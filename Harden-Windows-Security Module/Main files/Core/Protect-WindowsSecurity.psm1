@@ -6,7 +6,6 @@ Function Protect-WindowsSecurity {
     [CmdletBinding(DefaultParameterSetName = 'Online Mode')]
     [OutputType([System.String])]
     param (
-
         [parameter(Mandatory = $false, ParameterSetName = 'GUI')][System.Management.Automation.SwitchParameter]$GUI,
 
         [parameter(Mandatory = $false, ParameterSetName = 'Online Mode')]
@@ -371,91 +370,50 @@ Function Protect-WindowsSecurity {
             'Copy-Item:ProgressAction'         = 'SilentlyContinue'
             'Test-Path:ErrorAction'            = 'SilentlyContinue'
         }
-    }
-
-    process {
-
-        # Determining whether to use the files inside the module or download them from the GitHub repository
-        [System.Boolean]$IsLocally = $false
-        # Test for $null or '' or all-whitespace or any stringified value being ''
-        if (-NOT [System.String]::IsNullOrWhitespace($PSCommandPath)) {
-            try {
-                # Get the name of the file that called the function
-                [System.String]$PSCommandPathToProcess = Split-Path -Path $PSCommandPath -Leaf
-            }
-            catch {}
-            if ($PSCommandPathToProcess -eq 'Protect-WindowsSecurity.psm1') {
-                Write-Verbose -Message 'Running Protect-WindowsSecurity function as part of the Harden-Windows-Security module'
-
-                Write-Verbose -Message 'Importing the required sub-modules'
-                Import-Module -FullyQualifiedName "$HardeningModulePath\Shared\Update-self.psm1" -Force -Verbose:$false
-
-                # Set the flag to true to indicate that the module is running locally
-                $IsLocally = $true
-
-                if (!$Offline) {
-                    Write-Verbose -Message 'Checking for updates...'
-                    Update-Self -InvocationStatement $MyInvocation.Statement
-                }
-                else {
-                    Write-Verbose -Message 'Skipping update check since the -Offline switch was used'
-                }
-            }
-        }
-        else {
-            Write-Verbose -Message '$PSCommandPath was not found, Protect-WindowsSecurity function was most likely called from the GitHub repository'
-        }
-
-        # Start the transcript if the -Log switch is used
-        if ($Log) {
-            Start-Transcript -IncludeInvocationHeader -Path $LogPath
-
-            # Create a new stopwatch object to measure the execution time
-            Write-Verbose -Message 'Starting the stopwatch...'
-            [System.Diagnostics.Stopwatch]$StopWatch = [Diagnostics.Stopwatch]::StartNew()
-        }
-
-        # Determine whether the current session is running as Administrator or not
-        [System.Security.Principal.WindowsIdentity]$Identity = [Security.Principal.WindowsIdentity]::GetCurrent()
-        [System.Security.Principal.WindowsPrincipal]$Principal = New-Object -TypeName 'Security.Principal.WindowsPrincipal' -ArgumentList $Identity
-        [System.Boolean]$IsAdmin = $Principal.IsInRole([Security.Principal.WindowsBuiltinRole]::Administrator) ? $True : $false
-
-        # Get the execution policy for the current process
-        [System.String]$CurrentExecutionPolicy = Get-ExecutionPolicy -Scope 'Process'
-
-        # Change the execution policy temporarily only for the current PowerShell session
-        Set-ExecutionPolicy -ExecutionPolicy 'Unrestricted' -Scope 'Process' -Force
-
-        # Get the current title of the PowerShell
-        [System.String]$CurrentPowerShellTitle = $Host.UI.RawUI.WindowTitle
-
-        # Change the title of the Windows Terminal for PowerShell tab
-        $Host.UI.RawUI.WindowTitle = '❤️‍🔥Harden Windows Security❤️‍🔥'
-
-        # Minimum OS build number required for the hardening measures
-        [System.Decimal]$Requiredbuild = '22621.3155'
-        # Fetching Temp Directory
-        [System.String]$CurrentUserTempDirectoryPath = [System.IO.Path]::GetTempPath()
-        # The total number of the main categories for the parent/main progress bar to render
-        [System.Int32]$TotalMainSteps = 19
-        # Defining a boolean variable to determine whether optional diagnostic data should be enabled for Smart App Control or not
-        [System.Boolean]$ShouldEnableOptionalDiagnosticData = $false
 
         #region Helper-Functions
+        Function Set-Log {
+            <#
+            .SYNOPSIS
+                Function to start or stop the transcription and stopwatch
+            #>
+            [CmdletBinding()]
+            Param (
+                [Parameter(Mandatory = $false, ParameterSetName = 'Start')][System.Management.Automation.SwitchParameter]$Start,
+                [Parameter(Mandatory = $true, ParameterSetName = 'Start')][System.IO.FileInfo]$LogPath,
+                [Parameter(Mandatory = $false, ParameterSetName = 'Stop')][System.Management.Automation.SwitchParameter]$Stop
+            )
+
+            if ($Start) {
+                Start-Transcript -IncludeInvocationHeader -Path $LogPath
+
+                # Create a new stopwatch object to measure the execution time
+                Write-Verbose -Message 'Starting the stopwatch...'
+                [System.Diagnostics.Stopwatch]$script:StopWatch = [Diagnostics.Stopwatch]::StartNew()
+            }
+            elseif ($Stop) {
+                Write-Verbose -Message 'Stopping the stopwatch'
+                $script:StopWatch.Stop()
+                Write-Verbose -Message "Protect-WindowsSecurity completed in $($Script:StopWatch.Elapsed.Hours) Hours - $($Script:StopWatch.Elapsed.Minutes) Minutes - $($Script:StopWatch.Elapsed.Seconds) Seconds - $($Script:StopWatch.Elapsed.Milliseconds) Milliseconds - $($Script:StopWatch.Elapsed.Microseconds) Microseconds - $($Script:StopWatch.Elapsed.Nanoseconds) Nanoseconds"
+
+                Write-Verbose -Message 'Stopping the transcription'
+                Stop-Transcript
+            }
+        }
         function Select-Option {
             <#
-    .synopsis
-        Function to show a prompt to the user to select an option from a list of options
-    .INPUTS
-        System.String
-        System.Management.Automation.SwitchParameter
-    .OUTPUTS
-        System.String
-    .PARAMETER Message
-        Contains the main prompt message
-    .PARAMETER ExtraMessage
-        Contains any extra notes for sub-categories
-    #>
+                .synopsis
+                    Function to show a prompt to the user to select an option from a list of options
+                .INPUTS
+                    System.String
+                    System.Management.Automation.SwitchParameter
+                .OUTPUTS
+                    System.String
+                .PARAMETER Message
+                    Contains the main prompt message
+                .PARAMETER ExtraMessage
+                    Contains any extra notes for sub-categories
+                #>
             [CmdletBinding()]
             param(
                 [parameter(Mandatory = $True)][System.String]$Message,
@@ -506,13 +464,13 @@ Function Protect-WindowsSecurity {
         }
         function Edit-Registry {
             <#
-    .SYNOPSIS
-        Function to modify registry
-    .INPUTS
-        System.String
-    .OUTPUTS
-        System.Void
-    #>
+                .SYNOPSIS
+                    Function to modify registry
+                .INPUTS
+                    System.String
+                .OUTPUTS
+                    System.Void
+                #>
             [CmdletBinding()]
             param ([System.String]$Path, [System.String]$Key, [System.String]$Value, [System.String]$Type, [System.String]$Action)
             If (-NOT (Test-Path -Path $Path)) {
@@ -527,20 +485,20 @@ Function Protect-WindowsSecurity {
         }
         function Compare-SecureString {
             <#
-    .SYNOPSIS
-        Safely compares two SecureString objects without decrypting them.
-        Outputs $true if they are equal, or $false otherwise.
-    .LINK
-        https://stackoverflow.com/questions/48809012/compare-two-credentials-in-powershell
-    .INPUTS
-        System.Security.SecureString
-    .OUTPUTS
-        System.Boolean
-    .PARAMETER SecureString1
-        First secure string
-    .PARAMETER SecureString2
-        Second secure string to compare with the first secure string
-    #>
+                .SYNOPSIS
+                    Safely compares two SecureString objects without decrypting them.
+                    Outputs $true if they are equal, or $false otherwise.
+                .LINK
+                    https://stackoverflow.com/questions/48809012/compare-two-credentials-in-powershell
+                .INPUTS
+                    System.Security.SecureString
+                .OUTPUTS
+                    System.Boolean
+                .PARAMETER SecureString1
+                    First secure string
+                .PARAMETER SecureString2
+                    Second secure string to compare with the first secure string
+                #>
             [CmdletBinding()]
             param(
                 [System.Security.SecureString]$SecureString1,
@@ -574,18 +532,18 @@ Function Protect-WindowsSecurity {
         }
         Function Write-ColorfulText {
             <#
-    .SYNOPSIS
-        Function to write colorful text to the console
-    .INPUTS
-        System.String
-        System.Management.Automation.SwitchParameter
-    .OUTPUTS
-        System.String
-    .PARAMETER Color
-        The color to use to display the text, uses PSStyle
-     .PARAMETER InputText
-        The text to display in the selected color
-     #>
+                .SYNOPSIS
+                    Function to write colorful text to the console
+                .INPUTS
+                    System.String
+                    System.Management.Automation.SwitchParameter
+                .OUTPUTS
+                    System.String
+                .PARAMETER Color
+                    The color to use to display the text, uses PSStyle
+                 .PARAMETER InputText
+                    The text to display in the selected color
+                 #>
             [CmdletBinding()]
             param (
                 [Parameter(Mandatory = $True)]
@@ -639,13 +597,13 @@ Function Protect-WindowsSecurity {
         }
         function Get-AvailableRemovableDrives {
             <#
-    .SYNOPSIS
-        Function to get a removable drive to be used by BitLocker category
-    .INPUTS
-        None. You cannot pipe objects to this function
-    .OUTPUTS
-        System.String
-    #>
+                .SYNOPSIS
+                    Function to get a removable drive to be used by BitLocker category
+                .INPUTS
+                    None. You cannot pipe objects to this function
+                .OUTPUTS
+                    System.String
+                #>
 
             # An empty array of objects that holds the final removable drives list
             [System.Object[]]$AvailableRemovableDrives = @()
@@ -783,13 +741,13 @@ Function Protect-WindowsSecurity {
 
             function Confirm-Choice {
                 <#
-        .SYNOPSIS
-            A function to validate the user input
-        .INPUTS
-            System.String
-        .OUTPUTS
-            System.Boolean
-        #>
+                    .SYNOPSIS
+                        A function to validate the user input
+                    .INPUTS
+                        System.String
+                    .OUTPUTS
+                        System.Boolean
+                    #>
                 param([System.String]$Choice)
 
                 # Initialize a flag to indicate if the input is valid or not
@@ -831,20 +789,20 @@ Function Protect-WindowsSecurity {
         }
         function Block-CountryIP {
             <#
-    .SYNOPSIS
-        A function that gets a list of IP addresses and a name for them, then adds those IP addresses in the firewall block rules
-    .NOTES
-        -RemoteAddress in New-NetFirewallRule accepts array according to Microsoft Docs,
-        so we use "[System.String[]]$IPList = $IPList -split '\r?\n' -ne ''" to convert the IP lists, which is a single multiline string, into an array
+                .SYNOPSIS
+                    A function that gets a list of IP addresses and a name for them, then adds those IP addresses in the firewall block rules
+                .NOTES
+                    -RemoteAddress in New-NetFirewallRule accepts array according to Microsoft Docs,
+                    so we use "[System.String[]]$IPList = $IPList -split '\r?\n' -ne ''" to convert the IP lists, which is a single multiline string, into an array
 
-        how to query the number of IPs in each rule
-        (Get-NetFirewallRule -DisplayName "OFAC Sanctioned Countries IP range blocking" -PolicyStore localhost | Get-NetFirewallAddressFilter).RemoteAddress.count
-    .INPUTS
-        System.String
-        System.String[]
-    .OUTPUTS
-        System.Void
-        #>
+                    how to query the number of IPs in each rule
+                    (Get-NetFirewallRule -DisplayName "OFAC Sanctioned Countries IP range blocking" -PolicyStore localhost | Get-NetFirewallAddressFilter).RemoteAddress.count
+                .INPUTS
+                    System.String
+                    System.String[]
+                .OUTPUTS
+                    System.Void
+                    #>
             [CmdletBinding()]
             param (
                 [System.String[]]$IPList,
@@ -868,13 +826,13 @@ Function Protect-WindowsSecurity {
         }
         function Edit-Addons {
             <#
-        .SYNOPSIS
-            A function to enable or disable Windows features and capabilities.
-        .INPUTS
-            System.String
-        .OUTPUTS
-            System.String
-        #>
+                    .SYNOPSIS
+                        A function to enable or disable Windows features and capabilities.
+                    .INPUTS
+                        System.String
+                    .OUTPUTS
+                        System.String
+                    #>
             [CmdletBinding()]
             param (
                 [parameter(Mandatory = $true)]
@@ -935,38 +893,201 @@ Function Protect-WindowsSecurity {
                 }
             }
         }
-        #endregion Helper-Functions
 
-        if ($IsAdmin) {
-            Write-Verbose -Message 'Getting the current configurations and preferences of the Microsoft Defender...'
-            [Microsoft.Management.Infrastructure.CimInstance]$MDAVConfigCurrent = Get-MpComputerStatus
-            [Microsoft.Management.Infrastructure.CimInstance]$MDAVPreferencesCurrent = Get-MpPreference
+        Function Start-FileDownload {
+            <#
+            .SYNOPSIS
+                Based on whether the script is running locally (part of the module) or offline, downloads the required files.
+                At the end defines script-scope variable to be available to the entire script but not outside of it
+            .INPUTS
+                System.String
+                System.Management.Automation.SwitchParameter
+            .OUTPUTS
+                System.Void
+            #>
+            [CmdletBinding(
+                DefaultParameterSetName = 'All'
+            )]
+            [OutputType([System.Void])]
+            Param(
+                [Parameter(Mandatory = $true)][System.String]$WorkingDir,
+                [Parameter(Mandatory = $true, ParameterSetName = 'Local')][System.Management.Automation.SwitchParameter]$IsLocally,
+                [Parameter(Mandatory = $true, ParameterSetName = 'Local')][System.String]$HardeningModulePath,
 
-            Write-Verbose -Message 'Backing up the current Controlled Folder Access allowed apps list in order to restore them at the end'
-            # doing this so that when we Add and then Remove PowerShell executables in Controlled folder access exclusions
-            # no user customization will be affected
-            [System.IO.FileInfo[]]$CFAAllowedAppsBackup = $MDAVPreferencesCurrent.ControlledFolderAccessAllowedApplications
+                [Parameter(Mandatory = $true, ParameterSetName = 'Offline')][System.Management.Automation.SwitchParameter]$Offline,
+                [Parameter(Mandatory = $true, ParameterSetName = 'Offline')][System.String]$PathToMSFT365AppsSecurityBaselines,
+                [Parameter(Mandatory = $true, ParameterSetName = 'Offline')][System.String]$PathToMSFTSecurityBaselines,
+                [Parameter(Mandatory = $true, ParameterSetName = 'Offline')][System.String]$PathToLGPO
+            )
+            Begin {
+                Write-Progress -Id 0 -Activity 'Downloading the required files' -Status "Step $($RefCurrentMainStep.Value)/$TotalMainSteps" -PercentComplete 1
+                # Change the title of the Windows Terminal for PowerShell tab
+                $Host.UI.RawUI.WindowTitle = '⏬ Downloading'
 
-            Write-Verbose -Message 'Temporarily adding the currently running PowerShell executables to the Controlled Folder Access allowed apps list'
-            # so that the script can run without interruption. This change is reverted at the end.
-            # Adding powercfg.exe so Controlled Folder Access won't complain about it in BitLocker category when setting hibernate file size to full
-            foreach ($FilePath in (((Get-ChildItem -Path "$PSHOME\*.exe" -File).FullName) + "$env:SystemDrive\Windows\System32\powercfg.exe")) {
-                Add-MpPreference -ControlledFolderAccessAllowedApplications $FilePath
+                # Create an array of files to download
+                [System.Object[]]$Files = @(
+                    # System.Net.WebClient requires absolute path instead of relative one
+                    @{url = 'https://download.microsoft.com/download/8/5/C/85C25433-A1B0-4FFA-9429-7E023E7DA8D8/Windows%2011%20v23H2%20Security%20Baseline.zip'; path = "$WorkingDir\MicrosoftSecurityBaseline.zip"; tag = 'MicrosoftSecurityBaseline' }
+                    @{url = 'https://download.microsoft.com/download/8/5/C/85C25433-A1B0-4FFA-9429-7E023E7DA8D8/Microsoft%20365%20Apps%20for%20Enterprise%202306.zip'; path = "$WorkingDir\Microsoft365SecurityBaseline.zip"; tag = 'Microsoft365SecurityBaseline' }
+                    @{url = 'https://download.microsoft.com/download/8/5/C/85C25433-A1B0-4FFA-9429-7E023E7DA8D8/LGPO.zip'; path = "$WorkingDir\LGPO.zip"; tag = 'LGPO' }
+                    @{url = 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Harden-Windows-Security%20Module/Main%20files/Resources/Security-Baselines-X.zip'; path = "$WorkingDir\Security-Baselines-X.zip"; tag = 'Security-Baselines-X' }
+                    @{url = 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Harden-Windows-Security%20Module/Main%20files/Resources/Registry.csv'; path = "$WorkingDir\Registry.csv"; tag = 'Registry' }
+                    @{url = 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Harden-Windows-Security%20Module/Main%20files/Resources/ProcessMitigations.csv'; path = "$WorkingDir\ProcessMitigations.csv"; tag = 'ProcessMitigations' }
+                    @{url = 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Harden-Windows-Security%20Module/Main%20files/Resources/EventViewerCustomViews.zip'; path = "$WorkingDir\EventViewerCustomViews.zip"; tag = 'EventViewerCustomViews' }
+                )
+            }
+            Process {
+
+                try {
+
+                    # Get the total number of files to download based on whether the script is running locally or not
+                    [System.Int16]$TotalRequiredFiles = $IsLocally ? ($Files.Count - 4) : $Files.Count
+
+                    # Initialize a counter for the progress bar
+                    [System.Int16]$RequiredFilesCounter = 0
+
+                    # Start a job for each file download
+                    [System.Object[]]$Jobs = foreach ($File in $Files) {
+
+                        # If running locally, skip downloading the files that are already shipped with the Harden Windows Security module
+                        if ($IsLocally) {
+                            if ($File.tag -in @('Security-Baselines-X', 'Registry', 'ProcessMitigations', 'EventViewerCustomViews')) {
+                                Write-Verbose -Message "Skipping downloading the $($File.tag) because of local mode."
+                                Continue
+                            }
+                        }
+
+                        # If running in offline mode, skip downloading the files that are manually provided by the user
+                        if ($Offline) {
+                            if ($File.tag -in @('MicrosoftSecurityBaseline', 'Microsoft365SecurityBaseline', 'LGPO')) {
+                                Write-Verbose -Message "Skipping downloading the $($File.tag) because of offline mode."
+                                Continue
+                            }
+                        }
+
+                        Start-Job -ScriptBlock {
+
+                            param([System.Uri]$Url, [System.IO.FileInfo]$Path, [System.String]$Tag)
+                            # Create a WebClient object
+                            [System.Net.WebClient]$WC = New-Object -TypeName System.Net.WebClient
+                            try {
+                                # Try to download the file from the original URL
+                                $WC.DownloadFile($Url, $Path)
+                            }
+                            catch {
+                                # a switch for when the original URLs are failing and to provide Alt URL
+                                switch ($Tag) {
+                                    'Security-Baselines-X' {
+                                        Write-Host -Object 'Using Azure DevOps for Security-Baselines-X.zip' -ForegroundColor Yellow
+                                        [System.Uri]$AltURL = 'https://dev.azure.com/SpyNetGirl/011c178a-7b92-462b-bd23-2c014528a67e/_apis/git/repositories/5304fef0-07c0-4821-a613-79c01fb75657/items?path=/Payload/Security-Baselines-X.zip'
+                                        $WC.DownloadFile($AltURL, $Path)
+                                        break
+                                    }
+                                    'Registry' {
+                                        Write-Host -Object 'Using Azure DevOps for Registry.csv' -ForegroundColor Yellow
+                                        [System.Uri]$AltURL = 'https://dev.azure.com/SpyNetGirl/011c178a-7b92-462b-bd23-2c014528a67e/_apis/git/repositories/5304fef0-07c0-4821-a613-79c01fb75657/items?path=/Payload/Registry.csv'
+                                        $WC.DownloadFile($AltURL, $Path)
+                                        break
+                                    }
+                                    'ProcessMitigations' {
+                                        Write-Host -Object 'Using Azure DevOps for ProcessMitigations.CSV' -ForegroundColor Yellow
+                                        [System.Uri]$AltURL = 'https://dev.azure.com/SpyNetGirl/011c178a-7b92-462b-bd23-2c014528a67e/_apis/git/repositories/5304fef0-07c0-4821-a613-79c01fb75657/items?path=/Payload/ProcessMitigations.csv'
+                                        $WC.DownloadFile($AltURL, $Path)
+                                        break
+                                    }
+                                    'EventViewerCustomViews' {
+                                        Write-Host -Object 'Using Azure DevOps for EventViewerCustomViews.zip' -ForegroundColor Yellow
+                                        [System.Uri]$AltURL = 'https://dev.azure.com/SpyNetGirl/011c178a-7b92-462b-bd23-2c014528a67e/_apis/git/repositories/5304fef0-07c0-4821-a613-79c01fb75657/items?path=/Payload/EventViewerCustomViews.zip'
+                                        $WC.DownloadFile($AltURL, $Path)
+                                        break
+                                    }
+                                    default {
+                                        # Throw the error if any other URL fails and stop the operation
+                                        Throw $_
+                                    }
+                                }
+                            }
+                        } -ArgumentList $File.url, $File.path, $File.tag
+
+                        # Increment the counter by one
+                        $RequiredFilesCounter++
+
+                        # Write the progress of the download jobs
+                        Write-Progress -Id 1 -ParentId 0 -Activity "Downloading $($file.tag)" -Status "$RequiredFilesCounter of $TotalRequiredFiles" -PercentComplete ($RequiredFilesCounter / $TotalRequiredFiles * 100)
+                    }
+                    # Wait until all jobs are completed
+                    while ($Jobs | Where-Object -FilterScript { $_.State -ne 'Completed' }) {
+                        Start-Sleep -Milliseconds 700
+                    }
+
+                    # Receive the output or errors of each job and remove the job
+                    foreach ($Job in $Jobs) {
+                        Receive-Job -Job $Job
+                        Remove-Job -Job $Job
+                    }
+
+                    Write-Progress -Id 1 -ParentId 0 -Activity 'Downloading files completed.' -Completed
+                }
+                catch {
+                    foreach ($Job in $Jobs) { Remove-Job -Job $Job }
+                    Throw 'The required files could not be downloaded, Make sure you have Internet connection.'
+                }
+            }
+            End {
+                if ($IsLocally) {
+                    Write-Verbose -Message 'Local Mode; Copying the Security-Baselines-X, Registry, ProcessMitigations and EventViewerCustomViews files from the module folder to the working directory'
+                    Copy-Item -Path "$HardeningModulePath\Resources\Security-Baselines-X.zip" -Destination "$WorkingDir\Security-Baselines-X.zip"
+                    Copy-Item -Path "$HardeningModulePath\Resources\Registry.csv" -Destination "$WorkingDir\Registry.csv"
+                    Copy-Item -Path "$HardeningModulePath\Resources\ProcessMitigations.csv" -Destination "$WorkingDir\ProcessMitigations.csv"
+                    Copy-Item -Path "$HardeningModulePath\Resources\EventViewerCustomViews.zip" -Destination "$WorkingDir\EventViewerCustomViews.zip"
+                }
+                if ($Offline) {
+                    Write-Verbose -Message 'Offline Mode; Copying the Microsoft Security Baselines, Microsoft 365 Apps for Enterprise Security Baselines and LGPO files from the user provided paths to the working directory'
+                    Copy-Item -Path "$PathToLGPO" -Destination "$WorkingDir\LGPO.zip"
+                    Copy-Item -Path "$PathToMSFTSecurityBaselines" -Destination "$WorkingDir\MicrosoftSecurityBaseline.zip"
+                    Copy-Item -Path "$PathToMSFT365AppsSecurityBaselines" -Destination "$WorkingDir\Microsoft365SecurityBaseline.zip"
+                }
+
+                Write-Verbose -Message 'Unzipping the archives'
+                Expand-Archive -Path "$WorkingDir\MicrosoftSecurityBaseline.zip" -DestinationPath "$WorkingDir\MicrosoftSecurityBaseline" -Force
+                Expand-Archive -Path "$WorkingDir\Microsoft365SecurityBaseline.zip" -DestinationPath "$WorkingDir\Microsoft365SecurityBaseline" -Force
+                Expand-Archive -Path "$WorkingDir\LGPO.zip" -DestinationPath "$WorkingDir\" -Force
+                Expand-Archive -Path "$WorkingDir\Security-Baselines-X.zip" -DestinationPath "$WorkingDir\Security-Baselines-X\" -Force
+
+                # capturing the Microsoft Security Baselines extracted path in a variable using wildcard and storing it in a variable so that we won't need to change anything in the code other than the download link when they are updated
+                [System.String]$script:MicrosoftSecurityBaselinePath = (Get-ChildItem -Directory -Path "$WorkingDir\MicrosoftSecurityBaseline\*\").FullName
+                # capturing the Microsoft 365 Security Baselines extracted path in a variable using wildcard and storing it in a variable so that we won't need to change anything in the code other than the download link when they are updated
+                [System.String]$script:Microsoft365SecurityBaselinePath = (Get-ChildItem -Directory -Path "$WorkingDir\Microsoft365SecurityBaseline\*\").FullName
+                # Storing the registry CSV file in a variable
+                [System.Object[]]$script:RegistryCSVItems = Import-Csv -Path "$WorkingDir\Registry.csv" -Delimiter ','
+                # Storing the LGPO.exe path in a variable
+                [System.IO.FileInfo]$script:LGPOExe = Get-ChildItem -Path "$WorkingDir\LGPO_30\LGPO.exe" -File
+
+                # Copying LGPO.exe from its folder to Microsoft Security Baseline folder in order to get it ready to be used by PowerShell script
+                Copy-Item -Path $LGPOExe -Destination "$MicrosoftSecurityBaselinePath\Scripts\Tools"
+                # Copying LGPO.exe from its folder to Microsoft Office 365 Apps for Enterprise Security Baseline folder in order to get it ready to be used by PowerShell script
+                Copy-Item -Path $LGPOExe -Destination "$Microsoft365SecurityBaselinePath\Scripts\Tools"
             }
         }
+        Function Test-SystemRequirements {
+            <#
+            .SYNOPSIS
+                A function to check if the system meets the requirements for the hardening measures
+            .PARAMETER MDAVConfigCurrent
+                The current configuration of Microsoft Defender
+                Allows null values, because when not running as admin, this parameter will be null
+            .PARAMETER IsAdmin
+                A switch parameter to indicate if the script is running as an administrator
+            #>
+            [CmdletBinding()]
+            param (
+                [Parameter(Mandatory = $false)]
+                [AllowNull()]
+                [Microsoft.Management.Infrastructure.CimInstance]$MDAVConfigCurrent,
 
-        # doing a try-catch-finally block on the entire script so that when CTRL + C is pressed to forcefully exit the script,
-        # or break is passed, clean up will still happen for secure exit. Any error that happens will be thrown
-        try {
+                [Parameter(Mandatory = $true)][System.Management.Automation.SwitchParameter]$IsAdmin
+            )
 
-            if (!$Categories) {
-                Write-Host -Object "`r`n"
-                Write-ColorfulText -Color Rainbow -InputText "############################################################################################################`r`n"
-                Write-ColorfulText -Color MintGreen -InputText "### Please read the Readme in the GitHub repository: https://github.com/HotCakeX/Harden-Windows-Security ###`r`n"
-                Write-ColorfulText -Color Rainbow -InputText "############################################################################################################`r`n"
-            }
-
-            #region RequirementsCheck
             Write-Verbose -Message 'Checking if the OS is Windows Home edition...'
             if ((Get-CimInstance -ClassName Win32_OperatingSystem).OperatingSystemSKU -eq '101') {
                 Throw [System.PlatformNotSupportedException] 'Windows Home edition detected, exiting...'
@@ -1012,160 +1133,121 @@ Function Protect-WindowsSecurity {
                     Throw "Microsoft Defender is running in $($MDAVConfigCurrent.AMRunningMode) state, please remove any 3rd party AV and then try again."
                 }
             }
-            #endregion RequirementsCheck
+        }
+        #endregion Helper-Functions
+
+        #Region code that runs regardless of any mode or any available privilege
+
+        # Determining whether to use the files inside the module or download them from the GitHub repository
+        [System.Boolean]$IsLocally = $false
+        # Test for $null or '' or all-whitespace or any stringified value being ''
+        if (-NOT [System.String]::IsNullOrWhitespace($PSCommandPath)) {
+            try {
+                # Get the name of the file that called the function
+                [System.String]$PSCommandPathToProcess = Split-Path -Path $PSCommandPath -Leaf
+            }
+            catch {}
+            if ($PSCommandPathToProcess -eq 'Protect-WindowsSecurity.psm1') {
+                Write-Verbose -Message 'Running Protect-WindowsSecurity function as part of the Harden-Windows-Security module'
+
+                Write-Verbose -Message 'Importing the required sub-modules'
+                Import-Module -FullyQualifiedName "$HardeningModulePath\Shared\Update-self.psm1" -Force -Verbose:$false
+
+                # Set the flag to true to indicate that the module is running locally
+                $IsLocally = $true
+
+                if (!$Offline) {
+                    Write-Verbose -Message 'Checking for updates...'
+                    Update-Self -InvocationStatement $MyInvocation.Statement
+                }
+                else {
+                    Write-Verbose -Message 'Skipping update check since the -Offline switch was used'
+                }
+            }
+        }
+        else {
+            Write-Verbose -Message '$PSCommandPath was not found, Protect-WindowsSecurity function was most likely called from the GitHub repository'
+        }
+
+        # Get the execution policy for the current process
+        [System.String]$CurrentExecutionPolicy = Get-ExecutionPolicy -Scope 'Process'
+
+        # Change the execution policy temporarily only for the current PowerShell session
+        Set-ExecutionPolicy -ExecutionPolicy 'Unrestricted' -Scope 'Process' -Force
+
+        # Get the current title of the PowerShell
+        [System.String]$CurrentPowerShellTitle = $Host.UI.RawUI.WindowTitle
+
+        # Change the title of the Windows Terminal for PowerShell tab
+        $Host.UI.RawUI.WindowTitle = '❤️‍🔥Harden Windows Security❤️‍🔥'
+
+        # Minimum OS build number required for the hardening measures
+        [System.Decimal]$Requiredbuild = '22621.3155'
+        # Fetching Temp Directory
+        [System.String]$CurrentUserTempDirectoryPath = [System.IO.Path]::GetTempPath()
+        # The total number of the main categories for the parent/main progress bar to render
+        [System.Int32]$TotalMainSteps = 19
+        # Defining a boolean variable to determine whether optional diagnostic data should be enabled for Smart App Control or not
+        [System.Boolean]$ShouldEnableOptionalDiagnosticData = $false
+
+        # Determine whether the current session is running as Administrator or not
+        [System.Security.Principal.WindowsIdentity]$Identity = [Security.Principal.WindowsIdentity]::GetCurrent()
+        [System.Security.Principal.WindowsPrincipal]$Principal = New-Object -TypeName 'Security.Principal.WindowsPrincipal' -ArgumentList $Identity
+        [System.Boolean]$IsAdmin = $Principal.IsInRole([Security.Principal.WindowsBuiltinRole]::Administrator) ? $True : $false
+
+        if (!$Categories) {
+            Write-Host -Object "`r`n"
+            Write-ColorfulText -Color Rainbow -InputText "############################################################################################################`r`n"
+            Write-ColorfulText -Color MintGreen -InputText "### Please read the Readme in the GitHub repository: https://github.com/HotCakeX/Harden-Windows-Security ###`r`n"
+            Write-ColorfulText -Color Rainbow -InputText "############################################################################################################`r`n"
+        }
+
+        # Create a variable to store the current step number for the progress bar
+        [System.Int64]$CurrentMainStep = 0
+        # Create a reference variable that points to the original variable
+        [ref]$RefCurrentMainStep = $CurrentMainStep
+
+        #Endregion code that runs regardless of any mode or any available privilege
+    }
+
+    process {
+
+        # Start the transcript if the -Log switch is used
+        if ($Log) { Set-Log -Start -LogPath $LogPath }
+
+        if ($IsAdmin) {
+            Write-Verbose -Message 'Getting the current configurations and preferences of the Microsoft Defender...'
+            [Microsoft.Management.Infrastructure.CimInstance]$MDAVConfigCurrent = Get-MpComputerStatus
+            [Microsoft.Management.Infrastructure.CimInstance]$MDAVPreferencesCurrent = Get-MpPreference
+
+            Write-Verbose -Message 'Backing up the current Controlled Folder Access allowed apps list in order to restore them at the end'
+            # doing this so that when we Add and then Remove PowerShell executables in Controlled folder access exclusions
+            # no user customization will be affected
+            [System.IO.FileInfo[]]$CFAAllowedAppsBackup = $MDAVPreferencesCurrent.ControlledFolderAccessAllowedApplications
+
+            Write-Verbose -Message 'Temporarily adding the currently running PowerShell executables to the Controlled Folder Access allowed apps list'
+            # so that the script can run without interruption. This change is reverted at the end.
+            # Adding powercfg.exe so Controlled Folder Access won't complain about it in BitLocker category when setting hibernate file size to full
+            foreach ($FilePath in (((Get-ChildItem -Path "$PSHOME\*.exe" -File).FullName) + "$env:SystemDrive\Windows\System32\powercfg.exe")) {
+                Add-MpPreference -ControlledFolderAccessAllowedApplications $FilePath
+            }
+        }
+
+        # doing a try-catch-finally block on the entire script so that when CTRL + C is pressed to forcefully exit the script,
+        # or break is passed, clean up will still happen for secure exit. Any error that happens will be thrown
+        try {
+
+            # Check if the system requirements are met
+            Test-SystemRequirements -MDAVConfigCurrent $MDAVConfigCurrent -IsAdmin:$IsAdmin
 
             # Create the working directory
             [System.IO.DirectoryInfo]$WorkingDir = New-Item -ItemType Directory -Path "$CurrentUserTempDirectoryPath\HardeningXStuff\" -Force
 
-            # Create a variable to store the current step number for the progress bar
-            [System.Int64]$CurrentMainStep = 0
-            # Create a reference variable that points to the original variable
-            [ref]$RefCurrentMainStep = $CurrentMainStep
-
-            Write-Progress -Id 0 -Activity 'Downloading the required files' -Status "Step $($RefCurrentMainStep.Value)/$TotalMainSteps" -PercentComplete 1
-            # Change the title of the Windows Terminal for PowerShell tab
-            $Host.UI.RawUI.WindowTitle = '⏬ Downloading'
-
-            try {
-                # Create an array of files to download
-                [System.Object[]]$Files = @(
-                    # System.Net.WebClient requires absolute path instead of relative one
-                    @{url = 'https://download.microsoft.com/download/8/5/C/85C25433-A1B0-4FFA-9429-7E023E7DA8D8/Windows%2011%20v23H2%20Security%20Baseline.zip'; path = "$WorkingDir\MicrosoftSecurityBaseline.zip"; tag = 'MicrosoftSecurityBaseline' }
-                    @{url = 'https://download.microsoft.com/download/8/5/C/85C25433-A1B0-4FFA-9429-7E023E7DA8D8/Microsoft%20365%20Apps%20for%20Enterprise%202306.zip'; path = "$WorkingDir\Microsoft365SecurityBaseline.zip"; tag = 'Microsoft365SecurityBaseline' }
-                    @{url = 'https://download.microsoft.com/download/8/5/C/85C25433-A1B0-4FFA-9429-7E023E7DA8D8/LGPO.zip'; path = "$WorkingDir\LGPO.zip"; tag = 'LGPO' }
-                    @{url = 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Harden-Windows-Security%20Module/Main%20files/Resources/Security-Baselines-X.zip'; path = "$WorkingDir\Security-Baselines-X.zip"; tag = 'Security-Baselines-X' }
-                    @{url = 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Harden-Windows-Security%20Module/Main%20files/Resources/Registry.csv'; path = "$WorkingDir\Registry.csv"; tag = 'Registry' }
-                    @{url = 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Harden-Windows-Security%20Module/Main%20files/Resources/ProcessMitigations.csv'; path = "$WorkingDir\ProcessMitigations.csv"; tag = 'ProcessMitigations' }
-                    @{url = 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Harden-Windows-Security%20Module/Main%20files/Resources/EventViewerCustomViews.zip'; path = "$WorkingDir\EventViewerCustomViews.zip"; tag = 'EventViewerCustomViews' }
-                )
-
-                # Get the total number of files to download based on whether the script is running locally or not
-                [System.Int16]$TotalRequiredFiles = $IsLocally ? ($Files.Count - 4) : $Files.Count
-
-                # Initialize a counter for the progress bar
-                [System.Int16]$RequiredFilesCounter = 0
-
-                # Start a job for each file download
-                [System.Object[]]$Jobs = foreach ($File in $Files) {
-
-                    # If running locally, skip downloading the files that are already shipped with the Harden Windows Security module
-                    if ($IsLocally) {
-                        if ($File.tag -in @('Security-Baselines-X', 'Registry', 'ProcessMitigations', 'EventViewerCustomViews')) {
-                            Write-Verbose -Message "Skipping downloading the $($File.tag) because of local mode."
-                            Continue
-                        }
-                    }
-
-                    # If running in offline mode, skip downloading the files that are manually provided by the user
-                    if ($Offline) {
-                        if ($File.tag -in @('MicrosoftSecurityBaseline', 'Microsoft365SecurityBaseline', 'LGPO')) {
-                            Write-Verbose -Message "Skipping downloading the $($File.tag) because of offline mode."
-                            Continue
-                        }
-                    }
-
-                    Start-Job -ScriptBlock {
-
-                        param([System.Uri]$Url, [System.IO.FileInfo]$Path, [System.String]$Tag)
-                        # Create a WebClient object
-                        [System.Net.WebClient]$WC = New-Object -TypeName System.Net.WebClient
-                        try {
-                            # Try to download the file from the original URL
-                            $WC.DownloadFile($Url, $Path)
-                        }
-                        catch {
-                            # a switch for when the original URLs are failing and to provide Alt URL
-                            switch ($Tag) {
-                                'Security-Baselines-X' {
-                                    Write-Host -Object 'Using Azure DevOps for Security-Baselines-X.zip' -ForegroundColor Yellow
-                                    [System.Uri]$AltURL = 'https://dev.azure.com/SpyNetGirl/011c178a-7b92-462b-bd23-2c014528a67e/_apis/git/repositories/5304fef0-07c0-4821-a613-79c01fb75657/items?path=/Payload/Security-Baselines-X.zip'
-                                    $WC.DownloadFile($AltURL, $Path)
-                                    break
-                                }
-                                'Registry' {
-                                    Write-Host -Object 'Using Azure DevOps for Registry.csv' -ForegroundColor Yellow
-                                    [System.Uri]$AltURL = 'https://dev.azure.com/SpyNetGirl/011c178a-7b92-462b-bd23-2c014528a67e/_apis/git/repositories/5304fef0-07c0-4821-a613-79c01fb75657/items?path=/Payload/Registry.csv'
-                                    $WC.DownloadFile($AltURL, $Path)
-                                    break
-                                }
-                                'ProcessMitigations' {
-                                    Write-Host -Object 'Using Azure DevOps for ProcessMitigations.CSV' -ForegroundColor Yellow
-                                    [System.Uri]$AltURL = 'https://dev.azure.com/SpyNetGirl/011c178a-7b92-462b-bd23-2c014528a67e/_apis/git/repositories/5304fef0-07c0-4821-a613-79c01fb75657/items?path=/Payload/ProcessMitigations.csv'
-                                    $WC.DownloadFile($AltURL, $Path)
-                                    break
-                                }
-                                'EventViewerCustomViews' {
-                                    Write-Host -Object 'Using Azure DevOps for EventViewerCustomViews.zip' -ForegroundColor Yellow
-                                    [System.Uri]$AltURL = 'https://dev.azure.com/SpyNetGirl/011c178a-7b92-462b-bd23-2c014528a67e/_apis/git/repositories/5304fef0-07c0-4821-a613-79c01fb75657/items?path=/Payload/EventViewerCustomViews.zip'
-                                    $WC.DownloadFile($AltURL, $Path)
-                                    break
-                                }
-                                default {
-                                    # Throw the error if any other URL fails and stop the operation
-                                    Throw $_
-                                }
-                            }
-                        }
-                    } -ArgumentList $File.url, $File.path, $File.tag
-
-                    # Increment the counter by one
-                    $RequiredFilesCounter++
-
-                    # Write the progress of the download jobs
-                    Write-Progress -Id 1 -ParentId 0 -Activity "Downloading $($file.tag)" -Status "$RequiredFilesCounter of $TotalRequiredFiles" -PercentComplete ($RequiredFilesCounter / $TotalRequiredFiles * 100)
-                }
-                # Wait until all jobs are completed
-                while ($Jobs | Where-Object -FilterScript { $_.State -ne 'Completed' }) {
-                    Start-Sleep -Milliseconds 700
-                }
-
-                # Receive the output or errors of each job and remove the job
-                foreach ($Job in $Jobs) {
-                    Receive-Job -Job $Job
-                    Remove-Job -Job $Job
-                }
-
-                Write-Progress -Id 1 -ParentId 0 -Activity 'Downloading files completed.' -Completed
-            }
-            catch {
-                foreach ($Job in $Jobs) { Remove-Job -Job $Job }
-                Throw 'The required files could not be downloaded, Make sure you have Internet connection.'
-            }
-
-            if ($IsLocally) {
-                Write-Verbose -Message 'Local Mode; Copying the Security-Baselines-X, Registry, ProcessMitigations and EventViewerCustomViews files from the module folder to the working directory'
-                Copy-Item -Path "$HardeningModulePath\Resources\Security-Baselines-X.zip" -Destination "$WorkingDir\Security-Baselines-X.zip"
-                Copy-Item -Path "$HardeningModulePath\Resources\Registry.csv" -Destination "$WorkingDir\Registry.csv"
-                Copy-Item -Path "$HardeningModulePath\Resources\ProcessMitigations.csv" -Destination "$WorkingDir\ProcessMitigations.csv"
-                Copy-Item -Path "$HardeningModulePath\Resources\EventViewerCustomViews.zip" -Destination "$WorkingDir\EventViewerCustomViews.zip"
-            }
-
-            if ($Offline) {
-                Write-Verbose -Message 'Offline Mode; Copying the Microsoft Security Baselines, Microsoft 365 Apps for Enterprise Security Baselines and LGPO files from the user provided paths to the working directory'
-                Copy-Item -Path "$PathToLGPO" -Destination "$WorkingDir\LGPO.zip"
-                Copy-Item -Path "$PathToMSFTSecurityBaselines" -Destination "$WorkingDir\MicrosoftSecurityBaseline.zip"
-                Copy-Item -Path "$PathToMSFT365AppsSecurityBaselines" -Destination "$WorkingDir\Microsoft365SecurityBaseline.zip"
-            }
-
-            Write-Verbose -Message 'Unzipping the archives'
-            Expand-Archive -Path "$WorkingDir\MicrosoftSecurityBaseline.zip" -DestinationPath "$WorkingDir\MicrosoftSecurityBaseline" -Force
-            Expand-Archive -Path "$WorkingDir\Microsoft365SecurityBaseline.zip" -DestinationPath "$WorkingDir\Microsoft365SecurityBaseline" -Force
-            Expand-Archive -Path "$WorkingDir\LGPO.zip" -DestinationPath "$WorkingDir\" -Force
-            Expand-Archive -Path "$WorkingDir\Security-Baselines-X.zip" -DestinationPath "$WorkingDir\Security-Baselines-X\" -Force
-
-            # capturing the Microsoft Security Baselines extracted path in a variable using wildcard and storing it in a variable so that we won't need to change anything in the code other than the download link when they are updated
-            [System.String]$MicrosoftSecurityBaselinePath = (Get-ChildItem -Directory -Path "$WorkingDir\MicrosoftSecurityBaseline\*\").FullName
-            # capturing the Microsoft 365 Security Baselines extracted path in a variable using wildcard and storing it in a variable so that we won't need to change anything in the code other than the download link when they are updated
-            [System.String]$Microsoft365SecurityBaselinePath = (Get-ChildItem -Directory -Path "$WorkingDir\Microsoft365SecurityBaseline\*\").FullName
-            # Storing the registry CSV file in a variable
-            [System.Object[]]$RegistryCSVItems = Import-Csv -Path "$WorkingDir\Registry.csv" -Delimiter ','
-            # Storing the LGPO.exe path in a variable
-            [System.IO.FileInfo]$LGPOExe = Get-ChildItem -Path "$WorkingDir\LGPO_30\LGPO.exe" -File
-
-            # Copying LGPO.exe from its folder to Microsoft Security Baseline folder in order to get it ready to be used by PowerShell script
-            Copy-Item -Path $LGPOExe -Destination "$MicrosoftSecurityBaselinePath\Scripts\Tools"
-            # Copying LGPO.exe from its folder to Microsoft Office 365 Apps for Enterprise Security Baseline folder in order to get it ready to be used by PowerShell script
-            Copy-Item -Path $LGPOExe -Destination "$Microsoft365SecurityBaselinePath\Scripts\Tools"
+            # Start downloading the required files and process them
+            # $HardeningModulePath is a global variable that is set in the module file if this script is running as part of the Harden Windows Security Module
+            # If the script is neither running locally nor in offline mode, download the files from the internet
+            [System.Collections.Hashtable]$DownloadParams = ($Locally ? @{IsLocally = $true; WorkingDir = $WorkingDir; HardeningModulePath = $HardeningModulePath } : ($Offline ? @{Offline = $true; WorkingDir = $WorkingDir; PathToMSFT365AppsSecurityBaselines = $PathToMSFT365AppsSecurityBaselines; PathToMSFTSecurityBaselines = $PathToMSFTSecurityBaselines; PathToLGPO = $PathToLGPO } : @{WorkingDir = $WorkingDir }))
+            Start-FileDownload @DownloadParams
 
             #Region Hardening-Categories-Functions
             Function Invoke-WindowsBootManagerRevocations {
@@ -2597,7 +2679,7 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
             }
             #Endregion Hardening-Categories-Functions
 
-            # a label to break out of the main switch statements and run the finally block when user chooses to exit
+            # A label to break out of the main switch statements and run the finally block when user chooses to exit
             :MainSwitchLabel switch ($Categories) {
                 'WindowsBootManagerRevocations' { Invoke-WindowsBootManagerRevocations -RunUnattended }
                 'MicrosoftSecurityBaselines' { Invoke-MicrosoftSecurityBaselines -RunUnattended }
@@ -2663,12 +2745,7 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
             Set-ExecutionPolicy -ExecutionPolicy "$CurrentExecutionPolicy" -Scope 'Process' -Force
 
             if ($Log) {
-                Write-Verbose -Message 'Stopping the stopwatch'
-                $StopWatch.Stop()
-                Write-Verbose -Message "Protect-WindowsSecurity completed in $($StopWatch.Elapsed.Hours) Hours - $($StopWatch.Elapsed.Minutes) Minutes - $($StopWatch.Elapsed.Seconds) Seconds - $($StopWatch.Elapsed.Milliseconds) Milliseconds - $($StopWatch.Elapsed.Microseconds) Microseconds - $($StopWatch.Elapsed.Nanoseconds) Nanoseconds"
-
-                Write-Verbose -Message 'Stopping the transcription'
-                Stop-Transcript
+                Set-Log -Stop
             }
         }
     }
@@ -2700,6 +2777,9 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
     PowerShell
 .FUNCTIONALITY
     Applies the hardening measures described in the GitHub readme.
+.PARAMETER GUI
+    Activates the GUI mode. The cmdlet will display a GUI window where you can select the categories to apply.
+    If you want to run the cmdlet in GUI mode, you must not specify any other parameters.
 .PARAMETER Categories
     The hardening categories to implement. Use this to selectively apply certain categories.
     Use this parameter when executing the Protect-WindowsSecurity in silent/headless mode to automatically apply any categories you desire without user intervention.

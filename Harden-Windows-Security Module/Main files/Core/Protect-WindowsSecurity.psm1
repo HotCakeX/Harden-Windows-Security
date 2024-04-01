@@ -4292,7 +4292,7 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
            <Setter Property="FontWeight" Value="Bold"/>
            <Setter Property="Padding" Value="20"/>
            <Setter Property="Margin" Value="5"/>
-           <Setter Property="Height" Value="100"/>
+           <Setter Property="Height" Value="60"/>
            <Setter Property="ToolTip" Value="{Binding Header, RelativeSource={RelativeSource Self}}"/>
            <Setter Property="Foreground" Value="Black"/>
            <Setter Property="Background" Value="Transparent"/>
@@ -4309,8 +4309,8 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                                <Setter TargetName="Border" Property="Background">
                                    <Setter.Value>
                                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
-                                           <GradientStop Color="Pink" Offset="0.0"/>
-                                           <GradientStop Color="Yellow" Offset="1.0"/>
+                                           <GradientStop Color="#78ffd6" Offset="0.0"/>
+                                           <GradientStop Color="#a8ff78" Offset="1.0"/>
                                        </LinearGradientBrush>
                                    </Setter.Value>
                                </Setter>
@@ -4319,8 +4319,8 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                                <Setter TargetName="Border" Property="Background">
                                    <Setter.Value>
                                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
-                                           <GradientStop Color="#FFFADADD" Offset="0.0"/>
-                                           <GradientStop Color="#FFFFFF00" Offset="1.0"/>
+                                           <GradientStop Color="#a8ff78" Offset="0.0"/>
+                                           <GradientStop Color="#78ffd6" Offset="1.0"/>
                                        </LinearGradientBrush>
                                    </Setter.Value>
                                </Setter>
@@ -4351,7 +4351,7 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
    </Window.Resources>
    <TabControl>
        <!-- Online Mode Tab Content -->
-       <TabItem Header="Online Mode">
+       <TabItem Header="Online Mode" VerticalAlignment="Center" HorizontalAlignment="Center">
            <!-- Grid for Online Mode Tab - Removing the white border with negative margins -->
            <Grid x:Name="Grid1" Margin="-2.3,-2.3,-2.3,-2.3">
                <!-- Background color for the grid -->
@@ -4509,7 +4509,7 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
            </Grid>
        </TabItem>
        <!-- Offline Mode Tab Content -->
-       <TabItem Header="Offline Mode">
+       <TabItem Header="Offline Mode" VerticalAlignment="Center" HorizontalAlignment="Center">
            <Grid x:Name="Grid2">
                <Grid.Background>
                    <SolidColorBrush Color="#ffffad"/>

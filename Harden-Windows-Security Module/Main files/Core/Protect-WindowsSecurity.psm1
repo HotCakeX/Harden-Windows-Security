@@ -1029,6 +1029,9 @@ Function Protect-WindowsSecurity {
                 }
 
                 Process {
+                    # Add the text to the synchronized array list as log messages
+                    $SyncHash.Logger.Add([System.String](Get-Date) + ': ' + [System.String]$Text)
+
                     # Use Dispatcher.Invoke to update the GUI elements on the main thread
                     $SyncHash.Window.Dispatcher.Invoke({
                             # Since other output streams such as verbose, error, warning are not converted to strings, we need to convert them manually
@@ -1052,8 +1055,26 @@ Function Protect-WindowsSecurity {
             # A nested hashtable to store all of the variables from the function scope
             $SyncHash['GlobalVars'] = [System.Collections.Hashtable]@{}
 
+            # To store the log messages
+            $SyncHash.Logger = [System.Collections.ArrayList]::Synchronized((New-Object -TypeName System.Collections.ArrayList))
+
+            # Create and add the header to the log messages
+            $SyncHash.Logger.Add(@"
+**********************
+Harden Windows Security logger start
+Username: $env:UserName
+Machine: $env:COMPUTERNAME
+Start time: $(Get-Date)
+Process ID: $PID
+OS Build: $([System.Environment]::OSVersion.Version)
+Execution Policy: $CurrentExecutionPolicy
+**********************
+"@)
             # For storing the RunSpace data
             $SyncHash.ListOfStuff = New-Object -TypeName System.Collections.ArrayList
+
+            # Initialize a flag to determine whether to write logs or not, set to false by default
+            $SyncHash.ShouldWriteLogs = $false
 
             # Creating a RunSpace for the GUI
             $GUIRunSpace = [System.Management.Automation.RunSpaces.RunSpaceFactory]::CreateRunSpace()
@@ -1250,6 +1271,8 @@ Function Protect-WindowsSecurity {
                                 $SyncHash.txtFilePath.Visibility = 'Visible'
 
                                 Write-GUI -Text "Logs will be saved in: $($SyncHash.txtFilePath.Text)"
+
+                                $SyncHash.ShouldWriteLogs = $true
                             }
                         })
 
@@ -2070,7 +2093,7 @@ namespace SystemInfo
                                             &"$env:SystemDrive\Windows\System32\powercfg.exe" /h /type full | Out-Null
                                         }
                                         else {
-                                            Write-Output -InputObject "`nHibernate is already set to full."
+                                            Write-Output -InputObject 'Hibernate is already set to full.'
                                         }
                                     }
                                 }
@@ -2402,6 +2425,17 @@ namespace SystemInfo
                     # Defining what happens when the GUI window is closed
                     $SyncHash.Window.add_Closed({
                             #    [System.Windows.MessageBox]::Show('The window is closing.')
+
+                            if ($SyncHash.ShouldWriteLogs) {
+
+                                # Create and add the footer to the log file
+                                $SyncHash.Logger.Add(@'
+**********************
+Harden Windows Security logger end
+**********************
+'@)
+                                Add-Content -Value $SyncHash.Logger -Path $SyncHash.txtFilePath.Text -Force
+                            }
                         })
 
                     # Inside the GUI RunSpace

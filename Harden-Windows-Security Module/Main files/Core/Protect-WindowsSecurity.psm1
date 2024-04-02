@@ -44,7 +44,6 @@ Function Protect-WindowsSecurity {
         [parameter(Mandatory = $false, ParameterSetName = 'Offline Mode')]
         [System.Management.Automation.SwitchParameter]$Log,
 
-        [parameter(Mandatory = $false, ParameterSetName = 'Offline Mode')]
         [System.Management.Automation.SwitchParameter]$Offline
     )
 
@@ -302,7 +301,10 @@ Function Protect-WindowsSecurity {
                 ))
         }
 
-        return $ParamDictionary
+        # Only use the dynamic parameters if the GUI switch is not present
+        if (-NOT $PSBoundParameters.GUI.IsPresent) {
+            return $ParamDictionary
+        }
     }
 
     begin {
@@ -4273,6 +4275,7 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
 .PARAMETER Offline
     Indicates that the module is being run in offline mode. Will not download any files from the internet.
     Using this parameter will make the following 3 parameters mandatory: PathToLGPO, PathToMSFTSecurityBaselines and PathToMSFT365AppsSecurityBaselines.
+    Use this parameter with the -GUI parameter if you want to use the GUI to run the module in offline mode because it will skip the online version check.
 .PARAMETER PathToLGPO
     The path to the 'LGPO.zip'. Make sure it's in the zip format just like it's downloaded from the Microsoft servers.
     File name can be anything.

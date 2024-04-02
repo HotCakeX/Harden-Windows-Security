@@ -4337,8 +4337,8 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
        <Style TargetType="TabItem">
            <Setter Property="FontSize" Value="16"/>
            <Setter Property="FontWeight" Value="Bold"/>
-           <Setter Property="Padding" Value="20"/>
-           <Setter Property="Margin" Value="5"/>
+           <Setter Property="Padding" Value="20,20,20,0"/>
+           <Setter Property="Margin" Value="5,5,5,0"/>
            <Setter Property="Height" Value="60"/>
            <Setter Property="ToolTip" Value="{Binding Header, RelativeSource={RelativeSource Self}}"/>
            <Setter Property="Foreground" Value="Black"/>
@@ -4383,6 +4383,7 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
            <Setter Property="Foreground" Value="Black"/>
            <Setter Property="FontFamily" Value="Arial"/>
        </Style>
+       <!-- Style for Buttons with specific key-->
        <Style x:Key="GlobalButtons" TargetType="Button">
            <Setter Property="Background">
                <Setter.Value>
@@ -4396,179 +4397,233 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
            <Setter Property="BorderThickness" Value="0"/>
        </Style>
    </Window.Resources>
-   <TabControl>
-       <!-- Online Mode Tab Content -->
-       <TabItem Header="Online Mode" VerticalAlignment="Center" HorizontalAlignment="Center">
-           <!-- Grid for Online Mode Tab - Removing the white border with negative margins -->
-           <Grid x:Name="Grid1" Margin="-2.3,-2.3,-2.3,-2.3">
-               <!-- Background color for the grid -->
-               <Grid.Background>
-                   <SolidColorBrush Color="#ffffad"/>
-               </Grid.Background>
-               <!-- Row and Column definitions for the grid -->
-               <Grid.RowDefinitions>
-                   <!-- This is for row 0 -->
-                   <RowDefinition Height="3*" MaxHeight="200"/>
-                   <!-- This is for row 1 -->
-                   <RowDefinition Height="70"/>
-                   <!-- This is for row 2 -->
-                   <RowDefinition Height="40"/>
-                   <!-- This is for row 3 -->
-                   <RowDefinition Height="4*" MaxHeight="200"/>
-                   <!-- This is for row 4 -->
-                   <RowDefinition Height="70"/>
-                   <!-- This is for row 5 -->
-                   <RowDefinition Height="30"/>
-                   <!-- This is for row 6 -->
-                   <RowDefinition Height="80"/>
-               </Grid.RowDefinitions>
-               <Grid.ColumnDefinitions>
-                   <ColumnDefinition Width="*"/>
-                   <ColumnDefinition Width="*"/>
-               </Grid.ColumnDefinitions>
-               <!-- Logging Area -->
-               <ScrollViewer x:Name="ScrollerForOutputTextBlock" Grid.Row="0" Grid.ColumnSpan="2" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
-                   <TextBox x:Name="OutputTextBlock" TextWrapping="Wrap" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="10" Padding="10"
-                 Background="Transparent" BorderThickness="0" IsReadOnly="True" IsTabStop="False" Cursor="IBeam" MaxWidth="700"/>
-               </ScrollViewer>
-               <StackPanel Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="1"  Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="bottom">
-                   <Button x:Name="CheckAllButtonCategories" Content="Select All" Margin="5" Style="{StaticResource GlobalButtons}" ToolTip="Select all hardening categories" Padding="5"/>
-                   <Button x:Name="UncheckAllButtonCategories" Content="Remove Selections" Margin="5" Style="{StaticResource GlobalButtons}" ToolTip="De-select all hardening categories" Padding="5"/>
-               </StackPanel>
-               <StackPanel Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="1" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="bottom">
-                   <Button x:Name="CheckAllButtonSubCategories" Content="Select All" Margin="5" Style="{StaticResource GlobalButtons}" ToolTip="Select all available sub-categories" Padding="5"/>
-                   <Button x:Name="UncheckAllButtonSubCategories" Content="Remove Selections" Margin="5" Style="{StaticResource GlobalButtons}" ToolTip="De-select all sub-categories" Padding="5"/>
-               </StackPanel>
-               <!-- Categories and Sub-Categories text blocks -->
-               <TextBlock Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="1" HorizontalAlignment="Center" VerticalAlignment="bottom" Text="Categories" FontWeight="Bold" Foreground="#71B280"/>
-               <TextBlock Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="1" HorizontalAlignment="Center" VerticalAlignment="bottom" Text="Sub-Categories" FontWeight="Bold" Foreground="#71B280"/>
-               <!-- ListViews for Categories -->
-               <ListView Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="1" Margin="20" x:Name="Categories" BorderThickness="0" ToolTip="Select the hardening categories to run">
-                   <!-- Background color for the ListView -->
-                   <ListView.Background>
+   <!-- Grid for Online Mode Tab - Removing the white border with negative margins -->
+   <Grid x:Name="ParentGrid" Margin="-2.3,-2.3,-2.3,-2.3">
+       <!-- Background color for the grid -->
+       <Grid.Background>
+           <SolidColorBrush Color="#ffffad"/>
+       </Grid.Background>
+       <!-- Row definitions for the grid -->
+       <Grid.RowDefinitions>
+           <!-- row 0 -->
+           <RowDefinition Height="230"/>
+           <!-- row 1: TabControl -->
+           <RowDefinition Height="*"/>
+           <!-- row 2 -->
+           <RowDefinition Height="80"/>
+       </Grid.RowDefinitions>
+       <!-- Column definitions for the grid -->
+       <Grid.ColumnDefinitions>
+           <ColumnDefinition Width="*"/>
+           <ColumnDefinition Width="*"/>
+       </Grid.ColumnDefinitions>
+       <!-- Logging Area -->
+       <ScrollViewer x:Name="ScrollerForOutputTextBlock" Grid.Row="0" Grid.ColumnSpan="2" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto" Margin="10,15,10,10">
+           <TextBox x:Name="OutputTextBlock" TextWrapping="Wrap" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                 Background="Transparent" BorderThickness="0" IsReadOnly="True" IsTabStop="False" Cursor="IBeam" MaxWidth="700" FontSize="14" FontWeight="Bold"/>
+       </ScrollViewer>
+       <!-- TabControl for Online and Offline Mode -->
+       <TabControl Grid.Row="1" Grid.ColumnSpan="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" BorderThickness="0,1,0,0">
+           <!-- To center the tab items in the tab control -->
+           <TabControl.Resources>
+               <Style TargetType="{x:Type TabPanel}">
+                   <Setter Property="HorizontalAlignment" Value="Center" />
+               </Style>
+           </TabControl.Resources>
+           <!-- Online Mode Tab Content -->
+           <TabItem Header="Online Mode" VerticalAlignment="Center" HorizontalAlignment="Center">
+               <Grid x:Name="Grid1" Margin="-2.3,-2.3,-2.3,-2.3">
+                   <!-- Background color for the grid -->
+                   <Grid.Background>
                        <SolidColorBrush Color="#ffffad"/>
-                   </ListView.Background>
-                   <ListViewItem>
-                       <CheckBox Content="WindowsBootManagerRevocations" VerticalContentAlignment="Center" Padding="10,10,40,10"/>
-                   </ListViewItem>
-                   <ListViewItem>
-                       <CheckBox Content="MicrosoftSecurityBaselines" VerticalContentAlignment="Center" Padding="10,10,40,10"/>
-                   </ListViewItem>
-                   <ListViewItem>
-                       <CheckBox Content="Microsoft365AppsSecurityBaselines" VerticalContentAlignment="Center" Padding="10,10,40,10"/>
-                   </ListViewItem>
-                   <ListViewItem>
-                       <CheckBox Content="MicrosoftDefender" VerticalContentAlignment="Center" Padding="10,10,40,10"/>
-                   </ListViewItem>
-                   <ListViewItem>
-                       <CheckBox Content="AttackSurfaceReductionRules" VerticalContentAlignment="Center" Padding="10,10,40,10"/>
-                   </ListViewItem>
-                   <ListViewItem>
-                       <CheckBox Content="BitLockerSettings" VerticalContentAlignment="Center" Padding="10,10,40,10"/>
-                   </ListViewItem>
-                   <ListViewItem>
-                       <CheckBox Content="TLSSecurity" VerticalContentAlignment="Center" Padding="10,10,40,10"/>
-                   </ListViewItem>
-                   <ListViewItem>
-                       <CheckBox Content="LockScreen" VerticalContentAlignment="Center" Padding="10,10,40,10"/>
-                   </ListViewItem>
-                   <ListViewItem>
-                       <CheckBox Content="UserAccountControl" VerticalContentAlignment="Center" Padding="10,10,40,10"/>
-                   </ListViewItem>
-                   <ListViewItem>
-                       <CheckBox Content="WindowsFirewall" VerticalContentAlignment="Center" Padding="10,10,40,10"/>
-                   </ListViewItem>
-                   <ListViewItem>
-                       <CheckBox Content="OptionalWindowsFeatures" VerticalContentAlignment="Center" Padding="10,10,40,10"/>
-                   </ListViewItem>
-                   <ListViewItem>
-                       <CheckBox Content="WindowsNetworking" VerticalContentAlignment="Center" Padding="10,10,40,10"/>
-                   </ListViewItem>
-                   <ListViewItem>
-                       <CheckBox Content="MiscellaneousConfigurations" VerticalContentAlignment="Center" Padding="10,10,40,10"/>
-                   </ListViewItem>
-                   <ListViewItem>
-                       <CheckBox Content="WindowsUpdateConfigurations" VerticalContentAlignment="Center" Padding="10,10,40,10"/>
-                   </ListViewItem>
-                   <ListViewItem>
-                       <CheckBox Content="EdgeBrowserConfigurations" VerticalContentAlignment="Center" Padding="10,10,40,10"/>
-                   </ListViewItem>
-                   <ListViewItem>
-                       <CheckBox Content="CertificateCheckingCommands" VerticalContentAlignment="Center" Padding="10,10,40,10"/>
-                   </ListViewItem>
-                   <ListViewItem>
-                       <CheckBox Content="CountryIPBlocking" VerticalContentAlignment="Center" Padding="10,10,40,10"/>
-                   </ListViewItem>
-                   <ListViewItem>
-                       <CheckBox Content="DownloadsDefenseMeasures" VerticalContentAlignment="Center" Padding="10,10,40,10"/>
-                   </ListViewItem>
-                   <ListViewItem>
-                       <CheckBox Content="NonAdminCommands" VerticalContentAlignment="Center" Padding="10,10,40,10"/>
-                   </ListViewItem>
-               </ListView>
-               <!-- ListViews for Sub-Categories -->
-               <ListView Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="1" Margin="20" x:Name="SubCategories" BorderThickness="0" ToolTip="Select sub-categories">
-                   <!-- Background color for the list view -->
-                   <ListView.Background>
+                   </Grid.Background>
+                   <!-- Row and Column definitions for the grid -->
+                   <Grid.RowDefinitions>
+                       <!-- This is for row 0 -->
+                       <RowDefinition Height="50"/>
+                       <!-- This is for row 1 -->
+                       <RowDefinition Height="25"/>
+                       <!-- This is for row 2 -->
+                       <RowDefinition Height="4*" MaxHeight="215"/>
+                       <!-- This is for row 3 -->
+                       <RowDefinition Height="70"/>
+                       <!-- This is for row 4 -->
+                       <RowDefinition Height="30"/>
+                   </Grid.RowDefinitions>
+                   <Grid.ColumnDefinitions>
+                       <ColumnDefinition Width="*"/>
+                       <ColumnDefinition Width="*"/>
+                   </Grid.ColumnDefinitions>
+                   <StackPanel Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="1"  Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="bottom">
+                       <Button x:Name="CheckAllButtonCategories" Content="Select All" Margin="5" Style="{StaticResource GlobalButtons}" ToolTip="Select all hardening categories" Padding="5"/>
+                       <Button x:Name="UncheckAllButtonCategories" Content="Remove Selections" Margin="5" Style="{StaticResource GlobalButtons}" ToolTip="De-select all hardening categories" Padding="5"/>
+                   </StackPanel>
+                   <StackPanel Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="1" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="bottom">
+                       <Button x:Name="CheckAllButtonSubCategories" Content="Select All" Margin="5" Style="{StaticResource GlobalButtons}" ToolTip="Select all available sub-categories" Padding="5"/>
+                       <Button x:Name="UncheckAllButtonSubCategories" Content="Remove Selections" Margin="5" Style="{StaticResource GlobalButtons}" ToolTip="De-select all sub-categories" Padding="5"/>
+                   </StackPanel>
+                   <!-- Categories and Sub-Categories text blocks -->
+                   <TextBlock Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="1" HorizontalAlignment="Center" VerticalAlignment="bottom" Text="Categories" FontWeight="Bold" Foreground="#71B280"/>
+                   <TextBlock Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="1" HorizontalAlignment="Center" VerticalAlignment="bottom" Text="Sub-Categories" FontWeight="Bold" Foreground="#71B280"/>
+                   <!-- ListViews for Categories -->
+                   <ListView Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="1" Margin="10" x:Name="Categories" BorderThickness="0" ToolTip="Select the hardening categories to run">
+                       <!-- Background color for the ListView -->
+                       <ListView.Background>
+                           <SolidColorBrush Color="#ffffad"/>
+                       </ListView.Background>
+                       <ListViewItem>
+                           <CheckBox Content="WindowsBootManagerRevocations" VerticalContentAlignment="Center" Padding="10,10,40,10"/>
+                       </ListViewItem>
+                       <ListViewItem>
+                           <CheckBox Content="MicrosoftSecurityBaselines" VerticalContentAlignment="Center" Padding="10,10,40,10"/>
+                       </ListViewItem>
+                       <ListViewItem>
+                           <CheckBox Content="Microsoft365AppsSecurityBaselines" VerticalContentAlignment="Center" Padding="10,10,40,10"/>
+                       </ListViewItem>
+                       <ListViewItem>
+                           <CheckBox Content="MicrosoftDefender" VerticalContentAlignment="Center" Padding="10,10,40,10"/>
+                       </ListViewItem>
+                       <ListViewItem>
+                           <CheckBox Content="AttackSurfaceReductionRules" VerticalContentAlignment="Center" Padding="10,10,40,10"/>
+                       </ListViewItem>
+                       <ListViewItem>
+                           <CheckBox Content="BitLockerSettings" VerticalContentAlignment="Center" Padding="10,10,40,10"/>
+                       </ListViewItem>
+                       <ListViewItem>
+                           <CheckBox Content="TLSSecurity" VerticalContentAlignment="Center" Padding="10,10,40,10"/>
+                       </ListViewItem>
+                       <ListViewItem>
+                           <CheckBox Content="LockScreen" VerticalContentAlignment="Center" Padding="10,10,40,10"/>
+                       </ListViewItem>
+                       <ListViewItem>
+                           <CheckBox Content="UserAccountControl" VerticalContentAlignment="Center" Padding="10,10,40,10"/>
+                       </ListViewItem>
+                       <ListViewItem>
+                           <CheckBox Content="WindowsFirewall" VerticalContentAlignment="Center" Padding="10,10,40,10"/>
+                       </ListViewItem>
+                       <ListViewItem>
+                           <CheckBox Content="OptionalWindowsFeatures" VerticalContentAlignment="Center" Padding="10,10,40,10"/>
+                       </ListViewItem>
+                       <ListViewItem>
+                           <CheckBox Content="WindowsNetworking" VerticalContentAlignment="Center" Padding="10,10,40,10"/>
+                       </ListViewItem>
+                       <ListViewItem>
+                           <CheckBox Content="MiscellaneousConfigurations" VerticalContentAlignment="Center" Padding="10,10,40,10"/>
+                       </ListViewItem>
+                       <ListViewItem>
+                           <CheckBox Content="WindowsUpdateConfigurations" VerticalContentAlignment="Center" Padding="10,10,40,10"/>
+                       </ListViewItem>
+                       <ListViewItem>
+                           <CheckBox Content="EdgeBrowserConfigurations" VerticalContentAlignment="Center" Padding="10,10,40,10"/>
+                       </ListViewItem>
+                       <ListViewItem>
+                           <CheckBox Content="CertificateCheckingCommands" VerticalContentAlignment="Center" Padding="10,10,40,10"/>
+                       </ListViewItem>
+                       <ListViewItem>
+                           <CheckBox Content="CountryIPBlocking" VerticalContentAlignment="Center" Padding="10,10,40,10"/>
+                       </ListViewItem>
+                       <ListViewItem>
+                           <CheckBox Content="DownloadsDefenseMeasures" VerticalContentAlignment="Center" Padding="10,10,40,10"/>
+                       </ListViewItem>
+                       <ListViewItem>
+                           <CheckBox Content="NonAdminCommands" VerticalContentAlignment="Center" Padding="10,10,40,10"/>
+                       </ListViewItem>
+                   </ListView>
+                   <!-- ListViews for Sub-Categories -->
+                   <ListView Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="1" Margin="10" x:Name="SubCategories" BorderThickness="0" ToolTip="Select sub-categories">
+                       <!-- Background color for the list view -->
+                       <ListView.Background>
+                           <SolidColorBrush Color="#ffffad"/>
+                       </ListView.Background>
+                       <ListViewItem>
+                           <CheckBox Content="SecBaselines_NoOverrides" VerticalContentAlignment="Center" Padding="10,10,40,10"/>
+                       </ListViewItem>
+                       <ListViewItem>
+                           <CheckBox Content="MSFTDefender_SAC" VerticalContentAlignment="Center" Padding="10,10,40,10"/>
+                       </ListViewItem>
+                       <ListViewItem>
+                           <CheckBox Content="MSFTDefender_NoDiagData" VerticalContentAlignment="Center" Padding="10,10,40,10"/>
+                       </ListViewItem>
+                       <ListViewItem>
+                           <CheckBox Content="MSFTDefender_NoScheduledTask" VerticalContentAlignment="Center" Padding="10,10,40,10"/>
+                       </ListViewItem>
+                       <ListViewItem>
+                           <CheckBox Content="MSFTDefender_BetaChannels" VerticalContentAlignment="Center" Padding="10,10,40,10"/>
+                       </ListViewItem>
+                       <ListViewItem>
+                           <CheckBox Content="LockScreen_CtrlAltDel" VerticalContentAlignment="Center" Padding="10,10,40,10"/>
+                       </ListViewItem>
+                       <ListViewItem>
+                           <CheckBox Content="LockScreen_NoLastSignedIn" VerticalContentAlignment="Center" Padding="10,10,40,10"/>
+                       </ListViewItem>
+                       <ListViewItem>
+                           <CheckBox Content="UAC_NoFastSwitching" VerticalContentAlignment="Center" Padding="10,10,40,10"/>
+                       </ListViewItem>
+                       <ListViewItem>
+                           <CheckBox Content="UAC_OnlyElevateSigned" VerticalContentAlignment="Center" Padding="10,10,40,10"/>
+                       </ListViewItem>
+                       <ListViewItem>
+                           <CheckBox Content="CountryIPBlocking_OFAC" VerticalContentAlignment="Center" Padding="10,10,40,10"/>
+                       </ListViewItem>
+                   </ListView>
+                   <!-- Enable Logging CheckBox -->
+                   <Viewbox Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="200">
+                       <CheckBox x:Name="Log" Content="Enable Logging" Margin="15" Style="{StaticResource CheckBoxStyle}" ToolTip="Enable logging"/>
+                   </Viewbox>
+                   <!-- Log Path TextBox -->
+                   <Button Content="LogPath" x:Name="LogPath" Grid.Row="3" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="20" BorderThickness="0" Style="{StaticResource GlobalButtons}" ToolTip="The path to save the log file to"/>
+                   <!-- File Path TextBox which is dynamic-->
+                   <TextBox x:Name="txtFilePath" Grid.Row="4" Grid.ColumnSpan="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="10,0,10,0" BorderThickness="0" ToolTip="The selected log file path" MaxWidth="800"/>
+               </Grid>
+           </TabItem>
+           <!-- Offline Mode Tab Content -->
+           <TabItem Header="Offline Mode Configurations" VerticalAlignment="Center" HorizontalAlignment="Center">
+               <Grid x:Name="Grid2" Margin="-2.3,-2.3,-2.3,-2.3">
+                   <Grid.Background>
                        <SolidColorBrush Color="#ffffad"/>
-                   </ListView.Background>
-                   <ListViewItem>
-                       <CheckBox Content="SecBaselines_NoOverrides" VerticalContentAlignment="Center" Padding="10,10,40,10"/>
-                   </ListViewItem>
-                   <ListViewItem>
-                       <CheckBox Content="MSFTDefender_SAC" VerticalContentAlignment="Center" Padding="10,10,40,10"/>
-                   </ListViewItem>
-                   <ListViewItem>
-                       <CheckBox Content="MSFTDefender_NoDiagData" VerticalContentAlignment="Center" Padding="10,10,40,10"/>
-                   </ListViewItem>
-                   <ListViewItem>
-                       <CheckBox Content="MSFTDefender_NoScheduledTask" VerticalContentAlignment="Center" Padding="10,10,40,10"/>
-                   </ListViewItem>
-                   <ListViewItem>
-                       <CheckBox Content="MSFTDefender_BetaChannels" VerticalContentAlignment="Center" Padding="10,10,40,10"/>
-                   </ListViewItem>
-                   <ListViewItem>
-                       <CheckBox Content="LockScreen_CtrlAltDel" VerticalContentAlignment="Center" Padding="10,10,40,10"/>
-                   </ListViewItem>
-                   <ListViewItem>
-                       <CheckBox Content="LockScreen_NoLastSignedIn" VerticalContentAlignment="Center" Padding="10,10,40,10"/>
-                   </ListViewItem>
-                   <ListViewItem>
-                       <CheckBox Content="UAC_NoFastSwitching" VerticalContentAlignment="Center" Padding="10,10,40,10"/>
-                   </ListViewItem>
-                   <ListViewItem>
-                       <CheckBox Content="UAC_OnlyElevateSigned" VerticalContentAlignment="Center" Padding="10,10,40,10"/>
-                   </ListViewItem>
-                   <ListViewItem>
-                       <CheckBox Content="CountryIPBlocking_OFAC" VerticalContentAlignment="Center" Padding="10,10,40,10"/>
-                   </ListViewItem>
-               </ListView>
-               <!-- Enable Logging CheckBox -->
-               <Viewbox Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="200">
-                   <CheckBox x:Name="Log" Content="Enable Logging" Margin="15" Style="{StaticResource CheckBoxStyle}" ToolTip="Enable logging"/>
-               </Viewbox>
-               <!-- Log Path TextBox -->
-               <Button Content="LogPath" x:Name="LogPath" Grid.Row="4" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="20" BorderThickness="0" Style="{StaticResource GlobalButtons}" ToolTip="The path to save the log file to"/>
-               <!-- File Path TextBox which is dynamic-->
-               <TextBox x:Name="txtFilePath" Grid.Row="5" Grid.ColumnSpan="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="30,0,30,3" BorderThickness="0" ToolTip="The selected log file path" MaxWidth="800"/>
-               <!-- Execute Button -->
-               <Button Content="Execute" Grid.Row="6" Grid.ColumnSpan="2" Width="100" Height="40" x:Name="Execute" Style="{StaticResource GlobalButtons}" ToolTip="Run the selected categories and sub-categories"/>
-           </Grid>
-       </TabItem>
-       <!-- Offline Mode Tab Content -->
-       <TabItem Header="Offline Mode" VerticalAlignment="Center" HorizontalAlignment="Center">
-           <Grid x:Name="Grid2">
-               <Grid.Background>
-                   <SolidColorBrush Color="#ffffad"/>
-               </Grid.Background>
-               <Grid.RowDefinitions>
-                   <RowDefinition Height="Auto"/>
-                   <RowDefinition Height="Auto"/>
-               </Grid.RowDefinitions>
-               <Button Content="New Button 1" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="20" Padding="10" Style="{StaticResource GlobalButtons}"/>
-               <Button Content="New Button 2" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="20" Padding="10" Style="{StaticResource GlobalButtons}"/>
-           </Grid>
-       </TabItem>
-   </TabControl>
+                   </Grid.Background>
+                   <Grid.ColumnDefinitions>
+                       <ColumnDefinition Width="*"/>
+                       <!-- Button column -->
+                       <ColumnDefinition Width="*"/>
+                       <!-- Text area column -->
+                   </Grid.ColumnDefinitions>
+                   <Grid.RowDefinitions>
+                       <!-- This is for row 0 -->
+                       <RowDefinition Height="40" />
+                       <!-- This is for row 1 -->
+                       <RowDefinition Height="50"/>
+                       <!-- This is for row 2 -->
+                       <RowDefinition Height="50"/>
+                       <!-- This is for row 3 -->
+                       <RowDefinition Height="50"/>
+                   </Grid.RowDefinitions>
+                   <!-- Row 0 -->
+                   <!-- Enable Offline Mode CheckBox -->
+                   <Viewbox Grid.Row="0" Grid.ColumnSpan="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                       <CheckBox x:Name="EnableOfflineMode" Content="Enable Offline Mode" Margin="10,20,10,0" Style="{StaticResource CheckBoxStyle}" ToolTip="Enables Offline Mode and will use the selected files instead of downloading them from the Microsoft servers"/>
+                   </Viewbox>
+                   <!-- Row 1 -->
+                   <Button HorizontalAlignment="Stretch" VerticalAlignment="Stretch" x:Name="txtFilesdsddPath" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="1" Content="Microsoft Security Baseline" Margin="10,20,10,0" ToolTip="Browse for the path to Microsoft Security Baseline zip file" Style="{StaticResource GlobalButtons}"/>
+                   <TextBox HorizontalAlignment="Stretch" VerticalAlignment="Stretch" x:Name="txtFisdfsdflePath" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="1" Margin="10,20,10,0" MaxWidth="700" ToolTip="Selected path for the Microsoft Security Baseline zip file"/>
+                   <!-- Row 2 -->
+                   <Button HorizontalAlignment="Stretch" VerticalAlignment="Stretch" x:Name="txtFilfsdePath" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="1" Content="Microsoft 365 Apps Security Baseline" ToolTip="Browse for the path to Microsoft 365 Apps Security Baseline zip file" Margin="10,20,10,0" Style="{StaticResource GlobalButtons}"/>
+                   <TextBox HorizontalAlignment="Stretch" VerticalAlignment="Stretch" x:Name="txtFdssfilePath" Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="1" Margin="10,20,10,0" MaxWidth="700" ToolTip="Selected path for the Microsoft 365 Apps Security Baseline zip file"/>
+                   <!-- Row 3 -->
+                   <Button HorizontalAlignment="Stretch" VerticalAlignment="Stretch" x:Name="txtFifdslePath" Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="1" Content="LGPO" ToolTip="Browse for the path to LGPO zip file" Margin="10,20,10,0" Style="{StaticResource GlobalButtons}"/>
+                   <TextBox HorizontalAlignment="Stretch" VerticalAlignment="Stretch" x:Name="txtFdfdilePath" Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="1" Margin="10,20,10,0" ToolTip="Selected path for the LGPO zip file" MaxWidth="700"/>
+               </Grid>
+           </TabItem>
+       </TabControl>
+       <!-- Execute Button -->
+       <Button Content="Execute" Grid.Row="2" Grid.ColumnSpan="2" Width="100" Height="40" FontSize="14" FontWeight="Bold" x:Name="Execute" ToolTip="Run the selected categories and sub-categories">
+           <Button.Background>
+               <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                   <GradientStop Color="#78ffd6" Offset="0.0"/>
+                   <GradientStop Color="#a8ff78" Offset="1.0"/>
+               </LinearGradientBrush>
+           </Button.Background>
+       </Button>
+   </Grid>
 </Window>
 '@

@@ -1126,7 +1126,7 @@ Function Protect-WindowsSecurity {
                         'CountryIPBlocking'          = @('CountryIPBlocking_OFAC')
                     }
 
-                    function UpdateSubCategories {
+                    function Update-SubCategories {
                         <#
                         .SYNOPSIS
                             Function to update sub-category items based on the checked categories
@@ -1160,8 +1160,8 @@ Function Protect-WindowsSecurity {
                         $CheckBox = $CategoryItem.Content
                         # Set the DataContext to the ListViewItem
                         $CheckBox.DataContext = $CategoryItem
-                        $CheckBox.Add_Checked({ UpdateSubCategories })
-                        $CheckBox.Add_Unchecked({ UpdateSubCategories })
+                        $CheckBox.Add_Checked({ Update-SubCategories })
+                        $CheckBox.Add_Unchecked({ Update-SubCategories })
                     }
 
                     #Region Check-Uncheck buttons for Categories
@@ -1256,7 +1256,7 @@ Function Protect-WindowsSecurity {
                     #Endregion 3-Log related elements
 
                     # Update the sub-categories based on the initial unchecked state of the categories
-                    UpdateSubCategories
+                    Update-SubCategories
 
                     # Defining a set of commands to run when the GUI window is loaded
                     $SyncHash.Window.Add_ContentRendered({

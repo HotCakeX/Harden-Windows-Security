@@ -1105,6 +1105,7 @@ Execution Policy: $CurrentExecutionPolicy
             $SyncHash['GlobalVars']['MDAVConfigCurrent'] = $MDAVConfigCurrent
             $SyncHash['GlobalVars']['MDAVPreferencesCurrent'] = $MDAVPreferencesCurrent
             $SyncHash['GlobalVars']['CFAAllowedAppsBackup'] = $CFAAllowedAppsBackup
+            $SyncHash['GlobalVars']['Offline'] = ($Offline -eq $true) ? $true : $false
 
             # Pass any necessary function as nested hashtable inside of the main synced hashtable
             # so they can be easily passed to any other RunSpaces
@@ -1129,6 +1130,19 @@ Execution Policy: $CurrentExecutionPolicy
                     $SyncHash.LogCheckBox = $SyncHash.window.FindName('Log')
                     $SyncHash.LogPathButton = $SyncHash.window.FindName('LogPath')
                     $SyncHash.txtFilePath = $SyncHash.window.FindName('txtFilePath')
+                    $SyncHash.EnableOfflineModeCheckBox = $SyncHash.Window.FindName('EnableOfflineMode')
+
+                    $SyncHash.MicrosoftSecurityBaselineZipButton = $SyncHash.Window.FindName('MicrosoftSecurityBaselineZipButton')
+                    $SyncHash.MicrosoftSecurityBaselineZipTextBox = $SyncHash.Window.FindName('MicrosoftSecurityBaselineZipTextBox')
+                    $SyncHash.Microsoft365AppsSecurityBaselineZipButton = $SyncHash.Window.FindName('Microsoft365AppsSecurityBaselineZipButton')
+                    $SyncHash.Microsoft365AppsSecurityBaselineZipTextBox = $SyncHash.Window.FindName('Microsoft365AppsSecurityBaselineZipTextBox')
+                    $SyncHash.LGPOZipButton = $SyncHash.Window.FindName('LGPOZipButton')
+                    $SyncHash.LGPOZipTextBox = $SyncHash.Window.FindName('LGPOZipTextBox')
+
+                    # To find each tab item in the GUI
+                    $SyncHash.OfflineModeConfigsTabItem = $SyncHash.Window.FindName('ParentGrid').FindName('MainTabControl').Items | Where-Object -FilterScript { $_.Header -eq 'Offline Mode Configurations' }
+                    # To find the TabControl in the GUI
+                    $SyncHash.MainTabControl = $SyncHash.Window.FindName('ParentGrid').FindName('MainTabControl')
 
                     # Redefining all of the exported variables inside of the RunSpace
                     $SyncHash.GlobalVars.GetEnumerator() | ForEach-Object -Process {
@@ -1256,6 +1270,136 @@ Execution Policy: $CurrentExecutionPolicy
                             $SyncHash.LogPathButton.IsEnabled = $false
 
                             $SyncHash.txtFilePath.Visibility = 'Collapsed'
+                        })
+
+                    # If the Offline Mode checkbox is checked
+                    $SyncHash.EnableOfflineModeCheckBox.Add_Checked({
+                            $SyncHash.MicrosoftSecurityBaselineZipButton.IsEnabled = $true
+                            $SyncHash.MicrosoftSecurityBaselineZipTextBox.IsEnabled = $true
+                            $SyncHash.Microsoft365AppsSecurityBaselineZipButton.IsEnabled = $true
+                            $SyncHash.Microsoft365AppsSecurityBaselineZipTextBox.IsEnabled = $true
+                            $SyncHash.LGPOZipButton.IsEnabled = $true
+                            $SyncHash.LGPOZipTextBox.IsEnabled = $true
+                        })
+
+                    # Function to disable the Offline Mode configuration inputs
+                    Function Disable-OfflineModeConfigInputs {
+                        $SyncHash.MicrosoftSecurityBaselineZipButton.IsEnabled = $false
+                        $SyncHash.MicrosoftSecurityBaselineZipTextBox.IsEnabled = $false
+                        $SyncHash.Microsoft365AppsSecurityBaselineZipButton.IsEnabled = $false
+                        $SyncHash.Microsoft365AppsSecurityBaselineZipTextBox.IsEnabled = $false
+                        $SyncHash.LGPOZipButton.IsEnabled = $false
+                        $SyncHash.LGPOZipTextBox.IsEnabled = $false
+                    }
+
+                    # Initially disable the Offline Mode configuration inputs until the Offline Mode checkbox is checked
+                    Disable-OfflineModeConfigInputs
+
+                    # If the Offline Mode checkbox is Unchecked
+                    $SyncHash.EnableOfflineModeCheckBox.Add_Unchecked({
+                            Disable-OfflineModeConfigInputs
+                        })
+
+                    # Define the click event for the Microsoft Security Baseline Zip button
+                    $SyncHash.MicrosoftSecurityBaselineZipButton.Add_Click({
+
+                            Add-Type -AssemblyName System.Windows.Forms
+                            [System.Windows.Forms.OpenFileDialog]$Dialog = New-Object -TypeName 'System.Windows.Forms.OpenFileDialog'
+                            $Dialog.InitialDirectory = [System.Environment]::GetFolderPath('Desktop')
+                            $Dialog.Filter = 'Zip files (*.zip)|*.zip'
+                            $Dialog.Title = 'Select the Microsoft Security Baseline Zip file'
+
+                            if ($Dialog.ShowDialog() -eq 'OK') {
+
+                                try {
+                                    # Load the System.IO.Compression assembly
+                                    [System.Reflection.Assembly]::LoadWithPartialName('System.IO.Compression.FileSystem') | Out-Null
+                                    # Open the zip file in read mode
+                                    [System.IO.Compression.ZipArchive]$ZipArchive = [IO.Compression.ZipFile]::OpenRead($Dialog.FileName)
+                                    # Make sure the selected zip has the required file
+                                    if (-NOT ($ZipArchive.Entries | Where-Object -FilterScript { $_.FullName -like 'Windows*Security Baseline/Scripts/Baseline-LocalInstall.ps1' })) {
+                                        Write-GUI -Text 'The selected Zip file does not contain the Microsoft Security Baselines Baseline-LocalInstall.ps1 which is required for the Protect-WindowsSecurity function to work properly'
+                                    }
+                                    else {
+                                        $SyncHash.MicrosoftSecurityBaselineZipTextBox.Text = $Dialog.FileName
+                                    }
+                                }
+                                catch {
+                                    Write-GUI -Text $_.Exception.Message
+                                }
+                                finally {
+                                    # Close the handle whether the zip file is valid or not
+                                    $ZipArchive.Dispose()
+                                }
+                            }
+                        })
+
+                    # Define the click event for the Microsoft 365 Apps Security Baseline Zip button
+                    $SyncHash.Microsoft365AppsSecurityBaselineZipButton.Add_Click({
+
+                            Add-Type -AssemblyName System.Windows.Forms
+                            [System.Windows.Forms.OpenFileDialog]$Dialog = New-Object -TypeName 'System.Windows.Forms.OpenFileDialog'
+                            $Dialog.InitialDirectory = [System.Environment]::GetFolderPath('Desktop')
+                            $Dialog.Filter = 'Zip files (*.zip)|*.zip'
+                            $Dialog.Title = 'Select the Microsoft 365 Apps Security Baseline Zip file'
+
+                            if ($Dialog.ShowDialog() -eq 'OK') {
+
+                                try {
+                                    # Load the System.IO.Compression assembly
+                                    [System.Reflection.Assembly]::LoadWithPartialName('System.IO.Compression.FileSystem') | Out-Null
+                                    # Open the zip file in read mode
+                                    [System.IO.Compression.ZipArchive]$ZipArchive = [IO.Compression.ZipFile]::OpenRead($Dialog.FileName )
+                                    # Make sure the selected zip has the required file
+                                    if (-NOT ($ZipArchive.Entries | Where-Object -FilterScript { $_.FullName -like 'Microsoft 365 Apps for Enterprise*/Scripts/Baseline-LocalInstall.ps1' })) {
+                                        Write-GUI -Text 'The selected Zip file does not contain the Microsoft 365 Apps for Enterprise Security Baselines Baseline-LocalInstall.ps1 which is required for the Protect-WindowsSecurity function to work properly'
+                                    }
+                                    else {
+                                        $SyncHash.Microsoft365AppsSecurityBaselineZipTextBox.Text = $Dialog.FileName
+                                    }
+                                }
+                                catch {
+                                    Write-GUI -Text $_.Exception.Message
+                                }
+                                finally {
+                                    # Close the handle whether the zip file is valid or not
+                                    $ZipArchive.Dispose()
+                                }
+                            }
+                        })
+
+                    # Define the click event for the LGPO Zip button
+                    $SyncHash.LGPOZipButton.Add_Click({
+
+                            Add-Type -AssemblyName System.Windows.Forms
+                            [System.Windows.Forms.OpenFileDialog]$Dialog = New-Object -TypeName 'System.Windows.Forms.OpenFileDialog'
+                            $Dialog.InitialDirectory = [System.Environment]::GetFolderPath('Desktop')
+                            $Dialog.Filter = 'Zip files (*.zip)|*.zip'
+                            $Dialog.Title = 'Select the LGPO Zip file'
+
+                            if ($Dialog.ShowDialog() -eq 'OK') {
+
+                                try {
+                                    # Load the System.IO.Compression assembly
+                                    [System.Reflection.Assembly]::LoadWithPartialName('System.IO.Compression.FileSystem') | Out-Null
+                                    # Open the zip file in read mode
+                                    [System.IO.Compression.ZipArchive]$ZipArchive = [IO.Compression.ZipFile]::OpenRead($Dialog.FileName)
+                                    # Make sure the selected zip has the required file
+                                    if (-NOT ($ZipArchive.Entries | Where-Object -FilterScript { $_.FullName -like 'LGPO_*/LGPO.exe' })) {
+                                        Write-GUI -Text 'The selected Zip file does not contain the LGPO.exe which is required for the Protect-WindowsSecurity function to work properly'
+                                    }
+                                    else {
+                                        $SyncHash.LGPOZipTextBox.Text = $Dialog.FileName
+                                    }
+                                }
+                                catch {
+                                    Write-GUI -Text $_.Exception.Message
+                                }
+                                finally {
+                                    # Close the handle whether the zip file is valid or not
+                                    $ZipArchive.Dispose()
+                                }
+                            }
                         })
 
                     # Event handler for the Log Path button click to open a file path picker dialog
@@ -1537,6 +1681,9 @@ Execution Policy: $CurrentExecutionPolicy
 
                             # Disable all UI elements in Grid1 except for the textblock while commands are being executed
                             $AllControls = $SyncHash.window.FindName('Grid1').Children
+                            $AllControls += $SyncHash.window.FindName('Grid2').Children
+                            $AllControls += $SyncHash.window.FindName('ParentGrid').Children
+
                             foreach ($Control in $AllControls) {
                                 # Textblock's parent is the ScrollViewer
                                 if ($Control.Name -notin 'ScrollerForOutputTextBlock') {
@@ -2424,9 +2571,10 @@ namespace SystemInfo
 
                             # $SyncHash.Window.Dispatcher.Invoke({
                             # Enable all UI elements once all of the commands have been executed
+                            $AllControls = $SyncHash.window.FindName('Grid1').Children
+                            $AllControls += $SyncHash.window.FindName('Grid2').Children
+                            $AllControls += $SyncHash.window.FindName('ParentGrid').Children
 
-                            # Enable all UI elements in Grid1 once all of the commands have been executed
-                            $AllControls = $SyncHash.Window.FindName('Grid1').Children
                             foreach ($Control in $AllControls) {
                                 $Control.IsEnabled = $true
                             }
@@ -4423,7 +4571,7 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                  Background="Transparent" BorderThickness="0" IsReadOnly="True" IsTabStop="False" Cursor="IBeam" MaxWidth="700" FontSize="14" FontWeight="Bold"/>
        </ScrollViewer>
        <!-- TabControl for Online and Offline Mode -->
-       <TabControl Grid.Row="1" Grid.ColumnSpan="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" BorderThickness="0,1,0,0">
+       <TabControl x:Name="MainTabControl" Grid.Row="1" Grid.ColumnSpan="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" BorderThickness="0,1,0,0">
            <!-- To center the tab items in the tab control -->
            <TabControl.Resources>
                <Style TargetType="{x:Type TabPanel}">
@@ -4604,14 +4752,14 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                        <CheckBox x:Name="EnableOfflineMode" Content="Enable Offline Mode" Margin="10,20,10,0" Style="{StaticResource CheckBoxStyle}" ToolTip="Enables Offline Mode and will use the selected files instead of downloading them from the Microsoft servers"/>
                    </Viewbox>
                    <!-- Row 1 -->
-                   <Button HorizontalAlignment="Stretch" VerticalAlignment="Stretch" x:Name="txtFilesdsddPath" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="1" Content="Microsoft Security Baseline" Margin="10,20,10,0" ToolTip="Browse for the path to Microsoft Security Baseline zip file" Style="{StaticResource GlobalButtons}"/>
-                   <TextBox HorizontalAlignment="Stretch" VerticalAlignment="Stretch" x:Name="txtFisdfsdflePath" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="1" Margin="10,20,10,0" MaxWidth="700" ToolTip="Selected path for the Microsoft Security Baseline zip file"/>
+                   <Button HorizontalAlignment="Stretch" VerticalAlignment="Stretch" x:Name="MicrosoftSecurityBaselineZipButton" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="1" Content="Microsoft Security Baseline" Margin="10,20,10,0" ToolTip="Browse for the path to Microsoft Security Baseline zip file" Style="{StaticResource GlobalButtons}"/>
+                   <TextBox HorizontalAlignment="Stretch" VerticalAlignment="Stretch" x:Name="MicrosoftSecurityBaselineZipTextBox" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="1" Margin="10,20,10,0" MaxWidth="700" ToolTip="Selected path for the Microsoft Security Baseline zip file"/>
                    <!-- Row 2 -->
-                   <Button HorizontalAlignment="Stretch" VerticalAlignment="Stretch" x:Name="txtFilfsdePath" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="1" Content="Microsoft 365 Apps Security Baseline" ToolTip="Browse for the path to Microsoft 365 Apps Security Baseline zip file" Margin="10,20,10,0" Style="{StaticResource GlobalButtons}"/>
-                   <TextBox HorizontalAlignment="Stretch" VerticalAlignment="Stretch" x:Name="txtFdssfilePath" Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="1" Margin="10,20,10,0" MaxWidth="700" ToolTip="Selected path for the Microsoft 365 Apps Security Baseline zip file"/>
+                   <Button HorizontalAlignment="Stretch" VerticalAlignment="Stretch" x:Name="Microsoft365AppsSecurityBaselineZipButton" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="1" Content="Microsoft 365 Apps Security Baseline" ToolTip="Browse for the path to Microsoft 365 Apps Security Baseline zip file" Margin="10,20,10,0" Style="{StaticResource GlobalButtons}"/>
+                   <TextBox HorizontalAlignment="Stretch" VerticalAlignment="Stretch" x:Name="Microsoft365AppsSecurityBaselineZipTextBox" Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="1" Margin="10,20,10,0" MaxWidth="700" ToolTip="Selected path for the Microsoft 365 Apps Security Baseline zip file"/>
                    <!-- Row 3 -->
-                   <Button HorizontalAlignment="Stretch" VerticalAlignment="Stretch" x:Name="txtFifdslePath" Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="1" Content="LGPO" ToolTip="Browse for the path to LGPO zip file" Margin="10,20,10,0" Style="{StaticResource GlobalButtons}"/>
-                   <TextBox HorizontalAlignment="Stretch" VerticalAlignment="Stretch" x:Name="txtFdfdilePath" Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="1" Margin="10,20,10,0" ToolTip="Selected path for the LGPO zip file" MaxWidth="700"/>
+                   <Button HorizontalAlignment="Stretch" VerticalAlignment="Stretch" x:Name="LGPOZipButton" Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="1" Content="LGPO" ToolTip="Browse for the path to LGPO zip file" Margin="10,20,10,0" Style="{StaticResource GlobalButtons}"/>
+                   <TextBox HorizontalAlignment="Stretch" VerticalAlignment="Stretch" x:Name="LGPOZipTextBox" Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="1" Margin="10,20,10,0" ToolTip="Selected path for the LGPO zip file" MaxWidth="700"/>
                </Grid>
            </TabItem>
        </TabControl>

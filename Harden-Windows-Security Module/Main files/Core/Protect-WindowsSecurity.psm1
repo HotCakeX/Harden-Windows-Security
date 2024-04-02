@@ -1533,10 +1533,14 @@ Execution Policy: $CurrentExecutionPolicy
                             # Invoke the garbage collector manually to free up resources faster
                             [System.GC]::Collect()
 
-                            # Using dispatch since it's owned by the GUI RunSpace
-                            $SyncHash.Window.Dispatcher.Invoke({
-                                    $SyncHash.window.Content.IsEnabled = $false
-                                })
+                            # Disable all UI elements in Grid1 except for the textblock while commands are being executed
+                            $AllControls = $SyncHash.window.FindName('Grid1').Children
+                            foreach ($Control in $AllControls) {
+                                # Textblock's parent is the ScrollViewer
+                                if ($Control.Name -notin 'ScrollerForOutputTextBlock') {
+                                    $Control.IsEnabled = $false
+                                }
+                            }
 
                             # Gather selected categories
                             $SelectedCategories = $SyncHash.categoriesListView.Items | Where-Object -FilterScript { $_.Content.IsChecked } | ForEach-Object -Process { $_.Content.Content }
@@ -2416,10 +2420,15 @@ namespace SystemInfo
                             &$HardeningFunctionsScriptBlock *>&1 | ForEach-Object -Process {
                                 Write-GUI -Text $_ }
 
-                            # Using dispatch since it's owned by the GUI RunSpace
-                            $SyncHash.Window.Dispatcher.Invoke({
-                                    $SyncHash.window.Content.IsEnabled = $true
-                                })
+                            # $SyncHash.Window.Dispatcher.Invoke({
+                            # Enable all UI elements once all of the commands have been executed
+
+                            # Enable all UI elements in Grid1 once all of the commands have been executed
+                            $AllControls = $SyncHash.Window.FindName('Grid1').Children
+                            foreach ($Control in $AllControls) {
+                                $Control.IsEnabled = $true
+                            }
+                            #   })
                         })
 
                     # Defining what happens when the GUI window is closed

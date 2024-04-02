@@ -1000,8 +1000,8 @@ Function Protect-WindowsSecurity {
             Add-Type -AssemblyName PresentationFramework
 
             # Capture the currently available RunSpaces before initiating any new RunSpaces
-            $RunSpacesBefore = Get-Runspace           
-            
+            $RunSpacesBefore = Get-Runspace
+
             Function Write-GUI {
                 <#
                 .SYNOPSIS
@@ -1025,10 +1025,10 @@ Function Protect-WindowsSecurity {
                             $Control = [System.Windows.Media.VisualTreeHelper]::GetParent($Control)
                         }
                         return $Control
-                    }       
+                    }
                 }
 
-                Process {                         
+                Process {
                     # Use Dispatcher.Invoke to update the GUI elements on the main thread
                     $SyncHash.Window.Dispatcher.Invoke({
                             # Since other output streams such as verbose, error, warning are not converted to strings, we need to convert them manually
@@ -1249,7 +1249,7 @@ Function Protect-WindowsSecurity {
                                 # set the selected LogPath text area's visibly to enabled once the user selected a file path
                                 $SyncHash.txtFilePath.Visibility = 'Visible'
 
-                                Write-GUI -Text "Logs will be saved in: $($SyncHash.txtFilePath.Text)" 
+                                Write-GUI -Text "Logs will be saved in: $($SyncHash.txtFilePath.Text)"
                             }
                         })
 
@@ -1261,7 +1261,7 @@ Function Protect-WindowsSecurity {
                     # Defining a set of commands to run when the GUI window is loaded
                     $SyncHash.Window.Add_ContentRendered({
 
-                            Write-GUI -Text 'Hello, GUI has been loaded' 
+                            Write-GUI -Text 'Hello, GUI has been loaded'
 
                             # Set the execute button to disabled until all the prerequisites are met
                             $SyncHash.ExecuteButton.IsEnabled = $false
@@ -1538,7 +1538,7 @@ Function Protect-WindowsSecurity {
                                     Set-Variable -Name $_.Key -Value $_.Value
                                 }
 
-                               
+
                                 #Region Helper-Functions-GUI-Experience
                                 function Edit-Registry {
                                     <#

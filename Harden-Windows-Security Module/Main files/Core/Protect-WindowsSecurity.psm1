@@ -1006,6 +1006,8 @@ Function Protect-WindowsSecurity {
                 <#
                 .SYNOPSIS
                     A function to write text to the GUI
+                .INPUTS
+                    System.String
                 #>
                 [CmdletBinding()]
                 [OutputType([System.String])]

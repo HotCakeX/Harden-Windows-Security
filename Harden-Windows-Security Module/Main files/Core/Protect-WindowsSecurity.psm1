@@ -1502,9 +1502,10 @@ Function Protect-WindowsSecurity {
                     $SyncHash.ExecuteButton.Add_Click({
 
                             # Close and dispose of the prerequisites RunSpace and the related PowerShell object when the execute button is pressed
-                            ($SyncHash.ListOfStuff | Where-Object -FilterScript { $_.Name -eq 'PrerequisitesRunSpace' }).PowerShell.Dispose()
-                            ($SyncHash.ListOfStuff | Where-Object -FilterScript { $_.Name -eq 'PrerequisitesRunSpace' }).RunSpace.Close()
-                            ($SyncHash.ListOfStuff | Where-Object -FilterScript { $_.Name -eq 'PrerequisitesRunSpace' }).RunSpace.Dispose()
+                            $prerequisitesRunSpace = $SyncHash.ListOfStuff | Where-Object { $_.Name -eq 'PrerequisitesRunSpace' }
+                            $prerequisitesRunSpace.PowerShell.Dispose()
+                            $prerequisitesRunSpace.RunSpace.Close()
+                            $prerequisitesRunSpace.RunSpace.Dispose()
 
                             # Invoke the garbage collector manually to free up resources faster
                             [System.GC]::Collect()
@@ -1518,26 +1519,33 @@ Function Protect-WindowsSecurity {
                             $SelectedCategories = $SyncHash.categoriesListView.Items | Where-Object -FilterScript { $_.Content.IsChecked } | ForEach-Object -Process { $_.Content.Content }
 
                             # Gather selected sub-categories
-                            $SelectedSubCategories = $SyncHash.SubCategoriesListView.Items | Where-Object -FilterScript { $_.Content.IsChecked } | ForEach-Object -Process { $_.Content.Content }
+                            # $SelectedSubCategories = $SyncHash.SubCategoriesListView.Items | Where-Object -FilterScript { $_.Content.IsChecked } | ForEach-Object -Process { $_.Content.Content }
 
                             # Output the selected categories and sub-categories to the console
-                            $SelectedCategories *>&1 | ForEach-Object -Process {
-                                Write-GUI -Text $_ }
+                            # $SelectedCategories *>&1 | ForEach-Object -Process {
+                            #     Write-GUI -Text $_ }
 
-                            $SelectedSubCategories *>&1 | ForEach-Object -Process {
-                                Write-GUI -Text $_ }
+                            # $SelectedSubCategories *>&1 | ForEach-Object -Process {
+                            #    Write-GUI -Text $_ }
 
+                            # Make the Write-Verbose cmdlet write verbose messages regardless of the global preference or selected parameter
+                            # That is the main source of the messages in the GUI
                             $PSDefaultParameterValues = @{
                                 'Write-Verbose:Verbose' = $true
                             }
 
                             [System.Management.Automation.ScriptBlock]$HardeningFunctionsScriptBlock = {
 
-                                # Redefine all of the variables
+                                # Redefine all of the variables in the current scope
                                 $SyncHash.GlobalVars.GetEnumerator() | ForEach-Object -Process {
                                     Set-Variable -Name $_.Key -Value $_.Value
                                 }
 
+                                # Making the selected sub-categories available in the current scope because the functions called from this scriptblock wouldn't be able to access them otherwise
+                                $SyncHash.SubCategoriesListView.Items | Where-Object -FilterScript { $_.Content.IsChecked } | ForEach-Object -Process { $_.Content.Content } | ForEach-Object -Process {
+                                    # All of the sub-category variables are boolean since they are originally switch parameters in the CLI experience
+                                    Set-Variable -Name $_ -Value $true
+                                }
 
                                 #Region Helper-Functions-GUI-Experience
                                 function Edit-Registry {

@@ -1000,13 +1000,45 @@ Function Protect-WindowsSecurity {
             Add-Type -AssemblyName PresentationFramework
 
             # Capture the currently available RunSpaces before initiating any new RunSpaces
-            $RunSpacesBefore = Get-Runspace
+            $RunSpacesBefore = Get-Runspace           
+            
+            Function Write-GUI {
+                <#
+                .SYNOPSIS
+                    A function to write text to the GUI
+                #>
+                [CmdletBinding()]
+                [OutputType([System.String])]
+                Param (
+                    [Parameter(Mandatory = $true)][System.String]$Text
+                )
 
-            function FindScrollViewer($Control) {
-                while (($null -ne $Control) -and (-not ($Control -is [System.Windows.Controls.ScrollViewer]))) {
-                    $Control = [System.Windows.Media.VisualTreeHelper]::GetParent($Control)
+                Begin {
+                    Function FindScrollViewer($Control) {
+                        <#
+                    .SYNOPSIS
+                        A helper function to find the ScrollViewer in the GUI
+                    #>
+                        while (($null -ne $Control) -and (-not ($Control -is [System.Windows.Controls.ScrollViewer]))) {
+                            $Control = [System.Windows.Media.VisualTreeHelper]::GetParent($Control)
+                        }
+                        return $Control
+                    }       
                 }
-                return $Control
+
+                Process {                         
+                    # Use Dispatcher.Invoke to update the GUI elements on the main thread
+                    $SyncHash.Window.Dispatcher.Invoke({
+                            # Since other output streams such as verbose, error, warning are not converted to strings, we need to convert them manually
+                            $SyncHash.TextBox.Text += [System.String]$Text + "`n"
+
+                            # Find the ScrollViewer and scroll to the bottom
+                            $ScrollViewer = FindScrollViewer -Control $SyncHash.TextBox
+                            if ($null -ne $ScrollViewer) {
+                                $ScrollViewer.ScrollToBottom()
+                            }
+                        }, [System.Windows.Threading.DispatcherPriority]::Background)
+                }
             }
 
             # A synchronized hashtable to store all of the data that needs to be shared between the RunSpaces
@@ -1049,9 +1081,9 @@ Function Protect-WindowsSecurity {
             $SyncHash['GlobalVars']['MDAVPreferencesCurrent'] = $MDAVPreferencesCurrent
             $SyncHash['GlobalVars']['CFAAllowedAppsBackup'] = $CFAAllowedAppsBackup
 
-            # Pass all of the functions as nested hashtable inside of the main synced hashtable
+            # Pass any necessary function as nested hashtable inside of the main synced hashtable
             # so they can be easily passed to any other RunSpaces
-            'FindScrollViewer' | ForEach-Object -Process {
+            'Write-GUI' | ForEach-Object -Process {
                 $SyncHash['ExportedFunctions']["$_"] = Get-Item -Path "Function:$_"
             }
 
@@ -1113,6 +1145,11 @@ Function Protect-WindowsSecurity {
                                     $_.IsEnabled = $true
                                 }
                             }
+                        }
+
+                        # Uncheck sub-category items whose category is not selected
+                        $SyncHash.SubCategoriesListView.Items | Where-Object -FilterScript { $_.IsEnabled -eq $false } | ForEach-Object -Process {
+                            $_.Content.IsChecked = $false
                         }
                     }
 
@@ -1209,6 +1246,8 @@ Function Protect-WindowsSecurity {
 
                                 # set the selected LogPath text area's visibly to enabled once the user selected a file path
                                 $SyncHash.txtFilePath.Visibility = 'Visible'
+
+                                Write-GUI -Text "Logs will be saved in: $($SyncHash.txtFilePath.Text)" 
                             }
                         })
 
@@ -1220,19 +1259,7 @@ Function Protect-WindowsSecurity {
                     # Defining a set of commands to run when the GUI window is loaded
                     $SyncHash.Window.Add_ContentRendered({
 
-                            'Hello, GUI has been loaded' *>&1 | ForEach-Object -Process {
-                                # Use Dispatcher.Invoke to update the GUI elements on the main thread
-                                $SyncHash.Window.Dispatcher.Invoke({
-                                        # Since other output streams such as verbose, error, warning are not converted to strings, we need to convert them manually
-                                        $SyncHash.TextBox.Text += [System.String]$_ + "`n"
-
-                                        # Find the ScrollViewer and scroll to the bottom
-                                        $ScrollViewer = FindScrollViewer -Control $SyncHash.TextBox
-                                        if ($null -ne $ScrollViewer) {
-                                            $ScrollViewer.ScrollToBottom()
-                                        }
-                                    }, [System.Windows.Threading.DispatcherPriority]::Background)
-                            }
+                            Write-GUI -Text 'Hello, GUI has been loaded' 
 
                             # Set the execute button to disabled until all the prerequisites are met
                             $SyncHash.ExecuteButton.IsEnabled = $false
@@ -1448,18 +1475,7 @@ Function Protect-WindowsSecurity {
                                     }
 
                                     &$prerequisitesScriptBlock *>&1 | ForEach-Object -Process {
-                                        # Use Dispatcher.Invoke to update the GUI elements on the main thread
-                                        $SyncHash.Window.Dispatcher.Invoke({
-                                                # Since other output streams such as verbose, error, warning are not converted to strings, we need to convert them manually
-                                                $SyncHash.TextBox.Text += [System.String]$_ + "`n"
-
-                                                # Find the ScrollViewer and scroll to the bottom
-                                                $ScrollViewer = FindScrollViewer -Control $SyncHash.TextBox
-                                                if ($null -ne $ScrollViewer) {
-                                                    $ScrollViewer.ScrollToBottom()
-                                                }
-                                            }, [System.Windows.Threading.DispatcherPriority]::Background)
-                                    }
+                                        Write-GUI -Text $_ }
 
                                     # Using dispatch since the execute button is owned by the GUI (parent) RunSpace and we're in the 2nd nested RunSpace
                                     # Enabling the execute button after all files are downloaded and ready for action
@@ -1500,30 +1516,14 @@ Function Protect-WindowsSecurity {
                             $SelectedCategories = $SyncHash.categoriesListView.Items | Where-Object -FilterScript { $_.Content.IsChecked } | ForEach-Object -Process { $_.Content.Content }
 
                             # Gather selected sub-categories
-                            $SelectedSubCategories = $SyncHash.SubCategoriesListView.Items | Where-Object -FilterScript { $_.IsEnabled -and $_.Content.IsChecked } | ForEach-Object -Process { $_.Content.Content }
+                            $SelectedSubCategories = $SyncHash.SubCategoriesListView.Items | Where-Object -FilterScript { $_.Content.IsChecked } | ForEach-Object -Process { $_.Content.Content }
 
                             # Output the selected categories and sub-categories to the console
                             $SelectedCategories *>&1 | ForEach-Object -Process {
-                                # Since other output streams such as verbose, error, warning are not converted to strings, we need to convert them manually
-                                $SyncHash.TextBox.Text += [System.String]$_ + "`n"
-
-                                # Find the ScrollViewer and scroll to the bottom
-                                $ScrollViewer = FindScrollViewer -Control $SyncHash.TextBox
-                                if ($null -ne $ScrollViewer) {
-                                    $ScrollViewer.ScrollToBottom()
-                                }
-                            }
+                                Write-GUI -Text $_ }
 
                             $SelectedSubCategories *>&1 | ForEach-Object -Process {
-                                # Since other output streams such as verbose, error, warning are not converted to strings, we need to convert them manually
-                                $SyncHash.TextBox.Text += [System.String]$_ + "`n"
-
-                                # Find the ScrollViewer and scroll to the bottom
-                                $ScrollViewer = FindScrollViewer -Control $SyncHash.TextBox
-                                if ($null -ne $ScrollViewer) {
-                                    $ScrollViewer.ScrollToBottom()
-                                }
-                            }
+                                Write-GUI -Text $_ }
 
                             $PSDefaultParameterValues = @{
                                 'Write-Verbose:Verbose' = $true
@@ -1536,6 +1536,7 @@ Function Protect-WindowsSecurity {
                                     Set-Variable -Name $_.Key -Value $_.Value
                                 }
 
+                               
                                 #Region Helper-Functions-GUI-Experience
                                 function Edit-Registry {
                                     <#
@@ -2374,23 +2375,13 @@ namespace SystemInfo
                                     'CountryIPBlocking' { Invoke-CountryIPBlocking }
                                     'DownloadsDefenseMeasures' { Invoke-DownloadsDefenseMeasures }
                                     'NonAdminCommands' { Invoke-NonAdminCommands }
-                                    default { Write-Output -InputObject 'No category was selected' }
+                                    default { 'No category was selected' }
                                 }
                             }
 
+                            # Run the selected categories and output their results to the GUI
                             &$HardeningFunctionsScriptBlock *>&1 | ForEach-Object -Process {
-                                # Use Dispatcher.Invoke to update the GUI elements on the main thread
-                                $SyncHash.Window.Dispatcher.Invoke({
-                                        # Since other output streams such as verbose, error, warning are not converted to strings, we need to convert them manually
-                                        $SyncHash.TextBox.Text += [System.String]$_ + "`n"
-
-                                        # Find the ScrollViewer and scroll to the bottom
-                                        $ScrollViewer = FindScrollViewer -Control $SyncHash.TextBox
-                                        if ($null -ne $ScrollViewer) {
-                                            $ScrollViewer.ScrollToBottom()
-                                        }
-                                    }, [System.Windows.Threading.DispatcherPriority]::Background)
-                            }
+                                Write-GUI -Text $_ }
 
                             # Using dispatch since it's owned by the GUI RunSpace
                             $SyncHash.Window.Dispatcher.Invoke({

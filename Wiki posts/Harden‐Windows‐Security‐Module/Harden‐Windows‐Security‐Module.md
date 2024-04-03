@@ -16,31 +16,37 @@ The module checks for updates every time you run it and updates itself if there 
 
 ## How to Install and Use
 
-### Install the Harden Windows Security Module from [PowerShell Gallery](https://www.powershellgallery.com/packages/Harden-Windows-Security-Module/)
+### <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/pinkhellokittydonut.gif" width="35" alt="milky donut"> Install the Harden Windows Security Module from [PowerShell Gallery](https://www.powershellgallery.com/packages/Harden-Windows-Security-Module/)
 
 ```powershell
 Install-Module -Name 'Harden-Windows-Security-Module' -Force
 ```
 
-### Apply the Hardening measures described in the [Readme](https://github.com/HotCakeX/Harden-Windows-Security)
+### <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/rainbow.gif" width="35" alt="rainbow"> Use the GUI (Graphical User Interface) 
+
+```powershell
+Protect-WindowsSecurity -GUI
+```
+
+### <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/sailormoonheart.gif" width="35" alt="sailor moon heart"> Apply the Hardening measures described in the [Readme](https://github.com/HotCakeX/Harden-Windows-Security)
 
 ```powershell
 Protect-WindowsSecurity
 ```
 
-### Perform Compliance Check
+### <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/strawberrymilk.gif" width="35" alt="Strawberry milk"> Perform Compliance Check
 
 ```powershell
 Confirm-SystemCompliance
 ```
 
-### Remove the Hardening Measures Described in The [Readme](https://github.com/HotCakeX/Harden-Windows-Security)
+### <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/stileto.gif" width="35" alt="stileto"> Remove the Hardening Measures Described in The [Readme](https://github.com/HotCakeX/Harden-Windows-Security)
 
 ```powershell
 Unprotect-WindowsSecurity
 ```
 
-### Uninstall the Harden Windows Security Module
+### <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/glowstick.gif" width="35" alt="glowing sticks"> Uninstall the Harden Windows Security Module
 
 ```powershell
 Uninstall-Module -Name 'Harden-Windows-Security-Module' -Force -AllVersions

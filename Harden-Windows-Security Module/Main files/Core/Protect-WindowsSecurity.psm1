@@ -124,6 +124,8 @@ Function Protect-WindowsSecurity {
                 [System.Windows.Forms.OpenFileDialog]$Dialog = New-Object -TypeName 'System.Windows.Forms.OpenFileDialog'
                 # Set the filter to show only zip files
                 $Dialog.Filter = 'Zip files (*.zip)|*.zip'
+                # Set the title of the dialog
+                $Dialog.Title = 'Select the Zip file'
                 # Show the dialog and get the result
                 [System.String]$Result = $Dialog.ShowDialog()
                 # If the user clicked OK, return the selected file path

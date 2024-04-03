@@ -2933,12 +2933,13 @@ namespace SystemInfo
                             if ($SyncHash.ShouldWriteLogs) {
 
                                 # Create and add the footer to the log file
-                                $SyncHash.Logger.Add(@'
+                                $SyncHash.Logger.Add(@"
 **********************
 Harden Windows Security operation log end
 End time: $(Get-Date)
 **********************
-'@) | Out-Null
+"@) | Out-Null
+                                
                                 Add-Content -Value $SyncHash.Logger -Path $SyncHash.txtFilePath.Text -Force
                             }
                         })

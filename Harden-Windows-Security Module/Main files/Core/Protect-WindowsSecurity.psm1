@@ -282,25 +282,46 @@ Function Protect-WindowsSecurity {
         # Creating dynamic parameters for the LogPath
         if ($PSBoundParameters.Log.IsPresent) {
 
-            # Create a parameter attribute to add the ParameterSet for 'Online Mode'
-            $LogPath_ParamAttrib1 = [System.Management.Automation.ParameterAttribute]@{
-                Mandatory        = $false
-                ParameterSetName = 'Online Mode'
+            # Create a parameter attribute collection
+            $LogPath_AttributesCollection = New-Object -TypeName System.Collections.ObjectModel.Collection[System.Attribute]
+
+            # Define argument completer's scriptblock
+            [System.Management.Automation.ScriptBlock]$ArgumentCompleterLogFilePathPicker = {
+                Add-Type -AssemblyName System.Windows.Forms
+                [System.Windows.Forms.SaveFileDialog]$Dialog = New-Object -TypeName System.Windows.Forms.SaveFileDialog
+                $Dialog.InitialDirectory = [System.Environment]::GetFolderPath('Desktop')
+                $Dialog.Filter = 'Text files (*.txt)|*.txt'
+                $Dialog.Title = 'Choose where to save the log file'
+                [System.String]$Result = $Dialog.ShowDialog()
+                if ($Result -eq 'OK') {
+                    return "`'$($Dialog.FileName)`'"
+                }
             }
+
+            # Create an argument completer attribute and add it to the collection
+            [System.Management.Automation.ArgumentCompleterAttribute]$LogPath_ArgumentCompleterAttrib = New-Object -TypeName System.Management.Automation.ArgumentCompleterAttribute($ArgumentCompleterLogFilePathPicker)
+            $LogPath_AttributesCollection.Add($LogPath_ArgumentCompleterAttrib)
+
+            # Create a mandatory attribute and add it to the collection
+            [System.Management.Automation.ParameterAttribute]$LogPath_MandatoryAttrib = New-Object -TypeName System.Management.Automation.ParameterAttribute
+            $LogPath_MandatoryAttrib.Mandatory = $true
+            $LogPath_AttributesCollection.Add($LogPath_MandatoryAttrib)
+
             # Create a parameter attribute to add the ParameterSet for 'Offline Mode'
-            $LogPath_ParamAttrib2 = [System.Management.Automation.ParameterAttribute]@{
-                Mandatory        = $false
-                ParameterSetName = 'Offline Mode'
-            }
-            # Add the dynamic parameter to the param dictionary
-            $ParamDictionary.Add('LogPath', [System.Management.Automation.RuntimeDefinedParameter]::new(
-                    # Define parameter name
-                    'LogPath',
-                    # Define parameter type
-                    [System.IO.FileInfo],
-                    # Add both attributes to the parameter
-                    [System.Management.Automation.ParameterAttribute[]]@($LogPath_ParamAttrib1, $LogPath_ParamAttrib2)
-                ))
+            [System.Management.Automation.ParameterAttribute]$LogPath_ParamSetAttribute1 = New-Object -TypeName System.Management.Automation.ParameterAttribute
+            $LogPath_ParamSetAttribute1.ParameterSetName = 'Offline Mode'
+            $LogPath_AttributesCollection.Add($LogPath_ParamSetAttribute1)
+
+            # Create a parameter attribute to add the ParameterSet for 'Online Mode'
+            [System.Management.Automation.ParameterAttribute]$LogPath_ParamSetAttribute2 = New-Object -TypeName System.Management.Automation.ParameterAttribute
+            $LogPath_ParamSetAttribute2.ParameterSetName = 'Online Mode'
+            $LogPath_AttributesCollection.Add($LogPath_ParamSetAttribute2)
+
+            # Create a dynamic parameter object with the attributes already assigned: Name, Type, and Attributes Collection
+            [System.Management.Automation.RuntimeDefinedParameter]$LogPath = New-Object -TypeName System.Management.Automation.RuntimeDefinedParameter('LogPath', [System.IO.FileInfo], $LogPath_AttributesCollection)
+
+            # Add the dynamic parameter object to the dictionary
+            $ParamDictionary.Add('LogPath', $LogPath)
         }
 
         # Only use the dynamic parameters if the GUI switch is not present

@@ -1196,7 +1196,7 @@ Execution Policy: $CurrentExecutionPolicy
 
                     # Redefining all of the exported variables inside of the RunSpace
                     $SyncHash.GlobalVars.GetEnumerator() | ForEach-Object -Process {
-                        Set-Variable -Name $_.Key -Value $_.Value
+                        Set-Variable -Name $_.Key -Value $_.Value -Force
                     }
 
                     # Redefining all of the exported functions inside of the RunSpace
@@ -1670,7 +1670,7 @@ Execution Policy: $CurrentExecutionPolicy
 
                                     # Make all of the main function's variable available again in the 2nd nested RunSpace
                                     $SyncHash.GlobalVars.GetEnumerator() | ForEach-Object -Process {
-                                        Set-Variable -Name $_.Key -Value $_.Value
+                                        Set-Variable -Name $_.Key -Value $_.Value -Force
                                     }
 
                                     # Make all of the main function's functions available again in the 2nd nested RunSpace
@@ -1784,13 +1784,13 @@ Execution Policy: $CurrentExecutionPolicy
 
                                 # Redefine all of the variables in the current scope
                                 $SyncHash.GlobalVars.GetEnumerator() | ForEach-Object -Process {
-                                    Set-Variable -Name $_.Key -Value $_.Value
+                                    Set-Variable -Name $_.Key -Value $_.Value -Force
                                 }
 
                                 # Making the selected sub-categories available in the current scope because the functions called from this scriptblock wouldn't be able to access them otherwise
                                 $SyncHash.SubCategoriesListView.Items | Where-Object -FilterScript { $_.Content.IsChecked } | ForEach-Object -Process { $_.Content.Content } | ForEach-Object -Process {
                                     # All of the sub-category variables are boolean since they are originally switch parameters in the CLI experience
-                                    Set-Variable -Name $_ -Value $true
+                                    Set-Variable -Name $_ -Value $true -Force
                                 }
 
                                 # If Offline mode is used
@@ -1805,6 +1805,12 @@ Execution Policy: $CurrentExecutionPolicy
                                                 Start-FileDownload
                                                 # Set a flag indicating this code block should not happen again when the execute button is pressed
                                                 $SyncHash.StartFileDownloadHasRun = $true
+
+                                                # Redefine all of the variables in the current scope, Again
+                                                # This step is necessary because the Start-FileDownload function adds 5 new variables to the GlobalVars hashtable and if the offline mode is used, the function is not run when GUI is loaded initially
+                                                $SyncHash.GlobalVars.GetEnumerator() | ForEach-Object -Process {
+                                                    Set-Variable -Name $_.Key -Value $_.Value -Force
+                                                }
                                             }
                                             else {
                                                 Write-GUI -Text 'Enable Offline Mode checkbox is checked but you have not selected all of the 3 required files for offline mode operation. Please select them and press the execute button again.'
@@ -2307,7 +2313,7 @@ namespace SystemInfo
 '@
                                     # if the type is not already loaded, load it
                                     if (-NOT ('SystemInfo.NativeMethods' -as [System.Type])) {
-                                        Write-Verbose -Message 'Loading SystemInfo.NativeMethods type'
+                                        Write-Verbose -Message 'Loading SystemInfo.NativeMethods type' -Verbose:$false
                                         Add-Type -TypeDefinition $BootDMAProtectionCheck -Language CSharp -Verbose:$false
                                     }
                                     else {

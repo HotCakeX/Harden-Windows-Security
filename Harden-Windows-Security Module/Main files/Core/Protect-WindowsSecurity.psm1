@@ -1135,7 +1135,7 @@ Function Protect-WindowsSecurity {
             # Create and add the header to the log messages
             $SyncHash.Logger.Add(@"
 **********************
-Harden Windows Security logger start
+Harden Windows Security operation log start
 Start time: $(Get-Date)
 Username: $env:UserName
 Machine: $env:COMPUTERNAME
@@ -2881,7 +2881,8 @@ namespace SystemInfo
                                 # Create and add the footer to the log file
                                 $SyncHash.Logger.Add(@'
 **********************
-Harden Windows Security logger end
+Harden Windows Security operation log end
+End time: $(Get-Date)
 **********************
 '@) | Out-Null
                                 Add-Content -Value $SyncHash.Logger -Path $SyncHash.txtFilePath.Text -Force
@@ -5006,7 +5007,7 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
            </TabItem>
        </TabControl>
        <!-- Execute Button -->
-       <Button Content="Execute" Grid.Row="2" Grid.ColumnSpan="2" Width="100" Height="40" FontSize="14" FontWeight="Bold" x:Name="Execute" ToolTip="Run the selected categories and sub-categories">
+       <Button Content="Execute" Grid.Row="2" Grid.ColumnSpan="2" Width="100" Height="40" FontSize="14" FontWeight="Bold" x:Name="Execute" BorderThickness="0" ToolTip="Run the selected categories and sub-categories">
            <Button.Background>
                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
                    <GradientStop Color="#78ffd6" Offset="0.0"/>

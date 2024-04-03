@@ -2939,7 +2939,7 @@ Harden Windows Security operation log end
 End time: $(Get-Date)
 **********************
 "@) | Out-Null
-                                
+
                                 Add-Content -Value $SyncHash.Logger -Path $SyncHash.txtFilePath.Text -Force
                             }
                         })

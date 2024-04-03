@@ -1318,6 +1318,7 @@ Using [MIT License](https://github.com/HotCakeX/Harden-Windows-Security/blob/mai
 <a href="https://bsky.app/profile/hotcakex.bsky.social"><img width="30" height="30" src="https://raw.githubusercontent.com/HotCakeX/HotCakeX/main/Private/Images/Socials/Bsky.png" alt="BlueSky profile and icon"></a>
 <a href="https://infosec.exchange/@SpyNetGirl"><img width="30" height="30" src="https://raw.githubusercontent.com/HotCakeX/HotCakeX/dbfa543cdc9496c4258dd3bf6ea11caac277aadf/Private/Images/Socials/mastodonicon.svg" alt="Mastadon profile and icon"></a>
 <a href="https://www.facebook.com/VioletCakeX"><img width="30" height="30" src="https://raw.githubusercontent.com/HotCakeX/HotCakeX/main/Private/Images/Socials/Facebook.svg" alt="Facebook profile and icon"></a>
+<a href="https://mvp.microsoft.com/en-US/mvp/profile/4edbca65-7979-4779-b7e4-d182e123259b"><img width="30" height="30" src="https://mvp.microsoft.com/Assets/UserProfile/MVP/Badge.svg" alt="MVP profile and icon"></a>
 </p>
 
 <img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="Harden-Windows-Security is a PowerShell module">

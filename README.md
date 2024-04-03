@@ -61,7 +61,7 @@
 ### <img width="35" src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/SVGs/github.svg" alt="GitHub logo SVG"> Apply the Latest Hardening Measures [***directly***](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.utility/invoke-expression?view=powershell-7.3) From This Github Repository
 
 ```powershell
-irm 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/Harden-Windows-Security-Module-v0.3.6/Harden-Windows-Security.ps1' | iex
+irm 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Harden-Windows-Security.ps1' | iex
 ```
 
 <br>

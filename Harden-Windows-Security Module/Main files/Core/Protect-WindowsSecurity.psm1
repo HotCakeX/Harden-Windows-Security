@@ -1474,6 +1474,7 @@ Execution Policy: $CurrentExecutionPolicy
                             [System.Windows.Forms.SaveFileDialog]$Dialog = New-Object -TypeName System.Windows.Forms.SaveFileDialog
                             $Dialog.InitialDirectory = [System.Environment]::GetFolderPath('Desktop')
                             $Dialog.Filter = 'Text files (*.txt)|*.txt'
+                            $Dialog.Title = 'Choose where to save the log file'
 
                             if ($Dialog.ShowDialog() -eq 'OK') {
                                 $SyncHash.txtFilePath.Text = $Dialog.FileName

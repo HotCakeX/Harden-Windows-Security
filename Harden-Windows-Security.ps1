@@ -5082,4 +5082,4 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
 </Window>
 '@
 
-Protect-WindowsSecurity
+Protect-WindowsSecurity -GUI

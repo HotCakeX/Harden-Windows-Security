@@ -994,6 +994,55 @@ Function Protect-WindowsSecurity {
                 Add-MpPreference -ControlledFolderAccessAllowedApplications $FilePath
             }
         }
+        
+        #region RequirementsCheck
+        # Doesn't check for Windows Home single language edition
+        Write-Verbose -Message 'Checking if the OS is Windows Home edition...'
+        if ((Get-CimInstance -ClassName Win32_OperatingSystem).OperatingSystemSKU -eq '101') {
+            Throw [System.PlatformNotSupportedException] 'Windows Home edition detected, exiting...'
+        }
+
+        # Get OS build version
+        [System.Decimal]$OSBuild = [System.Environment]::OSVersion.Version.Build
+        # Get the Update Build Revision (UBR) number
+        [System.Decimal]$UBR = Get-ItemPropertyValue -Path 'Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion' -Name 'UBR'
+        # Create the full OS build number as seen in Windows Settings
+        [System.Decimal]$FullOSBuild = "$OSBuild.$UBR"
+
+        Write-Verbose -Message 'Checking if the OS build is equal or greater than the required build...'
+        if (-NOT ($FullOSBuild -ge $Requiredbuild)) {
+            Throw "You're not using the latest build of the Windows OS. A minimum build of $Requiredbuild is required but your OS build is $FullOSBuild`nPlease go to Windows Update to install the updates and then try again."
+        }
+
+        if ($IsAdmin) {
+            Write-Verbose -Message 'Checking if Secure Boot is enabled...'
+            if (-NOT (Confirm-SecureBootUEFI)) {
+                Throw 'Secure Boot is not enabled. Please enable it in your UEFI settings and try again.'
+            }
+
+            Write-Verbose -Message 'Checking if TPM is available and enabled...'
+            [System.Object]$TPM = Get-Tpm
+            if (-NOT ($TPM.tpmpresent -and $TPM.tpmenabled)) {
+                Throw 'TPM is not available or enabled, please enable it in UEFI settings and try again.'
+            }
+
+            if (-NOT ($MDAVConfigCurrent.AMServiceEnabled -eq $true)) {
+                Throw 'Microsoft Defender Anti Malware service is not enabled, please enable it and then try again.'
+            }
+
+            if (-NOT ($MDAVConfigCurrent.AntispywareEnabled -eq $true)) {
+                Throw 'Microsoft Defender Anti Spyware is not enabled, please enable it and then try again.'
+            }
+
+            if (-NOT ($MDAVConfigCurrent.AntivirusEnabled -eq $true)) {
+                Throw 'Microsoft Defender Anti Virus is not enabled, please enable it and then try again.'
+            }
+
+            if ($MDAVConfigCurrent.AMRunningMode -ne 'Normal') {
+                Throw "Microsoft Defender is running in $($MDAVConfigCurrent.AMRunningMode) state, please remove any 3rd party AV and then try again."
+            }
+        }
+        #endregion RequirementsCheck
 
         # Detecting whether GUI parameter is present or not
         if ($PSBoundParameters.GUI.IsPresent) {
@@ -2672,54 +2721,6 @@ Harden Windows Security logger end
                 Write-ColorfulText -Color MintGreen -InputText "### Please read the Readme in the GitHub repository: https://github.com/HotCakeX/Harden-Windows-Security ###`r`n"
                 Write-ColorfulText -Color Rainbow -InputText "############################################################################################################`r`n"
             }
-
-            #region RequirementsCheck
-            Write-Verbose -Message 'Checking if the OS is Windows Home edition...'
-            if ((Get-CimInstance -ClassName Win32_OperatingSystem).OperatingSystemSKU -eq '101') {
-                Throw [System.PlatformNotSupportedException] 'Windows Home edition detected, exiting...'
-            }
-
-            # Get OS build version
-            [System.Decimal]$OSBuild = [System.Environment]::OSVersion.Version.Build
-            # Get the Update Build Revision (UBR) number
-            [System.Decimal]$UBR = Get-ItemPropertyValue -Path 'Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion' -Name 'UBR'
-            # Create the full OS build number as seen in Windows Settings
-            [System.Decimal]$FullOSBuild = "$OSBuild.$UBR"
-
-            Write-Verbose -Message 'Checking if the OS build is equal or greater than the required build...'
-            if (-NOT ($FullOSBuild -ge $Requiredbuild)) {
-                Throw "You're not using the latest build of the Windows OS. A minimum build of $Requiredbuild is required but your OS build is $FullOSBuild`nPlease go to Windows Update to install the updates and then try again."
-            }
-
-            if ($IsAdmin) {
-                Write-Verbose -Message 'Checking if Secure Boot is enabled...'
-                if (-NOT (Confirm-SecureBootUEFI)) {
-                    Throw 'Secure Boot is not enabled. Please enable it in your UEFI settings and try again.'
-                }
-
-                Write-Verbose -Message 'Checking if TPM is available and enabled...'
-                [System.Object]$TPM = Get-Tpm
-                if (-NOT ($TPM.tpmpresent -and $TPM.tpmenabled)) {
-                    Throw 'TPM is not available or enabled, please enable it in UEFI settings and try again.'
-                }
-
-                if (-NOT ($MDAVConfigCurrent.AMServiceEnabled -eq $true)) {
-                    Throw 'Microsoft Defender Anti Malware service is not enabled, please enable it and then try again.'
-                }
-
-                if (-NOT ($MDAVConfigCurrent.AntispywareEnabled -eq $true)) {
-                    Throw 'Microsoft Defender Anti Spyware is not enabled, please enable it and then try again.'
-                }
-
-                if (-NOT ($MDAVConfigCurrent.AntivirusEnabled -eq $true)) {
-                    Throw 'Microsoft Defender Anti Virus is not enabled, please enable it and then try again.'
-                }
-
-                if ($MDAVConfigCurrent.AMRunningMode -ne 'Normal') {
-                    Throw "Microsoft Defender is running in $($MDAVConfigCurrent.AMRunningMode) state, please remove any 3rd party AV and then try again."
-                }
-            }
-            #endregion RequirementsCheck
 
             # Create the working directory
             [System.IO.DirectoryInfo]$WorkingDir = New-Item -ItemType Directory -Path "$CurrentUserTempDirectoryPath\HardeningXStuff\" -Force

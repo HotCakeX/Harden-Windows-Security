@@ -1198,7 +1198,7 @@ Get-Content <Path-To-File> -stream zone.identifier
 
     - Do not assume that the entire Open Source community audits and verifies every line of code just because the source code is available, as we've seen in the [XZ utility's backdoor](https://techcommunity.microsoft.com/t5/microsoft-defender-vulnerability/microsoft-faq-and-guidance-for-xz-utils-backdoor/ba-p/4101961) by state sponsored actors, they can have backdoors implanted in them in broad daylight and nobody might notice it for a long time.
 
-    - The majority of "open source" programs are unsigned, meaning they don't have a digital signature, their developers haven't bought and used a code signing certificate to sign their program. Among other problems, this poses a danger to the end-users, makes it harder to create trust for those programs in security solutions and makes it hard to authenticate them. [Read Microsoft's Introduction to Code Signing](https://learn.microsoft.com/en-us/previous-versions/windows/internet-explorer/ie-developer/platform-apis/ms537361(v=vs.85)).
+    - The majority of *open source* programs are unsigned, meaning they don't have a digital signature, their developers haven't bought and used a code signing certificate to sign their program. Among other problems, this might pose a danger to the end-users by making it harder to create trust for those programs in security solutions such as Application Control or App Whitelisting, and makes it hard to authenticate them. [Read Microsoft's Introduction to Code Signing](https://learn.microsoft.com/en-us/previous-versions/windows/internet-explorer/ie-developer/platform-apis/ms537361(v=vs.85)).
 
 <br>
 

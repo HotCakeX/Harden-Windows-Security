@@ -68,6 +68,10 @@ https://github.com/HotCakeX/Harden-Windows-Security/assets/118815227/51259ec0-ab
 
 <br>
 
+* #### [YouTube demo of the Module's GUI](https://youtu.be/a8YbihowTVg?si=hGUS2KAW_z80Hnx8)
+
+<br>
+
 <img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">
 
 <br>
@@ -78,6 +82,7 @@ https://github.com/HotCakeX/Harden-Windows-Security/assets/118815227/51259ec0-ab
 
 ```powershell
 Protect-WindowsSecurity
+    [-GUI]
     [-Categories <String[]>]
     [-Log]
     [-Offline]
@@ -93,6 +98,22 @@ In Interactive mode, the cmdlet will ask you to confirm the changes before apply
 It possesses the ability to operate entirely in isolation, useful for systems or servers that are disconnected from the Internet.
 
 ## Parameters
+
+### -GUI
+
+Shows a graphical user interface (GUI) that allows you to select the hardening categories you want to apply.
+
+<div align='center'>
+
+| Type: |[SwitchParameter](https://learn.microsoft.com/en-us/dotnet/api/system.management.automation.switchparameter)|
+| :-------------: | :-------------: |
+| Position: | Named |
+| Default value: | None |
+| Required: | False |
+| Accept pipeline input: | False |
+| Accept wildcard characters: | False |
+
+</div>
 
 ### -Categories
 
@@ -361,6 +382,14 @@ This example instructs the cmdlet to run in offline mode and will not download a
 
 ```powershell
 Protect-WindowsSecurity -Verbose -Offline -PathToLGPO 'C:\Users\Admin\Desktop\LGPO.zip' -PathToMSFTSecurityBaselines 'C:\Users\Admin\Desktop\Baselines.zip' -PathToMSFT365AppsSecurityBaselines 'C:\Users\Admin\Desktop\M365Baselines.zip' -Log -Categories MicrosoftSecurityBaselines,MicrosoftDefender -MSFTDefender_SAC
+```
+
+### Example 6
+
+This will display a GUI (Graphical UI) allowing you to easily select various options and categories to apply.
+
+```powershell
+Protect-WindowsSecurity -GUI
 ```
 
 <br>

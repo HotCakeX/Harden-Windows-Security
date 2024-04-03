@@ -16,31 +16,37 @@ The module checks for updates every time you run it and updates itself if there 
 
 ## How to Install and Use
 
-### Install the Harden Windows Security Module from [PowerShell Gallery](https://www.powershellgallery.com/packages/Harden-Windows-Security-Module/)
+### <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/pinkhellokittydonut.gif" width="35" alt="milky donut"> Install the Harden Windows Security Module from [PowerShell Gallery](https://www.powershellgallery.com/packages/Harden-Windows-Security-Module/)
 
 ```powershell
 Install-Module -Name 'Harden-Windows-Security-Module' -Force
 ```
 
-### Apply the Hardening measures described in the [Readme](https://github.com/HotCakeX/Harden-Windows-Security)
+### <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/rainbow.gif" width="35" alt="rainbow"> Use the GUI (Graphical User Interface) 
+
+```powershell
+Protect-WindowsSecurity -GUI
+```
+
+### <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/sailormoonheart.gif" width="35" alt="sailor moon heart"> Apply the Hardening measures described in the [Readme](https://github.com/HotCakeX/Harden-Windows-Security)
 
 ```powershell
 Protect-WindowsSecurity
 ```
 
-### Perform Compliance Check
+### <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/strawberrymilk.gif" width="35" alt="Strawberry milk"> Perform Compliance Check
 
 ```powershell
 Confirm-SystemCompliance
 ```
 
-### Remove the Hardening Measures Described in The [Readme](https://github.com/HotCakeX/Harden-Windows-Security)
+### <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/stileto.gif" width="35" alt="stileto"> Remove the Hardening Measures Described in The [Readme](https://github.com/HotCakeX/Harden-Windows-Security)
 
 ```powershell
 Unprotect-WindowsSecurity
 ```
 
-### Uninstall the Harden Windows Security Module
+### <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/glowstick.gif" width="35" alt="glowing sticks"> Uninstall the Harden Windows Security Module
 
 ```powershell
 Uninstall-Module -Name 'Harden-Windows-Security-Module' -Force -AllVersions
@@ -62,6 +68,10 @@ https://github.com/HotCakeX/Harden-Windows-Security/assets/118815227/51259ec0-ab
 
 <br>
 
+* #### [YouTube demo of the Module's GUI](https://youtu.be/a8YbihowTVg?si=hGUS2KAW_z80Hnx8)
+
+<br>
+
 <img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">
 
 <br>
@@ -72,6 +82,7 @@ https://github.com/HotCakeX/Harden-Windows-Security/assets/118815227/51259ec0-ab
 
 ```powershell
 Protect-WindowsSecurity
+    [-GUI]
     [-Categories <String[]>]
     [-Log]
     [-Offline]
@@ -87,6 +98,22 @@ In Interactive mode, the cmdlet will ask you to confirm the changes before apply
 It possesses the ability to operate entirely in isolation, useful for systems or servers that are disconnected from the Internet.
 
 ## Parameters
+
+### -GUI
+
+Shows a graphical user interface (GUI) that allows you to select the hardening categories you want to apply.
+
+<div align='center'>
+
+| Type: |[SwitchParameter](https://learn.microsoft.com/en-us/dotnet/api/system.management.automation.switchparameter)|
+| :-------------: | :-------------: |
+| Position: | Named |
+| Default value: | None |
+| Required: | False |
+| Accept pipeline input: | False |
+| Accept wildcard characters: | False |
+
+</div>
 
 ### -Categories
 
@@ -355,6 +382,14 @@ This example instructs the cmdlet to run in offline mode and will not download a
 
 ```powershell
 Protect-WindowsSecurity -Verbose -Offline -PathToLGPO 'C:\Users\Admin\Desktop\LGPO.zip' -PathToMSFTSecurityBaselines 'C:\Users\Admin\Desktop\Baselines.zip' -PathToMSFT365AppsSecurityBaselines 'C:\Users\Admin\Desktop\M365Baselines.zip' -Log -Categories MicrosoftSecurityBaselines,MicrosoftDefender -MSFTDefender_SAC
+```
+
+### Example 6
+
+This will display a GUI (Graphical UI) allowing you to easily select various options and categories to apply.
+
+```powershell
+Protect-WindowsSecurity -GUI
 ```
 
 <br>

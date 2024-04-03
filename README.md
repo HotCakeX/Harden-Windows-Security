@@ -66,6 +66,14 @@ irm 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Har
 
 <br>
 
+### <img width="35" src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/SVGs/github-pink.svg" alt="GitHub logo pink SVG"> Use the GUI [(Graphical User Interface)](https://youtu.be/a8YbihowTVg?si=hGUS2KAW_z80Hnx8) to apply the latest Hardening Measures
+
+```powershell
+irm 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Harden-Windows-Security-GUI.ps1' | iex
+```
+
+<br>
+
 ### <img width="35" src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/SVGs/powershell-pink.svg" alt="PowerShell icon Pink"> Install the Harden Windows Security Module from [PowerShell Gallery](https://www.powershellgallery.com/packages/Harden-Windows-Security-Module/)
 
 [**Check the documentation and How to use**](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Harden%E2%80%90Windows%E2%80%90Security%E2%80%90Module)
@@ -107,6 +115,18 @@ Unprotect-WindowsSecurity
          alt="YouTube Video showcase">
   </a>
 </p>
+
+<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">
+
+<br>
+
+<div align="center">
+
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/APNGs/GUI%20for%20Harden%20Windows%20Security.apng"  height="600" alt="horizontal super thin rainbow RGB line">
+
+</div>
+
+<br>
 
 <img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">
 

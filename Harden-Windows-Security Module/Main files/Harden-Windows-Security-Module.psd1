@@ -30,6 +30,8 @@ Harden Windows Safely, Securely, only with Official Microsoft methods
 
 ⭕ Please read the GitHub's readme before running this module: https://github.com/HotCakeX/Harden-Windows-Security
 
+💠 GUI (Graphical User Interface) is Available! Run (Protect-WindowsSecurity -GUI) to use the GUI instead of CLI experience.
+
 💠 Features of this module:
 
   ✅ Everything always stays up-to-date with the newest proactive security measures that are industry standards and scalable.

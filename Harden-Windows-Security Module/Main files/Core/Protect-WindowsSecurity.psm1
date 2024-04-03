@@ -1590,6 +1590,9 @@ Execution Policy: $CurrentExecutionPolicy
                         [System.IO.DirectoryInfo]$WorkingDir = New-Item -ItemType Directory -Path "$CurrentUserTempDirectoryPath\HardeningXStuff\" -Force
 
                         try {
+
+                            Write-Verbose -Message 'Downloading the required files'
+
                             # Create an array of files to download
                             [System.Object[]]$Files = @(
                                 # System.Net.WebClient requires absolute path instead of relative one
@@ -1723,6 +1726,8 @@ Execution Policy: $CurrentExecutionPolicy
                         $SyncHash['GlobalVars']['RegistryCSVItems'] = $RegistryCSVItems
                         $SyncHash['GlobalVars']['LGPOExe'] = $LGPOExe
                         $SyncHash['GlobalVars']['WorkingDir'] = $WorkingDir
+
+                        Write-Verbose -Message 'Finished downloading and processing the required files'
                     }
 
                     # Set a flag indicating that the required files for the Offline operation mode have been processed

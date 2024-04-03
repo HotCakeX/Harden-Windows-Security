@@ -4,7 +4,7 @@
   RootModule           = 'Harden-Windows-Security-Module.psm1'
 
   # Version number of this module.
-  ModuleVersion        = '0.3.5'
+  ModuleVersion        = '0.3.6'
 
   # Supported PSEditions
   CompatiblePSEditions = @('Core')
@@ -30,6 +30,8 @@ Harden Windows Safely, Securely, only with Official Microsoft methods
 
 ⭕ Please read the GitHub's readme before running this module: https://github.com/HotCakeX/Harden-Windows-Security
 
+💜 GUI (Graphical User Interface) is Available! Run (Protect-WindowsSecurity -GUI) to use the GUI instead of the CLI experience.
+
 💠 Features of this module:
 
   ✅ Everything always stays up-to-date with the newest proactive security measures that are industry standards and scalable.
@@ -41,7 +43,7 @@ Harden Windows Safely, Securely, only with Official Microsoft methods
   ✅ The module prompts for confirmation before running each hardening category.
   ✅ Applying these hardening measures makes your PC compliant with Microsoft Security Baselines and Secured-core PC specifications (provided that you use modern hardware that supports the latest Windows security features)
 
-💠 Hardening Categories from top to bottom: (🔻Detailed info about each of them at my Github🔻)
+💠 Hardening Categories from top to bottom: (⬇️Detailed info about each of them at my Github⬇️)
 
 ⏹ Commands that require Administrator Privileges
   ✅ Microsoft Security Baselines

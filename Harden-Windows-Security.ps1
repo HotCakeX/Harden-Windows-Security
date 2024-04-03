@@ -1936,7 +1936,6 @@ Execution Policy: $CurrentExecutionPolicy
                                                 $SyncHash['GlobalVars']['WorkingDir'] = $WorkingDir
 
                                                 Write-Verbose -Message 'Finished downloading and processing the required files'
-
                                             }
 
                                             # If any new RunSpace was created during the operation, they should be removed prior to removing the current RunSpace otherwise they'd be lingering and occupying resources

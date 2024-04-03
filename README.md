@@ -66,7 +66,7 @@ irm 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Har
 
 <br>
 
-### With GUI (Graphical User Interface)
+### <img width="35" src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/SVGs/github-pink.svg" alt="GitHub logo pink SVG"> Use the GUI (Graphical User Interface) to apply the latest Hardening Measures
 
 ```powershell
 irm 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Harden-Windows-Security-GUI.ps1' | iex

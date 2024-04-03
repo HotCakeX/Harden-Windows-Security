@@ -1264,9 +1264,22 @@ Execution Policy: $CurrentExecutionPolicy
 
                     # Add click event for 'Check All' button
                     $SyncHash.checkAllButtonCategories.Add_Click({
-                            $SyncHash.categoriesListView.Items | ForEach-Object -Process {
-                                $CheckBox = $_.Content
-                                $CheckBox.IsChecked = $true
+                            # Activate all categories if Admin privileges are available
+                            if ($IsAdmin) {
+                                $SyncHash.categoriesListView.Items | ForEach-Object -Process {
+                                    $CheckBox = $_.Content
+                                    $CheckBox.IsChecked = $true
+                                }
+                            }
+                            # Activate only the categories that don't require Admin privileges
+                            else {
+                                $SyncHash.categoriesListView.Items | ForEach-Object -Process {
+                                    if ($_.Content.Content -eq 'NonAdminCommands') {
+                                        $CheckBox = $_.Content
+                                        $CheckBox.IsChecked = $true
+
+                                    }
+                                }
                             }
                         })
 
@@ -1481,7 +1494,7 @@ Execution Policy: $CurrentExecutionPolicy
                         <#
                         .SYNOPSIS
                             Defining a function in the GUI's RunSpace for downloading and processing the required files
-                        .DESCRIPTION                            
+                        .DESCRIPTION
                             If Offline mode is being used, this function will run when the Execute button is clicked for the first time
                             Due to using multi-threaded jobs, it cannot be used in the nested Prerequisites runspace for some reason
                             #>
@@ -1631,7 +1644,7 @@ Execution Policy: $CurrentExecutionPolicy
 
                     # Defining a set of commands to run when the GUI window is loaded
                     $SyncHash.Window.Add_ContentRendered({
-                        
+
                             Write-GUI -Text ($IsAdmin ? 'Hello, Running as Administrator' : 'Hello, Running as Non-Administrator, some categories are disabled')
 
                             # Set the execute button to disabled until all the prerequisites are met
@@ -1652,8 +1665,8 @@ Execution Policy: $CurrentExecutionPolicy
                             $PeReqRunSpace.SessionStateProxy.SetVariable('SyncHash', $SyncHash)
 
                             # Define the script to run in the prerequisites RunSpace
-                            [System.Void]$PeReqPowerShell.AddScript({ 
-                                
+                            [System.Void]$PeReqPowerShell.AddScript({
+
                                     # Make the Write-Verbose parameter output verbose messages regardless of the global preference or selected parameter
                                     $PSDefaultParameterValues = @{
                                         'Invoke-WebRequest:HttpVersion'    = '3.0'
@@ -1826,7 +1839,7 @@ Execution Policy: $CurrentExecutionPolicy
                                                 $SyncHash['GlobalVars']['RegistryCSVItems'] = $RegistryCSVItems
                                                 $SyncHash['GlobalVars']['LGPOExe'] = $LGPOExe
                                                 $SyncHash['GlobalVars']['WorkingDir'] = $WorkingDir
-                                            
+
                                             }
 
                                             # If any new RunSpace was created during the operation, they should be removed prior to removing the current RunSpace otherwise they'd be lingering and occupying resources
@@ -2839,7 +2852,7 @@ Harden Windows Security logger end
 **********************
 '@) | Out-Null
                                 Add-Content -Value $SyncHash.Logger -Path $SyncHash.txtFilePath.Text -Force
-                            }                            
+                            }
                         })
 
                     # Inside the GUI RunSpace

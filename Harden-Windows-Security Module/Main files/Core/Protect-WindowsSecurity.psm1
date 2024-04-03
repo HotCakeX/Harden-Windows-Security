@@ -4754,6 +4754,14 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
     This example instructs the cmdlet to run in offline mode and will not download any files from the internet.
     It also runs it in headless/silent mode by specifying which categories to automatically run. -MSFTDefender_SAC switch is used so the Smart App Control sub-category is also applied in the headless/silent mode.
     -Log switch is mentioned which will save the output of the cmdlet to a text file in the current working directory.
+.EXAMPLE
+    Protect-WindowsSecurity -GUI
+
+    This example will allow you to use the Graphical User Interface.
+.EXAMPLE
+    Protect-WindowsSecurity -GUI -Offline
+
+    This example will allow you to use the Graphical User Interface and also unlocks the related controls in the GUI where you can select the required files for total offline operation.
 .INPUTS
     System.String[]
     System.IO.FileInfo

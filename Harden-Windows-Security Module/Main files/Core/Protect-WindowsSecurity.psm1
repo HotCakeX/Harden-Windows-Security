@@ -1415,8 +1415,10 @@ Execution Policy: $CurrentExecutionPolicy
                     # Initially disable the Offline Mode configuration inputs until the Offline Mode checkbox is checked
                     Disable-OfflineModeConfigInputs
 
-                    # Disable the Offline mode checkbox if -Offline parameter was not used with the function
+                    # Actions to take when the Offline Mode parameter was not passed with the function
                     if (-NOT $Offline) {
+
+                        # Disable the Offline mode checkbox if -Offline parameter was not used with the function
                         $SyncHash.EnableOfflineModeCheckBox.IsEnabled = $false
 
                         # Display a message showing how to activate the offline mode

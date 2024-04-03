@@ -1283,6 +1283,16 @@ Execution Policy: $CurrentExecutionPolicy
                         $CheckBox.Add_Unchecked({ Update-SubCategories })
                     }
 
+                    # Register an event handler for the window size changed event
+                    $SyncHash.Window.add_SizeChanged({
+                            # Calculate the max width based on the window width
+                            # Subtract 50 to account for the padding and margin
+                            [System.Int64]$NewMaxWidth = $SyncHash.Window.ActualWidth - 50
+
+                            # Update the main TextBox's MaxWidth property dynamically, instead of setting it to a fixed value in the XAML
+                            $SyncHash.window.FindName('OutputTextBlock').MaxWidth = $NewMaxWidth
+                        })
+
                     #Region Check-Uncheck buttons for Categories
 
                     # Find the buttons
@@ -4855,7 +4865,7 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
        <!-- Logging Area -->
        <ScrollViewer x:Name="ScrollerForOutputTextBlock" Grid.Row="0" Grid.ColumnSpan="2" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto" Margin="10,15,10,10">
            <TextBox x:Name="OutputTextBlock" TextWrapping="Wrap" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
-                 Background="Transparent" BorderThickness="0" IsReadOnly="True" IsTabStop="False" Cursor="IBeam" MaxWidth="700" FontSize="14" FontWeight="Bold"/>
+                 Background="Transparent" BorderThickness="0" IsReadOnly="True" IsTabStop="False" Cursor="IBeam" FontSize="14" FontWeight="Bold"/>
        </ScrollViewer>
        <!-- TabControl for Online and Offline Mode -->
        <TabControl x:Name="MainTabControl" Grid.Row="1" Grid.ColumnSpan="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" BorderThickness="0,1,0,0">

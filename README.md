@@ -120,6 +120,18 @@ Unprotect-WindowsSecurity
 
 <br>
 
+<div align="center">
+
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/APNGs/GUI%20for%20Harden%20Windows%20Security.apng"  height="600" alt="horizontal super thin rainbow RGB line">
+
+</div>
+
+<br>
+
+<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">
+
+<br>
+
 ## Requirements <a href="#requirements">![RequirementsIcon](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Requirements.png)</a>
 
 <img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/verticalshine.gif" width="27" alt="Requirements item"> PowerShell (latest version), Install it from [🛍️ Microsoft Store](https://apps.microsoft.com/store/detail/powershell/9MZ1SNWT0N5D) or using Winget: `Winget install Microsoft.PowerShell`

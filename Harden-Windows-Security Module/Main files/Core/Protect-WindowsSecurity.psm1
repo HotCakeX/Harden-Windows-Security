@@ -1199,7 +1199,7 @@ Execution Policy: $CurrentExecutionPolicy
             [System.Void]$GUIPowerShell.AddScript({
 
                     $Reader = New-Object -TypeName System.Xml.XmlNodeReader -ArgumentList $Xaml
-                    $SyncHash.Window = [Windows.Markup.XamlReader]::Load( $Reader )
+                    $SyncHash.Window = [System.Windows.Markup.XamlReader]::Load( $Reader )
 
                     # To disable all UI elements
                     # $SyncHash.window.Content.IsEnabled = $false
@@ -1367,6 +1367,31 @@ Execution Policy: $CurrentExecutionPolicy
                             $SyncHash.txtFilePath.Visibility = 'Collapsed'
                         })
 
+                    # Event handler for the Log Path button click to open a file path picker dialog
+                    $SyncHash.LogPathButton.Add_Click({
+
+                            Add-Type -AssemblyName System.Windows.Forms
+                            [System.Windows.Forms.SaveFileDialog]$Dialog = New-Object -TypeName System.Windows.Forms.SaveFileDialog
+                            $Dialog.InitialDirectory = [System.Environment]::GetFolderPath('Desktop')
+                            $Dialog.Filter = 'Text files (*.txt)|*.txt'
+                            $Dialog.Title = 'Choose where to save the log file'
+
+                            if ($Dialog.ShowDialog() -eq 'OK') {
+                                $SyncHash.txtFilePath.Text = $Dialog.FileName
+
+                                # set the selected LogPath text area's visibly to enabled once the user selected a file path
+                                $SyncHash.txtFilePath.Visibility = 'Visible'
+
+                                Write-GUI -Text "Logs will be saved in: $($SyncHash.txtFilePath.Text)"
+
+                                $SyncHash.ShouldWriteLogs = $true
+                            }
+                        })
+
+                    #Endregion 3-Log related elements
+
+                    #Region Offline-Mode-Tab
+
                     # If the Offline Mode checkbox is checked
                     $SyncHash.EnableOfflineModeCheckBox.Add_Checked({
                             $SyncHash.MicrosoftSecurityBaselineZipButton.IsEnabled = $true
@@ -1389,6 +1414,45 @@ Execution Policy: $CurrentExecutionPolicy
 
                     # Initially disable the Offline Mode configuration inputs until the Offline Mode checkbox is checked
                     Disable-OfflineModeConfigInputs
+
+                    # Disable the Offline mode checkbox if -Offline parameter was not used with the function
+                    if (-NOT $Offline) {
+                        $SyncHash.EnableOfflineModeCheckBox.IsEnabled = $false
+
+                        # Display a message showing how to activate the offline mode
+
+                        # Locate the Grid2 element in the XAML
+                        $Grid2 = $SyncHash.window.FindName('Grid2')
+
+                        # Add a new row definition for the text message
+                        [System.Windows.Controls.RowDefinition]$OfflineModeUnavailableRow = New-Object -Type System.Windows.Controls.RowDefinition
+                        $OfflineModeUnavailableRow.Height = 50
+                        $Grid2.RowDefinitions.Add($OfflineModeUnavailableRow)
+
+                        # Create a new text box
+                        [System.Windows.Controls.TextBox]$OfflineModeUnavailableNoticeBox = New-Object -Type System.Windows.Controls.TextBox
+                        $OfflineModeUnavailableNoticeBox.HorizontalAlignment = [System.Windows.HorizontalAlignment]::Stretch
+                        $OfflineModeUnavailableNoticeBox.VerticalAlignment = [System.Windows.VerticalAlignment]::Stretch
+                        $OfflineModeUnavailableNoticeBox.TextWrapping = [System.Windows.TextWrapping]::Wrap
+                        $OfflineModeUnavailableNoticeBox.SetValue([System.Windows.Controls.Grid]::ColumnSpanProperty, 2)
+                        $OfflineModeUnavailableNoticeBox.Text = 'To enable offline mode, use: Protect-WindowsSecurity -GUI -Offline'
+                        $OfflineModeUnavailableNoticeBox.TextAlignment = 'Center'
+                        $OfflineModeUnavailableNoticeBox.Background = 'transparent'
+                        $OfflineModeUnavailableNoticeBox.FontSize = 20
+                        $OfflineModeUnavailableNoticeBox.BorderThickness = '0,0,0,0'
+                        $OfflineModeUnavailableNoticeBox.Margin = New-Object -Type System.Windows.Thickness -ArgumentList (10, 20, 10, 0)
+                        $OfflineModeUnavailableNoticeBox.ToolTip = 'To enable offline mode, use: Protect-WindowsSecurity -GUI -Offline'
+                        $OfflineModeUnavailableNoticeBox.SetValue([System.Windows.Controls.Grid]::RowProperty, 4)
+
+                        # Create a gradient brush for the text color
+                        [System.Windows.Media.LinearGradientBrush]$GradientBrush = New-Object -TypeName System.Windows.Media.LinearGradientBrush
+                        $GradientBrush.GradientStops.Add((New-Object -TypeName System.Windows.Media.GradientStop -ArgumentList ('Purple', 0)))
+                        $GradientBrush.GradientStops.Add((New-Object -TypeName System.Windows.Media.GradientStop -ArgumentList ('Blue', 1)))
+                        $OfflineModeUnavailableNoticeBox.Foreground = $GradientBrush
+
+                        # Add the text box to the grid
+                        $Grid2.Children.Add($OfflineModeUnavailableNoticeBox)
+                    }
 
                     # If the Offline Mode checkbox is Unchecked
                     $SyncHash.EnableOfflineModeCheckBox.Add_Unchecked({
@@ -1496,29 +1560,7 @@ Execution Policy: $CurrentExecutionPolicy
                                 }
                             }
                         })
-
-                    # Event handler for the Log Path button click to open a file path picker dialog
-                    $SyncHash.LogPathButton.Add_Click({
-
-                            Add-Type -AssemblyName System.Windows.Forms
-                            [System.Windows.Forms.SaveFileDialog]$Dialog = New-Object -TypeName System.Windows.Forms.SaveFileDialog
-                            $Dialog.InitialDirectory = [System.Environment]::GetFolderPath('Desktop')
-                            $Dialog.Filter = 'Text files (*.txt)|*.txt'
-                            $Dialog.Title = 'Choose where to save the log file'
-
-                            if ($Dialog.ShowDialog() -eq 'OK') {
-                                $SyncHash.txtFilePath.Text = $Dialog.FileName
-
-                                # set the selected LogPath text area's visibly to enabled once the user selected a file path
-                                $SyncHash.txtFilePath.Visibility = 'Visible'
-
-                                Write-GUI -Text "Logs will be saved in: $($SyncHash.txtFilePath.Text)"
-
-                                $SyncHash.ShouldWriteLogs = $true
-                            }
-                        })
-
-                    #Endregion 3-Log related elements
+                    #Endregion Offline-Mode-Tab
 
                     # Update the sub-categories based on the initial unchecked state of the categories
                     Update-SubCategories

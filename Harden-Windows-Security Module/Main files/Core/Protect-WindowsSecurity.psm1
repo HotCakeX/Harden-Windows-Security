@@ -1136,11 +1136,20 @@ Function Protect-WindowsSecurity {
             $SyncHash.Logger.Add(@"
 **********************
 Harden Windows Security logger start
+Start time: $(Get-Date)
 Username: $env:UserName
 Machine: $env:COMPUTERNAME
-Start time: $(Get-Date)
+Host Application: $PSHOME
 Process ID: $PID
+PSVersion: $([System.String]($PSVersionTable).PSVersion)
+PSEdition: $PSEdition
+GitCommitId: $([System.String]$(($PSVersionTable).GitCommitId))
 OS Build: $([System.String]$([System.Environment]::OSVersion.Version))
+Platform: $([System.String]$(($PSVersionTable).Platform))
+PSCompatibleVersions: $([System.String]$(($PSVersionTable).PSCompatibleVersions))
+PSRemotingProtocolVersion: $([System.String]$(($PSVersionTable).PSRemotingProtocolVersion))
+SerializationVersion: $([System.String]$(($PSVersionTable).SerializationVersion))
+WSManStackVersion: $([System.String]$(($PSVersionTable).WSManStackVersion))
 Execution Policy: $CurrentExecutionPolicy
 **********************
 "@) | Out-Null # Because it outputs the index of the added item

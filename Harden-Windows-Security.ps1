@@ -44,7 +44,6 @@ Function Protect-WindowsSecurity {
         [parameter(Mandatory = $false, ParameterSetName = 'Offline Mode')]
         [System.Management.Automation.SwitchParameter]$Log,
 
-        [parameter(Mandatory = $false, ParameterSetName = 'Offline Mode')]
         [System.Management.Automation.SwitchParameter]$Offline
     )
 
@@ -125,6 +124,8 @@ Function Protect-WindowsSecurity {
                 [System.Windows.Forms.OpenFileDialog]$Dialog = New-Object -TypeName 'System.Windows.Forms.OpenFileDialog'
                 # Set the filter to show only zip files
                 $Dialog.Filter = 'Zip files (*.zip)|*.zip'
+                # Set the title of the dialog
+                $Dialog.Title = 'Select the Zip file'
                 # Show the dialog and get the result
                 [System.String]$Result = $Dialog.ShowDialog()
                 # If the user clicked OK, return the selected file path
@@ -281,28 +282,52 @@ Function Protect-WindowsSecurity {
         # Creating dynamic parameters for the LogPath
         if ($PSBoundParameters.Log.IsPresent) {
 
-            # Create a parameter attribute to add the ParameterSet for 'Online Mode'
-            $LogPath_ParamAttrib1 = [System.Management.Automation.ParameterAttribute]@{
-                Mandatory        = $false
-                ParameterSetName = 'Online Mode'
+            # Create a parameter attribute collection
+            $LogPath_AttributesCollection = New-Object -TypeName System.Collections.ObjectModel.Collection[System.Attribute]
+
+            # Define argument completer's scriptblock
+            [System.Management.Automation.ScriptBlock]$ArgumentCompleterLogFilePathPicker = {
+                Add-Type -AssemblyName System.Windows.Forms
+                [System.Windows.Forms.SaveFileDialog]$Dialog = New-Object -TypeName System.Windows.Forms.SaveFileDialog
+                $Dialog.InitialDirectory = [System.Environment]::GetFolderPath('Desktop')
+                $Dialog.Filter = 'Text files (*.txt)|*.txt'
+                $Dialog.Title = 'Choose where to save the log file'
+                [System.String]$Result = $Dialog.ShowDialog()
+                if ($Result -eq 'OK') {
+                    return "`'$($Dialog.FileName)`'"
+                }
             }
+
+            # Create an argument completer attribute and add it to the collection
+            [System.Management.Automation.ArgumentCompleterAttribute]$LogPath_ArgumentCompleterAttrib = New-Object -TypeName System.Management.Automation.ArgumentCompleterAttribute($ArgumentCompleterLogFilePathPicker)
+            $LogPath_AttributesCollection.Add($LogPath_ArgumentCompleterAttrib)
+
+            # Create a mandatory attribute and add it to the collection
+            [System.Management.Automation.ParameterAttribute]$LogPath_MandatoryAttrib = New-Object -TypeName System.Management.Automation.ParameterAttribute
+            $LogPath_MandatoryAttrib.Mandatory = $true
+            $LogPath_AttributesCollection.Add($LogPath_MandatoryAttrib)
+
             # Create a parameter attribute to add the ParameterSet for 'Offline Mode'
-            $LogPath_ParamAttrib2 = [System.Management.Automation.ParameterAttribute]@{
-                Mandatory        = $false
-                ParameterSetName = 'Offline Mode'
-            }
-            # Add the dynamic parameter to the param dictionary
-            $ParamDictionary.Add('LogPath', [System.Management.Automation.RuntimeDefinedParameter]::new(
-                    # Define parameter name
-                    'LogPath',
-                    # Define parameter type
-                    [System.IO.FileInfo],
-                    # Add both attributes to the parameter
-                    [System.Management.Automation.ParameterAttribute[]]@($LogPath_ParamAttrib1, $LogPath_ParamAttrib2)
-                ))
+            [System.Management.Automation.ParameterAttribute]$LogPath_ParamSetAttribute1 = New-Object -TypeName System.Management.Automation.ParameterAttribute
+            $LogPath_ParamSetAttribute1.ParameterSetName = 'Offline Mode'
+            $LogPath_AttributesCollection.Add($LogPath_ParamSetAttribute1)
+
+            # Create a parameter attribute to add the ParameterSet for 'Online Mode'
+            [System.Management.Automation.ParameterAttribute]$LogPath_ParamSetAttribute2 = New-Object -TypeName System.Management.Automation.ParameterAttribute
+            $LogPath_ParamSetAttribute2.ParameterSetName = 'Online Mode'
+            $LogPath_AttributesCollection.Add($LogPath_ParamSetAttribute2)
+
+            # Create a dynamic parameter object with the attributes already assigned: Name, Type, and Attributes Collection
+            [System.Management.Automation.RuntimeDefinedParameter]$LogPath = New-Object -TypeName System.Management.Automation.RuntimeDefinedParameter('LogPath', [System.IO.FileInfo], $LogPath_AttributesCollection)
+
+            # Add the dynamic parameter object to the dictionary
+            $ParamDictionary.Add('LogPath', $LogPath)
         }
 
-        return $ParamDictionary
+        # Only use the dynamic parameters if the GUI switch is not present
+        if (-NOT $PSBoundParameters.GUI.IsPresent) {
+            return $ParamDictionary
+        }
     }
 
     begin {
@@ -993,6 +1018,55 @@ Function Protect-WindowsSecurity {
             }
         }
 
+        #region RequirementsCheck
+        # Doesn't check for Windows Home single language edition
+        Write-Verbose -Message 'Checking if the OS is Windows Home edition...'
+        if ((Get-CimInstance -ClassName Win32_OperatingSystem).OperatingSystemSKU -eq '101') {
+            Throw [System.PlatformNotSupportedException] 'Windows Home edition detected, exiting...'
+        }
+
+        # Get OS build version
+        [System.Decimal]$OSBuild = [System.Environment]::OSVersion.Version.Build
+        # Get the Update Build Revision (UBR) number
+        [System.Decimal]$UBR = Get-ItemPropertyValue -Path 'Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion' -Name 'UBR'
+        # Create the full OS build number as seen in Windows Settings
+        [System.Decimal]$FullOSBuild = "$OSBuild.$UBR"
+
+        Write-Verbose -Message 'Checking if the OS build is equal or greater than the required build...'
+        if (-NOT ($FullOSBuild -ge $Requiredbuild)) {
+            Throw "You're not using the latest build of the Windows OS. A minimum build of $Requiredbuild is required but your OS build is $FullOSBuild`nPlease go to Windows Update to install the updates and then try again."
+        }
+
+        if ($IsAdmin) {
+            Write-Verbose -Message 'Checking if Secure Boot is enabled...'
+            if (-NOT (Confirm-SecureBootUEFI)) {
+                Throw 'Secure Boot is not enabled. Please enable it in your UEFI settings and try again.'
+            }
+
+            Write-Verbose -Message 'Checking if TPM is available and enabled...'
+            [System.Object]$TPM = Get-Tpm
+            if (-NOT ($TPM.tpmpresent -and $TPM.tpmenabled)) {
+                Throw 'TPM is not available or enabled, please enable it in UEFI settings and try again.'
+            }
+
+            if (-NOT ($MDAVConfigCurrent.AMServiceEnabled -eq $true)) {
+                Throw 'Microsoft Defender Anti Malware service is not enabled, please enable it and then try again.'
+            }
+
+            if (-NOT ($MDAVConfigCurrent.AntispywareEnabled -eq $true)) {
+                Throw 'Microsoft Defender Anti Spyware is not enabled, please enable it and then try again.'
+            }
+
+            if (-NOT ($MDAVConfigCurrent.AntivirusEnabled -eq $true)) {
+                Throw 'Microsoft Defender Anti Virus is not enabled, please enable it and then try again.'
+            }
+
+            if ($MDAVConfigCurrent.AMRunningMode -ne 'Normal') {
+                Throw "Microsoft Defender is running in $($MDAVConfigCurrent.AMRunningMode) state, please remove any 3rd party AV and then try again."
+            }
+        }
+        #endregion RequirementsCheck
+
         # Detecting whether GUI parameter is present or not
         if ($PSBoundParameters.GUI.IsPresent) {
 
@@ -1002,11 +1076,48 @@ Function Protect-WindowsSecurity {
             # Capture the currently available RunSpaces before initiating any new RunSpaces
             $RunSpacesBefore = Get-Runspace
 
-            function FindScrollViewer($Control) {
-                while (($null -ne $Control) -and (-not ($Control -is [System.Windows.Controls.ScrollViewer]))) {
-                    $Control = [System.Windows.Media.VisualTreeHelper]::GetParent($Control)
+            Function Write-GUI {
+                <#
+                .SYNOPSIS
+                    A function to write text to the GUI
+                .INPUTS
+                    System.String
+                #>
+                [CmdletBinding()]
+                [OutputType([System.String])]
+                Param (
+                    [Parameter(Mandatory = $true)][System.String]$Text
+                )
+
+                Begin {
+                    Function FindScrollViewer($Control) {
+                        <#
+                    .SYNOPSIS
+                        A helper function to find the ScrollViewer in the GUI
+                    #>
+                        while (($null -ne $Control) -and (-not ($Control -is [System.Windows.Controls.ScrollViewer]))) {
+                            $Control = [System.Windows.Media.VisualTreeHelper]::GetParent($Control)
+                        }
+                        return $Control
+                    }
                 }
-                return $Control
+
+                Process {
+                    # Add the text to the synchronized array list as log messages
+                    $SyncHash.Logger.Add([System.String](Get-Date) + ': ' + [System.String]$Text) | Out-Null
+
+                    # Use Dispatcher.Invoke to update the GUI elements on the main thread
+                    $SyncHash.Window.Dispatcher.Invoke({
+                            # Since other output streams such as verbose, error, warning are not converted to strings, we need to convert them manually
+                            $SyncHash.TextBox.Text += [System.String]$Text + "`n"
+
+                            # Find the ScrollViewer and scroll to the bottom
+                            $ScrollViewer = FindScrollViewer -Control $SyncHash.TextBox
+                            if ($null -ne $ScrollViewer) {
+                                $ScrollViewer.ScrollToBottom()
+                            }
+                        }, [System.Windows.Threading.DispatcherPriority]::Background)
+                }
             }
 
             # A synchronized hashtable to store all of the data that needs to be shared between the RunSpaces
@@ -1018,8 +1129,36 @@ Function Protect-WindowsSecurity {
             # A nested hashtable to store all of the variables from the function scope
             $SyncHash['GlobalVars'] = [System.Collections.Hashtable]@{}
 
+            # To store the log messages
+            $SyncHash.Logger = [System.Collections.ArrayList]::Synchronized((New-Object -TypeName System.Collections.ArrayList))
+
+            # Create and add the header to the log messages
+            $SyncHash.Logger.Add(@"
+**********************
+Harden Windows Security logger start
+Start time: $(Get-Date)
+Username: $env:UserName
+Machine: $env:COMPUTERNAME
+Host Application: $PSHOME
+Process ID: $PID
+PSVersion: $([System.String]($PSVersionTable).PSVersion)
+PSEdition: $PSEdition
+GitCommitId: $([System.String]$(($PSVersionTable).GitCommitId))
+OS Build: $([System.String]$([System.Environment]::OSVersion.Version))
+Platform: $([System.String]$(($PSVersionTable).Platform))
+PSCompatibleVersions: $([System.String]$(($PSVersionTable).PSCompatibleVersions))
+PSRemotingProtocolVersion: $([System.String]$(($PSVersionTable).PSRemotingProtocolVersion))
+SerializationVersion: $([System.String]$(($PSVersionTable).SerializationVersion))
+WSManStackVersion: $([System.String]$(($PSVersionTable).WSManStackVersion))
+Execution Policy: $CurrentExecutionPolicy
+**********************
+"@) | Out-Null # Because it outputs the index of the added item
+
             # For storing the RunSpace data
             $SyncHash.ListOfStuff = New-Object -TypeName System.Collections.ArrayList
+
+            # Initialize a flag to determine whether to write logs or not, set to false by default
+            $SyncHash.ShouldWriteLogs = $false
 
             # Creating a RunSpace for the GUI
             $GUIRunSpace = [System.Management.Automation.RunSpaces.RunSpaceFactory]::CreateRunSpace()
@@ -1048,10 +1187,11 @@ Function Protect-WindowsSecurity {
             $SyncHash['GlobalVars']['MDAVConfigCurrent'] = $MDAVConfigCurrent
             $SyncHash['GlobalVars']['MDAVPreferencesCurrent'] = $MDAVPreferencesCurrent
             $SyncHash['GlobalVars']['CFAAllowedAppsBackup'] = $CFAAllowedAppsBackup
+            $SyncHash['GlobalVars']['Offline'] = ($Offline -eq $true) ? $true : $false
 
-            # Pass all of the functions as nested hashtable inside of the main synced hashtable
+            # Pass any necessary function as nested hashtable inside of the main synced hashtable
             # so they can be easily passed to any other RunSpaces
-            'FindScrollViewer' | ForEach-Object -Process {
+            'Write-GUI' | ForEach-Object -Process {
                 $SyncHash['ExportedFunctions']["$_"] = Get-Item -Path "Function:$_"
             }
 
@@ -1061,7 +1201,7 @@ Function Protect-WindowsSecurity {
                     $Reader = New-Object -TypeName System.Xml.XmlNodeReader -ArgumentList $Xaml
                     $SyncHash.Window = [Windows.Markup.XamlReader]::Load( $Reader )
 
-                    # To disable all UI elements until the checks have been completed and files have been downloaded
+                    # To disable all UI elements
                     # $SyncHash.window.Content.IsEnabled = $false
 
                     # Finding the implemented controls in the XAML and assigning them to variables
@@ -1072,10 +1212,23 @@ Function Protect-WindowsSecurity {
                     $SyncHash.LogCheckBox = $SyncHash.window.FindName('Log')
                     $SyncHash.LogPathButton = $SyncHash.window.FindName('LogPath')
                     $SyncHash.txtFilePath = $SyncHash.window.FindName('txtFilePath')
+                    $SyncHash.EnableOfflineModeCheckBox = $SyncHash.Window.FindName('EnableOfflineMode')
+
+                    $SyncHash.MicrosoftSecurityBaselineZipButton = $SyncHash.Window.FindName('MicrosoftSecurityBaselineZipButton')
+                    $SyncHash.MicrosoftSecurityBaselineZipTextBox = $SyncHash.Window.FindName('MicrosoftSecurityBaselineZipTextBox')
+                    $SyncHash.Microsoft365AppsSecurityBaselineZipButton = $SyncHash.Window.FindName('Microsoft365AppsSecurityBaselineZipButton')
+                    $SyncHash.Microsoft365AppsSecurityBaselineZipTextBox = $SyncHash.Window.FindName('Microsoft365AppsSecurityBaselineZipTextBox')
+                    $SyncHash.LGPOZipButton = $SyncHash.Window.FindName('LGPOZipButton')
+                    $SyncHash.LGPOZipTextBox = $SyncHash.Window.FindName('LGPOZipTextBox')
+
+                    # To find each tab item in the GUI
+                    $SyncHash.OfflineModeConfigsTabItem = $SyncHash.Window.FindName('ParentGrid').FindName('MainTabControl').Items | Where-Object -FilterScript { $_.Header -eq 'Offline Mode Configurations' }
+                    # To find the TabControl in the GUI
+                    $SyncHash.MainTabControl = $SyncHash.Window.FindName('ParentGrid').FindName('MainTabControl')
 
                     # Redefining all of the exported variables inside of the RunSpace
                     $SyncHash.GlobalVars.GetEnumerator() | ForEach-Object -Process {
-                        Set-Variable -Name $_.Key -Value $_.Value
+                        Set-Variable -Name $_.Key -Value $_.Value -Force
                     }
 
                     # Redefining all of the exported functions inside of the RunSpace
@@ -1092,7 +1245,7 @@ Function Protect-WindowsSecurity {
                         'CountryIPBlocking'          = @('CountryIPBlocking_OFAC')
                     }
 
-                    function UpdateSubCategories {
+                    function Update-SubCategories {
                         <#
                         .SYNOPSIS
                             Function to update sub-category items based on the checked categories
@@ -1114,6 +1267,11 @@ Function Protect-WindowsSecurity {
                                 }
                             }
                         }
+
+                        # Uncheck sub-category items whose category is not selected
+                        $SyncHash.SubCategoriesListView.Items | Where-Object -FilterScript { $_.IsEnabled -eq $false } | ForEach-Object -Process {
+                            $_.Content.IsChecked = $false
+                        }
                     }
 
                     # Add Checked and Unchecked event handlers to category checkboxes
@@ -1121,8 +1279,8 @@ Function Protect-WindowsSecurity {
                         $CheckBox = $CategoryItem.Content
                         # Set the DataContext to the ListViewItem
                         $CheckBox.DataContext = $CategoryItem
-                        $CheckBox.Add_Checked({ UpdateSubCategories })
-                        $CheckBox.Add_Unchecked({ UpdateSubCategories })
+                        $CheckBox.Add_Checked({ Update-SubCategories })
+                        $CheckBox.Add_Unchecked({ Update-SubCategories })
                     }
 
                     #Region Check-Uncheck buttons for Categories
@@ -1138,9 +1296,22 @@ Function Protect-WindowsSecurity {
 
                     # Add click event for 'Check All' button
                     $SyncHash.checkAllButtonCategories.Add_Click({
-                            $SyncHash.categoriesListView.Items | ForEach-Object -Process {
-                                $CheckBox = $_.Content
-                                $CheckBox.IsChecked = $true
+                            # Activate all categories if Admin privileges are available
+                            if ($IsAdmin) {
+                                $SyncHash.categoriesListView.Items | ForEach-Object -Process {
+                                    $CheckBox = $_.Content
+                                    $CheckBox.IsChecked = $true
+                                }
+                            }
+                            # Activate only the categories that don't require Admin privileges
+                            else {
+                                $SyncHash.categoriesListView.Items | ForEach-Object -Process {
+                                    if ($_.Content.Content -eq 'NonAdminCommands') {
+                                        $CheckBox = $_.Content
+                                        $CheckBox.IsChecked = $true
+
+                                    }
+                                }
                             }
                         })
 
@@ -1189,11 +1360,141 @@ Function Protect-WindowsSecurity {
                             $SyncHash.LogPathButton.IsEnabled = $true
                         })
 
-                    # If the Log checkbox is unchecked, disable the LogPath button and set the selected LogPath text area's visibility to collapsed
+                    # If the Log checkbox is unchecked, disable the LogPath button and set the selected LogPath text area's visibility to collapsed again
                     $SyncHash.LogCheckBox.Add_Unchecked({
                             $SyncHash.LogPathButton.IsEnabled = $false
 
                             $SyncHash.txtFilePath.Visibility = 'Collapsed'
+                        })
+
+                    # If the Offline Mode checkbox is checked
+                    $SyncHash.EnableOfflineModeCheckBox.Add_Checked({
+                            $SyncHash.MicrosoftSecurityBaselineZipButton.IsEnabled = $true
+                            $SyncHash.MicrosoftSecurityBaselineZipTextBox.IsEnabled = $true
+                            $SyncHash.Microsoft365AppsSecurityBaselineZipButton.IsEnabled = $true
+                            $SyncHash.Microsoft365AppsSecurityBaselineZipTextBox.IsEnabled = $true
+                            $SyncHash.LGPOZipButton.IsEnabled = $true
+                            $SyncHash.LGPOZipTextBox.IsEnabled = $true
+                        })
+
+                    # Function to disable the Offline Mode configuration inputs
+                    Function Disable-OfflineModeConfigInputs {
+                        $SyncHash.MicrosoftSecurityBaselineZipButton.IsEnabled = $false
+                        $SyncHash.MicrosoftSecurityBaselineZipTextBox.IsEnabled = $false
+                        $SyncHash.Microsoft365AppsSecurityBaselineZipButton.IsEnabled = $false
+                        $SyncHash.Microsoft365AppsSecurityBaselineZipTextBox.IsEnabled = $false
+                        $SyncHash.LGPOZipButton.IsEnabled = $false
+                        $SyncHash.LGPOZipTextBox.IsEnabled = $false
+                    }
+
+                    # Initially disable the Offline Mode configuration inputs until the Offline Mode checkbox is checked
+                    Disable-OfflineModeConfigInputs
+
+                    # If the Offline Mode checkbox is Unchecked
+                    $SyncHash.EnableOfflineModeCheckBox.Add_Unchecked({
+                            Disable-OfflineModeConfigInputs
+                        })
+
+                    # Define the click event for the Microsoft Security Baseline Zip button
+                    $SyncHash.MicrosoftSecurityBaselineZipButton.Add_Click({
+
+                            Add-Type -AssemblyName System.Windows.Forms
+                            [System.Windows.Forms.OpenFileDialog]$Dialog = New-Object -TypeName 'System.Windows.Forms.OpenFileDialog'
+                            $Dialog.InitialDirectory = [System.Environment]::GetFolderPath('Desktop')
+                            $Dialog.Filter = 'Zip files (*.zip)|*.zip'
+                            $Dialog.Title = 'Select the Microsoft Security Baseline Zip file'
+
+                            if ($Dialog.ShowDialog() -eq 'OK') {
+
+                                try {
+                                    # Load the System.IO.Compression assembly
+                                    [System.Reflection.Assembly]::LoadWithPartialName('System.IO.Compression.FileSystem') | Out-Null
+                                    # Open the zip file in read mode
+                                    [System.IO.Compression.ZipArchive]$ZipArchive = [IO.Compression.ZipFile]::OpenRead($Dialog.FileName)
+                                    # Make sure the selected zip has the required file
+                                    if (-NOT ($ZipArchive.Entries | Where-Object -FilterScript { $_.FullName -like 'Windows*Security Baseline/Scripts/Baseline-LocalInstall.ps1' })) {
+                                        Write-GUI -Text 'The selected Zip file does not contain the Microsoft Security Baselines Baseline-LocalInstall.ps1 which is required for the Protect-WindowsSecurity function to work properly'
+                                    }
+                                    else {
+                                        $SyncHash.MicrosoftSecurityBaselineZipTextBox.Text = $Dialog.FileName
+                                    }
+                                }
+                                catch {
+                                    Write-GUI -Text $_.Exception.Message
+                                }
+                                finally {
+                                    # Close the handle whether the zip file is valid or not
+                                    $ZipArchive.Dispose()
+                                }
+                            }
+                        })
+
+                    # Define the click event for the Microsoft 365 Apps Security Baseline Zip button
+                    $SyncHash.Microsoft365AppsSecurityBaselineZipButton.Add_Click({
+
+                            Add-Type -AssemblyName System.Windows.Forms
+                            [System.Windows.Forms.OpenFileDialog]$Dialog = New-Object -TypeName 'System.Windows.Forms.OpenFileDialog'
+                            $Dialog.InitialDirectory = [System.Environment]::GetFolderPath('Desktop')
+                            $Dialog.Filter = 'Zip files (*.zip)|*.zip'
+                            $Dialog.Title = 'Select the Microsoft 365 Apps Security Baseline Zip file'
+
+                            if ($Dialog.ShowDialog() -eq 'OK') {
+
+                                try {
+                                    # Load the System.IO.Compression assembly
+                                    [System.Reflection.Assembly]::LoadWithPartialName('System.IO.Compression.FileSystem') | Out-Null
+                                    # Open the zip file in read mode
+                                    [System.IO.Compression.ZipArchive]$ZipArchive = [IO.Compression.ZipFile]::OpenRead($Dialog.FileName )
+                                    # Make sure the selected zip has the required file
+                                    if (-NOT ($ZipArchive.Entries | Where-Object -FilterScript { $_.FullName -like 'Microsoft 365 Apps for Enterprise*/Scripts/Baseline-LocalInstall.ps1' })) {
+                                        Write-GUI -Text 'The selected Zip file does not contain the Microsoft 365 Apps for Enterprise Security Baselines Baseline-LocalInstall.ps1 which is required for the Protect-WindowsSecurity function to work properly'
+                                    }
+                                    else {
+                                        $SyncHash.Microsoft365AppsSecurityBaselineZipTextBox.Text = $Dialog.FileName
+                                    }
+                                }
+                                catch {
+                                    Write-GUI -Text $_.Exception.Message
+                                }
+                                finally {
+                                    # Close the handle whether the zip file is valid or not
+                                    $ZipArchive.Dispose()
+                                }
+                            }
+                        })
+
+                    # Define the click event for the LGPO Zip button
+                    $SyncHash.LGPOZipButton.Add_Click({
+
+                            Add-Type -AssemblyName System.Windows.Forms
+                            [System.Windows.Forms.OpenFileDialog]$Dialog = New-Object -TypeName 'System.Windows.Forms.OpenFileDialog'
+                            $Dialog.InitialDirectory = [System.Environment]::GetFolderPath('Desktop')
+                            $Dialog.Filter = 'Zip files (*.zip)|*.zip'
+                            $Dialog.Title = 'Select the LGPO Zip file'
+
+                            if ($Dialog.ShowDialog() -eq 'OK') {
+
+                                try {
+                                    # Load the System.IO.Compression assembly
+                                    [System.Reflection.Assembly]::LoadWithPartialName('System.IO.Compression.FileSystem') | Out-Null
+                                    # Open the zip file in read mode
+                                    [System.IO.Compression.ZipArchive]$ZipArchive = [IO.Compression.ZipFile]::OpenRead($Dialog.FileName)
+                                    # Make sure the selected zip has the required file
+                                    if (-NOT ($ZipArchive.Entries | Where-Object -FilterScript { $_.FullName -like 'LGPO_*/LGPO.exe' })) {
+                                        Write-GUI -Text 'The selected Zip file does not contain the LGPO.exe which is required for the Protect-WindowsSecurity function to work properly'
+                                    }
+                                    else {
+                                        $SyncHash.LGPOZipTextBox.Text = $Dialog.FileName
+                                    }
+                                }
+                                catch {
+                                    Write-GUI -Text $_.Exception.Message
+                                }
+                                finally {
+                                    # Close the handle whether the zip file is valid or not
+                                    $ZipArchive.Dispose()
+                                }
+                            }
                         })
 
                     # Event handler for the Log Path button click to open a file path picker dialog
@@ -1203,36 +1504,181 @@ Function Protect-WindowsSecurity {
                             [System.Windows.Forms.SaveFileDialog]$Dialog = New-Object -TypeName System.Windows.Forms.SaveFileDialog
                             $Dialog.InitialDirectory = [System.Environment]::GetFolderPath('Desktop')
                             $Dialog.Filter = 'Text files (*.txt)|*.txt'
+                            $Dialog.Title = 'Choose where to save the log file'
 
                             if ($Dialog.ShowDialog() -eq 'OK') {
                                 $SyncHash.txtFilePath.Text = $Dialog.FileName
 
                                 # set the selected LogPath text area's visibly to enabled once the user selected a file path
                                 $SyncHash.txtFilePath.Visibility = 'Visible'
+
+                                Write-GUI -Text "Logs will be saved in: $($SyncHash.txtFilePath.Text)"
+
+                                $SyncHash.ShouldWriteLogs = $true
                             }
                         })
 
                     #Endregion 3-Log related elements
 
                     # Update the sub-categories based on the initial unchecked state of the categories
-                    UpdateSubCategories
+                    Update-SubCategories
+
+                    Function Start-FileDownload {
+                        <#
+                        .SYNOPSIS
+                            Defining a function in the GUI's RunSpace for downloading and processing the required files
+                        .DESCRIPTION
+                            If Offline mode is being used, this function will run when the Execute button is clicked for the first time
+                            Due to using multi-threaded jobs, it cannot be used in the nested Prerequisites runspace for some reason
+                            #>
+
+                        # Create the working directory
+                        [System.IO.DirectoryInfo]$WorkingDir = New-Item -ItemType Directory -Path "$CurrentUserTempDirectoryPath\HardeningXStuff\" -Force
+
+                        try {
+                            # Create an array of files to download
+                            [System.Object[]]$Files = @(
+                                # System.Net.WebClient requires absolute path instead of relative one
+                                @{url = 'https://download.microsoft.com/download/8/5/C/85C25433-A1B0-4FFA-9429-7E023E7DA8D8/Windows%2011%20v23H2%20Security%20Baseline.zip'; path = "$WorkingDir\MicrosoftSecurityBaseline.zip"; tag = 'MicrosoftSecurityBaseline' }
+                                @{url = 'https://download.microsoft.com/download/8/5/C/85C25433-A1B0-4FFA-9429-7E023E7DA8D8/Microsoft%20365%20Apps%20for%20Enterprise%202306.zip'; path = "$WorkingDir\Microsoft365SecurityBaseline.zip"; tag = 'Microsoft365SecurityBaseline' }
+                                @{url = 'https://download.microsoft.com/download/8/5/C/85C25433-A1B0-4FFA-9429-7E023E7DA8D8/LGPO.zip'; path = "$WorkingDir\LGPO.zip"; tag = 'LGPO' }
+                                @{url = 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Harden-Windows-Security%20Module/Main%20files/Resources/Security-Baselines-X.zip'; path = "$WorkingDir\Security-Baselines-X.zip"; tag = 'Security-Baselines-X' }
+                                @{url = 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Harden-Windows-Security%20Module/Main%20files/Resources/Registry.csv'; path = "$WorkingDir\Registry.csv"; tag = 'Registry' }
+                                @{url = 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Harden-Windows-Security%20Module/Main%20files/Resources/ProcessMitigations.csv'; path = "$WorkingDir\ProcessMitigations.csv"; tag = 'ProcessMitigations' }
+                                @{url = 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Harden-Windows-Security%20Module/Main%20files/Resources/EventViewerCustomViews.zip'; path = "$WorkingDir\EventViewerCustomViews.zip"; tag = 'EventViewerCustomViews' }
+                            )
+
+                            # Start a job for each file download
+                            [System.Object[]]$Jobs = foreach ($File in $Files) {
+
+                                # If running locally, skip downloading the files that are already shipped with the Harden Windows Security module
+                                if ($IsLocally) {
+                                    if ($File.tag -in @('Security-Baselines-X', 'Registry', 'ProcessMitigations', 'EventViewerCustomViews')) {
+                                        Write-Verbose -Message "Skipping downloading the $($File.tag) because of local mode."
+                                        Continue
+                                    }
+                                }
+
+                                # If running in offline mode, skip downloading the files that are manually provided by the user
+                                if ($Offline) {
+                                    if ($File.tag -in @('MicrosoftSecurityBaseline', 'Microsoft365SecurityBaseline', 'LGPO')) {
+                                        Write-Verbose -Message "Skipping downloading the $($File.tag) because of offline mode."
+                                        Continue
+                                    }
+                                }
+
+                                Start-Job -ScriptBlock {
+
+                                    param([System.Uri]$Url, [System.IO.FileInfo]$Path, [System.String]$Tag)
+                                    # Create a WebClient object
+                                    [System.Net.WebClient]$WC = New-Object -TypeName System.Net.WebClient
+                                    try {
+                                        # Try to download the file from the original URL
+                                        $WC.DownloadFile($Url, $Path)
+                                    }
+                                    catch {
+                                        # a switch for when the original URLs are failing and to provide Alt URL
+                                        switch ($Tag) {
+                                            'Security-Baselines-X' {
+                                                Write-Host -Object 'Using Azure DevOps for Security-Baselines-X.zip' -ForegroundColor Yellow
+                                                [System.Uri]$AltURL = 'https://dev.azure.com/SpyNetGirl/011c178a-7b92-462b-bd23-2c014528a67e/_apis/git/repositories/5304fef0-07c0-4821-a613-79c01fb75657/items?path=/Payload/Security-Baselines-X.zip'
+                                                $WC.DownloadFile($AltURL, $Path)
+                                                break
+                                            }
+                                            'Registry' {
+                                                Write-Host -Object 'Using Azure DevOps for Registry.csv' -ForegroundColor Yellow
+                                                [System.Uri]$AltURL = 'https://dev.azure.com/SpyNetGirl/011c178a-7b92-462b-bd23-2c014528a67e/_apis/git/repositories/5304fef0-07c0-4821-a613-79c01fb75657/items?path=/Payload/Registry.csv'
+                                                $WC.DownloadFile($AltURL, $Path)
+                                                break
+                                            }
+                                            'ProcessMitigations' {
+                                                Write-Host -Object 'Using Azure DevOps for ProcessMitigations.CSV' -ForegroundColor Yellow
+                                                [System.Uri]$AltURL = 'https://dev.azure.com/SpyNetGirl/011c178a-7b92-462b-bd23-2c014528a67e/_apis/git/repositories/5304fef0-07c0-4821-a613-79c01fb75657/items?path=/Payload/ProcessMitigations.csv'
+                                                $WC.DownloadFile($AltURL, $Path)
+                                                break
+                                            }
+                                            'EventViewerCustomViews' {
+                                                Write-Host -Object 'Using Azure DevOps for EventViewerCustomViews.zip' -ForegroundColor Yellow
+                                                [System.Uri]$AltURL = 'https://dev.azure.com/SpyNetGirl/011c178a-7b92-462b-bd23-2c014528a67e/_apis/git/repositories/5304fef0-07c0-4821-a613-79c01fb75657/items?path=/Payload/EventViewerCustomViews.zip'
+                                                $WC.DownloadFile($AltURL, $Path)
+                                                break
+                                            }
+                                            default {
+                                                # Throw the error if any other URL fails and stop the operation
+                                                Throw $_
+                                            }
+                                        }
+                                    }
+                                } -ArgumentList $File.url, $File.path, $File.tag
+
+                            }
+                            # Wait until all jobs are completed
+                            while ($Jobs | Where-Object -FilterScript { $_.State -ne 'Completed' }) {
+                                Start-Sleep -Milliseconds 700
+                            }
+
+                            # Receive the output or errors of each job and remove the job
+                            foreach ($Job in $Jobs) {
+                                Receive-Job -Job $Job
+                                Remove-Job -Job $Job
+                            }
+                        }
+                        catch {
+                            foreach ($Job in $Jobs) { Remove-Job -Job $Job }
+                            Throw 'The required files could not be downloaded, Make sure you have Internet connection.'
+                        }
+
+                        if ($IsLocally) {
+                            Write-Verbose -Message 'Local Mode; Copying the Security-Baselines-X, Registry, ProcessMitigations and EventViewerCustomViews files from the module folder to the working directory'
+                            Copy-Item -Path "$HardeningModulePath\Resources\Security-Baselines-X.zip" -Destination "$WorkingDir\Security-Baselines-X.zip"
+                            Copy-Item -Path "$HardeningModulePath\Resources\Registry.csv" -Destination "$WorkingDir\Registry.csv"
+                            Copy-Item -Path "$HardeningModulePath\Resources\ProcessMitigations.csv" -Destination "$WorkingDir\ProcessMitigations.csv"
+                            Copy-Item -Path "$HardeningModulePath\Resources\EventViewerCustomViews.zip" -Destination "$WorkingDir\EventViewerCustomViews.zip"
+                        }
+
+                        if ($Offline) {
+                            Write-Verbose -Message 'Offline Mode; Copying the Microsoft Security Baselines, Microsoft 365 Apps for Enterprise Security Baselines and LGPO files from the user provided paths to the working directory'
+                            Copy-Item -Path $SyncHash.LGPOZipTextBox.Text -Destination "$WorkingDir\LGPO.zip"
+                            Copy-Item -Path $SyncHash.MicrosoftSecurityBaselineZipTextBox.Text -Destination "$WorkingDir\MicrosoftSecurityBaseline.zip"
+                            Copy-Item -Path $SyncHash.Microsoft365AppsSecurityBaselineZipTextBox.Text -Destination "$WorkingDir\Microsoft365SecurityBaseline.zip"
+                        }
+
+                        Write-Verbose -Message 'Unzipping the archives'
+                        Expand-Archive -Path "$WorkingDir\MicrosoftSecurityBaseline.zip" -DestinationPath "$WorkingDir\MicrosoftSecurityBaseline" -Force
+                        Expand-Archive -Path "$WorkingDir\Microsoft365SecurityBaseline.zip" -DestinationPath "$WorkingDir\Microsoft365SecurityBaseline" -Force
+                        Expand-Archive -Path "$WorkingDir\LGPO.zip" -DestinationPath "$WorkingDir\" -Force
+                        Expand-Archive -Path "$WorkingDir\Security-Baselines-X.zip" -DestinationPath "$WorkingDir\Security-Baselines-X\" -Force
+
+                        # capturing the Microsoft Security Baselines extracted path in a variable using wildcard and storing it in a variable so that we won't need to change anything in the code other than the download link when they are updated
+                        [System.String]$MicrosoftSecurityBaselinePath = (Get-ChildItem -Directory -Path "$WorkingDir\MicrosoftSecurityBaseline\*\").FullName
+                        # capturing the Microsoft 365 Security Baselines extracted path in a variable using wildcard and storing it in a variable so that we won't need to change anything in the code other than the download link when they are updated
+                        [System.String]$Microsoft365SecurityBaselinePath = (Get-ChildItem -Directory -Path "$WorkingDir\Microsoft365SecurityBaseline\*\").FullName
+                        # Storing the registry CSV file in a variable
+                        [System.Object[]]$RegistryCSVItems = Import-Csv -Path "$WorkingDir\Registry.csv" -Delimiter ','
+                        # Storing the LGPO.exe path in a variable
+                        [System.IO.FileInfo]$LGPOExe = Get-ChildItem -Path "$WorkingDir\LGPO_30\LGPO.exe" -File
+
+                        # Copying LGPO.exe from its folder to Microsoft Security Baseline folder in order to get it ready to be used by PowerShell script
+                        Copy-Item -Path $LGPOExe -Destination "$MicrosoftSecurityBaselinePath\Scripts\Tools"
+                        # Copying LGPO.exe from its folder to Microsoft Office 365 Apps for Enterprise Security Baseline folder in order to get it ready to be used by PowerShell script
+                        Copy-Item -Path $LGPOExe -Destination "$Microsoft365SecurityBaselinePath\Scripts\Tools"
+
+                        # These values should be passed to the SyncHash so that they will be imported in the parent RunSpace where the main hardening functions run
+                        $SyncHash['GlobalVars']['MicrosoftSecurityBaselinePath'] = $MicrosoftSecurityBaselinePath
+                        $SyncHash['GlobalVars']['Microsoft365SecurityBaselinePath'] = $Microsoft365SecurityBaselinePath
+                        $SyncHash['GlobalVars']['RegistryCSVItems'] = $RegistryCSVItems
+                        $SyncHash['GlobalVars']['LGPOExe'] = $LGPOExe
+                        $SyncHash['GlobalVars']['WorkingDir'] = $WorkingDir
+                    }
+
+                    # Set a flag indicating that the required files for the Offline operation mode have been processed
+                    # When the execute button was clicked, so it won't run twice
+                    $SyncHash.StartFileDownloadHasRun = $false
 
                     # Defining a set of commands to run when the GUI window is loaded
                     $SyncHash.Window.Add_ContentRendered({
 
-                            'Hello, GUI has been loaded' *>&1 | ForEach-Object -Process {
-                                # Use Dispatcher.Invoke to update the GUI elements on the main thread
-                                $SyncHash.Window.Dispatcher.Invoke({
-                                        # Since other output streams such as verbose, error, warning are not converted to strings, we need to convert them manually
-                                        $SyncHash.TextBox.Text += [System.String]$_ + "`n"
-
-                                        # Find the ScrollViewer and scroll to the bottom
-                                        $ScrollViewer = FindScrollViewer -Control $SyncHash.TextBox
-                                        if ($null -ne $ScrollViewer) {
-                                            $ScrollViewer.ScrollToBottom()
-                                        }
-                                    }, [System.Windows.Threading.DispatcherPriority]::Background)
-                            }
+                            Write-GUI -Text ($IsAdmin ? 'Hello, Running as Administrator' : 'Hello, Running as Non-Administrator, some categories are disabled')
 
                             # Set the execute button to disabled until all the prerequisites are met
                             $SyncHash.ExecuteButton.IsEnabled = $false
@@ -1270,7 +1716,7 @@ Function Protect-WindowsSecurity {
 
                                     # Make all of the main function's variable available again in the 2nd nested RunSpace
                                     $SyncHash.GlobalVars.GetEnumerator() | ForEach-Object -Process {
-                                        Set-Variable -Name $_.Key -Value $_.Value
+                                        Set-Variable -Name $_.Key -Value $_.Value -Force
                                     }
 
                                     # Make all of the main function's functions available again in the 2nd nested RunSpace
@@ -1285,143 +1731,149 @@ Function Protect-WindowsSecurity {
                                             # Capture the currently available RunSpaces
                                             $RunSpacesBefore = Get-Runspace
 
-                                            # Create the working directory
-                                            [System.IO.DirectoryInfo]$WorkingDir = New-Item -ItemType Directory -Path "$CurrentUserTempDirectoryPath\HardeningXStuff\" -Force
+                                            # Only download and process the files when GUI is loaded if Offline mode is not used
+                                            # Because at this point user might have not selected the files to be used for offline operation
+                                            if (-NOT $Offline) {
 
-                                            try {
-                                                # Create an array of files to download
-                                                [System.Object[]]$Files = @(
-                                                    # System.Net.WebClient requires absolute path instead of relative one
-                                                    @{url = 'https://download.microsoft.com/download/8/5/C/85C25433-A1B0-4FFA-9429-7E023E7DA8D8/Windows%2011%20v23H2%20Security%20Baseline.zip'; path = "$WorkingDir\MicrosoftSecurityBaseline.zip"; tag = 'MicrosoftSecurityBaseline' }
-                                                    @{url = 'https://download.microsoft.com/download/8/5/C/85C25433-A1B0-4FFA-9429-7E023E7DA8D8/Microsoft%20365%20Apps%20for%20Enterprise%202306.zip'; path = "$WorkingDir\Microsoft365SecurityBaseline.zip"; tag = 'Microsoft365SecurityBaseline' }
-                                                    @{url = 'https://download.microsoft.com/download/8/5/C/85C25433-A1B0-4FFA-9429-7E023E7DA8D8/LGPO.zip'; path = "$WorkingDir\LGPO.zip"; tag = 'LGPO' }
-                                                    @{url = 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Harden-Windows-Security%20Module/Main%20files/Resources/Security-Baselines-X.zip'; path = "$WorkingDir\Security-Baselines-X.zip"; tag = 'Security-Baselines-X' }
-                                                    @{url = 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Harden-Windows-Security%20Module/Main%20files/Resources/Registry.csv'; path = "$WorkingDir\Registry.csv"; tag = 'Registry' }
-                                                    @{url = 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Harden-Windows-Security%20Module/Main%20files/Resources/ProcessMitigations.csv'; path = "$WorkingDir\ProcessMitigations.csv"; tag = 'ProcessMitigations' }
-                                                    @{url = 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Harden-Windows-Security%20Module/Main%20files/Resources/EventViewerCustomViews.zip'; path = "$WorkingDir\EventViewerCustomViews.zip"; tag = 'EventViewerCustomViews' }
-                                                )
+                                                # Create the working directory
+                                                [System.IO.DirectoryInfo]$WorkingDir = New-Item -ItemType Directory -Path "$CurrentUserTempDirectoryPath\HardeningXStuff\" -Force
 
-                                                # Start a job for each file download
-                                                [System.Object[]]$Jobs = foreach ($File in $Files) {
+                                                try {
+                                                    # Create an array of files to download
+                                                    [System.Object[]]$Files = @(
+                                                        # System.Net.WebClient requires absolute path instead of relative one
+                                                        @{url = 'https://download.microsoft.com/download/8/5/C/85C25433-A1B0-4FFA-9429-7E023E7DA8D8/Windows%2011%20v23H2%20Security%20Baseline.zip'; path = "$WorkingDir\MicrosoftSecurityBaseline.zip"; tag = 'MicrosoftSecurityBaseline' }
+                                                        @{url = 'https://download.microsoft.com/download/8/5/C/85C25433-A1B0-4FFA-9429-7E023E7DA8D8/Microsoft%20365%20Apps%20for%20Enterprise%202306.zip'; path = "$WorkingDir\Microsoft365SecurityBaseline.zip"; tag = 'Microsoft365SecurityBaseline' }
+                                                        @{url = 'https://download.microsoft.com/download/8/5/C/85C25433-A1B0-4FFA-9429-7E023E7DA8D8/LGPO.zip'; path = "$WorkingDir\LGPO.zip"; tag = 'LGPO' }
+                                                        @{url = 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Harden-Windows-Security%20Module/Main%20files/Resources/Security-Baselines-X.zip'; path = "$WorkingDir\Security-Baselines-X.zip"; tag = 'Security-Baselines-X' }
+                                                        @{url = 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Harden-Windows-Security%20Module/Main%20files/Resources/Registry.csv'; path = "$WorkingDir\Registry.csv"; tag = 'Registry' }
+                                                        @{url = 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Harden-Windows-Security%20Module/Main%20files/Resources/ProcessMitigations.csv'; path = "$WorkingDir\ProcessMitigations.csv"; tag = 'ProcessMitigations' }
+                                                        @{url = 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Harden-Windows-Security%20Module/Main%20files/Resources/EventViewerCustomViews.zip'; path = "$WorkingDir\EventViewerCustomViews.zip"; tag = 'EventViewerCustomViews' }
+                                                    )
 
-                                                    # If running locally, skip downloading the files that are already shipped with the Harden Windows Security module
-                                                    if ($IsLocally) {
-                                                        if ($File.tag -in @('Security-Baselines-X', 'Registry', 'ProcessMitigations', 'EventViewerCustomViews')) {
-                                                            Write-Verbose -Message "Skipping downloading the $($File.tag) because of local mode."
-                                                            Continue
-                                                        }
-                                                    }
+                                                    # Start a job for each file download
+                                                    [System.Object[]]$Jobs = foreach ($File in $Files) {
 
-                                                    # If running in offline mode, skip downloading the files that are manually provided by the user
-                                                    if ($Offline) {
-                                                        if ($File.tag -in @('MicrosoftSecurityBaseline', 'Microsoft365SecurityBaseline', 'LGPO')) {
-                                                            Write-Verbose -Message "Skipping downloading the $($File.tag) because of offline mode."
-                                                            Continue
-                                                        }
-                                                    }
-
-                                                    Start-Job -ScriptBlock {
-
-                                                        param([System.Uri]$Url, [System.IO.FileInfo]$Path, [System.String]$Tag)
-                                                        # Create a WebClient object
-                                                        [System.Net.WebClient]$WC = New-Object -TypeName System.Net.WebClient
-                                                        try {
-                                                            # Try to download the file from the original URL
-                                                            $WC.DownloadFile($Url, $Path)
-                                                        }
-                                                        catch {
-                                                            # a switch for when the original URLs are failing and to provide Alt URL
-                                                            switch ($Tag) {
-                                                                'Security-Baselines-X' {
-                                                                    Write-Host -Object 'Using Azure DevOps for Security-Baselines-X.zip' -ForegroundColor Yellow
-                                                                    [System.Uri]$AltURL = 'https://dev.azure.com/SpyNetGirl/011c178a-7b92-462b-bd23-2c014528a67e/_apis/git/repositories/5304fef0-07c0-4821-a613-79c01fb75657/items?path=/Payload/Security-Baselines-X.zip'
-                                                                    $WC.DownloadFile($AltURL, $Path)
-                                                                    break
-                                                                }
-                                                                'Registry' {
-                                                                    Write-Host -Object 'Using Azure DevOps for Registry.csv' -ForegroundColor Yellow
-                                                                    [System.Uri]$AltURL = 'https://dev.azure.com/SpyNetGirl/011c178a-7b92-462b-bd23-2c014528a67e/_apis/git/repositories/5304fef0-07c0-4821-a613-79c01fb75657/items?path=/Payload/Registry.csv'
-                                                                    $WC.DownloadFile($AltURL, $Path)
-                                                                    break
-                                                                }
-                                                                'ProcessMitigations' {
-                                                                    Write-Host -Object 'Using Azure DevOps for ProcessMitigations.CSV' -ForegroundColor Yellow
-                                                                    [System.Uri]$AltURL = 'https://dev.azure.com/SpyNetGirl/011c178a-7b92-462b-bd23-2c014528a67e/_apis/git/repositories/5304fef0-07c0-4821-a613-79c01fb75657/items?path=/Payload/ProcessMitigations.csv'
-                                                                    $WC.DownloadFile($AltURL, $Path)
-                                                                    break
-                                                                }
-                                                                'EventViewerCustomViews' {
-                                                                    Write-Host -Object 'Using Azure DevOps for EventViewerCustomViews.zip' -ForegroundColor Yellow
-                                                                    [System.Uri]$AltURL = 'https://dev.azure.com/SpyNetGirl/011c178a-7b92-462b-bd23-2c014528a67e/_apis/git/repositories/5304fef0-07c0-4821-a613-79c01fb75657/items?path=/Payload/EventViewerCustomViews.zip'
-                                                                    $WC.DownloadFile($AltURL, $Path)
-                                                                    break
-                                                                }
-                                                                default {
-                                                                    # Throw the error if any other URL fails and stop the operation
-                                                                    Throw $_
-                                                                }
+                                                        # If running locally, skip downloading the files that are already shipped with the Harden Windows Security module
+                                                        if ($IsLocally) {
+                                                            if ($File.tag -in @('Security-Baselines-X', 'Registry', 'ProcessMitigations', 'EventViewerCustomViews')) {
+                                                                Write-Verbose -Message "Skipping downloading the $($File.tag) because of local mode."
+                                                                Continue
                                                             }
                                                         }
-                                                    } -ArgumentList $File.url, $File.path, $File.tag
 
+                                                        # If running in offline mode, skip downloading the files that are manually provided by the user
+                                                        if ($Offline) {
+                                                            if ($File.tag -in @('MicrosoftSecurityBaseline', 'Microsoft365SecurityBaseline', 'LGPO')) {
+                                                                Write-Verbose -Message "Skipping downloading the $($File.tag) because of offline mode."
+                                                                Continue
+                                                            }
+                                                        }
+
+                                                        Start-Job -ScriptBlock {
+
+                                                            param([System.Uri]$Url, [System.IO.FileInfo]$Path, [System.String]$Tag)
+                                                            # Create a WebClient object
+                                                            [System.Net.WebClient]$WC = New-Object -TypeName System.Net.WebClient
+                                                            try {
+                                                                # Try to download the file from the original URL
+                                                                $WC.DownloadFile($Url, $Path)
+                                                            }
+                                                            catch {
+                                                                # a switch for when the original URLs are failing and to provide Alt URL
+                                                                switch ($Tag) {
+                                                                    'Security-Baselines-X' {
+                                                                        Write-Host -Object 'Using Azure DevOps for Security-Baselines-X.zip' -ForegroundColor Yellow
+                                                                        [System.Uri]$AltURL = 'https://dev.azure.com/SpyNetGirl/011c178a-7b92-462b-bd23-2c014528a67e/_apis/git/repositories/5304fef0-07c0-4821-a613-79c01fb75657/items?path=/Payload/Security-Baselines-X.zip'
+                                                                        $WC.DownloadFile($AltURL, $Path)
+                                                                        break
+                                                                    }
+                                                                    'Registry' {
+                                                                        Write-Host -Object 'Using Azure DevOps for Registry.csv' -ForegroundColor Yellow
+                                                                        [System.Uri]$AltURL = 'https://dev.azure.com/SpyNetGirl/011c178a-7b92-462b-bd23-2c014528a67e/_apis/git/repositories/5304fef0-07c0-4821-a613-79c01fb75657/items?path=/Payload/Registry.csv'
+                                                                        $WC.DownloadFile($AltURL, $Path)
+                                                                        break
+                                                                    }
+                                                                    'ProcessMitigations' {
+                                                                        Write-Host -Object 'Using Azure DevOps for ProcessMitigations.CSV' -ForegroundColor Yellow
+                                                                        [System.Uri]$AltURL = 'https://dev.azure.com/SpyNetGirl/011c178a-7b92-462b-bd23-2c014528a67e/_apis/git/repositories/5304fef0-07c0-4821-a613-79c01fb75657/items?path=/Payload/ProcessMitigations.csv'
+                                                                        $WC.DownloadFile($AltURL, $Path)
+                                                                        break
+                                                                    }
+                                                                    'EventViewerCustomViews' {
+                                                                        Write-Host -Object 'Using Azure DevOps for EventViewerCustomViews.zip' -ForegroundColor Yellow
+                                                                        [System.Uri]$AltURL = 'https://dev.azure.com/SpyNetGirl/011c178a-7b92-462b-bd23-2c014528a67e/_apis/git/repositories/5304fef0-07c0-4821-a613-79c01fb75657/items?path=/Payload/EventViewerCustomViews.zip'
+                                                                        $WC.DownloadFile($AltURL, $Path)
+                                                                        break
+                                                                    }
+                                                                    default {
+                                                                        # Throw the error if any other URL fails and stop the operation
+                                                                        Throw $_
+                                                                    }
+                                                                }
+                                                            }
+                                                        } -ArgumentList $File.url, $File.path, $File.tag
+
+                                                    }
+                                                    # Wait until all jobs are completed
+                                                    while ($Jobs | Where-Object -FilterScript { $_.State -ne 'Completed' }) {
+                                                        Start-Sleep -Milliseconds 700
+                                                    }
+
+                                                    # Receive the output or errors of each job and remove the job
+                                                    foreach ($Job in $Jobs) {
+                                                        Receive-Job -Job $Job
+                                                        Remove-Job -Job $Job
+                                                    }
                                                 }
-                                                # Wait until all jobs are completed
-                                                while ($Jobs | Where-Object -FilterScript { $_.State -ne 'Completed' }) {
-                                                    Start-Sleep -Milliseconds 700
+                                                catch {
+                                                    foreach ($Job in $Jobs) { Remove-Job -Job $Job }
+                                                    Throw 'The required files could not be downloaded, Make sure you have Internet connection.'
                                                 }
 
-                                                # Receive the output or errors of each job and remove the job
-                                                foreach ($Job in $Jobs) {
-                                                    Receive-Job -Job $Job
-                                                    Remove-Job -Job $Job
+                                                if ($IsLocally) {
+                                                    Write-Verbose -Message 'Local Mode; Copying the Security-Baselines-X, Registry, ProcessMitigations and EventViewerCustomViews files from the module folder to the working directory'
+                                                    Copy-Item -Path "$HardeningModulePath\Resources\Security-Baselines-X.zip" -Destination "$WorkingDir\Security-Baselines-X.zip"
+                                                    Copy-Item -Path "$HardeningModulePath\Resources\Registry.csv" -Destination "$WorkingDir\Registry.csv"
+                                                    Copy-Item -Path "$HardeningModulePath\Resources\ProcessMitigations.csv" -Destination "$WorkingDir\ProcessMitigations.csv"
+                                                    Copy-Item -Path "$HardeningModulePath\Resources\EventViewerCustomViews.zip" -Destination "$WorkingDir\EventViewerCustomViews.zip"
                                                 }
+
+                                                if ($Offline) {
+                                                    Write-Verbose -Message 'Offline Mode; Copying the Microsoft Security Baselines, Microsoft 365 Apps for Enterprise Security Baselines and LGPO files from the user provided paths to the working directory'
+                                                    Copy-Item -Path $SyncHash.LGPOZipTextBox.Text -Destination "$WorkingDir\LGPO.zip"
+                                                    Copy-Item -Path $SyncHash.MicrosoftSecurityBaselineZipTextBox.Text -Destination "$WorkingDir\MicrosoftSecurityBaseline.zip"
+                                                    Copy-Item -Path $SyncHash.Microsoft365AppsSecurityBaselineZipTextBox.Text -Destination "$WorkingDir\Microsoft365SecurityBaseline.zip"
+                                                }
+
+                                                Write-Verbose -Message 'Unzipping the archives'
+                                                Expand-Archive -Path "$WorkingDir\MicrosoftSecurityBaseline.zip" -DestinationPath "$WorkingDir\MicrosoftSecurityBaseline" -Force
+                                                Expand-Archive -Path "$WorkingDir\Microsoft365SecurityBaseline.zip" -DestinationPath "$WorkingDir\Microsoft365SecurityBaseline" -Force
+                                                Expand-Archive -Path "$WorkingDir\LGPO.zip" -DestinationPath "$WorkingDir\" -Force
+                                                Expand-Archive -Path "$WorkingDir\Security-Baselines-X.zip" -DestinationPath "$WorkingDir\Security-Baselines-X\" -Force
+
+                                                # capturing the Microsoft Security Baselines extracted path in a variable using wildcard and storing it in a variable so that we won't need to change anything in the code other than the download link when they are updated
+                                                [System.String]$MicrosoftSecurityBaselinePath = (Get-ChildItem -Directory -Path "$WorkingDir\MicrosoftSecurityBaseline\*\").FullName
+                                                # capturing the Microsoft 365 Security Baselines extracted path in a variable using wildcard and storing it in a variable so that we won't need to change anything in the code other than the download link when they are updated
+                                                [System.String]$Microsoft365SecurityBaselinePath = (Get-ChildItem -Directory -Path "$WorkingDir\Microsoft365SecurityBaseline\*\").FullName
+                                                # Storing the registry CSV file in a variable
+                                                [System.Object[]]$RegistryCSVItems = Import-Csv -Path "$WorkingDir\Registry.csv" -Delimiter ','
+                                                # Storing the LGPO.exe path in a variable
+                                                [System.IO.FileInfo]$LGPOExe = Get-ChildItem -Path "$WorkingDir\LGPO_30\LGPO.exe" -File
+
+                                                # Copying LGPO.exe from its folder to Microsoft Security Baseline folder in order to get it ready to be used by PowerShell script
+                                                Copy-Item -Path $LGPOExe -Destination "$MicrosoftSecurityBaselinePath\Scripts\Tools"
+                                                # Copying LGPO.exe from its folder to Microsoft Office 365 Apps for Enterprise Security Baseline folder in order to get it ready to be used by PowerShell script
+                                                Copy-Item -Path $LGPOExe -Destination "$Microsoft365SecurityBaselinePath\Scripts\Tools"
+
+                                                # These values should be passed to the SyncHash so that they will be imported in the parent RunSpace where the main hardening functions run
+                                                $SyncHash['GlobalVars']['MicrosoftSecurityBaselinePath'] = $MicrosoftSecurityBaselinePath
+                                                $SyncHash['GlobalVars']['Microsoft365SecurityBaselinePath'] = $Microsoft365SecurityBaselinePath
+                                                $SyncHash['GlobalVars']['RegistryCSVItems'] = $RegistryCSVItems
+                                                $SyncHash['GlobalVars']['LGPOExe'] = $LGPOExe
+                                                $SyncHash['GlobalVars']['WorkingDir'] = $WorkingDir
+
                                             }
-                                            catch {
-                                                foreach ($Job in $Jobs) { Remove-Job -Job $Job }
-                                                Throw 'The required files could not be downloaded, Make sure you have Internet connection.'
-                                            }
-
-                                            if ($IsLocally) {
-                                                Write-Verbose -Message 'Local Mode; Copying the Security-Baselines-X, Registry, ProcessMitigations and EventViewerCustomViews files from the module folder to the working directory'
-                                                Copy-Item -Path "$HardeningModulePath\Resources\Security-Baselines-X.zip" -Destination "$WorkingDir\Security-Baselines-X.zip"
-                                                Copy-Item -Path "$HardeningModulePath\Resources\Registry.csv" -Destination "$WorkingDir\Registry.csv"
-                                                Copy-Item -Path "$HardeningModulePath\Resources\ProcessMitigations.csv" -Destination "$WorkingDir\ProcessMitigations.csv"
-                                                Copy-Item -Path "$HardeningModulePath\Resources\EventViewerCustomViews.zip" -Destination "$WorkingDir\EventViewerCustomViews.zip"
-                                            }
-
-                                            if ($Offline) {
-                                                Write-Verbose -Message 'Offline Mode; Copying the Microsoft Security Baselines, Microsoft 365 Apps for Enterprise Security Baselines and LGPO files from the user provided paths to the working directory'
-                                                Copy-Item -Path "$PathToLGPO" -Destination "$WorkingDir\LGPO.zip"
-                                                Copy-Item -Path "$PathToMSFTSecurityBaselines" -Destination "$WorkingDir\MicrosoftSecurityBaseline.zip"
-                                                Copy-Item -Path "$PathToMSFT365AppsSecurityBaselines" -Destination "$WorkingDir\Microsoft365SecurityBaseline.zip"
-                                            }
-
-                                            Write-Verbose -Message 'Unzipping the archives'
-                                            Expand-Archive -Path "$WorkingDir\MicrosoftSecurityBaseline.zip" -DestinationPath "$WorkingDir\MicrosoftSecurityBaseline" -Force
-                                            Expand-Archive -Path "$WorkingDir\Microsoft365SecurityBaseline.zip" -DestinationPath "$WorkingDir\Microsoft365SecurityBaseline" -Force
-                                            Expand-Archive -Path "$WorkingDir\LGPO.zip" -DestinationPath "$WorkingDir\" -Force
-                                            Expand-Archive -Path "$WorkingDir\Security-Baselines-X.zip" -DestinationPath "$WorkingDir\Security-Baselines-X\" -Force
-
-                                            # capturing the Microsoft Security Baselines extracted path in a variable using wildcard and storing it in a variable so that we won't need to change anything in the code other than the download link when they are updated
-                                            [System.String]$MicrosoftSecurityBaselinePath = (Get-ChildItem -Directory -Path "$WorkingDir\MicrosoftSecurityBaseline\*\").FullName
-                                            # capturing the Microsoft 365 Security Baselines extracted path in a variable using wildcard and storing it in a variable so that we won't need to change anything in the code other than the download link when they are updated
-                                            [System.String]$Microsoft365SecurityBaselinePath = (Get-ChildItem -Directory -Path "$WorkingDir\Microsoft365SecurityBaseline\*\").FullName
-                                            # Storing the registry CSV file in a variable
-                                            [System.Object[]]$RegistryCSVItems = Import-Csv -Path "$WorkingDir\Registry.csv" -Delimiter ','
-                                            # Storing the LGPO.exe path in a variable
-                                            [System.IO.FileInfo]$LGPOExe = Get-ChildItem -Path "$WorkingDir\LGPO_30\LGPO.exe" -File
-
-                                            # Copying LGPO.exe from its folder to Microsoft Security Baseline folder in order to get it ready to be used by PowerShell script
-                                            Copy-Item -Path $LGPOExe -Destination "$MicrosoftSecurityBaselinePath\Scripts\Tools"
-                                            # Copying LGPO.exe from its folder to Microsoft Office 365 Apps for Enterprise Security Baseline folder in order to get it ready to be used by PowerShell script
-                                            Copy-Item -Path $LGPOExe -Destination "$Microsoft365SecurityBaselinePath\Scripts\Tools"
-
-                                            # These values should be passed to the SyncHash so that they will be imported in the parent RunSpace where the main hardening functions run
-                                            $SyncHash['GlobalVars']['MicrosoftSecurityBaselinePath'] = $MicrosoftSecurityBaselinePath
-                                            $SyncHash['GlobalVars']['Microsoft365SecurityBaselinePath'] = $Microsoft365SecurityBaselinePath
-                                            $SyncHash['GlobalVars']['RegistryCSVItems'] = $RegistryCSVItems
-                                            $SyncHash['GlobalVars']['LGPOExe'] = $LGPOExe
-                                            $SyncHash['GlobalVars']['WorkingDir'] = $WorkingDir
 
                                             # If any new RunSpace was created during the operation, they should be removed prior to removing the current RunSpace otherwise they'd be lingering and occupying resources
                                             # Additional RunSpaces are created automatically for remote proxying to Windows PowerShell because of the cmdlets that are not natively available in PowerShell Core such as Defender cmdlets
@@ -1439,7 +1891,6 @@ Function Protect-WindowsSecurity {
                                                     $_.Dispose()
                                                 }
                                             }
-
                                         }
                                         catch {
                                             # Display any error message in a non-terminating way for visibility on the GUI
@@ -1448,18 +1899,7 @@ Function Protect-WindowsSecurity {
                                     }
 
                                     &$prerequisitesScriptBlock *>&1 | ForEach-Object -Process {
-                                        # Use Dispatcher.Invoke to update the GUI elements on the main thread
-                                        $SyncHash.Window.Dispatcher.Invoke({
-                                                # Since other output streams such as verbose, error, warning are not converted to strings, we need to convert them manually
-                                                $SyncHash.TextBox.Text += [System.String]$_ + "`n"
-
-                                                # Find the ScrollViewer and scroll to the bottom
-                                                $ScrollViewer = FindScrollViewer -Control $SyncHash.TextBox
-                                                if ($null -ne $ScrollViewer) {
-                                                    $ScrollViewer.ScrollToBottom()
-                                                }
-                                            }, [System.Windows.Threading.DispatcherPriority]::Background)
-                                    }
+                                        Write-GUI -Text $_ }
 
                                     # Using dispatch since the execute button is owned by the GUI (parent) RunSpace and we're in the 2nd nested RunSpace
                                     # Enabling the execute button after all files are downloaded and ready for action
@@ -1484,56 +1924,87 @@ Function Protect-WindowsSecurity {
                     $SyncHash.ExecuteButton.Add_Click({
 
                             # Close and dispose of the prerequisites RunSpace and the related PowerShell object when the execute button is pressed
-                            ($SyncHash.ListOfStuff | Where-Object -FilterScript { $_.Name -eq 'PrerequisitesRunSpace' }).PowerShell.Dispose()
-                            ($SyncHash.ListOfStuff | Where-Object -FilterScript { $_.Name -eq 'PrerequisitesRunSpace' }).RunSpace.Close()
-                            ($SyncHash.ListOfStuff | Where-Object -FilterScript { $_.Name -eq 'PrerequisitesRunSpace' }).RunSpace.Dispose()
+                            $prerequisitesRunSpace = $SyncHash.ListOfStuff | Where-Object { $_.Name -eq 'PrerequisitesRunSpace' }
+                            $prerequisitesRunSpace.PowerShell.Dispose()
+                            $prerequisitesRunSpace.RunSpace.Close()
+                            $prerequisitesRunSpace.RunSpace.Dispose()
 
                             # Invoke the garbage collector manually to free up resources faster
                             [System.GC]::Collect()
 
-                            # Using dispatch since it's owned by the GUI RunSpace
-                            $SyncHash.Window.Dispatcher.Invoke({
-                                    $SyncHash.window.Content.IsEnabled = $false
-                                })
+                            # Disable all UI elements in Grid1 except for the textblock while commands are being executed
+                            $AllControls = $SyncHash.window.FindName('Grid1').Children
+                            $AllControls += $SyncHash.window.FindName('Grid2').Children
+                            $AllControls += $SyncHash.window.FindName('ParentGrid').Children
+
+                            foreach ($Control in $AllControls) {
+                                # Textblock's parent is the ScrollViewer
+                                if ($Control.Name -notin 'ScrollerForOutputTextBlock') {
+                                    $Control.IsEnabled = $false
+                                }
+                            }
 
                             # Gather selected categories
                             $SelectedCategories = $SyncHash.categoriesListView.Items | Where-Object -FilterScript { $_.Content.IsChecked } | ForEach-Object -Process { $_.Content.Content }
 
                             # Gather selected sub-categories
-                            $SelectedSubCategories = $SyncHash.SubCategoriesListView.Items | Where-Object -FilterScript { $_.IsEnabled -and $_.Content.IsChecked } | ForEach-Object -Process { $_.Content.Content }
+                            # $SelectedSubCategories = $SyncHash.SubCategoriesListView.Items | Where-Object -FilterScript { $_.Content.IsChecked } | ForEach-Object -Process { $_.Content.Content }
 
                             # Output the selected categories and sub-categories to the console
-                            $SelectedCategories *>&1 | ForEach-Object -Process {
-                                # Since other output streams such as verbose, error, warning are not converted to strings, we need to convert them manually
-                                $SyncHash.TextBox.Text += [System.String]$_ + "`n"
+                            # $SelectedCategories *>&1 | ForEach-Object -Process {
+                            #     Write-GUI -Text $_ }
 
-                                # Find the ScrollViewer and scroll to the bottom
-                                $ScrollViewer = FindScrollViewer -Control $SyncHash.TextBox
-                                if ($null -ne $ScrollViewer) {
-                                    $ScrollViewer.ScrollToBottom()
-                                }
-                            }
+                            # $SelectedSubCategories *>&1 | ForEach-Object -Process {
+                            #    Write-GUI -Text $_ }
 
-                            $SelectedSubCategories *>&1 | ForEach-Object -Process {
-                                # Since other output streams such as verbose, error, warning are not converted to strings, we need to convert them manually
-                                $SyncHash.TextBox.Text += [System.String]$_ + "`n"
-
-                                # Find the ScrollViewer and scroll to the bottom
-                                $ScrollViewer = FindScrollViewer -Control $SyncHash.TextBox
-                                if ($null -ne $ScrollViewer) {
-                                    $ScrollViewer.ScrollToBottom()
-                                }
-                            }
-
+                            # Make the Write-Verbose cmdlet write verbose messages regardless of the global preference or selected parameter
+                            # That is the main source of the messages in the GUI
                             $PSDefaultParameterValues = @{
                                 'Write-Verbose:Verbose' = $true
                             }
 
                             [System.Management.Automation.ScriptBlock]$HardeningFunctionsScriptBlock = {
 
-                                # Redefine all of the variables
+                                # Redefine all of the variables in the current scope
                                 $SyncHash.GlobalVars.GetEnumerator() | ForEach-Object -Process {
-                                    Set-Variable -Name $_.Key -Value $_.Value
+                                    Set-Variable -Name $_.Key -Value $_.Value -Force
+                                }
+
+                                # Making the selected sub-categories available in the current scope because the functions called from this scriptblock wouldn't be able to access them otherwise
+                                $SyncHash.SubCategoriesListView.Items | Where-Object -FilterScript { $_.Content.IsChecked } | ForEach-Object -Process { $_.Content.Content } | ForEach-Object -Process {
+                                    # All of the sub-category variables are boolean since they are originally switch parameters in the CLI experience
+                                    Set-Variable -Name $_ -Value $true -Force
+                                }
+
+                                # If Offline mode is used
+                                if ($Offline) {
+                                    # If the required files have not been processed for offline mode already
+                                    if ($SyncHash.StartFileDownloadHasRun -eq $false) {
+                                        # If the checkbox on the GUI for Offline mode is checked
+                                        if ($SyncHash.EnableOfflineModeCheckBox.IsChecked) {
+                                            # Make sure all 3 fields for offline mode files were selected by the users and they are neither empty nor null
+                                            if ((-NOT [System.String]::IsNullOrWhitespace($SyncHash.MicrosoftSecurityBaselineZipTextBox.Text)) -and (-NOT [System.String]::IsNullOrWhitespace($SyncHash.Microsoft365AppsSecurityBaselineZipTextBox.Text)) -and (-NOT [System.String]::IsNullOrWhitespace($SyncHash.LGPOZipTextBox.Text))) {
+                                                # Process the offline mode files selected by the user
+                                                Start-FileDownload
+                                                # Set a flag indicating this code block should not happen again when the execute button is pressed
+                                                $SyncHash.StartFileDownloadHasRun = $true
+
+                                                # Redefine all of the variables in the current scope, Again
+                                                # This step is necessary because the Start-FileDownload function adds 5 new variables to the GlobalVars hashtable and if the offline mode is used, the function is not run when GUI is loaded initially
+                                                $SyncHash.GlobalVars.GetEnumerator() | ForEach-Object -Process {
+                                                    Set-Variable -Name $_.Key -Value $_.Value -Force
+                                                }
+                                            }
+                                            else {
+                                                Write-GUI -Text 'Enable Offline Mode checkbox is checked but you have not selected all of the 3 required files for offline mode operation. Please select them and press the execute button again.'
+                                                Return
+                                            }
+                                        }
+                                        else {
+                                            Write-GUI -Text 'Offline mode is being used but the Enable Offline Mode checkbox is not checked. Please check it and press the execute button again.'
+                                            Return
+                                        }
+                                    }
                                 }
 
                                 #Region Helper-Functions-GUI-Experience
@@ -2025,7 +2496,7 @@ namespace SystemInfo
 '@
                                     # if the type is not already loaded, load it
                                     if (-NOT ('SystemInfo.NativeMethods' -as [System.Type])) {
-                                        Write-Verbose -Message 'Loading SystemInfo.NativeMethods type'
+                                        Write-Verbose -Message 'Loading SystemInfo.NativeMethods type' -Verbose:$false
                                         Add-Type -TypeDefinition $BootDMAProtectionCheck -Language CSharp -Verbose:$false
                                     }
                                     else {
@@ -2059,7 +2530,7 @@ namespace SystemInfo
                                             &"$env:SystemDrive\Windows\System32\powercfg.exe" /h /type full | Out-Null
                                         }
                                         else {
-                                            Write-Output -InputObject "`nHibernate is already set to full."
+                                            Write-Output -InputObject 'Hibernate is already set to full.'
                                         }
                                     }
                                 }
@@ -2354,53 +2825,67 @@ namespace SystemInfo
                                 }
                                 #Endregion Hardening-Categories-Functions-GUI-Experience
 
-                                :MainSwitchLabel switch ($SelectedCategories) {
-                                    'WindowsBootManagerRevocations' { Invoke-WindowsBootManagerRevocations }
-                                    'MicrosoftSecurityBaselines' { Invoke-MicrosoftSecurityBaselines }
-                                    'Microsoft365AppsSecurityBaselines' { Invoke-Microsoft365AppsSecurityBaselines }
-                                    'MicrosoftDefender' { Invoke-MicrosoftDefender }
-                                    'AttackSurfaceReductionRules' { Invoke-AttackSurfaceReductionRules }
-                                    'BitLockerSettings' { Invoke-BitLockerSettings }
-                                    'TLSSecurity' { Invoke-TLSSecurity }
-                                    'LockScreen' { Invoke-LockScreen }
-                                    'UserAccountControl' { Invoke-UserAccountControl }
-                                    'WindowsFirewall' { Invoke-WindowsFirewall }
-                                    'OptionalWindowsFeatures' { Invoke-OptionalWindowsFeatures }
-                                    'WindowsNetworking' { Invoke-WindowsNetworking }
-                                    'MiscellaneousConfigurations' { Invoke-MiscellaneousConfigurations }
-                                    'WindowsUpdateConfigurations' { Invoke-WindowsUpdateConfigurations }
-                                    'EdgeBrowserConfigurations' { Invoke-EdgeBrowserConfigurations }
-                                    'CertificateCheckingCommands' { Invoke-CertificateCheckingCommands }
-                                    'CountryIPBlocking' { Invoke-CountryIPBlocking }
-                                    'DownloadsDefenseMeasures' { Invoke-DownloadsDefenseMeasures }
-                                    'NonAdminCommands' { Invoke-NonAdminCommands }
-                                    default { Write-Output -InputObject 'No category was selected' }
+                                if ($null -ne $SelectedCategories) {
+
+                                    :MainSwitchLabel switch ($SelectedCategories) {
+                                        'WindowsBootManagerRevocations' { Invoke-WindowsBootManagerRevocations }
+                                        'MicrosoftSecurityBaselines' { Invoke-MicrosoftSecurityBaselines }
+                                        'Microsoft365AppsSecurityBaselines' { Invoke-Microsoft365AppsSecurityBaselines }
+                                        'MicrosoftDefender' { Invoke-MicrosoftDefender }
+                                        'AttackSurfaceReductionRules' { Invoke-AttackSurfaceReductionRules }
+                                        'BitLockerSettings' { Invoke-BitLockerSettings }
+                                        'TLSSecurity' { Invoke-TLSSecurity }
+                                        'LockScreen' { Invoke-LockScreen }
+                                        'UserAccountControl' { Invoke-UserAccountControl }
+                                        'WindowsFirewall' { Invoke-WindowsFirewall }
+                                        'OptionalWindowsFeatures' { Invoke-OptionalWindowsFeatures }
+                                        'WindowsNetworking' { Invoke-WindowsNetworking }
+                                        'MiscellaneousConfigurations' { Invoke-MiscellaneousConfigurations }
+                                        'WindowsUpdateConfigurations' { Invoke-WindowsUpdateConfigurations }
+                                        'EdgeBrowserConfigurations' { Invoke-EdgeBrowserConfigurations }
+                                        'CertificateCheckingCommands' { Invoke-CertificateCheckingCommands }
+                                        'CountryIPBlocking' { Invoke-CountryIPBlocking }
+                                        'DownloadsDefenseMeasures' { Invoke-DownloadsDefenseMeasures }
+                                        'NonAdminCommands' { Invoke-NonAdminCommands }
+                                        # This never runs because the $SelectedCategories is empty/null when no categories are selected
+                                        default { 'No category was selected' }
+                                    }
+                                }
+                                else {
+                                    Write-GUI -Text 'No category was selected'
                                 }
                             }
 
+                            # Run the selected categories and output their results to the GUI
                             &$HardeningFunctionsScriptBlock *>&1 | ForEach-Object -Process {
-                                # Use Dispatcher.Invoke to update the GUI elements on the main thread
-                                $SyncHash.Window.Dispatcher.Invoke({
-                                        # Since other output streams such as verbose, error, warning are not converted to strings, we need to convert them manually
-                                        $SyncHash.TextBox.Text += [System.String]$_ + "`n"
+                                Write-GUI -Text $_ }
 
-                                        # Find the ScrollViewer and scroll to the bottom
-                                        $ScrollViewer = FindScrollViewer -Control $SyncHash.TextBox
-                                        if ($null -ne $ScrollViewer) {
-                                            $ScrollViewer.ScrollToBottom()
-                                        }
-                                    }, [System.Windows.Threading.DispatcherPriority]::Background)
+                            # $SyncHash.Window.Dispatcher.Invoke({
+                            # Enable all UI elements once all of the commands have been executed
+                            $AllControls = $SyncHash.window.FindName('Grid1').Children
+                            $AllControls += $SyncHash.window.FindName('Grid2').Children
+                            $AllControls += $SyncHash.window.FindName('ParentGrid').Children
+
+                            foreach ($Control in $AllControls) {
+                                $Control.IsEnabled = $true
                             }
-
-                            # Using dispatch since it's owned by the GUI RunSpace
-                            $SyncHash.Window.Dispatcher.Invoke({
-                                    $SyncHash.window.Content.IsEnabled = $true
-                                })
+                            #   })
                         })
 
                     # Defining what happens when the GUI window is closed
                     $SyncHash.Window.add_Closed({
                             #    [System.Windows.MessageBox]::Show('The window is closing.')
+
+                            if ($SyncHash.ShouldWriteLogs) {
+
+                                # Create and add the footer to the log file
+                                $SyncHash.Logger.Add(@'
+**********************
+Harden Windows Security logger end
+**********************
+'@) | Out-Null
+                                Add-Content -Value $SyncHash.Logger -Path $SyncHash.txtFilePath.Text -Force
+                            }
                         })
 
                     # Inside the GUI RunSpace
@@ -2478,54 +2963,6 @@ namespace SystemInfo
                 Write-ColorfulText -Color MintGreen -InputText "### Please read the Readme in the GitHub repository: https://github.com/HotCakeX/Harden-Windows-Security ###`r`n"
                 Write-ColorfulText -Color Rainbow -InputText "############################################################################################################`r`n"
             }
-
-            #region RequirementsCheck
-            Write-Verbose -Message 'Checking if the OS is Windows Home edition...'
-            if ((Get-CimInstance -ClassName Win32_OperatingSystem).OperatingSystemSKU -eq '101') {
-                Throw [System.PlatformNotSupportedException] 'Windows Home edition detected, exiting...'
-            }
-
-            # Get OS build version
-            [System.Decimal]$OSBuild = [System.Environment]::OSVersion.Version.Build
-            # Get the Update Build Revision (UBR) number
-            [System.Decimal]$UBR = Get-ItemPropertyValue -Path 'Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion' -Name 'UBR'
-            # Create the full OS build number as seen in Windows Settings
-            [System.Decimal]$FullOSBuild = "$OSBuild.$UBR"
-
-            Write-Verbose -Message 'Checking if the OS build is equal or greater than the required build...'
-            if (-NOT ($FullOSBuild -ge $Requiredbuild)) {
-                Throw "You're not using the latest build of the Windows OS. A minimum build of $Requiredbuild is required but your OS build is $FullOSBuild`nPlease go to Windows Update to install the updates and then try again."
-            }
-
-            if ($IsAdmin) {
-                Write-Verbose -Message 'Checking if Secure Boot is enabled...'
-                if (-NOT (Confirm-SecureBootUEFI)) {
-                    Throw 'Secure Boot is not enabled. Please enable it in your UEFI settings and try again.'
-                }
-
-                Write-Verbose -Message 'Checking if TPM is available and enabled...'
-                [System.Object]$TPM = Get-Tpm
-                if (-NOT ($TPM.tpmpresent -and $TPM.tpmenabled)) {
-                    Throw 'TPM is not available or enabled, please enable it in UEFI settings and try again.'
-                }
-
-                if (-NOT ($MDAVConfigCurrent.AMServiceEnabled -eq $true)) {
-                    Throw 'Microsoft Defender Anti Malware service is not enabled, please enable it and then try again.'
-                }
-
-                if (-NOT ($MDAVConfigCurrent.AntispywareEnabled -eq $true)) {
-                    Throw 'Microsoft Defender Anti Spyware is not enabled, please enable it and then try again.'
-                }
-
-                if (-NOT ($MDAVConfigCurrent.AntivirusEnabled -eq $true)) {
-                    Throw 'Microsoft Defender Anti Virus is not enabled, please enable it and then try again.'
-                }
-
-                if ($MDAVConfigCurrent.AMRunningMode -ne 'Normal') {
-                    Throw "Microsoft Defender is running in $($MDAVConfigCurrent.AMRunningMode) state, please remove any 3rd party AV and then try again."
-                }
-            }
-            #endregion RequirementsCheck
 
             # Create the working directory
             [System.IO.DirectoryInfo]$WorkingDir = New-Item -ItemType Directory -Path "$CurrentUserTempDirectoryPath\HardeningXStuff\" -Force
@@ -4229,6 +4666,7 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
 .PARAMETER Offline
     Indicates that the module is being run in offline mode. Will not download any files from the internet.
     Using this parameter will make the following 3 parameters mandatory: PathToLGPO, PathToMSFTSecurityBaselines and PathToMSFT365AppsSecurityBaselines.
+    Use this parameter with the -GUI parameter if you want to use the GUI to run the module in offline mode because it will skip the online version check.
 .PARAMETER PathToLGPO
     The path to the 'LGPO.zip'. Make sure it's in the zip format just like it's downloaded from the Microsoft servers.
     File name can be anything.
@@ -4275,10 +4713,10 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         x:Name="Window"
             WindowStartupLocation="CenterScreen"
-                SizeToContent="WidthAndHeight" MinHeight="800" MinWidth="800">
+                SizeToContent="WidthAndHeight" MinHeight="700" MinWidth="700">
    <Window.Resources>
        <!-- Global style for font color -->
-       <SolidColorBrush x:Key="GlobalFontColor" Color="#302b63"/>
+       <SolidColorBrush x:Key="GlobalFontColor" Color="#000000"/>
        <!-- Base style for all controls -->
        <Style TargetType="{x:Type Control}" x:Key="BaseControlStyle">
            <Setter Property="Foreground" Value="{StaticResource GlobalFontColor}"/>
@@ -4286,14 +4724,13 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
        <!-- Derived styles for specific controls -->
        <Style TargetType="{x:Type Button}" BasedOn="{StaticResource BaseControlStyle}"/>
        <Style TargetType="{x:Type CheckBox}" BasedOn="{StaticResource BaseControlStyle}"/>
-
        <!-- Style for TabControl -->
        <Style TargetType="TabItem">
            <Setter Property="FontSize" Value="16"/>
            <Setter Property="FontWeight" Value="Bold"/>
-           <Setter Property="Padding" Value="20"/>
-           <Setter Property="Margin" Value="5"/>
-           <Setter Property="Height" Value="100"/>
+           <Setter Property="Padding" Value="20,20,20,0"/>
+           <Setter Property="Margin" Value="5,5,5,0"/>
+           <Setter Property="Height" Value="60"/>
            <Setter Property="ToolTip" Value="{Binding Header, RelativeSource={RelativeSource Self}}"/>
            <Setter Property="Foreground" Value="Black"/>
            <Setter Property="Background" Value="Transparent"/>
@@ -4310,8 +4747,8 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                                <Setter TargetName="Border" Property="Background">
                                    <Setter.Value>
                                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
-                                           <GradientStop Color="Pink" Offset="0.0"/>
-                                           <GradientStop Color="Yellow" Offset="1.0"/>
+                                           <GradientStop Color="#78ffd6" Offset="0.0"/>
+                                           <GradientStop Color="#a8ff78" Offset="1.0"/>
                                        </LinearGradientBrush>
                                    </Setter.Value>
                                </Setter>
@@ -4320,8 +4757,8 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                                <Setter TargetName="Border" Property="Background">
                                    <Setter.Value>
                                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
-                                           <GradientStop Color="#FFFADADD" Offset="0.0"/>
-                                           <GradientStop Color="#FFFFFF00" Offset="1.0"/>
+                                           <GradientStop Color="#a8ff78" Offset="0.0"/>
+                                           <GradientStop Color="#78ffd6" Offset="1.0"/>
                                        </LinearGradientBrush>
                                    </Setter.Value>
                                </Setter>
@@ -4334,206 +4771,251 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
        <!-- Style for CheckBox with specific key-->
        <Style x:Key="CheckBoxStyle" TargetType="CheckBox">
            <Setter Property="FontSize" Value="14"/>
-           <Setter Property="Foreground" Value="Blue"/>
+           <Setter Property="Foreground" Value="Black"/>
            <Setter Property="FontFamily" Value="Arial"/>
        </Style>
+       <!-- Style for Buttons with specific key-->
+       <Style x:Key="GlobalButtons" TargetType="Button">
+           <Setter Property="Background">
+               <Setter.Value>
+                   <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                       <GradientStop Color="#AAFFA9" Offset="0.0"/>
+                       <GradientStop Color="#AAFFA9" Offset="1.0"/>
+                   </LinearGradientBrush>
+               </Setter.Value>
+           </Setter>
+           <Setter Property="BorderBrush" Value="#FF003366"/>
+           <Setter Property="BorderThickness" Value="0"/>
+       </Style>
    </Window.Resources>
-   <TabControl>
-       <!-- Online Mode Tab Content -->
-       <TabItem Header="Online Mode">
-           <!-- Grid for Online Mode Tab - Removing the white border with negative margins -->
-           <Grid x:Name="Grid1" Margin="-2.3,-2.3,-2.3,-2.3">
-               <!-- Background color for the grid -->
-               <Grid.Background>
-                   <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                       <GradientStop Color="#8A2387" Offset="0.0"/>
-                       <GradientStop Color="#F27121" Offset="1.0"/>
-                   </LinearGradientBrush>
-               </Grid.Background>
-               <!-- Row and Column definitions for the grid -->
-               <Grid.RowDefinitions>
-               <!-- This is for row 0 -->
-                   <RowDefinition Height="3*" MaxHeight="200"/>
-                   <!-- This is for row 1 -->
-                   <RowDefinition Height="40"/>
-                   <!-- This is for row 2 -->
-                   <RowDefinition Height="70"/>
-                   <!-- This is for row 3 -->
-                   <RowDefinition Height="4*" MaxHeight="200"/>
-                   <!-- This is for row 4 -->
-                   <RowDefinition Height="70"/>
-                   <!-- This is for row 5 -->
-                   <RowDefinition Height="30"/>
-                   <!-- This is for row 6 -->
-                   <RowDefinition Height="80"/>
-               </Grid.RowDefinitions>
-               <Grid.ColumnDefinitions>
-                   <ColumnDefinition Width="*"/>
-                   <ColumnDefinition Width="*"/>
-               </Grid.ColumnDefinitions>
-
-                    <!-- Logging Area -->
-<ScrollViewer x:Name="ScrollerForOutputTextBlock" Grid.Row="0" Grid.ColumnSpan="2" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
-        <TextBox x:Name="OutputTextBlock" TextWrapping="Wrap" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="20" Padding="10"
-                 Background="Transparent" BorderThickness="0" IsReadOnly="True" IsTabStop="False" Cursor="IBeam" />
-</ScrollViewer>
-
-
-               <!-- Categories and Sub-Categories text blocks -->
-               <TextBlock Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="1" HorizontalAlignment="Center" VerticalAlignment="bottom" Margin="10" Text="Categories" FontWeight="Bold" Foreground="Pink"/>
-               <TextBlock Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="1" HorizontalAlignment="Center" VerticalAlignment="bottom" Margin="10" Text="Sub-Categories" FontWeight="Bold" Foreground="Pink"/>
-
-
-
-               <StackPanel Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="1"  Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="bottom" Margin="10">
-    <Button x:Name="CheckAllButtonCategories" Content="Check All Categories" Margin="5"/>
-    <Button x:Name="UncheckAllButtonCategories" Content="Uncheck All Categories" Margin="5"/>
-</StackPanel>
-
-
-
-               <StackPanel Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="1" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="bottom" Margin="10">
-    <Button x:Name="CheckAllButtonSubCategories" Content="Check All Sub-Categories" Margin="5"/>
-    <Button x:Name="UncheckAllButtonSubCategories" Content="Uncheck All Sub-Categories" Margin="5"/>
-</StackPanel>
-
-               <!-- ListViews for Categories -->
-               <ListView Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="1" Margin="20" x:Name="Categories">
-                   <!-- Background color for the ListView -->
-                   <ListView.Background>
-                       <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
-                           <GradientStop Color="#8A2387" Offset="0.0"/>
-                           <GradientStop Color="#F27121" Offset="1.0"/>
-                       </LinearGradientBrush>
-                   </ListView.Background>
-                   <ListViewItem>
-                       <CheckBox Content="WindowsBootManagerRevocations" VerticalContentAlignment="Center" Padding="10,10,60,10"/>
-                   </ListViewItem>
-                   <ListViewItem>
-                       <CheckBox Content="MicrosoftSecurityBaselines" VerticalContentAlignment="Center" Padding="10,10,60,10"/>
-                   </ListViewItem>
-                   <ListViewItem>
-                       <CheckBox Content="Microsoft365AppsSecurityBaselines" VerticalContentAlignment="Center" Padding="10,10,60,10"/>
-                   </ListViewItem>
-                   <ListViewItem>
-                       <CheckBox Content="MicrosoftDefender" VerticalContentAlignment="Center" Padding="10,10,60,10"/>
-                   </ListViewItem>
-                   <ListViewItem>
-                       <CheckBox Content="AttackSurfaceReductionRules" VerticalContentAlignment="Center" Padding="10,10,60,10"/>
-                   </ListViewItem>
-                   <ListViewItem>
-                       <CheckBox Content="BitLockerSettings" VerticalContentAlignment="Center" Padding="10,10,60,10"/>
-                   </ListViewItem>
-                   <ListViewItem>
-                       <CheckBox Content="TLSSecurity" VerticalContentAlignment="Center" Padding="10,10,60,10"/>
-                   </ListViewItem>
-                   <ListViewItem>
-                       <CheckBox Content="LockScreen" VerticalContentAlignment="Center" Padding="10,10,60,10"/>
-                   </ListViewItem>
-                   <ListViewItem>
-                       <CheckBox Content="UserAccountControl" VerticalContentAlignment="Center" Padding="10,10,60,10"/>
-                   </ListViewItem>
-                   <ListViewItem>
-                       <CheckBox Content="WindowsFirewall" VerticalContentAlignment="Center" Padding="10,10,60,10"/>
-                   </ListViewItem>
-                   <ListViewItem>
-                       <CheckBox Content="OptionalWindowsFeatures" VerticalContentAlignment="Center" Padding="10,10,60,10"/>
-                   </ListViewItem>
-                   <ListViewItem>
-                       <CheckBox Content="WindowsNetworking" VerticalContentAlignment="Center" Padding="10,10,60,10"/>
-                   </ListViewItem>
-                   <ListViewItem>
-                       <CheckBox Content="MiscellaneousConfigurations" VerticalContentAlignment="Center" Padding="10,10,60,10"/>
-                   </ListViewItem>
-                   <ListViewItem>
-                       <CheckBox Content="WindowsUpdateConfigurations" VerticalContentAlignment="Center" Padding="10,10,60,10"/>
-                   </ListViewItem>
-                   <ListViewItem>
-                       <CheckBox Content="EdgeBrowserConfigurations" VerticalContentAlignment="Center" Padding="10,10,60,10"/>
-                   </ListViewItem>
-                   <ListViewItem>
-                       <CheckBox Content="CertificateCheckingCommands" VerticalContentAlignment="Center" Padding="10,10,60,10"/>
-                   </ListViewItem>
-                   <ListViewItem>
-                       <CheckBox Content="CountryIPBlocking" VerticalContentAlignment="Center" Padding="10,10,60,10"/>
-                   </ListViewItem>
-                   <ListViewItem>
-                       <CheckBox Content="DownloadsDefenseMeasures" VerticalContentAlignment="Center" Padding="10,10,60,10"/>
-                   </ListViewItem>
-                   <ListViewItem>
-                       <CheckBox Content="NonAdminCommands" VerticalContentAlignment="Center" Padding="10,10,60,10"/>
-                   </ListViewItem>
-               </ListView>
-               <!-- ListViews for Sub-Categories -->
-               <ListView Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="1" Margin="20" x:Name="SubCategories">
-                  <!-- Background color for the list view -->
-                  <ListView.Background>
-                       <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
-                           <GradientStop Color="#8A2387" Offset="0.0"/>
-                           <GradientStop Color="#F27121" Offset="1.0"/>
-                       </LinearGradientBrush>
-                   </ListView.Background>
-                   <ListViewItem>
-                       <CheckBox Content="SecBaselines_NoOverrides" VerticalContentAlignment="Center" Padding="10,10,60,10"/>
-                   </ListViewItem>
-                   <ListViewItem>
-                       <CheckBox Content="MSFTDefender_SAC" VerticalContentAlignment="Center" Padding="10,10,60,10"/>
-                   </ListViewItem>
-                   <ListViewItem>
-                       <CheckBox Content="MSFTDefender_NoDiagData" VerticalContentAlignment="Center" Padding="10,10,60,10"/>
-                   </ListViewItem>
-                   <ListViewItem>
-                       <CheckBox Content="MSFTDefender_NoScheduledTask" VerticalContentAlignment="Center" Padding="10,10,60,10"/>
-                   </ListViewItem>
-                   <ListViewItem>
-                       <CheckBox Content="MSFTDefender_BetaChannels" VerticalContentAlignment="Center" Padding="10,10,60,10"/>
-                   </ListViewItem>
-                   <ListViewItem>
-                       <CheckBox Content="LockScreen_CtrlAltDel" VerticalContentAlignment="Center" Padding="10,10,60,10"/>
-                   </ListViewItem>
-                   <ListViewItem>
-                       <CheckBox Content="LockScreen_NoLastSignedIn" VerticalContentAlignment="Center" Padding="10,10,60,10"/>
-                   </ListViewItem>
-                   <ListViewItem>
-                       <CheckBox Content="UAC_NoFastSwitching" VerticalContentAlignment="Center" Padding="10,10,60,10"/>
-                   </ListViewItem>
-                   <ListViewItem>
-                       <CheckBox Content="UAC_OnlyElevateSigned" VerticalContentAlignment="Center" Padding="10,10,60,10"/>
-                   </ListViewItem>
-                   <ListViewItem>
-                       <CheckBox Content="CountryIPBlocking_OFAC" VerticalContentAlignment="Center" Padding="10,10,60,10"/>
-                   </ListViewItem>
-               </ListView>
-               <!-- Enable Logging CheckBox -->
-               <Viewbox Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-                   <CheckBox x:Name="Log" Content="Enable Logging" Margin="15" Style="{StaticResource CheckBoxStyle}" />
-               </Viewbox>
-               <!-- Log Path TextBox -->
-               <Button Content="LogPath" x:Name="LogPath" Grid.Row="4" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="20" />
-               <!-- File Path TextBox which is dynamic-->
-               <TextBox x:Name="txtFilePath" Grid.Row="5" Grid.ColumnSpan="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="30,0,30,3" />
-               <!-- Execute Button -->
-               <Button Content="Execute" Grid.Row="6" Grid.ColumnSpan="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="10" Padding="10" x:Name="Execute"/>
-           </Grid>
-       </TabItem>
-       <!-- Offline Mode Tab Content -->
-       <TabItem Header="Offline Mode">
-           <Grid x:Name="Grid2">
-               <Grid.Background>
-                   <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                       <GradientStop Color="#007ACC" Offset="0.0"/>
-                       <GradientStop Color="#6A5ACD" Offset="1.0"/>
-                   </LinearGradientBrush>
-               </Grid.Background>
-               <Grid.RowDefinitions>
-                   <RowDefinition Height="Auto"/>
-                   <RowDefinition Height="Auto"/>
-               </Grid.RowDefinitions>
-               <Button Content="New Button 1" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="20" Padding="10"/>
-               <Button Content="New Button 2" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="20" Padding="10"/>
-           </Grid>
-       </TabItem>
-   </TabControl>
+   <!-- Grid for Online Mode Tab - Removing the white border with negative margins -->
+   <Grid x:Name="ParentGrid" Margin="-2.3,-2.3,-2.3,-2.3">
+       <!-- Background color for the grid -->
+       <Grid.Background>
+           <SolidColorBrush Color="#ffffad"/>
+       </Grid.Background>
+       <!-- Row definitions for the grid -->
+       <Grid.RowDefinitions>
+           <!-- row 0 -->
+           <RowDefinition Height="230"/>
+           <!-- row 1: TabControl -->
+           <RowDefinition Height="*"/>
+           <!-- row 2 -->
+           <RowDefinition Height="80"/>
+       </Grid.RowDefinitions>
+       <!-- Column definitions for the grid -->
+       <Grid.ColumnDefinitions>
+           <ColumnDefinition Width="*"/>
+           <ColumnDefinition Width="*"/>
+       </Grid.ColumnDefinitions>
+       <!-- Logging Area -->
+       <ScrollViewer x:Name="ScrollerForOutputTextBlock" Grid.Row="0" Grid.ColumnSpan="2" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto" Margin="10,15,10,10">
+           <TextBox x:Name="OutputTextBlock" TextWrapping="Wrap" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
+                 Background="Transparent" BorderThickness="0" IsReadOnly="True" IsTabStop="False" Cursor="IBeam" MaxWidth="700" FontSize="14" FontWeight="Bold"/>
+       </ScrollViewer>
+       <!-- TabControl for Online and Offline Mode -->
+       <TabControl x:Name="MainTabControl" Grid.Row="1" Grid.ColumnSpan="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" BorderThickness="0,1,0,0">
+           <!-- To center the tab items in the tab control -->
+           <TabControl.Resources>
+               <Style TargetType="{x:Type TabPanel}">
+                   <Setter Property="HorizontalAlignment" Value="Center" />
+               </Style>
+           </TabControl.Resources>
+           <!-- Online Mode Tab Content -->
+           <TabItem Header="Online Mode" VerticalAlignment="Center" HorizontalAlignment="Center">
+               <Grid x:Name="Grid1" Margin="-2.3,-2.3,-2.3,-2.3">
+                   <!-- Background color for the grid -->
+                   <Grid.Background>
+                       <SolidColorBrush Color="#ffffad"/>
+                   </Grid.Background>
+                   <!-- Row and Column definitions for the grid -->
+                   <Grid.RowDefinitions>
+                       <!-- This is for row 0 -->
+                       <RowDefinition Height="50"/>
+                       <!-- This is for row 1 -->
+                       <RowDefinition Height="25"/>
+                       <!-- This is for row 2 -->
+                       <RowDefinition Height="4*" MaxHeight="215"/>
+                       <!-- This is for row 3 -->
+                       <RowDefinition Height="70"/>
+                       <!-- This is for row 4 -->
+                       <RowDefinition Height="30"/>
+                   </Grid.RowDefinitions>
+                   <Grid.ColumnDefinitions>
+                       <ColumnDefinition Width="*"/>
+                       <ColumnDefinition Width="*"/>
+                   </Grid.ColumnDefinitions>
+                   <StackPanel Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="1"  Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="bottom">
+                       <Button x:Name="CheckAllButtonCategories" Content="Select All" Margin="5" Style="{StaticResource GlobalButtons}" ToolTip="Select all hardening categories" Padding="5"/>
+                       <Button x:Name="UncheckAllButtonCategories" Content="Remove Selections" Margin="5" Style="{StaticResource GlobalButtons}" ToolTip="De-select all hardening categories" Padding="5"/>
+                   </StackPanel>
+                   <StackPanel Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="1" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="bottom">
+                       <Button x:Name="CheckAllButtonSubCategories" Content="Select All" Margin="5" Style="{StaticResource GlobalButtons}" ToolTip="Select all available sub-categories" Padding="5"/>
+                       <Button x:Name="UncheckAllButtonSubCategories" Content="Remove Selections" Margin="5" Style="{StaticResource GlobalButtons}" ToolTip="De-select all sub-categories" Padding="5"/>
+                   </StackPanel>
+                   <!-- Categories and Sub-Categories text blocks -->
+                   <TextBlock Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="1" HorizontalAlignment="Center" VerticalAlignment="bottom" Text="Categories" FontWeight="Bold" Foreground="#71B280"/>
+                   <TextBlock Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="1" HorizontalAlignment="Center" VerticalAlignment="bottom" Text="Sub-Categories" FontWeight="Bold" Foreground="#71B280"/>
+                   <!-- ListViews for Categories -->
+                   <ListView Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="1" Margin="10" x:Name="Categories" BorderThickness="0" ToolTip="Select the hardening categories to run">
+                       <!-- Background color for the ListView -->
+                       <ListView.Background>
+                           <SolidColorBrush Color="#ffffad"/>
+                       </ListView.Background>
+                       <ListViewItem>
+                           <CheckBox Content="WindowsBootManagerRevocations" VerticalContentAlignment="Center" Padding="10,10,40,10"/>
+                       </ListViewItem>
+                       <ListViewItem>
+                           <CheckBox Content="MicrosoftSecurityBaselines" VerticalContentAlignment="Center" Padding="10,10,40,10"/>
+                       </ListViewItem>
+                       <ListViewItem>
+                           <CheckBox Content="Microsoft365AppsSecurityBaselines" VerticalContentAlignment="Center" Padding="10,10,40,10"/>
+                       </ListViewItem>
+                       <ListViewItem>
+                           <CheckBox Content="MicrosoftDefender" VerticalContentAlignment="Center" Padding="10,10,40,10"/>
+                       </ListViewItem>
+                       <ListViewItem>
+                           <CheckBox Content="AttackSurfaceReductionRules" VerticalContentAlignment="Center" Padding="10,10,40,10"/>
+                       </ListViewItem>
+                       <ListViewItem>
+                           <CheckBox Content="BitLockerSettings" VerticalContentAlignment="Center" Padding="10,10,40,10"/>
+                       </ListViewItem>
+                       <ListViewItem>
+                           <CheckBox Content="TLSSecurity" VerticalContentAlignment="Center" Padding="10,10,40,10"/>
+                       </ListViewItem>
+                       <ListViewItem>
+                           <CheckBox Content="LockScreen" VerticalContentAlignment="Center" Padding="10,10,40,10"/>
+                       </ListViewItem>
+                       <ListViewItem>
+                           <CheckBox Content="UserAccountControl" VerticalContentAlignment="Center" Padding="10,10,40,10"/>
+                       </ListViewItem>
+                       <ListViewItem>
+                           <CheckBox Content="WindowsFirewall" VerticalContentAlignment="Center" Padding="10,10,40,10"/>
+                       </ListViewItem>
+                       <ListViewItem>
+                           <CheckBox Content="OptionalWindowsFeatures" VerticalContentAlignment="Center" Padding="10,10,40,10"/>
+                       </ListViewItem>
+                       <ListViewItem>
+                           <CheckBox Content="WindowsNetworking" VerticalContentAlignment="Center" Padding="10,10,40,10"/>
+                       </ListViewItem>
+                       <ListViewItem>
+                           <CheckBox Content="MiscellaneousConfigurations" VerticalContentAlignment="Center" Padding="10,10,40,10"/>
+                       </ListViewItem>
+                       <ListViewItem>
+                           <CheckBox Content="WindowsUpdateConfigurations" VerticalContentAlignment="Center" Padding="10,10,40,10"/>
+                       </ListViewItem>
+                       <ListViewItem>
+                           <CheckBox Content="EdgeBrowserConfigurations" VerticalContentAlignment="Center" Padding="10,10,40,10"/>
+                       </ListViewItem>
+                       <ListViewItem>
+                           <CheckBox Content="CertificateCheckingCommands" VerticalContentAlignment="Center" Padding="10,10,40,10"/>
+                       </ListViewItem>
+                       <ListViewItem>
+                           <CheckBox Content="CountryIPBlocking" VerticalContentAlignment="Center" Padding="10,10,40,10"/>
+                       </ListViewItem>
+                       <ListViewItem>
+                           <CheckBox Content="DownloadsDefenseMeasures" VerticalContentAlignment="Center" Padding="10,10,40,10"/>
+                       </ListViewItem>
+                       <ListViewItem>
+                           <CheckBox Content="NonAdminCommands" VerticalContentAlignment="Center" Padding="10,10,40,10"/>
+                       </ListViewItem>
+                   </ListView>
+                   <!-- ListViews for Sub-Categories -->
+                   <ListView Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="1" Margin="10" x:Name="SubCategories" BorderThickness="0" ToolTip="Select sub-categories">
+                       <!-- Background color for the list view -->
+                       <ListView.Background>
+                           <SolidColorBrush Color="#ffffad"/>
+                       </ListView.Background>
+                       <ListViewItem>
+                           <CheckBox Content="SecBaselines_NoOverrides" VerticalContentAlignment="Center" Padding="10,10,40,10"/>
+                       </ListViewItem>
+                       <ListViewItem>
+                           <CheckBox Content="MSFTDefender_SAC" VerticalContentAlignment="Center" Padding="10,10,40,10"/>
+                       </ListViewItem>
+                       <ListViewItem>
+                           <CheckBox Content="MSFTDefender_NoDiagData" VerticalContentAlignment="Center" Padding="10,10,40,10"/>
+                       </ListViewItem>
+                       <ListViewItem>
+                           <CheckBox Content="MSFTDefender_NoScheduledTask" VerticalContentAlignment="Center" Padding="10,10,40,10"/>
+                       </ListViewItem>
+                       <ListViewItem>
+                           <CheckBox Content="MSFTDefender_BetaChannels" VerticalContentAlignment="Center" Padding="10,10,40,10"/>
+                       </ListViewItem>
+                       <ListViewItem>
+                           <CheckBox Content="LockScreen_CtrlAltDel" VerticalContentAlignment="Center" Padding="10,10,40,10"/>
+                       </ListViewItem>
+                       <ListViewItem>
+                           <CheckBox Content="LockScreen_NoLastSignedIn" VerticalContentAlignment="Center" Padding="10,10,40,10"/>
+                       </ListViewItem>
+                       <ListViewItem>
+                           <CheckBox Content="UAC_NoFastSwitching" VerticalContentAlignment="Center" Padding="10,10,40,10"/>
+                       </ListViewItem>
+                       <ListViewItem>
+                           <CheckBox Content="UAC_OnlyElevateSigned" VerticalContentAlignment="Center" Padding="10,10,40,10"/>
+                       </ListViewItem>
+                       <ListViewItem>
+                           <CheckBox Content="CountryIPBlocking_OFAC" VerticalContentAlignment="Center" Padding="10,10,40,10"/>
+                       </ListViewItem>
+                   </ListView>
+                   <!-- Enable Logging CheckBox -->
+                   <Viewbox Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="200">
+                       <CheckBox x:Name="Log" Content="Enable Logging" Margin="15" Style="{StaticResource CheckBoxStyle}" ToolTip="Enable logging"/>
+                   </Viewbox>
+                   <!-- Log Path TextBox -->
+                   <Button Content="LogPath" x:Name="LogPath" Grid.Row="3" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="20" BorderThickness="0" Style="{StaticResource GlobalButtons}" ToolTip="The path to save the log file to"/>
+                   <!-- File Path TextBox which is dynamic-->
+                   <TextBox x:Name="txtFilePath" Grid.Row="4" Grid.ColumnSpan="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="10,0,10,0" BorderThickness="0" ToolTip="The selected log file path" MaxWidth="800"/>
+               </Grid>
+           </TabItem>
+           <!-- Offline Mode Tab Content -->
+           <TabItem Header="Offline Mode Configurations" VerticalAlignment="Center" HorizontalAlignment="Center">
+               <Grid x:Name="Grid2" Margin="-2.3,-2.3,-2.3,-2.3">
+                   <Grid.Background>
+                       <SolidColorBrush Color="#ffffad"/>
+                   </Grid.Background>
+                   <Grid.ColumnDefinitions>
+                       <ColumnDefinition Width="*"/>
+                       <!-- Button column -->
+                       <ColumnDefinition Width="*"/>
+                       <!-- Text area column -->
+                   </Grid.ColumnDefinitions>
+                   <Grid.RowDefinitions>
+                       <!-- This is for row 0 -->
+                       <RowDefinition Height="40" />
+                       <!-- This is for row 1 -->
+                       <RowDefinition Height="50"/>
+                       <!-- This is for row 2 -->
+                       <RowDefinition Height="50"/>
+                       <!-- This is for row 3 -->
+                       <RowDefinition Height="50"/>
+                   </Grid.RowDefinitions>
+                   <!-- Row 0 -->
+                   <!-- Enable Offline Mode CheckBox -->
+                   <Viewbox Grid.Row="0" Grid.ColumnSpan="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                       <CheckBox x:Name="EnableOfflineMode" Content="Enable Offline Mode" Margin="10,20,10,0" Style="{StaticResource CheckBoxStyle}" ToolTip="Enables Offline Mode and will use the selected files instead of downloading them from the Microsoft servers"/>
+                   </Viewbox>
+                   <!-- Row 1 -->
+                   <Button HorizontalAlignment="Stretch" VerticalAlignment="Stretch" x:Name="MicrosoftSecurityBaselineZipButton" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="1" Content="Microsoft Security Baseline" Margin="10,20,10,0" ToolTip="Browse for the path to Microsoft Security Baseline zip file" Style="{StaticResource GlobalButtons}"/>
+                   <TextBox HorizontalAlignment="Stretch" VerticalAlignment="Stretch" x:Name="MicrosoftSecurityBaselineZipTextBox" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="1" Margin="10,20,10,0" MaxWidth="700" ToolTip="Selected path for the Microsoft Security Baseline zip file"/>
+                   <!-- Row 2 -->
+                   <Button HorizontalAlignment="Stretch" VerticalAlignment="Stretch" x:Name="Microsoft365AppsSecurityBaselineZipButton" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="1" Content="Microsoft 365 Apps Security Baseline" ToolTip="Browse for the path to Microsoft 365 Apps Security Baseline zip file" Margin="10,20,10,0" Style="{StaticResource GlobalButtons}"/>
+                   <TextBox HorizontalAlignment="Stretch" VerticalAlignment="Stretch" x:Name="Microsoft365AppsSecurityBaselineZipTextBox" Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="1" Margin="10,20,10,0" MaxWidth="700" ToolTip="Selected path for the Microsoft 365 Apps Security Baseline zip file"/>
+                   <!-- Row 3 -->
+                   <Button HorizontalAlignment="Stretch" VerticalAlignment="Stretch" x:Name="LGPOZipButton" Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="1" Content="LGPO" ToolTip="Browse for the path to LGPO zip file" Margin="10,20,10,0" Style="{StaticResource GlobalButtons}"/>
+                   <TextBox HorizontalAlignment="Stretch" VerticalAlignment="Stretch" x:Name="LGPOZipTextBox" Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="1" Margin="10,20,10,0" ToolTip="Selected path for the LGPO zip file" MaxWidth="700"/>
+               </Grid>
+           </TabItem>
+       </TabControl>
+       <!-- Execute Button -->
+       <Button Content="Execute" Grid.Row="2" Grid.ColumnSpan="2" Width="100" Height="40" FontSize="14" FontWeight="Bold" x:Name="Execute" ToolTip="Run the selected categories and sub-categories">
+           <Button.Background>
+               <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                   <GradientStop Color="#78ffd6" Offset="0.0"/>
+                   <GradientStop Color="#a8ff78" Offset="1.0"/>
+               </LinearGradientBrush>
+           </Button.Background>
+       </Button>
+   </Grid>
 </Window>
 '@
 

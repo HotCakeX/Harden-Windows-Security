@@ -23,14 +23,12 @@ That will also change/create the `<BasePolicyID>GUID</BasePolicyID>` element in 
 
 We have to make sure that the supplemental policy does not contain any policy rule options that only work with a base policy. [This chart shows which ones can be used in a supplemental policy.](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/select-types-of-rules-to-create)
 
-<br>
-
 You can [use this PowerShell code](https://learn.microsoft.com/en-us/powershell/module/configci/set-ruleoption) to automatically make sure non-supplemental policy rule options don't exist in a supplemental policy XML file:
 
 ```powershell
-$supplementalPolicyPath = ".\Supplemental_Policy.xml"
-@(0, 1, 2, 3, 4, 8, 9, 10, 11, 12, 15, 16, 17, 19, 20) | ForEach-Object {
-    Set-RuleOption -FilePath $supplementalPolicyPath -Option $_ -Delete
+[System.String]$SupplementalPolicyPath = "<Path to SupplementalPolicy.xml>"
+@(0, 1, 2, 3, 4, 8, 9, 10, 11, 12, 15, 16, 17, 19, 20) | ForEach-Object -Process {
+    Set-RuleOption -FilePath $SupplementalPolicyPath -Option $_ -Delete
 }
 ```
 
@@ -49,19 +47,24 @@ A supplemental policy [can only have these policy rule options](https://learn.mi
 
 ### Deny Rules in Supplemental Policy Are Invalid
 
-Deny rules are ignored in supplemental policies by WDAC engine. Supplemental policies are only meant to expand what the base policy trusts, that's why only allow rules are supported in supplemental policies, and that's also the reason why we don't need to merge Microsoft recommended block rules or driver block rules with a supplemental policy.
+Deny rules are ignored in supplemental policies by the WDAC engine. Supplemental policies are only meant to expand what the base policy trusts, that's why only allow rules are supported in supplemental policies, and that's also the reason why we don't need to merge Microsoft recommended block rules or driver block rules with a supplemental policy.
 
-**When the base policy has a deny rule for a file and we allow the same file in a supplemental policy, the file will still be blocked, because explicit deny rules have the highest priority.**
+<br>
 
-**[Rule Precedence](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/select-types-of-rules-to-create#file-rule-precedence-order)**
+### Rule Precedence
+
+When the base policy has a deny rule for a file and we allow the same file in a supplemental policy, the file will still be blocked, because explicit deny rules have the highest priority.
+
+[More info](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/select-types-of-rules-to-create#file-rule-precedence-order)
 
 <br>
 
 ### Signing a Supplemental Policy
 
-Suppose you have a base policy and this base policy will have supplemental policies later on. To add the details of the code signing certificate to the base policy in order to get it ready for signing, you need to use the `-Supplemental` switch parameter with the [Add-SignerRule](https://learn.microsoft.com/en-us/powershell/module/configci/add-signerrule) cmdlet. If you don't do that, the signed base policy after deployment won't accept any signed **supplemental** policies. The `-Supplemental` parameter can only be used for a base policy.
+Suppose you have a base policy which will subsequently have supplemental policies. To add the details of the code signing certificate to the base policy, ensuring its readiness for signing, you need to use the `-Supplemental` switch parameter with the [Add-SignerRule](https://learn.microsoft.com/en-us/powershell/module/configci/add-signerrule) cmdlet. Failing to do so would render the signed *base* policy, post-deployment, incapable of accepting any signed *supplemental* policies. Note that the `-Supplemental` parameter is exclusively applicable to base policies.
 
-* **Using `-Supplemental` parameter with `Add-SignerRule` cmdlet on a Supplemental policy will cause boot failure after deploying it, because that parameter should only be used when adding signer rules to a base policy.**
+> [!IMPORTANT]\
+> Using `-Supplemental` parameter with `Add-SignerRule` cmdlet on a Supplemental policy will cause boot failure after deploying it, because that parameter should only be used when adding signer rules to a base policy.
 
 <br>
 
@@ -71,7 +74,7 @@ Whether the deployed supplemental policy is unsigned or signed, you can remove i
 
 <br>
 
-### What if You Deploy Unsigned Supplemental Policy on Signed System?
+### What if You Deployed an Unsigned Supplemental Policy for a Signed Base Policy?
 
 If you deploy an unsigned supplemental policy on a system where all policies including base and supplemental, are signed, the deployed unsigned supplemental policy will be ignored.
 

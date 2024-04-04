@@ -202,10 +202,10 @@ Unprotect-WindowsSecurity
 <br>
 
 > [!WARNING]\
-> For your own security, do not use any other 3rd party tools, programs or scripts that claim to harden Windows or modify it in any way, unless you can 100% verify it. [Never trust 3rd party people on the Internet,](https://github.com/HotCakeX/hotcakex.github.io/raw/main/pdfs/Windows%20Ebook-5%20Risk%20Points%20to%20Avoid%20in%20Enterprise%20Security.pdf) always verify their resources and do that after each release. <a href="#Trust">Read the Trust section</a> to see how you can 100% Trust this repository.
-
-> [!CAUTION]\
-> Any other 3rd party tool/program/script that claims to modify Windows or harden it, if they don't strictly adhere to the official rules above, they can damage your system, cause unknown problems and bugs. [How are Group Policies for this module created and maintained?](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Group-Policy#how-are-group-policies-for-the-module-created-and-maintained)
+> For your own security, exercise caution when considering any other 3rd-party tools, programs, or scripts claiming to harden or modify Windows OS in any way. Verify their legitimacy thoroughly before use and after each release. Avoid blind trust in 3rd party Internet sources. Additionally, if they don't adhere to the rules mentioned above, they can cause system damage, unknown issues, and bugs.
+>
+> * <a href="#Trust">Read the Trust section</a> to see how you can 100% Trust this repository.
+> * [How are Group Policies for this module created and maintained?](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Group-Policy#how-are-group-policies-for-the-module-created-and-maintained)
 
 <br>
 

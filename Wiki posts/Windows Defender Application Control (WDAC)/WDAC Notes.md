@@ -379,16 +379,6 @@ Get-ChildItem -Recurse -Path "Path\To\a\Folder" -File | ForEach-Object -Parallel
 
 <br>
 
-## About the Concurrent Deployed WDAC Policies Limit
-
-The limit as stated in [the official document](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/deploy-multiple-wdac-policies) is 32 active policies on a device at once. That is the total number of Base policies + Supplemental policies + any active system deployed policies.
-
-<br>
-
-<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">
-
-<br>
-
 ## Performing System Reset While Signed WDAC Policy Is Deployed
 
 If you've deployed a Signed WDAC policy on a system and then decide to reset it, either using local install or cloud download, it will fail during the reset process. You must remove the signed WDAC policy prior to performing the reset.

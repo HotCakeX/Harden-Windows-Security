@@ -237,17 +237,24 @@ WDAC forces Allow-list architecture by nature, not deny-list architecture. An em
 
 ## About Microsoft Recommended Block Rules
 
-### Microsoft Recommended Block Rules
+### How to Manually Consume the Microsoft Recommended Block Rules
 
 From [Microsoft recommended block rules](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/applications-that-can-bypass-wdac) document, copy the WDAC policy XML at the end (you might need to expand that section to view it), use a text editor like [VS Code](https://code.visualstudio.com/) to edit it as recommended:
 
-The blocklist policy includes "Allow all" rules for both kernel and user mode files that make it safe to deploy as a standalone WDAC policy. We can even deploy it side-by-side with AllowMicrosoft policy, by keeping its allow all rules in place. [Refer to this document about how multiple base policies work.](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/deploy-multiple-wdac-policies)
+The blocklist policy includes "Allow all" rules for both kernel and user mode files that make it safe to deploy as a standalone WDAC policy or side-by-side any other policy by keeping its allow all rules in place. [Refer to this document about how multiple base policies work.](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/deploy-multiple-wdac-policies)
 
-"Only applications allowed by both policies (All Base policies) run without generating block events", that means even though the Microsoft recommended block rules have **2 allow all rules**, they don't actually allow everything to run, because the same allow all rules don't exist in the default AllowMicrosoft policy, it only contains explicit allow rules.
+<br>
 
-On Windows versions 1903 and above, Microsoft recommends converting this policy to multiple policy format using the `Set-CiPolicyIdInfo` cmdlet with the `-ResetPolicyId` switch. Then, you can deploy it as a Base policy side-by-side with any other policies in your environment.
+### How Do the Allow All Rules Work
 
-If merging into an existing policy that includes an explicit allowlist, you should first remove the two "Allow all" rules and their corresponding FileRuleRefs:
+Only applications allowed by **all Base policies** run without generating block events, that means even though the Microsoft recommended block rules have **2 allow all rules**, they don't actually allow everything to run, because for instance in a realistic scenario, the same allow all rules don't exist in other base policies such as AllowMicrosoft or DefaultWindows base policy, they would only contain explicit allow rules.
+
+The policy must be in multiple policy format, which can be achieved by using the `Set-CiPolicyIdInfo` cmdlet with the `-ResetPolicyId` switch.
+
+<br>
+
+> [!IMPORTANT]\
+> If merging into an existing policy that includes an explicit allowlist, you should first remove the two "Allow all" rules and their corresponding FileRuleRefs:
 
 ```xml
 <Allow ID="ID_ALLOW_A_1" FriendlyName="Allow Kernel Drivers" FileName="*" />
@@ -265,10 +272,10 @@ If merging into an existing policy that includes an explicit allowlist, you shou
 
 * Deploying Microsoft recommended block rules (Driver or user mode) alone, after removing the allow all rules from them, will cause boot failure, for obvious reasons.
 
-* [How to check the version of Microsoft recommended ***driver*** block rules that are being enforced](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/deploy-multiple-wdac-policies)
+* How to check the version of the deployed Microsoft recommended ***driver*** block rules
   - The version is mentioned in [Code Integrity operational event logs](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/operations/event-id-explanations) with an event ID of `3099` in the General tab.
 
-* We don't need to use the **Recommended Kernel Block Rules** in WDAC when creating a policy because [it's already being enforced by default](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/microsoft-recommended-driver-block-rules#microsoft-vulnerable-driver-blocklist) and if we want to update it more regularly, we can do so [by following this section of the document.](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/microsoft-recommended-driver-block-rules#steps-to-download-and-apply-the-vulnerable-driver-blocklist-binary) Or by [Fast and Automatic Microsoft Recommended Driver Block Rules updates](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Fast-and-Automatic-Microsoft-Recommended-Driver-Block-Rules-updates).
+* We don't need to merge and use the Microsoft recommended driver block rules in a policy, because [it's already being enforced by default](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/microsoft-recommended-driver-block-rules#microsoft-vulnerable-driver-blocklist) and if we want to update it more regularly, we can do so [by following this section of the document.](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/microsoft-recommended-driver-block-rules#steps-to-download-and-apply-the-vulnerable-driver-blocklist-binary) Or by [Fast and Automatic Microsoft Recommended Driver Block Rules updates](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Fast-and-Automatic-Microsoft-Recommended-Driver-Block-Rules-updates).
 
 <br>
 
@@ -277,10 +284,6 @@ If merging into an existing policy that includes an explicit allowlist, you shou
 <br>
 
 > [Citation:](https://github.com/MicrosoftDocs/WDAC-Toolkit/discussions/216#discussioncomment-5104866) ISG does not include the recommended blocklist(s).
-
-<br>
-
-> [Citation:](https://github.com/MicrosoftDocs/windows-itpro-docs/issues/11429) About deploying new Signed WDAC policies ***rebootlessly*** using CITool.
 
 <br>
 
@@ -294,7 +297,7 @@ If merging into an existing policy that includes an explicit allowlist, you shou
 
 * Using [Signtool.exe](https://learn.microsoft.com/en-us/dotnet/framework/tools/signtool-exe) with `-fd certHash` will default to the algorithm used on the signing certificate. For example, if the certificate has `SHA512` hashing algorithm, the file that is being signed will use the same algorithm.
 
-* Sometimes [New-CIPolicy](https://learn.microsoft.com/en-us/powershell/module/configci/new-cipolicy) Cmdlet creates 2 file rules for each driver file, such as `.sys` files. One of them is stored in **Driver signing scenarios** section under `<SigningScenario Value="131" ID="ID_SIGNINGSCENARIO_DRIVERS_1" FriendlyName="">` and the other is stored in **User mode signing scenarios** section under `<SigningScenario Value="12" ID="ID_SIGNINGSCENARIO_WINDOWS" FriendlyName="">`. [More info here](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/select-types-of-rules-to-create#why-does-scan-create-eight-hash-rules-for-certain-xml-files)
+* Sometimes [New-CIPolicy](https://learn.microsoft.com/en-us/powershell/module/configci/new-cipolicy) Cmdlet creates 2 file rules for each driver file, such as `.sys` files. One of them is stored in **Driver signing scenarios** section under SigningScenario with the value `131` and the other one is stored in **User mode signing scenarios** section under SigningScenario with the value `12`. [More info here](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/select-types-of-rules-to-create#why-does-scan-create-eight-hash-rules-for-certain-files)
 
 * [File rule levels](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/select-types-of-rules-to-create#table-2-windows-defender-application-control-policy---file-rule-levels) and Cmdlets like [New-CiPolicy](https://learn.microsoft.com/en-us/powershell/module/configci/new-cipolicy) only create rules for files with supported extensions. The [table in this page](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/feature-availability) lists all of the support file extensions.
 

@@ -88,7 +88,7 @@ If you deploy an unsigned supplemental policy on a system where all policies inc
 
 ### Denied File Rules
 
-First, Block/Deny File rules are specified in `<FileRules>` element which is directly under `<SiPolicy>` element in the XML file. Deny rules are created by having `<Deny ID="ID_DENY_"` at the beginning of their lines. For example:
+First, Block/Deny File rules are specified in the `<FileRules>` node which is directly under the `<SiPolicy>` node in the XML file. Deny rules are created by having `<Deny ID="ID_DENY_"` at the beginning of their lines. For example:
 
 ```xml
 <Deny ID="ID_DENY_AGENT64_SHA1" FriendlyName=<Textual Description/Name> Hash=<Hash Numbers> />
@@ -120,7 +120,7 @@ Denied certificates/signers are first mentioned in `<SiPolicy` => `<Signers>` wi
 
 ```xml
 <Signer ID="ID_SIGNER_VERISIGN_2010" Name="VeriSign Class 3 Code Signing 2010 CA">
-... Other possible attributes ...
+... Other possible elements ...
 </Signer>
 ```
 
@@ -148,7 +148,7 @@ In order to specify whether a certificate/signer should be denied/allowed, the I
 
 <br>
 
-## How to Verify the Status of User-Mode and Kernel-Mode WDAC on a System
+## How to Verify the Status of User-Mode and Kernel-Mode Application Control on the System
 
 ### Using PowerShell
 
@@ -179,13 +179,11 @@ Get-CimInstance -ClassName Win32_DeviceGuard -Namespace root\Microsoft\Windows\D
 CITool --refresh
 ```
 
-<br>
+*Old Method: using [RefreshPolicy(AMD64).exe](https://www.microsoft.com/en-us/download/details.aspx?id=102925)*
 
-### Old Method: using [RefreshPolicy(AMD64).exe](https://www.microsoft.com/en-us/download/details.aspx?id=102925)
 
-Using RefreshPolicy(AMD64).exe only works when you add a new policy to the Windows folder, but when you delete a policy from that folder, running RefreshPolicy(AMD64).exe won't make the apps that were previously allowed to run by the policy we just deleted, to be blocked from running again. so after we remove a policy from Windows folder, a system restart is required.
-
-This makes sense because apps that have been previously allowed to run by a policy that we just deleted might be still running in the background or even foreground, so to properly stop them, just running `RefreshPolicy(AMD64).exe` isn't enough and data loss could've occurred if that was the case.
+> [!NOTE]\
+> When a Supplemental policy is removed from the system and you refresh the policies, that doesn't instantly block the apps that were allowed by the removed policy, simply because those apps might be still running on the system, either in the background or foreground. To properly stop them, a system restart is required.
 
 <br>
 
@@ -209,7 +207,7 @@ And this one contains the Certificates/Signers of the User-mode binaries
 <SigningScenario Value="12" ID="ID_SIGNINGSCENARIO_WINDOWS" FriendlyName="User Mode Signing Scenarios">
 ```
 
-**Only** the `Value` needs to stay the same. So, for Kernel-mode drivers it should always be **131** and for User-mode binaries it should always be **12**, anything else can be customized.
+**Only** the `Value` needs to stay the same. So, for Kernel-mode drivers it should always be **131** and for User-mode binaries it should always be **12**, anything else can be customized, this is according to the CI policy schema.
 
 <br>
 

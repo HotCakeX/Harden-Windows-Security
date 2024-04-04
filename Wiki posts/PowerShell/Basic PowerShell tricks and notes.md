@@ -6,7 +6,7 @@ The main source for learning PowerShell is Microsoft Learn websites. There are e
 
 [PowerShell core at Microsoft Learn](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/?view=powershell-7.4)
 
-**Also Use Bing Chat for your PowerShell questions. The AI is fantastic at creating code and explaining everything.**
+You can also use the Windows Copilot for asking any PowerShell related questions, code examples etc.
 
 <br>
 
@@ -18,7 +18,7 @@ The main source for learning PowerShell is Microsoft Learn websites. There are e
 
 <br>
 
-## Filtering With Where-Object
+## Filtering Data With Where-Object
 
 `?` which is an alias for `Where-Object`, is used to filter all the data given to it.
 
@@ -28,6 +28,12 @@ Example
 
 ```powershell
 Get-PSDrive | ?{$_.free -gt 1}
+```
+
+Example
+
+```powershell
+Get-PSDrive | Where-Object {$_.free -gt 1}
 ```
 
 <br>
@@ -41,29 +47,27 @@ If we use `*` then all of the properties will be shown and from there we can cho
 Example:
 
 ```powershell
-Get-PSDrive | ?{$_.free -gt 1} | select *
+Get-PSDrive | Where-Object {$_.free -gt 1} | Select-Object -Property *
 
-Get-PSDrive | ?{$_.free -gt 1} | select root, used, free
+Get-PSDrive | Where-Object {$_.free -gt 1} | Select-Object -Property root, used, free
 ```
 
 <br>
 
 ## Looping Using Foreach-Object
 
-`ForEach-Object { }`
+The [ForEach-Object](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/foreach-object) cmdlet performs an operation on each item in a collection of input objects. The input objects can be piped to the cmdlet or specified using the InputObject parameter.
 
-The `ForEach-Object` cmdlet performs an operation on each item in a collection of input objects. The input objects can be piped to the cmdlet or specified using the InputObject parameter.
-
-i.e. For every item in the pipe, run this line.
+In other words: for every item in the pipe, run this line.
 
 Examples:
 
 ```powershell
-Get-PSDrive | ?{$_.free -gt 1} | select root, used, free | ForEach-Object{"zebra"}
+Get-PSDrive | Where-Object { $_.free -gt 1 } | Select-Object -Property root, used, free | ForEach-Object { 'zebra' }
 ```
 
 ```powershell
-Get-PSDrive | ?{$_.free -gt 1} | select root, used, free | ForEach-Object{ Write-Host "Free Space for " $_.Root "is" ($_.free/1gb )}
+Get-PSDrive | Where-Object { $_.free -gt 1 } | Select-Object -Property root, used, free | ForEach-Object { Write-Host 'Free Space for ' $_.Root 'is' ($_.free / 1gb ) }
 ```
 
 The parenthesis, `($_.free/1gb )` must be there if we want to modify one of the output strings.
@@ -72,23 +76,35 @@ The parenthesis, `($_.free/1gb )` must be there if we want to modify one of the 
 
 ## To Get Online Help About Any Cmdlet
 
-Opens the webpage for the specified command
+These commands open the webpage for the specified cmdlet or command
 
-`Get-help cmdlet –online`
+```powershell
+Get-help <cmdlet> –online
+```
 
-Example:
+```powershell
+Get-Help dir –online
+```
 
-`Get-Help ForEach-Object –online`
+```powershell
+Get-Help ForEach-Object –online
+```
 
-`Get-Help dir –online`
+<br>
 
-Shows the full help on the PowerShell console
+This shows the full help on the PowerShell console
 
-`Get-help get-service -full`
+```powershell
+Get-help Get-Service -full
+```
 
-Opens a new window showing the full help content and offers other options such as Find
+<br>
 
-`Get-help get-service -ShowWindow`
+This opens a new window showing the full help content and offers other options such as Find
+
+```powershell
+Get-help Get-Service -ShowWindow
+```
 
 <br>
 
@@ -96,15 +112,21 @@ Opens a new window showing the full help content and offers other options such a
 
 This gets any Windows service that has the word "Xbox" in it.
 
-`Get-service "*xbox*"`
+```powershell
+Get-Service "*xbox*"
+```
 
 This gets any Windows service that has the word "x" in it.
 
-`Get-service "*x*"`
+```powershell
+Get-Service "*x*"
+```
 
 Putting `*` around the word or letter finds anything that contains it.
 
-`Get-service "*x*" | sort-object status`
+```powershell
+Get-Service "*x*" | Sort-Object status
+```
 
 Example syntax:
 
@@ -144,13 +166,13 @@ Everything is inside a bracket except for -DisplayName, that means it is mandato
 
 [Everything you wanted to know about exceptions](https://learn.microsoft.com/en-us/powershell/scripting/learn/deep-dives/everything-about-exceptions)
 
-Try/Catch will only 'trigger' on a terminating exception. Most cmdlets in PowerShell, by default, won't throw terminating exceptions. You can set the error action with the -ErrorAction or -ea parameters:
+Try/Catch will only 'trigger' on a terminating exception. Most cmdlets in PowerShell, by default, won't throw terminating exceptions. You can set the error action with the `-ErrorAction` or `-ea` parameters:
 
 ```powershell
 Do-Thing 'Stuff' -ErrorAction Stop
 ```
 
-Careful when using `-ErrorAction Stop`, If using it in loops like with `ForEach-Object`, then it will stop the entire loop after the first encounter of error.
+Be careful when using `-ErrorAction Stop`. If using it in loops like with `ForEach-Object`, it will stop the entire loop after the first encounter of error.
 
 [Handling Errors the PowerShell Way](https://devblogs.microsoft.com/scripting/handling-errors-the-powershell-way/)
 
@@ -164,19 +186,15 @@ In your PowerShell code, either locally or globally for the entire script, `Writ
 
 <br>
 
-## Get File Signature of All the Files in a Folder
+## Get File Signature of All of the Files in a Folder
 
-This will check all of the files in the current directory and show an error for folders, you can add `-ErrorAction SilentlyContinue` to the `Get-AuthenticodeSignature` cmdlet to ignore the errors.
-
-```powershell
-Get-ChildItem | ForEach-Object -Parallel {Get-AuthenticodeSignature $_.Name}
-```
-
-This will recursively check only the files in the current directory and sub-directories, no folder is piped.
+This will check all of the files' signatures in the current directory
 
 ```powershell
-Get-ChildItem -Recurse -File | ForEach-Object -Parallel {Get-AuthenticodeSignature $_.Name}
+Get-ChildItem -File | ForEach-Object -Process {Get-AuthenticodeSignature -FilePath $_}
 ```
+
+[More info about Get-ChildItem cmdlet](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.management/get-childitem)
 
 <br>
 
@@ -287,7 +305,7 @@ $File1 = "C:\Scripts\Txt1.txt"
 $File2 = "C:\Scripts\Txt2.txt"
 $Location = "C:\Scripts\Txt3.txt"
 
-Compare-Object (get-content $File1) (get-content $File2) | format-list | Out-File $Location
+Compare-Object -ReferenceObject (Get-Content -Path $File1) -DifferenceObject (Get-Content -Path $File2) | Format-List | Out-File -FilePath $Location
 ```
 
 [Compare-Object](https://learn.microsoft.com/en-gb/powershell/module/Microsoft.PowerShell.Utility/Compare-Object)
@@ -351,7 +369,7 @@ the markers `@"` and `"@` indicating the beginning and end of the string must be
 
 <br>
 
-## How to Find the Type of the Output of a Command in Powershell?
+## How to Find the Type of the Output of a Command in Powershell
 
 Using `GetType()`
 
@@ -362,7 +380,7 @@ Examples:
 ```
 
 ```powershell
-(get-nettCPConnection).GetType()
+(Get-NetTCPConnection).GetType()
 ```
 
 <br>
@@ -372,6 +390,8 @@ Examples:
 Pascal Case requires variables made from compound words and have the first letter of each appended word written with an uppercase letter.
 
 Example: `$Get-CurrentTime`
+
+This will make your code readable and more understandable.
 
 <br>
 
@@ -455,7 +475,7 @@ Example: `$Get-CurrentTime`
 
 * [Get-Unique](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.utility/get-unique)
 
-* [Sort-Object](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.utility/sort-object)
+* [Sort-Object](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.utility/Sort-Object)
 
 * [about_Comment_Based_Help](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_comment_based_help)
 

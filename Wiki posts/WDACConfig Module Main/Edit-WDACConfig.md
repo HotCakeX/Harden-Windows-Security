@@ -445,7 +445,7 @@ Edit-WDACConfig
 
 ## Description
 
-Merge multiple deployed Supplemental policies into 1 and deploy it, remove the individual ones, all happening automatically. Very useful to keep Supplemental policies below 32 since that's the limit.
+Merge multiple deployed Supplemental policies into 1 and deploy it, remove the individual ones, all happening automatically.
 
 ## Parameters
 

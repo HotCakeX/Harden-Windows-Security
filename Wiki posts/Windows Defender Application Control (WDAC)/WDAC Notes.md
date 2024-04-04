@@ -23,14 +23,12 @@ That will also change/create the `<BasePolicyID>GUID</BasePolicyID>` element in 
 
 We have to make sure that the supplemental policy does not contain any policy rule options that only work with a base policy. [This chart shows which ones can be used in a supplemental policy.](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/select-types-of-rules-to-create)
 
-<br>
-
 You can [use this PowerShell code](https://learn.microsoft.com/en-us/powershell/module/configci/set-ruleoption) to automatically make sure non-supplemental policy rule options don't exist in a supplemental policy XML file:
 
 ```powershell
-$supplementalPolicyPath = ".\Supplemental_Policy.xml"
-@(0, 1, 2, 3, 4, 8, 9, 10, 11, 12, 15, 16, 17, 19, 20) | ForEach-Object {
-    Set-RuleOption -FilePath $supplementalPolicyPath -Option $_ -Delete
+[System.String]$SupplementalPolicyPath = "<Path to SupplementalPolicy.xml>"
+@(0, 1, 2, 3, 4, 8, 9, 10, 11, 12, 15, 16, 17, 19, 20) | ForEach-Object -Process {
+    Set-RuleOption -FilePath $SupplementalPolicyPath -Option $_ -Delete
 }
 ```
 
@@ -49,19 +47,24 @@ A supplemental policy [can only have these policy rule options](https://learn.mi
 
 ### Deny Rules in Supplemental Policy Are Invalid
 
-Deny rules are ignored in supplemental policies by WDAC engine. Supplemental policies are only meant to expand what the base policy trusts, that's why only allow rules are supported in supplemental policies, and that's also the reason why we don't need to merge Microsoft recommended block rules or driver block rules with a supplemental policy.
+Deny rules are ignored in supplemental policies by the WDAC engine. Supplemental policies are only meant to expand what the base policy trusts, that's why only allow rules are supported in supplemental policies, and that's also the reason why we don't need to merge Microsoft recommended block rules or driver block rules with a supplemental policy.
 
-**When the base policy has a deny rule for a file and we allow the same file in a supplemental policy, the file will still be blocked, because explicit deny rules have the highest priority.**
+<br>
 
-**[Rule Precedence](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/select-types-of-rules-to-create#file-rule-precedence-order)**
+### Rule Precedence
+
+When the base policy has a deny rule for a file and we allow the same file in a supplemental policy, the file will still be blocked, because explicit deny rules have the highest priority.
+
+[More info](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/select-types-of-rules-to-create#file-rule-precedence-order)
 
 <br>
 
 ### Signing a Supplemental Policy
 
-Suppose you have a base policy and this base policy will have supplemental policies later on. To add the details of the code signing certificate to the base policy in order to get it ready for signing, you need to use the `-Supplemental` switch parameter with the [Add-SignerRule](https://learn.microsoft.com/en-us/powershell/module/configci/add-signerrule) cmdlet. If you don't do that, the signed base policy after deployment won't accept any signed **supplemental** policies. The `-Supplemental` parameter can only be used for a base policy.
+Suppose you have a base policy which will subsequently have supplemental policies. To add the details of the code signing certificate to the base policy, ensuring its readiness for signing, you need to use the `-Supplemental` switch parameter with the [Add-SignerRule](https://learn.microsoft.com/en-us/powershell/module/configci/add-signerrule) cmdlet. Failing to do so would render the signed *base* policy, post-deployment, incapable of accepting any signed *supplemental* policies. Note that the `-Supplemental` parameter is exclusively applicable to base policies.
 
-* **Using `-Supplemental` parameter with `Add-SignerRule` cmdlet on a Supplemental policy will cause boot failure after deploying it, because that parameter should only be used when adding signer rules to a base policy.**
+> [!IMPORTANT]\
+> Using `-Supplemental` parameter with `Add-SignerRule` cmdlet on a Supplemental policy will cause boot failure after deploying it, because that parameter should only be used when adding signer rules to a base policy.
 
 <br>
 
@@ -71,7 +74,7 @@ Whether the deployed supplemental policy is unsigned or signed, you can remove i
 
 <br>
 
-### What if You Deploy Unsigned Supplemental Policy on Signed System?
+### What if You Deployed an Unsigned Supplemental Policy for a Signed Base Policy?
 
 If you deploy an unsigned supplemental policy on a system where all policies including base and supplemental, are signed, the deployed unsigned supplemental policy will be ignored.
 
@@ -85,7 +88,7 @@ If you deploy an unsigned supplemental policy on a system where all policies inc
 
 ### Denied File Rules
 
-First, Block/Deny File rules are specified in `<FileRules>` element which is directly under `<SiPolicy>` element in the XML file. Deny rules are created by having `<Deny ID="ID_DENY_"` at the beginning of their lines. For example:
+First, Block/Deny File rules are specified in the `<FileRules>` node which is directly under the `<SiPolicy>` node in the XML file. Deny rules are created by having `<Deny ID="ID_DENY_"` at the beginning of their lines. For example:
 
 ```xml
 <Deny ID="ID_DENY_AGENT64_SHA1" FriendlyName=<Textual Description/Name> Hash=<Hash Numbers> />
@@ -117,7 +120,7 @@ Denied certificates/signers are first mentioned in `<SiPolicy` => `<Signers>` wi
 
 ```xml
 <Signer ID="ID_SIGNER_VERISIGN_2010" Name="VeriSign Class 3 Code Signing 2010 CA">
-... Other possible attributes ...
+... Other possible elements ...
 </Signer>
 ```
 
@@ -145,7 +148,7 @@ In order to specify whether a certificate/signer should be denied/allowed, the I
 
 <br>
 
-## How to Verify the Status of User-Mode and Kernel-Mode WDAC on a System
+## How to Verify the Status of User-Mode and Kernel-Mode Application Control on the System
 
 ### Using PowerShell
 
@@ -176,13 +179,11 @@ Get-CimInstance -ClassName Win32_DeviceGuard -Namespace root\Microsoft\Windows\D
 CITool --refresh
 ```
 
-<br>
+*Old Method: using [RefreshPolicy(AMD64).exe](https://www.microsoft.com/en-us/download/details.aspx?id=102925)*
 
-### Old Method: using [RefreshPolicy(AMD64).exe](https://www.microsoft.com/en-us/download/details.aspx?id=102925)
 
-Using RefreshPolicy(AMD64).exe only works when you add a new policy to the Windows folder, but when you delete a policy from that folder, running RefreshPolicy(AMD64).exe won't make the apps that were previously allowed to run by the policy we just deleted, to be blocked from running again. so after we remove a policy from Windows folder, a system restart is required.
-
-This makes sense because apps that have been previously allowed to run by a policy that we just deleted might be still running in the background or even foreground, so to properly stop them, just running `RefreshPolicy(AMD64).exe` isn't enough and data loss could've occurred if that was the case.
+> [!NOTE]\
+> When a Supplemental policy is removed from the system and you refresh the policies, that doesn't instantly block the apps that were allowed by the removed policy, simply because those apps might be still running on the system, either in the background or foreground. To properly stop them, a system restart is required.
 
 <br>
 
@@ -206,7 +207,7 @@ And this one contains the Certificates/Signers of the User-mode binaries
 <SigningScenario Value="12" ID="ID_SIGNINGSCENARIO_WINDOWS" FriendlyName="User Mode Signing Scenarios">
 ```
 
-**Only** the `Value` needs to stay the same. So, for Kernel-mode drivers it should always be **131** and for User-mode binaries it should always be **12**, anything else can be customized.
+**Only** the `Value` needs to stay the same. So, for Kernel-mode drivers it should always be **131** and for User-mode binaries it should always be **12**, anything else can be customized, this is according to the CI policy schema.
 
 <br>
 
@@ -236,17 +237,24 @@ WDAC forces Allow-list architecture by nature, not deny-list architecture. An em
 
 ## About Microsoft Recommended Block Rules
 
-### Microsoft Recommended Block Rules
+### How to Manually Consume the Microsoft Recommended Block Rules
 
 From [Microsoft recommended block rules](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/applications-that-can-bypass-wdac) document, copy the WDAC policy XML at the end (you might need to expand that section to view it), use a text editor like [VS Code](https://code.visualstudio.com/) to edit it as recommended:
 
-The blocklist policy includes "Allow all" rules for both kernel and user mode files that make it safe to deploy as a standalone WDAC policy. We can even deploy it side-by-side with AllowMicrosoft policy, by keeping its allow all rules in place. [Refer to this document about how multiple base policies work.](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/deploy-multiple-wdac-policies)
+The blocklist policy includes "Allow all" rules for both kernel and user mode files that make it safe to deploy as a standalone WDAC policy or side-by-side any other policy by keeping its allow all rules in place. [Refer to this document about how multiple base policies work.](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/deploy-multiple-wdac-policies)
 
-"Only applications allowed by both policies (All Base policies) run without generating block events", that means even though the Microsoft recommended block rules have **2 allow all rules**, they don't actually allow everything to run, because the same allow all rules don't exist in the default AllowMicrosoft policy, it only contains explicit allow rules.
+<br>
 
-On Windows versions 1903 and above, Microsoft recommends converting this policy to multiple policy format using the `Set-CiPolicyIdInfo` cmdlet with the `-ResetPolicyId` switch. Then, you can deploy it as a Base policy side-by-side with any other policies in your environment.
+### How Do the Allow All Rules Work
 
-If merging into an existing policy that includes an explicit allowlist, you should first remove the two "Allow all" rules and their corresponding FileRuleRefs:
+Only applications allowed by **all Base policies** run without generating block events, that means even though the Microsoft recommended block rules have **2 allow all rules**, they don't actually allow everything to run, because for instance in a realistic scenario, the same allow all rules don't exist in other base policies such as AllowMicrosoft or DefaultWindows base policy, they would only contain explicit allow rules.
+
+The policy must be in multiple policy format, which can be achieved by using the `Set-CiPolicyIdInfo` cmdlet with the `-ResetPolicyId` switch.
+
+<br>
+
+> [!IMPORTANT]\
+> If merging into an existing policy that includes an explicit allowlist, you should first remove the two "Allow all" rules and their corresponding FileRuleRefs:
 
 ```xml
 <Allow ID="ID_ALLOW_A_1" FriendlyName="Allow Kernel Drivers" FileName="*" />
@@ -264,10 +272,10 @@ If merging into an existing policy that includes an explicit allowlist, you shou
 
 * Deploying Microsoft recommended block rules (Driver or user mode) alone, after removing the allow all rules from them, will cause boot failure, for obvious reasons.
 
-* [How to check the version of Microsoft recommended ***driver*** block rules that are being enforced](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/deploy-multiple-wdac-policies)
+* How to check the version of the deployed Microsoft recommended ***driver*** block rules
   - The version is mentioned in [Code Integrity operational event logs](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/operations/event-id-explanations) with an event ID of `3099` in the General tab.
 
-* We don't need to use the **Recommended Kernel Block Rules** in WDAC when creating a policy because [it's already being enforced by default](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/microsoft-recommended-driver-block-rules#microsoft-vulnerable-driver-blocklist) and if we want to update it more regularly, we can do so [by following this section of the document.](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/microsoft-recommended-driver-block-rules#steps-to-download-and-apply-the-vulnerable-driver-blocklist-binary) Or by [Fast and Automatic Microsoft Recommended Driver Block Rules updates](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Fast-and-Automatic-Microsoft-Recommended-Driver-Block-Rules-updates).
+* We don't need to merge and use the Microsoft recommended driver block rules in a policy, because [it's already being enforced by default](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/microsoft-recommended-driver-block-rules#microsoft-vulnerable-driver-blocklist) and if we want to update it more regularly, we can do so [by following this section of the document.](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/microsoft-recommended-driver-block-rules#steps-to-download-and-apply-the-vulnerable-driver-blocklist-binary) Or by [Fast and Automatic Microsoft Recommended Driver Block Rules updates](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Fast-and-Automatic-Microsoft-Recommended-Driver-Block-Rules-updates).
 
 <br>
 
@@ -276,10 +284,6 @@ If merging into an existing policy that includes an explicit allowlist, you shou
 <br>
 
 > [Citation:](https://github.com/MicrosoftDocs/WDAC-Toolkit/discussions/216#discussioncomment-5104866) ISG does not include the recommended blocklist(s).
-
-<br>
-
-> [Citation:](https://github.com/MicrosoftDocs/windows-itpro-docs/issues/11429) About deploying new Signed WDAC policies ***rebootlessly*** using CITool.
 
 <br>
 
@@ -293,7 +297,7 @@ If merging into an existing policy that includes an explicit allowlist, you shou
 
 * Using [Signtool.exe](https://learn.microsoft.com/en-us/dotnet/framework/tools/signtool-exe) with `-fd certHash` will default to the algorithm used on the signing certificate. For example, if the certificate has `SHA512` hashing algorithm, the file that is being signed will use the same algorithm.
 
-* Sometimes [New-CIPolicy](https://learn.microsoft.com/en-us/powershell/module/configci/new-cipolicy) Cmdlet creates 2 file rules for each driver file, such as `.sys` files. One of them is stored in **Driver signing scenarios** section under `<SigningScenario Value="131" ID="ID_SIGNINGSCENARIO_DRIVERS_1" FriendlyName="">` and the other is stored in **User mode signing scenarios** section under `<SigningScenario Value="12" ID="ID_SIGNINGSCENARIO_WINDOWS" FriendlyName="">`. [More info here](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/select-types-of-rules-to-create#why-does-scan-create-eight-hash-rules-for-certain-xml-files)
+* Sometimes [New-CIPolicy](https://learn.microsoft.com/en-us/powershell/module/configci/new-cipolicy) Cmdlet creates 2 file rules for each driver file, such as `.sys` files. One of them is stored in **Driver signing scenarios** section under SigningScenario with the value `131` and the other one is stored in **User mode signing scenarios** section under SigningScenario with the value `12`. [More info here](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/select-types-of-rules-to-create#why-does-scan-create-eight-hash-rules-for-certain-files)
 
 * [File rule levels](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/select-types-of-rules-to-create#table-2-windows-defender-application-control-policy---file-rule-levels) and Cmdlets like [New-CiPolicy](https://learn.microsoft.com/en-us/powershell/module/configci/new-cipolicy) only create rules for files with supported extensions. The [table in this page](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/feature-availability) lists all of the support file extensions.
 
@@ -321,7 +325,7 @@ New-CIPolicy -FilePath ".\store.xml" -Rules $Rules
 
 ## How to Remove Flight Signing Certificates From Default Example Policies
 
-Removing these shouldn't cause any problem as long as you are using stable OS version
+Removing these do not cause any problem as long as your Windows build is in the Stable, Release Preview or Beta channel.
 
 ```powershell
 # Flight root Certs removal
@@ -365,23 +369,18 @@ Remove-CIPolicyRule -FilePath "DefaultWindows_Enforced.xml" -Id "ID_FILEATTRIB_R
 
 Questionable software such as pirated software are **never** recommended to be allowed in the WDAC policy because they are tampered with. Pirated software can have signed files too, but they are modified and as a result there is a mismatch between the file hash and the hash of the file saved in their digital signature. When such a mismatch exists for signed files, [Authenticode](https://learn.microsoft.com/en-us/windows-hardware/drivers/install/authenticode) reports the mismatch, and the file can't be allowed in a WDAC policy.
 
-If you want to go through many files and see which ones have a mismatch between their file hash and signature hash, you can use the following [PowerShell (core)](https://github.com/PowerShell/PowerShell/releases) command, it searches through a folder and all of its sub-folders quickly using [parallel](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/foreach-object?view=powershell-7.3#-parallel) operations:
+If you want to go through many files and see which ones have a mismatch between their file hash and signature hash, you can use the following [PowerShell](https://github.com/PowerShell/PowerShell/releases) command, it searches through a folder and all of its sub-folders quickly.
 
 <br>
 
 ```powershell
-Get-ChildItem -Recurse -Path "Path\To\a\Folder" -File | ForEach-Object -Parallel {Get-AuthenticodeSignature -FilePath $_.FullName} | Where-Object {$_.Status -eq 'HashMismatch'}
+Foreach ($File in (Get-ChildItem -Path 'Path\To\a\Folder' -File -Recurse)) {
+    $Signature = Get-AuthenticodeSignature -FilePath $File.FullName
+    if ($Signature.Status -eq 'HashMismatch') {
+        Write-Output -InputObject $File.FullName
+    }
+}
 ```
-
-<br>
-
-<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">
-
-<br>
-
-## About the Concurrent Deployed WDAC Policies Limit
-
-The limit as stated in [the official document](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/deploy-multiple-wdac-policies) is 32 active policies on a device at once. That is the total number of Base policies + Supplemental policies + any active system deployed policies.
 
 <br>
 
@@ -403,9 +402,9 @@ This behavior is true for [Lightly managed](https://github.com/HotCakeX/Harden-W
 
 <br>
 
-## Citool No Longer Requires GUID.cip Naming Convention for Deployment
+## The .CIP Binary File Can Have Any Name or No Name at All
 
-Normally, `.cip` files would have to have the same name as the GUID of the xml file they were converted from, but that's no longer necessary. Using [CiTool](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/operations/citool-commands) in Windows 11 build `22621`, they can be deployed with any name, even without a name, and lead to a successful WDAC policy deployment.
+Using [CiTool](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/operations/citool-commands) in Windows 11 build `22621` and above, `.CIP` binary files can be deployed with any name, even without a name, and lead to a successful WDAC policy deployment.
 
 <br>
 
@@ -415,7 +414,13 @@ Normally, `.cip` files would have to have the same name as the GUID of the xml f
 
 ## Policies with Required:EV Signers rule option
 
-If a base policy has rule option number 8, Required:EV Signers, it will require all kernel-mode drivers to have EV signer certificates. You cannot bypass this requirement with a Supplemental policy, you cannot allowlist non-EV signed files in any way. **Non-EV signed files will be blocked even if the base policy is in Audit mode.** This is true for any type of base policy such as Default Windows, Allow Microsoft, Strict Kernel mode etc.
+If a base policy has rule option number 8, **Required:EV Signers**, it will require all kernel-mode drivers to have EV signer certificates.
+
+* You cannot bypass this requirement with a Supplemental policy.
+
+* You cannot allowlist non-EV signed files in any way.
+
+* **Non-EV signed files will be blocked even if the base policy is in Audit mode.** This is true for any type of base policy such as Default Windows, Allow Microsoft, Strict Kernel mode etc.
 
 <br>
 
@@ -443,6 +448,9 @@ For a Kernel-mode only WDAC policy, only the following EKUs are necessary
     <EKU ID="ID_EKU_WHQL" Value="010A2B0601040182370A0305" FriendlyName="" />
 </EKUs>
 ```
+
+> [!IMPORTANT]\
+> [Refer to this document for complete info about Kernel-Mode policies](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDAC-policy-for-BYOVD-Kernel-mode-only-protection)
 
 <br>
 
@@ -485,15 +493,13 @@ When you use `-Audit` parameter of ConfigCI cmdlets such as [Get-SystemDriver](h
 
 Sometimes there are files that are signed by 2 or more certificates, aka double signed files.
 
-When FilePublisher level is used, WDAC creates rules for both of the intermediate certificates of those files, and each rule will have a signer assigned to it. If the file is either User mode only or Kernel mode only, then 2 Signers will be created for it, one for each certificate.
+When a level such as FilePublisher is used, ConfigCI cmdlets create signer rules for one of the intermediate certificates of each of the signers of those files.
 
 Depending on Kernel or use mode, 2 Allowed Signers are created for the file in either UMCI or KMCI Signing scenario sections.
 
 However, if the file is a kernel mode driver and user mode driver, then 4 signers are created for it, 2 Allowed Signers in the UMCI Signing Scenario and 2 in the KMCI Signing scenario.
 
 ### An example
-
-<br>
 
 In the signer below
 
@@ -507,17 +513,18 @@ In the signer below
 
 <br>
 
-* `Name="Microsoft Windows Third Party Component CA 2014"` is the Common name of the Intermediate certificate of the file
-* `Value="D8BE9E4D9074088EF818BC6F6FB64955E90378B2754155126FEEBBBD969CF0AE"` is the TBS (To Be Signed) values of the same Intermediate certificate
-* `Value="Microsoft Windows Hardware Compatibility Publisher"` is the Common name of the Leaf certificate of the file
+* `Name="Microsoft Windows Third Party Component CA 2014"` is the Common Name of one of the Intermediate certificate of the file.
+
+* `Value="D8BE9E4D9074088EF818BC6F6FB64955E90378B2754155126FEEBBBD969CF0AE"` is the TBS (To Be Signed) values of the same Intermediate certificate.
+* `Value="Microsoft Windows Hardware Compatibility Publisher"` is the Common Name of the Leaf certificate of the file.
 
 <br>
 
 ### Some Notes
 
-1. If 2 files have the same Leaf certificate CN and also have an Intermediate certificate in common (that has the same TBS and CN) then they should be listed under the same Signer.
+1. If 2 files have the same Leaf certificate CN and also have an Intermediate Certificate in common (that has the same TBS and CN) then they should be listed under the same Signer.
 
-2. Any Intermediate certificate in the certificate chain/path of a file can be used to allow a file using FilePublisher.
+2. Any Intermediate certificate in the certificate chain/path of a file can be used to allow a file using FilePublisher level.
 
 <br>
 
@@ -527,7 +534,9 @@ In the signer below
 
 ## What Does HVCI option Set to Strict Mean?
 
-[HVCI](https://learn.microsoft.com/en-us/windows/security/hardware-security/enable-virtualization-based-protection-of-code-integrity) stands for [Hypervisor-protected Code Integrity](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/introduction-to-device-guard-virtualization-based-security-and-windows-defender-application-control) and it is a feature that uses virtualization-based security (VBS) to protect the Windows kernel from memory attacks. HVCI can be set to different options in a WDAC policy, such as Enabled, DebugMode, or Strict. Setting [HVCI to Strict](https://learn.microsoft.com/en-us/powershell/module/configci/set-hvcioptions) in a WDAC policy provides the highest level of protection for kernel mode code integrity, as it enforces these additional restrictions:
+[HVCI](https://learn.microsoft.com/en-us/windows/security/hardware-security/enable-virtualization-based-protection-of-code-integrity) stands for [Hypervisor-protected Code Integrity](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/introduction-to-device-guard-virtualization-based-security-and-windows-defender-application-control) and it is a feature that uses virtualization-based security (VBS) to protect the Windows kernel from memory attacks. HVCI can be set to different options in a WDAC policy, such as Enabled, DebugMode, or Strict.
+
+Setting [HVCI to Strict](https://learn.microsoft.com/en-us/powershell/module/configci/set-hvcioptions) in a WDAC policy provides the highest level of protection for kernel mode code integrity, as it enforces these additional restrictions:
 
 * It prevents unsigned drivers from loading, even if they are allowed by the WDAC policy.
 It prevents drivers that are not compatible with HVCI from loading, even if they are signed and allowed by the WDAC policy.

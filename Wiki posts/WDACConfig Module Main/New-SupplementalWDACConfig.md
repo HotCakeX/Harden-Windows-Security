@@ -8,16 +8,16 @@
 
 ```powershell
 New-SupplementalWDACConfig
-    [-Normal] 
-    -ScanLocation <DirectoryInfo> 
-    -SuppPolicyName <String> 
-    [-PolicyPath <FileInfo>] 
-    [-Deploy] 
-    [-SpecificFileNameLevel <String>] 
-    [-NoUserPEs] 
-    [-NoScript] 
-    [-Level <String>] 
-    [-Fallbacks <String[]>] 
+    [-Normal]
+    -ScanLocation <DirectoryInfo>
+    -SuppPolicyName <String>
+    [-PolicyPath <FileInfo>]
+    [-Deploy]
+    [-SpecificFileNameLevel <String>]
+    [-NoUserPEs]
+    [-NoScript]
+    [-Level <String>]
+    [-Fallbacks <String[]>]
     [-SkipVersionCheck]
     [<CommonParameters>]
 ```

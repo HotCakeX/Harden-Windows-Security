@@ -325,7 +325,7 @@ New-CIPolicy -FilePath ".\store.xml" -Rules $Rules
 
 ## How to Remove Flight Signing Certificates From Default Example Policies
 
-Removing these shouldn't cause any problem as long as you are using stable OS version
+Removing these do not cause any problem as long as your Windows build is in the Stable, Release Preview or Beta channel.
 
 ```powershell
 # Flight root Certs removal
@@ -369,12 +369,17 @@ Remove-CIPolicyRule -FilePath "DefaultWindows_Enforced.xml" -Id "ID_FILEATTRIB_R
 
 Questionable software such as pirated software are **never** recommended to be allowed in the WDAC policy because they are tampered with. Pirated software can have signed files too, but they are modified and as a result there is a mismatch between the file hash and the hash of the file saved in their digital signature. When such a mismatch exists for signed files, [Authenticode](https://learn.microsoft.com/en-us/windows-hardware/drivers/install/authenticode) reports the mismatch, and the file can't be allowed in a WDAC policy.
 
-If you want to go through many files and see which ones have a mismatch between their file hash and signature hash, you can use the following [PowerShell (core)](https://github.com/PowerShell/PowerShell/releases) command, it searches through a folder and all of its sub-folders quickly using [parallel](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/foreach-object?view=powershell-7.3#-parallel) operations:
+If you want to go through many files and see which ones have a mismatch between their file hash and signature hash, you can use the following [PowerShell](https://github.com/PowerShell/PowerShell/releases) command, it searches through a folder and all of its sub-folders quickly.
 
 <br>
 
 ```powershell
-Get-ChildItem -Recurse -Path "Path\To\a\Folder" -File | ForEach-Object -Parallel {Get-AuthenticodeSignature -FilePath $_.FullName} | Where-Object {$_.Status -eq 'HashMismatch'}
+Foreach ($File in (Get-ChildItem -Path 'Path\To\a\Folder' -File -Recurse)) {
+    $Signature = Get-AuthenticodeSignature -FilePath $File.FullName
+    if ($Signature.Status -eq 'HashMismatch') {
+        Write-Output -InputObject $File.FullName
+    }
+}
 ```
 
 <br>

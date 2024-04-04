@@ -40,7 +40,7 @@ Full details, guides and videos available [here on GitHub](https://github.com/Ho
 
 ## <img width="40" src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/PNGs/350387930319028225.png" alt="Microsoft Zune logo"> How Do You Make the Right Choice?
 
-First use the Harden Windows Security Module to apply the hardening measures described in the Readme. After applying these hardening measures, your system will be secure against **at least** ~98% of the threats when you use Standard (non-Privileged) account for everyday work. These threats aren't the usual computer viruses, they are ***motivated nation state threat actors.***
+First use the Harden Windows Security Module to apply the hardening measures described in the Readme. After applying these hardening measures, your system will be secure against at least ~98% of the threats when you use Standard (non-Privileged) account for everyday work. These threats aren't the usual computer viruses, they are ***motivated nation state threat actors.***
 
 ### If you want even more security and control, you have at least 2 more options:
 
@@ -50,7 +50,7 @@ First use the Harden Windows Security Module to apply the hardening measures des
 
 These methods will create multiple layers of security; also known as defense in depth. Additionally, you can create [**Kernel-level Zero-Trust strategy**](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDAC-policy-for-BYOVD-Kernel-mode-only-protection) for your system.
 
-If there will ever be a zero-day vulnerability in one or even some of the security layers at the same time, there will still be enough layers left to protect your device. It's impossible to penetrate all of them.
+If there will ever be a zero-day vulnerability in one or even some of the security layers at the same time, there will still be enough layers left to protect your device. It's practically impossible to penetrate all of them at once.
 
 Also, zero-day vulnerabilities are patched quickly, so keeping your device and OS up to date, regardless of what OS you use, is one of the most basic security recommendations and best practices you must follow.
 
@@ -58,7 +58,7 @@ Also, zero-day vulnerabilities are patched quickly, so keeping your device and O
 
 ## <img width="40" src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/PNGs/Account.png" alt="Microsoft Identity logo"> Vulnerabilities Such as Zero-Days Are Disclosed in 3 Different Ways
 
-1. The vulnerability is disclosed responsibly. It is first communicated with the software developer and company privately so they can have the time to fix and issue updates/patches for the vulnerability before it is disclosed publicly. In this way, people are always safe because all that's needed is to keep your OS and software up to date to receive the latest security patches.
+1. The vulnerability is disclosed responsibly. It is first communicated privately with the software vendor/developer so they can have the time to fix and issue updates/patches for the vulnerability before it is disclosed publicly. In this way, people are always safe because all that's needed is to keep your OS and software up to date to receive the latest security patches.
 
 2. The vulnerability is disclosed irresponsibly. It is disclosed publicly, through social media or by creating PoCs (Proof of Concept) so that it can be used and abused by everyone.
 
@@ -74,11 +74,14 @@ Also, zero-day vulnerabilities are patched quickly, so keeping your device and O
 
 To achieve the Highest level of Security **at Scale** for Businesses, Enterprises and Military scenarios, you can use the following services to create impenetrable devices and environments.
 
-As an individual user you can still utilize these features and services, they add an additional layer of protection to your security stack.
+> [!IMPORTANT]\
+> The following services must be used **in addition** to the measures already talked about in this repository, such as proper Application Control policies and the security measures that the Harden Windows Security module applies. They are not a replacement for them.
+>
+> As an individual user you can still utilize these features and services, they add an additional layer of protection to your security stack.
 
 * [Microsoft Defender for Endpoint](https://www.microsoft.com/en-us/security/business/endpoint-security/microsoft-defender-endpoint) - Discover and secure endpoint devices across your multiplatform enterprise.
 
-* [Microsoft Security Copilot](https://www.microsoft.com/en-us/security/business/ai-machine-learning/microsoft-security-copilot) - Build a defense [so automated](https://learn.microsoft.com/en-us/security-copilot/microsoft-security-copilot) that even your intern becomes a cybersecurity expert.
+* [Microsoft Security Copilot](https://www.microsoft.com/en-us/security/business/ai-machine-learning/microsoft-copilot-security) - Build a defense [so automated](https://learn.microsoft.com/en-us/security-copilot/microsoft-security-copilot) that even your intern becomes a cybersecurity expert.
 
 * [Confidential Computing on Azure](https://learn.microsoft.com/en-us/azure/confidential-computing/overview-azure-products) - Protect your highly sensitive data while it's in use
 
@@ -186,7 +189,7 @@ Make sure to use Surface products that support [Device Firmware Configuration In
 
 ## <img width="40" src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/david%20star.gif" alt="icon for For Penetration testing and benchmarking section"> [For Penetration testing and benchmarking](#-for-penetration-testing-and-benchmarking)
 
-How to properly perform a pentest and benchmark a system hardened by this repository and make it as close to the real-world scenario as possible:
+How to properly perform a pentest and benchmark a system hardened by this repository and make it as close to a real-world scenario as possible:
 
 1. Use a physical machine if possible, it should have Windows 11 certified hardware, [Standard user account](https://learn.microsoft.com/en-us/windows-server/remote/multipoint-services/create-a-standard-user-account).
    * If you can't use a physical machine, use Hyper-V hypervisor. Your host (aka physical machine) must have Windows 11 certified hardware and meet all the hardware and UEFI security requirements explained in the Readme. VMs however are prone to side channel attacks, so don't use that attack vector in pentests if you want more realistic results.

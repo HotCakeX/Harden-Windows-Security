@@ -161,9 +161,6 @@ Unprotect-WindowsSecurity
 
 <img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/Shiny.gif" width="27" alt="Features Item"> Everything is in [plain text](https://github.com/HotCakeX/Harden-Windows-Security/blob/main/Harden-Windows-Security.ps1), nothing hidden, no 3rd party executable or pre-compiled binary is involved.
 
-> [!WARNING]\
-> For your own security, do not use any other 3rd party tools, programs or scripts that claim to harden Windows or modify it in any way, **unless you can 100% verify it**. [Never trust 3rd party people on the Internet,](https://github.com/HotCakeX/hotcakex.github.io/raw/main/pdfs/Windows%20Ebook-5%20Risk%20Points%20to%20Avoid%20in%20Enterprise%20Security.pdf) always verify their resources and do that after each release. **Keep on reading the features to see why this Harden-Windows-Security module is different and <a href="#Trust">read the Trust section</a> to see how you can 100% Trust it.**
-
 <img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/Shiny.gif" width="27" alt="Features Item"> No Windows functionality is removed/disabled against Microsoft's recommendations.
 
 <img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/Shiny.gif" width="27" alt="Features Item"> All of the links and sources are from official Microsoft websites, straight from the source. No bias, No FUD, No misinformation and definitely No old obsolete methods. That's why there are no links to 3rd party news websites, forums, made up blogs/articles, and such.
@@ -189,9 +186,6 @@ Unprotect-WindowsSecurity
 
 <img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/Shiny.gif" width="27" alt="Features Item"> The module primarily uses Group policies, **the Microsoft recommended way of configuring Windows**. It also uses PowerShell cmdlets where Group Policies aren't available, and finally uses [a few registry keys](https://github.com/HotCakeX/Harden-Windows-Security/blob/main/Harden-Windows-Security%20Module/Main%20files/Resources/Registry.csv) to configure security measures that can neither be configured using Group Policies nor PowerShell cmdlets. This is why the module doesn't break anything or cause unwanted behavior.
 
-> [!CAUTION]\
-> Any other 3rd party tool/program/script that claims to modify Windows or harden it, if they don't strictly adhere to the official rules above, they can damage your system, cause unknown problems and bugs. [How are Group Policies for this module created and maintained?](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Group-Policy#how-are-group-policies-for-the-module-created-and-maintained)
-
 <img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/Shiny.gif" width="27" alt="Features Item"> This Readme page lists **all** of the security measures applied by the module.
 
 <img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/Shiny.gif" width="27" alt="Features Item"> When a hardening measure is no longer necessary because it's applied by default by Microsoft on new builds of Windows, it will also be removed from the module in order to prevent any problems and because it won't be necessary anymore.
@@ -204,6 +198,14 @@ Unprotect-WindowsSecurity
 <img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/Shiny.gif" width="27" alt="Features Item"> Since I originally created this repository for myself and people I care about, I always maintain it to the highest possible standard.
 
 <img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/Shiny.gif" width="27" alt="Features Item"> If you have multiple accounts on your device, you only need to apply the hardening measures 1 time with Admin privileges, that will make system-wide changes. Then you can ***optionally*** run the module, without Admin privileges, for each standard user to apply the [Non-Admin category](https://github.com/HotCakeX/Harden-Windows-Security#non-admin-commands).
+
+<br>
+
+> [!WARNING]\
+> For your own security, do not use any other 3rd party tools, programs or scripts that claim to harden Windows or modify it in any way, unless you can 100% verify it. [Never trust 3rd party people on the Internet,](https://github.com/HotCakeX/hotcakex.github.io/raw/main/pdfs/Windows%20Ebook-5%20Risk%20Points%20to%20Avoid%20in%20Enterprise%20Security.pdf) always verify their resources and do that after each release. <a href="#Trust">Read the Trust section</a> to see how you can 100% Trust this repository.
+
+> [!CAUTION]\
+> Any other 3rd party tool/program/script that claims to modify Windows or harden it, if they don't strictly adhere to the official rules above, they can damage your system, cause unknown problems and bugs. [How are Group Policies for this module created and maintained?](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Group-Policy#how-are-group-policies-for-the-module-created-and-maintained)
 
 <br>
 

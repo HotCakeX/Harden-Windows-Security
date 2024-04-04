@@ -21,16 +21,16 @@ Let's create some dummy data first
 
 ```powershell
 # Create an array of 10 objects with 4 properties each
-$objects = @()
+$Objects = @()
 for ($i = 1; $i -le 10; $i++) {
-    $object = New-Object -TypeName PSObject -Property @{
-        "Name" = "Person$i"
-        "Age" = Get-Random -Minimum 20 -Maximum 40
-        "Gender" = Get-Random -InputObject @("Male", "Female")
-        "Occupation" = Get-Random -InputObject @("Teacher", "Engineer", "Doctor", "Lawyer", "Journalist", "Chef", "Artist", "Writer", "Student", "Manager")
-        "RandomNumber" = Get-Random -InputObject @("694646152","9846152","3153546")
+    $Object = New-Object -TypeName PSObject -Property @{
+        'Name'         = "Person$i"
+        'Age'          = Get-Random -Minimum 20 -Maximum 40
+        'Gender'       = Get-Random -InputObject @('Male', 'Female')
+        'Occupation'   = Get-Random -InputObject @('Teacher', 'Engineer', 'Doctor', 'Lawyer', 'Journalist', 'Chef', 'Artist', 'Writer', 'Student', 'Manager')
+        'RandomNumber' = Get-Random -InputObject @('694646152', '9846152', '3153546')
     }
-    $objects += $object
+    $Objects += $Object
 }
 ```
 
@@ -47,7 +47,7 @@ Now we want to filter the result to get the unique values, but the uniqueness sh
 To do that, we use this method in PowerShell
 
 ```powershell
-$objects | Group-Object -Property RandomNumber | ForEach-Object { $_.Group[0] } | Format-Table -AutoSize
+$Objects | Group-Object -Property RandomNumber | ForEach-Object -Process { $_.Group[0] } | Format-Table -AutoSize
 ```
 
 <br>
@@ -64,7 +64,7 @@ Modules such as [Az](https://www.powershellgallery.com/packages/AZ/) or [Microso
 
 By default modules are installed in the Documents directory and when you use OneDrive, everything in there is synced automatically.
 
-You can install such modules system wide so that they won't be stored in the `Documents\PowerShell` directory and instead will be stored in `C:\Program Files\PowerShell\Modules` (for PowerShell core). This will also improve security since Administrator privileges will be required to change module files.
+You can install such modules system wide so that they won't be stored in the `Documents\PowerShell` directory and instead will be stored in `C:\Program Files\PowerShell\Modules` (for PowerShell core). This will also improve security since Administrator privileges will be required to change module files in that directory.
 
 To do this, you need to use the `-Scope AllUsers` parameter.
 

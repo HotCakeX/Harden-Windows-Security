@@ -402,9 +402,9 @@ This behavior is true for [Lightly managed](https://github.com/HotCakeX/Harden-W
 
 <br>
 
-## Citool No Longer Requires GUID.cip Naming Convention for Deployment
+## The .CIP Binary File Can Have Any Name or No Name at All
 
-Normally, `.cip` files would have to have the same name as the GUID of the xml file they were converted from, but that's no longer necessary. Using [CiTool](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/operations/citool-commands) in Windows 11 build `22621`, they can be deployed with any name, even without a name, and lead to a successful WDAC policy deployment.
+Using [CiTool](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/operations/citool-commands) in Windows 11 build `22621` and above, `.CIP` binary files can be deployed with any name, even without a name, and lead to a successful WDAC policy deployment.
 
 <br>
 
@@ -414,7 +414,13 @@ Normally, `.cip` files would have to have the same name as the GUID of the xml f
 
 ## Policies with Required:EV Signers rule option
 
-If a base policy has rule option number 8, Required:EV Signers, it will require all kernel-mode drivers to have EV signer certificates. You cannot bypass this requirement with a Supplemental policy, you cannot allowlist non-EV signed files in any way. **Non-EV signed files will be blocked even if the base policy is in Audit mode.** This is true for any type of base policy such as Default Windows, Allow Microsoft, Strict Kernel mode etc.
+If a base policy has rule option number 8, **Required:EV Signers**, it will require all kernel-mode drivers to have EV signer certificates. 
+
+* You cannot bypass this requirement with a Supplemental policy.
+
+* You cannot allowlist non-EV signed files in any way.
+
+* **Non-EV signed files will be blocked even if the base policy is in Audit mode.** This is true for any type of base policy such as Default Windows, Allow Microsoft, Strict Kernel mode etc.
 
 <br>
 
@@ -442,6 +448,9 @@ For a Kernel-mode only WDAC policy, only the following EKUs are necessary
     <EKU ID="ID_EKU_WHQL" Value="010A2B0601040182370A0305" FriendlyName="" />
 </EKUs>
 ```
+
+> [!IMPORTANT]\
+> [Refer to this document for complete info about Kernel-Mode policies](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDAC-policy-for-BYOVD-Kernel-mode-only-protection)
 
 <br>
 
@@ -484,15 +493,13 @@ When you use `-Audit` parameter of ConfigCI cmdlets such as [Get-SystemDriver](h
 
 Sometimes there are files that are signed by 2 or more certificates, aka double signed files.
 
-When FilePublisher level is used, WDAC creates rules for both of the intermediate certificates of those files, and each rule will have a signer assigned to it. If the file is either User mode only or Kernel mode only, then 2 Signers will be created for it, one for each certificate.
+When a level such as FilePublisher is used, ConfigCI cmdlets create signer rules for one of the intermediate certificates of each of the signers of those files.
 
 Depending on Kernel or use mode, 2 Allowed Signers are created for the file in either UMCI or KMCI Signing scenario sections.
 
 However, if the file is a kernel mode driver and user mode driver, then 4 signers are created for it, 2 Allowed Signers in the UMCI Signing Scenario and 2 in the KMCI Signing scenario.
 
 ### An example
-
-<br>
 
 In the signer below
 
@@ -506,17 +513,18 @@ In the signer below
 
 <br>
 
-* `Name="Microsoft Windows Third Party Component CA 2014"` is the Common name of the Intermediate certificate of the file
-* `Value="D8BE9E4D9074088EF818BC6F6FB64955E90378B2754155126FEEBBBD969CF0AE"` is the TBS (To Be Signed) values of the same Intermediate certificate
-* `Value="Microsoft Windows Hardware Compatibility Publisher"` is the Common name of the Leaf certificate of the file
+* `Name="Microsoft Windows Third Party Component CA 2014"` is the Common Name of one of the Intermediate certificate of the file.
+
+* `Value="D8BE9E4D9074088EF818BC6F6FB64955E90378B2754155126FEEBBBD969CF0AE"` is the TBS (To Be Signed) values of the same Intermediate certificate.
+* `Value="Microsoft Windows Hardware Compatibility Publisher"` is the Common Name of the Leaf certificate of the file.
 
 <br>
 
 ### Some Notes
 
-1. If 2 files have the same Leaf certificate CN and also have an Intermediate certificate in common (that has the same TBS and CN) then they should be listed under the same Signer.
+1. If 2 files have the same Leaf certificate CN and also have an Intermediate Certificate in common (that has the same TBS and CN) then they should be listed under the same Signer.
 
-2. Any Intermediate certificate in the certificate chain/path of a file can be used to allow a file using FilePublisher.
+2. Any Intermediate certificate in the certificate chain/path of a file can be used to allow a file using FilePublisher level.
 
 <br>
 
@@ -526,7 +534,9 @@ In the signer below
 
 ## What Does HVCI option Set to Strict Mean?
 
-[HVCI](https://learn.microsoft.com/en-us/windows/security/hardware-security/enable-virtualization-based-protection-of-code-integrity) stands for [Hypervisor-protected Code Integrity](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/introduction-to-device-guard-virtualization-based-security-and-windows-defender-application-control) and it is a feature that uses virtualization-based security (VBS) to protect the Windows kernel from memory attacks. HVCI can be set to different options in a WDAC policy, such as Enabled, DebugMode, or Strict. Setting [HVCI to Strict](https://learn.microsoft.com/en-us/powershell/module/configci/set-hvcioptions) in a WDAC policy provides the highest level of protection for kernel mode code integrity, as it enforces these additional restrictions:
+[HVCI](https://learn.microsoft.com/en-us/windows/security/hardware-security/enable-virtualization-based-protection-of-code-integrity) stands for [Hypervisor-protected Code Integrity](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/introduction-to-device-guard-virtualization-based-security-and-windows-defender-application-control) and it is a feature that uses virtualization-based security (VBS) to protect the Windows kernel from memory attacks. HVCI can be set to different options in a WDAC policy, such as Enabled, DebugMode, or Strict.
+
+Setting [HVCI to Strict](https://learn.microsoft.com/en-us/powershell/module/configci/set-hvcioptions) in a WDAC policy provides the highest level of protection for kernel mode code integrity, as it enforces these additional restrictions:
 
 * It prevents unsigned drivers from loading, even if they are allowed by the WDAC policy.
 It prevents drivers that are not compatible with HVCI from loading, even if they are signed and allowed by the WDAC policy.

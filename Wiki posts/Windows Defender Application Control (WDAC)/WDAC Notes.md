@@ -414,7 +414,7 @@ Using [CiTool](https://learn.microsoft.com/en-us/windows/security/application-se
 
 ## Policies with Required:EV Signers rule option
 
-If a base policy has rule option number 8, **Required:EV Signers**, it will require all kernel-mode drivers to have EV signer certificates. 
+If a base policy has rule option number 8, **Required:EV Signers**, it will require all kernel-mode drivers to have EV signer certificates.
 
 * You cannot bypass this requirement with a Supplemental policy.
 

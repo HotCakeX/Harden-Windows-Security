@@ -1,53 +1,58 @@
 # What is Windows Defender Application Control?
 
-Application control is a crucial line of defense for protecting enterprises given today's threat landscape, and it has an inherent advantage over traditional antivirus solutions. Specifically, application control moves away from an application trust model where all applications are assumed trustworthy to one where applications must earn trust in order to run.
+Application control is a crucial line of defense for protecting computer systems given today's threat landscape, and it has an inherent advantage over traditional antivirus solutions. Specifically, application control moves away from an application trust model where all applications are assumed trustworthy to one where applications must earn trust in order to run.
 
-Devices where Windows Defender Application control (WDAC) policies are deployed on can either be centrally managed via MDM, Intune etc. or they can be home devices, devices that are private and don't belong to any organization, the computer of someone that you want to keep 100% safe and secure [so that even the device's owner can't willingly or forcefully compromise themselves,](https://github.com/HotCakeX/Harden-Windows-Security/wiki/How-to-Create-and-Deploy-a-Signed-WDAC-Policy-Windows-Defender-Application-Control) the possibilities are endless.
+Devices where Windows Defender Application control (WDAC) policies are deployed on can either be centrally managed via MDM, Intune etc. or they can be home devices, devices that are private and don't belong to any organization, the computer of someone that you want to keep very much safe and secure [so that even the device's owner can't willingly or forcefully compromise themselves,](https://github.com/HotCakeX/Harden-Windows-Security/wiki/How-to-Create-and-Deploy-a-Signed-WDAC-Policy-Windows-Defender-Application-Control) the possibilities are endless.
+
+<br>
+
+> [!IMPORTANT]\
+> The WDACConfig module is a one-stop shop for all your Application Control (WDAC) needs. It is scalable, easy to use, enterprise-ready, Azure VM ready and more importantly, it is free and always will be. [**Check it out here**](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDACConfig)
 
 <br>
 
 ## Windows Defender Application Control (WDAC) wiki posts
 
 * [Introduction](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Introduction)
-* [**WDACConfig** Module](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDACConfig)
 * [WDAC for Lightly managed device](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDAC-for-Lightly-Managed-Devices)
 * [WDAC for Fully managed device - Variant 1](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDAC-for-Fully-Managed-Devices)
 * [WDAC for Fully managed device - Variant 2](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDAC-for-Fully-Managed-Devices--Variant-2)
 * [WDAC for Fully managed device - Variant 3](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDAC-policy-for-Fully-managed-device---Variant-3)
 * [WDAC for Fully managed device - Variant 4](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDAC-policy-for-Fully-managed-device---Variant-4)
 * [WDAC Notes](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDAC-Notes)
-* [**How to Create and Deploy a Signed WDAC Policy**](https://github.com/HotCakeX/Harden-Windows-Security/wiki/How-to-Create-and-Deploy-a-Signed-WDAC-Policy-Windows-Defender-Application-Control)
+* [How to Create and Deploy a Signed WDAC Policy](https://github.com/HotCakeX/Harden-Windows-Security/wiki/How-to-Create-and-Deploy-a-Signed-WDAC-Policy-Windows-Defender-Application-Control)
 * [Fast and Automatic Microsoft Recommended Driver Block Rules updates](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Fast-and-Automatic-Microsoft-Recommended-Driver-Block-Rules-updates)
 * [WDAC policy for BYOVD Kernel mode only protection](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDAC-policy-for-BYOVD-Kernel-mode-only-protection)
 
 <br>
 
-## [My WDACConfig Module](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDACConfig)
+## WDACConfig Module
 
-[**WDACConfig**](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDACConfig) is an advanced PowerShell module designed with the aim of automating [Application and File whitelisting in Windows](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/wdac) using Windows Defender Application Control. Install it from [PowerShell gallery](https://www.powershellgallery.com/packages/WDACConfig/).
+[**WDACConfig**](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDACConfig) is an advanced PowerShell module designed with the aim of automating [Application and File whitelisting in Windows](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/wdac) using Windows Defender Application Control. It is available in [PowerShell gallery](https://www.powershellgallery.com/packages/WDACConfig/).
 
 <br>
 
-## WDAC usage levels
+## Application Control Usage Levels
 
-There are many ways you can utilize WDAC features and here they are sorted by the level of restriction and protection they provide; From top (having the least restriction and protection) to bottom (having the most restriction and protection).
+There are many ways you can utilize Application Control features and here they are sorted by the level of restriction and protection they provide; From top (having the least restriction and protection) to bottom (having the most restriction and protection).
 
 1. Use Microsoft recommended driver block rules.
-      - **No user action required**. Starting with Windows 11 2022 update, the vulnerable driver blocklist is enabled by default for all devices, using HVCI or Memory Integrity.
+      - **No user action required**; The vulnerable driver blocklist is enabled by default for all devices using HVCI or Memory Integrity.
       - [The built-in driver blocklist is updated with each new major release of Windows, typically 1-2 times per year.](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/microsoft-recommended-driver-block-rules)
 
-2. Update Microsoft recommended driver block rules **outside of the twice a year schedule.**
-      - The drivers block list itself [is updated more frequently](https://github.com/MicrosoftDocs/windows-itpro-docs/commits/public/windows/security/application-security/application-control/windows-defender-application-control/design/microsoft-recommended-driver-block-rules.md) than twice a year schedule, [use my WDAC Module to download and apply them regularly and ***automatically***.](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Fast-and-Automatic-Microsoft-Recommended-Driver-Block-Rules-updates)
-3. Use Microsoft recommended block rules PLUS Recommended driver block rules
-      - [The WDAC XML policy content is provided here](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/applications-that-can-bypass-wdac), copy them, create a new XML file and paste the content in it and save it. [Reset its policy ID and convert it to multiple policy format](https://learn.microsoft.com/en-us/powershell/module/configci/set-cipolicyidinfo?view=windowsserver2022-ps#-resetpolicyid). [Convert it to `.cip` policy binary](https://docs.microsoft.com/en-us/powershell/module/configci/convertfrom-cipolicy) and then [deploy it](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/operations/citool-commands#deploy-a-wdac-policy). Keep it up to date by regularly repeating this.
+2. Update Microsoft recommended driver block rules outside of the twice a year schedule.
+      - The drivers block list itself [is updated more frequently](https://github.com/MicrosoftDocs/windows-itpro-docs/commits/public/windows/security/application-security/application-control/windows-defender-application-control/design/microsoft-recommended-driver-block-rules.md) than twice a year schedule, [use the WDACConfig Module to setup a scheduled task that keeps the list up-to-date.](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Fast-and-Automatic-Microsoft-Recommended-Driver-Block-Rules-updates)
+3. Use Microsoft recommended block rules + Recommended driver block rules
+      - Use the [WDACConfig Module](https://github.com/HotCakeX/Harden-Windows-Security/wiki/New-WDACConfig#new-wdacconfig--getblockrules) to easily deploy the User-Mode Microsoft recommended block rules on your system.
 4. Create WDAC policy for **Lightly managed devices**
       - [Microsoft's guide: Create a WDAC policy for lightly managed devices](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/create-wdac-policy-for-lightly-managed-devices)
       - [My guide: WDAC for Lightly Managed Devices](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDAC-for-Lightly-Managed-Devices)
 5. Use [Smart App Control](https://support.microsoft.com/en-us/topic/what-is-smart-app-control-285ea03d-fa88-4d56-882e-6698afdb7003)
       - It's just a toggle in Windows Security under App & Browser control. It uses a special kind of WDAC policy that provides more protection than a lightly managed workstation but less protection than a fully managed workstation.
       - It uses both of Microsoft's recommended block rules.
-6. Create WDAC policy for **Fully managed devices**
-      - The following scenarios [provide the highest protection](https://github.com/HotCakeX/Harden-Windows-Security/wiki/How-to-Create-and-Deploy-a-Signed-WDAC-Policy-Windows-Defender-Application-Control) against any threats from any sources when cryptographically signed and deployed and properly configured.
+6. Use Smart App Control + [Strict Kernel-Mode WDAC Policy](https://github.com/HotCakeX/Harden-Windows-Security/wiki/New%E2%80%90KernelModeWDACConfig)
+7. Create WDAC policy for **Fully managed devices**
+      - The following scenarios provide the highest protection against any threats from any sources when cryptographically signed and deployed and properly configured.
       - [WDAC for Fully managed device - Variant 1](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDAC-for-Fully-Managed-Devices)
       - [WDAC for Fully managed device - Variant 2](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDAC-for-Fully-Managed-Devices--Variant-2)
       - [WDAC for Fully managed device - Variant 3](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDAC-policy-for-Fully-managed-device---Variant-3)
@@ -58,10 +63,10 @@ There are many ways you can utilize WDAC features and here they are sorted by th
 
 <br>
 
-## Methods we can use to create a WDAC policy
+## Methods we can use to create an Application Control policy (WDAC)
 
 * Using [PowerShell cmdlets](https://learn.microsoft.com/en-us/powershell/module/configci)
-* Using [WDACConfig PowerShell module](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDACConfig)
+* Using [WDACConfig PowerShell module](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDACConfig) - **Recommended**
 * Using [WDAC Policy Wizard](https://webapp-wdac-wizard.azurewebsites.net/)
 
 <br>

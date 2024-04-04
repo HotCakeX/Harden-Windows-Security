@@ -22,7 +22,7 @@ The module checks for updates every time you run it and updates itself if there 
 Install-Module -Name 'Harden-Windows-Security-Module' -Force
 ```
 
-### <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/rainbow.gif" width="35" alt="rainbow"> Use the GUI (Graphical User Interface) 
+### <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/rainbow.gif" width="35" alt="rainbow"> Use the GUI (Graphical User Interface)
 
 ```powershell
 Protect-WindowsSecurity -GUI

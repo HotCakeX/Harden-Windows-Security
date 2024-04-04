@@ -1,14 +1,17 @@
-# Basic PowerShell tricks and notes Part 2
+# Basic PowerShell Tricks and Notes Part 2
 
-This page is part 2 of the **Basic PowerShell tricks and notes** series. You can find the [part 1 here.](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Basic-PowerShell-tricks-and-notes)
-
-Designed for beginners and newcomers to PowerShell who want to quickly learn the essential basics, the most frequently used syntaxes, elements and tricks. It should help you jump start your journey as a PowerShell user.
+This page is designed for beginners and newcomers to PowerShell who want to quickly learn the essential basics, the most frequently used syntaxes, elements and and tricks. It should help you jump start your journey as a PowerShell user.
 
 The main source for learning PowerShell is Microsoft Learn websites. There are extensive and complete guides about each command/cmdlet with examples.
 
-[PowerShell core at Microsoft Learn](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/?view=powershell-7.4)
+[PowerShell core at Microsoft Learn](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/)
 
-**Also Use Bing Chat for your PowerShell questions. The AI is fantastic at creating code and explaining everything.**
+You can also use the Windows Copilot for asking any PowerShell related questions, code examples etc.
+
+This is part 2 of this series, find other parts here:
+
+* [Part 1](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Basic-PowerShell-tricks-and-notes)
+* [Part 3](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Basic-PowerShell-Tricks-and-Notes-Part-3)
 
 <br>
 
@@ -169,11 +172,10 @@ Async is faster than Sync
 
 PowerShell supports sync/async commands workflows, also known as parallel.
 
-<br>
-
-A comment under this [answer](https://stackoverflow.com/a/748189):
-
-Oddly enough "Synchronously" means "using the same clock" so when two instructions are synchronous they use the same clock and must happen one after the other. "Asynchronous" means "not using the same clock" so the instructions are not concerned with being in step with each other. That's why it looks backwards, the term is not referring to the instructions relationship to each other. It's referring to each instructions relationship to the clock.
+> [!NOTE]\
+> A comment under this [answer](https://stackoverflow.com/a/748189):
+>
+> Oddly enough "Synchronously" means "using the same clock" so when two instructions are synchronous they use the same clock and must happen one after the other. "Asynchronous" means "not using the same clock" so the instructions are not concerned with being in step with each other. That's why it looks backwards, the term is not referring to the instructions relationship to each other. It's referring to each instructions relationship to the clock.
 
 <br>
 
@@ -182,17 +184,16 @@ Oddly enough "Synchronously" means "using the same clock" so when two instructio
 First we create a new `EventLogConfiguration` object and pass it the name of the log we want to configure, then we set it to enabled and save the changes.
 
 ```powershell
-$logName = 'Microsoft-Windows-DNS-Client/Operational'
-
-$log = New-Object System.Diagnostics.Eventing.Reader.EventLogConfiguration $logName
-$log.IsEnabled=$true
-$log.SaveChanges()
+$LogName = 'Microsoft-Windows-DNS-Client/Operational'
+$Log = New-Object -TypeName System.Diagnostics.Eventing.Reader.EventLogConfiguration -ArgumentList $LogName
+$Log.IsEnabled = $true
+$Log.SaveChanges()
 ```
 
 We can confirm the change by running this command:
 
 ```powershell
-Get-WinEvent -ListLog Microsoft-Windows-DNS-Client/Operational | Format-List *
+Get-WinEvent -ListLog Microsoft-Windows-DNS-Client/Operational | Format-List -Property *
 ```
 
 Using the same method we can configure many other options of the log file, just take a look at the `EventLogConfiguration` Class for a list of configurable properties.
@@ -223,7 +224,7 @@ Example
 
 ```powershell
 $UserSID = [System.Security.Principal.WindowsIdentity]::GetCurrent().user.value
-(Get-LocalUser | where-object {$_.SID -eq $UserSID}).name
+(Get-LocalUser | Where-Object -FilterScript { $_.SID -eq $UserSID }).name
 ```
 
 <br>
@@ -257,13 +258,14 @@ To dot-source a PowerShell function in the same script file, you can use the dot
 
 ```powershell
 # Contents of MyFunctions.ps1
-function MyFunction {
+function New-Function {
     Write-Host "Hello World!"
 }
 
 # Contents of Main.ps1
-. ./MyFunctions.ps1
-MyFunction
+. .\MyFunctions.ps1
+
+New-Function
 ```
 
 In this example, `Main.ps1` dot-sources `MyFunctions.ps1` using the dot operator and then calls `MyFunction`. When you run `Main.ps1`, it will output `Hello World!` to the console.
@@ -326,7 +328,7 @@ Write-output("The drivername {0} is vulnerable with a matching SHA256 hash of {1
 In this example we use the
 
 ```powershell
-Get-Help -Name "Get-ChildItem" -Parameter * |
+Get-Help -Name 'Get-ChildItem' -Parameter * |
 Sort-Object -Property position |
 Select-Object -Property name, position
 ```
@@ -347,7 +349,7 @@ Get-CimInstance -Namespace root/CIMV2 -ClassName Win32_Fan
 ## How to Get the Last Reboot Time in Powershell
 
 ```powershell
-[datetime](Get-CimInstance -ClassName win32_operatingsystem -ComputerName $_.Name).LastBootUpTime
+[System.DateTime](Get-CimInstance -ClassName win32_operatingsystem -ComputerName $_.Name).LastBootUpTime
 ```
 
 <br>
@@ -413,7 +415,7 @@ The problem with the 2nd method is that if the path is long, contains too many s
 
 ## How to Securely Get the User Directory's Path
 
-The Get-CimInstance cmdlet can query the Win32_UserProfile class and filter by the current user’s SID to get the LocalPath property, which is the path of the current user’s profile directory. This method is more accurate than using the environment variable.
+The `Get-CimInstance` cmdlet can query the `Win32_UserProfile` class and filter by the current user's SID to get the LocalPath property, which is the path of the current user's profile directory. This method is more accurate than using the environment variable.
 
 ```powershell
 (Get-CimInstance Win32_UserProfile -Filter "SID = '$([System.Security.Principal.WindowsIdentity]::GetCurrent().User.Value)'").LocalPath

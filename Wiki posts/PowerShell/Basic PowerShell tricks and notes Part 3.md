@@ -1,17 +1,17 @@
 # Basic PowerShell Tricks and Notes Part 3
 
-This page is part 3 of the **Basic PowerShell tricks and notes** series.
-
-  * [part 1 here](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Basic-PowerShell-tricks-and-notes)
-  * [part 2 here](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Basic-PowerShell-tricks-and-notes-Part-2)
-
-Designed for beginners and newcomers to PowerShell who want to quickly learn the essential basics, the most frequently used syntaxes, elements and tricks. It should help you jump start your journey as a PowerShell user.
+This page is designed for beginners and newcomers to PowerShell who want to quickly learn the essential basics, the most frequently used syntaxes, elements and and tricks. It should help you jump start your journey as a PowerShell user.
 
 The main source for learning PowerShell is Microsoft Learn websites. There are extensive and complete guides about each command/cmdlet with examples.
 
-[PowerShell core at Microsoft Learn](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/?view=powershell-7.4)
+[PowerShell core at Microsoft Learn](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/)
 
-**Also Use Bing Chat for your PowerShell questions. The AI is fantastic at creating code and explaining everything.**
+You can also use the Windows Copilot for asking any PowerShell related questions, code examples etc.
+
+This is part 3 of this series, find other parts here:
+
+* [Part 1](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Basic-PowerShell-tricks-and-notes)
+* [Part 2](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Basic-PowerShell-Tricks-and-Notes-Part-2)
 
 <br>
 
@@ -21,16 +21,16 @@ Let's create some dummy data first
 
 ```powershell
 # Create an array of 10 objects with 4 properties each
-$objects = @()
+$Objects = @()
 for ($i = 1; $i -le 10; $i++) {
-    $object = New-Object -TypeName PSObject -Property @{
-        "Name" = "Person$i"
-        "Age" = Get-Random -Minimum 20 -Maximum 40
-        "Gender" = Get-Random -InputObject @("Male", "Female")
-        "Occupation" = Get-Random -InputObject @("Teacher", "Engineer", "Doctor", "Lawyer", "Journalist", "Chef", "Artist", "Writer", "Student", "Manager")
-        "RandomNumber" = Get-Random -InputObject @("694646152","9846152","3153546")
+    $Object = New-Object -TypeName PSObject -Property @{
+        'Name'         = "Person$i"
+        'Age'          = Get-Random -Minimum 20 -Maximum 40
+        'Gender'       = Get-Random -InputObject @('Male', 'Female')
+        'Occupation'   = Get-Random -InputObject @('Teacher', 'Engineer', 'Doctor', 'Lawyer', 'Journalist', 'Chef', 'Artist', 'Writer', 'Student', 'Manager')
+        'RandomNumber' = Get-Random -InputObject @('694646152', '9846152', '3153546')
     }
-    $objects += $object
+    $Objects += $Object
 }
 ```
 
@@ -47,7 +47,7 @@ Now we want to filter the result to get the unique values, but the uniqueness sh
 To do that, we use this method in PowerShell
 
 ```powershell
-$objects | Group-Object -Property RandomNumber | ForEach-Object { $_.Group[0] } | Format-Table -AutoSize
+$Objects | Group-Object -Property RandomNumber | ForEach-Object -Process { $_.Group[0] } | Format-Table -AutoSize
 ```
 
 <br>
@@ -64,7 +64,7 @@ Modules such as [Az](https://www.powershellgallery.com/packages/AZ/) or [Microso
 
 By default modules are installed in the Documents directory and when you use OneDrive, everything in there is synced automatically.
 
-You can install such modules system wide so that they won't be stored in the `Documents\PowerShell` directory and instead will be stored in `C:\Program Files\PowerShell\Modules` (for PowerShell core). This will also improve security since Administrator privileges will be required to change module files.
+You can install such modules system wide so that they won't be stored in the `Documents\PowerShell` directory and instead will be stored in `C:\Program Files\PowerShell\Modules` (for PowerShell core). This will also improve security since Administrator privileges will be required to change module files in that directory.
 
 To do this, you need to use the `-Scope AllUsers` parameter.
 

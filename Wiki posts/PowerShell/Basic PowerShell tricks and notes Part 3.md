@@ -143,3 +143,17 @@ Write-Host -Object "Resolved User's SID: " $ObjSID.Value -ForegroundColor Magent
 ```
 
 <br>
+
+## How To Block Edge Traversal For All of the Firewall Rules
+
+```powershell
+Get-NetFirewallRule | Where-Object -FilterScript { $_.EdgeTraversalPolicy -ne 'Block' } | ForEach-Object {
+    Set-NetFirewallRule -Name $_.Name -EdgeTraversalPolicy Block 
+}
+```
+
+Edge Traversal controls whether an application or service the firewall rule applies to can receive unsolicited traffic from the internet. Unsolicited traffic is traffic that is not a response to a request from the computer or user and is originated from the Internet. Solicited traffic is initiated by the computer or user.
+
+You can read more about it [here](https://learn.microsoft.com/en-us/windows/win32/winsock/ipv6-protection-level)
+
+<br>

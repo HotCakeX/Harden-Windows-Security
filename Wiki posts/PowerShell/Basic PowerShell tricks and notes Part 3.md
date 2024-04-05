@@ -77,3 +77,32 @@ Install-Module Microsoft.Graph.Beta -Scope AllUsers
 * [Parameter Info](https://learn.microsoft.com/en-us/powershell/module/powershellget/install-module)
 
 <br>
+
+## Variable Scopes in ForEach-Object -Parallel
+
+When using `ForEach-Object -Parallel`, the variables from the parent scope are read-only within the parallel script block when accessed with the `$using:` scope modifier. You cannot write to them or modify them inside the parallel script block. If you do not use the `$using:` scope modifier, they won't be available in the parallel script block at all.
+
+If you need to collect or aggregate results from each parallel run, you should output the results to the pipeline, and then collect them after the parallel execution. Here's an example of how you can do that:
+
+```powershell
+[System.String[]]$AnimalsList = @()
+$AnimalsList = 'Cat', 'Dog', 'Zebra', 'Horse', 'Mouse' | ForEach-Object -Parallel {
+    $_
+}
+```
+
+In that example, the count of the `$AnimalsList` will be 5 and it will contain the animals in the input array.
+
+<br>
+
+This example however would not work:
+
+```powershell
+[System.String[]]$AnimalsList = @()
+'Cat', 'Dog', 'Zebra', 'Horse', 'Mouse' | ForEach-Object -Parallel {
+    $AnimalsList += $_
+}
+```
+Because the `$AnimalsList` variable is read-only in the parallel script block and only available in the local scriptblock's scope.
+
+<br>

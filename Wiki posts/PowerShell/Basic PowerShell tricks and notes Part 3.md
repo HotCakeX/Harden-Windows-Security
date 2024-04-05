@@ -147,7 +147,7 @@ Write-Host -Object "Resolved User's SID: " $ObjSID.Value -ForegroundColor Magent
 ## How To Block Edge Traversal For All of the Firewall Rules
 
 ```powershell
-Get-NetFirewallRule | Where-Object -FilterScript { $_.EdgeTraversalPolicy -ne 'Block' } | ForEach-Object {
+Get-NetFirewallRule | Where-Object -FilterScript { $_.EdgeTraversalPolicy -ne 'Block' } | ForEach-Object -Process {
     Set-NetFirewallRule -Name $_.Name -EdgeTraversalPolicy Block 
 }
 ```

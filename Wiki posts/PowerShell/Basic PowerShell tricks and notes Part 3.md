@@ -106,3 +106,40 @@ This example however would not work:
 Because the `$AnimalsList` variable is read-only in the parallel script block and only available in the local scriptblock's scope.
 
 <br>
+
+## How to Get the SID of All of the Accounts on the System
+
+SID stands for Security Identifier. It is a unique value of variable length that is used to identify a security principal or security group in Windows operating systems. SIDs are used in access control lists (ACLs) and in the user manager database (SAM) in Windows operating systems.
+
+You can get the SID of all the accounts on the system using the following PowerShell script:
+
+```powershell
+(Get-CimInstance -Class Win32_UserAccount -Namespace 'root\cimv2').Name | ForEach-Object -Process {
+    [System.Security.Principal.NTAccount]$ObjSID = New-Object -TypeName System.Security.Principal.NTAccount -ArgumentList $_
+    [System.Security.Principal.SecurityIdentifier]$ObjUser = $ObjSID.Translate([System.Security.Principal.SecurityIdentifier])
+    [PSCustomObject]@{
+        User = $_
+        SID  = $ObjUser.Value
+    }
+}
+```
+
+### How To Convert a SID to User Name
+
+```powershell
+[System.String]$SID = 'S-1-5-21-348961611-2991266383-1085979528-1004'
+$ObjSID = New-Object -TypeName System.Security.Principal.SecurityIdentifier -ArgumentList $SID
+$ObjUser = $ObjSID.Translate([System.Security.Principal.NTAccount])
+Write-Host -Object 'Resolved user name: ' $ObjUser.Value -ForegroundColor Magenta
+```
+
+### How To Convert a User Name to SID
+
+```powershell
+[System.String]$UserName = 'HotCakeX'
+$ObjUser = New-Object -TypeName System.Security.Principal.NTAccount -ArgumentList $UserName
+$ObjSID = $ObjUser.Translate([System.Security.Principal.SecurityIdentifier])
+Write-Host -Object "Resolved User's SID: " $ObjSID.Value -ForegroundColor Magenta
+```
+
+<br>

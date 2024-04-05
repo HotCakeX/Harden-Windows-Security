@@ -77,3 +77,83 @@ Install-Module Microsoft.Graph.Beta -Scope AllUsers
 * [Parameter Info](https://learn.microsoft.com/en-us/powershell/module/powershellget/install-module)
 
 <br>
+
+## Variable Scopes in ForEach-Object -Parallel
+
+When using `ForEach-Object -Parallel`, the variables from the parent scope are read-only within the parallel script block when accessed with the `$using:` scope modifier. You cannot write to them or modify them inside the parallel script block. If you do not use the `$using:` scope modifier, they won't be available in the parallel script block at all.
+
+If you need to collect or aggregate results from each parallel run, you should output the results to the pipeline, and then collect them after the parallel execution. Here's an example of how you can do that:
+
+```powershell
+[System.String[]]$AnimalsList = @()
+$AnimalsList = 'Cat', 'Dog', 'Zebra', 'Horse', 'Mouse' | ForEach-Object -Parallel {
+    $_
+}
+```
+
+In that example, the count of the `$AnimalsList` will be 5 and it will contain the animals in the input array.
+
+<br>
+
+This example however would not work:
+
+```powershell
+[System.String[]]$AnimalsList = @()
+'Cat', 'Dog', 'Zebra', 'Horse', 'Mouse' | ForEach-Object -Parallel {
+    $AnimalsList += $_
+}
+```
+Because the `$AnimalsList` variable is read-only in the parallel script block and only available in the local scriptblock's scope.
+
+<br>
+
+## How to Get the SID of All of the Accounts on the System
+
+SID stands for Security Identifier. It is a unique value of variable length that is used to identify a security principal or security group in Windows operating systems. SIDs are used in access control lists (ACLs) and in the user manager database (SAM) in Windows operating systems.
+
+You can get the SID of all the accounts on the system using the following PowerShell script:
+
+```powershell
+(Get-CimInstance -Class Win32_UserAccount -Namespace 'root\cimv2').Name | ForEach-Object -Process {
+    [System.Security.Principal.NTAccount]$ObjSID = New-Object -TypeName System.Security.Principal.NTAccount -ArgumentList $_
+    [System.Security.Principal.SecurityIdentifier]$ObjUser = $ObjSID.Translate([System.Security.Principal.SecurityIdentifier])
+    [PSCustomObject]@{
+        User = $_
+        SID  = $ObjUser.Value
+    }
+}
+```
+
+### How To Convert a SID to User Name
+
+```powershell
+[System.String]$SID = 'S-1-5-21-348961611-2991266383-1085979528-1004'
+$ObjSID = New-Object -TypeName System.Security.Principal.SecurityIdentifier -ArgumentList $SID
+$ObjUser = $ObjSID.Translate([System.Security.Principal.NTAccount])
+Write-Host -Object 'Resolved user name: ' $ObjUser.Value -ForegroundColor Magenta
+```
+
+### How To Convert a User Name to SID
+
+```powershell
+[System.String]$UserName = 'HotCakeX'
+$ObjUser = New-Object -TypeName System.Security.Principal.NTAccount -ArgumentList $UserName
+$ObjSID = $ObjUser.Translate([System.Security.Principal.SecurityIdentifier])
+Write-Host -Object "Resolved User's SID: " $ObjSID.Value -ForegroundColor Magenta
+```
+
+<br>
+
+## How To Block Edge Traversal For All of the Firewall Rules
+
+```powershell
+Get-NetFirewallRule | Where-Object -FilterScript { $_.EdgeTraversalPolicy -ne 'Block' } | ForEach-Object -Process {
+    Set-NetFirewallRule -Name $_.Name -EdgeTraversalPolicy Block 
+}
+```
+
+Edge Traversal controls whether an application or service the firewall rule applies to can receive unsolicited traffic from the internet. Unsolicited traffic is traffic that is not a response to a request from the computer or user and is originated from the Internet. Solicited traffic is initiated by the computer or user.
+
+You can read more about it [here](https://learn.microsoft.com/en-us/windows/win32/winsock/ipv6-protection-level)
+
+<br>

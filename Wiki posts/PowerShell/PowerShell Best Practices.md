@@ -116,3 +116,12 @@ function Get-MyFunction3 {
 You can access the settings page of [PowerShell extension in VS Code](https://code.visualstudio.com/docs/languages/powershell) and enable options that automatically apply some of the aforementioned best practices when you format your code with (CTRL + Shift + F) shortcut.
 
 <br>
+
+## More Resources From Microsoft That You Should Check Out
+
+- [Cmdlet Development Guidelines](https://learn.microsoft.com/en-us/powershell/scripting/developer/cmdlet/cmdlet-development-guidelines)
+- [Required Development Guidelines](https://learn.microsoft.com/en-us/powershell/scripting/developer/cmdlet/required-development-guidelines)
+- [Strongly Encouraged Development Guidelines](https://learn.microsoft.com/en-us/powershell/scripting/developer/cmdlet/strongly-encouraged-development-guidelines)
+- [Advisory Development Guidelines](https://learn.microsoft.com/en-us/powershell/scripting/developer/cmdlet/advisory-development-guidelines)
+
+<br>

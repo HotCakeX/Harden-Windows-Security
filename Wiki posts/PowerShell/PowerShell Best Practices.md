@@ -106,7 +106,7 @@ function Get-MyFunction2 {
 function Get-MyFunction3 {
     # Function code here
 }
-#Rndregion
+#EndRegion
 ```
 
 <br>

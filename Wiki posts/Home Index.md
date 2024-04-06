@@ -80,5 +80,6 @@
  - <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/wings/redwings.gif" width="35"> [Basic PowerShell tricks and notes](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Basic-PowerShell-tricks-and-notes)
  - <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/wings/redwings.gif" width="35"> [Basic PowerShell tricks and notes Part 2](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Basic-PowerShell-tricks-and-notes-Part-2)
  - <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/wings/redwings.gif" width="35"> [Basic PowerShell tricks and notes Part 3](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Basic-PowerShell-Tricks-and-Notes-Part-3)
+  - <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/wings/redwings.gif" width="35"> [How To Access All Stream Outputs From Thread Jobs In PowerShell In Real Time](https://github.com/HotCakeX/Harden-Windows-Security/wiki/How-To-Access-All-Stream-Outputs-From-Thread-Jobs-In-PowerShell-In-Real-Time)
 
 <br>

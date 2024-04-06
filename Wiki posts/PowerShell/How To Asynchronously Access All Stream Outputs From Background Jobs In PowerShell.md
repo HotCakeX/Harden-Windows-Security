@@ -92,3 +92,13 @@ foreach ($JobName in $JobNames) {
 # (Get-EventSubscriber)[0].SourceObject.ChildJobs.JobStateInfo.Reason.Message
 # (Get-EventSubscriber).SourceObject.ChildJobs.output
 ```
+
+<br>
+
+## Note About Why We Needed To Access ChildJobs Property
+
+when you use `Start-Job` to initiate a background job, it executes the provided script block in a separate, child job. This is because `Start-Job` is designed to run tasks asynchronously, allowing the main PowerShell session to continue without waiting for the task to complete.
+
+The child job is essentially a separate PowerShell process that runs in the background. It's isolated from the parent job, which means it has its own scope and doesn't share variables or RunSpaces with the parent. This isolation ensures that the main session remains responsive and that the background task doesn't interfere with the ongoing tasks in the main session.
+
+<br>

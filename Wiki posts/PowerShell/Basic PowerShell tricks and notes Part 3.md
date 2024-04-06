@@ -157,3 +157,62 @@ Edge Traversal controls whether an application or service the firewall rule appl
 You can read more about it [here](https://learn.microsoft.com/en-us/windows/win32/winsock/ipv6-protection-level)
 
 <br>
+
+## Function Manipulation With Variables And ScriptBlocks
+
+Suppose you have this function
+
+```powershell
+Function Write-Text {
+    [CmdletBinding()]
+    Param(
+        [Parameter(Mandatory = $true)][System.String]$InputText
+    )
+    Write-Output -InputObject $InputText
+}
+```
+
+<br>
+
+You can store the function in a variable like this
+
+```powershell
+[System.Management.Automation.FunctionInfo]$Function = Get-Item -Path 'Function:Write-Text'
+``` 
+
+<br>
+
+You can redefine the function using the same name or a different name like this. This is useful for passing the function to a different RunSpace or session.
+
+```powershell
+New-Item -Path 'Function:\Write-TextAlt' -Value $Function -Force
+```
+
+<br>
+
+Invoke the function using its new name, just as you would with the original function.
+
+```powershell
+Write-Text -InputText 'Hello from the original function!'
+Write-TextAlt -InputText 'Hello from the new function!'
+```
+
+<br>
+
+You can also create a scriptblock from the function using the following approach
+
+```powershell
+$ScriptBlock = [System.Management.Automation.ScriptBlock]::Create($Function.Definition)
+```
+
+<br>
+
+And then call the scriptblock like this
+
+```powershell
+&$ScriptBlock 'Hello from the ScriptBlock! (direct call)'
+. $ScriptBlock 'Hello from the ScriptBlock! (dot sourced)'
+Invoke-Command -ScriptBlock $ScriptBlock -ArgumentList 'Hello from the ScriptBlock! (Invoke-Command)'
+```
+
+<br>

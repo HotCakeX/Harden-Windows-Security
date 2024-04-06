@@ -11,15 +11,15 @@ We will also properly communicate any terminating or non-terminating error that 
 foreach ($JobName in $JobNames) {
 
     $CurrentJob = Start-Job -Name "Animals $JobName" -ScriptBlock {
-        Param ($JobNameInput)     
+        Param ($JobNameInput)
 
         Start-Sleep -Seconds 2
 
         Write-Output -InputObject "Job started for $JobNameInput"
 
         # Simulate some real work
-        Start-Sleep -Seconds (Get-Random -Minimum 1 -Maximum 10)    
-        
+        Start-Sleep -Seconds (Get-Random -Minimum 1 -Maximum 10)
+
         # Generate terminating error
         # Throw "Error message for $JobNameInput"
 
@@ -34,43 +34,43 @@ foreach ($JobName in $JobNames) {
         Write-Host -Object "Host message for $JobNameInput"
         Write-Information -MessageData "Information message for $JobNameInput"
 
-    } -ArgumentList $JobName   
+    } -ArgumentList $JobName
 
     # Create an event subscriber for the job to automatically receive the job output for all streams and discard itself and the job
-    Register-ObjectEvent -InputObject $CurrentJob -EventName StateChanged -Action {      
-     
+    Register-ObjectEvent -InputObject $CurrentJob -EventName StateChanged -Action {
+
         # Receive the Write-Output stream for success stream
         # Write-Host is needed to display the error message on the console
         # We need to use loop because all of the Write-Output messages are stored in the ChildJobs.Output property
         # And without a loop, they would all be written as a single string on in one line
         if ($null -ne $EventSubscriber.SourceObject.ChildJobs.Output) {
             $EventSubscriber.SourceObject.ChildJobs.Output | ForEach-Object -Process {
-                Write-Host -Object $_      
+                Write-Host -Object $_
             }
         }
 
         # Check if a terminating error ocurred in the job
         if ($EventSubscriber.SourceObject.State -eq 'Failed') {
             Write-Host -Object "The Job $($EventSubscriber.SourceObject.Name) Failed" -ForegroundColor Red
-        }  
+        }
 
         # Receive the Terminating error stream - Write-Host is needed to display the error message on the console
-        if ($null -ne $EventSubscriber.SourceObject.ChildJobs.JobStateInfo.Reason.Message) {        
+        if ($null -ne $EventSubscriber.SourceObject.ChildJobs.JobStateInfo.Reason.Message) {
             $EventSubscriber.SourceObject.ChildJobs.JobStateInfo.Reason.Message | ForEach-Object -Process {
-                Write-Host -Object $_ -ForegroundColor Red    
+                Write-Host -Object $_ -ForegroundColor Red
             }
         }
 
         # Receive the Non-Terminating error stream - Write-Host is needed to display the error message on the console
         if ($null -ne $EventSubscriber.SourceObject.ChildJobs.Error) {
             $EventSubscriber.SourceObject.ChildJobs.Error | ForEach-Object -Process {
-                Write-Host -Object $_ -ForegroundColor DarkRed      
+                Write-Host -Object $_ -ForegroundColor DarkRed
             }
         }
 
         # Receive the job output except for Wire-Output and error stream
-        Receive-Job -Job $EventSubscriber.SourceObject                    
-        
+        Receive-Job -Job $EventSubscriber.SourceObject
+
         # Unregister the event itself
         Unregister-Event -SourceIdentifier $EventSubscriber.SourceIdentifier -Force
         # Remove the event subscriber's job, it is the same as the event subscriber's SourceIdentifier
@@ -78,9 +78,9 @@ foreach ($JobName in $JobNames) {
         # Remove the input job initiated by Start-Job
         Remove-Job -Id $EventSubscriber.SourceObject.Id -Force
 
-    } | Out-Null        
+    } | Out-Null
 }
-    
+
 # Get all of the jobs at the end to make sure there is no leftover
 # Get-Job
 

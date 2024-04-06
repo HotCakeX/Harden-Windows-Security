@@ -53,10 +53,10 @@ while ($Jobs.Count -ne 0) {
         $Job.Progress
         # $Job.Error - not required - Receive-Job shows it
         $Job.Information # Also displays the Write-Host message
-        
+
         # Gets the success, error, warning and host stream from Write-Host
-        Receive-Job -Job $Job      
-        
+        Receive-Job -Job $Job
+
         if ($Job.State -eq 'Completed' -or $Job.State -eq 'Failed') {
 
             #  if ($Job.State -eq 'Failed') {

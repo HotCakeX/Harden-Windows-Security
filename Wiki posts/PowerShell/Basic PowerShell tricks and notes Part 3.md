@@ -148,7 +148,7 @@ Write-Host -Object "Resolved User's SID: " $ObjSID.Value -ForegroundColor Magent
 
 ```powershell
 Get-NetFirewallRule | Where-Object -FilterScript { $_.EdgeTraversalPolicy -ne 'Block' } | ForEach-Object -Process {
-    Set-NetFirewallRule -Name $_.Name -EdgeTraversalPolicy Block 
+    Set-NetFirewallRule -Name $_.Name -EdgeTraversalPolicy Block
 }
 ```
 
@@ -178,7 +178,7 @@ You can store the function in a variable like this
 
 ```powershell
 [System.Management.Automation.FunctionInfo]$Function = Get-Item -Path 'Function:Write-Text'
-``` 
+```
 
 <br>
 

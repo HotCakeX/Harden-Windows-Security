@@ -5,10 +5,11 @@
 ```powershell
 ConvertTo-WDACPolicy
     [-PolicyToAddLogsTo <FileInfo>]
+    [-Source <String>]
+    [-MDEAHLogs <FileInfo>]
     [-FilterByPolicyNames <String[]>]
-    [-MinutesAgo <UInt64>]
-    [-HoursAgo <UInt64>]
-    [-DaysAgo <UInt64>]
+    [-TimeSpan <String>]
+    [-TimeSpanAgo <UInt64>]
     [-KernelModeOnly]
     [-LogType <String>]
     [-Deploy]
@@ -19,10 +20,11 @@ ConvertTo-WDACPolicy
 ```powershell
 ConvertTo-WDACPolicy
     [-BasePolicyFile <FileInfo>]
+    [-Source <String>]
+    [-MDEAHLogs <FileInfo>]
     [-FilterByPolicyNames <String[]>]
-    [-MinutesAgo <UInt64>]
-    [-HoursAgo <UInt64>]
-    [-DaysAgo <UInt64>]
+    [-TimeSpan <String>]
+    [-TimeSpanAgo <UInt64>]
     [-KernelModeOnly]
     [-LogType <String>]
     [-Deploy]
@@ -33,10 +35,11 @@ ConvertTo-WDACPolicy
 ```powershell
 ConvertTo-WDACPolicy
     [-BasePolicyGUID <Guid>]
+    [-Source <String>]
+    [-MDEAHLogs <FileInfo>]
     [-FilterByPolicyNames <String[]>]
-    [-MinutesAgo <UInt64>]
-    [-HoursAgo <UInt64>]
-    [-DaysAgo <UInt64>]
+    [-TimeSpan <String>]
+    [-TimeSpanAgo <UInt64>]
     [-KernelModeOnly]
     [-LogType <String>]
     [-Deploy]

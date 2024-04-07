@@ -3,10 +3,12 @@ Function ConvertTo-WDACPolicy {
         DefaultParameterSetName = 'All'
     )]
     param(
+        [Alias('AddLogs')]
         [ValidateScript({ Test-CiPolicy -XmlFile $_ })]
         [Parameter(Mandatory = $false, ParameterSetName = 'In-Place Upgrade')]
         [System.IO.FileInfo]$PolicyToAddLogsTo,
 
+        [Alias('BaseFile')]
         [ValidateScript({ Test-CiPolicy -XmlFile $_ })]
         [Parameter(Mandatory = $false, ParameterSetName = 'Base-Policy File Association')]
         [System.IO.FileInfo]$BasePolicyFile,
@@ -23,8 +25,10 @@ Function ConvertTo-WDACPolicy {
                 $PolicyGUIDs | Where-Object -FilterScript { $_ -notin $Existing } | ForEach-Object -Process { "'{0}'" -f $_ }
             })]
         [Parameter(Mandatory = $false, ParameterSetName = 'Base-Policy GUID Association')]
+        [Alias('BaseGUID')]
         [System.Guid]$BasePolicyGUID,
 
+        [Alias('Src')]
         [ValidateSet('MDEAdvancedHunting', 'LocalEventLogs')]
         [Parameter(Mandatory = $false)][System.String]$Source = 'LocalEventLogs',
 
@@ -39,8 +43,10 @@ Function ConvertTo-WDACPolicy {
 
                 $Policies | Where-Object -FilterScript { $_ -notin $Existing } | ForEach-Object -Process { "'{0}'" -f $_ }
             })]
+        [Alias('FilterNames')]
         [Parameter(Mandatory = $false)][System.String[]]$FilterByPolicyNames,
 
+        [Alias('Duration')]
         [ValidateSet('Minutes', 'Hours', 'Days')]
         [Parameter(Mandatory = $false)][System.String]$TimeSpan
     )
@@ -60,6 +66,10 @@ Function ConvertTo-WDACPolicy {
             [System.Management.Automation.ParameterAttribute]$TimeSpanAgo_MandatoryAttrib = New-Object -TypeName System.Management.Automation.ParameterAttribute
             $TimeSpanAgo_MandatoryAttrib.Mandatory = $true
             $TimeSpanAgo_AttributesCollection.Add($TimeSpanAgo_MandatoryAttrib)
+
+            # Create an alias attribute and add it to the collection
+            $TimeSpanAgo_AliasAttrib = New-Object -TypeName System.Management.Automation.AliasAttribute -ArgumentList 'Past'
+            $TimeSpanAgo_AttributesCollection.Add($TimeSpanAgo_AliasAttrib)
 
             # Create a dynamic parameter object with the attributes already assigned: Name, Type, and Attributes Collection
             [System.Management.Automation.RuntimeDefinedParameter]$TimeSpanAgo = New-Object -TypeName System.Management.Automation.RuntimeDefinedParameter('TimeSpanAgo', [System.UInt64], $TimeSpanAgo_AttributesCollection)
@@ -102,6 +112,10 @@ Function ConvertTo-WDACPolicy {
             $MDEAHLogs_MandatoryAttrib.Mandatory = $true
             $MDEAHLogs_AttributesCollection.Add($MDEAHLogs_MandatoryAttrib)
 
+            # Create an alias attribute and add it to the collection
+            $MDEAHLogs_AliasAttrib = New-Object -TypeName System.Management.Automation.AliasAttribute -ArgumentList 'MDELogs'
+            $MDEAHLogs_AttributesCollection.Add($MDEAHLogs_AliasAttrib)
+
             # Create a dynamic parameter object with the attributes already assigned: Name, Type, and Attributes Collection
             [System.Management.Automation.RuntimeDefinedParameter]$MDEAHLogs = New-Object -TypeName System.Management.Automation.RuntimeDefinedParameter('MDEAHLogs', [System.IO.FileInfo[]], $MDEAHLogs_AttributesCollection)
 
@@ -118,6 +132,10 @@ Function ConvertTo-WDACPolicy {
         [System.Management.Automation.ParameterAttribute]$KernelModeOnly_MandatoryAttrib = New-Object -TypeName System.Management.Automation.ParameterAttribute
         $KernelModeOnly_MandatoryAttrib.Mandatory = $false
         $KernelModeOnly_AttributesCollection.Add($KernelModeOnly_MandatoryAttrib)
+
+        # Create an alias attribute and add it to the collection
+        $KernelModeOnly_AliasAttrib = New-Object -TypeName System.Management.Automation.AliasAttribute -ArgumentList 'KMode'
+        $KernelModeOnly_AttributesCollection.Add($KernelModeOnly_AliasAttrib)
 
         # Create a dynamic parameter object with the attributes already assigned: Name, Type, and Attributes Collection
         [System.Management.Automation.RuntimeDefinedParameter]$KernelModeOnly = New-Object -TypeName System.Management.Automation.RuntimeDefinedParameter('KernelModeOnly', [System.Management.Automation.SwitchParameter], $KernelModeOnly_AttributesCollection)
@@ -141,6 +159,10 @@ Function ConvertTo-WDACPolicy {
         [System.Management.Automation.ValidateSetAttribute]$LogType_ValidateSetAttrib = New-Object -TypeName System.Management.Automation.ValidateSetAttribute('Audit', 'Blocked')
         $LogType_AttributesCollection.Add($LogType_ValidateSetAttrib)
 
+        # Create an alias attribute and add it to the collection
+        $LogType_AliasAttrib = New-Object -TypeName System.Management.Automation.AliasAttribute -ArgumentList 'LogKind'
+        $LogType_AttributesCollection.Add($LogType_AliasAttrib)
+
         # Create a dynamic parameter object with the attributes already assigned: Name, Type, and Attributes Collection
         [System.Management.Automation.RuntimeDefinedParameter]$LogType = New-Object -TypeName System.Management.Automation.RuntimeDefinedParameter('LogType', [System.String], $LogType_AttributesCollection)
 
@@ -159,6 +181,10 @@ Function ConvertTo-WDACPolicy {
         $Deploy_MandatoryAttrib.Mandatory = $false
         $Deploy_AttributesCollection.Add($Deploy_MandatoryAttrib)
 
+        # Create an alias attribute and add it to the collection
+        $Deploy_AliasAttrib = New-Object -TypeName System.Management.Automation.AliasAttribute -ArgumentList 'Up'
+        $Deploy_AttributesCollection.Add($Deploy_AliasAttrib)
+
         # Create a dynamic parameter object with the attributes already assigned: Name, Type, and Attributes Collection
         [System.Management.Automation.RuntimeDefinedParameter]$Deploy = New-Object -TypeName System.Management.Automation.RuntimeDefinedParameter('Deploy', [System.Management.Automation.SwitchParameter], $Deploy_AttributesCollection)
 
@@ -176,6 +202,9 @@ Function ConvertTo-WDACPolicy {
         [System.Management.Automation.ParameterAttribute]$ExtremeVisibility_MandatoryAttrib = New-Object -TypeName System.Management.Automation.ParameterAttribute
         $ExtremeVisibility_MandatoryAttrib.Mandatory = $false
         $ExtremeVisibility_AttributesCollection.Add($ExtremeVisibility_MandatoryAttrib)
+
+        $ExtremeVisibility_AliasAttrib = New-Object -TypeName System.Management.Automation.AliasAttribute -ArgumentList 'XVis'
+        $ExtremeVisibility_AttributesCollection.Add($ExtremeVisibility_AliasAttrib)
 
         # Create a dynamic parameter object with the attributes already assigned: Name, Type, and Attributes Collection
         [System.Management.Automation.RuntimeDefinedParameter]$ExtremeVisibility = New-Object -TypeName System.Management.Automation.RuntimeDefinedParameter('ExtremeVisibility', [System.Management.Automation.SwitchParameter], $ExtremeVisibility_AttributesCollection)

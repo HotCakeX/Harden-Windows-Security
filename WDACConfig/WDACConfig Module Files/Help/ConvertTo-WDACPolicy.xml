@@ -15,7 +15,7 @@
     <command:syntax>
       <command:syntaxItem>
         <maml:name>ConvertTo-WDACPolicy</maml:name>
-        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="AddLogs">
           <maml:name>PolicyToAddLogsTo</maml:name>
           <maml:description>
             <maml:para>The policy to add the selected logs to, it can either be a base or supplemental policy.</maml:para>
@@ -27,7 +27,7 @@
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
-        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="Src">
           <maml:name>Source</maml:name>
           <maml:description>
             <maml:para>The source of the logs: Local Event logs (LocalEventLogs) or Microsoft Defender for Endpoint Advanced Hunting results (MDEAdvancedHunting). Supports validate set.</maml:para>
@@ -39,7 +39,7 @@
           </dev:type>
           <dev:defaultValue>Event Logs</dev:defaultValue>
         </command:parameter>
-        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="MDELogs">
           <maml:name>MDEAHLogs</maml:name>
           <maml:description>
             <maml:para>The path(s) to use MDE AH CSV files. This is a dynamic parameter and will only be available if the Source parameter is set to MDEAdvancedHunting.</maml:para>
@@ -51,7 +51,7 @@
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
-        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="FilterNames">
           <maml:name>FilterByPolicyNames</maml:name>
           <maml:description>
             <maml:para>The names of the policies to filter the logs by. Supports auto-completion, press TAB key to view the list of the deployed base policy names to choose from. It will not display the policies that are already selected on the command line. You can manually enter the name of the policies that are no longer available on the system.</maml:para>
@@ -63,7 +63,7 @@
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
-        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="Duration">
           <maml:name>TimeSpan</maml:name>
           <maml:description>
             <maml:para>The unit of time to use when filtering the logs by the time. The allowed values are: Minutes, Hours, Days</maml:para>
@@ -75,7 +75,7 @@
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
-        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="Past">
           <maml:name>TimeSpanAgo</maml:name>
           <maml:description>
             <maml:para>The number of the selected time unit to go back in time from the current time.</maml:para>
@@ -87,7 +87,7 @@
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
-        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="KMode">
           <maml:name>KernelModeOnly</maml:name>
           <maml:description>
             <maml:para>If used, will filter the logs by including only the Kernel-Mode logs</maml:para>
@@ -98,7 +98,7 @@
           </dev:type>
           <dev:defaultValue>False</dev:defaultValue>
         </command:parameter>
-        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="LogKind">
           <maml:name>LogType</maml:name>
           <maml:description>
             <maml:para>The type of logs to display: Audit or Blocked</maml:para>
@@ -110,7 +110,7 @@
           </dev:type>
           <dev:defaultValue>Audit</dev:defaultValue>
         </command:parameter>
-        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="Up">
           <maml:name>Deploy</maml:name>
           <maml:description>
             <maml:para>If used, will deploy the policy on the system</maml:para>
@@ -121,7 +121,7 @@
           </dev:type>
           <dev:defaultValue>False</dev:defaultValue>
         </command:parameter>
-        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="XVis">
           <maml:name>ExtremeVisibility</maml:name>
           <maml:description>
             <maml:para>If used, will display all the properties of the logs without any filtering.</maml:para>
@@ -158,7 +158,7 @@
       </command:syntaxItem>
       <command:syntaxItem>
         <maml:name>ConvertTo-WDACPolicy</maml:name>
-        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="BaseFile">
           <maml:name>BasePolicyFile</maml:name>
           <maml:description>
             <maml:para>The base policy file to associate the supplemental policy with</maml:para>
@@ -170,7 +170,7 @@
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
-        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="Src">
           <maml:name>Source</maml:name>
           <maml:description>
             <maml:para>The source of the logs: Local Event logs (LocalEventLogs) or Microsoft Defender for Endpoint Advanced Hunting results (MDEAdvancedHunting). Supports validate set.</maml:para>
@@ -182,7 +182,7 @@
           </dev:type>
           <dev:defaultValue>Event Logs</dev:defaultValue>
         </command:parameter>
-        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="MDELogs">
           <maml:name>MDEAHLogs</maml:name>
           <maml:description>
             <maml:para>The path(s) to use MDE AH CSV files. This is a dynamic parameter and will only be available if the Source parameter is set to MDEAdvancedHunting.</maml:para>
@@ -194,7 +194,7 @@
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
-        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="FilterNames">
           <maml:name>FilterByPolicyNames</maml:name>
           <maml:description>
             <maml:para>The names of the policies to filter the logs by. Supports auto-completion, press TAB key to view the list of the deployed base policy names to choose from. It will not display the policies that are already selected on the command line. You can manually enter the name of the policies that are no longer available on the system.</maml:para>
@@ -206,7 +206,7 @@
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
-        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="Duration">
           <maml:name>TimeSpan</maml:name>
           <maml:description>
             <maml:para>The unit of time to use when filtering the logs by the time. The allowed values are: Minutes, Hours, Days</maml:para>
@@ -218,7 +218,7 @@
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
-        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="Past">
           <maml:name>TimeSpanAgo</maml:name>
           <maml:description>
             <maml:para>The number of the selected time unit to go back in time from the current time.</maml:para>
@@ -230,7 +230,7 @@
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
-        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="KMode">
           <maml:name>KernelModeOnly</maml:name>
           <maml:description>
             <maml:para>If used, will filter the logs by including only the Kernel-Mode logs</maml:para>
@@ -241,7 +241,7 @@
           </dev:type>
           <dev:defaultValue>False</dev:defaultValue>
         </command:parameter>
-        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="LogKind">
           <maml:name>LogType</maml:name>
           <maml:description>
             <maml:para>The type of logs to display: Audit or Blocked</maml:para>
@@ -253,7 +253,7 @@
           </dev:type>
           <dev:defaultValue>Audit</dev:defaultValue>
         </command:parameter>
-        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="Up">
           <maml:name>Deploy</maml:name>
           <maml:description>
             <maml:para>If used, will deploy the policy on the system</maml:para>
@@ -264,7 +264,7 @@
           </dev:type>
           <dev:defaultValue>False</dev:defaultValue>
         </command:parameter>
-        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="XVis">
           <maml:name>ExtremeVisibility</maml:name>
           <maml:description>
             <maml:para>If used, will display all the properties of the logs without any filtering.</maml:para>
@@ -301,7 +301,7 @@
       </command:syntaxItem>
       <command:syntaxItem>
         <maml:name>ConvertTo-WDACPolicy</maml:name>
-        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="BaseGUID">
           <maml:name>BasePolicyGUID</maml:name>
           <maml:description>
             <maml:para>The GUID of the base policy to associate the supplemental policy with</maml:para>
@@ -313,7 +313,7 @@
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
-        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="Src">
           <maml:name>Source</maml:name>
           <maml:description>
             <maml:para>The source of the logs: Local Event logs (LocalEventLogs) or Microsoft Defender for Endpoint Advanced Hunting results (MDEAdvancedHunting). Supports validate set.</maml:para>
@@ -325,7 +325,7 @@
           </dev:type>
           <dev:defaultValue>Event Logs</dev:defaultValue>
         </command:parameter>
-        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="MDELogs">
           <maml:name>MDEAHLogs</maml:name>
           <maml:description>
             <maml:para>The path(s) to use MDE AH CSV files. This is a dynamic parameter and will only be available if the Source parameter is set to MDEAdvancedHunting.</maml:para>
@@ -337,7 +337,7 @@
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
-        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="FilterNames">
           <maml:name>FilterByPolicyNames</maml:name>
           <maml:description>
             <maml:para>The names of the policies to filter the logs by. Supports auto-completion, press TAB key to view the list of the deployed base policy names to choose from. It will not display the policies that are already selected on the command line. You can manually enter the name of the policies that are no longer available on the system.</maml:para>
@@ -349,7 +349,7 @@
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
-        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="Duration">
           <maml:name>TimeSpan</maml:name>
           <maml:description>
             <maml:para>The unit of time to use when filtering the logs by the time. The allowed values are: Minutes, Hours, Days</maml:para>
@@ -361,7 +361,7 @@
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
-        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="Past">
           <maml:name>TimeSpanAgo</maml:name>
           <maml:description>
             <maml:para>The number of the selected time unit to go back in time from the current time.</maml:para>
@@ -373,7 +373,7 @@
           </dev:type>
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
-        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="KMode">
           <maml:name>KernelModeOnly</maml:name>
           <maml:description>
             <maml:para>If used, will filter the logs by including only the Kernel-Mode logs</maml:para>
@@ -384,7 +384,7 @@
           </dev:type>
           <dev:defaultValue>False</dev:defaultValue>
         </command:parameter>
-        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="LogKind">
           <maml:name>LogType</maml:name>
           <maml:description>
             <maml:para>The type of logs to display: Audit or Blocked</maml:para>
@@ -396,7 +396,7 @@
           </dev:type>
           <dev:defaultValue>Audit</dev:defaultValue>
         </command:parameter>
-        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="Up">
           <maml:name>Deploy</maml:name>
           <maml:description>
             <maml:para>If used, will deploy the policy on the system</maml:para>
@@ -407,7 +407,7 @@
           </dev:type>
           <dev:defaultValue>False</dev:defaultValue>
         </command:parameter>
-        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="XVis">
           <maml:name>ExtremeVisibility</maml:name>
           <maml:description>
             <maml:para>If used, will display all the properties of the logs without any filtering.</maml:para>
@@ -444,7 +444,7 @@
       </command:syntaxItem>
     </command:syntax>
     <command:parameters>
-      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="AddLogs">
         <maml:name>PolicyToAddLogsTo</maml:name>
         <maml:description>
           <maml:para>The policy to add the selected logs to, it can either be a base or supplemental policy.</maml:para>
@@ -456,7 +456,7 @@
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
       </command:parameter>
-      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="BaseFile">
         <maml:name>BasePolicyFile</maml:name>
         <maml:description>
           <maml:para>The base policy file to associate the supplemental policy with</maml:para>
@@ -468,7 +468,7 @@
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
       </command:parameter>
-      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="BaseGUID">
         <maml:name>BasePolicyGUID</maml:name>
         <maml:description>
           <maml:para>The GUID of the base policy to associate the supplemental policy with</maml:para>
@@ -480,7 +480,7 @@
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
       </command:parameter>
-      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="Src">
         <maml:name>Source</maml:name>
         <maml:description>
           <maml:para>The source of the logs: Local Event logs (LocalEventLogs) or Microsoft Defender for Endpoint Advanced Hunting results (MDEAdvancedHunting). Supports validate set.</maml:para>
@@ -492,7 +492,7 @@
         </dev:type>
         <dev:defaultValue>Event Logs</dev:defaultValue>
       </command:parameter>
-      <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+      <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="MDELogs">
         <maml:name>MDEAHLogs</maml:name>
         <maml:description>
           <maml:para>The path(s) to use MDE AH CSV files. This is a dynamic parameter and will only be available if the Source parameter is set to MDEAdvancedHunting.</maml:para>
@@ -504,7 +504,7 @@
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
       </command:parameter>
-      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="FilterNames">
         <maml:name>FilterByPolicyNames</maml:name>
         <maml:description>
           <maml:para>The names of the policies to filter the logs by. Supports auto-completion, press TAB key to view the list of the deployed base policy names to choose from. It will not display the policies that are already selected on the command line. You can manually enter the name of the policies that are no longer available on the system.</maml:para>
@@ -516,7 +516,7 @@
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
       </command:parameter>
-      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="Duration">
         <maml:name>TimeSpan</maml:name>
         <maml:description>
           <maml:para>The unit of time to use when filtering the logs by the time. The allowed values are: Minutes, Hours, Days</maml:para>
@@ -528,7 +528,7 @@
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
       </command:parameter>
-      <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+      <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="Past">
         <maml:name>TimeSpanAgo</maml:name>
         <maml:description>
           <maml:para>The number of the selected time unit to go back in time from the current time.</maml:para>
@@ -540,7 +540,7 @@
         </dev:type>
         <dev:defaultValue>None</dev:defaultValue>
       </command:parameter>
-      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="KMode">
         <maml:name>KernelModeOnly</maml:name>
         <maml:description>
           <maml:para>If used, will filter the logs by including only the Kernel-Mode logs</maml:para>
@@ -552,7 +552,7 @@
         </dev:type>
         <dev:defaultValue>False</dev:defaultValue>
       </command:parameter>
-      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="LogKind">
         <maml:name>LogType</maml:name>
         <maml:description>
           <maml:para>The type of logs to display: Audit or Blocked</maml:para>
@@ -564,7 +564,7 @@
         </dev:type>
         <dev:defaultValue>Audit</dev:defaultValue>
       </command:parameter>
-      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="Up">
         <maml:name>Deploy</maml:name>
         <maml:description>
           <maml:para>If used, will deploy the policy on the system</maml:para>
@@ -576,7 +576,7 @@
         </dev:type>
         <dev:defaultValue>False</dev:defaultValue>
       </command:parameter>
-      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="XVis">
         <maml:name>ExtremeVisibility</maml:name>
         <maml:description>
           <maml:para>If used, will display all the properties of the logs without any filtering.</maml:para>

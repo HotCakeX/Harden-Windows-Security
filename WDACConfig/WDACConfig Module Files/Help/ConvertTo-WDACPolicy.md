@@ -117,7 +117,7 @@ The policy to add the selected logs to, it can either be a base or supplemental 
 ```yaml
 Type: FileInfo
 Parameter Sets: In-Place Upgrade
-Aliases:
+Aliases: AddLogs
 
 Required: False
 Position: Named
@@ -132,7 +132,7 @@ The base policy file to associate the supplemental policy with
 ```yaml
 Type: FileInfo
 Parameter Sets: Base-Policy File Association
-Aliases:
+Aliases: BaseFile
 
 Required: False
 Position: Named
@@ -147,7 +147,7 @@ The GUID of the base policy to associate the supplemental policy with
 ```yaml
 Type: Guid
 Parameter Sets: Base-Policy GUID Association
-Aliases:
+Aliases: BaseGUID
 
 Required: False
 Position: Named
@@ -163,7 +163,7 @@ Supports validate set.
 ```yaml
 Type: String
 Parameter Sets: (All)
-Aliases:
+Aliases: Src
 
 Required: False
 Position: Named
@@ -178,7 +178,7 @@ The path(s) to use MDE AH CSV files. This is a dynamic parameter and will only b
 ```yaml
 Type: FileInfo[]
 Parameter Sets: (All)
-Aliases:
+Aliases: MDELogs
 
 Required: True
 Position: Named
@@ -196,7 +196,7 @@ You can manually enter the name of the policies that are no longer available on 
 ```yaml
 Type: String[]
 Parameter Sets: (All)
-Aliases:
+Aliases: FilterNames
 
 Required: False
 Position: Named
@@ -212,7 +212,7 @@ The allowed values are: Minutes, Hours, Days
 ```yaml
 Type: String
 Parameter Sets: (All)
-Aliases:
+Aliases: Duration
 
 Required: False
 Position: Named
@@ -227,7 +227,7 @@ The number of the selected time unit to go back in time from the current time.
 ```yaml
 Type: String
 Parameter Sets: (All)
-Aliases:
+Aliases: Past
 
 Required: True
 Position: Named
@@ -242,7 +242,7 @@ If used, will filter the logs by including only the Kernel-Mode logs
 ```yaml
 Type: SwitchParameter
 Parameter Sets: (All)
-Aliases:
+Aliases: KMode
 
 Required: False
 Position: Named
@@ -257,7 +257,7 @@ The type of logs to display: Audit or Blocked
 ```yaml
 Type: String
 Parameter Sets: (All)
-Aliases:
+Aliases: LogKind
 
 Required: False
 Position: Named
@@ -272,7 +272,7 @@ If used, will deploy the policy on the system
 ```yaml
 Type: SwitchParameter
 Parameter Sets: (All)
-Aliases:
+Aliases: Up
 
 Required: False
 Position: Named
@@ -287,7 +287,7 @@ If used, will display all the properties of the logs without any filtering.
 ```yaml
 Type: SwitchParameter
 Parameter Sets: (All)
-Aliases:
+Aliases: XVis
 
 Required: False
 Position: Named

@@ -28,13 +28,13 @@ Function Split-SignedUnsignedData {
     Process {
 
         foreach ($Data in $EventPackageCollections) {
-            
+
             # Check if the current pipeline object has correlated data
             if ($Null -ne $Data.CorrelatedEventsData) {
 
                 # Make sure the data group has valid Signer data and then get the unique signers based on their publisher TBS hash (aka leaf certificate's hash)
                 $PossibleSignerData = $Data.CorrelatedEventsData | Where-Object -FilterScript { -NOT ([System.String]::IsNullOrWhiteSpace($_.PublisherTBSHash)) } | Group-Object -Property PublisherTBSHash | ForEach-Object -Process { $_.Group[0] }
-                
+
                 if ($Null -ne $PossibleSignerData) {
 
                     if ($PossibleSignerData.count -gt 1) {
@@ -57,17 +57,17 @@ Function Split-SignedUnsignedData {
                     $UnsignedData += $Data
                 }
             }
-            else {                
+            else {
                 # If the current pipeline object has no correlated data, add it to the unsigned data and set its correlated data property to null
                 $Data.CorrelatedEventsData = $Null
                 $UnsignedData += $Data
             }
         }
-     
+
         # Getting unique values only
         $SignedData = $SignedData | Group-Object -Property SHA256 | ForEach-Object -Process { $_.Group[0] }
         $UnsignedData = $UnsignedData | Group-Object -Property SHA256 | ForEach-Object -Process { $_.Group[0] }
-        
+
         # De-duplicate the Unsigned data, if there is any Signed data in the array, by removing the logs of the same exact files that have valid signatures but are also found in the unsigned data
         # They are very few usually
 

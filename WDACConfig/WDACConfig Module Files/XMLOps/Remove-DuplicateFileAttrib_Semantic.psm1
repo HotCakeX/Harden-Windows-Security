@@ -123,7 +123,7 @@ function Remove-DuplicateFileAttrib_Semantic {
 
                     # Iterate through the remaining FileAttrib elements
                     for ($i = 1; $i -lt $FileAttribHash[$Key].Count; $i++) {
-                     
+
                         # Get the duplicate FileAttrib element to remove based on the index
                         $FileAttribToRemove = $FileAttribHash[$Key][$i]
 
@@ -140,7 +140,7 @@ function Remove-DuplicateFileAttrib_Semantic {
                             if ($Null -ne $FileAttribRef) {
 
                                 if ($FirstFileAttrib.GetAttribute('ID') -notin $Signer.FileAttribRef.RuleID) {
-                                
+
 
                                     $FileAttribRef.SetAttribute('RuleID', $FirstFileAttrib.GetAttribute('ID'))
                                 }

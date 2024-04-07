@@ -10,7 +10,7 @@ function Remove-UnreferencedFileRuleRefs {
         System.Void
     #>
     [CmdletBinding()]
-    [OutputType([System.Void])] 
+    [OutputType([System.Void])]
     param (
         [Parameter(Mandatory = $true)][System.IO.FileInfo]$XmlFilePath
     )

@@ -4,11 +4,11 @@ Function Merge-Signers_Semantic {
         Merges the FilePublisher and Publisher Signers in an XML file based on their TBS, Name, and CertPublisher values
         For each FilePublisher signer, if two signers are found with the same TBS, Name, and CertPublisher, only one of them will be kept, and their FileAttribRefs are merged
         For each Publisher signer, if two signers are found with the same TBS, Name, and CertPublisher, only one of them will be kept
-        
+
         If two signers have the same TBS, Name, and CertPublisher but only one of them has FileAttribRefs, then they are not the same. This function makes the distinction between FilePublisher and Publisher signers.
         This function makes the distinction between the Signers that are part of Signing Scenario 131 and the ones that are part of Signing Scenario 12.
         So there are 4 different Signer types to consider.
-        
+
         At the end, the XML file will have unique FilePublisher and Publisher signers for Signing Scenario 131 and 12, unique elements in the <AllowedSigners> and <CiSigners>
 
         Also, each Signer will have unique and valid FileAttribRef elements with IDs that point to an existing FileAttrib element in the <FileRules> node
@@ -27,18 +27,18 @@ Function Merge-Signers_Semantic {
 
     Begin {
         # Load the XML file
-        [System.Xml.XmlDocument]$Xml = Get-Content -Path $XmlFilePath        
+        [System.Xml.XmlDocument]$Xml = Get-Content -Path $XmlFilePath
     }
 
     Process {
-        
+
         # Define the namespace manager
         [System.Xml.XmlNamespaceManager]$Ns = New-Object -TypeName System.Xml.XmlNamespaceManager -ArgumentList $Xml.NameTable
         $Ns.AddNamespace('ns', 'urn:schemas-microsoft-com:sipolicy')
 
         # Get the User Mode Signing Scenario node
         [System.Xml.XmlNodeList]$AllowedSigners12 = $Xml.SelectNodes('//ns:SigningScenarios/ns:SigningScenario[@Value="12"]/ns:ProductSigners/ns:AllowedSigners', $Ns)
-        
+
         # Get the Kernel Mode Signing Scenario node
         [System.Xml.XmlNodeList]$AllowedSigners131 = $Xml.SelectNodes('//ns:SigningScenarios/ns:SigningScenario[@Value="131"]/ns:ProductSigners/ns:AllowedSigners', $Ns)
 
@@ -70,16 +70,16 @@ Function Merge-Signers_Semantic {
         [System.Xml.XmlNodeList]$FileRulesElements = $Xml.SelectNodes('//ns:FileRules/ns:FileAttrib', $Ns)
 
         $FileRulesValidID_HashSet = [System.Collections.Generic.HashSet[System.String]]$FileRulesElements.ID
-        
+
         if ($SignerNodes.Count -eq 0) {
             Write-Verbose -Message 'Merge-Signers: No Signer nodes found in the XML file. Exiting the function.'
             Return
         }
 
         # Iterate over each Signer node
-        foreach ($Signer in $SignerNodes) {     
-            
-            
+        foreach ($Signer in $SignerNodes) {
+
+
             # If the signer has FileAttribRefs, it is a FilePublisher signer
             if ($Signer.SelectNodes('ns:FileAttribRef', $Ns).Count -gt 0) {
 
@@ -92,18 +92,18 @@ Function Merge-Signers_Semantic {
                 $Signer.FileAttribRef | ForEach-Object -Process {
                     [System.Void]$_.ParentNode.RemoveChild($_)
                 }
-                
+
                 # Add the valid FileAttribRef elements back to the Signer
                 $ContentToReplaceWith | ForEach-Object -Process {
                     [System.Void]$Signer.AppendChild($Xml.ImportNode($_, $true))
                 }
-                            
+
                 [System.Int64]$After = $Signer.FileAttribRef.count
 
                 if ($Before -ne $After) {
                     Write-Verbose -Message "Merge-Signers: Removed $($Before - $After) FileAttribRef elements from Signer with ID $($Signer.ID)."
                 }
-                
+
                 # Determine the Signing Scenario based on the AllowedSigners
                 $SigningScenario = $SigningScenario131Node.SelectSingleNode("./ns:ProductSigners/ns:AllowedSigners/ns:AllowedSigner[@SignerId='$($Signer.GetAttribute('ID'))']", $Ns)
 
@@ -112,17 +112,17 @@ Function Merge-Signers_Semantic {
 
                     # Create a unique key for each FilePublisher signer based on TBS, Name, and CertPublisher
                     [System.String]$FilePublisherKey = $Signer.SelectSingleNode('ns:CertRoot', $Ns).GetAttribute('Value') + '|' +
-                    $Signer.GetAttribute('Name') + '|' +                    
+                    $Signer.GetAttribute('Name') + '|' +
                     ($Signer.SelectSingleNode('ns:CertPublisher', $Ns) ? $Signer.SelectSingleNode('ns:CertPublisher', $Ns).GetAttribute('Value') : $Null)
 
                     # If the signer is not in the hashtable, add it with its necessary details
-                    if (-not $UniqueFilePublisherSigners131.ContainsKey($FilePublisherKey)) {    
-                        
+                    if (-not $UniqueFilePublisherSigners131.ContainsKey($FilePublisherKey)) {
+
                         # Create a temp hashtable to store the signer and its details
-                        [System.Collections.Hashtable]$FilePublisherKeyTemp = @{}                         
+                        [System.Collections.Hashtable]$FilePublisherKeyTemp = @{}
                         $FilePublisherKeyTemp['Signer'] = @($Signer.Clone())
                         $FilePublisherKeyTemp['AllowedSigner'] = $AllowedSigners131.SelectNodes("//ns:AllowedSigner[@SignerId='$($Signer.GetAttribute('ID'))']", $Ns)
-                        
+
                         # Add the temp signer hashtable to the main hashtable
                         $UniqueFilePublisherSigners131[$FilePublisherKey] = $FilePublisherKeyTemp
                     }
@@ -151,15 +151,15 @@ Function Merge-Signers_Semantic {
 
                     # If the signer is not in the hashtable, add it with its FileAttribRefs
                     if (-not $UniqueFilePublisherSigners12.ContainsKey($FilePublisherKey)) {
-               
+
                         # Create a temp hashtable to store the signer and its details
-                        [System.Collections.Hashtable]$FilePublisherKeyTemp = @{}                         
+                        [System.Collections.Hashtable]$FilePublisherKeyTemp = @{}
                         $FilePublisherKeyTemp['Signer'] = @($Signer.Clone())
                         $FilePublisherKeyTemp['AllowedSigner'] = $AllowedSigners12.SelectNodes("//ns:AllowedSigner[@SignerId='$($Signer.GetAttribute('ID'))']", $Ns)
                         $FilePublisherKeyTemp['CiSigners'] = $CiSigners.SelectNodes("//ns:CiSigner[@SignerId='$($Signer.GetAttribute('ID'))']", $Ns)
-                        
+
                         # Add the temp signer hashtable to the main hashtable
-                        $UniqueFilePublisherSigners12[$FilePublisherKey] = $FilePublisherKeyTemp                        
+                        $UniqueFilePublisherSigners12[$FilePublisherKey] = $FilePublisherKeyTemp
                     }
 
                     # If the signer is already in the hashtable
@@ -180,7 +180,7 @@ Function Merge-Signers_Semantic {
 
             # If the signer has no FileAttribRefs, it is a Publisher or PCA signer
             elseif ($Signer.SelectNodes('ns:FileAttribRef', $Ns).Count -eq 0) {
-                
+
                 # Determine the Signing Scenario based on the AllowedSigners
                 $SigningScenario = $SigningScenario131Node.SelectSingleNode("./ns:ProductSigners/ns:AllowedSigners/ns:AllowedSigner[@SignerId='$($Signer.GetAttribute('ID'))']", $Ns)
 
@@ -196,10 +196,10 @@ Function Merge-Signers_Semantic {
                     if (-not $UniquePublisherSigners131.ContainsKey($PublisherKey)) {
 
                         # Create a temp hashtable to store the signer and its details
-                        [System.Collections.Hashtable]$PublisherKeyTemp = @{}                         
+                        [System.Collections.Hashtable]$PublisherKeyTemp = @{}
                         $PublisherKeyTemp['Signer'] = @($Signer.Clone())
                         $PublisherKeyTemp['AllowedSigner'] = $AllowedSigners131.SelectNodes("//ns:AllowedSigner[@SignerId='$($Signer.GetAttribute('ID'))']", $Ns)
-                        
+
                         # Add the temp signer hashtable to the main hashtable
                         $UniquePublisherSigners131[$PublisherKey] = $PublisherKeyTemp
                     }
@@ -217,25 +217,25 @@ Function Merge-Signers_Semantic {
 
                     # If the signer is not in the hashtable, add it with its FileAttribRefs
                     if (-not $UniquePublisherSigners12.ContainsKey($PublisherKey)) {
-                  
+
                         # Create a temp hashtable to store the signer and its details
-                        [System.Collections.Hashtable]$PublisherKeyTemp = @{}                         
+                        [System.Collections.Hashtable]$PublisherKeyTemp = @{}
                         $PublisherKeyTemp['Signer'] = @($Signer.Clone())
                         $PublisherKeyTemp['AllowedSigner'] = $AllowedSigners12.SelectNodes("//ns:AllowedSigner[@SignerId='$($Signer.GetAttribute('ID'))']", $Ns)
                         $PublisherKeyTemp['CiSigners'] = $CiSigners.SelectNodes("//ns:CiSigner[@SignerId='$($Signer.GetAttribute('ID'))']", $Ns)
-                       
+
                         # Add the temp signer hashtable to the main hashtable
-                        $UniquePublisherSigners12[$PublisherKey] = $PublisherKeyTemp 
+                        $UniquePublisherSigners12[$PublisherKey] = $PublisherKeyTemp
                     }
                     else {
                         Write-Verbose -Message "Merge-Signers: Excluded Publisher signer for Signing Scenario 12 with ID: $($Signer.ID). Only one Publisher signer is allowed per TBS, Name, and CertPublisher."
                     }
                 }
             }
-        }        
+        }
 
         $UniqueFilePublisherSigners12.Values | ForEach-Object -Process {
-       
+
             # Create a unique ID for each signer
             [System.String]$Guid = [System.Guid]::NewGuid().ToString().replace('-', '').ToUpper()
             $Guid = "ID_SIGNER_A_$Guid"
@@ -255,7 +255,7 @@ Function Merge-Signers_Semantic {
         }
 
         $UniquePublisherSigners12.Values | ForEach-Object -Process {
-       
+
             # Create a unique ID for each signer
             [System.String]$Guid = [System.Guid]::NewGuid().ToString().replace('-', '').ToUpper()
             $Guid = "ID_SIGNER_B_$Guid"
@@ -273,9 +273,9 @@ Function Merge-Signers_Semantic {
                 $CiSigner.SetAttribute('SignerId', $Guid)
             }
         }
-     
+
         $UniquePublisherSigners131.Values | ForEach-Object -Process {
-       
+
             # Create a unique ID for each signer
             [System.String]$Guid = [System.Guid]::NewGuid().ToString().replace('-', '').ToUpper()
             $Guid = "ID_SIGNER_B_$Guid"
@@ -309,14 +309,14 @@ Function Merge-Signers_Semantic {
 
         # Clear the existing Signers node from any type of Signer
         [System.Xml.XmlElement]$SignersNode = $Xml.SelectSingleNode('//ns:Signers', $Ns)
-        $SignersNode.RemoveAll()        
+        $SignersNode.RemoveAll()
 
         # Clear the existing AllowedSigners and CiSigners nodes from any type of Signer
         [System.Xml.XmlElement]$AllowedSigners12ToClear = $Xml.SelectSingleNode('//ns:SigningScenarios/ns:SigningScenario[@Value="12"]/ns:ProductSigners/ns:AllowedSigners', $Ns)
         [System.Xml.XmlElement]$AllowedSigners131ToClear = $Xml.SelectSingleNode('//ns:SigningScenarios/ns:SigningScenario[@Value="131"]/ns:ProductSigners/ns:AllowedSigners', $Ns)
         [System.Xml.XmlElement]$CiSignersToClear = $Xml.SelectSingleNode('//ns:CiSigners', $Ns)
-        
-        $AllowedSigners12ToClear.RemoveAll() 
+
+        $AllowedSigners12ToClear.RemoveAll()
         $AllowedSigners131ToClear.RemoveAll()
         $CiSignersToClear.RemoveAll()
 
@@ -324,7 +324,7 @@ Function Merge-Signers_Semantic {
 
         # Add the unique FilePublisher signers for Signing Scenario 131 back to the Signers node
         foreach ($Signer in $UniqueFilePublisherSigners131.Values) {
-                
+
             # index 0 is used because otherwise it would throw an error about array not being able to be appended to the XML
             # first index makes sure it is XmlElement type
             [System.Void]$SignersNode.AppendChild($Signer['Signer'][0])
@@ -338,13 +338,13 @@ Function Merge-Signers_Semantic {
         }
 
         # Add the unique Publisher signers for Signing Scenario 131 back to the Signers node
-        foreach ($Signer in $UniquePublisherSigners131.Values) {            
+        foreach ($Signer in $UniquePublisherSigners131.Values) {
 
             # A warning message to catch any edge cases that shouldn't happen
             if (($Signer['AllowedSigner'].SignerId | Select-Object -Unique).count -gt 1) {
                 Write-Warning -Message "Multiple AllowedSigners found for Publisher signer for Signing Scenario 131 with ID $($Signer['Signer'][0].ID)."
             }
-   
+
             # Add the <Signer> element to the <Signers> node
             [System.Void]$SignersNode.AppendChild($Signer['Signer'][0])
 
@@ -354,19 +354,19 @@ Function Merge-Signers_Semantic {
 
         # Add the unique FilePublisher signers for Signing Scenario 12 back to the Signers node
         foreach ($Signer in $UniqueFilePublisherSigners12.Values) {
- 
+
             # A warning message to catch any edge cases that shouldn't happen
             if (($Signer['AllowedSigner'].SignerId | Select-Object -Unique).count -gt 1) {
                 Write-Warning -Message "Multiple AllowedSigners found for FilePublisher signer for Signing Scenario 12 with ID $($Signer['Signer'][0].ID)."
             }
-           
+
             # A warning message to catch any edge cases that shouldn't happen
             if (($Signer['CiSigners'].SignerId | Select-Object -Unique).count -gt 1) {
                 Write-Warning -Message "Multiple CiSigners found for FilePublisher signer for Signing Scenario 12 with ID $($Signer['Signer'][0].ID)."
-            }           
-            
+            }
+
             # Add the <Signer> element to the <Signers> node
-            [System.Void]$SignersNode.AppendChild($Signer['Signer'][0])            
+            [System.Void]$SignersNode.AppendChild($Signer['Signer'][0])
 
             # Add the <AllowedSigner> element to the <AllowedSigners> node
             [System.Void]$AllowedSigners12.AppendChild($Signer['AllowedSigner'].Count -gt 1 ? $Signer['AllowedSigner'][0] : $Signer['AllowedSigner'])
@@ -378,7 +378,7 @@ Function Merge-Signers_Semantic {
         }
 
         # Add the unique Publisher signers for Signing Scenario 12 back to the Signers node
-        foreach ($Signer in $UniquePublisherSigners12.Values) {         
+        foreach ($Signer in $UniquePublisherSigners12.Values) {
 
             # A warning message to catch any edge cases that shouldn't happen
             if (($Signer['AllowedSigner'].SignerId | Select-Object -Unique).count -gt 1) {
@@ -392,10 +392,10 @@ Function Merge-Signers_Semantic {
 
             # Add the <Signer> element to the <Signers> node
             [System.Void]$SignersNode.AppendChild($Signer['Signer'][0])
-            
+
             # Add the <AllowedSigner> element to the <AllowedSigners> node
             [System.Void]$AllowedSigners12.AppendChild($Signer['AllowedSigner'].Count -gt 1 ? $Signer['AllowedSigner'][0] : $Signer['AllowedSigner'])
-            
+
             if ($Null -ne $Signer['CiSigners']) {
                 # Add the <CiSigner> element to the <CiSigners> node
                 [System.Void]$CiSigners.AppendChild($Signer['CiSigners'].Count -gt 1 ? $Signer['CiSigners'][0] : $Signer['CiSigners'])

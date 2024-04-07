@@ -93,7 +93,7 @@ Function New-HashLevelRules {
 
             # For Kernel-Mode files
             elseif ($Hash.SiSigningScenario -eq '0') {
-           
+
                 # Display a warning if a hash rule for a kernel-mode file is being created and the file is not an MSI
                 # Since MDE does not record the Signing information events (Id 8038) for MSI files so we must create Hash based rules for them
                 if (-NOT $Hash.FileName.EndsWith('.msi')) {

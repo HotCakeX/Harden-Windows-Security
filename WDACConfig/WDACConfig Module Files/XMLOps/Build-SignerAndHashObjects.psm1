@@ -84,10 +84,10 @@ Function Build-SignerAndHashObjects {
 
     Process {
 
-        if ($Null -ne $SignedData -and $SignedData.Count -gt 0) {           
-        
+        if ($Null -ne $SignedData -and $SignedData.Count -gt 0) {
+
             # Process the signed data
-            Foreach ($CurrentData in $SignedData) {     
+            Foreach ($CurrentData in $SignedData) {
 
                 # Create a new FilePublisherSignerCreator object
                 [FilePublisherSignerCreator]$CurrentFilePublisherSigner = New-Object -TypeName FilePublisherSignerCreator
@@ -113,9 +113,9 @@ Function Build-SignerAndHashObjects {
                     if (([System.String]::IsNullOrWhiteSpace($CurrentCorData.IntermediateCertTBS)) -and (-NOT (([System.String]::IsNullOrWhiteSpace($CurrentCorData.LeafCertTBS))))) {
 
                         Write-Warning -Message "Intermediate Certificate TBS hash is empty for the file: $($CurrentData.FileName), using the leaf certificate TBS hash instead"
-                        
+
                         $CurrentCorData.IntermediateCertName = $CurrentCorData.LeafCertName
-                        
+
                         $CurrentCorData.IntermediateCertTBS = $CurrentCorData.LeafCertTBS
 
                     }
@@ -176,7 +176,7 @@ Function Build-SignerAndHashObjects {
         }
 
         if ($Null -ne $UnsignedData -and $UnsignedData.Count -gt 0) {
-    
+
             # Processing the unsigned data
             Foreach ($HashData in $UnsignedData) {
 
@@ -193,7 +193,7 @@ Function Build-SignerAndHashObjects {
                 $CompleteHashes += $CurrentHash
             }
         }
-        
+
     }
     End {
 

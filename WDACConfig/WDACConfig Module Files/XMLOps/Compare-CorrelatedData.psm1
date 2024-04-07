@@ -37,11 +37,11 @@ Function Compare-CorrelatedData {
         Foreach ($RawLogGroup in $GroupedEvents) {
 
             # Create a new array to store the group data
-            [PSCustomObject[]]$GroupData = $RawLogGroup.Group  
-  
+            [PSCustomObject[]]$GroupData = $RawLogGroup.Group
+
             # Process Audit events
             if (($GroupData.ActionType -contains 'AppControlCodeIntegrityPolicyAudited') -or ($GroupData.ActionType -contains 'AppControlCIScriptAudited')) {
-    
+
                 # Finding the main Audit event in the group
                 # De-duplicating based on multiple properties
                 [PSCustomObject]$AuditTemp = $GroupData |
@@ -122,7 +122,7 @@ Function Compare-CorrelatedData {
             # Max detail - included correlated data
             $EventPackageCollections | Select-Object -Property $PropertyNames | Export-Csv -Path 'C:\Users\HotCakeX\Downloads\Pass2.csv'
         }
-        
+
         Return $EventPackageCollections
     }
 }

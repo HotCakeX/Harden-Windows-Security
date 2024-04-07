@@ -45,9 +45,9 @@ function Remove-AllowElements_Semantic {
         # These are unique because HashSets don't support duplicate values
         $UserMode_FileRulesRefIDs_HashSet = [System.Collections.Generic.HashSet[System.String]]$UMCI_SigningScenario_ProductSigners_FileRulesRef_Node.RuleID
         $KernelMode_FileRulesRefIDs_HashSet = [System.Collections.Generic.HashSet[System.String]]$KMCI_SigningScenario_ProductSigners_FileRulesRef_Node.RuleID
-    
+
         # 2 Hashtables for User and Kernel mode <Allow> elements and their corresponding FileRuleRef elements together
-        [System.Collections.Hashtable]$KernelModeHashTable = @{}      
+        [System.Collections.Hashtable]$KernelModeHashTable = @{}
         [System.Collections.Hashtable]$UserModeHashTable = @{}
 
         # 2 Arrays to save the <Allow> elements of User and Kernel modes
@@ -58,8 +58,8 @@ function Remove-AllowElements_Semantic {
     Process {
 
         # Separating User-Mode and Kernel-Mode <Allow> elements
-        foreach ($AllowElement in $AllowElements) {     
-            
+        foreach ($AllowElement in $AllowElements) {
+
             # Check if the User-Mode <FileRulesRef> node has any elements
             # And then check if the current <Allow> element ID is part of the User-Mode <FileRulesRef> node
             if (($Null -ne $UserMode_FileRulesRefIDs_HashSet) -and ($UserMode_FileRulesRefIDs_HashSet.Contains($AllowElement.ID))) {
@@ -74,34 +74,34 @@ function Remove-AllowElements_Semantic {
             else {
                 Write-Warning -Message "Remove-AllowElements_Semantic: The Allow element with ID $($AllowElement.ID) is not part of any Signing Scenario. It will be ignored."
             }
-        }            
+        }
 
         # Grouping the <Allow> elements by their Hash value, uniquely, So SHA1 and SHA256 hashes
         [System.Xml.XmlElement[]]$GroupsUserModes = $ArrayOfUserModes | Group-Object -Property Hash | ForEach-Object -Process { $_.Group[0] }
         [System.Xml.XmlElement[]]$GroupsKernelModes = $ArrayOfKernelModes | Group-Object -Property Hash | ForEach-Object -Process { $_.Group[0] }
 
         # Adding the User-Mode <Allow> elements and their corresponding <FileRuleRef> elements to the Hashtables
-        foreach ($UserModeAllowElement in $GroupsUserModes) { 
-         
+        foreach ($UserModeAllowElement in $GroupsUserModes) {
+
             # If the current <Allow> element ID is not already in the KernelModeHashTable, add it
             if (-NOT $UserModeHashTable.ContainsKey($UserModeAllowElement)) {
 
                 # The key is the <Allow> element, the value is all of the <FileRuleRef> elements with the same RuleID as the Allow element's ID, without deduplication at this point
                 # Cloning is necessary because after clearing the nodes, we would lose the reference to the original elements in those nodes
                 $UserModeHashTable[@($UserModeAllowElement.Clone())] = @($Xml.SelectNodes("//ns:SigningScenarios/ns:SigningScenario[@Value='12']/ns:ProductSigners/ns:FileRulesRef/ns:FileRuleRef[@RuleID=`"$($UserModeAllowElement.ID)`"]", $Ns).Clone())
-            }            
-        }   
+            }
+        }
 
         # Adding the Kernel-Mode <Allow> elements and their corresponding <FileRuleRef> elements to the Hashtables
-        foreach ($KernelModeAllowElement in $GroupsKernelModes) { 
-         
+        foreach ($KernelModeAllowElement in $GroupsKernelModes) {
+
             # If the current <Allow> element ID is not already in the KernelModeHashTable, add it
             if (-NOT $KernelModeHashTable.ContainsKey($KernelModeAllowElement)) {
 
                 # The key is the <Allow> element, the value is all of the <FileRuleRef> elements with the same RuleID as the Allow element's ID, without deduplication at this point
                 $KernelModeHashTable[@($KernelModeAllowElement.Clone())] = @($Xml.SelectNodes("//ns:SigningScenarios/ns:SigningScenario[@Value='131']/ns:ProductSigners/ns:FileRulesRef/ns:FileRuleRef[@RuleID=`"$($KernelModeAllowElement.ID)`"]", $Ns).Clone())
-            }            
-        } 
+            }
+        }
 
         # Select and remove all <Allow> elements from <FileRules>
         [System.Xml.XmlNodeList]$AllowNodes = $Xml.SelectNodes('//ns:FileRules/ns:Allow', $NS)
@@ -117,22 +117,22 @@ function Remove-AllowElements_Semantic {
                 [System.Void]$FileRuleRef.ParentNode.RemoveChild($FileRuleRef)
             }
         }
-     
+
         # Add Unique <Allow> elements and their corresponding <FileRuleRef> elements back to the XML file for the Kernel-Mode files
         foreach ($Group in $UserModeHashTable.GetEnumerator()) {
             # Add the unique <Allow> element
-            [System.Void]$FileRulesNode.AppendChild($Group.Key[0])  
+            [System.Void]$FileRulesNode.AppendChild($Group.Key[0])
             # Add the unique <FileRuleRef> element, using [0] index because the key is an array even though it only has 1 element
             [System.Void]$UserModeFileRefs.AppendChild(($Group.Value.GetEnumerator() | Group-Object -Property RuleID | ForEach-Object -Process { $_.Group[0] }))
-        }          
-        
+        }
+
         # Add Unique <Allow> elements and their corresponding <FileRuleRef> elements back to the XML file for the Kernel-Mode files
-        foreach ($Group in $KernelModeHashTable.GetEnumerator()) {           
+        foreach ($Group in $KernelModeHashTable.GetEnumerator()) {
             # Add the unique <Allow> element, using [0] index because the key is an array even though it only has 1 element
-            [System.Void]$FileRulesNode.AppendChild($Group.Key[0])             
+            [System.Void]$FileRulesNode.AppendChild($Group.Key[0])
             # Add the unique <FileRuleRef> element
             [System.Void]$KernelModeFileRefs.AppendChild(($Group.Value.GetEnumerator() | Group-Object -Property RuleID | ForEach-Object -Process { $_.Group[0] }))
-        }   
+        }
     }
 
     End {

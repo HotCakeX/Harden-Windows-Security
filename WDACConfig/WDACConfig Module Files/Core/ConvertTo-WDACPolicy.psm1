@@ -1,4 +1,5 @@
 Function ConvertTo-WDACPolicy {
+    # .ExternalHelp ..\Help\ConvertTo-WDACPolicy.xml
     [CmdletBinding(
         DefaultParameterSetName = 'In-Place Upgrade'
     )]
@@ -24,6 +25,12 @@ Function ConvertTo-WDACPolicy {
             })]
         [Parameter(Mandatory = $false, ParameterSetName = 'Base-Policy GUID Association')]
         [System.Guid]$BasePolicyGUID,
+
+        [ValidateSet('MDE AH', 'Event Logs')]
+        [Parameter(Mandatory = $false, ParameterSetName = 'In-Place Upgrade')]
+        [Parameter(Mandatory = $false, ParameterSetName = 'Base-Policy GUID Association')]
+        [Parameter(Mandatory = $false, ParameterSetName = 'Base-Policy File Association')]
+        [Parameter(Mandatory = $false)][System.String]$Source = 'Event Logs',
 
         [ArgumentCompleter({
                 param($CommandName, $parameterName, $wordToComplete, $CommandAst, $fakeBoundParameters)
@@ -486,70 +493,6 @@ Function ConvertTo-WDACPolicy {
             }
         }
     }
-
-    <#
-.SYNOPSIS
-    Displays the Code Integrity logs in a GUI and allows the user to select the logs to convert to a Supplemental WDAC policy
-    It's a multi-purpose cmdlet that offers a wide range of functionalities that can either be used separately or mixed together for very detailed and specific tasks
-.DESCRIPTION
-    You can filter the logs by the policy name and the time
-    You can add the logs to an existing WDAC policy or create a new one
-.PARAMETER FilterByPolicyNames
-   The names of the policies to filter the logs by.
-   Supports auto-completion, press TAB key to view the list of the deployed base policy names to choose from.
-   It will not display the policies that are already selected on the command line.
-   You can manually enter the name of the policies that are no longer available on the system.
-.PARAMETER PolicyToAddLogsTo
-    The policy to add the selected logs to, it can either be a base or supplemental policy.
-.PARAMETER BasePolicyFile
-    The base policy file to associate the supplemental policy with
-.PARAMETER BasePolicyGUID
-    The GUID of the base policy to associate the supplemental policy with
-.PARAMETER MinutesAgo
-    The number of minutes ago from the current time to filter the logs by
-.PARAMETER HoursAgo
-    The number of hours ago from the current time to filter the logs by
-.PARAMETER DaysAgo
-    The number of days ago from the current time to filter the logs by
-.PARAMETER KernelModeOnly
-    If used, will filter the logs by including only the Kernel-Mode logs
-.PARAMETER LogType
-    The type of logs to display: Audit or Blocked
-.PARAMETER Deploy
-    If used, will deploy the policy on the system
-.PARAMETER ExtremeVisibility
-    If used, will display all the properties of the logs without any filtering.
-.PARAMETER SkipVersionCheck
-    Can be used with any parameter to bypass the online version check - only to be used in rare cases
-.NOTES
-    The biggest specified time unit is used for filtering the logs if more than one time unit is specified.
-.EXAMPLE
-    ConvertTo-WDACPolicy -PolicyToAddLogsTo "C:\Users\Admin\AllowMicrosoftPlusBlockRules.xml" -Verbose
-
-    This example will display the Code Integrity logs in a GUI and allow the user to select the logs to add to the specified policy file.
-.EXAMPLE
-    ConvertTo-WDACPolicy -Verbose -BasePolicyGUID '{ACE9058C-8A24-47F4-86F0-A33FAB5073E3}'
-
-    This example will display the Code Integrity logs in a GUI and allow the user to select the logs to create a new supplemental policy and associate it with the specified base policy GUID.
-.EXAMPLE
-    ConvertTo-WDACPolicy -BasePolicyFile "C:\Users\Admin\AllowMicrosoftPlusBlockRules.xml"
-
-    This example will display the Code Integrity logs in a GUI and allow the user to select the logs to create a new supplemental policy and associate it with the specified base policy file.
-.EXAMPLE
-    ConvertTo-WDACPolicy
-
-    This example will display the Code Integrity logs in a GUI and takes no further action.
-.EXAMPLE
-    ConvertTo-WDACPolicy -FilterByPolicyNames 'VerifiedAndReputableDesktopFlightSupplemental','WindowsE_Lockdown_Flight_Policy_Supplemental' -Verbose
-
-    This example will filter the Code Integrity logs by the specified policy names and display them in a GUI. It will also display verbose messages on the console.
-.EXAMPLE
-    ConvertTo-WDACPolicy -FilterByPolicyNames 'Microsoft Windows Driver Policy - Enforced' -MinutesAgo 10
-
-    This example will filter the Code Integrity logs by the specified policy name and the number of minutes ago from the current time and display them in a GUI.
-    So, it will display the logs that are 10 minutes old and are associated with the specified policy name.
-#>
-
 }
 # Importing argument completer ScriptBlocks
 . "$ModuleRootPath\CoreExt\ArgumentCompleters.ps1"

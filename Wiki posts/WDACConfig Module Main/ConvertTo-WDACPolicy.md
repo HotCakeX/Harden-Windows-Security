@@ -6,7 +6,7 @@
 ConvertTo-WDACPolicy
     [-PolicyToAddLogsTo <FileInfo>]
     [-Source <String>]
-    [-MDEAHLogs <FileInfo>]
+    [-MDEAHLogs <FileInfo[]>]
     [-FilterByPolicyNames <String[]>]
     [-TimeSpan <String>]
     [-TimeSpanAgo <UInt64>]
@@ -21,7 +21,7 @@ ConvertTo-WDACPolicy
 ConvertTo-WDACPolicy
     [-BasePolicyFile <FileInfo>]
     [-Source <String>]
-    [-MDEAHLogs <FileInfo>]
+    [-MDEAHLogs <FileInfo[]>]
     [-FilterByPolicyNames <String[]>]
     [-TimeSpan <String>]
     [-TimeSpanAgo <UInt64>]
@@ -36,7 +36,7 @@ ConvertTo-WDACPolicy
 ConvertTo-WDACPolicy
     [-BasePolicyGUID <Guid>]
     [-Source <String>]
-    [-MDEAHLogs <FileInfo>]
+    [-MDEAHLogs <FileInfo[]>]
     [-FilterByPolicyNames <String[]>]
     [-TimeSpan <String>]
     [-TimeSpanAgo <UInt64>]

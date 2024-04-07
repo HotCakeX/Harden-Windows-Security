@@ -1,42 +1,67 @@
 ---
-external help file: WDACConfig-help.xml
+external help file: ConvertTo-WDACPolicy.xml
 Module Name: WDACConfig
-online version:
+online version: https://github.com/HotCakeX/Harden-Windows-Security/wiki/ConvertTo-WDACPolicy
 schema: 2.0.0
 ---
 
 # ConvertTo-WDACPolicy
 
 ## SYNOPSIS
-Displays the Code Integrity logs in a GUI and allows the user to select the logs to convert to a Supplemental WDAC policy
-It's a multi-purpose cmdlet that offers a wide range of functionalities that can either be used separately or mixed together for very detailed and specific tasks
+Displays the Code Integrity logs in a GUI and allows the user to select the logs to convert to a Supplemental WDAC policy. It's a multi-purpose cmdlet that offers a wide range of functionalities that can either be used separately or mixed together for very detailed and specific tasks.
 
 ## SYNTAX
 
-### In-Place Upgrade (Default)
+### In-Place Upgrade
 ```
-ConvertTo-WDACPolicy [-PolicyToAddLogsTo <FileInfo>] [-Source <String>] [-FilterByPolicyNames <String[]>]
- [-MinutesAgo <UInt64>] [-HoursAgo <UInt64>] [-DaysAgo <UInt64>] [-KernelModeOnly] [-LogType <String>]
- [-Deploy] [-ExtremeVisibility] [-SkipVersionCheck] [-ProgressAction <ActionPreference>] [<CommonParameters>]
+ConvertTo-WDACPolicy
+    [-PolicyToAddLogsTo <FileInfo>]
+    [-Source <String>]
+    [-MDEAHLogs <FileInfo[]>]
+    [-FilterByPolicyNames <String[]>]
+    [-TimeSpan <String>]
+    [-TimeSpanAgo <UInt64>]
+    [-KernelModeOnly]
+    [-LogType <String>]
+    [-Deploy]
+    [-ExtremeVisibility]
+    [<CommonParameters>]
 ```
 
 ### Base-Policy File Association
 ```
-ConvertTo-WDACPolicy [-BasePolicyFile <FileInfo>] [-Source <String>] [-FilterByPolicyNames <String[]>]
- [-MinutesAgo <UInt64>] [-HoursAgo <UInt64>] [-DaysAgo <UInt64>] [-KernelModeOnly] [-LogType <String>]
- [-Deploy] [-ExtremeVisibility] [-SkipVersionCheck] [-ProgressAction <ActionPreference>] [<CommonParameters>]
+ConvertTo-WDACPolicy
+    [-BasePolicyFile <FileInfo>]
+    [-Source <String>]
+    [-MDEAHLogs <FileInfo[]>]
+    [-FilterByPolicyNames <String[]>]
+    [-TimeSpan <String>]
+    [-TimeSpanAgo <UInt64>]
+    [-KernelModeOnly]
+    [-LogType <String>]
+    [-Deploy]
+    [-ExtremeVisibility]
+    [<CommonParameters>]
 ```
 
 ### Base-Policy GUID Association
 ```
-ConvertTo-WDACPolicy [-BasePolicyGUID <Guid>] [-Source <String>] [-FilterByPolicyNames <String[]>]
- [-MinutesAgo <UInt64>] [-HoursAgo <UInt64>] [-DaysAgo <UInt64>] [-KernelModeOnly] [-LogType <String>]
- [-Deploy] [-ExtremeVisibility] [-SkipVersionCheck] [-ProgressAction <ActionPreference>] [<CommonParameters>]
+ConvertTo-WDACPolicy
+    [-BasePolicyGUID <Guid>]
+    [-Source <String>]
+    [-MDEAHLogs <FileInfo[]>]
+    [-FilterByPolicyNames <String[]>]
+    [-TimeSpan <String>]
+    [-TimeSpanAgo <UInt64>]
+    [-KernelModeOnly]
+    [-LogType <String>]
+    [-Deploy]
+    [-ExtremeVisibility]
+    [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-You can filter the logs by the policy name and the time
-You can add the logs to an existing WDAC policy or create a new one
+You can filter the logs by the policy name and the time. You can add the logs to an existing WDAC policy or create a new one. You can use the local logs or use Microsoft Defender for Endpoint Advanced Hunting results to generate Application Control policies.
 
 ## EXAMPLES
 
@@ -132,7 +157,8 @@ Accept wildcard characters: False
 ```
 
 ### -Source
-The Source of the data or logs to use for the operation.
+The source of the logs: Local Event logs (LocalEventLogs) or Microsoft Defender for Endpoint Advanced Hunting results (MDEAdvancedHunting).
+Supports validate set.
 
 ```yaml
 Type: String
@@ -142,6 +168,21 @@ Aliases:
 Required: False
 Position: Named
 Default value: Event Logs
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -MDEAHLogs
+The path(s) to use MDE AH CSV files. This is a dynamic parameter and will only be available if the Source parameter is set to MDEAdvancedHunting.
+
+```yaml
+Type: FileInfo[]
+Parameter Sets: (All)
+Aliases:
+
+Required: True
+Position: Named
+Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
@@ -164,47 +205,33 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -MinutesAgo
-The number of minutes ago from the current time to filter the logs by
+### -TimeSpan
+The unit of time to use when filtering the logs by the time.
+The allowed values are: Minutes, Hours, Days
 
 ```yaml
-Type: UInt64
+Type: String
 Parameter Sets: (All)
 Aliases:
 
 Required: False
 Position: Named
-Default value: 0
+Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -HoursAgo
-The number of hours ago from the current time to filter the logs by
+### -TimeSpanAgo
+The number of the selected time unit to go back in time from the current time.
 
 ```yaml
-Type: UInt64
+Type: String
 Parameter Sets: (All)
 Aliases:
 
-Required: False
+Required: True
 Position: Named
-Default value: 0
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-### -DaysAgo
-The number of days ago from the current time to filter the logs by
-
-```yaml
-Type: UInt64
-Parameter Sets: (All)
-Aliases:
-
-Required: False
-Position: Named
-Default value: 0
+Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
@@ -285,7 +312,7 @@ Accept wildcard characters: False
 ```
 
 ### -ProgressAction
-{{ Fill ProgressAction Description }}
+Contains the preference for the progress action
 
 ```yaml
 Type: ActionPreference
@@ -315,9 +342,9 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ### System.String
 
-
 ## NOTES
-The biggest specified time unit is used for filtering the logs if more than one time unit is specified.
 
 ## RELATED LINKS
+
 [Cmdlet Guide](https://github.com/HotCakeX/Harden-Windows-Security/wiki/ConvertTo-WDACPolicy)
+

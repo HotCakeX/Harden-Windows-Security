@@ -1,7 +1,6 @@
 Function ConvertTo-WDACPolicy {
-    # .ExternalHelp ..\Help\ConvertTo-WDACPolicy.xml
     [CmdletBinding(
-        DefaultParameterSetName = 'In-Place Upgrade'
+        DefaultParameterSetName = 'All'
     )]
     param(
         [ValidateScript({ Test-CiPolicy -XmlFile $_ })]
@@ -13,7 +12,7 @@ Function ConvertTo-WDACPolicy {
         [System.IO.FileInfo]$BasePolicyFile,
 
         [ArgumentCompleter({
-                param($CommandName, $parameterName, $wordToComplete, $CommandAst, $fakeBoundParameters)
+                param($CommandName, $ParameterName, $WordToComplete, $CommandAst, $fakeBoundParameters)
 
                 [System.String[]]$PolicyGUIDs = ((&'C:\Windows\System32\CiTool.exe' -lp -json | ConvertFrom-Json).Policies | Where-Object -FilterScript { ($_.IsSystemPolicy -ne 'True') -and ($_.PolicyID -eq $_.BasePolicyID) }).PolicyID
 
@@ -26,14 +25,11 @@ Function ConvertTo-WDACPolicy {
         [Parameter(Mandatory = $false, ParameterSetName = 'Base-Policy GUID Association')]
         [System.Guid]$BasePolicyGUID,
 
-        [ValidateSet('MDE AH', 'Event Logs')]
-        [Parameter(Mandatory = $false, ParameterSetName = 'In-Place Upgrade')]
-        [Parameter(Mandatory = $false, ParameterSetName = 'Base-Policy GUID Association')]
-        [Parameter(Mandatory = $false, ParameterSetName = 'Base-Policy File Association')]
-        [Parameter(Mandatory = $false)][System.String]$Source = 'Event Logs',
+        [ValidateSet('MDEAdvancedHunting', 'LocalEventLogs')]
+        [Parameter(Mandatory = $false)][System.String]$Source = 'LocalEventLogs',
 
         [ArgumentCompleter({
-                param($CommandName, $parameterName, $wordToComplete, $CommandAst, $fakeBoundParameters)
+                param($CommandName, $ParameterName, $WordToComplete, $CommandAst, $FakeBoundParameters)
 
                 [System.String[]]$Policies = ((&'C:\Windows\System32\CiTool.exe' -lp -json | ConvertFrom-Json).Policies | Where-Object -FilterScript { ($_.FriendlyName) -and ($_.PolicyID -eq $_.BasePolicyID) }).FriendlyName
 
@@ -43,49 +39,172 @@ Function ConvertTo-WDACPolicy {
 
                 $Policies | Where-Object -FilterScript { $_ -notin $Existing } | ForEach-Object -Process { "'{0}'" -f $_ }
             })]
-        [Parameter(Mandatory = $false, ParameterSetName = 'In-Place Upgrade')]
-        [Parameter(Mandatory = $false, ParameterSetName = 'Base-Policy GUID Association')]
-        [Parameter(Mandatory = $false, ParameterSetName = 'Base-Policy File Association')]
-        [System.String[]]$FilterByPolicyNames,
+        [Parameter(Mandatory = $false)][System.String[]]$FilterByPolicyNames,
 
-        [Parameter(Mandatory = $false, ParameterSetName = 'In-Place Upgrade')]
-        [Parameter(Mandatory = $false, ParameterSetName = 'Base-Policy GUID Association')]
-        [Parameter(Mandatory = $false, ParameterSetName = 'Base-Policy File Association')]
-        [System.UInt64]$MinutesAgo,
-
-        [Parameter(Mandatory = $false, ParameterSetName = 'In-Place Upgrade')]
-        [Parameter(Mandatory = $false, ParameterSetName = 'Base-Policy GUID Association')]
-        [Parameter(Mandatory = $false, ParameterSetName = 'Base-Policy File Association')]
-        [System.UInt64]$HoursAgo,
-
-        [Parameter(Mandatory = $false, ParameterSetName = 'In-Place Upgrade')]
-        [Parameter(Mandatory = $false, ParameterSetName = 'Base-Policy GUID Association')]
-        [Parameter(Mandatory = $false, ParameterSetName = 'Base-Policy File Association')]
-        [System.UInt64]$DaysAgo,
-
-        [Parameter(Mandatory = $false, ParameterSetName = 'In-Place Upgrade')]
-        [Parameter(Mandatory = $false, ParameterSetName = 'Base-Policy GUID Association')]
-        [Parameter(Mandatory = $false, ParameterSetName = 'Base-Policy File Association')]
-        [System.Management.Automation.SwitchParameter]$KernelModeOnly,
-
-        [ValidateSet('Audit', 'Blocked')]
-        [Parameter(Mandatory = $false, ParameterSetName = 'In-Place Upgrade')]
-        [Parameter(Mandatory = $false, ParameterSetName = 'Base-Policy GUID Association')]
-        [Parameter(Mandatory = $false, ParameterSetName = 'Base-Policy File Association')]
-        [System.String]$LogType = 'Audit',
-
-        [Parameter(Mandatory = $false, ParameterSetName = 'In-Place Upgrade')]
-        [Parameter(Mandatory = $false, ParameterSetName = 'Base-Policy GUID Association')]
-        [Parameter(Mandatory = $false, ParameterSetName = 'Base-Policy File Association')]
-        [System.Management.Automation.SwitchParameter]$Deploy,
-
-        [Parameter(Mandatory = $false, ParameterSetName = 'In-Place Upgrade')]
-        [Parameter(Mandatory = $false, ParameterSetName = 'Base-Policy GUID Association')]
-        [Parameter(Mandatory = $false, ParameterSetName = 'Base-Policy File Association')]
-        [System.Management.Automation.SwitchParameter]$ExtremeVisibility,
-
-        [Parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$SkipVersionCheck
+        [ValidateSet('Minutes', 'Hours', 'Days')]
+        [Parameter(Mandatory = $false)][System.String]$TimeSpan
     )
+
+    DynamicParam {
+
+        # Create a new dynamic parameter dictionary
+        $ParamDictionary = [System.Management.Automation.RuntimeDefinedParameterDictionary]::new()
+
+        # If TimeSpanAgo parameter was used, create a mandatory parameter to ask for the value
+        if ($PSBoundParameters['TimeSpan']) {
+
+            # Create a parameter attribute collection
+            $TimeSpanAgo_AttributesCollection = New-Object -TypeName System.Collections.ObjectModel.Collection[System.Attribute]
+
+            # Create a mandatory attribute and add it to the collection
+            [System.Management.Automation.ParameterAttribute]$TimeSpanAgo_MandatoryAttrib = New-Object -TypeName System.Management.Automation.ParameterAttribute
+            $TimeSpanAgo_MandatoryAttrib.Mandatory = $true
+            $TimeSpanAgo_AttributesCollection.Add($TimeSpanAgo_MandatoryAttrib)
+
+            # Create a dynamic parameter object with the attributes already assigned: Name, Type, and Attributes Collection
+            [System.Management.Automation.RuntimeDefinedParameter]$TimeSpanAgo = New-Object -TypeName System.Management.Automation.RuntimeDefinedParameter('TimeSpanAgo', [System.UInt64], $TimeSpanAgo_AttributesCollection)
+
+            # Add the dynamic parameter object to the dictionary
+            $ParamDictionary.Add('TimeSpanAgo', $TimeSpanAgo)
+        }
+
+        # If user selected 'MDEAdvancedHunting' as the source, then create a mandatory parameter to ask for the .CSV file(s) path(s)
+        if ('MDEAdvancedHunting' -in $PSBoundParameters['Source']) {
+
+            # Opens File picker GUI so that user can select an .CSV file
+            [System.Management.Automation.ScriptBlock]$ArgumentCompleterCSVFilePathsPicker = {
+                # Create a new OpenFileDialog object
+                [System.Windows.Forms.OpenFileDialog]$Dialog = New-Object -TypeName 'System.Windows.Forms.OpenFileDialog'
+                # Set the filter to show only CSV files
+                $Dialog.Filter = 'CSV files (*.CSV)|*.CSV'
+                # Set the title of the dialog
+                $Dialog.Title = 'Select Microsoft Defender for Endpoint Advanced Hunting CSV files'
+                # Allow multiple CSV files to be selected
+                $Dialog.Multiselect = $true
+                $Dialog.ShowPreview = $true
+                # Show the dialog and get the result
+                [System.String]$Result = $Dialog.ShowDialog()
+                # If the user clicked OK, return the selected file paths
+                if ($Result -eq 'OK') {
+                    return "`"$($Dialog.FileNames -join '","')`""
+                }
+            }
+
+            # Create a parameter attribute collection
+            $MDEAHLogs_AttributesCollection = New-Object -TypeName System.Collections.ObjectModel.Collection[System.Attribute]
+
+            # Create an argument completer attribute and add it to the collection
+            [System.Management.Automation.ArgumentCompleterAttribute]$MDEAHLogs_ArgumentCompleterAttrib = New-Object -TypeName System.Management.Automation.ArgumentCompleterAttribute($ArgumentCompleterCSVFilePathsPicker)
+            $MDEAHLogs_AttributesCollection.Add($MDEAHLogs_ArgumentCompleterAttrib)
+
+            # Create a mandatory attribute and add it to the collection
+            [System.Management.Automation.ParameterAttribute]$MDEAHLogs_MandatoryAttrib = New-Object -TypeName System.Management.Automation.ParameterAttribute
+            $MDEAHLogs_MandatoryAttrib.Mandatory = $true
+            $MDEAHLogs_AttributesCollection.Add($MDEAHLogs_MandatoryAttrib)
+
+            # Create a dynamic parameter object with the attributes already assigned: Name, Type, and Attributes Collection
+            [System.Management.Automation.RuntimeDefinedParameter]$MDEAHLogs = New-Object -TypeName System.Management.Automation.RuntimeDefinedParameter('MDEAHLogs', [System.IO.FileInfo[]], $MDEAHLogs_AttributesCollection)
+
+            # Add the dynamic parameter object to the dictionary
+            $ParamDictionary.Add('MDEAHLogs', $MDEAHLogs)
+        }
+
+        #Region-KernelModeOnly-Parameter
+
+        # Create a parameter attribute collection
+        $KernelModeOnly_AttributesCollection = New-Object -TypeName System.Collections.ObjectModel.Collection[System.Attribute]
+
+        # Create a mandatory attribute and add it to the collection
+        [System.Management.Automation.ParameterAttribute]$KernelModeOnly_MandatoryAttrib = New-Object -TypeName System.Management.Automation.ParameterAttribute
+        $KernelModeOnly_MandatoryAttrib.Mandatory = $false
+        $KernelModeOnly_AttributesCollection.Add($KernelModeOnly_MandatoryAttrib)
+
+        # Create a dynamic parameter object with the attributes already assigned: Name, Type, and Attributes Collection
+        [System.Management.Automation.RuntimeDefinedParameter]$KernelModeOnly = New-Object -TypeName System.Management.Automation.RuntimeDefinedParameter('KernelModeOnly', [System.Management.Automation.SwitchParameter], $KernelModeOnly_AttributesCollection)
+
+        # Add the dynamic parameter object to the dictionary
+        $ParamDictionary.Add('KernelModeOnly', $KernelModeOnly)
+
+        #Endregion-KernelModeOnly-Parameter
+
+        #Region-LogType-Parameter
+
+        # Create a parameter attribute collection
+        $LogType_AttributesCollection = New-Object -TypeName System.Collections.ObjectModel.Collection[System.Attribute]
+
+        # Create a mandatory attribute and add it to the collection
+        [System.Management.Automation.ParameterAttribute]$LogType_MandatoryAttrib = New-Object -TypeName System.Management.Automation.ParameterAttribute
+        $LogType_MandatoryAttrib.Mandatory = $false
+        $LogType_AttributesCollection.Add($LogType_MandatoryAttrib)
+
+        # Create a ValidateSet attribute with the allowed values
+        [System.Management.Automation.ValidateSetAttribute]$LogType_ValidateSetAttrib = New-Object -TypeName System.Management.Automation.ValidateSetAttribute('Audit', 'Blocked')
+        $LogType_AttributesCollection.Add($LogType_ValidateSetAttrib)
+
+        # Create a dynamic parameter object with the attributes already assigned: Name, Type, and Attributes Collection
+        [System.Management.Automation.RuntimeDefinedParameter]$LogType = New-Object -TypeName System.Management.Automation.RuntimeDefinedParameter('LogType', [System.String], $LogType_AttributesCollection)
+
+        # Add the dynamic parameter object to the dictionary
+        $ParamDictionary.Add('LogType', $LogType)
+
+        #Endregion-LogType-Parameter
+
+        #Region-Deploy-Parameter
+
+        # Create a parameter attribute collection
+        $Deploy_AttributesCollection = New-Object -TypeName System.Collections.ObjectModel.Collection[System.Attribute]
+
+        # Create a mandatory attribute and add it to the collection
+        [System.Management.Automation.ParameterAttribute]$Deploy_MandatoryAttrib = New-Object -TypeName System.Management.Automation.ParameterAttribute
+        $Deploy_MandatoryAttrib.Mandatory = $false
+        $Deploy_AttributesCollection.Add($Deploy_MandatoryAttrib)
+
+        # Create a dynamic parameter object with the attributes already assigned: Name, Type, and Attributes Collection
+        [System.Management.Automation.RuntimeDefinedParameter]$Deploy = New-Object -TypeName System.Management.Automation.RuntimeDefinedParameter('Deploy', [System.Management.Automation.SwitchParameter], $Deploy_AttributesCollection)
+
+        # Add the dynamic parameter object to the dictionary
+        $ParamDictionary.Add('Deploy', $Deploy)
+
+        #Endregion-Deploy-Parameter
+
+        #Region-ExtremeVisibility-Parameter
+
+        # Create a parameter attribute collection
+        $ExtremeVisibility_AttributesCollection = New-Object -TypeName System.Collections.ObjectModel.Collection[System.Attribute]
+
+        # Create a mandatory attribute and add it to the collection
+        [System.Management.Automation.ParameterAttribute]$ExtremeVisibility_MandatoryAttrib = New-Object -TypeName System.Management.Automation.ParameterAttribute
+        $ExtremeVisibility_MandatoryAttrib.Mandatory = $false
+        $ExtremeVisibility_AttributesCollection.Add($ExtremeVisibility_MandatoryAttrib)
+
+        # Create a dynamic parameter object with the attributes already assigned: Name, Type, and Attributes Collection
+        [System.Management.Automation.RuntimeDefinedParameter]$ExtremeVisibility = New-Object -TypeName System.Management.Automation.RuntimeDefinedParameter('ExtremeVisibility', [System.Management.Automation.SwitchParameter], $ExtremeVisibility_AttributesCollection)
+
+        # Add the dynamic parameter object to the dictionary
+        $ParamDictionary.Add('ExtremeVisibility', $ExtremeVisibility)
+
+        #Endregion-ExtremeVisibility-Parameter
+
+        #Region-SkipVersionCheck-Parameter
+
+        # Create a parameter attribute collection
+        $SkipVersionCheck_AttributesCollection = New-Object -TypeName System.Collections.ObjectModel.Collection[System.Attribute]
+
+        # Create a mandatory attribute and add it to the collection
+        [System.Management.Automation.ParameterAttribute]$SkipVersionCheck_MandatoryAttrib = New-Object -TypeName System.Management.Automation.ParameterAttribute
+        $SkipVersionCheck_MandatoryAttrib.Mandatory = $false
+        $SkipVersionCheck_AttributesCollection.Add($SkipVersionCheck_MandatoryAttrib)
+
+        # Create a dynamic parameter object with the attributes already assigned: Name, Type, and Attributes Collection
+        [System.Management.Automation.RuntimeDefinedParameter]$SkipVersionCheck = New-Object -TypeName System.Management.Automation.RuntimeDefinedParameter('SkipVersionCheck', [System.Management.Automation.SwitchParameter], $SkipVersionCheck_AttributesCollection)
+
+        # Add the dynamic parameter object to the dictionary
+        $ParamDictionary.Add('SkipVersionCheck', $SkipVersionCheck)
+
+        #Endregion-SkipVersionCheck-Parameter
+
+        return $ParamDictionary
+    }
 
     begin {
         # Detecting if Verbose switch is used
@@ -107,17 +226,32 @@ Function ConvertTo-WDACPolicy {
         Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Get-FileRules.psm1" -Force
         Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\New-StagingArea.psm1" -Force
 
+        # Since Dynamic parameters are only available in the parameter dictionary, we have to access them using $PSBoundParameters or assign them manually to another variable in the function's scope
+        New-Variable -Name 'TimeSpanAgo' -Value $PSBoundParameters['TimeSpanAgo'] -Force
+        New-Variable -Name 'MDEAHLogs' -Value $PSBoundParameters['MDEAHLogs'] -Force
+        New-Variable -Name 'KernelModeOnly' -Value $PSBoundParameters['KernelModeOnly'] -Force
+        New-Variable -Name 'LogType' -Value ($PSBoundParameters['LogType'] ?? 'Audit') -Force
+        New-Variable -Name 'Deploy' -Value $PSBoundParameters['Deploy'] -Force
+        New-Variable -Name 'ExtremeVisibility' -Value $PSBoundParameters['ExtremeVisibility'] -Force
+        New-Variable -Name 'SkipVersionCheck' -Value $PSBoundParameters['SkipVersionCheck'] -Force
+
         # if -SkipVersionCheck wasn't passed, run the updater
         if (-NOT $SkipVersionCheck) { Update-Self -InvocationStatement $MyInvocation.Statement }
 
         [System.IO.DirectoryInfo]$StagingArea = New-StagingArea -CmdletName 'ConvertTo-WDACPolicy'
 
-        if ($MinutesAgo -or $HoursAgo -or $DaysAgo) {
-            # Convert MinutesAgo, HoursAgo, and DaysAgo to DateTime objects
+        # If TimeSpan parameter was selected
+        if ($TimeSpan) {
+
+            # Get the current time
             [System.DateTime]$CurrentDateTime = Get-Date
-            [System.DateTime]$StartTime = $CurrentDateTime.AddMinutes(-$MinutesAgo) -as [System.DateTime]
-            [System.DateTime]$StartTime = $StartTime.AddHours(-$HoursAgo) -as [System.DateTime]
-            [System.DateTime]$StartTime = $StartTime.AddDays(-$DaysAgo) -as [System.DateTime]
+
+            # Create the $StartTime variable based on the user input TimeSpanAgo parameter
+            switch ($TimeSpan) {
+                'Minutes' { [System.DateTime]$StartTime = $CurrentDateTime.AddMinutes(-$TimeSpanAgo) -as [System.DateTime] }
+                'Hours' { [System.DateTime]$StartTime = $CurrentDateTime.AddHours(-$TimeSpanAgo) -as [System.DateTime] }
+                'Days' { [System.DateTime]$StartTime = $CurrentDateTime.AddDays(-$TimeSpanAgo) -as [System.DateTime] }
+            }
         }
 
         # To store the logs that user selects using GUI
@@ -493,6 +627,87 @@ Function ConvertTo-WDACPolicy {
             }
         }
     }
+
+    <#
+.SYNOPSIS
+    Displays the Code Integrity logs in a GUI and allows the user to select the logs to convert to a Supplemental WDAC policy
+    It's a multi-purpose cmdlet that offers a wide range of functionalities that can either be used separately or mixed together for very detailed and specific tasks
+.DESCRIPTION
+    You can filter the logs by the policy name and the time
+    You can add the logs to an existing WDAC policy or create a new one
+    You can use the local logs or use Microsoft Defender for Endpoint Advanced Hunting results to generate Application Control policies
+.PARAMETER PolicyToAddLogsTo
+    The policy to add the selected logs to, it can either be a base or supplemental policy.
+.PARAMETER BasePolicyFile
+    The base policy file to associate the supplemental policy with
+.PARAMETER BasePolicyGUID
+    The GUID of the base policy to associate the supplemental policy with
+.PARAMETER FilterByPolicyNames
+   The names of the policies to filter the logs by.
+   Supports auto-completion, press TAB key to view the list of the deployed base policy names to choose from.
+   It will not display the policies that are already selected on the command line.
+   You can manually enter the name of the policies that are no longer available on the system.
+.PARAMETER Source
+    The source of the logs: Local Event logs (LocalEventLogs) or Microsoft Defender for Endpoint Advanced Hunting results (MDEAdvancedHunting)
+    Supports validate set.
+.PARAMETER MDEAHLogs
+    The path(s) to use MDE AH CSV files.
+    This is a dynamic parameter and will only be available if the Source parameter is set to MDEAdvancedHunting.
+.PARAMETER KernelModeOnly
+    If used, will filter the logs by including only the Kernel-Mode logs
+.PARAMETER LogType
+    The type of logs to display: Audit or Blocked, the default is Audit.
+.PARAMETER TimeSpan
+    The unit of time to use when filtering the logs by the time.
+    The allowed values are: Minutes, Hours, Days
+.PARAMETER TimeSpanAgo
+    The number of the selected time unit to go back in time from the current time.
+.PARAMETER Deploy
+    If used, will deploy the policy on the system
+.PARAMETER ExtremeVisibility
+    If used, will display all the properties of the logs without any filtering.
+.PARAMETER SkipVersionCheck
+    Can be used with any parameter to bypass the online version check - only to be used in rare cases
+.LINK
+    https://github.com/HotCakeX/Harden-Windows-Security/wiki/ConvertTo-WDACPolicy
+.INPUTS
+    System.IO.FileInfo
+    System.Guid
+    System.String
+    System.String[]
+    System.UInt64
+    System.Management.Automation.SwitchParameter
+.OUTPUTS
+    System.String
+.EXAMPLE
+    ConvertTo-WDACPolicy -PolicyToAddLogsTo "C:\Users\Admin\AllowMicrosoftPlusBlockRules.xml" -Verbose
+
+    This example will display the Code Integrity logs in a GUI and allow the user to select the logs to add to the specified policy file.
+.EXAMPLE
+    ConvertTo-WDACPolicy -Verbose -BasePolicyGUID '{ACE9058C-8A24-47F4-86F0-A33FAB5073E3}'
+
+    This example will display the Code Integrity logs in a GUI and allow the user to select the logs to create a new supplemental policy and associate it with the specified base policy GUID.
+.EXAMPLE
+    ConvertTo-WDACPolicy -BasePolicyFile "C:\Users\Admin\AllowMicrosoftPlusBlockRules.xml"
+
+    This example will display the Code Integrity logs in a GUI and allow the user to select the logs to create a new supplemental policy and associate it with the specified base policy file.
+.EXAMPLE
+    ConvertTo-WDACPolicy
+
+    This example will display the Code Integrity logs in a GUI and takes no further action.
+.EXAMPLE
+    ConvertTo-WDACPolicy -FilterByPolicyNames 'VerifiedAndReputableDesktopFlightSupplemental','WindowsE_Lockdown_Flight_Policy_Supplemental' -Verbose
+
+    This example will filter the Code Integrity logs by the specified policy names and display them in a GUI. It will also display verbose messages on the console.
+.EXAMPLE
+    ConvertTo-WDACPolicy -FilterByPolicyNames 'Microsoft Windows Driver Policy - Enforced' -MinutesAgo 10
+
+    This example will filter the Code Integrity logs by the specified policy name and the number of minutes ago from the current time and display them in a GUI.
+    So, it will display the logs that are 10 minutes old and are associated with the specified policy name.
+
+.EXTERNALHELP ..\Help\ConvertTo-WDACPolicy.xml
+#>
+
 }
 # Importing argument completer ScriptBlocks
 . "$ModuleRootPath\CoreExt\ArgumentCompleters.ps1"

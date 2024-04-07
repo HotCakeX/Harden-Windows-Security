@@ -6,11 +6,11 @@
       <command:verb>ConvertTo</command:verb>
       <command:noun>WDACPolicy</command:noun>
       <maml:description>
-        <maml:para>Displays the Code Integrity logs in a GUI and allows the user to select the logs to convert to a Supplemental WDAC policy It's a multi-purpose cmdlet that offers a wide range of functionalities that can either be used separately or mixed together for very detailed and specific tasks</maml:para>
+        <maml:para>Displays the Code Integrity logs in a GUI and allows the user to select the logs to convert to a Supplemental WDAC policy. It's a multi-purpose cmdlet that offers a wide range of functionalities that can either be used separately or mixed together for very detailed and specific tasks.</maml:para>
       </maml:description>
     </command:details>
     <maml:description>
-      <maml:para>You can filter the logs by the policy name and the time You can add the logs to an existing WDAC policy or create a new one</maml:para>
+      <maml:para>You can filter the logs by the policy name and the time. You can add the logs to an existing WDAC policy or create a new one. You can use the local logs or use Microsoft Defender for Endpoint Advanced Hunting results to generate Application Control policies.</maml:para>
     </maml:description>
     <command:syntax>
       <command:syntaxItem>
@@ -30,7 +30,7 @@
         <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
           <maml:name>Source</maml:name>
           <maml:description>
-            <maml:para>The Source of the data or logs to use for the operation.</maml:para>
+            <maml:para>The source of the logs: Local Event logs (LocalEventLogs) or Microsoft Defender for Endpoint Advanced Hunting results (MDEAdvancedHunting). Supports validate set.</maml:para>
           </maml:description>
           <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
           <dev:type>
@@ -38,6 +38,18 @@
             <maml:uri />
           </dev:type>
           <dev:defaultValue>Event Logs</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>MDEAHLogs</maml:name>
+          <maml:description>
+            <maml:para>The path(s) to use MDE AH CSV files. This is a dynamic parameter and will only be available if the Source parameter is set to MDEAdvancedHunting.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">FileInfo[]</command:parameterValue>
+          <dev:type>
+            <maml:name>FileInfo[]</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
         <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
           <maml:name>FilterByPolicyNames</maml:name>
@@ -52,40 +64,28 @@
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
         <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
-          <maml:name>MinutesAgo</maml:name>
+          <maml:name>TimeSpan</maml:name>
           <maml:description>
-            <maml:para>The number of minutes ago from the current time to filter the logs by</maml:para>
+            <maml:para>The unit of time to use when filtering the logs by the time. The allowed values are: Minutes, Hours, Days</maml:para>
           </maml:description>
-          <command:parameterValue required="true" variableLength="false">UInt64</command:parameterValue>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
           <dev:type>
-            <maml:name>UInt64</maml:name>
+            <maml:name>String</maml:name>
             <maml:uri />
           </dev:type>
-          <dev:defaultValue>0</dev:defaultValue>
+          <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
-        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
-          <maml:name>HoursAgo</maml:name>
+        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>TimeSpanAgo</maml:name>
           <maml:description>
-            <maml:para>The number of hours ago from the current time to filter the logs by</maml:para>
+            <maml:para>The number of the selected time unit to go back in time from the current time.</maml:para>
           </maml:description>
-          <command:parameterValue required="true" variableLength="false">UInt64</command:parameterValue>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
           <dev:type>
-            <maml:name>UInt64</maml:name>
+            <maml:name>String</maml:name>
             <maml:uri />
           </dev:type>
-          <dev:defaultValue>0</dev:defaultValue>
-        </command:parameter>
-        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
-          <maml:name>DaysAgo</maml:name>
-          <maml:description>
-            <maml:para>The number of days ago from the current time to filter the logs by</maml:para>
-          </maml:description>
-          <command:parameterValue required="true" variableLength="false">UInt64</command:parameterValue>
-          <dev:type>
-            <maml:name>UInt64</maml:name>
-            <maml:uri />
-          </dev:type>
-          <dev:defaultValue>0</dev:defaultValue>
+          <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
         <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
           <maml:name>KernelModeOnly</maml:name>
@@ -146,7 +146,7 @@
         <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="proga">
           <maml:name>ProgressAction</maml:name>
           <maml:description>
-            <maml:para>{{ Fill ProgressAction Description }}</maml:para>
+            <maml:para>Contains the preference for the progress action</maml:para>
           </maml:description>
           <command:parameterValue required="true" variableLength="false">ActionPreference</command:parameterValue>
           <dev:type>
@@ -173,7 +173,7 @@
         <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
           <maml:name>Source</maml:name>
           <maml:description>
-            <maml:para>The Source of the data or logs to use for the operation.</maml:para>
+            <maml:para>The source of the logs: Local Event logs (LocalEventLogs) or Microsoft Defender for Endpoint Advanced Hunting results (MDEAdvancedHunting). Supports validate set.</maml:para>
           </maml:description>
           <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
           <dev:type>
@@ -181,6 +181,18 @@
             <maml:uri />
           </dev:type>
           <dev:defaultValue>Event Logs</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>MDEAHLogs</maml:name>
+          <maml:description>
+            <maml:para>The path(s) to use MDE AH CSV files. This is a dynamic parameter and will only be available if the Source parameter is set to MDEAdvancedHunting.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">FileInfo[]</command:parameterValue>
+          <dev:type>
+            <maml:name>FileInfo[]</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
         <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
           <maml:name>FilterByPolicyNames</maml:name>
@@ -195,40 +207,28 @@
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
         <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
-          <maml:name>MinutesAgo</maml:name>
+          <maml:name>TimeSpan</maml:name>
           <maml:description>
-            <maml:para>The number of minutes ago from the current time to filter the logs by</maml:para>
+            <maml:para>The unit of time to use when filtering the logs by the time. The allowed values are: Minutes, Hours, Days</maml:para>
           </maml:description>
-          <command:parameterValue required="true" variableLength="false">UInt64</command:parameterValue>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
           <dev:type>
-            <maml:name>UInt64</maml:name>
+            <maml:name>String</maml:name>
             <maml:uri />
           </dev:type>
-          <dev:defaultValue>0</dev:defaultValue>
+          <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
-        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
-          <maml:name>HoursAgo</maml:name>
+        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>TimeSpanAgo</maml:name>
           <maml:description>
-            <maml:para>The number of hours ago from the current time to filter the logs by</maml:para>
+            <maml:para>The number of the selected time unit to go back in time from the current time.</maml:para>
           </maml:description>
-          <command:parameterValue required="true" variableLength="false">UInt64</command:parameterValue>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
           <dev:type>
-            <maml:name>UInt64</maml:name>
+            <maml:name>String</maml:name>
             <maml:uri />
           </dev:type>
-          <dev:defaultValue>0</dev:defaultValue>
-        </command:parameter>
-        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
-          <maml:name>DaysAgo</maml:name>
-          <maml:description>
-            <maml:para>The number of days ago from the current time to filter the logs by</maml:para>
-          </maml:description>
-          <command:parameterValue required="true" variableLength="false">UInt64</command:parameterValue>
-          <dev:type>
-            <maml:name>UInt64</maml:name>
-            <maml:uri />
-          </dev:type>
-          <dev:defaultValue>0</dev:defaultValue>
+          <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
         <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
           <maml:name>KernelModeOnly</maml:name>
@@ -289,7 +289,7 @@
         <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="proga">
           <maml:name>ProgressAction</maml:name>
           <maml:description>
-            <maml:para>{{ Fill ProgressAction Description }}</maml:para>
+            <maml:para>Contains the preference for the progress action</maml:para>
           </maml:description>
           <command:parameterValue required="true" variableLength="false">ActionPreference</command:parameterValue>
           <dev:type>
@@ -316,7 +316,7 @@
         <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
           <maml:name>Source</maml:name>
           <maml:description>
-            <maml:para>The Source of the data or logs to use for the operation.</maml:para>
+            <maml:para>The source of the logs: Local Event logs (LocalEventLogs) or Microsoft Defender for Endpoint Advanced Hunting results (MDEAdvancedHunting). Supports validate set.</maml:para>
           </maml:description>
           <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
           <dev:type>
@@ -324,6 +324,18 @@
             <maml:uri />
           </dev:type>
           <dev:defaultValue>Event Logs</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>MDEAHLogs</maml:name>
+          <maml:description>
+            <maml:para>The path(s) to use MDE AH CSV files. This is a dynamic parameter and will only be available if the Source parameter is set to MDEAdvancedHunting.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">FileInfo[]</command:parameterValue>
+          <dev:type>
+            <maml:name>FileInfo[]</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
         <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
           <maml:name>FilterByPolicyNames</maml:name>
@@ -338,40 +350,28 @@
           <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
         <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
-          <maml:name>MinutesAgo</maml:name>
+          <maml:name>TimeSpan</maml:name>
           <maml:description>
-            <maml:para>The number of minutes ago from the current time to filter the logs by</maml:para>
+            <maml:para>The unit of time to use when filtering the logs by the time. The allowed values are: Minutes, Hours, Days</maml:para>
           </maml:description>
-          <command:parameterValue required="true" variableLength="false">UInt64</command:parameterValue>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
           <dev:type>
-            <maml:name>UInt64</maml:name>
+            <maml:name>String</maml:name>
             <maml:uri />
           </dev:type>
-          <dev:defaultValue>0</dev:defaultValue>
+          <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
-        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
-          <maml:name>HoursAgo</maml:name>
+        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>TimeSpanAgo</maml:name>
           <maml:description>
-            <maml:para>The number of hours ago from the current time to filter the logs by</maml:para>
+            <maml:para>The number of the selected time unit to go back in time from the current time.</maml:para>
           </maml:description>
-          <command:parameterValue required="true" variableLength="false">UInt64</command:parameterValue>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
           <dev:type>
-            <maml:name>UInt64</maml:name>
+            <maml:name>String</maml:name>
             <maml:uri />
           </dev:type>
-          <dev:defaultValue>0</dev:defaultValue>
-        </command:parameter>
-        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
-          <maml:name>DaysAgo</maml:name>
-          <maml:description>
-            <maml:para>The number of days ago from the current time to filter the logs by</maml:para>
-          </maml:description>
-          <command:parameterValue required="true" variableLength="false">UInt64</command:parameterValue>
-          <dev:type>
-            <maml:name>UInt64</maml:name>
-            <maml:uri />
-          </dev:type>
-          <dev:defaultValue>0</dev:defaultValue>
+          <dev:defaultValue>None</dev:defaultValue>
         </command:parameter>
         <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
           <maml:name>KernelModeOnly</maml:name>
@@ -432,7 +432,7 @@
         <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="proga">
           <maml:name>ProgressAction</maml:name>
           <maml:description>
-            <maml:para>{{ Fill ProgressAction Description }}</maml:para>
+            <maml:para>Contains the preference for the progress action</maml:para>
           </maml:description>
           <command:parameterValue required="true" variableLength="false">ActionPreference</command:parameterValue>
           <dev:type>
@@ -483,7 +483,7 @@
       <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
         <maml:name>Source</maml:name>
         <maml:description>
-          <maml:para>The Source of the data or logs to use for the operation.</maml:para>
+          <maml:para>The source of the logs: Local Event logs (LocalEventLogs) or Microsoft Defender for Endpoint Advanced Hunting results (MDEAdvancedHunting). Supports validate set.</maml:para>
         </maml:description>
         <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
         <dev:type>
@@ -491,6 +491,18 @@
           <maml:uri />
         </dev:type>
         <dev:defaultValue>Event Logs</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <maml:name>MDEAHLogs</maml:name>
+        <maml:description>
+          <maml:para>The path(s) to use MDE AH CSV files. This is a dynamic parameter and will only be available if the Source parameter is set to MDEAdvancedHunting.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">FileInfo[]</command:parameterValue>
+        <dev:type>
+          <maml:name>FileInfo[]</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
       </command:parameter>
       <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
         <maml:name>FilterByPolicyNames</maml:name>
@@ -505,40 +517,28 @@
         <dev:defaultValue>None</dev:defaultValue>
       </command:parameter>
       <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
-        <maml:name>MinutesAgo</maml:name>
+        <maml:name>TimeSpan</maml:name>
         <maml:description>
-          <maml:para>The number of minutes ago from the current time to filter the logs by</maml:para>
+          <maml:para>The unit of time to use when filtering the logs by the time. The allowed values are: Minutes, Hours, Days</maml:para>
         </maml:description>
-        <command:parameterValue required="true" variableLength="false">UInt64</command:parameterValue>
+        <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
         <dev:type>
-          <maml:name>UInt64</maml:name>
+          <maml:name>String</maml:name>
           <maml:uri />
         </dev:type>
-        <dev:defaultValue>0</dev:defaultValue>
+        <dev:defaultValue>None</dev:defaultValue>
       </command:parameter>
-      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
-        <maml:name>HoursAgo</maml:name>
+      <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <maml:name>TimeSpanAgo</maml:name>
         <maml:description>
-          <maml:para>The number of hours ago from the current time to filter the logs by</maml:para>
+          <maml:para>The number of the selected time unit to go back in time from the current time.</maml:para>
         </maml:description>
-        <command:parameterValue required="true" variableLength="false">UInt64</command:parameterValue>
+        <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
         <dev:type>
-          <maml:name>UInt64</maml:name>
+          <maml:name>String</maml:name>
           <maml:uri />
         </dev:type>
-        <dev:defaultValue>0</dev:defaultValue>
-      </command:parameter>
-      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
-        <maml:name>DaysAgo</maml:name>
-        <maml:description>
-          <maml:para>The number of days ago from the current time to filter the logs by</maml:para>
-        </maml:description>
-        <command:parameterValue required="true" variableLength="false">UInt64</command:parameterValue>
-        <dev:type>
-          <maml:name>UInt64</maml:name>
-          <maml:uri />
-        </dev:type>
-        <dev:defaultValue>0</dev:defaultValue>
+        <dev:defaultValue>None</dev:defaultValue>
       </command:parameter>
       <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
         <maml:name>KernelModeOnly</maml:name>
@@ -603,7 +603,7 @@
       <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="proga">
         <maml:name>ProgressAction</maml:name>
         <maml:description>
-          <maml:para>{{ Fill ProgressAction Description }}</maml:para>
+          <maml:para>Contains the preference for the progress action</maml:para>
         </maml:description>
         <command:parameterValue required="true" variableLength="false">ActionPreference</command:parameterValue>
         <dev:type>
@@ -675,7 +675,7 @@
     </command:returnValues>
     <maml:alertSet>
       <maml:alert>
-        <maml:para>The biggest specified time unit is used for filtering the logs if more than one time unit is specified.</maml:para>
+        <maml:para></maml:para>
       </maml:alert>
     </maml:alertSet>
     <command:examples>

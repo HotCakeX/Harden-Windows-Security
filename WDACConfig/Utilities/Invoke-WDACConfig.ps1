@@ -18,3 +18,9 @@ foreach ($File in $Files) {
 
 # Replace with any cmdlet of the WDACConfig module that is going to be debugged
 # Assert-WDACConfigIntegrity -SaveLocally -Verbose
+
+Clear-Host
+
+New-ExternalHelp -Path "$ScriptFilePath\..\WDACConfig Module Files\Help\ConvertTo-WDACPolicy.md" -OutputPath "$ScriptFilePath\..\WDACConfig Module Files\Help\ConvertTo-WDACPolicy.xml" -Force | Out-Null
+
+Get-Help ConvertTo-WDACPolicy -full

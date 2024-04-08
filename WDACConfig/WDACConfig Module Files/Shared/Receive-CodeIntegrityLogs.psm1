@@ -153,20 +153,31 @@ Function Receive-CodeIntegrityLogs {
 
         Try {
             Write-Verbose -Message 'Receive-CodeIntegrityLogs: Collecting the Code Integrity Operational logs'
-            [System.Diagnostics.Eventing.Reader.EventLogRecord[]]$RawEventLogs = Get-WinEvent -FilterHashtable @{LogName = 'Microsoft-Windows-CodeIntegrity/Operational' }
+            [System.Diagnostics.Eventing.Reader.EventLogRecord[]]$CiRawEventLogs = Get-WinEvent -FilterHashtable @{LogName = 'Microsoft-Windows-CodeIntegrity/Operational' }
         }
         catch {
-            Throw "Receive-CodeIntegrityLogs: Could not collect the Code Integrity Operational logs, the number of logs collected is $($RawEventLogs.Count)"
+            Throw "Receive-CodeIntegrityLogs: Could not collect the Code Integrity Operational logs, the number of logs collected is $($CiRawEventLogs.Count)"
         }
 
-        [Microsoft.PowerShell.Commands.GroupInfo[]]$GroupedEvents = $RawEventLogs | Group-Object -Property ActivityId
-        Write-Verbose -Message "Receive-CodeIntegrityLogs: Grouped the logs by ActivityId. The total number of groups is $($GroupedEvents.Count) and the total number of logs in the groups is $($GroupedEvents.Group.Count)"
+        Try {
+            Write-Verbose -Message 'Receive-CodeIntegrityLogs: Collecting the AppLocker logs'
+            [System.Diagnostics.Eventing.Reader.EventLogRecord[]]$AppLockerRawEventLogs = Get-WinEvent -FilterHashtable @{LogName = 'Microsoft-Windows-AppLocker/MSI and Script' }
+        }
+        catch {
+            Throw "Receive-CodeIntegrityLogs: Could not collect the AppLocker logs, the number of logs collected is $($AppLockerRawEventLogs.Count)"
+        }
 
-        # Create a collection to store the packages of logs
-        [PSCustomObject[]]$EventPackageCollections = @()
+        [Microsoft.PowerShell.Commands.GroupInfo[]]$CiGroupedEvents = $CiRawEventLogs | Group-Object -Property ActivityId
+        Write-Verbose -Message "Receive-CodeIntegrityLogs: Grouped the logs by ActivityId. The total number of groups is $($CiGroupedEvents.Count) and the total number of logs in the groups is $($CiGroupedEvents.Group.Count)"
+
+        [Microsoft.PowerShell.Commands.GroupInfo[]]$AppLockerGroupedEvents = $AppLockerRawEventLogs | Group-Object -Property ActivityId
+        Write-Verbose -Message "Receive-CodeIntegrityLogs: Grouped the AppLocker logs by ActivityId. The total number of groups is $($AppLockerGroupedEvents.Count) and the total number of logs in the groups is $($AppLockerGroupedEvents.Group.Count)"
+
+        # Create a hashtable to store the packages of all types of logs
+        [System.Collections.Hashtable]$EventPackageCollections = @{}
 
         # Loop over each group of logs
-        Foreach ($RawLogGroup in $GroupedEvents) {
+        Foreach ($RawLogGroup in $CiGroupedEvents) {
 
             # Process Audit events
             if ($RawLogGroup.Group.Id -contains '3076') {
@@ -181,12 +192,16 @@ Function Receive-CodeIntegrityLogs {
                     }
                 }
 
-                # Add the main event along with the correlated events to the collection
-                $EventPackageCollections += [PSCustomObject]@{
-                    MainEventData        = $AuditTemp
-                    CorrelatedEventsData = $RawLogGroup.Group | Where-Object -FilterScript { $_.Id -eq '3089' }
-                    Type                 = 'Audit'
-                }
+                # Create a local hashtable to store the main event and the correlated events
+                [System.Collections.Hashtable]$LocalAuditEventPackageCollections = @{}
+
+                $LocalAuditEventPackageCollections['MainEventData'] = $AuditTemp
+                $LocalAuditEventPackageCollections['CorrelatedEventsData'] = $RawLogGroup.Group | Where-Object -FilterScript { $_.Id -eq '3089' }
+                $LocalAuditEventPackageCollections['Type'] = 'Audit'
+
+                # Add the main event along with the correlated events as a nested hashtable to the main hashtable
+                # Using the correlation ID as the key
+                $EventPackageCollections[$RawLogGroup.Name] = $LocalAuditEventPackageCollections
             }
 
             # Process Blocked events
@@ -202,63 +217,73 @@ Function Receive-CodeIntegrityLogs {
                     }
                 }
 
-                # Add the main event along with the correlated events to the collection
-                $EventPackageCollections += [PSCustomObject]@{
-                    MainEventData        = $BlockedTemp
-                    CorrelatedEventsData = $RawLogGroup.Group | Where-Object -FilterScript { $_.Id -eq '3089' }
-                    Type                 = 'Blocked'
-                }
+                # Create a local hashtable to store the main event and the correlated events
+                [System.Collections.Hashtable]$LocalBlockedEventPackageCollections = @{}
+
+                $LocalBlockedEventPackageCollections['MainEventData'] = $BlockedTemp
+                $LocalBlockedEventPackageCollections['CorrelatedEventsData'] = $RawLogGroup.Group | Where-Object -FilterScript { $_.Id -eq '3089' }
+                $LocalBlockedEventPackageCollections['Type'] = 'Blocked'
+
+                # Add the main event along with the correlated events as a nested hashtable to the main hashtable
+                # Using the correlation ID as the key
+                $EventPackageCollections[$RawLogGroup.Name] = $LocalBlockedEventPackageCollections
             }
         }
 
-        #Region Output objects definition based on type
-        # They return all the logs without post-processing
-        [PSCustomObject[]]$OutputAudit = @()
-        [PSCustomObject[]]$OutputBlocked = @()
-
-        # They only return the logs of files that exist on the disk
-        [PSCustomObject[]]$OutputExistingAudit = @()
-        [PSCustomObject[]]$OutputExistingBlocked = @()
-
-        # They only return the hash details of files no longer on the disk
-        [PSCustomObject[]]$OutputDeletedAudit = @()
-        [PSCustomObject[]]$OutputDeletedBlocked = @()
-
-        # They return FilePaths of files on the disk and hash details of files not on the disk
-        $OutputSeparatedAudit = [PSCustomObject]@{
-            AvailableFilesPaths = [System.IO.FileInfo[]]@()
-            DeletedFileHashes   = [PSCustomObject[]]@()
+        # Hashtable that contains the entire output
+        [System.Collections.Hashtable]$Output = @{
+            # all the logs without post-processing
+            All       = @{
+                Audit   = @{}
+                Blocked = @{}
+            }
+            # only the logs of files that exist on the disk
+            Existing  = @{
+                Audit   = @{}
+                Blocked = @{}
+            }
+            # only the hash details of files no longer on the disk
+            Deleted   = @{
+                Audit   = @{}
+                Blocked = @{}
+            }
+            # FilePaths of files on the disk and hash details of files not on the disk
+            Separated = @{
+                Audit   = @{
+                    AvailableFilesPaths = [System.Collections.Generic.HashSet[System.String]] @()
+                    DeletedFileHashes   = @{}
+                }
+                Blocked = @{
+                    AvailableFilesPaths = [System.Collections.Generic.HashSet[System.String]] @()
+                    DeletedFileHashes   = @{}
+                }
+            }
         }
-        $OutputSeparatedBlocked = [PSCustomObject]@{
-            AvailableFilesPaths = [System.IO.FileInfo[]]@()
-            DeletedFileHashes   = [PSCustomObject[]]@()
-        }
-        #Endregion Output objects definition based on type
     }
 
     Process {
 
         # Loop over each event package in the collection
-        foreach ($EventPackage in $EventPackageCollections) {
+        foreach ($EventPackage in $EventPackageCollections.GetEnumerator()) {
 
             # Extract the main event data
-            [System.Diagnostics.Eventing.Reader.EventLogRecord]$Event = $EventPackage.MainEventData
+            [System.Diagnostics.Eventing.Reader.EventLogRecord]$Event = $EventPackage.Value.MainEventData
 
             # Convert the main event data to XML object
             $Xml = [System.Xml.XmlDocument]$Event.ToXml()
 
-            # Place each event data in a hashtable and repackage it into a custom object at the end for further processing
-            [PSCustomObject[]]$ProcessedEvents = $Xml.event.EventData.data | ForEach-Object -Begin { $Hash = @{} } -Process { $Hash[$_.name] = $_.'#text' } -End { [pscustomobject]$Hash }
+            # Place each main event data in a hashtable and return the hashtable at the end
+            [System.Collections.Hashtable[]]$ProcessedEvents = $Xml.event.EventData.data | ForEach-Object -Begin { [System.Collections.Hashtable]$Hash = @{} } -Process { $Hash[$_.Name] = $_.'#text' } -End { [System.Collections.Hashtable]$Hash }
 
-            # Loop over each event data object
+            # Loop over each main event data's hashtable - Main loop
             foreach ($Log in $ProcessedEvents) {
 
-                # Add the TimeCreated property to the $Log object
-                $Log | Add-Member -NotePropertyName 'TimeCreated' -NotePropertyValue $Event.TimeCreated
-                # Add the ActivityId property to the $Log object
-                $Log | Add-Member -NotePropertyName 'ActivityId' -NotePropertyValue $Event.ActivityId
-                # Add the UserId property to the $Log object
-                $Log | Add-Member -NotePropertyName 'UserId' -NotePropertyValue $Event.UserId
+                # Add the TimeCreated property to the $Log hashtable
+                $Log['TimeCreated'] = $Event.TimeCreated
+                # Add the ActivityId property to the $Log hashtable
+                $Log['ActivityId'] = $Event.ActivityId
+                # Add the UserId property to the $Log hashtable
+                $Log['UserId'] = $Event.UserId
 
                 # Filter the logs based on the policy that generated them
                 if (-NOT ([System.String]::IsNullOrWhiteSpace($PolicyNames))) {
@@ -271,7 +296,7 @@ Function Receive-CodeIntegrityLogs {
                 [System.Text.RegularExpressions.Regex]$Pattern = '\\Device\\HarddiskVolume(?<HardDiskVolumeNumber>\d+)\\(?<RemainingPath>.*)$'
 
                 # replace the device path with the drive letter if it matches the pattern
-                if ($Log.'File Name' -match $Pattern) {
+                if ($Log['File Name'] -match $Pattern) {
 
                     # Use the primary method to fix the drive letter mappings
                     if ($AlternativeDriveLetterFix -eq $false) {
@@ -280,25 +305,25 @@ Function Receive-CodeIntegrityLogs {
                         [System.String]$RemainingPath = $Matches['RemainingPath']
                         [PSCustomObject]$GetLetter = $DriveLettersGlobalRootFix | Where-Object -FilterScript { $_.DevicePath -eq "\Device\HarddiskVolume$HardDiskVolumeNumber" }
                         [System.IO.FileInfo]$UsablePath = "$($GetLetter.DriveLetter)$RemainingPath"
-                        $Log.'File Name' = $Log.'File Name' -replace $Pattern, $UsablePath
+                        $Log['File Name'] = $Log['File Name'] -replace $Pattern, $UsablePath
                     }
                     # Use the alternative method to fix the drive letter mappings
                     else {
-                        $Log.'File Name' = $Log.'File Name' -replace "\\Device\\HarddiskVolume$($Matches['HardDiskVolumeNumber'])", "$($DriveLetterMappings[$Matches['HardDiskVolumeNumber']]):"
+                        $Log['File Name'] = $Log['File Name'] -replace "\\Device\\HarddiskVolume$($Matches['HardDiskVolumeNumber'])", "$($DriveLetterMappings[$Matches['HardDiskVolumeNumber']]):"
                     }
                 }
                 # sometimes the file name begins with System32 so we prepend the Windows directory to create a full resolvable path
                 # https://learn.microsoft.com/en-us/dotnet/api/system.string.startswith
-                elseif ($Log.'File Name'.StartsWith('System32', $true, [System.Globalization.CultureInfo]::InvariantCulture)) {
-                    $Log.'File Name' = Join-Path -Path $Env:WinDir -ChildPath ($Log.'File Name')
+                elseif ($Log['File Name'].StartsWith('System32', $true, [System.Globalization.CultureInfo]::InvariantCulture)) {
+                    $Log['File Name'] = Join-Path -Path $Env:WinDir -ChildPath ($Log['File Name'])
                 }
 
                 # Replace these numbers in the logs with user-friendly strings that represent the signature level at which the code was verified
-                $Log.'Requested Signing Level' = $ReqValSigningLevels[[System.UInt16]$Log.'Requested Signing Level']
-                $Log.'Validated Signing Level' = $ReqValSigningLevels[[System.UInt16]$Log.'Validated Signing Level']
+                $Log['Requested Signing Level'] = $ReqValSigningLevels[[System.UInt16]$Log['Requested Signing Level']]
+                $Log['Validated Signing Level'] = $ReqValSigningLevels[[System.UInt16]$Log['Validated Signing Level']]
 
                 # Replace the SI Signing Scenario numbers with a user-friendly string
-                $Log.'SI Signing Scenario' = $Log.'SI Signing Scenario' -eq '0' ? 'Kernel-Mode' : 'User-Mode'
+                $Log['SI Signing Scenario'] = $Log['SI Signing Scenario'] -eq '0' ? 'Kernel-Mode' : 'User-Mode'
 
                 # Translate the SID to a UserName
                 Try {
@@ -310,21 +335,23 @@ Function Receive-CodeIntegrityLogs {
                 }
 
                 # If there are correlated events, then process them
-                if ($null -ne $EventPackage.CorrelatedEventsData) {
+                if ($null -ne $EventPackage.Value.CorrelatedEventsData) {
 
-                    # Store the unique publisher name in an array
-                    [System.String[]]$Publishers = @()
+                    # A hashtable for storing the correlated logs
+                    [System.Collections.Hashtable]$CorrelatedLogs = @{}
 
-                    # Store the correlated logs in an array - these logs are processed into a custom object
-                    [PSCustomObject[]]$CorrelatedLogs = @()
+                    # Store the unique publisher name in HashSet
+                    $Publishers = [System.Collections.Generic.HashSet[System.String]]@()
 
-                    foreach ($CorrelatedEvent in $EventPackage.CorrelatedEventsData) {
+                    # Looping over each correlated event data
+                    # There are more than 1 if the file has multiple signers/publishers
+                    foreach ($CorrelatedEvent in $EventPackage.Value.CorrelatedEventsData) {
 
                         # Convert the main event data to XML object
                         $XmlCorrelated = [System.Xml.XmlDocument]$CorrelatedEvent.ToXml()
 
-                        # Place each event data in a hashtable and repackage it into a custom object at the end for further processing
-                        [PSCustomObject[]]$ProcessedCorrelatedEvents = $XmlCorrelated.event.EventData.data | ForEach-Object -Begin { $Hash = @{} } -Process { $Hash[$_.name] = $_.'#text' } -End { [pscustomobject]$Hash }
+                        # Place each event data in a hashtable and return the hashtable at the end
+                        [System.Collections.Hashtable[]]$ProcessedCorrelatedEvents = $XmlCorrelated.event.EventData.data | ForEach-Object -Begin { [System.Collections.Hashtable]$Hash = @{} } -Process { $Hash[$_.name] = $_.'#text' } -End { [System.Collections.Hashtable]$Hash }
 
                         # Loop over each event data object
                         foreach ($CorrelatedLog in $ProcessedCorrelatedEvents) {
@@ -334,69 +361,113 @@ Function Receive-CodeIntegrityLogs {
                             $CorrelatedLog.ValidatedSigningLevel = $ReqValSigningLevels[[System.UInt16]$CorrelatedLog.ValidatedSigningLevel]
                             $CorrelatedLog.VerificationError = $VerificationErrorTable[[System.UInt16]$CorrelatedLog.VerificationError]
 
-                            # Add the Correlated Log to the array of Correlated Logs
-                            $CorrelatedLogs += $CorrelatedLog
+                            # Create a unique key for each Publisher
+                            [System.String]$PublisherKey = $CorrelatedLog.PublisherTBSHash + '|' +
+                            $CorrelatedLog.PublisherName + '|' +
+                            $CorrelatedLog.IssuerTBSHash + '|' +
+                            $CorrelatedLog.IssuerName
 
-                            # Add the unique publisher name to the array of Publishers
-                            if ($CorrelatedLog.PublisherName -notin $Publishers) {
-                                $Publishers += $CorrelatedLog.PublisherName
+                            # Add the Correlated Log to the array of Correlated Logs if it doesn't already exist there
+                            if (-NOT $CorrelatedLogs.ContainsKey($PublisherKey)) {
+                                $CorrelatedLogs[$PublisherKey] = $CorrelatedLog
+                            }
+
+                            # Add the unique publisher name to the array of Publishers if it doesn't already exist there
+                            if (-NOT $Publishers.Contains($CorrelatedLog.PublisherName)) {
+                                [System.Void]$Publishers.Add($CorrelatedLog.PublisherName)
                             }
                         }
                     }
 
                     Write-Debug -Message "Receive-CodeIntegrityLogs: The number of unique publishers in the correlated events is $($Publishers.Count)"
-                    $Log | Add-Member -NotePropertyName 'Publishers' -NotePropertyValue $Publishers
-
-                    # De-Duplicate the correlated logs based on specific properties
-                    $CorrelatedLogs = $CorrelatedLogs | Group-Object -Property PublisherTBSHash, PublisherName, IssuerTBSHash, IssuerName |
-                    ForEach-Object -Process { $_.Group[0] }
+                    $Log['Publishers'] = $Publishers
 
                     Write-Debug -Message "Receive-CodeIntegrityLogs: The number of correlated events is $($CorrelatedLogs.Count)"
-                    $Log | Add-Member -NotePropertyName 'SignerInfo' -NotePropertyValue $CorrelatedLogs
+                    $Log['SignerInfo'] = $CorrelatedLogs
                 }
 
                 # Add the Type property to the log object
-                $Log | Add-Member -NotePropertyName 'Type' -NotePropertyValue $EventPackage.Type
+                $Log['Type'] = $EventPackage.Value.Type
 
                 #Region Post-processing for the logs
 
+                # Creating a unique string key for the current log
+                # The key ending up being too long doesn't matter and doesn't affect the performance
+                # Since all keys are hashed in a hashtable
+                [System.String]$UniqueLogKey = $Log['File Name'] + '|' +
+                $Log.ProductName + '|' +
+                $Log.FileVersion + '|' +
+                $Log.OriginalFileName + '|' +
+                $Log.FileDescription + '|' +
+                $Log.InternalName + '|' +
+                $Log.PackageFamilyName + '|' +
+                $Log.Publishers + '|' +
+                $Log['SHA256 Hash'] + '|' +
+                $Log['SHA256 Flat Hash']
+
                 if ($Log.Type -eq 'Audit') {
 
-                    # Add the log to the output object if it has Audit type
-                    $OutputAudit += $Log
+                    # Add the log to the output hashtable if it has Audit type and doesn't already exist there
+                    if (-NOT $Output.All.Audit.ContainsKey($UniqueLogKey)) {
+                        $Output.All.Audit[$UniqueLogKey] = $Log
+                    }
 
                     # If the file the log is referring to is currently on the disk
-                    if (Test-Path -Path $Log.'File Name') {
-                        $OutputExistingAudit += $Log
-                        $OutputSeparatedAudit.AvailableFilesPaths += $Log.'File Name'
+                    if (Test-Path -Path $Log['File Name']) {
+
+                        if (-NOT $Output.Existing.Audit.ContainsKey($UniqueLogKey)) {
+                            $Output.Existing.Audit[$UniqueLogKey] = $Log
+                        }
+
+                        if (-NOT $Output.Separated.Audit.AvailableFilesPaths.Contains($Log['File Name'])) {
+                            [System.Void]$Output.Separated.Audit.AvailableFilesPaths.Add($Log['File Name'])
+                        }
                     }
                     # If the file is not currently on the disk, extract its hashes from the log
                     else {
                         $TempDeletedOutputAudit = $Log | Select-Object -Property FileVersion, 'File Name', PolicyGUID, 'SHA256 Hash', 'SHA256 Flat Hash', 'SHA1 Hash', 'SHA1 Flat Hash'
 
-                        $OutputDeletedAudit += $TempDeletedOutputAudit
-                        $OutputSeparatedAudit.DeletedFileHashes += $TempDeletedOutputAudit
+                        if (-NOT $Output.Deleted.Audit.ContainsKey($UniqueLogKey)) {
+                            $Output.Deleted.Audit[$UniqueLogKey] = $TempDeletedOutputAudit
+                        }
+
+                        if (-NOT $Output.Separated.Audit.DeletedFileHashes.Contains($UniqueLogKey)) {
+                            $Output.Separated.Audit.DeletedFileHashes[$UniqueLogKey] = $TempDeletedOutputAudit
+                        }
                     }
                 }
+
                 elseif ($Log.Type -eq 'Blocked') {
 
-                    # Add the log to the output object if it has Blocked type
-                    $OutputBlocked += $Log
+                    # Add the log to the output hashtable if it has Blocked type and doesn't already exist there
+                    if (-NOT $Output.All.Blocked.ContainsKey($UniqueLogKey)) {
+                        $Output.All.Blocked[$UniqueLogKey] = $Log
+                    }
 
                     # If the file the log is referring to is currently on the disk
-                    if (Test-Path -Path $Log.'File Name') {
-                        $OutputExistingBlocked += $Log
-                        $OutputSeparatedBlocked.AvailableFilesPaths += $Log.'File Name'
+                    if (Test-Path -Path $Log['File Name']) {
+
+                        if (-NOT $Output.Existing.Blocked.ContainsKey($UniqueLogKey)) {
+                            $Output.Existing.Blocked[$UniqueLogKey] = $Log
+                        }
+
+                        if (-NOT $Output.Separated.Blocked.AvailableFilesPaths.Contains($Log['File Name'])) {
+                            [System.Void]$Output.Separated.Blocked.AvailableFilesPaths.Add($Log['File Name'])
+                        }
                     }
                     # If the file is not currently on the disk, extract its hashes from the log
                     else {
                         $TempDeletedOutputBlocked = $Log | Select-Object -Property FileVersion, 'File Name', PolicyGUID, 'SHA256 Hash', 'SHA256 Flat Hash', 'SHA1 Hash', 'SHA1 Flat Hash'
 
-                        $OutputDeletedBlocked += $TempDeletedOutputBlocked
-                        $OutputSeparatedBlocked.DeletedFileHashes += $TempDeletedOutputBlocked
+                        if (-NOT $Output.Deleted.Blocked.ContainsKey($UniqueLogKey)) {
+                            $Output.Deleted.Blocked[$UniqueLogKey] = $TempDeletedOutputBlocked
+                        }
+
+                        if (-NOT $Output.Separated.Blocked.DeletedFileHashes.Contains($UniqueLogKey)) {
+                            $Output.Separated.Blocked.DeletedFileHashes[$UniqueLogKey] = $TempDeletedOutputBlocked
+                        }
                     }
                 }
-
                 #Endregion Post-processing for the logs
             }
         }
@@ -406,78 +477,42 @@ Function Receive-CodeIntegrityLogs {
         Switch ($PostProcessing) {
             'Separate' {
                 if ($Type -eq 'Audit') {
-                    # De-duplication
-                    $OutputSeparatedAudit.AvailableFilesPaths = $OutputSeparatedAudit.AvailableFilesPaths | Select-Object -Unique
-
-                    $OutputSeparatedAudit.DeletedFileHashes = $OutputSeparatedAudit.DeletedFileHashes | Group-Object -Property 'File Name', ProductName, FileVersion, OriginalFileName, FileDescription, InternalName, PackageFamilyName, Publishers, 'SHA256 Hash', 'SHA256 Flat Hash' |
-                    ForEach-Object -Process { $_.Group[0] }
-
                     Write-Verbose -Message "Receive-CodeIntegrityLogs: Returning $($OutputSeparatedAudit.AvailableFilesPaths.Count) Audit Code Integrity logs for files on the disk and $($OutputSeparatedAudit.DeletedFileHashes.Count) for the files not on the disk, in a nested object."
-                    Return $OutputSeparatedAudit
+                    Return $Output.Separated.Audit
                 }
                 else {
-                    # De-duplication
-                    $OutputSeparatedBlocked.AvailableFilesPaths = $OutputSeparatedBlocked.AvailableFilesPaths | Select-Object -Unique
-
-                    $OutputSeparatedBlocked.DeletedFileHashes = $OutputSeparatedBlocked.DeletedFileHashes | Group-Object -Property 'File Name', ProductName, FileVersion, OriginalFileName, FileDescription, InternalName, PackageFamilyName, Publishers, 'SHA256 Hash', 'SHA256 Flat Hash' |
-                    ForEach-Object -Process { $_.Group[0] }
-
                     Write-Verbose -Message "Receive-CodeIntegrityLogs: Returning $($OutputSeparatedBlocked.AvailableFilesPaths.Count) Blocked Code Integrity logs for files on the disk and $($OutputSeparatedBlocked.DeletedFileHashes.Count) for the files not on the disk, in a nested object."
-                    Return $OutputSeparatedBlocked
+                    Return $Output.Separated.Blocked
                 }
             }
             'OnlyExisting' {
                 if ($Type -eq 'Audit') {
-                    # De-duplication
-                    $OutputExistingAudit = $OutputExistingAudit | Group-Object -Property 'File Name', ProductName, FileVersion, OriginalFileName, FileDescription, InternalName, PackageFamilyName, Publishers, 'SHA256 Hash', 'SHA256 Flat Hash' |
-                    ForEach-Object -Process { $_.Group[0] }
-
                     Write-Verbose -Message "Receive-CodeIntegrityLogs: Returning $($OutputExistingAudit.Count) Audit Code Integrity logs for files on the disk."
-                    Return $OutputExistingAudit
+                    Return $Output.Existing.Audit.Values
                 }
                 else {
-                    # De-duplication
-                    $OutputExistingBlocked = $OutputExistingBlocked | Group-Object -Property 'File Name', ProductName, FileVersion, OriginalFileName, FileDescription, InternalName, PackageFamilyName, Publishers, 'SHA256 Hash', 'SHA256 Flat Hash' |
-                    ForEach-Object -Process { $_.Group[0] }
-
                     Write-Verbose -Message "Receive-CodeIntegrityLogs: Returning $($OutputExistingBlocked.Count) Blocked Code Integrity logs for files on the disk."
-                    Return $OutputExistingBlocked
+                    Return $Output.Existing.Blocked.Values
                 }
             }
             'OnlyDeleted' {
                 if ($Type -eq 'Audit') {
-                    # De-duplication
-                    $OutputDeletedAudit = $OutputDeletedAudit | Group-Object -Property 'File Name', ProductName, FileVersion, OriginalFileName, FileDescription, InternalName, PackageFamilyName, Publishers, 'SHA256 Hash', 'SHA256 Flat Hash' |
-                    ForEach-Object -Process { $_.Group[0] }
-
                     Write-Verbose -Message "Receive-CodeIntegrityLogs: Returning $($OutputDeletedAudit.Count) Audit Code Integrity logs for files not on the disk."
-                    Return $OutputDeletedAudit
+                    Return $Output.Deleted.Audit.Values
                 }
                 else {
-                    # De-duplication
-                    $OutputDeletedBlocked = $OutputDeletedBlocked | Group-Object -Property 'File Name', ProductName, FileVersion, OriginalFileName, FileDescription, InternalName, PackageFamilyName, Publishers, 'SHA256 Hash', 'SHA256 Flat Hash' |
-                    ForEach-Object -Process { $_.Group[0] }
-
                     Write-Verbose -Message "Receive-CodeIntegrityLogs: Returning $($OutputDeletedBlocked.Count) Blocked Code Integrity logs for files not on the disk."
-                    Return $OutputDeletedBlocked
+                    Return $Output.Deleted.Blocked.Values
                 }
             }
             Default {
                 if ($Type -eq 'Audit') {
-                    # De-duplication
-                    $OutputAudit = $OutputAudit | Group-Object -Property 'File Name', ProductName, FileVersion, OriginalFileName, FileDescription, InternalName, PackageFamilyName, Publishers, 'SHA256 Hash', 'SHA256 Flat Hash' |
-                    ForEach-Object -Process { $_.Group[0] }
-
                     Write-Verbose -Message "Receive-CodeIntegrityLogs: Returning $($OutputAudit.Count) Audit Code Integrity logs."
-                    Return $OutputAudit
+                    Return $Output.All.Audit.Values
                 }
                 else {
-                    # De-duplication
-                    $OutputBlocked = $OutputBlocked | Group-Object -Property 'File Name', ProductName, FileVersion, OriginalFileName, FileDescription, InternalName, PackageFamilyName, Publishers, 'SHA256 Hash', 'SHA256 Flat Hash' |
-                    ForEach-Object -Process { $_.Group[0] }
-
                     Write-Verbose -Message "Receive-CodeIntegrityLogs: Returning $($OutputBlocked.Count) Blocked Code Integrity logs."
-                    Return $OutputBlocked
+                    Return $Output.All.Blocked.Values
                 }
             }
         }

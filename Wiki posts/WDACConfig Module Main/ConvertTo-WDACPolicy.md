@@ -68,6 +68,7 @@ The policy to add the selected logs to, it can either be a base or supplemental 
 
 | Type: |[FileInfo](https://learn.microsoft.com/en-us/dotnet/api/system.io.fileinfo)|
 | :-------------: | :-------------: |
+| Aliases: AddLogs |
 | Position: | Named |
 | Default value: | None |
 | Required: | False |
@@ -89,6 +90,7 @@ The base policy file to associate the supplemental policy with.
 
 | Type: |[FileInfo](https://learn.microsoft.com/en-us/dotnet/api/system.io.fileinfo)|
 | :-------------: | :-------------: |
+| Aliases: BaseFile |
 | Position: | Named |
 | Default value: | None |
 | Required: | False |
@@ -110,6 +112,7 @@ The GUID of the base policy to associate the supplemental policy with.
 
 | Type: |[Guid](https://learn.microsoft.com/en-us/dotnet/api/system.guid)|
 | :-------------: | :-------------: |
+| Aliases: BaseGUID |
 | Position: | Named |
 | Default value: | None |
 | Required: | False |
@@ -131,60 +134,7 @@ You can manually enter the name of the policies that are no longer available on 
 
 | Type: |[String](https://learn.microsoft.com/en-us/dotnet/api/system.string)[]|
 | :-------------: | :-------------: |
-| Position: | Named |
-| Default value: | None |
-| Required: | False |
-| Accept pipeline input: | False |
-| Accept wildcard characters: | False |
-
-</div>
-
-<br>
-
-### -MinutesAgo
-
-The number of minutes ago from the current time to filter the logs by
-
-<div align='center'>
-
-| Type: |[UInt64](https://learn.microsoft.com/en-us/dotnet/api/system.uint64)|
-| :-------------: | :-------------: |
-| Position: | Named |
-| Default value: | None |
-| Required: | False |
-| Accept pipeline input: | False |
-| Accept wildcard characters: | False |
-
-</div>
-
-<br>
-
-### -HoursAgo
-
-The number of hours ago from the current time to filter the logs by
-
-<div align='center'>
-
-| Type: |[UInt64](https://learn.microsoft.com/en-us/dotnet/api/system.uint64)|
-| :-------------: | :-------------: |
-| Position: | Named |
-| Default value: | None |
-| Required: | False |
-| Accept pipeline input: | False |
-| Accept wildcard characters: | False |
-
-</div>
-
-<br>
-
-### -DaysAgo
-
-The number of days ago from the current time to filter the logs by
-
-<div align='center'>
-
-| Type: |[UInt64](https://learn.microsoft.com/en-us/dotnet/api/system.uint64)|
-| :-------------: | :-------------: |
+| Aliases: FilterNames |
 | Position: | Named |
 | Default value: | None |
 | Required: | False |
@@ -203,6 +153,7 @@ If used, will filter the logs by including only the Kernel-Mode logs.
 
 | Type: |[SwitchParameter](https://learn.microsoft.com/en-us/dotnet/api/system.management.automation.switchparameter)|
 | :-------------: | :-------------: |
+| Aliases: KMode |
 | Position: | Named |
 | Default value: | None |
 | Required: | False |
@@ -221,6 +172,7 @@ The type of logs to display: Audit or Blocked
 
 | Type: |[String](https://learn.microsoft.com/en-us/dotnet/api/system.string)|
 | :-------------: | :-------------: |
+| Aliases: LogKind |
 | Position: | Named |
 | Default value: | `Audit` |
 | Required: | False |
@@ -239,6 +191,7 @@ If used, will deploy the policy on the system.
 
 | Type: |[SwitchParameter](https://learn.microsoft.com/en-us/dotnet/api/system.management.automation.switchparameter)|
 | :-------------: | :-------------: |
+| Aliases: Up |
 | Position: | Named |
 | Default value: | None |
 | Required: | False |
@@ -257,6 +210,7 @@ If used, will display all the properties of the logs without any filtering.
 
 | Type: |[SwitchParameter](https://learn.microsoft.com/en-us/dotnet/api/system.management.automation.switchparameter)|
 | :-------------: | :-------------: |
+| Aliases: XVis |
 | Position: | Named |
 | Default value: | None |
 | Required: | False |

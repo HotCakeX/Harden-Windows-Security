@@ -176,6 +176,7 @@ Function Receive-CodeIntegrityLogs {
         # Create a hashtable to store the packages of all types of logs
         [System.Collections.Hashtable]$EventPackageCollections = @{}
 
+        # Add Code Integrity and AppLocker logs to a single array
         [Microsoft.PowerShell.Commands.GroupInfo[]]$AccumulatedGroupedEvents = $CiGroupedEvents + $AppLockerGroupedEvents
 
         # Loop over each group of logs

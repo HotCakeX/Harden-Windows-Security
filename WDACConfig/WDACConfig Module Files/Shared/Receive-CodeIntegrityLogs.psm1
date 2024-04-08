@@ -176,14 +176,16 @@ Function Receive-CodeIntegrityLogs {
         # Create a hashtable to store the packages of all types of logs
         [System.Collections.Hashtable]$EventPackageCollections = @{}
 
+        [Microsoft.PowerShell.Commands.GroupInfo[]]$AccumulatedGroupedEvents = $CiGroupedEvents + $AppLockerGroupedEvents
+
         # Loop over each group of logs
-        Foreach ($RawLogGroup in $CiGroupedEvents) {
+        Foreach ($RawLogGroup in $AccumulatedGroupedEvents) {
 
             # Process Audit events
-            if ($RawLogGroup.Group.Id -contains '3076') {
+            if (($RawLogGroup.Group.Id -contains '3076') -or ($RawLogGroup.Group.Id -contains '8028')) {
 
                 # Finding the main event in the group - If there are more than 1, selecting the first one because that means the same event was triggered by multiple deployed policies
-                [System.Diagnostics.Eventing.Reader.EventLogRecord]$AuditTemp = $RawLogGroup.Group | Where-Object -FilterScript { $_.Id -eq '3076' } | Select-Object -First 1
+                [System.Diagnostics.Eventing.Reader.EventLogRecord]$AuditTemp = $RawLogGroup.Group | Where-Object -FilterScript { $_.Id -in '3076', '8028' } | Select-Object -First 1
 
                 # If the main event is older than the specified date, skip it
                 if (-NOT ([System.String]::IsNullOrWhiteSpace($Date))) {
@@ -196,7 +198,7 @@ Function Receive-CodeIntegrityLogs {
                 [System.Collections.Hashtable]$LocalAuditEventPackageCollections = @{}
 
                 $LocalAuditEventPackageCollections['MainEventData'] = $AuditTemp
-                $LocalAuditEventPackageCollections['CorrelatedEventsData'] = $RawLogGroup.Group | Where-Object -FilterScript { $_.Id -eq '3089' }
+                $LocalAuditEventPackageCollections['CorrelatedEventsData'] = $RawLogGroup.Group | Where-Object -FilterScript { $_.Id -in '3089', '8038' }
                 $LocalAuditEventPackageCollections['Type'] = 'Audit'
 
                 # Add the main event along with the correlated events as a nested hashtable to the main hashtable
@@ -205,10 +207,10 @@ Function Receive-CodeIntegrityLogs {
             }
 
             # Process Blocked events
-            if ($RawLogGroup.Group.Id -contains '3077') {
+            if (($RawLogGroup.Group.Id -contains '3077') -or ($RawLogGroup.Group.Id -contains '8029')) {
 
                 # Finding the main event in the group - If there are more than 1, selecting the first one because that means the same event was triggered by multiple deployed policies
-                [System.Diagnostics.Eventing.Reader.EventLogRecord]$BlockedTemp = $RawLogGroup.Group | Where-Object -FilterScript { $_.Id -eq '3077' } | Select-Object -First 1
+                [System.Diagnostics.Eventing.Reader.EventLogRecord]$BlockedTemp = $RawLogGroup.Group | Where-Object -FilterScript { $_.Id -in '3077', '8029' } | Select-Object -First 1
 
                 # If the main event is older than the specified date, skip it
                 if (-NOT ([System.String]::IsNullOrWhiteSpace($Date))) {
@@ -221,7 +223,7 @@ Function Receive-CodeIntegrityLogs {
                 [System.Collections.Hashtable]$LocalBlockedEventPackageCollections = @{}
 
                 $LocalBlockedEventPackageCollections['MainEventData'] = $BlockedTemp
-                $LocalBlockedEventPackageCollections['CorrelatedEventsData'] = $RawLogGroup.Group | Where-Object -FilterScript { $_.Id -eq '3089' }
+                $LocalBlockedEventPackageCollections['CorrelatedEventsData'] = $RawLogGroup.Group | Where-Object -FilterScript { $_.Id -in '3089', '8038' }
                 $LocalBlockedEventPackageCollections['Type'] = 'Blocked'
 
                 # Add the main event along with the correlated events as a nested hashtable to the main hashtable
@@ -294,6 +296,13 @@ Function Receive-CodeIntegrityLogs {
 
                 # Define the regex pattern for the device path
                 [System.Text.RegularExpressions.Regex]$Pattern = '\\Device\\HarddiskVolume(?<HardDiskVolumeNumber>\d+)\\(?<RemainingPath>.*)$'
+
+                # If the File Name property is empty, replace it with the FilePath property and then remove the FilePath property
+                # Only happens in the AppLocker logs
+                if ($null -eq $Log['File Name']) {
+                    $Log['File Name'] = $Log['FilePath']
+                    $Log.Remove('FilePath')
+                }
 
                 # replace the device path with the drive letter if it matches the pattern
                 if ($Log['File Name'] -match $Pattern) {

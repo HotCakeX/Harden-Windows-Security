@@ -260,7 +260,7 @@ Function ConvertTo-WDACPolicy {
         # Add XML Ops module to the list of modules to import
         $ModulesToImport += (Get-ChildItem -File -Filter '*.psm1' -LiteralPath "$ModuleRootPath\XMLOps").FullName
         Import-Module -FullyQualifiedName $ModulesToImport -Force
-        
+
         # Since Dynamic parameters are only available in the parameter dictionary, we have to access them using $PSBoundParameters or assign them manually to another variable in the function's scope
         New-Variable -Name 'TimeSpanAgo' -Value $PSBoundParameters['TimeSpanAgo'] -Force
         New-Variable -Name 'MDEAHLogs' -Value $PSBoundParameters['MDEAHLogs'] -Force
@@ -318,7 +318,7 @@ Function ConvertTo-WDACPolicy {
 
                     $CurrentStep++
                     Write-Progress -Id 30 -Activity "Collecting $LogType events" -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
-        
+
                     [PSCustomObject[]]$EventsToDisplay = Receive-CodeIntegrityLogs -PostProcessing OnlyExisting -PolicyName:$FilterByPolicyNames -Date:$StartTime -Type:$LogType |
                     Select-Object -Property @{
                         Label      = 'File Name'
@@ -345,7 +345,10 @@ Function ConvertTo-WDACPolicy {
                     'Requested Signing Level',
                     'SI Signing Scenario',
                     'UserId',
-                    'Publishers',
+                    @{
+                        Label      = 'Publishers'
+                        Expression = { [System.String[]]$_.'Publishers' }
+                    },
                     'SHA256 Hash',
                     'SHA256 Flat Hash',
                     'SHA1 Hash',
@@ -359,27 +362,27 @@ Function ConvertTo-WDACPolicy {
                     'Status',
                     'USN',
                     'SignerInfo'
-        
+
                     # If the KernelModeOnly switch is used, then filter the events by the 'Requested Signing Level' property
                     if ($KernelModeOnly) {
                         $EventsToDisplay = $EventsToDisplay | Where-Object -FilterScript { $_.'SI Signing Scenario' -eq 'Kernel-Mode' }
                     }
-        
+
                     # Sort the events by TimeCreated in descending order
                     [PSCustomObject[]]$EventsToDisplay = $EventsToDisplay | Sort-Object -Property TimeCreated -Descending
-        
+
                     if (($null -eq $EventsToDisplay) -and ($EventsToDisplay.Count -eq 0)) {
                         Write-ColorfulText -Color HotPink -InputText 'No logs were found to display based on the current filters. Exiting...'
                         return
                     }
-        
+
                     #Region Out-GridView properties visibility settings
-        
+
                     # If the ExtremeVisibility switch is used, then display all the properties of the logs without any filtering
                     if (-NOT $ExtremeVisibility) {
-        
+
                         [System.String[]]$PropertiesToDisplay = @('File Name', 'TimeCreated', 'PolicyName', 'ProductName', 'FileVersion', 'OriginalFileName', 'FileDescription', 'InternalName', 'PackageFamilyName', 'Full Path', 'SI Signing Scenario', 'UserId', 'Publishers')
-        
+
                         # Create a PSPropertySet object that contains the names of the properties to be visible
                         # Used for Out-GridView display
                         # https://learn.microsoft.com/en-us/dotnet/api/system.management.automation.pspropertyset
@@ -388,76 +391,76 @@ Function ConvertTo-WDACPolicy {
                             'DefaultDisplayPropertySet', # the name of the property set
                             $PropertiesToDisplay # the names of the properties to be visible
                         )
-        
+
                         # Add the PSPropertySet object to the PSStandardMembers member set of each element of the $EventsToDisplay array
                         foreach ($Element in $EventsToDisplay) {
                             $Element | Add-Member -MemberType 'MemberSet' -Name 'PSStandardMembers' -Value $Visible
                         }
                     }
-        
+
                     #Endregion Out-GridView properties visibility settings
-        
+
                     <#
                 Will enable this section once this issue has been fixed: https://github.com/PowerShell/GraphicalTools/issues/235
-        
+
                 if ($AlternateDisplay) {
-        
+
                     if (-NOT (Get-InstalledModule -Name Microsoft.PowerShell.ConsoleGuiTools -ErrorAction SilentlyContinue)) {
                         Write-Verbose -Message 'ConvertTo-WDACPolicy: Installing the Microsoft.PowerShell.ConsoleGuiTools module'
                         Install-Module -Name Microsoft.PowerShell.ConsoleGuiTools -Force
                     }
-        
+
                     # Display the logs in a console grid view using outside module
                     $SelectedLogs = $EventsToDisplay | Out-ConsoleGridView -Title "$($EventsToDisplay.count) $LogType Code Integrity Logs" -OutputMode Multiple
                 }
                 #>
-        
+
                     $CurrentStep++
                     Write-Progress -Id 30 -Activity 'Displaying the logs' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
-        
+
                     # Display the logs in a grid view using the build-in cmdlet
                     $SelectedLogs = $EventsToDisplay | Out-GridView -OutputMode Multiple -Title "$($EventsToDisplay.count) $LogType Code Integrity Logs"
-        
+
                     Write-Verbose -Message "ConvertTo-WDACPolicy: Selected logs count: $($SelectedLogs.count)"
-        
+
                     if (!$BasePolicyGUID -and !$BasePolicyFile -and !$PolicyToAddLogsTo) {
                         Write-ColorfulText -Color HotPink -InputText 'A more specific parameter was not provided to define what to do with the selected logs. Exiting...'
                         return
                     }
-        
+
                     # If the user has selected any logs, then create a WDAC policy for them, otherwise return
                     if ($null -eq $SelectedLogs) {
                         return
                     }
-        
+
                     Write-Verbose -Message 'ConvertTo-WDACPolicy: Creating a temporary folder to store the symbolic links to the files and for WDAC polices'
                     [System.IO.DirectoryInfo]$SymLinksStorage = New-Item -Path (Join-Path -Path $StagingArea 'SymLinkStorage') -ItemType Directory -Force
-        
+
                     # The path to the TEMP Supplemental WDAC Policy file
                     [System.IO.FileInfo]$WDACPolicyPathTemp = Join-Path -Path $StagingArea -ChildPath 'TEMP CiPolicy From Logs.xml'
-        
+
                     # The path to the final Supplemental WDAC Policy file
                     [System.IO.FileInfo]$WDACPolicyPath = Join-Path -Path $StagingArea -ChildPath "CiPolicy From Logs $CurrentDate.xml"
-        
+
                     # The path to the Kernel protected file hashes WDAC Policy file
                     [System.IO.FileInfo]$WDACPolicyKernelProtectedPath = Join-Path -Path $StagingArea -ChildPath "Kernel Protected Files Hashes $CurrentDate.xml"
-        
+
                     #Region Kernel-protected-files-automatic-detection-and-allow-rule-creation
                     # This part takes care of Kernel protected files such as the main executable of the games installed through Xbox app
                     # For these files, only Kernel can get their hashes, it passes them to event viewer and we take them from event viewer logs
                     # Any other attempts such as "Get-FileHash" or "Get-AuthenticodeSignature" fail and ConfigCI Module cmdlets totally ignore these files and do not create allow rules for them
-        
+
                     $CurrentStep++
                     Write-Progress -Id 30 -Activity 'Checking for Kernel protected files' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
-        
+
                     Write-Verbose -Message 'ConvertTo-WDACPolicy: Checking for Kernel protected files in the selected logs'
-        
+
                     # Storing the logs of the kernel protected files
                     [PSCustomObject[]]$KernelProtectedFileLogs = @()
-        
+
                     # Looping through every file with .exe and .dll extensions to check if they are kernel protected regardless of whether the file exists or not
                     foreach ($Log in $SelectedLogs | Where-Object -FilterScript { [System.IO.Path]::GetExtension($_.'Full Path') -in @('.exe', '.dll') }) {
-        
+
                         try {
                             # Testing each file to find the protected ones
                             Get-FileHash -Path $Log.'Full Path' -ErrorAction Stop | Out-Null
@@ -472,35 +475,35 @@ Function ConvertTo-WDACPolicy {
                             Write-Verbose -Message "ConvertTo-WDACPolicy: An unexpected error occurred while checking the file: $($Log.'Full Path')"
                         }
                     }
-        
+
                     # Only proceed if any kernel protected file(s) were found in any of the selected logs
                     if (($null -ne $KernelProtectedFileLogs) -and ($KernelProtectedFileLogs.count -gt 0)) {
-        
+
                         Write-Verbose -Message 'ConvertTo-WDACPolicy: The following Kernel protected files were detected, creating allow rules for them:'
                         $KernelProtectedFileLogs | ForEach-Object -Process { Write-Verbose -Message $($_.'File Name') }
-        
+
                         # Check if any of the kernel-protected files can be allowed by FamilyPackageName
                         [PSCustomObject]$AppxOutput = New-AppxPackageCiPolicy -Logs $KernelProtectedFileLogs -directoryPath $SymLinksStorage
-        
+
                         if ($null -ne $AppxOutput.PolicyPath) {
                             # Add the path of the Appx package policy file to the array of policy files to merge
                             $PolicyFilesToMerge += $AppxOutput.PolicyPath
-        
+
                             # Set the flag indicating that there are kernel-protected files in the selected logs
                             [System.Boolean]$HasKernelFiles = $true
                         }
-        
+
                         # If the New-AppxPackageCiPolicy function returned remaining logs then create allow rules for them using Hash level
                         if (($null -ne $AppxOutput.RemainingLogs) -and ($AppxOutput.RemainingLogs.count -gt 0)) {
-        
+
                             # Put the Rules and RulesRefs in an empty policy file by extracting the hashes from the logs
                             Write-Verbose -Message "ConvertTo-WDACPolicy: $($AppxOutput.RemainingLogs.count) Kernel protected files were found in the selected logs that did not have the PackageFamilyName property or the app is not installed on the system, creating allow rules for them using Hash level"
-        
+
                             New-EmptyPolicy -RulesContent (Get-FileRules -HashesArray $AppxOutput.RemainingLogs) -RuleRefsContent (Get-RuleRefs -HashesArray $AppxOutput.RemainingLogs) | Out-File -FilePath $WDACPolicyKernelProtectedPath -Force
-        
+
                             # Add the path of the Kernel protected files Hashes policy file to the array of policy files to merge
                             $PolicyFilesToMerge += $WDACPolicyKernelProtectedPath
-        
+
                             # Set the flag indicating that there are kernel-protected files in the selected logs
                             [System.Boolean]$HasKernelFiles = $true
                         }
@@ -511,28 +514,28 @@ Function ConvertTo-WDACPolicy {
                     else {
                         Write-Verbose -Message 'ConvertTo-WDACPolicy: No Kernel protected files were found in any of the selected logs'
                     }
-        
+
                     [System.UInt64]$LogCountBeforeRemovingKernelProtectedFiles = $SelectedLogs.Count
-        
+
                     # Remove the logs of the Kernel protected files from the selected logs since they cannot be scanned with New-CIPolicy cmdlet
                     [PSCustomObject[]]$SelectedLogs = $SelectedLogs | Where-Object -FilterScript { $KernelProtectedFileLogs -notcontains $_ }
-        
+
                     Write-Verbose -Message "ConvertTo-WDACPolicy: The number of logs before removing the Kernel protected files: $LogCountBeforeRemovingKernelProtectedFiles and after: $($SelectedLogs.Count). There were $($KernelProtectedFileLogs.Count) Kernel protected files."
                     #Endregion Kernel-protected-files-automatic-detection-and-allow-rule-creation
-        
+
                     $CurrentStep++
                     Write-Progress -Id 30 -Activity 'Processing the logs' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
-        
+
                     # If there are still logs after removing the kernel protected files, then scan them
                     if (($null -ne $SelectedLogs) -and ($SelectedLogs.Count -gt 0)) {
-        
+
                         #Region Main Policy Creation
-        
+
                         Write-Verbose -Message 'ConvertTo-WDACPolicy: Creating symbolic links to the non-kernel-protected files in the logs'
                         Foreach ($File in $SelectedLogs) {
                             New-Item -ItemType SymbolicLink -Path (Join-Path -Path $SymLinksStorage -ChildPath $File.'File Name') -Target $File.'Full Path' -Force | Out-Null
                         }
-        
+
                         # Creating a hash table to dynamically add parameters based on user input and pass them to New-Cipolicy cmdlet
                         [System.Collections.Hashtable]$CiPolicyScanHashTable = @{
                             FilePath               = $WDACPolicyPathTemp
@@ -544,27 +547,27 @@ Function ConvertTo-WDACPolicy {
                         }
                         # Only scan UserPEs if the KernelModeOnly switch is not used
                         if (!$KernelModeOnly) { $CiPolicyScanHashTable['UserPEs'] = $true }
-        
+
                         # Set the Fallback property to 'None' if the KernelModeOnly switch is used, otherwise set it to 'FilePublisher' and 'Hash'
                         $CiPolicyScanHashTable['Fallback'] = $KernelModeOnly ? 'None' : ('FilePublisher', 'Hash')
-        
+
                         Write-Verbose -Message 'ConvertTo-WDACPolicy: Scanning the files in the selected event logs with the following parameters:'
                         if ($Verbose) { $CiPolicyScanHashTable }
-        
+
                         New-CIPolicy @CiPolicyScanHashTable
-        
+
                         # Add the path of the TEMP WDAC Policy file as the 1st element to the policy files to merge array
                         $PolicyFilesToMerge = @($WDACPolicyPathTemp) + $PolicyFilesToMerge
-        
+
                         # Set the flag indicating that there are normal files in the selected logs
                         [System.Boolean]$HasNormalFiles = $true
-        
+
                         #Endregion Main Policy Creation
                     }
-        
+
                     $CurrentStep++
                     Write-Progress -Id 30 -Activity 'Generating the policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
-        
+
                     # If there are only kernel-protected files in the selected logs
                     if (($HasKernelFiles -eq $true) -and ($HasNormalFiles -eq $false)) {
                         Write-Verbose -Message 'ConvertTo-WDACPolicy: There are only kernel-protected files in the selected logs'
@@ -573,7 +576,7 @@ Function ConvertTo-WDACPolicy {
                     # If there are only normal files in the selected logs
                     elseif (($HasKernelFiles -eq $false) -and ($HasNormalFiles -eq $true)) {
                         Write-Verbose -Message 'ConvertTo-WDACPolicy: There are only normal files in the selected logs'
-        
+
                         # Using merge on a single policy takes care of any possible orphaned rules or file attributes
                         Merge-CIPolicy -PolicyPaths $WDACPolicyPathTemp -OutputFilePath $WDACPolicyPath | Out-Null
                     }
@@ -587,29 +590,29 @@ Function ConvertTo-WDACPolicy {
                         Write-ColorfulText -Color HotPink -InputText 'No logs were selected to create a WDAC policy from. Exiting...'
                         return
                     }
-        
+
                     #Region Base To Supplemental Policy Association and Deployment
-        
+
                     # If -BasePolicyFile parameter was used then associate the supplemental policy with the user input base policy
                     if ($null -ne $BasePolicyFile) {
-        
+
                         # Objectify the user input base policy file to extract its Base policy ID
                         $InputXMLObj = [System.Xml.XmlDocument](Get-Content -Path $BasePolicyFile)
-        
+
                         [System.String]$SupplementalPolicyID = Set-CIPolicyIdInfo -FilePath $WDACPolicyPath -PolicyName "Supplemental Policy from event logs - $(Get-Date -Format 'MM-dd-yyyy')" -SupplementsBasePolicyID $InputXMLObj.SiPolicy.BasePolicyID -ResetPolicyID
                         [System.String]$SupplementalPolicyID = $SupplementalPolicyID.Substring(11)
-        
+
                         # Configure policy rule options
                         Edit-CiPolicyRuleOptions -Action Supplemental -XMLFile $WDACPolicyPath
-        
+
                         Write-Verbose -Message 'ConvertTo-WDACPolicy: Copying the policy file to the current directory'
                         Copy-Item -Path $WDACPolicyPath -Destination $UserConfigDir -Force
-        
+
                         if ($Deploy) {
                             ConvertFrom-CIPolicy -XmlFilePath $WDACPolicyPath -BinaryFilePath (Join-Path -Path $StagingArea -ChildPath "$SupplementalPolicyID.cip") | Out-Null
-        
+
                             Write-Verbose -Message 'ConvertTo-WDACPolicy: Deploying the Supplemental policy'
-        
+
                             &'C:\Windows\System32\CiTool.exe' --update-policy (Join-Path -Path $StagingArea -ChildPath "$SupplementalPolicyID.cip") -json | Out-Null
                         }
                     }
@@ -617,52 +620,52 @@ Function ConvertTo-WDACPolicy {
                     elseif ($null -ne $BasePolicyGUID) {
                         [System.String]$SupplementalPolicyID = Set-CIPolicyIdInfo -FilePath $WDACPolicyPath -PolicyName "Supplemental Policy from event logs - $(Get-Date -Format 'MM-dd-yyyy')" -SupplementsBasePolicyID $BasePolicyGUID -ResetPolicyID
                         [System.String]$SupplementalPolicyID = $SupplementalPolicyID.Substring(11)
-        
+
                         # Configure policy rule options
                         Edit-CiPolicyRuleOptions -Action Supplemental -XMLFile $WDACPolicyPath
-        
+
                         Write-Verbose -Message 'ConvertTo-WDACPolicy: Copying the policy file to the current directory'
                         Copy-Item -Path $WDACPolicyPath -Destination $UserConfigDir -Force
-        
+
                         if ($Deploy) {
                             ConvertFrom-CIPolicy -XmlFilePath $WDACPolicyPath -BinaryFilePath (Join-Path -Path $StagingArea -ChildPath "$SupplementalPolicyID.cip") | Out-Null
-        
+
                             Write-Verbose -Message 'ConvertTo-WDACPolicy: Deploying the Supplemental policy'
-        
+
                             &'C:\Windows\System32\CiTool.exe' --update-policy (Join-Path -Path $StagingArea -ChildPath "$SupplementalPolicyID.cip") -json | Out-Null
                         }
                     }
                     # If -PolicyToAddLogsTo parameter was used then merge the supplemental policy with the user input policy
                     elseif ($null -ne $PolicyToAddLogsTo) {
-        
+
                         # Objectify the user input policy file to extract its policy ID
                         $InputXMLObj = [System.Xml.XmlDocument](Get-Content -Path $PolicyToAddLogsTo)
-        
+
                         Set-CIPolicyIdInfo -FilePath $WDACPolicyPath -PolicyName "Supplemental Policy from event logs - $(Get-Date -Format 'MM-dd-yyyy')" -ResetPolicyID | Out-Null
-        
+
                         # Remove all policy rule option prior to merging the policies since we don't need to add/remove any policy rule options to/from the user input policy
                         Edit-CiPolicyRuleOptions -Action RemoveAll -XMLFile $WDACPolicyPath
-        
+
                         Merge-CIPolicy -PolicyPaths $PolicyToAddLogsTo, $WDACPolicyPath -OutputFilePath $PolicyToAddLogsTo | Out-Null
-        
+
                         # Set HVCI to Strict
                         Set-HVCIOptions -Strict -FilePath $PolicyToAddLogsTo
-        
+
                         if ($Deploy) {
                             ConvertFrom-CIPolicy -XmlFilePath $PolicyToAddLogsTo -BinaryFilePath (Join-Path -Path $StagingArea -ChildPath "$($InputXMLObj.SiPolicy.PolicyID).cip") | Out-Null
-        
+
                             Write-Verbose -Message 'ConvertTo-WDACPolicy: Deploying the policy that user selected to add the logs to'
-        
+
                             &'C:\Windows\System32\CiTool.exe' --update-policy (Join-Path -Path $StagingArea -ChildPath "$($InputXMLObj.SiPolicy.PolicyID).cip") -json | Out-Null
                         }
                     }
-        
+
                     #Endregion Base To Supplemental Policy Association and Deployment
                 }
                 'MDEAdvancedHunting' {
 
 
-                    
+
                 }
             }
         }

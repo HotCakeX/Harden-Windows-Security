@@ -335,8 +335,7 @@ Function Protect-WindowsSecurity {
         # This class provides a list of valid values for the Categories parameter of the Protect-WindowsSecurity function
         Class Categoriex : System.Management.Automation.IValidateSetValuesGenerator {
             [System.String[]] GetValidValues() {
-                $Categoriex = @(
-                    'WindowsBootManagerRevocations',
+                $Categoriex = @(                    
                     'MicrosoftSecurityBaselines',
                     'Microsoft365AppsSecurityBaselines',
                     'MicrosoftDefender',
@@ -4900,10 +4899,7 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                        <!-- Background color for the ListView -->
                        <ListView.Background>
                            <SolidColorBrush Color="#ffffad"/>
-                       </ListView.Background>
-                       <ListViewItem>
-                           <CheckBox Content="WindowsBootManagerRevocations" VerticalContentAlignment="Center" Padding="10,10,40,10"/>
-                       </ListViewItem>
+                       </ListView.Background>                      
                        <ListViewItem>
                            <CheckBox Content="MicrosoftSecurityBaselines" VerticalContentAlignment="Center" Padding="10,10,40,10"/>
                        </ListViewItem>

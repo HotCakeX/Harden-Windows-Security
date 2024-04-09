@@ -336,7 +336,6 @@ Function Protect-WindowsSecurity {
         Class Categoriex : System.Management.Automation.IValidateSetValuesGenerator {
             [System.String[]] GetValidValues() {
                 $Categoriex = @(
-                    'WindowsBootManagerRevocations',
                     'MicrosoftSecurityBaselines',
                     'Microsoft365AppsSecurityBaselines',
                     'MicrosoftDefender',
@@ -993,7 +992,7 @@ Function Protect-WindowsSecurity {
         # Fetching Temp Directory
         [System.String]$CurrentUserTempDirectoryPath = [System.IO.Path]::GetTempPath()
         # The total number of the main categories for the parent/main progress bar to render
-        [System.Int32]$TotalMainSteps = 19
+        [System.Int32]$TotalMainSteps = 18
         # Defining a boolean variable to determine whether optional diagnostic data should be enabled for Smart App Control or not
         [System.Boolean]$ShouldEnableOptionalDiagnosticData = $false
 
@@ -2248,15 +2247,6 @@ Execution Policy: $CurrentExecutionPolicy
                                 #Endregion Helper-Functions-GUI-Experience
 
                                 #Region Hardening-Categories-Functions-GUI-Experience
-                                Function Invoke-WindowsBootManagerRevocations {
-                                    Write-Verbose -Message 'Processing the Category 0 function'
-                                    Write-Verbose -Message 'Applying the required security measures for Windows Boot Manager'
-
-                                    reg add HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Secureboot /v AvailableUpdates /t REG_DWORD /d 0x30 /f
-
-                                    Write-Output -InputObject 'The required security measures have been applied to the system'
-                                    Write-Warning -Message 'Make sure to restart your device once. After restart, wait for at least 5-10 minutes and perform a 2nd restart to finish applying security measures completely.'
-                                }
                                 Function Invoke-MicrosoftSecurityBaselines {
                                     Write-Verbose -Message 'Processing the Security Baselines category function'
                                     Write-Verbose -Message "Changing the current directory to '$MicrosoftSecurityBaselinePath\Scripts\'"
@@ -2891,7 +2881,6 @@ namespace SystemInfo
                                 if ($null -ne $SelectedCategories) {
 
                                     :MainSwitchLabel switch ($SelectedCategories) {
-                                        'WindowsBootManagerRevocations' { Invoke-WindowsBootManagerRevocations }
                                         'MicrosoftSecurityBaselines' { Invoke-MicrosoftSecurityBaselines }
                                         'Microsoft365AppsSecurityBaselines' { Invoke-Microsoft365AppsSecurityBaselines }
                                         'MicrosoftDefender' { Invoke-MicrosoftDefender }
@@ -3183,28 +3172,6 @@ End time: $(Get-Date)
             Copy-Item -Path $LGPOExe -Destination "$Microsoft365SecurityBaselinePath\Scripts\Tools"
 
             #Region Hardening-Categories-Functions-CLI-Experience
-            Function Invoke-WindowsBootManagerRevocations {
-                param([System.Management.Automation.SwitchParameter]$RunUnattended)
-                # If admin rights are not detected, break out of the function
-                if (!$IsAdmin) { return }
-
-                $RefCurrentMainStep.Value++
-                $Host.UI.RawUI.WindowTitle = '🫶 Category 0'
-                Write-Verbose -Message 'Processing the Category 0 function'
-
-                :Category0Label switch ($RunUnattended ? 'Yes' : (Select-Option -Options 'Yes', 'No', 'Exit' -Message "`nApply May 9 2023 Windows Boot Manager Security measures ? (If you've already run this category, don't need to do it again)")) {
-                    'Yes' {
-                        Write-Verbose -Message 'Applying the required security measures for Windows Boot Manager'
-                        Write-Progress -Id 0 -Activity 'Windows Boot Manager revocations for Secure Boot' -Status "Step $($RefCurrentMainStep.Value)/$TotalMainSteps" -PercentComplete ($RefCurrentMainStep.Value / $TotalMainSteps * 100)
-
-                        reg add HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Secureboot /v AvailableUpdates /t REG_DWORD /d 0x30 /f
-
-                        Write-ColorfulText -Color MintGreen -InputText 'The required security measures have been applied to the system'
-                        Write-Warning -Message 'Make sure to restart your device once. After restart, wait for at least 5-10 minutes and perform a 2nd restart to finish applying security measures completely.'
-                    } 'No' { break Category0Label }
-                    'Exit' { break MainSwitchLabel }
-                }
-            }
             Function Invoke-MicrosoftSecurityBaselines {
                 param([System.Management.Automation.SwitchParameter]$RunUnattended)
                 if (!$IsAdmin) { return }
@@ -4614,7 +4581,6 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
 
             # a label to break out of the main switch statements and run the finally block when user chooses to exit
             :MainSwitchLabel switch ($Categories) {
-                'WindowsBootManagerRevocations' { Invoke-WindowsBootManagerRevocations -RunUnattended }
                 'MicrosoftSecurityBaselines' { Invoke-MicrosoftSecurityBaselines -RunUnattended }
                 'Microsoft365AppsSecurityBaselines' { Invoke-Microsoft365AppsSecurityBaselines -RunUnattended }
                 'MicrosoftDefender' { Invoke-MicrosoftDefender -RunUnattended }
@@ -4934,9 +4900,6 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                        <ListView.Background>
                            <SolidColorBrush Color="#ffffad"/>
                        </ListView.Background>
-                       <ListViewItem>
-                           <CheckBox Content="WindowsBootManagerRevocations" VerticalContentAlignment="Center" Padding="10,10,40,10"/>
-                       </ListViewItem>
                        <ListViewItem>
                            <CheckBox Content="MicrosoftSecurityBaselines" VerticalContentAlignment="Center" Padding="10,10,40,10"/>
                        </ListViewItem>

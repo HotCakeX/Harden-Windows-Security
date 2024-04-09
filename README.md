@@ -218,7 +218,7 @@ Unprotect-WindowsSecurity
 <a name="menu-back-to-top"></a>
 From Top to bottom in order:
 
-* Commands that require Administrator Privileges (click/tap on each of these to see in-depth info)    
+* Commands that require Administrator Privileges (click/tap on each of these to see in-depth info)
     - <a href="#microsoft-security-baselines">Microsoft Security Baselines</a>
     - <a href="#microsoft-365-apps-security-baselines">Microsoft 365 Apps Security Baselines</a>
     - <a href="#microsoft-defender">Microsoft Defender</a>

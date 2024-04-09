@@ -218,8 +218,7 @@ Unprotect-WindowsSecurity
 <a name="menu-back-to-top"></a>
 From Top to bottom in order:
 
-* Commands that require Administrator Privileges (click/tap on each of these to see in-depth info)
-    - <a href="#may-9-2023-windows-boot-manager-cve-2023-24932">May 9 2023 Windows Boot Manager CVE-2023-24932</a>
+* Commands that require Administrator Privileges (click/tap on each of these to see in-depth info)    
     - <a href="#microsoft-security-baselines">Microsoft Security Baselines</a>
     - <a href="#microsoft-365-apps-security-baselines">Microsoft 365 Apps Security Baselines</a>
     - <a href="#microsoft-defender">Microsoft Defender</a>
@@ -257,30 +256,6 @@ From Top to bottom in order:
 </div>
 
 <p align="right"><a href="#readme-top">💡 (back to top)</a></p>
-
-<br>
-
-<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">
-
-<br>
-
-## May 9 2023 Windows Boot Manager CVE-2023-24932<a href="#may-9-2023-windows-boot-manager-cve-2023-24932"><img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/ExcMark.gif" width="35" alt="Rotating pink checkmark denoting registry or cmdlet"></a>
-
-<p align="center"><img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/PNG%20and%20JPG/Hearts/1%20(1).png" alt="An AI generated picture of a cat girl working in a server farm" width="550"></p>
-
-<br>
-
-#### May 9 2023 Windows Boot Manager revocations for Secure Boot changes associated with CVE-2023-24932
-
-<img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/magenta-verification.gif" width="25" alt="Rotating pink checkmark denoting registry or cmdlet"> Automatically applies the security measures [**described in the KB5025885 document page**](https://support.microsoft.com/en-us/topic/kb5025885-how-to-manage-the-windows-boot-manager-revocations-for-secure-boot-changes-associated-with-cve-2023-24932-41a975df-beb2-40c1-99a3-b3ff139f832d#update5025885).
-
-[KB5026372](https://support.microsoft.com/en-gb/topic/may-9-2023-kb5026372-os-build-22621-1702-ce93c18e-e819-458f-abcf-dc7154ce7e40) must be installed, so make sure your OS is fully up to date first.
-
-You will need to restart your device once. After restart, wait at least for 5-10 minutes and then restart again, as suggested in the official page.
-
-[Microsoft Security Response Center post](https://msrc.microsoft.com/update-guide/vulnerability/CVE-2023-24932)
-
-<p align="right"><a href="#menu-back-to-top">💡 (back to categories)</a></p>
 
 <br>
 

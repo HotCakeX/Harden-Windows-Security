@@ -2881,7 +2881,7 @@ namespace SystemInfo
 
                                 if ($null -ne $SelectedCategories) {
 
-                                    :MainSwitchLabel switch ($SelectedCategories) {                                        
+                                    :MainSwitchLabel switch ($SelectedCategories) {
                                         'MicrosoftSecurityBaselines' { Invoke-MicrosoftSecurityBaselines }
                                         'Microsoft365AppsSecurityBaselines' { Invoke-Microsoft365AppsSecurityBaselines }
                                         'MicrosoftDefender' { Invoke-MicrosoftDefender }
@@ -4581,7 +4581,7 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
             #Endregion Hardening-Categories-Functions-CLI-Experience
 
             # a label to break out of the main switch statements and run the finally block when user chooses to exit
-            :MainSwitchLabel switch ($Categories) {                
+            :MainSwitchLabel switch ($Categories) {
                 'MicrosoftSecurityBaselines' { Invoke-MicrosoftSecurityBaselines -RunUnattended }
                 'Microsoft365AppsSecurityBaselines' { Invoke-Microsoft365AppsSecurityBaselines -RunUnattended }
                 'MicrosoftDefender' { Invoke-MicrosoftDefender -RunUnattended }

@@ -2252,7 +2252,7 @@ Execution Policy: $CurrentExecutionPolicy
                                     Write-Verbose -Message 'Processing the Category 0 function'
                                     Write-Verbose -Message 'Applying the required security measures for Windows Boot Manager'
 
-                                    reg add HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Secureboot /v AvailableUpdates /t REG_DWORD /d 0x30 /f
+                                    reg add HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Secureboot /v AvailableUpdates /t REG_DWORD /d 0x40 /f
 
                                     Write-Output -InputObject 'The required security measures have been applied to the system'
                                     Write-Warning -Message 'Make sure to restart your device once. After restart, wait for at least 5-10 minutes and perform a 2nd restart to finish applying security measures completely.'
@@ -3197,7 +3197,7 @@ End time: $(Get-Date)
                         Write-Verbose -Message 'Applying the required security measures for Windows Boot Manager'
                         Write-Progress -Id 0 -Activity 'Windows Boot Manager revocations for Secure Boot' -Status "Step $($RefCurrentMainStep.Value)/$TotalMainSteps" -PercentComplete ($RefCurrentMainStep.Value / $TotalMainSteps * 100)
 
-                        reg add HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Secureboot /v AvailableUpdates /t REG_DWORD /d 0x30 /f
+                        reg add HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Secureboot /v AvailableUpdates /t REG_DWORD /d 0x40 /f
 
                         Write-ColorfulText -Color MintGreen -InputText 'The required security measures have been applied to the system'
                         Write-Warning -Message 'Make sure to restart your device once. After restart, wait for at least 5-10 minutes and perform a 2nd restart to finish applying security measures completely.'

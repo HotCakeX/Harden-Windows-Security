@@ -300,7 +300,6 @@ If you do not specify any sub-categories using the switch parameters above, the 
 
 <br>
 
-- Windows Boot Manager Revocations
 - Microsoft Security Baselines
     - <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/rainbow-planet-heart.gif" alt="planet rainbow heart indicating item that runs in Windows Hardening module" width="30"> Yes, With the Optional Overrides (Recommended)
     - <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/orange-point.gif" alt="spinning random dots indicating the sub-category won't run in headless mode in Windows Hardening module" width="30"> Yes

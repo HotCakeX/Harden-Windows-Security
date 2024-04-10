@@ -2,13 +2,14 @@ Function Receive-CodeIntegrityLogs {
     <#
     .SYNOPSIS
         A resilient function that:
-        Retrieves the Code Integrity Operational logs
+        Retrieves the Code Integrity Operational logs and App Locker logs
         Fixes the paths to the files that are being logged
         Separates events based on their type: Audit or Blocked
         Separates events based on their file paths: existing or deleted
-        Finds correlated events with ID 3089 and adds them to the main event (IDs 3076 and 3077)
+        For Code Integrity logs: Finds correlated events with ID 3089 and adds them to the main event (IDs 3076 and 3077)
+        For App Locker logs: Finds correlated events with ID 8038 and adds them to the main event (IDs 8028 and 8029)
         Replaces many numbers in the logs with user-friendly strings
-        De-duplicates the logs
+        Performs precise de-duplication of the logs so that the output will always have unique logs
         Then processes the output based on different criteria
     .PARAMETER Date
         The date from which the logs should be collected. If not specified, all logs will be collected.
@@ -26,10 +27,10 @@ Function Receive-CodeIntegrityLogs {
         System.String
         System.String[]
     .OUTPUTS
-        PSCustomObject
+        System.Collections.Hashtable
     #>
     [CmdletBinding()]
-    [OutputType([PSCustomObject[]])]
+    [OutputType([System.Collections.Hashtable[]])]
     param(
         [AllowEmptyString()]
         [AllowNull()]
@@ -336,12 +337,17 @@ Function Receive-CodeIntegrityLogs {
                 $Log['SI Signing Scenario'] = $Log['SI Signing Scenario'] -eq '0' ? 'Kernel-Mode' : 'User-Mode'
 
                 # Translate the SID to a UserName
-                Try {
-                    [System.Security.Principal.SecurityIdentifier]$ObjSID = New-Object -TypeName System.Security.Principal.SecurityIdentifier($Log.UserId)
-                    $Log.UserId = [System.String]($ObjSID.Translate([System.Security.Principal.NTAccount])).Value
+                if ($null -ne $Log.UserId) {
+                    Try {
+                        [System.Security.Principal.SecurityIdentifier]$ObjSID = New-Object -TypeName System.Security.Principal.SecurityIdentifier($Log.UserId)
+                        $Log.UserId = [System.String]($ObjSID.Translate([System.Security.Principal.NTAccount])).Value
+                    }
+                    Catch {
+                        Write-Verbose -Message "Receive-CodeIntegrityLogs: Could not translate the SID $($Log.UserId) to a username for the Activity ID $($Log['ActivityId']) for the file $($Log['File Name'])"
+                    }
                 }
-                Catch {
-                    Write-Verbose -Message "Receive-CodeIntegrityLogs: Could not translate the SID $($Log.UserId) to a username."
+                else {
+                    Write-Verbose -Message "Receive-CodeIntegrityLogs: The UserId property is null for the Activity ID $($Log['ActivityId']) for the file $($Log['File Name'])"
                 }
 
                 # If there are correlated events, then process them

@@ -13,10 +13,10 @@ Function Optimize-MDECSVData {
         .INPUTS
             System.IO.FileInfo[]
         .OUTPUTS
-            PSCustomObject[]
+            System.Collections.Hashtable[]
         #>
     [CmdletBinding()]
-    [OutputType([PSCustomObject[]])]
+    [OutputType([System.Collections.Hashtable[]])]
     Param (
         [Parameter(Mandatory = $true)][System.IO.FileInfo[]]$CSVPaths,
         [Parameter(Mandatory = $true)][System.IO.DirectoryInfo]$StagingArea
@@ -40,8 +40,8 @@ Function Optimize-MDECSVData {
 
     Process {
 
-        # Create a new array to hold the updated objects from the original CSVs
-        [PSCustomObject[]]$NewCsvData = $CSVPaths | ForEach-Object -ThrottleLimit ($CPUEnabledCores ?? 5) -Parallel {
+        # Create a new HashTable array to hold the updated data from the original CSVs
+        [System.Collections.Hashtable[]]$NewCsvData = $CSVPaths | ForEach-Object -ThrottleLimit ($CPUEnabledCores ?? 5) -Parallel {
 
             # Read the initial MDE AH CSV export and save them into a variable
             [System.Object[]]$CsvData += Import-Csv -Path $_
@@ -49,26 +49,26 @@ Function Optimize-MDECSVData {
             # Add the nested properties in the "AdditionalFields" property to the parent record as first-level properties
             foreach ($Row in $CsvData) {
 
-                # Create a new object for the combined data
-                [PSCustomObject]$NewObject = New-Object -TypeName PSCustomObject
+                # Create a new HashTable for the combined data
+                [System.Collections.Hashtable]$CurrentRowHashTable = @{}
 
                 # For each row in the CSV data, create a new object to hold the updated properties, except for the "AdditionalFields" property
                 foreach ($Property in $Row.PSObject.Properties) {
                     if ($Property.Name -ne 'AdditionalFields') {
-                        $NewObject | Add-Member -NotePropertyName $Property.Name -NotePropertyValue $Property.Value
+                        $CurrentRowHashTable[$Property.Name] = $Property.Value
                     }
                 }
 
-                # Convert the AdditionalFields JSON string to a PowerShell object
-                [PSCustomObject]$JsonConverted = $Row.AdditionalFields | ConvertFrom-Json
+                # Convert the AdditionalFields JSON string to a HashTable
+                [System.Collections.Hashtable]$JsonConverted = $Row.AdditionalFields | ConvertFrom-Json -AsHashtable
 
-                # Add each property from the additional fields to the new object as main property
-                foreach ($Property in $JsonConverted.PSObject.Properties) {
-                    $NewObject | Add-Member -NotePropertyName $Property.Name -NotePropertyValue $Property.Value
+                # Add each Key/Value pairs from the additional fields HashTable to the CurrentRow HashTable
+                foreach ($Item in $JsonConverted.GetEnumerator()) {
+                    $CurrentRowHashTable[$Item.Name] = $Item.Value
                 }
 
-                # Send the new object to the pipeline to be saved in the new array
-                [PSCustomObject]$NewObject
+                # Send the new HashTable to the pipeline to be saved in the HashTable Array
+                [System.Collections.Hashtable]$CurrentRowHashTable
             }
         }
     }
@@ -79,16 +79,14 @@ Function Optimize-MDECSVData {
 
             Write-Verbose -Message 'Optimize-MDECSVData: Debug parameter was used, exporting the new array to a CSV file...'
 
-            # Initialize a list to keep track of all property names
-            [System.String[]]$PropertyNames = @()
+            # Initialize a HashSet to keep track of all property names (aka keys in the HashTable Array)
+            $PropertyNames = [System.Collections.Generic.HashSet[System.String]] @()
 
             # Loop through each object in the new updated CSV data to find and add any new property names to the list that are not already present
             # These are the property names from the AdditionalFields
-            foreach ($Obj in $NewCsvData) {
-                foreach ($Prop in $Obj.PSObject.Properties) {
-                    if ($Prop.Name -notin $PropertyNames) {
-                        $PropertyNames += $Prop.Name
-                    }
+            foreach ($Obj in $NewCsvData.Keys) {
+                if (-NOT $PropertyNames.Contains($Obj)) {
+                    $PropertyNames += $Obj
                 }
             }
 

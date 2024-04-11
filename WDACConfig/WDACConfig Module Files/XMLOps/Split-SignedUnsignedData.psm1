@@ -45,6 +45,8 @@ Function Split-SignedUnsignedData {
 
                     if ($PossibleSignerData.count -gt 1) {
                         Write-Verbose -Message "Multiple signers found for the same file: $($Data.FileName)"
+
+
                     }
 
                     # If there was a valid signer, replace it with the current pipeline object's signers (aka correlated data)

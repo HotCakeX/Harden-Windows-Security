@@ -32,7 +32,7 @@ Function Receive-CodeIntegrityLogs {
         System.Collections.Hashtable
     #>
     [CmdletBinding()]
-    [OutputType([System.Collections.Hashtable[]])]
+    [OutputType([System.Collections.Hashtable])]
     param(
         [AllowEmptyString()]
         [AllowNull()]

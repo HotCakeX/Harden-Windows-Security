@@ -82,7 +82,7 @@ Function Optimize-MDECSVData {
             # Initialize a HashSet to keep track of all property names (aka keys in the HashTable Array)
             $PropertyNames = [System.Collections.Generic.HashSet[System.String]] @()
 
-            # Loop through each object in the new updated CSV data to find and add any new property names to the list that are not already present
+            # Loop through each HashTable's keys in the new updated CSV data to find and add any new key names to the list that are not already present
             # These are the property names from the AdditionalFields
             foreach ($Obj in $NewCsvData.Keys) {
                 if (-NOT $PropertyNames.Contains($Obj)) {

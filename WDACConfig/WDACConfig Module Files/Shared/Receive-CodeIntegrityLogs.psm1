@@ -192,7 +192,7 @@ Function Receive-CodeIntegrityLogs {
             # Toggle the value for the next iteration
             [System.Boolean]$Toggle = -NOT $Toggle
 
-            # Select the target hashtable based on the toggle value where the logs will be added
+            # Select the target hashtable based on the toggle value where the logs will be added, since hashtables are being assigned, they are already referenced and [ref] is not needed
             [System.Collections.Hashtable]$TargetHashTable = $Toggle ? $EventPackageCollections1 : $EventPackageCollections2
 
             # Process Audit events

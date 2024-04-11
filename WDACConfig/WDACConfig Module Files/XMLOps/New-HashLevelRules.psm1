@@ -24,7 +24,7 @@ Function New-HashLevelRules {
     Begin {
         # Importing the $PSDefaultParameterValues to the current session, prior to everything else
         . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
-    
+
         Write-Verbose -Message "New-HashLevelRules: There are $($Hashes.Count) Hash rules to be added to the XML file"
 
         # Load the XML file

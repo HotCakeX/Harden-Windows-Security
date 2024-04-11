@@ -31,7 +31,7 @@ Function Remove-DuplicateFileAttrib_IDBased {
     Process {
         # Importing the $PSDefaultParameterValues to the current session, prior to everything else
         . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
-    
+
         # Get all FileAttrib elements
         [System.Xml.XmlNodeList]$FileAttribs = $Xml.SelectNodes('//sip:FileRules/sip:FileAttrib', $NsMgr)
 

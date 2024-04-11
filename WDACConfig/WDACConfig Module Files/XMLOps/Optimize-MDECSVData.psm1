@@ -4,10 +4,12 @@ Function Optimize-MDECSVData {
             Optimizes the MDE CSV data by adding the nested properties in the "AdditionalFields" property to the parent record as first-level properties
         .DESCRIPTION
             The function runs each CSV file in parallel for fast processing based on the number of CPU cores available
-        .PARAMETER CSVPath
+        .PARAMETER CSVPaths
             The path to the CSV file containing the Microsoft Defender for Endpoint Advanced Hunting data
         .PARAMETER Debug
             A switch parameter to enable debugging actions such as exporting the new array to a CSV file
+        .PARAMETER StagingArea
+            The path to the directory where the debug CSV file will be saved which are the outputs of this function
         .INPUTS
             System.IO.FileInfo[]
         .OUTPUTS

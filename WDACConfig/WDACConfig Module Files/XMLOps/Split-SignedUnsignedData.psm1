@@ -91,9 +91,9 @@ Function Split-SignedUnsignedData {
 
             Write-Verbose -Message 'Split-SignedUnsignedData: Debug parameter was used, exporting the Signed and Unsigned data to separate CSV files...'
 
-            $SignedData | Export-Csv -Path (Join-Path -Path $StagingArea -ChildPath 'SignedData.csv') -Force            
+            $SignedData | Export-Csv -Path (Join-Path -Path $StagingArea -ChildPath 'SignedData.csv') -Force
             $UnsignedData | Export-Csv -Path (Join-Path -Path $StagingArea -ChildPath 'UnsignedData.csv') -Force
-            
+
         }
 
         Return [PSCustomObject]@{

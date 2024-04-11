@@ -24,7 +24,9 @@ function Remove-DuplicateFileAttrib_Semantic {
     )
 
     Begin {
-
+        # Importing the $PSDefaultParameterValues to the current session, prior to everything else
+        . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
+    
         # Load the XML file
         [System.Xml.XmlDocument]$XmlDoc = New-Object -TypeName System.Xml.XmlDocument
         $XmlDoc.Load($XmlFilePath)
@@ -161,3 +163,4 @@ function Remove-DuplicateFileAttrib_Semantic {
         $XmlDoc.Save($XmlFilePath)
     }
 }
+Export-ModuleMember -Function 'Remove-DuplicateFileAttrib_Semantic'

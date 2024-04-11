@@ -16,7 +16,9 @@ Function Remove-DuplicateAllowedSignersAndCiSigners_IDBased {
     )
 
     Begin {
-
+        # Importing the $PSDefaultParameterValues to the current session, prior to everything else
+        . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
+    
         # Load the XML file
         [System.Xml.XmlDocument]$Xml = Get-Content -Path $Path
 
@@ -64,3 +66,4 @@ Function Remove-DuplicateAllowedSignersAndCiSigners_IDBased {
         $Xml.Save($Path)
     }
 }
+Export-ModuleMember -Function 'Remove-DuplicateAllowedSignersAndCiSigners_IDBased'

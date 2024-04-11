@@ -26,6 +26,9 @@ Function Merge-Signers_Semantic {
     )
 
     Begin {
+        # Importing the $PSDefaultParameterValues to the current session, prior to everything else
+        . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
+    
         # Load the XML file
         [System.Xml.XmlDocument]$Xml = Get-Content -Path $XmlFilePath
     }
@@ -409,3 +412,4 @@ Function Merge-Signers_Semantic {
         $Xml.Save($XmlFilePath)
     }
 }
+Export-ModuleMember -Function 'Merge-Signers_Semantic'

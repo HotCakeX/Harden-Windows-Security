@@ -21,6 +21,9 @@ function Remove-AllowElements_Semantic {
     )
 
     Begin {
+        # Importing the $PSDefaultParameterValues to the current session, prior to everything else
+        . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
+    
         # Load the XML file
         [System.Xml.XmlDocument]$Xml = Get-Content -Path $Path
 
@@ -140,3 +143,4 @@ function Remove-AllowElements_Semantic {
         $Xml.Save($Path)
     }
 }
+Export-ModuleMember -Function 'Remove-AllowElements_Semantic'

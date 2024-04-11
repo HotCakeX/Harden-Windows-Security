@@ -21,6 +21,8 @@ Function New-FilePublisherLevelRules {
     )
 
     Begin {
+        # Importing the $PSDefaultParameterValues to the current session, prior to everything else
+        . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
 
         Write-Verbose -Message "New-FilePublisherLevelRules: There are $($FilePublisherSigners.Count) File Publisher Signers to be added to the XML file"
 
@@ -177,3 +179,4 @@ Function New-FilePublisherLevelRules {
         $Xml.Save($XmlFilePath)
     }
 }
+Export-ModuleMember -Function 'New-FilePublisherLevelRules'

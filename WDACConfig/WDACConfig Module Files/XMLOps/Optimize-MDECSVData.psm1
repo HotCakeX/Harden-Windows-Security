@@ -16,10 +16,14 @@ Function Optimize-MDECSVData {
     [CmdletBinding()]
     [OutputType([PSCustomObject[]])]
     Param (
-        [Parameter(Mandatory = $true)][System.IO.FileInfo[]]$CSVPaths
+        [Parameter(Mandatory = $true)][System.IO.FileInfo[]]$CSVPaths,
+        [Parameter(Mandatory = $true)][System.IO.DirectoryInfo]$StagingArea
     )
 
     Begin {
+        # Importing the $PSDefaultParameterValues to the current session, prior to everything else
+        . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
+    
         # Detecting if Debug switch is used
         $PSBoundParameters.Debug.IsPresent ? ([System.Boolean]$Debug = $true) : ([System.Boolean]$Debug = $false) | Out-Null
 
@@ -88,9 +92,10 @@ Function Optimize-MDECSVData {
 
             # Export the new array to a CSV file containing all of the original properties and the new properties from the AdditionalFields
             # guarantees that no property gets lost during CSV export
-            $NewCsvData | Select-Object -Property $PropertyNames | Export-Csv -Path 'C:\Users\HotCakeX\Downloads\Pass1.csv'
+            $NewCsvData | Select-Object -Property $PropertyNames | Export-Csv -Path (Join-Path -Path $StagingArea -ChildPath 'Pass1.csv') -Force
         }
 
         Return $NewCsvData
     }
 }
+Export-ModuleMember -Function 'Optimize-MDECSVData'

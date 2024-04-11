@@ -17,6 +17,9 @@ Function Remove-OrphanAllowedSignersAndCiSigners_IDBased {
     )
 
     Begin {
+        # Importing the $PSDefaultParameterValues to the current session, prior to everything else
+        . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
+    
         # Load the XML file
         [System.Xml.XmlDocument]$Xml = Get-Content -Path $Path
 
@@ -68,3 +71,4 @@ Function Remove-OrphanAllowedSignersAndCiSigners_IDBased {
         $Xml.Save($Path)
     }
 }
+Export-ModuleMember -Function 'Remove-OrphanAllowedSignersAndCiSigners_IDBased'

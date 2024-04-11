@@ -19,6 +19,9 @@ Function Compare-CorrelatedData {
     )
 
     Begin {
+        # Importing the $PSDefaultParameterValues to the current session, prior to everything else
+        . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
+    
         # Detecting if Debug switch is used
         $PSBoundParameters.Debug.IsPresent ? ([System.Boolean]$Debug = $true) : ([System.Boolean]$Debug = $false) | Out-Null
 
@@ -126,3 +129,4 @@ Function Compare-CorrelatedData {
         Return $EventPackageCollections
     }
 }
+Export-ModuleMember -Function 'Compare-CorrelatedData'

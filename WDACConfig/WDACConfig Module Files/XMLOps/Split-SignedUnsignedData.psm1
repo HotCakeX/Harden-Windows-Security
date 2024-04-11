@@ -2,7 +2,7 @@ Function Split-SignedUnsignedData {
     <#
     .SYNOPSIS
         Splits the correlated event data into signed and unsigned data by identifying which data can be used to create Signer objects and which data cannot
-        Deduplicates the unsigned data based on SHA256 Authenticode hash
+        De-duplicates the unsigned data based on SHA256 Authenticode hash
         Determines which data in the MDE CSV logs are signed and which are unsigned
     .PARAMETER EventPackageCollections
         The correlated event data to be processed, they should be the output of the Compare-CorrelatedData function
@@ -18,6 +18,9 @@ Function Split-SignedUnsignedData {
     )
 
     Begin {
+        # Importing the $PSDefaultParameterValues to the current session, prior to everything else
+        . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
+    
         # Detecting if Debug switch is used
         $PSBoundParameters.Debug.IsPresent ? ([System.Boolean]$Debug = $true) : ([System.Boolean]$Debug = $false) | Out-Null
 
@@ -97,3 +100,4 @@ Function Split-SignedUnsignedData {
         }
     }
 }
+Export-ModuleMember -Function 'Split-SignedUnsignedData'

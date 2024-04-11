@@ -34,6 +34,8 @@ Function Build-SignerAndHashObjects {
         [Parameter(Mandatory = $false)][PSCustomObject[]]$UnsignedData
     )
     Begin {
+        # Importing the $PSDefaultParameterValues to the current session, prior to everything else
+        . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
 
         Class CertificateDetailsCreator {
             [System.String]$IntermediateCertTBS
@@ -205,3 +207,4 @@ Function Build-SignerAndHashObjects {
         }
     }
 }
+Export-ModuleMember -Function 'Build-SignerAndHashObjects'

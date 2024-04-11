@@ -19,6 +19,9 @@ Function Remove-DuplicateAllowAndFileRuleRefElements_IDBased {
     )
 
     Begin {
+        # Importing the $PSDefaultParameterValues to the current session, prior to everything else
+        . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
+    
         # Load the XML document from the specified file path
         [System.Xml.XmlDocument]$XmlDocument = Get-Content -Path $XmlFilePath
 
@@ -84,3 +87,4 @@ Function Remove-DuplicateAllowAndFileRuleRefElements_IDBased {
         $XmlDocument.Save($XmlFilePath)
     }
 }
+Export-ModuleMember -Function 'Remove-DuplicateAllowAndFileRuleRefElements_IDBased'

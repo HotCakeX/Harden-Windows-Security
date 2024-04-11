@@ -15,7 +15,8 @@ Function Compare-CorrelatedData {
     [CmdletBinding()]
     [OutputType([PSCustomObject[]])]
     Param (
-        [Parameter(Mandatory = $true)][PSCustomObject[]]$OptimizedCSVData
+        [Parameter(Mandatory = $true)][PSCustomObject[]]$OptimizedCSVData,
+        [Parameter(Mandatory = $true)][System.IO.DirectoryInfo]$StagingArea
     )
 
     Begin {
@@ -123,7 +124,7 @@ Function Compare-CorrelatedData {
             }
 
             # Max detail - included correlated data
-            $EventPackageCollections | Select-Object -Property $PropertyNames | Export-Csv -Path 'C:\Users\HotCakeX\Downloads\Pass2.csv'
+            $EventPackageCollections | Select-Object -Property $PropertyNames | Export-Csv -Path (Join-Path -Path $StagingArea -ChildPath 'Pass2.csv') -Force
         }
 
         Return $EventPackageCollections

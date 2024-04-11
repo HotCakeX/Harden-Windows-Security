@@ -23,6 +23,8 @@ Function Receive-CodeIntegrityLogs {
         Separate: Returns the file paths of files that exist on the disk and the hash details of files that do not exist on the disk, separately in a nested object
     .PARAMETER PolicyNames
         The names of the policies to filter the logs by
+    .PARAMETER Category
+        The category of logs to be collected. Code Integrity, AppLocker, or All. The default value is 'All'
     .INPUTS
         System.String
         System.String[]
@@ -48,7 +50,10 @@ Function Receive-CodeIntegrityLogs {
         [AllowEmptyString()]
         [AllowNull()]
         [parameter(mandatory = $false)]
-        [System.String[]]$PolicyNames
+        [System.String[]]$PolicyNames,
+
+        [ValidateSet('CodeIntegrity', 'AppLocker', 'All')]
+        [Parameter(mandatory = $false)][System.String]$Category = 'All'
     )
 
     Begin {
@@ -154,30 +159,40 @@ Function Receive-CodeIntegrityLogs {
         }
         #Endregion Global Root Drive Fix
 
-        Try {
-            Write-Verbose -Message 'Receive-CodeIntegrityLogs: Collecting the Code Integrity Operational logs'
-            [System.Diagnostics.Eventing.Reader.EventLogRecord[]]$CiRawEventLogs = Get-WinEvent -FilterHashtable @{LogName = 'Microsoft-Windows-CodeIntegrity/Operational' }
+        if (($Category -eq 'All') -or ($Category -eq 'CodeIntegrity')) {
+            Try {
+                Write-Verbose -Message 'Receive-CodeIntegrityLogs: Collecting the Code Integrity Operational logs'
+                [System.Diagnostics.Eventing.Reader.EventLogRecord[]]$CiRawEventLogs = Get-WinEvent -FilterHashtable @{LogName = 'Microsoft-Windows-CodeIntegrity/Operational' }
+            }
+            catch {
+                Throw "Receive-CodeIntegrityLogs: Could not collect the Code Integrity Operational logs, the number of logs collected is $($CiRawEventLogs.Count)"
+            }
+
+            [Microsoft.PowerShell.Commands.GroupInfo[]]$CiGroupedEvents = $CiRawEventLogs | Group-Object -Property ActivityId
+            Write-Verbose -Message "Receive-CodeIntegrityLogs: Grouped the logs by ActivityId. The total number of groups is $($CiGroupedEvents.Count) and the total number of logs in the groups is $($CiGroupedEvents.Group.Count)"
         }
-        catch {
-            Throw "Receive-CodeIntegrityLogs: Could not collect the Code Integrity Operational logs, the number of logs collected is $($CiRawEventLogs.Count)"
+        else {
+            Write-Verbose -Message 'Receive-CodeIntegrityLogs: Skipping the collection of the Code Integrity logs'
         }
 
-        Try {
-            Write-Verbose -Message 'Receive-CodeIntegrityLogs: Collecting the AppLocker logs'
-            [System.Diagnostics.Eventing.Reader.EventLogRecord[]]$AppLockerRawEventLogs = Get-WinEvent -FilterHashtable @{LogName = 'Microsoft-Windows-AppLocker/MSI and Script' }
+        if (($Category -eq 'All') -or ($Category -eq 'AppLocker')) {
+            Try {
+                Write-Verbose -Message 'Receive-CodeIntegrityLogs: Collecting the AppLocker logs'
+                [System.Diagnostics.Eventing.Reader.EventLogRecord[]]$AppLockerRawEventLogs = Get-WinEvent -FilterHashtable @{LogName = 'Microsoft-Windows-AppLocker/MSI and Script' }
+            }
+            catch {
+                Throw "Receive-CodeIntegrityLogs: Could not collect the AppLocker logs, the number of logs collected is $($AppLockerRawEventLogs.Count)"
+            }
+
+            [Microsoft.PowerShell.Commands.GroupInfo[]]$AppLockerGroupedEvents = $AppLockerRawEventLogs | Group-Object -Property ActivityId
+            Write-Verbose -Message "Receive-CodeIntegrityLogs: Grouped the AppLocker logs by ActivityId. The total number of groups is $($AppLockerGroupedEvents.Count) and the total number of logs in the groups is $($AppLockerGroupedEvents.Group.Count)"
         }
-        catch {
-            Throw "Receive-CodeIntegrityLogs: Could not collect the AppLocker logs, the number of logs collected is $($AppLockerRawEventLogs.Count)"
+        else {
+            Write-Verbose -Message 'Receive-CodeIntegrityLogs: Skipping the collection of the AppLocker logs'
         }
 
-        [Microsoft.PowerShell.Commands.GroupInfo[]]$CiGroupedEvents = $CiRawEventLogs | Group-Object -Property ActivityId
-        Write-Verbose -Message "Receive-CodeIntegrityLogs: Grouped the logs by ActivityId. The total number of groups is $($CiGroupedEvents.Count) and the total number of logs in the groups is $($CiGroupedEvents.Group.Count)"
-
-        [Microsoft.PowerShell.Commands.GroupInfo[]]$AppLockerGroupedEvents = $AppLockerRawEventLogs | Group-Object -Property ActivityId
-        Write-Verbose -Message "Receive-CodeIntegrityLogs: Grouped the AppLocker logs by ActivityId. The total number of groups is $($AppLockerGroupedEvents.Count) and the total number of logs in the groups is $($AppLockerGroupedEvents.Group.Count)"
-
-        # Add Code Integrity and AppLocker logs to a single array
-        [Microsoft.PowerShell.Commands.GroupInfo[]]$AccumulatedGroupedEvents = $CiGroupedEvents + $AppLockerGroupedEvents
+        # Add Code Integrity and AppLocker logs to a single array based on the selected category
+        $AccumulatedGroupedEvents = ($Category -eq 'All') ? ($CiGroupedEvents + $AppLockerGroupedEvents) : (($Category -eq 'CodeIntegrity') ? $CiGroupedEvents : $AppLockerGroupedEvents)
 
         # Initialize two separate hashtables - going to split the logs into two hashtables to process them in parallel
         [System.Collections.Hashtable]$EventPackageCollections1 = @{}

@@ -6,6 +6,8 @@ Function Split-SignedUnsignedData {
         Determines which data in the MDE CSV logs are signed and which are unsigned
     .PARAMETER EventPackageCollections
         The correlated event data to be processed, they should be the output of the Compare-CorrelatedData function
+    .PARAMETER StagingArea
+        The path to the directory where the debug CSV file will be saved which are the outputs of this function
     .INPUTS
         PSCustomObject[]
     .OUTPUTS

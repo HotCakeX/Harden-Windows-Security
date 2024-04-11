@@ -5,6 +5,8 @@ Function Compare-CorrelatedData {
         Ensures that each Audit or Blocked event has its correlated AppControlCodeIntegritySigningInformation events grouped together as nested properties
     .PARAMETER OptimizedCSVData
         The CSV data to be processed, they should be the output of the Optimize-MDECSVData function
+    .PARAMETER StagingArea
+        The path to the directory where the debug CSV file will be saved which are the outputs of this function
     .PARAMETER Debug
         A switch parameter to enable debugging actions such as exporting the correlated event data to a CSV file
     .INPUTS

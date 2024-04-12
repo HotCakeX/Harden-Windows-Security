@@ -1,7 +1,7 @@
 Function Build-SignerAndHashObjects {
     <#
     .SYNOPSIS
-        Creates Signer and Hash objects from the signed and unsigned data
+        Creates Signer and Hash objects from the input data
         2 types of Signers are created: FilePublisher and Publisher signers
 
         FilePublisher Signers are created for files that have the necessary details for a FilePublisher rule
@@ -19,9 +19,8 @@ Function Build-SignerAndHashObjects {
         The other way around, where Publisher TBS hash is missing but Issuer TBS is present, would create a PCACertificate level Signer, but that is not implemented yet.
         Its use case is not clear yet and there haven't been any files with that condition yet.
     .PARAMETER SignedData
-        The signed data to be processed
-    .PARAMETER UnsignedData
-        The unsigned data to be processed
+        The Data to be processed. These are the logs selected by the user and contain both signed and unsigned data.
+        They will be separated into 2 arrays.
     .INPUTS
         PSCustomObject[]
     .OUTPUTS
@@ -30,8 +29,7 @@ Function Build-SignerAndHashObjects {
     [CmdletBinding()]
     [OutputType([PSCustomObject])]
     param (
-        [Parameter(Mandatory = $false)][PSCustomObject[]]$SignedData,
-        [Parameter(Mandatory = $false)][PSCustomObject[]]$UnsignedData
+        [Parameter(Mandatory = $true)][PSCustomObject[]]$Data
     )
     Begin {
         # Importing the $PSDefaultParameterValues to the current session, prior to everything else
@@ -82,6 +80,19 @@ Function Build-SignerAndHashObjects {
         # An array to store the FileAttributes created using Hash Level
         [HashCreator[]]$CompleteHashes = @()
 
+        # Defining the arrays to store the signed and unsigned data
+        [PSCustomObject[]]$SignedData = @()
+        [PSCustomObject[]]$UnsignedData = @()
+
+        # Loop through the data and separate the signed and unsigned data
+        foreach ($Item in $Data) {
+            if ($Item.SignatureStatus -eq 'Signed') {
+                $SignedData += $Item
+            }
+            else {
+                $UnsignedData += $Item
+            }
+        }
     }
 
     Process {
@@ -198,7 +209,6 @@ Function Build-SignerAndHashObjects {
 
     }
     End {
-
         # Return the created objects as nested properties of a single object
         Return [PSCustomObject]@{
             FilePublisherSigners = $FilePublisherSigners

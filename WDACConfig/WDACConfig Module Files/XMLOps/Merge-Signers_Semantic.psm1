@@ -82,7 +82,6 @@ Function Merge-Signers_Semantic {
         # Iterate over each Signer node
         foreach ($Signer in $SignerNodes) {
 
-
             # If the signer has FileAttribRefs, it is a FilePublisher signer
             if ($Signer.SelectNodes('ns:FileAttribRef', $Ns).Count -gt 0) {
 
@@ -312,16 +311,28 @@ Function Merge-Signers_Semantic {
 
         # Clear the existing Signers node from any type of Signer
         [System.Xml.XmlElement]$SignersNode = $Xml.SelectSingleNode('//ns:Signers', $Ns)
-        $SignersNode.RemoveAll()
+
+        if ($null -ne $SignersNode) {
+            $SignersNode.RemoveAll()
+        }
 
         # Clear the existing AllowedSigners and CiSigners nodes from any type of Signer
         [System.Xml.XmlElement]$AllowedSigners12ToClear = $Xml.SelectSingleNode('//ns:SigningScenarios/ns:SigningScenario[@Value="12"]/ns:ProductSigners/ns:AllowedSigners', $Ns)
         [System.Xml.XmlElement]$AllowedSigners131ToClear = $Xml.SelectSingleNode('//ns:SigningScenarios/ns:SigningScenario[@Value="131"]/ns:ProductSigners/ns:AllowedSigners', $Ns)
         [System.Xml.XmlElement]$CiSignersToClear = $Xml.SelectSingleNode('//ns:CiSigners', $Ns)
 
-        $AllowedSigners12ToClear.RemoveAll()
-        $AllowedSigners131ToClear.RemoveAll()
-        $CiSignersToClear.RemoveAll()
+        # Making sure the nodes are not null meaning they are not empty, before attempting to remove all of their elements
+        if ($null -ne $AllowedSigners12ToClear) {
+            $AllowedSigners12ToClear.RemoveAll()
+        }
+
+        if ($null -ne $AllowedSigners131ToClear) {
+            $AllowedSigners131ToClear.RemoveAll()
+        }
+
+        if ($null -ne $CiSignersToClear) {
+            $CiSignersToClear.RemoveAll()
+        }
 
         # Repopulate the Signers, AllowedSigners and CiSigners nodes with the unique values
 

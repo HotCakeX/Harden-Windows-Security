@@ -77,6 +77,11 @@ Function Compare-CorrelatedData {
                 # Looping over the signer infos and adding the unique publisher/issuer pairs to the correlated events data
                 foreach ($SignerInfo in ($GroupData | Where-Object -FilterScript { $_.ActionType -eq 'AppControlCodeIntegritySigningInformation' })) {
 
+                    # If the PublisherTBSHash or IssuerTBSHash is null, skip this iteration, usually in these situations the Issuer name and Publisher names are set to 'unknown'
+                    if (($null -eq $SignerInfo.PublisherTBSHash) -or ($null -eq $SignerInfo.IssuerTBSHash)) {
+                        Continue
+                    }
+
                     [System.String]$UniqueAuditSignerKey = $SignerInfo.PublisherTBSHash + '|' +
                     $SignerInfo.PublisherName + '|' +
                     $SignerInfo.IssuerName + '|' +
@@ -137,6 +142,11 @@ Function Compare-CorrelatedData {
 
                 # Looping over the signer infos and adding the unique publisher/issuer pairs to the correlated events data
                 foreach ($SignerInfo in ($GroupData | Where-Object -FilterScript { $_.ActionType -eq 'AppControlCodeIntegritySigningInformation' })) {
+
+                    # If the PublisherTBSHash or IssuerTBSHash is null, skip this iteration, usually in these situations the Issuer name and Publisher names are set to 'unknown'
+                    if (($null -eq $SignerInfo.PublisherTBSHash) -or ($null -eq $SignerInfo.IssuerTBSHash)) {
+                        Continue
+                    }
 
                     [System.String]$UniqueBlockedSignerKey = $SignerInfo.PublisherTBSHash + '|' +
                     $SignerInfo.PublisherName + '|' +

@@ -57,7 +57,6 @@ $PSDefaultParameterValues = @{
     'Remove-DuplicateFileAttribRef_IDBased:Verbose'               = $Verbose
     'Remove-OrphanAllowedSignersAndCiSigners_IDBased:Verbose'     = $Verbose
     'Remove-UnreferencedFileRuleRefs:Verbose'                     = $Verbose
-    'Split-SignedUnsignedData:Verbose'                            = $Verbose
 
     'Build-SignerAndHashObjects:Debug'                            = $Debug
     'Clear-CiPolicy_Semantic:Debug'                               = $Debug
@@ -76,7 +75,6 @@ $PSDefaultParameterValues = @{
     'Remove-DuplicateFileAttribRef_IDBased:Debug'                 = $Debug
     'Remove-OrphanAllowedSignersAndCiSigners_IDBased:Debug'       = $Debug
     'Remove-UnreferencedFileRuleRefs:Debug'                       = $Debug
-    'Split-SignedUnsignedData:Debug'                              = $Debug
 }
 
 # SIG # Begin signature block

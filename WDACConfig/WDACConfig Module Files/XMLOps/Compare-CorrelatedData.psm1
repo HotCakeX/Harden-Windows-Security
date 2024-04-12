@@ -2,22 +2,22 @@ Function Compare-CorrelatedData {
     <#
     .SYNOPSIS
         Finds the correlated events in the new CSV data and groups them together based on the EtwActivityId
-        Ensures that each Audit or Blocked event has its correlated AppControlCodeIntegritySigningInformation events grouped together as nested properties
+        Ensures that each Audit or Blocked event has its correlated Signing information events grouped together as nested HashTables
     .PARAMETER OptimizedCSVData
         The CSV data to be processed, they should be the output of the Optimize-MDECSVData function
     .PARAMETER StagingArea
         The path to the directory where the debug CSV file will be saved which are the outputs of this function
     .PARAMETER Debug
-        A switch parameter to enable debugging actions such as exporting the correlated event data to a CSV file
+        A switch parameter to enable debugging actions such as exporting the correlated event data to a JSON file
     .INPUTS
-        PSCustomObject[]
+        System.Collections.Hashtable[]
     .OUTPUTS
-        PSCustomObject[]
+        System.Collections.Hashtable[]
         #>
     [CmdletBinding()]
-    [OutputType([PSCustomObject[]])]
+    [OutputType([System.Collections.Hashtable[]])]
     Param (
-        [Parameter(Mandatory = $true)][PSCustomObject[]]$OptimizedCSVData,
+        [Parameter(Mandatory = $true)][System.Collections.Hashtable[]]$OptimizedCSVData,
         [Parameter(Mandatory = $true)][System.IO.DirectoryInfo]$StagingArea
     )
 
@@ -34,7 +34,7 @@ Function Compare-CorrelatedData {
         Write-Verbose -Message "Compare-CorrelatedData: Total number of groups: $($GroupedEvents.Count)"
 
         # Create a collection to store the packages of logs to return at the end
-        [PSCustomObject[]]$EventPackageCollections = @()
+        [System.Collections.Hashtable[]]$EventPackageCollections = $null
     }
 
     Process {
@@ -42,66 +42,95 @@ Function Compare-CorrelatedData {
         # Loop over each group of logs
         Foreach ($RawLogGroup in $GroupedEvents) {
 
-            # Create a new array to store the group data
-            [PSCustomObject[]]$GroupData = $RawLogGroup.Group
+            # Store the group data in a HashTable array
+            [System.Collections.Hashtable[]]$GroupData = $RawLogGroup.Group
 
-            # Process Audit events
+            # Process Audit events for Code Integrity and AppLocker
             if (($GroupData.ActionType -contains 'AppControlCodeIntegrityPolicyAudited') -or ($GroupData.ActionType -contains 'AppControlCIScriptAudited')) {
 
-                # Finding the main Audit event in the group
-                # De-duplicating based on multiple properties
-                [PSCustomObject]$AuditTemp = $GroupData |
-                Where-Object -FilterScript { $_.ActionType -in ('AppControlCodeIntegrityPolicyAudited', 'AppControlCIScriptAudited') } |
-                Group-Object -Property FileName, SHA256, SHA1 | ForEach-Object { $_.Group | Select-Object -First 1 }
-
-                # Adding this warning message but later logic will be added to handle the situation
-                # For now there is no case where this warning will be triggered
-                if ($AuditTemp.count -gt 1) {
-                    Write-Warning -Message "Multiple main audit events with different attributes were found for the same file: $($AuditTemp.FileName), It cannot be processed"
-                }
-
-                # Create a temporary object for storing the main event along with the correlated events as nested properties
-                $TempAuditObject = [PSCustomObject]@{
-                    CorrelatedEventsData = $GroupData | Where-Object -FilterScript { $_.ActionType -eq 'AppControlCodeIntegritySigningInformation' }
+                # Create a temporary HashTable to store the main event, its correlated events and its type
+                [System.Collections.Hashtable]$TempAuditHashTable = @{
+                    MainEventData        = @{}
+                    CorrelatedEventsData = @{}
                     Type                 = 'Audit'
+                    SignatureStatus      = ''
                 }
 
-                # Iterate through each property of the main audit event and add its properties to the temporary object
-                foreach ($Property in $AuditTemp.PSObject.Properties) {
-                    $TempAuditObject | Add-Member -NotePropertyName $Property.Name -NotePropertyValue $Property.Value
+                # Finding the main Audit event in the group
+                # Only selecting the first event because when multiple Audit policies of the same type are deployed on the system, they same event is generated for each of them
+                [System.Collections.Hashtable]$AuditTemp = $GroupData |
+                Where-Object -FilterScript { $_['ActionType'] -in ('AppControlCodeIntegrityPolicyAudited', 'AppControlCIScriptAudited') } | Select-Object -First 1
+
+                # Generating a unique key for the hashtable based on file's properties
+                [System.String]$UniqueAuditMainEventDataKey = $AuditTemp.FileName + '|' + $AuditTemp.SHA256 + '|' + $AuditTemp.SHA1 + '|' + $AuditTemp.FileVersion
+
+                # Adding the main event to the temporary HashTable
+                if (-NOT $TempAuditHashTable['MainEventData'].Contains($UniqueAuditMainEventDataKey)) {
+                    $TempAuditHashTable['MainEventData'][$UniqueAuditMainEventDataKey] = $AuditTemp
                 }
 
-                # Add the main event along with the correlated events to the collection
-                $EventPackageCollections += $TempAuditObject
+                # Looping over the signer infos and adding the unique publisher/issuer pairs to the correlated events data
+                foreach ($SignerInfo in ($GroupData | Where-Object -FilterScript { $_.ActionType -eq 'AppControlCodeIntegritySigningInformation' })) {
+
+                    [System.String]$UniqueAuditSignerKey = $SignerInfo.PublisherTBSHash + '|' +
+                    $SignerInfo.PublisherName + '|' +
+                    $SignerInfo.IssuerName + '|' +
+                    $SignerInfo.IssuerTBSHash
+
+                    if (-NOT $TempAuditHashTable['CorrelatedEventsData'].Contains($UniqueAuditSignerKey)) {
+                        $TempAuditHashTable['CorrelatedEventsData'][$UniqueAuditSignerKey] = $SignerInfo
+                    }
+                }
+
+                # Determining whether this log package is signed or unsigned
+                $TempAuditHashTable['SignatureStatus'] = $TempAuditHashTable.CorrelatedEventsData.Count -eq 0 ? 'Unsigned' : 'Signed'
+
+                # Add the temporary HashTable to the main HashTable Array
+                $EventPackageCollections += $TempAuditHashTable
             }
 
-            # Process Blocked events
+            # Process Blocked events for Code Integrity and AppLocker
             if (($GroupData.ActionType -contains 'AppControlCodeIntegrityPolicyBlocked') -or ($GroupData.ActionType -contains 'AppControlCIScriptBlocked')) {
 
-                # Finding the main block event in the group
-                [PSCustomObject]$BlockedTemp = $GroupData
-                | Where-Object -FilterScript { $_.ActionType -in ('AppControlCodeIntegrityPolicyBlocked', 'AppControlCIScriptBlocked') } |
-                Group-Object -Property FileName, SHA256, SHA1 | ForEach-Object { $_.Group | Select-Object -First 1 }
-
-                # Adding this warning message but later logic will be added to handle the situation
-                # For now there is no case where this warning will be triggered
-                if ($BlockedTemp.count -gt 1) {
-                    Write-Warning -Message "Multiple main blocked events with different attributes were found for the same file: $($BlockedTemp.FileName), It cannot be processed"
-                }
-
-                # Create a temporary object for storing the main block event along with the correlated events as nested properties
-                $TempBlockObject = [PSCustomObject]@{
-                    CorrelatedEventsData = $GroupData | Where-Object -FilterScript { $_.ActionType -eq '' }
+                # Create a temporary HashTable to store the main event, its correlated events and its type
+                [System.Collections.Hashtable]$TempBlockedHashTable = @{
+                    MainEventData        = @{}
+                    CorrelatedEventsData = @{}
                     Type                 = 'Blocked'
+                    SignatureStatus      = ''
                 }
 
-                # Iterate through each property of the main block event and add its properties to the temporary object
-                foreach ($Property in $BlockedTemp.PSObject.Properties) {
-                    $TempBlockObject | Add-Member -NotePropertyName $Property.Name -NotePropertyValue $Property.Value
+                # Finding the main block event in the group
+                # Only selecting the first event because when multiple enforced policies of the same type are deployed on the system, they same event might be generated for each of them
+                [System.Collections.Hashtable]$BlockedTemp = $GroupData |
+                Where-Object -FilterScript { $_['ActionType'] -in ('AppControlCodeIntegrityPolicyBlocked', 'AppControlCIScriptBlocked') } | Select-Object -First 1
+
+                # Generating a unique key for the hashtable based on file's properties
+                [System.String]$UniqueBlockedMainEventDataKey = $BlockedTemp.FileName + '|' + $BlockedTemp.SHA256 + '|' + $BlockedTemp.SHA1 + '|' + $BlockedTemp.FileVersion
+
+                # Adding the main event to the temporary HashTable
+                if (-NOT $TempBlockedHashTable['MainEventData'].Contains($UniqueBlockedMainEventDataKey)) {
+                    $TempBlockedHashTable['MainEventData'][$UniqueBlockedMainEventDataKey] = $BlockedTemp
                 }
 
-                # Add the main event along with the correlated events to the collection
-                $EventPackageCollections += $TempBlockObject
+                # Looping over the signer infos and adding the unique publisher/issuer pairs to the correlated events data
+                foreach ($SignerInfo in ($GroupData | Where-Object -FilterScript { $_.ActionType -eq 'AppControlCodeIntegritySigningInformation' })) {
+
+                    [System.String]$UniqueBlockedSignerKey = $SignerInfo.PublisherTBSHash + '|' +
+                    $SignerInfo.PublisherName + '|' +
+                    $SignerInfo.IssuerName + '|' +
+                    $SignerInfo.IssuerTBSHash
+
+                    if (-NOT $TempBlockedHashTable['CorrelatedEventsData'].Contains($UniqueBlockedSignerKey)) {
+                        $TempBlockedHashTable['CorrelatedEventsData'][$UniqueBlockedSignerKey] = $SignerInfo
+                    }
+                }
+
+                # Determining whether this log package is signed or unsigned
+                $TempBlockedHashTable['SignatureStatus'] = $TempBlockedHashTable.CorrelatedEventsData.Count -eq 0 ? 'Unsigned' : 'Signed'
+
+                # Add the temporary HashTable to the main HashTable Array
+                $EventPackageCollections += $TempBlockedHashTable
             }
         }
     }
@@ -109,24 +138,10 @@ Function Compare-CorrelatedData {
     End {
 
         if ($Debug) {
+            Write-Verbose -Message 'Compare-CorrelatedData: Debug parameter was used, exporting data to Json...'
 
-            Write-Verbose -Message 'Compare-CorrelatedData: Debug parameter was used, exporting the new array to a CSV file...'
-
-            # Initialize a list to keep track of all property names
-            [System.String[]]$PropertyNames = @()
-
-            # Loop through each object in the new updated CSV data to find and add any new property names to the list that are not already present
-            # These are the property names from the AdditionalFields
-            foreach ($Obj in $EventPackageCollections) {
-                foreach ($Prop in $Obj.PSObject.Properties) {
-                    if ($Prop.Name -notin $PropertyNames) {
-                        $PropertyNames += $Prop.Name
-                    }
-                }
-            }
-
-            # Max detail - included correlated data
-            $EventPackageCollections | Select-Object -Property $PropertyNames | Export-Csv -Path (Join-Path -Path $StagingArea -ChildPath 'Pass2.csv') -Force
+            # Max detail
+            $EventPackageCollections | ConvertTo-Json -Depth 100 | Set-Content -Path (Join-Path -Path $StagingArea -ChildPath 'Pass2.Json') -Force
         }
 
         Return $EventPackageCollections

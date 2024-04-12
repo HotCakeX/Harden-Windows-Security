@@ -3,6 +3,12 @@ Function Compare-CorrelatedData {
     .SYNOPSIS
         Finds the correlated events in the new CSV data and groups them together based on the EtwActivityId
         Ensures that each Audit or Blocked event has its correlated Signing information events grouped together as nested HashTables
+
+        The correlated data of each log is unique based on 4 main properties, Publisher TBS and name, Issuer TBS and name
+
+        The output of this function does not contain duplicates. Neither duplicate files nor duplicate signer information for each file.
+
+        If 2 logs for the same file exist and one of them contains the signing information while the other one doesn't, the one with signing information is kept.
     .PARAMETER OptimizedCSVData
         The CSV data to be processed, they should be the output of the Optimize-MDECSVData function
     .PARAMETER StagingArea
@@ -12,10 +18,10 @@ Function Compare-CorrelatedData {
     .INPUTS
         System.Collections.Hashtable[]
     .OUTPUTS
-        System.Collections.Hashtable[]
+        System.Collections.Hashtable
         #>
     [CmdletBinding()]
-    [OutputType([System.Collections.Hashtable[]])]
+    [OutputType([System.Collections.Hashtable])]
     Param (
         [Parameter(Mandatory = $true)][System.Collections.Hashtable[]]$OptimizedCSVData,
         [Parameter(Mandatory = $true)][System.IO.DirectoryInfo]$StagingArea
@@ -34,7 +40,7 @@ Function Compare-CorrelatedData {
         Write-Verbose -Message "Compare-CorrelatedData: Total number of groups: $($GroupedEvents.Count)"
 
         # Create a collection to store the packages of logs to return at the end
-        [System.Collections.Hashtable[]]$EventPackageCollections = $null
+        [System.Collections.Hashtable]$EventPackageCollections = @{}
     }
 
     Process {
@@ -50,7 +56,6 @@ Function Compare-CorrelatedData {
 
                 # Create a temporary HashTable to store the main event, its correlated events and its type
                 [System.Collections.Hashtable]$TempAuditHashTable = @{
-                    MainEventData        = @{}
                     CorrelatedEventsData = @{}
                     Type                 = 'Audit'
                     SignatureStatus      = ''
@@ -64,9 +69,9 @@ Function Compare-CorrelatedData {
                 # Generating a unique key for the hashtable based on file's properties
                 [System.String]$UniqueAuditMainEventDataKey = $AuditTemp.FileName + '|' + $AuditTemp.SHA256 + '|' + $AuditTemp.SHA1 + '|' + $AuditTemp.FileVersion
 
-                # Adding the main event to the temporary HashTable
-                if (-NOT $TempAuditHashTable['MainEventData'].Contains($UniqueAuditMainEventDataKey)) {
-                    $TempAuditHashTable['MainEventData'][$UniqueAuditMainEventDataKey] = $AuditTemp
+                # Adding the main event to the temporary HashTable, each key/value pair
+                foreach ($Data in $AuditTemp.GetEnumerator()) {
+                    $TempAuditHashTable[$Data.Key] = $Data.Value
                 }
 
                 # Looping over the signer infos and adding the unique publisher/issuer pairs to the correlated events data
@@ -85,8 +90,26 @@ Function Compare-CorrelatedData {
                 # Determining whether this log package is signed or unsigned
                 $TempAuditHashTable['SignatureStatus'] = $TempAuditHashTable.CorrelatedEventsData.Count -eq 0 ? 'Unsigned' : 'Signed'
 
-                # Add the temporary HashTable to the main HashTable Array
-                $EventPackageCollections += $TempAuditHashTable
+                # Check see if the main hashtable already contains the same file (key)
+                if ($EventPackageCollections.ContainsKey($UniqueAuditMainEventDataKey)) {
+
+                    # If it does, check if the current log is signed and the main log is unsigned
+                    if (($EventPackageCollections[$UniqueAuditMainEventDataKey]['SignatureStatus'] -eq 'Unsigned') -and ($TempAuditHashTable['SignatureStatus'] -eq 'Signed')) {
+
+                        Write-Debug -Message "The unsigned log of the file $($TempAuditHashTable['FileName']) is being replaced with its signed log."
+
+                        # Remove the Unsigned log from the main HashTable
+                        $EventPackageCollections.Remove($UniqueAuditMainEventDataKey)
+
+                        # Add the current Audit event with a unique identifiable key to the main HashTable
+                        # This way we are replacing the Unsigned log with the Signed log that has more data, for the same file, providing the ability to create signature based rules for that file instead of hash based rule
+                        $EventPackageCollections[$UniqueAuditMainEventDataKey] += $TempAuditHashTable
+                    }
+                }
+                else {
+                    # Add the current Audit event with a unique identifiable key to the main HashTable
+                    $EventPackageCollections[$UniqueAuditMainEventDataKey] += $TempAuditHashTable
+                }
             }
 
             # Process Blocked events for Code Integrity and AppLocker
@@ -94,7 +117,6 @@ Function Compare-CorrelatedData {
 
                 # Create a temporary HashTable to store the main event, its correlated events and its type
                 [System.Collections.Hashtable]$TempBlockedHashTable = @{
-                    MainEventData        = @{}
                     CorrelatedEventsData = @{}
                     Type                 = 'Blocked'
                     SignatureStatus      = ''
@@ -108,9 +130,9 @@ Function Compare-CorrelatedData {
                 # Generating a unique key for the hashtable based on file's properties
                 [System.String]$UniqueBlockedMainEventDataKey = $BlockedTemp.FileName + '|' + $BlockedTemp.SHA256 + '|' + $BlockedTemp.SHA1 + '|' + $BlockedTemp.FileVersion
 
-                # Adding the main event to the temporary HashTable
-                if (-NOT $TempBlockedHashTable['MainEventData'].Contains($UniqueBlockedMainEventDataKey)) {
-                    $TempBlockedHashTable['MainEventData'][$UniqueBlockedMainEventDataKey] = $BlockedTemp
+                # Adding the main event to the temporary HashTable, each key/value pair
+                foreach ($Data in $BlockedTemp.GetEnumerator()) {
+                    $TempBlockedHashTable[$Data.Key] = $Data.Value
                 }
 
                 # Looping over the signer infos and adding the unique publisher/issuer pairs to the correlated events data
@@ -129,8 +151,26 @@ Function Compare-CorrelatedData {
                 # Determining whether this log package is signed or unsigned
                 $TempBlockedHashTable['SignatureStatus'] = $TempBlockedHashTable.CorrelatedEventsData.Count -eq 0 ? 'Unsigned' : 'Signed'
 
-                # Add the temporary HashTable to the main HashTable Array
-                $EventPackageCollections += $TempBlockedHashTable
+                # Check see if the main hashtable already contains the same file (key)
+                if ($EventPackageCollections.ContainsKey($UniqueBlockedMainEventDataKey)) {
+
+                    # If it does, check if the current log is signed and the main log is unsigned
+                    if (($EventPackageCollections[$UniqueBlockedMainEventDataKey]['SignatureStatus'] -eq 'Unsigned') -and ($TempBlockedHashTable['SignatureStatus'] -eq 'Signed')) {
+
+                        Write-Debug -Message "The unsigned log of the file $($TempBlockedHashTable['FileName']) is being replaced with its signed log."
+
+                        # Remove the Unsigned log from the main HashTable
+                        $EventPackageCollections.Remove($UniqueBlockedMainEventDataKey)
+
+                        # Add the current Audit event with a unique identifiable key to the main HashTable
+                        # This way we are replacing the Unsigned log with the Signed log that has more data, for the same file, providing the ability to create signature based rules for that file instead of hash based rule
+                        $EventPackageCollections[$UniqueBlockedMainEventDataKey] += $TempBlockedHashTable
+                    }
+                }
+                else {
+                    # Add the current Audit event with a unique identifiable key to the main HashTable
+                    $EventPackageCollections[$UniqueBlockedMainEventDataKey] += $TempBlockedHashTable
+                }
             }
         }
     }

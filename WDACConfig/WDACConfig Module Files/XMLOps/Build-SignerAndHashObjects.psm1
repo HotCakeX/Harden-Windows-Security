@@ -108,7 +108,7 @@ Function Build-SignerAndHashObjects {
                 [PublisherSignerCreator]$CurrentPublisherSigner = New-Object -TypeName PublisherSignerCreator
 
                 # Loop through each correlated event and process the certificate details
-                foreach ($CorData in $CurrentData.CorrelatedEventsData) {
+                foreach ($CorData in $CurrentData.CorrelatedEventsData.Values) {
 
                     # Create a new CertificateDetailsCreator object to store the certificate details
                     [CertificateDetailsCreator]$CurrentCorData = New-Object -TypeName CertificateDetailsCreator

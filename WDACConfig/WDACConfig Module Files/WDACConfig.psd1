@@ -237,7 +237,24 @@ This is an advanced PowerShell module for WDAC (Windows Defender Application Con
         'C#\PageHashCalc.cs',
         'C#\Crypt32CertCN.cs',
         'Help\ConvertTo-WDACPolicy.xml',
-        'Help\ConvertTo-WDACPolicy.md'
+        'Help\ConvertTo-WDACPolicy.md',
+        'XMLOps\Build-SignerAndHashObjects.psm1',
+        'XMLOps\Clear-CiPolicy_Semantic.psm1',
+        'XMLOps\Close-EmptyXmlNodes_Semantic.psm1',
+        'XMLOps\Compare-CorrelatedData.psm1',
+        'XMLOps\Merge-Signers_Semantic.psm1',
+        'XMLOps\New-FilePublisherLevelRules.psm1',
+        'XMLOps\New-HashLevelRules.psm1',
+        'XMLOps\New-PublisherLevelRules.psm1',
+        'XMLOps\Optimize-MDECSVData.psm1',
+        'XMLOps\Remove-AllowElements_Semantic.psm1',
+        'XMLOps\Remove-DuplicateAllowAndFileRuleRefElements_IDBased.psm1',
+        'XMLOps\Remove-DuplicateAllowedSignersAndCiSigners_IDBased.psm1',
+        'XMLOps\Remove-DuplicateFileAttrib_IDBased.psm1',
+        'XMLOps\Remove-DuplicateFileAttrib_Semantic.psm1',
+        'XMLOps\Remove-DuplicateFileAttribRef_IDBased.psm1',
+        'XMLOps\Remove-OrphanAllowedSignersAndCiSigners_IDBased.psm1',
+        'XMLOps\Remove-UnreferencedFileRuleRefs.psm1'
     )
 
     # Private data to pass to the module specified in RootModule/ModuleToProcess. This may also contain a PSData hashtable with additional module metadata used by PowerShell.

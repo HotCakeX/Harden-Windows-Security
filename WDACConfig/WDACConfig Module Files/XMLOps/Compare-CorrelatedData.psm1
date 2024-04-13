@@ -15,8 +15,11 @@ Function Compare-CorrelatedData {
         The path to the directory where the debug CSV file will be saved which are the outputs of this function
     .PARAMETER Debug
         A switch parameter to enable debugging actions such as exporting the correlated event data to a JSON file
+    .PARAMETER StartTime
+        A DateTime object that specifies the start time of the logs to be processed. If this parameter is not specified, all logs will be processed.
     .INPUTS
         System.Collections.Hashtable[]
+        System.DateTime
     .OUTPUTS
         System.Collections.Hashtable
         #>
@@ -24,7 +27,8 @@ Function Compare-CorrelatedData {
     [OutputType([System.Collections.Hashtable])]
     Param (
         [Parameter(Mandatory = $true)][System.Collections.Hashtable[]]$OptimizedCSVData,
-        [Parameter(Mandatory = $true)][System.IO.DirectoryInfo]$StagingArea
+        [Parameter(Mandatory = $true)][System.IO.DirectoryInfo]$StagingArea,
+        [Parameter(Mandatory = $false)][System.DateTime]$StartTime
     )
 
     Begin {
@@ -50,6 +54,21 @@ Function Compare-CorrelatedData {
 
             # Store the group data in a HashTable array
             [System.Collections.Hashtable[]]$GroupData = $RawLogGroup.Group
+
+            if ($StartTime) {
+                try {
+                    # Try to prase the TimeStamp string as DateTime type
+                    [System.DateTime]$CurrentEventTimeStamp = [System.DateTime]::Parse((($GroupData.Timestamp) | Select-Object -First 1))
+
+                    # If the current log's TimeStamp is older than the time frame specified by the user then skip this iteration/log completely
+                    if ($CurrentEventTimeStamp -lt $StartTime ) {
+                        Continue
+                    }
+                }
+                Catch {
+                    Write-Verbose -Message "Event Timestamp for the file '$($GroupData.FileName)' was invalid"
+                }
+            }
 
             # Process Audit events for Code Integrity and AppLocker
             if (($GroupData.ActionType -contains 'AppControlCodeIntegrityPolicyAudited') -or ($GroupData.ActionType -contains 'AppControlCIScriptAudited')) {

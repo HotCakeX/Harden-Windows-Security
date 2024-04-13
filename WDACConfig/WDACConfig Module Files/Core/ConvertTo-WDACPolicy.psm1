@@ -668,7 +668,7 @@ Function ConvertTo-WDACPolicy {
                     ALL OF THE FUNCTIONS THAT PERFORM DATA MERGING ARE CREATED TO HANDLE MDE ADVANCED HUNTING DATA ONLY
                     SO NO DENIED SIGNERS OR DENY RULES WHATSOEVER
                     FOR MERGING WITH OTHER POLICIES, MERGE-CIPOLICY CMDLET SHOULD BE USED
-                    AT LEAST UNTIL THE NECESSARY FUNCTIONALITY IS ADDED TO THE MERGER FUNCTIONS                    
+                    AT LEAST UNTIL THE NECESSARY FUNCTIONALITY IS ADDED TO THE MERGER FUNCTIONS
                     #>
 
                     # The total number of the main steps for the progress bar to render
@@ -685,13 +685,29 @@ Function ConvertTo-WDACPolicy {
                     Write-Progress -Id 31 -Activity 'Identifying the correlated data in the MDE CSV data' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
                     Write-Verbose -Message 'Identifying the correlated data in the MDE CSV data'
-                    [System.Collections.Hashtable]$EventPackageCollections = Compare-CorrelatedData -OptimizedCSVData $OptimizedCSVData -StagingArea $StagingArea
+
+                    if (($null -eq $OptimizedCSVData) -or ($OptimizedCSVData.Count -eq 0)) {
+                        Write-ColorfulText -Color HotPink -InputText 'No valid MDE Advanced Hunting logs available. Exiting...'
+                        return
+                    }
+
+                    if ($TimeSpan) {
+                        [System.Collections.Hashtable]$EventPackageCollections = Compare-CorrelatedData -OptimizedCSVData $OptimizedCSVData -StagingArea $StagingArea -StartTime $StartTime
+                    }
+                    else {
+                        [System.Collections.Hashtable]$EventPackageCollections = Compare-CorrelatedData -OptimizedCSVData $OptimizedCSVData -StagingArea $StagingArea
+                    }
 
                     $MDEAHLogsToDisplay = $EventPackageCollections.Values -as [PSCustomObject] | Select-Object -Property *
 
                     # If the KernelModeOnly switch is used, then filter the logs by the 'SiSigningScenario' property
                     if ($KernelModeOnly) {
                         $MDEAHLogsToDisplay = $MDEAHLogsToDisplay | Where-Object -FilterScript { $_.'SiSigningScenario' -eq '0' }
+                    }
+
+                    if (($null -eq $MDEAHLogsToDisplay) -or ($MDEAHLogsToDisplay.Count -eq 0)) {
+                        Write-ColorfulText -Color HotPink -InputText 'No MDE Advanced Hunting logs available based on the selected filters. Exiting...'
+                        return
                     }
 
                     #Region Out-GridView properties visibility settings
@@ -724,7 +740,7 @@ Function ConvertTo-WDACPolicy {
                     Write-Verbose -Message 'Displaying the MDE Advanced Hunting logs in a GUI'
                     [PSCustomObject[]]$SelectMDEAHLogs = $MDEAHLogsToDisplay | Out-GridView -OutputMode Multiple -Title "Displaying $($MDEAHLogsToDisplay.count) Microsoft Defender for Endpoint Advanced Hunting Logs"
 
-                    if (($null -eq $SelectMDEAHLogs) -or ($SelectMDEAHLogs.Count -eq 0)) {                      
+                    if (($null -eq $SelectMDEAHLogs) -or ($SelectMDEAHLogs.Count -eq 0)) {
                         Write-ColorfulText -Color HotPink -InputText 'No MDE Advanced Hunting logs were selected to create a WDAC policy from. Exiting...'
                         return
                     }
@@ -793,7 +809,7 @@ Function ConvertTo-WDACPolicy {
 
                         Use Case:
                         User intentionally modifies one of the IDs of the CiSigners, but forgets to update the corresponding User-Mode Signer ID, AllowedSigner ID and more.
-                        #>
+                    #>
 
                     # 2 passes are necessary
                     Merge-Signers_Semantic -XmlFilePath $OutputPolicyPath

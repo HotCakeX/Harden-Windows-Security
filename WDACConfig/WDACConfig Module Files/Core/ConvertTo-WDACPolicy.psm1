@@ -698,6 +698,7 @@ Function ConvertTo-WDACPolicy {
                         [System.Collections.Hashtable]$EventPackageCollections = Compare-CorrelatedData -OptimizedCSVData $OptimizedCSVData -StagingArea $StagingArea
                     }
 
+                    # Selecting all of the properties of each log to be displayed
                     $MDEAHLogsToDisplay = $EventPackageCollections.Values -as [PSCustomObject] | Select-Object -Property *
 
                     # If the KernelModeOnly switch is used, then filter the logs by the 'SiSigningScenario' property

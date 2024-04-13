@@ -996,6 +996,9 @@ Function Protect-WindowsSecurity {
         # Defining a boolean variable to determine whether optional diagnostic data should be enabled for Smart App Control or not
         [System.Boolean]$ShouldEnableOptionalDiagnosticData = $false
 
+        Write-Verbose -Message 'Creating the working directory'
+        [System.IO.DirectoryInfo]$WorkingDir = New-Item -ItemType Directory -Path "$CurrentUserTempDirectoryPath\HardeningXStuff\" -Force
+
         if ($IsAdmin) {
             Write-Verbose -Message 'Getting the current configurations and preferences of the Microsoft Defender...'
 
@@ -1187,6 +1190,7 @@ Execution Policy: $CurrentExecutionPolicy
             $SyncHash['GlobalVars']['MDAVPreferencesCurrent'] = $MDAVPreferencesCurrent
             $SyncHash['GlobalVars']['CFAAllowedAppsBackup'] = $CFAAllowedAppsBackup
             $SyncHash['GlobalVars']['Offline'] = ($Offline -eq $true) ? $true : $false
+            $SyncHash['GlobalVars']['WorkingDir'] = $WorkingDir
 
             # Pass any necessary function as nested hashtable inside of the main synced hashtable
             # so they can be easily passed to any other RunSpaces
@@ -1585,9 +1589,6 @@ Execution Policy: $CurrentExecutionPolicy
                             Due to using multi-threaded jobs, it cannot be used in the nested Prerequisites runspace for some reason
                             #>
 
-                        # Create the working directory
-                        [System.IO.DirectoryInfo]$WorkingDir = New-Item -ItemType Directory -Path "$CurrentUserTempDirectoryPath\HardeningXStuff\" -Force
-
                         try {
 
                             Write-Verbose -Message 'Downloading the required files'
@@ -1786,15 +1787,17 @@ Execution Policy: $CurrentExecutionPolicy
 
                                         try {
 
+                                            if (-NOT $Offline) {
+                                                #  Write-Verbose -Message 'Downloading toast notification image'
+                                                Invoke-RestMethod -Uri 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/PNGs/ToastNotificationIcon.png' -OutFile "$WorkingDir\ToastNotificationIcon.png"
+                                            }
+
                                             # Capture the currently available RunSpaces
                                             $RunSpacesBefore = Get-Runspace
 
                                             # Only download and process the files when GUI is loaded if Offline mode is not used
                                             # Because at this point user might have not selected the files to be used for offline operation
                                             if (-NOT $Offline) {
-
-                                                # Create the working directory
-                                                [System.IO.DirectoryInfo]$WorkingDir = New-Item -ItemType Directory -Path "$CurrentUserTempDirectoryPath\HardeningXStuff\" -Force
 
                                                 try {
 
@@ -2902,6 +2905,95 @@ namespace SystemInfo
                                         # This never runs because the $SelectedCategories is empty/null when no categories are selected
                                         default { 'No category was selected' }
                                     }
+
+                                    # Display a toast notification when the selected categories have been run
+                                    powershell.exe -Sta -Command {
+                                        function Out-ToastNotification {
+                                            <#
+                                            .SYNOPSIS
+                                                Displays a toast notification on the screen.
+                                                It uses Windows PowerShell because the required types are not available to PowerShell Core
+                                            .PARAMETER Title
+                                                The title of the toast notification.
+                                            .PARAMETER Body
+                                                The body of the toast notification.
+                                            .PARAMETER ImagePath
+                                                The path to the image that will be displayed on the toast notification.
+                                            .PARAMETER UseImage
+                                                Switch to determine if the image should be used (optional parameter).
+                                            #>
+                                            [CmdletBinding()]
+                                            Param (
+                                                [Parameter(Mandatory = $true)][System.String]$Title,
+                                                [Parameter(Mandatory = $true)][System.String]$Body,
+                                                [Parameter(Mandatory = $false)][System.IO.FileInfo]$ImagePath,
+                                                [Parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$UseImage
+                                            )
+
+                                            # Load the necessary Windows Runtime types for toast notifications
+                                            [Windows.UI.Notifications.ToastNotificationManager, Windows.UI.Notifications, ContentType = WindowsRuntime] | Out-Null
+
+                                            # Decide which template to use based on whether an image is used
+                                            if ($UseImage) {
+                                                [System.String]$TemplateToUse = 'ToastImageAndText02'
+                                            }
+                                            else {
+                                                [System.String]$TemplateToUse = 'ToastText02'
+                                            }
+
+                                            # Get the template content for the chosen template
+                                            $Template = [Windows.UI.Notifications.ToastNotificationManager]::GetTemplateContent([Windows.UI.Notifications.ToastTemplateType]::($TemplateToUse))
+
+                                            # Convert the template to an XML document
+                                            $XML = [System.Xml.XmlDocument]$Template.GetXml()
+
+                                            # If using an image, set the image source in the XML
+                                            if ($UseImage) {
+                                                [System.Xml.XmlElement]$ImagePlaceHolder = $XML.toast.visual.binding.image
+                                                $ImagePlaceHolder.SetAttribute('src', $ImagePath)
+                                            }
+
+                                            # Set the title text in the XML
+                                            [System.Xml.XmlElement]$TitlePlaceHolder = $XML.toast.visual.binding.text | Where-Object -FilterScript { $_.id -eq '1' }
+                                            [System.Void]$TitlePlaceHolder.AppendChild($XML.CreateTextNode($Title))
+
+                                            # Set the body text in the XML
+                                            [System.Xml.XmlElement]$BodyPlaceHolder = $XML.toast.visual.binding.text | Where-Object -FilterScript { $_.id -eq '2' }
+                                            [System.Void]$BodyPlaceHolder.AppendChild($XML.CreateTextNode($Body))
+
+                                            # Load the XML content into a serializable XML document
+                                            $SerializedXml = New-Object -TypeName 'Windows.Data.Xml.Dom.XmlDocument'
+                                            $SerializedXml.LoadXml($XML.OuterXml)
+
+                                            # Create a new toast notification with the serialized XML
+                                            [Windows.UI.Notifications.ToastNotification]$Toast = [Windows.UI.Notifications.ToastNotification]::new($SerializedXml)
+
+                                            # Set a tag and group for the notification (used for managing notifications)
+                                            $Toast.Tag = 'Harden Windows Security'
+                                            $Toast.Group = 'Harden Windows Security'
+
+                                            # Set the notification to expire after 5 seconds
+                                            $Toast.ExpirationTime = [DateTimeOffset]::Now.AddSeconds(5)
+
+                                            # Create a toast notifier with a specific application ID
+                                            $Notifier = [Windows.UI.Notifications.ToastNotificationManager]::CreateToastNotifier('Harden Windows Security')
+
+                                            # Show the notification
+                                            $Notifier.Show($Toast)
+                                        }
+
+                                        # If the script is running in offline mode, use the toast notification template that doesn't require image
+                                        if ($args[1]) {
+                                            Out-ToastNotification -Title 'Completed' -body "$($args[0]) selected categories have been run."
+                                        }
+                                        # If the script is running in normal online mode, use the toast notification template that uses image
+                                        else {
+                                            Out-ToastNotification -Title 'Completed' -body "$($args[0]) selected categories have been run." -UseImage -ImagePath $args[2]
+                                        }
+                                    } -args $SelectedCategories.Count, ($Offline ? $true : $false), "$WorkingDir\ToastNotificationIcon.png" *>&1 # To display any error message or other streams from the script block on the console
+
+                                    # Display the runspace count on the GUI for debugging purposes
+                                    # Write-Host -Object "Current RunSpace Count is: $((Get-Runspace).Count)"
                                 }
                                 else {
                                     Write-GUI -Text 'No category was selected'
@@ -3017,9 +3109,6 @@ End time: $(Get-Date)
                 Write-ColorfulText -Color MintGreen -InputText "### Please read the Readme in the GitHub repository: https://github.com/HotCakeX/Harden-Windows-Security ###`r`n"
                 Write-ColorfulText -Color Rainbow -InputText "############################################################################################################`r`n"
             }
-
-            # Create the working directory
-            [System.IO.DirectoryInfo]$WorkingDir = New-Item -ItemType Directory -Path "$CurrentUserTempDirectoryPath\HardeningXStuff\" -Force
 
             # Create a variable to store the current step number for the progress bar
             [System.Int64]$CurrentMainStep = 0

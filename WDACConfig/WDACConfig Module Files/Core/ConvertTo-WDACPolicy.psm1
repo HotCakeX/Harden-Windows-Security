@@ -664,11 +664,16 @@ Function ConvertTo-WDACPolicy {
                 }
                 'MDEAdvancedHunting' {
 
+                    <#
+                    ALL OF THE FUNCTIONS THAT PERFORM DATA MERGING ARE CREATED TO HANDLE MDE ADVANCED HUNTING DATA ONLY
+                    SO NO DENIED SIGNERS OR DENY RULES WHATSOEVER
+                    FOR MERGING WITH OTHER POLICIES, MERGE-CIPOLICY CMDLET SHOULD BE USED
+                    AT LEAST UNTIL THE NECESSARY FUNCTIONALITY IS ADDED TO THE MERGER FUNCTIONS                    
+                    #>
+
                     # The total number of the main steps for the progress bar to render
                     [System.UInt16]$TotalSteps = 9
                     [System.UInt16]$CurrentStep = 0
-
-                    #Region Function Calls
 
                     $CurrentStep++
                     Write-Progress -Id 31 -Activity 'Optimizing the MDE CSV data' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
@@ -684,7 +689,7 @@ Function ConvertTo-WDACPolicy {
 
                     $MDEAHLogsToDisplay = $EventPackageCollections.Values -as [PSCustomObject] | Select-Object -Property *
 
-                    # If the KernelModeOnly switch is used, then filter the events by the 'Requested Signing Level' property
+                    # If the KernelModeOnly switch is used, then filter the logs by the 'SiSigningScenario' property
                     if ($KernelModeOnly) {
                         $MDEAHLogsToDisplay = $MDEAHLogsToDisplay | Where-Object -FilterScript { $_.'SiSigningScenario' -eq '0' }
                     }
@@ -719,63 +724,66 @@ Function ConvertTo-WDACPolicy {
                     Write-Verbose -Message 'Displaying the MDE Advanced Hunting logs in a GUI'
                     [PSCustomObject[]]$SelectMDEAHLogs = $MDEAHLogsToDisplay | Out-GridView -OutputMode Multiple -Title "Displaying $($MDEAHLogsToDisplay.count) Microsoft Defender for Endpoint Advanced Hunting Logs"
 
-                    if ($null -ne $SelectMDEAHLogs) {
+                    if (($null -eq $SelectMDEAHLogs) -or ($SelectMDEAHLogs.Count -eq 0)) {                      
+                        Write-ColorfulText -Color HotPink -InputText 'No MDE Advanced Hunting logs were selected to create a WDAC policy from. Exiting...'
+                        return
+                    }
 
-                        $CurrentStep++
-                        Write-Progress -Id 31 -Activity 'Preparing an empty policy to save the logs to' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
+                    $CurrentStep++
+                    Write-Progress -Id 31 -Activity 'Preparing an empty policy to save the logs to' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
-                        # Define the path where the final MDE AH XML policy file will be saved
-                        [System.IO.FileInfo]$OutputPolicyPath = Join-Path -Path $StagingArea -ChildPath "MDE Advanced Hunting Policy $CurrentDate.xml"
+                    # Define the path where the final MDE AH XML policy file will be saved
+                    [System.IO.FileInfo]$OutputPolicyPath = Join-Path -Path $StagingArea -ChildPath "MDE Advanced Hunting Policy $CurrentDate.xml"
 
-                        Write-Verbose -Message 'Copying the template policy to the staging area'
-                        Copy-Item -LiteralPath 'C:\Windows\schemas\CodeIntegrity\ExamplePolicies\AllowAll.xml' -Destination $OutputPolicyPath -Force
+                    Write-Verbose -Message 'Copying the template policy to the staging area'
+                    Copy-Item -LiteralPath 'C:\Windows\schemas\CodeIntegrity\ExamplePolicies\AllowAll.xml' -Destination $OutputPolicyPath -Force
 
-                        Write-Verbose -Message 'Emptying the policy file in preparation for the new data insertion'
-                        Clear-CiPolicy_Semantic -Path $OutputPolicyPath
+                    Write-Verbose -Message 'Emptying the policy file in preparation for the new data insertion'
+                    Clear-CiPolicy_Semantic -Path $OutputPolicyPath
 
-                        $CurrentStep++
-                        Write-Progress -Id 31 -Activity 'Building the Signer and Hash objects from the selected MDE AH logs' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
+                    $CurrentStep++
+                    Write-Progress -Id 31 -Activity 'Building the Signer and Hash objects from the selected MDE AH logs' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
-                        Write-Verbose -Message 'Building the Signer and Hash objects from the selected MDE AH logs'
-                        [PSCustomObject]$DataToUseForBuilding = Build-SignerAndHashObjects -Data $SelectMDEAHLogs
+                    Write-Verbose -Message 'Building the Signer and Hash objects from the selected MDE AH logs'
+                    [PSCustomObject]$DataToUseForBuilding = Build-SignerAndHashObjects -Data $SelectMDEAHLogs
 
-                        $CurrentStep++
-                        Write-Progress -Id 31 -Activity 'Creating rules for different levels' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
+                    $CurrentStep++
+                    Write-Progress -Id 31 -Activity 'Creating rules for different levels' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
-                        if ($Null -ne $DataToUseForBuilding.FilePublisherSigners -and $DataToUseForBuilding.FilePublisherSigners.Count -gt 0) {
-                            Write-Verbose -Message 'Creating File Publisher Level rules'
-                            New-FilePublisherLevelRules -FilePublisherSigners $DataToUseForBuilding.FilePublisherSigners -XmlFilePath $OutputPolicyPath
-                        }
-                        if ($Null -ne $DataToUseForBuilding.PublisherSigners -and $DataToUseForBuilding.PublisherSigners.Count -gt 0) {
-                            Write-Verbose -Message 'Creating Publisher Level rules'
-                            New-PublisherLevelRules -PublisherSigners $DataToUseForBuilding.PublisherSigners -XmlFilePath $OutputPolicyPath
-                        }
-                        if ($Null -ne $DataToUseForBuilding.CompleteHashes -and $DataToUseForBuilding.CompleteHashes.Count -gt 0) {
-                            Write-Verbose -Message 'Creating Hash Level rules'
-                            New-HashLevelRules -Hashes $DataToUseForBuilding.CompleteHashes -XmlFilePath $OutputPolicyPath
-                        }
+                    if ($Null -ne $DataToUseForBuilding.FilePublisherSigners -and $DataToUseForBuilding.FilePublisherSigners.Count -gt 0) {
+                        Write-Verbose -Message 'Creating File Publisher Level rules'
+                        New-FilePublisherLevelRules -FilePublisherSigners $DataToUseForBuilding.FilePublisherSigners -XmlFilePath $OutputPolicyPath
+                    }
+                    if ($Null -ne $DataToUseForBuilding.PublisherSigners -and $DataToUseForBuilding.PublisherSigners.Count -gt 0) {
+                        Write-Verbose -Message 'Creating Publisher Level rules'
+                        New-PublisherLevelRules -PublisherSigners $DataToUseForBuilding.PublisherSigners -XmlFilePath $OutputPolicyPath
+                    }
+                    if ($Null -ne $DataToUseForBuilding.CompleteHashes -and $DataToUseForBuilding.CompleteHashes.Count -gt 0) {
+                        Write-Verbose -Message 'Creating Hash Level rules'
+                        New-HashLevelRules -Hashes $DataToUseForBuilding.CompleteHashes -XmlFilePath $OutputPolicyPath
+                    }
 
-                        # MERGERS
+                    # MERGERS
 
-                        $CurrentStep++
-                        Write-Progress -Id 31 -Activity 'Merging the Hash Level rules' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
+                    $CurrentStep++
+                    Write-Progress -Id 31 -Activity 'Merging the Hash Level rules' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
-                        Write-Verbose -Message 'Merging the Hash Level rules'
-                        Remove-AllowElements_Semantic -Path $OutputPolicyPath
-                        Close-EmptyXmlNodes_Semantic -XmlFilePath $OutputPolicyPath
+                    Write-Verbose -Message 'Merging the Hash Level rules'
+                    Remove-AllowElements_Semantic -Path $OutputPolicyPath
+                    Close-EmptyXmlNodes_Semantic -XmlFilePath $OutputPolicyPath
 
-                        # Remove-UnreferencedFileRuleRefs -xmlFilePath $OutputPolicyPath
+                    # Remove-UnreferencedFileRuleRefs -xmlFilePath $OutputPolicyPath
 
-                        $CurrentStep++
-                        Write-Progress -Id 31 -Activity 'Merging the Signer Level rules' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
+                    $CurrentStep++
+                    Write-Progress -Id 31 -Activity 'Merging the Signer Level rules' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
-                        Write-Verbose -Message 'Merging the Signer Level rules'
-                        Remove-DuplicateFileAttrib_Semantic -XmlFilePath $OutputPolicyPath
+                    Write-Verbose -Message 'Merging the Signer Level rules'
+                    Remove-DuplicateFileAttrib_Semantic -XmlFilePath $OutputPolicyPath
 
-                        $CurrentStep++
-                        Write-Progress -Id 31 -Activity 'Finishing up the merge operation' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
+                    $CurrentStep++
+                    Write-Progress -Id 31 -Activity 'Finishing up the merge operation' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
-                        <#
+                    <#
                         Improvement suggestion for the Merge-Signers_Semantic function
                         When an orphan CiSigner is found, it is currently being removed from the <CiSigners> node
 
@@ -787,33 +795,25 @@ Function ConvertTo-WDACPolicy {
                         User intentionally modifies one of the IDs of the CiSigners, but forgets to update the corresponding User-Mode Signer ID, AllowedSigner ID and more.
                         #>
 
-                        # 2 passes are necessary
-                        Merge-Signers_Semantic -XmlFilePath $OutputPolicyPath
-                        Merge-Signers_Semantic -XmlFilePath $OutputPolicyPath
+                    # 2 passes are necessary
+                    Merge-Signers_Semantic -XmlFilePath $OutputPolicyPath
+                    Merge-Signers_Semantic -XmlFilePath $OutputPolicyPath
 
-                        # This function runs twice, once for signed data and once for unsigned data
-                        Close-EmptyXmlNodes_Semantic -XmlFilePath $OutputPolicyPath
+                    # This function runs twice, once for signed data and once for unsigned data
+                    Close-EmptyXmlNodes_Semantic -XmlFilePath $OutputPolicyPath
 
-                        # UNUSED FUNCTIONS - Their jobs have been replaced by semantic functions
-                        # Keeping them here for reference
+                    # UNUSED FUNCTIONS - Their jobs have been replaced by semantic functions
+                    # Keeping them here for reference
 
-                        # Remove-OrphanAllowedSignersAndCiSigners_IDBased -Path $OutputPolicyPath
-                        # Remove-DuplicateAllowedSignersAndCiSigners_IDBased -Path $OutputPolicyPath
-                        # Remove-DuplicateFileAttrib_IDBased -XmlFilePath $OutputPolicyPath
-                        # Remove-DuplicateAllowAndFileRuleRefElements_IDBased -XmlFilePath $OutputPolicyPath
-                        # Remove-DuplicateFileAttrib_Semantic -XmlFilePath $OutputPolicyPath
-                        # Remove-DuplicateFileAttribRef_IDBased -XmlFilePath $OutputPolicyPath -Verbose
+                    # Remove-OrphanAllowedSignersAndCiSigners_IDBased -Path $OutputPolicyPath
+                    # Remove-DuplicateAllowedSignersAndCiSigners_IDBased -Path $OutputPolicyPath
+                    # Remove-DuplicateFileAttrib_IDBased -XmlFilePath $OutputPolicyPath
+                    # Remove-DuplicateAllowAndFileRuleRefElements_IDBased -XmlFilePath $OutputPolicyPath
+                    # Remove-DuplicateFileAttrib_Semantic -XmlFilePath $OutputPolicyPath
+                    # Remove-DuplicateFileAttribRef_IDBased -XmlFilePath $OutputPolicyPath -Verbose
 
-                        #Endregion Function Calls
-
-                        Write-Verbose -Message 'ConvertTo-WDACPolicy: Copying the policy file to the User Config directory'
-                        Copy-Item -Path $OutputPolicyPath -Destination $UserConfigDir -Force
-
-                    }
-                    else {
-                        Write-ColorfulText -Color HotPink -InputText 'No MDE Advanced Hunting logs were selected to create a WDAC policy from. Exiting...'
-                        return
-                    }
+                    Write-Verbose -Message 'ConvertTo-WDACPolicy: Copying the policy file to the User Config directory'
+                    Copy-Item -Path $OutputPolicyPath -Destination $UserConfigDir -Force
                 }
             }
         }

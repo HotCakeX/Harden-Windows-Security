@@ -18,7 +18,7 @@ Function Build-SignerAndHashObjects {
 
         The other way around, where Publisher TBS hash is missing but Issuer TBS is present, would create a PCACertificate level Signer, but that is not implemented yet.
         Its use case is not clear yet and there haven't been any files with that condition yet.
-    .PARAMETER SignedData
+    .PARAMETER Data
         The Data to be processed. These are the logs selected by the user and contain both signed and unsigned data.
         They will be separated into 2 arrays.
     .INPUTS

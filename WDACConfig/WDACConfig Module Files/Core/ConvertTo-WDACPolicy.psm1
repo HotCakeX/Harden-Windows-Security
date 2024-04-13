@@ -643,7 +643,7 @@ Function ConvertTo-WDACPolicy {
 
                         Set-CIPolicyIdInfo -FilePath $WDACPolicyPath -PolicyName "Supplemental Policy from event logs - $(Get-Date -Format 'MM-dd-yyyy')" -ResetPolicyID | Out-Null
 
-                        # Remove all policy rule option prior to merging the policies since we don't need to add/remove any policy rule options to/from the user input policy
+                        # Remove all policy rule options prior to merging the policies since we don't need to add/remove any policy rule options to/from the user input policy
                         Edit-CiPolicyRuleOptions -Action RemoveAll -XMLFile $WDACPolicyPath
 
                         Merge-CIPolicy -PolicyPaths $PolicyToAddLogsTo, $WDACPolicyPath -OutputFilePath $PolicyToAddLogsTo | Out-Null
@@ -750,13 +750,13 @@ Function ConvertTo-WDACPolicy {
                     Write-Progress -Id 31 -Activity 'Preparing an empty policy to save the logs to' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
                     # Define the path where the final MDE AH XML policy file will be saved
-                    [System.IO.FileInfo]$OutputPolicyPath = Join-Path -Path $StagingArea -ChildPath "MDE Advanced Hunting Policy $CurrentDate.xml"
+                    [System.IO.FileInfo]$OutputPolicyPathMDEAH = Join-Path -Path $StagingArea -ChildPath "MDE Advanced Hunting Policy $CurrentDate.xml"
 
                     Write-Verbose -Message 'Copying the template policy to the staging area'
-                    Copy-Item -LiteralPath 'C:\Windows\schemas\CodeIntegrity\ExamplePolicies\AllowAll.xml' -Destination $OutputPolicyPath -Force
+                    Copy-Item -LiteralPath 'C:\Windows\schemas\CodeIntegrity\ExamplePolicies\AllowAll.xml' -Destination $OutputPolicyPathMDEAH -Force
 
                     Write-Verbose -Message 'Emptying the policy file in preparation for the new data insertion'
-                    Clear-CiPolicy_Semantic -Path $OutputPolicyPath
+                    Clear-CiPolicy_Semantic -Path $OutputPolicyPathMDEAH
 
                     $CurrentStep++
                     Write-Progress -Id 31 -Activity 'Building the Signer and Hash objects from the selected MDE AH logs' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
@@ -769,15 +769,15 @@ Function ConvertTo-WDACPolicy {
 
                     if ($Null -ne $DataToUseForBuilding.FilePublisherSigners -and $DataToUseForBuilding.FilePublisherSigners.Count -gt 0) {
                         Write-Verbose -Message 'Creating File Publisher Level rules'
-                        New-FilePublisherLevelRules -FilePublisherSigners $DataToUseForBuilding.FilePublisherSigners -XmlFilePath $OutputPolicyPath
+                        New-FilePublisherLevelRules -FilePublisherSigners $DataToUseForBuilding.FilePublisherSigners -XmlFilePath $OutputPolicyPathMDEAH
                     }
                     if ($Null -ne $DataToUseForBuilding.PublisherSigners -and $DataToUseForBuilding.PublisherSigners.Count -gt 0) {
                         Write-Verbose -Message 'Creating Publisher Level rules'
-                        New-PublisherLevelRules -PublisherSigners $DataToUseForBuilding.PublisherSigners -XmlFilePath $OutputPolicyPath
+                        New-PublisherLevelRules -PublisherSigners $DataToUseForBuilding.PublisherSigners -XmlFilePath $OutputPolicyPathMDEAH
                     }
                     if ($Null -ne $DataToUseForBuilding.CompleteHashes -and $DataToUseForBuilding.CompleteHashes.Count -gt 0) {
                         Write-Verbose -Message 'Creating Hash Level rules'
-                        New-HashLevelRules -Hashes $DataToUseForBuilding.CompleteHashes -XmlFilePath $OutputPolicyPath
+                        New-HashLevelRules -Hashes $DataToUseForBuilding.CompleteHashes -XmlFilePath $OutputPolicyPathMDEAH
                     }
 
                     # MERGERS
@@ -786,16 +786,16 @@ Function ConvertTo-WDACPolicy {
                     Write-Progress -Id 31 -Activity 'Merging the Hash Level rules' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
                     Write-Verbose -Message 'Merging the Hash Level rules'
-                    Remove-AllowElements_Semantic -Path $OutputPolicyPath
-                    Close-EmptyXmlNodes_Semantic -XmlFilePath $OutputPolicyPath
+                    Remove-AllowElements_Semantic -Path $OutputPolicyPathMDEAH
+                    Close-EmptyXmlNodes_Semantic -XmlFilePath $OutputPolicyPathMDEAH
 
-                    # Remove-UnreferencedFileRuleRefs -xmlFilePath $OutputPolicyPath
+                    # Remove-UnreferencedFileRuleRefs -xmlFilePath $OutputPolicyPathMDEAH
 
                     $CurrentStep++
                     Write-Progress -Id 31 -Activity 'Merging the Signer Level rules' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
                     Write-Verbose -Message 'Merging the Signer Level rules'
-                    Remove-DuplicateFileAttrib_Semantic -XmlFilePath $OutputPolicyPath
+                    Remove-DuplicateFileAttrib_Semantic -XmlFilePath $OutputPolicyPathMDEAH
 
                     $CurrentStep++
                     Write-Progress -Id 31 -Activity 'Finishing up the merge operation' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
@@ -813,24 +813,101 @@ Function ConvertTo-WDACPolicy {
                     #>
 
                     # 2 passes are necessary
-                    Merge-Signers_Semantic -XmlFilePath $OutputPolicyPath
-                    Merge-Signers_Semantic -XmlFilePath $OutputPolicyPath
+                    Merge-Signers_Semantic -XmlFilePath $OutputPolicyPathMDEAH
+                    Merge-Signers_Semantic -XmlFilePath $OutputPolicyPathMDEAH
 
                     # This function runs twice, once for signed data and once for unsigned data
-                    Close-EmptyXmlNodes_Semantic -XmlFilePath $OutputPolicyPath
+                    Close-EmptyXmlNodes_Semantic -XmlFilePath $OutputPolicyPathMDEAH
 
                     # UNUSED FUNCTIONS - Their jobs have been replaced by semantic functions
                     # Keeping them here for reference
 
-                    # Remove-OrphanAllowedSignersAndCiSigners_IDBased -Path $OutputPolicyPath
-                    # Remove-DuplicateAllowedSignersAndCiSigners_IDBased -Path $OutputPolicyPath
-                    # Remove-DuplicateFileAttrib_IDBased -XmlFilePath $OutputPolicyPath
-                    # Remove-DuplicateAllowAndFileRuleRefElements_IDBased -XmlFilePath $OutputPolicyPath
-                    # Remove-DuplicateFileAttrib_Semantic -XmlFilePath $OutputPolicyPath
-                    # Remove-DuplicateFileAttribRef_IDBased -XmlFilePath $OutputPolicyPath -Verbose
+                    # Remove-OrphanAllowedSignersAndCiSigners_IDBased -Path $OutputPolicyPathMDEAH
+                    # Remove-DuplicateAllowedSignersAndCiSigners_IDBased -Path $OutputPolicyPathMDEAH
+                    # Remove-DuplicateFileAttrib_IDBased -XmlFilePath $OutputPolicyPathMDEAH
+                    # Remove-DuplicateAllowAndFileRuleRefElements_IDBased -XmlFilePath $OutputPolicyPathMDEAH
+                    # Remove-DuplicateFileAttrib_Semantic -XmlFilePath $OutputPolicyPathMDEAH
+                    # Remove-DuplicateFileAttribRef_IDBased -XmlFilePath $OutputPolicyPathMDEAH -Verbose
 
-                    Write-Verbose -Message 'ConvertTo-WDACPolicy: Copying the policy file to the User Config directory'
-                    Copy-Item -Path $OutputPolicyPath -Destination $UserConfigDir -Force
+                    #Region Base To Supplemental Policy Association and Deployment
+
+                    # If -BasePolicyFile parameter was used then associate the supplemental policy with the user input base policy
+                    if ($null -ne $BasePolicyFile) {
+
+                        # Objectify the user input base policy file to extract its Base policy ID
+                        $InputXMLObj = [System.Xml.XmlDocument](Get-Content -Path $BasePolicyFile)
+
+                        [System.String]$SupplementalPolicyID = Set-CIPolicyIdInfo -FilePath $OutputPolicyPathMDEAH -PolicyName "Supplemental Policy from MDE Advanced Hunting - $(Get-Date -Format 'MM-dd-yyyy')" -SupplementsBasePolicyID $InputXMLObj.SiPolicy.BasePolicyID -ResetPolicyID
+                        [System.String]$SupplementalPolicyID = $SupplementalPolicyID.Substring(11)
+
+                        # Configure policy rule options
+                        Edit-CiPolicyRuleOptions -Action Supplemental -XMLFile $OutputPolicyPathMDEAH
+
+                        Write-Verbose -Message 'ConvertTo-WDACPolicy: Copying the policy file to the User Config directory'
+                        Copy-Item -Path $OutputPolicyPathMDEAH -Destination $UserConfigDir -Force
+
+                        if ($Deploy) {
+                            ConvertFrom-CIPolicy -XmlFilePath $OutputPolicyPathMDEAH -BinaryFilePath (Join-Path -Path $StagingArea -ChildPath "$SupplementalPolicyID.cip") | Out-Null
+
+                            Write-Verbose -Message 'ConvertTo-WDACPolicy: Deploying the Supplemental policy'
+
+                            &'C:\Windows\System32\CiTool.exe' --update-policy (Join-Path -Path $StagingArea -ChildPath "$SupplementalPolicyID.cip") -json | Out-Null
+                        }
+                    }
+                    # If -BasePolicyGUID parameter was used then use it by setting it as the Base policy ID in the supplemental policy
+                    elseif ($null -ne $BasePolicyGUID) {
+                        [System.String]$SupplementalPolicyID = Set-CIPolicyIdInfo -FilePath $OutputPolicyPathMDEAH -PolicyName "Supplemental Policy from MDE Advanced Hunting - $(Get-Date -Format 'MM-dd-yyyy')" -SupplementsBasePolicyID $BasePolicyGUID -ResetPolicyID
+                        [System.String]$SupplementalPolicyID = $SupplementalPolicyID.Substring(11)
+
+                        # Configure policy rule options
+                        Edit-CiPolicyRuleOptions -Action Supplemental -XMLFile $OutputPolicyPathMDEAH
+
+                        Write-Verbose -Message 'ConvertTo-WDACPolicy: Copying the policy file to the User Config directory'
+                        Copy-Item -Path $OutputPolicyPathMDEAH -Destination $UserConfigDir -Force
+
+                        if ($Deploy) {
+                            ConvertFrom-CIPolicy -XmlFilePath $OutputPolicyPathMDEAH -BinaryFilePath (Join-Path -Path $StagingArea -ChildPath "$SupplementalPolicyID.cip") | Out-Null
+
+                            Write-Verbose -Message 'ConvertTo-WDACPolicy: Deploying the Supplemental policy'
+
+                            &'C:\Windows\System32\CiTool.exe' --update-policy (Join-Path -Path $StagingArea -ChildPath "$SupplementalPolicyID.cip") -json | Out-Null
+                        }
+                    }
+                    # If -PolicyToAddLogsTo parameter was used then merge the supplemental policy with the user input policy
+                    elseif ($null -ne $PolicyToAddLogsTo) {
+
+                        # Objectify the user input policy file to extract its policy ID
+                        $InputXMLObj = [System.Xml.XmlDocument](Get-Content -Path $PolicyToAddLogsTo)
+
+                        Set-CIPolicyIdInfo -FilePath $OutputPolicyPathMDEAH -PolicyName "Supplemental Policy from MDE Advanced Hunting - $(Get-Date -Format 'MM-dd-yyyy')" -ResetPolicyID | Out-Null
+
+                        # Remove all policy rule options prior to merging the policies since we don't need to add/remove any policy rule options to/from the user input policy
+                        Edit-CiPolicyRuleOptions -Action RemoveAll -XMLFile $OutputPolicyPathMDEAH
+
+                        Merge-CIPolicy -PolicyPaths $PolicyToAddLogsTo, $OutputPolicyPathMDEAH -OutputFilePath $PolicyToAddLogsTo | Out-Null
+
+                        # Set HVCI to Strict
+                        Set-HVCIOptions -Strict -FilePath $PolicyToAddLogsTo
+
+                        if ($Deploy) {
+                            ConvertFrom-CIPolicy -XmlFilePath $PolicyToAddLogsTo -BinaryFilePath (Join-Path -Path $StagingArea -ChildPath "$($InputXMLObj.SiPolicy.PolicyID).cip") | Out-Null
+
+                            Write-Verbose -Message 'ConvertTo-WDACPolicy: Deploying the policy that user selected to add the MDE AH logs to'
+
+                            &'C:\Windows\System32\CiTool.exe' --update-policy (Join-Path -Path $StagingArea -ChildPath "$($InputXMLObj.SiPolicy.PolicyID).cip") -json | Out-Null
+                        }
+                    }
+                    else {
+                        Write-Verbose -Message 'ConvertTo-WDACPolicy: Copying the policy file to the User Config directory'
+
+                        Edit-CiPolicyRuleOptions -Action Supplemental -XMLFile $OutputPolicyPathMDEAH
+
+                        Set-HVCIOptions -Strict -FilePath $OutputPolicyPathMDEAH
+
+                        Copy-Item -Path $OutputPolicyPathMDEAH -Destination $UserConfigDir -Force
+                    }
+
+                    #Endregion Base To Supplemental Policy Association and Deployment
                 }
             }
         }

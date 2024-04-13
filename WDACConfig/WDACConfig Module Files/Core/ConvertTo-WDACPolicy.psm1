@@ -290,22 +290,8 @@ Function ConvertTo-WDACPolicy {
             }
         }
 
-        # To store the logs that user selects using GUI
-        [PSCustomObject[]]$SelectedLogs = @()
-
-        # The paths to the policy files to be merged together to produce the final Supplemental policy
-        [System.IO.FileInfo[]]$PolicyFilesToMerge = @()
-
-        # Initializing some flags
-        [System.Boolean]$HasKernelFiles = $false
-        [System.Boolean]$HasNormalFiles = $false
-
         # Save the current date in a variable as string
         [System.String]$CurrentDate = $(Get-Date -Format "MM-dd-yyyy 'at' HH-mm-ss")
-
-        # The total number of the main steps for the progress bar to render
-        [System.UInt16]$TotalSteps = 5
-        [System.UInt16]$CurrentStep = 0
     }
 
     Process {
@@ -315,6 +301,20 @@ Function ConvertTo-WDACPolicy {
             Switch ($Source) {
 
                 'LocalEventLogs' {
+
+                    # To store the logs that user selects using GUI
+                    [PSCustomObject[]]$SelectedLogs = @()
+
+                    # The paths to the policy files to be merged together to produce the final Supplemental policy
+                    [System.IO.FileInfo[]]$PolicyFilesToMerge = @()
+
+                    # Initializing some flags
+                    [System.Boolean]$HasKernelFiles = $false
+                    [System.Boolean]$HasNormalFiles = $false
+
+                    # The total number of the main steps for the progress bar to render
+                    [System.UInt16]$TotalSteps = 5
+                    [System.UInt16]$CurrentStep = 0
 
                     $CurrentStep++
                     Write-Progress -Id 30 -Activity "Collecting $LogType events" -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
@@ -419,7 +419,7 @@ Function ConvertTo-WDACPolicy {
                     Write-Progress -Id 30 -Activity 'Displaying the logs' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
                     # Display the logs in a grid view using the build-in cmdlet
-                    $SelectedLogs = $EventsToDisplay | Out-GridView -OutputMode Multiple -Title "$($EventsToDisplay.count) $LogType Code Integrity Logs"
+                    $SelectedLogs = $EventsToDisplay | Out-GridView -OutputMode Multiple -Title "Displaying $($EventsToDisplay.count) $LogType Code Integrity Logs"
 
                     Write-Verbose -Message "ConvertTo-WDACPolicy: Selected logs count: $($SelectedLogs.count)"
 
@@ -605,7 +605,7 @@ Function ConvertTo-WDACPolicy {
                         # Configure policy rule options
                         Edit-CiPolicyRuleOptions -Action Supplemental -XMLFile $WDACPolicyPath
 
-                        Write-Verbose -Message 'ConvertTo-WDACPolicy: Copying the policy file to the current directory'
+                        Write-Verbose -Message 'ConvertTo-WDACPolicy: Copying the policy file to the User Config directory'
                         Copy-Item -Path $WDACPolicyPath -Destination $UserConfigDir -Force
 
                         if ($Deploy) {
@@ -624,7 +624,7 @@ Function ConvertTo-WDACPolicy {
                         # Configure policy rule options
                         Edit-CiPolicyRuleOptions -Action Supplemental -XMLFile $WDACPolicyPath
 
-                        Write-Verbose -Message 'ConvertTo-WDACPolicy: Copying the policy file to the current directory'
+                        Write-Verbose -Message 'ConvertTo-WDACPolicy: Copying the policy file to the User Config directory'
                         Copy-Item -Path $WDACPolicyPath -Destination $UserConfigDir -Force
 
                         if ($Deploy) {
@@ -664,13 +664,162 @@ Function ConvertTo-WDACPolicy {
                 }
                 'MDEAdvancedHunting' {
 
+                    # The total number of the main steps for the progress bar to render
+                    [System.UInt16]$TotalSteps = 9
+                    [System.UInt16]$CurrentStep = 0
 
+                    #Region Function Calls
 
+                    $CurrentStep++
+                    Write-Progress -Id 31 -Activity 'Optimizing the MDE CSV data' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
+
+                    Write-Verbose -Message 'Optimizing the MDE CSV data'
+                    [System.Collections.Hashtable[]]$OptimizedCSVData = Optimize-MDECSVData -CSVPath $MDEAHLogs -StagingArea $StagingArea
+
+                    $CurrentStep++
+                    Write-Progress -Id 31 -Activity 'Identifying the correlated data in the MDE CSV data' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
+
+                    Write-Verbose -Message 'Identifying the correlated data in the MDE CSV data'
+                    [System.Collections.Hashtable]$EventPackageCollections = Compare-CorrelatedData -OptimizedCSVData $OptimizedCSVData -StagingArea $StagingArea
+
+                    $MDEAHLogsToDisplay = $EventPackageCollections.Values -as [PSCustomObject] | Select-Object -Property *
+
+                    # If the KernelModeOnly switch is used, then filter the events by the 'Requested Signing Level' property
+                    if ($KernelModeOnly) {
+                        $MDEAHLogsToDisplay = $MDEAHLogsToDisplay | Where-Object -FilterScript { $_.'SiSigningScenario' -eq '0' }
+                    }
+
+                    #Region Out-GridView properties visibility settings
+
+                    # If the ExtremeVisibility switch is used, then display all the properties of the logs without any filtering
+                    if (-NOT $ExtremeVisibility) {
+
+                        [System.String[]]$PropertiesToDisplay = @('TimeStamp', 'DeviceName', 'Type', 'SHA256', 'FileName', 'FolderPath', 'InitiatingProcessFileName', 'SignatureStatus', 'PolicyName', 'OriginalFileName', 'InternalName', 'PackageFamilyName', 'FileVersion', 'SISigningScenario')
+
+                        # Create a PSPropertySet object that contains the names of the properties to be visible
+                        # Used for Out-GridView display
+                        # https://learn.microsoft.com/en-us/dotnet/api/system.management.automation.pspropertyset
+                        # https://learn.microsoft.com/en-us/powershell/scripting/learn/deep-dives/everything-about-pscustomobject#using-defaultpropertyset-the-long-way
+                        $Visible = [System.Management.Automation.PSPropertySet]::new(
+                            'DefaultDisplayPropertySet', # the name of the property set
+                            $PropertiesToDisplay # the names of the properties to be visible
+                        )
+
+                        # Add the PSPropertySet object to the PSStandardMembers member set of each element of the $EventsToDisplay array
+                        foreach ($Element in $MDEAHLogsToDisplay) {
+                            $Element | Add-Member -MemberType 'MemberSet' -Name 'PSStandardMembers' -Value $Visible
+                        }
+                    }
+
+                    #Endregion Out-GridView properties visibility settings
+
+                    $CurrentStep++
+                    Write-Progress -Id 31 -Activity 'Displaying the MDE Advanced Hunting logs in a GUI' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
+
+                    Write-Verbose -Message 'Displaying the MDE Advanced Hunting logs in a GUI'
+                    [PSCustomObject[]]$SelectMDEAHLogs = $MDEAHLogsToDisplay | Out-GridView -OutputMode Multiple -Title "Displaying $($MDEAHLogsToDisplay.count) Microsoft Defender for Endpoint Advanced Hunting Logs"
+
+                    if ($null -ne $SelectMDEAHLogs) {
+
+                        $CurrentStep++
+                        Write-Progress -Id 31 -Activity 'Preparing an empty policy to save the logs to' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
+
+                        # Define the path where the final MDE AH XML policy file will be saved
+                        [System.IO.FileInfo]$OutputPolicyPath = Join-Path -Path $StagingArea -ChildPath "MDE Advanced Hunting Policy $CurrentDate.xml"
+
+                        Write-Verbose -Message 'Copying the template policy to the staging area'
+                        Copy-Item -LiteralPath 'C:\Windows\schemas\CodeIntegrity\ExamplePolicies\AllowAll.xml' -Destination $OutputPolicyPath -Force
+
+                        Write-Verbose -Message 'Emptying the policy file in preparation for the new data insertion'
+                        Clear-CiPolicy_Semantic -Path $OutputPolicyPath
+
+                        $CurrentStep++
+                        Write-Progress -Id 31 -Activity 'Building the Signer and Hash objects from the selected MDE AH logs' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
+
+                        Write-Verbose -Message 'Building the Signer and Hash objects from the selected MDE AH logs'
+                        [PSCustomObject]$DataToUseForBuilding = Build-SignerAndHashObjects -Data $SelectMDEAHLogs
+
+                        $CurrentStep++
+                        Write-Progress -Id 31 -Activity 'Creating rules for different levels' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
+
+                        if ($Null -ne $DataToUseForBuilding.FilePublisherSigners -and $DataToUseForBuilding.FilePublisherSigners.Count -gt 0) {
+                            Write-Verbose -Message 'Creating File Publisher Level rules'
+                            New-FilePublisherLevelRules -FilePublisherSigners $DataToUseForBuilding.FilePublisherSigners -XmlFilePath $OutputPolicyPath
+                        }
+                        if ($Null -ne $DataToUseForBuilding.PublisherSigners -and $DataToUseForBuilding.PublisherSigners.Count -gt 0) {
+                            Write-Verbose -Message 'Creating Publisher Level rules'
+                            New-PublisherLevelRules -PublisherSigners $DataToUseForBuilding.PublisherSigners -XmlFilePath $OutputPolicyPath
+                        }
+                        if ($Null -ne $DataToUseForBuilding.CompleteHashes -and $DataToUseForBuilding.CompleteHashes.Count -gt 0) {
+                            Write-Verbose -Message 'Creating Hash Level rules'
+                            New-HashLevelRules -Hashes $DataToUseForBuilding.CompleteHashes -XmlFilePath $OutputPolicyPath
+                        }
+
+                        # MERGERS
+
+                        $CurrentStep++
+                        Write-Progress -Id 31 -Activity 'Merging the Hash Level rules' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
+
+                        Write-Verbose -Message 'Merging the Hash Level rules'
+                        Remove-AllowElements_Semantic -Path $OutputPolicyPath
+                        Close-EmptyXmlNodes_Semantic -XmlFilePath $OutputPolicyPath
+
+                        # Remove-UnreferencedFileRuleRefs -xmlFilePath $OutputPolicyPath
+
+                        $CurrentStep++
+                        Write-Progress -Id 31 -Activity 'Merging the Signer Level rules' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
+
+                        Write-Verbose -Message 'Merging the Signer Level rules'
+                        Remove-DuplicateFileAttrib_Semantic -XmlFilePath $OutputPolicyPath
+
+                        $CurrentStep++
+                        Write-Progress -Id 31 -Activity 'Finishing up the merge operation' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
+
+                        <#
+                        Improvement suggestion for the Merge-Signers_Semantic function
+                        When an orphan CiSigner is found, it is currently being removed from the <CiSigners> node
+
+                        Suggestion:
+                        Implement an extra check to go through all User-Mode Signers and make sure they each have a corresponding CiSigner
+                        They already get a CiSigner automatically during build operations, but this check is just extra in case the policy was intentionally modified by the user!
+
+                        Use Case:
+                        User intentionally modifies one of the IDs of the CiSigners, but forgets to update the corresponding User-Mode Signer ID, AllowedSigner ID and more.
+                        #>
+
+                        # 2 passes are necessary
+                        Merge-Signers_Semantic -XmlFilePath $OutputPolicyPath
+                        Merge-Signers_Semantic -XmlFilePath $OutputPolicyPath
+
+                        # This function runs twice, once for signed data and once for unsigned data
+                        Close-EmptyXmlNodes_Semantic -XmlFilePath $OutputPolicyPath
+
+                        # UNUSED FUNCTIONS - Their jobs have been replaced by semantic functions
+                        # Keeping them here for reference
+
+                        # Remove-OrphanAllowedSignersAndCiSigners_IDBased -Path $OutputPolicyPath
+                        # Remove-DuplicateAllowedSignersAndCiSigners_IDBased -Path $OutputPolicyPath
+                        # Remove-DuplicateFileAttrib_IDBased -XmlFilePath $OutputPolicyPath
+                        # Remove-DuplicateAllowAndFileRuleRefElements_IDBased -XmlFilePath $OutputPolicyPath
+                        # Remove-DuplicateFileAttrib_Semantic -XmlFilePath $OutputPolicyPath
+                        # Remove-DuplicateFileAttribRef_IDBased -XmlFilePath $OutputPolicyPath -Verbose
+
+                        #Endregion Function Calls
+
+                        Write-Verbose -Message 'ConvertTo-WDACPolicy: Copying the policy file to the User Config directory'
+                        Copy-Item -Path $OutputPolicyPath -Destination $UserConfigDir -Force
+
+                    }
+                    else {
+                        Write-ColorfulText -Color HotPink -InputText 'No MDE Advanced Hunting logs were selected to create a WDAC policy from. Exiting...'
+                        return
+                    }
                 }
             }
         }
         Finally {
             Write-Progress -Id 30 -Activity 'Complete.' -Completed
+            Write-Progress -Id 31 -Activity 'Complete.' -Completed
 
             if (-NOT $Debug) {
                 Remove-Item -Path $StagingArea -Recurse -Force

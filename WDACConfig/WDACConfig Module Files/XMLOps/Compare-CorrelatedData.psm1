@@ -17,9 +17,12 @@ Function Compare-CorrelatedData {
         A switch parameter to enable debugging actions such as exporting the correlated event data to a JSON file
     .PARAMETER StartTime
         A DateTime object that specifies the start time of the logs to be processed. If this parameter is not specified, all logs will be processed.
+    .PARAMETER PolicyNamesToFilter
+        An array of strings that specifies the policy names to filter the logs by. If this parameter is not specified, all logs will be processed.
     .INPUTS
         System.Collections.Hashtable[]
         System.DateTime
+        System.String[]
     .OUTPUTS
         System.Collections.Hashtable
         #>
@@ -28,7 +31,9 @@ Function Compare-CorrelatedData {
     Param (
         [Parameter(Mandatory = $true)][System.Collections.Hashtable[]]$OptimizedCSVData,
         [Parameter(Mandatory = $true)][System.IO.DirectoryInfo]$StagingArea,
-        [Parameter(Mandatory = $false)][System.DateTime]$StartTime
+        [Parameter(Mandatory = $false)][System.DateTime]$StartTime,
+        [AllowNull()]
+        [Parameter(Mandatory = $false)][System.String[]]$PolicyNamesToFilter
     )
 
     Begin {
@@ -84,6 +89,14 @@ Function Compare-CorrelatedData {
                 # Only selecting the first event because when multiple Audit policies of the same type are deployed on the system, they same event is generated for each of them
                 [System.Collections.Hashtable]$AuditTemp = $GroupData |
                 Where-Object -FilterScript { $_['ActionType'] -in ('AppControlCodeIntegrityPolicyAudited', 'AppControlCIScriptAudited') } | Select-Object -First 1
+
+                # If the user provided policy names to filter the logs by
+                if ($null -ne $PolicyNamesToFilter) {
+                    # Skip this iteration if the policy name of the current log is not in the list of policy names to filter by
+                    if ($AuditTemp.PolicyName -notin $PolicyNamesToFilter) {
+                        Continue
+                    }
+                }
 
                 # Generating a unique key for the hashtable based on file's properties
                 [System.String]$UniqueAuditMainEventDataKey = $AuditTemp.FileName + '|' + $AuditTemp.SHA256 + '|' + $AuditTemp.SHA1 + '|' + $AuditTemp.FileVersion
@@ -150,6 +163,14 @@ Function Compare-CorrelatedData {
                 # Only selecting the first event because when multiple enforced policies of the same type are deployed on the system, they same event might be generated for each of them
                 [System.Collections.Hashtable]$BlockedTemp = $GroupData |
                 Where-Object -FilterScript { $_['ActionType'] -in ('AppControlCodeIntegrityPolicyBlocked', 'AppControlCIScriptBlocked') } | Select-Object -First 1
+
+                # If the user provided policy names to filter the logs by
+                if ($null -ne $PolicyNamesToFilter) {
+                    # Skip this iteration if the policy name of the current log is not in the list of policy names to filter by
+                    if ($BlockedTemp.PolicyName -notin $PolicyNamesToFilter) {
+                        Continue
+                    }
+                }
 
                 # Generating a unique key for the hashtable based on file's properties
                 [System.String]$UniqueBlockedMainEventDataKey = $BlockedTemp.FileName + '|' + $BlockedTemp.SHA256 + '|' + $BlockedTemp.SHA1 + '|' + $BlockedTemp.FileVersion

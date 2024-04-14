@@ -1191,6 +1191,7 @@ Execution Policy: $CurrentExecutionPolicy
             $SyncHash['GlobalVars']['CFAAllowedAppsBackup'] = $CFAAllowedAppsBackup
             $SyncHash['GlobalVars']['Offline'] = ($Offline -eq $true) ? $true : $false
             $SyncHash['GlobalVars']['WorkingDir'] = $WorkingDir
+            $SyncHash['GlobalVars']['BootDMAProtectionCheck'] = $BootDMAProtectionCheck
 
             # Pass any necessary function as nested hashtable inside of the main synced hashtable
             # so they can be easily passed to any other RunSpaces
@@ -2507,52 +2508,6 @@ Execution Policy: $CurrentExecutionPolicy
                                     # This PowerShell script can be used to find out if the DMA Protection is ON \ OFF.
                                     # The Script will show this by emitting True \ False for On \ Off respectively.
 
-                                    # bootDMAProtection check - checks for Kernel DMA Protection status in System information or msinfo32
-                                    [System.String]$BootDMAProtectionCheck = @'
-namespace SystemInfo
-{
-    using System;
-    using System.Runtime.InteropServices;
-
-    public static class NativeMethods
-    {
-        internal enum SYSTEM_DMA_GUARD_POLICY_INFORMATION : int
-        {
-            /// </summary>
-            SystemDmaGuardPolicyInformation = 202
-        }
-
-        [DllImport("ntdll.dll")]
-        internal static extern Int32 NtQuerySystemInformation(
-        SYSTEM_DMA_GUARD_POLICY_INFORMATION SystemDmaGuardPolicyInformation,
-        IntPtr SystemInformation,
-        Int32 SystemInformationLength,
-        out Int32 ReturnLength);
-
-        public static byte BootDmaCheck()
-        {
-            Int32 result;
-            Int32 SystemInformationLength = 1;
-            IntPtr SystemInformation = Marshal.AllocHGlobal(SystemInformationLength);
-            Int32 ReturnLength;
-
-            result = NativeMethods.NtQuerySystemInformation(
-            NativeMethods.SYSTEM_DMA_GUARD_POLICY_INFORMATION.SystemDmaGuardPolicyInformation,
-            SystemInformation,
-            SystemInformationLength,
-            out ReturnLength);
-
-            if (result == 0)
-            {
-                byte info = Marshal.ReadByte(SystemInformation, 0);
-                return info;
-            }
-
-            return 0;
-        }
-    }
-}
-'@
                                     # if the type is not already loaded, load it
                                     if (-NOT ('SystemInfo.NativeMethods' -as [System.Type])) {
                                         Write-Verbose -Message 'Loading SystemInfo.NativeMethods type' -Verbose:$false
@@ -3590,52 +3545,6 @@ End time: $(Get-Date)
                         # This PowerShell script can be used to find out if the DMA Protection is ON \ OFF.
                         # The Script will show this by emitting True \ False for On \ Off respectively.
 
-                        # bootDMAProtection check - checks for Kernel DMA Protection status in System information or msinfo32
-                        [System.String]$BootDMAProtectionCheck = @'
-namespace SystemInfo
-{
-  using System;
-  using System.Runtime.InteropServices;
-
-  public static class NativeMethods
-  {
-    internal enum SYSTEM_DMA_GUARD_POLICY_INFORMATION : int
-    {
-      /// </summary>
-      SystemDmaGuardPolicyInformation = 202
-    }
-
-    [DllImport("ntdll.dll")]
-    internal static extern Int32 NtQuerySystemInformation(
-      SYSTEM_DMA_GUARD_POLICY_INFORMATION SystemDmaGuardPolicyInformation,
-      IntPtr SystemInformation,
-      Int32 SystemInformationLength,
-      out Int32 ReturnLength);
-
-    public static byte BootDmaCheck()
-    {
-      Int32 result;
-      Int32 SystemInformationLength = 1;
-      IntPtr SystemInformation = Marshal.AllocHGlobal(SystemInformationLength);
-      Int32 ReturnLength;
-
-      result = NativeMethods.NtQuerySystemInformation(
-                NativeMethods.SYSTEM_DMA_GUARD_POLICY_INFORMATION.SystemDmaGuardPolicyInformation,
-                SystemInformation,
-                SystemInformationLength,
-                out ReturnLength);
-
-      if (result == 0)
-      {
-        byte info = Marshal.ReadByte(SystemInformation, 0);
-        return info;
-      }
-
-      return 0;
-    }
-  }
-}
-'@
                         # if the type is not already loaded, load it
                         if (-NOT ('SystemInfo.NativeMethods' -as [System.Type])) {
                             Write-Verbose -Message 'Loading SystemInfo.NativeMethods type'
@@ -4850,6 +4759,53 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
     System.String
 #>
 }
+
+# bootDMAProtection check - checks for Kernel DMA Protection status in System information or msinfo32
+[System.String]$BootDMAProtectionCheck = @'
+namespace SystemInfo
+{
+    using System;
+    using System.Runtime.InteropServices;
+
+    public static class NativeMethods
+    {
+        internal enum SYSTEM_DMA_GUARD_POLICY_INFORMATION : int
+        {
+            /// </summary>
+            SystemDmaGuardPolicyInformation = 202
+        }
+
+        [DllImport("ntdll.dll")]
+        internal static extern Int32 NtQuerySystemInformation(
+        SYSTEM_DMA_GUARD_POLICY_INFORMATION SystemDmaGuardPolicyInformation,
+        IntPtr SystemInformation,
+        Int32 SystemInformationLength,
+        out Int32 ReturnLength);
+
+        public static byte BootDmaCheck()
+        {
+            Int32 result;
+            Int32 SystemInformationLength = 1;
+            IntPtr SystemInformation = Marshal.AllocHGlobal(SystemInformationLength);
+            Int32 ReturnLength;
+
+            result = NativeMethods.NtQuerySystemInformation(
+            NativeMethods.SYSTEM_DMA_GUARD_POLICY_INFORMATION.SystemDmaGuardPolicyInformation,
+            SystemInformation,
+            SystemInformationLength,
+            out ReturnLength);
+
+            if (result == 0)
+            {
+                byte info = Marshal.ReadByte(SystemInformation, 0);
+                return info;
+            }
+
+            return 0;
+        }
+    }
+}
+'@
 
 [System.Xml.XmlDocument]$Xaml = @'
 <Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"

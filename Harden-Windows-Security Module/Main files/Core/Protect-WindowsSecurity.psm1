@@ -2249,6 +2249,7 @@ Execution Policy: $CurrentExecutionPolicy
 
                                 #Region Hardening-Categories-Functions-GUI-Experience
                                 Function Invoke-MicrosoftSecurityBaselines {
+                                    Write-Verbose -Message '========================='
                                     Write-Verbose -Message 'Processing the Security Baselines category function'
                                     Write-Verbose -Message "Changing the current directory to '$MicrosoftSecurityBaselinePath\Scripts\'"
 
@@ -2282,6 +2283,7 @@ Execution Policy: $CurrentExecutionPolicy
                                     Pop-Location
                                 }
                                 Function Invoke-Microsoft365AppsSecurityBaselines {
+                                    Write-Verbose -Message '========================='
                                     Write-Verbose -Message 'Processing the M365 Apps Security category function'
                                     Write-Verbose -Message 'Applying the Microsoft 365 Apps Security Baseline'
                                     Write-Verbose -Message "Changing the current directory to '$Microsoft365SecurityBaselinePath\Scripts\'"
@@ -2295,6 +2297,7 @@ Execution Policy: $CurrentExecutionPolicy
                                     Pop-Location
                                 }
                                 Function Invoke-MicrosoftDefender {
+                                    Write-Verbose -Message '========================='
                                     Write-Verbose -Message 'Processing the Microsoft Defender category function'
                                     Write-Verbose -Message 'Running the Microsoft Defender category'
 
@@ -2488,12 +2491,14 @@ Execution Policy: $CurrentExecutionPolicy
                                     }
                                 }
                                 Function Invoke-AttackSurfaceReductionRules {
+                                    Write-Verbose -Message '========================='
                                     Write-Verbose -Message 'Processing the ASR Rules category function'
                                     Write-Verbose -Message 'Running the Attack Surface Reduction Rules category'
 
                                     &$LGPOExe /q /m "$WorkingDir\Security-Baselines-X\Attack Surface Reduction Rules Policies\registry.pol"
                                 }
                                 Function Invoke-BitLockerSettings {
+                                    Write-Verbose -Message '========================='
                                     Write-Verbose -Message 'Processing the BitLocker category function'
                                     Write-Verbose -Message 'Running the Bitlocker category'
 
@@ -2589,6 +2594,7 @@ namespace SystemInfo
                                     }
                                 }
                                 Function Invoke-TLSSecurity {
+                                    Write-Verbose -Message '========================='
                                     Write-Verbose -Message 'Processing the TLS Security category function'
                                     Write-Verbose -Message 'Running the TLS Security category'
 
@@ -2617,6 +2623,7 @@ namespace SystemInfo
                                     &$LGPOExe /q /m "$WorkingDir\Security-Baselines-X\TLS Security\registry.pol"
                                 }
                                 Function Invoke-LockScreen {
+                                    Write-Verbose -Message '========================='
                                     Write-Verbose -Message 'Processing the Lock Screen category function'
                                     Write-Verbose -Message 'Running the Lock Screen category'
 
@@ -2640,6 +2647,7 @@ namespace SystemInfo
                                     }
                                 }
                                 Function Invoke-UserAccountControl {
+                                    Write-Verbose -Message '========================='
                                     Write-Verbose -Message 'Processing the User Account Control category function'
                                     Write-Verbose -Message 'Running the User Account Control category'
 
@@ -2662,6 +2670,7 @@ namespace SystemInfo
                                     }
                                 }
                                 Function Invoke-WindowsFirewall {
+                                    Write-Verbose -Message '========================='
                                     Write-Verbose -Message 'Processing the Windows Firewall category function'
                                     Write-Verbose -Message 'Running the Windows Firewall category'
 
@@ -2673,6 +2682,7 @@ namespace SystemInfo
                                     ForEach-Object -Process { Disable-NetFirewallRule -DisplayName $_.DisplayName }
                                 }
                                 Function Invoke-OptionalWindowsFeatures {
+                                    Write-Verbose -Message '========================='
                                     Write-Verbose -Message 'Processing the Optional Windows Features category function'
                                     Write-Verbose -Message 'Running the Optional Windows Features category'
 
@@ -2712,6 +2722,7 @@ namespace SystemInfo
                                     }
                                 }
                                 Function Invoke-WindowsNetworking {
+                                    Write-Verbose -Message '========================='
                                     Write-Verbose -Message 'Processing the Windows Networking category function'
                                     Write-Verbose -Message 'Running the Windows Networking category'
 
@@ -2725,6 +2736,7 @@ namespace SystemInfo
                                     Get-NetConnectionProfile | Set-NetConnectionProfile -NetworkCategory Public
                                 }
                                 Function Invoke-MiscellaneousConfigurations {
+                                    Write-Verbose -Message '========================='
                                     Write-Verbose -Message 'Processing the Miscellaneous Configurations category function'
                                     Write-Verbose -Message 'Running the Miscellaneous Configurations category'
 
@@ -2763,6 +2775,7 @@ namespace SystemInfo
                                     Expand-Archive -Path "$WorkingDir\EventViewerCustomViews.zip" -DestinationPath "$env:SystemDrive\ProgramData\Microsoft\Event Viewer\Views\Hardening Script" -Force
                                 }
                                 Function Invoke-WindowsUpdateConfigurations {
+                                    Write-Verbose -Message '========================='
                                     Write-Verbose -Message 'Processing the Windows Update category function'
                                     Write-Verbose -Message 'Running the Windows Update category'
 
@@ -2773,6 +2786,7 @@ namespace SystemInfo
                                     &$LGPOExe /q /m "$WorkingDir\Security-Baselines-X\Windows Update Policies\registry.pol"
                                 }
                                 Function Invoke-EdgeBrowserConfigurations {
+                                    Write-Verbose -Message '========================='
                                     Write-Verbose -Message 'Processing the Edge Browser category function'
                                     Write-Verbose -Message 'Running the Edge Browser category'
 
@@ -2784,6 +2798,7 @@ namespace SystemInfo
                                     }
                                 }
                                 Function Invoke-CertificateCheckingCommands {
+                                    Write-Verbose -Message '========================='
                                     Write-Verbose -Message 'Processing the Certificate Checking category function'
                                     Write-Verbose -Message 'Running the Certificate Checking category'
 
@@ -2805,6 +2820,7 @@ namespace SystemInfo
                                     Remove-Item -Path .\sigcheck64.exe -Force
                                 }
                                 Function Invoke-CountryIPBlocking {
+                                    Write-Verbose -Message '========================='
                                     Write-Verbose -Message 'Processing the Country IP Blocking category function'
                                     Write-Verbose -Message 'Running the Country IP Blocking category'
 
@@ -2819,6 +2835,7 @@ namespace SystemInfo
                                     }
                                 }
                                 Function Invoke-DownloadsDefenseMeasures {
+                                    Write-Verbose -Message '========================='
                                     Write-Verbose -Message 'Processing the Downloads Defense Measures category function'
                                     Write-Verbose -Message 'Running the Downloads Defense Measures category'
 
@@ -2868,6 +2885,7 @@ namespace SystemInfo
                                     }
                                 }
                                 Function Invoke-NonAdminCommands {
+                                    Write-Verbose -Message '========================='
                                     Write-Verbose -Message 'Processing the Non-Admin category function'
                                     Write-Verbose -Message 'Running the Non-Admin category'
                                     Write-Verbose -Message 'Applying the Non-Admin registry settings'

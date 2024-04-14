@@ -5,7 +5,7 @@ $PSStyle.Progress.UseOSCIndicator = $true
 Function Protect-WindowsSecurity {
     [CmdletBinding(DefaultParameterSetName = 'Online Mode')]
     [OutputType([System.String])]
-    [Alias('P')]
+    [Alias('PWS')]
     param (
         [Alias('G')]
         [parameter(Mandatory = $false, ParameterSetName = 'GUI')]

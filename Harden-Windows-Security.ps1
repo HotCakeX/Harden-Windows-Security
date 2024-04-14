@@ -3001,11 +3001,11 @@ End time: $(Get-Date)
                 $Host.UI.RawUI.WindowTitle = '🔐 Security Baselines'
                 Write-Verbose -Message 'Processing the Security Baselines category function'
 
-                Write-Verbose -Message "Changing the current directory to '$MicrosoftSecurityBaselinePath\Scripts\'"
-                Push-Location -Path "$MicrosoftSecurityBaselinePath\Scripts\"
-
                 :MicrosoftSecurityBaselinesCategoryLabel switch ($RunUnattended ? ($SecBaselines_NoOverrides ? 'Yes' : 'Yes, With the Optional Overrides (Recommended)') : (Select-Option -Options 'Yes', 'Yes, With the Optional Overrides (Recommended)' , 'No', 'Exit' -Message "`nApply Microsoft Security Baseline ?")) {
                     'Yes' {
+                        Write-Verbose -Message "Changing the current directory to '$MicrosoftSecurityBaselinePath\Scripts\'"
+                        Push-Location -Path "$MicrosoftSecurityBaselinePath\Scripts\"
+
                         Write-Verbose -Message 'Applying the Microsoft Security Baselines without the optional overrides'
                         Write-Progress -Id 0 -Activity 'Microsoft Security Baseline' -Status "Step $($RefCurrentMainStep.Value)/$TotalMainSteps" -PercentComplete ($RefCurrentMainStep.Value / $TotalMainSteps * 100)
 
@@ -3013,6 +3013,9 @@ End time: $(Get-Date)
                         .\Baseline-LocalInstall.ps1 -Win11NonDomainJoined 4>$null
                     }
                     'Yes, With the Optional Overrides (Recommended)' {
+                        Write-Verbose -Message "Changing the current directory to '$MicrosoftSecurityBaselinePath\Scripts\'"
+                        Push-Location -Path "$MicrosoftSecurityBaselinePath\Scripts\"
+
                         Write-Verbose -Message 'Applying the Microsoft Security Baselines with the optional overrides'
                         Write-Progress -Id 0 -Activity 'Microsoft Security Baseline' -Status "Step $($RefCurrentMainStep.Value)/$TotalMainSteps" -PercentComplete ($RefCurrentMainStep.Value / $TotalMainSteps * 100)
 
@@ -4875,4 +4878,3 @@ namespace SystemInfo
    </Grid>
 </Window>
 '@
-

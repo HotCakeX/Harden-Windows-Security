@@ -12,6 +12,9 @@ Function Unprotect-WindowsSecurity {
         [Parameter(Mandatory = $false, ParameterSetName = 'OnlyDownloadsDefenseMeasures')]
         [System.Management.Automation.SwitchParameter]$OnlyDownloadsDefenseMeasures,
 
+        [Parameter(Mandatory = $false, ParameterSetName = 'OnlyCountryIPBlockingFirewallRules')]
+        [System.Management.Automation.SwitchParameter]$OnlyCountryIPBlockingFirewallRules,
+
         [Parameter(Mandatory = $false)]
         [System.Management.Automation.SwitchParameter]$Force
     )
@@ -130,131 +133,130 @@ Function Unprotect-WindowsSecurity {
 
                 Start-Sleep -Seconds 3
 
-                $CurrentMainStep++
-                Write-Progress -Id 0 -Activity 'Removing Downloads Defense Measures' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
-
-                # If the user only wants to remove the Downloads Defense Measures, then skip the rest of the code
-                if ($OnlyDownloadsDefenseMeasures) {
-                    Remove-DownloadsDefenseMeasures
-                    Return
-                }
-                else {
-                    if (-NOT $OnlyProcessMitigations) {
+                Switch ($True) {
+                    $OnlyCountryIPBlockingFirewallRules {
+                        # Normally these are removed when all group policies are removed, but in case only the firewall rules are removed
+                        Write-Verbose -Message 'Removing the country IP blocking firewall rules only'
+                        Remove-NetFirewallRule -DisplayName 'OFAC Sanctioned Countries IP range blocking' -PolicyStore localhost -ErrorAction SilentlyContinue
+                        Remove-NetFirewallRule -DisplayName 'State Sponsors of Terrorism IP range blocking' -PolicyStore localhost -ErrorAction SilentlyContinue
+                        break
+                    }
+                    $OnlyDownloadsDefenseMeasures {
                         Remove-DownloadsDefenseMeasures
+                        break
                     }
-                }
-
-                # Create the working directory
-                Write-Verbose -Message "Creating a working directory at $CurrentUserTempDirectoryPath\HardeningXStuff\"
-                New-Item -ItemType Directory -Path "$CurrentUserTempDirectoryPath\HardeningXStuff\" -Force | Out-Null
-
-                # working directory assignment
-                [System.IO.DirectoryInfo]$WorkingDir = "$CurrentUserTempDirectoryPath\HardeningXStuff\"
-
-                # change location to the new directory
-                Write-Verbose -Message "Changing location to $WorkingDir"
-                Set-Location -Path $WorkingDir
-
-                $CurrentMainStep++
-                Write-Progress -Id 0 -Activity 'Removing Process Mitigations for apps' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
-
-                # If the user only wants to remove the Process Mitigations, skip the rest of the code
-                if ($OnlyProcessMitigations) {
-                    Remove-ProcessMitigations
-                    return
-                }
-                else {
-                    if (-NOT $OnlyDownloadsDefenseMeasures) {
+                    $OnlyProcessMitigations {
                         Remove-ProcessMitigations
+                        break
+                    }
+                    default {
+                        $CurrentMainStep++
+                        Write-Progress -Id 0 -Activity 'Removing Downloads Defense Measures' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
+                        Remove-DownloadsDefenseMeasures
+
+                        # Create the working directory
+                        Write-Verbose -Message "Creating a working directory at $CurrentUserTempDirectoryPath\HardeningXStuff\"
+                        New-Item -ItemType Directory -Path "$CurrentUserTempDirectoryPath\HardeningXStuff\" -Force | Out-Null
+
+                        # working directory assignment
+                        [System.IO.DirectoryInfo]$WorkingDir = "$CurrentUserTempDirectoryPath\HardeningXStuff\"
+
+                        # change location to the new directory
+                        Write-Verbose -Message "Changing location to $WorkingDir"
+                        Set-Location -Path $WorkingDir
+
+                        $CurrentMainStep++
+                        Write-Progress -Id 0 -Activity 'Removing Process Mitigations for apps' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
+                        Remove-ProcessMitigations
+
+                        $CurrentMainStep++
+                        Write-Progress -Id 0 -Activity 'Deleting all group policies' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
+
+                        if (Test-Path -Path "$env:SystemDrive\Windows\System32\GroupPolicy") {
+                            Remove-Item -Path "$env:SystemDrive\Windows\System32\GroupPolicy" -Recurse -Force
+                        }
+
+                        $CurrentMainStep++
+                        Write-Progress -Id 0 -Activity 'Deleting all the registry keys created by the Protect-WindowsSecurity cmdlet' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
+
+                        [System.Object[]]$Items = Import-Csv -Path "$HardeningModulePath\Resources\Registry.csv" -Delimiter ','
+                        foreach ($Item in $Items) {
+                            if (Test-Path -Path $item.path) {
+                                Remove-ItemProperty -Path $Item.path -Name $Item.key -Force -ErrorAction SilentlyContinue
+                            }
+                        }
+
+                        # To completely remove the Edge policy since only its sub-keys are removed by the command above
+                        Remove-Item -Path 'Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Edge\TLSCipherSuiteDenyList' -Force -Recurse -ErrorAction SilentlyContinue
+
+                        # Restore Security group policies back to their default states
+
+                        $CurrentMainStep++
+                        Write-Progress -Id 0 -Activity 'Restoring the default Security group policies' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
+
+                        # Download LGPO program from Microsoft servers
+                        Invoke-WebRequest -Uri 'https://download.microsoft.com/download/8/5/C/85C25433-A1B0-4FFA-9429-7E023E7DA8D8/LGPO.zip' -OutFile '.\LGPO.zip' -ProgressAction SilentlyContinue -HttpVersion '3.0' -SslProtocol 'Tls12,Tls13'
+
+                        # unzip the LGPO file
+                        Expand-Archive -Path .\LGPO.zip -DestinationPath .\ -Force
+                        .\'LGPO_30\LGPO.exe' /q /s "$HardeningModulePath\Resources\Default Security Policy.inf"
+
+                        # Enable LMHOSTS lookup protocol on all network adapters again
+                        Set-ItemProperty -Path 'Registry::HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\NetBT\Parameters' -Name 'EnableLMHOSTS' -Value '1' -Type DWord
+
+                        # Disable restart notification for Windows update
+                        Set-ItemProperty -Path 'Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\WindowsUpdate\UX\Settings' -Name 'RestartNotificationsAllowed2' -Value '0' -Type DWord
+
+                        # Re-enables the XblGameSave Standby Task that gets disabled by Microsoft Security Baselines
+                        SCHTASKS.EXE /Change /TN \Microsoft\XblGameSave\XblGameSaveTask /Enable | Out-Null
+
+                        $CurrentMainStep++
+                        Write-Progress -Id 0 -Activity 'Restoring Microsoft Defender configs back to their default states' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
+
+                        # Disable the advanced new security features of the Microsoft Defender
+                        Set-MpPreference -AllowSwitchToAsyncInspection $False
+                        Set-MpPreference -OobeEnableRtpAndSigUpdate $False
+                        Set-MpPreference -IntelTDTEnabled $False
+                        Set-MpPreference -DisableRestorePoint $True
+                        Set-MpPreference -PerformanceModeStatus Enabled
+                        Set-MpPreference -EnableConvertWarnToBlock $False
+                        Set-MpPreference -EngineUpdatesChannel NotConfigured
+                        Set-MpPreference -PlatformUpdatesChannel NotConfigured
+                        Set-MpPreference -BruteForceProtectionAggressiveness 0
+                        Set-MpPreference -BruteForceProtectionConfiguredState 0
+                        Set-MpPreference -BruteForceProtectionMaxBlockTime 0
+                        Set-MpPreference -RemoteEncryptionProtectionAggressiveness 0
+                        Set-MpPreference -RemoteEncryptionProtectionConfiguredState 0
+                        Set-MpPreference -RemoteEncryptionProtectionMaxBlockTime 0
+
+                        # Set Data Execution Prevention (DEP) back to its default value
+                        Set-BcdElement -Element 'nx' -Type 'Integer' -Value '0'
+
+                        # Remove the scheduled task that keeps the Microsoft recommended driver block rules updated
+
+                        # Define the name and path of the task
+                        [System.String]$taskName = 'MSFT Driver Block list update'
+                        [System.String]$taskPath = '\MSFT Driver Block list update\'
+
+                        Write-Verbose -Message "Removing the scheduled task $taskName"
+                        if (Get-ScheduledTask -TaskName $taskName -TaskPath $taskPath -ErrorAction SilentlyContinue) {
+                            Unregister-ScheduledTask -TaskName $taskName -TaskPath $taskPath -Confirm:$false | Out-Null
+                        }
+
+                        # Enables Multicast DNS (mDNS) UDP-in Firewall Rules for all 3 Firewall profiles
+                        Get-NetFirewallRule |
+                        Where-Object -FilterScript { $_.RuleGroup -eq '@%SystemRoot%\system32\firewallapi.dll,-37302' -and $_.Direction -eq 'inbound' } |
+                        ForEach-Object -Process { Enable-NetFirewallRule -DisplayName $_.DisplayName }
+
+                        # Remove any custom views added by this script for Event Viewer
+                        if (Test-Path -Path "$env:SystemDrive\ProgramData\Microsoft\Event Viewer\Views\Hardening Script") {
+                            Remove-Item -Path "$env:SystemDrive\ProgramData\Microsoft\Event Viewer\Views\Hardening Script" -Recurse -Force
+                        }
+
+                        # Set a tattooed Group policy for Svchost.exe process mitigations back to disabled state
+                        Set-ItemProperty -Path 'Registry::\HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\SCMConfig' -Name 'EnableSvchostMitigationPolicy' -Value '0' -Force -Type 'DWord' -ErrorAction SilentlyContinue
                     }
                 }
-
-                $CurrentMainStep++
-                Write-Progress -Id 0 -Activity 'Deleting all group policies' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
-
-                if (Test-Path -Path "$env:SystemDrive\Windows\System32\GroupPolicy") {
-                    Remove-Item -Path "$env:SystemDrive\Windows\System32\GroupPolicy" -Recurse -Force
-                }
-
-                $CurrentMainStep++
-                Write-Progress -Id 0 -Activity 'Deleting all the registry keys created by the Protect-WindowsSecurity cmdlet' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
-
-                [System.Object[]]$Items = Import-Csv -Path "$HardeningModulePath\Resources\Registry.csv" -Delimiter ','
-                foreach ($Item in $Items) {
-                    if (Test-Path -Path $item.path) {
-                        Remove-ItemProperty -Path $Item.path -Name $Item.key -Force -ErrorAction SilentlyContinue
-                    }
-                }
-
-                # To completely remove the Edge policy since only its sub-keys are removed by the command above
-                Remove-Item -Path 'Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Edge\TLSCipherSuiteDenyList' -Force -Recurse -ErrorAction SilentlyContinue
-
-                # Restore Security group policies back to their default states
-
-                $CurrentMainStep++
-                Write-Progress -Id 0 -Activity 'Restoring the default Security group policies' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
-
-                # Download LGPO program from Microsoft servers
-                Invoke-WebRequest -Uri 'https://download.microsoft.com/download/8/5/C/85C25433-A1B0-4FFA-9429-7E023E7DA8D8/LGPO.zip' -OutFile '.\LGPO.zip' -ProgressAction SilentlyContinue -HttpVersion '3.0' -SslProtocol 'Tls12,Tls13'
-
-                # unzip the LGPO file
-                Expand-Archive -Path .\LGPO.zip -DestinationPath .\ -Force
-                .\'LGPO_30\LGPO.exe' /q /s "$HardeningModulePath\Resources\Default Security Policy.inf"
-
-                # Enable LMHOSTS lookup protocol on all network adapters again
-                Set-ItemProperty -Path 'Registry::HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\NetBT\Parameters' -Name 'EnableLMHOSTS' -Value '1' -Type DWord
-
-                # Disable restart notification for Windows update
-                Set-ItemProperty -Path 'Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\WindowsUpdate\UX\Settings' -Name 'RestartNotificationsAllowed2' -Value '0' -Type DWord
-
-                # Re-enables the XblGameSave Standby Task that gets disabled by Microsoft Security Baselines
-                SCHTASKS.EXE /Change /TN \Microsoft\XblGameSave\XblGameSaveTask /Enable | Out-Null
-
-                $CurrentMainStep++
-                Write-Progress -Id 0 -Activity 'Restoring Microsoft Defender configs back to their default states' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
-
-                # Disable the advanced new security features of the Microsoft Defender
-                Set-MpPreference -AllowSwitchToAsyncInspection $False
-                Set-MpPreference -OobeEnableRtpAndSigUpdate $False
-                Set-MpPreference -IntelTDTEnabled $False
-                Set-MpPreference -DisableRestorePoint $True
-                Set-MpPreference -PerformanceModeStatus Enabled
-                Set-MpPreference -EnableConvertWarnToBlock $False
-                Set-MpPreference -EngineUpdatesChannel NotConfigured
-                Set-MpPreference -PlatformUpdatesChannel NotConfigured
-                Set-MpPreference -BruteForceProtectionAggressiveness 0
-                Set-MpPreference -BruteForceProtectionConfiguredState 0
-                Set-MpPreference -BruteForceProtectionMaxBlockTime 0
-                Set-MpPreference -RemoteEncryptionProtectionAggressiveness 0
-                Set-MpPreference -RemoteEncryptionProtectionConfiguredState 0
-                Set-MpPreference -RemoteEncryptionProtectionMaxBlockTime 0
-
-                # Set Data Execution Prevention (DEP) back to its default value
-                Set-BcdElement -Element 'nx' -Type 'Integer' -Value '0'
-
-                # Remove the scheduled task that keeps the Microsoft recommended driver block rules updated
-
-                # Define the name and path of the task
-                [System.String]$taskName = 'MSFT Driver Block list update'
-                [System.String]$taskPath = '\MSFT Driver Block list update\'
-
-                Write-Verbose -Message "Removing the scheduled task $taskName"
-                if (Get-ScheduledTask -TaskName $taskName -TaskPath $taskPath -ErrorAction SilentlyContinue) {
-                    Unregister-ScheduledTask -TaskName $taskName -TaskPath $taskPath -Confirm:$false | Out-Null
-                }
-
-                # Enables Multicast DNS (mDNS) UDP-in Firewall Rules for all 3 Firewall profiles
-                Get-NetFirewallRule |
-                Where-Object -FilterScript { $_.RuleGroup -eq '@%SystemRoot%\system32\firewallapi.dll,-37302' -and $_.Direction -eq 'inbound' } |
-                ForEach-Object -Process { Enable-NetFirewallRule -DisplayName $_.DisplayName }
-
-                # Remove any custom views added by this script for Event Viewer
-                if (Test-Path -Path "$env:SystemDrive\ProgramData\Microsoft\Event Viewer\Views\Hardening Script") {
-                    Remove-Item -Path "$env:SystemDrive\ProgramData\Microsoft\Event Viewer\Views\Hardening Script" -Recurse -Force
-                }
-
-                # Set a tattooed Group policy for Svchost.exe process mitigations back to disabled state
-                Set-ItemProperty -Path 'Registry::\HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\SCMConfig' -Name 'EnableSvchostMitigationPolicy' -Value '0' -Force -Type 'DWord' -ErrorAction SilentlyContinue
 
                 # Write in Fuchsia color
                 Write-Host -Object "$($PSStyle.Foreground.FromRGB(236,68,155))Operation Completed, please restart your computer.$($PSStyle.Reset)"
@@ -297,6 +299,8 @@ Function Unprotect-WindowsSecurity {
     Only removes the Process Mitigations / Exploit Protection settings and doesn't change anything else
 .PARAMETER OnlyDownloadsDefenseMeasures
     Only removes the Downloads Defense Measures WDAC policy and doesn't change anything else
+.PARAMETER OnlyCountryIPBlockingFirewallRules
+    Only removes the country IP blocking firewall rules and doesn't change anything else
 .PARAMETER Force
     Suppresses the confirmation prompt
 .EXAMPLE

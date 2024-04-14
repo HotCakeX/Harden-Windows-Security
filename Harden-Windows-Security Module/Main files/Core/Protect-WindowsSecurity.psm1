@@ -1725,7 +1725,6 @@ Execution Policy: $CurrentExecutionPolicy
                         $SyncHash['GlobalVars']['Microsoft365SecurityBaselinePath'] = $Microsoft365SecurityBaselinePath
                         $SyncHash['GlobalVars']['RegistryCSVItems'] = $RegistryCSVItems
                         $SyncHash['GlobalVars']['LGPOExe'] = $LGPOExe
-                        $SyncHash['GlobalVars']['WorkingDir'] = $WorkingDir
 
                         Write-Verbose -Message 'Finished downloading and processing the required files'
                     }
@@ -1935,7 +1934,6 @@ Execution Policy: $CurrentExecutionPolicy
                                                 $SyncHash['GlobalVars']['Microsoft365SecurityBaselinePath'] = $Microsoft365SecurityBaselinePath
                                                 $SyncHash['GlobalVars']['RegistryCSVItems'] = $RegistryCSVItems
                                                 $SyncHash['GlobalVars']['LGPOExe'] = $LGPOExe
-                                                $SyncHash['GlobalVars']['WorkingDir'] = $WorkingDir
 
                                                 Write-Verbose -Message 'Finished downloading and processing the required files'
                                             }

@@ -61,7 +61,7 @@
 ### <img width="35" src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/SVGs/github.svg" alt="GitHub logo SVG"> Apply the Latest Hardening Measures [***directly***](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.utility/invoke-expression?view=powershell-7.3) From This Github Repository
 
 ```powershell
-irm 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Harden-Windows-Security.ps1' | iex
+(irm 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Harden-Windows-Security.ps1')+'P'|iex
 ```
 
 <br>
@@ -69,7 +69,7 @@ irm 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Har
 ### <img width="35" src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/SVGs/github-pink.svg" alt="GitHub logo pink SVG"> Use the GUI [(Graphical User Interface)](https://youtu.be/a8YbihowTVg?si=hGUS2KAW_z80Hnx8) to apply the latest Hardening Measures
 
 ```powershell
-irm 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Harden-Windows-Security-GUI.ps1' | iex
+(irm 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Harden-Windows-Security.ps1')+'P -G'|iex
 ```
 
 <br>

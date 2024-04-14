@@ -103,6 +103,13 @@ It possesses the ability to operate entirely in isolation, useful for systems or
 
 Shows a graphical user interface (GUI) that allows you to select the hardening categories you want to apply.
 
+> [!TIP]\
+> In the GUI experience:
+> * Toast Notification is displayed when all of the selected categories are applied.
+> * When using the logging feature, the log file will be created in the path you selected once the GUI is closed.
+
+<br>
+
 <div align='center'>
 
 | Type: |[SwitchParameter](https://learn.microsoft.com/en-us/dotnet/api/system.management.automation.switchparameter)|

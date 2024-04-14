@@ -8,7 +8,16 @@ schema: 2.0.0
 # ConvertTo-WDACPolicy
 
 ## SYNOPSIS
-Displays the Code Integrity logs in a GUI and allows the user to select the logs to convert to a Supplemental WDAC policy. It's a multi-purpose cmdlet that offers a wide range of functionalities that can either be used separately or mixed together for very detailed and specific tasks.
+This is a multi-purpose cmdlet that offers a wide range of functionalities that can either be used separately or mixed together for very detailed and specific tasks.
+
+It currently supports Code Integrity and AppLocker logs from the following sources: Local Event logs and Microsoft Defender for Endpoint Advanced Hunting results.
+
+The cmdlet displays the logs in a GUI and allows the user to select the logs to be processed further.
+
+The logs can be filtered based on many criteria using the available parameters.
+
+The output of this cmdlet is a Supplemental Application Control (WDAC) policy.
+Based on the input parameters, it can be associated with a base policy or merged with an existing Base or Supplemental policy.
 
 ## SYNTAX
 
@@ -61,7 +70,8 @@ ConvertTo-WDACPolicy
 ```
 
 ## DESCRIPTION
-You can filter the logs by the policy name and the time. You can add the logs to an existing WDAC policy or create a new one. You can use the local logs or use Microsoft Defender for Endpoint Advanced Hunting results to generate Application Control policies.
+The cmdlet can be used for local and remote systems. You can utilize this cmdlet to create Application Control for Business policies from MDE Advanced Hunting and then deploy them using Microsoft Intune to your endpoints.
+This offers scalability and flexibility in managing your security policies.
 
 ## EXAMPLES
 
@@ -191,7 +201,7 @@ Accept wildcard characters: False
 The names of the policies to filter the logs by.
 Supports auto-completion, press TAB key to view the list of the deployed base policy names to choose from.
 It will not display the policies that are already selected on the command line.
-You can manually enter the name of the policies that are no longer available on the system.
+You can manually enter the name of the policies that are no longer available on the system or are from remote systems in case of MDE Advanced Hunting logs.
 
 ```yaml
 Type: String[]
@@ -237,7 +247,9 @@ Accept wildcard characters: False
 ```
 
 ### -KernelModeOnly
-If used, will filter the logs by including only the Kernel-Mode logs
+If used, will filter the logs by including only the Kernel-Mode logs. You can use this parameter to easily create Supplemental policies for Strict Kernel-Mode WDAC policy.
+
+More info available here: https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDAC-policy-for-BYOVD-Kernel-mode-only-protection
 
 ```yaml
 Type: SwitchParameter

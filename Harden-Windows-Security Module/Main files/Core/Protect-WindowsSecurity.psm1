@@ -939,6 +939,184 @@ Function Protect-WindowsSecurity {
         }
         #Endregion Helper-Functions-CLI-Experience
 
+        Function Start-FileDownload {
+            <#
+            .SYNOPSIS
+                Function to download the required files for the Harden-Windows-Security module
+                Is used for both CLI and GUI experiences
+            .NOTES
+                The function does not rely on any script-wide or global variables
+            .INPUTS
+                System.String
+                System.Management.Automation.SwitchParameter
+                System.Collections.Hashtable
+            .OUTPUTS
+                System.Object[]
+                Returns array of filepaths when running in CLI experience
+
+            #>
+            [CmdletBinding()]
+            Param (
+                [Parameter(Mandatory = $true)][System.String]$WorkingDir,
+                [Parameter(Mandatory = $true)][System.String]$HardeningModulePath,
+                [Parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$IsLocally,
+                [Parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$Offline,
+                [Parameter(Mandatory = $false)][System.Collections.Hashtable]$SyncHash,
+                [Parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$GUI
+            )
+            try {
+                Import-Module -Name 'Microsoft.PowerShell.Archive' -Force
+                Write-Verbose -Message 'Downloading the required files'
+
+                # Create an array of files to download
+                [System.Object[]]$Files = @(
+                    # System.Net.WebClient requires absolute path instead of relative one
+                    @{url = 'https://download.microsoft.com/download/8/5/C/85C25433-A1B0-4FFA-9429-7E023E7DA8D8/Windows%2011%20v23H2%20Security%20Baseline.zip'; path = "$WorkingDir\MicrosoftSecurityBaseline.zip"; tag = 'MicrosoftSecurityBaseline' }
+                    @{url = 'https://download.microsoft.com/download/8/5/C/85C25433-A1B0-4FFA-9429-7E023E7DA8D8/Microsoft%20365%20Apps%20for%20Enterprise%202306.zip'; path = "$WorkingDir\Microsoft365SecurityBaseline.zip"; tag = 'Microsoft365SecurityBaseline' }
+                    @{url = 'https://download.microsoft.com/download/8/5/C/85C25433-A1B0-4FFA-9429-7E023E7DA8D8/LGPO.zip'; path = "$WorkingDir\LGPO.zip"; tag = 'LGPO' }
+                    @{url = 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Harden-Windows-Security%20Module/Main%20files/Resources/Security-Baselines-X.zip'; path = "$WorkingDir\Security-Baselines-X.zip"; tag = 'Security-Baselines-X' }
+                    @{url = 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Harden-Windows-Security%20Module/Main%20files/Resources/Registry.csv'; path = "$WorkingDir\Registry.csv"; tag = 'Registry' }
+                    @{url = 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Harden-Windows-Security%20Module/Main%20files/Resources/ProcessMitigations.csv'; path = "$WorkingDir\ProcessMitigations.csv"; tag = 'ProcessMitigations' }
+                    @{url = 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Harden-Windows-Security%20Module/Main%20files/Resources/EventViewerCustomViews.zip'; path = "$WorkingDir\EventViewerCustomViews.zip"; tag = 'EventViewerCustomViews' }
+                )
+
+                # Get the total number of files to download based on whether the script is running locally or not
+                [System.Int16]$TotalRequiredFiles = $IsLocally ? ($Files.Count - 4) : $Files.Count
+                # Initialize a counter for the progress bar
+                [System.Int16]$RequiredFilesCounter = 0
+
+                # Start a job for each file download
+                [System.Object[]]$Jobs = foreach ($File in $Files) {
+
+                    # If running locally, skip downloading the files that are already shipped with the Harden Windows Security module
+                    if ($IsLocally) {
+                        if ($File.tag -in @('Security-Baselines-X', 'Registry', 'ProcessMitigations', 'EventViewerCustomViews')) {
+                            Write-Verbose -Message "Skipping downloading the $($File.tag) because of local mode."
+                            Continue
+                        }
+                    }
+                    # If running in offline mode, skip downloading the files that are manually provided by the user
+                    if ($Offline) {
+                        if ($File.tag -in @('MicrosoftSecurityBaseline', 'Microsoft365SecurityBaseline', 'LGPO')) {
+                            Write-Verbose -Message "Skipping downloading the $($File.tag) because of offline mode."
+                            Continue
+                        }
+                    }
+
+                    Start-Job -ScriptBlock {
+                        param([System.Uri]$Url, [System.IO.FileInfo]$Path, [System.String]$Tag)
+                        $ErrorActionPreference = 'Stop'
+
+                        # Create a WebClient object
+                        [System.Net.WebClient]$WC = New-Object -TypeName System.Net.WebClient
+                        try {
+                            # Try to download the file from the original URL
+                            $WC.DownloadFile($Url, $Path)
+                        }
+                        catch {
+                            # a switch for when the original URLs are failing and to provide Alt URL
+                            switch ($Tag) {
+                                'Security-Baselines-X' {
+                                    Write-Host -Object 'Using Azure DevOps for Security-Baselines-X.zip' -ForegroundColor Yellow
+                                    [System.Uri]$AltURL = 'https://dev.azure.com/SpyNetGirl/011c178a-7b92-462b-bd23-2c014528a67e/_apis/git/repositories/5304fef0-07c0-4821-a613-79c01fb75657/items?path=/Payload/Security-Baselines-X.zip'
+                                    $WC.DownloadFile($AltURL, $Path)
+                                    break
+                                }
+                                'Registry' {
+                                    Write-Host -Object 'Using Azure DevOps for Registry.csv' -ForegroundColor Yellow
+                                    [System.Uri]$AltURL = 'https://dev.azure.com/SpyNetGirl/011c178a-7b92-462b-bd23-2c014528a67e/_apis/git/repositories/5304fef0-07c0-4821-a613-79c01fb75657/items?path=/Payload/Registry.csv'
+                                    $WC.DownloadFile($AltURL, $Path)
+                                    break
+                                }
+                                'ProcessMitigations' {
+                                    Write-Host -Object 'Using Azure DevOps for ProcessMitigations.CSV' -ForegroundColor Yellow
+                                    [System.Uri]$AltURL = 'https://dev.azure.com/SpyNetGirl/011c178a-7b92-462b-bd23-2c014528a67e/_apis/git/repositories/5304fef0-07c0-4821-a613-79c01fb75657/items?path=/Payload/ProcessMitigations.csv'
+                                    $WC.DownloadFile($AltURL, $Path)
+                                    break
+                                }
+                                'EventViewerCustomViews' {
+                                    Write-Host -Object 'Using Azure DevOps for EventViewerCustomViews.zip' -ForegroundColor Yellow
+                                    [System.Uri]$AltURL = 'https://dev.azure.com/SpyNetGirl/011c178a-7b92-462b-bd23-2c014528a67e/_apis/git/repositories/5304fef0-07c0-4821-a613-79c01fb75657/items?path=/Payload/EventViewerCustomViews.zip'
+                                    $WC.DownloadFile($AltURL, $Path)
+                                    break
+                                }
+                                default {
+                                    # Throw the error if any other URL fails and stop the operation
+                                    Throw $_
+                                }
+                            }
+                        }
+                    } -ArgumentList $File.url, $File.path, $File.tag
+
+                    if (-NOT $GUI) {
+                        # Increment the counter by one
+                        $RequiredFilesCounter++
+                        # Write the progress of the download jobs
+                        Write-Progress -Id 1 -ParentId 0 -Activity "Downloading $($file.tag)" -Status "$RequiredFilesCounter of $TotalRequiredFiles" -PercentComplete ($RequiredFilesCounter / $TotalRequiredFiles * 100)
+                    }
+                }
+
+                # Output and remove jobs as they complete
+                foreach ($Job in $Jobs) {
+                    # Receive the job output and wait for it to complete before removing it
+                    Receive-Job -Job $Job -Wait -AutoRemoveJob
+                }
+
+                if (-NOT $GUI) {
+                    Write-Progress -Id 1 -ParentId 0 -Activity 'Downloading files completed.' -Completed
+                }
+            }
+            catch {
+                Throw 'The required files could not be downloaded, Make sure you have Internet connection.'
+            }
+
+            if ($IsLocally) {
+                Write-Verbose -Message 'Local Mode; Copying the Security-Baselines-X, Registry, ProcessMitigations and EventViewerCustomViews files from the module folder to the working directory'
+                Copy-Item -Path "$HardeningModulePath\Resources\Security-Baselines-X.zip" -Destination "$WorkingDir\Security-Baselines-X.zip"
+                Copy-Item -Path "$HardeningModulePath\Resources\Registry.csv" -Destination "$WorkingDir\Registry.csv"
+                Copy-Item -Path "$HardeningModulePath\Resources\ProcessMitigations.csv" -Destination "$WorkingDir\ProcessMitigations.csv"
+                Copy-Item -Path "$HardeningModulePath\Resources\EventViewerCustomViews.zip" -Destination "$WorkingDir\EventViewerCustomViews.zip"
+            }
+            if ($Offline) {
+                Write-Verbose -Message 'Offline Mode; Copying the Microsoft Security Baselines, Microsoft 365 Apps for Enterprise Security Baselines and LGPO files from the user provided paths to the working directory'
+                Copy-Item -Path ($GUI ? $SyncHash.LGPOZipTextBox.Text : "$PathToLGPO" ) -Destination "$WorkingDir\LGPO.zip"
+                Copy-Item -Path ($GUI ? $SyncHash.MicrosoftSecurityBaselineZipTextBox.Text : "$PathToMSFTSecurityBaselines") -Destination "$WorkingDir\MicrosoftSecurityBaseline.zip"
+                Copy-Item -Path ($GUI ? $SyncHash.Microsoft365AppsSecurityBaselineZipTextBox.Text : "$PathToMSFT365AppsSecurityBaselines" ) -Destination "$WorkingDir\Microsoft365SecurityBaseline.zip"
+            }
+
+            Write-Verbose -Message 'Unzipping the archives'
+            Expand-Archive -Path "$WorkingDir\MicrosoftSecurityBaseline.zip" -DestinationPath "$WorkingDir\MicrosoftSecurityBaseline" -Force
+            Expand-Archive -Path "$WorkingDir\Microsoft365SecurityBaseline.zip" -DestinationPath "$WorkingDir\Microsoft365SecurityBaseline" -Force
+            Expand-Archive -Path "$WorkingDir\LGPO.zip" -DestinationPath "$WorkingDir\" -Force
+            Expand-Archive -Path "$WorkingDir\Security-Baselines-X.zip" -DestinationPath "$WorkingDir\Security-Baselines-X\" -Force
+
+            # capturing the Microsoft Security Baselines extracted path in a variable using wildcard and storing it in a variable so that we won't need to change anything in the code other than the download link when they are updated
+            [System.String]$MicrosoftSecurityBaselinePath = (Get-ChildItem -Directory -Path "$WorkingDir\MicrosoftSecurityBaseline\*\").FullName
+            # capturing the Microsoft 365 Security Baselines extracted path in a variable using wildcard and storing it in a variable so that we won't need to change anything in the code other than the download link when they are updated
+            [System.String]$Microsoft365SecurityBaselinePath = (Get-ChildItem -Directory -Path "$WorkingDir\Microsoft365SecurityBaseline\*\").FullName
+            # Storing the registry CSV file in a variable
+            [System.Object[]]$RegistryCSVItems = Import-Csv -Path "$WorkingDir\Registry.csv" -Delimiter ','
+            # Storing the LGPO.exe path in a variable
+            [System.IO.FileInfo]$LGPOExe = Get-ChildItem -Path "$WorkingDir\LGPO_30\LGPO.exe" -File
+
+            # Copying LGPO.exe from its folder to Microsoft Security Baseline folder in order to get it ready to be used by PowerShell script
+            Copy-Item -Path $LGPOExe -Destination "$MicrosoftSecurityBaselinePath\Scripts\Tools"
+            # Copying LGPO.exe from its folder to Microsoft Office 365 Apps for Enterprise Security Baseline folder in order to get it ready to be used by PowerShell script
+            Copy-Item -Path $LGPOExe -Destination "$Microsoft365SecurityBaselinePath\Scripts\Tools"
+
+            if ($GUI) {
+                # These values should be passed to the SyncHash so that they will be imported in the parent RunSpace where the main hardening functions run
+                $SyncHash['GlobalVars']['MicrosoftSecurityBaselinePath'] = $MicrosoftSecurityBaselinePath
+                $SyncHash['GlobalVars']['Microsoft365SecurityBaselinePath'] = $Microsoft365SecurityBaselinePath
+                $SyncHash['GlobalVars']['RegistryCSVItems'] = $RegistryCSVItems
+                $SyncHash['GlobalVars']['LGPOExe'] = $LGPOExe
+            }
+            else {
+                Return $MicrosoftSecurityBaselinePath, $Microsoft365SecurityBaselinePath, $RegistryCSVItems, $LGPOExe
+            }
+            Write-Verbose -Message 'Finished downloading and processing the required files'
+        }
+
         # Determining whether to use the files inside the module or download them from the GitHub repository
         [System.Boolean]$IsLocally = $false
         # Test for $null or '' or all-whitespace or any stringified value being ''
@@ -1195,7 +1373,7 @@ Execution Policy: $CurrentExecutionPolicy
 
             # Pass any necessary function as nested hashtable inside of the main synced hashtable
             # so they can be easily passed to any other RunSpaces
-            'Write-GUI' | ForEach-Object -Process {
+            'Write-GUI', 'Start-FileDownload' | ForEach-Object -Process {
                 $SyncHash['ExportedFunctions']["$_"] = Get-Item -Path "Function:$_"
             }
 
@@ -1581,155 +1759,6 @@ Execution Policy: $CurrentExecutionPolicy
                     # Update the sub-categories based on the initial unchecked state of the categories
                     Update-SubCategories
 
-                    Function Start-FileDownload {
-                        <#
-                        .SYNOPSIS
-                            Defining a function in the GUI's RunSpace for downloading and processing the required files
-                        .DESCRIPTION
-                            If Offline mode is being used, this function will run when the Execute button is clicked for the first time
-                            Due to using multi-threaded jobs, it cannot be used in the nested Prerequisites runspace for some reason
-                            #>
-
-                        try {
-
-                            Write-Verbose -Message 'Downloading the required files'
-
-                            # Create an array of files to download
-                            [System.Object[]]$Files = @(
-                                # System.Net.WebClient requires absolute path instead of relative one
-                                @{url = 'https://download.microsoft.com/download/8/5/C/85C25433-A1B0-4FFA-9429-7E023E7DA8D8/Windows%2011%20v23H2%20Security%20Baseline.zip'; path = "$WorkingDir\MicrosoftSecurityBaseline.zip"; tag = 'MicrosoftSecurityBaseline' }
-                                @{url = 'https://download.microsoft.com/download/8/5/C/85C25433-A1B0-4FFA-9429-7E023E7DA8D8/Microsoft%20365%20Apps%20for%20Enterprise%202306.zip'; path = "$WorkingDir\Microsoft365SecurityBaseline.zip"; tag = 'Microsoft365SecurityBaseline' }
-                                @{url = 'https://download.microsoft.com/download/8/5/C/85C25433-A1B0-4FFA-9429-7E023E7DA8D8/LGPO.zip'; path = "$WorkingDir\LGPO.zip"; tag = 'LGPO' }
-                                @{url = 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Harden-Windows-Security%20Module/Main%20files/Resources/Security-Baselines-X.zip'; path = "$WorkingDir\Security-Baselines-X.zip"; tag = 'Security-Baselines-X' }
-                                @{url = 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Harden-Windows-Security%20Module/Main%20files/Resources/Registry.csv'; path = "$WorkingDir\Registry.csv"; tag = 'Registry' }
-                                @{url = 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Harden-Windows-Security%20Module/Main%20files/Resources/ProcessMitigations.csv'; path = "$WorkingDir\ProcessMitigations.csv"; tag = 'ProcessMitigations' }
-                                @{url = 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Harden-Windows-Security%20Module/Main%20files/Resources/EventViewerCustomViews.zip'; path = "$WorkingDir\EventViewerCustomViews.zip"; tag = 'EventViewerCustomViews' }
-                            )
-
-                            # Start a job for each file download
-                            [System.Object[]]$Jobs = foreach ($File in $Files) {
-
-                                # If running locally, skip downloading the files that are already shipped with the Harden Windows Security module
-                                if ($IsLocally) {
-                                    if ($File.tag -in @('Security-Baselines-X', 'Registry', 'ProcessMitigations', 'EventViewerCustomViews')) {
-                                        Write-Verbose -Message "Skipping downloading the $($File.tag) because of local mode."
-                                        Continue
-                                    }
-                                }
-
-                                # If running in offline mode, skip downloading the files that are manually provided by the user
-                                if ($Offline) {
-                                    if ($File.tag -in @('MicrosoftSecurityBaseline', 'Microsoft365SecurityBaseline', 'LGPO')) {
-                                        Write-Verbose -Message "Skipping downloading the $($File.tag) because of offline mode."
-                                        Continue
-                                    }
-                                }
-
-                                Start-Job -ScriptBlock {
-
-                                    param([System.Uri]$Url, [System.IO.FileInfo]$Path, [System.String]$Tag)
-                                    # Create a WebClient object
-                                    [System.Net.WebClient]$WC = New-Object -TypeName System.Net.WebClient
-                                    try {
-                                        # Try to download the file from the original URL
-                                        $WC.DownloadFile($Url, $Path)
-                                    }
-                                    catch {
-                                        # a switch for when the original URLs are failing and to provide Alt URL
-                                        switch ($Tag) {
-                                            'Security-Baselines-X' {
-                                                Write-Host -Object 'Using Azure DevOps for Security-Baselines-X.zip' -ForegroundColor Yellow
-                                                [System.Uri]$AltURL = 'https://dev.azure.com/SpyNetGirl/011c178a-7b92-462b-bd23-2c014528a67e/_apis/git/repositories/5304fef0-07c0-4821-a613-79c01fb75657/items?path=/Payload/Security-Baselines-X.zip'
-                                                $WC.DownloadFile($AltURL, $Path)
-                                                break
-                                            }
-                                            'Registry' {
-                                                Write-Host -Object 'Using Azure DevOps for Registry.csv' -ForegroundColor Yellow
-                                                [System.Uri]$AltURL = 'https://dev.azure.com/SpyNetGirl/011c178a-7b92-462b-bd23-2c014528a67e/_apis/git/repositories/5304fef0-07c0-4821-a613-79c01fb75657/items?path=/Payload/Registry.csv'
-                                                $WC.DownloadFile($AltURL, $Path)
-                                                break
-                                            }
-                                            'ProcessMitigations' {
-                                                Write-Host -Object 'Using Azure DevOps for ProcessMitigations.CSV' -ForegroundColor Yellow
-                                                [System.Uri]$AltURL = 'https://dev.azure.com/SpyNetGirl/011c178a-7b92-462b-bd23-2c014528a67e/_apis/git/repositories/5304fef0-07c0-4821-a613-79c01fb75657/items?path=/Payload/ProcessMitigations.csv'
-                                                $WC.DownloadFile($AltURL, $Path)
-                                                break
-                                            }
-                                            'EventViewerCustomViews' {
-                                                Write-Host -Object 'Using Azure DevOps for EventViewerCustomViews.zip' -ForegroundColor Yellow
-                                                [System.Uri]$AltURL = 'https://dev.azure.com/SpyNetGirl/011c178a-7b92-462b-bd23-2c014528a67e/_apis/git/repositories/5304fef0-07c0-4821-a613-79c01fb75657/items?path=/Payload/EventViewerCustomViews.zip'
-                                                $WC.DownloadFile($AltURL, $Path)
-                                                break
-                                            }
-                                            default {
-                                                # Throw the error if any other URL fails and stop the operation
-                                                Throw $_
-                                            }
-                                        }
-                                    }
-                                } -ArgumentList $File.url, $File.path, $File.tag
-
-                            }
-                            # Wait until all jobs are completed
-                            while ($Jobs | Where-Object -FilterScript { $_.State -ne 'Completed' }) {
-                                Start-Sleep -Milliseconds 700
-                            }
-
-                            # Receive the output or errors of each job and remove the job
-                            foreach ($Job in $Jobs) {
-                                Receive-Job -Job $Job
-                                Remove-Job -Job $Job
-                            }
-                        }
-                        catch {
-                            foreach ($Job in $Jobs) { Remove-Job -Job $Job }
-                            Throw 'The required files could not be downloaded, Make sure you have Internet connection.'
-                        }
-
-                        if ($IsLocally) {
-                            Write-Verbose -Message 'Local Mode; Copying the Security-Baselines-X, Registry, ProcessMitigations and EventViewerCustomViews files from the module folder to the working directory'
-                            Copy-Item -Path "$HardeningModulePath\Resources\Security-Baselines-X.zip" -Destination "$WorkingDir\Security-Baselines-X.zip"
-                            Copy-Item -Path "$HardeningModulePath\Resources\Registry.csv" -Destination "$WorkingDir\Registry.csv"
-                            Copy-Item -Path "$HardeningModulePath\Resources\ProcessMitigations.csv" -Destination "$WorkingDir\ProcessMitigations.csv"
-                            Copy-Item -Path "$HardeningModulePath\Resources\EventViewerCustomViews.zip" -Destination "$WorkingDir\EventViewerCustomViews.zip"
-                        }
-
-                        if ($Offline) {
-                            Write-Verbose -Message 'Offline Mode; Copying the Microsoft Security Baselines, Microsoft 365 Apps for Enterprise Security Baselines and LGPO files from the user provided paths to the working directory'
-                            Copy-Item -Path $SyncHash.LGPOZipTextBox.Text -Destination "$WorkingDir\LGPO.zip"
-                            Copy-Item -Path $SyncHash.MicrosoftSecurityBaselineZipTextBox.Text -Destination "$WorkingDir\MicrosoftSecurityBaseline.zip"
-                            Copy-Item -Path $SyncHash.Microsoft365AppsSecurityBaselineZipTextBox.Text -Destination "$WorkingDir\Microsoft365SecurityBaseline.zip"
-                        }
-
-                        Write-Verbose -Message 'Unzipping the archives'
-                        Expand-Archive -Path "$WorkingDir\MicrosoftSecurityBaseline.zip" -DestinationPath "$WorkingDir\MicrosoftSecurityBaseline" -Force
-                        Expand-Archive -Path "$WorkingDir\Microsoft365SecurityBaseline.zip" -DestinationPath "$WorkingDir\Microsoft365SecurityBaseline" -Force
-                        Expand-Archive -Path "$WorkingDir\LGPO.zip" -DestinationPath "$WorkingDir\" -Force
-                        Expand-Archive -Path "$WorkingDir\Security-Baselines-X.zip" -DestinationPath "$WorkingDir\Security-Baselines-X\" -Force
-
-                        # capturing the Microsoft Security Baselines extracted path in a variable using wildcard and storing it in a variable so that we won't need to change anything in the code other than the download link when they are updated
-                        [System.String]$MicrosoftSecurityBaselinePath = (Get-ChildItem -Directory -Path "$WorkingDir\MicrosoftSecurityBaseline\*\").FullName
-                        # capturing the Microsoft 365 Security Baselines extracted path in a variable using wildcard and storing it in a variable so that we won't need to change anything in the code other than the download link when they are updated
-                        [System.String]$Microsoft365SecurityBaselinePath = (Get-ChildItem -Directory -Path "$WorkingDir\Microsoft365SecurityBaseline\*\").FullName
-                        # Storing the registry CSV file in a variable
-                        [System.Object[]]$RegistryCSVItems = Import-Csv -Path "$WorkingDir\Registry.csv" -Delimiter ','
-                        # Storing the LGPO.exe path in a variable
-                        [System.IO.FileInfo]$LGPOExe = Get-ChildItem -Path "$WorkingDir\LGPO_30\LGPO.exe" -File
-
-                        # Copying LGPO.exe from its folder to Microsoft Security Baseline folder in order to get it ready to be used by PowerShell script
-                        Copy-Item -Path $LGPOExe -Destination "$MicrosoftSecurityBaselinePath\Scripts\Tools"
-                        # Copying LGPO.exe from its folder to Microsoft Office 365 Apps for Enterprise Security Baseline folder in order to get it ready to be used by PowerShell script
-                        Copy-Item -Path $LGPOExe -Destination "$Microsoft365SecurityBaselinePath\Scripts\Tools"
-
-                        # These values should be passed to the SyncHash so that they will be imported in the parent RunSpace where the main hardening functions run
-                        $SyncHash['GlobalVars']['MicrosoftSecurityBaselinePath'] = $MicrosoftSecurityBaselinePath
-                        $SyncHash['GlobalVars']['Microsoft365SecurityBaselinePath'] = $Microsoft365SecurityBaselinePath
-                        $SyncHash['GlobalVars']['RegistryCSVItems'] = $RegistryCSVItems
-                        $SyncHash['GlobalVars']['LGPOExe'] = $LGPOExe
-
-                        Write-Verbose -Message 'Finished downloading and processing the required files'
-                    }
-
                     # Set a flag indicating that the required files for the Offline operation mode have been processed
                     # When the execute button was clicked, so it won't run twice
                     $SyncHash.StartFileDownloadHasRun = $false
@@ -1798,145 +1827,7 @@ Execution Policy: $CurrentExecutionPolicy
                                             # Only download and process the files when GUI is loaded if Offline mode is not used
                                             # Because at this point user might have not selected the files to be used for offline operation
                                             if (-NOT $Offline) {
-
-                                                try {
-
-                                                    Write-Verbose -Message 'Downloading the required files'
-
-                                                    # Create an array of files to download
-                                                    [System.Object[]]$Files = @(
-                                                        # System.Net.WebClient requires absolute path instead of relative one
-                                                        @{url = 'https://download.microsoft.com/download/8/5/C/85C25433-A1B0-4FFA-9429-7E023E7DA8D8/Windows%2011%20v23H2%20Security%20Baseline.zip'; path = "$WorkingDir\MicrosoftSecurityBaseline.zip"; tag = 'MicrosoftSecurityBaseline' }
-                                                        @{url = 'https://download.microsoft.com/download/8/5/C/85C25433-A1B0-4FFA-9429-7E023E7DA8D8/Microsoft%20365%20Apps%20for%20Enterprise%202306.zip'; path = "$WorkingDir\Microsoft365SecurityBaseline.zip"; tag = 'Microsoft365SecurityBaseline' }
-                                                        @{url = 'https://download.microsoft.com/download/8/5/C/85C25433-A1B0-4FFA-9429-7E023E7DA8D8/LGPO.zip'; path = "$WorkingDir\LGPO.zip"; tag = 'LGPO' }
-                                                        @{url = 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Harden-Windows-Security%20Module/Main%20files/Resources/Security-Baselines-X.zip'; path = "$WorkingDir\Security-Baselines-X.zip"; tag = 'Security-Baselines-X' }
-                                                        @{url = 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Harden-Windows-Security%20Module/Main%20files/Resources/Registry.csv'; path = "$WorkingDir\Registry.csv"; tag = 'Registry' }
-                                                        @{url = 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Harden-Windows-Security%20Module/Main%20files/Resources/ProcessMitigations.csv'; path = "$WorkingDir\ProcessMitigations.csv"; tag = 'ProcessMitigations' }
-                                                        @{url = 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Harden-Windows-Security%20Module/Main%20files/Resources/EventViewerCustomViews.zip'; path = "$WorkingDir\EventViewerCustomViews.zip"; tag = 'EventViewerCustomViews' }
-                                                    )
-
-                                                    # Start a job for each file download
-                                                    [System.Object[]]$Jobs = foreach ($File in $Files) {
-
-                                                        # If running locally, skip downloading the files that are already shipped with the Harden Windows Security module
-                                                        if ($IsLocally) {
-                                                            if ($File.tag -in @('Security-Baselines-X', 'Registry', 'ProcessMitigations', 'EventViewerCustomViews')) {
-                                                                Write-Verbose -Message "Skipping downloading the $($File.tag) because of local mode."
-                                                                Continue
-                                                            }
-                                                        }
-
-                                                        # If running in offline mode, skip downloading the files that are manually provided by the user
-                                                        if ($Offline) {
-                                                            if ($File.tag -in @('MicrosoftSecurityBaseline', 'Microsoft365SecurityBaseline', 'LGPO')) {
-                                                                Write-Verbose -Message "Skipping downloading the $($File.tag) because of offline mode."
-                                                                Continue
-                                                            }
-                                                        }
-
-                                                        Start-Job -ScriptBlock {
-
-                                                            param([System.Uri]$Url, [System.IO.FileInfo]$Path, [System.String]$Tag)
-                                                            # Create a WebClient object
-                                                            [System.Net.WebClient]$WC = New-Object -TypeName System.Net.WebClient
-                                                            try {
-                                                                # Try to download the file from the original URL
-                                                                $WC.DownloadFile($Url, $Path)
-                                                            }
-                                                            catch {
-                                                                # a switch for when the original URLs are failing and to provide Alt URL
-                                                                switch ($Tag) {
-                                                                    'Security-Baselines-X' {
-                                                                        Write-Host -Object 'Using Azure DevOps for Security-Baselines-X.zip' -ForegroundColor Yellow
-                                                                        [System.Uri]$AltURL = 'https://dev.azure.com/SpyNetGirl/011c178a-7b92-462b-bd23-2c014528a67e/_apis/git/repositories/5304fef0-07c0-4821-a613-79c01fb75657/items?path=/Payload/Security-Baselines-X.zip'
-                                                                        $WC.DownloadFile($AltURL, $Path)
-                                                                        break
-                                                                    }
-                                                                    'Registry' {
-                                                                        Write-Host -Object 'Using Azure DevOps for Registry.csv' -ForegroundColor Yellow
-                                                                        [System.Uri]$AltURL = 'https://dev.azure.com/SpyNetGirl/011c178a-7b92-462b-bd23-2c014528a67e/_apis/git/repositories/5304fef0-07c0-4821-a613-79c01fb75657/items?path=/Payload/Registry.csv'
-                                                                        $WC.DownloadFile($AltURL, $Path)
-                                                                        break
-                                                                    }
-                                                                    'ProcessMitigations' {
-                                                                        Write-Host -Object 'Using Azure DevOps for ProcessMitigations.CSV' -ForegroundColor Yellow
-                                                                        [System.Uri]$AltURL = 'https://dev.azure.com/SpyNetGirl/011c178a-7b92-462b-bd23-2c014528a67e/_apis/git/repositories/5304fef0-07c0-4821-a613-79c01fb75657/items?path=/Payload/ProcessMitigations.csv'
-                                                                        $WC.DownloadFile($AltURL, $Path)
-                                                                        break
-                                                                    }
-                                                                    'EventViewerCustomViews' {
-                                                                        Write-Host -Object 'Using Azure DevOps for EventViewerCustomViews.zip' -ForegroundColor Yellow
-                                                                        [System.Uri]$AltURL = 'https://dev.azure.com/SpyNetGirl/011c178a-7b92-462b-bd23-2c014528a67e/_apis/git/repositories/5304fef0-07c0-4821-a613-79c01fb75657/items?path=/Payload/EventViewerCustomViews.zip'
-                                                                        $WC.DownloadFile($AltURL, $Path)
-                                                                        break
-                                                                    }
-                                                                    default {
-                                                                        # Throw the error if any other URL fails and stop the operation
-                                                                        Throw $_
-                                                                    }
-                                                                }
-                                                            }
-                                                        } -ArgumentList $File.url, $File.path, $File.tag
-
-                                                    }
-                                                    # Wait until all jobs are completed
-                                                    while ($Jobs | Where-Object -FilterScript { $_.State -ne 'Completed' }) {
-                                                        Start-Sleep -Milliseconds 700
-                                                    }
-
-                                                    # Receive the output or errors of each job and remove the job
-                                                    foreach ($Job in $Jobs) {
-                                                        Receive-Job -Job $Job
-                                                        Remove-Job -Job $Job
-                                                    }
-                                                }
-                                                catch {
-                                                    foreach ($Job in $Jobs) { Remove-Job -Job $Job }
-                                                    Throw 'The required files could not be downloaded, Make sure you have Internet connection.'
-                                                }
-
-                                                if ($IsLocally) {
-                                                    Write-Verbose -Message 'Local Mode; Copying the Security-Baselines-X, Registry, ProcessMitigations and EventViewerCustomViews files from the module folder to the working directory'
-                                                    Copy-Item -Path "$HardeningModulePath\Resources\Security-Baselines-X.zip" -Destination "$WorkingDir\Security-Baselines-X.zip"
-                                                    Copy-Item -Path "$HardeningModulePath\Resources\Registry.csv" -Destination "$WorkingDir\Registry.csv"
-                                                    Copy-Item -Path "$HardeningModulePath\Resources\ProcessMitigations.csv" -Destination "$WorkingDir\ProcessMitigations.csv"
-                                                    Copy-Item -Path "$HardeningModulePath\Resources\EventViewerCustomViews.zip" -Destination "$WorkingDir\EventViewerCustomViews.zip"
-                                                }
-
-                                                if ($Offline) {
-                                                    Write-Verbose -Message 'Offline Mode; Copying the Microsoft Security Baselines, Microsoft 365 Apps for Enterprise Security Baselines and LGPO files from the user provided paths to the working directory'
-                                                    Copy-Item -Path $SyncHash.LGPOZipTextBox.Text -Destination "$WorkingDir\LGPO.zip"
-                                                    Copy-Item -Path $SyncHash.MicrosoftSecurityBaselineZipTextBox.Text -Destination "$WorkingDir\MicrosoftSecurityBaseline.zip"
-                                                    Copy-Item -Path $SyncHash.Microsoft365AppsSecurityBaselineZipTextBox.Text -Destination "$WorkingDir\Microsoft365SecurityBaseline.zip"
-                                                }
-
-                                                Write-Verbose -Message 'Unzipping the archives'
-                                                Expand-Archive -Path "$WorkingDir\MicrosoftSecurityBaseline.zip" -DestinationPath "$WorkingDir\MicrosoftSecurityBaseline" -Force
-                                                Expand-Archive -Path "$WorkingDir\Microsoft365SecurityBaseline.zip" -DestinationPath "$WorkingDir\Microsoft365SecurityBaseline" -Force
-                                                Expand-Archive -Path "$WorkingDir\LGPO.zip" -DestinationPath "$WorkingDir\" -Force
-                                                Expand-Archive -Path "$WorkingDir\Security-Baselines-X.zip" -DestinationPath "$WorkingDir\Security-Baselines-X\" -Force
-
-                                                # capturing the Microsoft Security Baselines extracted path in a variable using wildcard and storing it in a variable so that we won't need to change anything in the code other than the download link when they are updated
-                                                [System.String]$MicrosoftSecurityBaselinePath = (Get-ChildItem -Directory -Path "$WorkingDir\MicrosoftSecurityBaseline\*\").FullName
-                                                # capturing the Microsoft 365 Security Baselines extracted path in a variable using wildcard and storing it in a variable so that we won't need to change anything in the code other than the download link when they are updated
-                                                [System.String]$Microsoft365SecurityBaselinePath = (Get-ChildItem -Directory -Path "$WorkingDir\Microsoft365SecurityBaseline\*\").FullName
-                                                # Storing the registry CSV file in a variable
-                                                [System.Object[]]$RegistryCSVItems = Import-Csv -Path "$WorkingDir\Registry.csv" -Delimiter ','
-                                                # Storing the LGPO.exe path in a variable
-                                                [System.IO.FileInfo]$LGPOExe = Get-ChildItem -Path "$WorkingDir\LGPO_30\LGPO.exe" -File
-
-                                                # Copying LGPO.exe from its folder to Microsoft Security Baseline folder in order to get it ready to be used by PowerShell script
-                                                Copy-Item -Path $LGPOExe -Destination "$MicrosoftSecurityBaselinePath\Scripts\Tools"
-                                                # Copying LGPO.exe from its folder to Microsoft Office 365 Apps for Enterprise Security Baseline folder in order to get it ready to be used by PowerShell script
-                                                Copy-Item -Path $LGPOExe -Destination "$Microsoft365SecurityBaselinePath\Scripts\Tools"
-
-                                                # These values should be passed to the SyncHash so that they will be imported in the parent RunSpace where the main hardening functions run
-                                                $SyncHash['GlobalVars']['MicrosoftSecurityBaselinePath'] = $MicrosoftSecurityBaselinePath
-                                                $SyncHash['GlobalVars']['Microsoft365SecurityBaselinePath'] = $Microsoft365SecurityBaselinePath
-                                                $SyncHash['GlobalVars']['RegistryCSVItems'] = $RegistryCSVItems
-                                                $SyncHash['GlobalVars']['LGPOExe'] = $LGPOExe
-
-                                                Write-Verbose -Message 'Finished downloading and processing the required files'
+                                                Start-FileDownload -WorkingDir $WorkingDir -HardeningModulePath $HardeningModulePath -Offline:$Offline -SyncHash $SyncHash -IsLocally:$IsLocally -GUI -Verbose:$true
                                             }
 
                                             # If any new RunSpace was created during the operation, they should be removed prior to removing the current RunSpace otherwise they'd be lingering and occupying resources
@@ -2049,7 +1940,8 @@ Execution Policy: $CurrentExecutionPolicy
                                             # Make sure all 3 fields for offline mode files were selected by the users and they are neither empty nor null
                                             if ((-NOT [System.String]::IsNullOrWhitespace($SyncHash.MicrosoftSecurityBaselineZipTextBox.Text)) -and (-NOT [System.String]::IsNullOrWhitespace($SyncHash.Microsoft365AppsSecurityBaselineZipTextBox.Text)) -and (-NOT [System.String]::IsNullOrWhitespace($SyncHash.LGPOZipTextBox.Text))) {
                                                 # Process the offline mode files selected by the user
-                                                Start-FileDownload
+                                                Start-FileDownload -WorkingDir $WorkingDir -HardeningModulePath $HardeningModulePath -Offline:$Offline -SyncHash $SyncHash -IsLocally:$IsLocally -GUI -Verbose:$true
+
                                                 # Set a flag indicating this code block should not happen again when the execute button is pressed
                                                 $SyncHash.StartFileDownloadHasRun = $true
 
@@ -3090,146 +2982,12 @@ End time: $(Get-Date)
             # Change the title of the Windows Terminal for PowerShell tab
             $Host.UI.RawUI.WindowTitle = '⏬ Downloading'
 
-            try {
-                # Create an array of files to download
-                [System.Object[]]$Files = @(
-                    # System.Net.WebClient requires absolute path instead of relative one
-                    @{url = 'https://download.microsoft.com/download/8/5/C/85C25433-A1B0-4FFA-9429-7E023E7DA8D8/Windows%2011%20v23H2%20Security%20Baseline.zip'; path = "$WorkingDir\MicrosoftSecurityBaseline.zip"; tag = 'MicrosoftSecurityBaseline' }
-                    @{url = 'https://download.microsoft.com/download/8/5/C/85C25433-A1B0-4FFA-9429-7E023E7DA8D8/Microsoft%20365%20Apps%20for%20Enterprise%202306.zip'; path = "$WorkingDir\Microsoft365SecurityBaseline.zip"; tag = 'Microsoft365SecurityBaseline' }
-                    @{url = 'https://download.microsoft.com/download/8/5/C/85C25433-A1B0-4FFA-9429-7E023E7DA8D8/LGPO.zip'; path = "$WorkingDir\LGPO.zip"; tag = 'LGPO' }
-                    @{url = 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Harden-Windows-Security%20Module/Main%20files/Resources/Security-Baselines-X.zip'; path = "$WorkingDir\Security-Baselines-X.zip"; tag = 'Security-Baselines-X' }
-                    @{url = 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Harden-Windows-Security%20Module/Main%20files/Resources/Registry.csv'; path = "$WorkingDir\Registry.csv"; tag = 'Registry' }
-                    @{url = 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Harden-Windows-Security%20Module/Main%20files/Resources/ProcessMitigations.csv'; path = "$WorkingDir\ProcessMitigations.csv"; tag = 'ProcessMitigations' }
-                    @{url = 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Harden-Windows-Security%20Module/Main%20files/Resources/EventViewerCustomViews.zip'; path = "$WorkingDir\EventViewerCustomViews.zip"; tag = 'EventViewerCustomViews' }
-                )
-
-                # Get the total number of files to download based on whether the script is running locally or not
-                [System.Int16]$TotalRequiredFiles = $IsLocally ? ($Files.Count - 4) : $Files.Count
-
-                # Initialize a counter for the progress bar
-                [System.Int16]$RequiredFilesCounter = 0
-
-                # Start a job for each file download
-                [System.Object[]]$Jobs = foreach ($File in $Files) {
-
-                    # If running locally, skip downloading the files that are already shipped with the Harden Windows Security module
-                    if ($IsLocally) {
-                        if ($File.tag -in @('Security-Baselines-X', 'Registry', 'ProcessMitigations', 'EventViewerCustomViews')) {
-                            Write-Verbose -Message "Skipping downloading the $($File.tag) because of local mode."
-                            Continue
-                        }
-                    }
-
-                    # If running in offline mode, skip downloading the files that are manually provided by the user
-                    if ($Offline) {
-                        if ($File.tag -in @('MicrosoftSecurityBaseline', 'Microsoft365SecurityBaseline', 'LGPO')) {
-                            Write-Verbose -Message "Skipping downloading the $($File.tag) because of offline mode."
-                            Continue
-                        }
-                    }
-
-                    Start-Job -ScriptBlock {
-
-                        param([System.Uri]$Url, [System.IO.FileInfo]$Path, [System.String]$Tag)
-                        # Create a WebClient object
-                        [System.Net.WebClient]$WC = New-Object -TypeName System.Net.WebClient
-                        try {
-                            # Try to download the file from the original URL
-                            $WC.DownloadFile($Url, $Path)
-                        }
-                        catch {
-                            # a switch for when the original URLs are failing and to provide Alt URL
-                            switch ($Tag) {
-                                'Security-Baselines-X' {
-                                    Write-Host -Object 'Using Azure DevOps for Security-Baselines-X.zip' -ForegroundColor Yellow
-                                    [System.Uri]$AltURL = 'https://dev.azure.com/SpyNetGirl/011c178a-7b92-462b-bd23-2c014528a67e/_apis/git/repositories/5304fef0-07c0-4821-a613-79c01fb75657/items?path=/Payload/Security-Baselines-X.zip'
-                                    $WC.DownloadFile($AltURL, $Path)
-                                    break
-                                }
-                                'Registry' {
-                                    Write-Host -Object 'Using Azure DevOps for Registry.csv' -ForegroundColor Yellow
-                                    [System.Uri]$AltURL = 'https://dev.azure.com/SpyNetGirl/011c178a-7b92-462b-bd23-2c014528a67e/_apis/git/repositories/5304fef0-07c0-4821-a613-79c01fb75657/items?path=/Payload/Registry.csv'
-                                    $WC.DownloadFile($AltURL, $Path)
-                                    break
-                                }
-                                'ProcessMitigations' {
-                                    Write-Host -Object 'Using Azure DevOps for ProcessMitigations.CSV' -ForegroundColor Yellow
-                                    [System.Uri]$AltURL = 'https://dev.azure.com/SpyNetGirl/011c178a-7b92-462b-bd23-2c014528a67e/_apis/git/repositories/5304fef0-07c0-4821-a613-79c01fb75657/items?path=/Payload/ProcessMitigations.csv'
-                                    $WC.DownloadFile($AltURL, $Path)
-                                    break
-                                }
-                                'EventViewerCustomViews' {
-                                    Write-Host -Object 'Using Azure DevOps for EventViewerCustomViews.zip' -ForegroundColor Yellow
-                                    [System.Uri]$AltURL = 'https://dev.azure.com/SpyNetGirl/011c178a-7b92-462b-bd23-2c014528a67e/_apis/git/repositories/5304fef0-07c0-4821-a613-79c01fb75657/items?path=/Payload/EventViewerCustomViews.zip'
-                                    $WC.DownloadFile($AltURL, $Path)
-                                    break
-                                }
-                                default {
-                                    # Throw the error if any other URL fails and stop the operation
-                                    Throw $_
-                                }
-                            }
-                        }
-                    } -ArgumentList $File.url, $File.path, $File.tag
-
-                    # Increment the counter by one
-                    $RequiredFilesCounter++
-
-                    # Write the progress of the download jobs
-                    Write-Progress -Id 1 -ParentId 0 -Activity "Downloading $($file.tag)" -Status "$RequiredFilesCounter of $TotalRequiredFiles" -PercentComplete ($RequiredFilesCounter / $TotalRequiredFiles * 100)
-                }
-                # Wait until all jobs are completed
-                while ($Jobs | Where-Object -FilterScript { $_.State -ne 'Completed' }) {
-                    Start-Sleep -Milliseconds 700
-                }
-
-                # Receive the output or errors of each job and remove the job
-                foreach ($Job in $Jobs) {
-                    Receive-Job -Job $Job
-                    Remove-Job -Job $Job
-                }
-
-                Write-Progress -Id 1 -ParentId 0 -Activity 'Downloading files completed.' -Completed
-            }
-            catch {
-                foreach ($Job in $Jobs) { Remove-Job -Job $Job }
-                Throw 'The required files could not be downloaded, Make sure you have Internet connection.'
-            }
-
-            if ($IsLocally) {
-                Write-Verbose -Message 'Local Mode; Copying the Security-Baselines-X, Registry, ProcessMitigations and EventViewerCustomViews files from the module folder to the working directory'
-                Copy-Item -Path "$HardeningModulePath\Resources\Security-Baselines-X.zip" -Destination "$WorkingDir\Security-Baselines-X.zip"
-                Copy-Item -Path "$HardeningModulePath\Resources\Registry.csv" -Destination "$WorkingDir\Registry.csv"
-                Copy-Item -Path "$HardeningModulePath\Resources\ProcessMitigations.csv" -Destination "$WorkingDir\ProcessMitigations.csv"
-                Copy-Item -Path "$HardeningModulePath\Resources\EventViewerCustomViews.zip" -Destination "$WorkingDir\EventViewerCustomViews.zip"
-            }
-
-            if ($Offline) {
-                Write-Verbose -Message 'Offline Mode; Copying the Microsoft Security Baselines, Microsoft 365 Apps for Enterprise Security Baselines and LGPO files from the user provided paths to the working directory'
-                Copy-Item -Path "$PathToLGPO" -Destination "$WorkingDir\LGPO.zip"
-                Copy-Item -Path "$PathToMSFTSecurityBaselines" -Destination "$WorkingDir\MicrosoftSecurityBaseline.zip"
-                Copy-Item -Path "$PathToMSFT365AppsSecurityBaselines" -Destination "$WorkingDir\Microsoft365SecurityBaseline.zip"
-            }
-
-            Write-Verbose -Message 'Unzipping the archives'
-            Expand-Archive -Path "$WorkingDir\MicrosoftSecurityBaseline.zip" -DestinationPath "$WorkingDir\MicrosoftSecurityBaseline" -Force
-            Expand-Archive -Path "$WorkingDir\Microsoft365SecurityBaseline.zip" -DestinationPath "$WorkingDir\Microsoft365SecurityBaseline" -Force
-            Expand-Archive -Path "$WorkingDir\LGPO.zip" -DestinationPath "$WorkingDir\" -Force
-            Expand-Archive -Path "$WorkingDir\Security-Baselines-X.zip" -DestinationPath "$WorkingDir\Security-Baselines-X\" -Force
-
-            # capturing the Microsoft Security Baselines extracted path in a variable using wildcard and storing it in a variable so that we won't need to change anything in the code other than the download link when they are updated
-            [System.String]$MicrosoftSecurityBaselinePath = (Get-ChildItem -Directory -Path "$WorkingDir\MicrosoftSecurityBaseline\*\").FullName
-            # capturing the Microsoft 365 Security Baselines extracted path in a variable using wildcard and storing it in a variable so that we won't need to change anything in the code other than the download link when they are updated
-            [System.String]$Microsoft365SecurityBaselinePath = (Get-ChildItem -Directory -Path "$WorkingDir\Microsoft365SecurityBaseline\*\").FullName
-            # Storing the registry CSV file in a variable
-            [System.Object[]]$RegistryCSVItems = Import-Csv -Path "$WorkingDir\Registry.csv" -Delimiter ','
-            # Storing the LGPO.exe path in a variable
-            [System.IO.FileInfo]$LGPOExe = Get-ChildItem -Path "$WorkingDir\LGPO_30\LGPO.exe" -File
-
-            # Copying LGPO.exe from its folder to Microsoft Security Baseline folder in order to get it ready to be used by PowerShell script
-            Copy-Item -Path $LGPOExe -Destination "$MicrosoftSecurityBaselinePath\Scripts\Tools"
-            # Copying LGPO.exe from its folder to Microsoft Office 365 Apps for Enterprise Security Baseline folder in order to get it ready to be used by PowerShell script
-            Copy-Item -Path $LGPOExe -Destination "$Microsoft365SecurityBaselinePath\Scripts\Tools"
+            # Download the required files and assign the output to variables
+            $FileDownloadOutput = Start-FileDownload -WorkingDir $WorkingDir -HardeningModulePath $HardeningModulePath -Offline:$Offline -IsLocally:$IsLocally
+            $MicrosoftSecurityBaselinePath = $FileDownloadOutput[0]
+            $Microsoft365SecurityBaselinePath = $FileDownloadOutput[1]
+            $RegistryCSVItems = $FileDownloadOutput[2]
+            $LGPOExe = $FileDownloadOutput[3]
 
             #Region Hardening-Categories-Functions-CLI-Experience
             Function Invoke-MicrosoftSecurityBaselines {

@@ -5,7 +5,7 @@ $PSStyle.Progress.UseOSCIndicator = $true
 Function Protect-WindowsSecurity {
     [CmdletBinding(DefaultParameterSetName = 'Online Mode')]
     [OutputType([System.String])]
-    [Alias('PWS')]
+    [Alias('P')]
     param (
         [Alias('G')]
         [parameter(Mandatory = $false, ParameterSetName = 'GUI')]
@@ -960,7 +960,8 @@ Function Protect-WindowsSecurity {
             [CmdletBinding()]
             Param (
                 [Parameter(Mandatory = $true)][System.String]$WorkingDir,
-                [Parameter(Mandatory = $true)][System.String]$HardeningModulePath,
+                [AllowNull()]
+                [Parameter(Mandatory = $false)][System.String]$HardeningModulePath,
                 [Parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$IsLocally,
                 [Parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$Offline,
                 [Parameter(Mandatory = $false)][System.Collections.Hashtable]$SyncHash,
@@ -1829,7 +1830,7 @@ Execution Policy: $CurrentExecutionPolicy
                                             # Only download and process the files when GUI is loaded if Offline mode is not used
                                             # Because at this point user might have not selected the files to be used for offline operation
                                             if (-NOT $Offline) {
-                                                Start-FileDownload -WorkingDir $WorkingDir -HardeningModulePath $HardeningModulePath -Offline:$Offline -SyncHash $SyncHash -IsLocally:$IsLocally -GUI -Verbose:$true
+                                                Start-FileDownload -WorkingDir $WorkingDir -HardeningModulePath:$HardeningModulePath -Offline:$Offline -SyncHash $SyncHash -IsLocally:$IsLocally -GUI -Verbose:$true
                                             }
 
                                             # If any new RunSpace was created during the operation, they should be removed prior to removing the current RunSpace otherwise they'd be lingering and occupying resources
@@ -1942,7 +1943,7 @@ Execution Policy: $CurrentExecutionPolicy
                                             # Make sure all 3 fields for offline mode files were selected by the users and they are neither empty nor null
                                             if ((-NOT [System.String]::IsNullOrWhitespace($SyncHash.MicrosoftSecurityBaselineZipTextBox.Text)) -and (-NOT [System.String]::IsNullOrWhitespace($SyncHash.Microsoft365AppsSecurityBaselineZipTextBox.Text)) -and (-NOT [System.String]::IsNullOrWhitespace($SyncHash.LGPOZipTextBox.Text))) {
                                                 # Process the offline mode files selected by the user
-                                                Start-FileDownload -WorkingDir $WorkingDir -HardeningModulePath $HardeningModulePath -Offline:$Offline -SyncHash $SyncHash -IsLocally:$IsLocally -GUI -Verbose:$true
+                                                Start-FileDownload -WorkingDir $WorkingDir -HardeningModulePath:$HardeningModulePath -Offline:$Offline -SyncHash $SyncHash -IsLocally:$IsLocally -GUI -Verbose:$true
 
                                                 # Set a flag indicating this code block should not happen again when the execute button is pressed
                                                 $SyncHash.StartFileDownloadHasRun = $true
@@ -2985,7 +2986,7 @@ End time: $(Get-Date)
             $Host.UI.RawUI.WindowTitle = '⏬ Downloading'
 
             # Download the required files and assign the output to variables
-            $FileDownloadOutput = Start-FileDownload -WorkingDir $WorkingDir -HardeningModulePath $HardeningModulePath -Offline:$Offline -IsLocally:$IsLocally
+            $FileDownloadOutput = Start-FileDownload -WorkingDir $WorkingDir -HardeningModulePath:$HardeningModulePath -Offline:$Offline -IsLocally:$IsLocally
             $MicrosoftSecurityBaselinePath = $FileDownloadOutput[0]
             $Microsoft365SecurityBaselinePath = $FileDownloadOutput[1]
             $RegistryCSVItems = $FileDownloadOutput[2]

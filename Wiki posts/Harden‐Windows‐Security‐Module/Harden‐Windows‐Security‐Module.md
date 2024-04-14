@@ -488,6 +488,7 @@ Shows the output on the PowerShell console with more details and in the list for
 Unprotect-WindowsSecurity
     [-OnlyProcessMitigations]
     [-OnlyDownloadsDefenseMeasures]
+    [-OnlyCountryIPBlockingFirewallRules]
     [-Force]
 ```
 
@@ -521,7 +522,25 @@ Indicates that the cmdlet will only remove Process Mitigations (Exploit Protecti
 
 ### -OnlyDownloadsDefenseMeasures
 
-Indicates that the cmdlet will only remove the[ Downloads Defense Measures](https://github.com/HotCakeX/Harden-Windows-Security?tab=readme-ov-file#downloads-defense-measures-) WDAC policy from the system and doesn't change anything else.
+Indicates that the cmdlet will only remove the [Downloads Defense Measures](https://github.com/HotCakeX/Harden-Windows-Security?tab=readme-ov-file#downloads-defense-measures-) WDAC policy from the system and doesn't change anything else.
+
+<div align='center'>
+
+| Type: |[SwitchParameter](https://learn.microsoft.com/en-us/dotnet/api/system.management.automation.switchparameter)|
+| :-------------: | :-------------: |
+| Position: | Named |
+| Default value: | None |
+| Required: | False |
+| Accept pipeline input: | False |
+| Accept wildcard characters: | False |
+
+</div>
+
+<br>
+
+### -OnlyCountryIPBlockingFirewallRules
+
+Indicates that the cmdlet will only remove the [country IP blocking firewall rules](https://github.com/HotCakeX/Harden-Windows-Security?tab=readme-ov-file#country-ip-blocking) and doesn't change anything else.
 
 <div align='center'>
 

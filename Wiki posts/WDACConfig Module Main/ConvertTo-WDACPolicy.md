@@ -165,6 +165,9 @@ The path(s) to use MDE AH CSV files.
 >    or ActionType startswith "AppControlCIScriptAudited"
 >```
 
+> [!IMPORTANT]\
+> [**Detailed YouTube video guide is available here**](https://www.youtube.com/watch?v=oyz0jFzOOGA)
+
 <br>
 
 <div align='center'>

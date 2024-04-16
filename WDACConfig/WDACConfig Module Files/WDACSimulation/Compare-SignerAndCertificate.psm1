@@ -341,6 +341,9 @@ Function Compare-SignerAndCertificate {
                     # Check if the signer's name (Referring to the one in the XML file) matches the same Intermediate certificate's SubjectCN
                     elseif (($Signer.CertRoot -eq $Certificate.TBSValue) -and ($Signer.Name -eq $Certificate.SubjectCN)) {
 
+                        # If the signer has a FileAttrib indicating it was generated with FilePublisher or SignedVersion level, and it wasn't already matched with those levels above, then do not use it for other levels
+                        if ($Signer.HasFileAttrib) { Continue }
+
                         $CurrentFileInfo.SignerID = $Signer.ID
                         $CurrentFileInfo.SignerName = $Signer.Name
                         $CurrentFileInfo.SignerCertRoot = $Signer.CertRoot
@@ -373,6 +376,9 @@ Function Compare-SignerAndCertificate {
 
                     #  Check if the signer's name (Referring to the one in the XML file) matches the Leaf certificate's SubjectCN
                     elseif (($Signer.CertRoot -eq $PrimaryCertificateLeafDetails.TBSValue) -and ($Signer.Name -eq $PrimaryCertificateLeafDetails.SubjectCN)) {
+
+                        # If the signer has a FileAttrib indicating it was generated with FilePublisher or SignedVersion level, and it wasn't already matched with those levels above, then do not use it for other levels
+                        if ($Signer.HasFileAttrib) { Continue }
 
                         $CurrentFileInfo.SignerID = $Signer.ID
                         $CurrentFileInfo.SignerName = $Signer.Name
@@ -559,6 +565,9 @@ Function Compare-SignerAndCertificate {
                         # PcaCertificate, RootCertificate levels eligibility check
                         elseif (($Signer.CertRoot -eq $NestedCertificate.TBSValue) -and ($Signer.Name -eq $NestedCertificate.SubjectCN)) {
 
+                            # If the signer has a FileAttrib indicating it was generated with FilePublisher or SignedVersion level, and it wasn't already matched with those levels above, then do not use it for other levels
+                            if ($Signer.HasFileAttrib) { Continue }
+
                             $CurrentFileInfo.NestedSignerID = $Signer.ID
                             $CurrentFileInfo.NestedSignerName = $Signer.Name
                             $CurrentFileInfo.NestedSignerCertRoot = $Signer.CertRoot
@@ -586,6 +595,9 @@ Function Compare-SignerAndCertificate {
 
                         # LeafCertificate level eligibility check
                         elseif (($Signer.CertRoot -eq $NestedCertificateLeafDetails.TBSValue) -and ($Signer.Name -eq $NestedCertificateLeafDetails.SubjectCN)) {
+
+                            # If the signer has a FileAttrib indicating it was generated with FilePublisher or SignedVersion level, and it wasn't already matched with those levels above, then do not use it for other levels
+                            if ($Signer.HasFileAttrib) { Continue }
 
                             $CurrentFileInfo.NestedSignerID = $Signer.ID
                             $CurrentFileInfo.NestedSignerName = $Signer.Name

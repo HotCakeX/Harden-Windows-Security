@@ -35,8 +35,13 @@ Function Get-SignedFileCertificates {
     process {
         # Check which parameter set is used
         if ($FilePath) {
-            # If the FilePath parameter is used, import all the certificates from the file
-            $CertCollection.Import($FilePath, $null, 'DefaultKeySet')
+            try {
+                # If the FilePath parameter is used, import all the certificates from the file
+                $CertCollection.Import($FilePath, $null, 'DefaultKeySet')
+            }
+            catch {
+                throw [ExceptionFailedToGetCertificateCollection]::new('Could not get the certificate collection of the file due to lack of necessary permissions.', 'Get-SignedFileCertificates')
+            }
         }
         elseif ($X509Certificate2) {
             # If the CertObject parameter is used, add the certificate object to the collection
@@ -54,8 +59,8 @@ Export-ModuleMember -Function 'Get-SignedFileCertificates'
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCDOrDleOeGXEyHo
-# vvuN3HYqR0NxLsLbVQb4+2ry+9PXWKCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCBJSLNu+U8SnBJS
+# gpR23elM8273c0I822sE5Ck6ehb2jKCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -102,16 +107,16 @@ Export-ModuleMember -Function 'Get-SignedFileCertificates'
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQggyMqz5uOaOB9DSCdRWJ9nSNv6T5y46ZfB3Q2rhUDlJAwDQYJKoZIhvcNAQEB
-# BQAEggIAhX6AzdMZ5ApNQxbunttLSA5IJjroUSISOH1PpgHf/ZpQEW0//J5YupQl
-# qf2JAKPlY1HzrXtTEyIpqh8oE8/5fGr0kemhIPuIsPsZO97hbwfy9UizsuamrN9c
-# vGWBDOO9WpYyu9mJ8CzXDfpE8Hzla3H5+giRUr9EAuuO6XodJ51k4pxpfe965ixi
-# vAK8kSDbv8O3SEhX8jFzBqVzNIr2Y5sAhOuY9421vJ1fvXDYYpghAvn2VsX4AkXx
-# x4d4DqbyLS69OEIElEdNGZdWKqocPECsJQwcLa7ompbb5iiwCf9UOoR/4Y7/ddbL
-# OKCqQInV3KLBe0FDYyphVuNws5idFobAyWnja1li5GiL9oaHUHn+q4ne5CSWay2v
-# OjqDqE6OfH7L1NcVcB93ZUEIR6kTdba6q3wXqR82Y6caK0qR6DCReCRcIgtjEUlY
-# tEy9a8E1WZoa+xdC2hLChPjEMgUXjdrUDZvEuVPQyBf+kXYoXHKWldZYDOj0691Q
-# 2AmppvLqSH4BB0wSb/dVIJN9mF28W2WSg2w7ymv4fQlVtHGQ4z+sD2obN13Mcv2v
-# FOxJhBQjkeyl69Ef9WfSHIydKSMMvB0+v+Fsdm6aASLNaXvoQJAi3+DavIj7E49G
-# 7GCOKax6VWFw3GZ9q3QQy7SSMV6Y0PRgJBreLi5WjcUTCSeNvyo=
+# IgQgqm2Bz3peAxXs9MFpeM8jrGrqwp9ld9MKAQ5thidCFikwDQYJKoZIhvcNAQEB
+# BQAEggIAiUWaYo+QOdNQU7lGaLscTrxRNvdMLUd1wFY95lHidrYg4bmq0hyiN642
+# iwT7jZJiVprKoVdJv37mqflXmfC6gRrsZIwdJDGZuUoD3J3crHLCKkzFILpvUw2E
+# WEWz2H+abpgaSE407kOom4Lz4KkK4AGcjMH6m+/hl4ILq7gra/lWJUX+hm9Lido6
+# g2Lnf16ftQHz7k/61jEAz0kraFEMSFXEQ0aL4zSqRpb2+i2CNe01bAuDayUBaaIV
+# ZHuReMa16LizJX0eY+IFDIoxAQX/Jg7dT2HMXccxZodDHWM76/KBtWcgvgEFvB+0
+# jhbL3WH5V1Tr7l55baY09Dyc6lHNjmW/80XVLlpdIlTr1FmeFdIYcVFGvYyEc3o4
+# pNOcqkRJwWK0nnYNYAfbCjE56d+J4THp6rEG4f7/WOjY7zRdHA9aLs8THKzyatB+
+# DxOJu0314OB3sVag5acudlSXxnItLUlKKo/1leue/cmXQOwJkmzrxajEAWUygQYe
+# yqHlYWFYjjKYcjH8JgwyMvpeO3z53p6ZqOhc/zonXcubaS/dWQOzjsUcZileTpBn
+# i1VUTrvCkdDosAmSuxcYZH23a66tefYzY83E5iphrgZr52qszxWM1si0ONag00I7
+# 6689hh3S7Due1RLMsg2ERd7oLLVoqrXU/m9Eojj8WYlOKCG+dBI=
 # SIG # End signature block

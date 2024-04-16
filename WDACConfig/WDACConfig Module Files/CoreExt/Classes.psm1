@@ -1,7 +1,7 @@
 # Since the quasi-exported classes will be available process-wide
 # and therefore also in other runspaces, defining them with the [NoRunspaceAffinity()] attribute.
 # https://stackoverflow.com/a/78078461/21243735
-# https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_classes?view=powershell-7.4#exporting-classes-with-type-accelerators
+# https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_classes#exporting-classes-with-type-accelerators
 
 # argument tab auto-completion and ValidateSet for Levels and Fallbacks parameters in the entire module
 [NoRunspaceAffinity()]
@@ -45,11 +45,22 @@ Class CertCNz : System.Management.Automation.IValidateSetValuesGenerator {
     }
 }
 
+# a class to throw a custom exception when the certificate collection cannot be obtained during WDAC Simulation
+[NoRunspaceAffinity()]
+class ExceptionFailedToGetCertificateCollection : System.Exception {
+    [System.String]$AdditionalData
+
+    ExceptionFailedToGetCertificateCollection([System.String]$Message, [System.String]$AdditionalData) : base($Message) {
+        $This.additionalData = $AdditionalData
+    }
+}
+
 # Define the types to export with type accelerators.
 [System.Reflection.TypeInfo[]]$ExportableTypes = @(
     [ScanLevelz]
     [CertCNz]
     [BasePolicyNamez]
+    [ExceptionFailedToGetCertificateCollection]
 )
 
 # Get the non-public TypeAccelerators class for defining new accelerators.
@@ -73,8 +84,8 @@ foreach ($Type in $ExportableTypes) {
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCB4k/BsJwtR9x6g
-# bVrZ5j4AcemhaBo+X0XaAn9yhi+wH6CCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCD9KheC+QwZeAmF
+# g1xWldilCpuou3ANAFzVdOww8fsLfqCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -121,16 +132,16 @@ foreach ($Type in $ExportableTypes) {
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQg5XdgEu3VPKwgiA+EBJKUZFPQWhN2el9Zck+VYvDH5O8wDQYJKoZIhvcNAQEB
-# BQAEggIAkWnlsQ98tkQpuBo579x9cBfjUnqHJSFhu4rm74hRJ/dsK0wT4Aoo5Jqd
-# X5QKdlvGyUkBQF5EHg9xGjae4+sGqztsOM+87Hj5vA+9lFdRuZLLUOOMEiSrT2Mc
-# WvtphT/yKfAOpoKG4Y6AS3H2zXbFjqbLH2X1agqr8WHRDZz9p0rcUj+s7oRV5Zws
-# JhV5QbCHb1MMbG05PqGvkJm2YC6/IbTKZVA37K3zLtXzyAmoAvgtbo4VKkYrlHlo
-# awN8/aAUJzhyCCevCe3JwHGZnKGwNDjwLfKJK5GrflP2xA4mXr1guGFX92hFHzv2
-# IYrhDqXDToYOWgNFAeUEbdqWt4Dj60LPKsWGw8+MYYXdti6al8f+EvabLMiKJc4g
-# OWAPFNU3TNITc1yjtDrIkhtnlt6c3qlbQSBut+otS0epS+9oZbgZyqAEimBJ2jt+
-# 0Etmf/CFrsS9qh8wM6dxnCMvbumSHWraNHl1nqjZNwoE9p9QnU489u6rwQAfkG6k
-# 7r1bMNz47yMSuMndSNKwY35uNllSU4J+07urpB9iMlONzFqJ6OxC+z2Etl9NhH1F
-# WVLROZ4kYimqJD7kZ4s5Pmg01j8eqAPqbI/OGLd8dLw4O2xDN57tlg/VEROdkaTk
-# b5zOEMrks88Cqrusok9MKHDRYerDfZgGpyA3Y3rrWEXRBM9BFlw=
+# IgQgZTNa0z12p9az8IOjAJiT4XpvYLnXqt8aiW9MKW2WVWcwDQYJKoZIhvcNAQEB
+# BQAEggIAC8es3LEoc9OZMX7URFE6PSF3M5df1l8BL0Qz5T9mWyexJdgUmA7hxBKL
+# 9lseS1K8PBxx3vgrdCT5DyGwRrDSOfHumUxQWTkMna339bFalBgV0LXMb7bzqtaQ
+# s91nEa7zyhIOPbKvi4cREoAi32qCjW9/YeJIEfrkp7aaGuzX45UsRi6pLfqPWS1F
+# vt3mhhsbLLfe607O9jJpNTc3B277AcQMojrYVBVaAmpc+YyCf14tx/RQ1XzRvMKl
+# c3QbenLoMUXPuN0tJvbxPZy1YTf7CdgCAUxsiI31DyaGUo7Yk4w+Qld3ltI+LIb8
+# Ggj9eUYxZYPnRuwJNg6Hkub26M2cnO0RGASkVhg2w85UObYMS5w1yBWRuxFj2mnC
+# MA68wPL+gnTAfrginETHUmIuAisRvuvB4CgeTkYTF2ANCIJbUNlR60LHYf8nqq91
+# fxv7FnFu99K12bQba7BBR1aFia1ZipANcwfqJvA7/7l5/gkQNWDxr4PG82MqbjIo
+# LD8L2Fu6Qit+MtWq/mdE47nXiABTUehadm9CkvCUuA0Eoa3jxpknpz0g3GJEs/Pu
+# 4xYmbzJpfwgA7wkRhxOvMwU3lx1Jkf66pQKGnIo4tCkQULE1YVr59Dgx4QvvF0ug
+# Cp/Ucn88TkGO3Sk50bMmrCO4SCUUNrot65olABvbcwuKOwEZnZU=
 # SIG # End signature block

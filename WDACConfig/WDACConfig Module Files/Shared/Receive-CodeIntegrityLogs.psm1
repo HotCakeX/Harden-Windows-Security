@@ -561,11 +561,11 @@ Function Receive-CodeIntegrityLogs {
         Switch ($PostProcessing) {
             'Separate' {
                 if ($Type -eq 'Audit') {
-                    Write-Verbose -Message "Receive-CodeIntegrityLogs: Returning $($Output.Separated.Audit.Count) Audit Code Integrity logs for files on the disk and $($OutputSeparatedAudit.DeletedFileHashes.Count) for the files not on the disk, in a nested object."
+                    Write-Verbose -Message "Receive-CodeIntegrityLogs: Returning $($Output.Separated.Audit.AvailableFilesPaths.Count) Audit Code Integrity logs for files on the disk and $($Output.Separated.Audit.DeletedFileHashes.Count) for the files not on the disk."
                     Return $Output.Separated.Audit
                 }
                 else {
-                    Write-Verbose -Message "Receive-CodeIntegrityLogs: Returning $($Output.Separated.Blocked.Count) Blocked Code Integrity logs for files on the disk and $($OutputSeparatedBlocked.DeletedFileHashes.Count) for the files not on the disk, in a nested object."
+                    Write-Verbose -Message "Receive-CodeIntegrityLogs: Returning $($Output.Separated.Blocked.AvailableFilesPaths.Count) Blocked Code Integrity logs for files on the disk and $($Output.Separated.Blocked.DeletedFileHashes.Count) for the files not on the disk."
                     Return $Output.Separated.Blocked
                 }
             }
@@ -607,8 +607,8 @@ Export-ModuleMember -Function 'Receive-CodeIntegrityLogs'
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCD3tknyhHBNdovr
-# RHgwYkH0Ba4f8wESUYQOugxDKEmxwqCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCDcERx1F7+tkP1p
+# qKprRkMwvaXGigd6ufErod7k3ugL3KCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -655,16 +655,16 @@ Export-ModuleMember -Function 'Receive-CodeIntegrityLogs'
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQgWOjW67jyNj4ndNVux5ZYcdmKhqk+Azstm3mX6IgTXXAwDQYJKoZIhvcNAQEB
-# BQAEggIAjaVnRbRefwCAwfvZqibTeTBJRW+YsnyT7ILnkuqmHsGasxwAZPRh5zaL
-# Qqe/HiJQvtO/W77hE59F4kOWRJC6qZrOA4MBrt2eHeniZs9S5dol6Z6K05EGinUo
-# X8NQAyS+XPByKDGnCc5/mCiuIMb26ATwrNrFhLH4ZGOFPpmre9GFaqTlk3Nmqc73
-# rQ7GVMnLTBoj1dWYV4+kwoAefiKR41bnI9R6a7RLvtktLLEBS+7x3bcImSHjyZlg
-# AbyrPBLbJXXB/IhFaZGUfadwCe3Lv4nP35uLghgnyXzB6iyGQxfg95iGxytHd8FW
-# nVh3evJLx/06ySGRwMUUGNiOCzPSmjeHkPbhgCBPRWoA7yH/EVSM6/Y+jByYBa4j
-# 9UshdoKM8pw74hc8J3rPCG43cbZgmZZANx9hNwVdUk3PDvRuePGk76H7S52aP95R
-# 7eLvI01CzPU5CbTu02XmDHD8cU7WIwyY06bX9Mf/PPe0iVgxlMmihkcUhfs7AQ/f
-# Lg6JrZMPuVt5NhankcNt87630LTFRitXjsPHOWr1Pi3jb4lzxMwgHh91QEQPS39z
-# 7kUsrcsG4YhqZeRcfq8mtopUMgFCVYhzziGim2OV8gEQY0QTjER43n55ajxnKDYW
-# 0pcxl360hUfvPCwOFncNw7DOS8ZnGKAqbx+uPDg+sZNxK6KUKA4=
+# IgQgXhfwKKzGimgBGVVxp/7Mv3wyUgvOqTdRUvabmAQUj0swDQYJKoZIhvcNAQEB
+# BQAEggIAdrDkEZ0CGQBnuPmLbmmC2RMavmZC5oDqNQNGUTmoJ/JQK2cLm3dUhey8
+# hQuyY5qiS7+RyRqv0Y9PWJYyQutcw6TyfUvb1f7wpaDExZqXW/m91XJWFQumBe0d
+# sO37WEjvqxES2iwaAAku+saQvZ2+6EKQpQ9gtavTLsPi6NZPhMJb4SguvwWw6Xlq
+# MPtFnFZm8NlFQRGeg4aIdkNBr32GxHYWYZMGYTQ3BTWQJ7bwQTK3FEm4mWbtdh+P
+# AfaMiK+fxV5hcA0pmEifalpRv6TbCULlLXO7myuDKpIpMKqRIrFcYy2VQuADmHKz
+# OcNrFqD/YK2dHFNpDr2i1IOiU7M1CJNpinBPUvEwnnbXETcYVxHAoZmwUrjSHNjk
+# ytX1RxSNjErH/Rs6Cr6u+g0eq05Xo5g/lB343lYoqgUgUXan37m1wJDNeKBOmHy7
+# cD4zJ64EJ9syjpFgrwDShrB41MrVrt0+gKbPzwsKgswpbqGiQyIJHcng6MaLiKa5
+# OHQvpvmCakQQVVtJ1dix4uCNwzs/XSfFYgT1FjdGpMYz/pdBdCTd7MyEQRNJW/M2
+# ib4gFXMwHtNMHTM0qpP/wLJL1mjnhDMbDsYWT1QFPnCSqGEmxI9uO0zF/wu1Njvi
+# o1P1MuyPg5PsbglHD5iSpLycYwrviufyiEc1v0V5I/hjrkBoejI=
 # SIG # End signature block

@@ -141,6 +141,9 @@ Function Invoke-WDACSimulation {
         # Store the paths of Signed files with EKU mismatch
         [System.IO.FileInfo[]]$SignedButEKUMismatch = @()
 
+        # Store the paths of the signed files that are inaccessible (Kernel-Protected files, Microsoft Defender files etc.)
+        [System.IO.FileInfo[]]$InAccessibleFilePaths = @()
+
         # Store the paths of Signed files that are not allowed
         [System.IO.FileInfo[]]$SignedButNotAllowed = @()
 
@@ -277,9 +280,16 @@ Function Invoke-WDACSimulation {
                         # If the file is signed and valid
                         { $_.Status -eq 'valid' } {
 
-                            # Use the Compare-SignerAndCertificate function to process it
-                            $ComparisonResult = Compare-SignerAndCertificate -XmlFilePath $XmlFilePath -SignedFilePath $CurrentFilePath
+                            try {
+                                # Use the Compare-SignerAndCertificate function to process it
+                                $ComparisonResult = Compare-SignerAndCertificate -XmlFilePath $XmlFilePath -SignedFilePath $CurrentFilePath
+                            }
+                            catch [ExceptionFailedToGetCertificateCollection] {
+                                # If the file's certificate collections could not be fetched due to lack of necessary permissions, place it in a different array of file path
+                                $InAccessibleFilePaths += $CurrentFilePath
 
+                                break MainSwitchLabel
+                            }
                             # If there is no comparison result then the file is not allowed by the policy
                             if (([System.String]::IsNullOrWhiteSpace($ComparisonResult))) {
 
@@ -584,6 +594,22 @@ Function Invoke-WDACSimulation {
                 $MegaOutputObject += New-Object -TypeName PSObject -Property $Object
             }
         }
+
+        if ($InAccessibleFilePaths) {
+            Write-Verbose -Message 'Looping through the array of signed files that are not processed due to lack of permission'
+            Write-Verbose -Message "$($InAccessibleFilePaths.count) File(s) are signed but not processed due to lack of permission." -Verbose
+            foreach ($Path in $InAccessibleFilePaths) {
+                # Create a hash table with the file path and source properties
+                [System.Collections.Hashtable]$Object = @{
+                    FilePath     = $Path
+                    Source       = 'Signer'
+                    Permission   = 'Not processed, No permission'
+                    IsAuthorized = $false
+                }
+                # Convert the hash table to a PSObject and add it to the output array
+                $MegaOutputObject += New-Object -TypeName PSObject -Property $Object
+            }
+        }
     }
 
     end {
@@ -755,8 +781,8 @@ Register-ArgumentCompleter -CommandName 'Invoke-WDACSimulation' -ParameterName '
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCCn8E3ZeFPqV8VL
-# WajIcDXn1bbq39TVTDOlwyfHMz9haaCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCDw7Dg/E7IqvgHr
+# e2+EDr7FqVMqM5xvt+/JEcb5p91B9KCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -803,16 +829,16 @@ Register-ArgumentCompleter -CommandName 'Invoke-WDACSimulation' -ParameterName '
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQgszcX8IhVikY7ngQcwU5MRcSCFQJV34ynFBARiRCAP0kwDQYJKoZIhvcNAQEB
-# BQAEggIASj/eja7u640ip1kUwFnKuuLPKk4rBrtrDSwtmfsWysocgaP8nOOGKVAh
-# S3SSNgavBaauLKjJ7PFM2aJ6dk03mCIQYwNnUlb6FwXsVwzSiHyvBAV+NkPz/nEz
-# KcqK26APAuOjhOAk1lhDs+wwr1J6Ik0BgUXgy+CCgvlrb47XQ2PykshlLZGynPXa
-# KSZ39gthepEfkLOnX2ig4X4hWzXLEOEqti8XTdjB9/u6nlBF8RDQeDzCjToX1zbE
-# RDHxVIoNRMH+s6hDJR0lOowUrTP2yamhswlJpUrtkRFKsR0HCMBkkwt0GFYh+yGZ
-# ZMZpkgcz5EhVieZwIwKr21sVOXK4M2HkHIRf24urcqTHjYBZzb4evmoyylZ6yw40
-# ouy9YId2/0eyF3JoRflZbESzGqpvlXUH51vQv/5efKgdU2h8zrxldWiDWpt+CjHm
-# a5z+Dnh8ZGhFML5nLeCrtwyE+zQdqEg9nef19wm8KpBZ03n4eytNGqUaInFK5GwX
-# oO2zpVHaZE11i9ZtfSXzL6Y3z/Olse6AAlK8zQXDC4xoidv/gVFFtpjeKPvqbGuN
-# 8f5jGOVg5NtomelkXp6eOeoyC+lS2XlpfKBmzdn+tvyPJm+oUnbn9esPrfZ6s+sb
-# gkvddRDDakhm/OWYmftyHuKGHJNz1ITnwTBglGhz1l5gXnJ8D4I=
+# IgQgUZX1J1xaIWC9ZOJoF/jPAxpoJ7BbI99W9WxCgIj9Cx0wDQYJKoZIhvcNAQEB
+# BQAEggIAD79kNnFWrAT1sA6ryRQZ3UUEcjjZbRDnTZ1zov3ipjQJ1DviypEabdcS
+# QNBf/uHXH9d2cFLwmTCej98J0DGxmA4N17u7WOdXip34keS2HRItvpJmpjnsPrVr
+# SdpA1hShbyTYnzG91qIwF4+1U7fcXN4quyRH63+B6WSw9qI0+pEU8b32EFfQoN+V
+# uZdnAtngssjdLzlx13HMlO8A6ww7reP3EGbLNtyjA5gRPUdNWYY+1brkLID9X4hD
+# N0OpovjZe0DNibqZgnQipUqT8oJGWQXmLfI6kL+OaTSSD+BCOQxHWlA6jE+Ruuom
+# zOvGlFs1r9eHPo4LscEu4QKUyJCT2eJZloqt8d7dQdnhqPTyOK1FP/lepdL7btYy
+# y06O6F82/KIHmr2SU+lT3sn4ceUiFHsvZVCMSk8/QMO64MJiBJqCZ8ZLR73kaDOL
+# j/PkHpaALRo2IlfzBJan7g0GWvMEw2ZR+rexxDctwG6IooLVcHD3J3/WiWpo27eT
+# f/JzPslSrCsWJzMXqbNMiCqCNCzPMMWsSjJJLH6J5T189XtkaGROA75efsZSQn+s
+# mmPpEZWK6gOCnf3R54npwyN6CFGG8g5iq91789cvYmSFNetmfEgtVtbSggecX2gx
+# xZXPL5Lxk9on42Lfp8EHq/9t4hEGWQzuDHKa5ztTUTrjQ3bkts8=
 # SIG # End signature block

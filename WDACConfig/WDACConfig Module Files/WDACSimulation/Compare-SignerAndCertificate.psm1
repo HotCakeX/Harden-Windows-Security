@@ -303,6 +303,7 @@ Function Compare-SignerAndCertificate {
                                 }
                             }
                         }
+                        # If the Signer matched and it doesn't have a FileAttrib, then it's a Publisher level signer
                         else {
                             $CurrentFileInfo.SignerID = $Signer.ID
                             $CurrentFileInfo.SignerName = $Signer.Name
@@ -340,6 +341,9 @@ Function Compare-SignerAndCertificate {
                     # Check if the signer's name (Referring to the one in the XML file) matches the same Intermediate certificate's SubjectCN
                     elseif (($Signer.CertRoot -eq $Certificate.TBSValue) -and ($Signer.Name -eq $Certificate.SubjectCN)) {
 
+                        # If the signer has a FileAttrib indicating it was generated with FilePublisher or SignedVersion level, and it wasn't already matched with those levels above, then do not use it for other levels
+                        if ($Signer.HasFileAttrib) { Continue }
+
                         $CurrentFileInfo.SignerID = $Signer.ID
                         $CurrentFileInfo.SignerName = $Signer.Name
                         $CurrentFileInfo.SignerCertRoot = $Signer.CertRoot
@@ -372,6 +376,9 @@ Function Compare-SignerAndCertificate {
 
                     #  Check if the signer's name (Referring to the one in the XML file) matches the Leaf certificate's SubjectCN
                     elseif (($Signer.CertRoot -eq $PrimaryCertificateLeafDetails.TBSValue) -and ($Signer.Name -eq $PrimaryCertificateLeafDetails.SubjectCN)) {
+
+                        # If the signer has a FileAttrib indicating it was generated with FilePublisher or SignedVersion level, and it wasn't already matched with those levels above, then do not use it for other levels
+                        if ($Signer.HasFileAttrib) { Continue }
 
                         $CurrentFileInfo.SignerID = $Signer.ID
                         $CurrentFileInfo.SignerName = $Signer.Name
@@ -525,6 +532,7 @@ Function Compare-SignerAndCertificate {
                                     }
                                 }
                             }
+                            # If the Signer matched and it doesn't have a FileAttrib, then it's a Publisher level signer
                             else {
                                 $CurrentFileInfo.NestedSignerID = $Signer.ID
                                 $CurrentFileInfo.NestedSignerName = $Signer.Name
@@ -557,6 +565,9 @@ Function Compare-SignerAndCertificate {
                         # PcaCertificate, RootCertificate levels eligibility check
                         elseif (($Signer.CertRoot -eq $NestedCertificate.TBSValue) -and ($Signer.Name -eq $NestedCertificate.SubjectCN)) {
 
+                            # If the signer has a FileAttrib indicating it was generated with FilePublisher or SignedVersion level, and it wasn't already matched with those levels above, then do not use it for other levels
+                            if ($Signer.HasFileAttrib) { Continue }
+
                             $CurrentFileInfo.NestedSignerID = $Signer.ID
                             $CurrentFileInfo.NestedSignerName = $Signer.Name
                             $CurrentFileInfo.NestedSignerCertRoot = $Signer.CertRoot
@@ -584,6 +595,9 @@ Function Compare-SignerAndCertificate {
 
                         # LeafCertificate level eligibility check
                         elseif (($Signer.CertRoot -eq $NestedCertificateLeafDetails.TBSValue) -and ($Signer.Name -eq $NestedCertificateLeafDetails.SubjectCN)) {
+
+                            # If the signer has a FileAttrib indicating it was generated with FilePublisher or SignedVersion level, and it wasn't already matched with those levels above, then do not use it for other levels
+                            if ($Signer.HasFileAttrib) { Continue }
 
                             $CurrentFileInfo.NestedSignerID = $Signer.ID
                             $CurrentFileInfo.NestedSignerName = $Signer.Name
@@ -655,8 +669,8 @@ Export-ModuleMember -Function 'Compare-SignerAndCertificate'
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCCXHNvEtgWNm6yQ
-# qNgkzmpRByZwQDu2goxzPvv1BTokQ6CCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCDwkblcNmqFlmKE
+# hrG2O1hGeLD1onn2mfdruKIQ0v7td6CCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -703,16 +717,16 @@ Export-ModuleMember -Function 'Compare-SignerAndCertificate'
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQgpndG7wMZ0sbFxETiPBEL5fwfrcdkJ/hQuL7Xh9SXt/owDQYJKoZIhvcNAQEB
-# BQAEggIAX8fWJ+vJ74d+hr10fUZMZzaILZEcUREcWlkTSVkGo2oaTII1ayhCa3QY
-# fqCxY7MNC4PwUYShOEbCbpeHFDXwwgBcpw83UygvV0xQnmPv0mxM05NG/5sgidkV
-# 7nKa2W82eyGVnVBSaz57CWG2nQduzrdPtWHKrQjDQ2C7aJqrPjIZxFi6/hUmx5/l
-# Bz6qIoPXqIAK9RSplRHT3GBAyq2erxVLuqcyEP9X/IzDzoa7Vw77RHxmEUnh2Ytu
-# 1nSMkXqCCYt7G2UrJuJ46H5dmI5CzzUHrBUAE2N8YaQJIdOB8/00p8NlxetBMmBo
-# eUMFHPPt3gNoqMqAgaQRZHNCXfw+m3okVhP3x78ilvS6r7IjdazyCxZ2uaYVt7Vq
-# K3x3Iy9NdAXr5UVg4Uc4fDpFmXVsxxjIwX0mqQxl8Gg0ZIqbpzE8jVW0+gpooKFu
-# X5dMyQCEbPMR3xBmlj3AmxAHE/jtBkvsPlivFzZ9micgXDdQpJ1SoxkPRZ9JYLnX
-# vCmO9H/jnoHQ3hipXSc2TFLYbUDPNh7gVeJLBbGc62B4Lze5ui5ZDxruRp5HWiYS
-# lG9SeaazDhYSwlFy7J5Og141ZbhoJ3ep/qEoxJwVZAV+Hl7lhyZ4Mr0Ow++FOy0W
-# ngJWV+fpEeGpwzcwf13ugFKM3LV24JIKrtW32mP2IxpbXzFMoXY=
+# IgQgeV/EgDv+lgHhttG8siXgDkD766padyTzGDW9u2Mo6jQwDQYJKoZIhvcNAQEB
+# BQAEggIAlUa5hOW7ckG5cSYZI/XvYIFEpLc3z7sz2HA6zwpMG7PsaeS+vFjG/tF8
+# NWBo/r1Mjt+5Ynk2sk7NBH8326NPesmd3n++kNiCflkEjI8kaIFGgQH2A90xYoTh
+# cdpDsEaxV5AwObgpfHK+oIXqqT+mkBlzojUL87us2vgIYHUavwCOFr1gVaR1FPka
+# oi9nLwqhe05r2hTmDrnxzXX5nJg4k33eoYApSeg4erMbIGOdFRYJFzMl1yQVxZx7
+# oKcFeE/L0vNGSGBP3zi3IYoLGvBo2fIFjpfOJXJWe9leRw2ee6hR/u18lfMawf5Z
+# iwOq+Q7GusuvVqFoQAPOCteZDqfP3Ph7GqAgJkODOTL5z3RySEfXmuEILfQmYKAV
+# PNUHWDk+9XPAqOg9yhsI8shn0D1bInt50F5ACwUCtbQhjZ8U0FuXTRwtA2Rhnywl
+# wK0wlG4dDmDMoBdju3ynFU03eMvX8ZK4Yr4jDqtNinmrFvhlgrbwHDR/p0vRhbq0
+# EBUS27vL/UAom21M9sUyHOOeSbCNZspZYLGfQg90QBtQMt2kmj+da1RTa5QmCLC/
+# gXmTm8yukiqFYlmgcspYplyz4h9RzJyjrGlzaNCUwboTcB/gT5njeYkTBXQEnbl1
+# AnRBwniebLZVLsvlBjCQdDrD7lou5P8XmZCTSOb8+HFXxhJ29VM=
 # SIG # End signature block

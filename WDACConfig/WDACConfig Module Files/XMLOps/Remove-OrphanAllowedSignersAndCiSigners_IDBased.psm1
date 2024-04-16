@@ -1,66 +1,83 @@
-Function Get-SignedFileCertificates {
+Function Remove-OrphanAllowedSignersAndCiSigners_IDBased {
     <#
     .SYNOPSIS
-        A function to get all the certificates from a signed file or a certificate object and output a Collection
-    .PARAMETER FilePath
-        Optional parameter, the function will get all the certificates from this file if this parameter is used
-    .PARAMETER X509Certificate2
-        Optional parameter, the function will get all the certificates from this certificate object if this parameter is used
+        Removes elements with invalid SignerIds from the CiSigners and AllowedSigners nodes in a CI policy XML file
+        These are elements with SignerIds that are not found in any <Signer> in the <Signers> node
+    .PARAMETER Path
+        The path to the CI policy XML file
     .INPUTS
-        System.String
-        System.Security.Cryptography.X509Certificates.X509Certificate2
+        System.IO.FileInfo
     .OUTPUTS
-        System.Security.Cryptography.X509Certificates.X509Certificate2Collection
+        System.Void
     #>
     [CmdletBinding()]
-    [OutputType([System.Security.Cryptography.X509Certificates.X509Certificate2Collection])]
+    [OutputType([System.Void])]
     param (
-        [Parameter()]
-        [System.String]$FilePath,
-        [Parameter(ValueFromPipeline = $true)]
-        [System.Security.Cryptography.X509Certificates.X509Certificate2]$X509Certificate2
+        [Parameter(Mandatory = $true)][System.IO.FileInfo]$Path
     )
 
-    begin {
-        # Detecting if Verbose switch is used
-        $PSBoundParameters.Verbose.IsPresent ? ([System.Boolean]$Verbose = $true) : ([System.Boolean]$Verbose = $false) | Out-Null
-
+    Begin {
         # Importing the $PSDefaultParameterValues to the current session, prior to everything else
         . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
 
-        # Create an X509Certificate2Collection object
-        [System.Security.Cryptography.X509Certificates.X509Certificate2Collection]$CertCollection = New-Object -TypeName System.Security.Cryptography.X509Certificates.X509Certificate2Collection
-    }
+        # Load the XML file
+        [System.Xml.XmlDocument]$Xml = Get-Content -Path $Path
 
-    process {
-        # Check which parameter set is used
-        if ($FilePath) {
-            try {
-                # If the FilePath parameter is used, import all the certificates from the file
-                $CertCollection.Import($FilePath, $null, 'DefaultKeySet')
-            }
-            catch {
-                throw [ExceptionFailedToGetCertificateCollection]::new('Could not get the certificate collection of the file due to lack of necessary permissions.', 'Get-SignedFileCertificates')
+        # Create an XmlNamespaceManager for namespace resolution
+        [System.Xml.XmlNamespaceManager]$NsManager = New-Object System.Xml.XmlNamespaceManager -ArgumentList $Xml.NameTable
+        $NsManager.AddNamespace('ns', 'urn:schemas-microsoft-com:sipolicy')
+
+        # Get the list of valid signer IDs from the Signers node
+        [System.String[]]$ValidSignerIds = $Xml.SelectNodes('//ns:Signers/ns:Signer', $NsManager) | ForEach-Object -Process { $_.ID }
+
+        Function Remove-InvalidSignerIds {
+            <#
+        .SYNOPSIS
+            Removes nodes with invalid SignerIds from the given XmlNodeList
+        .INPUTS
+            System.Xml.XmlNodeList
+        .OUTPUTS
+            System.Void
+        .PARAMETER NodeList
+            The XmlNodeList to remove invalid SignerIds from
+        #>
+            Param (
+                [Parameter(Mandatory = $true)][System.Xml.XmlNodeList]$NodeList
+            )
+
+            foreach ($Node in $NodeList) {
+                if ($ValidSignerIds -notcontains $Node.SignerId) {
+                    [System.Void]$Node.ParentNode.RemoveChild($Node)
+                }
             }
         }
-        elseif ($X509Certificate2) {
-            # If the CertObject parameter is used, add the certificate object to the collection
-            $CertCollection.Add($X509Certificate2)
-        }
     }
 
-    end {
-        # Return the collection
-        return $CertCollection
+    Process {
+
+        # Get CiSigners and AllowedSigners nodes
+        [System.Xml.XmlNodeList]$CiSigners = $Xml.SelectNodes('//ns:CiSigners/ns:CiSigner', $NsManager)
+        [System.Xml.XmlNodeList]$AllowedSigners12 = $Xml.SelectNodes('//ns:SigningScenarios/ns:SigningScenario[@Value="12"]/ns:ProductSigners/ns:AllowedSigners/ns:AllowedSigner', $NsManager)
+        [System.Xml.XmlNodeList]$AllowedSigners131 = $Xml.SelectNodes('//ns:SigningScenarios/ns:SigningScenario[@Value="131"]/ns:ProductSigners/ns:AllowedSigners/ns:AllowedSigner', $NsManager)
+
+        # Remove invalid signer IDs from CiSigners and AllowedSigners
+        Remove-InvalidSignerIds $CiSigners
+        Remove-InvalidSignerIds $AllowedSigners12
+        Remove-InvalidSignerIds $AllowedSigners131
+
+    }
+    End {
+        # Save the changes to the XML file
+        $Xml.Save($Path)
     }
 }
-Export-ModuleMember -Function 'Get-SignedFileCertificates'
+Export-ModuleMember -Function 'Remove-OrphanAllowedSignersAndCiSigners_IDBased'
 
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCDmvRW1JCHoyrOv
-# 91Dn2CAz8egQJePpo6Dd6Yd483BCY6CCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCDxCtyqvRx02Cij
+# 0iw25QrPxYTS8h82ZJlkaV81jjeC06CCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -107,16 +124,16 @@ Export-ModuleMember -Function 'Get-SignedFileCertificates'
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQgiXUhrv4vQ96S7F3u6/44/1f99O3Q/ce9AP9okKHGv2MwDQYJKoZIhvcNAQEB
-# BQAEggIAItKzX1GwZo6kXxUjSXr0GopK7V2sSJ2KO4Xg1VTmhd9aLAypnglFXhbP
-# K7o6K3yq20bxt09LhGPPkOGnHHCsH7J4+HPb5AtVWjk8L6yaH7wFZcRwEbOky8zJ
-# DA3TFDlOIChilXr7TxGmug58xzpDEMR6da5BRN/cOnsHKk27OeR8Y2A+NfXilf3+
-# FuRPJuVbi1CNhRSwNb+HNnBDChUvO3lA0f+DaqkGKf3NT4/Rkuubb+kFIWKaENyC
-# uJgfXO60PsYrWWAYibJ+NRkr9Q4GdVuJjy+4uk5CTjc/PZsFDMZazPkiextab8u3
-# 91hiuPwdVYNpJzjFafYfqH0ueH4Y3/74FgOp+ceY5OK0DLbFhu9EhM/9XlFJuefN
-# h9Dhv6UsU3CGJXYGgRlketvrBg1JGoU4viYCrHhQWi0kJSWLMbaPl2hrC48xa5vN
-# F72x37vSYQJzVeS5GUFYkjXK1c/x6K7c7d+I6FuPiwJOqm3vX0J4OzT7moatO0ju
-# bCRL4uJEEupTeoKMjy1pO0t4fUhUnNvtTrf8AfpdLyo16a7jDBbTHDDPiEnbVwyy
-# khqFymERTc9mG/egd42yAVr1/f8e4wOuLk6G/reeOm2SpDu6MuMUB2+H/0wvqZYv
-# t4djmnfqpPSQEFmGncT2VJGgpoY0K+4JBWPmbNgdAEElQIvF+70=
+# IgQgXNqcihUO+cJkmSBignGIEGOKN92AK2Cc2iVAC82b38UwDQYJKoZIhvcNAQEB
+# BQAEggIAFl+2r1q4vUEaPND38pvNL3mtp4lXqwLRVfia1XzVGcXWuAenKHWFvDIi
+# oJABEa7sXzAZn7HeZp2Np33pLI6upWDSjbsNi4s5RY4Dgq0d6OXKKcONrrq5g0+m
+# pErsvVPoQk+P98VLVLjZdZcVc415EwUdYF1ZwpoBzMVB+S4YLUggvLHsc65mkc3e
+# nLIdejBbk9shyv2dbdB0NRIKB/ccIcU3X+/Fttjz53Z++EYQA7iWVnUKqEsoYF8/
+# 0k+o8oDcXWOnp+q5Y49QfuPtp0nVxagInPMuf//LZFCFiwU1Bru2rHTOf3bY6Q4u
+# bSm6L8SdB1cmX7H3wiAs/BB0pEQwVSIVSHmktq2s0VrN06D4ArZ/hipylYCTCTEc
+# IhEp8i+sAKi97OHYcwhv+pB30O4sHscvpujnIMaBfyKNvEU9/0PcdBcg5RhHAi5J
+# NLhAigOMAFfwQZamUxM5ffkGYFlfU9HXxlsIwS5KhAzRqtvPBDbrE+RbLgZEtUho
+# Gd3v8vsHPzzrSYn+UMNQ2A0Dnt/nqN8ZGbsJm69rxh0WgXepfLXQpttMy8YVcsBm
+# QEMhb0Dh/fzZJLQ0xYeB2q21zAftMaqKVSmdPSF+43tpbAzPRiFWElY8xnEpotvQ
+# jhZ1cJkvYZcf3k1WrEXba3GRjul9C5M4PZyQZaz6qDy0iwuJZKk=
 # SIG # End signature block

@@ -527,20 +527,20 @@ Function Edit-WDACConfig {
 
                     # Only create policy for files that are on longer available on the disk if there are any and
                     # if user chose to include deleted files in the final supplemental policy
-                    if ($AuditEventLogsProcessingResults.DeletedFileHashes -and $IncludeDeletedFiles) {
+                    if ($AuditEventLogsProcessingResults.DeletedFileHashes.Values -and $IncludeDeletedFiles) {
 
                         Write-Verbose -Message 'Attempting to create a policy for files that are no longer available on the disk but were detected in event viewer logs'
 
                         # Displaying the unique values and count. Even though the DeletedFileHashesEventsPolicy.xml will have many duplicates, the final supplemental policy that will be deployed on the system won't have any duplicates
                         # Because Merge-CiPolicy will automatically take care of removing them
-                        Write-Verbose -Message "$(($AuditEventLogsProcessingResults.DeletedFileHashes.'File Name' | Select-Object -Unique).count) file(s) have been found in event viewer logs that were run during Audit phase but are no longer on the disk, they are as follows:"
-                        $AuditEventLogsProcessingResults.DeletedFileHashes.'File Name' | Select-Object -Unique | ForEach-Object -Process {
+                        Write-Verbose -Message "$(($AuditEventLogsProcessingResults.DeletedFileHashes.Values.'File Name' | Select-Object -Unique).count) file(s) have been found in event viewer logs that were run during Audit phase but are no longer on the disk, they are as follows:"
+                        $AuditEventLogsProcessingResults.DeletedFileHashes.Values.'File Name' | Select-Object -Unique | ForEach-Object -Process {
                             Write-Verbose -Message "$_"
                         }
 
                         Write-Verbose -Message 'Creating FileRules and RuleRefs for files that are no longer available on the disk but were detected in event viewer logs'
-                        [System.String]$FileRulesHashesResults = Get-FileRules -HashesArray $AuditEventLogsProcessingResults.DeletedFileHashes
-                        [System.String]$RuleRefsHashesResults = (Get-RuleRefs -HashesArray $AuditEventLogsProcessingResults.DeletedFileHashes).Trim()
+                        [System.String]$FileRulesHashesResults = Get-FileRules -HashesArray $AuditEventLogsProcessingResults.DeletedFileHashes.Values
+                        [System.String]$RuleRefsHashesResults = (Get-RuleRefs -HashesArray $AuditEventLogsProcessingResults.DeletedFileHashes.Values).Trim()
 
                         Write-Verbose -Message 'Saving the File Rules and File Rule Refs in the FileRulesAndFileRefs.txt for debugging purposes'
                         $FileRulesHashesResults + $RuleRefsHashesResults | Out-File -FilePath (Join-Path -Path $StagingArea -ChildPath 'FileRulesAndFileRefs.txt') -Force
@@ -1052,8 +1052,8 @@ Register-ArgumentCompleter -CommandName 'Edit-WDACConfig' -ParameterName 'SuppPo
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCCfDCsZImooZFMI
-# 6Kff/z0peBPZRoQvv28sDUySBYSIsaCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCDvOCdhDkt54HVg
+# f60AUdJ4lsl17cLAmOkYoeQ+OupZ3KCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -1100,16 +1100,16 @@ Register-ArgumentCompleter -CommandName 'Edit-WDACConfig' -ParameterName 'SuppPo
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQgCeZPNqXa13ZGHaivKielzVLt0/iekmYWl6Tz1IaD9kgwDQYJKoZIhvcNAQEB
-# BQAEggIAK7B1Z84Bx9/SgfhJzMFDYuYEcdZV9UGhkpxAjm085JDLzRAmOA7SGmwh
-# t9oGB1yYDhv3yfdc7EYWiBmSLMio2V1Z2MmLKpvH4wdYbUULf9Qv8FhM7E9pOkkE
-# i3xjaH9e09w0OQ0vIKVcPhzWWaBr64sh6pPGqtzloc2FdJm5S5ANRMwozTJMs2E3
-# pZgbj6ZIm7QcOGw7BPXWZl6aNsDFle0ScIZHCU7PWVSPVv5mZ8PNozZOENo/f56V
-# PH32CmpeAJxhR7JIUE7VrWzR98RZnwYOZZpPn/lDzIuVsjDJpCFgJd3gQcG9exqp
-# 75G2BHKFPs71H3MhWRudtwHPtrVsX1/Vbdjy5i4TUkK7sENVimrBYM5Gwmv/SSPd
-# iDKDQMcEpQxZPPOAFqLLZ8rYUE5xWiOL8Ee3bmyZ3jiOs5atY+Vj41kJbd3C6C62
-# UVWRIDXEplHpPwgWjcZHJhxUEleX18+B2LiLYqdHrPuQevsbMIC0xY7wZh2VwgDR
-# 0GkKhpwfVEvfdMxMlGhf4zPAXIrnOPA6Vtg6dOpVnXbLmx6VVWpPsvIsLsCxkpUN
-# SDEMd9C+RNN8d9vhoMPdp+77rc2x5x68uu6kX4Ssrw7OdSyCo0q7425MH7QfCiBJ
-# pzNJ1kU0JOnnp6KL4HFTyPANnh6oIJFmp0jBOULVqQHuX/05CYY=
+# IgQgV9gBwVzaa1aQwyQsVcf7ssrsCvjWDQ428nL6MNx3s0AwDQYJKoZIhvcNAQEB
+# BQAEggIAijOZA+AntMOvFArHh8IfQl9Cgk57iRvRp+VHQpRbgeLoTxOChP5zoIRJ
+# rr85ZXF1AdCe3T2YH2mYJJ3hBBG//SxI/OUENTbEq7/XFGJwIdmEAVWtBZfllfkf
+# nFhllDnVNOwn++GlMWsTYKr1wPPyGdKy4ob573GXerY/Rg07KUWlx0awtz1kwC1U
+# 5bmcS5iIb/ZAnEswi2qwwJcOJ/RcrGnXUUXt54eHISdGXme8TtZ8oJHP6cj8rh3Y
+# 93PQllD2vMbCgmF+4U4ohBVQNYjL46Gyyrw6sNwhzg2kEcYMS+y3HowI0X15Nt9w
+# MM3MYHdGos3krk81uHZX7k/vEwV6UAqZr1eI1/W4KWv8JTC8E5n7wmfEGNhh4O4e
+# Jf0hjn+ljLQCZOcT3n1l0pWUV/SMzNWuyVCOsT+DVqaAJW7by5oFd7POlfYBUZTY
+# M5B7Tu5O8rpIIxdQcqeiCRjE4CFJCfScWOtX6isALZRSWlgAsZDix9bWFMLlCtgX
+# 79mQ5irSgmHXiNs2qHTZ3m8ZvCm0pJMGfqZJK9Tw/DwO14FXyY1ecFVYXLuOODh5
+# FY+uPD/LAQCPLgIjZcC/H2L02hSf0Rv9x4n5IPrRc/2eOazUkvM10lmoGRq3cVxE
+# LS7yHP2+K+Vv3LEBv9Nl2qYe/HHVrF7ptuOuUZAC5W/u2n+bL9o=
 # SIG # End signature block

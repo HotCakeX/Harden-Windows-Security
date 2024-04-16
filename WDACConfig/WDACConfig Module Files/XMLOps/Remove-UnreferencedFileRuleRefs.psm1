@@ -1,66 +1,60 @@
-Function Get-SignedFileCertificates {
+function Remove-UnreferencedFileRuleRefs {
     <#
     .SYNOPSIS
-        A function to get all the certificates from a signed file or a certificate object and output a Collection
-    .PARAMETER FilePath
-        Optional parameter, the function will get all the certificates from this file if this parameter is used
-    .PARAMETER X509Certificate2
-        Optional parameter, the function will get all the certificates from this certificate object if this parameter is used
+        Removes <FileRuleRef> elements from the <FileRulesRef> node of each Signing Scenario that are not referenced by any <Allow> element in the <FileRules> node
+    .PARAMETER xmlFilePath
+        The path to the XML file to be modified
     .INPUTS
-        System.String
-        System.Security.Cryptography.X509Certificates.X509Certificate2
+        System.IO.FileInfo
     .OUTPUTS
-        System.Security.Cryptography.X509Certificates.X509Certificate2Collection
+        System.Void
     #>
     [CmdletBinding()]
-    [OutputType([System.Security.Cryptography.X509Certificates.X509Certificate2Collection])]
+    [OutputType([System.Void])]
     param (
-        [Parameter()]
-        [System.String]$FilePath,
-        [Parameter(ValueFromPipeline = $true)]
-        [System.Security.Cryptography.X509Certificates.X509Certificate2]$X509Certificate2
+        [Parameter(Mandatory = $true)][System.IO.FileInfo]$XmlFilePath
     )
 
-    begin {
-        # Detecting if Verbose switch is used
-        $PSBoundParameters.Verbose.IsPresent ? ([System.Boolean]$Verbose = $true) : ([System.Boolean]$Verbose = $false) | Out-Null
-
+    Begin {
         # Importing the $PSDefaultParameterValues to the current session, prior to everything else
         . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
 
-        # Create an X509Certificate2Collection object
-        [System.Security.Cryptography.X509Certificates.X509Certificate2Collection]$CertCollection = New-Object -TypeName System.Security.Cryptography.X509Certificates.X509Certificate2Collection
+        # Load the XML file
+        [System.Xml.XmlDocument]$XmlContent = Get-Content $XmlFilePath
     }
 
-    process {
-        # Check which parameter set is used
-        if ($FilePath) {
-            try {
-                # If the FilePath parameter is used, import all the certificates from the file
-                $CertCollection.Import($FilePath, $null, 'DefaultKeySet')
+    Process {
+        # Define the namespace to use with the namespace manager
+        [System.Xml.XmlNamespaceManager]$NsManager = New-Object -TypeName System.Xml.XmlNamespaceManager -ArgumentList $XmlContent.NameTable
+        $NsManager.AddNamespace('def', 'urn:schemas-microsoft-com:sipolicy')
+
+        # Find all Allow elements and store their IDs
+        $AllowedIds = $XmlContent.SelectNodes('//def:Allow', $NsManager) | ForEach-Object -Process { $_.ID }
+
+        # Find all FileRuleRef elements
+        $fileRuleRefs = $XmlContent.SelectNodes('//def:FileRuleRef', $NsManager)
+
+        foreach ($fileRuleRef in $fileRuleRefs) {
+            # Check if the RuleID attribute is not in the list of allowed IDs
+            if ($AllowedIds -notcontains $fileRuleRef.RuleID) {
+                # Remove the FileRuleRef element if it's not referenced
+                [System.Void]$fileRuleRef.ParentNode.RemoveChild($fileRuleRef)
             }
-            catch {
-                throw [ExceptionFailedToGetCertificateCollection]::new('Could not get the certificate collection of the file due to lack of necessary permissions.', 'Get-SignedFileCertificates')
-            }
-        }
-        elseif ($X509Certificate2) {
-            # If the CertObject parameter is used, add the certificate object to the collection
-            $CertCollection.Add($X509Certificate2)
         }
     }
 
-    end {
-        # Return the collection
-        return $CertCollection
+    End {
+        # Save the modified XML back to the file or to a new file
+        $XmlContent.Save($XmlFilePath)
     }
 }
-Export-ModuleMember -Function 'Get-SignedFileCertificates'
+Export-ModuleMember -Function 'Remove-UnreferencedFileRuleRefs'
 
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCDmvRW1JCHoyrOv
-# 91Dn2CAz8egQJePpo6Dd6Yd483BCY6CCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCAcu5khoRJnO0Ve
+# bHSHvJfXe9Li5yOP3zscbsFqUJGCUaCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -107,16 +101,16 @@ Export-ModuleMember -Function 'Get-SignedFileCertificates'
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQgiXUhrv4vQ96S7F3u6/44/1f99O3Q/ce9AP9okKHGv2MwDQYJKoZIhvcNAQEB
-# BQAEggIAItKzX1GwZo6kXxUjSXr0GopK7V2sSJ2KO4Xg1VTmhd9aLAypnglFXhbP
-# K7o6K3yq20bxt09LhGPPkOGnHHCsH7J4+HPb5AtVWjk8L6yaH7wFZcRwEbOky8zJ
-# DA3TFDlOIChilXr7TxGmug58xzpDEMR6da5BRN/cOnsHKk27OeR8Y2A+NfXilf3+
-# FuRPJuVbi1CNhRSwNb+HNnBDChUvO3lA0f+DaqkGKf3NT4/Rkuubb+kFIWKaENyC
-# uJgfXO60PsYrWWAYibJ+NRkr9Q4GdVuJjy+4uk5CTjc/PZsFDMZazPkiextab8u3
-# 91hiuPwdVYNpJzjFafYfqH0ueH4Y3/74FgOp+ceY5OK0DLbFhu9EhM/9XlFJuefN
-# h9Dhv6UsU3CGJXYGgRlketvrBg1JGoU4viYCrHhQWi0kJSWLMbaPl2hrC48xa5vN
-# F72x37vSYQJzVeS5GUFYkjXK1c/x6K7c7d+I6FuPiwJOqm3vX0J4OzT7moatO0ju
-# bCRL4uJEEupTeoKMjy1pO0t4fUhUnNvtTrf8AfpdLyo16a7jDBbTHDDPiEnbVwyy
-# khqFymERTc9mG/egd42yAVr1/f8e4wOuLk6G/reeOm2SpDu6MuMUB2+H/0wvqZYv
-# t4djmnfqpPSQEFmGncT2VJGgpoY0K+4JBWPmbNgdAEElQIvF+70=
+# IgQg8gxPJnFjmmFnhOJlgbHgyAsxCdc+tJyrGTU5AhNNiR4wDQYJKoZIhvcNAQEB
+# BQAEggIAXRJ5rVmyU8ZkeVqd5jsbqGBUPYEp8uNuJx3IwoQozCKScPAVnZWmmf1i
+# nCFmaMoNjSVPfGMyME2Mo05Cc259y8fSsX3tP//53tu7DJ5c6+usGstLohBycDtC
+# zXeY5G7MofB2p3nbbTgOIE9AgBXiIcno4PgGuW6e2xz6JgQ5DWPeScmXwshyf3yx
+# GlCE8MFsyEeOVrXYo8TtaKuURGQNUUl+6tgashtfzjC873TeJSyGQrFuJX90LTJU
+# fBr4IQWRM5KyOJ+iHYvDyyXmbg3dK80yVQEl9YrU2oPUlvco1Ek3IRRFq9/ROiyE
+# cXFlkedz1mxoBXvmDgULe7/x3DLnd9jSxutgZNMizEdSm6mHy2A1ewSPpDhEg3jA
+# Th7p00GC0Yz6XQUnK4dVIiZuJL7aQ6AEkVvwB7/oapvr6yj6Viw7oelT/4YuWyd4
+# hyFoELviLDL1DKTLZUu+yzjpp2jZbgdG8X6WToK5v9aFDgc7aDhGokv2kCj65wcJ
+# YmShZ/F/XRYt4eyTJaSoPk3XP+D/kVu5XYWQemVdeKZWY3Pt74IsqbJdisAqbvRO
+# kFvqXsUnpGKx2YbFLo3JZbK/24o34++s/qR/y1LiljIk9DcV+5vkon3Xuxb1Sy6V
+# AosnD0X2CXmkHR7g6ow8D/aDO541umtn8GxIem3hpZMAzb9a46E=
 # SIG # End signature block

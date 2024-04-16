@@ -733,7 +733,7 @@
         <maml:title>-------------------------- EXAMPLE 7 --------------------------</maml:title>
         <dev:code>ConvertTo-WDACPolicy -BasePolicyFile "C:\Program Files\WDACConfig\DefaultWindowsPlusBlockRules.xml" -Source MDEAdvancedHunting -MDEAHLogs "C:\Users\Admin\Downloads\New query.csv" -Deploy -TimeSpan Days -TimeSpanAgo 2</dev:code>
         <dev:remarks>
-          <maml:para>This example will create a new supplemental policy from the selected MDE Advanced Hunting logs and associate it with the specified base policy file and it will deploy it on the system. The displayed logs will be from the last 2 days. You will have to select the logs to create the policy from in the GUI.</maml:para>
+          <maml:para>This example will create a new supplemental policy from the selected MDE Advanced Hunting logs and associate it with the specified base policy file and it will deploy it on the system. The displayed logs will be from the last 2 days. You will be able to select the logs to create the policy from in the GUI.</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>

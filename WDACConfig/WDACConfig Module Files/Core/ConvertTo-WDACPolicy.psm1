@@ -1008,7 +1008,8 @@ Function ConvertTo-WDACPolicy {
     ConvertTo-WDACPolicy -BasePolicyFile "C:\Program Files\WDACConfig\DefaultWindowsPlusBlockRules.xml" -Source MDEAdvancedHunting -MDEAHLogs "C:\Users\Admin\Downloads\New query.csv" -Deploy -TimeSpan Days -TimeSpanAgo 2
 
     This example will create a new supplemental policy from the selected MDE Advanced Hunting logs and associate it with the specified base policy file and it will deploy it on the system.
-    The displayed logs will be from the last 2 days. You will have to select the logs to create the policy from in the GUI.
+    The displayed logs will be from the last 2 days. You will be able to select the logs to create the policy from in the GUI.
+
 .EXTERNALHELP ..\Help\ConvertTo-WDACPolicy.xml
 #>
 

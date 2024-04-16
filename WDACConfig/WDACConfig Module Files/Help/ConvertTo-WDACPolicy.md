@@ -91,14 +91,14 @@ This example will display the Code Integrity and AppLocker logs in a GUI and all
 
 ### EXAMPLE 3
 ```
- ConvertTo-WDACPolicy -BasePolicyFile "C:\Users\Admin\AllowMicrosoftPlusBlockRules.xml"
+ConvertTo-WDACPolicy -BasePolicyFile "C:\Users\Admin\AllowMicrosoftPlusBlockRules.xml"
 ```
 
 This example will display the Code Integrity and AppLocker logs in a GUI and allow the user to select the logs to create a new supplemental policy and associate it with the specified base policy file.
 
 ### EXAMPLE 4
 ```
- ConvertTo-WDACPolicy
+ConvertTo-WDACPolicy
 ```
 
 This example will display the Code Integrity and AppLocker logs in a GUI and takes no further action.
@@ -124,7 +124,7 @@ ConvertTo-WDACPolicy -BasePolicyFile "C:\Program Files\WDACConfig\DefaultWindows
 ```
 
 This example will create a new supplemental policy from the selected MDE Advanced Hunting logs and associate it with the specified base policy file and it will deploy it on the system.
-The displayed logs will be from the last 2 days. You will have to select the logs to create the policy from in the GUI.
+The displayed logs will be from the last 2 days. You will be able to select the logs to create the policy from in the GUI.
 
 ## PARAMETERS
 

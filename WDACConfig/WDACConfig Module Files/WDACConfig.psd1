@@ -71,7 +71,7 @@ This is an advanced PowerShell module for WDAC (Windows Defender Application Con
 '@
 
     # Minimum version of the PowerShell engine required by this module
-    PowerShellVersion    = '7.4.1'
+    PowerShellVersion    = '7.4.2'
 
     # Name of the PowerShell host required by this module
     # PowerShellHostName = ''

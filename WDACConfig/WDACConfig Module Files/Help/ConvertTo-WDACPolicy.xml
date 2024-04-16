@@ -691,42 +691,49 @@
         <maml:title>-------------------------- EXAMPLE 1 --------------------------</maml:title>
         <dev:code>ConvertTo-WDACPolicy -PolicyToAddLogsTo "C:\Users\Admin\AllowMicrosoftPlusBlockRules.xml" -Verbose</dev:code>
         <dev:remarks>
-          <maml:para>This example will display the Code Integrity logs in a GUI and allow the user to select the logs to add to the specified policy file.</maml:para>
+          <maml:para>This example will display the Code Integrity and AppLocker logs in a GUI and allow the user to select the logs to add to the specified policy file.</maml:para>
         </dev:remarks>
       </command:example>
       <command:example>
         <maml:title>-------------------------- EXAMPLE 2 --------------------------</maml:title>
         <dev:code>ConvertTo-WDACPolicy -Verbose -BasePolicyGUID '{ACE9058C-8A24-47F4-86F0-A33FAB5073E3}'</dev:code>
         <dev:remarks>
-          <maml:para>This example will display the Code Integrity logs in a GUI and allow the user to select the logs to create a new supplemental policy and associate it with the specified base policy GUID.</maml:para>
+          <maml:para>This example will display the Code Integrity and AppLocker logs in a GUI and allow the user to select the logs to create a new supplemental policy and associate it with the specified base policy GUID.</maml:para>
         </dev:remarks>
       </command:example>
       <command:example>
         <maml:title>-------------------------- EXAMPLE 3 --------------------------</maml:title>
         <dev:code>ConvertTo-WDACPolicy -BasePolicyFile "C:\Users\Admin\AllowMicrosoftPlusBlockRules.xml"</dev:code>
         <dev:remarks>
-          <maml:para>This example will display the Code Integrity logs in a GUI and allow the user to select the logs to create a new supplemental policy and associate it with the specified base policy file.</maml:para>
+          <maml:para>This example will display the Code Integrity and AppLocker logs in a GUI and allow the user to select the logs to create a new supplemental policy and associate it with the specified base policy file.</maml:para>
         </dev:remarks>
       </command:example>
       <command:example>
         <maml:title>-------------------------- EXAMPLE 4 --------------------------</maml:title>
         <dev:code>ConvertTo-WDACPolicy</dev:code>
         <dev:remarks>
-          <maml:para>This example will display the Code Integrity logs in a GUI and takes no further action.</maml:para>
+          <maml:para>This example will display the Code Integrity and AppLocker logs in a GUI and takes no further action.</maml:para>
         </dev:remarks>
       </command:example>
       <command:example>
         <maml:title>-------------------------- EXAMPLE 5 --------------------------</maml:title>
         <dev:code>ConvertTo-WDACPolicy -FilterByPolicyNames 'VerifiedAndReputableDesktopFlightSupplemental','WindowsE_Lockdown_Flight_Policy_Supplemental' -Verbose</dev:code>
         <dev:remarks>
-          <maml:para>This example will filter the Code Integrity logs by the specified policy names and display them in a GUI. It will also display verbose messages on the console.</maml:para>
+          <maml:para>This example will filter the Code Integrity and AppLocker logs by the specified policy names and display them in a GUI. It will also display verbose messages on the console.</maml:para>
         </dev:remarks>
       </command:example>
       <command:example>
         <maml:title>-------------------------- EXAMPLE 6 --------------------------</maml:title>
-        <dev:code>ConvertTo-WDACPolicy -FilterByPolicyNames 'Microsoft Windows Driver Policy - Enforced' -MinutesAgo 10</dev:code>
+        <dev:code>ConvertTo-WDACPolicy -FilterByPolicyNames 'Microsoft Windows Driver Policy - Enforced' -TimeSpan Minutes -TimeSpanAgo 10</dev:code>
         <dev:remarks>
-          <maml:para>This example will filter the Code Integrity logs by the specified policy name and the number of minutes ago from the current time and display them in a GUI. So, it will display the logs that are 10 minutes old and are associated with the specified policy name.</maml:para>
+          <maml:para>This example will filter the local Code Integrity and AppLocker logs by the specified policy name and the number of minutes ago from the current time and display them in a GUI. So, it will display the logs that are 10 minutes old and are associated with the specified policy name.</maml:para>
+        </dev:remarks>
+      </command:example>
+      <command:example>
+        <maml:title>-------------------------- EXAMPLE 7 --------------------------</maml:title>
+        <dev:code>ConvertTo-WDACPolicy -BasePolicyFile "C:\Program Files\WDACConfig\DefaultWindowsPlusBlockRules.xml" -Source MDEAdvancedHunting -MDEAHLogs "C:\Users\Admin\Downloads\New query.csv" -Deploy -TimeSpan Days -TimeSpanAgo 2</dev:code>
+        <dev:remarks>
+          <maml:para>This example will create a new supplemental policy from the selected MDE Advanced Hunting logs and associate it with the specified base policy file and it will deploy it on the system. The displayed logs will be from the last 2 days. You will have to select the logs to create the policy from in the GUI.</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>

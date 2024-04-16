@@ -169,7 +169,7 @@ Function Receive-CodeIntegrityLogs {
             }
 
             [Microsoft.PowerShell.Commands.GroupInfo[]]$CiGroupedEvents = $CiRawEventLogs | Group-Object -Property ActivityId
-            Write-Verbose -Message "Receive-CodeIntegrityLogs: Grouped the logs by ActivityId. The total number of groups is $($CiGroupedEvents.Count) and the total number of logs in the groups is $($CiGroupedEvents.Group.Count)"
+            Write-Verbose -Message "Receive-CodeIntegrityLogs: Grouped the Code Integrity logs by ActivityId. The total number of groups is $($CiGroupedEvents.Count) and the total number of logs in the groups is $($CiGroupedEvents.Group.Count)"
         }
         else {
             Write-Verbose -Message 'Receive-CodeIntegrityLogs: Skipping the collection of the Code Integrity logs'
@@ -607,8 +607,8 @@ Export-ModuleMember -Function 'Receive-CodeIntegrityLogs'
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCDJTJAfZant57lI
-# yAYm9lSIo1S+4OD2CwGrseIYOMiLQqCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCD3tknyhHBNdovr
+# RHgwYkH0Ba4f8wESUYQOugxDKEmxwqCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -655,16 +655,16 @@ Export-ModuleMember -Function 'Receive-CodeIntegrityLogs'
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQgxVpMPkvHZ78+jfW4G4AC+Uvttox1jOuQWGAW/9CG6EQwDQYJKoZIhvcNAQEB
-# BQAEggIAJ82tZ0is1I/lxdv7sk36PUqoIhixlykHm64Z0NyYZsKsGBcP14Bgl2Nq
-# YE9iuc8DIg0SwsPIGkUVBqIG/PV6M+od2jYnmNY29RhgfHfqlZ2FpS6t71j7ZFJf
-# rJDNtSpRKxA9nbTPgN46iSKvDCtc+1k/B2Eu1V7yCYbIqbgB+5lkCNl/rbQZGaiz
-# eFrFuaXcXHyDBZYA2j0kwndDapgFdrpDFAhA3UtB+BpHeb5tMRowA2T8NNMNJDbY
-# cZE/gZn+giga2k9O+0EHVejk8c/TrTGFv/EWQeouplB3pCDvV3CKz4RD2ng1nD8R
-# tdMAaUJA6CAL6+DaAvdKnBs1/HKD/8v48QwJeASjhGCnpH6tWOR4+AZrXXok9VZR
-# 8hCwoUbdup09CncUX6e62cFdCPqYnmX1kZiw3ZzJnhLQGJw+J/JgiSOpiVmfApu/
-# TwqMGnvsU5tkthRPq9DxCEAgGAh6u4IL7BwRqFoDn5pUpYABQv9VnLZ3fgSGZgF/
-# FEcSY/mWPiuvEHFtsRvM+qwmHx6a4BNdP+8y6FtxRcSQJ1nkC4Nt2YsHvxbnFDFs
-# sss7wBMODFJ9wwk/FuoMuB/qUKzs88yXI8XkVaEIszCcguV8mTLCrysj2tTWY+K2
-# L2aQVTJkYAyM9JqPt1LaPJCVYXg52iNMQwD4IHGw+dxBnEXsdzk=
+# IgQgWOjW67jyNj4ndNVux5ZYcdmKhqk+Azstm3mX6IgTXXAwDQYJKoZIhvcNAQEB
+# BQAEggIAjaVnRbRefwCAwfvZqibTeTBJRW+YsnyT7ILnkuqmHsGasxwAZPRh5zaL
+# Qqe/HiJQvtO/W77hE59F4kOWRJC6qZrOA4MBrt2eHeniZs9S5dol6Z6K05EGinUo
+# X8NQAyS+XPByKDGnCc5/mCiuIMb26ATwrNrFhLH4ZGOFPpmre9GFaqTlk3Nmqc73
+# rQ7GVMnLTBoj1dWYV4+kwoAefiKR41bnI9R6a7RLvtktLLEBS+7x3bcImSHjyZlg
+# AbyrPBLbJXXB/IhFaZGUfadwCe3Lv4nP35uLghgnyXzB6iyGQxfg95iGxytHd8FW
+# nVh3evJLx/06ySGRwMUUGNiOCzPSmjeHkPbhgCBPRWoA7yH/EVSM6/Y+jByYBa4j
+# 9UshdoKM8pw74hc8J3rPCG43cbZgmZZANx9hNwVdUk3PDvRuePGk76H7S52aP95R
+# 7eLvI01CzPU5CbTu02XmDHD8cU7WIwyY06bX9Mf/PPe0iVgxlMmihkcUhfs7AQ/f
+# Lg6JrZMPuVt5NhankcNt87630LTFRitXjsPHOWr1Pi3jb4lzxMwgHh91QEQPS39z
+# 7kUsrcsG4YhqZeRcfq8mtopUMgFCVYhzziGim2OV8gEQY0QTjER43n55ajxnKDYW
+# 0pcxl360hUfvPCwOFncNw7DOS8ZnGKAqbx+uPDg+sZNxK6KUKA4=
 # SIG # End signature block

@@ -303,6 +303,7 @@ Function Compare-SignerAndCertificate {
                                 }
                             }
                         }
+                        # If the Signer matched and it doesn't have a FileAttrib, then it's a Publisher level signer
                         else {
                             $CurrentFileInfo.SignerID = $Signer.ID
                             $CurrentFileInfo.SignerName = $Signer.Name
@@ -525,6 +526,7 @@ Function Compare-SignerAndCertificate {
                                     }
                                 }
                             }
+                            # If the Signer matched and it doesn't have a FileAttrib, then it's a Publisher level signer
                             else {
                                 $CurrentFileInfo.NestedSignerID = $Signer.ID
                                 $CurrentFileInfo.NestedSignerName = $Signer.Name

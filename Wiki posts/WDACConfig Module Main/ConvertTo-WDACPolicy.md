@@ -49,11 +49,16 @@ ConvertTo-WDACPolicy
 
 ## Description
 
-This cmdlet presents the Code Integrity logs in a graphical interface (GUI) and enables the user to choose the logs. The logs can be filtered in various ways, such as Date, Type, Policy that generated them, and so on.
+This is a multi-purpose cmdlet that offers a wide range of functionalities that can either be used separately or mixed together for very detailed and specific tasks.
 
-This cmdlet is versatile and offers a broad range of functionalities that can be applied independently or combined for very precise and specific tasks.
+It currently supports Code Integrity and AppLocker logs from the following sources: Local Event logs and Microsoft Defender for Endpoint Advanced Hunting results.
 
-This cmdlet allows you to perform an in-place upgrade of a deployed base/supplemental policy or create a new supplemental policy based on the selected logs.
+The cmdlet displays the logs in a GUI and allows the user to select the logs to be processed further.
+
+The logs can be filtered based on many criteria using the available parameters.
+
+The output of this cmdlet is a Supplemental Application Control (WDAC) policy.
+Based on the input parameters, it can be associated with a base policy or merged with an existing Base or Supplemental policy.
 
 ## Parameters
 
@@ -151,11 +156,64 @@ The path(s) to use MDE AH CSV files.
 > [!NOTE]\
 > This is a dynamic parameter and will only be available if the Source parameter is set to MDEAdvancedHunting.
 
+> [!TIP]\
+> Use the following KQL query to get the logs from the MDE Advanced Hunting portal
+> ```sql
+>DeviceEvents
+>| where ActionType startswith "AppControlCodeIntegrity"
+>    or ActionType startswith "AppControlCIScriptBlocked"
+>    or ActionType startswith "AppControlCIScriptAudited"
+>```
+
+<br>
+
 <div align='center'>
 
 | Type: |[FileInfo](https://learn.microsoft.com/en-us/dotnet/api/system.io.fileinfo)[]|
 | :-------------: | :-------------: |
 | Aliases: | MDELogs |
+| Position: | Named |
+| Default value: | None |
+| Required: | False |
+| Accept pipeline input: | False |
+| Accept wildcard characters: | False |
+
+</div>
+
+<br>
+
+### -TimeSpan
+
+The unit of time to use when filtering the logs by the time.
+The allowed values are: Minutes, Hours, Days
+
+<div align='center'>
+
+| Type: |[String](https://learn.microsoft.com/en-us/dotnet/api/system.string)|
+| :-------------: | :-------------: |
+| Aliases: | Duration |
+| Position: | Named |
+| Default value: | None |
+| Required: | False |
+| Accept pipeline input: | False |
+| Accept wildcard characters: | False |
+
+</div>
+
+<br>
+
+### -TimeSpanAgo
+
+The number of the selected time unit to go back in time from the current time.
+
+> [!NOTE]\
+> This is a dynamic parameter and will only be available if the TimeSpan parameter is set.
+
+<div align='center'>
+
+| Type: |[String](https://learn.microsoft.com/en-us/dotnet/api/system.string)|
+| :-------------: | :-------------: |
+| Aliases: | Past |
 | Position: | Named |
 | Default value: | None |
 | Required: | False |

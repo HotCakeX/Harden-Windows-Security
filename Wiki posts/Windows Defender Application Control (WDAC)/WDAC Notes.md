@@ -569,7 +569,7 @@ It prevents drivers that are not compatible with HVCI from loading, even if they
 
 ## MSI Files and Their Applicable Rule Levels
 
-MSI files cannot be allowed using FilePublisher rule level because they are not PEs and do not have the necessary attributes of the PEs in order to create FilePublisher/SignedVersion rules for them, so they need to be allowed by other [levels](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDAC-Rule-Levels-Comparison-and-Guide) such as Publisher or Hash.
+MSI files cannot be allowed using FilePublisher rule level because they are not PEs and do not have the necessary attributes (Such as file version, original file name, product name, file description and so on) of the PEs (Portable Executable) in order to create FilePublisher/SignedVersion rules for them, so they need to be allowed by other [levels](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDAC-Rule-Levels-Comparison-and-Guide) such as Publisher or Hash.
 
 <br>
 

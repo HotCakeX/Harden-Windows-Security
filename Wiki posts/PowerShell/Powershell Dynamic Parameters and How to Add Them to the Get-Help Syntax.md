@@ -14,7 +14,21 @@ Usually, PowerShell developers use [comment-based help](https://learn.microsoft.
 
 PlatyPS is a module that allows you to generate XML-based help for your cmdlets. It can be used to add dynamic parameters to the Get-Help output's syntax. You will be editing a Markdown file which is convenient and the module will automatically generate the XML help file for you.
 
-Once you have your XML-based file, you will then have to reference it in your cmdlet's function like this
+### Create a Markdown file Based on your Cmdlet
+
+```powershell
+New-MarkdownHelp -Command 'YourCmdletName' -OutputFolder ".\docs"
+```
+
+After you've created a markdown file based on your current cmdlet's parameters and details, you can start adding the dynamic parameters to it and modify the syntax, because dynamic parameters are not automatically added to it. Once you are done, you can run the following command to generate the XML help file.
+
+### Generate the XML Help File from the Markdown file
+
+```powershell
+New-ExternalHelp -Path "Path-To-Markdown-File.md" -OutputPath "Path-To-XML-File.xml" -Force
+```
+
+After creating your XML-based help file, you will then have to reference it in your cmdlet's function like this
 
 ```powershell
 .EXTERNALHELP .\Help\Cmdlet-Name.xml

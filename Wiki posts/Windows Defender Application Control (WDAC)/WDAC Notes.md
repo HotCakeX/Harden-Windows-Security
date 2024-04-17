@@ -567,6 +567,16 @@ It prevents drivers that are not compatible with HVCI from loading, even if they
 
 <br>
 
+## MSI Files and Their Applicable Rule Levels
+
+MSI files cannot be allowed using FilePublisher rule level because they are not PEs and do not have the necessary attributes of the PEs in order to create FilePublisher/SignedVersion rules for them, so they need to be allowed by other [levels](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDAC-Rule-Levels-Comparison-and-Guide) such as Publisher or Hash.
+
+<br>
+
+<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">
+
+<br>
+
 ## <img width="65" src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/arrow-pink.gif" alt="Continue Reading about BYOVD using Windows Defender Application Control"> [Continue reading about BYOVD protection with WDAC](#-continue-reading-about-byovd-protection-with-wdac)
 
 #### [WDAC policy](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDAC-policy-for-BYOVD-Kernel-mode-only-protection) for BYOVD Kernel mode only protection

@@ -80,7 +80,7 @@ Install-Module -Name 'WDACConfig' -Scope 'AllUsers' -Force
 | [Assert-WDACConfigIntegrity](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Assert-WDACConfigIntegrity) | To ascertain that the files in your local WDACConfig folder are identical to the ones in the cloud | `Get-Help Assert-WDACConfigIntegrity` |
 | [Build-WDACCertificate](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Build-WDACCertificate) | To create proper code signing certificates for WDAC policy signing | `Get-Help Build-WDACCertificate` |
 | [Test-CiPolicy](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Test-CiPolicy) | Tests a Code Integrity (WDAC) Policy XML file against the Schema and shows the signers in a signed `.CIP` files | `Get-Help Test-CiPolicy` |
-
+| [ConvertTo-WDACPolicy](https://github.com/HotCakeX/Harden-Windows-Security/wiki/ConvertTo-WDACPolicy) | Multi-Purpose & Powerful functionalities such as converting local and MDE logs to App Control Policies | `Get-Help ConvertTo WDACPolicy` |
 
 <br>
 

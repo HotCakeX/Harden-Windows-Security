@@ -29,7 +29,7 @@ Function ConvertTo-WDACPolicy {
         [System.Guid]$BasePolicyGUID,
 
         [Alias('Src')]
-        [ValidateSet('MDEAdvancedHunting', 'LocalEventLogs')]
+        [ValidateSet('MDEAdvancedHunting', 'LocalEventLogs', 'EVTXFiles')]
         [Parameter(Mandatory = $false)][System.String]$Source = 'LocalEventLogs',
 
         [ArgumentCompleter({
@@ -78,49 +78,100 @@ Function ConvertTo-WDACPolicy {
             $ParamDictionary.Add('TimeSpanAgo', $TimeSpanAgo)
         }
 
-        # If user selected 'MDEAdvancedHunting' as the source, then create a mandatory parameter to ask for the .CSV file(s) path(s)
-        if ('MDEAdvancedHunting' -in $PSBoundParameters['Source']) {
+        # Offer different parameters based on the source selected
+        switch ($PSBoundParameters['Source']) {
 
-            # Opens File picker GUI so that user can select an .CSV file
-            [System.Management.Automation.ScriptBlock]$ArgumentCompleterCSVFilePathsPicker = {
-                # Create a new OpenFileDialog object
-                [System.Windows.Forms.OpenFileDialog]$Dialog = New-Object -TypeName 'System.Windows.Forms.OpenFileDialog'
-                # Set the filter to show only CSV files
-                $Dialog.Filter = 'CSV files (*.CSV)|*.CSV'
-                # Set the title of the dialog
-                $Dialog.Title = 'Select Microsoft Defender for Endpoint Advanced Hunting CSV files'
-                # Allow multiple CSV files to be selected
-                $Dialog.Multiselect = $true
-                $Dialog.ShowPreview = $true
-                # Show the dialog and get the result
-                [System.String]$Result = $Dialog.ShowDialog()
-                # If the user clicked OK, return the selected file paths
-                if ($Result -eq 'OK') {
-                    return "`"$($Dialog.FileNames -join '","')`""
+            # If user selected 'MDEAdvancedHunting' as the source, then create a mandatory parameter to ask for the .CSV file(s) path(s)
+            'MDEAdvancedHunting' {
+                # Opens File picker GUI so that user can select .CSV files
+                [System.Management.Automation.ScriptBlock]$ArgumentCompleterCSVFilePathsPicker = {
+                    # Create a new OpenFileDialog object
+                    [System.Windows.Forms.OpenFileDialog]$Dialog = New-Object -TypeName 'System.Windows.Forms.OpenFileDialog'
+                    # Set the filter to show only CSV files
+                    $Dialog.Filter = 'CSV files (*.CSV)|*.CSV'
+                    # Set the title of the dialog
+                    $Dialog.Title = 'Select Microsoft Defender for Endpoint Advanced Hunting CSV files'
+                    # Allow multiple CSV files to be selected
+                    $Dialog.Multiselect = $true
+                    $Dialog.ShowPreview = $true
+                    # Show the dialog and get the result
+                    [System.String]$Result = $Dialog.ShowDialog()
+                    # If the user clicked OK, return the selected file paths
+                    if ($Result -eq 'OK') {
+                        return "`"$($Dialog.FileNames -join '","')`""
+                    }
                 }
+
+                # Create a parameter attribute collection
+                $MDEAHLogs_AttributesCollection = New-Object -TypeName System.Collections.ObjectModel.Collection[System.Attribute]
+
+                # Create an argument completer attribute and add it to the collection
+                [System.Management.Automation.ArgumentCompleterAttribute]$MDEAHLogs_ArgumentCompleterAttrib = New-Object -TypeName System.Management.Automation.ArgumentCompleterAttribute($ArgumentCompleterCSVFilePathsPicker)
+                $MDEAHLogs_AttributesCollection.Add($MDEAHLogs_ArgumentCompleterAttrib)
+
+                # Create a mandatory attribute and add it to the collection
+                [System.Management.Automation.ParameterAttribute]$MDEAHLogs_MandatoryAttrib = New-Object -TypeName System.Management.Automation.ParameterAttribute
+                $MDEAHLogs_MandatoryAttrib.Mandatory = $true
+                $MDEAHLogs_AttributesCollection.Add($MDEAHLogs_MandatoryAttrib)
+
+                # Create an alias attribute and add it to the collection
+                $MDEAHLogs_AliasAttrib = New-Object -TypeName System.Management.Automation.AliasAttribute -ArgumentList 'MDELogs'
+                $MDEAHLogs_AttributesCollection.Add($MDEAHLogs_AliasAttrib)
+
+                # Create a dynamic parameter object with the attributes already assigned: Name, Type, and Attributes Collection
+                [System.Management.Automation.RuntimeDefinedParameter]$MDEAHLogs = New-Object -TypeName System.Management.Automation.RuntimeDefinedParameter('MDEAHLogs', [System.IO.FileInfo[]], $MDEAHLogs_AttributesCollection)
+
+                # Add the dynamic parameter object to the dictionary
+                $ParamDictionary.Add('MDEAHLogs', $MDEAHLogs)
+
+                break
             }
 
-            # Create a parameter attribute collection
-            $MDEAHLogs_AttributesCollection = New-Object -TypeName System.Collections.ObjectModel.Collection[System.Attribute]
+            'EVTXFiles' {
 
-            # Create an argument completer attribute and add it to the collection
-            [System.Management.Automation.ArgumentCompleterAttribute]$MDEAHLogs_ArgumentCompleterAttrib = New-Object -TypeName System.Management.Automation.ArgumentCompleterAttribute($ArgumentCompleterCSVFilePathsPicker)
-            $MDEAHLogs_AttributesCollection.Add($MDEAHLogs_ArgumentCompleterAttrib)
+                # Opens File picker GUI so that user can select .EVTX files
+                [System.Management.Automation.ScriptBlock]$ArgumentCompleterEVTXFilePathsPicker = {
+                    # Create a new OpenFileDialog object
+                    [System.Windows.Forms.OpenFileDialog]$Dialog = New-Object -TypeName 'System.Windows.Forms.OpenFileDialog'
+                    # Set the filter to show only EVTX files
+                    $Dialog.Filter = 'EVTX files (*.evtx)|*.evtx'
+                    # Set the title of the dialog
+                    $Dialog.Title = 'Select .evtx files to convert to WDAC policy'
+                    # Allow multiple EVTX files to be selected
+                    $Dialog.Multiselect = $true
+                    $Dialog.ShowPreview = $true
+                    # Show the dialog and get the result
+                    [System.String]$Result = $Dialog.ShowDialog()
+                    # If the user clicked OK, return the selected file paths
+                    if ($Result -eq 'OK') {
+                        return "`"$($Dialog.FileNames -join '","')`""
+                    }
+                }
 
-            # Create a mandatory attribute and add it to the collection
-            [System.Management.Automation.ParameterAttribute]$MDEAHLogs_MandatoryAttrib = New-Object -TypeName System.Management.Automation.ParameterAttribute
-            $MDEAHLogs_MandatoryAttrib.Mandatory = $true
-            $MDEAHLogs_AttributesCollection.Add($MDEAHLogs_MandatoryAttrib)
+                # Create a parameter attribute collection
+                $EVTXLogs_AttributesCollection = New-Object -TypeName System.Collections.ObjectModel.Collection[System.Attribute]
 
-            # Create an alias attribute and add it to the collection
-            $MDEAHLogs_AliasAttrib = New-Object -TypeName System.Management.Automation.AliasAttribute -ArgumentList 'MDELogs'
-            $MDEAHLogs_AttributesCollection.Add($MDEAHLogs_AliasAttrib)
+                # Create an argument completer attribute and add it to the collection
+                [System.Management.Automation.ArgumentCompleterAttribute]$EVTXLogs_ArgumentCompleterAttrib = New-Object -TypeName System.Management.Automation.ArgumentCompleterAttribute($ArgumentCompleterEVTXFilePathsPicker)
+                $EVTXLogs_AttributesCollection.Add($EVTXLogs_ArgumentCompleterAttrib)
 
-            # Create a dynamic parameter object with the attributes already assigned: Name, Type, and Attributes Collection
-            [System.Management.Automation.RuntimeDefinedParameter]$MDEAHLogs = New-Object -TypeName System.Management.Automation.RuntimeDefinedParameter('MDEAHLogs', [System.IO.FileInfo[]], $MDEAHLogs_AttributesCollection)
+                # Create a mandatory attribute and add it to the collection
+                [System.Management.Automation.ParameterAttribute]$EVTXLogs_MandatoryAttrib = New-Object -TypeName System.Management.Automation.ParameterAttribute
+                $EVTXLogs_MandatoryAttrib.Mandatory = $true
+                $EVTXLogs_AttributesCollection.Add($EVTXLogs_MandatoryAttrib)
 
-            # Add the dynamic parameter object to the dictionary
-            $ParamDictionary.Add('MDEAHLogs', $MDEAHLogs)
+                # Create an alias attribute and add it to the collection
+                $EVTXLogs_AliasAttrib = New-Object -TypeName System.Management.Automation.AliasAttribute -ArgumentList 'Evtx'
+                $EVTXLogs_AttributesCollection.Add($EVTXLogs_AliasAttrib)
+
+                # Create a dynamic parameter object with the attributes already assigned: Name, Type, and Attributes Collection
+                [System.Management.Automation.RuntimeDefinedParameter]$EVTXLogs = New-Object -TypeName System.Management.Automation.RuntimeDefinedParameter('EVTXLogs', [System.IO.FileInfo[]], $EVTXLogs_AttributesCollection)
+
+                # Add the dynamic parameter object to the dictionary
+                $ParamDictionary.Add('EVTXLogs', $EVTXLogs)
+
+                break
+            }
         }
 
         #Region-KernelModeOnly-Parameter
@@ -264,6 +315,7 @@ Function ConvertTo-WDACPolicy {
         # Since Dynamic parameters are only available in the parameter dictionary, we have to access them using $PSBoundParameters or assign them manually to another variable in the function's scope
         New-Variable -Name 'TimeSpanAgo' -Value $PSBoundParameters['TimeSpanAgo'] -Force
         New-Variable -Name 'MDEAHLogs' -Value $PSBoundParameters['MDEAHLogs'] -Force
+        New-Variable -Name 'EVTXLogs' -Value $PSBoundParameters['EVTXLogs'] -Force
         New-Variable -Name 'KernelModeOnly' -Value $PSBoundParameters['KernelModeOnly'] -Force
         New-Variable -Name 'LogType' -Value ($PSBoundParameters['LogType'] ?? 'Audit') -Force
         New-Variable -Name 'Deploy' -Value $PSBoundParameters['Deploy'] -Force
@@ -381,7 +433,7 @@ Function ConvertTo-WDACPolicy {
                     # If the ExtremeVisibility switch is used, then display all the properties of the logs without any filtering
                     if (-NOT $ExtremeVisibility) {
 
-                        [System.String[]]$PropertiesToDisplay = @('File Name', 'TimeCreated', 'PolicyName', 'ProductName', 'FileVersion', 'OriginalFileName', 'FileDescription', 'InternalName', 'PackageFamilyName', 'Full Path', 'SI Signing Scenario', 'UserId', 'Publishers')
+                        [System.String[]]$PropertiesToDisplay = @('TimeCreated', 'PolicyName', 'File Name', 'ProductName', 'FileVersion', 'OriginalFileName', 'InternalName', 'PackageFamilyName', 'Full Path', 'SI Signing Scenario', 'Process Name', 'Publishers')
 
                         # Create a PSPropertySet object that contains the names of the properties to be visible
                         # Used for Out-GridView display
@@ -909,6 +961,95 @@ Function ConvertTo-WDACPolicy {
 
                     #Endregion Base To Supplemental Policy Association and Deployment
                 }
+                'EVTXFiles' {
+
+                    [PSCustomObject[]]$EventsToDisplay = Receive-CodeIntegrityLogs -PolicyName:$FilterByPolicyNames -Date:$StartTime -Type:$LogType -LogSource EVTXFiles -EVTXFilePaths $EVTXLogs |
+                    Select-Object -Property @{
+                        Label      = 'File Name'
+                        Expression = {
+                            # Can't use Get-Item or Get-ChildItem because the file might not exist on the disk
+                            # Can't use Split-Path -LiteralPath with -Leaf parameter because not supported
+                            [System.String]$TempPath = Split-Path -LiteralPath $_.'File Name'
+                            $_.'File Name'.Replace($TempPath, '').TrimStart('\')
+                        }
+                    },
+                    'TimeCreated',
+                    'PolicyName',
+                    'ProductName',
+                    'FileVersion',
+                    'OriginalFileName',
+                    'FileDescription',
+                    'InternalName',
+                    'PackageFamilyName',
+                    @{
+                        Label      = 'Full Path'
+                        Expression = { $_.'File Name' }
+                    },
+                    'Validated Signing Level',
+                    'Requested Signing Level',
+                    'SI Signing Scenario',
+                    'UserId',
+                    @{
+                        Label      = 'Publishers'
+                        Expression = { [System.String[]]$_.'Publishers' }
+                    },
+                    'SHA256 Hash',
+                    'SHA256 Flat Hash',
+                    'SHA1 Hash',
+                    'SHA1 Flat Hash',
+                    'PolicyGUID',
+                    'PolicyHash',
+                    'ActivityId',
+                    'Process Name',
+                    'UserWriteable',
+                    'PolicyID',
+                    'Status',
+                    'USN',
+                    'SignerInfo'
+
+                    # If the KernelModeOnly switch is used, then filter the events by the 'Requested Signing Level' property
+                    if ($KernelModeOnly) {
+                        $EventsToDisplay = $EventsToDisplay | Where-Object -FilterScript { $_.'SI Signing Scenario' -eq 'Kernel-Mode' }
+                    }
+
+                    # Sort the events by TimeCreated in descending order
+                    [PSCustomObject[]]$EventsToDisplay = $EventsToDisplay | Sort-Object -Property TimeCreated -Descending
+
+                    if (($null -eq $EventsToDisplay) -and ($EventsToDisplay.Count -eq 0)) {
+                        Write-ColorfulText -Color HotPink -InputText 'No logs were found to display based on the current filters. Exiting...'
+                        return
+                    }
+
+                    #Region Out-GridView properties visibility settings
+
+                    # If the ExtremeVisibility switch is used, then display all the properties of the logs without any filtering
+                    if (-NOT $ExtremeVisibility) {
+
+                        [System.String[]]$PropertiesToDisplay = @('TimeCreated', 'PolicyName', 'File Name', 'ProductName', 'FileVersion', 'OriginalFileName', 'InternalName', 'PackageFamilyName', 'Full Path', 'Process Name', 'SI Signing Scenario', 'Publishers')
+
+                        # Create a PSPropertySet object that contains the names of the properties to be visible
+                        # Used for Out-GridView display
+                        # https://learn.microsoft.com/en-us/dotnet/api/system.management.automation.pspropertyset
+                        # https://learn.microsoft.com/en-us/powershell/scripting/learn/deep-dives/everything-about-pscustomobject#using-defaultpropertyset-the-long-way
+                        $Visible = [System.Management.Automation.PSPropertySet]::new(
+                            'DefaultDisplayPropertySet', # the name of the property set
+                            $PropertiesToDisplay # the names of the properties to be visible
+                        )
+
+                        # Add the PSPropertySet object to the PSStandardMembers member set of each element of the $EventsToDisplay array
+                        foreach ($Element in $EventsToDisplay) {
+                            $Element | Add-Member -MemberType 'MemberSet' -Name 'PSStandardMembers' -Value $Visible
+                        }
+                    }
+
+                    #Endregion Out-GridView properties visibility settings
+
+                    # Display the logs in a grid view using the build-in cmdlet
+                    $SelectedLogs = $EventsToDisplay | Out-GridView -OutputMode Multiple -Title "Displaying $($EventsToDisplay.count) $LogType Code Integrity Logs"
+
+                    Write-Verbose -Message "ConvertTo-WDACPolicy: Selected logs count: $($SelectedLogs.count)"
+
+                }
             }
         }
         Finally {
@@ -947,11 +1088,14 @@ Function ConvertTo-WDACPolicy {
    It will not display the policies that are already selected on the command line.
    You can manually enter the name of the policies that are no longer available on the system or are from remote systems in case of MDE Advanced Hunting logs.
 .PARAMETER Source
-    The source of the logs: Local Event logs (LocalEventLogs) or Microsoft Defender for Endpoint Advanced Hunting results (MDEAdvancedHunting)
+    The source of the logs: Local Event logs (LocalEventLogs), Microsoft Defender for Endpoint Advanced Hunting results (MDEAdvancedHunting) or EVTX files (EVTXFiles).
     Supports validate set.
 .PARAMETER MDEAHLogs
     The path(s) to use MDE AH CSV files.
     This is a dynamic parameter and will only be available if the Source parameter is set to MDEAdvancedHunting.
+.PARAMETER EVTXLogs
+    The path(s) to use EVTX files.
+    This is a dynamic parameter and will only be available if the Source parameter is set to EVTXFiles.
 .PARAMETER KernelModeOnly
     If used, will filter the logs by including only the Kernel-Mode logs. You can use this parameter to easily create Supplemental policies for Strict Kernel-Mode WDAC policy.
     More info available here: https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDAC-policy-for-BYOVD-Kernel-mode-only-protection

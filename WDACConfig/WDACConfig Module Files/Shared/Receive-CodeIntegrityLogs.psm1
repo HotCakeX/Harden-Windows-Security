@@ -490,6 +490,10 @@ Function Receive-CodeIntegrityLogs {
                         Write-Debug -Message "Receive-CodeIntegrityLogs: The number of unique publishers in the correlated events is $($Publishers.Count)"
                         $Log['Publishers'] = $Publishers
 
+                        # Add a new property to detect whether this log is signed or not
+                        # Primarily used by the Build-SignerAndHashObjects Function and for Evtx log sources
+                        $Log['SignatureStatus'] = $Publishers.Count -ge 1 ? 'Signed' : 'Unsigned'
+
                         Write-Debug -Message "Receive-CodeIntegrityLogs: The number of correlated events is $($CorrelatedLogs.Count)"
                         $Log['SignerInfo'] = $CorrelatedLogs
                     }

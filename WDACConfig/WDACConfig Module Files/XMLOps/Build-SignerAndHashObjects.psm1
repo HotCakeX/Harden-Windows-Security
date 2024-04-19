@@ -21,6 +21,9 @@ Function Build-SignerAndHashObjects {
     .PARAMETER Data
         The Data to be processed. These are the logs selected by the user and contain both signed and unsigned data.
         They will be separated into 2 arrays.
+    .PARAMETER IncomingDataType
+        The type of data that is being processed. This is used to determine the property names in the input data.
+        The default value is 'MDEAH' (Microsoft Defender Application Guard Event and Hash) and the other value is 'EVTX' (Event Log evtx files).
     .INPUTS
         PSCustomObject[]
     .OUTPUTS
@@ -29,7 +32,9 @@ Function Build-SignerAndHashObjects {
     [CmdletBinding()]
     [OutputType([PSCustomObject])]
     param (
-        [Parameter(Mandatory = $true)][PSCustomObject[]]$Data
+        [Parameter(Mandatory = $true)][PSCustomObject[]]$Data,
+        [ValidateSet('MDEAH', 'EVTX')]
+        [Parameter(Mandatory = $false)][System.String]$IncomingDataType
     )
     Begin {
         # Importing the $PSDefaultParameterValues to the current session, prior to everything else
@@ -108,7 +113,7 @@ Function Build-SignerAndHashObjects {
                 [PublisherSignerCreator]$CurrentPublisherSigner = New-Object -TypeName PublisherSignerCreator
 
                 # Loop through each correlated event and process the certificate details
-                foreach ($CorData in $CurrentData.CorrelatedEventsData.Values) {
+                foreach ($CorData in ($IncomingDataType -eq 'MDEAH' ? $CurrentData.CorrelatedEventsData.Values : $CurrentData.SignerInfo.Values)) {
 
                     # Create a new CertificateDetailsCreator object to store the certificate details
                     [CertificateDetailsCreator]$CurrentCorData = New-Object -TypeName CertificateDetailsCreator
@@ -125,7 +130,7 @@ Function Build-SignerAndHashObjects {
                     # For those files, the FilePublisher rule will be created with the file's leaf Certificate details only (Publisher certificate)
                     if (([System.String]::IsNullOrWhiteSpace($CurrentCorData.IntermediateCertTBS)) -and (-NOT (([System.String]::IsNullOrWhiteSpace($CurrentCorData.LeafCertTBS))))) {
 
-                        Write-Warning -Message "Intermediate Certificate TBS hash is empty for the file: $($CurrentData.FileName), using the leaf certificate TBS hash instead"
+                        Write-Warning -Message "Intermediate Certificate TBS hash is empty for the file: $($IncomingDataType -eq 'MDEAH' ? $CurrentData.FileName : $CurrentData.'File Name'), using the leaf certificate TBS hash instead"
 
                         $CurrentCorData.IntermediateCertName = $CurrentCorData.LeafCertName
 
@@ -151,34 +156,32 @@ Function Build-SignerAndHashObjects {
            ([System.String]::IsNullOrWhiteSpace($CurrentData.FileVersion))
                     )
                 ) {
-                    $CurrentPublisherSigner.FileName = $CurrentData.FileName
-                    $CurrentPublisherSigner.AuthenticodeSHA256 = $CurrentData.SHA256
-                    $CurrentPublisherSigner.AuthenticodeSHA1 = $CurrentData.SHA1
-                    $CurrentPublisherSigner.SiSigningScenario = $CurrentData.SiSigningScenario
-
+                    $CurrentPublisherSigner.FileName = $IncomingDataType -eq 'MDEAH' ? $CurrentData.FileName : $CurrentData.'File Name'
+                    $CurrentPublisherSigner.AuthenticodeSHA256 = $IncomingDataType -eq 'MDEAH' ? $CurrentData.SHA256 : $CurrentData.'SHA256 Hash'
+                    $CurrentPublisherSigner.AuthenticodeSHA1 = $IncomingDataType -eq 'MDEAH' ? $CurrentData.SHA1 : $CurrentData.'SHA1 Hash'
+                    $CurrentPublisherSigner.SiSigningScenario = $IncomingDataType -eq 'MDEAH' ? $CurrentData.SiSigningScenario : ($CurrentData.'SI Signing Scenario' -eq 'Kernel-Mode' ? '0' : '1')
                     $PublisherSigners += $CurrentPublisherSigner
                 }
 
                 # If the file has some of the necessary details for a FilePublisher rule then add it to the FilePublisher array
-
                 else {
                     $CurrentFilePublisherSigner.FileVersion = $CurrentData.FileVersion
                     $CurrentFilePublisherSigner.FileDescription = $CurrentData.FileDescription
                     $CurrentFilePublisherSigner.InternalName = $CurrentData.InternalName
                     $CurrentFilePublisherSigner.OriginalFileName = $CurrentData.OriginalFileName
                     $CurrentFilePublisherSigner.ProductName = $CurrentData.ProductName
-                    $CurrentFilePublisherSigner.FileName = $CurrentData.FileName
-                    $CurrentFilePublisherSigner.AuthenticodeSHA256 = $CurrentData.SHA256
-                    $CurrentFilePublisherSigner.AuthenticodeSHA1 = $CurrentData.SHA1
-                    $CurrentFilePublisherSigner.SiSigningScenario = $CurrentData.SiSigningScenario
+                    $CurrentFilePublisherSigner.FileName = $IncomingDataType -eq 'MDEAH' ? $CurrentData.FileName : $CurrentData.'File Name'
+                    $CurrentFilePublisherSigner.AuthenticodeSHA256 = $IncomingDataType -eq 'MDEAH' ? $CurrentData.SHA256 : $CurrentData.'SHA256 Hash'
+                    $CurrentFilePublisherSigner.AuthenticodeSHA1 = $IncomingDataType -eq 'MDEAH' ? $CurrentData.SHA1 : $CurrentData.'SHA1 Hash'
+                    $CurrentFilePublisherSigner.SiSigningScenario = $IncomingDataType -eq 'MDEAH' ? $CurrentData.SiSigningScenario : ($CurrentData.'SI Signing Scenario' -eq 'Kernel-Mode' ? '0' : '1')
 
                     # Some checks to make sure the necessary details are not empty
-                    if (([System.String]::IsNullOrWhiteSpace($CurrentData.SHA256))) {
-                        Write-Warning "SHA256 is empty for the file: $($CurrentData.FileName)"
+                    if (([System.String]::IsNullOrWhiteSpace($IncomingDataType -eq 'MDEAH' ? $CurrentData.SHA256 : $CurrentData.'SHA256 Hash'))) {
+                        Write-Warning "SHA256 is empty for the file: $($IncomingDataType -eq 'MDEAH' ? $CurrentData.FileName : $CurrentData.'File Name')"
                     }
 
-                    if (([System.String]::IsNullOrWhiteSpace($CurrentData.SHA1))) {
-                        Write-Warning "SHA1 is empty for the file: $($CurrentData.FileName)"
+                    if (([System.String]::IsNullOrWhiteSpace($IncomingDataType -eq 'MDEAH' ? $CurrentData.SHA1 : $CurrentData.'SHA1 Hash'))) {
+                        Write-Warning "SHA1 is empty for the file: $($IncomingDataType -eq 'MDEAH' ? $CurrentData.FileName : $CurrentData.'File Name')"
                     }
 
                     # Add the new object to the FilePublisherSigners array
@@ -197,10 +200,10 @@ Function Build-SignerAndHashObjects {
                 [HashCreator]$CurrentHash = New-Object -TypeName HashCreator
 
                 # Add the hash details to the new object
-                $CurrentHash.AuthenticodeSHA256 = $HashData.SHA256
-                $CurrentHash.AuthenticodeSHA1 = $HashData.SHA1
-                $CurrentHash.FileName = $HashData.FileName
-                $CurrentHash.SiSigningScenario = $HashData.SiSigningScenario
+                $CurrentHash.AuthenticodeSHA256 = $IncomingDataType -eq 'MDEAH' ? $HashData.SHA256 : $HashData.'SHA256 Hash'
+                $CurrentHash.AuthenticodeSHA1 = $IncomingDataType -eq 'MDEAH' ? $HashData.SHA1 : $HashData.'SHA1 Hash'
+                $CurrentHash.FileName = $IncomingDataType -eq 'MDEAH' ? $HashData.FileName : $HashData.'File Name'
+                $CurrentHash.SiSigningScenario = $IncomingDataType -eq 'MDEAH' ? $HashData.SiSigningScenario : ($HashData.'SI Signing Scenario' -eq 'Kernel-Mode' ? '0' : '1')
 
                 # Add the new object to the CompleteHashes array
                 $CompleteHashes += $CurrentHash

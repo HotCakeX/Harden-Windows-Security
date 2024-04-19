@@ -25,9 +25,14 @@ Function Receive-CodeIntegrityLogs {
         The names of the policies to filter the logs by
     .PARAMETER Category
         The category of logs to be collected. Code Integrity, AppLocker, or All. The default value is 'All'
+    .PARAMETER LogSource
+        The source of the logs. EVTXFiles or LocalLogs. The default value is 'LocalLogs'
+    .PARAMETER EVTXFilePaths
+        The file paths of the EVTX files to collect the logs from. It accepts an array of FileInfo objects
     .INPUTS
         System.String
         System.String[]
+        System.IO.FileInfo[]
     .OUTPUTS
         System.Collections.Hashtable
     #>
@@ -53,7 +58,12 @@ Function Receive-CodeIntegrityLogs {
         [System.String[]]$PolicyNames,
 
         [ValidateSet('CodeIntegrity', 'AppLocker', 'All')]
-        [Parameter(mandatory = $false)][System.String]$Category = 'All'
+        [Parameter(mandatory = $false)][System.String]$Category = 'All',
+
+        [ValidateSet('EVTXFiles', 'LocalLogs')]
+        [Parameter(Mandatory = $false)][System.String]$LogSource = 'LocalLogs',
+
+        [Parameter(Mandatory = $false)][System.IO.FileInfo[]]$EVTXFilePaths
     )
 
     Begin {
@@ -141,7 +151,7 @@ Function Receive-CodeIntegrityLogs {
             [System.Boolean]$AlternativeDriveLetterFix = $false
 
             # Get the local disks mappings
-            [System.Object[]]$DriveLettersGlobalRootFix = Get-GlobalRootDrives
+            [PSCustomObject[]]$DriveLettersGlobalRootFix = Get-GlobalRootDrives
         }
         catch {
             Write-Verbose -Verbose -Message 'Receive-CodeIntegrityLogs: Could not get the drive mappings from the system using the primary method, trying the alternative method now'
@@ -159,13 +169,22 @@ Function Receive-CodeIntegrityLogs {
         }
         #Endregion Global Root Drive Fix
 
-        if (($Category -eq 'All') -or ($Category -eq 'CodeIntegrity')) {
+        if ($Category -in 'All', 'CodeIntegrity') {
             Try {
                 Write-Verbose -Message 'Receive-CodeIntegrityLogs: Collecting the Code Integrity Operational logs'
-                [System.Diagnostics.Eventing.Reader.EventLogRecord[]]$CiRawEventLogs = Get-WinEvent -FilterHashtable @{LogName = 'Microsoft-Windows-CodeIntegrity/Operational' }
+                switch ($LogSource) {
+                    'EVTXFiles' {
+                        # Get all of the Code Integrity logs from the specified EVTX files
+                        [System.Diagnostics.Eventing.Reader.EventLogRecord[]]$CiRawEventLogs = Get-WinEvent -FilterHashtable @{Path = $EVTXFilePaths; ID = '3076', '3077', '3089' }
+                    }
+                    'LocalLogs' {
+                        # Get all of the Code Integrity logs from the local machine
+                        [System.Diagnostics.Eventing.Reader.EventLogRecord[]]$CiRawEventLogs = Get-WinEvent -FilterHashtable @{LogName = 'Microsoft-Windows-CodeIntegrity/Operational' }
+                    }
+                }
             }
             catch {
-                Throw "Receive-CodeIntegrityLogs: Could not collect the Code Integrity Operational logs, the number of logs collected is $($CiRawEventLogs.Count)"
+                Write-Verbose -Message "Receive-CodeIntegrityLogs: Could not collect the Code Integrity Operational logs, the number of logs collected is $($CiRawEventLogs.Count)"
             }
 
             [Microsoft.PowerShell.Commands.GroupInfo[]]$CiGroupedEvents = $CiRawEventLogs | Group-Object -Property ActivityId
@@ -175,13 +194,22 @@ Function Receive-CodeIntegrityLogs {
             Write-Verbose -Message 'Receive-CodeIntegrityLogs: Skipping the collection of the Code Integrity logs'
         }
 
-        if (($Category -eq 'All') -or ($Category -eq 'AppLocker')) {
+        if ($Category -in 'All', 'AppLocker') {
             Try {
                 Write-Verbose -Message 'Receive-CodeIntegrityLogs: Collecting the AppLocker logs'
-                [System.Diagnostics.Eventing.Reader.EventLogRecord[]]$AppLockerRawEventLogs = Get-WinEvent -FilterHashtable @{LogName = 'Microsoft-Windows-AppLocker/MSI and Script' }
+                switch ($LogSource) {
+                    'EVTXFiles' {
+                        # Get all of the AppLocker logs from the specified EVTX files
+                        [System.Diagnostics.Eventing.Reader.EventLogRecord[]]$AppLockerRawEventLogs = Get-WinEvent -FilterHashtable @{Path = $EVTXFilePaths; ID = '8028', '8029', '8038' }
+                    }
+                    'LocalLogs' {
+                        # Get all of the AppLocker logs from the local machine
+                        [System.Diagnostics.Eventing.Reader.EventLogRecord[]]$AppLockerRawEventLogs = Get-WinEvent -FilterHashtable @{LogName = 'Microsoft-Windows-AppLocker/MSI and Script' }
+                    }
+                }
             }
             catch {
-                Throw "Receive-CodeIntegrityLogs: Could not collect the AppLocker logs, the number of logs collected is $($AppLockerRawEventLogs.Count)"
+                Write-Verbose -Message "Receive-CodeIntegrityLogs: Could not collect the AppLocker logs, the number of logs collected is $($AppLockerRawEventLogs.Count)"
             }
 
             [Microsoft.PowerShell.Commands.GroupInfo[]]$AppLockerGroupedEvents = $AppLockerRawEventLogs | Group-Object -Property ActivityId

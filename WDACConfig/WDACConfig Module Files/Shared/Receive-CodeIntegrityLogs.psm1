@@ -343,6 +343,7 @@ Function Receive-CodeIntegrityLogs {
             $VerificationErrorTable = $using:VerificationErrorTable
             $AlternativeDriveLetterFix = $using:AlternativeDriveLetterFix
             $DriveLetterMappings = $using:DriveLetterMappings
+            $LogSource = $using:LogSource
 
             # Set the VerbosePreference to the parent scope's value
             $VerbosePreference = $using:VerbosePreference
@@ -387,7 +388,8 @@ Function Receive-CodeIntegrityLogs {
                     }
 
                     # replace the device path with the drive letter if it matches the pattern
-                    if ($Log['File Name'] -match $Pattern) {
+                    # Only if the log source is local logs
+                    if (($LogSource -eq 'LocalLogs') -and ($Log['File Name'] -match $Pattern)) {
 
                         # Use the primary method to fix the drive letter mappings
                         if ($AlternativeDriveLetterFix -eq $false) {
@@ -416,18 +418,22 @@ Function Receive-CodeIntegrityLogs {
                     # Replace the SI Signing Scenario numbers with a user-friendly string
                     $Log['SI Signing Scenario'] = $Log['SI Signing Scenario'] -eq '0' ? 'Kernel-Mode' : 'User-Mode'
 
-                    # Translate the SID to a UserName
-                    if ($null -ne $Log.UserId) {
-                        Try {
-                            [System.Security.Principal.SecurityIdentifier]$ObjSID = New-Object -TypeName System.Security.Principal.SecurityIdentifier($Log.UserId)
-                            $Log.UserId = [System.String]($ObjSID.Translate([System.Security.Principal.NTAccount])).Value
+                    # if the log source is local logs
+                    if ($LogSource -eq 'LocalLogs') {
+
+                        # Translate the SID to a UserName if it's not null
+                        if ($null -ne $Log.UserId) {
+                            Try {
+                                [System.Security.Principal.SecurityIdentifier]$ObjSID = New-Object -TypeName System.Security.Principal.SecurityIdentifier($Log.UserId)
+                                $Log.UserId = [System.String]($ObjSID.Translate([System.Security.Principal.NTAccount])).Value
+                            }
+                            Catch {
+                                Write-Verbose -Message "Receive-CodeIntegrityLogs: Could not translate the SID $($Log.UserId) to a username for the Activity ID $($Log['ActivityId']) for the file $($Log['File Name'])"
+                            }
                         }
-                        Catch {
-                            Write-Verbose -Message "Receive-CodeIntegrityLogs: Could not translate the SID $($Log.UserId) to a username for the Activity ID $($Log['ActivityId']) for the file $($Log['File Name'])"
+                        else {
+                            Write-Verbose -Message "Receive-CodeIntegrityLogs: The UserId property is null for the Activity ID $($Log['ActivityId']) for the file $($Log['File Name'])"
                         }
-                    }
-                    else {
-                        Write-Verbose -Message "Receive-CodeIntegrityLogs: The UserId property is null for the Activity ID $($Log['ActivityId']) for the file $($Log['File Name'])"
                     }
 
                     # If there are correlated events, then process them

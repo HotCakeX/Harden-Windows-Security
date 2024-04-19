@@ -458,6 +458,12 @@ Function Receive-CodeIntegrityLogs {
                             # Loop over each event data object
                             foreach ($CorrelatedLog in $ProcessedCorrelatedEvents) {
 
+                                # Skip signers that don't have PublisherTBSHash (aka LeafCertificate TBS Hash)
+                                # They have "Unknown" as their IssuerName and PublisherName too
+                                if ($null -eq $CorrelatedLog.PublisherTBSHash) {
+                                    Continue
+                                }
+
                                 # Replace the properties with their user-friendly strings
                                 $CorrelatedLog.SignatureType = $SignatureTypeTable[[System.UInt16]$CorrelatedLog.SignatureType]
                                 $CorrelatedLog.ValidatedSigningLevel = $ReqValSigningLevels[[System.UInt16]$CorrelatedLog.ValidatedSigningLevel]

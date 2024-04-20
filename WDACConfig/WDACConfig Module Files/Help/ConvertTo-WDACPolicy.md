@@ -392,7 +392,10 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## NOTES
 
+
+
 ## RELATED LINKS
 
 [Cmdlet Guide](https://github.com/HotCakeX/Harden-Windows-Security/wiki/ConvertTo-WDACPolicy)
 
+[YouTube video guide for MDE Advanced Hunting usage](https://www.youtube.com/watch?v=oyz0jFzOOGA)

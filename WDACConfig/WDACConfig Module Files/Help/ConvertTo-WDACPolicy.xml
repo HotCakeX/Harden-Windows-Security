@@ -6,8 +6,8 @@
       <command:verb>ConvertTo</command:verb>
       <command:noun>WDACPolicy</command:noun>
       <maml:description>
-        <maml:para>This is a multi-purpose cmdlet that offers a wide range of functionalities that can either be used separately or mixed together for very detailed and specific tasks.
-It currently supports Code Integrity and AppLocker logs from the following sources: Local Event logs, Evtx log files and Microsoft Defender for Endpoint Advanced Hunting results.</maml:para>
+        <maml:para>This is a multi-purpose cmdlet that offers a wide range of functionalities that can either be used separately or mixed together for very detailed and specific tasks.</maml:para>
+        <maml:para>It currently supports Code Integrity and AppLocker logs from the following sources: Local Event logs, Evtx log files and Microsoft Defender for Endpoint Advanced Hunting results.</maml:para>
         <maml:para>The cmdlet displays the logs in a GUI and allows the user to select the logs to be processed further.</maml:para>
         <maml:para>The logs can be filtered based on many criteria using the available parameters.</maml:para>
         <maml:para>The output of this cmdlet is a Supplemental Application Control (WDAC) policy. Based on the input parameters, it can be associated with a base policy or merged with an existing Base or Supplemental policy.</maml:para>
@@ -798,6 +798,10 @@ It currently supports Code Integrity and AppLocker logs from the following sourc
       <maml:navigationLink>
         <maml:linkText>Cmdlet Guide</maml:linkText>
         <maml:uri>https://github.com/HotCakeX/Harden-Windows-Security/wiki/ConvertTo-WDACPolicy</maml:uri>
+      </maml:navigationLink>
+      <maml:navigationLink>
+        <maml:linkText>YouTube video guide for MDE Advanced Hunting usage</maml:linkText>
+        <maml:uri>https://www.youtube.com/watch?v=oyz0jFzOOGA</maml:uri>
       </maml:navigationLink>
     </command:relatedLinks>
   </command:command>

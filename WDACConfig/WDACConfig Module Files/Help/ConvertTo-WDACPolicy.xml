@@ -6,15 +6,17 @@
       <command:verb>ConvertTo</command:verb>
       <command:noun>WDACPolicy</command:noun>
       <maml:description>
-        <maml:para>This is a multi-purpose cmdlet that offers a wide range of functionalities that can either be used separately or mixed together for very detailed and specific tasks.</maml:para>
-        <maml:para>It currently supports Code Integrity and AppLocker logs from the following sources: Local Event logs and Microsoft Defender for Endpoint Advanced Hunting results.</maml:para>
+        <maml:para>This is a multi-purpose cmdlet that offers a wide range of functionalities that can either be used separately or mixed together for very detailed and specific tasks.
+It currently supports Code Integrity and AppLocker logs from the following sources: Local Event logs, Evtx log files and Microsoft Defender for Endpoint Advanced Hunting results.</maml:para>
         <maml:para>The cmdlet displays the logs in a GUI and allows the user to select the logs to be processed further.</maml:para>
         <maml:para>The logs can be filtered based on many criteria using the available parameters.</maml:para>
         <maml:para>The output of this cmdlet is a Supplemental Application Control (WDAC) policy. Based on the input parameters, it can be associated with a base policy or merged with an existing Base or Supplemental policy.</maml:para>
       </maml:description>
     </command:details>
     <maml:description>
-      <maml:para>The cmdlet can be used for local and remote systems. You can utilize this cmdlet to create Application Control for Business policies from MDE Advanced Hunting and then deploy them using Microsoft Intune to your endpoints. This offers scalability and flexibility in managing your security policies.</maml:para>
+      <maml:para>The cmdlet can be used for local and remote systems. You can utilize this cmdlet to create Application Control for Business policies from MDE Advanced Hunting and then deploy them using Microsoft Intune to your endpoints.</maml:para>
+      <maml:para>You can utilize this cmdlet to use the evtx log files you aggregated from your endpoints and create a WDAC policy from them.</maml:para>
+      <maml:para>This offers scalability and flexibility in managing your security policies.</maml:para>
     </maml:description>
     <command:syntax>
       <command:syntaxItem>
@@ -34,7 +36,7 @@
         <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="Src">
           <maml:name>Source</maml:name>
           <maml:description>
-            <maml:para>The source of the logs: Local Event logs (LocalEventLogs) or Microsoft Defender for Endpoint Advanced Hunting results (MDEAdvancedHunting). Supports validate set.</maml:para>
+            <maml:para>The source of the logs: Local Event logs (LocalEventLogs), Microsoft Defender for Endpoint Advanced Hunting results (MDEAdvancedHunting) or EVTX files (EVTXFiles). Supports validate set.</maml:para>
           </maml:description>
           <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
           <dev:type>
@@ -43,10 +45,22 @@
           </dev:type>
           <dev:defaultValue>Event Logs</dev:defaultValue>
         </command:parameter>
-        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="MDELogs">
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="MDELogs">
           <maml:name>MDEAHLogs</maml:name>
           <maml:description>
             <maml:para>The path(s) to use MDE AH CSV files. This is a dynamic parameter and will only be available if the Source parameter is set to MDEAdvancedHunting.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">FileInfo[]</command:parameterValue>
+          <dev:type>
+            <maml:name>FileInfo[]</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="Evtx">
+          <maml:name>EVTXLogs</maml:name>
+          <maml:description>
+            <maml:para>The path(s) to use EVTX files. This is a dynamic parameter and will only be available if the Source parameter is set to EVTXFiles.</maml:para>
           </maml:description>
           <command:parameterValue required="true" variableLength="false">FileInfo[]</command:parameterValue>
           <dev:type>
@@ -178,7 +192,7 @@
         <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="Src">
           <maml:name>Source</maml:name>
           <maml:description>
-            <maml:para>The source of the logs: Local Event logs (LocalEventLogs) or Microsoft Defender for Endpoint Advanced Hunting results (MDEAdvancedHunting). Supports validate set.</maml:para>
+            <maml:para>The source of the logs: Local Event logs (LocalEventLogs), Microsoft Defender for Endpoint Advanced Hunting results (MDEAdvancedHunting) or EVTX files (EVTXFiles). Supports validate set.</maml:para>
           </maml:description>
           <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
           <dev:type>
@@ -187,10 +201,22 @@
           </dev:type>
           <dev:defaultValue>Event Logs</dev:defaultValue>
         </command:parameter>
-        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="MDELogs">
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="MDELogs">
           <maml:name>MDEAHLogs</maml:name>
           <maml:description>
             <maml:para>The path(s) to use MDE AH CSV files. This is a dynamic parameter and will only be available if the Source parameter is set to MDEAdvancedHunting.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">FileInfo[]</command:parameterValue>
+          <dev:type>
+            <maml:name>FileInfo[]</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="Evtx">
+          <maml:name>EVTXLogs</maml:name>
+          <maml:description>
+            <maml:para>The path(s) to use EVTX files. This is a dynamic parameter and will only be available if the Source parameter is set to EVTXFiles.</maml:para>
           </maml:description>
           <command:parameterValue required="true" variableLength="false">FileInfo[]</command:parameterValue>
           <dev:type>
@@ -322,7 +348,7 @@
         <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="Src">
           <maml:name>Source</maml:name>
           <maml:description>
-            <maml:para>The source of the logs: Local Event logs (LocalEventLogs) or Microsoft Defender for Endpoint Advanced Hunting results (MDEAdvancedHunting). Supports validate set.</maml:para>
+            <maml:para>The source of the logs: Local Event logs (LocalEventLogs), Microsoft Defender for Endpoint Advanced Hunting results (MDEAdvancedHunting) or EVTX files (EVTXFiles). Supports validate set.</maml:para>
           </maml:description>
           <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
           <dev:type>
@@ -331,10 +357,22 @@
           </dev:type>
           <dev:defaultValue>Event Logs</dev:defaultValue>
         </command:parameter>
-        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="MDELogs">
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="MDELogs">
           <maml:name>MDEAHLogs</maml:name>
           <maml:description>
             <maml:para>The path(s) to use MDE AH CSV files. This is a dynamic parameter and will only be available if the Source parameter is set to MDEAdvancedHunting.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">FileInfo[]</command:parameterValue>
+          <dev:type>
+            <maml:name>FileInfo[]</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="Evtx">
+          <maml:name>EVTXLogs</maml:name>
+          <maml:description>
+            <maml:para>The path(s) to use EVTX files. This is a dynamic parameter and will only be available if the Source parameter is set to EVTXFiles.</maml:para>
           </maml:description>
           <command:parameterValue required="true" variableLength="false">FileInfo[]</command:parameterValue>
           <dev:type>
@@ -490,7 +528,7 @@
       <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="Src">
         <maml:name>Source</maml:name>
         <maml:description>
-          <maml:para>The source of the logs: Local Event logs (LocalEventLogs) or Microsoft Defender for Endpoint Advanced Hunting results (MDEAdvancedHunting). Supports validate set.</maml:para>
+          <maml:para>The source of the logs: Local Event logs (LocalEventLogs), Microsoft Defender for Endpoint Advanced Hunting results (MDEAdvancedHunting) or EVTX files (EVTXFiles). Supports validate set.</maml:para>
         </maml:description>
         <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
         <dev:type>
@@ -499,10 +537,22 @@
         </dev:type>
         <dev:defaultValue>Event Logs</dev:defaultValue>
       </command:parameter>
-      <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="MDELogs">
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="MDELogs">
         <maml:name>MDEAHLogs</maml:name>
         <maml:description>
           <maml:para>The path(s) to use MDE AH CSV files. This is a dynamic parameter and will only be available if the Source parameter is set to MDEAdvancedHunting.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">FileInfo[]</command:parameterValue>
+        <dev:type>
+          <maml:name>FileInfo[]</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="Evtx">
+        <maml:name>EVTXLogs</maml:name>
+        <maml:description>
+          <maml:para>The path(s) to use EVTX files. This is a dynamic parameter and will only be available if the Source parameter is set to EVTXFiles.</maml:para>
         </maml:description>
         <command:parameterValue required="true" variableLength="false">FileInfo[]</command:parameterValue>
         <dev:type>
@@ -734,6 +784,13 @@
         <dev:code>ConvertTo-WDACPolicy -BasePolicyFile "C:\Program Files\WDACConfig\DefaultWindowsPlusBlockRules.xml" -Source MDEAdvancedHunting -MDEAHLogs "C:\Users\Admin\Downloads\New query.csv" -Deploy -TimeSpan Days -TimeSpanAgo 2</dev:code>
         <dev:remarks>
           <maml:para>This example will create a new supplemental policy from the selected MDE Advanced Hunting logs and associate it with the specified base policy file and it will deploy it on the system. The displayed logs will be from the last 2 days. You will be able to select the logs to create the policy from in the GUI.</maml:para>
+        </dev:remarks>
+      </command:example>
+      <command:example>
+        <maml:title>-------------------------- EXAMPLE 8 --------------------------</maml:title>
+        <dev:code>ConvertTo-WDACPolicy -BasePolicyGUID '{89CD611D-5557-4833-B73D-716B979AEE3D}' -Source EVTXFiles -EVTXLogs "C:\Users\HotCakeX\App Locker logs.evtx","C:\Users\HotCakeX\Code Integrity LOGS.evtx"</dev:code>
+        <dev:remarks>
+          <maml:para>This example will create a new supplemental policy from the selected EVTX files and associate it with the specified base policy GUID.</maml:para>
         </dev:remarks>
       </command:example>
     </command:examples>

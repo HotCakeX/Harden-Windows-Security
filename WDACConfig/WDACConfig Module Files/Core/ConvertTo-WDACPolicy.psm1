@@ -1261,7 +1261,9 @@ Function ConvertTo-WDACPolicy {
     Based on the input parameters, it can be associated with a base policy or merged with an existing Base or Supplemental policy.
 .DESCRIPTION
    The cmdlet can be used for local and remote systems. You can utilize this cmdlet to create Application Control for Business policies from MDE Advanced Hunting and then deploy them using Microsoft Intune to your endpoints.
+
    You can utilize this cmdlet to use the evtx log files you aggregated from your endpoints and create a WDAC policy from them.
+
    This offers scalability and flexibility in managing your security policies.
 .PARAMETER PolicyToAddLogsTo
     The policy to add the selected logs to, it can either be a base or supplemental policy.
@@ -1340,6 +1342,10 @@ Function ConvertTo-WDACPolicy {
 
     This example will create a new supplemental policy from the selected MDE Advanced Hunting logs and associate it with the specified base policy file and it will deploy it on the system.
     The displayed logs will be from the last 2 days. You will be able to select the logs to create the policy from in the GUI.
+.EXAMPLE
+ConvertTo-WDACPolicy -BasePolicyGUID '{89CD611D-5557-4833-B73D-716B979AEE3D}' -Source EVTXFiles -EVTXLogs "C:\Users\HotCakeX\App Locker logs.evtx","C:\Users\HotCakeX\Code Integrity LOGS.evtx"
+
+This example will create a new supplemental policy from the selected EVTX files and associate it with the specified base policy GUID.
 
 .EXTERNALHELP ..\Help\ConvertTo-WDACPolicy.xml
 #>

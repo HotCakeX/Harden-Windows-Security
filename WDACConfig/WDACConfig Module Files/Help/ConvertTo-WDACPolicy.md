@@ -10,7 +10,7 @@ schema: 2.0.0
 ## SYNOPSIS
 This is a multi-purpose cmdlet that offers a wide range of functionalities that can either be used separately or mixed together for very detailed and specific tasks.
 
-It currently supports Code Integrity and AppLocker logs from the following sources: Local Event logs and Microsoft Defender for Endpoint Advanced Hunting results.
+It currently supports Code Integrity and AppLocker logs from the following sources: Local Event logs, Evtx log files and Microsoft Defender for Endpoint Advanced Hunting results.
 
 The cmdlet displays the logs in a GUI and allows the user to select the logs to be processed further.
 
@@ -27,6 +27,7 @@ ConvertTo-WDACPolicy
     [-PolicyToAddLogsTo <FileInfo>]
     [-Source <String>]
     [-MDEAHLogs <FileInfo[]>]
+    [-EVTXLogs <FileInfo[]>]
     [-FilterByPolicyNames <String[]>]
     [-TimeSpan <String>]
     [-TimeSpanAgo <UInt64>]
@@ -43,6 +44,7 @@ ConvertTo-WDACPolicy
     [-BasePolicyFile <FileInfo>]
     [-Source <String>]
     [-MDEAHLogs <FileInfo[]>]
+    [-EVTXLogs <FileInfo[]>]
     [-FilterByPolicyNames <String[]>]
     [-TimeSpan <String>]
     [-TimeSpanAgo <UInt64>]
@@ -59,6 +61,7 @@ ConvertTo-WDACPolicy
     [-BasePolicyGUID <Guid>]
     [-Source <String>]
     [-MDEAHLogs <FileInfo[]>]
+    [-EVTXLogs <FileInfo[]>]
     [-FilterByPolicyNames <String[]>]
     [-TimeSpan <String>]
     [-TimeSpanAgo <UInt64>]
@@ -71,6 +74,9 @@ ConvertTo-WDACPolicy
 
 ## DESCRIPTION
 The cmdlet can be used for local and remote systems. You can utilize this cmdlet to create Application Control for Business policies from MDE Advanced Hunting and then deploy them using Microsoft Intune to your endpoints.
+
+You can utilize this cmdlet to use the evtx log files you aggregated from your endpoints and create a WDAC policy from them.
+
 This offers scalability and flexibility in managing your security policies.
 
 ## EXAMPLES
@@ -126,6 +132,13 @@ ConvertTo-WDACPolicy -BasePolicyFile "C:\Program Files\WDACConfig\DefaultWindows
 This example will create a new supplemental policy from the selected MDE Advanced Hunting logs and associate it with the specified base policy file and it will deploy it on the system.
 The displayed logs will be from the last 2 days. You will be able to select the logs to create the policy from in the GUI.
 
+### EXAMPLE 8
+```
+ConvertTo-WDACPolicy -BasePolicyGUID '{89CD611D-5557-4833-B73D-716B979AEE3D}' -Source EVTXFiles -EVTXLogs "C:\Users\HotCakeX\App Locker logs.evtx","C:\Users\HotCakeX\Code Integrity LOGS.evtx"
+```
+
+This example will create a new supplemental policy from the selected EVTX files and associate it with the specified base policy GUID.
+
 ## PARAMETERS
 
 ### -PolicyToAddLogsTo
@@ -174,7 +187,7 @@ Accept wildcard characters: False
 ```
 
 ### -Source
-The source of the logs: Local Event logs (LocalEventLogs) or Microsoft Defender for Endpoint Advanced Hunting results (MDEAdvancedHunting).
+The source of the logs: Local Event logs (LocalEventLogs), Microsoft Defender for Endpoint Advanced Hunting results (MDEAdvancedHunting) or EVTX files (EVTXFiles).
 Supports validate set.
 
 ```yaml
@@ -197,7 +210,23 @@ Type: FileInfo[]
 Parameter Sets: (All)
 Aliases: MDELogs
 
-Required: True
+Required: False
+Position: Named
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -EVTXLogs
+The path(s) to use EVTX files.
+This is a dynamic parameter and will only be available if the Source parameter is set to EVTXFiles.
+
+```yaml
+Type: FileInfo[]
+Parameter Sets: (All)
+Aliases: Evtx
+
+Required: False
 Position: Named
 Default value: None
 Accept pipeline input: False

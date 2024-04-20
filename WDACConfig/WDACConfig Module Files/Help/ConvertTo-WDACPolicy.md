@@ -392,8 +392,6 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## NOTES
 
-
-
 ## RELATED LINKS
 
 [Cmdlet Guide](https://github.com/HotCakeX/Harden-Windows-Security/wiki/ConvertTo-WDACPolicy)

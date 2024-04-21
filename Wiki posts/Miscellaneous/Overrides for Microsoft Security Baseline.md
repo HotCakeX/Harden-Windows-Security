@@ -139,6 +139,12 @@ Computer Configuration\Administrative Templates\Windows Components\Remote Deskto
 
 The scheduled task is disabled as a result of applying the Microsoft Security Baselines. Using the optional overrides, it will be enabled and its status will be set back to the default state. The task syncs Xbox game saves on PC.
 
+PowerShell command
+
+```powershell
+SCHTASKS.EXE /Change /TN \Microsoft\XblGameSave\XblGameSaveTask /Enable
+```
+
 <br>
 
 <img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">

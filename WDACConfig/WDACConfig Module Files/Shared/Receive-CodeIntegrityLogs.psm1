@@ -25,9 +25,14 @@ Function Receive-CodeIntegrityLogs {
         The names of the policies to filter the logs by
     .PARAMETER Category
         The category of logs to be collected. Code Integrity, AppLocker, or All. The default value is 'All'
+    .PARAMETER LogSource
+        The source of the logs. EVTXFiles or LocalLogs. The default value is 'LocalLogs'
+    .PARAMETER EVTXFilePaths
+        The file paths of the EVTX files to collect the logs from. It accepts an array of FileInfo objects
     .INPUTS
         System.String
         System.String[]
+        System.IO.FileInfo[]
     .OUTPUTS
         System.Collections.Hashtable
     #>
@@ -53,7 +58,12 @@ Function Receive-CodeIntegrityLogs {
         [System.String[]]$PolicyNames,
 
         [ValidateSet('CodeIntegrity', 'AppLocker', 'All')]
-        [Parameter(mandatory = $false)][System.String]$Category = 'All'
+        [Parameter(mandatory = $false)][System.String]$Category = 'All',
+
+        [ValidateSet('EVTXFiles', 'LocalLogs')]
+        [Parameter(Mandatory = $false)][System.String]$LogSource = 'LocalLogs',
+
+        [Parameter(Mandatory = $false)][System.IO.FileInfo[]]$EVTXFilePaths
     )
 
     Begin {
@@ -141,7 +151,7 @@ Function Receive-CodeIntegrityLogs {
             [System.Boolean]$AlternativeDriveLetterFix = $false
 
             # Get the local disks mappings
-            [System.Object[]]$DriveLettersGlobalRootFix = Get-GlobalRootDrives
+            [PSCustomObject[]]$DriveLettersGlobalRootFix = Get-GlobalRootDrives
         }
         catch {
             Write-Verbose -Verbose -Message 'Receive-CodeIntegrityLogs: Could not get the drive mappings from the system using the primary method, trying the alternative method now'
@@ -159,13 +169,22 @@ Function Receive-CodeIntegrityLogs {
         }
         #Endregion Global Root Drive Fix
 
-        if (($Category -eq 'All') -or ($Category -eq 'CodeIntegrity')) {
+        if ($Category -in 'All', 'CodeIntegrity') {
             Try {
                 Write-Verbose -Message 'Receive-CodeIntegrityLogs: Collecting the Code Integrity Operational logs'
-                [System.Diagnostics.Eventing.Reader.EventLogRecord[]]$CiRawEventLogs = Get-WinEvent -FilterHashtable @{LogName = 'Microsoft-Windows-CodeIntegrity/Operational' }
+                switch ($LogSource) {
+                    'EVTXFiles' {
+                        # Get all of the Code Integrity logs from the specified EVTX files
+                        [System.Diagnostics.Eventing.Reader.EventLogRecord[]]$CiRawEventLogs = Get-WinEvent -FilterHashtable @{Path = $EVTXFilePaths; ID = '3076', '3077', '3089' }
+                    }
+                    'LocalLogs' {
+                        # Get all of the Code Integrity logs from the local machine
+                        [System.Diagnostics.Eventing.Reader.EventLogRecord[]]$CiRawEventLogs = Get-WinEvent -FilterHashtable @{LogName = 'Microsoft-Windows-CodeIntegrity/Operational' }
+                    }
+                }
             }
             catch {
-                Throw "Receive-CodeIntegrityLogs: Could not collect the Code Integrity Operational logs, the number of logs collected is $($CiRawEventLogs.Count)"
+                Write-Verbose -Message "Receive-CodeIntegrityLogs: Could not collect the Code Integrity Operational logs, the number of logs collected is $($CiRawEventLogs.Count)"
             }
 
             [Microsoft.PowerShell.Commands.GroupInfo[]]$CiGroupedEvents = $CiRawEventLogs | Group-Object -Property ActivityId
@@ -175,13 +194,22 @@ Function Receive-CodeIntegrityLogs {
             Write-Verbose -Message 'Receive-CodeIntegrityLogs: Skipping the collection of the Code Integrity logs'
         }
 
-        if (($Category -eq 'All') -or ($Category -eq 'AppLocker')) {
+        if ($Category -in 'All', 'AppLocker') {
             Try {
                 Write-Verbose -Message 'Receive-CodeIntegrityLogs: Collecting the AppLocker logs'
-                [System.Diagnostics.Eventing.Reader.EventLogRecord[]]$AppLockerRawEventLogs = Get-WinEvent -FilterHashtable @{LogName = 'Microsoft-Windows-AppLocker/MSI and Script' }
+                switch ($LogSource) {
+                    'EVTXFiles' {
+                        # Get all of the AppLocker logs from the specified EVTX files
+                        [System.Diagnostics.Eventing.Reader.EventLogRecord[]]$AppLockerRawEventLogs = Get-WinEvent -FilterHashtable @{Path = $EVTXFilePaths; ID = '8028', '8029', '8038' }
+                    }
+                    'LocalLogs' {
+                        # Get all of the AppLocker logs from the local machine
+                        [System.Diagnostics.Eventing.Reader.EventLogRecord[]]$AppLockerRawEventLogs = Get-WinEvent -FilterHashtable @{LogName = 'Microsoft-Windows-AppLocker/MSI and Script' }
+                    }
+                }
             }
             catch {
-                Throw "Receive-CodeIntegrityLogs: Could not collect the AppLocker logs, the number of logs collected is $($AppLockerRawEventLogs.Count)"
+                Write-Verbose -Message "Receive-CodeIntegrityLogs: Could not collect the AppLocker logs, the number of logs collected is $($AppLockerRawEventLogs.Count)"
             }
 
             [Microsoft.PowerShell.Commands.GroupInfo[]]$AppLockerGroupedEvents = $AppLockerRawEventLogs | Group-Object -Property ActivityId
@@ -315,6 +343,7 @@ Function Receive-CodeIntegrityLogs {
             $VerificationErrorTable = $using:VerificationErrorTable
             $AlternativeDriveLetterFix = $using:AlternativeDriveLetterFix
             $DriveLetterMappings = $using:DriveLetterMappings
+            $LogSource = $using:LogSource
 
             # Set the VerbosePreference to the parent scope's value
             $VerbosePreference = $using:VerbosePreference
@@ -359,7 +388,8 @@ Function Receive-CodeIntegrityLogs {
                     }
 
                     # replace the device path with the drive letter if it matches the pattern
-                    if ($Log['File Name'] -match $Pattern) {
+                    # Only if the log source is local logs
+                    if (($LogSource -eq 'LocalLogs') -and ($Log['File Name'] -match $Pattern)) {
 
                         # Use the primary method to fix the drive letter mappings
                         if ($AlternativeDriveLetterFix -eq $false) {
@@ -388,18 +418,22 @@ Function Receive-CodeIntegrityLogs {
                     # Replace the SI Signing Scenario numbers with a user-friendly string
                     $Log['SI Signing Scenario'] = $Log['SI Signing Scenario'] -eq '0' ? 'Kernel-Mode' : 'User-Mode'
 
-                    # Translate the SID to a UserName
-                    if ($null -ne $Log.UserId) {
-                        Try {
-                            [System.Security.Principal.SecurityIdentifier]$ObjSID = New-Object -TypeName System.Security.Principal.SecurityIdentifier($Log.UserId)
-                            $Log.UserId = [System.String]($ObjSID.Translate([System.Security.Principal.NTAccount])).Value
+                    # if the log source is local logs
+                    if ($LogSource -eq 'LocalLogs') {
+
+                        # Translate the SID to a UserName if it's not null
+                        if ($null -ne $Log.UserId) {
+                            Try {
+                                [System.Security.Principal.SecurityIdentifier]$ObjSID = New-Object -TypeName System.Security.Principal.SecurityIdentifier($Log.UserId)
+                                $Log.UserId = [System.String]($ObjSID.Translate([System.Security.Principal.NTAccount])).Value
+                            }
+                            Catch {
+                                Write-Verbose -Message "Receive-CodeIntegrityLogs: Could not translate the SID $($Log.UserId) to a username for the Activity ID $($Log['ActivityId']) for the file $($Log['File Name'])"
+                            }
                         }
-                        Catch {
-                            Write-Verbose -Message "Receive-CodeIntegrityLogs: Could not translate the SID $($Log.UserId) to a username for the Activity ID $($Log['ActivityId']) for the file $($Log['File Name'])"
+                        else {
+                            Write-Verbose -Message "Receive-CodeIntegrityLogs: The UserId property is null for the Activity ID $($Log['ActivityId']) for the file $($Log['File Name'])"
                         }
-                    }
-                    else {
-                        Write-Verbose -Message "Receive-CodeIntegrityLogs: The UserId property is null for the Activity ID $($Log['ActivityId']) for the file $($Log['File Name'])"
                     }
 
                     # If there are correlated events, then process them
@@ -423,6 +457,12 @@ Function Receive-CodeIntegrityLogs {
 
                             # Loop over each event data object
                             foreach ($CorrelatedLog in $ProcessedCorrelatedEvents) {
+
+                                # Skip signers that don't have PublisherTBSHash (aka LeafCertificate TBS Hash)
+                                # They have "Unknown" as their IssuerName and PublisherName too
+                                if ($null -eq $CorrelatedLog.PublisherTBSHash) {
+                                    Continue
+                                }
 
                                 # Replace the properties with their user-friendly strings
                                 $CorrelatedLog.SignatureType = $SignatureTypeTable[[System.UInt16]$CorrelatedLog.SignatureType]
@@ -449,6 +489,10 @@ Function Receive-CodeIntegrityLogs {
 
                         Write-Debug -Message "Receive-CodeIntegrityLogs: The number of unique publishers in the correlated events is $($Publishers.Count)"
                         $Log['Publishers'] = $Publishers
+
+                        # Add a new property to detect whether this log is signed or not
+                        # Primarily used by the Build-SignerAndHashObjects Function and for Evtx log sources
+                        $Log['SignatureStatus'] = $Publishers.Count -ge 1 ? 'Signed' : 'Unsigned'
 
                         Write-Debug -Message "Receive-CodeIntegrityLogs: The number of correlated events is $($CorrelatedLogs.Count)"
                         $Log['SignerInfo'] = $CorrelatedLogs
@@ -558,6 +602,19 @@ Function Receive-CodeIntegrityLogs {
     }
 
     End {
+
+        # Assigning null to the variables that are empty since users of this function need null values for empty variables
+        $Output.All.Audit.Count -gt 1 ? $Output.All.Audit : $null
+        $Output.All.Blocked.Count -gt 1 ? $Output.All.Blocked : $null
+        $Output.Existing.Audit.Count -gt 1 ? $Output.Existing.Audit : $null
+        $Output.Existing.Blocked.Count -gt 1 ? $Output.Existing.Blocked : $null
+        $Output.Deleted.Audit.Count -gt 1 ? $Output.Deleted.Audit : $null
+        $Output.Deleted.Blocked.Count -gt 1 ? $Output.Deleted.Blocked : $null
+        $Output.Separated.Audit.AvailableFilesPaths.Count -gt 1 ? $Output.Separated.Audit.AvailableFilesPaths : $null
+        $Output.Separated.Audit.DeletedFileHashes.Count -gt 1 ? $Output.Separated.Audit.DeletedFileHashes : $null
+        $Output.Separated.Blocked.AvailableFilesPaths.Count -gt 1 ? $Output.Separated.Blocked.AvailableFilesPaths : $null
+        $Output.Separated.Blocked.DeletedFileHashes.Count -gt 1 ? $Output.Separated.Blocked.DeletedFileHashes : $null
+
         Switch ($PostProcessing) {
             'Separate' {
                 if ($Type -eq 'Audit') {
@@ -607,8 +664,8 @@ Export-ModuleMember -Function 'Receive-CodeIntegrityLogs'
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCDcERx1F7+tkP1p
-# qKprRkMwvaXGigd6ufErod7k3ugL3KCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCCnd2r+Kkm1IrVj
+# EZdgPY6mxjudRU+z64ET05m9zNRjDaCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -655,16 +712,16 @@ Export-ModuleMember -Function 'Receive-CodeIntegrityLogs'
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQgXhfwKKzGimgBGVVxp/7Mv3wyUgvOqTdRUvabmAQUj0swDQYJKoZIhvcNAQEB
-# BQAEggIAdrDkEZ0CGQBnuPmLbmmC2RMavmZC5oDqNQNGUTmoJ/JQK2cLm3dUhey8
-# hQuyY5qiS7+RyRqv0Y9PWJYyQutcw6TyfUvb1f7wpaDExZqXW/m91XJWFQumBe0d
-# sO37WEjvqxES2iwaAAku+saQvZ2+6EKQpQ9gtavTLsPi6NZPhMJb4SguvwWw6Xlq
-# MPtFnFZm8NlFQRGeg4aIdkNBr32GxHYWYZMGYTQ3BTWQJ7bwQTK3FEm4mWbtdh+P
-# AfaMiK+fxV5hcA0pmEifalpRv6TbCULlLXO7myuDKpIpMKqRIrFcYy2VQuADmHKz
-# OcNrFqD/YK2dHFNpDr2i1IOiU7M1CJNpinBPUvEwnnbXETcYVxHAoZmwUrjSHNjk
-# ytX1RxSNjErH/Rs6Cr6u+g0eq05Xo5g/lB343lYoqgUgUXan37m1wJDNeKBOmHy7
-# cD4zJ64EJ9syjpFgrwDShrB41MrVrt0+gKbPzwsKgswpbqGiQyIJHcng6MaLiKa5
-# OHQvpvmCakQQVVtJ1dix4uCNwzs/XSfFYgT1FjdGpMYz/pdBdCTd7MyEQRNJW/M2
-# ib4gFXMwHtNMHTM0qpP/wLJL1mjnhDMbDsYWT1QFPnCSqGEmxI9uO0zF/wu1Njvi
-# o1P1MuyPg5PsbglHD5iSpLycYwrviufyiEc1v0V5I/hjrkBoejI=
+# IgQgrUpbcJvNnqV4nRV4nFGY+5jOfdfZ8s2FcEKTwVTyNeswDQYJKoZIhvcNAQEB
+# BQAEggIAKLR6qPI9lchjEdjSPUBHcMdehRRChlh6deUWZh4ZPAVgFvKBfnKhSPB8
+# uYTCDeffC87+sxVZBATCDl5nH+4MZkGVDQX6lrDZn3RvyoOiQHmE4QEAHuloTUxX
+# Uuew/E1a+LvBDpH+VoGXtyFKjUfm9O9bAy7/VOB2kWq+4CNyi4tVFuQ208w1sEDU
+# JcrqGR9EvQVVHDtzSkOUMj0oIYSWXQTx8F+BvqZ0aqkyZEo/cZDoQUue6iAq5X2H
+# +W0ixUsWGx6UIlT6Pb65/tnYsp71nhTFA6f3i79DxIi/xyJXhg+owa50bf9VfsJQ
+# Ay9fES1Op84Hs/ph9vYjf1BeS1GPyEcZBWSLpr/Gux0VAw/+Q0bszFHx92pzA+hD
+# ekiHaHhNRLLLl0IekFvw4LT9+ix3b60/lsEZVcVo8bA8jYLdtis/6o67QAhECjfq
+# A45FYHhz+4b5QCgJVVBcCRQm/mexAakZhDWaMhBsgqDDg9r78Xjc6WeexpfLWMOD
+# /WUg6ye2/0tTwoQhJz0FmxIXw7hRjPFYH7Vb+IvqyvGTUgEzTnSX8ruQwE7OP4LU
+# 2j/lwQwUymIxITAvuliQBrlKD9LW8nqPPC4D6iX2HXtoEtJeQroauLSic7AoNOgL
+# uZUOY7aSNLZUQbFdwGL4mFU/FnbR7bkxxGX8xoTfwNFcVQwD5PM=
 # SIG # End signature block

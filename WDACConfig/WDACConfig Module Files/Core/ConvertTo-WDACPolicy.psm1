@@ -29,7 +29,7 @@ Function ConvertTo-WDACPolicy {
         [System.Guid]$BasePolicyGUID,
 
         [Alias('Src')]
-        [ValidateSet('MDEAdvancedHunting', 'LocalEventLogs')]
+        [ValidateSet('MDEAdvancedHunting', 'LocalEventLogs', 'EVTXFiles')]
         [Parameter(Mandatory = $false)][System.String]$Source = 'LocalEventLogs',
 
         [ArgumentCompleter({
@@ -78,49 +78,100 @@ Function ConvertTo-WDACPolicy {
             $ParamDictionary.Add('TimeSpanAgo', $TimeSpanAgo)
         }
 
-        # If user selected 'MDEAdvancedHunting' as the source, then create a mandatory parameter to ask for the .CSV file(s) path(s)
-        if ('MDEAdvancedHunting' -in $PSBoundParameters['Source']) {
+        # Offer different parameters based on the source selected
+        switch ($PSBoundParameters['Source']) {
 
-            # Opens File picker GUI so that user can select an .CSV file
-            [System.Management.Automation.ScriptBlock]$ArgumentCompleterCSVFilePathsPicker = {
-                # Create a new OpenFileDialog object
-                [System.Windows.Forms.OpenFileDialog]$Dialog = New-Object -TypeName 'System.Windows.Forms.OpenFileDialog'
-                # Set the filter to show only CSV files
-                $Dialog.Filter = 'CSV files (*.CSV)|*.CSV'
-                # Set the title of the dialog
-                $Dialog.Title = 'Select Microsoft Defender for Endpoint Advanced Hunting CSV files'
-                # Allow multiple CSV files to be selected
-                $Dialog.Multiselect = $true
-                $Dialog.ShowPreview = $true
-                # Show the dialog and get the result
-                [System.String]$Result = $Dialog.ShowDialog()
-                # If the user clicked OK, return the selected file paths
-                if ($Result -eq 'OK') {
-                    return "`"$($Dialog.FileNames -join '","')`""
+            # If user selected 'MDEAdvancedHunting' as the source, then create a mandatory parameter to ask for the .CSV file(s) path(s)
+            'MDEAdvancedHunting' {
+                # Opens File picker GUI so that user can select .CSV files
+                [System.Management.Automation.ScriptBlock]$ArgumentCompleterCSVFilePathsPicker = {
+                    # Create a new OpenFileDialog object
+                    [System.Windows.Forms.OpenFileDialog]$Dialog = New-Object -TypeName 'System.Windows.Forms.OpenFileDialog'
+                    # Set the filter to show only CSV files
+                    $Dialog.Filter = 'CSV files (*.CSV)|*.CSV'
+                    # Set the title of the dialog
+                    $Dialog.Title = 'Select Microsoft Defender for Endpoint Advanced Hunting CSV files'
+                    # Allow multiple CSV files to be selected
+                    $Dialog.Multiselect = $true
+                    $Dialog.ShowPreview = $true
+                    # Show the dialog and get the result
+                    [System.String]$Result = $Dialog.ShowDialog()
+                    # If the user clicked OK, return the selected file paths
+                    if ($Result -eq 'OK') {
+                        return "`"$($Dialog.FileNames -join '","')`""
+                    }
                 }
+
+                # Create a parameter attribute collection
+                $MDEAHLogs_AttributesCollection = New-Object -TypeName System.Collections.ObjectModel.Collection[System.Attribute]
+
+                # Create an argument completer attribute and add it to the collection
+                [System.Management.Automation.ArgumentCompleterAttribute]$MDEAHLogs_ArgumentCompleterAttrib = New-Object -TypeName System.Management.Automation.ArgumentCompleterAttribute($ArgumentCompleterCSVFilePathsPicker)
+                $MDEAHLogs_AttributesCollection.Add($MDEAHLogs_ArgumentCompleterAttrib)
+
+                # Create a mandatory attribute and add it to the collection
+                [System.Management.Automation.ParameterAttribute]$MDEAHLogs_MandatoryAttrib = New-Object -TypeName System.Management.Automation.ParameterAttribute
+                $MDEAHLogs_MandatoryAttrib.Mandatory = $true
+                $MDEAHLogs_AttributesCollection.Add($MDEAHLogs_MandatoryAttrib)
+
+                # Create an alias attribute and add it to the collection
+                $MDEAHLogs_AliasAttrib = New-Object -TypeName System.Management.Automation.AliasAttribute -ArgumentList 'MDELogs'
+                $MDEAHLogs_AttributesCollection.Add($MDEAHLogs_AliasAttrib)
+
+                # Create a dynamic parameter object with the attributes already assigned: Name, Type, and Attributes Collection
+                [System.Management.Automation.RuntimeDefinedParameter]$MDEAHLogs = New-Object -TypeName System.Management.Automation.RuntimeDefinedParameter('MDEAHLogs', [System.IO.FileInfo[]], $MDEAHLogs_AttributesCollection)
+
+                # Add the dynamic parameter object to the dictionary
+                $ParamDictionary.Add('MDEAHLogs', $MDEAHLogs)
+
+                break
             }
 
-            # Create a parameter attribute collection
-            $MDEAHLogs_AttributesCollection = New-Object -TypeName System.Collections.ObjectModel.Collection[System.Attribute]
+            'EVTXFiles' {
 
-            # Create an argument completer attribute and add it to the collection
-            [System.Management.Automation.ArgumentCompleterAttribute]$MDEAHLogs_ArgumentCompleterAttrib = New-Object -TypeName System.Management.Automation.ArgumentCompleterAttribute($ArgumentCompleterCSVFilePathsPicker)
-            $MDEAHLogs_AttributesCollection.Add($MDEAHLogs_ArgumentCompleterAttrib)
+                # Opens File picker GUI so that user can select .EVTX files
+                [System.Management.Automation.ScriptBlock]$ArgumentCompleterEVTXFilePathsPicker = {
+                    # Create a new OpenFileDialog object
+                    [System.Windows.Forms.OpenFileDialog]$Dialog = New-Object -TypeName 'System.Windows.Forms.OpenFileDialog'
+                    # Set the filter to show only EVTX files
+                    $Dialog.Filter = 'EVTX files (*.evtx)|*.evtx'
+                    # Set the title of the dialog
+                    $Dialog.Title = 'Select .evtx files to convert to WDAC policy'
+                    # Allow multiple EVTX files to be selected
+                    $Dialog.Multiselect = $true
+                    $Dialog.ShowPreview = $true
+                    # Show the dialog and get the result
+                    [System.String]$Result = $Dialog.ShowDialog()
+                    # If the user clicked OK, return the selected file paths
+                    if ($Result -eq 'OK') {
+                        return "`"$($Dialog.FileNames -join '","')`""
+                    }
+                }
 
-            # Create a mandatory attribute and add it to the collection
-            [System.Management.Automation.ParameterAttribute]$MDEAHLogs_MandatoryAttrib = New-Object -TypeName System.Management.Automation.ParameterAttribute
-            $MDEAHLogs_MandatoryAttrib.Mandatory = $true
-            $MDEAHLogs_AttributesCollection.Add($MDEAHLogs_MandatoryAttrib)
+                # Create a parameter attribute collection
+                $EVTXLogs_AttributesCollection = New-Object -TypeName System.Collections.ObjectModel.Collection[System.Attribute]
 
-            # Create an alias attribute and add it to the collection
-            $MDEAHLogs_AliasAttrib = New-Object -TypeName System.Management.Automation.AliasAttribute -ArgumentList 'MDELogs'
-            $MDEAHLogs_AttributesCollection.Add($MDEAHLogs_AliasAttrib)
+                # Create an argument completer attribute and add it to the collection
+                [System.Management.Automation.ArgumentCompleterAttribute]$EVTXLogs_ArgumentCompleterAttrib = New-Object -TypeName System.Management.Automation.ArgumentCompleterAttribute($ArgumentCompleterEVTXFilePathsPicker)
+                $EVTXLogs_AttributesCollection.Add($EVTXLogs_ArgumentCompleterAttrib)
 
-            # Create a dynamic parameter object with the attributes already assigned: Name, Type, and Attributes Collection
-            [System.Management.Automation.RuntimeDefinedParameter]$MDEAHLogs = New-Object -TypeName System.Management.Automation.RuntimeDefinedParameter('MDEAHLogs', [System.IO.FileInfo[]], $MDEAHLogs_AttributesCollection)
+                # Create a mandatory attribute and add it to the collection
+                [System.Management.Automation.ParameterAttribute]$EVTXLogs_MandatoryAttrib = New-Object -TypeName System.Management.Automation.ParameterAttribute
+                $EVTXLogs_MandatoryAttrib.Mandatory = $true
+                $EVTXLogs_AttributesCollection.Add($EVTXLogs_MandatoryAttrib)
 
-            # Add the dynamic parameter object to the dictionary
-            $ParamDictionary.Add('MDEAHLogs', $MDEAHLogs)
+                # Create an alias attribute and add it to the collection
+                $EVTXLogs_AliasAttrib = New-Object -TypeName System.Management.Automation.AliasAttribute -ArgumentList 'Evtx'
+                $EVTXLogs_AttributesCollection.Add($EVTXLogs_AliasAttrib)
+
+                # Create a dynamic parameter object with the attributes already assigned: Name, Type, and Attributes Collection
+                [System.Management.Automation.RuntimeDefinedParameter]$EVTXLogs = New-Object -TypeName System.Management.Automation.RuntimeDefinedParameter('EVTXLogs', [System.IO.FileInfo[]], $EVTXLogs_AttributesCollection)
+
+                # Add the dynamic parameter object to the dictionary
+                $ParamDictionary.Add('EVTXLogs', $EVTXLogs)
+
+                break
+            }
         }
 
         #Region-KernelModeOnly-Parameter
@@ -255,7 +306,8 @@ Function ConvertTo-WDACPolicy {
             "$ModuleRootPath\Shared\New-EmptyPolicy.psm1",
             "$ModuleRootPath\Shared\Get-RuleRefs.psm1",
             "$ModuleRootPath\Shared\Get-FileRules.psm1",
-            "$ModuleRootPath\Shared\New-StagingArea.psm1"
+            "$ModuleRootPath\Shared\New-StagingArea.psm1",
+            "$ModuleRootPath\Shared\Set-LogPropertiesVisibility.psm1"
         )
         # Add XML Ops module to the list of modules to import
         $ModulesToImport += (Get-ChildItem -File -Filter '*.psm1' -LiteralPath "$ModuleRootPath\XMLOps").FullName
@@ -264,6 +316,7 @@ Function ConvertTo-WDACPolicy {
         # Since Dynamic parameters are only available in the parameter dictionary, we have to access them using $PSBoundParameters or assign them manually to another variable in the function's scope
         New-Variable -Name 'TimeSpanAgo' -Value $PSBoundParameters['TimeSpanAgo'] -Force
         New-Variable -Name 'MDEAHLogs' -Value $PSBoundParameters['MDEAHLogs'] -Force
+        New-Variable -Name 'EVTXLogs' -Value $PSBoundParameters['EVTXLogs'] -Force
         New-Variable -Name 'KernelModeOnly' -Value $PSBoundParameters['KernelModeOnly'] -Force
         New-Variable -Name 'LogType' -Value ($PSBoundParameters['LogType'] ?? 'Audit') -Force
         New-Variable -Name 'Deploy' -Value $PSBoundParameters['Deploy'] -Force
@@ -380,22 +433,7 @@ Function ConvertTo-WDACPolicy {
 
                     # If the ExtremeVisibility switch is used, then display all the properties of the logs without any filtering
                     if (-NOT $ExtremeVisibility) {
-
-                        [System.String[]]$PropertiesToDisplay = @('File Name', 'TimeCreated', 'PolicyName', 'ProductName', 'FileVersion', 'OriginalFileName', 'FileDescription', 'InternalName', 'PackageFamilyName', 'Full Path', 'SI Signing Scenario', 'UserId', 'Publishers')
-
-                        # Create a PSPropertySet object that contains the names of the properties to be visible
-                        # Used for Out-GridView display
-                        # https://learn.microsoft.com/en-us/dotnet/api/system.management.automation.pspropertyset
-                        # https://learn.microsoft.com/en-us/powershell/scripting/learn/deep-dives/everything-about-pscustomobject#using-defaultpropertyset-the-long-way
-                        $Visible = [System.Management.Automation.PSPropertySet]::new(
-                            'DefaultDisplayPropertySet', # the name of the property set
-                            $PropertiesToDisplay # the names of the properties to be visible
-                        )
-
-                        # Add the PSPropertySet object to the PSStandardMembers member set of each element of the $EventsToDisplay array
-                        foreach ($Element in $EventsToDisplay) {
-                            $Element | Add-Member -MemberType 'MemberSet' -Name 'PSStandardMembers' -Value $Visible
-                        }
+                        Set-LogPropertiesVisibility -LogType Evtx/Local -EventsToDisplay $EventsToDisplay
                     }
 
                     #Endregion Out-GridView properties visibility settings
@@ -593,70 +631,79 @@ Function ConvertTo-WDACPolicy {
 
                     #Region Base To Supplemental Policy Association and Deployment
 
-                    # If -BasePolicyFile parameter was used then associate the supplemental policy with the user input base policy
-                    if ($null -ne $BasePolicyFile) {
+                    Switch ($True) {
 
-                        # Objectify the user input base policy file to extract its Base policy ID
-                        $InputXMLObj = [System.Xml.XmlDocument](Get-Content -Path $BasePolicyFile)
+                        { $null -ne $BasePolicyFile } {
 
-                        [System.String]$SupplementalPolicyID = Set-CIPolicyIdInfo -FilePath $WDACPolicyPath -PolicyName "Supplemental Policy from event logs - $(Get-Date -Format 'MM-dd-yyyy')" -SupplementsBasePolicyID $InputXMLObj.SiPolicy.BasePolicyID -ResetPolicyID
-                        [System.String]$SupplementalPolicyID = $SupplementalPolicyID.Substring(11)
+                            Write-Verbose -Message 'ConvertTo-WDACPolicy: Associating the Supplemental policy with the user input base policy'
 
-                        # Configure policy rule options
-                        Edit-CiPolicyRuleOptions -Action Supplemental -XMLFile $WDACPolicyPath
+                            # Objectify the user input base policy file to extract its Base policy ID
+                            $InputXMLObj = [System.Xml.XmlDocument](Get-Content -Path $BasePolicyFile)
 
-                        Write-Verbose -Message 'ConvertTo-WDACPolicy: Copying the policy file to the User Config directory'
-                        Copy-Item -Path $WDACPolicyPath -Destination $UserConfigDir -Force
+                            [System.String]$SupplementalPolicyID = Set-CIPolicyIdInfo -FilePath $WDACPolicyPath -PolicyName "Supplemental Policy from event logs - $(Get-Date -Format 'MM-dd-yyyy')" -SupplementsBasePolicyID $InputXMLObj.SiPolicy.BasePolicyID -ResetPolicyID
+                            [System.String]$SupplementalPolicyID = $SupplementalPolicyID.Substring(11)
 
-                        if ($Deploy) {
-                            ConvertFrom-CIPolicy -XmlFilePath $WDACPolicyPath -BinaryFilePath (Join-Path -Path $StagingArea -ChildPath "$SupplementalPolicyID.cip") | Out-Null
+                            # Configure policy rule options
+                            Edit-CiPolicyRuleOptions -Action Supplemental -XMLFile $WDACPolicyPath
 
-                            Write-Verbose -Message 'ConvertTo-WDACPolicy: Deploying the Supplemental policy'
+                            Write-Verbose -Message 'ConvertTo-WDACPolicy: Copying the policy file to the User Config directory'
+                            Copy-Item -Path $WDACPolicyPath -Destination $UserConfigDir -Force
 
-                            &'C:\Windows\System32\CiTool.exe' --update-policy (Join-Path -Path $StagingArea -ChildPath "$SupplementalPolicyID.cip") -json | Out-Null
+                            if ($Deploy) {
+                                ConvertFrom-CIPolicy -XmlFilePath $WDACPolicyPath -BinaryFilePath (Join-Path -Path $StagingArea -ChildPath "$SupplementalPolicyID.cip") | Out-Null
+
+                                Write-Verbose -Message 'ConvertTo-WDACPolicy: Deploying the Supplemental policy'
+
+                                &'C:\Windows\System32\CiTool.exe' --update-policy (Join-Path -Path $StagingArea -ChildPath "$SupplementalPolicyID.cip") -json | Out-Null
+                            }
                         }
-                    }
-                    # If -BasePolicyGUID parameter was used then use it by setting it as the Base policy ID in the supplemental policy
-                    elseif ($null -ne $BasePolicyGUID) {
-                        [System.String]$SupplementalPolicyID = Set-CIPolicyIdInfo -FilePath $WDACPolicyPath -PolicyName "Supplemental Policy from event logs - $(Get-Date -Format 'MM-dd-yyyy')" -SupplementsBasePolicyID $BasePolicyGUID -ResetPolicyID
-                        [System.String]$SupplementalPolicyID = $SupplementalPolicyID.Substring(11)
 
-                        # Configure policy rule options
-                        Edit-CiPolicyRuleOptions -Action Supplemental -XMLFile $WDACPolicyPath
+                        { $null -ne $BasePolicyGUID } {
 
-                        Write-Verbose -Message 'ConvertTo-WDACPolicy: Copying the policy file to the User Config directory'
-                        Copy-Item -Path $WDACPolicyPath -Destination $UserConfigDir -Force
+                            Write-Verbose -Message 'ConvertTo-WDACPolicy: Assigning the user input GUID to the base policy ID of the supplemental policy'
 
-                        if ($Deploy) {
-                            ConvertFrom-CIPolicy -XmlFilePath $WDACPolicyPath -BinaryFilePath (Join-Path -Path $StagingArea -ChildPath "$SupplementalPolicyID.cip") | Out-Null
+                            [System.String]$SupplementalPolicyID = Set-CIPolicyIdInfo -FilePath $WDACPolicyPath -PolicyName "Supplemental Policy from event logs - $(Get-Date -Format 'MM-dd-yyyy')" -SupplementsBasePolicyID $BasePolicyGUID -ResetPolicyID
+                            [System.String]$SupplementalPolicyID = $SupplementalPolicyID.Substring(11)
 
-                            Write-Verbose -Message 'ConvertTo-WDACPolicy: Deploying the Supplemental policy'
+                            # Configure policy rule options
+                            Edit-CiPolicyRuleOptions -Action Supplemental -XMLFile $WDACPolicyPath
 
-                            &'C:\Windows\System32\CiTool.exe' --update-policy (Join-Path -Path $StagingArea -ChildPath "$SupplementalPolicyID.cip") -json | Out-Null
+                            Write-Verbose -Message 'ConvertTo-WDACPolicy: Copying the policy file to the User Config directory'
+                            Copy-Item -Path $WDACPolicyPath -Destination $UserConfigDir -Force
+
+                            if ($Deploy) {
+                                ConvertFrom-CIPolicy -XmlFilePath $WDACPolicyPath -BinaryFilePath (Join-Path -Path $StagingArea -ChildPath "$SupplementalPolicyID.cip") | Out-Null
+
+                                Write-Verbose -Message 'ConvertTo-WDACPolicy: Deploying the Supplemental policy'
+
+                                &'C:\Windows\System32\CiTool.exe' --update-policy (Join-Path -Path $StagingArea -ChildPath "$SupplementalPolicyID.cip") -json | Out-Null
+                            }
                         }
-                    }
-                    # If -PolicyToAddLogsTo parameter was used then merge the supplemental policy with the user input policy
-                    elseif ($null -ne $PolicyToAddLogsTo) {
 
-                        # Objectify the user input policy file to extract its policy ID
-                        $InputXMLObj = [System.Xml.XmlDocument](Get-Content -Path $PolicyToAddLogsTo)
+                        { $null -ne $PolicyToAddLogsTo } {
 
-                        Set-CIPolicyIdInfo -FilePath $WDACPolicyPath -PolicyName "Supplemental Policy from event logs - $(Get-Date -Format 'MM-dd-yyyy')" -ResetPolicyID | Out-Null
+                            Write-Verbose -Message 'ConvertTo-WDACPolicy: Adding the logs to the policy that user selected'
 
-                        # Remove all policy rule options prior to merging the policies since we don't need to add/remove any policy rule options to/from the user input policy
-                        Edit-CiPolicyRuleOptions -Action RemoveAll -XMLFile $WDACPolicyPath
+                            # Objectify the user input policy file to extract its policy ID
+                            $InputXMLObj = [System.Xml.XmlDocument](Get-Content -Path $PolicyToAddLogsTo)
 
-                        Merge-CIPolicy -PolicyPaths $PolicyToAddLogsTo, $WDACPolicyPath -OutputFilePath $PolicyToAddLogsTo | Out-Null
+                            Set-CIPolicyIdInfo -FilePath $WDACPolicyPath -PolicyName "Supplemental Policy from event logs - $(Get-Date -Format 'MM-dd-yyyy')" -ResetPolicyID | Out-Null
 
-                        # Set HVCI to Strict
-                        Set-HVCIOptions -Strict -FilePath $PolicyToAddLogsTo
+                            # Remove all policy rule options prior to merging the policies since we don't need to add/remove any policy rule options to/from the user input policy
+                            Edit-CiPolicyRuleOptions -Action RemoveAll -XMLFile $WDACPolicyPath
 
-                        if ($Deploy) {
-                            ConvertFrom-CIPolicy -XmlFilePath $PolicyToAddLogsTo -BinaryFilePath (Join-Path -Path $StagingArea -ChildPath "$($InputXMLObj.SiPolicy.PolicyID).cip") | Out-Null
+                            Merge-CIPolicy -PolicyPaths $PolicyToAddLogsTo, $WDACPolicyPath -OutputFilePath $PolicyToAddLogsTo | Out-Null
 
-                            Write-Verbose -Message 'ConvertTo-WDACPolicy: Deploying the policy that user selected to add the logs to'
+                            # Set HVCI to Strict
+                            Set-HVCIOptions -Strict -FilePath $PolicyToAddLogsTo
 
-                            &'C:\Windows\System32\CiTool.exe' --update-policy (Join-Path -Path $StagingArea -ChildPath "$($InputXMLObj.SiPolicy.PolicyID).cip") -json | Out-Null
+                            if ($Deploy) {
+                                ConvertFrom-CIPolicy -XmlFilePath $PolicyToAddLogsTo -BinaryFilePath (Join-Path -Path $StagingArea -ChildPath "$($InputXMLObj.SiPolicy.PolicyID).cip") | Out-Null
+
+                                Write-Verbose -Message 'ConvertTo-WDACPolicy: Deploying the policy that user selected to add the logs to'
+
+                                &'C:\Windows\System32\CiTool.exe' --update-policy (Join-Path -Path $StagingArea -ChildPath "$($InputXMLObj.SiPolicy.PolicyID).cip") -json | Out-Null
+                            }
                         }
                     }
 
@@ -715,22 +762,7 @@ Function ConvertTo-WDACPolicy {
 
                     # If the ExtremeVisibility switch is used, then display all the properties of the logs without any filtering
                     if (-NOT $ExtremeVisibility) {
-
-                        [System.String[]]$PropertiesToDisplay = @('TimeStamp', 'DeviceName', 'Type', 'SHA256', 'FileName', 'FolderPath', 'InitiatingProcessFileName', 'SignatureStatus', 'PolicyName', 'OriginalFileName', 'InternalName', 'PackageFamilyName', 'FileVersion', 'SISigningScenario')
-
-                        # Create a PSPropertySet object that contains the names of the properties to be visible
-                        # Used for Out-GridView display
-                        # https://learn.microsoft.com/en-us/dotnet/api/system.management.automation.pspropertyset
-                        # https://learn.microsoft.com/en-us/powershell/scripting/learn/deep-dives/everything-about-pscustomobject#using-defaultpropertyset-the-long-way
-                        $Visible = [System.Management.Automation.PSPropertySet]::new(
-                            'DefaultDisplayPropertySet', # the name of the property set
-                            $PropertiesToDisplay # the names of the properties to be visible
-                        )
-
-                        # Add the PSPropertySet object to the PSStandardMembers member set of each element of the $EventsToDisplay array
-                        foreach ($Element in $MDEAHLogsToDisplay) {
-                            $Element | Add-Member -MemberType 'MemberSet' -Name 'PSStandardMembers' -Value $Visible
-                        }
+                        Set-LogPropertiesVisibility -LogType MDEAH -EventsToDisplay $MDEAHLogsToDisplay
                     }
 
                     #Endregion Out-GridView properties visibility settings
@@ -762,7 +794,7 @@ Function ConvertTo-WDACPolicy {
                     Write-Progress -Id 31 -Activity 'Building the Signer and Hash objects from the selected MDE AH logs' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
                     Write-Verbose -Message 'Building the Signer and Hash objects from the selected MDE AH logs'
-                    [PSCustomObject]$DataToUseForBuilding = Build-SignerAndHashObjects -Data $SelectMDEAHLogs
+                    [PSCustomObject]$DataToUseForBuilding = Build-SignerAndHashObjects -Data $SelectMDEAHLogs -IncomingDataType MDEAH
 
                     $CurrentStep++
                     Write-Progress -Id 31 -Activity 'Creating rules for different levels' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
@@ -831,89 +863,340 @@ Function ConvertTo-WDACPolicy {
 
                     #Region Base To Supplemental Policy Association and Deployment
 
-                    # If -BasePolicyFile parameter was used then associate the supplemental policy with the user input base policy
-                    if ($null -ne $BasePolicyFile) {
+                    Switch ($True) {
 
-                        # Objectify the user input base policy file to extract its Base policy ID
-                        $InputXMLObj = [System.Xml.XmlDocument](Get-Content -Path $BasePolicyFile)
+                        { $null -ne $BasePolicyFile } {
 
-                        [System.String]$SupplementalPolicyID = Set-CIPolicyIdInfo -FilePath $OutputPolicyPathMDEAH -PolicyName "Supplemental Policy from MDE Advanced Hunting - $(Get-Date -Format 'MM-dd-yyyy')" -SupplementsBasePolicyID $InputXMLObj.SiPolicy.BasePolicyID -ResetPolicyID
-                        [System.String]$SupplementalPolicyID = $SupplementalPolicyID.Substring(11)
+                            Write-Verbose -Message 'ConvertTo-WDACPolicy: Associating the Supplemental policy with the user input base policy'
 
-                        # Configure policy rule options
-                        Edit-CiPolicyRuleOptions -Action Supplemental -XMLFile $OutputPolicyPathMDEAH
+                            # Objectify the user input base policy file to extract its Base policy ID
+                            $InputXMLObj = [System.Xml.XmlDocument](Get-Content -Path $BasePolicyFile)
 
-                        Write-Verbose -Message 'ConvertTo-WDACPolicy: Copying the policy file to the User Config directory'
-                        Copy-Item -Path $OutputPolicyPathMDEAH -Destination $UserConfigDir -Force
+                            [System.String]$SupplementalPolicyID = Set-CIPolicyIdInfo -FilePath $OutputPolicyPathMDEAH -PolicyName "Supplemental Policy from MDE Advanced Hunting - $(Get-Date -Format 'MM-dd-yyyy')" -SupplementsBasePolicyID $InputXMLObj.SiPolicy.BasePolicyID -ResetPolicyID
+                            [System.String]$SupplementalPolicyID = $SupplementalPolicyID.Substring(11)
 
-                        if ($Deploy) {
-                            ConvertFrom-CIPolicy -XmlFilePath $OutputPolicyPathMDEAH -BinaryFilePath (Join-Path -Path $StagingArea -ChildPath "$SupplementalPolicyID.cip") | Out-Null
+                            # Configure policy rule options
+                            Edit-CiPolicyRuleOptions -Action Supplemental -XMLFile $OutputPolicyPathMDEAH
 
-                            Write-Verbose -Message 'ConvertTo-WDACPolicy: Deploying the Supplemental policy'
+                            Write-Verbose -Message 'ConvertTo-WDACPolicy: Copying the policy file to the User Config directory'
+                            Copy-Item -Path $OutputPolicyPathMDEAH -Destination $UserConfigDir -Force
 
-                            &'C:\Windows\System32\CiTool.exe' --update-policy (Join-Path -Path $StagingArea -ChildPath "$SupplementalPolicyID.cip") -json | Out-Null
+                            if ($Deploy) {
+                                ConvertFrom-CIPolicy -XmlFilePath $OutputPolicyPathMDEAH -BinaryFilePath (Join-Path -Path $StagingArea -ChildPath "$SupplementalPolicyID.cip") | Out-Null
+
+                                Write-Verbose -Message 'ConvertTo-WDACPolicy: Deploying the Supplemental policy'
+
+                                &'C:\Windows\System32\CiTool.exe' --update-policy (Join-Path -Path $StagingArea -ChildPath "$SupplementalPolicyID.cip") -json | Out-Null
+                            }
                         }
-                    }
-                    # If -BasePolicyGUID parameter was used then use it by setting it as the Base policy ID in the supplemental policy
-                    elseif ($null -ne $BasePolicyGUID) {
-                        [System.String]$SupplementalPolicyID = Set-CIPolicyIdInfo -FilePath $OutputPolicyPathMDEAH -PolicyName "Supplemental Policy from MDE Advanced Hunting - $(Get-Date -Format 'MM-dd-yyyy')" -SupplementsBasePolicyID $BasePolicyGUID -ResetPolicyID
-                        [System.String]$SupplementalPolicyID = $SupplementalPolicyID.Substring(11)
 
-                        # Configure policy rule options
-                        Edit-CiPolicyRuleOptions -Action Supplemental -XMLFile $OutputPolicyPathMDEAH
+                        { $null -ne $BasePolicyGUID } {
 
-                        Write-Verbose -Message 'ConvertTo-WDACPolicy: Copying the policy file to the User Config directory'
-                        Copy-Item -Path $OutputPolicyPathMDEAH -Destination $UserConfigDir -Force
+                            Write-Verbose -Message 'ConvertTo-WDACPolicy: Assigning the user input GUID to the base policy ID of the supplemental policy'
 
-                        if ($Deploy) {
-                            ConvertFrom-CIPolicy -XmlFilePath $OutputPolicyPathMDEAH -BinaryFilePath (Join-Path -Path $StagingArea -ChildPath "$SupplementalPolicyID.cip") | Out-Null
+                            [System.String]$SupplementalPolicyID = Set-CIPolicyIdInfo -FilePath $OutputPolicyPathMDEAH -PolicyName "Supplemental Policy from MDE Advanced Hunting - $(Get-Date -Format 'MM-dd-yyyy')" -SupplementsBasePolicyID $BasePolicyGUID -ResetPolicyID
+                            [System.String]$SupplementalPolicyID = $SupplementalPolicyID.Substring(11)
 
-                            Write-Verbose -Message 'ConvertTo-WDACPolicy: Deploying the Supplemental policy'
+                            # Configure policy rule options
+                            Edit-CiPolicyRuleOptions -Action Supplemental -XMLFile $OutputPolicyPathMDEAH
 
-                            &'C:\Windows\System32\CiTool.exe' --update-policy (Join-Path -Path $StagingArea -ChildPath "$SupplementalPolicyID.cip") -json | Out-Null
+                            Write-Verbose -Message 'ConvertTo-WDACPolicy: Copying the policy file to the User Config directory'
+                            Copy-Item -Path $OutputPolicyPathMDEAH -Destination $UserConfigDir -Force
+
+                            if ($Deploy) {
+                                ConvertFrom-CIPolicy -XmlFilePath $OutputPolicyPathMDEAH -BinaryFilePath (Join-Path -Path $StagingArea -ChildPath "$SupplementalPolicyID.cip") | Out-Null
+
+                                Write-Verbose -Message 'ConvertTo-WDACPolicy: Deploying the Supplemental policy'
+
+                                &'C:\Windows\System32\CiTool.exe' --update-policy (Join-Path -Path $StagingArea -ChildPath "$SupplementalPolicyID.cip") -json | Out-Null
+                            }
                         }
-                    }
-                    # If -PolicyToAddLogsTo parameter was used then merge the supplemental policy with the user input policy
-                    elseif ($null -ne $PolicyToAddLogsTo) {
 
-                        # Objectify the user input policy file to extract its policy ID
-                        $InputXMLObj = [System.Xml.XmlDocument](Get-Content -Path $PolicyToAddLogsTo)
+                        { $null -ne $PolicyToAddLogsTo } {
 
-                        Set-CIPolicyIdInfo -FilePath $OutputPolicyPathMDEAH -PolicyName "Supplemental Policy from MDE Advanced Hunting - $(Get-Date -Format 'MM-dd-yyyy')" -ResetPolicyID | Out-Null
+                            Write-Verbose -Message 'ConvertTo-WDACPolicy: Adding the logs to the policy that user selected'
 
-                        # Remove all policy rule options prior to merging the policies since we don't need to add/remove any policy rule options to/from the user input policy
-                        Edit-CiPolicyRuleOptions -Action RemoveAll -XMLFile $OutputPolicyPathMDEAH
+                            # Objectify the user input policy file to extract its policy ID
+                            $InputXMLObj = [System.Xml.XmlDocument](Get-Content -Path $PolicyToAddLogsTo)
 
-                        Merge-CIPolicy -PolicyPaths $PolicyToAddLogsTo, $OutputPolicyPathMDEAH -OutputFilePath $PolicyToAddLogsTo | Out-Null
+                            Set-CIPolicyIdInfo -FilePath $OutputPolicyPathMDEAH -PolicyName "Supplemental Policy from MDE Advanced Hunting - $(Get-Date -Format 'MM-dd-yyyy')" -ResetPolicyID | Out-Null
 
-                        # Set HVCI to Strict
-                        Set-HVCIOptions -Strict -FilePath $PolicyToAddLogsTo
+                            # Remove all policy rule options prior to merging the policies since we don't need to add/remove any policy rule options to/from the user input policy
+                            Edit-CiPolicyRuleOptions -Action RemoveAll -XMLFile $OutputPolicyPathMDEAH
 
-                        if ($Deploy) {
-                            ConvertFrom-CIPolicy -XmlFilePath $PolicyToAddLogsTo -BinaryFilePath (Join-Path -Path $StagingArea -ChildPath "$($InputXMLObj.SiPolicy.PolicyID).cip") | Out-Null
+                            Merge-CIPolicy -PolicyPaths $PolicyToAddLogsTo, $OutputPolicyPathMDEAH -OutputFilePath $PolicyToAddLogsTo | Out-Null
 
-                            Write-Verbose -Message 'ConvertTo-WDACPolicy: Deploying the policy that user selected to add the MDE AH logs to'
+                            # Set HVCI to Strict
+                            Set-HVCIOptions -Strict -FilePath $PolicyToAddLogsTo
 
-                            &'C:\Windows\System32\CiTool.exe' --update-policy (Join-Path -Path $StagingArea -ChildPath "$($InputXMLObj.SiPolicy.PolicyID).cip") -json | Out-Null
+                            if ($Deploy) {
+                                ConvertFrom-CIPolicy -XmlFilePath $PolicyToAddLogsTo -BinaryFilePath (Join-Path -Path $StagingArea -ChildPath "$($InputXMLObj.SiPolicy.PolicyID).cip") | Out-Null
+
+                                Write-Verbose -Message 'ConvertTo-WDACPolicy: Deploying the policy that user selected to add the MDE AH logs to'
+
+                                &'C:\Windows\System32\CiTool.exe' --update-policy (Join-Path -Path $StagingArea -ChildPath "$($InputXMLObj.SiPolicy.PolicyID).cip") -json | Out-Null
+                            }
                         }
-                    }
-                    else {
-                        Write-Verbose -Message 'ConvertTo-WDACPolicy: Copying the policy file to the User Config directory'
 
-                        Edit-CiPolicyRuleOptions -Action Supplemental -XMLFile $OutputPolicyPathMDEAH
+                        Default {
 
-                        Set-HVCIOptions -Strict -FilePath $OutputPolicyPathMDEAH
+                            Write-Verbose -Message 'ConvertTo-WDACPolicy: Copying the policy file to the User Config directory'
 
-                        Copy-Item -Path $OutputPolicyPathMDEAH -Destination $UserConfigDir -Force
+                            Edit-CiPolicyRuleOptions -Action Supplemental -XMLFile $OutputPolicyPathMDEAH
+
+                            Set-HVCIOptions -Strict -FilePath $OutputPolicyPathMDEAH
+
+                            Copy-Item -Path $OutputPolicyPathMDEAH -Destination $UserConfigDir -Force
+
+                        }
                     }
 
                     #Endregion Base To Supplemental Policy Association and Deployment
+                }
+                'EVTXFiles' {
+
+                    # The total number of the main steps for the progress bar to render
+                    [System.UInt16]$TotalSteps = 7
+                    [System.UInt16]$CurrentStep = 0
+
+                    $CurrentStep++
+                    Write-Progress -Id 32 -Activity 'Processing the selected Evtx files' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
+
+                    [PSCustomObject[]]$EventsToDisplay = Receive-CodeIntegrityLogs -PolicyName:$FilterByPolicyNames -Date:$StartTime -Type:$LogType -LogSource EVTXFiles -EVTXFilePaths $EVTXLogs |
+                    Select-Object -Property @{
+                        Label      = 'File Name'
+                        Expression = {
+                            # Can't use Get-Item or Get-ChildItem because the file might not exist on the disk
+                            # Can't use Split-Path -LiteralPath with -Leaf parameter because not supported
+                            [System.String]$TempPath = Split-Path -LiteralPath $_.'File Name'
+                            $_.'File Name'.Replace($TempPath, '').TrimStart('\')
+                        }
+                    },
+                    'TimeCreated',
+                    'PolicyName',
+                    'ProductName',
+                    'FileVersion',
+                    'OriginalFileName',
+                    'FileDescription',
+                    'InternalName',
+                    'PackageFamilyName',
+                    @{
+                        Label      = 'Full Path'
+                        Expression = { $_.'File Name' }
+                    },
+                    'Validated Signing Level',
+                    'Requested Signing Level',
+                    'SI Signing Scenario',
+                    'UserId',
+                    @{
+                        Label      = 'Publishers'
+                        Expression = { [System.String[]]$_.'Publishers' }
+                    },
+                    'SHA256 Hash',
+                    'SHA256 Flat Hash',
+                    'SHA1 Hash',
+                    'SHA1 Flat Hash',
+                    'PolicyGUID',
+                    'PolicyHash',
+                    'ActivityId',
+                    'Process Name',
+                    'UserWriteable',
+                    'PolicyID',
+                    'Status',
+                    'USN',
+                    'SignatureStatus',
+                    'SignerInfo'
+
+                    $CurrentStep++
+                    Write-Progress -Id 32 -Activity 'sorting the logs' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
+
+                    # If the KernelModeOnly switch is used, then filter the events by the 'Requested Signing Level' property
+                    if ($KernelModeOnly) {
+                        $EventsToDisplay = $EventsToDisplay | Where-Object -FilterScript { $_.'SI Signing Scenario' -eq 'Kernel-Mode' }
+                    }
+
+                    # Sort the events by TimeCreated in descending order
+                    [PSCustomObject[]]$EventsToDisplay = $EventsToDisplay | Sort-Object -Property TimeCreated -Descending
+
+                    if (($null -eq $EventsToDisplay) -and ($EventsToDisplay.Count -eq 0)) {
+                        Write-ColorfulText -Color HotPink -InputText 'No logs were found to display based on the current filters. Exiting...'
+                        return
+                    }
+
+                    #Region Out-GridView properties visibility settings
+
+                    # If the ExtremeVisibility switch is used, then display all the properties of the logs without any filtering
+                    if (-NOT $ExtremeVisibility) {
+                        Set-LogPropertiesVisibility -LogType Evtx/Local -EventsToDisplay $EventsToDisplay
+                    }
+
+                    #Endregion Out-GridView properties visibility settings
+
+                    $CurrentStep++
+                    Write-Progress -Id 32 -Activity 'Displaying the logs' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
+
+                    # Display the logs in a grid view using the build-in cmdlet
+                    $SelectedLogs = $EventsToDisplay | Out-GridView -OutputMode Multiple -Title "Displaying $($EventsToDisplay.count) $LogType Code Integrity Logs"
+
+                    Write-Verbose -Message "ConvertTo-WDACPolicy: Selected logs count: $($SelectedLogs.count)"
+
+                    if (($null -eq $SelectedLogs) -or ( $SelectedLogs.Count -eq 0)) {
+                        Write-ColorfulText -Color HotPink -InputText 'No logs were selected to create a WDAC policy from. Exiting...'
+                        return
+                    }
+
+                    # Define the path where the final Evtx XML policy file will be saved
+                    [System.IO.FileInfo]$OutputPolicyPathEVTX = Join-Path -Path $StagingArea -ChildPath "Policy from Evtx files $CurrentDate.xml"
+
+                    Write-Verbose -Message 'Copying the template policy to the staging area'
+                    Copy-Item -LiteralPath 'C:\Windows\schemas\CodeIntegrity\ExamplePolicies\AllowAll.xml' -Destination $OutputPolicyPathEVTX -Force
+
+                    Write-Verbose -Message 'Emptying the policy file in preparation for the new data insertion'
+                    Clear-CiPolicy_Semantic -Path $OutputPolicyPathEVTX
+
+                    $CurrentStep++
+                    Write-Progress -Id 32 -Activity 'Building Signers and file rule' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
+
+                    Write-Verbose -Message 'Building the Signer and Hash objects from the selected Evtx logs'
+                    [PSCustomObject]$DataToUseForBuilding = Build-SignerAndHashObjects -Data $SelectedLogs -IncomingDataType EVTX
+
+                    if ($Null -ne $DataToUseForBuilding.FilePublisherSigners -and $DataToUseForBuilding.FilePublisherSigners.Count -gt 0) {
+                        Write-Verbose -Message 'Creating File Publisher Level rules'
+                        New-FilePublisherLevelRules -FilePublisherSigners $DataToUseForBuilding.FilePublisherSigners -XmlFilePath $OutputPolicyPathEVTX
+                    }
+                    if ($Null -ne $DataToUseForBuilding.PublisherSigners -and $DataToUseForBuilding.PublisherSigners.Count -gt 0) {
+                        Write-Verbose -Message 'Creating Publisher Level rules'
+                        New-PublisherLevelRules -PublisherSigners $DataToUseForBuilding.PublisherSigners -XmlFilePath $OutputPolicyPathEVTX
+                    }
+                    if ($Null -ne $DataToUseForBuilding.CompleteHashes -and $DataToUseForBuilding.CompleteHashes.Count -gt 0) {
+                        Write-Verbose -Message 'Creating Hash Level rules'
+                        New-HashLevelRules -Hashes $DataToUseForBuilding.CompleteHashes -XmlFilePath $OutputPolicyPathEVTX
+                    }
+
+                    # MERGERS
+
+                    $CurrentStep++
+                    Write-Progress -Id 32 -Activity 'Performing merge operations' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
+
+                    Write-Verbose -Message 'Merging the Hash Level rules'
+                    Remove-AllowElements_Semantic -Path $OutputPolicyPathEVTX
+                    Close-EmptyXmlNodes_Semantic -XmlFilePath $OutputPolicyPathEVTX
+
+                    # Remove-UnreferencedFileRuleRefs -xmlFilePath $OutputPolicyPathEVTX
+
+                    $CurrentStep++
+                    Write-Progress -Id 32 -Activity 'Making sure there are no duplicates' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
+
+                    Write-Verbose -Message 'Merging the Signer Level rules'
+                    Remove-DuplicateFileAttrib_Semantic -XmlFilePath $OutputPolicyPathEVTX
+
+                    # 2 passes are necessary
+                    Merge-Signers_Semantic -XmlFilePath $OutputPolicyPathEVTX
+                    Merge-Signers_Semantic -XmlFilePath $OutputPolicyPathEVTX
+
+                    # This function runs twice, once for signed data and once for unsigned data
+                    Close-EmptyXmlNodes_Semantic -XmlFilePath $OutputPolicyPathEVTX
+
+                    #Region Base To Supplemental Policy Association and Deployment
+
+                    $CurrentStep++
+                    Write-Progress -Id 32 -Activity 'Generating the final policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
+
+                    Switch ($True) {
+
+                        { $null -ne $BasePolicyFile } {
+
+                            Write-Verbose -Message 'ConvertTo-WDACPolicy: Associating the Supplemental policy with the user input base policy'
+
+                            # Objectify the user input base policy file to extract its Base policy ID
+                            $InputXMLObj = [System.Xml.XmlDocument](Get-Content -Path $BasePolicyFile)
+
+                            [System.String]$SupplementalPolicyID = Set-CIPolicyIdInfo -FilePath $OutputPolicyPathEVTX -PolicyName "Supplemental Policy from Evtx files - $(Get-Date -Format 'MM-dd-yyyy')" -SupplementsBasePolicyID $InputXMLObj.SiPolicy.BasePolicyID -ResetPolicyID
+                            [System.String]$SupplementalPolicyID = $SupplementalPolicyID.Substring(11)
+
+                            # Configure policy rule options
+                            Edit-CiPolicyRuleOptions -Action Supplemental -XMLFile $OutputPolicyPathEVTX
+
+                            Write-Verbose -Message 'ConvertTo-WDACPolicy: Copying the policy file to the User Config directory'
+                            Copy-Item -Path $OutputPolicyPathEVTX -Destination $UserConfigDir -Force
+
+                            if ($Deploy) {
+                                ConvertFrom-CIPolicy -XmlFilePath $OutputPolicyPathEVTX -BinaryFilePath (Join-Path -Path $StagingArea -ChildPath "$SupplementalPolicyID.cip") | Out-Null
+
+                                Write-Verbose -Message 'ConvertTo-WDACPolicy: Deploying the Supplemental policy'
+
+                                &'C:\Windows\System32\CiTool.exe' --update-policy (Join-Path -Path $StagingArea -ChildPath "$SupplementalPolicyID.cip") -json | Out-Null
+                            }
+                        }
+
+                        { $null -ne $BasePolicyGUID } {
+
+                            Write-Verbose -Message 'ConvertTo-WDACPolicy: Assigning the user input GUID to the base policy ID of the supplemental policy'
+
+                            [System.String]$SupplementalPolicyID = Set-CIPolicyIdInfo -FilePath $OutputPolicyPathEVTX -PolicyName "Supplemental Policy from Evtx files - $(Get-Date -Format 'MM-dd-yyyy')" -SupplementsBasePolicyID $BasePolicyGUID -ResetPolicyID
+                            [System.String]$SupplementalPolicyID = $SupplementalPolicyID.Substring(11)
+
+                            # Configure policy rule options
+                            Edit-CiPolicyRuleOptions -Action Supplemental -XMLFile $OutputPolicyPathEVTX
+
+                            Write-Verbose -Message 'ConvertTo-WDACPolicy: Copying the policy file to the User Config directory'
+                            Copy-Item -Path $OutputPolicyPathEVTX -Destination $UserConfigDir -Force
+
+                            if ($Deploy) {
+                                ConvertFrom-CIPolicy -XmlFilePath $OutputPolicyPathEVTX -BinaryFilePath (Join-Path -Path $StagingArea -ChildPath "$SupplementalPolicyID.cip") | Out-Null
+
+                                Write-Verbose -Message 'ConvertTo-WDACPolicy: Deploying the Supplemental policy'
+
+                                &'C:\Windows\System32\CiTool.exe' --update-policy (Join-Path -Path $StagingArea -ChildPath "$SupplementalPolicyID.cip") -json | Out-Null
+                            }
+                        }
+
+                        { $null -ne $PolicyToAddLogsTo } {
+
+                            Write-Verbose -Message 'ConvertTo-WDACPolicy: Adding the logs to the policy that user selected'
+
+                            # Objectify the user input policy file to extract its policy ID
+                            $InputXMLObj = [System.Xml.XmlDocument](Get-Content -Path $PolicyToAddLogsTo)
+
+                            Set-CIPolicyIdInfo -FilePath $OutputPolicyPathEVTX -PolicyName "Supplemental Policy from Evtx files - $(Get-Date -Format 'MM-dd-yyyy')" -ResetPolicyID | Out-Null
+
+                            # Remove all policy rule options prior to merging the policies since we don't need to add/remove any policy rule options to/from the user input policy
+                            Edit-CiPolicyRuleOptions -Action RemoveAll -XMLFile $OutputPolicyPathEVTX
+
+                            Merge-CIPolicy -PolicyPaths $PolicyToAddLogsTo, $OutputPolicyPathEVTX -OutputFilePath $PolicyToAddLogsTo | Out-Null
+
+                            # Set HVCI to Strict
+                            Set-HVCIOptions -Strict -FilePath $PolicyToAddLogsTo
+
+                            if ($Deploy) {
+                                ConvertFrom-CIPolicy -XmlFilePath $PolicyToAddLogsTo -BinaryFilePath (Join-Path -Path $StagingArea -ChildPath "$($InputXMLObj.SiPolicy.PolicyID).cip") | Out-Null
+
+                                Write-Verbose -Message 'ConvertTo-WDACPolicy: Deploying the policy that user selected to add the Evtx logs to'
+
+                                &'C:\Windows\System32\CiTool.exe' --update-policy (Join-Path -Path $StagingArea -ChildPath "$($InputXMLObj.SiPolicy.PolicyID).cip") -json | Out-Null
+                            }
+                        }
+
+                        Default {
+                            Write-Verbose -Message 'ConvertTo-WDACPolicy: Copying the policy file to the User Config directory'
+
+                            Edit-CiPolicyRuleOptions -Action Supplemental -XMLFile $OutputPolicyPathEVTX
+
+                            Set-HVCIOptions -Strict -FilePath $OutputPolicyPathEVTX
+
+                            Copy-Item -Path $OutputPolicyPathEVTX -Destination $UserConfigDir -Force
+                        }
+                    }
+
+                    #Endregion Base To Supplemental Policy Association and Deployment
+
                 }
             }
         }
         Finally {
             Write-Progress -Id 30 -Activity 'Complete.' -Completed
             Write-Progress -Id 31 -Activity 'Complete.' -Completed
+            Write-Progress -Id 32 -Activity 'Complete.' -Completed
 
             if (-NOT $Debug) {
                 Remove-Item -Path $StagingArea -Recurse -Force
@@ -924,7 +1207,7 @@ Function ConvertTo-WDACPolicy {
     <#
 .SYNOPSIS
     This is a multi-purpose cmdlet that offers a wide range of functionalities that can either be used separately or mixed together for very detailed and specific tasks.
-    It currently supports Code Integrity and AppLocker logs from the following sources: Local Event logs and Microsoft Defender for Endpoint Advanced Hunting results.
+    It currently supports Code Integrity and AppLocker logs from the following sources: Local Event logs, Evtx log files and Microsoft Defender for Endpoint Advanced Hunting results.
 
     The cmdlet displays the logs in a GUI and allows the user to select the logs to be processed further.
 
@@ -934,6 +1217,9 @@ Function ConvertTo-WDACPolicy {
     Based on the input parameters, it can be associated with a base policy or merged with an existing Base or Supplemental policy.
 .DESCRIPTION
    The cmdlet can be used for local and remote systems. You can utilize this cmdlet to create Application Control for Business policies from MDE Advanced Hunting and then deploy them using Microsoft Intune to your endpoints.
+
+   You can utilize this cmdlet to use the evtx log files you aggregated from your endpoints and create a WDAC policy from them.
+
    This offers scalability and flexibility in managing your security policies.
 .PARAMETER PolicyToAddLogsTo
     The policy to add the selected logs to, it can either be a base or supplemental policy.
@@ -947,11 +1233,14 @@ Function ConvertTo-WDACPolicy {
    It will not display the policies that are already selected on the command line.
    You can manually enter the name of the policies that are no longer available on the system or are from remote systems in case of MDE Advanced Hunting logs.
 .PARAMETER Source
-    The source of the logs: Local Event logs (LocalEventLogs) or Microsoft Defender for Endpoint Advanced Hunting results (MDEAdvancedHunting)
+    The source of the logs: Local Event logs (LocalEventLogs), Microsoft Defender for Endpoint Advanced Hunting results (MDEAdvancedHunting) or EVTX files (EVTXFiles).
     Supports validate set.
 .PARAMETER MDEAHLogs
     The path(s) to use MDE AH CSV files.
     This is a dynamic parameter and will only be available if the Source parameter is set to MDEAdvancedHunting.
+.PARAMETER EVTXLogs
+    The path(s) to use EVTX files.
+    This is a dynamic parameter and will only be available if the Source parameter is set to EVTXFiles.
 .PARAMETER KernelModeOnly
     If used, will filter the logs by including only the Kernel-Mode logs. You can use this parameter to easily create Supplemental policies for Strict Kernel-Mode WDAC policy.
     More info available here: https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDAC-policy-for-BYOVD-Kernel-mode-only-protection
@@ -1009,6 +1298,10 @@ Function ConvertTo-WDACPolicy {
 
     This example will create a new supplemental policy from the selected MDE Advanced Hunting logs and associate it with the specified base policy file and it will deploy it on the system.
     The displayed logs will be from the last 2 days. You will be able to select the logs to create the policy from in the GUI.
+.EXAMPLE
+ConvertTo-WDACPolicy -BasePolicyGUID '{89CD611D-5557-4833-B73D-716B979AEE3D}' -Source EVTXFiles -EVTXLogs "C:\Users\HotCakeX\App Locker logs.evtx","C:\Users\HotCakeX\Code Integrity LOGS.evtx"
+
+This example will create a new supplemental policy from the selected EVTX files and associate it with the specified base policy GUID.
 
 .EXTERNALHELP ..\Help\ConvertTo-WDACPolicy.xml
 #>
@@ -1023,8 +1316,8 @@ Register-ArgumentCompleter -CommandName 'ConvertTo-WDACPolicy' -ParameterName 'B
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCBr0mA4RXu2oBhc
-# U9urauPhn2HuYI3URrI5fyvTPvJg7qCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCC8fVmhmqw1Nh91
+# ot+/2837+pJo8C2smSDKnP7atOKnD6CCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -1071,16 +1364,16 @@ Register-ArgumentCompleter -CommandName 'ConvertTo-WDACPolicy' -ParameterName 'B
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQgFYeb/hSoHlhmH6WMB2vyr6Kv6OPjuvnd2OAXzibMSQswDQYJKoZIhvcNAQEB
-# BQAEggIAREFBZ2psLttbizakjXZCoYKVyMbpT6aq/fiB15sRowYAf1fjJxt8HY9B
-# vRKOjEofB+Pz+HLuUNUarZoh1hIkUVRpxEJbzge+jpXGjOAhzohNHOzT4fnw0ZUr
-# o9EyZnA19PZUWHGhs5S/PEq8vMvPQvzLErFzc2jJHKNVIfn/zx2sxsw/P9Nx1vv1
-# Zn8QZc0cwQrdAAsGVrWzTrzzSSaGjXu0YkBbn+FqxLL+ikmZwH9x6Fhv8y0J6LSg
-# enAzoJyfDKlNOUIBizSgIjJEH+nHlhEZjS0IDEp+Vp28hU7o+730WRKwPBp3hDh2
-# J+fYyHFNf/fewU7bzY47o5QIy5snhi19XUKtsGQNoTT6OskYbQGhGTGEXJeaHSU7
-# vjJ9g41Lt/MfpDCx2raoBimikQ03GXSwYAlKyOE1LILxle886izUER9BYsuTSzzO
-# i59bzLVbKFWnqFvQ23HhlBd+pSp4gx8Gq9KlIPwGSXMN1maoF+/1bSvhS+jtgZJx
-# 38qfFLFzg1F2hI8OA2P9duyZqeE3A0olRQBLrto3qgI2sjiV1YzzXGN9lNV10PyC
-# LPGIdU8se8ch1tv1dEBvUMbZfLokVhzEjaAit9KwKWtZ+O8mc//PGonwU0f8Dw6J
-# eL3EhV0YM2U05cUGuQ9YJeBVpXrhx1XSopG2bXcB2DB5zOEcfPg=
+# IgQgOd1ijymTYbmEoZDbYnglGGPQS3gm8hq2fjIBL7Gqna8wDQYJKoZIhvcNAQEB
+# BQAEggIAO+TeYOqiftPiqjfzPpDTXv021POvpbx7En1RINdDwVzsMToqu1PbBnKd
+# uEzeDYwQtug2LEDkXJH6K7M6XKbUqeulCxUMPH0q5FRSbsqM5EDjjmJv+Cm5vpN2
+# kb0GiufxGJvUChHthm8Es0taN7FnEEmMSBwd4A3bTGBrZ1NYBddC0mWT6yfZrntL
+# VBKdMEhJIW0ixS1gDQ2WwiaSiViFiogwPoWtSjUn1kIYHToN+kkbMiAc7HjQkfX7
+# +Bw5xIZLh4R8ZqL+e0qKNuCK1UAYcZVqBWwW1KVR2dxevAblC4GfLkeDpJzYByoR
+# SmSLzjj9o8HudlNXG1vLdf1JxUjLISlguCcx94Wjr80AkX8c1vNQec/qBYKrFJqu
+# b0XEbEQdtVggFs7POypGLQYCtZ0p6zw0aIROY9M565CkMAOznR9jgIP+GeqfiVaf
+# MIaw7ZCIXqz8HzBioXuCEUhcRkjrJRna3mh+ughvFhazccPZtTA9fc+hwriDlIp+
+# Ls81h6PpDMbo2fXVlCUxCctVi7PJnfuUaoWBelXjzp8ihZkE5r3mT1UF6HSaARgR
+# qPDaAu4Y5/TMArMSLAqzHvobNhqquF0C+jLQDxnpeYgLsBNPQ0NYZ/XZwhy0694M
+# sILHpwj/249UQDTpkb+e8pCGJAkGUON9zKi4IJ6EPjK5wkUQ3vs=
 # SIG # End signature block

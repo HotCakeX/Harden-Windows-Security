@@ -7,6 +7,7 @@ ConvertTo-WDACPolicy
     [-PolicyToAddLogsTo <FileInfo>]
     [-Source <String>]
     [-MDEAHLogs <FileInfo[]>]
+    [-EVTXLogs <FileInfo[]>]
     [-FilterByPolicyNames <String[]>]
     [-TimeSpan <String>]
     [-TimeSpanAgo <UInt64>]
@@ -22,6 +23,7 @@ ConvertTo-WDACPolicy
     [-BasePolicyFile <FileInfo>]
     [-Source <String>]
     [-MDEAHLogs <FileInfo[]>]
+    [-EVTXLogs <FileInfo[]>]
     [-FilterByPolicyNames <String[]>]
     [-TimeSpan <String>]
     [-TimeSpanAgo <UInt64>]
@@ -37,6 +39,7 @@ ConvertTo-WDACPolicy
     [-BasePolicyGUID <Guid>]
     [-Source <String>]
     [-MDEAHLogs <FileInfo[]>]
+    [-EVTXLogs <FileInfo[]>]
     [-FilterByPolicyNames <String[]>]
     [-TimeSpan <String>]
     [-TimeSpanAgo <UInt64>]
@@ -51,7 +54,11 @@ ConvertTo-WDACPolicy
 
 This is a multi-purpose cmdlet that offers a wide range of functionalities that can either be used separately or mixed together for very detailed and specific tasks.
 
-It currently supports Code Integrity and AppLocker logs from the following sources: Local Event logs and Microsoft Defender for Endpoint Advanced Hunting results.
+It currently supports Code Integrity and AppLocker logs from the following sources:
+
+* **Local Event logs**
+* **Evtx log files**
+* **Microsoft Defender for Endpoint Advanced Hunting results**
 
 The cmdlet displays the logs in a GUI and allows the user to select the logs to be processed further.
 
@@ -59,6 +66,12 @@ The logs can be filtered based on many criteria using the available parameters.
 
 The output of this cmdlet is a Supplemental Application Control (WDAC) policy.
 Based on the input parameters, it can be associated with a base policy or merged with an existing Base or Supplemental policy.
+
+The cmdlet can be used for local and remote systems. You can utilize this cmdlet to create Application Control for Business policies from MDE Advanced Hunting and then deploy them using Microsoft Intune to your endpoints.
+
+You can utilize this cmdlet to use the evtx log files you aggregated from your endpoints and create a WDAC policy from them.
+
+This offers scalability and flexibility in managing your security policies.
 
 ## Parameters
 
@@ -140,7 +153,7 @@ Supports validate set and auto-completion, press TAB key to view the list of the
 | :-------------: | :-------------: |
 | Aliases: | Src |
 | Position: | Named |
-| Default value: | None |
+| Default value: | LocalEventLogs |
 | Required: | False |
 | Accept pipeline input: | False |
 | Accept wildcard characters: | False |
@@ -175,6 +188,30 @@ The path(s) to use MDE AH CSV files.
 | Type: |[FileInfo](https://learn.microsoft.com/en-us/dotnet/api/system.io.fileinfo)[]|
 | :-------------: | :-------------: |
 | Aliases: | MDELogs |
+| Position: | Named |
+| Default value: | None |
+| Required: | False |
+| Accept pipeline input: | False |
+| Accept wildcard characters: | False |
+
+</div>
+
+<br>
+
+### -EVTXLogs
+
+The path(s) of EVTX files to use.
+
+> [!NOTE]\
+> This is a dynamic parameter and will only be available if the Source parameter is set to EVTXFiles.
+
+<br>
+
+<div align='center'>
+
+| Type: |[FileInfo](https://learn.microsoft.com/en-us/dotnet/api/system.io.fileinfo)[]|
+| :-------------: | :-------------: |
+| Aliases: | Evtx |
 | Position: | Named |
 | Default value: | None |
 | Required: | False |

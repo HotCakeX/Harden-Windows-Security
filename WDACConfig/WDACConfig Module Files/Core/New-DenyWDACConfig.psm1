@@ -57,6 +57,8 @@ Function New-DenyWDACConfig {
         [Parameter(Mandatory = $false, ParameterSetName = 'Installed AppXPackages')]
         [System.Management.Automation.SwitchParameter]$Force,
 
+        [Parameter(Mandatory = $false, ParameterSetName = 'Folder Path With WildCards')][System.Management.Automation.SwitchParameter]$EmbeddedVerboseOutput,
+
         [Parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$SkipVersionCheck
     )
 
@@ -372,8 +374,15 @@ Function New-DenyWDACConfig {
                 Write-Verbose -Message 'Converting the policy XML to .CIP'
                 ConvertFrom-CIPolicy -XmlFilePath $FinalDenyPolicyPath -BinaryFilePath $FinalDenyPolicyCIPPath | Out-Null
 
-                Write-ColorfulText -Color MintGreen -InputText "DenyPolicyFile = $FinalDenyPolicyPath"
-                Write-ColorfulText -Color MintGreen -InputText "DenyPolicyGUID = $FinalDenyPolicyCIPPath"
+                # Used for when the WDACConfig module is in the embedded mode by the Harden Windows Security module
+                if ($EmbeddedVerboseOutput) {
+                    Write-Verbose -Message "DenyPolicyFile = $FinalDenyPolicyPath"
+                    Write-Verbose -Message "DenyPolicyGUID = $FinalDenyPolicyCIPPath"
+                }
+                else {
+                    Write-ColorfulText -Color MintGreen -InputText "DenyPolicyFile = $FinalDenyPolicyPath"
+                    Write-ColorfulText -Color MintGreen -InputText "DenyPolicyGUID = $FinalDenyPolicyCIPPath"
+                }
 
                 if ($Deploy) {
                     $CurrentStep++
@@ -382,7 +391,12 @@ Function New-DenyWDACConfig {
                     Write-Verbose -Message 'Deploying the policy'
                     &'C:\Windows\System32\CiTool.exe' --update-policy $FinalDenyPolicyCIPPath -json | Out-Null
 
-                    Write-ColorfulText -Color Pink -InputText "A Deny Base policy with the name $PolicyName has been deployed."
+                    if ($EmbeddedVerboseOutput) {
+                        Write-Verbose -Message "A Deny Base policy with the name $PolicyName has been deployed."
+                    }
+                    else {
+                        Write-ColorfulText -Color Pink -InputText "A Deny Base policy with the name $PolicyName has been deployed."
+                    }
                 }
                 Write-Progress -Id 29 -Activity 'Complete.' -Completed
             }
@@ -473,8 +487,8 @@ Register-ArgumentCompleter -CommandName 'New-DenyWDACConfig' -ParameterName 'Fol
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCCDhx8vCKc14W2L
-# sFN7dYix6g/5ucF9B6zLWIMF2yJkF6CCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCDcX4aYvb/3xnLb
+# QSRPQPFCRNVd3Vvt/5Ya6x9YNFiMMKCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -521,16 +535,16 @@ Register-ArgumentCompleter -CommandName 'New-DenyWDACConfig' -ParameterName 'Fol
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQgU56Q5x6eh0MWg5wJvtSN6rh+gJGwzLy2obeFdOHPdkwwDQYJKoZIhvcNAQEB
-# BQAEggIAGa48lIJqNO+T2vn8HAPLhxgJHwWg+JXnATBt3Rezt0sM5r2OWaSf3xeo
-# 2iHTJQ8x5SrwBjTE08m2Q2NZiK28bWMyk8YIEjDNa/YInsYXFdB+W/r0qRfxymfM
-# 4pSR8R+ihaFjOh7DJPNLmLC28auRYwoGjrCDIUGFdwhbm0bxxIlOr10Vo7CcMoY5
-# seXhTbigBuRijwXn7xdPKPq7HOeWGI93c8+y7PD06wA6Z3HxyzbzrsPoA46vj17C
-# GpTg6vonXbLBrJOH06LFsk4qo/4+NE5aEjw34Uvdg1sL93UKdZ6TDX1bCD+gkiyH
-# G72QoT9Y7+wgl5MZ1UGWPI4DPU0nkWU/murBQ1Oc6qwds5RKvapLqkvFxWDJ8ho4
-# WQsBbD41hPoXyjQfneJI3+rHRo9TUr599EEQZsHEwaZ04Y+76tAHPGPsw4ePV36j
-# OBe2CdWHU0gmUSvwrbO/WBWDyxKU5oW4ngOET+byetJH2Q28bj5/71RFTny0dq94
-# 91qAXuVFCvrIokBDmCe0YzqQBtOfanyQLA6FZtOlSkuJqfOz4FS2Vxo8DgM2ZLX4
-# khtnQgqAXliUup0C6uQ+Yl2IK3P6Xv3wndlR7sBqGJOA8Ltp3bTedH+BksARj4nz
-# 8gtAgf8a4S43mfYG9bESCYgbs92W+h8tseD9kT9J+thoRat5tEA=
+# IgQghs8ydAzLaJOj+CZMAO7+Si0MpUt+DG061gov0459yGYwDQYJKoZIhvcNAQEB
+# BQAEggIAQAh+5qwwqc0JPL36GwDptWW3Uz+jRZPnyz0LYhCQQMO0oYNFnfuL+XwN
+# 5OvN/d/jHUogdmo7tiMutjxJd6dYZ4+OKWydDQnncSWtXqF+gzMN9oQDpyRgNMFP
+# cmLNnDakLB/9R+HcFe5Hfvc9wU3X8chWbMfxweOGjilDrSMS7UoL//56JEVKsrDo
+# ssn70LQGScm6WhJuzSZ443f40xd9zd8jsDrnBjU067lxfC20opwjJgoLFSE+YJdq
+# dXjEEzo1V0Rrn/LXr+6DjDPxtkTPftJdIRSRQCKLFtfByM6pDM3dYA7EPkXxXt0d
+# xAtyw3gkjAWnbERTcPeAmEdue4seHNYtq1HIIer2cBAuydJq6cQyYLpZUxvypKfp
+# Lt2+S3L3ouG94NLBcP1oI0/xdScaB0hEzEMiuU4Dn9Irev7YSYvxxbBmCpcvKy+T
+# VGtMGY7ox8PsEczsahJxteOm+Y2Izb9fBMWoe4tVhq60SQA8GkPkeAAnHwBfrEQU
+# KCVCOuNU999X52eoNMjcug8hTlz1A3C9ZBlQe2BGjZzelAazZHk7e6tg9p7XRySy
+# ojIugjKL4YGbEzE2DiIxG/HIG5ZqqQsyT/wckSOc9+1BNV3YgPvFym3/abjEdj5p
+# g3BvbbYDy0/Ef3jmxMSI3nZlhGHbOj8wRd8GlQPq7mQ82i2X4wg=
 # SIG # End signature block

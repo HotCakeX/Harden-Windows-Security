@@ -823,7 +823,7 @@ Function ConvertTo-WDACPolicy {
                     Write-Progress -Id 31 -Activity 'Building the Signer and Hash objects from the selected MDE AH logs' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
                     Write-Verbose -Message 'Building the Signer and Hash objects from the selected MDE AH logs'
-                    [PSCustomObject]$DataToUseForBuilding = Build-SignerAndHashObjects -Data $SelectMDEAHLogs
+                    [PSCustomObject]$DataToUseForBuilding = Build-SignerAndHashObjects -Data $SelectMDEAHLogs -IncomingDataType MDEAH
 
                     $CurrentStep++
                     Write-Progress -Id 31 -Activity 'Creating rules for different levels' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
@@ -1102,7 +1102,7 @@ Function ConvertTo-WDACPolicy {
                     Write-Progress -Id 32 -Activity 'Building Signers and file rule' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
                     Write-Verbose -Message 'Building the Signer and Hash objects from the selected Evtx logs'
-                    [PSCustomObject]$DataToUseForBuilding = Build-SignerAndHashObjects -Data $SelectedLogs
+                    [PSCustomObject]$DataToUseForBuilding = Build-SignerAndHashObjects -Data $SelectedLogs -IncomingDataType EVTX
 
                     if ($Null -ne $DataToUseForBuilding.FilePublisherSigners -and $DataToUseForBuilding.FilePublisherSigners.Count -gt 0) {
                         Write-Verbose -Message 'Creating File Publisher Level rules'

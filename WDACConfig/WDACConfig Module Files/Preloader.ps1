@@ -45,11 +45,36 @@ foreach ($File in (Get-ChildItem -Recurse -File -Path $ModuleRootPath -Include '
 }
 
 
+<#
+The reason behind this:
+
+https://github.com/MicrosoftDocs/WDAC-Toolkit/pull/365
+https://github.com/MicrosoftDocs/WDAC-Toolkit/issues/362
+
+Features:
+
+Short-circuits the cmdlet and finishes in 2 seconds.
+put in the preloader script so it only runs once in the runspace.
+No output is shown whatsoever (warning, error etc.)
+Any subsequent attempts to run New-CiPolicy cmdlet will work normally without any errors or warnings.
+The path I chose exists in Windows by default, and it contains very few PEs, something that is required for that error to be produced.
+Test-Path is used for more resiliency.
+-PathToCatroot is used and set to the same path as -ScanPath, this combination causes the operation to gracefully end prematurely.
+The XML file is never created.
+XML file is created but then immediately deleted. Its file name is random to minimize name collisions.
+#>
+
+if (Test-Path -LiteralPath 'C:\Program Files\Windows Defender\Offline' -PathType Container) {
+    [System.String]$RandomGUID = [System.Guid]::NewGuid().ToString()
+    New-CIPolicy -UserPEs -ScanPath 'C:\Program Files\Windows Defender\Offline' -Level hash -FilePath ".\$RandomGUID.xml" -NoShadowCopy -PathToCatroot 'C:\Program Files\Windows Defender\Offline' -WarningAction SilentlyContinue
+    Remove-Item -LiteralPath ".\$RandomGUID.xml" -Force
+}
+
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCA/cPKNrqU/exWm
-# 637JKcRteGOOgrP2redJ9G5nfDAO8qCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCC5Rd+63rWXviV8
+# ScMUF8tVC/rTjuuIxbQmgnmlYmf22aCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -96,16 +121,16 @@ foreach ($File in (Get-ChildItem -Recurse -File -Path $ModuleRootPath -Include '
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQgcNQvb8VJvZ1j8qhOrVDRBcHlT0AkEo2pHZo9S7781hAwDQYJKoZIhvcNAQEB
-# BQAEggIAVTTKuxFRVuCuK1z3zBtuQokL++5jJgBe5KVsklrk2YXS9+cvIWbEyIuI
-# V2x9HjWBkINmtV7r8GlN4sB45+wsIhbCf6ybnHSl3dA9MW02AYKdeHI19S4m88gJ
-# 9aHLLBROliQwQKzO7NlFdlCTqKJRKlNo/bfooWqvttO+zITQPf5PcMMmmHqQJIuM
-# BLwyu5dydg/5ONVKrNF+Bm73Oiec2fZl7DXCmItAHnI7Gj1IzdkHLOVIz2BMfcLM
-# L5AutW/8Fo6ukeE43QcifjXPGaa0cJ+NFoBBmM+74FB4Lql3EGE4EQ/8eqbv1LVo
-# /wRBF6XfCEVCT0rV7OCWB9I9Wq2WjljugjqnO5lqLnHJRhCRtvrmckunukdWqmSj
-# /jglNX4VQ6N5U0QLXB496sMnfJImcTedUl2r/8S0hv3YHZEowhGjDn9LlNK0MWJY
-# zQHcwpiyEcWUKHXm3UKVV0VR6ZvQLrDr4IKYu2GGdoUhq3AgGpDcQDy6zqc4f4QX
-# afdkIZsHfb/RJ29FzzFbtFlqOVwM09nJUQjKYl2tYMJcNwJieKSveuBOlzN0fGKL
-# ro+e1elyTc5YDYD/DDvpzqXmKHaloALyZo2AjqyZNc4Ewv+F58DyMKRw4toBaGil
-# ApC6lpnbIoePSomsoHlxlCsknCjb+HLwqEe5M2773m0MpLl+Kl4=
+# IgQgqqSe8+peM3nWd4RWDSl9+prxXWKk9muAM08KVTNQ4wIwDQYJKoZIhvcNAQEB
+# BQAEggIAm/pIz6QJ+EO80QuheBLn2BS/XrSnG5gOnqXQMnkS3Uu3AJzvt6Rf1w1A
+# VWn1j/is6DyBEMOEF/HTDuMqVbzTuGn4dtVfHNjjNqKq+KW7yKzkfk9S692+h6Y1
+# l/2DGkh9zSo1NvfWpaLBaaY+zWbomo5zJA397se34Ng+4nprqM1v2Z2aM4xRRmYb
+# Pib8484/NSfl490mzVDCqzcPEInrZPR4V9AlkOcu+zA6Qkan8HL6gYZGfj/4N/cI
+# GweGz6eIdceQf7n6jLQ/xFdVMWJXyxZB+rOfBQraV1wKECiANKntqM0msA3srEGT
+# ZUCRyuk/n/lvrn4LOc0b8c5w4NRnl54ChJi57fGw72U4GYVxX41iiwUYhA+rPNvv
+# urOak/z7ThDpFCGtsGck5X0iA+gIp/psbJTgbe2ejwWmUJh32Uycd9EoW2WtATO7
+# tHFWgWecAYx4k9OYOZKNSmIw5PP10Mp7KMVpWEYWGcPBAz24gsbvrmtC04wmsAVT
+# VU39ICBbcfKU+GraUr7coyhBLqCY5JJ6QUOr61VCHuG7q0tqb1RIDaCIFZx6Bk1B
+# tHJpyHZGJGnSJ6VS81KqxqD50Y3sJmLimGiZ9KrzvlIUTEcALitcnqoHLQ4RAN6n
+# hr9X5LI9pnTPU2fw8nwttqbHLB8VKhlmeQ2GKEEwoirMVB9+LJk=
 # SIG # End signature block

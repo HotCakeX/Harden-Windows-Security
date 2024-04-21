@@ -197,7 +197,7 @@ Aliases: Src
 
 Required: False
 Position: Named
-Default value: Event Logs
+Default value: LocalEventLogs
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
@@ -218,7 +218,7 @@ Accept wildcard characters: False
 ```
 
 ### -EVTXLogs
-The path(s) to use EVTX files.
+The path(s) of EVTX files to use.
 This is a dynamic parameter and will only be available if the Source parameter is set to EVTXFiles.
 
 ```yaml

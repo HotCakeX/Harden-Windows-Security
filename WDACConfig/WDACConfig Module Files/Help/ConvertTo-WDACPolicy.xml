@@ -43,7 +43,7 @@
             <maml:name>String</maml:name>
             <maml:uri />
           </dev:type>
-          <dev:defaultValue>Event Logs</dev:defaultValue>
+          <dev:defaultValue>LocalEventLogs</dev:defaultValue>
         </command:parameter>
         <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="MDELogs">
           <maml:name>MDEAHLogs</maml:name>
@@ -60,7 +60,7 @@
         <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="Evtx">
           <maml:name>EVTXLogs</maml:name>
           <maml:description>
-            <maml:para>The path(s) to use EVTX files. This is a dynamic parameter and will only be available if the Source parameter is set to EVTXFiles.</maml:para>
+            <maml:para>The path(s) of EVTX files to use. This is a dynamic parameter and will only be available if the Source parameter is set to EVTXFiles.</maml:para>
           </maml:description>
           <command:parameterValue required="true" variableLength="false">FileInfo[]</command:parameterValue>
           <dev:type>
@@ -199,7 +199,7 @@
             <maml:name>String</maml:name>
             <maml:uri />
           </dev:type>
-          <dev:defaultValue>Event Logs</dev:defaultValue>
+          <dev:defaultValue>LocalEventLogs</dev:defaultValue>
         </command:parameter>
         <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="MDELogs">
           <maml:name>MDEAHLogs</maml:name>
@@ -216,7 +216,7 @@
         <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="Evtx">
           <maml:name>EVTXLogs</maml:name>
           <maml:description>
-            <maml:para>The path(s) to use EVTX files. This is a dynamic parameter and will only be available if the Source parameter is set to EVTXFiles.</maml:para>
+            <maml:para>The path(s) of EVTX files to use. This is a dynamic parameter and will only be available if the Source parameter is set to EVTXFiles.</maml:para>
           </maml:description>
           <command:parameterValue required="true" variableLength="false">FileInfo[]</command:parameterValue>
           <dev:type>
@@ -355,7 +355,7 @@
             <maml:name>String</maml:name>
             <maml:uri />
           </dev:type>
-          <dev:defaultValue>Event Logs</dev:defaultValue>
+          <dev:defaultValue>LocalEventLogs</dev:defaultValue>
         </command:parameter>
         <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="MDELogs">
           <maml:name>MDEAHLogs</maml:name>
@@ -372,7 +372,7 @@
         <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="Evtx">
           <maml:name>EVTXLogs</maml:name>
           <maml:description>
-            <maml:para>The path(s) to use EVTX files. This is a dynamic parameter and will only be available if the Source parameter is set to EVTXFiles.</maml:para>
+            <maml:para>The path(s) of EVTX files to use. This is a dynamic parameter and will only be available if the Source parameter is set to EVTXFiles.</maml:para>
           </maml:description>
           <command:parameterValue required="true" variableLength="false">FileInfo[]</command:parameterValue>
           <dev:type>
@@ -535,7 +535,7 @@
           <maml:name>String</maml:name>
           <maml:uri />
         </dev:type>
-        <dev:defaultValue>Event Logs</dev:defaultValue>
+        <dev:defaultValue>LocalEventLogs</dev:defaultValue>
       </command:parameter>
       <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="MDELogs">
         <maml:name>MDEAHLogs</maml:name>
@@ -552,7 +552,7 @@
       <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="Evtx">
         <maml:name>EVTXLogs</maml:name>
         <maml:description>
-          <maml:para>The path(s) to use EVTX files. This is a dynamic parameter and will only be available if the Source parameter is set to EVTXFiles.</maml:para>
+          <maml:para>The path(s) of EVTX files to use. This is a dynamic parameter and will only be available if the Source parameter is set to EVTXFiles.</maml:para>
         </maml:description>
         <command:parameterValue required="true" variableLength="false">FileInfo[]</command:parameterValue>
         <dev:type>

@@ -602,6 +602,19 @@ Function Receive-CodeIntegrityLogs {
     }
 
     End {
+
+        # Assigning null to the variables that are empty since users of this function need null values for empty variables
+        $Output.All.Audit.Count -gt 1 ? $Output.All.Audit : $null
+        $Output.All.Blocked.Count -gt 1 ? $Output.All.Blocked : $null
+        $Output.Existing.Audit.Count -gt 1 ? $Output.Existing.Audit : $null
+        $Output.Existing.Blocked.Count -gt 1 ? $Output.Existing.Blocked : $null
+        $Output.Deleted.Audit.Count -gt 1 ? $Output.Deleted.Audit : $null
+        $Output.Deleted.Blocked.Count -gt 1 ? $Output.Deleted.Blocked : $null
+        $Output.Separated.Audit.AvailableFilesPaths.Count -gt 1 ? $Output.Separated.Audit.AvailableFilesPaths : $null
+        $Output.Separated.Audit.DeletedFileHashes.Count -gt 1 ? $Output.Separated.Audit.DeletedFileHashes : $null
+        $Output.Separated.Blocked.AvailableFilesPaths.Count -gt 1 ? $Output.Separated.Blocked.AvailableFilesPaths : $null
+        $Output.Separated.Blocked.DeletedFileHashes.Count -gt 1 ? $Output.Separated.Blocked.DeletedFileHashes : $null
+
         Switch ($PostProcessing) {
             'Separate' {
                 if ($Type -eq 'Audit') {
@@ -651,8 +664,8 @@ Export-ModuleMember -Function 'Receive-CodeIntegrityLogs'
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCAagKm7wgfubjHE
-# OdZk5FK09ZeMr0MxMkwtE9gvBNtc3KCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCCnd2r+Kkm1IrVj
+# EZdgPY6mxjudRU+z64ET05m9zNRjDaCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -699,16 +712,16 @@ Export-ModuleMember -Function 'Receive-CodeIntegrityLogs'
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQggDjH0zt/lkYSqIdkODk/d1ORrKdK3go14Os2+wXWyvswDQYJKoZIhvcNAQEB
-# BQAEggIAdDSpziNvBimnazLh0vQ2za2rPPiKkYjQKhjALFsqNg5XH6KYCwKwFzQ9
-# A0HKhrsm9etc/bOJATtNA2aqvi53tiaMnNWwEIL/fNPYksqtayuAUiYLOTqDhQmB
-# UDUUkj7O+AcISL1loOSiJEaf0kWuO5OGdDDIXxr3XwIXOtEcTHJOwUb4bH8W6fE2
-# yE0cOj4U+YyP3oQt9h5joARxv4VHjWOG5kDZAcsWTumRYLIxG2NWwZaH9ndvaLIr
-# Mdsd+jZHRZ9fEkWSJ1HUyQEpTMeOmhfk9uI+X6KE7qeAXZkrtieHUSm3LijQEf5H
-# HhoekF58l+WAuNF1wyDGgDGJTUy2ftgaBd91YzbU2RNB1js5ovMIg4/C9/4hdOV6
-# EHtQwruGcttYfCUodizSw6i2nnHzhnWhnG133ogZNIL9hW4OD07AIMhi6D8OoCss
-# gU7XYjprVZrHGyaABsKwKiXFPe5g9jGmerJuvie5xbwHLNq5DdutBLatJlwtjXE2
-# utaktk3PAOFX2BXxhbVoLRtJCrxHWFDWZNHxUFQr6Ir5+WPCO2tFIPzCqhIeIz8O
-# O2ZiXkKOS0eVwzWxtSS6MGmjDD5lKbjsqlnkWDdWAEo02PBL34PigKRWaa2xcwmk
-# YE/dFc6DLS42f85vBLrNTkuX897lSPUtGTRnrXGKiHJeGqV0zHA=
+# IgQgrUpbcJvNnqV4nRV4nFGY+5jOfdfZ8s2FcEKTwVTyNeswDQYJKoZIhvcNAQEB
+# BQAEggIAKLR6qPI9lchjEdjSPUBHcMdehRRChlh6deUWZh4ZPAVgFvKBfnKhSPB8
+# uYTCDeffC87+sxVZBATCDl5nH+4MZkGVDQX6lrDZn3RvyoOiQHmE4QEAHuloTUxX
+# Uuew/E1a+LvBDpH+VoGXtyFKjUfm9O9bAy7/VOB2kWq+4CNyi4tVFuQ208w1sEDU
+# JcrqGR9EvQVVHDtzSkOUMj0oIYSWXQTx8F+BvqZ0aqkyZEo/cZDoQUue6iAq5X2H
+# +W0ixUsWGx6UIlT6Pb65/tnYsp71nhTFA6f3i79DxIi/xyJXhg+owa50bf9VfsJQ
+# Ay9fES1Op84Hs/ph9vYjf1BeS1GPyEcZBWSLpr/Gux0VAw/+Q0bszFHx92pzA+hD
+# ekiHaHhNRLLLl0IekFvw4LT9+ix3b60/lsEZVcVo8bA8jYLdtis/6o67QAhECjfq
+# A45FYHhz+4b5QCgJVVBcCRQm/mexAakZhDWaMhBsgqDDg9r78Xjc6WeexpfLWMOD
+# /WUg6ye2/0tTwoQhJz0FmxIXw7hRjPFYH7Vb+IvqyvGTUgEzTnSX8ruQwE7OP4LU
+# 2j/lwQwUymIxITAvuliQBrlKD9LW8nqPPC4D6iX2HXtoEtJeQroauLSic7AoNOgL
+# uZUOY7aSNLZUQbFdwGL4mFU/FnbR7bkxxGX8xoTfwNFcVQwD5PM=
 # SIG # End signature block

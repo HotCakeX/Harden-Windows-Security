@@ -306,7 +306,8 @@ Function ConvertTo-WDACPolicy {
             "$ModuleRootPath\Shared\New-EmptyPolicy.psm1",
             "$ModuleRootPath\Shared\Get-RuleRefs.psm1",
             "$ModuleRootPath\Shared\Get-FileRules.psm1",
-            "$ModuleRootPath\Shared\New-StagingArea.psm1"
+            "$ModuleRootPath\Shared\New-StagingArea.psm1",
+            "$ModuleRootPath\Shared\Set-LogPropertiesVisibility.psm1"
         )
         # Add XML Ops module to the list of modules to import
         $ModulesToImport += (Get-ChildItem -File -Filter '*.psm1' -LiteralPath "$ModuleRootPath\XMLOps").FullName
@@ -432,22 +433,7 @@ Function ConvertTo-WDACPolicy {
 
                     # If the ExtremeVisibility switch is used, then display all the properties of the logs without any filtering
                     if (-NOT $ExtremeVisibility) {
-
-                        [System.String[]]$PropertiesToDisplay = @('TimeCreated', 'File Name', 'Full Path', 'Process Name', 'ProductName', 'OriginalFileName', 'InternalName', 'PackageFamilyName', 'FileVersion', 'Publishers', 'PolicyName', 'SI Signing Scenario')
-
-                        # Create a PSPropertySet object that contains the names of the properties to be visible
-                        # Used for Out-GridView display
-                        # https://learn.microsoft.com/en-us/dotnet/api/system.management.automation.pspropertyset
-                        # https://learn.microsoft.com/en-us/powershell/scripting/learn/deep-dives/everything-about-pscustomobject#using-defaultpropertyset-the-long-way
-                        $Visible = [System.Management.Automation.PSPropertySet]::new(
-                            'DefaultDisplayPropertySet', # the name of the property set
-                            $PropertiesToDisplay # the names of the properties to be visible
-                        )
-
-                        # Add the PSPropertySet object to the PSStandardMembers member set of each element of the $EventsToDisplay array
-                        foreach ($Element in $EventsToDisplay) {
-                            $Element | Add-Member -MemberType 'MemberSet' -Name 'PSStandardMembers' -Value $Visible
-                        }
+                        Set-LogPropertiesVisibility -LogType Evtx/Local -EventsToDisplay $EventsToDisplay
                     }
 
                     #Endregion Out-GridView properties visibility settings
@@ -776,22 +762,7 @@ Function ConvertTo-WDACPolicy {
 
                     # If the ExtremeVisibility switch is used, then display all the properties of the logs without any filtering
                     if (-NOT $ExtremeVisibility) {
-
-                        [System.String[]]$PropertiesToDisplay = @('TimeStamp', 'DeviceName', 'FileName', 'FolderPath', 'InitiatingProcessFileName', 'SignatureStatus', 'PolicyName', 'OriginalFileName', 'InternalName', 'PackageFamilyName', 'FileVersion', 'Type', 'SISigningScenario')
-
-                        # Create a PSPropertySet object that contains the names of the properties to be visible
-                        # Used for Out-GridView display
-                        # https://learn.microsoft.com/en-us/dotnet/api/system.management.automation.pspropertyset
-                        # https://learn.microsoft.com/en-us/powershell/scripting/learn/deep-dives/everything-about-pscustomobject#using-defaultpropertyset-the-long-way
-                        $Visible = [System.Management.Automation.PSPropertySet]::new(
-                            'DefaultDisplayPropertySet', # the name of the property set
-                            $PropertiesToDisplay # the names of the properties to be visible
-                        )
-
-                        # Add the PSPropertySet object to the PSStandardMembers member set of each element of the $EventsToDisplay array
-                        foreach ($Element in $MDEAHLogsToDisplay) {
-                            $Element | Add-Member -MemberType 'MemberSet' -Name 'PSStandardMembers' -Value $Visible
-                        }
+                        Set-LogPropertiesVisibility -LogType MDEAH -EventsToDisplay $MDEAHLogsToDisplay
                     }
 
                     #Endregion Out-GridView properties visibility settings
@@ -1056,22 +1027,7 @@ Function ConvertTo-WDACPolicy {
 
                     # If the ExtremeVisibility switch is used, then display all the properties of the logs without any filtering
                     if (-NOT $ExtremeVisibility) {
-
-                        [System.String[]]$PropertiesToDisplay = @('TimeCreated', 'File Name', 'Full Path', 'Process Name', 'ProductName', 'OriginalFileName', 'InternalName', 'PackageFamilyName', 'FileVersion', 'Publishers', 'PolicyName', 'SI Signing Scenario')
-
-                        # Create a PSPropertySet object that contains the names of the properties to be visible
-                        # Used for Out-GridView display
-                        # https://learn.microsoft.com/en-us/dotnet/api/system.management.automation.pspropertyset
-                        # https://learn.microsoft.com/en-us/powershell/scripting/learn/deep-dives/everything-about-pscustomobject#using-defaultpropertyset-the-long-way
-                        $Visible = [System.Management.Automation.PSPropertySet]::new(
-                            'DefaultDisplayPropertySet', # the name of the property set
-                            $PropertiesToDisplay # the names of the properties to be visible
-                        )
-
-                        # Add the PSPropertySet object to the PSStandardMembers member set of each element of the $EventsToDisplay array
-                        foreach ($Element in $EventsToDisplay) {
-                            $Element | Add-Member -MemberType 'MemberSet' -Name 'PSStandardMembers' -Value $Visible
-                        }
+                        Set-LogPropertiesVisibility -LogType Evtx/Local -EventsToDisplay $EventsToDisplay
                     }
 
                     #Endregion Out-GridView properties visibility settings

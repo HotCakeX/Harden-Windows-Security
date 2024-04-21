@@ -433,7 +433,7 @@ Function ConvertTo-WDACPolicy {
                     # If the ExtremeVisibility switch is used, then display all the properties of the logs without any filtering
                     if (-NOT $ExtremeVisibility) {
 
-                        [System.String[]]$PropertiesToDisplay = @('TimeCreated', 'PolicyName', 'File Name', 'ProductName', 'FileVersion', 'OriginalFileName', 'InternalName', 'PackageFamilyName', 'Full Path', 'SI Signing Scenario', 'Process Name', 'Publishers')
+                        [System.String[]]$PropertiesToDisplay = @('TimeCreated', 'File Name', 'Full Path', 'Process Name', 'ProductName', 'OriginalFileName', 'InternalName', 'PackageFamilyName', 'FileVersion', 'Publishers', 'PolicyName', 'SI Signing Scenario')
 
                         # Create a PSPropertySet object that contains the names of the properties to be visible
                         # Used for Out-GridView display
@@ -777,7 +777,7 @@ Function ConvertTo-WDACPolicy {
                     # If the ExtremeVisibility switch is used, then display all the properties of the logs without any filtering
                     if (-NOT $ExtremeVisibility) {
 
-                        [System.String[]]$PropertiesToDisplay = @('TimeStamp', 'DeviceName', 'Type', 'SHA256', 'FileName', 'FolderPath', 'InitiatingProcessFileName', 'SignatureStatus', 'PolicyName', 'OriginalFileName', 'InternalName', 'PackageFamilyName', 'FileVersion', 'SISigningScenario')
+                        [System.String[]]$PropertiesToDisplay = @('TimeStamp', 'DeviceName', 'FileName', 'FolderPath', 'InitiatingProcessFileName', 'SignatureStatus', 'PolicyName', 'OriginalFileName', 'InternalName', 'PackageFamilyName', 'FileVersion', 'Type', 'SISigningScenario')
 
                         # Create a PSPropertySet object that contains the names of the properties to be visible
                         # Used for Out-GridView display
@@ -1057,7 +1057,7 @@ Function ConvertTo-WDACPolicy {
                     # If the ExtremeVisibility switch is used, then display all the properties of the logs without any filtering
                     if (-NOT $ExtremeVisibility) {
 
-                        [System.String[]]$PropertiesToDisplay = @('TimeCreated', 'PolicyName', 'File Name', 'ProductName', 'FileVersion', 'OriginalFileName', 'InternalName', 'PackageFamilyName', 'Full Path', 'Process Name', 'SI Signing Scenario', 'Publishers')
+                        [System.String[]]$PropertiesToDisplay = @('TimeCreated', 'File Name', 'Full Path', 'Process Name', 'ProductName', 'OriginalFileName', 'InternalName', 'PackageFamilyName', 'FileVersion', 'Publishers', 'PolicyName', 'SI Signing Scenario')
 
                         # Create a PSPropertySet object that contains the names of the properties to be visible
                         # Used for Out-GridView display

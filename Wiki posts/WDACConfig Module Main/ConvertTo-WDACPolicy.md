@@ -143,7 +143,7 @@ The GUID of the base policy to associate the supplemental policy with.
 
 ### -Source
 
-The source of the logs: Local Event logs (LocalEventLogs) or Microsoft Defender for Endpoint Advanced Hunting results (MDEAdvancedHunting)
+The source of the logs: Local Event logs (LocalEventLogs), Microsoft Defender for Endpoint Advanced Hunting results (MDEAdvancedHunting) or EVTX files (EVTXFiles).
 
 Supports validate set and auto-completion, press TAB key to view the list of the available options.
 

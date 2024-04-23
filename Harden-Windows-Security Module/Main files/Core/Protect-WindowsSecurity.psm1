@@ -2743,6 +2743,9 @@ Execution Policy: $CurrentExecutionPolicy
                 $SyncHash['GlobalVars']['WorkingDir'] = $WorkingDir
                 $SyncHash['GlobalVars']['BootDMAProtectionCheck'] = $BootDMAProtectionCheck
 
+                # Adding the parent host to the synchronized hashtable
+                $SyncHash.ParentHost = $Host
+
                 # Pass any necessary function as nested hashtable inside of the main synced hashtable
                 # so they can be easily passed to any other RunSpaces
                 'Write-GUI', 'Start-FileDownload', 'Edit-Registry', 'Block-CountryIP' | ForEach-Object -Process {
@@ -4114,8 +4117,8 @@ Execution Policy: $CurrentExecutionPolicy
                                             }
                                         } -args $SelectedCategories.Count, ($Offline ? $true : $false), "$WorkingDir\ToastNotificationIcon.png" *>&1 # To display any error message or other streams from the script block on the console
 
-                                        # Display the runspace count on the GUI for debugging purposes
-                                        # Write-Host -Object "Current RunSpace Count is: $((Get-Runspace).Count)"
+                                        # Display the runspace count for debugging purposes
+                                        # $SyncHash.ParentHost.UI.WriteDebugLine("Current RunSpace Count is: $((Get-Runspace).Count)")
                                     }
                                     else {
                                         Write-GUI -Text 'No category was selected'

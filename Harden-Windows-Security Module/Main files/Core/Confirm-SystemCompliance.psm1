@@ -181,13 +181,13 @@ function Confirm-SystemCompliance {
 
                 # Try to get the registry key
                 try {
-                    $regKey = Get-Item -Path $Item.regPath
+                    Get-Item -Path $Item.RegPath | Out-Null
                     # If no error is thrown, the key exists
                     $KeyExists = $true
 
                     # Try to get the registry value and type
                     try {
-                        $RegValue = Get-ItemPropertyValue -Path $Item.regPath -Name $Item.Name
+                        $RegValue = Get-ItemPropertyValue -Path $Item.RegPath -Name $Item.Name
                         # If no error is thrown, the value exists
 
                         # Check if the value matches the expected one
@@ -280,7 +280,7 @@ function Confirm-SystemCompliance {
             }
         }
 
-        # Define a validate set class for the colors
+        # Defining a validate set class for the colors
         Class Colorsx : System.Management.Automation.IValidateSetValuesGenerator {
             [System.String[]] GetValidValues() {
                 $Colorsx = @($global:ColorsMap.Keys)
@@ -1699,7 +1699,7 @@ function Confirm-SystemCompliance {
             }
             #Endregion Main-Functions
 
-            :MainSwitchLabel Switch ($Categories) {
+            Switch ($Categories) {
                 'MicrosoftDefender' { Invoke-MicrosoftDefender -CurrentMainStep $CurrentMainStep -TotalMainSteps $TotalMainSteps -MDAVPreferencesCurrent $MDAVPreferencesCurrent -MDAVConfigCurrent $MDAVConfigCurrent -HardeningModulePath $HardeningModulePath -RefTotalNumberOfTrueCompliantValues $RefTotalNumberOfTrueCompliantValues -FinalMegaObject $FinalMegaObject }
                 'AttackSurfaceReductionRules' { Invoke-AttackSurfaceReductionRules -CurrentMainStep $CurrentMainStep -TotalMainSteps $TotalMainSteps -MDAVPreferencesCurrent $MDAVPreferencesCurrent -MDAVConfigCurrent $MDAVConfigCurrent -HardeningModulePath $HardeningModulePath -RefTotalNumberOfTrueCompliantValues $RefTotalNumberOfTrueCompliantValues -FinalMegaObject $FinalMegaObject }
                 'BitLockerSettings' { Invoke-BitLockerSettings -CurrentMainStep $CurrentMainStep -TotalMainSteps $TotalMainSteps -MDAVPreferencesCurrent $MDAVPreferencesCurrent -MDAVConfigCurrent $MDAVConfigCurrent -HardeningModulePath $HardeningModulePath -RefTotalNumberOfTrueCompliantValues $RefTotalNumberOfTrueCompliantValues -FinalMegaObject $FinalMegaObject }

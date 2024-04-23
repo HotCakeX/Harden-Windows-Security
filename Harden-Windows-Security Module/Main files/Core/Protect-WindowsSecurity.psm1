@@ -943,8 +943,49 @@ Function Protect-WindowsSecurity {
                 }
             }
         }
-        #Endregion Helper-Functions-All-Experiences
+        Function Write-GUI {
+            <#
+            .SYNOPSIS
+                A function to write text to the GUI
+            .INPUTS
+                System.String
+            #>
+            [CmdletBinding()]
+            [OutputType([System.String])]
+            Param (
+                [Parameter(Mandatory = $true)][System.String]$Text
+            )
 
+            Begin {
+                Function FindScrollViewer($Control) {
+                    <#
+                .SYNOPSIS
+                    A helper function to find the ScrollViewer in the GUI
+                #>
+                    while (($null -ne $Control) -and (-not ($Control -is [System.Windows.Controls.ScrollViewer]))) {
+                        $Control = [System.Windows.Media.VisualTreeHelper]::GetParent($Control)
+                    }
+                    return $Control
+                }
+            }
+
+            Process {
+                # Add the text to the synchronized array list as log messages
+                $SyncHash.Logger.Add([System.String](Get-Date) + ': ' + [System.String]$Text) | Out-Null
+
+                # Use Dispatcher.Invoke to update the GUI elements on the main thread
+                $SyncHash.Window.Dispatcher.Invoke({
+                        # Since other output streams such as verbose, error, warning are not converted to strings, we need to convert them manually
+                        $SyncHash.TextBox.Text += [System.String]$Text + "`n"
+
+                        # Find the ScrollViewer and scroll to the bottom
+                        $ScrollViewer = FindScrollViewer -Control $SyncHash.TextBox
+                        if ($null -ne $ScrollViewer) {
+                            $ScrollViewer.ScrollToBottom()
+                        }
+                    }, [System.Windows.Threading.DispatcherPriority]::Background)
+            }
+        }
         Function Start-FileDownload {
             <#
             .SYNOPSIS
@@ -1123,6 +1164,7 @@ Function Protect-WindowsSecurity {
             }
             Write-Verbose -Message 'Finished downloading and processing the required files'
         }
+        #Endregion Helper-Functions-All-Experiences
 
         # Determining whether to use the files inside the module or download them from the GitHub repository
         [System.Boolean]$IsLocally = $false
@@ -1262,50 +1304,6 @@ Function Protect-WindowsSecurity {
 
             # Capture the currently available RunSpaces before initiating any new RunSpaces
             $RunSpacesBefore = Get-Runspace
-
-            Function Write-GUI {
-                <#
-                .SYNOPSIS
-                    A function to write text to the GUI
-                .INPUTS
-                    System.String
-                #>
-                [CmdletBinding()]
-                [OutputType([System.String])]
-                Param (
-                    [Parameter(Mandatory = $true)][System.String]$Text
-                )
-
-                Begin {
-                    Function FindScrollViewer($Control) {
-                        <#
-                    .SYNOPSIS
-                        A helper function to find the ScrollViewer in the GUI
-                    #>
-                        while (($null -ne $Control) -and (-not ($Control -is [System.Windows.Controls.ScrollViewer]))) {
-                            $Control = [System.Windows.Media.VisualTreeHelper]::GetParent($Control)
-                        }
-                        return $Control
-                    }
-                }
-
-                Process {
-                    # Add the text to the synchronized array list as log messages
-                    $SyncHash.Logger.Add([System.String](Get-Date) + ': ' + [System.String]$Text) | Out-Null
-
-                    # Use Dispatcher.Invoke to update the GUI elements on the main thread
-                    $SyncHash.Window.Dispatcher.Invoke({
-                            # Since other output streams such as verbose, error, warning are not converted to strings, we need to convert them manually
-                            $SyncHash.TextBox.Text += [System.String]$Text + "`n"
-
-                            # Find the ScrollViewer and scroll to the bottom
-                            $ScrollViewer = FindScrollViewer -Control $SyncHash.TextBox
-                            if ($null -ne $ScrollViewer) {
-                                $ScrollViewer.ScrollToBottom()
-                            }
-                        }, [System.Windows.Threading.DispatcherPriority]::Background)
-                }
-            }
 
             # A synchronized hashtable to store all of the data that needs to be shared between the RunSpaces
             $SyncHash = [System.Collections.Hashtable]::Synchronized(@{})
@@ -1911,13 +1909,6 @@ Execution Policy: $CurrentExecutionPolicy
 
                             # Gather selected sub-categories
                             # $SelectedSubCategories = $SyncHash.SubCategoriesListView.Items | Where-Object -FilterScript { $_.Content.IsChecked } | ForEach-Object -Process { $_.Content.Content }
-
-                            # Output the selected categories and sub-categories to the console
-                            # $SelectedCategories *>&1 | ForEach-Object -Process {
-                            #     Write-GUI -Text $_ }
-
-                            # $SelectedSubCategories *>&1 | ForEach-Object -Process {
-                            #    Write-GUI -Text $_ }
 
                             # Make the Write-Verbose cmdlet write verbose messages regardless of the global preference or selected parameter
                             # That is the main source of the messages in the GUI

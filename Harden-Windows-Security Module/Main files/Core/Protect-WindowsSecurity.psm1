@@ -852,8 +852,11 @@ Function Protect-WindowsSecurity {
             [CmdletBinding()]
             param (
                 [parameter(Mandatory = $True)][System.String[]]$IPList,
-                [parameter(Mandatory = $True)][System.String]$ListName
+                [parameter(Mandatory = $True)][System.String]$ListName,
+                [Parameter(mandatory = $false)][System.Management.Automation.SwitchParameter]$GUI
             )
+
+            Import-Module -Name NetSecurity -Force
 
             # converts the list from string to string array
             [System.String[]]$IPList = $IPList -split '\r?\n' -ne ''
@@ -863,8 +866,9 @@ Function Protect-WindowsSecurity {
                 # delete previous rules (if any) to get new up-to-date IP ranges from the sources and set new rules
                 Remove-NetFirewallRule -DisplayName "$ListName IP range blocking" -PolicyStore localhost -ErrorAction SilentlyContinue
 
-                New-NetFirewallRule -DisplayName "$ListName IP range blocking" -Direction Inbound -Action Block -LocalAddress Any -RemoteAddress $IPList -Description "$ListName IP range blocking" -EdgeTraversalPolicy Block -PolicyStore localhost
-                New-NetFirewallRule -DisplayName "$ListName IP range blocking" -Direction Outbound -Action Block -LocalAddress Any -RemoteAddress $IPList -Description "$ListName IP range blocking" -EdgeTraversalPolicy Block -PolicyStore localhost
+                [System.Management.Automation.ScriptBlock]$Commands1 = { New-NetFirewallRule -DisplayName "$ListName IP range blocking" -Direction Inbound -Action Block -LocalAddress Any -RemoteAddress $IPList -Description "$ListName IP range blocking" -EdgeTraversalPolicy Block -PolicyStore localhost }
+                [System.Management.Automation.ScriptBlock]$Commands2 = { New-NetFirewallRule -DisplayName "$ListName IP range blocking" -Direction Outbound -Action Block -LocalAddress Any -RemoteAddress $IPList -Description "$ListName IP range blocking" -EdgeTraversalPolicy Block -PolicyStore localhost }
+                if (-NOT $GUI) { &$Commands1; &$Commands2 } else { &$Commands1 | Out-Null; &$Commands2 | Out-Null }
             }
             else {
                 Write-Warning -Message "The IP list was empty, skipping $ListName"
@@ -1376,7 +1380,7 @@ Execution Policy: $CurrentExecutionPolicy
 
             # Pass any necessary function as nested hashtable inside of the main synced hashtable
             # so they can be easily passed to any other RunSpaces
-            'Write-GUI', 'Start-FileDownload', 'Edit-Registry' | ForEach-Object -Process {
+            'Write-GUI', 'Start-FileDownload', 'Edit-Registry', 'Block-CountryIP' | ForEach-Object -Process {
                 $SyncHash['ExportedFunctions']["$_"] = Get-Item -Path "Function:$_"
             }
 
@@ -1967,43 +1971,6 @@ Execution Policy: $CurrentExecutionPolicy
                                 }
 
                                 #Region Helper-Functions-GUI-Experience
-                                function Block-CountryIP {
-                                    <#
-.SYNOPSIS
-    A function that gets a list of IP addresses and a name for them, then adds those IP addresses in the firewall block rules
-.NOTES
-    -RemoteAddress in New-NetFirewallRule accepts array according to Microsoft Docs,
-    so we use "[System.String[]]$IPList = $IPList -split '\r?\n' -ne ''" to convert the IP lists, which is a single multiline string, into an array
-
-    how to query the number of IPs in each rule
-    (Get-NetFirewallRule -DisplayName "OFAC Sanctioned Countries IP range blocking" -PolicyStore localhost | Get-NetFirewallAddressFilter).RemoteAddress.count
-.INPUTS
-    System.String
-    System.String[]
-.OUTPUTS
-    System.Void
-    #>
-                                    [CmdletBinding()]
-                                    param (
-                                        [parameter(Mandatory = $True)][System.String[]]$IPList,
-                                        [parameter(Mandatory = $True)][System.String]$ListName
-                                    )
-
-                                    # converts the list from string to string array
-                                    [System.String[]]$IPList = $IPList -split '\r?\n' -ne ''
-
-                                    # make sure the list isn't empty
-                                    if ($IPList.count -ne 0) {
-                                        # delete previous rules (if any) to get new up-to-date IP ranges from the sources and set new rules
-                                        Remove-NetFirewallRule -DisplayName "$ListName IP range blocking" -PolicyStore localhost -ErrorAction SilentlyContinue
-
-                                        New-NetFirewallRule -DisplayName "$ListName IP range blocking" -Direction Inbound -Action Block -LocalAddress Any -RemoteAddress $IPList -Description "$ListName IP range blocking" -EdgeTraversalPolicy Block -PolicyStore localhost | Out-Null
-                                        New-NetFirewallRule -DisplayName "$ListName IP range blocking" -Direction Outbound -Action Block -LocalAddress Any -RemoteAddress $IPList -Description "$ListName IP range blocking" -EdgeTraversalPolicy Block -PolicyStore localhost | Out-Null
-                                    }
-                                    else {
-                                        Write-Warning -Message "The IP list was empty, skipping $ListName"
-                                    }
-                                }
                                 function Edit-Addons {
                                     <#
     .SYNOPSIS
@@ -2607,12 +2574,12 @@ Execution Policy: $CurrentExecutionPolicy
                                     Write-Verbose -Message 'Running the Country IP Blocking category'
 
                                     Write-Verbose -Message 'Blocking IP ranges of countries in State Sponsors of Terrorism list'
-                                    Block-CountryIP -IPList (Invoke-RestMethod -Uri 'https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/Curated-Lists/StateSponsorsOfTerrorism.txt') -ListName 'State Sponsors of Terrorism'
+                                    Block-CountryIP -IPList (Invoke-RestMethod -Uri 'https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/Curated-Lists/StateSponsorsOfTerrorism.txt') -ListName 'State Sponsors of Terrorism' -GUI
 
                                     :IPBlockingOFACLabel switch ($CountryIPBlocking_OFAC ? 'Yes' : 'No') {
                                         'Yes' {
                                             Write-Verbose -Message 'Blocking IP ranges of countries in OFAC sanction list'
-                                            Block-CountryIP -IPList (Invoke-RestMethod -Uri 'https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/Curated-Lists/OFACSanctioned.txt') -ListName 'OFAC Sanctioned Countries'
+                                            Block-CountryIP -IPList (Invoke-RestMethod -Uri 'https://raw.githubusercontent.com/HotCakeX/Official-IANA-IP-blocks/main/Curated-Lists/OFACSanctioned.txt') -ListName 'OFAC Sanctioned Countries' -GUI
                                         } 'No' { break IPBlockingOFACLabel }
                                     }
                                 }

@@ -2450,7 +2450,7 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                     Write-Verbose -Message 'Running the Downloads Defense Measures category'
                     Write-Progress -Id 0 -Activity 'Downloads Defense Measures' -Status "Step $($RefCurrentMainStep.Value)/$TotalMainSteps" -PercentComplete ($RefCurrentMainStep.Value / $TotalMainSteps * 100)
 
-                    if (-NOT (Get-InstalledModule -Name 'WDACConfig' -ErrorAction SilentlyContinue -Verbose:$false)) {
+                    if (-NOT (Get-Module -ListAvailable -Name 'WDACConfig' -Verbose:$false)) {
                         Write-Verbose -Message 'Installing WDACConfig module because it is not installed'
                         Install-Module -Name 'WDACConfig' -Force -Verbose:$false
                     }
@@ -2489,7 +2489,7 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                         }
 
                         Write-Verbose -Message 'Creating and deploying the Downloads-Defense-Measures policy'
-                        New-DenyWDACConfig -PathWildCards -PolicyName 'Downloads-Defense-Measures' -FolderPath "$DownloadsPathSystem\*" -Deploy -Verbose:$Verbose -SkipVersionCheck
+                        New-DenyWDACConfig -PathWildCards -PolicyName 'Downloads-Defense-Measures' -FolderPath "$DownloadsPathSystem\*" -Deploy -Verbose:$Verbose -SkipVersionCheck -EmbeddedVerboseOutput
                     }
                     else {
                         Write-Verbose -Message 'The Downloads-Defense-Measures policy is already deployed'
@@ -3944,7 +3944,7 @@ Execution Policy: $CurrentExecutionPolicy
                                     Write-Verbose -Message 'Processing the Downloads Defense Measures category function'
                                     Write-Verbose -Message 'Running the Downloads Defense Measures category'
 
-                                    if (-NOT (Get-InstalledModule -Name 'WDACConfig' -ErrorAction SilentlyContinue -Verbose:$false)) {
+                                    if (-NOT (Get-Module -ListAvailable -Name 'WDACConfig' -Verbose:$false)) {
                                         Write-Verbose -Message 'Installing WDACConfig module because it is not installed'
                                         Install-Module -Name 'WDACConfig' -Force -Verbose:$false
                                     }
@@ -3983,7 +3983,7 @@ Execution Policy: $CurrentExecutionPolicy
                                         }
 
                                         Write-Verbose -Message 'Creating and deploying the Downloads-Defense-Measures policy'
-                                        New-DenyWDACConfig -PathWildCards -PolicyName 'Downloads-Defense-Measures' -FolderPath "$DownloadsPathSystem\*" -Deploy -Verbose:$Verbose -SkipVersionCheck
+                                        New-DenyWDACConfig -PathWildCards -PolicyName 'Downloads-Defense-Measures' -FolderPath "$DownloadsPathSystem\*" -Deploy -Verbose:$Verbose -SkipVersionCheck -EmbeddedVerboseOutput
                                     }
                                     else {
                                         Write-Verbose -Message 'The Downloads-Defense-Measures policy is already deployed'
@@ -4171,8 +4171,9 @@ End time: $(Get-Date)
             if ($SyncHash.Error) {
                 $SyncHash.Error | ForEach-Object -Process {
                     # Only show the terminating error message instead of those suppressed by -ErrorAction SilentlyContinue
-                    if ($null -ne $_.InnerException) {
+                    if ($null -ne $_.Exception.InnerException) {
                         Write-Host -Object $_.Exception.Message -ForegroundColor Red
+                        Write-Host -Object $_.exception.CommandInvocation -ForegroundColor Red
                     }
                 }
             }

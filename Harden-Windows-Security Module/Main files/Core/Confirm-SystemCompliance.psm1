@@ -51,7 +51,6 @@ function Confirm-SystemCompliance {
 
         Write-Verbose -Message 'Checking for updates...'
         Update-Self -InvocationStatement $MyInvocation.Statement
-
         Class Categoriex : System.Management.Automation.IValidateSetValuesGenerator {
             [System.String[]] GetValidValues() {
                 $Categoriex = @(
@@ -221,21 +220,73 @@ function Confirm-SystemCompliance {
         }
         #EndRegion defining-Functions
 
-        #Region Colors
-        [System.Management.Automation.ScriptBlock]$WritePlum = { Write-Output -InputObject "$($PSStyle.Foreground.FromRGB(221,160,221))$($PSStyle.Reverse)$($Args[0])$($PSStyle.Reset)" }
-        [System.Management.Automation.ScriptBlock]$WriteOrchid = { Write-Output -InputObject "$($PSStyle.Foreground.FromRGB(218,112,214))$($PSStyle.Reverse)$($Args[0])$($PSStyle.Reset)" }
-        [System.Management.Automation.ScriptBlock]$WriteFuchsia = { Write-Output -InputObject "$($PSStyle.Foreground.FromRGB(255,0,255))$($PSStyle.Reverse)$($Args[0])$($PSStyle.Reset)" }
-        [System.Management.Automation.ScriptBlock]$WriteMediumOrchid = { Write-Output -InputObject "$($PSStyle.Foreground.FromRGB(186,85,211))$($PSStyle.Reverse)$($Args[0])$($PSStyle.Reset)" }
-        [System.Management.Automation.ScriptBlock]$WriteMediumPurple = { Write-Output -InputObject "$($PSStyle.Foreground.FromRGB(147,112,219))$($PSStyle.Reverse)$($Args[0])$($PSStyle.Reset)" }
-        [System.Management.Automation.ScriptBlock]$WriteBlueViolet = { Write-Output -InputObject "$($PSStyle.Foreground.FromRGB(138,43,226))$($PSStyle.Reverse)$($Args[0])$($PSStyle.Reset)" }
-        [System.Management.Automation.ScriptBlock]$AndroidGreen = { Write-Output -InputObject "$($PSStyle.Foreground.FromRGB(176,191,26))$($PSStyle.Reverse)$($Args[0])$($PSStyle.Reset)" }
-        [System.Management.Automation.ScriptBlock]$WritePink = { Write-Output -InputObject "$($PSStyle.Foreground.FromRGB(255,192,203))$($PSStyle.Reverse)$($Args[0])$($PSStyle.Reset)" }
-        [System.Management.Automation.ScriptBlock]$WriteHotPink = { Write-Output -InputObject "$($PSStyle.Foreground.FromRGB(255,105,180))$($PSStyle.Reverse)$($Args[0])$($PSStyle.Reset)" }
-        [System.Management.Automation.ScriptBlock]$WriteDeepPink = { Write-Output -InputObject "$($PSStyle.Foreground.FromRGB(255,20,147))$($PSStyle.Reverse)$($Args[0])$($PSStyle.Reset)" }
-        [System.Management.Automation.ScriptBlock]$WriteMintGreen = { Write-Output -InputObject "$($PSStyle.Foreground.FromRGB(152,255,152))$($PSStyle.Reverse)$($Args[0])$($PSStyle.Reset)" }
-        [System.Management.Automation.ScriptBlock]$WriteOrange = { Write-Output -InputObject "$($PSStyle.Foreground.FromRGB(255,165,0))$($PSStyle.Reverse)$($Args[0])$($PSStyle.Reset)" }
-        [System.Management.Automation.ScriptBlock]$WriteSkyBlue = { Write-Output -InputObject "$($PSStyle.Foreground.FromRGB(135,206,235))$($PSStyle.Reverse)$($Args[0])$($PSStyle.Reset)" }
-        [System.Management.Automation.ScriptBlock]$Daffodil = { Write-Output -InputObject "$($PSStyle.Foreground.FromRGB(255,255,49))$($PSStyle.Reverse)$($Args[0])$($PSStyle.Reset)" }
+        #Region Colors       
+        [System.Collections.Hashtable]$global:ColorsMap = @{
+            Plum         = @{
+                Code        = '221,160,221'
+                ScriptBlock = { Write-Output -InputObject "$($PSStyle.Foreground.FromRGB(221,160,221))$($PSStyle.Reverse)$($Args[0])$($PSStyle.Reset)" }
+            }
+            Orchid       = @{
+                Code        = '218,112,214'
+                ScriptBlock = { Write-Output -InputObject "$($PSStyle.Foreground.FromRGB(218,112,214))$($PSStyle.Reverse)$($Args[0])$($PSStyle.Reset)" }
+            }
+            Fuchsia      = @{
+                Code        = '255,0,255'
+                ScriptBlock = { Write-Output -InputObject "$($PSStyle.Foreground.FromRGB(255,0,255))$($PSStyle.Reverse)$($Args[0])$($PSStyle.Reset)" }
+            }
+            MediumOrchid = @{
+                Code        = '186,85,211'
+                ScriptBlock = { Write-Output -InputObject "$($PSStyle.Foreground.FromRGB(186,85,211))$($PSStyle.Reverse)$($Args[0])$($PSStyle.Reset)" }
+            }
+            MediumPurple = @{
+                Code        = '147,112,219'
+                ScriptBlock = { Write-Output -InputObject "$($PSStyle.Foreground.FromRGB(147,112,219))$($PSStyle.Reverse)$($Args[0])$($PSStyle.Reset)" }
+            }
+            BlueViolet   = @{
+                Code        = '138,43,226'
+                ScriptBlock = { Write-Output -InputObject "$($PSStyle.Foreground.FromRGB(138,43,226))$($PSStyle.Reverse)$($Args[0])$($PSStyle.Reset)" }
+            }
+            AndroidGreen = @{
+                Code        = '176,191,26'
+                ScriptBlock = { Write-Output -InputObject "$($PSStyle.Foreground.FromRGB(176,191,26))$($PSStyle.Reverse)$($Args[0])$($PSStyle.Reset)" }
+            }
+            Pink         = @{
+                Code        = '255,192,203'
+                ScriptBlock = { Write-Output -InputObject "$($PSStyle.Foreground.FromRGB(255,192,203))$($PSStyle.Reverse)$($Args[0])$($PSStyle.Reset)" }
+            }
+            HotPink      = @{
+                Code        = '255,105,180'
+                ScriptBlock = { Write-Output -InputObject "$($PSStyle.Foreground.FromRGB(255,105,180))$($PSStyle.Reverse)$($Args[0])$($PSStyle.Reset)" }
+            }
+            DeepPink     = @{
+                Code        = '255,20,147'
+                ScriptBlock = { Write-Output -InputObject "$($PSStyle.Foreground.FromRGB(255,20,147))$($PSStyle.Reverse)$($Args[0])$($PSStyle.Reset)" }
+            }
+            MintGreen    = @{
+                Code        = '152,255,152'
+                ScriptBlock = { Write-Output -InputObject "$($PSStyle.Foreground.FromRGB(152,255,152))$($PSStyle.Reverse)$($Args[0])$($PSStyle.Reset)" }
+            }
+            Orange       = @{
+                Code        = '255,165,0'
+                ScriptBlock = { Write-Output -InputObject "$($PSStyle.Foreground.FromRGB(255,165,0))$($PSStyle.Reverse)$($Args[0])$($PSStyle.Reset)" }
+            }
+            SkyBlue      = @{
+                Code        = '135,206,235'
+                ScriptBlock = { Write-Output -InputObject "$($PSStyle.Foreground.FromRGB(135,206,235))$($PSStyle.Reverse)$($Args[0])$($PSStyle.Reset)" }
+            }
+            Daffodil     = @{
+                Code        = '255,255,49'
+                ScriptBlock = { Write-Output -InputObject "$($PSStyle.Foreground.FromRGB(255,255,49))$($PSStyle.Reverse)$($Args[0])$($PSStyle.Reset)" }
+            }
+        }
+
+        # Define a validate set class for the colors
+        Class Colorsx : System.Management.Automation.IValidateSetValuesGenerator {
+            [System.String[]] GetValidValues() {
+                $Colorsx = @($global:ColorsMap.Keys)
+                return [System.String[]]$Colorsx
+            }
+        }
 
         # An array of colors used in multiple places
         [System.Drawing.Color[]]$Global:Colors = @(

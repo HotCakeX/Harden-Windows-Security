@@ -4166,7 +4166,7 @@ End time: $(Get-Date)
                     $SyncHash.Error = $Error
                 })
 
-                [System.Void]$GUIPowerShell.Invoke()
+            [System.Void]$GUIPowerShell.Invoke()
 
             if ($SyncHash.Error) {
                 $SyncHash.Error | ForEach-Object -Process {

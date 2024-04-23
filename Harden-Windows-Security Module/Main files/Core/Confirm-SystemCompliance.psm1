@@ -1731,32 +1731,30 @@ function Confirm-SystemCompliance {
                 # Convert the array to a CSV file and store it in the current working directory
                 $CsvOutPutFileContent | ConvertTo-Csv | Out-File -FilePath ".\Compliance Check Output $(Get-Date -Format "MM-dd-yyyy 'at' HH-mm-ss").CSV" -Force
             }
+            function Set-CategoryFormat {
+                [CmdletBinding()]
+                param (
+                    [ValidateSet([Colorsx])]
+                    [Parameter(Mandatory)][System.String]$ColorInput,
+                    [Parameter(Mandatory)][System.String]$CategoryName,
+                    [Parameter(Mandatory)][System.String]$DisplayName,
+                    [Parameter(Mandatory)][System.Collections.Hashtable]$ColorMap,
+                    [Parameter(Mandatory)][PSCustomObject[]]$FinalMegaObject,
+                    [AllowNull()]
+                    [Parameter(Mandatory)][System.String[]]$Categories,
+                    [ValidateSet('List', 'Table')]
+                    [Parameter(Mandatory)][System.String]$Type
+                )
+                # If user selected specific categories and the current function call's category name is not included in them, return from this function
+                if (($null -ne $Categories) -and ($CategoryName -notin $Categories)) { Return }
 
-            if ($ShowAsObjectsOnly) {
-                # return the main object that contains multiple nested objects
-                return $FinalMegaObject
-            }
-            else {
-                # Show all properties in list
-                if ($DetailedDisplay) {
-                    function Set-CategoryFormat {
-                        param (
-                            [ValidateSet([Colorsx])]
-                            [System.String]$ColorInput,
-                            [System.String]$CategoryName,
-                            [System.String]$DisplayName,
-                            [System.Collections.Hashtable]$ColorMap,
-                            [PSCustomObject[]]$FinalMegaObject,
-                            [System.String[]]$Categories
-                        )
-                        # If user selected specific categories and the current function call's category name is not included in them, return from this function
-                        if (($null -ne $CategoryName) -and ($CategoryName -notin $Categories)) { Return }
+                # Assign the array of color codes to a variable for easier/shorter assignments
+                [System.Int32[]]$RGBs = $ColorMap[$ColorInput]['Code']
 
-                        # Assign the array of color codes to a variable for easier/shorter assignments
-                        [System.String]$RGBs = $ColorMap[$ColorInput]['Code']
+                &$ColorMap[$ColorInput]['ScriptBlock'] "`n-------------$DisplayName Category-------------"
 
-                        &$ColorMap[$ColorInput]['ScriptBlock'] "`n-------------$DisplayName Category-------------"
-
+                Switch ($Type) {
+                    'List' {
                         # Setting the List Format Accent the same color as the category's title
                         $PSStyle.Formatting.FormatAccent = $($PSStyle.Foreground.FromRGB($RGBs[0], $RGBs[1], $RGBs[2]))
                         $FinalMegaObject.$CategoryName | Format-List -Property FriendlyName, @{
@@ -1771,263 +1769,45 @@ function Confirm-SystemCompliance {
                             }
                         }, Value, Name, Category, Method
                     }
-                    Set-CategoryFormat -ColorInput Plum -CategoryName 'MicrosoftDefender' -DisplayName 'Microsoft Defender' -ColorMap $global:ColorsMap -FinalMegaObject $FinalMegaObject -Categories $Categories
-                    Set-CategoryFormat -ColorInput Orchid -CategoryName 'AttackSurfaceReductionRules' -DisplayName 'Attack Surface Reduction Rules' -ColorMap $global:ColorsMap -FinalMegaObject $FinalMegaObject -Categories $Categories
-                    Set-CategoryFormat -ColorInput Fuchsia -CategoryName 'BitLockerSettings' -DisplayName 'Bitlocker Category' -ColorMap $global:ColorsMap -FinalMegaObject $FinalMegaObject -Categories $Categories
-                    Set-CategoryFormat -ColorInput MediumOrchid -CategoryName 'TLSSecurity' -DisplayName 'TLS' -ColorMap $global:ColorsMap -FinalMegaObject $FinalMegaObject -Categories $Categories
-                    Set-CategoryFormat -ColorInput MediumPurple -CategoryName 'LockScreen' -DisplayName 'Lock Screen' -ColorMap $global:ColorsMap -FinalMegaObject $FinalMegaObject -Categories $Categories
-                    Set-CategoryFormat -ColorInput BlueViolet -CategoryName 'UserAccountControl' -DisplayName 'User Account Control' -ColorMap $global:ColorsMap -FinalMegaObject $FinalMegaObject -Categories $Categories
-                    Set-CategoryFormat -ColorInput AndroidGreen -CategoryName 'DeviceGuard' -DisplayName 'Device Guard' -ColorMap $global:ColorsMap -FinalMegaObject $FinalMegaObject -Categories $Categories
-                    Set-CategoryFormat -ColorInput Pink -CategoryName 'WindowsFirewall' -DisplayName 'Windows Firewall' -ColorMap $global:ColorsMap -FinalMegaObject $FinalMegaObject -Categories $Categories
-                    Set-CategoryFormat -ColorInput SkyBlue -CategoryName 'OptionalWindowsFeatures' -DisplayName 'Optional Windows Features' -ColorMap $global:ColorsMap -FinalMegaObject $FinalMegaObject -Categories $Categories
-                    Set-CategoryFormat -ColorInput HotPink -CategoryName 'WindowsNetworking' -DisplayName 'Windows Networking' -ColorMap $global:ColorsMap -FinalMegaObject $FinalMegaObject -Categories $Categories
-                    Set-CategoryFormat -ColorInput DeepPink -CategoryName 'MiscellaneousConfigurations' -DisplayName 'Miscellaneous' -ColorMap $global:ColorsMap -FinalMegaObject $FinalMegaObject -Categories $Categories
-                    Set-CategoryFormat -ColorInput MintGreen -CategoryName 'WindowsUpdateConfigurations' -DisplayName 'Windows Update' -ColorMap $global:ColorsMap -FinalMegaObject $FinalMegaObject -Categories $Categories
-                    Set-CategoryFormat -ColorInput Orange -CategoryName 'EdgeBrowserConfigurations' -DisplayName 'Microsoft Edge' -ColorMap $global:ColorsMap -FinalMegaObject $FinalMegaObject -Categories $Categories
-                    Set-CategoryFormat -ColorInput Daffodil -CategoryName 'NonAdminCommands' -DisplayName 'Non-Admin' -ColorMap $global:ColorsMap -FinalMegaObject $FinalMegaObject -Categories $Categories
+                    'Table' {
+                        # Setting the Table header the same color as the category's title
+                        $PSStyle.Formatting.TableHeader = $($PSStyle.Foreground.FromRGB($RGBs[0], $RGBs[1], $RGBs[2]))
+                        $FinalMegaObject.$CategoryName | Format-Table -Property FriendlyName,
+                        @{
+                            Label      = 'Compliant'
+                            Expression =
+                            { switch ($_.Compliant) {
+                                    { $_ -eq $true } { $SwitchColor = $($PSStyle.Foreground.FromRGB($RGBs[0], $RGBs[1], $RGBs[2])); break }
+                                    { $_ -eq $false } { $SwitchColor = "$($PSStyle.Foreground.FromRGB(229,43,80))$($PSStyle.Blink)"; break }
+                                    { $_ -eq 'N/A' } { $SwitchColor = "$($PSStyle.Foreground.FromRGB(238,255,204))"; break }
+                                }
+                                "$SwitchColor$($_.Compliant)$($PSStyle.Reset)"
+                            }
+
+                        } , Value -AutoSize
+                    }
                 }
+            }
 
-                # Show properties that matter in a table
-                else {
-
-                    # Setting the Table header the same color as the category's title
-                    $PSStyle.Formatting.TableHeader = "$($PSStyle.Foreground.FromRGB(221,160,221))"
-                    & $WritePlum "`n-------------Microsoft Defender Category-------------"
-                    $FinalMegaObject.MicrosoftDefender | Format-Table -Property FriendlyName,
-                    @{
-                        Label      = 'Compliant'
-                        Expression =
-                        { switch ($_.Compliant) {
-                                { $_ -eq $true } { $Color = "$($PSStyle.Foreground.FromRGB(221,160,221))"; break }
-                                { $_ -eq $false } { $Color = "$($PSStyle.Foreground.FromRGB(229,43,80))$($PSStyle.Blink)"; break }
-                                { $_ -eq 'N/A' } { $Color = "$($PSStyle.Foreground.FromRGB(238,255,204))"; break }
-                            }
-                            "$Color$($_.Compliant)$($PSStyle.Reset)"
-                        }
-
-                    } , Value -AutoSize
-
-                    # Setting the Table header the same color as the category's title
-                    $PSStyle.Formatting.TableHeader = "$($PSStyle.Foreground.FromRGB(218,112,214))"
-                    & $WriteOrchid "`n-------------Attack Surface Reduction Rules Category-------------"
-                    $FinalMegaObject.ASR | Format-Table -Property FriendlyName,
-                    @{
-                        Label      = 'Compliant'
-                        Expression =
-                        { switch ($_.Compliant) {
-                                { $_ -eq $true } { $Color = "$($PSStyle.Foreground.FromRGB(218,112,214))"; break }
-                                { $_ -eq $false } { $Color = "$($PSStyle.Foreground.FromRGB(229,43,80))$($PSStyle.Blink)"; break }
-                                { $_ -eq 'N/A' } { $Color = "$($PSStyle.Foreground.FromRGB(238,255,204))"; break }
-                            }
-                            "$Color$($_.Compliant)$($PSStyle.Reset)"
-                        }
-
-                    } , Value -AutoSize
-
-                    # Setting the Table header the same color as the category's title
-                    $PSStyle.Formatting.TableHeader = "$($PSStyle.Foreground.FromRGB(255,0,255))"
-                    & $WriteFuchsia "`n-------------Bitlocker Category-------------"
-                    $FinalMegaObject.Bitlocker | Format-Table -Property FriendlyName,
-                    @{
-                        Label      = 'Compliant'
-                        Expression =
-                        { switch ($_.Compliant) {
-                                { $_ -eq $true } { $Color = "$($PSStyle.Foreground.FromRGB(255,0,255))"; break }
-                                { $_ -eq $false } { $Color = "$($PSStyle.Foreground.FromRGB(229,43,80))$($PSStyle.Blink)"; break }
-                                { $_ -eq 'N/A' } { $Color = "$($PSStyle.Foreground.FromRGB(238,255,204))"; break }
-                            }
-                            "$Color$($_.Compliant)$($PSStyle.Reset)"
-                        }
-
-                    } , Value -AutoSize
-
-                    # Setting the Table header the same color as the category's title
-                    $PSStyle.Formatting.TableHeader = "$($PSStyle.Foreground.FromRGB(186,85,211))"
-                    & $WriteMediumOrchid "`n-------------TLS Category-------------"
-                    $FinalMegaObject.TLS | Format-Table -Property FriendlyName,
-                    @{
-                        Label      = 'Compliant'
-                        Expression =
-                        { switch ($_.Compliant) {
-                                { $_ -eq $true } { $Color = "$($PSStyle.Foreground.FromRGB(186,85,211))"; break }
-                                { $_ -eq $false } { $Color = "$($PSStyle.Foreground.FromRGB(229,43,80))$($PSStyle.Blink)"; break }
-                                { $_ -eq 'N/A' } { $Color = "$($PSStyle.Foreground.FromRGB(238,255,204))"; break }
-                            }
-                            "$Color$($_.Compliant)$($PSStyle.Reset)"
-                        }
-
-                    } , Value -AutoSize
-
-                    # Setting the Table header the same color as the category's title
-                    $PSStyle.Formatting.TableHeader = "$($PSStyle.Foreground.FromRGB(147,112,219))"
-                    & $WriteMediumPurple "`n-------------Lock Screen Category-------------"
-                    $FinalMegaObject.LockScreen | Format-Table -Property FriendlyName,
-                    @{
-                        Label      = 'Compliant'
-                        Expression =
-                        { switch ($_.Compliant) {
-                                { $_ -eq $true } { $Color = "$($PSStyle.Foreground.FromRGB(147,112,219))"; break }
-                                { $_ -eq $false } { $Color = "$($PSStyle.Foreground.FromRGB(229,43,80))$($PSStyle.Blink)"; break }
-                                { $_ -eq 'N/A' } { $Color = "$($PSStyle.Foreground.FromRGB(238,255,204))"; break }
-                            }
-                            "$Color$($_.Compliant)$($PSStyle.Reset)"
-                        }
-
-                    } , Value -AutoSize
-
-                    # Setting the Table header the same color as the category's title
-                    $PSStyle.Formatting.TableHeader = "$($PSStyle.Foreground.FromRGB(138,43,226))"
-                    & $WriteBlueViolet "`n-------------User Account Control Category-------------"
-                    $FinalMegaObject.UAC | Format-Table -Property FriendlyName,
-                    @{
-                        Label      = 'Compliant'
-                        Expression =
-                        { switch ($_.Compliant) {
-                                { $_ -eq $true } { $Color = "$($PSStyle.Foreground.FromRGB(138,43,226))"; break }
-                                { $_ -eq $false } { $Color = "$($PSStyle.Foreground.FromRGB(229,43,80))$($PSStyle.Blink)"; break }
-                                { $_ -eq 'N/A' } { $Color = "$($PSStyle.Foreground.FromRGB(238,255,204))"; break }
-                            }
-                            "$Color$($_.Compliant)$($PSStyle.Reset)"
-                        }
-
-                    } , Value -AutoSize
-
-                    # Setting the Table header the same color as the category's title
-                    $PSStyle.Formatting.TableHeader = "$($PSStyle.Foreground.FromRGB(176,191,26))"
-                    & $AndroidGreen "`n-------------Device Guard Category-------------"
-                    $FinalMegaObject.'DeviceGuard' | Format-Table -Property FriendlyName,
-                    @{
-                        Label      = 'Compliant'
-                        Expression =
-                        { switch ($_.Compliant) {
-                                { $_ -eq $true } { $Color = "$($PSStyle.Foreground.FromRGB(176,191,26))"; break }
-                                { $_ -eq $false } { $Color = "$($PSStyle.Foreground.FromRGB(229,43,80))$($PSStyle.Blink)"; break }
-                                { $_ -eq 'N/A' } { $Color = "$($PSStyle.Foreground.FromRGB(238,255,204))"; break }
-                            }
-                            "$Color$($_.Compliant)$($PSStyle.Reset)"
-                        }
-
-                    } , Value -AutoSize
-
-                    # Setting the Table header the same color as the category's title
-                    $PSStyle.Formatting.TableHeader = "$($PSStyle.Foreground.FromRGB(255,192,203))"
-                    & $WritePink "`n-------------Windows Firewall Category-------------"
-                    $FinalMegaObject.'WindowsFirewall' | Format-Table -Property FriendlyName,
-                    @{
-                        Label      = 'Compliant'
-                        Expression =
-                        { switch ($_.Compliant) {
-                                { $_ -eq $true } { $Color = "$($PSStyle.Foreground.FromRGB(255,192,203))"; break }
-                                { $_ -eq $false } { $Color = "$($PSStyle.Foreground.FromRGB(229,43,80))$($PSStyle.Blink)"; break }
-                                { $_ -eq 'N/A' } { $Color = "$($PSStyle.Foreground.FromRGB(238,255,204))"; break }
-                            }
-                            "$Color$($_.Compliant)$($PSStyle.Reset)"
-                        }
-
-                    } , Value -AutoSize
-
-                    # Setting the Table header the same color as the category's title
-                    $PSStyle.Formatting.TableHeader = "$($PSStyle.Foreground.FromRGB(135,206,235))"
-                    & $WriteSkyBlue "`n-------------Optional Windows Features Category-------------"
-                    $FinalMegaObject.'OptionalWindowsFeatures' | Format-Table -Property FriendlyName,
-                    @{
-                        Label      = 'Compliant'
-                        Expression =
-                        { switch ($_.Compliant) {
-                                { $_ -eq $true } { $Color = "$($PSStyle.Foreground.FromRGB(135,206,235))"; break }
-                                { $_ -eq $false } { $Color = "$($PSStyle.Foreground.FromRGB(229,43,80))$($PSStyle.Blink)"; break }
-                                { $_ -eq 'N/A' } { $Color = "$($PSStyle.Foreground.FromRGB(238,255,204))"; break }
-                            }
-                            "$Color$($_.Compliant)$($PSStyle.Reset)"
-                        }
-
-                    } , Value -AutoSize
-
-                    # Setting the Table header the same color as the category's title
-                    $PSStyle.Formatting.TableHeader = "$($PSStyle.Foreground.FromRGB(255,105,180))"
-                    & $WriteHotPink "`n-------------Windows Networking Category-------------"
-                    $FinalMegaObject.'WindowsNetworking' | Format-Table -Property FriendlyName,
-                    @{
-                        Label      = 'Compliant'
-                        Expression =
-                        { switch ($_.Compliant) {
-                                { $_ -eq $true } { $Color = "$($PSStyle.Foreground.FromRGB(255,105,180))"; break }
-                                { $_ -eq $false } { $Color = "$($PSStyle.Foreground.FromRGB(229,43,80))$($PSStyle.Blink)"; break }
-                                { $_ -eq 'N/A' } { $Color = "$($PSStyle.Foreground.FromRGB(238,255,204))"; break }
-                            }
-                            "$Color$($_.Compliant)$($PSStyle.Reset)"
-                        }
-
-                    } , Value -AutoSize
-
-                    # Setting the Table header the same color as the category's title
-                    $PSStyle.Formatting.TableHeader = "$($PSStyle.Foreground.FromRGB(255,20,147))"
-                    & $WriteDeepPink "`n-------------Miscellaneous Category-------------"
-                    $FinalMegaObject.Miscellaneous | Format-Table -Property FriendlyName,
-                    @{
-                        Label      = 'Compliant'
-                        Expression =
-                        { switch ($_.Compliant) {
-                                { $_ -eq $true } { $Color = "$($PSStyle.Foreground.FromRGB(255,20,147))"; break }
-                                { $_ -eq $false } { $Color = "$($PSStyle.Foreground.FromRGB(229,43,80))$($PSStyle.Blink)"; break }
-                                { $_ -eq 'N/A' } { $Color = "$($PSStyle.Foreground.FromRGB(238,255,204))"; break }
-                            }
-                            "$Color$($_.Compliant)$($PSStyle.Reset)"
-                        }
-
-                    } , Value -AutoSize
-
-                    # Setting the Table header the same color as the category's title
-                    $PSStyle.Formatting.TableHeader = "$($PSStyle.Foreground.FromRGB(152,255,152))"
-                    & $WriteMintGreen "`n-------------Windows Update Category-------------"
-                    $FinalMegaObject.'WindowsUpdateConfigurations' | Format-Table -Property FriendlyName,
-                    @{
-                        Label      = 'Compliant'
-                        Expression =
-                        { switch ($_.Compliant) {
-                                { $_ -eq $true } { $Color = "$($PSStyle.Foreground.FromRGB(152,255,152))"; break }
-                                { $_ -eq $false } { $Color = "$($PSStyle.Foreground.FromRGB(229,43,80))$($PSStyle.Blink)"; break }
-                                { $_ -eq 'N/A' } { $Color = "$($PSStyle.Foreground.FromRGB(238,255,204))"; break }
-                            }
-                            "$Color$($_.Compliant)$($PSStyle.Reset)"
-                        }
-
-                    } , Value -AutoSize
-
-                    # Setting the Table header the same color as the category's title
-                    $PSStyle.Formatting.TableHeader = "$($PSStyle.Foreground.FromRGB(255,165,0))"
-                    & $WriteOrange "`n-------------Microsoft Edge Category-------------"
-                    $FinalMegaObject.Edge | Format-Table -Property FriendlyName,
-                    @{
-                        Label      = 'Compliant'
-                        Expression =
-                        { switch ($_.Compliant) {
-                                { $_ -eq $true } { $Color = "$($PSStyle.Foreground.FromRGB(255,165,0))"; break }
-                                { $_ -eq $false } { $Color = "$($PSStyle.Foreground.FromRGB(229,43,80))$($PSStyle.Blink)"; break }
-                                { $_ -eq 'N/A' } { $Color = "$($PSStyle.Foreground.FromRGB(238,255,204))"; break }
-                            }
-                            "$Color$($_.Compliant)$($PSStyle.Reset)"
-                        }
-
-                    } , Value -AutoSize
-
-                    # Setting the Table header the same color as the category's title
-                    $PSStyle.Formatting.TableHeader = "$($PSStyle.Foreground.FromRGB(255,255,49))"
-                    & $Daffodil "`n-------------Non-Admin Category-------------"
-                    $FinalMegaObject.'NonAdminCommands' | Format-Table -Property FriendlyName,
-                    @{
-                        Label      = 'Compliant'
-                        Expression =
-                        { switch ($_.Compliant) {
-                                { $_ -eq $true } { $Color = "$($PSStyle.Foreground.FromRGB(255,255,49))"; break }
-                                { $_ -eq $false } { $Color = "$($PSStyle.Foreground.FromRGB(229,43,80))$($PSStyle.Blink)"; break }
-                                { $_ -eq 'N/A' } { $Color = "$($PSStyle.Foreground.FromRGB(238,255,204))"; break }
-                            }
-                            "$Color$($_.Compliant)$($PSStyle.Reset)"
-                        }
-
-                    } , Value -AutoSize
-                }
+            if ($ShowAsObjectsOnly) {
+                # return the main object that contains multiple nested objects
+                return $FinalMegaObject
+            }
+            else {
+                Set-CategoryFormat -ColorInput Plum -CategoryName 'MicrosoftDefender' -DisplayName 'Microsoft Defender' -ColorMap $global:ColorsMap -FinalMegaObject $FinalMegaObject -Categories:$Categories -Type ($DetailedDisplay ? 'List' : 'Table')
+                Set-CategoryFormat -ColorInput Orchid -CategoryName 'AttackSurfaceReductionRules' -DisplayName 'Attack Surface Reduction Rules' -ColorMap $global:ColorsMap -FinalMegaObject $FinalMegaObject -Categories:$Categories -Type ($DetailedDisplay ? 'List' : 'Table')
+                Set-CategoryFormat -ColorInput Fuchsia -CategoryName 'BitLockerSettings' -DisplayName 'Bitlocker Category' -ColorMap $global:ColorsMap -FinalMegaObject $FinalMegaObject -Categories:$Categories -Type ($DetailedDisplay ? 'List' : 'Table')
+                Set-CategoryFormat -ColorInput MediumOrchid -CategoryName 'TLSSecurity' -DisplayName 'TLS' -ColorMap $global:ColorsMap -FinalMegaObject $FinalMegaObject -Categories:$Categories -Type ($DetailedDisplay ? 'List' : 'Table')
+                Set-CategoryFormat -ColorInput MediumPurple -CategoryName 'LockScreen' -DisplayName 'Lock Screen' -ColorMap $global:ColorsMap -FinalMegaObject $FinalMegaObject -Categories:$Categories -Type ($DetailedDisplay ? 'List' : 'Table')
+                Set-CategoryFormat -ColorInput BlueViolet -CategoryName 'UserAccountControl' -DisplayName 'User Account Control' -ColorMap $global:ColorsMap -FinalMegaObject $FinalMegaObject -Categories:$Categories -Type ($DetailedDisplay ? 'List' : 'Table')
+                Set-CategoryFormat -ColorInput AndroidGreen -CategoryName 'DeviceGuard' -DisplayName 'Device Guard' -ColorMap $global:ColorsMap -FinalMegaObject $FinalMegaObject -Categories:$Categories -Type ($DetailedDisplay ? 'List' : 'Table')
+                Set-CategoryFormat -ColorInput Pink -CategoryName 'WindowsFirewall' -DisplayName 'Windows Firewall' -ColorMap $global:ColorsMap -FinalMegaObject $FinalMegaObject -Categories:$Categories -Type ($DetailedDisplay ? 'List' : 'Table')
+                Set-CategoryFormat -ColorInput SkyBlue -CategoryName 'OptionalWindowsFeatures' -DisplayName 'Optional Windows Features' -ColorMap $global:ColorsMap -FinalMegaObject $FinalMegaObject -Categories:$Categories -Type ($DetailedDisplay ? 'List' : 'Table')
+                Set-CategoryFormat -ColorInput HotPink -CategoryName 'WindowsNetworking' -DisplayName 'Windows Networking' -ColorMap $global:ColorsMap -FinalMegaObject $FinalMegaObject -Categories:$Categories -Type ($DetailedDisplay ? 'List' : 'Table')
+                Set-CategoryFormat -ColorInput DeepPink -CategoryName 'MiscellaneousConfigurations' -DisplayName 'Miscellaneous' -ColorMap $global:ColorsMap -FinalMegaObject $FinalMegaObject -Categories:$Categories -Type ($DetailedDisplay ? 'List' : 'Table')
+                Set-CategoryFormat -ColorInput MintGreen -CategoryName 'WindowsUpdateConfigurations' -DisplayName 'Windows Update' -ColorMap $global:ColorsMap -FinalMegaObject $FinalMegaObject -Categories:$Categories -Type ($DetailedDisplay ? 'List' : 'Table')
+                Set-CategoryFormat -ColorInput Orange -CategoryName 'EdgeBrowserConfigurations' -DisplayName 'Microsoft Edge' -ColorMap $global:ColorsMap -FinalMegaObject $FinalMegaObject -Categories:$Categories -Type ($DetailedDisplay ? 'List' : 'Table')
+                Set-CategoryFormat -ColorInput Daffodil -CategoryName 'NonAdminCommands' -DisplayName 'Non-Admin' -ColorMap $global:ColorsMap -FinalMegaObject $FinalMegaObject -Categories:$Categories -Type ($DetailedDisplay ? 'List' : 'Table')
 
                 [System.String[]]$CategoryNames = ('MicrosoftDefender', # 55 - 3x(N/A) = 46
                     'AttackSurfaceReductionRules', # 19

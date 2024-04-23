@@ -398,7 +398,7 @@ Function Protect-WindowsSecurity {
             'Test-Path:ErrorAction'            = 'SilentlyContinue'
         }
 
-        #Region Helper-Functions-CLI-Experience
+        #Region Helper-Functions-All-Experiences
         # The following functions do not rely on any script-wide or global variables
         function Select-Option {
             <#
@@ -939,7 +939,7 @@ Function Protect-WindowsSecurity {
                 }
             }
         }
-        #Endregion Helper-Functions-CLI-Experience
+        #Endregion Helper-Functions-All-Experiences
 
         Function Start-FileDownload {
             <#
@@ -1376,7 +1376,7 @@ Execution Policy: $CurrentExecutionPolicy
 
             # Pass any necessary function as nested hashtable inside of the main synced hashtable
             # so they can be easily passed to any other RunSpaces
-            'Write-GUI', 'Start-FileDownload' | ForEach-Object -Process {
+            'Write-GUI', 'Start-FileDownload', 'Edit-Registry' | ForEach-Object -Process {
                 $SyncHash['ExportedFunctions']["$_"] = Get-Item -Path "Function:$_"
             }
 
@@ -1967,74 +1967,6 @@ Execution Policy: $CurrentExecutionPolicy
                                 }
 
                                 #Region Helper-Functions-GUI-Experience
-                                function Edit-Registry {
-                                    <#
-                            .SYNOPSIS
-                                Function to modify registry
-                            .INPUTS
-                                System.String
-                            .OUTPUTS
-                                System.Void
-                            #>
-                                    [CmdletBinding()]
-                                    param (
-                                        [System.String]$Path,
-                                        [System.String]$Key,
-                                        [System.String]$Value,
-                                        [System.String]$Type,
-                                        [System.String]$Action
-                                    )
-                                    Begin {
-                                        Function Test-RegistryValue {
-                                            <#
-                                            .SYNOPSIS
-                                                A helper function to detect if a registry key contains a value
-                                                Used before attempting to delete a registry key's value
-                                            .INPUTS
-                                                Path: The registry key path
-                                                Name: The name of the registry value
-                                            .OUTPUTS
-                                                System.Boolean
-                                            #>
-                                            [CmdletBinding()]
-                                            [OutputType([System.Boolean])]
-                                            param(
-                                                [Parameter(Mandatory = $true)]
-                                                [System.String]$Path,
-
-                                                [Parameter(Mandatory = $true)]
-                                                [System.String]$Name
-                                            )
-                                            if (Test-Path -Path $Path) {
-                                                $Key = Get-Item -LiteralPath $Path
-                                                if ($null -ne $Key.GetValue($Name, $null)) {
-                                                    return $true
-                                                }
-                                                else {
-                                                    return $false
-                                                }
-                                            }
-                                            else {
-                                                return $false
-                                            }
-                                        }
-
-                                    }
-                                    Process {
-                                        If (-NOT (Test-Path -Path $Path)) {
-                                            New-Item -Path $Path -Force | Out-Null
-                                        }
-                                        if ($Action -eq 'AddOrModify') {
-                                            New-ItemProperty -Path $Path -Name $Key -Value $Value -PropertyType $Type -Force | Out-Null
-                                        }
-                                        elseif ($Action -eq 'Delete') {
-                                            if (Test-RegistryValue -Path $Path -Name $Key) {
-                                                Remove-ItemProperty -Path $Path -Name $Key -Force | Out-Null
-                                            }
-                                        }
-                                    }
-                                }
-
                                 function Block-CountryIP {
                                     <#
 .SYNOPSIS

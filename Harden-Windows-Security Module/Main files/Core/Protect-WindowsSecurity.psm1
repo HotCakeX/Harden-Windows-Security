@@ -364,7 +364,7 @@ Function Protect-WindowsSecurity {
                 # Remove the categories that are not allowed to run on Windows Home edition
                 if ((Get-CimInstance -ClassName Win32_OperatingSystem).OperatingSystemSKU -in '101', '100') {
                     foreach ($CatName in $Categoriex) {
-                        if ($CatName -in 'BitLockerSettings', 'DownloadsDefenseMeasures', 'TLSSecurity', 'AttackSurfaceReductionRules', 'MicrosoftSecurityBaselines', 'Microsoft365AppsSecurityBaselines') {
+                        if ($CatName -in 'BitLockerSettings', 'DownloadsDefenseMeasures', 'TLSSecurity', 'AttackSurfaceReductionRules', 'MicrosoftSecurityBaselines', 'Microsoft365AppsSecurityBaselines', 'CountryIPBlocking') {
                             [System.Void]$Categoriex.Remove($CatName)
                         }
                     }

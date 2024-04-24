@@ -4176,47 +4176,48 @@ End time: $(Get-Date)
         }
 
         finally {
-
-            if ($SyncHash.Error) {
-                $SyncHash.Error | ForEach-Object -Process {
-                    # Only show the terminating error message instead of those suppressed by -ErrorAction SilentlyContinue
-                    if ($null -ne $_.Exception.InnerException) {
-                        # a non-terminating error that isn't caught by the try-catch block and isn't even normally displayed
-                        # Caused by some built-in ConfigCI cmdlet most likely, when using New-DenyWDACConfig cmdlet
-                        # So skip this error and show any other errors
-                        if ($_.Exception.Message -like '*Exception calling "GetVersionInfo" with "1" argument*') {
-                            continue
+            if ($PSBoundParameters.GUI.IsPresent) {
+                if ($SyncHash.Error) {
+                    $SyncHash.Error | ForEach-Object -Process {
+                        # Only show the terminating error message instead of those suppressed by -ErrorAction SilentlyContinue
+                        if ($null -ne $_.Exception.InnerException) {
+                            # a non-terminating error that isn't caught by the try-catch block and isn't even normally displayed
+                            # Caused by some built-in ConfigCI cmdlet most likely, when using New-DenyWDACConfig cmdlet
+                            # So skip this error and show any other errors
+                            if ($_.Exception.Message -like '*Exception calling "GetVersionInfo" with "1" argument*') {
+                                continue
+                            }
+                            Write-Host -Object $_.Exception.Message -ForegroundColor Red
+                            Write-Host -Object $_.exception.CommandInvocation -ForegroundColor Red
                         }
-                        Write-Host -Object $_.Exception.Message -ForegroundColor Red
-                        Write-Host -Object $_.exception.CommandInvocation -ForegroundColor Red
                     }
                 }
-            }
 
-            $GUIPowerShell.Dispose()
-            $GUIRunSpace.Close()
-            $GUIRunSpace.Dispose()
+                $GUIPowerShell.Dispose()
+                $GUIRunSpace.Close()
+                $GUIRunSpace.Dispose()
 
-            # If any new RunSpace was created during the GUI operation, they will be removed to free up memory
-            # Additional RunSpaces are created automatically for remote proxying to Windows PowerShell because of the cmdlets that are not natively available in PowerShell Core such as Defender cmdlets
-            $RunSpacesAfter = Get-Runspace
+                # If any new RunSpace was created during the GUI operation, they will be removed to free up memory
+                # Additional RunSpaces are created automatically for remote proxying to Windows PowerShell because of the cmdlets that are not natively available in PowerShell Core such as Defender cmdlets
+                $RunSpacesAfter = Get-Runspace
 
-            # Determine the RunSpaces that were created during the operation
-            $RunSpacesToClose = Compare-Object -ReferenceObject $RunSpacesBefore -DifferenceObject $RunSpacesAfter |
-            Where-Object -FilterScript { $_.SideIndicator -eq '=>' } |
-            Select-Object -ExpandProperty InputObject
+                # Determine the RunSpaces that were created during the operation
+                $RunSpacesToClose = Compare-Object -ReferenceObject $RunSpacesBefore -DifferenceObject $RunSpacesAfter |
+                Where-Object -FilterScript { $_.SideIndicator -eq '=>' } |
+                Select-Object -ExpandProperty InputObject
 
-            # Close and dispose of the RunSpaces that were created during the operation
-            if ($RunSpacesToClose) {
-                $RunSpacesToClose | ForEach-Object -Process {
-                    $_.Close()
-                    $_.Dispose()
+                # Close and dispose of the RunSpaces that were created during the operation
+                if ($RunSpacesToClose) {
+                    $RunSpacesToClose | ForEach-Object -Process {
+                        $_.Close()
+                        $_.Dispose()
+                    }
                 }
-            }
 
-            # Invoke the garbage collector
-            [System.GC]::Collect()
-            [System.GC]::WaitForPendingFinalizers()
+                # Invoke the garbage collector
+                [System.GC]::Collect()
+                [System.GC]::WaitForPendingFinalizers()
+            }
         }
 
         # Return from the Begin block if GUI was used and then closed

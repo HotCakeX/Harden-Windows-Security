@@ -988,10 +988,10 @@ Function Protect-WindowsSecurity {
                 # Use Dispatcher.Invoke to update the GUI elements on the main thread
                 $SyncHash.Window.Dispatcher.Invoke({
                         # Since other output streams such as verbose, error, warning are not converted to strings, we need to convert them manually
-                        $SyncHash.TextBox.Text += [System.String]$Text + "`n"
+                        $SyncHash.window.FindName('OutputTextBlock').Text += [System.String]$Text + "`n"
 
                         # Find the ScrollViewer and scroll to the bottom
-                        $ScrollViewer = FindScrollViewer -Control $SyncHash.TextBox
+                        $ScrollViewer = FindScrollViewer -Control $SyncHash.window.FindName('OutputTextBlock')
                         if ($null -ne $ScrollViewer) {
                             $ScrollViewer.ScrollToBottom()
                         }
@@ -2606,10 +2606,8 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
         }
 
         #region RequirementsCheck
-        [System.Boolean]$IsHomeEdition = $false
         # Home edition and Home edition single-language SKUs
         if ((Get-CimInstance -ClassName Win32_OperatingSystem).OperatingSystemSKU -in '101', '100') {
-            $IsHomeEdition = $true
             Write-Verbose -Message 'The Windows Home edition has been detected, some categories are unavailable' -Verbose
         }
 
@@ -2756,12 +2754,9 @@ Execution Policy: $CurrentExecutionPolicy
                         # To disable all UI elements
                         # $SyncHash.window.Content.IsEnabled = $false
 
-                        # Finding the implemented controls in the XAML and assigning them to variables
-                        $SyncHash.TextBox = $SyncHash.window.FindName('OutputTextBlock')
+                        # Finding some of the most used implemented controls in the XAML and assigning them to variables
                         $SyncHash.categoriesListView = $SyncHash.window.FindName('Categories')
                         $SyncHash.SubCategoriesListView = $SyncHash.window.FindName('SubCategories')
-                        $SyncHash.ExecuteButton = $SyncHash.window.FindName('Execute')
-                        $SyncHash.LogCheckBox = $SyncHash.window.FindName('Log')
                         $SyncHash.LogPathButton = $SyncHash.window.FindName('LogPath')
                         $SyncHash.txtFilePath = $SyncHash.window.FindName('txtFilePath')
                         $SyncHash.EnableOfflineModeCheckBox = $SyncHash.Window.FindName('EnableOfflineMode')
@@ -2774,9 +2769,9 @@ Execution Policy: $CurrentExecutionPolicy
                         $SyncHash.LGPOZipTextBox = $SyncHash.Window.FindName('LGPOZipTextBox')
 
                         # To find each tab item in the GUI
-                        $SyncHash.OfflineModeConfigsTabItem = $SyncHash.Window.FindName('ParentGrid').FindName('MainTabControl').Items | Where-Object -FilterScript { $_.Header -eq 'Offline Mode Configurations' }
+                        # $SyncHash.OfflineModeConfigsTabItem = $SyncHash.Window.FindName('ParentGrid').FindName('MainTabControl').Items | Where-Object -FilterScript { $_.Header -eq 'Offline Mode Configurations' }
                         # To find the TabControl in the GUI
-                        $SyncHash.MainTabControl = $SyncHash.Window.FindName('ParentGrid').FindName('MainTabControl')
+                        # $SyncHash.MainTabControl = $SyncHash.Window.FindName('ParentGrid').FindName('MainTabControl')
 
                         # Redefining all of the exported variables inside of the RunSpace
                         $SyncHash.GlobalVars.GetEnumerator() | ForEach-Object -Process {
@@ -2854,23 +2849,17 @@ Execution Policy: $CurrentExecutionPolicy
 
                         #Region Check-Uncheck buttons for Categories
 
-                        # Find the buttons
-                        $SyncHash.checkAllButtonCategories = $SyncHash.window.FindName('CheckAllButtonCategories')
-                        $SyncHash.uncheckAllButtonCategories = $SyncHash.window.FindName('UncheckAllButtonCategories')
-
                         # Add click event for 'Check All' button
-                        $SyncHash.checkAllButtonCategories.Add_Click({
-                                $SyncHash.checkAllButtonCategories.Add_Click({
-                                        $SyncHash.CategoriesListView.Items | ForEach-Object -Process {
-                                            if ($_.Content.Content -in $ValidAllowedCategories) {
-                                                $_.Content.IsChecked = $true
-                                            }
-                                        }
-                                    })
+                        $SyncHash.window.FindName('CheckAllButtonCategories').Add_Click({
+                                $SyncHash.CategoriesListView.Items | ForEach-Object -Process {
+                                    if ($_.Content.Content -in $ValidAllowedCategories) {
+                                        $_.Content.IsChecked = $true
+                                    }
+                                }
                             })
 
                         # Add click event for 'Uncheck All' button
-                        $SyncHash.uncheckAllButtonCategories.Add_Click({
+                        $SyncHash.window.FindName('UncheckAllButtonCategories').Add_Click({
                                 $SyncHash.categoriesListView.Items | ForEach-Object -Process {
                                     $_.Content.IsChecked = $false
                                 }
@@ -2878,13 +2867,8 @@ Execution Policy: $CurrentExecutionPolicy
                         #Endregion Check-Uncheck buttons for Categories
 
                         #Region Check-Uncheck buttons for Sub-Categories
-
-                        # Find the buttons
-                        $SyncHash.checkAllButtonSubCategories = $SyncHash.window.FindName('CheckAllButtonSubCategories')
-                        $SyncHash.uncheckAllButtonSubCategories = $SyncHash.window.FindName('UncheckAllButtonSubCategories')
-
                         # Add click event for 'Check All' button for enabled sub-categories
-                        $SyncHash.checkAllButtonSubCategories.Add_Click({
+                        $SyncHash.window.FindName('CheckAllButtonSubCategories').Add_Click({
                                 $SyncHash.SubCategoriesListView.Items | Where-Object -FilterScript { $_.IsEnabled -eq $true } | ForEach-Object -Process {
                                     $CheckBox = $_.Content
                                     $CheckBox.IsChecked = $true
@@ -2892,7 +2876,7 @@ Execution Policy: $CurrentExecutionPolicy
                             })
 
                         # Add click event for 'Uncheck All' button from sub-categories, regardless of whether they are enabled or disabled
-                        $SyncHash.uncheckAllButtonSubCategories.Add_Click({
+                        $SyncHash.window.FindName('UncheckAllButtonSubCategories').Add_Click({
                                 $SyncHash.SubCategoriesListView.Items | ForEach-Object -Process {
                                     $CheckBox = $_.Content
                                     $CheckBox.IsChecked = $false
@@ -2909,12 +2893,12 @@ Execution Policy: $CurrentExecutionPolicy
                         $SyncHash.LogPathButton.IsEnabled = $false
 
                         # If the Log checkbox is checked, enable the LogPath button
-                        $SyncHash.LogCheckBox.Add_Checked({
+                        $SyncHash.window.FindName('Log').Add_Checked({
                                 $SyncHash.LogPathButton.IsEnabled = $true
                             })
 
                         # If the Log checkbox is unchecked, disable the LogPath button and set the selected LogPath text area's visibility to collapsed again
-                        $SyncHash.LogCheckBox.Add_Unchecked({
+                        $SyncHash.window.FindName('Log').Add_Unchecked({
                                 $SyncHash.LogPathButton.IsEnabled = $false
 
                                 $SyncHash.txtFilePath.Visibility = 'Collapsed'
@@ -2976,13 +2960,10 @@ Execution Policy: $CurrentExecutionPolicy
 
                             # Display a message showing how to activate the offline mode
 
-                            # Locate the Grid2 element in the XAML
-                            $Grid2 = $SyncHash.window.FindName('Grid2')
-
                             # Add a new row definition for the text message
                             [System.Windows.Controls.RowDefinition]$OfflineModeUnavailableRow = New-Object -Type System.Windows.Controls.RowDefinition
                             $OfflineModeUnavailableRow.Height = 50
-                            $Grid2.RowDefinitions.Add($OfflineModeUnavailableRow)
+                            $SyncHash.window.FindName('Grid2').RowDefinitions.Add($OfflineModeUnavailableRow)
 
                             # Create a new text box
                             [System.Windows.Controls.TextBox]$OfflineModeUnavailableNoticeBox = New-Object -Type System.Windows.Controls.TextBox
@@ -3006,7 +2987,7 @@ Execution Policy: $CurrentExecutionPolicy
                             $OfflineModeUnavailableNoticeBox.Foreground = $GradientBrush
 
                             # Add the text box to the grid
-                            $Grid2.Children.Add($OfflineModeUnavailableNoticeBox)
+                            $SyncHash.window.FindName('Grid2').Children.Add($OfflineModeUnavailableNoticeBox)
                         }
 
                         # If the Offline Mode checkbox is Unchecked
@@ -3130,7 +3111,7 @@ Execution Policy: $CurrentExecutionPolicy
                                 Write-GUI -Text ($IsAdmin ? 'Hello, Running as Administrator' : 'Hello, Running as Non-Administrator, some categories are disabled')
 
                                 # Set the execute button to disabled until all the prerequisites are met
-                                $SyncHash.ExecuteButton.IsEnabled = $false
+                                $SyncHash.window.FindName('Execute').IsEnabled = $false
 
                                 # Create a new RunSpace for the prerequisites commands
                                 $PeReqRunSpace = [System.Management.Automation.RunSpaces.RunSpaceFactory]::CreateRunSpace()
@@ -3220,7 +3201,7 @@ Execution Policy: $CurrentExecutionPolicy
                                         # Using dispatch since the execute button is owned by the GUI (parent) RunSpace and we're in the 2nd nested RunSpace
                                         # Enabling the execute button after all files are downloaded and ready for action
                                         $SyncHash.Window.Dispatcher.Invoke({
-                                                $SyncHash.ExecuteButton.IsEnabled = $true
+                                                $SyncHash.window.FindName('Execute').IsEnabled = $true
                                             })
                                     })
 
@@ -3237,7 +3218,7 @@ Execution Policy: $CurrentExecutionPolicy
                             })
 
                         # Add the click event for the execute button in the GUI RunSpace
-                        $SyncHash.ExecuteButton.Add_Click({
+                        $SyncHash.window.FindName('Execute').Add_Click({
 
                                 # Close and dispose of the prerequisites RunSpace and the related PowerShell object when the execute button is pressed
                                 $prerequisitesRunSpace = $SyncHash.ListOfStuff | Where-Object { $_.Name -eq 'PrerequisitesRunSpace' }
@@ -3603,13 +3584,13 @@ Execution Policy: $CurrentExecutionPolicy
                                                     [Microsoft.Management.Infrastructure.CimInstance]$Time = New-ScheduledTaskTrigger -Once -At (Get-Date).AddHours(1) -RepetitionInterval (New-TimeSpan -Days 7)
 
                                                     # Register the scheduled task
-                                                    Register-ScheduledTask -Action $Action -Trigger $Time -Principal $TaskPrincipal -TaskPath 'MSFT Driver Block list update' -TaskName 'MSFT Driver Block list update' -Description 'Microsoft Recommended Driver Block List update' -Force
+                                                    Register-ScheduledTask -Action $Action -Trigger $Time -Principal $TaskPrincipal -TaskPath 'MSFT Driver Block list update' -TaskName 'MSFT Driver Block list update' -Description 'Microsoft Recommended Driver Block List update' -Force | Out-Null
 
                                                     # Define advanced settings for the scheduled task
                                                     [Microsoft.Management.Infrastructure.CimInstance]$TaskSettings = New-ScheduledTaskSettingsSet -AllowStartIfOnBatteries -DontStopIfGoingOnBatteries -Compatibility 'Win8' -StartWhenAvailable -ExecutionTimeLimit (New-TimeSpan -Minutes 3) -RestartCount 4 -RestartInterval (New-TimeSpan -Hours 6) -RunOnlyIfNetworkAvailable
 
                                                     # Add the advanced settings we defined above to the scheduled task
-                                                    Set-ScheduledTask -TaskName 'MSFT Driver Block list update' -TaskPath 'MSFT Driver Block list update' -Settings $TaskSettings
+                                                    Set-ScheduledTask -TaskName 'MSFT Driver Block list update' -TaskPath 'MSFT Driver Block list update' -Settings $TaskSettings | Out-Null
                                                 } 'No' { break TaskSchedulerCreationLabel }
                                             }
                                         }

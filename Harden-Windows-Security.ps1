@@ -333,11 +333,15 @@ Function Protect-WindowsSecurity {
     }
 
     begin {
-
-        # This class provides a list of valid values for the Categories parameter of the Protect-WindowsSecurity function
+        # This class is the orchestrator of the hardening categories deciding which one of them is allowed to run
         Class Categoriex : System.Management.Automation.IValidateSetValuesGenerator {
             [System.String[]] GetValidValues() {
-                $Categoriex = @(
+
+                # Only return the NonAdmin category if the user is not an administrator
+                [System.Security.Principal.WindowsPrincipal]$Principal = New-Object -TypeName 'Security.Principal.WindowsPrincipal' -ArgumentList ([Security.Principal.WindowsIdentity]::GetCurrent())
+                if (-NOT $Principal.IsInRole([Security.Principal.WindowsBuiltinRole]::Administrator)) { Return 'NonAdminCommands' }
+
+                $Categoriex = [System.Collections.Generic.HashSet[System.String]](
                     'MicrosoftSecurityBaselines',
                     'Microsoft365AppsSecurityBaselines',
                     'MicrosoftDefender',
@@ -357,6 +361,14 @@ Function Protect-WindowsSecurity {
                     'DownloadsDefenseMeasures',
                     'NonAdminCommands'
                 )
+                # Remove the categories that are not allowed to run on Windows Home edition
+                if ((Get-CimInstance -ClassName Win32_OperatingSystem).OperatingSystemSKU -in '101', '100') {
+                    foreach ($CatName in $Categoriex) {
+                        if ($CatName -in 'BitLockerSettings', 'DownloadsDefenseMeasures', 'TLSSecurity', 'AttackSurfaceReductionRules', 'MicrosoftSecurityBaselines', 'Microsoft365AppsSecurityBaselines', 'CountryIPBlocking') {
+                            [System.Void]$Categoriex.Remove($CatName)
+                        }
+                    }
+                }
                 return [System.String[]]$Categoriex
             }
         }
@@ -976,10 +988,10 @@ Function Protect-WindowsSecurity {
                 # Use Dispatcher.Invoke to update the GUI elements on the main thread
                 $SyncHash.Window.Dispatcher.Invoke({
                         # Since other output streams such as verbose, error, warning are not converted to strings, we need to convert them manually
-                        $SyncHash.TextBox.Text += [System.String]$Text + "`n"
+                        $SyncHash.window.FindName('OutputTextBlock').Text += [System.String]$Text + "`n"
 
                         # Find the ScrollViewer and scroll to the bottom
-                        $ScrollViewer = FindScrollViewer -Control $SyncHash.TextBox
+                        $ScrollViewer = FindScrollViewer -Control $SyncHash.window.FindName('OutputTextBlock')
                         if ($null -ne $ScrollViewer) {
                             $ScrollViewer.ScrollToBottom()
                         }
@@ -1169,7 +1181,6 @@ Function Protect-WindowsSecurity {
         #Region Hardening-Categories-Functions-CLI-Experience
         Function Invoke-MicrosoftSecurityBaselines {
             param([System.Management.Automation.SwitchParameter]$RunUnattended)
-            if (!$IsAdmin) { return }
 
             $RefCurrentMainStep.Value++
             $Host.UI.RawUI.WindowTitle = '🔐 Security Baselines'
@@ -1213,7 +1224,6 @@ Function Protect-WindowsSecurity {
         }
         Function Invoke-Microsoft365AppsSecurityBaselines {
             param([System.Management.Automation.SwitchParameter]$RunUnattended)
-            if (!$IsAdmin) { return }
 
             $RefCurrentMainStep.Value++
             $Host.UI.RawUI.WindowTitle = '🧁 M365 Apps Security'
@@ -1239,7 +1249,6 @@ Function Protect-WindowsSecurity {
         }
         Function Invoke-MicrosoftDefender {
             param([System.Management.Automation.SwitchParameter]$RunUnattended)
-            if (!$IsAdmin) { return }
 
             $RefCurrentMainStep.Value++
             $Host.UI.RawUI.WindowTitle = '🍁 MSFT Defender'
@@ -1449,7 +1458,6 @@ Function Protect-WindowsSecurity {
         }
         Function Invoke-AttackSurfaceReductionRules {
             param([System.Management.Automation.SwitchParameter]$RunUnattended)
-            if (!$IsAdmin) { return }
 
             $RefCurrentMainStep.Value++
             $Host.UI.RawUI.WindowTitle = '🪷 ASR Rules'
@@ -1467,7 +1475,6 @@ Function Protect-WindowsSecurity {
         }
         Function Invoke-BitLockerSettings {
             param([System.Management.Automation.SwitchParameter]$RunUnattended)
-            if (!$IsAdmin) { return }
 
             $RefCurrentMainStep.Value++
             $Host.UI.RawUI.WindowTitle = '🔑 BitLocker'
@@ -2070,7 +2077,6 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
         }
         Function Invoke-TLSSecurity {
             param([System.Management.Automation.SwitchParameter]$RunUnattended)
-            if (!$IsAdmin) { return }
 
             $RefCurrentMainStep.Value++
             $Host.UI.RawUI.WindowTitle = '🛡️ TLS'
@@ -2110,7 +2116,6 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
         }
         Function Invoke-LockScreen {
             param([System.Management.Automation.SwitchParameter]$RunUnattended)
-            if (!$IsAdmin) { return }
 
             $RefCurrentMainStep.Value++
             $Host.UI.RawUI.WindowTitle = '💻 Lock Screen'
@@ -2147,7 +2152,6 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
         }
         Function Invoke-UserAccountControl {
             param([System.Management.Automation.SwitchParameter]$RunUnattended)
-            if (!$IsAdmin) { return }
 
             $RefCurrentMainStep.Value++
             $Host.UI.RawUI.WindowTitle = '💎 UAC'
@@ -2183,7 +2187,6 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
         }
         Function Invoke-WindowsFirewall {
             param([System.Management.Automation.SwitchParameter]$RunUnattended)
-            if (!$IsAdmin) { return }
 
             $RefCurrentMainStep.Value++
             $Host.UI.RawUI.WindowTitle = '🔥 Firewall'
@@ -2207,7 +2210,6 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
         }
         Function Invoke-OptionalWindowsFeatures {
             param([System.Management.Automation.SwitchParameter]$RunUnattended)
-            if (!$IsAdmin) { return }
 
             $RefCurrentMainStep.Value++
             $Host.UI.RawUI.WindowTitle = '🏅 Optional Features'
@@ -2258,7 +2260,6 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
         }
         Function Invoke-WindowsNetworking {
             param([System.Management.Automation.SwitchParameter]$RunUnattended)
-            if (!$IsAdmin) { return }
 
             $RefCurrentMainStep.Value++
             $Host.UI.RawUI.WindowTitle = '📶 Networking'
@@ -2283,7 +2284,6 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
         }
         Function Invoke-MiscellaneousConfigurations {
             param([System.Management.Automation.SwitchParameter]$RunUnattended)
-            if (!$IsAdmin) { return }
 
             $RefCurrentMainStep.Value++
             $Host.UI.RawUI.WindowTitle = '🥌 Miscellaneous'
@@ -2332,7 +2332,6 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
         }
         Function Invoke-WindowsUpdateConfigurations {
             param([System.Management.Automation.SwitchParameter]$RunUnattended)
-            if (!$IsAdmin) { return }
 
             $RefCurrentMainStep.Value++
             $Host.UI.RawUI.WindowTitle = '🪟 Windows Update'
@@ -2354,7 +2353,6 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
         }
         Function Invoke-EdgeBrowserConfigurations {
             param([System.Management.Automation.SwitchParameter]$RunUnattended)
-            if (!$IsAdmin) { return }
 
             $RefCurrentMainStep.Value++
             $Host.UI.RawUI.WindowTitle = '🦔 Edge'
@@ -2377,7 +2375,6 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
         }
         Function Invoke-CertificateCheckingCommands {
             param([System.Management.Automation.SwitchParameter]$RunUnattended)
-            if (!$IsAdmin) { return }
 
             $RefCurrentMainStep.Value++
             $Host.UI.RawUI.WindowTitle = '🎟️ Certificates'
@@ -2410,7 +2407,6 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
         }
         Function Invoke-CountryIPBlocking {
             param([System.Management.Automation.SwitchParameter]$RunUnattended)
-            if (!$IsAdmin) { return }
 
             $RefCurrentMainStep.Value++
             $Host.UI.RawUI.WindowTitle = '🧾 Country IPs'
@@ -2439,7 +2435,6 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
         }
         Function Invoke-DownloadsDefenseMeasures {
             param([System.Management.Automation.SwitchParameter]$RunUnattended)
-            if (!$IsAdmin) { return }
 
             $RefCurrentMainStep.Value++
             $Host.UI.RawUI.WindowTitle = '🎇 Downloads Defense Measures'
@@ -2562,9 +2557,7 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
             Write-Verbose -Message '$PSCommandPath was not found, Protect-WindowsSecurity function was most likely called from the GitHub repository'
         }
 
-        # Determine whether the current session is running as Administrator or not
-        [System.Security.Principal.WindowsIdentity]$Identity = [Security.Principal.WindowsIdentity]::GetCurrent()
-        [System.Security.Principal.WindowsPrincipal]$Principal = New-Object -TypeName 'Security.Principal.WindowsPrincipal' -ArgumentList $Identity
+        [System.Security.Principal.WindowsPrincipal]$Principal = New-Object -TypeName 'Security.Principal.WindowsPrincipal' -ArgumentList ([Security.Principal.WindowsIdentity]::GetCurrent())
         [System.Boolean]$IsAdmin = $Principal.IsInRole([Security.Principal.WindowsBuiltinRole]::Administrator) ? $True : $false
 
         # Get the execution policy for the current process
@@ -2613,10 +2606,9 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
         }
 
         #region RequirementsCheck
-        # Doesn't check for Windows Home single language edition
-        Write-Verbose -Message 'Checking if the OS is Windows Home edition...'
-        if ((Get-CimInstance -ClassName Win32_OperatingSystem).OperatingSystemSKU -eq '101') {
-            Throw [System.PlatformNotSupportedException] 'Windows Home edition detected, exiting...'
+        # Home edition and Home edition single-language SKUs
+        if ((Get-CimInstance -ClassName Win32_OperatingSystem).OperatingSystemSKU -in '101', '100') {
+            Write-Warning -Message 'The Windows Home edition has been detected, some categories are unavailable and the remaining categories are applied in a best effort fashion.'
         }
 
         # Get OS build version
@@ -2742,6 +2734,10 @@ Execution Policy: $CurrentExecutionPolicy
                 $SyncHash['GlobalVars']['Offline'] = ($Offline -eq $true) ? $true : $false
                 $SyncHash['GlobalVars']['WorkingDir'] = $WorkingDir
                 $SyncHash['GlobalVars']['BootDMAProtectionCheck'] = $BootDMAProtectionCheck
+                $SyncHash['GlobalVars']['ValidAllowedCategories'] = [Categoriex]::new().GetValidValues()
+
+                # Adding the parent host to the synchronized hashtable
+                $SyncHash.ParentHost = $Host
 
                 # Pass any necessary function as nested hashtable inside of the main synced hashtable
                 # so they can be easily passed to any other RunSpaces
@@ -2758,12 +2754,9 @@ Execution Policy: $CurrentExecutionPolicy
                         # To disable all UI elements
                         # $SyncHash.window.Content.IsEnabled = $false
 
-                        # Finding the implemented controls in the XAML and assigning them to variables
-                        $SyncHash.TextBox = $SyncHash.window.FindName('OutputTextBlock')
+                        # Finding some of the most used implemented controls in the XAML and assigning them to variables
                         $SyncHash.categoriesListView = $SyncHash.window.FindName('Categories')
                         $SyncHash.SubCategoriesListView = $SyncHash.window.FindName('SubCategories')
-                        $SyncHash.ExecuteButton = $SyncHash.window.FindName('Execute')
-                        $SyncHash.LogCheckBox = $SyncHash.window.FindName('Log')
                         $SyncHash.LogPathButton = $SyncHash.window.FindName('LogPath')
                         $SyncHash.txtFilePath = $SyncHash.window.FindName('txtFilePath')
                         $SyncHash.EnableOfflineModeCheckBox = $SyncHash.Window.FindName('EnableOfflineMode')
@@ -2776,9 +2769,9 @@ Execution Policy: $CurrentExecutionPolicy
                         $SyncHash.LGPOZipTextBox = $SyncHash.Window.FindName('LGPOZipTextBox')
 
                         # To find each tab item in the GUI
-                        $SyncHash.OfflineModeConfigsTabItem = $SyncHash.Window.FindName('ParentGrid').FindName('MainTabControl').Items | Where-Object -FilterScript { $_.Header -eq 'Offline Mode Configurations' }
+                        # $SyncHash.OfflineModeConfigsTabItem = $SyncHash.Window.FindName('ParentGrid').FindName('MainTabControl').Items | Where-Object -FilterScript { $_.Header -eq 'Offline Mode Configurations' }
                         # To find the TabControl in the GUI
-                        $SyncHash.MainTabControl = $SyncHash.Window.FindName('ParentGrid').FindName('MainTabControl')
+                        # $SyncHash.MainTabControl = $SyncHash.Window.FindName('ParentGrid').FindName('MainTabControl')
 
                         # Redefining all of the exported variables inside of the RunSpace
                         $SyncHash.GlobalVars.GetEnumerator() | ForEach-Object -Process {
@@ -2826,6 +2819,13 @@ Execution Policy: $CurrentExecutionPolicy
                             $SyncHash.SubCategoriesListView.Items | Where-Object -FilterScript { $_.IsEnabled -eq $false } | ForEach-Object -Process {
                                 $_.Content.IsChecked = $false
                             }
+
+                            # Disable categories that are not valid for the current session
+                            foreach ($Item in $SyncHash.categoriesListView.Items) {
+                                if ($Item.Content.Content -notin $ValidAllowedCategories) {
+                                    $Item.IsEnabled = $false
+                                }
+                            }
                         }
 
                         # Add Checked and Unchecked event handlers to category checkboxes
@@ -2849,53 +2849,26 @@ Execution Policy: $CurrentExecutionPolicy
 
                         #Region Check-Uncheck buttons for Categories
 
-                        # Find the buttons
-                        $SyncHash.checkAllButtonCategories = $SyncHash.window.FindName('CheckAllButtonCategories')
-                        $SyncHash.uncheckAllButtonCategories = $SyncHash.window.FindName('UncheckAllButtonCategories')
-
-                        # Disable the categories that require admin privileges if the GUI was not initiated with admin privileges
-                        if (-NOT $IsAdmin) {
-                            $SyncHash.categoriesListView.Items | Where-Object -FilterScript { $_.Content.Content -ne 'NonAdminCommands' } | ForEach-Object -Process { $_.IsEnabled = $false }
-                        }
-
                         # Add click event for 'Check All' button
-                        $SyncHash.checkAllButtonCategories.Add_Click({
-                                # Activate all categories if Admin privileges are available
-                                if ($IsAdmin) {
-                                    $SyncHash.categoriesListView.Items | ForEach-Object -Process {
-                                        $CheckBox = $_.Content
-                                        $CheckBox.IsChecked = $true
-                                    }
-                                }
-                                # Activate only the categories that don't require Admin privileges
-                                else {
-                                    $SyncHash.categoriesListView.Items | ForEach-Object -Process {
-                                        if ($_.Content.Content -eq 'NonAdminCommands') {
-                                            $CheckBox = $_.Content
-                                            $CheckBox.IsChecked = $true
-
-                                        }
+                        $SyncHash.window.FindName('CheckAllButtonCategories').Add_Click({
+                                $SyncHash.CategoriesListView.Items | ForEach-Object -Process {
+                                    if ($_.Content.Content -in $ValidAllowedCategories) {
+                                        $_.Content.IsChecked = $true
                                     }
                                 }
                             })
 
                         # Add click event for 'Uncheck All' button
-                        $SyncHash.uncheckAllButtonCategories.Add_Click({
+                        $SyncHash.window.FindName('UncheckAllButtonCategories').Add_Click({
                                 $SyncHash.categoriesListView.Items | ForEach-Object -Process {
-                                    $CheckBox = $_.Content
-                                    $CheckBox.IsChecked = $false
+                                    $_.Content.IsChecked = $false
                                 }
                             })
                         #Endregion Check-Uncheck buttons for Categories
 
                         #Region Check-Uncheck buttons for Sub-Categories
-
-                        # Find the buttons
-                        $SyncHash.checkAllButtonSubCategories = $SyncHash.window.FindName('CheckAllButtonSubCategories')
-                        $SyncHash.uncheckAllButtonSubCategories = $SyncHash.window.FindName('UncheckAllButtonSubCategories')
-
                         # Add click event for 'Check All' button for enabled sub-categories
-                        $SyncHash.checkAllButtonSubCategories.Add_Click({
+                        $SyncHash.window.FindName('CheckAllButtonSubCategories').Add_Click({
                                 $SyncHash.SubCategoriesListView.Items | Where-Object -FilterScript { $_.IsEnabled -eq $true } | ForEach-Object -Process {
                                     $CheckBox = $_.Content
                                     $CheckBox.IsChecked = $true
@@ -2903,7 +2876,7 @@ Execution Policy: $CurrentExecutionPolicy
                             })
 
                         # Add click event for 'Uncheck All' button from sub-categories, regardless of whether they are enabled or disabled
-                        $SyncHash.uncheckAllButtonSubCategories.Add_Click({
+                        $SyncHash.window.FindName('UncheckAllButtonSubCategories').Add_Click({
                                 $SyncHash.SubCategoriesListView.Items | ForEach-Object -Process {
                                     $CheckBox = $_.Content
                                     $CheckBox.IsChecked = $false
@@ -2920,12 +2893,12 @@ Execution Policy: $CurrentExecutionPolicy
                         $SyncHash.LogPathButton.IsEnabled = $false
 
                         # If the Log checkbox is checked, enable the LogPath button
-                        $SyncHash.LogCheckBox.Add_Checked({
+                        $SyncHash.window.FindName('Log').Add_Checked({
                                 $SyncHash.LogPathButton.IsEnabled = $true
                             })
 
                         # If the Log checkbox is unchecked, disable the LogPath button and set the selected LogPath text area's visibility to collapsed again
-                        $SyncHash.LogCheckBox.Add_Unchecked({
+                        $SyncHash.window.FindName('Log').Add_Unchecked({
                                 $SyncHash.LogPathButton.IsEnabled = $false
 
                                 $SyncHash.txtFilePath.Visibility = 'Collapsed'
@@ -2987,13 +2960,10 @@ Execution Policy: $CurrentExecutionPolicy
 
                             # Display a message showing how to activate the offline mode
 
-                            # Locate the Grid2 element in the XAML
-                            $Grid2 = $SyncHash.window.FindName('Grid2')
-
                             # Add a new row definition for the text message
                             [System.Windows.Controls.RowDefinition]$OfflineModeUnavailableRow = New-Object -Type System.Windows.Controls.RowDefinition
                             $OfflineModeUnavailableRow.Height = 50
-                            $Grid2.RowDefinitions.Add($OfflineModeUnavailableRow)
+                            $SyncHash.window.FindName('Grid2').RowDefinitions.Add($OfflineModeUnavailableRow)
 
                             # Create a new text box
                             [System.Windows.Controls.TextBox]$OfflineModeUnavailableNoticeBox = New-Object -Type System.Windows.Controls.TextBox
@@ -3017,7 +2987,7 @@ Execution Policy: $CurrentExecutionPolicy
                             $OfflineModeUnavailableNoticeBox.Foreground = $GradientBrush
 
                             # Add the text box to the grid
-                            $Grid2.Children.Add($OfflineModeUnavailableNoticeBox)
+                            $SyncHash.window.FindName('Grid2').Children.Add($OfflineModeUnavailableNoticeBox)
                         }
 
                         # If the Offline Mode checkbox is Unchecked
@@ -3141,7 +3111,7 @@ Execution Policy: $CurrentExecutionPolicy
                                 Write-GUI -Text ($IsAdmin ? 'Hello, Running as Administrator' : 'Hello, Running as Non-Administrator, some categories are disabled')
 
                                 # Set the execute button to disabled until all the prerequisites are met
-                                $SyncHash.ExecuteButton.IsEnabled = $false
+                                $SyncHash.window.FindName('Execute').IsEnabled = $false
 
                                 # Create a new RunSpace for the prerequisites commands
                                 $PeReqRunSpace = [System.Management.Automation.RunSpaces.RunSpaceFactory]::CreateRunSpace()
@@ -3231,7 +3201,7 @@ Execution Policy: $CurrentExecutionPolicy
                                         # Using dispatch since the execute button is owned by the GUI (parent) RunSpace and we're in the 2nd nested RunSpace
                                         # Enabling the execute button after all files are downloaded and ready for action
                                         $SyncHash.Window.Dispatcher.Invoke({
-                                                $SyncHash.ExecuteButton.IsEnabled = $true
+                                                $SyncHash.window.FindName('Execute').IsEnabled = $true
                                             })
                                     })
 
@@ -3248,7 +3218,7 @@ Execution Policy: $CurrentExecutionPolicy
                             })
 
                         # Add the click event for the execute button in the GUI RunSpace
-                        $SyncHash.ExecuteButton.Add_Click({
+                        $SyncHash.window.FindName('Execute').Add_Click({
 
                                 # Close and dispose of the prerequisites RunSpace and the related PowerShell object when the execute button is pressed
                                 $prerequisitesRunSpace = $SyncHash.ListOfStuff | Where-Object { $_.Name -eq 'PrerequisitesRunSpace' }
@@ -3614,13 +3584,13 @@ Execution Policy: $CurrentExecutionPolicy
                                                     [Microsoft.Management.Infrastructure.CimInstance]$Time = New-ScheduledTaskTrigger -Once -At (Get-Date).AddHours(1) -RepetitionInterval (New-TimeSpan -Days 7)
 
                                                     # Register the scheduled task
-                                                    Register-ScheduledTask -Action $Action -Trigger $Time -Principal $TaskPrincipal -TaskPath 'MSFT Driver Block list update' -TaskName 'MSFT Driver Block list update' -Description 'Microsoft Recommended Driver Block List update' -Force
+                                                    Register-ScheduledTask -Action $Action -Trigger $Time -Principal $TaskPrincipal -TaskPath 'MSFT Driver Block list update' -TaskName 'MSFT Driver Block list update' -Description 'Microsoft Recommended Driver Block List update' -Force | Out-Null
 
                                                     # Define advanced settings for the scheduled task
                                                     [Microsoft.Management.Infrastructure.CimInstance]$TaskSettings = New-ScheduledTaskSettingsSet -AllowStartIfOnBatteries -DontStopIfGoingOnBatteries -Compatibility 'Win8' -StartWhenAvailable -ExecutionTimeLimit (New-TimeSpan -Minutes 3) -RestartCount 4 -RestartInterval (New-TimeSpan -Hours 6) -RunOnlyIfNetworkAvailable
 
                                                     # Add the advanced settings we defined above to the scheduled task
-                                                    Set-ScheduledTask -TaskName 'MSFT Driver Block list update' -TaskPath 'MSFT Driver Block list update' -Settings $TaskSettings
+                                                    Set-ScheduledTask -TaskName 'MSFT Driver Block list update' -TaskPath 'MSFT Driver Block list update' -Settings $TaskSettings | Out-Null
                                                 } 'No' { break TaskSchedulerCreationLabel }
                                             }
                                         }
@@ -4114,8 +4084,8 @@ Execution Policy: $CurrentExecutionPolicy
                                             }
                                         } -args $SelectedCategories.Count, ($Offline ? $true : $false), "$WorkingDir\ToastNotificationIcon.png" *>&1 # To display any error message or other streams from the script block on the console
 
-                                        # Display the runspace count on the GUI for debugging purposes
-                                        # Write-Host -Object "Current RunSpace Count is: $((Get-Runspace).Count)"
+                                        # Display the runspace count for debugging purposes
+                                        # $SyncHash.ParentHost.UI.WriteDebugLine("Current RunSpace Count is: $((Get-Runspace).Count)")
                                     }
                                     else {
                                         Write-GUI -Text 'No category was selected'
@@ -4173,47 +4143,48 @@ End time: $(Get-Date)
         }
 
         finally {
-
-            if ($SyncHash.Error) {
-                $SyncHash.Error | ForEach-Object -Process {
-                    # Only show the terminating error message instead of those suppressed by -ErrorAction SilentlyContinue
-                    if ($null -ne $_.Exception.InnerException) {
-                        # a non-terminating error that isn't caught by the try-catch block and isn't even normally displayed
-                        # Caused by some built-in ConfigCI cmdlet most likely, when using New-DenyWDACConfig cmdlet
-                        # So skip this error and show any other errors
-                        if ($_.Exception.Message -like '*Exception calling "GetVersionInfo" with "1" argument*') {
-                            continue
+            if ($PSBoundParameters.GUI.IsPresent) {
+                if ($SyncHash.Error) {
+                    $SyncHash.Error | ForEach-Object -Process {
+                        # Only show the terminating error message instead of those suppressed by -ErrorAction SilentlyContinue
+                        if ($null -ne $_.Exception.InnerException) {
+                            # a non-terminating error that isn't caught by the try-catch block and isn't even normally displayed
+                            # Caused by some built-in ConfigCI cmdlet most likely, when using New-DenyWDACConfig cmdlet
+                            # So skip this error and show any other errors
+                            if ($_.Exception.Message -like '*Exception calling "GetVersionInfo" with "1" argument*') {
+                                continue
+                            }
+                            Write-Host -Object $_.Exception.Message -ForegroundColor Red
+                            Write-Host -Object $_.exception.CommandInvocation -ForegroundColor Red
                         }
-                        Write-Host -Object $_.Exception.Message -ForegroundColor Red
-                        Write-Host -Object $_.exception.CommandInvocation -ForegroundColor Red
                     }
                 }
-            }
 
-            $GUIPowerShell.Dispose()
-            $GUIRunSpace.Close()
-            $GUIRunSpace.Dispose()
+                $GUIPowerShell.Dispose()
+                $GUIRunSpace.Close()
+                $GUIRunSpace.Dispose()
 
-            # If any new RunSpace was created during the GUI operation, they will be removed to free up memory
-            # Additional RunSpaces are created automatically for remote proxying to Windows PowerShell because of the cmdlets that are not natively available in PowerShell Core such as Defender cmdlets
-            $RunSpacesAfter = Get-Runspace
+                # If any new RunSpace was created during the GUI operation, they will be removed to free up memory
+                # Additional RunSpaces are created automatically for remote proxying to Windows PowerShell because of the cmdlets that are not natively available in PowerShell Core such as Defender cmdlets
+                $RunSpacesAfter = Get-Runspace
 
-            # Determine the RunSpaces that were created during the operation
-            $RunSpacesToClose = Compare-Object -ReferenceObject $RunSpacesBefore -DifferenceObject $RunSpacesAfter |
-            Where-Object -FilterScript { $_.SideIndicator -eq '=>' } |
-            Select-Object -ExpandProperty InputObject
+                # Determine the RunSpaces that were created during the operation
+                $RunSpacesToClose = Compare-Object -ReferenceObject $RunSpacesBefore -DifferenceObject $RunSpacesAfter |
+                Where-Object -FilterScript { $_.SideIndicator -eq '=>' } |
+                Select-Object -ExpandProperty InputObject
 
-            # Close and dispose of the RunSpaces that were created during the operation
-            if ($RunSpacesToClose) {
-                $RunSpacesToClose | ForEach-Object -Process {
-                    $_.Close()
-                    $_.Dispose()
+                # Close and dispose of the RunSpaces that were created during the operation
+                if ($RunSpacesToClose) {
+                    $RunSpacesToClose | ForEach-Object -Process {
+                        $_.Close()
+                        $_.Dispose()
+                    }
                 }
-            }
 
-            # Invoke the garbage collector
-            [System.GC]::Collect()
-            [System.GC]::WaitForPendingFinalizers()
+                # Invoke the garbage collector
+                [System.GC]::Collect()
+                [System.GC]::WaitForPendingFinalizers()
+            }
         }
 
         # Return from the Begin block if GUI was used and then closed

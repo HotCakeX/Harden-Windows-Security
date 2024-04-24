@@ -74,7 +74,7 @@ function Confirm-SystemCompliance {
         }
 
         if ((Get-CimInstance -ClassName Win32_OperatingSystem).OperatingSystemSKU -in '101', '100') {
-            Write-Verbose -Message 'The Windows Home edition has been detected, many features are unavailable in this edition.' -Verbose
+            Write-Warning -Message 'The Windows Home edition has been detected, many features are unavailable in this edition.'
         }
 
         #Region Defining-Variables

@@ -2608,7 +2608,7 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
         #region RequirementsCheck
         # Home edition and Home edition single-language SKUs
         if ((Get-CimInstance -ClassName Win32_OperatingSystem).OperatingSystemSKU -in '101', '100') {
-            Write-Verbose -Message 'The Windows Home edition has been detected, some categories are unavailable' -Verbose
+            Write-Warning -Message 'The Windows Home edition has been detected, some categories are unavailable and the remaining categories are applied in a best effort fashion.'
         }
 
         # Get OS build version

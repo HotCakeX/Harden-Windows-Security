@@ -410,6 +410,7 @@ Protect-WindowsSecurity -GUI
 
 ```powershell
 Confirm-SystemCompliance
+    [-Categories]
     [-ExportToCSV]
     [-ShowAsObjectsOnly]
     [-DetailedDisplay]
@@ -425,6 +426,22 @@ Compliance checking strictly follows the guidelines and security measures of thi
 > Based on the score that you get you will see a different ASCII art!
 
 ## Parameters
+
+### -Categories
+
+Specify the categories to check compliance for. If not specified, all categories will be checked.
+
+<div align='center'>
+
+| Type: |[String](https://learn.microsoft.com/en-us/dotnet/api/system.string)[]|
+| :-------------: | :-------------: |
+| Position: | Named |
+| Default value: | None |
+| Required: | False |
+| Accept pipeline input: | False |
+| Accept wildcard characters: | False |
+
+</div>
 
 ### -ExportToCSV
 

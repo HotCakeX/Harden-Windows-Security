@@ -21,8 +21,3 @@ catch {
 if (-NOT ([System.Decimal]$FullOSBuild -ge [System.Decimal]$Requiredbuild)) {
     Throw [System.PlatformNotSupportedException] "You are not using the latest build of the Windows OS. A minimum build of $Requiredbuild is required but your OS build is $FullOSBuild`nPlease go to Windows Update to install the updates and then try again."
 }
-
-# check if user's OS is Windows Home edition
-if ((Get-CimInstance -ClassName Win32_OperatingSystem).OperatingSystemSKU -eq '101') {
-    Throw [System.PlatformNotSupportedException] 'Windows Home edition detected, exiting...'
-}

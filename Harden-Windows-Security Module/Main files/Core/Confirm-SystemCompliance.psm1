@@ -73,6 +73,10 @@ function Confirm-SystemCompliance {
             }
         }
 
+        if ((Get-CimInstance -ClassName Win32_OperatingSystem).OperatingSystemSKU -in '101', '100') {
+            Write-Verbose -Message 'The Windows Home edition has been detected, many features are unavailable in this edition.' -Verbose
+        }
+
         #Region Defining-Variables
         # Total number of Compliant values not equal to N/A
         [System.UInt16]$TotalNumberOfTrueCompliantValues = 238

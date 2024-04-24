@@ -333,11 +333,15 @@ Function Protect-WindowsSecurity {
     }
 
     begin {
-
-        # This class provides a list of valid values for the Categories parameter of the Protect-WindowsSecurity function
+        # This class is the orchestrator of the hardening categories deciding which one of them is allowed to run
         Class Categoriex : System.Management.Automation.IValidateSetValuesGenerator {
             [System.String[]] GetValidValues() {
-                $Categoriex = @(
+
+                # Only return the NonAdmin category if the user is not an administrator
+                [System.Security.Principal.WindowsPrincipal]$Principal = New-Object -TypeName 'Security.Principal.WindowsPrincipal' -ArgumentList ([Security.Principal.WindowsIdentity]::GetCurrent())
+                if (-NOT $Principal.IsInRole([Security.Principal.WindowsBuiltinRole]::Administrator)) { Return 'NonAdminCommands' }
+
+                $Categoriex = [System.Collections.Generic.HashSet[System.String]](
                     'MicrosoftSecurityBaselines',
                     'Microsoft365AppsSecurityBaselines',
                     'MicrosoftDefender',
@@ -357,6 +361,14 @@ Function Protect-WindowsSecurity {
                     'DownloadsDefenseMeasures',
                     'NonAdminCommands'
                 )
+                # Remove the categories that are not allowed to run on Windows Home edition
+                if ((Get-CimInstance -ClassName Win32_OperatingSystem).OperatingSystemSKU -in '101', '100') {
+                    foreach ($CatName in $Categoriex) {
+                        if ($CatName -in 'BitLockerSettings', 'DownloadsDefenseMeasures', 'TLSSecurity', 'AttackSurfaceReductionRules', 'MicrosoftSecurityBaselines', 'Microsoft365AppsSecurityBaselines') {
+                            [System.Void]$Categoriex.Remove($CatName)
+                        }
+                    }
+                }
                 return [System.String[]]$Categoriex
             }
         }
@@ -1169,7 +1181,6 @@ Function Protect-WindowsSecurity {
         #Region Hardening-Categories-Functions-CLI-Experience
         Function Invoke-MicrosoftSecurityBaselines {
             param([System.Management.Automation.SwitchParameter]$RunUnattended)
-            if (!$IsAdmin) { return }
 
             $RefCurrentMainStep.Value++
             $Host.UI.RawUI.WindowTitle = '🔐 Security Baselines'
@@ -1213,7 +1224,6 @@ Function Protect-WindowsSecurity {
         }
         Function Invoke-Microsoft365AppsSecurityBaselines {
             param([System.Management.Automation.SwitchParameter]$RunUnattended)
-            if (!$IsAdmin) { return }
 
             $RefCurrentMainStep.Value++
             $Host.UI.RawUI.WindowTitle = '🧁 M365 Apps Security'
@@ -1239,7 +1249,6 @@ Function Protect-WindowsSecurity {
         }
         Function Invoke-MicrosoftDefender {
             param([System.Management.Automation.SwitchParameter]$RunUnattended)
-            if (!$IsAdmin) { return }
 
             $RefCurrentMainStep.Value++
             $Host.UI.RawUI.WindowTitle = '🍁 MSFT Defender'
@@ -1449,7 +1458,6 @@ Function Protect-WindowsSecurity {
         }
         Function Invoke-AttackSurfaceReductionRules {
             param([System.Management.Automation.SwitchParameter]$RunUnattended)
-            if (!$IsAdmin) { return }
 
             $RefCurrentMainStep.Value++
             $Host.UI.RawUI.WindowTitle = '🪷 ASR Rules'
@@ -1467,7 +1475,6 @@ Function Protect-WindowsSecurity {
         }
         Function Invoke-BitLockerSettings {
             param([System.Management.Automation.SwitchParameter]$RunUnattended)
-            if (!$IsAdmin) { return }
 
             $RefCurrentMainStep.Value++
             $Host.UI.RawUI.WindowTitle = '🔑 BitLocker'
@@ -2070,7 +2077,6 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
         }
         Function Invoke-TLSSecurity {
             param([System.Management.Automation.SwitchParameter]$RunUnattended)
-            if (!$IsAdmin) { return }
 
             $RefCurrentMainStep.Value++
             $Host.UI.RawUI.WindowTitle = '🛡️ TLS'
@@ -2110,7 +2116,6 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
         }
         Function Invoke-LockScreen {
             param([System.Management.Automation.SwitchParameter]$RunUnattended)
-            if (!$IsAdmin) { return }
 
             $RefCurrentMainStep.Value++
             $Host.UI.RawUI.WindowTitle = '💻 Lock Screen'
@@ -2147,7 +2152,6 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
         }
         Function Invoke-UserAccountControl {
             param([System.Management.Automation.SwitchParameter]$RunUnattended)
-            if (!$IsAdmin) { return }
 
             $RefCurrentMainStep.Value++
             $Host.UI.RawUI.WindowTitle = '💎 UAC'
@@ -2183,7 +2187,6 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
         }
         Function Invoke-WindowsFirewall {
             param([System.Management.Automation.SwitchParameter]$RunUnattended)
-            if (!$IsAdmin) { return }
 
             $RefCurrentMainStep.Value++
             $Host.UI.RawUI.WindowTitle = '🔥 Firewall'
@@ -2207,7 +2210,6 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
         }
         Function Invoke-OptionalWindowsFeatures {
             param([System.Management.Automation.SwitchParameter]$RunUnattended)
-            if (!$IsAdmin) { return }
 
             $RefCurrentMainStep.Value++
             $Host.UI.RawUI.WindowTitle = '🏅 Optional Features'
@@ -2258,7 +2260,6 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
         }
         Function Invoke-WindowsNetworking {
             param([System.Management.Automation.SwitchParameter]$RunUnattended)
-            if (!$IsAdmin) { return }
 
             $RefCurrentMainStep.Value++
             $Host.UI.RawUI.WindowTitle = '📶 Networking'
@@ -2283,7 +2284,6 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
         }
         Function Invoke-MiscellaneousConfigurations {
             param([System.Management.Automation.SwitchParameter]$RunUnattended)
-            if (!$IsAdmin) { return }
 
             $RefCurrentMainStep.Value++
             $Host.UI.RawUI.WindowTitle = '🥌 Miscellaneous'
@@ -2332,7 +2332,6 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
         }
         Function Invoke-WindowsUpdateConfigurations {
             param([System.Management.Automation.SwitchParameter]$RunUnattended)
-            if (!$IsAdmin) { return }
 
             $RefCurrentMainStep.Value++
             $Host.UI.RawUI.WindowTitle = '🪟 Windows Update'
@@ -2354,7 +2353,6 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
         }
         Function Invoke-EdgeBrowserConfigurations {
             param([System.Management.Automation.SwitchParameter]$RunUnattended)
-            if (!$IsAdmin) { return }
 
             $RefCurrentMainStep.Value++
             $Host.UI.RawUI.WindowTitle = '🦔 Edge'
@@ -2377,7 +2375,6 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
         }
         Function Invoke-CertificateCheckingCommands {
             param([System.Management.Automation.SwitchParameter]$RunUnattended)
-            if (!$IsAdmin) { return }
 
             $RefCurrentMainStep.Value++
             $Host.UI.RawUI.WindowTitle = '🎟️ Certificates'
@@ -2410,7 +2407,6 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
         }
         Function Invoke-CountryIPBlocking {
             param([System.Management.Automation.SwitchParameter]$RunUnattended)
-            if (!$IsAdmin) { return }
 
             $RefCurrentMainStep.Value++
             $Host.UI.RawUI.WindowTitle = '🧾 Country IPs'
@@ -2439,7 +2435,6 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
         }
         Function Invoke-DownloadsDefenseMeasures {
             param([System.Management.Automation.SwitchParameter]$RunUnattended)
-            if (!$IsAdmin) { return }
 
             $RefCurrentMainStep.Value++
             $Host.UI.RawUI.WindowTitle = '🎇 Downloads Defense Measures'
@@ -2562,9 +2557,7 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
             Write-Verbose -Message '$PSCommandPath was not found, Protect-WindowsSecurity function was most likely called from the GitHub repository'
         }
 
-        # Determine whether the current session is running as Administrator or not
-        [System.Security.Principal.WindowsIdentity]$Identity = [Security.Principal.WindowsIdentity]::GetCurrent()
-        [System.Security.Principal.WindowsPrincipal]$Principal = New-Object -TypeName 'Security.Principal.WindowsPrincipal' -ArgumentList $Identity
+        [System.Security.Principal.WindowsPrincipal]$Principal = New-Object -TypeName 'Security.Principal.WindowsPrincipal' -ArgumentList ([Security.Principal.WindowsIdentity]::GetCurrent())
         [System.Boolean]$IsAdmin = $Principal.IsInRole([Security.Principal.WindowsBuiltinRole]::Administrator) ? $True : $false
 
         # Get the execution policy for the current process
@@ -2613,10 +2606,11 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
         }
 
         #region RequirementsCheck
-        # Doesn't check for Windows Home single language edition
-        Write-Verbose -Message 'Checking if the OS is Windows Home edition...'
-        if ((Get-CimInstance -ClassName Win32_OperatingSystem).OperatingSystemSKU -eq '101') {
-            Throw [System.PlatformNotSupportedException] 'Windows Home edition detected, exiting...'
+        [System.Boolean]$IsHomeEdition = $false
+        # Home edition and Home edition single-language SKUs
+        if ((Get-CimInstance -ClassName Win32_OperatingSystem).OperatingSystemSKU -in '101', '100') {
+            $IsHomeEdition = $true
+            Write-Verbose -Message 'The Windows Home edition has been detected, some categories are unavailable' -Verbose
         }
 
         # Get OS build version
@@ -2742,6 +2736,7 @@ Execution Policy: $CurrentExecutionPolicy
                 $SyncHash['GlobalVars']['Offline'] = ($Offline -eq $true) ? $true : $false
                 $SyncHash['GlobalVars']['WorkingDir'] = $WorkingDir
                 $SyncHash['GlobalVars']['BootDMAProtectionCheck'] = $BootDMAProtectionCheck
+                $SyncHash['GlobalVars']['ValidAllowedCategories'] = [Categoriex]::new().GetValidValues()
 
                 # Adding the parent host to the synchronized hashtable
                 $SyncHash.ParentHost = $Host
@@ -2829,6 +2824,13 @@ Execution Policy: $CurrentExecutionPolicy
                             $SyncHash.SubCategoriesListView.Items | Where-Object -FilterScript { $_.IsEnabled -eq $false } | ForEach-Object -Process {
                                 $_.Content.IsChecked = $false
                             }
+
+                            # Disable categories that are not valid for the current session
+                            foreach ($Item in $SyncHash.categoriesListView.Items) {
+                                if ($Item.Content.Content -notin $ValidAllowedCategories) {
+                                    $Item.IsEnabled = $false
+                                }
+                            }
                         }
 
                         # Add Checked and Unchecked event handlers to category checkboxes
@@ -2856,37 +2858,21 @@ Execution Policy: $CurrentExecutionPolicy
                         $SyncHash.checkAllButtonCategories = $SyncHash.window.FindName('CheckAllButtonCategories')
                         $SyncHash.uncheckAllButtonCategories = $SyncHash.window.FindName('UncheckAllButtonCategories')
 
-                        # Disable the categories that require admin privileges if the GUI was not initiated with admin privileges
-                        if (-NOT $IsAdmin) {
-                            $SyncHash.categoriesListView.Items | Where-Object -FilterScript { $_.Content.Content -ne 'NonAdminCommands' } | ForEach-Object -Process { $_.IsEnabled = $false }
-                        }
-
                         # Add click event for 'Check All' button
                         $SyncHash.checkAllButtonCategories.Add_Click({
-                                # Activate all categories if Admin privileges are available
-                                if ($IsAdmin) {
-                                    $SyncHash.categoriesListView.Items | ForEach-Object -Process {
-                                        $CheckBox = $_.Content
-                                        $CheckBox.IsChecked = $true
-                                    }
-                                }
-                                # Activate only the categories that don't require Admin privileges
-                                else {
-                                    $SyncHash.categoriesListView.Items | ForEach-Object -Process {
-                                        if ($_.Content.Content -eq 'NonAdminCommands') {
-                                            $CheckBox = $_.Content
-                                            $CheckBox.IsChecked = $true
-
+                                $SyncHash.checkAllButtonCategories.Add_Click({
+                                        $SyncHash.CategoriesListView.Items | ForEach-Object -Process {
+                                            if ($_.Content.Content -in $ValidAllowedCategories) {
+                                                $_.Content.IsChecked = $true
+                                            }
                                         }
-                                    }
-                                }
+                                    })
                             })
 
                         # Add click event for 'Uncheck All' button
                         $SyncHash.uncheckAllButtonCategories.Add_Click({
                                 $SyncHash.categoriesListView.Items | ForEach-Object -Process {
-                                    $CheckBox = $_.Content
-                                    $CheckBox.IsChecked = $false
+                                    $_.Content.IsChecked = $false
                                 }
                             })
                         #Endregion Check-Uncheck buttons for Categories

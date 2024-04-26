@@ -62,22 +62,22 @@ Computer Configuration\Administrative Templates\Network\Network Connections\Proh
 
 ## 3. Firewall local rule merging
 
-This can prevent Hyper-V default switch from working properly, please see [this forum post on Microsoft Tech Community](https://techcommunity.microsoft.com/t5/microsoft-security-baselines/security-baseline-with-hyper-v-default-switch/m-p/2622890) for more info:
+This can prevent Hyper-V default switch from working properly, please see [this forum post on Microsoft Tech Community](https://techcommunity.microsoft.com/t5/microsoft-security-baselines/security-baseline-with-hyper-v-default-switch/m-p/2622890) for more info.
 
-The Group policy that we change back to default values are located in:
-Computer Configuration -> Windows Settings -> Security Settings -> Windows Firewall with Advanced Security -> Windows Firewall with Advanced Security -> Windows Firewall Properties -> Public Profile Tab -> Settings (select Customize) -> Rule merging, "Apply local connection security rules:" to "No".
+The Group policies that we change back to default values are located in:
 
-Here is a screenshot:
+```
+Computer Configuration\Windows Settings\Security Settings\Windows Defender Firewall with Advanced Security\
+```
+
+From there you need to select ***properties*** and then in each relevant profile tab, you need to select ***Customize*** and change the 2 settings for ***Rule merging*** to ***Yes (Default)*** and also set ***Display a notification*** to ***Yes***, which is the default value in Windows.
+
+Here is an screenshot of the settings for the Public Profile tab:
 
 <br>
 
 ![Firewall](https://user-images.githubusercontent.com/118815227/214886150-0acca5b6-5e38-49c4-b0ef-99b1eb832f4f.png)
 
-Policy path:
-
-```
-Computer Configuration\Windows Settings\Security Settings\Windows Defender Firewall with Advanced Security\
-```
 
 <br>
 

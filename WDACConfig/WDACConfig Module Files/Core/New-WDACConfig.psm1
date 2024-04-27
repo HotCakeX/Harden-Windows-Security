@@ -69,6 +69,13 @@ Function New-WDACConfig {
         [Parameter(Mandatory = $false, ParameterSetName = 'Make Policy From Audit Logs')]
         [System.UInt64]$LogSize,
 
+        [Parameter(Mandatory = $false, ParameterSetName = 'Make AllowMSFT With Block Rules')]
+        [Parameter(Mandatory = $false, ParameterSetName = 'Prep MSFT Only Audit')]
+        [Parameter(Mandatory = $false, ParameterSetName = 'Prep Default Windows Audit')]
+        [Parameter(Mandatory = $false, ParameterSetName = 'Make Light Policy')]
+        [Parameter(Mandatory = $false, ParameterSetName = 'Make DefaultWindows With Block Rules')]
+        [System.Management.Automation.SwitchParameter]$EnableScriptEnforcement,
+
         [Parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$SkipVersionCheck
     )
 
@@ -294,6 +301,10 @@ Function New-WDACConfig {
                 Write-Verbose -Message 'Setting "Required:EV Signers" policy rule option for the AllowMicrosoftPlusBlockRules.xml policy because RequireEVSigners parameter was used'
                 Set-RuleOption -FilePath $FinalPolicyPath -Option 8
             }
+            if ($EnableScriptEnforcement) {
+                Write-Verbose -Message 'Enabling script enforcement for the policy'
+                Set-RuleOption -FilePath $FinalPolicyPath -Option 11 -Delete
+            }
 
             if ($Deploy) {
                 $CurrentStep++
@@ -387,10 +398,13 @@ Function New-WDACConfig {
                 Write-Verbose -Message 'Setting "Boot Audit on Failure" and "Advanced Boot Options Menu" policy rule options because TestMode parameter was used'
                 9..10 | ForEach-Object -Process { Set-RuleOption -FilePath $FinalPolicyPath -Option $_ }
             }
-
             if ($RequireEVSigners) {
                 Write-Verbose -Message 'Setting "Required:EV Signers" policy rule option because RequireEVSigners parameter was used'
                 Set-RuleOption -FilePath $FinalPolicyPath -Option 8
+            }
+            if ($EnableScriptEnforcement) {
+                Write-Verbose -Message 'Enabling script enforcement for the policy'
+                Set-RuleOption -FilePath $FinalPolicyPath -Option 11 -Delete
             }
 
             if ($Deploy) {
@@ -580,6 +594,11 @@ Function New-WDACConfig {
             Write-Verbose -Message 'Assigning "PrepMSFTOnlyAudit" as the policy name'
             Set-CIPolicyIdInfo -PolicyName 'PrepMSFTOnlyAudit' -FilePath $FinalPolicyPath
 
+            if ($EnableScriptEnforcement) {
+                Write-Verbose -Message 'Enabling script enforcement for the policy'
+                Set-RuleOption -FilePath $FinalPolicyPath -Option 11 -Delete
+            }
+
             if ($Deploy) {
                 $CurrentStep++
                 Write-Progress -Id 5 -Activity 'Creating the CIP file' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
@@ -665,6 +684,11 @@ Function New-WDACConfig {
 
             Write-Verbose -Message 'Assigning "PrepDefaultWindowsAudit" as the policy name'
             Set-CIPolicyIdInfo -PolicyName 'PrepDefaultWindows' -FilePath $FinalPolicyPath
+
+            if ($EnableScriptEnforcement) {
+                Write-Verbose -Message 'Enabling script enforcement for the policy'
+                Set-RuleOption -FilePath $FinalPolicyPath -Option 11 -Delete
+            }
 
             if ($Deploy) {
                 $CurrentStep++
@@ -903,6 +927,10 @@ Function New-WDACConfig {
                 Write-Verbose -Message 'Setting "Required:EV Signers" policy rule option because RequireEVSigners parameter was used'
                 Set-RuleOption -FilePath $FinalPolicyPath -Option 8
             }
+            if ($EnableScriptEnforcement) {
+                Write-Verbose -Message 'Enabling script enforcement for the policy'
+                Set-RuleOption -FilePath $FinalPolicyPath -Option 11 -Delete
+            }
 
             Write-Verbose -Message 'Resetting the policy ID and setting a name for the policy'
             Set-CIPolicyIdInfo -FilePath $FinalPolicyPath -ResetPolicyID -PolicyName "Signed And Reputable policy - $(Get-Date -Format 'MM-dd-yyyy')" | Out-Null
@@ -1015,6 +1043,8 @@ Function New-WDACConfig {
     Make a WDAC Policy with ISG for Lightly Managed system
 .PARAMETER MakeDefaultWindowsWithBlockRules
     Make a WDAC policy by merging DefaultWindows policy with the recommended block rules
+.PARAMETER EnableScriptEnforcement
+    Enable script enforcement for the policy
 .PARAMETER BasePolicyType
     Select the Base Policy Type
 .PARAMETER Deploy

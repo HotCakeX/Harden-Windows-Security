@@ -31,10 +31,6 @@ Function New-SupplementalWDACConfig {
         [parameter(Mandatory = $true, ParameterSetName = 'Certificate', ValueFromPipelineByPropertyName = $true)]
         [System.IO.DirectoryInfo[]]$CertificatePaths,
 
-        [ValidateSet('UserMode', 'KernelMode')]
-        [parameter(Mandatory = $false, ParameterSetName = 'Certificate')]
-        [System.String]$SigningScenario = 'UserMode',
-
         [ValidateCount(1, 232)]
         [ValidatePattern('^[a-zA-Z0-9 \-]+$', ErrorMessage = 'The policy name can only contain alphanumeric, space and dash (-) characters.')]
         [parameter(Mandatory = $true, ValueFromPipelineByPropertyName = $true)]
@@ -67,6 +63,10 @@ Function New-SupplementalWDACConfig {
 
         [Parameter(Mandatory = $false, ParameterSetName = 'Installed AppXPackages')]
         [System.Management.Automation.SwitchParameter]$Force,
+
+        [ValidateSet('UserMode', 'KernelMode')]
+        [parameter(Mandatory = $false, ParameterSetName = 'Certificate')]
+        [System.String]$SigningScenario = 'UserMode',
 
         [Parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$SkipVersionCheck
     )

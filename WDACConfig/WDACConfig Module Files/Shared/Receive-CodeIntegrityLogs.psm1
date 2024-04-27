@@ -357,6 +357,11 @@ Function Receive-CodeIntegrityLogs {
                 # Convert the main event data to XML object
                 $Xml = [System.Xml.XmlDocument]$Event.ToXml()
 
+                if ($null -eq $Xml.event.EventData.data) {
+                    Write-Warning -Message "Receive-CodeIntegrityLogs: Skipping Main event data for: $($Log['File Name'])"
+                    continue
+                }
+
                 # Place each main event data in a hashtable and return the hashtable at the end
                 [System.Collections.Hashtable[]]$ProcessedEvents = $Xml.event.EventData.data | ForEach-Object -Begin { [System.Collections.Hashtable]$Hash = @{} } -Process { $Hash[$_.Name] = $_.'#text' } -End { [System.Collections.Hashtable]$Hash }
 
@@ -451,6 +456,11 @@ Function Receive-CodeIntegrityLogs {
 
                             # Convert the main event data to XML object
                             $XmlCorrelated = [System.Xml.XmlDocument]$CorrelatedEvent.ToXml()
+
+                            if ($null -eq $XmlCorrelated.event.EventData.data) {
+                                Write-Warning -Message "Receive-CodeIntegrityLogs: Skipping Publisher check for: '$($Log['File Name'])' due to missing correlated event data"
+                                continue
+                            }
 
                             # Place each event data in a hashtable and return the hashtable at the end
                             [System.Collections.Hashtable[]]$ProcessedCorrelatedEvents = $XmlCorrelated.event.EventData.data | ForEach-Object -Begin { [System.Collections.Hashtable]$Hash = @{} } -Process { $Hash[$_.name] = $_.'#text' } -End { [System.Collections.Hashtable]$Hash }

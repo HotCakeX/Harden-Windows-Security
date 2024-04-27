@@ -358,7 +358,7 @@ Function Receive-CodeIntegrityLogs {
                 $Xml = [System.Xml.XmlDocument]$Event.ToXml()
 
                 if ($null -eq $Xml.event.EventData.data) {
-                    Write-Warning -Message "Receive-CodeIntegrityLogs: Skipping Main event data for: $($Log['File Name'])"
+                    Write-Verbose -Message "Receive-CodeIntegrityLogs: Skipping Main event data for: $($Log['File Name'])"
                     continue
                 }
 
@@ -458,7 +458,7 @@ Function Receive-CodeIntegrityLogs {
                             $XmlCorrelated = [System.Xml.XmlDocument]$CorrelatedEvent.ToXml()
 
                             if ($null -eq $XmlCorrelated.event.EventData.data) {
-                                Write-Warning -Message "Receive-CodeIntegrityLogs: Skipping Publisher check for: '$($Log['File Name'])' due to missing correlated event data"
+                                Write-Verbose -Message "Receive-CodeIntegrityLogs: Skipping Publisher check for: '$($Log['File Name'])' due to missing correlated event data"
                                 continue
                             }
 

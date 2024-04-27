@@ -52,6 +52,23 @@
     }
 }
 
+# Opens File picker GUI so that user can select multiple .cer files
+[System.Management.Automation.ScriptBlock]$ArgumentCompleterCerFilesPathsPicker = {
+    # Create a new OpenFileDialog object
+    [System.Windows.Forms.OpenFileDialog]$Dialog = New-Object -TypeName 'System.Windows.Forms.OpenFileDialog'
+    # Set the filter to show only certificate files
+    $Dialog.Filter = 'Certificate files (*.cer)|*.cer'
+    $Dialog.Title = 'Select certificate files'
+    $Dialog.InitialDirectory = $UserConfigDir
+    $Dialog.Multiselect = $true
+    # Show the dialog and get the result
+    [System.String]$Result = $Dialog.ShowDialog()
+    # If the user clicked OK, return the selected file paths
+    if ($Result -eq 'OK') {
+        return "`"$($Dialog.FileNames -join '","')`""
+    }
+}
+
 # Opens File picker GUI so that user can select a .xml file
 [System.Management.Automation.ScriptBlock]$ArgumentCompleterXmlFilePathsPicker = {
     # Create a new OpenFileDialog object

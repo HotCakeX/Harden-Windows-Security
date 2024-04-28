@@ -344,7 +344,7 @@ Creates a Supplemental policy based on the package name of an installed app. Mor
 
 ## Parameters
 
-### PackageName
+### -PackageName
 
 Enter the [package name](https://learn.microsoft.com/en-us/powershell/module/appx/get-appxpackage) of an installed app. Supports wildcard `*` character. e.g., `*Edge*` or `"*Microsoft*"`.
 
@@ -362,7 +362,7 @@ Enter the [package name](https://learn.microsoft.com/en-us/powershell/module/app
 
 <br>
 
-### SuppPolicyName
+### -SuppPolicyName
 
 Add a descriptive name for the Supplemental policy. Accepts only alphanumeric and space characters.
 
@@ -439,5 +439,129 @@ Indicates that the cmdlet won't ask for confirmation and will proceed with creat
 
 * ***SupplementalPolicy`<Custom Name>`.xml***
 * ***{GUID}.cip***
+
+<br>
+
+<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">
+
+<br>
+
+## New-SupplementalWDACConfig -Certificates
+
+![image](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/New-SupplementalWDACConfig/New-SupplementalWDACConfig%20-Certificates.gif)
+
+## Syntax
+
+```powershell
+    New-SupplementalWDACConfig
+    [-Certificates]
+    -CertificatePaths <FileInfo[]>
+    -SuppPolicyName <String>
+    [-PolicyPath <FileInfo>]
+    [-Deploy]
+    [-SigningScenario <String>]
+    [-SkipVersionCheck]
+    [<CommonParameters>]
+```
+
+## Description
+
+Creates a Supplemental policy based on the certificate paths.
+
+* If you select a root CA certificate, it will generate Signer rules based on RootCertificate level which contains TBS Hash only.
+
+* If you select a non-root CA certificate such as Leaf Certificate or Intermediate certificate, it will generate Signer rules based on LeafCertificate level, that means it will contain TBS Hash as well as the subject name of the selected certificate.
+
+## Parameters
+
+### -CertificatePaths
+
+Browse for the certificate file(s) that you want to use to create the Supplemental policy. Supports file picker GUI by showing only .cer files.
+
+<div align='center'>
+
+| Type: |[FileInfo](https://learn.microsoft.com/en-us/dotnet/api/system.io.fileinfo)[]|
+| :-------------: | :-------------: |
+| Position: | Named |
+| Default value: | None |
+| Required: | True |
+| Accept pipeline input: | False |
+| Accept wildcard characters: | True |
+
+</div>
+
+<br>
+
+### -SuppPolicyName
+
+Add a descriptive name for the Supplemental policy. Accepts only alphanumeric and space characters.
+
+<div align='center'>
+
+| Type: |[String](https://learn.microsoft.com/en-us/dotnet/api/system.string)|
+| :-------------: | :-------------: |
+| Position: | Named |
+| Default value: | None |
+| Required: | True |
+| Accept pipeline input: | False |
+| Accept wildcard characters: | False |
+
+</div>
+
+<br>
+
+### -PolicyPath
+
+Browse for the xml file of the Base policy this Supplemental policy is going to expand. Supports tab completion by showing only `.xml` files with **Base Policy** Type.
+
+<div align='center'>
+
+| Type: |[FileInfo](https://learn.microsoft.com/en-us/dotnet/api/system.io.fileinfo)|
+| :-------------: | :-------------: |
+| Position: | Named |
+| Default value: | None |
+| Required: | False |
+| [Automatic:](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDACConfig#about-automatic-parameters) | True |
+| Accept pipeline input: | False |
+| Accept wildcard characters: | False |
+
+</div>
+
+<br>
+
+### -Deploy
+
+Indicates that the module will automatically deploy the Supplemental policy after creation.
+
+<div align='center'>
+
+| Type: |[SwitchParameter](https://learn.microsoft.com/en-us/dotnet/api/system.management.automation.switchparameter)|
+| :-------------: | :-------------: |
+| Position: | Named |
+| Default value: | None |
+| Required: | False |
+| Accept pipeline input: | False |
+| Accept wildcard characters: | False |
+
+</div>
+
+<br>
+
+### -SigningScenario
+
+You can choose one of the following options: "UserMode", "KernelMode"
+The certificate will be added to the policy based on the selected scenario.
+
+<div align='center'>
+
+| Type: |[SwitchParameter](https://learn.microsoft.com/en-us/dotnet/api/system.management.automation.switchparameter)|
+| :-------------: | :-------------: |
+| Position: | Named |
+| Default value: | `UserMode` |
+| Required: | False |
+| Accept pipeline input: | False |
+| Accept wildcard characters: | False |
+
+</div>
 
 <br>

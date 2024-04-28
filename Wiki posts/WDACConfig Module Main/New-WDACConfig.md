@@ -97,6 +97,7 @@ New-WDACConfig
      [-TestMode]
      [-RequireEVSigners]
      [-SkipVersionCheck]
+     [-EnableScriptEnforcement]
      [<CommonParameters>]
 ```
 
@@ -181,6 +182,22 @@ Indicates that the created/deployed policy will have [Require EV Signers](https:
 
 </div>
 
+### -EnableScriptEnforcement
+
+Enables [script enforcement](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/script-enforcement) in the created policy.
+
+<div align='center'>
+
+| Type: |[SwitchParameter](https://learn.microsoft.com/en-us/dotnet/api/system.management.automation.switchparameter)|
+| :-------------: | :-------------: |
+| Position: | Named |
+| Default value: | None |
+| Required: | False |
+| Accept pipeline input: | False |
+| Accept wildcard characters: | False |
+
+</div>
+
 <br>
 
 ### The outputs of the parameter are
@@ -229,6 +246,7 @@ New-WDACConfig
      [-Deploy]
      [-LogSize <UInt64>]
      [-SkipVersionCheck]
+     [-EnableScriptEnforcement]
      [<CommonParameters>]
 ```
 
@@ -276,6 +294,22 @@ Deploys the policy instead of just creating it.
 
 </div>
 
+### -EnableScriptEnforcement
+
+Enables [script enforcement](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/script-enforcement) in the created policy.
+
+<div align='center'>
+
+| Type: |[SwitchParameter](https://learn.microsoft.com/en-us/dotnet/api/system.management.automation.switchparameter)|
+| :-------------: | :-------------: |
+| Position: | Named |
+| Default value: | None |
+| Required: | False |
+| Accept pipeline input: | False |
+| Accept wildcard characters: | False |
+
+</div>
+
 <br>
 
 <img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">
@@ -294,6 +328,7 @@ New-WDACConfig
      [-Deploy]
      [-LogSize <UInt64>]
      [-SkipVersionCheck]
+     [-EnableScriptEnforcement]
      [<CommonParameters>]
 ```
 
@@ -328,6 +363,22 @@ Specifies the log size for ***Microsoft-Windows-CodeIntegrity/Operational*** eve
 ### -Deploy
 
 Deploys the policy instead of just creating it.
+
+<div align='center'>
+
+| Type: |[SwitchParameter](https://learn.microsoft.com/en-us/dotnet/api/system.management.automation.switchparameter)|
+| :-------------: | :-------------: |
+| Position: | Named |
+| Default value: | None |
+| Required: | False |
+| Accept pipeline input: | False |
+| Accept wildcard characters: | False |
+
+</div>
+
+### -EnableScriptEnforcement
+
+Enables [script enforcement](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/script-enforcement) in the created policy.
 
 <div align='center'>
 
@@ -637,6 +688,7 @@ New-WDACConfig
      [-TestMode]
      [-RequireEVSigners]
      [-SkipVersionCheck]
+     [-EnableScriptEnforcement]
      [<CommonParameters>]
 ```
 
@@ -713,6 +765,22 @@ Indicates that the created/deployed policy will have [Require EV Signers](https:
 
 </div>
 
+### -EnableScriptEnforcement
+
+Enables [script enforcement](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/script-enforcement) in the created policy.
+
+<div align='center'>
+
+| Type: |[SwitchParameter](https://learn.microsoft.com/en-us/dotnet/api/system.management.automation.switchparameter)|
+| :-------------: | :-------------: |
+| Position: | Named |
+| Default value: | None |
+| Required: | False |
+| Accept pipeline input: | False |
+| Accept wildcard characters: | False |
+
+</div>
+
 <br>
 
 ### The outputs of the parameter are
@@ -739,6 +807,7 @@ New-WDACConfig
      [-TestMode]
      [-RequireEVSigners]
      [-SkipVersionCheck]
+     [-EnableScriptEnforcement]
      [<CommonParameters>]
 ```
 
@@ -794,6 +863,22 @@ Indicates that the created/deployed policy will have ***Enabled:Boot Audit on Fa
 Indicates that the created/deployed policy will have [Require EV Signers](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/wdac-wizard-create-base-policy#advanced-policy-rules-description) policy rule option.
 
  * In addition to being WHQL signed, this rule requires that drivers must have been submitted by a partner that has an Extended Verification (EV) certificate. All Windows 10 and later, or Windows 11 drivers will meet this requirement.
+
+<div align='center'>
+
+| Type: |[SwitchParameter](https://learn.microsoft.com/en-us/dotnet/api/system.management.automation.switchparameter)|
+| :-------------: | :-------------: |
+| Position: | Named |
+| Default value: | None |
+| Required: | False |
+| Accept pipeline input: | False |
+| Accept wildcard characters: | False |
+
+</div>
+
+### -EnableScriptEnforcement
+
+Enables [script enforcement](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/script-enforcement) in the created policy.
 
 <div align='center'>
 

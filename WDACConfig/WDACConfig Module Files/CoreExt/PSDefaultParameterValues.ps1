@@ -58,6 +58,7 @@ $PSDefaultParameterValues = @{
     'Remove-DuplicateFileAttribRef_IDBased:Verbose'               = $Verbose
     'Remove-OrphanAllowedSignersAndCiSigners_IDBased:Verbose'     = $Verbose
     'Remove-UnreferencedFileRuleRefs:Verbose'                     = $Verbose
+    'New-RootAndLeafCertificateLevelRules:Verbose'                = $Verbose
 
     'Build-SignerAndHashObjects:Debug'                            = $Debug
     'Clear-CiPolicy_Semantic:Debug'                               = $Debug
@@ -76,13 +77,14 @@ $PSDefaultParameterValues = @{
     'Remove-DuplicateFileAttribRef_IDBased:Debug'                 = $Debug
     'Remove-OrphanAllowedSignersAndCiSigners_IDBased:Debug'       = $Debug
     'Remove-UnreferencedFileRuleRefs:Debug'                       = $Debug
+    'New-RootAndLeafCertificateLevelRules:Debug'                  = $Debug
 }
 
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCD9AlBwSspsBT8W
-# HaVzRN4qDnfo1WUtSwp96mYC/GpumKCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCCBtwdWe9IKoQcw
+# aOK3F3Pc4hwasOcsI+SUCSF7+QQOOqCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -129,16 +131,16 @@ $PSDefaultParameterValues = @{
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQgUQX4s/cFRAGgvbX9weQ5lUu2QFi4Qp1iUpQafWAFC5AwDQYJKoZIhvcNAQEB
-# BQAEggIAh//5SVI7ScgGzK0h5Ika1uv/IWt/b0FAtx8YAvn2EzdgZSBE7zmqcSD1
-# M7oEOloC16L+CHVCQ+wXOyKu0BkbSZlkrLQIT4qcNbJEUtqJx0y7/t4Q2mRNf23r
-# wPYtQonDNxfcUuWZ2L/0ssep8bTtkHfnG+q5MTsYlXDVr1+w+zoaXRmB7BuvxZZ5
-# sNSG3+4RCD6siDHQVPWI7CkjSvYwn1JU3OcZP6qQWu0bTZJqRXf3ZY/dih+TutOx
-# Ddur+vXJvSzpOABD0oSayUgVShetrzscnXDuiQlnNczIpU0pquwxLd5juLtuT56C
-# KiERssQWTPQSBHDkWvuzsJfgjDsJ/hqSbJAmYtl4pz3Ez1iSKNaI4QGxbRuzsItY
-# 13WM2J7J1hzerolcpY6PkD30B390ds42uSohI6gUB7HTD9bCkOgr8rZrW9n1rQIs
-# cDPNT+Fd1W+d9B36AKX4fIZ1N4u+y3Ds4Nekku54+BVe6hVmCtMxIiOHVJeMr/9H
-# 8TCNCV2WUAPYvyD79HXVbOP3HY44VPlieZp7sqSriWYeR8+7J5shVdVAoNOkqES3
-# w6v0zegFp1sIt8R6vYdA+UiqlNWTVyhpeaimEGcx0ZgKAji6/Ua1IIzusF3cld+a
-# 9KvkVv0TRBsNAJpxhCo8n/6Ov5gocwfFtanZ3/HmvhrYIF3sNH4=
+# IgQg51w3MXbYcZni3xpBHZxYt0A+4N/f2uzpPzQDKI52gPswDQYJKoZIhvcNAQEB
+# BQAEggIAJCpNfVAdFFOLXA3x3DDv7jEB3HH3cv6DHpM1dpA4tZbTYHfFySyb10LQ
+# fxOP9a5mPKEnPydUetFmMWeT1KSkLE3F07zS+ruVRLT0c/PhZsJy1kQbjHMJzD3N
+# UU5vofwIuT0OTSE1mM9TFWorLllMmX5evP/NHRnJPa1w9tBigEyk8CK26kF7c08x
+# K4cOdKf7dY+pQRpDDHTkNeGpbQPTud9jNqDrgX6AwOtMcKQM15JWDpYqCxUG/Cus
+# miD+zIkd5OQn3WlyT8zONT0uyDBxXBtwZBKoVUBIJHBbO63mn4pN4vTWUDOvLQSb
+# wdGmSdEGpoVR7K52xTipCzmdu5KzXgsniS3WwT7k4siSqDwls/Q0EyCDBxAGOwAE
+# qZsORpDDUn5Np7mWJyUuIkGUPleIZ7s3t8TY8Q/LsDLwsyBgBd+3oYL9dFQPldk2
+# ZyUfaY20lOBRVFH6cQ6yLdYaq5W9PpraswDOyjtpae1uuJXqkyhQI1jEd9mufpHG
+# bKw6bU6gfSde6xL6Srkx22VogGVrAITc6vDmPz/7st9IY8TGnvZKeUaj6EXaHNHE
+# /gRtFosJKwFVUcVC3yUV7nqqtmziAVS/XQBBRFLroH/RiynIovwSis9cbX90//O7
+# ZVvWrNBiyr7s0MHUl7WJIyfkhvMSSVbOopKft4Hx1gF7WsOSmbc=
 # SIG # End signature block

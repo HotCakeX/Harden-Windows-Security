@@ -357,6 +357,11 @@ Function Receive-CodeIntegrityLogs {
                 # Convert the main event data to XML object
                 $Xml = [System.Xml.XmlDocument]$Event.ToXml()
 
+                if ($null -eq $Xml.event.EventData.data) {
+                    Write-Verbose -Message "Receive-CodeIntegrityLogs: Skipping Main event data for: $($Log['File Name'])"
+                    continue
+                }
+
                 # Place each main event data in a hashtable and return the hashtable at the end
                 [System.Collections.Hashtable[]]$ProcessedEvents = $Xml.event.EventData.data | ForEach-Object -Begin { [System.Collections.Hashtable]$Hash = @{} } -Process { $Hash[$_.Name] = $_.'#text' } -End { [System.Collections.Hashtable]$Hash }
 
@@ -451,6 +456,11 @@ Function Receive-CodeIntegrityLogs {
 
                             # Convert the main event data to XML object
                             $XmlCorrelated = [System.Xml.XmlDocument]$CorrelatedEvent.ToXml()
+
+                            if ($null -eq $XmlCorrelated.event.EventData.data) {
+                                Write-Verbose -Message "Receive-CodeIntegrityLogs: Skipping Publisher check for: '$($Log['File Name'])' due to missing correlated event data"
+                                continue
+                            }
 
                             # Place each event data in a hashtable and return the hashtable at the end
                             [System.Collections.Hashtable[]]$ProcessedCorrelatedEvents = $XmlCorrelated.event.EventData.data | ForEach-Object -Begin { [System.Collections.Hashtable]$Hash = @{} } -Process { $Hash[$_.name] = $_.'#text' } -End { [System.Collections.Hashtable]$Hash }
@@ -664,8 +674,8 @@ Export-ModuleMember -Function 'Receive-CodeIntegrityLogs'
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCCnd2r+Kkm1IrVj
-# EZdgPY6mxjudRU+z64ET05m9zNRjDaCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCBgkmVhIPVsXm9I
+# I3ha6gQdy9qk86YrQEWgjZ7qOjQ2dqCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -712,16 +722,16 @@ Export-ModuleMember -Function 'Receive-CodeIntegrityLogs'
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQgrUpbcJvNnqV4nRV4nFGY+5jOfdfZ8s2FcEKTwVTyNeswDQYJKoZIhvcNAQEB
-# BQAEggIAKLR6qPI9lchjEdjSPUBHcMdehRRChlh6deUWZh4ZPAVgFvKBfnKhSPB8
-# uYTCDeffC87+sxVZBATCDl5nH+4MZkGVDQX6lrDZn3RvyoOiQHmE4QEAHuloTUxX
-# Uuew/E1a+LvBDpH+VoGXtyFKjUfm9O9bAy7/VOB2kWq+4CNyi4tVFuQ208w1sEDU
-# JcrqGR9EvQVVHDtzSkOUMj0oIYSWXQTx8F+BvqZ0aqkyZEo/cZDoQUue6iAq5X2H
-# +W0ixUsWGx6UIlT6Pb65/tnYsp71nhTFA6f3i79DxIi/xyJXhg+owa50bf9VfsJQ
-# Ay9fES1Op84Hs/ph9vYjf1BeS1GPyEcZBWSLpr/Gux0VAw/+Q0bszFHx92pzA+hD
-# ekiHaHhNRLLLl0IekFvw4LT9+ix3b60/lsEZVcVo8bA8jYLdtis/6o67QAhECjfq
-# A45FYHhz+4b5QCgJVVBcCRQm/mexAakZhDWaMhBsgqDDg9r78Xjc6WeexpfLWMOD
-# /WUg6ye2/0tTwoQhJz0FmxIXw7hRjPFYH7Vb+IvqyvGTUgEzTnSX8ruQwE7OP4LU
-# 2j/lwQwUymIxITAvuliQBrlKD9LW8nqPPC4D6iX2HXtoEtJeQroauLSic7AoNOgL
-# uZUOY7aSNLZUQbFdwGL4mFU/FnbR7bkxxGX8xoTfwNFcVQwD5PM=
+# IgQg6OpMIrCfPmQ9SmJ9HJewjCq7lJN/mJ/VdGblE/XloKYwDQYJKoZIhvcNAQEB
+# BQAEggIAbSOvKZzGfnsOkK/0MnuBkyX0kyNX2KOh9KKQ5AlBAQ55zx4TdntR7OFS
+# v4bU8x8+gNGPd8CDycUOhoQCRH9MbG6T0fvLdgpytijGUL9G4vcZuka5tx3Ra7YR
+# 0dMGkzc1hxjra0ScqHaUYYkgTGMSolrcUaZ8THBb8zICxQORDRHAsAouG9y4iETw
+# 3qxCdz5mCJJK92h5Fde+j3dRwajLQfk+mWPX8zovN7/35o4m/qo3BHAdKRq+Gm1b
+# jQ2EtGMK56anNPEpObHPzV9M76YRmiusgN2GXg37V56gXU5WEO5NHKqG2Kuyu2GM
+# ijgWv2LJOswK5h9TIzR/19tb8rlnnfy1lFL7zxzyOgi05c8zyd2uaUZ/Bb+rs+t+
+# riU9bx3c0/kNRq71R74pO8g6h8dXihKbTojBGx58kxahCXGkB3JZI8AE/zDkx6uj
+# AZ+unrZSHnsmNfcJvyLeKqGPwkQPocRkxI1yRfLpvO2GTfxp7RMAntsiNSk2t3hf
+# MPE14HGdB8rMutGU+BxIzTQq/liBD4GX6xuPaxfEYZ4K03kTg8qTy/yFUvYNMdJK
+# 6iEDEEWPkDoEXxzh8IkDTWNrHkC5mFoBwNkuiJvkP9Lw9bSzErt+9MQb79ObNunS
+# BnkJKjXyiRgi+GP9Q2Hyxnm2aXQbMWTFspBt9hQAf5ZOMCMW1UY=
 # SIG # End signature block

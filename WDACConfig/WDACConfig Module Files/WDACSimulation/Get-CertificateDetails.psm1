@@ -132,17 +132,14 @@ Function Get-CertificateDetails {
 
             #Region Intermediate-Certificates-Processing
 
-            # The reason the commented code below is not used is because some files such as C:\Windows\System32\xcopy.exe or d3dcompiler_47.dll that are signed by Microsoft report a different Leaf certificate common name when queried using Get-AuthenticodeSignature
-            # (Get-AuthenticodeSignature -FilePath $FilePath).SignerCertificate.Subject -match 'CN=(?<InitialRegexTest4>.*?),.*' | Out-Null
+            [System.Security.Cryptography.X509Certificates.X509Certificate]$SignedFileSigDetails = [System.Security.Cryptography.X509Certificates.X509Certificate]::CreateFromSignedFile($FilePath)
 
-            [System.Security.Cryptography.X509Certificates.X509Certificate]$CertificateUsingAlternativeMethod = [System.Security.Cryptography.X509Certificates.X509Certificate]::CreateFromSignedFile($FilePath)
-            $CertificateUsingAlternativeMethod.Subject -match 'CN=(?<InitialRegexTest4>.*?),.*' | Out-Null
-
-            [System.String]$TestAgainst = $matches['InitialRegexTest4'] -like '*"*' ? ((Get-AuthenticodeSignature -LiteralPath $FilePath).SignerCertificate.Subject -split 'CN="(.+?)"')[1] : $matches['InitialRegexTest4']
+            # Get the subject common name of the signed file
+            [System.String]$FileSubjectCN = [WDACConfig.CryptoAPI]::GetNameString($SignedFileSigDetails.Handle, [WDACConfig.CryptoAPI]::CERT_NAME_SIMPLE_DISPLAY_TYPE, $null, $false)
 
             # ($_.SubjectCN -ne $_.IssuerCN) -> To omit Root certificate from the result
-            # ($_.SubjectCN -ne $TestAgainst) -> To omit the Leaf certificate
-            $Obj | Where-Object -FilterScript { ($_.SubjectCN -ne $_.IssuerCN) -and ($_.SubjectCN -ne $TestAgainst) } |
+            # ($_.SubjectCN -ne $FileSubjectCN) -> To omit the Leaf certificate
+            $Obj | Where-Object -FilterScript { ($_.SubjectCN -ne $_.IssuerCN) -and ($_.SubjectCN -ne $FileSubjectCN) } |
 
             # To make sure the output values are unique based on TBSValue property
             Group-Object -Property TBSValue | ForEach-Object -Process { $_.Group[0] } |
@@ -162,13 +159,14 @@ Function Get-CertificateDetails {
 
             # Add the $IntermediateCerts object to the final object
             Add-Member -InputObject $FinalObj -MemberType NoteProperty -Name 'IntermediateCertificates' -Value $IntermediateCerts
+
             #Endregion Intermediate-Certificates-Processing
 
             #Region Leaf-Certificate-Processing
 
             # ($_.SubjectCN -ne $_.IssuerCN) -> To omit Root certificate from the result
-            # ($_.SubjectCN -eq $TestAgainst) -> To get the Leaf certificate
-            $TempLeafCertObj = $Obj | Where-Object -FilterScript { ($_.SubjectCN -ne $_.IssuerCN) -and ($_.SubjectCN -eq $TestAgainst) } |
+            # ($_.SubjectCN -eq $FileSubjectCN) -> To get the Leaf certificate
+            $TempLeafCertObj = $Obj | Where-Object -FilterScript { ($_.SubjectCN -ne $_.IssuerCN) -and ($_.SubjectCN -eq $FileSubjectCN) } |
 
             # To make sure the output values are unique based on TBSValue property
             Group-Object -Property TBSValue | ForEach-Object -Process { $_.Group[0] }
@@ -195,11 +193,11 @@ Function Get-CertificateDetails {
             # ($_.SubjectCN -ne $_.IssuerCN) -> To omit Root certificate from the result
             # ($_.SubjectCN -ne $LeafCNOfTheNestedCertificate) -> To omit the Leaf certificate
             $Obj | Where-Object -FilterScript { ($_.SubjectCN -ne $_.IssuerCN) -and ($_.SubjectCN -ne $LeafCNOfTheNestedCertificate) } |
+
             # To make sure the output values are unique based on TBSValue property
-
             Group-Object -Property TBSValue | ForEach-Object -Process { $_.Group[0] } |
-            # Add each intermediate certificate to the nested object of the final object
 
+            # Add each intermediate certificate to the nested object of the final object
             ForEach-Object -Process {
                 $IntermediateCerts += [PSCustomObject]@{
                     SubjectCN = $_.SubjectCN
@@ -252,8 +250,8 @@ Export-ModuleMember -Function 'Get-CertificateDetails'
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCDycPpWzwR0cPeZ
-# YOVi0UI2HfVRL4XyTuaPEBwMYehaw6CCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCCk5h8FgXw6keMK
+# rv3upyRWehT4xn7cIruw/7oy/xriK6CCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -300,16 +298,16 @@ Export-ModuleMember -Function 'Get-CertificateDetails'
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQgQ1nJsAZ13y81k1aXUk8ZUIF1RwjPaiOptClTaF6yzrowDQYJKoZIhvcNAQEB
-# BQAEggIAQwrgPfLS4W39ph3scrTWrluuhFlkRfAYz1L3GkohdVSbajGuWsVG3Jfx
-# 4L2MhVLE5ktp82sHFFErghhBzmz2asNplD2Sxm3+e1tQmkEA59tp/GT/Za0vQ2Qu
-# RhFJySo9c0u5/Pl0d84JLiB4YIyCA0pZICGjnOs8JO7AtPBGXhT76Ro+tqZRdmaL
-# h1c98USBedRgkAiTD7KJmjHTWl+Mcjguecs1g1gUs2q1l7ydyInk1zZxwJaxY8MU
-# xvAte8fco3Ad86TwNGiRkC7Lwx+W3v7TKnxxTrAN0rGQ1NumyQkMNO4uSzlekEPV
-# ba9zeecCIU7mEnIbe8SxyOFQjZtoJk/7oHtTig+CnSNlA3ipic7rzov2yNOTvobF
-# l8A+VLJHBlQLwML02PeT8GaNur2ddX/RwXFp5CCNLxOeo73jX0h+CZOViZdN0Scf
-# 2ZcymPvJM/Z+Par2Q5J+MYKA87No1Eq6HF1DHN9Dy6RLuaVCX25ahHxX/1m+UluY
-# Z3H027yAY6vie3fZudAe/zh9cRb6VgxUvUsmyIzWw+PsVY4RauLKH6dev7gUp8Yz
-# XZH/r64dgrOy33wWLzhA7MyBopk6dZpUJFD+5vuIS/8YSrqqoI4bexlJMXry55Zw
-# OZ3e1nkbOI/CgfSFIj3b2Bdcb17nbv7o5Xb0e89LCe4Bthd18TA=
+# IgQgr9P+0zY4Vieke8pwr8zmin6DnUIC8NmijxYv/u3ufqUwDQYJKoZIhvcNAQEB
+# BQAEggIAIC0SRSmzWIRBwxSxoLZ5akghIvg2Gpk2Xk19K811F7OoeFoYOTDHMpND
+# idm3SL/iHP64jVSHSBEOcpg+LDXOxqToTqWbaALz2xy+kd1IGEmrfW2BOsTvEPxg
+# MflCSL5nKKCZ5h+4eo9ekahiLOgCypNuMO0BVjmnqjyDoIIhChJcjx2gwl5WsAoy
+# orQybd6Fufynz6QWB9sBjH5QOKJ9ZG87Fo7vjOGO5jEmO3iCaJwU6QRdFVHYnpCr
+# F1+lWJrmLH6pKNwZ8MzoPQ2j2niwYoWchNY5+SI2Hp5EAvpCuLjN84Oo0EfCNz01
+# a7nqVQJgvQLi6bEMlNrQGHqYWyVjaJ8m7PZfRKvRlu4OZgkpfbFN7XlJI0gMfdzS
+# sAeIc81rSOBpLxBFQwzL0kfxHqMon3eOvYzv1x0jBkDcTWI64b2HfQYRB4fsGeYI
+# cQilh/HViENc7cAIYKyevemftf/4UM6mD9KTHIzzbvFG+z41x7RAXC4iUt6ROtO7
+# QgmItoa1gjY7jnponcdCxr04+RusBrwvtP2BDGMM4hLN8FjxM2uBo9qBqrxroFV6
+# gside3XyPgVb/9eGBrICApofx/mDLTrMg94gBJ2w0D7riCWWgzmw4V/+1NMu2jzv
+# 8Gepc5lfalBTCcKpzENwh8TjuzIJOHg9A/PGhYHG7szwQ/6H6rQ=
 # SIG # End signature block

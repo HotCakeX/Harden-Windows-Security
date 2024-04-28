@@ -69,6 +69,13 @@ Function New-WDACConfig {
         [Parameter(Mandatory = $false, ParameterSetName = 'Make Policy From Audit Logs')]
         [System.UInt64]$LogSize,
 
+        [Parameter(Mandatory = $false, ParameterSetName = 'Make AllowMSFT With Block Rules')]
+        [Parameter(Mandatory = $false, ParameterSetName = 'Prep MSFT Only Audit')]
+        [Parameter(Mandatory = $false, ParameterSetName = 'Prep Default Windows Audit')]
+        [Parameter(Mandatory = $false, ParameterSetName = 'Make Light Policy')]
+        [Parameter(Mandatory = $false, ParameterSetName = 'Make DefaultWindows With Block Rules')]
+        [System.Management.Automation.SwitchParameter]$EnableScriptEnforcement,
+
         [Parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$SkipVersionCheck
     )
 
@@ -294,6 +301,10 @@ Function New-WDACConfig {
                 Write-Verbose -Message 'Setting "Required:EV Signers" policy rule option for the AllowMicrosoftPlusBlockRules.xml policy because RequireEVSigners parameter was used'
                 Set-RuleOption -FilePath $FinalPolicyPath -Option 8
             }
+            if ($EnableScriptEnforcement) {
+                Write-Verbose -Message 'Enabling script enforcement for the policy'
+                Set-RuleOption -FilePath $FinalPolicyPath -Option 11 -Delete
+            }
 
             if ($Deploy) {
                 $CurrentStep++
@@ -387,10 +398,13 @@ Function New-WDACConfig {
                 Write-Verbose -Message 'Setting "Boot Audit on Failure" and "Advanced Boot Options Menu" policy rule options because TestMode parameter was used'
                 9..10 | ForEach-Object -Process { Set-RuleOption -FilePath $FinalPolicyPath -Option $_ }
             }
-
             if ($RequireEVSigners) {
                 Write-Verbose -Message 'Setting "Required:EV Signers" policy rule option because RequireEVSigners parameter was used'
                 Set-RuleOption -FilePath $FinalPolicyPath -Option 8
+            }
+            if ($EnableScriptEnforcement) {
+                Write-Verbose -Message 'Enabling script enforcement for the policy'
+                Set-RuleOption -FilePath $FinalPolicyPath -Option 11 -Delete
             }
 
             if ($Deploy) {
@@ -580,6 +594,11 @@ Function New-WDACConfig {
             Write-Verbose -Message 'Assigning "PrepMSFTOnlyAudit" as the policy name'
             Set-CIPolicyIdInfo -PolicyName 'PrepMSFTOnlyAudit' -FilePath $FinalPolicyPath
 
+            if ($EnableScriptEnforcement) {
+                Write-Verbose -Message 'Enabling script enforcement for the policy'
+                Set-RuleOption -FilePath $FinalPolicyPath -Option 11 -Delete
+            }
+
             if ($Deploy) {
                 $CurrentStep++
                 Write-Progress -Id 5 -Activity 'Creating the CIP file' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
@@ -665,6 +684,11 @@ Function New-WDACConfig {
 
             Write-Verbose -Message 'Assigning "PrepDefaultWindowsAudit" as the policy name'
             Set-CIPolicyIdInfo -PolicyName 'PrepDefaultWindows' -FilePath $FinalPolicyPath
+
+            if ($EnableScriptEnforcement) {
+                Write-Verbose -Message 'Enabling script enforcement for the policy'
+                Set-RuleOption -FilePath $FinalPolicyPath -Option 11 -Delete
+            }
 
             if ($Deploy) {
                 $CurrentStep++
@@ -903,6 +927,10 @@ Function New-WDACConfig {
                 Write-Verbose -Message 'Setting "Required:EV Signers" policy rule option because RequireEVSigners parameter was used'
                 Set-RuleOption -FilePath $FinalPolicyPath -Option 8
             }
+            if ($EnableScriptEnforcement) {
+                Write-Verbose -Message 'Enabling script enforcement for the policy'
+                Set-RuleOption -FilePath $FinalPolicyPath -Option 11 -Delete
+            }
 
             Write-Verbose -Message 'Resetting the policy ID and setting a name for the policy'
             Set-CIPolicyIdInfo -FilePath $FinalPolicyPath -ResetPolicyID -PolicyName "Signed And Reputable policy - $(Get-Date -Format 'MM-dd-yyyy')" | Out-Null
@@ -1015,6 +1043,8 @@ Function New-WDACConfig {
     Make a WDAC Policy with ISG for Lightly Managed system
 .PARAMETER MakeDefaultWindowsWithBlockRules
     Make a WDAC policy by merging DefaultWindows policy with the recommended block rules
+.PARAMETER EnableScriptEnforcement
+    Enable script enforcement for the policy
 .PARAMETER BasePolicyType
     Select the Base Policy Type
 .PARAMETER Deploy
@@ -1067,8 +1097,8 @@ Function New-WDACConfig {
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCA1l56P0xGP4H4g
-# j5tUqbADvOAaIOViqdugqVCUVPI8OqCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCA7mxmekAgCzE1L
+# F36s5mtrWDR2nzWfTWXIf5qu7yTfBqCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -1115,16 +1145,16 @@ Function New-WDACConfig {
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQgxT+ZnBvuZ+8FFvvIMgx7cGJ227jCxXNn3QIDnNc6mqAwDQYJKoZIhvcNAQEB
-# BQAEggIAae9D1QZcGSHtA0+ZWXJUMo3XBoqJT0han02+vqUoCDX0HszhwFub7kd5
-# jenPFvngORsJfCJVFumCw2I0IS/zyM9Igid3Uijvr8JxB87kxT/BT5QeXTUDZsRN
-# Dn/lNIgRXtENBCxLk4hKlSXaVgb2cGYtXh2UvdlBXH+ULXOCEXyCsP28b0RlKNWJ
-# sHoAbSEe0Iw30RR57iHDF4gcjmy/ktW93TcN1C+HdPSlPP+/bq8Qt6m9U45Toe7x
-# dMEbI4xLus469fnItI7kyKLJIeUTSqEKujQ88PzJC7/htNlXJ7JKwpE+7pWFPOXO
-# 6qZbVdBCRj92dO5OnX3p6y/hhyEDC4wKm/Dr1zQTHAknGAh1/AJXFae8cF4JTNPz
-# /59WXJIAFfIKpSoe17nY+c5s6mCJEV4Mdi7nLNQKBTC2vdNGoOv0RgDVTZj7qyqD
-# 8S46xPf8NvxxKn8pbhJiItguD1aWhFQml3DV9Ite5pvt8KEp7WeL1Qt/WgERyYEV
-# /j1dv9Cdr7Zfiak7sr9bKBBf0oACe0c09ybLy3FfihJdTZl4K06lJLM5S6wrlrW3
-# 1zEhpTAKa72czRJTiocXZIo+Cv0D54Y9av34UD8iEGD8tKKEwlsZw4xiool48WpN
-# xYgagkOWb6zCvyDKwfyor/tdu0JcB8t3KwaOfbEZF4DKt8Z0kL0=
+# IgQgO3B2MnTqyfRq8ZMaZV/qaQSeNCb98wO+gWAMPcVOFqUwDQYJKoZIhvcNAQEB
+# BQAEggIAJhIVPH4vQmgT4LEgjiSrkEzGw6bI2OJfFCTA2oXDkfDsaQAC8V4CYoap
+# VturR7xI8Jcr9Yxf1y9wwEHLpnRwdXzRmNemYSGq4FSg5IUAb3ZtZjLNv5fFTO92
+# SPwS8jPZiEzlE2r0pV3kfoNc6+M9dnlPWjROskHTqHEnPRbzlNbLLWlp9av06l+G
+# BDJKKmjPD+9I9Mh2FsUDFcNLzUcTQJ1FO4NvOr1LMJ6awBWrIhb7VivnXSHkam5m
+# 3h/rf67ceEqt3OUbODODqk6mcT5Rer+EJFmE4UvnXCzsPq+U8DjUR0rr2ECqU3ME
+# hgnkKByKvwKAEIYrzrh0FrFJuOBZMDW6+s2kYlBUJkjnjYhoYM/zb5HOLINKNJtx
+# gxQkv4NTABMHePaKuDmzelt2/cbHaEdIj0yV5opcoX/5bGVTWPcE599l5lcTabiE
+# 7aemPh7oB3uOquO7qHx8MYMj/lYgYn4+mIvFMkkkPyzbHsUUwd72d7WW5OKxtP4K
+# IbgchqbhbwVonYERXPwLl9bn5oo/Yg4u1CUDV4bUqIWzYUgm414KFa1ImwbEg0k1
+# X6/fuzjSHKa8V/vmZiA4l2GGzQvey7VNu7k0vQX1n7nw1p3MIwqSr9ciJJN6aC+C
+# X20RHt3NA1pdVmd69W2KoWnlJMt6OA8ysNWV3owl3f1DhWTQJUY=
 # SIG # End signature block

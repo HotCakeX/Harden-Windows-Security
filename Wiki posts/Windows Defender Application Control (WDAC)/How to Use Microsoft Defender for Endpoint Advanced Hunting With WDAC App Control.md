@@ -152,3 +152,15 @@ You can put your endpoints into different groups and each group can receive diff
 > [ApplicationControl CSP](https://learn.microsoft.com/en-us/windows/client-management/mdm/applicationcontrol-csp)
 
 <br>
+
+## Feedback and Support
+
+If you have any questions, feature requests or feedback regarding this guide or the WDACConfig module, please feel free to reach out to me on GitHub by opening a new issue or discussion.
+
+<br>
+
+<div align="Center">
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/PNG%20and%20JPG/eds.jpeg" width="150" alt="anime girl holding the save button">
+</div>
+
+<br>

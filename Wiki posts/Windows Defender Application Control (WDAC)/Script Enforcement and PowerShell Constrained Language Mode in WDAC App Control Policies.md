@@ -2,10 +2,10 @@
 
 ## Introduction
 
-This article explores some of the technical details of how to deploy a WDAC (Application Control) policy that uses Script Enforcement and forces PowerShell to run in Constrained Language Mode.
+This article explores some of the technical details of how to deploy a WDAC (Application Control) policy that uses Script Enforcement and forces PowerShell to run in Constrained Language Mode. It expands aspects of this topic that are not covered enough in the official docs.
 
 > [!Tip]\
-> Check out these 2 articles from Microsoft for more info:
+> Check out these 2 documents from Microsoft for more info and basics:
 > * [PowerShell Constrained Language Mode](https://devblogs.microsoft.com/powershell/powershell-constrained-language-mode/)
 >
 > * [Script enforcement with Windows Defender Application Control (WDAC)](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/script-enforcement)
@@ -98,7 +98,7 @@ Here is an example of a valid Supplemental policy that allows a root certificate
 </SiPolicy>
 ```
 
-As you can see, we need the TBS Hash value of the root certificate. 
+As you can see, we need the TBS Hash value of the root certificate.
 
 <br>
 

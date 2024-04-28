@@ -349,9 +349,6 @@ Function New-SupplementalWDACConfig {
                     [System.String]$SignerType
                 }
 
-                # Define the path for the output Supplemental policy file
-                [System.IO.FileInfo]$FinalSupplementalPath = Join-Path -Path $StagingArea -ChildPath "Supplemental Policy $SuppPolicyName.xml"
-
                 Write-Verbose -Message 'Copying the template policy to the staging area'
                 Copy-Item -LiteralPath 'C:\Windows\schemas\CodeIntegrity\ExamplePolicies\AllowAll.xml' -Destination $FinalSupplementalPath -Force
 
@@ -544,8 +541,8 @@ Register-ArgumentCompleter -CommandName 'New-SupplementalWDACConfig' -ParameterN
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCCYHdEAl68UNXAQ
-# NINOMZgYoSqAAhKP2lHjOb6Mjge3B6CCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCAGpgoA2egqPi5i
+# 3p9robwsZZsVhAjDDKG5w1JqPzeJRKCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -592,16 +589,16 @@ Register-ArgumentCompleter -CommandName 'New-SupplementalWDACConfig' -ParameterN
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQg38kPCW1fB0hLl2ikkCV3co5Mugd5c4ae8MVR2nFINHUwDQYJKoZIhvcNAQEB
-# BQAEggIAkBFSI+jjbawYjW49Y/GYDtuv6SOGhw2WynNz46STKkC5+O14TVb/RBuZ
-# MbqK8vKFI1pgd4NJSDecJwTIatVQsYWjaH4OUPpGAmdDQrSPiuyHWalR5LYA7eED
-# p1OeLoWPu14pDWrc2bs4s6O9Z/2V4ipmsCq1AszZsCuvJrdCSRmGuI1Ur6w84Nkv
-# 71EqH9Q7XCjB5NOMzM8WJBSN/c3czS6byWHY1ITS1Of47RVOEFYnAhPDZyfp/GH/
-# lONV65YxP8c4Wc06TuEovboCZY9GFOZiPOW2CyP/BNjmQ+sGFNbNEoEzbpXr4r5O
-# Osny4/s9ZPinVLjaMxv9ULbcbBxreFFO+n1uj5O6LGTUk/QYLoEJdDB7mb674jxl
-# 9Uz2X2oVwGK0mR+dWLJZRe5kAtmfRpZsij5OwO++3mpumtjk2WLMpNIpFziJOWL5
-# wcvA9tM7eDd8lD3VZgnItrZHqRhEvK0E0vofLzu6pOe6RtyqhjoT0TvHTHu91ZlN
-# oRPGAIQcHFt/irXSApSpjQaxa8mBswxNCTRoHomPSFi7W+mQxpz005CccdWOyCv9
-# UNiM+XOpGNxKPRLRC74qHIpS85C5UT5IFUOw6t/dMyy7eSIRFeQ5YQ0dA1X+MiNO
-# MyLk+aGYVHJplKlzZp5YmdIS9TwJ7ot8jj7eXXb8AiaOCtX3TSY=
+# IgQgNtXDpCHi/BEiSM7hD9cQ4fRw/pax5SJ1yakr+TtoQaIwDQYJKoZIhvcNAQEB
+# BQAEggIAMSrUXriUAuImRUPKxn4H4OmRfr+zRkP6SFBcMx8um9GN6kvRPTdRnL+V
+# BBoA+1br35mndSWk7+3my7I7cGWH2d+yIAHbY+hcklnFLUbhDX4+k5KxsrwrsmZ9
+# 1MKWY21eZr0YaORxGv/NEDCuXGfMarmsm6oOh1TcW0767s5ghxKX01e+qX10Gzwe
+# Tq3cifwZW2KrhwT48akFHBNkjuK4wJpAKrGg65N0D+hD11LI0rV+ubK0EvX+r3yt
+# YKIxhUbFi/djIbG9GQaytuK/Mk6qDNXJkS2lxwfE/VwIH+XmiaQUSzFSmRifUVO/
+# IyRitJE7L35tqsjbFmXdygNPaUKh5AnlVmoKHrVe+sVtGCwlIaiVNhgPREmVFiPn
+# 5pXka2Ne2+Vi2F520a9kQ689yV3i0nz6r5i/n0ElWVZ4Hnn6+KRzNZLEv67XhyGk
+# Q2uCIx3E1HkC/ebElPCukxr3nvUWd+rwhChIOaHpc1nERnK3/QJiWPbJosHjailx
+# dFe6yrJR6QoIsmXxWF5uF2V4nyeR2ptaZv4rU8W6uBqppUtgdPD53EUMZqiKihXK
+# 3Qw8ZL+V0j8mYbg9Re18TR4AVLzJuCDpvP1Y5EXJm7AxGTTgocLP83+WGygcv78A
+# 1y/VLfLNSCO1sRag8BJEStEq4uNXRnlHJOLk3+NLq7COx+EwD0Q=
 # SIG # End signature block

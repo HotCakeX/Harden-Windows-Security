@@ -99,6 +99,24 @@ Note that the generated policy will be a Supplemental policy.
 
 <br>
 
+### WDACConfig Features For MDE Advanced Hunting
+
+* Systematic approach for converting the MDE AH data to WDAC policy with high precision and performance
+* Uses parallel processing to speed up the policy generation process
+* Provides a GUI for filtering the logs based on various criteria
+* Never includes duplicate rules in the policy, regardless of the number of the duplicate logs you give it
+
+### The Module Can Create 3 Types of Rules for Files:
+
+* If a file is unsigned then a hash rule will be created for it.
+* If a file is signed then there are multiple possibilities:
+  * If the file is signed and the MDE AH results contain the file's version as well as **at least one** of the following file attributes (Original Name, Internal Name, Description, Product Name), then a File Publisher rule will be created for it.
+  * If the file is signed but the file attributes are not present in the results, Publisher level rule will be created for it.
+
+These levels are selected based on their security. You can read more about the levels security comparison [in this article](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDAC-Rule-Levels-Comparison-and-Guide).
+
+<br>
+
 ### Video Demonstration
 
 The following video demonstrates the process of collecting the data from MDE Advanced Hunting and generating WDAC policies using the WDACConfig module

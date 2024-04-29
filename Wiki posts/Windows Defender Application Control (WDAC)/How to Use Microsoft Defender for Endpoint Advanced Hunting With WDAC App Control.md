@@ -85,13 +85,13 @@ That query generates a standard output of the data in CSV file format which is c
 
 ## Generating the WDAC Policies
 
-After exporting the data from MDE Advanced Hunting, we can use the WDACConfig module to generate WDAC policies. We need to feed the CSV file(s) we collected MDE Advanced Hunting data into the module like so:
+After exporting the data from MDE Advanced Hunting, we can use the [**WDACConfig module**](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDACConfig) to generate WDAC policies. We need to feed the CSV file(s) we collected MDE Advanced Hunting data into the module like so:
 
 ```powershell
 ConvertTo-WDACPolicy -Source MDEAdvancedHunting -MDEAHLogs <Path to one or more CSV files> -BasePolicyGUID <Base policy GUID>
 ```
 
-It is only one example of how you can utilize the WDACConfig for policy generation based on MDE AH data, for more information about the cmdlet please refer to its [documentations available here](https://github.com/HotCakeX/Harden-Windows-Security/wiki/ConvertTo-WDACPolicy).
+It is only one example of how you can utilize the WDACConfig for policy generation based on MDE AH data, for more information about the cmdlet please refer to its [**documentations available here**](https://github.com/HotCakeX/Harden-Windows-Security/wiki/ConvertTo-WDACPolicy).
 
 The command we used above will process the CSV file(s) and open a GUI window where you can filter the logs based on many criteria, and then either select all or only select some of the logs to be included in the WDAC policy.
 

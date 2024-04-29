@@ -169,17 +169,8 @@ The path(s) to use MDE AH CSV files.
 > [!NOTE]\
 > This is a dynamic parameter and will only be available if the Source parameter is set to MDEAdvancedHunting.
 
-> [!TIP]\
-> Use the following KQL query to get the logs from the MDE Advanced Hunting portal
-> ```sql
->DeviceEvents
->| where ActionType startswith "AppControlCodeIntegrity"
->    or ActionType startswith "AppControlCIScriptBlocked"
->    or ActionType startswith "AppControlCIScriptAudited"
->```
-
 > [!IMPORTANT]\
-> [**Detailed YouTube video guide is available here**](https://www.youtube.com/watch?v=oyz0jFzOOGA)
+> Please [**read this article**](https://github.com/HotCakeX/Harden-Windows-Security/wiki/How-to-Use-Microsoft-Defender-for-Endpoint-Advanced-Hunting-With-WDAC-App-Control) for complete information on how to use this feature.
 
 <br>
 

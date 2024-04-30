@@ -31,6 +31,7 @@ Creates a Supplemental policy for a base policy based on a folder path.
 ### -ScanLocation
 
 The directory or drive that you want to scan for files that will be allowed to run by the Supplemental policy.
+Supports GUI folder picker, press TAB after the parameter to launch it.
 
 <div align='center'>
 
@@ -66,7 +67,8 @@ Add a descriptive name for the Supplemental policy. Accepts only alphanumeric an
 
 ### -PolicyPath
 
-Browse for the xml file of the Base policy this Supplemental policy is going to expand. Supports tab completion by showing only `.xml` files with **Base Policy** Type.
+Browse for the xml file of the Base policy this Supplemental policy is going to expand.
+Supports GUI file picker that only shows XML files, press TAB after the parameter to launch it.
 
 <div align='center'>
 
@@ -273,7 +275,8 @@ Add a descriptive name for the Supplemental policy. Accepts only alphanumeric an
 
 ### -PolicyPath
 
-Browse for the xml file of the Base policy this Supplemental policy is going to expand. Supports tab completion by showing only `.xml` files with **Base Policy** Type.
+Browse for the xml file of the Base policy this Supplemental policy is going to expand.
+Supports GUI file picker that only shows XML files, press TAB after the parameter to launch it.
 
 <div align='center'>
 
@@ -382,7 +385,8 @@ Add a descriptive name for the Supplemental policy. Accepts only alphanumeric an
 
 ### -PolicyPath
 
-Browse for the xml file of the Base policy this Supplemental policy is going to expand. Supports tab completion by showing only `.xml` files with **Base Policy** Type.
+Browse for the xml file of the Base policy this Supplemental policy is going to expand.
+Supports GUI file picker that only shows XML files, press TAB after the parameter to launch it.
 
 <div align='center'>
 
@@ -512,7 +516,8 @@ Add a descriptive name for the Supplemental policy. Accepts only alphanumeric an
 
 ### -PolicyPath
 
-Browse for the xml file of the Base policy this Supplemental policy is going to expand. Supports tab completion by showing only `.xml` files with **Base Policy** Type.
+Browse for the xml file of the Base policy this Supplemental policy is going to expand.
+Supports GUI file picker that only shows XML files, press TAB after the parameter to launch it.
 
 <div align='center'>
 

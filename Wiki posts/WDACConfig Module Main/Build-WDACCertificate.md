@@ -31,7 +31,8 @@ The PFX file is encrypted with `SHA-256` encryption and safeguarded with the pas
 
 The common name of the certificate, it will also be assigned as the friendly name of the certificate.
 
- * If you enter a CommonName but do not enter a FileName, the FileName will be set to the same value as the CommonName for better user experience.
+> [!TIP]\
+> If you enter a CommonName but do not enter a FileName, the FileName will be set to the same value as the CommonName for better user experience.
 
 <div align='center'>
 

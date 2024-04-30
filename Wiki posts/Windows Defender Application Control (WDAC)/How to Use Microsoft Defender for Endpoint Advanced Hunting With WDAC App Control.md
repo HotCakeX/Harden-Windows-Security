@@ -9,7 +9,7 @@ Microsoft Defender for Endpoint (MDE) is one of the tools that can be used by en
 <br>
 
 > [!NOTE]\
-> You can access Intune portal by navigating to: https://intune.microsoft.com
+> You can access Intune portal by navigating to: [https://intune.microsoft.com](https://intune.microsoft.com)
 
 <br>
 
@@ -58,7 +58,7 @@ DeviceEvents
 <br>
 
 > [!NOTE]\
-> You can access Microsoft Defender for Endpoint's portal by navigating to: https://security.microsoft.com
+> You can access Microsoft Defender for Endpoint's portal by navigating to: [https://security.microsoft.com](https://security.microsoft.com)
 
 <br>
 

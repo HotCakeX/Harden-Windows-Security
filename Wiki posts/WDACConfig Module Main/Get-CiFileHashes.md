@@ -1,5 +1,7 @@
 # Get-CiFileHashes available parameters
 
+![Get-CiFileHashes demo](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/Get-CiFileHashes/Get-CiFileHashes%20-FilePath.gif)
+
 ## Syntax
 
 ```powershell

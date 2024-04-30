@@ -1,5 +1,7 @@
 # Test-CiPolicy available parameters
 
+![Test-CiPolicy demo](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/Test-CiPolicy/Test-CiPolicy%20-XmlFile.gif)
+
 ## Syntax
 
 ```powershell

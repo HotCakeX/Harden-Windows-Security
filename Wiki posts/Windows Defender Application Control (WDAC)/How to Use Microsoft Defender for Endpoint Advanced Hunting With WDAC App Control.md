@@ -171,6 +171,14 @@ You can put your endpoints into different groups and each group can receive diff
 
 <br>
 
+## Strict Kernel Mode Code Integrity Policy Scenario
+
+I've created a scenario where you can strictly control what is allowed to run in Kernel mode, without blocking any user mode applications. [**You can read all about this scenario in here**](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDAC-policy-for-BYOVD-Kernel-mode-only-protection). Using the WDACConfig module and MDE Advanced Hunting intel, you can deploy this scenario across your entire fleet of endpoints.
+
+This approach demands very minimal upkeep as it exclusively manages Kernel-mode activities, yet it offers an exceptional degree of security. A significant benefit of this method is the safeguarding of your endpoints from all Bring Your Own Vulnerable Driver (BYOVD) threats.
+
+<br>
+
 ## Feedback and Support
 
 If you have any questions, feature requests or feedback regarding this guide or the WDACConfig module, please feel free to reach out to me on GitHub by opening a new issue or discussion.

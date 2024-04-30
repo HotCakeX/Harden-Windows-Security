@@ -577,6 +577,16 @@ MSI files cannot be allowed using FilePublisher rule level because they are not 
 
 <br>
 
+## The Length of the IDs in the policy XML file has no effect on the size of the generated CIP file
+
+It doesn't matter how long or short the IDs are in the policy XML file, such as Signer IDs, Allowed Signer IDs, CiSigner IDs and so on, you can even use GUIDs as IDs to make sure they stay unique, the size of the generated CIP file will not change. In fact, even the hash of the generated CIP file stays the same when you change the length of the IDs in the policy XML file.
+
+<br>
+
+<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">
+
+<br>
+
 ## <img width="65" src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/arrow-pink.gif" alt="Continue Reading about BYOVD using Windows Defender Application Control"> [Continue reading about BYOVD protection with WDAC](#-continue-reading-about-byovd-protection-with-wdac)
 
 #### [WDAC policy](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDAC-policy-for-BYOVD-Kernel-mode-only-protection) for BYOVD Kernel mode only protection

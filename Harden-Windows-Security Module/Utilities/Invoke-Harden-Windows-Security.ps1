@@ -7,4 +7,4 @@
 Import-Module -FullyQualifiedName "$ScriptFilePath\..\Main files\Harden-Windows-Security-Module.psd1" -Force
 
 # Uncomment and replace with any cmdlet of the Harden-Windows-Security module that is going to be debugged
-Protect-WindowsSecurity -Verbose -GUI -Offline
+Protect-WindowsSecurity -Verbose -GUI

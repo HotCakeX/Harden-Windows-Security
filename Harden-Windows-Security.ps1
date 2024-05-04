@@ -2790,11 +2790,12 @@ Execution Policy: $CurrentExecutionPolicy
                         # If the script is running directly from GitHub repository, download the required image files to the working directory and use them
                         else {
                             [System.String]$RandomStringFromGUID = [System.Guid]::newGuid().ToString().Replace('-', '')
-                            # $SyncHash.RandomStringFromGUID = $RandomStringFromGUID
 
                             Invoke-RestMethod -Uri 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Harden-Windows-Security%20Module/Main%20files/Resources/Media/Path.png' -OutFile "$CurrentUserTempDirectoryPath\$RandomStringFromGUID path.png"
                             Invoke-RestMethod -Uri 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Harden-Windows-Security%20Module/Main%20files/Resources/Media/Log.png' -OutFile "$CurrentUserTempDirectoryPath\$RandomStringFromGUID log.png"
                             Invoke-RestMethod -Uri 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Harden-Windows-Security%20Module/Main%20files/Resources/Media/start.png' -OutFile "$CurrentUserTempDirectoryPath\$RandomStringFromGUID start.png"
+                            # Used for the toast notification icon later in the code
+                            Invoke-RestMethod -Uri 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Harden-Windows-Security%20Module/Main%20files/Resources/Media/ToastNotificationIcon.png' -OutFile "$WorkingDir\ToastNotificationIcon.png"
 
                             [System.String]$GUIIconPath = "$CurrentUserTempDirectoryPath\$RandomStringFromGUID path.png"
                             [System.String]$GUILogPath = "$CurrentUserTempDirectoryPath\$RandomStringFromGUID log.png"
@@ -3181,11 +3182,6 @@ Execution Policy: $CurrentExecutionPolicy
                                         [System.Management.Automation.ScriptBlock]$prerequisitesScriptBlock = {
 
                                             try {
-
-                                                if (-NOT $Offline) {
-                                                    #  Write-Verbose -Message 'Downloading toast notification image'
-                                                    Invoke-RestMethod -Uri 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/PNGs/ToastNotificationIcon.png' -OutFile "$WorkingDir\ToastNotificationIcon.png"
-                                                }
 
                                                 # Capture the currently available RunSpaces
                                                 $RunSpacesBefore = Get-Runspace
@@ -4040,7 +4036,7 @@ Execution Policy: $CurrentExecutionPolicy
                                                 Param (
                                                     [Parameter(Mandatory = $true)][System.String]$Title,
                                                     [Parameter(Mandatory = $true)][System.String]$Body,
-                                                    [Parameter(Mandatory = $false)][System.IO.FileInfo]$PathIconPath,
+                                                    [Parameter(Mandatory = $false)][System.IO.FileInfo]$ImagePath,
                                                     [Parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$UseImage
                                                 )
 
@@ -4064,7 +4060,7 @@ Execution Policy: $CurrentExecutionPolicy
                                                 # If using an image, set the image source in the XML
                                                 if ($UseImage) {
                                                     [System.Xml.XmlElement]$ImagePlaceHolder = $XML.toast.visual.binding.image
-                                                    $ImagePlaceHolder.SetAttribute('src', $PathIconPath)
+                                                    $ImagePlaceHolder.SetAttribute('src', $ImagePath)
                                                 }
 
                                                 # Set the title text in the XML
@@ -4096,15 +4092,9 @@ Execution Policy: $CurrentExecutionPolicy
                                                 $Notifier.Show($Toast)
                                             }
 
-                                            # If the script is running in offline mode, use the toast notification template that doesn't require image
-                                            if ($args[1]) {
-                                                Out-ToastNotification -Title 'Completed' -body "$($args[0]) selected categories have been run."
-                                            }
-                                            # If the script is running in normal online mode, use the toast notification template that uses image
-                                            else {
-                                                Out-ToastNotification -Title 'Completed' -body "$($args[0]) selected categories have been run." -UseImage -ImagePath $args[2]
-                                            }
-                                        } -args $SelectedCategories.Count, ($Offline ? $true : $false), "$WorkingDir\ToastNotificationIcon.png" *>&1 # To display any error message or other streams from the script block on the console
+                                            Out-ToastNotification -Title 'Completed' -body "$($args[0]) selected categories have been run." -UseImage -ImagePath $args[1]
+                                            # If the module is running locally, the toast notification image will be taken from the module directory, if not it will be taken from the working directory where it was already downloaded from the GitHub repo
+                                        } -args $SelectedCategories.Count, ($IsLocally ? "$HardeningModulePath\Resources\Media\ToastNotificationIcon.png" : "$WorkingDir\ToastNotificationIcon.png") *>&1 # To display any error message or other streams from the script block on the console
 
                                         # Display the runspace count for debugging purposes
                                         # $SyncHash.ParentHost.UI.WriteDebugLine("Current RunSpace Count is: $((Get-Runspace).Count)")

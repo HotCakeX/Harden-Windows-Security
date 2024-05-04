@@ -1139,9 +1139,9 @@ Function Protect-WindowsSecurity {
             }
             if ($Offline) {
                 Write-Verbose -Message 'Offline Mode; Copying the Microsoft Security Baselines, Microsoft 365 Apps for Enterprise Security Baselines and LGPO files from the user provided paths to the working directory'
-                Copy-Item -Path ($GUI ? $SyncHash.LGPOZipTextBox.Text : "$PathToLGPO" ) -Destination "$WorkingDir\LGPO.zip"
-                Copy-Item -Path ($GUI ? $SyncHash.MicrosoftSecurityBaselineZipTextBox.Text : "$PathToMSFTSecurityBaselines") -Destination "$WorkingDir\MicrosoftSecurityBaseline.zip"
-                Copy-Item -Path ($GUI ? $SyncHash.Microsoft365AppsSecurityBaselineZipTextBox.Text : "$PathToMSFT365AppsSecurityBaselines" ) -Destination "$WorkingDir\Microsoft365SecurityBaseline.zip"
+                Copy-Item -Path ($GUI ? $SyncHash['GUI'].LGPOZipTextBox.Text : "$PathToLGPO" ) -Destination "$WorkingDir\LGPO.zip"
+                Copy-Item -Path ($GUI ? $SyncHash['GUI'].MicrosoftSecurityBaselineZipTextBox.Text : "$PathToMSFTSecurityBaselines") -Destination "$WorkingDir\MicrosoftSecurityBaseline.zip"
+                Copy-Item -Path ($GUI ? $SyncHash['GUI'].Microsoft365AppsSecurityBaselineZipTextBox.Text : "$PathToMSFT365AppsSecurityBaselines" ) -Destination "$WorkingDir\Microsoft365SecurityBaseline.zip"
             }
 
             Write-Verbose -Message 'Unzipping the archives'
@@ -2673,6 +2673,9 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                 # A nested hashtable to store all of the variables from the function scope
                 $SyncHash['GlobalVars'] = [System.Collections.Hashtable]@{}
 
+                # A nested hashtable to store all of the GUI elements
+                $SyncHash['GUI'] = [System.Collections.Hashtable]@{}
+
                 # To store the log messages
                 $SyncHash.Logger = [System.Collections.ArrayList]::Synchronized((New-Object -TypeName System.Collections.ArrayList))
 
@@ -2751,27 +2754,20 @@ Execution Policy: $CurrentExecutionPolicy
                         $Reader = New-Object -TypeName System.Xml.XmlNodeReader -ArgumentList $Xaml
                         $SyncHash.Window = [System.Windows.Markup.XamlReader]::Load( $Reader )
 
-                        # To disable all UI elements
-                        # $SyncHash.window.Content.IsEnabled = $false
+                        # Finding the ParentGrid
+                        [System.Windows.DependencyObject]$ParentGrid = $SyncHash.Window.FindName('ParentGrid')
+                        [System.Windows.DependencyObject]$MainTabControlToggle = $ParentGrid.FindName('MainTabControlToggle')
+                        [System.Windows.DependencyObject]$MainContentControl = $MainTabControlToggle.FindName('MainContentControl')
 
-                        # Finding some of the most used implemented controls in the XAML and assigning them to variables
-                        $SyncHash.categoriesListView = $SyncHash.window.FindName('Categories')
-                        $SyncHash.SubCategoriesListView = $SyncHash.window.FindName('SubCategories')
-                        $SyncHash.LogPathButton = $SyncHash.window.FindName('LogPath')
-                        $SyncHash.txtFilePath = $SyncHash.window.FindName('txtFilePath')
-                        $SyncHash.EnableOfflineModeCheckBox = $SyncHash.Window.FindName('EnableOfflineMode')
+                        # Due to using ToggleButton as Tab Control element, this is somehow considered the parent of all inner elements
+                        [System.Windows.Style]$MainContentControlStyle = $MainContentControl.FindName('MainContentControlStyle')
 
-                        $SyncHash.MicrosoftSecurityBaselineZipButton = $SyncHash.Window.FindName('MicrosoftSecurityBaselineZipButton')
-                        $SyncHash.MicrosoftSecurityBaselineZipTextBox = $SyncHash.Window.FindName('MicrosoftSecurityBaselineZipTextBox')
-                        $SyncHash.Microsoft365AppsSecurityBaselineZipButton = $SyncHash.Window.FindName('Microsoft365AppsSecurityBaselineZipButton')
-                        $SyncHash.Microsoft365AppsSecurityBaselineZipTextBox = $SyncHash.Window.FindName('Microsoft365AppsSecurityBaselineZipTextBox')
-                        $SyncHash.LGPOZipButton = $SyncHash.Window.FindName('LGPOZipButton')
-                        $SyncHash.LGPOZipTextBox = $SyncHash.Window.FindName('LGPOZipTextBox')
-
-                        # To find each tab item in the GUI
-                        # $SyncHash.OfflineModeConfigsTabItem = $SyncHash.Window.FindName('ParentGrid').FindName('MainTabControl').Items | Where-Object -FilterScript { $_.Header -eq 'Offline Mode Configurations' }
-                        # To find the TabControl in the GUI
-                        # $SyncHash.MainTabControl = $SyncHash.Window.FindName('ParentGrid').FindName('MainTabControl')
+                        # Create variables for all elements inside of $MainContentControlStyle
+                        $XAML.SelectNodes("//*[@*[contains(translate(name(.),'n','N'),'Name')]]") | ForEach-Object -Process {
+                            #  Set-Variable -Name "$('GUI_'+$_.Name)" -Value $MainContentControlStyle.FindName($_.Name) -Force
+                            $SyncHash['GUI'][$_.Name] = $MainContentControlStyle.FindName($_.Name)
+                            $_.Name
+                        }
 
                         # Redefining all of the exported variables inside of the RunSpace
                         $SyncHash.GlobalVars.GetEnumerator() | ForEach-Object -Process {
@@ -2783,6 +2779,35 @@ Execution Policy: $CurrentExecutionPolicy
                             New-Item -Path "Function:\$($_.Key)" -Value $_.Value.ScriptBlock -Force | Out-Null
                         }
 
+                        #Region assigning image source paths to the buttons
+
+                        # If the script is running in the context of module then use the local images
+                        if ($IsLocally) {
+                            [System.String]$GUIIconPath = "$HardeningModulePath\Resources\Media\path.png"
+                            [System.String]$GUILogPath = "$HardeningModulePath\Resources\Media\log.png"
+                            [System.String]$GUIExecutePath = "$HardeningModulePath\Resources\Media\start.png"
+                        }
+                        # If the script is running directly from GitHub repository, download the required image files to the working directory and use them
+                        else {
+                            [System.String]$RandomStringFromGUID = [System.Guid]::newGuid().ToString().Replace('-', '')
+                            # $SyncHash.RandomStringFromGUID = $RandomStringFromGUID
+
+                            Invoke-RestMethod -Uri 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Harden-Windows-Security%20Module/Main%20files/Resources/Media/Path.png' -OutFile "$CurrentUserTempDirectoryPath\$RandomStringFromGUID path.png"
+                            Invoke-RestMethod -Uri 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Harden-Windows-Security%20Module/Main%20files/Resources/Media/Log.png' -OutFile "$CurrentUserTempDirectoryPath\$RandomStringFromGUID log.png"
+                            Invoke-RestMethod -Uri 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Harden-Windows-Security%20Module/Main%20files/Resources/Media/start.png' -OutFile "$CurrentUserTempDirectoryPath\$RandomStringFromGUID start.png"
+
+                            [System.String]$GUIIconPath = "$CurrentUserTempDirectoryPath\$RandomStringFromGUID path.png"
+                            [System.String]$GUILogPath = "$CurrentUserTempDirectoryPath\$RandomStringFromGUID log.png"
+                            [System.String]$GUIExecutePath = "$CurrentUserTempDirectoryPath\$RandomStringFromGUID start.png"
+                        }
+
+                        $SyncHash['GUI'].PathIcon1.Source = $GUIIconPath
+                        $SyncHash['GUI'].PathIcon2.Source = $GUIIconPath
+                        $SyncHash['GUI'].PathIcon3.Source = $GUIIconPath
+                        $SyncHash['GUI'].LogButtonIcon.Source = $GUILogPath
+                        $ParentGrid.FindName('ExecuteButtonIcon').Source = $GUIExecutePath
+                        #Endregion assigning image source paths to the buttons
+
                         # Defining the correlation between Categories and which Sub-Categories they activate
                         [System.Collections.Hashtable]$Correlation = @{
                             'MicrosoftSecurityBaselines' = @('SecBaselines_NoOverrides')
@@ -2791,7 +2816,6 @@ Execution Policy: $CurrentExecutionPolicy
                             'UserAccountControl'         = @('UAC_NoFastSwitching', 'UAC_OnlyElevateSigned')
                             'CountryIPBlocking'          = @('CountryIPBlocking_OFAC')
                         }
-
                         function Update-SubCategories {
                             <#
                         .SYNOPSIS
@@ -2799,37 +2823,37 @@ Execution Policy: $CurrentExecutionPolicy
                         #>
 
                             # Disable all sub-category items first
-                            $SyncHash.SubCategoriesListView.Items | ForEach-Object -Process { $_.IsEnabled = $false }
+                            $SyncHash['GUI'].SubCategories.Items | ForEach-Object -Process { $_.IsEnabled = $false }
 
                             # Get all checked categories
-                            $CheckedCategories = $SyncHash.categoriesListView.Items | Where-Object -FilterScript { $_.Content.IsChecked }
+                            $CheckedCategories = $SyncHash['GUI'].Categories.Items | Where-Object -FilterScript { $_.Content.IsChecked }
 
                             # Enable the corresponding sub-category items
                             foreach ($CategoryItem in $CheckedCategories) {
-                                $CategoryContent = $CategoryItem.Content.Content
+                                $CategoryContent = $CategoryItem.Content.Name
                                 $Correlation[$CategoryContent] | ForEach-Object -Process {
                                     $SubCategoryName = $_
-                                    $SyncHash.SubCategoriesListView.Items | Where-Object -FilterScript { $_.Content.Content -eq $SubCategoryName } | ForEach-Object -Process {
+                                    $SyncHash['GUI'].SubCategories.Items | Where-Object -FilterScript { $_.Content.Name -eq $SubCategoryName } | ForEach-Object -Process {
                                         $_.IsEnabled = $true
                                     }
                                 }
                             }
 
                             # Uncheck sub-category items whose category is not selected
-                            $SyncHash.SubCategoriesListView.Items | Where-Object -FilterScript { $_.IsEnabled -eq $false } | ForEach-Object -Process {
+                            $SyncHash['GUI'].SubCategories.Items | Where-Object -FilterScript { $_.IsEnabled -eq $false } | ForEach-Object -Process {
                                 $_.Content.IsChecked = $false
                             }
 
                             # Disable categories that are not valid for the current session
-                            foreach ($Item in $SyncHash.categoriesListView.Items) {
-                                if ($Item.Content.Content -notin $ValidAllowedCategories) {
+                            foreach ($Item in $SyncHash['GUI'].Categories.Items) {
+                                if ($Item.Content.Name -notin $ValidAllowedCategories) {
                                     $Item.IsEnabled = $false
                                 }
                             }
                         }
 
                         # Add Checked and Unchecked event handlers to category checkboxes
-                        foreach ($CategoryItem in $SyncHash.categoriesListView.Items) {
+                        foreach ($CategoryItem in $SyncHash['GUI'].Categories.Items) {
                             $CheckBox = $CategoryItem.Content
                             # Set the DataContext to the ListViewItem
                             $CheckBox.DataContext = $CategoryItem
@@ -2850,17 +2874,17 @@ Execution Policy: $CurrentExecutionPolicy
                         #Region Check-Uncheck buttons for Categories
 
                         # Add click event for 'Check All' button
-                        $SyncHash.window.FindName('CheckAllButtonCategories').Add_Click({
-                                $SyncHash.CategoriesListView.Items | ForEach-Object -Process {
-                                    if ($_.Content.Content -in $ValidAllowedCategories) {
+                        $SyncHash['GUI'].SelectAllCategories.Add_Checked({
+                                $SyncHash['GUI'].Categories.Items | ForEach-Object -Process {
+                                    if ($_.Content.Name -in $ValidAllowedCategories) {
                                         $_.Content.IsChecked = $true
                                     }
                                 }
                             })
 
                         # Add click event for 'Uncheck All' button
-                        $SyncHash.window.FindName('UncheckAllButtonCategories').Add_Click({
-                                $SyncHash.categoriesListView.Items | ForEach-Object -Process {
+                        $SyncHash['GUI'].SelectAllCategories.Add_Unchecked({
+                                $SyncHash['GUI'].Categories.Items | ForEach-Object -Process {
                                     $_.Content.IsChecked = $false
                                 }
                             })
@@ -2868,16 +2892,16 @@ Execution Policy: $CurrentExecutionPolicy
 
                         #Region Check-Uncheck buttons for Sub-Categories
                         # Add click event for 'Check All' button for enabled sub-categories
-                        $SyncHash.window.FindName('CheckAllButtonSubCategories').Add_Click({
-                                $SyncHash.SubCategoriesListView.Items | Where-Object -FilterScript { $_.IsEnabled -eq $true } | ForEach-Object -Process {
+                        $SyncHash['GUI'].SelectAllSubCategories.Add_Checked({
+                                $SyncHash['GUI'].SubCategories.Items | Where-Object -FilterScript { $_.IsEnabled -eq $true } | ForEach-Object -Process {
                                     $CheckBox = $_.Content
                                     $CheckBox.IsChecked = $true
                                 }
                             })
 
                         # Add click event for 'Uncheck All' button from sub-categories, regardless of whether they are enabled or disabled
-                        $SyncHash.window.FindName('UncheckAllButtonSubCategories').Add_Click({
-                                $SyncHash.SubCategoriesListView.Items | ForEach-Object -Process {
+                        $SyncHash['GUI'].SelectAllSubCategories.Add_Unchecked({
+                                $SyncHash['GUI'].SubCategories.Items | ForEach-Object -Process {
                                     $CheckBox = $_.Content
                                     $CheckBox.IsChecked = $false
                                 }
@@ -2887,25 +2911,25 @@ Execution Policy: $CurrentExecutionPolicy
                         #Region 3-Log related elements
 
                         # Initially set the visibility of the text area for the selected LogPath to Collapsed since nothing is selected by the user
-                        $SyncHash.txtFilePath.Visibility = 'Collapsed'
+                        $SyncHash['GUI'].txtFilePath.Visibility = 'Collapsed'
 
                         # Initialize the LogPath button element as disabled since the checkbox to enable logging hasn't been checked yet
-                        $SyncHash.LogPathButton.IsEnabled = $false
+                        $SyncHash['GUI'].LogPath.IsEnabled = $false
 
                         # If the Log checkbox is checked, enable the LogPath button
-                        $SyncHash.window.FindName('Log').Add_Checked({
-                                $SyncHash.LogPathButton.IsEnabled = $true
+                        $SyncHash['GUI'].Log.Add_Checked({
+                                $SyncHash['GUI'].LogPath.IsEnabled = $true
                             })
 
                         # If the Log checkbox is unchecked, disable the LogPath button and set the selected LogPath text area's visibility to collapsed again
-                        $SyncHash.window.FindName('Log').Add_Unchecked({
-                                $SyncHash.LogPathButton.IsEnabled = $false
+                        $SyncHash['GUI'].Log.Add_Unchecked({
+                                $SyncHash['GUI'].LogPath.IsEnabled = $false
 
-                                $SyncHash.txtFilePath.Visibility = 'Collapsed'
+                                $SyncHash['GUI'].txtFilePath.Visibility = 'Collapsed'
                             })
 
                         # Event handler for the Log Path button click to open a file path picker dialog
-                        $SyncHash.LogPathButton.Add_Click({
+                        $SyncHash['GUI'].LogPath.Add_Click({
 
                                 Add-Type -AssemblyName System.Windows.Forms
                                 [System.Windows.Forms.SaveFileDialog]$Dialog = New-Object -TypeName System.Windows.Forms.SaveFileDialog
@@ -2914,12 +2938,12 @@ Execution Policy: $CurrentExecutionPolicy
                                 $Dialog.Title = 'Choose where to save the log file'
 
                                 if ($Dialog.ShowDialog() -eq 'OK') {
-                                    $SyncHash.txtFilePath.Text = $Dialog.FileName
+                                    $SyncHash['GUI'].txtFilePath.Text = $Dialog.FileName
 
                                     # set the selected LogPath text area's visibly to enabled once the user selected a file path
-                                    $SyncHash.txtFilePath.Visibility = 'Visible'
+                                    $SyncHash['GUI'].txtFilePath.Visibility = 'Visible'
 
-                                    Write-GUI -Text "Logs will be saved in: $($SyncHash.txtFilePath.Text)"
+                                    Write-GUI -Text "Logs will be saved in: $($SyncHash['GUI'].txtFilePath.Text)"
 
                                     $SyncHash.ShouldWriteLogs = $true
                                 }
@@ -2930,23 +2954,23 @@ Execution Policy: $CurrentExecutionPolicy
                         #Region Offline-Mode-Tab
 
                         # If the Offline Mode checkbox is checked
-                        $SyncHash.EnableOfflineModeCheckBox.Add_Checked({
-                                $SyncHash.MicrosoftSecurityBaselineZipButton.IsEnabled = $true
-                                $SyncHash.MicrosoftSecurityBaselineZipTextBox.IsEnabled = $true
-                                $SyncHash.Microsoft365AppsSecurityBaselineZipButton.IsEnabled = $true
-                                $SyncHash.Microsoft365AppsSecurityBaselineZipTextBox.IsEnabled = $true
-                                $SyncHash.LGPOZipButton.IsEnabled = $true
-                                $SyncHash.LGPOZipTextBox.IsEnabled = $true
+                        $SyncHash['GUI'].EnableOfflineMode.Add_Checked({
+                                $SyncHash['GUI'].MicrosoftSecurityBaselineZipButton.IsEnabled = $true
+                                $SyncHash['GUI'].MicrosoftSecurityBaselineZipTextBox.IsEnabled = $true
+                                $SyncHash['GUI'].Microsoft365AppsSecurityBaselineZipButton.IsEnabled = $true
+                                $SyncHash['GUI'].Microsoft365AppsSecurityBaselineZipTextBox.IsEnabled = $true
+                                $SyncHash['GUI'].LGPOZipButton.IsEnabled = $true
+                                $SyncHash['GUI'].LGPOZipTextBox.IsEnabled = $true
                             })
 
                         # Function to disable the Offline Mode configuration inputs
                         Function Disable-OfflineModeConfigInputs {
-                            $SyncHash.MicrosoftSecurityBaselineZipButton.IsEnabled = $false
-                            $SyncHash.MicrosoftSecurityBaselineZipTextBox.IsEnabled = $false
-                            $SyncHash.Microsoft365AppsSecurityBaselineZipButton.IsEnabled = $false
-                            $SyncHash.Microsoft365AppsSecurityBaselineZipTextBox.IsEnabled = $false
-                            $SyncHash.LGPOZipButton.IsEnabled = $false
-                            $SyncHash.LGPOZipTextBox.IsEnabled = $false
+                            $SyncHash['GUI'].MicrosoftSecurityBaselineZipButton.IsEnabled = $false
+                            $SyncHash['GUI'].MicrosoftSecurityBaselineZipTextBox.IsEnabled = $false
+                            $SyncHash['GUI'].Microsoft365AppsSecurityBaselineZipButton.IsEnabled = $false
+                            $SyncHash['GUI'].Microsoft365AppsSecurityBaselineZipTextBox.IsEnabled = $false
+                            $SyncHash['GUI'].LGPOZipButton.IsEnabled = $false
+                            $SyncHash['GUI'].LGPOZipTextBox.IsEnabled = $false
                         }
 
                         # Initially disable the Offline Mode configuration inputs until the Offline Mode checkbox is checked
@@ -2956,14 +2980,14 @@ Execution Policy: $CurrentExecutionPolicy
                         if (-NOT $Offline) {
 
                             # Disable the Offline mode checkbox if -Offline parameter was not used with the function
-                            $SyncHash.EnableOfflineModeCheckBox.IsEnabled = $false
+                            $SyncHash['GUI'].EnableOfflineMode.IsEnabled = $false
 
                             # Display a message showing how to activate the offline mode
 
                             # Add a new row definition for the text message
                             [System.Windows.Controls.RowDefinition]$OfflineModeUnavailableRow = New-Object -Type System.Windows.Controls.RowDefinition
                             $OfflineModeUnavailableRow.Height = 50
-                            $SyncHash.window.FindName('Grid2').RowDefinitions.Add($OfflineModeUnavailableRow)
+                            $SyncHash['GUI'].Grid2.RowDefinitions.Add($OfflineModeUnavailableRow)
 
                             # Create a new text box
                             [System.Windows.Controls.TextBox]$OfflineModeUnavailableNoticeBox = New-Object -Type System.Windows.Controls.TextBox
@@ -2987,16 +3011,16 @@ Execution Policy: $CurrentExecutionPolicy
                             $OfflineModeUnavailableNoticeBox.Foreground = $GradientBrush
 
                             # Add the text box to the grid
-                            $SyncHash.window.FindName('Grid2').Children.Add($OfflineModeUnavailableNoticeBox)
+                            $SyncHash['GUI'].Grid2.Children.Add($OfflineModeUnavailableNoticeBox)
                         }
 
                         # If the Offline Mode checkbox is Unchecked
-                        $SyncHash.EnableOfflineModeCheckBox.Add_Unchecked({
+                        $SyncHash['GUI'].EnableOfflineMode.Add_Unchecked({
                                 Disable-OfflineModeConfigInputs
                             })
 
                         # Define the click event for the Microsoft Security Baseline Zip button
-                        $SyncHash.MicrosoftSecurityBaselineZipButton.Add_Click({
+                        $SyncHash['GUI'].MicrosoftSecurityBaselineZipButton.Add_Click({
 
                                 Add-Type -AssemblyName System.Windows.Forms
                                 [System.Windows.Forms.OpenFileDialog]$Dialog = New-Object -TypeName 'System.Windows.Forms.OpenFileDialog'
@@ -3016,7 +3040,7 @@ Execution Policy: $CurrentExecutionPolicy
                                             Write-GUI -Text 'The selected Zip file does not contain the Microsoft Security Baselines Baseline-LocalInstall.ps1 which is required for the Protect-WindowsSecurity function to work properly'
                                         }
                                         else {
-                                            $SyncHash.MicrosoftSecurityBaselineZipTextBox.Text = $Dialog.FileName
+                                            $SyncHash['GUI'].MicrosoftSecurityBaselineZipTextBox.Text = $Dialog.FileName
                                         }
                                     }
                                     catch {
@@ -3030,7 +3054,7 @@ Execution Policy: $CurrentExecutionPolicy
                             })
 
                         # Define the click event for the Microsoft 365 Apps Security Baseline Zip button
-                        $SyncHash.Microsoft365AppsSecurityBaselineZipButton.Add_Click({
+                        $SyncHash['GUI'].Microsoft365AppsSecurityBaselineZipButton.Add_Click({
 
                                 Add-Type -AssemblyName System.Windows.Forms
                                 [System.Windows.Forms.OpenFileDialog]$Dialog = New-Object -TypeName 'System.Windows.Forms.OpenFileDialog'
@@ -3050,7 +3074,7 @@ Execution Policy: $CurrentExecutionPolicy
                                             Write-GUI -Text 'The selected Zip file does not contain the Microsoft 365 Apps for Enterprise Security Baselines Baseline-LocalInstall.ps1 which is required for the Protect-WindowsSecurity function to work properly'
                                         }
                                         else {
-                                            $SyncHash.Microsoft365AppsSecurityBaselineZipTextBox.Text = $Dialog.FileName
+                                            $SyncHash['GUI'].Microsoft365AppsSecurityBaselineZipTextBox.Text = $Dialog.FileName
                                         }
                                     }
                                     catch {
@@ -3064,7 +3088,7 @@ Execution Policy: $CurrentExecutionPolicy
                             })
 
                         # Define the click event for the LGPO Zip button
-                        $SyncHash.LGPOZipButton.Add_Click({
+                        $SyncHash['GUI'].LGPOZipButton.Add_Click({
 
                                 Add-Type -AssemblyName System.Windows.Forms
                                 [System.Windows.Forms.OpenFileDialog]$Dialog = New-Object -TypeName 'System.Windows.Forms.OpenFileDialog'
@@ -3084,7 +3108,7 @@ Execution Policy: $CurrentExecutionPolicy
                                             Write-GUI -Text 'The selected Zip file does not contain the LGPO.exe which is required for the Protect-WindowsSecurity function to work properly'
                                         }
                                         else {
-                                            $SyncHash.LGPOZipTextBox.Text = $Dialog.FileName
+                                            $SyncHash['GUI'].LGPOZipTextBox.Text = $Dialog.FileName
                                         }
                                     }
                                     catch {
@@ -3230,9 +3254,7 @@ Execution Policy: $CurrentExecutionPolicy
                                 [System.GC]::Collect()
 
                                 # Disable all UI elements in Grid1 except for the textblock while commands are being executed
-                                $AllControls = $SyncHash.window.FindName('Grid1').Children
-                                $AllControls += $SyncHash.window.FindName('Grid2').Children
-                                $AllControls += $SyncHash.window.FindName('ParentGrid').Children
+                                $AllControls = $SyncHash.window.FindName('ParentGrid').Children
 
                                 foreach ($Control in $AllControls) {
                                     # Textblock's parent is the ScrollViewer
@@ -3242,10 +3264,10 @@ Execution Policy: $CurrentExecutionPolicy
                                 }
 
                                 # Gather selected categories
-                                $SelectedCategories = $SyncHash.categoriesListView.Items | Where-Object -FilterScript { $_.Content.IsChecked } | ForEach-Object -Process { $_.Content.Content }
+                                $SelectedCategories = $SyncHash['GUI'].Categories.Items | Where-Object -FilterScript { $_.Content.IsChecked } | ForEach-Object -Process { $_.Content.Name }
 
                                 # Gather selected sub-categories
-                                # $SelectedSubCategories = $SyncHash.SubCategoriesListView.Items | Where-Object -FilterScript { $_.Content.IsChecked } | ForEach-Object -Process { $_.Content.Content }
+                                # $SelectedSubCategories = $SyncHash['GUI'].SubCategories.Items | Where-Object -FilterScript { $_.Content.IsChecked } | ForEach-Object -Process { $_.Content.Name }
 
                                 # Make the Write-Verbose cmdlet write verbose messages regardless of the global preference or selected parameter
                                 # That is the main source of the messages in the GUI
@@ -3261,7 +3283,7 @@ Execution Policy: $CurrentExecutionPolicy
                                     }
 
                                     # Making the selected sub-categories available in the current scope because the functions called from this scriptblock wouldn't be able to access them otherwise
-                                    $SyncHash.SubCategoriesListView.Items | Where-Object -FilterScript { $_.Content.IsChecked } | ForEach-Object -Process { $_.Content.Content } | ForEach-Object -Process {
+                                    $SyncHash['GUI'].SubCategories.Items | Where-Object -FilterScript { $_.Content.IsChecked } | ForEach-Object -Process { $_.Content.Name } | ForEach-Object -Process {
                                         # All of the sub-category variables are boolean since they are originally switch parameters in the CLI experience
                                         Set-Variable -Name $_ -Value $true -Force
                                     }
@@ -3271,9 +3293,9 @@ Execution Policy: $CurrentExecutionPolicy
                                         # If the required files have not been processed for offline mode already
                                         if ($SyncHash.StartFileDownloadHasRun -eq $false) {
                                             # If the checkbox on the GUI for Offline mode is checked
-                                            if ($SyncHash.EnableOfflineModeCheckBox.IsChecked) {
+                                            if ($SyncHash['GUI'].EnableOfflineMode.IsChecked) {
                                                 # Make sure all 3 fields for offline mode files were selected by the users and they are neither empty nor null
-                                                if ((-NOT [System.String]::IsNullOrWhitespace($SyncHash.MicrosoftSecurityBaselineZipTextBox.Text)) -and (-NOT [System.String]::IsNullOrWhitespace($SyncHash.Microsoft365AppsSecurityBaselineZipTextBox.Text)) -and (-NOT [System.String]::IsNullOrWhitespace($SyncHash.LGPOZipTextBox.Text))) {
+                                                if ((-NOT [System.String]::IsNullOrWhitespace($SyncHash['GUI'].MicrosoftSecurityBaselineZipTextBox.Text)) -and (-NOT [System.String]::IsNullOrWhitespace($SyncHash['GUI'].Microsoft365AppsSecurityBaselineZipTextBox.Text)) -and (-NOT [System.String]::IsNullOrWhitespace($SyncHash['GUI'].LGPOZipTextBox.Text))) {
                                                     # Process the offline mode files selected by the user
                                                     Start-FileDownload -WorkingDir $WorkingDir -HardeningModulePath:$HardeningModulePath -Offline:$Offline -SyncHash $SyncHash -IsLocally:$IsLocally -GUI -Verbose:$true
 
@@ -4018,7 +4040,7 @@ Execution Policy: $CurrentExecutionPolicy
                                                 Param (
                                                     [Parameter(Mandatory = $true)][System.String]$Title,
                                                     [Parameter(Mandatory = $true)][System.String]$Body,
-                                                    [Parameter(Mandatory = $false)][System.IO.FileInfo]$ImagePath,
+                                                    [Parameter(Mandatory = $false)][System.IO.FileInfo]$PathIconPath,
                                                     [Parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$UseImage
                                                 )
 
@@ -4042,7 +4064,7 @@ Execution Policy: $CurrentExecutionPolicy
                                                 # If using an image, set the image source in the XML
                                                 if ($UseImage) {
                                                     [System.Xml.XmlElement]$ImagePlaceHolder = $XML.toast.visual.binding.image
-                                                    $ImagePlaceHolder.SetAttribute('src', $ImagePath)
+                                                    $ImagePlaceHolder.SetAttribute('src', $PathIconPath)
                                                 }
 
                                                 # Set the title text in the XML
@@ -4098,9 +4120,7 @@ Execution Policy: $CurrentExecutionPolicy
 
                                 # $SyncHash.Window.Dispatcher.Invoke({
                                 # Enable all UI elements once all of the commands have been executed
-                                $AllControls = $SyncHash.window.FindName('Grid1').Children
-                                $AllControls += $SyncHash.window.FindName('Grid2').Children
-                                $AllControls += $SyncHash.window.FindName('ParentGrid').Children
+                                $AllControls = $SyncHash.window.FindName('ParentGrid').Children
 
                                 foreach ($Control in $AllControls) {
                                     $Control.IsEnabled = $true
@@ -4122,7 +4142,7 @@ End time: $(Get-Date)
 **********************
 "@) | Out-Null
 
-                                    Add-Content -Value $SyncHash.Logger -Path $SyncHash.txtFilePath.Text -Force
+                                    Add-Content -Value $SyncHash.Logger -Path $SyncHash['GUI'].txtFilePath.Text -Force
                                 }
                             })
 
@@ -4446,309 +4466,799 @@ namespace SystemInfo
 '@
 
 [System.Xml.XmlDocument]$Xaml = @'
-<Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        x:Name="Window"
-            WindowStartupLocation="CenterScreen"
-                SizeToContent="WidthAndHeight" MinHeight="700" MinWidth="700">
-   <Window.Resources>
-       <!-- Global style for font color -->
-       <SolidColorBrush x:Key="GlobalFontColor" Color="#000000"/>
-       <!-- Base style for all controls -->
-       <Style TargetType="{x:Type Control}" x:Key="BaseControlStyle">
-           <Setter Property="Foreground" Value="{StaticResource GlobalFontColor}"/>
-       </Style>
-       <!-- Derived styles for specific controls -->
-       <Style TargetType="{x:Type Button}" BasedOn="{StaticResource BaseControlStyle}"/>
-       <Style TargetType="{x:Type CheckBox}" BasedOn="{StaticResource BaseControlStyle}"/>
-       <!-- Style for TabControl -->
-       <Style TargetType="TabItem">
-           <Setter Property="FontSize" Value="16"/>
-           <Setter Property="FontWeight" Value="Bold"/>
-           <Setter Property="Padding" Value="20,20,20,0"/>
-           <Setter Property="Margin" Value="5,5,5,0"/>
-           <Setter Property="Height" Value="60"/>
-           <Setter Property="ToolTip" Value="{Binding Header, RelativeSource={RelativeSource Self}}"/>
-           <Setter Property="Foreground" Value="Black"/>
-           <Setter Property="Background" Value="Transparent"/>
-           <Setter Property="BorderBrush" Value="Transparent"/>
-           <Setter Property="BorderThickness" Value="0"/>
-           <Setter Property="Template">
-               <Setter.Value>
-                   <ControlTemplate TargetType="TabItem">
-                       <Border x:Name="Border" Background="Transparent" BorderBrush="Transparent" BorderThickness="0">
-                           <ContentPresenter x:Name="ContentSite" VerticalAlignment="Center" HorizontalAlignment="Center" ContentSource="Header" Margin="20" TextBlock.Foreground="Black"/>
-                       </Border>
-                       <ControlTemplate.Triggers>
-                           <Trigger Property="IsSelected" Value="True">
-                               <Setter TargetName="Border" Property="Background">
-                                   <Setter.Value>
-                                       <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
-                                           <GradientStop Color="#78ffd6" Offset="0.0"/>
-                                           <GradientStop Color="#a8ff78" Offset="1.0"/>
-                                       </LinearGradientBrush>
-                                   </Setter.Value>
-                               </Setter>
-                           </Trigger>
-                           <Trigger Property="IsMouseOver" Value="True">
-                               <Setter TargetName="Border" Property="Background">
-                                   <Setter.Value>
-                                       <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
-                                           <GradientStop Color="#a8ff78" Offset="0.0"/>
-                                           <GradientStop Color="#78ffd6" Offset="1.0"/>
-                                       </LinearGradientBrush>
-                                   </Setter.Value>
-                               </Setter>
-                           </Trigger>
-                       </ControlTemplate.Triggers>
-                   </ControlTemplate>
-               </Setter.Value>
-           </Setter>
-       </Style>
-       <!-- Style for CheckBox with specific key-->
-       <Style x:Key="CheckBoxStyle" TargetType="CheckBox">
-           <Setter Property="FontSize" Value="14"/>
-           <Setter Property="Foreground" Value="Black"/>
-           <Setter Property="FontFamily" Value="Arial"/>
-       </Style>
-       <!-- Style for Buttons with specific key-->
-       <Style x:Key="GlobalButtons" TargetType="Button">
-           <Setter Property="Background">
-               <Setter.Value>
-                   <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                       <GradientStop Color="#AAFFA9" Offset="0.0"/>
-                       <GradientStop Color="#AAFFA9" Offset="1.0"/>
-                   </LinearGradientBrush>
-               </Setter.Value>
-           </Setter>
-           <Setter Property="BorderBrush" Value="#FF003366"/>
-           <Setter Property="BorderThickness" Value="0"/>
-       </Style>
-   </Window.Resources>
-   <!-- Grid for Online Mode Tab - Removing the white border with negative margins -->
-   <Grid x:Name="ParentGrid" Margin="-2.3,-2.3,-2.3,-2.3">
-       <!-- Background color for the grid -->
-       <Grid.Background>
-           <SolidColorBrush Color="#ffffad"/>
-       </Grid.Background>
-       <!-- Row definitions for the grid -->
-       <Grid.RowDefinitions>
-           <!-- row 0 -->
-           <RowDefinition Height="230"/>
-           <!-- row 1: TabControl -->
-           <RowDefinition Height="*"/>
-           <!-- row 2 -->
-           <RowDefinition Height="80"/>
-       </Grid.RowDefinitions>
-       <!-- Column definitions for the grid -->
-       <Grid.ColumnDefinitions>
-           <ColumnDefinition Width="*"/>
-           <ColumnDefinition Width="*"/>
-       </Grid.ColumnDefinitions>
-       <!-- Logging Area -->
-       <ScrollViewer x:Name="ScrollerForOutputTextBlock" Grid.Row="0" Grid.ColumnSpan="2" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto" Margin="10,15,10,10">
-           <TextBox x:Name="OutputTextBlock" TextWrapping="Wrap" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
-                 Background="Transparent" BorderThickness="0" IsReadOnly="True" IsTabStop="False" Cursor="IBeam" FontSize="14" FontWeight="Bold"/>
-       </ScrollViewer>
-       <!-- TabControl for Online and Offline Mode -->
-       <TabControl x:Name="MainTabControl" Grid.Row="1" Grid.ColumnSpan="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" BorderThickness="0,1,0,0">
-           <!-- To center the tab items in the tab control -->
-           <TabControl.Resources>
-               <Style TargetType="{x:Type TabPanel}">
-                   <Setter Property="HorizontalAlignment" Value="Center" />
-               </Style>
-           </TabControl.Resources>
-           <!-- Online Mode Tab Content -->
-           <TabItem Header="Online Mode" VerticalAlignment="Center" HorizontalAlignment="Center">
-               <Grid x:Name="Grid1" Margin="-2.3,-2.3,-2.3,-2.3">
-                   <!-- Background color for the grid -->
-                   <Grid.Background>
-                       <SolidColorBrush Color="#ffffad"/>
-                   </Grid.Background>
-                   <!-- Row and Column definitions for the grid -->
-                   <Grid.RowDefinitions>
-                       <!-- This is for row 0 -->
-                       <RowDefinition Height="50"/>
-                       <!-- This is for row 1 -->
-                       <RowDefinition Height="25"/>
-                       <!-- This is for row 2 -->
-                       <RowDefinition Height="4*" MaxHeight="215"/>
-                       <!-- This is for row 3 -->
-                       <RowDefinition Height="70"/>
-                       <!-- This is for row 4 -->
-                       <RowDefinition Height="30"/>
-                   </Grid.RowDefinitions>
-                   <Grid.ColumnDefinitions>
-                       <ColumnDefinition Width="*"/>
-                       <ColumnDefinition Width="*"/>
-                   </Grid.ColumnDefinitions>
-                   <StackPanel Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="1"  Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="bottom">
-                       <Button x:Name="CheckAllButtonCategories" Content="Select All" Margin="5" Style="{StaticResource GlobalButtons}" ToolTip="Select all hardening categories" Padding="5"/>
-                       <Button x:Name="UncheckAllButtonCategories" Content="Remove Selections" Margin="5" Style="{StaticResource GlobalButtons}" ToolTip="De-select all hardening categories" Padding="5"/>
-                   </StackPanel>
-                   <StackPanel Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="1" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="bottom">
-                       <Button x:Name="CheckAllButtonSubCategories" Content="Select All" Margin="5" Style="{StaticResource GlobalButtons}" ToolTip="Select all available sub-categories" Padding="5"/>
-                       <Button x:Name="UncheckAllButtonSubCategories" Content="Remove Selections" Margin="5" Style="{StaticResource GlobalButtons}" ToolTip="De-select all sub-categories" Padding="5"/>
-                   </StackPanel>
-                   <!-- Categories and Sub-Categories text blocks -->
-                   <TextBlock Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="1" HorizontalAlignment="Center" VerticalAlignment="bottom" Text="Categories" FontWeight="Bold" Foreground="#71B280"/>
-                   <TextBlock Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="1" HorizontalAlignment="Center" VerticalAlignment="bottom" Text="Sub-Categories" FontWeight="Bold" Foreground="#71B280"/>
-                   <!-- ListViews for Categories -->
-                   <ListView Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="1" Margin="10" x:Name="Categories" BorderThickness="0" ToolTip="Select the hardening categories to run">
-                       <!-- Background color for the ListView -->
-                       <ListView.Background>
-                           <SolidColorBrush Color="#ffffad"/>
-                       </ListView.Background>
-                       <ListViewItem>
-                           <CheckBox Content="MicrosoftSecurityBaselines" VerticalContentAlignment="Center" Padding="10,10,40,10"/>
-                       </ListViewItem>
-                       <ListViewItem>
-                           <CheckBox Content="Microsoft365AppsSecurityBaselines" VerticalContentAlignment="Center" Padding="10,10,40,10"/>
-                       </ListViewItem>
-                       <ListViewItem>
-                           <CheckBox Content="MicrosoftDefender" VerticalContentAlignment="Center" Padding="10,10,40,10"/>
-                       </ListViewItem>
-                       <ListViewItem>
-                           <CheckBox Content="AttackSurfaceReductionRules" VerticalContentAlignment="Center" Padding="10,10,40,10"/>
-                       </ListViewItem>
-                       <ListViewItem>
-                           <CheckBox Content="BitLockerSettings" VerticalContentAlignment="Center" Padding="10,10,40,10"/>
-                       </ListViewItem>
-                       <ListViewItem>
-                           <CheckBox Content="TLSSecurity" VerticalContentAlignment="Center" Padding="10,10,40,10"/>
-                       </ListViewItem>
-                       <ListViewItem>
-                           <CheckBox Content="LockScreen" VerticalContentAlignment="Center" Padding="10,10,40,10"/>
-                       </ListViewItem>
-                       <ListViewItem>
-                           <CheckBox Content="UserAccountControl" VerticalContentAlignment="Center" Padding="10,10,40,10"/>
-                       </ListViewItem>
-                       <ListViewItem>
-                           <CheckBox Content="WindowsFirewall" VerticalContentAlignment="Center" Padding="10,10,40,10"/>
-                       </ListViewItem>
-                       <ListViewItem>
-                           <CheckBox Content="OptionalWindowsFeatures" VerticalContentAlignment="Center" Padding="10,10,40,10"/>
-                       </ListViewItem>
-                       <ListViewItem>
-                           <CheckBox Content="WindowsNetworking" VerticalContentAlignment="Center" Padding="10,10,40,10"/>
-                       </ListViewItem>
-                       <ListViewItem>
-                           <CheckBox Content="MiscellaneousConfigurations" VerticalContentAlignment="Center" Padding="10,10,40,10"/>
-                       </ListViewItem>
-                       <ListViewItem>
-                           <CheckBox Content="WindowsUpdateConfigurations" VerticalContentAlignment="Center" Padding="10,10,40,10"/>
-                       </ListViewItem>
-                       <ListViewItem>
-                           <CheckBox Content="EdgeBrowserConfigurations" VerticalContentAlignment="Center" Padding="10,10,40,10"/>
-                       </ListViewItem>
-                       <ListViewItem>
-                           <CheckBox Content="CertificateCheckingCommands" VerticalContentAlignment="Center" Padding="10,10,40,10"/>
-                       </ListViewItem>
-                       <ListViewItem>
-                           <CheckBox Content="CountryIPBlocking" VerticalContentAlignment="Center" Padding="10,10,40,10"/>
-                       </ListViewItem>
-                       <ListViewItem>
-                           <CheckBox Content="DownloadsDefenseMeasures" VerticalContentAlignment="Center" Padding="10,10,40,10"/>
-                       </ListViewItem>
-                       <ListViewItem>
-                           <CheckBox Content="NonAdminCommands" VerticalContentAlignment="Center" Padding="10,10,40,10"/>
-                       </ListViewItem>
-                   </ListView>
-                   <!-- ListViews for Sub-Categories -->
-                   <ListView Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="1" Margin="10" x:Name="SubCategories" BorderThickness="0" ToolTip="Select sub-categories">
-                       <!-- Background color for the list view -->
-                       <ListView.Background>
-                           <SolidColorBrush Color="#ffffad"/>
-                       </ListView.Background>
-                       <ListViewItem>
-                           <CheckBox Content="SecBaselines_NoOverrides" VerticalContentAlignment="Center" Padding="10,10,40,10"/>
-                       </ListViewItem>
-                       <ListViewItem>
-                           <CheckBox Content="MSFTDefender_SAC" VerticalContentAlignment="Center" Padding="10,10,40,10"/>
-                       </ListViewItem>
-                       <ListViewItem>
-                           <CheckBox Content="MSFTDefender_NoDiagData" VerticalContentAlignment="Center" Padding="10,10,40,10"/>
-                       </ListViewItem>
-                       <ListViewItem>
-                           <CheckBox Content="MSFTDefender_NoScheduledTask" VerticalContentAlignment="Center" Padding="10,10,40,10"/>
-                       </ListViewItem>
-                       <ListViewItem>
-                           <CheckBox Content="MSFTDefender_BetaChannels" VerticalContentAlignment="Center" Padding="10,10,40,10"/>
-                       </ListViewItem>
-                       <ListViewItem>
-                           <CheckBox Content="LockScreen_CtrlAltDel" VerticalContentAlignment="Center" Padding="10,10,40,10"/>
-                       </ListViewItem>
-                       <ListViewItem>
-                           <CheckBox Content="LockScreen_NoLastSignedIn" VerticalContentAlignment="Center" Padding="10,10,40,10"/>
-                       </ListViewItem>
-                       <ListViewItem>
-                           <CheckBox Content="UAC_NoFastSwitching" VerticalContentAlignment="Center" Padding="10,10,40,10"/>
-                       </ListViewItem>
-                       <ListViewItem>
-                           <CheckBox Content="UAC_OnlyElevateSigned" VerticalContentAlignment="Center" Padding="10,10,40,10"/>
-                       </ListViewItem>
-                       <ListViewItem>
-                           <CheckBox Content="CountryIPBlocking_OFAC" VerticalContentAlignment="Center" Padding="10,10,40,10"/>
-                       </ListViewItem>
-                   </ListView>
-                   <!-- Enable Logging CheckBox -->
-                   <Viewbox Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="200">
-                       <CheckBox x:Name="Log" Content="Enable Logging" Margin="15" Style="{StaticResource CheckBoxStyle}" ToolTip="Enable logging"/>
-                   </Viewbox>
-                   <!-- Log Path TextBox -->
-                   <Button Content="LogPath" x:Name="LogPath" Grid.Row="3" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="20" BorderThickness="0" Style="{StaticResource GlobalButtons}" ToolTip="The path to save the log file to"/>
-                   <!-- File Path TextBox which is dynamic-->
-                   <TextBox x:Name="txtFilePath" Grid.Row="4" Grid.ColumnSpan="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="10,0,10,0" BorderThickness="0" ToolTip="The selected log file path" MaxWidth="800"/>
-               </Grid>
-           </TabItem>
-           <!-- Offline Mode Tab Content -->
-           <TabItem Header="Offline Mode Configurations" VerticalAlignment="Center" HorizontalAlignment="Center">
-               <Grid x:Name="Grid2" Margin="-2.3,-2.3,-2.3,-2.3">
-                   <Grid.Background>
-                       <SolidColorBrush Color="#ffffad"/>
-                   </Grid.Background>
-                   <Grid.ColumnDefinitions>
-                       <ColumnDefinition Width="*"/>
-                       <!-- Button column -->
-                       <ColumnDefinition Width="*"/>
-                       <!-- Text area column -->
-                   </Grid.ColumnDefinitions>
-                   <Grid.RowDefinitions>
-                       <!-- This is for row 0 -->
-                       <RowDefinition Height="40" />
-                       <!-- This is for row 1 -->
-                       <RowDefinition Height="50"/>
-                       <!-- This is for row 2 -->
-                       <RowDefinition Height="50"/>
-                       <!-- This is for row 3 -->
-                       <RowDefinition Height="50"/>
-                   </Grid.RowDefinitions>
-                   <!-- Row 0 -->
-                   <!-- Enable Offline Mode CheckBox -->
-                   <Viewbox Grid.Row="0" Grid.ColumnSpan="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-                       <CheckBox x:Name="EnableOfflineMode" Content="Enable Offline Mode" Margin="10,20,10,0" Style="{StaticResource CheckBoxStyle}" ToolTip="Enables Offline Mode and will use the selected files instead of downloading them from the Microsoft servers"/>
-                   </Viewbox>
-                   <!-- Row 1 -->
-                   <Button HorizontalAlignment="Stretch" VerticalAlignment="Stretch" x:Name="MicrosoftSecurityBaselineZipButton" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="1" Content="Microsoft Security Baseline" Margin="10,20,10,0" ToolTip="Browse for the path to Microsoft Security Baseline zip file" Style="{StaticResource GlobalButtons}"/>
-                   <TextBox HorizontalAlignment="Stretch" VerticalAlignment="Stretch" x:Name="MicrosoftSecurityBaselineZipTextBox" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="1" Margin="10,20,10,0" MaxWidth="700" ToolTip="Selected path for the Microsoft Security Baseline zip file"/>
-                   <!-- Row 2 -->
-                   <Button HorizontalAlignment="Stretch" VerticalAlignment="Stretch" x:Name="Microsoft365AppsSecurityBaselineZipButton" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="1" Content="Microsoft 365 Apps Security Baseline" ToolTip="Browse for the path to Microsoft 365 Apps Security Baseline zip file" Margin="10,20,10,0" Style="{StaticResource GlobalButtons}"/>
-                   <TextBox HorizontalAlignment="Stretch" VerticalAlignment="Stretch" x:Name="Microsoft365AppsSecurityBaselineZipTextBox" Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="1" Margin="10,20,10,0" MaxWidth="700" ToolTip="Selected path for the Microsoft 365 Apps Security Baseline zip file"/>
-                   <!-- Row 3 -->
-                   <Button HorizontalAlignment="Stretch" VerticalAlignment="Stretch" x:Name="LGPOZipButton" Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="1" Content="LGPO" ToolTip="Browse for the path to LGPO zip file" Margin="10,20,10,0" Style="{StaticResource GlobalButtons}"/>
-                   <TextBox HorizontalAlignment="Stretch" VerticalAlignment="Stretch" x:Name="LGPOZipTextBox" Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="1" Margin="10,20,10,0" ToolTip="Selected path for the LGPO zip file" MaxWidth="700"/>
-               </Grid>
-           </TabItem>
-       </TabControl>
-       <!-- Execute Button -->
-       <Button Content="Execute" Grid.Row="2" Grid.ColumnSpan="2" Width="100" Height="40" FontSize="14" FontWeight="Bold" x:Name="Execute" BorderThickness="0" ToolTip="Run the selected categories and sub-categories">
-           <Button.Background>
-               <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                   <GradientStop Color="#78ffd6" Offset="0.0"/>
-                   <GradientStop Color="#a8ff78" Offset="1.0"/>
-               </LinearGradientBrush>
-           </Button.Background>
-       </Button>
-   </Grid>
+<Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" x:Name="Window" WindowStartupLocation="CenterScreen" SizeToContent="WidthAndHeight" MinHeight="700" MinWidth="700" FontFamily="Trebuchet MS" FontSize="16" Background="#FFFFC0CB">
+    <Window.Resources>
+        <!--BEGIN global scrollbars styles-->
+        <Style x:Key="ElderScrolls" TargetType="{x:Type Thumb}">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate>
+                        <Grid x:Name="Grid">
+                            <Rectangle HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="Auto" Height="Auto" Fill="Transparent"/>
+                            <Border x:Name="RectangleX" CornerRadius="10 0 0 10" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="Auto" Height="Auto" Background="{TemplateBinding Background}"/>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="Tag" Value="Horizontal">
+                                <Setter TargetName="RectangleX" Property="Width" Value="Auto"/>
+                                <Setter TargetName="RectangleX" Property="Height" Value="7"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style x:Key="{x:Type ScrollBar}" TargetType="{x:Type ScrollBar}">
+            <Setter Property="Stylus.IsFlicksEnabled" Value="False"/>
+            <Setter Property="Foreground" Value="#AAA81A99"/>
+            <Setter Property="Background" Value="DarkGray"/>
+            <Setter Property="Width" Value="10"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type ScrollBar}">
+                        <Grid x:Name="GridRoot" Width="12" Background="{x:Null}">
+                            <Track x:Name="PART_Track" Grid.Row="0" IsDirectionReversed="true" Focusable="False">
+                                <Track.Thumb>
+                                    <Thumb x:Name="Thumb" Background="{TemplateBinding Foreground}" Style="{DynamicResource ElderScrolls}"/>
+                                </Track.Thumb>
+                                <Track.IncreaseRepeatButton>
+                                    <RepeatButton x:Name="PageUp" Command="ScrollBar.PageDownCommand" Opacity="0" Focusable="False"/>
+                                </Track.IncreaseRepeatButton>
+                                <Track.DecreaseRepeatButton>
+                                    <RepeatButton x:Name="PageDown" Command="ScrollBar.PageUpCommand" Opacity="0" Focusable="False"/>
+                                </Track.DecreaseRepeatButton>
+                            </Track>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger SourceName="Thumb" Property="IsMouseOver" Value="true">
+                                <Setter Value="{DynamicResource ButtonSelectBrush}" TargetName="Thumb" Property="Background"/>
+                            </Trigger>
+                            <Trigger SourceName="Thumb" Property="IsDragging" Value="true">
+                                <Setter Value="{DynamicResource DarkBrush}" TargetName="Thumb" Property="Background"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="false">
+                                <Setter TargetName="Thumb" Property="Visibility" Value="Collapsed"/>
+                            </Trigger>
+                            <Trigger Property="Orientation" Value="Horizontal">
+                                <Setter TargetName="GridRoot" Property="LayoutTransform">
+                                    <Setter.Value>
+                                        <RotateTransform Angle="-90"/>
+                                    </Setter.Value>
+                                </Setter>
+                                <Setter TargetName="PART_Track" Property="LayoutTransform">
+                                    <Setter.Value>
+                                        <RotateTransform Angle="-90"/>
+                                    </Setter.Value>
+                                </Setter>
+                                <Setter Property="Width" Value="Auto"/>
+                                <Setter Property="Height" Value="12"/>
+                                <Setter TargetName="Thumb" Property="Tag" Value="Horizontal"/>
+                                <Setter TargetName="PageDown" Property="Command" Value="ScrollBar.PageLeftCommand"/>
+                                <Setter TargetName="PageUp" Property="Command" Value="ScrollBar.PageRightCommand"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <!--END global scrollbars styles-->
+        <ControlTemplate x:Key="CustomCheckBoxTemplate" TargetType="{x:Type CheckBox}">
+            <StackPanel Orientation="Horizontal" Margin="0,2.5,0,2.5">
+                <!-- Grid to contain the ellipses -->
+                <Grid Width="20" Height="20">
+                    <!-- Outer Ellipse (Border) with pink stroke and white fill -->
+                    <Ellipse x:Name="BorderEllipse" Stroke="#FFF485F0" StrokeThickness="1" Fill="White" Width="20" Height="20">
+                        <Ellipse.Effect>
+                            <DropShadowEffect ShadowDepth="0" Direction="0" Color="#FFF485F0" Opacity="1" BlurRadius="6" RenderingBias="Quality"/>
+                        </Ellipse.Effect>
+                    </Ellipse>
+                    <!-- Inner Ellipse (Indicator) -->
+                    <Ellipse x:Name="IndicatorEllipse" Fill="#FFA91BEF" Width="15" Height="15" Visibility="Collapsed"/>
+                </Grid>
+                <!-- ContentPresenter for the text -->
+                <ContentPresenter Margin="5,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Left">
+                    <!-- Apply a style trigger for IsEnabled -->
+                    <ContentPresenter.Style>
+                        <Style TargetType="{x:Type ContentPresenter}">
+                            <Style.Triggers>
+                                <Trigger Property="IsEnabled" Value="False">
+                                    <!-- Set the text color to gray when not enabled -->
+                                    <Setter Property="TextElement.Foreground" Value="Gray"/>
+                                    <!-- apply a blur effect to the text -->
+                                    <Setter Property="Effect">
+                                        <Setter.Value>
+                                            <BlurEffect Radius="2"/>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </ContentPresenter.Style>
+                </ContentPresenter>
+            </StackPanel>
+            <ControlTemplate.Triggers>
+                <Trigger Property="IsChecked" Value="true">
+                    <!-- Show the inner ellipse when checked -->
+                    <Setter TargetName="IndicatorEllipse" Property="Visibility" Value="Visible"/>
+                </Trigger>
+                <Trigger Property="IsChecked" Value="false">
+                    <!-- Hide the inner ellipse when unchecked -->
+                    <Setter TargetName="IndicatorEllipse" Property="Visibility" Value="Collapsed"/>
+                </Trigger>
+                <!-- New trigger for IsEnabled -->
+                <Trigger Property="IsEnabled" Value="False">
+                    <!-- Change the color of the BorderEllipse when not enabled -->
+                    <Setter TargetName="BorderEllipse" Property="Fill" Value="Gray"/>
+                    <!-- Hide the IndicatorEllipse when not enabled -->
+                    <Setter TargetName="IndicatorEllipse" Property="Visibility" Value="Collapsed"/>
+                </Trigger>
+            </ControlTemplate.Triggers>
+        </ControlTemplate>
+        <!-- Global style for font color -->
+        <SolidColorBrush x:Key="GlobalFontColor" Color="#000000"/>
+        <!-- Base style for all controls -->
+        <Style TargetType="{x:Type Control}" x:Key="BaseControlStyle">
+            <Setter Property="Foreground" Value="{StaticResource GlobalFontColor}"/>
+        </Style>
+        <!-- Derived styles for specific controls -->
+        <Style TargetType="{x:Type CheckBox}" BasedOn="{StaticResource BaseControlStyle}"/>
+        <!-- Style for TabControl -->
+        <!--
+
+        <Style TargetType="TabItem"><Setter Property="FontSize" Value="16"/><Setter Property="FontWeight" Value="Bold"/><Setter Property="Padding" Value="20,20,20,0"/><Setter Property="Margin" Value="5,5,5,0"/><Setter Property="Height" Value="60"/><Setter Property="ToolTip" Value="{Binding Header, RelativeSource={RelativeSource Self}}"/><Setter Property="Foreground" Value="Black"/><Setter Property="Background" Value="Transparent"/><Setter Property="BorderBrush" Value="Transparent"/><Setter Property="BorderThickness" Value="0"/><Setter Property="Template"><Setter.Value><ControlTemplate TargetType="TabItem"><Border x:Name="Border" Background="Transparent" BorderBrush="Transparent" BorderThickness="0"><ContentPresenter x:Name="ContentSite" VerticalAlignment="Center" HorizontalAlignment="Center" ContentSource="Header" Margin="20" TextBlock.Foreground="Black"/></Border><ControlTemplate.Triggers><Trigger Property="IsSelected" Value="True"><Setter TargetName="Border" Property="Background"><Setter.Value><LinearGradientBrush StartPoint="0,0" EndPoint="1,0"><GradientStop Color="#78ffd6" Offset="0.0"/><GradientStop Color="#a8ff78" Offset="1.0"/></LinearGradientBrush></Setter.Value></Setter></Trigger><Trigger Property="IsMouseOver" Value="True"><Setter TargetName="Border" Property="Background"><Setter.Value><LinearGradientBrush StartPoint="0,0" EndPoint="1,0"><GradientStop Color="#a8ff78" Offset="0.0"/><GradientStop Color="#78ffd6" Offset="1.0"/></LinearGradientBrush></Setter.Value></Setter></Trigger></ControlTemplate.Triggers></ControlTemplate></Setter.Value></Setter></Style>
+        -->
+        <!-- Style for CheckBox with specific key-->
+        <Style x:Key="CheckBoxStyle" TargetType="CheckBox">
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Foreground" Value="Black"/>
+        </Style>
+        <!-- Style for Buttons with specific key-->
+        <Style x:Key="GlobalButtons" TargetType="Button">
+            <Setter Property="Background">
+                <Setter.Value>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                        <GradientStop Color="#AAFFA9" Offset="0.0"/>
+                        <GradientStop Color="#AAFFA9" Offset="1.0"/>
+                    </LinearGradientBrush>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="BorderBrush" Value="#FF003366"/>
+            <Setter Property="BorderThickness" Value="0"/>
+        </Style>
+        <LinearGradientBrush x:Key="PinkGradient" EndPoint="0,1" StartPoint="0,0">
+            <GradientStop Color="#ee9ca7" Offset="0"/>
+            <GradientStop Color="#ffdde1" Offset="1"/>
+        </LinearGradientBrush>
+        <LinearGradientBrush x:Key="GradientBLK" EndPoint="0,1" StartPoint="1,1">
+            <LinearGradientBrush.GradientStops>
+                <GradientStop Color="#f953c6" Offset="0"/>
+                <GradientStop Color="#b91d73" Offset="0.8"/>
+            </LinearGradientBrush.GradientStops>
+        </LinearGradientBrush>
+    </Window.Resources>
+    <!-- Grid for Online Mode Tab - Removing the white border with negative margins -->
+    <Grid x:Name="ParentGrid" Margin="-2.3,-2.3,-2.3,-2.3">
+        <!-- Row definitions for the grid -->
+        <Grid.RowDefinitions>
+            <!-- row 0 -->
+            <RowDefinition Height="230"/>
+            <!-- row 1 -->
+            <RowDefinition Height="Auto"/>
+            <!-- row 2 -->
+            <RowDefinition Height="*"/>
+            <!-- row 3 -->
+            <RowDefinition Height="80"/>
+        </Grid.RowDefinitions>
+        <!-- Column definitions for the grid -->
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <!-- Logging Area -->
+        <ScrollViewer x:Name="ScrollerForOutputTextBlock" Grid.Row="0" Grid.ColumnSpan="2" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto" Margin="10,15,10,10">
+            <TextBox x:Name="OutputTextBlock" TextWrapping="Wrap" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="Transparent" BorderThickness="0" IsReadOnly="True" IsTabStop="False" Cursor="IBeam" MaxWidth="700" FontSize="14" FontWeight="Bold"/>
+        </ScrollViewer>
+        <!-- ToggleButton -->
+        <ToggleButton x:Name="MainTabControlToggle" ToolTip="Enable logging" Foreground="White" Height="40" Width="170" FontSize="18" Grid.Row="1" Grid.ColumnSpan="2">
+            <ToggleButton.Template>
+                <ControlTemplate TargetType="ToggleButton">
+                    <Border x:Name="Button1" Background="{StaticResource PinkGradient}" CornerRadius="20" Padding="1">
+                        <Border x:Name="Button2" Background="{StaticResource GradientBLK}" Width="80" CornerRadius="20" HorizontalAlignment="Left">
+                            <TextBlock x:Name="TextBlock1" Text="Online" HorizontalAlignment="Center" VerticalAlignment="Center" TextAlignment="Center"/>
+                        </Border>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsChecked" Value="True">
+                            <Setter TargetName="Button2" Property="HorizontalAlignment" Value="Right"/>
+                            <!-- The color can be changed to be different when the button is toggled vs when it's not -->
+                            <Setter TargetName="Button1" Property="Background" Value="{StaticResource PinkGradient}"/>
+                            <Setter TargetName="TextBlock1" Property="Text" Value="Offline"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </ToggleButton.Template>
+        </ToggleButton>
+        <!-- ContentControl to display content based on the ToggleButton's state -->
+        <ContentControl Grid.Row="2" Grid.ColumnSpan="2" x:Name="MainContentControl">
+            <ContentControl.Style>
+                <Style TargetType="ContentControl" x:Name="MainContentControlStyle">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding ElementName=MainTabControlToggle, Path=IsChecked}" Value="False">
+                            <Setter Property="Content">
+                                <Setter.Value>
+                                    <!-- Online Tab/Grid -->
+                                    <Grid x:Name="Grid1" Margin="-2.3,-2.3,-2.3,-2.3">
+                                        <!-- Row and Column definitions for the grid -->
+                                        <Grid.RowDefinitions>
+                                            <!-- This is for row 0 -->
+                                            <RowDefinition Height="25"/>
+                                            <!-- This is for row 1 -->
+                                            <RowDefinition Height="4*" MaxHeight="215"/>
+                                            <!-- This is for row 2 -->
+                                            <RowDefinition Height="70"/>
+                                            <!-- This is for row 3 -->
+                                            <RowDefinition Height="30"/>
+                                        </Grid.RowDefinitions>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <!-- Categories and Sub-Categories text blocks -->
+                                        <TextBlock x:Name="TextBlockCategories" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="1" HorizontalAlignment="Center" VerticalAlignment="bottom" Text="Categories" Foreground="#FFFA00FF" FontSize="18">
+                                            <TextBlock.Effect>
+                                                <DropShadowEffect ShadowDepth="6" Direction="320" Color="#FFF485F0" Opacity="100" BlurRadius="10" RenderingBias="Quality"/>
+                                            </TextBlock.Effect>
+                                        </TextBlock>
+                                        <TextBlock x:Name="TextBlockSubCategories" Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="1" HorizontalAlignment="Center" VerticalAlignment="bottom" Text="Sub-Categories" Foreground="#FFFA00FF" FontSize="18">
+                                            <TextBlock.Effect>
+                                                <DropShadowEffect ShadowDepth="6" Direction="320" Color="#FFF485F0" Opacity="100" BlurRadius="10" RenderingBias="Quality"/>
+                                            </TextBlock.Effect>
+                                        </TextBlock>
+                                        <Grid Name="InnerGrid1" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="1" Margin="10">
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="Auto"/>
+                                                <RowDefinition Height="*"/>
+                                            </Grid.RowDefinitions>
+                                            <CheckBox Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="1" Content="Select All" VerticalContentAlignment="Center" Margin="7,0,0,2" Padding="10,10,40,10" x:Name="SelectAllCategories" Template="{StaticResource CustomCheckBoxTemplate}"/>
+                                            <!-- ListViews for Categories -->
+                                            <ListView x:Name="Categories" BorderThickness="0" ToolTip="Select the hardening categories to run" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="1">
+                                                <!-- Background color for the ListView -->
+                                                <ListView.Background>
+                                                    <SolidColorBrush Color="transparent"/>
+                                                </ListView.Background>
+                                                <ListViewItem>
+                                                    <CheckBox x:Name="MicrosoftSecurityBaselines" Content="Microsoft Security Baselines" VerticalContentAlignment="Center" Padding="10,10,40,10" Template="{StaticResource CustomCheckBoxTemplate}"/>
+                                                </ListViewItem>
+                                                <ListViewItem>
+                                                    <CheckBox x:Name="Microsoft365AppsSecurityBaselines" Content="MSFT365 Apps Security Baselines" VerticalContentAlignment="Center" Padding="10,10,40,10" Template="{StaticResource CustomCheckBoxTemplate}"/>
+                                                </ListViewItem>
+                                                <ListViewItem>
+                                                    <CheckBox x:Name="MicrosoftDefender" Content="Microsoft Defender" VerticalContentAlignment="Center" Padding="10,10,40,10" Template="{StaticResource CustomCheckBoxTemplate}"/>
+                                                </ListViewItem>
+                                                <ListViewItem>
+                                                    <CheckBox x:Name="AttackSurfaceReductionRules" Content="Attack Surface Reduction Rules" VerticalContentAlignment="Center" Padding="10,10,40,10" Template="{StaticResource CustomCheckBoxTemplate}"/>
+                                                </ListViewItem>
+                                                <ListViewItem>
+                                                    <CheckBox x:Name="BitLockerSettings" Content="BitLocker Settings" VerticalContentAlignment="Center" Padding="10,10,40,10" Template="{StaticResource CustomCheckBoxTemplate}"/>
+                                                </ListViewItem>
+                                                <ListViewItem>
+                                                    <CheckBox x:Name="TLSSecurity" Content="TLS Security" VerticalContentAlignment="Center" Padding="10,10,40,10" Template="{StaticResource CustomCheckBoxTemplate}"/>
+                                                </ListViewItem>
+                                                <ListViewItem>
+                                                    <CheckBox x:Name="LockScreen" Content="Lock Screen" VerticalContentAlignment="Center" Padding="10,10,40,10" Template="{StaticResource CustomCheckBoxTemplate}"/>
+                                                </ListViewItem>
+                                                <ListViewItem>
+                                                    <CheckBox x:Name="UserAccountControl" Content="User Account Control" VerticalContentAlignment="Center" Padding="10,10,40,10" Template="{StaticResource CustomCheckBoxTemplate}"/>
+                                                </ListViewItem>
+                                                <ListViewItem>
+                                                    <CheckBox x:Name="WindowsFirewall" Content="Windows Firewall" VerticalContentAlignment="Center" Padding="10,10,40,10" Template="{StaticResource CustomCheckBoxTemplate}"/>
+                                                </ListViewItem>
+                                                <ListViewItem>
+                                                    <CheckBox x:Name="OptionalWindowsFeatures" Content="Optional Windows Features" VerticalContentAlignment="Center" Padding="10,10,40,10" Template="{StaticResource CustomCheckBoxTemplate}"/>
+                                                </ListViewItem>
+                                                <ListViewItem>
+                                                    <CheckBox x:Name="WindowsNetworking" Content="Windows Networking" VerticalContentAlignment="Center" Padding="10,10,40,10" Template="{StaticResource CustomCheckBoxTemplate}"/>
+                                                </ListViewItem>
+                                                <ListViewItem>
+                                                    <CheckBox x:Name="MiscellaneousConfigurations" Content="Miscellaneous Configurations" VerticalContentAlignment="Center" Padding="10,10,40,10" Template="{StaticResource CustomCheckBoxTemplate}"/>
+                                                </ListViewItem>
+                                                <ListViewItem>
+                                                    <CheckBox x:Name="WindowsUpdateConfigurations" Content="Windows Update Configurations" VerticalContentAlignment="Center" Padding="10,10,40,10" Template="{StaticResource CustomCheckBoxTemplate}"/>
+                                                </ListViewItem>
+                                                <ListViewItem>
+                                                    <CheckBox x:Name="EdgeBrowserConfigurations" Content="Edge Browser Configurations" VerticalContentAlignment="Center" Padding="10,10,40,10" Template="{StaticResource CustomCheckBoxTemplate}"/>
+                                                </ListViewItem>
+                                                <ListViewItem>
+                                                    <CheckBox x:Name="CertificateCheckingCommands" Content="Certificate Checking Commands" VerticalContentAlignment="Center" Padding="10,10,40,10" Template="{StaticResource CustomCheckBoxTemplate}"/>
+                                                </ListViewItem>
+                                                <ListViewItem>
+                                                    <CheckBox x:Name="CountryIPBlocking" Content="Country IP Blocking" VerticalContentAlignment="Center" Padding="10,10,40,10" Template="{StaticResource CustomCheckBoxTemplate}"/>
+                                                </ListViewItem>
+                                                <ListViewItem>
+                                                    <CheckBox x:Name="DownloadsDefenseMeasures" Content="Downloads Defense Measures" VerticalContentAlignment="Center" Padding="10,10,40,10" Template="{StaticResource CustomCheckBoxTemplate}"/>
+                                                </ListViewItem>
+                                                <ListViewItem>
+                                                    <CheckBox x:Name="NonAdminCommands" Content="Non-Admin Commands" VerticalContentAlignment="Center" Padding="10,10,40,10" Template="{StaticResource CustomCheckBoxTemplate}"/>
+                                                </ListViewItem>
+                                            </ListView>
+                                        </Grid>
+                                        <Grid x:Name="InnerGrid2" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="1" Margin="10">
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="Auto"/>
+                                                <RowDefinition Height="*"/>
+                                            </Grid.RowDefinitions>
+                                            <CheckBox Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="1" Content="Select All" VerticalContentAlignment="Center" Margin="6,0,0,2" x:Name="SelectAllSubCategories" Template="{StaticResource CustomCheckBoxTemplate}"/>
+                                            <!-- ListViews for Sub-Categories -->
+                                            <ListView x:Name="SubCategories" BorderThickness="0" ToolTip="Select sub-categories" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="1">
+                                                <ListView.Background>
+                                                    <SolidColorBrush Color="transparent"/>
+                                                </ListView.Background>
+                                                <ListViewItem>
+                                                    <CheckBox x:Name="SecBaselines_NoOverrides" Content="Security Baselines No Overrides" VerticalContentAlignment="Center" Padding="10,10,40,10" Template="{StaticResource CustomCheckBoxTemplate}"/>
+                                                </ListViewItem>
+                                                <ListViewItem>
+                                                    <CheckBox x:Name="MSFTDefender_SAC" Content="Smart App Control" VerticalContentAlignment="Center" Padding="10,10,40,10" Template="{StaticResource CustomCheckBoxTemplate}"/>
+                                                </ListViewItem>
+                                                <ListViewItem>
+                                                    <CheckBox x:Name="MSFTDefender_NoDiagData" Content="Defender: No Diagnostics Data" VerticalContentAlignment="Center" Padding="10,10,40,10" Template="{StaticResource CustomCheckBoxTemplate}"/>
+                                                </ListViewItem>
+                                                <ListViewItem>
+                                                    <CheckBox x:Name="MSFTDefender_NoScheduledTask" Content="Defender: No Scheduled Task" VerticalContentAlignment="Center" Padding="10,10,40,10" Template="{StaticResource CustomCheckBoxTemplate}"/>
+                                                </ListViewItem>
+                                                <ListViewItem>
+                                                    <CheckBox x:Name="MSFTDefender_BetaChannels" Content="Defender: Use Beta Update Channels" VerticalContentAlignment="Center" Padding="10,10,40,10" Template="{StaticResource CustomCheckBoxTemplate}"/>
+                                                </ListViewItem>
+                                                <ListViewItem>
+                                                    <CheckBox x:Name="LockScreen_CtrlAltDel" Content="Require CTRL + Alt + Del" VerticalContentAlignment="Center" Padding="10,10,40,10" Template="{StaticResource CustomCheckBoxTemplate}"/>
+                                                </ListViewItem>
+                                                <ListViewItem>
+                                                    <CheckBox x:Name="LockScreen_NoLastSignedIn" Content="No Last Signed-In" VerticalContentAlignment="Center" Padding="10,10,40,10" Template="{StaticResource CustomCheckBoxTemplate}"/>
+                                                </ListViewItem>
+                                                <ListViewItem>
+                                                    <CheckBox x:Name="UAC_NoFastSwitching" Content="No Fast User Switching" VerticalContentAlignment="Center" Padding="10,10,40,10" Template="{StaticResource CustomCheckBoxTemplate}"/>
+                                                </ListViewItem>
+                                                <ListViewItem>
+                                                    <CheckBox x:Name="UAC_OnlyElevateSigned" Content="Only Elevated Signed" VerticalContentAlignment="Center" Padding="10,10,40,10" Template="{StaticResource CustomCheckBoxTemplate}"/>
+                                                </ListViewItem>
+                                                <ListViewItem>
+                                                    <CheckBox x:Name="CountryIPBlocking_OFAC" Content="Block OFAC Sanctions Countries" VerticalContentAlignment="Center" Padding="10,10,40,10" Template="{StaticResource CustomCheckBoxTemplate}"/>
+                                                </ListViewItem>
+                                            </ListView>
+                                        </Grid>
+                                        <!-- Enable Logging CheckBox -->
+                                        <Viewbox x:Name="LoggingViewBox" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="1" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="14">
+                                            <ToggleButton x:Name="Log" ToolTip="Enable logging" Foreground="White" Height="40" Width="170" FontSize="16">
+                                                <ToggleButton.Template>
+                                                    <ControlTemplate TargetType="ToggleButton">
+                                                        <Border x:Name="Button11" Background="LightGray" CornerRadius="10" Padding="3">
+                                                            <Border x:Name="Button22" Background="Black" Width="100" CornerRadius="10" HorizontalAlignment="Left">
+                                                                <TextBlock x:Name="TextBlock11" Text="Logging Off" HorizontalAlignment="Center" VerticalAlignment="Center" TextAlignment="Center"/>
+                                                            </Border>
+                                                        </Border>
+                                                        <ControlTemplate.Triggers>
+                                                            <Trigger Property="IsChecked" Value="True">
+                                                                <Setter TargetName="Button22" Property="HorizontalAlignment" Value="Right"/>
+                                                                <Setter TargetName="Button11" Property="Background" Value="#FFF485F0"/>
+                                                                <Setter TargetName="TextBlock11" Property="Text" Value="Logging On"/>
+                                                            </Trigger>
+                                                        </ControlTemplate.Triggers>
+                                                    </ControlTemplate>
+                                                </ToggleButton.Template>
+                                            </ToggleButton>
+                                        </Viewbox>
+                                        <!-- Log Path TextBox -->
+                                        <Button x:Name="LogPath" Grid.Row="2" Grid.Column="1" Width="150" Height="40" FontSize="16" FontWeight="Bold" Background="{StaticResource PinkGradient}" ToolTip="The path to save the log file to">
+                                            <Button.Template>
+                                                <ControlTemplate TargetType="Button">
+                                                    <Border x:Name="border" BorderThickness="3" Width="{TemplateBinding Width}" Height="{TemplateBinding Height}" Background="{TemplateBinding Background}" CornerRadius="6" BorderBrush="MediumPurple">
+                                                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                    </Border>
+                                                    <ControlTemplate.Triggers>
+                                                        <Trigger Property="IsMouseOver" Value="true">
+                                                            <Trigger.EnterActions>
+                                                                <BeginStoryboard>
+                                                                    <Storyboard>
+                                                                        <DoubleAnimation To="160" Storyboard.TargetProperty="Width" Duration="0:0:0.3"/>
+                                                                        <DoubleAnimation To="45" Storyboard.TargetProperty="Height" Duration="0:0:0.3"/>
+                                                                        <ColorAnimation To="Coral" Storyboard.TargetProperty="Background.(SolidColorBrush.Color)" Duration="0:0:0.3"/>
+                                                                    </Storyboard>
+                                                                </BeginStoryboard>
+                                                            </Trigger.EnterActions>
+                                                            <Trigger.ExitActions>
+                                                                <BeginStoryboard>
+                                                                    <Storyboard>
+                                                                        <DoubleAnimation To="150" Storyboard.TargetProperty="Width" Duration="0:0:0.3"/>
+                                                                        <DoubleAnimation To="40" Storyboard.TargetProperty="Height" Duration="0:0:0.3"/>
+                                                                        <ColorAnimation To="White" Storyboard.TargetProperty="Background.(SolidColorBrush.Color)" Duration="0:0:0.3"/>
+                                                                    </Storyboard>
+                                                                </BeginStoryboard>
+                                                            </Trigger.ExitActions>
+                                                        </Trigger>
+                                                        <Trigger Property="IsPressed" Value="true">
+                                                            <Setter TargetName="border" Property="Background">
+                                                                <Setter.Value>
+                                                                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                                                        <GradientStop Color="#eaafc8" Offset="0.0"/>
+                                                                        <GradientStop Color="#e1eec3" Offset="1.0"/>
+                                                                    </LinearGradientBrush>
+                                                                </Setter.Value>
+                                                            </Setter>
+                                                        </Trigger>
+                                                    </ControlTemplate.Triggers>
+                                                </ControlTemplate>
+                                            </Button.Template>
+                                            <StackPanel Orientation="Horizontal">
+                                                <Image x:Name="LogButtonIcon" Width="40" Height="30"/>
+                                                <TextBlock Text="Log Path" VerticalAlignment="Center"/>
+                                            </StackPanel>
+                                        </Button>
+                                        <!-- File Path TextBox which is dynamic-->
+                                        <TextBox x:Name="txtFilePath" Grid.Row="3" Grid.ColumnSpan="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="30,0,30,0" BorderThickness="0" ToolTip="The selected log file path" MaxWidth="700">
+                                            <TextBox.Style>
+                                                <Style TargetType="{x:Type TextBox}">
+                                                    <Setter Property="VerticalContentAlignment" Value="Center"/>
+                                                    <Setter Property="Template">
+                                                        <Setter.Value>
+                                                            <ControlTemplate TargetType="{x:Type TextBox}">
+                                                                <Border CornerRadius="10" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}">
+                                                                    <ScrollViewer x:Name="PART_ContentHost" Margin="0"/>
+                                                                </Border>
+                                                            </ControlTemplate>
+                                                        </Setter.Value>
+                                                    </Setter>
+                                                    <Setter Property="Effect">
+                                                        <Setter.Value>
+                                                            <DropShadowEffect ShadowDepth="0" Direction="0" Color="#FFF485F0" Opacity="1" BlurRadius="10" RenderingBias="Quality"/>
+                                                        </Setter.Value>
+                                                    </Setter>
+                                                </Style>
+                                            </TextBox.Style>
+                                        </TextBox>
+                                    </Grid>
+                                </Setter.Value>
+                            </Setter>
+                        </DataTrigger>
+                        <DataTrigger Binding="{Binding ElementName=MainTabControlToggle, Path=IsChecked}" Value="True">
+                            <Setter Property="Content">
+                                <Setter.Value>
+                                    <!-- Offline Tab/Grid -->
+                                    <Grid x:Name="Grid2" Margin="-2.3,-2.3,-2.3,-2.3">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <!-- Button column -->
+                                            <ColumnDefinition Width="*"/>
+                                            <!-- Text area column -->
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <!-- This is for row 0 -->
+                                            <RowDefinition Height="60"/>
+                                            <!-- This is for row 1 -->
+                                            <RowDefinition Height="60"/>
+                                            <!-- This is for row 2 -->
+                                            <RowDefinition Height="60"/>
+                                            <!-- This is for row 3 -->
+                                            <RowDefinition Height="60"/>
+                                        </Grid.RowDefinitions>
+                                        <!-- Row 0 -->
+                                        <!-- Enable Offline Mode CheckBox -->
+                                        <Viewbox Grid.Row="0" Grid.ColumnSpan="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0,20,0,0">
+                                            <ToggleButton x:Name="EnableOfflineMode" ToolTip="Enables Offline Mode and will use the selected files instead of downloading them from the Microsoft servers" Foreground="White" Height="40" Width="170" FontSize="16">
+                                                <ToggleButton.Template>
+                                                    <ControlTemplate TargetType="ToggleButton">
+                                                        <Border x:Name="Button111" Background="LightGray" CornerRadius="10" Padding="3">
+                                                            <Border x:Name="Button222" Background="Black" Width="100" CornerRadius="10" HorizontalAlignment="Left">
+                                                                <TextBlock x:Name="TextBlock111" Text="Disabled" HorizontalAlignment="Center" VerticalAlignment="Center" TextAlignment="Center"/>
+                                                            </Border>
+                                                        </Border>
+                                                        <ControlTemplate.Triggers>
+                                                            <Trigger Property="IsChecked" Value="True">
+                                                                <Setter TargetName="Button222" Property="HorizontalAlignment" Value="Right"/>
+                                                                <Setter TargetName="Button111" Property="Background" Value="#04C8F9"/>
+                                                                <Setter TargetName="TextBlock111" Property="Text" Value="Enabled"/>
+                                                            </Trigger>
+                                                        </ControlTemplate.Triggers>
+                                                    </ControlTemplate>
+                                                </ToggleButton.Template>
+                                            </ToggleButton>
+                                        </Viewbox>
+                                        <!-- Row 1 -->
+                                        <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.ColumnSpan="2" HorizontalAlignment="Center" Margin="30,0,30,0">
+                                            <!-- LGPO Button -->
+                                            <Button x:Name="LGPOZipButton" Width="100" Height="40" FontSize="15" FontWeight="Bold" Background="{StaticResource PinkGradient}" Margin="0,0,0,0" ToolTip="Browse for the path to LGPO zip file">
+                                                <Button.Template>
+                                                    <ControlTemplate TargetType="Button">
+                                                        <Border x:Name="border" BorderThickness="3" Width="{TemplateBinding Width}" Height="{TemplateBinding Height}" Background="{TemplateBinding Background}" CornerRadius="6" BorderBrush="MediumPurple">
+                                                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                        </Border>
+                                                        <ControlTemplate.Triggers>
+                                                            <Trigger Property="IsMouseOver" Value="true">
+                                                                <Trigger.EnterActions>
+                                                                    <BeginStoryboard>
+                                                                        <Storyboard>
+                                                                            <DoubleAnimation To="115" Storyboard.TargetProperty="Width" Duration="0:0:0.3"/>
+                                                                            <DoubleAnimation To="45" Storyboard.TargetProperty="Height" Duration="0:0:0.3"/>
+                                                                            <ColorAnimation To="Coral" Storyboard.TargetProperty="Background.(SolidColorBrush.Color)" Duration="0:0:0.3"/>
+                                                                        </Storyboard>
+                                                                    </BeginStoryboard>
+                                                                </Trigger.EnterActions>
+                                                                <Trigger.ExitActions>
+                                                                    <BeginStoryboard>
+                                                                        <Storyboard>
+                                                                            <DoubleAnimation To="100" Storyboard.TargetProperty="Width" Duration="0:0:0.3"/>
+                                                                            <DoubleAnimation To="40" Storyboard.TargetProperty="Height" Duration="0:0:0.3"/>
+                                                                            <ColorAnimation To="White" Storyboard.TargetProperty="Background.(SolidColorBrush.Color)" Duration="0:0:0.3"/>
+                                                                        </Storyboard>
+                                                                    </BeginStoryboard>
+                                                                </Trigger.ExitActions>
+                                                            </Trigger>
+                                                            <Trigger Property="IsPressed" Value="true">
+                                                                <Setter TargetName="border" Property="Background">
+                                                                    <Setter.Value>
+                                                                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                                                            <GradientStop Color="#eaafc8" Offset="0.0"/>
+                                                                            <GradientStop Color="#e1eec3" Offset="1.0"/>
+                                                                        </LinearGradientBrush>
+                                                                    </Setter.Value>
+                                                                </Setter>
+                                                            </Trigger>
+                                                        </ControlTemplate.Triggers>
+                                                    </ControlTemplate>
+                                                </Button.Template>
+                                                <StackPanel Orientation="Horizontal">
+                                                    <Image x:Name="PathIcon3" Width="40" Height="30"/>
+                                                    <TextBlock Text="LGPO" VerticalAlignment="Center"/>
+                                                </StackPanel>
+                                            </Button>
+                                            <!-- LGPO Path Text box -->
+                                            <TextBox x:Name="LGPOZipTextBox" Height="40" Margin="20,0,0,0" ToolTip="Selected path for the LGPO zip file" MinWidth="210" MaxWidth="700">
+                                                <TextBox.Style>
+                                                    <Style TargetType="{x:Type TextBox}">
+                                                        <Setter Property="VerticalContentAlignment" Value="Center"/>
+                                                        <Setter Property="Foreground" Value="Black"/>
+                                                        <Setter Property="Effect">
+                                                            <Setter.Value>
+                                                                <DropShadowEffect ShadowDepth="0" Direction="0" Color="#FFF485F0" Opacity="1" BlurRadius="10" RenderingBias="Quality"/>
+                                                            </Setter.Value>
+                                                        </Setter>
+                                                        <Setter Property="Template">
+                                                            <Setter.Value>
+                                                                <ControlTemplate TargetType="{x:Type TextBox}">
+                                                                    <Grid>
+                                                                        <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}"/>
+                                                                        <ScrollViewer x:Name="PART_ContentHost" Margin="5,0"/>
+                                                                        <TextBlock x:Name="PART_Watermark" Text="Selected Path will be displayed here..." Foreground="Gray" IsHitTestVisible="False" Margin="5,0" VerticalAlignment="Center" Visibility="Collapsed"/>
+                                                                    </Grid>
+                                                                    <ControlTemplate.Triggers>
+                                                                        <Trigger Property="Text" Value="">
+                                                                            <Setter TargetName="PART_Watermark" Property="Visibility" Value="Visible"/>
+                                                                        </Trigger>
+                                                                        <Trigger Property="Text" Value="{x:Null}">
+                                                                            <Setter TargetName="PART_Watermark" Property="Visibility" Value="Visible"/>
+                                                                        </Trigger>
+                                                                    </ControlTemplate.Triggers>
+                                                                </ControlTemplate>
+                                                            </Setter.Value>
+                                                        </Setter>
+                                                    </Style>
+                                                </TextBox.Style>
+                                            </TextBox>
+                                        </StackPanel>
+                                        <!-- Row 2 -->
+                                        <StackPanel Orientation="Horizontal" Grid.Row="2" Grid.ColumnSpan="2" HorizontalAlignment="Center" Margin="30,0,30,0">
+                                            <!-- Microsoft Security Baselines Button -->
+                                            <Button x:Name="MicrosoftSecurityBaselineZipButton" Width="270" Height="40" FontSize="15" FontWeight="Bold" Background="{StaticResource PinkGradient}" Margin="0,0,0,0" ToolTip="Browse for the path to Microsoft Security Baseline zip file">
+                                                <Button.Template>
+                                                    <ControlTemplate TargetType="Button">
+                                                        <Border x:Name="border" BorderThickness="3" Width="{TemplateBinding Width}" Height="{TemplateBinding Height}" Background="{TemplateBinding Background}" CornerRadius="6" BorderBrush="MediumPurple">
+                                                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                        </Border>
+                                                        <ControlTemplate.Triggers>
+                                                            <Trigger Property="IsMouseOver" Value="true">
+                                                                <Trigger.EnterActions>
+                                                                    <BeginStoryboard>
+                                                                        <Storyboard>
+                                                                            <DoubleAnimation To="280" Storyboard.TargetProperty="Width" Duration="0:0:0.3"/>
+                                                                            <DoubleAnimation To="45" Storyboard.TargetProperty="Height" Duration="0:0:0.3"/>
+                                                                            <ColorAnimation To="Coral" Storyboard.TargetProperty="Background.(SolidColorBrush.Color)" Duration="0:0:0.3"/>
+                                                                        </Storyboard>
+                                                                    </BeginStoryboard>
+                                                                </Trigger.EnterActions>
+                                                                <Trigger.ExitActions>
+                                                                    <BeginStoryboard>
+                                                                        <Storyboard>
+                                                                            <DoubleAnimation To="270" Storyboard.TargetProperty="Width" Duration="0:0:0.3"/>
+                                                                            <DoubleAnimation To="40" Storyboard.TargetProperty="Height" Duration="0:0:0.3"/>
+                                                                            <ColorAnimation To="White" Storyboard.TargetProperty="Background.(SolidColorBrush.Color)" Duration="0:0:0.3"/>
+                                                                        </Storyboard>
+                                                                    </BeginStoryboard>
+                                                                </Trigger.ExitActions>
+                                                            </Trigger>
+                                                            <Trigger Property="IsPressed" Value="true">
+                                                                <Setter TargetName="border" Property="Background">
+                                                                    <Setter.Value>
+                                                                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                                                            <GradientStop Color="#eaafc8" Offset="0.0"/>
+                                                                            <GradientStop Color="#e1eec3" Offset="1.0"/>
+                                                                        </LinearGradientBrush>
+                                                                    </Setter.Value>
+                                                                </Setter>
+                                                            </Trigger>
+                                                        </ControlTemplate.Triggers>
+                                                    </ControlTemplate>
+                                                </Button.Template>
+                                                <StackPanel Orientation="Horizontal">
+                                                    <Image x:Name="PathIcon1" Width="40" Height="30"/>
+                                                    <TextBlock Text="Microsoft Security Baseline" VerticalAlignment="Center"/>
+                                                </StackPanel>
+                                            </Button>
+                                            <!-- Microsoft Security Baselines Text block -->
+                                            <TextBox x:Name="MicrosoftSecurityBaselineZipTextBox" Height="40" Margin="20,0,0,0" MinWidth="210" MaxWidth="700" ToolTip="Selected path for the Microsoft Security Baseline zip file" VerticalContentAlignment="Center">
+                                                <TextBox.Style>
+                                                    <Style TargetType="{x:Type TextBox}">
+                                                        <Setter Property="Foreground" Value="Black"/>
+                                                        <Setter Property="Effect">
+                                                            <Setter.Value>
+                                                                <DropShadowEffect ShadowDepth="0" Direction="0" Color="#FFF485F0" Opacity="1" BlurRadius="10" RenderingBias="Quality"/>
+                                                            </Setter.Value>
+                                                        </Setter>
+                                                        <Setter Property="Template">
+                                                            <Setter.Value>
+                                                                <ControlTemplate TargetType="{x:Type TextBox}">
+                                                                    <Grid>
+                                                                        <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}"/>
+                                                                        <!-- Adjust the ScrollViewer's VerticalAlignment to Center -->
+                                                                        <ScrollViewer x:Name="PART_ContentHost" Margin="5,0" VerticalAlignment="Center"/>
+                                                                        <TextBlock x:Name="PART_Watermark" Text="Selected Path will be displayed here..." Foreground="Gray" IsHitTestVisible="False" Margin="5,0" VerticalAlignment="Center" Visibility="Collapsed"/>
+                                                                    </Grid>
+                                                                    <ControlTemplate.Triggers>
+                                                                        <Trigger Property="Text" Value="">
+                                                                            <Setter TargetName="PART_Watermark" Property="Visibility" Value="Visible"/>
+                                                                        </Trigger>
+                                                                        <Trigger Property="Text" Value="{x:Null}">
+                                                                            <Setter TargetName="PART_Watermark" Property="Visibility" Value="Visible"/>
+                                                                        </Trigger>
+                                                                    </ControlTemplate.Triggers>
+                                                                </ControlTemplate>
+                                                            </Setter.Value>
+                                                        </Setter>
+                                                    </Style>
+                                                </TextBox.Style>
+                                            </TextBox>
+                                        </StackPanel>
+                                        <!-- Row 3 -->
+                                        <StackPanel Orientation="Horizontal" Grid.Row="3" Grid.ColumnSpan="2" HorizontalAlignment="Center" Margin="30,0,30,0">
+                                            <!-- M365 apps security baselines button -->
+                                            <Button x:Name="Microsoft365AppsSecurityBaselineZipButton" Width="320" Height="40" FontSize="15" FontWeight="Bold" Background="{StaticResource PinkGradient}" Margin="0,0,0,0" ToolTip="Browse for the path to Microsoft 365 Apps Security Baseline zip file">
+                                                <Button.Template>
+                                                    <ControlTemplate TargetType="Button">
+                                                        <Border x:Name="border" BorderThickness="3" Width="{TemplateBinding Width}" Height="{TemplateBinding Height}" Background="{TemplateBinding Background}" CornerRadius="6" BorderBrush="MediumPurple">
+                                                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                        </Border>
+                                                        <ControlTemplate.Triggers>
+                                                            <Trigger Property="IsMouseOver" Value="true">
+                                                                <Trigger.EnterActions>
+                                                                    <BeginStoryboard>
+                                                                        <Storyboard>
+                                                                            <DoubleAnimation To="345" Storyboard.TargetProperty="Width" Duration="0:0:0.3"/>
+                                                                            <DoubleAnimation To="45" Storyboard.TargetProperty="Height" Duration="0:0:0.3"/>
+                                                                            <ColorAnimation To="Coral" Storyboard.TargetProperty="Background.(SolidColorBrush.Color)" Duration="0:0:0.3"/>
+                                                                        </Storyboard>
+                                                                    </BeginStoryboard>
+                                                                </Trigger.EnterActions>
+                                                                <Trigger.ExitActions>
+                                                                    <BeginStoryboard>
+                                                                        <Storyboard>
+                                                                            <DoubleAnimation To="320" Storyboard.TargetProperty="Width" Duration="0:0:0.3"/>
+                                                                            <DoubleAnimation To="40" Storyboard.TargetProperty="Height" Duration="0:0:0.3"/>
+                                                                            <ColorAnimation To="White" Storyboard.TargetProperty="Background.(SolidColorBrush.Color)" Duration="0:0:0.3"/>
+                                                                        </Storyboard>
+                                                                    </BeginStoryboard>
+                                                                </Trigger.ExitActions>
+                                                            </Trigger>
+                                                            <Trigger Property="IsPressed" Value="true">
+                                                                <Setter TargetName="border" Property="Background">
+                                                                    <Setter.Value>
+                                                                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                                                            <GradientStop Color="#eaafc8" Offset="0.0"/>
+                                                                            <GradientStop Color="#e1eec3" Offset="1.0"/>
+                                                                        </LinearGradientBrush>
+                                                                    </Setter.Value>
+                                                                </Setter>
+                                                            </Trigger>
+                                                        </ControlTemplate.Triggers>
+                                                    </ControlTemplate>
+                                                </Button.Template>
+                                                <StackPanel Orientation="Horizontal">
+                                                    <Image x:Name="PathIcon2" Width="40" Height="30"/>
+                                                    <TextBlock Text="Microsoft 365 Apps Security Baseline" VerticalAlignment="Center"/>
+                                                </StackPanel>
+                                            </Button>
+                                            <!-- M365 apps security baselines text block -->
+                                            <TextBox x:Name="Microsoft365AppsSecurityBaselineZipTextBox" Height="40" Margin="20,0,0,0" MinWidth="210" MaxWidth="700" ToolTip="Selected path for the Microsoft 365 Apps Security Baseline zip file" VerticalContentAlignment="Center">
+                                                <TextBox.Style>
+                                                    <Style TargetType="{x:Type TextBox}">
+                                                        <Setter Property="Foreground" Value="Black"/>
+                                                        <Setter Property="Effect">
+                                                            <Setter.Value>
+                                                                <DropShadowEffect ShadowDepth="0" Direction="0" Color="#FFF485F0" Opacity="1" BlurRadius="10" RenderingBias="Quality"/>
+                                                            </Setter.Value>
+                                                        </Setter>
+                                                        <Setter Property="Template">
+                                                            <Setter.Value>
+                                                                <ControlTemplate TargetType="{x:Type TextBox}">
+                                                                    <Grid>
+                                                                        <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}"/>
+                                                                        <!-- Adjust the ScrollViewer's VerticalAlignment to Center -->
+                                                                        <ScrollViewer x:Name="PART_ContentHost" Margin="5,0" VerticalAlignment="Center"/>
+                                                                        <TextBlock x:Name="PART_Watermark" Text="Selected Path will be displayed here..." Foreground="Gray" IsHitTestVisible="False" Margin="5,0" VerticalAlignment="Center" Visibility="Collapsed"/>
+                                                                    </Grid>
+                                                                    <ControlTemplate.Triggers>
+                                                                        <Trigger Property="Text" Value="">
+                                                                            <Setter TargetName="PART_Watermark" Property="Visibility" Value="Visible"/>
+                                                                        </Trigger>
+                                                                        <Trigger Property="Text" Value="{x:Null}">
+                                                                            <Setter TargetName="PART_Watermark" Property="Visibility" Value="Visible"/>
+                                                                        </Trigger>
+                                                                    </ControlTemplate.Triggers>
+                                                                </ControlTemplate>
+                                                            </Setter.Value>
+                                                        </Setter>
+                                                    </Style>
+                                                </TextBox.Style>
+                                            </TextBox>
+                                        </StackPanel>
+                                    </Grid>
+                                </Setter.Value>
+                            </Setter>
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </ContentControl.Style>
+        </ContentControl>
+        <Button x:Name="Execute" Grid.Row="3" Grid.ColumnSpan="2" Width="120" Height="50" FontSize="16" FontWeight="Bold" Background="{StaticResource PinkGradient}">
+            <Button.Template>
+                <ControlTemplate TargetType="Button">
+                    <Border x:Name="border" BorderThickness="3" Width="{TemplateBinding Width}" Height="{TemplateBinding Height}" Background="{TemplateBinding Background}" CornerRadius="6" BorderBrush="MediumPurple">
+                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="true">
+                            <Trigger.EnterActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimation To="140" Storyboard.TargetProperty="Width" Duration="0:0:0.3"/>
+                                        <DoubleAnimation To="55" Storyboard.TargetProperty="Height" Duration="0:0:0.3"/>
+                                        <ColorAnimation To="Coral" Storyboard.TargetProperty="Background.(SolidColorBrush.Color)" Duration="0:0:0.3"/>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </Trigger.EnterActions>
+                            <Trigger.ExitActions>
+                                <BeginStoryboard>
+                                    <Storyboard>
+                                        <DoubleAnimation To="120" Storyboard.TargetProperty="Width" Duration="0:0:0.3"/>
+                                        <DoubleAnimation To="50" Storyboard.TargetProperty="Height" Duration="0:0:0.3"/>
+                                        <ColorAnimation To="White" Storyboard.TargetProperty="Background.(SolidColorBrush.Color)" Duration="0:0:0.3"/>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </Trigger.ExitActions>
+                        </Trigger>
+                        <Trigger Property="IsPressed" Value="true">
+                            <Setter TargetName="border" Property="Background">
+                                <Setter.Value>
+                                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                        <GradientStop Color="#eaafc8" Offset="0.0"/>
+                                        <GradientStop Color="#e1eec3" Offset="1.0"/>
+                                    </LinearGradientBrush>
+                                </Setter.Value>
+                            </Setter>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Button.Template>
+            <StackPanel Orientation="Horizontal">
+                <Image x:Name="ExecuteButtonIcon" Width="40" Height="40"/>
+                <TextBlock Text="Execute" VerticalAlignment="Center"/>
+            </StackPanel>
+        </Button>
+    </Grid>
 </Window>
 '@

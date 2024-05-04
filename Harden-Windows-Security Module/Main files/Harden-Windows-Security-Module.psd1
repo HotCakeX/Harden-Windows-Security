@@ -138,8 +138,10 @@ Harden Windows Safely, Securely, only with Official Microsoft methods
     'Resources\Registry.csv',
     'Resources\ProcessMitigations.csv',
     'Shared\Update-self.psm1',
-    'Shared\Test-IsAdmin.psm1'
-  )
+    'Shared\Test-IsAdmin.psm1',
+    'Resources\Media\Log.png',
+    'Resources\Media\Path.png',
+    'Resources\Media\start.png')
 
   # Private data to pass to the module specified in RootModule/ModuleToProcess. This may also contain a PSData hashtable with additional module metadata used by PowerShell.
   PrivateData          = @{

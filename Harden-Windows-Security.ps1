@@ -2764,9 +2764,7 @@ Execution Policy: $CurrentExecutionPolicy
 
                         # Create variables for all elements inside of $MainContentControlStyle
                         $XAML.SelectNodes("//*[@*[contains(translate(name(.),'n','N'),'Name')]]") | ForEach-Object -Process {
-                            #  Set-Variable -Name "$('GUI_'+$_.Name)" -Value $MainContentControlStyle.FindName($_.Name) -Force
                             $SyncHash['GUI'][$_.Name] = $MainContentControlStyle.FindName($_.Name)
-                            $_.Name
                         }
 
                         # Redefining all of the exported variables inside of the RunSpace

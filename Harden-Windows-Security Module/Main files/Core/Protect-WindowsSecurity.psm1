@@ -613,6 +613,13 @@ Function Protect-WindowsSecurity {
                 [Alias('I')]
                 [System.String]$InputText
             )
+
+            # If GUI is being used, write verbose text and exit
+            if ($GUI) {
+                Write-Verbose -Message $InputText
+                Return
+            }
+
             switch ($Color) {
                 'Fuchsia' { Write-Host -Object "$($PSStyle.Foreground.FromRGB(236,68,155))$InputText$($PSStyle.Reset)"; break }
                 'Orange' { Write-Host -Object "$($PSStyle.Foreground.FromRGB(255,165,0))$InputText$($PSStyle.Reset)"; break }

@@ -4456,7 +4456,7 @@ namespace SystemInfo
 [System.Xml.XmlDocument]$Xaml = @'
 <Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" x:Name="Window" WindowStartupLocation="CenterScreen" SizeToContent="WidthAndHeight" MinHeight="700" MinWidth="700" FontFamily="Trebuchet MS" FontSize="16" Background="#FFFFC0CB">
     <Window.Resources>
-        <!--BEGIN global scrollbars styles-->
+        <!--Begin global scrollbars styles-->
         <Style x:Key="ElderScrolls" TargetType="{x:Type Thumb}">
             <Setter Property="Template">
                 <Setter.Value>
@@ -4528,7 +4528,8 @@ namespace SystemInfo
                 </Setter.Value>
             </Setter>
         </Style>
-        <!--END global scrollbars styles-->
+        <!--End global scrollbars styles-->
+        <!-- Begin Check box styles -->
         <ControlTemplate x:Key="CustomCheckBoxTemplate" TargetType="{x:Type CheckBox}">
             <StackPanel Orientation="Horizontal" Margin="0,2.5,0,2.5">
                 <!-- Grid to contain the ellipses -->
@@ -4581,6 +4582,7 @@ namespace SystemInfo
                 </Trigger>
             </ControlTemplate.Triggers>
         </ControlTemplate>
+        <!-- End Check box styles -->
         <!-- Global style for font color -->
         <SolidColorBrush x:Key="GlobalFontColor" Color="#000000"/>
         <!-- Base style for all controls -->
@@ -4594,28 +4596,12 @@ namespace SystemInfo
 
         <Style TargetType="TabItem"><Setter Property="FontSize" Value="16"/><Setter Property="FontWeight" Value="Bold"/><Setter Property="Padding" Value="20,20,20,0"/><Setter Property="Margin" Value="5,5,5,0"/><Setter Property="Height" Value="60"/><Setter Property="ToolTip" Value="{Binding Header, RelativeSource={RelativeSource Self}}"/><Setter Property="Foreground" Value="Black"/><Setter Property="Background" Value="Transparent"/><Setter Property="BorderBrush" Value="Transparent"/><Setter Property="BorderThickness" Value="0"/><Setter Property="Template"><Setter.Value><ControlTemplate TargetType="TabItem"><Border x:Name="Border" Background="Transparent" BorderBrush="Transparent" BorderThickness="0"><ContentPresenter x:Name="ContentSite" VerticalAlignment="Center" HorizontalAlignment="Center" ContentSource="Header" Margin="20" TextBlock.Foreground="Black"/></Border><ControlTemplate.Triggers><Trigger Property="IsSelected" Value="True"><Setter TargetName="Border" Property="Background"><Setter.Value><LinearGradientBrush StartPoint="0,0" EndPoint="1,0"><GradientStop Color="#78ffd6" Offset="0.0"/><GradientStop Color="#a8ff78" Offset="1.0"/></LinearGradientBrush></Setter.Value></Setter></Trigger><Trigger Property="IsMouseOver" Value="True"><Setter TargetName="Border" Property="Background"><Setter.Value><LinearGradientBrush StartPoint="0,0" EndPoint="1,0"><GradientStop Color="#a8ff78" Offset="0.0"/><GradientStop Color="#78ffd6" Offset="1.0"/></LinearGradientBrush></Setter.Value></Setter></Trigger></ControlTemplate.Triggers></ControlTemplate></Setter.Value></Setter></Style>
         -->
-        <!-- Style for CheckBox with specific key-->
-        <Style x:Key="CheckBoxStyle" TargetType="CheckBox">
-            <Setter Property="FontSize" Value="14"/>
-            <Setter Property="Foreground" Value="Black"/>
-        </Style>
-        <!-- Style for Buttons with specific key-->
-        <Style x:Key="GlobalButtons" TargetType="Button">
-            <Setter Property="Background">
-                <Setter.Value>
-                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                        <GradientStop Color="#AAFFA9" Offset="0.0"/>
-                        <GradientStop Color="#AAFFA9" Offset="1.0"/>
-                    </LinearGradientBrush>
-                </Setter.Value>
-            </Setter>
-            <Setter Property="BorderBrush" Value="#FF003366"/>
-            <Setter Property="BorderThickness" Value="0"/>
-        </Style>
+       <!-- Defining gradient color to be use with specific key -->
         <LinearGradientBrush x:Key="PinkGradient" EndPoint="0,1" StartPoint="0,0">
             <GradientStop Color="#ee9ca7" Offset="0"/>
             <GradientStop Color="#ffdde1" Offset="1"/>
         </LinearGradientBrush>
+         <!-- Defining gradient color to be use with specific key -->
         <LinearGradientBrush x:Key="GradientBLK" EndPoint="0,1" StartPoint="1,1">
             <LinearGradientBrush.GradientStops>
                 <GradientStop Color="#f953c6" Offset="0"/>
@@ -4643,10 +4629,11 @@ namespace SystemInfo
         </Grid.ColumnDefinitions>
         <!-- Logging Area -->
         <ScrollViewer x:Name="ScrollerForOutputTextBlock" Grid.Row="0" Grid.ColumnSpan="2" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto" Margin="10,15,10,10">
-            <TextBox x:Name="OutputTextBlock" TextWrapping="Wrap" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="Transparent" BorderThickness="0" IsReadOnly="True" IsTabStop="False" Cursor="IBeam" MaxWidth="700" FontSize="14" FontWeight="Bold"/>
+            <!-- its max width is being dynamically set using code behind (PowerShell) -->
+            <TextBox x:Name="OutputTextBlock" TextWrapping="Wrap" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="Transparent" BorderThickness="0" IsReadOnly="True" IsTabStop="False" Cursor="IBeam" FontSize="14" FontWeight="Bold"/>
         </ScrollViewer>
         <!-- ToggleButton -->
-        <ToggleButton x:Name="MainTabControlToggle" ToolTip="Enable logging" Foreground="White" Height="40" Width="170" FontSize="18" Grid.Row="1" Grid.ColumnSpan="2">
+        <ToggleButton x:Name="MainTabControlToggle" ToolTip="Choose between Online or Offline modes" Foreground="White" Height="40" Width="170" FontSize="18" Grid.Row="1" Grid.ColumnSpan="2">
             <ToggleButton.Template>
                 <ControlTemplate TargetType="ToggleButton">
                     <Border x:Name="Button1" Background="{StaticResource PinkGradient}" CornerRadius="20" Padding="1">
@@ -4879,7 +4866,7 @@ namespace SystemInfo
                                                 <TextBlock Text="Log Path" VerticalAlignment="Center"/>
                                             </StackPanel>
                                         </Button>
-                                        <!-- File Path TextBox which is dynamic-->
+                                        <!-- File Path TextBox which is dynamic -->
                                         <TextBox x:Name="txtFilePath" Grid.Row="3" Grid.ColumnSpan="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="30,0,30,0" BorderThickness="0" ToolTip="The selected log file path" MaxWidth="700">
                                             <TextBox.Style>
                                                 <Style TargetType="{x:Type TextBox}">

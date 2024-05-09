@@ -4041,39 +4041,25 @@ Execution Policy: $CurrentExecutionPolicy
                                                 The body of the toast notification.
                                             .PARAMETER ImagePath
                                                 The path to the image that will be displayed on the toast notification.
-                                            .PARAMETER UseImage
-                                                Switch to determine if the image should be used (optional parameter).
                                             #>
-                                                [CmdletBinding()]
                                                 Param (
-                                                    [Parameter(Mandatory = $true)][System.String]$Title,
-                                                    [Parameter(Mandatory = $true)][System.String]$Body,
-                                                    [Parameter(Mandatory = $false)][System.IO.FileInfo]$ImagePath,
-                                                    [Parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$UseImage
+                                                    [System.String]$Title,
+                                                    [System.String]$Body,
+                                                    [System.IO.FileInfo]$ImagePath
                                                 )
 
                                                 # Load the necessary Windows Runtime types for toast notifications
                                                 [Windows.UI.Notifications.ToastNotificationManager, Windows.UI.Notifications, ContentType = WindowsRuntime] | Out-Null
 
-                                                # Decide which template to use based on whether an image is used
-                                                if ($UseImage) {
-                                                    [System.String]$TemplateToUse = 'ToastImageAndText02'
-                                                }
-                                                else {
-                                                    [System.String]$TemplateToUse = 'ToastText02'
-                                                }
-
                                                 # Get the template content for the chosen template
-                                                $Template = [Windows.UI.Notifications.ToastNotificationManager]::GetTemplateContent([Windows.UI.Notifications.ToastTemplateType]::($TemplateToUse))
+                                                $Template = [Windows.UI.Notifications.ToastNotificationManager]::GetTemplateContent([Windows.UI.Notifications.ToastTemplateType]::('ToastImageAndText02'))
 
                                                 # Convert the template to an XML document
                                                 $XML = [System.Xml.XmlDocument]$Template.GetXml()
 
-                                                # If using an image, set the image source in the XML
-                                                if ($UseImage) {
-                                                    [System.Xml.XmlElement]$ImagePlaceHolder = $XML.toast.visual.binding.image
-                                                    $ImagePlaceHolder.SetAttribute('src', $ImagePath)
-                                                }
+                                                # set the image source in the XML
+                                                [System.Xml.XmlElement]$ImagePlaceHolder = $XML.toast.visual.binding.image
+                                                $ImagePlaceHolder.SetAttribute('src', $ImagePath)
 
                                                 # Set the title text in the XML
                                                 [System.Xml.XmlElement]$TitlePlaceHolder = $XML.toast.visual.binding.text | Where-Object -FilterScript { $_.id -eq '1' }
@@ -4104,7 +4090,7 @@ Execution Policy: $CurrentExecutionPolicy
                                                 $Notifier.Show($Toast)
                                             }
 
-                                            Out-ToastNotification -Title 'Completed' -body "$($args[0]) selected categories have been run." -UseImage -ImagePath $args[1]
+                                            Out-ToastNotification -Title 'Completed' -body "$($args[0]) selected categories have been run." -ImagePath $args[1]
                                             # If the module is running locally, the toast notification image will be taken from the module directory, if not it will be taken from the working directory where it was already downloaded from the GitHub repo
                                         } -args $SelectedCategories.Count, ($IsLocally ? "$HardeningModulePath\Resources\Media\ToastNotificationIcon.png" : "$WorkingDir\ToastNotificationIcon.png") *>&1 # To display any error message or other streams from the script block on the console
 

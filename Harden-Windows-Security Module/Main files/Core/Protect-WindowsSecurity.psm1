@@ -965,7 +965,7 @@ Function Protect-WindowsSecurity {
         Function Write-GUI {
             <#
             .SYNOPSIS
-                A function to write text to the GUI. It also saved the text to the log variable used for the log file.
+                A function to write text to the GUI. It also saves the text to the log variable used for the log file.
             .INPUTS
                 System.String
             #>

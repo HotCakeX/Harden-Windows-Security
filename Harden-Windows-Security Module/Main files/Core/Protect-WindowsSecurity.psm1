@@ -1245,41 +1245,54 @@ Function Protect-WindowsSecurity {
 
                     &$LGPOExe /q /m "$WorkingDir\Security-Baselines-X\Microsoft Defender Policies\registry.pol"
 
+                    # Make sure the parameters are available in the ConfigDefender module before using them
+                    [System.Collections.Hashtable]$AvailableDefenderParams = (Get-Command -Name Set-MpPreference).Parameters
+                    Function Set-DefenderConfigWithCheck {
+                        Param ([System.String]$Name, $Value)
+                        if ($AvailableDefenderParams.ContainsKey($Name)) {
+                            [System.Collections.Hashtable]$Params = @{$Name = $Value }
+                            Set-MpPreference @Params
+                        }
+                        else {
+                            Write-Warning -Message "The parameter $Name is not available yet, restart the OS one more time after updating and try again."
+                        }
+                    }
+
                     Write-Verbose -Message 'Optimizing Network Protection Performance of the Microsoft Defender'
-                    Set-MpPreference -AllowSwitchToAsyncInspection $True
+                    Set-DefenderConfigWithCheck -Name 'AllowSwitchToAsyncInspection' -Value $True
 
                     Write-Verbose -Message 'Enabling Real-time protection and Security Intelligence Updates during OOBE'
-                    Set-MpPreference -OobeEnableRtpAndSigUpdate $True
+                    Set-DefenderConfigWithCheck -Name 'OobeEnableRtpAndSigUpdate' -Value $True
 
                     Write-Verbose -Message 'Enabling Intel Threat Detection Technology'
-                    Set-MpPreference -IntelTDTEnabled $True
+                    Set-DefenderConfigWithCheck -Name 'IntelTDTEnabled' -Value $True
 
                     Write-Verbose -Message 'Enabling Restore point scan'
-                    Set-MpPreference -DisableRestorePoint $False
+                    Set-DefenderConfigWithCheck -Name 'DisableRestorePoint' -Value $False
 
                     Write-Verbose -Message 'Disabling Performance mode of Defender that only applies to Dev drives by lowering security'
-                    Set-MpPreference -PerformanceModeStatus Disabled
+                    Set-DefenderConfigWithCheck -Name 'PerformanceModeStatus' -Value Disabled
 
                     Write-Verbose -Message 'Setting the Network Protection to block network traffic instead of displaying a warning'
-                    Set-MpPreference -EnableConvertWarnToBlock $True
+                    Set-DefenderConfigWithCheck -Name 'EnableConvertWarnToBlock' -Value $True
 
                     Write-Verbose -Message 'Setting the Brute-Force Protection to use cloud aggregation to block IP addresses that are over 99% likely malicious'
-                    Set-MpPreference -BruteForceProtectionAggressiveness 1 # 2nd level aggression will come after further testing
+                    Set-DefenderConfigWithCheck -Name 'BruteForceProtectionAggressiveness' -Value 1 # 2nd level aggression will come after further testing
 
                     Write-Verbose -Message 'Setting the Brute-Force Protection to prevent suspicious and malicious behaviors'
-                    Set-MpPreference -BruteForceProtectionConfiguredState 1
+                    Set-DefenderConfigWithCheck -Name 'BruteForceProtectionConfiguredState' -Value 1
 
                     Write-Verbose -Message 'Setting the internal feature logic to determine blocking time for the Brute-Force Protections'
-                    Set-MpPreference -BruteForceProtectionMaxBlockTime 0
+                    Set-DefenderConfigWithCheck -Name 'BruteForceProtectionMaxBlockTime' -Value 0
 
                     Write-Verbose -Message 'Setting the Remote Encryption Protection to use cloud intel and context, and block when confidence level is above 90%'
-                    Set-MpPreference -RemoteEncryptionProtectionAggressiveness 2
+                    Set-DefenderConfigWithCheck -Name 'RemoteEncryptionProtectionAggressiveness' -Value 2
 
                     Write-Verbose -Message 'Setting the Remote Encryption Protection to prevent suspicious and malicious behaviors'
-                    Set-MpPreference -RemoteEncryptionProtectionConfiguredState 1
+                    Set-DefenderConfigWithCheck -Name 'RemoteEncryptionProtectionConfiguredState' -Value 1
 
                     Write-Verbose -Message 'Setting the internal feature logic to determine blocking time for the Remote Encryption Protection'
-                    Set-MpPreference -RemoteEncryptionProtectionMaxBlockTime 0
+                    Set-DefenderConfigWithCheck -Name 'RemoteEncryptionProtectionMaxBlockTime' -Value 0
 
                     Write-Verbose -Message 'Adding OneDrive folders of all the user accounts (personal and work accounts) to the Controlled Folder Access for Ransomware Protection'
                     Get-ChildItem -Path "$env:SystemDrive\Users\*\OneDrive*\" -Directory | ForEach-Object -Process { Add-MpPreference -ControlledFolderAccessProtectedFolders $_ }
@@ -2855,7 +2868,7 @@ Execution Policy: $CurrentExecutionPolicy
                                 [System.Int64]$NewMaxWidth = $SyncHash.Window.ActualWidth - 50
 
                                 # Update the main TextBox's MaxWidth property dynamically, instead of setting it to a fixed value in the XAML
-                                $SyncHash.window.FindName('OutputTextBlock').MaxWidth = $NewMaxWidth
+                                $SyncHash['GUI']['OutputTextBlock'].MaxWidth = $NewMaxWidth
                             })
 
                         #Region Check-Uncheck buttons for Categories
@@ -3430,41 +3443,54 @@ Execution Policy: $CurrentExecutionPolicy
 
                                         &$LGPOExe /q /m "$WorkingDir\Security-Baselines-X\Microsoft Defender Policies\registry.pol"
 
+                                        # Make sure the parameters are available in the ConfigDefender module before using them
+                                        [System.Collections.Hashtable]$AvailableDefenderParams = (Get-Command -Name Set-MpPreference).Parameters
+                                        Function Set-DefenderConfigWithCheck {
+                                            Param ([System.String]$Name, $Value)
+                                            if ($AvailableDefenderParams.ContainsKey($Name)) {
+                                                [System.Collections.Hashtable]$Params = @{$Name = $Value }
+                                                Set-MpPreference @Params
+                                            }
+                                            else {
+                                                Write-Warning -Message "The parameter $Name is not available yet, restart the OS one more time after updating and try again."
+                                            }
+                                        }
+
                                         Write-Verbose -Message 'Optimizing Network Protection Performance of the Microsoft Defender'
-                                        Set-MpPreference -AllowSwitchToAsyncInspection $True
+                                        Set-DefenderConfigWithCheck -Name 'AllowSwitchToAsyncInspection' -Value $True
 
                                         Write-Verbose -Message 'Enabling Real-time protection and Security Intelligence Updates during OOBE'
-                                        Set-MpPreference -OobeEnableRtpAndSigUpdate $True
+                                        Set-DefenderConfigWithCheck -Name 'OobeEnableRtpAndSigUpdate' -Value $True
 
                                         Write-Verbose -Message 'Enabling Intel Threat Detection Technology'
-                                        Set-MpPreference -IntelTDTEnabled $True
+                                        Set-DefenderConfigWithCheck -Name 'IntelTDTEnabled' -Value $True
 
                                         Write-Verbose -Message 'Enabling Restore point scan'
-                                        Set-MpPreference -DisableRestorePoint $False
+                                        Set-DefenderConfigWithCheck -Name 'DisableRestorePoint' -Value $False
 
                                         Write-Verbose -Message 'Disabling Performance mode of Defender that only applies to Dev drives by lowering security'
-                                        Set-MpPreference -PerformanceModeStatus Disabled
+                                        Set-DefenderConfigWithCheck -Name 'PerformanceModeStatus' -Value Disabled
 
                                         Write-Verbose -Message 'Setting the Network Protection to block network traffic instead of displaying a warning'
-                                        Set-MpPreference -EnableConvertWarnToBlock $True
+                                        Set-DefenderConfigWithCheck -Name 'EnableConvertWarnToBlock' -Value $True
 
                                         Write-Verbose -Message 'Setting the Brute-Force Protection to use cloud aggregation to block IP addresses that are over 99% likely malicious'
-                                        Set-MpPreference -BruteForceProtectionAggressiveness 1 # 2nd level aggression will come after further testing
+                                        Set-DefenderConfigWithCheck -Name 'BruteForceProtectionAggressiveness' -Value 1 # 2nd level aggression will come after further testing
 
                                         Write-Verbose -Message 'Setting the Brute-Force Protection to prevent suspicious and malicious behaviors'
-                                        Set-MpPreference -BruteForceProtectionConfiguredState 1
+                                        Set-DefenderConfigWithCheck -Name 'BruteForceProtectionConfiguredState' -Value 1
 
                                         Write-Verbose -Message 'Setting the internal feature logic to determine blocking time for the Brute-Force Protections'
-                                        Set-MpPreference -BruteForceProtectionMaxBlockTime 0
+                                        Set-DefenderConfigWithCheck -Name 'BruteForceProtectionMaxBlockTime' -Value 0
 
                                         Write-Verbose -Message 'Setting the Remote Encryption Protection to use cloud intel and context, and block when confidence level is above 90%'
-                                        Set-MpPreference -RemoteEncryptionProtectionAggressiveness 2
+                                        Set-DefenderConfigWithCheck -Name 'RemoteEncryptionProtectionAggressiveness' -Value 2
 
                                         Write-Verbose -Message 'Setting the Remote Encryption Protection to prevent suspicious and malicious behaviors'
-                                        Set-MpPreference -RemoteEncryptionProtectionConfiguredState 1
+                                        Set-DefenderConfigWithCheck -Name 'RemoteEncryptionProtectionConfiguredState' -Value 1
 
                                         Write-Verbose -Message 'Setting the internal feature logic to determine blocking time for the Remote Encryption Protection'
-                                        Set-MpPreference -RemoteEncryptionProtectionMaxBlockTime 0
+                                        Set-DefenderConfigWithCheck -Name 'RemoteEncryptionProtectionMaxBlockTime' -Value 0
 
                                         Write-Verbose -Message 'Adding OneDrive folders of all the user accounts (personal and work accounts) to the Controlled Folder Access for Ransomware Protection'
                                         Get-ChildItem -Path "$env:SystemDrive\Users\*\OneDrive*\" -Directory | ForEach-Object -Process { Add-MpPreference -ControlledFolderAccessProtectedFolders $_ }

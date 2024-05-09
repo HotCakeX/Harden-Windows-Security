@@ -970,40 +970,17 @@ Function Protect-WindowsSecurity {
                 System.String
             #>
             [CmdletBinding()]
-            [OutputType([System.String])]
             Param (
                 [Parameter(Mandatory = $true)][System.String]$Text
             )
+            # Add the text to the synchronized array list as log messages
+            $SyncHash.Logger.Add([System.String](Get-Date) + ': ' + [System.String]$Text) | Out-Null
 
-            Begin {
-                Function FindScrollViewer($Control) {
-                    <#
-                .SYNOPSIS
-                    A helper function to find the ScrollViewer in the GUI
-                #>
-                    while (($null -ne $Control) -and (-not ($Control -is [System.Windows.Controls.ScrollViewer]))) {
-                        $Control = [System.Windows.Media.VisualTreeHelper]::GetParent($Control)
-                    }
-                    return $Control
-                }
-            }
-
-            Process {
-                # Add the text to the synchronized array list as log messages
-                $SyncHash.Logger.Add([System.String](Get-Date) + ': ' + [System.String]$Text) | Out-Null
-
-                # Use Dispatcher.Invoke to update the GUI elements on the main thread
-                $SyncHash.Window.Dispatcher.Invoke({
-                        # Since other output streams such as verbose, error, warning are not converted to strings, we need to convert them manually
-                        $SyncHash.window.FindName('OutputTextBlock').Text += [System.String]$Text + "`n"
-
-                        # Find the ScrollViewer and scroll to the bottom
-                        $ScrollViewer = FindScrollViewer -Control $SyncHash.window.FindName('OutputTextBlock')
-                        if ($null -ne $ScrollViewer) {
-                            $ScrollViewer.ScrollToBottom()
-                        }
-                    }, [System.Windows.Threading.DispatcherPriority]::Background)
-            }
+            $SyncHash.Window.Dispatcher.Invoke({
+                    # Since other output streams such as verbose, error, warning are not converted to strings, we need to convert them manually
+                    $SyncHash['GUI']['OutputTextBlock'].Text += [System.String]$Text + "`n"
+                    $SyncHash['GUI']['ScrollerForOutputTextBlock'].ScrollToBottom()
+                }, [System.Windows.Threading.DispatcherPriority]::Background)
         }
         Function Start-FileDownload {
             <#
@@ -2773,6 +2750,10 @@ Execution Policy: $CurrentExecutionPolicy
                         $XAML.SelectNodes("//*[@*[contains(translate(name(.),'n','N'),'Name')]]") | ForEach-Object -Process {
                             $SyncHash['GUI'][$_.Name] = $MainContentControlStyle.FindName($_.Name)
                         }
+
+                        # Creating variables for the important elements inside of the ParentGrid
+                        $SyncHash['GUI']['OutputTextBlock'] = $SyncHash.Window.FindName('ParentGrid').FindName('OutputTextBlock')
+                        $SyncHash['GUI']['ScrollerForOutputTextBlock'] = $SyncHash.Window.FindName('ParentGrid').FindName('ScrollerForOutputTextBlock')
 
                         # Redefining all of the exported variables inside of the RunSpace
                         $SyncHash.GlobalVars.GetEnumerator() | ForEach-Object -Process {

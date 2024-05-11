@@ -140,6 +140,7 @@ Function Unprotect-WindowsSecurity {
                         Write-Verbose -Message 'Removing the country IP blocking firewall rules only'
                         Remove-NetFirewallRule -DisplayName 'OFAC Sanctioned Countries IP range blocking' -PolicyStore localhost -ErrorAction SilentlyContinue
                         Remove-NetFirewallRule -DisplayName 'State Sponsors of Terrorism IP range blocking' -PolicyStore localhost -ErrorAction SilentlyContinue
+                        Start-Process -FilePath gpupdate.exe -ArgumentList '/force' -NoNewWindow | Out-Null
                         break
                     }
                     $OnlyDownloadsDefenseMeasures {

@@ -3522,7 +3522,7 @@ Execution Policy: $CurrentExecutionPolicy
                                             $NewToastNotification.Invoke($SyncHash['GlobalVars']['SelectedCategories'],
                                                 $IsLocally,
                                                 $HardeningModulePath,
-                                                $WorkingDir)                                          
+                                                $WorkingDir)
                                         }
                                         else {
                                             &$WriteGUI -Text 'No category was selected'

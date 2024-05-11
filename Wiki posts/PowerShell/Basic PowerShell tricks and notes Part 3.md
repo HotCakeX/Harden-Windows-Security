@@ -182,10 +182,30 @@ You can store the function in a variable like this
 
 <br>
 
+Or do it in bulk like this. In this example, `$SyncHash` is a synchronized hashtable used for communications between runspaces and `ExportedFunctions` is a nested hashtable that stores the functions inside of it.
+
+```powershell
+'Function-1', 'Function-2', 'Function-3' | ForEach-Object -Process {
+  $SyncHash['ExportedFunctions']["$_"] = Get-Item -Path "Function:$_"
+}
+```
+
+<br>
+
 You can redefine the function using the same name or a different name like this. This is useful for passing the function to a different RunSpace or session.
 
 ```powershell
 New-Item -Path 'Function:\Write-TextAlt' -Value $Function -Force
+```
+
+<br>
+
+Redefining the functions in bulk just like the previous bulk operation above.
+
+```powershell
+$SyncHash.ExportedFunctions.GetEnumerator() | ForEach-Object -Process {
+    New-Item -Path "Function:\$($_.Key)" -Value $_.Value.ScriptBlock -Force | Out-Null
+}
 ```
 
 <br>

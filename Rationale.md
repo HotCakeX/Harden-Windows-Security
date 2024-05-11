@@ -173,12 +173,20 @@ Make sure to use Surface products that support [Device Firmware Configuration In
 
 <br>
 
-## <img width="40" src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/Red%20police%20light.gif" alt="Alert gif for what to do when under attack"> [What to do when there is an attack ?](#-what-to-do-when-there-is-an-attack-)
+## <img width="40" src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/Red%20police%20light.gif" alt="Alert gif for what to do when under attack"> [What to Do When There Is an Attack ?](#-what-to-do-when-there-is-an-attack-)
 
-### You can hire any of these teams
+You should have an existing [***Unified Contract***](https://www.microsoft.com/en-us/unifiedsupport/overview) with Microsoft ([formerly](https://www.microsoft.com/en-us/unifiedsupport/premier) known as [Premier Support](https://www.microsoft.com/en-us/premier-support-end-of-sale)). Microsoft offers a wide range of services and teams to help you recover from a cyber attack such as:
 
+- GHOST: Global Hunting, Oversight and Strategic Triage
 - [DART](https://www.microsoft.com/en-us/security/blog/2019/03/25/dart-the-microsoft-cybersecurity-team-we-hope-you-never-meet/) - The Microsoft Detection and Response Team
 - [CRSP](https://www.microsoft.com/en-us/security/blog/2021/06/09/crsp-the-emergency-team-fighting-cyber-attacks-beside-customers/) - Global Compromise Recovery Security Practice Team - [including Ransomware](https://learn.microsoft.com/en-us/azure/security/fundamentals/ransomware-detect-respond#road-to-recovery)
+
+After you've got hacked, you should request them by contacting your Customer Success Account Manager and telling them you need the help of one of these teams.
+
+<br>
+
+> [!TIP]\
+> When getting cyber security insurance for your company or organization, make sure to get one that covers the cost of hiring Microsoft's **elite** teams such as **GHOST/DART**, i.e. those Microsoft teams will be in-network for your insurance.
 
 <br>
 

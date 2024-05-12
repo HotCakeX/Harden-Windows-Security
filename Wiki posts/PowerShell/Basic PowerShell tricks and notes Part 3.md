@@ -236,3 +236,16 @@ Invoke-Command -ScriptBlock $ScriptBlock -ArgumentList 'Hello from the ScriptBlo
 ```
 
 <br>
+
+> [!TIP]\
+> When orchestrating tasks across multiple RunSpaces with synchronized Hashtables, it's crucial to ensure seamless function transfer. Follow these steps for optimal results:
+>
+> 1. Convert the desired function into a ScriptBlock.
+> 2. Store the ScriptBlock in the synchronized Hashtable.
+> 3. Redefine the ScriptBlock in the target RunSpace.
+>
+> This approach is necessary because simply saving the function to a variable, redefining it as a function in the destination RunSpace, and executing it won't replicate the original function's behavior outside the RunSpace context.
+>
+> Alternatively, you can define your code as ScriptBlocks instead of functions from the beginning.
+
+<br>

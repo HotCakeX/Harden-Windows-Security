@@ -117,6 +117,14 @@ You can access the settings page of [PowerShell extension in VS Code](https://co
 
 <br>
 
+## Refrain From Defining and Using Global Variables as Much as Possible
+
+Global variables are not recommended in general because of security implications. They can be overwritten by the user on console as well.
+
+If you need to define global variables, make sure you set them as [constants or read-only](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.utility/new-variable#-option) so that they cannot be overwritten once they are defined.
+
+<br>
+
 ## More Resources From Microsoft That You Should Check Out
 
 - [Cmdlet Development Guidelines](https://learn.microsoft.com/en-us/powershell/scripting/developer/cmdlet/cmdlet-development-guidelines)

@@ -1,4 +1,4 @@
-Function Edit-CiPolicyRuleOptions {
+Function Set-CiRuleOptions {
     <#
     .SYNOPSIS
         Configures the Policy rule options in a given XML file and sets the HVCI to Strict in the output XML file.
@@ -128,7 +128,7 @@ Function Edit-CiPolicyRuleOptions {
 
         foreach ($Option in $ValidOptions) {
             if (-NOT $Intel.Values.Contains($Option)) {
-                Write-Verbose -Message "Edit-CiPolicyRuleOptions: Rule option '$Option' exists in the Code Integrity Schema but not being used by the module." -Verbose
+                Write-Verbose -Message "Set-CiRuleOptions: Rule option '$Option' exists in the Code Integrity Schema but not being used by the module." -Verbose
             }
         }
         #Endregion Validating current Intel data
@@ -218,14 +218,14 @@ Function Edit-CiPolicyRuleOptions {
         Compare-Object -ReferenceObject ([System.Int32[]]$RuleOptionsToImplement) -DifferenceObject ([System.Int32[]]$ExistingRuleOptions.Keys) |
         ForEach-Object -Process {
             if ($_.SideIndicator -eq '<=') {
-                Write-Verbose -Message "Edit-CiPolicyRuleOptions: Adding Rule Option: $($Intel[[System.String]$_.InputObject])"
+                Write-Verbose -Message "Set-CiRuleOptions: Adding Rule Option: $($Intel[[System.String]$_.InputObject])"
             }
             else {
-                Write-Verbose -Message "Edit-CiPolicyRuleOptions: Removing Rule Option: $($Intel[[System.String]$_.InputObject])"
+                Write-Verbose -Message "Set-CiRuleOptions: Removing Rule Option: $($Intel[[System.String]$_.InputObject])"
             }
         }
 
-        Write-Verbose -Message 'Edit-CiPolicyRuleOptions: Configuring the policy rule options'
+        Write-Verbose -Message 'Set-CiRuleOptions: Configuring the policy rule options'
 
         # Always remove any existing rule options initially. The calculations determining which
         # Rules must be included in the policy are all made in the Begin block.
@@ -261,7 +261,7 @@ Function Edit-CiPolicyRuleOptions {
         Test-CiPolicy -XmlFile $XMLFile | Out-Null
     }
 }
-Export-ModuleMember -Function 'Edit-CiPolicyRuleOptions'
+Export-ModuleMember -Function 'Set-CiRuleOptions'
 
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor

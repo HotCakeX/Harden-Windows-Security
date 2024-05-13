@@ -145,7 +145,7 @@ Function Edit-SignedWDACConfig {
         Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Get-FileRules.psm1" -Force
         Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Get-BlockRulesMeta.psm1" -Force
         Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\New-SnapBackGuarantee.psm1" -Force
-        Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Edit-CiPolicyRuleOptions.psm1" -Force
+        Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Set-CiRuleOptions.psm1" -Force
         Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\New-StagingArea.psm1" -Force
 
         # if -SkipVersionCheck wasn't passed, run the updater
@@ -407,7 +407,7 @@ Function Edit-SignedWDACConfig {
                 Write-Verbose -Message 'Adding signer rule to the Supplemental policy'
                 Add-SignerRule -FilePath $SuppPolicyPath -CertificatePath $CertPath -Update -User -Kernel
 
-                Edit-CiPolicyRuleOptions -Action Supplemental -XMLFile $SuppPolicyPath
+                Set-CiRuleOptions -Action Supplemental -XMLFile $SuppPolicyPath
 
                 Write-Verbose -Message 'Setting the Supplemental policy version to 1.0.0.0'
                 Set-CIPolicyVersion -FilePath $SuppPolicyPath -Version '1.0.0.0'
@@ -820,7 +820,7 @@ Function Edit-SignedWDACConfig {
                 Write-Verbose -Message 'Adding signer rule to the Supplemental policy'
                 Add-SignerRule -FilePath $SuppPolicyPath -CertificatePath $CertPath -Update -User -Kernel
 
-                Edit-CiPolicyRuleOptions -Action Supplemental -XMLFile $SuppPolicyPath
+                Set-CiRuleOptions -Action Supplemental -XMLFile $SuppPolicyPath
 
                 Write-Verbose -Message 'Setting the Supplemental policy version to 1.0.0.0'
                 Set-CIPolicyVersion -FilePath $SuppPolicyPath -Version '1.0.0.0'
@@ -1026,7 +1026,7 @@ Function Edit-SignedWDACConfig {
                         Write-Verbose -Message 'Setting the policy name'
                         Set-CIPolicyIdInfo -FilePath $BasePolicyPath -PolicyName "Allow Microsoft Plus Block Rules refreshed On $(Get-Date -Format 'MM-dd-yyyy')"
 
-                        Edit-CiPolicyRuleOptions -Action Base -XMLFile $BasePolicyPath
+                        Set-CiRuleOptions -Action Base -XMLFile $BasePolicyPath
                     }
 
                     'Lightly_Managed_system_Policy' {
@@ -1041,7 +1041,7 @@ Function Edit-SignedWDACConfig {
                         Write-Verbose -Message 'Setting the policy name'
                         Set-CIPolicyIdInfo -FilePath $BasePolicyPath -PolicyName "Signed And Reputable policy refreshed on $(Get-Date -Format 'MM-dd-yyyy')"
 
-                        Edit-CiPolicyRuleOptions -Action Base-ISG -XMLFile $BasePolicyPath
+                        Set-CiRuleOptions -Action Base-ISG -XMLFile $BasePolicyPath
 
                         # Configure required services for ISG authorization
                         Write-Verbose -Message 'Configuring required services for ISG authorization'
@@ -1085,7 +1085,7 @@ Function Edit-SignedWDACConfig {
                         Write-Verbose -Message 'Setting the policy name'
                         Set-CIPolicyIdInfo -FilePath $BasePolicyPath -PolicyName "Default Windows Plus Block Rules refreshed On $(Get-Date -Format 'MM-dd-yyyy')"
 
-                        Edit-CiPolicyRuleOptions -Action Base -XMLFile $BasePolicyPath
+                        Set-CiRuleOptions -Action Base -XMLFile $BasePolicyPath
                     }
                 }
 

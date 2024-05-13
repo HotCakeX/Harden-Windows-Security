@@ -74,7 +74,7 @@ Function New-DenyWDACConfig {
         Write-Verbose -Message 'Importing the required sub-modules'
         Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Update-Self.psm1" -Force
         Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Write-ColorfulText.psm1" -Force
-        Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Edit-CiPolicyRuleOptions.psm1" -Force
+        Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Set-CiRuleOptions.psm1" -Force
         Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\New-StagingArea.psm1" -Force
 
         # if -SkipVersionCheck wasn't passed, run the updater
@@ -159,7 +159,7 @@ Function New-DenyWDACConfig {
                 Write-Verbose -Message 'Setting the policy version to 1.0.0.0'
                 Set-CIPolicyVersion -FilePath $FinalDenyPolicyPath -Version '1.0.0.0'
 
-                Edit-CiPolicyRuleOptions -Action Base -XMLFile $FinalDenyPolicyPath
+                Set-CiRuleOptions -Action Base -XMLFile $FinalDenyPolicyPath
 
                 Write-Verbose -Message 'Converting the policy XML to .CIP'
                 ConvertFrom-CIPolicy -XmlFilePath $FinalDenyPolicyPath -BinaryFilePath $FinalDenyPolicyCIPPath | Out-Null
@@ -233,7 +233,7 @@ Function New-DenyWDACConfig {
                 Write-Verbose -Message 'Setting the policy version to 1.0.0.0'
                 Set-CIPolicyVersion -FilePath $FinalDenyPolicyPath -Version '1.0.0.0'
 
-                Edit-CiPolicyRuleOptions -Action Base -XMLFile $FinalDenyPolicyPath
+                Set-CiRuleOptions -Action Base -XMLFile $FinalDenyPolicyPath
 
                 Write-Verbose -Message 'Converting the policy XML to .CIP'
                 ConvertFrom-CIPolicy -XmlFilePath $FinalDenyPolicyPath -BinaryFilePath $FinalDenyPolicyCIPPath | Out-Null
@@ -308,7 +308,7 @@ Function New-DenyWDACConfig {
                         Write-Verbose -Message 'Setting the policy version to 1.0.0.0'
                         Set-CIPolicyVersion -FilePath $FinalDenyPolicyPath -Version '1.0.0.0'
 
-                        Edit-CiPolicyRuleOptions -Action Base -XMLFile $FinalDenyPolicyPath
+                        Set-CiRuleOptions -Action Base -XMLFile $FinalDenyPolicyPath
 
                         Write-Verbose -Message 'Converting the policy XML to .CIP'
                         ConvertFrom-CIPolicy -XmlFilePath $FinalDenyPolicyPath -BinaryFilePath $FinalDenyPolicyCIPPath | Out-Null
@@ -369,7 +369,7 @@ Function New-DenyWDACConfig {
                 Write-Verbose -Message 'Setting the policy version to 1.0.0.0'
                 Set-CIPolicyVersion -FilePath $FinalDenyPolicyPath -Version '1.0.0.0'
 
-                Edit-CiPolicyRuleOptions -Action Base -XMLFile $FinalDenyPolicyPath
+                Set-CiRuleOptions -Action Base -XMLFile $FinalDenyPolicyPath
 
                 Write-Verbose -Message 'Converting the policy XML to .CIP'
                 ConvertFrom-CIPolicy -XmlFilePath $FinalDenyPolicyPath -BinaryFilePath $FinalDenyPolicyCIPPath | Out-Null

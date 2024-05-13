@@ -94,7 +94,7 @@ Function New-WDACConfig {
         Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Get-RuleRefs.psm1" -Force
         Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Get-FileRules.psm1" -Force
         Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Get-BlockRulesMeta.psm1" -Force
-        Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Edit-CiPolicyRuleOptions.psm1" -Force
+        Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Set-CiRuleOptions.psm1" -Force
         Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\New-StagingArea.psm1" -Force
         Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Receive-CodeIntegrityLogs.psm1" -Force
 
@@ -291,7 +291,7 @@ Function New-WDACConfig {
             Write-Verbose -Message 'Setting AllowMicrosoftPlusBlockRules.xml policy version to 1.0.0.0'
             Set-CIPolicyVersion -FilePath $FinalPolicyPath -Version '1.0.0.0'
 
-            Edit-CiPolicyRuleOptions -Action Base -XMLFile $FinalPolicyPath
+            Set-CiRuleOptions -Action Base -XMLFile $FinalPolicyPath
 
             if ($TestMode) {
                 Write-Verbose -Message 'Setting "Boot Audit on Failure" and "Advanced Boot Options Menu" policy rule options for the AllowMicrosoftPlusBlockRules.xml policy because TestMode parameter was used'
@@ -392,7 +392,7 @@ Function New-WDACConfig {
             Write-Verbose -Message 'Setting the policy version to 1.0.0.0'
             Set-CIPolicyVersion -FilePath $FinalPolicyPath -Version '1.0.0.0'
 
-            Edit-CiPolicyRuleOptions -Action Base -XMLFile $FinalPolicyPath
+            Set-CiRuleOptions -Action Base -XMLFile $FinalPolicyPath
 
             if ($TestMode) {
                 Write-Verbose -Message 'Setting "Boot Audit on Failure" and "Advanced Boot Options Menu" policy rule options because TestMode parameter was used'
@@ -464,7 +464,7 @@ Function New-WDACConfig {
             $CurrentStep++
             Write-Progress -Id 0 -Activity 'Configuring the policy settings' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
-            Edit-CiPolicyRuleOptions -Action Base -XMLFile $FinalPolicyPath
+            Set-CiRuleOptions -Action Base -XMLFile $FinalPolicyPath
             # Remove WHQL requirement since it's a user mode policy and doesn't need to enforce it
             Set-RuleOption -FilePath $FinalPolicyPath -Option 2 -Delete
 
@@ -832,7 +832,7 @@ Function New-WDACConfig {
             Write-Verbose -Message 'Convert the SupplementalPolicy.xml policy file from base policy to supplemental policy of our base policy'
             Set-CIPolicyIdInfo -FilePath $FinalSupplementalPath -PolicyName "Supplemental Policy made from Audit Event Logs on $(Get-Date -Format 'MM-dd-yyyy')" -ResetPolicyID -BasePolicyToSupplementPath $FinalPolicyPath | Out-Null
 
-            Edit-CiPolicyRuleOptions -Action Supplemental -XMLFile $FinalSupplementalPath
+            Set-CiRuleOptions -Action Supplemental -XMLFile $FinalSupplementalPath
 
             $CurrentStep++
             Write-Progress -Id 4 -Activity 'Generating the CIP files' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)

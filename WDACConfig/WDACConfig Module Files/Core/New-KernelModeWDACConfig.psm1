@@ -32,7 +32,7 @@ Function New-KernelModeWDACConfig {
         Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Write-ColorfulText.psm1" -Force
         Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Move-UserModeToKernelMode.psm1" -Force
         Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Get-KernelModeDriversAudit.psm1" -Force
-        Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Edit-CiPolicyRuleOptions.psm1" -Force
+        Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Set-CiRuleOptions.psm1" -Force
         Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\New-StagingArea.psm1" -Force
 
         # if -SkipVersionCheck wasn't passed, run the updater
@@ -140,7 +140,7 @@ Function New-KernelModeWDACConfig {
                 Write-Verbose -Message 'Setting the policy version to 1.0.0.0'
                 Set-CIPolicyVersion -FilePath $OutputPolicyPath -Version '1.0.0.0'
 
-                Edit-CiPolicyRuleOptions Base-KernelMode -XMLFile $OutputPolicyPath
+                Set-CiRuleOptions Base-KernelMode -XMLFile $OutputPolicyPath
 
                 # Enabling Audit mode
                 Set-RuleOption -FilePath $OutputPolicyPath -Option 3
@@ -277,7 +277,7 @@ Function New-KernelModeWDACConfig {
                             Write-Verbose -Message 'Setting the policy version to 1.0.0.0'
                             Set-CIPolicyVersion -FilePath $FinalEnforcedPolicyPath -Version '1.0.0.0'
 
-                            Edit-CiPolicyRuleOptions -Action Base-KernelMode -XMLFile $FinalEnforcedPolicyPath
+                            Set-CiRuleOptions -Action Base-KernelMode -XMLFile $FinalEnforcedPolicyPath
 
                             if ($EVSigners) {
                                 Write-Verbose -Message 'Adding EVSigners policy rule option'
@@ -416,7 +416,7 @@ Function New-KernelModeWDACConfig {
                             Write-Verbose -Message 'Setting the policy version to 1.0.0.0'
                             Set-CIPolicyVersion -FilePath $FinalEnforcedPolicyPath -Version '1.0.0.0'
 
-                            Edit-CiPolicyRuleOptions -Action Base-KernelMode -XMLFile $FinalEnforcedPolicyPath
+                            Set-CiRuleOptions -Action Base-KernelMode -XMLFile $FinalEnforcedPolicyPath
 
                             # Add policy rule option 4 to block flight root certs
                             Set-RuleOption -FilePath $FinalEnforcedPolicyPath -Option 4

@@ -84,7 +84,7 @@ Function New-SupplementalWDACConfig {
         Import-Module -Force -FullyQualifiedName (
             "$ModuleRootPath\Shared\Update-Self.psm1",
             "$ModuleRootPath\Shared\Write-ColorfulText.psm1",
-            "$ModuleRootPath\Shared\Edit-CiPolicyRuleOptions.psm1",
+            "$ModuleRootPath\Shared\Set-CiRuleOptions.psm1",
             "$ModuleRootPath\Shared\New-StagingArea.psm1"
         )
 
@@ -183,7 +183,7 @@ Function New-SupplementalWDACConfig {
                 Write-Verbose -Message 'Setting the Supplemental policy version to 1.0.0.0'
                 Set-CIPolicyVersion -FilePath $FinalSupplementalPath -Version '1.0.0.0'
 
-                Edit-CiPolicyRuleOptions -Action Supplemental -XMLFile $FinalSupplementalPath
+                Set-CiRuleOptions -Action Supplemental -XMLFile $FinalSupplementalPath
 
                 Write-Verbose -Message 'Converting the Supplemental policy XML file to a CIP file'
                 ConvertFrom-CIPolicy -XmlFilePath $FinalSupplementalPath -BinaryFilePath $FinalSupplementalCIPPath | Out-Null
@@ -224,7 +224,7 @@ Function New-SupplementalWDACConfig {
                 Write-Verbose -Message 'Setting the Supplemental policy version to 1.0.0.0'
                 Set-CIPolicyVersion -FilePath $FinalSupplementalPath -Version '1.0.0.0'
 
-                Edit-CiPolicyRuleOptions -Action Supplemental -XMLFile $FinalSupplementalPath
+                Set-CiRuleOptions -Action Supplemental -XMLFile $FinalSupplementalPath
 
                 Write-Verbose -Message 'Converting the Supplemental policy XML file to a CIP file'
                 ConvertFrom-CIPolicy -XmlFilePath $FinalSupplementalPath -BinaryFilePath $FinalSupplementalCIPPath | Out-Null
@@ -302,7 +302,7 @@ Function New-SupplementalWDACConfig {
                         Write-Verbose -Message 'Setting the Supplemental policy version to 1.0.0.0'
                         Set-CIPolicyVersion -FilePath $FinalSupplementalPath -Version '1.0.0.0'
 
-                        Edit-CiPolicyRuleOptions -Action Supplemental -XMLFile $FinalSupplementalPath
+                        Set-CiRuleOptions -Action Supplemental -XMLFile $FinalSupplementalPath
 
                         Write-Verbose -Message 'Converting the Supplemental policy XML file to a CIP file'
                         ConvertFrom-CIPolicy -XmlFilePath $FinalSupplementalPath -BinaryFilePath $FinalSupplementalCIPPath | Out-Null
@@ -416,7 +416,7 @@ Function New-SupplementalWDACConfig {
                 Write-Verbose -Message 'Setting the Supplemental policy version to 1.0.0.0'
                 Set-CIPolicyVersion -FilePath $FinalSupplementalPath -Version '1.0.0.0'
 
-                Edit-CiPolicyRuleOptions -Action Supplemental -XMLFile $FinalSupplementalPath
+                Set-CiRuleOptions -Action Supplemental -XMLFile $FinalSupplementalPath
 
                 Write-Verbose -Message 'Converting the Supplemental policy XML file to a CIP file'
                 ConvertFrom-CIPolicy -XmlFilePath $FinalSupplementalPath -BinaryFilePath $FinalSupplementalCIPPath | Out-Null

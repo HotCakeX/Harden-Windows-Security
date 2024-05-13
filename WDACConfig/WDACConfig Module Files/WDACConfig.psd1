@@ -218,7 +218,7 @@ This is an advanced PowerShell module for WDAC (Windows Defender Application Con
         'Shared\Copy-CiRules.psm1',
         'Shared\Remove-SupplementalSigners.psm1',
         'Shared\Receive-CodeIntegrityLogs.psm1',
-        'Shared\Edit-CiPolicyRuleOptions.psm1',
+        'Shared\Set-CiRuleOptions.psm1',
         'Shared\New-AppxPackageCiPolicy.psm1',
         'Shared\New-StagingArea.psm1',
         'Shared\Set-LogPropertiesVisibility.psm1',

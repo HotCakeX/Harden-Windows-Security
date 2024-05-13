@@ -25,7 +25,7 @@ Function Set-CiRuleOptions {
         Boolean parameter, if set to true, removes the rule option that allows unsigned system integrity policy, if set to false, adds that rule option.
     .PARAMETER RemoveAll
         Removes all the existing rule options from the policy XML file
-    .PARAMETER XMLFile
+    .PARAMETER FilePath
         Specifies the path to the XML file that contains the CI policy rules
     .INPUTS
         System.Management.Automation.SwitchParameter
@@ -69,7 +69,7 @@ Function Set-CiRuleOptions {
         [Parameter(Mandatory = $false, ParameterSetName = 'RemoveAll')]
         [System.Management.Automation.SwitchParameter]$RemoveAll,
 
-        [Parameter(Mandatory = $true)][System.IO.FileInfo]$XMLFile
+        [Parameter(Mandatory = $true)][System.IO.FileInfo]$FilePath
     )
     Begin {
         # Importing the $PSDefaultParameterValues to the current session, prior to everything else
@@ -134,7 +134,7 @@ Function Set-CiRuleOptions {
         #Endregion Validating current Intel data
 
         # Load the XML file
-        [System.Xml.XmlDocument]$Xml = Get-Content -Path $XMLFile
+        [System.Xml.XmlDocument]$Xml = Get-Content -Path $FilePath
 
         # Define the namespace manager
         [System.Xml.XmlNamespaceManager]$Ns = New-Object -TypeName System.Xml.XmlNamespaceManager -ArgumentList $Xml.NameTable
@@ -251,14 +251,14 @@ Function Set-CiRuleOptions {
         }
     }
     End {
-        $Xml.Save($XMLFile)
+        $Xml.Save($FilePath)
 
         # Close the empty XML nodes
-        Close-EmptyXmlNodes_Semantic -XmlFilePath $XMLFile
+        Close-EmptyXmlNodes_Semantic -XmlFilePath $FilePath
 
-        Set-HVCIOptions -Strict -FilePath $XMLFile
+        Set-HVCIOptions -Strict -FilePath $FilePath
 
-        Test-CiPolicy -XmlFile $XMLFile | Out-Null
+        Test-CiPolicy -XmlFile $FilePath | Out-Null
     }
 }
 Export-ModuleMember -Function 'Set-CiRuleOptions'

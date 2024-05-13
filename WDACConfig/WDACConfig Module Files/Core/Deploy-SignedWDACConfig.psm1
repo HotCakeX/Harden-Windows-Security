@@ -175,7 +175,7 @@ Function Deploy-SignedWDACConfig {
                 Set-HVCIOptions -Strict -FilePath $PolicyPath
 
                 Write-Verbose -Message 'Removing the Unsigned mode option from the policy rules'
-                Set-RuleOption -FilePath $PolicyPath -Option 6 -Delete
+                Set-CiRuleOptions -FilePath $PolicyPath -SignedPolicy $true
 
                 [system.io.FileInfo]$PolicyCIPPath = Join-Path -Path $StagingArea -ChildPath "$PolicyID.cip"
 

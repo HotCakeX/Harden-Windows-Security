@@ -1,75 +1,38 @@
 Function Set-CiRuleOptions {
-    <#
-    .SYNOPSIS
-        Configures the Policy rule options in a given XML file and sets the HVCI to Strict in the output XML file.
-        This function is completely self-sufficient and does not rely on built-in modules.
-    .PARAMETER CustomOptions
-        Specifies the custom rule options to be added or removed from the policy XML file. By default, the rule options are added.
-    .PARAMETER Remove
-        Specifies whether to remove the custom rule options from the policy XML file.
-    .PARAMETER Base
-        Configures the rule options for a base policy that is based on AllowMicrosoft or DefaultWindows templates
-    .PARAMETER BaseISG
-        Configures the rule options for a base policy that is based on AllowMicrosoft or DefaultWindows templates and uses ISG rule options (Intelligent Security Graph)
-    .PARAMETER BaseKernelMode
-        Configures the rule options for Strict Kernel-mode policy
-    .PARAMETER Supplemental
-        Configures the rule options for Supplemental policies
-    .PARAMETER TestMode
-        Boolean parameter, if set to true, adds the rule options suitable for testing a CI policy, if set to false, removes those rule options.
-    .PARAMETER AuditMode
-        Boolean parameter, if set to true, adds the rule option for auditing a CI policy, if set to false, removes that rule options.
-    .PARAMETER EVCertsRequirements
-        Boolean parameter, if set to true, adds the rule option that requires EV Signers, if set to false, removes that rule option.
-    .PARAMETER SignedPolicy
-        Boolean parameter, if set to true, removes the rule option that allows unsigned system integrity policy, if set to false, adds that rule option.
-    .PARAMETER RemoveAll
-        Removes all the existing rule options from the policy XML file
-    .PARAMETER FilePath
-        Specifies the path to the XML file that contains the CI policy rules
-    .INPUTS
-        System.Management.Automation.SwitchParameter
-        System.IO.FileInfo
-        System.Int32[]
-        System.Boolean
-    .OUTPUTS
-        System.Void
-    #>
     [CmdletBinding(DefaultParameterSetName = 'All')]
     [OutputType([System.Void])]
     param (
+        [ValidateSet('Base', 'BaseISG', 'BaseKernel', 'Supplemental')]
+        [Parameter(Mandatory = $false, ParameterSetName = 'Template')]
+        [System.String]$Template,
 
-        [Parameter(Mandatory = $false, ParameterSetName = 'Custom')]
-        [ValidateSet([RuleOptionNumberx])]
-        [System.Int32[]]$CustomOptions,
+        [ValidateScript({ Test-CiPolicy -XmlFile $_ })]
+        [Parameter(Mandatory = $true)][System.IO.FileInfo]$FilePath,
 
-        [Parameter(Mandatory = $false, ParameterSetName = 'Custom')]
-        [System.Management.Automation.SwitchParameter]$Remove,
+        [ValidateScript({
+                if ($_ -notin [RuleOptionsx]::new().GetValidValues()) { throw "Invalid Policy Rule Option: $_" }
+                # Return true if everything is okay
+                $true
+            })]
+        [Parameter(Mandatory = $false)][System.String[]]$RulesToAdd,
 
-        [Parameter(Mandatory = $false, ParameterSetName = 'Base')]
-        [System.Management.Automation.SwitchParameter]$Base,
+        [ValidateScript({
+                if ($_ -notin [RuleOptionsx]::new().GetValidValues()) { throw "Invalid Policy Rule Option: $_" }
+                # Return true if everything is okay
+                $true
+            })]
+        [Parameter(Mandatory = $false)][System.String[]]$RulesToRemove,
 
-        [Parameter(Mandatory = $false, ParameterSetName = 'BaseISG')]
-        [System.Management.Automation.SwitchParameter]$BaseISG,
-
-        [Parameter(Mandatory = $false, ParameterSetName = 'BaseKernel')]
-        [System.Management.Automation.SwitchParameter]$BaseKernelMode,
-
-        [Parameter(Mandatory = $false, ParameterSetName = 'Supplemental')]
-        [System.Management.Automation.SwitchParameter]$Supplemental,
-
+        [Parameter(Mandatory = $false)][System.Boolean]$RequireWHQL,
+        [Parameter(Mandatory = $false)][System.Boolean]$EnableAuditMode,
+        [Parameter(Mandatory = $false)][System.Boolean]$DisableFlightSigning,
+        [Parameter(Mandatory = $false)][System.Boolean]$EnableUnsignedSystemIntegrityPolicy,
+        [Parameter(Mandatory = $false)][System.Boolean]$RequireEVSigners,
+        [Parameter(Mandatory = $false)][System.Boolean]$ScriptEnforcement,
         [Parameter(Mandatory = $false)][System.Boolean]$TestMode,
 
-        [Parameter(Mandatory = $false)][System.Boolean]$AuditMode,
-
-        [Parameter(Mandatory = $false)][System.Boolean]$EVCertsRequirements,
-
-        [Parameter(Mandatory = $false)][System.Boolean]$SignedPolicy,
-
         [Parameter(Mandatory = $false, ParameterSetName = 'RemoveAll')]
-        [System.Management.Automation.SwitchParameter]$RemoveAll,
-
-        [Parameter(Mandatory = $true)][System.IO.FileInfo]$FilePath
+        [System.Management.Automation.SwitchParameter]$RemoveAll
     )
     Begin {
         # Importing the $PSDefaultParameterValues to the current session, prior to everything else
@@ -77,61 +40,7 @@ Function Set-CiRuleOptions {
 
         Import-Module -FullyQualifiedName "$ModuleRootPath\XMLOps\Close-EmptyXmlNodes_Semantic.psm1" -Force
 
-        Class RuleOptionNumberx : System.Management.Automation.IValidateSetValuesGenerator {
-            [System.String[]] GetValidValues() {
-                $RuleOptionNumberx = @(0..6 + 8..20)
-                return [System.String[]]$RuleOptionNumberx
-            }
-        }
-
-        [System.Management.Automation.OrderedHashtable]$Intel = @{
-            '0'   = 'Enabled:UMCI'
-            '1'   = 'Enabled:Boot Menu Protection'
-            '2'   = 'Required:WHQL'
-            '3'   = 'Enabled:Audit Mode'
-            '4'   = 'Disabled:Flight Signing'
-            '5'   = 'Enabled:Inherit Default Policy'
-            '6'   = 'Enabled:Unsigned System Integrity Policy'
-            '8'   = 'Required:EV Signers'
-            '9'   = 'Enabled:Advanced Boot Options Menu'
-            '10'  = 'Enabled:Boot Audit On Failure'
-            '11'  = 'Disabled:Script Enforcement'
-            '12'  = 'Required:Enforce Store Applications'
-            '13'  = 'Enabled:Managed Installer'
-            '14'  = 'Enabled:Intelligent Security Graph Authorization'
-            '15'  = 'Enabled:Invalidate EAs on Reboot'
-            '16'  = 'Enabled:Update Policy No Reboot'
-            '17'  = 'Enabled:Allow Supplemental Policies'
-            '18'  = 'Disabled:Runtime FilePath Rule Protection'
-            '19'  = 'Enabled:Dynamic Code Security'
-            '20'  = 'Enabled:Revoked Expired As Unsigned'
-            '100' = 'Enabled:Developer Mode Dynamic Code Trust'
-            '101' = 'Enabled:Windows Lockdown Trial Mode'
-            '102' = 'Enabled:Secure Setting Policy'
-            '103' = 'Enabled:Conditional Windows Lockdown Policy'
-        }
-
-        #Region Validating current Intel data
-
-        # Get the CI Schema content
-        [System.Xml.XmlDocument]$SchemaData = Get-Content -Path $CISchemaPath
-
-        # Get the valid rule options from the schema
-        $ValidOptions = [System.Collections.Generic.HashSet[System.String]] @(($SchemaData.schema.simpleType | Where-Object -FilterScript { $_.name -eq 'OptionType' }).restriction.enumeration.Value)
-
-        # Perform validation to make sure the current intel is valid in the CI Schema
-        foreach ($Key in $Intel.Values) {
-            if (-NOT $ValidOptions.Contains($Key)) {
-                Throw "Invalid Policy Rule Option detected that is not part of the Code Integrity Schema: $Key"
-            }
-        }
-
-        foreach ($Option in $ValidOptions) {
-            if (-NOT $Intel.Values.Contains($Option)) {
-                Write-Verbose -Message "Set-CiRuleOptions: Rule option '$Option' exists in the Code Integrity Schema but not being used by the module." -Verbose
-            }
-        }
-        #Endregion Validating current Intel data
+        [System.Collections.Hashtable]$Intel = ConvertFrom-Json -AsHashtable -InputObject (Get-Content -Path "$ModuleRootPath\Resources\PolicyRuleOptions.Json" -Raw)
 
         # Load the XML file
         [System.Xml.XmlDocument]$Xml = Get-Content -Path $FilePath
@@ -154,19 +63,23 @@ Function Set-CiRuleOptions {
         $BaseISGRules = [System.Collections.Generic.HashSet[System.Int32]] @(0, 2, 5, 6, 11, 12, 14, 15, 16, 17, 19, 20)
         $BaseKernelModeRules = [System.Collections.Generic.HashSet[System.Int32]] @(2, 5, 6, 16, 17, 20)
         $SupplementalRules = [System.Collections.Generic.HashSet[System.Int32]] @(18)
+        $RequireWHQLRules = [System.Collections.Generic.HashSet[System.Int32]] @(2)
+        $EnableAuditModeRules = [System.Collections.Generic.HashSet[System.Int32]] @(3)
+        $DisableFlightSigningRules = [System.Collections.Generic.HashSet[System.Int32]] @(4)
+        $EnableUnsignedSystemIntegrityPolicyRules = [System.Collections.Generic.HashSet[System.Int32]] @(6)
+        $RequireEVSignersRules = [System.Collections.Generic.HashSet[System.Int32]] @(8)
+        $ScriptEnforcementRules = [System.Collections.Generic.HashSet[System.Int32]] @(11)
         $TestModeRules = [System.Collections.Generic.HashSet[System.Int32]] @(9, 10)
-        $AuditRules = [System.Collections.Generic.HashSet[System.Int32]] @(3)
-        $RequireEVCertsRules = [System.Collections.Generic.HashSet[System.Int32]] @(8)
 
         # A flag to determine whether to clear all the existing rules based on the input parameters
-        if ($PSBoundParameters['Base'] -or $PSBoundParameters['BaseISG'] -or $PSBoundParameters['BaseKernelMode'] -or $PSBoundParameters['Supplemental'] -or $PSBoundParameters['RemoveAll']) {
+        if ($PSBoundParameters['Template'] -or $PSBoundParameters['RemoveAll']) {
             [System.Boolean]$ClearAllRules = $true
         }
         else {
             [System.Boolean]$ClearAllRules = $False
         }
 
-        # Iterating through each <Rule> node
+        # Iterating through each <Rule> node in the supplied XML file
         foreach ($RuleNode in $RulesNode.SelectNodes('ns:Rule', $Ns)) {
             # Get the option text from the <Option> node
             [System.String]$OptionText = $RuleNode.SelectSingleNode('ns:Option', $Ns).InnerText
@@ -184,33 +97,47 @@ Function Set-CiRuleOptions {
             # Add the existing rule options to the final rule options to implement
             $RuleOptionsToImplement.UnionWith([System.Collections.Generic.HashSet[System.Int32]]@($ExistingRuleOptions.Keys))
         }
-
-        # Process custom rule options and skip template based rule options
-        if ($PSCmdlet.ParameterSetName -eq 'Custom') {
-            if ($PSBoundParameters['Remove']) {
-                [System.Void]$RuleOptionsToImplement.ExceptWith($CustomOptions)
-            }
-            else {
-                $RuleOptionsToImplement.UnionWith($CustomOptions)
-            }
-        }
         else {
-            switch ($true) {
-                $ClearAllRules { $RuleOptionsToImplement.Clear() }
-                $PSBoundParameters['Base'] { $RuleOptionsToImplement.UnionWith($BaseRules) }
-                $PSBoundParameters['BaseISG'] { $RuleOptionsToImplement.UnionWith($BaseISGRules) }
-                $PSBoundParameters['BaseKernelMode'] { $RuleOptionsToImplement.UnionWith($BaseKernelModeRules) }
-                $PSBoundParameters['Supplemental'] { $RuleOptionsToImplement.UnionWith($SupplementalRules) }
-                { $PSBoundParameters['SignedPolicy'] -eq $true } { [System.Void]$RuleOptionsToImplement.Remove(6) }
-                { $PSBoundParameters['SignedPolicy'] -eq $false } { [System.Void]$RuleOptionsToImplement.Add(6) }
-                { $PSBoundParameters['TestMode'] -eq $true } { $RuleOptionsToImplement.UnionWith($TestModeRules) }
-                { $PSBoundParameters['TestMode'] -eq $false } { [System.Void]$RuleOptionsToImplement.ExceptWith($TestModeRules) }
-                { $PSBoundParameters['AuditMode'] -eq $true } { $RuleOptionsToImplement.UnionWith($AuditRules) }
-                { $PSBoundParameters['AuditMode'] -eq $false } { [System.Void]$RuleOptionsToImplement.ExceptWith($AuditRules) }
-                { $PSBoundParameters['EVCertsRequirements'] -eq $true } { $RuleOptionsToImplement.UnionWith($RequireEVCertsRules) }
-                { $PSBoundParameters['EVCertsRequirements'] -eq $false } { [System.Void]$RuleOptionsToImplement.ExceptWith($RequireEVCertsRules) }
-            }
+            $RuleOptionsToImplement.Clear()
         }
+
+        # Process selected templates
+        switch ($Template) {
+            'Base' { $RuleOptionsToImplement.UnionWith($BaseRules) }
+            'BaseISG' { $RuleOptionsToImplement.UnionWith($BaseISGRules) }
+            'BaseKernelMode' { $RuleOptionsToImplement.UnionWith($BaseKernelModeRules) }
+            'Supplemental' { $RuleOptionsToImplement.UnionWith($SupplementalRules) }
+        }
+
+        # Process individual boolean parameters
+        switch ($true) {
+            { $RequireWHQL -eq $true } { $RuleOptionsToImplement.UnionWith($RequireWHQLRules) }
+            { $RequireWHQL -eq $false } { $RuleOptionsToImplement.ExceptWith($RequireWHQLRules) }
+            { $EnableAuditMode -eq $true } { $RuleOptionsToImplement.UnionWith($EnableAuditModeRules) }
+            { $EnableAuditMode -eq $false } { $RuleOptionsToImplement.ExceptWith($EnableAuditModeRules) }
+            { $DisableFlightSigning -eq $true } { $RuleOptionsToImplement.UnionWith($DisableFlightSigningRules) }
+            { $DisableFlightSigning -eq $false } { $RuleOptionsToImplement.ExceptWith($DisableFlightSigningRules) }
+            { $EnableUnsignedSystemIntegrityPolicy -eq $true } { $RuleOptionsToImplement.UnionWith($EnableUnsignedSystemIntegrityPolicyRules) }
+            { $EnableUnsignedSystemIntegrityPolicy -eq $false } { $RuleOptionsToImplement.ExceptWith($EnableUnsignedSystemIntegrityPolicyRules) }
+            { $RequireEVSigners -eq $true } { $RuleOptionsToImplement.UnionWith($RequireEVSignersRules) }
+            { $RequireEVSigners -eq $false } { $RuleOptionsToImplement.ExceptWith($RequireEVSignersRules) }
+            { $ScriptEnforcement -eq $false } { $RuleOptionsToImplement.UnionWith($ScriptEnforcementRules) }
+            { $ScriptEnforcement -eq $true } { $RuleOptionsToImplement.ExceptWith($ScriptEnforcementRules) }
+            { $TestMode -eq $true } { $RuleOptionsToImplement.UnionWith($TestModeRules) }
+            { $TestMode -eq $false } { $RuleOptionsToImplement.ExceptWith($TestModeRules) }
+        }
+
+        # Process individual rules to add
+        foreach ($Item in $RulesToAdd) {
+            [System.Int32]$Key = $Intel.Keys | Where-Object -FilterScript { $Intel[$_] -eq $Item }
+            [System.Void]$RuleOptionsToImplement.Add($Key)
+        }
+        # Process individual rules to  remove
+        foreach ($Item in $RulesToRemove) {
+            [System.Int32]$Key = $Intel.Keys | Where-Object -FilterScript { $Intel[$_] -eq $Item }
+            [System.Void]$RuleOptionsToImplement.Remove($Key)
+        }
+
     }
     Process {
 
@@ -256,11 +183,84 @@ Function Set-CiRuleOptions {
         # Close the empty XML nodes
         Close-EmptyXmlNodes_Semantic -XmlFilePath $FilePath
 
+        # Set the HVCI to Strict
         Set-HVCIOptions -Strict -FilePath $FilePath
 
+        # Validate the XML file at the end
         Test-CiPolicy -XmlFile $FilePath | Out-Null
     }
+    <#
+    .SYNOPSIS
+        Configures the Policy rule options in a given XML file and sets the HVCI to Strict in the output XML file.
+        This function is completely self-sufficient and does not rely on built-in modules.
+    .DESCRIPTION
+        It offers many ways to configure the policy rule options in a given XML file.
+        All of its various parameters provide the flexibility that ensures only one pass is needed to configure the policy rule options.
+    .LINK
+        https://github.com/HotCakeX/Harden-Windows-Security/wiki/Set-CiRuleOptions
+    .PARAMETER Template
+        Specifies the template to use for the CI policy rules: Base, BaseISG, BaseKernel, or Supplemental
+    .PARAMETER RulesToAdd
+        Specifies the rule options to add to the policy XML file
+        If a rule option is already selected by the RulesToRemove parameter, it won't be suggested by the argument completer of this parameter.
+    .PARAMETER RulesToRemove
+        Specifies the rule options to remove from the policy XML file
+        If a rule option is already selected by the RulesToAdd parameter, it won't be suggested by the argument completer of this parameter.
+    .PARAMETER RemoveAll
+        Removes all the existing rule options from the policy XML file
+    .PARAMETER FilePath
+        Specifies the path to the XML file that contains the CI policy rules
+    .PARAMETER RequireWHQL
+        Specifies whether to require WHQL signatures for all drivers
+    .PARAMETER EnableAuditMode
+        Specifies whether to enable audit mode
+    .PARAMETER DisableFlightSigning
+        Specifies whether to disable flight signing
+    .PARAMETER EnableUnsignedSystemIntegrityPolicy
+        Specifies whether to enable the unsigned system integrity policy
+    .PARAMETER RequireEVSigners
+        Specifies whether to require EV signers
+    .PARAMETER DisableScriptEnforcement
+        Specifies whether to disable script enforcement
+    .PARAMETER TestMode
+        Specifies whether to enable test mode
+    .NOTES
+        First the template is processed, then the individual boolean parameters, and finally the individual rules to add and remove.
+    .INPUTS
+        System.Management.Automation.SwitchParameter
+        System.IO.FileInfo
+        System.String[]
+        System.String
+    .OUTPUTS
+        System.Void
+    #>
 }
+# Note: This argument completer suggest rule options that are not already selected on the command line by *any* other parameter
+# It currently doesn't make a distinction between the RulesToAdd/RulesToRemove parameters and other parameters.
+[System.Management.Automation.ScriptBlock]$RuleOptionsScriptBlock = {
+    # Get the current command and the already bound parameters
+    param($CommandName, $ParameterName, $WordToComplete, $CommandAst, $FakeBoundParameters)
+
+    # Find all string constants in the AST
+    $Existing = $CommandAst.FindAll(
+        # The predicate scriptblock to define the criteria for filtering the AST nodes
+        {
+            $Args[0] -is [System.Management.Automation.Language.StringConstantExpressionAst]
+        },
+        # The recurse flag, whether to search nested scriptblocks or not.
+        $false
+    ).Value
+
+    [RuleOptionsx]::new().GetValidValues() | ForEach-Object -Process {
+        # Check if the item is already selected
+        if ($_ -notin $Existing) {
+            # Return the item
+            "'$_'"
+        }
+    }
+}
+Register-ArgumentCompleter -CommandName 'Set-CiRuleOptions' -ParameterName 'RulesToAdd' -ScriptBlock $RuleOptionsScriptBlock
+Register-ArgumentCompleter -CommandName 'Set-CiRuleOptions' -ParameterName 'RulesToRemove' -ScriptBlock $RuleOptionsScriptBlock
 Export-ModuleMember -Function 'Set-CiRuleOptions'
 
 # SIG # Begin signature block

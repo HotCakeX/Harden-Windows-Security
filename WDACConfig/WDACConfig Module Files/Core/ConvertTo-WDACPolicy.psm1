@@ -301,7 +301,6 @@ Function ConvertTo-WDACPolicy {
             "$ModuleRootPath\Shared\Update-Self.psm1",
             "$ModuleRootPath\Shared\Write-ColorfulText.psm1",
             "$ModuleRootPath\Shared\Receive-CodeIntegrityLogs.psm1",
-            "$ModuleRootPath\Shared\Set-CiRuleOptions.psm1",
             "$ModuleRootPath\Shared\New-AppxPackageCiPolicy.psm1",
             "$ModuleRootPath\Shared\New-EmptyPolicy.psm1",
             "$ModuleRootPath\Shared\Get-RuleRefs.psm1",

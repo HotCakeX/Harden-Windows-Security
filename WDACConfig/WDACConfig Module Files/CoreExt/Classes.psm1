@@ -1,5 +1,4 @@
-# Since the quasi-exported classes will be available process-wide
-# and therefore also in other runspaces, defining them with the [NoRunspaceAffinity()] attribute.
+# Classes will be available process-wide and therefore also in other runspaces, defining them with the [NoRunspaceAffinity()] attribute.
 # https://stackoverflow.com/a/78078461/21243735
 # https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_classes#exporting-classes-with-type-accelerators
 
@@ -55,12 +54,45 @@ class ExceptionFailedToGetCertificateCollection : System.Exception {
     }
 }
 
+# a class to define valid policy rule options
+[NoRunspaceAffinity()]
+Class RuleOptionsx : System.Management.Automation.IValidateSetValuesGenerator {
+    [System.String[]] GetValidValues() {
+
+        #Region Validating current Intel data
+        # Get the CI Schema content
+        [System.Xml.XmlDocument]$SchemaData = Get-Content -Path $global:CISchemaPath
+        [System.Collections.Hashtable]$Intel = ConvertFrom-Json -AsHashtable -InputObject (Get-Content -Path "$global:ModuleRootPath\Resources\PolicyRuleOptions.Json" -Raw -Force)
+
+        # Get the valid rule options from the schema
+        $ValidOptions = [System.Collections.Generic.HashSet[System.String]] @(($SchemaData.schema.simpleType | Where-Object -FilterScript { $_.name -eq 'OptionType' }).restriction.enumeration.Value)
+
+        # Perform validation to make sure the current intel is valid in the CI Schema
+        foreach ($Key in $Intel.Values) {
+            if (-NOT $ValidOptions.Contains($Key)) {
+                Throw "Invalid Policy Rule Option detected that is not part of the Code Integrity Schema: $Key"
+            }
+        }
+
+        foreach ($Option in $ValidOptions) {
+            if (-NOT $Intel.Values.Contains($Option)) {
+                Write-Verbose -Message "Set-CiRuleOptions: Rule option '$Option' exists in the Code Integrity Schema but not being used by the module." -Verbose
+            }
+        }
+        #Endregion Validating current Intel data
+
+        $RuleOptionsx = @($Intel.Values)
+        return [System.String[]]$RuleOptionsx
+    }
+}
+
 # Define the types to export with type accelerators.
 [System.Reflection.TypeInfo[]]$ExportableTypes = @(
     [ScanLevelz]
     [CertCNz]
     [BasePolicyNamez]
     [ExceptionFailedToGetCertificateCollection]
+    [RuleOptionsx]
 )
 
 # Get the non-public TypeAccelerators class for defining new accelerators.

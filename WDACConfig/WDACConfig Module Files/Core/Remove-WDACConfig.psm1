@@ -284,8 +284,7 @@ Function Remove-WDACConfig {
                     Write-Verbose -Message 'Making sure SupplementalPolicySigners do not exist in the XML policy'
                     Remove-SupplementalSigners -Path $PolicyPath
 
-                    # Adding policy rule option "Unsigned System Integrity Policy" to the selected XML policy file
-                    Set-RuleOption -FilePath $PolicyPath -Option 6
+                    Set-CiRuleOptions -FilePath $PolicyPath -RulesToAdd 'Enabled:Unsigned System Integrity Policy'
 
                     [System.IO.FileInfo]$PolicyCIPPath = Join-Path -Path $StagingArea -ChildPath "$PolicyID.cip"
 

@@ -94,7 +94,6 @@ Function New-WDACConfig {
         Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Get-RuleRefs.psm1" -Force
         Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Get-FileRules.psm1" -Force
         Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Get-BlockRulesMeta.psm1" -Force
-        Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Set-CiRuleOptions.psm1" -Force
         Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\New-StagingArea.psm1" -Force
         Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Receive-CodeIntegrityLogs.psm1" -Force
 
@@ -222,11 +221,7 @@ Function New-WDACConfig {
                 $CurrentStep++
                 Write-Progress -Id 1 -Activity 'Configuring the policy settings' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
-                Write-Verbose -Message 'Removing the Audit mode policy rule option'
-                Set-RuleOption -FilePath $XMLPath -Option 3 -Delete
-
-                Write-Verbose -Message 'Setting the HVCI option to strict'
-                Set-HVCIOptions -Strict -FilePath $XMLPath
+                Set-CiRuleOptions -FilePath $XMLPath -RulesToRemove 'Enabled:Audit Mode'
 
                 Write-Verbose -Message 'Displaying extra info about the Microsoft recommended Drivers block list'
                 Invoke-Command -ScriptBlock $DriversBlockListInfoGatheringSCRIPTBLOCK
@@ -285,26 +280,13 @@ Function New-WDACConfig {
             $CurrentStep++
             Write-Progress -Id 3 -Activity 'Configuring the policy settings' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
-            Write-Verbose -Message 'Resetting the policy ID and setting a name for AllowMicrosoftPlusBlockRules.xml'
+            Write-Verbose -Message 'Resetting the policy ID and assigning policy name'
             Set-CIPolicyIdInfo -FilePath $FinalPolicyPath -PolicyName "Allow Microsoft Plus Block Rules - $(Get-Date -Format 'MM-dd-yyyy')" -ResetPolicyID | Out-Null
 
             Write-Verbose -Message 'Setting AllowMicrosoftPlusBlockRules.xml policy version to 1.0.0.0'
             Set-CIPolicyVersion -FilePath $FinalPolicyPath -Version '1.0.0.0'
 
-            Set-CiRuleOptions -Action Base -XMLFile $FinalPolicyPath
-
-            if ($TestMode) {
-                Write-Verbose -Message 'Setting "Boot Audit on Failure" and "Advanced Boot Options Menu" policy rule options for the AllowMicrosoftPlusBlockRules.xml policy because TestMode parameter was used'
-                9..10 | ForEach-Object -Process { Set-RuleOption -FilePath $FinalPolicyPath -Option $_ }
-            }
-            if ($RequireEVSigners) {
-                Write-Verbose -Message 'Setting "Required:EV Signers" policy rule option for the AllowMicrosoftPlusBlockRules.xml policy because RequireEVSigners parameter was used'
-                Set-RuleOption -FilePath $FinalPolicyPath -Option 8
-            }
-            if ($EnableScriptEnforcement) {
-                Write-Verbose -Message 'Enabling script enforcement for the policy'
-                Set-RuleOption -FilePath $FinalPolicyPath -Option 11 -Delete
-            }
+            Set-CiRuleOptions -FilePath $FinalPolicyPath -Template Base -TestMode:$TestMode -RequireEVSigners:$RequireEVSigners -ScriptEnforcement:$EnableScriptEnforcement
 
             if ($Deploy) {
                 $CurrentStep++
@@ -386,26 +368,13 @@ Function New-WDACConfig {
             $CurrentStep++
             Write-Progress -Id 7 -Activity 'Configuring policy settings' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
-            Write-Verbose -Message 'Resetting the policy ID and setting a name'
+            Write-Verbose -Message 'Resetting the policy ID and assigning policy name'
             Set-CIPolicyIdInfo -FilePath $FinalPolicyPath -PolicyName "Default Windows Plus Block Rules - $(Get-Date -Format 'MM-dd-yyyy')" -ResetPolicyID | Out-Null
 
             Write-Verbose -Message 'Setting the policy version to 1.0.0.0'
             Set-CIPolicyVersion -FilePath $FinalPolicyPath -Version '1.0.0.0'
 
-            Set-CiRuleOptions -Action Base -XMLFile $FinalPolicyPath
-
-            if ($TestMode) {
-                Write-Verbose -Message 'Setting "Boot Audit on Failure" and "Advanced Boot Options Menu" policy rule options because TestMode parameter was used'
-                9..10 | ForEach-Object -Process { Set-RuleOption -FilePath $FinalPolicyPath -Option $_ }
-            }
-            if ($RequireEVSigners) {
-                Write-Verbose -Message 'Setting "Required:EV Signers" policy rule option because RequireEVSigners parameter was used'
-                Set-RuleOption -FilePath $FinalPolicyPath -Option 8
-            }
-            if ($EnableScriptEnforcement) {
-                Write-Verbose -Message 'Enabling script enforcement for the policy'
-                Set-RuleOption -FilePath $FinalPolicyPath -Option 11 -Delete
-            }
+            Set-CiRuleOptions -FilePath $FinalPolicyPath -Template Base -TestMode:$TestMode -RequireEVSigners:$RequireEVSigners -ScriptEnforcement:$EnableScriptEnforcement
 
             if ($Deploy) {
                 $CurrentStep++
@@ -464,15 +433,11 @@ Function New-WDACConfig {
             $CurrentStep++
             Write-Progress -Id 0 -Activity 'Configuring the policy settings' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
-            Set-CiRuleOptions -Action Base -XMLFile $FinalPolicyPath
             # Remove WHQL requirement since it's a user mode policy and doesn't need to enforce it
-            Set-RuleOption -FilePath $FinalPolicyPath -Option 2 -Delete
+            Set-CiRuleOptions -FilePath $FinalPolicyPath -Template Base -RulesToRemove 'Required:WHQL'
 
-            Write-Verbose -Message 'Resetting the policy ID'
-            Set-CIPolicyIdInfo -FilePath $FinalPolicyPath -ResetPolicyID | Out-Null
-
-            Write-Verbose -Message 'Assigning a name to the policy'
-            Set-CIPolicyIdInfo -PolicyName "Microsoft Windows User Mode Policy - Enforced - $(Get-Date -Format 'MM-dd-yyyy')" -FilePath $FinalPolicyPath
+            Write-Verbose -Message 'Resetting the policy ID and assigning policy name'
+            Set-CIPolicyIdInfo -FilePath $FinalPolicyPath -ResetPolicyID -PolicyName "Microsoft Windows User Mode Policy - Enforced - $(Get-Date -Format 'MM-dd-yyyy')" | Out-Null
 
             Write-Verbose -Message 'Converting the policy file to .CIP binary'
             ConvertFrom-CIPolicy -XmlFilePath $FinalPolicyPath -BinaryFilePath (Join-Path -Path $StagingArea -ChildPath 'UserModeBlockRules.cip') | Out-Null
@@ -582,22 +547,13 @@ Function New-WDACConfig {
             Write-Verbose -Message 'Copying AllowMicrosoft.xml from Windows directory to the Staging Area'
             Copy-Item -Path 'C:\Windows\schemas\CodeIntegrity\ExamplePolicies\AllowMicrosoft.xml' -Destination $FinalPolicyPath -Force
 
-            Write-Verbose -Message 'Enabling Audit mode and disabling script enforcement'
-            3, 11 | ForEach-Object -Process { Set-RuleOption -FilePath $FinalPolicyPath -Option $_ }
-
             $CurrentStep++
             Write-Progress -Id 5 -Activity 'Configuring the policy settings' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
-            Write-Verbose -Message 'Resetting the Policy ID'
-            Set-CIPolicyIdInfo -FilePath $FinalPolicyPath -ResetPolicyID | Out-Null
+            Write-Verbose -Message 'Resetting the Policy ID and assigning policy name'
+            Set-CIPolicyIdInfo -FilePath $FinalPolicyPath -ResetPolicyID -PolicyName 'PrepMSFTOnlyAudit' | Out-Null
 
-            Write-Verbose -Message 'Assigning "PrepMSFTOnlyAudit" as the policy name'
-            Set-CIPolicyIdInfo -PolicyName 'PrepMSFTOnlyAudit' -FilePath $FinalPolicyPath
-
-            if ($EnableScriptEnforcement) {
-                Write-Verbose -Message 'Enabling script enforcement for the policy'
-                Set-RuleOption -FilePath $FinalPolicyPath -Option 11 -Delete
-            }
+            Set-CiRuleOptions -FilePath $FinalPolicyPath -RulesToAdd 'Enabled:Audit Mode' -ScriptEnforcement:$EnableScriptEnforcement
 
             if ($Deploy) {
                 $CurrentStep++
@@ -676,19 +632,10 @@ Function New-WDACConfig {
             $CurrentStep++
             Write-Progress -Id 8 -Activity 'Configuring the policy settings' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
-            Write-Verbose -Message 'Enabling Audit mode and disabling script enforcement'
-            3, 11 | ForEach-Object -Process { Set-RuleOption -FilePath $FinalPolicyPath -Option $_ }
+            Write-Verbose -Message 'Resetting the Policy ID and assigning policy name'
+            Set-CIPolicyIdInfo -FilePath $FinalPolicyPath -ResetPolicyID -PolicyName 'PrepDefaultWindows' | Out-Null
 
-            Write-Verbose -Message 'Resetting the Policy ID'
-            Set-CIPolicyIdInfo -FilePath $FinalPolicyPath -ResetPolicyID | Out-Null
-
-            Write-Verbose -Message 'Assigning "PrepDefaultWindowsAudit" as the policy name'
-            Set-CIPolicyIdInfo -PolicyName 'PrepDefaultWindows' -FilePath $FinalPolicyPath
-
-            if ($EnableScriptEnforcement) {
-                Write-Verbose -Message 'Enabling script enforcement for the policy'
-                Set-RuleOption -FilePath $FinalPolicyPath -Option 11 -Delete
-            }
+            Set-CiRuleOptions -FilePath $FinalPolicyPath -RulesToAdd 'Enabled:Audit Mode' -ScriptEnforcement:$EnableScriptEnforcement
 
             if ($Deploy) {
                 $CurrentStep++
@@ -758,14 +705,8 @@ Function New-WDACConfig {
                 }
             }
 
-            if ($TestMode) {
-                Write-Verbose -Message 'Setting "Boot Audit on Failure" and "Advanced Boot Options Menu" policy rule options because TestMode parameter was used'
-                9..10 | ForEach-Object -Process { Set-RuleOption -FilePath $FinalPolicyPath -Option $_ }
-            }
-            if ($RequireEVSigners) {
-                Write-Verbose -Message 'Setting "Required:EV Signers" policy rule option because RequireEVSigners parameter was used'
-                Set-RuleOption -FilePath $FinalPolicyPath -Option 8
-            }
+            Set-CiRuleOptions -FilePath $FinalPolicyPath -TestMode:$TestMode -RequireEVSigners:$RequireEVSigners
+
             #Endregion Base-Policy-Processing
 
             #Region Supplemental-Policy-Processing
@@ -832,7 +773,7 @@ Function New-WDACConfig {
             Write-Verbose -Message 'Convert the SupplementalPolicy.xml policy file from base policy to supplemental policy of our base policy'
             Set-CIPolicyIdInfo -FilePath $FinalSupplementalPath -PolicyName "Supplemental Policy made from Audit Event Logs on $(Get-Date -Format 'MM-dd-yyyy')" -ResetPolicyID -BasePolicyToSupplementPath $FinalPolicyPath | Out-Null
 
-            Set-CiRuleOptions -Action Supplemental -XMLFile $FinalSupplementalPath
+            Set-CiRuleOptions -FilePath $FinalSupplementalPath -Template Supplemental
 
             $CurrentStep++
             Write-Progress -Id 4 -Activity 'Generating the CIP files' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
@@ -911,28 +852,14 @@ Function New-WDACConfig {
             Build-AllowMSFTWithBlockRules -SavePath $FinalPolicyPath
 
             $CurrentStep++
-            Write-Progress -Id 6 -Activity 'Configuring the policy settings' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
-
-            Write-Verbose -Message 'Setting the policy rule options'
-            @(14, 15) | ForEach-Object -Process { Set-RuleOption -FilePath $FinalPolicyPath -Option $_ }
-
-            $CurrentStep++
             Write-Progress -Id 6 -Activity 'Configuring the policy rule options' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
-            if ($TestMode) {
-                Write-Verbose -Message 'Setting "Boot Audit on Failure" and "Advanced Boot Options Menu" policy rule options because TestMode parameter was used'
-                9..10 | ForEach-Object -Process { Set-RuleOption -FilePath $FinalPolicyPath -Option $_ }
-            }
-            if ($RequireEVSigners) {
-                Write-Verbose -Message 'Setting "Required:EV Signers" policy rule option because RequireEVSigners parameter was used'
-                Set-RuleOption -FilePath $FinalPolicyPath -Option 8
-            }
-            if ($EnableScriptEnforcement) {
-                Write-Verbose -Message 'Enabling script enforcement for the policy'
-                Set-RuleOption -FilePath $FinalPolicyPath -Option 11 -Delete
-            }
+            Set-CiRuleOptions -FilePath $FinalPolicyPath -Template BaseISG -TestMode:$TestMode -RequireEVSigners:$RequireEVSigners -ScriptEnforcement:$EnableScriptEnforcement
 
-            Write-Verbose -Message 'Resetting the policy ID and setting a name for the policy'
+            $CurrentStep++
+            Write-Progress -Id 6 -Activity 'Configuring the policy settings' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
+
+            Write-Verbose -Message 'Resetting the policy ID and assigning policy name'
             Set-CIPolicyIdInfo -FilePath $FinalPolicyPath -ResetPolicyID -PolicyName "Signed And Reputable policy - $(Get-Date -Format 'MM-dd-yyyy')" | Out-Null
 
             Write-Verbose -Message 'Setting the policy version to 1.0.0.0'

@@ -196,15 +196,13 @@ Function Edit-WDACConfig {
 
                 Write-Verbose -Message 'Creating Audit Mode CIP'
                 [System.IO.FileInfo]$AuditModeCIPPath = Join-Path -Path $StagingArea -ChildPath 'AuditMode.cip'
-                # Add Audit mode policy rule option
-                Set-RuleOption -FilePath $PolicyPath -Option 3
+                Set-CiRuleOptions -FilePath $PolicyPath -RulesToAdd 'Enabled:Audit Mode'
                 # Create CIP for Audit Mode
                 ConvertFrom-CIPolicy -XmlFilePath $PolicyPath -BinaryFilePath $AuditModeCIPPath | Out-Null
 
                 Write-Verbose -Message 'Creating Enforced Mode CIP'
                 [System.IO.FileInfo]$EnforcedModeCIPPath = Join-Path -Path $StagingArea -ChildPath 'EnforcedMode.cip'
-                # Remove Audit mode policy rule option
-                Set-RuleOption -FilePath $PolicyPath -Option 3 -Delete
+                Set-CiRuleOptions -FilePath $PolicyPath -RulesToRemove 'Enabled:Audit Mode'
                 # Create CIP for Enforced Mode
                 ConvertFrom-CIPolicy -XmlFilePath $PolicyPath -BinaryFilePath $EnforcedModeCIPPath | Out-Null
 
@@ -335,7 +333,7 @@ Function Edit-WDACConfig {
                 [System.String]$SuppPolicyID = Set-CIPolicyIdInfo -FilePath $SuppPolicyPath -PolicyName "$SuppPolicyName - $(Get-Date -Format 'MM-dd-yyyy')" -ResetPolicyID -BasePolicyToSupplementPath $PolicyPath
                 $SuppPolicyID = $SuppPolicyID.Substring(11)
 
-                Set-CiRuleOptions -Action Supplemental -XMLFile $SuppPolicyPath
+                Set-CiRuleOptions -FilePath $SuppPolicyPath -Template Supplemental
 
                 Write-Verbose -Message 'Setting the Supplemental policy version to 1.0.0.0'
                 Set-CIPolicyVersion -FilePath $SuppPolicyPath -Version '1.0.0.0'
@@ -400,15 +398,13 @@ Function Edit-WDACConfig {
 
                 Write-Verbose -Message 'Creating Audit Mode CIP'
                 [System.IO.FileInfo]$AuditModeCIPPath = Join-Path -Path $StagingArea -ChildPath 'AuditMode.cip'
-                # Add Audit mode policy rule option
-                Set-RuleOption -FilePath $PolicyPath -Option 3
+                Set-CiRuleOptions -FilePath $PolicyPath -RulesToAdd 'Enabled:Audit Mode'
                 # Create CIP for Audit Mode
                 ConvertFrom-CIPolicy -XmlFilePath $PolicyPath -BinaryFilePath $AuditModeCIPPath | Out-Null
 
                 Write-Verbose -Message 'Creating Enforced Mode CIP'
                 [System.IO.FileInfo]$EnforcedModeCIPPath = Join-Path -Path $StagingArea -ChildPath 'EnforcedMode.cip'
-                # Remove Audit mode policy rule option
-                Set-RuleOption -FilePath $PolicyPath -Option 3 -Delete
+                Set-CiRuleOptions -FilePath $PolicyPath -RulesToRemove 'Enabled:Audit Mode'
                 # Create CIP for Enforced Mode
                 ConvertFrom-CIPolicy -XmlFilePath $PolicyPath -BinaryFilePath $EnforcedModeCIPPath | Out-Null
 
@@ -699,7 +695,7 @@ Function Edit-WDACConfig {
                 [System.String]$SuppPolicyID = Set-CIPolicyIdInfo -FilePath $SuppPolicyPath -PolicyName "$SuppPolicyName - $(Get-Date -Format 'MM-dd-yyyy')" -ResetPolicyID -BasePolicyToSupplementPath $PolicyPath
                 $SuppPolicyID = $SuppPolicyID.Substring(11)
 
-                Set-CiRuleOptions -Action Supplemental -XMLFile $SuppPolicyPath
+                Set-CiRuleOptions -FilePath $SuppPolicyPath -Template Supplemental
 
                 Write-Verbose -Message 'Setting the Supplemental policy version to 1.0.0.0'
                 Set-CIPolicyVersion -FilePath $SuppPolicyPath -Version '1.0.0.0'
@@ -853,7 +849,7 @@ Function Edit-WDACConfig {
                         Write-Verbose -Message 'Setting the policy name'
                         Set-CIPolicyIdInfo -FilePath $BasePolicyPath -PolicyName "Allow Microsoft Plus Block Rules refreshed On $(Get-Date -Format 'MM-dd-yyyy')"
 
-                        Set-CiRuleOptions -Action Base -XMLFile $BasePolicyPath
+                        Set-CiRuleOptions -FilePath $BasePolicyPath -Template Base -RequireEVSigners:$RequireEVSigners
                     }
                     'Lightly_Managed_system_Policy' {
                         Write-Verbose -Message 'The new base policy type is Lightly_Managed_system_Policy'
@@ -867,7 +863,7 @@ Function Edit-WDACConfig {
                         Write-Verbose -Message 'Setting the policy name'
                         Set-CIPolicyIdInfo -FilePath $BasePolicyPath -PolicyName "Signed And Reputable policy refreshed on $(Get-Date -Format 'MM-dd-yyyy')"
 
-                        Set-CiRuleOptions -Action Base-ISG -XMLFile $BasePolicyPath
+                        Set-CiRuleOptions -FilePath $BasePolicyPath -Template BaseISG -RequireEVSigners:$RequireEVSigners
 
                         # Configure required services for ISG authorization
                         Write-Verbose -Message 'Configuring required services for ISG authorization'
@@ -899,17 +895,12 @@ Function Edit-WDACConfig {
                         Write-Verbose -Message 'Setting the policy name'
                         Set-CIPolicyIdInfo -FilePath $BasePolicyPath -PolicyName "Default Windows Plus Block Rules refreshed On $(Get-Date -Format 'MM-dd-yyyy')"
 
-                        Set-CiRuleOptions -Action Base -XMLFile $BasePolicyPath
+                        Set-CiRuleOptions -FilePath $BasePolicyPath -Template Base -RequireEVSigners:$RequireEVSigners
                     }
                 }
 
                 $CurrentStep++
                 Write-Progress -Id 12 -Activity 'Configuring the policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
-
-                if ($UpdateBasePolicy -and $RequireEVSigners) {
-                    Write-Verbose -Message 'Adding the EV Signers rule option to the base policy'
-                    Set-RuleOption -FilePath $BasePolicyPath -Option 8
-                }
 
                 # Get the policy ID of the currently deployed base policy based on the policy name that user selected
                 Write-Verbose -Message 'Getting the policy ID of the currently deployed base policy based on the policy name that user selected'

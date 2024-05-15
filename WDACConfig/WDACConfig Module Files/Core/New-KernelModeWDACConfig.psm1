@@ -139,22 +139,7 @@ Function New-KernelModeWDACConfig {
                 Write-Verbose -Message 'Setting the policy version to 1.0.0.0'
                 Set-CIPolicyVersion -FilePath $OutputPolicyPath -Version '1.0.0.0'
 
-                Set-CiRuleOptions Base-KernelMode -XMLFile $OutputPolicyPath
-
-                # Enabling Audit mode
-                Set-RuleOption -FilePath $OutputPolicyPath -Option 3
-
-                # If user chooses to add EVSigners, add it to the policy
-                if ($EVSigners) {
-                    Write-Verbose -Message 'Adding EVSigners policy rule option'
-                    Set-RuleOption -FilePath $OutputPolicyPath -Option 8
-                }
-
-                # If user chooses to go with no flight root certs then block flight/insider builds in policy rule options
-                if ($NoFlights) {
-                    Write-Verbose -Message 'Adding policy rule option 4 to block flight root certificates'
-                    Set-RuleOption -FilePath $OutputPolicyPath -Option 4
-                }
+                Set-CiRuleOptions -FilePath $OutputPolicyPath -Template BaseKernel -RulesToAdd 'Enabled:Audit Mode' -RequireEVSigners:$EVSigners -DisableFlightSigning:$NoFlights
 
                 # Set the already available and deployed GUID as the new PolicyID to prevent deploying duplicate Audit mode policies
                 if ($CurrentStrictKernelPolicyGUIDConfirmation) {
@@ -276,13 +261,8 @@ Function New-KernelModeWDACConfig {
                             Write-Verbose -Message 'Setting the policy version to 1.0.0.0'
                             Set-CIPolicyVersion -FilePath $FinalEnforcedPolicyPath -Version '1.0.0.0'
 
-                            Set-CiRuleOptions -Action Base-KernelMode -XMLFile $FinalEnforcedPolicyPath
-
-                            if ($EVSigners) {
-                                Write-Verbose -Message 'Adding EVSigners policy rule option'
-                                Set-RuleOption -FilePath $FinalEnforcedPolicyPath -Option 8
-                            }
-
+                            Set-CiRuleOptions -FilePath $FinalEnforcedPolicyPath -Template BaseKernel -RequireEVSigners:$EVSigners
+                           
                             [System.IO.FileInfo]$FinalEnforcedCIPPath = Join-Path -Path $StagingArea -ChildPath "$PolicyID.cip"
 
                             Write-Verbose -Message 'Converting the policy XML file to CIP binary'
@@ -415,15 +395,7 @@ Function New-KernelModeWDACConfig {
                             Write-Verbose -Message 'Setting the policy version to 1.0.0.0'
                             Set-CIPolicyVersion -FilePath $FinalEnforcedPolicyPath -Version '1.0.0.0'
 
-                            Set-CiRuleOptions -Action Base-KernelMode -XMLFile $FinalEnforcedPolicyPath
-
-                            # Add policy rule option 4 to block flight root certs
-                            Set-RuleOption -FilePath $FinalEnforcedPolicyPath -Option 4
-
-                            if ($EVSigners) {
-                                Write-Verbose -Message 'Adding EVSigners policy rule option'
-                                Set-RuleOption -FilePath $FinalEnforcedPolicyPath -Option 8
-                            }
+                            Set-CiRuleOptions -FilePath $FinalEnforcedPolicyPath -Template BaseKernel -RulesToAdd 'Disabled:Flight Signing' -RequireEVSigners:$EVSigners
 
                             [System.IO.FileInfo]$FinalEnforcedCIPPath = Join-Path -Path $StagingArea -ChildPath "$PolicyID.cip"
 

@@ -171,11 +171,7 @@ Function Deploy-SignedWDACConfig {
                 $CurrentStep++
                 Write-Progress -Id 13 -Activity 'Creating CIP file' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
-                Write-Verbose -Message 'Setting HVCI to Strict'
-                Set-HVCIOptions -Strict -FilePath $PolicyPath
-
-                Write-Verbose -Message 'Removing the Unsigned mode option from the policy rules'
-                Set-CiRuleOptions -FilePath $PolicyPath -SignedPolicy $true
+                Set-CiRuleOptions -FilePath $PolicyPath -RulesToRemove 'Enabled:Unsigned System Integrity Policy'
 
                 [system.io.FileInfo]$PolicyCIPPath = Join-Path -Path $StagingArea -ChildPath "$PolicyID.cip"
 

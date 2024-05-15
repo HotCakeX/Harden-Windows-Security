@@ -643,7 +643,7 @@ Function ConvertTo-WDACPolicy {
                             [System.String]$SupplementalPolicyID = $SupplementalPolicyID.Substring(11)
 
                             # Configure policy rule options
-                            Set-CiRuleOptions -Action Supplemental -XMLFile $WDACPolicyPath
+                            Set-CiRuleOptions -FilePath $WDACPolicyPath -Template Supplemental
 
                             Write-Verbose -Message 'ConvertTo-WDACPolicy: Copying the policy file to the User Config directory'
                             Copy-Item -Path $WDACPolicyPath -Destination $UserConfigDir -Force
@@ -665,7 +665,7 @@ Function ConvertTo-WDACPolicy {
                             [System.String]$SupplementalPolicyID = $SupplementalPolicyID.Substring(11)
 
                             # Configure policy rule options
-                            Set-CiRuleOptions -Action Supplemental -XMLFile $WDACPolicyPath
+                            Set-CiRuleOptions -FilePath $WDACPolicyPath -Template Supplemental
 
                             Write-Verbose -Message 'ConvertTo-WDACPolicy: Copying the policy file to the User Config directory'
                             Copy-Item -Path $WDACPolicyPath -Destination $UserConfigDir -Force
@@ -689,7 +689,7 @@ Function ConvertTo-WDACPolicy {
                             Set-CIPolicyIdInfo -FilePath $WDACPolicyPath -PolicyName "Supplemental Policy from event logs - $(Get-Date -Format 'MM-dd-yyyy')" -ResetPolicyID | Out-Null
 
                             # Remove all policy rule options prior to merging the policies since we don't need to add/remove any policy rule options to/from the user input policy
-                            Set-CiRuleOptions -Action RemoveAll -XMLFile $WDACPolicyPath
+                            Set-CiRuleOptions -FilePath $WDACPolicyPath -RemoveAll
 
                             Merge-CIPolicy -PolicyPaths $PolicyToAddLogsTo, $WDACPolicyPath -OutputFilePath $PolicyToAddLogsTo | Out-Null
 
@@ -875,7 +875,7 @@ Function ConvertTo-WDACPolicy {
                             [System.String]$SupplementalPolicyID = $SupplementalPolicyID.Substring(11)
 
                             # Configure policy rule options
-                            Set-CiRuleOptions -Action Supplemental -XMLFile $OutputPolicyPathMDEAH
+                            Set-CiRuleOptions -FilePath $OutputPolicyPathMDEAH -Template Supplemental
 
                             Write-Verbose -Message 'ConvertTo-WDACPolicy: Copying the policy file to the User Config directory'
                             Copy-Item -Path $OutputPolicyPathMDEAH -Destination $UserConfigDir -Force
@@ -897,7 +897,7 @@ Function ConvertTo-WDACPolicy {
                             [System.String]$SupplementalPolicyID = $SupplementalPolicyID.Substring(11)
 
                             # Configure policy rule options
-                            Set-CiRuleOptions -Action Supplemental -XMLFile $OutputPolicyPathMDEAH
+                            Set-CiRuleOptions -FilePath $OutputPolicyPathMDEAH -Template Supplemental
 
                             Write-Verbose -Message 'ConvertTo-WDACPolicy: Copying the policy file to the User Config directory'
                             Copy-Item -Path $OutputPolicyPathMDEAH -Destination $UserConfigDir -Force
@@ -921,7 +921,7 @@ Function ConvertTo-WDACPolicy {
                             Set-CIPolicyIdInfo -FilePath $OutputPolicyPathMDEAH -PolicyName "Supplemental Policy from MDE Advanced Hunting - $(Get-Date -Format 'MM-dd-yyyy')" -ResetPolicyID | Out-Null
 
                             # Remove all policy rule options prior to merging the policies since we don't need to add/remove any policy rule options to/from the user input policy
-                            Set-CiRuleOptions -Action RemoveAll -XMLFile $OutputPolicyPathMDEAH
+                            Set-CiRuleOptions -FilePath $OutputPolicyPathMDEAH -RemoveAll
 
                             Merge-CIPolicy -PolicyPaths $PolicyToAddLogsTo, $OutputPolicyPathMDEAH -OutputFilePath $PolicyToAddLogsTo | Out-Null
 
@@ -941,7 +941,7 @@ Function ConvertTo-WDACPolicy {
 
                             Write-Verbose -Message 'ConvertTo-WDACPolicy: Copying the policy file to the User Config directory'
 
-                            Set-CiRuleOptions -Action Supplemental -XMLFile $OutputPolicyPathMDEAH
+                            Set-CiRuleOptions -FilePath $OutputPolicyPathMDEAH -Template Supplemental
 
                             Set-HVCIOptions -Strict -FilePath $OutputPolicyPathMDEAH
 
@@ -1114,7 +1114,7 @@ Function ConvertTo-WDACPolicy {
                             [System.String]$SupplementalPolicyID = $SupplementalPolicyID.Substring(11)
 
                             # Configure policy rule options
-                            Set-CiRuleOptions -Action Supplemental -XMLFile $OutputPolicyPathEVTX
+                            Set-CiRuleOptions -FilePath $OutputPolicyPathEVTX -Template Supplemental
 
                             Write-Verbose -Message 'ConvertTo-WDACPolicy: Copying the policy file to the User Config directory'
                             Copy-Item -Path $OutputPolicyPathEVTX -Destination $UserConfigDir -Force
@@ -1136,7 +1136,7 @@ Function ConvertTo-WDACPolicy {
                             [System.String]$SupplementalPolicyID = $SupplementalPolicyID.Substring(11)
 
                             # Configure policy rule options
-                            Set-CiRuleOptions -Action Supplemental -XMLFile $OutputPolicyPathEVTX
+                            Set-CiRuleOptions -FilePath $OutputPolicyPathEVTX -Template Supplemental
 
                             Write-Verbose -Message 'ConvertTo-WDACPolicy: Copying the policy file to the User Config directory'
                             Copy-Item -Path $OutputPolicyPathEVTX -Destination $UserConfigDir -Force
@@ -1160,7 +1160,7 @@ Function ConvertTo-WDACPolicy {
                             Set-CIPolicyIdInfo -FilePath $OutputPolicyPathEVTX -PolicyName "Supplemental Policy from Evtx files - $(Get-Date -Format 'MM-dd-yyyy')" -ResetPolicyID | Out-Null
 
                             # Remove all policy rule options prior to merging the policies since we don't need to add/remove any policy rule options to/from the user input policy
-                            Set-CiRuleOptions -Action RemoveAll -XMLFile $OutputPolicyPathEVTX
+                            Set-CiRuleOptions -FilePath $OutputPolicyPathEVTX -RemoveAll
 
                             Merge-CIPolicy -PolicyPaths $PolicyToAddLogsTo, $OutputPolicyPathEVTX -OutputFilePath $PolicyToAddLogsTo | Out-Null
 
@@ -1179,7 +1179,7 @@ Function ConvertTo-WDACPolicy {
                         Default {
                             Write-Verbose -Message 'ConvertTo-WDACPolicy: Copying the policy file to the User Config directory'
 
-                            Set-CiRuleOptions -Action Supplemental -XMLFile $OutputPolicyPathEVTX
+                            Set-CiRuleOptions -FilePath $OutputPolicyPathEVTX -Template Supplemental
 
                             Set-HVCIOptions -Strict -FilePath $OutputPolicyPathEVTX
 

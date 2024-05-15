@@ -26,7 +26,6 @@ Function Set-CiRuleOptions {
         [Parameter(Mandatory = $false)][System.Boolean]$RequireWHQL,
         [Parameter(Mandatory = $false)][System.Boolean]$EnableAuditMode,
         [Parameter(Mandatory = $false)][System.Boolean]$DisableFlightSigning,
-        [Parameter(Mandatory = $false)][System.Boolean]$EnableUnsignedSystemIntegrityPolicy,
         [Parameter(Mandatory = $false)][System.Boolean]$RequireEVSigners,
         [Parameter(Mandatory = $false)][System.Boolean]$ScriptEnforcement,
         [Parameter(Mandatory = $false)][System.Boolean]$TestMode,
@@ -66,7 +65,6 @@ Function Set-CiRuleOptions {
         $RequireWHQLRules = [System.Collections.Generic.HashSet[System.Int32]] @(2)
         $EnableAuditModeRules = [System.Collections.Generic.HashSet[System.Int32]] @(3)
         $DisableFlightSigningRules = [System.Collections.Generic.HashSet[System.Int32]] @(4)
-        $EnableUnsignedSystemIntegrityPolicyRules = [System.Collections.Generic.HashSet[System.Int32]] @(6)
         $RequireEVSignersRules = [System.Collections.Generic.HashSet[System.Int32]] @(8)
         $ScriptEnforcementRules = [System.Collections.Generic.HashSet[System.Int32]] @(11)
         $TestModeRules = [System.Collections.Generic.HashSet[System.Int32]] @(9, 10)
@@ -117,8 +115,6 @@ Function Set-CiRuleOptions {
             { $EnableAuditMode -eq $false } { $RuleOptionsToImplement.ExceptWith($EnableAuditModeRules) }
             { $DisableFlightSigning -eq $true } { $RuleOptionsToImplement.UnionWith($DisableFlightSigningRules) }
             { $DisableFlightSigning -eq $false } { $RuleOptionsToImplement.ExceptWith($DisableFlightSigningRules) }
-            { $EnableUnsignedSystemIntegrityPolicy -eq $true } { $RuleOptionsToImplement.UnionWith($EnableUnsignedSystemIntegrityPolicyRules) }
-            { $EnableUnsignedSystemIntegrityPolicy -eq $false } { $RuleOptionsToImplement.ExceptWith($EnableUnsignedSystemIntegrityPolicyRules) }
             { $RequireEVSigners -eq $true } { $RuleOptionsToImplement.UnionWith($RequireEVSignersRules) }
             { $RequireEVSigners -eq $false } { $RuleOptionsToImplement.ExceptWith($RequireEVSignersRules) }
             { $ScriptEnforcement -eq $false } { $RuleOptionsToImplement.UnionWith($ScriptEnforcementRules) }
@@ -216,8 +212,6 @@ Function Set-CiRuleOptions {
         Specifies whether to enable audit mode
     .PARAMETER DisableFlightSigning
         Specifies whether to disable flight signing
-    .PARAMETER EnableUnsignedSystemIntegrityPolicy
-        Specifies whether to enable the unsigned system integrity policy
     .PARAMETER RequireEVSigners
         Specifies whether to require EV signers
     .PARAMETER DisableScriptEnforcement

@@ -865,9 +865,6 @@ Function New-WDACConfig {
             Write-Verbose -Message 'Setting the policy version to 1.0.0.0'
             Set-CIPolicyVersion -FilePath $FinalPolicyPath -Version '1.0.0.0'
 
-            Write-Verbose -Message 'Setting HVCI to Strict'
-            Set-HVCIOptions -Strict -FilePath $FinalPolicyPath
-
             if ($Deploy) {
 
                 $CurrentStep++

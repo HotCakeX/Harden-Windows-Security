@@ -36,7 +36,6 @@ $PSDefaultParameterValues = @{
     'Compare-SignerAndCertificate:Verbose'                        = $Verbose
     'Remove-SupplementalSigners:Verbose'                          = $Verbose
     'Get-ExtendedFileInfo:Verbose'                                = $Verbose
-    'Set-CiRuleOptions:Verbose'                                   = $Verbose
     'New-AppxPackageCiPolicy:Verbose'                             = $Verbose
     'New-StagingArea:Verbose'                                     = $Verbose
     'Set-LogPropertiesVisibility:Verbose'                         = $Verbose

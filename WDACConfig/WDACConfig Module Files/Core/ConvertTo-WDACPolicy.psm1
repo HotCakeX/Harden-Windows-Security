@@ -938,15 +938,9 @@ Function ConvertTo-WDACPolicy {
                         }
 
                         Default {
-
                             Write-Verbose -Message 'ConvertTo-WDACPolicy: Copying the policy file to the User Config directory'
-
                             Set-CiRuleOptions -FilePath $OutputPolicyPathMDEAH -Template Supplemental
-
-                            Set-HVCIOptions -Strict -FilePath $OutputPolicyPathMDEAH
-
                             Copy-Item -Path $OutputPolicyPathMDEAH -Destination $UserConfigDir -Force
-
                         }
                     }
 
@@ -1178,11 +1172,7 @@ Function ConvertTo-WDACPolicy {
 
                         Default {
                             Write-Verbose -Message 'ConvertTo-WDACPolicy: Copying the policy file to the User Config directory'
-
                             Set-CiRuleOptions -FilePath $OutputPolicyPathEVTX -Template Supplemental
-
-                            Set-HVCIOptions -Strict -FilePath $OutputPolicyPathEVTX
-
                             Copy-Item -Path $OutputPolicyPathEVTX -Destination $UserConfigDir -Force
                         }
                     }

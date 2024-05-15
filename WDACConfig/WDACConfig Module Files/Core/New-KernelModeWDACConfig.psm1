@@ -262,7 +262,7 @@ Function New-KernelModeWDACConfig {
                             Set-CIPolicyVersion -FilePath $FinalEnforcedPolicyPath -Version '1.0.0.0'
 
                             Set-CiRuleOptions -FilePath $FinalEnforcedPolicyPath -Template BaseKernel -RequireEVSigners:$EVSigners
-                           
+
                             [System.IO.FileInfo]$FinalEnforcedCIPPath = Join-Path -Path $StagingArea -ChildPath "$PolicyID.cip"
 
                             Write-Verbose -Message 'Converting the policy XML file to CIP binary'

@@ -158,7 +158,7 @@ Function New-DenyWDACConfig {
                 Write-Verbose -Message 'Setting the policy version to 1.0.0.0'
                 Set-CIPolicyVersion -FilePath $FinalDenyPolicyPath -Version '1.0.0.0'
 
-                Set-CiRuleOptions -FilePath $FinalDenyPolicyPath -Template Base                
+                Set-CiRuleOptions -FilePath $FinalDenyPolicyPath -Template Base
 
                 Write-Verbose -Message 'Converting the policy XML to .CIP'
                 ConvertFrom-CIPolicy -XmlFilePath $FinalDenyPolicyPath -BinaryFilePath $FinalDenyPolicyCIPPath | Out-Null

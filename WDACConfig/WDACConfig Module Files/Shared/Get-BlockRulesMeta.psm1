@@ -79,10 +79,7 @@ Function Get-BlockRulesMeta {
         # Save the modified XML content to a file - The Save method requires full file path
         $BlockRulesXML.Save($FinalPolicyPath)
 
-        # Remove the audit mode rule option
-        Set-RuleOption -FilePath $FinalPolicyPath -Option 3 -Delete
-
-        Set-HVCIOptions -Strict -FilePath $FinalPolicyPath
+        Set-CiRuleOptions -FilePath $FinalPolicyPath -RulesToRemove 'Enabled:Audit Mode'
     }
     End {
         Return $FinalPolicyPath

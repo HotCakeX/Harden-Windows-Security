@@ -240,13 +240,13 @@ Function Edit-SignedWDACConfig {
 
                 Write-Verbose -Message 'Creating Audit Mode CIP'
                 [System.IO.FileInfo]$AuditModeCIPPath = Join-Path -Path $StagingArea -ChildPath 'AuditMode.cip'
-                Set-CiRuleOptions -FilePath $PolicyPath -SignedPolicy $true -AuditMode $true
+                Set-CiRuleOptions -FilePath $PolicyPath -RulesToRemove 'Enabled:Unsigned System Integrity Policy' -RulesToAdd 'Enabled:Audit Mode'
                 # Create CIP for Audit Mode
                 ConvertFrom-CIPolicy -XmlFilePath $PolicyPath -BinaryFilePath $AuditModeCIPPath | Out-Null
 
                 Write-Verbose -Message 'Creating Enforced Mode CIP'
                 [System.IO.FileInfo]$EnforcedModeCIPPath = Join-Path -Path $StagingArea -ChildPath 'EnforcedMode.cip'
-                Set-CiRuleOptions -FilePath $PolicyPath -SignedPolicy $true -AuditMode $false
+                Set-CiRuleOptions -FilePath $PolicyPath -RulesToRemove 'Enabled:Unsigned System Integrity Policy', 'Enabled:Audit Mode'
                 # Create CIP for Enforced Mode
                 ConvertFrom-CIPolicy -XmlFilePath $PolicyPath -BinaryFilePath $EnforcedModeCIPPath | Out-Null
 
@@ -400,7 +400,7 @@ Function Edit-SignedWDACConfig {
                 Write-Verbose -Message 'Adding signer rule to the Supplemental policy'
                 Add-SignerRule -FilePath $SuppPolicyPath -CertificatePath $CertPath -Update -User -Kernel
 
-                Set-CiRuleOptions -FilePath $SuppPolicyPath -Supplemental
+                Set-CiRuleOptions -FilePath $SuppPolicyPath -Template Supplemental
 
                 Write-Verbose -Message 'Setting the Supplemental policy version to 1.0.0.0'
                 Set-CIPolicyVersion -FilePath $SuppPolicyPath -Version '1.0.0.0'
@@ -485,13 +485,13 @@ Function Edit-SignedWDACConfig {
 
                 Write-Verbose -Message 'Creating Audit Mode CIP'
                 [System.IO.FileInfo]$AuditModeCIPPath = Join-Path -Path $StagingArea -ChildPath 'AuditMode.cip'
-                Set-CiRuleOptions -FilePath $PolicyPath -SignedPolicy $true -AuditMode $true
+                Set-CiRuleOptions -FilePath $PolicyPath -RulesToRemove 'Enabled:Unsigned System Integrity Policy' -RulesToAdd 'Enabled:Audit Mode'
                 # Create CIP for Audit Mode
                 ConvertFrom-CIPolicy -XmlFilePath $PolicyPath -BinaryFilePath $AuditModeCIPPath | Out-Null
 
                 Write-Verbose -Message 'Creating Enforced Mode CIP'
                 [System.IO.FileInfo]$EnforcedModeCIPPath = Join-Path -Path $StagingArea -ChildPath 'EnforcedMode.cip'
-                Set-CiRuleOptions -FilePath $PolicyPath -SignedPolicy $true -AuditMode $false
+                Set-CiRuleOptions -FilePath $PolicyPath -RulesToRemove 'Enabled:Unsigned System Integrity Policy', 'Enabled:Audit Mode'
                 # Create CIP for Enforced Mode
                 ConvertFrom-CIPolicy -XmlFilePath $PolicyPath -BinaryFilePath $EnforcedModeCIPPath | Out-Null
 
@@ -807,7 +807,7 @@ Function Edit-SignedWDACConfig {
                 Write-Verbose -Message 'Adding signer rule to the Supplemental policy'
                 Add-SignerRule -FilePath $SuppPolicyPath -CertificatePath $CertPath -Update -User -Kernel
 
-                Set-CiRuleOptions -FilePath $SuppPolicyPath -Supplemental
+                Set-CiRuleOptions -FilePath $SuppPolicyPath -Template Supplemental
 
                 Write-Verbose -Message 'Setting the Supplemental policy version to 1.0.0.0'
                 Set-CIPolicyVersion -FilePath $SuppPolicyPath -Version '1.0.0.0'
@@ -932,11 +932,7 @@ Function Edit-SignedWDACConfig {
                 Write-Verbose -Message 'Adding signer rules to the Supplemental policy'
                 Add-SignerRule -FilePath $FinalSupplementalPath -CertificatePath $CertPath -Update -User -Kernel
 
-                Write-Verbose -Message 'Setting HVCI to Strict'
-                Set-HVCIOptions -Strict -FilePath $FinalSupplementalPath
-
-                Write-Verbose -Message 'Removing the Unsigned mode policy rule option'
-                Set-CiRuleOptions -FilePath $FinalSupplementalPath -SignedPolicy $true
+                Set-CiRuleOptions -FilePath $FinalSupplementalPath -RulesToRemove 'Enabled:Unsigned System Integrity Policy'
 
                 # Defining paths for the final Supplemental policy CIP
                 [System.IO.FileInfo]$FinalSupplementalCIPPath = Join-Path -Path $StagingArea -ChildPath "$SuppPolicyID.cip"
@@ -1013,7 +1009,7 @@ Function Edit-SignedWDACConfig {
                         Write-Verbose -Message 'Setting the policy name'
                         Set-CIPolicyIdInfo -FilePath $BasePolicyPath -PolicyName "Allow Microsoft Plus Block Rules refreshed On $(Get-Date -Format 'MM-dd-yyyy')"
 
-                        Set-CiRuleOptions -FilePath $BasePolicyPath -Base
+                        Set-CiRuleOptions -FilePath $BasePolicyPath -Template Base -RequireEVSigners:$RequireEVSigners
                     }
 
                     'Lightly_Managed_system_Policy' {
@@ -1028,7 +1024,7 @@ Function Edit-SignedWDACConfig {
                         Write-Verbose -Message 'Setting the policy name'
                         Set-CIPolicyIdInfo -FilePath $BasePolicyPath -PolicyName "Signed And Reputable policy refreshed on $(Get-Date -Format 'MM-dd-yyyy')"
 
-                        Set-CiRuleOptions -FilePath $BasePolicyPath -BaseISG
+                        Set-CiRuleOptions -FilePath $BasePolicyPath -Template BaseISG -RequireEVSigners:$RequireEVSigners
 
                         # Configure required services for ISG authorization
                         Write-Verbose -Message 'Configuring required services for ISG authorization'
@@ -1072,17 +1068,12 @@ Function Edit-SignedWDACConfig {
                         Write-Verbose -Message 'Setting the policy name'
                         Set-CIPolicyIdInfo -FilePath $BasePolicyPath -PolicyName "Default Windows Plus Block Rules refreshed On $(Get-Date -Format 'MM-dd-yyyy')"
 
-                        Set-CiRuleOptions -FilePath $BasePolicyPath -Base
+                        Set-CiRuleOptions -FilePath $BasePolicyPath -Template Base -RequireEVSigners:$RequireEVSigners
                     }
                 }
 
                 $CurrentStep++
                 Write-Progress -Id 17 -Activity 'Configuring the policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
-
-                if ($UpdateBasePolicy -and $RequireEVSigners) {
-                    Write-Verbose -Message 'Adding the EV Signers rule option to the base policy'
-                    Set-CiRuleOptions -FilePath $BasePolicyPath -EVCertsRequirements $true
-                }
 
                 Write-Verbose -Message 'Getting the policy ID of the currently deployed base policy based on the policy name that user selected'
                 # In case there are multiple policies with the same name, the first one will be used
@@ -1108,11 +1099,7 @@ Function Edit-SignedWDACConfig {
                 Write-Verbose -Message 'Setting the policy version to 1.0.0.1'
                 Set-CIPolicyVersion -FilePath $BasePolicyPath -Version '1.0.0.1'
 
-                # Removing unsigned policy rule option
-                Set-CiRuleOptions -FilePath $BasePolicyPath -SignedPolicy $true
-
-                Write-Verbose -Message 'Setting HVCI to Strict'
-                Set-HVCIOptions -Strict -FilePath $BasePolicyPath
+                Set-CiRuleOptions -FilePath $BasePolicyPath -RulesToRemove 'Enabled:Unsigned System Integrity Policy'
 
                 Write-Verbose -Message 'Converting the base policy to a CIP file'
                 ConvertFrom-CIPolicy -XmlFilePath $BasePolicyPath -BinaryFilePath $BasePolicyCIPPath | Out-Null

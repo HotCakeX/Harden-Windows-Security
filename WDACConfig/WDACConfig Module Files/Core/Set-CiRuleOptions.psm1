@@ -61,7 +61,7 @@ Function Set-CiRuleOptions {
         $BaseRules = [System.Collections.Generic.HashSet[System.Int32]] @(0, 2, 5, 6, 11, 12, 16, 17, 19, 20)
         $BaseISGRules = [System.Collections.Generic.HashSet[System.Int32]] @(0, 2, 5, 6, 11, 12, 14, 15, 16, 17, 19, 20)
         $BaseKernelModeRules = [System.Collections.Generic.HashSet[System.Int32]] @(2, 5, 6, 16, 17, 20)
-        $SupplementalRules = [System.Collections.Generic.HashSet[System.Int32]] @(18)
+        $SupplementalRules = [System.Collections.Generic.HashSet[System.Int32]] @(6, 18)
         $RequireWHQLRules = [System.Collections.Generic.HashSet[System.Int32]] @(2)
         $EnableAuditModeRules = [System.Collections.Generic.HashSet[System.Int32]] @(3)
         $DisableFlightSigningRules = [System.Collections.Generic.HashSet[System.Int32]] @(4)
@@ -134,6 +134,14 @@ Function Set-CiRuleOptions {
             [System.Void]$RuleOptionsToImplement.Remove($Key)
         }
 
+        # Make sure Supplemental policies only contain rule options that are applicable to them
+        if (($Template -eq 'Supplemental') -or ($Xml.SiPolicy.PolicyType -eq 'Supplemental Policy')) {
+            foreach ($Rule in $RuleOptionsToImplement) {
+                if ($Rule -notin '18', '14', '13', '7', '5', '6') {
+                    [System.Void]$RuleOptionsToImplement.Remove($Rule)
+                }
+            }
+        }
     }
     Process {
 

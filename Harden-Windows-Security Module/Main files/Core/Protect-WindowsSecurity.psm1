@@ -3376,16 +3376,12 @@ Execution Policy: $CurrentExecutionPolicy
                                 try {
 
                                     $SyncHash.Window.Dispatcher.Invoke({
-
-                                            # Disable all UI elements in Grid1 except for the textblock while commands are being executed
-                                            $AllControls = $SyncHash.window.FindName('ParentGrid').Children
-
-                                            foreach ($Control in $AllControls) {
-                                                # Textblock's parent is the ScrollViewer
-                                                if ($Control.Name -notin 'ScrollerForOutputTextBlock') {
-                                                    $Control.IsEnabled = $false
-                                                }
-                                            }
+                                            # Disable Important elements while commands are being executed
+                                            $SyncHash.window.FindName('Execute').IsEnabled = $false
+                                            $SyncHash.window.FindName('ParentGrid').FindName('MainTabControlToggle').IsEnabled = $false
+                                            $SyncHash['GUI']['LogPath'].IsEnabled = $false
+                                            $SyncHash['GUI']['LoggingViewBox'].IsEnabled = $false
+                                            $SyncHash['GUI']['txtFilePath'].IsEnabled = $false
                                         })
 
                                     # If Offline mode is used
@@ -3539,12 +3535,12 @@ Execution Policy: $CurrentExecutionPolicy
                                 &$WriteGUI -Text $_ }
 
                             $SyncHash.Window.Dispatcher.Invoke({
-                                    # Enable all UI elements once all of the commands have been executed
-                                    $AllControls = $SyncHash.window.FindName('ParentGrid').Children
-
-                                    foreach ($Control in $AllControls) {
-                                        $Control.IsEnabled = $true
-                                    }
+                                    # Enable the disabled UI elements once all of the commands have been executed
+                                    $SyncHash.window.FindName('Execute').IsEnabled = $true
+                                    $SyncHash.window.FindName('ParentGrid').FindName('MainTabControlToggle').IsEnabled = $true
+                                    $SyncHash['GUI']['LogPath'].IsEnabled = $true
+                                    $SyncHash['GUI']['LoggingViewBox'].IsEnabled = $true
+                                    $SyncHash['GUI']['txtFilePath'].IsEnabled = $true
                                 })
                         } -ArgumentList $SyncHash
 

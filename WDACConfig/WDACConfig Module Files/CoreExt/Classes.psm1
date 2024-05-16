@@ -86,6 +86,42 @@ Class RuleOptionsx : System.Management.Automation.IValidateSetValuesGenerator {
     }
 }
 
+Class CertificateDetailsCreator {
+    [System.String]$IntermediateCertTBS
+    [System.String]$IntermediateCertName
+    [System.String]$LeafCertTBS
+    [System.String]$LeafCertName
+}
+
+Class FilePublisherSignerCreator {
+    [CertificateDetailsCreator[]]$CertificateDetails
+    [System.Version]$FileVersion
+    [System.String]$FileDescription
+    [System.String]$InternalName
+    [System.String]$OriginalFileName
+    [System.String]$PackageFamilyName
+    [System.String]$ProductName
+    [System.String]$FileName
+    [System.String]$AuthenticodeSHA256
+    [System.String]$AuthenticodeSHA1
+    [System.Int32]$SiSigningScenario
+}
+
+Class PublisherSignerCreator {
+    [CertificateDetailsCreator[]]$CertificateDetails
+    [System.String]$FileName
+    [System.String]$AuthenticodeSHA256
+    [System.String]$AuthenticodeSHA1
+    [System.Int32]$SiSigningScenario
+}
+
+Class HashCreator {
+    [System.String]$AuthenticodeSHA256
+    [System.String]$AuthenticodeSHA1
+    [System.String]$FileName
+    [System.Int32]$SiSigningScenario
+}
+
 # Define the types to export with type accelerators.
 [System.Reflection.TypeInfo[]]$ExportableTypes = @(
     [ScanLevelz]
@@ -93,6 +129,10 @@ Class RuleOptionsx : System.Management.Automation.IValidateSetValuesGenerator {
     [BasePolicyNamez]
     [ExceptionFailedToGetCertificateCollection]
     [RuleOptionsx]
+    [CertificateDetailsCreator]
+    [FilePublisherSignerCreator]
+    [PublisherSignerCreator]
+    [HashCreator]
 )
 
 # Get the non-public TypeAccelerators class for defining new accelerators.

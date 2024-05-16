@@ -40,42 +40,6 @@ Function Build-SignerAndHashObjects {
         # Importing the $PSDefaultParameterValues to the current session, prior to everything else
         . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
 
-        Class CertificateDetailsCreator {
-            [System.String]$IntermediateCertTBS
-            [System.String]$IntermediateCertName
-            [System.String]$LeafCertTBS
-            [System.String]$LeafCertName
-        }
-
-        Class FilePublisherSignerCreator {
-            [CertificateDetailsCreator[]]$CertificateDetails
-            [System.Version]$FileVersion
-            [System.String]$FileDescription
-            [System.String]$InternalName
-            [System.String]$OriginalFileName
-            [System.String]$PackageFamilyName
-            [System.String]$ProductName
-            [System.String]$FileName
-            [System.String]$AuthenticodeSHA256
-            [System.String]$AuthenticodeSHA1
-            [System.Int32]$SiSigningScenario
-        }
-
-        Class PublisherSignerCreator {
-            [CertificateDetailsCreator[]]$CertificateDetails
-            [System.String]$FileName
-            [System.String]$AuthenticodeSHA256
-            [System.String]$AuthenticodeSHA1
-            [System.Int32]$SiSigningScenario
-        }
-
-        Class HashCreator {
-            [System.String]$AuthenticodeSHA256
-            [System.String]$AuthenticodeSHA1
-            [System.String]$FileName
-            [System.Int32]$SiSigningScenario
-        }
-
         # An array to store the Signers created with FilePublisher Level
         [FilePublisherSignerCreator[]]$FilePublisherSigners = @()
 

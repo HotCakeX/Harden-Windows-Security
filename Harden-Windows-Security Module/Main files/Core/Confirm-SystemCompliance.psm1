@@ -36,7 +36,9 @@ function Confirm-SystemCompliance {
         [parameter(Mandatory = $false)]
         [System.Management.Automation.SwitchParameter]$ShowAsObjectsOnly,
         [parameter(Mandatory = $false)]
-        [System.Management.Automation.SwitchParameter]$DetailedDisplay
+        [System.Management.Automation.SwitchParameter]$DetailedDisplay,
+        [parameter(Mandatory = $false)]
+        [System.Management.Automation.SwitchParameter]$Offline
     )
     begin {
         # Importing the required sub-modules
@@ -49,8 +51,11 @@ function Confirm-SystemCompliance {
             Throw [System.Security.AccessControl.PrivilegeNotHeldException] 'Administrator'
         }
 
-        Write-Verbose -Message 'Checking for updates...'
-        Update-Self -InvocationStatement $MyInvocation.Statement
+        if (-NOT $Offline) {
+            Write-Verbose -Message 'Checking for updates...'
+            Update-Self -InvocationStatement $MyInvocation.Statement
+        }
+
         Class Categoriex : System.Management.Automation.IValidateSetValuesGenerator {
             [System.String[]] GetValidValues() {
                 $Categoriex = @(
@@ -408,7 +413,6 @@ function Confirm-SystemCompliance {
                 # Process items in Registry resources.csv file with "Group Policy" origin and add them to the $NestedObjectArray array as custom objects
                 $NestedObjectArray += [PSCustomObject](Invoke-CategoryProcessing -catname $CatName -Method 'Group Policy')
 
-                # For PowerShell Cmdlet
                 $IndividualItemResult = $MDAVPreferencesCurrent.AllowSwitchToAsyncInspection
                 $NestedObjectArray += [PSCustomObject]@{
                     FriendlyName = 'AllowSwitchToAsyncInspection'
@@ -419,7 +423,6 @@ function Confirm-SystemCompliance {
                     Method       = 'Cmdlet'
                 }
 
-                # For PowerShell Cmdlet
                 $IndividualItemResult = $MDAVPreferencesCurrent.oobeEnableRtpAndSigUpdate
                 $NestedObjectArray += [PSCustomObject]@{
                     FriendlyName = 'oobeEnableRtpAndSigUpdate'
@@ -430,7 +433,6 @@ function Confirm-SystemCompliance {
                     Method       = 'Cmdlet'
                 }
 
-                # For PowerShell Cmdlet
                 $IndividualItemResult = $MDAVPreferencesCurrent.IntelTDTEnabled
                 $NestedObjectArray += [PSCustomObject]@{
                     FriendlyName = 'IntelTDTEnabled'
@@ -441,7 +443,6 @@ function Confirm-SystemCompliance {
                     Method       = 'Cmdlet'
                 }
 
-                # For PowerShell Cmdlet
                 $IndividualItemResult = $((Get-ProcessMitigation -System).aslr.ForceRelocateImages)
                 $NestedObjectArray += [PSCustomObject]@{
                     FriendlyName = 'Mandatory ASLR'
@@ -462,7 +463,6 @@ function Confirm-SystemCompliance {
                     Method       = 'Cmdlet'
                 }
 
-                # For PowerShell Cmdlet
                 $NestedObjectArray += [PSCustomObject]@{
                     FriendlyName = 'Smart App Control State'
                     Compliant    = ($MDAVConfigCurrent.SmartAppControlState -eq 'On') ? $True : $False
@@ -472,7 +472,6 @@ function Confirm-SystemCompliance {
                     Method       = 'Cmdlet'
                 }
 
-                # For PowerShell Cmdlet
                 try {
                     $IndividualItemResult = $((Get-ScheduledTask -TaskPath '\MSFT Driver Block list update\' -TaskName 'MSFT Driver Block list update' -ErrorAction SilentlyContinue) ? $True : $false)
                 }
@@ -496,7 +495,7 @@ function Confirm-SystemCompliance {
                     5 = 'Broad'
                     6 = 'Delayed'
                 }
-                # For PowerShell Cmdlet
+
                 $NestedObjectArray += [PSCustomObject]@{
                     FriendlyName = 'Microsoft Defender Platform Updates Channel'
                     Compliant    = 'N/A'
@@ -514,7 +513,7 @@ function Confirm-SystemCompliance {
                     5 = 'Broad'
                     6 = 'Delayed'
                 }
-                # For PowerShell Cmdlet
+
                 $NestedObjectArray += [PSCustomObject]@{
                     FriendlyName = 'Microsoft Defender Engine Updates Channel'
                     Compliant    = 'N/A'
@@ -524,7 +523,16 @@ function Confirm-SystemCompliance {
                     Method       = 'Cmdlet'
                 }
 
-                # For PowerShell Cmdlet
+                # This covers instances where CFA is applied through Intune policy
+                $NestedObjectArray += [PSCustomObject]@{
+                    FriendlyName = 'Controlled Folder Access'
+                    Compliant    = $MDAVPreferencesCurrent.EnableControlledFolderAccess -eq 1 ? $true : $false
+                    Value        = $MDAVPreferencesCurrent.EnableControlledFolderAccess
+                    Name         = 'Controlled Folder Access'
+                    Category     = $CatName
+                    Method       = 'Cmdlet'
+                }
+
                 $NestedObjectArray += [PSCustomObject]@{
                     FriendlyName = 'Controlled Folder Access Exclusions'
                     Compliant    = 'N/A'
@@ -2052,8 +2060,11 @@ function Confirm-SystemCompliance {
     Shows the output on the PowerShell console with more details and in the list format instead of table format
 .PARAMETER Categories
     Specify the categories to check compliance for. If not specified, all categories will be checked
+.PARAMETER Offline
+    Skips the online update check
 .INPUTS
     System.Management.Automation.SwitchParameter
+    System.String[]
 .OUTPUTS
     System.String
     System.Object[]

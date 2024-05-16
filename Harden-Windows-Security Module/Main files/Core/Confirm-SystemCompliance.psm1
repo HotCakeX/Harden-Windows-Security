@@ -36,7 +36,9 @@ function Confirm-SystemCompliance {
         [parameter(Mandatory = $false)]
         [System.Management.Automation.SwitchParameter]$ShowAsObjectsOnly,
         [parameter(Mandatory = $false)]
-        [System.Management.Automation.SwitchParameter]$DetailedDisplay
+        [System.Management.Automation.SwitchParameter]$DetailedDisplay,
+        [parameter(Mandatory = $false)]
+        [System.Management.Automation.SwitchParameter]$Offline
     )
     begin {
         # Importing the required sub-modules
@@ -49,8 +51,11 @@ function Confirm-SystemCompliance {
             Throw [System.Security.AccessControl.PrivilegeNotHeldException] 'Administrator'
         }
 
-        Write-Verbose -Message 'Checking for updates...'
-        Update-Self -InvocationStatement $MyInvocation.Statement
+        if (-NOT $Offline) {
+            Write-Verbose -Message 'Checking for updates...'
+            Update-Self -InvocationStatement $MyInvocation.Statement
+        }
+
         Class Categoriex : System.Management.Automation.IValidateSetValuesGenerator {
             [System.String[]] GetValidValues() {
                 $Categoriex = @(
@@ -2055,8 +2060,11 @@ function Confirm-SystemCompliance {
     Shows the output on the PowerShell console with more details and in the list format instead of table format
 .PARAMETER Categories
     Specify the categories to check compliance for. If not specified, all categories will be checked
+.PARAMETER Offline
+    Skips the online update check
 .INPUTS
     System.Management.Automation.SwitchParameter
+    System.String[]
 .OUTPUTS
     System.String
     System.Object[]

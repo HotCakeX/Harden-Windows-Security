@@ -414,6 +414,7 @@ Confirm-SystemCompliance
     [-ExportToCSV]
     [-ShowAsObjectsOnly]
     [-DetailedDisplay]
+    [-Offline]
 ```
 
 ## Description
@@ -478,6 +479,22 @@ Instead of displaying strings on the console, outputs actionable objects and pro
 ### -DetailedDisplay
 
 Shows the output on the PowerShell console with more details and in the list format instead of table format
+
+<div align='center'>
+
+| Type: |[SwitchParameter](https://learn.microsoft.com/en-us/dotnet/api/system.management.automation.switchparameter)|
+| :-------------: | :-------------: |
+| Position: | Named |
+| Default value: | None |
+| Required: | False |
+| Accept pipeline input: | False |
+| Accept wildcard characters: | False |
+
+</div>
+
+### -Offline
+
+Skips the online update check and allows you to run the cmdlet in completely offline mode.
 
 <div align='center'>
 

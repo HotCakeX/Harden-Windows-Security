@@ -39,6 +39,7 @@ $PSDefaultParameterValues = @{
     'New-AppxPackageCiPolicy:Verbose'                             = $Verbose
     'New-StagingArea:Verbose'                                     = $Verbose
     'Set-LogPropertiesVisibility:Verbose'                         = $Verbose
+    'Test-KernelProtectedFiles:Verbose'                           = $Verbose
 
     'Build-SignerAndHashObjects:Verbose'                          = $Verbose
     'Clear-CiPolicy_Semantic:Verbose'                             = $Verbose

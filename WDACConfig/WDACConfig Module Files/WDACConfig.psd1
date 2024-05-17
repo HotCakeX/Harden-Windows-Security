@@ -226,6 +226,7 @@ This is an advanced PowerShell module for WDAC (Windows Defender Application Con
         'Shared\New-AppxPackageCiPolicy.psm1',
         'Shared\New-StagingArea.psm1',
         'Shared\Set-LogPropertiesVisibility.psm1',
+        'Shared\Test-KernelProtectedFiles.psm1'
         'WDACSimulation\Get-TBSCertificate.psm1',
         'WDACSimulation\Get-SignerInfo.psm1',
         'WDACSimulation\Get-SignedFileCertificates.psm1',

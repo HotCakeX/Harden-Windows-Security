@@ -306,7 +306,8 @@ Function ConvertTo-WDACPolicy {
             "$ModuleRootPath\Shared\Get-RuleRefs.psm1",
             "$ModuleRootPath\Shared\Get-FileRules.psm1",
             "$ModuleRootPath\Shared\New-StagingArea.psm1",
-            "$ModuleRootPath\Shared\Set-LogPropertiesVisibility.psm1"
+            "$ModuleRootPath\Shared\Set-LogPropertiesVisibility.psm1",
+            "$ModuleRootPath\Shared\Select-LogProperties.psm1"
         )
         # Add XML Ops module to the list of modules to import
         $ModulesToImport += (Get-ChildItem -File -Filter '*.psm1' -LiteralPath "$ModuleRootPath\XMLOps").FullName
@@ -371,58 +372,13 @@ Function ConvertTo-WDACPolicy {
                     $CurrentStep++
                     Write-Progress -Id 30 -Activity "Collecting $LogType events" -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
-                    [PSCustomObject[]]$EventsToDisplay = Receive-CodeIntegrityLogs -PostProcessing OnlyExisting -PolicyName:$FilterByPolicyNames -Date:$StartTime -Type:$LogType |
-                    Select-Object -Property @{
-                        Label      = 'File Name'
-                        Expression = {
-                            # Can't use Get-Item or Get-ChildItem because the file might not exist on the disk
-                            # Can't use Split-Path -LiteralPath with -Leaf parameter because not supported
-                            [System.String]$TempPath = Split-Path -LiteralPath $_.'File Name'
-                            $_.'File Name'.Replace($TempPath, '').TrimStart('\')
-                        }
-                    },
-                    'TimeCreated',
-                    'PolicyName',
-                    'ProductName',
-                    'FileVersion',
-                    'OriginalFileName',
-                    'FileDescription',
-                    'InternalName',
-                    'PackageFamilyName',
-                    @{
-                        Label      = 'Full Path'
-                        Expression = { $_.'File Name' }
-                    },
-                    'Validated Signing Level',
-                    'Requested Signing Level',
-                    'SI Signing Scenario',
-                    'UserId',
-                    @{
-                        Label      = 'Publishers'
-                        Expression = { [System.String[]]$_.'Publishers' }
-                    },
-                    'SHA256 Hash',
-                    'SHA256 Flat Hash',
-                    'SHA1 Hash',
-                    'SHA1 Flat Hash',
-                    'PolicyGUID',
-                    'PolicyHash',
-                    'ActivityId',
-                    'Process Name',
-                    'UserWriteable',
-                    'PolicyID',
-                    'Status',
-                    'USN',
-                    'SignatureStatus',
-                    'SignerInfo'
+                    [PSCustomObject[]]$EventsToDisplay = Receive-CodeIntegrityLogs -PostProcessing OnlyExisting -PolicyName:$FilterByPolicyNames -Date:$StartTime -Type:$LogType
+                    [PSCustomObject[]]$EventsToDisplay = Select-LogProperties -Logs $EventsToDisplay
 
                     # If the KernelModeOnly switch is used, then filter the events by the 'Requested Signing Level' property
                     if ($KernelModeOnly) {
                         $EventsToDisplay = $EventsToDisplay | Where-Object -FilterScript { $_.'SI Signing Scenario' -eq 'Kernel-Mode' }
                     }
-
-                    # Sort the events by TimeCreated in descending order
-                    [PSCustomObject[]]$EventsToDisplay = $EventsToDisplay | Sort-Object -Property TimeCreated -Descending
 
                     if (($null -eq $EventsToDisplay) -and ($EventsToDisplay.Count -eq 0)) {
                         Write-ColorfulText -Color HotPink -InputText 'No logs were found to display based on the current filters. Exiting...'
@@ -950,67 +906,19 @@ Function ConvertTo-WDACPolicy {
                 'EVTXFiles' {
 
                     # The total number of the main steps for the progress bar to render
-                    [System.UInt16]$TotalSteps = 7
+                    [System.UInt16]$TotalSteps = 6
                     [System.UInt16]$CurrentStep = 0
 
                     $CurrentStep++
                     Write-Progress -Id 32 -Activity 'Processing the selected Evtx files' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
-                    [PSCustomObject[]]$EventsToDisplay = Receive-CodeIntegrityLogs -PolicyName:$FilterByPolicyNames -Date:$StartTime -Type:$LogType -LogSource EVTXFiles -EVTXFilePaths $EVTXLogs |
-                    Select-Object -Property @{
-                        Label      = 'File Name'
-                        Expression = {
-                            # Can't use Get-Item or Get-ChildItem because the file might not exist on the disk
-                            # Can't use Split-Path -LiteralPath with -Leaf parameter because not supported
-                            [System.String]$TempPath = Split-Path -LiteralPath $_.'File Name'
-                            $_.'File Name'.Replace($TempPath, '').TrimStart('\')
-                        }
-                    },
-                    'TimeCreated',
-                    'PolicyName',
-                    'ProductName',
-                    'FileVersion',
-                    'OriginalFileName',
-                    'FileDescription',
-                    'InternalName',
-                    'PackageFamilyName',
-                    @{
-                        Label      = 'Full Path'
-                        Expression = { $_.'File Name' }
-                    },
-                    'Validated Signing Level',
-                    'Requested Signing Level',
-                    'SI Signing Scenario',
-                    'UserId',
-                    @{
-                        Label      = 'Publishers'
-                        Expression = { [System.String[]]$_.'Publishers' }
-                    },
-                    'SHA256 Hash',
-                    'SHA256 Flat Hash',
-                    'SHA1 Hash',
-                    'SHA1 Flat Hash',
-                    'PolicyGUID',
-                    'PolicyHash',
-                    'ActivityId',
-                    'Process Name',
-                    'UserWriteable',
-                    'PolicyID',
-                    'Status',
-                    'USN',
-                    'SignatureStatus',
-                    'SignerInfo'
-
-                    $CurrentStep++
-                    Write-Progress -Id 32 -Activity 'sorting the logs' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
+                    [PSCustomObject[]]$EventsToDisplay = Receive-CodeIntegrityLogs -PolicyName:$FilterByPolicyNames -Date:$StartTime -Type:$LogType -LogSource EVTXFiles -EVTXFilePaths $EVTXLogs
+                    [PSCustomObject[]]$EventsToDisplay = Select-LogProperties -Logs $EventsToDisplay
 
                     # If the KernelModeOnly switch is used, then filter the events by the 'Requested Signing Level' property
                     if ($KernelModeOnly) {
                         $EventsToDisplay = $EventsToDisplay | Where-Object -FilterScript { $_.'SI Signing Scenario' -eq 'Kernel-Mode' }
                     }
-
-                    # Sort the events by TimeCreated in descending order
-                    [PSCustomObject[]]$EventsToDisplay = $EventsToDisplay | Sort-Object -Property TimeCreated -Descending
 
                     if (($null -eq $EventsToDisplay) -and ($EventsToDisplay.Count -eq 0)) {
                         Write-ColorfulText -Color HotPink -InputText 'No logs were found to display based on the current filters. Exiting...'

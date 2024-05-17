@@ -122,7 +122,8 @@ Class HashCreator {
     [System.Int32]$SiSigningScenario
 }
 
-class FindWDACCompliantFiles {   
+# Gets the WDAC Compliant files from a list of directories
+class FindWDACCompliantFiles {
     static [System.String[]]
     SearchFiles([System.String[]] $Paths) {
         [System.String[]]$Extensions = @('*.sys', '*.exe', '*.com', '*.dll', '*.rll', '*.ocx', '*.msp', '*.mst', '*.msi', '*.js', '*.vbs', '*.ps1', '*.appx', '*.bin', '*.bat', '*.hxs', '*.mui', '*.lex', '*.mof')

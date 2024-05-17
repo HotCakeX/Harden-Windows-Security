@@ -15,7 +15,7 @@ Function Invoke-WDACSimulation {
                 # Ensure the selected path is a file path
                 if (Test-Path -LiteralPath $_ -PathType 'Leaf') {
                     # Ensure the selected file has a supported extension
-                    [System.IO.FileInfo]$SelectedFile = Get-ChildItem -File -LiteralPath $_ -Include '*.sys', '*.exe', '*.com', '*.dll', '*.rll', '*.ocx', '*.msp', '*.mst', '*.msi', '*.js', '*.vbs', '*.ps1', '*.appx', '*.bin', '*.bat', '*.hxs', '*.mui', '*.lex', '*.mof'
+                    [System.IO.FileInfo]$SelectedFile = [FindWDACCompliantFiles]::SearchFiles($_)
                     # If the selected file has a supported extension, return $true
                     if ($SelectedFile) {
                         $true
@@ -171,7 +171,7 @@ Function Invoke-WDACSimulation {
             [System.IO.FileInfo]$CollectedFiles = Get-ChildItem -File -LiteralPath $FilePath
         }
         else {
-            [System.IO.FileInfo[]]$CollectedFiles = (Get-ChildItem -Recurse -LiteralPath $FolderPath -File -Include '*.sys', '*.exe', '*.com', '*.dll', '*.rll', '*.ocx', '*.msp', '*.mst', '*.msi', '*.js', '*.vbs', '*.ps1', '*.appx', '*.bin', '*.bat', '*.hxs', '*.mui', '*.lex', '*.mof').FullName
+            [System.IO.FileInfo[]]$CollectedFiles = [FindWDACCompliantFiles]::SearchFiles($FolderPath)
         }
 
         # Make sure the selected directory contains files with the supported extensions

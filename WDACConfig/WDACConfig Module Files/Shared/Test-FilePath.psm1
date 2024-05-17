@@ -3,6 +3,8 @@ Function Test-FilePath {
     .SYNOPSIS
         Function that takes 2 arrays, one contains file paths and the other contains folder paths. It checks them and returns the unique file paths
         that are not in any of the folder paths. Performs this check recursively too so works if a filepath is in a sub-directory of a folder path.
+    .NOTES
+        It works even if the file paths or folder paths are non-existent/deleted, but they still need to be valid file/folder paths.
     .INPUTS
         System.IO.DirectoryInfo[]
         System.IO.FileInfo[]
@@ -12,11 +14,11 @@ Function Test-FilePath {
     [CmdletBinding()]
     [OutputType([System.IO.FileInfo[]])]
     param (
-        [ValidateScript({ Test-Path -Path $_ -PathType Leaf })]
+        [ValidateScript({ Test-Path -Path $_ -PathType Leaf -IsValid })]
         [Parameter(Mandatory = $true)]
         [System.IO.FileInfo[]]$FilePath,
 
-        [ValidateScript({ Test-Path -Path $_ -PathType Container })]
+        [ValidateScript({ Test-Path -Path $_ -PathType Container -IsValid })]
         [Parameter(Mandatory = $true)]
         [System.IO.DirectoryInfo[]]$DirectoryPath
     )

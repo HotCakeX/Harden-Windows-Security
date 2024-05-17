@@ -413,6 +413,7 @@ Function ConvertTo-WDACPolicy {
                     'PolicyID',
                     'Status',
                     'USN',
+                    'SignatureStatus',
                     'SignerInfo'
 
                     # If the KernelModeOnly switch is used, then filter the events by the 'Requested Signing Level' property

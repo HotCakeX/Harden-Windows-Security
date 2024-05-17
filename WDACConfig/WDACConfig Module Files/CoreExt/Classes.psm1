@@ -122,6 +122,15 @@ Class HashCreator {
     [System.Int32]$SiSigningScenario
 }
 
+class FindWDACCompliantFiles {   
+    static [System.String[]]
+    SearchFiles([System.String[]] $Paths) {
+        [System.String[]]$Extensions = @('*.sys', '*.exe', '*.com', '*.dll', '*.rll', '*.ocx', '*.msp', '*.mst', '*.msi', '*.js', '*.vbs', '*.ps1', '*.appx', '*.bin', '*.bat', '*.hxs', '*.mui', '*.lex', '*.mof')
+        $Output = Get-ChildItem -Recurse -File -LiteralPath $Paths -Include $Extensions -Force
+        Return ($Output ? [System.String[]]$Output : $null)
+    }
+}
+
 # Define the types to export with type accelerators.
 [System.Reflection.TypeInfo[]]$ExportableTypes = @(
     [ScanLevelz]
@@ -133,6 +142,7 @@ Class HashCreator {
     [FilePublisherSignerCreator]
     [PublisherSignerCreator]
     [HashCreator]
+    [FindWDACCompliantFiles]
 )
 
 # Get the non-public TypeAccelerators class for defining new accelerators.

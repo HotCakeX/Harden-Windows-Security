@@ -138,6 +138,24 @@ Function Receive-CodeIntegrityLogs {
 
         #EndRegion Application Control event tags intelligence
 
+        Function Test-NotEmpty ($Data) {
+            <#
+            .SYNOPSIS
+                Tests if the data is not null, empty, or whitespace
+            #>
+            if ((-NOT ([System.String]::IsNullOrWhiteSpace($Data)))) {
+                if ($Data.count -ge 1) {
+                    return $true
+                }
+                else {
+                    return $false
+                }
+            }
+            else {
+                return $false
+            }
+        }
+
         # Validate the date provided if it's not null or empty or whitespace
         if (-NOT ([System.String]::IsNullOrWhiteSpace($Date))) {
             if (-NOT ([System.DateTime]::TryParse($Date, [ref]$Date))) {
@@ -612,18 +630,17 @@ Function Receive-CodeIntegrityLogs {
     }
 
     End {
-
         # Assigning null to the variables that are empty since users of this function need null values for empty variables
-        $Output.All.Audit.Count -gt 1 ? $Output.All.Audit : $null
-        $Output.All.Blocked.Count -gt 1 ? $Output.All.Blocked : $null
-        $Output.Existing.Audit.Count -gt 1 ? $Output.Existing.Audit : $null
-        $Output.Existing.Blocked.Count -gt 1 ? $Output.Existing.Blocked : $null
-        $Output.Deleted.Audit.Count -gt 1 ? $Output.Deleted.Audit : $null
-        $Output.Deleted.Blocked.Count -gt 1 ? $Output.Deleted.Blocked : $null
-        $Output.Separated.Audit.AvailableFilesPaths.Count -gt 1 ? $Output.Separated.Audit.AvailableFilesPaths : $null
-        $Output.Separated.Audit.DeletedFileHashes.Count -gt 1 ? $Output.Separated.Audit.DeletedFileHashes : $null
-        $Output.Separated.Blocked.AvailableFilesPaths.Count -gt 1 ? $Output.Separated.Blocked.AvailableFilesPaths : $null
-        $Output.Separated.Blocked.DeletedFileHashes.Count -gt 1 ? $Output.Separated.Blocked.DeletedFileHashes : $null
+        if (-NOT (Test-NotEmpty -Data $Output.All.Audit)) { $Output.All.Audit = $null }
+        if (-NOT (Test-NotEmpty -Data $Output.All.Blocked)) { $Output.All.Blocked = $null }
+        if (-NOT (Test-NotEmpty -Data $Output.Existing.Audit)) { $Output.Existing.Audit = $null }
+        if (-NOT (Test-NotEmpty -Data $Output.Existing.Blocked)) { $Output.Existing.Blocked = $null }
+        if (-NOT (Test-NotEmpty -Data $Output.Deleted.Audit)) { $Output.Deleted.Audit = $null }
+        if (-NOT (Test-NotEmpty -Data $Output.Deleted.Blocked)) { $Output.Deleted.Blocked = $null }
+        if (-NOT (Test-NotEmpty -Data $Output.Separated.Audit.AvailableFilesPaths)) { $Output.Separated.Audit.AvailableFilesPaths = $null }
+        if (-NOT (Test-NotEmpty -Data $Output.Separated.Audit.DeletedFileHashes)) { $Output.Separated.Audit.DeletedFileHashes = $null }
+        if (-NOT (Test-NotEmpty -Data $Output.Separated.Blocked.AvailableFilesPaths)) { $Output.Separated.Blocked.AvailableFilesPaths = $null }
+        if (-NOT (Test-NotEmpty -Data $Output.Separated.Blocked.DeletedFileHashes)) { $Output.Separated.Blocked.DeletedFileHashes = $null }
 
         Switch ($PostProcessing) {
             'Separate' {

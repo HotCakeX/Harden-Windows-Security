@@ -81,14 +81,14 @@ Function New-SupplementalWDACConfig {
         . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
 
         Write-Verbose -Message 'Importing the required sub-modules'
-        Import-Module -Force -FullyQualifiedName (
+        Import-Module -Force -FullyQualifiedName @(
             "$ModuleRootPath\Shared\Update-Self.psm1",
             "$ModuleRootPath\Shared\Write-ColorfulText.psm1",
             "$ModuleRootPath\Shared\New-StagingArea.psm1"
         )
 
         if ($PSBoundParameters['Certificates']) {
-            Import-Module -Force -FullyQualifiedName (
+            Import-Module -Force -FullyQualifiedName @(
                 "$ModuleRootPath\WDACSimulation\Get-TBSCertificate.psm1",
                 "$ModuleRootPath\WDACSimulation\Get-SignedFileCertificates.psm1",
                 "$ModuleRootPath\WDACSimulation\Get-CertificateDetails.psm1",

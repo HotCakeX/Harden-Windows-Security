@@ -37,7 +37,7 @@ Function Test-KernelProtectedFiles {
         }
     }
     End {
-        Return $ExesWithNoHash
+        Return ($ExesWithNoHash.Count -eq 0 ? $null : $ExesWithNoHash)
     }
 }
 Export-ModuleMember -Function 'Test-KernelProtectedFiles'

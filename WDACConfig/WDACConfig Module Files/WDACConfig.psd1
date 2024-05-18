@@ -262,7 +262,8 @@ This is an advanced PowerShell module for WDAC (Windows Defender Application Con
         'XMLOps\Remove-DuplicateFileAttribRef_IDBased.psm1',
         'XMLOps\Remove-OrphanAllowedSignersAndCiSigners_IDBased.psm1',
         'XMLOps\Remove-UnreferencedFileRuleRefs.psm1',
-        'XMLOps\New-RootAndLeafCertificateLevelRules.psm1')
+        'XMLOps\New-RootAndLeafCertificateLevelRules.psm1',
+        'XMLOps\New-PFNLevelRules.psm1')
 
     # Private data to pass to the module specified in RootModule/ModuleToProcess. This may also contain a PSData hashtable with additional module metadata used by PowerShell.
     PrivateData          = @{

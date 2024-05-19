@@ -23,6 +23,8 @@ Function New-PFNLevelRules {
 
         # Find the User-Mode ProductSigners Nodes
         [System.Xml.XmlElement]$UMCI_ProductSigners_Node = $Xml.SelectSingleNode('//ns:SigningScenarios/ns:SigningScenario[@Value="12"]/ns:ProductSigners', $Ns)
+
+        $PackageFamilyNames = $PackageFamilyNames | Select-Object -Unique
     }
 
     Process {

@@ -7,6 +7,7 @@ Function Test-KernelProtectedFiles {
         Any other attempts such as "Get-FileHash" or "Get-AuthenticodeSignature" fails and ConfigCI Module cmdlets totally ignore these files and do not create allow rules for them
     .INPUTS
         System.IO.DirectoryInfo[]
+        System.IO.FileInfo[]
     .OUTPUTS
         System.Collections.Generic.HashSet[System.String]
     #>
@@ -14,16 +15,34 @@ Function Test-KernelProtectedFiles {
     [OutputType([System.Collections.Generic.HashSet[System.String]])]
     Param(
         [ValidateScript({ Test-Path -Path $_ -PathType Container -IsValid })]
-        [Parameter(Mandatory = $true)][System.IO.DirectoryInfo[]]$DirectoryPaths
+        [Parameter(Mandatory = $false)][System.IO.DirectoryInfo[]]$DirectoryPaths,
+
+        [ValidateScript({ Test-Path -Path $_ -PathType Leaf -IsValid })]
+        [Parameter(Mandatory = $false)][System.IO.FileInfo[]]$FilePaths,
+
+        [Parameter(Mandatory = $false)][PSCustomObject[]]$Logs
     )
-    Begin {
-        # Final output
+
+    Write-Verbose -Message 'Test-KernelProtectedFiles: Checking for Kernel-Protected files'
+
+    if ($DirectoryPaths -or $FilePaths) {
+        # Final output to return
         $ExesWithNoHash = [System.Collections.Generic.HashSet[System.String]]@()
-        # Get all of the executables in the directory paths
-        $AnyAvailableExes = [System.Collections.Generic.HashSet[System.String]]@(Get-ChildItem -File -Recurse -Path $DirectoryPaths -Filter '*.exe')
-    }
-    Process {
-        foreach ($Exe in $AnyAvailableExes) {
+
+        # Files to process
+        $ApplicableFiles = [System.Collections.Generic.HashSet[System.String]]@()
+
+        switch ($true) {
+            $DirectoryPaths {
+                # Get all of the executables in the directory paths
+                $ApplicableFiles = Get-ChildItem -File -Recurse -Path $DirectoryPaths -Filter '*.exe', '*.dll'
+            }
+            $FilePaths {
+                $ApplicableFiles = $FilePaths | Where-Object -FilterScript { [System.IO.Path]::GetExtension($_) -in @('.exe', '.dll') }
+            }
+        }
+
+        foreach ($Exe in $ApplicableFiles) {
             try {
                 # Testing each executable to find the protected ones
                 Get-FileHash -Path $Exe -ErrorAction Stop | Out-Null
@@ -34,10 +53,33 @@ Function Test-KernelProtectedFiles {
             catch [System.UnauthorizedAccessException] {
                 [System.Void]$ExesWithNoHash.Add($Exe)
             }
+            catch {
+                Write-Verbose -Message "Test-KernelProtectedFiles: An unexpected error occurred while checking the file: $Exe"
+            }
         }
-    }
-    End {
+
         Return ($ExesWithNoHash.Count -eq 0 ? $null : $ExesWithNoHash)
+    }
+
+    elseif ($Logs) {
+
+        # Final output to return
+        $KernelProtectedFileLogs = [System.Collections.Generic.HashSet[PSCustomObject]]@()
+
+        # Looping through every file with .exe and .dll extensions to check if they are kernel protected regardless of whether the file exists or not
+        foreach ($Log in $Logs | Where-Object -FilterScript { [System.IO.Path]::GetExtension($_.'Full Path') -in @('.exe', '.dll') }) {
+            try {
+                Get-FileHash -Path $Log.'Full Path' -ErrorAction Stop | Out-Null
+            }
+            catch [System.UnauthorizedAccessException] {
+                [System.Void]$KernelProtectedFileLogs.Add($Log)
+            }
+            catch {
+                Write-Verbose -Message "Test-KernelProtectedFiles: An unexpected error occurred while checking the file: $($Log.'Full Path')"
+            }
+        }
+
+        Return ($KernelProtectedFileLogs.Count -eq 0 ? $null : $KernelProtectedFileLogs)
     }
 }
 Export-ModuleMember -Function 'Test-KernelProtectedFiles'

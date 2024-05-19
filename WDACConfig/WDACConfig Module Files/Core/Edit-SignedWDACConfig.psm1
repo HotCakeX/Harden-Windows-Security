@@ -141,13 +141,10 @@ Function Edit-SignedWDACConfig {
             "$ModuleRootPath\Shared\Set-LogSize.psm1",
             "$ModuleRootPath\Shared\Test-FilePath.psm1",
             "$ModuleRootPath\Shared\Receive-CodeIntegrityLogs.psm1",
-            "$ModuleRootPath\Shared\New-EmptyPolicy.psm1",
-            "$ModuleRootPath\Shared\Get-RuleRefs.psm1",
-            "$ModuleRootPath\Shared\Get-FileRules.psm1",
             "$ModuleRootPath\Shared\Get-BlockRulesMeta.psm1",
             "$ModuleRootPath\Shared\New-SnapBackGuarantee.psm1",
             "$ModuleRootPath\Shared\New-StagingArea.psm1"
-        ) 
+        )
 
         # if -SkipVersionCheck wasn't passed, run the updater
         if (-NOT $SkipVersionCheck) { Update-Self -InvocationStatement $MyInvocation.Statement }
@@ -648,15 +645,9 @@ Function Edit-SignedWDACConfig {
                             Write-Verbose -Message "$_"
                         }
 
-                        Write-Verbose -Message 'Creating FileRules and RuleRefs for files that are no longer available on the disk but were detected in event viewer logs'
-                        [System.String]$FileRulesHashesResults = Get-FileRules -HashesArray $AuditEventLogsProcessingResults.DeletedFileHashes.Values
-                        [System.String]$RuleRefsHashesResults = (Get-RuleRefs -HashesArray $AuditEventLogsProcessingResults.DeletedFileHashes.Values).Trim()
 
                         Write-Verbose -Message 'Saving the File Rules and File Rule Refs in the FileRulesAndFileRefs.txt in the Staging Area for debugging purposes'
                         $FileRulesHashesResults + $RuleRefsHashesResults | Out-File -FilePath (Join-Path -Path $StagingArea -ChildPath 'FileRulesAndFileRefs.txt') -Force
-
-                        Write-Verbose -Message 'Putting the Rules and RulesRefs in an empty policy file'
-                        New-EmptyPolicy -RulesContent $FileRulesHashesResults -RuleRefsContent $RuleRefsHashesResults | Out-File -FilePath (Join-Path -Path $StagingArea -ChildPath 'DeletedFileHashesEventsPolicy.xml') -Force
 
                         Write-Verbose -Message 'Adding the policy file (DeletedFileHashesEventsPolicy.xml) that consists of rules from audit even logs, to the array of XML files'
                         $PolicyXMLFilesArray += (Join-Path -Path $StagingArea -ChildPath 'DeletedFileHashesEventsPolicy.xml')
@@ -747,11 +738,6 @@ Function Edit-SignedWDACConfig {
                         # If none is found then skip this part, because user didn't run those files/programs when audit mode was turned on in base policy, so no hash was found in audit logs
                         if ($KernelProtectedHashesBlockResults) {
 
-                            # Save the File Rules and File Rule Refs in the FileRulesAndFileRefs.txt for debugging purposes
-                        (Get-FileRules -HashesArray $KernelProtectedHashesBlockResults) + (Get-RuleRefs -HashesArray $KernelProtectedHashesBlockResults) | Out-File -FilePath (Join-Path -Path $StagingArea -ChildPath 'KernelProtectedFiles.txt') -Force
-
-                            # Put the Rules and RulesRefs in an empty policy file
-                            New-EmptyPolicy -RulesContent (Get-FileRules -HashesArray $KernelProtectedHashesBlockResults) -RuleRefsContent (Get-RuleRefs -HashesArray $KernelProtectedHashesBlockResults) | Out-File -FilePath (Join-Path -Path $StagingArea -ChildPath 'KernelProtectedFiles.xml') -Force
 
                             # adding the policy file to the array of xml files
                             $PolicyXMLFilesArray += (Join-Path -Path $StagingArea -ChildPath 'KernelProtectedFiles.xml')

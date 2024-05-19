@@ -91,9 +91,6 @@ Function New-WDACConfig {
             "$ModuleRootPath\Shared\Update-Self.psm1",
             "$ModuleRootPath\Shared\Write-ColorfulText.psm1",
             "$ModuleRootPath\Shared\Set-LogSize.psm1",
-            "$ModuleRootPath\Shared\New-EmptyPolicy.psm1",
-            "$ModuleRootPath\Shared\Get-RuleRefs.psm1",
-            "$ModuleRootPath\Shared\Get-FileRules.psm1",
             "$ModuleRootPath\Shared\Get-BlockRulesMeta.psm1",
             "$ModuleRootPath\Shared\New-StagingArea.psm1",
             "$ModuleRootPath\Shared\Receive-CodeIntegrityLogs.psm1"
@@ -751,11 +748,7 @@ Function New-WDACConfig {
             # run the following only if there are any event logs for files no longer on the disk and if -NoDeletedFiles switch parameter wasn't used
             if ($DeletedFileHashesArray -and !$NoDeletedFiles) {
 
-                # Save the the File Rules and File Rule Refs to the Out-File FileRulesAndFileRefs.txt in the Staging Area
-                (Get-FileRules -HashesArray $DeletedFileHashesArray) + (Get-RuleRefs -HashesArray $DeletedFileHashesArray) | Out-File -FilePath (Join-Path -Path $StagingArea -ChildPath 'FileRulesAndFileRefs.txt') -Force
 
-                # Put the Rules and RulesRefs in an empty policy file
-                New-EmptyPolicy -RulesContent (Get-FileRules -HashesArray $DeletedFileHashesArray) -RuleRefsContent (Get-RuleRefs -HashesArray $DeletedFileHashesArray) | Out-File -FilePath (Join-Path -Path $StagingArea -ChildPath 'DeletedFilesHashes.xml') -Force
 
                 # Merge the policy file we created at first using Event Viewer logs, with the policy file we created for Hash of the files no longer available on the disk
                 Merge-CIPolicy -PolicyPaths $PolicyFromAuditsPath, (Join-Path -Path $StagingArea -ChildPath 'DeletedFilesHashes.xml') -OutputFilePath $FinalSupplementalPath | Out-Null

@@ -34,7 +34,7 @@ Function New-KernelModeWDACConfig {
             "$ModuleRootPath\Shared\Move-UserModeToKernelMode.psm1",
             "$ModuleRootPath\Shared\Get-KernelModeDriversAudit.psm1",
             "$ModuleRootPath\Shared\New-StagingArea.psm1"
-        ) 
+        )
 
         # if -SkipVersionCheck wasn't passed, run the updater
         if (-NOT $SkipVersionCheck) { Update-Self -InvocationStatement $MyInvocation.Statement }

@@ -19,9 +19,7 @@ Function Get-KernelModeDriversAudit {
     param(
         [Parameter(Mandatory = $true)][System.IO.DirectoryInfo]$SavePath
     )
-
     begin {
-        # Importing the $PSDefaultParameterValues to the current session, prior to everything else
         . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
 
         Write-Verbose -Message 'Importing the required sub-modules'

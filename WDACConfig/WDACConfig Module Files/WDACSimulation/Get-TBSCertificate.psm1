@@ -15,10 +15,7 @@ Function Get-TBSCertificate {
         [System.Security.Cryptography.X509Certificates.X509Certificate2]$Cert
     )
     Begin {
-        # Detecting if Verbose switch is used
         $PSBoundParameters.Verbose.IsPresent ? ([System.Boolean]$Verbose = $true) : ([System.Boolean]$Verbose = $false) | Out-Null
-
-        # Importing the $PSDefaultParameterValues to the current session, prior to everything else
         . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
 
         # Get the raw data of the certificate

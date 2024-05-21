@@ -65,9 +65,7 @@ Function Receive-CodeIntegrityLogs {
 
         [Parameter(Mandatory = $false)][System.IO.FileInfo[]]$EVTXFilePaths
     )
-
     Begin {
-        # Importing the $PSDefaultParameterValues to the current session, prior to everything else
         . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
 
         # Importing the required sub-modules

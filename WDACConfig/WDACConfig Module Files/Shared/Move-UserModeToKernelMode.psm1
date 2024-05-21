@@ -17,7 +17,6 @@ Function Move-UserModeToKernelMode {
         [ValidateScript({ Test-Path -Path $_ -PathType Leaf })]
         [System.String]$FilePath
     )
-    # Importing the $PSDefaultParameterValues to the current session, prior to everything else
     . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
 
     # Load the XML file as an XmlDocument object
@@ -63,8 +62,6 @@ Function Move-UserModeToKernelMode {
     # Save the modified XML document to a new file
     $Xml.Save($FilePath)
 }
-
-# Export external facing functions only, prevent internal functions from getting exported
 Export-ModuleMember -Function 'Move-UserModeToKernelMode'
 
 # SIG # Begin signature block

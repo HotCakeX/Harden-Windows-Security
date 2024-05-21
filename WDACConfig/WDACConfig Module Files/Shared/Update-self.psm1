@@ -23,7 +23,6 @@ Function Update-Self {
         [ValidatePattern('^(Confirm-WDACConfig|Deploy-SignedWDACConfig|Edit-SignedWDACConfig|Edit-WDACConfig|Invoke-WDACSimulation|New-DenyWDACConfig|New-KernelModeWDACConfig|New-SupplementalWDACConfig|New-WDACConfig|Remove-WDACConfig|Assert-WDACConfigIntegrity|Build-WDACCertificate|Get-CiFileHashes|ConvertTo-WDACPolicy)(?!.*[;`]).*$', ErrorMessage = 'Either Update-Self function was called with an unauthorized command or it contains semicolon and/or backtick')]
         [System.String]$InvocationStatement
     )
-    # Importing the $PSDefaultParameterValues to the current session, prior to everything else
     . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
 
     try {
@@ -104,8 +103,6 @@ Function Update-Self {
         Write-Verbose -Message "Skipping online update check because the last update check was performed $TimeDiff minutes ago"
     }
 }
-
-# Export external facing functions only, prevent internal functions from getting exported
 Export-ModuleMember -Function 'Update-Self'
 
 # SIG # Begin signature block

@@ -18,7 +18,6 @@ Function Remove-CommonWDACConfig {
         [Parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$Force
     )
     begin {
-        # Importing the $PSDefaultParameterValues to the current session, prior to everything else
         . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
 
         # Create User configuration folder if it doesn't already exist

@@ -31,6 +31,18 @@ if (-NOT ([System.Decimal]$FullOSBuild -ge [System.Decimal]$Requiredbuild)) {
 # Enables additional progress indicators for Windows Terminal and Windows
 $PSStyle.Progress.UseOSCIndicator = $true
 
+function Write-FinalOutput {
+    <#
+    .SYNOPSIS
+        function that shows output messages at the end of each cmdlet run
+    #>
+    param (
+        [Parameter(Mandatory = $true, ValueFromPipeline = $true, ValueFromPipelineByPropertyName = $true, Position = 0)][System.IO.FileInfo]$Path
+    )
+    Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Write-ColorfulText.psm1" -Force
+    Write-ColorfulText -Color Lavender -InputText "The output file ($($Path.Name)) has been saved in ($UserConfigDir)"
+}
+
 # Loop through all the relevant files in the module
 foreach ($File in (Get-ChildItem -Recurse -File -Path $ModuleRootPath -Include '*.ps1', '*.psm1')) {
     # Get the signature of the current file

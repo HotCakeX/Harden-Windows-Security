@@ -14,7 +14,6 @@ Function Get-CommonWDACConfig {
         [parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$StrictKernelModePolicyTimeOfDeployment
     )
     begin {
-        # Importing the $PSDefaultParameterValues to the current session, prior to everything else
         . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
 
         # Create User configuration folder if it doesn't already exist

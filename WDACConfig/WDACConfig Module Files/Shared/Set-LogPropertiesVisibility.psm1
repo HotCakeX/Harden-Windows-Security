@@ -20,7 +20,6 @@ Function Set-LogPropertiesVisibility {
         [Parameter(Mandatory = $true)][PSCustomObject[]]$EventsToDisplay
     )
     Begin {
-        # Importing the $PSDefaultParameterValues to the current session, prior to everything else
         . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
 
         Switch ($LogType) {

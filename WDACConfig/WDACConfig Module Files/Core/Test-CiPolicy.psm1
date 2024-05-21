@@ -9,12 +9,8 @@ Function Test-CiPolicy {
         [Parameter(Mandatory = $true, ValueFromPipeline = $true, ParameterSetName = 'CIP File')]
         [System.IO.FileInfo]$CipFile
     )
-
-    begin {
-        # Detecting if Verbose switch is used
+    Begin {
         $PSBoundParameters.Verbose.IsPresent ? ([System.Boolean]$Verbose = $true) : ([System.Boolean]$Verbose = $false) | Out-Null
-
-        # Importing the $PSDefaultParameterValues to the current session, prior to everything else
         . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
     }
 

@@ -24,12 +24,8 @@ Function Compare-SignerAndCertificate {
         [Parameter(Mandatory = $true)][System.IO.FileInfo]$XmlFilePath,
         [Parameter(Mandatory = $true)][System.IO.FileInfo]$SignedFilePath
     )
-
-    begin {
-        # Detecting if Verbose switch is used
+    Begin {
         $PSBoundParameters.Verbose.IsPresent ? ([System.Boolean]$Verbose = $true) : ([System.Boolean]$Verbose = $false) | Out-Null
-
-        # Importing the $PSDefaultParameterValues to the current session, prior to everything else
         . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
 
         # Importing the required sub-modules

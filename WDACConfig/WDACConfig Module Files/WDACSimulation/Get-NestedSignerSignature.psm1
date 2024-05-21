@@ -17,12 +17,8 @@ Function Get-NestedSignerSignature {
         [Parameter(Mandatory = $true, ValueFromPipeline = $true, ValueFromPipelineByPropertyName = $true)]
         [System.IO.FileInfo]$FilePath
     )
-
-    begin {
-        # Detecting if Verbose switch is used
+    Begin {
         $PSBoundParameters.Verbose.IsPresent ? ([System.Boolean]$Verbose = $true) : ([System.Boolean]$Verbose = $false) | Out-Null
-
-        # Importing the $PSDefaultParameterValues to the current session, prior to everything else
         . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
 
         # Add the Crypt32.dll library functions as a type if they don't exist

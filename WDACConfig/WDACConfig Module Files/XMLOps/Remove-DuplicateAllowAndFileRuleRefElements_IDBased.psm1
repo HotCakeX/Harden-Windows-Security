@@ -17,9 +17,7 @@ Function Remove-DuplicateAllowAndFileRuleRefElements_IDBased {
     param (
         [Parameter(Mandatory = $true)][System.IO.FileInfo]$XmlFilePath
     )
-
     Begin {
-        # Importing the $PSDefaultParameterValues to the current session, prior to everything else
         . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
 
         # Load the XML document from the specified file path

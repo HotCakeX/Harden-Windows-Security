@@ -17,9 +17,7 @@ Function Get-SignTool {
     param(
         [parameter(Mandatory = $false)][System.IO.FileInfo]$SignToolExePathInput
     )
-
     Begin {
-        # Importing the $PSDefaultParameterValues to the current session, prior to everything else
         . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
 
         Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\New-StagingArea.psm1" -Force
@@ -135,7 +133,6 @@ Function Get-SignTool {
         }
     }
 }
-# Export external facing functions only, prevent internal functions from getting exported
 Export-ModuleMember -Function 'Get-SignTool'
 
 # SIG # Begin signature block

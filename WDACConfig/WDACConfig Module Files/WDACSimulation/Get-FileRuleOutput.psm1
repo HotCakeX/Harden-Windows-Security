@@ -19,10 +19,7 @@ Function Get-FileRuleOutput {
         [System.IO.FileInfo]$XmlPath
     )
     Begin {
-        # Detecting if Verbose switch is used
         $PSBoundParameters.Verbose.IsPresent ? ([System.Boolean]$Verbose = $true) : ([System.Boolean]$Verbose = $false) | Out-Null
-
-        # Importing the $PSDefaultParameterValues to the current session, prior to everything else
         . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
 
         # Load the xml file into a variable

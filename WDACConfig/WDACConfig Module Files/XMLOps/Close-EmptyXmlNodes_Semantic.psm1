@@ -40,7 +40,6 @@ Function Close-EmptyXmlNodes_Semantic {
         [Parameter(Mandatory = $true)][System.IO.FileInfo]$XmlFilePath
     )
     Begin {
-        # Importing the $PSDefaultParameterValues to the current session, prior to everything else
         . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
 
         # Define the base node names that should not be removed even if empty

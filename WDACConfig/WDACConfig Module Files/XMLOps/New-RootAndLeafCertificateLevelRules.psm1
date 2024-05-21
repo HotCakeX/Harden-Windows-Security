@@ -18,9 +18,7 @@ Function New-RootAndLeafCertificateLevelRules {
         [Parameter(Mandatory = $true)][PSCustomObject[]]$SignerData,
         [Parameter(Mandatory = $true)][System.IO.FileInfo]$XmlFilePath
     )
-
     Begin {
-        # Importing the $PSDefaultParameterValues to the current session, prior to everything else
         . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
 
         # Load the XML file

@@ -13,7 +13,6 @@ Function Get-GlobalRootDrives {
     [CmdletBinding()]
     [OutputType([System.Object[]])]
     param ()
-    # Importing the $PSDefaultParameterValues to the current session, prior to everything else
     . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
 
     # Import the kernel32.dll functions using P/Invoke if they don't exist
@@ -58,8 +57,6 @@ Function Get-GlobalRootDrives {
     } while ([WDACConfig.Win32Utils]::FindNextVolume([System.IntPtr]$VolumeHandle, $SbVolumeName, $Max))
 
 }
-
-# Export external facing functions only, prevent internal functions from getting exported
 Export-ModuleMember -Function 'Get-GlobalRootDrives'
 
 # SIG # Begin signature block

@@ -1,3 +1,9 @@
+<# -------- Guidance for code readers --------
+The module uses tight import/export control, no internal function is exposed on the console/to the user.
+The $PSDefaultParameterValues located in "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1" is imported via dot-sourcing to the current session of each main cmdlet/internal function that calls any (other) internal function or uses any of the cmdlets defined in that file, prior to everything else.
+In order to take actions based on Verbose/Debug preferences, at the beginning of each main cmdlet that requires them, 2 custom $Verbose and/or $Debug variables are propagated to the codes present in that cmdlet.
+#>
+
 # Stopping the module process if any error occurs
 $global:ErrorActionPreference = 'Stop'
 

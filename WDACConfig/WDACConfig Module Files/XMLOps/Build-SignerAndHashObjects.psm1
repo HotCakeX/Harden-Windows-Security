@@ -37,7 +37,6 @@ Function Build-SignerAndHashObjects {
         [Parameter(Mandatory = $false)][System.String]$IncomingDataType
     )
     Begin {
-        # Importing the $PSDefaultParameterValues to the current session, prior to everything else
         . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
 
         # An array to store the Signers created with FilePublisher Level

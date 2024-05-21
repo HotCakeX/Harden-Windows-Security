@@ -26,8 +26,7 @@ Function Remove-SupplementalSigners {
         [Parameter(Mandatory = $true, ValueFromPipeline = $true, Position = 0)]
         [System.IO.FileInfo]$Path
     )
-
-    begin {
+    Begin {
 
         # Make sure the input file is compliant with the CI policy schema
         Test-CiPolicy -XmlFile $Path | Out-Null

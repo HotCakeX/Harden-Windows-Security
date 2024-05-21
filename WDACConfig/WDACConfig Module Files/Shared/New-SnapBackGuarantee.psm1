@@ -46,8 +46,6 @@ del "%~f0"
 "@
 
 }
-
-# Export external facing functions only, prevent internal functions from getting exported
 Export-ModuleMember -Function 'New-SnapBackGuarantee'
 
 # An alternative way to do this which is less reliable because RunOnce key can be deleted by 3rd party programs during installation etc.

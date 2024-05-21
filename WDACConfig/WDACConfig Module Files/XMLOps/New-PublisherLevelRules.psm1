@@ -19,9 +19,7 @@ Function New-PublisherLevelRules {
         [Parameter(Mandatory = $true)][PSCustomObject[]]$PublisherSigners,
         [Parameter(Mandatory = $true)][System.IO.FileInfo]$XmlFilePath
     )
-
     Begin {
-        # Importing the $PSDefaultParameterValues to the current session, prior to everything else
         . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
 
         Write-Verbose -Message "New-PublisherLevelRules: There are $($PublisherSigners.Count) Publisher Signers to be added to the XML file"

@@ -23,7 +23,6 @@ Function Test-FilePath {
         [System.IO.DirectoryInfo[]]$DirectoryPath
     )
     Begin {
-        # Importing the $PSDefaultParameterValues to the current session, prior to everything else
         . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
 
         [System.IO.FileInfo[]]$Output = @()
@@ -54,8 +53,6 @@ Function Test-FilePath {
         Return ($Output | Select-Object -Unique)
     }
 }
-
-# Export external facing functions only, prevent internal functions from getting exported
 Export-ModuleMember -Function 'Test-FilePath'
 
 # SIG # Begin signature block

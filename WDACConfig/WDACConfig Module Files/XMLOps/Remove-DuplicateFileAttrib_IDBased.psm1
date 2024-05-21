@@ -18,7 +18,6 @@ Function Remove-DuplicateFileAttrib_IDBased {
     param (
         [Parameter(Mandatory = $true)][System.IO.FileInfo]$XmlFilePath
     )
-
     Begin {
         # Load the XML file
         [System.Xml.XmlDocument]$Xml = Get-Content -Path $XmlFilePath
@@ -29,7 +28,6 @@ Function Remove-DuplicateFileAttrib_IDBased {
     }
 
     Process {
-        # Importing the $PSDefaultParameterValues to the current session, prior to everything else
         . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
 
         # Get all FileAttrib elements

@@ -40,13 +40,9 @@ Function Compare-CorrelatedData {
         [ValidateSet('Audit', 'Blocked')]
         [Parameter(Mandatory = $true)][System.String]$LogType
     )
-
     Begin {
-        # Importing the $PSDefaultParameterValues to the current session, prior to everything else
-        . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
-
-        # Detecting if Debug switch is used
         $PSBoundParameters.Debug.IsPresent ? ([System.Boolean]$Debug = $true) : ([System.Boolean]$Debug = $false) | Out-Null
+        . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
 
         # Group the events based on the EtwActivityId, which is the unique identifier for each group of correlated events
         [Microsoft.PowerShell.Commands.GroupInfo[]]$GroupedEvents = $OptimizedCSVData | Group-Object -Property EtwActivityId

@@ -6,9 +6,7 @@ Function New-PFNLevelRules {
         [Parameter(Mandatory = $true)][System.String[]]$PackageFamilyNames,
         [Parameter(Mandatory = $true)][System.IO.FileInfo]$XmlFilePath
     )
-
     Begin {
-        # Importing the $PSDefaultParameterValues to the current session, prior to everything else
         . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
 
         # Load the XML file

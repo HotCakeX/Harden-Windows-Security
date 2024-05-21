@@ -14,9 +14,7 @@ Function Get-BlockRulesMeta {
     param (
         [Parameter(Mandatory = $true)][System.IO.DirectoryInfo]$SaveDirectory
     )
-
     Begin {
-        # Importing the $PSDefaultParameterValues to the current session, prior to everything else
         . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
 
         [System.IO.FileInfo]$FinalPolicyPath = Join-Path -Path $SaveDirectory -ChildPath 'Microsoft recommended block rules.xml'
@@ -85,8 +83,6 @@ Function Get-BlockRulesMeta {
         Return $FinalPolicyPath
     }
 }
-
-# Export external facing functions only, prevent internal functions from getting exported
 Export-ModuleMember -Function 'Get-BlockRulesMeta'
 
 # SIG # Begin signature block

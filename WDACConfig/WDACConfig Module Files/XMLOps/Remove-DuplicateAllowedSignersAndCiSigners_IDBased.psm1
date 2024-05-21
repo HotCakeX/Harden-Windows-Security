@@ -14,9 +14,7 @@ Function Remove-DuplicateAllowedSignersAndCiSigners_IDBased {
     param (
         [Parameter(Mandatory = $true)][System.IO.FileInfo]$Path
     )
-
     Begin {
-        # Importing the $PSDefaultParameterValues to the current session, prior to everything else
         . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
 
         # Load the XML file

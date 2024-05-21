@@ -122,15 +122,9 @@ Function Edit-SignedWDACConfig {
         [Parameter(Mandatory = $false)]
         [System.Management.Automation.SwitchParameter]$SkipVersionCheck
     )
-
-    begin {
-        # Detecting if Verbose switch is used
+    Begin {
         $PSBoundParameters.Verbose.IsPresent ? ([System.Boolean]$Verbose = $true) : ([System.Boolean]$Verbose = $false) | Out-Null
-
-        # Detecting if Debug switch is used, will do debugging actions based on that
         $PSBoundParameters.Debug.IsPresent ? ([System.Boolean]$Debug = $true) : ([System.Boolean]$Debug = $false) | Out-Null
-
-        # Importing the $PSDefaultParameterValues to the current session, prior to everything else
         . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
 
         Write-Verbose -Message 'Importing the required sub-modules'
@@ -450,11 +444,7 @@ Function Edit-SignedWDACConfig {
             }
 
             if ($AllowNewAppsAuditEvents) {
-                # Change Code Integrity event logs size
-                if ($AllowNewAppsAuditEvents -and $LogSize) {
-                    Write-Verbose -Message 'Changing Code Integrity event logs size'
-                    Set-LogSize -LogSize $LogSize
-                }
+                Set-LogSize -LogSize:$LogSize
 
                 # Get the current date so that instead of the entire event viewer logs, only audit logs created after running this module will be captured
                 Write-Verbose -Message 'Getting the current date'

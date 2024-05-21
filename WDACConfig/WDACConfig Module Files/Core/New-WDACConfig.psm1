@@ -5,23 +5,17 @@ Function New-WDACConfig {
     )]
     [OutputType([System.String])]
     Param(
-        # 9 Main parameters - should be used for position 0
+        # 8 Main parameters - should be used for position 0
         [Parameter(Mandatory = $false, ParameterSetName = 'Get Block Rules')][System.Management.Automation.SwitchParameter]$GetBlockRules,
         [Parameter(Mandatory = $false, ParameterSetName = 'Get Driver Block Rules')][System.Management.Automation.SwitchParameter]$GetDriverBlockRules,
         [Parameter(Mandatory = $false, ParameterSetName = 'Make AllowMSFT With Block Rules')][System.Management.Automation.SwitchParameter]$MakeAllowMSFTWithBlockRules,
         [Parameter(Mandatory = $false, ParameterSetName = 'Set Auto Update Driver Block Rules')][System.Management.Automation.SwitchParameter]$SetAutoUpdateDriverBlockRules,
         [Parameter(Mandatory = $false, ParameterSetName = 'Prep MSFT Only Audit')][System.Management.Automation.SwitchParameter]$PrepMSFTOnlyAudit,
         [Parameter(Mandatory = $false, ParameterSetName = 'Prep Default Windows Audit')][System.Management.Automation.SwitchParameter]$PrepDefaultWindowsAudit,
-        [Parameter(Mandatory = $false, ParameterSetName = 'Make Policy From Audit Logs')][System.Management.Automation.SwitchParameter]$MakePolicyFromAuditLogs,
         [Parameter(Mandatory = $false, ParameterSetName = 'Make Light Policy')][System.Management.Automation.SwitchParameter]$MakeLightPolicy,
         [Parameter(Mandatory = $false, ParameterSetName = 'Make DefaultWindows With Block Rules')][System.Management.Automation.SwitchParameter]$MakeDefaultWindowsWithBlockRules,
 
-        [ValidateSet('Allow Microsoft Base', 'Default Windows Base')]
-        [Parameter(Mandatory = $true, ParameterSetName = 'Make Policy From Audit Logs')]
-        [System.String]$BasePolicyType,
-
         [Parameter(Mandatory = $false, ParameterSetName = 'Make AllowMSFT With Block Rules')]
-        [Parameter(Mandatory = $false, ParameterSetName = 'Make Policy From Audit Logs')]
         [Parameter(Mandatory = $false, ParameterSetName = 'Make Light Policy')]
         [Parameter(Mandatory = $false, ParameterSetName = 'Make DefaultWindows With Block Rules')]
         [Parameter(Mandatory = $false, ParameterSetName = 'Prep MSFT Only Audit')]
@@ -31,42 +25,18 @@ Function New-WDACConfig {
         [System.Management.Automation.SwitchParameter]$Deploy,
 
         [Parameter(Mandatory = $false, ParameterSetName = 'Make Light Policy')]
-        [Parameter(Mandatory = $false, ParameterSetName = 'Make Policy From Audit Logs')]
         [Parameter(Mandatory = $false, ParameterSetName = 'Make AllowMSFT With Block Rules')]
         [Parameter(Mandatory = $false, ParameterSetName = 'Make DefaultWindows With Block Rules')]
         [System.Management.Automation.SwitchParameter]$TestMode,
 
         [Parameter(Mandatory = $false, ParameterSetName = 'Make AllowMSFT With Block Rules')]
-        [Parameter(Mandatory = $false, ParameterSetName = 'Make Policy From Audit Logs')]
         [Parameter(Mandatory = $false, ParameterSetName = 'Make Light Policy')]
         [Parameter(Mandatory = $false, ParameterSetName = 'Make DefaultWindows With Block Rules')]
         [System.Management.Automation.SwitchParameter]$RequireEVSigners,
 
-        [ValidateSet('OriginalFileName', 'InternalName', 'FileDescription', 'ProductName', 'PackageFamilyName', 'FilePath')]
-        [Parameter(Mandatory = $false, ParameterSetName = 'Make Policy From Audit Logs')]
-        [System.String]$SpecificFileNameLevel,
-
-        [Parameter(Mandatory = $false, ParameterSetName = 'Make Policy From Audit Logs')]
-        [System.Management.Automation.SwitchParameter]$NoDeletedFiles,
-
-        [Parameter(Mandatory = $false, ParameterSetName = 'Make Policy From Audit Logs')]
-        [System.Management.Automation.SwitchParameter]$NoUserPEs,
-
-        [Parameter(Mandatory = $false, ParameterSetName = 'Make Policy From Audit Logs')]
-        [System.Management.Automation.SwitchParameter]$NoScript,
-
-        [ValidateSet([ScanLevelz])]
-        [parameter(Mandatory = $false, ParameterSetName = 'Make Policy From Audit Logs')]
-        [System.String]$Level = 'WHQLFilePublisher',
-
-        [ValidateSet([ScanLevelz])]
-        [parameter(Mandatory = $false, ParameterSetName = 'Make Policy From Audit Logs')]
-        [System.String[]]$Fallbacks = ('FilePublisher', 'Hash'),
-
         [ValidateRange(1024KB, 18014398509481983KB)]
         [Parameter(Mandatory = $false, ParameterSetName = 'Prep MSFT Only Audit')]
         [Parameter(Mandatory = $false, ParameterSetName = 'Prep Default Windows Audit')]
-        [Parameter(Mandatory = $false, ParameterSetName = 'Make Policy From Audit Logs')]
         [System.UInt64]$LogSize,
 
         [Parameter(Mandatory = $false, ParameterSetName = 'Make AllowMSFT With Block Rules')]
@@ -78,12 +48,9 @@ Function New-WDACConfig {
 
         [Parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$SkipVersionCheck
     )
-
-    begin {
-        # Detecting if Verbose switch is used
+    Begin {
         $PSBoundParameters.Verbose.IsPresent ? ([System.Boolean]$Verbose = $true) : ([System.Boolean]$Verbose = $false) | Out-Null
-
-        # Importing the $PSDefaultParameterValues to the current session, prior to everything else
+        $PSBoundParameters.Debug.IsPresent ? ([System.Boolean]$Debug = $true) : ([System.Boolean]$Debug = $false) | Out-Null
         . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
 
         Write-Verbose -Message 'Importing the required sub-modules'
@@ -92,12 +59,8 @@ Function New-WDACConfig {
             "$ModuleRootPath\Shared\Write-ColorfulText.psm1",
             "$ModuleRootPath\Shared\Set-LogSize.psm1",
             "$ModuleRootPath\Shared\Get-BlockRulesMeta.psm1",
-            "$ModuleRootPath\Shared\New-StagingArea.psm1",
-            "$ModuleRootPath\Shared\Receive-CodeIntegrityLogs.psm1"
+            "$ModuleRootPath\Shared\New-StagingArea.psm1"
         )
-
-        # Detecting if Debug switch is used, will do debugging actions based on that
-        $PSBoundParameters.Debug.IsPresent ? ([System.Boolean]$Debug = $true) : ([System.Boolean]$Debug = $false) | Out-Null
 
         [System.IO.DirectoryInfo]$StagingArea = New-StagingArea -CmdletName 'New-WDACConfig'
 
@@ -228,7 +191,7 @@ Function New-WDACConfig {
                 # Copy the result to the User Config directory at the end
                 Copy-Item -Path $XMLPath -Destination $UserConfigDir -Force
 
-                Write-ColorfulText -Color MintGreen -InputText "PolicyFile = $($XMLPath.Name)"
+                Write-FinalOutput $XMLPath
             }
             Write-Progress -Id 1 -Activity 'Complete.' -Completed
         }
@@ -282,7 +245,7 @@ Function New-WDACConfig {
             Write-Verbose -Message 'Resetting the policy ID and assigning policy name'
             Set-CIPolicyIdInfo -FilePath $FinalPolicyPath -PolicyName "Allow Microsoft Plus Block Rules - $(Get-Date -Format 'MM-dd-yyyy')" -ResetPolicyID | Out-Null
 
-            Write-Verbose -Message 'Setting AllowMicrosoftPlusBlockRules.xml policy version to 1.0.0.0'
+            Write-Verbose -Message 'Setting policy version to 1.0.0.0'
             Set-CIPolicyVersion -FilePath $FinalPolicyPath -Version '1.0.0.0'
 
             Set-CiRuleOptions -FilePath $FinalPolicyPath -Template Base -TestMode:$TestMode -RequireEVSigners:$RequireEVSigners -ScriptEnforcement:$EnableScriptEnforcement
@@ -301,9 +264,7 @@ Function New-WDACConfig {
             # Copy the result to the User Config directory at the end if -SavePath is not used indicating this function is being called from another function
             if (-NOT $SavePath) {
                 Copy-Item -Path $FinalPolicyPath -Destination $UserConfigDir -Force
-
-                Write-Verbose -Message 'Displaying the output'
-                Write-ColorfulText -Color MintGreen -InputText 'PolicyFile = AllowMicrosoftPlusBlockRules.xml'
+                Write-FinalOutput $FinalPolicyPath
             }
 
             Write-Progress -Id 3 -Activity 'Complete' -Completed
@@ -387,11 +348,9 @@ Function New-WDACConfig {
             }
 
             if (-NOT $SavePath) {
-                Write-Verbose -Message 'Displaying the output'
-                Write-ColorfulText -Color MintGreen -InputText 'PolicyFile = DefaultWindowsPlusBlockRules.xml'
-
                 # Copy the result to the User Config directory at the end
                 Copy-Item -Path $FinalPolicyPath -Destination $UserConfigDir -Force
+                Write-FinalOutput $FinalPolicyPath
             }
 
             Write-Progress -Id 7 -Activity 'Complete.' -Completed
@@ -533,10 +492,7 @@ Function New-WDACConfig {
             [System.UInt16]$TotalSteps = $Deploy ? 3 : 2
             [System.UInt16]$CurrentStep = 0
 
-            if ($PrepMSFTOnlyAudit -and $LogSize) {
-                Write-Verbose -Message 'Changing the Log size of Code Integrity Operational event log'
-                Set-LogSize -LogSize $LogSize
-            }
+            Set-LogSize -LogSize:$LogSize
 
             $CurrentStep++
             Write-Progress -Id 5 -Activity 'Creating the policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
@@ -568,6 +524,7 @@ Function New-WDACConfig {
             else {
                 Copy-Item -Path $FinalPolicyPath -Destination $UserConfigDir -Force
                 Write-ColorfulText -Color HotPink -InputText 'The default AllowMicrosoft policy has been created in Audit mode and is ready for deployment.'
+                Write-FinalOutput $FinalPolicyPath
             }
             Write-Progress -Id 5 -Activity 'complete.' -Completed
         }
@@ -591,13 +548,10 @@ Function New-WDACConfig {
             )
 
             # The total number of the main steps for the progress bar to render
-            [System.UInt16]$TotalSteps = $Deploy ? 4 : 3
+            [System.UInt16]$TotalSteps = $Deploy ? 3 : 2
             [System.UInt16]$CurrentStep = 0
 
-            if ($PrepDefaultWindowsAudit -and $LogSize) {
-                Write-Verbose -Message 'Changing the Log size of Code Integrity Operational event log'
-                Set-LogSize -LogSize $LogSize
-            }
+            Set-LogSize -LogSize:$LogSize
 
             $CurrentStep++
             Write-Progress -Id 8 -Activity 'Fetching the policy template' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
@@ -606,27 +560,6 @@ Function New-WDACConfig {
 
             Write-Verbose -Message 'Copying DefaultWindows_Audit.xml from Windows directory to the Staging Area'
             Copy-Item -Path 'C:\Windows\schemas\CodeIntegrity\ExamplePolicies\DefaultWindows_Audit.xml' -Destination $FinalPolicyPath -Force
-
-            $CurrentStep++
-            Write-Progress -Id 8 -Activity 'Determining whether to include PowerShell core' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
-
-            # Making Sure neither PowerShell core (Installed using MSI because Microsoft Store installed version is automatically allowed) nor WDACConfig module files are added to the Supplemental policy created by -MakePolicyFromAuditLogs parameter
-            # by adding them first to the deployed Default Windows policy in Audit mode. Because WDACConfig module files don't need to be allowed to run since they are *.ps1 and .*psm1 files
-            # And PowerShell core files will be added to the DefaultWindows Base policy anyway
-            if ($PSHOME -notlike 'C:\Program Files\WindowsApps\*') {
-
-                Write-Verbose -Message 'Scanning PowerShell core directory and creating a policy file'
-                New-CIPolicy -ScanPath $PSHOME -Level FilePublisher -NoScript -Fallback Hash -UserPEs -UserWriteablePaths -MultiplePolicyFormat -FilePath (Join-Path -Path $StagingArea -ChildPath 'AllowPowerShell.xml')
-
-                Write-Verbose -Message 'Scanning WDACConfig module directory and creating a policy file'
-                New-CIPolicy -ScanPath "$ModuleRootPath" -Level hash -UserPEs -UserWriteablePaths -MultiplePolicyFormat -FilePath (Join-Path -Path $StagingArea -ChildPath 'WDACConfigModule.xml')
-
-                Write-Verbose -Message 'Merging the policy files for PowerShell core and WDACConfig module with the DefaultWindows_Audit.xml policy file'
-                Merge-CIPolicy -PolicyPaths $FinalPolicyPath, (Join-Path -Path $StagingArea -ChildPath 'AllowPowerShell.xml'), (Join-Path -Path $StagingArea -ChildPath 'WDACConfigModule.xml') -OutputFilePath (Join-Path -Path $StagingArea -ChildPath 'DefaultWindows_Audit_temp.xml') | Out-Null
-
-                Write-Verbose -Message 'Renaming DefaultWindows_Audit_temp.xml to DefaultWindows_Audit.xml'
-                Move-Item -Path (Join-Path -Path $StagingArea -ChildPath 'DefaultWindows_Audit_temp.xml') -Destination $FinalPolicyPath -Force
-            }
 
             $CurrentStep++
             Write-Progress -Id 8 -Activity 'Configuring the policy settings' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
@@ -651,169 +584,10 @@ Function New-WDACConfig {
             else {
                 Copy-Item -Path $FinalPolicyPath -Destination $UserConfigDir -Force
                 Write-ColorfulText -Color Lavender -InputText 'The defaultWindows policy has been created in Audit mode and is ready for deployment.'
+                Write-FinalOutput $FinalPolicyPath
             }
             Write-Progress -Id 8 -Activity 'Complete.' -Completed
         }
-
-        Function Build-PolicyFromAuditLogs {
-            <#
-            .SYNOPSIS
-                A helper function that creates 2 WDAC policies. A bas policy from one of the standard templates
-                and a Supplemental policy based on the Code Integrity Operational audit logs
-            .INPUTS
-                System.Management.Automation.SwitchParameter
-            .OUTPUTS
-                System.String
-            #>
-            [CmdletBinding()]
-            param(
-                [parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$Deploy,
-                [parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$RequireEVSigners,
-                [parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$TestMode
-            )
-
-            # The total number of the main steps for the progress bar to render
-            [System.UInt16]$TotalSteps = 4
-            [System.UInt16]$CurrentStep = 0
-
-            if ($MakePolicyFromAuditLogs -and $LogSize) {
-                Write-Verbose -Message 'Changing the Log size of Code Integrity Operational event log'
-                Set-LogSize -LogSize $LogSize
-            }
-
-            #Region Base-Policy-Processing
-            $CurrentStep++
-            Write-Progress -Id 4 -Activity 'Creating the base policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
-
-            switch ($BasePolicyType) {
-                'Allow Microsoft Base' {
-                    Write-Verbose -Message 'Creating Allow Microsoft Base policy'
-
-                    # Base policy path definition
-                    [System.IO.FileInfo]$FinalPolicyPath = Join-Path -Path $StagingArea -ChildPath 'AllowMicrosoftPlusBlockRules.xml'
-
-                    Build-AllowMSFTWithBlockRules -SavePath $FinalPolicyPath
-                }
-                'Default Windows Base' {
-                    Write-Verbose -Message 'Creating Default Windows Base policy'
-
-                    # Base policy path definition
-                    [System.IO.FileInfo]$FinalPolicyPath = Join-Path -Path $StagingArea -ChildPath 'DefaultWindowsPlusBlockRules.xml'
-
-                    Build-DefaultWindowsWithBlockRules -SavePath $FinalPolicyPath
-                }
-            }
-
-            Set-CiRuleOptions -FilePath $FinalPolicyPath -TestMode:$TestMode -RequireEVSigners:$RequireEVSigners
-
-            #Endregion Base-Policy-Processing
-
-            #Region Supplemental-Policy-Processing
-            $CurrentStep++
-            Write-Progress -Id 4 -Activity 'Scanning the event logs' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
-
-            # Audits policy path definition
-            [System.IO.FileInfo]$PolicyFromAuditsPath = Join-Path $StagingArea -ChildPath 'AuditLogsPolicy_NoDeletedFiles.xml'
-
-            # Creating a hash table to dynamically add parameters based on user input and pass them to New-Cipolicy cmdlet
-            [System.Collections.Hashtable]$PolicyMakerHashTable = @{
-                FilePath               = $PolicyFromAuditsPath
-                Audit                  = $true
-                Level                  = $Level
-                Fallback               = $Fallbacks
-                MultiplePolicyFormat   = $true
-                UserWriteablePaths     = $true
-                WarningAction          = 'SilentlyContinue'
-                AllowFileNameFallbacks = $true
-            }
-            # Assess user input parameters and add the required parameters to the hash table
-            if ($SpecificFileNameLevel) { $PolicyMakerHashTable['SpecificFileNameLevel'] = $SpecificFileNameLevel }
-            if ($NoScript) { $PolicyMakerHashTable['NoScript'] = $true }
-            if (!$NoUserPEs) { $PolicyMakerHashTable['UserPEs'] = $true }
-
-            Write-ColorfulText -Color HotPink -InputText 'Generating Supplemental policy with the following specifications:'
-            $PolicyMakerHashTable
-            Write-Host -Object ''
-
-            # Create the supplemental policy via parameter splatting for files in event viewer that are currently on the disk
-            New-CIPolicy @PolicyMakerHashTable
-
-            # Supplemental policy path definition
-            [System.IO.FileInfo]$FinalSupplementalPath = Join-Path -Path $StagingArea -ChildPath 'SupplementalPolicy.xml'
-
-            if (!$NoDeletedFiles) {
-                # Get the hashes of the files no longer available on the disk
-                $DeletedFileHashesArray = Receive-CodeIntegrityLogs -PostProcessing OnlyDeleted
-            }
-            # run the following only if there are any event logs for files no longer on the disk and if -NoDeletedFiles switch parameter wasn't used
-            if ($DeletedFileHashesArray -and !$NoDeletedFiles) {
-
-
-
-                # Merge the policy file we created at first using Event Viewer logs, with the policy file we created for Hash of the files no longer available on the disk
-                Merge-CIPolicy -PolicyPaths $PolicyFromAuditsPath, (Join-Path -Path $StagingArea -ChildPath 'DeletedFilesHashes.xml') -OutputFilePath $FinalSupplementalPath | Out-Null
-            }
-            # do this only if there are no event logs detected with files no longer on the disk, so we use the policy file created earlier using Audit even logs
-            else {
-                Move-Item -Path $PolicyFromAuditsPath -Destination $FinalSupplementalPath -Force
-            }
-
-            Write-Verbose -Message 'Setting the version for SupplementalPolicy.xml policy to 1.0.0.0'
-            Set-CIPolicyVersion -FilePath $FinalSupplementalPath -Version '1.0.0.0'
-
-            # Convert the SupplementalPolicy.xml policy file from base policy to supplemental policy of our base policy
-            $CurrentStep++
-            Write-Progress -Id 4 -Activity 'Adjusting the policy settings' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
-
-            Write-Verbose -Message 'Convert the SupplementalPolicy.xml policy file from base policy to supplemental policy of our base policy'
-            Set-CIPolicyIdInfo -FilePath $FinalSupplementalPath -PolicyName "Supplemental Policy made from Audit Event Logs on $(Get-Date -Format 'MM-dd-yyyy')" -ResetPolicyID -BasePolicyToSupplementPath $FinalPolicyPath | Out-Null
-
-            Set-CiRuleOptions -FilePath $FinalSupplementalPath -Template Supplemental
-
-            $CurrentStep++
-            Write-Progress -Id 4 -Activity 'Generating the CIP files' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
-
-            # Defining the paths for the .CIP binary files
-            [System.IO.FileInfo]$BasePolicyCIPPath = Join-Path -Path $StagingArea -ChildPath 'BasePolicy.cip'
-            [System.IO.FileInfo]$SupplementalPolicyCIPPath = Join-Path -Path $StagingArea -ChildPath 'SupplementalPolicy.cip'
-
-            Write-Verbose -Message 'Generating .CIP binary files for base and supplemental policies'
-            ConvertFrom-CIPolicy -XmlFilePath $FinalPolicyPath -BinaryFilePath $BasePolicyCIPPath | Out-Null
-            ConvertFrom-CIPolicy -XmlFilePath $FinalSupplementalPath -BinaryFilePath $SupplementalPolicyCIPPath | Out-Null
-            #Endregion Supplemental-Policy-Processing
-
-            Write-ColorfulText -Color MintGreen -InputText "BasePolicyFile = $FinalPolicyPath"
-            Write-ColorfulText -Color MintGreen -InputText "SupplementalPolicyFile = $FinalSupplementalPath"
-
-            if ($Deploy) {
-                Write-Verbose -Message 'Deploying the Base policy and Supplemental policy'
-                &'C:\Windows\System32\CiTool.exe' --update-policy $BasePolicyCIPPath -json | Out-Null
-                &'C:\Windows\System32\CiTool.exe' --update-policy $SupplementalPolicyCIPPath -json | Out-Null
-
-                Write-ColorfulText -Color Pink -InputText 'Base policy and Supplemental Policies deployed and activated.'
-
-                Write-Verbose -Message 'Getting the correct Prep mode Audit policy ID to remove from the system'
-                switch ($BasePolicyType) {
-                    'Allow Microsoft Base' {
-                        Write-Verbose -Message 'Going to remove the AllowMicrosoft policy from the system because Allow Microsoft Base was used'
-                        [System.String]$IDToRemove = ((&'C:\Windows\System32\CiTool.exe' -lp -json | ConvertFrom-Json).Policies | Where-Object -FilterScript { $_.FriendlyName -eq 'PrepMSFTOnlyAudit' }).PolicyID
-                    }
-                    'Default Windows Base' {
-                        Write-Verbose -Message 'Going to remove the DefaultWindows policy from the system because Default Windows Base was used'
-                        [System.String]$IDToRemove = ((&'C:\Windows\System32\CiTool.exe' -lp -json | ConvertFrom-Json).Policies | Where-Object -FilterScript { $_.FriendlyName -eq 'PrepDefaultWindows' }).PolicyID
-                    }
-                }
-
-                &'C:\Windows\System32\CiTool.exe' --remove-policy "{$IDToRemove}" -json | Out-Null
-                Write-ColorfulText -Color Lavender -InputText 'System restart required to finish removing the Audit mode Prep policy'
-            }
-
-            # Copy the results to the User Config directory at the end
-            Copy-Item -Path $FinalPolicyPath, $FinalSupplementalPath, $BasePolicyCIPPath, $SupplementalPolicyCIPPath -Destination $UserConfigDir -Force
-
-            Write-Progress -Id 4 -Activity 'Complete.' -Completed
-        }
-
         Function Build-LightPolicy {
             <#
             .SYNOPSIS
@@ -879,10 +653,8 @@ Function New-WDACConfig {
                 &'C:\Windows\System32\CiTool.exe' --update-policy (Join-Path -Path $StagingArea -ChildPath 'BasePolicy.cip') -json | Out-Null
             }
 
-            Write-Verbose -Message 'Displaying the output'
-            Write-ColorfulText -Color MintGreen -InputText "BasePolicyFile = $FinalPolicyPath"
-
             Copy-Item -Path $FinalPolicyPath -Destination $UserConfigDir -Force
+            Write-FinalOutput $FinalPolicyPath
 
             Write-Progress -Id 6 -Activity 'Complete.' -Completed
         }
@@ -918,7 +690,6 @@ Function New-WDACConfig {
                 $GetDriverBlockRules { Get-DriverBlockRules -Deploy:$Deploy ; break }
                 $SetAutoUpdateDriverBlockRules { Set-AutoUpdateDriverBlockRules ; break }
                 $MakeAllowMSFTWithBlockRules { Build-AllowMSFTWithBlockRules -Deploy:$Deploy -RequireEVSigners:$RequireEVSigners -TestMode:$TestMode ; break }
-                $MakePolicyFromAuditLogs { Build-PolicyFromAuditLogs -Deploy:$Deploy -RequireEVSigners:$RequireEVSigners -TestMode:$TestMode ; break }
                 $PrepMSFTOnlyAudit { Build-MSFTOnlyAudit -Deploy:$Deploy ; break }
                 $MakeLightPolicy { Build-LightPolicy -Deploy:$Deploy -RequireEVSigners:$RequireEVSigners -TestMode:$TestMode ; break }
                 $MakeDefaultWindowsWithBlockRules { Build-DefaultWindowsWithBlockRules -Deploy:$Deploy -RequireEVSigners:$RequireEVSigners -TestMode:$TestMode ; break }
@@ -956,34 +727,18 @@ Function New-WDACConfig {
     Prepare the system for Audit mode using AllowMicrosoft default policy
 .PARAMETER PrepDefaultWindowsAudit
     Prepare the system for Audit mode using DefaultWindows policy
-.PARAMETER MakePolicyFromAuditLogs
-    Make a WDAC Policy from Audit event logs that also covers files no longer on disk
 .PARAMETER MakeLightPolicy
     Make a WDAC Policy with ISG for Lightly Managed system
 .PARAMETER MakeDefaultWindowsWithBlockRules
     Make a WDAC policy by merging DefaultWindows policy with the recommended block rules
 .PARAMETER EnableScriptEnforcement
     Enable script enforcement for the policy
-.PARAMETER BasePolicyType
-    Select the Base Policy Type
 .PARAMETER Deploy
     Deploys the policy that is being created
 .PARAMETER TestMode
     Indicates that the created/deployed policy will have Enabled:Boot Audit on Failure and Enabled:Advanced Boot Options Menu policy rule options
 .PARAMETER RequireEVSigners
     Indicates that the created/deployed policy will have Require EV Signers policy rule option.
-.PARAMETER NoDeletedFiles
-    Indicates that files that were run during program installations but then were deleted and are no longer on the disk, won't be added to the supplemental policy. This can mean the programs you installed will be allowed to run but installation/reinstallation might not be allowed once the policies are deployed.
-.PARAMETER SpecificFileNameLevel
-    You can choose one of the following options: "OriginalFileName", "InternalName", "FileDescription", "ProductName", "PackageFamilyName", "FilePath". More info available on Microsoft Learn
-.PARAMETER NoUserPEs
-    By default, the module includes user PEs in the scan. When you use this switch parameter, they won't be included.
-.PARAMETER NoScript
-    Won't scan script files
-.PARAMETER Level
-    Offers the same official Levels for scanning of event logs. If no level is specified the default, which is set to FilePublisher in this module, will be used.
-.PARAMETER Fallbacks
-    Offers the same official Fallbacks for scanning of event logs. If no fallbacks are specified the default, which is set to Hash in this module, will be used.
 .PARAMETER LogSize
     Specifies the log size for Microsoft-Windows-CodeIntegrity/Operational events. The values must be in the form of <Digit + Data measurement unit>. e.g., 2MB, 10MB, 1GB, 1TB. The minimum accepted value is 1MB which is the default.
     The maximum range is the maximum allowed log size by Windows Event viewer

@@ -21,13 +21,9 @@ Function Optimize-MDECSVData {
         [Parameter(Mandatory = $true)][System.IO.FileInfo[]]$CSVPaths,
         [Parameter(Mandatory = $true)][System.IO.DirectoryInfo]$StagingArea
     )
-
     Begin {
-        # Importing the $PSDefaultParameterValues to the current session, prior to everything else
-        . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
-
-        # Detecting if Debug switch is used
         $PSBoundParameters.Debug.IsPresent ? ([System.Boolean]$Debug = $true) : ([System.Boolean]$Debug = $false) | Out-Null
+        . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
 
         Try {
             # Get the number of enabled CPU cores

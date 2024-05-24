@@ -12,7 +12,6 @@ $PSDefaultParameterValues = @{
     'Get-WinEvent:Verbose'                                        = $false
     'Test-Path:ErrorAction'                                       = 'SilentlyContinue'
     'Receive-CodeIntegrityLogs:Verbose'                           = $Verbose
-    'Get-BlockRulesMeta:Verbose'                                  = $Verbose
     'Get-GlobalRootDrives:Verbose'                                = $Verbose
     'Get-SignTool:Verbose'                                        = $Verbose
     'Move-UserModeToKernelMode:Verbose'                           = $Verbose

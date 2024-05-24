@@ -15,7 +15,7 @@ Function Invoke-WDACSimulation {
                 # Ensure the selected path is a file path
                 if (Test-Path -LiteralPath $_ -PathType 'Leaf') {
                     # Ensure the selected file has a supported extension
-                    [System.IO.FileInfo]$SelectedFile = [FindWDACCompliantFiles]::SearchFiles($_)
+                    [System.IO.FileInfo]$SelectedFile = &$FindWDACCompliantFiles $_
                     # If the selected file has a supported extension, return $true
                     if ($SelectedFile) {
                         $true
@@ -169,7 +169,7 @@ Function Invoke-WDACSimulation {
             [System.IO.FileInfo]$CollectedFiles = Get-ChildItem -File -LiteralPath $FilePath
         }
         else {
-            [System.IO.FileInfo[]]$CollectedFiles = [FindWDACCompliantFiles]::SearchFiles($FolderPath)
+            [System.IO.FileInfo[]]$CollectedFiles = &$FindWDACCompliantFiles $FolderPath
         }
 
         # Make sure the selected directory contains files with the supported extensions

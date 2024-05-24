@@ -1,55 +1,64 @@
 Function New-WDACConfig {
     [CmdletBinding(
-        DefaultParameterSetName = 'Get Block Rules',
+        DefaultParameterSetName = 'PolicyType',
         PositionalBinding = $false
     )]
     [OutputType([System.String])]
     Param(
-        # 8 Main parameters - should be used for position 0
-        [Parameter(Mandatory = $false, ParameterSetName = 'Get Block Rules')][System.Management.Automation.SwitchParameter]$GetBlockRules,
-        [Parameter(Mandatory = $false, ParameterSetName = 'Get Driver Block Rules')][System.Management.Automation.SwitchParameter]$GetDriverBlockRules,
-        [Parameter(Mandatory = $false, ParameterSetName = 'Make AllowMSFT With Block Rules')][System.Management.Automation.SwitchParameter]$MakeAllowMSFTWithBlockRules,
-        [Parameter(Mandatory = $false, ParameterSetName = 'Set Auto Update Driver Block Rules')][System.Management.Automation.SwitchParameter]$SetAutoUpdateDriverBlockRules,
-        [Parameter(Mandatory = $false, ParameterSetName = 'Prep MSFT Only Audit')][System.Management.Automation.SwitchParameter]$PrepMSFTOnlyAudit,
-        [Parameter(Mandatory = $false, ParameterSetName = 'Prep Default Windows Audit')][System.Management.Automation.SwitchParameter]$PrepDefaultWindowsAudit,
-        [Parameter(Mandatory = $false, ParameterSetName = 'Make Light Policy')][System.Management.Automation.SwitchParameter]$MakeLightPolicy,
-        [Parameter(Mandatory = $false, ParameterSetName = 'Make DefaultWindows With Block Rules')][System.Management.Automation.SwitchParameter]$MakeDefaultWindowsWithBlockRules,
+        [Alias('Type')]
+        [ValidateSet('DefaultWindows', 'AllowMicrosoft', 'SignedAndReputable')]
+        [Parameter(Mandatory = $false, ParameterSetName = 'PolicyType')][System.String]$PolicyType,
 
-        [Parameter(Mandatory = $false, ParameterSetName = 'Make AllowMSFT With Block Rules')]
-        [Parameter(Mandatory = $false, ParameterSetName = 'Make Light Policy')]
-        [Parameter(Mandatory = $false, ParameterSetName = 'Make DefaultWindows With Block Rules')]
-        [Parameter(Mandatory = $false, ParameterSetName = 'Prep MSFT Only Audit')]
-        [Parameter(Mandatory = $false, ParameterSetName = 'Prep Default Windows Audit')]
-        [Parameter(Mandatory = $false, ParameterSetName = 'Get Block Rules')]
-        [Parameter(Mandatory = $false, ParameterSetName = 'Get Driver Block Rules')]
-        [System.Management.Automation.SwitchParameter]$Deploy,
+        [Parameter(Mandatory = $false, ParameterSetName = 'GetUserModeBlockRules')][System.Management.Automation.SwitchParameter]$GetUserModeBlockRules,
+        [Parameter(Mandatory = $false, ParameterSetName = 'GetDriverBlockRules')][System.Management.Automation.SwitchParameter]$GetDriverBlockRules,
 
-        [Parameter(Mandatory = $false, ParameterSetName = 'Make Light Policy')]
-        [Parameter(Mandatory = $false, ParameterSetName = 'Make AllowMSFT With Block Rules')]
-        [Parameter(Mandatory = $false, ParameterSetName = 'Make DefaultWindows With Block Rules')]
+        [Parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$Deploy,
+
+        [Parameter(Mandatory = $false, ParameterSetName = 'GetDriverBlockRules')]$AutoUpdate,
+
+        [Parameter(Mandatory = $false, ParameterSetName = 'PolicyType')]
+        [System.Management.Automation.SwitchParameter]$Audit,
+
+        [Parameter(Mandatory = $false, ParameterSetName = 'PolicyType')]
         [System.Management.Automation.SwitchParameter]$TestMode,
 
-        [Parameter(Mandatory = $false, ParameterSetName = 'Make AllowMSFT With Block Rules')]
-        [Parameter(Mandatory = $false, ParameterSetName = 'Make Light Policy')]
-        [Parameter(Mandatory = $false, ParameterSetName = 'Make DefaultWindows With Block Rules')]
+        [Parameter(Mandatory = $false, ParameterSetName = 'PolicyType')]
         [System.Management.Automation.SwitchParameter]$RequireEVSigners,
 
-        [ValidateRange(1024KB, 18014398509481983KB)]
-        [Parameter(Mandatory = $false, ParameterSetName = 'Prep MSFT Only Audit')]
-        [Parameter(Mandatory = $false, ParameterSetName = 'Prep Default Windows Audit')]
-        [System.UInt64]$LogSize,
-
-        [Parameter(Mandatory = $false, ParameterSetName = 'Make AllowMSFT With Block Rules')]
-        [Parameter(Mandatory = $false, ParameterSetName = 'Prep MSFT Only Audit')]
-        [Parameter(Mandatory = $false, ParameterSetName = 'Prep Default Windows Audit')]
-        [Parameter(Mandatory = $false, ParameterSetName = 'Make Light Policy')]
-        [Parameter(Mandatory = $false, ParameterSetName = 'Make DefaultWindows With Block Rules')]
+        [Parameter(Mandatory = $false, ParameterSetName = 'PolicyType')]
         [System.Management.Automation.SwitchParameter]$EnableScriptEnforcement,
 
         [Parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$SkipVersionCheck
     )
+    DynamicParam {
+
+        # Create a new dynamic parameter dictionary
+        $ParamDictionary = [System.Management.Automation.RuntimeDefinedParameterDictionary]::new()
+
+        # Create a dynamic parameter for -LogSize with ValidateRange if -Audit switch is used
+        if ($PSBoundParameters['Audit']) {
+
+            # Create a parameter attribute collection
+            $LogSize_AttributesCollection = New-Object -TypeName System.Collections.ObjectModel.Collection[System.Attribute]
+
+            # Create a mandatory attribute and add it to the collection
+            [System.Management.Automation.ParameterAttribute]$LogSize_MandatoryAttrib = New-Object -TypeName System.Management.Automation.ParameterAttribute
+            $LogSize_MandatoryAttrib.Mandatory = $false
+            $LogSize_AttributesCollection.Add($LogSize_MandatoryAttrib)
+
+            # Create a Validate Range attribute and add it to the attributes collection
+            $LogSize_ValidateRangeAttrib = [System.Management.Automation.ValidateRangeAttribute]::new(1024KB, 18014398509481983KB)
+            $LogSize_AttributesCollection.Add($LogSize_ValidateRangeAttrib)
+
+            # Create a dynamic parameter object with the attributes already assigned: Name, Type, and Attributes Collection
+            [System.Management.Automation.RuntimeDefinedParameter]$LogSize = New-Object -TypeName System.Management.Automation.RuntimeDefinedParameter('LogSize', [System.UInt64], $LogSize_AttributesCollection)
+
+            # Add the dynamic parameter object to the dictionary
+            $ParamDictionary.Add('LogSize', $LogSize)
+        }
+        return $ParamDictionary
+    }
     Begin {
-        $PSBoundParameters.Verbose.IsPresent ? ([System.Boolean]$Verbose = $true) : ([System.Boolean]$Verbose = $false) | Out-Null
         $PSBoundParameters.Debug.IsPresent ? ([System.Boolean]$Debug = $true) : ([System.Boolean]$Debug = $false) | Out-Null
         . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
 
@@ -58,41 +67,81 @@ Function New-WDACConfig {
             "$ModuleRootPath\Shared\Update-Self.psm1",
             "$ModuleRootPath\Shared\Write-ColorfulText.psm1",
             "$ModuleRootPath\Shared\Set-LogSize.psm1",
-            "$ModuleRootPath\Shared\Get-BlockRulesMeta.psm1",
             "$ModuleRootPath\Shared\New-StagingArea.psm1"
         )
 
         [System.IO.DirectoryInfo]$StagingArea = New-StagingArea -CmdletName 'New-WDACConfig'
 
+        # Define the varaibles in the function scope for the dynamic parameters
+        New-Variable -Name 'LogSize' -Value $PSBoundParameters['LogSize'] -Force
+
         Function Get-DriverBlockRules {
             <#
             .SYNOPSIS
-                Gets the latest Microsoft Recommended Driver Block rules and processes them
-                Can optionally deploy them.
-                If the -Deploy switch is used, the drivers block list will contain the 2 allow all rules,
-                otherwise, the allow all rules will be removed from the policy
-            .INPUTS
-                System.Management.Automation.SwitchParameter
-            .OUTPUTS
-                System.String
-            .PARAMETER Deploy
-                Indicates that the function will deploy the latest Microsoft recommended drivers block list
+                Gets the latest Microsoft Recommended Driver Block rules
+                1) can deploy them
+                2) set them to be auto-updated via task scheduler
+                3) create XML file with the rules and remove the allow all rules from the policy
             #>
-            [CmdletBinding()]
-            [OutputType([System.String])]
-            param (
-                [System.Management.Automation.SwitchParameter]$Deploy
-            )
+
+            if ($AutoUpdate) {
+
+                # The total number of the main steps for the progress bar to render
+                [System.UInt16]$TotalSteps = 1
+                [System.UInt16]$CurrentStep = 0
+
+                $CurrentStep++
+                Write-Progress -Id 2 -Activity 'Setting up the Scheduled task' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
+
+                Write-Verbose -Message 'Getting the state of MSFT Driver Block list update Scheduled task'
+                [System.String]$BlockListScheduledTaskState = (Get-ScheduledTask -TaskName 'MSFT Driver Block list update' -TaskPath '\MSFT Driver Block list update\' -ErrorAction SilentlyContinue).State
+
+                # Create scheduled task for fast weekly Microsoft recommended driver block list update if it doesn't exist or exists but is not Ready/Running
+                if (-NOT (($BlockListScheduledTaskState -eq 'Ready' -or $BlockListScheduledTaskState -eq 'Running'))) {
+
+                    Write-Verbose -Message "Creating the MSFT Driver Block list update task because its state is neither Running nor Ready, it's $BlockListScheduledTaskState"
+                    # Get the SID of the SYSTEM account. It is a well-known SID, but still querying it, going to use it to create the scheduled task
+                    [System.Security.Principal.SecurityIdentifier]$SYSTEMSID = New-Object -TypeName System.Security.Principal.SecurityIdentifier([System.Security.Principal.WellKnownSidType]::LocalSystemSid, $null)
+
+                    # Create a scheduled task action, this defines how to download and install the latest Microsoft Recommended Driver Block Rules
+                    [Microsoft.Management.Infrastructure.CimInstance]$Action = New-ScheduledTaskAction -Execute 'Powershell.exe' `
+                        -Argument '-NoProfile -WindowStyle Hidden -command "& {try {Invoke-WebRequest -Uri "https://aka.ms/VulnerableDriverBlockList" -OutFile VulnerableDriverBlockList.zip -ErrorAction Stop}catch{exit 1};Expand-Archive -Path .\VulnerableDriverBlockList.zip -DestinationPath "VulnerableDriverBlockList" -Force;Rename-Item -Path .\VulnerableDriverBlockList\SiPolicy_Enforced.p7b -NewName "SiPolicy.p7b" -Force;Copy-Item -Path .\VulnerableDriverBlockList\SiPolicy.p7b -Destination "$env:SystemDrive\Windows\System32\CodeIntegrity" -Force;citool --refresh -json;Remove-Item -Path .\VulnerableDriverBlockList -Recurse -Force;Remove-Item -Path .\VulnerableDriverBlockList.zip -Force; exit 0;}"'
+
+                    # Create a scheduled task principal and assign the SYSTEM account's SID to it so that the task will run under its context
+                    [Microsoft.Management.Infrastructure.CimInstance]$TaskPrincipal = New-ScheduledTaskPrincipal -LogonType S4U -UserId $($SYSTEMSID.Value) -RunLevel Highest
+
+                    # Create a trigger for the scheduled task. The task will first run one hour after its creation and from then on will run every 7 days, indefinitely
+                    [Microsoft.Management.Infrastructure.CimInstance]$Time = New-ScheduledTaskTrigger -Once -At (Get-Date).AddHours(1) -RepetitionInterval (New-TimeSpan -Days 7)
+
+                    # Register the scheduled task. If the task's state is disabled, it will be overwritten with a new task that is enabled
+                    Register-ScheduledTask -Action $Action -Trigger $Time -Principal $TaskPrincipal -TaskPath 'MSFT Driver Block list update' -TaskName 'MSFT Driver Block list update' -Description 'Microsoft Recommended Driver Block List update' -Force
+
+                    # Define advanced settings for the scheduled task
+                    [Microsoft.Management.Infrastructure.CimInstance]$TaskSettings = New-ScheduledTaskSettingsSet -AllowStartIfOnBatteries -DontStopIfGoingOnBatteries -Compatibility 'Win8' -StartWhenAvailable -ExecutionTimeLimit (New-TimeSpan -Minutes 3) -RestartCount 4 -RestartInterval (New-TimeSpan -Hours 6) -RunOnlyIfNetworkAvailable
+
+                    # Add the advanced settings we defined above to the scheduled task
+                    Set-ScheduledTask -TaskName 'MSFT Driver Block list update' -TaskPath 'MSFT Driver Block list update' -Settings $TaskSettings
+                }
+
+                Write-Verbose -Message 'Displaying extra info about the Microsoft recommended Drivers block list'
+                Invoke-Command -ScriptBlock $DriversBlockListInfoGatheringSCRIPTBLOCK
+
+                Write-Progress -Id 2 -Activity 'complete.' -Completed
+
+                Return
+            }
 
             # The total number of the main steps for the progress bar to render
             [System.UInt16]$TotalSteps = 3
             [System.UInt16]$CurrentStep = 0
 
+            [System.String]$Name = 'Microsoft Recommended Driver Block Rules'
+
             if ($Deploy) {
                 $CurrentStep++
-                Write-Progress -Id 1 -Activity 'Downloading the driver block rules' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
+                Write-Progress -Id 1 -Activity "Downloading the $Name" -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
-                Write-Verbose -Message 'Downloading the Microsoft Recommended Driver Block List archive'
+                Write-Verbose -Message "Downloading the $Name archive"
                 Invoke-WebRequest -Uri 'https://aka.ms/VulnerableDriverBlockList' -OutFile (Join-Path -Path $StagingArea -ChildPath 'VulnerableDriverBlockList.zip') -ProgressAction SilentlyContinue
 
                 $CurrentStep++
@@ -112,12 +161,12 @@ Function New-WDACConfig {
 
                 Write-ColorfulText -Color Pink -InputText 'SiPolicy.p7b has been deployed and policies refreshed.'
 
-                Write-Verbose -Message 'Displaying extra info about the Microsoft recommended Drivers block list'
+                Write-Verbose -Message "Displaying extra info about the $Name"
                 Invoke-Command -ScriptBlock $DriversBlockListInfoGatheringSCRIPTBLOCK
             }
             else {
                 $CurrentStep++
-                Write-Progress -Id 1 -Activity 'Downloading the driver block rules' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
+                Write-Progress -Id 1 -Activity "Downloading the $Name" -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
                 # Download the markdown page from GitHub containing the latest Microsoft recommended driver block rules
                 [System.String]$MSFTDriverBlockRulesAsString = (Invoke-WebRequest -Uri $MSFTRecommendedDriverBlockRulesURL -ProgressAction SilentlyContinue).Content
@@ -175,7 +224,7 @@ Function New-WDACConfig {
                     }
                 }
 
-                [System.IO.FileInfo]$XMLPath = Join-Path -Path $StagingArea -ChildPath 'Microsoft recommended driver block rules.xml'
+                [System.IO.FileInfo]$XMLPath = Join-Path -Path $StagingArea -ChildPath "$Name.xml"
 
                 # Save the modified XML content to a file
                 $DriverBlockRulesXML.Save($XMLPath)
@@ -185,25 +234,21 @@ Function New-WDACConfig {
 
                 Set-CiRuleOptions -FilePath $XMLPath -RulesToRemove 'Enabled:Audit Mode'
 
-                Write-Verbose -Message 'Displaying extra info about the Microsoft recommended Drivers block list'
+                Write-Verbose -Message "Displaying extra info about the $Name"
                 Invoke-Command -ScriptBlock $DriversBlockListInfoGatheringSCRIPTBLOCK
 
                 # Copy the result to the User Config directory at the end
                 Copy-Item -Path $XMLPath -Destination $UserConfigDir -Force
 
-                Write-FinalOutput $XMLPath
+                &$WriteFinalOutput $XMLPath
             }
             Write-Progress -Id 1 -Activity 'Complete.' -Completed
         }
-
-        Function Build-AllowMSFTWithBlockRules {
+        Function Build-AllowMSFT {
             <#
             .SYNOPSIS
-                A helper function that downloads the latest Microsoft recommended block rules
-                and merges them with the Allow Microsoft template policy.
-                It can also deploy the policy on the system.
+                Creates a base policy based on the AllowMicrosoft template.
             .INPUTS
-                System.Management.Automation.SwitchParameter
                 System.IO.FileInfo
             .OUTPUTS
                 System.String
@@ -212,86 +257,70 @@ Function New-WDACConfig {
             #>
             [CmdletBinding()]
             param (
-                [parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$Deploy,
-                [parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$RequireEVSigners,
-                [parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$TestMode,
                 [parameter(Mandatory = $false)][System.IO.FileInfo]$SavePath
             )
 
+            Set-LogSize -LogSize:$LogSize
+
+            [System.String]$Name = $Deploy ? 'AllowMicrosoftAudit' : 'AllowMicrosoft'
+
             # The total number of the main steps for the progress bar to render
-            [System.UInt16]$TotalSteps = $Deploy ? 4 : 3
+            [System.UInt16]$TotalSteps = $Deploy ? 3 : 2
             [System.UInt16]$CurrentStep = 0
+
+            [System.IO.FileInfo]$FinalPolicyPath = $SavePath ?? (Join-Path -Path $StagingArea -ChildPath "$Name.xml")
 
             $CurrentStep++
             Write-Progress -Id 3 -Activity 'Getting the recommended block rules' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
-            Write-Verbose -Message 'Getting the latest Microsoft recommended block rules'
-            [System.IO.FileInfo]$UserModeBlockRules = Get-BlockRulesMeta -SaveDirectory $StagingArea
+            Get-BlockRules -Deploy:$Deploy
 
             Write-Verbose -Message 'Copying the AllowMicrosoft.xml from Windows directory to the Staging Area'
-            Copy-Item -Path 'C:\Windows\schemas\CodeIntegrity\ExamplePolicies\AllowMicrosoft.xml' -Destination (Join-Path -Path $StagingArea -ChildPath 'AllowMicrosoft.xml') -Force
-
-            $CurrentStep++
-            Write-Progress -Id 3 -Activity 'Merging the block rules' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
-
-            [System.IO.FileInfo]$FinalPolicyPath = $SavePath ?? (Join-Path -Path $StagingArea -ChildPath 'AllowMicrosoftPlusBlockRules.xml')
-
-            Write-Verbose -Message 'Merging the AllowMicrosoft.xml with User-Mode block rules'
-            Merge-CIPolicy -PolicyPaths (Join-Path -Path $StagingArea -ChildPath 'AllowMicrosoft.xml'), $UserModeBlockRules -OutputFilePath $FinalPolicyPath | Out-Null
+            Copy-Item -Path 'C:\Windows\schemas\CodeIntegrity\ExamplePolicies\AllowMicrosoft.xml' -Destination $FinalPolicyPath -Force
 
             $CurrentStep++
             Write-Progress -Id 3 -Activity 'Configuring the policy settings' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
             Write-Verbose -Message 'Resetting the policy ID and assigning policy name'
-            Set-CIPolicyIdInfo -FilePath $FinalPolicyPath -PolicyName "Allow Microsoft Plus Block Rules - $(Get-Date -Format 'MM-dd-yyyy')" -ResetPolicyID | Out-Null
+            Set-CIPolicyIdInfo -FilePath $FinalPolicyPath -PolicyName "$Name - $(Get-Date -Format 'MM-dd-yyyy')" -ResetPolicyID | Out-Null
 
             Write-Verbose -Message 'Setting policy version to 1.0.0.0'
             Set-CIPolicyVersion -FilePath $FinalPolicyPath -Version '1.0.0.0'
 
-            Set-CiRuleOptions -FilePath $FinalPolicyPath -Template Base -TestMode:$TestMode -RequireEVSigners:$RequireEVSigners -ScriptEnforcement:$EnableScriptEnforcement
+            Set-CiRuleOptions -FilePath $FinalPolicyPath -Template Base -TestMode:$TestMode -RequireEVSigners:$RequireEVSigners -ScriptEnforcement:$EnableScriptEnforcement -EnableAuditMode:$Audit
 
             if ($Deploy) {
                 $CurrentStep++
                 Write-Progress -Id 3 -Activity 'Creating CIP file' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
-                Write-Verbose -Message 'Converting the AllowMicrosoftPlusBlockRules.xml policy file to .CIP binary'
-                ConvertFrom-CIPolicy -XmlFilePath $FinalPolicyPath -BinaryFilePath (Join-Path -Path $StagingArea -ChildPath 'AllowMicrosoftPlusBlockRules.cip') | Out-Null
+                Write-Verbose -Message 'Converting the policy file to .CIP binary'
+                [System.IO.FileInfo]$CIPPath = ConvertFrom-CIPolicy -XmlFilePath $FinalPolicyPath -BinaryFilePath (Join-Path -Path $StagingArea -ChildPath "$Name.cip")
 
-                Write-Verbose -Message 'Deploying the AllowMicrosoftPlusBlockRules.xml policy'
-                &'C:\Windows\System32\CiTool.exe' --update-policy (Join-Path -Path $StagingArea -ChildPath 'AllowMicrosoftPlusBlockRules.cip') -json | Out-Null
+                Write-Verbose -Message "Deploying the $Name policy"
+                &'C:\Windows\System32\CiTool.exe' --update-policy $CIPPath -json | Out-Null
             }
 
             # Copy the result to the User Config directory at the end if -SavePath is not used indicating this function is being called from another function
             if (-NOT $SavePath) {
                 Copy-Item -Path $FinalPolicyPath -Destination $UserConfigDir -Force
-                Write-FinalOutput $FinalPolicyPath
+                &$WriteFinalOutput $FinalPolicyPath
             }
 
             Write-Progress -Id 3 -Activity 'Complete' -Completed
         }
-
-        Function Build-DefaultWindowsWithBlockRules {
+        Function Build-DefaultWindows {
             <#
             .SYNOPSIS
-                A helper function that downloads the latest Microsoft recommended block rules
-                and merges them with the DefaultWindows_Enforced template policy.
-                It can also deploy the policy on the system.
+                Creates a base policy based off the DefaultWindows template.
             .INPUTS
-                System.Management.Automation.SwitchParameter
-                System.IO.FileInfo
+                None
             .OUTPUTS
                 System.String
-            .PARAMETER SavePath
-                The path to save the policy file to. If not used, the final policy file will be saved to the User Config directory
             #>
-            [CmdletBinding()]
-            param (
-                [parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$Deploy,
-                [parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$RequireEVSigners,
-                [parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$TestMode,
-                [parameter(Mandatory = $false)][System.IO.FileInfo]$SavePath
 
-            )
+            [System.String]$Name = $Audit ? 'DefaultWindowsAudit' : 'DefaultWindows'
+
+            if ($Audit) { Set-LogSize -LogSize:$LogSize }
 
             # The total number of the main steps for the progress bar to render
             [System.UInt16]$TotalSteps = $Deploy ? 4 : 3
@@ -300,14 +329,12 @@ Function New-WDACConfig {
             $CurrentStep++
             Write-Progress -Id 7 -Activity 'Getting the recommended block rules' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
-            Write-Verbose -Message 'Getting the latest Microsoft recommended block rules'
-            [System.IO.FileInfo]$UserModeBlockRules = Get-BlockRulesMeta -SaveDirectory $StagingArea
+            Get-BlockRules -Deploy:$Deploy
 
-            [System.IO.FileInfo]$BaseTemplatePath = Join-Path -Path $StagingArea -ChildPath 'DefaultWindows_Enforced.xml'
-            [System.IO.FileInfo]$FinalPolicyPath = $SavePath ?? (Join-Path -Path $StagingArea -ChildPath 'DefaultWindowsPlusBlockRules.xml')
+            [System.IO.FileInfo]$FinalPolicyPath = Join-Path -Path $StagingArea -ChildPath "$Name.xml"
 
             Write-Verbose -Message 'Copying the DefaultWindows_Enforced.xml from Windows directory to the Staging Area'
-            Copy-Item -Path 'C:\Windows\schemas\CodeIntegrity\ExamplePolicies\DefaultWindows_Enforced.xml' -Destination $BaseTemplatePath -Force
+            Copy-Item -Path 'C:\Windows\schemas\CodeIntegrity\ExamplePolicies\DefaultWindows_Enforced.xml' -Destination $FinalPolicyPath -Force
 
             $CurrentStep++
             Write-Progress -Id 7 -Activity 'Determining whether to include PowerShell core' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
@@ -317,319 +344,124 @@ Function New-WDACConfig {
                 Write-ColorfulText -Color Lavender -InputText 'Creating allow rules for PowerShell in the DefaultWindows base policy so you can continue using this module after deploying it.'
                 New-CIPolicy -ScanPath $PSHOME -Level FilePublisher -NoScript -Fallback Hash -UserPEs -UserWriteablePaths -MultiplePolicyFormat -FilePath (Join-Path -Path $StagingArea -ChildPath 'AllowPowerShell.xml')
 
-                Write-Verbose -Message 'Merging the policy files to create the final DefaultWindowsPlusBlockRules.xml policy'
-                Merge-CIPolicy -PolicyPaths $BaseTemplatePath, (Join-Path -Path $StagingArea -ChildPath 'AllowPowerShell.xml'), $UserModeBlockRules -OutputFilePath $FinalPolicyPath | Out-Null
-            }
-            else {
-                Write-Verbose -Message 'Merging the policy files to create the final DefaultWindowsPlusBlockRules.xml policy'
-                Merge-CIPolicy -PolicyPaths $BaseTemplatePath, $UserModeBlockRules -OutputFilePath $FinalPolicyPath | Out-Null
+                Write-Verbose -Message "Merging the policy files to create the final $Name.xml policy"
+                Merge-CIPolicy -PolicyPaths $FinalPolicyPath, (Join-Path -Path $StagingArea -ChildPath 'AllowPowerShell.xml') -OutputFilePath $FinalPolicyPath | Out-Null
             }
 
             $CurrentStep++
             Write-Progress -Id 7 -Activity 'Configuring policy settings' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
             Write-Verbose -Message 'Resetting the policy ID and assigning policy name'
-            Set-CIPolicyIdInfo -FilePath $FinalPolicyPath -PolicyName "Default Windows Plus Block Rules - $(Get-Date -Format 'MM-dd-yyyy')" -ResetPolicyID | Out-Null
+            Set-CIPolicyIdInfo -FilePath $FinalPolicyPath -PolicyName "$Name - $(Get-Date -Format 'MM-dd-yyyy')" -ResetPolicyID | Out-Null
 
             Write-Verbose -Message 'Setting the policy version to 1.0.0.0'
             Set-CIPolicyVersion -FilePath $FinalPolicyPath -Version '1.0.0.0'
 
-            Set-CiRuleOptions -FilePath $FinalPolicyPath -Template Base -TestMode:$TestMode -RequireEVSigners:$RequireEVSigners -ScriptEnforcement:$EnableScriptEnforcement
+            Set-CiRuleOptions -FilePath $FinalPolicyPath -Template Base -TestMode:$TestMode -RequireEVSigners:$RequireEVSigners -ScriptEnforcement:$EnableScriptEnforcement -EnableAuditMode:$Audit
 
             if ($Deploy) {
                 $CurrentStep++
                 Write-Progress -Id 7 -Activity 'Creating the CIP file' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
                 Write-Verbose -Message 'Converting the policy file to .CIP binary'
-                ConvertFrom-CIPolicy -XmlFilePath $FinalPolicyPath -BinaryFilePath (Join-Path -Path $StagingArea -ChildPath 'BasePolicy.cip') | Out-Null
+                [System.IO.FileInfo]$CIPPath = ConvertFrom-CIPolicy -XmlFilePath $FinalPolicyPath -BinaryFilePath (Join-Path -Path $StagingArea -ChildPath "$Name.cip")
 
                 Write-Verbose -Message 'Deploying the policy'
-                &'C:\Windows\System32\CiTool.exe' --update-policy (Join-Path -Path $StagingArea -ChildPath 'BasePolicy.cip') -json | Out-Null
+                &'C:\Windows\System32\CiTool.exe' --update-policy $CIPPath -json | Out-Null
             }
 
-            if (-NOT $SavePath) {
-                # Copy the result to the User Config directory at the end
-                Copy-Item -Path $FinalPolicyPath -Destination $UserConfigDir -Force
-                Write-FinalOutput $FinalPolicyPath
-            }
+            # Copy the result to the User Config directory at the end
+            Copy-Item -Path $FinalPolicyPath -Destination $UserConfigDir -Force
+            &$WriteFinalOutput $FinalPolicyPath
 
             Write-Progress -Id 7 -Activity 'Complete.' -Completed
         }
-
-        Function Deploy-LatestBlockRules {
+        Function Get-BlockRules {
             <#
-            .SYNOPSIS
-                A helper function that downloads the latest Microsoft recommended block rules
-                and deploys it as a standalone WDAC base policy on the system.
-                The deployed policy contains the 2 Allow All rules so it acts as a blocklist and is made in a way to be suitable for side-by-side deployment with other policies.
-            .INPUTS
-                None. You cannot pipe objects to this function.
-            .OUTPUTS
-                System.String
-            #>
-            [CmdletBinding()]
-            param()
+    .SYNOPSIS
+        Gets the latest Microsoft Recommended block rules for User Mode files, removes the audit mode policy rule option and sets HVCI to strict
+        It generates a XML file compliant with CI Policies Schema.
+    .OUTPUTS
+        System.IO.FileInfo
+    #>
+            Begin {
+                [System.String]$Name = 'Microsoft Windows Recommended User Mode BlockList'
+                [System.IO.FileInfo]$FinalPolicyPath = Join-Path -Path $StagingArea -ChildPath "$Name.xml"
+            }
+            Process {
 
-            # The total number of the main steps for the progress bar to render
-            [System.UInt16]$TotalSteps = 3
-            [System.UInt16]$CurrentStep = 0
+                Write-Verbose -Message "Checking if the $Name policy is already deployed"
 
-            $CurrentStep++
-            Write-Progress -Id 0 -Activity 'Downloading the latest block rules' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
+                if ($Deploy) {
+                    # Get the friendly names of all of the deployed base policies on the system
+                    $CurrentlyDeployedPolicies = [System.Collections.Generic.HashSet[System.String]] @(((&'C:\Windows\System32\CiTool.exe' -lp -json | ConvertFrom-Json).Policies | Where-Object -FilterScript { ($_.IsSystemPolicy -ne 'True') -and ($_.PolicyID -eq $_.BasePolicyID) }).FriendlyName)
 
-            Write-Verbose -Message 'Downloading the latest Microsoft recommended block rules'
-            [System.String]$MSFTRecommendedBlockRulesAsString = (Invoke-WebRequest -Uri $MSFTRecommendedBlockRulesURL -ProgressAction SilentlyContinue).Content
+                    if ($CurrentlyDeployedPolicies.Contains($Name)) {
+                        Write-Verbose -Message "The $Name policy is already deployed"
+                        return
+                    }
+                }
 
-            # Load the Block Rules as XML into a variable after extracting them from the markdown string
-            [System.Xml.XmlDocument]$BlockRulesXML = ($MSFTRecommendedBlockRulesAsString -replace "(?s).*``````xml(.*)``````.*", '$1').Trim()
+                Write-Verbose -Message "Getting the latest $Name from the official Microsoft GitHub repository"
+                [System.String]$MSFTRecommendedBlockRulesAsString = (Invoke-WebRequest -Uri $MSFTRecommendedBlockRulesURL -ProgressAction SilentlyContinue).Content
 
-            [System.IO.FileInfo]$FinalPolicyPath = Join-Path -Path $StagingArea -ChildPath 'Microsoft recommended block rules.xml'
+                # Load the Block Rules into a variable after extracting them from the markdown string
+                [System.String]$XMLContent = ($MSFTRecommendedBlockRulesAsString -replace "(?s).*``````xml(.*)``````.*", '$1').Trim()
 
-            # Save the XML content to a file
-            $BlockRulesXML.Save($FinalPolicyPath)
+                Set-Content -Value $XMLContent -LiteralPath $FinalPolicyPath -Force
 
-            $CurrentStep++
-            Write-Progress -Id 0 -Activity 'Configuring the policy settings' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
+                Set-CiRuleOptions -FilePath $FinalPolicyPath -RulesToRemove 'Enabled:Audit Mode'
 
-            # Remove WHQL requirement since it's a user mode policy and doesn't need to enforce it
-            Set-CiRuleOptions -FilePath $FinalPolicyPath -Template Base -RulesToRemove 'Required:WHQL'
+                Write-Verbose -Message 'Assigning policy name and resetting policy ID'
+                Set-CIPolicyIdInfo -ResetPolicyID -FilePath $FinalPolicyPath -PolicyName $Name | Out-Null
 
-            Write-Verbose -Message 'Resetting the policy ID and assigning policy name'
-            Set-CIPolicyIdInfo -FilePath $FinalPolicyPath -ResetPolicyID -PolicyName "Microsoft Windows User Mode Policy - Enforced - $(Get-Date -Format 'MM-dd-yyyy')" | Out-Null
+                if ($Deploy) {
+                    [System.IO.FileInfo]$CIPPath = ConvertFrom-CIPolicy -XmlFilePath $FinalPolicyPath -BinaryFilePath (Join-Path -Path $StagingArea -ChildPath "$Name.cip")
 
-            Write-Verbose -Message 'Converting the policy file to .CIP binary'
-            ConvertFrom-CIPolicy -XmlFilePath $FinalPolicyPath -BinaryFilePath (Join-Path -Path $StagingArea -ChildPath 'UserModeBlockRules.cip') | Out-Null
-
-            $CurrentStep++
-            Write-Progress -Id 0 -Activity 'Deploying the policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
-
-            Write-Verbose -Message 'Deploying the Microsoft recommended block rules policy'
-            &'C:\Windows\System32\CiTool.exe' --update-policy (Join-Path -Path $StagingArea -ChildPath 'UserModeBlockRules.cip') -json | Out-Null
-
-            Write-ColorfulText -Color Lavender -InputText 'The Microsoft recommended block rules policy has been deployed in enforced mode.'
-
-            Write-Progress -Id 0 -Activity 'Policy creation complete.' -Completed
+                    Write-Verbose -Message "Deploying the $Name policy"
+                    &'C:\Windows\System32\CiTool.exe' --update-policy $CIPPath -json
+                }
+                else {
+                    Copy-Item -Path $FinalPolicyPath -Destination $UserConfigDir -Force
+                    &$WriteFinalOutput $FinalPolicyPath
+                }
+            }
         }
-
-        Function Set-AutoUpdateDriverBlockRules {
-            <#
-            .SYNOPSIS
-                A helper function that creates a scheduled task to keep the Microsoft Recommended Driver Block rules
-                In Windows up to date quickly ahead of its official release schedule. It does this by downloading and applying
-                The latest block list every 7 days on the system.
-            .INPUTS
-                None. You cannot pipe objects to this function.
-            .OUTPUTS
-                System.Void
-            #>
-            [CmdletBinding()]
-            [OutputType([System.Void])]
-            param()
-
-            # The total number of the main steps for the progress bar to render
-            [System.UInt16]$TotalSteps = 1
-            [System.UInt16]$CurrentStep = 0
-
-            $CurrentStep++
-            Write-Progress -Id 2 -Activity 'Setting up the Scheduled task' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
-
-            # Get the state of fast weekly Microsoft recommended driver block list update scheduled task
-            Write-Verbose -Message 'Getting the state of MSFT Driver Block list update Scheduled task'
-            [System.String]$BlockListScheduledTaskState = (Get-ScheduledTask -TaskName 'MSFT Driver Block list update' -TaskPath '\MSFT Driver Block list update\' -ErrorAction SilentlyContinue).State
-
-            # Create scheduled task for fast weekly Microsoft recommended driver block list update if it doesn't exist or exists but is not Ready/Running
-            if (-NOT (($BlockListScheduledTaskState -eq 'Ready' -or $BlockListScheduledTaskState -eq 'Running'))) {
-
-                Write-Verbose -Message "Creating the MSFT Driver Block list update task because its state is neither Running nor Ready, it's $BlockListScheduledTaskState"
-                # Get the SID of the SYSTEM account. It is a well-known SID, but still querying it, going to use it to create the scheduled task
-                [System.Security.Principal.SecurityIdentifier]$SYSTEMSID = New-Object -TypeName System.Security.Principal.SecurityIdentifier([System.Security.Principal.WellKnownSidType]::LocalSystemSid, $null)
-
-                # Create a scheduled task action, this defines how to download and install the latest Microsoft Recommended Driver Block Rules
-                [Microsoft.Management.Infrastructure.CimInstance]$Action = New-ScheduledTaskAction -Execute 'Powershell.exe' `
-                    -Argument '-NoProfile -WindowStyle Hidden -command "& {try {Invoke-WebRequest -Uri "https://aka.ms/VulnerableDriverBlockList" -OutFile VulnerableDriverBlockList.zip -ErrorAction Stop}catch{exit 1};Expand-Archive -Path .\VulnerableDriverBlockList.zip -DestinationPath "VulnerableDriverBlockList" -Force;Rename-Item -Path .\VulnerableDriverBlockList\SiPolicy_Enforced.p7b -NewName "SiPolicy.p7b" -Force;Copy-Item -Path .\VulnerableDriverBlockList\SiPolicy.p7b -Destination "$env:SystemDrive\Windows\System32\CodeIntegrity" -Force;citool --refresh -json;Remove-Item -Path .\VulnerableDriverBlockList -Recurse -Force;Remove-Item -Path .\VulnerableDriverBlockList.zip -Force; exit 0;}"'
-
-                # Create a scheduled task principal and assign the SYSTEM account's SID to it so that the task will run under its context
-                [Microsoft.Management.Infrastructure.CimInstance]$TaskPrincipal = New-ScheduledTaskPrincipal -LogonType S4U -UserId $($SYSTEMSID.Value) -RunLevel Highest
-
-                # Create a trigger for the scheduled task. The task will first run one hour after its creation and from then on will run every 7 days, indefinitely
-                [Microsoft.Management.Infrastructure.CimInstance]$Time = New-ScheduledTaskTrigger -Once -At (Get-Date).AddHours(1) -RepetitionInterval (New-TimeSpan -Days 7)
-
-                # Register the scheduled task. If the task's state is disabled, it will be overwritten with a new task that is enabled
-                Register-ScheduledTask -Action $Action -Trigger $Time -Principal $TaskPrincipal -TaskPath 'MSFT Driver Block list update' -TaskName 'MSFT Driver Block list update' -Description 'Microsoft Recommended Driver Block List update' -Force
-
-                # Define advanced settings for the scheduled task
-                [Microsoft.Management.Infrastructure.CimInstance]$TaskSettings = New-ScheduledTaskSettingsSet -AllowStartIfOnBatteries -DontStopIfGoingOnBatteries -Compatibility 'Win8' -StartWhenAvailable -ExecutionTimeLimit (New-TimeSpan -Minutes 3) -RestartCount 4 -RestartInterval (New-TimeSpan -Hours 6) -RunOnlyIfNetworkAvailable
-
-                # Add the advanced settings we defined above to the scheduled task
-                Set-ScheduledTask -TaskName 'MSFT Driver Block list update' -TaskPath 'MSFT Driver Block list update' -Settings $TaskSettings
-            }
-
-            Write-Verbose -Message 'Displaying extra info about the Microsoft recommended Drivers block list'
-            Invoke-Command -ScriptBlock $DriversBlockListInfoGatheringSCRIPTBLOCK
-
-            Write-Progress -Id 2 -Activity 'complete.' -Completed
-        }
-
-        Function Build-MSFTOnlyAudit {
-            <#
-            .SYNOPSIS
-                A helper function that creates a WDAC policy based on AllowMicrosoft template policy.
-                It has audit policy rule option.
-                It can also call the Set-LogSize function to modify the size of Code Integrity Operational event log
-                It uses the $LogSize variable available in the New-WDACConfig's scope to do that.
-            .INPUTS
-                None. You cannot pipe objects to this function.
-            .OUTPUTS
-                System.Void
-            #>
-            [CmdletBinding()]
-            [OutputType([System.Void])]
-            param (
-                [System.Management.Automation.SwitchParameter]$Deploy
-            )
-
-            # The total number of the main steps for the progress bar to render
-            [System.UInt16]$TotalSteps = $Deploy ? 3 : 2
-            [System.UInt16]$CurrentStep = 0
-
-            Set-LogSize -LogSize:$LogSize
-
-            $CurrentStep++
-            Write-Progress -Id 5 -Activity 'Creating the policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
-
-            [System.IO.FileInfo]$FinalPolicyPath = Join-Path -Path $StagingArea -ChildPath 'AllowMicrosoft.xml'
-
-            Write-Verbose -Message 'Copying AllowMicrosoft.xml from Windows directory to the Staging Area'
-            Copy-Item -Path 'C:\Windows\schemas\CodeIntegrity\ExamplePolicies\AllowMicrosoft.xml' -Destination $FinalPolicyPath -Force
-
-            $CurrentStep++
-            Write-Progress -Id 5 -Activity 'Configuring the policy settings' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
-
-            Write-Verbose -Message 'Resetting the Policy ID and assigning policy name'
-            Set-CIPolicyIdInfo -FilePath $FinalPolicyPath -ResetPolicyID -PolicyName 'PrepMSFTOnlyAudit' | Out-Null
-
-            Set-CiRuleOptions -FilePath $FinalPolicyPath -RulesToAdd 'Enabled:Audit Mode' -ScriptEnforcement:$EnableScriptEnforcement
-
-            if ($Deploy) {
-                $CurrentStep++
-                Write-Progress -Id 5 -Activity 'Creating the CIP file' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
-
-                Write-Verbose -Message 'Converting the policy to .CIP Binary'
-                ConvertFrom-CIPolicy -XmlFilePath $FinalPolicyPath -BinaryFilePath (Join-Path -Path $StagingArea -ChildPath 'AllowMicrosoftAudit.cip') | Out-Null
-
-                Write-Verbose -Message 'Deploying the policy on the system'
-                &'C:\Windows\System32\CiTool.exe' --update-policy (Join-Path -Path $StagingArea -ChildPath 'AllowMicrosoftAudit.cip') -json | Out-Null
-                Write-ColorfulText -Color HotPink -InputText 'The default AllowMicrosoft policy has been deployed in Audit mode. No reboot required.'
-            }
-            else {
-                Copy-Item -Path $FinalPolicyPath -Destination $UserConfigDir -Force
-                Write-ColorfulText -Color HotPink -InputText 'The default AllowMicrosoft policy has been created in Audit mode and is ready for deployment.'
-                Write-FinalOutput $FinalPolicyPath
-            }
-            Write-Progress -Id 5 -Activity 'complete.' -Completed
-        }
-
-        Function Build-DefaultWindowsAudit {
-            <#
-            .SYNOPSIS
-                A helper function that creates a WDAC policy based on DefaultWindows template policy.
-                It has audit policy rule option.
-                It can also call the Set-LogSize function to modify the size of Code Integrity Operational event log
-                It uses the $LogSize variable available in the New-WDACConfig's scope to do that.
-            .INPUTS
-                System.Management.Automation.SwitchParameter
-            .OUTPUTS
-                System.Void
-            #>
-            [CmdletBinding()]
-            [OutputType([System.Void])]
-            param (
-                [System.Management.Automation.SwitchParameter]$Deploy
-            )
-
-            # The total number of the main steps for the progress bar to render
-            [System.UInt16]$TotalSteps = $Deploy ? 3 : 2
-            [System.UInt16]$CurrentStep = 0
-
-            Set-LogSize -LogSize:$LogSize
-
-            $CurrentStep++
-            Write-Progress -Id 8 -Activity 'Fetching the policy template' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
-
-            [System.IO.FileInfo]$FinalPolicyPath = Join-Path -Path $StagingArea -ChildPath 'DefaultWindows_Audit.xml'
-
-            Write-Verbose -Message 'Copying DefaultWindows_Audit.xml from Windows directory to the Staging Area'
-            Copy-Item -Path 'C:\Windows\schemas\CodeIntegrity\ExamplePolicies\DefaultWindows_Audit.xml' -Destination $FinalPolicyPath -Force
-
-            $CurrentStep++
-            Write-Progress -Id 8 -Activity 'Configuring the policy settings' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
-
-            Write-Verbose -Message 'Resetting the Policy ID and assigning policy name'
-            Set-CIPolicyIdInfo -FilePath $FinalPolicyPath -ResetPolicyID -PolicyName 'PrepDefaultWindows' | Out-Null
-
-            Set-CiRuleOptions -FilePath $FinalPolicyPath -RulesToAdd 'Enabled:Audit Mode' -ScriptEnforcement:$EnableScriptEnforcement
-
-            if ($Deploy) {
-                $CurrentStep++
-                Write-Progress -Id 8 -Activity 'Creating the CIP file' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
-
-                Write-Verbose -Message 'Converting the policy to .CIP Binary'
-                ConvertFrom-CIPolicy -XmlFilePath $FinalPolicyPath -BinaryFilePath (Join-Path -Path $StagingArea -ChildPath 'DefaultWindowsAudit.cip') | Out-Null
-
-                Write-Verbose -Message 'Deploying the policy on the system'
-                &'C:\Windows\System32\CiTool.exe' --update-policy (Join-Path -Path $StagingArea -ChildPath 'DefaultWindowsAudit.cip') -json | Out-Null
-
-                Write-ColorfulText -Color Lavender -InputText 'The defaultWindows policy has been deployed in Audit mode. No reboot required.'
-            }
-            else {
-                Copy-Item -Path $FinalPolicyPath -Destination $UserConfigDir -Force
-                Write-ColorfulText -Color Lavender -InputText 'The defaultWindows policy has been created in Audit mode and is ready for deployment.'
-                Write-FinalOutput $FinalPolicyPath
-            }
-            Write-Progress -Id 8 -Activity 'Complete.' -Completed
-        }
-        Function Build-LightPolicy {
+        Function Build-SignedAndReputable {
             <#
             .SYNOPSIS
                 A helper function that created SignedAndReputable WDAC policy
                 which is based on AllowMicrosoft template policy.
-                It includes Microsoft Recommended Block rules.
                 It uses ISG to authorize files with good reputation.
-            .INPUTS
-                System.Management.Automation.SwitchParameter
             .OUTPUTS
                 System.String
             #>
-            [CmdletBinding()]
-            param (
-                [parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$Deploy,
-                [parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$RequireEVSigners,
-                [parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$TestMode
-            )
+
+            if ($Audit) { Set-LogSize -LogSize:$LogSize }
+
+            [System.String]$Name = $Audit ? 'SignedAndReputableAudit' : 'SignedAndReputable'
 
             # The total number of the main steps for the progress bar to render
             [System.UInt16]$TotalSteps = $Deploy ? 5 : 3
             [System.UInt16]$CurrentStep = 0
 
             $CurrentStep++
-            Write-Progress -Id 6 -Activity 'Creating AllowMicrosoftPlusBlockRules policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
+            Write-Progress -Id 6 -Activity 'Creating AllowMicrosoft policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
-            Write-Verbose -Message 'Calling Build-AllowMSFTWithBlockRules function to create AllowMicrosoftPlusBlockRules.xml policy'
+            [System.IO.FileInfo]$FinalPolicyPath = Join-Path -Path $StagingArea -ChildPath "$Name.xml"
 
-            [System.IO.FileInfo]$FinalPolicyPath = Join-Path -Path $StagingArea -ChildPath 'SignedAndReputable.xml'
-
-            Build-AllowMSFTWithBlockRules -SavePath $FinalPolicyPath
+            Build-AllowMSFT -SavePath $FinalPolicyPath
 
             $CurrentStep++
             Write-Progress -Id 6 -Activity 'Configuring the policy rule options' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
-            Set-CiRuleOptions -FilePath $FinalPolicyPath -Template BaseISG -TestMode:$TestMode -RequireEVSigners:$RequireEVSigners -ScriptEnforcement:$EnableScriptEnforcement
+            Set-CiRuleOptions -FilePath $FinalPolicyPath -Template BaseISG -TestMode:$TestMode -RequireEVSigners:$RequireEVSigners -ScriptEnforcement:$EnableScriptEnforcement -EnableAuditMode:$Audit
 
             $CurrentStep++
             Write-Progress -Id 6 -Activity 'Configuring the policy settings' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
             Write-Verbose -Message 'Resetting the policy ID and assigning policy name'
-            Set-CIPolicyIdInfo -FilePath $FinalPolicyPath -ResetPolicyID -PolicyName "Signed And Reputable policy - $(Get-Date -Format 'MM-dd-yyyy')" | Out-Null
+            Set-CIPolicyIdInfo -FilePath $FinalPolicyPath -ResetPolicyID -PolicyName "$Name - $(Get-Date -Format 'MM-dd-yyyy')" | Out-Null
 
             Write-Verbose -Message 'Setting the policy version to 1.0.0.0'
             Set-CIPolicyVersion -FilePath $FinalPolicyPath -Version '1.0.0.0'
@@ -640,7 +472,7 @@ Function New-WDACConfig {
                 Write-Progress -Id 6 -Activity 'Creating the CIP file' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
                 Write-Verbose -Message 'Converting the policy to .CIP binary'
-                ConvertFrom-CIPolicy -XmlFilePath $FinalPolicyPath -BinaryFilePath (Join-Path -Path $StagingArea -ChildPath 'BasePolicy.cip') | Out-Null
+                [System.IO.FileInfo]$CIPPath = ConvertFrom-CIPolicy -XmlFilePath $FinalPolicyPath -BinaryFilePath (Join-Path -Path $StagingArea -ChildPath "$Name.cip")
 
                 $CurrentStep++
                 Write-Progress -Id 6 -Activity 'Configuring Windows Services' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
@@ -650,11 +482,11 @@ Function New-WDACConfig {
                 Start-Process -FilePath 'C:\Windows\System32\sc.exe' -ArgumentList 'config', 'appidsvc', 'start= auto' -NoNewWindow
 
                 Write-Verbose -Message 'Deploying the policy'
-                &'C:\Windows\System32\CiTool.exe' --update-policy (Join-Path -Path $StagingArea -ChildPath 'BasePolicy.cip') -json | Out-Null
+                &'C:\Windows\System32\CiTool.exe' --update-policy $CIPPath -json | Out-Null
             }
 
             Copy-Item -Path $FinalPolicyPath -Destination $UserConfigDir -Force
-            Write-FinalOutput $FinalPolicyPath
+            &$WriteFinalOutput $FinalPolicyPath
 
             Write-Progress -Id 6 -Activity 'Complete.' -Completed
         }
@@ -681,19 +513,16 @@ Function New-WDACConfig {
 
     process {
         Try {
-            switch ($true) {
-                # Deploy the latest block rules if 'New-WDACConfig -GetBlockRules -Deploy' is passed
-                { $GetBlockRules -and $Deploy } { Deploy-LatestBlockRules ; break }
-                # Get the latest block rules if 'New-WDACConfig -GetBlockRules' is passed
-                $GetBlockRules { Get-BlockRulesMeta -SaveDirectory $UserConfigDir ; break }
-                # Get the latest driver block rules and only Deploy them if New-WDACConfig -GetDriverBlockRules was called with -Deploy parameter
-                $GetDriverBlockRules { Get-DriverBlockRules -Deploy:$Deploy ; break }
-                $SetAutoUpdateDriverBlockRules { Set-AutoUpdateDriverBlockRules ; break }
-                $MakeAllowMSFTWithBlockRules { Build-AllowMSFTWithBlockRules -Deploy:$Deploy -RequireEVSigners:$RequireEVSigners -TestMode:$TestMode ; break }
-                $PrepMSFTOnlyAudit { Build-MSFTOnlyAudit -Deploy:$Deploy ; break }
-                $MakeLightPolicy { Build-LightPolicy -Deploy:$Deploy -RequireEVSigners:$RequireEVSigners -TestMode:$TestMode ; break }
-                $MakeDefaultWindowsWithBlockRules { Build-DefaultWindowsWithBlockRules -Deploy:$Deploy -RequireEVSigners:$RequireEVSigners -TestMode:$TestMode ; break }
-                $PrepDefaultWindowsAudit { Build-DefaultWindowsAudit -Deploy:$Deploy ; break }
+            Switch ($PSCmdlet.ParameterSetName) {
+                'PolicyType' {
+                    Switch ($PSBoundParameters['PolicyType']) {
+                        'DefaultWindows' { Build-DefaultWindows ; break }
+                        'AllowMicrosoft' { Build-AllowMSFT ; break }
+                        'SignedAndReputable' { Build-SignedAndReputable ; break }
+                    }
+                }
+                'GetUserModeBlockRules' { Get-BlockRules ; break }
+                'GetDriverBlockRules' { Get-DriverBlockRules ; break }
                 default { Write-Warning -Message 'None of the main parameters were selected.'; break }
             }
         }
@@ -709,28 +538,15 @@ Function New-WDACConfig {
     Automate a lot of tasks related to WDAC (Windows Defender Application Control)
 .LINK
     https://github.com/HotCakeX/Harden-Windows-Security/wiki/New-WDACConfig
-.DESCRIPTION
-    Using official Microsoft methods, configure and use Windows Defender Application Control
-.COMPONENT
-    Windows Defender Application Control, ConfigCI PowerShell module
-.FUNCTIONALITY
-    Automate various tasks related to Windows Defender Application Control (WDAC)
-.PARAMETER GetBlockRules
-    Create Microsoft recommended block rules xml policy and remove the allow rules
+.PARAMETER PolicyType
+    The type of policy to create: DefaultWindows, AllowMicrosoft, SignedAndReputable
+.PARAMETER GetUserModeBlockRules
+    Gets the latest Microsoft Recommended User Mode Block rules
 .PARAMETER GetDriverBlockRules
-    Create Microsoft recommended driver block rules xml policy and remove the allow rules
-.PARAMETER MakeAllowMSFTWithBlockRules
-    Make WDAC policy by merging AllowMicrosoft policy with the recommended block rules
-.PARAMETER SetAutoUpdateDriverBlockRules
-    Make a Scheduled Task that automatically runs every 7 days to download the newest Microsoft Recommended driver block rules
-.PARAMETER PrepMSFTOnlyAudit
-    Prepare the system for Audit mode using AllowMicrosoft default policy
-.PARAMETER PrepDefaultWindowsAudit
-    Prepare the system for Audit mode using DefaultWindows policy
-.PARAMETER MakeLightPolicy
-    Make a WDAC Policy with ISG for Lightly Managed system
-.PARAMETER MakeDefaultWindowsWithBlockRules
-    Make a WDAC policy by merging DefaultWindows policy with the recommended block rules
+    Gets the latest Microsoft Recommended Driver Block rules
+.PARAMETER AutoUpdate
+    Creates a scheduled task that will keep the Microsoft Recommended Driver Block rules up to date by downloading and applying
+    the latest block list every 7 days on the system.
 .PARAMETER EnableScriptEnforcement
     Enable script enforcement for the policy
 .PARAMETER Deploy
@@ -742,29 +558,18 @@ Function New-WDACConfig {
 .PARAMETER LogSize
     Specifies the log size for Microsoft-Windows-CodeIntegrity/Operational events. The values must be in the form of <Digit + Data measurement unit>. e.g., 2MB, 10MB, 1GB, 1TB. The minimum accepted value is 1MB which is the default.
     The maximum range is the maximum allowed log size by Windows Event viewer
+.PARAMETER Audit
+    Indicates that the created/deployed policy will have Enabled:Audit Mode policy rule option and will generate audit logs instead of blocking files.
 .PARAMETER SkipVersionCheck
     Can be used with any parameter to bypass the online version check - only to be used in rare cases
 .PARAMETER Verbose
     Displays detailed information about the operation performed by the command
 .INPUTS
     System.UInt64
-    System.String[]
     System.String
     System.Management.Automation.SwitchParameter
 .OUTPUTS
     System.String
-.EXAMPLE
-    New-WDACConfig -GetBlockRules -Deploy
-    This example will create a WDAC policy with Microsoft recommended block rules and deploys it on the system
-.EXAMPLE
-    New-WDACConfig -GetDriverBlockRules -Deploy
-    This example will create a WDAC policy with Microsoft recommended driver block rules and deploys it on the system
-.EXAMPLE
-    New-WDACConfig -MakeAllowMSFTWithBlockRules -Deploy
-    This example will create a WDAC policy by merging AllowMicrosoft policy with the recommended block rules and deploys it on the system
-.EXAMPLE
-    New-WDACConfig -SetAutoUpdateDriverBlockRules
-    This example will create a Scheduled Task that automatically runs every 7 days to download the newest Microsoft Recommended driver block rules
 #>
 }
 

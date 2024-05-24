@@ -135,7 +135,6 @@ Function Edit-SignedWDACConfig {
             "$ModuleRootPath\Shared\Set-LogSize.psm1",
             "$ModuleRootPath\Shared\Test-FilePath.psm1",
             "$ModuleRootPath\Shared\Receive-CodeIntegrityLogs.psm1",
-            "$ModuleRootPath\Shared\Get-BlockRulesMeta.psm1",
             "$ModuleRootPath\Shared\New-SnapBackGuarantee.psm1",
             "$ModuleRootPath\Shared\New-StagingArea.psm1"
         )

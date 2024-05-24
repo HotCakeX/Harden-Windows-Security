@@ -20,7 +20,6 @@
     "19": "Enabled:Dynamic Code Security",
     "20": "Enabled:Revoked Expired As Unsigned",
     "100": "Enabled:Developer Mode Dynamic Code Trust",
-    "101": "Enabled:Windows Lockdown Trial Mode",
     "102": "Enabled:Secure Setting Policy",
     "103": "Enabled:Conditional Windows Lockdown Policy"
 }

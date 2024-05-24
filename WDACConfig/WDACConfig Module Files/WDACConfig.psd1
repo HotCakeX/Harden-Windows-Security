@@ -117,7 +117,8 @@ This is an advanced PowerShell module for WDAC (Windows Defender Application Con
         'Core\Test-CiPolicy.psm1',
         'Core\ConvertTo-WDACPolicy.psm1',
         'Core\Get-CiFileHashes.psm1',
-        'Core\Set-CiRuleOptions.psm1')
+        'Core\Set-CiRuleOptions.psm1',
+        'Core\Get-CIPolicySetting.psm1')
 
     # Functions to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no functions to export.
     FunctionsToExport    = @('New-WDACConfig',
@@ -138,7 +139,8 @@ This is an advanced PowerShell module for WDAC (Windows Defender Application Con
         'Test-CiPolicy',
         'ConvertTo-WDACPolicy',
         'Get-CiFileHashes',
-        'Set-CiRuleOptions')
+        'Set-CiRuleOptions',
+        'Get-CIPolicySetting')
 
     # Cmdlets to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no cmdlets to export.
     CmdletsToExport      = @('New-WDACConfig',
@@ -159,7 +161,8 @@ This is an advanced PowerShell module for WDAC (Windows Defender Application Con
         'Test-CiPolicy',
         'ConvertTo-WDACPolicy',
         'Get-CiFileHashes',
-        'Set-CiRuleOptions')
+        'Set-CiRuleOptions',
+        'Get-CIPolicySetting')
 
     # Variables to export from this module
     VariablesToExport    = '*'
@@ -196,6 +199,7 @@ This is an advanced PowerShell module for WDAC (Windows Defender Application Con
         'Core\ConvertTo-WDACPolicy.psm1',
         'Core\Get-CiFileHashes.psm1',
         'Core\Set-CiRuleOptions.psm1',
+        'Core\Get-CIPolicySetting.psm1',
         'CoreExt\PSDefaultParameterValues.ps1',
         'CoreExt\ArgumentCompleters.ps1',
         'CoreExt\Classes.psm1',
@@ -206,7 +210,6 @@ This is an advanced PowerShell module for WDAC (Windows Defender Application Con
         'Resources\WDAC Policies-Archived\DefaultWindows_Enforced_Kernel_NoFlights.xml',
         'Resources\WDAC Policies-Archived\Readme.md',
         'Resources\PolicyRuleOptions.Json',
-        'Shared\Get-BlockRulesMeta.psm1',
         'Shared\Get-GlobalRootDrives.psm1',
         'Shared\Get-SignTool.psm1',
         'Shared\Move-UserModeToKernelMode.psm1',
@@ -239,6 +242,7 @@ This is an advanced PowerShell module for WDAC (Windows Defender Application Con
         'C#\AuthenticodeHashCalc.cs',
         'C#\PageHashCalc.cs',
         'C#\Crypt32CertCN.cs',
+        'C#\WldpQuerySecurityPolicy.cs',
         'Help\ConvertTo-WDACPolicy.xml',
         'Help\ConvertTo-WDACPolicy.md',
         'XMLOps\Build-SignerAndHashObjects.psm1',

@@ -108,7 +108,6 @@ Function Edit-WDACConfig {
             "$ModuleRootPath\Shared\Set-LogSize.psm1",
             "$ModuleRootPath\Shared\Test-FilePath.psm1",
             "$ModuleRootPath\Shared\Receive-CodeIntegrityLogs.psm1",
-            "$ModuleRootPath\Shared\Get-BlockRulesMeta.psm1",
             "$ModuleRootPath\Shared\New-SnapBackGuarantee.psm1",
             "$ModuleRootPath\Shared\New-StagingArea.psm1",
             "$ModuleRootPath\Shared\Set-LogPropertiesVisibility.psm1",
@@ -453,7 +452,7 @@ Function Edit-WDACConfig {
                 # Copy the Supplemental policy to the user's config directory since Staging Area is a temporary location
                 Copy-Item -Path $SuppPolicyPath -Destination $UserConfigDir -Force
 
-                Write-FinalOutput $SuppPolicyPath
+                &$WriteFinalOutput $SuppPolicyPath
             }
 
             if ($MergeSupplementalPolicies) {

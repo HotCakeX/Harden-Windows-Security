@@ -18,6 +18,23 @@ try {
     if ((Test-Path -Path 'Variable:\CISchemaPath') -eq $false) { New-Variable -Name 'CISchemaPath' -Value "$Env:SystemDrive\Windows\schemas\CodeIntegrity\cipolicy.xsd" -Option 'Constant' -Scope 'Global' -Description 'Storing the path to the WDAC Code Integrity Schema XSD file' -Force }
     if ((Test-Path -Path 'Variable:\UserConfigDir') -eq $false) { New-Variable -Name 'UserConfigDir' -Value "$Env:ProgramFiles\WDACConfig" -Option 'Constant' -Scope 'Global' -Description 'Storing the path to the WDACConfig folder in the Program Files' -Force }
     if ((Test-Path -Path 'Variable:\UserConfigJson') -eq $false) { New-Variable -Name 'UserConfigJson' -Value "$UserConfigDir\UserConfigurations\UserConfigurations.json" -Option 'Constant' -Scope 'Global' -Description 'Storing the path to User Config JSON file in the WDACConfig folder in the Program Files' -Force }
+
+    if ((Test-Path -Path 'Variable:\FindWDACCompliantFiles') -eq $false) {
+        New-Variable -Name 'FindWDACCompliantFiles' -Value {
+            Param ($Paths)
+            [System.String[]]$Extensions = @('*.sys', '*.exe', '*.com', '*.dll', '*.rll', '*.ocx', '*.msp', '*.mst', '*.msi', '*.js', '*.vbs', '*.ps1', '*.appx', '*.bin', '*.bat', '*.hxs', '*.mui', '*.lex', '*.mof')
+            $Output = Get-ChildItem -Recurse -File -LiteralPath $Paths -Include $Extensions -Force
+            Return $Output
+        } -Option 'Constant' -Scope 'Global' -Description 'Scriptblock that gets the WDAC Compliant files from a list of directories' -Force
+    }
+
+    if ((Test-Path -Path 'Variable:\WriteFinalOutput') -eq $false) {
+        New-Variable -Name 'WriteFinalOutput' -Value {
+            Param ($Path)
+            Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Write-ColorfulText.psm1" -Force
+            Write-ColorfulText -Color Lavender -InputText "The output file '$($Path.Name)' has been saved in '$UserConfigDir'"
+        } -Option 'Constant' -Scope 'Global' -Description 'Scriptblock that writes the final output of some cmdlets' -Force
+    }
 }
 catch {
     Throw [System.InvalidOperationException] 'Could not set the required global variables.'
@@ -30,18 +47,6 @@ if (-NOT ([System.Decimal]$FullOSBuild -ge [System.Decimal]$Requiredbuild)) {
 
 # Enables additional progress indicators for Windows Terminal and Windows
 $PSStyle.Progress.UseOSCIndicator = $true
-
-function Write-FinalOutput {
-    <#
-    .SYNOPSIS
-        function that shows output messages at the end of each cmdlet run
-    #>
-    param (
-        [Parameter(Mandatory = $true, ValueFromPipeline = $true, ValueFromPipelineByPropertyName = $true, Position = 0)][System.IO.FileInfo]$Path
-    )
-    Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Write-ColorfulText.psm1" -Force
-    Write-ColorfulText -Color Lavender -InputText "The output file ($($Path.Name)) has been saved in ($UserConfigDir)"
-}
 
 # Loop through all the relevant files in the module
 foreach ($File in (Get-ChildItem -Recurse -File -Path $ModuleRootPath -Include '*.ps1', '*.psm1')) {

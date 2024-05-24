@@ -1,6 +1,6 @@
 Function New-WDACConfig {
     [CmdletBinding(
-        DefaultParameterSetName = 'PolicyType',
+        DefaultParameterSetName = 'All',
         PositionalBinding = $false
     )]
     [OutputType([System.String])]
@@ -14,7 +14,7 @@ Function New-WDACConfig {
 
         [Parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$Deploy,
 
-        [Parameter(Mandatory = $false, ParameterSetName = 'GetDriverBlockRules')]$AutoUpdate,
+        [Parameter(Mandatory = $false, ParameterSetName = 'GetDriverBlockRules')][System.Management.Automation.SwitchParameter]$AutoUpdate,
 
         [Parameter(Mandatory = $false, ParameterSetName = 'PolicyType')]
         [System.Management.Automation.SwitchParameter]$Audit,
@@ -59,6 +59,7 @@ Function New-WDACConfig {
         return $ParamDictionary
     }
     Begin {
+        $PSBoundParameters.Verbose.IsPresent ? ([System.Boolean]$Verbose = $true) : ([System.Boolean]$Verbose = $false) | Out-Null
         $PSBoundParameters.Debug.IsPresent ? ([System.Boolean]$Debug = $true) : ([System.Boolean]$Debug = $false) | Out-Null
         . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
 
@@ -249,31 +250,23 @@ Function New-WDACConfig {
             .SYNOPSIS
                 Creates a base policy based on the AllowMicrosoft template.
             .INPUTS
-                System.IO.FileInfo
+                None
             .OUTPUTS
                 System.String
-            .PARAMETER SavePath
-                The path to save the policy file to. If not used, the final policy file will be saved to the User Config directory
             #>
-            [CmdletBinding()]
-            param (
-                [parameter(Mandatory = $false)][System.IO.FileInfo]$SavePath
-            )
-
-            Set-LogSize -LogSize:$LogSize
-
-            [System.String]$Name = $Deploy ? 'AllowMicrosoftAudit' : 'AllowMicrosoft'
+            if ($Audit) { Set-LogSize -LogSize:$LogSize }
+            [System.String]$Name = $Audit ? 'AllowMicrosoftAudit' : 'AllowMicrosoft'
 
             # The total number of the main steps for the progress bar to render
             [System.UInt16]$TotalSteps = $Deploy ? 3 : 2
             [System.UInt16]$CurrentStep = 0
 
-            [System.IO.FileInfo]$FinalPolicyPath = $SavePath ?? (Join-Path -Path $StagingArea -ChildPath "$Name.xml")
+            [System.IO.FileInfo]$FinalPolicyPath = Join-Path -Path $StagingArea -ChildPath "$Name.xml"
 
             $CurrentStep++
             Write-Progress -Id 3 -Activity 'Getting the recommended block rules' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
-            Get-BlockRules -Deploy:$Deploy
+            Get-BlockRules
 
             Write-Verbose -Message 'Copying the AllowMicrosoft.xml from Windows directory to the Staging Area'
             Copy-Item -Path 'C:\Windows\schemas\CodeIntegrity\ExamplePolicies\AllowMicrosoft.xml' -Destination $FinalPolicyPath -Force
@@ -299,12 +292,8 @@ Function New-WDACConfig {
                 Write-Verbose -Message "Deploying the $Name policy"
                 &'C:\Windows\System32\CiTool.exe' --update-policy $CIPPath -json | Out-Null
             }
-
-            # Copy the result to the User Config directory at the end if -SavePath is not used indicating this function is being called from another function
-            if (-NOT $SavePath) {
-                Copy-Item -Path $FinalPolicyPath -Destination $UserConfigDir -Force
-                &$WriteFinalOutput $FinalPolicyPath
-            }
+            Copy-Item -Path $FinalPolicyPath -Destination $UserConfigDir -Force
+            &$WriteFinalOutput $FinalPolicyPath
 
             Write-Progress -Id 3 -Activity 'Complete' -Completed
         }
@@ -317,10 +306,8 @@ Function New-WDACConfig {
             .OUTPUTS
                 System.String
             #>
-
-            [System.String]$Name = $Audit ? 'DefaultWindowsAudit' : 'DefaultWindows'
-
             if ($Audit) { Set-LogSize -LogSize:$LogSize }
+            [System.String]$Name = $Audit ? 'DefaultWindowsAudit' : 'DefaultWindows'
 
             # The total number of the main steps for the progress bar to render
             [System.UInt16]$TotalSteps = $Deploy ? 4 : 3
@@ -329,7 +316,7 @@ Function New-WDACConfig {
             $CurrentStep++
             Write-Progress -Id 7 -Activity 'Getting the recommended block rules' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
-            Get-BlockRules -Deploy:$Deploy
+            Get-BlockRules
 
             [System.IO.FileInfo]$FinalPolicyPath = Join-Path -Path $StagingArea -ChildPath "$Name.xml"
 
@@ -378,21 +365,21 @@ Function New-WDACConfig {
         }
         Function Get-BlockRules {
             <#
-    .SYNOPSIS
-        Gets the latest Microsoft Recommended block rules for User Mode files, removes the audit mode policy rule option and sets HVCI to strict
-        It generates a XML file compliant with CI Policies Schema.
-    .OUTPUTS
-        System.IO.FileInfo
-    #>
+            .SYNOPSIS
+                Gets the latest Microsoft Recommended block rules for User Mode files, removes the audit mode policy rule option and sets HVCI to strict
+                It generates a XML file compliant with CI Policies Schema.
+            .OUTPUTS
+                System.IO.FileInfo
+            #>
             Begin {
                 [System.String]$Name = 'Microsoft Windows Recommended User Mode BlockList'
                 [System.IO.FileInfo]$FinalPolicyPath = Join-Path -Path $StagingArea -ChildPath "$Name.xml"
             }
             Process {
 
-                Write-Verbose -Message "Checking if the $Name policy is already deployed"
-
                 if ($Deploy) {
+                    Write-Verbose -Message "Checking if the $Name policy is already deployed"
+
                     # Get the friendly names of all of the deployed base policies on the system
                     $CurrentlyDeployedPolicies = [System.Collections.Generic.HashSet[System.String]] @(((&'C:\Windows\System32\CiTool.exe' -lp -json | ConvertFrom-Json).Policies | Where-Object -FilterScript { ($_.IsSystemPolicy -ne 'True') -and ($_.PolicyID -eq $_.BasePolicyID) }).FriendlyName)
 
@@ -410,7 +397,7 @@ Function New-WDACConfig {
 
                 Set-Content -Value $XMLContent -LiteralPath $FinalPolicyPath -Force
 
-                Set-CiRuleOptions -FilePath $FinalPolicyPath -RulesToRemove 'Enabled:Audit Mode'
+                Set-CiRuleOptions -FilePath $FinalPolicyPath -RulesToRemove 'Enabled:Audit Mode' -RulesToAdd 'Enabled:Update Policy No Reboot'
 
                 Write-Verbose -Message 'Assigning policy name and resetting policy ID'
                 Set-CIPolicyIdInfo -ResetPolicyID -FilePath $FinalPolicyPath -PolicyName $Name | Out-Null
@@ -419,7 +406,7 @@ Function New-WDACConfig {
                     [System.IO.FileInfo]$CIPPath = ConvertFrom-CIPolicy -XmlFilePath $FinalPolicyPath -BinaryFilePath (Join-Path -Path $StagingArea -ChildPath "$Name.cip")
 
                     Write-Verbose -Message "Deploying the $Name policy"
-                    &'C:\Windows\System32\CiTool.exe' --update-policy $CIPPath -json
+                    &'C:\Windows\System32\CiTool.exe' --update-policy $CIPPath -json | Out-Null
                 }
                 else {
                     Copy-Item -Path $FinalPolicyPath -Destination $UserConfigDir -Force
@@ -430,27 +417,29 @@ Function New-WDACConfig {
         Function Build-SignedAndReputable {
             <#
             .SYNOPSIS
-                A helper function that created SignedAndReputable WDAC policy
-                which is based on AllowMicrosoft template policy.
+                Creates SignedAndReputable WDAC policy which is based on AllowMicrosoft template policy.
                 It uses ISG to authorize files with good reputation.
+            .INPUTS
+                None
             .OUTPUTS
                 System.String
             #>
-
             if ($Audit) { Set-LogSize -LogSize:$LogSize }
-
             [System.String]$Name = $Audit ? 'SignedAndReputableAudit' : 'SignedAndReputable'
 
             # The total number of the main steps for the progress bar to render
             [System.UInt16]$TotalSteps = $Deploy ? 5 : 3
             [System.UInt16]$CurrentStep = 0
 
-            $CurrentStep++
-            Write-Progress -Id 6 -Activity 'Creating AllowMicrosoft policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
-
             [System.IO.FileInfo]$FinalPolicyPath = Join-Path -Path $StagingArea -ChildPath "$Name.xml"
 
-            Build-AllowMSFT -SavePath $FinalPolicyPath
+            $CurrentStep++
+            Write-Progress -Id 6 -Activity 'Getting the recommended block rules' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
+
+            Get-BlockRules
+
+            Write-Verbose -Message 'Copying the AllowMicrosoft.xml from Windows directory to the Staging Area'
+            Copy-Item -Path 'C:\Windows\schemas\CodeIntegrity\ExamplePolicies\AllowMicrosoft.xml' -Destination $FinalPolicyPath -Force
 
             $CurrentStep++
             Write-Progress -Id 6 -Activity 'Configuring the policy rule options' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
@@ -493,18 +482,24 @@ Function New-WDACConfig {
 
         # Script block that is used to supply extra information regarding Microsoft recommended driver block rules in commands that use them
         [System.Management.Automation.ScriptBlock]$DriversBlockListInfoGatheringSCRIPTBLOCK = {
-            [System.String]$Owner = 'MicrosoftDocs'
-            [System.String]$Repo = 'windows-itpro-docs'
-            [System.String]$Path = 'windows/security/application-security/application-control/windows-defender-application-control/design/microsoft-recommended-driver-block-rules.md'
+            try {
+                [System.String]$Owner = 'MicrosoftDocs'
+                [System.String]$Repo = 'windows-itpro-docs'
+                [System.String]$Path = 'windows/security/application-security/application-control/windows-defender-application-control/design/microsoft-recommended-driver-block-rules.md'
 
-            [System.String]$ApiUrl = "https://api.github.com/repos/$Owner/$Repo/commits?path=$Path"
-            [System.Object[]]$Response = Invoke-RestMethod -Uri $ApiUrl -ProgressAction SilentlyContinue
-            [System.DateTime]$Date = $Response[0].commit.author.date
+                [System.String]$ApiUrl = "https://api.github.com/repos/$Owner/$Repo/commits?path=$Path"
+                [System.Object[]]$Response = Invoke-RestMethod -Uri $ApiUrl -ProgressAction SilentlyContinue
+                [System.DateTime]$Date = $Response[0].commit.author.date
 
-            Write-ColorfulText -Color Lavender -InputText "The document containing the drivers block list on GitHub was last updated on $Date"
-            [System.String]$MicrosoftRecommendedDriverBlockRules = (Invoke-WebRequest -Uri $MSFTRecommendedDriverBlockRulesURL -ProgressAction SilentlyContinue).Content
-            $MicrosoftRecommendedDriverBlockRules -match '<VersionEx>(.*)</VersionEx>' | Out-Null
-            Write-ColorfulText -Color Pink -InputText "The current version of Microsoft recommended drivers block list is $($Matches[1])"
+                Write-ColorfulText -Color Lavender -InputText "The document containing the drivers block list on GitHub was last updated on $Date"
+                [System.String]$MicrosoftRecommendedDriverBlockRules = (Invoke-WebRequest -Uri $MSFTRecommendedDriverBlockRulesURL -ProgressAction SilentlyContinue).Content
+                $MicrosoftRecommendedDriverBlockRules -match '<VersionEx>(.*)</VersionEx>' | Out-Null
+                Write-ColorfulText -Color Pink -InputText "The current version of Microsoft recommended drivers block list is $($Matches[1])"
+            }
+            catch {
+                Write-Error -ErrorAction Continue -Message $_
+                Write-Error -ErrorAction Continue -Message 'Could not get additional information about the Microsoft recommended driver block list'
+            }
         }
 
         # if -SkipVersionCheck wasn't passed, run the updater
@@ -557,7 +552,8 @@ Function New-WDACConfig {
     Indicates that the created/deployed policy will have Require EV Signers policy rule option.
 .PARAMETER LogSize
     Specifies the log size for Microsoft-Windows-CodeIntegrity/Operational events. The values must be in the form of <Digit + Data measurement unit>. e.g., 2MB, 10MB, 1GB, 1TB. The minimum accepted value is 1MB which is the default.
-    The maximum range is the maximum allowed log size by Windows Event viewer
+    The maximum range is the maximum allowed log size by Windows Event viewer.
+    The parameter is only available when -Audit is used.
 .PARAMETER Audit
     Indicates that the created/deployed policy will have Enabled:Audit Mode policy rule option and will generate audit logs instead of blocking files.
 .PARAMETER SkipVersionCheck

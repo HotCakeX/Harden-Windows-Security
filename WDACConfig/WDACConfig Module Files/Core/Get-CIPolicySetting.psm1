@@ -7,6 +7,8 @@ Function Get-CIPolicySetting {
         [Parameter(Mandatory = $true)][System.String]$ValueName
     )
     Begin {
+        $PSBoundParameters.Verbose.IsPresent ? ([System.Boolean]$Verbose = $true) : ([System.Boolean]$Verbose = $false) | Out-Null
+
         # Import the required C# type if it hasn't already been imported
         if (-NOT ('WDACConfig.WldpQuerySecurityPolicy' -as [System.Type]) ) {
             Add-Type -Path "$ModuleRootPath\C#\WldpQuerySecurityPolicy.cs"
@@ -102,4 +104,3 @@ Function Get-CIPolicySetting {
         In order to set a Boolean value using the Set-CIPolicySetting cmdlet, you need to use 1 for True or 0 for False, that will create a valid policy XML file that is compliant with the CI Policy Schema.
         #>
 }
-Export-ModuleMember -Function 'Get-CIPolicySetting'

@@ -34,9 +34,12 @@ Function Set-CiRuleOptions {
         [System.Management.Automation.SwitchParameter]$RemoveAll
     )
     Begin {
+        $PSBoundParameters.Verbose.IsPresent ? ([System.Boolean]$Verbose = $true) : ([System.Boolean]$Verbose = $false) | Out-Null
         . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
 
         Import-Module -FullyQualifiedName "$ModuleRootPath\XMLOps\Close-EmptyXmlNodes_Semantic.psm1" -Force
+
+        Write-Verbose -Message "Set-CiRuleOptions: Configuring the policy rule options for: $($FilePath.Name)"
 
         [System.Collections.Hashtable]$Intel = ConvertFrom-Json -AsHashtable -InputObject (Get-Content -Path "$ModuleRootPath\Resources\PolicyRuleOptions.Json" -Raw)
 
@@ -155,8 +158,6 @@ Function Set-CiRuleOptions {
             }
         }
 
-        Write-Verbose -Message 'Set-CiRuleOptions: Configuring the policy rule options'
-
         # Always remove any existing rule options initially. The calculations determining which
         # Rules must be included in the policy are all made in the Begin block.
         if ($null -ne $RulesNode) {
@@ -260,9 +261,12 @@ Function Set-CiRuleOptions {
         }
     }
 }
+# Importing argument completer ScriptBlocks
+. "$ModuleRootPath\CoreExt\ArgumentCompleters.ps1"
+
+Register-ArgumentCompleter -CommandName 'Set-CiRuleOptions' -ParameterName 'FilePath' -ScriptBlock $ArgumentCompleterXmlFilePathsPicker
 Register-ArgumentCompleter -CommandName 'Set-CiRuleOptions' -ParameterName 'RulesToAdd' -ScriptBlock $RuleOptionsScriptBlock
 Register-ArgumentCompleter -CommandName 'Set-CiRuleOptions' -ParameterName 'RulesToRemove' -ScriptBlock $RuleOptionsScriptBlock
-Export-ModuleMember -Function 'Set-CiRuleOptions'
 
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor

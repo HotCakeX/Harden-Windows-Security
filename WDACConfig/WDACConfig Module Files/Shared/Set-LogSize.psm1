@@ -17,6 +17,8 @@ Function Set-LogSize {
         [parameter(Mandatory = $false)][System.UInt64]$LogSize
     )
     Begin {
+        Write-Verbose -Message 'Set-LogSize function started...'
+
         [System.String]$LogName = 'Microsoft-Windows-CodeIntegrity/Operational'
         [System.Diagnostics.Eventing.Reader.EventLogConfiguration]$Log = New-Object -TypeName System.Diagnostics.Eventing.Reader.EventLogConfiguration -ArgumentList $LogName
         [System.IO.FileInfo]$LogFilePath = [System.Environment]::ExpandEnvironmentVariables($Log.LogFilePath)

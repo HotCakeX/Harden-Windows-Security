@@ -14,6 +14,8 @@ Function Get-CommonWDACConfig {
         [parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$StrictKernelModePolicyTimeOfDeployment
     )
     begin {
+        $PSBoundParameters.Verbose.IsPresent ? ([System.Boolean]$Verbose = $true) : ([System.Boolean]$Verbose = $false) | Out-Null
+
         . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
 
         # Create User configuration folder if it doesn't already exist

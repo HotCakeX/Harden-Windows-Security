@@ -1,5 +1,6 @@
 # $PSDefaultParameterValues only get read from scope where invocation occurs
 # This is why this file is dot-sourced in every other component of the WDACConfig module at the beginning
+# Main cmdlets that are also used within other main cmdlets are mentioned here too.
 $PSDefaultParameterValues = @{
     'Invoke-WebRequest:HttpVersion'                               = '3.0'
     'Invoke-WebRequest:SslProtocol'                               = 'Tls12,Tls13'
@@ -35,6 +36,10 @@ $PSDefaultParameterValues = @{
     'New-StagingArea:Verbose'                                     = $Verbose
     'Set-LogPropertiesVisibility:Verbose'                         = $Verbose
     'Test-KernelProtectedFiles:Verbose'                           = $Verbose
+    'Set-CiRuleOptions:Verbose'                                   = $Verbose
+    'New-WDACConfig:Verbose'                                      = $Verbose
+    'Test-CiPolicy:Verbose'                                       = $Verbose
+    'Get-CiFileHashes:Verbose'                                    = $Verbose
 
     'Build-SignerAndHashObjects:Verbose'                          = $Verbose
     'Clear-CiPolicy_Semantic:Verbose'                             = $Verbose

@@ -173,13 +173,15 @@ Function New-WDACConfig {
                 [System.String]$MSFTDriverBlockRulesAsString = (Invoke-WebRequest -Uri $MSFTRecommendedDriverBlockRulesURL -ProgressAction SilentlyContinue).Content
 
                 $CurrentStep++
-                Write-Progress -Id 1 -Activity 'Removing the `Allow all rules` from the policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
+                Write-Progress -Id 1 -Activity "Removing the 'Allow all rules' from the policy" -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
                 # Load the Driver Block Rules as XML into a variable after extracting them from the markdown string
                 [System.Xml.XmlDocument]$DriverBlockRulesXML = ($MSFTDriverBlockRulesAsString -replace "(?s).*``````xml(.*)``````.*", '$1').Trim()
 
                 # Get the SiPolicy node
                 [System.Xml.XmlElement]$SiPolicyNode = $DriverBlockRulesXML.SiPolicy
+
+                Write-Verbose -Message "Removing the 'Allow all rules' from the policy"
 
                 # Declare the namespace manager and add the default namespace with a prefix
                 [System.Xml.XmlNamespaceManager]$NameSpace = New-Object -TypeName System.Xml.XmlNamespaceManager -ArgumentList $DriverBlockRulesXML.NameTable

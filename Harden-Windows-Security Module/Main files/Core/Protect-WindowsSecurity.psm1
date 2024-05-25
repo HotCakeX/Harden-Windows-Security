@@ -363,10 +363,15 @@ Function Protect-WindowsSecurity {
                 )
                 # Remove the categories that are not allowed to run on Windows Home edition
                 if ((Get-CimInstance -ClassName Win32_OperatingSystem).OperatingSystemSKU -in '101', '100') {
-                    foreach ($CatName in $Categoriex) {
-                        if ($CatName -in 'BitLockerSettings', 'DownloadsDefenseMeasures', 'TLSSecurity', 'AttackSurfaceReductionRules', 'MicrosoftSecurityBaselines', 'Microsoft365AppsSecurityBaselines', 'CountryIPBlocking') {
-                            [System.Void]$Categoriex.Remove($CatName)
-                        }
+                    foreach ($CatName in 'BitLockerSettings', 'DownloadsDefenseMeasures', 'TLSSecurity', 'AttackSurfaceReductionRules', 'MicrosoftSecurityBaselines', 'Microsoft365AppsSecurityBaselines', 'CountryIPBlocking') {
+                        [System.Void]$Categoriex.Remove($CatName)
+                    }
+                }
+                # Remove the categories that are not allowed to run on systems without TPM chip
+                [System.Object]$TPM = Get-Tpm
+                if (-NOT ($TPM.tpmpresent -and $TPM.tpmenabled)) {
+                    foreach ($CatName in 'BitLockerSettings') {
+                        [System.Void]$Categoriex.Remove($CatName)
                     }
                 }
                 return [System.String[]]$Categoriex
@@ -1429,7 +1434,7 @@ Function Protect-WindowsSecurity {
                     Set-BcdElement -Element 'nx' -Type 'Integer' -Value '3' -Force
 
                     # Suggest turning on Smart App Control only if it's in Eval mode
-                    if ((Get-MpComputerStatus).SmartAppControlState -eq 'Eval') {
+                    if ($MDAVConfigCurrent.SmartAppControlState -eq 'Eval') {
                         :SmartAppControlLabel switch ($RunUnattended ? ($MSFTDefender_SAC ? 'Yes' : 'No' ) : (Select-Option -SubCategory -Options 'Yes', 'No', 'Exit' -Message "`nTurn on Smart App Control ?")) {
                             'Yes' {
                                 Write-Verbose -Message 'Turning on Smart App Control'
@@ -1442,13 +1447,13 @@ Function Protect-WindowsSecurity {
                         }
                     }
 
-                    if (($ShouldEnableOptionalDiagnosticData -eq $True) -or ((Get-MpComputerStatus).SmartAppControlState -eq 'On')) {
+                    if (($ShouldEnableOptionalDiagnosticData -eq $True) -or ($MDAVConfigCurrent.SmartAppControlState -eq 'On')) {
                         Write-Verbose -Message 'Enabling Optional Diagnostic Data because SAC is on or user selected to turn it on'
                         &$LGPOExe /q /m "$WorkingDir\Security-Baselines-X\Microsoft Defender Policies\Optional Diagnostic Data\registry.pol"
                     }
                     else {
                         # Ask user if they want to turn on optional diagnostic data only if Smart App Control is not already turned off
-                        if ((Get-MpComputerStatus).SmartAppControlState -ne 'Off') {
+                        if ($MDAVConfigCurrent.SmartAppControlState -ne 'Off') {
                             :SmartAppControlLabel2 switch ($RunUnattended ? ($MSFTDefender_NoDiagData ? 'No' : 'Yes') : (Select-Option -SubCategory -Options 'Yes', 'No', 'Exit' -Message "`nEnable Optional Diagnostic Data ?" -ExtraMessage 'Required for Smart App Control usage and evaluation, read the GitHub Readme!')) {
                                 'Yes' {
                                     Write-Verbose -Message 'Enabling Optional Diagnostic Data'
@@ -1905,7 +1910,7 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
 
                     # Setting Hibernate file size to full after making sure OS drive is property encrypted for holding hibernate data
                     # Making sure the system is not a VM because Hibernate on VM doesn't work and VMs have other/better options than Hibernation
-                    if (-NOT ((Get-MpComputerStatus).IsVirtualMachine)) {
+                    if (-NOT ($MDAVConfigCurrent.IsVirtualMachine)) {
 
                         # Check to see if Hibernate is already set to full and HiberFileType is set to 2 which is Full, 1 is Reduced
                         try {
@@ -2703,7 +2708,7 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
             Write-Verbose -Message 'Checking if TPM is available and enabled...'
             [System.Object]$TPM = Get-Tpm
             if (-NOT ($TPM.tpmpresent -and $TPM.tpmenabled)) {
-                Throw 'TPM is not available or enabled, please enable it in UEFI settings and try again.'
+                Write-Warning -Message 'TPM is not present or enabled on this system. BitLockerSettings category will be unavailable.'
             }
 
             if (-NOT ($MDAVConfigCurrent.AMServiceEnabled -eq $true)) {

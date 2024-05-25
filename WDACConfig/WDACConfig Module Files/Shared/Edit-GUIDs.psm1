@@ -5,6 +5,7 @@ Function Edit-GUIDs {
         Shouldn't be used for supplemental policies.
     .INPUTS
         System.String
+        System.IO.FileInfo
     .OUTPUTS
         System.Void
     #>
@@ -14,21 +15,24 @@ Function Edit-GUIDs {
         [System.String]$PolicyIDInput,
         [System.IO.FileInfo]$PolicyFilePathInput
     )
+    Begin {
+        [System.String]$PolicyID = "{$PolicyIDInput}"
 
-    [System.String]$PolicyID = "{$PolicyIDInput}"
+        # Read the xml file as an xml object
+        [System.Xml.XmlDocument]$Xml = Get-Content -Path $PolicyFilePathInput
+    }
+    Process {
+        # Define the new values for PolicyID and BasePolicyID
+        [System.String]$newPolicyID = $PolicyID
+        [System.String]$newBasePolicyID = $PolicyID
 
-    # Read the xml file as an xml object
-    [System.Xml.XmlDocument]$Xml = Get-Content -Path $PolicyFilePathInput
-
-    # Define the new values for PolicyID and BasePolicyID
-    [System.String]$newPolicyID = $PolicyID
-    [System.String]$newBasePolicyID = $PolicyID
-
-    # Replace the old values with the new ones
-    $Xml.SiPolicy.PolicyID = $newPolicyID
-    $Xml.SiPolicy.BasePolicyID = $newBasePolicyID
-
-    # Save the modified xml file
-    $Xml.Save($PolicyFilePathInput)
+        # Replace the old values with the new ones
+        $Xml.SiPolicy.PolicyID = $newPolicyID
+        $Xml.SiPolicy.BasePolicyID = $newBasePolicyID
+    }
+    End {
+        # Save the modified xml file
+        $Xml.Save($PolicyFilePathInput)
+    }
 }
 Export-ModuleMember -Function 'Edit-GUIDs'

@@ -68,7 +68,8 @@ Function New-WDACConfig {
             "$ModuleRootPath\Shared\Update-Self.psm1",
             "$ModuleRootPath\Shared\Write-ColorfulText.psm1",
             "$ModuleRootPath\Shared\Set-LogSize.psm1",
-            "$ModuleRootPath\Shared\New-StagingArea.psm1"
+            "$ModuleRootPath\Shared\New-StagingArea.psm1",
+            "$ModuleRootPath\Shared\Edit-GUIDs.psm1"
         )
 
         [System.IO.DirectoryInfo]$StagingArea = New-StagingArea -CmdletName 'New-WDACConfig'
@@ -180,8 +181,6 @@ Function New-WDACConfig {
 
                 # Get the SiPolicy node
                 [System.Xml.XmlElement]$SiPolicyNode = $DriverBlockRulesXML.SiPolicy
-
-                Write-Verbose -Message "Removing the 'Allow all rules' from the policy"
 
                 # Declare the namespace manager and add the default namespace with a prefix
                 [System.Xml.XmlNamespaceManager]$NameSpace = New-Object -TypeName System.Xml.XmlNamespaceManager -ArgumentList $DriverBlockRulesXML.NameTable
@@ -378,19 +377,6 @@ Function New-WDACConfig {
                 [System.IO.FileInfo]$FinalPolicyPath = Join-Path -Path $StagingArea -ChildPath "$Name.xml"
             }
             Process {
-
-                if ($Deploy) {
-                    Write-Verbose -Message "Checking if the $Name policy is already deployed"
-
-                    # Get the friendly names of all of the deployed base policies on the system
-                    $CurrentlyDeployedPolicies = [System.Collections.Generic.HashSet[System.String]] @(((&'C:\Windows\System32\CiTool.exe' -lp -json | ConvertFrom-Json).Policies | Where-Object -FilterScript { ($_.IsSystemPolicy -ne 'True') -and ($_.PolicyID -eq $_.BasePolicyID) }).FriendlyName)
-
-                    if ($CurrentlyDeployedPolicies.Contains($Name)) {
-                        Write-Verbose -Message "The $Name policy is already deployed"
-                        return
-                    }
-                }
-
                 Write-Verbose -Message "Getting the latest $Name from the official Microsoft GitHub repository"
                 [System.String]$MSFTRecommendedBlockRulesAsString = (Invoke-WebRequest -Uri $MSFTRecommendedBlockRulesURL -ProgressAction SilentlyContinue).Content
 
@@ -405,6 +391,15 @@ Function New-WDACConfig {
                 Set-CIPolicyIdInfo -ResetPolicyID -FilePath $FinalPolicyPath -PolicyName $Name | Out-Null
 
                 if ($Deploy) {
+
+                    Write-Verbose -Message "Checking if the $Name policy is already deployed"
+                    [System.String]$CurrentlyDeployedBlockRulesGUID = ((&'C:\Windows\System32\CiTool.exe' -lp -json | ConvertFrom-Json).Policies | Where-Object -FilterScript { ($_.IsSystemPolicy -ne 'True') -and ($_.PolicyID -eq $_.BasePolicyID) -and ($_.FriendlyName -eq $Name) }).PolicyID
+
+                    if (-NOT ([System.String]::IsNullOrWhiteSpace($CurrentlyDeployedBlockRulesGUID))) {
+                        Write-Verbose -Message "$Name policy is already deployed, updating it using the same GUID."
+                        Edit-GUIDs -PolicyIDInput $CurrentlyDeployedBlockRulesGUID -PolicyFilePathInput $FinalPolicyPath
+                    }
+
                     [System.IO.FileInfo]$CIPPath = ConvertFrom-CIPolicy -XmlFilePath $FinalPolicyPath -BinaryFilePath (Join-Path -Path $StagingArea -ChildPath "$Name.cip")
 
                     Write-Verbose -Message "Deploying the $Name policy"

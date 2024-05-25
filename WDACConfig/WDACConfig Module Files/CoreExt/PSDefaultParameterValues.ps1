@@ -40,6 +40,7 @@ $PSDefaultParameterValues = @{
     'New-WDACConfig:Verbose'                                      = $Verbose
     'Test-CiPolicy:Verbose'                                       = $Verbose
     'Get-CiFileHashes:Verbose'                                    = $Verbose
+    'Edit-GUIDs:Verbose'                                          = $Verbose
 
     'Build-SignerAndHashObjects:Verbose'                          = $Verbose
     'Clear-CiPolicy_Semantic:Verbose'                             = $Verbose

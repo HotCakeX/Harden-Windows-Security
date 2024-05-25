@@ -4,7 +4,7 @@ Function Edit-SignedWDACConfig {
         PositionalBinding = $false
     )]
     [OutputType([System.String])]
-    Param(       
+    Param(
         [Alias('A')]
         [Parameter(Mandatory = $false, ParameterSetName = 'AllowNewApps')][System.Management.Automation.SwitchParameter]$AllowNewApps,
         [Alias('M')]
@@ -86,19 +86,19 @@ Function Edit-SignedWDACConfig {
 
         [parameter(Mandatory = $false, ParameterSetName = 'AllowNewApps')]
         [System.Management.Automation.SwitchParameter]$NoScript,
-     
+
         [parameter(Mandatory = $false, ParameterSetName = 'AllowNewApps')]
         [System.Management.Automation.SwitchParameter]$NoUserPEs,
 
         [ValidateSet('OriginalFileName', 'InternalName', 'FileDescription', 'ProductName', 'PackageFamilyName', 'FilePath')]
         [parameter(Mandatory = $false, ParameterSetName = 'AllowNewApps')]
-        [System.String]$SpecificFileNameLevel,       
+        [System.String]$SpecificFileNameLevel,
 
-        [ValidateSet([ScanLevelz])]        
+        [ValidateSet([ScanLevelz])]
         [parameter(Mandatory = $false, ParameterSetName = 'AllowNewApps')]
         [System.String]$Level = 'WHQLFilePublisher',
 
-        [ValidateSet([ScanLevelz])]       
+        [ValidateSet([ScanLevelz])]
         [parameter(Mandatory = $false, ParameterSetName = 'AllowNewApps')]
         [System.String[]]$Fallbacks = ('FilePublisher', 'Hash'),
 
@@ -178,7 +178,7 @@ Function Edit-SignedWDACConfig {
                 }
             }
         }
-        #Endregion User-Configurations-Processing-Validation       
+        #Endregion User-Configurations-Processing-Validation
     }
 
     process {
@@ -249,7 +249,7 @@ Function Edit-SignedWDACConfig {
                 #Region Snap-Back-Guarantee
                 Write-Verbose -Message 'Creating Enforced Mode SnapBack guarantee'
                 New-SnapBackGuarantee -Path $EnforcedModeCIPPath
-                
+
                 $CurrentStep++
                 Write-Progress -Id 15 -Activity 'Deploying Audit mode policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
@@ -271,7 +271,7 @@ Function Edit-SignedWDACConfig {
                     Pause
                     Write-ColorfulText -Color Lavender -InputText 'Select directories to scan'
                     $ProgramsPaths = Show-DirectoryPathPicker
-                    #Endregion User-Interaction                    
+                    #Endregion User-Interaction
                 }
                 catch {
                     Throw $_
@@ -288,7 +288,7 @@ Function Edit-SignedWDACConfig {
                     Unregister-ScheduledTask -TaskName 'EnforcedModeSnapBack' -Confirm:$false
                     Remove-Item -Path (Join-Path -Path $UserConfigDir -ChildPath 'EnforcedModeSnapBack.cmd') -Force
                 }
-                
+
                 $CurrentStep++
                 Write-Progress -Id 15 -Activity 'Processing Audit event logs and directories' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
@@ -480,16 +480,16 @@ Function Edit-SignedWDACConfig {
                     Write-Verbose -Message 'No directory path or audit logs were selected to create a supplemental policy. Exiting...' -Verbose
                     Return
                 }
-               
+
                 Write-Verbose -Message 'The following policy xml files are going to be merged into the final Supplemental policy and be deployed on the system:'
                 $PolicyXMLFilesArray.Values | ForEach-Object -Process { Write-Verbose -Message "$_" }
 
                 # Merge all of the policy XML files in the array into the final Supplemental policy
                 $CurrentStep++
                 Write-Progress -Id 15 -Activity 'Merging the policies' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
- 
+
                 Merge-CIPolicy -PolicyPaths $PolicyXMLFilesArray.Values -OutputFilePath $SuppPolicyPath | Out-Null
-              
+
                 #Region Supplemental-policy-processing-and-deployment
 
                 $CurrentStep++
@@ -681,15 +681,15 @@ Function Edit-SignedWDACConfig {
                 $CurrentStep++
                 Write-Progress -Id 17 -Activity 'Getting the block rules' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
-                Write-Verbose -Message 'Getting the Use-Mode Block Rules'       
-                # This shouldn't deploy the policy unsigned if it is already signed - requires build 24H2 features         
+                Write-Verbose -Message 'Getting the Use-Mode Block Rules'
+                # This shouldn't deploy the policy unsigned if it is already signed - requires build 24H2 features
                 New-WDACConfig -GetUserModeBlockRules -Deploy
 
                 $CurrentStep++
                 Write-Progress -Id 17 -Activity 'Determining the policy type' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
                 [System.IO.FileInfo]$BasePolicyPath = Join-Path -Path $StagingArea -ChildPath 'BasePolicy.xml'
-                
+
                 Write-Verbose -Message 'Determining the type of the new base policy'
                 [System.String]$Name = $null
 
@@ -702,7 +702,7 @@ Function Edit-SignedWDACConfig {
 
                         Write-Verbose -Message 'Copying the AllowMicrosoft.xml template policy file to the Staging Area'
                         Copy-Item -Path 'C:\Windows\schemas\CodeIntegrity\ExamplePolicies\AllowMicrosoft.xml' -Destination $BasePolicyPath -Force
-                        
+
                         Write-Verbose -Message 'Setting the policy name'
                         Set-CIPolicyIdInfo -FilePath $BasePolicyPath -PolicyName "$Name refreshed On $(Get-Date -Format 'MM-dd-yyyy')"
 
@@ -715,7 +715,7 @@ Function Edit-SignedWDACConfig {
 
                         Write-Verbose -Message 'Copying the AllowMicrosoft.xml template policy file to the Staging Area'
                         Copy-Item -Path 'C:\Windows\schemas\CodeIntegrity\ExamplePolicies\AllowMicrosoft.xml' -Destination $BasePolicyPath -Force
-                       
+
                         Write-Verbose -Message 'Setting the policy name'
                         Set-CIPolicyIdInfo -FilePath $BasePolicyPath -PolicyName "$Name refreshed on $(Get-Date -Format 'MM-dd-yyyy')"
 
@@ -774,13 +774,13 @@ Function Edit-SignedWDACConfig {
                 Write-Verbose -Message 'Getting the policy ID of the currently deployed base policy based on the policy name that user selected'
                 # In case there are multiple policies with the same name, the first one will be used
                 [System.String]$CurrentID = ((&'C:\Windows\System32\CiTool.exe' -lp -json | ConvertFrom-Json).Policies | Where-Object -FilterScript { $_.IsSystemPolicy -ne 'True' } | Where-Object -FilterScript { $_.Friendlyname -eq $CurrentBasePolicyName }).BasePolicyID | Select-Object -First 1
-                    
+
                 Write-Verbose -Message 'Setting the policy ID and Base policy ID to the current base policy ID in the generated XML file'
                 Edit-GUIDs -PolicyIDInput $CurrentID -PolicyFilePathInput $BasePolicyPath
 
                 # Defining paths for the final Base policy CIP
                 [System.IO.FileInfo]$BasePolicyCIPPath = Join-Path -Path $StagingArea -ChildPath "$CurrentID.cip"
-             
+
                 Write-Verbose -Message 'Adding signer rules to the base policy'
                 Add-SignerRule -FilePath $BasePolicyPath -CertificatePath $CertPath -Update -User -Kernel -Supplemental
 

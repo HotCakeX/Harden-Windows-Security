@@ -1,7 +1,8 @@
 Function Edit-GUIDs {
     <#
     .SYNOPSIS
-        A helper function to swap GUIDs in a WDAC policy XML file
+        Swaps the PolicyID and BasePolicyID GUIDs in a WDAC policy XML file for Base policies..
+        Shouldn't be used for supplemental policies.
     .INPUTS
         System.String
     .OUTPUTS

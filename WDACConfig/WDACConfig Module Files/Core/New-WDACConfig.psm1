@@ -182,6 +182,8 @@ Function New-WDACConfig {
                 # Get the SiPolicy node
                 [System.Xml.XmlElement]$SiPolicyNode = $DriverBlockRulesXML.SiPolicy
 
+                Write-Verbose -Message "Removing the 'Allow all rules' from the policy"
+
                 # Declare the namespace manager and add the default namespace with a prefix
                 [System.Xml.XmlNamespaceManager]$NameSpace = New-Object -TypeName System.Xml.XmlNamespaceManager -ArgumentList $DriverBlockRulesXML.NameTable
                 $NameSpace.AddNamespace('ns', 'urn:schemas-microsoft-com:sipolicy')

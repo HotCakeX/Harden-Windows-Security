@@ -1,4 +1,4 @@
-Function S {
+Function P {
     <#
     .SYNOPSIS
         Effortlessly starts the hardening script on any system
@@ -7,8 +7,7 @@ Function S {
         Can start from Windows PowerShell too
     #>
     Param (
-        [System.Management.Automation.SwitchParameter]$G,
-        [System.Management.Automation.SwitchParameter]$C
+        [System.Management.Automation.SwitchParameter]$G
     )
     [System.Boolean]$CommandRan = $false
     if ($G) {

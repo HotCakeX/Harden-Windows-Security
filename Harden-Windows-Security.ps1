@@ -21,7 +21,6 @@ Function P {
         }
     }
     Try {
-        Write-Verbose -Verbose -Message 'Trying to run the command in PowerShell Core'
         pwsh.exe -NoLogo -NoExit -command $Command
         $CommandRan = $true
     }

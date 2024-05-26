@@ -17,7 +17,7 @@ function Set-ConstantVariable {
         [System.String]$Scope = 'Script'
     )
     if ((Test-Path -Path "Variable:\$Name") -eq $true) {
-        $ExistingValue = (Get-Variable -Name $Name).Value
+        $ExistingValue = Get-Variable -Name $Name -Scope Global -ValueOnly
         if ($ExistingValue -ne $Value) {
             throw "Variable '$Name' already exists with a different value: ($ExistingValue)."
         }

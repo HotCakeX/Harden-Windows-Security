@@ -67,7 +67,7 @@ Function Get-CIPolicySetting {
 
         Value = The actual value of the string
         ValueType = The type of setting: WldpString, WldpInteger or WldpBoolean
-        ValueSize = the size of the retured value
+        ValueSize = the size of the returned value
         Status = True/False depending on whether the setting exists on the system or not
         StatusCode = 0 if the value exists on the system, non-zero if it doesn't.
     .DESCRIPTION

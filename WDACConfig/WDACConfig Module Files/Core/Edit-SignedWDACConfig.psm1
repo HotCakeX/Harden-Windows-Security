@@ -736,7 +736,13 @@ Function Edit-SignedWDACConfig {
 
                 Write-Verbose -Message 'Getting the policy ID of the currently deployed base policy based on the policy name that user selected'
                 # In case there are multiple policies with the same name, the first one will be used
-                [System.String]$CurrentID = ((&'C:\Windows\System32\CiTool.exe' -lp -json | ConvertFrom-Json).Policies | Where-Object -FilterScript { $_.IsSystemPolicy -ne 'True' } | Where-Object -FilterScript { $_.Friendlyname -eq $CurrentBasePolicyName }).BasePolicyID | Select-Object -First 1
+                [System.Object]$CurrentlyDeployedPolicy = ((&'C:\Windows\System32\CiTool.exe' -lp -json | ConvertFrom-Json).Policies | Where-Object -FilterScript { ($_.IsSystemPolicy -ne 'True') -and ($_.Version = &$CalculateCIPolicyVersion $_.Version) -and ($_.Friendlyname -eq $CurrentBasePolicyName) }) | Select-Object -First 1
+
+                [System.String]$CurrentID = $CurrentlyDeployedPolicy.BasePolicyID
+                [System.Version]$CurrentVersion = $CurrentlyDeployedPolicy.Version
+
+                # Increment the version and use it to deploy the updated policy
+                [System.Version]$VersionToDeploy = &$IncrementVersion -Version $CurrentVersion
 
                 Write-Verbose -Message 'Setting the policy ID and Base policy ID to the current base policy ID in the generated XML file'
                 Edit-GUIDs -PolicyIDInput $CurrentID -PolicyFilePathInput $BasePolicyPath
@@ -747,8 +753,8 @@ Function Edit-SignedWDACConfig {
                 Write-Verbose -Message 'Adding signer rules to the base policy'
                 Add-SignerRule -FilePath $BasePolicyPath -CertificatePath $CertPath -Update -User -Kernel -Supplemental
 
-                Write-Verbose -Message 'Setting the policy version to 1.0.0.1'
-                Set-CIPolicyVersion -FilePath $BasePolicyPath -Version '1.0.0.1'
+                Write-Verbose -Message "Setting the policy version to '$VersionToDeploy' - Previous version was '$CurrentVersion'"
+                Set-CIPolicyVersion -FilePath $BasePolicyPath -Version $VersionToDeploy
 
                 Set-CiRuleOptions -FilePath $BasePolicyPath -RulesToRemove 'Enabled:Unsigned System Integrity Policy'
 

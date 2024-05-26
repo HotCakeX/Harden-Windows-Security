@@ -82,13 +82,13 @@ Function Confirm-WDACConfig {
 
         # Script block to show only non-system Base policies
         [System.Management.Automation.ScriptBlock]$OnlyBasePoliciesBLOCK = {
-            [System.Object[]]$BasePolicies = (&'C:\Windows\System32\CiTool.exe' -lp -json | ConvertFrom-Json).Policies | Where-Object -FilterScript { ($_.IsSystemPolicy -ne 'True') -and ($_.PolicyID -eq $_.BasePolicyID) }
+            [System.Object[]]$BasePolicies = (&'C:\Windows\System32\CiTool.exe' -lp -json | ConvertFrom-Json).Policies | Where-Object -FilterScript { ($_.IsSystemPolicy -ne 'True') -and ($_.PolicyID -eq $_.BasePolicyID) -and ($_.Version = &$CalculateCIPolicyVersion $_.Version) }
             Write-ColorfulText -Color Lavender -InputText "`nThere are currently $(($BasePolicies.count)) Non-system Base policies deployed"
             $BasePolicies
         }
         # Script block to show only non-system Supplemental policies
         [System.Management.Automation.ScriptBlock]$OnlySupplementalPoliciesBLOCK = {
-            [System.Object[]]$SupplementalPolicies = (&'C:\Windows\System32\CiTool.exe' -lp -json | ConvertFrom-Json).Policies | Where-Object -FilterScript { ($_.IsSystemPolicy -ne 'True') -and ($_.PolicyID -ne $_.BasePolicyID) }
+            [System.Object[]]$SupplementalPolicies = (&'C:\Windows\System32\CiTool.exe' -lp -json | ConvertFrom-Json).Policies | Where-Object -FilterScript { ($_.IsSystemPolicy -ne 'True') -and ($_.PolicyID -ne $_.BasePolicyID) -and ($_.Version = &$CalculateCIPolicyVersion $_.Version) }
             Write-ColorfulText -Color Lavender -InputText "`nThere are currently $(($SupplementalPolicies.count)) Non-system Supplemental policies deployed`n"
             $SupplementalPolicies
         }

@@ -12,12 +12,12 @@ Function P {
     [System.Boolean]$CommandRan = $false
     if ($G) {
         [System.Management.Automation.ScriptBlock]$Command = {
-            (Invoke-RestMethod 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Harden-Windows-Security%20Module/Main%20files/Core/Protect-WindowsSecurity.psm1') + 'P -G' | Invoke-Expression
+            (Invoke-RestMethod -Uri 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Harden-Windows-Security%20Module/Main%20files/Core/Protect-WindowsSecurity.psm1') + 'P -G' | Invoke-Expression
         }
     }
     else {
         [System.Management.Automation.ScriptBlock]$Command = {
-            (Invoke-RestMethod 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Harden-Windows-Security%20Module/Main%20files/Core/Protect-WindowsSecurity.psm1') + 'P' | Invoke-Expression
+            (Invoke-RestMethod -Uri 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Harden-Windows-Security%20Module/Main%20files/Core/Protect-WindowsSecurity.psm1') + 'P' | Invoke-Expression
         }
     }
     Try {

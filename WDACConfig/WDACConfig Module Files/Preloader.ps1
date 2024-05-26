@@ -5,85 +5,96 @@ if (!$IsWindows) {
 # Specifies that the WDACConfig module requires Administrator privileges
 #Requires -RunAsAdministrator
 
+function Set-ConstantVariable {
+    param (
+        [System.String]$Name,
+        [System.String]$Value,
+        [System.String]$Description,
+        [System.String]$Option = 'Constant',
+        [System.String]$Scope = 'Script'
+    )
+    if ((Test-Path -Path "Variable:\$Name") -eq $true) {
+        $ExistingValue = (Get-Variable -Name $Name).Value
+        if ($ExistingValue -ne $Value) {
+            throw "Variable '$Name' already exists with a different value: ($ExistingValue)."
+        }
+    }
+    else {
+        try {
+            New-Variable -Name $Name -Value $Value -Option $Option -Scope $Scope -Description $Description -Force
+        }
+        catch {
+            Throw [System.InvalidOperationException] "Could not set the required global variable: $Name"
+        }
+    }
+}
+
 # Create tamper resistant global/script variables (if they don't already exist) - They are automatically imported in the caller's environment
-try {
-    if ((Test-Path -Path 'Variable:\MSFTRecommendedBlockRulesURL') -eq $false) { New-Variable -Name 'MSFTRecommendedBlockRulesURL' -Value 'https://raw.githubusercontent.com/MicrosoftDocs/windows-itpro-docs/public/windows/security/application-security/application-control/windows-defender-application-control/design/applications-that-can-bypass-wdac.md' -Option 'Constant' -Scope 'Global' -Description 'User Mode block rules' -Force }
-    if ((Test-Path -Path 'Variable:\MSFTRecommendedDriverBlockRulesURL') -eq $false) { New-Variable -Name 'MSFTRecommendedDriverBlockRulesURL' -Value 'https://raw.githubusercontent.com/MicrosoftDocs/windows-itpro-docs/public/windows/security/application-security/application-control/windows-defender-application-control/design/microsoft-recommended-driver-block-rules.md' -Option 'Constant' -Scope 'Global' -Description 'Kernel Mode block rules' -Force }
-    # if ((Test-Path -Path 'Variable:\UserAccountDirectoryPath') -eq $false) { New-Variable -Name 'UserAccountDirectoryPath' -Value ((Get-CimInstance Win32_UserProfile -Filter "SID = '$([System.Security.Principal.WindowsIdentity]::GetCurrent().User.Value)'").LocalPath) -Option 'Constant' -Scope 'Script' -Description 'Securely retrieved User profile directory' -Force }
-    if ((Test-Path -Path 'Variable:\Requiredbuild') -eq $false) { New-Variable -Name 'Requiredbuild' -Value '22621.2428' -Option 'Constant' -Scope 'Script' -Description 'Minimum required OS build number' -Force }
-    if ((Test-Path -Path 'Variable:\OSBuild') -eq $false) { New-Variable -Name 'OSBuild' -Value ([System.Environment]::OSVersion.Version.Build) -Option 'Constant' -Scope 'Script' -Description 'Current OS build version' -Force }
-    if ((Test-Path -Path 'Variable:\UBR') -eq $false) { New-Variable -Name 'UBR' -Value (Get-ItemPropertyValue -Path 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion' -Name 'UBR') -Option 'Constant' -Scope 'Script' -Description 'Update Build Revision (UBR) number' -Force }
-    if ((Test-Path -Path 'Variable:\FullOSBuild') -eq $false) { New-Variable -Name 'FullOSBuild' -Value "$OSBuild.$UBR" -Option 'Constant' -Scope 'Script' -Description 'Create full OS build number as seen in Windows Settings' -Force }
-    if ((Test-Path -Path 'Variable:\ModuleRootPath') -eq $false) { New-Variable -Name 'ModuleRootPath' -Value ($PSScriptRoot) -Option 'Constant' -Scope 'Global' -Description 'Storing the value of $PSScriptRoot in a global constant variable to allow the internal functions to use it when navigating the module structure' -Force }
-    if ((Test-Path -Path 'Variable:\CISchemaPath') -eq $false) { New-Variable -Name 'CISchemaPath' -Value "$Env:SystemDrive\Windows\schemas\CodeIntegrity\cipolicy.xsd" -Option 'Constant' -Scope 'Global' -Description 'Storing the path to the WDAC Code Integrity Schema XSD file' -Force }
-    if ((Test-Path -Path 'Variable:\UserConfigDir') -eq $false) { New-Variable -Name 'UserConfigDir' -Value "$Env:ProgramFiles\WDACConfig" -Option 'Constant' -Scope 'Global' -Description 'Storing the path to the WDACConfig folder in the Program Files' -Force }
-    if ((Test-Path -Path 'Variable:\UserConfigJson') -eq $false) { New-Variable -Name 'UserConfigJson' -Value "$UserConfigDir\UserConfigurations\UserConfigurations.json" -Option 'Constant' -Scope 'Global' -Description 'Storing the path to User Config JSON file in the WDACConfig folder in the Program Files' -Force }
+Set-ConstantVariable -Name 'MSFTRecommendedBlockRulesURL' -Value 'https://raw.githubusercontent.com/MicrosoftDocs/windows-itpro-docs/public/windows/security/application-security/application-control/windows-defender-application-control/design/applications-that-can-bypass-wdac.md' -Option 'Constant' -Scope 'Global' -Description 'User Mode block rules'
+Set-ConstantVariable -Name 'MSFTRecommendedDriverBlockRulesURL' -Value 'https://raw.githubusercontent.com/MicrosoftDocs/windows-itpro-docs/public/windows/security/application-security/application-control/windows-defender-application-control/design/microsoft-recommended-driver-block-rules.md' -Option 'Constant' -Scope 'Global' -Description 'Kernel Mode block rules'
+# Set-ConstantVariable -Name 'UserAccountDirectoryPath' -Value ((Get-CimInstance Win32_UserProfile -Filter "SID = '$([System.Security.Principal.WindowsIdentity]::GetCurrent().User.Value)'").LocalPath) -Option 'Constant' -Scope 'Script' -Description 'Securely retrieved User profile directory'
+Set-ConstantVariable -Name 'Requiredbuild' -Value '22621.2428' -Option 'Constant' -Scope 'Script' -Description 'Minimum required OS build number'
+Set-ConstantVariable -Name 'OSBuild' -Value ([System.Environment]::OSVersion.Version.Build) -Option 'Constant' -Scope 'Script' -Description 'Current OS build version'
+Set-ConstantVariable -Name 'UBR' -Value (Get-ItemPropertyValue -Path 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion' -Name 'UBR') -Option 'Constant' -Scope 'Script' -Description 'Update Build Revision (UBR) number'
+Set-ConstantVariable -Name 'FullOSBuild' -Value "$OSBuild.$UBR" -Option 'Constant' -Scope 'Script' -Description 'Create full OS build number as seen in Windows Settings'
+Set-ConstantVariable -Name 'ModuleRootPath' -Value ($PSScriptRoot) -Option 'Constant' -Scope 'Global' -Description 'Storing the value of $PSScriptRoot in a global constant variable to allow the internal functions to use it when navigating the module structure'
+Set-ConstantVariable -Name 'CISchemaPath' -Value "$Env:SystemDrive\Windows\schemas\CodeIntegrity\cipolicy.xsd" -Option 'Constant' -Scope 'Global' -Description 'Storing the path to the WDAC Code Integrity Schema XSD file'
+Set-ConstantVariable -Name 'UserConfigDir' -Value "$Env:ProgramFiles\WDACConfig" -Option 'Constant' -Scope 'Global' -Description 'Storing the path to the WDACConfig folder in the Program Files'
+Set-ConstantVariable -Name 'UserConfigJson' -Value "$UserConfigDir\UserConfigurations\UserConfigurations.json" -Option 'Constant' -Scope 'Global' -Description 'Storing the path to User Config JSON file in the WDACConfig folder in the Program Files'
 
-    if ((Test-Path -Path 'Variable:\FindWDACCompliantFiles') -eq $false) {
-        New-Variable -Name 'FindWDACCompliantFiles' -Value {
-            Param ($Paths)
-            [System.String[]]$Extensions = @('*.sys', '*.exe', '*.com', '*.dll', '*.rll', '*.ocx', '*.msp', '*.mst', '*.msi', '*.js', '*.vbs', '*.ps1', '*.appx', '*.bin', '*.bat', '*.hxs', '*.mui', '*.lex', '*.mof')
-            $Output = Get-ChildItem -Recurse -File -LiteralPath $Paths -Include $Extensions -Force
-            Return $Output
-        } -Option 'Constant' -Scope 'Global' -Description 'Scriptblock that gets the WDAC Compliant files from a list of directories' -Force
+Set-ConstantVariable -Name 'FindWDACCompliantFiles' -Value {
+    Param ($Paths)
+    [System.String[]]$Extensions = @('*.sys', '*.exe', '*.com', '*.dll', '*.rll', '*.ocx', '*.msp', '*.mst', '*.msi', '*.js', '*.vbs', '*.ps1', '*.appx', '*.bin', '*.bat', '*.hxs', '*.mui', '*.lex', '*.mof')
+    $Output = Get-ChildItem -Recurse -File -LiteralPath $Paths -Include $Extensions -Force
+    Return $Output
+} -Option 'Constant' -Scope 'Global' -Description 'Scriptblock that gets the WDAC Compliant files from a list of directories'
+
+Set-ConstantVariable -Name 'WriteFinalOutput' -Value {
+    Param ($Path)
+    Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Write-ColorfulText.psm1" -Force
+    Write-ColorfulText -Color Lavender -InputText "The output file '$($Path.Name)' has been saved in '$UserConfigDir'"
+} -Option 'Constant' -Scope 'Global' -Description 'Scriptblock that writes the final output of some cmdlets'
+
+Set-ConstantVariable -Name 'CalculateCIPolicyVersion' -Value {
+    Param ([System.String]$Number)
+
+    # Convert the string to a 64-bit integer
+    $Number = [System.UInt64]::Parse($Number)
+
+    # Extract the version parts by splitting the 64-bit integer into four 16-bit segments and convert each segment to its respective part of the version number
+    [System.UInt16]$Part1 = ($Number -band '0xFFFF000000000000') -shr '48' # mask isolates the highest 16 bits of a 64-bit number.
+    [System.UInt16]$Part2 = ($Number -band '0x0000FFFF00000000') -shr '32' # mask isolates the next 16 bits.
+    [System.UInt16]$Part3 = ($Number -band '0x00000000FFFF0000') -shr '16' # mask isolates the third set of 16 bits.
+    [System.UInt16]$Part4 = $Number -band '0x000000000000FFFF' # mask isolates the lowest 16 bits.
+
+    # Form the version string
+    [System.Version]$version = "$Part1.$Part2.$Part3.$Part4"
+    Return $version
+} -Option 'Constant' -Scope 'Global' -Description 'Scriptblock that converts a 64-bit unsigned integer into version type, used for converting the numbers from CiTool.exe output to proper versions'
+
+Set-ConstantVariable -Name 'IncrementVersion' -Value {
+    param (
+        [System.Version]$Version
+    )
+
+    if ($Version.Revision -lt [System.Int32]::MaxValue) {
+        $NewVersion = [System.Version]::new($Version.Major, $Version.Minor, $Version.Build, $Version.Revision + 1)
+    }
+    elseif ($Version.Build -lt [System.Int32]::MaxValue) {
+        $NewVersion = [System.Version]::new($Version.Major, $Version.Minor, $Version.Build + 1, 0)
+    }
+    elseif ($Version.Minor -lt [System.Int32]::MaxValue) {
+        $NewVersion = [System.Version]::new($Version.Major, $Version.Minor + 1, 0, 0)
+    }
+    elseif ($Version.Major -lt [System.Int32]::MaxValue) {
+        $NewVersion = [System.Version]::new($Version.Major + 1, 0, 0, 0)
+    }
+    else {
+        Throw 'Version has reached its maximum value.'
     }
 
-    if ((Test-Path -Path 'Variable:\WriteFinalOutput') -eq $false) {
-        New-Variable -Name 'WriteFinalOutput' -Value {
-            Param ($Path)
-            Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Write-ColorfulText.psm1" -Force
-            Write-ColorfulText -Color Lavender -InputText "The output file '$($Path.Name)' has been saved in '$UserConfigDir'"
-        } -Option 'Constant' -Scope 'Global' -Description 'Scriptblock that writes the final output of some cmdlets' -Force
-    }
-
-    if ((Test-Path -Path 'Variable:\CalculateCIPolicyVersion') -eq $false) {
-        New-Variable -Name 'CalculateCIPolicyVersion' -Value {
-            Param ([System.String]$Number)
-
-            # Convert the string to a 64-bit integer
-            $Number = [System.UInt64]::Parse($Number)
-
-            # Extract the version parts by splitting the 64-bit integer into four 16-bit segments and convert each segment to its respective part of the version number
-            [System.UInt16]$Part1 = ($Number -band '0xFFFF000000000000') -shr '48' # mask isolates the highest 16 bits of a 64-bit number.
-            [System.UInt16]$Part2 = ($Number -band '0x0000FFFF00000000') -shr '32' # mask isolates the next 16 bits.
-            [System.UInt16]$Part3 = ($Number -band '0x00000000FFFF0000') -shr '16' # mask isolates the third set of 16 bits.
-            [System.UInt16]$Part4 = $Number -band '0x000000000000FFFF' # mask isolates the lowest 16 bits.
-
-            # Form the version string
-            [System.Version]$version = "$Part1.$Part2.$Part3.$Part4"
-            Return $version
-        } -Option 'Constant' -Scope 'Global' -Description 'Scriptblock that converts a 64-bit unsigned integer into version type, used for converting the numbers from CiTool.exe output to proper versions' -Force
-    }
-
-    if ((Test-Path -Path 'Variable:\IncrementVersion') -eq $false) {
-        New-Variable -Name 'IncrementVersion' -Value {
-            param (
-                [System.Version]$Version
-            )
-
-            if ($Version.Revision -lt [System.Int32]::MaxValue) {
-                $NewVersion = [System.Version]::new($Version.Major, $Version.Minor, $Version.Build, $Version.Revision + 1)
-            }
-            elseif ($Version.Build -lt [System.Int32]::MaxValue) {
-                $NewVersion = [System.Version]::new($Version.Major, $Version.Minor, $Version.Build + 1, 0)
-            }
-            elseif ($Version.Minor -lt [System.Int32]::MaxValue) {
-                $NewVersion = [System.Version]::new($Version.Major, $Version.Minor + 1, 0, 0)
-            }
-            elseif ($Version.Major -lt [System.Int32]::MaxValue) {
-                $NewVersion = [System.Version]::new($Version.Major + 1, 0, 0, 0)
-            }
-            else {
-                Throw 'Version has reached its maximum value.'
-            }
-
-            return $NewVersion
-        } -Option 'Constant' -Scope 'Global' -Description 'Scriptblock that can recursively increment an input version by one, and is aware of the max limit' -Force
-    }
-}
-catch {
-    Throw [System.InvalidOperationException] 'Could not set the required global variables.'
-}
+    return $NewVersion
+} -Option 'Constant' -Scope 'Global' -Description 'Scriptblock that can recursively increment an input version by one, and is aware of the max limit'
 
 # Make sure the current OS build is equal or greater than the required build number
 if (-NOT ([System.Decimal]$FullOSBuild -ge [System.Decimal]$Requiredbuild)) {

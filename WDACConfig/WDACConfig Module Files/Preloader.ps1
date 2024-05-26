@@ -1,3 +1,6 @@
+# Stopping the module process if any error occurs
+$global:ErrorActionPreference = 'Stop'
+
 if (!$IsWindows) {
     Throw [System.PlatformNotSupportedException] 'The WDACConfig module only runs on Windows operation systems.'
 }

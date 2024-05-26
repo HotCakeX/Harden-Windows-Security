@@ -113,7 +113,8 @@ Function Edit-WDACConfig {
             "$ModuleRootPath\Shared\Set-LogPropertiesVisibility.psm1",
             "$ModuleRootPath\Shared\Select-LogProperties.psm1",
             "$ModuleRootPath\Shared\Test-KernelProtectedFiles.psm1",
-            "$ModuleRootPath\Shared\Show-DirectoryPathPicker.psm1"
+            "$ModuleRootPath\Shared\Show-DirectoryPathPicker.psm1",
+            "$ModuleRootPath\Shared\Edit-GUIDs.psm1"
         )
         $ModulesToImport += (Get-ChildItem -File -Filter '*.psm1' -LiteralPath "$ModuleRootPath\XMLOps").FullName
         Import-Module -FullyQualifiedName $ModulesToImport -Force

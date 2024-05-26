@@ -40,7 +40,8 @@ Function Deploy-SignedWDACConfig {
             "$ModuleRootPath\Shared\Get-SignTool.psm1",
             "$ModuleRootPath\Shared\Write-ColorfulText.psm1",
             "$ModuleRootPath\Shared\Copy-CiRules.psm1",
-            "$ModuleRootPath\Shared\New-StagingArea.psm1"
+            "$ModuleRootPath\Shared\New-StagingArea.psm1",
+            "$ModuleRootPath\Shared\Invoke-CiSigning.psm1"
         )
 
         # if -SkipVersionCheck wasn't passed, run the updater
@@ -179,21 +180,7 @@ Function Deploy-SignedWDACConfig {
                 Write-Progress -Id 13 -Activity 'Signing the policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
                 Push-Location -Path $StagingArea
-                # Configure the parameter splat
-                [System.Collections.Hashtable]$ProcessParams = @{
-                    'ArgumentList' = 'sign', '/v' , '/n', "`"$CertCN`"", '/p7', '.', '/p7co', '1.3.6.1.4.1.311.79.1', '/fd', 'certHash', "$($PolicyCIPPath.Name)"
-                    'FilePath'     = $SignToolPathFinal
-                    'NoNewWindow'  = $true
-                    'Wait'         = $true
-                    'ErrorAction'  = 'Stop'
-                }
-                # Hide the SignTool.exe's normal output unless -Verbose parameter was used
-                if (!$Verbose) { $ProcessParams['RedirectStandardOutput'] = 'NUL' }
-
-                # Sign the files with the specified cert
-                Write-Verbose -Message 'Signing the policy with the specified certificate'
-                Start-Process @ProcessParams
-
+                Invoke-CiSigning -CiPath $PolicyCIPPath -SignToolPathFinal $SignToolPathFinal -CertCN $CertCN
                 Pop-Location
 
                 Write-Verbose -Message 'Renaming the .p7 file to .cip'

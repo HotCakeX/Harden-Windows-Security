@@ -129,7 +129,9 @@ Function Edit-SignedWDACConfig {
             "$ModuleRootPath\Shared\Set-LogPropertiesVisibility.psm1",
             "$ModuleRootPath\Shared\Select-LogProperties.psm1",
             "$ModuleRootPath\Shared\Test-KernelProtectedFiles.psm1",
-            "$ModuleRootPath\Shared\Show-DirectoryPathPicker.psm1"
+            "$ModuleRootPath\Shared\Show-DirectoryPathPicker.psm1",
+            "$ModuleRootPath\Shared\Invoke-CiSigning.psm1",
+            "$ModuleRootPath\Shared\Edit-GUIDs.psm1"
         )
 
         # if -SkipVersionCheck wasn't passed, run the updater
@@ -224,22 +226,10 @@ Function Edit-SignedWDACConfig {
 
                 # Change location so SignTool.exe will create outputs in the Staging Area
                 Push-Location -LiteralPath $StagingArea
-
                 # Sign both CIPs
                 $AuditModeCIPPath, $EnforcedModeCIPPath | ForEach-Object -Process {
-                    # Configure the parameter splat
-                    [System.Collections.Hashtable]$ProcessParams = @{
-                        'ArgumentList' = 'sign', '/v' , '/n', "`"$CertCN`"", '/p7', '.', '/p7co', '1.3.6.1.4.1.311.79.1', '/fd', 'certHash', "`"$_`""
-                        'FilePath'     = $SignToolPathFinal
-                        'NoNewWindow'  = $true
-                        'Wait'         = $true
-                        'ErrorAction'  = 'Stop'
-                    } # Only show the output of SignTool if Verbose switch is used
-                    if (!$Verbose) { $ProcessParams['RedirectStandardOutput'] = 'NUL' }
-                    # Sign the files with the specified cert
-                    Start-Process @ProcessParams
+                    Invoke-CiSigning -CiPath $_ -SignToolPathFinal $SignToolPathFinal -CertCN $CertCN
                 }
-
                 Pop-Location
 
                 Write-Verbose -Message 'Renaming the signed CIPs to remove the .p7 extension'
@@ -517,21 +507,7 @@ Function Edit-SignedWDACConfig {
 
                 # Change location so SignTool.exe will create outputs in the Staging Area
                 Push-Location -LiteralPath $StagingArea
-
-                # Configure the parameter splat
-                [System.Collections.Hashtable]$ProcessParams = @{
-                    'ArgumentList' = 'sign', '/v' , '/n', "`"$CertCN`"", '/p7', '.', '/p7co', '1.3.6.1.4.1.311.79.1', '/fd', 'certHash', "$($SupplementalCIPPath.Name)"
-                    'FilePath'     = $SignToolPathFinal
-                    'NoNewWindow'  = $true
-                    'Wait'         = $true
-                    'ErrorAction'  = 'Stop'
-                }
-                # Only show the output of SignTool if Verbose switch is used
-                if (!$Verbose) { $ProcessParams['RedirectStandardOutput'] = 'NUL' }
-
-                Write-Verbose -Message 'Signing the Supplemental policy with the specified cert'
-                Start-Process @ProcessParams
-
+                Invoke-CiSigning -CiPath $SupplementalCIPPath -SignToolPathFinal $SignToolPathFinal -CertCN $CertCN
                 Pop-Location
 
                 Write-Verbose -Message 'Renaming the signed Supplemental policy file to remove the .p7 extension'
@@ -639,20 +615,7 @@ Function Edit-SignedWDACConfig {
 
                 # Change location so SignTool.exe will create outputs in the Staging Area
                 Push-Location -LiteralPath $StagingArea
-
-                # Configure the parameter splat
-                [System.Collections.Hashtable]$ProcessParams = @{
-                    'ArgumentList' = 'sign', '/v' , '/n', "`"$CertCN`"", '/p7', '.', '/p7co', '1.3.6.1.4.1.311.79.1', '/fd', 'certHash', "$($FinalSupplementalCIPPath.Name)"
-                    'FilePath'     = $SignToolPathFinal
-                    'NoNewWindow'  = $true
-                    'Wait'         = $true
-                    'ErrorAction'  = 'Stop'
-                } # Only show the output of SignTool if Verbose switch is used
-                if (!$Verbose) { $ProcessParams['RedirectStandardOutput'] = 'NUL' }
-
-                Write-Verbose -Message 'Signing the Supplemental policy with the specified cert'
-                Start-Process @ProcessParams
-
+                Invoke-CiSigning -CiPath $FinalSupplementalCIPPath -SignToolPathFinal $SignToolPathFinal -CertCN $CertCN
                 Pop-Location
 
                 Write-Verbose -Message 'Renaming the signed Supplemental policy file to remove the .p7 extension'
@@ -794,20 +757,7 @@ Function Edit-SignedWDACConfig {
 
                 # Change location so SignTool.exe will create outputs in the Staging Area
                 Push-Location -LiteralPath $StagingArea
-
-                # Configure the parameter splat
-                [System.Collections.Hashtable]$ProcessParams = @{
-                    'ArgumentList' = 'sign', '/v' , '/n', "`"$CertCN`"", '/p7', '.', '/p7co', '1.3.6.1.4.1.311.79.1', '/fd', 'certHash', "$($BasePolicyCIPPath.Name)"
-                    'FilePath'     = $SignToolPathFinal
-                    'NoNewWindow'  = $true
-                    'Wait'         = $true
-                    'ErrorAction'  = 'Stop'
-                } # Only show the output of SignTool if Verbose switch is used
-                if (!$Verbose) { $ProcessParams['RedirectStandardOutput'] = 'NUL' }
-
-                Write-Verbose -Message 'Signing the base policy with the specified cert'
-                Start-Process @ProcessParams
-
+                Invoke-CiSigning -CiPath $BasePolicyCIPPath -SignToolPathFinal $SignToolPathFinal -CertCN $CertCN
                 Pop-Location
 
                 Write-Verbose -Message 'Renaming the signed base policy file to remove the .p7 extension'

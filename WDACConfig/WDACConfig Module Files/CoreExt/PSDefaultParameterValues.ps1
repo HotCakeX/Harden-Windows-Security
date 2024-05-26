@@ -41,6 +41,7 @@ $PSDefaultParameterValues = @{
     'Test-CiPolicy:Verbose'                                       = $Verbose
     'Get-CiFileHashes:Verbose'                                    = $Verbose
     'Edit-GUIDs:Verbose'                                          = $Verbose
+    'Invoke-CiSigning:Verbose'                                    = $Verbose
 
     'Build-SignerAndHashObjects:Verbose'                          = $Verbose
     'Clear-CiPolicy_Semantic:Verbose'                             = $Verbose

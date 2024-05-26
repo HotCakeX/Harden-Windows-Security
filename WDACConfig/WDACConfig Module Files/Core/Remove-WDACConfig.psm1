@@ -128,7 +128,8 @@ Function Remove-WDACConfig {
             "$ModuleRootPath\Shared\Get-SignTool.psm1",
             "$ModuleRootPath\Shared\Write-ColorfulText.psm1",
             "$ModuleRootPath\Shared\Remove-SupplementalSigners.psm1",
-            "$ModuleRootPath\Shared\New-StagingArea.psm1"
+            "$ModuleRootPath\Shared\New-StagingArea.psm1",
+            "$ModuleRootPath\Shared\Invoke-CiSigning.psm1"
         )
 
         # if -SkipVersionCheck wasn't passed, run the updater
@@ -293,20 +294,7 @@ Function Remove-WDACConfig {
                     Write-Progress -Id 18 -Activity 'Signing the policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
                     Push-Location -Path $StagingArea
-                    # Configure the parameter splat
-                    [System.Collections.Hashtable]$ProcessParams = @{
-                        'ArgumentList' = 'sign', '/v' , '/n', "`"$CertCN`"", '/p7', '.', '/p7co', '1.3.6.1.4.1.311.79.1', '/fd', 'certHash', "$($PolicyCIPPath.Name)"
-                        'FilePath'     = $SignToolPathFinal
-                        'NoNewWindow'  = $true
-                        'Wait'         = $true
-                        'ErrorAction'  = 'Stop'
-                    }
-                    if (!$Verbose) { $ProcessParams['RedirectStandardOutput'] = 'NUL' }
-
-                    # Sign the files with the specified cert
-                    Write-Verbose -Message 'Signing the new CIP binary'
-                    Start-Process @ProcessParams
-
+                    Invoke-CiSigning -CiPath $PolicyCIPPath -SignToolPathFinal $SignToolPathFinal -CertCN $CertCN
                     Pop-Location
 
                     # Fixing the extension name of the newly signed CIP file

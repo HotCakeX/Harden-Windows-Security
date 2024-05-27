@@ -1,12 +1,12 @@
 # Answers to the Basic Frequently Asked Questions
 
-This document has answers to the most basic frequently asked questions about this repository, specially about how to use the Harden Windows Security module.
+This document has answers to the most basic frequently asked questions about this repository.
 
 <br>
 
 ## From 1 to 10 How Difficult Is It to Use the Harden Windows Security Module?
 
-Around 2
+1 - **Very Easy**
 
 <br>
 
@@ -19,7 +19,8 @@ Around 2
 
 ## How to Install PowerShell?
 
-[Installing PowerShell on Windows](https://learn.microsoft.com/en-us/powershell/scripting/install/installing-powershell-on-windows)
+* [Install PowerShell from Microsoft Store](https://www.microsoft.com/store/productid/9MZ1SNWT0N5D) (easiest way)
+* [Installing PowerShell on Windows](https://learn.microsoft.com/en-us/powershell/scripting/install/installing-powershell-on-windows)
 
 <br>
 
@@ -108,6 +109,18 @@ Yes, it's a very capable automated AI-driven security feature.
 No. Because Modern hardware are built for Windows security features such as Virtualization Based Security, BitLocker etc. They expect these advanced security features to be turned on and running on a secure system.
 
 Only very old and unsupported hardware *might* experience degraded performance when using modern security features.
+
+<br>
+
+## What If I Want to Revert the Changes?
+
+You can revert the changes by running the command [Unprotect-WindowsSecurity](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Harden%E2%80%90Windows%E2%80%90Security%E2%80%90Module#unprotect-windowssecurity-cmdlet) in PowerShell.
+
+<br>
+
+## Can You Alter The Requirements?
+
+No. The [requirements](https://github.com/HotCakeX/Harden-Windows-Security#requirements-) are very basic and minimum, they are even less than what's required by Windows 11 minim hardware.
 
 <br>
 

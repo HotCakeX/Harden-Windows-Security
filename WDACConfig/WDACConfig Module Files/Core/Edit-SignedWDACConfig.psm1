@@ -133,6 +133,8 @@ Function Edit-SignedWDACConfig {
             "$ModuleRootPath\Shared\Invoke-CiSigning.psm1",
             "$ModuleRootPath\Shared\Edit-GUIDs.psm1"
         )
+        $ModulesToImport += (Get-ChildItem -File -Filter '*.psm1' -LiteralPath "$ModuleRootPath\XMLOps").FullName
+        Import-Module -FullyQualifiedName $ModulesToImport -Force
 
         # if -SkipVersionCheck wasn't passed, run the updater
         if (-NOT $SkipVersionCheck) { Update-Self -InvocationStatement $MyInvocation.Statement }
@@ -413,7 +415,7 @@ Function Edit-SignedWDACConfig {
                         Write-Verbose -Message "Kernel protected files with PFN property: $($KernelProtectedFileLogsWithPFN.count)"
                         Write-Verbose -Message "Kernel protected files without PFN property: $($KernelProtectedFileLogs.count - $KernelProtectedFileLogsWithPFN.count)"
 
-                        # Removing the logs that were used to create PFN rules from the rest of the logs
+                        # Removing the logs that were used to create PFN rules, from the rest of the logs
                         $SelectedLogs = $SelectedLogs | Where-Object -FilterScript { $_ -notin $KernelProtectedFileLogsWithPFN }
                     }
 
@@ -667,7 +669,7 @@ Function Edit-SignedWDACConfig {
                         Copy-Item -Path 'C:\Windows\schemas\CodeIntegrity\ExamplePolicies\AllowMicrosoft.xml' -Destination $BasePolicyPath -Force
 
                         Write-Verbose -Message 'Setting the policy name'
-                        Set-CIPolicyIdInfo -FilePath $BasePolicyPath -PolicyName "$Name refreshed On $(Get-Date -Format 'MM-dd-yyyy')"
+                        Set-CIPolicyIdInfo -FilePath $BasePolicyPath -PolicyName "$Name - $(Get-Date -Format 'MM-dd-yyyy')"
 
                         Set-CiRuleOptions -FilePath $BasePolicyPath -Template Base -RequireEVSigners:$RequireEVSigners
                     }
@@ -680,7 +682,7 @@ Function Edit-SignedWDACConfig {
                         Copy-Item -Path 'C:\Windows\schemas\CodeIntegrity\ExamplePolicies\AllowMicrosoft.xml' -Destination $BasePolicyPath -Force
 
                         Write-Verbose -Message 'Setting the policy name'
-                        Set-CIPolicyIdInfo -FilePath $BasePolicyPath -PolicyName "$Name refreshed on $(Get-Date -Format 'MM-dd-yyyy')"
+                        Set-CIPolicyIdInfo -FilePath $BasePolicyPath -PolicyName "$Name - $(Get-Date -Format 'MM-dd-yyyy')"
 
                         Set-CiRuleOptions -FilePath $BasePolicyPath -Template BaseISG -RequireEVSigners:$RequireEVSigners
 
@@ -725,7 +727,7 @@ Function Edit-SignedWDACConfig {
                         }
 
                         Write-Verbose -Message 'Setting the policy name'
-                        Set-CIPolicyIdInfo -FilePath $BasePolicyPath -PolicyName "$Name refreshed On $(Get-Date -Format 'MM-dd-yyyy')"
+                        Set-CIPolicyIdInfo -FilePath $BasePolicyPath -PolicyName "$Name - $(Get-Date -Format 'MM-dd-yyyy')"
 
                         Set-CiRuleOptions -FilePath $BasePolicyPath -Template Base -RequireEVSigners:$RequireEVSigners
                     }

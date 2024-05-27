@@ -9,7 +9,6 @@ Function Confirm-WDACConfig {
         [Alias('S')]
         [Parameter(Mandatory = $false, ParameterSetName = 'Check SmartAppControl Status')][System.Management.Automation.SwitchParameter]$CheckSmartAppControlStatus
     )
-
     DynamicParam {
 
         # Add the dynamic parameters to the param dictionary
@@ -23,7 +22,6 @@ Function Confirm-WDACConfig {
                 ParameterSetName = 'List Active Policies'
                 HelpMessage      = 'Only List Base Policies'
             }
-
             $ParamDictionary.Add('OnlyBasePolicies', [System.Management.Automation.RuntimeDefinedParameter]::new(
                     'OnlyBasePolicies',
                     [System.Management.Automation.SwitchParameter],
@@ -36,11 +34,22 @@ Function Confirm-WDACConfig {
                 ParameterSetName = 'List Active Policies'
                 HelpMessage      = 'Only List Supplemental Policies'
             }
-
             $ParamDictionary.Add('OnlySupplementalPolicies', [System.Management.Automation.RuntimeDefinedParameter]::new(
                     'OnlySupplementalPolicies',
                     [System.Management.Automation.SwitchParameter],
                     [System.Management.Automation.ParameterAttribute[]]@($OnlySupplementalPoliciesDynamicParameter)
+                ))
+
+            # Create a dynamic parameter for -OnlySystemPolicies
+            $OnlySystemPoliciesDynamicParameter = [System.Management.Automation.ParameterAttribute]@{
+                Mandatory        = $false
+                ParameterSetName = 'List Active Policies'
+                HelpMessage      = 'Only List System Policies'
+            }
+            $ParamDictionary.Add('OnlySystemPolicies', [System.Management.Automation.RuntimeDefinedParameter]::new(
+                    'OnlySystemPolicies',
+                    [System.Management.Automation.SwitchParameter],
+                    [System.Management.Automation.ParameterAttribute[]]@($OnlySystemPoliciesDynamicParameter)
                 ))
         }
 
@@ -51,7 +60,6 @@ Function Confirm-WDACConfig {
             ParameterSetName = '__AllParameterSets'
             HelpMessage      = 'Skip Version Check'
         }
-
         $ParamDictionary.Add('SkipVersionCheck', [System.Management.Automation.RuntimeDefinedParameter]::new(
                 'SkipVersionCheck',
                 [System.Management.Automation.SwitchParameter],
@@ -75,21 +83,22 @@ Function Confirm-WDACConfig {
         # or assign them manually to another variable in the function's scope
         [System.Management.Automation.SwitchParameter]$OnlyBasePolicies = $($PSBoundParameters['OnlyBasePolicies'])
         [System.Management.Automation.SwitchParameter]$OnlySupplementalPolicies = $($PSBoundParameters['OnlySupplementalPolicies'])
+        [System.Management.Automation.SwitchParameter]$OnlySystemPolicies = $($PSBoundParameters['OnlySystemPolicies'])
         [System.Management.Automation.SwitchParameter]$SkipVersionCheck = $($PSBoundParameters['SkipVersionCheck'])
 
         # if -SkipVersionCheck wasn't passed, run the updater
         if (-NOT $SkipVersionCheck) { Update-Self -InvocationStatement $MyInvocation.Statement }
 
-        # Script block to show only non-system Base policies
+        # Script block to show only Base policies
         [System.Management.Automation.ScriptBlock]$OnlyBasePoliciesBLOCK = {
-            [System.Object[]]$BasePolicies = (&'C:\Windows\System32\CiTool.exe' -lp -json | ConvertFrom-Json).Policies | Where-Object -FilterScript { ($_.IsSystemPolicy -ne 'True') -and ($_.PolicyID -eq $_.BasePolicyID) -and ($_.Version = &$CalculateCIPolicyVersion $_.Version) }
-            Write-ColorfulText -Color Lavender -InputText "`nThere are currently $(($BasePolicies.count)) Non-system Base policies deployed"
+            [System.Object[]]$BasePolicies = (&'C:\Windows\System32\CiTool.exe' -lp -json | ConvertFrom-Json).Policies | Where-Object -FilterScript { ($_.IsSystemPolicy -eq $OnlySystemPolicies) -and ($_.PolicyID -eq $_.BasePolicyID) -and ($_.Version = &$CalculateCIPolicyVersion $_.Version) }
+            Write-ColorfulText -Color Lavender -InputText "`nThere are currently $(($BasePolicies.count)) Base policies deployed"
             $BasePolicies
         }
-        # Script block to show only non-system Supplemental policies
+        # Script block to show only Supplemental policies
         [System.Management.Automation.ScriptBlock]$OnlySupplementalPoliciesBLOCK = {
-            [System.Object[]]$SupplementalPolicies = (&'C:\Windows\System32\CiTool.exe' -lp -json | ConvertFrom-Json).Policies | Where-Object -FilterScript { ($_.IsSystemPolicy -ne 'True') -and ($_.PolicyID -ne $_.BasePolicyID) -and ($_.Version = &$CalculateCIPolicyVersion $_.Version) }
-            Write-ColorfulText -Color Lavender -InputText "`nThere are currently $(($SupplementalPolicies.count)) Non-system Supplemental policies deployed`n"
+            [System.Object[]]$SupplementalPolicies = (&'C:\Windows\System32\CiTool.exe' -lp -json | ConvertFrom-Json).Policies | Where-Object -FilterScript { ($_.IsSystemPolicy -eq $OnlySystemPolicies) -and ($_.PolicyID -ne $_.BasePolicyID) -and ($_.Version = &$CalculateCIPolicyVersion $_.Version) }
+            Write-ColorfulText -Color Lavender -InputText "`nThere are currently $(($SupplementalPolicies.count)) Supplemental policies deployed`n"
             $SupplementalPolicies
         }
 
@@ -138,11 +147,17 @@ Function Confirm-WDACConfig {
 .DESCRIPTION
     Using official Microsoft methods, Show the status of WDAC (Windows Defender Application Control) on the system, list the current deployed policies and show details about each of them.
 .COMPONENT
-    Windows Defender Application Control, ConfigCI PowerShell module
+    Windows Defender Application Control, ConfigCI, CiTool
 .FUNCTIONALITY
     Using official Microsoft methods, Show the status of WDAC (Windows Defender Application Control) on the system, list the current deployed policies and show details about each of them.
 .PARAMETER ListActivePolicies
     Lists the currently deployed policies and shows details about each of them
+.PARAMETER OnlySystemPolicies
+    Shows only the system policies
+.PARAMETER OnlyBasePolicies
+    Shows only the Base policies
+.PARAMETER OnlySupplementalPolicies
+    Shows only the Supplemental policies
 .PARAMETER VerifyWDACStatus
     Shows the status of WDAC (Windows Defender Application Control) on the system
 .PARAMETER CheckSmartAppControlStatus

@@ -9,17 +9,22 @@ if (!$IsWindows) {
 #Requires -RunAsAdministrator
 
 function Set-ConstantVariable {
+    <#
+    .SYNOPSIS
+        Performs precise check to ensure that a global variable is not already pre-defined with a potentially malicious value.
+        Even a single space change in the value of the variable will be detected.
+    #>
     param (
         [System.String]$Name,
-        [System.String]$Value,
+        $Value,
         [System.String]$Description,
-        [System.String]$Option = 'Constant',
-        [System.String]$Scope = 'Script'
+        [System.String]$Option,
+        [System.String]$Scope
     )
     if ((Test-Path -Path "Variable:\$Name") -eq $true) {
-        $ExistingValue = Get-Variable -Name $Name -Scope Global -ValueOnly
+        $ExistingValue = [System.String]$(Get-Variable -Name $Name -Scope Global -ValueOnly)
         if ($ExistingValue -ne $Value) {
-            throw "Variable '$Name' already exists with a different value: ($ExistingValue)."
+            throw "Variable '$Name' already exists with a different value: ($ExistingValue). For security reasons, cannot continue the operation. Please close and reopen the PowerShell session and try again."
         }
     }
     else {
@@ -45,59 +50,65 @@ Set-ConstantVariable -Name 'CISchemaPath' -Value "$Env:SystemDrive\Windows\schem
 Set-ConstantVariable -Name 'UserConfigDir' -Value "$Env:ProgramFiles\WDACConfig" -Option 'Constant' -Scope 'Global' -Description 'Storing the path to the WDACConfig folder in the Program Files'
 Set-ConstantVariable -Name 'UserConfigJson' -Value "$UserConfigDir\UserConfigurations\UserConfigurations.json" -Option 'Constant' -Scope 'Global' -Description 'Storing the path to User Config JSON file in the WDACConfig folder in the Program Files'
 
-Set-ConstantVariable -Name 'FindWDACCompliantFiles' -Value {
-    Param ($Paths)
-    [System.String[]]$Extensions = @('*.sys', '*.exe', '*.com', '*.dll', '*.rll', '*.ocx', '*.msp', '*.mst', '*.msi', '*.js', '*.vbs', '*.ps1', '*.appx', '*.bin', '*.bat', '*.hxs', '*.mui', '*.lex', '*.mof')
-    $Output = Get-ChildItem -Recurse -File -LiteralPath $Paths -Include $Extensions -Force
-    Return $Output
-} -Option 'Constant' -Scope 'Global' -Description 'Scriptblock that gets the WDAC Compliant files from a list of directories'
+Set-ConstantVariable -Name 'FindWDACCompliantFiles' -Value $([System.Management.Automation.ScriptBlock]::Create({
+            Param ($Paths)
+            [System.String[]]$Extensions = @('*.sys', '*.exe', '*.com', '*.dll', '*.rll', '*.ocx', '*.msp', '*.mst', '*.msi', '*.js', '*.vbs', '*.ps1', '*.appx', '*.bin', '*.bat', '*.hxs', '*.mui', '*.lex', '*.mof')
+            $Output = Get-ChildItem -Recurse -File -LiteralPath $Paths -Include $Extensions -Force
+            Return $Output
+        })) -Option 'Constant' -Scope 'Global' -Description 'Scriptblock that gets the WDAC Compliant files from a list of directories'
 
-Set-ConstantVariable -Name 'WriteFinalOutput' -Value {
-    Param ($Path)
-    Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Write-ColorfulText.psm1" -Force
-    Write-ColorfulText -Color Lavender -InputText "The output file '$($Path.Name)' has been saved in '$UserConfigDir'"
-} -Option 'Constant' -Scope 'Global' -Description 'Scriptblock that writes the final output of some cmdlets'
+Set-ConstantVariable -Name 'WriteFinalOutput' -Value $([System.Management.Automation.ScriptBlock]::Create({
+            Param ($Path)
+            Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Write-ColorfulText.psm1" -Force
+            Write-ColorfulText -Color Lavender -InputText "The output file '$($Path.Name)' has been saved in '$UserConfigDir'"
+        })) -Option 'Constant' -Scope 'Global' -Description 'Scriptblock that writes the final output of some cmdlets'
 
-Set-ConstantVariable -Name 'CalculateCIPolicyVersion' -Value {
-    Param ([System.String]$Number)
+Set-ConstantVariable -Name 'CalculateCIPolicyVersion' -Value $([System.Management.Automation.ScriptBlock]::Create({
+            Param ([System.String]$Number)
 
-    # Convert the string to a 64-bit integer
-    $Number = [System.UInt64]::Parse($Number)
+            Try {
+                # Convert the string to a 64-bit integer
+                $Number = [System.UInt64]::Parse($Number)
 
-    # Extract the version parts by splitting the 64-bit integer into four 16-bit segments and convert each segment to its respective part of the version number
-    [System.UInt16]$Part1 = ($Number -band '0xFFFF000000000000') -shr '48' # mask isolates the highest 16 bits of a 64-bit number.
-    [System.UInt16]$Part2 = ($Number -band '0x0000FFFF00000000') -shr '32' # mask isolates the next 16 bits.
-    [System.UInt16]$Part3 = ($Number -band '0x00000000FFFF0000') -shr '16' # mask isolates the third set of 16 bits.
-    [System.UInt16]$Part4 = $Number -band '0x000000000000FFFF' # mask isolates the lowest 16 bits.
+                # Extract the version parts by splitting the 64-bit integer into four 16-bit segments and convert each segment to its respective part of the version number
+                [System.UInt16]$Part1 = ($Number -band '0xFFFF000000000000') -shr '48' # mask isolates the highest 16 bits of a 64-bit number.
+                [System.UInt16]$Part2 = ($Number -band '0x0000FFFF00000000') -shr '32' # mask isolates the next 16 bits.
+                [System.UInt16]$Part3 = ($Number -band '0x00000000FFFF0000') -shr '16' # mask isolates the third set of 16 bits.
+                [System.UInt16]$Part4 = $Number -band '0x000000000000FFFF' # mask isolates the lowest 16 bits.
 
-    # Form the version string
-    [System.Version]$version = "$Part1.$Part2.$Part3.$Part4"
-    Return $version
-} -Option 'Constant' -Scope 'Global' -Description 'Scriptblock that converts a 64-bit unsigned integer into version type, used for converting the numbers from CiTool.exe output to proper versions'
+                # Form the version string
+                [System.Version]$version = "$Part1.$Part2.$Part3.$Part4"
+                Return $version
+            }
+            catch {
+                Return $Number
+            }
 
-Set-ConstantVariable -Name 'IncrementVersion' -Value {
-    param (
-        [System.Version]$Version
-    )
+        })) -Option 'Constant' -Scope 'Global' -Description 'Scriptblock that converts a 64-bit unsigned integer into version type, used for converting the numbers from CiTool.exe output to proper versions'
 
-    if ($Version.Revision -lt [System.Int32]::MaxValue) {
-        $NewVersion = [System.Version]::new($Version.Major, $Version.Minor, $Version.Build, $Version.Revision + 1)
-    }
-    elseif ($Version.Build -lt [System.Int32]::MaxValue) {
-        $NewVersion = [System.Version]::new($Version.Major, $Version.Minor, $Version.Build + 1, 0)
-    }
-    elseif ($Version.Minor -lt [System.Int32]::MaxValue) {
-        $NewVersion = [System.Version]::new($Version.Major, $Version.Minor + 1, 0, 0)
-    }
-    elseif ($Version.Major -lt [System.Int32]::MaxValue) {
-        $NewVersion = [System.Version]::new($Version.Major + 1, 0, 0, 0)
-    }
-    else {
-        Throw 'Version has reached its maximum value.'
-    }
+Set-ConstantVariable -Name 'IncrementVersion' -Value $([System.Management.Automation.ScriptBlock]::Create({
+            param (
+                [System.Version]$Version
+            )
 
-    return $NewVersion
-} -Option 'Constant' -Scope 'Global' -Description 'Scriptblock that can recursively increment an input version by one, and is aware of the max limit'
+            if ($Version.Revision -lt [System.Int32]::MaxValue) {
+                $NewVersion = [System.Version]::new($Version.Major, $Version.Minor, $Version.Build, $Version.Revision + 1)
+            }
+            elseif ($Version.Build -lt [System.Int32]::MaxValue) {
+                $NewVersion = [System.Version]::new($Version.Major, $Version.Minor, $Version.Build + 1, 0)
+            }
+            elseif ($Version.Minor -lt [System.Int32]::MaxValue) {
+                $NewVersion = [System.Version]::new($Version.Major, $Version.Minor + 1, 0, 0)
+            }
+            elseif ($Version.Major -lt [System.Int32]::MaxValue) {
+                $NewVersion = [System.Version]::new($Version.Major + 1, 0, 0, 0)
+            }
+            else {
+                Throw 'Version has reached its maximum value.'
+            }
+
+            return $NewVersion
+        })) -Option 'Constant' -Scope 'Global' -Description 'Scriptblock that can recursively increment an input version by one, and is aware of the max limit'
 
 # Make sure the current OS build is equal or greater than the required build number
 if (-NOT ([System.Decimal]$FullOSBuild -ge [System.Decimal]$Requiredbuild)) {

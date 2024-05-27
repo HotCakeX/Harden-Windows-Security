@@ -50,11 +50,12 @@ Function Assert-WDACConfigIntegrity {
                 continue
             }
 
-            # Create a SHA512 object
-            [System.Security.Cryptography.SHA512]$Sha512 = [System.Security.Cryptography.SHA512]::Create()
-
             # Read the file as a byte array - This way we can get hashes of a file in use by another process where Get-FileHash would fail
             [System.Byte[]]$Bytes = [System.IO.File]::ReadAllBytes($File)
+
+            #Region SHA2-512 calculation
+            # Create a SHA512 object
+            [System.Security.Cryptography.SHA512]$Sha512 = [System.Security.Cryptography.SHA512]::Create()
 
             # Compute the hash of the byte array
             [System.Byte[]]$HashBytes = $Sha512.ComputeHash($Bytes)
@@ -68,12 +69,36 @@ Function Assert-WDACConfigIntegrity {
 
             # Remove the dashes from the hexadecimal string
             $HashString = $HashString.Replace('-', '')
+            #Endregion SHA2-512 calculation
+
+            #Region SHA3-512 calculation
+            try {
+                [System.Security.Cryptography.SHA3_512]$SHA3_512 = [System.Security.Cryptography.SHA3_512]::Create()
+
+                # Compute the hash of the byte array
+                [System.Byte[]]$SHA3_512HashBytes = $SHA3_512.ComputeHash($Bytes)
+
+                # Dispose the SHA3_512 object
+                $SHA3_512.Dispose()
+
+                # Convert the hash bytes to a hexadecimal string to make it look like the output of the Get-FileHash which produces hexadecimals (0-9 and A-F)
+                # If [System.Convert]::ToBase64String was used, it'd return the hash in base64 format, which uses 64 symbols (A-Z, a-z, 0-9, + and /) to represent each byte
+                [System.String]$SHA3_512HashString = [System.BitConverter]::ToString($SHA3_512HashBytes)
+
+                # Remove the dashes from the hexadecimal string
+                $SHA3_512HashString = $SHA3_512HashString.Replace('-', '')
+            }
+            catch [System.PlatformNotSupportedException] {
+                Write-Verbose -Message 'The SHA3-512 algorithm is not supported on this system. Requires build 24H2 or higher.'
+            }
+            #Endregion SHA3-512 calculation
 
             # Create a custom object to store the relative path, file name and the hash of the file
             $FinalOutput += [PSCustomObject]@{
-                RelativePath = [System.String]([System.IO.Path]::GetRelativePath($ModuleRootPath, $File.FullName))
-                FileName     = [System.String]$File.Name
-                FileHash     = [System.String]$HashString
+                RelativePath     = [System.String]([System.IO.Path]::GetRelativePath($ModuleRootPath, $File.FullName))
+                FileName         = [System.String]$File.Name
+                FileHash         = [System.String]$HashString
+                FileHashSHA3_512 = [System.String]$SHA3_512HashString
             }
         }
 
@@ -98,6 +123,7 @@ Function Assert-WDACConfigIntegrity {
     <#
 .SYNOPSIS
     Gets the SHA2-512 hashes of files in the WDACConfig and compares them with the ones in the cloud and shows the differences.
+    It also calculates the SHA3-512 hashes of the files and will completely switch to this new algorithm after Windows build 24H2 is reached GA.
 .DESCRIPTION
     The Assert-WDACConfigIntegrity function scans all the relevant files in the WDACConfig's folder and its subfolders, calculates their SHA2-512 hashes in hexadecimal format,
     Then it downloads the cloud CSV file from the GitHub repository and compares the hashes of the local files with the ones in the cloud.

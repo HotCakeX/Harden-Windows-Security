@@ -120,7 +120,7 @@ You can revert the changes by running the command [Unprotect-WindowsSecurity](ht
 
 ## Can You Alter The Requirements?
 
-No. The [requirements](https://github.com/HotCakeX/Harden-Windows-Security#requirements-) are very basic and minimum, they are even less than what's required by Windows 11 minim hardware.
+No. The [requirements](https://github.com/HotCakeX/Harden-Windows-Security#requirements-) are very basic and minimum, they are even less than what's required by Windows 11 minimum hardware.
 
 <br>
 

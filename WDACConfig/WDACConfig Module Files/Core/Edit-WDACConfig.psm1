@@ -441,6 +441,44 @@ Function Edit-WDACConfig {
                 # Define the path for the final Supplemental policy CIP
                 [System.IO.FileInfo]$SupplementalCIPPath = Join-Path -Path $StagingArea -ChildPath "$SuppPolicyID.cip"
 
+                #Region Boosted Security - Sandboxing
+                # The AppIDs association must happen at the end right before converting the policy to binary because merge-cipolicy and other ConfigCI cmdlets remove the Macros
+
+                if ($BoostedSecurity) {
+
+                    # 3 HashSets to store the unique file paths
+                    $AddInPaths = [System.Collections.Generic.HashSet[System.String]]@()
+                    $ExePaths = [System.Collections.Generic.HashSet[System.String]]@()
+
+                    # Separating the exes and addins from the user supplied directory path
+                    [System.String[]]$Extensions = @('*.sys', '*.com', '*.dll', '*.rll', '*.ocx', '*.msp', '*.mst', '*.msi', '*.js', '*.vbs', '*.ps1', '*.appx', '*.bin', '*.bat', '*.hxs', '*.mui', '*.lex', '*.mof')
+
+                    # If user selected directories
+                    if ($HasFolderPaths) {
+                        Get-ChildItem -Recurse -File -LiteralPath $ProgramsPaths -Include $Extensions -Force | ForEach-Object -Process { [System.Void]$AddInPaths.Add($_.FullName) }
+                        Get-ChildItem -Recurse -File -LiteralPath $ProgramsPaths -Include '*.exe' -Force | ForEach-Object -Process { [System.Void]$ExePaths.Add($_.FullName) }
+
+                        Write-Debug -Message "Number of AddIns after scanning the user selected directories: $($AddInPaths.Count)"
+                        Write-Debug -Message "Number of Exes after scanning the user selected directories: $($ExePaths.Count)"
+                    }
+
+                    # If event logs had any audit logs
+                    if ($HasAuditLogs) {
+                        # Separating the exes and addins from the audit event logs
+                        Get-ChildItem -Recurse -File -LiteralPath $AuditEventLogsProcessingResults.'File Name' -Include '*.exe' -Force | ForEach-Object -Process { [System.Void]$ExePaths.Add($_.FullName) }
+                        Get-ChildItem -Recurse -File -LiteralPath $AuditEventLogsProcessingResults.'File Name' -Include $Extensions -Force | ForEach-Object -Process { [System.Void]$AddInPaths.Add($_.FullName) }
+
+                        Write-Debug -Message "Number of AddIns after scanning the Event Logs + user selected directories: $($AddInPaths.Count)"
+                        Write-Debug -Message "Number of Exes after scanning the Event Logs + user selected directories: $($ExePaths.Count)"
+                    }
+
+                    if (($null -ne $ExePaths) -and ($null -ne $AddInPaths) -and ($ExePaths.Count -ne 0) -and ($AddInPaths.count -ne 0)) {
+                        New-Macros -XmlFilePath $SuppPolicyPath -Macros $([System.IO.FileInfo[]]$ExePaths).Name
+                    }
+                }
+
+                #Endregion Boosted Security - Sandboxing
+
                 Write-Verbose -Message 'Convert the Supplemental policy to a CIP file'
                 ConvertFrom-CIPolicy -XmlFilePath $SuppPolicyPath -BinaryFilePath $SupplementalCIPPath | Out-Null
 
@@ -532,44 +570,6 @@ Function Edit-WDACConfig {
 
                 Write-Verbose -Message 'Setting HVCI to Strict'
                 Set-HVCIOptions -Strict -FilePath $FinalSupplementalPath
-
-                #Region Boosted Security - Sandboxing
-                # The AppIDs association must happen at the end right before converting the policy to binary because merge-cipolicy and other ConfigCI cmdlets remove the Macros
-
-                if ($BoostedSecurity) {
-
-                    # 3 HashSets to store the unique file paths
-                    $AddInPaths = [System.Collections.Generic.HashSet[System.String]]@()
-                    $ExePaths = [System.Collections.Generic.HashSet[System.String]]@()
-
-                    # Separating the exes and addins from the user supplied directory path
-                    [System.String[]]$Extensions = @('*.sys', '*.com', '*.dll', '*.rll', '*.ocx', '*.msp', '*.mst', '*.msi', '*.js', '*.vbs', '*.ps1', '*.appx', '*.bin', '*.bat', '*.hxs', '*.mui', '*.lex', '*.mof')
-
-                    # If user selected directories
-                    if ($HasFolderPaths) {
-                        Get-ChildItem -Recurse -File -LiteralPath $ProgramsPaths -Include $Extensions -Force | ForEach-Object -Process { [System.Void]$AddInPaths.Add($_.FullName) }
-                        Get-ChildItem -Recurse -File -LiteralPath $ProgramsPaths -Include '*.exe' -Force | ForEach-Object -Process { [System.Void]$ExePaths.Add($_.FullName) }
-
-                        Write-Debug -Message "Number of AddIns after scanning the user selected directories: $($AddInPaths.Count)"
-                        Write-Debug -Message "Number of Exes after scanning the user selected directories: $($ExePaths.Count)"
-                    }
-
-                    # If event logs had any audit logs
-                    if ($HasAuditLogs) {
-                        # Separating the exes and addins from the audit event logs
-                        Get-ChildItem -Recurse -File -LiteralPath $AuditEventLogsProcessingResults.'File Name' -Include '*.exe' -Force | ForEach-Object -Process { [System.Void]$ExePaths.Add($_.FullName) }
-                        Get-ChildItem -Recurse -File -LiteralPath $AuditEventLogsProcessingResults.'File Name' -Include $Extensions -Force | ForEach-Object -Process { [System.Void]$AddInPaths.Add($_.FullName) }
-
-                        Write-Debug -Message "Number of AddIns after scanning the Event Logs + user selected directories: $($AddInPaths.Count)"
-                        Write-Debug -Message "Number of Exes after scanning the Event Logs + user selected directories: $($ExePaths.Count)"
-                    }
-
-                    if (($null -ne $ExePaths) -and ($null -ne $AddInPaths) -and ($ExePaths.Count -ne 0) -and ($AddInPaths.count -ne 0)) {
-                        New-Macros -XmlFilePath $SuppPolicyPath -Macros $([System.IO.FileInfo[]]$ExePaths).Name
-                    }
-                }
-
-                #Endregion Boosted Security - Sandboxing
 
                 Write-Verbose -Message 'Converting the Supplemental policy to a CIP file'
                 ConvertFrom-CIPolicy -XmlFilePath $FinalSupplementalPath -BinaryFilePath (Join-Path -Path $StagingArea -ChildPath "$SuppPolicyID.cip") | Out-Null

@@ -6,7 +6,6 @@ Function New-Macros {
         The path to the XML file containing the CI policy
     .PARAMETER Macros
         The list of Macros to create. These are the values of the Macros.
-        The IDs of the macros will be in the "appid.<Macro>" format
     #>
     [CmdletBinding()]
     [OutputType([System.Void])]
@@ -16,6 +15,7 @@ Function New-Macros {
     )
     Begin {
 
+        # We don't need duplicate Macros values to exist in the XML policy file
         $Macros = $Macros | Select-Object -Unique
 
         # Load the XML file
@@ -39,6 +39,7 @@ Function New-Macros {
         [System.Collections.Hashtable]$MacroAppIDMapping = @{}
 
         for ($I = 0; $I -lt $Macros.Length; $I++) {
+            # The IDs of the macros will be in the "appid.<number>" format
             $MacroAppIDMapping["appid.$I"] = $Macros[$I]
         }
 
@@ -63,7 +64,8 @@ Function New-Macros {
         # Update AppIDs for elements between <FileRules> and </FileRules>
         $FileRulesNode = $Xml.SelectSingleNode('//ns:FileRules', $Ns)
         if ($FileRulesNode) {
-            # Make sure to exclude the .exe files from the AppIDs because only AddIns such as DLLs should have the AppIDs applied to them
+            # Make sure to exclude the .exe files from the AppIDs because only AddIns such as DLLs should have the AppIDs applied to them.
+            # AppIDs applied to .exe files make them unrunnable and trigger blocked event.
             # Also exclude .sys files since driver load can only be done by secure kernel
 
             # '.*\.(exe|sys)\s(FileRule|FileAttribute|Hash).*'

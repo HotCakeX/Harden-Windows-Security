@@ -22,6 +22,8 @@ Function Edit-WDACConfig {
         [Parameter(Mandatory = $true, ParameterSetName = 'MergeSupplementalPolicies', ValueFromPipelineByPropertyName = $true)]
         [System.IO.FileInfo[]]$SuppPolicyPaths,
 
+        [Parameter(Mandatory = $false, ParameterSetName = 'AllowNewApps')][System.Management.Automation.SwitchParameter]$BoostedSecurity,
+
         [ValidateScript({
                 # Validate the Policy file to make sure the user isn't accidentally trying to
                 # Edit a Signed policy using Edit-WDACConfig cmdlet which is only made for Unsigned policies
@@ -234,8 +236,6 @@ Function Edit-WDACConfig {
                 # Path for the temp policy file generated from the audits logs captured during the audit phase
                 [System.IO.FileInfo]$WDACPolicyPathTEMP = Join-Path -Path $StagingArea -ChildPath "TEMP policy for Audits logs - $SuppPolicyName.xml"
 
-                [System.Collections.Hashtable[]]$AuditEventLogsProcessingResults = Receive-CodeIntegrityLogs -Date $Date
-
                 # Flag indicating user has selected directory path(s)
                 [System.Boolean]$HasFolderPaths = $false
                 # Flag indicating audit event logs have been detected during the audit phase
@@ -295,7 +295,9 @@ Function Edit-WDACConfig {
                     Write-Verbose -Message 'No directory path was selected.'
                 }
 
-                if ($null -ne $AuditEventLogsProcessingResults) {
+                [System.Collections.Hashtable[]]$AuditEventLogsProcessingResults = Receive-CodeIntegrityLogs -Date $Date
+
+                if (($null -ne $AuditEventLogsProcessingResults) -and ($AuditEventLogsProcessingResults.count -ne 0)) {
                     $HasAuditLogs = $true
                 }
                 else {
@@ -306,7 +308,7 @@ Function Edit-WDACConfig {
                     $OutsideFiles = [System.Collections.Generic.HashSet[System.String]]@(Test-FilePath -FilePath $AuditEventLogsProcessingResults.'File Name' -DirectoryPath $ProgramsPaths)
                 }
 
-                if ($null -ne $OutsideFiles) {
+                if (($null -ne $OutsideFiles) -and ($OutsideFiles.count -ne 0)) {
                     Write-Verbose -Message "$($OutsideFiles.count) file(s) have been found in event viewer logs that don't exist in any of the folder paths you selected."
                     $HasExtraFiles = $true
                 }
@@ -531,6 +533,44 @@ Function Edit-WDACConfig {
                 Write-Verbose -Message 'Setting HVCI to Strict'
                 Set-HVCIOptions -Strict -FilePath $FinalSupplementalPath
 
+                #Region Boosted Security - Sandboxing
+                # The AppIDs association must happen at the end right before converting the policy to binary because merge-cipolicy and other ConfigCI cmdlets remove the Macros
+
+                if ($BoostedSecurity) {
+
+                    # 3 HashSets to store the unique file paths
+                    $AddInPaths = [System.Collections.Generic.HashSet[System.String]]@()
+                    $ExePaths = [System.Collections.Generic.HashSet[System.String]]@()
+
+                    # Separating the exes and addins from the user supplied directory path
+                    [System.String[]]$Extensions = @('*.sys', '*.com', '*.dll', '*.rll', '*.ocx', '*.msp', '*.mst', '*.msi', '*.js', '*.vbs', '*.ps1', '*.appx', '*.bin', '*.bat', '*.hxs', '*.mui', '*.lex', '*.mof')
+
+                    # If user selected directories
+                    if ($HasFolderPaths) {
+                        Get-ChildItem -Recurse -File -LiteralPath $ProgramsPaths -Include $Extensions -Force | ForEach-Object -Process { [System.Void]$AddInPaths.Add($_.FullName) }
+                        Get-ChildItem -Recurse -File -LiteralPath $ProgramsPaths -Include '*.exe' -Force | ForEach-Object -Process { [System.Void]$ExePaths.Add($_.FullName) }
+
+                        Write-Debug -Message "Number of AddIns after scanning the user selected directories: $($AddInPaths.Count)"
+                        Write-Debug -Message "Number of Exes after scanning the user selected directories: $($ExePaths.Count)"
+                    }
+
+                    # If event logs had any audit logs
+                    if ($HasAuditLogs) {
+                        # Separating the exes and addins from the audit event logs
+                        Get-ChildItem -Recurse -File -LiteralPath $AuditEventLogsProcessingResults.'File Name' -Include '*.exe' -Force | ForEach-Object -Process { [System.Void]$ExePaths.Add($_.FullName) }
+                        Get-ChildItem -Recurse -File -LiteralPath $AuditEventLogsProcessingResults.'File Name' -Include $Extensions -Force | ForEach-Object -Process { [System.Void]$AddInPaths.Add($_.FullName) }
+
+                        Write-Debug -Message "Number of AddIns after scanning the Event Logs + user selected directories: $($AddInPaths.Count)"
+                        Write-Debug -Message "Number of Exes after scanning the Event Logs + user selected directories: $($ExePaths.Count)"
+                    }
+
+                    if (($null -ne $ExePaths) -and ($null -ne $AddInPaths) -and ($ExePaths.Count -ne 0) -and ($AddInPaths.count -ne 0)) {
+                        New-Macros -XmlFilePath $SuppPolicyPath -Macros $([System.IO.FileInfo[]]$ExePaths).Name
+                    }
+                }
+
+                #Endregion Boosted Security - Sandboxing
+
                 Write-Verbose -Message 'Converting the Supplemental policy to a CIP file'
                 ConvertFrom-CIPolicy -XmlFilePath $FinalSupplementalPath -BinaryFilePath (Join-Path -Path $StagingArea -ChildPath "$SuppPolicyID.cip") | Out-Null
 
@@ -721,6 +761,8 @@ Function Edit-WDACConfig {
     Keep the old Supplemental policies that are going to be merged into a single policy
 .PARAMETER NoScript
     If specified, scripts will not be scanned
+.PARAMETER BoostedSecurity
+    If specified, reinforced rules will be created that offer pseudo-sandbox capabilities
 .PARAMETER NoUserPEs
     If specified, user mode binaries will not be scanned
 .PARAMETER SpecificFileNameLevel

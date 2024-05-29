@@ -228,6 +228,7 @@ This is an advanced PowerShell module for WDAC (Windows Defender Application Con
         'Shared\Test-KernelProtectedFiles.psm1',
         'Shared\Select-LogProperties.psm1',
         'Shared\Edit-GUIDs.psm1',
+        'Shared\Get-KernelModeDrivers.psm1',
         'Shared\Invoke-CiSigning.psm1',
         'WDACSimulation\Get-TBSCertificate.psm1',
         'WDACSimulation\Get-SignerInfo.psm1',
@@ -265,7 +266,8 @@ This is an advanced PowerShell module for WDAC (Windows Defender Application Con
         'XMLOps\Remove-OrphanAllowedSignersAndCiSigners_IDBased.psm1',
         'XMLOps\Remove-UnreferencedFileRuleRefs.psm1',
         'XMLOps\New-RootAndLeafCertificateLevelRules.psm1',
-        'XMLOps\New-PFNLevelRules.psm1')
+        'XMLOps\New-PFNLevelRules.psm1',
+        'XMLOps\New-Macros.psm1')
 
     # Private data to pass to the module specified in RootModule/ModuleToProcess. This may also contain a PSData hashtable with additional module metadata used by PowerShell.
     PrivateData          = @{

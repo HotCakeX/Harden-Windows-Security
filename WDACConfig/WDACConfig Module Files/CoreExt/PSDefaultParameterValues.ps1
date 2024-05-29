@@ -43,6 +43,7 @@ $PSDefaultParameterValues = @{
     'Edit-GUIDs:Verbose'                                          = $Verbose
     'Invoke-CiSigning:Verbose'                                    = $Verbose
     'Get-KernelModeDrivers:Verbose'                               = $Verbose
+    'New-Macros:Verbose'                                          = $Verbose
 
     'Build-SignerAndHashObjects:Verbose'                          = $Verbose
     'Clear-CiPolicy_Semantic:Verbose'                             = $Verbose

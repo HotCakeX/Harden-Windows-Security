@@ -16,7 +16,7 @@ Function New-Macros {
     )
     Begin {
 
-        $Macros = $Macros | Get-Unique
+        $Macros = $Macros | Select-Object -Unique
 
         # Load the XML file
         [System.Xml.XmlDocument]$Xml = Get-Content -Path $XmlFilePath
@@ -65,7 +65,9 @@ Function New-Macros {
         if ($FileRulesNode) {
             # Make sure to exclude the .exe files from the AppIDs because only AddIns such as DLLs should have the AppIDs applied to them
             # Also exclude .sys files since driver load can only be done by secure kernel
-            $FileRulesToModify = $FileRulesNode.ChildNodes | Where-Object -FilterScript { ($_.Name -in 'Allow', 'Deny', 'FileAttrib', 'FileRule') -and ($_.FriendlyName -notmatch '.*\.(exe|sys)\s(FileRule|FileAttribute|Hash).*') }
+
+            # '.*\.(exe|sys)\s(FileRule|FileAttribute|Hash).*'
+            $FileRulesToModify = $FileRulesNode.ChildNodes | Where-Object -FilterScript { ($_.Name -in 'Allow', 'Deny', 'FileAttrib', 'FileRule') -and ($_.FriendlyName -notmatch '.*\.(exe|sys).*') }
 
             $FileRulesToModify | ForEach-Object -Process {
                 $_.SetAttribute('AppIDs', [System.String]$AppIDsArray)

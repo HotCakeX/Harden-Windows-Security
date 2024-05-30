@@ -605,6 +605,9 @@ Function Edit-SignedWDACConfig {
                 }
                 #Endregion Input-policy-verification
 
+                Write-Verbose -Message 'Backing up any possible Macros in the Supplemental policies'
+                $MacrosBackup = Checkpoint-Macros -XmlFilePathIn $SuppPolicyPaths -Backup
+
                 $CurrentStep++
                 Write-Progress -Id 16 -Activity 'Merging the policies' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
@@ -626,12 +629,6 @@ Function Edit-SignedWDACConfig {
 
                     Write-Verbose -Message "Removing policy with ID: $SupplementalPolicyID"
                     &'C:\Windows\System32\CiTool.exe' --remove-policy $SupplementalPolicyID -json | Out-Null
-
-                    # remove the old policy files unless user chose to keep them
-                    if (!$KeepOldSupplementalPolicies) {
-                        Write-Verbose -Message "Removing the old policy file: $SuppPolicyPath"
-                        Remove-Item -Path $SuppPolicyPath -Force
-                    }
                 }
 
                 $CurrentStep++
@@ -649,6 +646,11 @@ Function Edit-SignedWDACConfig {
 
                 # Defining paths for the final Supplemental policy CIP
                 [System.IO.FileInfo]$FinalSupplementalCIPPath = Join-Path -Path $StagingArea -ChildPath "$SuppPolicyID.cip"
+
+                if ($null -ne $MacrosBackup) {
+                    Write-Verbose -Message 'Restoring the Macros in the Supplemental policies'
+                    Checkpoint-Macros -XmlFilePathOut $FinalSupplementalPath -Restore -MacrosBackup $MacrosBackup
+                }
 
                 Write-Verbose -Message 'Converting the Supplemental policy to a CIP file'
                 ConvertFrom-CIPolicy -XmlFilePath $FinalSupplementalPath -BinaryFilePath $FinalSupplementalCIPPath | Out-Null
@@ -671,6 +673,12 @@ Function Edit-SignedWDACConfig {
 
                 # Copying the final Supplemental policy to the user's config directory since Staging Area is a temporary location
                 Copy-Item -Path $FinalSupplementalPath -Destination $UserConfigDir -Force
+
+                # remove the old policy files at the end after ensuring the operation was successful
+                if (!$KeepOldSupplementalPolicies) {
+                    Write-Verbose -Message 'Removing the old policy files'
+                    Remove-Item -Path $SuppPolicyPaths -Force
+                }
 
                 Write-Progress -Id 16 -Activity 'Complete.' -Completed
             }
@@ -756,12 +764,12 @@ Function Edit-SignedWDACConfig {
                             New-CIPolicy -ScanPath $PSHOME -Level FilePublisher -NoScript -Fallback Hash -UserPEs -UserWriteablePaths -MultiplePolicyFormat -AllowFileNameFallbacks -FilePath (Join-Path -Path $StagingArea -ChildPath 'AllowPowerShell.xml')
 
                             Write-Verbose -Message 'Merging the DefaultWindows.xml, AllowPowerShell.xml and SignTool.xml a single policy file'
-                            Merge-CIPolicy -PolicyPaths $DefaultWindowsTemplatePath, (Join-Path -Path $StagingArea -ChildPath 'AllowPowerShell.xml'), (Join-Path -Path $StagingArea -ChildPath 'SignTool.xml') -OutputFilePath $BasePolicyPath | Out-Null
+                            Merge-CIPolicy -PolicyPaths $BasePolicyPath, (Join-Path -Path $StagingArea -ChildPath 'AllowPowerShell.xml'), (Join-Path -Path $StagingArea -ChildPath 'SignTool.xml') -OutputFilePath $BasePolicyPath | Out-Null
                         }
                         else {
                             Write-Verbose -Message 'Not including the PowerShell core directory in the policy'
                             Write-Verbose -Message 'Merging the DefaultWindows.xml and SignTool.xml into a single policy file'
-                            Merge-CIPolicy -PolicyPaths $DefaultWindowsTemplatePath, (Join-Path -Path $StagingArea -ChildPath 'SignTool.xml') -OutputFilePath $BasePolicyPath | Out-Null
+                            Merge-CIPolicy -PolicyPaths $BasePolicyPath, (Join-Path -Path $StagingArea -ChildPath 'SignTool.xml') -OutputFilePath $BasePolicyPath | Out-Null
                         }
 
                         Write-Verbose -Message 'Setting the policy name'

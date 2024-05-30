@@ -531,6 +531,9 @@ Function Edit-WDACConfig {
                 }
                 #Endregion Input-policy-verification
 
+                Write-Verbose -Message 'Backing up any possible Macros in the Supplemental policies'
+                $MacrosBackup = Checkpoint-Macros -XmlFilePathIn $SuppPolicyPaths -Backup
+
                 $CurrentStep++
                 Write-Progress -Id 11 -Activity 'Merging the policies' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
@@ -552,12 +555,6 @@ Function Edit-WDACConfig {
 
                     Write-Verbose -Message "Removing policy with ID: $SupplementalPolicyID"
                     &'C:\Windows\System32\CiTool.exe' --remove-policy $SupplementalPolicyID -json | Out-Null
-
-                    # remove the old policy files unless user chose to keep them
-                    if (!$KeepOldSupplementalPolicies) {
-                        Write-Verbose -Message "Removing the old policy file: $SuppPolicyPath"
-                        Remove-Item -Path $SuppPolicyPath -Force
-                    }
                 }
 
                 $CurrentStep++
@@ -570,6 +567,11 @@ Function Edit-WDACConfig {
 
                 Write-Verbose -Message 'Setting HVCI to Strict'
                 Set-HVCIOptions -Strict -FilePath $FinalSupplementalPath
+
+                if ($null -ne $MacrosBackup) {
+                    Write-Verbose -Message 'Restoring the Macros in the Supplemental policies'
+                    Checkpoint-Macros -XmlFilePathOut $FinalSupplementalPath -Restore -MacrosBackup $MacrosBackup
+                }
 
                 Write-Verbose -Message 'Converting the Supplemental policy to a CIP file'
                 ConvertFrom-CIPolicy -XmlFilePath $FinalSupplementalPath -BinaryFilePath (Join-Path -Path $StagingArea -ChildPath "$SuppPolicyID.cip") | Out-Null
@@ -584,6 +586,12 @@ Function Edit-WDACConfig {
 
                 # Copying the final Supplemental policy to the user's config directory since Staging Area is a temporary location
                 Copy-Item -Path $FinalSupplementalPath -Destination $UserConfigDir -Force
+
+                # remove the old policy files at the end after ensuring the operation was successful
+                if (!$KeepOldSupplementalPolicies) {
+                    Write-Verbose -Message 'Removing the old policy files'
+                    Remove-Item -Path $SuppPolicyPaths -Force
+                }
             }
 
             if ($UpdateBasePolicy) {

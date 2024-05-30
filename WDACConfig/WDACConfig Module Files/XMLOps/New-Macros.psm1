@@ -38,9 +38,10 @@ Function New-Macros {
         # Create a hashtable to store the mapping of Macro IDs to their values
         [System.Collections.Hashtable]$MacroAppIDMapping = @{}
 
-        for ($I = 0; $I -lt $Macros.Length; $I++) {
-            # The IDs of the macros will be in the "appid.<number>" format
-            $MacroAppIDMapping["appid.$I"] = $Macros[$I]
+        # Ensuring that the MacroIDs are unique - comes handy when merging multiple Macros from different policies into one
+        foreach ($Macro in $Macros) {
+            $RandomizedGUID = [System.Guid]::NewGuid().ToString().Replace('-', '')
+            $MacroAppIDMapping["AppID.$RandomizedGUID"] = $Macro
         }
 
         # To store the AppIDs array as a single string

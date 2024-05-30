@@ -4,10 +4,15 @@ Function Get-CIPolicySetting {
     Param(
         [Parameter(Mandatory = $true)][System.String]$Provider,
         [Parameter(Mandatory = $true)][System.String]$Key,
-        [Parameter(Mandatory = $true)][System.String]$ValueName
+        [Parameter(Mandatory = $true)][System.String]$ValueName,
+
+        [Parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$SkipVersionCheck
     )
     Begin {
         $PSBoundParameters.Verbose.IsPresent ? ([System.Boolean]$Verbose = $true) : ([System.Boolean]$Verbose = $false) | Out-Null
+
+        # if -SkipVersionCheck wasn't passed, run the updater
+        if (-NOT $SkipVersionCheck) { Update-Self -InvocationStatement $MyInvocation.Statement }
 
         # Import the required C# type if it hasn't already been imported
         if (-NOT ('WDACConfig.WldpQuerySecurityPolicy' -as [System.Type]) ) {

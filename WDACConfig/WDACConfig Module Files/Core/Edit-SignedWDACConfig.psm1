@@ -189,7 +189,7 @@ Function Edit-SignedWDACConfig {
         # Validate the Level and Fallbacks parameters when using the Boosted Security mode
         if ($BoostedSecurity) {
             $AllowedLevelsForBoostedSecurityMode = [System.Collections.Generic.HashSet[System.String]]@('Hash', 'FileName', 'SignedVersion', 'FilePublisher', 'WHQLFilePublisher')
-       
+
             if (-NOT ($AllowedLevelsForBoostedSecurityMode.Contains($Level))) {
                 Throw 'When using the Boosted Security mode, the Level parameter can only contain the following values: Hash, FileName, SignedVersion, FilePublisher, WHQLFilePublisher'
             }
@@ -221,7 +221,7 @@ Function Edit-SignedWDACConfig {
                 [System.UInt16]$CurrentStep = 0
 
                 $CurrentStep++
-                Write-Progress -Id 15 -Activity 'Creating Audit mode policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
+                Write-Progress -Id 15 -Activity 'Creating the Audit mode policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
                 Write-Verbose -Message 'Creating a copy of the original policy in the Staging Area so that the original one will be unaffected'
 
@@ -260,7 +260,7 @@ Function Edit-SignedWDACConfig {
                 New-SnapBackGuarantee -Path $EnforcedModeCIPPath
 
                 $CurrentStep++
-                Write-Progress -Id 15 -Activity 'Deploying Audit mode policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
+                Write-Progress -Id 15 -Activity 'Deploying the Audit mode policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
                 Write-Verbose -Message 'Deploying the Audit mode CIP'
                 &'C:\Windows\System32\CiTool.exe' --update-policy $AuditModeCIPPath -json | Out-Null
@@ -275,6 +275,7 @@ Function Edit-SignedWDACConfig {
                     #Region User-Interaction
                     $CurrentStep++
                     Write-Progress -Id 15 -Activity 'waiting for user input' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
+
                     Write-ColorfulText -Color Pink -InputText 'Audit mode deployed, start installing your programs now'
                     Write-ColorfulText -Color HotPink -InputText 'When you have finished installing programs, Press Enter to start selecting program directories to scan'
                     Pause
@@ -286,6 +287,9 @@ Function Edit-SignedWDACConfig {
                     Throw $_
                 }
                 finally {
+                    $CurrentStep++
+                    Write-Progress -Id 15 -Activity 'Redeploying the Base policy in Enforced Mode' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
+
                     Write-Verbose -Message 'Finally Block Running'
                     &'C:\Windows\System32\CiTool.exe' --update-policy $EnforcedModeCIPPath -json | Out-Null
                     Write-ColorfulText -Color Lavender -InputText 'The Base policy with the following details has been Re-Signed and Re-Deployed in Enforced Mode:'
@@ -582,8 +586,6 @@ Function Edit-SignedWDACConfig {
 
                 # Copy the Supplemental policy to the user's config directory since Staging Area is a temporary location
                 Copy-Item -Path $SuppPolicyPath -Destination $UserConfigDir -Force
-
-                Write-Progress -Id 15 -Activity 'Complete.' -Completed
             }
 
             if ($MergeSupplementalPolicies) {
@@ -694,8 +696,6 @@ Function Edit-SignedWDACConfig {
                     Write-Verbose -Message 'Removing the old policy files'
                     Remove-Item -Path $SuppPolicyPaths -Force
                 }
-
-                Write-Progress -Id 16 -Activity 'Complete.' -Completed
             }
 
             if ($UpdateBasePolicy) {
@@ -859,11 +859,10 @@ Function Edit-SignedWDACConfig {
                     Write-Verbose -Message 'Replacing the old signed policy path in User Configurations with the new one'
                     Set-CommonWDACConfig -SignedPolicyPath $PolicyFiles[$NewBasePolicyType] | Out-Null
                 }
-
-                Write-Progress -Id 17 -Activity 'Complete.' -Completed
             }
         }
         finally {
+            15..17 | ForEach-Object -Process { Write-Progress -Id $_ -Activity 'Complete.' -Completed }
             if (!$Debug) {
                 Remove-Item -LiteralPath $StagingArea -Recurse -Force
             }

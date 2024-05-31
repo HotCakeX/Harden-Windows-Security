@@ -144,7 +144,7 @@ Function Edit-WDACConfig {
         # Validate the Level and Fallbacks parameters when using the Boosted Security mode
         if ($BoostedSecurity) {
             $AllowedLevelsForBoostedSecurityMode = [System.Collections.Generic.HashSet[System.String]]@('Hash', 'FileName', 'SignedVersion', 'FilePublisher', 'WHQLFilePublisher')
-       
+
             if (-NOT ($AllowedLevelsForBoostedSecurityMode.Contains($Level))) {
                 Throw 'When using the Boosted Security mode, the Level parameter can only contain the following values: Hash, FileName, SignedVersion, FilePublisher, WHQLFilePublisher'
             }
@@ -172,7 +172,7 @@ Function Edit-WDACConfig {
                 $PolicyXMLFilesArray = [System.Collections.Concurrent.ConcurrentDictionary[System.String, System.IO.FileInfo]]::new()
 
                 # The total number of the main steps for the progress bar to render
-                [System.UInt16]$TotalSteps = 6
+                [System.UInt16]$TotalSteps = 8
                 [System.UInt16]$CurrentStep = 0
 
                 $CurrentStep++
@@ -218,6 +218,7 @@ Function Edit-WDACConfig {
                     #Region User-Interaction
                     $CurrentStep++
                     Write-Progress -Id 10 -Activity 'Waiting for user input' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
+
                     Write-ColorfulText -Color Pink -InputText 'Audit mode deployed, start installing/running your programs now'
                     Write-ColorfulText -Color HotPink -InputText 'When you are finished, Press Enter, you will have the option to select directories to scan'
                     Pause
@@ -229,6 +230,9 @@ Function Edit-WDACConfig {
                     Throw $_
                 }
                 finally {
+                    $CurrentStep++
+                    Write-Progress -Id 10 -Activity 'Redeploying the Base policy in Enforced Mode' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
+
                     Write-Debug -Message 'Finally Block Running'
                     &'C:\Windows\System32\CiTool.exe' --update-policy $EnforcedModeCIPPath -json | Out-Null
                     Write-Verbose -Message 'The Base policy with the following details has been Re-Deployed in Enforced Mode:'
@@ -441,6 +445,9 @@ Function Edit-WDACConfig {
                 Merge-CIPolicy -PolicyPaths $PolicyXMLFilesArray.Values -OutputFilePath $SuppPolicyPath | Out-Null
 
                 #Region Supplemental-policy-processing-and-deployment
+
+                $CurrentStep++
+                Write-Progress -Id 10 -Activity 'Creating supplemental policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
                 Write-Verbose -Message 'Supplemental policy processing and deployment'
 

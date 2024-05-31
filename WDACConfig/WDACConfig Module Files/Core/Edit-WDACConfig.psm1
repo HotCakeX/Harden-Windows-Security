@@ -388,7 +388,7 @@ Function Edit-WDACConfig {
                     Clear-CiPolicy_Semantic -Path $WDACPolicyPathTEMP
 
                     Write-Verbose -Message 'Building the Signer and Hash objects from the selected logs'
-                    [PSCustomObject]$DataToUseForBuilding = Build-SignerAndHashObjects -Data $SelectedLogs -IncomingDataType EVTX -PubLisherToHash
+                    [PSCustomObject]$DataToUseForBuilding = Build-SignerAndHashObjects -Data $SelectedLogs -IncomingDataType EVTX -PubLisherToHash:$BoostedSecurity
 
                     if ($Null -ne $DataToUseForBuilding.FilePublisherSigners -and $DataToUseForBuilding.FilePublisherSigners.Count -gt 0) {
                         Write-Verbose -Message 'Creating File Publisher Level rules'
@@ -827,8 +827,8 @@ Register-ArgumentCompleter -CommandName 'Edit-WDACConfig' -ParameterName 'SuppPo
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCDiFkr/YAEAkQ21
-# 2MYifE77+hvw0D6JHzETnuPYnIQRZKCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCCcB5jcQHJ3jWq7
+# 2diHMOzM5xfOKWwZjTt+Aq9IXcZjU6CCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -875,16 +875,16 @@ Register-ArgumentCompleter -CommandName 'Edit-WDACConfig' -ParameterName 'SuppPo
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQg1dhuEFvGUZN1gYVidkJ0touaTQN2Ch7w/PL01uBOIhYwDQYJKoZIhvcNAQEB
-# BQAEggIABmANF4Z2ZXRfmxES4yA38FRgBEMY+YvaYtmQ1NBSY3DVZiDCBAAU4mpI
-# JydnvUWTls71FiVs4J9fqmZIBoDqlZdrF8gh4T3KpclEU9FX8rxxXbFX8COOX16t
-# 7DF5VcTO1LQ75etZcPedz8n4l4Hjlb5Ky5ihe7KaYH/uU/eKnF/UIvoA/Ms4AsnO
-# juKPScOdWXWvC6D9sXM1PfEn+ggZL72LL5s2AG8eQ+1QJ+ItUwnlYxAyVVHky1oa
-# c465d9J0BBcp6QNXlVaFtnvTnekT1PPTAUAQaWmDgaEBVMICrTGabMxsN9mCirH7
-# bJ18Ks0jnPw4+ZPV4GLF4eyikogO2fPEK6uMz5AIOP4QjhaH31c3Jf/hkoC2ejkM
-# Qx4ptQ6SS5DXy3LHnQLjuFEtsGFaqNruRVBpkF0nZEnbryNUszB6GGOEjP1te1EK
-# BQ5i/ubO9w5HxlYlICCGprv3t0xtwmMnFjfs0MRWO8ORWS08RIor2Enko3ocfxRL
-# uzMD1r/HeskPsCzzf2E8FchTYpCApuqUascWZ0oy3DWzFTgS50ua4FErEEHvON/C
-# lDlC/owfnRjA1XdE47T5HYP+V3VWy2KMQUcEvZDi1cHJXmDB6Et2U5CxXSPTNzbk
-# IQYTpvPwnn7+b8P9inpzAmAoGu+Y8rlNMuFRF6bjyVOodz/pGEU=
+# IgQgyZLayRmV8bPw419kBiGzTK6CQs52zwV7RUDrqfq1eAswDQYJKoZIhvcNAQEB
+# BQAEggIAKMP5BY9eqmONYKsZpzAYFsAKizmNDtMrH6uKhapn5Ph9sJIyKjjc1RFj
+# q+hy5ulc1+J6MXC29hUf7YrO8av6aEXPi/z7S+/dpIGvWERXoVzcnVSxOsMUNSAa
+# ByHjmpYuNE/A0Cd/qh/NoEmhgdwTouX0apiGqVMqURWb4UUrxgOL1rAY0waFtO8l
+# MNz89HcId0lC63pqEU9t3Hj2fYXIvwUqCf1As2buBk72plkOXCL8TQv1cS/XWVdR
+# kiLz5Pr90/v3aFnoaI0K964I+uhZXVdF6pXghmNVkTXraTVz9gYi29s7W4AH2Zws
+# 3RDcVbhMqUVbIAMJR0e3vTg+TLxlnEg8GSrH7MUV8jubzSHTE3emd7Ks8avdMIEu
+# vMX/9fbVsSX4JMqxBAM05cvP1E1VpCK8E/LlvwJS1XAsuOKsgf9OFcVwRjBpai0l
+# qzi6wbJ19adlEkjq4rTt26nF/lrSaDE2xrQmW4BEP6pwW1hnZjhGJakDGMKQJgYp
+# KqSWM4+3Qj3dC7PJR1r68eoXzy+PgJBK6v82IcJTj5zTeIJhG4r4KBAkTWCCDCWy
+# lMqqTffhWxCZQob0Jnu0F9VvNw5Tvr4y2JVW35KX3MGi2OIG2EAYBMdt5Pyfe50k
+# zhWOf7ZC1+Uqb57rZiNeWOM/6/4AWvv3suuK+NMWK5MdexZRdR8=
 # SIG # End signature block

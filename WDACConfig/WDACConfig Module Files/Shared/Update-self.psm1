@@ -44,9 +44,9 @@ Function Update-Self {
         [System.Int64]$TimeDiff = ($CurrentDateTime - $UserConfigDate).TotalMinutes
     }
 
-    # Only check for updates if the last attempt occurred more than 10 minutes ago or the User Config file for last update check doesn't exist
+    # Only check for updates if the last attempt occurred more than 30 minutes ago or the User Config file for last update check doesn't exist
     # This prevents the module from constantly doing an update check by fetching the version file from GitHub
-    if (($TimeDiff -gt 10) -or $PerformOnlineUpdateCheck) {
+    if (($TimeDiff -gt 30) -or $PerformOnlineUpdateCheck) {
 
         Write-Verbose -Message "Performing online update check because the last update check was performed $($TimeDiff ?? [System.Char]::ConvertFromUtf32(8734)) minutes ago"
 
@@ -108,8 +108,8 @@ Export-ModuleMember -Function 'Update-Self'
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCDi7CpCaMOJmJsC
-# F/1r5In8RZ9VDC3+WjixwexYqqsCnqCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCAYm8pkZ29hrQho
+# cxnyHVFaebXH4CLxgr3leo0GWyDdr6CCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -156,16 +156,16 @@ Export-ModuleMember -Function 'Update-Self'
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQg6V/6JuSRVZOEE01XmcHMNnIXH9rytsoeHeMELio7YZkwDQYJKoZIhvcNAQEB
-# BQAEggIARPvkLt2/tzy+eX8rQit4GcfSe+z2d49UY1q7ateEhmTnfXgnRZE5bEFv
-# 8jCjnNDJ3RWj3zQkscEf5+oqD9afYK/Rphue6fVjnXfwk9IPJe1EiAsHg8QX0+uZ
-# lG7dZamVHeQ8RJV8RpVYgKvZJii5DV6MiRPAVhYGdjQcGpLpYZsjgh2NR1CoMI9Q
-# oogvG5EFCEkgwr0+J9QGPqXd03Vka34OTvSvMiWl6ETHYGq1FeSzk5V2HLP35k3p
-# mkdHvfSm7dhcSABMmZMcj/BiEsrQpeC3wxDfimfcQV24iQ2dSAkq0BXke40xe/z5
-# vAX3gUDd0sSLQ40C/Dy6ZFVxfWxzjAZHayS4LDqNAXY227P9qrAvfyDG9B9Ov8kI
-# yJgMeZL1OK6paKe44Ov1moCQ6/hOeqiuTy1RXZN5cxBAoCQvqtmEImtSIBvIR3Sm
-# ufcAFw2hmk/WvnnEFqSmjzCg7HYQE07zL64wz3R+wwSs4QoPhUokBT5Cr2Gfn0hS
-# MH+PTLZ5LdI83sspDJy0h/FXWlJnOZtCLSXQ9DKR9+ArL9IhR8zQdHGzjs4r1PNJ
-# /pKsymKVTlZ2c6tOqeMDL3BpTbXdfLpJfuHHOtTOHFAMYbFHbcUXa0I0RhdC0l6F
-# dftFlTsmhjqmZWfj3KeZL2f737RXAQm1Bic1jLUwBv0EyNNtEpU=
+# IgQgqiHowFZVJTKKmEKRJlyPdj1RUKU7qQ5iZqraGqSRRqYwDQYJKoZIhvcNAQEB
+# BQAEggIAObS68qPX5cf6/Y7LUPNR6vcG3m957qczU+0yDGZB5IscVXTeLBo86/rz
+# IZM04oqgAEii4pXaTzvUWCulHWfOJOx5M4ZE9fqwvewpfvQ81euAUkuElRjqnVe6
+# +RfxzqnXxw3Qq1fEsjbthBj9hkRH83vjBMVcPWN8Rtz92p0mLvvwrn4ADlxWsBUq
+# kYDHPrKYet364pz1Iol1HfA5EJjiYKdLrWnT0+oGvotg3HYJRr2DKfwSZjjaflku
+# GfY1DXxRBD9n0c5TcZzxR3lwKiJcPMtKMDs+kLMGw43CaZZPODrIuO9a5QA5oOVw
+# ns4P724LuljcB2M5WPHInubJqDukIuzOs1sQEhnwBTv8pzSVdTL0hrtV85bBVbfI
+# 7Typ+xrYarnId8PzYnV9Lp28sf/Iqfo0/mPZgb4/hTFUalCwot62YLs3gLCph/wN
+# yZMX2/4fQ5MJqF5Xnj5lw8Al35JY9awkdc2epiiZfTIGrZxB17yghDInvwDf82PD
+# 14jJkDJ3ZCbIMPt6YwnvQFE07QzUqibVOjp/6RHu/hYDfBuW31y3NTDjf8zutZI/
+# 2wv6MwAkQDZcJXF0Rsu0lXN8ZmWcL+BuEU6++WLSHrMkppoolK/sbu6s6KL3BjVO
+# yboyLlJoekygH5n5M203M6LFa9QpPkhxe6wjIa0U8FMvyngRUBo=
 # SIG # End signature block

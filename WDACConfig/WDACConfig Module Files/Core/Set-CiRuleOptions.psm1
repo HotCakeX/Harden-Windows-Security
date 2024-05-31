@@ -105,7 +105,7 @@ Function Set-CiRuleOptions {
         switch ($Template) {
             'Base' { $RuleOptionsToImplement.UnionWith($BaseRules) }
             'BaseISG' { $RuleOptionsToImplement.UnionWith($BaseISGRules) }
-            'BaseKernelMode' { $RuleOptionsToImplement.UnionWith($BaseKernelModeRules) }
+            'BaseKernel' { $RuleOptionsToImplement.UnionWith($BaseKernelModeRules) }
             'Supplemental' { $RuleOptionsToImplement.UnionWith($SupplementalRules) }
         }
 
@@ -271,8 +271,8 @@ Register-ArgumentCompleter -CommandName 'Set-CiRuleOptions' -ParameterName 'Rule
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCAIuqbvzruXBiaE
-# 1MlBoaZeAar0eTitSXHtprDjGQ1FiaCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCDU7GoTN2CjgYbJ
+# ZP1KzS6tBADW19yY2rBwjY3kBGB+36CCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -319,16 +319,16 @@ Register-ArgumentCompleter -CommandName 'Set-CiRuleOptions' -ParameterName 'Rule
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQg/Up9O+PtNfAZehZsZS0RAm/Gib+4KuYITDyfeaLoSUQwDQYJKoZIhvcNAQEB
-# BQAEggIARR+FOfkuNtEJMtwEfnPKVs8weEO/PBR/J2DezVE8JT9Euq8vK2eVk4kI
-# yvsyJ7jbUWcf54ukWhyavT1KgGRVUWXyU5cyVKYlMlk0wgYPkeFbKo742eO6Q42A
-# VAVuqvz1yNCeMD1IbVLslBs6HbWLS5lfSUjQ09snV1Kx8ImaFGeEGPIWE3JZeVc8
-# hvPqCLJNgkuMugScOSYnlU8lZznuRIQZhyfSYeyl7UF5++px6zGxOM14J2gvqsOh
-# bROZmkKpDD+tPCghZBomef0J2MnwhSvbpItBa/Q/Otn+ov/eYzNFFXxuvN72p4FF
-# ygE/VUDw67xppaz96dJ/IUhbsZUMcHTY2zp2p3EfAZ2uYCJLefEnKd+zlUyAwtqf
-# hCfqGEWaGXc8pBP7UURBerI1dB6h4F8WTZhyfNjjALjKA1fOTDs8ong2ZKIwNxfU
-# 1AMkIQUNvGAhUmwxU/8Ov8VbJuPDDhfdpHlhn8dSTYxhurio6XyOb026cSKjNSTG
-# tD20VQCEC9V9an9xllkAfCG7KlSEq+xA4aYq3dFRRj1H4qb63iJ5qJv2430HLLTN
-# Q8bXjYES52Z6Ftx1S0SHywpBOBt5+h7wCsn7BTn1lz03LDXiGOKqmGpa5g4agCPZ
-# D+3kd0z0U+RQgDHrL9G+J4q0vGBw6rAlWgONTQkLyZ5Fk7jQLHY=
+# IgQgSj88jVDHRKpm7gAR1FoPst3HR/ZTe7A0cUXyHXr9C4QwDQYJKoZIhvcNAQEB
+# BQAEggIAF6BtvXItokq3wH63vRKIK6y38cLNZzJDTiIf4ziDEOBLzZAwMwmlXjjz
+# VbyawRAHpKXKxMiDbyac6gKLHEMaLpR3v3QvcKXVUAXJt39CqbB2DtWzPUs8QpkR
+# ittxi5S4Y5bbtopMYfNHTKCjy4GvPFihKiH1vkqnq+NEirQ2X7HTHWCC5owTQKuR
+# OykREYh4V9z6hLeatyrHVDQF5bHtADB6SzIEGjVYONH3WthG1Fiela4bW0u0X78Z
+# l2tzYtkxfn0hzA1Fbt0larX5PikJ2xDRZJIcoY3KWPlYTO6XOd20UtVucoBXzEi0
+# ZnsXOVyVCRjwRfS+AbW+dyiU0IAJsLoVzCry4aj6K/fos58tgZK+/EOJ+XBRy8qw
+# qq8y+WiHGFrQ5cQPUCkRJwvei3KD9/br61376pEa8TygmhbZp+J2isHxGIN1/ABf
+# lip/fA1cmL4nwedO8Tncvks+w2z19CPA3ijKEKPX2+jvTyypiDgqx8i2NvloO5N3
+# fOopB31DjgPTEd7Sl5KQyuSd0a9wlqRgs2EESyJg9rwkXwARwz89FcsRgYy21a7t
+# 79HHBNahVFzTho6xRkyb/S7LZzdk3Jj+nO66jsNTtaga5rUhad79/vPx2IztTQdC
+# 26Yj4PiF54g3lGgRQ+Se2m7TGZPJsmbe9YJgAJTCGZme+PFWrGU=
 # SIG # End signature block

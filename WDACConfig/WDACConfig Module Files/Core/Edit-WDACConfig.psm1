@@ -235,6 +235,7 @@ Function Edit-WDACConfig {
 
                     Write-Debug -Message 'Finally Block Running'
                     &'C:\Windows\System32\CiTool.exe' --update-policy $EnforcedModeCIPPath -json | Out-Null
+
                     Write-Verbose -Message 'The Base policy with the following details has been Re-Deployed in Enforced Mode:'
                     Write-Verbose -Message "PolicyName = $PolicyName"
                     Write-Verbose -Message "PolicyGUID = $PolicyID"
@@ -827,8 +828,8 @@ Register-ArgumentCompleter -CommandName 'Edit-WDACConfig' -ParameterName 'SuppPo
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCCcB5jcQHJ3jWq7
-# 2diHMOzM5xfOKWwZjTt+Aq9IXcZjU6CCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCD9c8IsCI/foCWB
+# /SYUbQ/3rzc3hyO5YBJJaQz3nJEmM6CCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -875,16 +876,16 @@ Register-ArgumentCompleter -CommandName 'Edit-WDACConfig' -ParameterName 'SuppPo
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQgyZLayRmV8bPw419kBiGzTK6CQs52zwV7RUDrqfq1eAswDQYJKoZIhvcNAQEB
-# BQAEggIAKMP5BY9eqmONYKsZpzAYFsAKizmNDtMrH6uKhapn5Ph9sJIyKjjc1RFj
-# q+hy5ulc1+J6MXC29hUf7YrO8av6aEXPi/z7S+/dpIGvWERXoVzcnVSxOsMUNSAa
-# ByHjmpYuNE/A0Cd/qh/NoEmhgdwTouX0apiGqVMqURWb4UUrxgOL1rAY0waFtO8l
-# MNz89HcId0lC63pqEU9t3Hj2fYXIvwUqCf1As2buBk72plkOXCL8TQv1cS/XWVdR
-# kiLz5Pr90/v3aFnoaI0K964I+uhZXVdF6pXghmNVkTXraTVz9gYi29s7W4AH2Zws
-# 3RDcVbhMqUVbIAMJR0e3vTg+TLxlnEg8GSrH7MUV8jubzSHTE3emd7Ks8avdMIEu
-# vMX/9fbVsSX4JMqxBAM05cvP1E1VpCK8E/LlvwJS1XAsuOKsgf9OFcVwRjBpai0l
-# qzi6wbJ19adlEkjq4rTt26nF/lrSaDE2xrQmW4BEP6pwW1hnZjhGJakDGMKQJgYp
-# KqSWM4+3Qj3dC7PJR1r68eoXzy+PgJBK6v82IcJTj5zTeIJhG4r4KBAkTWCCDCWy
-# lMqqTffhWxCZQob0Jnu0F9VvNw5Tvr4y2JVW35KX3MGi2OIG2EAYBMdt5Pyfe50k
-# zhWOf7ZC1+Uqb57rZiNeWOM/6/4AWvv3suuK+NMWK5MdexZRdR8=
+# IgQgCdZ8unkPrZbhFMBUOzTkyiivgQRRLxQ3EO27W7X6l0cwDQYJKoZIhvcNAQEB
+# BQAEggIAbv1o8DwT+rHvqLujp234H9hTvB0R8B2p/NTM+VIHjB4qY9hgiWGSjqfh
+# sJ7cPv1o3BVKf1UE5Pvf0worcVZWwoagVpxISlADTZDhqrqkrVWrn56Ievq2MbRN
+# 2qx3r3OLb8fwEYqxxwRyfBukbBTLBafcUxwgYAXI/foTggcsXaeXrUZXKtwK2rYd
+# zQmxeWy2RGBYz8I7SwJAtLVWdoGoTUjHea/ILBb/762HJshJRj7g9p/G53J6V4Jm
+# 62v3+STCdxeoX9jcjSDkblZeOVSdzQrREdw+Pj3ywCyAkXcKGxQP/BKGMfy13ApL
+# AxlZ1T5k90UQvjfzpgldM2IUkwiw+YD6Wh475MZsG28OsIcHsBYF3MWnL7vmPUkp
+# LKHiGmxebl7mARm/0pXV9nXZzzDGLm8fOr2tbintwcRDemH/f+2WOGQPTVIsbMVG
+# HGBCpauuw5wZ3VxXW+xveNpT47UTuHwsSzASFXdrMEjdHrD7/NHiLcVhBQgkuE/j
+# czzzqS6++3Gt3Cc1gtiqc90LY3T9hcpOpRSOf6LBbmrPaQguIM6y7ANsR83KKigj
+# kXE7hc6ldr2pTX42EOTMRJw9WjvQ3RWHT/9wNtkVrayA+Ju/C9Q6YKJesUM25oqS
+# O3TdP/25i0aVtbwvOC9JYjnMRyCY24A1oGbT35bBoqOGHjKYAKs=
 # SIG # End signature block

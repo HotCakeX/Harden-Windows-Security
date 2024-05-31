@@ -265,9 +265,9 @@ Function Edit-SignedWDACConfig {
                 Write-Verbose -Message 'Deploying the Audit mode CIP'
                 &'C:\Windows\System32\CiTool.exe' --update-policy $AuditModeCIPPath -json | Out-Null
 
-                Write-ColorfulText -Color Lavender -InputText 'The Base policy with the following details has been Re-Signed and Re-Deployed in Audit Mode:'
-                Write-ColorfulText -Color MintGreen -InputText "PolicyName = $PolicyName"
-                Write-ColorfulText -Color MintGreen -InputText "PolicyGUID = $PolicyID"
+                Write-Verbose -Message 'The Base policy with the following details has been Re-Signed and Re-Deployed in Audit Mode:'
+                Write-Verbose -Message "PolicyName = $PolicyName"
+                Write-Verbose -Message "PolicyGUID = $PolicyID"
                 #Endregion Snap-Back-Guarantee
 
                 # A Try-Catch-Finally block so that if any errors occur, the Base policy will be Re-deployed in enforced mode
@@ -290,11 +290,12 @@ Function Edit-SignedWDACConfig {
                     $CurrentStep++
                     Write-Progress -Id 15 -Activity 'Redeploying the Base policy in Enforced Mode' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
-                    Write-Verbose -Message 'Finally Block Running'
+                    Write-Debug -Message 'Finally Block Running'
                     &'C:\Windows\System32\CiTool.exe' --update-policy $EnforcedModeCIPPath -json | Out-Null
-                    Write-ColorfulText -Color Lavender -InputText 'The Base policy with the following details has been Re-Signed and Re-Deployed in Enforced Mode:'
-                    Write-ColorfulText -Color MintGreen -InputText "PolicyName = $PolicyName"
-                    Write-ColorfulText -Color MintGreen -InputText "PolicyGUID = $PolicyID"
+
+                    Write-Verbose -Message 'The Base policy with the following details has been Re-Signed and Re-Deployed in Enforced Mode:'
+                    Write-Verbose -Message "PolicyName = $PolicyName"
+                    Write-Verbose -Message "PolicyGUID = $PolicyID"
 
                     Write-Verbose -Message 'Removing the SnapBack guarantee because the base policy has been successfully re-enforced'
 
@@ -577,10 +578,6 @@ Function Edit-SignedWDACConfig {
 
                 Write-Verbose -Message 'Deploying the Supplemental policy'
                 &'C:\Windows\System32\CiTool.exe' --update-policy $SupplementalCIPPath -json | Out-Null
-
-                Write-ColorfulText -Color Lavender -InputText 'Supplemental policy with the following details has been Signed and Deployed in Enforced Mode:'
-                Write-ColorfulText -Color MintGreen -InputText "SupplementalPolicyName = $SuppPolicyName"
-                Write-ColorfulText -Color MintGreen -InputText "SupplementalPolicyGUID = $SuppPolicyID"
 
                 #Endregion Supplemental-policy-processing-and-deployment
 
@@ -958,8 +955,8 @@ Register-ArgumentCompleter -CommandName 'Edit-SignedWDACConfig' -ParameterName '
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCClITAG/yE1lu7c
-# RRMKBdMe/tGJa8tnayuwhQgiesjolaCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCBuP2Wdurjuh86V
+# xB4OMx7rKuLrYNZz0y33erFmLb/196CCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -1006,16 +1003,16 @@ Register-ArgumentCompleter -CommandName 'Edit-SignedWDACConfig' -ParameterName '
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQgc7+su7+hu2KMp0knGcK4C1+BNoA+CGuQY1/yUxew6FowDQYJKoZIhvcNAQEB
-# BQAEggIAkGK7AevW/EKe+02VUEzXSRXOuhZgmO6JVfYU/I7qJB1/m5izaZQbPUGX
-# Ttw/se+juI8nbwgRTEfBudUmTjy17oVcR/Ny/4UTQtOTu0Hy6EXc77qXu2F0sZRk
-# mFe6AxLw0VqANaMmV8TCXTIUM0dU4VUBXv6KaagFuJKRywk/6KQIIcvNyJPM/IFG
-# /Sbz22ZLUwqfQu4Ft6wlzCpEZx8/sAuZ0i+Csg/vgnzLrwxK8Sa03sylmdotVnFq
-# AcY2TBWvJ7619ADmfbAuOCoJiKzIHqbS88mme1nlRz0/USsI88QVpyr5GayZv3vi
-# +aFztOuDnoXUL033tDbNgcgzH+CyWP5aouLVxw2C0QbUu9O3cnJyYUnjtqWg5Ry3
-# LZuIbUCNyARkOkeErLgCtQOQ8cJ+x1+zLX50LfhwrmyQtGqe27OFERJjdqeDQfSb
-# O/WP14kEeNcorkWsgLQhVujUG2MWLE4kVKKmY0QF3u68CNf7cM5hzzy45ICMPhtR
-# kdK+a5PEw9hzpGQk+BPPRSZED2Jyw2my79CncA6bXxXicZiZe0KA8vSXqxp8GwyA
-# XX6SNM58oSLgBTfz2Rio7e6UUi99NyCWC43uixJFIz/QRizwQhkNBqnZmtT7t/xB
-# yT45l/7aOx4pWAQ24hpeuQ3dkzomxaOeupw1MLQxcyFOpVGviEo=
+# IgQghQMjO9P1ezBxy4f8Tqyd5nhU492wouOa+Vp+0AJp0AIwDQYJKoZIhvcNAQEB
+# BQAEggIAKqAf0MsrvX0z9VoYInbleifID4x8gjZQH/tlknf4KiWTNqM1SgRK1mWG
+# ObDaXZuQtvGYln53PlijIHZKf4kNU65RiDdSTxsJnXpiEBemT+SvGmr8OUunN40C
+# +QbFI+mWjFTUYLtIRFTXurVcdQywwLOnhGsEMKTdGSxHVNdxlAJ2Tx0xvuzIUin+
+# naT6ps+W/0eCpmnr83/VHcxJsBOqH2xraYJRc6k6vZYkVv1+ivbamVDHlMH6yHhq
+# 2TDmUyOv9qJbLUh2mcH5A9bZ2KmhhGsZzJccik+QSOwKIysSZKtKLF2l5ZLROmwv
+# rbHpmb+WgViJAx6TKoFrP+s94NZkGBC1FsSIIJ/kIdR635AouBjM5lRN8+3icKKh
+# rk15oQg0pB2y/kGqoJJxDvd8mxLjZJ44vYvWWZxO2mPZS9tJfl+hO4tnBNxWeE8h
+# mh1noZzh4aa7b2rE80TI3WzXB1itxG3KiN8UXAzNEnatknBIsaY4bZTQm0gkSlg5
+# 3qyelwrKkh59nnZzc4WqqAvV24pzXHqqSU97jKXkspGFmGoUI3zNYIPs6fz05ZB4
+# IhuWvMjzYS7RxyV7DqcBcCIF3TsuGzilOl08gnSkxQTzOhmGTYHSTZnCJwJqyH1S
+# hBGYZ7gQoRkFFKm+1fTbXYhX4gFnkscbKkVs+v3xbqF91QnKe/E=
 # SIG # End signature block

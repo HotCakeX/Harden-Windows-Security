@@ -322,7 +322,10 @@ Function Edit-SignedWDACConfig {
 
                 if ($ProgramsPaths) {
                     Write-Verbose -Message 'Here are the paths you selected:'
-                    $ProgramsPaths | ForEach-Object -Process { $_.FullName }
+                    if ($Verbose) {
+                        $ProgramsPaths | ForEach-Object -Process { $_.FullName }
+                    }
+
                     $HasFolderPaths = $true
 
                     $DirectoryScanJob = Start-ThreadJob -InitializationScript {
@@ -400,12 +403,18 @@ Function Edit-SignedWDACConfig {
 
                     [PSCustomObject[]]$LogsToShow = Select-LogProperties -Logs $LogsToShow
                     Set-LogPropertiesVisibility -LogType Evtx/Local -EventsToDisplay $LogsToShow
+                    
+                    Write-ColorfulText -Color Pink -InputText 'Displaying files detected outside of any directories you selected'
+
                     $SelectedLogs = $LogsToShow | Out-GridView -OutputMode Multiple -Title "Displaying $($LogsToShow.count) Audit Code Integrity and AppLocker Logs"
                 }
                 # If user did not select any directory paths but there were files found during the audit phase in the audit event logs
                 elseif (!$HasFolderPaths -and $HasAuditLogs) {
                     [PSCustomObject[]]$LogsToShow = Select-LogProperties -Logs $AuditEventLogsProcessingResults
                     Set-LogPropertiesVisibility -LogType Evtx/Local -EventsToDisplay $LogsToShow
+                    
+                    Write-ColorfulText -Color Pink -InputText 'Displaying files detected outside of any directories you selected'
+
                     $SelectedLogs = $LogsToShow | Out-GridView -OutputMode Multiple -Title "Displaying $($LogsToShow.count) Audit Code Integrity Logs"
                 }
 
@@ -955,8 +964,8 @@ Register-ArgumentCompleter -CommandName 'Edit-SignedWDACConfig' -ParameterName '
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCBuP2Wdurjuh86V
-# xB4OMx7rKuLrYNZz0y33erFmLb/196CCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCAw4gNvAulMvXBn
+# zdVOH26Lpye2KyJqzlDiRPFyoHEXiqCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -1003,16 +1012,16 @@ Register-ArgumentCompleter -CommandName 'Edit-SignedWDACConfig' -ParameterName '
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQghQMjO9P1ezBxy4f8Tqyd5nhU492wouOa+Vp+0AJp0AIwDQYJKoZIhvcNAQEB
-# BQAEggIAKqAf0MsrvX0z9VoYInbleifID4x8gjZQH/tlknf4KiWTNqM1SgRK1mWG
-# ObDaXZuQtvGYln53PlijIHZKf4kNU65RiDdSTxsJnXpiEBemT+SvGmr8OUunN40C
-# +QbFI+mWjFTUYLtIRFTXurVcdQywwLOnhGsEMKTdGSxHVNdxlAJ2Tx0xvuzIUin+
-# naT6ps+W/0eCpmnr83/VHcxJsBOqH2xraYJRc6k6vZYkVv1+ivbamVDHlMH6yHhq
-# 2TDmUyOv9qJbLUh2mcH5A9bZ2KmhhGsZzJccik+QSOwKIysSZKtKLF2l5ZLROmwv
-# rbHpmb+WgViJAx6TKoFrP+s94NZkGBC1FsSIIJ/kIdR635AouBjM5lRN8+3icKKh
-# rk15oQg0pB2y/kGqoJJxDvd8mxLjZJ44vYvWWZxO2mPZS9tJfl+hO4tnBNxWeE8h
-# mh1noZzh4aa7b2rE80TI3WzXB1itxG3KiN8UXAzNEnatknBIsaY4bZTQm0gkSlg5
-# 3qyelwrKkh59nnZzc4WqqAvV24pzXHqqSU97jKXkspGFmGoUI3zNYIPs6fz05ZB4
-# IhuWvMjzYS7RxyV7DqcBcCIF3TsuGzilOl08gnSkxQTzOhmGTYHSTZnCJwJqyH1S
-# hBGYZ7gQoRkFFKm+1fTbXYhX4gFnkscbKkVs+v3xbqF91QnKe/E=
+# IgQgnmJBWtSGX9hsbG1R0W2j2EAJZv6bYT/MlmjPKaHErQIwDQYJKoZIhvcNAQEB
+# BQAEggIAG4XNDnG27BUjDur3lgG+taoY3S/cJUK7BO34NyYqjYg/F+xed3GWIrxf
+# kuNEhkyQVW61FHCkcTAJYnud0gqTJrBfi3GcxEFnKSQBld98H5ZFP10ZB8yU5PTt
+# yMW3YwuPJ1nxMwbtH5elCWKQptO8/WL0yLBNqmjMAj3IeuGNDs9cKDwY9xr/6I7T
+# l8E9YiG1TJFQleKt3AbVpfsdv4EJAh3V+uEez12iJdT7hSqkTCXkWVLXBfVBFwxR
+# j8Qe3+vZFMNnPPwmYZ5CecVM+PXRCe2hw18X8gblBFAZ30RrNn9d6w1jYHsz7K6b
+# KA7teWUdkyYhMczT8UlPRjZ6qkEikeua7RIQnBqS9S1aDRtJQg8w2Hdv25/HWUk6
+# wpP9hzC9cEdPs20QveKgyzibTaO2cbAxe+bvdGZiBqX7YyqNCcB/3ZNb56bFwMnA
+# cgCc3hwKUC+hONWoA+hItCRLHQjVjCn32KhOOYekRUJYDVsZbzMDWVlbbKI3wpyU
+# SonZyKbrX5vavf2vw8xi9Q1YoEBpAZ98O8KIAnilkBGSktizdpdSZb28f2p9Ovik
+# 5xtYo5G6jvDPQu84+XeS/WNbnjAhv39rDUqmmZJguSURQK0IKMz3atEzVAJJm14w
+# CCcNDHJcBJn0OAJrSOv9WUWH5DTt6TrgahjAB7QVyEqdUFwdXfg=
 # SIG # End signature block

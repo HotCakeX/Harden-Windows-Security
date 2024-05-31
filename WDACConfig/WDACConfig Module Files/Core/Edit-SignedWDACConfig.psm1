@@ -426,7 +426,7 @@ Function Edit-SignedWDACConfig {
                     Clear-CiPolicy_Semantic -Path $WDACPolicyPathTEMP
 
                     Write-Verbose -Message 'Building the Signer and Hash objects from the selected logs'
-                    [PSCustomObject]$DataToUseForBuilding = Build-SignerAndHashObjects -Data $SelectedLogs -IncomingDataType EVTX
+                    [PSCustomObject]$DataToUseForBuilding = Build-SignerAndHashObjects -Data $SelectedLogs -IncomingDataType EVTX -PubLisherToHash
 
                     if ($Null -ne $DataToUseForBuilding.FilePublisherSigners -and $DataToUseForBuilding.FilePublisherSigners.Count -gt 0) {
                         Write-Verbose -Message 'Creating File Publisher Level rules'

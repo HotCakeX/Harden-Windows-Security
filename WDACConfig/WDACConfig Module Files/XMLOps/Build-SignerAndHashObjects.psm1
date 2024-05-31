@@ -24,6 +24,8 @@ Function Build-SignerAndHashObjects {
     .PARAMETER IncomingDataType
         The type of data that is being processed. This is used to determine the property names in the input data.
         The default value is 'MDEAH' (Microsoft Defender Application Guard Event and Hash) and the other value is 'EVTX' (Event Log evtx files).
+    .PARAMETER PubLisherToHash
+        It will pass any publisher rules to the hash array. This is used when sandboxing-like behavior using Macros and AppIDs are used.
     .INPUTS
         PSCustomObject[]
     .OUTPUTS
@@ -34,7 +36,9 @@ Function Build-SignerAndHashObjects {
     param (
         [Parameter(Mandatory = $true)][PSCustomObject[]]$Data,
         [ValidateSet('MDEAH', 'EVTX')]
-        [Parameter(Mandatory = $false)][System.String]$IncomingDataType
+        [Parameter(Mandatory = $false)][System.String]$IncomingDataType,
+
+        [Parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$PubLisherToHash
     )
     Begin {
         . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
@@ -93,12 +97,10 @@ Function Build-SignerAndHashObjects {
                     # For those files, the FilePublisher rule will be created with the file's leaf Certificate details only (Publisher certificate)
                     if (([System.String]::IsNullOrWhiteSpace($CurrentCorData.IntermediateCertTBS)) -and (-NOT (([System.String]::IsNullOrWhiteSpace($CurrentCorData.LeafCertTBS))))) {
 
-                        Write-Warning -Message "Intermediate Certificate TBS hash is empty for the file: $($IncomingDataType -eq 'MDEAH' ? $CurrentData.FileName : $CurrentData.'File Name'), using the leaf certificate TBS hash instead"
+                        Write-Warning -Message "Build-SignerAndHashObjects: Intermediate Certificate TBS hash is empty for the file: $($IncomingDataType -eq 'MDEAH' ? $CurrentData.FileName : $CurrentData.'File Name'), using the leaf certificate TBS hash instead"
 
                         $CurrentCorData.IntermediateCertName = $CurrentCorData.LeafCertName
-
                         $CurrentCorData.IntermediateCertTBS = $CurrentCorData.LeafCertTBS
-
                     }
 
                     # Add the Certificate details to both the FilePublisherSignerCreator and PublisherSignerCreator objects
@@ -119,11 +121,31 @@ Function Build-SignerAndHashObjects {
            ([System.String]::IsNullOrWhiteSpace($CurrentData.FileVersion))
                     )
                 ) {
-                    $CurrentPublisherSigner.FileName = $IncomingDataType -eq 'MDEAH' ? $CurrentData.FileName : $CurrentData.'File Name'
-                    $CurrentPublisherSigner.AuthenticodeSHA256 = $IncomingDataType -eq 'MDEAH' ? $CurrentData.SHA256 : $CurrentData.'SHA256 Hash'
-                    $CurrentPublisherSigner.AuthenticodeSHA1 = $IncomingDataType -eq 'MDEAH' ? $CurrentData.SHA1 : $CurrentData.'SHA1 Hash'
-                    $CurrentPublisherSigner.SiSigningScenario = $IncomingDataType -eq 'MDEAH' ? $CurrentData.SiSigningScenario : ($CurrentData.'SI Signing Scenario' -eq 'Kernel-Mode' ? '0' : '1')
-                    $PublisherSigners += $CurrentPublisherSigner
+                    # If the switch to pass Publisher rules to the hash array is not set, then add the current data to the Publisher array as expected
+                    if (-NOT $PubLisherToHash) {
+                        $CurrentPublisherSigner.FileName = $IncomingDataType -eq 'MDEAH' ? $CurrentData.FileName : $CurrentData.'File Name'
+                        $CurrentPublisherSigner.AuthenticodeSHA256 = $IncomingDataType -eq 'MDEAH' ? $CurrentData.SHA256 : $CurrentData.'SHA256 Hash'
+                        $CurrentPublisherSigner.AuthenticodeSHA1 = $IncomingDataType -eq 'MDEAH' ? $CurrentData.SHA1 : $CurrentData.'SHA1 Hash'
+                        $CurrentPublisherSigner.SiSigningScenario = $IncomingDataType -eq 'MDEAH' ? $CurrentData.SiSigningScenario : ($CurrentData.'SI Signing Scenario' -eq 'Kernel-Mode' ? '0' : '1')
+                        $PublisherSigners += $CurrentPublisherSigner
+                    }
+                    # Otherwise, add the current data to the hash array instead despite being eligible for Publisher level
+                    else {
+
+                        Write-Verbose -Message "Build-SignerAndHashObjects: Passing Publisher rule to the hash array for the file: $($IncomingDataType -eq 'MDEAH' ? $CurrentData.FileName : $CurrentData.'File Name')"
+
+                        # Create a new HashCreator object
+                        [HashCreator]$CurrentHash = New-Object -TypeName HashCreator
+
+                        # Add the hash details to the new object
+                        $CurrentHash.AuthenticodeSHA256 = $IncomingDataType -eq 'MDEAH' ? $CurrentData.SHA256 : $CurrentData.'SHA256 Hash'
+                        $CurrentHash.AuthenticodeSHA1 = $IncomingDataType -eq 'MDEAH' ? $CurrentData.SHA1 : $CurrentData.'SHA1 Hash'
+                        $CurrentHash.FileName = $IncomingDataType -eq 'MDEAH' ? $CurrentData.FileName : $CurrentData.'File Name'
+                        $CurrentHash.SiSigningScenario = $IncomingDataType -eq 'MDEAH' ? $CurrentData.SiSigningScenario : ($CurrentData.'SI Signing Scenario' -eq 'Kernel-Mode' ? '0' : '1')
+
+                        # Add the new object to the CompleteHashes array
+                        $CompleteHashes += $CurrentHash
+                    }
                 }
 
                 # If the file has some of the necessary details for a FilePublisher rule then add it to the FilePublisher array
@@ -151,7 +173,6 @@ Function Build-SignerAndHashObjects {
                     $FilePublisherSigners += $CurrentFilePublisherSigner
                 }
             }
-
         }
 
         if ($Null -ne $UnsignedData -and $UnsignedData.Count -gt 0) {

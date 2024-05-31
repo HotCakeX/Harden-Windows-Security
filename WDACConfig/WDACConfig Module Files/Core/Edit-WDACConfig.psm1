@@ -140,6 +140,21 @@ Function Edit-WDACConfig {
             }
         }
         #Endregion User-Configurations-Processing-Validation
+
+        # Validate the Level and Fallbacks parameters when using the Boosted Security mode
+        if ($BoostedSecurity) {
+            $AllowedLevelsForBoostedSecurityMode = [System.Collections.Generic.HashSet[System.String]]@('Hash', 'FileName', 'SignedVersion', 'FilePublisher', 'WHQLFilePublisher')
+       
+            if (-NOT ($AllowedLevelsForBoostedSecurityMode.Contains($Level))) {
+                Throw 'When using the Boosted Security mode, the Level parameter can only contain the following values: Hash, FileName, SignedVersion, FilePublisher, WHQLFilePublisher'
+            }
+
+            foreach ($Fallback in $Fallbacks) {
+                if (-NOT ($AllowedLevelsForBoostedSecurityMode.Contains($Fallback))) {
+                    Throw 'When using the Boosted Security mode, the Fallbacks parameter can only contain the following values: Hash, FileName, SignedVersion, FilePublisher, WHQLFilePublisher'
+                }
+            }
+        }
     }
 
     process {

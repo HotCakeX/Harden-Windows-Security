@@ -182,16 +182,13 @@ Function New-SupplementalWDACConfig {
                 Write-Verbose -Message 'Converting the Supplemental policy XML file to a CIP file'
                 ConvertFrom-CIPolicy -XmlFilePath $FinalSupplementalPath -BinaryFilePath $FinalSupplementalCIPPath | Out-Null
 
-                Write-ColorfulText -Color MintGreen -InputText "SupplementalPolicyFile = $FinalSupplementalPath"
-                Write-ColorfulText -Color MintGreen -InputText "SupplementalPolicyGUID = $FinalSupplementalCIPPath"
-
                 if ($Deploy) {
                     $CurrentStep++
                     Write-Progress -Id 19 -Activity 'Deploying the Supplemental policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
                     Write-Verbose -Message 'Deploying the Supplemental policy'
                     &'C:\Windows\System32\CiTool.exe' --update-policy $FinalSupplementalCIPPath -json | Out-Null
-                    Write-ColorfulText -Color Pink -InputText "A Supplemental policy with the name $SuppPolicyName has been deployed."
+                    Write-ColorfulText -Color Pink -InputText "A Supplemental policy with the name '$SuppPolicyName' has been deployed."
                 }
                 Write-Progress -Id 19 -Activity 'Complete.' -Completed
             }
@@ -223,16 +220,13 @@ Function New-SupplementalWDACConfig {
                 Write-Verbose -Message 'Converting the Supplemental policy XML file to a CIP file'
                 ConvertFrom-CIPolicy -XmlFilePath $FinalSupplementalPath -BinaryFilePath $FinalSupplementalCIPPath | Out-Null
 
-                Write-ColorfulText -Color MintGreen -InputText "SupplementalPolicyFile = $FinalSupplementalPath"
-                Write-ColorfulText -Color MintGreen -InputText "SupplementalPolicyGUID = $FinalSupplementalCIPPath"
-
                 if ($Deploy) {
                     $CurrentStep++
                     Write-Progress -Id 20 -Activity 'Deploying the Supplemental policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
                     Write-Verbose -Message 'Deploying the Supplemental policy'
                     &'C:\Windows\System32\CiTool.exe' --update-policy $FinalSupplementalCIPPath -json | Out-Null
-                    Write-ColorfulText -Color Pink -InputText "A Supplemental policy with the name $SuppPolicyName has been deployed."
+                    Write-ColorfulText -Color Pink -InputText "A Supplemental policy with the name '$SuppPolicyName' has been deployed."
                 }
                 Write-Progress -Id 20 -Activity 'Complete.' -Completed
             }
@@ -301,16 +295,13 @@ Function New-SupplementalWDACConfig {
                         Write-Verbose -Message 'Converting the Supplemental policy XML file to a CIP file'
                         ConvertFrom-CIPolicy -XmlFilePath $FinalSupplementalPath -BinaryFilePath $FinalSupplementalCIPPath | Out-Null
 
-                        Write-ColorfulText -Color MintGreen -InputText "SupplementalPolicyFile = $FinalSupplementalPath"
-                        Write-ColorfulText -Color MintGreen -InputText "SupplementalPolicyGUID = $FinalSupplementalCIPPath"
-
                         if ($Deploy) {
                             $CurrentStep++
                             Write-Progress -Id 21 -Activity 'Deploying the Supplemental policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
                             Write-Verbose -Message 'Deploying the Supplemental policy'
                             &'C:\Windows\System32\CiTool.exe' --update-policy $FinalSupplementalCIPPath -json | Out-Null
-                            Write-ColorfulText -Color Pink -InputText "A Supplemental policy with the name $SuppPolicyName has been deployed."
+                            Write-ColorfulText -Color Pink -InputText "A Supplemental policy with the name '$SuppPolicyName' has been deployed."
                         }
                     }
                     else {
@@ -415,16 +406,13 @@ Function New-SupplementalWDACConfig {
                 Write-Verbose -Message 'Converting the Supplemental policy XML file to a CIP file'
                 ConvertFrom-CIPolicy -XmlFilePath $FinalSupplementalPath -BinaryFilePath $FinalSupplementalCIPPath | Out-Null
 
-                Write-ColorfulText -Color MintGreen -InputText "SupplementalPolicyFile = $FinalSupplementalPath"
-                Write-ColorfulText -Color MintGreen -InputText "SupplementalPolicyGUID = $FinalSupplementalCIPPath"
-
                 if ($Deploy) {
                     $CurrentStep++
                     Write-Progress -Id 33 -Activity 'Deploying the Supplemental policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
                     Write-Verbose -Message 'Deploying the Supplemental policy'
                     &'C:\Windows\System32\CiTool.exe' --update-policy $FinalSupplementalCIPPath -json | Out-Null
-                    Write-ColorfulText -Color Pink -InputText "A Supplemental policy with the name $SuppPolicyName has been deployed."
+                    Write-ColorfulText -Color Pink -InputText "A Supplemental policy with the name '$SuppPolicyName' has been deployed."
                 }
 
                 Write-Progress -Id 33 -Activity 'Complete.' -Completed
@@ -435,6 +423,14 @@ Function New-SupplementalWDACConfig {
             Throw $_
         }
         finally {
+            # Display the output
+            if ($Deploy) {
+                &$WriteFinalOutput $FinalSupplementalPath
+            }
+            else {
+                &$WriteFinalOutput $FinalSupplementalPath, $FinalSupplementalCIPPath
+            }
+
             # Copy the final files to the user config directory
             if (-NOT $NoCopy) {
                 Copy-Item -Path ($Deploy ? $FinalSupplementalPath : $FinalSupplementalPath, $FinalSupplementalCIPPath) -Destination $UserConfigDir -Force
@@ -537,8 +533,8 @@ Register-ArgumentCompleter -CommandName 'New-SupplementalWDACConfig' -ParameterN
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCBQg4+11OSwqc0O
-# kyrR+r/Ubed64ZiN8mM0BKKpTTzKs6CCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCAQq8AxVqrLqAp3
+# kKa5rgti49QdmyvCxa2gYKxJ/pjWXqCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -585,16 +581,16 @@ Register-ArgumentCompleter -CommandName 'New-SupplementalWDACConfig' -ParameterN
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQgAGAR0qjeP2v9Fx7zosEUDYDr4AaNnbBSvr0bKE2RVT8wDQYJKoZIhvcNAQEB
-# BQAEggIAg+2IIqnS01pK0+UeWNy3Niu+5altNXsD4V9Q9R607NXjMWFlBZJCE29d
-# 1/fsT8Uo/u4yHtC77Z6xEoj0rz0iLKX0H9dpJoD/TokDjwgjPVXI40wnLyIRWMPr
-# 0sMqDzQGsA6ss+/kBpTshiTvLTGZ2zSVfZjFrX5ynIaYM/20s4P69AtgrtJDTSnz
-# 1fwQjGwGaGN4Ky4aB+XLnQ/5RlyNZHrdgPfhzcgIjQ35Mh/M+76dYW80IIttIniU
-# OCJItUFjzHtQRgkOjU7Vdf6/2T4Hc5+PRYqw8w4+GlnSuxi3vgQU6m7tF4dkGKhb
-# KuHD4I3fB3cFG/Uv4VB5xwVav3zLt7JfiA2wCXaz0wwnrqjdRoZEL+fC4ETmXJw0
-# iReRmtSZbjdEquKnsOw75JTTIbK03YlomKTbbkSbK2CtMyQj3uFdmuSBFebrz1lL
-# tqTe6b7d64irOEfgewubvfFHoR2XLyOpjPeqe0+6guv+c3i0MQQ8PJbb/QB5Z9g1
-# pqMOT8OCMEprovZPFXjzCTT8exvwKYQ+TW553MVZuY1ET/7AtbrCZmDMXn+BEgZJ
-# 726sFFLoSaSktXzD1wpBFZfY4wLrgGDVJEKdSUn9fZv2w7mismc0LZSCm5DyUEU3
-# 0XvzKRDIaVE5+Hzwn9vLHF9v0QFtLgJjO+PzTifq1ck+a5P3T24=
+# IgQgmOtF0bJD2lyHBtNgbsFRmIP/8iDOMBUnLfs/xdVSCCUwDQYJKoZIhvcNAQEB
+# BQAEggIASlfnPzGUL/T1NAySox6432CXqLRLfqXB388C4dEdgRGthYbfi5p9dIbQ
+# Jv60j96NPeg+fk50evdZEBINDDjakc84FJTH8O3rpcX8l9o1vKXKbRAc2jvjkV27
+# cCImMDhw6b3+n+2cxA3mWL1d2hReAYfSkl9Y2NNgtOcQlGlk6vmxGh3SVbAo+lHh
+# juZbJYcEUg8cQQSq+FaXft3KnGw0/bMG0bEdfMLJrTbKRxYdRAq1N3YBfATJjiAJ
+# v8N3GdQR1glzVYebdjYIRt+aLzbJ7QUFeJHwnB91wxkGA5BKMi9E3vuEKkQWwsyL
+# MqWJwcw0758X2CvFHsKx6aKK/XpymhQ2PRKBc7MpkzQKFaqGT7XmulKk3Iepf0ju
+# upUlT4FyVoAODOtC4szHm/EgtzeXdbG1thJODJSemOJtkgsPXb1n4SNu3GLr2q3E
+# B2ge3czuRVmZASjRYsPF87JWeSBgDDGuvbhzF6cIyBRGlHNHDpJ5NiSeqpGWA+WN
+# LwILgVxP4zytysofVag9cqMPntpo+QwBPq6ezYvLmQ/OEM5TxQVl7yeX4WwJlifO
+# 1T6o+qs0VNsz8OwI/YR4YyBMmhsPBsvT1Mh1a6gX6GNLcTGmFX9B7ZxM20R5tfC4
+# W4DayPYzeG6noA7FysbXUjM/AQstP9tC+HIJU+QJB8zikc0Y9Jg=
 # SIG # End signature block

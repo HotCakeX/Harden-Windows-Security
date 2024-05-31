@@ -58,9 +58,11 @@ Set-ConstantVariable -Name 'FindWDACCompliantFiles' -Value $([System.Management.
         })) -Option 'Constant' -Scope 'Global' -Description 'Scriptblock that gets the WDAC Compliant files from a list of directories'
 
 Set-ConstantVariable -Name 'WriteFinalOutput' -Value $([System.Management.Automation.ScriptBlock]::Create({
-            Param ($Path)
+            Param ([System.IO.FileInfo[]]$Paths)
             Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Write-ColorfulText.psm1" -Force
-            Write-ColorfulText -Color Lavender -InputText "The output file '$($Path.Name)' has been saved in '$UserConfigDir'"
+            foreach ($Path in $Paths) {
+                Write-ColorfulText -Color Lavender -InputText "The file '$($Path.Name)' has been saved in '$UserConfigDir'"
+            }
         })) -Option 'Constant' -Scope 'Global' -Description 'Scriptblock that writes the final output of some cmdlets'
 
 Set-ConstantVariable -Name 'CalculateCIPolicyVersion' -Value $([System.Management.Automation.ScriptBlock]::Create({
@@ -159,8 +161,8 @@ if (Test-Path -LiteralPath 'C:\Program Files\Windows Defender\Offline' -PathType
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCD/mPAaOYbiNK7/
-# vMw1gAyq/jblvBU424mR/jWckWE5zqCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCDXw80cYswbw2Fb
+# NfQm1G9uNnnhuKFWKphY3CbQG7FQEKCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -207,16 +209,16 @@ if (Test-Path -LiteralPath 'C:\Program Files\Windows Defender\Offline' -PathType
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQgBFwN1ExyqaOf/69yTObGZIhUWCPCCzwdSzYOSo8MSsYwDQYJKoZIhvcNAQEB
-# BQAEggIAEdczaJeJhmXAi4Kd4rzY6TpyY3j1EKVKqHYEwgAf6hTpAnBFOEAwoyD3
-# o6DomCRADc15JvPpv9/vJcDSzF4wkO82ugCJ/EJNfZ6iTduBWXaP9fmWcMs/BGsv
-# 7LGhiwTOzcZH6GvkAUNTXrf7eiJabt82cTr1ZgOw99Gqifnif0IvQ2xxhLiO1HFN
-# gM76VJOf2b67CDJk2LHc/3H4rvWOfOzqD/d+m7ip7TWLNPQbWFol8HAIAiVOiQCb
-# gvxKXFXmosCilvtg3s6cKNvFFXsM6kWFrTl6n7XtcVM9yIVD8cS7DTkFrcG5/7XB
-# YwtO1T2AcB5rxHyi+xcuJrpHeX/oVAGlArUSxo6J2Wzdd/QFLSckSky6R0C+qNeu
-# KGg5kZR0rnPGT6ZjDcWKHlA1aSdT6B3wQNxtkyeBg562TsWK1g9Bkz2/xnYGHgIo
-# 2cyBHhoQfrrWGQSWrEkF9Xmmcleu72KpJ0PPMtZ7mdlNTyenu3OZIVKMwwGkBAF0
-# 21VDHvlmUMZ98BPFrx+svZu3Os8olybhpIUxp+XVWw49EKiud4eNHZXNlChkRxG/
-# xQ9Nv+G+aG8+SnfJCb9xh/6kVt+3R1/ry2aP5QVq/tL9K5HHXK0OeHCn4p6/5ins
-# q9Fip4PdX0dQgUKBfJnMrd4/dlymMdkQezQJ0b/G23V4OLEYjh0=
+# IgQgPzCE9zaudQ0mvP0gOYxTeCXpevAOp8hmmByOpuiLhr0wDQYJKoZIhvcNAQEB
+# BQAEggIAOI5i1WU1JPzzHOSejWwCz3UxUKtTaM4A14QN0wfTyErOc/zgDgtSAC1M
+# ZPYHFmPeWvUjMwDWnUYb0ao7Xa/CfOMNc4woQrjXOsyyimNfxJtwRwo+jfM1dqc2
+# ms1U/ReqkDJwZxmphhBbB9g4PdMj25ez5oERsj4C6Fks23Zm9Htg85UyJMpSI50o
+# lZurDyst8DYtUsSkndAiJ6AUR3Mpx8pwNXOq54Mh5SujCh02gbzIy0ga4fegWVwW
+# MsaCnQpErm3heBGTeDsoZYy1BoG522oFak87AoRreuSXz+V6cBwtPXuxUECip97M
+# R2znV9QqwTldRHGOFA0IU5CjxNFXXp5zN36Aq2fxYXjb4qTmdlV4GY5HThxUYnmx
+# bXzaj+oosqv2vIm/SDcnJGgGzX7uYqr8S4AX24M2dH2ZQg427QIWokMYV3dS+n8y
+# xLvhooHElRIKyB91fdl2HZwDIb/p52Rt2z+bUBGTusqIxlfcM/VMkquwpqzIhqk5
+# xCsLK8jbKMVOKAZyfZFNXU9IrzfTIt4rQAwFa8l6SmrMwnGBaTzrO9HA9UkExdb6
+# uhIQCIK/oC2FHDBXlj3dUePT2D1mIwn7mhUfB5l2hUDezwmhYKa7vKWNQ6rDR7yy
+# 0Jy7hNPduAu3VKkFNzNImYrkdUGIIpExHIYYD3731gYIk0Efb+o=
 # SIG # End signature block

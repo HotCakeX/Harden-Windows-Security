@@ -160,9 +160,6 @@ Function New-DenyWDACConfig {
                 Write-Verbose -Message 'Converting the policy XML to .CIP'
                 ConvertFrom-CIPolicy -XmlFilePath $FinalDenyPolicyPath -BinaryFilePath $FinalDenyPolicyCIPPath | Out-Null
 
-                Write-ColorfulText -Color MintGreen -InputText "DenyPolicyFile = $FinalDenyPolicyPath"
-                Write-ColorfulText -Color MintGreen -InputText "DenyPolicyGUID = $FinalDenyPolicyCIPPath"
-
                 if ($Deploy) {
                     $CurrentStep++
                     Write-Progress -Id 22 -Activity 'Deploying the base policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
@@ -170,7 +167,7 @@ Function New-DenyWDACConfig {
                     Write-Verbose -Message 'Deploying the policy'
                     &'C:\Windows\System32\CiTool.exe' --update-policy $FinalDenyPolicyCIPPath -json | Out-Null
 
-                    Write-ColorfulText -Color Pink -InputText "A Deny Base policy with the name $PolicyName has been deployed."
+                    Write-ColorfulText -Color Pink -InputText "A Deny Base policy with the name '$PolicyName' has been deployed."
                 }
                 Write-Progress -Id 22 -Activity 'Complete.' -Completed
             }
@@ -234,9 +231,6 @@ Function New-DenyWDACConfig {
                 Write-Verbose -Message 'Converting the policy XML to .CIP'
                 ConvertFrom-CIPolicy -XmlFilePath $FinalDenyPolicyPath -BinaryFilePath $FinalDenyPolicyCIPPath | Out-Null
 
-                Write-ColorfulText -Color MintGreen -InputText "DenyPolicyFile = $FinalDenyPolicyPath"
-                Write-ColorfulText -Color MintGreen -InputText "DenyPolicyGUID = $FinalDenyPolicyCIPPath"
-
                 if ($Deploy) {
                     $CurrentStep++
                     Write-Progress -Id 23 -Activity 'Deploying the base policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
@@ -244,7 +238,7 @@ Function New-DenyWDACConfig {
                     Write-Verbose -Message 'Deploying the policy'
                     &'C:\Windows\System32\CiTool.exe' --update-policy $FinalDenyPolicyCIPPath -json | Out-Null
 
-                    Write-ColorfulText -Color Pink -InputText "A Deny Base policy with the name $PolicyName has been deployed."
+                    Write-ColorfulText -Color Pink -InputText "A Deny Base policy with the name '$PolicyName' has been deployed."
                 }
                 Write-Progress -Id 23 -Activity 'Complete.' -Completed
             }
@@ -309,9 +303,6 @@ Function New-DenyWDACConfig {
                         Write-Verbose -Message 'Converting the policy XML to .CIP'
                         ConvertFrom-CIPolicy -XmlFilePath $FinalDenyPolicyPath -BinaryFilePath $FinalDenyPolicyCIPPath | Out-Null
 
-                        Write-ColorfulText -Color MintGreen -InputText "DenyPolicyFile = $FinalDenyPolicyPath"
-                        Write-ColorfulText -Color MintGreen -InputText "DenyPolicyGUID = $FinalDenyPolicyCIPPath"
-
                         if ($Deploy) {
                             $CurrentStep++
                             Write-Progress -Id 24 -Activity 'Deploying the base policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
@@ -319,7 +310,7 @@ Function New-DenyWDACConfig {
                             Write-Verbose -Message 'Deploying the policy'
                             &'C:\Windows\System32\CiTool.exe' --update-policy $FinalDenyPolicyCIPPath -json | Out-Null
 
-                            Write-ColorfulText -Color Pink -InputText "A Deny Base policy with the name $PolicyName has been deployed."
+                            Write-ColorfulText -Color Pink -InputText "A Deny Base policy with the name '$PolicyName' has been deployed."
                         }
                     }
                     else {
@@ -370,16 +361,6 @@ Function New-DenyWDACConfig {
                 Write-Verbose -Message 'Converting the policy XML to .CIP'
                 ConvertFrom-CIPolicy -XmlFilePath $FinalDenyPolicyPath -BinaryFilePath $FinalDenyPolicyCIPPath | Out-Null
 
-                # Used for when the WDACConfig module is in the embedded mode by the Harden Windows Security module
-                if ($EmbeddedVerboseOutput) {
-                    Write-Verbose -Message "DenyPolicyFile = $FinalDenyPolicyPath"
-                    Write-Verbose -Message "DenyPolicyGUID = $FinalDenyPolicyCIPPath"
-                }
-                else {
-                    Write-ColorfulText -Color MintGreen -InputText "DenyPolicyFile = $FinalDenyPolicyPath"
-                    Write-ColorfulText -Color MintGreen -InputText "DenyPolicyGUID = $FinalDenyPolicyCIPPath"
-                }
-
                 if ($Deploy) {
                     $CurrentStep++
                     Write-Progress -Id 29 -Activity 'Deploying the base policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
@@ -388,10 +369,10 @@ Function New-DenyWDACConfig {
                     &'C:\Windows\System32\CiTool.exe' --update-policy $FinalDenyPolicyCIPPath -json | Out-Null
 
                     if ($EmbeddedVerboseOutput) {
-                        Write-Verbose -Message "A Deny Base policy with the name $PolicyName has been deployed."
+                        Write-Verbose -Message "A Deny Base policy with the name '$PolicyName' has been deployed."
                     }
                     else {
-                        Write-ColorfulText -Color Pink -InputText "A Deny Base policy with the name $PolicyName has been deployed."
+                        Write-ColorfulText -Color Pink -InputText "A Deny Base policy with the name '$PolicyName' has been deployed."
                     }
                 }
                 Write-Progress -Id 29 -Activity 'Complete.' -Completed
@@ -402,6 +383,17 @@ Function New-DenyWDACConfig {
             Throw $_
         }
         finally {
+            # If the cmdlet is not running in embedded mode
+            if (-NOT $EmbeddedVerboseOutput) {
+                # Display the output
+                if ($Deploy) {
+                    &$WriteFinalOutput $FinalDenyPolicyPath
+                }
+                else {
+                    &$WriteFinalOutput $FinalDenyPolicyPath, $FinalDenyPolicyCIPPath
+                }
+            }
+
             # Copy the final policy files to the user config directory
             if (-NOT $NoCopy) {
                 Copy-Item -Path ($Deploy ? $FinalDenyPolicyPath : $FinalDenyPolicyPath, $FinalDenyPolicyCIPPath) -Destination $UserConfigDir -Force
@@ -433,6 +425,8 @@ Function New-DenyWDACConfig {
 .PARAMETER Fallbacks
     The fallback level(s) that determine how the selected folder will be scanned.
     The default value for it is Hash.
+.PARAMETER EmbeddedVerboseOutput
+    Used for when the WDACConfig module is in the embedded mode by the Harden Windows Security module
 .PARAMETER Deploy
     It's used by the entire Cmdlet. Indicates that the created Base deny policy will be deployed on the system.
 .PARAMETER Drivers
@@ -483,8 +477,8 @@ Register-ArgumentCompleter -CommandName 'New-DenyWDACConfig' -ParameterName 'Fol
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCBXckWqwRa/iiD9
-# rhY/CticBAyo6AuCm9JYzJmq5UEVu6CCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCCeaMmKyzVNK5Fr
+# cJpVtbItzQRmq+2XRm1K68YsUJnGk6CCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -531,16 +525,16 @@ Register-ArgumentCompleter -CommandName 'New-DenyWDACConfig' -ParameterName 'Fol
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQgftVoq45uijce2/yVnrWmAmV/vZMvLY0438OsxhtU8rQwDQYJKoZIhvcNAQEB
-# BQAEggIAXSbYpzubAAZtsY4SgmCNHtw4m0BjVkX2I1Iy276gr9mStooVuqJRvw5V
-# HIdUoJSGuI5obStLQ1DjF+4Yp/abVhd3BT27WmCN5jT6ufYdzTISbEd9k3M44ngT
-# h/W5SodaSv0zzUm2GFCmqdh9KQ5dh5IsJPrfpIDR64/zTyj4UQvenid1gFXCr2Vi
-# ZW/y+gjb1WfStsR4MUF8lYZ/FdaJBx4TuPozWVDHVYuRlCLZtqTo7kQ2gzgXgD98
-# TuVSC1882B6w9qSnHCXSJfZ9Int+kBDSCLzS8bEJmGuA4WlrmojpOCr5kxmcBdwv
-# TbmRxFFbKt5sKpLf4qUiBsaGuejbDK6O0kBeCnoM9zxIOpFH3CnZZW/TfeQcA3jl
-# maOY9mAZrM9SZqMV6sfGW2PGKl/7iP1yQwrZnkd4nGgJ+fpVbwemwHVwqm/eRI2C
-# mlkmjbZ7nM2WTR8yqENstqmuUdrhRGB/AciMoXmQc7KoxP333HlcFlfmB5p2oYF1
-# XNhK5qVdNOYfKRpCB97rxRmhPzrXVOqQt6YWjA/17UxvdlKv8I2Cm0xzOJ/3bqun
-# YvHnup1QtkPSrscEdVyh9FGg+cAEOBmetDI21IouMbQvUxeHVlGNA4BEQpWu1Squ
-# fa/HQctJ/WTdRIw/8NyatWjitb9EshKqhq9GHKTEqg5F05IHzhA=
+# IgQg6zKVaHiS+qL299vS1BhNaZ8IYS4FJ8Ldx1EECgjyM1EwDQYJKoZIhvcNAQEB
+# BQAEggIATVn75rNkSq9G52dJ1EIblFbTfG/p7U4JDb+LYFyxxBltyTmDgB/6tOEM
+# Fp5Ui9SBhKgXJo6wvos8xLOXOzhn+r8A/imrrYjbMqpoK9gJY4SS70ik+YLpDhGa
+# CTR/jucuBcXRrpcNbizP63cZfh7YQsMn8YRJ9ob17tqT0GYo+lRAKswvgce36ULA
+# dSjNB79BQSHjatsJ+WEV51ElWTqJWMbLPM17VkPtj8VRUJNKDVeJbGZ0Y3I+BjK6
+# HLUit8C6qq2KPJ1VDQYthT2zXG5oTAoPJDyxk4u0EovqndXRtnu7fiuwkaojlbXV
+# 0wtcm5qMmv9uqAhBukiTLFPdcOWydrS3bfAELFnL7+ANJWXSLuu/WYnhzL00yRW8
+# /bwfL+aIh3gL3uUnhEutU2NLSL9hakr5DbFFKnRPdFN4Om5UJuHxdHph3uVLVnZ/
+# JG0f7tMXGtbw39DoQ+cdOwkCnbqQKk5V9pjEyd5p0ZIZpGQStfvmKSCQKJ+S1pNN
+# R5RTY7a+6dRA8TK67RqJhEaRoR8p5dd5axDeiF+O0KRi6oIWDuXsDpROWdyX+pES
+# WNwoHi0/qa60oW/EaeUqzJcwBsLyZ7K9cYdvjkYC094fSCILz6/8G6YgjMSf8Vg/
+# Vl28ukgg8qm0fvx6Bo5u0LaYzR4z9lnOHpLr465E1ZMPLMm7594=
 # SIG # End signature block

@@ -10,6 +10,9 @@ Function Get-CIPolicySetting {
     Begin {
         $PSBoundParameters.Verbose.IsPresent ? ([System.Boolean]$Verbose = $true) : ([System.Boolean]$Verbose = $false) | Out-Null
 
+        Write-Verbose -Message 'Importing the required sub-modules'
+        Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Update-Self.psm1" -Force
+
         # if -SkipVersionCheck wasn't passed, run the updater
         if (-NOT $SkipVersionCheck) { Update-Self -InvocationStatement $MyInvocation.Statement }
 
@@ -132,8 +135,8 @@ Function Get-CIPolicySetting {
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCBRU6hfTFW4AaUB
-# 3tHL31QCSM+2v0a4nt43pLCXbZR2laCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCCB5MrzFenGD3ac
+# hY72E5dNFt93+9d7a2+jpEL7rExqVqCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -180,16 +183,16 @@ Function Get-CIPolicySetting {
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQgg826TdjWYePmssqPRDxuAHStZKZe4kNCG4HKLetx0/0wDQYJKoZIhvcNAQEB
-# BQAEggIAnJeqxeYfWZanuo2vDV0eyqdUIODLeDnIQ5ThZ9Qj7Q9Y7G0HdFQ/1j/z
-# olLJeZVYWfbgXNumkJ5Jwp7jDfCDaBu2nxKk0dpJWOT5WCTJPUGZZlGWLlBsdKsW
-# VLHfhI6kEiscd5I/FB4tI8YBCkFh0WcDVQ3b9oCd65SnXRC9kqawCvRh3GsI2NJk
-# 7hgKwJ7g64guNjYlxk9AtwyfX61mcqoNsUfDX15BEcJynVRlAh5VMhBxA25YKcNt
-# RMmj6uWWmFroNeI5+7XPUEgQh2PLMVexQ6jsOi7jgDO3czFUnMKbnUQ+vx1ARU+C
-# BbMtJ0hS8YV4QbQOdqZB9kbJkCBeUTh7zFBtQR0Kjuk/Xo9iWlhJ8TfRyrYxk+ym
-# gg+adds14Y+WcGMdo05+VQCR7E20UFs8TTg0dCpoXu8+BPF6jJZZ3TmGGCsPEfSp
-# kucHudF/DhIHcT+afGV/2dMOF1KPbhbL/WEXcuQI9XVINv/PvdyiGpBtUbTHiI8M
-# NA+Zjk8puTIQp9xacdcM7K9z92MANfiAsl/hxIjAn03uxQau8idB7pLd4+DHw6Zg
-# m7Djh/RLDYk4IB5T5GP7lURpgOWJH4waaR79eAiO4eR3iaTYxBvkPdC45dAyH2k5
-# nHXxit2KvjWFIYJUifbipgSclcRS2Ytf8UawrZUy2dM3LfleMYg=
+# IgQgbjtLcRFmfXlgOo8UsHYbd+wUBS3bZ5/1NiwqOHWjQRowDQYJKoZIhvcNAQEB
+# BQAEggIAff+06fuQjGg9X/nTxlHtw8mGsdJ83aa7ddbmYRlhLKZruzGUTnLB3AoC
+# ukzc0Lo+lG+08itNTXLhGDiT8Xw4jVMvzCV23QLn2ZIgy080/23byoLXNoalAIZV
+# AoG9SyihFrBAYKzJXfzdmmeFkMWmvFbYibayqIb4iURsYPNq6xF9m9nfzD3+xgEm
+# Kc+PimpQZpf7v0m+5G5EVz3L+mxfB45syjIRu1OMZG+KTsR9v2Xgyxb0hmstzqPV
+# YjvpeOk5M82JCuPUeat+/pUyHpQzKQFdQAYNRfCynA+MQSZ5Q8p5JjHm/WwVfzeC
+# +lEPFwp0V9N3mhWkt21Ts59MwoIn81+DTG9Mu1UIDSa0/IO7GV+gS6jJrkBcBdNB
+# xYhD98eBILAtztVbmz8Nht+DuipDaN83Apm1w55Dlj4QwJRyascRkmNAE0o7kqHU
+# d1RvHOTouiGFpOJp8ZLn/rsQegKEzrsXSxKqyRuMQSgxuKMCW3wT6IdBVMJ42I8q
+# vioVlFQ3YaJiD1ud/MzIH8SrqfosYVkJR4O0YhBC42Z7xDH5m+nFLIpFW+z7mrbN
+# YfGi3fbi3fBJsBjRHconnVDY5E/GJvxcOLe0q/1zavCDwFLmMfPieUVeQggH/oFE
+# rEyHPBfji2z/kD0MwgWCpj1KJE85R8ml825crT9SVUAYD7w4zI4=
 # SIG # End signature block

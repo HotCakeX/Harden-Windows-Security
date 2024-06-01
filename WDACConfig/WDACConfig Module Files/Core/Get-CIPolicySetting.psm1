@@ -5,7 +5,6 @@ Function Get-CIPolicySetting {
         [Parameter(Mandatory = $true)][System.String]$Provider,
         [Parameter(Mandatory = $true)][System.String]$Key,
         [Parameter(Mandatory = $true)][System.String]$ValueName,
-
         [Parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$SkipVersionCheck
     )
     Begin {
@@ -86,17 +85,37 @@ Function Get-CIPolicySetting {
         System.String
     .OUTPUTS
         PSCustomObject
+    .PARAMETER Provider
+        The provider of the secure setting
+    .PARAMETER Key
+        The key of the secure setting
+    .PARAMETER ValueName
+        The name of the secure setting
+    .PARAMETER SkipVersionCheck
+        If this switch is present, the cmdlet will skip the version check
     .EXAMPLE
-        The following examples are for creating the secure settings in a Code Integrity policy
+        Creating the secure settings in a Code Integrity policy
 
         Set-CIPolicySetting -FilePath 'Policy.xml' -Provider 'WDACConfig' -ValueType 'Boolean' -Value '1' -ValueName 'IsUserModePolicy' -Key '{4a981f19-1f7f-4167-b4a6-915765e34fd6}'
+    .EXAMPLE
+        Creating the secure settings in a Code Integrity policy
+
         Set-CIPolicySetting -FilePath 'Policy.xml' -Provider 'SomeProvider' -ValueType 'String' -Value 'HotCakeX' -ValueName 'Author' -Key '{495e96a3-f6e0-4e7e-bf48-e8b6085b824a}'
+    .EXAMPLE
+        Creating the secure settings in a Code Integrity policy
+
         Set-CIPolicySetting -FilePath 'Policy.xml' -Provider 'Provider2' -ValueType 'DWord' -Value '66' -ValueName 'Role' -Key '{741b1fcf-e1ce-49e4-a274-5c367b46b00c}'
     .EXAMPLE
-        The following examples are for using the Get-CIPolicySetting cmdlet to query the secure strings among the deployed policies on the system.
+        Using the Get-CIPolicySetting cmdlet to query the secure strings among the deployed policies on the system.
 
         Get-CIPolicySetting -Provider 'WDACConfig' -Key '{4a981f19-1f7f-4167-b4a6-915765e34fd6}' -ValueName 'IsUserModePolicy'
+    .EXAMPLE
+        Using the Get-CIPolicySetting cmdlet to query the secure strings among the deployed policies on the system.
+
         Get-CIPolicySetting -Provider 'SomeProvider' -ValueName 'Author' -Key '{495e96a3-f6e0-4e7e-bf48-e8b6085b824a}'
+    .EXAMPLE
+        Using the Get-CIPolicySetting cmdlet to query the secure strings among the deployed policies on the system.
+
         Get-CIPolicySetting -Provider 'Provider2' -ValueName 'Role' -Key '{741b1fcf-e1ce-49e4-a274-5c367b46b00c}'
     .NOTES
         Note-1
@@ -113,8 +132,8 @@ Function Get-CIPolicySetting {
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCBJmWMmoQhNKZh4
-# c9E/xlG0oLDrUgtJAz8+ARA2sN6D0KCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCBRU6hfTFW4AaUB
+# 3tHL31QCSM+2v0a4nt43pLCXbZR2laCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -161,16 +180,16 @@ Function Get-CIPolicySetting {
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQgcWDSXfRLu8PNIMR7ojRRzigMnFLr6G5MbpOyZnWz2VkwDQYJKoZIhvcNAQEB
-# BQAEggIAC45AfpiXAyusTpHB81/YoqwIA45Dxwq8spDbT4vp9wXBuyTR4QtWb2mN
-# 1tCfPbncvZiQRZrHKBEYqkczZbHLsoYsXtwpq+nm7v7YJdBxxC1i+0Tq4EjV4+GG
-# LqZ7HsTZWqj0F5ftLbrum5J7QN/d/uywC27Uaurjdbht51MAB6i2kMCVgb6xOevy
-# Gjzagt/FY+gzh2DSKjqEmC+AXl8aTZapBAKQg4CVclU1M18aNZO8yj9Zd2YEp2Ma
-# hv6pfyKzPDC+iN8i1qsYjBSuis0IZYvATGdCLYeBgUaZwZk0fPc9bzpFokMrvgZ1
-# mmu4NWCAyI6PxTzOxstqySZ0J8xPC3Ts7i1HYp2MkUZpqlVlhMLtNTZkP8Th5nO2
-# 1YJEQ+L11HF0cAs9qBCUN3CzpUZzzhgTpAZ+JE9vjKYzZY1uzxZPCo0QyFSV0I4P
-# QDVLSmJEmbxUDwiuZacK9pMzdeQqoVdbBG0l6nVN/Ih5Ez6tBGqKkjbqkGLrrC3X
-# HRHCIfgLmiJO/C9racBL/u1MER2DBuzu3ugJdZqAEXltsDRAKBH6eRJ5jN5kHg7W
-# bL8tXm/EUZa8NX++mtBX7EZNnL9aR8tVWGGeaImJGSahacrHja2zXnz2cLlysppx
-# hNUJMENnWgmmCXj8LGHEc0l+hDPGJ6BqqH+8hzFr0N78mIoXmyM=
+# IgQgg826TdjWYePmssqPRDxuAHStZKZe4kNCG4HKLetx0/0wDQYJKoZIhvcNAQEB
+# BQAEggIAnJeqxeYfWZanuo2vDV0eyqdUIODLeDnIQ5ThZ9Qj7Q9Y7G0HdFQ/1j/z
+# olLJeZVYWfbgXNumkJ5Jwp7jDfCDaBu2nxKk0dpJWOT5WCTJPUGZZlGWLlBsdKsW
+# VLHfhI6kEiscd5I/FB4tI8YBCkFh0WcDVQ3b9oCd65SnXRC9kqawCvRh3GsI2NJk
+# 7hgKwJ7g64guNjYlxk9AtwyfX61mcqoNsUfDX15BEcJynVRlAh5VMhBxA25YKcNt
+# RMmj6uWWmFroNeI5+7XPUEgQh2PLMVexQ6jsOi7jgDO3czFUnMKbnUQ+vx1ARU+C
+# BbMtJ0hS8YV4QbQOdqZB9kbJkCBeUTh7zFBtQR0Kjuk/Xo9iWlhJ8TfRyrYxk+ym
+# gg+adds14Y+WcGMdo05+VQCR7E20UFs8TTg0dCpoXu8+BPF6jJZZ3TmGGCsPEfSp
+# kucHudF/DhIHcT+afGV/2dMOF1KPbhbL/WEXcuQI9XVINv/PvdyiGpBtUbTHiI8M
+# NA+Zjk8puTIQp9xacdcM7K9z92MANfiAsl/hxIjAn03uxQau8idB7pLd4+DHw6Zg
+# m7Djh/RLDYk4IB5T5GP7lURpgOWJH4waaR79eAiO4eR3iaTYxBvkPdC45dAyH2k5
+# nHXxit2KvjWFIYJUifbipgSclcRS2Ytf8UawrZUy2dM3LfleMYg=
 # SIG # End signature block

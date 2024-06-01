@@ -85,7 +85,11 @@ Function New-DenyWDACConfig {
 
         [System.IO.FileInfo]$FinalDenyPolicyPath = Join-Path -Path $StagingArea -ChildPath "DenyPolicy $PolicyName.xml"
         [System.IO.FileInfo]$FinalDenyPolicyCIPPath = Join-Path -Path $StagingArea -ChildPath "DenyPolicy $PolicyName.cip"
-        [System.IO.FileInfo]$AllowAllPolicyPath = 'C:\Windows\schemas\CodeIntegrity\ExamplePolicies\AllowAll.xml'
+
+        # Due to the ACLs of the Windows directory, we make a copy of the AllowAll template policy in the Staging Area and then use it
+        [System.IO.FileInfo]$AllowAllPolicyPath = Join-Path -Path $StagingArea -ChildPath 'AllowAllPolicy.xml'
+        Copy-Item -Path 'C:\Windows\schemas\CodeIntegrity\ExamplePolicies\AllowAll.xml' -Destination $AllowAllPolicyPath -Force
+
         [System.IO.FileInfo]$TempPolicyPath = Join-Path -Path $StagingArea -ChildPath 'DenyPolicy Temp.xml'
 
         # Flag indicating the final files should not be copied to the main user config directory
@@ -477,8 +481,8 @@ Register-ArgumentCompleter -CommandName 'New-DenyWDACConfig' -ParameterName 'Fol
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCCeaMmKyzVNK5Fr
-# cJpVtbItzQRmq+2XRm1K68YsUJnGk6CCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCA6bcMD4abRaTkc
+# 7fG3+kEafUA5A+oWnPnytAxpJFHT+KCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -525,16 +529,16 @@ Register-ArgumentCompleter -CommandName 'New-DenyWDACConfig' -ParameterName 'Fol
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQg6zKVaHiS+qL299vS1BhNaZ8IYS4FJ8Ldx1EECgjyM1EwDQYJKoZIhvcNAQEB
-# BQAEggIATVn75rNkSq9G52dJ1EIblFbTfG/p7U4JDb+LYFyxxBltyTmDgB/6tOEM
-# Fp5Ui9SBhKgXJo6wvos8xLOXOzhn+r8A/imrrYjbMqpoK9gJY4SS70ik+YLpDhGa
-# CTR/jucuBcXRrpcNbizP63cZfh7YQsMn8YRJ9ob17tqT0GYo+lRAKswvgce36ULA
-# dSjNB79BQSHjatsJ+WEV51ElWTqJWMbLPM17VkPtj8VRUJNKDVeJbGZ0Y3I+BjK6
-# HLUit8C6qq2KPJ1VDQYthT2zXG5oTAoPJDyxk4u0EovqndXRtnu7fiuwkaojlbXV
-# 0wtcm5qMmv9uqAhBukiTLFPdcOWydrS3bfAELFnL7+ANJWXSLuu/WYnhzL00yRW8
-# /bwfL+aIh3gL3uUnhEutU2NLSL9hakr5DbFFKnRPdFN4Om5UJuHxdHph3uVLVnZ/
-# JG0f7tMXGtbw39DoQ+cdOwkCnbqQKk5V9pjEyd5p0ZIZpGQStfvmKSCQKJ+S1pNN
-# R5RTY7a+6dRA8TK67RqJhEaRoR8p5dd5axDeiF+O0KRi6oIWDuXsDpROWdyX+pES
-# WNwoHi0/qa60oW/EaeUqzJcwBsLyZ7K9cYdvjkYC094fSCILz6/8G6YgjMSf8Vg/
-# Vl28ukgg8qm0fvx6Bo5u0LaYzR4z9lnOHpLr465E1ZMPLMm7594=
+# IgQgKZfFLztaIT5Aw4BPlT5oAKQGtiNB7NfZCiPTn2WSigowDQYJKoZIhvcNAQEB
+# BQAEggIAcqwSvUFiA9W8lDJhR+yRXk0V2Ns4bHvbeBAwx6dphEy4wJVmRXaiU+jb
+# LTOytGd6wNy5qZqX0V2zQPx085bWC7dgMbT/Tt7P8yqerxa9znXi6E4C6JVW2YTj
+# 3PBcu7slCQvFCB6uuChFa4MiJrfQWFanTGMqEo64cSifVMI0GwPB9jRxw/ZM6XKQ
+# 7Ne2Ak2kbqhCttttbB4Xw+ix5vt3FqGx2VRb2HteFjcYTYgfOYR5IAcHYVjaas/u
+# /K5LQA8NQF0uXnKgEzMYL8FWEWy9acANeH69lzkSKsjQ71uRoIWdx1iA5KWK7Pz6
+# umxBJjLVYkI34MPRIpfxwOXEus+uvxzMM9/6fowIxyS+j0O+ysKTZ6zJTfihr+U0
+# /hJVqalP5QN5TLYKHhLa6+uYB5xma55kHiveIps06Pvt2+wqkSamzbMD17g8yYmi
+# Pz6jtOeX34zANh0ktw5cJREJD0xIW5XqNH3jhRlPM+mP5mLhwxSmgqLJjnoQqlq/
+# jXKi3n86uturK0gCtQnPdBTWkSXh7mftWWyDkB2k/EbLgNQ+l2PwMtzE3Y4VVRwe
+# sHM64xMbY/Just6NYusOSEFwxovI89eFi3k+pAvdnTGJHlrrKdf6YYcBG6rxFXNR
+# AlBhpQ4ZeKSzU6fqznHZCaQtc0/4aNRJAGsDW1BCEby2AbL5R+8=
 # SIG # End signature block

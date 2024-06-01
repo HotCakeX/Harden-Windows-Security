@@ -346,18 +346,18 @@ Function Edit-WDACConfig {
 
                     [PSCustomObject[]]$LogsToShow = Select-LogProperties -Logs $LogsToShow
                     Set-LogPropertiesVisibility -LogType Evtx/Local -EventsToDisplay $LogsToShow
-                    
+
                     Write-ColorfulText -Color Pink -InputText 'Displaying files detected outside of any directories you selected'
-                    
+
                     $SelectedLogs = $LogsToShow | Out-GridView -OutputMode Multiple -Title "Displaying $($LogsToShow.count) Audit Code Integrity and AppLocker Logs"
                 }
                 # If user did not select any directory paths but there were files found during the audit phase in the audit event logs
                 elseif (!$HasFolderPaths -and $HasAuditLogs) {
                     [PSCustomObject[]]$LogsToShow = Select-LogProperties -Logs $AuditEventLogsProcessingResults
                     Set-LogPropertiesVisibility -LogType Evtx/Local -EventsToDisplay $LogsToShow
-                    
+
                     Write-ColorfulText -Color Pink -InputText 'Displaying files detected outside of any directories you selected'
-                    
+
                     $SelectedLogs = $LogsToShow | Out-GridView -OutputMode Multiple -Title "Displaying $($LogsToShow.count) Audit Code Integrity Logs"
                 }
 
@@ -837,8 +837,8 @@ Register-ArgumentCompleter -CommandName 'Edit-WDACConfig' -ParameterName 'SuppPo
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCBbUIqiWpDNx6P0
-# pKCJCPJnh1EZeh6YOQYuJ5WjVq1AGKCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCDleYM/8LEicfa/
+# Zs+uQSQC+LibygZCyVjZdf140aZGlqCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -885,16 +885,16 @@ Register-ArgumentCompleter -CommandName 'Edit-WDACConfig' -ParameterName 'SuppPo
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQgWl/FDxszvyRG6o58OFVBCj7BmKHuoZ7MkckqtxLbtdAwDQYJKoZIhvcNAQEB
-# BQAEggIAPpZPZLomeg3sJns4A65pY7v3LpuEQ5lyh+Np3vSJBdSV6uLPqmgC/Uvj
-# oS19WuoJlzEVYSgDoydjW1RIT8oEqf54rPF/2PZaUPD1knRg1+C7wEUWV0r6G+Sa
-# 4QPj1JuWX5DdMhyB02eVMLXNPyZXuIrJxUybJCkAur5pTI5N0uTiciQbghj1cuGf
-# 2wfKwnpBdjWSOctpnukA2zmmBu9uwf7HBJG35MWm+ZZtaQFUDMeg5b4KTgqoOCfe
-# s6aK0KtjoITSGFm/vmE8GjPBl0X6t0If7zYGPOQW0EViFG6+RuOuWqlwwad0Vppu
-# GPNr5c/hRUT6CobGlCpkQwDlw3uZOrH3IrnRCc9gAIyMq5IWbnQw1jzEF09wYZte
-# /RNVAGDWBNKvuRKXcJAp0tmUkgmsRQcbiO/zbUgUlGsx83sYvXI+cndPdh/w8FQm
-# QaEKy6GiB57WhOaxipKMma8JaweCY2EgYK+OKVa9V14KUjvnAdAfVdOS2M85b/vt
-# TJezTQHOQWz1DBSLH7P0btjH3vrjix0R39HCATy5+7b2cEVjKh0Kx4mOfNwVBbXN
-# fmwCcOlMnRfrGzQfPkhnepPjrthqZFc24CgUb5o4YjNUcWFQjXA0xTke7pmitCke
-# W7xxHY+HnNhrvtTLMJTinYJVMFNbfksy3Zl3jt6lFyB1fFJKmug=
+# IgQgjID32R1QCVgzpsaDjYcxMXuRkXXKPTO4NZZtMxQWPmkwDQYJKoZIhvcNAQEB
+# BQAEggIAH5m6QxI9PikIc5ybiq3gyFja5tRzqPZkiA+2y6vgZWl3VmIeIyd7Et58
+# M4PPeVmspEUykEMXi/8IfTAXYbh/k7/+gyPPBWkQLcXcdceX9JfQDOjwa6Jmdm0I
+# OmJ3lMlK8KzvMC3SpPG4Sa9h1CDr7R7W7YZMIEXVvbTPBdFeNr760Cw6ujCZymtK
+# 5HCj23UK6fFRNV8XL0PJXNXt/0/9XrT7zcX+6WeF6qwhyN3Nw5LDMlWEoAgIBSsT
+# Hgw3iYE8C21sxxvlvAWQbAzM93zQDSd9uTTtzqECc5hwO667Ajaubpxpv/T9Oqka
+# gfHvPPEMSIextd3+yw5/oz5lheFZgBoOnzUaRcGnflplHv+DRn9Vq1gEk+IF4JJ4
+# 9cLIVGNWlcixY1SZO9uB7CzwcBMkEVgCoO2lSDUHlTp5DNrjlDjk4ptHiFOv94hg
+# dAfhkTLqqPwe136APchj6r/QETE2s9j8nvektcK8BS7+R8lTHtRNdtWr2K1z4Tmp
+# a3rgLiQ3zx6mOfqUKgDFwG2pjr4+35c8DgSzxma7hO4AAdxO77zNKc4UFC8FISyg
+# A+EZnUiUdSzWm5JkHaWTmbKHdNcWWKvcnH6pTwK0HI1hZbGlFacYfCGxA5Du+161
+# aRdKxWCJOGFi7D0kVJHYlLqCtvmxYBEQFa95/QYq/P7coslWTBM=
 # SIG # End signature block

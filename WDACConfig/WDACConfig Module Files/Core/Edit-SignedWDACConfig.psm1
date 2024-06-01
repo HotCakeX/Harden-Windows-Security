@@ -403,7 +403,7 @@ Function Edit-SignedWDACConfig {
 
                     [PSCustomObject[]]$LogsToShow = Select-LogProperties -Logs $LogsToShow
                     Set-LogPropertiesVisibility -LogType Evtx/Local -EventsToDisplay $LogsToShow
-                    
+
                     Write-ColorfulText -Color Pink -InputText 'Displaying files detected outside of any directories you selected'
 
                     $SelectedLogs = $LogsToShow | Out-GridView -OutputMode Multiple -Title "Displaying $($LogsToShow.count) Audit Code Integrity and AppLocker Logs"
@@ -412,7 +412,7 @@ Function Edit-SignedWDACConfig {
                 elseif (!$HasFolderPaths -and $HasAuditLogs) {
                     [PSCustomObject[]]$LogsToShow = Select-LogProperties -Logs $AuditEventLogsProcessingResults
                     Set-LogPropertiesVisibility -LogType Evtx/Local -EventsToDisplay $LogsToShow
-                    
+
                     Write-ColorfulText -Color Pink -InputText 'Displaying files detected outside of any directories you selected'
 
                     $SelectedLogs = $LogsToShow | Out-GridView -OutputMode Multiple -Title "Displaying $($LogsToShow.count) Audit Code Integrity Logs"
@@ -964,8 +964,8 @@ Register-ArgumentCompleter -CommandName 'Edit-SignedWDACConfig' -ParameterName '
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCAw4gNvAulMvXBn
-# zdVOH26Lpye2KyJqzlDiRPFyoHEXiqCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCBYlNoPi11PCSgH
+# u/Nl5WAS70gYsaowdABhct2FsHkOX6CCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -1012,16 +1012,16 @@ Register-ArgumentCompleter -CommandName 'Edit-SignedWDACConfig' -ParameterName '
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQgnmJBWtSGX9hsbG1R0W2j2EAJZv6bYT/MlmjPKaHErQIwDQYJKoZIhvcNAQEB
-# BQAEggIAG4XNDnG27BUjDur3lgG+taoY3S/cJUK7BO34NyYqjYg/F+xed3GWIrxf
-# kuNEhkyQVW61FHCkcTAJYnud0gqTJrBfi3GcxEFnKSQBld98H5ZFP10ZB8yU5PTt
-# yMW3YwuPJ1nxMwbtH5elCWKQptO8/WL0yLBNqmjMAj3IeuGNDs9cKDwY9xr/6I7T
-# l8E9YiG1TJFQleKt3AbVpfsdv4EJAh3V+uEez12iJdT7hSqkTCXkWVLXBfVBFwxR
-# j8Qe3+vZFMNnPPwmYZ5CecVM+PXRCe2hw18X8gblBFAZ30RrNn9d6w1jYHsz7K6b
-# KA7teWUdkyYhMczT8UlPRjZ6qkEikeua7RIQnBqS9S1aDRtJQg8w2Hdv25/HWUk6
-# wpP9hzC9cEdPs20QveKgyzibTaO2cbAxe+bvdGZiBqX7YyqNCcB/3ZNb56bFwMnA
-# cgCc3hwKUC+hONWoA+hItCRLHQjVjCn32KhOOYekRUJYDVsZbzMDWVlbbKI3wpyU
-# SonZyKbrX5vavf2vw8xi9Q1YoEBpAZ98O8KIAnilkBGSktizdpdSZb28f2p9Ovik
-# 5xtYo5G6jvDPQu84+XeS/WNbnjAhv39rDUqmmZJguSURQK0IKMz3atEzVAJJm14w
-# CCcNDHJcBJn0OAJrSOv9WUWH5DTt6TrgahjAB7QVyEqdUFwdXfg=
+# IgQgw6dcsRLl5WOnHQacEm/e8R99sYu1QPCZvjZufPWP2okwDQYJKoZIhvcNAQEB
+# BQAEggIAgp/dZt3apbD7udixzb09+VfltuuQ1SKDKW49u5NwoxoRkNEOe89H1wCG
+# 5cC4kexHp4ku1GvIakXbDV12+/CBvFziSPpJOfPzMEe25U/Kj2CM7c12ZCuYn82R
+# h7V+BQlvt2HHvYDImy11H6QarCQUDbe5IlGVF/pS+qxhNcv9/Xinl7VL71v9otua
+# LLdvJloY+2jwHe0HRP0OEsjXq+QV1LpRO2CMImBZQtMKUijwMQgvXc/HzwmdlaxA
+# /BHWGRZYgP8kMwZb9i50Qk1ULxrjIksQcnosOVYBe4Rz1TdrjGVzWKG+tOQDl17B
+# s/2Lkzpj/2DN71VkJKoII48urD9Cv7BG7ggdgRtBhm/nkOZoOAV9hviwM3Hf+pWS
+# MSojmTm4ggWlBS2+Xc9Q4b3YiweiFjoeRKmY2SHDtF98Jb1x5oIHTDgj2I/Dck10
+# aVWRL3cX5AAgnO+ERVWI4Utp3NlfHdgl0QYQesDuKMjtTGgdnG2oFGAEhxhkZn6i
+# ovRwURdQ+23kWrtZ+Kw2luJ8aEenuwXayKevg7PEuSsBDJisMIfGT1+YIMXh3VA4
+# 4oDVM8IRuzDoppuT83k9s8AnBNYWrFk9584t+/rEB1R8a4KVNRTOl7gyRvC3bPZa
+# wSa1ZM4nVnuG0emho6Xxsm9/KOw1S28JMWG4I6h0/g+tsEaeXMw=
 # SIG # End signature block

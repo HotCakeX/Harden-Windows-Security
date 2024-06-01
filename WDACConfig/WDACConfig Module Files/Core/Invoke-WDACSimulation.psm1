@@ -98,7 +98,7 @@ Function Invoke-WDACSimulation {
         [System.Boolean]$ShouldExit = $false
 
         if ((Get-Content -LiteralPath $XmlFilePath -Raw) -match '<Allow ID="ID_ALLOW_.*" FriendlyName=".*" FileName="\*".*/>') {
-            Write-Verbose -Message 'The supplied XML file contains a rule that allows all files.' -Verbose
+            Write-Verbose -Message "The supplied XML file '$($XmlFilePath.Name)' contains a rule that allows all files." -Verbose
 
             # Set a flag to exit the subsequent blocks
             $ShouldExit = $true

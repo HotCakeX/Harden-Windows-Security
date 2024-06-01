@@ -122,7 +122,7 @@ Function Get-CIPolicySetting {
         Get-CIPolicySetting -Provider 'Provider2' -ValueName 'Role' -Key '{741b1fcf-e1ce-49e4-a274-5c367b46b00c}'
     .NOTES
         Note-1
-        Since these settings are secured by Secure Boot, in order to successfully query these settings, you must restart once after deploying the CI Policy on the system.
+        Since these settings are secured by Secure Boot, in order to successfully query these settings, you might need to restart once after deploying the CI Policy on the system.
 
         Note-2
         DWord value is the same as integer or WldpInteger
@@ -135,8 +135,8 @@ Function Get-CIPolicySetting {
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCCB5MrzFenGD3ac
-# hY72E5dNFt93+9d7a2+jpEL7rExqVqCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCBqeuOQzMwf3N4x
+# tVif7flsFw/n2ThI/hKZ03ALESW2eaCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -183,16 +183,16 @@ Function Get-CIPolicySetting {
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQgbjtLcRFmfXlgOo8UsHYbd+wUBS3bZ5/1NiwqOHWjQRowDQYJKoZIhvcNAQEB
-# BQAEggIAff+06fuQjGg9X/nTxlHtw8mGsdJ83aa7ddbmYRlhLKZruzGUTnLB3AoC
-# ukzc0Lo+lG+08itNTXLhGDiT8Xw4jVMvzCV23QLn2ZIgy080/23byoLXNoalAIZV
-# AoG9SyihFrBAYKzJXfzdmmeFkMWmvFbYibayqIb4iURsYPNq6xF9m9nfzD3+xgEm
-# Kc+PimpQZpf7v0m+5G5EVz3L+mxfB45syjIRu1OMZG+KTsR9v2Xgyxb0hmstzqPV
-# YjvpeOk5M82JCuPUeat+/pUyHpQzKQFdQAYNRfCynA+MQSZ5Q8p5JjHm/WwVfzeC
-# +lEPFwp0V9N3mhWkt21Ts59MwoIn81+DTG9Mu1UIDSa0/IO7GV+gS6jJrkBcBdNB
-# xYhD98eBILAtztVbmz8Nht+DuipDaN83Apm1w55Dlj4QwJRyascRkmNAE0o7kqHU
-# d1RvHOTouiGFpOJp8ZLn/rsQegKEzrsXSxKqyRuMQSgxuKMCW3wT6IdBVMJ42I8q
-# vioVlFQ3YaJiD1ud/MzIH8SrqfosYVkJR4O0YhBC42Z7xDH5m+nFLIpFW+z7mrbN
-# YfGi3fbi3fBJsBjRHconnVDY5E/GJvxcOLe0q/1zavCDwFLmMfPieUVeQggH/oFE
-# rEyHPBfji2z/kD0MwgWCpj1KJE85R8ml825crT9SVUAYD7w4zI4=
+# IgQg0t/iLiHnYrOreMYSx7AJJjFNUOeV2pPOY1KRQQDhHUowDQYJKoZIhvcNAQEB
+# BQAEggIAaLka48k6BlwDNha3eWd3zlpsKiqsPSyFQJi/8bzZmSE4X9qgkVlKQaJd
+# mrMvKd//pSQxbRKvK8TCMGwjhvoYBvJcke4YXEWXhda2KXRRggNSj/1lhye98bqv
+# /JNzvPJmecvr0qJy1iMaX9LHcO7xnerw2iB1IFLaUIBKvS7VMtBBLWcn1xjIIICf
+# GRK50mgpzVJOgY+e3xeXKFwsRGZ2ijQ3/R3bOWLEUw/r+Ue4MTLgZEKBQT11zgDa
+# rmjmZRndZ26MrdF6GujMtDq2iL4Ihq/Gl0Gov2frqqa9DZXQRD9zMftoTWCc/H2u
+# OXSDKfXUSWQZ+zKZlPTGvbfmV/w5gJctr3+V5mx+isC70GSr1H7RQpwql08M4/zg
+# RPChnKU971tRueqwNbOvWLKH4y3oAVAZeqjV/4RaoTgpdIe2YT7nvpaMbYSwmvKV
+# JiQrS4nFNIy498j1/Q+L5t8kGb1V3huh3Fe70yJcn3CGnxSA3DgkYy/Jjfubh7xy
+# j2h3C6CQV2Imuw+BWTY831AzjkVp76h5CUSEw8UETNGXk5xAi9Oj0se1IT86FuRV
+# te3EEPA1M5BnqpJiAlbktAQPZMXlXcjo4ZmeZOR5xvmkJqr41BaENEAmgZuvQvJ/
+# xRM/n4AD5B9McJRPFwuEV/IuBCNPcUXXVrhwUqahara+ZsMSl3o=
 # SIG # End signature block

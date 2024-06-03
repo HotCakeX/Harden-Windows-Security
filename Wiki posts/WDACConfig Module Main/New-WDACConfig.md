@@ -6,13 +6,13 @@
 ## Syntax
 
 ```powershell
-New-WDACConfig 
-    [-PolicyType <String>] 
-    [-Deploy] 
-    [-Audit] 
-    [-TestMode] 
+New-WDACConfig
+    [-PolicyType <String>]
+    [-Deploy]
+    [-Audit]
+    [-TestMode]
     [-RequireEVSigners]
-    [-EnableScriptEnforcement] 
+    [-EnableScriptEnforcement]
 ```
 
 ## Description

@@ -36,7 +36,7 @@ There are 3 policy types you can choose from and they are listed below:
 | Type: |[String](https://learn.microsoft.com/en-us/dotnet/api/system.string)|
 | :-------------: | :-------------: |
 | Position: | Named |
-Accepted values: | `AllowMicrosoft`, `DefaultWindows`, `SignedAndReputable` |
+| Accepted values: | `AllowMicrosoft`, `DefaultWindows`, `SignedAndReputable` |
 | Default value: | None |
 | Required: | True |
 | Accept pipeline input: | False |

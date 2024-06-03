@@ -4,7 +4,7 @@
 
 | Base policy type|Method used|Signed | Protection score 1-5 |
 | :-------------: | :-------------: | :-------------: | :-------------: |
-| [Signed and Reputable (ISG)](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/use-wdac-with-intelligent-security-graph#configuring-isg-authorization-for-your-wdac-policy) | [WDACConfig module](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDACConfig) | No / Yes | 3.5 / 4 |
+| [SignedAndReputable (ISG)](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/use-wdac-with-intelligent-security-graph#configuring-isg-authorization-for-your-wdac-policy) | [WDACConfig module](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDACConfig) | No / Yes | 3.5 / 4 |
 
 </div>
 
@@ -29,9 +29,9 @@ flowchart TD
 
 <br>
 
-## Deploy the Signed and Reputable base policy on the system
+## Deploy the SignedAndReputable Base Policy on the System
 
-Start by deploying the Signed and Reputable base policy on the system, which allows only files and apps that are authorized by the [Intelligent Security Graph Authorization](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/use-wdac-with-intelligent-security-graph) which have known good state to run and anything else is blocked.
+Start by deploying the SignedAndReputable base policy on the system, which allows only files and apps that are authorized by the [Intelligent Security Graph Authorization](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/use-wdac-with-intelligent-security-graph) which have known good state to run and anything else is blocked.
 
 ### Unsigned version
 
@@ -59,17 +59,17 @@ Deploy-SignedWDACConfig -CertPath "C:\Certificate.cer" -PolicyPaths "C:\Users\Ho
 
 <br>
 
-* The module creates ***Signed and Reputable WDAC base Policy*** based on [AllowMicrosoft policy template](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/example-wdac-base-policies) with ***ISG*** related [rule options](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/select-types-of-rules-to-create#table-1-windows-defender-application-control-policy---policy-rule-options).
+* The module creates ***SignedAndReputable WDAC base Policy*** based on [AllowMicrosoft policy template](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/example-wdac-base-policies) with ***ISG*** related [rule options](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/select-types-of-rules-to-create#table-1-windows-defender-application-control-policy---policy-rule-options).
 
 * The module also automatically starts the [Application Identity](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/applocker/configure-the-application-identity-service) (`AppIDSvc`) service required for [ISG Authorization](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/use-wdac-with-intelligent-security-graph#enable-the-necessary-services-to-allow-wdac-to-use-the-isg-correctly-on-the-client) and sets its startup mode to Automatic. It's a protected service so can't be disabled or modified using Services snap-in.
 
 * ISG Authorization requires active Internet connection to communicate with the global ISG network.
 
-* Recommended to perform a reboot regardless of whether you are deploying signed or unsigned version of the "Signed and Reputable" WDAC base policy.
+* Recommended to perform a reboot regardless of whether you are deploying signed or unsigned version of the "SignedAndReputable" WDAC base policy.
 
 <br>
 
-After finishing deploying the Signed and Reputable base policy, if there is an app that is getting blocked and you want to allow it, you can create Supplemental policies to expand your base policy. To do that, you have multiple options.
+After finishing deploying the SignedAndReputable base policy, if there is an app that is getting blocked and you want to allow it, you can create Supplemental policies to expand your base policy. To do that, you have multiple options.
 
 <br>
 
@@ -77,13 +77,13 @@ After finishing deploying the Signed and Reputable base policy, if there is an a
 
 <br>
 
-## Creating Supplemental policy for apps already installed
+## Creating Supplemental Policy for Apps Already Installed
 
 The following commands use the `-Deploy` optional switch parameter, meaning after Supplemental policy creation, they are automatically deployed on the system.
 
 If you chose the Signed path, omit it from the commands and instead use the [Deploy-SignedWDACConfig](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Deploy-SignedWDACConfig) cmdlet to Sign and Deploy the Supplemental policy xml files.
 
-### Based on signer rules, hashes, file names etc.
+### Based on Signer Rules, Hashes, File Names Etc.
 
 ```powershell
 New-SupplementalWDACConfig -Normal -ScanLocation "C:\Program Files\Program" -SuppPolicyName "App's Name" -PolicyPath "C:\SignedAndReputable.xml" -Deploy
@@ -93,7 +93,7 @@ New-SupplementalWDACConfig -Normal -ScanLocation "C:\Program Files\Program" -Sup
 
 <br>
 
-### Based on File path with one or more wildcard characters
+### Based on File Path With One or More Wildcard Characters
 
 ```powershell
 New-SupplementalWDACConfig -FilePathWildCards -WildCardPath "C:\Program Files\Program\*" -SuppPolicyName "App's Name" -PolicyPath
@@ -104,7 +104,7 @@ New-SupplementalWDACConfig -FilePathWildCards -WildCardPath "C:\Program Files\Pr
 
 <br>
 
-### Based on an installed Windows app's name
+### Based on an Installed Windows App’s Name
 
 ```powershell
 New-SupplementalWDACConfig -InstalledAppXPackages -PackageName "*App's name*" -SuppPolicyName "App's name" -PolicyPath "C:\SignedAndReputable.xml" -Deploy
@@ -118,17 +118,17 @@ New-SupplementalWDACConfig -InstalledAppXPackages -PackageName "*App's name*" -S
 
 <br>
 
-## Creating Supplemental policy for new app installations or apps already installed
+## Creating Supplemental Policy for New App Installations or Apps Already Installed
 
 If the app you are trying to allow isn't installed, and when you try to install it you see a blocked/error message, you can use the following syntaxes to allow them to run and then automatically create Supplemental policy for them.
 
-These methods also work for apps that were installed prior to deploying the "Signed and Reputable" base policy and now you want to allow them to run by creating Supplemental policy for them.
+These methods also work for apps that were installed prior to deploying the "SignedAndReputable" base policy and now you want to allow them to run by creating Supplemental policy for them.
 
 You can create a Supplemental policy for more than 1 app at a time by browsing for multiple apps' install directories using the commands below.
 
 <br>
 
-### Based on App's install directory and other signals - Unsigned version
+### Based on App’s Install Directory and Other Signals - Unsigned Version
 
 ```powershell
 Edit-WDACConfig -AllowNewApps -SuppPolicyName "App's Name" -PolicyPath "C:\SignedAndReputable.xml"
@@ -138,7 +138,7 @@ Edit-WDACConfig -AllowNewApps -SuppPolicyName "App's Name" -PolicyPath "C:\Signe
 
 <br>
 
-### Based on App's install directory and other signals - Signed version
+### Based on App’s Install Directory and Other Signals - Signed Version
 
 ```powershell
 Edit-SignedWDACConfig -AllowNewApps -CertPath "C:\Certificate.cer" -SuppPolicyName "App's Name" -PolicyPath "C:\SignedAndReputable.xml" -CertCN "WDAC Certificate"

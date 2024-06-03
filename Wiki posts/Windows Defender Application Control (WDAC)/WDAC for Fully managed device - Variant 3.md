@@ -36,7 +36,7 @@ flowchart TD
 
 <br>
 
-## Deploy the Allow Microsoft base policy on the system
+## Deploy the Allow Microsoft Base Policy on the System
 
 Start by creating the Allow Microsoft base policy xml file, which allows only files and apps that are signed by Microsoft's trusted root certificate.
 
@@ -68,11 +68,11 @@ After deploying the base policy, you can create Supplemental policies to allow o
 
 <br>
 
-## Creating Supplemental policy for apps already installed
+## Creating Supplemental Policy for Apps Already Installed
 
 If you deployed the Allow Microsoft base policy on a system that already had apps installed, you can create Supplemental policy for them using the following syntaxes. **After creating each Supplemental policy, you need to sign and deploy it [using the same Cmdlet we used above.](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Deploy-SignedWDACConfig)**
 
-### Based on signer rules, hashes, file names etc.
+### Based on Signer Rules, Hashes, File Names Etc.
 
 ```powershell
 New-SupplementalWDACConfig -Normal -ScanLocation "C:\Program Files\Program" -SuppPolicyName "App's Name" -PolicyPath "C:\AllowMicrosoftPlusBlockRules.xml"
@@ -82,7 +82,7 @@ New-SupplementalWDACConfig -Normal -ScanLocation "C:\Program Files\Program" -Sup
 
 <br>
 
-### Based on File path with one or more wildcard characters
+### Based on File Path With One or More Wildcard Characters
 
 ```powershell
 New-SupplementalWDACConfig -FilePathWildCards -WildCardPath "C:\Program Files\Program\*" -SuppPolicyName "App's Name" -PolicyPath
@@ -93,7 +93,7 @@ New-SupplementalWDACConfig -FilePathWildCards -WildCardPath "C:\Program Files\Pr
 
 <br>
 
-### Based on an installed Windows app's name
+### Based on an Installed Windows App’s Name
 
 ```powershell
 New-SupplementalWDACConfig -InstalledAppXPackages -PackageName "*App's name*" -SuppPolicyName "App's name" -PolicyPath "C:\AllowMicrosoftPlusBlockRules.xml"
@@ -117,7 +117,7 @@ You can create a Supplemental policy for more than 1 app at a time by browsing f
 
 <br>
 
-### Based on App's install directory and other signals
+### Based on App’s Install Directory and Other Signals
 
 ```powershell
 Edit-SignedWDACConfig -AllowNewApps -CertPath "C:\Certificate.cer" -SuppPolicyName "App's Name" -PolicyPath "C:\AllowMicrosoftPlusBlockRules.xml" -CertCN "WDAC Certificate"

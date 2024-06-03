@@ -60,7 +60,7 @@ After deploying the base policy, you can create Supplemental policies to allow o
 
 If you deployed the Default Windows base policy on a system that already had apps installed, you can create Supplemental policy for them using the following syntaxes:
 
-### Based on signer rules, hashes, file names etc.
+### Based on Signer Rules, Hashes, File Names Etc.
 
 ```powershell
 New-SupplementalWDACConfig -Normal -ScanLocation "C:\Program Files\Program" -SuppPolicyName "App's Name" -PolicyPath "C:\DefaultWindowsPlusBlockRules.xml" -Deploy
@@ -70,7 +70,7 @@ New-SupplementalWDACConfig -Normal -ScanLocation "C:\Program Files\Program" -Sup
 
 <br>
 
-### Based on File path with one or more wildcard characters
+### Based on File Path With One or More Wildcard Characters
 
 ```powershell
 New-SupplementalWDACConfig -FilePathWildCards -WildCardPath "C:\Program Files\Program\*" -SuppPolicyName "App's Name" -PolicyPath
@@ -81,7 +81,7 @@ New-SupplementalWDACConfig -FilePathWildCards -WildCardPath "C:\Program Files\Pr
 
 <br>
 
-### Based on an installed Windows app's name
+### Based on an Installed Windows App’s Name
 
 ```powershell
 New-SupplementalWDACConfig -InstalledAppXPackages -PackageName "*App's name*" -SuppPolicyName "App's name" -PolicyPath "C:\DefaultWindowsPlusBlockRules.xml" -Deploy
@@ -103,7 +103,7 @@ These methods also work for apps that were installed prior to deploying the Defa
 
 You can create a Supplemental policy for more than 1 app at a time by browsing for multiple apps' install directories using the commands below.
 
-### Based on App's install directory and other signals
+### Based on App’s Install Directory and Other Signals
 
 ```powershell
 Edit-WDACConfig -AllowNewApps -SuppPolicyName "App's Name" -PolicyPath "C:\DefaultWindowsPlusBlockRules.xml"

@@ -14,7 +14,7 @@ You can use the [WDACConfig Module](https://github.com/HotCakeX/Harden-Windows-S
 
 ```powershell
 Install-Module -Name WDACConfig -Force
-New-WDACConfig -SetAutoUpdateDriverBlockRules
+New-WDACConfig -GetDriverBlockRules -AutoUpdate
 ```
 
 <details>

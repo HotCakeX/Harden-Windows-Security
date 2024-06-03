@@ -25,9 +25,10 @@ flowchart TD
     I --> J[Edit-SignedWDACConfig -AllowNewApps]
 ```
 
-*Every time I use the word "App", I'm referring to regular Win32 programs as well as Microsoft Store installed apps; Basically, any software that you can run.*
-
-This scenario provides the ultimate protection level. Using the WDACConfig module, it's very easy to deploy, manage and maintain a system with this configuration.
+> [!NOTE]\
+> *Every time I use the word "App", I'm referring to regular Win32 programs as well as Microsoft Store installed apps; Basically, any software that you can run.*
+>
+> This scenario provides the ultimate protection level. Using the WDACConfig module, it's very easy to deploy, manage and maintain a system with this configuration.
 
 <br>
 

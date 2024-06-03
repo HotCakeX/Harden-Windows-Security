@@ -21,7 +21,6 @@ flowchart TD
     B --> H[Is it a game Installed using Xbox app?]
     H --> I[Or Is it an app that installs drivers outside app's directory?]
     I --> J[Edit-WDACConfig -AllowNewApps]
-    I --> K[Edit-SignedWDACConfig -AllowNewApps]
 ```
 
 

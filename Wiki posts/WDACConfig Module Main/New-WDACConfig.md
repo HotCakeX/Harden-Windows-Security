@@ -2,6 +2,7 @@
 
 ## New-WDACConfig -PolicyType
 
+![New-WDACConfig -PolicyType](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/New-WDACConfig/New-WDACConfig%20-PolicyType.apng)
 
 ## Syntax
 
@@ -142,6 +143,8 @@ Enables [script enforcement](https://learn.microsoft.com/en-us/windows/security/
 
 ## New-WDACConfig -GetUserModeBlockRules
 
+![New-WDACConfig -GetUserModeBlockRules](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/New-WDACConfig/New-WDACConfig%20-GetUserModeBlockRules.apng)
+
 ## Syntax
 
 ```powershell
@@ -179,6 +182,8 @@ Indicates that the policy is to be deployed to the local machine.
 <br>
 
 ## New-WDACConfig -GetDriverBlockRules
+
+![New-WDACConfig -GetDriverBlockRules](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/New-WDACConfig/New-WDACConfig%20-GetDriverBlockRules.apng)
 
 ## Syntax
 

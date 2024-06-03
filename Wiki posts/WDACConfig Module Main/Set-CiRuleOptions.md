@@ -1,6 +1,6 @@
 # Set-CiRuleOptions available parameters
 
-![Set-CiRuleOptions demo]()
+![Set-CiRuleOptions demo](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/Set-CiRuleOptions/Set-CiRuleOptions.apng)
 
 ## Syntax
 

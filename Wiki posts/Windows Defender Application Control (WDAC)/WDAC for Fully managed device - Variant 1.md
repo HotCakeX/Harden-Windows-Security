@@ -14,12 +14,6 @@
 
 <br>
 
-## Video Guide
-
-<a href="https://youtu.be/KD0zUb2GCyk?si=_g09D0yF5lTN1NLO"><img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/PNG%20and%20JPG/YouTube%20Video%20Thumbnails/With%20YouTube%20play%20button/WDAC%20policy%20for%20Fully%20Managed%20device%20-%20Variant%201.png" alt="WDAC policy for Fully Managed device - Variant 1 YouTube Guide"></a>
-
-<br>
-
 * This variant helps you create and deploy a WDAC policy for fully managed device ***using only Event Viewer audit logs.***
 
 * This scenario includes using explicit Allow rules for files and certificates/signers, anything not allowed by the policies we are going to make are automatically denied/blocked.

@@ -289,13 +289,13 @@ Edit-SignedWDACConfig
      [-MergeSupplementalPolicies]
      -SuppPolicyName <String>
      -SuppPolicyPaths <FileInfo[]>
-    [-PolicyPath <FileInfo>]
-    [-KeepOldSupplementalPolicies]
-    [-CertPath <FileInfo>]
-    [-CertCN <String>]
-    [-SignToolPath <FileInfo>]
-    [-SkipVersionCheck]
-    [<CommonParameters>]
+     [-PolicyPath <FileInfo>]
+     [-KeepOldSupplementalPolicies]
+     [-CertPath <FileInfo>]
+     [-CertCN <String>]
+     [-SignToolPath <FileInfo>]
+     [-SkipVersionCheck]
+     [<CommonParameters>]
 ```
 
 ## Description

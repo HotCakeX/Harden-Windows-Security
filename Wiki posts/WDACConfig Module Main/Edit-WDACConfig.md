@@ -1,6 +1,6 @@
 # Edit-WDACConfig available parameters
 
-## Edit-WDACConfig -AllowNewAppsAuditEvents
+## Edit-WDACConfig -AllowNewApps
 
 ![image](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/Edit-WDACConfig/Edit-WDACConfig%20-AllowNewAppsAuditEvents.apng)
 
@@ -8,8 +8,9 @@
 
 ```powershell
 Edit-WDACConfig
-     [-AllowNewAppsAuditEvents]
+     [-AllowNewApps]
      -SuppPolicyName <String>
+     [-BoostedSecurity]
      [-PolicyPath <FileInfo>]
      [-Level <String>]
      [-Fallbacks <String[]>]
@@ -17,30 +18,21 @@ Edit-WDACConfig
      [-NoUserPEs]
      [-SpecificFileNameLevel <String>]
      [-LogSize <UInt64>]
-     [-IncludeDeletedFiles]
      [-SkipVersionCheck]
      [<CommonParameters>]
 ```
 
 ## Description
 
-### How to use
+While a Windows Defender Application Control (WDAC) policy is already deployed on the system, rebootlessly turns on Audit mode in it, which will allow you to install a new app that was otherwise getting blocked.
 
-1. Using the provided syntax, run the command and supply values for the parameters.
+After installation, you will be able to browse for the path(s) of the installed app(s) for scanning, which is optional.
 
-2. When prompted to start installing your apps, do so and once you're done, press Enter to continue. The rest is automated.
+Any file outside of the paths you select that was executed or run during the audit mode phase and was detected in the audit logs, will be displayed to you in a nice GUI (Graphical User Interface) so you will be able to see detailed information about them and decide whether to include them in the Supplemental policy or not.
 
-<br>
+This parameter can also be used for apps that are already installed on the system.
 
-While an unsigned Windows Defender Application Control (WDAC) policy is already deployed on the system, rebootlessly turns on Audit mode in it, which will allow you to install a new app that was otherwise getting blocked.
-
-After running this command, you will be prompted to start installing your apps/programs. Once you're finished, you will need to browse for the path(s) of the installed app(s) for scanning. This parameter can also be used for apps that are already installed on the system.
-
-The Audit logs that will be included in the scan are only the ones created from the time you ran the module with [-AllowNewAppsAuditEvents](#edit-wdacconfig--allownewappsauditevents) parameter till the time you finished app installations and browsed for folders to scan.
-
-A new supplemental policy will be created, it will be deployed on the system. The base policy that was initially set to Audit mode will also revert back to enforced mode. The entire process happens without the need for reboot. If something like a power outage occurs during the time Audit mode is deployed, on the next reboot, the enforced mode base policy will be automatically deployed.
-
-This parameter is specially useful for applications that install files outside of their main install directory, such as system drivers. **Make sure you run those applications after installation (and before starting to browse for their install directories) so that Audit logs will capture and create allow rules for them.**
+A new supplemental policy will be created and deployed on the system. The base policy that was initially set to Audit mode will also revert back to enforced mode. The entire process happens without the need for reboot. If something like a power outage occurs during the audit mode phase, on the next reboot, the enforced mode base policy will be automatically deployed.
 
 > [!NOTE]\
 > This parameter can also detect and create allow rules for Kernel protected files, such as the executables of games installed using Xbox app. Make sure you run the game while the base policy is deployed in Audit mode so that it can capture those executables.
@@ -65,6 +57,24 @@ Add a descriptive name for the Supplemental policy.
 
 <br>
 
+### -BoostedSecurity
+
+Implements the Sandboxing-like restrictions around the program's dependencies.
+
+<div align='center'>
+
+| Type: |[SwitchParameter](https://learn.microsoft.com/en-us/dotnet/api/system.management.automation.switchparameter)|
+| :-------------: | :-------------: |
+| Position: | Named |
+| Default value: | None |
+| Required: | False |
+| Accept pipeline input: | False |
+| Accept wildcard characters: | False |
+
+</div>
+
+<br>
+
 ### -PolicyPath
 
 Browse for the xml file of the Base policy this Supplemental policy is going to expand. Supports tab completion by showing only `.xml` files with **Base Policy** Type.
@@ -77,32 +87,6 @@ Browse for the xml file of the Base policy this Supplemental policy is going to 
 | Default value: | None |
 | Required: | False |
 | [Automatic:](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDACConfig#about-automatic-parameters) | True |
-| Accept pipeline input: | False |
-| Accept wildcard characters: | False |
-
-</div>
-
-<br>
-
-### -Debug
-
-Indicates that the module will output these additional files for debugging purposes:
-
-* *FileRulesAndFileRefs.txt* - Contains the File Rules and Rule refs for the Hash of the files that no longer exist on the disk.
-
-* *DeletedFileHashesEventsPolicy.xml* - If `-IncludeDeletedFiles` was used and if there were any files detected that were in audit event logs that are no longer on the disk, this file will include allow rules for them based on their hashes.
-
-* *ProgramDir_ScanResults*.xml* - xml policy files for each program path that is selected by user, contains allow rules.
-
-* *RulesForFilesNotInUserSelectedPaths.xml* - xml policy file that has allow rules for files that do not reside in any of the user-selected program paths, but have been detected in audit event logs.
-
-<div align='center'>
-
-| Type: |[SwitchParameter](https://learn.microsoft.com/en-us/dotnet/api/system.management.automation.switchparameter)|
-| :-------------: | :-------------: |
-| Position: | Named |
-| Default value: | None |
-| Required: | False |
 | Accept pipeline input: | False |
 | Accept wildcard characters: | False |
 
@@ -149,201 +133,6 @@ Offers the same official [Levels](https://learn.microsoft.com/en-us/powershell/m
 ### -Fallbacks
 
 Offers the same official [Fallbacks](https://learn.microsoft.com/en-us/powershell/module/configci/new-cipolicy#-fallback) for scanning event logs and the specified directory path(s).
-
-<div align='center'>
-
-| Type: |[String](https://learn.microsoft.com/en-us/dotnet/api/system.string)[]|
-| :-------------: | :-------------: |
-| Position: | Named |
-| Default value: | `FilePublisher`,`Hash` |
-| Required: | False |
-| Accept pipeline input: | False |
-| Accept wildcard characters: | False |
-
-</div>
-
-<br>
-
-### -SpecificFileNameLevel
-
-You can choose one of the following options:
-
-* OriginalFileName
-* InternalName
-* FileDescription
-* ProductName
-* PackageFamilyName
-* FilePath
-
-[More info available on Microsoft Learn](https://learn.microsoft.com/en-us/powershell/module/configci/new-cipolicy#-specificfilenamelevel)
-
-<div align='center'>
-
-| Type: |[String](https://learn.microsoft.com/en-us/dotnet/api/system.string)|
-| :-------------: | :-------------: |
-| Position: | Named |
-| Default value: | None |
-| Required: | False |
-| Accept pipeline input: | False |
-| Accept wildcard characters: | False |
-
-</div>
-
-<br>
-
-### -IncludeDeletedFiles
-
-Indicates that hashes of the files that were run during Audit phase but then were deleted and are no longer on the disk, will be added to the Supplemental policy.
-
-> [!NOTE]\
-> If you created a Supplemental policy for your program and it's still getting blocked, try using this parameter. Chances are your program writes and then deletes some files during runtime that are necessary to be included in the Supplemental policy.
-
-<div align='center'>
-
-| Type: |[SwitchParameter](https://learn.microsoft.com/en-us/dotnet/api/system.management.automation.switchparameter)|
-| :-------------: | :-------------: |
-| Position: | Named |
-| Default value: | None |
-| Required: | False |
-| Accept pipeline input: | False |
-| Accept wildcard characters: | False |
-
-</div>
-
-### -NoUserPEs
-
-By default, the module includes user PEs in the scan. When you use this switch parameter, they won't be included. [More info available on Microsoft Learn](https://learn.microsoft.com/en-us/powershell/module/configci/new-cipolicy#-userpes)
-
-<div align='center'>
-
-| Type: |[SwitchParameter](https://learn.microsoft.com/en-us/dotnet/api/system.management.automation.switchparameter)|
-| :-------------: | :-------------: |
-| Position: | Named |
-| Default value: | None |
-| Required: | False |
-| Accept pipeline input: | False |
-| Accept wildcard characters: | False |
-
-</div>
-
-<br>
-
-### -NoScript
-
-[More info available on Microsoft Learn](https://learn.microsoft.com/en-us/powershell/module/configci/new-cipolicy#-noscript)
-
-<div align='center'>
-
-| Type: |[SwitchParameter](https://learn.microsoft.com/en-us/dotnet/api/system.management.automation.switchparameter)|
-| :-------------: | :-------------: |
-| Position: | Named |
-| Default value: | None |
-| Required: | False |
-| Accept pipeline input: | False |
-| Accept wildcard characters: | False |
-
-</div>
-
-<br>
-
-<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">
-
-<br>
-
-## Edit-WDACConfig -AllowNewApps
-
-![image](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/Edit-WDACConfig/Edit-WDACConfig%20-AllowNewApps.apng)
-
-## Syntax
-
-```powershell
-Edit-WDACConfig
-     [-AllowNewApps]
-     -SuppPolicyName <String>
-     [-PolicyPath <FileInfo>]
-     [-Level <String>]
-     [-Fallbacks <String[]>]
-     [-NoScript]
-     [-NoUserPEs]
-     [-SpecificFileNameLevel <String>]
-     [-SkipVersionCheck]
-     [<CommonParameters>]
-```
-
-## Description
-
-### How to use
-
-1. Using the provided syntax, run the command and supply values for the parameters.
-
-2. When prompted to start installing your apps, do so and once you're done, press Enter to continue. The rest is automated.
-
-<br>
-
-While an unsigned WDAC policy is already deployed on the system, rebootlessly turn on Audit mode in it, which will allow you to install a new app that was otherwise getting blocked. After installation, you will need to browse for the path(s) of the installed app(s) for scanning. This parameter can also be used for apps that are already installed on the system.
-
-A new supplemental policy will be created, it will be deployed on the system. The base policy that was initially set to Audit mode will also revert back to enforced mode. The entire process happens without the need for reboot. If something like a power outage occurs during the time Audit mode is deployed, on the next reboot, the enforced mode base policy will be automatically deployed.
-
-## Parameters
-
-### -SuppPolicyName
-
-Add a descriptive name for the Supplemental policy.
-
-<div align='center'>
-
-| Type: |[String](https://learn.microsoft.com/en-us/dotnet/api/system.string)|
-| :-------------: | :-------------: |
-| Position: | Named |
-| Default value: | None |
-| Required: | True |
-| Accept pipeline input: | False |
-| Accept wildcard characters: | False |
-
-</div>
-
-<br>
-
-### -PolicyPath
-
-Browse for the xml file of the Base policy this Supplemental policy is going to expand. Supports tab completion by showing only `.xml` files.
-
-<div align='center'>
-
-| Type: |[FileInfo](https://learn.microsoft.com/en-us/dotnet/api/system.io.fileinfo)|
-| :-------------: | :-------------: |
-| Position: | Named |
-| Default value: | None |
-| Required: | False |
-| [Automatic:](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDACConfig#about-automatic-parameters) | True |
-| Accept pipeline input: | False |
-| Accept wildcard characters: | False |
-
-</div>
-
-<br>
-
-### -Levels
-
-Offers the same official [Levels](https://learn.microsoft.com/en-us/powershell/module/configci/new-cipolicy#-level) to scan the specified directory path(s).
-
-<div align='center'>
-
-| Type: |[String](https://learn.microsoft.com/en-us/dotnet/api/system.string)|
-| :-------------: | :-------------: |
-| Position: | Named |
-| Default value: | `WHQLFilePublisher` |
-| Required: | False |
-| Accept pipeline input: | False |
-| Accept wildcard characters: | False |
-
-</div>
-
-<br>
-
-### -Fallbacks
-
-Offers the same official [Fallbacks](https://learn.microsoft.com/en-us/powershell/module/configci/new-cipolicy#-fallback) to scan the specified directory path(s).
 
 <div align='center'>
 
@@ -537,17 +326,19 @@ Edit-WDACConfig
      [-UpdateBasePolicy]
      -CurrentBasePolicyName <String[]>
      -NewBasePolicyType <String>
-    [-RequireEVSigners]
-    [-SkipVersionCheck]
-    [<CommonParameters>]
+     [-RequireEVSigners]
+     [-SkipVersionCheck]
+     [<CommonParameters>]
 ```
 
 ## Description
 
-It can rebootlessly change the type of the deployed base policy. It can update the recommended block rules and/or change policy rule options in the deployed base policy. The deployed Supplemental policies will stay intact and continue to work with the new Base policy.
+It can rebootlessly change the type or rule options of the deployed base policy. The deployed Supplemental policies will stay intact and continue to work with the new Base policy.
 
 > [!NOTE]\
-> When switching from a more permissive base policy type to a more restrictive one, make sure your Supplemental policies will continue to work. E.g., if your current base policy type is *Allow Microsoft* and the one you are switching to is *Default Windows*, there *might* be files that will get blocked as a result of this switch if you created a Supplemental policy using Event viewer capturing. That's simply because they were allowed by the more permissive *Allow Microsoft* policy type so they didn't trigger audit logs thus weren't needed to be included in the Supplemental policy. You will need to update those Supplemental policies if that happens by deleting and recreating them, no immediate reboot required.
+> When switching from a more permissive base policy type to a more restrictive one, make sure your Supplemental policies will continue to work. E.g., if your current base policy type is *AllowMicrosoft* and the one you are switching to is *DefaultWindows*, there *might* be files that will get blocked as a result of this switch.
+>
+> That's simply because they were allowed by the more permissive *AllowMicrosoft* policy type so they didn't trigger audit logs (in case the supplemental policy was created based on audit logs) thus weren't needed to be included in the Supplemental policy. You will need to update those Supplemental policies if that happens by deleting and recreating them, no immediate reboot required.
 
 ## Parameters
 
@@ -571,20 +362,17 @@ The name of the currently deployed base policy. It supports tab completion so ju
 
 ### -NewBasePolicyType
 
-The type of the base policy to deploy. It supports tab completion so just press tab to autofill it. Supports all 3 Base policy types:
-
-* [AllowMicrosoft_Plus_Block_Rules](https://github.com/HotCakeX/Harden-Windows-Security/wiki/New-WDACConfig#new-wdacconfig--makeallowmsftwithblockrules)
-* [Lightly_Managed_system_Policy](https://github.com/HotCakeX/Harden-Windows-Security/wiki/New-WDACConfig#new-wdacconfig--makelightpolicy)
-* [DefaultWindows_WithBlockRules](https://github.com/HotCakeX/Harden-Windows-Security/wiki/New-WDACConfig#new-wdacconfig--makedefaultwindowswithblockrules)
+The new type of the base policy to deploy. It supports tab completion so just press tab to autofill it. Supports all 3 main Base policy types.
 
 > [!NOTE]\
->  Since the module uses PowerShell and not Windows PowerShell that is pre-installed in Windows, selecting this argument will automatically scan `C:\Program Files\PowerShell` directory and add PowerShell files to the base policy (if it detects the PowerShell is not installed from Microsoft Store) so that you will be able to continue using the module after redeploying the base policy. The scan uses ***FilePublisher*** level and ***Hash*** fallback.
+> If the selected policy type is `DefaultWindows` and the detected PowerShell is not installed through Microsoft Store, the module will scan the PowerShell files and add them to the `DefaultWindows` base policy as allowed files so you will be able to continue using the module after deploying the policy.
 
 <div align='center'>
 
 | Type: |[String](https://learn.microsoft.com/en-us/dotnet/api/system.string)|
 | :-------------: | :-------------: |
 | Position: | Named |
+| Accepted values: | `AllowMicrosoft`, `DefaultWindows`, `SignedAndReputable` |
 | Default value: | None |
 | Required: | True |
 | Accept pipeline input: | False |

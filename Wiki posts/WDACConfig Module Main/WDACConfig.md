@@ -18,7 +18,7 @@ This page is also available [on my website.](https://spynetgirl.github.io/WDACCo
 
 * Windows 11 latest version
 * Administrator Privileges
-* Internet Connection (for periodic update checks)
+* Internet Connection (for periodic update checks that happen every 30 minutes)
 
 <br>
 
@@ -38,7 +38,7 @@ This page is also available [on my website.](https://spynetgirl.github.io/WDACCo
 
 * The module goes through Extended Validation before each update is released to make sure everything works perfectly.
 
-* The module can be used for managing both local systems and systems in Azure VMs.
+* The module can be used for managing local systems, remote systems and Azure VMs.
 
 * Use `-Verbose` common parameter with each cmdlet of the WDACConfig module to see extra details and what's happening under the hood.
 

@@ -1,7 +1,5 @@
 # Get-CIPolicySetting available parameters
 
-![Get-CIPolicySetting demo]()
-
 ## Syntax
 
 ```powershell

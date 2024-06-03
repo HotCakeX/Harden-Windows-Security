@@ -24,6 +24,8 @@
 - <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/wings/pinkwings.gif" width="35"> [Test-CiPolicy](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Test-CiPolicy)
 - <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/wings/pinkwings.gif" width="35"> [Get-CiFileHashes](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Get-CiFileHashes) <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/PNG%20and%20JPG/New.png" alt="New Label" width="25">
 - <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/wings/pinkwings.gif" width="35"> [ConvertTo-WDACPolicy](https://github.com/HotCakeX/Harden-Windows-Security/wiki/ConvertTo-WDACPolicy) <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/PNG%20and%20JPG/New.png" alt="New Label" width="25">
+- <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/wings/pinkwings.gif" width="35"> [Set-CiRuleOptions](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Set-CiRuleOptions) <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/PNG%20and%20JPG/New.png" alt="New Label" width="25">
+- <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/wings/pinkwings.gif" width="35"> [Get-CIPolicySetting](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Get-CIPolicySetting) <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/PNG%20and%20JPG/New.png" alt="New Label" width="25">
 
 <br>
 

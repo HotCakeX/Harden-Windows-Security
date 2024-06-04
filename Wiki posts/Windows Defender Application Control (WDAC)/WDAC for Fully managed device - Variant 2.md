@@ -109,7 +109,7 @@ You can create a Supplemental policy for more than 1 app at a time by browsing f
 Edit-WDACConfig -AllowNewApps -SuppPolicyName "App's Name" -PolicyPath "C:\DefaultWindowsPlusBlockRules.xml"
 ```
 
-* [Parameter info](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Edit-WDACConfig#edit-wdacconfig--allownewappsauditevents)
+* [Parameter info](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Edit-WDACConfig#edit-wdacconfig--allownewapps)
 
 <br>
 

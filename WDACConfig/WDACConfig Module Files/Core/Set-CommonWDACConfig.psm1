@@ -65,7 +65,7 @@ Function Set-CommonWDACConfig {
         [parameter(Mandatory = $false)][System.DateTime]$StrictKernelModePolicyTimeOfDeployment
     )
     begin {
-        # Importing the $PSDefaultParameterValues to the current session, prior to everything else
+        $PSBoundParameters.Verbose.IsPresent ? ([System.Boolean]$Verbose = $true) : ([System.Boolean]$Verbose = $false) | Out-Null
         . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
 
         if (!$CertCN -And !$CertPath -And !$SignToolPath -And !$UnsignedPolicyPath -And !$SignedPolicyPath -And !$StrictKernelPolicyGUID -And !$StrictKernelNoFlightRootsPolicyGUID -And !$LastUpdateCheck -And !$StrictKernelModePolicyTimeOfDeployment) {
@@ -277,8 +277,8 @@ Register-ArgumentCompleter -CommandName 'Set-CommonWDACConfig' -ParameterName 'U
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCAA5VMVrXcwVaqO
-# kTGRNirazDPR7Ch7o0t4hhRQdsNdvqCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCBXCSEXyDxP4tUD
+# qJypUjxZyXD2xecfuP2mhE6kbzf3lqCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -325,16 +325,16 @@ Register-ArgumentCompleter -CommandName 'Set-CommonWDACConfig' -ParameterName 'U
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQg9qoon0LYXgRoANxS/VQTOlH8Ep9sxMoqdDUfyQzLv2YwDQYJKoZIhvcNAQEB
-# BQAEggIACv5F9dpCv5xpI9xt4KOG8vYCfELiNlcLH5Tn9paTzFEZ4Et1xAhA8JcN
-# gRsN8HF7UC3+4qTt5/wzsQBozhRonnt7oG6MsjqmL3md5FGYl7lXPFnXdwLOGPc+
-# h2VqBuxCWYMId3cShzGVs10hBbdu9pdiPqQzR9CocY0bqZzOq0vKzGj3TvSmc76n
-# Aovh8LKA6cGYB4MnsCrxJZvl38JQxe5djgvRVn1JYct2SYRMT2Ylgzs2Avr3wvh8
-# MavbS832JY0sdHFDt2Sxw0eVJDqCbcw5rzVDmQVnEri0jGuPmEE7LVH6Smku7ExU
-# fWM2fIA4+SkBZlUYU9/l6LDIlHRBZ6r/Ff+f0y22br+5qlZ0dmj+nSPSnvrTTUDO
-# JhUqAbNdl5DJ7vEtm3MmJeqcOH+081SkaKTWr/hUZskwt8FohYD0Cjjs5RKy/nKb
-# jq4RBUDLkNKQxOONFytRmRn7GMRCBWnIPjkvCoH990BzP4+sMVmZyr6TFymgiliU
-# VGvA9Q/0rzU3wdKXRbB9xxjZT6t1btiZpBM9rSavy43gm7leBgZ/SU/euPrviAmm
-# xJl68ZR+3jhtH+jZ5/gYmOk7isaeS911MiyJewrjpSv6il++95mdWK+QqpImYqvv
-# QHoAPVhTjwULMsxbTT8FohpxF5FIfveLsyCciLN74gprQvwqLEQ=
+# IgQgv/Mef9R8hMw5wmaupKlEsXMPny6p+VfBcE/hF5xF1FEwDQYJKoZIhvcNAQEB
+# BQAEggIAOg8X0gSsXKa+GwlrFgp+VpTWBNEm2nDGmjoaQsnaWTOyUlv2yuCyeoLA
+# MLFfyyfZ7WbSkbd065MDBLU1nja3ZDgANCTnyaWs8Cr1qgIzBwv8DRMtlL+xs4l2
+# a99OGe2TwddKttNBYUrmydi3SnvNG8dP8cdtzy7dXB5cMasNv9hcOoodGbVEw6eS
+# 6hUFVmHw6iRanI4Gi6cpstBMRA39IYiZOvPr0qeG79CDeid9JjyY5YddGuVsHVKv
+# G7KFUWfYRE3ppgm7a9YqkSW00GclpEYJEOO4JTFWkoaZGtKxCNCVOxHcX+90py7O
+# EesmQGVH80kKVdkW/FEbHEjtQkjpMLW8eY4dPiOlRnbnoY7Qwwl3EvbzYrpjF7mD
+# MqoFHzB7yeTMSuAfxLjz9qyOA835jFbWo7gFdheZdvC67rYIDL1VHvqX/vbRYP6g
+# 07xMXSWk5pqD72QFBPaaUwTciT36Jn213S/Q29Ygxdj3odYFtlv5PdMK6Z/6AUUL
+# +ODOmD4MpQ7YL4fQT1ReuOqJyPd8p18mp3+XBz6CzZLBjacVdJ4V6oNdKRN7R63G
+# gbPAPWg1dtLY7653yvbbN9Rv5KuV2GA8KUNy63kbpeySAv3+/0ETWyVNuq0hgak1
+# JMPRRvZ8PzQVB6XEsL8K+CAbMPI6g8Eaph/hHNU6b7FIXnnxVCY=
 # SIG # End signature block

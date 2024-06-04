@@ -20,10 +20,9 @@ Function Update-Self {
     [OutputType([System.String])]
     param(
         [Parameter(Mandatory = $true, ValueFromPipeline = $true, ValueFromPipelineByPropertyName = $true, Position = 0)]
-        [ValidatePattern('^(Confirm-WDACConfig|Deploy-SignedWDACConfig|Edit-SignedWDACConfig|Edit-WDACConfig|Invoke-WDACSimulation|New-DenyWDACConfig|New-KernelModeWDACConfig|New-SupplementalWDACConfig|New-WDACConfig|Remove-WDACConfig|Assert-WDACConfigIntegrity|Build-WDACCertificate|Get-CiFileHashes|ConvertTo-WDACPolicy)(?!.*[;`]).*$', ErrorMessage = 'Either Update-Self function was called with an unauthorized command or it contains semicolon and/or backtick')]
+        [ValidatePattern('^(Confirm-WDACConfig|Deploy-SignedWDACConfig|Edit-SignedWDACConfig|Edit-WDACConfig|Invoke-WDACSimulation|New-DenyWDACConfig|New-KernelModeWDACConfig|New-SupplementalWDACConfig|New-WDACConfig|Remove-WDACConfig|Assert-WDACConfigIntegrity|Build-WDACCertificate|Get-CiFileHashes|ConvertTo-WDACPolicy|Get-CIPolicySetting)(?!.*[;`]).*$', ErrorMessage = 'Either Update-Self function was called with an unauthorized command or it contains semicolon and/or backtick')]
         [System.String]$InvocationStatement
     )
-    # Importing the $PSDefaultParameterValues to the current session, prior to everything else
     . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
 
     try {
@@ -45,9 +44,9 @@ Function Update-Self {
         [System.Int64]$TimeDiff = ($CurrentDateTime - $UserConfigDate).TotalMinutes
     }
 
-    # Only check for updates if the last attempt occurred more than 10 minutes ago or the User Config file for last update check doesn't exist
+    # Only check for updates if the last attempt occurred more than 30 minutes ago or the User Config file for last update check doesn't exist
     # This prevents the module from constantly doing an update check by fetching the version file from GitHub
-    if (($TimeDiff -gt 10) -or $PerformOnlineUpdateCheck) {
+    if (($TimeDiff -gt 30) -or $PerformOnlineUpdateCheck) {
 
         Write-Verbose -Message "Performing online update check because the last update check was performed $($TimeDiff ?? [System.Char]::ConvertFromUtf32(8734)) minutes ago"
 
@@ -104,15 +103,13 @@ Function Update-Self {
         Write-Verbose -Message "Skipping online update check because the last update check was performed $TimeDiff minutes ago"
     }
 }
-
-# Export external facing functions only, prevent internal functions from getting exported
 Export-ModuleMember -Function 'Update-Self'
 
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCAh3DXuGdyMpjKW
-# YlosHiFXyXBgrtC0NyjhDlUiJ0tEw6CCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCAYm8pkZ29hrQho
+# cxnyHVFaebXH4CLxgr3leo0GWyDdr6CCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -159,16 +156,16 @@ Export-ModuleMember -Function 'Update-Self'
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQgPsr7mha1uvo8aMFJiwvG1SgrN65IJiwMMA/d4bdFgyMwDQYJKoZIhvcNAQEB
-# BQAEggIAVq0i/NE7AxL11WwN3+A6m5eqRrbqGjf6Tk6pFC+Xi+6PGlPOaAZOUGaI
-# GgRBr6L0EEHirYUkkovYL9u3nwIEVe+4s1+L436SzSj9ufaMR+Uj4K8tBrKBgYVO
-# EESvkc/2MzbCmqrw9R/BAZw0NP8DK1GNWGOYyV7WkzklUiHApHxrJc0W8MY7/uKa
-# 9ETwbu7fKDsbTzIZSDys6Ep6wPe4Gsgg3m5QIQ6BTJ0D5NQLWAieHaGoVeEHM2ct
-# mDxaKXk5JlRBzXyTWgOfGBFcGoFI66qtU85G8tXfhLAh7So8ybTgh+wTQzNx2m/S
-# L46OzXvUYWSNAbDPSIRV7FkrLKYgueEC9nsGAt8bh57pv1B38eV2qbP4/RCOg6u7
-# m41/lAQYmp63J6nYua/0vGsFM4S3FhNZqsEIZvg3in69/6T3WwF5e3pPCU2UtIBa
-# MnMB42A9F3xEHQob5+nsv3TgP3rAIdtws36OOACEDaoqenhyKyy8sQL9hArBdn7c
-# Ay8zjYIIjIx4yt4hHHHqlaVlQnNmCItrtFETxsI/Qy64KQpD2aqy57rXAsldIf7k
-# ESbB9h+me34YYliJjJl3QG6qcBQvn+1gsSYX0iRjL3b+iHJAAWdBF7jITkjZ+mFG
-# DD7aUj2U6aXHNyw4SDwFsGKdB28ZINdAOTwW2iNSvPVUJyeqE68=
+# IgQgqiHowFZVJTKKmEKRJlyPdj1RUKU7qQ5iZqraGqSRRqYwDQYJKoZIhvcNAQEB
+# BQAEggIAObS68qPX5cf6/Y7LUPNR6vcG3m957qczU+0yDGZB5IscVXTeLBo86/rz
+# IZM04oqgAEii4pXaTzvUWCulHWfOJOx5M4ZE9fqwvewpfvQ81euAUkuElRjqnVe6
+# +RfxzqnXxw3Qq1fEsjbthBj9hkRH83vjBMVcPWN8Rtz92p0mLvvwrn4ADlxWsBUq
+# kYDHPrKYet364pz1Iol1HfA5EJjiYKdLrWnT0+oGvotg3HYJRr2DKfwSZjjaflku
+# GfY1DXxRBD9n0c5TcZzxR3lwKiJcPMtKMDs+kLMGw43CaZZPODrIuO9a5QA5oOVw
+# ns4P724LuljcB2M5WPHInubJqDukIuzOs1sQEhnwBTv8pzSVdTL0hrtV85bBVbfI
+# 7Typ+xrYarnId8PzYnV9Lp28sf/Iqfo0/mPZgb4/hTFUalCwot62YLs3gLCph/wN
+# yZMX2/4fQ5MJqF5Xnj5lw8Al35JY9awkdc2epiiZfTIGrZxB17yghDInvwDf82PD
+# 14jJkDJ3ZCbIMPt6YwnvQFE07QzUqibVOjp/6RHu/hYDfBuW31y3NTDjf8zutZI/
+# 2wv6MwAkQDZcJXF0Rsu0lXN8ZmWcL+BuEU6++WLSHrMkppoolK/sbu6s6KL3BjVO
+# yboyLlJoekygH5n5M203M6LFa9QpPkhxe6wjIa0U8FMvyngRUBo=
 # SIG # End signature block

@@ -1,6 +1,7 @@
 {
 	"folders": [
 		{
+			"name": "WDACConfig",
 			"path": "."
 		}
 	],
@@ -34,10 +35,12 @@
 			"blocklist",
 			"blocklists",
 			"Bootable",
+			"bootres",
 			"Bstr",
 			"Bufer",
 			"BYOVD",
 			"catname",
+			"Catroot",
 			"CDROM",
 			"certreq",
 			"certutil",
@@ -102,6 +105,7 @@
 			"IOMMUs",
 			"IRGC",
 			"itpro",
+			"kernelbase",
 			"keyprotectors",
 			"keyprotectortype",
 			"Kleopatra",
@@ -125,6 +129,7 @@
 			"Mitigations",
 			"mountpoint",
 			"mountvol",
+			"mscoree",
 			"msinfo",
 			"MSIX",
 			"multicloud",
@@ -139,11 +144,13 @@
 			"notlike",
 			"ntdll",
 			"NTFS",
+			"nupkg",
 			"OFAC",
 			"ONEDRIVE",
 			"operatingsystem",
 			"OPSEC",
 			"Optane",
+			"Optionsx",
 			"Orcid",
 			"orpa",
 			"passwordless",
@@ -172,6 +179,8 @@
 			"Requiredbuild",
 			"REQUIREDSCRIPTS",
 			"Rockstar",
+			"Runspace",
+			"runspaces",
 			"sandboxed",
 			"ScanLevelz",
 			"Schannel",
@@ -231,6 +240,7 @@
 			"Winreg",
 			"Wireshark",
 			"Wireshark's",
+			"Wldp",
 			"WTDS",
 			"XDRs",
 			"Zune"

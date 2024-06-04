@@ -20,12 +20,8 @@ Function Get-SignedFileCertificates {
         [Parameter(ValueFromPipeline = $true)]
         [System.Security.Cryptography.X509Certificates.X509Certificate2]$X509Certificate2
     )
-
     begin {
-        # Detecting if Verbose switch is used
         $PSBoundParameters.Verbose.IsPresent ? ([System.Boolean]$Verbose = $true) : ([System.Boolean]$Verbose = $false) | Out-Null
-
-        # Importing the $PSDefaultParameterValues to the current session, prior to everything else
         . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
 
         # Create an X509Certificate2Collection object
@@ -59,8 +55,8 @@ Export-ModuleMember -Function 'Get-SignedFileCertificates'
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCDmvRW1JCHoyrOv
-# 91Dn2CAz8egQJePpo6Dd6Yd483BCY6CCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCA8ZhX0nMQP6G0C
+# v1tlKgNZ3vPxnh29+Zc6sOLxbZ3YK6CCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -107,16 +103,16 @@ Export-ModuleMember -Function 'Get-SignedFileCertificates'
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQgiXUhrv4vQ96S7F3u6/44/1f99O3Q/ce9AP9okKHGv2MwDQYJKoZIhvcNAQEB
-# BQAEggIAItKzX1GwZo6kXxUjSXr0GopK7V2sSJ2KO4Xg1VTmhd9aLAypnglFXhbP
-# K7o6K3yq20bxt09LhGPPkOGnHHCsH7J4+HPb5AtVWjk8L6yaH7wFZcRwEbOky8zJ
-# DA3TFDlOIChilXr7TxGmug58xzpDEMR6da5BRN/cOnsHKk27OeR8Y2A+NfXilf3+
-# FuRPJuVbi1CNhRSwNb+HNnBDChUvO3lA0f+DaqkGKf3NT4/Rkuubb+kFIWKaENyC
-# uJgfXO60PsYrWWAYibJ+NRkr9Q4GdVuJjy+4uk5CTjc/PZsFDMZazPkiextab8u3
-# 91hiuPwdVYNpJzjFafYfqH0ueH4Y3/74FgOp+ceY5OK0DLbFhu9EhM/9XlFJuefN
-# h9Dhv6UsU3CGJXYGgRlketvrBg1JGoU4viYCrHhQWi0kJSWLMbaPl2hrC48xa5vN
-# F72x37vSYQJzVeS5GUFYkjXK1c/x6K7c7d+I6FuPiwJOqm3vX0J4OzT7moatO0ju
-# bCRL4uJEEupTeoKMjy1pO0t4fUhUnNvtTrf8AfpdLyo16a7jDBbTHDDPiEnbVwyy
-# khqFymERTc9mG/egd42yAVr1/f8e4wOuLk6G/reeOm2SpDu6MuMUB2+H/0wvqZYv
-# t4djmnfqpPSQEFmGncT2VJGgpoY0K+4JBWPmbNgdAEElQIvF+70=
+# IgQgFa6qkE0CZ8RsiTyMhRLnB67o+AyFuuJyd6nr8+A5QwYwDQYJKoZIhvcNAQEB
+# BQAEggIACeAgPMHL3HZmEx4RlBQTcyI5EO3ZXKvCc/QETog4QEZf122sR3VhgnZq
+# /anqCe3Ri5xTGxJc1dO8k3/+MjKk9tWWSgsdJc1wCFfCKn0F8Q5iNnG51d4W9Umm
+# YjPtu5M32a+wlOYarPl/ji9bs5a1cUTTIWOuLUQ8IXAFO3GkgriWh2/LKfyIn897
+# 2EAiBzIuVivN4auSUjL/m94ItiunNgU4ryFNL4SsArBB1psooSE4oGdoZiLbQgY0
+# W7W4DPSL/7+ZQpCZFsvm/W19SQrBBgt3aZLzwiwrHFOji9SBUjc++V/3S/DZA29y
+# Ce/M2XbGp1aAgdgg54OTv4gYNZLycgCEWZsf30iJRnAtLydOvQJc2DHbuh37pXg4
+# Nj/eRmOEYL0WJ0wDrlDXgb6CKjkRq+P36VPGIvwTaPbnSkeyCyoiJVAhcRBSEHf5
+# vu+ocJdJ3261iFY4I1GURUBvcIOkGpCtQaucD4CXRTrVSkDq6H0YzAbqRQ+RI6hr
+# 277eiKdb3JGF94OfctRf//npCTlk+761JEZMCLV71rgZfU2YlAUm8bn1xS0/XiLH
+# K6R4J27gEaveuwCUfRTSxuFCdzt+hJfBsIz/9+u5ef5goR0UovkaKhG9mqcHp4EJ
+# QpnhhDTBUI8uOnB0Ev0yqVvaggu/pQr7gjm2JePEw2WK3AvTBcE=
 # SIG # End signature block

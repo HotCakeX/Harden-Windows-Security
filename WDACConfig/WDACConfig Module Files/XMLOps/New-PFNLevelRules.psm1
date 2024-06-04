@@ -1,58 +1,75 @@
-function Remove-UnreferencedFileRuleRefs {
-    <#
-    .SYNOPSIS
-        Removes <FileRuleRef> elements from the <FileRulesRef> node of each Signing Scenario that are not referenced by any <Allow> element in the <FileRules> node
-    .PARAMETER xmlFilePath
-        The path to the XML file to be modified
-    .INPUTS
-        System.IO.FileInfo
-    .OUTPUTS
-        System.Void
-    #>
+Function New-PFNLevelRules {
     [CmdletBinding()]
     [OutputType([System.Void])]
-    param (
+    Param (
+        [Alias('PFN')]
+        [Parameter(Mandatory = $true)][System.String[]]$PackageFamilyNames,
         [Parameter(Mandatory = $true)][System.IO.FileInfo]$XmlFilePath
     )
     Begin {
         . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
 
         # Load the XML file
-        [System.Xml.XmlDocument]$XmlContent = Get-Content $XmlFilePath
+        [System.Xml.XmlDocument]$Xml = Get-Content -Path $XmlFilePath
+
+        # Define the namespace manager
+        [System.Xml.XmlNamespaceManager]$Ns = New-Object -TypeName System.Xml.XmlNamespaceManager -ArgumentList $Xml.NameTable
+        $Ns.AddNamespace('ns', 'urn:schemas-microsoft-com:sipolicy')
+
+        # Find the FileRules node
+        [System.Xml.XmlElement]$FileRulesNode = $Xml.SelectSingleNode('//ns:FileRules', $Ns)
+
+        # Find the User-Mode ProductSigners Nodes
+        [System.Xml.XmlElement]$UMCI_ProductSigners_Node = $Xml.SelectSingleNode('//ns:SigningScenarios/ns:SigningScenario[@Value="12"]/ns:ProductSigners', $Ns)
+
+        $PackageFamilyNames = $PackageFamilyNames | Select-Object -Unique
     }
 
     Process {
-        # Define the namespace to use with the namespace manager
-        [System.Xml.XmlNamespaceManager]$NsManager = New-Object -TypeName System.Xml.XmlNamespaceManager -ArgumentList $XmlContent.NameTable
-        $NsManager.AddNamespace('def', 'urn:schemas-microsoft-com:sipolicy')
 
-        # Find all Allow elements and store their IDs
-        $AllowedIds = $XmlContent.SelectNodes('//def:Allow', $NsManager) | ForEach-Object -Process { $_.ID }
+        foreach ($PFN in $PackageFamilyNames) {
 
-        # Find all FileRuleRef elements
-        $fileRuleRefs = $XmlContent.SelectNodes('//def:FileRuleRef', $NsManager)
+            [System.String]$Guid = [System.Guid]::NewGuid().ToString().replace('-', '').ToUpper()
+            [System.String]$ID = "ID_ALLOW_A_$Guid"
 
-        foreach ($fileRuleRef in $fileRuleRefs) {
-            # Check if the RuleID attribute is not in the list of allowed IDs
-            if ($AllowedIds -notcontains $fileRuleRef.RuleID) {
-                # Remove the FileRuleRef element if it's not referenced
-                [System.Void]$fileRuleRef.ParentNode.RemoveChild($fileRuleRef)
+            # Create new PackageFamilyName rule
+            [System.Xml.XmlElement]$PFNRuleNode = $Xml.CreateElement('Allow', $FileRulesNode.NamespaceURI)
+            $PFNRuleNode.SetAttribute('ID', $ID)
+            $PFNRuleNode.SetAttribute('FriendlyName', "Allowing packaged app by its Family Name: $PFN")
+            $PFNRuleNode.SetAttribute('MinimumFileVersion', '0.0.0.0')
+            $PFNRuleNode.SetAttribute('PackageFamilyName', $PFN)
+            # Add the new node to the FileRules node
+            [System.Void]$FileRulesNode.AppendChild($PFNRuleNode)
+
+            # Check if FileRulesRef node exists, if not, create it
+            $UMCI_Temp_FileRulesRefNode = $UMCI_ProductSigners_Node.SelectSingleNode('ns:FileRulesRef', $Ns)
+
+            if ($Null -eq $UMCI_Temp_FileRulesRefNode) {
+
+                [System.Xml.XmlElement]$UMCI_Temp_FileRulesRefNode = $Xml.CreateElement('FileRulesRef', $Ns.LookupNamespace('ns'))
+                [System.Void]$UMCI_ProductSigners_Node.AppendChild($UMCI_Temp_FileRulesRefNode)
+
             }
+
+            # Create FileRuleRef for the PFN inside the <FileRulesRef> -> <ProductSigners> -> <SigningScenario Value="12">
+            [System.Xml.XmlElement]$NewUMCIFileRuleRefNode = $Xml.CreateElement('FileRuleRef', $UMCI_Temp_FileRulesRefNode.NamespaceURI)
+            $NewUMCIFileRuleRefNode.SetAttribute('RuleID', $ID)
+            [System.Void]$UMCI_Temp_FileRulesRefNode.AppendChild($NewUMCIFileRuleRefNode)
         }
     }
 
     End {
-        # Save the modified XML back to the file or to a new file
-        $XmlContent.Save($XmlFilePath)
+        # Save the modified XML back to the file
+        $Xml.Save($XmlFilePath)
     }
 }
-Export-ModuleMember -Function 'Remove-UnreferencedFileRuleRefs'
+Export-ModuleMember -Function 'New-PFNLevelRules'
 
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCCiiH5jyaDDpFGG
-# 5x+IU8g/kXOi35TVT0xBvcUsEt4y16CCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCCAxQ2T4ZtEqnvg
+# E/xFNq4xBjdjBWCK1ye8Ig7MGFJIL6CCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -99,16 +116,16 @@ Export-ModuleMember -Function 'Remove-UnreferencedFileRuleRefs'
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQghWJUX2RTrBrk5j5kXE9FJbJwogs1y7re8g+KpOEFG6EwDQYJKoZIhvcNAQEB
-# BQAEggIAk0Eva3KnhVgfwXjf2j45DxSTj6opD9/YAc90HCLNWVnYGS2sT59xDoGh
-# SIhGjEyE6lKqiQvII4yCakdva4byRTphX0F7+EXOeLnnDJb5Xs1YioqZsErw6CEI
-# 6eI2I9iyISuaOg/4f5bGXeNiAP3GLzeAbyrggUHfPvYMpLBZj/6FcuNYJ273Cx2p
-# C6Ae9USWSy8dqvKpl3q/OD/YxExM/DuyHXjpAu9hzl5afF7lciKR+tXpRHazdT5Y
-# HY2o2H0+Ht/92f8GODfAqD0kBkp36jvL8gvKnUHyt/VWCHaPRDFEXZe4bJRmu9tb
-# NmIbFFsM+erPu/XYtazJu5cc3tyyjNyxKVJQtk+ZvHXBYViGkjwP1MFRPaN+G+yU
-# 2jyJjI9hdtmkQTrsGmLI3AZ9MyuZHEXCxaEaL/gYMDd8wXjl0oMPuubxwPJHqrvS
-# xCgvL1oGcT7Odr/6V6MbIr+5J3/ZHK51Yp/t5Ufqw1Nh5lAQ0vRoT9PYyykefAXn
-# 9HtO3y4Or/Bx2h/ZJNG3+teu8KkCMUfxpAaj+HEzpWYqfLpOJgMFpeUD2rUmVAQB
-# rzGR5bX0j5McOP0u3PIWSl2GKvpCuRr7R40Y/SunwLLCYrc9KysUg00S8z0WtiBl
-# kNCfxlNdEIDZYURzMo9ke27N9wHv7uVjcTDlcMVN+ALTosbu+9Y=
+# IgQgfoR+EkOylkBA/eo6P/OEhpnZKAjCBWTQrT0QjgM046EwDQYJKoZIhvcNAQEB
+# BQAEggIAh7uTveRl5vtbuFmtghbEEFGvEwFU8wtgmetd7idwwdUKFtnRAwTTT9Hw
+# C6b08CQUOamWtZOlPJ7odf67mlKW5QpcSE/NRH9qtQaCGN1UDR0MPP+bKCgDK6fd
+# E+2y9Zkh5hjF6hb0+Utz/2fXxzs2RNPpDbfpOGN72Haflen3FyFwrwlYjxSIyRiX
+# HcGR7XRPgV4puV+oJ+IPzonKdJ8vGu7pdAWAecjjGISOxfXOe4j+pB6Vg7UbdQoY
+# 4TkBkyR9/pXoScXY73e6RkEveU6b6lTTFW/Q3ncjNBzC2AtvPqpPoN4Kz/3/pzJS
+# N81Un/6iSxc2eWBVnHoyMo4b48bDryYjxcLLi5UXyNxlnJv8ETtAmoUYaKYo0/3E
+# v3g9PwBHnPA1TVLkPt3DEfLneJ+PFdwiAAyUI0terWAmIRjHib5QgFavZxUkNwZL
+# StMDxzXsL3ALzNE4NzrjC8AZ6ST5X2j4iLf1LRUJpAmchWcoty32DLpg0Zm/H6/M
+# v2hKHYzRED7rqNApHIUjgrZPz9dUnmIL92EmvhgoLE/GYhDA/7KL6R6vy1dyRDqO
+# LQxQpovutppkj3EhsOLt9m9N+9Mhydn9pzruR7XuJhav+Dt6oQx7rxIpd/DqafdT
+# yyUiMYVjLebM8SFF0TY869Max+T+spxHtpvrGTZ2YpdcqQaMSc0=
 # SIG # End signature block

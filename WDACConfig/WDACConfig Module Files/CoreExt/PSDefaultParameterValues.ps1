@@ -1,5 +1,6 @@
 # $PSDefaultParameterValues only get read from scope where invocation occurs
 # This is why this file is dot-sourced in every other component of the WDACConfig module at the beginning
+# Main cmdlets that are also used within other main cmdlets are mentioned here too.
 $PSDefaultParameterValues = @{
     'Invoke-WebRequest:HttpVersion'                               = '3.0'
     'Invoke-WebRequest:SslProtocol'                               = 'Tls12,Tls13'
@@ -12,13 +13,9 @@ $PSDefaultParameterValues = @{
     'Get-WinEvent:Verbose'                                        = $false
     'Test-Path:ErrorAction'                                       = 'SilentlyContinue'
     'Receive-CodeIntegrityLogs:Verbose'                           = $Verbose
-    'Get-FileRules:Verbose'                                       = $Verbose
-    'Get-BlockRulesMeta:Verbose'                                  = $Verbose
     'Get-GlobalRootDrives:Verbose'                                = $Verbose
-    'Get-RuleRefs:Verbose'                                        = $Verbose
     'Get-SignTool:Verbose'                                        = $Verbose
     'Move-UserModeToKernelMode:Verbose'                           = $Verbose
-    'New-EmptyPolicy:Verbose'                                     = $Verbose
     'Set-LogSize:Verbose'                                         = $Verbose
     'Test-FilePath:Verbose'                                       = $Verbose
     'Update-Self:Verbose'                                         = $Verbose
@@ -36,10 +33,18 @@ $PSDefaultParameterValues = @{
     'Compare-SignerAndCertificate:Verbose'                        = $Verbose
     'Remove-SupplementalSigners:Verbose'                          = $Verbose
     'Get-ExtendedFileInfo:Verbose'                                = $Verbose
-    'Edit-CiPolicyRuleOptions:Verbose'                            = $Verbose
-    'New-AppxPackageCiPolicy:Verbose'                             = $Verbose
     'New-StagingArea:Verbose'                                     = $Verbose
     'Set-LogPropertiesVisibility:Verbose'                         = $Verbose
+    'Test-KernelProtectedFiles:Verbose'                           = $Verbose
+    'Set-CiRuleOptions:Verbose'                                   = $Verbose
+    'New-WDACConfig:Verbose'                                      = $Verbose
+    'Test-CiPolicy:Verbose'                                       = $Verbose
+    'Get-CiFileHashes:Verbose'                                    = $Verbose
+    'Edit-GUIDs:Verbose'                                          = $Verbose
+    'Invoke-CiSigning:Verbose'                                    = $Verbose
+    'Get-KernelModeDrivers:Verbose'                               = $Verbose
+    'New-Macros:Verbose'                                          = $Verbose
+    'Checkpoint-Macros:Verbose'                                   = $Verbose
 
     'Build-SignerAndHashObjects:Verbose'                          = $Verbose
     'Clear-CiPolicy_Semantic:Verbose'                             = $Verbose
@@ -83,8 +88,8 @@ $PSDefaultParameterValues = @{
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCCBtwdWe9IKoQcw
-# aOK3F3Pc4hwasOcsI+SUCSF7+QQOOqCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCBrov1em9r5Z0Sf
+# Qafj6qr5WWyPqTEJZ4+lNnvqN59id6CCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -131,16 +136,16 @@ $PSDefaultParameterValues = @{
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQg51w3MXbYcZni3xpBHZxYt0A+4N/f2uzpPzQDKI52gPswDQYJKoZIhvcNAQEB
-# BQAEggIAJCpNfVAdFFOLXA3x3DDv7jEB3HH3cv6DHpM1dpA4tZbTYHfFySyb10LQ
-# fxOP9a5mPKEnPydUetFmMWeT1KSkLE3F07zS+ruVRLT0c/PhZsJy1kQbjHMJzD3N
-# UU5vofwIuT0OTSE1mM9TFWorLllMmX5evP/NHRnJPa1w9tBigEyk8CK26kF7c08x
-# K4cOdKf7dY+pQRpDDHTkNeGpbQPTud9jNqDrgX6AwOtMcKQM15JWDpYqCxUG/Cus
-# miD+zIkd5OQn3WlyT8zONT0uyDBxXBtwZBKoVUBIJHBbO63mn4pN4vTWUDOvLQSb
-# wdGmSdEGpoVR7K52xTipCzmdu5KzXgsniS3WwT7k4siSqDwls/Q0EyCDBxAGOwAE
-# qZsORpDDUn5Np7mWJyUuIkGUPleIZ7s3t8TY8Q/LsDLwsyBgBd+3oYL9dFQPldk2
-# ZyUfaY20lOBRVFH6cQ6yLdYaq5W9PpraswDOyjtpae1uuJXqkyhQI1jEd9mufpHG
-# bKw6bU6gfSde6xL6Srkx22VogGVrAITc6vDmPz/7st9IY8TGnvZKeUaj6EXaHNHE
-# /gRtFosJKwFVUcVC3yUV7nqqtmziAVS/XQBBRFLroH/RiynIovwSis9cbX90//O7
-# ZVvWrNBiyr7s0MHUl7WJIyfkhvMSSVbOopKft4Hx1gF7WsOSmbc=
+# IgQgocq7n3OyQzjJDVkGhg4zf4OpTp5rcIDx4Z2zU2gyMOYwDQYJKoZIhvcNAQEB
+# BQAEggIAhpFnfy6FY2BZPGPZqJxBSSoZBiacne4IID1S0/BBvEr5ydtYIgmBx7Ln
+# OTdTDZfYylpC9NANSbo75rwdYAZBaCvqQXARfd+bXIJjsU/cwfox4ajd9FBGmZcs
+# OcfiYDteVQELsI5/LG9O2Onwu1nHJoCEmO/1RmZ5yZVv/hWZLUkAsTkuE+GuAv7Z
+# DcDSnYCQBder4gceVmkxoKoua6jnNXj6TCriPK6YPFP0OH7pcA2JyjyH87pEyZbM
+# H4sVOb7kk/HzQlEitrj9cULYk0DIvfWdVlX2+LYsUPw01/lf4qfAC92aNfJeXYWQ
+# PDnNwz79wRahhsSZVaujmRZVlDLECCIKtiqCYLiXUfPiy/uPvzEhYL6XytJooaES
+# b51TAjKbTcAhFtqjLbBlBWNSkTXm92VTkStLeHTA50Ph0KntjDiW8GJTGdPnu8Lr
+# rlCUd/7WIBfs+GEm/mDPh30KRp2862SlxjvHVPXh0YsdEA39Jftttk5Pfp2hV3K9
+# V9BMRWL/PtYH7pJoQJJNww8ZbFMVppcp28eXvFDIODMz1DfmA5yLeqy2IK9Pwtg4
+# QELu9CT2e+BlzwGnuqd13L8tEV4LRx5htnESM2MYpKoKlYH9bX3b5JiOqn1J1LRZ
+# s2DXThGbKb3rJhHYwnbcExlzDs+Z+OhwO0ZA40d8q7JiRNw9hGM=
 # SIG # End signature block

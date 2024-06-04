@@ -15,7 +15,7 @@ Function Invoke-WDACSimulation {
                 # Ensure the selected path is a file path
                 if (Test-Path -LiteralPath $_ -PathType 'Leaf') {
                     # Ensure the selected file has a supported extension
-                    [System.IO.FileInfo]$SelectedFile = Get-ChildItem -File -LiteralPath $_ -Include '*.sys', '*.exe', '*.com', '*.dll', '*.rll', '*.ocx', '*.msp', '*.mst', '*.msi', '*.js', '*.vbs', '*.ps1', '*.appx', '*.bin', '*.bat', '*.hxs', '*.mui', '*.lex', '*.mof'
+                    [System.IO.FileInfo]$SelectedFile = &$FindWDACCompliantFiles $_
                     # If the selected file has a supported extension, return $true
                     if ($SelectedFile) {
                         $true
@@ -40,19 +40,17 @@ Function Invoke-WDACSimulation {
         [Alias('S')]
         [Parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$SkipVersionCheck
     )
-
-    begin {
-        # Detecting if Verbose switch is used
+    Begin {
         $PSBoundParameters.Verbose.IsPresent ? ([System.Boolean]$Verbose = $true) : ([System.Boolean]$Verbose = $false) | Out-Null
-
-        # Importing the $PSDefaultParameterValues to the current session, prior to everything else
         . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
 
         Write-Verbose -Message 'Importing the required sub-modules'
-        Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Update-Self.psm1" -Force
-        Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Write-ColorfulText.psm1" -Force
-        Import-Module -FullyQualifiedName "$ModuleRootPath\WDACSimulation\Compare-SignerAndCertificate.psm1" -Force
-        Import-Module -FullyQualifiedName "$ModuleRootPath\WDACSimulation\Get-FileRuleOutput.psm1" -Force
+        Import-Module -Force -FullyQualifiedName @(
+            "$ModuleRootPath\Shared\Update-Self.psm1",
+            "$ModuleRootPath\Shared\Write-ColorfulText.psm1",
+            "$ModuleRootPath\WDACSimulation\Compare-SignerAndCertificate.psm1",
+            "$ModuleRootPath\WDACSimulation\Get-FileRuleOutput.psm1"
+        )
 
         # if -SkipVersionCheck wasn't passed, run the updater
         if (-NOT $SkipVersionCheck) { Update-Self -InvocationStatement $MyInvocation.Statement }
@@ -100,7 +98,7 @@ Function Invoke-WDACSimulation {
         [System.Boolean]$ShouldExit = $false
 
         if ((Get-Content -LiteralPath $XmlFilePath -Raw) -match '<Allow ID="ID_ALLOW_.*" FriendlyName=".*" FileName="\*".*/>') {
-            Write-Verbose -Message 'The supplied XML file contains a rule that allows all files.' -Verbose
+            Write-Verbose -Message "The supplied XML file '$($XmlFilePath.Name)' contains a rule that allows all files." -Verbose
 
             # Set a flag to exit the subsequent blocks
             $ShouldExit = $true
@@ -171,7 +169,7 @@ Function Invoke-WDACSimulation {
             [System.IO.FileInfo]$CollectedFiles = Get-ChildItem -File -LiteralPath $FilePath
         }
         else {
-            [System.IO.FileInfo[]]$CollectedFiles = (Get-ChildItem -Recurse -LiteralPath $FolderPath -File -Include '*.sys', '*.exe', '*.com', '*.dll', '*.rll', '*.ocx', '*.msp', '*.mst', '*.msi', '*.js', '*.vbs', '*.ps1', '*.appx', '*.bin', '*.bat', '*.hxs', '*.mui', '*.lex', '*.mof').FullName
+            [System.IO.FileInfo[]]$CollectedFiles = &$FindWDACCompliantFiles $FolderPath
         }
 
         # Make sure the selected directory contains files with the supported extensions
@@ -781,8 +779,8 @@ Register-ArgumentCompleter -CommandName 'Invoke-WDACSimulation' -ParameterName '
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCDw7Dg/E7IqvgHr
-# e2+EDr7FqVMqM5xvt+/JEcb5p91B9KCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCD1MU2Kcdljjc5a
+# qffc3oA3Qz4Wt4Ex01QHNh3vWh5y8aCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -829,16 +827,16 @@ Register-ArgumentCompleter -CommandName 'Invoke-WDACSimulation' -ParameterName '
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQgUZX1J1xaIWC9ZOJoF/jPAxpoJ7BbI99W9WxCgIj9Cx0wDQYJKoZIhvcNAQEB
-# BQAEggIAD79kNnFWrAT1sA6ryRQZ3UUEcjjZbRDnTZ1zov3ipjQJ1DviypEabdcS
-# QNBf/uHXH9d2cFLwmTCej98J0DGxmA4N17u7WOdXip34keS2HRItvpJmpjnsPrVr
-# SdpA1hShbyTYnzG91qIwF4+1U7fcXN4quyRH63+B6WSw9qI0+pEU8b32EFfQoN+V
-# uZdnAtngssjdLzlx13HMlO8A6ww7reP3EGbLNtyjA5gRPUdNWYY+1brkLID9X4hD
-# N0OpovjZe0DNibqZgnQipUqT8oJGWQXmLfI6kL+OaTSSD+BCOQxHWlA6jE+Ruuom
-# zOvGlFs1r9eHPo4LscEu4QKUyJCT2eJZloqt8d7dQdnhqPTyOK1FP/lepdL7btYy
-# y06O6F82/KIHmr2SU+lT3sn4ceUiFHsvZVCMSk8/QMO64MJiBJqCZ8ZLR73kaDOL
-# j/PkHpaALRo2IlfzBJan7g0GWvMEw2ZR+rexxDctwG6IooLVcHD3J3/WiWpo27eT
-# f/JzPslSrCsWJzMXqbNMiCqCNCzPMMWsSjJJLH6J5T189XtkaGROA75efsZSQn+s
-# mmPpEZWK6gOCnf3R54npwyN6CFGG8g5iq91789cvYmSFNetmfEgtVtbSggecX2gx
-# xZXPL5Lxk9on42Lfp8EHq/9t4hEGWQzuDHKa5ztTUTrjQ3bkts8=
+# IgQgZsNWsQaxJrE4u9f3liaRJbc9MslhY9a7OSomKlpqKHswDQYJKoZIhvcNAQEB
+# BQAEggIAaUnB2iHzqjdqRSMCUt+d3GE/lUEGkN8hkgiar6R/zWdd8LTBRjwQyDGy
+# T6fX5XVVGloN5HFgA7W04oC/fTAyoAMbKAM/fH9BuMlmH/sjGxFP+rN2hgB076Wt
+# Yrj0urzaUjsDs9F/x0bZ7PLSixKYgtNjurd38FX72YuvVGGuvSwrYFZhMOoSOIrK
+# O6ki1ha7///GUUTXOzqQcFb84+YE0cTANtRXwhxgkuRtiNfSknS47gNMsVn16hy0
+# Mv1PzFTMjErmTiUctYs6PsEC/AeKXNcbIwIGxL2JeapFKfi/qjqdMz2sF6hMMW7/
+# UzmXf5z2Dd3UEWM92PUBphirJOU0o5BPLTg3BYYzd7gK4LpLDKJIoJ6yHOs2Ih+/
+# Rwt9gojZeJpyvfTSm06pJB2lDTZzILoxHbQ0og9FOASkblrP4Lxz6k7BpfZ9R4Ah
+# 6dwOC3k+7Qq/xGK3+6I+/Xf35ApQBzGj5c1dvfWGWYUmOaICP/vv5my8CZzQ/y9c
+# qVzzqM1TAvd/l8xo5I5M4ahFRGDwTemniKMb9kODODRy0cKw5mFSXDMIGWOHSWye
+# Ad/sdOR719ooaX71LbjEu9P+U/2R15kP4soBEAccVuOFQz4WTV3SXZWiziKKvgM0
+# sQKdIwezhfC2VXj7y8Ff6OntqEn3WlPJbRqbghy18CIlgiLi9iU=
 # SIG # End signature block

@@ -19,9 +19,7 @@ Function New-PublisherLevelRules {
         [Parameter(Mandatory = $true)][PSCustomObject[]]$PublisherSigners,
         [Parameter(Mandatory = $true)][System.IO.FileInfo]$XmlFilePath
     )
-
     Begin {
-        # Importing the $PSDefaultParameterValues to the current session, prior to everything else
         . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
 
         Write-Verbose -Message "New-PublisherLevelRules: There are $($PublisherSigners.Count) Publisher Signers to be added to the XML file"
@@ -141,8 +139,8 @@ Export-ModuleMember -Function 'New-PublisherLevelRules'
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCBVYPSvMHeTsmWF
-# Nqi2haZoVUvTkfNWFNFZTPiiPD9gS6CCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCCT2diUb1K2mefv
+# TWZ4yN/lPgyjxBAvUm5dcqLEuPqLxqCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -189,16 +187,16 @@ Export-ModuleMember -Function 'New-PublisherLevelRules'
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQg7h5se0851U5ToouU+UDdH152mLHdp/rKiOrkNDZM0FAwDQYJKoZIhvcNAQEB
-# BQAEggIARlTimUWFipKEKKvsZvefdUeuCe2fMpgLpGBdhcYbYOTojjo4GC24+cr/
-# hrbSx7OZjN0BDRRLjdOHRAtnu5xBr61GHTuX71KCZ6UDrIBFb8tguVh9GUvMAPYd
-# u16ZRjx2kiouZbVzaFYloR0NllYbye8ymwEXMaLcDP2cvuRRVCsD0S0Iz0Um2MlE
-# rXTsr+EUHxOfwq3DDPYFGmlPakb6t018JEyflSDXcLsavAXIDX7xNzZrkug68qqH
-# E36lfYYGNKv+Or6RmU7lcX6aeaf0tzjf8Di88BL90WqBEmvaZft0frl+fuF3yamu
-# xFpWN+VGJM/RzO/lOKlCqdYmEqR03W/ijGqK7iMovV0HzeM9R+kYZk9AGhXRTIvM
-# YswcZ4quokyvbvAaLfbePKW+hEGJ/zvYMQJic2x5Fdpz1G43osJyfhN4QAwywtnA
-# DIzNaSitxt/gZjNfYEB+6cwvxDKA/3gmhFvrEg30DNc7RW61cIiNONQIsAO3zbnZ
-# VJ4UOilUqSrR39muOd33R5C/kkjq4urSoT2hZ8aM8Efbvrm6kFDU+H39SZoJReA/
-# UXklqp2MgYsW34c8OFDB3njh8QpSxIdTaZoHiTaHmDhWrY470jy0MWg1y4hiysW3
-# 4CvUiTfgwTdehOAtLSBOKLLtPAWwXRoRJcMYPtTqIbmygU3FAds=
+# IgQg4coYPuadgo+vNCsvtqAMZ9B3aiymAQPNy1gVCcDwzykwDQYJKoZIhvcNAQEB
+# BQAEggIAZtSgLBIZ9j8I0MHNP/GMQMticQ/v+EVs8WFewMBsVHbS/idm1UDf9CsQ
+# UlnZonSjQ86H3gsQX+Xf+CiWzLPPDEKHvbimPHkZoS6WKSPC5d/xIN/DWr2pgENb
+# qxtBh64Af4o1cF+Jhx71jlyBc4gMuDHRJmwl65IuhrUL6hB4ek9jdsdhAOEtWMYP
+# eYRQ44qvGFyC1CA33MGcp1HEfh99IlLY6X+1kE6vbf94dm/PwO50ey0og4vQ3O22
+# hOu1vutBZSFjSfI0PzNqP6E+JAJOkqywpV1OdX9S5T26Zr4n+h1z4TQuBBWxJnpS
+# r4S+HG33drASnJBRtIPdxQ/o5Jjclftuga9SnHHUQzEmuIFPVCStywoAeK7E3NgY
+# e9shP3RD0BCj/5T4kpfcrH2T8tZLSqLxax//UaZ/yrPwQ7fh5usn9wwlr9FWt7Ah
+# cTbYSjVS8voCDvuJTCyiJKSc0+LAk471QiZvsgVe0jZCcNwMZrM2FoGk8ZriGJQY
+# misN94QD6/30LbfrHfhGkmUV8Av/HySn0YYxgreztf4y7JLIIxlZ1f/23gJh1Dan
+# eKskaLj0TY6bJev07k6aaCachizkFzLdIl09QFArDhBT4keUKYacwm4HiOl7sqJn
+# FYKOEmq7ySkzN+g73w/tx5uaRxTJWcV21rU9yyEYI30JpHy6nrA=
 # SIG # End signature block

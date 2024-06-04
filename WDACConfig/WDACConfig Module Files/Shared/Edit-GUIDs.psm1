@@ -1,39 +1,47 @@
-Function Get-RuleRefs {
+Function Edit-GUIDs {
     <#
     .SYNOPSIS
-        Create File Rule Refs based on the ID of the File Rules above and store them in the $RulesRefs variable
+        Swaps the PolicyID and BasePolicyID GUIDs in a WDAC policy XML file for Base policies..
+        Shouldn't be used for supplemental policies.
     .INPUTS
-        System.Object[]
-    .OUTPUTS
         System.String
+        System.IO.FileInfo
+    .OUTPUTS
+        System.Void
     #>
     [CmdletBinding()]
-    [OutputType([System.String])]
-    param (
-        [parameter(Mandatory = $true)]
-        [System.Object[]]$HashesArray
+    [OutputType([System.Void])]
+    param(
+        [System.String]$PolicyIDInput,
+        [System.IO.FileInfo]$PolicyFilePathInput
     )
-    # Importing the $PSDefaultParameterValues to the current session, prior to everything else
-    . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
+    Begin {
+        [System.String]$PolicyID = "{$PolicyIDInput}"
 
-    $HashesArray | ForEach-Object -Begin { $i = 1 } -Process {
-        $RulesRefs += Write-Output -InputObject "`n<FileRuleRef RuleID=`"ID_ALLOW_AA_$i`" />"
-        $RulesRefs += Write-Output -InputObject "`n<FileRuleRef RuleID=`"ID_ALLOW_AB_$i`" />"
-        $RulesRefs += Write-Output -InputObject "`n<FileRuleRef RuleID=`"ID_ALLOW_AC_$i`" />"
-        $RulesRefs += Write-Output -InputObject "`n<FileRuleRef RuleID=`"ID_ALLOW_AD_$i`" />"
-        $i++
+        # Read the xml file as an xml object
+        [System.Xml.XmlDocument]$Xml = Get-Content -Path $PolicyFilePathInput
     }
-    return [System.String]($RulesRefs.Trim())
-}
+    Process {
+        # Define the new values for PolicyID and BasePolicyID
+        [System.String]$newPolicyID = $PolicyID
+        [System.String]$newBasePolicyID = $PolicyID
 
-# Export external facing functions only, prevent internal functions from getting exported
-Export-ModuleMember -Function 'Get-RuleRefs'
+        # Replace the old values with the new ones
+        $Xml.SiPolicy.PolicyID = $newPolicyID
+        $Xml.SiPolicy.BasePolicyID = $newBasePolicyID
+    }
+    End {
+        # Save the modified xml file
+        $Xml.Save($PolicyFilePathInput)
+    }
+}
+Export-ModuleMember -Function 'Edit-GUIDs'
 
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCAnAdyh5um+PiPg
-# S+kIT+rFFKGgpDot7ksDq1nim7tioqCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCAjVzWHXP1OT4QT
+# 9GEuclfVNwW/JN38ePtL6idjSP9GNaCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -80,16 +88,16 @@ Export-ModuleMember -Function 'Get-RuleRefs'
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQgNl3ePf9eJ1XboRCWjfzPK8qEdGjm5RIN6yrCa9oB6ykwDQYJKoZIhvcNAQEB
-# BQAEggIACNny2BrTTsrW0E71lOaMnd6VbfxkO/cAbjS05k9sswNabyJr10oTu4+M
-# 0fjupJP/AvcBM2nXZemXHy7WuinIh3gtIyHQvpxKW6WG1MB20kWJiDJVsLx0079i
-# WjmOZ49jyTLGffQXj2hbhnNUoyJfZU0wMcC3v4Vs4COjHodkSgKlyWyo/mzSz0cE
-# l3suNrxMa/CqiugU3EVjZ1TvvXOo8seNL/V5GliVYfJk1AnJMTjRteIgi3N3RYJv
-# 8ExQx0/Mc99HWfGamvV/AEpj0Twx9fgOp8vC9vV0b7XuEj16GzSLO6mJiv5tWLB/
-# veLnIdqr9Cmd55xfACpgS+THYH0DBI2IQhScWXDwA7fDNp1XVIcIHH4paD4aKyEe
-# D54WCy74uTizCMG9wSI+NXEqigyCPoc87grvdyrVqKlzU0zR2ks7hTAUkk2Heg7m
-# YJcQ5MMeCTWVdH146d5n5roKDEIkAaMFgT5lXEacWLehvluZqah5nbw/ASzrHN/n
-# uAg71FscD7bnU3Wba2JA5N3uoFrNezhHSkeo9lODFKXEEMPK+CDpAkzYWsFXykie
-# AAVg1OJpn+tJ7E7hQ4V5BO3Dm+2g1zztCXLf0XqOew5bkJHKkg2lDGqBiCcRavhl
-# FQxp6BNXhx1vbqFrkvIcRo2liBGCRualmzWspLtxp8nQLWptVLI=
+# IgQgyKGkNU8myMvKWXt76DcqjQnn4ec3e93TM17Yw+nZQmMwDQYJKoZIhvcNAQEB
+# BQAEggIAkdlJt0Yc0XCdnM3b98IxYzWyyh7H7ihnrsiSx6OckJQtUBtWkzWaVa6n
+# MhXsfQN96oEUUmZRMej5JmPx1lru/a1h90ge7vqAKtUHxSsfDLC4w3csHoWWyY+Q
+# fsMqy/q0RsgwSWsHc9UevJVFDGVw7CdX2RixyS0p1S4iqyt8pYAkL620NLxBQcb5
+# ++5W2N93UpD40z/gnUCsRH9xB23ASFVyfKws23yTVnnMd7TpEtiGl9doAeK5vgiV
+# nL3nXc67hcvPc91vJInkwIR9VFlsqZv+T1rzhMTWLu5dqBLxP1g6W64c1KOFe6y+
+# FYjRy7zzYoGQG+VPGV7CAuIBqeHpkVNq8eyWwqRZaU8BhiF5r+ybjo+k6XK6LvjC
+# p2Dpf3o22/iOTRPEq+SYIWMd+wv0pLggq+eSc3i27RRBtTM4LqJlsZRH0g0gbzC0
+# j229EA8FTFD/0t7BmhbayPeZg+gPq+5+f5Qea/WJXPzpkK533hHcmPWcCKgfo8qr
+# G2wwsGGQ42sFARgH02SawNFm9KxApw0T0AxeTFZYirWp20aF1cKywzx1xiLU3rvx
+# 8WLdT/yRGdVFFuKc/UxlcHKnjlh4jISXdB/PVMSSkfLDhq/3AL4NtKfz3oRVVLgk
+# 7p1sgFpBP9dpWD6Do5FMyYrsTbzXtdYy2/MZVwKDNNxu/Z5HSH0=
 # SIG # End signature block

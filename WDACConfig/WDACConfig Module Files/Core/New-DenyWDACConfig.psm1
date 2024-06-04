@@ -61,21 +61,17 @@ Function New-DenyWDACConfig {
 
         [Parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$SkipVersionCheck
     )
-
-    begin {
-        # Detecting if Verbose switch is used
+    Begin {
         $PSBoundParameters.Verbose.IsPresent ? ([System.Boolean]$Verbose = $true) : ([System.Boolean]$Verbose = $false) | Out-Null
-        # Detecting if Debug switch is used, will do debugging actions based on that
         $PSBoundParameters.Debug.IsPresent ? ([System.Boolean]$Debug = $true) : ([System.Boolean]$Debug = $false) | Out-Null
-
-        # Importing the $PSDefaultParameterValues to the current session, prior to everything else
         . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
 
         Write-Verbose -Message 'Importing the required sub-modules'
-        Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Update-Self.psm1" -Force
-        Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Write-ColorfulText.psm1" -Force
-        Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Edit-CiPolicyRuleOptions.psm1" -Force
-        Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\New-StagingArea.psm1" -Force
+        Import-Module -Force -FullyQualifiedName @(
+            "$ModuleRootPath\Shared\Update-Self.psm1",
+            "$ModuleRootPath\Shared\Write-ColorfulText.psm1",
+            "$ModuleRootPath\Shared\New-StagingArea.psm1"
+        )
 
         # if -SkipVersionCheck wasn't passed, run the updater
         if (-NOT $SkipVersionCheck) { Update-Self -InvocationStatement $MyInvocation.Statement }
@@ -89,7 +85,11 @@ Function New-DenyWDACConfig {
 
         [System.IO.FileInfo]$FinalDenyPolicyPath = Join-Path -Path $StagingArea -ChildPath "DenyPolicy $PolicyName.xml"
         [System.IO.FileInfo]$FinalDenyPolicyCIPPath = Join-Path -Path $StagingArea -ChildPath "DenyPolicy $PolicyName.cip"
-        [System.IO.FileInfo]$AllowAllPolicyPath = 'C:\Windows\schemas\CodeIntegrity\ExamplePolicies\AllowAll.xml'
+
+        # Due to the ACLs of the Windows directory, we make a copy of the AllowAll template policy in the Staging Area and then use it
+        [System.IO.FileInfo]$AllowAllPolicyPath = Join-Path -Path $StagingArea -ChildPath 'AllowAllPolicy.xml'
+        Copy-Item -Path 'C:\Windows\schemas\CodeIntegrity\ExamplePolicies\AllowAll.xml' -Destination $AllowAllPolicyPath -Force
+
         [System.IO.FileInfo]$TempPolicyPath = Join-Path -Path $StagingArea -ChildPath 'DenyPolicy Temp.xml'
 
         # Flag indicating the final files should not be copied to the main user config directory
@@ -159,13 +159,10 @@ Function New-DenyWDACConfig {
                 Write-Verbose -Message 'Setting the policy version to 1.0.0.0'
                 Set-CIPolicyVersion -FilePath $FinalDenyPolicyPath -Version '1.0.0.0'
 
-                Edit-CiPolicyRuleOptions -Action Base -XMLFile $FinalDenyPolicyPath
+                Set-CiRuleOptions -FilePath $FinalDenyPolicyPath -Template Base
 
                 Write-Verbose -Message 'Converting the policy XML to .CIP'
                 ConvertFrom-CIPolicy -XmlFilePath $FinalDenyPolicyPath -BinaryFilePath $FinalDenyPolicyCIPPath | Out-Null
-
-                Write-ColorfulText -Color MintGreen -InputText "DenyPolicyFile = $FinalDenyPolicyPath"
-                Write-ColorfulText -Color MintGreen -InputText "DenyPolicyGUID = $FinalDenyPolicyCIPPath"
 
                 if ($Deploy) {
                     $CurrentStep++
@@ -174,7 +171,7 @@ Function New-DenyWDACConfig {
                     Write-Verbose -Message 'Deploying the policy'
                     &'C:\Windows\System32\CiTool.exe' --update-policy $FinalDenyPolicyCIPPath -json | Out-Null
 
-                    Write-ColorfulText -Color Pink -InputText "A Deny Base policy with the name $PolicyName has been deployed."
+                    Write-ColorfulText -Color Pink -InputText "A Deny Base policy with the name '$PolicyName' has been deployed."
                 }
                 Write-Progress -Id 22 -Activity 'Complete.' -Completed
             }
@@ -233,13 +230,10 @@ Function New-DenyWDACConfig {
                 Write-Verbose -Message 'Setting the policy version to 1.0.0.0'
                 Set-CIPolicyVersion -FilePath $FinalDenyPolicyPath -Version '1.0.0.0'
 
-                Edit-CiPolicyRuleOptions -Action Base -XMLFile $FinalDenyPolicyPath
+                Set-CiRuleOptions -FilePath $FinalDenyPolicyPath -Template Base
 
                 Write-Verbose -Message 'Converting the policy XML to .CIP'
                 ConvertFrom-CIPolicy -XmlFilePath $FinalDenyPolicyPath -BinaryFilePath $FinalDenyPolicyCIPPath | Out-Null
-
-                Write-ColorfulText -Color MintGreen -InputText "DenyPolicyFile = $FinalDenyPolicyPath"
-                Write-ColorfulText -Color MintGreen -InputText "DenyPolicyGUID = $FinalDenyPolicyCIPPath"
 
                 if ($Deploy) {
                     $CurrentStep++
@@ -248,7 +242,7 @@ Function New-DenyWDACConfig {
                     Write-Verbose -Message 'Deploying the policy'
                     &'C:\Windows\System32\CiTool.exe' --update-policy $FinalDenyPolicyCIPPath -json | Out-Null
 
-                    Write-ColorfulText -Color Pink -InputText "A Deny Base policy with the name $PolicyName has been deployed."
+                    Write-ColorfulText -Color Pink -InputText "A Deny Base policy with the name '$PolicyName' has been deployed."
                 }
                 Write-Progress -Id 23 -Activity 'Complete.' -Completed
             }
@@ -308,13 +302,10 @@ Function New-DenyWDACConfig {
                         Write-Verbose -Message 'Setting the policy version to 1.0.0.0'
                         Set-CIPolicyVersion -FilePath $FinalDenyPolicyPath -Version '1.0.0.0'
 
-                        Edit-CiPolicyRuleOptions -Action Base -XMLFile $FinalDenyPolicyPath
+                        Set-CiRuleOptions -FilePath $FinalDenyPolicyPath -Template Base
 
                         Write-Verbose -Message 'Converting the policy XML to .CIP'
                         ConvertFrom-CIPolicy -XmlFilePath $FinalDenyPolicyPath -BinaryFilePath $FinalDenyPolicyCIPPath | Out-Null
-
-                        Write-ColorfulText -Color MintGreen -InputText "DenyPolicyFile = $FinalDenyPolicyPath"
-                        Write-ColorfulText -Color MintGreen -InputText "DenyPolicyGUID = $FinalDenyPolicyCIPPath"
 
                         if ($Deploy) {
                             $CurrentStep++
@@ -323,7 +314,7 @@ Function New-DenyWDACConfig {
                             Write-Verbose -Message 'Deploying the policy'
                             &'C:\Windows\System32\CiTool.exe' --update-policy $FinalDenyPolicyCIPPath -json | Out-Null
 
-                            Write-ColorfulText -Color Pink -InputText "A Deny Base policy with the name $PolicyName has been deployed."
+                            Write-ColorfulText -Color Pink -InputText "A Deny Base policy with the name '$PolicyName' has been deployed."
                         }
                     }
                     else {
@@ -369,20 +360,10 @@ Function New-DenyWDACConfig {
                 Write-Verbose -Message 'Setting the policy version to 1.0.0.0'
                 Set-CIPolicyVersion -FilePath $FinalDenyPolicyPath -Version '1.0.0.0'
 
-                Edit-CiPolicyRuleOptions -Action Base -XMLFile $FinalDenyPolicyPath
+                Set-CiRuleOptions -FilePath $FinalDenyPolicyPath -Template Base
 
                 Write-Verbose -Message 'Converting the policy XML to .CIP'
                 ConvertFrom-CIPolicy -XmlFilePath $FinalDenyPolicyPath -BinaryFilePath $FinalDenyPolicyCIPPath | Out-Null
-
-                # Used for when the WDACConfig module is in the embedded mode by the Harden Windows Security module
-                if ($EmbeddedVerboseOutput) {
-                    Write-Verbose -Message "DenyPolicyFile = $FinalDenyPolicyPath"
-                    Write-Verbose -Message "DenyPolicyGUID = $FinalDenyPolicyCIPPath"
-                }
-                else {
-                    Write-ColorfulText -Color MintGreen -InputText "DenyPolicyFile = $FinalDenyPolicyPath"
-                    Write-ColorfulText -Color MintGreen -InputText "DenyPolicyGUID = $FinalDenyPolicyCIPPath"
-                }
 
                 if ($Deploy) {
                     $CurrentStep++
@@ -392,10 +373,10 @@ Function New-DenyWDACConfig {
                     &'C:\Windows\System32\CiTool.exe' --update-policy $FinalDenyPolicyCIPPath -json | Out-Null
 
                     if ($EmbeddedVerboseOutput) {
-                        Write-Verbose -Message "A Deny Base policy with the name $PolicyName has been deployed."
+                        Write-Verbose -Message "A Deny Base policy with the name '$PolicyName' has been deployed."
                     }
                     else {
-                        Write-ColorfulText -Color Pink -InputText "A Deny Base policy with the name $PolicyName has been deployed."
+                        Write-ColorfulText -Color Pink -InputText "A Deny Base policy with the name '$PolicyName' has been deployed."
                     }
                 }
                 Write-Progress -Id 29 -Activity 'Complete.' -Completed
@@ -406,6 +387,17 @@ Function New-DenyWDACConfig {
             Throw $_
         }
         finally {
+            # If the cmdlet is not running in embedded mode
+            if (-NOT $EmbeddedVerboseOutput) {
+                # Display the output
+                if ($Deploy) {
+                    &$WriteFinalOutput $FinalDenyPolicyPath
+                }
+                else {
+                    &$WriteFinalOutput $FinalDenyPolicyPath, $FinalDenyPolicyCIPPath
+                }
+            }
+
             # Copy the final policy files to the user config directory
             if (-NOT $NoCopy) {
                 Copy-Item -Path ($Deploy ? $FinalDenyPolicyPath : $FinalDenyPolicyPath, $FinalDenyPolicyCIPPath) -Destination $UserConfigDir -Force
@@ -437,6 +429,8 @@ Function New-DenyWDACConfig {
 .PARAMETER Fallbacks
     The fallback level(s) that determine how the selected folder will be scanned.
     The default value for it is Hash.
+.PARAMETER EmbeddedVerboseOutput
+    Used for when the WDACConfig module is in the embedded mode by the Harden Windows Security module
 .PARAMETER Deploy
     It's used by the entire Cmdlet. Indicates that the created Base deny policy will be deployed on the system.
 .PARAMETER Drivers
@@ -487,8 +481,8 @@ Register-ArgumentCompleter -CommandName 'New-DenyWDACConfig' -ParameterName 'Fol
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCDcX4aYvb/3xnLb
-# QSRPQPFCRNVd3Vvt/5Ya6x9YNFiMMKCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCA6bcMD4abRaTkc
+# 7fG3+kEafUA5A+oWnPnytAxpJFHT+KCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -535,16 +529,16 @@ Register-ArgumentCompleter -CommandName 'New-DenyWDACConfig' -ParameterName 'Fol
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQghs8ydAzLaJOj+CZMAO7+Si0MpUt+DG061gov0459yGYwDQYJKoZIhvcNAQEB
-# BQAEggIAQAh+5qwwqc0JPL36GwDptWW3Uz+jRZPnyz0LYhCQQMO0oYNFnfuL+XwN
-# 5OvN/d/jHUogdmo7tiMutjxJd6dYZ4+OKWydDQnncSWtXqF+gzMN9oQDpyRgNMFP
-# cmLNnDakLB/9R+HcFe5Hfvc9wU3X8chWbMfxweOGjilDrSMS7UoL//56JEVKsrDo
-# ssn70LQGScm6WhJuzSZ443f40xd9zd8jsDrnBjU067lxfC20opwjJgoLFSE+YJdq
-# dXjEEzo1V0Rrn/LXr+6DjDPxtkTPftJdIRSRQCKLFtfByM6pDM3dYA7EPkXxXt0d
-# xAtyw3gkjAWnbERTcPeAmEdue4seHNYtq1HIIer2cBAuydJq6cQyYLpZUxvypKfp
-# Lt2+S3L3ouG94NLBcP1oI0/xdScaB0hEzEMiuU4Dn9Irev7YSYvxxbBmCpcvKy+T
-# VGtMGY7ox8PsEczsahJxteOm+Y2Izb9fBMWoe4tVhq60SQA8GkPkeAAnHwBfrEQU
-# KCVCOuNU999X52eoNMjcug8hTlz1A3C9ZBlQe2BGjZzelAazZHk7e6tg9p7XRySy
-# ojIugjKL4YGbEzE2DiIxG/HIG5ZqqQsyT/wckSOc9+1BNV3YgPvFym3/abjEdj5p
-# g3BvbbYDy0/Ef3jmxMSI3nZlhGHbOj8wRd8GlQPq7mQ82i2X4wg=
+# IgQgKZfFLztaIT5Aw4BPlT5oAKQGtiNB7NfZCiPTn2WSigowDQYJKoZIhvcNAQEB
+# BQAEggIAcqwSvUFiA9W8lDJhR+yRXk0V2Ns4bHvbeBAwx6dphEy4wJVmRXaiU+jb
+# LTOytGd6wNy5qZqX0V2zQPx085bWC7dgMbT/Tt7P8yqerxa9znXi6E4C6JVW2YTj
+# 3PBcu7slCQvFCB6uuChFa4MiJrfQWFanTGMqEo64cSifVMI0GwPB9jRxw/ZM6XKQ
+# 7Ne2Ak2kbqhCttttbB4Xw+ix5vt3FqGx2VRb2HteFjcYTYgfOYR5IAcHYVjaas/u
+# /K5LQA8NQF0uXnKgEzMYL8FWEWy9acANeH69lzkSKsjQ71uRoIWdx1iA5KWK7Pz6
+# umxBJjLVYkI34MPRIpfxwOXEus+uvxzMM9/6fowIxyS+j0O+ysKTZ6zJTfihr+U0
+# /hJVqalP5QN5TLYKHhLa6+uYB5xma55kHiveIps06Pvt2+wqkSamzbMD17g8yYmi
+# Pz6jtOeX34zANh0ktw5cJREJD0xIW5XqNH3jhRlPM+mP5mLhwxSmgqLJjnoQqlq/
+# jXKi3n86uturK0gCtQnPdBTWkSXh7mftWWyDkB2k/EbLgNQ+l2PwMtzE3Y4VVRwe
+# sHM64xMbY/Just6NYusOSEFwxovI89eFi3k+pAvdnTGJHlrrKdf6YYcBG6rxFXNR
+# AlBhpQ4ZeKSzU6fqznHZCaQtc0/4aNRJAGsDW1BCEby2AbL5R+8=
 # SIG # End signature block

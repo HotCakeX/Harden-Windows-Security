@@ -8,10 +8,7 @@ Function Get-CiFileHashes {
         [Parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$SkipVersionCheck
     )
     Begin {
-        # Detecting if Verbose switch is used
         $PSBoundParameters.Verbose.IsPresent ? ([System.Boolean]$Verbose = $true) : ([System.Boolean]$Verbose = $false) | Out-Null
-
-        # Importing the $PSDefaultParameterValues to the current session, prior to everything else
         . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
 
         # if -SkipVersionCheck wasn't passed, run the updater
@@ -215,8 +212,8 @@ Register-ArgumentCompleter -CommandName 'Get-CiFileHashes' -ParameterName 'FileP
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCBAAUnvQYJKv0iB
-# S0R9ZMS3zidsec/ilThkafRUZoehpqCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCAdCQg7EdYiLZi9
+# yyBdKSybgakXxVgBRo6AZ0XxNvtxL6CCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -263,16 +260,16 @@ Register-ArgumentCompleter -CommandName 'Get-CiFileHashes' -ParameterName 'FileP
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQg+1YGoEZK/BvzzbSbY6TAREhyyzh1YZsdUnQ3Kpq52qEwDQYJKoZIhvcNAQEB
-# BQAEggIAan2PBn64jvy1Q8QbhGl1888t8nwcxN+xQ88v8CTFz3osnGYmLnSCZttO
-# UbRQ3ZdhBD6scJqOZrcicKK+eCpbR2I4I9N8cCW+r1GEJc0hACBkjZptkcehzgIq
-# mrVtpmPa75ExJNpWH0Ik2W3JmZY5tXmajyrbRS8tbCwRkPEQDAuGsd8Zl+iOOFrm
-# 0JlvnpduXPLuABuRoVQ182Pnu9mwV2G0Yei1+2kyaNlcQz41NiZ1+mVVhcJtey3k
-# wWREHvn4/axPUBWL5b8VY0OMKiLL21NPI0v+qHi+CYmdh4vpWyla41xnovrZ+YIl
-# s89JWnCN9zrYzGg42C5YlkODeRvksYyND2xAnDm227znNPHb07hCVqZeNhUo6tzl
-# Upl+PFZYm00p80xCTq129lBBVKhRuj0ySKB6bInigQ2F486PoUA8EI6KVfMr1ojQ
-# NTuS79ss9C48R6lyiJUMZ8Rm7EJnhgfnjYwAD+afWG5vlzb3EKM82rhHfiJcSgrd
-# gihcgiIzlkHbDCEaU0cOFAgqN1ESmgAnBvtRed9px0Szvx2bFFt6kRS1lAeG8NNl
-# bXTJqG5bCwIOHBYtVCCAPBhfOJawAGL9OEOsIA5w7WsPNJBM3BC0/aab8qotXQlR
-# l1Il5W9Fub85IMmr2ejkpENEwGUtKYkNulb4ADGkwfTqYXzFg8g=
+# IgQgsjGATjEOM3PjMp0guB0jg+gss7Fz/ETlC3+FCkBxjn4wDQYJKoZIhvcNAQEB
+# BQAEggIAnwIDOSAbd+DRia47LXk5wABVQDBAUw03q/le4pVX2ZskcpnM/NbE5wG+
+# awArjdE3rnAJjeUW2ne6bndvb4SafDzi+8u/+SQVZGLEwJs9ph7svVd1aLlfxQ3u
+# kFgQ7mLd+/UJD8JRRuiTIr01n+QivsWrO+gGeUgJTgTBC7kRMn3aKW2g2dRiMyxx
+# BULJcDBvulufIDmhbNzEKYPVlQ2wTv4Dt71b/oqvXFU3Tf6ukuBH43ijfTrE0XZk
+# 4c5N2cDfcsL4EBJtfULSIW4xL+9GucVnfEWyaSCoSx2NnD9CwcqODh/y4ncZh90d
+# O410C0T2VDdyEEBrX8Ffpb6gSsKGGu4w6oWi8OGsbWs/1F5bbNBQ8wX67L88Gwvh
+# 7n8uFeCse2ziT19TfBrFRBUYP4kVSFYn9WrEUmoQDmP9tFGNceJRvtPCVGh/E55s
+# sghAcGiCp8VbmZ+FL62eJt4DJ9sDdV5II+koTYJEF4h0u+HRHoFZM0paxFdOl16q
+# dNax+5GdTPP1po0H95mnsCS+GNGJwn2F1a3VdEps4W/6ukLe+uM46kKOnXj+l9UU
+# 6a590xcyYs588Kc3yMQZUXuaHFba2ssFWsW9zGVh0oObNzwNN2o+4CM6C9V12CoU
+# WlnUMdVvDYQ25DIJrvQfcxpW7SMlra15To/d623Ob98qbW4CTTA=
 # SIG # End signature block

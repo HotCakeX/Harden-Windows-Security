@@ -17,7 +17,6 @@ Function Move-UserModeToKernelMode {
         [ValidateScript({ Test-Path -Path $_ -PathType Leaf })]
         [System.String]$FilePath
     )
-    # Importing the $PSDefaultParameterValues to the current session, prior to everything else
     . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
 
     # Load the XML file as an XmlDocument object
@@ -63,15 +62,13 @@ Function Move-UserModeToKernelMode {
     # Save the modified XML document to a new file
     $Xml.Save($FilePath)
 }
-
-# Export external facing functions only, prevent internal functions from getting exported
 Export-ModuleMember -Function 'Move-UserModeToKernelMode'
 
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCAvgzM+b0Ubb1Gs
-# BhH7WxFLvpTafl2ajUYXqT8dODmjLqCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCB80p8y243BXIeN
+# 5VlKN335LnVFocQfl+SVVe0tCW58xqCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -118,16 +115,16 @@ Export-ModuleMember -Function 'Move-UserModeToKernelMode'
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQgUgVjnY6l3AxRy77QvSR5J22g0MltDnBA7oA5iciB0UYwDQYJKoZIhvcNAQEB
-# BQAEggIAh2oa1dwaN6eYJFWl/M3V/vFqgB9edQIOD3/CgMVv4P1eoRZ1tD8D54Rz
-# /ntak5f+JYgmVcBOvB6PiQ/xH0O3pz0y6CsWcASSWmA9epbQpp7jbbmgJYUzOx40
-# jTTbdGWyyE4N7aHUa3WebSykZZX60tHknxIan36D3qFW9DPV/YoGmJaSzZZ0ic0j
-# wj6WOdrmhDIzy8P+kwMoTTTF8rcVw9Cs/L7GmnU9kmP1P+z5j05wM53DOH6TXMsx
-# QMZ6Q5v9UT3pEps4ARSIaEXPNelsC5c8aQz9Pr80B89mXp4HNEffj/DBUHYpo0S+
-# ku/7UJxljK2BYzmW9L3d6wsxWm3AfIYq4zYOSxqyuTmScP5rI9OMFI/Xnnn++RyM
-# 1VgHziQ8fWG6vLEYcAql2rxqRpc4OPKoaT1Xdau5JHExQ8XLoj5iUNDcTSIsQycv
-# TD2tDEgAUiKSNE94VBQ9pnzDIMBFgzHqcA49LkT8qn9FR1k0qWd6ZbJTurQjBDIH
-# f94xTD68tkhzgVQCL8IfhiPdXbyrIiHDHnjx19wEDBOqB4itQ1FvWxmFnQzXmk33
-# 3fY8vqYc1TAaLCfSdfVieBgnSU12Wdl5hoCQWL9GOQw+pOdDXP3azJ5DWp/O/nBt
-# qwguoGV4fX/yRh3w4OJ8BbKVyFh1ctHakGYdvKOkp3JTMgd/kAY=
+# IgQgHffMJgyE9BNY0UpIpnvSyIQ3j6I5jhHNtLOoOmQxCN4wDQYJKoZIhvcNAQEB
+# BQAEggIAFD62cBpzF4pRWV4X31vAWc8RgMzgCtHUFZAxRlVGNM9vhfUeFbGQFwlY
+# udS7R2tA4MYfS3EdM1rg9xRYnPvnqeME/ypz8py1UGNP6Ly66qDT5Zn1t76YKvjL
+# mgwWEo5/XduxZV+uvPFC360XPIZn5/tUI3mDDFIJmB4Qyt5wiHP5+fBgHYAjmrF7
+# C83uPrhmJ4fxynRCamNkgRl17tZAEl8uN/nQ9PY8p6DKGYs3VnmVq1kib3Vr3gvh
+# r4ta8B8OuDjnqTL3IPEk5b5VGb3gUP78gcDyEAFASBslJc3XAhW8397/8knyXc1f
+# 9bKUZzEHJYT55RtxyMvxzIG/OJgWkwV7jMjzYJuNHBORhiDvckhnISr/Yb/QZ/CS
+# pYrdXePT7WdxCAq/bgHIrDnPw5y6WOo4gu9o3Q55ot2cNhfpVd8IqovF7RrAdnWA
+# RTcNN6/MdiQ94i4o6P1dVDUiNBh4d9OyiE3u3jQaaOIiDjNf2ATLTQbkmW5EuAGj
+# D6Gz8wQp0UOgvm5YVQM/4Cp8ngMFqyZyylcbHjiaJfdxsY+q/fuWmPWkxC7c9I2M
+# E2e4xLmVwwITSuMi0TrixHYBAazOE6q31IeZbvfX0BWaw2QNDGDribV8liPEu+jq
+# Cb2Op5C+Mo0zlzTTEXeLPOEhgHZWBZ/otNl3Hb7w8EiRkfmrBbM=
 # SIG # End signature block

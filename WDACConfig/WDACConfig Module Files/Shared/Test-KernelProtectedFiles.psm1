@@ -1,58 +1,53 @@
-function Remove-UnreferencedFileRuleRefs {
+Function Test-KernelProtectedFiles {
     <#
     .SYNOPSIS
-        Removes <FileRuleRef> elements from the <FileRulesRef> node of each Signing Scenario that are not referenced by any <Allow> element in the <FileRules> node
-    .PARAMETER xmlFilePath
-        The path to the XML file to be modified
+        Detects kernel-protected files files such as the main executable of the games installed through Xbox app inside of the event logs
+    .DESCRIPTION
+        For these files, only Kernel can get their details such as hashes, it passes them to event viewer and we take them from event viewer logs
+        Any other attempts such as "Get-FileHash" or "Get-AuthenticodeSignature" fails and ConfigCI Module cmdlets totally ignore these files and do not create allow rules for them
     .INPUTS
-        System.IO.FileInfo
+        PSCustomObject[]
     .OUTPUTS
-        System.Void
+        PSCustomObject[]
     #>
     [CmdletBinding()]
-    [OutputType([System.Void])]
-    param (
-        [Parameter(Mandatory = $true)][System.IO.FileInfo]$XmlFilePath
+    [OutputType([PSCustomObject[]])]
+    Param(
+        [Parameter(Mandatory = $true)][PSCustomObject[]]$Logs
     )
     Begin {
-        . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
-
-        # Load the XML file
-        [System.Xml.XmlDocument]$XmlContent = Get-Content $XmlFilePath
+        Write-Verbose -Message 'Test-KernelProtectedFiles: Checking for Kernel-Protected files'
+        # Final output to return
+        $KernelProtectedFileLogs = [System.Collections.Generic.HashSet[PSCustomObject]]@()
     }
-
     Process {
-        # Define the namespace to use with the namespace manager
-        [System.Xml.XmlNamespaceManager]$NsManager = New-Object -TypeName System.Xml.XmlNamespaceManager -ArgumentList $XmlContent.NameTable
-        $NsManager.AddNamespace('def', 'urn:schemas-microsoft-com:sipolicy')
-
-        # Find all Allow elements and store their IDs
-        $AllowedIds = $XmlContent.SelectNodes('//def:Allow', $NsManager) | ForEach-Object -Process { $_.ID }
-
-        # Find all FileRuleRef elements
-        $fileRuleRefs = $XmlContent.SelectNodes('//def:FileRuleRef', $NsManager)
-
-        foreach ($fileRuleRef in $fileRuleRefs) {
-            # Check if the RuleID attribute is not in the list of allowed IDs
-            if ($AllowedIds -notcontains $fileRuleRef.RuleID) {
-                # Remove the FileRuleRef element if it's not referenced
-                [System.Void]$fileRuleRef.ParentNode.RemoveChild($fileRuleRef)
+        # Looping through every existing file with .exe and .dll extensions to check if they are kernel protected
+        foreach ($Log in ($Logs | Where-Object -FilterScript { ([System.IO.Path]::GetExtension($_.'Full Path') -in @('.exe', '.dll')) -and ([System.IO.Path]::Exists($_.'Full Path')) })) {
+            try {
+                Get-FileHash -Path $Log.'Full Path' -ErrorAction Stop | Out-Null
+            }
+            # If the executable is protected, it will throw an exception and the module will continue to the next one
+            # Making sure only the right file is captured by narrowing down the error type.
+            # E.g., when get-filehash can't get a file's hash because its open by another program, the exception is different: System.IO.IOException
+            catch [System.UnauthorizedAccessException] {
+                [System.Void]$KernelProtectedFileLogs.Add($Log)
+            }
+            catch {
+                Write-Verbose -Message "Test-KernelProtectedFiles: An unexpected error occurred while checking the file: $($Log.'Full Path')"
             }
         }
     }
-
     End {
-        # Save the modified XML back to the file or to a new file
-        $XmlContent.Save($XmlFilePath)
+        Return ($KernelProtectedFileLogs.Count -eq 0 ? $null : [PSCustomObject[]]$KernelProtectedFileLogs)
     }
 }
-Export-ModuleMember -Function 'Remove-UnreferencedFileRuleRefs'
+Export-ModuleMember -Function 'Test-KernelProtectedFiles'
 
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCCiiH5jyaDDpFGG
-# 5x+IU8g/kXOi35TVT0xBvcUsEt4y16CCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCBHKMkT28X36Dwj
+# Cn61ype5SvzUIZdSs14yZOWwbD4OoaCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -99,16 +94,16 @@ Export-ModuleMember -Function 'Remove-UnreferencedFileRuleRefs'
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQghWJUX2RTrBrk5j5kXE9FJbJwogs1y7re8g+KpOEFG6EwDQYJKoZIhvcNAQEB
-# BQAEggIAk0Eva3KnhVgfwXjf2j45DxSTj6opD9/YAc90HCLNWVnYGS2sT59xDoGh
-# SIhGjEyE6lKqiQvII4yCakdva4byRTphX0F7+EXOeLnnDJb5Xs1YioqZsErw6CEI
-# 6eI2I9iyISuaOg/4f5bGXeNiAP3GLzeAbyrggUHfPvYMpLBZj/6FcuNYJ273Cx2p
-# C6Ae9USWSy8dqvKpl3q/OD/YxExM/DuyHXjpAu9hzl5afF7lciKR+tXpRHazdT5Y
-# HY2o2H0+Ht/92f8GODfAqD0kBkp36jvL8gvKnUHyt/VWCHaPRDFEXZe4bJRmu9tb
-# NmIbFFsM+erPu/XYtazJu5cc3tyyjNyxKVJQtk+ZvHXBYViGkjwP1MFRPaN+G+yU
-# 2jyJjI9hdtmkQTrsGmLI3AZ9MyuZHEXCxaEaL/gYMDd8wXjl0oMPuubxwPJHqrvS
-# xCgvL1oGcT7Odr/6V6MbIr+5J3/ZHK51Yp/t5Ufqw1Nh5lAQ0vRoT9PYyykefAXn
-# 9HtO3y4Or/Bx2h/ZJNG3+teu8KkCMUfxpAaj+HEzpWYqfLpOJgMFpeUD2rUmVAQB
-# rzGR5bX0j5McOP0u3PIWSl2GKvpCuRr7R40Y/SunwLLCYrc9KysUg00S8z0WtiBl
-# kNCfxlNdEIDZYURzMo9ke27N9wHv7uVjcTDlcMVN+ALTosbu+9Y=
+# IgQg/rD5gGofWRssXCK/60fZJ3mTCPwaJ3qCZAMQ/2dakX0wDQYJKoZIhvcNAQEB
+# BQAEggIAgH4NGd+8VM3J4hrz65XLXq+gjt5tTxo1gyjWuegtzo79GSJJBB8gQAo/
+# qRf7uS9esUSgT5+DYSJ8VKBKvOb1fylw4OJINnBeTwWarrlfv7rvVOHfRvCnVnDP
+# o8GnBkej8Ud8KEcG3W/fDAkiieC75z5SFDYAFMpHEiFnTuyY/MGebx2D11iLTHbO
+# d0VFpJn7JBMIJOV1+j4k39B8ZCNve0BVdxWWyU+k82026OokC7J/8DAk2hnCRiSC
+# ftc6zyaH+qB//v6suLxxvG2OAbtFenFVqhT8NcsnnsfUWY33N4dt9KwORvT4H/7r
+# pPVQRL41PkJcxN+W3V3wpfu0AqeuJHYDAsq7EVi5BbfFHfAFrYD05ki0MpqcrEK8
+# vhMzHumsp0gqulH8nA3l6n4avqWWGDj5AZ70R03YIp0G7e4lghv09yfCjyYClkYj
+# KfOstxJZkzBXFee7epHSQbn8UR0Lxe4ptXclsjilvxQVAopfDpA1h5H1irOBemzw
+# +sqoo/IoR1l4y79at/hVmylJ0JmsBqFrIOhRXTqF+t8pwdVpobLTcg3mLjUkkBwE
+# OIiBSYJfifIt3fIh70pcwsSGl7PFdrXwErBDXsJpqj5uKA8IIMcGGhJVMz6pN2Be
+# nyG8bR5honK/M2MIgxuU56+3acFLwtxiGSlJ6/jkdyGi9ojHyhs=
 # SIG # End signature block

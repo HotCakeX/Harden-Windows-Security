@@ -29,22 +29,20 @@ Function Deploy-SignedWDACConfig {
 
         [Parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$SkipVersionCheck
     )
-
-    begin {
-        # Detecting if Verbose switch is used
+    Begin {
         $PSBoundParameters.Verbose.IsPresent ? ([System.Boolean]$Verbose = $true) : ([System.Boolean]$Verbose = $false) | Out-Null
-        # Detecting if Debug switch is used, will do debugging actions based on that
         $PSBoundParameters.Debug.IsPresent ? ([System.Boolean]$Debug = $true) : ([System.Boolean]$Debug = $false) | Out-Null
-
-        # Importing the $PSDefaultParameterValues to the current session, prior to everything else
         . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
 
         Write-Verbose -Message 'Importing the required sub-modules'
-        Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Update-Self.psm1" -Force
-        Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Get-SignTool.psm1" -Force
-        Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Write-ColorfulText.psm1" -Force
-        Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Copy-CiRules.psm1" -Force
-        Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\New-StagingArea.psm1" -Force
+        Import-Module -Force -FullyQualifiedName @(
+            "$ModuleRootPath\Shared\Update-Self.psm1",
+            "$ModuleRootPath\Shared\Get-SignTool.psm1",
+            "$ModuleRootPath\Shared\Write-ColorfulText.psm1",
+            "$ModuleRootPath\Shared\Copy-CiRules.psm1",
+            "$ModuleRootPath\Shared\New-StagingArea.psm1",
+            "$ModuleRootPath\Shared\Invoke-CiSigning.psm1"
+        )
 
         # if -SkipVersionCheck wasn't passed, run the updater
         if (-NOT $SkipVersionCheck) { Update-Self -InvocationStatement $MyInvocation.Statement }
@@ -171,11 +169,7 @@ Function Deploy-SignedWDACConfig {
                 $CurrentStep++
                 Write-Progress -Id 13 -Activity 'Creating CIP file' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
-                Write-Verbose -Message 'Setting HVCI to Strict'
-                Set-HVCIOptions -Strict -FilePath $PolicyPath
-
-                Write-Verbose -Message 'Removing the Unsigned mode option from the policy rules'
-                Set-RuleOption -FilePath $PolicyPath -Option 6 -Delete
+                Set-CiRuleOptions -FilePath $PolicyPath -RulesToRemove 'Enabled:Unsigned System Integrity Policy'
 
                 [system.io.FileInfo]$PolicyCIPPath = Join-Path -Path $StagingArea -ChildPath "$PolicyID.cip"
 
@@ -186,21 +180,7 @@ Function Deploy-SignedWDACConfig {
                 Write-Progress -Id 13 -Activity 'Signing the policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
                 Push-Location -Path $StagingArea
-                # Configure the parameter splat
-                [System.Collections.Hashtable]$ProcessParams = @{
-                    'ArgumentList' = 'sign', '/v' , '/n', "`"$CertCN`"", '/p7', '.', '/p7co', '1.3.6.1.4.1.311.79.1', '/fd', 'certHash', "$($PolicyCIPPath.Name)"
-                    'FilePath'     = $SignToolPathFinal
-                    'NoNewWindow'  = $true
-                    'Wait'         = $true
-                    'ErrorAction'  = 'Stop'
-                }
-                # Hide the SignTool.exe's normal output unless -Verbose parameter was used
-                if (!$Verbose) { $ProcessParams['RedirectStandardOutput'] = 'NUL' }
-
-                # Sign the files with the specified cert
-                Write-Verbose -Message 'Signing the policy with the specified certificate'
-                Start-Process @ProcessParams
-
+                Invoke-CiSigning -CiPath $PolicyCIPPath -SignToolPathFinal $SignToolPathFinal -CertCN $CertCN
                 Pop-Location
 
                 Write-Verbose -Message 'Renaming the .p7 file to .cip'
@@ -322,8 +302,8 @@ Register-ArgumentCompleter -CommandName 'Deploy-SignedWDACConfig' -ParameterName
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCAfCfQJqiGUxvfo
-# 1rrqH4STmRIzU1kcbZwO2BaccS1r16CCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCDd1kPaoE/mfFvn
+# +FKa4HEzm/1bEc58VAiL8n800qW7YqCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -370,16 +350,16 @@ Register-ArgumentCompleter -CommandName 'Deploy-SignedWDACConfig' -ParameterName
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQgTkawqEgV9UnM/qiNU9F0MyXVygkBQgZQFLt+1AvCqWowDQYJKoZIhvcNAQEB
-# BQAEggIAgaPxvPjQZ3qdefS8fpzOGb9PNcgchIY+VzfBsFwwa/N7Uuh9LgQTTAAD
-# HRM31ECXlKdCgt261uQlBHkoAAtbZQNbt6y3MgPdmZVPW8C74rQ3MHA61bARsvlR
-# Vgmz2tBuzyq98P5PA/lg6NwQKlj5Zx9Q+Ix82Eux2+NemxEvHNGdMHpETPreQjXf
-# XG1l6iEhWJwfJYy57Y6eL4wEBfTt1FppXCObPig0iQfufO6OGgwd/M9xAJDx6umV
-# H53PNFDhKe7i+fY7yr5aTKLDzFaNWXtpaPEPeewBuAJVEzopepXYJKCdCxtC62Wv
-# YYMG5P1ZOqScMXNfUt8RhhHXQ9aVCV/8gbRSe75H5DK3vTHJn7Lkb7dTVfThSvmf
-# 8SB1ASKVSh2vnYR0pslrRtMzKvkaEdE3d/Pe9Q+fN5Kkrz+EZmr5G4EPHGlDCHJr
-# 2yXkdLnnT16LGL5Y/UPvoJJyRUJjPLnmSkN+gA5KIN41Otyd0nNK+dR3kxXSrQ54
-# 3jm5aQeWrQlf9t0OumwMvbtUAyvou266OsoHEmfpvCmSs1H+Sg4F6Am96OEtSnuH
-# Jct+iHyGn3AOwSdznszpWZTaeAowp+BKeNK7cEO9BCb+VX6smwqOyOQWBCWA+DZs
-# MtfxHo0bbRRTOGbgdgPFVEk6mYiVFJIZcxFIXNuehOy6kdly2nQ=
+# IgQgAD/QgFC7i0DS/jz9v4YMcxj4nmhthmLU6NB066pfEJEwDQYJKoZIhvcNAQEB
+# BQAEggIAmxtH5LFvO2xH70rhxFcUngjk6It5mnm20R8935+E3/ItGrIB4BnfU+nk
+# aJrz3i8rRuK/p4gQ5LUOYAzRQ1C1vy/3xHiHx2hEQacpBOjLLO+QzMVEmPUku9NZ
+# Wpio4GX4puguXcetHq2aoGozpAshNp3bOWwJ3oK2iYncFxLYQrgZiw9gApVwhIRT
+# fYMzglrUL8wvEEoC+gQO4qIzP1iJoqPVI3gRItqPzhSic34iJamBiRhI1K6t9Y0O
+# nnEGkvh9VXb+HqxdwzyFH81cCikUri0RaeTOX+gun5Z6f1Tiu5L7wd/rPZSCYJdv
+# W4NPkKJty8PpHOYtMdqeZVgea2ZrPakhFVVlATgtbX9LOYKXOmEq3z/PHyRexO8L
+# DQkfs+RIe/BONiKYTKcy/Qb45HeDkWfvtkcLXP5c4kODp3X6yfUWtBHPJf+lgwjS
+# aV7nskaWIMa8HkltzL+g+8Faav/y7RpopzyY7lRbQjUmOX6XKFNNKlBKGzWsKO63
+# 2OoIXff1vUb4ALPF0kwe56gPpc6MzYBiK2DyVi/A6OAFOql8+7IoqbLGBy4Z7owh
+# gF2dGUYEXYY/9ZUPTaM6rLwncOzDE3nUWD9YUsg//X/E4bH72hdIt+Jpv7bMbH7E
+# HpZEbR6n3RoV4QpFWIraejQ2vM8enBH1Ic9w42uNk8Jc1GcqnkM=
 # SIG # End signature block

@@ -9,12 +9,8 @@ Function Test-CiPolicy {
         [Parameter(Mandatory = $true, ValueFromPipeline = $true, ParameterSetName = 'CIP File')]
         [System.IO.FileInfo]$CipFile
     )
-
-    begin {
-        # Detecting if Verbose switch is used
+    Begin {
         $PSBoundParameters.Verbose.IsPresent ? ([System.Boolean]$Verbose = $true) : ([System.Boolean]$Verbose = $false) | Out-Null
-
-        # Importing the $PSDefaultParameterValues to the current session, prior to everything else
         . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
     }
 
@@ -138,8 +134,8 @@ Register-ArgumentCompleter -CommandName 'Test-CiPolicy' -ParameterName 'CipFile'
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCDMfKjVgLv27ENN
-# FnUvpteDMPklp+tOxL2ji9KEGWhi4qCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCB4SIyH5b+sVRuA
+# bSxyCw2d6rf6fhSzQ2U1JVK5oqyu1qCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -186,16 +182,16 @@ Register-ArgumentCompleter -CommandName 'Test-CiPolicy' -ParameterName 'CipFile'
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQgVAXKogo5Xc1nHh3Mm7BOT8UUflAIv+7955zRtjDDHPgwDQYJKoZIhvcNAQEB
-# BQAEggIAcXlr1yXtmmpYliJ+WHEqzzrU4mU98c16/WIBUZzbtH8BYMM12IdhH16h
-# u9HO/GEF+WKT+7ikqo/xMcQXx9yByOSV58Coe/0FhWrFYoSb8LKL8ZlSv+5UozT0
-# 3IiE7TIswrL0BXWJ9/jtjNRbV3lfEQh5Gtb/uy5F+TOHqx16rQJwLlKdsDRd0Ub3
-# QADyzLzY57gJKNpx274ndYOXTpfORFkRbLXggH51Kg2ZpL5JZI424BUeu8eRn3Or
-# m3UQpYvXycsthT+nwOwYifSDc5eiF/Em6TeCzybnOVvXxYV7RYpv5ne1edhZ/e/R
-# 8eAT+Z/9usskQ2ynmp2M5r3wF2RqZxRilnWzecDtSBl9ncGpI2RhdGPP6ng6OWEl
-# mrab59aCa4paJDKZCF1Z+GtxO5KvmS/HlL/DkVyvOqd6V6heuFPeJVBoqNQAJRT/
-# GUD+KQ2H7qa2ZA2b01qtmey0WB6lLsRIuKRhNWwm+RT2q++PDb6dnChnHZAkPTSW
-# y3Zf9fnSt24Ae3+i4KkclH8WBHLjAm7DuoPZ3+tNPwMpgCQos71bqbYxwG7JY/3L
-# XZpmVJMKapeCxG+xP9fUilKK6H8RTF8Gf85qjJI+OCxtA5cK2zx4jD2FwhTVGGOQ
-# LqmDdAE6u9km1Z2hQlIylCSYAgFu5i6aPbAv9WLsCYxWVkDwJ6Y=
+# IgQgSbUazFxpQJ34FlHJzPlNHaE82kaX++JgJrG9Hqu18NowDQYJKoZIhvcNAQEB
+# BQAEggIAAmlzIigASW5RZIAJ06gwxtkpUqkqm/hXWqQhn865I67J0jPqVoYiE3Xy
+# VKO9WCNyPpzqs2LO2UjU/o0KpRr2xTQnTNCpCepJSJ7kvbp/ThJTAvnzeNjlVSP/
+# ztrVVldujvv7vuqwcukHGXUiYxviiTiB3nE1A6K1M46u3JZpuPYh7si3u1PA33pj
+# fiOc8mB7BR7I3RBKxtJHwge6WHX/DdHpklOnRQiLEpuwQLk7etYE/WjB5XAGKSEG
+# cJ4jePeMSPFMvaR09TNqOHW+2if5SwyQOYjIasZYoyvPzF92Jf49vkL9YYLfsIiH
+# bvS/AKbHG7ooKLR6IUDs3edqCW9lSC9iDQJ6+J3BdftzOMZZEjfb9xT9kZ6mvbDO
+# Wep1Yut3anjFYp+e6yhJKmEoEyxYiiWfQA2lIR1mjQGL7LOkaP+bh7PG9VAaHDvk
+# 5/24ZraZj02BqVypOzmObx2MfzzeeuRZxCufaF2/7zy6g/Cge++oSCpZwhGSiYai
+# CTDbSCg3nJnwWJDyhHmJd6HS2xRkqE+UdINcO7PJeaGzfnEkp1Y31/v5CtYawOx6
+# QiWz2pnAv9nOxEbajqCIi9DJfSWXjBebPNUjW+g1J+uiLHzjor76k19zB7uXuaV/
+# JYh3LDdO9OzQ5+QQej+Bt2GVimYnp1SmE+SgvuFZADLDbP1Vuh8=
 # SIG # End signature block

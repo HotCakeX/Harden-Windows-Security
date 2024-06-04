@@ -24,6 +24,8 @@ Function Build-SignerAndHashObjects {
     .PARAMETER IncomingDataType
         The type of data that is being processed. This is used to determine the property names in the input data.
         The default value is 'MDEAH' (Microsoft Defender Application Guard Event and Hash) and the other value is 'EVTX' (Event Log evtx files).
+    .PARAMETER PubLisherToHash
+        It will pass any publisher rules to the hash array. This is used when sandboxing-like behavior using Macros and AppIDs are used.
     .INPUTS
         PSCustomObject[]
     .OUTPUTS
@@ -34,47 +36,12 @@ Function Build-SignerAndHashObjects {
     param (
         [Parameter(Mandatory = $true)][PSCustomObject[]]$Data,
         [ValidateSet('MDEAH', 'EVTX')]
-        [Parameter(Mandatory = $false)][System.String]$IncomingDataType
+        [Parameter(Mandatory = $false)][System.String]$IncomingDataType,
+
+        [Parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$PubLisherToHash
     )
     Begin {
-        # Importing the $PSDefaultParameterValues to the current session, prior to everything else
         . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
-
-        Class CertificateDetailsCreator {
-            [System.String]$IntermediateCertTBS
-            [System.String]$IntermediateCertName
-            [System.String]$LeafCertTBS
-            [System.String]$LeafCertName
-        }
-
-        Class FilePublisherSignerCreator {
-            [CertificateDetailsCreator[]]$CertificateDetails
-            [System.Version]$FileVersion
-            [System.String]$FileDescription
-            [System.String]$InternalName
-            [System.String]$OriginalFileName
-            [System.String]$PackageFamilyName
-            [System.String]$ProductName
-            [System.String]$FileName
-            [System.String]$AuthenticodeSHA256
-            [System.String]$AuthenticodeSHA1
-            [System.Int32]$SiSigningScenario
-        }
-
-        Class PublisherSignerCreator {
-            [CertificateDetailsCreator[]]$CertificateDetails
-            [System.String]$FileName
-            [System.String]$AuthenticodeSHA256
-            [System.String]$AuthenticodeSHA1
-            [System.Int32]$SiSigningScenario
-        }
-
-        Class HashCreator {
-            [System.String]$AuthenticodeSHA256
-            [System.String]$AuthenticodeSHA1
-            [System.String]$FileName
-            [System.Int32]$SiSigningScenario
-        }
 
         # An array to store the Signers created with FilePublisher Level
         [FilePublisherSignerCreator[]]$FilePublisherSigners = @()
@@ -130,12 +97,10 @@ Function Build-SignerAndHashObjects {
                     # For those files, the FilePublisher rule will be created with the file's leaf Certificate details only (Publisher certificate)
                     if (([System.String]::IsNullOrWhiteSpace($CurrentCorData.IntermediateCertTBS)) -and (-NOT (([System.String]::IsNullOrWhiteSpace($CurrentCorData.LeafCertTBS))))) {
 
-                        Write-Warning -Message "Intermediate Certificate TBS hash is empty for the file: $($IncomingDataType -eq 'MDEAH' ? $CurrentData.FileName : $CurrentData.'File Name'), using the leaf certificate TBS hash instead"
+                        Write-Warning -Message "Build-SignerAndHashObjects: Intermediate Certificate TBS hash is empty for the file: $($IncomingDataType -eq 'MDEAH' ? $CurrentData.FileName : $CurrentData.'File Name'), using the leaf certificate TBS hash instead"
 
                         $CurrentCorData.IntermediateCertName = $CurrentCorData.LeafCertName
-
                         $CurrentCorData.IntermediateCertTBS = $CurrentCorData.LeafCertTBS
-
                     }
 
                     # Add the Certificate details to both the FilePublisherSignerCreator and PublisherSignerCreator objects
@@ -156,11 +121,31 @@ Function Build-SignerAndHashObjects {
            ([System.String]::IsNullOrWhiteSpace($CurrentData.FileVersion))
                     )
                 ) {
-                    $CurrentPublisherSigner.FileName = $IncomingDataType -eq 'MDEAH' ? $CurrentData.FileName : $CurrentData.'File Name'
-                    $CurrentPublisherSigner.AuthenticodeSHA256 = $IncomingDataType -eq 'MDEAH' ? $CurrentData.SHA256 : $CurrentData.'SHA256 Hash'
-                    $CurrentPublisherSigner.AuthenticodeSHA1 = $IncomingDataType -eq 'MDEAH' ? $CurrentData.SHA1 : $CurrentData.'SHA1 Hash'
-                    $CurrentPublisherSigner.SiSigningScenario = $IncomingDataType -eq 'MDEAH' ? $CurrentData.SiSigningScenario : ($CurrentData.'SI Signing Scenario' -eq 'Kernel-Mode' ? '0' : '1')
-                    $PublisherSigners += $CurrentPublisherSigner
+                    # If the switch to pass Publisher rules to the hash array is not set, then add the current data to the Publisher array as expected
+                    if (-NOT $PubLisherToHash) {
+                        $CurrentPublisherSigner.FileName = $IncomingDataType -eq 'MDEAH' ? $CurrentData.FileName : $CurrentData.'File Name'
+                        $CurrentPublisherSigner.AuthenticodeSHA256 = $IncomingDataType -eq 'MDEAH' ? $CurrentData.SHA256 : $CurrentData.'SHA256 Hash'
+                        $CurrentPublisherSigner.AuthenticodeSHA1 = $IncomingDataType -eq 'MDEAH' ? $CurrentData.SHA1 : $CurrentData.'SHA1 Hash'
+                        $CurrentPublisherSigner.SiSigningScenario = $IncomingDataType -eq 'MDEAH' ? $CurrentData.SiSigningScenario : ($CurrentData.'SI Signing Scenario' -eq 'Kernel-Mode' ? '0' : '1')
+                        $PublisherSigners += $CurrentPublisherSigner
+                    }
+                    # Otherwise, add the current data to the hash array instead despite being eligible for Publisher level
+                    else {
+
+                        Write-Verbose -Message "Build-SignerAndHashObjects: Passing Publisher rule to the hash array for the file: $($IncomingDataType -eq 'MDEAH' ? $CurrentData.FileName : $CurrentData.'File Name')"
+
+                        # Create a new HashCreator object
+                        [HashCreator]$CurrentHash = New-Object -TypeName HashCreator
+
+                        # Add the hash details to the new object
+                        $CurrentHash.AuthenticodeSHA256 = $IncomingDataType -eq 'MDEAH' ? $CurrentData.SHA256 : $CurrentData.'SHA256 Hash'
+                        $CurrentHash.AuthenticodeSHA1 = $IncomingDataType -eq 'MDEAH' ? $CurrentData.SHA1 : $CurrentData.'SHA1 Hash'
+                        $CurrentHash.FileName = $IncomingDataType -eq 'MDEAH' ? $CurrentData.FileName : $CurrentData.'File Name'
+                        $CurrentHash.SiSigningScenario = $IncomingDataType -eq 'MDEAH' ? $CurrentData.SiSigningScenario : ($CurrentData.'SI Signing Scenario' -eq 'Kernel-Mode' ? '0' : '1')
+
+                        # Add the new object to the CompleteHashes array
+                        $CompleteHashes += $CurrentHash
+                    }
                 }
 
                 # If the file has some of the necessary details for a FilePublisher rule then add it to the FilePublisher array
@@ -188,7 +173,6 @@ Function Build-SignerAndHashObjects {
                     $FilePublisherSigners += $CurrentFilePublisherSigner
                 }
             }
-
         }
 
         if ($Null -ne $UnsignedData -and $UnsignedData.Count -gt 0) {
@@ -225,8 +209,8 @@ Export-ModuleMember -Function 'Build-SignerAndHashObjects'
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCCeW+LkODTL5C5F
-# BQslQ/FiF7Ep8bkHoV7t5fGL4ceUNKCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCD5m0mDKEu2Q/Wd
+# 7e1IrFaEAdErKbcVY6MdYPP3EXzwnaCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -273,16 +257,16 @@ Export-ModuleMember -Function 'Build-SignerAndHashObjects'
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQgf8nx2/wZmvUmTaSCSGw6wFOIxLhw+2YA+99ttWSY1howDQYJKoZIhvcNAQEB
-# BQAEggIAF++Gqm+zQYZGGPWjO7So1gzJziWHKeHjllg6NAJ5obWfawmM8ZQMYBbj
-# RY7oSzpYNxqVFqx0fYyr2an2jYqyW+mHeD6odRoHzMeV4tilGPJMxVjXTyTKTGYr
-# JWLvUrYT/SLLP21RsPUrPlgIB9unz5Zi7mzp+dHwD9pRBmCtlQc7hZjvGUJBimst
-# QrtrR7dTGbsIK4RvMb3J8EaXFZL1NJIwg5w1LBF/gR/+OxqsWv0qVtYxpaLIgBAY
-# Nl77TwK1InlRqgAoim4BLjX+aVbdjpxV1sYd1P8LK64+QKGbrgjKDugxaWcUFRhO
-# 6FrtDD4yj94zEEGQJN8IUCbxNBPe8BL6yy3Y6975/LNKWnOkKGrWebzvXzbhQWRV
-# usvhzqylZ2MlMpglT9O2qRJ/LSzB7VR2MPpl6iSdWPmko7F8kKzrmqoWIR5oYZrN
-# fmKd/peee0qCMQtJrbWtSNaoU2LklhznFsI5FlPSh18hSAiB9mx7Gr9ClYGzEKZU
-# VHk4QX1D45kB77M4bb5gVIkN2SeokHFiirLSV4cY7Z08VZ6S+hBPF4P3KTPEWlXn
-# VGkP645zTA5R9PLCEP5uDQKS/jv33rvxaFoSw/TKKrFqjaTeRHftpsz8Y2SlwgHi
-# W7aG60TqR/LACof9ssV3SU4BZVM+sz/BqiqGVwU8lNElpBdg7QE=
+# IgQgxl0FAH0I+UAFmnwcJWwY07xLyV2HKSxqZM1ejO9DVQYwDQYJKoZIhvcNAQEB
+# BQAEggIAFU2usmkKZncloQdVE9uXvdwhoHhcH5y+y1q/1f0yedusTueVaTrdVQv0
+# vAY8JObDJYENgjZ5lD2FCUGXGHaLJ5FXwU1/yBMVxYO5yjGuuJeV1+dJy+EtI40x
+# SnCgVZZt8FYO5XWrREVTLskl9o5Xhkk5GvwDjU26wXIVL01/k2JYAayT3qsqSnPc
+# OJ6sytUSFrx7D+UCidc6TSHiKqGiu7NAaNUQVgFzwhVp3JepbRFP53o5aaW77WuX
+# JLGx4MuGRRi88IM+8lMrQE3rjR7Q4/JmVCDctGc6vjXtWSkCLGKPFv3X6wXLKztN
+# iDLgupu8In2Safbd71SnMxjBpnIVDYoQqbgeXw7UDujg0AxzFc89hpiTPMMyn2PZ
+# ktQ+PmypBcBbKfGh6K/ffSSm/522Lw7Wg934KRv52hcCspHP48w82cbLelMcwdCE
+# ODvOdgsvPzqOr7up+dvIt5mxbDx/K3d1s6eQbFBC8t3KSFd0k2sNpiDBFsr/5jxr
+# RAH3aS3cmfM38b3bj1FYwf+Ddu0sYqL5VbY2HLhckFiF0jwFT5lwZPM/O0/GPxTR
+# nrhcOKlduKDwhPhitdXBhGzZJ9qglFaQFLeqnjhzOZJz1ijQ1Td+6VOOp73np78I
+# C4RqFbrucUDdoB21zcO1zt0H7bTuqeB28pUyfLPMFEMVTbZwlVo=
 # SIG # End signature block

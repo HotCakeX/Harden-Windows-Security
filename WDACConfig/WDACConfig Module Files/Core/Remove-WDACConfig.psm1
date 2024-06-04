@@ -118,20 +118,19 @@ Function Remove-WDACConfig {
 
         [Parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$SkipVersionCheck
     )
-
-    begin {
-        # Detecting if Verbose switch is used
+    Begin {
         $PSBoundParameters.Verbose.IsPresent ? ([System.Boolean]$Verbose = $true) : ([System.Boolean]$Verbose = $false) | Out-Null
-
-        # Importing the $PSDefaultParameterValues to the current session, prior to everything else
         . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
 
         Write-Verbose -Message 'Importing the required sub-modules'
-        Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Update-Self.psm1" -Force
-        Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Get-SignTool.psm1" -Force
-        Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Write-ColorfulText.psm1" -Force
-        Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Remove-SupplementalSigners.psm1" -Force
-        Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\New-StagingArea.psm1" -Force
+        Import-Module -Force -FullyQualifiedName @(
+            "$ModuleRootPath\Shared\Update-Self.psm1",
+            "$ModuleRootPath\Shared\Get-SignTool.psm1",
+            "$ModuleRootPath\Shared\Write-ColorfulText.psm1",
+            "$ModuleRootPath\Shared\Remove-SupplementalSigners.psm1",
+            "$ModuleRootPath\Shared\New-StagingArea.psm1",
+            "$ModuleRootPath\Shared\Invoke-CiSigning.psm1"
+        )
 
         # if -SkipVersionCheck wasn't passed, run the updater
         if (-NOT $SkipVersionCheck) { Update-Self -InvocationStatement $MyInvocation.Statement }
@@ -284,8 +283,7 @@ Function Remove-WDACConfig {
                     Write-Verbose -Message 'Making sure SupplementalPolicySigners do not exist in the XML policy'
                     Remove-SupplementalSigners -Path $PolicyPath
 
-                    # Adding policy rule option "Unsigned System Integrity Policy" to the selected XML policy file
-                    Set-RuleOption -FilePath $PolicyPath -Option 6
+                    Set-CiRuleOptions -FilePath $PolicyPath -RulesToAdd 'Enabled:Unsigned System Integrity Policy'
 
                     [System.IO.FileInfo]$PolicyCIPPath = Join-Path -Path $StagingArea -ChildPath "$PolicyID.cip"
 
@@ -296,20 +294,7 @@ Function Remove-WDACConfig {
                     Write-Progress -Id 18 -Activity 'Signing the policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
                     Push-Location -Path $StagingArea
-                    # Configure the parameter splat
-                    [System.Collections.Hashtable]$ProcessParams = @{
-                        'ArgumentList' = 'sign', '/v' , '/n', "`"$CertCN`"", '/p7', '.', '/p7co', '1.3.6.1.4.1.311.79.1', '/fd', 'certHash', "$($PolicyCIPPath.Name)"
-                        'FilePath'     = $SignToolPathFinal
-                        'NoNewWindow'  = $true
-                        'Wait'         = $true
-                        'ErrorAction'  = 'Stop'
-                    }
-                    if (!$Verbose) { $ProcessParams['RedirectStandardOutput'] = 'NUL' }
-
-                    # Sign the files with the specified cert
-                    Write-Verbose -Message 'Signing the new CIP binary'
-                    Start-Process @ProcessParams
-
+                    Invoke-CiSigning -CiPath $PolicyCIPPath -SignToolPathFinal $SignToolPathFinal -CertCN $CertCN
                     Pop-Location
 
                     # Fixing the extension name of the newly signed CIP file
@@ -417,8 +402,8 @@ Register-ArgumentCompleter -CommandName 'Remove-WDACConfig' -ParameterName 'Sign
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCAYBLhpiLXJCu/L
-# ERhWcXmYGJ2SlgE+oaJ75J2VJu2bCqCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCBnti5h6rIkbWSh
+# px762fsODGX4bQyezKlr9mNEpQ013aCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -465,16 +450,16 @@ Register-ArgumentCompleter -CommandName 'Remove-WDACConfig' -ParameterName 'Sign
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQg+rPuiKUVq3jj7qIKB0G0jT+7SIrWuws+iislsacoG/owDQYJKoZIhvcNAQEB
-# BQAEggIAVvteniTxPIym0jNp7SoAF+Vy7UtxF8ktALDR97VZ6R5TDAETWwyZSheh
-# +nFE39pWxQjgEa0GosMRp8G1jQNZ7DDCbLGvd/ZTW8ZrgGvVNVs4MjVt1eBGlWWj
-# DWKgEwCXpMZKp5D9PEhpAXpIuBW3ejmFooUY+bZkojUzPokby9lkdz9Vu+H2wGyQ
-# LiY221ESqjFFt/BW/8horFEyNDmnyr2saG20N+4aGfO4y2KzxRgsP+fZTml/CoMg
-# jgGvvFfKPK8eBNLz94sbTHu8zfi+meLqDPvhz2tffaseXyug1GOUK9gunEZ2hH5h
-# LUy9MUkbIOlkVWmLPe0m/jkz+uYJP9qdfdMsWE5M25sCA/kS/tBPcBl3LKEMw0e7
-# yyTe+tsyoz5WQOXqpKW2zORvwiaoyH6+ZReUItv1Y8z+U0l7nfZMZMneKbk22dGu
-# C1vF0xZEjyaRHWzCmMiwINrHjcxltnQIfdL1MiaA/0X8jrZ/sc/CyRqMqDSodGcP
-# 95kcFbhuxtvgbLK4XJA0CsURQg0WefRMMjLIgzDf3yWqSqStfZi2nrY8SJCmzjaW
-# l9l515VTUeYmYyjaY+f478oa8RopQBqEufq6n9imYT5xWwah/t5FmdPtTnKqcLVc
-# IKgiAv5FQlSE2Xvzxj1YfudjD3hLKgzxkUdLUth92QiHtIGVmeI=
+# IgQgGac0QKPpH73m8U/pTAQf9dKO+0/HGTkt/UzuGRGvX/QwDQYJKoZIhvcNAQEB
+# BQAEggIAkiPyE/zc3z6gdWH+d6JzVHYxiUA9nPX1ER4mYg+OaOZReOVzdvM7/So8
+# 3ZciOvnFQAv4zndUNoeGAiK5tEpwdO2yvCqtOEhsNmPeT4wnrbiu9m2fiwgmt1TJ
+# XC0qUfEcxA0e2a77/9ph1Dcfb+pz0DZhYZyisiZ6Hi1MV85JGdDrwIF4IjVqStT6
+# beNYxdxXBzhwoUL8Lb2zFXH3ov6cLgAjZDouOiPMc3t0AWOfiZn/6QHeLVTl+pkY
+# INNMovtKSuq7NaWtUGyMjJaxlQtC+osc2aoBfSRrUTwVMYlU0j3ZiuueD6JEdlM4
+# TRf1B1iPcJwjf6yk3pj2EeXlisxXlqMVLFH8qQZnCy1r1ZM5cg6V6mZejB9Fq3cF
+# 8dAKbc3W0q55bI/48ugbCPoLOyrE8sOnM2jgT9o3I+lKiFhfz4l7ITZNu7dJuoOA
+# 7fPRHUM/SJt6JHr+XkpuFHwp9U31sItIvzwmvgViL7P0ArgWa+y6sADYAeIicQN8
+# TKlM9OHoWQeb54urGsJGS+VWBelJ0ugt2+EyQZBfIafWw7j7HdLpDvJlp3q+a4Kn
+# njK9E4MryfQ2cIJ3HNiLtGTcLcdXbIiif8rD8vlaLJP+Kq81bASC7RqN3pIMQCvt
+# LIiYh+1sOqh0z/iG4MgAsRHBpGe+F9/xVG+0GvuH8LztPoMHHgU=
 # SIG # End signature block

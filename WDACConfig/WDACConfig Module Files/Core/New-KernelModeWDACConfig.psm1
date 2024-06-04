@@ -17,23 +17,20 @@ Function New-KernelModeWDACConfig {
 
         [Parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$SkipVersionCheck
     )
-
-    begin {
-        # Detecting if Verbose switch is used
+    Begin {
         $PSBoundParameters.Verbose.IsPresent ? ([System.Boolean]$Verbose = $true) : ([System.Boolean]$Verbose = $false) | Out-Null
-        # Detecting if Debug switch is used, will do debugging actions based on that
         $PSBoundParameters.Debug.IsPresent ? ([System.Boolean]$Debug = $true) : ([System.Boolean]$Debug = $false) | Out-Null
-
-        # Importing the $PSDefaultParameterValues to the current session, prior to everything else
         . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
 
         Write-Verbose -Message 'Importing the required sub-modules'
-        Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Update-Self.psm1" -Force
-        Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Write-ColorfulText.psm1" -Force
-        Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Move-UserModeToKernelMode.psm1" -Force
-        Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Get-KernelModeDriversAudit.psm1" -Force
-        Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Edit-CiPolicyRuleOptions.psm1" -Force
-        Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\New-StagingArea.psm1" -Force
+        Import-Module -Force -FullyQualifiedName @(
+            "$ModuleRootPath\Shared\Update-Self.psm1",
+            "$ModuleRootPath\Shared\Write-ColorfulText.psm1",
+            "$ModuleRootPath\Shared\Move-UserModeToKernelMode.psm1",
+            "$ModuleRootPath\Shared\Get-KernelModeDriversAudit.psm1",
+            "$ModuleRootPath\Shared\New-StagingArea.psm1",
+            "$ModuleRootPath\Shared\Edit-GUIDs.psm1"
+        )
 
         # if -SkipVersionCheck wasn't passed, run the updater
         if (-NOT $SkipVersionCheck) { Update-Self -InvocationStatement $MyInvocation.Statement }
@@ -54,39 +51,6 @@ Function New-KernelModeWDACConfig {
 
         # A flag that will be set to true if errors occur
         [System.Boolean]$NoCopy = $false
-
-        Function Edit-GUIDs {
-            <#
-            .SYNOPSIS
-                A helper function to swap GUIDs in a WDAC policy XML file
-            .INPUTS
-                System.String
-            .OUTPUTS
-                System.Void
-            #>
-            [CmdletBinding()]
-            [OutputType([System.Void])]
-            param(
-                [System.String]$PolicyIDInput,
-                [System.IO.FileInfo]$PolicyFilePathInput
-            )
-
-            [System.String]$PolicyID = "{$PolicyIDInput}"
-
-            # Read the xml file as an xml object
-            [System.Xml.XmlDocument]$Xml = Get-Content -Path $PolicyFilePathInput
-
-            # Define the new values for PolicyID and BasePolicyID
-            [System.String]$newPolicyID = $PolicyID
-            [System.String]$newBasePolicyID = $PolicyID
-
-            # Replace the old values with the new ones
-            $Xml.SiPolicy.PolicyID = $newPolicyID
-            $Xml.SiPolicy.BasePolicyID = $newBasePolicyID
-
-            # Save the modified xml file
-            $Xml.Save($PolicyFilePathInput)
-        }
 
         Function Build-PrepModeStrictKernelPolicy {
             <#
@@ -140,22 +104,7 @@ Function New-KernelModeWDACConfig {
                 Write-Verbose -Message 'Setting the policy version to 1.0.0.0'
                 Set-CIPolicyVersion -FilePath $OutputPolicyPath -Version '1.0.0.0'
 
-                Edit-CiPolicyRuleOptions Base-KernelMode -XMLFile $OutputPolicyPath
-
-                # Enabling Audit mode
-                Set-RuleOption -FilePath $OutputPolicyPath -Option 3
-
-                # If user chooses to add EVSigners, add it to the policy
-                if ($EVSigners) {
-                    Write-Verbose -Message 'Adding EVSigners policy rule option'
-                    Set-RuleOption -FilePath $OutputPolicyPath -Option 8
-                }
-
-                # If user chooses to go with no flight root certs then block flight/insider builds in policy rule options
-                if ($NoFlights) {
-                    Write-Verbose -Message 'Adding policy rule option 4 to block flight root certificates'
-                    Set-RuleOption -FilePath $OutputPolicyPath -Option 4
-                }
+                Set-CiRuleOptions -FilePath $OutputPolicyPath -Template BaseKernel -RulesToAdd 'Enabled:Audit Mode' -RequireEVSigners:$EVSigners -DisableFlightSigning:$NoFlights
 
                 # Set the already available and deployed GUID as the new PolicyID to prevent deploying duplicate Audit mode policies
                 if ($CurrentStrictKernelPolicyGUIDConfirmation) {
@@ -277,12 +226,7 @@ Function New-KernelModeWDACConfig {
                             Write-Verbose -Message 'Setting the policy version to 1.0.0.0'
                             Set-CIPolicyVersion -FilePath $FinalEnforcedPolicyPath -Version '1.0.0.0'
 
-                            Edit-CiPolicyRuleOptions -Action Base-KernelMode -XMLFile $FinalEnforcedPolicyPath
-
-                            if ($EVSigners) {
-                                Write-Verbose -Message 'Adding EVSigners policy rule option'
-                                Set-RuleOption -FilePath $FinalEnforcedPolicyPath -Option 8
-                            }
+                            Set-CiRuleOptions -FilePath $FinalEnforcedPolicyPath -Template BaseKernel -RequireEVSigners:$EVSigners
 
                             [System.IO.FileInfo]$FinalEnforcedCIPPath = Join-Path -Path $StagingArea -ChildPath "$PolicyID.cip"
 
@@ -416,15 +360,7 @@ Function New-KernelModeWDACConfig {
                             Write-Verbose -Message 'Setting the policy version to 1.0.0.0'
                             Set-CIPolicyVersion -FilePath $FinalEnforcedPolicyPath -Version '1.0.0.0'
 
-                            Edit-CiPolicyRuleOptions -Action Base-KernelMode -XMLFile $FinalEnforcedPolicyPath
-
-                            # Add policy rule option 4 to block flight root certs
-                            Set-RuleOption -FilePath $FinalEnforcedPolicyPath -Option 4
-
-                            if ($EVSigners) {
-                                Write-Verbose -Message 'Adding EVSigners policy rule option'
-                                Set-RuleOption -FilePath $FinalEnforcedPolicyPath -Option 8
-                            }
+                            Set-CiRuleOptions -FilePath $FinalEnforcedPolicyPath -Template BaseKernel -RulesToAdd 'Disabled:Flight Signing' -RequireEVSigners:$EVSigners
 
                             [System.IO.FileInfo]$FinalEnforcedCIPPath = Join-Path -Path $StagingArea -ChildPath "$PolicyID.cip"
 
@@ -517,8 +453,8 @@ Function New-KernelModeWDACConfig {
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCDbLF95DL242YJt
-# oxdNmHybKhPlvew4nFSowMAAe3ONyaCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCCjbAsSg53pkAsi
+# buRyG08VMxOR1aqV7vjTJnCfc/CS8KCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -565,16 +501,16 @@ Function New-KernelModeWDACConfig {
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQgGNG/dSqO0Ba4enwsjwu87JbS9vUIjorQ4SAWcZUm3B4wDQYJKoZIhvcNAQEB
-# BQAEggIAFbWnHZLKAFctOov91GAiuTDO81yT+NQNk4fCaZxtl2acltBvkesWICHP
-# Yu88n2mNxhrukGnVPvnsyJ8H0M6iefE41PikCZ8qOmML2svzqtyEBGLVxyPeP2Vg
-# AgucS2rolqWC9LBnt9v0hjCT+V+70Dit55g4VI9J0kbkfrBEAodv1cDPejbaM0y+
-# p+LIST0fFvqUZ3I5uXb5TF28Dgibv5lbYHWFqnRpu4dxtUp5YQvbfWOL0OcHdmwi
-# F6QbL3Oy5BqJiA554OhjCKXlWasMd5+0T0KaRED5iwUC7cohmSFmPlDGotArDDr8
-# 3g/P8Z/eAjTJK05jeYuHgGbVWDcEGfGzKeUCMJbWT4hL7GaOsQQjGYR/aCz3dDSM
-# JzcmaQNOHGxzdFzHIEH/hRt8vssLnGpY6imVuBOSiheQRwl4QPSyw8cUgY4NmwGy
-# K+GFWtW1Ri8TJ+WrUFk7yhEDVnGkyihjDbN6E/Q6/xGb9dZp6REwJ2hcWkR6+w9h
-# EwcBwUH1mdT/CN8q8QgPAxARnB/GIQ6tDrpERwYJLAyCGsDFfSaV2og9/l8OZLUi
-# BLl3kiYpBC1O/HcbUEFlJcJtZDh688xRRw3/M+UpAz1wKIBsQ1vXKmgKnsyTKFPC
-# zbgWBENlHXc8le7E4Ap4HzXayINe4DGlKqCHCT0AKszbOkH8pFs=
+# IgQg9CJrbF2qP6qW2qYjsnEidU7L0lia5nZgzRSYad7R+5QwDQYJKoZIhvcNAQEB
+# BQAEggIAKEL48Z2U8kLVRh6aRGFWK4cLGMmi6HXvnLnycNOsKPpSxaB151a8gfOx
+# pghoQWeMglydC/T4MIPhK0LIUxcfN+x1d1zeiZ+7cwIOd6jsyrN3Txdlgn2/cUnA
+# u6SmQc2xnqpPW2ZLkmYp2AgqRdqafZrxXJ/PgvEzFHxE/xyDkyVMlUMBz2YkM0V6
+# zB+zbLbG/GBgHVKdei22H3+VVYlw9u+WpFTB8RKvEwxuPf4OCbG9QQPMvnyQ/0yz
+# PBY9R/fh5rGuBrsicj/NvxLnaHTzJW+3SiGkWiA4dWhxYcn0AJpm13mXpy5XcE+M
+# wzx3/nPSLkAG74Wj+XcM4IPBL5SSngCCqcHwjBJ64Jgezgnqt6CEk2jJTLs/njnK
+# o8epem065xneNvSzG5quUbtvJ0Sw2NZiVjYQxeLc0K8FLlEvmCXfQApGQ2wqlSmj
+# 0Z+vSakumuMxbFd3MeghO37HbfAT4JP/EK9hfXzm6TbCYJYrQbXrhk5lZDQ/qHd1
+# l9JCTjub3PyWrbI6JyzT331rdGDsVD0YaaAkobAFhzv32AVNqpMmKvMb83s6mlqk
+# glRTzeZnSHgEUrv+t+XAGM2soM4AOn3o6S3Q2VUrhicQHGHRJ2t8XkEWllIsN/MK
+# StxAVOCuz1FdVA0U/KRB/cavBuwDk/lsRVehakYFiyqDeayMYQs=
 # SIG # End signature block

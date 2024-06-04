@@ -13,7 +13,6 @@ Function Get-GlobalRootDrives {
     [CmdletBinding()]
     [OutputType([System.Object[]])]
     param ()
-    # Importing the $PSDefaultParameterValues to the current session, prior to everything else
     . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
 
     # Import the kernel32.dll functions using P/Invoke if they don't exist
@@ -58,15 +57,13 @@ Function Get-GlobalRootDrives {
     } while ([WDACConfig.Win32Utils]::FindNextVolume([System.IntPtr]$VolumeHandle, $SbVolumeName, $Max))
 
 }
-
-# Export external facing functions only, prevent internal functions from getting exported
 Export-ModuleMember -Function 'Get-GlobalRootDrives'
 
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCCY80BUksqhWkl3
-# tTnVOKu9rW+oMV3WkN3pzlBRCSH/3KCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCC4884M+wwXvyzt
+# 6o+goGH32PER3SswAUBnEug0q9G7fqCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -113,16 +110,16 @@ Export-ModuleMember -Function 'Get-GlobalRootDrives'
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQghUTkNqOG40SWbFi67HmHufoI92omSG2hhvOI2kJtHKkwDQYJKoZIhvcNAQEB
-# BQAEggIAO5NHqtVTVp4azYXypWIWJourLFbPLVhkkia/7s4n8pGIrk+bSpJr6BmJ
-# jbRJuYS9b8EwLkie7eFD0Sv0bd3JaR/H29Ez4xIa8PjV3Gygl1n6Mu492rlD5c13
-# YEnHgb+yLuU0wOTCKQMJ0Z9JA2X9Jbu8B7RLwoqDjsRkhpZeuAiNgM7LatRzK9du
-# nmYRj0McmPoVu4YExq6Afym7HOzYXjQvRyKFGv540r6u6Kd2ErHade4EEx53ZW0+
-# RQgiIFdZZP5GmZLUnzaHTZ7WJO5fPJUp2UFxH6z572ogPkJv/0mnEzbTInmE1S9L
-# 9zHFx0vC3Kqe1VTM+WhZrKaeNOT0wnMRWik/CThQ5v+OlWQKk7vOG/J5HKlojwP2
-# 9C1wESizZkr9kRzapVrx6EnTvL/Irscn0R8Wd1UvKUcyfMfMs/6eIbAbLDTruaJg
-# GmgOn2x7eW1fBBSc9oY4y3+zIBsF2d5gJbK79OZTCcL4ORzJNd6uAlC+BwBm+5VI
-# 4vjXbhJsi7XLByZmu614F7g0FWmNPee4Fy4azwc2yAvvSywfWNPhY6o5Ig9fViBQ
-# Z52Yuvs0yIYfPVyZVxtLFBHxMkTEM3/2a3kijz0uFKewloFfc/PBAMjUe69+qZ3A
-# tS9NtokNEdG3v+nRDKkck1xrjX5YtYiNCsyig39jX9zylkR9IFI=
+# IgQgo0C0zptFhoJzZvj/0/3wpvlPFH1XTvybgp+ox0nDOEEwDQYJKoZIhvcNAQEB
+# BQAEggIAhzu7HyYusy9CRzee6sYUAaHZkCUSWljnPlFEyoUSLUo+2vhbE01LYFPT
+# y7ymeZTRnosGuydR9oo1XVpv8aND+wAPcm84nOmJ7QgTg61KdyL6GCm0kf6gPsQt
+# KAy/EloD3sHseoVvsBNjbec0YHfxmdxSKZOg5ZLTMnSw7/SVwNB95c937Js2V5Ns
+# b3CaFlUUrvhqBXw9FgAP0SXsoJ4MTW7pGKjPBTA1vkfx+QNxUGfUNUlFoEvLUY7b
+# WJkU+nTZu2LozuMtLr4wr7VPOVXwAAh88UuagU2bAZIihm0eoooixtlznIT0w1r1
+# HZ3aZLenMHSLpdggSCas4jZ+WU8TShr2M9hVSDdE2ChvX/Vp3ajjSDal9ON7HC74
+# BVnb2gJcxCn4Ebil4ztY6vBUQGZH6o6P5A7NSAipv2k3Zp0bqlDo6E2uN7IM739L
+# QXWT22GPDOKXdJcUgfNJIKQzDWf3q0VMCPzGva+kdre/euv8dZz8qCZMahF7jBlo
+# rw5C1DoTO4NtzxcjNY6GIyANFwa6YFo7APNLGa+KQzYNF0FKs1t7NJsSH4RX/Mwa
+# MnwVasC1vP+pVrP0jyssEDzGn7y87xkvNprNLWoO+Hqo7xHIx2D3RQ6XnfjKo2xc
+# mJxI8B2WnoTKD4/wX6aa03tTzBcCdAFqVpK4YuOvvZvsHiKN5mM=
 # SIG # End signature block

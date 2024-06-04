@@ -3,6 +3,8 @@ Function Test-FilePath {
     .SYNOPSIS
         Function that takes 2 arrays, one contains file paths and the other contains folder paths. It checks them and returns the unique file paths
         that are not in any of the folder paths. Performs this check recursively too so works if a filepath is in a sub-directory of a folder path.
+    .NOTES
+        It works even if the file paths or folder paths are non-existent/deleted, but they still need to be valid file/folder paths.
     .INPUTS
         System.IO.DirectoryInfo[]
         System.IO.FileInfo[]
@@ -12,16 +14,15 @@ Function Test-FilePath {
     [CmdletBinding()]
     [OutputType([System.IO.FileInfo[]])]
     param (
-        [ValidateScript({ Test-Path -Path $_ -PathType Leaf })]
+        [ValidateScript({ Test-Path -Path $_ -PathType Leaf -IsValid })]
         [Parameter(Mandatory = $true)]
         [System.IO.FileInfo[]]$FilePath,
 
-        [ValidateScript({ Test-Path -Path $_ -PathType Container })]
+        [ValidateScript({ Test-Path -Path $_ -PathType Container -IsValid })]
         [Parameter(Mandatory = $true)]
         [System.IO.DirectoryInfo[]]$DirectoryPath
     )
     Begin {
-        # Importing the $PSDefaultParameterValues to the current session, prior to everything else
         . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
 
         [System.IO.FileInfo[]]$Output = @()
@@ -52,15 +53,13 @@ Function Test-FilePath {
         Return ($Output | Select-Object -Unique)
     }
 }
-
-# Export external facing functions only, prevent internal functions from getting exported
 Export-ModuleMember -Function 'Test-FilePath'
 
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCDrQ3AuE4O5yVy9
-# g+KfiCzeeslBVjLSerW79k/w8eFHuKCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCDkCoNu18a8hf1D
+# NyGqN7ZPAho6p11nQjrKraYECoKFKqCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -107,16 +106,16 @@ Export-ModuleMember -Function 'Test-FilePath'
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQg5xylSGfQKbRINzsDrsyeI1ZRg/uVEW+LzjF/6LmkTmswDQYJKoZIhvcNAQEB
-# BQAEggIAOw9mxP5WA9wgIax6ntgaLhW3g/AJFneBlWElGFWDknYp3ZWsBa4YKDpF
-# 2+uUoHnWQgOEbLYVMTv/Ebp5iKdwJkHYKuxkMA9F06Dlt9MnWeESB3wQ4IVZimkn
-# ARB7LPhl8ZUvtuaKcFRWcpex2Pdr9wLUwmz3CVNp5X9RwwhCc3M/joLsN/lWSAQZ
-# tw2X3Oy2Lajuv9YCB5818fhR5spEkz00xnn1EVY07n1IX4Mq2y03YMmuc4TI0Kow
-# 6bpRG8H/8UN3bic78WDqSarWjnDiY0iBLcs4bcEtmN9ay0VHLLPH+XOs2RKj6dTt
-# gFQ1c7je7U8jM+hQOWpQcDGAE5HK1XVn90xm7PZv+YvJE2LmdcLinttQyEsRUEu1
-# WRSJTNB0cjldS3F+Vt6PjISb/QIUbYYdBUk/TDgWcRR2anAnDzC0I6rT54bqaMr+
-# 0zG+glWjbkAs/xxnAf49LkWKf+IKL7k8e0aYdfYN+Q4R7sYb0lw8x6Pj6Sb5CCIw
-# KqQNprXxkjMK/SvRvGLMDG2MxF2Uxoho/D3RMiaNX29b4VNbgGI8aJd9egYcEUQY
-# /0HVixgaYK4TicZ3kYjM1IxM4v74AukabJSBWwH+8KDwoq73mrN7GAZrlop4ZM6F
-# iIkZmbITL2AARIEeRbR1tZzbHGVYBkytqC3gdssLrSoq+s22FZU=
+# IgQgwE542d0nnWEQ3nx1P03lGX2S2WWepXdbYXsmIroJmKAwDQYJKoZIhvcNAQEB
+# BQAEggIAL3C97Eg9TquSmK33GTCmr9N2OSInCup3rjVDDEKwBSNJvOWSh3IXvaLD
+# K56Lt2SyJatAdQ786E3doTIB10GxHXzfviypuYlibUadV924RwVqUNkDt+K8tDsv
+# YquSA2mBWJBcD5m+VoEoCSaet/JJxT90om9UN1w2Zpvh1IUB6xOuC9jjtegMnXpJ
+# KR95ecc44sRinm1KMGfykLaA5xQ88pSvgMSNe26Pm6SI7cLV5Y4eGxlQNC7w26IZ
+# mZnU8maQFH/g+1i/ulgzv7Y++/win0C1RmK6fCx4ArJKQBDFz42O/gGTa8Nudlc5
+# M8Eq9UtzCmgTm2nPINL/D89K4BSWAn+FvtystFGEnJUxu5sbKFLCVkxjp9jGBxKC
+# fEXe9x8GTKRJh1J/oqcIP9XTb9CxJFWxQTiqcqHk9eLuFjpEUm7D7yUO2+c2C91s
+# JPfWrk6bGos4lrLywqaoPWQv+9A8mICcMRiDMmipWqjmenNG3Vx5g19DslUlzTbb
+# 3jz1ldxfOTOUqSir47e6H1bmzZuqIxgGrfCBno8HgSm82RtDIfyIV8BPxhxV7BYM
+# NPMGL8TYP7vtJKHOWScoL/acB65zw23kZQxwQ1tgyV61ptOLAye0+wGhckhpWg5J
+# VDG86mAi3IM60lJKh0v+0iZ7aUHZ5pgqHdTo78VMstxaYlrihNg=
 # SIG # End signature block

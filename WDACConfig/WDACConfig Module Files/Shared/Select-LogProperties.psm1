@@ -1,58 +1,62 @@
-function Remove-UnreferencedFileRuleRefs {
+Function Select-LogProperties {
     <#
     .SYNOPSIS
-        Removes <FileRuleRef> elements from the <FileRulesRef> node of each Signing Scenario that are not referenced by any <Allow> element in the <FileRules> node
-    .PARAMETER xmlFilePath
-        The path to the XML file to be modified
-    .INPUTS
-        System.IO.FileInfo
-    .OUTPUTS
-        System.Void
+        Selects, processes and sorts the properties for the Code Integrity and AppLocker logs.
     #>
-    [CmdletBinding()]
-    [OutputType([System.Void])]
-    param (
-        [Parameter(Mandatory = $true)][System.IO.FileInfo]$XmlFilePath
+    Param (
+        [PSCustomObject[]]$Logs
     )
-    Begin {
-        . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
-
-        # Load the XML file
-        [System.Xml.XmlDocument]$XmlContent = Get-Content $XmlFilePath
-    }
-
-    Process {
-        # Define the namespace to use with the namespace manager
-        [System.Xml.XmlNamespaceManager]$NsManager = New-Object -TypeName System.Xml.XmlNamespaceManager -ArgumentList $XmlContent.NameTable
-        $NsManager.AddNamespace('def', 'urn:schemas-microsoft-com:sipolicy')
-
-        # Find all Allow elements and store their IDs
-        $AllowedIds = $XmlContent.SelectNodes('//def:Allow', $NsManager) | ForEach-Object -Process { $_.ID }
-
-        # Find all FileRuleRef elements
-        $fileRuleRefs = $XmlContent.SelectNodes('//def:FileRuleRef', $NsManager)
-
-        foreach ($fileRuleRef in $fileRuleRefs) {
-            # Check if the RuleID attribute is not in the list of allowed IDs
-            if ($AllowedIds -notcontains $fileRuleRef.RuleID) {
-                # Remove the FileRuleRef element if it's not referenced
-                [System.Void]$fileRuleRef.ParentNode.RemoveChild($fileRuleRef)
-            }
+    Return $Logs | Select-Object -Property @{
+        Label      = 'File Name'
+        Expression = {
+            # Can't use Get-Item or Get-ChildItem because the file might not exist on the disk
+            # Can't use Split-Path -LiteralPath with -Leaf parameter because not supported
+            [System.String]$TempPath = Split-Path -LiteralPath $_.'File Name'
+            $_.'File Name'.Replace($TempPath, '').TrimStart('\')
         }
-    }
-
-    End {
-        # Save the modified XML back to the file or to a new file
-        $XmlContent.Save($XmlFilePath)
-    }
+    },
+    'TimeCreated',
+    'PolicyName',
+    'ProductName',
+    'FileVersion',
+    'OriginalFileName',
+    'FileDescription',
+    'InternalName',
+    'PackageFamilyName',
+    @{
+        Label      = 'Full Path'
+        Expression = { $_.'File Name' }
+    },
+    'Validated Signing Level',
+    'Requested Signing Level',
+    'SI Signing Scenario',
+    'UserId',
+    @{
+        Label      = 'Publishers'
+        Expression = { [System.String[]]$_.'Publishers' }
+    },
+    'SHA256 Hash',
+    'SHA256 Flat Hash',
+    'SHA1 Hash',
+    'SHA1 Flat Hash',
+    'PolicyGUID',
+    'PolicyHash',
+    'ActivityId',
+    'Process Name',
+    'UserWriteable',
+    'PolicyID',
+    'Status',
+    'USN',
+    'SignatureStatus',
+    'SignerInfo' | Sort-Object -Property TimeCreated -Descending
 }
-Export-ModuleMember -Function 'Remove-UnreferencedFileRuleRefs'
+Export-ModuleMember -Function 'Select-LogProperties'
 
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCCiiH5jyaDDpFGG
-# 5x+IU8g/kXOi35TVT0xBvcUsEt4y16CCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCBrARnsR+Q9BPLf
+# +cLZxpVRgGTq9mgSJkwfWTuxZIY596CCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -99,16 +103,16 @@ Export-ModuleMember -Function 'Remove-UnreferencedFileRuleRefs'
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQghWJUX2RTrBrk5j5kXE9FJbJwogs1y7re8g+KpOEFG6EwDQYJKoZIhvcNAQEB
-# BQAEggIAk0Eva3KnhVgfwXjf2j45DxSTj6opD9/YAc90HCLNWVnYGS2sT59xDoGh
-# SIhGjEyE6lKqiQvII4yCakdva4byRTphX0F7+EXOeLnnDJb5Xs1YioqZsErw6CEI
-# 6eI2I9iyISuaOg/4f5bGXeNiAP3GLzeAbyrggUHfPvYMpLBZj/6FcuNYJ273Cx2p
-# C6Ae9USWSy8dqvKpl3q/OD/YxExM/DuyHXjpAu9hzl5afF7lciKR+tXpRHazdT5Y
-# HY2o2H0+Ht/92f8GODfAqD0kBkp36jvL8gvKnUHyt/VWCHaPRDFEXZe4bJRmu9tb
-# NmIbFFsM+erPu/XYtazJu5cc3tyyjNyxKVJQtk+ZvHXBYViGkjwP1MFRPaN+G+yU
-# 2jyJjI9hdtmkQTrsGmLI3AZ9MyuZHEXCxaEaL/gYMDd8wXjl0oMPuubxwPJHqrvS
-# xCgvL1oGcT7Odr/6V6MbIr+5J3/ZHK51Yp/t5Ufqw1Nh5lAQ0vRoT9PYyykefAXn
-# 9HtO3y4Or/Bx2h/ZJNG3+teu8KkCMUfxpAaj+HEzpWYqfLpOJgMFpeUD2rUmVAQB
-# rzGR5bX0j5McOP0u3PIWSl2GKvpCuRr7R40Y/SunwLLCYrc9KysUg00S8z0WtiBl
-# kNCfxlNdEIDZYURzMo9ke27N9wHv7uVjcTDlcMVN+ALTosbu+9Y=
+# IgQgKTxeGJeS1TiTWmKzvhw75kgGKmzOwpUS6F/5uO8SzuowDQYJKoZIhvcNAQEB
+# BQAEggIAU8WidlIB9O6kdBCL5/wQF4nC9OQRXlPrltxd//m/IJNyybGwEFEaO3sF
+# rTDXK//NNJ2Dq9c4rVYtWGdn+nrwtSOaSOjgVSuM9APlaL3E4m5XlmuVAoivI8xk
+# 8unVcqrp+erdGm26diTrkSReqGOgB42CL9w1kOjBlNeKGhj9EiqPTZXTMbXvnBvS
+# WtCcIarkwoqJL3nsnSeZGKPssbGcN+tP8hiOxhVvcC49PrnPQ1sJkddZbG6M4LxX
+# 9bRZHL/INKAYoq3YszWRrUlnRTn1aVTfllC6797OpEjlDboHmSxj8J1tzsJPFT6R
+# l+QODdGl9Dy4dOlM52wz1JQqNYjgLFWV6xsyIXzZwv8wLrKFrdC1tcDGmjZJImO9
+# lr7DKPgO8K4nPul6WiCmgZdxfGvXvKACqRt5lxTEAdL8D1mjmBqklBMl+b56c1PO
+# 1ij6P0n7MMEnYy9P3LcXbpBa33HTgRIrnXcxVY6pnXGl2Nv3lp04jbD15VEZ3BE/
+# XhZMv2v5nttu617imdo9oTSoau7tiRi717gkjj7tGQd42XhuR+KnwMBe/xiUpy4e
+# zZ/6aOaB2QVoMimYFGhU0jCDYENa+tMmCQmCiuK67aF8uurO6tQ6tYbJY7VXZgHd
+# jMgXD5Hov7ILI5Svj4E3JJbym8Rg6jqO9lJOL40Qcl16D0F1CD4=
 # SIG # End signature block

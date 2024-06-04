@@ -65,9 +65,7 @@ Function Receive-CodeIntegrityLogs {
 
         [Parameter(Mandatory = $false)][System.IO.FileInfo[]]$EVTXFilePaths
     )
-
     Begin {
-        # Importing the $PSDefaultParameterValues to the current session, prior to everything else
         . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
 
         # Importing the required sub-modules
@@ -137,6 +135,24 @@ Function Receive-CodeIntegrityLogs {
         }
 
         #EndRegion Application Control event tags intelligence
+
+        Function Test-NotEmpty ($Data) {
+            <#
+            .SYNOPSIS
+                Tests if the data is not null, empty, or whitespace
+            #>
+            if ((-NOT ([System.String]::IsNullOrWhiteSpace($Data)))) {
+                if ($Data.count -ge 1) {
+                    return $true
+                }
+                else {
+                    return $false
+                }
+            }
+            else {
+                return $false
+            }
+        }
 
         # Validate the date provided if it's not null or empty or whitespace
         if (-NOT ([System.String]::IsNullOrWhiteSpace($Date))) {
@@ -612,18 +628,17 @@ Function Receive-CodeIntegrityLogs {
     }
 
     End {
-
         # Assigning null to the variables that are empty since users of this function need null values for empty variables
-        $Output.All.Audit.Count -gt 1 ? $Output.All.Audit : $null
-        $Output.All.Blocked.Count -gt 1 ? $Output.All.Blocked : $null
-        $Output.Existing.Audit.Count -gt 1 ? $Output.Existing.Audit : $null
-        $Output.Existing.Blocked.Count -gt 1 ? $Output.Existing.Blocked : $null
-        $Output.Deleted.Audit.Count -gt 1 ? $Output.Deleted.Audit : $null
-        $Output.Deleted.Blocked.Count -gt 1 ? $Output.Deleted.Blocked : $null
-        $Output.Separated.Audit.AvailableFilesPaths.Count -gt 1 ? $Output.Separated.Audit.AvailableFilesPaths : $null
-        $Output.Separated.Audit.DeletedFileHashes.Count -gt 1 ? $Output.Separated.Audit.DeletedFileHashes : $null
-        $Output.Separated.Blocked.AvailableFilesPaths.Count -gt 1 ? $Output.Separated.Blocked.AvailableFilesPaths : $null
-        $Output.Separated.Blocked.DeletedFileHashes.Count -gt 1 ? $Output.Separated.Blocked.DeletedFileHashes : $null
+        if (-NOT (Test-NotEmpty -Data $Output.All.Audit)) { $Output.All.Audit = $null }
+        if (-NOT (Test-NotEmpty -Data $Output.All.Blocked)) { $Output.All.Blocked = $null }
+        if (-NOT (Test-NotEmpty -Data $Output.Existing.Audit)) { $Output.Existing.Audit = $null }
+        if (-NOT (Test-NotEmpty -Data $Output.Existing.Blocked)) { $Output.Existing.Blocked = $null }
+        if (-NOT (Test-NotEmpty -Data $Output.Deleted.Audit)) { $Output.Deleted.Audit = $null }
+        if (-NOT (Test-NotEmpty -Data $Output.Deleted.Blocked)) { $Output.Deleted.Blocked = $null }
+        if (-NOT (Test-NotEmpty -Data $Output.Separated.Audit.AvailableFilesPaths)) { $Output.Separated.Audit.AvailableFilesPaths = $null }
+        if (-NOT (Test-NotEmpty -Data $Output.Separated.Audit.DeletedFileHashes)) { $Output.Separated.Audit.DeletedFileHashes = $null }
+        if (-NOT (Test-NotEmpty -Data $Output.Separated.Blocked.AvailableFilesPaths)) { $Output.Separated.Blocked.AvailableFilesPaths = $null }
+        if (-NOT (Test-NotEmpty -Data $Output.Separated.Blocked.DeletedFileHashes)) { $Output.Separated.Blocked.DeletedFileHashes = $null }
 
         Switch ($PostProcessing) {
             'Separate' {
@@ -674,8 +689,8 @@ Export-ModuleMember -Function 'Receive-CodeIntegrityLogs'
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCBgkmVhIPVsXm9I
-# I3ha6gQdy9qk86YrQEWgjZ7qOjQ2dqCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCBsgDqC5qKT8VvQ
+# rBMj1yDqqKzutSViyai8zsMTFpoJ0aCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -722,16 +737,16 @@ Export-ModuleMember -Function 'Receive-CodeIntegrityLogs'
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQg6OpMIrCfPmQ9SmJ9HJewjCq7lJN/mJ/VdGblE/XloKYwDQYJKoZIhvcNAQEB
-# BQAEggIAbSOvKZzGfnsOkK/0MnuBkyX0kyNX2KOh9KKQ5AlBAQ55zx4TdntR7OFS
-# v4bU8x8+gNGPd8CDycUOhoQCRH9MbG6T0fvLdgpytijGUL9G4vcZuka5tx3Ra7YR
-# 0dMGkzc1hxjra0ScqHaUYYkgTGMSolrcUaZ8THBb8zICxQORDRHAsAouG9y4iETw
-# 3qxCdz5mCJJK92h5Fde+j3dRwajLQfk+mWPX8zovN7/35o4m/qo3BHAdKRq+Gm1b
-# jQ2EtGMK56anNPEpObHPzV9M76YRmiusgN2GXg37V56gXU5WEO5NHKqG2Kuyu2GM
-# ijgWv2LJOswK5h9TIzR/19tb8rlnnfy1lFL7zxzyOgi05c8zyd2uaUZ/Bb+rs+t+
-# riU9bx3c0/kNRq71R74pO8g6h8dXihKbTojBGx58kxahCXGkB3JZI8AE/zDkx6uj
-# AZ+unrZSHnsmNfcJvyLeKqGPwkQPocRkxI1yRfLpvO2GTfxp7RMAntsiNSk2t3hf
-# MPE14HGdB8rMutGU+BxIzTQq/liBD4GX6xuPaxfEYZ4K03kTg8qTy/yFUvYNMdJK
-# 6iEDEEWPkDoEXxzh8IkDTWNrHkC5mFoBwNkuiJvkP9Lw9bSzErt+9MQb79ObNunS
-# BnkJKjXyiRgi+GP9Q2Hyxnm2aXQbMWTFspBt9hQAf5ZOMCMW1UY=
+# IgQgLRn8iCVLngsyMSZEpjnsGrognHl12khwH9bDFFTPjWIwDQYJKoZIhvcNAQEB
+# BQAEggIAmSLhnWqgvihyeta1TisaNnW9+g7GI+eYvLEGiwzsEQFEbBkt3PGKzyHZ
+# 92CyvHyfuLPHOd1D56TEpDSwa7tKrSuYItsji3aRohZI/UBm1FaLNBVQbTqR/m5u
+# m3aP6rrxEikvpSGkg5ownYVpHPbubRPevkHDd8VyozI+0uTK2NXt9StHyXc22VQK
+# bb6VLLKNBuwIt9I3mors/9/DYapeCkK70P/OSrACCddi7hqPJG4z4he6KPGh1bCL
+# 7Vmb/0j8gvJvNR9T0+HaKUvlB4znw8eBJp7sLdVUNBx7vqysJllDAcFMp5r1RCvS
+# NAVCwggfbeY/Hh6AH+uK3GK+XxfY85XzfFr1ae8dcRigWMLSOPZ2rFdm+lGoUGqw
+# 9lnsvN8ReUmz7ZgD2eD8c1PsGCaFh9rf1IKkMqIyZR5NGOotJ/fim87sjfSdHFhK
+# MUtqUv/Xuv2BX017iqiWcn0wBDuv6PMRV3QqonbpYGh1SR2nr4QwTNpL/PZLXXzI
+# /Xc58Mi2djzlNcvf3V5Y9XqaWveklq+/E6Khz6JkRIfvXN5ZKzTSC83WZHIbwSm3
+# Pes7eH3cS28ZjBI3AkHEzOd+sPPsBalCG4sPTFU0rfUhDVKovL0E1b7/tAv3BwBg
+# WuEleLuT2k9mMm8iPQMADF5KDSX71ry6T5jg6Y3nXHUhijHrZ5w=
 # SIG # End signature block

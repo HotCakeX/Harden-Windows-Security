@@ -46,8 +46,6 @@ del "%~f0"
 "@
 
 }
-
-# Export external facing functions only, prevent internal functions from getting exported
 Export-ModuleMember -Function 'New-SnapBackGuarantee'
 
 # An alternative way to do this which is less reliable because RunOnce key can be deleted by 3rd party programs during installation etc.
@@ -77,8 +75,8 @@ CiTool --update-policy "$((Get-Location).Path)\EnforcedMode.cip" -json; Remove-I
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCBKMXl6rG3EbcKJ
-# lbEBDxOu8f2rxKoT68HyC6H6vMeMEaCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCB5a/araSn3OQ2S
+# 0Ae5gTuaDQr/Xu8QIQCE45YD+erNQaCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -125,16 +123,16 @@ CiTool --update-policy "$((Get-Location).Path)\EnforcedMode.cip" -json; Remove-I
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQg0XQZSSQOQZSEh9aMK1aN8/fHmdBTA13VwA6ODwtJDSUwDQYJKoZIhvcNAQEB
-# BQAEggIAIBe1FjXMo4EdqI1pbEComOiOBN8kdO/erY8KMcN6Q36ewHY58ujwkSKM
-# 1WbiE82wGXZuIVvnFy2P1jBQElSGUltYMydF+SG6kUDwEkKf2CfYtxqqK78b5QzK
-# FPL2fIi3mFUnQAJRmhVDdIFoDCugLfRvfBUHDLhO0yDcktVq0OcvYgu+EJBkhlQ8
-# eowkqmJ/IyiFBZV4H1KhtWRTo7qq3NKi2NkXRw4LpDAvdCUeXlzK5YGH940q4wxs
-# pcn3XXXzFvedpt9Z5UxzxLpD/Nw4zyDddHcgjFAWUFjCa2oQ6igtFtZCveySQnCA
-# +v6abyjVFVvzTSP8gPY/InEJrcImanj/Q0idW68jU0ySM9OW5Ld9tBhgEC11PSHl
-# EuDhkMCm0slv+FW/1p1tACrJMlx/fztbjqtrqjE6S6bxitVQXEB9gG2+vf1ghnuN
-# 23D9Tll4cN2zzgjuMT+pUDeHSS92loHywDz8Fyv6raJ8RHpeKDPdsrHdFTKFCFHG
-# lsZF7zZDva0bcgkbE3NBT+Rj2MIQshLx0mGdFcP+kTRuzfVEovbeafQsbz4xmdPA
-# 67/R9B7jHvmQbevGe/RYib58eJQtKNnopecE2w/da0wQSneP6WQMZdGQGjYIQ3mr
-# bT4lWnh6RLgkmHmeCqWKyCdfZS7GTboMa6ok5qjtT/ovCwpBrQE=
+# IgQg4EQQiEsaoR63vxiuaprHgwze3OrU9X3H8WELiRHJInowDQYJKoZIhvcNAQEB
+# BQAEggIAMmHKVwXwKU9316MybuK6OCMb8Yn9cRxuFNkbXzXpilc4DmlJwjdaKFAA
+# Ce4Hz98hd8LhA1YYH6OOqZqSGFRBowD8FdMOKUaK9LJ88Rt6pdxIPel8fNxJiMU3
+# nn+Qj++Ck3MOdXCGiiQZGYW2Mw2033XodPCVnMn5Ex3tNm3QSoeqbc3CuPkniqVD
+# tJ4hreEF6DPaGwHIpp5dOqhm3NrI9ekRqXNzkA/wdQ3OMcidYMpL4C5aZkUXF2S1
+# Rkc5edK60CzW1O8cDVD+0nzadjxWDOi6gaOgFK1t5sUMpTGuHZBMMCsNDwXtJq2H
+# 2Z2RYaZsErkZOgqu/WG+v8Q3YAR222H6vbvJ8xmg326YcMg9XWDlDziOOtGTLkvq
+# tIcYubA3qfQvHwISNNv0uiawdiTxzy+bKFZCrlS8Zvd/THVgprNxcQ5lQyDM5cmW
+# RPIypGaDXEWIO/CIt2fRNDS9IKXgbVaLa+1ggAcjYAd1KXd5ZEj3bKsfKw0c5mI2
+# n1GioroYpiPk25USj6cuqxix0Z2MD/pyJOxxB/GHTYZu25CO1jfuIQBkT2dvPwXC
+# luj9zdX8/IH5qpD3ii/Hr5YTB7JXFmkyoCK5m4V+IBR5szumAdphrq7r6nyArXHt
+# 0a+WoAMfRyJT6TlRZzRgH36tNwD8VJSiuADuezMfX9BRAsqafb8=
 # SIG # End signature block

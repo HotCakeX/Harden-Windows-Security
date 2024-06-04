@@ -1,5 +1,4 @@
-# Since the quasi-exported classes will be available process-wide
-# and therefore also in other runspaces, defining them with the [NoRunspaceAffinity()] attribute.
+# Classes will be available process-wide and therefore also in other runspaces, defining them with the [NoRunspaceAffinity()] attribute.
 # https://stackoverflow.com/a/78078461/21243735
 # https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_classes#exporting-classes-with-type-accelerators
 
@@ -55,12 +54,85 @@ class ExceptionFailedToGetCertificateCollection : System.Exception {
     }
 }
 
+# a class to define valid policy rule options
+[NoRunspaceAffinity()]
+Class RuleOptionsx : System.Management.Automation.IValidateSetValuesGenerator {
+    [System.String[]] GetValidValues() {
+
+        #Region Validating current Intel data
+        # Get the CI Schema content
+        [System.Xml.XmlDocument]$SchemaData = Get-Content -Path $global:CISchemaPath
+        [System.Collections.Hashtable]$Intel = ConvertFrom-Json -AsHashtable -InputObject (Get-Content -Path "$global:ModuleRootPath\Resources\PolicyRuleOptions.Json" -Raw -Force)
+
+        # Get the valid rule options from the schema
+        $ValidOptions = [System.Collections.Generic.HashSet[System.String]] @(($SchemaData.schema.simpleType | Where-Object -FilterScript { $_.name -eq 'OptionType' }).restriction.enumeration.Value)
+
+        # Perform validation to make sure the current intel is valid in the CI Schema
+        foreach ($Key in $Intel.Values) {
+            if (-NOT $ValidOptions.Contains($Key)) {
+                Throw "Invalid Policy Rule Option detected that is not part of the Code Integrity Schema: $Key"
+            }
+        }
+
+        foreach ($Option in $ValidOptions) {
+            if (-NOT $Intel.Values.Contains($Option)) {
+                Write-Verbose -Message "Set-CiRuleOptions: Rule option '$Option' exists in the Code Integrity Schema but not being used by the module."
+            }
+        }
+        #Endregion Validating current Intel data
+
+        $RuleOptionsx = @($Intel.Values)
+        return [System.String[]]$RuleOptionsx
+    }
+}
+
+Class CertificateDetailsCreator {
+    [System.String]$IntermediateCertTBS
+    [System.String]$IntermediateCertName
+    [System.String]$LeafCertTBS
+    [System.String]$LeafCertName
+}
+
+Class FilePublisherSignerCreator {
+    [CertificateDetailsCreator[]]$CertificateDetails
+    [System.Version]$FileVersion
+    [System.String]$FileDescription
+    [System.String]$InternalName
+    [System.String]$OriginalFileName
+    [System.String]$PackageFamilyName
+    [System.String]$ProductName
+    [System.String]$FileName
+    [System.String]$AuthenticodeSHA256
+    [System.String]$AuthenticodeSHA1
+    [System.Int32]$SiSigningScenario
+}
+
+Class PublisherSignerCreator {
+    [CertificateDetailsCreator[]]$CertificateDetails
+    [System.String]$FileName
+    [System.String]$AuthenticodeSHA256
+    [System.String]$AuthenticodeSHA1
+    [System.Int32]$SiSigningScenario
+}
+
+Class HashCreator {
+    [System.String]$AuthenticodeSHA256
+    [System.String]$AuthenticodeSHA1
+    [System.String]$FileName
+    [System.Int32]$SiSigningScenario
+}
+
 # Define the types to export with type accelerators.
 [System.Reflection.TypeInfo[]]$ExportableTypes = @(
     [ScanLevelz]
     [CertCNz]
     [BasePolicyNamez]
     [ExceptionFailedToGetCertificateCollection]
+    [RuleOptionsx]
+    [CertificateDetailsCreator]
+    [FilePublisherSignerCreator]
+    [PublisherSignerCreator]
+    [HashCreator]
 )
 
 # Get the non-public TypeAccelerators class for defining new accelerators.
@@ -84,8 +156,8 @@ foreach ($Type in $ExportableTypes) {
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCD9KheC+QwZeAmF
-# g1xWldilCpuou3ANAFzVdOww8fsLfqCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCBRyOd1iV3keAaj
+# RJxp1CQZkAEUKEt+wSALV94nP2pWxKCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -132,16 +204,16 @@ foreach ($Type in $ExportableTypes) {
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQgZTNa0z12p9az8IOjAJiT4XpvYLnXqt8aiW9MKW2WVWcwDQYJKoZIhvcNAQEB
-# BQAEggIAC8es3LEoc9OZMX7URFE6PSF3M5df1l8BL0Qz5T9mWyexJdgUmA7hxBKL
-# 9lseS1K8PBxx3vgrdCT5DyGwRrDSOfHumUxQWTkMna339bFalBgV0LXMb7bzqtaQ
-# s91nEa7zyhIOPbKvi4cREoAi32qCjW9/YeJIEfrkp7aaGuzX45UsRi6pLfqPWS1F
-# vt3mhhsbLLfe607O9jJpNTc3B277AcQMojrYVBVaAmpc+YyCf14tx/RQ1XzRvMKl
-# c3QbenLoMUXPuN0tJvbxPZy1YTf7CdgCAUxsiI31DyaGUo7Yk4w+Qld3ltI+LIb8
-# Ggj9eUYxZYPnRuwJNg6Hkub26M2cnO0RGASkVhg2w85UObYMS5w1yBWRuxFj2mnC
-# MA68wPL+gnTAfrginETHUmIuAisRvuvB4CgeTkYTF2ANCIJbUNlR60LHYf8nqq91
-# fxv7FnFu99K12bQba7BBR1aFia1ZipANcwfqJvA7/7l5/gkQNWDxr4PG82MqbjIo
-# LD8L2Fu6Qit+MtWq/mdE47nXiABTUehadm9CkvCUuA0Eoa3jxpknpz0g3GJEs/Pu
-# 4xYmbzJpfwgA7wkRhxOvMwU3lx1Jkf66pQKGnIo4tCkQULE1YVr59Dgx4QvvF0ug
-# Cp/Ucn88TkGO3Sk50bMmrCO4SCUUNrot65olABvbcwuKOwEZnZU=
+# IgQgvtHbCpTZEOmq/wTxe80y6rLLNJRWqDbpAfEsi+PcU/8wDQYJKoZIhvcNAQEB
+# BQAEggIAQXNyZ1RvnnrvqZjWOw/4cHXHcH7Um7Q5UAdjf7FcVhENBQcODckhiHe4
+# kqz8NKO57iyqpNqSLmyEgd99Oe+HO/ved/l/0g9mvuazBEsANsR4CSfuUjuMtLRB
+# CwzKGFWDYIMr24pQbgaWtres0KUudzzgJgfg2gBysZtBo+K4SPPrgABQ6d1sYJ01
+# DLgXWGQh5VDwg+wwc76MjVteSEM4+GG207uJYg4GIbll1fvEP259Z2KjpOfGrCgM
+# 7IWN9KV6uy0LKSWSejFGNfWo62knvtzMRuik7T2xit1PZSswaou0EMQCUWOmiLPB
+# GYD4KJA/pOAUZSAGL8Ya+X/572Q9jiuRxxpppIQghxuy85Plt0VCk2Q0a2DG/qsx
+# 64wDv65ZFNuT2DKWCaQgVchjLpAV2bZDj2NC7MuKcaenn95rLVVaXrcGNvTjhsf/
+# ZDllp2aEKmHNcmnrVqcutg4llQRUWZ7p2clWOqsJgaOJXDO54lyQksnCsitbxFye
+# MAup9VSRd7ZwPgDWSR3ef4bkScFbImKmLz6nhXgFHImp5p8HiNWDoyBtkzzSa8oG
+# t8gWyDbqqZFy4Q2hA1Ldkn0r4p+/tl3JZ7nn6a7IiANb2Pf7Vqyx5CIsTl1OCH9n
+# 0AzjcByp8S2kN8DEqQ1wOq0W9/MZ6mXE9ZBRN11ywvfHDSqtyVQ=
 # SIG # End signature block

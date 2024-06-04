@@ -22,9 +22,7 @@ function Remove-DuplicateFileAttrib_Semantic {
     param(
         [Parameter(Mandatory = $true)][System.IO.FileInfo]$XmlFilePath
     )
-
     Begin {
-        # Importing the $PSDefaultParameterValues to the current session, prior to everything else
         . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
 
         # Load the XML file
@@ -168,8 +166,8 @@ Export-ModuleMember -Function 'Remove-DuplicateFileAttrib_Semantic'
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCC+k7vhp8c86WbL
-# Kwg60udQjt71Llf3NlXi9z9ZX+33K6CCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCCH3pkVhR+0vJQv
+# sEL4NycE9F2BKBdfs2x+82jtrimo0aCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -216,16 +214,16 @@ Export-ModuleMember -Function 'Remove-DuplicateFileAttrib_Semantic'
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQgCkEmQA6Bz4ztKSOupfOnuQhd/Bt9MEKu7Xyy114q6qswDQYJKoZIhvcNAQEB
-# BQAEggIAPIf9nIuem5E+h461vsYOgvtTCZL6pJgJnL/84ZR1QF8KO+m68u50IvSC
-# Oy4+EeN6OttimzwoP+wqYjZMFv/wskyFCZzKPnRpTcm36ixGSoEO7iTgrbcAN2n6
-# MPlOKp5/GGumWzoNu4YxHsKCQNA9X1jyOUjkXhUFbXMcPjryQ60tHW7HsoDCuP9o
-# qTHKDWvBd+97HohQzKUDtD3HAf64WSLbDxVKsRlmc1LE5zZGfMgiTYO0phw0gFSK
-# G8c4rxfsG7tBo73Dl8JBYLnWYtiOB/Z3lk/N2atMPNgAsowHTjqOTGmSoO0Ckfy9
-# Z03gnTp9Clf0Mcu/0MG/7aVKhUIoafNMNUWqRBBsEHIxc3+TkdUL8hIp2b5KhLTx
-# x/2D9a+eBqWT1B2RPiyhktqrmgL/WUWM5hQmNvg38gaDoV/wF9CNFOdcJ/tEObqd
-# pUdhWf6rFmaj6+b3vqjqoToqHeB1thdaXaqgGYU/xp1sCyk8Xe2McLdcEm2rgiG4
-# am3kRspavl2BGW8gfMwu4I8/7AbH/wDFIVbkku2EegRR8Hw5RrCZbdQI1Qxs2wNG
-# DlTfuAnBFIiAbCBxPsify3SLN06StlYQzzHBJNcs1WwOoZX42PFasNYZr8UR/12+
-# z3xXf/Tm2OGW+u0aBzOW7b8milwL9+CWqN7InbMXFgUOmZMNWZU=
+# IgQg5jNIJDouUgVcZ4DM2bP2ctXF5omLiqNl5T7VgEJIL1swDQYJKoZIhvcNAQEB
+# BQAEggIAde3Aa0uX/GkoxnrmFAMDB51JTvW/3gsJ/HawNhyzEJh3bl4WG2y/it6d
+# VOVgB0DJtmzEuPEIJKQgbtCXn+mEvWYRlst8WOdB7CWIQV6DbQVdXwLjtZZCHJWw
+# GW22Am/zZY8UqnP5cakNwlwInaJMDUQPtJ4RgfZBjwnDNMJoE5XgffA90CoLmHBa
+# no2Zgovuw8wCoC/DnKbuw0fhck9xwnWn4Q9zfDx9D5dEwfy5hTsQvtqSb2BS94gQ
+# jcwEPxpyIMPmsaY4oxJC/AbXOaNwuWqjaT5psBkUraRdH+1ak04XuL2agwxIvDiG
+# mZn6T1RdkK0glNRdB8FQC/1epwAC/qM0z0uK2rqhwOoABU+Islwu8VNDCcdcs6Nx
+# aW7/yYFvT4zELzt5yfc8YhQVDB35hL+cyaW2Qivij4kYN5AnlOapU87hNRTAeOFi
+# Gk/bz8gR4Ai++SVUCHZgLzkfC6A3M71cUjZ34d9VaxS/XOJm1qgye3/AbIxv0KHV
+# /p77wd+6egnJ/AJBr4cvjOaJgxP//JOWEBN2kCraE03bxyrtIrCFjQtUeMMGOBZE
+# GNZnAms1funGW9dpOMoXZTfNyBeUAmW52km5OrZSWEiD8mYFvJker5uzgzqpoQxU
+# cuVKdsnkMo4DAnS8rEEhWyRI8Zyzf3TNfYQJXgLUs9L6i6OCVmQ=
 # SIG # End signature block

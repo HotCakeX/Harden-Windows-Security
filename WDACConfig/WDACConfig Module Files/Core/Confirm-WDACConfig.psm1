@@ -9,7 +9,6 @@ Function Confirm-WDACConfig {
         [Alias('S')]
         [Parameter(Mandatory = $false, ParameterSetName = 'Check SmartAppControl Status')][System.Management.Automation.SwitchParameter]$CheckSmartAppControlStatus
     )
-
     DynamicParam {
 
         # Add the dynamic parameters to the param dictionary
@@ -23,7 +22,6 @@ Function Confirm-WDACConfig {
                 ParameterSetName = 'List Active Policies'
                 HelpMessage      = 'Only List Base Policies'
             }
-
             $ParamDictionary.Add('OnlyBasePolicies', [System.Management.Automation.RuntimeDefinedParameter]::new(
                     'OnlyBasePolicies',
                     [System.Management.Automation.SwitchParameter],
@@ -36,11 +34,22 @@ Function Confirm-WDACConfig {
                 ParameterSetName = 'List Active Policies'
                 HelpMessage      = 'Only List Supplemental Policies'
             }
-
             $ParamDictionary.Add('OnlySupplementalPolicies', [System.Management.Automation.RuntimeDefinedParameter]::new(
                     'OnlySupplementalPolicies',
                     [System.Management.Automation.SwitchParameter],
                     [System.Management.Automation.ParameterAttribute[]]@($OnlySupplementalPoliciesDynamicParameter)
+                ))
+
+            # Create a dynamic parameter for -OnlySystemPolicies
+            $OnlySystemPoliciesDynamicParameter = [System.Management.Automation.ParameterAttribute]@{
+                Mandatory        = $false
+                ParameterSetName = 'List Active Policies'
+                HelpMessage      = 'Only List System Policies'
+            }
+            $ParamDictionary.Add('OnlySystemPolicies', [System.Management.Automation.RuntimeDefinedParameter]::new(
+                    'OnlySystemPolicies',
+                    [System.Management.Automation.SwitchParameter],
+                    [System.Management.Automation.ParameterAttribute[]]@($OnlySystemPoliciesDynamicParameter)
                 ))
         }
 
@@ -51,7 +60,6 @@ Function Confirm-WDACConfig {
             ParameterSetName = '__AllParameterSets'
             HelpMessage      = 'Skip Version Check'
         }
-
         $ParamDictionary.Add('SkipVersionCheck', [System.Management.Automation.RuntimeDefinedParameter]::new(
                 'SkipVersionCheck',
                 [System.Management.Automation.SwitchParameter],
@@ -60,38 +68,37 @@ Function Confirm-WDACConfig {
 
         return $ParamDictionary
     }
-
-    begin {
-        # Detecting if Verbose switch is used
+    Begin {
         $PSBoundParameters.Verbose.IsPresent ? ([System.Boolean]$Verbose = $true) : ([System.Boolean]$Verbose = $false) | Out-Null
-
-        # Importing the $PSDefaultParameterValues to the current session, prior to everything else
         . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
 
         Write-Verbose -Message 'Importing the required sub-modules'
-        Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Update-Self.psm1" -Force
-        Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Write-ColorfulText.psm1" -Force
+        Import-Module -Force -FullyQualifiedName @(
+            "$ModuleRootPath\Shared\Update-Self.psm1",
+            "$ModuleRootPath\Shared\Write-ColorfulText.psm1"
+        )
 
         # Regular parameters are automatically bound to variables in the function scope
         # Dynamic parameters however, are only available in the parameter dictionary, which is why we have to access them using $PSBoundParameters
         # or assign them manually to another variable in the function's scope
         [System.Management.Automation.SwitchParameter]$OnlyBasePolicies = $($PSBoundParameters['OnlyBasePolicies'])
         [System.Management.Automation.SwitchParameter]$OnlySupplementalPolicies = $($PSBoundParameters['OnlySupplementalPolicies'])
+        [System.Management.Automation.SwitchParameter]$OnlySystemPolicies = $($PSBoundParameters['OnlySystemPolicies'])
         [System.Management.Automation.SwitchParameter]$SkipVersionCheck = $($PSBoundParameters['SkipVersionCheck'])
 
         # if -SkipVersionCheck wasn't passed, run the updater
         if (-NOT $SkipVersionCheck) { Update-Self -InvocationStatement $MyInvocation.Statement }
 
-        # Script block to show only non-system Base policies
+        # Script block to show only Base policies
         [System.Management.Automation.ScriptBlock]$OnlyBasePoliciesBLOCK = {
-            [System.Object[]]$BasePolicies = (&'C:\Windows\System32\CiTool.exe' -lp -json | ConvertFrom-Json).Policies | Where-Object -FilterScript { ($_.IsSystemPolicy -ne 'True') -and ($_.PolicyID -eq $_.BasePolicyID) }
-            Write-ColorfulText -Color Lavender -InputText "`nThere are currently $(($BasePolicies.count)) Non-system Base policies deployed"
+            [System.Object[]]$BasePolicies = (&'C:\Windows\System32\CiTool.exe' -lp -json | ConvertFrom-Json).Policies | Where-Object -FilterScript { ($_.IsSystemPolicy -eq $OnlySystemPolicies) -and ($_.PolicyID -eq $_.BasePolicyID) -and ($_.Version = &$CalculateCIPolicyVersion $_.Version) }
+            Write-ColorfulText -Color Lavender -InputText "`nThere are currently $(($BasePolicies.count)) Base policies deployed"
             $BasePolicies
         }
-        # Script block to show only non-system Supplemental policies
+        # Script block to show only Supplemental policies
         [System.Management.Automation.ScriptBlock]$OnlySupplementalPoliciesBLOCK = {
-            [System.Object[]]$SupplementalPolicies = (&'C:\Windows\System32\CiTool.exe' -lp -json | ConvertFrom-Json).Policies | Where-Object -FilterScript { ($_.IsSystemPolicy -ne 'True') -and ($_.PolicyID -ne $_.BasePolicyID) }
-            Write-ColorfulText -Color Lavender -InputText "`nThere are currently $(($SupplementalPolicies.count)) Non-system Supplemental policies deployed`n"
+            [System.Object[]]$SupplementalPolicies = (&'C:\Windows\System32\CiTool.exe' -lp -json | ConvertFrom-Json).Policies | Where-Object -FilterScript { ($_.IsSystemPolicy -eq $OnlySystemPolicies) -and ($_.PolicyID -ne $_.BasePolicyID) -and ($_.Version = &$CalculateCIPolicyVersion $_.Version) }
+            Write-ColorfulText -Color Lavender -InputText "`nThere are currently $(($SupplementalPolicies.count)) Supplemental policies deployed`n"
             $SupplementalPolicies
         }
 
@@ -140,11 +147,17 @@ Function Confirm-WDACConfig {
 .DESCRIPTION
     Using official Microsoft methods, Show the status of WDAC (Windows Defender Application Control) on the system, list the current deployed policies and show details about each of them.
 .COMPONENT
-    Windows Defender Application Control, ConfigCI PowerShell module
+    Windows Defender Application Control, ConfigCI, CiTool
 .FUNCTIONALITY
     Using official Microsoft methods, Show the status of WDAC (Windows Defender Application Control) on the system, list the current deployed policies and show details about each of them.
 .PARAMETER ListActivePolicies
     Lists the currently deployed policies and shows details about each of them
+.PARAMETER OnlySystemPolicies
+    Shows only the system policies
+.PARAMETER OnlyBasePolicies
+    Shows only the Base policies
+.PARAMETER OnlySupplementalPolicies
+    Shows only the Supplemental policies
 .PARAMETER VerifyWDACStatus
     Shows the status of WDAC (Windows Defender Application Control) on the system
 .PARAMETER CheckSmartAppControlStatus
@@ -168,8 +181,8 @@ Function Confirm-WDACConfig {
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCB0d15yGVrV1www
-# gVxsYzF0BdtKGg7DUmCKln9PTVxg+aCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCBO4epubi0FsrHc
+# 2E+lMnxLQsTmNhXfG3pRdbuWF/pWraCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -216,16 +229,16 @@ Function Confirm-WDACConfig {
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQgsfscZyfBCLkYDaInaWFArQaVaAzDT2yf6+08LKEfVG0wDQYJKoZIhvcNAQEB
-# BQAEggIAjRl7yRqIqP1C2YfOgHNi7x9L02j0qTAiAa0rukpJyR9+aafbNsQD5c/u
-# 1IhDzdU0pbs72zyKD+NqVVDxkkTUP4kGj1gkx6P9SFO59Sa97iHv4KklW5f5VHdY
-# iIGG5QkUVKiepK59rIEJZzrNPxc2xYZiCG4IOjp6aN5s/KI3PyAVvnUTQVkYUSIX
-# /HX+fTm1nb/IdiFpWl6j422fhzRtJ6GtPxYA8bWd/ElRbO/fBNmmdyD1/wMT6xiE
-# V0h0SO3EWNvuzRzVXI+8QqL3I9HYIWIciXAKFPWazn6PRgVGd2KdCqySyXA6o0ls
-# EFxhMXmuomC//pBpebpDWjb5zkObbAlDB3JhoApBTCSkGuEsN0oaeurnyOKdcoAZ
-# DWJCFf5sPEjhXn+fSEkOZASa2/++vhw9hE5Wz3GYw4KoC3TJjxQgJAY6UJDGQ44v
-# VLkH+n+ASLJ76vs6oNzz/WoruQZqFmf1K0FAI8pOUwmCqerKz2q42L9mQhfLULMd
-# xjghlDhBm2SyUdReqpzCtFndLpuVvs5AqA6K2wkT7s53IXvtM/yVdWWa5RDGBgQC
-# SshJvrGB6G1Rzz4SdZjUeGAIA5ZKsAZJ3jw6QNgcWJHpGR4LbSv7NzlAxV8+HMoW
-# zRA1W86lTCV9CcbvZvH/R/d7X2WG9HMBAnVZRxnVgJhiIoSoS38=
+# IgQgwtuWrNsHGnVUg/FEBx+gd8DC+K4EHZ/GulSbGPkpVDowDQYJKoZIhvcNAQEB
+# BQAEggIATcJdM7gN3O9HImMxwjzRqcWEnlLvlZF/8mPX820cruJB7W4T75HI1cYw
+# FS6pxQ04kJUx6rm2r+KKdvRxWqsJjvuLcRVfVb4DuUMW332Rmyhh3kWSbYZ+sI7s
+# 8BmWBsPdRnnHdnptjfcmBmnd99NvPAiGmqZRB1GtQlFxJUGE6IBNXa70yNNAN21l
+# yArzZpVjhXWjiCxvJqxanP03W9x5dwsMWH46ZD3mVbYJTu7T9eaGoznNlzwB5Snm
+# EVEY2GSUae9mas5Y3224cjXdoyti4et+naHwtD98ZSvFc0lUZ83AlfAuaCe4axHM
+# ZZz8j5SPDmndbpyLEyesuwn43qwBmPLpq0ct6DiJpY9HMs8iiz7E04vUTnGdnbPP
+# 0fjzGvORO4H3ATLoImWC6Q/8HixUkfQQ+yeGqH+X3uuaHxCGoZWgQlnAp8SSeHDf
+# X9JOPfr22hpGFbg0360tPM0kSZZDutHRG7xkPuGtI7loqrujBXN+rfptRATr5LJt
+# gB+JHbdnEjFyte6Fs3v6hvEQyZkdS9BhEWJno7nmrlabJCWZxyaHLUbLKz4MoGDd
+# uXF8Btifz8pHy8oT7/0ELEUz1ZeWWeO8IMk90LLCijShPizVHE+SA/lZe+tWOZ7c
+# 0m0cjMXwAu1rKmWAB696QVYLZxa5P2WriwLk//nFdqehOtr0uho=
 # SIG # End signature block

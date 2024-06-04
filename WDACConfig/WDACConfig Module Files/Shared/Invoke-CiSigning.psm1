@@ -1,41 +1,32 @@
-Function Get-FileRules {
-    <#
-    .SYNOPSIS
-        Create File Rules based on hash of the files no longer available on the disk and store them in the $Rules variable
-    .PARAMETER HashesArray
-        The array of hashes of the files no longer available on the disk
-    .INPUTS
-        System.Object[]
-    .OUTPUTS
-        System.String
-    #>
+Function Invoke-CiSigning {
     [CmdletBinding()]
-    [OutputType([System.String])]
-    param (
-        [parameter(Mandatory = $true)]
-        [System.Object[]]$HashesArray
+    Param (
+        [Parameter(Mandatory = $true)][System.IO.FileInfo]$CiPath,
+        [Parameter(Mandatory = $true)][System.IO.FileInfo]$SignToolPathFinal,
+        [Parameter(Mandatory = $true)][System.String]$CertCN
     )
-    # Importing the $PSDefaultParameterValues to the current session, prior to everything else
-    . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
+    $PSBoundParameters.Verbose.IsPresent ? ([System.Boolean]$Verbose = $true) : ([System.Boolean]$Verbose = $false) | Out-Null
 
-    $HashesArray | ForEach-Object -Begin { $i = 1 } -Process {
-        $Rules += Write-Output -InputObject "`n<Allow ID=`"ID_ALLOW_AA_$i`" FriendlyName=`"$($_.'File Name') SHA256 Hash`" Hash=`"$($_.'SHA256 Hash')`" />"
-        $Rules += Write-Output -InputObject "`n<Allow ID=`"ID_ALLOW_AB_$i`" FriendlyName=`"$($_.'File Name') SHA256 Flat Hash`" Hash=`"$($_.'SHA256 Flat Hash')`" />"
-        $Rules += Write-Output -InputObject "`n<Allow ID=`"ID_ALLOW_AC_$i`" FriendlyName=`"$($_.'File Name') SHA1 Hash`" Hash=`"$($_.'SHA1 Hash')`" />"
-        $Rules += Write-Output -InputObject "`n<Allow ID=`"ID_ALLOW_AD_$i`" FriendlyName=`"$($_.'File Name') SHA1 Flat Hash`" Hash=`"$($_.'SHA1 Flat Hash')`" />"
-        $i++
-    }
-    return [System.String]($Rules.Trim())
+    # Configure the parameter splat
+    [System.Collections.Hashtable]$ProcessParams = @{
+        'ArgumentList' = 'sign', '/v' , '/n', "`"$CertCN`"", '/p7', '.', '/p7co', '1.3.6.1.4.1.311.79.1', '/fd', 'certHash', "$($CiPath.Name)"
+        'FilePath'     = $SignToolPathFinal
+        'NoNewWindow'  = $true
+        'Wait'         = $true
+        'ErrorAction'  = 'Stop'
+    } # Only show the output of SignTool if Verbose switch is used
+    if (!$Verbose) { $ProcessParams['RedirectStandardOutput'] = 'NUL' }
+
+    Write-Verbose -Message 'Signing the base policy with the specified cert'
+    Start-Process @ProcessParams
 }
-
-# Export external facing functions only, prevent internal functions from getting exported
-Export-ModuleMember -Function 'Get-FileRules'
+Export-ModuleMember -Function 'Invoke-CiSigning'
 
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCAECnecSijCPGeI
-# Zbglk/fp+OSvvNXoM1205m2GOkG2EaCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCCrIXkGPCcsLyaN
+# znSjS4gsE7suymsnSNg/PFHISQZdFaCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -82,16 +73,16 @@ Export-ModuleMember -Function 'Get-FileRules'
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQgo2t6QmhIr76fd3/Wi/lhaAVMKUMH+wXT0KL32ykLs/YwDQYJKoZIhvcNAQEB
-# BQAEggIAHA2Fm00Ge9vy6DDfD+JY0ytcRclYwjk8ElC5DdsG+C9ZKqx4lRe94yfA
-# PVrwy6XEoo86eteiAPgFDAUwPqiBFuNmD/7Kxc9Yoc1C+H4ejINBVNncdGoKaGLI
-# BdF7C5WBDPHyjAvTQezLSaHca0FDor9yK5YGW0KP8nKAyTNid4dCdTtPKttCgi2r
-# ZFp89dpiSbSuyX7fDLR6gG+P9GXlDoPMcJKi37liDo5qd9sLwrKwhbXi4KWeyMiu
-# oOSoAfXSGoJ6aDdULqk4N2fhB7MvN6FLCvGT8vX6TD+kf/eJkjZiQZvzKddGsKqJ
-# bjd6FtbfIroPVC5yNCkXu0cDyqlpgnVN68TG9K4yi+lBk2W81aObr341ami+6D5M
-# bepS54r5AkYePhPCzvb8Jjl5igjT7Ktbax8dhot92qy2K34Pd2KgnY9Rrkxdmml2
-# U81okk2CcaYQ+UKOV2ozqSsIuCYwzcjbtbQPsvB9ySCxQ3eNn9PI0ikNgn6B/QF+
-# DKvHSqHaM4AZc8Sp0lMu4I74fOrSURMd9EKaHPiT11B6UWZAUnwi1SjsFa0XGMcF
-# XVJoGc+ljDXaLUovbNJOk2G2kEPS5xF3+v3pXqo8bB7uj+E1v1BxMomIpuOl/OOV
-# MJidavPD32YDNtug1/xRjfjReQdkyv4ABWHBVN/u2oGXw//f/jE=
+# IgQgBq10iz9rHUGfcjbI9/+vKyULjjQHSxnPDVloemzjJ8QwDQYJKoZIhvcNAQEB
+# BQAEggIAMXvZjCWV8QylSgpU3iX/cwHnTr49jqO4GihJ3w+9heYzAdm9p+DpU1bl
+# ckIaddilxUMtb12J6GgCUkwNVjM0DsOG45iVc+M7IFSG6CEAYHlmmX8okLirdY4V
+# 7g30JYh0OUD0TEF0k1l1uBgPcdgT5peyIMfTGjvcU3nCTuCyqbKty7NM022NzzeN
+# DybLxsMOrEgyZ9HRKqWKP4174zeURluG1IkDeUWv3aduJ7l77YUACctJm/Dbm4fF
+# +z/Lihas8v6/w8tA6pVSUC3J7XbG1ZzAQfuLqN7v1eUEgpUM2E3YHCDhbCQ3O3ad
+# WiZ+/eQd5YxI0NjflFRdn6wpuL+Bdw03332VXsOp/a0laR0EcALQSS4TOKoyLXsV
+# wDCpuODCKtXP4odVWHqGLI/mo4a2HKOdz044TMWygsLERKnOL0hrTskO1m4V8x7N
+# pKhCDu57P4KnHLtOyBMXZDhHYClRqTyvNnSKTOOqY7Z9rX2JsiA0rg3NNb30jBfE
+# APsK2s4Y+wDVyXLEmj4NCT+4VuWkZ9fSR0J5geXcUtw34Pd8lj4tSGa8epjOuiba
+# VKbgAQjbnm147mtBqAFjzCbZlI44TyTEgRHfL6WEx9tLT6Jmkg9n6AJU39EydGH6
+# beBZS0hE2rSwdePIBeRFilR/1YxXfZ4RCP7bogF8CRIZsM0EazY=
 # SIG # End signature block

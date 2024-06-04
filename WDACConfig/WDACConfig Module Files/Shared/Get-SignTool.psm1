@@ -17,9 +17,7 @@ Function Get-SignTool {
     param(
         [parameter(Mandatory = $false)][System.IO.FileInfo]$SignToolExePathInput
     )
-
     Begin {
-        # Importing the $PSDefaultParameterValues to the current session, prior to everything else
         . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
 
         Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\New-StagingArea.psm1" -Force
@@ -135,14 +133,13 @@ Function Get-SignTool {
         }
     }
 }
-# Export external facing functions only, prevent internal functions from getting exported
 Export-ModuleMember -Function 'Get-SignTool'
 
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCC7Ohj2RL7d+Q72
-# /mH5zdoioBtdShv/ACSHi/jCgjQMV6CCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCDpXlXAw7vyUs4s
+# QbGk+OWIGCDd1hBfJItO+pMb6wXevqCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -189,16 +186,16 @@ Export-ModuleMember -Function 'Get-SignTool'
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQg/C31DRlK7qa/spMf96XcDI0lT2i3SEAj29T4+9XKAAkwDQYJKoZIhvcNAQEB
-# BQAEggIAfPr5bRwNIBFDfOgufktuCu8vc4vUjrtRpcoAkDGLPCKtJDiA5vGh2T9m
-# X9q2u3GEQamBYk3HBZVatFf55UMJ8xBiQalQ10m0jbutxhofbkQQnm598obLhQiV
-# gMs3dtjvd3w/JV7bywr2KYlVHoT1qW+VWgCQKd3MfGPs1wpELz7jCZdZ9wsCg6Ny
-# UhDfmVBYFmwf9KsSKY1YBIIl1I1L6Lr1khTdddj63GgnL+CcAfiQiLCFvcIYSIU5
-# 3soINB4smvASNbO8o2SO7qSA8C40I0E+BTxNcg1KqeS6EoSHSzWcMeFzcozjIETx
-# Sfd4jLyx05/kgSm9nYI4PeN9oSSCeUF/oIy2c0C1a/Pj8z+71repzhYRG1rI2+eE
-# MtR8pj/o6zssC5xiMXSZBJeBMjpDrydExBjy82TG/jaYc8ypFr5/QOLPWcegeP4o
-# QnXT7yqcyG9Jkjg4Z6cPtG0xpfv2ePnp71n85bkNHYxDRr13ZLpoplM9PFrCtfwf
-# Yzt1YUF3fM2aLhFZ0jGAdVqJG7QT5UYmr7WE+WV9eMiukQtVU5Hns1+ATS8Lprwg
-# ah24UCnfA38DCzCmDNwS/WugBdDPmj948REJmSDbs9vRN0db+rlSub1gCCVoVHpi
-# rL93fV5vWeGL1jVP9t0NeCLe7cFzXkgLq906wJ/g/nA+O2HMkO0=
+# IgQgRQwq0H49srX5lfoOHyqTmfrjbHlkfWtIsUGD6+1/SaQwDQYJKoZIhvcNAQEB
+# BQAEggIAHlqc55fYzrNj2zD6lHhhSu4idbBo815nyWGz2WknUD/SZhexMqEp/Bps
+# +lmD2/kJ06rJW1QazzdePvdeGaj2pBTZQ8+/hPOOP9ElOZWLRI5CGpxnpz7ItPM+
+# 9nBwfiwSlMEALyUSQQUsCybCwl7GnOffznqdHuwt+Y0uYgChHJD1fdexPKgViTf9
+# w5RGccV6ufFCO168nG1oykMKFoINjMvFqNG1U3l5Q87RPN9PtDgMR+C5I8xnDjny
+# c3pZ5z2cFadFfbV/bXqfQTWHDGjRBeHJ86ji/grzipr51OVEICb645QQrLFN8occ
+# IWL9X5fDl/Slsg7wE6Sy2oOJOKikwAAu/fjQZq4YDbbqIVBTE9wV496Ihcq0ma+Y
+# 9M+F1FEudRYhvGw9R3r2aB5RKlDY2cO071q3OhbSW4bmDfjDKyx/ko4Ow/ziF5Ch
+# zzr8RTHBkvjh3U1qVCvFtuA/dpHFdyX2YyhUXWa1Jncgmifz/i9FvmmFau4rytnz
+# tfePWcZU95jeEwtjr/rykDcLxcF9JrxXVTFaRcapibYcNh8w1OiRn0N3iFK/NKbp
+# D4wkxzVv2bLNzogNe5iKSYx3eHMI2EzKCurqnuAWGBvlDWEGQfqdvCedZl5w8JFq
+# oUc+Tf7NtJJhpl83PxSJHnJaKhH4jEC+7Mzoi0z8SvKNQqIUsZI=
 # SIG # End signature block

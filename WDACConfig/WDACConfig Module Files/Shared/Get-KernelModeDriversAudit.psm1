@@ -19,9 +19,7 @@ Function Get-KernelModeDriversAudit {
     param(
         [Parameter(Mandatory = $true)][System.IO.DirectoryInfo]$SavePath
     )
-
     begin {
-        # Importing the $PSDefaultParameterValues to the current session, prior to everything else
         . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
 
         Write-Verbose -Message 'Importing the required sub-modules'
@@ -61,8 +59,8 @@ Export-ModuleMember -Function 'Get-KernelModeDriversAudit'
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCCrTp5tre18JkZ/
-# mVrKZJuHAO2xvekTmYM3xw+wYWPodaCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCDT/ss6y0BoGedf
+# WT2WU5MzNgs3RPWVsUxHfw/wNDwqzKCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -109,16 +107,16 @@ Export-ModuleMember -Function 'Get-KernelModeDriversAudit'
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQgDNYq/RmXSyxXs4VzZGCcN40+l0ZSAIG/plvFEH2q9FcwDQYJKoZIhvcNAQEB
-# BQAEggIAYcztyeiKU9NwJ3Qnzhq/HoJx6Nboj5fulo/sQMCVBAzEa3TAaNLnELjD
-# thEJb94rvRgqJIYKP98m/Zk10JzyH876T6jQ1POdRRuvf5PPfnEJaOBDkDlcSefW
-# cq68d+/dEm2hoUkTqm/+k/i5wC/qdyD6RtlWG1pORAZP3RY8ZK1F/iHYtKj+ClXj
-# 3NwL4CEzFA1S1LojTZBvK1IgBbdec2ciw98Yb3Nfn8VttXveQbJIgpKzleQ0zfNv
-# 7pJjVnmqmsfRNpRyHuzPpbFRnx5RfCvahpNGEHdmxqfqMlY8Eo/2mZSm49pywfeo
-# b+OjZrAtqzpSAccUgrPHdlmTP0S8QTA/L2QXZbIpGi3v1uWABQEp2ubCUe3Fvza7
-# VZ8YgZ//fXYW0KkBytmiJYYS/SB45aqtWD1kxPgCIDrklKJWfde3nfeCQVhtFrej
-# F8MSOxezXODzZy2VvI0OuFEf4OYl1NPklFk/NF/43m1/4pikG4jO3rGNWuPFSnPa
-# /Wt5FUog4tigfUhNU7jJQEeFFpKJUL507NpQvyfwCTdKTs2li/Tq2Gjlb0lxs0E5
-# 9hlAo9bIdiogPhsMbheTOk2xhSgtBmQ7T5QDKyPujbLXdbS7XKZ9qgBY/NnjjNK3
-# 9sqv1AocRnlVslliYNhHyEszInmkWl0R4pnXXHKmwxzTuB2L/Us=
+# IgQgSM+0BjWfV/AQCOEEK9Vpmd1UdsdBBJsIaAtmNu0MuMwwDQYJKoZIhvcNAQEB
+# BQAEggIAbzsqt3wZp8E+A3IhAUmY9yLn2FuGhYSwIqGHy4vJQwJua1AWuBuJ3fTI
+# G6PvTzzatMDw2LxaMhGiszGNejFFF7tAqEExv33b+LgitAkBP+bTljqzE6Iz271A
+# w7Pv2PJTtGAyA2kiI2oz0pdA05lugjgxhh99mlyhfNU7ZMKuKDOG8b1KnkFrjVVI
+# WpU80mK1SZNCF/f52fy/2e9srxWKTUq0TLAmvyKfsYpZzjIv1Xh3Fdd2rNpAO9F/
+# 8Up1YcoqpHTkDyoW77SdYDR/g8bKiSuP+DgvopXpQqAwnDcyGj31a0UnWhrhCRfP
+# U2w6Lmd0BRIZXIu/z2IoLapLvpy0+10VRjW2GMuUA1RBlizuiLBO+FqdAdTuW4v9
+# tF5xwR/nxTJcyZWDueFZURGEh0keeIJHgC3o3zklW/n2OjFRmclZ3abNH5O81DTa
+# BDwlZDoRBV77LxuarOtHh+cITigyGGCNgu5B4wyGWrRqO2XlGGUF9WRdLa20NW1v
+# HKTwjImGk30+bH9Rx7kCB7jsJlPaRSJY5d1h/cWz4HED5ibCHk0KAUfXlfM8AJBa
+# rHhcJRrE9/UCYWMszf5rq3KGFwcgrRN0kv/SEg0/B1k85v/RbdaNx43cluEXbi+O
+# ff8kJgIR0za4FnvQB99FHm6Ln9qGBJbgPN4VjhA1RVYY9vqDgv0=
 # SIG # End signature block

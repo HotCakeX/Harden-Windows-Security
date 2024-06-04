@@ -15,10 +15,7 @@ Function Get-TBSCertificate {
         [System.Security.Cryptography.X509Certificates.X509Certificate2]$Cert
     )
     Begin {
-        # Detecting if Verbose switch is used
         $PSBoundParameters.Verbose.IsPresent ? ([System.Boolean]$Verbose = $true) : ([System.Boolean]$Verbose = $false) | Out-Null
-
-        # Importing the $PSDefaultParameterValues to the current session, prior to everything else
         . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
 
         # Get the raw data of the certificate
@@ -82,8 +79,8 @@ Export-ModuleMember -Function 'Get-TBSCertificate'
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCBIQLtX3DWCgjqJ
-# 6OA0qYLUp5bzxZ1PXNYKMkt1VKAsjaCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCDQdoexE2imKXeh
+# f2pmoT6LgboEPaRdhkrawF8JFrR4CaCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -130,16 +127,16 @@ Export-ModuleMember -Function 'Get-TBSCertificate'
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQgCmVEPcqbesuFBibLCCIS7M1HlzSjuSN5nd9cwSd8BfIwDQYJKoZIhvcNAQEB
-# BQAEggIAja3WUR8PMindjaL4f3ybwrrv4WSrV3aFQUSzWmWIA+qm2IV7hJTnldeo
-# NBsyc/CZjZOzcbl2xjM/npn98AKGaoh9+HTYtEzY0gQqXP9P1o3bm31Qkt7/GYMI
-# UG6dDJ5/tXxGRueOTTKVB+cQWFXmx7i0R5zvbME/ch0KLCa8PesYuQTKFVP143Oz
-# p2DamyDEWlathoctFuXXFxmU7iI7P3cshBuxhArMLmFJqup+3uADxAtTZ+vOdkat
-# t8WT234o0F1nbUixJX+UZsN5KRM0N5PaxpVoxrpHSfTw/Itv7jHSjU5RoTQxOyli
-# xypq8DRc4PKmhKpnb96yvCAypBS3a+v1lRzxLAU0dZ+YDjAY2S5gFyuk7vWONfI6
-# XIiak6rcZ8iujypVq7MrddpPdLzNCLCI1A9FLh7DTZkR/j9keGl7+F0CW8wxN6Ud
-# 8nRXLuUUsWM0LF2wIZDhwF0H2Il7dc/KIwz8eWRzfzNgjzOfocgD3ci21yUMC5RX
-# E3kkxkaDbtpG/HmLrnncROzxkCKUcDfegPd7/fdcGA+ft3RtL6mkhqFmXE/W/UJE
-# s/jTiD2lLCf71ww1uc21qB4fKo2gvfhtcZ/buuf4eg43XJ3y7QbWsu+Earr9+TA4
-# z0C8xCKd6xX5OGGRQJVm+b11jE7Gu3EhpaNaHKN/QATboxxZWsY=
+# IgQgPYFSGYic32/Se4ChFmTpegDNKBasGdaZGApP1fiStJIwDQYJKoZIhvcNAQEB
+# BQAEggIASxKBfA8mVH+yXUUCkMzrt75qJebgTcihehHWxTPfqap49g0cVwW3YaVr
+# hbs1ywXXwCG8/fgGemLlQ3AdXZ5N8TA0J5hcnHw/xHBbmgOOtAqW1UfMOmKotLNq
+# PtRDnX17JomsluAWEFr8R42246W+Jxywvk91EZvXBkceibjGGpsGMU4f12LucH1z
+# OxDTXBINS2Pyo5XCYNuVwN/ah52IFX8PHyZhEKRYByMMFbD5Bi3w5m2nlB4a6q8V
+# V9dTba5j58xr+awosQG8+gbOlaoidVRGl7IM8j7mCZq41DJNPPo8RxBP2HPmDDGN
+# 2hKfh4f/kS/keJkdUGRKxWflghORUJ34wvSWz4ahEhdU/q2OgfOr8NKkL+4wfRte
+# cJlhlwFAd427F8i7UIJjOSsHtMAG/2oIGbCtuFtxK9GuF2XwD9FbKTGr2a3ZMgfe
+# drX4YoSuUybgrnzm/YWwIkqeMaNkkyZon+HZKeiqC6mRFovjpS5Miu/B3V6y3qqU
+# A4GFx7WKJ4+RbdgG58Y7+B/VDUIWi/v1K503O90EqzNxOvKwal1zTQZ+PR7nNe37
+# vUbgS1GCx6YeQwNt7KomMzb8NJWE8Dox/PTICv9KsBiEUbSfRHcJ0VxioIwRg4lv
+# cN+PoMCcQDe5m0nmlhZKsErRbpsMb/WwKeChACahCrv2Qkt3fmw=
 # SIG # End signature block

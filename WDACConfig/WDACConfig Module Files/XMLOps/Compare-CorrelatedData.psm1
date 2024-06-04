@@ -40,13 +40,9 @@ Function Compare-CorrelatedData {
         [ValidateSet('Audit', 'Blocked')]
         [Parameter(Mandatory = $true)][System.String]$LogType
     )
-
     Begin {
-        # Importing the $PSDefaultParameterValues to the current session, prior to everything else
-        . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
-
-        # Detecting if Debug switch is used
         $PSBoundParameters.Debug.IsPresent ? ([System.Boolean]$Debug = $true) : ([System.Boolean]$Debug = $false) | Out-Null
+        . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
 
         # Group the events based on the EtwActivityId, which is the unique identifier for each group of correlated events
         [Microsoft.PowerShell.Commands.GroupInfo[]]$GroupedEvents = $OptimizedCSVData | Group-Object -Property EtwActivityId
@@ -255,8 +251,8 @@ Export-ModuleMember -Function 'Compare-CorrelatedData'
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCC4U8how5q7ZEkr
-# agzaF3Sfxg7+UTeCemF9BEQIH+diD6CCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCCrOqz69rhxDJ1a
+# zu4zMfOpXhvY5O3V6b48fc7hHPPs5KCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -303,16 +299,16 @@ Export-ModuleMember -Function 'Compare-CorrelatedData'
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQgL+mDBytP9xDjH4CUX3CFufyVJmEZqt2BOv63SEo59JkwDQYJKoZIhvcNAQEB
-# BQAEggIAiTJwhm+hnrevcV21mYV5qqiKmKSOH0pCWjMA9CVQ/lsSgpVaiWimQPLb
-# YbRg8JG6IZqVE6C7CY5GuAFVyMVF8C6PbZcAiLIxkdnxt3SRbIbplb3lcE+OsGvM
-# EzMQfcfBdIMzOCX4ieif/uqq+zIp97SXlBQd9lmZeafbqNIpvr4E3uVtLURlxkLz
-# guF0jaqjzn7PDItkiJGYwn5fmB4VP7hDPtILi8K2aEhx7x2d+ECMlZgU2s/hBfq1
-# dR3O5qQLVZ89qy8ObVWh77V4j6CFb8gXq4f8+YZntEgw9dXONwaepZgS7El5rB1M
-# ZRhONWppQrscSSmZNfSPSAvF7bIZ/QsFLwziyLgKD5zbQJdE0M75i6VggFwYMckf
-# z/ACki0tCLuMNf0y9622Y2MWKNfMHhEL4gCfAwnjuI67sOl1isg2OcvbMsrErAhK
-# 0JS7yJPwvGoMhusTc5rEq32vAJjyL8odmD5Npk+ww2l6ZZFz2bi2TyMJFgbaq3kp
-# Ixp8tcLWZH6VFZMlZsgH4sdC1ajwxcGOdynfpZdSJRL4flBZSph1+JhJuHBWtwkS
-# nmDvekGrbtiQCCZrhUDs+ztPwTMACGuRVBDbiQw7iwT5/h2T4iaGxMjnhIFyIcr7
-# PJ5DSSdsxs5p0e8y7EA+XuKAw+2VWKqfTKOS4v/zwB8iGbj9WwY=
+# IgQgcAVcMBUqUJ6bLEDQ/qdynvMgB8Q2DH+X+S4wOWvQRpcwDQYJKoZIhvcNAQEB
+# BQAEggIAbMndhLnfJVjOlr4CFAPL9xFtSr8SFAaNvwrvLvQdZayqog5GhSKooiUG
+# lsZcMsZ1hPQLwS1oek5B6R3ADlWvB4dR07GFiNxfIStaZl0fLSIKVpCc7/z601VB
+# TPE9OXSLdGot22Z8sB1hWXg+bKXrm7TLB2XAHn7f/p7exkj1pC3r3lQvIzjdkHJY
+# qRJCrW8ChguE1DMZLEDKbkWxJvWPGLWg6vHgZCnKTvMMnfNWGF0QRr8zaPGl0cMJ
+# flAiNWnYd5LCvaLU+LYGVc+9mYw7cKiIQQE44m1iBvtclTHsoA2D6MxPgkr4aQj6
+# tMivQzzEgzqdbzasOGSv9Z5BwQ1jHuHj3T/A61cChokNU+9tZSyAn/SMT/iPZLaa
+# y4Y8h/XlTadMoXG6EFcRz4a78Uz6AXr3m521IqHF3IKubbQ2BZEFBhJuuvBPSnQe
+# IhZApkwwGc3dxbgJu6u7n63UeY1lkzjHBRx6rzT/wBnyFaPrZoz0GikEMJTlX7qZ
+# bJQuKiiGY0LybNEcBm9ObwUR0l+uYwJTOs/guIW7LVrM2FR6Ko3L996gY3UevhJt
+# VZsdGqrxxVTsRidK/5SD7x39vltfWNk+bboVryqJCWRibxRlajLjftjcUgLvXHon
+# tIiUZZ+MiB91qksNNLecZOa47pOsQC6jBysyZRJsOzY8VIMRFF8=
 # SIG # End signature block

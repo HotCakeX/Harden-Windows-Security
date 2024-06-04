@@ -18,9 +18,7 @@ Function New-RootAndLeafCertificateLevelRules {
         [Parameter(Mandatory = $true)][PSCustomObject[]]$SignerData,
         [Parameter(Mandatory = $true)][System.IO.FileInfo]$XmlFilePath
     )
-
     Begin {
-        # Importing the $PSDefaultParameterValues to the current session, prior to everything else
         . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
 
         # Load the XML file
@@ -129,8 +127,8 @@ Export-ModuleMember -Function 'New-RootAndLeafCertificateLevelRules'
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCDELy7y+gTIcuNS
-# ZYA42rwZlJjl5S2jpavoAIUGRaPj46CCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCA8CxZ10usueJkW
+# goOszNaT5g+OD2SkBNb70qZYQmTwxaCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -177,16 +175,16 @@ Export-ModuleMember -Function 'New-RootAndLeafCertificateLevelRules'
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQgleIivPrsLEGZX+FNJjZVl7NqhqyMfaoGR/+0J3tLwAowDQYJKoZIhvcNAQEB
-# BQAEggIAVpgChkOrR0CS1qhfk95UDNbjUUBH+rzkkvEtgtABMEECxZtTTQrrjOtz
-# GVqqr6U+fWcTYkBV6l5kPThUSu3mO2F/kZuFmUqfQWShicVfUMsALCXy/n+P/AxB
-# 6HbMZJnytZbTUmOmjf2y2OG3iyhNQ38PbdFJzFQSkz7hBx+QalWrkT1UyOvsOnKb
-# eIA3/yPd9oBluQoKD/u8NeVHUWrwDqmdqjOLJHIbBszFtbBLjc7pncmE3ur7I0dE
-# GSdkhVntNG8lCYTDJIKxg+fF9Bd7uXAnZnH4HoeqTNepOrjlT/5+H5f2s0XlDL+B
-# KrGHWeXVE7epfTIRl1GYdz10s7Jq8BuK+o86B5gfCo0CgcjvpoQhOt3Jrx92dPjw
-# nqbH6leVM4mkv6sycy/QIvpZc/1QVPpHhMj+pDdowIPLb8uYNnHtdC7XqprcNuIs
-# qMBeu7a0Ga2Kw6MTFgkU2q2hn67onRacFP1Tc8de9Dm8GcuAvCWVVRT7EE2FmMZr
-# 6PmWKNumffqIcVhpsdpALwRDSe0qfu5aF2hepEWpvsCZzTm8rAbq/rpCBVWKvwG0
-# VI90MqKj/bOZIWCrN8ZYGfotExVFgeiHJchH3AA92g3WdIQEpvPf+Q1MFxuLnIsM
-# fzT7ULnbgJuJIOtuIerRC2Fe8fOKPCVg2KQ6RBQV2+fYtERrZ2U=
+# IgQgXq0FCx+jz3T9E3RC9yDet4LDYM2OMwF2R9CFEmWjI/YwDQYJKoZIhvcNAQEB
+# BQAEggIATRS+wXdiADHexq5nQy7qkcmBj7ocRnF8Hj7zVBnqh/2dxuGrXXA67DSo
+# CNSGV6K8fJv/zXNwXGiMctPy8obBDy6ynnXb8ZKlZfoCzWXPkK6+6cmuiUce/h3a
+# Sqp75rtcG4ueAhpDiWKULMlcMFfXw0DT43jd6eZh0GIduKKPiJtPwH7mu+DHSn8c
+# GthWp9ZwYwHPuuy7aa/QmozIuWNJTdzxX2RpUSxZIsHCWI7FAR8S5DZKubCQNrfm
+# PCFlcBkPCvccJiw+kvpClNTO9QitnBCJo4NaniyDWLzyLOvhPJ/QS+spsAXN+Y1R
+# GvE5ZZhjfISAteIGBx9h7+Lm35a39mSkq+qYT7aIpL9R1MuCjy1EzxyB+WDIgsTv
+# 9J6WS5VZbZB7W9jaB/JiAygFaHGBub2pdg8hqssUwETt9GGpDZp1Hihj1B//iYlV
+# p71l4g+ZFuXDdzkpFsHIfUcx/gcQ6pcPT0Jqh9CcXdR2SMQn0KGNIbfxO2khcmox
+# L079Y08I3q5KHk2xVO221M7D4WXb1l2GKKXTLWOwA0OnfojGOG0DlZumNR4GyELJ
+# K9cFbYQd1XD9ajMHdVqOn3QxEN83jNHxDVqABDurhQ98vKViWA7t1bnf1D2r8xlc
+# +1q51cdj890p2H/GuiKrJ89NIfM2wFQnfVv7FNrYhFum57RifTw=
 # SIG # End signature block

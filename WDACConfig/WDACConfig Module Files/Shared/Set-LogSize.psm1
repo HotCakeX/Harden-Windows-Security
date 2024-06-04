@@ -2,40 +2,55 @@ Function Set-LogSize {
     <#
     .SYNOPSIS
         Increase Code Integrity Operational Event Logs size from the default 1MB to user defined size
+        Also automatically increases the log size by 1MB if the current free space is less than 1MB and the current maximum log size is less than or equal to 10MB.
+        This is to prevent infinitely expanding the max log size automatically.
     .PARAMETER LogSize
         Size of the Code Integrity Operational Event Log
     .INPUTS
         System.Int64
     .OUTPUTS
         System.Void
-    .PARAMETER LogSize
-        Size of the Code Integrity Operational Event Log
     #>
     [CmdletBinding()]
     [OutputType([System.Void])]
     param (
-        [parameter(Mandatory = $true)]
-        [System.UInt64]$LogSize
+        [parameter(Mandatory = $false)][System.UInt64]$LogSize
     )
-    # Importing the $PSDefaultParameterValues to the current session, prior to everything else
-    . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
+    Begin {
+        Write-Verbose -Message 'Set-LogSize function started...'
 
-    Write-Verbose -Message "Setting 'Microsoft-Windows-CodeIntegrity/Operational' log size to $LogSize"
-    [System.String]$LogName = 'Microsoft-Windows-CodeIntegrity/Operational'
-    [System.Diagnostics.Eventing.Reader.EventLogConfiguration]$Log = New-Object -TypeName System.Diagnostics.Eventing.Reader.EventLogConfiguration -ArgumentList $LogName
-    $Log.MaximumSizeInBytes = $LogSize
-    $Log.IsEnabled = $true
-    $Log.SaveChanges()
+        [System.String]$LogName = 'Microsoft-Windows-CodeIntegrity/Operational'
+        [System.Diagnostics.Eventing.Reader.EventLogConfiguration]$Log = New-Object -TypeName System.Diagnostics.Eventing.Reader.EventLogConfiguration -ArgumentList $LogName
+        [System.IO.FileInfo]$LogFilePath = [System.Environment]::ExpandEnvironmentVariables($Log.LogFilePath)
+        [System.Double]$CurrentLogFileSize = $LogFilePath.Length
+        [System.Double]$CurrentLogMaxSize = $Log.MaximumSizeInBytes
+    }
+    Process {
+        if (-NOT $LogSize) {
+            if (($CurrentLogMaxSize - $CurrentLogFileSize) -lt 1MB) {
+                if ($CurrentLogMaxSize -le 10MB) {
+                    Write-Verbose -Message "Increasing the Code Integrity log size by 1MB because its current free space ($(($CurrentLogMaxSize - $CurrentLogFileSize) / 1MB)) is less than 1MB"
+                    $Log.MaximumSizeInBytes = $CurrentLogMaxSize + 1MB
+                    $Log.IsEnabled = $true
+                    $Log.SaveChanges()
+                }
+            }
+        }
+        else {
+            Write-Verbose -Message "Setting Code Integrity log size to $LogSize"
+            $Log.MaximumSizeInBytes = $LogSize
+            $Log.IsEnabled = $true
+            $Log.SaveChanges()
+        }
+    }
 }
-
-# Export external facing functions only, prevent internal functions from getting exported
 Export-ModuleMember -Function 'Set-LogSize'
 
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCCuTnFeCbqlhOQk
-# i/DSYn2LuTZd+ob1NH3w8cj5DJeHcaCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCDat9Q+BLixUyhZ
+# PxONcbupy2i0DP45RImWuPBXUAbcuqCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -82,16 +97,16 @@ Export-ModuleMember -Function 'Set-LogSize'
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQgvhHgRABVmYV9tw0D9Aai0dv5tFWVBqYeFXk4be+cl/gwDQYJKoZIhvcNAQEB
-# BQAEggIAKJGKYbANPeURgkSHNes2SuLhFLMuENeGj91G2CxW7hpGaEfLbi57COii
-# qlosalIxNp1EvinSrr9Hhj5v4rUhK9bdimDD3/cfwMP7x4xzekD3yZ4kgTZdSXJB
-# NDsqa+vBXdbAcCIq5/85BHrrrJ0Orb6odxU9GogMu5zTVS5C+VpIf2yLzIWNPvqi
-# pMu1QpI+pMPv7SKWEQgowstypt64IR8aXPSnfjEkeeivnRBoSwH7Ep7tbDJiPuRe
-# 5SREGXtnueLG23OrW6PpzLPSlLU3m4eWmszZs1jnVwynbQY0A9dvWKpygewPDG7p
-# WPA0ebu4U39HoaicMl6RVo6gwSUhtiII4+82c1nBQ52bHV7aMHn5RWG+vGTgl62N
-# fUZOgvkFGqEMG+TWAK0PWSMDY5sylJEbiEv40XOWCOwwafyBoPinC/XCC3cz3mqt
-# d6tCG4fuE34T/VugGsWJUd5vGvH/VrdjZZ0Te9swR/KuKdY+6P3dsO3FEEn4QNDY
-# isKLSmbFm+xyF4ZJpki7YvaOtklsxQuuvfG6TG0oAxPnhWVFj5UINw+vLDX3QGwV
-# Po0FxMDlayZCRUf6TE+F7Ry9QTusFXisLE3gX2BaZhPaXztxbzpvZs32cx91yVT0
-# Lk3RKoF1hXEDl9S75ING+TBXD6ZH1HqQs24TeDMDeq435s/F+j4=
+# IgQgSB8LWsHpA1oO0yQDN0b26XkcPQUQzxl6dWCTrPBjFJYwDQYJKoZIhvcNAQEB
+# BQAEggIALxm+bCEMOcsELihCsHyahWaq/hZH+cefgGZbQgosgxIi867YL7t6amsz
+# ZntZzE05JV0LiOcQCUzd/Afy6g1kS0bsFT5GB9HS0TpqoLSzffdrfd+ypQZACOVb
+# wL/me96JoIYrLackQEjU5G5Cn3WsxgDqmzD5sX+IFyCih5y/o9ZZ0ED6eqlw9Vkc
+# gphC1zaJm2/E8rEPyziwCXXxh28gd1XAUJCe6RnRS0avsCS7udf2nR/bXVu5oBtG
+# M101fQC4jqM00DSAe5v8bbwG7hU3FcBVBpbwYV9s4IU1qU2FQs7bHW6aNNKbLuAN
+# LWMn6VSU83AKG68Q7WWNgHNkVcgo1IFG/5v4fX7azJDTiI72YJ8Pq7n+aMCTkRo5
+# HZQB/8v3ApFHEq6UG9HG96KTlD1KQB0KgBK8VXcxxDyA4mUtcHDmPodRZapceFZR
+# J4uCYrs8gLe4qT+bwEc+StLymhtxppkdFUnXZT1AzMZGjHPCarmIMV07HikGAiOg
+# KmjoJr9e5JqhgHRcVC5Kih1qxEXoNVoqHd5eMUUhATTqG8/qyXeqf5NAjImwqh3U
+# 80UP/WOU0SEA+FvWJO9Yfd/E9jWBi56+/b0qQrAnxiAJWsjkNZB6D0x8pFTz6bh7
+# taeTTroyLOc2F4tqhc7PR8d22znhh6dPQ/Lm9xjYbG55kkSAtbI=
 # SIG # End signature block

@@ -1,79 +1,30 @@
-Function New-EmptyPolicy {
+Function Show-DirectoryPathPicker {
     <#
     .SYNOPSIS
-        Creates a policy file and requires 2 parameters to supply the file rules and rule references
-    .INPUTS
-        System.String
-    .OUTPUTS
-        System.String
+        Shows the folder picker GUI to the user for folder path selection
     #>
-    [CmdletBinding()]
-    [OutputType([System.String])]
-    param (
-        $RulesContent,
-        $RuleRefsContent
-    )
-    # Importing the $PSDefaultParameterValues to the current session, prior to everything else
-    . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
-
-    [System.String]$EmptyPolicy = @"
-<?xml version="1.0" encoding="utf-8"?>
-<SiPolicy xmlns="urn:schemas-microsoft-com:sipolicy" PolicyType="Base Policy">
-<VersionEx>10.0.0.0</VersionEx>
-<PlatformID>{2E07F7E4-194C-4D20-B7C9-6F44A6C5A234}</PlatformID>
-<Rules>
-<Rule>
-<Option>Enabled:Unsigned System Integrity Policy</Option>
-</Rule>
-<Rule>
-<Option>Enabled:Audit Mode</Option>
-</Rule>
-<Rule>
-<Option>Enabled:Advanced Boot Options Menu</Option>
-</Rule>
-<Rule>
-<Option>Required:Enforce Store Applications</Option>
-</Rule>
-</Rules>
-<!--EKUS-->
-<EKUs />
-<!--File Rules-->
-<FileRules>
-$RulesContent
-</FileRules>
-<!--Signers-->
-<Signers />
-<!--Driver Signing Scenarios-->
-<SigningScenarios>
-<SigningScenario Value="131" ID="ID_SIGNINGSCENARIO_DRIVERS_1" FriendlyName="Auto generated policy on $(Get-Date -Format 'MM-dd-yyyy')">
-<ProductSigners />
-</SigningScenario>
-<SigningScenario Value="12" ID="ID_SIGNINGSCENARIO_WINDOWS" FriendlyName="Auto generated policy on $(Get-Date -Format 'MM-dd-yyyy')">
-<ProductSigners>
-<FileRulesRef>
-$RuleRefsContent
-</FileRulesRef>
-</ProductSigners>
-</SigningScenario>
-</SigningScenarios>
-<UpdatePolicySigners />
-<CiSigners />
-<HvciOptions>0</HvciOptions>
-<BasePolicyID>{B163125F-E30A-43FC-ABEC-E30B4EE88FA8}</BasePolicyID>
-<PolicyID>{B163125F-E30A-43FC-ABEC-E30B4EE88FA8}</PolicyID>
-</SiPolicy>
-"@
-    return $EmptyPolicy
+    [System.IO.DirectoryInfo[]]$ProgramsPaths = @()
+    do {
+        [System.Reflection.Assembly]::LoadWithPartialName('System.windows.forms') | Out-Null
+        [System.Windows.Forms.FolderBrowserDialog]$OBJ = New-Object -TypeName System.Windows.Forms.FolderBrowserDialog
+        $OBJ.InitialDirectory = "$env:SystemDrive"
+        $OBJ.Description = 'To stop selecting directories, press ESC or select Cancel.'
+        $OBJ.ShowHiddenFiles = $true
+        [System.Windows.Forms.Form]$Spawn = New-Object -TypeName System.Windows.Forms.Form -Property @{TopMost = $true }
+        [System.String]$Show = $OBJ.ShowDialog($Spawn)
+        If ($Show -eq 'OK') { $ProgramsPaths += $OBJ.SelectedPath }
+        else { break }
+    }
+    while ($true)
+    Return $ProgramsPaths.Count -ne 0 ? $ProgramsPaths : $null
 }
-
-# Export external facing functions only, prevent internal functions from getting exported
-Export-ModuleMember -Function 'New-EmptyPolicy'
+Export-ModuleMember -Function 'Show-DirectoryPathPicker'
 
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCD6FuIoSDxn96wa
-# Ic0O7eFrZTZyL87Z5VS61F/ICSygCqCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCBWcYtGI5P27LwO
+# BYi5u/xv5NLTRc0VH2JdE/uSJLs1LqCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -120,16 +71,16 @@ Export-ModuleMember -Function 'New-EmptyPolicy'
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQg+rMgqS8TnoRWPjFT1Gfh7WJUoCL2cJT1zZPhPYegzJowDQYJKoZIhvcNAQEB
-# BQAEggIABttiwpstGi8i2oNlhCHitPMLDn2gEPs82U72QO6Ine+2QmvIvV9bV/Hd
-# U9k8cPbQDFhCkBw86X5+B5bYsjbu/tnGqeGFNRXsFaOJ0S5C+WIiYi6iivdrScZo
-# NIw/hfu58QMrAX6LdNnH1fu0edf3harL1vp7LqTv76CdjJyoA57OSVk2hUP73PfI
-# 6uK2PyT+aLYfPxPjBVwp4TCH6kJjyB3mpYxd6IR31nr4+odYUA1rCozbt9MSlCaB
-# TtHWLG+o27QrT54LbM7/Layo3AgcgpgABxQT0NOKJt58rweEUGvqfC1wO30KidCG
-# cTnVDAfHLtItZxper61uQiBBepMkibo6GGulFzYgoVN8/S8eaMZpl225Y7de6gJ2
-# ZEC9HdbqXOU8ORDXuDesOo4O/+EfJZ91U2kCCQfmUUx9fJOt/StDR7pt+x+5ldMX
-# L+yhhfrG3xJQ/J58ibjBXVHJyQ8ZZxbR3lm4PIhu/1BBkJmwmu854846uLqA2FUQ
-# uZ2zlI1BOtogGwdN0WVtOs4vtMn4NEcXfgVOp3046TmJxnmrMNbW4N+Q1B/nTXB4
-# lXnZ18A4l088EW/cH/+1LmZxH1hnsVM2sGMamicGm+jcV6F6m3XzGaOhQc/ibyru
-# 5xmSL/wSN+hBruAlHO3MtN2Ji6u7439MDDhkG9BEEfWz7gefrkc=
+# IgQgoOsSBeuhy14OHhMDXHVjiVE6C9iNYr1Q7kjiFNtYnYAwDQYJKoZIhvcNAQEB
+# BQAEggIAlhEs5IRpnwuFRrpsOpdvhkOKcAM/dd7QbcJHdOV4CdnNzptpOgcVjeME
+# OmUBASaTZIAmXCT3j/TALTmq9VqmZQdJC2auL5B5cHfHRY3D4XZsvR9ILGmcCvcs
+# 96i9ULSwuqtYZozjV+6ObSRMIjC9JMnxyuuOu5vz+gg9t+PdPfpsTLp6YMdsiRYL
+# 2zxdFu97kOdGSU03fB+RFrvBQdU+shqkII5o2elUgDnSsniHf7bxy39qj9tsJ+xJ
+# 7+7iCYdOnBxt21opBrkyE+TKAQ38YMTXfm5/cLBwL3Yt7Zz0ZTMvIvwl5Se2/n1W
+# F65ESrPs4MYminX+DQgyM/7KdeoXNAETQGchsoIPlbXSzP/vjxWlEgwSc/p77ijo
+# pzaY+CBTJDQFuRJPzMrHSmEjkttRijJdn/yHcfOqubhQfiwfU5Jihb2BssJDA9MH
+# JrHPjjCNjtnBmg1gxiHJ8i22GfhEGA12O2/gnV7ZvAkCf0jh/iwGvayGv4PcSC3h
+# DKAcG/c0fsr31LUCLfeo48xnh+KcTvm9KENdSaLOLw3olTiF6c80z1LfsrWjPjat
+# nd8GXuJW7GNI2el9Gg12+g0V5BYULL9KJiuckDYkQmFVvvojeSwUawCpoPhkywV2
+# t/93AID7ERhQcnjRrO9tbCJF2P9gpkI5Rk000cn6GggWLzzR+Tg=
 # SIG # End signature block

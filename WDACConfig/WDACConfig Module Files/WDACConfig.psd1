@@ -4,7 +4,7 @@
     RootModule           = 'WDACConfig.psm1'
 
     # Version number of this module.
-    ModuleVersion        = '0.3.8'
+    ModuleVersion        = '0.3.9'
 
     # Supported PSEditions
     CompatiblePSEditions = @('Core')
@@ -68,6 +68,10 @@ This is an advanced PowerShell module for WDAC (Windows Defender Application Con
 
 ✔️ Get-CiFileHashes: https://github.com/HotCakeX/Harden-Windows-Security/wiki/Get-CiFileHashes
 
+✔️ Set-CiRuleOptions: https://github.com/HotCakeX/Harden-Windows-Security/wiki/Set-CiRuleOptions
+
+✔️ Get-CIPolicySetting: https://github.com/HotCakeX/Harden-Windows-Security/wiki/Get-CIPolicySetting
+
 '@
 
     # Minimum version of the PowerShell engine required by this module
@@ -116,7 +120,9 @@ This is an advanced PowerShell module for WDAC (Windows Defender Application Con
         'Core\Build-WDACCertificate.psm1',
         'Core\Test-CiPolicy.psm1',
         'Core\ConvertTo-WDACPolicy.psm1',
-        'Core\Get-CiFileHashes.psm1')
+        'Core\Get-CiFileHashes.psm1',
+        'Core\Set-CiRuleOptions.psm1',
+        'Core\Get-CIPolicySetting.psm1')
 
     # Functions to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no functions to export.
     FunctionsToExport    = @('New-WDACConfig',
@@ -136,7 +142,9 @@ This is an advanced PowerShell module for WDAC (Windows Defender Application Con
         'Build-WDACCertificate',
         'Test-CiPolicy',
         'ConvertTo-WDACPolicy',
-        'Get-CiFileHashes')
+        'Get-CiFileHashes',
+        'Set-CiRuleOptions',
+        'Get-CIPolicySetting')
 
     # Cmdlets to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no cmdlets to export.
     CmdletsToExport      = @('New-WDACConfig',
@@ -156,7 +164,9 @@ This is an advanced PowerShell module for WDAC (Windows Defender Application Con
         'Build-WDACCertificate',
         'Test-CiPolicy',
         'ConvertTo-WDACPolicy',
-        'Get-CiFileHashes')
+        'Get-CiFileHashes',
+        'Set-CiRuleOptions',
+        'Get-CIPolicySetting')
 
     # Variables to export from this module
     VariablesToExport    = '*'
@@ -192,6 +202,8 @@ This is an advanced PowerShell module for WDAC (Windows Defender Application Con
         'Core\Test-CiPolicy.psm1',
         'Core\ConvertTo-WDACPolicy.psm1',
         'Core\Get-CiFileHashes.psm1',
+        'Core\Set-CiRuleOptions.psm1',
+        'Core\Get-CIPolicySetting.psm1',
         'CoreExt\PSDefaultParameterValues.ps1',
         'CoreExt\ArgumentCompleters.ps1',
         'CoreExt\Classes.psm1',
@@ -201,13 +213,10 @@ This is an advanced PowerShell module for WDAC (Windows Defender Application Con
         'Resources\WDAC Policies-Archived\DefaultWindows_Enforced_Kernel.xml',
         'Resources\WDAC Policies-Archived\DefaultWindows_Enforced_Kernel_NoFlights.xml',
         'Resources\WDAC Policies-Archived\Readme.md',
-        'Shared\Get-BlockRulesMeta.psm1',
-        'Shared\Get-FileRules.psm1',
+        'Resources\PolicyRuleOptions.Json',
         'Shared\Get-GlobalRootDrives.psm1',
-        'Shared\Get-RuleRefs.psm1',
         'Shared\Get-SignTool.psm1',
         'Shared\Move-UserModeToKernelMode.psm1',
-        'Shared\New-EmptyPolicy.psm1',
         'Shared\Set-LogSize.psm1',
         'Shared\Test-FilePath.psm1',
         'Shared\Update-Self.psm1',
@@ -218,10 +227,14 @@ This is an advanced PowerShell module for WDAC (Windows Defender Application Con
         'Shared\Copy-CiRules.psm1',
         'Shared\Remove-SupplementalSigners.psm1',
         'Shared\Receive-CodeIntegrityLogs.psm1',
-        'Shared\Edit-CiPolicyRuleOptions.psm1',
-        'Shared\New-AppxPackageCiPolicy.psm1',
         'Shared\New-StagingArea.psm1',
         'Shared\Set-LogPropertiesVisibility.psm1',
+        'Shared\Test-KernelProtectedFiles.psm1',
+        'Shared\Select-LogProperties.psm1',
+        'Shared\Edit-GUIDs.psm1',
+        'Shared\Get-KernelModeDrivers.psm1',
+        'Shared\Invoke-CiSigning.psm1',
+        'Shared\Show-DirectoryPathPicker.psm1',
         'WDACSimulation\Get-TBSCertificate.psm1',
         'WDACSimulation\Get-SignerInfo.psm1',
         'WDACSimulation\Get-SignedFileCertificates.psm1',
@@ -237,6 +250,7 @@ This is an advanced PowerShell module for WDAC (Windows Defender Application Con
         'C#\AuthenticodeHashCalc.cs',
         'C#\PageHashCalc.cs',
         'C#\Crypt32CertCN.cs',
+        'C#\WldpQuerySecurityPolicy.cs',
         'Help\ConvertTo-WDACPolicy.xml',
         'Help\ConvertTo-WDACPolicy.md',
         'XMLOps\Build-SignerAndHashObjects.psm1',
@@ -256,7 +270,10 @@ This is an advanced PowerShell module for WDAC (Windows Defender Application Con
         'XMLOps\Remove-DuplicateFileAttribRef_IDBased.psm1',
         'XMLOps\Remove-OrphanAllowedSignersAndCiSigners_IDBased.psm1',
         'XMLOps\Remove-UnreferencedFileRuleRefs.psm1',
-        'XMLOps\New-RootAndLeafCertificateLevelRules.psm1')
+        'XMLOps\New-RootAndLeafCertificateLevelRules.psm1',
+        'XMLOps\New-PFNLevelRules.psm1',
+        'XMLOps\New-Macros.psm1',
+        'XMLOps\Checkpoint-Macros.psm1')
 
     # Private data to pass to the module specified in RootModule/ModuleToProcess. This may also contain a PSData hashtable with additional module metadata used by PowerShell.
     PrivateData          = @{

@@ -17,15 +17,14 @@ Function Assert-WDACConfigIntegrity {
         [System.Management.Automation.SwitchParameter]$SkipVersionCheck
     )
     begin {
-        # Detecting if Verbose switch is used
         $PSBoundParameters.Verbose.IsPresent ? ([System.Boolean]$Verbose = $true) : ([System.Boolean]$Verbose = $false) | Out-Null
-
-        # Importing the $PSDefaultParameterValues to the current session, prior to everything else
         . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
 
         Write-Verbose -Message 'Importing the required sub-modules'
-        Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Write-ColorfulText.psm1" -Force
-        Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Update-Self.psm1" -Force
+        Import-Module -Force -FullyQualifiedName @(
+            "$ModuleRootPath\Shared\Update-Self.psm1",
+            "$ModuleRootPath\Shared\Write-ColorfulText.psm1"
+        )
 
         # if -SkipVersionCheck wasn't passed, run the updater
         if (-NOT $SkipVersionCheck) { Update-Self -InvocationStatement $MyInvocation.Statement }
@@ -51,11 +50,12 @@ Function Assert-WDACConfigIntegrity {
                 continue
             }
 
-            # Create a SHA512 object
-            [System.Security.Cryptography.SHA512]$Sha512 = [System.Security.Cryptography.SHA512]::Create()
-
             # Read the file as a byte array - This way we can get hashes of a file in use by another process where Get-FileHash would fail
             [System.Byte[]]$Bytes = [System.IO.File]::ReadAllBytes($File)
+
+            #Region SHA2-512 calculation
+            # Create a SHA512 object
+            [System.Security.Cryptography.SHA512]$Sha512 = [System.Security.Cryptography.SHA512]::Create()
 
             # Compute the hash of the byte array
             [System.Byte[]]$HashBytes = $Sha512.ComputeHash($Bytes)
@@ -69,12 +69,36 @@ Function Assert-WDACConfigIntegrity {
 
             # Remove the dashes from the hexadecimal string
             $HashString = $HashString.Replace('-', '')
+            #Endregion SHA2-512 calculation
+
+            #Region SHA3-512 calculation
+            try {
+                [System.Security.Cryptography.SHA3_512]$SHA3_512 = [System.Security.Cryptography.SHA3_512]::Create()
+
+                # Compute the hash of the byte array
+                [System.Byte[]]$SHA3_512HashBytes = $SHA3_512.ComputeHash($Bytes)
+
+                # Dispose the SHA3_512 object
+                $SHA3_512.Dispose()
+
+                # Convert the hash bytes to a hexadecimal string to make it look like the output of the Get-FileHash which produces hexadecimals (0-9 and A-F)
+                # If [System.Convert]::ToBase64String was used, it'd return the hash in base64 format, which uses 64 symbols (A-Z, a-z, 0-9, + and /) to represent each byte
+                [System.String]$SHA3_512HashString = [System.BitConverter]::ToString($SHA3_512HashBytes)
+
+                # Remove the dashes from the hexadecimal string
+                $SHA3_512HashString = $SHA3_512HashString.Replace('-', '')
+            }
+            catch [System.PlatformNotSupportedException] {
+                Write-Verbose -Message 'The SHA3-512 algorithm is not supported on this system. Requires build 24H2 or higher.'
+            }
+            #Endregion SHA3-512 calculation
 
             # Create a custom object to store the relative path, file name and the hash of the file
             $FinalOutput += [PSCustomObject]@{
-                RelativePath = [System.String]([System.IO.Path]::GetRelativePath($ModuleRootPath, $File.FullName))
-                FileName     = [System.String]$File.Name
-                FileHash     = [System.String]$HashString
+                RelativePath     = [System.String]([System.IO.Path]::GetRelativePath($ModuleRootPath, $File.FullName))
+                FileName         = [System.String]$File.Name
+                FileHash         = [System.String]$HashString
+                FileHashSHA3_512 = [System.String]$SHA3_512HashString
             }
         }
 
@@ -99,6 +123,7 @@ Function Assert-WDACConfigIntegrity {
     <#
 .SYNOPSIS
     Gets the SHA2-512 hashes of files in the WDACConfig and compares them with the ones in the cloud and shows the differences.
+    It also calculates the SHA3-512 hashes of the files and will completely switch to this new algorithm after Windows build 24H2 is reached GA.
 .DESCRIPTION
     The Assert-WDACConfigIntegrity function scans all the relevant files in the WDACConfig's folder and its subfolders, calculates their SHA2-512 hashes in hexadecimal format,
     Then it downloads the cloud CSV file from the GitHub repository and compares the hashes of the local files with the ones in the cloud.
@@ -132,8 +157,8 @@ Function Assert-WDACConfigIntegrity {
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCAFF4HKnQ2IEFYX
-# nEQ9v9zymIo2ZJ+PYob+Gyp1W8P3YaCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCD3vkemtShWfZhy
+# mygRSMAaTBRmvabzOtlTdB07mkEKx6CCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -180,16 +205,16 @@ Function Assert-WDACConfigIntegrity {
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQgGs6IBMiClYHy/u3UANL34WVyVxjJp0hTsV9Xvnif8NkwDQYJKoZIhvcNAQEB
-# BQAEggIAjAxZ1njPam0pAnD1ZMOMw7ttuRWzgPOnTs2eZvV1wt2DRKftsHiFl1X0
-# 1xyFkZVlYTmVdACzeY9LRZ0mLLgOL24md3sXaL34BIUNcJPjg7fazURXsXqekkSM
-# qfWWveEkbp57OldUHZRU0dGtvvLzZ72yYCAY0FIUV9eFoQQf0Rj+7bu+ot5K9Vvu
-# fue99yJzDB7eqr9TiO2r9G/gsdd6A7iAEhcJ3uZYcsjZNx7KlaJ4Wx/mbutsgEsj
-# lfFSipYejutl9X6qLaQkLXeB9mBe2o33QNOylX71Zu6x1NZoGsXtq5ZqJ8dOe2fY
-# 6OXhADfFQb4lfGf9t5Oi0FAp69Vx3lT+repx534NQeB4hthU2TYUPN23LyTEFnWd
-# 8YYzFos7hT8VA0NNA0YjN6bH2Xa3JkVbkLUTFvS+KpE5ZivKg6lJDmHw74SIzX3U
-# C5bfAs7bZktbyHF0Fdcr4YsE+/kgxevinNjF+IFFmPcpCzhIeF1ZWgzCXXUe4h3Y
-# 59L8wbdkvwbWdcm9RNb00S8BmEKcKy1qY4mCzCz1c3pfrQZUBqAdMqwKXlgvIfr5
-# Vr30wttFMhPxB/dGDi+fxGIeXf9673WLTuSx0//Fr28wT5Pf5nFuN85Q6NfT54cd
-# bmi0uGjRA7q7ATM/GZSbsVd9dWFcuiP+YqZ9oJmh8SttwbFLDhA=
+# IgQgtpHzllpNLP4rMubolzRhCEqaS73b/bi9UW6WYHkJFrcwDQYJKoZIhvcNAQEB
+# BQAEggIAQ9dxpH8Byd3YGwyoGJahJtUP0qE4rBVsRlhZPEUSYeWVkfffk5oNstHx
+# ftOx98hgOb1bngsvQ4BwQIoBa8RCAXdgqWlqFHzdTtRTuVbXPUJD6UWwyoAhTbZA
+# gPRshCMaQTYGK3FeJBQ8AKVjjDVB4/vlHgjGkJwZzr+eGzCa/pvVHaNxajjHjesK
+# 9R52sxtCuhTgEUQCAwxMqAyNy1Vh5lt6mmL47dQrVAdaMCxCSCbigscBO0q6xDV0
+# AbtPiwuYwNLVNSFdWZ/m5KKZdyYNpiMRZS5uYAJKsPn2ZL0CaVfPs55emoFWpjBv
+# eP3k+MgidiJ1MwMMnP4sBi+bKh6liA/gnOb1qidldVbt62QF9iih3QAI2i2TQU2j
+# WU2ILCeGOBXCVf9pW1VFU/b5z1D7buBYS9q+WzajdBSv74MWiYSkif8Vf57j89RM
+# znhg1PE3PStvq45a25el/NeISWjmtegvEpIJhItpD8dlgM2kgXKA4p6WR7Xm/c2B
+# AI3IKp740j4mtQBMzmvZS8PjxRKXJZxK/J7qGJdWl5gRzzHafmzNXv/2244MckIF
+# 2UFWxgejx81eGdhO94o3ZOqZTO4YSMIq60MEkuIWt3tMnuBlXVzHAnjEv/4713zl
+# jm8uwsw5HKLW2QTE6o8oggJXniHwvqgK+9ER/n/kUROhKtMO0bk=
 # SIG # End signature block

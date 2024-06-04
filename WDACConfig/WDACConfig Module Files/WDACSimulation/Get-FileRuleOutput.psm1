@@ -19,10 +19,7 @@ Function Get-FileRuleOutput {
         [System.IO.FileInfo]$XmlPath
     )
     Begin {
-        # Detecting if Verbose switch is used
         $PSBoundParameters.Verbose.IsPresent ? ([System.Boolean]$Verbose = $true) : ([System.Boolean]$Verbose = $false) | Out-Null
-
-        # Importing the $PSDefaultParameterValues to the current session, prior to everything else
         . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
 
         # Load the xml file into a variable
@@ -74,8 +71,8 @@ Export-ModuleMember -Function 'Get-FileRuleOutput'
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCBXAJRx/8+fk8gQ
-# K971odWjNipOHta7jGLNTkwWaXWti6CCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCA665oHZqqhg0Vb
+# cELbeYkLyg/nNXh/+ZhpXeP/ehOobaCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -122,16 +119,16 @@ Export-ModuleMember -Function 'Get-FileRuleOutput'
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQgczCBC4vmmhSJ2rbWeJrqBkFMG/I2HX3e1696qxNEXDwwDQYJKoZIhvcNAQEB
-# BQAEggIAokH97SwDuU1I+vh7HyR4b9aKjT/rh/0oEusaXkpLk++LYqQ4q+thxNQw
-# F3H+btmC7m+kT8b/6woIR1+QKVCvGjM/JBut/HV011mcqYlWiaNWRMknvLypLx6I
-# lJQXgyj/BGa+1lQHarp8znpDMnaadUa+/BdqB6ZAoZU5j13jYlTXFAnKWPKDVt2U
-# 2WtY9lZmGU47TSUSTDC9V63JCwJ7cTPWIU1AWFaL/i1edtlo07/wbvIlUnzynCLK
-# KVFQI8hTYbdfJmaZyo5nFzMaKI3wbJAKOeaskCeSWtNoj3xNtCOQo8HGHIsSfinr
-# H79bVnDEe5E5lJnU5sXEKRh60VoP8b4qD/1rR1IcG6MhJL8ELc5IKLytpNI0ESk+
-# G8pbd4/B5xtCuChHkPTjKuRec0i7LqTj0pXVo27QNvFBpbXnnxE5x8VWjUpjrpC8
-# yWuDMAu3GsNr8k1Ngc9nlmUei8te8IQiMXrl/TCcGXnqY9nLonSLhJ7fMwc01KXz
-# l23TuesBeKuONfW612KmNPFStLXr+vglJOCqut/aZdTOC+hApDFLpRxrFClk/VNQ
-# Ac52LxxYhkq0zgiDEfos7MTK72HLRv9oZgciViglJ/d6kSFMazqMxsEO6ljGiXbP
-# sPGQHFvopPOrriX3G3n5O09AH0x6rNRZ05HXac4+vLw6PpODoG0=
+# IgQg2z7eMTxX9Z0u9SoMKVsg155qNNgDM225T2msIWOiDy4wDQYJKoZIhvcNAQEB
+# BQAEggIAL0stfm7ViojKtrHiRdDnGEQ0HA14cEccefA+s3YaXuAdb21vu7CpsDh6
+# cmn7Vxyf8oDvE73bLw/ek3NBbCyEXs1t/dWfXoFd9D+Rci6veSgUCfU9hYjBci73
+# tNASt0a82E9408nVSIevG+oAc1iEpO6o99JON2FJPDtSodLyLZE6RwWkOocJuye3
+# wxO39l19DQQmrR9x+/5hWG/5EIfpjJzyTJST2SG1nNT5/y26MzK9oSkIku4mOgPQ
+# BCk2QD5jMcb9kKvocsVLude5LJktg3HjOTYAriF7my6+pVJy9VxAtM8j5YvAC46h
+# CtoMi85dzJu54jZmiMZla2afYvTz1EhtIA4WVtfJGj35ho66DbPgI9E52VtpJHvi
+# iibg5Kzjin3fOiilKJgVKO8rJwhtb8P/f03yTIvxZmqFyuQGQZNS3b930FWuJo5c
+# ielWzBDEGQXL2UG0v389XuZJ4CMicWrGfq6kXlKAlnq4KfKnu8iboXhJDqCqelsC
+# CSi9MjEDEyXxNlFs/nQ0VwLipZT+vAO1CeRxsE97g17Sjy00YH6BvapbkozSB5ST
+# 5iNJDz0DIMghPrit2gruY6QvV0Rvusbs3bcWA0oqoiGcGSuhkBB26kRe4mo+uDgW
+# /eg6+VkZif0HbGsCBfWtNwm9gZ0tlfgw5kI7a8ZQ4KFKKN2jTp8=
 # SIG # End signature block

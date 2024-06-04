@@ -1,29 +1,28 @@
 Function Edit-WDACConfig {
     [CmdletBinding(
-        DefaultParameterSetName = 'Allow New Apps Audit Events',
+        DefaultParameterSetName = 'AllowNewApps',
         PositionalBinding = $false
     )]
     [OutputType([System.String])]
     Param(
-        [Alias('E')]
-        [Parameter(Mandatory = $false, ParameterSetName = 'Allow New Apps Audit Events')][System.Management.Automation.SwitchParameter]$AllowNewAppsAuditEvents,
         [Alias('A')]
-        [Parameter(Mandatory = $false, ParameterSetName = 'Allow New Apps')][System.Management.Automation.SwitchParameter]$AllowNewApps,
+        [Parameter(Mandatory = $false, ParameterSetName = 'AllowNewApps')][System.Management.Automation.SwitchParameter]$AllowNewApps,
         [Alias('M')]
-        [Parameter(Mandatory = $false, ParameterSetName = 'Merge Supplemental Policies')][System.Management.Automation.SwitchParameter]$MergeSupplementalPolicies,
+        [Parameter(Mandatory = $false, ParameterSetName = 'MergeSupplementalPolicies')][System.Management.Automation.SwitchParameter]$MergeSupplementalPolicies,
         [Alias('U')]
-        [Parameter(Mandatory = $false, ParameterSetName = 'Update Base Policy')][System.Management.Automation.SwitchParameter]$UpdateBasePolicy,
+        [Parameter(Mandatory = $false, ParameterSetName = 'UpdateBasePolicy')][System.Management.Automation.SwitchParameter]$UpdateBasePolicy,
 
         [ValidateCount(1, 232)]
         [ValidatePattern('^[a-zA-Z0-9 \-]+$', ErrorMessage = 'The policy name can only contain alphanumeric, space and dash (-) characters.')]
-        [Parameter(Mandatory = $true, ParameterSetName = 'Allow New Apps Audit Events', ValueFromPipelineByPropertyName = $true)]
-        [Parameter(Mandatory = $true, ParameterSetName = 'Allow New Apps', ValueFromPipelineByPropertyName = $true)]
-        [Parameter(Mandatory = $true, ParameterSetName = 'Merge Supplemental Policies', ValueFromPipelineByPropertyName = $true)]
+        [Parameter(Mandatory = $true, ParameterSetName = 'AllowNewApps', ValueFromPipelineByPropertyName = $true)]
+        [Parameter(Mandatory = $true, ParameterSetName = 'MergeSupplementalPolicies', ValueFromPipelineByPropertyName = $true)]
         [System.String]$SuppPolicyName,
 
         [ValidateScript({ Test-CiPolicy -XmlFile $_ })]
-        [Parameter(Mandatory = $true, ParameterSetName = 'Merge Supplemental Policies', ValueFromPipelineByPropertyName = $true)]
+        [Parameter(Mandatory = $true, ParameterSetName = 'MergeSupplementalPolicies', ValueFromPipelineByPropertyName = $true)]
         [System.IO.FileInfo[]]$SuppPolicyPaths,
+
+        [Parameter(Mandatory = $false, ParameterSetName = 'AllowNewApps')][System.Management.Automation.SwitchParameter]$BoostedSecurity,
 
         [ValidateScript({
                 # Validate the Policy file to make sure the user isn't accidentally trying to
@@ -60,77 +59,67 @@ Function Edit-WDACConfig {
                     throw 'The policy xml file in User Configurations for UnsignedPolicyPath is a Signed policy.'
                 }
             }, ErrorMessage = 'The selected policy xml file is Signed. Please use Edit-SignedWDACConfig cmdlet to edit Signed policies.')]
-        [Parameter(Mandatory = $false, ParameterSetName = 'Allow New Apps Audit Events', ValueFromPipelineByPropertyName = $true)]
-        [Parameter(Mandatory = $false, ParameterSetName = 'Allow New Apps', ValueFromPipelineByPropertyName = $true)]
-        [Parameter(Mandatory = $false, ParameterSetName = 'Merge Supplemental Policies', ValueFromPipelineByPropertyName = $true)]
+        [Parameter(Mandatory = $false, ParameterSetName = 'AllowNewApps', ValueFromPipelineByPropertyName = $true)]
+        [Parameter(Mandatory = $false, ParameterSetName = 'MergeSupplementalPolicies', ValueFromPipelineByPropertyName = $true)]
         [System.IO.FileInfo]$PolicyPath,
 
-        [Parameter(Mandatory = $false, ParameterSetName = 'Merge Supplemental Policies')]
+        [Parameter(Mandatory = $false, ParameterSetName = 'MergeSupplementalPolicies')]
         [System.Management.Automation.SwitchParameter]$KeepOldSupplementalPolicies,
 
         [ValidateSet([ScanLevelz])]
-        [parameter(Mandatory = $false, ParameterSetName = 'Allow New Apps Audit Events')]
-        [parameter(Mandatory = $false, ParameterSetName = 'Allow New Apps')]
+        [parameter(Mandatory = $false, ParameterSetName = 'AllowNewApps')]
         [System.String]$Level = 'WHQLFilePublisher',
 
         [ValidateSet([ScanLevelz])]
-        [parameter(Mandatory = $false, ParameterSetName = 'Allow New Apps Audit Events')]
-        [parameter(Mandatory = $false, ParameterSetName = 'Allow New Apps')]
+        [parameter(Mandatory = $false, ParameterSetName = 'AllowNewApps')]
         [System.String[]]$Fallbacks = ('FilePublisher', 'Hash'),
 
-        [parameter(Mandatory = $false, ParameterSetName = 'Allow New Apps Audit Events')]
-        [parameter(Mandatory = $false, ParameterSetName = 'Allow New Apps')]
+        [parameter(Mandatory = $false, ParameterSetName = 'AllowNewApps')]
         [System.Management.Automation.SwitchParameter]$NoScript,
 
-        [parameter(Mandatory = $false, ParameterSetName = 'Allow New Apps Audit Events')]
-        [parameter(Mandatory = $false, ParameterSetName = 'Allow New Apps')]
+        [parameter(Mandatory = $false, ParameterSetName = 'AllowNewApps')]
         [System.Management.Automation.SwitchParameter]$NoUserPEs,
 
         [ValidateSet('OriginalFileName', 'InternalName', 'FileDescription', 'ProductName', 'PackageFamilyName', 'FilePath')]
-        [parameter(Mandatory = $false, ParameterSetName = 'Allow New Apps Audit Events')]
-        [parameter(Mandatory = $false, ParameterSetName = 'Allow New Apps')]
+        [parameter(Mandatory = $false, ParameterSetName = 'AllowNewApps')]
         [System.String]$SpecificFileNameLevel,
 
         [ValidateRange(1024KB, 18014398509481983KB)]
-        [Parameter(Mandatory = $false, ParameterSetName = 'Allow New Apps Audit Events')]
+        [parameter(Mandatory = $false, ParameterSetName = 'AllowNewApps')]
         [System.UInt64]$LogSize,
 
-        [parameter(Mandatory = $false, ParameterSetName = 'Allow New Apps Audit Events')][System.Management.Automation.SwitchParameter]$IncludeDeletedFiles,
-
         [ValidateSet([BasePolicyNamez])]
-        [Parameter(Mandatory = $true, ParameterSetName = 'Update Base Policy')][System.String[]]$CurrentBasePolicyName,
+        [Parameter(Mandatory = $true, ParameterSetName = 'UpdateBasePolicy')][System.String[]]$CurrentBasePolicyName,
 
-        [ValidateSet('AllowMicrosoft_Plus_Block_Rules', 'Lightly_Managed_system_Policy', 'DefaultWindows_WithBlockRules')]
-        [Parameter(Mandatory = $true, ParameterSetName = 'Update Base Policy')][System.String]$NewBasePolicyType,
+        [ValidateSet('DefaultWindows', 'AllowMicrosoft', 'SignedAndReputable')]
+        [Parameter(Mandatory = $true, ParameterSetName = 'UpdateBasePolicy')][System.String]$NewBasePolicyType,
 
-        [Parameter(Mandatory = $false, ParameterSetName = 'Update Base Policy')][System.Management.Automation.SwitchParameter]$RequireEVSigners,
+        [Parameter(Mandatory = $false, ParameterSetName = 'UpdateBasePolicy')][System.Management.Automation.SwitchParameter]$RequireEVSigners,
 
         [Parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$SkipVersionCheck
     )
-
-    begin {
-        # Detecting if Verbose switch is used
+    Begin {
         $PSBoundParameters.Verbose.IsPresent ? ([System.Boolean]$Verbose = $true) : ([System.Boolean]$Verbose = $false) | Out-Null
-
-        # Detecting if Debug switch is used, will do debugging actions based on that
         $PSBoundParameters.Debug.IsPresent ? ([System.Boolean]$Debug = $true) : ([System.Boolean]$Debug = $false) | Out-Null
-
-        # Importing the $PSDefaultParameterValues to the current session, prior to everything else
         . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
 
         Write-Verbose -Message 'Importing the required sub-modules'
-        Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Update-Self.psm1" -Force
-        Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Write-ColorfulText.psm1" -Force
-        Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Set-LogSize.psm1" -Force
-        Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Test-FilePath.psm1" -Force
-        Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Receive-CodeIntegrityLogs.psm1" -Force
-        Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\New-EmptyPolicy.psm1" -Force
-        Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Get-RuleRefs.psm1" -Force
-        Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Get-FileRules.psm1" -Force
-        Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Get-BlockRulesMeta.psm1" -Force
-        Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\New-SnapBackGuarantee.psm1" -Force
-        Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Edit-CiPolicyRuleOptions.psm1" -Force
-        Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\New-StagingArea.psm1" -Force
+        $ModulesToImport = @(
+            "$ModuleRootPath\Shared\Update-Self.psm1",
+            "$ModuleRootPath\Shared\Write-ColorfulText.psm1",
+            "$ModuleRootPath\Shared\Set-LogSize.psm1",
+            "$ModuleRootPath\Shared\Test-FilePath.psm1",
+            "$ModuleRootPath\Shared\Receive-CodeIntegrityLogs.psm1",
+            "$ModuleRootPath\Shared\New-SnapBackGuarantee.psm1",
+            "$ModuleRootPath\Shared\New-StagingArea.psm1",
+            "$ModuleRootPath\Shared\Set-LogPropertiesVisibility.psm1",
+            "$ModuleRootPath\Shared\Select-LogProperties.psm1",
+            "$ModuleRootPath\Shared\Test-KernelProtectedFiles.psm1",
+            "$ModuleRootPath\Shared\Show-DirectoryPathPicker.psm1",
+            "$ModuleRootPath\Shared\Edit-GUIDs.psm1"
+        )
+        $ModulesToImport += (Get-ChildItem -File -Filter '*.psm1' -LiteralPath "$ModuleRootPath\XMLOps").FullName
+        Import-Module -FullyQualifiedName $ModulesToImport -Force
 
         # if -SkipVersionCheck wasn't passed, run the updater
         if (-NOT $SkipVersionCheck) { Update-Self -InvocationStatement $MyInvocation.Statement }
@@ -139,7 +128,7 @@ Function Edit-WDACConfig {
 
         #Region User-Configurations-Processing-Validation
         # make sure the ParameterSet being used has PolicyPath parameter - Then enforces "mandatory" attribute for the parameter
-        if ($PSCmdlet.ParameterSetName -in 'Allow New Apps Audit Events', 'Allow New Apps', 'Merge Supplemental Policies') {
+        if ($PSCmdlet.ParameterSetName -in 'AllowNewApps', 'MergeSupplementalPolicies') {
             # If PolicyPath was not provided by user, check if a valid value exists in user configs, if so, use it, otherwise throw an error
             if (!$PolicyPath) {
                 if (Test-Path -Path (Get-CommonWDACConfig -UnsignedPolicyPath)) {
@@ -151,19 +140,20 @@ Function Edit-WDACConfig {
             }
         }
         #Endregion User-Configurations-Processing-Validation
-        function Update-BasePolicyToEnforced {
-            <#
-            .SYNOPSIS
-                A helper function used to redeploy the base policy in Enforced mode
-            .INPUTS
-                None. This function uses the global variables: $PolicyName, $PolicyID and $EnforcedModeCIPPath
-            .OUTPUTS
-                System.String
-            #>
-            &'C:\Windows\System32\CiTool.exe' --update-policy $EnforcedModeCIPPath -json | Out-Null
-            Write-ColorfulText -Color Lavender -InputText 'The Base policy with the following details has been Re-Deployed in Enforced Mode:'
-            Write-ColorfulText -Color MintGreen -InputText "PolicyName = $PolicyName"
-            Write-ColorfulText -Color MintGreen -InputText "PolicyGUID = $PolicyID"
+
+        # Validate the Level and Fallbacks parameters when using the Boosted Security mode
+        if ($BoostedSecurity) {
+            $AllowedLevelsForBoostedSecurityMode = [System.Collections.Generic.HashSet[System.String]]@('Hash', 'FileName', 'SignedVersion', 'FilePublisher', 'WHQLFilePublisher')
+
+            if (-NOT ($AllowedLevelsForBoostedSecurityMode.Contains($Level))) {
+                Throw 'When using the Boosted Security mode, the Level parameter can only contain the following values: Hash, FileName, SignedVersion, FilePublisher, WHQLFilePublisher'
+            }
+
+            foreach ($Fallback in $Fallbacks) {
+                if (-NOT ($AllowedLevelsForBoostedSecurityMode.Contains($Fallback))) {
+                    Throw 'When using the Boosted Security mode, the Fallbacks parameter can only contain the following values: Hash, FileName, SignedVersion, FilePublisher, WHQLFilePublisher'
+                }
+            }
         }
     }
 
@@ -172,218 +162,17 @@ Function Edit-WDACConfig {
         try {
 
             if ($AllowNewApps) {
-
-                # An empty array that holds the Policy XML files - This array will eventually be used to create the final Supplemental policy
-                [System.IO.FileInfo[]]$PolicyXMLFilesArray = @()
-
-                #Initiate Live Audit Mode
-
-                # The total number of the main steps for the progress bar to render
-                [System.UInt16]$TotalSteps = 8
-                [System.UInt16]$CurrentStep = 0
-
-                $CurrentStep++
-                Write-Progress -Id 9 -Activity 'Creating Audit mode policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
-
-                Write-Verbose -Message 'Creating a copy of the original policy in the Staging Area so that the original one will be unaffected'
-
-                Copy-Item -LiteralPath $PolicyPath -Destination $StagingArea -Force
-                [System.IO.FileInfo]$PolicyPath = Join-Path -Path $StagingArea -ChildPath (Split-Path -Path $PolicyPath -Leaf)
-
-                Write-Verbose -Message 'Retrieving the Base policy name and ID'
-                [System.Xml.XmlDocument]$Xml = Get-Content -Path $PolicyPath
-                [System.String]$PolicyID = $Xml.SiPolicy.PolicyID
-                [System.String]$PolicyName = ($Xml.SiPolicy.Settings.Setting | Where-Object -FilterScript { $_.provider -eq 'PolicyInfo' -and $_.valuename -eq 'Name' -and $_.key -eq 'Information' }).Value.String
-
-                Write-Verbose -Message 'Creating Audit Mode CIP'
-                [System.IO.FileInfo]$AuditModeCIPPath = Join-Path -Path $StagingArea -ChildPath 'AuditMode.cip'
-                # Add Audit mode policy rule option
-                Set-RuleOption -FilePath $PolicyPath -Option 3
-                # Create CIP for Audit Mode
-                ConvertFrom-CIPolicy -XmlFilePath $PolicyPath -BinaryFilePath $AuditModeCIPPath | Out-Null
-
-                Write-Verbose -Message 'Creating Enforced Mode CIP'
-                [System.IO.FileInfo]$EnforcedModeCIPPath = Join-Path -Path $StagingArea -ChildPath 'EnforcedMode.cip'
-                # Remove Audit mode policy rule option
-                Set-RuleOption -FilePath $PolicyPath -Option 3 -Delete
-                # Create CIP for Enforced Mode
-                ConvertFrom-CIPolicy -XmlFilePath $PolicyPath -BinaryFilePath $EnforcedModeCIPPath | Out-Null
-
-                #Region Snap-Back-Guarantee
-                Write-Verbose -Message 'Creating Enforced Mode SnapBack guarantee'
-                New-SnapBackGuarantee -Path $EnforcedModeCIPPath
-
-                $CurrentStep++
-                Write-Progress -Id 9 -Activity 'Deploying the Audit mode policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
-
-                Write-Verbose -Message 'Deploying the Audit mode CIP'
-                &'C:\Windows\System32\CiTool.exe' --update-policy $AuditModeCIPPath -json | Out-Null
-
-                Write-ColorfulText -Color Lavender -InputText 'The Base policy with the following details has been Re-Deployed in Audit Mode:'
-                Write-ColorfulText -Color MintGreen -InputText "PolicyName = $PolicyName"
-                Write-ColorfulText -Color MintGreen -InputText "PolicyGUID = $PolicyID"
-
-                #Endregion Snap-Back-Guarantee
-
-                # A Try-Catch-Finally block so that if any errors occur, the Base policy will be Re-deployed in enforced mode
-                Try {
-                    #Region User-Interaction
-
-                    $CurrentStep++
-                    Write-Progress -Id 9 -Activity 'Waiting for user input' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
-
-                    Write-ColorfulText -Color Pink -InputText 'Audit mode deployed, start installing your programs now'
-                    Write-ColorfulText -Color HotPink -InputText 'When you have finished installing programs, Press Enter to start selecting program directories to scan'
-                    Pause
-
-                    # Store the program paths that user browses for in an array
-                    [System.IO.DirectoryInfo[]]$ProgramsPaths = @()
-                    Write-Host -Object 'Select program directories to scan' -ForegroundColor Cyan
-
-                    # Showing folder picker GUI to the user for folder path selection
-                    do {
-                        [System.Reflection.Assembly]::LoadWithPartialName('System.windows.forms') | Out-Null
-                        [System.Windows.Forms.FolderBrowserDialog]$OBJ = New-Object -TypeName System.Windows.Forms.FolderBrowserDialog
-                        $OBJ.InitialDirectory = "$env:SystemDrive"
-                        $OBJ.Description = $Description
-                        [System.Windows.Forms.Form]$Spawn = New-Object -TypeName System.Windows.Forms.Form -Property @{TopMost = $true }
-                        [System.String]$Show = $OBJ.ShowDialog($Spawn)
-                        If ($Show -eq 'OK') { $ProgramsPaths += $OBJ.SelectedPath }
-                        else { break }
-                    }
-                    while ($true)
-                    #Endregion User-Interaction
-
-                    # Make sure User browsed for at least 1 directory, otherwise exit
-                    if ($ProgramsPaths.count -eq 0) {
-                        # Finally block will be triggered to Re-Deploy Base policy in Enforced mode
-                        Throw 'No program folder was selected, reverting the changes and quitting...'
-                    }
-                }
-                catch {
-                    # Complete the progress bar if there was an error, such as user not selecting any folders
-                    Write-Progress -Id 9 -Activity 'Complete.' -Completed
-
-                    # Show any extra info about any possible error that might've occurred
-                    Throw $_
-                }
-                finally {
-                    # Deploy Enforced mode CIP
-                    Write-Verbose -Message 'Finally Block Running'
-                    Update-BasePolicyToEnforced
-
-                    Write-Verbose -Message 'Removing the SnapBack guarantee because the base policy has been successfully re-enforced'
-
-                    # For CMD Method
-                    Unregister-ScheduledTask -TaskName 'EnforcedModeSnapBack' -Confirm:$false
-                    Remove-Item -Path (Join-Path -Path $UserConfigDir -ChildPath 'EnforcedModeSnapBack.cmd') -Force
-                }
-
-                Write-Host -Object 'Here are the paths you selected:' -ForegroundColor Yellow
-                $ProgramsPaths | ForEach-Object -Process { $_.FullName }
-
-                # Scan each of the folder paths that user selected
-                $CurrentStep++
-                Write-Progress -Id 9 -Activity 'Scanning user selected folders' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
-
-                Write-Verbose -Message 'Scanning each of the folder paths that user selected'
-                for ($i = 0; $i -lt $ProgramsPaths.Count; $i++) {
-
-                    # Creating a hash table to dynamically add parameters based on user input and pass them to New-Cipolicy cmdlet
-                    [System.Collections.Hashtable]$UserInputProgramFoldersPolicyMakerHashTable = @{
-                        FilePath               = "$StagingArea\ProgramDir_ScanResults$($i).xml"
-                        ScanPath               = $ProgramsPaths[$i]
-                        Level                  = $Level
-                        Fallback               = $Fallbacks
-                        MultiplePolicyFormat   = $true
-                        UserWriteablePaths     = $true
-                        AllowFileNameFallbacks = $true
-                    }
-                    # Assess user input parameters and add the required parameters to the hash table
-                    if ($SpecificFileNameLevel) { $UserInputProgramFoldersPolicyMakerHashTable['SpecificFileNameLevel'] = $SpecificFileNameLevel }
-                    if ($NoScript) { $UserInputProgramFoldersPolicyMakerHashTable['NoScript'] = $true }
-                    if (!$NoUserPEs) { $UserInputProgramFoldersPolicyMakerHashTable['UserPEs'] = $true }
-
-                    # Create the supplemental policy via parameter splatting
-                    Write-Verbose -Message "Currently scanning: $($ProgramsPaths[$i])"
-                    New-CIPolicy @UserInputProgramFoldersPolicyMakerHashTable
-                }
-
-                Write-Verbose -Message 'Collecting all the policy files created by scanning user specified folders'
-
-                foreach ($File in (Get-ChildItem -File -Path $StagingArea -Filter 'ProgramDir_ScanResults*.xml')) {
-                    $PolicyXMLFilesArray += $File.FullName
-                }
-
-                Write-Verbose -Message 'The following policy xml files are going to be merged into the final Supplemental policy and be deployed on the system:'
-                $PolicyXMLFilesArray | ForEach-Object -Process { Write-Verbose -Message "$_" }
-
-                # Define the path for the final Supplemental policy XML
-                [System.IO.FileInfo]$SuppPolicyPath = Join-Path -Path $StagingArea -ChildPath "SupplementalPolicy $SuppPolicyName.xml"
-
-                # Merge all of the policy XML files in the array into the final Supplemental policy
-                $CurrentStep++
-                Write-Progress -Id 9 -Activity 'Merging the policies' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
-
-                Write-Verbose -Message 'Merging all of the policy XML files in the array into the final Supplemental policy'
-                Merge-CIPolicy -PolicyPaths $PolicyXMLFilesArray -OutputFilePath $SuppPolicyPath | Out-Null
-
-                #Region Supplemental-policy-processing-and-deployment
-                $CurrentStep++
-                Write-Progress -Id 9 -Activity 'Creating Supplemental policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
-
-                Write-Verbose -Message 'Converting the policy to a Supplemental policy type and resetting its ID'
-                [System.String]$SuppPolicyID = Set-CIPolicyIdInfo -FilePath $SuppPolicyPath -PolicyName "$SuppPolicyName - $(Get-Date -Format 'MM-dd-yyyy')" -ResetPolicyID -BasePolicyToSupplementPath $PolicyPath
-                $SuppPolicyID = $SuppPolicyID.Substring(11)
-
-                Edit-CiPolicyRuleOptions -Action Supplemental -XMLFile $SuppPolicyPath
-
-                Write-Verbose -Message 'Setting the Supplemental policy version to 1.0.0.0'
-                Set-CIPolicyVersion -FilePath $SuppPolicyPath -Version '1.0.0.0'
-
-                # Define the path for the final Supplemental policy CIP
-                [System.IO.FileInfo]$SupplementalCIPPath = Join-Path -Path $StagingArea -ChildPath "$SuppPolicyID.cip"
-
-                Write-Verbose -Message 'Convert the Supplemental policy to a CIP file'
-                ConvertFrom-CIPolicy -XmlFilePath $SuppPolicyPath -BinaryFilePath $SupplementalCIPPath | Out-Null
-
-                $CurrentStep++
-                Write-Progress -Id 9 -Activity 'Deploying the Supplemental policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
-
-                Write-Verbose -Message 'Deploying the Supplemental policy'
-                &'C:\Windows\System32\CiTool.exe' --update-policy $SupplementalCIPPath -json | Out-Null
-
-                Write-ColorfulText -Color Lavender -InputText 'Supplemental policy with the following details has been deployed in Enforced Mode:'
-                Write-ColorfulText -Color MintGreen -InputText "SupplementalPolicyName = $SuppPolicyName"
-                Write-ColorfulText -Color MintGreen -InputText "SupplementalPolicyGUID = $SuppPolicyID"
-
-                #Endregion Supplemental-policy-processing-and-deployment
-
-                # Copy the Supplemental policy to the user's config directory since Staging Area is a temporary location
-                Copy-Item -Path $SuppPolicyPath -Destination $UserConfigDir -Force
-
-                Write-Progress -Id 9 -Activity 'Complete.' -Completed
-            }
-
-            if ($AllowNewAppsAuditEvents) {
-
-                # Change Code Integrity event logs size
-                if ($AllowNewAppsAuditEvents -and $LogSize) {
-                    Write-Verbose -Message 'Changing Code Integrity event logs size'
-                    Set-LogSize -LogSize $LogSize
-                }
+                Set-LogSize -LogSize:$LogSize
 
                 # Get the current date so that instead of the entire event viewer logs, only audit logs created after running this module will be captured
                 Write-Verbose -Message 'Getting the current date'
                 [System.DateTime]$Date = Get-Date
 
-                # An empty array that holds the Policy XML files - This array will eventually be used to create the final Supplemental policy
-                [System.IO.FileInfo[]]$PolicyXMLFilesArray = @()
-
-                #Initiate Live Audit Mode
+                # A concurrent hashtable that holds the Policy XML files in its values - This array will eventually be used to create the final Supplemental policy
+                $PolicyXMLFilesArray = [System.Collections.Concurrent.ConcurrentDictionary[System.String, System.IO.FileInfo]]::new()
 
                 # The total number of the main steps for the progress bar to render
-                [System.UInt16]$TotalSteps = 9
+                [System.UInt16]$TotalSteps = 8
                 [System.UInt16]$CurrentStep = 0
 
                 $CurrentStep++
@@ -401,16 +190,12 @@ Function Edit-WDACConfig {
 
                 Write-Verbose -Message 'Creating Audit Mode CIP'
                 [System.IO.FileInfo]$AuditModeCIPPath = Join-Path -Path $StagingArea -ChildPath 'AuditMode.cip'
-                # Add Audit mode policy rule option
-                Set-RuleOption -FilePath $PolicyPath -Option 3
-                # Create CIP for Audit Mode
+                Set-CiRuleOptions -FilePath $PolicyPath -RulesToAdd 'Enabled:Audit Mode'
                 ConvertFrom-CIPolicy -XmlFilePath $PolicyPath -BinaryFilePath $AuditModeCIPPath | Out-Null
 
                 Write-Verbose -Message 'Creating Enforced Mode CIP'
                 [System.IO.FileInfo]$EnforcedModeCIPPath = Join-Path -Path $StagingArea -ChildPath 'EnforcedMode.cip'
-                # Remove Audit mode policy rule option
-                Set-RuleOption -FilePath $PolicyPath -Option 3 -Delete
-                # Create CIP for Enforced Mode
+                Set-CiRuleOptions -FilePath $PolicyPath -RulesToRemove 'Enabled:Audit Mode'
                 ConvertFrom-CIPolicy -XmlFilePath $PolicyPath -BinaryFilePath $EnforcedModeCIPPath | Out-Null
 
                 #Region Snap-Back-Guarantee
@@ -423,10 +208,9 @@ Function Edit-WDACConfig {
                 Write-Verbose -Message 'Deploying the Audit mode CIP'
                 &'C:\Windows\System32\CiTool.exe' --update-policy $AuditModeCIPPath -json | Out-Null
 
-                Write-ColorfulText -Color Lavender -InputText 'The Base policy with the following details has been Re-Deployed in Audit Mode:'
-                Write-ColorfulText -Color MintGreen -InputText "PolicyName = $PolicyName"
-                Write-ColorfulText -Color MintGreen -InputText "PolicyGUID = $PolicyID"
-
+                Write-Verbose -Message 'The Base policy with the following details has been Re-Deployed in Audit Mode:'
+                Write-Verbose -Message "PolicyName = $PolicyName"
+                Write-Verbose -Message "PolicyGUID = $PolicyID"
                 #Endregion Snap-Back-Guarantee
 
                 # A Try-Catch-Finally block so that if any errors occur, the Base policy will be Re-deployed in enforced mode
@@ -435,256 +219,26 @@ Function Edit-WDACConfig {
                     $CurrentStep++
                     Write-Progress -Id 10 -Activity 'Waiting for user input' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
-                    Write-ColorfulText -Color Pink -InputText 'Audit mode deployed, start installing your programs now'
-                    Write-ColorfulText -Color HotPink -InputText 'When you have finished installing programs, Press Enter to start selecting program directories to scan'
+                    Write-ColorfulText -Color Pink -InputText 'Audit mode deployed, start installing/running your programs now'
+                    Write-ColorfulText -Color HotPink -InputText 'When you are finished, Press Enter, you will have the option to select directories to scan'
                     Pause
-
-                    # Store the program paths that user browses for in an array
-                    [System.IO.DirectoryInfo[]]$ProgramsPaths = @()
-                    Write-Host -Object 'Select program directories to scan' -ForegroundColor Cyan
-
-                    # Showing folder picker GUI to the user for folder path selection
-                    do {
-                        [System.Reflection.Assembly]::LoadWithPartialName('System.windows.forms') | Out-Null
-                        [System.Windows.Forms.FolderBrowserDialog]$OBJ = New-Object -TypeName System.Windows.Forms.FolderBrowserDialog
-                        $OBJ.InitialDirectory = "$env:SystemDrive"
-                        $OBJ.Description = $Description
-                        [System.Windows.Forms.Form]$Spawn = New-Object -TypeName System.Windows.Forms.Form -Property @{TopMost = $true }
-                        [System.String]$Show = $OBJ.ShowDialog($Spawn)
-                        If ($Show -eq 'OK') { $ProgramsPaths += $OBJ.SelectedPath }
-                        else { break }
-                    }
-                    while ($true)
+                    Write-ColorfulText -Color Lavender -InputText 'Select directories to scan'
+                    $ProgramsPaths = Show-DirectoryPathPicker
                     #Endregion User-Interaction
-
-                    # Make sure User browsed for at least 1 directory, otherwise exit
-                    if ($ProgramsPaths.count -eq 0) {
-                        # Finally block will be triggered to Re-Deploy Base policy in Enforced mode
-                        Throw 'No program folder was selected, reverting the changes and quitting...'
-                    }
-
-                    Write-Host -Object 'Here are the paths you selected:' -ForegroundColor Yellow
-                    $ProgramsPaths | ForEach-Object -Process { $_.FullName }
-
-                    #Region EventCapturing
-                    $CurrentStep++
-                    Write-Progress -Id 10 -Activity 'Scanning event logs to create policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
-
-                    # Extracting the array content from the function
-                    $AuditEventLogsProcessingResults = Receive-CodeIntegrityLogs -Date $Date -PostProcessing 'Separate'
-
-                    # Only create policy for files that are available on the disk (based on Event viewer logs)
-                    # but weren't in user-selected program path(s), if there are any
-                    if ($AuditEventLogsProcessingResults.AvailableFilesPaths) {
-
-                        # Using the function to find out which files are not in the user-selected path(s), if any, to only scan those by first copying them to another directory
-                        # this prevents duplicate rule creation and double file copying
-                        [System.IO.FileInfo[]]$TestFilePathResults = Test-FilePath -FilePath $AuditEventLogsProcessingResults.AvailableFilesPaths -DirectoryPath $ProgramsPaths
-
-                        Write-Verbose -Message "$($TestFilePathResults.count) file(s) have been found in event viewer logs that don't exist in any of the folder paths you selected."
-
-                        # Another check to make sure there were indeed files found in Event viewer logs but weren't in any of the user-selected path(s)
-                        if ($TestFilePathResults) {
-
-                            # Create a folder in Staging Area to copy the files that are not included in user-selected program path(s)
-                            # but detected in Event viewer audit logs, scan that folder, and in the end delete it
-                            [System.IO.DirectoryInfo]$TemporaryScanFolderForEventViewerFiles = New-Item -Path "$StagingArea\TemporaryScanFolderForEventViewerFiles" -ItemType Directory -Force
-
-                            Write-Verbose -Message 'The following file(s) are being copied to the Staging Area for scanning because they were found in event logs but did not exist in any of the user-selected paths:'
-                            $TestFilePathResults | ForEach-Object -Process {
-                                Write-Verbose -Message "$_"
-                                Copy-Item -Path $_ -Destination $TemporaryScanFolderForEventViewerFiles -Force -ErrorAction SilentlyContinue
-                            }
-
-                            # Create a policy XML file for available files on the disk
-
-                            # Creating a hash table to dynamically add parameters based on user input and pass them to New-Cipolicy cmdlet
-                            [System.Collections.Hashtable]$AvailableFilesOnDiskPolicyMakerHashTable = @{
-                                FilePath               = (Join-Path -Path $StagingArea -ChildPath 'RulesForFilesNotInUserSelectedPaths.xml')
-                                ScanPath               = $TemporaryScanFolderForEventViewerFiles
-                                Level                  = $Level -eq 'FilePath' ? 'FilePublisher' : $Level # Since FilePath will not be valid for files scanned in the Staging Area (because they weren't in any user-selected paths), using FilePublisher as level in case user chose FilePath as level
-                                Fallback               = $Fallbacks -eq 'FilePath' ? 'Hash' : $Fallbacks # Since FilePath will not be valid for files scanned in the Staging Area (because they weren't in any user-selected paths), using Hash as Fallback in case user chose FilePath as Fallback
-                                MultiplePolicyFormat   = $true
-                                UserWriteablePaths     = $true
-                                AllowFileNameFallbacks = $true
-                            }
-                            # Assess user input parameters and add the required parameters to the hash table
-                            if ($SpecificFileNameLevel) { $AvailableFilesOnDiskPolicyMakerHashTable['SpecificFileNameLevel'] = $SpecificFileNameLevel }
-                            if ($NoScript) { $AvailableFilesOnDiskPolicyMakerHashTable['NoScript'] = $true }
-                            if (!$NoUserPEs) { $AvailableFilesOnDiskPolicyMakerHashTable['UserPEs'] = $true }
-
-                            # Create the supplemental policy via parameter splatting
-                            Write-Verbose -Message 'Creating a policy for files that are available on the disk but were not in user-selected program path(s)'
-                            New-CIPolicy @AvailableFilesOnDiskPolicyMakerHashTable
-
-                            # Add the policy XML file to the array that holds policy XML files
-                            $PolicyXMLFilesArray += (Join-Path -Path $StagingArea -ChildPath 'RulesForFilesNotInUserSelectedPaths.xml')
-
-                            Write-Verbose -Message 'Deleting the Temporary folder in the Staging Area'
-                            Remove-Item -Recurse -Path $TemporaryScanFolderForEventViewerFiles -Force
-                        }
-                    }
-
-                    # Only create policy for files that are on longer available on the disk if there are any and
-                    # if user chose to include deleted files in the final supplemental policy
-                    if ($AuditEventLogsProcessingResults.DeletedFileHashes.Values -and $IncludeDeletedFiles) {
-
-                        Write-Verbose -Message 'Attempting to create a policy for files that are no longer available on the disk but were detected in event viewer logs'
-
-                        # Displaying the unique values and count. Even though the DeletedFileHashesEventsPolicy.xml will have many duplicates, the final supplemental policy that will be deployed on the system won't have any duplicates
-                        # Because Merge-CiPolicy will automatically take care of removing them
-                        Write-Verbose -Message "$(($AuditEventLogsProcessingResults.DeletedFileHashes.Values.'File Name' | Select-Object -Unique).count) file(s) have been found in event viewer logs that were run during Audit phase but are no longer on the disk, they are as follows:"
-                        $AuditEventLogsProcessingResults.DeletedFileHashes.Values.'File Name' | Select-Object -Unique | ForEach-Object -Process {
-                            Write-Verbose -Message "$_"
-                        }
-
-                        Write-Verbose -Message 'Creating FileRules and RuleRefs for files that are no longer available on the disk but were detected in event viewer logs'
-                        [System.String]$FileRulesHashesResults = Get-FileRules -HashesArray $AuditEventLogsProcessingResults.DeletedFileHashes.Values
-                        [System.String]$RuleRefsHashesResults = (Get-RuleRefs -HashesArray $AuditEventLogsProcessingResults.DeletedFileHashes.Values).Trim()
-
-                        Write-Verbose -Message 'Saving the File Rules and File Rule Refs in the FileRulesAndFileRefs.txt for debugging purposes'
-                        $FileRulesHashesResults + $RuleRefsHashesResults | Out-File -FilePath (Join-Path -Path $StagingArea -ChildPath 'FileRulesAndFileRefs.txt') -Force
-
-                        Write-Verbose -Message 'Putting the Rules and RulesRefs in an empty policy file'
-                        New-EmptyPolicy -RulesContent $FileRulesHashesResults -RuleRefsContent $RuleRefsHashesResults | Out-File -FilePath (Join-Path -Path $StagingArea -ChildPath 'DeletedFileHashesEventsPolicy.xml') -Force
-
-                        Write-Verbose -Message 'Adding the policy file (DeletedFileHashesEventsPolicy.xml) that consists of rules from audit even logs, to the array of XML files'
-                        $PolicyXMLFilesArray += (Join-Path -Path $StagingArea -ChildPath 'DeletedFileHashesEventsPolicy.xml')
-                    }
-                    #Endregion EventCapturing
-
-                    #Region Process-Program-Folders-From-User-input
-                    $CurrentStep++
-                    Write-Progress -Id 10 -Activity 'Scanning user selected folders' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
-
-                    Write-Verbose -Message 'Scanning each of the folder paths that user selected'
-
-                    for ($i = 0; $i -lt $ProgramsPaths.Count; $i++) {
-
-                        # Creating a hash table to dynamically add parameters based on user input and pass them to New-Cipolicy cmdlet
-                        [System.Collections.Hashtable]$UserInputProgramFoldersPolicyMakerHashTable = @{
-                            FilePath               = "$StagingArea\ProgramDir_ScanResults$($i).xml"
-                            ScanPath               = $ProgramsPaths[$i]
-                            Level                  = $Level
-                            Fallback               = $Fallbacks
-                            MultiplePolicyFormat   = $true
-                            UserWriteablePaths     = $true
-                            AllowFileNameFallbacks = $true
-                        }
-                        # Assess user input parameters and add the required parameters to the hash table
-                        if ($SpecificFileNameLevel) { $UserInputProgramFoldersPolicyMakerHashTable['SpecificFileNameLevel'] = $SpecificFileNameLevel }
-                        if ($NoScript) { $UserInputProgramFoldersPolicyMakerHashTable['NoScript'] = $true }
-                        if (!$NoUserPEs) { $UserInputProgramFoldersPolicyMakerHashTable['UserPEs'] = $true }
-
-                        # Create the supplemental policy via parameter splatting
-                        Write-Verbose -Message "Currently scanning: $($ProgramsPaths[$i])"
-                        New-CIPolicy @UserInputProgramFoldersPolicyMakerHashTable
-                    }
-
-                    Write-Verbose -Message 'Collecting all the policy files created by scanning user specified folders'
-
-                    foreach ($File in (Get-ChildItem -File -Path $StagingArea -Filter 'ProgramDir_ScanResults*.xml')) {
-                        $PolicyXMLFilesArray += $File.FullName
-                    }
-                    #Endregion Process-Program-Folders-From-User-input
-
-                    #Region Kernel-protected-files-automatic-detection-and-allow-rule-creation
-                    # This part takes care of Kernel protected files such as the main executable of the games installed through Xbox app
-                    # For these files, only Kernel can get their hashes, it passes them to event viewer and we take them from event viewer logs
-                    # Any other attempts such as "Get-FileHash" or "Get-AuthenticodeSignature" fail and ConfigCI Module cmdlets totally ignore these files and do not create allow rules for them
-
-                    $CurrentStep++
-                    Write-Progress -Id 10 -Activity 'Checking for Kernel protected files' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
-
-                    Write-Verbose -Message 'Checking for Kernel protected files'
-
-                    # Finding the file(s) first and storing them in an array
-                    [System.String[]]$ExesWithNoHash = @()
-
-                    # looping through each user-selected path(s)
-                    foreach ($ProgramsPath in $ProgramsPaths) {
-
-                        # Making sure the currently processing path has any .exe in it
-                        [System.String[]]$AnyAvailableExes = (Get-ChildItem -File -Recurse -Path $ProgramsPath -Filter '*.exe').FullName
-
-                        # if any .exe was found then continue testing them
-                        if ($AnyAvailableExes) {
-                            foreach ($Exe in $AnyAvailableExes) {
-                                try {
-                                    # Testing each executable to find the protected ones
-                                    Get-FileHash -Path $Exe -ErrorAction Stop | Out-Null
-                                }
-                                # If the executable is protected, it will throw an exception and the module will continue to the next one
-                                # Making sure only the right file is captured by narrowing down the error type.
-                                # E.g., when get-filehash can't get a file's hash because its open by another program, the exception is different: System.IO.IOException
-                                catch [System.UnauthorizedAccessException] {
-                                    $ExesWithNoHash += $Exe
-                                }
-                            }
-                        }
-                    }
-
-                    $CurrentStep++
-                    Write-Progress -Id 10 -Activity 'Checking for extra files' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
-
-                    # Only proceed if any kernel protected file(s) were found in any of the user-selected directory path(s)
-                    if ($ExesWithNoHash) {
-
-                        Write-Verbose -Message 'The following Kernel protected files detected, creating allow rules for them:'
-                        $ExesWithNoHash | ForEach-Object -Process { Write-Verbose -Message "$_" }
-
-                        # Check if the file exits in the $ExesWithNoHash array
-                        $KernelProtectedHashesBlockResults = Receive-CodeIntegrityLogs -Date $Date -PostProcessing 'OnlyExisting' | Where-Object -FilterScript { $ExesWithNoHash -contains $_.'File Name' } | Select-Object -Property FileVersion, 'File Name', PolicyGUID, 'SHA256 Hash', 'SHA256 Flat Hash', 'SHA1 Hash', 'SHA1 Flat Hash'
-
-                        # Only proceed further if any hashes belonging to the detected kernel protected files were found in Event viewer
-                        # If none is found then skip this part, because user didn't run those files/programs when audit mode was turned on in base policy, so no hash was found in audit logs
-                        if ($KernelProtectedHashesBlockResults) {
-
-                            # Save the File Rules and File Rule Refs in the FileRulesAndFileRefs.txt for debugging purposes
-                        (Get-FileRules -HashesArray $KernelProtectedHashesBlockResults) + (Get-RuleRefs -HashesArray $KernelProtectedHashesBlockResults) | Out-File -FilePath (Join-Path -Path $StagingArea -ChildPath 'KernelProtectedFiles.txt') -Force
-
-                            # Put the Rules and RulesRefs in an empty policy file
-                            New-EmptyPolicy -RulesContent (Get-FileRules -HashesArray $KernelProtectedHashesBlockResults) -RuleRefsContent (Get-RuleRefs -HashesArray $KernelProtectedHashesBlockResults) | Out-File -FilePath (Join-Path -Path $StagingArea -ChildPath 'KernelProtectedFiles.xml') -Force
-
-                            # adding the policy file  to the array of xml files
-                            $PolicyXMLFilesArray += (Join-Path -Path $StagingArea -ChildPath 'KernelProtectedFiles.xml')
-                        }
-                        else {
-                            Write-Warning -Message "The following Kernel protected files detected, but no hash was found for them in Event viewer logs.`nThis means you didn't run those files/programs when Audit mode was turned on."
-                            $ExesWithNoHash | ForEach-Object -Process { Write-Warning -Message "$_" }
-                        }
-                    }
-                    else {
-                        Write-Verbose -Message 'No Kernel protected files in the user selected paths were detected'
-                    }
-                    #Endregion Kernel-protected-files-automatic-detection-and-allow-rule-creation
-
-                    Write-Verbose -Message 'The following policy xml files are going to be merged into the final Supplemental policy and be deployed on the system:'
-                    $PolicyXMLFilesArray | ForEach-Object -Process { Write-Verbose -Message "$_" }
-
-                    # Define the path for the final Supplemental policy XML
-                    [System.IO.FileInfo]$SuppPolicyPath = Join-Path -Path $StagingArea -ChildPath "SupplementalPolicy $SuppPolicyName.xml"
-
-                    # Merge all of the policy XML files in the array into the final Supplemental policy
-                    $CurrentStep++
-                    Write-Progress -Id 10 -Activity 'Merging the policies' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
-
-                    Merge-CIPolicy -PolicyPaths $PolicyXMLFilesArray -OutputFilePath $SuppPolicyPath | Out-Null
-
                 }
-                # Unlike AllowNewApps parameter, AllowNewAppsAuditEvents parameter performs Event viewer scanning and kernel protected files detection
-                # So the base policy enforced mode snap back can't happen any sooner than this point
                 catch {
-                    # Complete the progress bar if there was an error, such as user not selecting any folders
-                    Write-Progress -Id 10 -Activity 'Complete.' -Completed
-
-                    # Show any extra info about any possible error that might've occurred
                     Throw $_
                 }
                 finally {
-                    # Deploy Enforced mode CIP
-                    Write-Verbose -Message 'Finally Block Running'
-                    Update-BasePolicyToEnforced
+                    $CurrentStep++
+                    Write-Progress -Id 10 -Activity 'Redeploying the Base policy in Enforced Mode' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
+
+                    Write-Debug -Message 'Finally Block Running'
+                    &'C:\Windows\System32\CiTool.exe' --update-policy $EnforcedModeCIPPath -json | Out-Null
+
+                    Write-Verbose -Message 'The Base policy with the following details has been Re-Deployed in Enforced Mode:'
+                    Write-Verbose -Message "PolicyName = $PolicyName"
+                    Write-Verbose -Message "PolicyGUID = $PolicyID"
 
                     Write-Verbose -Message 'Removing the SnapBack guarantee because the base policy has been successfully re-enforced'
 
@@ -692,7 +246,218 @@ Function Edit-WDACConfig {
                     Remove-Item -Path (Join-Path -Path $UserConfigDir -ChildPath 'EnforcedModeSnapBack.cmd') -Force
                 }
 
+                $CurrentStep++
+                Write-Progress -Id 10 -Activity 'Processing Audit event logs and directories' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
+
+                # Path for the final Supplemental policy XML
+                [System.IO.FileInfo]$SuppPolicyPath = Join-Path -Path $StagingArea -ChildPath "Supplemental Policy - $SuppPolicyName.xml"
+                # Path for the kernel protected files policy XML
+                [System.IO.FileInfo]$KernelProtectedPolicyPath = Join-Path -Path $StagingArea -ChildPath "Kernel Protected Files - $SuppPolicyName.xml"
+                # Path for the temp policy file generated from the audits logs captured during the audit phase
+                [System.IO.FileInfo]$WDACPolicyPathTEMP = Join-Path -Path $StagingArea -ChildPath "TEMP policy for Audits logs - $SuppPolicyName.xml"
+
+                # Flag indicating user has selected directory path(s)
+                [System.Boolean]$HasFolderPaths = $false
+                # Flag indicating audit event logs have been detected during the audit phase
+                [System.Boolean]$HasAuditLogs = $false
+                # Flag indicating files have been found in audit event logs during the audit phase that are not inside of any of the user-selected directory paths
+                [System.Boolean]$HasExtraFiles = $false
+
+                if ($ProgramsPaths) {
+                    Write-Verbose -Message 'Here are the paths you selected:'
+                    if ($Verbose) {
+                        $ProgramsPaths | ForEach-Object -Process { $_.FullName }
+                    }
+
+                    $HasFolderPaths = $true
+
+                    $DirectoryScanJob = Start-ThreadJob -InitializationScript {
+                        # pre-load the ConfigCI module
+                        if (Test-Path -LiteralPath 'C:\Program Files\Windows Defender\Offline' -PathType Container) {
+                            [System.String]$RandomGUID = [System.Guid]::NewGuid().ToString()
+                            New-CIPolicy -UserPEs -ScanPath 'C:\Program Files\Windows Defender\Offline' -Level hash -FilePath ".\$RandomGUID.xml" -NoShadowCopy -PathToCatroot 'C:\Program Files\Windows Defender\Offline' -WarningAction SilentlyContinue
+                            Remove-Item -LiteralPath ".\$RandomGUID.xml" -Force
+                        }
+                    } -ScriptBlock {
+                        Param ($ProgramsPaths, $StagingArea, $PolicyXMLFilesArray, $ParentVerbosePreference, $ParentDebugPreference)
+
+                        $VerbosePreference = $ParentVerbosePreference
+
+                        Write-Verbose -Message 'Scanning each of the folder paths that user selected'
+
+                        for ($i = 0; $i -lt $ProgramsPaths.Count; $i++) {
+
+                            # Creating a hash table to dynamically add parameters based on user input and pass them to New-Cipolicy cmdlet
+                            [System.Collections.Hashtable]$UserInputProgramFoldersPolicyMakerHashTable = @{
+                                FilePath               = "$StagingArea\ProgramDir_ScanResults$($i).xml"
+                                ScanPath               = $ProgramsPaths[$i]
+                                Level                  = $using:Level
+                                Fallback               = $using:Fallbacks
+                                MultiplePolicyFormat   = $true
+                                UserWriteablePaths     = $true
+                                AllowFileNameFallbacks = $true
+                            }
+                            # Assess user input parameters and add the required parameters to the hash table
+                            if ($using:SpecificFileNameLevel) { $UserInputProgramFoldersPolicyMakerHashTable['SpecificFileNameLevel'] = $using:SpecificFileNameLevel }
+                            if ($using:NoScript) { $UserInputProgramFoldersPolicyMakerHashTable['NoScript'] = $true }
+                            if (!$using:NoUserPEs) { $UserInputProgramFoldersPolicyMakerHashTable['UserPEs'] = $true }
+
+                            Write-Verbose -Message "Currently scanning: $($ProgramsPaths[$i])"
+                            New-CIPolicy @UserInputProgramFoldersPolicyMakerHashTable
+
+                            [System.Void]$PolicyXMLFilesArray.TryAdd("$($ProgramsPaths[$i]) Scan Results", "$StagingArea\ProgramDir_ScanResults$($i).xml")
+                        }
+
+                        if ($ParentDebugPreference -eq 'Continue') {
+                            Write-Output -InputObject 'The directories were scanned with the following configuration'
+                            Write-Output -InputObject $($UserInputProgramFoldersPolicyMakerHashTable | Format-Table)
+                        }
+                    } -StreamingHost $Host -ArgumentList $ProgramsPaths, $StagingArea, $PolicyXMLFilesArray, $VerbosePreference, $DebugPreference
+                }
+                else {
+                    Write-Verbose -Message 'No directory path was selected.'
+                }
+
+                [System.Collections.Hashtable[]]$AuditEventLogsProcessingResults = Receive-CodeIntegrityLogs -Date $Date
+
+                if (($null -ne $AuditEventLogsProcessingResults) -and ($AuditEventLogsProcessingResults.count -ne 0)) {
+                    $HasAuditLogs = $true
+                }
+                else {
+                    Write-Verbose -Message 'No audit log events were generated during the audit period.'
+                }
+
+                if ($HasAuditLogs -and $HasFolderPaths) {
+                    $OutsideFiles = [System.Collections.Generic.HashSet[System.String]]@(Test-FilePath -FilePath $AuditEventLogsProcessingResults.'File Name' -DirectoryPath $ProgramsPaths)
+                }
+
+                if (($null -ne $OutsideFiles) -and ($OutsideFiles.count -ne 0)) {
+                    Write-Verbose -Message "$($OutsideFiles.count) file(s) have been found in event viewer logs that don't exist in any of the folder paths you selected."
+                    $HasExtraFiles = $true
+                }
+
+                # If user selected directory paths and there were files outside of those paths in the audit logs
+                if ($HasExtraFiles) {
+
+                    # Get only the log of the files that were found in event viewer logs but are not in any user selected directories
+                    [PSCustomObject[]]$LogsToShow = $AuditEventLogsProcessingResults | Where-Object -FilterScript {
+                        $OutsideFiles.Contains($_.'File Name')
+                    }
+
+                    [PSCustomObject[]]$LogsToShow = Select-LogProperties -Logs $LogsToShow
+                    Set-LogPropertiesVisibility -LogType Evtx/Local -EventsToDisplay $LogsToShow
+
+                    Write-ColorfulText -Color Pink -InputText 'Displaying files detected outside of any directories you selected'
+
+                    $SelectedLogs = $LogsToShow | Out-GridView -OutputMode Multiple -Title "Displaying $($LogsToShow.count) Audit Code Integrity and AppLocker Logs"
+                }
+                # If user did not select any directory paths but there were files found during the audit phase in the audit event logs
+                elseif (!$HasFolderPaths -and $HasAuditLogs) {
+                    [PSCustomObject[]]$LogsToShow = Select-LogProperties -Logs $AuditEventLogsProcessingResults
+                    Set-LogPropertiesVisibility -LogType Evtx/Local -EventsToDisplay $LogsToShow
+
+                    Write-ColorfulText -Color Pink -InputText 'Displaying files detected outside of any directories you selected'
+
+                    $SelectedLogs = $LogsToShow | Out-GridView -OutputMode Multiple -Title "Displaying $($LogsToShow.count) Audit Code Integrity Logs"
+                }
+
+                # if user selected any logs
+                if (($null -ne $SelectedLogs) -and ($SelectedLogs.count -gt 0)) {
+
+                    $KernelProtectedFileLogs = Test-KernelProtectedFiles -Logs $SelectedLogs
+
+                    if ($null -ne $KernelProtectedFileLogs) {
+
+                        Write-Verbose -Message "Kernel protected files count: $($KernelProtectedFileLogs.count)"
+
+                        Write-Verbose -Message 'Copying the template policy to the staging area'
+                        Copy-Item -LiteralPath 'C:\Windows\schemas\CodeIntegrity\ExamplePolicies\AllowAll.xml' -Destination $KernelProtectedPolicyPath -Force
+
+                        Write-Verbose -Message 'Emptying the policy file in preparation for the new data insertion'
+                        Clear-CiPolicy_Semantic -Path $KernelProtectedPolicyPath
+
+                        # Find the kernel protected files that have PFN property
+                        $KernelProtectedFileLogsWithPFN = $KernelProtectedFileLogs | Where-Object -FilterScript { $_.PackageFamilyName }
+
+                        New-PFNLevelRules -PackageFamilyNames $KernelProtectedFileLogsWithPFN.PackageFamilyName -XmlFilePath $KernelProtectedPolicyPath
+
+                        # Add the Kernel protected files policy to the list of policies to merge
+                        [System.Void]$PolicyXMLFilesArray.TryAdd('Kernel Protected files policy', $KernelProtectedPolicyPath)
+
+                        Write-Verbose -Message "Kernel protected files with PFN property: $($KernelProtectedFileLogsWithPFN.count)"
+                        Write-Verbose -Message "Kernel protected files without PFN property: $($KernelProtectedFileLogs.count - $KernelProtectedFileLogsWithPFN.count)"
+
+                        # Removing the logs that were used to create PFN rules, from the rest of the logs
+                        $SelectedLogs = $SelectedLogs | Where-Object -FilterScript { $_ -notin $KernelProtectedFileLogsWithPFN }
+                    }
+
+                    Write-Verbose -Message 'Copying the template policy to the staging area'
+                    Copy-Item -LiteralPath 'C:\Windows\schemas\CodeIntegrity\ExamplePolicies\AllowAll.xml' -Destination $WDACPolicyPathTEMP -Force
+
+                    Write-Verbose -Message 'Emptying the policy file in preparation for the new data insertion'
+                    Clear-CiPolicy_Semantic -Path $WDACPolicyPathTEMP
+
+                    Write-Verbose -Message 'Building the Signer and Hash objects from the selected logs'
+                    [PSCustomObject]$DataToUseForBuilding = Build-SignerAndHashObjects -Data $SelectedLogs -IncomingDataType EVTX -PubLisherToHash:$BoostedSecurity
+
+                    if ($Null -ne $DataToUseForBuilding.FilePublisherSigners -and $DataToUseForBuilding.FilePublisherSigners.Count -gt 0) {
+                        Write-Verbose -Message 'Creating File Publisher Level rules'
+                        New-FilePublisherLevelRules -FilePublisherSigners $DataToUseForBuilding.FilePublisherSigners -XmlFilePath $WDACPolicyPathTEMP
+                    }
+                    if ($Null -ne $DataToUseForBuilding.PublisherSigners -and $DataToUseForBuilding.PublisherSigners.Count -gt 0) {
+                        Write-Verbose -Message 'Creating Publisher Level rules'
+                        New-PublisherLevelRules -PublisherSigners $DataToUseForBuilding.PublisherSigners -XmlFilePath $WDACPolicyPathTEMP
+                    }
+                    if ($Null -ne $DataToUseForBuilding.CompleteHashes -and $DataToUseForBuilding.CompleteHashes.Count -gt 0) {
+                        Write-Verbose -Message 'Creating Hash Level rules'
+                        New-HashLevelRules -Hashes $DataToUseForBuilding.CompleteHashes -XmlFilePath $WDACPolicyPathTEMP
+                    }
+
+                    # MERGERS
+                    Write-Verbose -Message 'Merging the Hash Level rules'
+                    Remove-AllowElements_Semantic -Path $WDACPolicyPathTEMP
+                    Close-EmptyXmlNodes_Semantic -XmlFilePath $WDACPolicyPathTEMP
+
+                    Write-Verbose -Message 'Merging the Signer Level rules'
+                    Remove-DuplicateFileAttrib_Semantic -XmlFilePath $WDACPolicyPathTEMP
+
+                    # 2 passes are necessary
+                    Merge-Signers_Semantic -XmlFilePath $WDACPolicyPathTEMP
+                    Merge-Signers_Semantic -XmlFilePath $WDACPolicyPathTEMP
+
+                    # This function runs twice, once for signed data and once for unsigned data
+                    Close-EmptyXmlNodes_Semantic -XmlFilePath $WDACPolicyPathTEMP
+
+                    # Add the policy XML file to the array that holds policy XML files
+                    [System.Void]$PolicyXMLFilesArray.TryAdd('Temp WDAC Policy', $WDACPolicyPathTEMP)
+                }
+
+                if ($HasFolderPaths) {
+                    Wait-Job -Job $DirectoryScanJob | Out-Null
+                    # Redirecting Verbose and Debug output streams because they are automatically displayed already on the console using StreamingHost parameter
+                    Receive-Job -Job $DirectoryScanJob 4>$null 5>$null
+                    Remove-Job -Job $DirectoryScanJob -Force
+                }
+
+                # If none of the previous actions resulted in any policy XML files, exit the function
+                if ($PolicyXMLFilesArray.Values.Count -eq 0) {
+                    Write-Verbose -Message 'No directory path or audit logs were selected to create a supplemental policy. Exiting...' -Verbose
+                    Return
+                }
+
+                Write-Verbose -Message 'The following policy xml files are going to be merged into the final Supplemental policy and be deployed on the system:'
+                $PolicyXMLFilesArray.Values | ForEach-Object -Process { Write-Verbose -Message "$_" }
+
+                # Merge all of the policy XML files in the array into the final Supplemental policy
+                $CurrentStep++
+                Write-Progress -Id 10 -Activity 'Merging the policies' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
+
+                Merge-CIPolicy -PolicyPaths $PolicyXMLFilesArray.Values -OutputFilePath $SuppPolicyPath | Out-Null
+
                 #Region Supplemental-policy-processing-and-deployment
+
+                $CurrentStep++
+                Write-Progress -Id 10 -Activity 'Creating supplemental policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
                 Write-Verbose -Message 'Supplemental policy processing and deployment'
 
@@ -700,13 +465,51 @@ Function Edit-WDACConfig {
                 [System.String]$SuppPolicyID = Set-CIPolicyIdInfo -FilePath $SuppPolicyPath -PolicyName "$SuppPolicyName - $(Get-Date -Format 'MM-dd-yyyy')" -ResetPolicyID -BasePolicyToSupplementPath $PolicyPath
                 $SuppPolicyID = $SuppPolicyID.Substring(11)
 
-                Edit-CiPolicyRuleOptions -Action Supplemental -XMLFile $SuppPolicyPath
+                Set-CiRuleOptions -FilePath $SuppPolicyPath -Template Supplemental
 
                 Write-Verbose -Message 'Setting the Supplemental policy version to 1.0.0.0'
                 Set-CIPolicyVersion -FilePath $SuppPolicyPath -Version '1.0.0.0'
 
                 # Define the path for the final Supplemental policy CIP
                 [System.IO.FileInfo]$SupplementalCIPPath = Join-Path -Path $StagingArea -ChildPath "$SuppPolicyID.cip"
+
+                #Region Boosted Security - Sandboxing
+                # The AppIDs association must happen at the end right before converting the policy to binary because merge-cipolicy and other ConfigCI cmdlets remove the Macros
+
+                if ($BoostedSecurity) {
+
+                    # 3 HashSets to store the unique file paths
+                    $AddInPaths = [System.Collections.Generic.HashSet[System.String]]@()
+                    $ExePaths = [System.Collections.Generic.HashSet[System.String]]@()
+
+                    # Separating the exes and addins from the user supplied directory path
+                    [System.String[]]$Extensions = @('*.sys', '*.com', '*.dll', '*.rll', '*.ocx', '*.msp', '*.mst', '*.msi', '*.js', '*.vbs', '*.ps1', '*.appx', '*.bin', '*.bat', '*.hxs', '*.mui', '*.lex', '*.mof')
+
+                    # If user selected directories
+                    if ($HasFolderPaths) {
+                        Get-ChildItem -Recurse -File -LiteralPath $ProgramsPaths -Include $Extensions -Force | ForEach-Object -Process { [System.Void]$AddInPaths.Add($_.FullName) }
+                        Get-ChildItem -Recurse -File -LiteralPath $ProgramsPaths -Include '*.exe' -Force | ForEach-Object -Process { [System.Void]$ExePaths.Add($_.FullName) }
+
+                        Write-Debug -Message "Number of AddIns after scanning the user selected directories: $($AddInPaths.Count)"
+                        Write-Debug -Message "Number of Exes after scanning the user selected directories: $($ExePaths.Count)"
+                    }
+
+                    # If event logs had any audit logs
+                    if ($HasAuditLogs) {
+                        # Separating the exes and addins from the audit event logs
+                        Get-ChildItem -Recurse -File -LiteralPath $AuditEventLogsProcessingResults.'File Name' -Include '*.exe' -Force | ForEach-Object -Process { [System.Void]$ExePaths.Add($_.FullName) }
+                        Get-ChildItem -Recurse -File -LiteralPath $AuditEventLogsProcessingResults.'File Name' -Include $Extensions -Force | ForEach-Object -Process { [System.Void]$AddInPaths.Add($_.FullName) }
+
+                        Write-Debug -Message "Number of AddIns after scanning the Event Logs + user selected directories: $($AddInPaths.Count)"
+                        Write-Debug -Message "Number of Exes after scanning the Event Logs + user selected directories: $($ExePaths.Count)"
+                    }
+
+                    if (($null -ne $ExePaths) -and ($null -ne $AddInPaths) -and ($ExePaths.Count -ne 0) -and ($AddInPaths.count -ne 0)) {
+                        New-Macros -XmlFilePath $SuppPolicyPath -Macros $([System.IO.FileInfo[]]$ExePaths).Name
+                    }
+                }
+
+                #Endregion Boosted Security - Sandboxing
 
                 Write-Verbose -Message 'Convert the Supplemental policy to a CIP file'
                 ConvertFrom-CIPolicy -XmlFilePath $SuppPolicyPath -BinaryFilePath $SupplementalCIPPath | Out-Null
@@ -717,16 +520,12 @@ Function Edit-WDACConfig {
                 Write-Verbose -Message 'Deploying the Supplemental policy'
                 &'C:\Windows\System32\CiTool.exe' --update-policy $SupplementalCIPPath -json | Out-Null
 
-                Write-ColorfulText -Color Lavender -InputText 'Supplemental policy with the following details has been deployed in Enforced Mode:'
-                Write-ColorfulText -Color MintGreen -InputText "SupplementalPolicyName = $SuppPolicyName"
-                Write-ColorfulText -Color MintGreen -InputText "SupplementalPolicyGUID = $SuppPolicyID"
-
                 #Endregion Supplemental-policy-processing-and-deployment
 
                 # Copy the Supplemental policy to the user's config directory since Staging Area is a temporary location
                 Copy-Item -Path $SuppPolicyPath -Destination $UserConfigDir -Force
 
-                Write-Progress -Id 10 -Activity 'Complete.' -Completed
+                &$WriteFinalOutput $SuppPolicyPath
             }
 
             if ($MergeSupplementalPolicies) {
@@ -764,6 +563,9 @@ Function Edit-WDACConfig {
                 }
                 #Endregion Input-policy-verification
 
+                Write-Verbose -Message 'Backing up any possible Macros in the Supplemental policies'
+                $MacrosBackup = Checkpoint-Macros -XmlFilePathIn $SuppPolicyPaths -Backup
+
                 $CurrentStep++
                 Write-Progress -Id 11 -Activity 'Merging the policies' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
@@ -785,12 +587,6 @@ Function Edit-WDACConfig {
 
                     Write-Verbose -Message "Removing policy with ID: $SupplementalPolicyID"
                     &'C:\Windows\System32\CiTool.exe' --remove-policy $SupplementalPolicyID -json | Out-Null
-
-                    # remove the old policy files unless user chose to keep them
-                    if (!$KeepOldSupplementalPolicies) {
-                        Write-Verbose -Message "Removing the old policy file: $SuppPolicyPath"
-                        Remove-Item -Path $SuppPolicyPath -Force
-                    }
                 }
 
                 $CurrentStep++
@@ -803,6 +599,11 @@ Function Edit-WDACConfig {
 
                 Write-Verbose -Message 'Setting HVCI to Strict'
                 Set-HVCIOptions -Strict -FilePath $FinalSupplementalPath
+
+                if ($null -ne $MacrosBackup) {
+                    Write-Verbose -Message 'Restoring the Macros in the Supplemental policies'
+                    Checkpoint-Macros -XmlFilePathOut $FinalSupplementalPath -Restore -MacrosBackup $MacrosBackup
+                }
 
                 Write-Verbose -Message 'Converting the Supplemental policy to a CIP file'
                 ConvertFrom-CIPolicy -XmlFilePath $FinalSupplementalPath -BinaryFilePath (Join-Path -Path $StagingArea -ChildPath "$SuppPolicyID.cip") | Out-Null
@@ -818,7 +619,11 @@ Function Edit-WDACConfig {
                 # Copying the final Supplemental policy to the user's config directory since Staging Area is a temporary location
                 Copy-Item -Path $FinalSupplementalPath -Destination $UserConfigDir -Force
 
-                Write-Progress -Id 11 -Activity 'Complete.' -Completed
+                # remove the old policy files at the end after ensuring the operation was successful
+                if (!$KeepOldSupplementalPolicies) {
+                    Write-Verbose -Message 'Removing the old policy files'
+                    Remove-Item -Path $SuppPolicyPaths -Force
+                }
             }
 
             if ($UpdateBasePolicy) {
@@ -830,56 +635,56 @@ Function Edit-WDACConfig {
                 $CurrentStep++
                 Write-Progress -Id 12 -Activity 'Getting the block rules' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
-                Write-Verbose -Message 'Getting the Use-Mode Block Rules'
-                [System.IO.FileInfo]$MSFTRecommendedBlockRulesPath = Get-BlockRulesMeta -SaveDirectory $StagingArea
+                Write-Verbose -Message 'Getting the Use Mode Block Rules'
+                New-WDACConfig -GetUserModeBlockRules -Deploy
 
                 $CurrentStep++
                 Write-Progress -Id 12 -Activity 'Determining the policy type' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
                 [System.IO.FileInfo]$BasePolicyPath = Join-Path -Path $StagingArea -ChildPath 'BasePolicy.xml'
-                [System.IO.FileInfo]$AllowMicrosoftTemplatePath = Join-Path -Path $StagingArea -ChildPath 'AllowMicrosoft.xml'
-                [System.IO.FileInfo]$DefaultWindowsTemplatePath = Join-Path -Path $StagingArea -ChildPath 'DefaultWindows_Enforced.xml'
 
                 Write-Verbose -Message 'Determining the type of the new base policy'
+
+                [System.String]$Name = $null
+
                 switch ($NewBasePolicyType) {
-                    'AllowMicrosoft_Plus_Block_Rules' {
-                        Write-Verbose -Message 'The new base policy type is AllowMicrosoft_Plus_Block_Rules'
+                    'AllowMicrosoft' {
+                        $Name = 'AllowMicrosoft'
+
+                        Write-Verbose -Message "The new base policy type is $Name"
 
                         Write-Verbose -Message 'Copying the AllowMicrosoft.xml template policy file to the Staging Area'
-                        Copy-Item -Path 'C:\Windows\schemas\CodeIntegrity\ExamplePolicies\AllowMicrosoft.xml' -Destination $AllowMicrosoftTemplatePath -Force
-
-                        Write-Verbose -Message 'Merging the AllowMicrosoft.xml and User-Mode block rules into a single policy file'
-                        Merge-CIPolicy -PolicyPaths $AllowMicrosoftTemplatePath, $MSFTRecommendedBlockRulesPath -OutputFilePath $BasePolicyPath | Out-Null
+                        Copy-Item -Path 'C:\Windows\schemas\CodeIntegrity\ExamplePolicies\AllowMicrosoft.xml' -Destination $BasePolicyPath -Force
 
                         Write-Verbose -Message 'Setting the policy name'
-                        Set-CIPolicyIdInfo -FilePath $BasePolicyPath -PolicyName "Allow Microsoft Plus Block Rules refreshed On $(Get-Date -Format 'MM-dd-yyyy')"
+                        Set-CIPolicyIdInfo -FilePath $BasePolicyPath -PolicyName "$Name - $(Get-Date -Format 'MM-dd-yyyy')"
 
-                        Edit-CiPolicyRuleOptions -Action Base -XMLFile $BasePolicyPath
+                        Set-CiRuleOptions -FilePath $BasePolicyPath -Template Base -RequireEVSigners:$RequireEVSigners
                     }
-                    'Lightly_Managed_system_Policy' {
-                        Write-Verbose -Message 'The new base policy type is Lightly_Managed_system_Policy'
+                    'SignedAndReputable' {
+                        $Name = 'SignedAndReputable'
+
+                        Write-Verbose -Message "The new base policy type is $Name"
 
                         Write-Verbose -Message 'Copying the AllowMicrosoft.xml template policy file to the Staging Area'
-                        Copy-Item -Path 'C:\Windows\schemas\CodeIntegrity\ExamplePolicies\AllowMicrosoft.xml' -Destination $AllowMicrosoftTemplatePath -Force
-
-                        Write-Verbose -Message 'Merging the AllowMicrosoft.xml and User-Mode block rules into a single policy file'
-                        Merge-CIPolicy -PolicyPaths $AllowMicrosoftTemplatePath, $MSFTRecommendedBlockRulesPath -OutputFilePath $BasePolicyPath | Out-Null
+                        Copy-Item -Path 'C:\Windows\schemas\CodeIntegrity\ExamplePolicies\AllowMicrosoft.xml' -Destination $BasePolicyPath -Force
 
                         Write-Verbose -Message 'Setting the policy name'
-                        Set-CIPolicyIdInfo -FilePath $BasePolicyPath -PolicyName "Signed And Reputable policy refreshed on $(Get-Date -Format 'MM-dd-yyyy')"
+                        Set-CIPolicyIdInfo -FilePath $BasePolicyPath -PolicyName "$Name - $(Get-Date -Format 'MM-dd-yyyy')"
 
-                        Edit-CiPolicyRuleOptions -Action Base-ISG -XMLFile $BasePolicyPath
+                        Set-CiRuleOptions -FilePath $BasePolicyPath -Template BaseISG -RequireEVSigners:$RequireEVSigners
 
-                        # Configure required services for ISG authorization
                         Write-Verbose -Message 'Configuring required services for ISG authorization'
                         Start-Process -FilePath 'C:\Windows\System32\appidtel.exe' -ArgumentList 'start' -NoNewWindow
                         Start-Process -FilePath 'C:\Windows\System32\sc.exe' -ArgumentList 'config', 'appidsvc', 'start= auto' -NoNewWindow
                     }
-                    'DefaultWindows_WithBlockRules' {
-                        Write-Verbose -Message 'The new base policy type is DefaultWindows_WithBlockRules'
+                    'DefaultWindows' {
+                        $Name = 'DefaultWindows'
+
+                        Write-Verbose -Message "The new base policy type is $Name"
 
                         Write-Verbose -Message 'Copying the DefaultWindows.xml template policy file to the Staging Area'
-                        Copy-Item -Path 'C:\Windows\schemas\CodeIntegrity\ExamplePolicies\DefaultWindows_Enforced.xml' -Destination $DefaultWindowsTemplatePath -Force
+                        Copy-Item -Path 'C:\Windows\schemas\CodeIntegrity\ExamplePolicies\DefaultWindows_Enforced.xml' -Destination $BasePolicyPath -Force
 
                         if ($PSHOME -notlike 'C:\Program Files\WindowsApps\*') {
                             Write-Verbose -Message 'Scanning the PowerShell core directory '
@@ -888,58 +693,46 @@ Function Edit-WDACConfig {
 
                             New-CIPolicy -ScanPath $PSHOME -Level FilePublisher -NoScript -Fallback Hash -UserPEs -UserWriteablePaths -MultiplePolicyFormat -AllowFileNameFallbacks -FilePath (Join-Path -Path $StagingArea -ChildPath 'AllowPowerShell.xml')
 
-                            Write-Verbose -Message 'Merging the DefaultWindows.xml, AllowPowerShell.xml, SignTool.xml and User-Mode block rules into a single policy file'
-                            Merge-CIPolicy -PolicyPaths $DefaultWindowsTemplatePath, (Join-Path -Path $StagingArea -ChildPath 'AllowPowerShell.xml'), $MSFTRecommendedBlockRulesPath -OutputFilePath $BasePolicyPath | Out-Null
-                        }
-                        else {
-                            Write-Verbose -Message 'Not including the PowerShell core directory in the policy'
-                            Write-Verbose -Message 'Merging the DefaultWindows.xml, SignTool.xml and User-Mode block rules into a single policy file'
-                            Merge-CIPolicy -PolicyPaths $DefaultWindowsTemplatePath, $MSFTRecommendedBlockRulesPath -OutputFilePath $BasePolicyPath | Out-Null
+                            Write-Verbose -Message 'Merging the DefaultWindows.xml and AllowPowerShell.xml into a single policy file'
+                            Merge-CIPolicy -PolicyPaths $BasePolicyPath, (Join-Path -Path $StagingArea -ChildPath 'AllowPowerShell.xml') -OutputFilePath $BasePolicyPath | Out-Null
                         }
 
                         Write-Verbose -Message 'Setting the policy name'
-                        Set-CIPolicyIdInfo -FilePath $BasePolicyPath -PolicyName "Default Windows Plus Block Rules refreshed On $(Get-Date -Format 'MM-dd-yyyy')"
+                        Set-CIPolicyIdInfo -FilePath $BasePolicyPath -PolicyName "$Name - $(Get-Date -Format 'MM-dd-yyyy')"
 
-                        Edit-CiPolicyRuleOptions -Action Base -XMLFile $BasePolicyPath
+                        Set-CiRuleOptions -FilePath $BasePolicyPath -Template Base -RequireEVSigners:$RequireEVSigners
                     }
                 }
 
                 $CurrentStep++
                 Write-Progress -Id 12 -Activity 'Configuring the policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
-                if ($UpdateBasePolicy -and $RequireEVSigners) {
-                    Write-Verbose -Message 'Adding the EV Signers rule option to the base policy'
-                    Set-RuleOption -FilePath $BasePolicyPath -Option 8
-                }
-
-                # Get the policy ID of the currently deployed base policy based on the policy name that user selected
                 Write-Verbose -Message 'Getting the policy ID of the currently deployed base policy based on the policy name that user selected'
                 # In case there are multiple policies with the same name, the first one will be used
-                [System.String]$CurrentID = ((&'C:\Windows\System32\CiTool.exe' -lp -json | ConvertFrom-Json).Policies | Where-Object -FilterScript { $_.IsSystemPolicy -ne 'True' } | Where-Object -FilterScript { $_.Friendlyname -eq $CurrentBasePolicyName }).BasePolicyID | Select-Object -First 1
-                $CurrentID = "{$CurrentID}"
+                [System.Object]$CurrentlyDeployedPolicy = ((&'C:\Windows\System32\CiTool.exe' -lp -json | ConvertFrom-Json).Policies | Where-Object -FilterScript { ($_.IsSystemPolicy -ne 'True') -and ($_.Version = &$CalculateCIPolicyVersion $_.Version) -and ($_.Friendlyname -eq $CurrentBasePolicyName) }) | Select-Object -First 1
+
+                [System.String]$CurrentID = $CurrentlyDeployedPolicy.BasePolicyID
+                [System.Version]$CurrentVersion = $CurrentlyDeployedPolicy.Version
+
+                # Increment the version and use it to deploy the updated policy
+                [System.Version]$VersionToDeploy = &$IncrementVersion -Version $CurrentVersion
 
                 Write-Verbose -Message "This is the current ID of deployed base policy that is going to be used in the new base policy: $CurrentID"
-                Write-Verbose -Message 'Reading the current base policy XML file'
-                [System.Xml.XmlDocument]$Xml = Get-Content -Path $BasePolicyPath
 
                 Write-Verbose -Message 'Setting the policy ID and Base policy ID to the current base policy ID in the generated XML file'
-                $Xml.SiPolicy.PolicyID = $CurrentID
-                $Xml.SiPolicy.BasePolicyID = $CurrentID
+                Edit-GUIDs -PolicyIDInput $CurrentID -PolicyFilePathInput $BasePolicyPath
 
-                Write-Verbose -Message 'Saving the updated XML file'
-                $Xml.Save($BasePolicyPath)
-
-                Write-Verbose -Message 'Setting the policy version to 1.0.0.1'
-                Set-CIPolicyVersion -FilePath $BasePolicyPath -Version '1.0.0.1'
+                Write-Verbose -Message "Setting the policy version to '$VersionToDeploy' - Previous version was '$CurrentVersion'"
+                Set-CIPolicyVersion -FilePath $BasePolicyPath -Version $VersionToDeploy
 
                 Write-Verbose -Message 'Converting the base policy to a CIP file'
-                ConvertFrom-CIPolicy -XmlFilePath $BasePolicyPath -BinaryFilePath (Join-Path -Path $StagingArea -ChildPath "$CurrentID.cip") | Out-Null
+                [System.IO.FileInfo]$CIPPath = ConvertFrom-CIPolicy -XmlFilePath $BasePolicyPath -BinaryFilePath (Join-Path -Path $StagingArea -ChildPath "$CurrentID.cip")
 
                 $CurrentStep++
                 Write-Progress -Id 12 -Activity 'Deploying the policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
                 Write-Verbose -Message 'Deploying the new base policy with the same GUID on the system'
-                &'C:\Windows\System32\CiTool.exe' --update-policy (Join-Path -Path $StagingArea -ChildPath "$CurrentID.cip") -json | Out-Null
+                &'C:\Windows\System32\CiTool.exe' --update-policy $CIPPath -json | Out-Null
 
                 $CurrentStep++
                 Write-Progress -Id 12 -Activity 'Cleaning up' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
@@ -947,9 +740,9 @@ Function Edit-WDACConfig {
                 # Keep the new base policy XML file that was just deployed for user to keep it
                 # Defining a hashtable that contains the policy names and their corresponding XML file names + paths
                 [System.Collections.Hashtable]$PolicyFiles = @{
-                    'AllowMicrosoft_Plus_Block_Rules' = (Join-Path -Path $UserConfigDir -ChildPath 'AllowMicrosoftPlusBlockRules.xml')
-                    'Lightly_Managed_system_Policy'   = (Join-Path -Path $UserConfigDir -ChildPath 'SignedAndReputable.xml')
-                    'DefaultWindows_WithBlockRules'   = (Join-Path -Path $UserConfigDir -ChildPath 'DefaultWindowsPlusBlockRules.xml')
+                    'AllowMicrosoft'     = (Join-Path -Path $UserConfigDir -ChildPath 'AllowMicrosoft.xml')
+                    'SignedAndReputable' = (Join-Path -Path $UserConfigDir -ChildPath 'SignedAndReputable.xml')
+                    'DefaultWindows'     = (Join-Path -Path $UserConfigDir -ChildPath 'DefaultWindows.xml')
                 }
 
                 Write-Verbose -Message 'Renaming the base policy XML file to match the new base policy type'
@@ -962,10 +755,10 @@ Function Edit-WDACConfig {
                     Write-Verbose -Message 'Replacing the old unsigned policy path in User Configurations with the new one'
                     Set-CommonWDACConfig -UnsignedPolicyPath $PolicyFiles[$NewBasePolicyType] | Out-Null
                 }
-                Write-Progress -Id 12 -Activity 'Complete.' -Completed
             }
         }
         Finally {
+            10..12 | ForEach-Object -Process { Write-Progress -Id $_ -Activity 'Complete.' -Completed }
             if (!$Debug) {
                 Remove-Item -Path $StagingArea -Recurse -Force
             }
@@ -974,25 +767,17 @@ Function Edit-WDACConfig {
 
     <#
 .SYNOPSIS
-    Edits Unsigned WDAC policies deployed on the system
+    This cmdlet offers various options for managing the deployed Application Control (WDAC) policies.
 .LINK
     https://github.com/HotCakeX/Harden-Windows-Security/wiki/Edit-WDACConfig
-.DESCRIPTION
-    Using official Microsoft methods, Edits non-signed WDAC policies deployed on the system
-
-    All of the files the cmdlet creates and interacts with are stored in the following directory: C:\Program Files\WDACConfig\StagingArea\Edit-WDACConfig
-.COMPONENT
-    Windows Defender Application Control, ConfigCI PowerShell module
-.FUNCTIONALITY
-    Using official Microsoft methods, Edits non-signed WDAC policies deployed on the system
 .PARAMETER AllowNewApps
     While an unsigned WDAC policy is already deployed on the system, rebootlessly turn on Audit mode in it, which will allow you to install a new app that was otherwise getting blocked.
-.PARAMETER AllowNewAppsAuditEvents
-    While an unsigned WDAC policy is already deployed on the system, rebootlessly turn on Audit mode in it, which will allow you to install a new app that was otherwise getting blocked.
+    This parameter also scans the Code Integrity and AppLocker logs during the audit mode phase to detect the audited files.
+    It has the ability to detect and create rules for kernel-protected files, such as the main executables of the Xbox games.
 .PARAMETER MergeSupplementalPolicies
-    Merges multiple deployed supplemental policies into 1 single supplemental policy, removes the old ones, deploys the new one. System restart needed to take effect.
+    Merges multiple deployed supplemental policies into 1 single supplemental policy, removes the old ones, deploys the new one.
 .PARAMETER UpdateBasePolicy
-    It can rebootlessly change the type of the deployed base policy. It can update the recommended block rules and/or change policy rule options in the deployed base policy.
+    It can rebootlessly change the type of the deployed base policy.
 .PARAMETER SkipVersionCheck
     Can be used with any parameter to bypass the online version check - only to be used in rare cases
     It is used by the entire Cmdlet.
@@ -1011,17 +796,17 @@ Function Edit-WDACConfig {
 .PARAMETER PolicyPath
     The path to the base policy XML file that will be used
 .PARAMETER SuppPolicyPaths
-    The path(s) to the Supplemental policy XML file(s) that will be used
+    The path(s) to the Supplemental policy XML file(s) that will be used in the merge operation.
 .PARAMETER KeepOldSupplementalPolicies
     Keep the old Supplemental policies that are going to be merged into a single policy
 .PARAMETER NoScript
     If specified, scripts will not be scanned
+.PARAMETER BoostedSecurity
+    If specified, reinforced rules will be created that offer pseudo-sandbox capabilities
 .PARAMETER NoUserPEs
     If specified, user mode binaries will not be scanned
 .PARAMETER SpecificFileNameLevel
     The more specific level that determines how the selected file will be scanned.
-.PARAMETER IncludeDeletedFiles
-    If specified, deleted files will be included in the scan
 .PARAMETER CurrentBasePolicyName
     The name of the currently deployed base policy that will be used
 .PARAMETER NewBasePolicyType
@@ -1052,8 +837,8 @@ Register-ArgumentCompleter -CommandName 'Edit-WDACConfig' -ParameterName 'SuppPo
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCDvOCdhDkt54HVg
-# f60AUdJ4lsl17cLAmOkYoeQ+OupZ3KCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCDleYM/8LEicfa/
+# Zs+uQSQC+LibygZCyVjZdf140aZGlqCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -1100,16 +885,16 @@ Register-ArgumentCompleter -CommandName 'Edit-WDACConfig' -ParameterName 'SuppPo
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQgV9gBwVzaa1aQwyQsVcf7ssrsCvjWDQ428nL6MNx3s0AwDQYJKoZIhvcNAQEB
-# BQAEggIAijOZA+AntMOvFArHh8IfQl9Cgk57iRvRp+VHQpRbgeLoTxOChP5zoIRJ
-# rr85ZXF1AdCe3T2YH2mYJJ3hBBG//SxI/OUENTbEq7/XFGJwIdmEAVWtBZfllfkf
-# nFhllDnVNOwn++GlMWsTYKr1wPPyGdKy4ob573GXerY/Rg07KUWlx0awtz1kwC1U
-# 5bmcS5iIb/ZAnEswi2qwwJcOJ/RcrGnXUUXt54eHISdGXme8TtZ8oJHP6cj8rh3Y
-# 93PQllD2vMbCgmF+4U4ohBVQNYjL46Gyyrw6sNwhzg2kEcYMS+y3HowI0X15Nt9w
-# MM3MYHdGos3krk81uHZX7k/vEwV6UAqZr1eI1/W4KWv8JTC8E5n7wmfEGNhh4O4e
-# Jf0hjn+ljLQCZOcT3n1l0pWUV/SMzNWuyVCOsT+DVqaAJW7by5oFd7POlfYBUZTY
-# M5B7Tu5O8rpIIxdQcqeiCRjE4CFJCfScWOtX6isALZRSWlgAsZDix9bWFMLlCtgX
-# 79mQ5irSgmHXiNs2qHTZ3m8ZvCm0pJMGfqZJK9Tw/DwO14FXyY1ecFVYXLuOODh5
-# FY+uPD/LAQCPLgIjZcC/H2L02hSf0Rv9x4n5IPrRc/2eOazUkvM10lmoGRq3cVxE
-# LS7yHP2+K+Vv3LEBv9Nl2qYe/HHVrF7ptuOuUZAC5W/u2n+bL9o=
+# IgQgjID32R1QCVgzpsaDjYcxMXuRkXXKPTO4NZZtMxQWPmkwDQYJKoZIhvcNAQEB
+# BQAEggIAH5m6QxI9PikIc5ybiq3gyFja5tRzqPZkiA+2y6vgZWl3VmIeIyd7Et58
+# M4PPeVmspEUykEMXi/8IfTAXYbh/k7/+gyPPBWkQLcXcdceX9JfQDOjwa6Jmdm0I
+# OmJ3lMlK8KzvMC3SpPG4Sa9h1CDr7R7W7YZMIEXVvbTPBdFeNr760Cw6ujCZymtK
+# 5HCj23UK6fFRNV8XL0PJXNXt/0/9XrT7zcX+6WeF6qwhyN3Nw5LDMlWEoAgIBSsT
+# Hgw3iYE8C21sxxvlvAWQbAzM93zQDSd9uTTtzqECc5hwO667Ajaubpxpv/T9Oqka
+# gfHvPPEMSIextd3+yw5/oz5lheFZgBoOnzUaRcGnflplHv+DRn9Vq1gEk+IF4JJ4
+# 9cLIVGNWlcixY1SZO9uB7CzwcBMkEVgCoO2lSDUHlTp5DNrjlDjk4ptHiFOv94hg
+# dAfhkTLqqPwe136APchj6r/QETE2s9j8nvektcK8BS7+R8lTHtRNdtWr2K1z4Tmp
+# a3rgLiQ3zx6mOfqUKgDFwG2pjr4+35c8DgSzxma7hO4AAdxO77zNKc4UFC8FISyg
+# A+EZnUiUdSzWm5JkHaWTmbKHdNcWWKvcnH6pTwK0HI1hZbGlFacYfCGxA5Du+161
+# aRdKxWCJOGFi7D0kVJHYlLqCtvmxYBEQFa95/QYq/P7coslWTBM=
 # SIG # End signature block

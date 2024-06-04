@@ -10,7 +10,7 @@
 
 ![image](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/New-WDACConfig/New-WDACConfig%20-SetAutoUpdateDriverBlockRules.apng)
 
-You can use the [WDACConfig Module](https://github.com/HotCakeX/Harden-Windows-Security/wiki/New-WDACConfig#new-wdacconfig--setautoupdatedriverblockrules) to create a scheduled task in Windows that will **automatically** run the script below every 7 days.
+You can use the [WDACConfig Module](https://github.com/HotCakeX/Harden-Windows-Security/wiki/New-WDACConfig#new-wdacconfig--getdriverblockrules) to create a scheduled task in Windows that will **automatically** run the script below every 7 days.
 
 ```powershell
 Install-Module -Name WDACConfig -Force

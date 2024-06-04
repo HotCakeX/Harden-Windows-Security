@@ -45,17 +45,11 @@ There are 2 types of base policies you can choose from.
 
 2. Default Windows: Allows only files and apps that come pre-installed by Windows.
 
-<br>
-
 ### Deploy the Allow Microsoft Audit Mode Base Policy
 
 ```powershell
 New-WDACConfig -PolicyType AllowMicrosoft -Audit -LogSize 20MB
 ```
-
-* [Parameter Info](https://github.com/HotCakeX/Harden-Windows-Security/wiki/New-WDACConfig#new-wdacconfig--prepmsftonlyaudit)
-
-<br>
 
 ### Deploy the Default Windows Audit Mode Base Policy
 
@@ -63,7 +57,7 @@ New-WDACConfig -PolicyType AllowMicrosoft -Audit -LogSize 20MB
 New-WDACConfig -PolicyType DefaultWindows -Audit -LogSize 20MB
 ```
 
-* [Parameter Info](https://github.com/HotCakeX/Harden-Windows-Security/wiki/New-WDACConfig#new-wdacconfig--prepdefaultwindowsaudit)
+* [Parameter Info](https://github.com/HotCakeX/Harden-Windows-Security/wiki/New-WDACConfig)
 
 <br>
 

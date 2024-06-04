@@ -223,7 +223,7 @@ Function Edit-WDACConfig {
                     Write-ColorfulText -Color HotPink -InputText 'When you are finished, Press Enter, you will have the option to select directories to scan'
                     Pause
                     Write-ColorfulText -Color Lavender -InputText 'Select directories to scan'
-                    $ProgramsPaths = Show-DirectoryPathPicker
+                    $ProgramsPaths = Show-DirectoryPathPicker | Select-Object -Unique
                     #Endregion User-Interaction
                 }
                 catch {

@@ -280,7 +280,7 @@ Function Edit-SignedWDACConfig {
                     Write-ColorfulText -Color HotPink -InputText 'When you have finished installing programs, Press Enter to start selecting program directories to scan'
                     Pause
                     Write-ColorfulText -Color Lavender -InputText 'Select directories to scan'
-                    $ProgramsPaths = Show-DirectoryPathPicker
+                    $ProgramsPaths = Show-DirectoryPathPicker | Select-Object -Unique
                     #Endregion User-Interaction
                 }
                 catch {

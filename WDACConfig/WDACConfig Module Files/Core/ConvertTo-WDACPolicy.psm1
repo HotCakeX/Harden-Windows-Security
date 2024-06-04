@@ -1036,7 +1036,7 @@ Function ConvertTo-WDACPolicy {
 .PARAMETER BasePolicyGUID
     The GUID of the base policy to associate the supplemental policy with
 .PARAMETER SuppPolicyName
-    The name of the supplemental policy to be created
+    The name of the supplemental policy to create. If not specified, the cmdlet will generate a proper name based on the selected source and time.
 .PARAMETER FilterByPolicyNames
    The names of the policies to filter the logs by.
    Supports auto-completion, press TAB key to view the list of the deployed base policy names to choose from.

@@ -12,39 +12,23 @@
 
 ```mermaid
 flowchart TD
-    A(Deploy Default Windows base policy) -->B(Identify Important apps that need Supplemental policy)
-    B --> C(Create and Deploy Supplemental policies for them)
-    C --> D[Another App is getting blocked?]
-    D --> E[Is it a normal app?]
-    E --> F[Create Supplemental policy based on App's directory]
-    D --> G[Is it a game Installed using Xbox app?]
-    G --> H[Is it an app that installs drivers outside app's directory?]
-    H --> I[Use Event viewer logs + game/app's directory scan]
-    I --> J[Edit-WDACConfig -AllowNewAppsAuditEvents]
-    I --> K[Edit-SignedWDACConfig -AllowNewAppsAuditEvents]
-    D --> L[Want to allow an entire folder?]
-    L --> M[Use folder path with one or more Wildcards]
-    M --> N[New-SupplementalWDACConfig -FilePathWildCards]
-    F --> O[Edit-WDACConfig -AllowNewApps]
-    F --> P[Edit-SignedWDACConfig -AllowNewApps]
-    F --> Q[New-SupplementalWDACConfig -Normal]
+    A(Deploy Default Windows Signed base policy) -->B(Identify Important apps that need Supplemental policy)
+    B --> C[Create Supplemental policy based on App's directory]
+    C --> D[Want to allow an entire directory?]
+    D --> E[New-SupplementalWDACConfig -FilePathWildCards]
+    E --> AA[Deploy-SignedWDACConfig]
+    C --> F[Want to Scan the app's install directory?]
+    F --> G[New-SupplementalWDACConfig -Normal]
+    G --> AB[Deploy-SignedWDACConfig]
+    B --> H[Is it a game Installed using Xbox app?]
+    H --> I[Or Is it an app that installs drivers outside app's directory?]
+    I --> J[Edit-SignedWDACConfig -AllowNewApps]
 ```
 
-<br>
-
-<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">
-
-<br>
-
-## Video Guide
-
-<a href="https://youtu.be/AgqhcPV9aPY?si=l_2QPbEAKKVhb9z6"><img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/PNG%20and%20JPG/YouTube%20Video%20Thumbnails/With%20YouTube%20play%20button/WDAC%20policy%20for%20Fully%20managed%20device%20Variant%204.png" alt="WDAC policy for Fully managed device - Variant 4 YouTube Guide"></a>
-
-<br>
-
-*Every time I use the word "App", I'm referring to regular Win32 programs as well as Microsoft Store installed apps; Basically, any software that you can run.*
-
-This scenario provides the ultimate protection level. Using the WDACConfig module, it's very easy to deploy, manage and maintain a system with this configuration.
+> [!NOTE]\
+> *Every time I use the word "App", I'm referring to regular Win32 programs as well as Microsoft Store installed apps; Basically, any software that you can run.*
+>
+> This scenario provides the ultimate protection level. Using the WDACConfig module, it's very easy to deploy, manage and maintain a system with this configuration.
 
 <br>
 
@@ -57,10 +41,10 @@ This scenario provides the ultimate protection level. Using the WDACConfig modul
 Start by creating the Default Windows base policy xml file, which allows only files and apps that come pre-installed in Windows to run and anything else is blocked.
 
 ```powershell
-New-WDACConfig -MakeDefaultWindowsWithBlockRules -IncludeSignTool
+New-WDACConfig -PolicyType DefaultWindows
 ```
 
-* [Parameter info](https://github.com/HotCakeX/Harden-Windows-Security/wiki/New-WDACConfig#new-wdacconfig--makedefaultwindowswithblockrules)
+* [Parameter info](https://github.com/HotCakeX/Harden-Windows-Security/wiki/New-WDACConfig)
 
 <br>
 
@@ -88,7 +72,7 @@ After deploying the base policy, you can create Supplemental policies to allow o
 
 If you deployed the Default Windows base policy on a system that already had apps installed, you can create Supplemental policy for them using the following syntaxes. **After creating each Supplemental policy, you need to sign and deploy it [using the same Cmdlet we used above.](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Deploy-SignedWDACConfig)**
 
-### Based on signer rules, hashes, file names etc.
+### Based on Signer Rules, Hashes, File Names Etc.
 
 ```powershell
 New-SupplementalWDACConfig -Normal -ScanLocation "C:\Program Files\Program" -SuppPolicyName "App's Name" -PolicyPath "C:\DefaultWindowsPlusBlockRules.xml"
@@ -98,7 +82,7 @@ New-SupplementalWDACConfig -Normal -ScanLocation "C:\Program Files\Program" -Sup
 
 <br>
 
-### Based on File path with one or more wildcard characters
+### Based on File Path With One or More Wildcard Characters
 
 ```powershell
 New-SupplementalWDACConfig -FilePathWildCards -WildCardPath "C:\Program Files\Program\*" -SuppPolicyName "App's Name" -PolicyPath
@@ -109,7 +93,7 @@ New-SupplementalWDACConfig -FilePathWildCards -WildCardPath "C:\Program Files\Pr
 
 <br>
 
-### Based on an installed Windows app's name
+### Based on an Installed Windows App’s Name
 
 ```powershell
 New-SupplementalWDACConfig -InstalledAppXPackages -PackageName "*App's name*" -SuppPolicyName "App's name" -PolicyPath "C:\DefaultWindowsPlusBlockRules.xml"
@@ -131,39 +115,13 @@ These methods also work for apps that were installed prior to deploying the Defa
 
 You can create a Supplemental policy for more than 1 app at a time by browsing for multiple apps' install directories using the commands below.
 
-### Based on App's install directory and Event viewer logs
-
-```powershell
-Edit-SignedWDACConfig -AllowNewAppsAuditEvents -CertPath "C:\Certificate.cer" -SuppPolicyName "App's Name" -PolicyPath "C:\DefaultWindowsPlusBlockRules.xml" -CertCN "WDAC Certificate" -LogSize 20MB
-```
-
-* [Parameter info](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Edit-SignedWDACConfig#edit-signedwdacconfig--allownewappsauditevents)
-
-<br>
-
-### Based on App's install directory only
+### Based on App's install directory and Other Signals
 
 ```powershell
 Edit-SignedWDACConfig -AllowNewApps -CertPath "C:\Certificate.cer" -SuppPolicyName "App's Name" -PolicyPath "C:\DefaultWindowsPlusBlockRules.xml" -CertCN "WDAC Certificate"
 ```
 
 * [Parameter info](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Edit-SignedWDACConfig#edit-signedwdacconfig--allownewapps)
-
-<br>
-
-<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">
-
-<br>
-
-## What to Do if You Have a Lot of Supplemental Policies?
-
-Currently, the limit for the number of policies (Base + Supplemental) that can be deployed on a system at a time is 32. So if you are getting close to that limit, you can merge some or all of your Supplemental policies automatically into 1 using the command below:
-
-```powershell
-Edit-SignedWDACConfig -MergeSupplementalPolicies -CertPath "C:\Certificate.cer" -SuppPolicyName "Merge of Multiple Supplementals" -PolicyPath "C:\DefaultWindowsPlusBlockRules.xml" -CertCN "WDAC Certificate" -SuppPolicyPaths "C:\Supplemental policy for App1.xml","C:\Supplemental policy for App 2.xml","C:\Supplemental policy for App 3.xml"
-```
-
-* [Parameter info](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Edit-SignedWDACConfig#edit-signedwdacconfig--mergesupplementalpolicies)
 
 <br>
 

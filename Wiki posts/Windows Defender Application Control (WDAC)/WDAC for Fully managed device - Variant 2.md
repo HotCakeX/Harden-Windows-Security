@@ -13,38 +13,20 @@
 ```mermaid
 flowchart TD
     A(Deploy Default Windows base policy) -->B(Identify Important apps that need Supplemental policy)
-    B --> C(Create and Deploy Supplemental policies for them)
-    C --> D[Another App is getting blocked?]
-    D --> E[Is it a normal app?]
-    E --> F[Create Supplemental policy based on App's directory]
-    D --> G[Is it a game Installed using Xbox app?]
-    G --> H[Is it an app that installs drivers outside app's directory?]
-    H --> I[Use Event viewer logs + game/app's directory scan]
-    I --> J[Edit-WDACConfig -AllowNewAppsAuditEvents]
-    I --> K[Edit-SignedWDACConfig -AllowNewAppsAuditEvents]
-    D --> L[Want to allow an entire folder?]
-    L --> M[Use folder path with one or more Wildcards]
-    M --> N[New-SupplementalWDACConfig -FilePathWildCards]
-    F --> O[Edit-WDACConfig -AllowNewApps]
-    F --> P[Edit-SignedWDACConfig -AllowNewApps]
-    F --> Q[New-SupplementalWDACConfig -Normal]
+    B --> C[Create Supplemental policy based on App's directory]
+    C --> D[Want to allow an entire directory?]
+    D --> E[New-SupplementalWDACConfig -FilePathWildCards]
+    C --> F[Want to Scan the app's install directory?]
+    F --> G[New-SupplementalWDACConfig -Normal]
+    B --> H[Is it a game Installed using Xbox app?]
+    H --> I[Or Is it an app that installs drivers outside app's directory?]
+    I --> J[Edit-WDACConfig -AllowNewApps]
 ```
 
-<br>
-
-<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">
-
-<br>
-
-## Video Guide
-
-<a href="https://youtu.be/QpJt255pHDE?si=eLSRkAQXrkHK8SSh"><img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/PNG%20and%20JPG/YouTube%20Video%20Thumbnails/With%20YouTube%20play%20button/WDAC%20for%20Fully%20Managed%20Devices%20(2nd%20variant).png" alt="WDAC policy for Fully managed device - Variant 2 YouTube Guide"></a>
-
-<br>
-
-*Every time I use the word "App", I'm referring to regular Win32 programs as well as Microsoft Store installed apps; Basically, any software that you can run.*
-
-This scenario provides a very high protection level. Using the WDACConfig module, it's very easy to deploy, manage and maintain a system with this configuration.
+> [!NOTE]\
+> *Every time I use the word "App", I'm referring to regular Win32 programs as well as Microsoft Store installed apps; Basically, any software that you can run.*
+>
+> This scenario provides a very high protection level. Using the WDACConfig module, it's very easy to deploy, manage and maintain a system with this configuration.
 
 <br>
 
@@ -61,7 +43,7 @@ Since this is an unsigned policy, no reboot is required but it's better to perfo
 <br>
 
 ```powershell
-New-WDACConfig -MakeDefaultWindowsWithBlockRules -Deploy
+New-WDACConfig -PolicyType DefaultWindows -Deploy
 ```
 
 * [Cmdlet info](https://github.com/HotCakeX/Harden-Windows-Security/wiki/New-WDACConfig)
@@ -78,7 +60,7 @@ After deploying the base policy, you can create Supplemental policies to allow o
 
 If you deployed the Default Windows base policy on a system that already had apps installed, you can create Supplemental policy for them using the following syntaxes:
 
-### Based on signer rules, hashes, file names etc.
+### Based on Signer Rules, Hashes, File Names Etc.
 
 ```powershell
 New-SupplementalWDACConfig -Normal -ScanLocation "C:\Program Files\Program" -SuppPolicyName "App's Name" -PolicyPath "C:\DefaultWindowsPlusBlockRules.xml" -Deploy
@@ -88,7 +70,7 @@ New-SupplementalWDACConfig -Normal -ScanLocation "C:\Program Files\Program" -Sup
 
 <br>
 
-### Based on File path with one or more wildcard characters
+### Based on File Path With One or More Wildcard Characters
 
 ```powershell
 New-SupplementalWDACConfig -FilePathWildCards -WildCardPath "C:\Program Files\Program\*" -SuppPolicyName "App's Name" -PolicyPath
@@ -99,7 +81,7 @@ New-SupplementalWDACConfig -FilePathWildCards -WildCardPath "C:\Program Files\Pr
 
 <br>
 
-### Based on an installed Windows app's name
+### Based on an Installed Windows App’s Name
 
 ```powershell
 New-SupplementalWDACConfig -InstalledAppXPackages -PackageName "*App's name*" -SuppPolicyName "App's name" -PolicyPath "C:\DefaultWindowsPlusBlockRules.xml" -Deploy
@@ -121,41 +103,13 @@ These methods also work for apps that were installed prior to deploying the Defa
 
 You can create a Supplemental policy for more than 1 app at a time by browsing for multiple apps' install directories using the commands below.
 
-<br>
-
-### Based on App's install directory and Event viewer logs
-
-```powershell
-Edit-WDACConfig -AllowNewAppsAuditEvents -SuppPolicyName "App's Name" -PolicyPath "C:\DefaultWindowsPlusBlockRules.xml" -LogSize 20MB
-```
-
-* [Parameter info](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Edit-WDACConfig#edit-wdacconfig--allownewappsauditevents)
-
-<br>
-
-### Based on App's install directory only
+### Based on App’s Install Directory and Other Signals
 
 ```powershell
 Edit-WDACConfig -AllowNewApps -SuppPolicyName "App's Name" -PolicyPath "C:\DefaultWindowsPlusBlockRules.xml"
 ```
 
 * [Parameter info](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Edit-WDACConfig#edit-wdacconfig--allownewapps)
-
-<br>
-
-<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">
-
-<br>
-
-## What to Do if You Have a Lot of Supplemental Policies?
-
-Currently, the limit for the number of policies (Base + Supplemental) that can be deployed on a system at a time is 32. So if you are getting close to that limit, you can merge some or all of your Supplemental policies automatically into 1 using the command below:
-
-```powershell
-Edit-WDACConfig -MergeSupplementalPolicies -SuppPolicyName "Merge of Multiple Supplementals" -PolicyPath "C:\DefaultWindowsPlusBlockRules.xml" -SuppPolicyPaths "C:\Supplemental policy for App1.xml","C:\Supplemental policy for App 2.xml","C:\Supplemental policy for App 3.xml"
-```
-
-* [Parameter info](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Edit-WDACConfig#edit-wdacconfig--mergesupplementalpolicies)
 
 <br>
 

@@ -18,7 +18,7 @@ This page is also available [on my website.](https://spynetgirl.github.io/WDACCo
 
 * Windows 11 latest version
 * Administrator Privileges
-* Internet Connection (for periodic update checks)
+* Internet Connection (for periodic update checks that happen every 30 minutes)
 
 <br>
 
@@ -38,7 +38,7 @@ This page is also available [on my website.](https://spynetgirl.github.io/WDACCo
 
 * The module goes through Extended Validation before each update is released to make sure everything works perfectly.
 
-* The module can be used for managing both local systems and systems in Azure VMs.
+* The module can be used for managing local systems, remote systems and Azure VMs.
 
 * Use `-Verbose` common parameter with each cmdlet of the WDACConfig module to see extra details and what's happening under the hood.
 
@@ -53,6 +53,23 @@ This page is also available [on my website.](https://spynetgirl.github.io/WDACCo
 ```powershell
 Install-Module -Name 'WDACConfig' -Scope 'AllUsers' -Force
 ```
+
+<br>
+
+<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">
+
+<br>
+
+## Video Guides
+
+| Video Link  | Description |
+| :---: | :---: |
+| <a href="https://youtu.be/oyz0jFzOOGA?si=tJbFbzRJNy79lUo7"><img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/PNG%20and%20JPG/MDE%20Advanced%20Hunting%20YouTube%20Thumbnail.png" alt="MDE AH Demo"></a> | [Microsoft Defender For Endpoint Advanced Hunting With WDACConfig Module](https://youtu.be/oyz0jFzOOGA?si=tJbFbzRJNy79lUo7) |
+| <a href="https://www.youtube.com/watch?v=cp7TaTNPZE0"><img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/PNG%20and%20JPG/YouTube%20Thumbnail%20-%20Sandboxing-like%20capabilities%20of%20WDAC%20Policies.png" alt="Sandboxing-like capabilities in the WDAC Policies"></a> | [Sandboxing-like capabilities in the WDAC Policies](https://www.youtube.com/watch?v=cp7TaTNPZE0) |
+| <a href="https://www.youtube.com/watch?v=JSwrfe9zYY4"><img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/PNG%20and%20JPG/YouTube%20Thumbnail%20-%20create%2C%20audit%20and%20deploy%20WDAC%20policies.png" alt="Create, Deploy & Audit WDAC Policies"></a> | [Create, Deploy & Audit WDAC Policies](https://www.youtube.com/watch?v=JSwrfe9zYY4) |
+| <a href="https://www.youtube.com/watch?v=hNpzYlOMCys"><img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/PNG%20and%20JPG/YouTube%20Thumbnail%20-%20secure%20settings%20in%20WDAC%20Policies.png" alt="How To Set And Query Secure Settings in WDAC Policies"></a> | [How To Set And Query Secure Settings in WDAC Policies](https://www.youtube.com/watch?v=hNpzYlOMCys) |
+| <a href="https://www.youtube.com/watch?v=nZ5c9ceaEwA"><img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/PNG%20and%20JPG/YouTube%20Thumbnal%20-%20deploy%20Signed%20WDAC%20policies.png" alt="How To Create And Deploy Signed WDAC Policies"></a> | [How To Create And Deploy Signed WDAC Policies](https://www.youtube.com/watch?v=nZ5c9ceaEwA) |
+| <a href="https://youtu.be/RSYJ64BlS9Y?si=t6TlcYzsMwteG1M9"><img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/PNG%20and%20JPG/YouTube%20Video%20Thumbnails/With%20YouTube%20play%20button/How%20to%20Create%20and%20Deploy%20a%20Signed%20WDAC%20Policy.png" alt="Create and Deploy Signed WDAC Windows Defender Policy YouTube Guide"></a> | [Create Code Signing Certificate Using Windows Server](https://youtu.be/RSYJ64BlS9Y?si=t6TlcYzsMwteG1M9) |
 
 <br>
 
@@ -82,6 +99,8 @@ Install-Module -Name 'WDACConfig' -Scope 'AllUsers' -Force
 | [Test-CiPolicy](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Test-CiPolicy) | Tests a Code Integrity (WDAC) Policy XML file against the Schema and shows the signers in a signed `.CIP` files | `Get-Help Test-CiPolicy` |
 | [Get-CiFileHashes](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Get-CiFileHashes) | Calculates the Authenticode hash and first page hash of the PEs with SHA1 and SHA256 algorithms | `Get-Help Get-CiFileHashes` |
 | [ConvertTo-WDACPolicy](https://github.com/HotCakeX/Harden-Windows-Security/wiki/ConvertTo-WDACPolicy) | Multi-Purpose & Powerful functionalities such as converting local and MDE logs to App Control Policies | `Get-Help ConvertTo-WDACPolicy` |
+| [Set-CiRuleOptions](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Set-CiRuleOptions) | Configures Policy Rule Options in the WDAC policies | `Get-Help Set-CiRuleOptions` |
+| [Get-CIPolicySetting](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Get-CIPolicySetting) | Queries the Secure Settings among the deployed policies on the system | `Get-Help Get-CIPolicySetting` |
 
 <br>
 
@@ -132,40 +151,6 @@ A parameter with an **Automatic** value of True in the description means that th
 4. Specifying `-SignToolPath` parameter explicitly on the command line takes priority over auto detection and value in the user configurations.
 
 5. If SignTool.exe cannot be auto-detected and the user didn't specify it on the command line, you will receive a prompt to authorize the automatic download of the most recent SignTool.exe version from the official Microsoft servers. Upon confirmation, it will be saved in your user configurations and utilized by the cmdlet.
-
-<br>
-
-<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">
-
-<br>
-
-## Video Guides
-
-<br>
-
-<a href="https://youtu.be/oyz0jFzOOGA?si=tJbFbzRJNy79lUo7"><img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/PNG%20and%20JPG/MDE%20Advanced%20Hunting%20YouTube%20Thumbnail.png" alt="MDE AH Demo"></a>
-
-<a href="https://youtu.be/RSYJ64BlS9Y?si=t6TlcYzsMwteG1M9"><img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/PNG%20and%20JPG/YouTube%20Video%20Thumbnails/With%20YouTube%20play%20button/How%20to%20Create%20and%20Deploy%20a%20Signed%20WDAC%20Policy.png" alt="Create and Deploy Signed WDAC Windows Defender Policy YouTube Guide"></a>
-
-<br>
-
-<a href="https://youtu.be/KD0zUb2GCyk?si=_g09D0yF5lTN1NLO"><img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/PNG%20and%20JPG/YouTube%20Video%20Thumbnails/With%20YouTube%20play%20button/WDAC%20policy%20for%20Fully%20Managed%20device%20-%20Variant%201.png" alt="WDAC policy for Fully Managed device - Variant 1 YouTube Guide"></a>
-
-<br>
-
-<a href="https://youtu.be/QpJt255pHDE?si=eLSRkAQXrkHK8SSh"><img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/PNG%20and%20JPG/YouTube%20Video%20Thumbnails/With%20YouTube%20play%20button/WDAC%20for%20Fully%20Managed%20Devices%20(2nd%20variant).png" alt="WDAC policy for Fully managed device - Variant 2 YouTube Guide"></a>
-
-<br>
-
-<a href="https://youtu.be/41_5ntFYghM?si=2PcCXI7gis6UAJh7"><img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/PNG%20and%20JPG/YouTube%20Video%20Thumbnails/With%20YouTube%20play%20button/WDAC%20policy%20for%20Fully%20managed%20device%20Variant%203.png" alt="WDAC policy for Fully managed device - Variant 3 YouTube Guide"></a>
-
-<br>
-
-<a href="https://youtu.be/AgqhcPV9aPY?si=l_2QPbEAKKVhb9z6"><img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/PNG%20and%20JPG/YouTube%20Video%20Thumbnails/With%20YouTube%20play%20button/WDAC%20policy%20for%20Fully%20managed%20device%20Variant%204.png" alt="WDAC policy for Fully managed device - Variant 4 YouTube Guide"></a>
-
-<br>
-
-<a href="https://youtu.be/RgVf4p9ct90?si=mGdVCnqVlUN_FBWR"><img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/PNG%20and%20JPG/YouTube%20Video%20Thumbnails/With%20YouTube%20play%20button/WDAC%20policy%20for%20Lightly%20managed%20device.png" alt="WDAC policy for Lightly managed device YouTube Guide"></a>
 
 <br>
 

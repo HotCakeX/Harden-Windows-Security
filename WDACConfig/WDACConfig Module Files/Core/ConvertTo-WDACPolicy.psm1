@@ -28,6 +28,7 @@ Function ConvertTo-WDACPolicy {
         [Alias('BaseGUID')]
         [System.Guid]$BasePolicyGUID,
 
+        [Alias('Name')]
         [ValidateCount(1, 232)]
         [ValidatePattern('^[a-zA-Z0-9 \-]+$', ErrorMessage = 'The policy name can only contain alphanumeric, space and dash (-) characters.')]
         [Parameter(Mandatory = $false)][System.String]$SuppPolicyName,

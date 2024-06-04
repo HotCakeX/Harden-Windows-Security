@@ -2,6 +2,11 @@
 
 ## New-WDACConfig -PolicyType
 
+<div align="center">
+<a href="https://www.youtube.com/watch?v=JSwrfe9zYY4"><img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/PNG%20and%20JPG/Thumbnails%20with%20YouTube%20play%20logo/YouTube%20Thumbnail%20-%20create%2C%20audit%20and%20deploy%20WDAC%20policies.png" alt="How to create, deploy and audit WDAC policies" width="550"></a></div>
+
+<br>
+
 ![New-WDACConfig -PolicyType](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/New-WDACConfig/New-WDACConfig%20-PolicyType.apng)
 
 ## Syntax

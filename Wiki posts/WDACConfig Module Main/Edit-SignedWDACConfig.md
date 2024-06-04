@@ -64,6 +64,11 @@ Add a descriptive name for the Supplemental policy.
 
 Implements the Sandboxing-like restrictions around the program's dependencies.
 
+<div align="center">
+<a href="https://www.youtube.com/watch?v=cp7TaTNPZE0"><img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/PNG%20and%20JPG/Thumbnails%20with%20YouTube%20play%20logo/YouTube%20Thumbnail%20-%20Sandboxing-like%20capabilities%20of%20WDAC%20Policies.png" alt="Boosted security dependencies in WDAC policies" width="400"></a></div>
+
+<br>
+
 <div align='center'>
 
 | Type: |[SwitchParameter](https://learn.microsoft.com/en-us/dotnet/api/system.management.automation.switchparameter)|

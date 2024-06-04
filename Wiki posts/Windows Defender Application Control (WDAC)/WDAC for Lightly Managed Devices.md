@@ -39,7 +39,7 @@ Start by deploying the SignedAndReputable base policy on the system, which allow
 New-WDACConfig -PolicyType SignedAndReputable -Deploy
 ```
 
-* [Parameter info](https://github.com/HotCakeX/Harden-Windows-Security/wiki/New-WDACConfig#new-wdacconfig--makelightpolicy)
+* [Parameter info](https://github.com/HotCakeX/Harden-Windows-Security/wiki/New-WDACConfig)
 
 <br>
 
@@ -49,7 +49,7 @@ New-WDACConfig -PolicyType SignedAndReputable -Deploy
 New-WDACConfig -PolicyType SignedAndReputable
 ```
 
-* [Parameter info](https://github.com/HotCakeX/Harden-Windows-Security/wiki/New-WDACConfig#new-wdacconfig--makelightpolicy)
+* [Parameter info](https://github.com/HotCakeX/Harden-Windows-Security/wiki/New-WDACConfig)
 
 ```powershell
 Deploy-SignedWDACConfig -CertPath "C:\Certificate.cer" -PolicyPaths "C:\Users\HotCakeX\SignedAndReputable.xml" -CertCN "WDAC Certificate" -Deploy

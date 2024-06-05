@@ -30,9 +30,11 @@ Function Get-KernelModeDrivers {
         [Parameter(Mandatory = $False)][System.IO.FileInfo[]]$File
     )
     Begin {
-
-        Write-Verbose -Message 'Importing the ConfigCI assembly resources'
-        Add-Type -Path ([System.String](PowerShell.exe -Command { (Get-Command -Name Merge-CIPolicy).DLL }))
+        # Import the ConfigCI assembly resources if they are not already imported
+        if (-NOT ('Microsoft.SecureBoot.UserConfig.ImportParser' -as [System.Type]) ) {
+            Write-Verbose -Message 'Importing the ConfigCI assembly resources'
+            Add-Type -Path ([System.String](PowerShell.exe -Command { (Get-Command -Name Merge-CIPolicy).DLL }))
+        }
 
         Function Test-UserPE {
             <#

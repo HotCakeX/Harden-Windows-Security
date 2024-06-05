@@ -45,6 +45,7 @@ $PSDefaultParameterValues = @{
     'Get-KernelModeDrivers:Verbose'                               = $Verbose
     'New-Macros:Verbose'                                          = $Verbose
     'Checkpoint-Macros:Verbose'                                   = $Verbose
+    'Test-ECCSignedFiles:Verbose'                                 = $Verbose
 
     'Build-SignerAndHashObjects:Verbose'                          = $Verbose
     'Clear-CiPolicy_Semantic:Verbose'                             = $Verbose

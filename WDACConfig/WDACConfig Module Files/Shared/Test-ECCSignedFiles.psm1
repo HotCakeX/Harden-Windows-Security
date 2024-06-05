@@ -60,6 +60,7 @@ Function Test-ECCSignedFiles {
     Process {
         Write-Verbose -Message "Test-ECCSignedFiles: Processing $($WDACSupportedFiles.Count) WDAC compliant files to check for ECC signatures."
         # The check for existence is mainly for the files detected in audit logs that no longer exist on the disk
+        # Audit logs or MDE data simply don't have the data related to the file's signature algorithm, so only local files can be checked
         foreach ($Path in $WDACSupportedFiles | Where-Object -FilterScript { ([System.IO.FileInfo]$_).Exists -eq $true }) {
             if ((Get-AuthenticodeSignature -LiteralPath $Path | Where-Object -FilterScript { $_.Status -eq 'Valid' }).SignerCertificate.PublicKey.Oid.Value -eq '1.2.840.10045.2.1') {
                 Write-Verbose -Message "Test-ECCSignedFiles: The file '$Path' is signed with ECC algorithm. Will create Hash Level rules for it."

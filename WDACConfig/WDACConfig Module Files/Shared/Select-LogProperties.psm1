@@ -48,6 +48,7 @@ Function Select-LogProperties {
     'Status',
     'USN',
     'SignatureStatus',
+    'ProviderName',
     'SignerInfo' | Sort-Object -Property TimeCreated -Descending
 }
 Export-ModuleMember -Function 'Select-LogProperties'

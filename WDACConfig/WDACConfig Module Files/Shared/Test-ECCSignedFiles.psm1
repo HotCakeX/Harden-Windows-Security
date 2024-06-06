@@ -105,6 +105,7 @@ Function Test-ECCSignedFiles {
             }
             else {
                 Write-Verbose -Message 'Test-ECCSignedFiles: No ECC signed files found. Exiting the function.'
+                Return $null
             }
         }
     }

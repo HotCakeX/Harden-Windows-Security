@@ -409,11 +409,18 @@ Function Receive-CodeIntegrityLogs {
                     # Define the regex pattern for the device path
                     [System.Text.RegularExpressions.Regex]$Pattern = '\\Device\\HarddiskVolume(?<HardDiskVolumeNumber>\d+)\\(?<RemainingPath>.*)$'
 
-                    # If the File Name property is empty, replace it with the FilePath property and then remove the FilePath property
-                    # Only happens in the AppLocker logs
-                    if ($null -eq $Log['File Name']) {
+                    # These are the properties that are different in AppLocker so they need to be manually set to be compliant with the expected output of this function
+                    if ($Log['ProviderName'] -eq 'Microsoft-Windows-AppLocker') {
+
+                        # Replace File Name property with the FilePath property and then remove the FilePath property
                         $Log['File Name'] = $Log['FilePath']
                         $Log.Remove('FilePath')
+                        
+                        $Log['SHA256 Hash'] = $Log['Sha256Hash']
+                        $Log.Remove('Sha256Hash')
+
+                        $Log['SHA1 Hash'] = $Log['Sha1Hash']
+                        $Log.Remove('Sha1Hash')
                     }
 
                     # replace the device path with the drive letter if it matches the pattern

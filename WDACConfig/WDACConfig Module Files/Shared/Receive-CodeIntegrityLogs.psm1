@@ -396,6 +396,8 @@ Function Receive-CodeIntegrityLogs {
                     $Log['ActivityId'] = $Event.ActivityId
                     # Add the UserId property to the $Log hashtable
                     $Log['UserId'] = $Event.UserId
+                    # Add the ProviderName property to the $Log hashtable
+                    $Log['ProviderName'] = $Event.ProviderName
 
                     # Filter the logs based on the policy that generated them
                     if (-NOT ([System.String]::IsNullOrWhiteSpace($PolicyNames))) {

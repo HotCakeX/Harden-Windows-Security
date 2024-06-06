@@ -319,6 +319,8 @@ Function Edit-SignedWDACConfig {
                 [System.Boolean]$HasAuditLogs = $false
                 # Flag indicating files have been found in audit event logs during the audit phase that are not inside of any of the user-selected directory paths
                 [System.Boolean]$HasExtraFiles = $false
+                # Flag indicating whether the user has selected any logs from the audit logs GUI displayed to them
+                [System.Boolean]$HasSelectedLogs = $false
 
                 if ($ProgramsPaths) {
                     Write-Verbose -Message 'Here are the paths you selected:'
@@ -327,6 +329,25 @@ Function Edit-SignedWDACConfig {
                     }
 
                     $HasFolderPaths = $true
+
+                    # Start Async job for detecting ECC-Signed files among the user-selected directories
+                    [System.Management.Automation.Job2]$ECCSignedDirectoriesJob = Start-ThreadJob -ScriptBlock {
+                        Param ($PolicyXMLFilesArray, $ParentVerbosePreference, $ParentDebugPreference, $ModuleRootPath, $FindWDACCompliantFiles)
+
+                        $global:VerbosePreference = $ParentVerbosePreference
+                        $global:DebugPreference = $ParentDebugPreference
+                        $global:ErrorActionPreference = 'Stop'
+
+                        . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
+
+                        Import-Module -Force -FullyQualifiedName "$ModuleRootPath\Shared\Test-ECCSignedFiles.psm1"
+                        [System.IO.FileInfo]$ECCSignedFilesTempPolicyUserDirs = Join-Path -Path $using:StagingArea -ChildPath 'ECCSignedFilesTempPolicyUserDirs.xml'
+                        $ECCSignedFilesTempPolicy = Test-ECCSignedFiles -Directory $using:ProgramsPaths -Process -ECCSignedFilesTempPolicy $ECCSignedFilesTempPolicyUserDirs
+
+                        if ($ECCSignedFilesTempPolicy -as [System.IO.FileInfo]) {
+                            [System.Void]$PolicyXMLFilesArray.TryAdd('Hash Rules For ECC Signed Files in User selected directories', $ECCSignedFilesTempPolicy)
+                        }
+                    } -StreamingHost $Host -ArgumentList $PolicyXMLFilesArray, $VerbosePreference, $DebugPreference, $ModuleRootPath, $FindWDACCompliantFiles
 
                     $DirectoryScanJob = Start-ThreadJob -InitializationScript {
                         # pre-load the ConfigCI module
@@ -421,6 +442,27 @@ Function Edit-SignedWDACConfig {
                 # if user selected any logs
                 if (($null -ne $SelectedLogs) -and ($SelectedLogs.count -gt 0)) {
 
+                    $HasSelectedLogs = $true
+
+                    # Start Async job for detecting ECC-Signed files among the user-selected audit logs
+                    [System.Management.Automation.Job2]$ECCSignedAuditLogsJob = Start-ThreadJob -ScriptBlock {
+                        Param ($PolicyXMLFilesArray, $ParentVerbosePreference, $ParentDebugPreference, $ModuleRootPath, $FindWDACCompliantFiles)
+
+                        $global:VerbosePreference = $ParentVerbosePreference
+                        $global:DebugPreference = $ParentDebugPreference
+                        $global:ErrorActionPreference = 'Stop'
+
+                        . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
+
+                        Import-Module -Force -FullyQualifiedName "$ModuleRootPath\Shared\Test-ECCSignedFiles.psm1"
+                        [System.IO.FileInfo]$ECCSignedFilesTempPolicyAuditLogs = Join-Path -Path $using:StagingArea -ChildPath 'ECCSignedFilesTempPolicyAuditLogs.xml'
+                        $ECCSignedFilesTempPolicy = Test-ECCSignedFiles -File $($using:SelectedLogs).'Full Path' -Process -ECCSignedFilesTempPolicy $ECCSignedFilesTempPolicyAuditLogs
+
+                        if ($ECCSignedFilesTempPolicy -as [System.IO.FileInfo]) {
+                            [System.Void]$PolicyXMLFilesArray.TryAdd('Hash Rules For ECC Signed Files in User selected Audit Logs', $ECCSignedFilesTempPolicy)
+                        }
+                    } -StreamingHost $Host -ArgumentList $PolicyXMLFilesArray, $VerbosePreference, $DebugPreference, $ModuleRootPath, $FindWDACCompliantFiles
+
                     $KernelProtectedFileLogs = Test-KernelProtectedFiles -Logs $SelectedLogs
 
                     if ($null -ne $KernelProtectedFileLogs) {
@@ -489,12 +531,28 @@ Function Edit-SignedWDACConfig {
                     [System.Void]$PolicyXMLFilesArray.TryAdd('Temp WDAC Policy', $WDACPolicyPathTEMP)
                 }
 
+                #Region Async-Jobs-Management
+
                 if ($HasFolderPaths) {
                     Wait-Job -Job $DirectoryScanJob | Out-Null
                     # Redirecting Verbose and Debug output streams because they are automatically displayed already on the console using StreamingHost parameter
                     Receive-Job -Job $DirectoryScanJob 4>$null 5>$null
                     Remove-Job -Job $DirectoryScanJob -Force
+
+                    Wait-Job -Job $ECCSignedDirectoriesJob | Out-Null
+                    # Redirecting Verbose and Debug output streams because they are automatically displayed already on the console using StreamingHost parameter
+                    Receive-Job -Job $ECCSignedDirectoriesJob 4>$null 5>$null
+                    Remove-Job -Job $ECCSignedDirectoriesJob -Force
                 }
+
+                if ($HasSelectedLogs) {
+                    Wait-Job -Job $ECCSignedAuditLogsJob | Out-Null
+                    # Redirecting Verbose and Debug output streams because they are automatically displayed already on the console using StreamingHost parameter
+                    Receive-Job -Job $ECCSignedAuditLogsJob 4>$null 5>$null
+                    Remove-Job -Job $ECCSignedAuditLogsJob -Force
+                }
+
+                #Endregion Async-Jobs-Management
 
                 # If none of the previous actions resulted in any policy XML files, exit the function
                 if ($PolicyXMLFilesArray.Values.Count -eq 0) {

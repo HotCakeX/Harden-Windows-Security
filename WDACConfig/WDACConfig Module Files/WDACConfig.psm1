@@ -4,6 +4,8 @@ The $PSDefaultParameterValues located in "$ModuleRootPath\CoreExt\PSDefaultParam
 At the beginning of each main cmdlet, 2 custom $Verbose and/or $Debug variables are defined which help to take actions based on Verbose/Debug preferences and also pass the $VerbosePreference and $DebugPreference to the subsequent sub-functions/modules being called from the main cmdlets.
 #>
 
+Set-StrictMode -Version 3.0
+
 # Stopping the module process if any error occurs
 $global:ErrorActionPreference = 'Stop'
 
@@ -16,8 +18,8 @@ Import-Module -FullyQualifiedName "$ModuleRootPath\CoreExt\Classes.psm1" -Force
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCBs+s+MhJCPIoXj
-# hWFd9YeUkfI6MAsELSSIA5GODJG6cqCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCB/xLHGVrZnvkzK
+# //2+XfE/hFq66ZaK58YkGIiH7tLUbaCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -64,16 +66,16 @@ Import-Module -FullyQualifiedName "$ModuleRootPath\CoreExt\Classes.psm1" -Force
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQgQbHB6/51JMeRGGTIj39CJC8YUDI56PNcd6tYx9n/TcAwDQYJKoZIhvcNAQEB
-# BQAEggIAl7Kk3uKo+8a0zSEisQPKkO5OGg5I6R3TL+iz01k6h8vTwuX/o4rdB/Ia
-# hKazvTnCrxFyLuhgVEqmmHJFwb+xvuXnwhanu/etcDKQDBAxkeGSAaQ/WZrCMiNK
-# 25/Fqrpw6Xp7JCh791fH9lgKeCdNs0TOLjdipYBlLzIkJ3dWHMndvbRw92IGi/sE
-# bjQXCGRWSl19qxftU2OmCkjW3Sag/bKdfXaQaPWXW6xVjik0MLCRzy5HiDTB3mnb
-# z9noV7qzL3bQ43Tg97kY0tOddw4H+YTsp/BZAgd+pyXsXUaCU2yijU1NeQXrW9ox
-# BK5OTb4kJJiiXVpyqIlnWHKErpbj9ww9eFCLvGZ0TjeDrhLBLaNjjHFhqF/209k8
-# g5Naf50JZEXLLK/RqRMMeqz1niHTusvP3h76hrDlmrgslrnTaj+OIXSsG8hRMzK3
-# XbMLRw7B6dt/r94DicwsMxCLxfEWonVBvyxRIjYXx7axiv/5laoO1omSp8DB8IR3
-# 0OC0RV1Od2a3cWFNQNTQCl3VVEIAzAZNCTHIA9/rn9/3czk/0E7Yx7EmVEe7Bo3O
-# d1epawFsEAI4fDj4tGLEbGwdF5blIbwsNtkBm6wNyKugLudXQAt4eO6bttll/rYK
-# mYlKlWw80erD2IAtCa2s4zLxJ4ZA7jsWkZMky1Dvoh4UeyoAbME=
+# IgQgtwbF/6q3s0CuO8CeCdDmOrQSsEXeTMWKfDA/fbvrk6kwDQYJKoZIhvcNAQEB
+# BQAEggIAUiB6qf4Nfqqm7VbriNTqzAJoMqduLaT1Sk9NFg+55gZiRMiOojm0WwOY
+# ZG71Bhk+S9WakMdS33AcAXOc2T0cI4imibObbPH/rzTIZ1l9dBfoy5rszdCy5cW2
+# pxrgSnDn/TuALXBHB+xcdcl34IlKnNjcUGKscwcwUKSeTWU+eVrvMmCjKMg/ZNh/
+# wzhycPIXRo/Sp2NcyY/NUWHFDEQri7xQmHJFGEMopuuznzL7YF5g3rdNVnoSOaBX
+# afY+/I7irtriSDs5mPmMmVuN1buCef5Di/FggJAi5FAArOZSSXf1fVoG0OEhx0Ma
+# xYxaLCm8LI66X0gDOBfyKEwqMUCj47MMNVTuDI5T2sFu0Md9yPJf+Hgcj7P+Zk15
+# PoeuFGk30LUwoPqzFnq/NHFwOUfvltC4CgeB5h9eR2WnMSh8et61tGLv2YmdBozG
+# PprQt00Hd0KmI7zLCwdjSKgf8NkMwkUJXyCb5F7nfGJe5JWwVy8F/jXTSAioC4BJ
+# tN2fqmOC6JQfz881jdaoYmkRGRR+xNqUdkDtzJ7AC0ih6UNtdWEbLAd/tGyHQubv
+# 5tm8uHjX1x1TuDvHV3e1h0yy6B+Qh33ZG7vXtKFtpyMAzsn2mBjpX+XNnCn8VHZE
+# Mdde5cTJC/2WkMbrptrQJKHwfWnUwaEQ+JixSy30Gcc8j5F/pGg=
 # SIG # End signature block

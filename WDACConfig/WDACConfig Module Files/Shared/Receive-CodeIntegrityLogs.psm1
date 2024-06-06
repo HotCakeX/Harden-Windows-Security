@@ -35,6 +35,9 @@ Function Receive-CodeIntegrityLogs {
         System.IO.FileInfo[]
     .OUTPUTS
         System.Collections.Hashtable
+    .NOTES
+        The extra functionalities for post processing such as Separated output and Deleted outputs have been commented
+        out because they are not used anymore by the module.
     #>
     [CmdletBinding()]
     [OutputType([System.Collections.Hashtable])]
@@ -48,7 +51,8 @@ Function Receive-CodeIntegrityLogs {
         [Parameter(Mandatory = $false)]
         [System.String]$Type = 'Audit',
 
-        [ValidateSet('OnlyExisting', 'OnlyDeleted' , 'Separate')]
+        # [ValidateSet('OnlyExisting', 'OnlyDeleted' , 'Separate')]
+        [ValidateSet('OnlyExisting')]
         [parameter(mandatory = $false)]
         [System.String]$PostProcessing,
 
@@ -308,15 +312,16 @@ Function Receive-CodeIntegrityLogs {
         # Hashtable that contains the entire output
         [System.Collections.Hashtable]$Output = @{
             # all the logs without post-processing
-            All       = @{
+            All      = @{
                 Audit   = @{}
                 Blocked = @{}
             }
             # only the logs of files that exist on the disk
-            Existing  = @{
+            Existing = @{
                 Audit   = @{}
                 Blocked = @{}
             }
+            <#
             # only the hash details of files no longer on the disk
             Deleted   = @{
                 Audit   = @{}
@@ -333,6 +338,7 @@ Function Receive-CodeIntegrityLogs {
                     DeletedFileHashes   = @{}
                 }
             }
+            #>
         }
 
         # Making the hashtable thread-safe by synchronizing it and allowing the Foreach-Object -Parallel to write back data to it safely in real time with $Using scope modifier
@@ -563,10 +569,13 @@ Function Receive-CodeIntegrityLogs {
                                     $Output.Existing.Audit[$UniqueLogKey] = $Log
                                 }
 
+                                <#
                                 if (-NOT $Output.Separated.Audit.AvailableFilesPaths.Contains($Log['File Name'])) {
                                     [System.Void]$Output.Separated.Audit.AvailableFilesPaths.Add($Log['File Name'])
                                 }
+                                #>
                             }
+                            <#
                             # If the file is not currently on the disk, extract its hashes from the log
                             else {
                                 $TempDeletedOutputAudit = $Log | Select-Object -Property FileVersion, 'File Name', PolicyGUID, 'SHA256 Hash', 'SHA256 Flat Hash', 'SHA1 Hash', 'SHA1 Flat Hash'
@@ -579,6 +588,7 @@ Function Receive-CodeIntegrityLogs {
                                     $Output.Separated.Audit.DeletedFileHashes[$UniqueLogKey] = $TempDeletedOutputAudit
                                 }
                             }
+                            #>
                         }
 
                         elseif ($Log.Type -eq 'Blocked') {
@@ -595,10 +605,13 @@ Function Receive-CodeIntegrityLogs {
                                     $Output.Existing.Blocked[$UniqueLogKey] = $Log
                                 }
 
+                                <#
                                 if (-NOT $Output.Separated.Blocked.AvailableFilesPaths.Contains($Log['File Name'])) {
                                     [System.Void]$Output.Separated.Blocked.AvailableFilesPaths.Add($Log['File Name'])
                                 }
+                                #>
                             }
+                            <#
                             # If the file is not currently on the disk, extract its hashes from the log
                             else {
                                 $TempDeletedOutputBlocked = $Log | Select-Object -Property FileVersion, 'File Name', PolicyGUID, 'SHA256 Hash', 'SHA256 Flat Hash', 'SHA1 Hash', 'SHA1 Flat Hash'
@@ -611,6 +624,7 @@ Function Receive-CodeIntegrityLogs {
                                     $Output.Separated.Blocked.DeletedFileHashes[$UniqueLogKey] = $TempDeletedOutputBlocked
                                 }
                             }
+                            #>
                         }
                         #Endregion Post-processing for the logs
 
@@ -633,14 +647,15 @@ Function Receive-CodeIntegrityLogs {
         if (-NOT (Test-NotEmpty -Data $Output.All.Blocked)) { $Output.All.Blocked = $null }
         if (-NOT (Test-NotEmpty -Data $Output.Existing.Audit)) { $Output.Existing.Audit = $null }
         if (-NOT (Test-NotEmpty -Data $Output.Existing.Blocked)) { $Output.Existing.Blocked = $null }
-        if (-NOT (Test-NotEmpty -Data $Output.Deleted.Audit)) { $Output.Deleted.Audit = $null }
-        if (-NOT (Test-NotEmpty -Data $Output.Deleted.Blocked)) { $Output.Deleted.Blocked = $null }
-        if (-NOT (Test-NotEmpty -Data $Output.Separated.Audit.AvailableFilesPaths)) { $Output.Separated.Audit.AvailableFilesPaths = $null }
-        if (-NOT (Test-NotEmpty -Data $Output.Separated.Audit.DeletedFileHashes)) { $Output.Separated.Audit.DeletedFileHashes = $null }
-        if (-NOT (Test-NotEmpty -Data $Output.Separated.Blocked.AvailableFilesPaths)) { $Output.Separated.Blocked.AvailableFilesPaths = $null }
-        if (-NOT (Test-NotEmpty -Data $Output.Separated.Blocked.DeletedFileHashes)) { $Output.Separated.Blocked.DeletedFileHashes = $null }
+        #    if (-NOT (Test-NotEmpty -Data $Output.Deleted.Audit)) { $Output.Deleted.Audit = $null }
+        #    if (-NOT (Test-NotEmpty -Data $Output.Deleted.Blocked)) { $Output.Deleted.Blocked = $null }
+        #    if (-NOT (Test-NotEmpty -Data $Output.Separated.Audit.AvailableFilesPaths)) { $Output.Separated.Audit.AvailableFilesPaths = $null }
+        #    if (-NOT (Test-NotEmpty -Data $Output.Separated.Audit.DeletedFileHashes)) { $Output.Separated.Audit.DeletedFileHashes = $null }
+        #    if (-NOT (Test-NotEmpty -Data $Output.Separated.Blocked.AvailableFilesPaths)) { $Output.Separated.Blocked.AvailableFilesPaths = $null }
+        #    if (-NOT (Test-NotEmpty -Data $Output.Separated.Blocked.DeletedFileHashes)) { $Output.Separated.Blocked.DeletedFileHashes = $null }
 
         Switch ($PostProcessing) {
+            <#
             'Separate' {
                 if ($Type -eq 'Audit') {
                     Write-Verbose -Message "Receive-CodeIntegrityLogs: Returning $($Output.Separated.Audit.AvailableFilesPaths.Count) Audit Code Integrity logs for files on the disk and $($Output.Separated.Audit.DeletedFileHashes.Count) for the files not on the disk."
@@ -651,6 +666,7 @@ Function Receive-CodeIntegrityLogs {
                     Return $Output.Separated.Blocked
                 }
             }
+            #>
             'OnlyExisting' {
                 if ($Type -eq 'Audit') {
                     Write-Verbose -Message "Receive-CodeIntegrityLogs: Returning $($Output.Existing.Audit.Values.Count) Audit Code Integrity logs for files on the disk."
@@ -661,6 +677,7 @@ Function Receive-CodeIntegrityLogs {
                     Return $Output.Existing.Blocked.Values
                 }
             }
+            <#
             'OnlyDeleted' {
                 if ($Type -eq 'Audit') {
                     Write-Verbose -Message "Receive-CodeIntegrityLogs: Returning $($Output.Deleted.Audit.Values.Count) Audit Code Integrity logs for files not on the disk."
@@ -671,6 +688,7 @@ Function Receive-CodeIntegrityLogs {
                     Return $Output.Deleted.Blocked.Values
                 }
             }
+            #>
             Default {
                 if ($Type -eq 'Audit') {
                     Write-Verbose -Message "Receive-CodeIntegrityLogs: Returning $($Output.All.Audit.Values.Count) Audit Code Integrity logs."

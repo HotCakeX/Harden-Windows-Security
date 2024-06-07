@@ -6,6 +6,7 @@
 ConvertTo-WDACPolicy
     [-PolicyToAddLogsTo <FileInfo>]
     [-Source <String>]
+    [-SuppPolicyName <String>]
     [-MDEAHLogs <FileInfo[]>]
     [-EVTXLogs <FileInfo[]>]
     [-FilterByPolicyNames <String[]>]
@@ -22,6 +23,7 @@ ConvertTo-WDACPolicy
 ConvertTo-WDACPolicy
     [-BasePolicyFile <FileInfo>]
     [-Source <String>]
+    [-SuppPolicyName <String>]
     [-MDEAHLogs <FileInfo[]>]
     [-EVTXLogs <FileInfo[]>]
     [-FilterByPolicyNames <String[]>]
@@ -38,6 +40,7 @@ ConvertTo-WDACPolicy
 ConvertTo-WDACPolicy
     [-BasePolicyGUID <Guid>]
     [-Source <String>]
+    [-SuppPolicyName <String>]
     [-MDEAHLogs <FileInfo[]>]
     [-EVTXLogs <FileInfo[]>]
     [-FilterByPolicyNames <String[]>]
@@ -154,6 +157,25 @@ Supports validate set and auto-completion, press TAB key to view the list of the
 | Aliases: | Src |
 | Position: | Named |
 | Default value: | LocalEventLogs |
+| Required: | False |
+| Accept pipeline input: | False |
+| Accept wildcard characters: | False |
+
+</div>
+
+<br>
+
+### -SuppPolicyName
+
+The name of the supplemental policy to create
+
+<div align='center'>
+
+| Type: |[String](https://learn.microsoft.com/en-us/dotnet/api/system.string)|
+| :-------------: | :-------------: |
+| Aliases: | Name |
+| Position: | Named |
+| Default value: | `The cmdlet will generate a proper name based on the selected source and time` |
 | Required: | False |
 | Accept pipeline input: | False |
 | Accept wildcard characters: | False |

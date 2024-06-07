@@ -45,6 +45,18 @@
           </dev:type>
           <dev:defaultValue>LocalEventLogs</dev:defaultValue>
         </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="Name">
+          <maml:name>SuppPolicyName</maml:name>
+          <maml:description>
+            <maml:para>The name of the supplemental policy to create. If not specified, the cmdlet will generate a proper name based on the selected source and time.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>&lt;Depends on the selected source and time&gt;</dev:defaultValue>
+        </command:parameter>
         <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="MDELogs">
           <maml:name>MDEAHLogs</maml:name>
           <maml:description>
@@ -201,6 +213,18 @@
           </dev:type>
           <dev:defaultValue>LocalEventLogs</dev:defaultValue>
         </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="Name">
+          <maml:name>SuppPolicyName</maml:name>
+          <maml:description>
+            <maml:para>The name of the supplemental policy to create. If not specified, the cmdlet will generate a proper name based on the selected source and time.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>&lt;Depends on the selected source and time&gt;</dev:defaultValue>
+        </command:parameter>
         <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="MDELogs">
           <maml:name>MDEAHLogs</maml:name>
           <maml:description>
@@ -356,6 +380,18 @@
             <maml:uri />
           </dev:type>
           <dev:defaultValue>LocalEventLogs</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="Name">
+          <maml:name>SuppPolicyName</maml:name>
+          <maml:description>
+            <maml:para>The name of the supplemental policy to create. If not specified, the cmdlet will generate a proper name based on the selected source and time.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>&lt;Depends on the selected source and time&gt;</dev:defaultValue>
         </command:parameter>
         <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="MDELogs">
           <maml:name>MDEAHLogs</maml:name>
@@ -536,6 +572,18 @@
           <maml:uri />
         </dev:type>
         <dev:defaultValue>LocalEventLogs</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="Name">
+        <maml:name>SuppPolicyName</maml:name>
+        <maml:description>
+          <maml:para>The name of the supplemental policy to create. If not specified, the cmdlet will generate a proper name based on the selected source and time.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>&lt;Depends on the selected source and time&gt;</dev:defaultValue>
       </command:parameter>
       <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="MDELogs">
         <maml:name>MDEAHLogs</maml:name>

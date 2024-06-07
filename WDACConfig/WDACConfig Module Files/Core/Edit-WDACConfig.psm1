@@ -223,7 +223,7 @@ Function Edit-WDACConfig {
                     Write-ColorfulText -Color HotPink -InputText 'When you are finished, Press Enter, you will have the option to select directories to scan'
                     Pause
                     Write-ColorfulText -Color Lavender -InputText 'Select directories to scan'
-                    $ProgramsPaths = Show-DirectoryPathPicker
+                    $ProgramsPaths = Show-DirectoryPathPicker | Select-Object -Unique
                     #Endregion User-Interaction
                 }
                 catch {
@@ -262,6 +262,8 @@ Function Edit-WDACConfig {
                 [System.Boolean]$HasAuditLogs = $false
                 # Flag indicating files have been found in audit event logs during the audit phase that are not inside of any of the user-selected directory paths
                 [System.Boolean]$HasExtraFiles = $false
+                # Flag indicating whether the user has selected any logs from the audit logs GUI displayed to them
+                [System.Boolean]$HasSelectedLogs = $false
 
                 if ($ProgramsPaths) {
                     Write-Verbose -Message 'Here are the paths you selected:'
@@ -271,7 +273,26 @@ Function Edit-WDACConfig {
 
                     $HasFolderPaths = $true
 
-                    $DirectoryScanJob = Start-ThreadJob -InitializationScript {
+                    # Start Async job for detecting ECC-Signed files among the user-selected directories
+                    [System.Management.Automation.Job2]$ECCSignedDirectoriesJob = Start-ThreadJob -ScriptBlock {
+                        Param ($PolicyXMLFilesArray, $ParentVerbosePreference, $ParentDebugPreference, $ModuleRootPath, $FindWDACCompliantFiles)
+
+                        $global:VerbosePreference = $ParentVerbosePreference
+                        $global:DebugPreference = $ParentDebugPreference
+                        $global:ErrorActionPreference = 'Stop'
+
+                        . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
+
+                        Import-Module -Force -FullyQualifiedName "$ModuleRootPath\Shared\Test-ECCSignedFiles.psm1"
+                        [System.IO.FileInfo]$ECCSignedFilesTempPolicyUserDirs = Join-Path -Path $using:StagingArea -ChildPath 'ECCSignedFilesTempPolicyUserDirs.xml'
+                        $ECCSignedFilesTempPolicy = Test-ECCSignedFiles -Directory $using:ProgramsPaths -Process -ECCSignedFilesTempPolicy $ECCSignedFilesTempPolicyUserDirs
+
+                        if ($ECCSignedFilesTempPolicy -as [System.IO.FileInfo]) {
+                            [System.Void]$PolicyXMLFilesArray.TryAdd('Hash Rules For ECC Signed Files in User selected directories', $ECCSignedFilesTempPolicy)
+                        }
+                    } -StreamingHost $Host -ArgumentList $PolicyXMLFilesArray, $VerbosePreference, $DebugPreference, $ModuleRootPath, $FindWDACCompliantFiles
+
+                    [System.Management.Automation.Job2]$DirectoryScanJob = Start-ThreadJob -InitializationScript {
                         # pre-load the ConfigCI module
                         if (Test-Path -LiteralPath 'C:\Program Files\Windows Defender\Offline' -PathType Container) {
                             [System.String]$RandomGUID = [System.Guid]::NewGuid().ToString()
@@ -364,6 +385,27 @@ Function Edit-WDACConfig {
                 # if user selected any logs
                 if (($null -ne $SelectedLogs) -and ($SelectedLogs.count -gt 0)) {
 
+                    $HasSelectedLogs = $true
+
+                    # Start Async job for detecting ECC-Signed files among the user-selected audit logs
+                    [System.Management.Automation.Job2]$ECCSignedAuditLogsJob = Start-ThreadJob -ScriptBlock {
+                        Param ($PolicyXMLFilesArray, $ParentVerbosePreference, $ParentDebugPreference, $ModuleRootPath, $FindWDACCompliantFiles)
+
+                        $global:VerbosePreference = $ParentVerbosePreference
+                        $global:DebugPreference = $ParentDebugPreference
+                        $global:ErrorActionPreference = 'Stop'
+
+                        . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
+
+                        Import-Module -Force -FullyQualifiedName "$ModuleRootPath\Shared\Test-ECCSignedFiles.psm1"
+                        [System.IO.FileInfo]$ECCSignedFilesTempPolicyAuditLogs = Join-Path -Path $using:StagingArea -ChildPath 'ECCSignedFilesTempPolicyAuditLogs.xml'
+                        $ECCSignedFilesTempPolicy = Test-ECCSignedFiles -File $($using:SelectedLogs).'Full Path' -Process -ECCSignedFilesTempPolicy $ECCSignedFilesTempPolicyAuditLogs
+
+                        if ($ECCSignedFilesTempPolicy -as [System.IO.FileInfo]) {
+                            [System.Void]$PolicyXMLFilesArray.TryAdd('Hash Rules For ECC Signed Files in User selected Audit Logs', $ECCSignedFilesTempPolicy)
+                        }
+                    } -StreamingHost $Host -ArgumentList $PolicyXMLFilesArray, $VerbosePreference, $DebugPreference, $ModuleRootPath, $FindWDACCompliantFiles
+
                     $KernelProtectedFileLogs = Test-KernelProtectedFiles -Logs $SelectedLogs
 
                     if ($null -ne $KernelProtectedFileLogs) {
@@ -432,12 +474,28 @@ Function Edit-WDACConfig {
                     [System.Void]$PolicyXMLFilesArray.TryAdd('Temp WDAC Policy', $WDACPolicyPathTEMP)
                 }
 
+                #Region Async-Jobs-Management
+
                 if ($HasFolderPaths) {
                     Wait-Job -Job $DirectoryScanJob | Out-Null
                     # Redirecting Verbose and Debug output streams because they are automatically displayed already on the console using StreamingHost parameter
                     Receive-Job -Job $DirectoryScanJob 4>$null 5>$null
                     Remove-Job -Job $DirectoryScanJob -Force
+
+                    Wait-Job -Job $ECCSignedDirectoriesJob | Out-Null
+                    # Redirecting Verbose and Debug output streams because they are automatically displayed already on the console using StreamingHost parameter
+                    Receive-Job -Job $ECCSignedDirectoriesJob 4>$null 5>$null
+                    Remove-Job -Job $ECCSignedDirectoriesJob -Force
                 }
+
+                if ($HasSelectedLogs) {
+                    Wait-Job -Job $ECCSignedAuditLogsJob | Out-Null
+                    # Redirecting Verbose and Debug output streams because they are automatically displayed already on the console using StreamingHost parameter
+                    Receive-Job -Job $ECCSignedAuditLogsJob 4>$null 5>$null
+                    Remove-Job -Job $ECCSignedAuditLogsJob -Force
+                }
+
+                #Endregion Async-Jobs-Management
 
                 # If none of the previous actions resulted in any policy XML files, exit the function
                 if ($PolicyXMLFilesArray.Values.Count -eq 0) {
@@ -475,40 +533,12 @@ Function Edit-WDACConfig {
 
                 #Region Boosted Security - Sandboxing
                 # The AppIDs association must happen at the end right before converting the policy to binary because merge-cipolicy and other ConfigCI cmdlets remove the Macros
-
                 if ($BoostedSecurity) {
-
-                    # 3 HashSets to store the unique file paths
-                    $AddInPaths = [System.Collections.Generic.HashSet[System.String]]@()
-                    $ExePaths = [System.Collections.Generic.HashSet[System.String]]@()
-
-                    # Separating the exes and addins from the user supplied directory path
-                    [System.String[]]$Extensions = @('*.sys', '*.com', '*.dll', '*.rll', '*.ocx', '*.msp', '*.mst', '*.msi', '*.js', '*.vbs', '*.ps1', '*.appx', '*.bin', '*.bat', '*.hxs', '*.mui', '*.lex', '*.mof')
-
-                    # If user selected directories
-                    if ($HasFolderPaths) {
-                        Get-ChildItem -Recurse -File -LiteralPath $ProgramsPaths -Include $Extensions -Force | ForEach-Object -Process { [System.Void]$AddInPaths.Add($_.FullName) }
-                        Get-ChildItem -Recurse -File -LiteralPath $ProgramsPaths -Include '*.exe' -Force | ForEach-Object -Process { [System.Void]$ExePaths.Add($_.FullName) }
-
-                        Write-Debug -Message "Number of AddIns after scanning the user selected directories: $($AddInPaths.Count)"
-                        Write-Debug -Message "Number of Exes after scanning the user selected directories: $($ExePaths.Count)"
-                    }
-
-                    # If event logs had any audit logs
-                    if ($HasAuditLogs) {
-                        # Separating the exes and addins from the audit event logs
-                        Get-ChildItem -Recurse -File -LiteralPath $AuditEventLogsProcessingResults.'File Name' -Include '*.exe' -Force | ForEach-Object -Process { [System.Void]$ExePaths.Add($_.FullName) }
-                        Get-ChildItem -Recurse -File -LiteralPath $AuditEventLogsProcessingResults.'File Name' -Include $Extensions -Force | ForEach-Object -Process { [System.Void]$AddInPaths.Add($_.FullName) }
-
-                        Write-Debug -Message "Number of AddIns after scanning the Event Logs + user selected directories: $($AddInPaths.Count)"
-                        Write-Debug -Message "Number of Exes after scanning the Event Logs + user selected directories: $($ExePaths.Count)"
-                    }
-
-                    if (($null -ne $ExePaths) -and ($null -ne $AddInPaths) -and ($ExePaths.Count -ne 0) -and ($AddInPaths.count -ne 0)) {
-                        New-Macros -XmlFilePath $SuppPolicyPath -Macros $([System.IO.FileInfo[]]$ExePaths).Name
-                    }
+                    [System.Collections.Hashtable]$InputObject = @{}
+                    $InputObject['SelectedDirectoryPaths'] = $ProgramsPaths
+                    $InputObject['SelectedAuditLogs'] = $AuditEventLogsProcessingResults
+                    New-Macros -XmlFilePath $SuppPolicyPath -InputObject $InputObject
                 }
-
                 #Endregion Boosted Security - Sandboxing
 
                 Write-Verbose -Message 'Convert the Supplemental policy to a CIP file'
@@ -614,7 +644,7 @@ Function Edit-WDACConfig {
                 Write-Verbose -Message 'Deploying the Supplemental policy'
                 &'C:\Windows\System32\CiTool.exe' --update-policy (Join-Path -Path $StagingArea -ChildPath "$SuppPolicyID.cip") -json | Out-Null
 
-                Write-ColorfulText -Color TeaGreen -InputText "The Supplemental policy $SuppPolicyName has been deployed on the system, replacing the old ones.`nSystem Restart is not immediately needed but eventually required to finish the removal of the previous individual Supplemental policies."
+                Write-ColorfulText -Color TeaGreen -InputText "The Supplemental policy $SuppPolicyName has been deployed on the system, replacing the old ones."
 
                 # Copying the final Supplemental policy to the user's config directory since Staging Area is a temporary location
                 Copy-Item -Path $FinalSupplementalPath -Destination $UserConfigDir -Force
@@ -837,8 +867,8 @@ Register-ArgumentCompleter -CommandName 'Edit-WDACConfig' -ParameterName 'SuppPo
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCDleYM/8LEicfa/
-# Zs+uQSQC+LibygZCyVjZdf140aZGlqCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCCoYP8+jZT4pFcr
+# erhj36wif8vQTU0KuaGkKqSModPV7aCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -885,16 +915,16 @@ Register-ArgumentCompleter -CommandName 'Edit-WDACConfig' -ParameterName 'SuppPo
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQgjID32R1QCVgzpsaDjYcxMXuRkXXKPTO4NZZtMxQWPmkwDQYJKoZIhvcNAQEB
-# BQAEggIAH5m6QxI9PikIc5ybiq3gyFja5tRzqPZkiA+2y6vgZWl3VmIeIyd7Et58
-# M4PPeVmspEUykEMXi/8IfTAXYbh/k7/+gyPPBWkQLcXcdceX9JfQDOjwa6Jmdm0I
-# OmJ3lMlK8KzvMC3SpPG4Sa9h1CDr7R7W7YZMIEXVvbTPBdFeNr760Cw6ujCZymtK
-# 5HCj23UK6fFRNV8XL0PJXNXt/0/9XrT7zcX+6WeF6qwhyN3Nw5LDMlWEoAgIBSsT
-# Hgw3iYE8C21sxxvlvAWQbAzM93zQDSd9uTTtzqECc5hwO667Ajaubpxpv/T9Oqka
-# gfHvPPEMSIextd3+yw5/oz5lheFZgBoOnzUaRcGnflplHv+DRn9Vq1gEk+IF4JJ4
-# 9cLIVGNWlcixY1SZO9uB7CzwcBMkEVgCoO2lSDUHlTp5DNrjlDjk4ptHiFOv94hg
-# dAfhkTLqqPwe136APchj6r/QETE2s9j8nvektcK8BS7+R8lTHtRNdtWr2K1z4Tmp
-# a3rgLiQ3zx6mOfqUKgDFwG2pjr4+35c8DgSzxma7hO4AAdxO77zNKc4UFC8FISyg
-# A+EZnUiUdSzWm5JkHaWTmbKHdNcWWKvcnH6pTwK0HI1hZbGlFacYfCGxA5Du+161
-# aRdKxWCJOGFi7D0kVJHYlLqCtvmxYBEQFa95/QYq/P7coslWTBM=
+# IgQg7KeFG51r3dgd1HnHOe3mICb44kk2J3tRusZuX/XWuZowDQYJKoZIhvcNAQEB
+# BQAEggIAo0qF3ui584zYco/kTMRWkAdTxi9d+65XGPmwQ+ioSANnqaMkzRydE5jD
+# H3tmQttToSOsjuL7XCus+ctl6G67/W9xko6htiJOG8C+3bVOEvxmSF8+Tsz4/p87
+# /IyviqALzrD3KhAV4Gk3Y5K5wwZcNStCExUPMNEAkbuNEucwiIjNzVl952c+J7Ue
+# +mWb0dra7Uf4oUjplNwRp8DIw+ORAls7Fisp27BGZ1CsYBBni59BZ/FpwjX5D+5q
+# W1hoJE77pU24EFLqRG1X9VsDbnqFFRMHrYKVZQA0ALXbkV5apUDurk3GwdYHcqRN
+# 2Pu62VVutxZZgC/nz5Lc+B7rILaC+cPXiq4HhagB9NWrNwJR0szNBZjQs5rqZpHm
+# ZBkhEOvfQn5iUs3O8epjGp2Fe7gf8cAtwru82SdVZU3ogbfVF7xxumMgvj61l+4w
+# strR0JRCjBNAm74QDfP+lQe7vGVhjAef9su4Fe74b4oONdJnqxcyfeFmLUd/NliB
+# LnBwuVJUM3IBUP4+hTyFYpbZsefyLXmhEOOf4KYASMi8JxhoP2NqZKcUmtYQA1BY
+# sQ0VaMeFPMxqavbmbOrsE9v3FWY+IsaX7Su7/BKZCSFxR1Gnm44ULGmXoLvXEg6N
+# c8BxMozL/N/3e+8xOpfL0IAjtfcHQoYPSAFEXil9NdvNO0kUZ5I=
 # SIG # End signature block

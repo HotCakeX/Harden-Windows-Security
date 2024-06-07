@@ -4,19 +4,50 @@ Function New-Macros {
         Creates Macros in the CI policy XML and adds them as multi-valued AppIDs to each element in the <FileRules> node
     .PARAMETER XmlFilePath
         The path to the XML file containing the CI policy
-    .PARAMETER Macros
-        The list of Macros to create. These are the values of the Macros.
+    .PARAMETER InputObject
+        This should be a hashtable that contains directory paths and audit logs
+    .INPUTS
+        System.Collections.Hashtable
+        System.IO.FileInfo
+    .OUTPUTS
+        System.Void
     #>
     [CmdletBinding()]
     [OutputType([System.Void])]
     Param (
         [Parameter(Mandatory = $true)][System.IO.FileInfo]$XmlFilePath,
-        [Parameter(Mandatory = $true)][System.String[]]$Macros
+        [Parameter(Mandatory = $true)][System.Collections.Hashtable]$InputObject
     )
     Begin {
+        Import-Module -Force -FullyQualifiedName "$ModuleRootPath\WDACSimulation\Get-ExtendedFileInfo.psm1"
 
-        # We don't need duplicate Macros values to exist in the XML policy file
-        $Macros = $Macros | Select-Object -Unique
+        # A HashSet to store the unique OriginalFileName values of the input files
+        $Macros = [System.Collections.Generic.HashSet[System.String]] @()
+
+        # If user selected directory paths to be passed to this function
+        if ($null -ne $InputObject['SelectedDirectoryPaths'] -and $InputObject['SelectedDirectoryPaths'].count -gt 0) {
+
+            # Loop through each directory and get all the .exe files
+            Foreach ($Directory in $InputObject['SelectedDirectoryPaths']) {
+                foreach ($Exe in (Get-ChildItem -File -LiteralPath $Directory -Recurse -Include '*.exe*')) {
+                    # Get the OriginalFileName property of the file
+                    $OFileName = (Get-ExtendedFileInfo -Path $Exe).FileName
+                    if (-NOT ([System.String]::IsNullOrWhiteSpace($OFileName))) {
+                        # Add the OriginalFileName to the HashSet
+                        [System.Void]$Macros.Add($OFileName)
+                    }
+                    else {
+                        Write-Verbose -Message "New-Macros: OriginalFileName property is empty for the file: $($Exe.FullName)"
+                    }
+                }
+            }
+        }
+
+        # Add the OriginalFileName value of all of the executable files that exist or don't exist on the disk from audit logs to the Macros HashSet
+        $Macros.UnionWith([System.Collections.Generic.HashSet[System.String]] @(($InputObject['SelectedAuditLogs'] | Where-Object -FilterScript { (([System.IO.FileInfo]$_.'File Name').Extension -eq '.exe') -and (-NOT ([System.String]::IsNullOrWhiteSpace($_.OriginalFileName))) }).OriginalFileName))
+
+        # Break from the begin block if there is no macros (aka OriginalFileNames) to add to the policy
+        if ($Macros.Count -eq 0) { return }
 
         # Load the XML file
         [System.Xml.XmlDocument]$Xml = Get-Content -Path $XmlFilePath
@@ -49,6 +80,8 @@ Function New-Macros {
     }
     Process {
 
+        if ($Macros.Count -eq 0) { return }
+
         foreach ($Macro in $MacroAppIDMapping.Keys) {
 
             # Create new Macro node
@@ -78,6 +111,8 @@ Function New-Macros {
         }
     }
     End {
+        if ($Macros.Count -eq 0) { return }
+
         # Save the modified XML back to the file
         $Xml.Save($XmlFilePath)
     }
@@ -87,8 +122,8 @@ Export-ModuleMember -Function 'New-Macros'
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCCcFJ75W21W9LA9
-# H+FtuAuLcq9qu0K52J0LP15tFIqdnqCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCBG4ygcXph+a2Yc
+# cZu9NgNhUWchysaJ3EwuEiMwpT2vkqCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -135,16 +170,16 @@ Export-ModuleMember -Function 'New-Macros'
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQgpOULMfADBNWI4yzW3vcrcF4Ieu92xYo05RkKfv0ItQMwDQYJKoZIhvcNAQEB
-# BQAEggIAi7bco+4CM93LePkPged9B9cHohLBYZT8wVj0UsuxAbrenuBdHhwg8O+R
-# E0gtFu99XBa1f++C4JXsRdEoXtvIzYNr3X8oCjD1kX4ZsnZYihi+yCksbO2Evwm2
-# I5T/6duYKpp/uPdFLNoLNUNOzFa1qtswgxKVkepXUBFWvtDH6Q64s903i26ES5XY
-# IT7ZUu7TVzLvZ+YpEIJBnSacyXAcW5xEAbVt1fV131fAF8CZz3RAN39u7m/t+rdM
-# HCQmSLJvCbThLPiMwTDyVjarC8RogNXcPNyNDM2nLZsS3R1p6807audtEEzs/L7I
-# i0IZyYTPpWSmTwufAwuUI34roiTpWItWNEsqdyIr0NnDlz9vQO3rG+NMG0ySBSNt
-# ORlxRMPW4++SnEmVcaxxCd/2aqMAL6s1tTUkiR4KyD2O5P5CF1xBeIB6eBmIee9c
-# Cyzdbona86WqsZNOeo96kwCAwTqeipWyz3rua3/qO4jSF6O2uAxpIrGP5BEXnSJ1
-# ChFZsrIsL2PdEhMyjGbxUjQZ+Qngw2cgFKFNruVRS2aZnBLH0yEbWNFIAC8SCPki
-# uQT77b/PCGj+0pgbVfL/sUYsUTZnAgjHDm41xIPrVQkYtSxnNxOWgFZouY+xYiqM
-# vERAj/2+dJI/2umFvhtytN4CrEe7J2G4P4R+mIZqQPaujZJ+k5g=
+# IgQgEpt7xWvFkBxABG3Jh9z83qPMVntvVu08JqIyKEVTVDIwDQYJKoZIhvcNAQEB
+# BQAEggIAhMVOYTxNy2dg43Pq+0UAC7xLGsmgdAFlxC8VIjhtk1nTKDlesmw+FHUN
+# awdhBW4jRrLkJ/5YOY+c6Vepp2iY3oVJ0OTQ/ZWORQIzyxU4X1LRrNV4uQafDK2v
+# 5rZYPfm9Pw+7JFha5BG20jfsQ2L1l9dmD0MnUzejgakx8+qbreRGNqfQMN6ObM01
+# 5wHaAD6pbkAPvbIxilF6Z42WnXdNiMOUlSFI+yQotauY1U8V19sFyqf4Zpt4klUd
+# OduPUuLeVnqByBKrni/5EPcgmD6Klx7ZwaROIIfKtbk0QgDw5nNkZoQjZ1EAMbHw
+# 4K1fH8CvY7j40oXO1fm3bduxCiDG2xytK8bbXBixr7UCBwOOlvGWzUMOFllVtZ24
+# xUa07+b9YS/bcIkHzh0mnSgHNblXUaPhtGycyVokFD50QVXqrjfC6ZySHSA4XBWr
+# UCg69ftcZ7aHZoAZL/BHLpIapLtVUPZ+hjiDBKV8JyHQ1XofzJTfaU03O0DrYExY
+# r9zrdH8EgPmKnN+t/ddmTfeXEMMiC4YbbzDm/b4BnYu/xNH8wmCi7xdEjeMHIP/G
+# pJzbJUuD4Tp2DfnL8Mda5LpT2YBceyJva2mgrK9SlWj/22hZMsWz47dEHPobAch+
+# JiyW7IiaB+1CIme+NJP3+fe+7OF5PiX8icL2j+yVd7pEG7mVs2A=
 # SIG # End signature block

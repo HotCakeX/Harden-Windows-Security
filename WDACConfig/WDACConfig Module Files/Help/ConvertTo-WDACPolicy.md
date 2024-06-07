@@ -26,6 +26,7 @@ Based on the input parameters, it can be associated with a base policy or merged
 ConvertTo-WDACPolicy
     [-PolicyToAddLogsTo <FileInfo>]
     [-Source <String>]
+    [-SuppPolicyName]
     [-MDEAHLogs <FileInfo[]>]
     [-EVTXLogs <FileInfo[]>]
     [-FilterByPolicyNames <String[]>]
@@ -43,6 +44,7 @@ ConvertTo-WDACPolicy
 ConvertTo-WDACPolicy
     [-BasePolicyFile <FileInfo>]
     [-Source <String>]
+    [-SuppPolicyName]
     [-MDEAHLogs <FileInfo[]>]
     [-EVTXLogs <FileInfo[]>]
     [-FilterByPolicyNames <String[]>]
@@ -60,6 +62,7 @@ ConvertTo-WDACPolicy
 ConvertTo-WDACPolicy
     [-BasePolicyGUID <Guid>]
     [-Source <String>]
+    [-SuppPolicyName]
     [-MDEAHLogs <FileInfo[]>]
     [-EVTXLogs <FileInfo[]>]
     [-FilterByPolicyNames <String[]>]
@@ -198,6 +201,21 @@ Aliases: Src
 Required: False
 Position: Named
 Default value: LocalEventLogs
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -SuppPolicyName
+The name of the supplemental policy to create. If not specified, the cmdlet will generate a proper name based on the selected source and time.
+
+```yaml
+Type: String
+Parameter Sets: (All)
+Aliases: Name
+
+Required: False
+Position: Named
+Default value: <Depends on the selected source and time>
 Accept pipeline input: False
 Accept wildcard characters: False
 ```

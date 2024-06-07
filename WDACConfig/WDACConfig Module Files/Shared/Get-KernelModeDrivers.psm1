@@ -30,9 +30,11 @@ Function Get-KernelModeDrivers {
         [Parameter(Mandatory = $False)][System.IO.FileInfo[]]$File
     )
     Begin {
-
-        Write-Verbose -Message 'Importing the ConfigCI assembly resources'
-        Add-Type -Path ([System.String](PowerShell.exe -Command { (Get-Command -Name Merge-CIPolicy).DLL }))
+        # Import the ConfigCI assembly resources if they are not already imported
+        if (-NOT ('Microsoft.SecureBoot.UserConfig.ImportParser' -as [System.Type]) ) {
+            Write-Verbose -Message 'Importing the ConfigCI assembly resources'
+            Add-Type -Path ([System.String](PowerShell.exe -Command { (Get-Command -Name Merge-CIPolicy).DLL }))
+        }
 
         Function Test-UserPE {
             <#
@@ -179,8 +181,8 @@ Export-ModuleMember -Function 'Get-KernelModeDrivers'
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCDr5Pukb02DZr+z
-# l/dIc/h7Go5tzM3vZ79dRpFwSzEugKCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCBapeBjzHzxVqow
+# 1H3Daq0NgAhz7cpaMs9l9LTMtetKAaCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -227,16 +229,16 @@ Export-ModuleMember -Function 'Get-KernelModeDrivers'
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQgGn6DRP5uhRRnMyeJOhz92JvhIu88D8bDAweh0GirnsEwDQYJKoZIhvcNAQEB
-# BQAEggIAOQAyq0a/dpjMwa9qY9Den9FdA4TemwlNq5aWTI6bqk2/pRIQS8BSjjYR
-# UDc6VA5FaVcEEbFjcXMigiUwIM2SwRo9PJQn2BCQdz5XHRhjISHxjm/g46C0+izL
-# GEkLyOetOyptqnr7g+W5psTRagW8oHa+DCCex3EuAM2fFdVMpQXpd0PSKLqua12E
-# 92yLtmRChWsqIeRFOIpcKP3bBW5TjjJPU3HoT1TaGM6vLga5gst/LJ1V/0oZKGfc
-# 26jCEouxElOTRWSQcrEbNT+7GeXf07xlpLkDjnk4/5/BVHLgfOwCeZmkt/PZCTUj
-# sRtlfMZS7Ag/0RJ2cogAdzFLSppucf5O4fcSOf/YcTXXOeteb34JDSkw+BOb0k5C
-# 3YCQqv+GzwJHOx4jGzHURCbVF8ayDXpK64L6VNL4/iZTRhxBoZqRsxMNIfKxQrpG
-# gpkWo1zgF3Csu5FhmUZYgZBaFR14un6Die3/2Bsp6A2eq95y/+FrmRMy9IVu+o0j
-# 3um++pFz3lKH0LiKbd2i9MQuzr1WYHuqWnibUNc9IBiccBslMhKHFEFtaSACzrG5
-# Qqd6VH/8zhmwOF7PlHYr/ETCFjNlD+BH/7MeQ4qaMgjdru9vj3XGtmFF1FWcXjhS
-# OhTtG/xbLHyFPtame/j91AbdORmk2Sr06qtKx8R/8SXiAAS23KA=
+# IgQgomEe1VqYnvvitIRoduLzwFSFmDpbHa2b+5E2ckJm6LMwDQYJKoZIhvcNAQEB
+# BQAEggIAEUwoxnAWZ7Rsx79FyXu6zI8/ssbrvkf1dRDS4QAIb1+DL1j/nUk8OUIQ
+# IhtYlUQNCWJx0+4qw/VnPEWMdHuSjpYGSPHjIPitO7TOrZFtyg5/Cc/l2cTslAX0
+# 2G0UcmQxLJazLbQUv6cIDEdMQUhyYj5pROUEBslToy0gVnuVtYVMiL0pZoO3P1Va
+# E7mwsKuyEgFQSHc7PyHAA8pVwHTWbx7lWrfPKx3TAJlUciqeMPX1c3fBA4fI3463
+# j85W/1/Ijkchiia+Et3Dx2EeO+lrQw4h1fcL8j0U5fs2bx+GUf9slD3IM5fU+Lbh
+# dcBgI1SSDutFGW8AFSi6PaSmqdtNuHTHePUdIfWuF37zf8RXlDHnmCBND9kUcF81
+# +/+9mQ+AmINUFLqWtm6Uljhauph4BpF+mTifpT7Flpi1uNr4MUAacvZ1RrFrSL7Q
+# lONDc7/DHSY/DyPVp9/hZv0aSMGcUatzsJ56F+RLRwlOVqrXQHyiiExO5ekaY5ay
+# 52jqclDOxoFzrTKhKVzjoqFdZ34rLp8/fkYck9SXQmNWIoTCJlmuBAd4HqT6ixEu
+# B6wkF+A0m2Db391JttnFhLGAhE23ORmcHJnXBpRZDT33yT0lx/L0VWySG1drEdui
+# Ax04Ood32s/QbBYbBaYjQuCTvSVBWAmk3kgJZbJJemhg+GDnM6g=
 # SIG # End signature block

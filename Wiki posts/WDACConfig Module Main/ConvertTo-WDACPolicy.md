@@ -6,6 +6,7 @@
 ConvertTo-WDACPolicy
     [-PolicyToAddLogsTo <FileInfo>]
     [-Source <String>]
+    [-SuppPolicyName <String>]
     [-MDEAHLogs <FileInfo[]>]
     [-EVTXLogs <FileInfo[]>]
     [-FilterByPolicyNames <String[]>]
@@ -22,6 +23,7 @@ ConvertTo-WDACPolicy
 ConvertTo-WDACPolicy
     [-BasePolicyFile <FileInfo>]
     [-Source <String>]
+    [-SuppPolicyName <String>]
     [-MDEAHLogs <FileInfo[]>]
     [-EVTXLogs <FileInfo[]>]
     [-FilterByPolicyNames <String[]>]
@@ -38,6 +40,7 @@ ConvertTo-WDACPolicy
 ConvertTo-WDACPolicy
     [-BasePolicyGUID <Guid>]
     [-Source <String>]
+    [-SuppPolicyName <String>]
     [-MDEAHLogs <FileInfo[]>]
     [-EVTXLogs <FileInfo[]>]
     [-FilterByPolicyNames <String[]>]
@@ -143,9 +146,7 @@ The GUID of the base policy to associate the supplemental policy with.
 
 ### -Source
 
-The source of the logs: Local Event logs (LocalEventLogs), Microsoft Defender for Endpoint Advanced Hunting results (MDEAdvancedHunting) or EVTX files (EVTXFiles).
-
-Supports validate set and auto-completion, press TAB key to view the list of the available options.
+The source of the logs. Supports validate set and auto-completion, press TAB key to view the list of the available options.
 
 <div align='center'>
 
@@ -153,7 +154,27 @@ Supports validate set and auto-completion, press TAB key to view the list of the
 | :-------------: | :-------------: |
 | Aliases: | Src |
 | Position: | Named |
+| Accepted values: | `LocalEventLogs`, `MDEAdvancedHunting`, `EVTXFiles` |
 | Default value: | LocalEventLogs |
+| Required: | False |
+| Accept pipeline input: | False |
+| Accept wildcard characters: | False |
+
+</div>
+
+<br>
+
+### -SuppPolicyName
+
+The name of the supplemental policy to create
+
+<div align='center'>
+
+| Type: |[String](https://learn.microsoft.com/en-us/dotnet/api/system.string)|
+| :-------------: | :-------------: |
+| Aliases: | Name |
+| Position: | Named |
+| Default value: | `The cmdlet will generate a proper name based on the selected source and time` |
 | Required: | False |
 | Accept pipeline input: | False |
 | Accept wildcard characters: | False |
@@ -216,7 +237,6 @@ The path(s) of EVTX files to use.
 ### -TimeSpan
 
 The unit of time to use when filtering the logs by the time.
-The allowed values are: Minutes, Hours, Days
 
 <div align='center'>
 
@@ -224,6 +244,7 @@ The allowed values are: Minutes, Hours, Days
 | :-------------: | :-------------: |
 | Aliases: | Duration |
 | Position: | Named |
+| Accepted values: | `Minutes`, `Hours`, `Days` |
 | Default value: | None |
 | Required: | False |
 | Accept pipeline input: | False |
@@ -298,7 +319,7 @@ If used, will filter the logs by including only the Kernel-Mode logs.
 
 ### -LogType
 
-The type of logs to display: Audit or Blocked
+The type of logs to display.
 
 <div align='center'>
 
@@ -306,6 +327,7 @@ The type of logs to display: Audit or Blocked
 | :-------------: | :-------------: |
 | Aliases: | LogKind |
 | Position: | Named |
+| Accepted values: | `Audit`, `Blocked` |
 | Default value: | `Audit` |
 | Required: | False |
 | Accept pipeline input: | False |
@@ -352,4 +374,3 @@ If used, will display all the properties of the logs without any filtering.
 </div>
 
 <br>
-

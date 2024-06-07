@@ -35,6 +35,9 @@ Function Receive-CodeIntegrityLogs {
         System.IO.FileInfo[]
     .OUTPUTS
         System.Collections.Hashtable
+    .NOTES
+        The extra functionalities for post processing such as Separated output and Deleted outputs have been commented
+        out because they are not used anymore by the module.
     #>
     [CmdletBinding()]
     [OutputType([System.Collections.Hashtable])]
@@ -48,7 +51,8 @@ Function Receive-CodeIntegrityLogs {
         [Parameter(Mandatory = $false)]
         [System.String]$Type = 'Audit',
 
-        [ValidateSet('OnlyExisting', 'OnlyDeleted' , 'Separate')]
+        # [ValidateSet('OnlyExisting', 'OnlyDeleted' , 'Separate')]
+        [ValidateSet('OnlyExisting')]
         [parameter(mandatory = $false)]
         [System.String]$PostProcessing,
 
@@ -308,15 +312,16 @@ Function Receive-CodeIntegrityLogs {
         # Hashtable that contains the entire output
         [System.Collections.Hashtable]$Output = @{
             # all the logs without post-processing
-            All       = @{
+            All      = @{
                 Audit   = @{}
                 Blocked = @{}
             }
             # only the logs of files that exist on the disk
-            Existing  = @{
+            Existing = @{
                 Audit   = @{}
                 Blocked = @{}
             }
+            <#
             # only the hash details of files no longer on the disk
             Deleted   = @{
                 Audit   = @{}
@@ -333,6 +338,7 @@ Function Receive-CodeIntegrityLogs {
                     DeletedFileHashes   = @{}
                 }
             }
+            #>
         }
 
         # Making the hashtable thread-safe by synchronizing it and allowing the Foreach-Object -Parallel to write back data to it safely in real time with $Using scope modifier
@@ -390,6 +396,8 @@ Function Receive-CodeIntegrityLogs {
                     $Log['ActivityId'] = $Event.ActivityId
                     # Add the UserId property to the $Log hashtable
                     $Log['UserId'] = $Event.UserId
+                    # Add the ProviderName property to the $Log hashtable
+                    $Log['ProviderName'] = $Event.ProviderName
 
                     # Filter the logs based on the policy that generated them
                     if (-NOT ([System.String]::IsNullOrWhiteSpace($PolicyNames))) {
@@ -401,11 +409,18 @@ Function Receive-CodeIntegrityLogs {
                     # Define the regex pattern for the device path
                     [System.Text.RegularExpressions.Regex]$Pattern = '\\Device\\HarddiskVolume(?<HardDiskVolumeNumber>\d+)\\(?<RemainingPath>.*)$'
 
-                    # If the File Name property is empty, replace it with the FilePath property and then remove the FilePath property
-                    # Only happens in the AppLocker logs
-                    if ($null -eq $Log['File Name']) {
+                    # These are the properties that are different in AppLocker so they need to be manually set to be compliant with the expected output of this function
+                    if ($Log['ProviderName'] -eq 'Microsoft-Windows-AppLocker') {
+
+                        # Replace File Name property with the FilePath property and then remove the FilePath property
                         $Log['File Name'] = $Log['FilePath']
                         $Log.Remove('FilePath')
+
+                        $Log['SHA256 Hash'] = $Log['Sha256Hash']
+                        $Log.Remove('Sha256Hash')
+
+                        $Log['SHA1 Hash'] = $Log['Sha1Hash']
+                        $Log.Remove('Sha1Hash')
                     }
 
                     # replace the device path with the drive letter if it matches the pattern
@@ -563,10 +578,13 @@ Function Receive-CodeIntegrityLogs {
                                     $Output.Existing.Audit[$UniqueLogKey] = $Log
                                 }
 
+                                <#
                                 if (-NOT $Output.Separated.Audit.AvailableFilesPaths.Contains($Log['File Name'])) {
                                     [System.Void]$Output.Separated.Audit.AvailableFilesPaths.Add($Log['File Name'])
                                 }
+                                #>
                             }
+                            <#
                             # If the file is not currently on the disk, extract its hashes from the log
                             else {
                                 $TempDeletedOutputAudit = $Log | Select-Object -Property FileVersion, 'File Name', PolicyGUID, 'SHA256 Hash', 'SHA256 Flat Hash', 'SHA1 Hash', 'SHA1 Flat Hash'
@@ -579,6 +597,7 @@ Function Receive-CodeIntegrityLogs {
                                     $Output.Separated.Audit.DeletedFileHashes[$UniqueLogKey] = $TempDeletedOutputAudit
                                 }
                             }
+                            #>
                         }
 
                         elseif ($Log.Type -eq 'Blocked') {
@@ -595,10 +614,13 @@ Function Receive-CodeIntegrityLogs {
                                     $Output.Existing.Blocked[$UniqueLogKey] = $Log
                                 }
 
+                                <#
                                 if (-NOT $Output.Separated.Blocked.AvailableFilesPaths.Contains($Log['File Name'])) {
                                     [System.Void]$Output.Separated.Blocked.AvailableFilesPaths.Add($Log['File Name'])
                                 }
+                                #>
                             }
+                            <#
                             # If the file is not currently on the disk, extract its hashes from the log
                             else {
                                 $TempDeletedOutputBlocked = $Log | Select-Object -Property FileVersion, 'File Name', PolicyGUID, 'SHA256 Hash', 'SHA256 Flat Hash', 'SHA1 Hash', 'SHA1 Flat Hash'
@@ -611,6 +633,7 @@ Function Receive-CodeIntegrityLogs {
                                     $Output.Separated.Blocked.DeletedFileHashes[$UniqueLogKey] = $TempDeletedOutputBlocked
                                 }
                             }
+                            #>
                         }
                         #Endregion Post-processing for the logs
 
@@ -633,14 +656,15 @@ Function Receive-CodeIntegrityLogs {
         if (-NOT (Test-NotEmpty -Data $Output.All.Blocked)) { $Output.All.Blocked = $null }
         if (-NOT (Test-NotEmpty -Data $Output.Existing.Audit)) { $Output.Existing.Audit = $null }
         if (-NOT (Test-NotEmpty -Data $Output.Existing.Blocked)) { $Output.Existing.Blocked = $null }
-        if (-NOT (Test-NotEmpty -Data $Output.Deleted.Audit)) { $Output.Deleted.Audit = $null }
-        if (-NOT (Test-NotEmpty -Data $Output.Deleted.Blocked)) { $Output.Deleted.Blocked = $null }
-        if (-NOT (Test-NotEmpty -Data $Output.Separated.Audit.AvailableFilesPaths)) { $Output.Separated.Audit.AvailableFilesPaths = $null }
-        if (-NOT (Test-NotEmpty -Data $Output.Separated.Audit.DeletedFileHashes)) { $Output.Separated.Audit.DeletedFileHashes = $null }
-        if (-NOT (Test-NotEmpty -Data $Output.Separated.Blocked.AvailableFilesPaths)) { $Output.Separated.Blocked.AvailableFilesPaths = $null }
-        if (-NOT (Test-NotEmpty -Data $Output.Separated.Blocked.DeletedFileHashes)) { $Output.Separated.Blocked.DeletedFileHashes = $null }
+        #    if (-NOT (Test-NotEmpty -Data $Output.Deleted.Audit)) { $Output.Deleted.Audit = $null }
+        #    if (-NOT (Test-NotEmpty -Data $Output.Deleted.Blocked)) { $Output.Deleted.Blocked = $null }
+        #    if (-NOT (Test-NotEmpty -Data $Output.Separated.Audit.AvailableFilesPaths)) { $Output.Separated.Audit.AvailableFilesPaths = $null }
+        #    if (-NOT (Test-NotEmpty -Data $Output.Separated.Audit.DeletedFileHashes)) { $Output.Separated.Audit.DeletedFileHashes = $null }
+        #    if (-NOT (Test-NotEmpty -Data $Output.Separated.Blocked.AvailableFilesPaths)) { $Output.Separated.Blocked.AvailableFilesPaths = $null }
+        #    if (-NOT (Test-NotEmpty -Data $Output.Separated.Blocked.DeletedFileHashes)) { $Output.Separated.Blocked.DeletedFileHashes = $null }
 
         Switch ($PostProcessing) {
+            <#
             'Separate' {
                 if ($Type -eq 'Audit') {
                     Write-Verbose -Message "Receive-CodeIntegrityLogs: Returning $($Output.Separated.Audit.AvailableFilesPaths.Count) Audit Code Integrity logs for files on the disk and $($Output.Separated.Audit.DeletedFileHashes.Count) for the files not on the disk."
@@ -651,6 +675,7 @@ Function Receive-CodeIntegrityLogs {
                     Return $Output.Separated.Blocked
                 }
             }
+            #>
             'OnlyExisting' {
                 if ($Type -eq 'Audit') {
                     Write-Verbose -Message "Receive-CodeIntegrityLogs: Returning $($Output.Existing.Audit.Values.Count) Audit Code Integrity logs for files on the disk."
@@ -661,6 +686,7 @@ Function Receive-CodeIntegrityLogs {
                     Return $Output.Existing.Blocked.Values
                 }
             }
+            <#
             'OnlyDeleted' {
                 if ($Type -eq 'Audit') {
                     Write-Verbose -Message "Receive-CodeIntegrityLogs: Returning $($Output.Deleted.Audit.Values.Count) Audit Code Integrity logs for files not on the disk."
@@ -671,6 +697,7 @@ Function Receive-CodeIntegrityLogs {
                     Return $Output.Deleted.Blocked.Values
                 }
             }
+            #>
             Default {
                 if ($Type -eq 'Audit') {
                     Write-Verbose -Message "Receive-CodeIntegrityLogs: Returning $($Output.All.Audit.Values.Count) Audit Code Integrity logs."
@@ -689,8 +716,8 @@ Export-ModuleMember -Function 'Receive-CodeIntegrityLogs'
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCBsgDqC5qKT8VvQ
-# rBMj1yDqqKzutSViyai8zsMTFpoJ0aCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCDaxrJ3cMoXpwvC
+# g1nAadARiOBH+LJyOOlc9FMbUY524qCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -737,16 +764,16 @@ Export-ModuleMember -Function 'Receive-CodeIntegrityLogs'
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQgLRn8iCVLngsyMSZEpjnsGrognHl12khwH9bDFFTPjWIwDQYJKoZIhvcNAQEB
-# BQAEggIAmSLhnWqgvihyeta1TisaNnW9+g7GI+eYvLEGiwzsEQFEbBkt3PGKzyHZ
-# 92CyvHyfuLPHOd1D56TEpDSwa7tKrSuYItsji3aRohZI/UBm1FaLNBVQbTqR/m5u
-# m3aP6rrxEikvpSGkg5ownYVpHPbubRPevkHDd8VyozI+0uTK2NXt9StHyXc22VQK
-# bb6VLLKNBuwIt9I3mors/9/DYapeCkK70P/OSrACCddi7hqPJG4z4he6KPGh1bCL
-# 7Vmb/0j8gvJvNR9T0+HaKUvlB4znw8eBJp7sLdVUNBx7vqysJllDAcFMp5r1RCvS
-# NAVCwggfbeY/Hh6AH+uK3GK+XxfY85XzfFr1ae8dcRigWMLSOPZ2rFdm+lGoUGqw
-# 9lnsvN8ReUmz7ZgD2eD8c1PsGCaFh9rf1IKkMqIyZR5NGOotJ/fim87sjfSdHFhK
-# MUtqUv/Xuv2BX017iqiWcn0wBDuv6PMRV3QqonbpYGh1SR2nr4QwTNpL/PZLXXzI
-# /Xc58Mi2djzlNcvf3V5Y9XqaWveklq+/E6Khz6JkRIfvXN5ZKzTSC83WZHIbwSm3
-# Pes7eH3cS28ZjBI3AkHEzOd+sPPsBalCG4sPTFU0rfUhDVKovL0E1b7/tAv3BwBg
-# WuEleLuT2k9mMm8iPQMADF5KDSX71ry6T5jg6Y3nXHUhijHrZ5w=
+# IgQg0aOEs9oY4GM60SkLkJ1+yzWBFQ9gt/w9d1euBjS84PgwDQYJKoZIhvcNAQEB
+# BQAEggIAMmKPNBUo6sB5CtjTb4CCuYGQcldzxQep4tbcPqnHyW/Xm3rPZf6L9NHE
+# 4on972BZsYDpYjBcKlesKaVbiFKOPOuqknrpoFrq06VeY/ILDrfKG6Z7leI1Vwb2
+# ZekZKalSE2ZG3a8OeYLPrqg2yccNrVD4ey9ga7czYzMaviPIpsxLhuH8yLdMbCkM
+# rGP1cemX0aUcF/N9AsGELvJ8dl3ftAfvw7b1ufrqbsjdfkbSc2QIPSWqNHVT5rle
+# YlQ1N/ijjpuNmPFl4G/3zSxuR/QGya7Q1q7ucueYlmWo39LmRW8Io0UbLE21NY9J
+# HgrKPUJZcknmZX5ebfjPH2LwP/hiiWOkx/ykSVr0g8PSn+9iMil0HafzjGylaPQE
+# IeVggj/mi5NAwTN1NgURNglZ7KJRAUTz+cCh9cLs3S+xrScY7dGpXclGPMFBZImY
+# Av7BYKxRBceWs1H+MlK+Qm/PujXKRqftGcnUfNYYLm/Zh68OqA61OHtaOTdc0RL+
+# O+jdWToUxAwgm+WueqVYruxPDNmMFiFUiZ7Sy09nprBuVu1ISJ0eCpC1g3dv01xS
+# POicaTbo2uHrW6ko/fgX5BETBm0INSnNT/kcyRlac+YqR5LyiUCwcxROMI6KjcMK
+# OUdJjyTW7rJwU5mRPcOCkz6UkZZ1JDpfdgTQYstiPvsyvGNKYkA=
 # SIG # End signature block

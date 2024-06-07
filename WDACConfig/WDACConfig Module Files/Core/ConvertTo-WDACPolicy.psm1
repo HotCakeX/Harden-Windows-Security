@@ -28,6 +28,11 @@ Function ConvertTo-WDACPolicy {
         [Alias('BaseGUID')]
         [System.Guid]$BasePolicyGUID,
 
+        [Alias('Name')]
+        [ValidateCount(1, 232)]
+        [ValidatePattern('^[a-zA-Z0-9 \-]+$', ErrorMessage = 'The policy name can only contain alphanumeric, space and dash (-) characters.')]
+        [Parameter(Mandatory = $false)][System.String]$SuppPolicyName,
+
         [Alias('Src')]
         [ValidateSet('MDEAdvancedHunting', 'LocalEventLogs', 'EVTXFiles')]
         [Parameter(Mandatory = $false)][System.String]$Source = 'LocalEventLogs',
@@ -347,14 +352,17 @@ Function ConvertTo-WDACPolicy {
 
                 'LocalEventLogs' {
 
+                    # Define the policy name if it wasn't provided by the user
+                    [System.String]$SuppPolicyName = $PSBoundParameters['SuppPolicyName'] ?? "Supplemental Policy from event logs - $CurrentDate"
+
                     # The path to the final Supplemental WDAC Policy file
-                    [System.IO.FileInfo]$WDACPolicyPath = Join-Path -Path $StagingArea -ChildPath "CiPolicy From Logs $CurrentDate.xml"
+                    [System.IO.FileInfo]$WDACPolicyPath = Join-Path -Path $StagingArea -ChildPath "$SuppPolicyName.xml"
 
                     # The path to the temp WDAC Policy file
-                    [System.IO.FileInfo]$WDACPolicyPathTEMP = Join-Path -Path $StagingArea -ChildPath "TEMP CiPolicy From Logs $CurrentDate.xml"
+                    [System.IO.FileInfo]$WDACPolicyPathTEMP = Join-Path -Path $StagingArea -ChildPath "TEMP $SuppPolicyName.xml"
 
                     # The path to the Kernel protected files WDAC Policy file
-                    [System.IO.FileInfo]$WDACPolicyKernelProtectedPath = Join-Path -Path $StagingArea -ChildPath "Kernel Protected Files $CurrentDate.xml"
+                    [System.IO.FileInfo]$WDACPolicyKernelProtectedPath = Join-Path -Path $StagingArea -ChildPath "Kernel Protected Files $SuppPolicyName.xml"
 
                     # The paths to the policy files to be merged together to produce the final Supplemental policy
                     [System.IO.FileInfo[]]$PolicyFilesToMerge = @()
@@ -492,7 +500,7 @@ Function ConvertTo-WDACPolicy {
                             # Objectify the user input base policy file to extract its Base policy ID
                             $InputXMLObj = [System.Xml.XmlDocument](Get-Content -Path $BasePolicyFile)
 
-                            [System.String]$SupplementalPolicyID = Set-CIPolicyIdInfo -FilePath $WDACPolicyPath -PolicyName "Supplemental Policy from event logs - $(Get-Date -Format 'MM-dd-yyyy')" -SupplementsBasePolicyID $InputXMLObj.SiPolicy.BasePolicyID -ResetPolicyID
+                            [System.String]$SupplementalPolicyID = Set-CIPolicyIdInfo -FilePath $WDACPolicyPath -PolicyName $SuppPolicyName -SupplementsBasePolicyID $InputXMLObj.SiPolicy.BasePolicyID -ResetPolicyID
                             [System.String]$SupplementalPolicyID = $SupplementalPolicyID.Substring(11)
 
                             # Configure policy rule options
@@ -514,7 +522,7 @@ Function ConvertTo-WDACPolicy {
 
                             Write-Verbose -Message 'ConvertTo-WDACPolicy: Assigning the user input GUID to the base policy ID of the supplemental policy'
 
-                            [System.String]$SupplementalPolicyID = Set-CIPolicyIdInfo -FilePath $WDACPolicyPath -PolicyName "Supplemental Policy from event logs - $(Get-Date -Format 'MM-dd-yyyy')" -SupplementsBasePolicyID $BasePolicyGUID -ResetPolicyID
+                            [System.String]$SupplementalPolicyID = Set-CIPolicyIdInfo -FilePath $WDACPolicyPath -PolicyName $SuppPolicyName -SupplementsBasePolicyID $BasePolicyGUID -ResetPolicyID
                             [System.String]$SupplementalPolicyID = $SupplementalPolicyID.Substring(11)
 
                             # Configure policy rule options
@@ -539,7 +547,7 @@ Function ConvertTo-WDACPolicy {
                             # Objectify the user input policy file to extract its policy ID
                             $InputXMLObj = [System.Xml.XmlDocument](Get-Content -Path $PolicyToAddLogsTo)
 
-                            Set-CIPolicyIdInfo -FilePath $WDACPolicyPath -PolicyName "Supplemental Policy from event logs - $(Get-Date -Format 'MM-dd-yyyy')" -ResetPolicyID | Out-Null
+                            Set-CIPolicyIdInfo -FilePath $WDACPolicyPath -PolicyName $SuppPolicyName -ResetPolicyID | Out-Null
 
                             # Remove all policy rule options prior to merging the policies since we don't need to add/remove any policy rule options to/from the user input policy
                             Set-CiRuleOptions -FilePath $WDACPolicyPath -RemoveAll
@@ -562,6 +570,9 @@ Function ConvertTo-WDACPolicy {
                     #Endregion Base To Supplemental Policy Association and Deployment
                 }
                 'MDEAdvancedHunting' {
+
+                    # Define the policy name if it wasn't provided by the user
+                    [System.String]$SuppPolicyName = $PSBoundParameters['SuppPolicyName'] ?? "Supplemental Policy from MDE Advanced Hunting - $CurrentDate"
 
                     <#
                     ALL OF THE FUNCTIONS THAT PERFORM DATA MERGING ARE CREATED TO HANDLE MDE ADVANCED HUNTING DATA ONLY
@@ -634,7 +645,7 @@ Function ConvertTo-WDACPolicy {
                     Write-Progress -Id 31 -Activity 'Preparing an empty policy to save the logs to' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
                     # Define the path where the final MDE AH XML policy file will be saved
-                    [System.IO.FileInfo]$OutputPolicyPathMDEAH = Join-Path -Path $StagingArea -ChildPath "MDE Advanced Hunting Policy $CurrentDate.xml"
+                    [System.IO.FileInfo]$OutputPolicyPathMDEAH = Join-Path -Path $StagingArea -ChildPath "$SuppPolicyName.xml"
 
                     Write-Verbose -Message 'Copying the template policy to the staging area'
                     Copy-Item -LiteralPath 'C:\Windows\schemas\CodeIntegrity\ExamplePolicies\AllowAll.xml' -Destination $OutputPolicyPathMDEAH -Force
@@ -724,7 +735,7 @@ Function ConvertTo-WDACPolicy {
                             # Objectify the user input base policy file to extract its Base policy ID
                             $InputXMLObj = [System.Xml.XmlDocument](Get-Content -Path $BasePolicyFile)
 
-                            [System.String]$SupplementalPolicyID = Set-CIPolicyIdInfo -FilePath $OutputPolicyPathMDEAH -PolicyName "Supplemental Policy from MDE Advanced Hunting - $(Get-Date -Format 'MM-dd-yyyy')" -SupplementsBasePolicyID $InputXMLObj.SiPolicy.BasePolicyID -ResetPolicyID
+                            [System.String]$SupplementalPolicyID = Set-CIPolicyIdInfo -FilePath $OutputPolicyPathMDEAH -PolicyName $SuppPolicyName -SupplementsBasePolicyID $InputXMLObj.SiPolicy.BasePolicyID -ResetPolicyID
                             [System.String]$SupplementalPolicyID = $SupplementalPolicyID.Substring(11)
 
                             # Configure policy rule options
@@ -746,7 +757,7 @@ Function ConvertTo-WDACPolicy {
 
                             Write-Verbose -Message 'ConvertTo-WDACPolicy: Assigning the user input GUID to the base policy ID of the supplemental policy'
 
-                            [System.String]$SupplementalPolicyID = Set-CIPolicyIdInfo -FilePath $OutputPolicyPathMDEAH -PolicyName "Supplemental Policy from MDE Advanced Hunting - $(Get-Date -Format 'MM-dd-yyyy')" -SupplementsBasePolicyID $BasePolicyGUID -ResetPolicyID
+                            [System.String]$SupplementalPolicyID = Set-CIPolicyIdInfo -FilePath $OutputPolicyPathMDEAH -PolicyName $SuppPolicyName -SupplementsBasePolicyID $BasePolicyGUID -ResetPolicyID
                             [System.String]$SupplementalPolicyID = $SupplementalPolicyID.Substring(11)
 
                             # Configure policy rule options
@@ -771,7 +782,7 @@ Function ConvertTo-WDACPolicy {
                             # Objectify the user input policy file to extract its policy ID
                             $InputXMLObj = [System.Xml.XmlDocument](Get-Content -Path $PolicyToAddLogsTo)
 
-                            Set-CIPolicyIdInfo -FilePath $OutputPolicyPathMDEAH -PolicyName "Supplemental Policy from MDE Advanced Hunting - $(Get-Date -Format 'MM-dd-yyyy')" -ResetPolicyID | Out-Null
+                            Set-CIPolicyIdInfo -FilePath $OutputPolicyPathMDEAH -PolicyName $SuppPolicyName -ResetPolicyID | Out-Null
 
                             # Remove all policy rule options prior to merging the policies since we don't need to add/remove any policy rule options to/from the user input policy
                             Set-CiRuleOptions -FilePath $OutputPolicyPathMDEAH -RemoveAll
@@ -800,6 +811,9 @@ Function ConvertTo-WDACPolicy {
                     #Endregion Base To Supplemental Policy Association and Deployment
                 }
                 'EVTXFiles' {
+
+                    # Define the policy name if it wasn't provided by the user
+                    [System.String]$SuppPolicyName = $PSBoundParameters['SuppPolicyName'] ?? "Supplemental Policy from Evtx files - $CurrentDate"
 
                     # The total number of the main steps for the progress bar to render
                     [System.UInt16]$TotalSteps = 6
@@ -844,7 +858,7 @@ Function ConvertTo-WDACPolicy {
                     }
 
                     # Define the path where the final Evtx XML policy file will be saved
-                    [System.IO.FileInfo]$OutputPolicyPathEVTX = Join-Path -Path $StagingArea -ChildPath "Policy from Evtx files $CurrentDate.xml"
+                    [System.IO.FileInfo]$OutputPolicyPathEVTX = Join-Path -Path $StagingArea -ChildPath "$SuppPolicyName.xml"
 
                     Write-Verbose -Message 'Copying the template policy to the staging area'
                     Copy-Item -LiteralPath 'C:\Windows\schemas\CodeIntegrity\ExamplePolicies\AllowAll.xml' -Destination $OutputPolicyPathEVTX -Force
@@ -909,7 +923,7 @@ Function ConvertTo-WDACPolicy {
                             # Objectify the user input base policy file to extract its Base policy ID
                             $InputXMLObj = [System.Xml.XmlDocument](Get-Content -Path $BasePolicyFile)
 
-                            [System.String]$SupplementalPolicyID = Set-CIPolicyIdInfo -FilePath $OutputPolicyPathEVTX -PolicyName "Supplemental Policy from Evtx files - $(Get-Date -Format 'MM-dd-yyyy')" -SupplementsBasePolicyID $InputXMLObj.SiPolicy.BasePolicyID -ResetPolicyID
+                            [System.String]$SupplementalPolicyID = Set-CIPolicyIdInfo -FilePath $OutputPolicyPathEVTX -PolicyName $SuppPolicyName -SupplementsBasePolicyID $InputXMLObj.SiPolicy.BasePolicyID -ResetPolicyID
                             [System.String]$SupplementalPolicyID = $SupplementalPolicyID.Substring(11)
 
                             # Configure policy rule options
@@ -931,7 +945,7 @@ Function ConvertTo-WDACPolicy {
 
                             Write-Verbose -Message 'ConvertTo-WDACPolicy: Assigning the user input GUID to the base policy ID of the supplemental policy'
 
-                            [System.String]$SupplementalPolicyID = Set-CIPolicyIdInfo -FilePath $OutputPolicyPathEVTX -PolicyName "Supplemental Policy from Evtx files - $(Get-Date -Format 'MM-dd-yyyy')" -SupplementsBasePolicyID $BasePolicyGUID -ResetPolicyID
+                            [System.String]$SupplementalPolicyID = Set-CIPolicyIdInfo -FilePath $OutputPolicyPathEVTX -PolicyName $SuppPolicyName -SupplementsBasePolicyID $BasePolicyGUID -ResetPolicyID
                             [System.String]$SupplementalPolicyID = $SupplementalPolicyID.Substring(11)
 
                             # Configure policy rule options
@@ -956,7 +970,7 @@ Function ConvertTo-WDACPolicy {
                             # Objectify the user input policy file to extract its policy ID
                             $InputXMLObj = [System.Xml.XmlDocument](Get-Content -Path $PolicyToAddLogsTo)
 
-                            Set-CIPolicyIdInfo -FilePath $OutputPolicyPathEVTX -PolicyName "Supplemental Policy from Evtx files - $(Get-Date -Format 'MM-dd-yyyy')" -ResetPolicyID | Out-Null
+                            Set-CIPolicyIdInfo -FilePath $OutputPolicyPathEVTX -PolicyName $SuppPolicyName -ResetPolicyID | Out-Null
 
                             # Remove all policy rule options prior to merging the policies since we don't need to add/remove any policy rule options to/from the user input policy
                             Set-CiRuleOptions -FilePath $OutputPolicyPathEVTX -RemoveAll
@@ -1021,6 +1035,8 @@ Function ConvertTo-WDACPolicy {
     The base policy file to associate the supplemental policy with
 .PARAMETER BasePolicyGUID
     The GUID of the base policy to associate the supplemental policy with
+.PARAMETER SuppPolicyName
+    The name of the supplemental policy to create. If not specified, the cmdlet will generate a proper name based on the selected source and time.
 .PARAMETER FilterByPolicyNames
    The names of the policies to filter the logs by.
    Supports auto-completion, press TAB key to view the list of the deployed base policy names to choose from.
@@ -1110,8 +1126,8 @@ Register-ArgumentCompleter -CommandName 'ConvertTo-WDACPolicy' -ParameterName 'B
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCD2Y2eEy49tx/AD
-# kXm+o1xlQvPAQwNsaVGEkKc51AFXJKCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCDAT0vp+1WV/7nM
+# +14CtGIIgRnVxxo6ml0IR7wEydJsSKCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -1158,16 +1174,16 @@ Register-ArgumentCompleter -CommandName 'ConvertTo-WDACPolicy' -ParameterName 'B
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQgymT1R2GbIKHeZchIRIKbHMTgZDNw/vGftaGb12mFsxowDQYJKoZIhvcNAQEB
-# BQAEggIAZ+5ZvUnYJyWq/gFeWaQ8JZUx5JK/3llQIaRZGww8TiLzIN1xFlXcnq4X
-# WzkPyL+3QzrQxNoqA2NeDiC7Z+cjGmnB9f4WE1efUw1afGzCjdgV1Tw9yymA1MXG
-# 9jIfOBpmFH0zwVwpRMV9oOFiEk3Iww8Yr2kWizcezdeiX3KAA0losSq4LnxPfHYT
-# V6B0DY8rVfKd6H4WVSiddPxmy29XmaOmj/CpcmM+XpnNJhRSzPRH9s6NPARgC/U/
-# ldZ17sGoL1gCNdYhnNt0oKmZgM+MRysCZwi7NVa1MzpcLiZkpkX2B+eg9j+g2gJ7
-# ArAL5hS48N7QxAEGvxfFsxBpGx380nfxoPOuzF3EqbBb97LBHv8MNFX4WhwiUavz
-# S+M81+0GnZ30Yb0yLsLjdDnt4GZZ5qxUgrzXz3xRfkq94ZIEEwGBrH1chILgxhcK
-# B3yuCBqiKLaqTreLRX7oCcK880Td2rQsr6R3f9GBmp0pUul09froWvsBoGAecfAa
-# 32NqrHETq3Nkp5U7OhUWRIpL7JHdNDRZS/wYAG+ewAfPLrDTIFIz3IFQPKgjOPmD
-# +20W5Ej6a83A0PNPwUbi5isGVAdeJ5cOSL0xS/4S044fM4IQyCg2QmelNpV6RgYw
-# ibkOZIkMbRbqhXhY1MDEYt5WC0WEYybQ0ewG4noewUS2k43a35Y=
+# IgQgbcECvCvIhqOmQcSw+McJa7Fikor+6skSIZ8GcNKxqTswDQYJKoZIhvcNAQEB
+# BQAEggIAjJcfKUFwTAS9C0TamDcuNmz9ctxo6zdlzA7jQSwVIj/jYUdb84lL7vXs
+# d78lfS3NNdmaaplB2TnMvUmtUKtmTwDFrPG2i7T4LGWIpfIxen7SdcOWdZ+JhZMv
+# F7QixzT0HaIRF5uMTrnPCwIKrKVABtFD7EaoQkXjhCblS2Hxu59TktAvd/G2/h67
+# EtJpOvS2+l+Ky1Z4JedlXNIpG7LYZK+DQcF6FAhdmS3k6HOCJzC0ANmyBYaLo6R4
+# KWbz+QhbvsTceiHzFgFFAYmlZXbeaDmJACxmv0Ivou/dX+QCa914NVc5A6pHrlbB
+# g/XTYPGzHHZYdRNqf58pOk239qwnkStCnE+3IJLG+fJ6Y4xg8ORWBWP7Ad212NKU
+# zXBjNq/Z5/MX4rpVZD0umnzsoBM1uDeQK0MrQPPNeJE5wYus0qbeW+ovL4a62GDz
+# lPrUAIVjPCf3Qp8YWEgbTpfrJ2eEj/z+lirPZqLjUydeJoE4yI7BSeptaYsbBtjx
+# iGRv8VfKTaTFnfxahx21j4ZTlGrYuCEqI8TYGG/fARaMLT62By8q9Oj7nSCTVB/R
+# j0Bt6xyi2pJ3Op2v2QbQJr7oo8bkOX2EAjRmNFnZO73a3TMwHLx5lrUHIIxFGLfe
+# 2spoL4DsifJdKOjkJ+NuwuszDC+jPCdP5vvKPzh8n0UC7oSj0Xs=
 # SIG # End signature block

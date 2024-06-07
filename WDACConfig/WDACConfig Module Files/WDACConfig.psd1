@@ -4,7 +4,7 @@
     RootModule           = 'WDACConfig.psm1'
 
     # Version number of this module.
-    ModuleVersion        = '0.3.9'
+    ModuleVersion        = '0.4.0'
 
     # Supported PSEditions
     CompatiblePSEditions = @('Core')
@@ -235,6 +235,7 @@ This is an advanced PowerShell module for WDAC (Windows Defender Application Con
         'Shared\Get-KernelModeDrivers.psm1',
         'Shared\Invoke-CiSigning.psm1',
         'Shared\Show-DirectoryPathPicker.psm1',
+        'Shared\Test-ECCSignedFiles.psm1',
         'WDACSimulation\Get-TBSCertificate.psm1',
         'WDACSimulation\Get-SignerInfo.psm1',
         'WDACSimulation\Get-SignedFileCertificates.psm1',

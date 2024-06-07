@@ -644,7 +644,7 @@ Function Edit-WDACConfig {
                 Write-Verbose -Message 'Deploying the Supplemental policy'
                 &'C:\Windows\System32\CiTool.exe' --update-policy (Join-Path -Path $StagingArea -ChildPath "$SuppPolicyID.cip") -json | Out-Null
 
-                Write-ColorfulText -Color TeaGreen -InputText "The Supplemental policy $SuppPolicyName has been deployed on the system, replacing the old ones.`nSystem Restart is not immediately needed but eventually required to finish the removal of the previous individual Supplemental policies."
+                Write-ColorfulText -Color TeaGreen -InputText "The Supplemental policy $SuppPolicyName has been deployed on the system, replacing the old ones."
 
                 # Copying the final Supplemental policy to the user's config directory since Staging Area is a temporary location
                 Copy-Item -Path $FinalSupplementalPath -Destination $UserConfigDir -Force
@@ -867,8 +867,8 @@ Register-ArgumentCompleter -CommandName 'Edit-WDACConfig' -ParameterName 'SuppPo
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCC1TpnsQWkEer4Z
-# jUZNhDlH4zXVqBrbTejrSoKFvkk6aqCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCCoYP8+jZT4pFcr
+# erhj36wif8vQTU0KuaGkKqSModPV7aCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -915,16 +915,16 @@ Register-ArgumentCompleter -CommandName 'Edit-WDACConfig' -ParameterName 'SuppPo
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQgeXClwpSH3qjO8KIjZT0C8JXX73suGWTCIdE6RAp/6aYwDQYJKoZIhvcNAQEB
-# BQAEggIAH7tFYiGUqjvtu6gnDtOyLS30OweiZ3zFw++N1+907RtfFin/orp9aGcR
-# noWTr8yZ5e0V9L7lILFckl1O0WVi/uB6RhjRPEv0Y8XE+qpHh4+kUB7RQPOQco97
-# voPGaYep0KC5jz/TuxzIT/ifW6hnL+sB7RDV+B7FwlTEQoLK0Y28BLVwyXrGx1ki
-# 1QVKmNGkpxg+UbkdmWH7Ms+EBobcs2yG06iD35K25VrR1/17qHbMvxJxtxrOAwKr
-# 1q3CZLVjXpkUh08K/Igdh/YMNgRPtIAmQ5x3gFlvbSgLHAhLHbtMuznJiTwrUXvy
-# FNxy93zB16a7fELQSLjcgzpA0PcQgtx9UWNyyQVQ3JzzffxKIpN5Qi0/xMQ8ToWb
-# NBmGIJqXFiCbXynl9MsNznL9laQQ94a9+9GkTD0bHz8YSHC2NWUcJSLT9QBpFE+f
-# lgOsYAobrZEMTuzbjR0bCxCDkLaRMFRyMehMDEEnez69wbSOFdEExAd+5YCiB4Jo
-# DB/LkKd3+ZEt4qVeMOgKJYbNVVu89uj4lYiLwHvHG0SXxUkyOfx4PEUx7mdkUAR2
-# qplUHOexy36ELERztHQcZJ0sTQNHQWgs6ut8dk+CO8xB+3nGT+4QcEjbotCUbLXa
-# zSsdrSiw+YMb2DRkfD3HmMLS8/wieC3fmfBviJcC+rZmHFxjeso=
+# IgQg7KeFG51r3dgd1HnHOe3mICb44kk2J3tRusZuX/XWuZowDQYJKoZIhvcNAQEB
+# BQAEggIAo0qF3ui584zYco/kTMRWkAdTxi9d+65XGPmwQ+ioSANnqaMkzRydE5jD
+# H3tmQttToSOsjuL7XCus+ctl6G67/W9xko6htiJOG8C+3bVOEvxmSF8+Tsz4/p87
+# /IyviqALzrD3KhAV4Gk3Y5K5wwZcNStCExUPMNEAkbuNEucwiIjNzVl952c+J7Ue
+# +mWb0dra7Uf4oUjplNwRp8DIw+ORAls7Fisp27BGZ1CsYBBni59BZ/FpwjX5D+5q
+# W1hoJE77pU24EFLqRG1X9VsDbnqFFRMHrYKVZQA0ALXbkV5apUDurk3GwdYHcqRN
+# 2Pu62VVutxZZgC/nz5Lc+B7rILaC+cPXiq4HhagB9NWrNwJR0szNBZjQs5rqZpHm
+# ZBkhEOvfQn5iUs3O8epjGp2Fe7gf8cAtwru82SdVZU3ogbfVF7xxumMgvj61l+4w
+# strR0JRCjBNAm74QDfP+lQe7vGVhjAef9su4Fe74b4oONdJnqxcyfeFmLUd/NliB
+# LnBwuVJUM3IBUP4+hTyFYpbZsefyLXmhEOOf4KYASMi8JxhoP2NqZKcUmtYQA1BY
+# sQ0VaMeFPMxqavbmbOrsE9v3FWY+IsaX7Su7/BKZCSFxR1Gnm44ULGmXoLvXEg6N
+# c8BxMozL/N/3e+8xOpfL0IAjtfcHQoYPSAFEXil9NdvNO0kUZ5I=
 # SIG # End signature block

@@ -722,7 +722,7 @@ Function Edit-SignedWDACConfig {
                 Write-Verbose -Message 'Deploying the Supplemental policy'
                 &'C:\Windows\System32\CiTool.exe' --update-policy $FinalSupplementalCIPPath -json | Out-Null
 
-                Write-ColorfulText -Color TeaGreen -InputText "The Signed Supplemental policy $SuppPolicyName has been deployed on the system, replacing the old ones.`nSystem Restart is not immediately needed but eventually required to finish the removal of the previous individual Supplemental policies."
+                Write-ColorfulText -Color TeaGreen -InputText "The Signed Supplemental policy $SuppPolicyName has been deployed on the system, replacing the old ones."
 
                 # Copying the final Supplemental policy to the user's config directory since Staging Area is a temporary location
                 Copy-Item -Path $FinalSupplementalPath -Destination $UserConfigDir -Force
@@ -921,7 +921,7 @@ Function Edit-SignedWDACConfig {
 .PARAMETER AllowNewApps
     Rebootlessly install new apps/programs when Signed policy is already deployed, scan their directories for new Supplemental policy, Sign and deploy thew Supplemental policy.
 .PARAMETER MergeSupplementalPolicies
-    Merges multiple Signed deployed supplemental policies into 1 single supplemental policy, removes the old ones, deploys the new one. System restart needed to take effect.
+    Merges multiple Signed deployed supplemental policies into 1 single supplemental policy, removes the old ones, deploys the new one.
 .PARAMETER UpdateBasePolicy
     It can rebootlessly change the type of the deployed signed base policy. It can update the recommended block rules and/or change policy rule options in the deployed base policy.
 .PARAMETER SkipVersionCheck
@@ -994,8 +994,8 @@ Register-ArgumentCompleter -CommandName 'Edit-SignedWDACConfig' -ParameterName '
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCDn3g2AF4JWfIrC
-# rw/jl8QxpTk5OeAgUKj5shZVFS8tp6CCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCDEbl7iNY/LT5g+
+# y3ZulCHS1FfkzzBVfNUs9xNqeNVq+aCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -1042,16 +1042,16 @@ Register-ArgumentCompleter -CommandName 'Edit-SignedWDACConfig' -ParameterName '
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQgkD2qF1pVPZ+ejct0ZKbYkKj6/2GP/JEg5jNcTTcGTE8wDQYJKoZIhvcNAQEB
-# BQAEggIAVxXxipYtlAPa8o3V7CP8xu9nmD/ljD7jjDkyWNl1jrgIj4UjSXhjnfXw
-# ZOba3QYSnzPv3WIGBzCDMghKeB99NMr2CWbg9cQKk7j8IBOFgPRjh7M4qaJFE9kF
-# GTQwjnWOVRCoF1ossOmzoHB86ONhdQfG+Z3R0N2aX6KCViP8FArDqeaoE/MzRxcN
-# LxhtTddSjrppygzv51Jw05Mgkn8ZItwO8NoToUVktS8YbvRKOtE42hDTcsQQxVNR
-# omA76GPL52D4tzauntChEN5oeUVuo+C9KaZwy2nl8gYqWGQQLrCQpVPQvRBRL0rO
-# N/g7uYpoOcOUmxYUFIL7QHURrYZkWYNsLxD5g48dI+yFbIW723WNpN5aIJ9F8+ck
-# z2lxGC11kSDvjWtyIeSRlys+O9s2XSv/3BIlUTnPdoXcKT7zB2Y0rl7gAZKCNLjY
-# fU1ro+o3p/8fsxkllsROejZGufa/vbnsgENALQFdcIke0tGT1lcwxUKg7wuJekH1
-# BMYTnYF7p9xQu4OJJY58VdGH0MwzSmQ0fyObNXB2OheM2Fz/fTVpvgmxrXl/g3K4
-# OmfMaJdDArgWt4W5PTCp08ECrv6r8OBtAmVwlh1Hw0q0X7dNSV6rDxvD2ldfezj0
-# 47YDPDtlzEhBBIYnx2xYmQiO5JFtAeWV4avuH1kboZ1Bj9ogfGA=
+# IgQg0L9m0rSCkB4Fa5n8pFJerWPqCmAkM8FLQAvsF3zXuj4wDQYJKoZIhvcNAQEB
+# BQAEggIAO0Jk1D+tSHw1xKb9EhjDAm7LmUsSveSKAjFnk2jKNynb2n+IaGoTnnVS
+# QTsWs5+jjf9O9RKuIXPPi24y+HQRZdqO1VbY5tX4kOia1tdAAGgCNKvbXdeDq3MK
+# Ch8r2ym2aYeyvXB9SL213g4poxMnCBoCVwXDd0DyIWUZ4PxCGSSD5A9RI80mp7vl
+# eM5SHhI+GxRReMKFvr1F/mkP1Qkipsx55FFylq5ltvo0neKwKlRYj7frJL/X2uXb
+# uqSgPm7x2CGWW/B3N9tJLKvW8fwKW0wuhBEv0uPJujsg8D5mgrnMludvKNOEZtSI
+# L4dmxPc2PNmXuw/Wc3jHLHe39+vtBy1+jeMCL0dZPNGGneGbLrbegjWVygjOkZ+H
+# CV/nY23n40MsaWlpE/tFkKxkjL77mb+FkAMe0dFfuqN/e7Zqs11S0ixXpbme3J4I
+# z5V+ESD3n3479AZ8T+/q2lELhkenChlcP36X6gq3iosrcmIeGXECkNCLJqrxmXR6
+# Zvev/1YntdLT2JcewLDQmsEhPkTxfHCbA6+iSQV+xgVpERsWSMwhqS8WLnAmHnbw
+# jmSQlHi0tOPfjz9zHJfid0j9Lffu91rmSV3qhgnkGaZNVDDoJBgpZGRk2XlCPAwf
+# P668TNdmM/iOpaPXLfegcrcmJ9GOxMNyfsZLNPGcLfuuFBQb99c=
 # SIG # End signature block

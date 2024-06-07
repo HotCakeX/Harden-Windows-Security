@@ -19,6 +19,7 @@ New-WDACConfig
     [-TestMode]
     [-RequireEVSigners]
     [-EnableScriptEnforcement]
+    [-LogSize]
 ```
 
 ## Description
@@ -131,6 +132,27 @@ Enables [script enforcement](https://learn.microsoft.com/en-us/windows/security/
 <div align='center'>
 
 | Type: |[SwitchParameter](https://learn.microsoft.com/en-us/dotnet/api/system.management.automation.switchparameter)|
+| :-------------: | :-------------: |
+| Position: | Named |
+| Default value: | None |
+| Required: | False |
+| Accept pipeline input: | False |
+| Accept wildcard characters: | False |
+
+</div>
+
+<br>
+
+### -LogSize
+
+> [!NOTE]\
+> This parameter is only available when the `-Audit` parameter is used.
+
+Specifies the log size for ***Microsoft-Windows-CodeIntegrity/Operational*** events. The values must be in the form of `<Digit + Data measurement unit>`. e.g., 2MB, 10MB, 1GB, 1TB. The minimum accepted value is 1MB which is the default.
+
+<div align='center'>
+
+| Type: |[UInt64](https://learn.microsoft.com/en-us/dotnet/api/system.uint64)|
 | :-------------: | :-------------: |
 | Position: | Named |
 | Default value: | None |

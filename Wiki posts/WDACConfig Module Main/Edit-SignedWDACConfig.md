@@ -67,10 +67,10 @@ Implements Sandboxing-like restrictions around the program's dependencies.
 > [!TIP]\
 > When using this mode, it's recommended to only target one program at a time. E.g., don't use this method for creating a supplemental policy for Adobe Photoshop and Steam client at the same time, because they will be put in the same supplemental policy and the dependency sandboxing will be ineffective.
 >
-> This mode requires the main executable(s) of the programs that need access to the dependencies (such as DLLs) to have the OriginalFileName property. Most of the time they do. Use `-Verbose` parameter to see when they don't.
+> This mode requires the main executable(s) of the programs that need access to the dependencies (such as DLLs) to have the `OriginalFileName` property. Most of the time they do. Use the `-Verbose` parameter to see when they don't.
 
 <div align="center">
-<a href="https://www.youtube.com/watch?v=cp7TaTNPZE0"><img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/PNG%20and%20JPG/Thumbnails%20with%20YouTube%20play%20logo/YouTube%20Thumbnail%20-%20Sandboxing-like%20capabilities%20of%20WDAC%20Policies.png" alt="Boosted security dependencies in WDAC policies" width="400"></a></div>
+<a href="https://www.youtube.com/watch?v=cp7TaTNPZE0"><img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/PNG%20and%20JPG/Thumbnails%20with%20YouTube%20play%20logo/YouTube%20Thumbnail%20-%20Sandboxing-like%20capabilities%20of%20WDAC%20Policies.png" alt="Boosted security dependencies in WDAC policies" width="500"></a></div>
 
 <br>
 

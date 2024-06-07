@@ -19,7 +19,7 @@ New-WDACConfig
     [-TestMode]
     [-RequireEVSigners]
     [-EnableScriptEnforcement]
-    [-LogSize]
+    [-LogSize <UInt64>]
 ```
 
 ## Description

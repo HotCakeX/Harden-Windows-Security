@@ -141,15 +141,6 @@ Offers the same official [Fallbacks](https://learn.microsoft.com/en-us/powershel
 
 ### -SpecificFileNameLevel
 
-You can choose one of the following options:
-
-* OriginalFileName
-* InternalName
-* FileDescription
-* ProductName
-* PackageFamilyName
-* FilePath
-
 [More info available on Microsoft Learn](https://learn.microsoft.com/en-us/powershell/module/configci/new-cipolicy#-specificfilenamelevel)
 
 <div align='center'>
@@ -157,6 +148,7 @@ You can choose one of the following options:
 | Type: |[String](https://learn.microsoft.com/en-us/dotnet/api/system.string)|
 | :-------------: | :-------------: |
 | Position: | Named |
+| Accepted values: | `OriginalFileName`, `InternalName`, `FileDescription`, `ProductName`, `PackageFamilyName`, `FilePath` |
 | Default value: | None |
 | Required: | False |
 | Accept pipeline input: | False |

@@ -37,7 +37,7 @@ Function New-Macros {
                         [System.Void]$Macros.Add($OFileName)
                     }
                     else {
-                        Write-Verbose -Message "New-Macros: OriginalFileName property is empty for the file: $($Path.FullName)"
+                        Write-Verbose -Message "New-Macros: OriginalFileName property is empty for the file: $($Exe.FullName)"
                     }
                 }
             }
@@ -122,8 +122,8 @@ Export-ModuleMember -Function 'New-Macros'
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCCEollPvKOwWKtB
-# Ji8/gwM6tBfCJv2kQtF020XHf6Hz8KCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCBG4ygcXph+a2Yc
+# cZu9NgNhUWchysaJ3EwuEiMwpT2vkqCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -170,16 +170,16 @@ Export-ModuleMember -Function 'New-Macros'
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQgAoLkDqfWoT8RrKX/k/jMDCB3gJlFLQh4jeFAbHgpgMswDQYJKoZIhvcNAQEB
-# BQAEggIAVgjSi/DZuMffffyPZmTfGF8PvfCjfL/0CpeW8TrKZzzxHBFDHai9rR+z
-# zyXh/yVbzPHauJw3N+469LtbDxoSN+JgGI2YjGY54dvDfAfHZ/GpQ0GpY5HrBOHZ
-# dB5l1ejtPiHBGQ0vuI/adFVCYClzZfuZ59JFbof5GaVHkWAAmv5dD99n4VEYK15l
-# zcPNYsXWExiv2OFmrLUUFouCLK72fFUFb/X2R7iK2PiOzgMc/qZPxjHzGz5lfN85
-# aeabvsYWuauuk2sfze9HPhwe03fmgKzhtYmWNy0dF2ptj2e69HpRRKzvX/LSimJT
-# UPRvnQ0BfJyz5hHpDDlOXMl5tDI18+M4yffzkkDJPcbTVOeQ/6F7uljY/jSVye1w
-# O38atKhYyTzK6Ix9H/gZh3Qj+vqcEVOyEkJMq6UobO9Pk1rj/WyagvXEmTmvaGvq
-# gDW6cMxmkfadq+ue3pF0EC8u2DOL6pRaWlBqqJO+Mh3iw+XXybTohhFk7M3gkUgG
-# 5WxNwRFtOcKhJIcx9tuBUqKAudOdh/IiV/D4m5xpGmp9SQeDdUbCI3KhIidt1ebx
-# lTg4rZJEfiQfbFw7GQr43pQ2+E3tPAexH1nUCQ/Jf5CQHwVPPReEgCklwGRuo44x
-# WLVxJOKkD6lpRoPvQvKBVQg57wjeH/37O8BLl0/d4yRgeN7F0lo=
+# IgQgEpt7xWvFkBxABG3Jh9z83qPMVntvVu08JqIyKEVTVDIwDQYJKoZIhvcNAQEB
+# BQAEggIAhMVOYTxNy2dg43Pq+0UAC7xLGsmgdAFlxC8VIjhtk1nTKDlesmw+FHUN
+# awdhBW4jRrLkJ/5YOY+c6Vepp2iY3oVJ0OTQ/ZWORQIzyxU4X1LRrNV4uQafDK2v
+# 5rZYPfm9Pw+7JFha5BG20jfsQ2L1l9dmD0MnUzejgakx8+qbreRGNqfQMN6ObM01
+# 5wHaAD6pbkAPvbIxilF6Z42WnXdNiMOUlSFI+yQotauY1U8V19sFyqf4Zpt4klUd
+# OduPUuLeVnqByBKrni/5EPcgmD6Klx7ZwaROIIfKtbk0QgDw5nNkZoQjZ1EAMbHw
+# 4K1fH8CvY7j40oXO1fm3bduxCiDG2xytK8bbXBixr7UCBwOOlvGWzUMOFllVtZ24
+# xUa07+b9YS/bcIkHzh0mnSgHNblXUaPhtGycyVokFD50QVXqrjfC6ZySHSA4XBWr
+# UCg69ftcZ7aHZoAZL/BHLpIapLtVUPZ+hjiDBKV8JyHQ1XofzJTfaU03O0DrYExY
+# r9zrdH8EgPmKnN+t/ddmTfeXEMMiC4YbbzDm/b4BnYu/xNH8wmCi7xdEjeMHIP/G
+# pJzbJUuD4Tp2DfnL8Mda5LpT2YBceyJva2mgrK9SlWj/22hZMsWz47dEHPobAch+
+# JiyW7IiaB+1CIme+NJP3+fe+7OF5PiX8icL2j+yVd7pEG7mVs2A=
 # SIG # End signature block

@@ -4,7 +4,7 @@ Function Test-ECCSignedFiles {
     This function gets list of directories or files
     Then it checks if the files are WDAC compliant
     If they are, it checks if they are signed with ECC
-    If they are, it returns an array of them of -Process parameter is not used
+    If they are, it returns an array of them if -Process parameter is not used
 
     With -Progress parameter, the function creates Hash level rules for each ECC file
     puts them in a separate XML policy file and returns the path to it

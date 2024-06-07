@@ -533,40 +533,12 @@ Function Edit-WDACConfig {
 
                 #Region Boosted Security - Sandboxing
                 # The AppIDs association must happen at the end right before converting the policy to binary because merge-cipolicy and other ConfigCI cmdlets remove the Macros
-
                 if ($BoostedSecurity) {
-
-                    # 3 HashSets to store the unique file paths
-                    $AddInPaths = [System.Collections.Generic.HashSet[System.String]]@()
-                    $ExePaths = [System.Collections.Generic.HashSet[System.String]]@()
-
-                    # Separating the exes and addins from the user supplied directory path
-                    [System.String[]]$Extensions = @('*.sys', '*.com', '*.dll', '*.rll', '*.ocx', '*.msp', '*.mst', '*.msi', '*.js', '*.vbs', '*.ps1', '*.appx', '*.bin', '*.bat', '*.hxs', '*.mui', '*.lex', '*.mof')
-
-                    # If user selected directories
-                    if ($HasFolderPaths) {
-                        Get-ChildItem -Recurse -File -LiteralPath $ProgramsPaths -Include $Extensions -Force | ForEach-Object -Process { [System.Void]$AddInPaths.Add($_.FullName) }
-                        Get-ChildItem -Recurse -File -LiteralPath $ProgramsPaths -Include '*.exe' -Force | ForEach-Object -Process { [System.Void]$ExePaths.Add($_.FullName) }
-
-                        Write-Debug -Message "Number of AddIns after scanning the user selected directories: $($AddInPaths.Count)"
-                        Write-Debug -Message "Number of Exes after scanning the user selected directories: $($ExePaths.Count)"
-                    }
-
-                    # If event logs had any audit logs
-                    if ($HasAuditLogs) {
-                        # Separating the exes and addins from the audit event logs
-                        Get-ChildItem -Recurse -File -LiteralPath $AuditEventLogsProcessingResults.'File Name' -Include '*.exe' -Force | ForEach-Object -Process { [System.Void]$ExePaths.Add($_.FullName) }
-                        Get-ChildItem -Recurse -File -LiteralPath $AuditEventLogsProcessingResults.'File Name' -Include $Extensions -Force | ForEach-Object -Process { [System.Void]$AddInPaths.Add($_.FullName) }
-
-                        Write-Debug -Message "Number of AddIns after scanning the Event Logs + user selected directories: $($AddInPaths.Count)"
-                        Write-Debug -Message "Number of Exes after scanning the Event Logs + user selected directories: $($ExePaths.Count)"
-                    }
-
-                    if (($null -ne $ExePaths) -and ($null -ne $AddInPaths) -and ($ExePaths.Count -ne 0) -and ($AddInPaths.count -ne 0)) {
-                        New-Macros -XmlFilePath $SuppPolicyPath -Macros $([System.IO.FileInfo[]]$ExePaths).Name
-                    }
+                    [System.Collections.Hashtable]$InputObject = @{}
+                    $InputObject['SelectedDirectoryPaths'] = $ProgramsPaths
+                    $InputObject['SelectedAuditLogs'] = $AuditEventLogsProcessingResults
+                    New-Macros -XmlFilePath $SuppPolicyPath -InputObject $InputObject
                 }
-
                 #Endregion Boosted Security - Sandboxing
 
                 Write-Verbose -Message 'Convert the Supplemental policy to a CIP file'
@@ -895,8 +867,8 @@ Register-ArgumentCompleter -CommandName 'Edit-WDACConfig' -ParameterName 'SuppPo
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCA1KyzbxcmwjcX5
-# eW1ih48FI2HYaHAvug/BPZZzyGlyaqCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCC1TpnsQWkEer4Z
+# jUZNhDlH4zXVqBrbTejrSoKFvkk6aqCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -943,16 +915,16 @@ Register-ArgumentCompleter -CommandName 'Edit-WDACConfig' -ParameterName 'SuppPo
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQgZ4G9DF3A6lXvZJ2a9rFqN+uOxvEgDXAA/mBA65PbsWEwDQYJKoZIhvcNAQEB
-# BQAEggIAZFdkvH+kuzDMkV/Nem3xdOYNVTL500PiLFpRIAdtxL36LjV92J1sDROl
-# PX7c9RygMQK3IneCH+/TIz7xHEN0obpYG/W5qvEMzFv+YRkn5+XlKaman7wXrPyj
-# T5O5QIr6iMmxZJeJvMB40q1HpWGhCN6niS/gNg2UkitJ3pLtEbW78r3ZRu0IeEE3
-# bNGavOfyxr0EjI/PpcYjMBhwjKDhaqvKPjoo4QuOlSBuP7LxMGyD+/uQPVZo+t/k
-# D9mRG94DnFargL6vCYsS18GXn/oTH1Yr7L19+Q6oOlPnCeZwNKWVwkSBofOEN8If
-# NDs2NDyyjiaaWknoqqlQdrVdrAN+gitgDh9gEKYaCOA/mWFs+VsDlMXGgTLYN9NQ
-# T+HOlUmV/EPHUa0lnu+UcIAvQpLxqag98LHa5ex5QMeEZttMe8nqtgM7mmwF6Tc1
-# NuyjPXBRVLsKMmRVK5OsvvmTavbcxhUtffUgSx9pJzLpUqlGylULe5xqsCPaezem
-# XhgUgfnFgro2yTSJ8hfcrNiPuezEotnZslBpgqrZqbQmsRr4pdx2XS8jRq9V6uQ+
-# gt5RvRTj8KCax1kvta7gg+aXY4noFMyDHGweJAv+pCScVvovFuT2c7zCgZfK+tTn
-# toEPy/c7Ux9ycMXEsMhDyIqEK0jdXwD/ZAUVthCPV4WSv16FKCo=
+# IgQgeXClwpSH3qjO8KIjZT0C8JXX73suGWTCIdE6RAp/6aYwDQYJKoZIhvcNAQEB
+# BQAEggIAH7tFYiGUqjvtu6gnDtOyLS30OweiZ3zFw++N1+907RtfFin/orp9aGcR
+# noWTr8yZ5e0V9L7lILFckl1O0WVi/uB6RhjRPEv0Y8XE+qpHh4+kUB7RQPOQco97
+# voPGaYep0KC5jz/TuxzIT/ifW6hnL+sB7RDV+B7FwlTEQoLK0Y28BLVwyXrGx1ki
+# 1QVKmNGkpxg+UbkdmWH7Ms+EBobcs2yG06iD35K25VrR1/17qHbMvxJxtxrOAwKr
+# 1q3CZLVjXpkUh08K/Igdh/YMNgRPtIAmQ5x3gFlvbSgLHAhLHbtMuznJiTwrUXvy
+# FNxy93zB16a7fELQSLjcgzpA0PcQgtx9UWNyyQVQ3JzzffxKIpN5Qi0/xMQ8ToWb
+# NBmGIJqXFiCbXynl9MsNznL9laQQ94a9+9GkTD0bHz8YSHC2NWUcJSLT9QBpFE+f
+# lgOsYAobrZEMTuzbjR0bCxCDkLaRMFRyMehMDEEnez69wbSOFdEExAd+5YCiB4Jo
+# DB/LkKd3+ZEt4qVeMOgKJYbNVVu89uj4lYiLwHvHG0SXxUkyOfx4PEUx7mdkUAR2
+# qplUHOexy36ELERztHQcZJ0sTQNHQWgs6ut8dk+CO8xB+3nGT+4QcEjbotCUbLXa
+# zSsdrSiw+YMb2DRkfD3HmMLS8/wieC3fmfBviJcC+rZmHFxjeso=
 # SIG # End signature block

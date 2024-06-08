@@ -1250,6 +1250,7 @@ Get-Content <Path-To-File> -stream zone.identifier
 - [Clean source principle](https://learn.microsoft.com/en-us/security/privileged-access-workstations/privileged-access-success-criteria#clean-source-principle)
 - [Windows Message Center](https://learn.microsoft.com/en-us/windows/release-health/windows-message-center)
 - [Deprecated features for Windows client](https://learn.microsoft.com/en-us/windows/whats-new/deprecated-features)
+- [Microsoft Cybersecurity Reference Architectures](https://aka.ms/mcra)
 
 <p align="right"><a href="#readme-top">💡 (back to top)</a></p>
 

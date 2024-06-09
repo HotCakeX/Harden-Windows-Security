@@ -149,6 +149,8 @@ Make sure to use Surface products that support [Device Firmware Configuration In
 
 * Pluton security chip is **not** a requirement for Secured-Core certification.
 
+* Pluton security chip is included in [Qualcomm Snapdragon ARM CPUs](https://www.qualcomm.com/products/mobile/snapdragon/pcs-and-tablets/snapdragon-x-elite), [AMD](https://blogs.windows.com/windowsexperience/2024/04/16/amds-commercial-ai-pc-portfolio-integrates-microsoft-pluton-includes-microsoft-copilot/) and [Intel CPUs](https://www.theverge.com/2024/6/3/24169115/intel-lunar-lake-architecture-platform-feature-reveal).
+
 <br>
 
 > [!IMPORTANT]\

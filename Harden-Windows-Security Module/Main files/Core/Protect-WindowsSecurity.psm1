@@ -2645,7 +2645,7 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
         $Host.UI.RawUI.WindowTitle = '❤️‍🔥Harden Windows Security❤️‍🔥'
 
         # Minimum OS build number required for the hardening measures
-        [System.Decimal]$Requiredbuild = '22621.3155'
+        [System.Decimal]$RequiredbuildHardeningModule = '22621.3155'
         # Fetching Temp Directory
         [System.String]$CurrentUserTempDirectoryPath = [System.IO.Path]::GetTempPath()
         # The total number of the main categories for the parent/main progress bar to render
@@ -2695,8 +2695,8 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
         [System.Decimal]$FullOSBuild = "$OSBuild.$UBR"
 
         Write-Verbose -Message 'Checking if the OS build is equal or greater than the required build...'
-        if (-NOT ($FullOSBuild -ge $Requiredbuild)) {
-            Throw "You're not using the latest build of the Windows OS. A minimum build of $Requiredbuild is required but your OS build is $FullOSBuild`nPlease go to Windows Update to install the updates and then try again."
+        if (-NOT ($FullOSBuild -ge $RequiredbuildHardeningModule)) {
+            Throw "You're not using the latest build of the Windows OS. A minimum build of $RequiredbuildHardeningModule is required but your OS build is $FullOSBuild`nPlease go to Windows Update to install the updates and then try again."
         }
 
         if ($IsAdmin) {
@@ -2783,7 +2783,7 @@ Execution Policy: $CurrentExecutionPolicy
                 $SyncHash['GlobalVars']['IsLocally'] = $IsLocally
                 $SyncHash['GlobalVars']['IsAdmin'] = $IsAdmin
                 $SyncHash['GlobalVars']['CurrentExecutionPolicy'] = $CurrentExecutionPolicy
-                $SyncHash['GlobalVars']['Requiredbuild'] = $Requiredbuild
+                $SyncHash['GlobalVars']['RequiredbuildHardeningModule'] = $RequiredbuildHardeningModule
                 $SyncHash['GlobalVars']['CurrentUserTempDirectoryPath'] = $CurrentUserTempDirectoryPath
                 $SyncHash['GlobalVars']['ShouldEnableOptionalDiagnosticData'] = $ShouldEnableOptionalDiagnosticData
                 $SyncHash['GlobalVars']['HardeningModulePath'] = $HardeningModulePath

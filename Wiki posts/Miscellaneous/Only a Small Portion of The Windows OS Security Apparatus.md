@@ -290,7 +290,7 @@ In addition to the protection that the TPM provides, part of the encryption key 
 
 ## Firmware Security
 
-### System Management Mode (SMM)
+### System Management Mode (SMM) Protection
 
 SMM code executes in the highest privilege level and is invisible to the OS. SMM protection is built on top of the Secure Launch technology and requires it to function. A hardware-enforced processor feature known as a supervisor SMI handler can monitor the SMM and make sure it doesn't access any part of the address space that it isn't supposed to. Windows measures SMI Handler's behavior and attest that no OS-owned memory has been tampered with.
 

@@ -6,7 +6,7 @@
 
 <br>
 
-* [Full Resolution Available here](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Only%20a%20Small%20Portion%20of%20The%20Windows%20OS%20Security%20Apparatus/Full%20Res.png)
+* [Full Resolution Available Here](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Only%20a%20Small%20Portion%20of%20The%20Windows%20OS%20Security%20Apparatus/Full%20Res.png)
 * [SVG Vectorized Version Available Here](https://raw.githubusercontent.com/HotCakeX/.github/73d020c821f5c91e2cad877aea91601a183ebcc4/Pictures/Only%20a%20Small%20Portion%20of%20The%20Windows%20OS%20Security%20Apparatus/Full%20Res.svg)
 
 <br>

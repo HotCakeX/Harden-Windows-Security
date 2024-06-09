@@ -477,6 +477,8 @@ Most people run as full admins on their devices, which means apps and services h
 
 * [Read More](https://www.microsoft.com/en-us/security/blog/2024/05/20/new-windows-11-features-strengthen-security-to-address-evolving-cyberthreat-landscape/)
 
+* [Watch](https://youtu.be/8T6ClX-y2AE?si=0otN2KrpfH2lf9oV&t=1269)
+
 <br>
 
 ### Windows Hello Multi-Factor Authentication

@@ -20,6 +20,14 @@ It uses the same security features built into your device and Windows operating 
 
 <br>
 
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Only%20a%20Small%20Portion%20of%20The%20Windows%20OS%20Security%20Apparatus/Smaller%20version.png" alt="Only a Small Portion of The Windows OS Security Apparatus">
+
+> [*More Info About This Map*](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Only-a-Small-Portion-of-The-Windows-OS-Security-Apparatus)
+
+<br>
+
+<br>
+
 <p align="center"><img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/PNG%20and%20JPG/SecurityBenchmarksComparisonChart.png" alt="Infographic of comparison of security benchmarks"></p>
 
 > [*The reasoning behind the infographic above*](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Comparison-of-security-benchmarks)

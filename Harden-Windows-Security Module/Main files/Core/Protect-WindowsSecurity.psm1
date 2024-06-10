@@ -1,3 +1,4 @@
+$ErrorActionPreference = 'Stop'
 #Requires -Version 7.4
 #Requires -PSEdition Core
 # Applies the style to the Protect-WindowsSecurity when running as script straight from the GitHub, as well as all of the cmdlets of the Harden Windows Security module
@@ -397,8 +398,6 @@ Function Protect-WindowsSecurity {
 
         # Detecting if Verbose switch is used
         $PSBoundParameters.Verbose.IsPresent ? ([System.Boolean]$Verbose = $true) : ([System.Boolean]$Verbose = $false) | Out-Null
-
-        $ErrorActionPreference = 'Stop'
 
         $PSDefaultParameterValues = @{
             'Invoke-WebRequest:HttpVersion'    = '3.0'

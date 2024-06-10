@@ -178,7 +178,7 @@ function Confirm-SystemCompliance {
             )
 
             # an array to hold the output
-            [System.Object[]]$Output = @()
+            $Output = New-Object -TypeName System.Collections.Generic.List[PSCustomObject]
 
             foreach ($Item in $AllRegistryItems | Where-Object -FilterScript { ($_.category -eq $CatName) -and ($_.Method -eq $Method) }) {
 
@@ -216,14 +216,14 @@ function Confirm-SystemCompliance {
                 }
 
                 # Create a custom object with the results for this row
-                $Output += [PSCustomObject]@{
-                    FriendlyName = $Item.FriendlyName
-                    Compliant    = $ValueMatches
-                    Value        = $Item.value
-                    Name         = $Item.Name
-                    Category     = $CatName
-                    Method       = $Method
-                }
+                $Output.Add([PSCustomObject]@{
+                        FriendlyName = $Item.FriendlyName
+                        Compliant    = $ValueMatches
+                        Value        = $Item.value
+                        Name         = $Item.Name
+                        Category     = $CatName
+                        Method       = $Method
+                    })
             }
             return $Output
         }
@@ -310,13 +310,13 @@ function Confirm-SystemCompliance {
         )
 
         [System.Management.Automation.ScriptBlock]$WriteRainbow = {
-            $Text = $Args[0]
-            [System.String]$Output = ''
+            Param([System.String]$Text)
+            $StringBuilder = New-Object -TypeName System.Text.StringBuilder
             for ($i = 0; $i -lt $Text.Length; $i++) {
                 $Color = $Global:Colors[$i % $Global:Colors.Length]
-                $Output += "$($PSStyle.Foreground.FromRGB($Color.R, $Color.G, $Color.B))$($Text[$i])$($PSStyle.Reset)"
+                [System.Void]$StringBuilder.Append("$($PSStyle.Foreground.FromRGB($Color.R, $Color.G, $Color.B))$($Text[$i])$($PSStyle.Reset)")
             }
-            Write-Output -InputObject $Output
+            Write-Output -InputObject $StringBuilder.ToString()
         }
         #Endregion Colors
     }

@@ -2514,16 +2514,48 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                     Write-Verbose -Message 'Running the Downloads Defense Measures category'
                     Write-Progress -Id 0 -Activity 'Downloads Defense Measures' -Status "Step $($RefCurrentMainStep.Value)/$TotalMainSteps" -PercentComplete ($RefCurrentMainStep.Value / $TotalMainSteps * 100)
 
-                    if (-NOT (Get-Module -ListAvailable -Name 'WDACConfig' -Verbose:$false)) {
-                        Write-Verbose -Message 'Installing WDACConfig module because it is not installed'
-                        Install-Module -Name 'WDACConfig' -Force -Verbose:$false
+                    #Region Installation And Update
+
+                    # a flag indicating the WDACConfig module must be downloaded and installed on the system
+                    [System.Boolean]$ShouldInstallWDACConfigModule = $true
+
+                    # Getting the latest available version number of the WDACConfig module
+                    [System.Version]$WDACConfigLatestVersion = Invoke-RestMethod -Uri 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/WDACConfig/version.txt'
+
+                    # Getting the latest available version of the WDACConfig module from the local system, if it exists
+                    [System.Management.Automation.PSModuleInfo]$WDACConfigModuleLocalStatus = Get-Module -ListAvailable -Name 'WDACConfig' -Verbose:$false | Sort-Object -Property Version -Descending | Select-Object -First 1
+
+                    # If the WDACConfig module is already installed on the system and its version is greater than or equal to the latest version available on GitHub repo then don't install it again
+                    if (($null -ne $WDACConfigModuleLocalStatus) -and ($WDACConfigModuleLocalStatus.count -gt 0)) {
+                        if ($WDACConfigModuleLocalStatus.Version -ge $WDACConfigLatestVersion) {
+                            $ShouldInstallWDACConfigModule = $false
+                        }
+                        else {
+                            [System.String]$ReasonToInstallWDACConfigModule = "the installed WDACConfig module version $($WDACConfigModuleLocalStatus.Version) is less than the latest available version $($WDACConfigLatestVersion)"
+
+                            Write-Verbose -Message 'Removing the WDACConfig module'
+                            try {
+                                Uninstall-Module -Name 'WDACConfig' -Force -Verbose:$false -AllVersions | Out-Null
+                            }
+                            catch {}
+                        }
+                    }
+                    else {
+                        [System.String]$ReasonToInstallWDACConfigModule = 'it is not installed on the system'
                     }
 
+                    if ($ShouldInstallWDACConfigModule) {
+                        Write-Verbose -Message "Installing the WDACConfig module because $ReasonToInstallWDACConfigModule"
+                        Install-Module -Name 'WDACConfig' -Force -Verbose:$false -Scope 'AllUsers' -RequiredVersion $WDACConfigLatestVersion
+                    }
+
+                    #Endregion Installation And Update
+
                     Write-Verbose -Message 'Getting the currently deployed base policy names'
-                    [System.String[]]$CurrentBasePolicyNames = ((&"$env:SystemDrive\Windows\System32\CiTool.exe" -lp -json | ConvertFrom-Json).Policies | Where-Object -FilterScript { ($_.IsSystemPolicy -ne 'True') -and ($_.PolicyID -eq $_.BasePolicyID) }).FriendlyName
+                    $CurrentBasePolicyNames = [System.Collections.Generic.HashSet[System.String]](((&"$env:SystemDrive\Windows\System32\CiTool.exe" -lp -json | ConvertFrom-Json).Policies | Where-Object -FilterScript { ($_.IsSystemPolicy -ne 'True') -and ($_.PolicyID -eq $_.BasePolicyID) }).FriendlyName)
 
                     # Only deploy the Downloads-Defense-Measures policy if it is not already deployed
-                    if ('Downloads-Defense-Measures' -notin $CurrentBasePolicyNames) {
+                    if (($null -eq $CurrentBasePolicyNames) -or (-NOT ($CurrentBasePolicyNames.Contains('Downloads-Defense-Measures')))) {
 
                         Write-Verbose -Message 'Detecting the Downloads folder path on system'
                         [System.IO.FileInfo]$DownloadsPathSystem = (New-Object -ComObject Shell.Application).NameSpace('shell:Downloads').Self.path
@@ -2645,7 +2677,7 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
         $Host.UI.RawUI.WindowTitle = '❤️‍🔥Harden Windows Security❤️‍🔥'
 
         # Minimum OS build number required for the hardening measures
-        [System.Decimal]$Requiredbuild = '22621.3155'
+        [System.Decimal]$RequiredbuildHardeningModule = '22621.3155'
         # Fetching Temp Directory
         [System.String]$CurrentUserTempDirectoryPath = [System.IO.Path]::GetTempPath()
         # The total number of the main categories for the parent/main progress bar to render
@@ -2695,8 +2727,8 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
         [System.Decimal]$FullOSBuild = "$OSBuild.$UBR"
 
         Write-Verbose -Message 'Checking if the OS build is equal or greater than the required build...'
-        if (-NOT ($FullOSBuild -ge $Requiredbuild)) {
-            Throw "You're not using the latest build of the Windows OS. A minimum build of $Requiredbuild is required but your OS build is $FullOSBuild`nPlease go to Windows Update to install the updates and then try again."
+        if (-NOT ($FullOSBuild -ge $RequiredbuildHardeningModule)) {
+            Throw "You're not using the latest build of the Windows OS. A minimum build of $RequiredbuildHardeningModule is required but your OS build is $FullOSBuild`nPlease go to Windows Update to install the updates and then try again."
         }
 
         if ($IsAdmin) {
@@ -2783,7 +2815,7 @@ Execution Policy: $CurrentExecutionPolicy
                 $SyncHash['GlobalVars']['IsLocally'] = $IsLocally
                 $SyncHash['GlobalVars']['IsAdmin'] = $IsAdmin
                 $SyncHash['GlobalVars']['CurrentExecutionPolicy'] = $CurrentExecutionPolicy
-                $SyncHash['GlobalVars']['Requiredbuild'] = $Requiredbuild
+                $SyncHash['GlobalVars']['RequiredbuildHardeningModule'] = $RequiredbuildHardeningModule
                 $SyncHash['GlobalVars']['CurrentUserTempDirectoryPath'] = $CurrentUserTempDirectoryPath
                 $SyncHash['GlobalVars']['ShouldEnableOptionalDiagnosticData'] = $ShouldEnableOptionalDiagnosticData
                 $SyncHash['GlobalVars']['HardeningModulePath'] = $HardeningModulePath

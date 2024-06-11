@@ -56,7 +56,7 @@ Function Get-CertificateDetails {
     process {
 
         # An array to hold certificate elements objects
-        [System.Object[]]$Obj = @()
+        $Obj = New-Object -TypeName System.Collections.Generic.List[PSCustomObject]
 
         # Loop through each certificate in the collection and call this function recursively with the certificate object as an input
         foreach ($Cert in $CertCollection) {
@@ -67,10 +67,10 @@ Function Get-CertificateDetails {
             # Set the chain policy properties
 
             # https://learn.microsoft.com/en-us/dotnet/api/system.security.cryptography.x509certificates.x509revocationmode
-            $chain.ChainPolicy.RevocationMode = 'NoCheck'
+            $Chain.ChainPolicy.RevocationMode = 'NoCheck'
 
             # https://learn.microsoft.com/en-us/dotnet/api/system.security.cryptography.x509certificates.x509revocationflag
-            $chain.ChainPolicy.RevocationFlag = 'EndCertificateOnly'
+            $Chain.ChainPolicy.RevocationFlag = 'EndCertificateOnly'
 
             # https://learn.microsoft.com/en-us/dotnet/api/system.security.cryptography.x509certificates.x509verificationflags
             $Chain.ChainPolicy.VerificationFlags = 'NoFlag'
@@ -109,13 +109,13 @@ Function Get-CertificateDetails {
                 [System.String]$TbsValue = Get-TBSCertificate -cert $Element.Certificate
 
                 # Create a custom object with the extracted properties and the TBS value and add it to the array
-                $Obj += [pscustomobject]@{
-                    SubjectCN        = $SubjectCN
-                    IssuerCN         = $IssuerCN
-                    NotAfter         = $element.Certificate.NotAfter
-                    TBSValue         = $TbsValue
-                    X509Certificate2 = $Element.Certificate # Append the certificate object itself to the output object as well
-                }
+                [System.Void]$Obj.Add([pscustomobject]@{
+                        SubjectCN        = $SubjectCN
+                        IssuerCN         = $IssuerCN
+                        NotAfter         = $element.Certificate.NotAfter
+                        TBSValue         = $TbsValue
+                        X509Certificate2 = $Element.Certificate # Append the certificate object itself to the output object as well
+                    })
             }
         }
 
@@ -123,7 +123,7 @@ Function Get-CertificateDetails {
         $FinalObj = [PSCustomObject]@{}
 
         # An array to hold the Intermediate certificates
-        $IntermediateCerts = @()
+        $IntermediateCerts = New-Object -TypeName System.Collections.Generic.List[PSCustomObject]
 
         if ($FilePath) {
 
@@ -143,13 +143,13 @@ Function Get-CertificateDetails {
 
             # Add each intermediate certificate to the nested object of the final object
             ForEach-Object -Process {
-                $IntermediateCerts += [PSCustomObject]@{
-                    SubjectCN        = $_.SubjectCN
-                    IssuerCN         = $_.IssuerCN
-                    NotAfter         = $_.NotAfter
-                    TBSValue         = $_.TbsValue
-                    X509Certificate2 = $_.X509Certificate2
-                }
+                [System.Void]$IntermediateCerts.Add([PSCustomObject]@{
+                        SubjectCN        = $_.SubjectCN
+                        IssuerCN         = $_.IssuerCN
+                        NotAfter         = $_.NotAfter
+                        TBSValue         = $_.TbsValue
+                        X509Certificate2 = $_.X509Certificate2
+                    })
             }
 
             Write-Verbose -Message "The Primary Signer's Root Certificate common name is: $($($Obj | Where-Object -FilterScript { ($_.SubjectCN -eq $_.IssuerCN) }).SubjectCN | Select-Object -First 1)"
@@ -198,12 +198,13 @@ Function Get-CertificateDetails {
 
             # Add each intermediate certificate to the nested object of the final object
             ForEach-Object -Process {
-                $IntermediateCerts += [PSCustomObject]@{
-                    SubjectCN = $_.SubjectCN
-                    IssuerCN  = $_.IssuerCN
-                    NotAfter  = $_.NotAfter
-                    TBSValue  = $_.TbsValue
-                }
+                [System.Void]$IntermediateCerts.Add([PSCustomObject]@{
+                        SubjectCN        = $_.SubjectCN
+                        IssuerCN         = $_.IssuerCN
+                        NotAfter         = $_.NotAfter
+                        TBSValue         = $_.TbsValue
+                        X509Certificate2 = $_.X509Certificate2
+                    })
             }
 
             Write-Verbose -Message "The Nested Signer's Root Certificate common name is: $($($Obj | Where-Object -FilterScript { ($_.SubjectCN -eq $_.IssuerCN) }).SubjectCN | Select-Object -First 1)"
@@ -224,10 +225,11 @@ Function Get-CertificateDetails {
             Group-Object -Property TBSValue | ForEach-Object -Process { $_.Group[0] }
 
             $LeafCert = [PSCustomObject]@{
-                SubjectCN = $TempLeafCertObj.SubjectCN
-                IssuerCN  = $TempLeafCertObj.IssuerCN
-                NotAfter  = $TempLeafCertObj.NotAfter
-                TBSValue  = $TempLeafCertObj.TbsValue
+                SubjectCN        = $TempLeafCertObj.SubjectCN
+                IssuerCN         = $TempLeafCertObj.IssuerCN
+                NotAfter         = $TempLeafCertObj.NotAfter
+                TBSValue         = $TempLeafCertObj.TbsValue
+                X509Certificate2 = $TempLeafCertObj.X509Certificate2
             }
 
             Write-Verbose -Message "The Nested Signer has $($TempLeafCertObj.Count) Leaf certificate with the following common name: $($TempLeafCertObj.SubjectCN -join ', ')"

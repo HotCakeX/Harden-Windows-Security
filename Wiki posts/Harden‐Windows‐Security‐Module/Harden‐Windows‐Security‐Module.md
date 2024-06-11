@@ -1,5 +1,11 @@
 # Harden Windows Security Module
 
+<div align="center">
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/APNGs/harden%20windows%20security%20Module.apng" alt="Harden Windows Security by Violet Hansen aka HotCakeX">
+</div>
+
+<br>
+
 It is a PowerShell module that can apply all of the hardening measures described in the readme. It also offers rigorous compliance verification and security assessment. It enables you to evaluate the conformity of your system based on the security standards and recommendations of this repository. The module employs various techniques such as Security Policy, PowerShell cmdlet and Registry keys to conduct the checks.
 
 It is also useful for security researchers and penetration testers who want to assess their system security posture. The module works with any system locale and language.

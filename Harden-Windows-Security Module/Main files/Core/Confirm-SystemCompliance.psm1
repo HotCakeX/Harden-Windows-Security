@@ -93,9 +93,6 @@ function Confirm-SystemCompliance {
         New-Variable -Name 'MDAVConfigCurrent' -Value (Get-MpComputerStatus) -Force
         New-Variable -Name 'MDAVPreferencesCurrent' -Value (Get-MpPreference) -Force
 
-        # An object to hold all the initial registry items
-        [System.Object[]]$AllRegistryItems = @()
-
         # Import the CSV file
         [System.Object[]]$CSVResource = Import-Csv -Path "$HardeningModulePath\Resources\Registry resources.csv"
 
@@ -103,7 +100,7 @@ function Confirm-SystemCompliance {
         $FinalMegaObject = [PSCustomObject]@{}
 
         # The total number of the steps for the parent/main progress bar to render
-        [System.UInt16]$TotalMainSteps = 17
+        [System.UInt16]$TotalMainSteps = 16
         [System.UInt16]$CurrentMainStep = 0
         #EndRegion Defining-Variables
 
@@ -180,7 +177,7 @@ function Confirm-SystemCompliance {
             # an array to hold the output
             $Output = New-Object -TypeName System.Collections.Generic.List[PSCustomObject]
 
-            foreach ($Item in $AllRegistryItems | Where-Object -FilterScript { ($_.category -eq $CatName) -and ($_.Method -eq $Method) }) {
+            foreach ($Item in $CSVResource | Where-Object -FilterScript { ($_.Category -eq $CatName) -and ($_.Origin -eq $Method) }) {
 
                 # Initialize a flag to indicate if the key exists
                 [System.Boolean]$KeyExists = $false
@@ -190,13 +187,13 @@ function Confirm-SystemCompliance {
 
                 # Try to get the registry key
                 try {
-                    Get-Item -Path $Item.RegPath | Out-Null
+                    $null = Get-Item -Path "Registry::$($Item.Key)"
                     # If no error is thrown, the key exists
                     $KeyExists = $true
 
                     # Try to get the registry value and type
                     try {
-                        $RegValue = Get-ItemPropertyValue -Path $Item.RegPath -Name $Item.Name
+                        $RegValue = Get-ItemPropertyValue -Path "Registry::$($Item.Key)" -Name $Item.Name
                         # If no error is thrown, the value exists
 
                         # Check if the value matches the expected one
@@ -219,7 +216,7 @@ function Confirm-SystemCompliance {
                 $Output.Add([PSCustomObject]@{
                         FriendlyName = $Item.FriendlyName
                         Compliant    = $ValueMatches
-                        Value        = $Item.value
+                        Value        = $Item.Value
                         Name         = $Item.Name
                         Category     = $CatName
                         Method       = $Method
@@ -378,27 +375,10 @@ function Confirm-SystemCompliance {
             Write-Progress -Id 0 -Activity 'Gathering Security Policy Information' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
 
             # Get the security group policies
-            &"$env:SystemDrive\Windows\System32\Secedit.exe" /export /cfg .\security_policy.inf | Out-Null
+            $null = &"$env:SystemDrive\Windows\System32\Secedit.exe" /export /cfg .\security_policy.inf
 
             # Storing the output of the ini file parsing function
             [PSCustomObject]$SecurityPoliciesIni = ConvertFrom-IniFile -IniFile .\security_policy.inf
-
-            $CurrentMainStep++
-            Write-Progress -Id 0 -Activity 'Processing the registry CSV file' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
-
-            # Loop through each row in the CSV file and add it to the $AllRegistryItems array as a custom object
-            foreach ($Row in $CSVResource) {
-                $AllRegistryItems += [PSCustomObject]@{
-                    FriendlyName = $Row.FriendlyName
-                    category     = $Row.Category
-                    key          = $Row.Key
-                    value        = $Row.Value
-                    name         = $Row.Name
-                    type         = $Row.Type
-                    regPath      = "Registry::$($Row.Key)" # Build the registry path
-                    Method       = $Row.Origin
-                }
-            }
 
             #Region Main-Functions
             Function Invoke-MicrosoftDefender {

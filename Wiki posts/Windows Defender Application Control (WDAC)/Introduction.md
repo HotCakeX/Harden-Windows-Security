@@ -1,7 +1,7 @@
 # What is Windows Defender Application Control?
 
 <div align="center">
-<img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/APNGs/Application%20Control%20For%20Business%20WDAC.apng" alt="Application Control For Business introduction and WDACConfig Module">
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/Application%20Control%20for%20Business.gif" alt="Application Control For Business introduction and WDACConfig Module">
 </div>
 
 <br>

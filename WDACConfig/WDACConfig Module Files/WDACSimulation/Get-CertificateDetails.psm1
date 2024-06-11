@@ -110,10 +110,11 @@ Function Get-CertificateDetails {
 
                 # Create a custom object with the extracted properties and the TBS value and add it to the array
                 $Obj += [pscustomobject]@{
-                    SubjectCN = $SubjectCN
-                    IssuerCN  = $IssuerCN
-                    NotAfter  = $element.Certificate.NotAfter
-                    TBSValue  = $TbsValue
+                    SubjectCN        = $SubjectCN
+                    IssuerCN         = $IssuerCN
+                    NotAfter         = $element.Certificate.NotAfter
+                    TBSValue         = $TbsValue
+                    X509Certificate2 = $Element.Certificate # Append the certificate object itself to the output object as well
                 }
             }
         }
@@ -143,10 +144,11 @@ Function Get-CertificateDetails {
             # Add each intermediate certificate to the nested object of the final object
             ForEach-Object -Process {
                 $IntermediateCerts += [PSCustomObject]@{
-                    SubjectCN = $_.SubjectCN
-                    IssuerCN  = $_.IssuerCN
-                    NotAfter  = $_.NotAfter
-                    TBSValue  = $_.TbsValue
+                    SubjectCN        = $_.SubjectCN
+                    IssuerCN         = $_.IssuerCN
+                    NotAfter         = $_.NotAfter
+                    TBSValue         = $_.TbsValue
+                    X509Certificate2 = $_.X509Certificate2
                 }
             }
 
@@ -168,10 +170,11 @@ Function Get-CertificateDetails {
             Group-Object -Property TBSValue | ForEach-Object -Process { $_.Group[0] }
 
             $LeafCert = [PSCustomObject]@{
-                SubjectCN = $TempLeafCertObj.SubjectCN
-                IssuerCN  = $TempLeafCertObj.IssuerCN
-                NotAfter  = $TempLeafCertObj.NotAfter
-                TBSValue  = $TempLeafCertObj.TbsValue
+                SubjectCN        = $TempLeafCertObj.SubjectCN
+                IssuerCN         = $TempLeafCertObj.IssuerCN
+                NotAfter         = $TempLeafCertObj.NotAfter
+                TBSValue         = $TempLeafCertObj.TbsValue
+                X509Certificate2 = $TempLeafCertObj.X509Certificate2
             }
 
             Write-Verbose -Message "The Primary Signer has $($TempLeafCertObj.Count) Leaf certificate with the following common name: $($TempLeafCertObj.SubjectCN -join ', ')"

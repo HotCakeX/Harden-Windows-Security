@@ -374,11 +374,11 @@ function Confirm-SystemCompliance {
 
             #Region Main-Functions
             Function Invoke-MicrosoftDefender {
-                Param ($MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $TotalNumberOfTrueCompliantValues, $FinalMegaObject)
+                Param ($MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $TotalNumberOfTrueCompliantValues, $FinalMegaObject, $SecurityPoliciesIni)
 
                 [System.Management.Automation.Job2]$script:MicrosoftDefenderJob = Start-ThreadJob -ScriptBlock {
 
-                    Param ($MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $TotalNumberOfTrueCompliantValues, $FinalMegaObject, $ScriptBlockInvokeCategoryProcessing, $CSVResource, $ParentVerbosePreference)
+                    Param ($MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $TotalNumberOfTrueCompliantValues, $FinalMegaObject, $ScriptBlockInvokeCategoryProcessing, $CSVResource, $ParentVerbosePreference, $SecurityPoliciesIni)
 
                     Try {
 
@@ -817,14 +817,14 @@ function Confirm-SystemCompliance {
                         }
                     }
 
-                } -Name 'Invoke-MicrosoftDefender' -StreamingHost $Host -ArgumentList ($MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $TotalNumberOfTrueCompliantValues, $FinalMegaObject, $ScriptBlockInvokeCategoryProcessing, $CSVResource, $VerbosePreference)
+                } -Name 'Invoke-MicrosoftDefender' -StreamingHost $Host -ArgumentList ($MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $TotalNumberOfTrueCompliantValues, $FinalMegaObject, $ScriptBlockInvokeCategoryProcessing, $CSVResource, $VerbosePreference, $SecurityPoliciesIni)
             }
             Function Invoke-AttackSurfaceReductionRules {
-                Param ($MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $TotalNumberOfTrueCompliantValues, $FinalMegaObject)
+                Param ($MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $TotalNumberOfTrueCompliantValues, $FinalMegaObject, $SecurityPoliciesIni)
 
                 [System.Management.Automation.Job2]$script:AttackSurfaceReductionRulesJob = Start-ThreadJob -ScriptBlock {
 
-                    Param ($MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $TotalNumberOfTrueCompliantValues, $FinalMegaObject, $ScriptBlockInvokeCategoryProcessing, $CSVResource, $ParentVerbosePreference)
+                    Param ($MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $TotalNumberOfTrueCompliantValues, $FinalMegaObject, $ScriptBlockInvokeCategoryProcessing, $CSVResource, $ParentVerbosePreference, $SecurityPoliciesIni)
 
                     $ErrorActionPreference = 'Stop'
                     $VerbosePreference = $ParentVerbosePreference
@@ -922,15 +922,15 @@ function Confirm-SystemCompliance {
                     # Add the array of the custom objects to the main output HashTable
                     [System.Void]$FinalMegaObject.TryAdd($CatName, $NestedObjectArray)
 
-                } -Name 'Invoke-AttackSurfaceReductionRules' -StreamingHost $Host -ArgumentList ($MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $TotalNumberOfTrueCompliantValues, $FinalMegaObject, $ScriptBlockInvokeCategoryProcessing, $CSVResource, $VerbosePreference)
+                } -Name 'Invoke-AttackSurfaceReductionRules' -StreamingHost $Host -ArgumentList ($MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $TotalNumberOfTrueCompliantValues, $FinalMegaObject, $ScriptBlockInvokeCategoryProcessing, $CSVResource, $VerbosePreference, $SecurityPoliciesIni)
 
             }
             Function Invoke-BitLockerSettings {
-                Param ($MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $TotalNumberOfTrueCompliantValues, $FinalMegaObject)
+                Param ($MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $TotalNumberOfTrueCompliantValues, $FinalMegaObject, $SecurityPoliciesIni)
 
                 [System.Management.Automation.Job2]$script:BitLockerSettingsJob = Start-ThreadJob -ScriptBlock {
 
-                    Param ($MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $TotalNumberOfTrueCompliantValues, $FinalMegaObject, $ScriptBlockInvokeCategoryProcessing, $CSVResource, $ParentVerbosePreference)
+                    Param ($MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $TotalNumberOfTrueCompliantValues, $FinalMegaObject, $ScriptBlockInvokeCategoryProcessing, $CSVResource, $ParentVerbosePreference, $SecurityPoliciesIni)
 
                     $ErrorActionPreference = 'Stop'
                     $PSDefaultParameterValues = @{
@@ -1182,14 +1182,14 @@ function Confirm-SystemCompliance {
 
                     # Add the array of the custom objects to the main output HashTable
                     [System.Void]$FinalMegaObject.TryAdd($CatName, $NestedObjectArray)
-                } -Name 'Invoke-BitLockerSettings' -StreamingHost $Host -ArgumentList ($MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $TotalNumberOfTrueCompliantValues, $FinalMegaObject, $ScriptBlockInvokeCategoryProcessing, $CSVResource, $VerbosePreference)
+                } -Name 'Invoke-BitLockerSettings' -StreamingHost $Host -ArgumentList ($MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $TotalNumberOfTrueCompliantValues, $FinalMegaObject, $ScriptBlockInvokeCategoryProcessing, $CSVResource, $VerbosePreference, $SecurityPoliciesIni)
             }
             Function Invoke-TLSSecurity {
-                Param ($MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $TotalNumberOfTrueCompliantValues, $FinalMegaObject)
+                Param ($MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $TotalNumberOfTrueCompliantValues, $FinalMegaObject, $SecurityPoliciesIni)
 
                 [System.Management.Automation.Job2]$script:TLSSecurityJob = Start-ThreadJob -ScriptBlock {
 
-                    Param ($MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $TotalNumberOfTrueCompliantValues, $FinalMegaObject, $ScriptBlockInvokeCategoryProcessing, $CSVResource, $ParentVerbosePreference)
+                    Param ($MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $TotalNumberOfTrueCompliantValues, $FinalMegaObject, $ScriptBlockInvokeCategoryProcessing, $CSVResource, $ParentVerbosePreference, $SecurityPoliciesIni)
 
                     $ErrorActionPreference = 'Stop'
                     $VerbosePreference = $ParentVerbosePreference
@@ -1231,188 +1231,230 @@ function Confirm-SystemCompliance {
                     # Add the array of the custom objects to the main output HashTable
                     [System.Void]$FinalMegaObject.TryAdd($CatName, $NestedObjectArray)
 
-                } -Name 'Invoke-TLSSecurity' -StreamingHost $Host -ArgumentList ($MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $TotalNumberOfTrueCompliantValues, $FinalMegaObject, $ScriptBlockInvokeCategoryProcessing, $CSVResource, $VerbosePreference)
+                } -Name 'Invoke-TLSSecurity' -StreamingHost $Host -ArgumentList ($MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $TotalNumberOfTrueCompliantValues, $FinalMegaObject, $ScriptBlockInvokeCategoryProcessing, $CSVResource, $VerbosePreference, $SecurityPoliciesIni)
             }
             Function Invoke-LockScreen {
-                Param ($MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $TotalNumberOfTrueCompliantValues, $FinalMegaObject)
+                Param ($MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $TotalNumberOfTrueCompliantValues, $FinalMegaObject, $SecurityPoliciesIni)
 
-                $NestedObjectArray = New-Object -TypeName System.Collections.Generic.List[HardeningModule.IndividualResult]
-                [System.String]$CatName = 'LockScreen'
+                [System.Management.Automation.Job2]$script:LockScreenJob = Start-ThreadJob -ScriptBlock {
 
-                # Process items in Registry resources.csv file with "Group Policy" origin and add them to the $NestedObjectArray array as custom objects
-                foreach ($Result in Invoke-CategoryProcessing -catname $CatName -Method 'Group Policy') {
-                    [System.Void]$NestedObjectArray.Add($Result)
-                }
+                    Param ($MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $TotalNumberOfTrueCompliantValues, $FinalMegaObject, $ScriptBlockInvokeCategoryProcessing, $CSVResource, $ParentVerbosePreference, $SecurityPoliciesIni)
 
-                # Verify a Security Group Policy setting
-                $IndividualItemResult = [System.Boolean]$($SecurityPoliciesIni.'Registry Values'['MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\InactivityTimeoutSecs'] -eq '4,120') ? $True : $False
-                [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
-                        FriendlyName = 'Machine inactivity limit'
-                        Compliant    = $IndividualItemResult
-                        Value        = $IndividualItemResult
-                        Name         = 'Machine inactivity limit'
-                        Category     = $CatName
-                        Method       = 'Security Group Policy'
-                    })
+                    $ErrorActionPreference = 'Stop'
+                    $VerbosePreference = $ParentVerbosePreference
 
-                # Verify a Security Group Policy setting
-                $IndividualItemResult = [System.Boolean]$($SecurityPoliciesIni.'Registry Values'['MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\DisableCAD'] -eq '4,0') ? $True : $False
-                [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
-                        FriendlyName = 'Interactive logon: Do not require CTRL+ALT+DEL'
-                        Compliant    = $IndividualItemResult
-                        Value        = $IndividualItemResult
-                        Name         = 'Interactive logon: Do not require CTRL+ALT+DEL'
-                        Category     = $CatName
-                        Method       = 'Security Group Policy'
-                    })
+                    # Import the IndividualResult class if it's not already loaded
+                    if (-NOT ('HardeningModule.IndividualResult' -as [System.Type]) ) {
+                        Add-Type -Path "$HardeningModulePath\Shared\IndividualResultClass.cs"
+                    }
 
-                # Verify a Security Group Policy setting
-                $IndividualItemResult = [System.Boolean]$($SecurityPoliciesIni.'Registry Values'['MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\MaxDevicePasswordFailedAttempts'] -eq '4,5') ? $True : $False
-                [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
-                        FriendlyName = 'Interactive logon: Machine account lockout threshold'
-                        Compliant    = $IndividualItemResult
-                        Value        = $IndividualItemResult
-                        Name         = 'Interactive logon: Machine account lockout threshold'
-                        Category     = $CatName
-                        Method       = 'Security Group Policy'
-                    })
+                    $NestedObjectArray = New-Object -TypeName System.Collections.Generic.List[HardeningModule.IndividualResult]
+                    [System.String]$CatName = 'LockScreen'
 
-                # Verify a Security Group Policy setting
-                $IndividualItemResult = [System.Boolean]$($SecurityPoliciesIni.'Registry Values'['MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\DontDisplayLockedUserId'] -eq '4,4') ? $True : $False
-                [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
-                        FriendlyName = 'Interactive logon: Display user information when the session is locked'
-                        Compliant    = $IndividualItemResult
-                        Value        = $IndividualItemResult
-                        Name         = 'Interactive logon: Display user information when the session is locked'
-                        Category     = $CatName
-                        Method       = 'Security Group Policy'
-                    })
+                    # Process items in Registry resources.csv file with "Group Policy" origin and add them to the $NestedObjectArray array as custom objects
+                    foreach ($Result in (&$ScriptBlockInvokeCategoryProcessing -catname $CatName -Method 'Group Policy')) {
+                        [System.Void]$NestedObjectArray.Add($Result)
+                    }
 
-                # Verify a Security Group Policy setting
-                $IndividualItemResult = [System.Boolean]$($SecurityPoliciesIni.'Registry Values'['MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\DontDisplayUserName'] -eq '4,1') ? $True : $False
-                [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
-                        FriendlyName = "Interactive logon: Don't display username at sign-in"
-                        Compliant    = $IndividualItemResult
-                        Value        = $IndividualItemResult
-                        Name         = "Interactive logon: Don't display username at sign-in"
-                        Category     = $CatName
-                        Method       = 'Security Group Policy'
-                    })
+                    # Verify a Security Group Policy setting
+                    $IndividualItemResult = [System.Boolean]$($SecurityPoliciesIni.'Registry Values'['MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\InactivityTimeoutSecs'] -eq '4,120') ? $True : $False
+                    [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
+                            FriendlyName = 'Machine inactivity limit'
+                            Compliant    = $IndividualItemResult
+                            Value        = $IndividualItemResult
+                            Name         = 'Machine inactivity limit'
+                            Category     = $CatName
+                            Method       = 'Security Group Policy'
+                        })
 
-                # Verify a Security Group Policy setting
-                $IndividualItemResult = [System.Boolean]$($SecurityPoliciesIni.'System Access'['LockoutBadCount'] -eq '5') ? $True : $False
-                [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
-                        FriendlyName = 'Account lockout threshold'
-                        Compliant    = $IndividualItemResult
-                        Value        = $IndividualItemResult
-                        Name         = 'Account lockout threshold'
-                        Category     = $CatName
-                        Method       = 'Security Group Policy'
-                    })
+                    # Verify a Security Group Policy setting
+                    $IndividualItemResult = [System.Boolean]$($SecurityPoliciesIni.'Registry Values'['MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\DisableCAD'] -eq '4,0') ? $True : $False
+                    [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
+                            FriendlyName = 'Interactive logon: Do not require CTRL+ALT+DEL'
+                            Compliant    = $IndividualItemResult
+                            Value        = $IndividualItemResult
+                            Name         = 'Interactive logon: Do not require CTRL+ALT+DEL'
+                            Category     = $CatName
+                            Method       = 'Security Group Policy'
+                        })
 
-                # Verify a Security Group Policy setting
-                $IndividualItemResult = [System.Boolean]$($SecurityPoliciesIni.'System Access'['LockoutDuration'] -eq '1440') ? $True : $False
-                [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
-                        FriendlyName = 'Account lockout duration'
-                        Compliant    = $IndividualItemResult
-                        Value        = $IndividualItemResult
-                        Name         = 'Account lockout duration'
-                        Category     = $CatName
-                        Method       = 'Security Group Policy'
-                    })
+                    # Verify a Security Group Policy setting
+                    $IndividualItemResult = [System.Boolean]$($SecurityPoliciesIni.'Registry Values'['MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\MaxDevicePasswordFailedAttempts'] -eq '4,5') ? $True : $False
+                    [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
+                            FriendlyName = 'Interactive logon: Machine account lockout threshold'
+                            Compliant    = $IndividualItemResult
+                            Value        = $IndividualItemResult
+                            Name         = 'Interactive logon: Machine account lockout threshold'
+                            Category     = $CatName
+                            Method       = 'Security Group Policy'
+                        })
 
-                # Verify a Security Group Policy setting
-                $IndividualItemResult = [System.Boolean]$($SecurityPoliciesIni.'System Access'['ResetLockoutCount'] -eq '1440') ? $True : $False
-                [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
-                        FriendlyName = 'Reset account lockout counter after'
-                        Compliant    = $IndividualItemResult
-                        Value        = $IndividualItemResult
-                        Name         = 'Reset account lockout counter after'
-                        Category     = $CatName
-                        Method       = 'Security Group Policy'
-                    })
+                    # Verify a Security Group Policy setting
+                    $IndividualItemResult = [System.Boolean]$($SecurityPoliciesIni.'Registry Values'['MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\DontDisplayLockedUserId'] -eq '4,4') ? $True : $False
+                    [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
+                            FriendlyName = 'Interactive logon: Display user information when the session is locked'
+                            Compliant    = $IndividualItemResult
+                            Value        = $IndividualItemResult
+                            Name         = 'Interactive logon: Display user information when the session is locked'
+                            Category     = $CatName
+                            Method       = 'Security Group Policy'
+                        })
 
-                # Verify a Security Group Policy setting
-                $IndividualItemResult = [System.Boolean]$($SecurityPoliciesIni.'Registry Values'['MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\DontDisplayLastUserName'] -eq '4,1') ? $True : $False
-                [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
-                        FriendlyName = "Interactive logon: Don't display last signed-in"
-                        Compliant    = $IndividualItemResult
-                        Value        = $IndividualItemResult
-                        Name         = "Interactive logon: Don't display last signed-in"
-                        Category     = $CatName
-                        Method       = 'Security Group Policy'
-                    })
+                    # Verify a Security Group Policy setting
+                    $IndividualItemResult = [System.Boolean]$($SecurityPoliciesIni.'Registry Values'['MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\DontDisplayUserName'] -eq '4,1') ? $True : $False
+                    [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
+                            FriendlyName = "Interactive logon: Don't display username at sign-in"
+                            Compliant    = $IndividualItemResult
+                            Value        = $IndividualItemResult
+                            Name         = "Interactive logon: Don't display username at sign-in"
+                            Category     = $CatName
+                            Method       = 'Security Group Policy'
+                        })
 
-                # Add the array of the custom objects to the main output HashTable
-                [System.Void]$FinalMegaObject.TryAdd($CatName, $NestedObjectArray)
+                    # Verify a Security Group Policy setting
+                    $IndividualItemResult = [System.Boolean]$($SecurityPoliciesIni.'System Access'['LockoutBadCount'] -eq '5') ? $True : $False
+                    [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
+                            FriendlyName = 'Account lockout threshold'
+                            Compliant    = $IndividualItemResult
+                            Value        = $IndividualItemResult
+                            Name         = 'Account lockout threshold'
+                            Category     = $CatName
+                            Method       = 'Security Group Policy'
+                        })
+
+                    # Verify a Security Group Policy setting
+                    $IndividualItemResult = [System.Boolean]$($SecurityPoliciesIni.'System Access'['LockoutDuration'] -eq '1440') ? $True : $False
+                    [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
+                            FriendlyName = 'Account lockout duration'
+                            Compliant    = $IndividualItemResult
+                            Value        = $IndividualItemResult
+                            Name         = 'Account lockout duration'
+                            Category     = $CatName
+                            Method       = 'Security Group Policy'
+                        })
+
+                    # Verify a Security Group Policy setting
+                    $IndividualItemResult = [System.Boolean]$($SecurityPoliciesIni.'System Access'['ResetLockoutCount'] -eq '1440') ? $True : $False
+                    [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
+                            FriendlyName = 'Reset account lockout counter after'
+                            Compliant    = $IndividualItemResult
+                            Value        = $IndividualItemResult
+                            Name         = 'Reset account lockout counter after'
+                            Category     = $CatName
+                            Method       = 'Security Group Policy'
+                        })
+
+                    # Verify a Security Group Policy setting
+                    $IndividualItemResult = [System.Boolean]$($SecurityPoliciesIni.'Registry Values'['MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\DontDisplayLastUserName'] -eq '4,1') ? $True : $False
+                    [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
+                            FriendlyName = "Interactive logon: Don't display last signed-in"
+                            Compliant    = $IndividualItemResult
+                            Value        = $IndividualItemResult
+                            Name         = "Interactive logon: Don't display last signed-in"
+                            Category     = $CatName
+                            Method       = 'Security Group Policy'
+                        })
+
+                    # Add the array of the custom objects to the main output HashTable
+                    [System.Void]$FinalMegaObject.TryAdd($CatName, $NestedObjectArray)
+                } -Name 'Invoke-LockScreen' -StreamingHost $Host -ArgumentList ($MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $TotalNumberOfTrueCompliantValues, $FinalMegaObject, $ScriptBlockInvokeCategoryProcessing, $CSVResource, $VerbosePreference, $SecurityPoliciesIni)
+
             }
             Function Invoke-UserAccountControl {
-                Param ($MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $TotalNumberOfTrueCompliantValues, $FinalMegaObject)
+                Param ($MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $TotalNumberOfTrueCompliantValues, $FinalMegaObject, $SecurityPoliciesIni)
 
-                $NestedObjectArray = New-Object -TypeName System.Collections.Generic.List[HardeningModule.IndividualResult]
-                [System.String]$CatName = 'UserAccountControl'
+                [System.Management.Automation.Job2]$script:UserAccountControlJob = Start-ThreadJob -ScriptBlock {
 
-                # Process items in Registry resources.csv file with "Group Policy" origin and add them to the $NestedObjectArray array as custom objects
-                foreach ($Result in Invoke-CategoryProcessing -catname $CatName -Method 'Group Policy') {
-                    [System.Void]$NestedObjectArray.Add($Result)
-                }
+                    Param ($MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $TotalNumberOfTrueCompliantValues, $FinalMegaObject, $ScriptBlockInvokeCategoryProcessing, $CSVResource, $ParentVerbosePreference, $SecurityPoliciesIni)
 
-                # Verify a Security Group Policy setting
-                $IndividualItemResult = [System.Boolean]$($SecurityPoliciesIni.'Registry Values'['MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\ConsentPromptBehaviorAdmin'] -eq '4,2') ? $True : $False
-                [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
-                        FriendlyName = 'UAC: Behavior of the elevation prompt for administrators in Admin Approval Mode'
-                        Compliant    = $IndividualItemResult
-                        Value        = $IndividualItemResult
-                        Name         = 'UAC: Behavior of the elevation prompt for administrators in Admin Approval Mode'
-                        Category     = $CatName
-                        Method       = 'Security Group Policy'
-                    })
+                    $ErrorActionPreference = 'Stop'
+                    $VerbosePreference = $ParentVerbosePreference
 
-                # Verify a Security Group Policy setting
-                $IndividualItemResult = [System.Boolean]$($SecurityPoliciesIni.'Registry Values'['MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\ConsentPromptBehaviorUser'] -eq '4,0') ? $True : $False
-                [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
-                        FriendlyName = 'UAC: Automatically deny elevation requests on Standard accounts'
-                        Compliant    = $IndividualItemResult
-                        Value        = $IndividualItemResult
-                        Name         = 'UAC: Automatically deny elevation requests on Standard accounts'
-                        Category     = $CatName
-                        Method       = 'Security Group Policy'
-                    })
+                    # Import the IndividualResult class if it's not already loaded
+                    if (-NOT ('HardeningModule.IndividualResult' -as [System.Type]) ) {
+                        Add-Type -Path "$HardeningModulePath\Shared\IndividualResultClass.cs"
+                    }
 
-                # Verify a Security Group Policy setting
-                $IndividualItemResult = [System.Boolean]($($SecurityPoliciesIni.'Registry Values'['MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\ValidateAdminCodeSignatures'] -eq '4,1') ? $True : $False)
-                [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
-                        FriendlyName = 'UAC: Only elevate executables that are signed and validated'
-                        Compliant    = $IndividualItemResult
-                        Value        = $IndividualItemResult
-                        Name         = 'UAC: Only elevate executables that are signed and validated'
-                        Category     = $CatName
-                        Method       = 'Security Group Policy'
-                    })
+                    $NestedObjectArray = New-Object -TypeName System.Collections.Generic.List[HardeningModule.IndividualResult]
+                    [System.String]$CatName = 'UserAccountControl'
 
-                # Add the array of the custom objects to the main output HashTable
-                [System.Void]$FinalMegaObject.TryAdd($CatName, $NestedObjectArray)
+                    # Process items in Registry resources.csv file with "Group Policy" origin and add them to the $NestedObjectArray array as custom objects
+                    foreach ($Result in (&$ScriptBlockInvokeCategoryProcessing -catname $CatName -Method 'Group Policy')) {
+                        [System.Void]$NestedObjectArray.Add($Result)
+                    }
+
+                    # Verify a Security Group Policy setting
+                    $IndividualItemResult = [System.Boolean]$($SecurityPoliciesIni.'Registry Values'['MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\ConsentPromptBehaviorAdmin'] -eq '4,2') ? $True : $False
+                    [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
+                            FriendlyName = 'UAC: Behavior of the elevation prompt for administrators in Admin Approval Mode'
+                            Compliant    = $IndividualItemResult
+                            Value        = $IndividualItemResult
+                            Name         = 'UAC: Behavior of the elevation prompt for administrators in Admin Approval Mode'
+                            Category     = $CatName
+                            Method       = 'Security Group Policy'
+                        })
+
+                    # Verify a Security Group Policy setting
+                    $IndividualItemResult = [System.Boolean]$($SecurityPoliciesIni.'Registry Values'['MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\ConsentPromptBehaviorUser'] -eq '4,0') ? $True : $False
+                    [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
+                            FriendlyName = 'UAC: Automatically deny elevation requests on Standard accounts'
+                            Compliant    = $IndividualItemResult
+                            Value        = $IndividualItemResult
+                            Name         = 'UAC: Automatically deny elevation requests on Standard accounts'
+                            Category     = $CatName
+                            Method       = 'Security Group Policy'
+                        })
+
+                    # Verify a Security Group Policy setting
+                    $IndividualItemResult = [System.Boolean]($($SecurityPoliciesIni.'Registry Values'['MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\ValidateAdminCodeSignatures'] -eq '4,1') ? $True : $False)
+                    [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
+                            FriendlyName = 'UAC: Only elevate executables that are signed and validated'
+                            Compliant    = $IndividualItemResult
+                            Value        = $IndividualItemResult
+                            Name         = 'UAC: Only elevate executables that are signed and validated'
+                            Category     = $CatName
+                            Method       = 'Security Group Policy'
+                        })
+
+                    # Add the array of the custom objects to the main output HashTable
+                    [System.Void]$FinalMegaObject.TryAdd($CatName, $NestedObjectArray)
+                } -Name 'Invoke-UserAccountControl' -StreamingHost $Host -ArgumentList ($MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $TotalNumberOfTrueCompliantValues, $FinalMegaObject, $ScriptBlockInvokeCategoryProcessing, $CSVResource, $VerbosePreference, $SecurityPoliciesIni)
+
             }
             Function Invoke-DeviceGuard {
-                Param ($MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $TotalNumberOfTrueCompliantValues, $FinalMegaObject)
+                Param ($MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $TotalNumberOfTrueCompliantValues, $FinalMegaObject, $SecurityPoliciesIni)
 
-                $NestedObjectArray = New-Object -TypeName System.Collections.Generic.List[HardeningModule.IndividualResult]
-                [System.String]$CatName = 'DeviceGuard'
+                [System.Management.Automation.Job2]$script:DeviceGuardJob = Start-ThreadJob -ScriptBlock {
 
-                # Process items in Registry resources.csv file with "Group Policy" origin and add them to the $NestedObjectArray array as custom objects
-                foreach ($Result in Invoke-CategoryProcessing -catname $CatName -Method 'Group Policy') {
-                    [System.Void]$NestedObjectArray.Add($Result)
-                }
+                    Param ($MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $TotalNumberOfTrueCompliantValues, $FinalMegaObject, $ScriptBlockInvokeCategoryProcessing, $CSVResource, $ParentVerbosePreference, $SecurityPoliciesIni)
 
-                # Add the array of the custom objects to the main output HashTable
-                [System.Void]$FinalMegaObject.TryAdd($CatName, $NestedObjectArray)
+                    $ErrorActionPreference = 'Stop'
+                    $VerbosePreference = $ParentVerbosePreference
+
+                    # Import the IndividualResult class if it's not already loaded
+                    if (-NOT ('HardeningModule.IndividualResult' -as [System.Type]) ) {
+                        Add-Type -Path "$HardeningModulePath\Shared\IndividualResultClass.cs"
+                    }
+
+                    $NestedObjectArray = New-Object -TypeName System.Collections.Generic.List[HardeningModule.IndividualResult]
+                    [System.String]$CatName = 'DeviceGuard'
+
+                    # Process items in Registry resources.csv file with "Group Policy" origin and add them to the $NestedObjectArray array as custom objects
+                    foreach ($Result in (&$ScriptBlockInvokeCategoryProcessing -catname $CatName -Method 'Group Policy')) {
+                        [System.Void]$NestedObjectArray.Add($Result)
+                    }
+
+                    # Add the array of the custom objects to the main output HashTable
+                    [System.Void]$FinalMegaObject.TryAdd($CatName, $NestedObjectArray)
+
+                } -Name 'Invoke-DeviceGuard' -StreamingHost $Host -ArgumentList ($MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $TotalNumberOfTrueCompliantValues, $FinalMegaObject, $ScriptBlockInvokeCategoryProcessing, $CSVResource, $VerbosePreference, $SecurityPoliciesIni)
             }
             Function Invoke-WindowsFirewall {
-                Param ($MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $TotalNumberOfTrueCompliantValues, $FinalMegaObject)
+                Param ($MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $TotalNumberOfTrueCompliantValues, $FinalMegaObject, $SecurityPoliciesIni)
 
                 [System.Management.Automation.Job2]$script:WindowsFirewallJob = Start-ThreadJob -ScriptBlock {
 
-                    Param ($MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $TotalNumberOfTrueCompliantValues, $FinalMegaObject, $ScriptBlockInvokeCategoryProcessing, $CSVResource, $ParentVerbosePreference)
+                    Param ($MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $TotalNumberOfTrueCompliantValues, $FinalMegaObject, $ScriptBlockInvokeCategoryProcessing, $CSVResource, $ParentVerbosePreference, $SecurityPoliciesIni)
 
                     $ErrorActionPreference = 'Stop'
                     $VerbosePreference = $ParentVerbosePreference
@@ -1448,14 +1490,14 @@ function Confirm-SystemCompliance {
                     # Add the array of the custom objects to the main output HashTable
                     [System.Void]$FinalMegaObject.TryAdd($CatName, $NestedObjectArray)
 
-                } -Name 'Invoke-WindowsFirewall' -StreamingHost $Host -ArgumentList ($MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $TotalNumberOfTrueCompliantValues, $FinalMegaObject, $ScriptBlockInvokeCategoryProcessing, $CSVResource, $VerbosePreference)
+                } -Name 'Invoke-WindowsFirewall' -StreamingHost $Host -ArgumentList ($MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $TotalNumberOfTrueCompliantValues, $FinalMegaObject, $ScriptBlockInvokeCategoryProcessing, $CSVResource, $VerbosePreference, $SecurityPoliciesIni)
             }
             Function Invoke-OptionalWindowsFeatures {
-                Param ($MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $TotalNumberOfTrueCompliantValues, $FinalMegaObject)
+                Param ($MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $TotalNumberOfTrueCompliantValues, $FinalMegaObject, $SecurityPoliciesIni)
 
                 [System.Management.Automation.Job2]$script:OptionalWindowsFeaturesJob = Start-ThreadJob -ScriptBlock {
 
-                    Param ($MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $TotalNumberOfTrueCompliantValues, $FinalMegaObject, $ScriptBlockInvokeCategoryProcessing, $CSVResource, $ParentVerbosePreference)
+                    Param ($MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $TotalNumberOfTrueCompliantValues, $FinalMegaObject, $ScriptBlockInvokeCategoryProcessing, $CSVResource, $ParentVerbosePreference, $SecurityPoliciesIni)
 
                     $ErrorActionPreference = 'Stop'
 
@@ -1620,81 +1662,95 @@ function Confirm-SystemCompliance {
                     # Add the array of the custom objects to the main output HashTable
                     [System.Void]$FinalMegaObject.TryAdd($CatName, $NestedObjectArray)
 
-                } -Name 'Invoke-OptionalWindowsFeatures' -StreamingHost $Host -ArgumentList ($MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $TotalNumberOfTrueCompliantValues, $FinalMegaObject, $ScriptBlockInvokeCategoryProcessing, $CSVResource, $VerbosePreference)
+                } -Name 'Invoke-OptionalWindowsFeatures' -StreamingHost $Host -ArgumentList ($MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $TotalNumberOfTrueCompliantValues, $FinalMegaObject, $ScriptBlockInvokeCategoryProcessing, $CSVResource, $VerbosePreference, $SecurityPoliciesIni)
 
             }
             Function Invoke-WindowsNetworking {
-                Param ($MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $TotalNumberOfTrueCompliantValues, $FinalMegaObject)
+                Param ($MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $TotalNumberOfTrueCompliantValues, $FinalMegaObject, $SecurityPoliciesIni)
 
-                $NestedObjectArray = New-Object -TypeName System.Collections.Generic.List[HardeningModule.IndividualResult]
-                [System.String]$CatName = 'WindowsNetworking'
+                [System.Management.Automation.Job2]$script:WindowsNetworkingJob = Start-ThreadJob -ScriptBlock {
 
-                # Process items in Registry resources.csv file with "Group Policy" origin and add them to the $NestedObjectArray array as custom objects
-                foreach ($Result in Invoke-CategoryProcessing -catname $CatName -Method 'Group Policy') {
-                    [System.Void]$NestedObjectArray.Add($Result)
-                }
+                    Param ($MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $TotalNumberOfTrueCompliantValues, $FinalMegaObject, $ScriptBlockInvokeCategoryProcessing, $CSVResource, $ParentVerbosePreference, $SecurityPoliciesIni)
 
-                # Check network location of all connections to see if they are public
-                $Condition = Get-NetConnectionProfile | ForEach-Object -Process { $_.NetworkCategory -eq 'public' }
-                [System.Boolean]$IndividualItemResult = -NOT ($Condition -contains $false) ? $True : $false
+                    $ErrorActionPreference = 'Stop'
+                    $VerbosePreference = $ParentVerbosePreference
 
-                # Verify a Security setting using Cmdlet
-                [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
-                        FriendlyName = 'Network Location of all connections set to Public'
-                        Compliant    = $IndividualItemResult
-                        Value        = $IndividualItemResult
-                        Name         = 'Network Location of all connections set to Public'
-                        Category     = $CatName
-                        Method       = 'Cmdlet'
-                    })
+                    # Import the IndividualResult class if it's not already loaded
+                    if (-NOT ('HardeningModule.IndividualResult' -as [System.Type]) ) {
+                        Add-Type -Path "$HardeningModulePath\Shared\IndividualResultClass.cs"
+                    }
 
-                # Verify a Security setting using registry
-                try {
-                    $IndividualItemResult = [System.Boolean]((Get-ItemPropertyValue -Path 'Registry::HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\NetBT\Parameters' -Name 'EnableLMHOSTS' -ErrorAction SilentlyContinue) -eq '0')
-                }
-                catch {
-                    # -ErrorAction SilentlyContinue wouldn't suppress the error if the path exists but property doesn't, so using try-catch
-                }
-                [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
-                        FriendlyName = 'Disable LMHOSTS lookup protocol on all network adapters'
-                        Compliant    = $IndividualItemResult
-                        Value        = $IndividualItemResult
-                        Name         = 'Disable LMHOSTS lookup protocol on all network adapters'
-                        Category     = $CatName
-                        Method       = 'Registry Key'
-                    })
+                    $NestedObjectArray = New-Object -TypeName System.Collections.Generic.List[HardeningModule.IndividualResult]
+                    [System.String]$CatName = 'WindowsNetworking'
 
-                # Verify a Security Group Policy setting
-                $IndividualItemResult = [System.Boolean]$($SecurityPoliciesIni.'Registry Values'['MACHINE\System\CurrentControlSet\Control\SecurePipeServers\Winreg\AllowedExactPaths\Machine'] -eq '7,') ? $True : $False
-                [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
-                        FriendlyName = 'Network access: Remotely accessible registry paths'
-                        Compliant    = $IndividualItemResult
-                        Value        = $IndividualItemResult
-                        Name         = 'Network access: Remotely accessible registry paths'
-                        Category     = $CatName
-                        Method       = 'Security Group Policy'
-                    })
+                    # Process items in Registry resources.csv file with "Group Policy" origin and add them to the $NestedObjectArray array as custom objects
+                    foreach ($Result in (&$ScriptBlockInvokeCategoryProcessing -catname $CatName -Method 'Group Policy')) {
+                        [System.Void]$NestedObjectArray.Add($Result)
+                    }
 
-                # Verify a Security Group Policy setting
-                $IndividualItemResult = [System.Boolean]$($SecurityPoliciesIni.'Registry Values'['MACHINE\System\CurrentControlSet\Control\SecurePipeServers\Winreg\AllowedPaths\Machine'] -eq '7,') ? $True : $False
-                [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
-                        FriendlyName = 'Network access: Remotely accessible registry paths and subpaths'
-                        Compliant    = $IndividualItemResult
-                        Value        = $IndividualItemResult
-                        Name         = 'Network access: Remotely accessible registry paths and subpaths'
-                        Category     = $CatName
-                        Method       = 'Security Group Policy'
-                    })
+                    # Check network location of all connections to see if they are public
+                    $Condition = Get-NetConnectionProfile | ForEach-Object -Process { $_.NetworkCategory -eq 'public' }
+                    [System.Boolean]$IndividualItemResult = -NOT ($Condition -contains $false) ? $True : $false
 
-                # Add the array of the custom objects to the main output HashTable
-                [System.Void]$FinalMegaObject.TryAdd($CatName, $NestedObjectArray)
+                    # Verify a Security setting using Cmdlet
+                    [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
+                            FriendlyName = 'Network Location of all connections set to Public'
+                            Compliant    = $IndividualItemResult
+                            Value        = $IndividualItemResult
+                            Name         = 'Network Location of all connections set to Public'
+                            Category     = $CatName
+                            Method       = 'Cmdlet'
+                        })
+
+                    # Verify a Security setting using registry
+                    try {
+                        $IndividualItemResult = [System.Boolean]((Get-ItemPropertyValue -Path 'Registry::HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\NetBT\Parameters' -Name 'EnableLMHOSTS' -ErrorAction SilentlyContinue) -eq '0')
+                    }
+                    catch {
+                        # -ErrorAction SilentlyContinue wouldn't suppress the error if the path exists but property doesn't, so using try-catch
+                    }
+                    [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
+                            FriendlyName = 'Disable LMHOSTS lookup protocol on all network adapters'
+                            Compliant    = $IndividualItemResult
+                            Value        = $IndividualItemResult
+                            Name         = 'Disable LMHOSTS lookup protocol on all network adapters'
+                            Category     = $CatName
+                            Method       = 'Registry Key'
+                        })
+
+                    # Verify a Security Group Policy setting
+                    $IndividualItemResult = [System.Boolean]$($SecurityPoliciesIni.'Registry Values'['MACHINE\System\CurrentControlSet\Control\SecurePipeServers\Winreg\AllowedExactPaths\Machine'] -eq '7,') ? $True : $False
+                    [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
+                            FriendlyName = 'Network access: Remotely accessible registry paths'
+                            Compliant    = $IndividualItemResult
+                            Value        = $IndividualItemResult
+                            Name         = 'Network access: Remotely accessible registry paths'
+                            Category     = $CatName
+                            Method       = 'Security Group Policy'
+                        })
+
+                    # Verify a Security Group Policy setting
+                    $IndividualItemResult = [System.Boolean]$($SecurityPoliciesIni.'Registry Values'['MACHINE\System\CurrentControlSet\Control\SecurePipeServers\Winreg\AllowedPaths\Machine'] -eq '7,') ? $True : $False
+                    [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
+                            FriendlyName = 'Network access: Remotely accessible registry paths and subpaths'
+                            Compliant    = $IndividualItemResult
+                            Value        = $IndividualItemResult
+                            Name         = 'Network access: Remotely accessible registry paths and subpaths'
+                            Category     = $CatName
+                            Method       = 'Security Group Policy'
+                        })
+
+                    # Add the array of the custom objects to the main output HashTable
+                    [System.Void]$FinalMegaObject.TryAdd($CatName, $NestedObjectArray)
+
+                } -Name 'Invoke-WindowsNetworking' -StreamingHost $Host -ArgumentList ($MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $TotalNumberOfTrueCompliantValues, $FinalMegaObject, $ScriptBlockInvokeCategoryProcessing, $CSVResource, $VerbosePreference, $SecurityPoliciesIni)
             }
             Function Invoke-MiscellaneousConfigurations {
-                Param ($MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $TotalNumberOfTrueCompliantValues, $FinalMegaObject)
+                Param ($MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $TotalNumberOfTrueCompliantValues, $FinalMegaObject, $SecurityPoliciesIni)
 
                 [System.Management.Automation.Job2]$script:MiscellaneousConfigurationsJob = Start-ThreadJob -ScriptBlock {
 
-                    Param ($MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $TotalNumberOfTrueCompliantValues, $FinalMegaObject, $ScriptBlockInvokeCategoryProcessing, $CSVResource, $ParentVerbosePreference)
+                    Param ($MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $TotalNumberOfTrueCompliantValues, $FinalMegaObject, $ScriptBlockInvokeCategoryProcessing, $CSVResource, $ParentVerbosePreference, $SecurityPoliciesIni)
 
                     $ErrorActionPreference = 'Stop'
                     $VerbosePreference = $ParentVerbosePreference
@@ -1763,89 +1819,134 @@ function Confirm-SystemCompliance {
                     [System.Void]$FinalMegaObject.TryAdd($CatName, $NestedObjectArray)
 
 
-                } -Name 'Invoke-MiscellaneousConfigurations' -StreamingHost $Host -ArgumentList ($MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $TotalNumberOfTrueCompliantValues, $FinalMegaObject, $ScriptBlockInvokeCategoryProcessing, $CSVResource, $VerbosePreference)
+                } -Name 'Invoke-MiscellaneousConfigurations' -StreamingHost $Host -ArgumentList ($MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $TotalNumberOfTrueCompliantValues, $FinalMegaObject, $ScriptBlockInvokeCategoryProcessing, $CSVResource, $VerbosePreference, $SecurityPoliciesIni)
 
             }
             Function Invoke-WindowsUpdateConfigurations {
-                Param ($MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $TotalNumberOfTrueCompliantValues, $FinalMegaObject)
+                Param ($MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $TotalNumberOfTrueCompliantValues, $FinalMegaObject, $SecurityPoliciesIni)
 
-                $NestedObjectArray = New-Object -TypeName System.Collections.Generic.List[HardeningModule.IndividualResult]
-                [System.String]$CatName = 'WindowsUpdateConfigurations'
+                [System.Management.Automation.Job2]$script:WindowsUpdateConfigurationsJob = Start-ThreadJob -ScriptBlock {
 
-                # Process items in Registry resources.csv file with "Group Policy" origin and add them to the $NestedObjectArray array as custom objects
-                foreach ($Result in Invoke-CategoryProcessing -catname $CatName -Method 'Group Policy') {
-                    [System.Void]$NestedObjectArray.Add($Result)
-                }
+                    Param ($MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $TotalNumberOfTrueCompliantValues, $FinalMegaObject, $ScriptBlockInvokeCategoryProcessing, $CSVResource, $ParentVerbosePreference, $SecurityPoliciesIni)
 
-                # Verify a Security setting using registry
-                try {
-                    $IndividualItemResult = [System.Boolean]((Get-ItemPropertyValue -Path 'Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\WindowsUpdate\UX\Settings' -Name 'RestartNotificationsAllowed2' -ErrorAction SilentlyContinue) -eq '1')
-                }
-                catch {
-                    # -ErrorAction SilentlyContinue wouldn't suppress the error if the path exists but property doesn't, so using try-catch
-                }
-                [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
-                        FriendlyName = 'Enable restart notification for Windows update'
-                        Compliant    = $IndividualItemResult
-                        Value        = $IndividualItemResult
-                        Name         = 'Enable restart notification for Windows update'
-                        Category     = $CatName
-                        Method       = 'Registry Key'
-                    })
+                    $ErrorActionPreference = 'Stop'
+                    $VerbosePreference = $ParentVerbosePreference
 
-                # Add the array of the custom objects to the main output HashTable
-                [System.Void]$FinalMegaObject.TryAdd($CatName, $NestedObjectArray)
+                    # Import the IndividualResult class if it's not already loaded
+                    if (-NOT ('HardeningModule.IndividualResult' -as [System.Type]) ) {
+                        Add-Type -Path "$HardeningModulePath\Shared\IndividualResultClass.cs"
+                    }
+
+                    $NestedObjectArray = New-Object -TypeName System.Collections.Generic.List[HardeningModule.IndividualResult]
+                    [System.String]$CatName = 'WindowsUpdateConfigurations'
+
+                    # Process items in Registry resources.csv file with "Group Policy" origin and add them to the $NestedObjectArray array as custom objects
+                    foreach ($Result in (&$ScriptBlockInvokeCategoryProcessing -catname $CatName -Method 'Group Policy')) {
+                        [System.Void]$NestedObjectArray.Add($Result)
+                    }
+
+                    # Verify a Security setting using registry
+                    try {
+                        $IndividualItemResult = [System.Boolean]((Get-ItemPropertyValue -Path 'Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\WindowsUpdate\UX\Settings' -Name 'RestartNotificationsAllowed2' -ErrorAction SilentlyContinue) -eq '1')
+                    }
+                    catch {
+                        # -ErrorAction SilentlyContinue wouldn't suppress the error if the path exists but property doesn't, so using try-catch
+                    }
+                    [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
+                            FriendlyName = 'Enable restart notification for Windows update'
+                            Compliant    = $IndividualItemResult
+                            Value        = $IndividualItemResult
+                            Name         = 'Enable restart notification for Windows update'
+                            Category     = $CatName
+                            Method       = 'Registry Key'
+                        })
+
+                    # Add the array of the custom objects to the main output HashTable
+                    [System.Void]$FinalMegaObject.TryAdd($CatName, $NestedObjectArray)
+
+                } -Name 'Invoke-WindowsUpdateConfigurations' -StreamingHost $Host -ArgumentList ($MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $TotalNumberOfTrueCompliantValues, $FinalMegaObject, $ScriptBlockInvokeCategoryProcessing, $CSVResource, $VerbosePreference, $SecurityPoliciesIni)
+
             }
             Function Invoke-EdgeBrowserConfigurations {
-                Param ($MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $TotalNumberOfTrueCompliantValues, $FinalMegaObject)
+                Param ($MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $TotalNumberOfTrueCompliantValues, $FinalMegaObject, $SecurityPoliciesIni)
 
-                $NestedObjectArray = New-Object -TypeName System.Collections.Generic.List[HardeningModule.IndividualResult]
-                [System.String]$CatName = 'EdgeBrowserConfigurations'
+                [System.Management.Automation.Job2]$script:EdgeBrowserConfigurationsJob = Start-ThreadJob -ScriptBlock {
 
-                # Process items in Registry resources.csv file with "Registry Keys" origin and add them to the $NestedObjectArray array as custom objects
-                foreach ($Result in Invoke-CategoryProcessing -catname $CatName -Method 'Registry Keys') {
-                    [System.Void]$NestedObjectArray.Add($Result)
-                }
+                    Param ($MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $TotalNumberOfTrueCompliantValues, $FinalMegaObject, $ScriptBlockInvokeCategoryProcessing, $CSVResource, $ParentVerbosePreference, $SecurityPoliciesIni)
 
-                # Add the array of the custom objects to the main output HashTable
-                [System.Void]$FinalMegaObject.TryAdd($CatName, $NestedObjectArray)
+                    $ErrorActionPreference = 'Stop'
+                    $VerbosePreference = $ParentVerbosePreference
+
+                    # Import the IndividualResult class if it's not already loaded
+                    if (-NOT ('HardeningModule.IndividualResult' -as [System.Type]) ) {
+                        Add-Type -Path "$HardeningModulePath\Shared\IndividualResultClass.cs"
+                    }
+
+                    $NestedObjectArray = New-Object -TypeName System.Collections.Generic.List[HardeningModule.IndividualResult]
+                    [System.String]$CatName = 'EdgeBrowserConfigurations'
+
+                    # Process items in Registry resources.csv file with "Registry Keys" origin and add them to the $NestedObjectArray array as custom objects
+                    foreach ($Result in (&$ScriptBlockInvokeCategoryProcessing -catname $CatName -Method 'Registry Keys')) {
+                        [System.Void]$NestedObjectArray.Add($Result)
+                    }
+
+                    # Add the array of the custom objects to the main output HashTable
+                    [System.Void]$FinalMegaObject.TryAdd($CatName, $NestedObjectArray)
+
+                } -Name 'Invoke-EdgeBrowserConfigurations' -StreamingHost $Host -ArgumentList ($MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $TotalNumberOfTrueCompliantValues, $FinalMegaObject, $ScriptBlockInvokeCategoryProcessing, $CSVResource, $VerbosePreference, $SecurityPoliciesIni)
+
             }
             Function Invoke-NonAdminCommands {
-                Param ($MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $TotalNumberOfTrueCompliantValues, $FinalMegaObject)
+                Param ($MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $TotalNumberOfTrueCompliantValues, $FinalMegaObject, $SecurityPoliciesIni)
 
-                $NestedObjectArray = New-Object -TypeName System.Collections.Generic.List[HardeningModule.IndividualResult]
-                [System.String]$CatName = 'NonAdminCommands'
+                [System.Management.Automation.Job2]$script:NonAdminCommandsJob = Start-ThreadJob -ScriptBlock {
 
-                # Process items in Registry resources.csv file with "Registry Keys" origin and add them to the $NestedObjectArray array as custom objects
-                foreach ($Result in Invoke-CategoryProcessing -catname $CatName -Method 'Registry Keys') {
-                    [System.Void]$NestedObjectArray.Add($Result)
-                }
+                    Param ($MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $TotalNumberOfTrueCompliantValues, $FinalMegaObject, $ScriptBlockInvokeCategoryProcessing, $CSVResource, $ParentVerbosePreference, $SecurityPoliciesIni)
 
-                # Add the array of the custom objects to the main output HashTable
-                [System.Void]$FinalMegaObject.TryAdd($CatName, $NestedObjectArray)
+                    $ErrorActionPreference = 'Stop'
+                    $VerbosePreference = $ParentVerbosePreference
+
+                    # Import the IndividualResult class if it's not already loaded
+                    if (-NOT ('HardeningModule.IndividualResult' -as [System.Type]) ) {
+                        Add-Type -Path "$HardeningModulePath\Shared\IndividualResultClass.cs"
+                    }
+
+                    $NestedObjectArray = New-Object -TypeName System.Collections.Generic.List[HardeningModule.IndividualResult]
+                    [System.String]$CatName = 'NonAdminCommands'
+
+                    # Process items in Registry resources.csv file with "Registry Keys" origin and add them to the $NestedObjectArray array as custom objects
+                    foreach ($Result in (&$ScriptBlockInvokeCategoryProcessing -catname $CatName -Method 'Registry Keys')) {
+                        [System.Void]$NestedObjectArray.Add($Result)
+                    }
+
+                    # Add the array of the custom objects to the main output HashTable
+                    [System.Void]$FinalMegaObject.TryAdd($CatName, $NestedObjectArray)
+
+                } -Name 'Invoke-NonAdminCommands' -StreamingHost $Host -ArgumentList ($MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $TotalNumberOfTrueCompliantValues, $FinalMegaObject, $ScriptBlockInvokeCategoryProcessing, $CSVResource, $VerbosePreference, $SecurityPoliciesIni)
+
             }
             #Endregion Main-Functions
 
             Switch ($Categories) {
-                'MicrosoftDefender' { Invoke-MicrosoftDefender -MDAVPreferencesCurrent $MDAVPreferencesCurrent -MDAVConfigCurrent $MDAVConfigCurrent -HardeningModulePath $HardeningModulePath -TotalNumberOfTrueCompliantValues $SyncHash['TotalNumberOfTrueCompliantValues'] -FinalMegaObject $FinalMegaObject }
-                'AttackSurfaceReductionRules' { Invoke-AttackSurfaceReductionRules -MDAVPreferencesCurrent $MDAVPreferencesCurrent -MDAVConfigCurrent $MDAVConfigCurrent -HardeningModulePath $HardeningModulePath -TotalNumberOfTrueCompliantValues $SyncHash['TotalNumberOfTrueCompliantValues'] -FinalMegaObject $FinalMegaObject }
-                'BitLockerSettings' { Invoke-BitLockerSettings -MDAVPreferencesCurrent $MDAVPreferencesCurrent -MDAVConfigCurrent $MDAVConfigCurrent -HardeningModulePath $HardeningModulePath -TotalNumberOfTrueCompliantValues $SyncHash['TotalNumberOfTrueCompliantValues'] -FinalMegaObject $FinalMegaObject }
-                'TLSSecurity' { Invoke-TLSSecurity -MDAVPreferencesCurrent $MDAVPreferencesCurrent -MDAVConfigCurrent $MDAVConfigCurrent -HardeningModulePath $HardeningModulePath -TotalNumberOfTrueCompliantValues $SyncHash['TotalNumberOfTrueCompliantValues'] -FinalMegaObject $FinalMegaObject }
-                'LockScreen' { Invoke-LockScreen -MDAVPreferencesCurrent $MDAVPreferencesCurrent -MDAVConfigCurrent $MDAVConfigCurrent -HardeningModulePath $HardeningModulePath -TotalNumberOfTrueCompliantValues $SyncHash['TotalNumberOfTrueCompliantValues'] -FinalMegaObject $FinalMegaObject }
-                'UserAccountControl' { Invoke-UserAccountControl -MDAVPreferencesCurrent $MDAVPreferencesCurrent -MDAVConfigCurrent $MDAVConfigCurrent -HardeningModulePath $HardeningModulePath -TotalNumberOfTrueCompliantValues $SyncHash['TotalNumberOfTrueCompliantValues'] -FinalMegaObject $FinalMegaObject }
-                'DeviceGuard' { Invoke-DeviceGuard -MDAVPreferencesCurrent $MDAVPreferencesCurrent -MDAVConfigCurrent $MDAVConfigCurrent -HardeningModulePath $HardeningModulePath -TotalNumberOfTrueCompliantValues $SyncHash['TotalNumberOfTrueCompliantValues'] -FinalMegaObject $FinalMegaObject }
-                'WindowsFirewall' { Invoke-WindowsFirewall -MDAVPreferencesCurrent $MDAVPreferencesCurrent -MDAVConfigCurrent $MDAVConfigCurrent -HardeningModulePath $HardeningModulePath -TotalNumberOfTrueCompliantValues $SyncHash['TotalNumberOfTrueCompliantValues'] -FinalMegaObject $FinalMegaObject }
-                'OptionalWindowsFeatures' { Invoke-OptionalWindowsFeatures -MDAVPreferencesCurrent $MDAVPreferencesCurrent -MDAVConfigCurrent $MDAVConfigCurrent -HardeningModulePath $HardeningModulePath -TotalNumberOfTrueCompliantValues $SyncHash['TotalNumberOfTrueCompliantValues'] -FinalMegaObject $FinalMegaObject }
-                'WindowsNetworking' { Invoke-WindowsNetworking -MDAVPreferencesCurrent $MDAVPreferencesCurrent -MDAVConfigCurrent $MDAVConfigCurrent -HardeningModulePath $HardeningModulePath -TotalNumberOfTrueCompliantValues $SyncHash['TotalNumberOfTrueCompliantValues'] -FinalMegaObject $FinalMegaObject }
-                'MiscellaneousConfigurations' { Invoke-MiscellaneousConfigurations -MDAVPreferencesCurrent $MDAVPreferencesCurrent -MDAVConfigCurrent $MDAVConfigCurrent -HardeningModulePath $HardeningModulePath -TotalNumberOfTrueCompliantValues $SyncHash['TotalNumberOfTrueCompliantValues'] -FinalMegaObject $FinalMegaObject }
-                'WindowsUpdateConfigurations' { Invoke-WindowsUpdateConfigurations -MDAVPreferencesCurrent $MDAVPreferencesCurrent -MDAVConfigCurrent $MDAVConfigCurrent -HardeningModulePath $HardeningModulePath -TotalNumberOfTrueCompliantValues $SyncHash['TotalNumberOfTrueCompliantValues'] -FinalMegaObject $FinalMegaObject }
-                'EdgeBrowserConfigurations' { Invoke-EdgeBrowserConfigurations -MDAVPreferencesCurrent $MDAVPreferencesCurrent -MDAVConfigCurrent $MDAVConfigCurrent -HardeningModulePath $HardeningModulePath -TotalNumberOfTrueCompliantValues $SyncHash['TotalNumberOfTrueCompliantValues'] -FinalMegaObject $FinalMegaObject }
-                'NonAdminCommands' { Invoke-NonAdminCommands -MDAVPreferencesCurrent $MDAVPreferencesCurrent -MDAVConfigCurrent $MDAVConfigCurrent -HardeningModulePath $HardeningModulePath -TotalNumberOfTrueCompliantValues $SyncHash['TotalNumberOfTrueCompliantValues'] -FinalMegaObject $FinalMegaObject }
+                'MicrosoftDefender' { Invoke-MicrosoftDefender -MDAVPreferencesCurrent $MDAVPreferencesCurrent -MDAVConfigCurrent $MDAVConfigCurrent -HardeningModulePath $HardeningModulePath -TotalNumberOfTrueCompliantValues $SyncHash['TotalNumberOfTrueCompliantValues'] -FinalMegaObject $FinalMegaObject -SecurityPoliciesIni $SecurityPoliciesIni }
+                'AttackSurfaceReductionRules' { Invoke-AttackSurfaceReductionRules -MDAVPreferencesCurrent $MDAVPreferencesCurrent -MDAVConfigCurrent $MDAVConfigCurrent -HardeningModulePath $HardeningModulePath -TotalNumberOfTrueCompliantValues $SyncHash['TotalNumberOfTrueCompliantValues'] -FinalMegaObject $FinalMegaObject -SecurityPoliciesIni $SecurityPoliciesIni }
+                'BitLockerSettings' { Invoke-BitLockerSettings -MDAVPreferencesCurrent $MDAVPreferencesCurrent -MDAVConfigCurrent $MDAVConfigCurrent -HardeningModulePath $HardeningModulePath -TotalNumberOfTrueCompliantValues $SyncHash['TotalNumberOfTrueCompliantValues'] -FinalMegaObject $FinalMegaObject -SecurityPoliciesIni $SecurityPoliciesIni }
+                'TLSSecurity' { Invoke-TLSSecurity -MDAVPreferencesCurrent $MDAVPreferencesCurrent -MDAVConfigCurrent $MDAVConfigCurrent -HardeningModulePath $HardeningModulePath -TotalNumberOfTrueCompliantValues $SyncHash['TotalNumberOfTrueCompliantValues'] -FinalMegaObject $FinalMegaObject -SecurityPoliciesIni $SecurityPoliciesIni }
+                'LockScreen' { Invoke-LockScreen -MDAVPreferencesCurrent $MDAVPreferencesCurrent -MDAVConfigCurrent $MDAVConfigCurrent -HardeningModulePath $HardeningModulePath -TotalNumberOfTrueCompliantValues $SyncHash['TotalNumberOfTrueCompliantValues'] -FinalMegaObject $FinalMegaObject -SecurityPoliciesIni $SecurityPoliciesIni }
+                'UserAccountControl' { Invoke-UserAccountControl -MDAVPreferencesCurrent $MDAVPreferencesCurrent -MDAVConfigCurrent $MDAVConfigCurrent -HardeningModulePath $HardeningModulePath -TotalNumberOfTrueCompliantValues $SyncHash['TotalNumberOfTrueCompliantValues'] -FinalMegaObject $FinalMegaObject -SecurityPoliciesIni $SecurityPoliciesIni }
+                'DeviceGuard' { Invoke-DeviceGuard -MDAVPreferencesCurrent $MDAVPreferencesCurrent -MDAVConfigCurrent $MDAVConfigCurrent -HardeningModulePath $HardeningModulePath -TotalNumberOfTrueCompliantValues $SyncHash['TotalNumberOfTrueCompliantValues'] -FinalMegaObject $FinalMegaObject -SecurityPoliciesIni $SecurityPoliciesIni }
+                'WindowsFirewall' { Invoke-WindowsFirewall -MDAVPreferencesCurrent $MDAVPreferencesCurrent -MDAVConfigCurrent $MDAVConfigCurrent -HardeningModulePath $HardeningModulePath -TotalNumberOfTrueCompliantValues $SyncHash['TotalNumberOfTrueCompliantValues'] -FinalMegaObject $FinalMegaObject -SecurityPoliciesIni $SecurityPoliciesIni }
+                'OptionalWindowsFeatures' { Invoke-OptionalWindowsFeatures -MDAVPreferencesCurrent $MDAVPreferencesCurrent -MDAVConfigCurrent $MDAVConfigCurrent -HardeningModulePath $HardeningModulePath -TotalNumberOfTrueCompliantValues $SyncHash['TotalNumberOfTrueCompliantValues'] -FinalMegaObject $FinalMegaObject -SecurityPoliciesIni $SecurityPoliciesIni }
+                'WindowsNetworking' { Invoke-WindowsNetworking -MDAVPreferencesCurrent $MDAVPreferencesCurrent -MDAVConfigCurrent $MDAVConfigCurrent -HardeningModulePath $HardeningModulePath -TotalNumberOfTrueCompliantValues $SyncHash['TotalNumberOfTrueCompliantValues'] -FinalMegaObject $FinalMegaObject -SecurityPoliciesIni $SecurityPoliciesIni }
+                'MiscellaneousConfigurations' { Invoke-MiscellaneousConfigurations -MDAVPreferencesCurrent $MDAVPreferencesCurrent -MDAVConfigCurrent $MDAVConfigCurrent -HardeningModulePath $HardeningModulePath -TotalNumberOfTrueCompliantValues $SyncHash['TotalNumberOfTrueCompliantValues'] -FinalMegaObject $FinalMegaObject -SecurityPoliciesIni $SecurityPoliciesIni }
+                'WindowsUpdateConfigurations' { Invoke-WindowsUpdateConfigurations -MDAVPreferencesCurrent $MDAVPreferencesCurrent -MDAVConfigCurrent $MDAVConfigCurrent -HardeningModulePath $HardeningModulePath -TotalNumberOfTrueCompliantValues $SyncHash['TotalNumberOfTrueCompliantValues'] -FinalMegaObject $FinalMegaObject -SecurityPoliciesIni $SecurityPoliciesIni }
+                'EdgeBrowserConfigurations' { Invoke-EdgeBrowserConfigurations -MDAVPreferencesCurrent $MDAVPreferencesCurrent -MDAVConfigCurrent $MDAVConfigCurrent -HardeningModulePath $HardeningModulePath -TotalNumberOfTrueCompliantValues $SyncHash['TotalNumberOfTrueCompliantValues'] -FinalMegaObject $FinalMegaObject -SecurityPoliciesIni $SecurityPoliciesIni }
+                'NonAdminCommands' { Invoke-NonAdminCommands -MDAVPreferencesCurrent $MDAVPreferencesCurrent -MDAVConfigCurrent $MDAVConfigCurrent -HardeningModulePath $HardeningModulePath -TotalNumberOfTrueCompliantValues $SyncHash['TotalNumberOfTrueCompliantValues'] -FinalMegaObject $FinalMegaObject -SecurityPoliciesIni $SecurityPoliciesIni }
                 Default {
                     # Get the values of the ValidateSet attribute of the Categories parameter of the main function
                     [Categoriex]::new().GetValidValues() | ForEach-Object -Process {
                         # Run all of the categories' functions if the user didn't specify any
-                        . "Invoke-$_" -MDAVPreferencesCurrent $MDAVPreferencesCurrent -MDAVConfigCurrent $MDAVConfigCurrent -HardeningModulePath $HardeningModulePath -TotalNumberOfTrueCompliantValues $SyncHash['TotalNumberOfTrueCompliantValues'] -FinalMegaObject $FinalMegaObject
+                        . "Invoke-$_" -MDAVPreferencesCurrent $MDAVPreferencesCurrent -MDAVConfigCurrent $MDAVConfigCurrent -HardeningModulePath $HardeningModulePath -TotalNumberOfTrueCompliantValues $SyncHash['TotalNumberOfTrueCompliantValues'] -FinalMegaObject $FinalMegaObject -SecurityPoliciesIni $SecurityPoliciesIni
                     }
                 }
             }
@@ -1873,6 +1974,27 @@ function Confirm-SystemCompliance {
             }
             if (($null -eq $Categories) -or ('TLSSecurity' -in $Categories)) {
                 [System.Void]$JobsToWaitFor.Add($TLSSecurityJob)
+            }
+            if (($null -eq $Categories) -or ('LockScreen' -in $Categories)) {
+                [System.Void]$JobsToWaitFor.Add($LockScreenJob)
+            }
+            if (($null -eq $Categories) -or ('UserAccountControl' -in $Categories)) {
+                [System.Void]$JobsToWaitFor.Add($UserAccountControlJob)
+            }
+            if (($null -eq $Categories) -or ('DeviceGuard' -in $Categories)) {
+                [System.Void]$JobsToWaitFor.Add($DeviceGuardJob)
+            }
+            if (($null -eq $Categories) -or ('WindowsNetworking' -in $Categories)) {
+                [System.Void]$JobsToWaitFor.Add($WindowsNetworkingJob)
+            }
+            if (($null -eq $Categories) -or ('WindowsUpdateConfigurations' -in $Categories)) {
+                [System.Void]$JobsToWaitFor.Add($WindowsUpdateConfigurationsJob)
+            }
+            if (($null -eq $Categories) -or ('EdgeBrowserConfigurations' -in $Categories)) {
+                [System.Void]$JobsToWaitFor.Add($EdgeBrowserConfigurationsJob)
+            }
+            if (($null -eq $Categories) -or ('NonAdminCommands' -in $Categories)) {
+                [System.Void]$JobsToWaitFor.Add($NonAdminCommandsJob)
             }
 
             $null = Wait-Job -Job $JobsToWaitFor

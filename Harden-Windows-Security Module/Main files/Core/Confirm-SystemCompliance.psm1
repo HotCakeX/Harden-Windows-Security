@@ -374,8 +374,8 @@ function Confirm-SystemCompliance {
 
             #Region Main-Functions
             Function Invoke-MicrosoftDefender {
-                Param ($CurrentMainStep, $TotalMainSteps, $MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $TotalNumberOfTrueCompliantValues, $FinalMegaObject)
-
+                Param ($MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $TotalNumberOfTrueCompliantValues, $FinalMegaObject)
+                
                 [System.Management.Automation.Job2]$script:MicrosoftDefenderJob = Start-ThreadJob -ScriptBlock {
 
                     Param ($MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $TotalNumberOfTrueCompliantValues, $FinalMegaObject, $ScriptBlockInvokeCategoryProcessing, $CSVResource, $ParentVerbosePreference)
@@ -821,7 +821,7 @@ function Confirm-SystemCompliance {
             }
 
             Function Invoke-AttackSurfaceReductionRules {
-                Param ($CurrentMainStep, $TotalMainSteps, $MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $TotalNumberOfTrueCompliantValues, $FinalMegaObject)
+                Param ($MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $TotalNumberOfTrueCompliantValues, $FinalMegaObject)
 
                 [System.Management.Automation.Job2]$script:AttackSurfaceReductionRulesJob = Start-ThreadJob -ScriptBlock {
 
@@ -927,7 +927,7 @@ function Confirm-SystemCompliance {
 
             }
             Function Invoke-BitLockerSettings {
-                Param ($CurrentMainStep, $TotalMainSteps, $MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $TotalNumberOfTrueCompliantValues, $FinalMegaObject)
+                Param ($MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $TotalNumberOfTrueCompliantValues, $FinalMegaObject)
 
                 [System.Management.Automation.Job2]$script:BitLockerSettingsJob = Start-ThreadJob -ScriptBlock {
 
@@ -1186,7 +1186,7 @@ function Confirm-SystemCompliance {
                 } -Name 'Invoke-BitLockerSettings' -StreamingHost $Host -ArgumentList ($MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $TotalNumberOfTrueCompliantValues, $FinalMegaObject, $ScriptBlockInvokeCategoryProcessing, $CSVResource, $VerbosePreference)
             }
             Function Invoke-TLSSecurity {
-                Param ($CurrentMainStep, $TotalMainSteps, $MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $TotalNumberOfTrueCompliantValues, $FinalMegaObject)
+                Param ($MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $TotalNumberOfTrueCompliantValues, $FinalMegaObject)
               
                 $NestedObjectArray = New-Object -TypeName System.Collections.Generic.List[HardeningModule.IndividualResult]
                 [System.String]$CatName = 'TLSSecurity'
@@ -1221,7 +1221,7 @@ function Confirm-SystemCompliance {
                 [System.Void]$FinalMegaObject.TryAdd($CatName, $NestedObjectArray)
             }
             Function Invoke-LockScreen {
-                Param ($CurrentMainStep, $TotalMainSteps, $MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $TotalNumberOfTrueCompliantValues, $FinalMegaObject)
+                Param ($MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $TotalNumberOfTrueCompliantValues, $FinalMegaObject)
                 
                 $NestedObjectArray = New-Object -TypeName System.Collections.Generic.List[HardeningModule.IndividualResult]
                 [System.String]$CatName = 'LockScreen'
@@ -1334,7 +1334,7 @@ function Confirm-SystemCompliance {
                 [System.Void]$FinalMegaObject.TryAdd($CatName, $NestedObjectArray)
             }
             Function Invoke-UserAccountControl {
-                Param ($CurrentMainStep, $TotalMainSteps, $MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $TotalNumberOfTrueCompliantValues, $FinalMegaObject)
+                Param ($MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $TotalNumberOfTrueCompliantValues, $FinalMegaObject)
                
                 $NestedObjectArray = New-Object -TypeName System.Collections.Generic.List[HardeningModule.IndividualResult]
                 [System.String]$CatName = 'UserAccountControl'
@@ -1381,7 +1381,7 @@ function Confirm-SystemCompliance {
                 [System.Void]$FinalMegaObject.TryAdd($CatName, $NestedObjectArray)
             }
             Function Invoke-DeviceGuard {
-                Param ($CurrentMainStep, $TotalMainSteps, $MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $TotalNumberOfTrueCompliantValues, $FinalMegaObject)
+                Param ($MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $TotalNumberOfTrueCompliantValues, $FinalMegaObject)
                
                 $NestedObjectArray = New-Object -TypeName System.Collections.Generic.List[HardeningModule.IndividualResult]
                 [System.String]$CatName = 'DeviceGuard'
@@ -1395,7 +1395,7 @@ function Confirm-SystemCompliance {
                 [System.Void]$FinalMegaObject.TryAdd($CatName, $NestedObjectArray)
             }
             Function Invoke-WindowsFirewall {
-                Param ($CurrentMainStep, $TotalMainSteps, $MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $TotalNumberOfTrueCompliantValues, $FinalMegaObject)
+                Param ($MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $TotalNumberOfTrueCompliantValues, $FinalMegaObject)
 
                 [System.Management.Automation.Job2]$script:WindowsFirewallJob = Start-ThreadJob -ScriptBlock {
 
@@ -1438,7 +1438,7 @@ function Confirm-SystemCompliance {
                 } -Name 'Invoke-WindowsFirewall' -StreamingHost $Host -ArgumentList ($MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $TotalNumberOfTrueCompliantValues, $FinalMegaObject, $ScriptBlockInvokeCategoryProcessing, $CSVResource, $VerbosePreference)
             }
             Function Invoke-OptionalWindowsFeatures {
-                Param ($CurrentMainStep, $TotalMainSteps, $MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $TotalNumberOfTrueCompliantValues, $FinalMegaObject)
+                Param ($MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $TotalNumberOfTrueCompliantValues, $FinalMegaObject)
 
                 [System.Management.Automation.Job2]$script:OptionalWindowsFeaturesJob = Start-ThreadJob -ScriptBlock {
 
@@ -1611,7 +1611,7 @@ function Confirm-SystemCompliance {
 
             }
             Function Invoke-WindowsNetworking {
-                Param ($CurrentMainStep, $TotalMainSteps, $MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $TotalNumberOfTrueCompliantValues, $FinalMegaObject)
+                Param ($MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $TotalNumberOfTrueCompliantValues, $FinalMegaObject)
                
                 $NestedObjectArray = New-Object -TypeName System.Collections.Generic.List[HardeningModule.IndividualResult]
                 [System.String]$CatName = 'WindowsNetworking'
@@ -1677,7 +1677,7 @@ function Confirm-SystemCompliance {
                 [System.Void]$FinalMegaObject.TryAdd($CatName, $NestedObjectArray)
             }
             Function Invoke-MiscellaneousConfigurations {
-                Param ($CurrentMainStep, $TotalMainSteps, $MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $TotalNumberOfTrueCompliantValues, $FinalMegaObject)
+                Param ($MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $TotalNumberOfTrueCompliantValues, $FinalMegaObject)
 
                 [System.Management.Automation.Job2]$script:MiscellaneousConfigurationsJob = Start-ThreadJob -ScriptBlock {
 
@@ -1754,7 +1754,7 @@ function Confirm-SystemCompliance {
 
             }
             Function Invoke-WindowsUpdateConfigurations {
-                Param ($CurrentMainStep, $TotalMainSteps, $MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $TotalNumberOfTrueCompliantValues, $FinalMegaObject)
+                Param ($MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $TotalNumberOfTrueCompliantValues, $FinalMegaObject)
                
                 $NestedObjectArray = New-Object -TypeName System.Collections.Generic.List[HardeningModule.IndividualResult]
                 [System.String]$CatName = 'WindowsUpdateConfigurations'
@@ -1784,7 +1784,7 @@ function Confirm-SystemCompliance {
                 [System.Void]$FinalMegaObject.TryAdd($CatName, $NestedObjectArray)
             }
             Function Invoke-EdgeBrowserConfigurations {
-                Param ($CurrentMainStep, $TotalMainSteps, $MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $TotalNumberOfTrueCompliantValues, $FinalMegaObject)
+                Param ($MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $TotalNumberOfTrueCompliantValues, $FinalMegaObject)
               
                 $NestedObjectArray = New-Object -TypeName System.Collections.Generic.List[HardeningModule.IndividualResult]
                 [System.String]$CatName = 'EdgeBrowserConfigurations'
@@ -1798,7 +1798,7 @@ function Confirm-SystemCompliance {
                 [System.Void]$FinalMegaObject.TryAdd($CatName, $NestedObjectArray)
             }
             Function Invoke-NonAdminCommands {
-                Param ($CurrentMainStep, $TotalMainSteps, $MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $TotalNumberOfTrueCompliantValues, $FinalMegaObject)
+                Param ($MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $TotalNumberOfTrueCompliantValues, $FinalMegaObject)
               
                 $NestedObjectArray = New-Object -TypeName System.Collections.Generic.List[HardeningModule.IndividualResult]
                 [System.String]$CatName = 'NonAdminCommands'
@@ -1814,25 +1814,25 @@ function Confirm-SystemCompliance {
             #Endregion Main-Functions
 
             Switch ($Categories) {
-                'MicrosoftDefender' { Invoke-MicrosoftDefender -CurrentMainStep $CurrentMainStep -TotalMainSteps $TotalMainSteps -MDAVPreferencesCurrent $MDAVPreferencesCurrent -MDAVConfigCurrent $MDAVConfigCurrent -HardeningModulePath $HardeningModulePath -TotalNumberOfTrueCompliantValues $SyncHash['TotalNumberOfTrueCompliantValues'] -FinalMegaObject $FinalMegaObject }
-                'AttackSurfaceReductionRules' { Invoke-AttackSurfaceReductionRules -CurrentMainStep $CurrentMainStep -TotalMainSteps $TotalMainSteps -MDAVPreferencesCurrent $MDAVPreferencesCurrent -MDAVConfigCurrent $MDAVConfigCurrent -HardeningModulePath $HardeningModulePath -TotalNumberOfTrueCompliantValues $SyncHash['TotalNumberOfTrueCompliantValues'] -FinalMegaObject $FinalMegaObject }
-                'BitLockerSettings' { Invoke-BitLockerSettings -CurrentMainStep $CurrentMainStep -TotalMainSteps $TotalMainSteps -MDAVPreferencesCurrent $MDAVPreferencesCurrent -MDAVConfigCurrent $MDAVConfigCurrent -HardeningModulePath $HardeningModulePath -TotalNumberOfTrueCompliantValues $SyncHash['TotalNumberOfTrueCompliantValues'] -FinalMegaObject $FinalMegaObject }
-                'TLSSecurity' { Invoke-TLSSecurity -CurrentMainStep $CurrentMainStep -TotalMainSteps $TotalMainSteps -MDAVPreferencesCurrent $MDAVPreferencesCurrent -MDAVConfigCurrent $MDAVConfigCurrent -HardeningModulePath $HardeningModulePath -TotalNumberOfTrueCompliantValues $SyncHash['TotalNumberOfTrueCompliantValues'] -FinalMegaObject $FinalMegaObject }
-                'LockScreen' { Invoke-LockScreen -CurrentMainStep $CurrentMainStep -TotalMainSteps $TotalMainSteps -MDAVPreferencesCurrent $MDAVPreferencesCurrent -MDAVConfigCurrent $MDAVConfigCurrent -HardeningModulePath $HardeningModulePath -TotalNumberOfTrueCompliantValues $SyncHash['TotalNumberOfTrueCompliantValues'] -FinalMegaObject $FinalMegaObject }
-                'UserAccountControl' { Invoke-UserAccountControl -CurrentMainStep $CurrentMainStep -TotalMainSteps $TotalMainSteps -MDAVPreferencesCurrent $MDAVPreferencesCurrent -MDAVConfigCurrent $MDAVConfigCurrent -HardeningModulePath $HardeningModulePath -TotalNumberOfTrueCompliantValues $SyncHash['TotalNumberOfTrueCompliantValues'] -FinalMegaObject $FinalMegaObject }
-                'DeviceGuard' { Invoke-DeviceGuard -CurrentMainStep $CurrentMainStep -TotalMainSteps $TotalMainSteps -MDAVPreferencesCurrent $MDAVPreferencesCurrent -MDAVConfigCurrent $MDAVConfigCurrent -HardeningModulePath $HardeningModulePath -TotalNumberOfTrueCompliantValues $SyncHash['TotalNumberOfTrueCompliantValues'] -FinalMegaObject $FinalMegaObject }
-                'WindowsFirewall' { Invoke-WindowsFirewall -CurrentMainStep $CurrentMainStep -TotalMainSteps $TotalMainSteps -MDAVPreferencesCurrent $MDAVPreferencesCurrent -MDAVConfigCurrent $MDAVConfigCurrent -HardeningModulePath $HardeningModulePath -TotalNumberOfTrueCompliantValues $SyncHash['TotalNumberOfTrueCompliantValues'] -FinalMegaObject $FinalMegaObject }
-                'OptionalWindowsFeatures' { Invoke-OptionalWindowsFeatures -CurrentMainStep $CurrentMainStep -TotalMainSteps $TotalMainSteps -MDAVPreferencesCurrent $MDAVPreferencesCurrent -MDAVConfigCurrent $MDAVConfigCurrent -HardeningModulePath $HardeningModulePath -TotalNumberOfTrueCompliantValues $SyncHash['TotalNumberOfTrueCompliantValues'] -FinalMegaObject $FinalMegaObject }
-                'WindowsNetworking' { Invoke-WindowsNetworking -CurrentMainStep $CurrentMainStep -TotalMainSteps $TotalMainSteps -MDAVPreferencesCurrent $MDAVPreferencesCurrent -MDAVConfigCurrent $MDAVConfigCurrent -HardeningModulePath $HardeningModulePath -TotalNumberOfTrueCompliantValues $SyncHash['TotalNumberOfTrueCompliantValues'] -FinalMegaObject $FinalMegaObject }
-                'MiscellaneousConfigurations' { Invoke-MiscellaneousConfigurations -CurrentMainStep $CurrentMainStep -TotalMainSteps $TotalMainSteps -MDAVPreferencesCurrent $MDAVPreferencesCurrent -MDAVConfigCurrent $MDAVConfigCurrent -HardeningModulePath $HardeningModulePath -TotalNumberOfTrueCompliantValues $SyncHash['TotalNumberOfTrueCompliantValues'] -FinalMegaObject $FinalMegaObject }
-                'WindowsUpdateConfigurations' { Invoke-WindowsUpdateConfigurations -CurrentMainStep $CurrentMainStep -TotalMainSteps $TotalMainSteps -MDAVPreferencesCurrent $MDAVPreferencesCurrent -MDAVConfigCurrent $MDAVConfigCurrent -HardeningModulePath $HardeningModulePath -TotalNumberOfTrueCompliantValues $SyncHash['TotalNumberOfTrueCompliantValues'] -FinalMegaObject $FinalMegaObject }
-                'EdgeBrowserConfigurations' { Invoke-EdgeBrowserConfigurations -CurrentMainStep $CurrentMainStep -TotalMainSteps $TotalMainSteps -MDAVPreferencesCurrent $MDAVPreferencesCurrent -MDAVConfigCurrent $MDAVConfigCurrent -HardeningModulePath $HardeningModulePath -TotalNumberOfTrueCompliantValues $SyncHash['TotalNumberOfTrueCompliantValues'] -FinalMegaObject $FinalMegaObject }
-                'NonAdminCommands' { Invoke-NonAdminCommands -CurrentMainStep $CurrentMainStep -TotalMainSteps $TotalMainSteps -MDAVPreferencesCurrent $MDAVPreferencesCurrent -MDAVConfigCurrent $MDAVConfigCurrent -HardeningModulePath $HardeningModulePath -TotalNumberOfTrueCompliantValues $SyncHash['TotalNumberOfTrueCompliantValues'] -FinalMegaObject $FinalMegaObject }
+                'MicrosoftDefender' { Invoke-MicrosoftDefender -MDAVPreferencesCurrent $MDAVPreferencesCurrent -MDAVConfigCurrent $MDAVConfigCurrent -HardeningModulePath $HardeningModulePath -TotalNumberOfTrueCompliantValues $SyncHash['TotalNumberOfTrueCompliantValues'] -FinalMegaObject $FinalMegaObject }
+                'AttackSurfaceReductionRules' { Invoke-AttackSurfaceReductionRules -MDAVPreferencesCurrent $MDAVPreferencesCurrent -MDAVConfigCurrent $MDAVConfigCurrent -HardeningModulePath $HardeningModulePath -TotalNumberOfTrueCompliantValues $SyncHash['TotalNumberOfTrueCompliantValues'] -FinalMegaObject $FinalMegaObject }
+                'BitLockerSettings' { Invoke-BitLockerSettings -MDAVPreferencesCurrent $MDAVPreferencesCurrent -MDAVConfigCurrent $MDAVConfigCurrent -HardeningModulePath $HardeningModulePath -TotalNumberOfTrueCompliantValues $SyncHash['TotalNumberOfTrueCompliantValues'] -FinalMegaObject $FinalMegaObject }
+                'TLSSecurity' { Invoke-TLSSecurity -MDAVPreferencesCurrent $MDAVPreferencesCurrent -MDAVConfigCurrent $MDAVConfigCurrent -HardeningModulePath $HardeningModulePath -TotalNumberOfTrueCompliantValues $SyncHash['TotalNumberOfTrueCompliantValues'] -FinalMegaObject $FinalMegaObject }
+                'LockScreen' { Invoke-LockScreen -MDAVPreferencesCurrent $MDAVPreferencesCurrent -MDAVConfigCurrent $MDAVConfigCurrent -HardeningModulePath $HardeningModulePath -TotalNumberOfTrueCompliantValues $SyncHash['TotalNumberOfTrueCompliantValues'] -FinalMegaObject $FinalMegaObject }
+                'UserAccountControl' { Invoke-UserAccountControl -MDAVPreferencesCurrent $MDAVPreferencesCurrent -MDAVConfigCurrent $MDAVConfigCurrent -HardeningModulePath $HardeningModulePath -TotalNumberOfTrueCompliantValues $SyncHash['TotalNumberOfTrueCompliantValues'] -FinalMegaObject $FinalMegaObject }
+                'DeviceGuard' { Invoke-DeviceGuard -MDAVPreferencesCurrent $MDAVPreferencesCurrent -MDAVConfigCurrent $MDAVConfigCurrent -HardeningModulePath $HardeningModulePath -TotalNumberOfTrueCompliantValues $SyncHash['TotalNumberOfTrueCompliantValues'] -FinalMegaObject $FinalMegaObject }
+                'WindowsFirewall' { Invoke-WindowsFirewall -MDAVPreferencesCurrent $MDAVPreferencesCurrent -MDAVConfigCurrent $MDAVConfigCurrent -HardeningModulePath $HardeningModulePath -TotalNumberOfTrueCompliantValues $SyncHash['TotalNumberOfTrueCompliantValues'] -FinalMegaObject $FinalMegaObject }
+                'OptionalWindowsFeatures' { Invoke-OptionalWindowsFeatures -MDAVPreferencesCurrent $MDAVPreferencesCurrent -MDAVConfigCurrent $MDAVConfigCurrent -HardeningModulePath $HardeningModulePath -TotalNumberOfTrueCompliantValues $SyncHash['TotalNumberOfTrueCompliantValues'] -FinalMegaObject $FinalMegaObject }
+                'WindowsNetworking' { Invoke-WindowsNetworking -MDAVPreferencesCurrent $MDAVPreferencesCurrent -MDAVConfigCurrent $MDAVConfigCurrent -HardeningModulePath $HardeningModulePath -TotalNumberOfTrueCompliantValues $SyncHash['TotalNumberOfTrueCompliantValues'] -FinalMegaObject $FinalMegaObject }
+                'MiscellaneousConfigurations' { Invoke-MiscellaneousConfigurations -MDAVPreferencesCurrent $MDAVPreferencesCurrent -MDAVConfigCurrent $MDAVConfigCurrent -HardeningModulePath $HardeningModulePath -TotalNumberOfTrueCompliantValues $SyncHash['TotalNumberOfTrueCompliantValues'] -FinalMegaObject $FinalMegaObject }
+                'WindowsUpdateConfigurations' { Invoke-WindowsUpdateConfigurations -MDAVPreferencesCurrent $MDAVPreferencesCurrent -MDAVConfigCurrent $MDAVConfigCurrent -HardeningModulePath $HardeningModulePath -TotalNumberOfTrueCompliantValues $SyncHash['TotalNumberOfTrueCompliantValues'] -FinalMegaObject $FinalMegaObject }
+                'EdgeBrowserConfigurations' { Invoke-EdgeBrowserConfigurations -MDAVPreferencesCurrent $MDAVPreferencesCurrent -MDAVConfigCurrent $MDAVConfigCurrent -HardeningModulePath $HardeningModulePath -TotalNumberOfTrueCompliantValues $SyncHash['TotalNumberOfTrueCompliantValues'] -FinalMegaObject $FinalMegaObject }
+                'NonAdminCommands' { Invoke-NonAdminCommands -MDAVPreferencesCurrent $MDAVPreferencesCurrent -MDAVConfigCurrent $MDAVConfigCurrent -HardeningModulePath $HardeningModulePath -TotalNumberOfTrueCompliantValues $SyncHash['TotalNumberOfTrueCompliantValues'] -FinalMegaObject $FinalMegaObject }
                 Default {
                     # Get the values of the ValidateSet attribute of the Categories parameter of the main function
                     [Categoriex]::new().GetValidValues() | ForEach-Object -Process {
                         # Run all of the categories' functions if the user didn't specify any
-                        . "Invoke-$_" -CurrentMainStep $CurrentMainStep -TotalMainSteps $TotalMainSteps -MDAVPreferencesCurrent $MDAVPreferencesCurrent -MDAVConfigCurrent $MDAVConfigCurrent -HardeningModulePath $HardeningModulePath -TotalNumberOfTrueCompliantValues $SyncHash['TotalNumberOfTrueCompliantValues'] -FinalMegaObject $FinalMegaObject
+                        . "Invoke-$_" -MDAVPreferencesCurrent $MDAVPreferencesCurrent -MDAVConfigCurrent $MDAVConfigCurrent -HardeningModulePath $HardeningModulePath -TotalNumberOfTrueCompliantValues $SyncHash['TotalNumberOfTrueCompliantValues'] -FinalMegaObject $FinalMegaObject
                     }
                 }
             }

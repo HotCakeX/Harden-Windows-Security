@@ -653,12 +653,12 @@ Function Protect-WindowsSecurity {
                         [System.Drawing.Color]::Gold
                     )
 
-                    [System.String]$Output = ''
+                    $StringBuilder = New-Object -TypeName System.Text.StringBuilder
                     for ($I = 0; $I -lt $InputText.Length; $I++) {
                         $CurrentColor = $RainbowColors[$I % $RainbowColors.Length]
-                        $Output += "$($PSStyle.Foreground.FromRGB($CurrentColor.R, $CurrentColor.G, $CurrentColor.B))$($PSStyle.Blink)$($InputText[$I])$($PSStyle.BlinkOff)$($PSStyle.Reset)"
+                        [System.Void]$StringBuilder.Append("$($PSStyle.Foreground.FromRGB($CurrentColor.R, $CurrentColor.G, $CurrentColor.B))$($PSStyle.Blink)$($InputText[$I])$($PSStyle.BlinkOff)$($PSStyle.Reset)")
                     }
-                    Write-Output -InputObject $Output
+                    Write-Output -InputObject $StringBuilder.ToString()
                     break
                 }
                 Default { Throw 'Unspecified Color' }

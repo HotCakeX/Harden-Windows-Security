@@ -1954,47 +1954,17 @@ function Confirm-SystemCompliance {
             #Region Threading management
             $JobsToWaitFor = New-Object -TypeName System.Collections.Generic.List[System.Management.Automation.Job2]
 
-            if (($null -eq $Categories) -or ('MicrosoftDefender' -in $Categories)) {
-                [System.Void]$JobsToWaitFor.Add($MicrosoftDefenderJob)
+            # If user didn't specify any categories, add all of them to the list of jobs to wait for
+            if ($null -eq $Categories) {
+                foreach ($Cat in [Categoriex]::new().GetValidValues()) {
+                    [System.Void]$JobsToWaitFor.Add((Get-Variable -Name ($Cat + 'Job') -ValueOnly))
+                }
             }
-            if (($null -eq $Categories) -or ('BitLockerSettings' -in $Categories)) {
-                [System.Void]$JobsToWaitFor.Add($BitLockerSettingsJob)
-            }
-            if (($null -eq $Categories) -or ('OptionalWindowsFeatures' -in $Categories)) {
-                [System.Void]$JobsToWaitFor.Add($OptionalWindowsFeaturesJob)
-            }
-            if (($null -eq $Categories) -or ('AttackSurfaceReductionRules' -in $Categories)) {
-                [System.Void]$JobsToWaitFor.Add($AttackSurfaceReductionRulesJob)
-            }
-            if (($null -eq $Categories) -or ('WindowsFirewall' -in $Categories)) {
-                [System.Void]$JobsToWaitFor.Add($WindowsFirewallJob)
-            }
-            if (($null -eq $Categories) -or ('MiscellaneousConfigurations' -in $Categories)) {
-                [System.Void]$JobsToWaitFor.Add($MiscellaneousConfigurationsJob)
-            }
-            if (($null -eq $Categories) -or ('TLSSecurity' -in $Categories)) {
-                [System.Void]$JobsToWaitFor.Add($TLSSecurityJob)
-            }
-            if (($null -eq $Categories) -or ('LockScreen' -in $Categories)) {
-                [System.Void]$JobsToWaitFor.Add($LockScreenJob)
-            }
-            if (($null -eq $Categories) -or ('UserAccountControl' -in $Categories)) {
-                [System.Void]$JobsToWaitFor.Add($UserAccountControlJob)
-            }
-            if (($null -eq $Categories) -or ('DeviceGuard' -in $Categories)) {
-                [System.Void]$JobsToWaitFor.Add($DeviceGuardJob)
-            }
-            if (($null -eq $Categories) -or ('WindowsNetworking' -in $Categories)) {
-                [System.Void]$JobsToWaitFor.Add($WindowsNetworkingJob)
-            }
-            if (($null -eq $Categories) -or ('WindowsUpdateConfigurations' -in $Categories)) {
-                [System.Void]$JobsToWaitFor.Add($WindowsUpdateConfigurationsJob)
-            }
-            if (($null -eq $Categories) -or ('EdgeBrowserConfigurations' -in $Categories)) {
-                [System.Void]$JobsToWaitFor.Add($EdgeBrowserConfigurationsJob)
-            }
-            if (($null -eq $Categories) -or ('NonAdminCommands' -in $Categories)) {
-                [System.Void]$JobsToWaitFor.Add($NonAdminCommandsJob)
+            # If user specified categories, add only the specified ones to the list of the jobs to wait for
+            else {
+                foreach ($Cat in $Categories) {
+                    [System.Void]$JobsToWaitFor.Add((Get-Variable -Name ($Cat + 'Job') -ValueOnly))
+                }
             }
 
             $null = Wait-Job -Job $JobsToWaitFor

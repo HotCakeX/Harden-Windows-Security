@@ -105,7 +105,7 @@ function Confirm-SystemCompliance {
         $FinalMegaObject = [System.Collections.Concurrent.ConcurrentDictionary[System.String, PSCustomObject[]]]::new()
 
         # The total number of the steps for the parent/main progress bar to render
-        [System.UInt16]$TotalMainSteps = 13
+        [System.UInt16]$TotalMainSteps = 2
         [System.UInt16]$CurrentMainStep = 0
         #EndRegion Defining-Variables
 
@@ -368,6 +368,9 @@ function Confirm-SystemCompliance {
 
             # Storing the output of the ini file parsing function
             [PSCustomObject]$SecurityPoliciesIni = ConvertFrom-IniFile -IniFile .\security_policy.inf
+
+            $CurrentMainStep++
+            Write-Progress -Id 0 -Activity 'Verifying the security settings' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
 
             #Region Main-Functions
             Function Invoke-MicrosoftDefender {
@@ -1184,9 +1187,7 @@ function Confirm-SystemCompliance {
             }
             Function Invoke-TLSSecurity {
                 Param ($CurrentMainStep, $TotalMainSteps, $MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $TotalNumberOfTrueCompliantValues, $FinalMegaObject)
-                $CurrentMainStep++
-                Write-Progress -Id 0 -Activity 'Validating TLS Category' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
-
+              
                 $NestedObjectArray = New-Object -TypeName System.Collections.Generic.List[HardeningModule.IndividualResult]
                 [System.String]$CatName = 'TLSSecurity'
 
@@ -1221,9 +1222,7 @@ function Confirm-SystemCompliance {
             }
             Function Invoke-LockScreen {
                 Param ($CurrentMainStep, $TotalMainSteps, $MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $TotalNumberOfTrueCompliantValues, $FinalMegaObject)
-                $CurrentMainStep++
-                Write-Progress -Id 0 -Activity 'Validating Lock Screen Category' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
-
+                
                 $NestedObjectArray = New-Object -TypeName System.Collections.Generic.List[HardeningModule.IndividualResult]
                 [System.String]$CatName = 'LockScreen'
 
@@ -1336,9 +1335,7 @@ function Confirm-SystemCompliance {
             }
             Function Invoke-UserAccountControl {
                 Param ($CurrentMainStep, $TotalMainSteps, $MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $TotalNumberOfTrueCompliantValues, $FinalMegaObject)
-                $CurrentMainStep++
-                Write-Progress -Id 0 -Activity 'Validating User Account Control Category' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
-
+               
                 $NestedObjectArray = New-Object -TypeName System.Collections.Generic.List[HardeningModule.IndividualResult]
                 [System.String]$CatName = 'UserAccountControl'
 
@@ -1385,9 +1382,7 @@ function Confirm-SystemCompliance {
             }
             Function Invoke-DeviceGuard {
                 Param ($CurrentMainStep, $TotalMainSteps, $MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $TotalNumberOfTrueCompliantValues, $FinalMegaObject)
-                $CurrentMainStep++
-                Write-Progress -Id 0 -Activity 'Validating Device Guard Category' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
-
+               
                 $NestedObjectArray = New-Object -TypeName System.Collections.Generic.List[HardeningModule.IndividualResult]
                 [System.String]$CatName = 'DeviceGuard'
 
@@ -1617,9 +1612,7 @@ function Confirm-SystemCompliance {
             }
             Function Invoke-WindowsNetworking {
                 Param ($CurrentMainStep, $TotalMainSteps, $MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $TotalNumberOfTrueCompliantValues, $FinalMegaObject)
-                $CurrentMainStep++
-                Write-Progress -Id 0 -Activity 'Validating Windows Networking Category' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
-
+               
                 $NestedObjectArray = New-Object -TypeName System.Collections.Generic.List[HardeningModule.IndividualResult]
                 [System.String]$CatName = 'WindowsNetworking'
 
@@ -1762,9 +1755,7 @@ function Confirm-SystemCompliance {
             }
             Function Invoke-WindowsUpdateConfigurations {
                 Param ($CurrentMainStep, $TotalMainSteps, $MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $TotalNumberOfTrueCompliantValues, $FinalMegaObject)
-                $CurrentMainStep++
-                Write-Progress -Id 0 -Activity 'Validating Windows Update Category' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
-
+               
                 $NestedObjectArray = New-Object -TypeName System.Collections.Generic.List[HardeningModule.IndividualResult]
                 [System.String]$CatName = 'WindowsUpdateConfigurations'
 
@@ -1794,9 +1785,7 @@ function Confirm-SystemCompliance {
             }
             Function Invoke-EdgeBrowserConfigurations {
                 Param ($CurrentMainStep, $TotalMainSteps, $MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $TotalNumberOfTrueCompliantValues, $FinalMegaObject)
-                $CurrentMainStep++
-                Write-Progress -Id 0 -Activity 'Validating Edge Browser Category' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
-
+              
                 $NestedObjectArray = New-Object -TypeName System.Collections.Generic.List[HardeningModule.IndividualResult]
                 [System.String]$CatName = 'EdgeBrowserConfigurations'
 
@@ -1810,9 +1799,7 @@ function Confirm-SystemCompliance {
             }
             Function Invoke-NonAdminCommands {
                 Param ($CurrentMainStep, $TotalMainSteps, $MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $TotalNumberOfTrueCompliantValues, $FinalMegaObject)
-                $CurrentMainStep++
-                Write-Progress -Id 0 -Activity 'Validating Non-Admin Category' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
-
+              
                 $NestedObjectArray = New-Object -TypeName System.Collections.Generic.List[HardeningModule.IndividualResult]
                 [System.String]$CatName = 'NonAdminCommands'
 

@@ -1784,9 +1784,11 @@ function Confirm-SystemCompliance {
             }
 
             #Region Threading management
-            $null = Wait-Job -Job $MicrosoftDefenderJob
-            Receive-Job -Job $MicrosoftDefenderJob
-            Remove-Job -Job $MicrosoftDefenderJob -Force
+            if ('MicrosoftDefender' -in $Categories) {
+                $null = Wait-Job -Job $MicrosoftDefenderJob
+                Receive-Job -Job $MicrosoftDefenderJob
+                Remove-Job -Job $MicrosoftDefenderJob -Force
+            }
             #Endregion Threading management
 
             if ($ExportToCSV) {

@@ -375,7 +375,7 @@ function Confirm-SystemCompliance {
             #Region Main-Functions
             Function Invoke-MicrosoftDefender {
                 Param ($MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $TotalNumberOfTrueCompliantValues, $FinalMegaObject)
-                
+
                 [System.Management.Automation.Job2]$script:MicrosoftDefenderJob = Start-ThreadJob -ScriptBlock {
 
                     Param ($MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $TotalNumberOfTrueCompliantValues, $FinalMegaObject, $ScriptBlockInvokeCategoryProcessing, $CSVResource, $ParentVerbosePreference)
@@ -819,7 +819,6 @@ function Confirm-SystemCompliance {
 
                 } -Name 'Invoke-MicrosoftDefender' -StreamingHost $Host -ArgumentList ($MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $TotalNumberOfTrueCompliantValues, $FinalMegaObject, $ScriptBlockInvokeCategoryProcessing, $CSVResource, $VerbosePreference)
             }
-
             Function Invoke-AttackSurfaceReductionRules {
                 Param ($MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $TotalNumberOfTrueCompliantValues, $FinalMegaObject)
 
@@ -1187,42 +1186,56 @@ function Confirm-SystemCompliance {
             }
             Function Invoke-TLSSecurity {
                 Param ($MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $TotalNumberOfTrueCompliantValues, $FinalMegaObject)
-              
-                $NestedObjectArray = New-Object -TypeName System.Collections.Generic.List[HardeningModule.IndividualResult]
-                [System.String]$CatName = 'TLSSecurity'
 
-                # Process items in Registry resources.csv file with "Group Policy" origin and add them to the $NestedObjectArray array as custom objects
-                foreach ($Result in Invoke-CategoryProcessing -catname $CatName -Method 'Group Policy') {
-                    [System.Void]$NestedObjectArray.Add($Result)
-                }
+                [System.Management.Automation.Job2]$script:TLSSecurityJob = Start-ThreadJob -ScriptBlock {
 
-                # ECC Curves
-                [System.Object[]]$ECCCurves = Get-TlsEccCurve
-                [System.Object[]]$List = ('nistP521', 'curve25519', 'NistP384', 'NistP256')
-                # Make sure both arrays are completely identical in terms of members and their exact position
-                # If this variable is empty that means both arrays are completely identical
-                $IndividualItemResult = Compare-Object -ReferenceObject $ECCCurves -DifferenceObject $List -SyncWindow 0
+                    Param ($MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $TotalNumberOfTrueCompliantValues, $FinalMegaObject, $ScriptBlockInvokeCategoryProcessing, $CSVResource, $ParentVerbosePreference)
 
-                [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
-                        FriendlyName = 'ECC Curves and their positions'
-                        Compliant    = [System.Boolean]($IndividualItemResult ? $false : $True)
-                        Value        = ($List -join ',') # Join the array elements into a string to display them properly in the output CSV file
-                        Name         = 'ECC Curves and their positions'
-                        Category     = $CatName
-                        Method       = 'Cmdlet'
-                    })
+                    $ErrorActionPreference = 'Stop'
+                    $VerbosePreference = $ParentVerbosePreference
 
-                # Process items in Registry resources.csv file with "Registry Keys" origin and add them to the $NestedObjectArray array as custom objects
-                foreach ($Result in Invoke-CategoryProcessing -catname $CatName -Method 'Registry Keys') {
-                    [System.Void]$NestedObjectArray.Add($Result)
-                }
+                    # Import the IndividualResult class if it's not already loaded
+                    if (-NOT ('HardeningModule.IndividualResult' -as [System.Type]) ) {
+                        Add-Type -Path "$HardeningModulePath\Shared\IndividualResultClass.cs"
+                    }
 
-                # Add the array of the custom objects to the main output HashTable
-                [System.Void]$FinalMegaObject.TryAdd($CatName, $NestedObjectArray)
+                    $NestedObjectArray = New-Object -TypeName System.Collections.Generic.List[HardeningModule.IndividualResult]
+                    [System.String]$CatName = 'TLSSecurity'
+
+                    # Process items in Registry resources.csv file with "Group Policy" origin and add them to the $NestedObjectArray array as custom objects
+                    foreach ($Result in (&$ScriptBlockInvokeCategoryProcessing -catname $CatName -Method 'Group Policy')) {
+                        [System.Void]$NestedObjectArray.Add($Result)
+                    }
+
+                    # ECC Curves
+                    [System.Object[]]$ECCCurves = Get-TlsEccCurve
+                    [System.Object[]]$List = ('nistP521', 'curve25519', 'NistP384', 'NistP256')
+                    # Make sure both arrays are completely identical in terms of members and their exact position
+                    # If this variable is empty that means both arrays are completely identical
+                    $IndividualItemResult = Compare-Object -ReferenceObject $ECCCurves -DifferenceObject $List -SyncWindow 0
+
+                    [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
+                            FriendlyName = 'ECC Curves and their positions'
+                            Compliant    = [System.Boolean]($IndividualItemResult ? $false : $True)
+                            Value        = ($List -join ',') # Join the array elements into a string to display them properly in the output CSV file
+                            Name         = 'ECC Curves and their positions'
+                            Category     = $CatName
+                            Method       = 'Cmdlet'
+                        })
+
+                    # Process items in Registry resources.csv file with "Registry Keys" origin and add them to the $NestedObjectArray array as custom objects
+                    foreach ($Result in (&$ScriptBlockInvokeCategoryProcessing -catname $CatName -Method 'Registry Keys')) {
+                        [System.Void]$NestedObjectArray.Add($Result)
+                    }
+
+                    # Add the array of the custom objects to the main output HashTable
+                    [System.Void]$FinalMegaObject.TryAdd($CatName, $NestedObjectArray)
+
+                } -Name 'Invoke-TLSSecurity' -StreamingHost $Host -ArgumentList ($MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $TotalNumberOfTrueCompliantValues, $FinalMegaObject, $ScriptBlockInvokeCategoryProcessing, $CSVResource, $VerbosePreference)
             }
             Function Invoke-LockScreen {
                 Param ($MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $TotalNumberOfTrueCompliantValues, $FinalMegaObject)
-                
+
                 $NestedObjectArray = New-Object -TypeName System.Collections.Generic.List[HardeningModule.IndividualResult]
                 [System.String]$CatName = 'LockScreen'
 
@@ -1335,7 +1348,7 @@ function Confirm-SystemCompliance {
             }
             Function Invoke-UserAccountControl {
                 Param ($MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $TotalNumberOfTrueCompliantValues, $FinalMegaObject)
-               
+
                 $NestedObjectArray = New-Object -TypeName System.Collections.Generic.List[HardeningModule.IndividualResult]
                 [System.String]$CatName = 'UserAccountControl'
 
@@ -1382,7 +1395,7 @@ function Confirm-SystemCompliance {
             }
             Function Invoke-DeviceGuard {
                 Param ($MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $TotalNumberOfTrueCompliantValues, $FinalMegaObject)
-               
+
                 $NestedObjectArray = New-Object -TypeName System.Collections.Generic.List[HardeningModule.IndividualResult]
                 [System.String]$CatName = 'DeviceGuard'
 
@@ -1612,7 +1625,7 @@ function Confirm-SystemCompliance {
             }
             Function Invoke-WindowsNetworking {
                 Param ($MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $TotalNumberOfTrueCompliantValues, $FinalMegaObject)
-               
+
                 $NestedObjectArray = New-Object -TypeName System.Collections.Generic.List[HardeningModule.IndividualResult]
                 [System.String]$CatName = 'WindowsNetworking'
 
@@ -1755,7 +1768,7 @@ function Confirm-SystemCompliance {
             }
             Function Invoke-WindowsUpdateConfigurations {
                 Param ($MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $TotalNumberOfTrueCompliantValues, $FinalMegaObject)
-               
+
                 $NestedObjectArray = New-Object -TypeName System.Collections.Generic.List[HardeningModule.IndividualResult]
                 [System.String]$CatName = 'WindowsUpdateConfigurations'
 
@@ -1785,7 +1798,7 @@ function Confirm-SystemCompliance {
             }
             Function Invoke-EdgeBrowserConfigurations {
                 Param ($MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $TotalNumberOfTrueCompliantValues, $FinalMegaObject)
-              
+
                 $NestedObjectArray = New-Object -TypeName System.Collections.Generic.List[HardeningModule.IndividualResult]
                 [System.String]$CatName = 'EdgeBrowserConfigurations'
 
@@ -1799,7 +1812,7 @@ function Confirm-SystemCompliance {
             }
             Function Invoke-NonAdminCommands {
                 Param ($MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $TotalNumberOfTrueCompliantValues, $FinalMegaObject)
-              
+
                 $NestedObjectArray = New-Object -TypeName System.Collections.Generic.List[HardeningModule.IndividualResult]
                 [System.String]$CatName = 'NonAdminCommands'
 
@@ -1857,6 +1870,9 @@ function Confirm-SystemCompliance {
             }
             if (($null -eq $Categories) -or ('MiscellaneousConfigurations' -in $Categories)) {
                 [System.Void]$JobsToWaitFor.Add($MiscellaneousConfigurationsJob)
+            }
+            if (($null -eq $Categories) -or ('TLSSecurity' -in $Categories)) {
+                [System.Void]$JobsToWaitFor.Add($TLSSecurityJob)
             }
 
             $null = Wait-Job -Job $JobsToWaitFor

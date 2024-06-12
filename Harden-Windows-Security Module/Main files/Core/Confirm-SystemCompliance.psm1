@@ -78,14 +78,9 @@ function Confirm-SystemCompliance {
             }
         }
 
-        # Defining a class for the individual results
-        Class IndividualResult {
-            [System.String]$FriendlyName
-            [System.String]$Compliant
-            [System.String]$Value
-            [System.String]$Name
-            [System.String]$Category
-            [System.String]$Method
+        # Import the IndividualResult class if it's not already loaded
+        if (-NOT ('HardeningModule.IndividualResult' -as [System.Type]) ) {
+            Add-Type -Path "$HardeningModulePath\Shared\IndividualResultClass.cs"
         }
 
         if ((Get-CimInstance -ClassName Win32_OperatingSystem).OperatingSystemSKU -in '101', '100') {
@@ -93,11 +88,11 @@ function Confirm-SystemCompliance {
         }
 
         #Region Defining-Variables
-        # Total number of Compliant values not equal to N/A
-        [System.UInt16]$TotalNumberOfTrueCompliantValues = 238
 
-        # Create a reference variable that points to the original variable
-        [ref]$RefTotalNumberOfTrueCompliantValues = $TotalNumberOfTrueCompliantValues
+        # a synced hashtable so that System.Threading.Interlocked can safely increment/decrement this value from multiple threads
+        $SyncHash = [System.Collections.Hashtable]::Synchronized(@{})
+        # Total number of Compliant values not equal to N/A
+        $SyncHash['TotalNumberOfTrueCompliantValues'] = 238
 
         # Get the current configurations and preferences of the Microsoft Defender
         New-Variable -Name 'MDAVConfigCurrent' -Value (Get-MpComputerStatus) -Force
@@ -110,7 +105,7 @@ function Confirm-SystemCompliance {
         $FinalMegaObject = [System.Collections.Concurrent.ConcurrentDictionary[System.String, PSCustomObject[]]]::new()
 
         # The total number of the steps for the parent/main progress bar to render
-        [System.UInt16]$TotalMainSteps = 16
+        [System.UInt16]$TotalMainSteps = 14
         [System.UInt16]$CurrentMainStep = 0
         #EndRegion Defining-Variables
 
@@ -223,7 +218,7 @@ function Confirm-SystemCompliance {
                 }
 
                 # Create a custom object with the results for this row
-                [System.Void]$Output.Add([IndividualResult]@{
+                [System.Void]$Output.Add([HardeningModule.IndividualResult]@{
                         FriendlyName = $Item.FriendlyName
                         Compliant    = $ValueMatches
                         Value        = $Item.Value
@@ -331,13 +326,6 @@ function Confirm-SystemCompliance {
     process {
 
         try {
-            # A global try-Catch-finally block to revert the changes made being made to the Controlled Folder Access exclusions list
-            # Which is currently required for BCD NX value verification
-
-            # backup the current allowed apps list in Controlled folder access in order to restore them at the end of the script
-            # doing this so that when we Add and then Remove PowerShell executables in Controlled folder access exclusions
-            # no user customization will be affected
-
             #Region Rainbow Progress Bar
 
             # Define a variable to store the current color index
@@ -368,20 +356,6 @@ function Confirm-SystemCompliance {
             #Endregion Rainbow Progress Bar
 
             $CurrentMainStep++
-            Write-Progress -Id 0 -Activity 'Backing up Controlled Folder Access exclusion list' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
-
-            [System.String[]]$CFAAllowedAppsBackup = (Get-MpPreference).ControlledFolderAccessAllowedApplications
-
-            # Temporarily allow the currently running PowerShell executables to the Controlled Folder Access allowed apps
-            # so that the script can run without interruption. This change is reverted at the end.
-            foreach ($FilePath in (Get-ChildItem -Path "$PSHOME\*.exe" -File).FullName) {
-                Add-MpPreference -ControlledFolderAccessAllowedApplications $FilePath
-            }
-
-            # Give the Defender internals time to process the updated exclusions list
-            Start-Sleep -Seconds '5'
-
-            $CurrentMainStep++
             Write-Progress -Id 0 -Activity 'Gathering Security Policy Information' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
 
             # Get the security group policies
@@ -392,408 +366,462 @@ function Confirm-SystemCompliance {
 
             #Region Main-Functions
             Function Invoke-MicrosoftDefender {
-                Param ($CurrentMainStep, $TotalMainSteps, $MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $RefTotalNumberOfTrueCompliantValues, $FinalMegaObject)
-                $CurrentMainStep++
-                Write-Progress -Id 0 -Activity 'Validating Microsoft Defender Category' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
+                Param ($CurrentMainStep, $TotalMainSteps, $MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $TotalNumberOfTrueCompliantValues, $FinalMegaObject)
 
-                # An array to store the nested custom objects, inside the main output object
-                $NestedObjectArray = New-Object -TypeName System.Collections.Generic.List[IndividualResult]
-                [System.String]$CatName = 'MicrosoftDefender'
+                # Save the function as scriptblock to pass it to the thread job
+                [System.Management.Automation.FunctionInfo]$Function = Get-Item -Path 'Function:Invoke-CategoryProcessing'
+                $ScriptBlockInvokeCategoryProcessing = [System.Management.Automation.ScriptBlock]::Create($Function.Definition)
 
-                # Process items in Registry resources.csv file with "Group Policy" origin and add them to the $NestedObjectArray array as custom objects
-                foreach ($Result in Invoke-CategoryProcessing -catname $CatName -Method 'Group Policy') {
-                    [System.Void]$NestedObjectArray.Add($Result)
-                }
+                [System.Management.Automation.Job2]$script:MicrosoftDefenderJob = Start-ThreadJob -ScriptBlock {
 
-                $IndividualItemResult = $MDAVPreferencesCurrent.AllowSwitchToAsyncInspection
-                [System.Void]$NestedObjectArray.Add([IndividualResult]@{
-                        FriendlyName = 'AllowSwitchToAsyncInspection'
-                        Compliant    = $IndividualItemResult
-                        Value        = $IndividualItemResult
-                        Name         = 'AllowSwitchToAsyncInspection'
-                        Category     = $CatName
-                        Method       = 'Cmdlet'
-                    })
+                    Param ($MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $TotalNumberOfTrueCompliantValues, $FinalMegaObject, $ScriptBlockInvokeCategoryProcessing, $CSVResource, $ParentVerbosePreference)
 
-                $IndividualItemResult = $MDAVPreferencesCurrent.oobeEnableRtpAndSigUpdate
-                [System.Void]$NestedObjectArray.Add([IndividualResult]@{
-                        FriendlyName = 'oobeEnableRtpAndSigUpdate'
-                        Compliant    = $IndividualItemResult
-                        Value        = $IndividualItemResult
-                        Name         = 'oobeEnableRtpAndSigUpdate'
-                        Category     = $CatName
-                        Method       = 'Cmdlet'
-                    })
+                    Try {
 
-                $IndividualItemResult = $MDAVPreferencesCurrent.IntelTDTEnabled
-                [System.Void]$NestedObjectArray.Add([IndividualResult]@{
-                        FriendlyName = 'IntelTDTEnabled'
-                        Compliant    = $IndividualItemResult
-                        Value        = $IndividualItemResult
-                        Name         = 'IntelTDTEnabled'
-                        Category     = $CatName
-                        Method       = 'Cmdlet'
-                    })
+                        $ErrorActionPreference = 'Stop'
+                        $VerbosePreference = $ParentVerbosePreference
 
-                $IndividualItemResult = $((Get-ProcessMitigation -System).aslr.ForceRelocateImages)
-                [System.Void]$NestedObjectArray.Add([IndividualResult]@{
-                        FriendlyName = 'Mandatory ASLR'
-                        Compliant    = $IndividualItemResult -eq 'on' ? $True : $false
-                        Value        = $IndividualItemResult
-                        Name         = 'Mandatory ASLR'
-                        Category     = $CatName
-                        Method       = 'Cmdlet'
-                    })
-
-                # Verify the NX bit as shown in bcdedit /enum or Get-BcdEntry, info about numbers and values correlation: https://learn.microsoft.com/en-us/previous-versions/windows/desktop/bcd/bcdosloader-nxpolicy
-                [System.Void]$NestedObjectArray.Add([IndividualResult]@{
-                        FriendlyName = 'Boot Configuration Data (BCD) No-eXecute (NX) Value'
-                        Compliant    = (((Get-BcdEntry).elements | Where-Object -FilterScript { $_.Name -eq 'nx' }).value -eq '3')
-                        Value        = (((Get-BcdEntry).elements | Where-Object -FilterScript { $_.Name -eq 'nx' }).value -eq '3')
-                        Name         = 'Boot Configuration Data (BCD) No-eXecute (NX) Value'
-                        Category     = $CatName
-                        Method       = 'Cmdlet'
-                    })
-
-                [System.Void]$NestedObjectArray.Add([IndividualResult]@{
-                        FriendlyName = 'Smart App Control State'
-                        Compliant    = ($MDAVConfigCurrent.SmartAppControlState -eq 'On') ? $True : $False
-                        Value        = $MDAVConfigCurrent.SmartAppControlState
-                        Name         = 'Smart App Control State'
-                        Category     = $CatName
-                        Method       = 'Cmdlet'
-                    })
-
-                try {
-                    $IndividualItemResult = $((Get-ScheduledTask -TaskPath '\MSFT Driver Block list update\' -TaskName 'MSFT Driver Block list update' -ErrorAction SilentlyContinue) ? $True : $false)
-                }
-                catch {
-                    # suppress any possible terminating errors
-                }
-                [System.Void]$NestedObjectArray.Add([IndividualResult]@{
-                        FriendlyName = 'Fast weekly Microsoft recommended driver block list update'
-                        Compliant    = $IndividualItemResult
-                        Value        = $IndividualItemResult
-                        Name         = 'Fast weekly Microsoft recommended driver block list update'
-                        Category     = $CatName
-                        Method       = 'Cmdlet'
-                    })
-
-                [System.Collections.Hashtable]$DefenderPlatformUpdatesChannels = @{
-                    0 = 'NotConfigured'
-                    2 = 'Beta'
-                    3 = 'Preview'
-                    4 = 'Staged'
-                    5 = 'Broad'
-                    6 = 'Delayed'
-                }
-
-                [System.Void]$NestedObjectArray.Add([IndividualResult]@{
-                        FriendlyName = 'Microsoft Defender Platform Updates Channel'
-                        Compliant    = 'N/A'
-                        Value        = ($DefenderPlatformUpdatesChannels[[System.Int32]($MDAVPreferencesCurrent).PlatformUpdatesChannel])
-                        Name         = 'Microsoft Defender Platform Updates Channel'
-                        Category     = $CatName
-                        Method       = 'Cmdlet'
-                    })
-
-                [System.Collections.Hashtable]$DefenderEngineUpdatesChannels = @{
-                    0 = 'NotConfigured'
-                    2 = 'Beta'
-                    3 = 'Preview'
-                    4 = 'Staged'
-                    5 = 'Broad'
-                    6 = 'Delayed'
-                }
-
-                [System.Void]$NestedObjectArray.Add([IndividualResult]@{
-                        FriendlyName = 'Microsoft Defender Engine Updates Channel'
-                        Compliant    = 'N/A'
-                        Value        = ($DefenderEngineUpdatesChannels[[System.Int32]($MDAVPreferencesCurrent).EngineUpdatesChannel])
-                        Name         = 'Microsoft Defender Engine Updates Channel'
-                        Category     = $CatName
-                        Method       = 'Cmdlet'
-                    })
-
-                # This covers instances where CFA is applied through Intune policy
-                [System.Void]$NestedObjectArray.Add([IndividualResult]@{
-                        FriendlyName = 'Controlled Folder Access'
-                        Compliant    = $MDAVPreferencesCurrent.EnableControlledFolderAccess -eq 1 ? $true : $false
-                        Value        = $MDAVPreferencesCurrent.EnableControlledFolderAccess
-                        Name         = 'Controlled Folder Access'
-                        Category     = $CatName
-                        Method       = 'Cmdlet'
-                    })
-
-                [System.Void]$NestedObjectArray.Add([IndividualResult]@{
-                        FriendlyName = 'Controlled Folder Access Exclusions'
-                        Compliant    = 'N/A'
-                        Value        = ($MDAVPreferencesCurrent.ControlledFolderAccessAllowedApplications -join ',') # Join the array elements into a string to display them properly in the output CSV file
-                        Name         = 'Controlled Folder Access Exclusions'
-                        Category     = $CatName
-                        Method       = 'Cmdlet'
-                    })
-
-                $IndividualItemResult = $MDAVPreferencesCurrent.DisableRestorePoint
-                [System.Void]$NestedObjectArray.Add([IndividualResult]@{
-                        FriendlyName = 'Enable Restore Point scanning'
-                        Compliant    = ($IndividualItemResult -eq $False)
-                        Value        = ($IndividualItemResult -eq $False)
-                        Name         = 'Enable Restore Point scanning'
-                        Category     = $CatName
-                        Method       = 'Cmdlet'
-                    })
-
-                $IndividualItemResult = $MDAVPreferencesCurrent.PerformanceModeStatus
-                [System.Void]$NestedObjectArray.Add([IndividualResult]@{
-                        FriendlyName = 'PerformanceModeStatus'
-                        Compliant    = [System.Boolean]($IndividualItemResult -eq '0')
-                        Value        = $IndividualItemResult
-                        Name         = 'PerformanceModeStatus'
-                        Category     = $CatName
-                        Method       = 'Cmdlet'
-                    })
-
-                $IndividualItemResult = $MDAVPreferencesCurrent.EnableConvertWarnToBlock
-                [System.Void]$NestedObjectArray.Add([IndividualResult]@{
-                        FriendlyName = 'EnableConvertWarnToBlock'
-                        Compliant    = $IndividualItemResult
-                        Value        = $IndividualItemResult
-                        Name         = 'EnableConvertWarnToBlock'
-                        Category     = $CatName
-                        Method       = 'Cmdlet'
-                    })
-
-                $IndividualItemResult = $MDAVPreferencesCurrent.BruteForceProtectionAggressiveness
-                [System.Void]$NestedObjectArray.Add([IndividualResult]@{
-                        FriendlyName = 'BruteForceProtectionAggressiveness'
-                        Compliant    = [System.Boolean]($IndividualItemResult -in ('1', '2'))
-                        Value        = $IndividualItemResult
-                        Name         = 'BruteForceProtectionAggressiveness'
-                        Category     = $CatName
-                        Method       = 'Cmdlet'
-                    })
-
-                $IndividualItemResult = $MDAVPreferencesCurrent.BruteForceProtectionConfiguredState
-                [System.Void]$NestedObjectArray.Add([IndividualResult]@{
-                        FriendlyName = 'BruteForceProtectionConfiguredState'
-                        Compliant    = [System.Boolean]($IndividualItemResult -eq '1')
-                        Value        = $IndividualItemResult
-                        Name         = 'BruteForceProtectionConfiguredState'
-                        Category     = $CatName
-                        Method       = 'Cmdlet'
-                    })
-
-                $IndividualItemResult = $MDAVPreferencesCurrent.BruteForceProtectionMaxBlockTime
-                [System.Void]$NestedObjectArray.Add([IndividualResult]@{
-                        FriendlyName = 'BruteForceProtectionMaxBlockTime'
-                        Compliant    = [System.Boolean]($IndividualItemResult -in ('0', '4294967295'))
-                        Value        = $IndividualItemResult
-                        Name         = 'BruteForceProtectionMaxBlockTime'
-                        Category     = $CatName
-                        Method       = 'Cmdlet'
-                    })
-
-                $IndividualItemResult = $MDAVPreferencesCurrent.RemoteEncryptionProtectionAggressiveness
-                [System.Void]$NestedObjectArray.Add([IndividualResult]@{
-                        FriendlyName = 'RemoteEncryptionProtectionAggressiveness'
-                        Compliant    = [System.Boolean]($IndividualItemResult -eq '2')
-                        Value        = $IndividualItemResult
-                        Name         = 'RemoteEncryptionProtectionAggressiveness'
-                        Category     = $CatName
-                        Method       = 'Cmdlet'
-                    })
-
-                $IndividualItemResult = $MDAVPreferencesCurrent.RemoteEncryptionProtectionConfiguredState
-                [System.Void]$NestedObjectArray.Add([IndividualResult]@{
-                        FriendlyName = 'RemoteEncryptionProtectionConfiguredState'
-                        Compliant    = [System.Boolean]($IndividualItemResult -eq '1')
-                        Value        = $IndividualItemResult
-                        Name         = 'RemoteEncryptionProtectionConfiguredState'
-                        Category     = $CatName
-                        Method       = 'Cmdlet'
-                    })
-
-                $IndividualItemResult = $MDAVPreferencesCurrent.RemoteEncryptionProtectionMaxBlockTime
-                [System.Void]$NestedObjectArray.Add([IndividualResult]@{
-                        FriendlyName = 'RemoteEncryptionProtectionMaxBlockTime'
-                        Compliant    = [System.Boolean]($IndividualItemResult -in ('0', '4294967295'))
-                        Value        = $IndividualItemResult
-                        Name         = 'RemoteEncryptionProtectionMaxBlockTime'
-                        Category     = $CatName
-                        Method       = 'Cmdlet'
-                    })
-
-                #Region Microsoft-Defender-Exploit-Guard-Category
-
-                # Get the current system's exploit mitigation policy XML file using the Get-ProcessMitigation cmdlet
-                [System.String]$RandomGUID = (New-Guid).Guid.ToString()
-                Get-ProcessMitigation -RegistryConfigFilePath ".\CurrentlyAppliedMitigations-$RandomGUID.xml"
-
-                # Load the XML file as an XML object
-                [System.Xml.XmlDocument]$SystemMitigationsXML = Get-Content -Path ".\CurrentlyAppliedMitigations-$RandomGUID.xml" -Force
-
-                # Delete the XML file after loading it
-                Remove-Item -Path ".\CurrentlyAppliedMitigations-$RandomGUID.xml" -Force
-
-                #Region System-Mitigations-Processing
-                # A hashtable to store the output of the current system's exploit mitigation policy XML file exported by the Get-ProcessMitigation cmdlet
-                [System.Collections.Hashtable]$ProcessMitigationsOnTheSystem = @{}
-
-                # Loop through each AppConfig element in the XML object
-                foreach ($App in $SystemMitigationsXML.MitigationPolicy.AppConfig) {
-                    # Get the executable name of the app
-                    [System.String]$Name = $App.Executable
-
-                    # Create an empty array to store the mitigations
-                    $Mitigations = New-Object -TypeName 'System.Collections.Generic.HashSet[System.String]'
-
-                    # Loop through each child element of the app element
-                    foreach ($Child in $App.ChildNodes ) {
-                        # Get the name of the mitigation
-                        [System.String]$Mitigation = $Child.Name
-
-                        # Loop through each attribute of the child element
-                        foreach ($Attribute in $Child.Attributes) {
-                            # Get the name and value of the attribute
-                            [System.String]$AttributeName = $Attribute.Name
-                            [System.String]$AttributeValue = $Attribute.Value
-
-                            # If the attribute value is true, add it to the array
-                            # We don't include the mitigations that are disabled/set to false
-                            # For example, some poorly designed git apps are incompatible with mandatory ASLR
-                            # And they pollute the output of the Get-ProcessMitigation cmdlet with items such as "<ASLR ForceRelocateImages="false" RequireInfo="false" />"
-                            if ($AttributeValue -eq 'true') {
-                                # If the attribute name is Enable, use the mitigation name instead, because we only need the names of the mitigations that are enabled for comparison with the CSV file.
-                                # Some attributes such as "<StrictHandle Enable="true" />" don't have a name so we add the mitigation's name to the array instead, which is "StrictHandle" in this case.
-                                if ($AttributeName -eq 'Enable') {
-                                    [System.Void]$Mitigations.Add($Mitigation)
-                                }
-                                else {
-                                    [System.Void]$Mitigations.Add($AttributeName)
-                                }
-                            }
+                        # Import the IndividualResult class if it's not already loaded
+                        if (-NOT ('HardeningModule.IndividualResult' -as [System.Type]) ) {
+                            Add-Type -Path "$HardeningModulePath\Shared\IndividualResultClass.cs"
                         }
-                    }
 
-                    # Make sure the array isn't empty which filters out apps with no mitigations or mitigations that are all disabled/set to false
-                    if ($Mitigations.Count -ne 0) {
-                        # Create a hashtable entry with the name and mitigations properties
-                        $ProcessMitigationsOnTheSystem[$Name] = $Mitigations
-                    }
-                }
+                        # A try-Catch-finally block to revert the changes being made to the Controlled Folder Access exclusions list
+                        # Which is currently required for BCD NX value verification in the MicrosoftDefender category
 
-                # Create a new empty hashtable which replaces "ControlFlowGuard" with "CFG" since the shortened name is used in the CSV file and required by the the Set-ProcessMitigation cmdlet
-                [System.Collections.Hashtable]$RevisedProcessMitigationsOnTheSystem = @{}
+                        # backup the currently allowed apps list in Controlled folder access in order to restore them at the end
+                        # doing this so that when we Add and then Remove PowerShell executables in Controlled folder access exclusions
+                        # no user customization will be affected
+                        [System.String[]]$CFAAllowedAppsBackup = (Get-MpPreference).ControlledFolderAccessAllowedApplications
 
-                # Loop over the keys and values of the original hashtable
-                foreach ($Key in $ProcessMitigationsOnTheSystem.Keys) {
-                    # Get the value array for the current key
-                    [System.String[]]$Value = $ProcessMitigationsOnTheSystem[$Key]
-                    # Replace "ControlFlowGuard" with "CFG" in the value array
-                    [System.String[]]$Value = $Value -replace 'ControlFlowGuard', 'CFG'
-                    # Add the modified key-value pair to the new hashtable
-                    [System.Void]$RevisedProcessMitigationsOnTheSystem.add($Key, $Value)
-                }
-                #Endregion System-Mitigations-Processing
-
-                #Region Harden-Windows-Security-Module-CSV-Processing
-                # Import the CSV file as an object
-                [System.Object[]]$ProcessMitigations = Import-Csv -Path "$HardeningModulePath\Resources\ProcessMitigations.csv" -Delimiter ','
-
-                # Only keep the enabled mitigations in the CSV, then Group the data by ProgramName
-                [System.Object[]]$GroupedMitigations = $ProcessMitigations | Where-Object -FilterScript { $_.Action -eq 'Enable' } | Group-Object -Property ProgramName
-
-                # A hashtable to store the output of the CSV file
-                [System.Collections.Hashtable]$TargetMitigations = @{}
-
-                # Loop through each group in the grouped mitigations array and add the ProgramName and Mitigations to the hashtable
-                foreach ($Item in $GroupedMitigations) {
-                    $TargetMitigations[$Item.Name] = $Item.Group.Mitigation
-                }
-                #Endregion Harden-Windows-Security-Module-CSV-Processing
-
-                #Region Comparison
-                # Compare the values of the two hashtables if the keys match
-                $TargetMitigations.GetEnumerator() | ForEach-Object -Process {
-
-                    # Get the current key and value from hashtable containing the CSV data
-                    [System.String]$ProcessName_Target = $_.Key
-                    [System.String[]]$ProcessMitigations_Target = $_.Value
-
-                    # Check if the hashtable containing the currently applied mitigations contains the same key
-                    # Meaning the same executable is present in both hashtables
-                    if ($RevisedProcessMitigationsOnTheSystem.ContainsKey($ProcessName_Target)) {
-
-                        # Get the value from the applied mitigations hashtable
-                        [System.String[]]$ProcessMitigations_Applied = $RevisedProcessMitigationsOnTheSystem[$ProcessName_Target]
-
-                        # Compare the values of the two hashtables to see if they are the same without the order of the elements (process mitigations) in the arrays being considered
-                        # Compare-Object produces output only if the objects are different
-                        if (Compare-Object -ReferenceObject $ProcessMitigations_Target -DifferenceObject $ProcessMitigations_Applied) {
-
-                            # If the values are different, it means the process has different mitigations applied to it than the ones in the CSV file
-                            Write-Verbose -Message "Mitigations for $ProcessName_Target were found but are not compliant"
-
-                            # Increment the total number of the verifiable compliant values for each process that has a mitigation applied to it in the CSV file
-                            $RefTotalNumberOfTrueCompliantValues.Value++
-
-                            [System.Void]$NestedObjectArray.Add([IndividualResult]@{
-                                    FriendlyName = "Process Mitigations for: $ProcessName_Target"
-                                    Compliant    = $False
-                                    Value        = ($ProcessMitigations_Applied -join ',') # Join the array elements into a string to display them properly in the output CSV file
-                                    Name         = "Process Mitigations for: $ProcessName_Target"
-                                    Category     = $CatName
-                                    Method       = 'Cmdlet'
-                                })
+                        # Temporarily allow the currently running PowerShell executables to the Controlled Folder Access allowed apps
+                        # so that the script can run without interruption. This change is reverted at the end.
+                        foreach ($FilePath in (Get-ChildItem -Path "$PSHOME\*.exe" -File).FullName) {
+                            Add-MpPreference -ControlledFolderAccessAllowedApplications $FilePath
                         }
-                        else {
-                            # If the values are the same, it means the process has the same mitigations applied to it as the ones in the CSV file
-                            Write-Verbose -Message "Mitigations for $ProcessName_Target are compliant"
 
-                            # Increment the total number of the verifiable compliant values for each process that has a mitigation applied to it in the CSV file
-                            $RefTotalNumberOfTrueCompliantValues.Value++
+                        # Give the Defender internals time to process the updated exclusions list
+                        Start-Sleep -Seconds '5'
 
-                            [System.Void]$NestedObjectArray.Add([IndividualResult]@{
-                                    FriendlyName = "Process Mitigations for: $ProcessName_Target"
-                                    Compliant    = $true
-                                    Value        = ($ProcessMitigations_Target -join ',') # Join the array elements into a string to display them properly in the output CSV file
-                                    Name         = "Process Mitigations for: $ProcessName_Target"
-                                    Category     = $CatName
-                                    Method       = 'Cmdlet'
-                                })
+                        # An array to store the nested custom objects, inside the main output object
+                        $NestedObjectArray = New-Object -TypeName System.Collections.Generic.List[HardeningModule.IndividualResult]
+                        [System.String]$CatName = 'MicrosoftDefender'
+
+                        # Process items in Registry resources.csv file with "Group Policy" origin and add them to the $NestedObjectArray array as custom objects
+                        foreach ($Result in (&$ScriptBlockInvokeCategoryProcessing -catname $CatName -Method 'Group Policy')) {
+                            [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]$Result)
                         }
-                    }
-                    else {
-                        # If the process name is not found in the hashtable containing the currently applied mitigations, it means the process doesn't have any mitigations applied to it
-                        Write-Verbose -Message "Mitigations for $ProcessName_Target were not found"
 
-                        # Increment the total number of the verifiable compliant values for each process that has a mitigation applied to it in the CSV file
-                        $RefTotalNumberOfTrueCompliantValues.Value++
-
-                        [System.Void]$NestedObjectArray.Add([IndividualResult]@{
-                                FriendlyName = "Process Mitigations for: $ProcessName_Target"
-                                Compliant    = $False
-                                Value        = 'N/A'
-                                Name         = "Process Mitigations for: $ProcessName_Target"
+                        $IndividualItemResult = $MDAVPreferencesCurrent.AllowSwitchToAsyncInspection
+                        [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
+                                FriendlyName = 'AllowSwitchToAsyncInspection'
+                                Compliant    = $IndividualItemResult
+                                Value        = $IndividualItemResult
+                                Name         = 'AllowSwitchToAsyncInspection'
                                 Category     = $CatName
                                 Method       = 'Cmdlet'
                             })
+
+                        $IndividualItemResult = $MDAVPreferencesCurrent.oobeEnableRtpAndSigUpdate
+                        [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
+                                FriendlyName = 'oobeEnableRtpAndSigUpdate'
+                                Compliant    = $IndividualItemResult
+                                Value        = $IndividualItemResult
+                                Name         = 'oobeEnableRtpAndSigUpdate'
+                                Category     = $CatName
+                                Method       = 'Cmdlet'
+                            })
+
+                        $IndividualItemResult = $MDAVPreferencesCurrent.IntelTDTEnabled
+                        [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
+                                FriendlyName = 'IntelTDTEnabled'
+                                Compliant    = $IndividualItemResult
+                                Value        = $IndividualItemResult
+                                Name         = 'IntelTDTEnabled'
+                                Category     = $CatName
+                                Method       = 'Cmdlet'
+                            })
+
+                        $IndividualItemResult = $((Get-ProcessMitigation -System).aslr.ForceRelocateImages)
+                        [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
+                                FriendlyName = 'Mandatory ASLR'
+                                Compliant    = $IndividualItemResult -eq 'on' ? $True : $false
+                                Value        = $IndividualItemResult
+                                Name         = 'Mandatory ASLR'
+                                Category     = $CatName
+                                Method       = 'Cmdlet'
+                            })
+
+                        # Verify the NX bit as shown in bcdedit /enum or Get-BcdEntry, info about numbers and values correlation: https://learn.microsoft.com/en-us/previous-versions/windows/desktop/bcd/bcdosloader-nxpolicy
+                        [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
+                                FriendlyName = 'Boot Configuration Data (BCD) No-eXecute (NX) Value'
+                                Compliant    = (((Get-BcdEntry).elements | Where-Object -FilterScript { $_.Name -eq 'nx' }).value -eq '3')
+                                Value        = (((Get-BcdEntry).elements | Where-Object -FilterScript { $_.Name -eq 'nx' }).value -eq '3')
+                                Name         = 'Boot Configuration Data (BCD) No-eXecute (NX) Value'
+                                Category     = $CatName
+                                Method       = 'Cmdlet'
+                            })
+
+                        [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
+                                FriendlyName = 'Smart App Control State'
+                                Compliant    = ($MDAVConfigCurrent.SmartAppControlState -eq 'On') ? $True : $False
+                                Value        = $MDAVConfigCurrent.SmartAppControlState
+                                Name         = 'Smart App Control State'
+                                Category     = $CatName
+                                Method       = 'Cmdlet'
+                            })
+
+                        try {
+                            $IndividualItemResult = $((Get-ScheduledTask -TaskPath '\MSFT Driver Block list update\' -TaskName 'MSFT Driver Block list update' -ErrorAction SilentlyContinue) ? $True : $false)
+                        }
+                        catch {
+                            # suppress any possible terminating errors
+                        }
+                        [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
+                                FriendlyName = 'Fast weekly Microsoft recommended driver block list update'
+                                Compliant    = $IndividualItemResult
+                                Value        = $IndividualItemResult
+                                Name         = 'Fast weekly Microsoft recommended driver block list update'
+                                Category     = $CatName
+                                Method       = 'Cmdlet'
+                            })
+
+                        [System.Collections.Hashtable]$DefenderPlatformUpdatesChannels = @{
+                            0 = 'NotConfigured'
+                            2 = 'Beta'
+                            3 = 'Preview'
+                            4 = 'Staged'
+                            5 = 'Broad'
+                            6 = 'Delayed'
+                        }
+
+                        [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
+                                FriendlyName = 'Microsoft Defender Platform Updates Channel'
+                                Compliant    = 'N/A'
+                                Value        = ($DefenderPlatformUpdatesChannels[[System.Int32]($MDAVPreferencesCurrent).PlatformUpdatesChannel])
+                                Name         = 'Microsoft Defender Platform Updates Channel'
+                                Category     = $CatName
+                                Method       = 'Cmdlet'
+                            })
+
+                        [System.Collections.Hashtable]$DefenderEngineUpdatesChannels = @{
+                            0 = 'NotConfigured'
+                            2 = 'Beta'
+                            3 = 'Preview'
+                            4 = 'Staged'
+                            5 = 'Broad'
+                            6 = 'Delayed'
+                        }
+
+                        [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
+                                FriendlyName = 'Microsoft Defender Engine Updates Channel'
+                                Compliant    = 'N/A'
+                                Value        = ($DefenderEngineUpdatesChannels[[System.Int32]($MDAVPreferencesCurrent).EngineUpdatesChannel])
+                                Name         = 'Microsoft Defender Engine Updates Channel'
+                                Category     = $CatName
+                                Method       = 'Cmdlet'
+                            })
+
+                        # This covers instances where CFA is applied through Intune policy
+                        [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
+                                FriendlyName = 'Controlled Folder Access'
+                                Compliant    = $MDAVPreferencesCurrent.EnableControlledFolderAccess -eq 1 ? $true : $false
+                                Value        = $MDAVPreferencesCurrent.EnableControlledFolderAccess
+                                Name         = 'Controlled Folder Access'
+                                Category     = $CatName
+                                Method       = 'Cmdlet'
+                            })
+
+                        [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
+                                FriendlyName = 'Controlled Folder Access Exclusions'
+                                Compliant    = 'N/A'
+                                Value        = ($MDAVPreferencesCurrent.ControlledFolderAccessAllowedApplications -join ',') # Join the array elements into a string to display them properly in the output CSV file
+                                Name         = 'Controlled Folder Access Exclusions'
+                                Category     = $CatName
+                                Method       = 'Cmdlet'
+                            })
+
+                        $IndividualItemResult = $MDAVPreferencesCurrent.DisableRestorePoint
+                        [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
+                                FriendlyName = 'Enable Restore Point scanning'
+                                Compliant    = ($IndividualItemResult -eq $False)
+                                Value        = ($IndividualItemResult -eq $False)
+                                Name         = 'Enable Restore Point scanning'
+                                Category     = $CatName
+                                Method       = 'Cmdlet'
+                            })
+
+                        $IndividualItemResult = $MDAVPreferencesCurrent.PerformanceModeStatus
+                        [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
+                                FriendlyName = 'PerformanceModeStatus'
+                                Compliant    = [System.Boolean]($IndividualItemResult -eq '0')
+                                Value        = $IndividualItemResult
+                                Name         = 'PerformanceModeStatus'
+                                Category     = $CatName
+                                Method       = 'Cmdlet'
+                            })
+
+                        $IndividualItemResult = $MDAVPreferencesCurrent.EnableConvertWarnToBlock
+                        [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
+                                FriendlyName = 'EnableConvertWarnToBlock'
+                                Compliant    = $IndividualItemResult
+                                Value        = $IndividualItemResult
+                                Name         = 'EnableConvertWarnToBlock'
+                                Category     = $CatName
+                                Method       = 'Cmdlet'
+                            })
+
+                        $IndividualItemResult = $MDAVPreferencesCurrent.BruteForceProtectionAggressiveness
+                        [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
+                                FriendlyName = 'BruteForceProtectionAggressiveness'
+                                Compliant    = [System.Boolean]($IndividualItemResult -in ('1', '2'))
+                                Value        = $IndividualItemResult
+                                Name         = 'BruteForceProtectionAggressiveness'
+                                Category     = $CatName
+                                Method       = 'Cmdlet'
+                            })
+
+                        $IndividualItemResult = $MDAVPreferencesCurrent.BruteForceProtectionConfiguredState
+                        [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
+                                FriendlyName = 'BruteForceProtectionConfiguredState'
+                                Compliant    = [System.Boolean]($IndividualItemResult -eq '1')
+                                Value        = $IndividualItemResult
+                                Name         = 'BruteForceProtectionConfiguredState'
+                                Category     = $CatName
+                                Method       = 'Cmdlet'
+                            })
+
+                        $IndividualItemResult = $MDAVPreferencesCurrent.BruteForceProtectionMaxBlockTime
+                        [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
+                                FriendlyName = 'BruteForceProtectionMaxBlockTime'
+                                Compliant    = [System.Boolean]($IndividualItemResult -in ('0', '4294967295'))
+                                Value        = $IndividualItemResult
+                                Name         = 'BruteForceProtectionMaxBlockTime'
+                                Category     = $CatName
+                                Method       = 'Cmdlet'
+                            })
+
+                        $IndividualItemResult = $MDAVPreferencesCurrent.RemoteEncryptionProtectionAggressiveness
+                        [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
+                                FriendlyName = 'RemoteEncryptionProtectionAggressiveness'
+                                Compliant    = [System.Boolean]($IndividualItemResult -eq '2')
+                                Value        = $IndividualItemResult
+                                Name         = 'RemoteEncryptionProtectionAggressiveness'
+                                Category     = $CatName
+                                Method       = 'Cmdlet'
+                            })
+
+                        $IndividualItemResult = $MDAVPreferencesCurrent.RemoteEncryptionProtectionConfiguredState
+                        [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
+                                FriendlyName = 'RemoteEncryptionProtectionConfiguredState'
+                                Compliant    = [System.Boolean]($IndividualItemResult -eq '1')
+                                Value        = $IndividualItemResult
+                                Name         = 'RemoteEncryptionProtectionConfiguredState'
+                                Category     = $CatName
+                                Method       = 'Cmdlet'
+                            })
+
+                        $IndividualItemResult = $MDAVPreferencesCurrent.RemoteEncryptionProtectionMaxBlockTime
+                        [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
+                                FriendlyName = 'RemoteEncryptionProtectionMaxBlockTime'
+                                Compliant    = [System.Boolean]($IndividualItemResult -in ('0', '4294967295'))
+                                Value        = $IndividualItemResult
+                                Name         = 'RemoteEncryptionProtectionMaxBlockTime'
+                                Category     = $CatName
+                                Method       = 'Cmdlet'
+                            })
+
+                        #Region Microsoft-Defender-Exploit-Guard-Category
+
+                        # Get the current system's exploit mitigation policy XML file using the Get-ProcessMitigation cmdlet
+                        [System.String]$RandomGUID = (New-Guid).Guid.ToString()
+                        Get-ProcessMitigation -RegistryConfigFilePath ".\CurrentlyAppliedMitigations-$RandomGUID.xml"
+
+                        # Load the XML file as an XML object
+                        [System.Xml.XmlDocument]$SystemMitigationsXML = Get-Content -Path ".\CurrentlyAppliedMitigations-$RandomGUID.xml" -Force
+
+                        # Delete the XML file after loading it
+                        Remove-Item -Path ".\CurrentlyAppliedMitigations-$RandomGUID.xml" -Force
+
+                        #Region System-Mitigations-Processing
+                        # A hashtable to store the output of the current system's exploit mitigation policy XML file exported by the Get-ProcessMitigation cmdlet
+                        [System.Collections.Hashtable]$ProcessMitigationsOnTheSystem = @{}
+
+                        # Loop through each AppConfig element in the XML object
+                        foreach ($App in $SystemMitigationsXML.MitigationPolicy.AppConfig) {
+                            # Get the executable name of the app
+                            [System.String]$Name = $App.Executable
+
+                            # Create an empty array to store the mitigations
+                            $Mitigations = New-Object -TypeName 'System.Collections.Generic.HashSet[System.String]'
+
+                            # Loop through each child element of the app element
+                            foreach ($Child in $App.ChildNodes ) {
+                                # Get the name of the mitigation
+                                [System.String]$Mitigation = $Child.Name
+
+                                # Loop through each attribute of the child element
+                                foreach ($Attribute in $Child.Attributes) {
+                                    # Get the name and value of the attribute
+                                    [System.String]$AttributeName = $Attribute.Name
+                                    [System.String]$AttributeValue = $Attribute.Value
+
+                                    # If the attribute value is true, add it to the array
+                                    # We don't include the mitigations that are disabled/set to false
+                                    # For example, some poorly designed git apps are incompatible with mandatory ASLR
+                                    # And they pollute the output of the Get-ProcessMitigation cmdlet with items such as "<ASLR ForceRelocateImages="false" RequireInfo="false" />"
+                                    if ($AttributeValue -eq 'true') {
+                                        # If the attribute name is Enable, use the mitigation name instead, because we only need the names of the mitigations that are enabled for comparison with the CSV file.
+                                        # Some attributes such as "<StrictHandle Enable="true" />" don't have a name so we add the mitigation's name to the array instead, which is "StrictHandle" in this case.
+                                        if ($AttributeName -eq 'Enable') {
+                                            [System.Void]$Mitigations.Add($Mitigation)
+                                        }
+                                        else {
+                                            [System.Void]$Mitigations.Add($AttributeName)
+                                        }
+                                    }
+                                }
+                            }
+
+                            # Make sure the array isn't empty which filters out apps with no mitigations or mitigations that are all disabled/set to false
+                            if ($Mitigations.Count -ne 0) {
+                                # Create a hashtable entry with the name and mitigations properties
+                                $ProcessMitigationsOnTheSystem[$Name] = $Mitigations
+                            }
+                        }
+
+                        # Create a new empty hashtable which replaces "ControlFlowGuard" with "CFG" since the shortened name is used in the CSV file and required by the the Set-ProcessMitigation cmdlet
+                        [System.Collections.Hashtable]$RevisedProcessMitigationsOnTheSystem = @{}
+
+                        # Loop over the keys and values of the original hashtable
+                        foreach ($Key in $ProcessMitigationsOnTheSystem.Keys) {
+                            # Get the value array for the current key
+                            [System.String[]]$Value = $ProcessMitigationsOnTheSystem[$Key]
+                            # Replace "ControlFlowGuard" with "CFG" in the value array
+                            [System.String[]]$Value = $Value -replace 'ControlFlowGuard', 'CFG'
+                            # Add the modified key-value pair to the new hashtable
+                            [System.Void]$RevisedProcessMitigationsOnTheSystem.add($Key, $Value)
+                        }
+                        #Endregion System-Mitigations-Processing
+
+                        #Region Harden-Windows-Security-Module-CSV-Processing
+                        # Import the CSV file as an object
+                        [System.Object[]]$ProcessMitigations = Import-Csv -Path "$HardeningModulePath\Resources\ProcessMitigations.csv" -Delimiter ','
+
+                        # Only keep the enabled mitigations in the CSV, then Group the data by ProgramName
+                        [System.Object[]]$GroupedMitigations = $ProcessMitigations | Where-Object -FilterScript { $_.Action -eq 'Enable' } | Group-Object -Property ProgramName
+
+                        # A hashtable to store the output of the CSV file
+                        [System.Collections.Hashtable]$TargetMitigations = @{}
+
+                        # Loop through each group in the grouped mitigations array and add the ProgramName and Mitigations to the hashtable
+                        foreach ($Item in $GroupedMitigations) {
+                            $TargetMitigations[$Item.Name] = $Item.Group.Mitigation
+                        }
+                        #Endregion Harden-Windows-Security-Module-CSV-Processing
+
+                        #Region Comparison
+                        # Compare the values of the two hashtables if the keys match
+                        $TargetMitigations.GetEnumerator() | ForEach-Object -Process {
+
+                            # Get the current key and value from hashtable containing the CSV data
+                            [System.String]$ProcessName_Target = $_.Key
+                            [System.String[]]$ProcessMitigations_Target = $_.Value
+
+                            # Check if the hashtable containing the currently applied mitigations contains the same key
+                            # Meaning the same executable is present in both hashtables
+                            if ($RevisedProcessMitigationsOnTheSystem.ContainsKey($ProcessName_Target)) {
+
+                                # Get the value from the applied mitigations hashtable
+                                [System.String[]]$ProcessMitigations_Applied = $RevisedProcessMitigationsOnTheSystem[$ProcessName_Target]
+
+                                # Compare the values of the two hashtables to see if they are the same without the order of the elements (process mitigations) in the arrays being considered
+                                # Compare-Object produces output only if the objects are different
+                                if (Compare-Object -ReferenceObject $ProcessMitigations_Target -DifferenceObject $ProcessMitigations_Applied) {
+
+                                    # If the values are different, it means the process has different mitigations applied to it than the ones in the CSV file
+                                    Write-Verbose -Message "Mitigations for $ProcessName_Target were found but are not compliant"
+
+                                    # Increment the total number of the verifiable compliant values for each process that has a mitigation applied to it in the CSV file
+                                    [System.Void][System.Threading.Interlocked]::Increment([ref]$TotalNumberOfTrueCompliantValues)
+
+                                    [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
+                                            FriendlyName = "Process Mitigations for: $ProcessName_Target"
+                                            Compliant    = $False
+                                            Value        = ($ProcessMitigations_Applied -join ',') # Join the array elements into a string to display them properly in the output CSV file
+                                            Name         = "Process Mitigations for: $ProcessName_Target"
+                                            Category     = $CatName
+                                            Method       = 'Cmdlet'
+                                        })
+                                }
+                                else {
+                                    # If the values are the same, it means the process has the same mitigations applied to it as the ones in the CSV file
+                                    Write-Verbose -Message "Mitigations for $ProcessName_Target are compliant"
+
+                                    # Increment the total number of the verifiable compliant values for each process that has a mitigation applied to it in the CSV file
+                                    [System.Void][System.Threading.Interlocked]::Increment([ref]$TotalNumberOfTrueCompliantValues)
+
+                                    [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
+                                            FriendlyName = "Process Mitigations for: $ProcessName_Target"
+                                            Compliant    = $true
+                                            Value        = ($ProcessMitigations_Target -join ',') # Join the array elements into a string to display them properly in the output CSV file
+                                            Name         = "Process Mitigations for: $ProcessName_Target"
+                                            Category     = $CatName
+                                            Method       = 'Cmdlet'
+                                        })
+                                }
+                            }
+                            else {
+                                # If the process name is not found in the hashtable containing the currently applied mitigations, it means the process doesn't have any mitigations applied to it
+                                Write-Verbose -Message "Mitigations for $ProcessName_Target were not found"
+
+                                # Increment the total number of the verifiable compliant values for each process that has a mitigation applied to it in the CSV file
+                                [System.Void][System.Threading.Interlocked]::Increment([ref]$TotalNumberOfTrueCompliantValues)
+
+                                [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
+                                        FriendlyName = "Process Mitigations for: $ProcessName_Target"
+                                        Compliant    = $False
+                                        Value        = 'N/A'
+                                        Name         = "Process Mitigations for: $ProcessName_Target"
+                                        Category     = $CatName
+                                        Method       = 'Cmdlet'
+                                    })
+                            }
+                        }
+                        #Endregion Comparison
+
+                        #Endregion Microsoft-Defender-Exploit-Guard-Category
+
+                        # Add the array of the custom objects to the main output HashTable
+                        [System.Void]$FinalMegaObject.TryAdd($CatName, $NestedObjectArray)
+
                     }
-                }
-                #Endregion Comparison
+                    catch {
+                        Write-Verbose -Message $_ -Verbose
+                        Throw $_
+                    }
+                    finally {
+                        # Reverting the PowerShell executables allow listings in Controlled folder access
+                        foreach ($FilePath in (Get-ChildItem -Path "$PSHOME\*.exe" -File).FullName) {
+                            Remove-MpPreference -ControlledFolderAccessAllowedApplications $FilePath
+                        }
 
-                #Endregion Microsoft-Defender-Exploit-Guard-Category
+                        # restoring the original Controlled folder access allow list - if user already had added PowerShell executables to the list
+                        # they will be restored as well, so user customization will remain intact
+                        if ($null -ne $CFAAllowedAppsBackup) {
+                            Set-MpPreference -ControlledFolderAccessAllowedApplications $CFAAllowedAppsBackup
+                        }
+                    }
 
-                # Add the array of the custom objects to the main output HashTable
-                [System.Void]$FinalMegaObject.TryAdd($CatName, $NestedObjectArray)
+                } -Name 'Invoke-MicrosoftDefender' -StreamingHost $Host -ArgumentList ($MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $TotalNumberOfTrueCompliantValues, $FinalMegaObject, $ScriptBlockInvokeCategoryProcessing, $CSVResource, $VerbosePreference)
             }
+
             Function Invoke-AttackSurfaceReductionRules {
-                Param ($CurrentMainStep, $TotalMainSteps, $MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $RefTotalNumberOfTrueCompliantValues, $FinalMegaObject)
+                Param ($CurrentMainStep, $TotalMainSteps, $MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $TotalNumberOfTrueCompliantValues, $FinalMegaObject)
                 $CurrentMainStep++
                 Write-Progress -Id 0 -Activity 'Validating Attack Surface Reduction Rules Category' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
 
-                $NestedObjectArray = New-Object -TypeName System.Collections.Generic.List[IndividualResult]
+                $NestedObjectArray = New-Object -TypeName System.Collections.Generic.List[HardeningModule.IndividualResult]
                 [System.String]$CatName = 'AttackSurfaceReductionRules'
 
                 # Process items in Registry resources.csv file with "Group Policy" origin and add them to the $NestedObjectArray array as custom objects
@@ -855,7 +883,7 @@ function Confirm-SystemCompliance {
                     # Because it's in preview and is set to 6 for Warn instead of 1 for block
                     if ($Name -eq 'c0033c00-d16d-4114-a5a0-dc9b3a7d2ceb') {
                         # Create a custom object with properties
-                        [System.Void]$NestedObjectArray.Add([IndividualResult]@{
+                        [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
                                 FriendlyName = $ASRsTable[$name]
                                 Compliant    = [System.Boolean]($Action -in '6', '1') # Either 6 or 1 is compliant and acceptable
                                 Value        = $Action
@@ -867,7 +895,7 @@ function Confirm-SystemCompliance {
                     }
                     else {
                         # Create a custom object with properties
-                        [System.Void]$NestedObjectArray.Add([IndividualResult]@{
+                        [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
                                 FriendlyName = $ASRsTable[$name]
                                 Compliant    = [System.Boolean]($Action -eq 1) # Compare action value with 1 and cast to boolean
                                 Value        = $Action
@@ -882,11 +910,11 @@ function Confirm-SystemCompliance {
                 [System.Void]$FinalMegaObject.TryAdd($CatName, $NestedObjectArray)
             }
             Function Invoke-BitLockerSettings {
-                Param ($CurrentMainStep, $TotalMainSteps, $MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $RefTotalNumberOfTrueCompliantValues, $FinalMegaObject)
+                Param ($CurrentMainStep, $TotalMainSteps, $MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $TotalNumberOfTrueCompliantValues, $FinalMegaObject)
                 $CurrentMainStep++
                 Write-Progress -Id 0 -Activity 'Validating Bitlocker Category' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
 
-                $NestedObjectArray = New-Object -TypeName System.Collections.Generic.List[IndividualResult]
+                $NestedObjectArray = New-Object -TypeName System.Collections.Generic.List[HardeningModule.IndividualResult]
                 [System.String]$CatName = 'BitLockerSettings'
 
                 # This PowerShell script can be used to find out if the DMA Protection is ON \ OFF.
@@ -962,7 +990,7 @@ function Confirm-SystemCompliance {
                 [System.Boolean]$ItemState = ($BootDMAProtection -xor ($BitlockerDMAProtectionStatus -eq '1')) ? $True : $False
 
                 # Create a custom object with 5 properties to store them as nested objects inside the main output object
-                [System.Void]$NestedObjectArray.Add([IndividualResult]@{
+                [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
                         FriendlyName = 'DMA protection'
                         Compliant    = $ItemState
                         Value        = $ItemState
@@ -984,7 +1012,7 @@ function Confirm-SystemCompliance {
                     catch {
                         # suppress the errors if any
                     }
-                    [System.Void]$NestedObjectArray.Add([IndividualResult]@{
+                    [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
                             FriendlyName = 'Hibernate is set to full'
                             Compliant    = [System.Boolean]($IndividualItemResult)
                             Value        = [System.Boolean]($IndividualItemResult)
@@ -994,7 +1022,7 @@ function Confirm-SystemCompliance {
                         })
                 }
                 else {
-                    $RefTotalNumberOfTrueCompliantValues.Value--
+                    [System.Void][System.Threading.Interlocked]::Decrement([ref]$TotalNumberOfTrueCompliantValues)
                 }
 
                 # OS Drive encryption verifications
@@ -1008,7 +1036,7 @@ function Confirm-SystemCompliance {
                     # Check if TPM+PIN and recovery password are being used - Normal Security level
                     if (($KeyProtectors -contains 'Tpmpin') -and ($KeyProtectors -contains 'RecoveryPassword')) {
 
-                        [System.Void]$NestedObjectArray.Add([IndividualResult]@{
+                        [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
                                 FriendlyName = 'Secure OS Drive encryption'
                                 Compliant    = $True
                                 Value        = 'Normal Security Level'
@@ -1022,7 +1050,7 @@ function Confirm-SystemCompliance {
                     # Check if TPM+PIN+StartupKey and recovery password are being used - Enhanced security level
                     elseif (($KeyProtectors -contains 'TpmPinStartupKey') -and ($KeyProtectors -contains 'RecoveryPassword')) {
 
-                        [System.Void]$NestedObjectArray.Add([IndividualResult]@{
+                        [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
                                 FriendlyName = 'Secure OS Drive encryption'
                                 Compliant    = $True
                                 Value        = 'Enhanced Security Level'
@@ -1033,7 +1061,7 @@ function Confirm-SystemCompliance {
                     }
 
                     else {
-                        [System.Void]$NestedObjectArray.Add([IndividualResult]@{
+                        [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
                                 FriendlyName = 'Secure OS Drive encryption'
                                 Compliant    = $false
                                 Value        = $false
@@ -1044,7 +1072,7 @@ function Confirm-SystemCompliance {
                     }
                 }
                 else {
-                    [System.Void]$NestedObjectArray.Add([IndividualResult]@{
+                    [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
                             FriendlyName = 'Secure OS Drive encryption'
                             Compliant    = $false
                             Value        = $false
@@ -1079,7 +1107,7 @@ function Confirm-SystemCompliance {
                     foreach ($MountPoint in $($NonOSBitLockerVolumes | Sort-Object).MountPoint) {
 
                         # Increase the number of available compliant values for each non-OS drive that was found
-                        $RefTotalNumberOfTrueCompliantValues.Value++
+                        [System.Void][System.Threading.Interlocked]::Increment([ref]$TotalNumberOfTrueCompliantValues)
 
                         # If status is unknown, that means the non-OS volume is encrypted and locked, if it's on then it's on
                         if ((Get-BitLockerVolume -MountPoint $MountPoint).ProtectionStatus -in 'on', 'Unknown') {
@@ -1088,7 +1116,7 @@ function Confirm-SystemCompliance {
                             [System.Object[]]$KeyProtectors = (Get-BitLockerVolume -MountPoint $MountPoint).KeyProtector.keyprotectortype
                             if (($KeyProtectors -contains 'RecoveryPassword') -or ($KeyProtectors -contains 'Password')) {
 
-                                [System.Void]$NestedObjectArray.Add([IndividualResult]@{
+                                [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
                                         FriendlyName = "Secure Drive $MountPoint encryption"
                                         Compliant    = $True
                                         Value        = 'Encrypted'
@@ -1098,7 +1126,7 @@ function Confirm-SystemCompliance {
                                     })
                             }
                             else {
-                                [System.Void]$NestedObjectArray.Add([IndividualResult]@{
+                                [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
                                         FriendlyName = "Secure Drive $MountPoint encryption"
                                         Compliant    = $false
                                         Value        = 'Not properly encrypted'
@@ -1109,7 +1137,7 @@ function Confirm-SystemCompliance {
                             }
                         }
                         else {
-                            [System.Void]$NestedObjectArray.Add([IndividualResult]@{
+                            [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
                                     FriendlyName = "Secure Drive $MountPoint encryption"
                                     Compliant    = $false
                                     Value        = 'Not encrypted'
@@ -1126,11 +1154,11 @@ function Confirm-SystemCompliance {
                 [System.Void]$FinalMegaObject.TryAdd($CatName, $NestedObjectArray)
             }
             Function Invoke-TLSSecurity {
-                Param ($CurrentMainStep, $TotalMainSteps, $MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $RefTotalNumberOfTrueCompliantValues, $FinalMegaObject)
+                Param ($CurrentMainStep, $TotalMainSteps, $MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $TotalNumberOfTrueCompliantValues, $FinalMegaObject)
                 $CurrentMainStep++
                 Write-Progress -Id 0 -Activity 'Validating TLS Category' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
 
-                $NestedObjectArray = New-Object -TypeName System.Collections.Generic.List[IndividualResult]
+                $NestedObjectArray = New-Object -TypeName System.Collections.Generic.List[HardeningModule.IndividualResult]
                 [System.String]$CatName = 'TLSSecurity'
 
                 # Process items in Registry resources.csv file with "Group Policy" origin and add them to the $NestedObjectArray array as custom objects
@@ -1145,7 +1173,7 @@ function Confirm-SystemCompliance {
                 # If this variable is empty that means both arrays are completely identical
                 $IndividualItemResult = Compare-Object -ReferenceObject $ECCCurves -DifferenceObject $List -SyncWindow 0
 
-                [System.Void]$NestedObjectArray.Add([IndividualResult]@{
+                [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
                         FriendlyName = 'ECC Curves and their positions'
                         Compliant    = [System.Boolean]($IndividualItemResult ? $false : $True)
                         Value        = ($List -join ',') # Join the array elements into a string to display them properly in the output CSV file
@@ -1163,11 +1191,11 @@ function Confirm-SystemCompliance {
                 [System.Void]$FinalMegaObject.TryAdd($CatName, $NestedObjectArray)
             }
             Function Invoke-LockScreen {
-                Param ($CurrentMainStep, $TotalMainSteps, $MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $RefTotalNumberOfTrueCompliantValues, $FinalMegaObject)
+                Param ($CurrentMainStep, $TotalMainSteps, $MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $TotalNumberOfTrueCompliantValues, $FinalMegaObject)
                 $CurrentMainStep++
                 Write-Progress -Id 0 -Activity 'Validating Lock Screen Category' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
 
-                $NestedObjectArray = New-Object -TypeName System.Collections.Generic.List[IndividualResult]
+                $NestedObjectArray = New-Object -TypeName System.Collections.Generic.List[HardeningModule.IndividualResult]
                 [System.String]$CatName = 'LockScreen'
 
                 # Process items in Registry resources.csv file with "Group Policy" origin and add them to the $NestedObjectArray array as custom objects
@@ -1177,7 +1205,7 @@ function Confirm-SystemCompliance {
 
                 # Verify a Security Group Policy setting
                 $IndividualItemResult = [System.Boolean]$($SecurityPoliciesIni.'Registry Values'['MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\InactivityTimeoutSecs'] -eq '4,120') ? $True : $False
-                [System.Void]$NestedObjectArray.Add([IndividualResult]@{
+                [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
                         FriendlyName = 'Machine inactivity limit'
                         Compliant    = $IndividualItemResult
                         Value        = $IndividualItemResult
@@ -1188,7 +1216,7 @@ function Confirm-SystemCompliance {
 
                 # Verify a Security Group Policy setting
                 $IndividualItemResult = [System.Boolean]$($SecurityPoliciesIni.'Registry Values'['MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\DisableCAD'] -eq '4,0') ? $True : $False
-                [System.Void]$NestedObjectArray.Add([IndividualResult]@{
+                [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
                         FriendlyName = 'Interactive logon: Do not require CTRL+ALT+DEL'
                         Compliant    = $IndividualItemResult
                         Value        = $IndividualItemResult
@@ -1199,7 +1227,7 @@ function Confirm-SystemCompliance {
 
                 # Verify a Security Group Policy setting
                 $IndividualItemResult = [System.Boolean]$($SecurityPoliciesIni.'Registry Values'['MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\MaxDevicePasswordFailedAttempts'] -eq '4,5') ? $True : $False
-                [System.Void]$NestedObjectArray.Add([IndividualResult]@{
+                [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
                         FriendlyName = 'Interactive logon: Machine account lockout threshold'
                         Compliant    = $IndividualItemResult
                         Value        = $IndividualItemResult
@@ -1210,7 +1238,7 @@ function Confirm-SystemCompliance {
 
                 # Verify a Security Group Policy setting
                 $IndividualItemResult = [System.Boolean]$($SecurityPoliciesIni.'Registry Values'['MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\DontDisplayLockedUserId'] -eq '4,4') ? $True : $False
-                [System.Void]$NestedObjectArray.Add([IndividualResult]@{
+                [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
                         FriendlyName = 'Interactive logon: Display user information when the session is locked'
                         Compliant    = $IndividualItemResult
                         Value        = $IndividualItemResult
@@ -1221,7 +1249,7 @@ function Confirm-SystemCompliance {
 
                 # Verify a Security Group Policy setting
                 $IndividualItemResult = [System.Boolean]$($SecurityPoliciesIni.'Registry Values'['MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\DontDisplayUserName'] -eq '4,1') ? $True : $False
-                [System.Void]$NestedObjectArray.Add([IndividualResult]@{
+                [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
                         FriendlyName = "Interactive logon: Don't display username at sign-in"
                         Compliant    = $IndividualItemResult
                         Value        = $IndividualItemResult
@@ -1232,7 +1260,7 @@ function Confirm-SystemCompliance {
 
                 # Verify a Security Group Policy setting
                 $IndividualItemResult = [System.Boolean]$($SecurityPoliciesIni.'System Access'['LockoutBadCount'] -eq '5') ? $True : $False
-                [System.Void]$NestedObjectArray.Add([IndividualResult]@{
+                [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
                         FriendlyName = 'Account lockout threshold'
                         Compliant    = $IndividualItemResult
                         Value        = $IndividualItemResult
@@ -1243,7 +1271,7 @@ function Confirm-SystemCompliance {
 
                 # Verify a Security Group Policy setting
                 $IndividualItemResult = [System.Boolean]$($SecurityPoliciesIni.'System Access'['LockoutDuration'] -eq '1440') ? $True : $False
-                [System.Void]$NestedObjectArray.Add([IndividualResult]@{
+                [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
                         FriendlyName = 'Account lockout duration'
                         Compliant    = $IndividualItemResult
                         Value        = $IndividualItemResult
@@ -1254,7 +1282,7 @@ function Confirm-SystemCompliance {
 
                 # Verify a Security Group Policy setting
                 $IndividualItemResult = [System.Boolean]$($SecurityPoliciesIni.'System Access'['ResetLockoutCount'] -eq '1440') ? $True : $False
-                [System.Void]$NestedObjectArray.Add([IndividualResult]@{
+                [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
                         FriendlyName = 'Reset account lockout counter after'
                         Compliant    = $IndividualItemResult
                         Value        = $IndividualItemResult
@@ -1265,7 +1293,7 @@ function Confirm-SystemCompliance {
 
                 # Verify a Security Group Policy setting
                 $IndividualItemResult = [System.Boolean]$($SecurityPoliciesIni.'Registry Values'['MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\DontDisplayLastUserName'] -eq '4,1') ? $True : $False
-                [System.Void]$NestedObjectArray.Add([IndividualResult]@{
+                [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
                         FriendlyName = "Interactive logon: Don't display last signed-in"
                         Compliant    = $IndividualItemResult
                         Value        = $IndividualItemResult
@@ -1278,11 +1306,11 @@ function Confirm-SystemCompliance {
                 [System.Void]$FinalMegaObject.TryAdd($CatName, $NestedObjectArray)
             }
             Function Invoke-UserAccountControl {
-                Param ($CurrentMainStep, $TotalMainSteps, $MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $RefTotalNumberOfTrueCompliantValues, $FinalMegaObject)
+                Param ($CurrentMainStep, $TotalMainSteps, $MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $TotalNumberOfTrueCompliantValues, $FinalMegaObject)
                 $CurrentMainStep++
                 Write-Progress -Id 0 -Activity 'Validating User Account Control Category' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
 
-                $NestedObjectArray = New-Object -TypeName System.Collections.Generic.List[IndividualResult]
+                $NestedObjectArray = New-Object -TypeName System.Collections.Generic.List[HardeningModule.IndividualResult]
                 [System.String]$CatName = 'UserAccountControl'
 
                 # Process items in Registry resources.csv file with "Group Policy" origin and add them to the $NestedObjectArray array as custom objects
@@ -1292,7 +1320,7 @@ function Confirm-SystemCompliance {
 
                 # Verify a Security Group Policy setting
                 $IndividualItemResult = [System.Boolean]$($SecurityPoliciesIni.'Registry Values'['MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\ConsentPromptBehaviorAdmin'] -eq '4,2') ? $True : $False
-                [System.Void]$NestedObjectArray.Add([IndividualResult]@{
+                [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
                         FriendlyName = 'UAC: Behavior of the elevation prompt for administrators in Admin Approval Mode'
                         Compliant    = $IndividualItemResult
                         Value        = $IndividualItemResult
@@ -1303,7 +1331,7 @@ function Confirm-SystemCompliance {
 
                 # Verify a Security Group Policy setting
                 $IndividualItemResult = [System.Boolean]$($SecurityPoliciesIni.'Registry Values'['MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\ConsentPromptBehaviorUser'] -eq '4,0') ? $True : $False
-                [System.Void]$NestedObjectArray.Add([IndividualResult]@{
+                [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
                         FriendlyName = 'UAC: Automatically deny elevation requests on Standard accounts'
                         Compliant    = $IndividualItemResult
                         Value        = $IndividualItemResult
@@ -1314,7 +1342,7 @@ function Confirm-SystemCompliance {
 
                 # Verify a Security Group Policy setting
                 $IndividualItemResult = [System.Boolean]($($SecurityPoliciesIni.'Registry Values'['MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\ValidateAdminCodeSignatures'] -eq '4,1') ? $True : $False)
-                [System.Void]$NestedObjectArray.Add([IndividualResult]@{
+                [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
                         FriendlyName = 'UAC: Only elevate executables that are signed and validated'
                         Compliant    = $IndividualItemResult
                         Value        = $IndividualItemResult
@@ -1327,11 +1355,11 @@ function Confirm-SystemCompliance {
                 [System.Void]$FinalMegaObject.TryAdd($CatName, $NestedObjectArray)
             }
             Function Invoke-DeviceGuard {
-                Param ($CurrentMainStep, $TotalMainSteps, $MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $RefTotalNumberOfTrueCompliantValues, $FinalMegaObject)
+                Param ($CurrentMainStep, $TotalMainSteps, $MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $TotalNumberOfTrueCompliantValues, $FinalMegaObject)
                 $CurrentMainStep++
                 Write-Progress -Id 0 -Activity 'Validating Device Guard Category' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
 
-                $NestedObjectArray = New-Object -TypeName System.Collections.Generic.List[IndividualResult]
+                $NestedObjectArray = New-Object -TypeName System.Collections.Generic.List[HardeningModule.IndividualResult]
                 [System.String]$CatName = 'DeviceGuard'
 
                 # Process items in Registry resources.csv file with "Group Policy" origin and add them to the $NestedObjectArray array as custom objects
@@ -1343,11 +1371,11 @@ function Confirm-SystemCompliance {
                 [System.Void]$FinalMegaObject.TryAdd($CatName, $NestedObjectArray)
             }
             Function Invoke-WindowsFirewall {
-                Param ($CurrentMainStep, $TotalMainSteps, $MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $RefTotalNumberOfTrueCompliantValues, $FinalMegaObject)
+                Param ($CurrentMainStep, $TotalMainSteps, $MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $TotalNumberOfTrueCompliantValues, $FinalMegaObject)
                 $CurrentMainStep++
                 Write-Progress -Id 0 -Activity 'Validating Windows Firewall Category' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
 
-                $NestedObjectArray = New-Object -TypeName System.Collections.Generic.List[IndividualResult]
+                $NestedObjectArray = New-Object -TypeName System.Collections.Generic.List[HardeningModule.IndividualResult]
                 [System.String]$CatName = 'WindowsFirewall'
 
                 # Process items in Registry resources.csv file with "Group Policy" origin and add them to the $NestedObjectArray array as custom objects
@@ -1361,7 +1389,7 @@ function Confirm-SystemCompliance {
                     Where-Object -FilterScript { ($_.RuleGroup -eq '@%SystemRoot%\system32\firewallapi.dll,-37302') -and ($_.Direction -eq 'inbound') }).Enabled -inotcontains 'True'
                 )
 
-                [System.Void]$NestedObjectArray.Add([IndividualResult]@{
+                [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
                         FriendlyName = 'mDNS UDP-In Firewall Rules are disabled'
                         Compliant    = $IndividualItemResult
                         Value        = $IndividualItemResult
@@ -1374,11 +1402,11 @@ function Confirm-SystemCompliance {
                 [System.Void]$FinalMegaObject.TryAdd($CatName, $NestedObjectArray)
             }
             Function Invoke-OptionalWindowsFeatures {
-                Param ($CurrentMainStep, $TotalMainSteps, $MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $RefTotalNumberOfTrueCompliantValues, $FinalMegaObject)
+                Param ($CurrentMainStep, $TotalMainSteps, $MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $TotalNumberOfTrueCompliantValues, $FinalMegaObject)
                 $CurrentMainStep++
                 Write-Progress -Id 0 -Activity 'Validating Optional Windows Features Category' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
 
-                $NestedObjectArray = New-Object -TypeName System.Collections.Generic.List[IndividualResult]
+                $NestedObjectArray = New-Object -TypeName System.Collections.Generic.List[HardeningModule.IndividualResult]
                 [System.String]$CatName = 'OptionalWindowsFeatures'
 
                 # Windows PowerShell handling Windows optional features verifications
@@ -1402,7 +1430,7 @@ function Confirm-SystemCompliance {
                     Return $PowerShell1, $PowerShell2, $WorkFoldersClient, $InternetPrintingClient, $WindowsMediaPlayer, $MDAG, $WindowsSandbox, $HyperV, $WMIC, $IEMode, $LegacyNotepad, $LegacyWordPad, $PowerShellISE, $StepsRecorder
                 }
                 # Verify PowerShell v2 is disabled
-                [System.Void]$NestedObjectArray.Add([IndividualResult]@{
+                [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
                         FriendlyName = 'PowerShell v2 is disabled'
                         Compliant    = ($Results[0] -and $Results[1]) ? $True : $False
                         Value        = ($Results[0] -and $Results[1]) ? $True : $False
@@ -1412,7 +1440,7 @@ function Confirm-SystemCompliance {
                     })
 
                 # Verify Work folders is disabled
-                [System.Void]$NestedObjectArray.Add([IndividualResult]@{
+                [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
                         FriendlyName = 'Work Folders client is disabled'
                         Compliant    = [System.Boolean]($Results[2] -eq 'Disabled')
                         Value        = [System.String]$Results[2]
@@ -1422,7 +1450,7 @@ function Confirm-SystemCompliance {
                     })
 
                 # Verify Internet Printing Client is disabled
-                [System.Void]$NestedObjectArray.Add([IndividualResult]@{
+                [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
                         FriendlyName = 'Internet Printing Client is disabled'
                         Compliant    = [System.Boolean]($Results[3] -eq 'Disabled')
                         Value        = [System.String]$Results[3]
@@ -1432,7 +1460,7 @@ function Confirm-SystemCompliance {
                     })
 
                 # Verify the old Windows Media Player is disabled
-                [System.Void]$NestedObjectArray.Add([IndividualResult]@{
+                [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
                         FriendlyName = 'Windows Media Player (legacy) is disabled'
                         Compliant    = [System.Boolean]($Results[4] -eq 'NotPresent')
                         Value        = [System.String]$Results[4]
@@ -1442,7 +1470,7 @@ function Confirm-SystemCompliance {
                     })
 
                 # Verify MDAG is disabled
-                [System.Void]$NestedObjectArray.Add([IndividualResult]@{
+                [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
                         FriendlyName = 'Microsoft Defender Application Guard is enabled'
                         Compliant    = [System.Boolean]($Results[5] -eq 'Disabled')
                         Value        = [System.String]$Results[5]
@@ -1452,7 +1480,7 @@ function Confirm-SystemCompliance {
                     })
 
                 # Verify Windows Sandbox is enabled
-                [System.Void]$NestedObjectArray.Add([IndividualResult]@{
+                [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
                         FriendlyName = 'Windows Sandbox is enabled'
                         Compliant    = [System.Boolean]($Results[6] -eq 'Enabled')
                         Value        = [System.String]$Results[6]
@@ -1462,7 +1490,7 @@ function Confirm-SystemCompliance {
                     })
 
                 # Verify Hyper-V is enabled
-                [System.Void]$NestedObjectArray.Add([IndividualResult]@{
+                [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
                         FriendlyName = 'Hyper-V is enabled'
                         Compliant    = [System.Boolean]($Results[7] -eq 'Enabled')
                         Value        = [System.String]$Results[7]
@@ -1472,7 +1500,7 @@ function Confirm-SystemCompliance {
                     })
 
                 # Verify WMIC is not present
-                [System.Void]$NestedObjectArray.Add([IndividualResult]@{
+                [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
                         FriendlyName = 'WMIC is not present'
                         Compliant    = [System.Boolean]($Results[8] -eq 'NotPresent')
                         Value        = [System.String]$Results[8]
@@ -1482,7 +1510,7 @@ function Confirm-SystemCompliance {
                     })
 
                 # Verify Internet Explorer mode functionality for Edge is not present
-                [System.Void]$NestedObjectArray.Add([IndividualResult]@{
+                [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
                         FriendlyName = 'Internet Explorer mode functionality for Edge is not present'
                         Compliant    = [System.Boolean]($Results[9] -eq 'NotPresent')
                         Value        = [System.String]$Results[9]
@@ -1492,7 +1520,7 @@ function Confirm-SystemCompliance {
                     })
 
                 # Verify Legacy Notepad is not present
-                [System.Void]$NestedObjectArray.Add([IndividualResult]@{
+                [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
                         FriendlyName = 'Legacy Notepad is not present'
                         Compliant    = [System.Boolean]($Results[10] -eq 'NotPresent')
                         Value        = [System.String]$Results[10]
@@ -1502,7 +1530,7 @@ function Confirm-SystemCompliance {
                     })
 
                 # Verify Legacy WordPad is not present
-                [System.Void]$NestedObjectArray.Add([IndividualResult]@{
+                [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
                         FriendlyName = 'WordPad is not present'
                         Compliant    = [System.Boolean]($Results[11] -eq 'NotPresent')
                         Value        = [System.String]$Results[11]
@@ -1512,7 +1540,7 @@ function Confirm-SystemCompliance {
                     })
 
                 # Verify PowerShell ISE is not present
-                [System.Void]$NestedObjectArray.Add([IndividualResult]@{
+                [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
                         FriendlyName = 'PowerShell ISE is not present'
                         Compliant    = [System.Boolean]($Results[12] -eq 'NotPresent')
                         Value        = [System.String]$Results[12]
@@ -1522,7 +1550,7 @@ function Confirm-SystemCompliance {
                     })
 
                 # Verify Steps Recorder is not present
-                [System.Void]$NestedObjectArray.Add([IndividualResult]@{
+                [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
                         FriendlyName = 'Steps Recorder is not present'
                         Compliant    = [System.Boolean]($Results[13] -eq 'NotPresent')
                         Value        = [System.String]$Results[13]
@@ -1535,11 +1563,11 @@ function Confirm-SystemCompliance {
                 [System.Void]$FinalMegaObject.TryAdd($CatName, $NestedObjectArray)
             }
             Function Invoke-WindowsNetworking {
-                Param ($CurrentMainStep, $TotalMainSteps, $MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $RefTotalNumberOfTrueCompliantValues, $FinalMegaObject)
+                Param ($CurrentMainStep, $TotalMainSteps, $MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $TotalNumberOfTrueCompliantValues, $FinalMegaObject)
                 $CurrentMainStep++
                 Write-Progress -Id 0 -Activity 'Validating Windows Networking Category' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
 
-                $NestedObjectArray = New-Object -TypeName System.Collections.Generic.List[IndividualResult]
+                $NestedObjectArray = New-Object -TypeName System.Collections.Generic.List[HardeningModule.IndividualResult]
                 [System.String]$CatName = 'WindowsNetworking'
 
                 # Process items in Registry resources.csv file with "Group Policy" origin and add them to the $NestedObjectArray array as custom objects
@@ -1552,7 +1580,7 @@ function Confirm-SystemCompliance {
                 [System.Boolean]$IndividualItemResult = -NOT ($Condition -contains $false) ? $True : $false
 
                 # Verify a Security setting using Cmdlet
-                [System.Void]$NestedObjectArray.Add([IndividualResult]@{
+                [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
                         FriendlyName = 'Network Location of all connections set to Public'
                         Compliant    = $IndividualItemResult
                         Value        = $IndividualItemResult
@@ -1568,7 +1596,7 @@ function Confirm-SystemCompliance {
                 catch {
                     # -ErrorAction SilentlyContinue wouldn't suppress the error if the path exists but property doesn't, so using try-catch
                 }
-                [System.Void]$NestedObjectArray.Add([IndividualResult]@{
+                [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
                         FriendlyName = 'Disable LMHOSTS lookup protocol on all network adapters'
                         Compliant    = $IndividualItemResult
                         Value        = $IndividualItemResult
@@ -1579,7 +1607,7 @@ function Confirm-SystemCompliance {
 
                 # Verify a Security Group Policy setting
                 $IndividualItemResult = [System.Boolean]$($SecurityPoliciesIni.'Registry Values'['MACHINE\System\CurrentControlSet\Control\SecurePipeServers\Winreg\AllowedExactPaths\Machine'] -eq '7,') ? $True : $False
-                [System.Void]$NestedObjectArray.Add([IndividualResult]@{
+                [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
                         FriendlyName = 'Network access: Remotely accessible registry paths'
                         Compliant    = $IndividualItemResult
                         Value        = $IndividualItemResult
@@ -1590,7 +1618,7 @@ function Confirm-SystemCompliance {
 
                 # Verify a Security Group Policy setting
                 $IndividualItemResult = [System.Boolean]$($SecurityPoliciesIni.'Registry Values'['MACHINE\System\CurrentControlSet\Control\SecurePipeServers\Winreg\AllowedPaths\Machine'] -eq '7,') ? $True : $False
-                [System.Void]$NestedObjectArray.Add([IndividualResult]@{
+                [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
                         FriendlyName = 'Network access: Remotely accessible registry paths and subpaths'
                         Compliant    = $IndividualItemResult
                         Value        = $IndividualItemResult
@@ -1603,11 +1631,11 @@ function Confirm-SystemCompliance {
                 [System.Void]$FinalMegaObject.TryAdd($CatName, $NestedObjectArray)
             }
             Function Invoke-MiscellaneousConfigurations {
-                Param ($CurrentMainStep, $TotalMainSteps, $MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $RefTotalNumberOfTrueCompliantValues, $FinalMegaObject)
+                Param ($CurrentMainStep, $TotalMainSteps, $MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $TotalNumberOfTrueCompliantValues, $FinalMegaObject)
                 $CurrentMainStep++
                 Write-Progress -Id 0 -Activity 'Validating Miscellaneous Category' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
 
-                $NestedObjectArray = New-Object -TypeName System.Collections.Generic.List[IndividualResult]
+                $NestedObjectArray = New-Object -TypeName System.Collections.Generic.List[HardeningModule.IndividualResult]
                 [System.String]$CatName = 'MiscellaneousConfigurations'
 
                 # Process items in Registry resources.csv file with "Group Policy" origin and add them to the $NestedObjectArray array as custom objects
@@ -1618,7 +1646,7 @@ function Confirm-SystemCompliance {
                 # Verify an Audit policy is enabled - only supports systems with English-US language
                 if ((Get-Culture).Name -eq 'en-US') {
                     $IndividualItemResult = [System.Boolean](((auditpol /get /subcategory:"Other Logon/Logoff Events" /r | ConvertFrom-Csv).'Inclusion Setting' -eq 'Success and Failure') ? $True : $False)
-                    [System.Void]$NestedObjectArray.Add([IndividualResult]@{
+                    [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
                             FriendlyName = 'Audit policy for Other Logon/Logoff Events'
                             Compliant    = $IndividualItemResult
                             Value        = $IndividualItemResult
@@ -1628,7 +1656,7 @@ function Confirm-SystemCompliance {
                         })
                 }
                 else {
-                    $RefTotalNumberOfTrueCompliantValues.Value--
+                    [System.Void][System.Threading.Interlocked]::Decrement([ref]$TotalNumberOfTrueCompliantValues)
                 }
 
                 # Checking if all user accounts are part of the Hyper-V security Group
@@ -1648,7 +1676,7 @@ function Confirm-SystemCompliance {
                 }
 
                 # Saving the results of the Hyper-V administrators members group to the array as an object
-                [System.Void]$NestedObjectArray.Add([IndividualResult]@{
+                [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
                         FriendlyName = 'All users are part of the Hyper-V Administrators group'
                         Compliant    = $IndividualItemResult
                         Value        = $IndividualItemResult
@@ -1666,11 +1694,11 @@ function Confirm-SystemCompliance {
                 [System.Void]$FinalMegaObject.TryAdd($CatName, $NestedObjectArray)
             }
             Function Invoke-WindowsUpdateConfigurations {
-                Param ($CurrentMainStep, $TotalMainSteps, $MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $RefTotalNumberOfTrueCompliantValues, $FinalMegaObject)
+                Param ($CurrentMainStep, $TotalMainSteps, $MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $TotalNumberOfTrueCompliantValues, $FinalMegaObject)
                 $CurrentMainStep++
                 Write-Progress -Id 0 -Activity 'Validating Windows Update Category' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
 
-                $NestedObjectArray = New-Object -TypeName System.Collections.Generic.List[IndividualResult]
+                $NestedObjectArray = New-Object -TypeName System.Collections.Generic.List[HardeningModule.IndividualResult]
                 [System.String]$CatName = 'WindowsUpdateConfigurations'
 
                 # Process items in Registry resources.csv file with "Group Policy" origin and add them to the $NestedObjectArray array as custom objects
@@ -1685,7 +1713,7 @@ function Confirm-SystemCompliance {
                 catch {
                     # -ErrorAction SilentlyContinue wouldn't suppress the error if the path exists but property doesn't, so using try-catch
                 }
-                [System.Void]$NestedObjectArray.Add([IndividualResult]@{
+                [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
                         FriendlyName = 'Enable restart notification for Windows update'
                         Compliant    = $IndividualItemResult
                         Value        = $IndividualItemResult
@@ -1698,11 +1726,11 @@ function Confirm-SystemCompliance {
                 [System.Void]$FinalMegaObject.TryAdd($CatName, $NestedObjectArray)
             }
             Function Invoke-EdgeBrowserConfigurations {
-                Param ($CurrentMainStep, $TotalMainSteps, $MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $RefTotalNumberOfTrueCompliantValues, $FinalMegaObject)
+                Param ($CurrentMainStep, $TotalMainSteps, $MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $TotalNumberOfTrueCompliantValues, $FinalMegaObject)
                 $CurrentMainStep++
                 Write-Progress -Id 0 -Activity 'Validating Edge Browser Category' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
 
-                $NestedObjectArray = New-Object -TypeName System.Collections.Generic.List[IndividualResult]
+                $NestedObjectArray = New-Object -TypeName System.Collections.Generic.List[HardeningModule.IndividualResult]
                 [System.String]$CatName = 'EdgeBrowserConfigurations'
 
                 # Process items in Registry resources.csv file with "Registry Keys" origin and add them to the $NestedObjectArray array as custom objects
@@ -1714,11 +1742,11 @@ function Confirm-SystemCompliance {
                 [System.Void]$FinalMegaObject.TryAdd($CatName, $NestedObjectArray)
             }
             Function Invoke-NonAdminCommands {
-                Param ($CurrentMainStep, $TotalMainSteps, $MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $RefTotalNumberOfTrueCompliantValues, $FinalMegaObject)
+                Param ($CurrentMainStep, $TotalMainSteps, $MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $TotalNumberOfTrueCompliantValues, $FinalMegaObject)
                 $CurrentMainStep++
                 Write-Progress -Id 0 -Activity 'Validating Non-Admin Category' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
 
-                $NestedObjectArray = New-Object -TypeName System.Collections.Generic.List[IndividualResult]
+                $NestedObjectArray = New-Object -TypeName System.Collections.Generic.List[HardeningModule.IndividualResult]
                 [System.String]$CatName = 'NonAdminCommands'
 
                 # Process items in Registry resources.csv file with "Registry Keys" origin and add them to the $NestedObjectArray array as custom objects
@@ -1732,36 +1760,42 @@ function Confirm-SystemCompliance {
             #Endregion Main-Functions
 
             Switch ($Categories) {
-                'MicrosoftDefender' { Invoke-MicrosoftDefender -CurrentMainStep $CurrentMainStep -TotalMainSteps $TotalMainSteps -MDAVPreferencesCurrent $MDAVPreferencesCurrent -MDAVConfigCurrent $MDAVConfigCurrent -HardeningModulePath $HardeningModulePath -RefTotalNumberOfTrueCompliantValues $RefTotalNumberOfTrueCompliantValues -FinalMegaObject $FinalMegaObject }
-                'AttackSurfaceReductionRules' { Invoke-AttackSurfaceReductionRules -CurrentMainStep $CurrentMainStep -TotalMainSteps $TotalMainSteps -MDAVPreferencesCurrent $MDAVPreferencesCurrent -MDAVConfigCurrent $MDAVConfigCurrent -HardeningModulePath $HardeningModulePath -RefTotalNumberOfTrueCompliantValues $RefTotalNumberOfTrueCompliantValues -FinalMegaObject $FinalMegaObject }
-                'BitLockerSettings' { Invoke-BitLockerSettings -CurrentMainStep $CurrentMainStep -TotalMainSteps $TotalMainSteps -MDAVPreferencesCurrent $MDAVPreferencesCurrent -MDAVConfigCurrent $MDAVConfigCurrent -HardeningModulePath $HardeningModulePath -RefTotalNumberOfTrueCompliantValues $RefTotalNumberOfTrueCompliantValues -FinalMegaObject $FinalMegaObject }
-                'TLSSecurity' { Invoke-TLSSecurity -CurrentMainStep $CurrentMainStep -TotalMainSteps $TotalMainSteps -MDAVPreferencesCurrent $MDAVPreferencesCurrent -MDAVConfigCurrent $MDAVConfigCurrent -HardeningModulePath $HardeningModulePath -RefTotalNumberOfTrueCompliantValues $RefTotalNumberOfTrueCompliantValues -FinalMegaObject $FinalMegaObject }
-                'LockScreen' { Invoke-LockScreen -CurrentMainStep $CurrentMainStep -TotalMainSteps $TotalMainSteps -MDAVPreferencesCurrent $MDAVPreferencesCurrent -MDAVConfigCurrent $MDAVConfigCurrent -HardeningModulePath $HardeningModulePath -RefTotalNumberOfTrueCompliantValues $RefTotalNumberOfTrueCompliantValues -FinalMegaObject $FinalMegaObject }
-                'UserAccountControl' { Invoke-UserAccountControl -CurrentMainStep $CurrentMainStep -TotalMainSteps $TotalMainSteps -MDAVPreferencesCurrent $MDAVPreferencesCurrent -MDAVConfigCurrent $MDAVConfigCurrent -HardeningModulePath $HardeningModulePath -RefTotalNumberOfTrueCompliantValues $RefTotalNumberOfTrueCompliantValues -FinalMegaObject $FinalMegaObject }
-                'DeviceGuard' { Invoke-DeviceGuard -CurrentMainStep $CurrentMainStep -TotalMainSteps $TotalMainSteps -MDAVPreferencesCurrent $MDAVPreferencesCurrent -MDAVConfigCurrent $MDAVConfigCurrent -HardeningModulePath $HardeningModulePath -RefTotalNumberOfTrueCompliantValues $RefTotalNumberOfTrueCompliantValues -FinalMegaObject $FinalMegaObject }
-                'WindowsFirewall' { Invoke-WindowsFirewall -CurrentMainStep $CurrentMainStep -TotalMainSteps $TotalMainSteps -MDAVPreferencesCurrent $MDAVPreferencesCurrent -MDAVConfigCurrent $MDAVConfigCurrent -HardeningModulePath $HardeningModulePath -RefTotalNumberOfTrueCompliantValues $RefTotalNumberOfTrueCompliantValues -FinalMegaObject $FinalMegaObject }
-                'OptionalWindowsFeatures' { Invoke-OptionalWindowsFeatures -CurrentMainStep $CurrentMainStep -TotalMainSteps $TotalMainSteps -MDAVPreferencesCurrent $MDAVPreferencesCurrent -MDAVConfigCurrent $MDAVConfigCurrent -HardeningModulePath $HardeningModulePath -RefTotalNumberOfTrueCompliantValues $RefTotalNumberOfTrueCompliantValues -FinalMegaObject $FinalMegaObject }
-                'WindowsNetworking' { Invoke-WindowsNetworking -CurrentMainStep $CurrentMainStep -TotalMainSteps $TotalMainSteps -MDAVPreferencesCurrent $MDAVPreferencesCurrent -MDAVConfigCurrent $MDAVConfigCurrent -HardeningModulePath $HardeningModulePath -RefTotalNumberOfTrueCompliantValues $RefTotalNumberOfTrueCompliantValues -FinalMegaObject $FinalMegaObject }
-                'MiscellaneousConfigurations' { Invoke-MiscellaneousConfigurations -CurrentMainStep $CurrentMainStep -TotalMainSteps $TotalMainSteps -MDAVPreferencesCurrent $MDAVPreferencesCurrent -MDAVConfigCurrent $MDAVConfigCurrent -HardeningModulePath $HardeningModulePath -RefTotalNumberOfTrueCompliantValues $RefTotalNumberOfTrueCompliantValues -FinalMegaObject $FinalMegaObject }
-                'WindowsUpdateConfigurations' { Invoke-WindowsUpdateConfigurations -CurrentMainStep $CurrentMainStep -TotalMainSteps $TotalMainSteps -MDAVPreferencesCurrent $MDAVPreferencesCurrent -MDAVConfigCurrent $MDAVConfigCurrent -HardeningModulePath $HardeningModulePath -RefTotalNumberOfTrueCompliantValues $RefTotalNumberOfTrueCompliantValues -FinalMegaObject $FinalMegaObject }
-                'EdgeBrowserConfigurations' { Invoke-EdgeBrowserConfigurations -CurrentMainStep $CurrentMainStep -TotalMainSteps $TotalMainSteps -MDAVPreferencesCurrent $MDAVPreferencesCurrent -MDAVConfigCurrent $MDAVConfigCurrent -HardeningModulePath $HardeningModulePath -RefTotalNumberOfTrueCompliantValues $RefTotalNumberOfTrueCompliantValues -FinalMegaObject $FinalMegaObject }
-                'NonAdminCommands' { Invoke-NonAdminCommands -CurrentMainStep $CurrentMainStep -TotalMainSteps $TotalMainSteps -MDAVPreferencesCurrent $MDAVPreferencesCurrent -MDAVConfigCurrent $MDAVConfigCurrent -HardeningModulePath $HardeningModulePath -RefTotalNumberOfTrueCompliantValues $RefTotalNumberOfTrueCompliantValues -FinalMegaObject $FinalMegaObject }
+                'MicrosoftDefender' { Invoke-MicrosoftDefender -CurrentMainStep $CurrentMainStep -TotalMainSteps $TotalMainSteps -MDAVPreferencesCurrent $MDAVPreferencesCurrent -MDAVConfigCurrent $MDAVConfigCurrent -HardeningModulePath $HardeningModulePath -TotalNumberOfTrueCompliantValues $SyncHash['TotalNumberOfTrueCompliantValues'] -FinalMegaObject $FinalMegaObject }
+                'AttackSurfaceReductionRules' { Invoke-AttackSurfaceReductionRules -CurrentMainStep $CurrentMainStep -TotalMainSteps $TotalMainSteps -MDAVPreferencesCurrent $MDAVPreferencesCurrent -MDAVConfigCurrent $MDAVConfigCurrent -HardeningModulePath $HardeningModulePath -TotalNumberOfTrueCompliantValues $SyncHash['TotalNumberOfTrueCompliantValues'] -FinalMegaObject $FinalMegaObject }
+                'BitLockerSettings' { Invoke-BitLockerSettings -CurrentMainStep $CurrentMainStep -TotalMainSteps $TotalMainSteps -MDAVPreferencesCurrent $MDAVPreferencesCurrent -MDAVConfigCurrent $MDAVConfigCurrent -HardeningModulePath $HardeningModulePath -TotalNumberOfTrueCompliantValues $SyncHash['TotalNumberOfTrueCompliantValues'] -FinalMegaObject $FinalMegaObject }
+                'TLSSecurity' { Invoke-TLSSecurity -CurrentMainStep $CurrentMainStep -TotalMainSteps $TotalMainSteps -MDAVPreferencesCurrent $MDAVPreferencesCurrent -MDAVConfigCurrent $MDAVConfigCurrent -HardeningModulePath $HardeningModulePath -TotalNumberOfTrueCompliantValues $SyncHash['TotalNumberOfTrueCompliantValues'] -FinalMegaObject $FinalMegaObject }
+                'LockScreen' { Invoke-LockScreen -CurrentMainStep $CurrentMainStep -TotalMainSteps $TotalMainSteps -MDAVPreferencesCurrent $MDAVPreferencesCurrent -MDAVConfigCurrent $MDAVConfigCurrent -HardeningModulePath $HardeningModulePath -TotalNumberOfTrueCompliantValues $SyncHash['TotalNumberOfTrueCompliantValues'] -FinalMegaObject $FinalMegaObject }
+                'UserAccountControl' { Invoke-UserAccountControl -CurrentMainStep $CurrentMainStep -TotalMainSteps $TotalMainSteps -MDAVPreferencesCurrent $MDAVPreferencesCurrent -MDAVConfigCurrent $MDAVConfigCurrent -HardeningModulePath $HardeningModulePath -TotalNumberOfTrueCompliantValues $SyncHash['TotalNumberOfTrueCompliantValues'] -FinalMegaObject $FinalMegaObject }
+                'DeviceGuard' { Invoke-DeviceGuard -CurrentMainStep $CurrentMainStep -TotalMainSteps $TotalMainSteps -MDAVPreferencesCurrent $MDAVPreferencesCurrent -MDAVConfigCurrent $MDAVConfigCurrent -HardeningModulePath $HardeningModulePath -TotalNumberOfTrueCompliantValues $SyncHash['TotalNumberOfTrueCompliantValues'] -FinalMegaObject $FinalMegaObject }
+                'WindowsFirewall' { Invoke-WindowsFirewall -CurrentMainStep $CurrentMainStep -TotalMainSteps $TotalMainSteps -MDAVPreferencesCurrent $MDAVPreferencesCurrent -MDAVConfigCurrent $MDAVConfigCurrent -HardeningModulePath $HardeningModulePath -TotalNumberOfTrueCompliantValues $SyncHash['TotalNumberOfTrueCompliantValues'] -FinalMegaObject $FinalMegaObject }
+                'OptionalWindowsFeatures' { Invoke-OptionalWindowsFeatures -CurrentMainStep $CurrentMainStep -TotalMainSteps $TotalMainSteps -MDAVPreferencesCurrent $MDAVPreferencesCurrent -MDAVConfigCurrent $MDAVConfigCurrent -HardeningModulePath $HardeningModulePath -TotalNumberOfTrueCompliantValues $SyncHash['TotalNumberOfTrueCompliantValues'] -FinalMegaObject $FinalMegaObject }
+                'WindowsNetworking' { Invoke-WindowsNetworking -CurrentMainStep $CurrentMainStep -TotalMainSteps $TotalMainSteps -MDAVPreferencesCurrent $MDAVPreferencesCurrent -MDAVConfigCurrent $MDAVConfigCurrent -HardeningModulePath $HardeningModulePath -TotalNumberOfTrueCompliantValues $SyncHash['TotalNumberOfTrueCompliantValues'] -FinalMegaObject $FinalMegaObject }
+                'MiscellaneousConfigurations' { Invoke-MiscellaneousConfigurations -CurrentMainStep $CurrentMainStep -TotalMainSteps $TotalMainSteps -MDAVPreferencesCurrent $MDAVPreferencesCurrent -MDAVConfigCurrent $MDAVConfigCurrent -HardeningModulePath $HardeningModulePath -TotalNumberOfTrueCompliantValues $SyncHash['TotalNumberOfTrueCompliantValues'] -FinalMegaObject $FinalMegaObject }
+                'WindowsUpdateConfigurations' { Invoke-WindowsUpdateConfigurations -CurrentMainStep $CurrentMainStep -TotalMainSteps $TotalMainSteps -MDAVPreferencesCurrent $MDAVPreferencesCurrent -MDAVConfigCurrent $MDAVConfigCurrent -HardeningModulePath $HardeningModulePath -TotalNumberOfTrueCompliantValues $SyncHash['TotalNumberOfTrueCompliantValues'] -FinalMegaObject $FinalMegaObject }
+                'EdgeBrowserConfigurations' { Invoke-EdgeBrowserConfigurations -CurrentMainStep $CurrentMainStep -TotalMainSteps $TotalMainSteps -MDAVPreferencesCurrent $MDAVPreferencesCurrent -MDAVConfigCurrent $MDAVConfigCurrent -HardeningModulePath $HardeningModulePath -TotalNumberOfTrueCompliantValues $SyncHash['TotalNumberOfTrueCompliantValues'] -FinalMegaObject $FinalMegaObject }
+                'NonAdminCommands' { Invoke-NonAdminCommands -CurrentMainStep $CurrentMainStep -TotalMainSteps $TotalMainSteps -MDAVPreferencesCurrent $MDAVPreferencesCurrent -MDAVConfigCurrent $MDAVConfigCurrent -HardeningModulePath $HardeningModulePath -TotalNumberOfTrueCompliantValues $SyncHash['TotalNumberOfTrueCompliantValues'] -FinalMegaObject $FinalMegaObject }
                 Default {
                     # Get the values of the ValidateSet attribute of the Categories parameter of the main function
                     [Categoriex]::new().GetValidValues() | ForEach-Object -Process {
                         # Run all of the categories' functions if the user didn't specify any
-                        . "Invoke-$_" -CurrentMainStep $CurrentMainStep -TotalMainSteps $TotalMainSteps -MDAVPreferencesCurrent $MDAVPreferencesCurrent -MDAVConfigCurrent $MDAVConfigCurrent -HardeningModulePath $HardeningModulePath -RefTotalNumberOfTrueCompliantValues $RefTotalNumberOfTrueCompliantValues -FinalMegaObject $FinalMegaObject
+                        . "Invoke-$_" -CurrentMainStep $CurrentMainStep -TotalMainSteps $TotalMainSteps -MDAVPreferencesCurrent $MDAVPreferencesCurrent -MDAVConfigCurrent $MDAVConfigCurrent -HardeningModulePath $HardeningModulePath -TotalNumberOfTrueCompliantValues $SyncHash['TotalNumberOfTrueCompliantValues'] -FinalMegaObject $FinalMegaObject
                     }
                 }
             }
 
+            #Region Threading management
+            $null = Wait-Job -Job $MicrosoftDefenderJob
+            Receive-Job -Job $MicrosoftDefenderJob
+            Remove-Job -Job $MicrosoftDefenderJob -Force
+            #Endregion Threading management
+
             if ($ExportToCSV) {
                 # Create an empty list to store the results based on the category order by sorting the concurrent hashtable
-                $AllOrderedResults = New-Object -TypeName System.Collections.Generic.List[IndividualResult]
+                $AllOrderedResults = New-Object -TypeName System.Collections.Generic.List[HardeningModule.IndividualResult]
                 foreach ($Key in [Categoriex]::new().GetValidValues()) {
                     if ($FinalMegaObject.ContainsKey($Key)) {
                         foreach ($Item in $FinalMegaObject[$Key].GetEnumerator()) {
-                            [System.Void]$AllOrderedResults.Add([IndividualResult]$Item)
+                            [System.Void]$AllOrderedResults.Add([HardeningModule.IndividualResult]$Item)
                         }
                     }
                 }
@@ -1854,7 +1888,7 @@ function Confirm-SystemCompliance {
                 }
 
                 #Region ASCII-Arts
-                [System.String]$WhenValue1To20 = @'
+                [System.String]$WhenValue1To40 = @'
                 OH
 
                 N
@@ -1873,7 +1907,7 @@ function Confirm-SystemCompliance {
 
 '@
 
-                [System.String]$WhenValue21To40 = @'
+                [System.String]$WhenValue41To80 = @'
 
 ‎‏‏‎‏‏‎⣿⣿⣷⡁⢆⠈⠕⢕⢂⢕⢂⢕⢂⢔⢂⢕⢄⠂⣂⠂⠆⢂⢕⢂⢕⢂⢕⢂⢕⢂
 ‎‏‏‎‏‏‎⣿⣿⣿⡷⠊⡢⡹⣦⡑⢂⢕⢂⢕⢂⢕⢂⠕⠔⠌⠝⠛⠶⠶⢶⣦⣄⢂⢕⢂⢕
@@ -1892,7 +1926,7 @@ function Confirm-SystemCompliance {
 
 '@
 
-                [System.String]$WhenValue41To60 = @'
+                [System.String]$WhenValue81To120 = @'
 
             ⣿⡟⠙⠛⠋⠩⠭⣉⡛⢛⠫⠭⠄⠒⠄⠄⠄⠈⠉⠛⢿⣿⣿⣿⣿⣿⣿⣿⣿⣿
             ⣿⡇⠄⠄⠄⠄⣠⠖⠋⣀⡤⠄⠒⠄⠄⠄⠄⠄⠄⠄⠄⠄⣈⡭⠭⠄⠄⠄⠉⠙
@@ -1911,7 +1945,7 @@ function Confirm-SystemCompliance {
 
 '@
 
-                [System.String]$WhenValue61To80 = @'
+                [System.String]$WhenValue121To160 = @'
 
                 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣴⣿⣿⡷⣄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
                 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣴⣿⡿⠋⠈⠻⣮⣳⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
@@ -1936,7 +1970,7 @@ function Confirm-SystemCompliance {
 
 '@
 
-                [System.String]$WhenValue81To88 = @'
+                [System.String]$WhenValue161To200 = @'
 
                 ⠀⠀⠀⠀⠀⠀⠀⠀⢀⣀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
                 ⠀⠀⠀⠀⠀⠔⠶⠒⠉⠈⠸⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
@@ -1963,7 +1997,7 @@ function Confirm-SystemCompliance {
 
 '@
 
-                [System.String]$WhenValueAbove88 = @'
+                [System.String]$WhenValueAbove200 = @'
                 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⣀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
                 ⠀⠀⠀⠀⠀⠀⠀⢠⣶⣶⣶⣦⣤⣀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣴⣿⠟⠛⢿⣶⡄⠀⢀⣀⣤⣤⣦⣤⡀⠀⠀⠀⠀⠀
                 ⠀⠀⠀⠀⠀⠀⢠⣿⠋⠀⠀⠈⠙⠻⢿⣶⣶⣶⣶⣶⣶⣶⣿⠟⠀⠀⠀⠀⠹⣿⡿⠟⠋⠉⠁⠈⢻⣷⠀⠀⠀⠀⠀
@@ -1991,12 +2025,12 @@ function Confirm-SystemCompliance {
                 # Only display the overall score if the user has not specified any categories
                 if (!$Categories) {
                     switch ($True) {
-                    ($TotalTrueCompliantValuesInOutPut -in 1..40) { & $WriteRainbow "$WhenValue1To20`nYour compliance score is $TotalTrueCompliantValuesInOutPut out of $($RefTotalNumberOfTrueCompliantValues.Value)!" }
-                    ($TotalTrueCompliantValuesInOutPut -in 41..80) { & $WriteRainbow "$WhenValue21To40`nYour compliance score is $TotalTrueCompliantValuesInOutPut out of $($RefTotalNumberOfTrueCompliantValues.Value)!" }
-                    ($TotalTrueCompliantValuesInOutPut -in 81..120) { & $WriteRainbow "$WhenValue41To60`nYour compliance score is $TotalTrueCompliantValuesInOutPut out of $($RefTotalNumberOfTrueCompliantValues.Value)!" }
-                    ($TotalTrueCompliantValuesInOutPut -in 121..160) { & $WriteRainbow "$WhenValue61To80`nYour compliance score is $TotalTrueCompliantValuesInOutPut out of $($RefTotalNumberOfTrueCompliantValues.Value)!" }
-                    ($TotalTrueCompliantValuesInOutPut -in 161..200) { & $WriteRainbow "$WhenValue81To88`nYour compliance score is $TotalTrueCompliantValuesInOutPut out of $($RefTotalNumberOfTrueCompliantValues.Value)!" }
-                    ($TotalTrueCompliantValuesInOutPut -gt 200) { & $WriteRainbow "$WhenValueAbove88`nYour compliance score is $TotalTrueCompliantValuesInOutPut out of $($RefTotalNumberOfTrueCompliantValues.Value)!" }
+                    ($TotalTrueCompliantValuesInOutPut -in 1..40) { & $WriteRainbow "$WhenValue1To40`nYour compliance score is $TotalTrueCompliantValuesInOutPut out of $($SyncHash['TotalNumberOfTrueCompliantValues'])!" }
+                    ($TotalTrueCompliantValuesInOutPut -in 41..80) { & $WriteRainbow "$WhenValue41To80`nYour compliance score is $TotalTrueCompliantValuesInOutPut out of $($SyncHash['TotalNumberOfTrueCompliantValues'])!" }
+                    ($TotalTrueCompliantValuesInOutPut -in 81..120) { & $WriteRainbow "$WhenValue81To120`nYour compliance score is $TotalTrueCompliantValuesInOutPut out of $($SyncHash['TotalNumberOfTrueCompliantValues'])!" }
+                    ($TotalTrueCompliantValuesInOutPut -in 121..160) { & $WriteRainbow "$WhenValue121To160`nYour compliance score is $TotalTrueCompliantValuesInOutPut out of $($SyncHash['TotalNumberOfTrueCompliantValues'])!" }
+                    ($TotalTrueCompliantValuesInOutPut -in 161..200) { & $WriteRainbow "$WhenValue161To200`nYour compliance score is $TotalTrueCompliantValuesInOutPut out of $($SyncHash['TotalNumberOfTrueCompliantValues'])!" }
+                    ($TotalTrueCompliantValuesInOutPut -gt 200) { & $WriteRainbow "$WhenValueAbove200`nYour compliance score is $TotalTrueCompliantValuesInOutPut out of $($SyncHash['TotalNumberOfTrueCompliantValues'])!" }
                     }
                 }
             }
@@ -2009,11 +2043,6 @@ function Confirm-SystemCompliance {
             # End the progress bar and mark it as completed
             Write-Progress -Id 0 -Activity 'Completed' -Completed
 
-            # Reverting the PowerShell executables allow listings in Controlled folder access
-            foreach ($FilePath in (Get-ChildItem -Path "$PSHOME\*.exe" -File).FullName) {
-                Remove-MpPreference -ControlledFolderAccessAllowedApplications $FilePath
-            }
-
             #Region stopping rainbow progress bar
 
             # Stop the timer
@@ -2024,11 +2053,6 @@ function Confirm-SystemCompliance {
 
             #Endregion stopping rainbow progress bar
 
-            # restoring the original Controlled folder access allow list - if user already had added PowerShell executables to the list
-            # they will be restored as well, so user customization will remain intact
-            if ($null -ne $CFAAllowedAppsBackup) {
-                Set-MpPreference -ControlledFolderAccessAllowedApplications $CFAAllowedAppsBackup
-            }
             # Clean up
             Remove-Item -Path '.\security_policy.inf' -Force
         }

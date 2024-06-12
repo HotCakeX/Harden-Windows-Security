@@ -105,7 +105,7 @@ function Confirm-SystemCompliance {
         $FinalMegaObject = [System.Collections.Concurrent.ConcurrentDictionary[System.String, PSCustomObject[]]]::new()
 
         # The total number of the steps for the parent/main progress bar to render
-        [System.UInt16]$TotalMainSteps = 14
+        [System.UInt16]$TotalMainSteps = 13
         [System.UInt16]$CurrentMainStep = 0
         #EndRegion Defining-Variables
 
@@ -229,6 +229,11 @@ function Confirm-SystemCompliance {
             }
             return $Output
         }
+
+        # Save the function as scriptblock to pass it to the thread jobs
+        [System.Management.Automation.FunctionInfo]$Function = Get-Item -Path 'Function:Invoke-CategoryProcessing'
+        $ScriptBlockInvokeCategoryProcessing = [System.Management.Automation.ScriptBlock]::Create($Function.Definition)
+
         #EndRegion defining-Functions
 
         #Region Colors
@@ -367,10 +372,6 @@ function Confirm-SystemCompliance {
             #Region Main-Functions
             Function Invoke-MicrosoftDefender {
                 Param ($CurrentMainStep, $TotalMainSteps, $MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $TotalNumberOfTrueCompliantValues, $FinalMegaObject)
-
-                # Save the function as scriptblock to pass it to the thread job
-                [System.Management.Automation.FunctionInfo]$Function = Get-Item -Path 'Function:Invoke-CategoryProcessing'
-                $ScriptBlockInvokeCategoryProcessing = [System.Management.Automation.ScriptBlock]::Create($Function.Definition)
 
                 [System.Management.Automation.Job2]$script:MicrosoftDefenderJob = Start-ThreadJob -ScriptBlock {
 
@@ -818,111 +819,138 @@ function Confirm-SystemCompliance {
 
             Function Invoke-AttackSurfaceReductionRules {
                 Param ($CurrentMainStep, $TotalMainSteps, $MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $TotalNumberOfTrueCompliantValues, $FinalMegaObject)
-                $CurrentMainStep++
-                Write-Progress -Id 0 -Activity 'Validating Attack Surface Reduction Rules Category' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
 
-                $NestedObjectArray = New-Object -TypeName System.Collections.Generic.List[HardeningModule.IndividualResult]
-                [System.String]$CatName = 'AttackSurfaceReductionRules'
+                [System.Management.Automation.Job2]$script:AttackSurfaceReductionRulesJob = Start-ThreadJob -ScriptBlock {
 
-                # Process items in Registry resources.csv file with "Group Policy" origin and add them to the $NestedObjectArray array as custom objects
-                foreach ($Result in Invoke-CategoryProcessing -catname $CatName -Method 'Group Policy') {
-                    [System.Void]$NestedObjectArray.Add($Result)
-                }
+                    Param ($MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $TotalNumberOfTrueCompliantValues, $FinalMegaObject, $ScriptBlockInvokeCategoryProcessing, $CSVResource, $ParentVerbosePreference)
 
-                # Individual ASR rules verification
-                [System.String[]]$Ids = $MDAVPreferencesCurrent.AttackSurfaceReductionRules_Ids
-                [System.String[]]$Actions = $MDAVPreferencesCurrent.AttackSurfaceReductionRules_Actions
+                    $ErrorActionPreference = 'Stop'
+                    $VerbosePreference = $ParentVerbosePreference
 
-                # If $Ids variable is not empty, convert them to lower case because some IDs can be in upper case and result in inaccurate comparison
-                if ($Ids) { $Ids = $Ids.tolower() }
+                    # Import the IndividualResult class if it's not already loaded
+                    if (-NOT ('HardeningModule.IndividualResult' -as [System.Type]) ) {
+                        Add-Type -Path "$HardeningModulePath\Shared\IndividualResultClass.cs"
+                    }
 
-                # Hashtable to store the descriptions for each ID
-                [System.Collections.Hashtable]$ASRsTable = @{
-                    '26190899-1602-49e8-8b27-eb1d0a1ce869' = 'Block Office communication application from creating child processes'
-                    'd1e49aac-8f56-4280-b9ba-993a6d77406c' = 'Block process creations originating from PSExec and WMI commands'
-                    'b2b3f03d-6a65-4f7b-a9c7-1c7ef74a9ba4' = 'Block untrusted and unsigned processes that run from USB'
-                    '92e97fa1-2edf-4476-bdd6-9dd0b4dddc7b' = 'Block Win32 API calls from Office macros'
-                    '7674ba52-37eb-4a4f-a9a1-f0f9a1619a2c' = 'Block Adobe Reader from creating child processes'
-                    '3b576869-a4ec-4529-8536-b80a7769e899' = 'Block Office applications from creating executable content'
-                    'd4f940ab-401b-4efc-aadc-ad5f3c50688a' = 'Block all Office applications from creating child processes'
-                    '9e6c4e1f-7d60-472f-ba1a-a39ef669e4b2' = 'Block credential stealing from the Windows local security authority subsystem (lsass.exe)'
-                    'be9ba2d9-53ea-4cdc-84e5-9b1eeee46550' = 'Block executable content from email client and webmail'
-                    '01443614-cd74-433a-b99e-2ecdc07bfc25' = 'Block executable files from running unless they meet a prevalence; age or trusted list criterion'
-                    '5beb7efe-fd9a-4556-801d-275e5ffc04cc' = 'Block execution of potentially obfuscated scripts'
-                    'e6db77e5-3df2-4cf1-b95a-636979351e5b' = 'Block persistence through WMI event subscription'
-                    '75668c1f-73b5-4cf0-bb93-3ecf5cb7cc84' = 'Block Office applications from injecting code into other processes'
-                    '56a863a9-875e-4185-98a7-b882c64b5ce5' = 'Block abuse of exploited vulnerable signed drivers'
-                    'c1db55ab-c21a-4637-bb3f-a12568109d35' = 'Use advanced protection against ransomware'
-                    'd3e037e1-3eb8-44c8-a917-57927947596d' = 'Block JavaScript or VBScript from launching downloaded executable content'
-                    '33ddedf1-c6e0-47cb-833e-de6133960387' = 'Block rebooting machine in Safe Mode'
-                    'c0033c00-d16d-4114-a5a0-dc9b3a7d2ceb' = 'Block use of copied or impersonated system tools'
-                }
+                    $NestedObjectArray = New-Object -TypeName System.Collections.Generic.List[HardeningModule.IndividualResult]
+                    [System.String]$CatName = 'AttackSurfaceReductionRules'
 
-                # Loop over each ID in the hashtable
-                foreach ($Name in $ASRsTable.Keys) {
+                    # Process items in Registry resources.csv file with "Group Policy" origin and add them to the $NestedObjectArray array as custom objects
+                    foreach ($Result in (&$ScriptBlockInvokeCategoryProcessing -catname $CatName -Method 'Group Policy')) {
+                        [System.Void]$NestedObjectArray.Add($Result)
+                    }
 
-                    # Check if the $Ids array is not empty and current ID is present in the $Ids array
-                    if ($Ids -and $Ids -icontains $Name) {
-                        # If yes, check if the $Actions array is not empty
-                        if ($Actions) {
-                            # If yes, use the index of the ID in the array to access the action value
-                            $Action = $Actions[$Ids.IndexOf($Name)]
+                    # Individual ASR rules verification
+                    [System.String[]]$Ids = $MDAVPreferencesCurrent.AttackSurfaceReductionRules_Ids
+                    [System.String[]]$Actions = $MDAVPreferencesCurrent.AttackSurfaceReductionRules_Actions
+
+                    # If $Ids variable is not empty, convert them to lower case because some IDs can be in upper case and result in inaccurate comparison
+                    if ($Ids) { $Ids = $Ids.tolower() }
+
+                    # Hashtable to store the descriptions for each ID
+                    [System.Collections.Hashtable]$ASRsTable = @{
+                        '26190899-1602-49e8-8b27-eb1d0a1ce869' = 'Block Office communication application from creating child processes'
+                        'd1e49aac-8f56-4280-b9ba-993a6d77406c' = 'Block process creations originating from PSExec and WMI commands'
+                        'b2b3f03d-6a65-4f7b-a9c7-1c7ef74a9ba4' = 'Block untrusted and unsigned processes that run from USB'
+                        '92e97fa1-2edf-4476-bdd6-9dd0b4dddc7b' = 'Block Win32 API calls from Office macros'
+                        '7674ba52-37eb-4a4f-a9a1-f0f9a1619a2c' = 'Block Adobe Reader from creating child processes'
+                        '3b576869-a4ec-4529-8536-b80a7769e899' = 'Block Office applications from creating executable content'
+                        'd4f940ab-401b-4efc-aadc-ad5f3c50688a' = 'Block all Office applications from creating child processes'
+                        '9e6c4e1f-7d60-472f-ba1a-a39ef669e4b2' = 'Block credential stealing from the Windows local security authority subsystem (lsass.exe)'
+                        'be9ba2d9-53ea-4cdc-84e5-9b1eeee46550' = 'Block executable content from email client and webmail'
+                        '01443614-cd74-433a-b99e-2ecdc07bfc25' = 'Block executable files from running unless they meet a prevalence; age or trusted list criterion'
+                        '5beb7efe-fd9a-4556-801d-275e5ffc04cc' = 'Block execution of potentially obfuscated scripts'
+                        'e6db77e5-3df2-4cf1-b95a-636979351e5b' = 'Block persistence through WMI event subscription'
+                        '75668c1f-73b5-4cf0-bb93-3ecf5cb7cc84' = 'Block Office applications from injecting code into other processes'
+                        '56a863a9-875e-4185-98a7-b882c64b5ce5' = 'Block abuse of exploited vulnerable signed drivers'
+                        'c1db55ab-c21a-4637-bb3f-a12568109d35' = 'Use advanced protection against ransomware'
+                        'd3e037e1-3eb8-44c8-a917-57927947596d' = 'Block JavaScript or VBScript from launching downloaded executable content'
+                        '33ddedf1-c6e0-47cb-833e-de6133960387' = 'Block rebooting machine in Safe Mode'
+                        'c0033c00-d16d-4114-a5a0-dc9b3a7d2ceb' = 'Block use of copied or impersonated system tools'
+                    }
+
+                    # Loop over each ID in the hashtable
+                    foreach ($Name in $ASRsTable.Keys) {
+
+                        # Check if the $Ids array is not empty and current ID is present in the $Ids array
+                        if ($Ids -and $Ids -icontains $Name) {
+                            # If yes, check if the $Actions array is not empty
+                            if ($Actions) {
+                                # If yes, use the index of the ID in the array to access the action value
+                                $Action = $Actions[$Ids.IndexOf($Name)]
+                            }
+                            else {
+                                # If no, assign a default action value of 0
+                                $Action = 0
+                            }
                         }
                         else {
                             # If no, assign a default action value of 0
                             $Action = 0
                         }
-                    }
-                    else {
-                        # If no, assign a default action value of 0
-                        $Action = 0
+
+                        # An exception for the ASR rule with ID 'c0033c00-d16d-4114-a5a0-dc9b3a7d2ceb'
+                        # 'Block use of copied or impersonated system tools'
+                        # Because it's in preview and is set to 6 for Warn instead of 1 for block
+                        if ($Name -eq 'c0033c00-d16d-4114-a5a0-dc9b3a7d2ceb') {
+                            # Create a custom object with properties
+                            [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
+                                    FriendlyName = $ASRsTable[$name]
+                                    Compliant    = [System.Boolean]($Action -in '6', '1') # Either 6 or 1 is compliant and acceptable
+                                    Value        = $Action
+                                    Name         = $Name
+                                    Category     = $CatName
+                                    Method       = 'Cmdlet'
+                                })
+
+                        }
+                        else {
+                            # Create a custom object with properties
+                            [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
+                                    FriendlyName = $ASRsTable[$name]
+                                    Compliant    = [System.Boolean]($Action -eq 1) # Compare action value with 1 and cast to boolean
+                                    Value        = $Action
+                                    Name         = $Name
+                                    Category     = $CatName
+                                    Method       = 'Cmdlet'
+                                })
+                        }
                     }
 
-                    # An exception for the ASR rule with ID 'c0033c00-d16d-4114-a5a0-dc9b3a7d2ceb'
-                    # 'Block use of copied or impersonated system tools'
-                    # Because it's in preview and is set to 6 for Warn instead of 1 for block
-                    if ($Name -eq 'c0033c00-d16d-4114-a5a0-dc9b3a7d2ceb') {
-                        # Create a custom object with properties
-                        [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
-                                FriendlyName = $ASRsTable[$name]
-                                Compliant    = [System.Boolean]($Action -in '6', '1') # Either 6 or 1 is compliant and acceptable
-                                Value        = $Action
-                                Name         = $Name
-                                Category     = $CatName
-                                Method       = 'Cmdlet'
-                            })
+                    # Add the array of the custom objects to the main output HashTable
+                    [System.Void]$FinalMegaObject.TryAdd($CatName, $NestedObjectArray)
 
-                    }
-                    else {
-                        # Create a custom object with properties
-                        [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
-                                FriendlyName = $ASRsTable[$name]
-                                Compliant    = [System.Boolean]($Action -eq 1) # Compare action value with 1 and cast to boolean
-                                Value        = $Action
-                                Name         = $Name
-                                Category     = $CatName
-                                Method       = 'Cmdlet'
-                            })
-                    }
-                }
+                } -Name 'Invoke-AttackSurfaceReductionRules' -StreamingHost $Host -ArgumentList ($MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $TotalNumberOfTrueCompliantValues, $FinalMegaObject, $ScriptBlockInvokeCategoryProcessing, $CSVResource, $VerbosePreference)
 
-                # Add the array of the custom objects to the main output HashTable
-                [System.Void]$FinalMegaObject.TryAdd($CatName, $NestedObjectArray)
             }
             Function Invoke-BitLockerSettings {
                 Param ($CurrentMainStep, $TotalMainSteps, $MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $TotalNumberOfTrueCompliantValues, $FinalMegaObject)
-                $CurrentMainStep++
-                Write-Progress -Id 0 -Activity 'Validating Bitlocker Category' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
 
-                $NestedObjectArray = New-Object -TypeName System.Collections.Generic.List[HardeningModule.IndividualResult]
-                [System.String]$CatName = 'BitLockerSettings'
+                [System.Management.Automation.Job2]$script:BitLockerSettingsJob = Start-ThreadJob -ScriptBlock {
 
-                # This PowerShell script can be used to find out if the DMA Protection is ON \ OFF.
-                # The Script will show this by emitting True \ False for On \ Off respectively.
+                    Param ($MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $TotalNumberOfTrueCompliantValues, $FinalMegaObject, $ScriptBlockInvokeCategoryProcessing, $CSVResource, $ParentVerbosePreference)
 
-                # bootDMAProtection check - checks for Kernel DMA Protection status in System information or msinfo32
-                [System.String]$BootDMAProtectionCheck =
-                @'
+                    $ErrorActionPreference = 'Stop'
+                    $PSDefaultParameterValues = @{
+                        'Get-BitLockerVolume:Verbose' = $false
+                        'Get-Volume:Verbose'          = $false
+                        'Add-Type:Verbose'            = $false
+                    }
+
+                    # Import the IndividualResult class if it's not already loaded
+                    if (-NOT ('HardeningModule.IndividualResult' -as [System.Type]) ) {
+                        Add-Type -Path "$HardeningModulePath\Shared\IndividualResultClass.cs"
+                    }
+
+                    $NestedObjectArray = New-Object -TypeName System.Collections.Generic.List[HardeningModule.IndividualResult]
+                    [System.String]$CatName = 'BitLockerSettings'
+
+                    # This PowerShell script can be used to find out if the DMA Protection is ON \ OFF.
+                    # The Script will show this by emitting True \ False for On \ Off respectively.
+
+                    # bootDMAProtection check - checks for Kernel DMA Protection status in System information or msinfo32
+                    [System.String]$BootDMAProtectionCheck =
+                    @'
   namespace SystemInfo
     {
       using System;
@@ -965,101 +993,112 @@ function Confirm-SystemCompliance {
       }
     }
 '@
-                # if the type is not already loaded, load it
-                if (-NOT ('SystemInfo.NativeMethods' -as [System.Type])) {
-                    Write-Verbose -Message 'Loading SystemInfo.NativeMethods type'
-                    Add-Type -TypeDefinition $BootDMAProtectionCheck -Language CSharp -Verbose:$false
-                }
-                else {
-                    Write-Verbose -Message 'SystemInfo.NativeMethods type is already loaded, skipping loading it again.'
-                }
+                    # if the type is not already loaded, load it
+                    if (-NOT ('SystemInfo.NativeMethods' -as [System.Type])) {
+                        Write-Verbose -Message 'Loading SystemInfo.NativeMethods type' -Verbose:$($ParentVerbosePreference -eq 'Continue')
+                        Add-Type -TypeDefinition $BootDMAProtectionCheck -Language CSharp -Verbose:$false
+                    }
+                    else {
+                        Write-Verbose -Message 'SystemInfo.NativeMethods type is already loaded, skipping loading it again.' -Verbose:$($ParentVerbosePreference -eq 'Continue')
+                    }
 
-                # Returns true or false depending on whether Kernel DMA Protection is on or off
-                [System.Boolean]$BootDMAProtection = ([SystemInfo.NativeMethods]::BootDmaCheck()) -ne 0
+                    # Returns true or false depending on whether Kernel DMA Protection is on or off
+                    [System.Boolean]$BootDMAProtection = ([SystemInfo.NativeMethods]::BootDmaCheck()) -ne 0
 
-                # Get the status of Bitlocker DMA protection
-                try {
-                    [System.Int32]$BitlockerDMAProtectionStatus = Get-ItemPropertyValue -Path 'Registry::HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\FVE' -Name 'DisableExternalDMAUnderLock' -ErrorAction SilentlyContinue
-                }
-                catch {
-                    # -ErrorAction SilentlyContinue wouldn't suppress the error if the path exists but property doesn't, so using try-catch
-                }
-                # Bitlocker DMA counter measure status
-                # Returns true if only either Kernel DMA protection is on and Bitlocker DMA protection if off
-                # or Kernel DMA protection is off and Bitlocker DMA protection is on
-                [System.Boolean]$ItemState = ($BootDMAProtection -xor ($BitlockerDMAProtectionStatus -eq '1')) ? $True : $False
-
-                # Create a custom object with 5 properties to store them as nested objects inside the main output object
-                [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
-                        FriendlyName = 'DMA protection'
-                        Compliant    = $ItemState
-                        Value        = $ItemState
-                        Name         = 'DMA protection'
-                        Category     = $CatName
-                        Method       = 'Group Policy'
-                    })
-
-                # Process items in Registry resources.csv file with "Group Policy" origin and add them to the $NestedObjectArray array as custom objects
-                foreach ($Result in Invoke-CategoryProcessing -catname $CatName -Method 'Group Policy') {
-                    [System.Void]$NestedObjectArray.Add($Result)
-                }
-
-                # To detect if Hibernate is enabled and set to full
-                if (-NOT ($MDAVConfigCurrent.IsVirtualMachine)) {
+                    # Get the status of Bitlocker DMA protection
                     try {
-                        $IndividualItemResult = $($((Get-ItemProperty 'Registry::HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Power' -Name 'HiberFileType' -ErrorAction SilentlyContinue).HiberFileType) -eq 2 ? $True : $False)
+                        [System.Int32]$BitlockerDMAProtectionStatus = Get-ItemPropertyValue -Path 'Registry::HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\FVE' -Name 'DisableExternalDMAUnderLock' -ErrorAction SilentlyContinue
                     }
                     catch {
-                        # suppress the errors if any
+                        # -ErrorAction SilentlyContinue wouldn't suppress the error if the path exists but property doesn't, so using try-catch
                     }
+                    # Bitlocker DMA counter measure status
+                    # Returns true if only either Kernel DMA protection is on and Bitlocker DMA protection if off
+                    # or Kernel DMA protection is off and Bitlocker DMA protection is on
+                    [System.Boolean]$ItemState = ($BootDMAProtection -xor ($BitlockerDMAProtectionStatus -eq '1')) ? $True : $False
+
+                    # Create a custom object with 5 properties to store them as nested objects inside the main output object
                     [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
-                            FriendlyName = 'Hibernate is set to full'
-                            Compliant    = [System.Boolean]($IndividualItemResult)
-                            Value        = [System.Boolean]($IndividualItemResult)
-                            Name         = 'Hibernate is set to full'
+                            FriendlyName = 'DMA protection'
+                            Compliant    = $ItemState
+                            Value        = $ItemState
+                            Name         = 'DMA protection'
                             Category     = $CatName
-                            Method       = 'Cmdlet'
+                            Method       = 'Group Policy'
                         })
-                }
-                else {
-                    [System.Void][System.Threading.Interlocked]::Decrement([ref]$TotalNumberOfTrueCompliantValues)
-                }
 
-                # OS Drive encryption verifications
-                # Check if BitLocker is on for the OS Drive
-                # The ProtectionStatus remains off while the drive is encrypting or decrypting
-                if ((Get-BitLockerVolume -MountPoint $env:SystemDrive).ProtectionStatus -eq 'on') {
-
-                    # Get the key protectors of the OS Drive
-                    [System.String[]]$KeyProtectors = (Get-BitLockerVolume -MountPoint $env:SystemDrive).KeyProtector.keyprotectortype
-
-                    # Check if TPM+PIN and recovery password are being used - Normal Security level
-                    if (($KeyProtectors -contains 'Tpmpin') -and ($KeyProtectors -contains 'RecoveryPassword')) {
-
-                        [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
-                                FriendlyName = 'Secure OS Drive encryption'
-                                Compliant    = $True
-                                Value        = 'Normal Security Level'
-                                Name         = 'Secure OS Drive encryption'
-                                Category     = $CatName
-                                Method       = 'Cmdlet'
-
-                            })
+                    # Process items in Registry resources.csv file with "Group Policy" origin and add them to the $NestedObjectArray array as custom objects
+                    foreach ($Result in (&$ScriptBlockInvokeCategoryProcessing -catname $CatName -Method 'Group Policy')) {
+                        [System.Void]$NestedObjectArray.Add($Result)
                     }
 
-                    # Check if TPM+PIN+StartupKey and recovery password are being used - Enhanced security level
-                    elseif (($KeyProtectors -contains 'TpmPinStartupKey') -and ($KeyProtectors -contains 'RecoveryPassword')) {
-
+                    # To detect if Hibernate is enabled and set to full
+                    if (-NOT ($MDAVConfigCurrent.IsVirtualMachine)) {
+                        try {
+                            $IndividualItemResult = $($((Get-ItemProperty 'Registry::HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Power' -Name 'HiberFileType' -ErrorAction SilentlyContinue).HiberFileType) -eq 2 ? $True : $False)
+                        }
+                        catch {
+                            # suppress the errors if any
+                        }
                         [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
-                                FriendlyName = 'Secure OS Drive encryption'
-                                Compliant    = $True
-                                Value        = 'Enhanced Security Level'
-                                Name         = 'Secure OS Drive encryption'
+                                FriendlyName = 'Hibernate is set to full'
+                                Compliant    = [System.Boolean]($IndividualItemResult)
+                                Value        = [System.Boolean]($IndividualItemResult)
+                                Name         = 'Hibernate is set to full'
                                 Category     = $CatName
                                 Method       = 'Cmdlet'
                             })
                     }
+                    else {
+                        [System.Void][System.Threading.Interlocked]::Decrement([ref]$TotalNumberOfTrueCompliantValues)
+                    }
 
+                    # OS Drive encryption verifications
+                    # Check if BitLocker is on for the OS Drive
+                    # The ProtectionStatus remains off while the drive is encrypting or decrypting
+                    if ((Get-BitLockerVolume -MountPoint $env:SystemDrive).ProtectionStatus -eq 'on') {
+
+                        # Get the key protectors of the OS Drive
+                        [System.String[]]$KeyProtectors = (Get-BitLockerVolume -MountPoint $env:SystemDrive).KeyProtector.keyprotectortype
+
+                        # Check if TPM+PIN and recovery password are being used - Normal Security level
+                        if (($KeyProtectors -contains 'Tpmpin') -and ($KeyProtectors -contains 'RecoveryPassword')) {
+
+                            [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
+                                    FriendlyName = 'Secure OS Drive encryption'
+                                    Compliant    = $True
+                                    Value        = 'Normal Security Level'
+                                    Name         = 'Secure OS Drive encryption'
+                                    Category     = $CatName
+                                    Method       = 'Cmdlet'
+
+                                })
+                        }
+
+                        # Check if TPM+PIN+StartupKey and recovery password are being used - Enhanced security level
+                        elseif (($KeyProtectors -contains 'TpmPinStartupKey') -and ($KeyProtectors -contains 'RecoveryPassword')) {
+
+                            [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
+                                    FriendlyName = 'Secure OS Drive encryption'
+                                    Compliant    = $True
+                                    Value        = 'Enhanced Security Level'
+                                    Name         = 'Secure OS Drive encryption'
+                                    Category     = $CatName
+                                    Method       = 'Cmdlet'
+                                })
+                        }
+
+                        else {
+                            [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
+                                    FriendlyName = 'Secure OS Drive encryption'
+                                    Compliant    = $false
+                                    Value        = $false
+                                    Name         = 'Secure OS Drive encryption'
+                                    Category     = $CatName
+                                    Method       = 'Cmdlet'
+                                })
+                        }
+                    }
                     else {
                         [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
                                 FriendlyName = 'Secure OS Drive encryption'
@@ -1070,88 +1109,78 @@ function Confirm-SystemCompliance {
                                 Method       = 'Cmdlet'
                             })
                     }
-                }
-                else {
-                    [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
-                            FriendlyName = 'Secure OS Drive encryption'
-                            Compliant    = $false
-                            Value        = $false
-                            Name         = 'Secure OS Drive encryption'
-                            Category     = $CatName
-                            Method       = 'Cmdlet'
-                        })
-                }
-                #region Non-OS-Drive-BitLocker-Drives-Encryption-Verification
-                # Get the list of non OS volumes
-                [System.Object[]]$NonOSBitLockerVolumes = Get-BitLockerVolume | Where-Object -FilterScript { $_.volumeType -ne 'OperatingSystem' }
+                    #region Non-OS-Drive-BitLocker-Drives-Encryption-Verification
+                    # Get the list of non OS volumes
+                    [System.Object[]]$NonOSBitLockerVolumes = Get-BitLockerVolume | Where-Object -FilterScript { $_.volumeType -ne 'OperatingSystem' }
 
-                # Get all the volumes and filter out removable ones
-                [System.Object[]]$RemovableVolumes = Get-Volume | Where-Object -FilterScript { ($_.DriveType -eq 'Removable') -and $_.DriveLetter }
+                    # Get all the volumes and filter out removable ones
+                    [System.Object[]]$RemovableVolumes = Get-Volume | Where-Object -FilterScript { ($_.DriveType -eq 'Removable') -and $_.DriveLetter }
 
-                # Check if there is any removable volumes
-                if ($RemovableVolumes) {
+                    # Check if there is any removable volumes
+                    if ($RemovableVolumes) {
 
-                    # Get the letters of all the removable volumes
-                    [System.String[]]$RemovableVolumesLetters = foreach ($RemovableVolume in $RemovableVolumes) {
-                        $(($RemovableVolume).DriveLetter + ':' )
+                        # Get the letters of all the removable volumes
+                        [System.String[]]$RemovableVolumesLetters = foreach ($RemovableVolume in $RemovableVolumes) {
+                            $(($RemovableVolume).DriveLetter + ':' )
+                        }
+
+                        # Filter out removable drives from BitLocker volumes to process
+                        $NonOSBitLockerVolumes = $NonOSBitLockerVolumes | Where-Object -FilterScript { $_.MountPoint -notin $RemovableVolumesLetters }
                     }
 
-                    # Filter out removable drives from BitLocker volumes to process
-                    $NonOSBitLockerVolumes = $NonOSBitLockerVolumes | Where-Object -FilterScript { $_.MountPoint -notin $RemovableVolumesLetters }
-                }
+                    # Check if there is any non-OS volumes
+                    if ($NonOSBitLockerVolumes) {
 
-                # Check if there is any non-OS volumes
-                if ($NonOSBitLockerVolumes) {
+                        # Loop through each non-OS volume and verify their encryption
+                        foreach ($MountPoint in $($NonOSBitLockerVolumes | Sort-Object).MountPoint) {
 
-                    # Loop through each non-OS volume and verify their encryption
-                    foreach ($MountPoint in $($NonOSBitLockerVolumes | Sort-Object).MountPoint) {
+                            # Increase the number of available compliant values for each non-OS drive that was found
+                            [System.Void][System.Threading.Interlocked]::Increment([ref]$TotalNumberOfTrueCompliantValues)
 
-                        # Increase the number of available compliant values for each non-OS drive that was found
-                        [System.Void][System.Threading.Interlocked]::Increment([ref]$TotalNumberOfTrueCompliantValues)
+                            # If status is unknown, that means the non-OS volume is encrypted and locked, if it's on then it's on
+                            if ((Get-BitLockerVolume -MountPoint $MountPoint).ProtectionStatus -in 'on', 'Unknown') {
 
-                        # If status is unknown, that means the non-OS volume is encrypted and locked, if it's on then it's on
-                        if ((Get-BitLockerVolume -MountPoint $MountPoint).ProtectionStatus -in 'on', 'Unknown') {
+                                # Check 1: if Recovery Password and Auto Unlock key protectors are available on the drive
+                                [System.Object[]]$KeyProtectors = (Get-BitLockerVolume -MountPoint $MountPoint).KeyProtector.keyprotectortype
+                                if (($KeyProtectors -contains 'RecoveryPassword') -or ($KeyProtectors -contains 'Password')) {
 
-                            # Check 1: if Recovery Password and Auto Unlock key protectors are available on the drive
-                            [System.Object[]]$KeyProtectors = (Get-BitLockerVolume -MountPoint $MountPoint).KeyProtector.keyprotectortype
-                            if (($KeyProtectors -contains 'RecoveryPassword') -or ($KeyProtectors -contains 'Password')) {
-
-                                [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
-                                        FriendlyName = "Secure Drive $MountPoint encryption"
-                                        Compliant    = $True
-                                        Value        = 'Encrypted'
-                                        Name         = "Secure Drive $MountPoint encryption"
-                                        Category     = $CatName
-                                        Method       = 'Cmdlet'
-                                    })
+                                    [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
+                                            FriendlyName = "Secure Drive $MountPoint encryption"
+                                            Compliant    = $True
+                                            Value        = 'Encrypted'
+                                            Name         = "Secure Drive $MountPoint encryption"
+                                            Category     = $CatName
+                                            Method       = 'Cmdlet'
+                                        })
+                                }
+                                else {
+                                    [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
+                                            FriendlyName = "Secure Drive $MountPoint encryption"
+                                            Compliant    = $false
+                                            Value        = 'Not properly encrypted'
+                                            Name         = "Secure Drive $MountPoint encryption"
+                                            Category     = $CatName
+                                            Method       = 'Cmdlet'
+                                        })
+                                }
                             }
                             else {
                                 [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
                                         FriendlyName = "Secure Drive $MountPoint encryption"
                                         Compliant    = $false
-                                        Value        = 'Not properly encrypted'
+                                        Value        = 'Not encrypted'
                                         Name         = "Secure Drive $MountPoint encryption"
                                         Category     = $CatName
                                         Method       = 'Cmdlet'
                                     })
                             }
                         }
-                        else {
-                            [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
-                                    FriendlyName = "Secure Drive $MountPoint encryption"
-                                    Compliant    = $false
-                                    Value        = 'Not encrypted'
-                                    Name         = "Secure Drive $MountPoint encryption"
-                                    Category     = $CatName
-                                    Method       = 'Cmdlet'
-                                })
-                        }
                     }
-                }
-                #endregion Non-OS-Drive-BitLocker-Drives-Encryption-Verification
+                    #endregion Non-OS-Drive-BitLocker-Drives-Encryption-Verification
 
-                # Add the array of the custom objects to the main output HashTable
-                [System.Void]$FinalMegaObject.TryAdd($CatName, $NestedObjectArray)
+                    # Add the array of the custom objects to the main output HashTable
+                    [System.Void]$FinalMegaObject.TryAdd($CatName, $NestedObjectArray)
+                } -Name 'Invoke-BitLockerSettings' -StreamingHost $Host -ArgumentList ($MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $TotalNumberOfTrueCompliantValues, $FinalMegaObject, $ScriptBlockInvokeCategoryProcessing, $CSVResource, $VerbosePreference)
             }
             Function Invoke-TLSSecurity {
                 Param ($CurrentMainStep, $TotalMainSteps, $MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $TotalNumberOfTrueCompliantValues, $FinalMegaObject)
@@ -1372,195 +1401,219 @@ function Confirm-SystemCompliance {
             }
             Function Invoke-WindowsFirewall {
                 Param ($CurrentMainStep, $TotalMainSteps, $MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $TotalNumberOfTrueCompliantValues, $FinalMegaObject)
-                $CurrentMainStep++
-                Write-Progress -Id 0 -Activity 'Validating Windows Firewall Category' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
 
-                $NestedObjectArray = New-Object -TypeName System.Collections.Generic.List[HardeningModule.IndividualResult]
-                [System.String]$CatName = 'WindowsFirewall'
+                [System.Management.Automation.Job2]$script:WindowsFirewallJob = Start-ThreadJob -ScriptBlock {
 
-                # Process items in Registry resources.csv file with "Group Policy" origin and add them to the $NestedObjectArray array as custom objects
-                foreach ($Result in Invoke-CategoryProcessing -catname $CatName -Method 'Group Policy') {
-                    [System.Void]$NestedObjectArray.Add($Result)
-                }
+                    Param ($MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $TotalNumberOfTrueCompliantValues, $FinalMegaObject, $ScriptBlockInvokeCategoryProcessing, $CSVResource, $ParentVerbosePreference)
 
-                # Verify the 3 built-in Firewall rules (for all 3 profiles) for Multicast DNS (mDNS) UDP-in are disabled
-                $IndividualItemResult = [System.Boolean](
+                    $ErrorActionPreference = 'Stop'
+                    $VerbosePreference = $ParentVerbosePreference
+
+                    # Import the IndividualResult class if it's not already loaded
+                    if (-NOT ('HardeningModule.IndividualResult' -as [System.Type]) ) {
+                        Add-Type -Path "$HardeningModulePath\Shared\IndividualResultClass.cs"
+                    }
+
+                    $NestedObjectArray = New-Object -TypeName System.Collections.Generic.List[HardeningModule.IndividualResult]
+                    [System.String]$CatName = 'WindowsFirewall'
+
+                    # Process items in Registry resources.csv file with "Group Policy" origin and add them to the $NestedObjectArray array as custom objects
+                    foreach ($Result in (&$ScriptBlockInvokeCategoryProcessing -catname $CatName -Method 'Group Policy')) {
+                        [System.Void]$NestedObjectArray.Add($Result)
+                    }
+
+                    # Verify the 3 built-in Firewall rules (for all 3 profiles) for Multicast DNS (mDNS) UDP-in are disabled
+                    $IndividualItemResult = [System.Boolean](
                 (Get-NetFirewallRule |
-                    Where-Object -FilterScript { ($_.RuleGroup -eq '@%SystemRoot%\system32\firewallapi.dll,-37302') -and ($_.Direction -eq 'inbound') }).Enabled -inotcontains 'True'
-                )
+                        Where-Object -FilterScript { ($_.RuleGroup -eq '@%SystemRoot%\system32\firewallapi.dll,-37302') -and ($_.Direction -eq 'inbound') }).Enabled -inotcontains 'True'
+                    )
 
-                [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
-                        FriendlyName = 'mDNS UDP-In Firewall Rules are disabled'
-                        Compliant    = $IndividualItemResult
-                        Value        = $IndividualItemResult
-                        Name         = 'mDNS UDP-In Firewall Rules are disabled'
-                        Category     = $CatName
-                        Method       = 'Cmdlet'
-                    })
+                    [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
+                            FriendlyName = 'mDNS UDP-In Firewall Rules are disabled'
+                            Compliant    = $IndividualItemResult
+                            Value        = $IndividualItemResult
+                            Name         = 'mDNS UDP-In Firewall Rules are disabled'
+                            Category     = $CatName
+                            Method       = 'Cmdlet'
+                        })
 
-                # Add the array of the custom objects to the main output HashTable
-                [System.Void]$FinalMegaObject.TryAdd($CatName, $NestedObjectArray)
+                    # Add the array of the custom objects to the main output HashTable
+                    [System.Void]$FinalMegaObject.TryAdd($CatName, $NestedObjectArray)
+
+                } -Name 'Invoke-WindowsFirewall' -StreamingHost $Host -ArgumentList ($MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $TotalNumberOfTrueCompliantValues, $FinalMegaObject, $ScriptBlockInvokeCategoryProcessing, $CSVResource, $VerbosePreference)
             }
             Function Invoke-OptionalWindowsFeatures {
                 Param ($CurrentMainStep, $TotalMainSteps, $MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $TotalNumberOfTrueCompliantValues, $FinalMegaObject)
-                $CurrentMainStep++
-                Write-Progress -Id 0 -Activity 'Validating Optional Windows Features Category' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
 
-                $NestedObjectArray = New-Object -TypeName System.Collections.Generic.List[HardeningModule.IndividualResult]
-                [System.String]$CatName = 'OptionalWindowsFeatures'
+                [System.Management.Automation.Job2]$script:OptionalWindowsFeaturesJob = Start-ThreadJob -ScriptBlock {
 
-                # Windows PowerShell handling Windows optional features verifications
-                [System.String[]]$Results = @()
-                $Results = powershell.exe {
-                    [System.Boolean]$PowerShell1 = (Get-WindowsOptionalFeature -Online -FeatureName MicrosoftWindowsPowerShellV2).State -eq 'Disabled'
-                    [System.Boolean]$PowerShell2 = (Get-WindowsOptionalFeature -Online -FeatureName MicrosoftWindowsPowerShellV2Root).State -eq 'Disabled'
-                    [System.String]$WorkFoldersClient = (Get-WindowsOptionalFeature -Online -FeatureName WorkFolders-Client).state
-                    [System.String]$InternetPrintingClient = (Get-WindowsOptionalFeature -Online -FeatureName Printing-Foundation-Features).state
-                    [System.String]$WindowsMediaPlayer = (Get-WindowsCapability -Online | Where-Object -FilterScript { $_.Name -like '*Media.WindowsMediaPlayer*' }).state
-                    [System.String]$MDAG = (Get-WindowsOptionalFeature -Online -FeatureName Windows-Defender-ApplicationGuard).state
-                    [System.String]$WindowsSandbox = (Get-WindowsOptionalFeature -Online -FeatureName Containers-DisposableClientVM).state
-                    [System.String]$HyperV = (Get-WindowsOptionalFeature -Online -FeatureName Microsoft-Hyper-V).state
-                    [System.String]$WMIC = (Get-WindowsCapability -Online | Where-Object -FilterScript { $_.Name -like '*wmic*' }).state
-                    [System.String]$IEMode = (Get-WindowsCapability -Online | Where-Object -FilterScript { $_.Name -like '*Browser.InternetExplorer*' }).state
-                    [System.String]$LegacyNotepad = (Get-WindowsCapability -Online | Where-Object -FilterScript { $_.Name -like '*Microsoft.Windows.Notepad.System*' }).state
-                    [System.String]$LegacyWordPad = (Get-WindowsCapability -Online | Where-Object -FilterScript { $_.Name -like '*Microsoft.Windows.WordPad*' }).state
-                    [System.String]$PowerShellISE = (Get-WindowsCapability -Online | Where-Object -FilterScript { $_.Name -like '*Microsoft.Windows.PowerShell.ISE*' }).state
-                    [System.String]$StepsRecorder = (Get-WindowsCapability -Online | Where-Object -FilterScript { $_.Name -like '*App.StepsRecorder*' }).state
-                    # returning the output of the script block as an array
-                    Return $PowerShell1, $PowerShell2, $WorkFoldersClient, $InternetPrintingClient, $WindowsMediaPlayer, $MDAG, $WindowsSandbox, $HyperV, $WMIC, $IEMode, $LegacyNotepad, $LegacyWordPad, $PowerShellISE, $StepsRecorder
-                }
-                # Verify PowerShell v2 is disabled
-                [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
-                        FriendlyName = 'PowerShell v2 is disabled'
-                        Compliant    = ($Results[0] -and $Results[1]) ? $True : $False
-                        Value        = ($Results[0] -and $Results[1]) ? $True : $False
-                        Name         = 'PowerShell v2 is disabled'
-                        Category     = $CatName
-                        Method       = 'Optional Windows Features'
-                    })
+                    Param ($MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $TotalNumberOfTrueCompliantValues, $FinalMegaObject, $ScriptBlockInvokeCategoryProcessing, $CSVResource, $ParentVerbosePreference)
 
-                # Verify Work folders is disabled
-                [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
-                        FriendlyName = 'Work Folders client is disabled'
-                        Compliant    = [System.Boolean]($Results[2] -eq 'Disabled')
-                        Value        = [System.String]$Results[2]
-                        Name         = 'Work Folders client is disabled'
-                        Category     = $CatName
-                        Method       = 'Optional Windows Features'
-                    })
+                    $ErrorActionPreference = 'Stop'
 
-                # Verify Internet Printing Client is disabled
-                [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
-                        FriendlyName = 'Internet Printing Client is disabled'
-                        Compliant    = [System.Boolean]($Results[3] -eq 'Disabled')
-                        Value        = [System.String]$Results[3]
-                        Name         = 'Internet Printing Client is disabled'
-                        Category     = $CatName
-                        Method       = 'Optional Windows Features'
-                    })
+                    # Import the IndividualResult class if it's not already loaded
+                    if (-NOT ('HardeningModule.IndividualResult' -as [System.Type]) ) {
+                        Add-Type -Path "$HardeningModulePath\Shared\IndividualResultClass.cs"
+                    }
 
-                # Verify the old Windows Media Player is disabled
-                [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
-                        FriendlyName = 'Windows Media Player (legacy) is disabled'
-                        Compliant    = [System.Boolean]($Results[4] -eq 'NotPresent')
-                        Value        = [System.String]$Results[4]
-                        Name         = 'Windows Media Player (legacy) is disabled'
-                        Category     = $CatName
-                        Method       = 'Optional Windows Features'
-                    })
+                    $NestedObjectArray = New-Object -TypeName System.Collections.Generic.List[HardeningModule.IndividualResult]
+                    [System.String]$CatName = 'OptionalWindowsFeatures'
 
-                # Verify MDAG is disabled
-                [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
-                        FriendlyName = 'Microsoft Defender Application Guard is enabled'
-                        Compliant    = [System.Boolean]($Results[5] -eq 'Disabled')
-                        Value        = [System.String]$Results[5]
-                        Name         = 'Microsoft Defender Application Guard is enabled'
-                        Category     = $CatName
-                        Method       = 'Optional Windows Features'
-                    })
+                    # Windows PowerShell handling Windows optional features verifications
+                    [System.String[]]$Results = @()
+                    $Results = powershell.exe {
+                        [System.Boolean]$PowerShell1 = (Get-WindowsOptionalFeature -Online -FeatureName MicrosoftWindowsPowerShellV2).State -eq 'Disabled'
+                        [System.Boolean]$PowerShell2 = (Get-WindowsOptionalFeature -Online -FeatureName MicrosoftWindowsPowerShellV2Root).State -eq 'Disabled'
+                        [System.String]$WorkFoldersClient = (Get-WindowsOptionalFeature -Online -FeatureName WorkFolders-Client).state
+                        [System.String]$InternetPrintingClient = (Get-WindowsOptionalFeature -Online -FeatureName Printing-Foundation-Features).state
+                        [System.String]$WindowsMediaPlayer = (Get-WindowsCapability -Online | Where-Object -FilterScript { $_.Name -like '*Media.WindowsMediaPlayer*' }).state
+                        [System.String]$MDAG = (Get-WindowsOptionalFeature -Online -FeatureName Windows-Defender-ApplicationGuard).state
+                        [System.String]$WindowsSandbox = (Get-WindowsOptionalFeature -Online -FeatureName Containers-DisposableClientVM).state
+                        [System.String]$HyperV = (Get-WindowsOptionalFeature -Online -FeatureName Microsoft-Hyper-V).state
+                        [System.String]$WMIC = (Get-WindowsCapability -Online | Where-Object -FilterScript { $_.Name -like '*wmic*' }).state
+                        [System.String]$IEMode = (Get-WindowsCapability -Online | Where-Object -FilterScript { $_.Name -like '*Browser.InternetExplorer*' }).state
+                        [System.String]$LegacyNotepad = (Get-WindowsCapability -Online | Where-Object -FilterScript { $_.Name -like '*Microsoft.Windows.Notepad.System*' }).state
+                        [System.String]$LegacyWordPad = (Get-WindowsCapability -Online | Where-Object -FilterScript { $_.Name -like '*Microsoft.Windows.WordPad*' }).state
+                        [System.String]$PowerShellISE = (Get-WindowsCapability -Online | Where-Object -FilterScript { $_.Name -like '*Microsoft.Windows.PowerShell.ISE*' }).state
+                        [System.String]$StepsRecorder = (Get-WindowsCapability -Online | Where-Object -FilterScript { $_.Name -like '*App.StepsRecorder*' }).state
+                        # returning the output of the script block as an array
+                        Return $PowerShell1, $PowerShell2, $WorkFoldersClient, $InternetPrintingClient, $WindowsMediaPlayer, $MDAG, $WindowsSandbox, $HyperV, $WMIC, $IEMode, $LegacyNotepad, $LegacyWordPad, $PowerShellISE, $StepsRecorder
+                    }
+                    # Verify PowerShell v2 is disabled
+                    [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
+                            FriendlyName = 'PowerShell v2 is disabled'
+                            Compliant    = ($Results[0] -and $Results[1]) ? $True : $False
+                            Value        = ($Results[0] -and $Results[1]) ? $True : $False
+                            Name         = 'PowerShell v2 is disabled'
+                            Category     = $CatName
+                            Method       = 'Optional Windows Features'
+                        })
 
-                # Verify Windows Sandbox is enabled
-                [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
-                        FriendlyName = 'Windows Sandbox is enabled'
-                        Compliant    = [System.Boolean]($Results[6] -eq 'Enabled')
-                        Value        = [System.String]$Results[6]
-                        Name         = 'Windows Sandbox is enabled'
-                        Category     = $CatName
-                        Method       = 'Optional Windows Features'
-                    })
+                    # Verify Work folders is disabled
+                    [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
+                            FriendlyName = 'Work Folders client is disabled'
+                            Compliant    = [System.Boolean]($Results[2] -eq 'Disabled')
+                            Value        = [System.String]$Results[2]
+                            Name         = 'Work Folders client is disabled'
+                            Category     = $CatName
+                            Method       = 'Optional Windows Features'
+                        })
 
-                # Verify Hyper-V is enabled
-                [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
-                        FriendlyName = 'Hyper-V is enabled'
-                        Compliant    = [System.Boolean]($Results[7] -eq 'Enabled')
-                        Value        = [System.String]$Results[7]
-                        Name         = 'Hyper-V is enabled'
-                        Category     = $CatName
-                        Method       = 'Optional Windows Features'
-                    })
+                    # Verify Internet Printing Client is disabled
+                    [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
+                            FriendlyName = 'Internet Printing Client is disabled'
+                            Compliant    = [System.Boolean]($Results[3] -eq 'Disabled')
+                            Value        = [System.String]$Results[3]
+                            Name         = 'Internet Printing Client is disabled'
+                            Category     = $CatName
+                            Method       = 'Optional Windows Features'
+                        })
 
-                # Verify WMIC is not present
-                [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
-                        FriendlyName = 'WMIC is not present'
-                        Compliant    = [System.Boolean]($Results[8] -eq 'NotPresent')
-                        Value        = [System.String]$Results[8]
-                        Name         = 'WMIC is not present'
-                        Category     = $CatName
-                        Method       = 'Optional Windows Features'
-                    })
+                    # Verify the old Windows Media Player is disabled
+                    [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
+                            FriendlyName = 'Windows Media Player (legacy) is disabled'
+                            Compliant    = [System.Boolean]($Results[4] -eq 'NotPresent')
+                            Value        = [System.String]$Results[4]
+                            Name         = 'Windows Media Player (legacy) is disabled'
+                            Category     = $CatName
+                            Method       = 'Optional Windows Features'
+                        })
 
-                # Verify Internet Explorer mode functionality for Edge is not present
-                [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
-                        FriendlyName = 'Internet Explorer mode functionality for Edge is not present'
-                        Compliant    = [System.Boolean]($Results[9] -eq 'NotPresent')
-                        Value        = [System.String]$Results[9]
-                        Name         = 'Internet Explorer mode functionality for Edge is not present'
-                        Category     = $CatName
-                        Method       = 'Optional Windows Features'
-                    })
+                    # Verify MDAG is disabled
+                    [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
+                            FriendlyName = 'Microsoft Defender Application Guard is enabled'
+                            Compliant    = [System.Boolean]($Results[5] -eq 'Disabled')
+                            Value        = [System.String]$Results[5]
+                            Name         = 'Microsoft Defender Application Guard is enabled'
+                            Category     = $CatName
+                            Method       = 'Optional Windows Features'
+                        })
 
-                # Verify Legacy Notepad is not present
-                [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
-                        FriendlyName = 'Legacy Notepad is not present'
-                        Compliant    = [System.Boolean]($Results[10] -eq 'NotPresent')
-                        Value        = [System.String]$Results[10]
-                        Name         = 'Legacy Notepad is not present'
-                        Category     = $CatName
-                        Method       = 'Optional Windows Features'
-                    })
+                    # Verify Windows Sandbox is enabled
+                    [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
+                            FriendlyName = 'Windows Sandbox is enabled'
+                            Compliant    = [System.Boolean]($Results[6] -eq 'Enabled')
+                            Value        = [System.String]$Results[6]
+                            Name         = 'Windows Sandbox is enabled'
+                            Category     = $CatName
+                            Method       = 'Optional Windows Features'
+                        })
 
-                # Verify Legacy WordPad is not present
-                [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
-                        FriendlyName = 'WordPad is not present'
-                        Compliant    = [System.Boolean]($Results[11] -eq 'NotPresent')
-                        Value        = [System.String]$Results[11]
-                        Name         = 'WordPad is not present'
-                        Category     = $CatName
-                        Method       = 'Optional Windows Features'
-                    })
+                    # Verify Hyper-V is enabled
+                    [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
+                            FriendlyName = 'Hyper-V is enabled'
+                            Compliant    = [System.Boolean]($Results[7] -eq 'Enabled')
+                            Value        = [System.String]$Results[7]
+                            Name         = 'Hyper-V is enabled'
+                            Category     = $CatName
+                            Method       = 'Optional Windows Features'
+                        })
 
-                # Verify PowerShell ISE is not present
-                [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
-                        FriendlyName = 'PowerShell ISE is not present'
-                        Compliant    = [System.Boolean]($Results[12] -eq 'NotPresent')
-                        Value        = [System.String]$Results[12]
-                        Name         = 'PowerShell ISE is not present'
-                        Category     = $CatName
-                        Method       = 'Optional Windows Features'
-                    })
+                    # Verify WMIC is not present
+                    [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
+                            FriendlyName = 'WMIC is not present'
+                            Compliant    = [System.Boolean]($Results[8] -eq 'NotPresent')
+                            Value        = [System.String]$Results[8]
+                            Name         = 'WMIC is not present'
+                            Category     = $CatName
+                            Method       = 'Optional Windows Features'
+                        })
 
-                # Verify Steps Recorder is not present
-                [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
-                        FriendlyName = 'Steps Recorder is not present'
-                        Compliant    = [System.Boolean]($Results[13] -eq 'NotPresent')
-                        Value        = [System.String]$Results[13]
-                        Name         = 'Steps Recorder is not present'
-                        Category     = $CatName
-                        Method       = 'Optional Windows Features'
-                    })
+                    # Verify Internet Explorer mode functionality for Edge is not present
+                    [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
+                            FriendlyName = 'Internet Explorer mode functionality for Edge is not present'
+                            Compliant    = [System.Boolean]($Results[9] -eq 'NotPresent')
+                            Value        = [System.String]$Results[9]
+                            Name         = 'Internet Explorer mode functionality for Edge is not present'
+                            Category     = $CatName
+                            Method       = 'Optional Windows Features'
+                        })
 
-                # Add the array of the custom objects to the main output HashTable
-                [System.Void]$FinalMegaObject.TryAdd($CatName, $NestedObjectArray)
+                    # Verify Legacy Notepad is not present
+                    [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
+                            FriendlyName = 'Legacy Notepad is not present'
+                            Compliant    = [System.Boolean]($Results[10] -eq 'NotPresent')
+                            Value        = [System.String]$Results[10]
+                            Name         = 'Legacy Notepad is not present'
+                            Category     = $CatName
+                            Method       = 'Optional Windows Features'
+                        })
+
+                    # Verify Legacy WordPad is not present
+                    [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
+                            FriendlyName = 'WordPad is not present'
+                            Compliant    = [System.Boolean]($Results[11] -eq 'NotPresent')
+                            Value        = [System.String]$Results[11]
+                            Name         = 'WordPad is not present'
+                            Category     = $CatName
+                            Method       = 'Optional Windows Features'
+                        })
+
+                    # Verify PowerShell ISE is not present
+                    [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
+                            FriendlyName = 'PowerShell ISE is not present'
+                            Compliant    = [System.Boolean]($Results[12] -eq 'NotPresent')
+                            Value        = [System.String]$Results[12]
+                            Name         = 'PowerShell ISE is not present'
+                            Category     = $CatName
+                            Method       = 'Optional Windows Features'
+                        })
+
+                    # Verify Steps Recorder is not present
+                    [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
+                            FriendlyName = 'Steps Recorder is not present'
+                            Compliant    = [System.Boolean]($Results[13] -eq 'NotPresent')
+                            Value        = [System.String]$Results[13]
+                            Name         = 'Steps Recorder is not present'
+                            Category     = $CatName
+                            Method       = 'Optional Windows Features'
+                        })
+
+                    # Add the array of the custom objects to the main output HashTable
+                    [System.Void]$FinalMegaObject.TryAdd($CatName, $NestedObjectArray)
+
+                } -Name 'Invoke-OptionalWindowsFeatures' -StreamingHost $Host -ArgumentList ($MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $TotalNumberOfTrueCompliantValues, $FinalMegaObject, $ScriptBlockInvokeCategoryProcessing, $CSVResource, $VerbosePreference)
+
             }
             Function Invoke-WindowsNetworking {
                 Param ($CurrentMainStep, $TotalMainSteps, $MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $TotalNumberOfTrueCompliantValues, $FinalMegaObject)
@@ -1632,66 +1685,80 @@ function Confirm-SystemCompliance {
             }
             Function Invoke-MiscellaneousConfigurations {
                 Param ($CurrentMainStep, $TotalMainSteps, $MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $TotalNumberOfTrueCompliantValues, $FinalMegaObject)
-                $CurrentMainStep++
-                Write-Progress -Id 0 -Activity 'Validating Miscellaneous Category' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
 
-                $NestedObjectArray = New-Object -TypeName System.Collections.Generic.List[HardeningModule.IndividualResult]
-                [System.String]$CatName = 'MiscellaneousConfigurations'
+                [System.Management.Automation.Job2]$script:MiscellaneousConfigurationsJob = Start-ThreadJob -ScriptBlock {
 
-                # Process items in Registry resources.csv file with "Group Policy" origin and add them to the $NestedObjectArray array as custom objects
-                foreach ($Result in Invoke-CategoryProcessing -catname $CatName -Method 'Group Policy') {
-                    [System.Void]$NestedObjectArray.Add($Result)
-                }
+                    Param ($MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $TotalNumberOfTrueCompliantValues, $FinalMegaObject, $ScriptBlockInvokeCategoryProcessing, $CSVResource, $ParentVerbosePreference)
 
-                # Verify an Audit policy is enabled - only supports systems with English-US language
-                if ((Get-Culture).Name -eq 'en-US') {
-                    $IndividualItemResult = [System.Boolean](((auditpol /get /subcategory:"Other Logon/Logoff Events" /r | ConvertFrom-Csv).'Inclusion Setting' -eq 'Success and Failure') ? $True : $False)
+                    $ErrorActionPreference = 'Stop'
+                    $VerbosePreference = $ParentVerbosePreference
+
+                    # Import the IndividualResult class if it's not already loaded
+                    if (-NOT ('HardeningModule.IndividualResult' -as [System.Type]) ) {
+                        Add-Type -Path "$HardeningModulePath\Shared\IndividualResultClass.cs"
+                    }
+
+                    $NestedObjectArray = New-Object -TypeName System.Collections.Generic.List[HardeningModule.IndividualResult]
+                    [System.String]$CatName = 'MiscellaneousConfigurations'
+
+                    # Process items in Registry resources.csv file with "Group Policy" origin and add them to the $NestedObjectArray array as custom objects
+                    foreach ($Result in (&$ScriptBlockInvokeCategoryProcessing -catname $CatName -Method 'Group Policy')) {
+                        [System.Void]$NestedObjectArray.Add($Result)
+                    }
+
+                    # Verify an Audit policy is enabled - only supports systems with English-US language
+                    if ((Get-Culture).Name -eq 'en-US') {
+                        $IndividualItemResult = [System.Boolean](((auditpol /get /subcategory:"Other Logon/Logoff Events" /r | ConvertFrom-Csv).'Inclusion Setting' -eq 'Success and Failure') ? $True : $False)
+                        [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
+                                FriendlyName = 'Audit policy for Other Logon/Logoff Events'
+                                Compliant    = $IndividualItemResult
+                                Value        = $IndividualItemResult
+                                Name         = 'Audit policy for Other Logon/Logoff Events'
+                                Category     = $CatName
+                                Method       = 'Cmdlet'
+                            })
+                    }
+                    else {
+                        [System.Void][System.Threading.Interlocked]::Decrement([ref]$TotalNumberOfTrueCompliantValues)
+                    }
+
+                    # Checking if all user accounts are part of the Hyper-V security Group
+                    # Get all the enabled user account SIDs
+                    [System.Security.Principal.SecurityIdentifier[]]$EnabledUsers = (Get-LocalUser | Where-Object -FilterScript { $_.Enabled -eq 'True' }).SID
+                    # Get the members of the Hyper-V Administrators security group using their SID
+                    [System.Security.Principal.SecurityIdentifier[]]$GroupMembers = (Get-LocalGroupMember -SID 'S-1-5-32-578').SID
+
+                    # Make sure the arrays are not empty
+                    if (($null -ne $EnabledUsers) -and ($null -ne $GroupMembers)) {
+                        # only outputs data if there is a difference, so when it returns $false it means both arrays are equal
+                        $IndividualItemResult = [System.Boolean](-NOT (Compare-Object -ReferenceObject $EnabledUsers -DifferenceObject $GroupMembers) )
+                    }
+                    else {
+                        # if either of the arrays are null or empty then return false
+                        [System.Boolean]$IndividualItemResult = $false
+                    }
+
+                    # Saving the results of the Hyper-V administrators members group to the array as an object
                     [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
-                            FriendlyName = 'Audit policy for Other Logon/Logoff Events'
+                            FriendlyName = 'All users are part of the Hyper-V Administrators group'
                             Compliant    = $IndividualItemResult
                             Value        = $IndividualItemResult
-                            Name         = 'Audit policy for Other Logon/Logoff Events'
+                            Name         = 'All users are part of the Hyper-V Administrators group'
                             Category     = $CatName
                             Method       = 'Cmdlet'
                         })
-                }
-                else {
-                    [System.Void][System.Threading.Interlocked]::Decrement([ref]$TotalNumberOfTrueCompliantValues)
-                }
 
-                # Checking if all user accounts are part of the Hyper-V security Group
-                # Get all the enabled user account SIDs
-                [System.Security.Principal.SecurityIdentifier[]]$EnabledUsers = (Get-LocalUser | Where-Object -FilterScript { $_.Enabled -eq 'True' }).SID
-                # Get the members of the Hyper-V Administrators security group using their SID
-                [System.Security.Principal.SecurityIdentifier[]]$GroupMembers = (Get-LocalGroupMember -SID 'S-1-5-32-578').SID
+                    # Process items in Registry resources.csv file with "Registry Keys" origin and add them to the $NestedObjectArray array as custom objects
+                    foreach ($Result in (&$ScriptBlockInvokeCategoryProcessing -catname $CatName -Method 'Registry Keys')) {
+                        [System.Void]$NestedObjectArray.Add($Result)
+                    }
 
-                # Make sure the arrays are not empty
-                if (($null -ne $EnabledUsers) -and ($null -ne $GroupMembers)) {
-                    # only outputs data if there is a difference, so when it returns $false it means both arrays are equal
-                    $IndividualItemResult = [System.Boolean](-NOT (Compare-Object -ReferenceObject $EnabledUsers -DifferenceObject $GroupMembers) )
-                }
-                else {
-                    # if either of the arrays are null or empty then return false
-                    [System.Boolean]$IndividualItemResult = $false
-                }
+                    # Add the array of the custom objects to the main output HashTable
+                    [System.Void]$FinalMegaObject.TryAdd($CatName, $NestedObjectArray)
 
-                # Saving the results of the Hyper-V administrators members group to the array as an object
-                [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
-                        FriendlyName = 'All users are part of the Hyper-V Administrators group'
-                        Compliant    = $IndividualItemResult
-                        Value        = $IndividualItemResult
-                        Name         = 'All users are part of the Hyper-V Administrators group'
-                        Category     = $CatName
-                        Method       = 'Cmdlet'
-                    })
 
-                # Process items in Registry resources.csv file with "Registry Keys" origin and add them to the $NestedObjectArray array as custom objects
-                foreach ($Result in Invoke-CategoryProcessing -catname $CatName -Method 'Registry Keys') {
-                    [System.Void]$NestedObjectArray.Add($Result)
-                }
+                } -Name 'Invoke-MiscellaneousConfigurations' -StreamingHost $Host -ArgumentList ($MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $TotalNumberOfTrueCompliantValues, $FinalMegaObject, $ScriptBlockInvokeCategoryProcessing, $CSVResource, $VerbosePreference)
 
-                # Add the array of the custom objects to the main output HashTable
-                [System.Void]$FinalMegaObject.TryAdd($CatName, $NestedObjectArray)
             }
             Function Invoke-WindowsUpdateConfigurations {
                 Param ($CurrentMainStep, $TotalMainSteps, $MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $TotalNumberOfTrueCompliantValues, $FinalMegaObject)
@@ -1784,11 +1851,30 @@ function Confirm-SystemCompliance {
             }
 
             #Region Threading management
-            if ('MicrosoftDefender' -in $Categories) {
-                $null = Wait-Job -Job $MicrosoftDefenderJob
-                Receive-Job -Job $MicrosoftDefenderJob
-                Remove-Job -Job $MicrosoftDefenderJob -Force
+            $JobsToWaitFor = New-Object -TypeName System.Collections.Generic.List[System.Management.Automation.Job2]
+
+            if (($null -eq $Categories) -or ('MicrosoftDefender' -in $Categories)) {
+                [System.Void]$JobsToWaitFor.Add($MicrosoftDefenderJob)
             }
+            if (($null -eq $Categories) -or ('BitLockerSettings' -in $Categories)) {
+                [System.Void]$JobsToWaitFor.Add($BitLockerSettingsJob)
+            }
+            if (($null -eq $Categories) -or ('OptionalWindowsFeatures' -in $Categories)) {
+                [System.Void]$JobsToWaitFor.Add($OptionalWindowsFeaturesJob)
+            }
+            if (($null -eq $Categories) -or ('AttackSurfaceReductionRules' -in $Categories)) {
+                [System.Void]$JobsToWaitFor.Add($AttackSurfaceReductionRulesJob)
+            }
+            if (($null -eq $Categories) -or ('WindowsFirewall' -in $Categories)) {
+                [System.Void]$JobsToWaitFor.Add($WindowsFirewallJob)
+            }
+            if (($null -eq $Categories) -or ('MiscellaneousConfigurations' -in $Categories)) {
+                [System.Void]$JobsToWaitFor.Add($MiscellaneousConfigurationsJob)
+            }
+
+            $null = Wait-Job -Job $JobsToWaitFor
+            Receive-Job -Job $JobsToWaitFor
+            Remove-Job -Job $JobsToWaitFor -Force
             #Endregion Threading management
 
             if ($ExportToCSV) {
@@ -2052,6 +2138,9 @@ function Confirm-SystemCompliance {
 
             # Unregister the event handler
             Unregister-Event -SourceIdentifier $EventHandler.Name -Force
+
+            # Remove the event handler's job
+            Remove-Job -Job $EventHandler -Force
 
             #Endregion stopping rainbow progress bar
 

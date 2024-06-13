@@ -106,7 +106,7 @@ namespace HardeningModule
 "@ -Language CSharp
         }
 
-        # a synced hashtable so that System.Threading.Interlocked can safely increment/decrement this value from multiple threads
+        # a Synchronized HashTable to safely increment/decrement values from multiple threads and also access parent scope variables inside thread jobs
         $SyncHash = [System.Collections.Hashtable]::Synchronized(@{})
         # Total number of Compliant values not equal to N/A
         $SyncHash['TotalNumberOfTrueCompliantValues'] = 238
@@ -126,6 +126,7 @@ namespace HardeningModule
         # The total number of the steps for the parent/main progress bar to render
         [System.UInt16]$TotalMainSteps = 2
         [System.UInt16]$CurrentMainStep = 0
+
         #EndRegion Defining-Variables
 
         #Region Defining-Functions-ScriptBlocks
@@ -194,7 +195,7 @@ namespace HardeningModule
                 # an array to hold the output
                 $Output = New-Object -TypeName System.Collections.Generic.List[PSCustomObject]
 
-                foreach ($Item in $SyncHash['CSVResource'] | Where-Object -FilterScript { ($_.Category -eq $CatName) -and ($_.Origin -eq $Method) }) {
+                foreach ($Item in $SyncHash['CSVResource'].Where({ ($_.Category -eq $CatName) -and ($_.Origin -eq $Method) })) {
 
                     # Initialize a flag to indicate if the key exists
                     [System.Boolean]$KeyExists = $false
@@ -715,7 +716,7 @@ namespace HardeningModule
                         [System.Object[]]$ProcessMitigations = Import-Csv -Path "$([HardeningModule.GlobalVars]::Path)\Resources\ProcessMitigations.csv" -Delimiter ','
 
                         # Only keep the enabled mitigations in the CSV, then Group the data by ProgramName
-                        [System.Object[]]$GroupedMitigations = $ProcessMitigations | Where-Object -FilterScript { $_.Action -eq 'Enable' } | Group-Object -Property ProgramName
+                        [System.Object[]]$GroupedMitigations = $ProcessMitigations.Where({ $_.Action -eq 'Enable' }) | Group-Object -Property ProgramName
 
                         # A hashtable to store the output of the CSV file
                         [System.Collections.Hashtable]$TargetMitigations = @{}

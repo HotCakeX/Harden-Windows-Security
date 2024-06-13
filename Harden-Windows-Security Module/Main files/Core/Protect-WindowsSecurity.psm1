@@ -155,7 +155,7 @@ Function Protect-WindowsSecurity {
             [System.Management.Automation.ValidateScriptAttribute]$PathToLGPO_ValidateScriptAttrib = New-Object -TypeName System.Management.Automation.ValidateScriptAttribute( {
                     try {
                         # Load the System.IO.Compression assembly
-                        [System.Reflection.Assembly]::LoadWithPartialName('System.IO.Compression.FileSystem') | Out-Null
+                        [System.Void][System.Reflection.Assembly]::LoadWithPartialName('System.IO.Compression.FileSystem')
                         # Open the zip file in read mode
                         [System.IO.Compression.ZipArchive]$ZipArchive = [IO.Compression.ZipFile]::OpenRead("$_")
                         # Make sure the selected zip has the required file
@@ -203,7 +203,7 @@ Function Protect-WindowsSecurity {
             [System.Management.Automation.ValidateScriptAttribute]$PathToMSFT365AppsSecurityBaselines_ValidateScriptAttrib = New-Object -TypeName System.Management.Automation.ValidateScriptAttribute( {
                     try {
                         # Load the System.IO.Compression assembly
-                        [System.Reflection.Assembly]::LoadWithPartialName('System.IO.Compression.FileSystem') | Out-Null
+                        [System.Void][System.Reflection.Assembly]::LoadWithPartialName('System.IO.Compression.FileSystem')
                         # Open the zip file in read mode
                         [System.IO.Compression.ZipArchive]$ZipArchive = [IO.Compression.ZipFile]::OpenRead("$_")
                         # Make sure the selected zip has the required file
@@ -251,7 +251,7 @@ Function Protect-WindowsSecurity {
             [System.Management.Automation.ValidateScriptAttribute]$PathToMSFTSecurityBaselines_ValidateScriptAttrib = New-Object -TypeName System.Management.Automation.ValidateScriptAttribute( {
                     try {
                         # Load the System.IO.Compression assembly
-                        [System.Reflection.Assembly]::LoadWithPartialName('System.IO.Compression.FileSystem') | Out-Null
+                        [System.Void][System.Reflection.Assembly]::LoadWithPartialName('System.IO.Compression.FileSystem')
                         # Open the zip file in read mode
                         [System.IO.Compression.ZipArchive]$ZipArchive = [IO.Compression.ZipFile]::OpenRead("$_")
                         # Make sure the selected zip has the required file
@@ -397,7 +397,7 @@ Function Protect-WindowsSecurity {
         New-Variable -Name 'LogPath' -Value $($PSBoundParameters['LogPath'] ?? (Join-Path -Path $(Get-Location).Path -ChildPath "Log-Protect-WindowsSecurity-$(Get-Date -Format 'yyyy-MM-dd HH-mm-ss').txt")) -Force
 
         # Detecting if Verbose switch is used
-        $PSBoundParameters.Verbose.IsPresent ? ([System.Boolean]$Verbose = $true) : ([System.Boolean]$Verbose = $false) | Out-Null
+        $null = $PSBoundParameters.Verbose.IsPresent ? ([System.Boolean]$Verbose = $true) : ([System.Boolean]$Verbose = $false)
 
         $PSDefaultParameterValues = @{
             'Invoke-WebRequest:HttpVersion'    = '3.0'
@@ -533,14 +533,14 @@ Function Protect-WindowsSecurity {
             }
             Process {
                 If (-NOT (Test-Path -Path $Path)) {
-                    New-Item -Path $Path -Force | Out-Null
+                    $null = New-Item -Path $Path -Force
                 }
                 if ($Action -eq 'AddOrModify') {
-                    New-ItemProperty -Path $Path -Name $Key -Value $Value -PropertyType $Type -Force | Out-Null
+                    $null = New-ItemProperty -Path $Path -Name $Key -Value $Value -PropertyType $Type -Force
                 }
                 elseif ($Action -eq 'Delete') {
                     if (Test-RegistryValue -Path $Path -Name $Key) {
-                        Remove-ItemProperty -Path $Path -Name $Key -Force | Out-Null
+                        $null = Remove-ItemProperty -Path $Path -Name $Key -Force
                     }
                 }
             }
@@ -685,7 +685,7 @@ Function Protect-WindowsSecurity {
 
                 try {
                     # Create a test file on the drive to make sure it's not write-protected
-                    New-Item -Path $Path -ItemType File -Value 'test' -Force | Out-Null
+                    $null = New-Item -Path $Path -ItemType File -Value 'test' -Force
                     # If the drive wasn't write-protected then delete the test file
                     Remove-Item -Path $Path -Force
                     # Add the drive to the list only if it's writable
@@ -719,7 +719,7 @@ Function Protect-WindowsSecurity {
 
                                 try {
                                     # Create a test file on the drive to make sure it's not write-protected
-                                    New-Item -Path $ExtremelyRandomPath -ItemType File -Value 'test' -Force | Out-Null
+                                    $null = New-Item -Path $ExtremelyRandomPath -ItemType File -Value 'test' -Force
                                     # If the drive wasn't write-protected then delete the test file
                                     Remove-Item -Path $ExtremelyRandomPath -Force
                                     # Add the drive to the list only if it's writable
@@ -891,7 +891,7 @@ Function Protect-WindowsSecurity {
 
                 [System.Management.Automation.ScriptBlock]$Commands1 = { New-NetFirewallRule -DisplayName "$ListName IP range blocking" -Direction Inbound -Action Block -LocalAddress Any -RemoteAddress $IPList -Description "$ListName IP range blocking" -EdgeTraversalPolicy Block -PolicyStore localhost }
                 [System.Management.Automation.ScriptBlock]$Commands2 = { New-NetFirewallRule -DisplayName "$ListName IP range blocking" -Direction Outbound -Action Block -LocalAddress Any -RemoteAddress $IPList -Description "$ListName IP range blocking" -EdgeTraversalPolicy Block -PolicyStore localhost }
-                if (-NOT $GUI) { &$Commands1; &$Commands2 } else { &$Commands1 | Out-Null; &$Commands2 | Out-Null }
+                if (-NOT $GUI) { &$Commands1; &$Commands2 } else { $null = &$Commands1; $null = &$Commands2 }
             }
             else {
                 Write-Warning -Message "The IP list was empty, skipping $ListName"
@@ -928,10 +928,10 @@ Function Protect-WindowsSecurity {
                     if ((Get-WindowsOptionalFeature -Online -FeatureName $FeatureName).state -eq $ActionCheck) {
                         try {
                             if ($FeatureAction -eq 'Enabling') {
-                                Enable-WindowsOptionalFeature -Online -FeatureName $FeatureName -All -NoRestart | Out-Null
+                                $null = Enable-WindowsOptionalFeature -Online -FeatureName $FeatureName -All -NoRestart
                             }
                             else {
-                                Disable-WindowsOptionalFeature -Online -FeatureName $FeatureName -NoRestart | Out-Null
+                                $null = Disable-WindowsOptionalFeature -Online -FeatureName $FeatureName -NoRestart
                             }
                             # Shows the successful message only if the process was successful
                             Write-ColorfulText -Color NeonGreen -InputText "$FeatureName was successfully $ActionOutput"
@@ -950,7 +950,7 @@ Function Protect-WindowsSecurity {
                     Write-ColorfulText -Color Lavender -InputText "`nRemoving $CapabilityName"
                     if ((Get-WindowsCapability -Online | Where-Object -FilterScript { $_.Name -like "*$CapabilityName*" }).state -ne 'NotPresent') {
                         try {
-                            Get-WindowsCapability -Online | Where-Object -FilterScript { $_.Name -like "*$CapabilityName*" } | Remove-WindowsCapability -Online | Out-Null
+                            $null = Get-WindowsCapability -Online | Where-Object -FilterScript { $_.Name -like "*$CapabilityName*" } | Remove-WindowsCapability -Online
                             # Shows the successful message only if the process was successful
                             Write-ColorfulText -Color NeonGreen -InputText "$CapabilityName was successfully removed."
                         }
@@ -1183,7 +1183,7 @@ Function Protect-WindowsSecurity {
                     )
 
                     # Load the necessary Windows Runtime types for toast notifications
-                    [Windows.UI.Notifications.ToastNotificationManager, Windows.UI.Notifications, ContentType = WindowsRuntime] | Out-Null
+                    $null = [Windows.UI.Notifications.ToastNotificationManager, Windows.UI.Notifications, ContentType = WindowsRuntime]
 
                     # Get the template content for the chosen template
                     $Template = [Windows.UI.Notifications.ToastNotificationManager]::GetTemplateContent([Windows.UI.Notifications.ToastTemplateType]::('ToastImageAndText02'))
@@ -1428,7 +1428,7 @@ Function Protect-WindowsSecurity {
                     }
 
                     Write-Verbose -Message 'Turning on Data Execution Prevention (DEP) for all applications, including 32-bit programs'
-                    # Old method: bcdedit.exe /set '{current}' nx AlwaysOn | Out-Null
+                    # Old method: bcdedit.exe /set '{current}' nx AlwaysOn
                     # New method using PowerShell cmdlets added in Windows 11
                     Set-BcdElement -Element 'nx' -Type 'Integer' -Value '3' -Force
 
@@ -1486,13 +1486,13 @@ Function Protect-WindowsSecurity {
                                 [Microsoft.Management.Infrastructure.CimInstance]$Time = New-ScheduledTaskTrigger -Once -At (Get-Date).AddHours(1) -RepetitionInterval (New-TimeSpan -Days 7)
 
                                 # Register the scheduled task
-                                Register-ScheduledTask -Action $Action -Trigger $Time -Principal $TaskPrincipal -TaskPath 'MSFT Driver Block list update' -TaskName 'MSFT Driver Block list update' -Description 'Microsoft Recommended Driver Block List update' -Force | Out-Null
+                                $null = Register-ScheduledTask -Action $Action -Trigger $Time -Principal $TaskPrincipal -TaskPath 'MSFT Driver Block list update' -TaskName 'MSFT Driver Block list update' -Description 'Microsoft Recommended Driver Block List update' -Force
 
                                 # Define advanced settings for the scheduled task
                                 [Microsoft.Management.Infrastructure.CimInstance]$TaskSettings = New-ScheduledTaskSettingsSet -AllowStartIfOnBatteries -DontStopIfGoingOnBatteries -Compatibility 'Win8' -StartWhenAvailable -ExecutionTimeLimit (New-TimeSpan -Minutes 3) -RestartCount 4 -RestartInterval (New-TimeSpan -Hours 6) -RunOnlyIfNetworkAvailable
 
                                 # Add the advanced settings we defined above to the scheduled task
-                                Set-ScheduledTask -TaskName 'MSFT Driver Block list update' -TaskPath 'MSFT Driver Block list update' -Settings $TaskSettings | Out-Null
+                                $null = Set-ScheduledTask -TaskName 'MSFT Driver Block list update' -TaskPath 'MSFT Driver Block list update' -Settings $TaskSettings
                             } 'No' { break TaskSchedulerCreationLabel }
                             'Exit' { break MainSwitchLabel }
                         }
@@ -1671,7 +1671,7 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                                         [System.Object[]]$KeyProtectorsOSDrive = (Get-BitLockerVolume -MountPoint $env:SystemDrive).KeyProtector
 
                                         # Backup the recovery code of the OS drive in a file
-                                        New-Item -Path "$env:SystemDrive\Drive $($env:SystemDrive.remove(1)) recovery password.txt" -Value $(&$RecoveryPasswordContentGenerator $KeyProtectorsOSDrive) -ItemType File -Force | Out-Null
+                                        $null = New-Item -Path "$env:SystemDrive\Drive $($env:SystemDrive.remove(1)) recovery password.txt" -Value $(&$RecoveryPasswordContentGenerator $KeyProtectorsOSDrive) -ItemType File -Force
                                     }
 
                                     # If the OS Drive doesn't have (TPM + PIN) key protector
@@ -1696,7 +1696,7 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
 
                                         try {
                                             # Add TPM + PIN key protectors to the OS Drive
-                                            Add-BitLockerKeyProtector -MountPoint $env:SystemDrive -TpmAndPinProtector -Pin $Pin | Out-Null
+                                            $null = Add-BitLockerKeyProtector -MountPoint $env:SystemDrive -TpmAndPinProtector -Pin $Pin
                                             Write-ColorfulText -C MintGreen -I "`nPINs matched, enabling TPM and startup PIN now`n"
                                         }
                                         catch {
@@ -1710,7 +1710,7 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                                         [System.Object[]]$KeyProtectorsOSDrive = (Get-BitLockerVolume -MountPoint $env:SystemDrive).KeyProtector
 
                                         # Backup the recovery code of the OS drive in a file just in case - This is for when the disk is automatically encrypted and using TPM + Recovery code by default
-                                        New-Item -Path "$env:SystemDrive\Drive $($env:SystemDrive.remove(1)) recovery password.txt" -Value $(&$RecoveryPasswordContentGenerator $KeyProtectorsOSDrive) -ItemType File -Force | Out-Null
+                                        $null = New-Item -Path "$env:SystemDrive\Drive $($env:SystemDrive.remove(1)) recovery password.txt" -Value $(&$RecoveryPasswordContentGenerator $KeyProtectorsOSDrive) -ItemType File -Force
 
                                         Write-Host -Object "The recovery password was backed up in a text file in '$env:SystemDrive\Drive $($env:SystemDrive.remove(1)) recovery password.txt'" -ForegroundColor Cyan
                                     }
@@ -1749,9 +1749,9 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                                 [System.Object[]]$KeyProtectorsOSDrive = (Get-BitLockerVolume -MountPoint $env:SystemDrive).KeyProtector
 
                                 # Backup the recovery code of the OS drive in a file
-                                New-Item -Path "$env:SystemDrive\Drive $($env:SystemDrive.remove(1)) recovery password.txt" -Value $(&$RecoveryPasswordContentGenerator $KeyProtectorsOSDrive) -ItemType File -Force | Out-Null
+                                $null = New-Item -Path "$env:SystemDrive\Drive $($env:SystemDrive.remove(1)) recovery password.txt" -Value $(&$RecoveryPasswordContentGenerator $KeyProtectorsOSDrive) -ItemType File -Force
 
-                                Resume-BitLocker -MountPoint $env:SystemDrive | Out-Null
+                                $null = Resume-BitLocker -MountPoint $env:SystemDrive
 
                                 Write-ColorfulText -C MintGreen -I "`nBitlocker is now enabled for the OS drive with Normal security level."
                                 Write-Host -Object "The recovery password will be saved in a text file in '$env:SystemDrive\Drive $($env:SystemDrive.remove(1)) recovery password.txt'" -ForegroundColor Cyan
@@ -1800,7 +1800,7 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                                         [System.Object[]]$KeyProtectorsOSDrive = (Get-BitLockerVolume -MountPoint $env:SystemDrive).KeyProtector
 
                                         # Backup the recovery code of the OS drive in a file
-                                        New-Item -Path "$env:SystemDrive\Drive $($env:SystemDrive.remove(1)) recovery password.txt" -Value $(&$RecoveryPasswordContentGenerator $KeyProtectorsOSDrive) -ItemType File -Force | Out-Null
+                                        $null = New-Item -Path "$env:SystemDrive\Drive $($env:SystemDrive.remove(1)) recovery password.txt" -Value $(&$RecoveryPasswordContentGenerator $KeyProtectorsOSDrive) -ItemType File -Force
 
                                     }
 
@@ -1815,7 +1815,7 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
 
                                                     (Get-BitLockerVolume -MountPoint $env:SystemDrive).KeyProtector |
                                             Where-Object -FilterScript { $_.keyprotectortype -eq 'ExternalKey' } |
-                                            ForEach-Object -Process { Remove-BitLockerKeyProtector -MountPoint $env:SystemDrive -KeyProtectorId $_.KeyProtectorId | Out-Null }
+                                            ForEach-Object -Process { $null = Remove-BitLockerKeyProtector -MountPoint $env:SystemDrive -KeyProtectorId $_.KeyProtectorId }
                                         }
 
                                         do {
@@ -1837,7 +1837,7 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
 
                                         try {
                                             # Add TpmAndPinAndStartupKeyProtector to the OS Drive
-                                            Add-BitLockerKeyProtector -MountPoint $env:SystemDrive -TpmAndPinAndStartupKeyProtector -StartupKeyPath (Get-AvailableRemovableDrives) -Pin $Pin | Out-Null
+                                            $null = Add-BitLockerKeyProtector -MountPoint $env:SystemDrive -TpmAndPinAndStartupKeyProtector -StartupKeyPath (Get-AvailableRemovableDrives) -Pin $Pin
                                         }
                                         catch {
                                             Write-Host -Object 'There was a problem adding Startup Key to the removable drive, try ejecting and reinserting the flash drive into your device and run this category again.' -ForegroundColor Red
@@ -1849,7 +1849,7 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                                         [System.Object[]]$KeyProtectorsOSDrive = (Get-BitLockerVolume -MountPoint $env:SystemDrive).KeyProtector
 
                                         # Backup the recovery code of the OS drive in a file just in case - This is for when the disk is automatically encrypted and using TPM + Recovery code by default
-                                        New-Item -Path "$env:SystemDrive\Drive $($env:SystemDrive.remove(1)) recovery password.txt" -Value $(&$RecoveryPasswordContentGenerator $KeyProtectorsOSDrive) -ItemType File -Force | Out-Null
+                                        $null = New-Item -Path "$env:SystemDrive\Drive $($env:SystemDrive.remove(1)) recovery password.txt" -Value $(&$RecoveryPasswordContentGenerator $KeyProtectorsOSDrive) -ItemType File -Force
 
                                         Write-Host -Object "The recovery password was backed up in a text file in '$env:SystemDrive\Drive $($env:SystemDrive.remove(1)) recovery password.txt'" -ForegroundColor Cyan
 
@@ -1895,9 +1895,9 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                                 [System.Object[]]$KeyProtectorsOSDrive = (Get-BitLockerVolume -MountPoint $env:SystemDrive).KeyProtector
 
                                 # Backup the recovery code of the OS drive in a file
-                                New-Item -Path "$env:SystemDrive\Drive $($env:SystemDrive.remove(1)) recovery password.txt" -Value $(&$RecoveryPasswordContentGenerator $KeyProtectorsOSDrive) -ItemType File -Force | Out-Null
+                                $null = New-Item -Path "$env:SystemDrive\Drive $($env:SystemDrive.remove(1)) recovery password.txt" -Value $(&$RecoveryPasswordContentGenerator $KeyProtectorsOSDrive) -ItemType File -Force
 
-                                Resume-BitLocker -MountPoint $env:SystemDrive | Out-Null
+                                $null = Resume-BitLocker -MountPoint $env:SystemDrive
 
                                 Write-ColorfulText -C MintGreen -I "`nBitlocker is now enabled for the OS drive with Enhanced security level."
                                 Write-Host -Object "The recovery password will be saved in a text file in '$env:SystemDrive\Drive $($env:SystemDrive.remove(1)) recovery password.txt'" -ForegroundColor Cyan
@@ -1923,7 +1923,7 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                             Write-Progress -Id 2 -ParentId 0 -Activity 'Hibernate' -Status 'Setting Hibernate file size to full' -PercentComplete 50
 
                             # Set Hibernate mode to full
-                            &"$env:SystemDrive\Windows\System32\powercfg.exe" /h /type full | Out-Null
+                            $null = &"$env:SystemDrive\Windows\System32\powercfg.exe" /h /type full
 
                             Write-Progress -Id 2 -Activity 'Setting Hibernate file size to full' -Completed
                         }
@@ -2009,11 +2009,11 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                                         ForEach-Object -Process {
                                             # -ErrorAction SilentlyContinue makes sure no error is thrown if the drive only has 1 External key key protector
                                             # and it's being used to unlock the drive
-                                            Remove-BitLockerKeyProtector -MountPoint $MountPoint -KeyProtectorId $_ -ErrorAction SilentlyContinue | Out-Null
+                                            $null = Remove-BitLockerKeyProtector -MountPoint $MountPoint -KeyProtectorId $_ -ErrorAction SilentlyContinue
                                         }
 
                                         # Renew the External key of the selected Non-OS Drive
-                                        Enable-BitLockerAutoUnlock -MountPoint $MountPoint | Out-Null
+                                        $null = Enable-BitLockerAutoUnlock -MountPoint $MountPoint
 
                                         # Additional Check 2: if there are more than 1 Recovery Password, delete all of them and add a new one
                                         [System.String[]]$RecoveryPasswordKeyProtectors = ((Get-BitLockerVolume -MountPoint $MountPoint).KeyProtector |
@@ -2028,7 +2028,7 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
 
                                             # Remove all of the recovery password key protectors of the selected Non-OS Drive
                                             $RecoveryPasswordKeyProtectors | ForEach-Object -Process {
-                                                Remove-BitLockerKeyProtector -MountPoint $MountPoint -KeyProtectorId $_ | Out-Null
+                                                $null = Remove-BitLockerKeyProtector -MountPoint $MountPoint -KeyProtectorId $_
                                             }
 
                                             # Add a new Recovery Password key protector after removing all of the previous ones
@@ -2038,7 +2038,7 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                                             [System.Object[]]$KeyProtectorsNonOS = (Get-BitLockerVolume -MountPoint $MountPoint).KeyProtector
 
                                             # Backup the recovery code of the Non-OS drive in a file
-                                            New-Item -Path "$MountPoint\Drive $($MountPoint.Remove(1)) recovery password.txt" -Value $(&$RecoveryPasswordContentGenerator $KeyProtectorsNonOS) -ItemType File -Force | Out-Null
+                                            $null = New-Item -Path "$MountPoint\Drive $($MountPoint.Remove(1)) recovery password.txt" -Value $(&$RecoveryPasswordContentGenerator $KeyProtectorsNonOS) -ItemType File -Force
 
                                         }
                                         Write-ColorfulText -C MintGreen -I "`nBitlocker is already securely enabled for drive $MountPoint"
@@ -2061,11 +2061,11 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                                         ForEach-Object -Process {
                                             # -ErrorAction SilentlyContinue makes sure no error is thrown if the drive only has 1 External key key protector
                                             # and it's being used to unlock the drive
-                                            Remove-BitLockerKeyProtector -MountPoint $MountPoint -KeyProtectorId $_ -ErrorAction SilentlyContinue | Out-Null
+                                            $null = Remove-BitLockerKeyProtector -MountPoint $MountPoint -KeyProtectorId $_ -ErrorAction SilentlyContinue
                                         }
 
                                         # Renew the External key of the selected Non-OS Drive
-                                        Enable-BitLockerAutoUnlock -MountPoint $MountPoint | Out-Null
+                                        $null = Enable-BitLockerAutoUnlock -MountPoint $MountPoint
 
                                         # Add Recovery Password Key protector and save it to a file inside the drive
                                         Add-BitLockerKeyProtector -MountPoint $MountPoint -RecoveryPasswordProtector *> $null
@@ -2074,7 +2074,7 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                                         [System.Object[]]$KeyProtectorsNonOS = (Get-BitLockerVolume -MountPoint $MountPoint).KeyProtector
 
                                         # Backup the recovery code of the Non-OS drive in a file
-                                        New-Item -Path "$MountPoint\Drive $($MountPoint.Remove(1)) recovery password.txt" -Value $(&$RecoveryPasswordContentGenerator $KeyProtectorsNonOS) -ItemType File -Force | Out-Null
+                                        $null = New-Item -Path "$MountPoint\Drive $($MountPoint.Remove(1)) recovery password.txt" -Value $(&$RecoveryPasswordContentGenerator $KeyProtectorsNonOS) -ItemType File -Force
 
                                         [System.String]$BitLockerMsg = "`nDrive $MountPoint is auto-unlocked but doesn't have Recovery Password, adding it now... `n" +
                                         "It will be saved in a text file in '$($MountPoint)\Drive $($MountPoint.Remove(1)) recovery password.txt'"
@@ -2085,7 +2085,7 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                                     elseif ($KeyProtectorTypesNonOS -contains 'RecoveryPassword' -and $KeyProtectorTypesNonOS -notcontains 'ExternalKey') {
 
                                         # Add Auto-unlock (a.k.a ExternalKey key protector to the drive)
-                                        Enable-BitLockerAutoUnlock -MountPoint $MountPoint | Out-Null
+                                        $null = Enable-BitLockerAutoUnlock -MountPoint $MountPoint
 
                                         # if there are more than 1 Recovery Password, delete all of them and add a new one
                                         [System.String[]]$RecoveryPasswordKeyProtectors = ((Get-BitLockerVolume -MountPoint $MountPoint).KeyProtector |
@@ -2100,7 +2100,7 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
 
                                             # Delete all Recovery Passwords because there were more than 1
                                             $RecoveryPasswordKeyProtectors | ForEach-Object -Process {
-                                                Remove-BitLockerKeyProtector -MountPoint $MountPoint -KeyProtectorId $_ | Out-Null
+                                                $null = Remove-BitLockerKeyProtector -MountPoint $MountPoint -KeyProtectorId $_
                                             }
 
                                             # Add a new Recovery Password
@@ -2110,7 +2110,7 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                                             [System.Object[]]$KeyProtectorsNonOS = (Get-BitLockerVolume -MountPoint $MountPoint).KeyProtector
 
                                             # Backup the recovery code of the Non-OS drive in a file
-                                            New-Item -Path "$MountPoint\Drive $($MountPoint.Remove(1)) recovery password.txt" -Value $(&$RecoveryPasswordContentGenerator $KeyProtectorsNonOS) -ItemType File -Force | Out-Null
+                                            $null = New-Item -Path "$MountPoint\Drive $($MountPoint.Remove(1)) recovery password.txt" -Value $(&$RecoveryPasswordContentGenerator $KeyProtectorsNonOS) -ItemType File -Force
                                         }
                                     }
                                 }
@@ -2121,13 +2121,13 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                                     Enable-BitLocker -MountPoint $MountPoint -RecoveryPasswordProtector *> $null
 
                                     # Add Auto-unlock (a.k.a ExternalKey key protector to the drive)
-                                    Enable-BitLockerAutoUnlock -MountPoint $MountPoint | Out-Null
+                                    $null = Enable-BitLockerAutoUnlock -MountPoint $MountPoint
 
                                     # Get the new key protectors of the Non-OS Drive after adding RecoveryPasswordProtector to it
                                     [System.Object[]]$KeyProtectorsNonOS = (Get-BitLockerVolume -MountPoint $MountPoint).KeyProtector
 
                                     # Backup the recovery code of the Non-OS drive in a file
-                                    New-Item -Path "$MountPoint\Drive $($MountPoint.Remove(1)) recovery password.txt" -Value $(&$RecoveryPasswordContentGenerator $KeyProtectorsNonOS) -ItemType File -Force | Out-Null
+                                    $null = New-Item -Path "$MountPoint\Drive $($MountPoint.Remove(1)) recovery password.txt" -Value $(&$RecoveryPasswordContentGenerator $KeyProtectorsNonOS) -ItemType File -Force
 
                                     Write-ColorfulText -C MintGreen -I "`nBitLocker has started encrypting drive $MountPoint"
                                     Write-Host -Object "Recovery password will be saved in a text file in '$($MountPoint)\Drive $($MountPoint.Remove(1)) recovery password.txt'" -ForegroundColor Cyan
@@ -2163,7 +2163,7 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                         'RC4 128/128', # RC4 128-bit
                         'Triple DES 168' # 3DES 168-bit (Triple DES 168)
                     ) | ForEach-Object -Process {
-                        [Microsoft.Win32.RegistryKey]::OpenRemoteBaseKey([Microsoft.Win32.RegistryHive]::LocalMachine, $env:COMPUTERNAME).CreateSubKey("SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers\$_") | Out-Null
+                        $null = [Microsoft.Win32.RegistryKey]::OpenRemoteBaseKey([Microsoft.Win32.RegistryHive]::LocalMachine, $env:COMPUTERNAME).CreateSubKey("SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers\$_")
                     }
 
                     Write-Verbose -Message 'Applying the TLS Security registry settings'
@@ -2377,7 +2377,7 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                     # auditpol /set /subcategory:"Other Logon/Logoff Events" /success:enable /failure:enable
                     # Using GUID
                     Write-Verbose -Message 'Enabling auditing for the "Other Logon/Logoff Events" subcategory under the Logon/Logoff category'
-                    auditpol /set /subcategory:"{0CCE921C-69AE-11D9-BED3-505054503030}" /success:enable /failure:enable | Out-Null
+                    $null = auditpol /set /subcategory:"{0CCE921C-69AE-11D9-BED3-505054503030}" /success:enable /failure:enable
 
                     # Query all Audits status
                     # auditpol /get /category:*
@@ -2534,7 +2534,7 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
 
                             Write-Verbose -Message 'Removing the WDACConfig module'
                             try {
-                                Uninstall-Module -Name 'WDACConfig' -Force -Verbose:$false -AllVersions | Out-Null
+                                $null = Uninstall-Module -Name 'WDACConfig' -Force -Verbose:$false -AllVersions
                             }
                             catch {}
                         }
@@ -3124,7 +3124,7 @@ Execution Policy: $CurrentExecutionPolicy
 
                             try {
                                 # Load the System.IO.Compression assembly
-                                [System.Reflection.Assembly]::LoadWithPartialName('System.IO.Compression.FileSystem') | Out-Null
+                                [System.Void][System.Reflection.Assembly]::LoadWithPartialName('System.IO.Compression.FileSystem')
                                 # Open the zip file in read mode
                                 [System.IO.Compression.ZipArchive]$ZipArchive = [IO.Compression.ZipFile]::OpenRead($Dialog.FileName)
                                 # Make sure the selected zip has the required file
@@ -3161,7 +3161,7 @@ Execution Policy: $CurrentExecutionPolicy
 
                             try {
                                 # Load the System.IO.Compression assembly
-                                [System.Reflection.Assembly]::LoadWithPartialName('System.IO.Compression.FileSystem') | Out-Null
+                                [System.Void][System.Reflection.Assembly]::LoadWithPartialName('System.IO.Compression.FileSystem')
                                 # Open the zip file in read mode
                                 [System.IO.Compression.ZipArchive]$ZipArchive = [IO.Compression.ZipFile]::OpenRead($Dialog.FileName )
                                 # Make sure the selected zip has the required file
@@ -3198,7 +3198,7 @@ Execution Policy: $CurrentExecutionPolicy
 
                             try {
                                 # Load the System.IO.Compression assembly
-                                [System.Reflection.Assembly]::LoadWithPartialName('System.IO.Compression.FileSystem') | Out-Null
+                                [System.Void][System.Reflection.Assembly]::LoadWithPartialName('System.IO.Compression.FileSystem')
                                 # Open the zip file in read mode
                                 [System.IO.Compression.ZipArchive]$ZipArchive = [IO.Compression.ZipFile]::OpenRead($Dialog.FileName)
                                 # Make sure the selected zip has the required file
@@ -3283,7 +3283,7 @@ Execution Policy: $CurrentExecutionPolicy
 
                                 # Make all of the main function's functions available again in the 2nd nested RunSpace
                                 $SyncHash.ExportedFunctions.GetEnumerator() | ForEach-Object -Process {
-                                    New-Item -Path "Function:\$($_.Key)" -Value $_.Value.ScriptBlock.Ast.Body.GetScriptBlock() -Force | Out-Null
+                                    $null = New-Item -Path "Function:\$($_.Key)" -Value $_.Value.ScriptBlock.Ast.Body.GetScriptBlock() -Force
                                 }
 
                                 [System.Management.Automation.ScriptBlock]$prerequisitesScriptBlock = {
@@ -3401,7 +3401,7 @@ Execution Policy: $CurrentExecutionPolicy
 
                             # Redefining all of the exported functions inside of the RunSpace
                             $SyncHash.ExportedFunctions.GetEnumerator() | ForEach-Object -Process {
-                                New-Item -Path "Function:\$($_.Key)" -Value $_.Value.ScriptBlock.Ast.Body.GetScriptBlock() -Force | Out-Null
+                                $null = New-Item -Path "Function:\$($_.Key)" -Value $_.Value.ScriptBlock.Ast.Body.GetScriptBlock() -Force
                             }
 
                             # Making the selected sub-categories available in the current scope because the functions called from this scriptblock wouldn't be able to access them otherwise
@@ -3537,7 +3537,7 @@ Execution Policy: $CurrentExecutionPolicy
 Harden Windows Security operation log end
 End time: $(Get-Date)
 **********************
-"@) | Out-Null
+"@)
 
                             Add-Content -Value $SyncHash.Logger -Path $SyncHash['GUI'].txtFilePath.Text -Force
                         }
@@ -3782,48 +3782,49 @@ End time: $(Get-Date)
 
 # bootDMAProtection check - checks for Kernel DMA Protection status in System information or msinfo32
 [System.String]$BootDMAProtectionCheck = @'
+using System;
+using System.Runtime.InteropServices;
+
 namespace SystemInfo
 {
-    using System;
-    using System.Runtime.InteropServices;
-
-    public static class NativeMethods
+  public static class NativeMethods
+  {
+    internal enum SYSTEM_DMA_GUARD_POLICY_INFORMATION : int
     {
-        internal enum SYSTEM_DMA_GUARD_POLICY_INFORMATION : int
-        {
-            /// </summary>
-            SystemDmaGuardPolicyInformation = 202
-        }
+      SystemDmaGuardPolicyInformation = 202
+    }
 
-        [DllImport("ntdll.dll")]
-        internal static extern Int32 NtQuerySystemInformation(
+    [DllImport("ntdll.dll")]
+    internal static extern Int32 NtQuerySystemInformation(
         SYSTEM_DMA_GUARD_POLICY_INFORMATION SystemDmaGuardPolicyInformation,
         IntPtr SystemInformation,
         Int32 SystemInformationLength,
         out Int32 ReturnLength);
 
-        public static byte BootDmaCheck()
-        {
-            Int32 result;
-            Int32 SystemInformationLength = 1;
-            IntPtr SystemInformation = Marshal.AllocHGlobal(SystemInformationLength);
-            Int32 ReturnLength;
+    public static byte BootDmaCheck()
+    {
+      Int32 result;
+      Int32 SystemInformationLength = 1;
+      IntPtr SystemInformation = Marshal.AllocHGlobal(SystemInformationLength);
+      Int32 ReturnLength;
 
-            result = NativeMethods.NtQuerySystemInformation(
-            NativeMethods.SYSTEM_DMA_GUARD_POLICY_INFORMATION.SystemDmaGuardPolicyInformation,
-            SystemInformation,
-            SystemInformationLength,
-            out ReturnLength);
+      result = NativeMethods.NtQuerySystemInformation(
+          NativeMethods.SYSTEM_DMA_GUARD_POLICY_INFORMATION.SystemDmaGuardPolicyInformation,
+          SystemInformation,
+          SystemInformationLength,
+          out ReturnLength);
 
-            if (result == 0)
-            {
-                byte info = Marshal.ReadByte(SystemInformation, 0);
-                return info;
-            }
+      if (result == 0)
+      {
+        byte info = Marshal.ReadByte(SystemInformation, 0);
+        Marshal.FreeHGlobal(SystemInformation);
+        return info;
+      }
 
-            return 0;
-        }
+      Marshal.FreeHGlobal(SystemInformation);
+      return 0;
     }
+  }
 }
 '@
 

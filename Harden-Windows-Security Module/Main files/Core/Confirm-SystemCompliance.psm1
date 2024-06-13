@@ -98,6 +98,9 @@ namespace HardeningModule
         public static int TotalNumberOfTrueCompliantValues = 238;
         // Making the HardeningModulePath variable available app-domain wide in a pseudo-lexical scoping manner so it can be accessed from thread jobs without having to pass it as a parameter to each job
         public static string path = $("`"$($HardeningModulePath -replace '\\', '\\')`"");
+
+        public static object MDAVConfigCurrent;
+        public static object MDAVPreferencesCurrent;
     }
 }
 "@ -Language CSharp
@@ -108,9 +111,9 @@ namespace HardeningModule
         # Total number of Compliant values not equal to N/A
         $SyncHash['TotalNumberOfTrueCompliantValues'] = 238
 
-        # Get the current configurations and preferences of the Microsoft Defender
-        New-Variable -Name 'MDAVConfigCurrent' -Value (Get-MpComputerStatus) -Force
-        New-Variable -Name 'MDAVPreferencesCurrent' -Value (Get-MpPreference) -Force
+        # Get the current configurations and preferences of the Microsoft Defender and set them as variables
+        [HardeningModule.GlobalVars]::MDAVPreferencesCurrent = Get-MpPreference
+        [HardeningModule.GlobalVars]::MDAVConfigCurrent = Get-MpComputerStatus
 
         # Import the CSV file
         [System.Object[]]$CSVResource = Import-Csv -Path "$HardeningModulePath\Resources\Registry resources.csv"
@@ -376,11 +379,11 @@ namespace HardeningModule
 
             #Region Main-Functions
             Function Invoke-MicrosoftDefender {
-                Param ($MDAVPreferencesCurrent, $MDAVConfigCurrent, $SyncHash, $FinalMegaObject, $SecurityPoliciesIni)
+                Param ($SyncHash, $FinalMegaObject, $SecurityPoliciesIni)
 
                 [System.Management.Automation.Job2]$script:MicrosoftDefenderJob = Start-ThreadJob -ScriptBlock {
 
-                    Param ($MDAVPreferencesCurrent, $MDAVConfigCurrent, $SyncHash, $FinalMegaObject, $ScriptBlockInvokeCategoryProcessing, $CSVResource, $ParentVerbosePreference, $SecurityPoliciesIni)
+                    Param ($SyncHash, $FinalMegaObject, $ScriptBlockInvokeCategoryProcessing, $CSVResource, $ParentVerbosePreference, $SecurityPoliciesIni)
 
                     Try {
 
@@ -413,7 +416,7 @@ namespace HardeningModule
                             [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]$Result)
                         }
 
-                        $IndividualItemResult = $MDAVPreferencesCurrent.AllowSwitchToAsyncInspection
+                        $IndividualItemResult = [HardeningModule.GlobalVars]::MDAVPreferencesCurrent.AllowSwitchToAsyncInspection
                         [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
                                 FriendlyName = 'AllowSwitchToAsyncInspection'
                                 Compliant    = $IndividualItemResult
@@ -423,7 +426,7 @@ namespace HardeningModule
                                 Method       = 'Cmdlet'
                             })
 
-                        $IndividualItemResult = $MDAVPreferencesCurrent.oobeEnableRtpAndSigUpdate
+                        $IndividualItemResult = [HardeningModule.GlobalVars]::MDAVPreferencesCurrent.oobeEnableRtpAndSigUpdate
                         [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
                                 FriendlyName = 'oobeEnableRtpAndSigUpdate'
                                 Compliant    = $IndividualItemResult
@@ -433,7 +436,7 @@ namespace HardeningModule
                                 Method       = 'Cmdlet'
                             })
 
-                        $IndividualItemResult = $MDAVPreferencesCurrent.IntelTDTEnabled
+                        $IndividualItemResult = [HardeningModule.GlobalVars]::MDAVPreferencesCurrent.IntelTDTEnabled
                         [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
                                 FriendlyName = 'IntelTDTEnabled'
                                 Compliant    = $IndividualItemResult
@@ -465,8 +468,8 @@ namespace HardeningModule
 
                         [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
                                 FriendlyName = 'Smart App Control State'
-                                Compliant    = ($MDAVConfigCurrent.SmartAppControlState -eq 'On') ? $True : $False
-                                Value        = $MDAVConfigCurrent.SmartAppControlState
+                                Compliant    = ([HardeningModule.GlobalVars]::MDAVConfigCurrent.SmartAppControlState -eq 'On') ? $True : $False
+                                Value        = [HardeningModule.GlobalVars]::MDAVConfigCurrent.SmartAppControlState
                                 Name         = 'Smart App Control State'
                                 Category     = $CatName
                                 Method       = 'Cmdlet'
@@ -499,7 +502,7 @@ namespace HardeningModule
                         [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
                                 FriendlyName = 'Microsoft Defender Platform Updates Channel'
                                 Compliant    = 'N/A'
-                                Value        = ($DefenderPlatformUpdatesChannels[[System.Int32]($MDAVPreferencesCurrent).PlatformUpdatesChannel])
+                                Value        = ($DefenderPlatformUpdatesChannels[[System.Int32]([HardeningModule.GlobalVars]::MDAVPreferencesCurrent).PlatformUpdatesChannel])
                                 Name         = 'Microsoft Defender Platform Updates Channel'
                                 Category     = $CatName
                                 Method       = 'Cmdlet'
@@ -517,7 +520,7 @@ namespace HardeningModule
                         [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
                                 FriendlyName = 'Microsoft Defender Engine Updates Channel'
                                 Compliant    = 'N/A'
-                                Value        = ($DefenderEngineUpdatesChannels[[System.Int32]($MDAVPreferencesCurrent).EngineUpdatesChannel])
+                                Value        = ($DefenderEngineUpdatesChannels[[System.Int32]([HardeningModule.GlobalVars]::MDAVPreferencesCurrent).EngineUpdatesChannel])
                                 Name         = 'Microsoft Defender Engine Updates Channel'
                                 Category     = $CatName
                                 Method       = 'Cmdlet'
@@ -526,8 +529,8 @@ namespace HardeningModule
                         # This covers instances where CFA is applied through Intune policy
                         [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
                                 FriendlyName = 'Controlled Folder Access'
-                                Compliant    = $MDAVPreferencesCurrent.EnableControlledFolderAccess -eq 1 ? $true : $false
-                                Value        = $MDAVPreferencesCurrent.EnableControlledFolderAccess
+                                Compliant    = [HardeningModule.GlobalVars]::MDAVPreferencesCurrent.EnableControlledFolderAccess -eq 1 ? $true : $false
+                                Value        = [HardeningModule.GlobalVars]::MDAVPreferencesCurrent.EnableControlledFolderAccess
                                 Name         = 'Controlled Folder Access'
                                 Category     = $CatName
                                 Method       = 'Cmdlet'
@@ -536,13 +539,13 @@ namespace HardeningModule
                         [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
                                 FriendlyName = 'Controlled Folder Access Exclusions'
                                 Compliant    = 'N/A'
-                                Value        = ($MDAVPreferencesCurrent.ControlledFolderAccessAllowedApplications -join ',') # Join the array elements into a string to display them properly in the output CSV file
+                                Value        = ([HardeningModule.GlobalVars]::MDAVPreferencesCurrent.ControlledFolderAccessAllowedApplications -join ',') # Join the array elements into a string to display them properly in the output CSV file
                                 Name         = 'Controlled Folder Access Exclusions'
                                 Category     = $CatName
                                 Method       = 'Cmdlet'
                             })
 
-                        $IndividualItemResult = $MDAVPreferencesCurrent.DisableRestorePoint
+                        $IndividualItemResult = [HardeningModule.GlobalVars]::MDAVPreferencesCurrent.DisableRestorePoint
                         [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
                                 FriendlyName = 'Enable Restore Point scanning'
                                 Compliant    = ($IndividualItemResult -eq $False)
@@ -552,7 +555,7 @@ namespace HardeningModule
                                 Method       = 'Cmdlet'
                             })
 
-                        $IndividualItemResult = $MDAVPreferencesCurrent.PerformanceModeStatus
+                        $IndividualItemResult = [HardeningModule.GlobalVars]::MDAVPreferencesCurrent.PerformanceModeStatus
                         [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
                                 FriendlyName = 'PerformanceModeStatus'
                                 Compliant    = [System.Boolean]($IndividualItemResult -eq '0')
@@ -562,7 +565,7 @@ namespace HardeningModule
                                 Method       = 'Cmdlet'
                             })
 
-                        $IndividualItemResult = $MDAVPreferencesCurrent.EnableConvertWarnToBlock
+                        $IndividualItemResult = [HardeningModule.GlobalVars]::MDAVPreferencesCurrent.EnableConvertWarnToBlock
                         [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
                                 FriendlyName = 'EnableConvertWarnToBlock'
                                 Compliant    = $IndividualItemResult
@@ -572,7 +575,7 @@ namespace HardeningModule
                                 Method       = 'Cmdlet'
                             })
 
-                        $IndividualItemResult = $MDAVPreferencesCurrent.BruteForceProtectionAggressiveness
+                        $IndividualItemResult = [HardeningModule.GlobalVars]::MDAVPreferencesCurrent.BruteForceProtectionAggressiveness
                         [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
                                 FriendlyName = 'BruteForceProtectionAggressiveness'
                                 Compliant    = [System.Boolean]($IndividualItemResult -in ('1', '2'))
@@ -582,7 +585,7 @@ namespace HardeningModule
                                 Method       = 'Cmdlet'
                             })
 
-                        $IndividualItemResult = $MDAVPreferencesCurrent.BruteForceProtectionConfiguredState
+                        $IndividualItemResult = [HardeningModule.GlobalVars]::MDAVPreferencesCurrent.BruteForceProtectionConfiguredState
                         [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
                                 FriendlyName = 'BruteForceProtectionConfiguredState'
                                 Compliant    = [System.Boolean]($IndividualItemResult -eq '1')
@@ -592,7 +595,7 @@ namespace HardeningModule
                                 Method       = 'Cmdlet'
                             })
 
-                        $IndividualItemResult = $MDAVPreferencesCurrent.BruteForceProtectionMaxBlockTime
+                        $IndividualItemResult = [HardeningModule.GlobalVars]::MDAVPreferencesCurrent.BruteForceProtectionMaxBlockTime
                         [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
                                 FriendlyName = 'BruteForceProtectionMaxBlockTime'
                                 Compliant    = [System.Boolean]($IndividualItemResult -in ('0', '4294967295'))
@@ -602,7 +605,7 @@ namespace HardeningModule
                                 Method       = 'Cmdlet'
                             })
 
-                        $IndividualItemResult = $MDAVPreferencesCurrent.RemoteEncryptionProtectionAggressiveness
+                        $IndividualItemResult = [HardeningModule.GlobalVars]::MDAVPreferencesCurrent.RemoteEncryptionProtectionAggressiveness
                         [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
                                 FriendlyName = 'RemoteEncryptionProtectionAggressiveness'
                                 Compliant    = [System.Boolean]($IndividualItemResult -eq '2')
@@ -612,7 +615,7 @@ namespace HardeningModule
                                 Method       = 'Cmdlet'
                             })
 
-                        $IndividualItemResult = $MDAVPreferencesCurrent.RemoteEncryptionProtectionConfiguredState
+                        $IndividualItemResult = [HardeningModule.GlobalVars]::MDAVPreferencesCurrent.RemoteEncryptionProtectionConfiguredState
                         [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
                                 FriendlyName = 'RemoteEncryptionProtectionConfiguredState'
                                 Compliant    = [System.Boolean]($IndividualItemResult -eq '1')
@@ -622,7 +625,7 @@ namespace HardeningModule
                                 Method       = 'Cmdlet'
                             })
 
-                        $IndividualItemResult = $MDAVPreferencesCurrent.RemoteEncryptionProtectionMaxBlockTime
+                        $IndividualItemResult = [HardeningModule.GlobalVars]::MDAVPreferencesCurrent.RemoteEncryptionProtectionMaxBlockTime
                         [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
                                 FriendlyName = 'RemoteEncryptionProtectionMaxBlockTime'
                                 Compliant    = [System.Boolean]($IndividualItemResult -in ('0', '4294967295'))
@@ -814,14 +817,14 @@ namespace HardeningModule
                         }
                     }
 
-                } -Name 'Invoke-MicrosoftDefender' -StreamingHost $Host -ArgumentList ($MDAVPreferencesCurrent, $MDAVConfigCurrent, $SyncHash, $FinalMegaObject, $ScriptBlockInvokeCategoryProcessing, $CSVResource, $VerbosePreference, $SecurityPoliciesIni)
+                } -Name 'Invoke-MicrosoftDefender' -StreamingHost $Host -ArgumentList ($SyncHash, $FinalMegaObject, $ScriptBlockInvokeCategoryProcessing, $CSVResource, $VerbosePreference, $SecurityPoliciesIni)
             }
             Function Invoke-AttackSurfaceReductionRules {
-                Param ($MDAVPreferencesCurrent, $MDAVConfigCurrent, $SyncHash, $FinalMegaObject, $SecurityPoliciesIni)
+                Param ($SyncHash, $FinalMegaObject, $SecurityPoliciesIni)
 
                 [System.Management.Automation.Job2]$script:AttackSurfaceReductionRulesJob = Start-ThreadJob -ScriptBlock {
 
-                    Param ($MDAVPreferencesCurrent, $MDAVConfigCurrent, $SyncHash, $FinalMegaObject, $ScriptBlockInvokeCategoryProcessing, $CSVResource, $ParentVerbosePreference, $SecurityPoliciesIni)
+                    Param ($SyncHash, $FinalMegaObject, $ScriptBlockInvokeCategoryProcessing, $CSVResource, $ParentVerbosePreference, $SecurityPoliciesIni)
 
                     $ErrorActionPreference = 'Stop'
 
@@ -834,8 +837,8 @@ namespace HardeningModule
                     }
 
                     # Individual ASR rules verification
-                    [System.String[]]$Ids = $MDAVPreferencesCurrent.AttackSurfaceReductionRules_Ids
-                    [System.String[]]$Actions = $MDAVPreferencesCurrent.AttackSurfaceReductionRules_Actions
+                    [System.String[]]$Ids = [HardeningModule.GlobalVars]::MDAVPreferencesCurrent.AttackSurfaceReductionRules_Ids
+                    [System.String[]]$Actions = [HardeningModule.GlobalVars]::MDAVPreferencesCurrent.AttackSurfaceReductionRules_Actions
 
                     # If $Ids variable is not empty, convert them to lower case because some IDs can be in upper case and result in inaccurate comparison
                     if ($Ids) { $Ids = $Ids.tolower() }
@@ -913,14 +916,14 @@ namespace HardeningModule
                     # Add the array of the custom objects to the main output HashTable
                     [System.Void]$FinalMegaObject.TryAdd($CatName, $NestedObjectArray)
 
-                } -Name 'Invoke-AttackSurfaceReductionRules' -StreamingHost $Host -ArgumentList ($MDAVPreferencesCurrent, $MDAVConfigCurrent, $SyncHash, $FinalMegaObject, $ScriptBlockInvokeCategoryProcessing, $CSVResource, $VerbosePreference, $SecurityPoliciesIni)
+                } -Name 'Invoke-AttackSurfaceReductionRules' -StreamingHost $Host -ArgumentList ($SyncHash, $FinalMegaObject, $ScriptBlockInvokeCategoryProcessing, $CSVResource, $VerbosePreference, $SecurityPoliciesIni)
             }
             Function Invoke-BitLockerSettings {
-                Param ($MDAVPreferencesCurrent, $MDAVConfigCurrent, $SyncHash, $FinalMegaObject, $SecurityPoliciesIni)
+                Param ($SyncHash, $FinalMegaObject, $SecurityPoliciesIni)
 
                 [System.Management.Automation.Job2]$script:BitLockerSettingsJob = Start-ThreadJob -ScriptBlock {
 
-                    Param ($MDAVPreferencesCurrent, $MDAVConfigCurrent, $SyncHash, $FinalMegaObject, $ScriptBlockInvokeCategoryProcessing, $CSVResource, $ParentVerbosePreference, $SecurityPoliciesIni)
+                    Param ($SyncHash, $FinalMegaObject, $ScriptBlockInvokeCategoryProcessing, $CSVResource, $ParentVerbosePreference, $SecurityPoliciesIni)
 
                     $ErrorActionPreference = 'Stop'
                     $PSDefaultParameterValues = @{
@@ -973,7 +976,7 @@ namespace HardeningModule
                     }
 
                     # To detect if Hibernate is enabled and set to full
-                    if (-NOT ($MDAVConfigCurrent.IsVirtualMachine)) {
+                    if (-NOT ([HardeningModule.GlobalVars]::MDAVConfigCurrent.IsVirtualMachine)) {
                         try {
                             $IndividualItemResult = $($((Get-ItemProperty 'Registry::HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Power' -Name 'HiberFileType' -ErrorAction SilentlyContinue).HiberFileType) -eq 2 ? $True : $False)
                         }
@@ -1120,14 +1123,14 @@ namespace HardeningModule
 
                     # Add the array of the custom objects to the main output HashTable
                     [System.Void]$FinalMegaObject.TryAdd($CatName, $NestedObjectArray)
-                } -Name 'Invoke-BitLockerSettings' -StreamingHost $Host -ArgumentList ($MDAVPreferencesCurrent, $MDAVConfigCurrent, $SyncHash, $FinalMegaObject, $ScriptBlockInvokeCategoryProcessing, $CSVResource, $VerbosePreference, $SecurityPoliciesIni)
+                } -Name 'Invoke-BitLockerSettings' -StreamingHost $Host -ArgumentList ($SyncHash, $FinalMegaObject, $ScriptBlockInvokeCategoryProcessing, $CSVResource, $VerbosePreference, $SecurityPoliciesIni)
             }
             Function Invoke-TLSSecurity {
-                Param ($MDAVPreferencesCurrent, $MDAVConfigCurrent, $SyncHash, $FinalMegaObject, $SecurityPoliciesIni)
+                Param ($SyncHash, $FinalMegaObject, $SecurityPoliciesIni)
 
                 [System.Management.Automation.Job2]$script:TLSSecurityJob = Start-ThreadJob -ScriptBlock {
 
-                    Param ($MDAVPreferencesCurrent, $MDAVConfigCurrent, $SyncHash, $FinalMegaObject, $ScriptBlockInvokeCategoryProcessing, $CSVResource, $ParentVerbosePreference, $SecurityPoliciesIni)
+                    Param ($SyncHash, $FinalMegaObject, $ScriptBlockInvokeCategoryProcessing, $CSVResource, $ParentVerbosePreference, $SecurityPoliciesIni)
 
                     $ErrorActionPreference = 'Stop'
 
@@ -1163,14 +1166,14 @@ namespace HardeningModule
                     # Add the array of the custom objects to the main output HashTable
                     [System.Void]$FinalMegaObject.TryAdd($CatName, $NestedObjectArray)
 
-                } -Name 'Invoke-TLSSecurity' -StreamingHost $Host -ArgumentList ($MDAVPreferencesCurrent, $MDAVConfigCurrent, $SyncHash, $FinalMegaObject, $ScriptBlockInvokeCategoryProcessing, $CSVResource, $VerbosePreference, $SecurityPoliciesIni)
+                } -Name 'Invoke-TLSSecurity' -StreamingHost $Host -ArgumentList ($SyncHash, $FinalMegaObject, $ScriptBlockInvokeCategoryProcessing, $CSVResource, $VerbosePreference, $SecurityPoliciesIni)
             }
             Function Invoke-LockScreen {
-                Param ($MDAVPreferencesCurrent, $MDAVConfigCurrent, $SyncHash, $FinalMegaObject, $SecurityPoliciesIni)
+                Param ($SyncHash, $FinalMegaObject, $SecurityPoliciesIni)
 
                 [System.Management.Automation.Job2]$script:LockScreenJob = Start-ThreadJob -ScriptBlock {
 
-                    Param ($MDAVPreferencesCurrent, $MDAVConfigCurrent, $SyncHash, $FinalMegaObject, $ScriptBlockInvokeCategoryProcessing, $CSVResource, $ParentVerbosePreference, $SecurityPoliciesIni)
+                    Param ($SyncHash, $FinalMegaObject, $ScriptBlockInvokeCategoryProcessing, $CSVResource, $ParentVerbosePreference, $SecurityPoliciesIni)
 
                     $ErrorActionPreference = 'Stop'
 
@@ -1283,14 +1286,14 @@ namespace HardeningModule
 
                     # Add the array of the custom objects to the main output HashTable
                     [System.Void]$FinalMegaObject.TryAdd($CatName, $NestedObjectArray)
-                } -Name 'Invoke-LockScreen' -StreamingHost $Host -ArgumentList ($MDAVPreferencesCurrent, $MDAVConfigCurrent, $SyncHash, $FinalMegaObject, $ScriptBlockInvokeCategoryProcessing, $CSVResource, $VerbosePreference, $SecurityPoliciesIni)
+                } -Name 'Invoke-LockScreen' -StreamingHost $Host -ArgumentList ($SyncHash, $FinalMegaObject, $ScriptBlockInvokeCategoryProcessing, $CSVResource, $VerbosePreference, $SecurityPoliciesIni)
             }
             Function Invoke-UserAccountControl {
-                Param ($MDAVPreferencesCurrent, $MDAVConfigCurrent, $SyncHash, $FinalMegaObject, $SecurityPoliciesIni)
+                Param ($SyncHash, $FinalMegaObject, $SecurityPoliciesIni)
 
                 [System.Management.Automation.Job2]$script:UserAccountControlJob = Start-ThreadJob -ScriptBlock {
 
-                    Param ($MDAVPreferencesCurrent, $MDAVConfigCurrent, $SyncHash, $FinalMegaObject, $ScriptBlockInvokeCategoryProcessing, $CSVResource, $ParentVerbosePreference, $SecurityPoliciesIni)
+                    Param ($SyncHash, $FinalMegaObject, $ScriptBlockInvokeCategoryProcessing, $CSVResource, $ParentVerbosePreference, $SecurityPoliciesIni)
 
                     $ErrorActionPreference = 'Stop'
 
@@ -1337,14 +1340,14 @@ namespace HardeningModule
 
                     # Add the array of the custom objects to the main output HashTable
                     [System.Void]$FinalMegaObject.TryAdd($CatName, $NestedObjectArray)
-                } -Name 'Invoke-UserAccountControl' -StreamingHost $Host -ArgumentList ($MDAVPreferencesCurrent, $MDAVConfigCurrent, $SyncHash, $FinalMegaObject, $ScriptBlockInvokeCategoryProcessing, $CSVResource, $VerbosePreference, $SecurityPoliciesIni)
+                } -Name 'Invoke-UserAccountControl' -StreamingHost $Host -ArgumentList ($SyncHash, $FinalMegaObject, $ScriptBlockInvokeCategoryProcessing, $CSVResource, $VerbosePreference, $SecurityPoliciesIni)
             }
             Function Invoke-DeviceGuard {
-                Param ($MDAVPreferencesCurrent, $MDAVConfigCurrent, $SyncHash, $FinalMegaObject, $SecurityPoliciesIni)
+                Param ($SyncHash, $FinalMegaObject, $SecurityPoliciesIni)
 
                 [System.Management.Automation.Job2]$script:DeviceGuardJob = Start-ThreadJob -ScriptBlock {
 
-                    Param ($MDAVPreferencesCurrent, $MDAVConfigCurrent, $SyncHash, $FinalMegaObject, $ScriptBlockInvokeCategoryProcessing, $CSVResource, $ParentVerbosePreference, $SecurityPoliciesIni)
+                    Param ($SyncHash, $FinalMegaObject, $ScriptBlockInvokeCategoryProcessing, $CSVResource, $ParentVerbosePreference, $SecurityPoliciesIni)
 
                     $ErrorActionPreference = 'Stop'
 
@@ -1359,14 +1362,14 @@ namespace HardeningModule
                     # Add the array of the custom objects to the main output HashTable
                     [System.Void]$FinalMegaObject.TryAdd($CatName, $NestedObjectArray)
 
-                } -Name 'Invoke-DeviceGuard' -StreamingHost $Host -ArgumentList ($MDAVPreferencesCurrent, $MDAVConfigCurrent, $SyncHash, $FinalMegaObject, $ScriptBlockInvokeCategoryProcessing, $CSVResource, $VerbosePreference, $SecurityPoliciesIni)
+                } -Name 'Invoke-DeviceGuard' -StreamingHost $Host -ArgumentList ($SyncHash, $FinalMegaObject, $ScriptBlockInvokeCategoryProcessing, $CSVResource, $VerbosePreference, $SecurityPoliciesIni)
             }
             Function Invoke-WindowsFirewall {
-                Param ($MDAVPreferencesCurrent, $MDAVConfigCurrent, $SyncHash, $FinalMegaObject, $SecurityPoliciesIni)
+                Param ($SyncHash, $FinalMegaObject, $SecurityPoliciesIni)
 
                 [System.Management.Automation.Job2]$script:WindowsFirewallJob = Start-ThreadJob -ScriptBlock {
 
-                    Param ($MDAVPreferencesCurrent, $MDAVConfigCurrent, $SyncHash, $FinalMegaObject, $ScriptBlockInvokeCategoryProcessing, $CSVResource, $ParentVerbosePreference, $SecurityPoliciesIni)
+                    Param ($SyncHash, $FinalMegaObject, $ScriptBlockInvokeCategoryProcessing, $CSVResource, $ParentVerbosePreference, $SecurityPoliciesIni)
 
                     $ErrorActionPreference = 'Stop'
 
@@ -1396,14 +1399,14 @@ namespace HardeningModule
                     # Add the array of the custom objects to the main output HashTable
                     [System.Void]$FinalMegaObject.TryAdd($CatName, $NestedObjectArray)
 
-                } -Name 'Invoke-WindowsFirewall' -StreamingHost $Host -ArgumentList ($MDAVPreferencesCurrent, $MDAVConfigCurrent, $SyncHash, $FinalMegaObject, $ScriptBlockInvokeCategoryProcessing, $CSVResource, $VerbosePreference, $SecurityPoliciesIni)
+                } -Name 'Invoke-WindowsFirewall' -StreamingHost $Host -ArgumentList ($SyncHash, $FinalMegaObject, $ScriptBlockInvokeCategoryProcessing, $CSVResource, $VerbosePreference, $SecurityPoliciesIni)
             }
             Function Invoke-OptionalWindowsFeatures {
-                Param ($MDAVPreferencesCurrent, $MDAVConfigCurrent, $SyncHash, $FinalMegaObject, $SecurityPoliciesIni)
+                Param ($SyncHash, $FinalMegaObject, $SecurityPoliciesIni)
 
                 [System.Management.Automation.Job2]$script:OptionalWindowsFeaturesJob = Start-ThreadJob -ScriptBlock {
 
-                    Param ($MDAVPreferencesCurrent, $MDAVConfigCurrent, $SyncHash, $FinalMegaObject, $ScriptBlockInvokeCategoryProcessing, $CSVResource, $ParentVerbosePreference, $SecurityPoliciesIni)
+                    Param ($SyncHash, $FinalMegaObject, $ScriptBlockInvokeCategoryProcessing, $CSVResource, $ParentVerbosePreference, $SecurityPoliciesIni)
 
                     $ErrorActionPreference = 'Stop'
 
@@ -1563,14 +1566,14 @@ namespace HardeningModule
                     # Add the array of the custom objects to the main output HashTable
                     [System.Void]$FinalMegaObject.TryAdd($CatName, $NestedObjectArray)
 
-                } -Name 'Invoke-OptionalWindowsFeatures' -StreamingHost $Host -ArgumentList ($MDAVPreferencesCurrent, $MDAVConfigCurrent, $SyncHash, $FinalMegaObject, $ScriptBlockInvokeCategoryProcessing, $CSVResource, $VerbosePreference, $SecurityPoliciesIni)
+                } -Name 'Invoke-OptionalWindowsFeatures' -StreamingHost $Host -ArgumentList ($SyncHash, $FinalMegaObject, $ScriptBlockInvokeCategoryProcessing, $CSVResource, $VerbosePreference, $SecurityPoliciesIni)
             }
             Function Invoke-WindowsNetworking {
-                Param ($MDAVPreferencesCurrent, $MDAVConfigCurrent, $SyncHash, $FinalMegaObject, $SecurityPoliciesIni)
+                Param ($SyncHash, $FinalMegaObject, $SecurityPoliciesIni)
 
                 [System.Management.Automation.Job2]$script:WindowsNetworkingJob = Start-ThreadJob -ScriptBlock {
 
-                    Param ($MDAVPreferencesCurrent, $MDAVConfigCurrent, $SyncHash, $FinalMegaObject, $ScriptBlockInvokeCategoryProcessing, $CSVResource, $ParentVerbosePreference, $SecurityPoliciesIni)
+                    Param ($SyncHash, $FinalMegaObject, $ScriptBlockInvokeCategoryProcessing, $CSVResource, $ParentVerbosePreference, $SecurityPoliciesIni)
 
                     $ErrorActionPreference = 'Stop'
 
@@ -1637,14 +1640,14 @@ namespace HardeningModule
                     # Add the array of the custom objects to the main output HashTable
                     [System.Void]$FinalMegaObject.TryAdd($CatName, $NestedObjectArray)
 
-                } -Name 'Invoke-WindowsNetworking' -StreamingHost $Host -ArgumentList ($MDAVPreferencesCurrent, $MDAVConfigCurrent, $SyncHash, $FinalMegaObject, $ScriptBlockInvokeCategoryProcessing, $CSVResource, $VerbosePreference, $SecurityPoliciesIni)
+                } -Name 'Invoke-WindowsNetworking' -StreamingHost $Host -ArgumentList ($SyncHash, $FinalMegaObject, $ScriptBlockInvokeCategoryProcessing, $CSVResource, $VerbosePreference, $SecurityPoliciesIni)
             }
             Function Invoke-MiscellaneousConfigurations {
-                Param ($MDAVPreferencesCurrent, $MDAVConfigCurrent, $SyncHash, $FinalMegaObject, $SecurityPoliciesIni)
+                Param ($SyncHash, $FinalMegaObject, $SecurityPoliciesIni)
 
                 [System.Management.Automation.Job2]$script:MiscellaneousConfigurationsJob = Start-ThreadJob -ScriptBlock {
 
-                    Param ($MDAVPreferencesCurrent, $MDAVConfigCurrent, $SyncHash, $FinalMegaObject, $ScriptBlockInvokeCategoryProcessing, $CSVResource, $ParentVerbosePreference, $SecurityPoliciesIni)
+                    Param ($SyncHash, $FinalMegaObject, $ScriptBlockInvokeCategoryProcessing, $CSVResource, $ParentVerbosePreference, $SecurityPoliciesIni)
 
                     $ErrorActionPreference = 'Stop'
 
@@ -1707,14 +1710,14 @@ namespace HardeningModule
                     [System.Void]$FinalMegaObject.TryAdd($CatName, $NestedObjectArray)
 
 
-                } -Name 'Invoke-MiscellaneousConfigurations' -StreamingHost $Host -ArgumentList ($MDAVPreferencesCurrent, $MDAVConfigCurrent, $SyncHash, $FinalMegaObject, $ScriptBlockInvokeCategoryProcessing, $CSVResource, $VerbosePreference, $SecurityPoliciesIni)
+                } -Name 'Invoke-MiscellaneousConfigurations' -StreamingHost $Host -ArgumentList ($SyncHash, $FinalMegaObject, $ScriptBlockInvokeCategoryProcessing, $CSVResource, $VerbosePreference, $SecurityPoliciesIni)
             }
             Function Invoke-WindowsUpdateConfigurations {
-                Param ($MDAVPreferencesCurrent, $MDAVConfigCurrent, $SyncHash, $FinalMegaObject, $SecurityPoliciesIni)
+                Param ($SyncHash, $FinalMegaObject, $SecurityPoliciesIni)
 
                 [System.Management.Automation.Job2]$script:WindowsUpdateConfigurationsJob = Start-ThreadJob -ScriptBlock {
 
-                    Param ($MDAVPreferencesCurrent, $MDAVConfigCurrent, $SyncHash, $FinalMegaObject, $ScriptBlockInvokeCategoryProcessing, $CSVResource, $ParentVerbosePreference, $SecurityPoliciesIni)
+                    Param ($SyncHash, $FinalMegaObject, $ScriptBlockInvokeCategoryProcessing, $CSVResource, $ParentVerbosePreference, $SecurityPoliciesIni)
 
                     $ErrorActionPreference = 'Stop'
 
@@ -1745,14 +1748,14 @@ namespace HardeningModule
                     # Add the array of the custom objects to the main output HashTable
                     [System.Void]$FinalMegaObject.TryAdd($CatName, $NestedObjectArray)
 
-                } -Name 'Invoke-WindowsUpdateConfigurations' -StreamingHost $Host -ArgumentList ($MDAVPreferencesCurrent, $MDAVConfigCurrent, $SyncHash, $FinalMegaObject, $ScriptBlockInvokeCategoryProcessing, $CSVResource, $VerbosePreference, $SecurityPoliciesIni)
+                } -Name 'Invoke-WindowsUpdateConfigurations' -StreamingHost $Host -ArgumentList ($SyncHash, $FinalMegaObject, $ScriptBlockInvokeCategoryProcessing, $CSVResource, $VerbosePreference, $SecurityPoliciesIni)
             }
             Function Invoke-EdgeBrowserConfigurations {
-                Param ($MDAVPreferencesCurrent, $MDAVConfigCurrent, $SyncHash, $FinalMegaObject, $SecurityPoliciesIni)
+                Param ($SyncHash, $FinalMegaObject, $SecurityPoliciesIni)
 
                 [System.Management.Automation.Job2]$script:EdgeBrowserConfigurationsJob = Start-ThreadJob -ScriptBlock {
 
-                    Param ($MDAVPreferencesCurrent, $MDAVConfigCurrent, $SyncHash, $FinalMegaObject, $ScriptBlockInvokeCategoryProcessing, $CSVResource, $ParentVerbosePreference, $SecurityPoliciesIni)
+                    Param ($SyncHash, $FinalMegaObject, $ScriptBlockInvokeCategoryProcessing, $CSVResource, $ParentVerbosePreference, $SecurityPoliciesIni)
 
                     $ErrorActionPreference = 'Stop'
 
@@ -1767,14 +1770,14 @@ namespace HardeningModule
                     # Add the array of the custom objects to the main output HashTable
                     [System.Void]$FinalMegaObject.TryAdd($CatName, $NestedObjectArray)
 
-                } -Name 'Invoke-EdgeBrowserConfigurations' -StreamingHost $Host -ArgumentList ($MDAVPreferencesCurrent, $MDAVConfigCurrent, $SyncHash, $FinalMegaObject, $ScriptBlockInvokeCategoryProcessing, $CSVResource, $VerbosePreference, $SecurityPoliciesIni)
+                } -Name 'Invoke-EdgeBrowserConfigurations' -StreamingHost $Host -ArgumentList ($SyncHash, $FinalMegaObject, $ScriptBlockInvokeCategoryProcessing, $CSVResource, $VerbosePreference, $SecurityPoliciesIni)
             }
             Function Invoke-NonAdminCommands {
-                Param ($MDAVPreferencesCurrent, $MDAVConfigCurrent, $SyncHash, $FinalMegaObject, $SecurityPoliciesIni)
+                Param ($SyncHash, $FinalMegaObject, $SecurityPoliciesIni)
 
                 [System.Management.Automation.Job2]$script:NonAdminCommandsJob = Start-ThreadJob -ScriptBlock {
 
-                    Param ($MDAVPreferencesCurrent, $MDAVConfigCurrent, $SyncHash, $FinalMegaObject, $ScriptBlockInvokeCategoryProcessing, $CSVResource, $ParentVerbosePreference, $SecurityPoliciesIni)
+                    Param ($SyncHash, $FinalMegaObject, $ScriptBlockInvokeCategoryProcessing, $CSVResource, $ParentVerbosePreference, $SecurityPoliciesIni)
 
                     $ErrorActionPreference = 'Stop'
 
@@ -1789,30 +1792,30 @@ namespace HardeningModule
                     # Add the array of the custom objects to the main output HashTable
                     [System.Void]$FinalMegaObject.TryAdd($CatName, $NestedObjectArray)
 
-                } -Name 'Invoke-NonAdminCommands' -StreamingHost $Host -ArgumentList ($MDAVPreferencesCurrent, $MDAVConfigCurrent, $SyncHash, $FinalMegaObject, $ScriptBlockInvokeCategoryProcessing, $CSVResource, $VerbosePreference, $SecurityPoliciesIni)
+                } -Name 'Invoke-NonAdminCommands' -StreamingHost $Host -ArgumentList ($SyncHash, $FinalMegaObject, $ScriptBlockInvokeCategoryProcessing, $CSVResource, $VerbosePreference, $SecurityPoliciesIni)
             }
             #Endregion Main-Functions
 
             Switch ($Categories) {
-                'MicrosoftDefender' { Invoke-MicrosoftDefender -MDAVPreferencesCurrent $MDAVPreferencesCurrent -MDAVConfigCurrent $MDAVConfigCurrent -SyncHash $SyncHash -FinalMegaObject $FinalMegaObject -SecurityPoliciesIni $SecurityPoliciesIni }
-                'AttackSurfaceReductionRules' { Invoke-AttackSurfaceReductionRules -MDAVPreferencesCurrent $MDAVPreferencesCurrent -MDAVConfigCurrent $MDAVConfigCurrent -SyncHash $SyncHash -FinalMegaObject $FinalMegaObject -SecurityPoliciesIni $SecurityPoliciesIni }
-                'BitLockerSettings' { Invoke-BitLockerSettings -MDAVPreferencesCurrent $MDAVPreferencesCurrent -MDAVConfigCurrent $MDAVConfigCurrent -SyncHash $SyncHash -FinalMegaObject $FinalMegaObject -SecurityPoliciesIni $SecurityPoliciesIni }
-                'TLSSecurity' { Invoke-TLSSecurity -MDAVPreferencesCurrent $MDAVPreferencesCurrent -MDAVConfigCurrent $MDAVConfigCurrent -SyncHash $SyncHash -FinalMegaObject $FinalMegaObject -SecurityPoliciesIni $SecurityPoliciesIni }
-                'LockScreen' { Invoke-LockScreen -MDAVPreferencesCurrent $MDAVPreferencesCurrent -MDAVConfigCurrent $MDAVConfigCurrent -SyncHash $SyncHash -FinalMegaObject $FinalMegaObject -SecurityPoliciesIni $SecurityPoliciesIni }
-                'UserAccountControl' { Invoke-UserAccountControl -MDAVPreferencesCurrent $MDAVPreferencesCurrent -MDAVConfigCurrent $MDAVConfigCurrent -SyncHash $SyncHash -FinalMegaObject $FinalMegaObject -SecurityPoliciesIni $SecurityPoliciesIni }
-                'DeviceGuard' { Invoke-DeviceGuard -MDAVPreferencesCurrent $MDAVPreferencesCurrent -MDAVConfigCurrent $MDAVConfigCurrent -SyncHash $SyncHash -FinalMegaObject $FinalMegaObject -SecurityPoliciesIni $SecurityPoliciesIni }
-                'WindowsFirewall' { Invoke-WindowsFirewall -MDAVPreferencesCurrent $MDAVPreferencesCurrent -MDAVConfigCurrent $MDAVConfigCurrent -SyncHash $SyncHash -FinalMegaObject $FinalMegaObject -SecurityPoliciesIni $SecurityPoliciesIni }
-                'OptionalWindowsFeatures' { Invoke-OptionalWindowsFeatures -MDAVPreferencesCurrent $MDAVPreferencesCurrent -MDAVConfigCurrent $MDAVConfigCurrent -SyncHash $SyncHash -FinalMegaObject $FinalMegaObject -SecurityPoliciesIni $SecurityPoliciesIni }
-                'WindowsNetworking' { Invoke-WindowsNetworking -MDAVPreferencesCurrent $MDAVPreferencesCurrent -MDAVConfigCurrent $MDAVConfigCurrent -SyncHash $SyncHash -FinalMegaObject $FinalMegaObject -SecurityPoliciesIni $SecurityPoliciesIni }
-                'MiscellaneousConfigurations' { Invoke-MiscellaneousConfigurations -MDAVPreferencesCurrent $MDAVPreferencesCurrent -MDAVConfigCurrent $MDAVConfigCurrent -SyncHash $SyncHash -FinalMegaObject $FinalMegaObject -SecurityPoliciesIni $SecurityPoliciesIni }
-                'WindowsUpdateConfigurations' { Invoke-WindowsUpdateConfigurations -MDAVPreferencesCurrent $MDAVPreferencesCurrent -MDAVConfigCurrent $MDAVConfigCurrent -SyncHash $SyncHash -FinalMegaObject $FinalMegaObject -SecurityPoliciesIni $SecurityPoliciesIni }
-                'EdgeBrowserConfigurations' { Invoke-EdgeBrowserConfigurations -MDAVPreferencesCurrent $MDAVPreferencesCurrent -MDAVConfigCurrent $MDAVConfigCurrent -SyncHash $SyncHash -FinalMegaObject $FinalMegaObject -SecurityPoliciesIni $SecurityPoliciesIni }
-                'NonAdminCommands' { Invoke-NonAdminCommands -MDAVPreferencesCurrent $MDAVPreferencesCurrent -MDAVConfigCurrent $MDAVConfigCurrent -SyncHash $SyncHash -FinalMegaObject $FinalMegaObject -SecurityPoliciesIni $SecurityPoliciesIni }
+                'MicrosoftDefender' { Invoke-MicrosoftDefender -SyncHash $SyncHash -FinalMegaObject $FinalMegaObject -SecurityPoliciesIni $SecurityPoliciesIni }
+                'AttackSurfaceReductionRules' { Invoke-AttackSurfaceReductionRules -SyncHash $SyncHash -FinalMegaObject $FinalMegaObject -SecurityPoliciesIni $SecurityPoliciesIni }
+                'BitLockerSettings' { Invoke-BitLockerSettings -SyncHash $SyncHash -FinalMegaObject $FinalMegaObject -SecurityPoliciesIni $SecurityPoliciesIni }
+                'TLSSecurity' { Invoke-TLSSecurity -SyncHash $SyncHash -FinalMegaObject $FinalMegaObject -SecurityPoliciesIni $SecurityPoliciesIni }
+                'LockScreen' { Invoke-LockScreen -SyncHash $SyncHash -FinalMegaObject $FinalMegaObject -SecurityPoliciesIni $SecurityPoliciesIni }
+                'UserAccountControl' { Invoke-UserAccountControl -SyncHash $SyncHash -FinalMegaObject $FinalMegaObject -SecurityPoliciesIni $SecurityPoliciesIni }
+                'DeviceGuard' { Invoke-DeviceGuard -SyncHash $SyncHash -FinalMegaObject $FinalMegaObject -SecurityPoliciesIni $SecurityPoliciesIni }
+                'WindowsFirewall' { Invoke-WindowsFirewall -SyncHash $SyncHash -FinalMegaObject $FinalMegaObject -SecurityPoliciesIni $SecurityPoliciesIni }
+                'OptionalWindowsFeatures' { Invoke-OptionalWindowsFeatures -SyncHash $SyncHash -FinalMegaObject $FinalMegaObject -SecurityPoliciesIni $SecurityPoliciesIni }
+                'WindowsNetworking' { Invoke-WindowsNetworking -SyncHash $SyncHash -FinalMegaObject $FinalMegaObject -SecurityPoliciesIni $SecurityPoliciesIni }
+                'MiscellaneousConfigurations' { Invoke-MiscellaneousConfigurations -SyncHash $SyncHash -FinalMegaObject $FinalMegaObject -SecurityPoliciesIni $SecurityPoliciesIni }
+                'WindowsUpdateConfigurations' { Invoke-WindowsUpdateConfigurations -SyncHash $SyncHash -FinalMegaObject $FinalMegaObject -SecurityPoliciesIni $SecurityPoliciesIni }
+                'EdgeBrowserConfigurations' { Invoke-EdgeBrowserConfigurations -SyncHash $SyncHash -FinalMegaObject $FinalMegaObject -SecurityPoliciesIni $SecurityPoliciesIni }
+                'NonAdminCommands' { Invoke-NonAdminCommands -SyncHash $SyncHash -FinalMegaObject $FinalMegaObject -SecurityPoliciesIni $SecurityPoliciesIni }
                 Default {
                     # Get the values of the ValidateSet attribute of the Categories parameter of the main function
                     [Categoriex]::new().GetValidValues() | ForEach-Object -Process {
                         # Run all of the categories' functions if the user didn't specify any
-                        . "Invoke-$_" -MDAVPreferencesCurrent $MDAVPreferencesCurrent -MDAVConfigCurrent $MDAVConfigCurrent -SyncHash $SyncHash -FinalMegaObject $FinalMegaObject -SecurityPoliciesIni $SecurityPoliciesIni
+                        . "Invoke-$_" -SyncHash $SyncHash -FinalMegaObject $FinalMegaObject -SecurityPoliciesIni $SecurityPoliciesIni
                     }
                 }
             }

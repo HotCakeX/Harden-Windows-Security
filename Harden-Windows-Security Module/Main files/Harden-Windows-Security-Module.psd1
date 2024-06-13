@@ -140,6 +140,7 @@ Harden Windows Safely, Securely, only with Official Microsoft methods
     'Shared\Update-self.psm1',
     'Shared\Test-IsAdmin.psm1',
     'Shared\IndividualResultClass.cs',
+    'Shared\SystemInfoNativeMethods.cs',
     'Resources\Media\Log.png',
     'Resources\Media\Path.png',
     'Resources\Media\start.png',

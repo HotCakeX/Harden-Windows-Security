@@ -78,7 +78,7 @@ function Confirm-SystemCompliance {
             }
         }
 
-        # Import the IndividualResult class if it's not already loaded
+        # Import the IndividualResult class if it's not already loaded, will become available to the thread-jobs as well since they share the same app domain
         if (-NOT ('HardeningModule.IndividualResult' -as [System.Type]) ) {
             Add-Type -Path "$HardeningModulePath\Shared\IndividualResultClass.cs"
         }
@@ -372,9 +372,6 @@ function Confirm-SystemCompliance {
 
                         $ErrorActionPreference = 'Stop'
                         $VerbosePreference = $ParentVerbosePreference
-
-                        # Import the IndividualResult class
-                        Add-Type -Path "$HardeningModulePath\Shared\IndividualResultClass.cs"
 
                         # A try-Catch-finally block to revert the changes being made to the Controlled Folder Access exclusions list
                         # Which is currently required for BCD NX value verification in the MicrosoftDefender category
@@ -814,9 +811,6 @@ function Confirm-SystemCompliance {
 
                     $ErrorActionPreference = 'Stop'
 
-                    # Import the IndividualResult class
-                    Add-Type -Path "$HardeningModulePath\Shared\IndividualResultClass.cs"
-
                     $NestedObjectArray = New-Object -TypeName System.Collections.Generic.List[HardeningModule.IndividualResult]
                     [System.String]$CatName = 'AttackSurfaceReductionRules'
 
@@ -906,7 +900,6 @@ function Confirm-SystemCompliance {
                     [System.Void]$FinalMegaObject.TryAdd($CatName, $NestedObjectArray)
 
                 } -Name 'Invoke-AttackSurfaceReductionRules' -StreamingHost $Host -ArgumentList ($MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $SyncHash, $FinalMegaObject, $ScriptBlockInvokeCategoryProcessing, $CSVResource, $VerbosePreference, $SecurityPoliciesIni)
-
             }
             Function Invoke-BitLockerSettings {
                 Param ($MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $SyncHash, $FinalMegaObject, $SecurityPoliciesIni)
@@ -922,64 +915,15 @@ function Confirm-SystemCompliance {
                         'Add-Type:Verbose'            = $false
                     }
 
-                    # Import the IndividualResult class
-                    Add-Type -Path "$HardeningModulePath\Shared\IndividualResultClass.cs"
-
                     $NestedObjectArray = New-Object -TypeName System.Collections.Generic.List[HardeningModule.IndividualResult]
                     [System.String]$CatName = 'BitLockerSettings'
 
                     # This PowerShell script can be used to find out if the DMA Protection is ON \ OFF.
                     # The Script will show this by emitting True \ False for On \ Off respectively.
-
-                    # bootDMAProtection check - checks for Kernel DMA Protection status in System information or msinfo32
-                    [System.String]$BootDMAProtectionCheck =
-                    @'
-  namespace SystemInfo
-    {
-      using System;
-      using System.Runtime.InteropServices;
-
-      public static class NativeMethods
-      {
-        internal enum SYSTEM_DMA_GUARD_POLICY_INFORMATION : int
-        {
-            /// </summary>
-            SystemDmaGuardPolicyInformation = 202
-        }
-
-        [DllImport("ntdll.dll")]
-        internal static extern Int32 NtQuerySystemInformation(
-          SYSTEM_DMA_GUARD_POLICY_INFORMATION SystemDmaGuardPolicyInformation,
-          IntPtr SystemInformation,
-          Int32 SystemInformationLength,
-          out Int32 ReturnLength);
-
-        public static byte BootDmaCheck() {
-          Int32 result;
-          Int32 SystemInformationLength = 1;
-          IntPtr SystemInformation = Marshal.AllocHGlobal(SystemInformationLength);
-          Int32 ReturnLength;
-
-          result = NativeMethods.NtQuerySystemInformation(
-                    NativeMethods.SYSTEM_DMA_GUARD_POLICY_INFORMATION.SystemDmaGuardPolicyInformation,
-                    SystemInformation,
-                    SystemInformationLength,
-                    out ReturnLength);
-
-          if (result == 0) {
-            byte info = Marshal.ReadByte(SystemInformation, 0);
-            return info;
-          }
-
-          return 0;
-        }
-      }
-    }
-'@
                     # if the type is not already loaded, load it
                     if (-NOT ('SystemInfo.NativeMethods' -as [System.Type])) {
                         Write-Verbose -Message 'Loading SystemInfo.NativeMethods type' -Verbose:$($ParentVerbosePreference -eq 'Continue')
-                        Add-Type -TypeDefinition $BootDMAProtectionCheck -Language CSharp -Verbose:$false
+                        Add-Type -Path "$HardeningModulePath\Shared\SystemInfoNativeMethods.cs"
                     }
                     else {
                         Write-Verbose -Message 'SystemInfo.NativeMethods type is already loaded, skipping loading it again.' -Verbose:$($ParentVerbosePreference -eq 'Continue')
@@ -1174,9 +1118,6 @@ function Confirm-SystemCompliance {
 
                     $ErrorActionPreference = 'Stop'
 
-                    # Import the IndividualResult class
-                    Add-Type -Path "$HardeningModulePath\Shared\IndividualResultClass.cs"
-
                     $NestedObjectArray = New-Object -TypeName System.Collections.Generic.List[HardeningModule.IndividualResult]
                     [System.String]$CatName = 'TLSSecurity'
 
@@ -1219,9 +1160,6 @@ function Confirm-SystemCompliance {
                     Param ($MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $SyncHash, $FinalMegaObject, $ScriptBlockInvokeCategoryProcessing, $CSVResource, $ParentVerbosePreference, $SecurityPoliciesIni)
 
                     $ErrorActionPreference = 'Stop'
-
-                    # Import the IndividualResult class
-                    Add-Type -Path "$HardeningModulePath\Shared\IndividualResultClass.cs"
 
                     $NestedObjectArray = New-Object -TypeName System.Collections.Generic.List[HardeningModule.IndividualResult]
                     [System.String]$CatName = 'LockScreen'
@@ -1333,7 +1271,6 @@ function Confirm-SystemCompliance {
                     # Add the array of the custom objects to the main output HashTable
                     [System.Void]$FinalMegaObject.TryAdd($CatName, $NestedObjectArray)
                 } -Name 'Invoke-LockScreen' -StreamingHost $Host -ArgumentList ($MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $SyncHash, $FinalMegaObject, $ScriptBlockInvokeCategoryProcessing, $CSVResource, $VerbosePreference, $SecurityPoliciesIni)
-
             }
             Function Invoke-UserAccountControl {
                 Param ($MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $SyncHash, $FinalMegaObject, $SecurityPoliciesIni)
@@ -1343,9 +1280,6 @@ function Confirm-SystemCompliance {
                     Param ($MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $SyncHash, $FinalMegaObject, $ScriptBlockInvokeCategoryProcessing, $CSVResource, $ParentVerbosePreference, $SecurityPoliciesIni)
 
                     $ErrorActionPreference = 'Stop'
-
-                    # Import the IndividualResult class
-                    Add-Type -Path "$HardeningModulePath\Shared\IndividualResultClass.cs"
 
                     $NestedObjectArray = New-Object -TypeName System.Collections.Generic.List[HardeningModule.IndividualResult]
                     [System.String]$CatName = 'UserAccountControl'
@@ -1391,7 +1325,6 @@ function Confirm-SystemCompliance {
                     # Add the array of the custom objects to the main output HashTable
                     [System.Void]$FinalMegaObject.TryAdd($CatName, $NestedObjectArray)
                 } -Name 'Invoke-UserAccountControl' -StreamingHost $Host -ArgumentList ($MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $SyncHash, $FinalMegaObject, $ScriptBlockInvokeCategoryProcessing, $CSVResource, $VerbosePreference, $SecurityPoliciesIni)
-
             }
             Function Invoke-DeviceGuard {
                 Param ($MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $SyncHash, $FinalMegaObject, $SecurityPoliciesIni)
@@ -1401,9 +1334,6 @@ function Confirm-SystemCompliance {
                     Param ($MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $SyncHash, $FinalMegaObject, $ScriptBlockInvokeCategoryProcessing, $CSVResource, $ParentVerbosePreference, $SecurityPoliciesIni)
 
                     $ErrorActionPreference = 'Stop'
-
-                    # Import the IndividualResult class
-                    Add-Type -Path "$HardeningModulePath\Shared\IndividualResultClass.cs"
 
                     $NestedObjectArray = New-Object -TypeName System.Collections.Generic.List[HardeningModule.IndividualResult]
                     [System.String]$CatName = 'DeviceGuard'
@@ -1426,9 +1356,6 @@ function Confirm-SystemCompliance {
                     Param ($MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $SyncHash, $FinalMegaObject, $ScriptBlockInvokeCategoryProcessing, $CSVResource, $ParentVerbosePreference, $SecurityPoliciesIni)
 
                     $ErrorActionPreference = 'Stop'
-
-                    # Import the IndividualResult class
-                    Add-Type -Path "$HardeningModulePath\Shared\IndividualResultClass.cs"
 
                     $NestedObjectArray = New-Object -TypeName System.Collections.Generic.List[HardeningModule.IndividualResult]
                     [System.String]$CatName = 'WindowsFirewall'
@@ -1466,9 +1393,6 @@ function Confirm-SystemCompliance {
                     Param ($MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $SyncHash, $FinalMegaObject, $ScriptBlockInvokeCategoryProcessing, $CSVResource, $ParentVerbosePreference, $SecurityPoliciesIni)
 
                     $ErrorActionPreference = 'Stop'
-
-                    # Import the IndividualResult class
-                    Add-Type -Path "$HardeningModulePath\Shared\IndividualResultClass.cs"
 
                     $NestedObjectArray = New-Object -TypeName System.Collections.Generic.List[HardeningModule.IndividualResult]
                     [System.String]$CatName = 'OptionalWindowsFeatures'
@@ -1627,7 +1551,6 @@ function Confirm-SystemCompliance {
                     [System.Void]$FinalMegaObject.TryAdd($CatName, $NestedObjectArray)
 
                 } -Name 'Invoke-OptionalWindowsFeatures' -StreamingHost $Host -ArgumentList ($MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $SyncHash, $FinalMegaObject, $ScriptBlockInvokeCategoryProcessing, $CSVResource, $VerbosePreference, $SecurityPoliciesIni)
-
             }
             Function Invoke-WindowsNetworking {
                 Param ($MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $SyncHash, $FinalMegaObject, $SecurityPoliciesIni)
@@ -1637,9 +1560,6 @@ function Confirm-SystemCompliance {
                     Param ($MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $SyncHash, $FinalMegaObject, $ScriptBlockInvokeCategoryProcessing, $CSVResource, $ParentVerbosePreference, $SecurityPoliciesIni)
 
                     $ErrorActionPreference = 'Stop'
-
-                    # Import the IndividualResult class
-                    Add-Type -Path "$HardeningModulePath\Shared\IndividualResultClass.cs"
 
                     $NestedObjectArray = New-Object -TypeName System.Collections.Generic.List[HardeningModule.IndividualResult]
                     [System.String]$CatName = 'WindowsNetworking'
@@ -1715,9 +1635,6 @@ function Confirm-SystemCompliance {
 
                     $ErrorActionPreference = 'Stop'
 
-                    # Import the IndividualResult class
-                    Add-Type -Path "$HardeningModulePath\Shared\IndividualResultClass.cs"
-
                     $NestedObjectArray = New-Object -TypeName System.Collections.Generic.List[HardeningModule.IndividualResult]
                     [System.String]$CatName = 'MiscellaneousConfigurations'
 
@@ -1778,7 +1695,6 @@ function Confirm-SystemCompliance {
 
 
                 } -Name 'Invoke-MiscellaneousConfigurations' -StreamingHost $Host -ArgumentList ($MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $SyncHash, $FinalMegaObject, $ScriptBlockInvokeCategoryProcessing, $CSVResource, $VerbosePreference, $SecurityPoliciesIni)
-
             }
             Function Invoke-WindowsUpdateConfigurations {
                 Param ($MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $SyncHash, $FinalMegaObject, $SecurityPoliciesIni)
@@ -1788,9 +1704,6 @@ function Confirm-SystemCompliance {
                     Param ($MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $SyncHash, $FinalMegaObject, $ScriptBlockInvokeCategoryProcessing, $CSVResource, $ParentVerbosePreference, $SecurityPoliciesIni)
 
                     $ErrorActionPreference = 'Stop'
-
-                    # Import the IndividualResult class
-                    Add-Type -Path "$HardeningModulePath\Shared\IndividualResultClass.cs"
 
                     $NestedObjectArray = New-Object -TypeName System.Collections.Generic.List[HardeningModule.IndividualResult]
                     [System.String]$CatName = 'WindowsUpdateConfigurations'
@@ -1820,7 +1733,6 @@ function Confirm-SystemCompliance {
                     [System.Void]$FinalMegaObject.TryAdd($CatName, $NestedObjectArray)
 
                 } -Name 'Invoke-WindowsUpdateConfigurations' -StreamingHost $Host -ArgumentList ($MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $SyncHash, $FinalMegaObject, $ScriptBlockInvokeCategoryProcessing, $CSVResource, $VerbosePreference, $SecurityPoliciesIni)
-
             }
             Function Invoke-EdgeBrowserConfigurations {
                 Param ($MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $SyncHash, $FinalMegaObject, $SecurityPoliciesIni)
@@ -1830,9 +1742,6 @@ function Confirm-SystemCompliance {
                     Param ($MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $SyncHash, $FinalMegaObject, $ScriptBlockInvokeCategoryProcessing, $CSVResource, $ParentVerbosePreference, $SecurityPoliciesIni)
 
                     $ErrorActionPreference = 'Stop'
-
-                    # Import the IndividualResult class
-                    Add-Type -Path "$HardeningModulePath\Shared\IndividualResultClass.cs"
 
                     $NestedObjectArray = New-Object -TypeName System.Collections.Generic.List[HardeningModule.IndividualResult]
                     [System.String]$CatName = 'EdgeBrowserConfigurations'
@@ -1846,7 +1755,6 @@ function Confirm-SystemCompliance {
                     [System.Void]$FinalMegaObject.TryAdd($CatName, $NestedObjectArray)
 
                 } -Name 'Invoke-EdgeBrowserConfigurations' -StreamingHost $Host -ArgumentList ($MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $SyncHash, $FinalMegaObject, $ScriptBlockInvokeCategoryProcessing, $CSVResource, $VerbosePreference, $SecurityPoliciesIni)
-
             }
             Function Invoke-NonAdminCommands {
                 Param ($MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $SyncHash, $FinalMegaObject, $SecurityPoliciesIni)
@@ -1856,9 +1764,6 @@ function Confirm-SystemCompliance {
                     Param ($MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $SyncHash, $FinalMegaObject, $ScriptBlockInvokeCategoryProcessing, $CSVResource, $ParentVerbosePreference, $SecurityPoliciesIni)
 
                     $ErrorActionPreference = 'Stop'
-
-                    # Import the IndividualResult class
-                    Add-Type -Path "$HardeningModulePath\Shared\IndividualResultClass.cs"
 
                     $NestedObjectArray = New-Object -TypeName System.Collections.Generic.List[HardeningModule.IndividualResult]
                     [System.String]$CatName = 'NonAdminCommands'
@@ -1872,7 +1777,6 @@ function Confirm-SystemCompliance {
                     [System.Void]$FinalMegaObject.TryAdd($CatName, $NestedObjectArray)
 
                 } -Name 'Invoke-NonAdminCommands' -StreamingHost $Host -ArgumentList ($MDAVPreferencesCurrent, $MDAVConfigCurrent, $HardeningModulePath, $SyncHash, $FinalMegaObject, $ScriptBlockInvokeCategoryProcessing, $CSVResource, $VerbosePreference, $SecurityPoliciesIni)
-
             }
             #Endregion Main-Functions
 

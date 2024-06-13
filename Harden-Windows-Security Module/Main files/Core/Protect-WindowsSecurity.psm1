@@ -1545,6 +1545,50 @@ Function Protect-WindowsSecurity {
             if (-NOT $RunUnattended) { $Host.UI.RawUI.WindowTitle = '🔑 BitLocker' } else { Write-Verbose -Message '=========================' }
             Write-Verbose -Message 'Processing the BitLocker category function'
 
+            # a ScriptBlock that gets the BitLocker recovery information for all drives that have a RecoveryPassword key protector
+            [System.Management.Automation.ScriptBlock]$GetBitLockerRecoveryInfo = {
+                Class BitLockerRecoveryInfo {
+                    [System.String]$DriveLetter
+                    [System.String]$Size
+                    [System.String]$KeyID
+                    [System.String]$RecoveryPassword
+                }
+
+                $BitLockerInfo = [System.Collections.Generic.List[BitLockerRecoveryInfo]]::new()
+
+                Foreach ($Drive in Get-BitLockerVolume | Where-Object -FilterScript { 'RecoveryPassword' -in $_.KeyProtector.KeyProtectorType }) {
+
+                    # In case the drive has multiple recovery passwords
+                    [Microsoft.BitLocker.Structures.BitLockerVolumeKeyProtector[]]$RecoveryPasswordKeyProtectors = $Drive.KeyProtector | Where-Object -FilterScript { $_.KeyProtectorType -eq 'RecoveryPassword' }
+
+                    foreach ($RecoveryPassword in $RecoveryPasswordKeyProtectors) {
+
+                        $TempBitLockerRecoveryInfo = [BitLockerRecoveryInfo]::new()
+
+                        $TempBitLockerRecoveryInfo.DriveLetter = $Drive.MountPoint
+                        $TempBitLockerRecoveryInfo.Size = '{0:N4} GB' -f $Drive.CapacityGB
+                        $TempBitLockerRecoveryInfo.KeyID = $RecoveryPassword.KeyProtectorId
+                        $TempBitLockerRecoveryInfo.RecoveryPassword = $RecoveryPassword.RecoveryPassword
+
+                        [System.Void]$BitLockerInfo.Add($TempBitLockerRecoveryInfo)
+                    }
+                }
+
+                [System.String]$SavePath = "$env:SystemDrive\BitLocker-Recovery-Info-All-Drives.txt"
+
+                Write-ColorfulText -Color Lavender -InputText "The Up-To-Date BitLocker recovery information of all drives have been saved to: $SavePath"
+
+                $BitLockerInfo | Out-File -FilePath $SavePath -Force
+
+                Add-Content -Path $SavePath -Value @'
+
+
+Please refer to this page for additional assistance on BitLocker recovery:
+https://learn.microsoft.com/en-us/windows/security/operating-system-security/data-protection/bitlocker/recovery-overview
+
+'@
+            }
+
             :BitLockerCategoryLabel switch ($RunUnattended ? 'Yes' : (Select-Option -Options 'Yes', 'No', 'Exit' -Message "`nRun Bitlocker category ?")) {
                 'Yes' {
                     Write-Verbose -Message 'Running the Bitlocker category'
@@ -1593,34 +1637,7 @@ Function Protect-WindowsSecurity {
                         break BitLockerCategoryLabel
                     }
 
-                    # A script block that generates recovery codes just like Windows does
-                    [System.Management.Automation.ScriptBlock]$RecoveryPasswordContentGenerator = {
-                        param ([System.Object[]]$KeyProtectorsInputFromScriptBlock)
-
-                        return @"
-BitLocker Drive Encryption recovery key
-
-To verify that this is the correct recovery key, compare the start of the following identifier with the identifier value displayed on your PC.
-
-Identifier:
-
-        $(($KeyProtectorsInputFromScriptBlock | Where-Object -FilterScript { $_.keyprotectortype -eq 'RecoveryPassword' }).KeyProtectorId.Trim('{', '}'))
-
-If the above identifier matches the one displayed by your PC, then use the following key to unlock your drive.
-
-Recovery Key:
-
-        $(($KeyProtectorsInputFromScriptBlock | Where-Object -FilterScript { $_.keyprotectortype -eq 'RecoveryPassword' }).RecoveryPassword)
-
-If the above identifier doesn't match the one displayed by your PC, then this isn't the right key to unlock your drive.
-Try another recovery key, or refer to https://learn.microsoft.com/en-us/windows/security/operating-system-security/data-protection/bitlocker/recovery-overview for additional assistance.
-
-IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Vault which requires additional authentication to access.
-
-"@
-                    }
-
-                    :OSDriveEncryptionLabel switch ($RunUnattended ? 'Skip encryptions altogether' : (Select-Option -SubCategory -Options 'Normal: TPM + Startup PIN + Recovery Password', 'Enhanced: TPM + Startup PIN + Startup Key + Recovery Password', 'Skip encryptions altogether', 'Exit' -Message "`nPlease select your desired security level" -ExtraMessage "If you are not sure, refer to the BitLocker category in the GitHub Readme`n")) {
+                    :OSDriveEncryptionLabel switch ($RunUnattended ? 'Skip encryptions altogether' : (Select-Option -SubCategory -Options 'Normal: TPM + Startup PIN + Recovery Password', 'Enhanced: TPM + Startup PIN + Startup Key + Recovery Password', 'Backup the BitLocker recovery information of all drives' , 'Skip encryptions altogether', 'Exit' -Message "`nPlease select your desired security level" -ExtraMessage "If you are not sure, refer to the BitLocker category in the GitHub Readme`n")) {
                         'Normal: TPM + Startup PIN + Recovery Password' {
 
                             # check if Bitlocker is enabled for the system drive with Normal security level
@@ -1651,27 +1668,18 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                                 if ($KeyProtectorTypesOSDrive -contains 'Tpmpin' -and $KeyProtectorTypesOSDrive -contains 'recoveryPassword') {
 
                                     Write-ColorfulText -C MintGreen -I 'Bitlocker is already enabled for the OS drive with Normal security level.'
-
-                                    Write-ColorfulText -C Fuchsia -I 'Here is your 48-digits recovery password for the OS drive in case you were looking for it:'
-                                    Write-ColorfulText -C Rainbow -I "$(($KeyProtectorsOSDrive | Where-Object -FilterScript { $_.keyprotectortype -eq 'RecoveryPassword' }).RecoveryPassword)"
                                 }
                                 else {
 
                                     # If the OS Drive doesn't have recovery password key protector
                                     if ($KeyProtectorTypesOSDrive -notcontains 'recoveryPassword') {
 
-                                        [System.String]$BitLockerMsg = "`nThe recovery password is missing, adding it now... `n" +
-                                        "It will be saved in a text file in '$env:SystemDrive\Drive $($env:SystemDrive.remove(1)) recovery password.txt'"
-                                        Write-Host -Object $BitLockerMsg -ForegroundColor Yellow
+                                        Write-Host -Object "`nThe recovery password is missing, adding it now... `n" -ForegroundColor Yellow
 
                                         # Add RecoveryPasswordProtector key protector to the OS drive
                                         Add-BitLockerKeyProtector -MountPoint $env:SystemDrive -RecoveryPasswordProtector *> $null
 
-                                        # Get the new key protectors of the OS Drive after adding RecoveryPasswordProtector to it
-                                        [System.Object[]]$KeyProtectorsOSDrive = (Get-BitLockerVolume -MountPoint $env:SystemDrive).KeyProtector
-
-                                        # Backup the recovery code of the OS drive in a file
-                                        $null = New-Item -Path "$env:SystemDrive\Drive $($env:SystemDrive.remove(1)) recovery password.txt" -Value $(&$RecoveryPasswordContentGenerator $KeyProtectorsOSDrive) -ItemType File -Force
+                                        &$GetBitLockerRecoveryInfo
                                     }
 
                                     # If the OS Drive doesn't have (TPM + PIN) key protector
@@ -1706,13 +1714,8 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                                             break BitLockerCategoryLabel
                                         }
 
-                                        # Get the key protectors of the OS Drive
-                                        [System.Object[]]$KeyProtectorsOSDrive = (Get-BitLockerVolume -MountPoint $env:SystemDrive).KeyProtector
-
                                         # Backup the recovery code of the OS drive in a file just in case - This is for when the disk is automatically encrypted and using TPM + Recovery code by default
-                                        $null = New-Item -Path "$env:SystemDrive\Drive $($env:SystemDrive.remove(1)) recovery password.txt" -Value $(&$RecoveryPasswordContentGenerator $KeyProtectorsOSDrive) -ItemType File -Force
-
-                                        Write-Host -Object "The recovery password was backed up in a text file in '$env:SystemDrive\Drive $($env:SystemDrive.remove(1)) recovery password.txt'" -ForegroundColor Cyan
+                                        &$GetBitLockerRecoveryInfo
                                     }
                                 }
                             }
@@ -1745,16 +1748,11 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                                 # Add recovery password key protector to the OS Drive
                                 Add-BitLockerKeyProtector -MountPoint $env:SystemDrive -RecoveryPasswordProtector *> $null
 
-                                # Get the new key protectors of the OS Drive after adding RecoveryPasswordProtector to it
-                                [System.Object[]]$KeyProtectorsOSDrive = (Get-BitLockerVolume -MountPoint $env:SystemDrive).KeyProtector
-
-                                # Backup the recovery code of the OS drive in a file
-                                $null = New-Item -Path "$env:SystemDrive\Drive $($env:SystemDrive.remove(1)) recovery password.txt" -Value $(&$RecoveryPasswordContentGenerator $KeyProtectorsOSDrive) -ItemType File -Force
-
                                 $null = Resume-BitLocker -MountPoint $env:SystemDrive
 
+                                &$GetBitLockerRecoveryInfo
+
                                 Write-ColorfulText -C MintGreen -I "`nBitlocker is now enabled for the OS drive with Normal security level."
-                                Write-Host -Object "The recovery password will be saved in a text file in '$env:SystemDrive\Drive $($env:SystemDrive.remove(1)) recovery password.txt'" -ForegroundColor Cyan
                             }
 
                         }
@@ -1780,28 +1778,18 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                                 if ($KeyProtectorTypesOSDrive -contains 'TpmPinStartupKey' -and $KeyProtectorTypesOSDrive -contains 'recoveryPassword') {
 
                                     Write-ColorfulText -C MintGreen -I 'Bitlocker is already enabled for the OS drive with Enhanced security level.'
-
-                                    Write-ColorfulText -C Fuchsia -I 'Here is your 48-digits recovery password for the OS drive in case you were looking for it:'
-                                    Write-ColorfulText -C Rainbow -I "$(($KeyProtectorsOSDrive | Where-Object -FilterScript { $_.keyprotectortype -eq 'RecoveryPassword' }).RecoveryPassword)"
                                 }
                                 else {
 
                                     # If the OS Drive doesn't have recovery password key protector
                                     if ($KeyProtectorTypesOSDrive -notcontains 'recoveryPassword') {
 
-                                        [System.String]$BitLockerMsg = "`nThe recovery password is missing, adding it now... `n" +
-                                        "It will be saved in a text file in '$env:SystemDrive\Drive $($env:SystemDrive.remove(1)) recovery password.txt'"
-                                        Write-Host -Object $BitLockerMsg -ForegroundColor Yellow
+                                        Write-Host -Object "`nThe recovery password is missing, adding it now... `n" -ForegroundColor Yellow
 
                                         # Add RecoveryPasswordProtector key protector to the OS drive
                                         Add-BitLockerKeyProtector -MountPoint $env:SystemDrive -RecoveryPasswordProtector *> $null
 
-                                        # Get the new key protectors of the OS Drive after adding RecoveryPasswordProtector to it
-                                        [System.Object[]]$KeyProtectorsOSDrive = (Get-BitLockerVolume -MountPoint $env:SystemDrive).KeyProtector
-
-                                        # Backup the recovery code of the OS drive in a file
-                                        $null = New-Item -Path "$env:SystemDrive\Drive $($env:SystemDrive.remove(1)) recovery password.txt" -Value $(&$RecoveryPasswordContentGenerator $KeyProtectorsOSDrive) -ItemType File -Force
-
+                                        &$GetBitLockerRecoveryInfo
                                     }
 
                                     # If the OS Drive doesn't have (TpmPinStartupKey) key protector
@@ -1845,14 +1833,8 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                                             break BitLockerCategoryLabel
                                         }
 
-                                        # Get the key protectors of the OS Drive
-                                        [System.Object[]]$KeyProtectorsOSDrive = (Get-BitLockerVolume -MountPoint $env:SystemDrive).KeyProtector
-
                                         # Backup the recovery code of the OS drive in a file just in case - This is for when the disk is automatically encrypted and using TPM + Recovery code by default
-                                        $null = New-Item -Path "$env:SystemDrive\Drive $($env:SystemDrive.remove(1)) recovery password.txt" -Value $(&$RecoveryPasswordContentGenerator $KeyProtectorsOSDrive) -ItemType File -Force
-
-                                        Write-Host -Object "The recovery password was backed up in a text file in '$env:SystemDrive\Drive $($env:SystemDrive.remove(1)) recovery password.txt'" -ForegroundColor Cyan
-
+                                        &$GetBitLockerRecoveryInfo
                                     }
                                 }
                             }
@@ -1891,17 +1873,15 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                                 # Add recovery password key protector to the OS Drive
                                 Add-BitLockerKeyProtector -MountPoint $env:SystemDrive -RecoveryPasswordProtector *> $null
 
-                                # Get the new key protectors of the OS Drive after adding RecoveryPasswordProtector to it
-                                [System.Object[]]$KeyProtectorsOSDrive = (Get-BitLockerVolume -MountPoint $env:SystemDrive).KeyProtector
-
-                                # Backup the recovery code of the OS drive in a file
-                                $null = New-Item -Path "$env:SystemDrive\Drive $($env:SystemDrive.remove(1)) recovery password.txt" -Value $(&$RecoveryPasswordContentGenerator $KeyProtectorsOSDrive) -ItemType File -Force
-
                                 $null = Resume-BitLocker -MountPoint $env:SystemDrive
 
+                                &$GetBitLockerRecoveryInfo
+
                                 Write-ColorfulText -C MintGreen -I "`nBitlocker is now enabled for the OS drive with Enhanced security level."
-                                Write-Host -Object "The recovery password will be saved in a text file in '$env:SystemDrive\Drive $($env:SystemDrive.remove(1)) recovery password.txt'" -ForegroundColor Cyan
                             }
+                        }
+                        'Backup the BitLocker recovery information of all drives' {
+                            &$GetBitLockerRecoveryInfo
                         }
                         'Skip encryptions altogether' { break BitLockerCategoryLabel } # Exit the entire BitLocker category, only
                         'Exit' { break MainSwitchLabel }
@@ -2022,8 +2002,7 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                                         if ($RecoveryPasswordKeyProtectors.Count -gt 1) {
 
                                             [System.String]$BitLockerMsg = "`nThere are more than 1 recovery password key protector associated with the drive $mountpoint `n" +
-                                            "Removing all of them and adding a new one. `n" +
-                                            "It will be saved in a text file in '$($MountPoint)\Drive $($MountPoint.Remove(1)) recovery password.txt'"
+                                            "Removing all of them and adding a new one. `n"
                                             Write-Host -Object $BitLockerMsg -ForegroundColor Yellow
 
                                             # Remove all of the recovery password key protectors of the selected Non-OS Drive
@@ -2034,21 +2013,9 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                                             # Add a new Recovery Password key protector after removing all of the previous ones
                                             Add-BitLockerKeyProtector -MountPoint $MountPoint -RecoveryPasswordProtector *> $null
 
-                                            # Get the new key protectors of the Non-OS Drive after adding RecoveryPasswordProtector to it
-                                            [System.Object[]]$KeyProtectorsNonOS = (Get-BitLockerVolume -MountPoint $MountPoint).KeyProtector
-
-                                            # Backup the recovery code of the Non-OS drive in a file
-                                            $null = New-Item -Path "$MountPoint\Drive $($MountPoint.Remove(1)) recovery password.txt" -Value $(&$RecoveryPasswordContentGenerator $KeyProtectorsNonOS) -ItemType File -Force
-
+                                            &$GetBitLockerRecoveryInfo
                                         }
                                         Write-ColorfulText -C MintGreen -I "`nBitlocker is already securely enabled for drive $MountPoint"
-
-                                        # Get the new key protectors of the Non-OS Drive after adding RecoveryPasswordProtector to it
-                                        # Just to simply display it on the console for the user
-                                        [System.Object[]]$KeyProtectorsNonOS = (Get-BitLockerVolume -MountPoint $MountPoint).KeyProtector
-
-                                        Write-ColorfulText -C Fuchsia -I "Here is your 48-digits recovery password for drive $MountPoint in case you were looking for it:"
-                                        Write-ColorfulText -C Rainbow -I "$(($KeyProtectorsNonOS | Where-Object -FilterScript { $_.keyprotectortype -eq 'RecoveryPassword' }).RecoveryPassword)"
                                     }
 
                                     # If the selected drive has Auto Unlock key protector but doesn't have Recovery Password
@@ -2070,15 +2037,9 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                                         # Add Recovery Password Key protector and save it to a file inside the drive
                                         Add-BitLockerKeyProtector -MountPoint $MountPoint -RecoveryPasswordProtector *> $null
 
-                                        # Get the new key protectors of the Non-OS Drive after adding RecoveryPasswordProtector to it
-                                        [System.Object[]]$KeyProtectorsNonOS = (Get-BitLockerVolume -MountPoint $MountPoint).KeyProtector
+                                        &$GetBitLockerRecoveryInfo
 
-                                        # Backup the recovery code of the Non-OS drive in a file
-                                        $null = New-Item -Path "$MountPoint\Drive $($MountPoint.Remove(1)) recovery password.txt" -Value $(&$RecoveryPasswordContentGenerator $KeyProtectorsNonOS) -ItemType File -Force
-
-                                        [System.String]$BitLockerMsg = "`nDrive $MountPoint is auto-unlocked but doesn't have Recovery Password, adding it now... `n" +
-                                        "It will be saved in a text file in '$($MountPoint)\Drive $($MountPoint.Remove(1)) recovery password.txt'"
-                                        Write-Host -Object $BitLockerMsg -ForegroundColor Cyan
+                                        Write-Host -Object "`nDrive $MountPoint is auto-unlocked but doesn't have Recovery Password, adding it now... `n" -ForegroundColor Cyan
                                     }
 
                                     # Check 3: If the selected drive has Recovery Password key protector but doesn't have Auto Unlock enabled
@@ -2094,8 +2055,7 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                                         if ($RecoveryPasswordKeyProtectors.Count -gt 1) {
 
                                             [System.String]$BitLockerMsg = "`nThere are more than 1 recovery password key protector associated with the drive $mountpoint `n" +
-                                            'Removing all of them and adding a new one.' +
-                                            "It will be saved in a text file in '$($MountPoint)\Drive $($MountPoint.Remove(1)) recovery password.txt'"
+                                            'Removing all of them and adding a new one.'
                                             Write-Host -Object $BitLockerMsg -ForegroundColor Yellow
 
                                             # Delete all Recovery Passwords because there were more than 1
@@ -2106,11 +2066,7 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                                             # Add a new Recovery Password
                                             Add-BitLockerKeyProtector -MountPoint $MountPoint -RecoveryPasswordProtector *> $null
 
-                                            # Get the new key protectors of the Non-OS Drive after adding RecoveryPasswordProtector to it
-                                            [System.Object[]]$KeyProtectorsNonOS = (Get-BitLockerVolume -MountPoint $MountPoint).KeyProtector
-
-                                            # Backup the recovery code of the Non-OS drive in a file
-                                            $null = New-Item -Path "$MountPoint\Drive $($MountPoint.Remove(1)) recovery password.txt" -Value $(&$RecoveryPasswordContentGenerator $KeyProtectorsNonOS) -ItemType File -Force
+                                            &$GetBitLockerRecoveryInfo
                                         }
                                     }
                                 }
@@ -2123,14 +2079,9 @@ IMPORTANT: Make sure to keep it in a safe place, e.g., in OneDrive's Personal Va
                                     # Add Auto-unlock (a.k.a ExternalKey key protector to the drive)
                                     $null = Enable-BitLockerAutoUnlock -MountPoint $MountPoint
 
-                                    # Get the new key protectors of the Non-OS Drive after adding RecoveryPasswordProtector to it
-                                    [System.Object[]]$KeyProtectorsNonOS = (Get-BitLockerVolume -MountPoint $MountPoint).KeyProtector
-
-                                    # Backup the recovery code of the Non-OS drive in a file
-                                    $null = New-Item -Path "$MountPoint\Drive $($MountPoint.Remove(1)) recovery password.txt" -Value $(&$RecoveryPasswordContentGenerator $KeyProtectorsNonOS) -ItemType File -Force
+                                    &$GetBitLockerRecoveryInfo
 
                                     Write-ColorfulText -C MintGreen -I "`nBitLocker has started encrypting drive $MountPoint"
-                                    Write-Host -Object "Recovery password will be saved in a text file in '$($MountPoint)\Drive $($MountPoint.Remove(1)) recovery password.txt'" -ForegroundColor Cyan
                                 }
                             } 'No' { break }
                             'Exit' { break MainSwitchLabel }

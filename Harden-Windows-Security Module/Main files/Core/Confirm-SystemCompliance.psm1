@@ -912,7 +912,6 @@ function Confirm-SystemCompliance {
                     $PSDefaultParameterValues = @{
                         'Get-BitLockerVolume:Verbose' = $false
                         'Get-Volume:Verbose'          = $false
-                        'Add-Type:Verbose'            = $false
                     }
 
                     $NestedObjectArray = New-Object -TypeName System.Collections.Generic.List[HardeningModule.IndividualResult]
@@ -923,7 +922,7 @@ function Confirm-SystemCompliance {
                     # if the type is not already loaded, load it
                     if (-NOT ('SystemInfo.NativeMethods' -as [System.Type])) {
                         Write-Verbose -Message 'Loading SystemInfo.NativeMethods type' -Verbose:$($ParentVerbosePreference -eq 'Continue')
-                        Add-Type -Path "$HardeningModulePath\Shared\SystemInfoNativeMethods.cs"
+                        Add-Type -Path "$HardeningModulePath\Shared\SystemInfoNativeMethods.cs" -Verbose:$($ParentVerbosePreference -eq 'Continue')
                     }
                     else {
                         Write-Verbose -Message 'SystemInfo.NativeMethods type is already loaded, skipping loading it again.' -Verbose:$($ParentVerbosePreference -eq 'Continue')

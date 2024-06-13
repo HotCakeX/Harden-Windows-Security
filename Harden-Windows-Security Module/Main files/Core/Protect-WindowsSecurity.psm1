@@ -2834,7 +2834,7 @@ Execution Policy: $CurrentExecutionPolicy
 
                 # Pass any necessary function as nested hashtable inside of the main synced hashtable
                 # so they can be easily passed to any other RunSpaces or ThreadJobs
-                'Start-FileDownload', 'Edit-Registry', 'Block-CountryIP', 'Write-ColorfulText' | ForEach-Object -Process {
+                'Start-FileDownload', 'Edit-Registry', 'Block-CountryIP', 'Write-ColorfulText', 'Edit-Addons' | ForEach-Object -Process {
                     $SyncHash['ExportedFunctions']["$_"] = Get-Item -Path "Function:$_"
                 }
 
@@ -3398,7 +3398,7 @@ Execution Policy: $CurrentExecutionPolicy
 
                             # Redefining all of the exported functions inside of the RunSpace
                             $SyncHash.ExportedFunctions.GetEnumerator() | ForEach-Object -Process {
-                                New-Item -Path "Function:\$($_.Key)" -Value $_.Value.ScriptBlock -Force | Out-Null
+                                New-Item -Path "Function:\$($_.Key)" -Value $_.Value.ScriptBlock.Ast.Body.GetScriptBlock() -Force | Out-Null
                             }
 
                             # Making the selected sub-categories available in the current scope because the functions called from this scriptblock wouldn't be able to access them otherwise
@@ -3457,68 +3457,6 @@ Execution Policy: $CurrentExecutionPolicy
                                         }
                                     }
 
-                                    # Defining this function here again because of PowerShell core's (Store installed) issue with DISM cmdlets and its strange behavior when imported with WindowsPowerShell compatibility layer
-                                    function Edit-Addons {
-                                        [CmdletBinding()]
-                                        param (
-                                            [parameter(Mandatory = $true)]
-                                            [ValidateSet('Capability', 'Feature')]
-                                            [System.String]$Type,
-                                            [parameter(Mandatory = $true, ParameterSetName = 'Capability')]
-                                            [System.String]$CapabilityName,
-                                            [parameter(Mandatory = $true, ParameterSetName = 'Feature')]
-                                            [System.String]$FeatureName,
-                                            [parameter(Mandatory = $true, ParameterSetName = 'Feature')]
-                                            [ValidateSet('Enabling', 'Disabling')]
-                                            [System.String]$FeatureAction
-                                        )
-                                        switch ($Type) {
-                                            'Feature' {
-                                                [System.String]$ActionCheck = ($FeatureAction -eq 'Enabling') ? 'disabled' : 'enabled'
-                                                [System.String]$ActionOutput = ($FeatureAction -eq 'Enabling') ? 'enabled' : 'disabled'
-
-                                                Write-Output -InputObject "`n$FeatureAction $FeatureName"
-                                                if ((Get-WindowsOptionalFeature -Online -FeatureName $FeatureName).state -eq $ActionCheck) {
-                                                    try {
-                                                        if ($FeatureAction -eq 'Enabling') {
-                                                            Enable-WindowsOptionalFeature -Online -FeatureName $FeatureName -All -NoRestart | Out-Null
-                                                        }
-                                                        else {
-                                                            Disable-WindowsOptionalFeature -Online -FeatureName $FeatureName -NoRestart | Out-Null
-                                                        }
-                                                        # Shows the successful message only if the process was successful
-                                                        Write-Output -InputObject "$FeatureName was successfully $ActionOutput"
-                                                    }
-                                                    catch {
-                                                        # show errors in non-terminating way
-                                                        $_
-                                                    }
-                                                }
-                                                else {
-                                                    Write-Output -InputObject "$FeatureName is already $ActionOutput"
-                                                }
-                                                break
-                                            }
-                                            'Capability' {
-                                                Write-Output -InputObject "`nRemoving $CapabilityName"
-                                                if ((Get-WindowsCapability -Online | Where-Object -FilterScript { $_.Name -like "*$CapabilityName*" }).state -ne 'NotPresent') {
-                                                    try {
-                                                        Get-WindowsCapability -Online | Where-Object -FilterScript { $_.Name -like "*$CapabilityName*" } | Remove-WindowsCapability -Online | Out-Null
-                                                        # Shows the successful message only if the process was successful
-                                                        Write-Output -InputObject "$CapabilityName was successfully removed."
-                                                    }
-                                                    catch {
-                                                        # show errors in non-terminating way
-                                                        $_
-                                                    }
-                                                }
-                                                else {
-                                                    Write-Output -InputObject "$CapabilityName is already removed."
-                                                }
-                                                break
-                                            }
-                                        }
-                                    }
 
                                     if (-NOT $Offline -or ($Offline -and $SyncHash.StartFileDownloadHasRun -eq $true)) {
 

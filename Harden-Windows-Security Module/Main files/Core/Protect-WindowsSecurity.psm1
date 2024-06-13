@@ -3283,7 +3283,7 @@ Execution Policy: $CurrentExecutionPolicy
 
                                 # Make all of the main function's functions available again in the 2nd nested RunSpace
                                 $SyncHash.ExportedFunctions.GetEnumerator() | ForEach-Object -Process {
-                                    New-Item -Path "Function:\$($_.Key)" -Value $_.Value.ScriptBlock -Force | Out-Null
+                                    New-Item -Path "Function:\$($_.Key)" -Value $_.Value.ScriptBlock.Ast.Body.GetScriptBlock() -Force | Out-Null
                                 }
 
                                 [System.Management.Automation.ScriptBlock]$prerequisitesScriptBlock = {
@@ -3390,6 +3390,9 @@ Execution Policy: $CurrentExecutionPolicy
                             $PSDefaultParameterValues = @{
                                 'Write-Verbose:Verbose' = $true
                             }
+
+                            # This tells the Write-ColorfulText function to write verbose texts instead of outputting PSStyle texts that don't work in the UI text block
+                            $script:GUI = $true
 
                             # Redefine all of the variables in the current scope
                             $SyncHash.GlobalVars.GetEnumerator() | ForEach-Object -Process {

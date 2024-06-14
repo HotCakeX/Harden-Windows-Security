@@ -13,34 +13,48 @@ body:
     id: version
     attributes:
       label: Tools category
-      description: Which category/tool does this bug belong to?
+      description: Which Category/Tool Does This Bug Belong To?
       options:
         - Harden Windows Security Module
         - WDACConfig Module
-        - Harden Windows Security Script
     validations:
       required: true
   - type: checkboxes
     id: Requirements
     attributes:
-      label: Does your system meet the requirements?
-      description: Depending on which tool your bug belongs to, please make sure you have read their requirements and meet them [Harden Windows Security Requirements](https://github.com/HotCakeX/Harden-Windows-Security#requirements-), [WDACConfig Requirements](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDACConfig#requirements), [Harden Windows Security Module Requirements](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Harden%E2%80%90Windows%E2%80%90Security%E2%80%90Module#requirements)
+      label: Does Your System Meet The Requirements?
+      description: Depending on which tool your bug belongs to, please make sure you have read their requirements and meet them [Harden Windows Security Requirements](https://github.com/HotCakeX/Harden-Windows-Security#requirements-), [WDACConfig Requirements](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDACConfig#requirements)
       options:
-        - label: Yes, my system meets the requirements 👍
+        - label: Yes, I acknowledge that I've read the requirements and my system meets them. 👍
           required: true
   - type: checkboxes
     id: Genuine-Windows
     attributes:
-      label: Is your Windows installation genuine?
-      description: Genuine means you downloaded Windows installation media from the official Microsoft website and it is neither tampered nor modified by any 3rd party tools.
+      label: Is your Windows Installation Genuine?      
       options:
-        - label: Yes, I am using genuine Windows installation. 💯
+        - label: Yes, I acknowledge that the installation media of the Windows OS I used the tool on was downloaded from the official Microsoft website and I didn't tamper or modify it. 💯
+          required: true
+  - type: checkboxes
+    id: Read-FAQ
+    attributes:
+      label: Did You Read The Frequently Asked Questions?
+      options:
+        - label: Yes, I've referred to the [FAQs](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Answers-to-the-Basic-Frequently-Asked-Questions) and my issue is not covered/explained in there.
           required: true
   - type: textarea
     id: Explanation
     attributes:
-      label: Please explain the bug
-      description: Please explain the bug and be as detailed as possible. 🙏
+      label: Please Explain The Bug
+      description: Please explain the bug and be as detailed as possible. Screenshots will help too.
       placeholder: "There is a problem with..."
     validations:
       required: true
+  - type: textarea
+    id: Error-Details
+    attributes:
+      label: Error Details
+      description: Paste the output from `Get-Error` if PowerShell returned errors.
+      render: console
+      placeholder: PS> Get-Error
+    validations:
+      required: false

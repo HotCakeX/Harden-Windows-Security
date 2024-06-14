@@ -17,14 +17,13 @@ body:
       options:
         - Harden Windows Security Module
         - WDACConfig Module
-        - Harden Windows Security Script
     validations:
       required: true
   - type: checkboxes
     id: Requirements
     attributes:
       label: Does your system meet the requirements?
-      description: Depending on which tool your bug belongs to, please make sure you have read their requirements and meet them [Harden Windows Security Requirements](https://github.com/HotCakeX/Harden-Windows-Security#requirements-), [WDACConfig Requirements](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDACConfig#requirements), [Harden Windows Security Module Requirements](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Harden%E2%80%90Windows%E2%80%90Security%E2%80%90Module#requirements)
+      description: Depending on which tool your bug belongs to, please make sure you have read their requirements and meet them [Harden Windows Security Requirements](https://github.com/HotCakeX/Harden-Windows-Security#requirements-), [WDACConfig Requirements](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDACConfig#requirements)
       options:
         - label: Yes, my system meets the requirements 👍
           required: true
@@ -34,7 +33,7 @@ body:
       label: Is your Windows installation genuine?
       description: Genuine means you downloaded Windows installation media from the official Microsoft website and it is neither tampered nor modified by any 3rd party tools.
       options:
-        - label: Yes, I am using genuine Windows installation. 💯
+        - label: Yes, I am using genuine Windows installation and have not tampered with the OS files. 💯
           required: true
   - type: textarea
     id: Explanation
@@ -44,3 +43,10 @@ body:
       placeholder: "There is a problem with..."
     validations:
       required: true
+  - type: textarea
+    id: Error-Details
+    attributes:
+      label: Error details
+      description: Paste the output from `Get-Error` if PowerShell returned errors.
+      render: console
+      placeholder: PS> Get-Error

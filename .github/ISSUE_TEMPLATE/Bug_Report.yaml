@@ -30,8 +30,7 @@ body:
   - type: checkboxes
     id: Genuine-Windows
     attributes:
-      label: Is your Windows Installation Genuine?
-      description: Genuine means you downloaded Windows installation media from the official Microsoft website and it is neither tampered nor modified.
+      label: Is your Windows Installation Genuine?      
       options:
         - label: Yes, I acknowledge that the installation media of the Windows OS I used the tool on was downloaded from the official Microsoft website and I didn't tamper or modify it. 💯
           required: true

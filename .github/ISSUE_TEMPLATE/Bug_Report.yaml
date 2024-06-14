@@ -39,8 +39,9 @@ body:
     id: Read-FAQ
     attributes:
       label: Refer To The [FAQ](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Answers-to-the-Basic-Frequently-Asked-Questions)
+      description: Genuine means you downloaded Windows installation media from the official Microsoft website and it is neither tampered nor modified.
       options:
-        - label: I've referred to the FAQ and my issue is not covered/explained there.
+        - label: Refer To The [FAQ](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Answers-to-the-Basic-Frequently-Asked-Questions)
           required: true
   - type: textarea
     id: Explanation

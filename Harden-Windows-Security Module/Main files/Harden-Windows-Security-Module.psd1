@@ -4,7 +4,7 @@
   RootModule           = 'Harden-Windows-Security-Module.psm1'
 
   # Version number of this module.
-  ModuleVersion        = '0.4.3'
+  ModuleVersion        = '0.4.5'
 
   # Supported PSEditions
   CompatiblePSEditions = @('Core')
@@ -139,6 +139,8 @@ Harden Windows Safely, Securely, only with Official Microsoft methods
     'Resources\ProcessMitigations.csv',
     'Shared\Update-self.psm1',
     'Shared\Test-IsAdmin.psm1',
+    'Shared\IndividualResultClass.cs',
+    'Shared\SystemInfoNativeMethods.cs',
     'Resources\Media\Log.png',
     'Resources\Media\Path.png',
     'Resources\Media\start.png',

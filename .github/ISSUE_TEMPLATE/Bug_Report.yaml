@@ -38,9 +38,9 @@ body:
   - type: checkboxes
     id: Read-FAQ
     attributes:
-      label: Refer To The [FAQ](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Answers-to-the-Basic-Frequently-Asked-Questions)
+      label: Did you read the Frequently Asked Questions?
       options:
-        - label: Refer To The [FAQ](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Answers-to-the-Basic-Frequently-Asked-Questions)
+        - label: Yes, I've referred to the [FAQ](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Answers-to-the-Basic-Frequently-Asked-Questions) and my issue is not covered/explained in there.
           required: true
   - type: textarea
     id: Explanation

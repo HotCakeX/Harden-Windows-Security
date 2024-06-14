@@ -140,7 +140,7 @@ Function Unprotect-WindowsSecurity {
                         Write-Verbose -Message 'Removing the country IP blocking firewall rules only'
                         Remove-NetFirewallRule -DisplayName 'OFAC Sanctioned Countries IP range blocking' -PolicyStore localhost -ErrorAction SilentlyContinue
                         Remove-NetFirewallRule -DisplayName 'State Sponsors of Terrorism IP range blocking' -PolicyStore localhost -ErrorAction SilentlyContinue
-                        Start-Process -FilePath gpupdate.exe -ArgumentList '/force' -NoNewWindow | Out-Null
+                        Start-Process -FilePath GPUpdate.exe -ArgumentList '/force' -NoNewWindow
                         break
                     }
                     $OnlyDownloadsDefenseMeasures {
@@ -158,7 +158,7 @@ Function Unprotect-WindowsSecurity {
 
                         # Create the working directory
                         Write-Verbose -Message "Creating a working directory at $CurrentUserTempDirectoryPath\HardeningXStuff\"
-                        New-Item -ItemType Directory -Path "$CurrentUserTempDirectoryPath\HardeningXStuff\" -Force | Out-Null
+                        $null = New-Item -ItemType Directory -Path "$CurrentUserTempDirectoryPath\HardeningXStuff\" -Force
 
                         # working directory assignment
                         [System.IO.DirectoryInfo]$WorkingDir = "$CurrentUserTempDirectoryPath\HardeningXStuff\"
@@ -210,7 +210,7 @@ Function Unprotect-WindowsSecurity {
                         Set-ItemProperty -Path 'Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\WindowsUpdate\UX\Settings' -Name 'RestartNotificationsAllowed2' -Value '0' -Type DWord
 
                         # Re-enables the XblGameSave Standby Task that gets disabled by Microsoft Security Baselines
-                        SCHTASKS.EXE /Change /TN \Microsoft\XblGameSave\XblGameSaveTask /Enable | Out-Null
+                        $null = SCHTASKS.EXE /Change /TN \Microsoft\XblGameSave\XblGameSaveTask /Enable
 
                         $CurrentMainStep++
                         Write-Progress -Id 0 -Activity 'Restoring Microsoft Defender configs back to their default states' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
@@ -242,7 +242,7 @@ Function Unprotect-WindowsSecurity {
 
                         Write-Verbose -Message "Removing the scheduled task $taskName"
                         if (Get-ScheduledTask -TaskName $taskName -TaskPath $taskPath -ErrorAction SilentlyContinue) {
-                            Unregister-ScheduledTask -TaskName $taskName -TaskPath $taskPath -Confirm:$false | Out-Null
+                            [System.Void](Unregister-ScheduledTask -TaskName $taskName -TaskPath $taskPath -Confirm:$false)
                         }
 
                         # Enables Multicast DNS (mDNS) UDP-in Firewall Rules for all 3 Firewall profiles

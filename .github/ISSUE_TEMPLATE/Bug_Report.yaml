@@ -50,3 +50,5 @@ body:
       description: Paste the output from `Get-Error` if PowerShell returned errors.
       render: console
       placeholder: PS> Get-Error
+    validations:
+      required: false

@@ -35,6 +35,13 @@ body:
       options:
         - label: Yes, I acknowledge that the installation media of the Windows OS I used the tool on was downloaded from the official Microsoft website and I didn't tamper or modify it. 💯
           required: true
+  - type: checkboxes
+    id: Read-FAQ
+    attributes:
+      label: Refer To The [FAQ](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Answers-to-the-Basic-Frequently-Asked-Questions)
+      options:
+        - label: I've referred to the FAQ and my issue is not covered/explained there.
+          required: true
   - type: textarea
     id: Explanation
     attributes:

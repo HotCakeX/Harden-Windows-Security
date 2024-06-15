@@ -202,6 +202,24 @@ New-Item -Path 'Function:\Write-TextAlt' -Value $Function -Force
 
 Redefining the functions in bulk just like the previous bulk operation above.
 
+> [!TIP]\
+> This is the recommended method of redefining the function in a different RunSpace because it completely strips its ScriptBlock of its affinity to the original RunSpace, so it'll just run on whatever the current RunSpace is without attempting to marshal. 
+>
+> The affinity is about which RunSpace the script block was created in (rather than is allowed to run on).
+>
+> Basically when a scriptblock is created in a RunSpace, it knows where it came from, and when invoked outside of that RunSpace, the engine tries to send it back. This often fails because the main RunSpace is busy. So after a ~200ms time out, it will sometimes just run it on the current thread against the busy RunSpace, that causes a lot of issues, one of which is the inability to see it's parent scope. So it just forgets all commands exist and the result will be unexpected.
+>
+> Thanks to [SeeminglyScience](https://github.com/SeeminglyScience) for providing this additional info.
+
+```powershell
+New-Item -Path "Function:\$($_.Key)" -Value $_.Value.ScriptBlock.Ast.Body.GetScriptBlock() -Force | Out-Null
+```
+
+<br>
+
+> [!TIP]\
+> This method isn't recommended as it will maintain the ScriptBlock's affinity to the original RunSpace.
+
 ```powershell
 $SyncHash.ExportedFunctions.GetEnumerator() | ForEach-Object -Process {
     New-Item -Path "Function:\$($_.Key)" -Value $_.Value.ScriptBlock -Force | Out-Null

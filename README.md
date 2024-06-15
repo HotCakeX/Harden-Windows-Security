@@ -516,7 +516,7 @@ Refer to this [official documentation about the countermeasures of Bitlocker](ht
 
 ## TLS Security<a href="#tls-security">![TLSIcon](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/TLS.png)</a>
 
-<p align="center"><img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/PNG%20and%20JPG/Hearts/1%20(6).png" alt="AI Generated image" width="550"></p>
+<p align="center"><img src="https://raw.githubusercontent.com/HotCakeX/.github/d6960a261913f979526c0fac7901effa4b72d813/Pictures/Readme%20Categories/TLS%20Security/TLS%20Security.svg" alt="TLS Security - Harden Windows Security repository GitHub" width="550"></p>
 
 <br>
 
@@ -578,7 +578,7 @@ NistP384
 
 ## Lock Screen<a href="#lock-screen">![LockScreenIcon](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/LockScreen.png)</a>
 
-<p align="center"><img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/PNG%20and%20JPG/Hearts/1%20(7).png" alt="An AI generated picture of a girl working in a server farm" width="550"></p>
+<p align="center"><img src="https://raw.githubusercontent.com/HotCakeX/.github/d6960a261913f979526c0fac7901effa4b72d813/Pictures/Readme%20Categories/Lock%20Screen/Lock%20Screen.svg" alt="An AI generated picture of a girl working in a server farm in Lock Screen Category" width="550"></p>
 
 <br>
 
@@ -631,7 +631,7 @@ NistP384
 
 ## User Account Control<a href="#user-account-control">![UACIcon](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/UAC.png)</a>
 
-<p align="center"><img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Bing%20AI%20generated/fsdfds.png" alt="An AI generated picture of a cat girl working in a server farm" width="550"></p>
+<p align="center"><img src="https://raw.githubusercontent.com/HotCakeX/.github/d6960a261913f979526c0fac7901effa4b72d813/Pictures/Readme%20Categories/User%20Account%20Control/User%20Account%20Control.svg" alt="User Account Control - Harden Windows Security" width="550"></p>
 
 <br>
 
@@ -656,7 +656,7 @@ NistP384
 
 ## Windows Firewall<a href="#windows-firewall">![FirewallIcon](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Firewall.png)</a>
 
-<p align="center"><img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Bing%20AI%20generated/rfsfdiol.png" alt="An AI generated picture of a cat girl working in a server farm" width="500"></p>
+<p align="center"><img src="https://raw.githubusercontent.com/HotCakeX/.github/d6960a261913f979526c0fac7901effa4b72d813/Pictures/Readme%20Categories/Windows%20Firewall/Windows%20Firewall.svg" alt="Windows Firewall - Harden Windows Security GitHub repository" width="500"></p>
 
 <br>
 

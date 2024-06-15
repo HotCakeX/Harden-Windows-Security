@@ -54,3 +54,31 @@ namespace NS
 ```
 
 <br>
+
+## How To Prevent PowerShell Optimization From Being Disabled
+
+In PowerShell, the presence of the following commands in a ScriptBlock will completely disable optimizations in that ScriptBlock:
+
+```PowerShell
+New-Variable
+Remove-Variable
+Set-Variable
+Set-PSBreakpoint
+# Also Dot-Sourcing
+. .\file.ps1
+# Also if any type of breakpoint is already set
+```
+
+Also usage of any [AllScope](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_scopes#the-allscope-option) variable in a ScriptBlock will disable optimization in there.
+
+You can view those commands [in here too](https://github.com/PowerShell/PowerShell/blob/bd8b0bd42163a9a6f3fc32001662d845b7f7fff0/src/System.Management.Automation/engine/parser/VariableAnalysis.cs#L48-L62).
+
+> Shout out to [SeeminglyScience](https://github.com/SeeminglyScience) for this info.
+
+<br>
+
+Any PowerShell code at some point will run and be in a ScriptBlock. Functions are their own ScriptBlock, modules (.psm1 files) are their own ScriptBlock, script files (.ps1 files) are their own ScriptBlock, ScriptBlocks themselves are their own ScriptBlock and so on.
+
+So the presence of the above methods and commands inside a ScriptBlock in the context explained above will disable optimization in that ScriptBlock, you can however use them outside of the ScriptBlock and then utilize them inside which **will not** disable optimization in that ScriptBlock.
+
+<br>

@@ -934,7 +934,7 @@ Due to security reasons, many policies cannot be used when you are signed into E
 
 ## Country IP Blocking<a href="#country-ip-blocking">![CountryIPBlockingIcon](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/CountryIPBlocking.png)</a>
 
-<p align="center"><img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Bing%20AI%20generated/fdss%20(2).png" alt="An AI generated picture of a cat girl working in a server farm" width="500"></p>
+<p align="center"><img src="https://raw.githubusercontent.com/HotCakeX/.github/d6960a261913f979526c0fac7901effa4b72d813/Pictures/Readme%20Categories/Country%20IP%20Blocking/Country%20IP%20Blocking.svg" alt="Country IP Blocking - Harden Windows Security GitHub repository" width="500"></p>
 
 <br>
 
@@ -955,7 +955,7 @@ Once you have those Firewall rules added, you can [use this method](https://gith
 
 ## Downloads Defense Measures <a href="#downloads-defense-measures-"><img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/DownloadsDefenseMeasures.png" alt="Downloads Defense Measures icon" width="48"></a>
 
-<p align="center"><img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Bing%20AI%20generated/tgrlkdmg543.png" alt="An AI generated picture of a cat girl on the roof" width="500"></p>
+<p align="center"><img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Readme%20Categories/Downloads%20Defense%20Measures/Downloads%20Defense%20Measures.png" alt="Downloads Defense Measures - Harden Windows Security GitHub repository" width="500"></p>
 
 <br>
 
@@ -977,7 +977,7 @@ The policy can be removed by the [**Unprotect-WindowsSecurity**](https://github.
 
 ## Non-Admin Commands<a href="#non-admin-commands">![NonAdminIcon](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/NonAdmin.png)</a>
 
-<p align="center"><img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/6.jpg" alt="An AI generated picture of a cat girl working in a server farm" width="500"></p>
+<p align="center"><img src="https://raw.githubusercontent.com/HotCakeX/.github/d6960a261913f979526c0fac7901effa4b72d813/Pictures/Readme%20Categories/Non-Admin%20Commands/Non-Admin%20Commands.svg" alt="Non-Admin Commands - Harden Windows Security GitHub repository" width="500"></p>
 
 <br>
 

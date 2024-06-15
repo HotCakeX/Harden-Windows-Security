@@ -263,7 +263,7 @@ From Top to bottom in order:
 
 ## Microsoft Security Baselines<a href="#microsoft-security-baselines">![MicrosoftSecurityBaseline](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Microsoft-Security-Baseline.png)</a>
 
-<p align="center"><img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/PNG%20and%20JPG/Hearts/1%20(2).png" alt="An AI generated picture of a cat girl working in a server farm" width="550"></p>
+<p align="center"><img src="https://raw.githubusercontent.com/HotCakeX/.github/d6960a261913f979526c0fac7901effa4b72d813/Pictures/Readme%20Categories/Microsoft%20Security%20Baselines/Microsoft%20Security%20Baselines.svg" alt="Microsoft Security Baselines - Harden Windows Security" width="550"></p>
 
 <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> A security baseline is a group of Microsoft-recommended configuration settings that explains their security implications. These settings are based on feedback from Microsoft security engineering teams, product groups, partners, and customers.
 
@@ -283,7 +283,7 @@ From Top to bottom in order:
 
 ## Microsoft 365 Apps Security Baselines<a href="#microsoft-365-apps-security-baselines">![Microsoft365AppsSecurityBaselines](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Microsoft-365-Apps-Security-Baselines.png)</a>
 
-<p align="center"><img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/PNG%20and%20JPG/Hearts/1%20(3).png" alt="AI generated picture" width="550"></p>
+<p align="center"><img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Readme%20Categories/Microsoft%20365%20Apps%20Security%20Baselines/Microsoft%20365%20Apps%20Security%20Baselines.png" alt="Microsoft 365 Apps Security Baselines - Harden Windows Security GitHub repository" width="550"></p>
 
 <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> The security baseline for Microsoft 365 Apps for enterprise is published twice a year, usually in June and December.
 
@@ -301,7 +301,7 @@ From Top to bottom in order:
 
 ## Microsoft Defender<a href="#microsoft-defender">![WindowsDefenderIcon](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/WindowsDefender.png)</a>
 
-<p align="center"><img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/PNGs/mde-cloud-protection.png" alt="Microsoft Defender Cloud Protection features and abilities" width="450"></p>
+<p align="center"><img src="https://raw.githubusercontent.com/HotCakeX/.github/d6960a261913f979526c0fac7901effa4b72d813/Pictures/Readme%20Categories/Microsoft%20Defender/Microsoft%20Defender.svg" alt="Microsoft Defender Cloud Protection features and abilities" width="450"></p>
 
 - <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> Enables **additional** security features of Microsoft Defender, You can refer to [this official document](https://docs.microsoft.com/en-us/powershell/module/defender/set-mppreference?view=windowsserver2022-ps) for full details. <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-defender)
 
@@ -429,7 +429,7 @@ Add-MpPreference -ControlledFolderAccessAllowedApplications 'C:\Program Files\Ap
 
 ## Attack surface reduction rules<a href="#attack-surface-reduction-rules">![ASRrulesIcon](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/ASRrules.png)</a>
 
-<p align="center"><img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/PNG%20and%20JPG/Hearts/1%20(4).png" alt="AI generated image" width="550"></p>
+<p align="center"><img src="https://raw.githubusercontent.com/HotCakeX/.github/d6960a261913f979526c0fac7901effa4b72d813/Pictures/Readme%20Categories/Attack%20Surface%20Reduction/Attack%20Surface%20Reduction.svg" alt="Attack surface reduction rules - Harden Windows Security GitHub repository" width="550"></p>
 
 <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> [Reducing your attack surface](https://learn.microsoft.com/en-us/microsoft-365/security/defender-endpoint/attack-surface-reduction) means protecting your devices and network, which leaves attackers with fewer ways to perform attacks. Configuring attack surface reduction rules in Windows can help!
 
@@ -453,7 +453,7 @@ Such software behaviors are sometimes seen in legitimate applications. However, 
 
 ## Bitlocker Settings<a href="#bitlocker-settings">![BitlockerIcon](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Bitlocker.png)</a>
 
-<p align="center"><img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/PNG%20and%20JPG/Hearts/1%20(5).png" alt="AI generated image" width="550"></p>
+<p align="center"><img src="https://raw.githubusercontent.com/HotCakeX/.github/d6960a261913f979526c0fac7901effa4b72d813/Pictures/Readme%20Categories/BitLocker%20Settings/BitLocker%20Settings.svg" alt="Bitlocker Settings - Harden Windows Security" width="550"></p>
 
 <br>
 

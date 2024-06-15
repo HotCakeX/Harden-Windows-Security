@@ -1,7 +1,7 @@
 # About TLS, DNS, Encryption and OPSEC concepts
 
 <p align=center>
-<img width=500 src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Bing%20AI%20generated/TLS%20DNS%20Encryption.jpg" alt="About TLS, DNS, Encryption and OPSEC concepts">
+<img width=500 src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/6.jpg" alt="About TLS, DNS, Encryption and OPSEC concepts">
 </p>
 
 The contents here are for beginners, to learn the basics of TLS, encrypted connections and some preliminary OPSEC (Operational security) concepts.

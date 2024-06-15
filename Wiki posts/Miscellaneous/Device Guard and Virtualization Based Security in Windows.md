@@ -1,6 +1,6 @@
 # Device Guard<a href="#device-guard">![DeviceGuardIcon](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/DeviceGuard.png)</a>
 
-<p align="center"><img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Bing%20AI%20generated/_7b1941d2-cc77-4423-b4d9-76986bdc3680.jpg" alt="An AI generated picture of a cat girl working in a server farm" width="600"></p>
+<p align="center"><img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Readme%20Categories/Device%20Guard/Device%20Guard.png" alt="Device Guard Category - Harden Windows Security GitHub repository" width="600"></p>
 
 <br>
 

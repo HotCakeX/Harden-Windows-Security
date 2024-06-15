@@ -1,6 +1,6 @@
 # Basic PowerShell Tricks and Notes Part 3
 
-This page is designed for beginners and newcomers to PowerShell who want to quickly learn the essential basics, the most frequently used syntaxes, elements and and tricks. It should help you jump start your journey as a PowerShell user.
+This page is designed for beginners and newcomers to PowerShell who want to quickly learn the essential basics, the most frequently used syntaxes, elements and tricks. It should help you jump start your journey as a PowerShell user.
 
 The main source for learning PowerShell is Microsoft Learn websites. There are extensive and complete guides about each command/cmdlet with examples.
 
@@ -12,6 +12,7 @@ This is part 3 of this series, find other parts here:
 
 * [Part 1](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Basic-PowerShell-tricks-and-notes)
 * [Part 2](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Basic-PowerShell-Tricks-and-Notes-Part-2)
+* [Part 4](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Basic-PowerShell-Tricks-and-Notes-Part-4)
 
 <br>
 
@@ -202,6 +203,24 @@ New-Item -Path 'Function:\Write-TextAlt' -Value $Function -Force
 
 Redefining the functions in bulk just like the previous bulk operation above.
 
+> [!TIP]\
+> This is the recommended method of redefining the function in a different RunSpace because it completely strips its ScriptBlock of its affinity to the original RunSpace, so it'll just run on whatever the current RunSpace is without attempting to marshal.
+>
+> The affinity is about which RunSpace the script block was created in (rather than is allowed to run on).
+>
+> Basically when a scriptblock is created in a RunSpace, it knows where it came from, and when invoked outside of that RunSpace, the engine tries to send it back. This often fails because the main RunSpace is busy. So after a ~200ms time out, it will sometimes just run it on the current thread against the busy RunSpace, that causes a lot of issues, one of which is the inability to see it's parent scope. So it just forgets all commands exist and the result will be unexpected.
+>
+> Thanks to [SeeminglyScience](https://github.com/SeeminglyScience) for providing this additional info.
+
+```powershell
+New-Item -Path "Function:\$($_.Key)" -Value $_.Value.ScriptBlock.Ast.Body.GetScriptBlock() -Force | Out-Null
+```
+
+<br>
+
+> [!TIP]\
+> This method isn't recommended as it will maintain the ScriptBlock's affinity to the original RunSpace.
+
 ```powershell
 $SyncHash.ExportedFunctions.GetEnumerator() | ForEach-Object -Process {
     New-Item -Path "Function:\$($_.Key)" -Value $_.Value.ScriptBlock -Force | Out-Null
@@ -247,5 +266,70 @@ Invoke-Command -ScriptBlock $ScriptBlock -ArgumentList 'Hello from the ScriptBlo
 > This approach is necessary because simply saving the function to a variable, redefining it as a function in the destination RunSpace, and executing it won't replicate the original function's behavior outside the RunSpace context.
 >
 > Alternatively, you can define your code as ScriptBlocks instead of functions from the beginning.
+
+<br>
+
+## How To Achieve Pseudo-Lexical Variable Scoping in PowerShell
+
+Lexical Scoping means:
+
+* Nested functions have access to variables declared in their outer scope.
+* Variables declared in an outer scope are accessible within nested functions.
+
+PowerShell does not have true lexical scoping, but you can achieve pseudo-lexical scoping using C# types. Here's an example where we define a C# class with static members to store variables.
+
+```powershell
+# A path defined in the parent scope
+$SomePath = 'C:\FolderName\FolderName2'
+
+Add-Type -TypeDefinition @"
+namespace NameSpace
+{
+    public static class ClassName
+    {
+        public static int SomeNumber = 456;
+        public static string path = $("`"$($SomePath -replace '\\', '\\')`"");
+    }
+}
+"@ -Language CSharp
+```
+
+The benefit of this approach is that **you can access the variables from any scope across the PowerShell App Domain**. That means any RunSpace you create, or any job started by either `Start-ThreadJob` or `Start-Job` cmdlets, without having to pass them as arguments.
+
+<br>
+
+Another great feature of this approach is that you don't need to set the value of the variables in the C# code, you can simply define the variable in C# and then assign the values in PowerShell side.
+
+In this example, I'm only defining the variables:
+
+```powershell
+Add-Type -TypeDefinition @"
+namespace NameSpace
+{
+    public static class ClassName
+    {
+        public static int SomeNumber;
+        public static string path;
+        public static object MDAVConfigCurrent;
+    }
+}
+"@ -Language CSharp
+```
+
+And now I can set any value to the variables in PowerShell side
+
+```powershell
+[NameSpace.ClassName]::SomeNumber = 123
+[NameSpace.ClassName]::path = 'C:\FolderName\FolderName2'
+[NameSpace.ClassName]::MDAVConfigCurrent = Get-MpPreference
+```
+
+You can now use the variables anywhere by accessing them
+
+```powershell
+Write-Host -Object ([NameSpace.ClassName]::SomeNumber)
+Write-Host -Object ([NameSpace.ClassName]::path)
+Write-OutPut -InputObject ([NameSpace.ClassName]::MDAVConfigCurrent)
+```
 
 <br>

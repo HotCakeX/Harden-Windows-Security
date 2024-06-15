@@ -906,8 +906,6 @@ Due to security reasons, many policies cannot be used when you are signed into E
     - [Microsoft Edge Security baselines](https://www.microsoft.com/en-us/download/details.aspx?id=55319) - Work without ingesting [ADMX policy files](https://www.microsoft.com/en-us/edge/business/download) first
         - [Reason why the module doesn't use it.](https://github.com/HotCakeX/Harden-Windows-Security/issues/50)
 
-###### Edge policies reviewed until version 123.0.2420.10
-
 <p align="right"><a href="#menu-back-to-top">💡 (back to categories)</a></p>
 
 <br>

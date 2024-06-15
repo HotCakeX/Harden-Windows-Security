@@ -1,6 +1,6 @@
 # Basic PowerShell Tricks and Notes Part 3
 
-This page is designed for beginners and newcomers to PowerShell who want to quickly learn the essential basics, the most frequently used syntaxes, elements and and tricks. It should help you jump start your journey as a PowerShell user.
+This page is designed for beginners and newcomers to PowerShell who want to quickly learn the essential basics, the most frequently used syntaxes, elements and tricks. It should help you jump start your journey as a PowerShell user.
 
 The main source for learning PowerShell is Microsoft Learn websites. There are extensive and complete guides about each command/cmdlet with examples.
 
@@ -12,6 +12,7 @@ This is part 3 of this series, find other parts here:
 
 * [Part 1](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Basic-PowerShell-tricks-and-notes)
 * [Part 2](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Basic-PowerShell-Tricks-and-Notes-Part-2)
+* [Part 4](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Basic-PowerShell-Tricks-and-Notes-Part-4)
 
 <br>
 
@@ -203,7 +204,7 @@ New-Item -Path 'Function:\Write-TextAlt' -Value $Function -Force
 Redefining the functions in bulk just like the previous bulk operation above.
 
 > [!TIP]\
-> This is the recommended method of redefining the function in a different RunSpace because it completely strips its ScriptBlock of its affinity to the original RunSpace, so it'll just run on whatever the current RunSpace is without attempting to marshal. 
+> This is the recommended method of redefining the function in a different RunSpace because it completely strips its ScriptBlock of its affinity to the original RunSpace, so it'll just run on whatever the current RunSpace is without attempting to marshal.
 >
 > The affinity is about which RunSpace the script block was created in (rather than is allowed to run on).
 >

@@ -267,3 +267,68 @@ Invoke-Command -ScriptBlock $ScriptBlock -ArgumentList 'Hello from the ScriptBlo
 > Alternatively, you can define your code as ScriptBlocks instead of functions from the beginning.
 
 <br>
+
+## How To Achieve Pseudo-Lexical Variable Scoping in PowerShell
+
+Lexical Scoping means:
+
+* Nested functions have access to variables declared in their outer scope.
+* Variables declared in an outer scope are accessible within nested functions.
+
+PowerShell does not have true lexical scoping, but you can achieve pseudo-lexical scoping using C# types. Here's an example where we define a C# class with static members to store variables.
+
+```powershell
+# A path defined in the parent scope
+$SomePath = 'C:\FolderName\FolderName2'
+
+Add-Type -TypeDefinition @"
+namespace NameSpace
+{
+    public static class ClassName
+    {
+        public static int SomeNumber = 456;
+        public static string path = $("`"$($SomePath -replace '\\', '\\')`"");
+    }
+}
+"@ -Language CSharp
+```
+
+The benefit of this approach is that **you can access the variables from any scope across the PowerShell App Domain**. That means any RunSpace you create, or any job started by either `Start-ThreadJob` or `Start-Job` cmdlets, without having to pass them as arguments.
+
+<br>
+
+Another great feature of this approach is that you don't need to set the value of the variables in the C# code, you can simply define the variable in C# and then assign the values in PowerShell side.
+
+In this example, I'm only defining the variables:
+
+```powershell
+Add-Type -TypeDefinition @"
+namespace NameSpace
+{
+    public static class ClassName
+    {
+        public static int SomeNumber;
+        public static string path;
+        public static object MDAVConfigCurrent;
+    }
+}
+"@ -Language CSharp
+```
+
+And now I can set any value to the variables in PowerShell side
+
+```powershell
+[NameSpace.ClassName]::SomeNumber = 123
+[NameSpace.ClassName]::path = 'C:\FolderName\FolderName2'
+[NameSpace.ClassName]::MDAVConfigCurrent = Get-MpPreference
+```
+
+You can now use the variables anywhere by accessing them
+
+```powershell
+Write-Host -Object ([NameSpace.ClassName]::SomeNumber)
+Write-Host -Object ([NameSpace.ClassName]::path)
+Write-OutPut -InputObject ([NameSpace.ClassName]::MDAVConfigCurrent)
+```
+
+<br>

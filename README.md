@@ -631,7 +631,7 @@ NistP384
 
 ## User Account Control<a href="#user-account-control">![UACIcon](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/UAC.png)</a>
 
-<p align="center"><img src="https://raw.githubusercontent.com/HotCakeX/.github/e792d15c74782163858aafdb55bec93cd162c268/Pictures/Readme%20Categories/User%20Account%20Control/UAC%20-%20User%20Account%20Control.svg" alt="User Account Control - Harden Windows Security" width="550"></p>
+<p align="center"><img src="https://raw.githubusercontent.com/HotCakeX/.github/503f187e5e870b776d281808fc5574e49f212955/Pictures/Readme%20Categories/User%20Account%20Control/User%20Account%20Control.svg" alt="User Account Control - Harden Windows Security" width="550"></p>
 
 <br>
 
@@ -1085,7 +1085,7 @@ This repository uses the simplest possible, yet effective, methods that make it 
 
 ## Support<a href="#support">![SupportIcon](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Support.png)</a>
 
-<p align="center"><img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Bing%20AI%20generated/fsfds.png" alt="A beautiful pink laptop Windows 11, located on the table with coffee on the side" width="500"></p>
+<p align="center"><img src="https://raw.githubusercontent.com/HotCakeX/.github/9e33c645239ff9eaef2bd232b88a75f5d04de092/Pictures/Readme%20Categories/Support/Support.svg" alt="Support Section - Harden Windows Security Repository" width="500"></p>
 
 <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/WebP/Heart%20Microsoft.webp" width="28" alt="If you have any questions, requests, suggestions etc"> If you have any questions, requests, suggestions etc. about this GitHub repository and its content, please open [a new discussion](https://github.com/HotCakeX/Harden-Windows-Security/discussions) or [Issue](https://github.com/HotCakeX/Harden-Windows-Security/issues).
 

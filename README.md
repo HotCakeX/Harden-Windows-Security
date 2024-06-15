@@ -631,7 +631,7 @@ NistP384
 
 ## User Account Control<a href="#user-account-control">![UACIcon](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/UAC.png)</a>
 
-<p align="center"><img src="https://raw.githubusercontent.com/HotCakeX/.github/1218ae038c413000ecb24b0ba47e9adb8a995abc/Pictures/Readme%20Categories/User%20Account%20Control/User%20Account%20Control%20-%20UAC.svg" alt="User Account Control - Harden Windows Security" width="550"></p>
+<p align="center"><img src="https://raw.githubusercontent.com/HotCakeX/.github/e792d15c74782163858aafdb55bec93cd162c268/Pictures/Readme%20Categories/User%20Account%20Control/UAC%20-%20User%20Account%20Control.svg" alt="User Account Control - Harden Windows Security" width="550"></p>
 
 <br>
 

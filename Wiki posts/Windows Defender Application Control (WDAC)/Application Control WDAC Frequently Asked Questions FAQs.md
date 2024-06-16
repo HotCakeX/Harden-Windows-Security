@@ -10,6 +10,16 @@ Application Control policies are based on whitelisting strategy, meaning everyth
 
 <br>
 
+## How Does WDAC In The OS Compare To 3rd Party Solutions?
+
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/WDAC%20FAQ/How%20Does%20WDAC%20In%20The%20OS%20Compare%20To%203rd%20Party%20Solutions.png" alt="How Does WDAC In The OS Compare To 3rd Party Solutions">
+
+<br>
+
+WDAC which is built deep inside of the OS kernel doesn’t need any “agents” to be installed, that means it can’t be killed using techniques used against 3rd party solutions, it also doesn’t increase the attack surface of the system. It’s native and exceedingly fast which makes it transparent to the user.
+
+<br>
+
 ## Can I Use Microsoft Defender For Endpoint (MDE) To Collect WDAC Logs?
 
 <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/WDAC%20FAQ/Can%20I%20Use%20Microsoft%20Defender%20For%20Endpoint%20(MDE)%20To%20Collect%20WDAC%20Logs.png" alt="Can I Use Microsoft Defender For Endpoint (MDE) To Collect WDAC Logs">
@@ -82,9 +92,9 @@ ISG stands for [The Intelligent Security Graph](https://learn.microsoft.com/en-u
 
 ## What Is Smart App Control?
 
-<br>
-
 <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/WDAC%20FAQ/What%20Is%20Smart%20App%20Control.png" alt="What Is Smart App Control">
+
+<br>
 
 Smart App Control is an automated AI-based Application Control mechanism that uses the same underlying components as WDAC (Windows Defender Application Control). It can be used in all Windows editions and provides great level of security by default for all systems it's enabled on.
 
@@ -92,10 +102,20 @@ Smart App Control is an automated AI-based Application Control mechanism that us
 
 ## What Is The Most Secure Level To Use For Authorizing Files?
 
-<br>
-
 <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/WDAC%20FAQ/What%20Is%20The%20Most%20Secure%20Level%20To%20Use%20For%20Authorizing%20Files.png" alt="What Is The Most Secure Level To Use For Authorizing Files">
 
+<br>
+
 For signed files, you should always use `WHQLFilePublisher` as [main level](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDAC-Rule-Levels-Comparison-and-Guide) and `FilePublisher` as fallback. For unsigned files, use `Hash` level.
+
+<br>
+
+## Is There A More Automated Way To Use Application Control At Scale?
+
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/WDAC%20FAQ/Is%20There%20A%20More%20Automated%20Way%20To%20Use%20Application%20Control%20At%20Scale.png" alt="Is There A More Automated Way To Use Application Control At Scale">
+
+<br>
+
+Yes. [Microsoft Defender for Cloud's](https://learn.microsoft.com/en-us/azure/defender-for-cloud/enable-adaptive-application-controls) adaptive application controls enhance your security with this data-driven, intelligent automated solution that defines allowlists of known-safe applications for your machines. It uses Machine Learning models and is based on the collected telemetry data.
 
 <br>

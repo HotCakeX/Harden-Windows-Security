@@ -33,7 +33,7 @@
   <a href="#resources">Resources</a> <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/cool-colours.gif" width="12" alt="rotating colorful thing">
   <a href="#license">License</a> <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/cool-colours.gif" width="12" alt="rotating colorful thing">
   <a href="https://github.com/HotCakeX/Harden-Windows-Security/wiki"><b>Wiki</b></a> <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/cool-colours.gif" width="12" alt="rotating colorful thing">
-  <a href="https://github.com/HotCakeX/Harden-Windows-Security/wiki/Answers-to-the-Basic-Frequently-Asked-Questions"><b>Basic FAQs</b></a>
+  <a href="https://github.com/HotCakeX/Harden-Windows-Security/wiki/Answers-to-the-Basic-Frequently-Asked-Questions"><b>Basic FAQs</b></a> <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/cool-colours.gif" width="12" alt="rotating colorful thing"> <a href="#roadmap"><b>Roadmap</b></a>
 </p>
 
 <img src="https://raw.githubusercontent.com/HotCakeX/.github/febfcc2b3be66ef0d5ecd74694157622a7fde865/Pictures/SVG/SVG%20line%20wave%20yellow%20pink%20inverted.svg" width= "300000" alt="horizontal super thin rainbow RGB line">
@@ -1250,6 +1250,16 @@ Get-Content <Path-To-File> -stream zone.identifier
 - [Deprecated features for Windows client](https://learn.microsoft.com/en-us/windows/whats-new/deprecated-features)
 - [Microsoft Cybersecurity Reference Architectures](https://aka.ms/mcra)
 - [BlueHat IL 2023 - David Weston - Default Security](https://youtu.be/8T6ClX-y2AE?si=aICh_wZIJrMpM6xB)
+
+<p align="right"><a href="#readme-top">💡 (back to top)</a></p>
+
+<br>
+
+## Roadmap<a href="#roadmap">![RoadmapIcon](https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/PNGs/Roadmapicon.png)</a>
+
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/PNG%20and%20JPG/Harden%20Windows%20Security%20Repository%20Roadmap.png" alt="The Harden Windows Security Repository Roadmap">
+
+<br>
 
 <p align="right"><a href="#readme-top">💡 (back to top)</a></p>
 

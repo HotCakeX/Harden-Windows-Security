@@ -1255,6 +1255,10 @@ Get-Content <Path-To-File> -stream zone.identifier
 
 <br>
 
+<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">
+
+<br>
+
 ## Roadmap<a href="#roadmap">![RoadmapIcon](https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/PNGs/Roadmapicon.png)</a>
 
 <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/PNG%20and%20JPG/Harden%20Windows%20Security%20Repository%20Roadmap.png" alt="The Harden Windows Security Repository Roadmap">
@@ -1262,6 +1266,10 @@ Get-Content <Path-To-File> -stream zone.identifier
 <br>
 
 <p align="right"><a href="#readme-top">💡 (back to top)</a></p>
+
+<br>
+
+<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">
 
 <br>
 

@@ -429,7 +429,7 @@ Add-MpPreference -ControlledFolderAccessAllowedApplications 'C:\Program Files\Ap
 
 ## Attack surface reduction rules<a href="#attack-surface-reduction-rules">![ASRrulesIcon](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/ASRrules.png)</a>
 
-<p align="center"><img src="https://raw.githubusercontent.com/HotCakeX/.github/d6960a261913f979526c0fac7901effa4b72d813/Pictures/Readme%20Categories/Attack%20Surface%20Reduction/Attack%20Surface%20Reduction.svg" alt="Attack surface reduction rules - Harden Windows Security GitHub repository" width="550"></p>
+<p align="center"><img src="https://raw.githubusercontent.com/HotCakeX/.github/0180bc6ace1ea086653cc405f142d1aada424150/Pictures/Readme%20Categories/Attack%20Surface%20Reduction/Attack%20Surface%20Reduction.svg" alt="Attack surface reduction rules - Harden Windows Security GitHub repository" width="550"></p>
 
 <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> [Reducing your attack surface](https://learn.microsoft.com/en-us/microsoft-365/security/defender-endpoint/attack-surface-reduction) means protecting your devices and network, which leaves attackers with fewer ways to perform attacks. Configuring attack surface reduction rules in Windows can help!
 
@@ -453,7 +453,7 @@ Such software behaviors are sometimes seen in legitimate applications. However, 
 
 ## Bitlocker Settings<a href="#bitlocker-settings">![BitlockerIcon](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Bitlocker.png)</a>
 
-<p align="center"><img src="https://raw.githubusercontent.com/HotCakeX/.github/d6960a261913f979526c0fac7901effa4b72d813/Pictures/Readme%20Categories/BitLocker%20Settings/BitLocker%20Settings.svg" alt="Bitlocker Settings - Harden Windows Security" width="550"></p>
+<p align="center"><img src="https://raw.githubusercontent.com/HotCakeX/.github/0180bc6ace1ea086653cc405f142d1aada424150/Pictures/Readme%20Categories/BitLocker%20Settings/BitLocker%20Settings.svg" alt="Bitlocker Settings - Harden Windows Security" width="550"></p>
 
 <br>
 
@@ -516,7 +516,7 @@ Refer to this [official documentation about the countermeasures of Bitlocker](ht
 
 ## TLS Security<a href="#tls-security">![TLSIcon](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/TLS.png)</a>
 
-<p align="center"><img src="https://raw.githubusercontent.com/HotCakeX/.github/d6960a261913f979526c0fac7901effa4b72d813/Pictures/Readme%20Categories/TLS%20Security/TLS%20Security.svg" alt="TLS Security - Harden Windows Security repository GitHub" width="550"></p>
+<p align="center"><img src="https://raw.githubusercontent.com/HotCakeX/.github/0180bc6ace1ea086653cc405f142d1aada424150/Pictures/Readme%20Categories/TLS%20Security/TLS%20Security.svg" alt="TLS Security - Harden Windows Security repository GitHub" width="550"></p>
 
 <br>
 
@@ -916,7 +916,7 @@ Due to security reasons, many policies cannot be used when you are signed into E
 
 ## Certificate Checking Commands<a href="#certificate-checking-commands">![CertificateIcon](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Certificate.png)</a>
 
-<p align="center"><img src="https://raw.githubusercontent.com/HotCakeX/.github/d6960a261913f979526c0fac7901effa4b72d813/Pictures/Readme%20Categories/Certificate%20Checking/Certificate%20Checking.svg" alt="Certificate Checking Commands - Harden Windows Security" width="550"></p>
+<p align="center"><img src="https://raw.githubusercontent.com/HotCakeX/.github/0180bc6ace1ea086653cc405f142d1aada424150/Pictures/Readme%20Categories/Certificate%20Checking/Certificate%20Checking.svg" alt="Certificate Checking Commands - Harden Windows Security" width="550"></p>
 
 <br>
 
@@ -932,7 +932,7 @@ Due to security reasons, many policies cannot be used when you are signed into E
 
 ## Country IP Blocking<a href="#country-ip-blocking">![CountryIPBlockingIcon](https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/CountryIPBlocking.png)</a>
 
-<p align="center"><img src="https://raw.githubusercontent.com/HotCakeX/.github/d6960a261913f979526c0fac7901effa4b72d813/Pictures/Readme%20Categories/Country%20IP%20Blocking/Country%20IP%20Blocking.svg" alt="Country IP Blocking - Harden Windows Security GitHub repository" width="500"></p>
+<p align="center"><img src="https://raw.githubusercontent.com/HotCakeX/.github/0180bc6ace1ea086653cc405f142d1aada424150/Pictures/Readme%20Categories/Country%20IP%20Blocking/Country%20IP%20Blocking.svg" alt="Country IP Blocking - Harden Windows Security GitHub repository" width="500"></p>
 
 <br>
 

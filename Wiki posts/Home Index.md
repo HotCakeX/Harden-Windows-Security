@@ -33,7 +33,7 @@
 
 <br>
 
-## <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/wings/yellowwings.gif" width="50"> [Windows Defender Application Control (WDAC)](#-windows-defender-application-control-wdac)
+## <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/wings/yellowwings.gif" width="50"> [Windows Defender Application Control (WDAC)](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Introduction)
 
 - <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/wings/yellowwings.gif" width="35"> [Introduction](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Introduction)
 - <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/wings/yellowwings.gif" width="35"> [WDAC for Lightly Managed Devices](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDAC-for-Lightly-Managed-Devices)

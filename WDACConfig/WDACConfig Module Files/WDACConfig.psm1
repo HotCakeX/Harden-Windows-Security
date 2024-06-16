@@ -10,8 +10,89 @@ $global:ErrorActionPreference = 'Stop'
 # Set PSReadline tab completion to complete menu for easier access to available parameters - Only for the current session
 Set-PSReadLineKeyHandler -Key 'Tab' -Function 'MenuComplete'
 
-# Import the classes globally to be available to the entire module
+# Enables additional progress indicators for Windows Terminal and Windows
+$PSStyle.Progress.UseOSCIndicator = $true
+
+# Import the public global modules
+Import-Module -FullyQualifiedName (Get-ChildItem -File -LiteralPath "$ModuleRootPath\Public" -Filter '*.psm1').FullName -Force -Global
+
+# Import the classes
 Import-Module -FullyQualifiedName "$ModuleRootPath\CoreExt\Classes.psm1" -Force
+
+#Region C# code imports
+
+# Defining the WinTrust class from the WDACConfig Namespace if it doesn't already exist
+if (-NOT ('WDACConfig.WinTrust' -as [System.Type]) ) {
+    Add-Type -Path "$ModuleRootPath\C#\AuthenticodeHashCalc.cs"
+}
+
+# Defining the PageHashCalculator class from the WDACConfig Namespace if it doesn't already exist
+if (-NOT ('WDACConfig.PageHashCalculator' -as [System.Type]) ) {
+    Add-Type -Path "$ModuleRootPath\C#\PageHashCalc.cs"
+}
+
+# Import the kernel32.dll functions using P/Invoke if they don't exist
+if (-NOT ('WDACConfig.Win32Utils' -as [System.Type]) ) {
+    Add-Type -Path "$ModuleRootPath\C#\Kernel32dll.cs"
+}
+
+# Defining the Signer class from the WDACConfig Namespace if it doesn't already exist
+if (-NOT ('WDACConfig.Signer' -as [System.Type]) ) {
+    Add-Type -Path "$ModuleRootPath\C#\Signer.cs"
+}
+
+# Add the Crypt32.dll library functions as a type if they don't exist
+if (-NOT ('WDACConfig.Crypt32DLL' -as [System.Type]) ) {
+    Add-Type -Path "$ModuleRootPath\C#\Crypt32dll.cs"
+}
+
+# Defining the CryptoAPI class from the WDACConfig Namespace if it doesn't already exist
+if (-NOT ('WDACConfig.CryptoAPI' -as [System.Type]) ) {
+    Add-Type -Path "$ModuleRootPath\C#\Crypt32CertCN.cs"
+}
+
+#Endregion C# code imports
+
+<#
+# Loop through all the relevant files in the module
+foreach ($File in (Get-FilesFast -Directory $ModuleRootPath -ExtensionsToFilterBy '.ps1', '.psm1')) {
+    # Get the signature of the current file
+    [System.Management.Automation.Signature]$Signature = Get-AuthenticodeSignature -FilePath $File
+    # Ensure that they are code signed properly and have not been tampered with.
+    if (($Signature.SignerCertificate.Thumbprint -eq '1c1c9082551b43eec17c0301bfb2f27031a4d8c8') -and ($Signature.Status -in 'Valid', 'UnknownError')) {
+        # If the file is signed properly, then continue to the next file
+    }
+    else {
+        Throw [System.Security.SecurityException] "The module has been tampered with, signature status of the file $($File.FullName) is $($Signature.Status)"
+    }
+}
+#>
+
+<#
+The reason behind this:
+
+https://github.com/MicrosoftDocs/WDAC-Toolkit/pull/365
+https://github.com/MicrosoftDocs/WDAC-Toolkit/issues/362
+
+Features:
+
+Short-circuits the cmdlet and finishes in 2 seconds.
+put in the preloader script so it only runs once in the runspace.
+No output is shown whatsoever (warning, error etc.)
+Any subsequent attempts to run New-CiPolicy cmdlet will work normally without any errors or warnings.
+The path I chose exists in Windows by default, and it contains very few PEs, something that is required for that error to be produced.
+Test-Path is used for more resiliency.
+-PathToCatroot is used and set to the same path as -ScanPath, this combination causes the operation to gracefully end prematurely.
+The XML file is never created.
+XML file is created but then immediately deleted. Its file name is random to minimize name collisions.
+#>
+
+if (Test-Path -LiteralPath 'C:\Program Files\Windows Defender\Offline' -PathType Container) {
+    [System.String]$RandomGUID = [System.Guid]::NewGuid().ToString()
+    New-CIPolicy -UserPEs -ScanPath 'C:\Program Files\Windows Defender\Offline' -Level hash -FilePath ".\$RandomGUID.xml" -NoShadowCopy -PathToCatroot 'C:\Program Files\Windows Defender\Offline' -WarningAction SilentlyContinue
+    Remove-Item -LiteralPath ".\$RandomGUID.xml" -Force
+}
+
 
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor

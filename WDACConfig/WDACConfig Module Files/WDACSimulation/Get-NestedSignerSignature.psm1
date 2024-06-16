@@ -18,13 +18,8 @@ Function Get-NestedSignerSignature {
         [System.IO.FileInfo]$FilePath
     )
     Begin {
-        $PSBoundParameters.Verbose.IsPresent ? ([System.Boolean]$Verbose = $true) : ([System.Boolean]$Verbose = $false) | Out-Null
+        [System.Boolean]$Verbose = $PSBoundParameters.Verbose.IsPresent ? $true : $false
         . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
-
-        # Add the Crypt32.dll library functions as a type if they don't exist
-        if (-NOT ('WDACConfig.Crypt32DLL' -as [System.Type]) ) {
-            Add-Type -Path "$ModuleRootPath\C#\Crypt32dll.cs"
-        }
 
         # Define some constants for the CryptQueryObject function parameters
         [System.Int16]$CERT_QUERY_OBJECT_FILE = 0x1

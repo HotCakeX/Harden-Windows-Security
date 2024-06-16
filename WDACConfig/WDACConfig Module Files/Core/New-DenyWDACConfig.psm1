@@ -62,7 +62,7 @@ Function New-DenyWDACConfig {
         [Parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$SkipVersionCheck
     )
     Begin {
-        $PSBoundParameters.Verbose.IsPresent ? ([System.Boolean]$Verbose = $true) : ([System.Boolean]$Verbose = $false) | Out-Null
+        [System.Boolean]$Verbose = $PSBoundParameters.Verbose.IsPresent ? $true : $false
         $PSBoundParameters.Debug.IsPresent ? ([System.Boolean]$Debug = $true) : ([System.Boolean]$Debug = $false) | Out-Null
         . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
 
@@ -391,10 +391,10 @@ Function New-DenyWDACConfig {
             if (-NOT $EmbeddedVerboseOutput) {
                 # Display the output
                 if ($Deploy) {
-                    &$WriteFinalOutput $FinalDenyPolicyPath
+                    Write-FinalOutput -Paths $FinalDenyPolicyPath
                 }
                 else {
-                    &$WriteFinalOutput $FinalDenyPolicyPath, $FinalDenyPolicyCIPPath
+                    Write-FinalOutput -Paths $FinalDenyPolicyPath, $FinalDenyPolicyCIPPath
                 }
             }
 
@@ -471,12 +471,9 @@ Function New-DenyWDACConfig {
     Creates a Deny standalone base policy by scanning the specified folders for files.
 #>
 }
-
-# Importing argument completer ScriptBlocks
-. "$ModuleRootPath\CoreExt\ArgumentCompleters.ps1"
-Register-ArgumentCompleter -CommandName 'New-DenyWDACConfig' -ParameterName 'ScanLocations' -ScriptBlock $ArgumentCompleterFolderPathsPicker
-Register-ArgumentCompleter -CommandName 'New-DenyWDACConfig' -ParameterName 'PackageName' -ScriptBlock $ArgumentCompleterAppxPackageNames
-Register-ArgumentCompleter -CommandName 'New-DenyWDACConfig' -ParameterName 'FolderPath' -ScriptBlock $ArgumentCompleterFolderPathsPickerWildCards
+Register-ArgumentCompleter -CommandName 'New-DenyWDACConfig' -ParameterName 'ScanLocations' -ScriptBlock ([WDACConfig.ArgumentCompleters]::ArgumentCompleterFolderPathsPicker)
+Register-ArgumentCompleter -CommandName 'New-DenyWDACConfig' -ParameterName 'PackageName' -ScriptBlock ([WDACConfig.ArgumentCompleters]::ArgumentCompleterAppxPackageNames)
+Register-ArgumentCompleter -CommandName 'New-DenyWDACConfig' -ParameterName 'FolderPath' -ScriptBlock ([WDACConfig.ArgumentCompleters]::ArgumentCompleterFolderPathsPickerWildCards)
 
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor

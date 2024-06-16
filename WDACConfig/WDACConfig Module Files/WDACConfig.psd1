@@ -4,7 +4,7 @@
     RootModule           = 'WDACConfig.psm1'
 
     # Version number of this module.
-    ModuleVersion        = '0.4.0'
+    ModuleVersion        = '0.4.1'
 
     # Supported PSEditions
     CompatiblePSEditions = @('Core')
@@ -252,6 +252,7 @@ This is an advanced PowerShell module for WDAC (Windows Defender Application Con
         'C#\PageHashCalc.cs',
         'C#\Crypt32CertCN.cs',
         'C#\WldpQuerySecurityPolicy.cs',
+        'C#\ArgumentCompleters.cs',
         'Help\ConvertTo-WDACPolicy.xml',
         'Help\ConvertTo-WDACPolicy.md',
         'XMLOps\Build-SignerAndHashObjects.psm1',
@@ -274,7 +275,11 @@ This is an advanced PowerShell module for WDAC (Windows Defender Application Con
         'XMLOps\New-RootAndLeafCertificateLevelRules.psm1',
         'XMLOps\New-PFNLevelRules.psm1',
         'XMLOps\New-Macros.psm1',
-        'XMLOps\Checkpoint-Macros.psm1')
+        'XMLOps\Checkpoint-Macros.psm1',
+        'Public\Add-Version.psm1',
+        'Public\Get-FilesFast.psm1',
+        'Public\Measure-CIPolicyVersion.psm1',
+        'Public\Write-FinalOutput.psm1')
 
     # Private data to pass to the module specified in RootModule/ModuleToProcess. This may also contain a PSData hashtable with additional module metadata used by PowerShell.
     PrivateData          = @{

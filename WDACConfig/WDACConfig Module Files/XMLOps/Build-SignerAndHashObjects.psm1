@@ -44,25 +44,27 @@ Function Build-SignerAndHashObjects {
         . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
 
         # An array to store the Signers created with FilePublisher Level
-        [FilePublisherSignerCreator[]]$FilePublisherSigners = @()
+        $FilePublisherSigners = New-Object -TypeName System.Collections.Generic.List[FilePublisherSignerCreator]
 
         # An array to store the Signers created with Publisher Level
-        [PublisherSignerCreator[]]$PublisherSigners = @()
+        $PublisherSigners = New-Object -TypeName System.Collections.Generic.List[PublisherSignerCreator]
 
         # An array to store the FileAttributes created using Hash Level
-        [HashCreator[]]$CompleteHashes = @()
+        $CompleteHashes = New-Object -TypeName System.Collections.Generic.List[HashCreator]
 
         # Defining the arrays to store the signed and unsigned data
-        [PSCustomObject[]]$SignedData = @()
-        [PSCustomObject[]]$UnsignedData = @()
+        $SignedData = New-Object -TypeName System.Collections.Generic.List[PSCustomObject]
+        $UnsignedData = New-Object -TypeName System.Collections.Generic.List[PSCustomObject]
+
 
         # Loop through the data and separate the signed and unsigned data
         foreach ($Item in $Data) {
             if ($Item.SignatureStatus -eq 'Signed') {
-                $SignedData += $Item
+
+                $SignedData.Add($Item)
             }
             else {
-                $UnsignedData += $Item
+                $UnsignedData.Add($Item)
             }
         }
     }
@@ -105,8 +107,8 @@ Function Build-SignerAndHashObjects {
 
                     # Add the Certificate details to both the FilePublisherSignerCreator and PublisherSignerCreator objects
                     # Because later we will determine if the $CurrentData is suitable for FilePublisher or Publisher level
-                    $CurrentFilePublisherSigner.CertificateDetails += $CurrentCorData
-                    $CurrentPublisherSigner.CertificateDetails += $CurrentCorData
+                    $CurrentFilePublisherSigner.CertificateDetails.Add($CurrentCorData)
+                    $CurrentPublisherSigner.CertificateDetails.Add($CurrentCorData)
                 }
 
                 # If the file's version is empty or it has no file attribute, then add it to the Publishers array
@@ -127,7 +129,7 @@ Function Build-SignerAndHashObjects {
                         $CurrentPublisherSigner.AuthenticodeSHA256 = $IncomingDataType -eq 'MDEAH' ? $CurrentData.SHA256 : $CurrentData.'SHA256 Hash'
                         $CurrentPublisherSigner.AuthenticodeSHA1 = $IncomingDataType -eq 'MDEAH' ? $CurrentData.SHA1 : $CurrentData.'SHA1 Hash'
                         $CurrentPublisherSigner.SiSigningScenario = $IncomingDataType -eq 'MDEAH' ? $CurrentData.SiSigningScenario : ($CurrentData.'SI Signing Scenario' -eq 'Kernel-Mode' ? '0' : '1')
-                        $PublisherSigners += $CurrentPublisherSigner
+                        $PublisherSigners.Add($CurrentPublisherSigner)
                     }
                     # Otherwise, add the current data to the hash array instead despite being eligible for Publisher level
                     else {
@@ -144,7 +146,7 @@ Function Build-SignerAndHashObjects {
                         $CurrentHash.SiSigningScenario = $IncomingDataType -eq 'MDEAH' ? $CurrentData.SiSigningScenario : ($CurrentData.'SI Signing Scenario' -eq 'Kernel-Mode' ? '0' : '1')
 
                         # Add the new object to the CompleteHashes array
-                        $CompleteHashes += $CurrentHash
+                        $CompleteHashes.Add($CurrentHash)
                     }
                 }
 
@@ -170,7 +172,7 @@ Function Build-SignerAndHashObjects {
                     }
 
                     # Add the new object to the FilePublisherSigners array
-                    $FilePublisherSigners += $CurrentFilePublisherSigner
+                    $FilePublisherSigners.Add($CurrentFilePublisherSigner)
                 }
             }
         }
@@ -190,7 +192,7 @@ Function Build-SignerAndHashObjects {
                 $CurrentHash.SiSigningScenario = $IncomingDataType -eq 'MDEAH' ? $HashData.SiSigningScenario : ($HashData.'SI Signing Scenario' -eq 'Kernel-Mode' ? '0' : '1')
 
                 # Add the new object to the CompleteHashes array
-                $CompleteHashes += $CurrentHash
+                $CompleteHashes.Add($CurrentHash)
             }
         }
 

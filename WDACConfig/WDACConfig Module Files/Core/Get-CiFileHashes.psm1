@@ -8,7 +8,7 @@ Function Get-CiFileHashes {
         [Parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$SkipVersionCheck
     )
     Begin {
-        $PSBoundParameters.Verbose.IsPresent ? ([System.Boolean]$Verbose = $true) : ([System.Boolean]$Verbose = $false) | Out-Null
+        [System.Boolean]$Verbose = $PSBoundParameters.Verbose.IsPresent ? $true : $false
         . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
 
         # if -SkipVersionCheck wasn't passed, run the updater
@@ -17,16 +17,6 @@ Function Get-CiFileHashes {
             Import-Module -FullyQualifiedName "$ModuleRootPath\Shared\Update-Self.psm1" -Force
 
             Update-Self -InvocationStatement $MyInvocation.Statement
-        }
-
-        # Defining the WinTrust class from the WDACConfig Namespace if it doesn't already exist
-        if (-NOT ('WDACConfig.WinTrust' -as [System.Type]) ) {
-            Add-Type -Path "$ModuleRootPath\C#\AuthenticodeHashCalc.cs"
-        }
-
-        # Defining the PageHashCalculator class from the WDACConfig Namespace if it doesn't already exist
-        if (-NOT ('WDACConfig.PageHashCalculator' -as [System.Type]) ) {
-            Add-Type -Path "$ModuleRootPath\C#\PageHashCalc.cs"
         }
 
         # Defining an ordered hashtable to store the output
@@ -204,10 +194,8 @@ Function Get-CiFileHashes {
     And return them as the Authenticode hashes. This is compliant with how the WDAC engine in Windows works.
 #>
 }
-# Importing argument completer ScriptBlocks
-. "$ModuleRootPath\CoreExt\ArgumentCompleters.ps1"
 
-Register-ArgumentCompleter -CommandName 'Get-CiFileHashes' -ParameterName 'FilePath' -ScriptBlock $ArgumentCompleterAnyFilePathsPicker
+Register-ArgumentCompleter -CommandName 'Get-CiFileHashes' -ParameterName 'FilePath' -ScriptBlock ([WDACConfig.ArgumentCompleters]::ArgumentCompleterAnyFilePathsPicker)
 
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor

@@ -1,7 +1,3 @@
-# Defining the Signer class from the WDACConfig Namespace if it doesn't already exist
-if (-NOT ('WDACConfig.Signer' -as [System.Type]) ) {
-    Add-Type -Path "$ModuleRootPath\C#\Signer.cs"
-}
 Function Get-SignerInfo {
     <#
     .SYNOPSIS
@@ -24,7 +20,7 @@ Function Get-SignerInfo {
         [parameter(Mandatory = $true)][System.IO.FileInfo]$SignedFilePath
     )
     begin {
-        $PSBoundParameters.Verbose.IsPresent ? ([System.Boolean]$Verbose = $true) : ([System.Boolean]$Verbose = $false) | Out-Null
+        [System.Boolean]$Verbose = $PSBoundParameters.Verbose.IsPresent ? $true : $false
         . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
 
         Write-Verbose -Message 'Importing the required sub-modules'

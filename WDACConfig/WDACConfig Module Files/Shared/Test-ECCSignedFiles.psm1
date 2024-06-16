@@ -4,7 +4,7 @@ Function Test-ECCSignedFiles {
     This function gets list of directories or files
     Then it checks if the files are WDAC compliant
     If they are, it checks if they are signed with ECC
-    If they are, it returns an array of them of -Process parameter is not used
+    If they are, it returns an array of them if -Process parameter is not used
 
     With -Progress parameter, the function creates Hash level rules for each ECC file
     puts them in a separate XML policy file and returns the path to it
@@ -41,21 +41,16 @@ Function Test-ECCSignedFiles {
             "$ModuleRootPath\Core\Get-CiFileHashes.psm1",
             "$ModuleRootPath\XMLOps\New-HashLevelRules.psm1",
             "$ModuleRootPath\XMLOps\Clear-CiPolicy_Semantic.psm1",
-            "$ModuleRootPath\CoreExt\Classes.psm1"
+            "$ModuleRootPath\CoreExt\Classes.psm1",
+            "$ModuleRootPath\Shared\Get-FilesFast.psm1"
         ) -Verbose:$false
 
         $WDACSupportedFiles = [System.Collections.Generic.HashSet[System.String]]@()
         $ECCSignedFiles = [System.Collections.Generic.HashSet[System.String]]@()
 
-        # Get compliant WDAC files from the Files parameter and add them to the HashSet
-        if (($null -ne $File) -and ($File.Count -gt 0)) {
-            &$FindWDACCompliantFiles $File | ForEach-Object -Process { [System.Void]$WDACSupportedFiles.Add($_) }
-        }
+        # Get the compliant WDAC files from the File and Directory parameters and add them to the HashSet
+        $WDACSupportedFiles.UnionWith([System.String[]]((Get-FilesFast -Directory $Directory -File $File)))
 
-        # Get compliant WDAC files in the directories from the Directory parameter and add them to the HashSet
-        if (($null -ne $Directory) -and ($Directory.Count -gt 0)) {
-            &$FindWDACCompliantFiles $Directory | ForEach-Object -Process { [System.Void]$WDACSupportedFiles.Add($_) }
-        }
     }
     Process {
         Write-Verbose -Message "Test-ECCSignedFiles: Processing $($WDACSupportedFiles.Count) WDAC compliant files to check for ECC signatures."

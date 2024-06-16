@@ -15,11 +15,6 @@ Function Get-GlobalRootDrives {
     param ()
     . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
 
-    # Import the kernel32.dll functions using P/Invoke if they don't exist
-    if (-NOT ('WDACConfig.Win32Utils' -as [System.Type]) ) {
-        Add-Type -Path "$ModuleRootPath\C#\Kernel32dll.cs"
-    }
-
     # Initialize some variables for storing the volume names, paths, and mount points
     [System.UInt32]$lpcchReturnLength = 0
     [System.UInt32]$Max = 65535

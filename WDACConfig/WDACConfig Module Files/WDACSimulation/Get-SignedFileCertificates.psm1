@@ -21,7 +21,7 @@ Function Get-SignedFileCertificates {
         [System.Security.Cryptography.X509Certificates.X509Certificate2]$X509Certificate2
     )
     begin {
-        $PSBoundParameters.Verbose.IsPresent ? ([System.Boolean]$Verbose = $true) : ([System.Boolean]$Verbose = $false) | Out-Null
+        [System.Boolean]$Verbose = $PSBoundParameters.Verbose.IsPresent ? $true : $false
         . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
 
         # Create an X509Certificate2Collection object

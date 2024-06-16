@@ -15,7 +15,7 @@ Function Get-TBSCertificate {
         [System.Security.Cryptography.X509Certificates.X509Certificate2]$Cert
     )
     Begin {
-        $PSBoundParameters.Verbose.IsPresent ? ([System.Boolean]$Verbose = $true) : ([System.Boolean]$Verbose = $false) | Out-Null
+        [System.Boolean]$Verbose = $PSBoundParameters.Verbose.IsPresent ? $true : $false
         . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
 
         # Get the raw data of the certificate

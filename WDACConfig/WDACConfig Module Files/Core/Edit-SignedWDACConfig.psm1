@@ -114,7 +114,7 @@ Function Edit-SignedWDACConfig {
         [System.Management.Automation.SwitchParameter]$SkipVersionCheck
     )
     Begin {
-        $PSBoundParameters.Verbose.IsPresent ? ([System.Boolean]$Verbose = $true) : ([System.Boolean]$Verbose = $false) | Out-Null
+        [System.Boolean]$Verbose = $PSBoundParameters.Verbose.IsPresent ? $true : $false
         $PSBoundParameters.Debug.IsPresent ? ([System.Boolean]$Debug = $true) : ([System.Boolean]$Debug = $false) | Out-Null
         . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
 
@@ -135,7 +135,7 @@ Function Edit-SignedWDACConfig {
             "$ModuleRootPath\Shared\Invoke-CiSigning.psm1",
             "$ModuleRootPath\Shared\Edit-GUIDs.psm1"
         )
-        $ModulesToImport += (Get-ChildItem -File -Filter '*.psm1' -LiteralPath "$ModuleRootPath\XMLOps").FullName
+        $ModulesToImport += (Get-FilesFast -Directory "$ModuleRootPath\XMLOps" -ExtensionsToFilterBy '.psm1').FullName
         Import-Module -FullyQualifiedName $ModulesToImport -Force
 
         # if -SkipVersionCheck wasn't passed, run the updater
@@ -332,7 +332,7 @@ Function Edit-SignedWDACConfig {
 
                     # Start Async job for detecting ECC-Signed files among the user-selected directories
                     [System.Management.Automation.Job2]$ECCSignedDirectoriesJob = Start-ThreadJob -ScriptBlock {
-                        Param ($PolicyXMLFilesArray, $ParentVerbosePreference, $ParentDebugPreference, $ModuleRootPath, $FindWDACCompliantFiles)
+                        Param ($PolicyXMLFilesArray, $ParentVerbosePreference, $ParentDebugPreference, $ModuleRootPath)
 
                         $global:VerbosePreference = $ParentVerbosePreference
                         $global:DebugPreference = $ParentDebugPreference
@@ -347,7 +347,7 @@ Function Edit-SignedWDACConfig {
                         if ($ECCSignedFilesTempPolicy -as [System.IO.FileInfo]) {
                             [System.Void]$PolicyXMLFilesArray.TryAdd('Hash Rules For ECC Signed Files in User selected directories', $ECCSignedFilesTempPolicy)
                         }
-                    } -StreamingHost $Host -ArgumentList $PolicyXMLFilesArray, $VerbosePreference, $DebugPreference, $ModuleRootPath, $FindWDACCompliantFiles
+                    } -StreamingHost $Host -ArgumentList $PolicyXMLFilesArray, $VerbosePreference, $DebugPreference, $ModuleRootPath
 
                     $DirectoryScanJob = Start-ThreadJob -InitializationScript {
                         # pre-load the ConfigCI module
@@ -446,7 +446,7 @@ Function Edit-SignedWDACConfig {
 
                     # Start Async job for detecting ECC-Signed files among the user-selected audit logs
                     [System.Management.Automation.Job2]$ECCSignedAuditLogsJob = Start-ThreadJob -ScriptBlock {
-                        Param ($PolicyXMLFilesArray, $ParentVerbosePreference, $ParentDebugPreference, $ModuleRootPath, $FindWDACCompliantFiles)
+                        Param ($PolicyXMLFilesArray, $ParentVerbosePreference, $ParentDebugPreference, $ModuleRootPath)
 
                         $global:VerbosePreference = $ParentVerbosePreference
                         $global:DebugPreference = $ParentDebugPreference
@@ -461,7 +461,7 @@ Function Edit-SignedWDACConfig {
                         if ($ECCSignedFilesTempPolicy -as [System.IO.FileInfo]) {
                             [System.Void]$PolicyXMLFilesArray.TryAdd('Hash Rules For ECC Signed Files in User selected Audit Logs', $ECCSignedFilesTempPolicy)
                         }
-                    } -StreamingHost $Host -ArgumentList $PolicyXMLFilesArray, $VerbosePreference, $DebugPreference, $ModuleRootPath, $FindWDACCompliantFiles
+                    } -StreamingHost $Host -ArgumentList $PolicyXMLFilesArray, $VerbosePreference, $DebugPreference, $ModuleRootPath
 
                     $KernelProtectedFileLogs = Test-KernelProtectedFiles -Logs $SelectedLogs
 
@@ -835,13 +835,13 @@ Function Edit-SignedWDACConfig {
 
                 Write-Verbose -Message 'Getting the policy ID of the currently deployed base policy based on the policy name that user selected'
                 # In case there are multiple policies with the same name, the first one will be used
-                [System.Object]$CurrentlyDeployedPolicy = ((&'C:\Windows\System32\CiTool.exe' -lp -json | ConvertFrom-Json).Policies | Where-Object -FilterScript { ($_.IsSystemPolicy -ne 'True') -and ($_.Version = &$CalculateCIPolicyVersion $_.Version) -and ($_.Friendlyname -eq $CurrentBasePolicyName) }) | Select-Object -First 1
+                [System.Object]$CurrentlyDeployedPolicy = ((&'C:\Windows\System32\CiTool.exe' -lp -json | ConvertFrom-Json).Policies | Where-Object -FilterScript { ($_.IsSystemPolicy -ne 'True') -and ($_.Version = Measure-CIPolicyVersion -Number $_.Version) -and ($_.Friendlyname -eq $CurrentBasePolicyName) }) | Select-Object -First 1
 
                 [System.String]$CurrentID = $CurrentlyDeployedPolicy.BasePolicyID
                 [System.Version]$CurrentVersion = $CurrentlyDeployedPolicy.Version
 
                 # Increment the version and use it to deploy the updated policy
-                [System.Version]$VersionToDeploy = &$IncrementVersion -Version $CurrentVersion
+                [System.Version]$VersionToDeploy = Add-Version -Version $CurrentVersion
 
                 Write-Verbose -Message 'Setting the policy ID and Base policy ID to the current base policy ID in the generated XML file'
                 Edit-GUIDs -PolicyIDInput $CurrentID -PolicyFilePathInput $BasePolicyPath
@@ -984,12 +984,10 @@ Function Edit-SignedWDACConfig {
 #>
 }
 
-# Importing argument completer ScriptBlocks
-. "$ModuleRootPath\CoreExt\ArgumentCompleters.ps1"
-Register-ArgumentCompleter -CommandName 'Edit-SignedWDACConfig' -ParameterName 'CertPath' -ScriptBlock $ArgumentCompleterCerFilePathsPicker
-Register-ArgumentCompleter -CommandName 'Edit-SignedWDACConfig' -ParameterName 'SignToolPath' -ScriptBlock $ArgumentCompleterExeFilePathsPicker
-Register-ArgumentCompleter -CommandName 'Edit-SignedWDACConfig' -ParameterName 'PolicyPath' -ScriptBlock $ArgumentCompleterXmlFilePathsPicker
-Register-ArgumentCompleter -CommandName 'Edit-SignedWDACConfig' -ParameterName 'SuppPolicyPaths' -ScriptBlock $ArgumentCompleterMultipleXmlFilePathsPicker
+Register-ArgumentCompleter -CommandName 'Edit-SignedWDACConfig' -ParameterName 'CertPath' -ScriptBlock ([WDACConfig.ArgumentCompleters]::ArgumentCompleterCerFilePathsPicker)
+Register-ArgumentCompleter -CommandName 'Edit-SignedWDACConfig' -ParameterName 'SignToolPath' -ScriptBlock ([WDACConfig.ArgumentCompleters]::ArgumentCompleterExeFilePathsPicker)
+Register-ArgumentCompleter -CommandName 'Edit-SignedWDACConfig' -ParameterName 'PolicyPath' -ScriptBlock ([WDACConfig.ArgumentCompleters]::ArgumentCompleterXmlFilePathsPicker)
+Register-ArgumentCompleter -CommandName 'Edit-SignedWDACConfig' -ParameterName 'SuppPolicyPaths' -ScriptBlock ([WDACConfig.ArgumentCompleters]::ArgumentCompleterMultipleXmlFilePathsPicker)
 
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor

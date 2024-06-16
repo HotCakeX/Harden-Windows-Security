@@ -1,10 +1,10 @@
 Function Get-KernelModeDrivers {
     <#
     .SYNOPSIS
-        Gets the path of all of the kerne-mode drivers from the system
+        Gets the path of all of the kernel-mode drivers from the system
     .DESCRIPTION
         The output of this function is completely based on the ConfigCI module's workflow.
-        It checks the same locations that the ConfigCI checks for .sys files and
+        It checks the same locations that the ConfigCI checks for .sys files and kernel-mode DLLs
 
         It even returns the same kernel-mode dll files from System32 folder that the (Get-SystemDriver -ScanPath 'C:\Windows\System32') command does
 
@@ -39,7 +39,7 @@ Function Get-KernelModeDrivers {
         Function Test-UserPE {
             <#
              .SYNOPSIS
-                 This function tests if a file is a user-mode PE
+                This function tests if a DLL is a user-mode PE
              #>
             Param (
                 [AllowNull()]
@@ -71,13 +71,13 @@ Function Get-KernelModeDrivers {
             )
 
             if ($Directory) {
-                [System.String[]]$DllKernelDrivers = @()
-                foreach ($File in Get-ChildItem -ErrorAction Ignore -File -Recurse -Include '*.dll' -Path $Directory) {
+                [System.Collections.Generic.List[System.String]]$DllKernelDrivers = @()
+                foreach ($File in (Get-FilesFast -ExtensionsToFilterBy '.dll' -Directory $Directory)) {
                     $HasSIP = $False
                     $IsPE = $False
                     $Imports = [Microsoft.SecureBoot.UserConfig.ImportParser]::GetImports($File.FullName, [ref]$HasSIP, [ref]$IsPE)
                     if ($HasSIP -and -not (Test-UserPE -Imports $Imports)) {
-                        $DllKernelDrivers += $File.FullName
+                        $DllKernelDrivers.Add($File.FullName)
                     }
                 }
                 return $DllKernelDrivers
@@ -94,19 +94,23 @@ Function Get-KernelModeDrivers {
 
         # Final output variable that includes all kernel-mode driver files
         $DriverFiles = [System.Collections.Generic.HashSet[System.String]]@()
-        # HashSets used for during the internal processes
-        $FilePathsToScan = [System.Collections.Generic.HashSet[System.String]]@()
+
+        # List of all potential DLL files
         $PotentialKernelModeDlls = [System.Collections.Generic.HashSet[System.String]]@()
+
+        # This is only used to display extra info
         $KernelModeDlls = [System.Collections.Generic.HashSet[System.String]]@()
     }
 
     Process {
-
         # If directory paths were passed by user, add them all to the paths to be scanned
         if ($null -ne $PSBoundParameters['Directory']) {
-            foreach ($DirPath in $PSBoundParameters['Directory']) {
-                [System.Void]$FilePathsToScan.Add($DirPath)
-            }
+
+            # Get the .sys files from the directories
+            $DriverFiles.UnionWith([System.String[]](Get-FilesFast -Directory $PSBoundParameters['Directory'] -ExtensionsToFilterBy '.sys'))
+
+            # Get all of the .dll files from the user-selected directories
+            $PotentialKernelModeDlls.UnionWith([System.String[]](Get-FilesFast -Directory $PSBoundParameters['Directory'] -ExtensionsToFilterBy '.dll'))
         }
         # If file paths were passed by the user
         elseif ($null -ne $PSBoundParameters['File']) {
@@ -114,13 +118,15 @@ Function Get-KernelModeDrivers {
             foreach ($FilePath in $PSBoundParameters['File']) {
 
                 Switch (($FilePath).Extension) {
-                    '.sys' { $DriverFiles.Add($FilePath); break }
+                    '.sys' {
+                        [System.Void]$DriverFiles.Add($FilePath)
+                        break
+                    }
                     '.dll' {
                         if (Get-FolderDllKernelDrivers -File $FilePath) {
-                            [System.Void]$KernelModeDlls.Add($FilePath)
                             [System.Void]$DriverFiles.Add($FilePath)
+                            break
                         }
-                        break
                     }
                 }
             }
@@ -131,32 +137,22 @@ Function Get-KernelModeDrivers {
         # If no parameters were passed, scan the system for kernel-mode drivers
         else {
             # Reference: ReadDriverFolders() method in ConfigCI Helper class
-            # [System.Void]$FilePathsToScan.Add("$env:SystemRoot\System32\DriverStore\FileRepository")
-            # [System.Void]$FilePathsToScan.Add("$env:SystemRoot\System32\drivers")
-            [System.Void]$FilePathsToScan.Add("$env:SystemRoot\System32")
+            # "$env:SystemRoot\System32\DriverStore\FileRepository"
+            # "$env:SystemRoot\System32\drivers"
 
             # Since there can be more than one folder due to localizations such as en-US then from each of the folders, the bootres.dll.mui file is added
             Foreach ($Path in Get-ChildItem -Directory -Path "$env:SystemDrive\Windows\Boot\Resources") {
                 [System.Void]$DriverFiles.Add("$Path\bootres.dll.mui")
             }
-        }
 
-        # Get the .sys files from the directories
-        Foreach ($DirectoryPath in $FilePathsToScan) {
+            # Get all of the .dll files from the system32 directory
+            $PotentialKernelModeDlls.UnionWith([System.String[]](Get-FilesFast -Directory "$env:SystemRoot\System32" -ExtensionsToFilterBy '.dll'))
 
-            # Ignoring errors because of access denied errors
-            foreach ($DriverFile in Get-ChildItem -ErrorAction Ignore -File -Include '*.sys' -Recurse -Path $DirectoryPath) {
-                [System.Void]$DriverFiles.Add($DriverFile.FullName)
-            }
+            # Get the .sys files from the System32 directory
+            $DriverFiles.UnionWith([System.String[]](Get-FilesFast -Directory "$env:SystemRoot\System32" -ExtensionsToFilterBy '.sys'))
         }
 
         Write-Verbose -Message "Number of sys files: $($DriverFiles.Count)"
-
-        # Get all of the .dll files from the system32 directory
-        Foreach ($DllPath in Get-ChildItem -ErrorAction Ignore -File -Recurse -Include '*.dll' -Path "$env:SystemRoot\System32\") {
-            [System.Void]$PotentialKernelModeDlls.Add($DllPath.FullName)
-        }
-
         Write-Verbose -Message "Number of potential kernel-mode DLLs: $($PotentialKernelModeDlls.Count)"
 
         # Scan all of the .dll files to see if they are kernel-mode drivers
@@ -168,7 +164,6 @@ Function Get-KernelModeDrivers {
         }
 
         Write-Verbose -Message "Number of kernel-mode DLLs folder: $($KernelModeDlls.Count)"
-
     }
     End {
         Write-Verbose -Message "Returning $($DriverFiles.Count) kernel-mode driver file paths"

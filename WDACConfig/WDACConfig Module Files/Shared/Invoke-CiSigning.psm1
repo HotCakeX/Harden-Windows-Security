@@ -5,7 +5,7 @@ Function Invoke-CiSigning {
         [Parameter(Mandatory = $true)][System.IO.FileInfo]$SignToolPathFinal,
         [Parameter(Mandatory = $true)][System.String]$CertCN
     )
-    $PSBoundParameters.Verbose.IsPresent ? ([System.Boolean]$Verbose = $true) : ([System.Boolean]$Verbose = $false) | Out-Null
+    [System.Boolean]$Verbose = $PSBoundParameters.Verbose.IsPresent ? $true : $false
 
     # Configure the parameter splat
     [System.Collections.Hashtable]$ProcessParams = @{

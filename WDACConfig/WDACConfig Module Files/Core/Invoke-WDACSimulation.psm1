@@ -15,7 +15,7 @@ Function Invoke-WDACSimulation {
                 # Ensure the selected path is a file path
                 if (Test-Path -LiteralPath $_ -PathType 'Leaf') {
                     # Ensure the selected file has a supported extension
-                    [System.IO.FileInfo]$SelectedFile = &$FindWDACCompliantFiles $_
+                    [System.IO.FileInfo]$SelectedFile = Get-FilesFast -File $_
                     # If the selected file has a supported extension, return $true
                     if ($SelectedFile) {
                         $true
@@ -41,7 +41,7 @@ Function Invoke-WDACSimulation {
         [Parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$SkipVersionCheck
     )
     Begin {
-        $PSBoundParameters.Verbose.IsPresent ? ([System.Boolean]$Verbose = $true) : ([System.Boolean]$Verbose = $false) | Out-Null
+        [System.Boolean]$Verbose = $PSBoundParameters.Verbose.IsPresent ? $true : $false
         . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
 
         Write-Verbose -Message 'Importing the required sub-modules'
@@ -98,7 +98,7 @@ Function Invoke-WDACSimulation {
         [System.Boolean]$ShouldExit = $false
 
         if ((Get-Content -LiteralPath $XmlFilePath -Raw) -match '<Allow ID="ID_ALLOW_.*" FriendlyName=".*" FileName="\*".*/>') {
-            Write-Verbose -Message "The supplied XML file '$($XmlFilePath.Name)' contains a rule that allows all files." -Verbose
+            Write-Verbose -Message "The supplied XML file '$($XmlFilePath.Name)' contains a rule that allows all files."
 
             # Set a flag to exit the subsequent blocks
             $ShouldExit = $true
@@ -113,43 +113,43 @@ Function Invoke-WDACSimulation {
         if ($ShouldExit) { Return }
 
         # Store the PSCustomObjects that contain file paths and SpecificFileNameLevel options of valid Allowed Signed files - FilePublisher level
-        [System.Object[]]$SignedFile_FilePublisher_Objects = @()
+        $SignedFile_FilePublisher_Objects = New-Object -TypeName System.Collections.Generic.List[System.Object]
 
         # Store the file paths of valid Allowed Signed files - Publisher level
-        [System.IO.FileInfo[]]$SignedFile_Publisher_FilePaths = @()
+        $SignedFile_Publisher_FilePaths = New-Object -TypeName System.Collections.Generic.HashSet[System.IO.FileInfo]
 
         # Store the file paths of valid Allowed Signed files - SignedVersion level
-        [System.IO.FileInfo[]]$SignedFile_SignedVersion_FilePaths = @()
+        $SignedFile_SignedVersion_FilePaths = New-Object -TypeName System.Collections.Generic.HashSet[System.IO.FileInfo]
 
         # Store the file paths of valid Allowed Signed files - PcaCertificate and RootCertificate levels
-        [System.IO.FileInfo[]]$SignedFile_PcaCertificateAndRootCertificate_FilePaths = @()
+        $SignedFile_PcaCertificateAndRootCertificate_FilePaths = New-Object -TypeName System.Collections.Generic.HashSet[System.IO.FileInfo]
 
         # Store the file paths of valid Allowed Signed files - LeafCertificate level
-        [System.IO.FileInfo[]]$SignedFile_LeafCertificate_FilePaths = @()
+        $SignedFile_LeafCertificate_FilePaths = New-Object -TypeName System.Collections.Generic.HashSet[System.IO.FileInfo]
 
         # Store the paths of files allowed by Hash
-        [System.IO.FileInfo[]]$AllowedByHashFilePaths = @()
+        $AllowedByHashFilePaths = New-Object -TypeName System.Collections.Generic.HashSet[System.IO.FileInfo]
 
         # Store the paths of Signed files with HashMismatch Status
-        [System.IO.FileInfo[]]$SignedHashMismatchFilePaths = @()
+        $SignedHashMismatchFilePaths = New-Object -TypeName System.Collections.Generic.HashSet[System.IO.FileInfo]
 
         # Store the PSCustomObjects that contain file paths of Signed files with a status that doesn't fall into any other category and their exact signature status
-        [System.Object[]]$SignedButUnknownObjects = @()
+        $SignedButUnknownObjects = New-Object -TypeName System.Collections.Generic.List[System.Object]
 
         # Store the paths of Signed files with EKU mismatch
-        [System.IO.FileInfo[]]$SignedButEKUMismatch = @()
+        $SignedButEKUMismatch = New-Object -TypeName System.Collections.Generic.HashSet[System.IO.FileInfo]
 
         # Store the paths of the signed files that are inaccessible (Kernel-Protected files, Microsoft Defender files etc.)
-        [System.IO.FileInfo[]]$InAccessibleFilePaths = @()
+        $InAccessibleFilePaths = New-Object -TypeName System.Collections.Generic.HashSet[System.IO.FileInfo]
 
         # Store the paths of Signed files that are not allowed
-        [System.IO.FileInfo[]]$SignedButNotAllowed = @()
+        $SignedButNotAllowed = New-Object -TypeName System.Collections.Generic.HashSet[System.IO.FileInfo]
 
         # Store the paths of Unsigned files that are not allowed by hash
-        [System.IO.FileInfo[]]$UnsignedNotAllowedFilePaths = @()
+        $UnsignedNotAllowedFilePaths = New-Object -TypeName System.Collections.Generic.HashSet[System.IO.FileInfo]
 
         # Store the final object of all of the results
-        [System.Object[]]$MegaOutputObject = @()
+        $MegaOutputObject = New-Object -TypeName System.Collections.Generic.List[System.Object]
 
         # Hash Sha256 values of all the file rules based on hash in the supplied xml policy file
         Write-Verbose -Message 'Getting the Sha256 Hash values of all the file rules based on hash in the supplied xml policy file'
@@ -157,20 +157,14 @@ Function Invoke-WDACSimulation {
         $CurrentStep++
         Write-Progress -Id 0 -Activity 'Getting the Sha256 Hash values from the XML file' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
-        [System.String[]]$SHA256HashesFromXML = (Get-FileRuleOutput -xmlPath $XmlFilePath).hashvalue
+        $SHA256HashesFromXML = [System.Collections.Generic.HashSet[System.String]]@((Get-FileRuleOutput -xmlPath $XmlFilePath).hashvalue)
 
         # Get all of the file paths of the files that WDAC supports, from the user provided directory
         Write-Verbose -Message 'Getting all of the file paths of the files that WDAC supports, from the user provided directory'
 
         $CurrentStep++
         Write-Progress -Id 0 -Activity "Getting the supported files' paths" -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
-
-        if ($FilePath) {
-            [System.IO.FileInfo]$CollectedFiles = Get-ChildItem -File -LiteralPath $FilePath
-        }
-        else {
-            [System.IO.FileInfo[]]$CollectedFiles = &$FindWDACCompliantFiles $FolderPath
-        }
+        [System.IO.FileInfo[]]$CollectedFiles = Get-FilesFast -Directory $FolderPath -File $FilePath
 
         # Make sure the selected directory contains files with the supported extensions
         if (!$CollectedFiles) { Throw 'There are no files in the selected directory that are supported by the WDAC engine.' }
@@ -256,17 +250,17 @@ Function Invoke-WDACSimulation {
                 [System.String]$CurrentFilePathHash = (Get-CiFileHashes -FilePath $CurrentFilePath -SkipVersionCheck).SHA256Authenticode
 
                 # if the file's hash exists in the XML file then add the file's path to the allowed files and do not check anymore that whether the file is signed or not
-                if ($CurrentFilePathHash -in $SHA256HashesFromXML) {
+                if ($SHA256HashesFromXML.Contains($CurrentFilePathHash)) {
                     Write-Verbose -Message 'Hash of the file exists in the supplied XML file'
 
-                    $AllowedByHashFilePaths += $CurrentFilePath
+                    [System.Void]$AllowedByHashFilePaths.Add($CurrentFilePath)
                 }
 
                 # If the file's extension is not supported by Authenticode and it wasn't allowed by file hash then it's not allowed and no reason to check its signature
                 elseif ($CurrentFilePath.Extension -in @('.ocx', '.bat')) {
                     Write-Verbose -Message 'The file is not signed and is not allowed by hash'
 
-                    $UnsignedNotAllowedFilePaths += $CurrentFilePath
+                    [System.Void]$UnsignedNotAllowedFilePaths.Add($CurrentFilePath)
                 }
 
                 # If the file's hash does not exist in the supplied XML file, then check its signature
@@ -284,7 +278,7 @@ Function Invoke-WDACSimulation {
                             }
                             catch [ExceptionFailedToGetCertificateCollection] {
                                 # If the file's certificate collections could not be fetched due to lack of necessary permissions, place it in a different array of file path
-                                $InAccessibleFilePaths += $CurrentFilePath
+                                [System.Void]$InAccessibleFilePaths.Add($CurrentFilePath)
 
                                 break MainSwitchLabel
                             }
@@ -293,14 +287,14 @@ Function Invoke-WDACSimulation {
 
                                 Write-Verbose -Message 'The file is signed and valid, but not allowed by the policy'
 
-                                $SignedButNotAllowed += $CurrentFilePath
+                                [System.Void]$SignedButNotAllowed.Add($CurrentFilePath)
                             }
 
                             # If the file's signer requires the file to have specific EKU(s) but the file doesn't meet it
                             elseif ($ComparisonResult.HasEKU -and (-NOT $ComparisonResult.EKUsMatch)) {
                                 Write-Verbose -Message 'The file is signed and valid, but does not meet the EKU requirements'
 
-                                $SignedButEKUMismatch += $CurrentFilePath
+                                [System.Void]$SignedButEKUMismatch.Add($CurrentFilePath)
                             }
 
                             # Continue only if the file is authorized by a signer and doesn't have EKU mismatch
@@ -310,10 +304,10 @@ Function Invoke-WDACSimulation {
                                     'FilePublisher' {
                                         Write-Verbose -Message 'The file is signed and valid, and allowed by the policy using FilePublisher level'
 
-                                        $SignedFile_FilePublisher_Objects += [PSCustomObject]@{
-                                            FilePath              = [System.IO.FileInfo]$CurrentFilePath
-                                            SpecificFileNameLevel = [System.String]$ComparisonResult.SpecificFileNameLevelMatchCriteria
-                                        }
+                                        $SignedFile_FilePublisher_Objects.Add([PSCustomObject]@{
+                                                FilePath              = [System.IO.FileInfo]$CurrentFilePath
+                                                SpecificFileNameLevel = [System.String]$ComparisonResult.SpecificFileNameLevelMatchCriteria
+                                            })
 
                                         break Level2SwitchLabel
                                     }
@@ -321,7 +315,7 @@ Function Invoke-WDACSimulation {
                                     'Publisher' {
                                         Write-Verbose -Message 'The file is signed and valid, and allowed by the policy using Publisher level'
 
-                                        $SignedFile_Publisher_FilePaths += $CurrentFilePath
+                                        [System.Void]$SignedFile_Publisher_FilePaths.Add($CurrentFilePath)
 
                                         break Level2SwitchLabel
                                     }
@@ -329,7 +323,7 @@ Function Invoke-WDACSimulation {
                                     'SignedVersion' {
                                         Write-Verbose -Message 'The file is signed and valid, and allowed by the policy using SignedVersion level'
 
-                                        $SignedFile_SignedVersion_FilePaths += $CurrentFilePath
+                                        [System.Void]$SignedFile_SignedVersion_FilePaths.Add($CurrentFilePath)
 
                                         break Level2SwitchLabel
                                     }
@@ -337,14 +331,14 @@ Function Invoke-WDACSimulation {
                                     'PcaCertificate/RootCertificate' {
                                         Write-Verbose -Message 'The file is signed and valid, and allowed by the policy using PcaCertificate/RootCertificate levels'
 
-                                        $SignedFile_PcaCertificateAndRootCertificate_FilePaths += $CurrentFilePath
+                                        [System.Void]$SignedFile_PcaCertificateAndRootCertificate_FilePaths.Add($CurrentFilePath)
 
                                         break Level2SwitchLabel
                                     }
                                     'LeafCertificate' {
                                         Write-Verbose -Message 'The file is signed and valid, and allowed by the policy using LeafCertificate level'
 
-                                        $SignedFile_LeafCertificate_FilePaths += $CurrentFilePath
+                                        [System.Void]$SignedFile_LeafCertificate_FilePaths.Add($CurrentFilePath)
 
                                         break Level2SwitchLabel
                                     }
@@ -358,7 +352,7 @@ Function Invoke-WDACSimulation {
                         { $_.Status -eq 'HashMismatch' } {
                             Write-Warning -Message "The file: $CurrentFilePath has hash mismatch, it is most likely tampered."
 
-                            $SignedHashMismatchFilePaths += $CurrentFilePath
+                            [System.Void]$SignedHashMismatchFilePaths.Add($CurrentFilePath)
 
                             break MainSwitchLabel
                         }
@@ -367,7 +361,7 @@ Function Invoke-WDACSimulation {
                         { $_.Status -eq 'NotSigned' } {
                             Write-Verbose -Message 'The file is not signed and is not allowed by hash'
 
-                            $UnsignedNotAllowedFilePaths += $CurrentFilePath
+                            [System.Void]$UnsignedNotAllowedFilePaths.Add($CurrentFilePath)
 
                             break MainSwitchLabel
                         }
@@ -377,10 +371,10 @@ Function Invoke-WDACSimulation {
                             Write-Verbose -Message 'The file has unknown signature status'
 
                             # Store the filepath and reason for the unknown status
-                            $SignedButUnknownObjects += [PSCustomObject]@{
-                                FilePath      = [System.IO.FileInfo]$CurrentFilePath
-                                FailureReason = $_.StatusMessage
-                            }
+                            $SignedButUnknownObjects.Add([PSCustomObject]@{
+                                    FilePath      = [System.IO.FileInfo]$CurrentFilePath
+                                    FailureReason = $_.StatusMessage
+                                })
 
                             break MainSwitchLabel
                         }
@@ -417,195 +411,160 @@ Function Invoke-WDACSimulation {
         $CurrentStep++
         Write-Progress -Id 0 -Activity 'Preparing the output' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
-        if ($AllowedByHashFilePaths) {
+        if ($AllowedByHashFilePaths.Count -gt 0) {
             Write-Verbose -Message 'Looping through the array of files allowed by hash'
-            Write-Verbose -Message "$($AllowedByHashFilePaths.count) File(s) are allowed by their Hashes." -Verbose
+            Write-Verbose -Message "$($AllowedByHashFilePaths.count) File(s) are allowed by their Hashes."
             foreach ($Path in $AllowedByHashFilePaths) {
                 # Create a hash table with the file path and source
-                [System.Collections.Hashtable]$Object = @{
-                    FilePath     = $Path
-                    Source       = 'Hash'
-                    Permission   = 'Hash Level'
-                    IsAuthorized = $true
-                }
-                # Convert the hash table to a PSObject and add it to the output array
-                $MegaOutputObject += New-Object -TypeName PSObject -Property $Object
+                $MegaOutputObject.Add([PSCustomObject]@{
+                        FilePath     = $Path
+                        Source       = 'Hash'
+                        Permission   = 'Hash Level'
+                        IsAuthorized = $true
+                    })
             }
         }
 
-        if ($SignedFile_FilePublisher_Objects) {
+        if ($SignedFile_FilePublisher_Objects.Count -gt 0) {
             Write-Verbose -Message 'Looping through the array of files allowed by valid signature - FilePublisher Level'
-            Write-Verbose -Message "$($SignedFile_FilePublisher_Objects.count) File(s) are allowed by FilePublisher signer level." -Verbose
+            Write-Verbose -Message "$($SignedFile_FilePublisher_Objects.count) File(s) are allowed by FilePublisher signer level."
             foreach ($Item in $SignedFile_FilePublisher_Objects) {
-                # Create a hash table with the file path and source properties
-                [System.Collections.Hashtable]$Object = @{
-                    FilePath     = $Item.FilePath
-                    Source       = 'Signer'
-                    Permission   = "FilePublisher Level - $($Item.SpecificFileNameLevel)"
-                    IsAuthorized = $true
-                }
-                # Convert the hash table to a PSObject and add it to the output array
-                $MegaOutputObject += New-Object -TypeName PSObject -Property $Object
+                $MegaOutputObject.Add([PSCustomObject]@{
+                        FilePath     = $Item.FilePath
+                        Source       = 'Signer'
+                        Permission   = "FilePublisher Level - $($Item.SpecificFileNameLevel)"
+                        IsAuthorized = $true
+                    })
             }
         }
 
-        if ($SignedFile_Publisher_FilePaths) {
+        if ($SignedFile_Publisher_FilePaths.Count -gt 0) {
             Write-Verbose -Message 'Looping through the array of files allowed by valid signature - Publisher Level'
-            Write-Verbose -Message "$($SignedFile_Publisher_FilePaths.count) File(s) are allowed by Publisher signer level." -Verbose
+            Write-Verbose -Message "$($SignedFile_Publisher_FilePaths.count) File(s) are allowed by Publisher signer level."
             foreach ($Path in $SignedFile_Publisher_FilePaths) {
-                # Create a hash table with the file path and source properties
-                [System.Collections.Hashtable]$Object = @{
-                    FilePath     = $Path
-                    Source       = 'Signer'
-                    Permission   = 'Publisher Level'
-                    IsAuthorized = $true
-                }
-                # Convert the hash table to a PSObject and add it to the output array
-                $MegaOutputObject += New-Object -TypeName PSObject -Property $Object
+                $MegaOutputObject.Add([PSCustomObject]@{
+                        FilePath     = $Path
+                        Source       = 'Signer'
+                        Permission   = 'Publisher Level'
+                        IsAuthorized = $true
+                    })
             }
         }
 
-        if ($SignedFile_SignedVersion_FilePaths) {
+        if ($SignedFile_SignedVersion_FilePaths.Count -gt 0) {
             Write-Verbose -Message 'Looping through the array of files allowed by valid signature - SignedVersion Level'
-            Write-Verbose -Message "$($SignedFile_SignedVersion_FilePaths.count) File(s) are allowed by SignedVersion signer level." -Verbose
+            Write-Verbose -Message "$($SignedFile_SignedVersion_FilePaths.count) File(s) are allowed by SignedVersion signer level."
             foreach ($Path in $SignedFile_SignedVersion_FilePaths) {
-                # Create a hash table with the file path and source properties
-                [System.Collections.Hashtable]$Object = @{
-                    FilePath     = $Path
-                    Source       = 'Signer'
-                    Permission   = 'SignedVersion Level'
-                    IsAuthorized = $true
-                }
-                # Convert the hash table to a PSObject and add it to the output array
-                $MegaOutputObject += New-Object -TypeName PSObject -Property $Object
+                $MegaOutputObject.Add([PSCustomObject]@{
+                        FilePath     = $Path
+                        Source       = 'Signer'
+                        Permission   = 'SignedVersion Level'
+                        IsAuthorized = $true
+                    })
             }
         }
 
-        if ($SignedFile_PcaCertificateAndRootCertificate_FilePaths) {
+        if ($SignedFile_PcaCertificateAndRootCertificate_FilePaths.Count -gt 0) {
             Write-Verbose -Message 'Looping through the array of files allowed by valid signature - PcaCertificate/RootCertificate Levels'
-            Write-Verbose -Message "$($SignedFile_PcaCertificateAndRootCertificate_FilePaths.count) File(s) are allowed by PcaCertificate/RootCertificate signer levels." -Verbose
+            Write-Verbose -Message "$($SignedFile_PcaCertificateAndRootCertificate_FilePaths.count) File(s) are allowed by PcaCertificate/RootCertificate signer levels."
             foreach ($Path in $SignedFile_PcaCertificateAndRootCertificate_FilePaths) {
-                # Create a hash table with the file path and source properties
-                [System.Collections.Hashtable]$Object = @{
-                    FilePath     = $Path
-                    Source       = 'Signer'
-                    Permission   = 'PcaCertificate / RootCertificate Levels'
-                    IsAuthorized = $true
-                }
-                # Convert the hash table to a PSObject and add it to the output array
-                $MegaOutputObject += New-Object -TypeName PSObject -Property $Object
+                $MegaOutputObject.Add([PSCustomObject]@{
+                        FilePath     = $Path
+                        Source       = 'Signer'
+                        Permission   = 'PcaCertificate / RootCertificate Levels'
+                        IsAuthorized = $true
+                    })
             }
         }
 
-        if ($SignedFile_LeafCertificate_FilePaths) {
+        if ($SignedFile_LeafCertificate_FilePaths.Count -gt 0) {
             Write-Verbose -Message 'Looping through the array of files allowed by valid signature - LeafCertificate Level'
-            Write-Verbose -Message "$($SignedFile_LeafCertificate_FilePaths.count) File(s) are allowed by LeafCertificate signer level." -Verbose
+            Write-Verbose -Message "$($SignedFile_LeafCertificate_FilePaths.count) File(s) are allowed by LeafCertificate signer level."
             foreach ($Path in $SignedFile_LeafCertificate_FilePaths) {
-                # Create a hash table with the file path and source properties
-                [System.Collections.Hashtable]$Object = @{
-                    FilePath     = $Path
-                    Source       = 'Signer'
-                    Permission   = 'LeafCertificate Level'
-                    IsAuthorized = $true
-                }
-                # Convert the hash table to a PSObject and add it to the output array
-                $MegaOutputObject += New-Object -TypeName PSObject -Property $Object
+                $MegaOutputObject.Add([PSCustomObject]@{
+                        FilePath     = $Path
+                        Source       = 'Signer'
+                        Permission   = 'LeafCertificate Level'
+                        IsAuthorized = $true
+                    })
             }
         }
 
-        if ($SignedButNotAllowed) {
+        if ($SignedButNotAllowed.Count -gt 0) {
             Write-Verbose -Message 'Looping through the array of signed files that are not allowed'
-            Write-Verbose -Message "$($SignedButNotAllowed.count) File(s) are signed but NOT allowed." -Verbose
+            Write-Verbose -Message "$($SignedButNotAllowed.count) File(s) are signed but NOT allowed."
             foreach ($Path in $SignedButNotAllowed) {
-                # Create a hash table with the file path and source properties
-                [System.Collections.Hashtable]$Object = @{
-                    FilePath     = $Path
-                    Source       = 'Signer'
-                    Permission   = 'Not Allowed'
-                    IsAuthorized = $false
-                }
-                # Convert the hash table to a PSObject and add it to the output array
-                $MegaOutputObject += New-Object -TypeName PSObject -Property $Object
+                $MegaOutputObject.Add([PSCustomObject]@{
+                        FilePath     = $Path
+                        Source       = 'Signer'
+                        Permission   = 'Not Allowed'
+                        IsAuthorized = $false
+                    })
             }
         }
 
-        if ($SignedButEKUMismatch) {
+        if ($SignedButEKUMismatch.Count -gt 0) {
             Write-Verbose -Message 'Looping through the array of signed files with EKU mismatch'
-            Write-Verbose -Message "$($SignedButEKUMismatch.count) File(s) have EKU mismatch and are NOT allowed." -Verbose
+            Write-Verbose -Message "$($SignedButEKUMismatch.count) File(s) have EKU mismatch and are NOT allowed."
             foreach ($Path in $SignedButEKUMismatch) {
-                # Create a hash table with the file path and source properties
-                [System.Collections.Hashtable]$Object = @{
-                    FilePath     = $Path
-                    Source       = 'Signer'
-                    Permission   = 'EKU requirements not met'
-                    IsAuthorized = $false
-                }
-                # Convert the hash table to a PSObject and add it to the output array
-                $MegaOutputObject += New-Object -TypeName PSObject -Property $Object
+                $MegaOutputObject.Add([PSCustomObject]@{
+                        FilePath     = $Path
+                        Source       = 'Signer'
+                        Permission   = 'EKU requirements not met'
+                        IsAuthorized = $false
+                    })
             }
         }
 
-        if ($SignedHashMismatchFilePaths) {
+        if ($SignedHashMismatchFilePaths.Count -gt 0) {
             Write-Verbose -Message 'Looping through the array of signed files with hash mismatch'
-            Write-Verbose -Message "$($SignedHashMismatchFilePaths.count) File(s) have Hash Mismatch and are NOT allowed." -Verbose
+            Write-Verbose -Message "$($SignedHashMismatchFilePaths.count) File(s) have Hash Mismatch and are NOT allowed."
             foreach ($Path in $SignedHashMismatchFilePaths) {
-                # Create a hash table with the file path and source properties
-                [System.Collections.Hashtable]$Object = @{
-                    FilePath     = $Path
-                    Source       = 'Signer'
-                    Permission   = 'Hash Mismatch'
-                    IsAuthorized = $false
-                }
-                # Convert the hash table to a PSObject and add it to the output array
-                $MegaOutputObject += New-Object -TypeName PSObject -Property $Object
+                $MegaOutputObject.Add([PSCustomObject]@{
+                        FilePath     = $Path
+                        Source       = 'Signer'
+                        Permission   = 'Hash Mismatch'
+                        IsAuthorized = $false
+                    })
             }
         }
 
-        if ($SignedButUnknownObjects) {
+        if ($SignedButUnknownObjects.Count -gt 0) {
             Write-Verbose -Message 'Looping through the array of files with unknown signature status'
-            Write-Verbose -Message "$($SignedButUnknownObjects.count) File(s) have unknown signature status and are NOT allowed." -Verbose
+            Write-Verbose -Message "$($SignedButUnknownObjects.count) File(s) have unknown signature status and are NOT allowed."
             foreach ($Item in $SignedButUnknownObjects) {
-                # Create a hash table with the file path and source properties
-                [System.Collections.Hashtable]$Object = @{
-                    FilePath     = $Item.FilePath
-                    Source       = 'Signer'
-                    Permission   = "UnknownError, $($Item.FailureReason)"
-                    IsAuthorized = $false
-                }
-                # Convert the hash table to a PSObject and add it to the output array
-                $MegaOutputObject += New-Object -TypeName PSObject -Property $Object
+                $MegaOutputObject.Add([PSCustomObject]@{
+                        FilePath     = $Item.FilePath
+                        Source       = 'Signer'
+                        Permission   = "UnknownError, $($Item.FailureReason)"
+                        IsAuthorized = $false
+                    })
             }
         }
 
-        if ($UnsignedNotAllowedFilePaths) {
+        if ($UnsignedNotAllowedFilePaths.Count -gt 0) {
             Write-Verbose -Message 'Looping through the array of unsigned files that are not allowed'
-            Write-Verbose -Message "$($UnsignedNotAllowedFilePaths.count) File(s) are unsigned and are NOT allowed." -Verbose
+            Write-Verbose -Message "$($UnsignedNotAllowedFilePaths.count) File(s) are unsigned and are NOT allowed."
             foreach ($Path in $UnsignedNotAllowedFilePaths) {
-                # Create a hash table with the file path and source properties
-                [System.Collections.Hashtable]$Object = @{
-                    FilePath     = $Path
-                    Source       = 'Unsigned'
-                    Permission   = 'Not Allowed'
-                    IsAuthorized = $false
-                }
-                # Convert the hash table to a PSObject and add it to the output array
-                $MegaOutputObject += New-Object -TypeName PSObject -Property $Object
+                $MegaOutputObject.Add([PSCustomObject]@{
+                        FilePath     = $Path
+                        Source       = 'Unsigned'
+                        Permission   = 'Not Allowed'
+                        IsAuthorized = $false
+                    })
             }
         }
 
-        if ($InAccessibleFilePaths) {
+        if ($InAccessibleFilePaths.Count -gt 0) {
             Write-Verbose -Message 'Looping through the array of signed files that are not processed due to lack of permission'
-            Write-Verbose -Message "$($InAccessibleFilePaths.count) File(s) are signed but not processed due to lack of permission." -Verbose
+            Write-Verbose -Message "$($InAccessibleFilePaths.count) File(s) are signed but not processed due to lack of permission."
             foreach ($Path in $InAccessibleFilePaths) {
-                # Create a hash table with the file path and source properties
-                [System.Collections.Hashtable]$Object = @{
-                    FilePath     = $Path
-                    Source       = 'Signer'
-                    Permission   = 'Not processed, No permission'
-                    IsAuthorized = $false
-                }
-                # Convert the hash table to a PSObject and add it to the output array
-                $MegaOutputObject += New-Object -TypeName PSObject -Property $Object
+                $MegaOutputObject.Add([PSCustomObject]@{
+                        FilePath     = $Path
+                        Source       = 'Signer'
+                        Permission   = 'Not processed, No permission'
+                        IsAuthorized = $false
+                    })
             }
         }
     }
@@ -617,9 +576,9 @@ Function Invoke-WDACSimulation {
         # If the user selected the -BooleanOutput switch, then return a boolean value and don't display any more output
         if ($BooleanOutput) {
             # Get all of the allowed files
-            $AllAllowedRules = $MegaOutputObject | Where-Object -FilterScript { $_.IsAuthorized -eq $true }
+            $AllAllowedRules = $MegaOutputObject.Where({ $_.IsAuthorized -eq $true })
             # Get all of the blocked files
-            $BlockedRules = $MegaOutputObject | Where-Object -FilterScript { $_.IsAuthorized -eq $false }
+            $BlockedRules = $MegaOutputObject.Where({ $_.IsAuthorized -eq $false })
 
             Write-Verbose -Message "Allowed files: $($AllAllowedRules.count)"
             Write-Verbose -Message "Blocked files: $($BlockedRules.count)"
@@ -770,11 +729,9 @@ Function Invoke-WDACSimulation {
 #>
 }
 
-# Importing argument completer ScriptBlocks
-. "$ModuleRootPath\CoreExt\ArgumentCompleters.ps1"
-Register-ArgumentCompleter -CommandName 'Invoke-WDACSimulation' -ParameterName 'FolderPath' -ScriptBlock $ArgumentCompleterFolderPathsPicker
-Register-ArgumentCompleter -CommandName 'Invoke-WDACSimulation' -ParameterName 'XmlFilePath' -ScriptBlock $ArgumentCompleterXmlFilePathsPicker
-Register-ArgumentCompleter -CommandName 'Invoke-WDACSimulation' -ParameterName 'FilePath' -ScriptBlock $ArgumentCompleterAnyFilePathsPicker
+Register-ArgumentCompleter -CommandName 'Invoke-WDACSimulation' -ParameterName 'FolderPath' -ScriptBlock ([WDACConfig.ArgumentCompleters]::ArgumentCompleterFolderPathsPicker)
+Register-ArgumentCompleter -CommandName 'Invoke-WDACSimulation' -ParameterName 'XmlFilePath' -ScriptBlock ([WDACConfig.ArgumentCompleters]::ArgumentCompleterXmlFilePathsPicker)
+Register-ArgumentCompleter -CommandName 'Invoke-WDACSimulation' -ParameterName 'FilePath' -ScriptBlock ([WDACConfig.ArgumentCompleters]::ArgumentCompleterAnyFilePathsPicker)
 
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor

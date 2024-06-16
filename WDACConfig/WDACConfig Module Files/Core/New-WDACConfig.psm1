@@ -59,7 +59,7 @@ Function New-WDACConfig {
         return $ParamDictionary
     }
     Begin {
-        $PSBoundParameters.Verbose.IsPresent ? ([System.Boolean]$Verbose = $true) : ([System.Boolean]$Verbose = $false) | Out-Null
+        [System.Boolean]$Verbose = $PSBoundParameters.Verbose.IsPresent ? $true : $false
         $PSBoundParameters.Debug.IsPresent ? ([System.Boolean]$Debug = $true) : ([System.Boolean]$Debug = $false) | Out-Null
         . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
 
@@ -244,7 +244,7 @@ Function New-WDACConfig {
                 # Copy the result to the User Config directory at the end
                 Copy-Item -Path $XMLPath -Destination $UserConfigDir -Force
 
-                &$WriteFinalOutput $XMLPath
+                Write-FinalOutput -Paths $XMLPath
             }
             Write-Progress -Id 1 -Activity 'Complete.' -Completed
         }
@@ -296,7 +296,7 @@ Function New-WDACConfig {
                 &'C:\Windows\System32\CiTool.exe' --update-policy $CIPPath -json | Out-Null
             }
             Copy-Item -Path $FinalPolicyPath -Destination $UserConfigDir -Force
-            &$WriteFinalOutput $FinalPolicyPath
+            Write-FinalOutput -Paths $FinalPolicyPath
 
             Write-Progress -Id 3 -Activity 'Complete' -Completed
         }
@@ -362,7 +362,7 @@ Function New-WDACConfig {
 
             # Copy the result to the User Config directory at the end
             Copy-Item -Path $FinalPolicyPath -Destination $UserConfigDir -Force
-            &$WriteFinalOutput $FinalPolicyPath
+            Write-FinalOutput -Paths $FinalPolicyPath
 
             Write-Progress -Id 7 -Activity 'Complete.' -Completed
         }
@@ -409,7 +409,7 @@ Function New-WDACConfig {
                 }
                 else {
                     Copy-Item -Path $FinalPolicyPath -Destination $UserConfigDir -Force
-                    &$WriteFinalOutput $FinalPolicyPath
+                    Write-FinalOutput -Paths $FinalPolicyPath
                 }
             }
         }
@@ -474,7 +474,7 @@ Function New-WDACConfig {
             }
 
             Copy-Item -Path $FinalPolicyPath -Destination $UserConfigDir -Force
-            &$WriteFinalOutput $FinalPolicyPath
+            Write-FinalOutput -Paths $FinalPolicyPath
 
             Write-Progress -Id 6 -Activity 'Complete.' -Completed
         }

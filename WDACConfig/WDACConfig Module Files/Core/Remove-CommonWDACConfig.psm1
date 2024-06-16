@@ -18,7 +18,7 @@ Function Remove-CommonWDACConfig {
         [Parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$Force
     )
     begin {
-        $PSBoundParameters.Verbose.IsPresent ? ([System.Boolean]$Verbose = $true) : ([System.Boolean]$Verbose = $false) | Out-Null
+        [System.Boolean]$Verbose = $PSBoundParameters.Verbose.IsPresent ? $true : $false
         . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
 
         # Create User configuration folder if it doesn't already exist

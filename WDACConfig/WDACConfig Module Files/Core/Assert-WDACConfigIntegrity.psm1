@@ -17,7 +17,7 @@ Function Assert-WDACConfigIntegrity {
         [System.Management.Automation.SwitchParameter]$SkipVersionCheck
     )
     begin {
-        $PSBoundParameters.Verbose.IsPresent ? ([System.Boolean]$Verbose = $true) : ([System.Boolean]$Verbose = $false) | Out-Null
+        [System.Boolean]$Verbose = $PSBoundParameters.Verbose.IsPresent ? $true : $false
         . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
 
         Write-Verbose -Message 'Importing the required sub-modules'
@@ -37,12 +37,12 @@ Function Assert-WDACConfigIntegrity {
         [System.Object[]]$CloudCSV = (Invoke-WebRequest -Uri $Url -ProgressAction SilentlyContinue).Content | ConvertFrom-Csv
 
         # An empty array to store the final results
-        [System.Object[]]$FinalOutput = @()
+        $FinalOutput = New-Object -TypeName System.Collections.Generic.List[PSCustomObject]
     }
     process {
 
         Write-Verbose -Message 'Looping through the WDACConfig module files'
-        foreach ($File in Get-ChildItem -Path $ModuleRootPath -Recurse -File -Force) {
+        foreach ($File in (Get-FilesFast -Directory $ModuleRootPath -ExtensionsToFilterBy '*')) {
 
             # Making sure the PowerShell Gallery file in the WDACConfig module's folder is skipped
             if ($File.Name -eq 'PSGetModuleInfo.xml') {
@@ -94,12 +94,12 @@ Function Assert-WDACConfigIntegrity {
             #Endregion SHA3-512 calculation
 
             # Create a custom object to store the relative path, file name and the hash of the file
-            $FinalOutput += [PSCustomObject]@{
-                RelativePath     = [System.String]([System.IO.Path]::GetRelativePath($ModuleRootPath, $File.FullName))
-                FileName         = [System.String]$File.Name
-                FileHash         = [System.String]$HashString
-                FileHashSHA3_512 = [System.String]$SHA3_512HashString
-            }
+            $FinalOutput.Add([PSCustomObject]@{
+                    RelativePath     = [System.String]([System.IO.Path]::GetRelativePath($ModuleRootPath, $File.FullName))
+                    FileName         = [System.String]$File.Name
+                    FileHash         = [System.String]$HashString
+                    FileHashSHA3_512 = [System.String]$SHA3_512HashString
+                })
         }
 
         if ($SaveLocally) {

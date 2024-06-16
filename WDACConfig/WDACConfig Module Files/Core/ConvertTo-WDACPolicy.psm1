@@ -291,7 +291,7 @@ Function ConvertTo-WDACPolicy {
         return $ParamDictionary
     }
     Begin {
-        $PSBoundParameters.Verbose.IsPresent ? ([System.Boolean]$Verbose = $true) : ([System.Boolean]$Verbose = $false) | Out-Null
+        [System.Boolean]$Verbose = $PSBoundParameters.Verbose.IsPresent ? $true : $false
         $PSBoundParameters.Debug.IsPresent ? ([System.Boolean]$Debug = $true) : ([System.Boolean]$Debug = $false) | Out-Null
         . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
 
@@ -307,7 +307,7 @@ Function ConvertTo-WDACPolicy {
             "$ModuleRootPath\Shared\Test-KernelProtectedFiles.psm1"
         )
         # Add XML Ops module to the list of modules to import
-        $ModulesToImport += (Get-ChildItem -File -Filter '*.psm1' -LiteralPath "$ModuleRootPath\XMLOps").FullName
+        $ModulesToImport += (Get-FilesFast -Directory "$ModuleRootPath\XMLOps" -ExtensionsToFilterBy '.psm1').FullName
         Import-Module -FullyQualifiedName $ModulesToImport -Force
 
         # Since Dynamic parameters are only available in the parameter dictionary, we have to access them using $PSBoundParameters or assign them manually to another variable in the function's scope
@@ -365,7 +365,7 @@ Function ConvertTo-WDACPolicy {
                     [System.IO.FileInfo]$WDACPolicyKernelProtectedPath = Join-Path -Path $StagingArea -ChildPath "Kernel Protected Files $SuppPolicyName.xml"
 
                     # The paths to the policy files to be merged together to produce the final Supplemental policy
-                    [System.IO.FileInfo[]]$PolicyFilesToMerge = @()
+                    $PolicyFilesToMerge = New-Object -TypeName System.Collections.Generic.List[System.IO.FileInfo]
 
                     # The total number of the main steps for the progress bar to render
                     [System.UInt16]$TotalSteps = 6
@@ -428,7 +428,7 @@ Function ConvertTo-WDACPolicy {
                         New-PFNLevelRules -PackageFamilyNames $KernelProtectedFileLogsWithPFN.PackageFamilyName -XmlFilePath $WDACPolicyKernelProtectedPath
 
                         # Add the Kernel protected files policy to the list of policies to merge
-                        $PolicyFilesToMerge += $WDACPolicyKernelProtectedPath
+                        $PolicyFilesToMerge.Add($WDACPolicyKernelProtectedPath)
 
                         Write-Verbose -Message "ConvertTo-WDACPolicy: Kernel protected files with PFN property: $($KernelProtectedFileLogsWithPFN.count)"
                         Write-Verbose -Message "ConvertTo-WDACPolicy: Kernel protected files without PFN property: $($KernelProtectedFileLogs.count - $KernelProtectedFileLogsWithPFN.count)"
@@ -487,7 +487,7 @@ Function ConvertTo-WDACPolicy {
                     # This function runs twice, once for signed data and once for unsigned data
                     Close-EmptyXmlNodes_Semantic -XmlFilePath $WDACPolicyPathTEMP
 
-                    $PolicyFilesToMerge += $WDACPolicyPathTEMP
+                    $PolicyFilesToMerge.Add($WDACPolicyPathTEMP)
 
                     Merge-CIPolicy -PolicyPaths $PolicyFilesToMerge -OutputFilePath $WDACPolicyPath | Out-Null
 
@@ -1117,11 +1117,9 @@ This example will create a new supplemental policy from the selected EVTX files 
 #>
 
 }
-# Importing argument completer ScriptBlocks
-. "$ModuleRootPath\CoreExt\ArgumentCompleters.ps1"
 
-Register-ArgumentCompleter -CommandName 'ConvertTo-WDACPolicy' -ParameterName 'PolicyToAddLogsTo' -ScriptBlock $ArgumentCompleterXmlFilePathsPicker
-Register-ArgumentCompleter -CommandName 'ConvertTo-WDACPolicy' -ParameterName 'BasePolicyFile' -ScriptBlock $ArgumentCompleterXmlFilePathsPicker
+Register-ArgumentCompleter -CommandName 'ConvertTo-WDACPolicy' -ParameterName 'PolicyToAddLogsTo' -ScriptBlock ([WDACConfig.ArgumentCompleters]::ArgumentCompleterXmlFilePathsPicker)
+Register-ArgumentCompleter -CommandName 'ConvertTo-WDACPolicy' -ParameterName 'BasePolicyFile' -ScriptBlock ([WDACConfig.ArgumentCompleters]::ArgumentCompleterXmlFilePathsPicker)
 
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor

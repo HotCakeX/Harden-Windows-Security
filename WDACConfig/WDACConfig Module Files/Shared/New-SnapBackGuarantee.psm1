@@ -30,7 +30,7 @@ Function New-SnapBackGuarantee {
     # Setting the task to run with the highest priority. This is to ensure that the task runs as soon as possible after the reboot. It runs even on logon screen before user logs on too.
     [Microsoft.Management.Infrastructure.CimInstance]$TaskSettings = New-ScheduledTaskSettingsSet -Hidden -Compatibility Win8 -DontStopIfGoingOnBatteries -Priority 0 -AllowStartIfOnBatteries
     # Register the scheduled task
-    Register-ScheduledTask -TaskName 'EnforcedModeSnapBack' -Action $TaskAction -Trigger $TaskTrigger -Principal $Principal -Settings $TaskSettings -Force | Out-Null
+    $null = Register-ScheduledTask -TaskName 'EnforcedModeSnapBack' -Action $TaskAction -Trigger $TaskTrigger -Principal $Principal -Settings $TaskSettings -Force
 
     # Saving the EnforcedModeSnapBack.cmd file to the UserConfig directory in Program Files
     # It contains the instructions to revert the base policy to enforced mode

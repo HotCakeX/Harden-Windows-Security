@@ -38,11 +38,11 @@ Function Get-CertificateDetails {
 
         if ($FilePath) {
             # Get all the certificates from the file path using the Get-SignedFileCertificates function
-            [System.Security.Cryptography.X509Certificates.X509Certificate2[]]$CertCollection = Get-SignedFileCertificates -FilePath $FilePath | Where-Object -FilterScript { $_.EnhancedKeyUsageList.FriendlyName -ne 'Time Stamping' }
+            [System.Security.Cryptography.X509Certificates.X509Certificate2[]]$CertCollection = (Get-SignedFileCertificates -FilePath $FilePath).Where({ $_.EnhancedKeyUsageList.FriendlyName -ne 'Time Stamping' })
         }
         elseif ($X509Certificate2) {
-            # The "| Where-Object -FilterScript {$_ -ne 0}" part is used to filter the output coming from Get-NestedSignerSignature function that gets nested certificate
-            [System.Security.Cryptography.X509Certificates.X509Certificate2[]]$CertCollection = Get-SignedFileCertificates -X509Certificate2 $X509Certificate2 | Where-Object -FilterScript { ($_.EnhancedKeyUsageList.FriendlyName -ne 'Time Stamping') -and ($_ -ne 0) }
+            # The "{$_ -ne 0}" part is used to filter the output coming from Get-NestedSignerSignature function that gets nested certificate
+            [System.Security.Cryptography.X509Certificates.X509Certificate2[]]$CertCollection = (Get-SignedFileCertificates -X509Certificate2 $X509Certificate2).Where({ ($_.EnhancedKeyUsageList.FriendlyName -ne 'Time Stamping') -and ($_ -ne 0) })
         }
         else {
             throw 'Either FilePath or X509Certificate2 parameter must be specified'
@@ -89,18 +89,6 @@ Function Get-CertificateDetails {
                 # Get the subject common name
                 [System.String]$SubjectCN = [WDACConfig.CryptoAPI]::GetNameString($Element.Certificate.Handle, [WDACConfig.CryptoAPI]::CERT_NAME_SIMPLE_DISPLAY_TYPE, $null, $false)
 
-                #Region Old way of getting common names
-                # Extract the data after CN= in the subject and issuer properties
-                # When a common name contains a comma ',' then it will automatically be wrapped around double quotes. E.g., "App Software USA, Inc."
-                # The methods below are conditional regex. Different patterns are used based on the availability of at least one double quote in the CN field, indicating that it had comma in it so it had been enclosed with double quotes by system
-
-                #   $Element.Certificate.Subject -match 'CN=(?<InitialRegexTest2>.*?),.*' | Out-Null
-                #   [System.String]$SubjectCN = $matches['InitialRegexTest2'] -like '*"*' ? ($Element.Certificate.Subject -split 'CN="(.+?)"')[1] : $matches['InitialRegexTest2']
-
-                #   $Element.Certificate.Issuer -match 'CN=(?<InitialRegexTest3>.*?),.*' | Out-Null
-                #   [System.String]$IssuerCN = $matches['InitialRegexTest3'] -like '*"*' ? ($Element.Certificate.Issuer -split 'CN="(.+?)"')[1] : $matches['InitialRegexTest3']
-                #Endregion Old way of getting common names
-
                 # Get the TBS value of the certificate
                 [System.String]$TbsValue = Get-TBSCertificate -cert $Element.Certificate
 
@@ -132,7 +120,7 @@ Function Get-CertificateDetails {
 
             # ($_.SubjectCN -ne $_.IssuerCN) -> To omit Root certificate from the result
             # ($_.SubjectCN -ne $FileSubjectCN) -> To omit the Leaf certificate
-            $Obj | Where-Object -FilterScript { ($_.SubjectCN -ne $_.IssuerCN) -and ($_.SubjectCN -ne $FileSubjectCN) } |
+            $Obj.Where({ ($_.SubjectCN -ne $_.IssuerCN) -and ($_.SubjectCN -ne $FileSubjectCN) }) |
 
             # To make sure the output values are unique based on TBSValue property
             Group-Object -Property TBSValue | ForEach-Object -Process { $_.Group[0] } |
@@ -148,7 +136,7 @@ Function Get-CertificateDetails {
                     })
             }
 
-            Write-Verbose -Message "The Primary Signer's Root Certificate common name is: $($($Obj | Where-Object -FilterScript { ($_.SubjectCN -eq $_.IssuerCN) }).SubjectCN | Select-Object -First 1)"
+            Write-Verbose -Message "The Primary Signer's Root Certificate common name is: $($($Obj.Where({ ($_.SubjectCN -eq $_.IssuerCN) })).SubjectCN | Select-Object -First 1)"
             Write-Verbose -Message "The Primary Signer has $($IntermediateCerts.Count) Intermediate certificate(s) with the following common name(s): $($IntermediateCerts.SubjectCN -join ', ')"
 
             # Add the $IntermediateCerts object to the final object
@@ -160,7 +148,7 @@ Function Get-CertificateDetails {
 
             # ($_.SubjectCN -ne $_.IssuerCN) -> To omit Root certificate from the result
             # ($_.SubjectCN -eq $FileSubjectCN) -> To get the Leaf certificate
-            $TempLeafCertObj = $Obj | Where-Object -FilterScript { ($_.SubjectCN -ne $_.IssuerCN) -and ($_.SubjectCN -eq $FileSubjectCN) } |
+            $TempLeafCertObj = $Obj.Where({ ($_.SubjectCN -ne $_.IssuerCN) -and ($_.SubjectCN -eq $FileSubjectCN) }) |
 
             # To make sure the output values are unique based on TBSValue property
             Group-Object -Property TBSValue | ForEach-Object -Process { $_.Group[0] }
@@ -187,7 +175,7 @@ Function Get-CertificateDetails {
 
             # ($_.SubjectCN -ne $_.IssuerCN) -> To omit Root certificate from the result
             # ($_.SubjectCN -ne $LeafCNOfTheNestedCertificate) -> To omit the Leaf certificate
-            $Obj | Where-Object -FilterScript { ($_.SubjectCN -ne $_.IssuerCN) -and ($_.SubjectCN -ne $LeafCNOfTheNestedCertificate) } |
+            $Obj.Where({ ($_.SubjectCN -ne $_.IssuerCN) -and ($_.SubjectCN -ne $LeafCNOfTheNestedCertificate) }) |
 
             # To make sure the output values are unique based on TBSValue property
             Group-Object -Property TBSValue | ForEach-Object -Process { $_.Group[0] } |
@@ -203,7 +191,7 @@ Function Get-CertificateDetails {
                     })
             }
 
-            Write-Verbose -Message "The Nested Signer's Root Certificate common name is: $($($Obj | Where-Object -FilterScript { ($_.SubjectCN -eq $_.IssuerCN) }).SubjectCN | Select-Object -First 1)"
+            Write-Verbose -Message "The Nested Signer's Root Certificate common name is: $($($Obj.Where({ ($_.SubjectCN -eq $_.IssuerCN) })).SubjectCN | Select-Object -First 1)"
             Write-Verbose -Message "The Nested Signer has $($IntermediateCerts.Count) Intermediate certificate(s) with the following common name(s): $($IntermediateCerts.SubjectCN -join ', ')"
 
             # Add the $IntermediateCerts object to the final object
@@ -215,7 +203,7 @@ Function Get-CertificateDetails {
 
             # ($_.SubjectCN -ne $_.IssuerCN) -> To omit Root certificate from the result
             # ($_.SubjectCN -eq $LeafCNOfTheNestedCertificate) -> To get the Leaf certificate
-            $TempLeafCertObj = $Obj | Where-Object -FilterScript { ($_.SubjectCN -ne $_.IssuerCN) -and ($_.SubjectCN -eq $LeafCNOfTheNestedCertificate) } |
+            $TempLeafCertObj = $Obj.Where({ ($_.SubjectCN -ne $_.IssuerCN) -and ($_.SubjectCN -eq $LeafCNOfTheNestedCertificate) }) |
 
             # To make sure the output values are unique based on TBSValue property
             Group-Object -Property TBSValue | ForEach-Object -Process { $_.Group[0] }

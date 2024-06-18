@@ -288,7 +288,7 @@ Function Remove-WDACConfig {
                     [System.IO.FileInfo]$PolicyCIPPath = Join-Path -Path $StagingArea -ChildPath "$PolicyID.cip"
 
                     # Converting the Policy XML file to CIP binary file
-                    ConvertFrom-CIPolicy -XmlFilePath $PolicyPath -BinaryFilePath $PolicyCIPPath | Out-Null
+                    $null = ConvertFrom-CIPolicy -XmlFilePath $PolicyPath -BinaryFilePath $PolicyCIPPath
 
                     $CurrentStep++
                     Write-Progress -Id 18 -Activity 'Signing the policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
@@ -306,7 +306,7 @@ Function Remove-WDACConfig {
                     if ($PSCmdlet.ShouldProcess('This PC', 'Deploying the signed policy')) {
 
                         Write-Verbose -Message 'Deploying the newly signed CIP file'
-                        &'C:\Windows\System32\CiTool.exe' --update-policy $PolicyCIPPath -json | Out-Null
+                        $null = &'C:\Windows\System32\CiTool.exe' --update-policy $PolicyCIPPath -json
 
                         Write-ColorfulText -Color Lavender -InputText "Policy with the following details has been Re-signed and Re-deployed in Unsigned mode.`nPlease restart your system."
                         Write-ColorfulText -Color MintGreen -InputText "PolicyName = $PolicyName"
@@ -321,7 +321,7 @@ Function Remove-WDACConfig {
 
                 # If IDs were supplied by user
                 foreach ($ID in $PolicyIDs ) {
-                    &'C:\Windows\System32\CiTool.exe' --remove-policy "{$ID}" -json | Out-Null
+                    $null = &'C:\Windows\System32\CiTool.exe' --remove-policy "{$ID}" -json
                     Write-ColorfulText -Color Lavender -InputText "Policy with the ID $ID has been successfully removed."
                 }
 
@@ -337,7 +337,7 @@ Function Remove-WDACConfig {
                 $NameID | Select-Object -Unique | ForEach-Object -Process { Write-Verbose -Message "$_" }
 
                 $NameID | Select-Object -Unique | ForEach-Object -Process {
-                    &'C:\Windows\System32\CiTool.exe' --remove-policy "{$_}" -json | Out-Null
+                    $null = &'C:\Windows\System32\CiTool.exe' --remove-policy "{$_}" -json
                     Write-ColorfulText -Color Lavender -InputText "Policy with the ID $_ has been successfully removed."
                 }
             }

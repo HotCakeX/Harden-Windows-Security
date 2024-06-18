@@ -100,7 +100,7 @@ Function Edit-WDACConfig {
     )
     Begin {
         [System.Boolean]$Verbose = $PSBoundParameters.Verbose.IsPresent ? $true : $false
-        $PSBoundParameters.Debug.IsPresent ? ([System.Boolean]$Debug = $true) : ([System.Boolean]$Debug = $false) | Out-Null
+        [System.Boolean]$Debug = $PSBoundParameters.Debug.IsPresent ? $true : $false
         . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
 
         Write-Verbose -Message 'Importing the required sub-modules'
@@ -191,12 +191,12 @@ Function Edit-WDACConfig {
                 Write-Verbose -Message 'Creating Audit Mode CIP'
                 [System.IO.FileInfo]$AuditModeCIPPath = Join-Path -Path $StagingArea -ChildPath 'AuditMode.cip'
                 Set-CiRuleOptions -FilePath $PolicyPath -RulesToAdd 'Enabled:Audit Mode'
-                ConvertFrom-CIPolicy -XmlFilePath $PolicyPath -BinaryFilePath $AuditModeCIPPath | Out-Null
+                $null = ConvertFrom-CIPolicy -XmlFilePath $PolicyPath -BinaryFilePath $AuditModeCIPPath
 
                 Write-Verbose -Message 'Creating Enforced Mode CIP'
                 [System.IO.FileInfo]$EnforcedModeCIPPath = Join-Path -Path $StagingArea -ChildPath 'EnforcedMode.cip'
                 Set-CiRuleOptions -FilePath $PolicyPath -RulesToRemove 'Enabled:Audit Mode'
-                ConvertFrom-CIPolicy -XmlFilePath $PolicyPath -BinaryFilePath $EnforcedModeCIPPath | Out-Null
+                $null = ConvertFrom-CIPolicy -XmlFilePath $PolicyPath -BinaryFilePath $EnforcedModeCIPPath
 
                 #Region Snap-Back-Guarantee
                 Write-Verbose -Message 'Creating Enforced Mode SnapBack guarantee'
@@ -234,7 +234,7 @@ Function Edit-WDACConfig {
                     Write-Progress -Id 10 -Activity 'Redeploying the Base policy in Enforced Mode' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
                     Write-Debug -Message 'Finally Block Running'
-                    &'C:\Windows\System32\CiTool.exe' --update-policy $EnforcedModeCIPPath -json | Out-Null
+                    $null = &'C:\Windows\System32\CiTool.exe' --update-policy $EnforcedModeCIPPath -json
 
                     Write-Verbose -Message 'The Base policy with the following details has been Re-Deployed in Enforced Mode:'
                     Write-Verbose -Message "PolicyName = $PolicyName"
@@ -477,19 +477,19 @@ Function Edit-WDACConfig {
                 #Region Async-Jobs-Management
 
                 if ($HasFolderPaths) {
-                    Wait-Job -Job $DirectoryScanJob | Out-Null
+                    $null = Wait-Job -Job $DirectoryScanJob
                     # Redirecting Verbose and Debug output streams because they are automatically displayed already on the console using StreamingHost parameter
                     Receive-Job -Job $DirectoryScanJob 4>$null 5>$null
                     Remove-Job -Job $DirectoryScanJob -Force
 
-                    Wait-Job -Job $ECCSignedDirectoriesJob | Out-Null
+                    $null = Wait-Job -Job $ECCSignedDirectoriesJob
                     # Redirecting Verbose and Debug output streams because they are automatically displayed already on the console using StreamingHost parameter
                     Receive-Job -Job $ECCSignedDirectoriesJob 4>$null 5>$null
                     Remove-Job -Job $ECCSignedDirectoriesJob -Force
                 }
 
                 if ($HasSelectedLogs) {
-                    Wait-Job -Job $ECCSignedAuditLogsJob | Out-Null
+                    $null = Wait-Job -Job $ECCSignedAuditLogsJob 
                     # Redirecting Verbose and Debug output streams because they are automatically displayed already on the console using StreamingHost parameter
                     Receive-Job -Job $ECCSignedAuditLogsJob 4>$null 5>$null
                     Remove-Job -Job $ECCSignedAuditLogsJob -Force
@@ -542,13 +542,13 @@ Function Edit-WDACConfig {
                 #Endregion Boosted Security - Sandboxing
 
                 Write-Verbose -Message 'Convert the Supplemental policy to a CIP file'
-                ConvertFrom-CIPolicy -XmlFilePath $SuppPolicyPath -BinaryFilePath $SupplementalCIPPath | Out-Null
+                $null = ConvertFrom-CIPolicy -XmlFilePath $SuppPolicyPath -BinaryFilePath $SupplementalCIPPath
 
                 $CurrentStep++
                 Write-Progress -Id 10 -Activity 'Deploying the Supplemental policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
                 Write-Verbose -Message 'Deploying the Supplemental policy'
-                &'C:\Windows\System32\CiTool.exe' --update-policy $SupplementalCIPPath -json | Out-Null
+                $null = &'C:\Windows\System32\CiTool.exe' --update-policy $SupplementalCIPPath -json
 
                 #Endregion Supplemental-policy-processing-and-deployment
 

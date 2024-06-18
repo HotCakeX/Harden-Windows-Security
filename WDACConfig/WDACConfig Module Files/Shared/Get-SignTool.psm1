@@ -71,7 +71,7 @@ Function Get-SignTool {
                         [Microsoft.PackageManagement.Packaging.SoftwareIdentity]$Package = $Package | Sort-Object -Property { [System.Version]$_.Version } -Descending | Select-Object -First 1
 
                         Write-Verbose -Message 'Downloading SignTool.exe from NuGet...'
-                        Save-Package -InputObject $Package -Path $StagingArea -Force | Out-Null
+                        $null = Save-Package -InputObject $Package -Path $StagingArea -Force
 
                         Write-Verbose -Message 'Extracting the nupkg'
                         Expand-Archive -Path "$StagingArea\*.nupkg" -DestinationPath $StagingArea -Force
@@ -129,7 +129,7 @@ Function Get-SignTool {
                 Write-Verbose -Message 'SignTool executable was found and verified successfully.'
 
                 Write-Verbose -Message 'Setting the SignTool path in the common WDAC user configurations'
-                Set-CommonWDACConfig -SignToolPath $SignToolExePathOutput | Out-Null
+                $null = Set-CommonWDACConfig -SignToolPath $SignToolExePathOutput
 
                 return $SignToolExePathOutput
             }

@@ -74,13 +74,13 @@ Function Set-CommonWDACConfig {
 
         # Create User configuration folder if it doesn't already exist
         if (-NOT (Test-Path -Path (Split-Path -Path $UserConfigJson -Parent))) {
-            New-Item -ItemType Directory -Path (Split-Path -Path $UserConfigJson -Parent) -Force | Out-Null
+            $null = New-Item -ItemType Directory -Path (Split-Path -Path $UserConfigJson -Parent) -Force
             Write-Verbose -Message 'The WDACConfig folder in Program Files has been created because it did not exist.'
         }
 
         # Create User configuration file if it doesn't already exist
         if (-NOT (Test-Path -Path $UserConfigJson)) {
-            New-Item -ItemType File -Path (Split-Path -Path $UserConfigJson -Parent) -Name (Split-Path -Path $UserConfigJson -Leaf) -Force | Out-Null
+            $null = New-Item -ItemType File -Path (Split-Path -Path $UserConfigJson -Parent) -Name (Split-Path -Path $UserConfigJson -Leaf) -Force
             Write-Verbose -Message 'The UserConfigurations.json file has been created because it did not exist.'
         }
 

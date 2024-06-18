@@ -22,7 +22,7 @@ Function Optimize-MDECSVData {
         [Parameter(Mandatory = $true)][System.IO.DirectoryInfo]$StagingArea
     )
     Begin {
-        $PSBoundParameters.Debug.IsPresent ? ([System.Boolean]$Debug = $true) : ([System.Boolean]$Debug = $false) | Out-Null
+        [System.Boolean]$Debug = $PSBoundParameters.Debug.IsPresent ? $true : $false
         . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
 
         Try {

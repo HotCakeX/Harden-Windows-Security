@@ -191,7 +191,7 @@ Function Set-CiRuleOptions {
         Set-HVCIOptions -Strict -FilePath $FilePath
 
         # Validate the XML file at the end
-        Test-CiPolicy -XmlFile $FilePath | Out-Null
+        $null = Test-CiPolicy -XmlFile $FilePath
     }
     <#
     .SYNOPSIS

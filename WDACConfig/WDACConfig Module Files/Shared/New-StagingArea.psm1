@@ -20,7 +20,7 @@ Function New-StagingArea {
         Remove-Item -LiteralPath $StagingArea -Recurse -Force
     }
     # Create the staging area for the cmdlet
-    New-Item -Path $StagingArea -ItemType Directory -Force | Out-Null
+    $null = New-Item -Path $StagingArea -ItemType Directory -Force
     return $StagingArea
 }
 Export-ModuleMember -Function 'New-StagingArea'

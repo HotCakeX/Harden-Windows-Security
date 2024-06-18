@@ -41,7 +41,7 @@ Function Compare-CorrelatedData {
         [Parameter(Mandatory = $true)][System.String]$LogType
     )
     Begin {
-        $PSBoundParameters.Debug.IsPresent ? ([System.Boolean]$Debug = $true) : ([System.Boolean]$Debug = $false) | Out-Null
+        [System.Boolean]$Debug = $PSBoundParameters.Debug.IsPresent ? $true : $false
         . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
 
         # Group the events based on the EtwActivityId, which is the unique identifier for each group of correlated events

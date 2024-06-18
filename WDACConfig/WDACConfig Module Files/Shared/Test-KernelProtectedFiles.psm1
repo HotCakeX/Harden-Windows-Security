@@ -18,13 +18,13 @@ Function Test-KernelProtectedFiles {
     Begin {
         Write-Verbose -Message 'Test-KernelProtectedFiles: Checking for Kernel-Protected files'
         # Final output to return
-        $KernelProtectedFileLogs = [System.Collections.Generic.HashSet[PSCustomObject]]@()
+        $KernelProtectedFileLogs = New-Object -TypeName System.Collections.Generic.HashSet[PSCustomObject]
     }
     Process {
         # Looping through every existing file with .exe and .dll extensions to check if they are kernel protected
         foreach ($Log in ($Logs | Where-Object -FilterScript { ([System.IO.Path]::GetExtension($_.'Full Path') -in @('.exe', '.dll')) -and ([System.IO.Path]::Exists($_.'Full Path')) })) {
             try {
-                Get-FileHash -Path $Log.'Full Path' -ErrorAction Stop | Out-Null
+                $Null = Get-FileHash -Path $Log.'Full Path' -ErrorAction Stop
             }
             # If the executable is protected, it will throw an exception and the module will continue to the next one
             # Making sure only the right file is captured by narrowing down the error type.

@@ -50,7 +50,7 @@ Function Get-KernelModeDriversAudit {
 
         Write-Verbose -Message 'Creating symbolic links to the driver files'
         Foreach ($File in $KernelModeDriversPaths) {
-            New-Item -ItemType SymbolicLink -Path (Join-Path -Path $SavePath -ChildPath $File.Name) -Target $File.FullName | Out-Null
+            $null = New-Item -ItemType SymbolicLink -Path (Join-Path -Path $SavePath -ChildPath $File.Name) -Target $File.FullName
         }
     }
 }

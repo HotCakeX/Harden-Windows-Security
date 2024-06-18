@@ -151,6 +151,13 @@ Function Invoke-WDACSimulation {
         # Store the final object of all of the results
         $MegaOutputObject = New-Object -TypeName System.Collections.Generic.List[System.Object]
 
+        # Extensions that are not supported by Authenticode. So if these files are not allowed by hash, they are not allowed at all
+        $UnsignedExtensions = [System.Collections.Generic.HashSet[System.String]]::new(
+            [System.String[]] ('.ocx', '.bat', '.bin'),
+            # Make it case-insensitive
+            [System.StringComparer]::InvariantCultureIgnoreCase
+        )
+
         # Hash Sha256 values of all the file rules based on hash in the supplied xml policy file
         Write-Verbose -Message 'Getting the Sha256 Hash values of all the file rules based on hash in the supplied xml policy file'
 
@@ -255,14 +262,12 @@ Function Invoke-WDACSimulation {
 
                     [System.Void]$AllowedByHashFilePaths.Add($CurrentFilePath)
                 }
-
                 # If the file's extension is not supported by Authenticode and it wasn't allowed by file hash then it's not allowed and no reason to check its signature
-                elseif ($CurrentFilePath.Extension -in @('.ocx', '.bat')) {
+                elseif ($UnsignedExtensions.Contains($CurrentFilePath.Extension)) {
                     Write-Verbose -Message 'The file is not signed and is not allowed by hash'
 
                     [System.Void]$UnsignedNotAllowedFilePaths.Add($CurrentFilePath)
                 }
-
                 # If the file's hash does not exist in the supplied XML file, then check its signature
                 else {
 
@@ -401,6 +406,9 @@ Function Invoke-WDACSimulation {
 
             # Unregister the event handler for progress bar color
             Unregister-Event -SourceIdentifier $EventHandler.Name -Force
+
+            # Remove the event handler's job
+            Remove-Job -Job $EventHandler -Force
 
             # Restore PS Formatting Styles for progress bar
             $OriginalStyle.Keys | ForEach-Object -Process {

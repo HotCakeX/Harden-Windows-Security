@@ -51,6 +51,10 @@ if (-NOT ('WDACConfig.CryptoAPI' -as [System.Type]) ) {
     Add-Type -Path "$ModuleRootPath\C#\Crypt32CertCN.cs"
 }
 
+if (-NOT ('WDACConfig.PolicyHashObj' -as [System.Type]) ) {
+    Add-Type -Path "$ModuleRootPath\C#\PolicyHashObj.cs"
+}
+
 #Endregion C# code imports
 
 <#

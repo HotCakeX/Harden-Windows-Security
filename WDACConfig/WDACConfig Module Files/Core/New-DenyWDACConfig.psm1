@@ -63,7 +63,7 @@ Function New-DenyWDACConfig {
     )
     Begin {
         [System.Boolean]$Verbose = $PSBoundParameters.Verbose.IsPresent ? $true : $false
-        $PSBoundParameters.Debug.IsPresent ? ([System.Boolean]$Debug = $true) : ([System.Boolean]$Debug = $false) | Out-Null
+        [System.Boolean]$Debug = $PSBoundParameters.Debug.IsPresent ? $true : $false
         . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
 
         Write-Verbose -Message 'Importing the required sub-modules'

@@ -67,7 +67,7 @@ Function Update-Self {
 
         # Reset the last update timer to the current time
         Write-Verbose -Message 'Resetting the last update timer to the current time'
-        Set-CommonWDACConfig -LastUpdateCheck $(Get-Date) | Out-Null
+        $null = Set-CommonWDACConfig -LastUpdateCheck $(Get-Date)
 
         if ($CurrentVersion -lt $LatestVersion) {
 

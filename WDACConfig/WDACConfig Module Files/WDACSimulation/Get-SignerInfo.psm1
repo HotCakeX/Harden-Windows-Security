@@ -34,19 +34,19 @@ Function Get-SignerInfo {
         [System.Object[]]$Signers = $Xml.SiPolicy.Signers.Signer
 
         # Get User Mode Signers IDs
-        [System.String[]]$UMSigners = ($Xml.SiPolicy.SigningScenarios.SigningScenario | Where-Object -FilterScript { $_.value -eq '12' }).ProductSigners.AllowedSigners.AllowedSigner.SignerId
+        $UMSigners = [System.Collections.Generic.HashSet[System.String]]@(($Xml.SiPolicy.SigningScenarios.SigningScenario.Where({ $_.value -eq '12' })).ProductSigners.AllowedSigners.AllowedSigner.SignerId)
 
         # Get Kernel Mode Signers IDs
-        [System.String[]]$KMSigners = ($Xml.SiPolicy.SigningScenarios.SigningScenario | Where-Object -FilterScript { $_.value -eq '131' }).ProductSigners.AllowedSigners.AllowedSigner.SignerId
+        $KMSigners = [System.Collections.Generic.HashSet[System.String]]@(($Xml.SiPolicy.SigningScenarios.SigningScenario.Where({ $_.value -eq '131' })).ProductSigners.AllowedSigners.AllowedSigner.SignerId)
 
         # Get UpdatePolicySigners IDs
-        [System.String[]]$UPSigners = $Xml.SiPolicy.UpdatePolicySigners.UpdatePolicySigner.SignerId
+        $UPSigners = [System.Collections.Generic.HashSet[System.String]]@($Xml.SiPolicy.UpdatePolicySigners.UpdatePolicySigner.SignerId)
 
         # Get SupplementalPolicySigners IDs
-        [System.String[]]$SPSigners = $Xml.SiPolicy.SupplementalPolicySigners.SupplementalPolicySigner.SignerId
+        $SPSigners = [System.Collections.Generic.HashSet[System.String]]@($Xml.SiPolicy.SupplementalPolicySigners.SupplementalPolicySigner.SignerId)
 
         # Get all of the File Attrib IDs in the <FileRules> node
-        [System.String[]]$FileAttribIDs = $Xml.SiPolicy.FileRules.FileAttrib.ID
+        $FileAttribIDs = [System.Collections.Generic.HashSet[System.String]]@($Xml.SiPolicy.FileRules.FileAttrib.ID)
 
         # Select the EKU nodes if they exist
         if ($Xml.SiPolicy.EKUs.EKU) {
@@ -61,7 +61,7 @@ Function Get-SignerInfo {
         }
 
         # Create an empty array to store the output
-        [WDACConfig.Signer[]]$Output = @()
+        $Output = New-Object -TypeName System.Collections.Generic.List[WDACConfig.Signer]
 
         # Loop through each Signer node and extract the information
         foreach ($Signer in $Signers) {
@@ -134,18 +134,18 @@ Function Get-SignerInfo {
                 [System.Boolean]$HasEKU = $true
 
                 # an array to store the EKU OIDs of the signer (in case the signer has multiple EKUs)
-                [System.String[]]$EKUOIDs = @()
+                $EKUOIDs = New-Object -TypeName System.Collections.Generic.HashSet[System.String]
 
                 # Loop through each EKU ID (hex value) and convert it to an OID
                 $EKUAndValuesCorrelation[$Signer.CertEKU.ID] | ForEach-Object -Process {
-                    $EKUOIDs += Convert-HexToOID -Hex $_
+                    [System.Void]$EKUOIDs.Add((Convert-HexToOID -Hex $_))
                 }
 
                 # Get the EKU OIDs of the file's signer certificate (Leaf certificate)
                 [System.String[]]$FileEKUOIDs = (Get-AuthenticodeSignature -LiteralPath $SignedFilePath).SignerCertificate.EnhancedKeyUsageList.ObjectId
 
-                # Check if the array of EKU OIDs of the file's signer certificate contains all the EKU OIDs of the signer defined in the WDAC policy
-                if (-NOT ($EKUOIDs | Where-Object -FilterScript { $FileEKUOIDs -notcontains $_ })) {
+                # Check if the array of EKU OIDs of the file's signer certificate contains all the EKU OIDs of the signer defined in the WDAC policy that is currently being processed in the loop
+                if (-NOT ($EKUOIDs.Where({ -NOT ($FileEKUOIDs.Contains($_)) }))) {
 
                     # Set the flag to indicate that the EKUs match
                     [System.Boolean]$EKUsMatch = $true
@@ -157,21 +157,21 @@ Function Get-SignerInfo {
             }
             else {
                 [System.Boolean]$HasEKU = $false
-                [System.String[]]$EKUOIDs = '0'
+                $EKUOIDs = '0'
                 [System.Boolean]$EKUsMatch = $false
             }
 
             # Determine the scope of the signer
-            if ($Signer.ID -in $UMSigners) {
+            if ($UMSigners.Contains($Signer.ID)) {
                 [System.String]$SignerScope = 'UserMode'
             }
-            elseif ($Signer.ID -in $KMSigners) {
+            elseif ($KMSigners.Contains($Signer.ID)) {
                 [System.String]$SignerScope = 'KernelMode'
             }
-            elseif ($Signer.ID -in $UPSigners) {
+            elseif ($UPSigners.Contains($Signer.ID)) {
                 [System.String]$SignerScope = 'UpdatePolicy'
             }
-            elseif ($Signer.ID -in $SPSigners) {
+            elseif ($SPSigners.Contains($Signer.ID)) {
                 [System.String]$SignerScope = 'SupplementalPolicy'
             }
             else {
@@ -184,7 +184,7 @@ Function Get-SignerInfo {
                 # If the signer has FilaAttrib(s) but there is no file rule in the policy XML file that points to it, then display a warning
                 # Using a loop here for when there are multiple FileAttribRef nodes assigned to a single signer
                 $Signer.FileAttribRef.RuleID | ForEach-Object -Process {
-                    if ($_ -notin $FileAttribIDs) {
+                    if (-NOT ($FileAttribIDs.Contains($_))) {
                         Write-Warning -Message "The signer with ID $($Signer.ID) has a file attribute but is not allowed in any of the file rules defined in the WDAC policy. The policy XML file may be corrupted."
                     }
                 }
@@ -207,14 +207,23 @@ Function Get-SignerInfo {
                 $SignerFileAttributeIDs = 'N/A'
             }
 
-            # Create a new instance of the Signer class in the WDACConfig Namespace
-            [WDACConfig.Signer]$SignerObj = New-Object -TypeName 'WDACConfig.Signer' -ArgumentList ($Signer.ID, $Signer.Name, $Signer.CertRoot.Value, $Signer.CertPublisher.Value, $HasEKU, $EKUOIDs, $EKUsMatch, $SignerScope, $HasFileAttrib, $SignerFileAttributeIDs)
+            # Create a new instance of the Signer class in the WDACConfig Namespace And add it to the output
+            $Output.Add([WDACConfig.Signer]::New(
+                    $Signer.ID,
+                    $Signer.Name,
+                    $Signer.CertRoot.Value,
+                    $Signer.CertPublisher.Value,
+                    $HasEKU,
+                    [System.String[]]$EKUOIDs,
+                    $EKUsMatch,
+                    $SignerScope,
+                    $HasFileAttrib,
+                    $SignerFileAttributeIDs
+                ))
 
             # Add the Signer object to the output array if it doesn't already exist with another ID, typically for files that are allowed in both User and Kernel mode signing scenarios so they have 2 identical signers with different IDs
             # Commenting it because it causes slight inaccuracies in the detected level of an allowed file
             # if (-NOT ($Output | Where-Object { ($_.Name -eq $SignerObj.Name) -and ($_.CertRoot -eq $SignerObj.CertRoot) -and ($_.CertPublisher -eq $SignerObj.CertPublisher) -and ($_.HasEKU -eq $SignerObj.HasEKU) -and ($_.EKUOIDs -eq $SignerObj.EKUOIDs) -and ($_.EKUsMatch -eq $SignerObj.EKUsMatch) })) {
-
-            $Output += $SignerObj
 
             #  }
         }

@@ -46,7 +46,7 @@ Function Test-CiPolicy {
                 # Create an XML document object
                 [System.Xml.XmlDocument]$Xml = New-Object -TypeName System.Xml.XmlDocument
                 # Add the schema object to the XML document
-                $Xml.Schemas.Add($XmlSchemaObject) | Out-Null
+                [System.Void]$Xml.Schemas.Add($XmlSchemaObject)
                 # Load the XML file to the XML document
                 $Xml.Load($XmlFile)
                 # Validate the XML document against the schema object

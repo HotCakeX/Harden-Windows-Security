@@ -31,7 +31,7 @@ Function Copy-CiRules {
     # https://learn.microsoft.com/en-us/dotnet/api/system.xml.xmldocument.importnode
     [Xml.XmlNode]$Rules = $DestinationFileContent.ImportNode($SourceFileContent.SiPolicy.Rules, $true)
     # Use the ReplaceChild method to replace the rules node in $DestinationFileContent with the copied node
-    $DestinationFileContent.SiPolicy.ReplaceChild($Rules, $DestinationFileContent.SiPolicy.Rules) | Out-Null
+    [System.Void]$DestinationFileContent.SiPolicy.ReplaceChild($Rules, $DestinationFileContent.SiPolicy.Rules)
 
     # Save the modified XML file
     $DestinationFileContent.Save($DestinationFile)

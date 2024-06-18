@@ -19,7 +19,7 @@ Function New-KernelModeWDACConfig {
     )
     Begin {
         [System.Boolean]$Verbose = $PSBoundParameters.Verbose.IsPresent ? $true : $false
-        $PSBoundParameters.Debug.IsPresent ? ([System.Boolean]$Debug = $true) : ([System.Boolean]$Debug = $false) | Out-Null
+        [System.Boolean]$Debug = $PSBoundParameters.Debug.IsPresent ? $true : $false
         . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
 
         Write-Verbose -Message 'Importing the required sub-modules'
@@ -346,10 +346,10 @@ Function New-KernelModeWDACConfig {
                             Copy-Item -Path $TemplatePolicyPath -Destination (Join-Path -Path $StagingArea -ChildPath 'Raw_NoFlights.xml') -Force
 
                             Write-Verbose -Message 'Merging the base policy with the policy made from driver files, to deploy them as one policy'
-                            Merge-CIPolicy -PolicyPaths (Join-Path -Path $StagingArea -ChildPath 'Raw_NoFlights.xml'), $DriverFilesScanPolicyPath -OutputFilePath $FinalEnforcedPolicyPath | Out-Null
+                            $null = Merge-CIPolicy -PolicyPaths (Join-Path -Path $StagingArea -ChildPath 'Raw_NoFlights.xml'), $DriverFilesScanPolicyPath -OutputFilePath $FinalEnforcedPolicyPath
 
                             Write-Verbose -Message 'Moving all AllowedSigners from Usermode to Kernel mode signing scenario'
-                            Move-UserModeToKernelMode -FilePath $FinalEnforcedPolicyPath | Out-Null
+                            $null = Move-UserModeToKernelMode -FilePath $FinalEnforcedPolicyPath
 
                             Write-Verbose -Message 'Setting the GUIDs for the XML policy file'
                             Edit-GUIDs -PolicyIDInput $PolicyID -PolicyFilePathInput $FinalEnforcedPolicyPath
@@ -365,7 +365,7 @@ Function New-KernelModeWDACConfig {
                             [System.IO.FileInfo]$FinalEnforcedCIPPath = Join-Path -Path $StagingArea -ChildPath "$PolicyID.cip"
 
                             Write-Verbose -Message 'Converting the policy XML file to CIP binary'
-                            ConvertFrom-CIPolicy -XmlFilePath $FinalEnforcedPolicyPath -BinaryFilePath $FinalEnforcedCIPPath | Out-Null
+                            $null = ConvertFrom-CIPolicy -XmlFilePath $FinalEnforcedPolicyPath -BinaryFilePath $FinalEnforcedCIPPath
 
                             # Deploy the policy if Deploy parameter is used
                             if ($Deploy) {
@@ -374,11 +374,11 @@ Function New-KernelModeWDACConfig {
                                 Write-Progress -Id 28 -Activity 'Deploying the final policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
                                 Write-Verbose -Message 'Deploying the enforced mode policy with the same ID as the Audit mode policy, effectively overwriting it'
-                                &'C:\Windows\System32\CiTool.exe' --update-policy $FinalEnforcedCIPPath -json | Out-Null
+                                $null = &'C:\Windows\System32\CiTool.exe' --update-policy $FinalEnforcedCIPPath -json
                                 Write-ColorfulText -Color HotPink -InputText 'Strict Kernel mode policy with no flighting root certs has been deployed in Enforced mode, no restart required.'
 
                                 Write-Verbose -Message 'Removing the GUID and time of deployment of the StrictKernelNoFlightRootsPolicy from user configuration'
-                                Remove-CommonWDACConfig -StrictKernelNoFlightRootsPolicyGUID -StrictKernelModePolicyTimeOfDeployment | Out-Null
+                                $null = Remove-CommonWDACConfig -StrictKernelNoFlightRootsPolicyGUID -StrictKernelModePolicyTimeOfDeployment
                             }
                             else {
                                 # Remove the Audit mode policy from the system

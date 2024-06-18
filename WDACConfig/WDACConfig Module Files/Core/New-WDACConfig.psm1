@@ -60,7 +60,7 @@ Function New-WDACConfig {
     }
     Begin {
         [System.Boolean]$Verbose = $PSBoundParameters.Verbose.IsPresent ? $true : $false
-        $PSBoundParameters.Debug.IsPresent ? ([System.Boolean]$Debug = $true) : ([System.Boolean]$Debug = $false) | Out-Null
+        [System.Boolean]$Debug = $PSBoundParameters.Debug.IsPresent ? $true : $false
         . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
 
         Write-Verbose -Message 'Importing the required sub-modules'
@@ -202,7 +202,7 @@ Function New-WDACConfig {
                     # Check if the parent node has more than one child node, if it does then only remove the child node
                     if ($ParentNode.ChildNodes.Count -gt 1) {
                         # Remove the node from the parent node
-                        $ParentNode.RemoveChild($Node) | Out-Null
+                        [System.Void]$ParentNode.RemoveChild($Node)
                     }
 
                     # If the parent node only has one child node then replace the parent node with an empty node
@@ -210,7 +210,7 @@ Function New-WDACConfig {
                         # Create a new node with the same name and namespace as the parent node
                         [System.Xml.XmlElement]$NewNode = $DriverBlockRulesXML.CreateElement($ParentNode.Name, $ParentNode.NamespaceURI)
                         # Replace the parent node with the new node
-                        $ParentNode.ParentNode.ReplaceChild($NewNode, $ParentNode) | Out-Null
+                        [System.Void]$ParentNode.ParentNode.ReplaceChild($NewNode, $ParentNode)
 
                         # Check if the new node has any sibling nodes, if not then replace its parent node with an empty node
                         # We do this because the built-in PowerShell cmdlets would throw errors if empty <FileRulesRef /> exists inside <ProductSigners> node
@@ -449,7 +449,7 @@ Function New-WDACConfig {
             Write-Progress -Id 6 -Activity 'Configuring the policy settings' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
             Write-Verbose -Message 'Resetting the policy ID and assigning policy name'
-            Set-CIPolicyIdInfo -FilePath $FinalPolicyPath -ResetPolicyID -PolicyName "$Name - $(Get-Date -Format 'MM-dd-yyyy')" | Out-Null
+            $null = Set-CIPolicyIdInfo -FilePath $FinalPolicyPath -ResetPolicyID -PolicyName "$Name - $(Get-Date -Format 'MM-dd-yyyy')"
 
             Write-Verbose -Message 'Setting the policy version to 1.0.0.0'
             Set-CIPolicyVersion -FilePath $FinalPolicyPath -Version '1.0.0.0'
@@ -470,7 +470,7 @@ Function New-WDACConfig {
                 Start-Process -FilePath 'C:\Windows\System32\sc.exe' -ArgumentList 'config', 'appidsvc', 'start= auto' -NoNewWindow
 
                 Write-Verbose -Message 'Deploying the policy'
-                &'C:\Windows\System32\CiTool.exe' --update-policy $CIPPath -json | Out-Null
+                $null = &'C:\Windows\System32\CiTool.exe' --update-policy $CIPPath -json
             }
 
             Copy-Item -Path $FinalPolicyPath -Destination $UserConfigDir -Force

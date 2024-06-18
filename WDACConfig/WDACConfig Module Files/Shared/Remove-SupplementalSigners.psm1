@@ -29,7 +29,7 @@ Function Remove-SupplementalSigners {
     Begin {
 
         # Make sure the input file is compliant with the CI policy schema
-        Test-CiPolicy -XmlFile $Path | Out-Null
+        $null = Test-CiPolicy -XmlFile $Path
 
         # Get the XML content from the file
         [System.Xml.XmlDocument]$XMLContent = Get-Content -Path $Path
@@ -70,14 +70,14 @@ Function Remove-SupplementalSigners {
             # Loop through the Signer nodes to remove
             foreach ($SignerNode in $NodesToRemove_Signers) {
                 # Remove the Signer from the Signers node
-                $SiPolicyNode.Signers.RemoveChild($SignerNode) | Out-Null
+                [System.Void]$SiPolicyNode.Signers.RemoveChild($SignerNode)
             }
 
             # Loop through the <SupplementalPolicySigners>..</SupplementalPolicySigners> nodes to remove, in case there are multiple!
             foreach ($Node in $NodesToRemove_SupplementalPolicySigners) {
 
                 # Remove the <SupplementalPolicySigners> node from the parent node which is $SiPolicyNode
-                $SiPolicyNode.RemoveChild($Node) | Out-Null
+                [System.Void]$SiPolicyNode.RemoveChild($Node)
             }
         }
 
@@ -95,7 +95,7 @@ Function Remove-SupplementalSigners {
             [System.Xml.XmlElement]$OldSignersNode = $XMLContent.SelectSingleNode('//ns:Signers', $NameSpace)
 
             # Replace the old element with the new one
-            $SiPolicyNode.ReplaceChild($NewSignersNode, $OldSignersNode) | Out-Null
+            [System.Void]$SiPolicyNode.ReplaceChild($NewSignersNode, $OldSignersNode)
         }
 
     }

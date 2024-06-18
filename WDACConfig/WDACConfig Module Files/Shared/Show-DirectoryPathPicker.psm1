@@ -5,7 +5,7 @@ Function Show-DirectoryPathPicker {
     #>
     [System.IO.DirectoryInfo[]]$ProgramsPaths = @()
     do {
-        [System.Reflection.Assembly]::LoadWithPartialName('System.windows.forms') | Out-Null
+        [System.Void][System.Reflection.Assembly]::LoadWithPartialName('System.windows.forms')
         [System.Windows.Forms.FolderBrowserDialog]$OBJ = New-Object -TypeName System.Windows.Forms.FolderBrowserDialog
         $OBJ.InitialDirectory = "$env:SystemDrive"
         $OBJ.Description = 'To stop selecting directories, press ESC or select Cancel.'

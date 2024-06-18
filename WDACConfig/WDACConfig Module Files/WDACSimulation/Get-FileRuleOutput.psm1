@@ -2,7 +2,7 @@
 Function Get-FileRuleOutput {
     <#
     .SYNOPSIS
-        a function to load an xml file and create an output array of custom objects that contain the file rules that are based on file hashes
+        a function to load an xml file and create an output array that contains the file rules that are based on file hashes
     .PARAMETER XmlPath
         Path to the XML file that user selected for WDAC simulation
     .NOTES
@@ -26,7 +26,7 @@ Function Get-FileRuleOutput {
         $Xml = [System.Xml.XmlDocument](Get-Content -LiteralPath $XmlPath)
 
         # Create an empty array to store the output
-        [System.Object[]]$OutputHashInfoProcessing = @()
+        $OutputHashInfoProcessing = New-Object -TypeName System.Collections.Generic.HashSet[WDACConfig.PolicyHashObj]
     }
 
     Process {
@@ -43,21 +43,16 @@ Function Get-FileRuleOutput {
             # Extract the file path from the FriendlyName attribute using regex
             [System.IO.FileInfo]$FilePathForHash = $FileRule.FriendlyName -replace ' (Hash (Sha1|Sha256|Page Sha1|Page Sha256|Authenticode SIP Sha256))$', ''
 
-            # Create a custom object with the three properties
-            $Object = [PSCustomObject]@{
-                HashValue       = $Hashvalue
-                HashType        = $HashType
-                FilePathForHash = $FilePathForHash
-            }
-
-            # Add the object to the output array if it is not a duplicate hash value
-            if ($OutputHashInfoProcessing.HashValue -notcontains $Hashvalue) {
-                $OutputHashInfoProcessing += $Object
-            }
+            # Add the extracted values of the current Hash rule to the output HashSet
+            $OutputHashInfoProcessing.Add([WDACConfig.PolicyHashObj]::New(
+                    $HashValue,
+                    $HashType,
+                    $FilePathForHash
+                ))
         }
 
-        # Only show the Authenticode Hash SHA256
-        [System.Object[]]$OutputHashInfoProcessing = $OutputHashInfoProcessing | Where-Object -FilterScript { $_.hashtype -eq 'Hash Sha256' }
+        # Only keep the Authenticode Hash SHA256
+        $OutputHashInfoProcessing = $OutputHashInfoProcessing.Where({ $_.hashtype -eq 'Hash Sha256' })
     }
 
     End {

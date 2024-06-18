@@ -253,6 +253,7 @@ This is an advanced PowerShell module for WDAC (Windows Defender Application Con
         'C#\Crypt32CertCN.cs',
         'C#\WldpQuerySecurityPolicy.cs',
         'C#\ArgumentCompleters.cs',
+        'C#\PolicyHashObj.cs',
         'Help\ConvertTo-WDACPolicy.xml',
         'Help\ConvertTo-WDACPolicy.md',
         'XMLOps\Build-SignerAndHashObjects.psm1',

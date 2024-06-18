@@ -72,7 +72,7 @@ Function New-SupplementalWDACConfig {
     )
     Begin {
         [System.Boolean]$Verbose = $PSBoundParameters.Verbose.IsPresent ? $true : $false
-        $PSBoundParameters.Debug.IsPresent ? ([System.Boolean]$Debug = $true) : ([System.Boolean]$Debug = $false) | Out-Null
+        [System.Boolean]$Debug = $PSBoundParameters.Debug.IsPresent ? $true : $false
         . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
 
         Write-Verbose -Message 'Importing the required sub-modules'
@@ -172,7 +172,7 @@ Function New-SupplementalWDACConfig {
                 Write-Progress -Id 19 -Activity 'Configuring the Supplemental policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
                 Write-Verbose -Message 'Changing the policy type from base to Supplemental, assigning its name and resetting its policy ID'
-                Set-CIPolicyIdInfo -FilePath $FinalSupplementalPath -ResetPolicyID -BasePolicyToSupplementPath $PolicyPath -PolicyName "$SuppPolicyName - $(Get-Date -Format 'MM-dd-yyyy')" | Out-Null
+                $null = Set-CIPolicyIdInfo -FilePath $FinalSupplementalPath -ResetPolicyID -BasePolicyToSupplementPath $PolicyPath -PolicyName "$SuppPolicyName - $(Get-Date -Format 'MM-dd-yyyy')"
 
                 Write-Verbose -Message 'Setting the Supplemental policy version to 1.0.0.0'
                 Set-CIPolicyVersion -FilePath $FinalSupplementalPath -Version '1.0.0.0'
@@ -180,14 +180,14 @@ Function New-SupplementalWDACConfig {
                 Set-CiRuleOptions -FilePath $FinalSupplementalPath -Template Supplemental
 
                 Write-Verbose -Message 'Converting the Supplemental policy XML file to a CIP file'
-                ConvertFrom-CIPolicy -XmlFilePath $FinalSupplementalPath -BinaryFilePath $FinalSupplementalCIPPath | Out-Null
+                $null = ConvertFrom-CIPolicy -XmlFilePath $FinalSupplementalPath -BinaryFilePath $FinalSupplementalCIPPath
 
                 if ($Deploy) {
                     $CurrentStep++
                     Write-Progress -Id 19 -Activity 'Deploying the Supplemental policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
                     Write-Verbose -Message 'Deploying the Supplemental policy'
-                    &'C:\Windows\System32\CiTool.exe' --update-policy $FinalSupplementalCIPPath -json | Out-Null
+                    $null = &'C:\Windows\System32\CiTool.exe' --update-policy $FinalSupplementalCIPPath -json
                     Write-ColorfulText -Color Pink -InputText "A Supplemental policy with the name '$SuppPolicyName' has been deployed."
                 }
                 Write-Progress -Id 19 -Activity 'Complete.' -Completed
@@ -210,7 +210,7 @@ Function New-SupplementalWDACConfig {
                 } -args $FolderPath, $SuppPolicyName, $StagingArea
 
                 Write-Verbose -Message 'Changing the policy type from base to Supplemental, assigning its name and resetting its policy ID'
-                Set-CIPolicyIdInfo -FilePath $FinalSupplementalPath -ResetPolicyID -BasePolicyToSupplementPath $PolicyPath -PolicyName "$SuppPolicyName - $(Get-Date -Format 'MM-dd-yyyy')" | Out-Null
+                $null = Set-CIPolicyIdInfo -FilePath $FinalSupplementalPath -ResetPolicyID -BasePolicyToSupplementPath $PolicyPath -PolicyName "$SuppPolicyName - $(Get-Date -Format 'MM-dd-yyyy')"
 
                 Write-Verbose -Message 'Setting the Supplemental policy version to 1.0.0.0'
                 Set-CIPolicyVersion -FilePath $FinalSupplementalPath -Version '1.0.0.0'
@@ -218,14 +218,14 @@ Function New-SupplementalWDACConfig {
                 Set-CiRuleOptions -FilePath $FinalSupplementalPath -Template Supplemental
 
                 Write-Verbose -Message 'Converting the Supplemental policy XML file to a CIP file'
-                ConvertFrom-CIPolicy -XmlFilePath $FinalSupplementalPath -BinaryFilePath $FinalSupplementalCIPPath | Out-Null
+                $null = ConvertFrom-CIPolicy -XmlFilePath $FinalSupplementalPath -BinaryFilePath $FinalSupplementalCIPPath
 
                 if ($Deploy) {
                     $CurrentStep++
                     Write-Progress -Id 20 -Activity 'Deploying the Supplemental policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
                     Write-Verbose -Message 'Deploying the Supplemental policy'
-                    &'C:\Windows\System32\CiTool.exe' --update-policy $FinalSupplementalCIPPath -json | Out-Null
+                    $null = &'C:\Windows\System32\CiTool.exe' --update-policy $FinalSupplementalCIPPath -json
                     Write-ColorfulText -Color Pink -InputText "A Supplemental policy with the name '$SuppPolicyName' has been deployed."
                 }
                 Write-Progress -Id 20 -Activity 'Complete.' -Completed
@@ -285,7 +285,7 @@ Function New-SupplementalWDACConfig {
                         } -args $PackageName, $SuppPolicyName, $StagingArea
 
                         Write-Verbose -Message 'Converting the policy type from base to Supplemental, assigning its name and resetting its policy ID'
-                        Set-CIPolicyIdInfo -FilePath $FinalSupplementalPath -ResetPolicyID -BasePolicyToSupplementPath $PolicyPath -PolicyName "$SuppPolicyName - $(Get-Date -Format 'MM-dd-yyyy')" | Out-Null
+                        $null = Set-CIPolicyIdInfo -FilePath $FinalSupplementalPath -ResetPolicyID -BasePolicyToSupplementPath $PolicyPath -PolicyName "$SuppPolicyName - $(Get-Date -Format 'MM-dd-yyyy')"
 
                         Write-Verbose -Message 'Setting the Supplemental policy version to 1.0.0.0'
                         Set-CIPolicyVersion -FilePath $FinalSupplementalPath -Version '1.0.0.0'
@@ -293,14 +293,14 @@ Function New-SupplementalWDACConfig {
                         Set-CiRuleOptions -FilePath $FinalSupplementalPath -Template Supplemental
 
                         Write-Verbose -Message 'Converting the Supplemental policy XML file to a CIP file'
-                        ConvertFrom-CIPolicy -XmlFilePath $FinalSupplementalPath -BinaryFilePath $FinalSupplementalCIPPath | Out-Null
+                        $null = ConvertFrom-CIPolicy -XmlFilePath $FinalSupplementalPath -BinaryFilePath $FinalSupplementalCIPPath
 
                         if ($Deploy) {
                             $CurrentStep++
                             Write-Progress -Id 21 -Activity 'Deploying the Supplemental policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
                             Write-Verbose -Message 'Deploying the Supplemental policy'
-                            &'C:\Windows\System32\CiTool.exe' --update-policy $FinalSupplementalCIPPath -json | Out-Null
+                            $null = &'C:\Windows\System32\CiTool.exe' --update-policy $FinalSupplementalCIPPath -json
                             Write-ColorfulText -Color Pink -InputText "A Supplemental policy with the name '$SuppPolicyName' has been deployed."
                         }
                     }
@@ -396,7 +396,7 @@ Function New-SupplementalWDACConfig {
                 Write-Progress -Id 33 -Activity 'Finalizing the Supplemental policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
                 Write-Verbose -Message 'Converting the policy type from base to Supplemental, assigning its name and resetting its policy ID'
-                Set-CIPolicyIdInfo -FilePath $FinalSupplementalPath -ResetPolicyID -BasePolicyToSupplementPath $PolicyPath -PolicyName "$SuppPolicyName - $(Get-Date -Format 'MM-dd-yyyy')" | Out-Null
+                $null = Set-CIPolicyIdInfo -FilePath $FinalSupplementalPath -ResetPolicyID -BasePolicyToSupplementPath $PolicyPath -PolicyName "$SuppPolicyName - $(Get-Date -Format 'MM-dd-yyyy')"
 
                 Write-Verbose -Message 'Setting the Supplemental policy version to 1.0.0.0'
                 Set-CIPolicyVersion -FilePath $FinalSupplementalPath -Version '1.0.0.0'

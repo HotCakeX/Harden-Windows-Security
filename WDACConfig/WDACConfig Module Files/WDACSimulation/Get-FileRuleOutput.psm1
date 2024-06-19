@@ -2,28 +2,24 @@
 Function Get-FileRuleOutput {
     <#
     .SYNOPSIS
-        a function to load an xml file and create an output array that contains the file rules that are based on file hashes
-    .PARAMETER XmlPath
-        Path to the XML file that user selected for WDAC simulation
+        a function that accepts WDAC policy XML content and creates an output array that contains the file rules that are based on file hashes
+    .PARAMETER Xml
+        The WDAC Policy XML file content as XMLDocument object
     .NOTES
         The function is intentionally not made to handle Allow all rules since checking for their existence happens in the main cmdlet
     .INPUTS
-        System.IO.FileInfo
+        System.Xml.XmlDocument
     .OUTPUTS
         System.Object[]
     #>
     [CmdletBinding()]
     [OutputType([System.Object[]])]
     param(
-        [parameter(Mandatory = $true)]
-        [System.IO.FileInfo]$XmlPath
+        [parameter(Mandatory = $true)][System.Xml.XmlDocument]$Xml
     )
     Begin {
         [System.Boolean]$Verbose = $PSBoundParameters.Verbose.IsPresent ? $true : $false
         . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
-
-        # Load the xml file into a variable
-        $Xml = [System.Xml.XmlDocument](Get-Content -LiteralPath $XmlPath)
 
         # Create an empty array to store the output
         $OutputHashInfoProcessing = New-Object -TypeName System.Collections.Generic.HashSet[WDACConfig.PolicyHashObj]

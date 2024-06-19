@@ -97,7 +97,10 @@ Function Invoke-WDACSimulation {
         # Check if the supplied XML file contains Allow all rule
         [System.Boolean]$ShouldExit = $false
 
-        if ((Get-Content -LiteralPath $XmlFilePath -Raw) -match '<Allow ID="ID_ALLOW_.*" FriendlyName=".*" FileName="\*".*/>') {
+        # Get the content of the XML file
+        [System.String]$XMLContent = Get-Content -LiteralPath $XmlFilePath -Raw
+
+        if ($XMLContent -match '<Allow ID="ID_ALLOW_.*" FriendlyName=".*" FileName="\*".*/>') {
             Write-Verbose -Message "The supplied XML file '$($XmlFilePath.Name)' contains a rule that allows all files."
 
             # Set a flag to exit the subsequent blocks
@@ -106,11 +109,6 @@ Function Invoke-WDACSimulation {
             # Exit the Begin block
             Return
         }
-    }
-
-    process {
-        # Exit the Process block
-        if ($ShouldExit) { Return }
 
         # Store the PSCustomObjects that contain file paths and SpecificFileNameLevel options of valid Allowed Signed files - FilePublisher level
         $SignedFile_FilePublisher_Objects = New-Object -TypeName System.Collections.Generic.List[System.Object]
@@ -157,6 +155,11 @@ Function Invoke-WDACSimulation {
             # Make it case-insensitive
             [System.StringComparer]::InvariantCultureIgnoreCase
         )
+    }
+
+    process {
+        # Exit the Process block
+        if ($ShouldExit) { Return }
 
         # Hash Sha256 values of all the file rules based on hash in the supplied xml policy file
         Write-Verbose -Message 'Getting the Sha256 Hash values of all the file rules based on hash in the supplied xml policy file'
@@ -164,14 +167,14 @@ Function Invoke-WDACSimulation {
         $CurrentStep++
         Write-Progress -Id 0 -Activity 'Getting the Sha256 Hash values from the XML file' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
-        $SHA256HashesFromXML = [System.Collections.Generic.HashSet[System.String]]@((Get-FileRuleOutput -xmlPath $XmlFilePath).hashvalue)
+        $SHA256HashesFromXML = [System.Collections.Generic.HashSet[System.String]]@((Get-FileRuleOutput -Xml ([System.Xml.XmlDocument]$XMLContent)).HashValue)
 
         # Get all of the file paths of the files that WDAC supports, from the user provided directory
         Write-Verbose -Message 'Getting all of the file paths of the files that WDAC supports, from the user provided directory'
 
         $CurrentStep++
         Write-Progress -Id 0 -Activity "Getting the supported files' paths" -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
-        [System.IO.FileInfo[]]$CollectedFiles = Get-FilesFast -Directory $FolderPath -File $FilePath
+        $CollectedFiles = [System.Collections.Generic.HashSet[System.IO.FileInfo]]@(Get-FilesFast -Directory $FolderPath -File $FilePath)
 
         # Make sure the selected directory contains files with the supported extensions
         if (!$CollectedFiles) { Throw 'There are no files in the selected directory that are supported by the WDAC engine.' }
@@ -271,17 +274,22 @@ Function Invoke-WDACSimulation {
                 # If the file's hash does not exist in the supplied XML file, then check its signature
                 else {
 
+                    $GetAuthenticodeSignatureResults = Get-AuthenticodeSignature -LiteralPath $CurrentFilePath
+
                     # Get the status of file's signature
-                    :MainSwitchLabel switch (Get-AuthenticodeSignature -LiteralPath $CurrentFilePath) {
+                    :MainSwitchLabel switch ($GetAuthenticodeSignatureResults.Status) {
 
                         # If the file is signed and valid
-                        { $_.Status -eq 'valid' } {
-
+                        'valid' {
                             try {
                                 # Use the Compare-SignerAndCertificate function to process it
-                                $ComparisonResult = Compare-SignerAndCertificate -XmlFilePath $XmlFilePath -SignedFilePath $CurrentFilePath
+                                $ComparisonResult = Compare-SignerAndCertificate -SimulationInput ([WDACConfig.SimulationInput]::New(
+                                        $CurrentFilePath,
+                                        $GetAuthenticodeSignatureResults,
+                                        [System.Xml.XmlDocument]$XMLContent
+                                    ))
                             }
-                            catch [ExceptionFailedToGetCertificateCollection] {
+                            catch [WDACConfig.ExceptionFailedToGetCertificateCollection] {
                                 # If the file's certificate collections could not be fetched due to lack of necessary permissions, place it in a different array of file path
                                 [System.Void]$InAccessibleFilePaths.Add($CurrentFilePath)
 
@@ -354,7 +362,7 @@ Function Invoke-WDACSimulation {
                         }
 
                         # If the file is signed but is tampered
-                        { $_.Status -eq 'HashMismatch' } {
+                        'HashMismatch' {
                             Write-Warning -Message "The file: $CurrentFilePath has hash mismatch, it is most likely tampered."
 
                             [System.Void]$SignedHashMismatchFilePaths.Add($CurrentFilePath)
@@ -363,7 +371,7 @@ Function Invoke-WDACSimulation {
                         }
 
                         # If the file is not signed
-                        { $_.Status -eq 'NotSigned' } {
+                        'NotSigned' {
                             Write-Verbose -Message 'The file is not signed and is not allowed by hash'
 
                             [System.Void]$UnsignedNotAllowedFilePaths.Add($CurrentFilePath)

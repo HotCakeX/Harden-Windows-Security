@@ -489,7 +489,7 @@ Function Edit-WDACConfig {
                 }
 
                 if ($HasSelectedLogs) {
-                    $null = Wait-Job -Job $ECCSignedAuditLogsJob 
+                    $null = Wait-Job -Job $ECCSignedAuditLogsJob
                     # Redirecting Verbose and Debug output streams because they are automatically displayed already on the console using StreamingHost parameter
                     Receive-Job -Job $ECCSignedAuditLogsJob 4>$null 5>$null
                     Remove-Job -Job $ECCSignedAuditLogsJob -Force

@@ -4,58 +4,52 @@ Function Get-SignerInfo {
         Function that takes an XML file path as input and returns an array of Signer objects
         The output contains as much info as possible about the signer
     .INPUTS
-        System.IO.FileInfo
+        WDACConfig.SimulationInput
+    .INPUTS
+        WDACConfig.SimulationInput
     .OUTPUTS
         WDACConfig.Signer[]
-    .PARAMETER XmlFilePath
-        The XML file path that the user selected for WDAC simulation.
-    .PARAMETER SignedFilePath
-        The signed file path that the user selected for WDAC simulation
-        This is used for cross-referencing some of the signers' properties with the file's properties
+    .PARAMETER SimulationInput
+        The SimulationInput object contains:
+        1. File path of the signed file
+        2. Results of the Get-AuthenticodeSignature of the signed file
+        3. Content of the WDAC XML file as an XML object
     #>
     [CmdletBinding()]
     [OutputType([WDACConfig.Signer[]])]
     param(
-        [Parameter(Mandatory = $true)][System.IO.FileInfo]$XmlFilePath,
-        [parameter(Mandatory = $true)][System.IO.FileInfo]$SignedFilePath
+        [WDACConfig.SimulationInput]$SimulationInput
     )
     begin {
         [System.Boolean]$Verbose = $PSBoundParameters.Verbose.IsPresent ? $true : $false
-        . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
-
-        Write-Verbose -Message 'Importing the required sub-modules'
-        Import-Module -FullyQualifiedName "$ModuleRootPath\WDACSimulation\Convert-HexToOID.psm1" -Force
-
-        # Load the XML file
-        [System.Xml.XmlDocument]$Xml = Get-Content -LiteralPath $XmlFilePath
     }
     process {
         # Select the Signer nodes
-        [System.Object[]]$Signers = $Xml.SiPolicy.Signers.Signer
+        [System.Object[]]$Signers = $SimulationInput.XMLContent.SiPolicy.Signers.Signer
 
         # Get User Mode Signers IDs
-        $UMSigners = [System.Collections.Generic.HashSet[System.String]]@(($Xml.SiPolicy.SigningScenarios.SigningScenario.Where({ $_.value -eq '12' })).ProductSigners.AllowedSigners.AllowedSigner.SignerId)
+        $UMSigners = [System.Collections.Generic.HashSet[System.String]]@(($SimulationInput.XMLContent.SiPolicy.SigningScenarios.SigningScenario.Where({ $_.value -eq '12' })).ProductSigners.AllowedSigners.AllowedSigner.SignerId)
 
         # Get Kernel Mode Signers IDs
-        $KMSigners = [System.Collections.Generic.HashSet[System.String]]@(($Xml.SiPolicy.SigningScenarios.SigningScenario.Where({ $_.value -eq '131' })).ProductSigners.AllowedSigners.AllowedSigner.SignerId)
+        $KMSigners = [System.Collections.Generic.HashSet[System.String]]@(($SimulationInput.XMLContent.SiPolicy.SigningScenarios.SigningScenario.Where({ $_.value -eq '131' })).ProductSigners.AllowedSigners.AllowedSigner.SignerId)
 
         # Get UpdatePolicySigners IDs
-        $UPSigners = [System.Collections.Generic.HashSet[System.String]]@($Xml.SiPolicy.UpdatePolicySigners.UpdatePolicySigner.SignerId)
+        $UPSigners = [System.Collections.Generic.HashSet[System.String]]@($SimulationInput.XMLContent.SiPolicy.UpdatePolicySigners.UpdatePolicySigner.SignerId)
 
         # Get SupplementalPolicySigners IDs
-        $SPSigners = [System.Collections.Generic.HashSet[System.String]]@($Xml.SiPolicy.SupplementalPolicySigners.SupplementalPolicySigner.SignerId)
+        $SPSigners = [System.Collections.Generic.HashSet[System.String]]@($SimulationInput.XMLContent.SiPolicy.SupplementalPolicySigners.SupplementalPolicySigner.SignerId)
 
         # Get all of the File Attrib IDs in the <FileRules> node
-        $FileAttribIDs = [System.Collections.Generic.HashSet[System.String]]@($Xml.SiPolicy.FileRules.FileAttrib.ID)
+        $FileAttribIDs = [System.Collections.Generic.HashSet[System.String]]@($SimulationInput.XMLContent.SiPolicy.FileRules.FileAttrib.ID)
 
         # Select the EKU nodes if they exist
-        if ($Xml.SiPolicy.EKUs.EKU) {
+        if ($SimulationInput.XMLContent.SiPolicy.EKUs.EKU) {
 
             # Create a hashtable to store the correlation between the EKU IDs and their values
             [System.Collections.Hashtable]$EKUAndValuesCorrelation = @{}
 
             # Add the EKU IDs and their values to the hashtable
-            $Xml.SiPolicy.EKUs.EKU | ForEach-Object -Process {
+            $SimulationInput.XMLContent.SiPolicy.EKUs.EKU | ForEach-Object -Process {
                 $EKUAndValuesCorrelation.Add($_.ID, $_.Value)
             }
         }
@@ -138,11 +132,11 @@ Function Get-SignerInfo {
 
                 # Loop through each EKU ID (hex value) and convert it to an OID
                 $EKUAndValuesCorrelation[$Signer.CertEKU.ID] | ForEach-Object -Process {
-                    [System.Void]$EKUOIDs.Add((Convert-HexToOID -Hex $_))
+                    [System.Void]$EKUOIDs.Add([WDACConfig.CertificateHelper]::ConvertHexToOID($_))
                 }
 
                 # Get the EKU OIDs of the file's signer certificate (Leaf certificate)
-                [System.String[]]$FileEKUOIDs = (Get-AuthenticodeSignature -LiteralPath $SignedFilePath).SignerCertificate.EnhancedKeyUsageList.ObjectId
+                [System.String[]]$FileEKUOIDs = $SimulationInput.GetAuthenticodeResults.SignerCertificate.EnhancedKeyUsageList.ObjectId
 
                 # Check if the array of EKU OIDs of the file's signer certificate contains all the EKU OIDs of the signer defined in the WDAC policy that is currently being processed in the loop
                 if (-NOT ($EKUOIDs.Where({ -NOT ($FileEKUOIDs.Contains($_)) }))) {

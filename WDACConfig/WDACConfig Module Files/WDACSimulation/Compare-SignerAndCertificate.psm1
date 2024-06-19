@@ -6,19 +6,19 @@ Function Compare-SignerAndCertificate {
 
         Only returns the result if the file is authorized by the policy using one of the signers
     .INPUTS
-        System.IO.FileInfo
+        WDACConfig.SimulationInput
     .OUTPUTS
         ordered
-    .PARAMETER XmlFilePath
-        Path to a WDAC XML file
-    .PARAMETER SignedFilePath
-        Path to a signed file
+    .PARAMETER SimulationInput
+        The SimulationInput object contains:
+        1. File path of the signed file
+        2. Results of the Get-AuthenticodeSignature of the signed file
+        3. Content of the WDAC XML file as an XML object
     #>
     [CmdletBinding()]
     [OutputType([ordered])]
     param(
-        [Parameter(Mandatory = $true)][System.IO.FileInfo]$XmlFilePath,
-        [Parameter(Mandatory = $true)][System.IO.FileInfo]$SignedFilePath
+        [Parameter(Mandatory = $true)][WDACConfig.SimulationInput]$SimulationInput
     )
     Begin {
         [System.Boolean]$Verbose = $PSBoundParameters.Verbose.IsPresent ? $true : $false
@@ -31,13 +31,10 @@ Function Compare-SignerAndCertificate {
         Import-Module -FullyQualifiedName "$ModuleRootPath\WDACSimulation\Get-ExtendedFileInfo.psm1" -Force
 
         # Get the signer information from the XML file path using the Get-SignerInfo function
-        [WDACConfig.Signer[]]$SignerInfo = Get-SignerInfo -XmlFilePath $XmlFilePath -SignedFilePath $SignedFilePath
-
-        # Load the XML file as an XML document object
-        [System.Xml.XmlDocument]$Xml = Get-Content -LiteralPath $XmlFilePath
+        [WDACConfig.Signer[]]$SignerInfo = Get-SignerInfo -SimulationInput $SimulationInput
 
         # Select the FileAttrib nodes of the XML file
-        [System.Object[]]$PolicyFileAttributes = $Xml.SiPolicy.FileRules.FileAttrib
+        [System.Object[]]$PolicyFileAttributes = $SimulationInput.XMLContent.SiPolicy.FileRules.FileAttrib
 
         # An ordered hashtable that holds the details of the current file
         # Values marked as "Gathered from the Get-SignerInfo function" are identical for both primary and nested signers since that function can't know which signer is going to be matched with the primary or nested certificate of a file
@@ -87,11 +84,11 @@ Function Compare-SignerAndCertificate {
             NestedCertPublisherMatch                 = $false
             #Endregion Nested Signer
 
-            FilePath                                 = $SignedFilePath
+            FilePath                                 = $SimulationInput.FilePath
         }
 
         # Get details of the intermediate and leaf certificates of the primary certificate of the signed file
-        [System.Object[]]$AllPrimaryCertificateDetails = Get-CertificateDetails -FilePath $SignedFilePath
+        [System.Object[]]$AllPrimaryCertificateDetails = Get-CertificateDetails -FilePath $SimulationInput.FilePath
 
         # Store the intermediate certificate(s) details of the Primary certificate of the signed file
         [System.Object[]]$PrimaryCertificateIntermediateDetails = $AllPrimaryCertificateDetails.IntermediateCertificates
@@ -100,7 +97,7 @@ Function Compare-SignerAndCertificate {
         [System.Object]$PrimaryCertificateLeafDetails = $AllPrimaryCertificateDetails.LeafCertificate
 
         # Get the Nested (Secondary) certificate of the signed file, if any
-        [System.Management.Automation.Signature]$ExtraCertificateDetails = Get-NestedSignerSignature -FilePath $SignedFilePath
+        [System.Management.Automation.Signature]$ExtraCertificateDetails = Get-NestedSignerSignature -SimulationInput $SimulationInput
 
         # Extract the Nested (Secondary) certificate from the nested property, if any
         $NestedCertificate = ($ExtraCertificateDetails).NestedSignature.SignerCertificate
@@ -194,10 +191,10 @@ Function Compare-SignerAndCertificate {
                         if ($Signer.HasFileAttrib) {
 
                             # Get the extended file attributes as ordered hashtable
-                            $ExtendedFileInfo = Get-ExtendedFileInfo -Path $SignedFilePath
+                            $ExtendedFileInfo = Get-ExtendedFileInfo -Path $SimulationInput.FilePath
 
                             # Get the current file's version
-                            [System.Version]$FileVersion = (Get-Item -LiteralPath $SignedFilePath).VersionInfo.FileVersionRaw
+                            [System.Version]$FileVersion = (Get-Item -LiteralPath $SimulationInput.FilePath).VersionInfo.FileVersionRaw
 
                             # If the file version couldn't be retrieved from the file using Get-Item cmdlet
                             if (-NOT $FileVersion) {
@@ -425,10 +422,10 @@ Function Compare-SignerAndCertificate {
                                 if (-NOT $FileExtendedInfoAvailable) {
 
                                     # Get the extended file attributes as ordered hashtable
-                                    $ExtendedFileInfo = Get-ExtendedFileInfo -Path $SignedFilePath
+                                    $ExtendedFileInfo = Get-ExtendedFileInfo -Path $SimulationInput.FilePath
 
                                     # Get the current file's version
-                                    [System.Version]$FileVersion = (Get-Item -LiteralPath $SignedFilePath).VersionInfo.FileVersionRaw
+                                    [System.Version]$FileVersion = (Get-Item -LiteralPath $SimulationInput.FilePath).VersionInfo.FileVersionRaw
 
                                     # If the file version couldn't be retrieved from the file using Get-Item cmdlet
                                     if (-NOT $FileVersion) {

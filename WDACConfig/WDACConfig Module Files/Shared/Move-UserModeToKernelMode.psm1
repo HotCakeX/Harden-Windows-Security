@@ -47,7 +47,7 @@ Function Move-UserModeToKernelMode {
             [System.Void]$signingScenario131.ProductSigners.AllowedSigners.AppendChild($NewAllowedSigner)
         }
 
-        # Remove the SigningScenario node with Value 12 from the XML document        
+        # Remove the SigningScenario node with Value 12 from the XML document
         [System.Void]$Xml.SiPolicy.SigningScenarios.RemoveChild($signingScenario12)
     }
 

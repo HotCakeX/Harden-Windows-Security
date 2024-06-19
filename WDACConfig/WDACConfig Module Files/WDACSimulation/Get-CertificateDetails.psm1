@@ -32,17 +32,13 @@ Function Get-CertificateDetails {
         [System.Boolean]$Verbose = $PSBoundParameters.Verbose.IsPresent ? $true : $false
         . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
 
-        # Importing the required sub-modules
-        Import-Module -FullyQualifiedName "$ModuleRootPath\WDACSimulation\Get-TBSCertificate.psm1" -Force
-        Import-Module -FullyQualifiedName "$ModuleRootPath\WDACSimulation\Get-SignedFileCertificates.psm1" -Force
-
         if ($FilePath) {
-            # Get all the certificates from the file path using the Get-SignedFileCertificates function
-            [System.Security.Cryptography.X509Certificates.X509Certificate2[]]$CertCollection = (Get-SignedFileCertificates -FilePath $FilePath).Where({ $_.EnhancedKeyUsageList.FriendlyName -ne 'Time Stamping' })
+            # Get all the certificates from the file path
+            [System.Security.Cryptography.X509Certificates.X509Certificate2[]]$CertCollection = ([WDACConfig.CertificateHelper]::GetSignedFileCertificates($FilePath)).Where({ $_.EnhancedKeyUsageList.FriendlyName -ne 'Time Stamping' })
         }
         elseif ($X509Certificate2) {
-            # The "{$_ -ne 0}" part is used to filter the output coming from Get-NestedSignerSignature function that gets nested certificate
-            [System.Security.Cryptography.X509Certificates.X509Certificate2[]]$CertCollection = (Get-SignedFileCertificates -X509Certificate2 $X509Certificate2).Where({ ($_.EnhancedKeyUsageList.FriendlyName -ne 'Time Stamping') -and ($_ -ne 0) })
+            # The "{$_ -ne 0}" part is used to filter the output coming from Get-NestedSignerSignature function that gets nested certificate - since we're using the 2nd parameter, the first parameter should be passed as null
+            [System.Security.Cryptography.X509Certificates.X509Certificate2[]]$CertCollection = ([WDACConfig.CertificateHelper]::GetSignedFileCertificates($null, $X509Certificate2)).Where({ ($_.EnhancedKeyUsageList.FriendlyName -ne 'Time Stamping') -and ($_ -ne 0) })
         }
         else {
             throw 'Either FilePath or X509Certificate2 parameter must be specified'
@@ -90,7 +86,7 @@ Function Get-CertificateDetails {
                 [System.String]$SubjectCN = [WDACConfig.CryptoAPI]::GetNameString($Element.Certificate.Handle, [WDACConfig.CryptoAPI]::CERT_NAME_SIMPLE_DISPLAY_TYPE, $null, $false)
 
                 # Get the TBS value of the certificate
-                [System.String]$TbsValue = Get-TBSCertificate -cert $Element.Certificate
+                [System.String]$TbsValue = [WDACConfig.CertificateHelper]::GetTBSCertificate($Element.Certificate)
 
                 # Create a custom object with the extracted properties and the TBS value and add it to the array
                 $Obj.Add([pscustomobject]@{

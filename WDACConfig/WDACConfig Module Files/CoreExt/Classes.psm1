@@ -44,16 +44,6 @@ Class CertCNz : System.Management.Automation.IValidateSetValuesGenerator {
     }
 }
 
-# a class to throw a custom exception when the certificate collection cannot be obtained during WDAC Simulation
-[NoRunspaceAffinity()]
-class ExceptionFailedToGetCertificateCollection : System.Exception {
-    [System.String]$AdditionalData
-
-    ExceptionFailedToGetCertificateCollection([System.String]$Message, [System.String]$AdditionalData) : base($Message) {
-        $This.additionalData = $AdditionalData
-    }
-}
-
 # a class to define valid policy rule options
 [NoRunspaceAffinity()]
 Class RuleOptionsx : System.Management.Automation.IValidateSetValuesGenerator {
@@ -127,7 +117,6 @@ Class HashCreator {
     [ScanLevelz]
     [CertCNz]
     [BasePolicyNamez]
-    [ExceptionFailedToGetCertificateCollection]
     [RuleOptionsx]
     [CertificateDetailsCreator]
     [FilePublisherSignerCreator]

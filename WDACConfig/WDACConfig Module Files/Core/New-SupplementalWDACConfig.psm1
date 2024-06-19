@@ -84,8 +84,6 @@ Function New-SupplementalWDACConfig {
 
         if ($PSBoundParameters['Certificates']) {
             Import-Module -Force -FullyQualifiedName @(
-                "$ModuleRootPath\WDACSimulation\Get-TBSCertificate.psm1",
-                "$ModuleRootPath\WDACSimulation\Get-SignedFileCertificates.psm1",
                 "$ModuleRootPath\WDACSimulation\Get-CertificateDetails.psm1",
                 "$ModuleRootPath\XMLOps\New-RootAndLeafCertificateLevelRules.psm1",
                 "$ModuleRootPath\XMLOps\Clear-CiPolicy_Semantic.psm1"
@@ -349,7 +347,7 @@ Function New-SupplementalWDACConfig {
                 foreach ($CertPath in $CertificatePaths) {
 
                     # All certificates have this value, which will create signer rules with TBS Hash only and result in RootCertificate Level
-                    $MainCertificateDetails = Get-SignedFileCertificates -FilePath "$CertPath"
+                    $MainCertificateDetails = [WDACConfig.CertificateHelper]::GetSignedFileCertificates($CertPath)
 
                     # Only non-root certificates have this value, which will create signer rules with subject name and TBSHash and result in LeafCertificate Level
                     $LeafCertificateDetails = (Get-CertificateDetails -FilePath "$CertPath").LeafCertificate
@@ -375,7 +373,8 @@ Function New-SupplementalWDACConfig {
                         Write-Verbose -Message "New-SupplementalWDACConfig: Root certificate signer is going to be created for the certificate located at $CertPath"
 
                         # Get the TBS value of the certificate
-                        $CurrentRootAndLeafSignerSigner.TBS = Get-TBSCertificate -Cert $MainCertificateDetails
+                        $CurrentRootAndLeafSignerSigner.TBS = [WDACConfig.CertificateHelper]::GetTBSCertificate($MainCertificateDetails)
+
                         $CurrentRootAndLeafSignerSigner.SiSigningScenario = $SigningScenarioTranslated
                         $CurrentRootAndLeafSignerSigner.SignerName = $MainCertificateDetails.Subject
                         $CurrentRootAndLeafSignerSigner.SignerType = 'Root'

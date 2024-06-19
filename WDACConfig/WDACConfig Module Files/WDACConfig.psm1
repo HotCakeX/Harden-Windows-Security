@@ -55,6 +55,14 @@ if (-NOT ('WDACConfig.PolicyHashObj' -as [System.Type]) ) {
     Add-Type -Path "$ModuleRootPath\C#\PolicyHashObj.cs"
 }
 
+if (-NOT ('WDACConfig.SimulationInput' -as [System.Type]) ) {
+    Add-Type -Path "$ModuleRootPath\C#\SimulationInput.cs"
+}
+
+if (-NOT ('WDACConfig.CertificateHelper' -as [System.Type]) ) {
+    Add-Type -Path "$ModuleRootPath\C#\CertificateHelper.cs"
+}
+
 #Endregion C# code imports
 
 <#

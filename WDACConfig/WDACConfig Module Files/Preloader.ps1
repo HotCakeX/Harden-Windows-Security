@@ -64,10 +64,18 @@ if (-NOT ([System.Decimal]$FullOSBuild -ge [System.Decimal]$Requiredbuild)) {
     Throw [System.PlatformNotSupportedException] "You are not using the latest build of the Windows OS. A minimum build of $Requiredbuild is required but your OS build is $FullOSBuild`nPlease go to Windows Update to install the updates and then try again."
 }
 
-# Import the ArgumentCompleters class which will introduce App-Domain-Wide variables to the session
-if (-NOT ('WDACConfig.ArgumentCompleters' -as [System.Type]) ) {
-    Add-Type -Path "$ModuleRootPath\C#\ArgumentCompleters.cs"
-}
+# Import all C# codes at once so they will get compiled together, have resolved dependencies and recognize each others' classes/types
+Add-Type -Path (Get-ChildItem -File -Recurse -Path "$ModuleRootPath\C#").FullName -ReferencedAssemblies ('System',
+    'System.Security.Cryptography.Pkcs',
+    'System.Security.Cryptography.X509Certificates',
+    'System.Security.Cryptography',
+    'System.Xml',
+    'System.Formats.Asn1',
+    'System.IO',
+    'System.Runtime.InteropServices',
+    'System.Collections',
+    'System.Xml.ReaderWriter',
+    'System.Collections.NonGeneric')
 
 # Importing argument completer ScriptBlocks
 . "$ModuleRootPath\CoreExt\ArgumentCompleters.ps1"

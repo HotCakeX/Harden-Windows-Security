@@ -90,8 +90,8 @@ This is an advanced PowerShell module for WDAC (Windows Defender Application Con
     # RequiredModules      = @()
 
     # Assemblies that must be loaded prior to importing this module
-    # Required for File/Folder picker GUI, and Get-NestedSignerSignature function to use the SignedCms class
-    RequiredAssemblies   = @('System.Windows.Forms', 'System.Security')
+    # Required for File/Folder picker GUI
+    RequiredAssemblies   = @('System.Windows.Forms')
 
     # Script files (.ps1) that are run in the caller's environment prior to importing this module.
     ScriptsToProcess     = @('Preloader.ps1')
@@ -239,19 +239,8 @@ This is an advanced PowerShell module for WDAC (Windows Defender Application Con
         'WDACSimulation\Get-SignerInfo.psm1',
         'WDACSimulation\Get-FileRuleOutput.psm1',
         'WDACSimulation\Get-CertificateDetails.psm1',
-        'WDACSimulation\Get-NestedSignerSignature.psm1',
         'WDACSimulation\Compare-SignerAndCertificate.psm1',
         'WDACSimulation\Get-ExtendedFileInfo.psm1',
-        'C#\Signer.cs',
-        'C#\Kernel32dll.cs',
-        'C#\Crypt32dll.cs',
-        'C#\AuthenticodeHashCalc.cs',
-        'C#\PageHashCalc.cs',
-        'C#\Crypt32CertCN.cs',
-        'C#\WldpQuerySecurityPolicy.cs',
-        'C#\ArgumentCompleters.cs',
-        'C#\PolicyHashObj.cs',
-        'C#\CertificateHelper.cs',
         'Help\ConvertTo-WDACPolicy.xml',
         'Help\ConvertTo-WDACPolicy.md',
         'XMLOps\Build-SignerAndHashObjects.psm1',
@@ -278,7 +267,25 @@ This is an advanced PowerShell module for WDAC (Windows Defender Application Con
         'Public\Add-Version.psm1',
         'Public\Get-FilesFast.psm1',
         'Public\Measure-CIPolicyVersion.psm1',
-        'Public\Write-FinalOutput.psm1')
+        'Public\Write-FinalOutput.psm1',
+        'C#\Custom Types\ChainElement.cs',
+        'C#\Custom Types\PolicyHashObj.cs',
+        'C#\Custom Types\Signer.cs',
+        'C#\Custom Types\SimulationInput.cs',
+        'C#\Custom Types\HashCreator.cs',
+        'C#\Custom Types\CertificateDetailsCreator.cs',
+        'C#\Custom Types\FilePublisherSignerCreator.cs',
+        'C#\Custom Types\PublisherSignerCreator.cs',
+        'C#\Custom Types\OpusSigner.cs',
+        'C#\Functions\AllCertificatesGrabber.cs',
+        'C#\Functions\AuthenticodeHashCalc.cs',
+        'C#\Functions\CertificateHelper.cs',
+        'C#\Functions\Crypt32CertCN.cs',
+        'C#\Functions\Kernel32dll.cs',
+        'C#\Functions\PageHashCalc.cs',
+        'C#\Functions\WldpQuerySecurityPolicy.cs',
+        'C#\Functions\GetOpusData.cs',
+        'C#\Variables\ArgumentCompleters.cs')
 
     # Private data to pass to the module specified in RootModule/ModuleToProcess. This may also contain a PSData hashtable with additional module metadata used by PowerShell.
     PrivateData          = @{

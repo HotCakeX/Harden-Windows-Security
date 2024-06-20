@@ -15,11 +15,6 @@ Function Get-CIPolicySetting {
 
         # if -SkipVersionCheck wasn't passed, run the updater
         if (-NOT $SkipVersionCheck) { Update-Self -InvocationStatement $MyInvocation.Statement }
-
-        # Import the required C# type if it hasn't already been imported
-        if (-NOT ('WDACConfig.WldpQuerySecurityPolicy' -as [System.Type]) ) {
-            Add-Type -Path "$ModuleRootPath\C#\WldpQuerySecurityPolicy.cs"
-        }
     }
     Process {
         try {

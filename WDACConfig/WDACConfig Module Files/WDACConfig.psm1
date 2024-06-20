@@ -19,52 +19,6 @@ Import-Module -FullyQualifiedName (Get-ChildItem -File -LiteralPath "$ModuleRoot
 # Import the classes
 Import-Module -FullyQualifiedName "$ModuleRootPath\CoreExt\Classes.psm1" -Force
 
-#Region C# code imports
-
-# Defining the WinTrust class from the WDACConfig Namespace if it doesn't already exist
-if (-NOT ('WDACConfig.WinTrust' -as [System.Type]) ) {
-    Add-Type -Path "$ModuleRootPath\C#\AuthenticodeHashCalc.cs"
-}
-
-# Defining the PageHashCalculator class from the WDACConfig Namespace if it doesn't already exist
-if (-NOT ('WDACConfig.PageHashCalculator' -as [System.Type]) ) {
-    Add-Type -Path "$ModuleRootPath\C#\PageHashCalc.cs"
-}
-
-# Import the kernel32.dll functions using P/Invoke if they don't exist
-if (-NOT ('WDACConfig.Win32Utils' -as [System.Type]) ) {
-    Add-Type -Path "$ModuleRootPath\C#\Kernel32dll.cs"
-}
-
-# Defining the Signer class from the WDACConfig Namespace if it doesn't already exist
-if (-NOT ('WDACConfig.Signer' -as [System.Type]) ) {
-    Add-Type -Path "$ModuleRootPath\C#\Signer.cs"
-}
-
-# Add the Crypt32.dll library functions as a type if they don't exist
-if (-NOT ('WDACConfig.Crypt32DLL' -as [System.Type]) ) {
-    Add-Type -Path "$ModuleRootPath\C#\Crypt32dll.cs"
-}
-
-# Defining the CryptoAPI class from the WDACConfig Namespace if it doesn't already exist
-if (-NOT ('WDACConfig.CryptoAPI' -as [System.Type]) ) {
-    Add-Type -Path "$ModuleRootPath\C#\Crypt32CertCN.cs"
-}
-
-if (-NOT ('WDACConfig.PolicyHashObj' -as [System.Type]) ) {
-    Add-Type -Path "$ModuleRootPath\C#\PolicyHashObj.cs"
-}
-
-if (-NOT ('WDACConfig.SimulationInput' -as [System.Type]) ) {
-    Add-Type -Path "$ModuleRootPath\C#\SimulationInput.cs"
-}
-
-if (-NOT ('WDACConfig.CertificateHelper' -as [System.Type]) ) {
-    Add-Type -Path "$ModuleRootPath\C#\CertificateHelper.cs"
-}
-
-#Endregion C# code imports
-
 <#
 # Loop through all the relevant files in the module
 foreach ($File in (Get-FilesFast -Directory $ModuleRootPath -ExtensionsToFilterBy '.ps1', '.psm1')) {

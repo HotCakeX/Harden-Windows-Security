@@ -44,13 +44,13 @@ Function Build-SignerAndHashObjects {
         . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
 
         # An array to store the Signers created with FilePublisher Level
-        $FilePublisherSigners = New-Object -TypeName System.Collections.Generic.List[FilePublisherSignerCreator]
+        $FilePublisherSigners = New-Object -TypeName System.Collections.Generic.List[WDACConfig.FilePublisherSignerCreator]
 
         # An array to store the Signers created with Publisher Level
-        $PublisherSigners = New-Object -TypeName System.Collections.Generic.List[PublisherSignerCreator]
+        $PublisherSigners = New-Object -TypeName System.Collections.Generic.List[WDACConfig.PublisherSignerCreator]
 
         # An array to store the FileAttributes created using Hash Level
-        $CompleteHashes = New-Object -TypeName System.Collections.Generic.List[HashCreator]
+        $CompleteHashes = New-Object -TypeName System.Collections.Generic.List[WDACConfig.HashCreator]
 
         # Defining the arrays to store the signed and unsigned data
         $SignedData = New-Object -TypeName System.Collections.Generic.List[PSCustomObject]
@@ -77,32 +77,35 @@ Function Build-SignerAndHashObjects {
             Foreach ($CurrentData in $SignedData) {
 
                 # Create a new FilePublisherSignerCreator object
-                [FilePublisherSignerCreator]$CurrentFilePublisherSigner = New-Object -TypeName FilePublisherSignerCreator
+                $CurrentFilePublisherSigner = New-Object -TypeName 'WDACConfig.FilePublisherSignerCreator'
                 # Create a new PublisherSignerCreator object
-                [PublisherSignerCreator]$CurrentPublisherSigner = New-Object -TypeName PublisherSignerCreator
+                $CurrentPublisherSigner = New-Object -TypeName 'WDACConfig.PublisherSignerCreator'
 
                 # Loop through each correlated event and process the certificate details
                 foreach ($CorData in ($IncomingDataType -eq 'MDEAH' ? $CurrentData.CorrelatedEventsData.Values : $CurrentData.SignerInfo.Values)) {
-
-                    # Create a new CertificateDetailsCreator object to store the certificate details
-                    [CertificateDetailsCreator]$CurrentCorData = New-Object -TypeName CertificateDetailsCreator
-
-                    # Add the certificate details to the new object
-                    $CurrentCorData.LeafCertTBS = $CorData.PublisherTBSHash
-                    $CurrentCorData.LeafCertName = $CorData.PublisherName
-                    $CurrentCorData.IntermediateCertTBS = $CorData.IssuerTBSHash
-                    $CurrentCorData.IntermediateCertName = $CorData.IssuerName
 
                     # If the file doesn't have Issuer TBS hash (aka Intermediate certificate hash), use the leaf cert's TBS hash and CN instead (aka publisher TBS hash)
                     # This is according to the ConfigCI's workflow when encountering specific files
                     # MDE doesn't generate Issuer TBS hash for some files
                     # For those files, the FilePublisher rule will be created with the file's leaf Certificate details only (Publisher certificate)
-                    if (([System.String]::IsNullOrWhiteSpace($CurrentCorData.IntermediateCertTBS)) -and (-NOT (([System.String]::IsNullOrWhiteSpace($CurrentCorData.LeafCertTBS))))) {
+                    if (([System.String]::IsNullOrWhiteSpace($CorData.IssuerTBSHash)) -and (-NOT (([System.String]::IsNullOrWhiteSpace($CorData.PublisherTBSHash))))) {
 
                         Write-Warning -Message "Build-SignerAndHashObjects: Intermediate Certificate TBS hash is empty for the file: $($IncomingDataType -eq 'MDEAH' ? $CurrentData.FileName : $CurrentData.'File Name'), using the leaf certificate TBS hash instead"
 
-                        $CurrentCorData.IntermediateCertName = $CurrentCorData.LeafCertName
-                        $CurrentCorData.IntermediateCertTBS = $CurrentCorData.LeafCertTBS
+                        $CurrentCorData = [WDACConfig.CertificateDetailsCreator]::New(
+                            $CorData.PublisherTBSHash,
+                            $CorData.PublisherName,
+                            $CorData.PublisherTBSHash,
+                            $CorData.PublisherName
+                        )
+                    }
+                    else {
+                        $CurrentCorData = [WDACConfig.CertificateDetailsCreator]::New(
+                            $CorData.IssuerTBSHash,
+                            $CorData.IssuerName,
+                            $CorData.PublisherTBSHash,
+                            $CorData.PublisherName
+                        )
                     }
 
                     # Add the Certificate details to both the FilePublisherSignerCreator and PublisherSignerCreator objects
@@ -133,20 +136,15 @@ Function Build-SignerAndHashObjects {
                     }
                     # Otherwise, add the current data to the hash array instead despite being eligible for Publisher level
                     else {
-
                         Write-Verbose -Message "Build-SignerAndHashObjects: Passing Publisher rule to the hash array for the file: $($IncomingDataType -eq 'MDEAH' ? $CurrentData.FileName : $CurrentData.'File Name')"
 
-                        # Create a new HashCreator object
-                        [HashCreator]$CurrentHash = New-Object -TypeName HashCreator
-
-                        # Add the hash details to the new object
-                        $CurrentHash.AuthenticodeSHA256 = $IncomingDataType -eq 'MDEAH' ? $CurrentData.SHA256 : $CurrentData.'SHA256 Hash'
-                        $CurrentHash.AuthenticodeSHA1 = $IncomingDataType -eq 'MDEAH' ? $CurrentData.SHA1 : $CurrentData.'SHA1 Hash'
-                        $CurrentHash.FileName = $IncomingDataType -eq 'MDEAH' ? $CurrentData.FileName : $CurrentData.'File Name'
-                        $CurrentHash.SiSigningScenario = $IncomingDataType -eq 'MDEAH' ? $CurrentData.SiSigningScenario : ($CurrentData.'SI Signing Scenario' -eq 'Kernel-Mode' ? '0' : '1')
-
                         # Add the new object to the CompleteHashes array
-                        $CompleteHashes.Add($CurrentHash)
+                        $CompleteHashes.Add([WDACConfig.HashCreator]::New(
+                        ($IncomingDataType -eq 'MDEAH' ? $CurrentData.SHA256 : $CurrentData.'SHA256 Hash'),
+                        ($IncomingDataType -eq 'MDEAH' ? $CurrentData.SHA1 : $CurrentData.'SHA1 Hash'),
+                        ($IncomingDataType -eq 'MDEAH' ? $CurrentData.FileName : $CurrentData.'File Name'),
+                        ($IncomingDataType -eq 'MDEAH' ? $CurrentData.SiSigningScenario : ($CurrentData.'SI Signing Scenario' -eq 'Kernel-Mode' ? '0' : '1'))
+                            ))
                     }
                 }
 
@@ -182,17 +180,13 @@ Function Build-SignerAndHashObjects {
             # Processing the unsigned data
             Foreach ($HashData in $UnsignedData) {
 
-                # Create a new HashCreator object
-                [HashCreator]$CurrentHash = New-Object -TypeName HashCreator
-
-                # Add the hash details to the new object
-                $CurrentHash.AuthenticodeSHA256 = $IncomingDataType -eq 'MDEAH' ? $HashData.SHA256 : $HashData.'SHA256 Hash'
-                $CurrentHash.AuthenticodeSHA1 = $IncomingDataType -eq 'MDEAH' ? $HashData.SHA1 : $HashData.'SHA1 Hash'
-                $CurrentHash.FileName = $IncomingDataType -eq 'MDEAH' ? $HashData.FileName : $HashData.'File Name'
-                $CurrentHash.SiSigningScenario = $IncomingDataType -eq 'MDEAH' ? $HashData.SiSigningScenario : ($HashData.'SI Signing Scenario' -eq 'Kernel-Mode' ? '0' : '1')
-
                 # Add the new object to the CompleteHashes array
-                $CompleteHashes.Add($CurrentHash)
+                $CompleteHashes.Add([WDACConfig.HashCreator]::New(
+                    ($IncomingDataType -eq 'MDEAH' ? $HashData.SHA256 : $HashData.'SHA256 Hash'),
+                    ($IncomingDataType -eq 'MDEAH' ? $HashData.SHA1 : $HashData.'SHA1 Hash'),
+                    ($IncomingDataType -eq 'MDEAH' ? $HashData.FileName : $HashData.'File Name'),
+                    ($IncomingDataType -eq 'MDEAH' ? $HashData.SiSigningScenario : ($HashData.'SI Signing Scenario' -eq 'Kernel-Mode' ? '0' : '1'))
+                    ))
             }
         }
 

@@ -27,7 +27,6 @@ $PSDefaultParameterValues = @{
     'Get-SignerInfo:Verbose'                                      = $Verbose
     'Get-FileRuleOutput:Verbose'                                  = $Verbose
     'Get-CertificateDetails:Verbose'                              = $Verbose
-    'Get-NestedSignerSignature:Verbose'                           = $Verbose
     'Compare-SignerAndCertificate:Verbose'                        = $Verbose
     'Remove-SupplementalSigners:Verbose'                          = $Verbose
     'Get-ExtendedFileInfo:Verbose'                                = $Verbose

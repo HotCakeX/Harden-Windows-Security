@@ -4,226 +4,163 @@ Function Get-CertificateDetails {
         A function to detect Root, Intermediate and Leaf certificates
         It returns a compound object that contains 2 nested objects for Intermediate and Leaf certificates
     .INPUTS
-        System.Security.Cryptography.X509Certificates.X509Certificate2
-        System.IO.FileInfo
-        System.String
+        WDACConfig.AllCertificatesGrabber.AllFileSigners[]
     .OUTPUTS
-        System.Object[]
-    .PARAMETER FilePath
-        Path to a signed file
-    .PARAMETER X509Certificate2
-        An X509Certificate2 object
-    .PARAMETER LeafCNOfTheNestedCertificate
-        This is used only for when -X509Certificate2 parameter is used, so that we can filter out the Leaf certificate and only get the Intermediate certificates at the end of this function
+        WDACConfig.ChainPackage[]
+    .PARAMETER CompleteSignatureResult
+    .NOTES
+        Old method of recognizing the certificate type:
+        If the file's subject common name is equal to the certificate's subject common name, then it's the leaf certificate - If a certificate's subject common name is equal to its issuer common name, then it's a root certificate - otherwise it's an intermediate certificate
+        CertType    = ($SubjectCN -eq $IssuerCN) ? 'Root' : (($SubjectCN -eq $FileSubjectCN) ? 'Leaf' : 'Intermediate')
     #>
     [CmdletBinding()]
-    [OutputType([System.Object[]])]
+    [OutputType([WDACConfig.ChainPackage[]])]
     param (
-        [Parameter(ParameterSetName = 'Based on File Path', Mandatory = $true)]
-        [System.IO.FileInfo]$FilePath,
-
-        [Parameter(ParameterSetName = 'Based on Certificate', Mandatory = $true)]
-        [System.Security.Cryptography.X509Certificates.X509Certificate2]$X509Certificate2,
-
-        [Parameter(ParameterSetName = 'Based on Certificate')]
-        [System.String]$LeafCNOfTheNestedCertificate
+        [Parameter(Mandatory = $true)][WDACConfig.AllCertificatesGrabber.AllFileSigners[]]$CompleteSignatureResult
     )
     Begin {
         [System.Boolean]$Verbose = $PSBoundParameters.Verbose.IsPresent ? $true : $false
         . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
 
-        if ($FilePath) {
-            # Get all the certificates from the file path
-            [System.Security.Cryptography.X509Certificates.X509Certificate2[]]$CertCollection = ([WDACConfig.CertificateHelper]::GetSignedFileCertificates($FilePath)).Where({ $_.EnhancedKeyUsageList.FriendlyName -ne 'Time Stamping' })
-        }
-        elseif ($X509Certificate2) {
-            # The "{$_ -ne 0}" part is used to filter the output coming from Get-NestedSignerSignature function that gets nested certificate - since we're using the 2nd parameter, the first parameter should be passed as null
-            [System.Security.Cryptography.X509Certificates.X509Certificate2[]]$CertCollection = ([WDACConfig.CertificateHelper]::GetSignedFileCertificates($null, $X509Certificate2)).Where({ ($_.EnhancedKeyUsageList.FriendlyName -ne 'Time Stamping') -and ($_ -ne 0) })
-        }
-        else {
-            throw 'Either FilePath or X509Certificate2 parameter must be specified'
-        }
+        $FinalObject = New-Object -TypeName System.Collections.Generic.List[WDACConfig.ChainPackage]
     }
 
     process {
 
-        # An array to hold certificate elements objects
-        $Obj = New-Object -TypeName System.Collections.Generic.List[PSCustomObject]
+        # Loop over each signer of the file, in case the file has multiple separate signers
+        for ($i = 0; $i -lt $CompleteSignatureResult.Count; $i++) {
 
-        # Loop through each certificate in the collection and call this function recursively with the certificate object as an input
-        foreach ($Cert in $CertCollection) {
+            # Get the current chain and SignedCms of the signer
+            [System.Security.Cryptography.X509Certificates.X509Chain]$CurrentChain = $CompleteSignatureResult.Chain[$i]
+            [System.Security.Cryptography.Pkcs.SignedCms]$CurrentSignedCms = $CompleteSignatureResult.Signer[$i]
 
-            # Build the certificate chain
-            [System.Security.Cryptography.X509Certificates.X509Chain]$Chain = New-Object -TypeName System.Security.Cryptography.X509Certificates.X509Chain
+            [System.UInt32]$CertificatesInChainCount = $CurrentChain.ChainElements.Certificate.Count
 
-            # Set the chain policy properties
+            :ChainProcessLoop Switch ($CertificatesInChainCount) {
 
-            # https://learn.microsoft.com/en-us/dotnet/api/system.security.cryptography.x509certificates.x509revocationmode
-            $Chain.ChainPolicy.RevocationMode = 'NoCheck'
+                # If the chain includes a Root, Leaf and at least one Intermediate certificate
+                { $_ -gt 2 } {
 
-            # https://learn.microsoft.com/en-us/dotnet/api/system.security.cryptography.x509certificates.x509revocationflag
-            $Chain.ChainPolicy.RevocationFlag = 'EndCertificateOnly'
+                    # The last certificate in the chain is the Root certificate
+                    [System.Security.Cryptography.X509Certificates.X509Certificate]$CurrentRootCertificate = $CurrentChain.ChainElements.Certificate[-1]
 
-            # https://learn.microsoft.com/en-us/dotnet/api/system.security.cryptography.x509certificates.x509verificationflags
-            $Chain.ChainPolicy.VerificationFlags = 'NoFlag'
+                    $RootCertificate = [WDACConfig.ChainElement]::New(
+                        [WDACConfig.CryptoAPI]::GetNameString($CurrentRootCertificate.Handle, [WDACConfig.CryptoAPI]::CERT_NAME_SIMPLE_DISPLAY_TYPE, $null, $false), # SubjectCN
+                        [WDACConfig.CryptoAPI]::GetNameString($CurrentRootCertificate.Handle, [WDACConfig.CryptoAPI]::CERT_NAME_SIMPLE_DISPLAY_TYPE, $null, $true), # IssuerCN
+                        $CurrentRootCertificate.NotAfter,
+                        [WDACConfig.CertificateHelper]::GetTBSCertificate($CurrentRootCertificate),
+                        $CurrentRootCertificate, # Append the certificate object itself to the output object as well
+                        [WDACConfig.CertificateType]::Root
+                    )
 
-            [System.Void]$Chain.Build($Cert)
+                    # An array to hold the Intermediate Certificate(s) of the current chain
+                    $IntermediateCertificates = New-Object -TypeName System.Collections.Generic.List[WDACConfig.ChainElement]
 
-            # Verify the certificate using the base policy
-            [System.Boolean]$Result = $Cert.Verify()
+                    # All the certificates in between are Intermediate certificates
+                    foreach ($Cert in $CurrentChain.ChainElements.Certificate[1..($CertificatesInChainCount - 2)]) {
 
-            if ($Result -ne $true) {
-                Write-Verbose -Message "WARNING: The certificate $($Cert.Subject) could not be validated."
+                        # Create a collection of intermediate certificates
+                        $IntermediateCertificates.Add([WDACConfig.ChainElement]::New(
+                                [WDACConfig.CryptoAPI]::GetNameString($Cert.Handle, [WDACConfig.CryptoAPI]::CERT_NAME_SIMPLE_DISPLAY_TYPE, $null, $false),
+                                [WDACConfig.CryptoAPI]::GetNameString($Cert.Handle, [WDACConfig.CryptoAPI]::CERT_NAME_SIMPLE_DISPLAY_TYPE, $null, $true),
+                                $Cert.NotAfter,
+                                [WDACConfig.CertificateHelper]::GetTBSCertificate($Cert) ,
+                                $Cert, # Append the certificate object itself to the output object as well
+                                [WDACConfig.CertificateType]::Intermediate
+                            ))
+                    }
+
+                    # The first certificate in the chain is the Leaf certificate
+                    [System.Security.Cryptography.X509Certificates.X509Certificate]$CurrentLeafCertificate = $CurrentChain.ChainElements.Certificate[0]
+
+                    $LeafCertificate = [WDACConfig.ChainElement]::New(
+                        [WDACConfig.CryptoAPI]::GetNameString($CurrentLeafCertificate.Handle, [WDACConfig.CryptoAPI]::CERT_NAME_SIMPLE_DISPLAY_TYPE, $null, $false),
+                        [WDACConfig.CryptoAPI]::GetNameString($CurrentLeafCertificate.Handle, [WDACConfig.CryptoAPI]::CERT_NAME_SIMPLE_DISPLAY_TYPE, $null, $true),
+                        $CurrentLeafCertificate.NotAfter,
+                        [WDACConfig.CertificateHelper]::GetTBSCertificate($CurrentLeafCertificate),
+                        $CurrentLeafCertificate, # Append the certificate object itself to the output object as well
+                        [WDACConfig.CertificateType]::Leaf
+                    )
+
+                    $FinalObject.Add([WDACConfig.ChainPackage]::New(
+                            $CurrentChain, # The entire current chain of the certificate
+                            $CurrentSignedCms, # The entire current SignedCms object
+                            $RootCertificate,
+                            $IntermediateCertificates,
+                            $LeafCertificate
+                        ))
+
+                    Break ChainProcessLoop
+                }
+
+                # If the chain only includes a Root and Leaf certificate
+                { $_ -eq 2 } {
+
+                    # The last certificate in the chain is the Root certificate
+                    [System.Security.Cryptography.X509Certificates.X509Certificate]$CurrentRootCertificate = $CurrentChain.ChainElements.Certificate[-1]
+
+                    $RootCertificate = [WDACConfig.ChainElement]::New(
+                        [WDACConfig.CryptoAPI]::GetNameString($CurrentRootCertificate.Handle, [WDACConfig.CryptoAPI]::CERT_NAME_SIMPLE_DISPLAY_TYPE, $null, $false), # SubjectCN
+                        [WDACConfig.CryptoAPI]::GetNameString($CurrentRootCertificate.Handle, [WDACConfig.CryptoAPI]::CERT_NAME_SIMPLE_DISPLAY_TYPE, $null, $true), # IssuerCN
+                        $CurrentRootCertificate.NotAfter,
+                        [WDACConfig.CertificateHelper]::GetTBSCertificate($CurrentRootCertificate),
+                        $CurrentRootCertificate, # Append the certificate object itself to the output object as well
+                        [WDACConfig.CertificateType]::Root
+                    )
+
+                    # The first certificate in the chain is the Leaf certificate
+                    [System.Security.Cryptography.X509Certificates.X509Certificate]$CurrentLeafCertificate = $CurrentChain.ChainElements.Certificate[0]
+
+                    $LeafCertificate = [WDACConfig.ChainElement]::New(
+                        [WDACConfig.CryptoAPI]::GetNameString($CurrentLeafCertificate.Handle, [WDACConfig.CryptoAPI]::CERT_NAME_SIMPLE_DISPLAY_TYPE, $null, $false),
+                        [WDACConfig.CryptoAPI]::GetNameString($CurrentLeafCertificate.Handle, [WDACConfig.CryptoAPI]::CERT_NAME_SIMPLE_DISPLAY_TYPE, $null, $true),
+                        $CurrentLeafCertificate.NotAfter,
+                        [WDACConfig.CertificateHelper]::GetTBSCertificate($CurrentLeafCertificate),
+                        $CurrentLeafCertificate, # Append the certificate object itself to the output object as well
+                        [WDACConfig.CertificateType]::Leaf
+                    )
+
+                    $FinalObject.Add([WDACConfig.ChainPackage]::New(
+                            $CurrentChain, # The entire current chain of the certificate
+                            $CurrentSignedCms, # The entire current SignedCms object
+                            $RootCertificate,
+                            $null,
+                            $LeafCertificate
+                        ))
+
+                    break ChainProcessLoop
+                }
+
+                # If the chain only includes a Root certificate
+                { $_ -eq 1 } {
+
+                    # The only certificate in the chain is the Root certificate
+                    [System.Security.Cryptography.X509Certificates.X509Certificate]$CurrentRootCertificate = $CurrentChain.ChainElements.Certificate
+
+                    $RootCertificate = [WDACConfig.ChainElement]::New(
+                        [WDACConfig.CryptoAPI]::GetNameString($CurrentRootCertificate.Handle, [WDACConfig.CryptoAPI]::CERT_NAME_SIMPLE_DISPLAY_TYPE, $null, $false), # SubjectCN
+                        [WDACConfig.CryptoAPI]::GetNameString($CurrentRootCertificate.Handle, [WDACConfig.CryptoAPI]::CERT_NAME_SIMPLE_DISPLAY_TYPE, $null, $true), # IssuerCN
+                        $CurrentRootCertificate.NotAfter,
+                        [WDACConfig.CertificateHelper]::GetTBSCertificate($CurrentRootCertificate),
+                        $CurrentRootCertificate, # Append the certificate object itself to the output object as well
+                        [WDACConfig.CertificateType]::Root
+                    )
+
+                    $FinalObject.Add([WDACConfig.ChainPackage]::New(
+                            $CurrentChain, # The entire current chain of the certificate
+                            $CurrentSignedCms, # The entire current SignedCms object
+                            $RootCertificate,
+                            $null,
+                            $null
+                        ))
+
+                    break ChainProcessLoop
+                }
             }
-
-            # Loop through all chain elements and display all certificates
-            foreach ($Element in $Chain.ChainElements) {
-
-                # Get the issuer common name
-                [System.String]$IssuerCN = [WDACConfig.CryptoAPI]::GetNameString($Element.Certificate.Handle, [WDACConfig.CryptoAPI]::CERT_NAME_SIMPLE_DISPLAY_TYPE, $null, $true)
-
-                # Get the subject common name
-                [System.String]$SubjectCN = [WDACConfig.CryptoAPI]::GetNameString($Element.Certificate.Handle, [WDACConfig.CryptoAPI]::CERT_NAME_SIMPLE_DISPLAY_TYPE, $null, $false)
-
-                # Get the TBS value of the certificate
-                [System.String]$TbsValue = [WDACConfig.CertificateHelper]::GetTBSCertificate($Element.Certificate)
-
-                # Create a custom object with the extracted properties and the TBS value and add it to the array
-                $Obj.Add([pscustomobject]@{
-                        SubjectCN        = $SubjectCN
-                        IssuerCN         = $IssuerCN
-                        NotAfter         = $element.Certificate.NotAfter
-                        TBSValue         = $TbsValue
-                        X509Certificate2 = $Element.Certificate # Append the certificate object itself to the output object as well
-                    })
-            }
-        }
-
-        # An object to hold the final output that will be returned by the function
-        $FinalObj = [PSCustomObject]@{}
-
-        # An array to hold the Intermediate certificates
-        $IntermediateCerts = New-Object -TypeName System.Collections.Generic.List[PSCustomObject]
-
-        if ($FilePath) {
-
-            #Region Intermediate-Certificates-Processing
-
-            [System.Security.Cryptography.X509Certificates.X509Certificate]$SignedFileSigDetails = [System.Security.Cryptography.X509Certificates.X509Certificate]::CreateFromSignedFile($FilePath)
-
-            # Get the subject common name of the signed file
-            [System.String]$FileSubjectCN = [WDACConfig.CryptoAPI]::GetNameString($SignedFileSigDetails.Handle, [WDACConfig.CryptoAPI]::CERT_NAME_SIMPLE_DISPLAY_TYPE, $null, $false)
-
-            # ($_.SubjectCN -ne $_.IssuerCN) -> To omit Root certificate from the result
-            # ($_.SubjectCN -ne $FileSubjectCN) -> To omit the Leaf certificate
-            $Obj.Where({ ($_.SubjectCN -ne $_.IssuerCN) -and ($_.SubjectCN -ne $FileSubjectCN) }) |
-
-            # To make sure the output values are unique based on TBSValue property
-            Group-Object -Property TBSValue | ForEach-Object -Process { $_.Group[0] } |
-
-            # Add each intermediate certificate to the nested object of the final object
-            ForEach-Object -Process {
-                $IntermediateCerts.Add([PSCustomObject]@{
-                        SubjectCN        = $_.SubjectCN
-                        IssuerCN         = $_.IssuerCN
-                        NotAfter         = $_.NotAfter
-                        TBSValue         = $_.TbsValue
-                        X509Certificate2 = $_.X509Certificate2
-                    })
-            }
-
-            Write-Verbose -Message "The Primary Signer's Root Certificate common name is: $($($Obj.Where({ ($_.SubjectCN -eq $_.IssuerCN) })).SubjectCN | Select-Object -First 1)"
-            Write-Verbose -Message "The Primary Signer has $($IntermediateCerts.Count) Intermediate certificate(s) with the following common name(s): $($IntermediateCerts.SubjectCN -join ', ')"
-
-            # Add the $IntermediateCerts object to the final object
-            Add-Member -InputObject $FinalObj -MemberType NoteProperty -Name 'IntermediateCertificates' -Value $IntermediateCerts
-
-            #Endregion Intermediate-Certificates-Processing
-
-            #Region Leaf-Certificate-Processing
-
-            # ($_.SubjectCN -ne $_.IssuerCN) -> To omit Root certificate from the result
-            # ($_.SubjectCN -eq $FileSubjectCN) -> To get the Leaf certificate
-            $TempLeafCertObj = $Obj.Where({ ($_.SubjectCN -ne $_.IssuerCN) -and ($_.SubjectCN -eq $FileSubjectCN) }) |
-
-            # To make sure the output values are unique based on TBSValue property
-            Group-Object -Property TBSValue | ForEach-Object -Process { $_.Group[0] }
-
-            $LeafCert = [PSCustomObject]@{
-                SubjectCN        = $TempLeafCertObj.SubjectCN
-                IssuerCN         = $TempLeafCertObj.IssuerCN
-                NotAfter         = $TempLeafCertObj.NotAfter
-                TBSValue         = $TempLeafCertObj.TbsValue
-                X509Certificate2 = $TempLeafCertObj.X509Certificate2
-            }
-
-            Write-Verbose -Message "The Primary Signer has $($TempLeafCertObj.Count) Leaf certificate with the following common name: $($TempLeafCertObj.SubjectCN -join ', ')"
-
-            # Add the $LeafCert object to the final object
-            Add-Member -InputObject $FinalObj -MemberType NoteProperty -Name 'LeafCertificate' -Value $LeafCert
-            #Endregion Leaf-Certificate-Processing
-        }
-
-        # If nested certificate is being processed and X509Certificate2 object is passed
-        elseif ($X509Certificate2) {
-
-            #Region Intermediate-Certificates-Processing
-
-            # ($_.SubjectCN -ne $_.IssuerCN) -> To omit Root certificate from the result
-            # ($_.SubjectCN -ne $LeafCNOfTheNestedCertificate) -> To omit the Leaf certificate
-            $Obj.Where({ ($_.SubjectCN -ne $_.IssuerCN) -and ($_.SubjectCN -ne $LeafCNOfTheNestedCertificate) }) |
-
-            # To make sure the output values are unique based on TBSValue property
-            Group-Object -Property TBSValue | ForEach-Object -Process { $_.Group[0] } |
-
-            # Add each intermediate certificate to the nested object of the final object
-            ForEach-Object -Process {
-                $IntermediateCerts.Add([PSCustomObject]@{
-                        SubjectCN        = $_.SubjectCN
-                        IssuerCN         = $_.IssuerCN
-                        NotAfter         = $_.NotAfter
-                        TBSValue         = $_.TbsValue
-                        X509Certificate2 = $_.X509Certificate2
-                    })
-            }
-
-            Write-Verbose -Message "The Nested Signer's Root Certificate common name is: $($($Obj.Where({ ($_.SubjectCN -eq $_.IssuerCN) })).SubjectCN | Select-Object -First 1)"
-            Write-Verbose -Message "The Nested Signer has $($IntermediateCerts.Count) Intermediate certificate(s) with the following common name(s): $($IntermediateCerts.SubjectCN -join ', ')"
-
-            # Add the $IntermediateCerts object to the final object
-            Add-Member -InputObject $FinalObj -MemberType NoteProperty -Name 'IntermediateCertificates' -Value $IntermediateCerts
-
-            #Endregion Intermediate-Certificates-Processing
-
-            #Region Leaf-Certificate-Processing
-
-            # ($_.SubjectCN -ne $_.IssuerCN) -> To omit Root certificate from the result
-            # ($_.SubjectCN -eq $LeafCNOfTheNestedCertificate) -> To get the Leaf certificate
-            $TempLeafCertObj = $Obj.Where({ ($_.SubjectCN -ne $_.IssuerCN) -and ($_.SubjectCN -eq $LeafCNOfTheNestedCertificate) }) |
-
-            # To make sure the output values are unique based on TBSValue property
-            Group-Object -Property TBSValue | ForEach-Object -Process { $_.Group[0] }
-
-            $LeafCert = [PSCustomObject]@{
-                SubjectCN        = $TempLeafCertObj.SubjectCN
-                IssuerCN         = $TempLeafCertObj.IssuerCN
-                NotAfter         = $TempLeafCertObj.NotAfter
-                TBSValue         = $TempLeafCertObj.TbsValue
-                X509Certificate2 = $TempLeafCertObj.X509Certificate2
-            }
-
-            Write-Verbose -Message "The Nested Signer has $($TempLeafCertObj.Count) Leaf certificate with the following common name: $($TempLeafCertObj.SubjectCN -join ', ')"
-
-            # Add the $LeafCert object to the final object
-            Add-Member -InputObject $FinalObj -MemberType NoteProperty -Name 'LeafCertificate' -Value $LeafCert
-
-            #Endregion Leaf-Certificate-Processing
         }
     }
-
-    end {
-        # Return the final object with the 2 nested objects
-        return [System.Object[]]$FinalObj
+    End {
+        return $FinalObject
     }
 }
 Export-ModuleMember -Function 'Get-CertificateDetails'

@@ -1,5 +1,6 @@
 namespace WDACConfig
 {
+    // Importing this ArgumentCompleters class in PowerShell will introduce App-Domain-Wide variables
     public static class ArgumentCompleters
     {
         public static object ArgumentCompleterAppxPackageNames;

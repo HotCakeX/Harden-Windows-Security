@@ -185,13 +185,3 @@ Upon completion of the simulation, you will obtain a CSV file containing the out
 </div>
 
 <br>
-
-<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">
-
-<br>
-
-## Notes
-
-* A small part of this cmdlet's code includes [Vadims Podāns's](https://www.sysadmins.lv/disclaimer.aspx) code for [nested certificate calculation](https://www.sysadmins.lv/blog-en/reading-multiple-signatures-from-signed-file-with-powershell.aspx) of double signed files.
-
-<br>

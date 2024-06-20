@@ -1,6 +1,6 @@
 function Get-ExtendedFileInfo {
   [CmdletBinding()]
-  [OutputType([ordered])]
+  [OutputType([System.Collections.Hashtable])]
   param (
     [Parameter(Mandatory = $true)][System.IO.FileInfo]$Path
   )
@@ -29,34 +29,18 @@ function Get-ExtendedFileInfo {
   .INPUTS
     System.IO.FileInfo
   .OUTPUTS
-    Ordered
+    System.Collections.Hashtable
   #>
 
   Begin {
     # Get the file object
     [System.IO.FileInfo]$File = Get-Item -LiteralPath $Path
 
-    # Create an ordered hashtable to store the file properties
-    $FileInfo = [ordered]@{}
+    # a hashtable to store the file properties
+    $FileInfo = [System.Collections.Hashtable]::new()
   }
   process {
-    # Add the properties to the hashtable
-    $FileInfo['FileDescription'] = [System.String]$File.VersionInfo.FileDescription
-    $FileInfo['InternalName'] = [System.String]$File.VersionInfo.InternalName
-    $FileInfo['FileName'] = [System.String]$File.VersionInfo.OriginalFilename
-    $FileInfo['PackageFamilyName'] = [System.String]$File.PackageFamilyName
-    $FileInfo['ProductName'] = [System.String]$File.VersionInfo.ProductName
-    $FileInfo['FilePath'] = [System.String]$Path
-
-    # Remove any empty values from the hashtable
-    @($FileInfo.keys) | ForEach-Object -Process {
-      if (!$FileInfo[$_]) { $FileInfo.Remove($_) }
-    }
-
-    # If the Get-Item cmdlet didn't find any of these properties then initiate Com object creation to get them if they are available
-    # Only these 2 properties are checked because the Com object method can't get the other ones
-    if ((-NOT $FileInfo['FileDescription']) -or (-NOT $FileInfo['ProductName'])) {
-
+    try {
       # Create a Shell.Application object
       [System.__ComObject]$Shell = New-Object -ComObject Shell.Application
 
@@ -68,60 +52,64 @@ function Get-ExtendedFileInfo {
       [System.__ComObject]$ShellFolder = $Shell.Namespace($Folder)
       [System.__ComObject]$ShellFile = $ShellFolder.ParseName($File)
 
-      # Get the properties from the ShellFile object using their property ID
-      # Null coalescing operator can't be used because the hashtable values are not null, just empty
-      $FileInfo['FileDescription'] = $FileInfo['FileDescription'] ? $FileInfo['FileDescription'] : [System.String]$ShellFolder.GetDetailsOf($ShellFile, 34)
-      $FileInfo['ProductName'] = $FileInfo['ProductName'] ? $FileInfo['ProductName'] : [System.String]$ShellFolder.GetDetailsOf($ShellFile, 297)
+      $FileInfo['FilePath'] = [System.String]$Path
+      $FileInfo['InternalName'] = (-NOT [System.String]::IsNullOrWhiteSpace([System.String]$File.VersionInfo.InternalName)) ? [System.String]$File.VersionInfo.InternalName : $null
+      $FileInfo['PackageFamilyName'] = (-NOT [System.String]::IsNullOrWhiteSpace([System.String]$File.PackageFamilyName)) ? [System.String]$File.PackageFamilyName : $null
+      $FileInfo['FileDescription'] = (-NOT [System.String]::IsNullOrWhiteSpace([System.String]$File.VersionInfo.FileDescription)) ? [System.String]$File.VersionInfo.FileDescription : [System.String]$ShellFolder.GetDetailsOf($ShellFile, 34)
+      $FileInfo['ProductName'] = (-NOT [System.String]::IsNullOrWhiteSpace([System.String]$File.VersionInfo.ProductName)) ? [System.String]$File.VersionInfo.ProductName : [System.String]$ShellFolder.GetDetailsOf($ShellFile, 297)
+      $FileInfo['FileVersion'] = (-NOT [System.String]::IsNullOrWhiteSpace([System.String]$File.VersionInfo.FileVersionRaw)) ? [System.String]$File.VersionInfo.FileVersionRaw : [System.Version]($ShellFolder.GetDetailsOf($ShellFile, 166))
 
-      # Release the Shell.Application object
-      [Runtime.InteropServices.Marshal]::ReleaseComObject($Shell) | Out-Null
+      if (-NOT [System.String]::IsNullOrWhiteSpace([System.String]$File.VersionInfo.OriginalFilename)) {
+        $FileInfo['FileName'] = [System.String]$File.VersionInfo.OriginalFilename
+      }
+      else {
 
-    }
+        try {
 
-    # If the Get-Item cmdlet couldn't find the OriginalFileName property of the file, use Get-AppLockerFileInformation's output and parse it for OriginalFileName string
-    if (-NOT $FileInfo['FileName']) {
+          Write-Verbose -Message "OriginalFileName property not found. Using Get-AppLockerFileInformation's output and parsing it for OriginalFileName string."
 
-      try {
+          [System.String]$OriginalFileNameRaw = (Get-AppLockerFileInformation -Path $Path).Publisher
 
-        Write-Verbose -Message "OriginalFileName property not found. Using Get-AppLockerFileInformation's output and parsing it for OriginalFileName string."
+          if ((-NOT ([System.String]::IsNullOrWhiteSpace($OriginalFileNameRaw)))) {
 
-        [System.String]$OriginalFileNameRaw = (Get-AppLockerFileInformation -Path $Path).Publisher
+            # Split the input by the backslash (\) characters
+            $Parts = $OriginalFileNameRaw.Split('\')
 
-        if ((-NOT ([System.String]::IsNullOrWhiteSpace($OriginalFileNameRaw)))) {
+            # Check if the split string is an array and has at least one element
+            if (($Parts -is [System.String[]]) -and ($Parts.Count -gt 0)) {
 
-          # Split the input by the backslash (\) characters
-          $Parts = $OriginalFileNameRaw.Split('\')
+              # Get the last part of the split string which contains OriginalFileName and Version
+              [System.String]$VersionAndName = $Parts[-1]
 
-          # Check if the split string is an array and has at least one element
-          if (($Parts -is [System.String[]]) -and ($Parts.Count -gt 0)) {
+              if ((-NOT ([System.String]::IsNullOrWhiteSpace($VersionAndName)))) {
 
-            # Get the last part of the split string which contains OriginalFileName and Version
-            [System.String]$VersionAndName = $Parts[-1]
+                # Split the last part by the comma (,) characters and get the first part which contains OriginalFileName
+                [System.String]$ExtractedOriginalFileNameAttrib = $VersionAndName.Split(',') | Select-Object -First 1
 
-            if ((-NOT ([System.String]::IsNullOrWhiteSpace($VersionAndName)))) {
+                if ((-NOT ([System.String]::IsNullOrWhiteSpace($ExtractedOriginalFileNameAttrib)))) {
 
-              # Split the last part by the comma (,) characters and get the first part which contains OriginalFileName
-              [System.String]$ExtractedOriginalFileNameAttrib = $VersionAndName.Split(',') | Select-Object -First 1
+                  # Assign the OriginalFileName to the FileName property
+                  $FileInfo['FileName'] = $ExtractedOriginalFileNameAttrib
 
-              if ((-NOT ([System.String]::IsNullOrWhiteSpace($ExtractedOriginalFileNameAttrib)))) {
-
-                # Assign the OriginalFileName to the FileName property
-                $FileInfo['FileName'] = $ExtractedOriginalFileNameAttrib
-
-                Write-Verbose -Message "OriginalFileName property found using Get-AppLockerFileInformation: $ExtractedOriginalFileNameAttrib"
+                  Write-Verbose -Message "OriginalFileName property found using Get-AppLockerFileInformation: $ExtractedOriginalFileNameAttrib"
+                }
               }
             }
           }
         }
+        catch {
+          # Gracefully handle the error since it should not stop the execution
+          Write-Verbose -Message "There was an error while trying to get the OriginalFileName property using Get-AppLockerFileInformation cmdlet: $($_.Exception.Message)"
+        }
       }
-      catch {
-        # Gracefully handle the error since it should not stop the execution
-        Write-Verbose -Message "There was an error while trying to get the OriginalFileName property using Get-AppLockerFileInformation cmdlet: $($_.Exception.Message)"
-      }
+    }
+    finally {
+      # Release the Shell.Application object
+      [System.Void][Runtime.InteropServices.Marshal]::ReleaseComObject($Shell)
     }
   }
   End {
-    # Return the ordered hashtable
+    # Return the hashtable
     return $FileInfo
   }
 }

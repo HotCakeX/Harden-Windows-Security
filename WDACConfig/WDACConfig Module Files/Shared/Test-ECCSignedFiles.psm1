@@ -41,7 +41,6 @@ Function Test-ECCSignedFiles {
             "$ModuleRootPath\Core\Get-CiFileHashes.psm1",
             "$ModuleRootPath\XMLOps\New-HashLevelRules.psm1",
             "$ModuleRootPath\XMLOps\Clear-CiPolicy_Semantic.psm1",
-            "$ModuleRootPath\CoreExt\Classes.psm1",
             "$ModuleRootPath\Shared\Get-FilesFast.psm1"
         ) -Verbose:$false
 
@@ -71,24 +70,20 @@ Function Test-ECCSignedFiles {
 
             if (($null -ne $ECCSignedFiles) -and ($ECCSignedFiles.Count -gt 0)) {
 
-                [HashCreator[]]$CompleteHashes = @()
+                $CompleteHashes = New-Object -TypeName 'System.Collections.Generic.List[WDACConfig.HashCreator]'
 
                 foreach ($ECCSignedFile in $ECCSignedFiles) {
 
-                    # Create a new HashCreator object
-                    [HashCreator]$CurrentHash = New-Object -TypeName HashCreator
-
                     $HashOutput = Get-CiFileHashes -FilePath $ECCSignedFile -SkipVersionCheck
 
-                    # Add the hash details to the new object
-                    $CurrentHash.AuthenticodeSHA256 = $HashOutput.SHA256Authenticode
-                    $CurrentHash.AuthenticodeSHA1 = $HashOutput.SHA1Authenticode
-                    $CurrentHash.FileName = ([System.IO.FileInfo]$ECCSignedFile).Name
-                    # Check if the file is kernel-mode or user-mode -- Don't need the verbose output of the cmdlet when using it in embedded mode
-                    $CurrentHash.SiSigningScenario = ($null -eq (Get-KernelModeDrivers -File $ECCSignedFile 4>$null)) ? 1 : 0
-
-                    # Add the new object to the CompleteHashes array
-                    $CompleteHashes += $CurrentHash
+                    $CompleteHashes.Add([WDACConfig.HashCreator]::New(
+                            $HashOutput.SHA256Authenticode,
+                            $HashOutput.SHA1Authenticode,
+                        ([System.IO.FileInfo]$ECCSignedFile).Name,
+                            # Check if the file is kernel-mode or user-mode -- Don't need the verbose output of the cmdlet when using it in embedded mode
+                        ($null -eq (Get-KernelModeDrivers -File $ECCSignedFile 4>$null)) ? 1 : 0
+                        )
+                    )
                 }
 
                 Copy-Item -LiteralPath 'C:\Windows\schemas\CodeIntegrity\ExamplePolicies\AllowAll.xml' -Destination $ECCSignedFilesTempPolicy -Force

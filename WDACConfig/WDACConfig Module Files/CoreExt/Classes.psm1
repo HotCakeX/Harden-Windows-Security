@@ -25,7 +25,7 @@ Class BasePolicyNamez : System.Management.Automation.IValidateSetValuesGenerator
 Class CertCNz : System.Management.Automation.IValidateSetValuesGenerator {
     [System.String[]] GetValidValues() {
         # Cannot define the custom type 'WDACConfig.CryptoAPI' since we're in a class definition and it does not support it, hence using Add-Type with -PassThru
-        $CryptoAPI = Add-Type -Path "$global:ModuleRootPath\C#\Crypt32CertCN.cs" -PassThru
+        $CryptoAPI = Add-Type -Path "$global:ModuleRootPath\C#\Functions\Crypt32CertCN.cs" -PassThru
 
         [System.String[]]$Output = @()
 
@@ -76,52 +76,12 @@ Class RuleOptionsx : System.Management.Automation.IValidateSetValuesGenerator {
     }
 }
 
-Class CertificateDetailsCreator {
-    [System.String]$IntermediateCertTBS
-    [System.String]$IntermediateCertName
-    [System.String]$LeafCertTBS
-    [System.String]$LeafCertName
-}
-
-Class FilePublisherSignerCreator {
-    [CertificateDetailsCreator[]]$CertificateDetails
-    [System.Version]$FileVersion
-    [System.String]$FileDescription
-    [System.String]$InternalName
-    [System.String]$OriginalFileName
-    [System.String]$PackageFamilyName
-    [System.String]$ProductName
-    [System.String]$FileName
-    [System.String]$AuthenticodeSHA256
-    [System.String]$AuthenticodeSHA1
-    [System.Int32]$SiSigningScenario
-}
-
-Class PublisherSignerCreator {
-    [CertificateDetailsCreator[]]$CertificateDetails
-    [System.String]$FileName
-    [System.String]$AuthenticodeSHA256
-    [System.String]$AuthenticodeSHA1
-    [System.Int32]$SiSigningScenario
-}
-
-Class HashCreator {
-    [System.String]$AuthenticodeSHA256
-    [System.String]$AuthenticodeSHA1
-    [System.String]$FileName
-    [System.Int32]$SiSigningScenario
-}
-
 # Define the types to export with type accelerators.
 [System.Reflection.TypeInfo[]]$ExportableTypes = @(
     [ScanLevelz]
     [CertCNz]
     [BasePolicyNamez]
     [RuleOptionsx]
-    [CertificateDetailsCreator]
-    [FilePublisherSignerCreator]
-    [PublisherSignerCreator]
-    [HashCreator]
 )
 
 # Get the non-public TypeAccelerators class for defining new accelerators.

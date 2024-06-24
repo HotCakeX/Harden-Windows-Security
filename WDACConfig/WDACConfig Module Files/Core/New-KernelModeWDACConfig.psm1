@@ -28,8 +28,7 @@ Function New-KernelModeWDACConfig {
             "$ModuleRootPath\Shared\Write-ColorfulText.psm1",
             "$ModuleRootPath\Shared\Move-UserModeToKernelMode.psm1",
             "$ModuleRootPath\Shared\Get-KernelModeDriversAudit.psm1",
-            "$ModuleRootPath\Shared\New-StagingArea.psm1",
-            "$ModuleRootPath\Shared\Edit-GUIDs.psm1"
+            "$ModuleRootPath\Shared\New-StagingArea.psm1"
         )
 
         # if -SkipVersionCheck wasn't passed, run the updater
@@ -108,7 +107,7 @@ Function New-KernelModeWDACConfig {
 
                 # Set the already available and deployed GUID as the new PolicyID to prevent deploying duplicate Audit mode policies
                 if ($CurrentStrictKernelPolicyGUIDConfirmation) {
-                    Edit-GUIDs -PolicyIDInput $CurrentStrictKernelPolicyGUIDConfirmation -PolicyFilePathInput $OutputPolicyPath
+                    [WDACConfig.PolicyEditor]::EditGUIDs($CurrentStrictKernelPolicyGUIDConfirmation, $OutputPolicyPath)
                     $PolicyID = $CurrentStrictKernelPolicyGUIDConfirmation
                 }
             }
@@ -218,7 +217,7 @@ Function New-KernelModeWDACConfig {
                             Move-UserModeToKernelMode -FilePath $FinalEnforcedPolicyPath | Out-Null
 
                             Write-Verbose -Message 'Setting the GUIDs for the XML policy file'
-                            Edit-GUIDs -PolicyIDInput $PolicyID -PolicyFilePathInput $FinalEnforcedPolicyPath
+                            [WDACConfig.PolicyEditor]::EditGUIDs($PolicyID, $FinalEnforcedPolicyPath)
 
                             Write-Verbose -Message 'Setting a new policy name with the current date attached to it'
                             Set-CIPolicyIdInfo -FilePath $FinalEnforcedPolicyPath -PolicyName "Strict Kernel mode policy Enforced - $(Get-Date -Format 'MM-dd-yyyy')"
@@ -352,7 +351,7 @@ Function New-KernelModeWDACConfig {
                             $null = Move-UserModeToKernelMode -FilePath $FinalEnforcedPolicyPath
 
                             Write-Verbose -Message 'Setting the GUIDs for the XML policy file'
-                            Edit-GUIDs -PolicyIDInput $PolicyID -PolicyFilePathInput $FinalEnforcedPolicyPath
+                            [WDACConfig.PolicyEditor]::EditGUIDs($PolicyID, $FinalEnforcedPolicyPath)
 
                             Write-Verbose -Message 'Setting a new policy name with the current date attached to it'
                             Set-CIPolicyIdInfo -FilePath $FinalEnforcedPolicyPath -PolicyName "Strict Kernel No Flights mode policy Enforced - $(Get-Date -Format 'MM-dd-yyyy')"

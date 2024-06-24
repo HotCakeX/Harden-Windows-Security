@@ -2,8 +2,8 @@ Name on the Website,File Name,Wellknown Root Value,Signature Hash Algorithm,Thum
 Microsoft Authenticode(tm) Root Authority,Microsoft Authenticode(tm) Root Authority.crt,03,MD5,7f88cd7223f3c813818c994614a89c99fa3b5247,Microsoft Authenticode(tm) Root Authority,D67576F5521D1CCAB52E9215E0F9F743
 Microsoft Product Root 1997,Microsoft Product Root 1997.crt,04,MD5,a43489159a520f0d93d032ccaf37e7fe20a8b419,Microsoft Root Authority,8B3C3087B7056F5EC5DDBA91A1B901F0
 Microsoft Product Root 2001,Microsoft Product Root 2001.crt,05,SHA1,cdd4eeae6000ac7f40c3802c171e30148030c072,Microsoft Root Certificate Authority,391BE92883D52509155BFEAE27B9BD340170B76B
-Microsoft Product Root 2010,Microsoft Code Signing PCA 2010.crt,06,SHA2-256,8bfe3107712b3c886b1c96aaec89984914dc9b6b,Microsoft Code Signing PCA 2010,121AF4B922A74247EA49DF50DE37609CC1451A1FE06B2CB7E1E079B492BD8195
-Microsoft Standard Root 2011,Microsoft Code Signing PCA 2011.crt,07,SHA2-256,f252e794fe438e35ace6e53762c0a234a2c52135,Microsoft Code Signing PCA 2011,F6F717A43AD9ABDDC8CEFDDE1C505462535E7D1307E630F9544A2D14FE8BF26E
+Microsoft Product Root 2010,Microsoft Root Certificate Authority 2010.crt,06,SHA2-256,3b1efd3a66ea28b16697394703a72ca340a05bd5,Microsoft Root Certificate Authority 2010,08FBA831C08544208F5208686B991CA1B2CFC510E7301784DDF1EB5BF0393239
+Microsoft Standard Root 2011,Microsoft Root Certificate Authority 2011.crt,07,SHA2-256,8f43288ad272f3103b6fb1428485ea3014c0bcfe,Microsoft Root Certificate Authority 2011,279CD652C4E252BFBE5217AC722205D7729BA409148CFA9E6D9E5B1CB94EAFF1
 Microsoft Test Root 1999,Microsoft Test Root 1999.cer,09,MD5,2bd63d28d7bcd0e251195aeb519243c13142ebc3,Microsoft Test Root Authority,09CBAFBD98E81B4D6BAAAB32B8B2F5D7
 Microsoft Test Root 2010,Microsoft Test Root 2010.cer,10 (0A),SHA2-256,8a334aa8052dd244a647306a76b8178fa215f344,Microsoft Testing Root Certificate Authority 2010,7A4D9890B0F9006A6F77472D50D83CA54975FCC2B7EA0563490134E19B78782A
 Microsoft Flight Root 2014,Microsoft Flight Root 2014.cer,(14) 0E,SHA2-256,f8db7e1c16f1ffd4aaad4aad8dff0f2445184aeb,Microsoft Development Root Certificate Authority 2014,ED55F82E1444F79CA9DCE826846FDC4E0EA3859E3D26EFEF412D2FFF0C7C8E6C

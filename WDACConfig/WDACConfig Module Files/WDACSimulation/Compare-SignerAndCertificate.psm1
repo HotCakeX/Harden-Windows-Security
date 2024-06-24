@@ -21,41 +21,32 @@ Function Compare-SignerAndCertificate {
         # Importing the required sub-modules
         Import-Module -FullyQualifiedName "$ModuleRootPath\WDACSimulation\Get-ExtendedFileInfo.psm1" -Force
 
-        # A hashtable that holds the details of the current file
-        $CurrentFileInfo = [System.Collections.Hashtable]@{
-            SignerID                           = ''       # Gathered from the Get-SignerInfo function
-            SignerName                         = ''       # Gathered from the Get-SignerInfo function
-            SignerCertRoot                     = ''       # Gathered from the Get-SignerInfo function
-            SignerCertPublisher                = ''       # Gathered from the Get-SignerInfo function
-            SignerScope                        = ''       # Gathered from the Get-SignerInfo function
-            HasFileAttrib                      = $false   # Gathered from the Get-SignerInfo function
-            SignerFileAttributeIDs             = @()      # Gathered from the Get-SignerInfo function
-            MatchCriteria                      = ''
-            SpecificFileNameLevelMatchCriteria = ''       # Only those eligible for FilePublisher or SignedVersion levels assign this value, otherwise it stays empty
-            CertSubjectCN                      = ''
-            CertIssuerCN                       = ''
-            CertNotAfter                       = ''
-            CertTBSValue                       = ''
-            FilePath                           = $SimulationInput.FilePath
-        }
-
         # Get the extended file attributes
         [System.Collections.Hashtable]$ExtendedFileInfo = Get-ExtendedFileInfo -Path $SimulationInput.FilePath
     }
 
     Process {
 
-        # Loop through each signer in the signer information array, these are the signers in the XML policy file
-        :MainSignerLoop foreach ($Signer in $SimulationInput.SignerInfo) {
+        $EligibleAllowedSigners = $SimulationInput.SignerInfo.Where({ $_.IsAllowed -eq $true })
+
+        Write-Debug -Message "The number of allowed signers in the XML policy file: $($EligibleAllowedSigners.count)"
+
+        # Loop through each Allowed signer in the signer information array, these are the signers in the XML policy file
+        foreach ($Signer in $EligibleAllowedSigners) {
+
+            Write-Debug -Message "Checking the signer: $($Signer.Name)"
 
             # If the signer has any EKUs, try to match it with the file's EKU OIDs
             if ($Signer.HasEKU) {
+
+                Write-Debug -Message 'The signer has EKUs'
+                Write-Debug -Message "The current file has $($SimulationInput.EKUOIDs.Count) EKUs"
 
                 # Check if any of the Signer's OIDs match any of the file's certificates' OIDs (which are basically Leaf certificates' EKU OIDs)
                 # This is used for all levels, not just WHQL levels
                 [System.Boolean]$EKUsMatch = $false
                 foreach ($EKU in $Signer.CertEKU) {
-                    if ($SimulationInput.EKUOIDs.Contains($EKU)) {
+                    if ($SimulationInput.EKUOIDs -and $SimulationInput.EKUOIDs.Contains($EKU)) {
                         [System.Boolean]$EKUsMatch = $true
                         break
                     }
@@ -64,8 +55,12 @@ Function Compare-SignerAndCertificate {
                 # If both the file and signer had EKUs and they match
                 if ($EKUsMatch) {
 
+                    Write-Debug -Message "The EKUs of the signer matched with the file's EKUs"
+
                     # If the signer and file have matching EKUs and the signer is WHQL then start checking for OemID
                     if ($Signer.IsWHQL) {
+
+                        Write-Debug -Message 'The signer is WHQL'
 
                         # At this point the file is definitely WHQL-Signed
 
@@ -81,7 +76,7 @@ Function Compare-SignerAndCertificate {
                         # Loop through each candidate WHQL chain package
                         foreach ($ChainPackage in $WHQLChainPackagesCandidates) {
 
-                            # Try to get the Opus data of the current chain
+                            # Try to get the Opus data of the current chain (essentially the current chain's leaf certificate)
                             try {
                                 $CurrentOpusData = ([WDACConfig.Opus]::GetOpusData($ChainPackage.SignedCms)).CertOemID
                             }
@@ -95,6 +90,7 @@ Function Compare-SignerAndCertificate {
 
                             # Capture the details of the WHQL signers, aka Intermediate certificate(s) of the signer package that had WHQL EKU
                             # In case there are more than 1 intermediate certificates in the chain, add all of them to the HashSets
+                            # regardless of whether they have Opus data or not because we'll use these data for the WHQL level too and that level doesn't require Opus data match
                             foreach ($IntermediateCert in $ChainPackage.IntermediateCertificates) {
 
                                 # Add the current TBSHash and SubjectCN pair of the intermediate certificate to the list
@@ -107,7 +103,7 @@ Function Compare-SignerAndCertificate {
                             }
                         }
 
-                        # Flag indicating if the Opus data of the signer matched with the file's certificates
+                        # Flag indicating if the Opus data of the current signer matched with one of the file's leaf certificates Opus data
                         # Making it eligible for WHQLFilePublisher and WHQLPublisher levels
                         # if true, CertOemID of the signer matches the EKU Opus data of the file (This should belong to the leaf certificate of the file as it's the one with EKUs)
                         [System.Boolean]$OpusMatch = $Current_Chain_Opus.Contains($Signer.CertOemID)
@@ -117,7 +113,7 @@ Function Compare-SignerAndCertificate {
                         foreach ($OpusSigner in $OpusSigners) {
 
                             # Check if the selected file's signer chain's intermediate certificates match the current signer's details
-                            if (($OpusSigner.TBSHash -eq $Signer.CertRoot) -and ($OpusSigner.SubjectCN -eq $Signer.Name)) {
+                            if (($Signer.CertRoot -eq $OpusSigner.TBSHash) -and ($Signer.Name -eq $OpusSigner.SubjectCN)) {
 
                                 # At this point the file meets the criteria for one of the WHQL levels
 
@@ -131,50 +127,52 @@ Function Compare-SignerAndCertificate {
                                         }
                                     }
 
-                                    # Loop over all of the candidate file attributes to find a match with the file's extended info
-                                    foreach ($FileAttrib in $CandidateFileAttrib.GetEnumerator()) {
+                                    # Loop over all of the candidate file attributes (if they exists) to find a match with the file's extended info
+                                    if ($null -ne $CandidateFileAttrib) {
+                                        foreach ($FileAttrib in $CandidateFileAttrib.GetEnumerator()) {
 
-                                        # Loop over all of the keys in the extended file info to see which one of them is a match, to determine the SpecificFileNameLevel option
-                                        foreach ($KeyItem in $ExtendedFileInfo.Keys) {
+                                            # Loop over all of the keys in the extended file info to see which one of them is a match, to determine the SpecificFileNameLevel option
+                                            foreach ($KeyItem in $ExtendedFileInfo.Keys) {
 
-                                            if ($ExtendedFileInfo.$KeyItem -eq $FileAttrib.$KeyItem) {
+                                                if ($ExtendedFileInfo.$KeyItem -eq $FileAttrib.$KeyItem) {
 
-                                                Write-Verbose -Message "The SpecificFileNameLevel is $KeyItem"
+                                                    Write-Verbose -Message "The SpecificFileNameLevel is $KeyItem"
 
-                                                # If there was a match then assign the $KeyItem which is the name of the SpecificFileNameLevel option to the $CurrentFileInfo.SpecificFileNameLevelMatchCriteria
-                                                # And break out of the loop by validating the signer as suitable for FilePublisher level
+                                                    # If there was a match then assign the $KeyItem which is the name of the SpecificFileNameLevel option to the $CurrentFileInfo.SpecificFileNameLevelMatchCriteria
 
-                                                <#
-                                                ELIGIBILITY CHECK FOR LEVELS: WHQLFilePublisher
+                                                    <#
+                                                    ELIGIBILITY CHECK FOR LEVELS: WHQLFilePublisher
 
-                                                CRITERIA:
-                                                1) The signer's CertRoot (referring to the TBS value in the xml file which belongs to the intermediate cert of the file signed by Microsoft) Matches the TBSValue of the file's certificate that belongs to Microsoft WHQL program
-                                                2) The signer's name (Referring to the one in the XML file) matches the same Intermediate certificate's SubjectCN, the certificate that belongs to Microsoft WHQL program
-                                                3) The signer's CertEKU points to the WHQL EKU OID and one of the file's leaf certificates contains this EKU OID
-                                                4) The signer's CertOemID matches one of the Opus data of the file's certificates (Leaf certificates as they are the ones with EKUs)
-                                                5) The signer's FileAttribRef(s) point to the same file that is currently being investigated
-                                                #>
+                                                    CRITERIA:
+                                                    1) The signer's CertRoot (referring to the TBS value in the xml file which belongs to the intermediate cert of the file signed by Microsoft) Matches the TBSValue of the file's certificate that belongs to Microsoft WHQL program
+                                                    2) The signer's name (Referring to the one in the XML file) matches the same Intermediate certificate's SubjectCN, the certificate that belongs to Microsoft WHQL program
+                                                    3) The signer's CertEKU points to the WHQL EKU OID and one of the file's leaf certificates contains this EKU OID
+                                                    4) The signer's CertOemID matches one of the Opus data of the file's certificates (Leaf certificates as they are the ones with EKUs)
+                                                    5) The signer's FileAttribRef(s) point to the same file that is currently being investigated
+                                                    #>
 
-                                                $CurrentFileInfo.SignerID = $Signer.ID
-                                                $CurrentFileInfo.SignerName = $Signer.Name
-                                                $CurrentFileInfo.SignerCertRoot = $Signer.CertRoot
-                                                $CurrentFileInfo.SignerCertPublisher = $Signer.CertPublisher
-                                                $CurrentFileInfo.SignerScope = $Signer.SignerScope
-                                                $CurrentFileInfo.HasFileAttrib = $Signer.HasFileAttrib
-                                                $CurrentFileInfo.SignerFileAttributeIDs = $Signer.SignerFileAttributeIDs
-                                                $CurrentFileInfo.SpecificFileNameLevelMatchCriteria = [System.String]$KeyItem
-                                                $CurrentFileInfo.MatchCriteria = 'WHQLFilePublisher'
-                                                $CurrentFileInfo.CertSubjectCN = $Certificate.SubjectCN
-                                                $CurrentFileInfo.CertIssuerCN = $Certificate.IssuerCN
-                                                $CurrentFileInfo.CertNotAfter = $Certificate.NotAfter
-                                                $CurrentFileInfo.CertTBSValue = $Certificate.TBSValue
-
-                                                break MainSignerLoop
-
+                                                    return ([WDACConfig.SimulationOutput]::New(
+                                                        ([System.IO.Path]::GetFileName($SimulationInput.FilePath)),
+                                                            'Signer',
+                                                            $true,
+                                                            $Signer.ID,
+                                                            $Signer.Name,
+                                                            $Signer.CertRoot,
+                                                            $Signer.CertPublisher,
+                                                            $Signer.SignerScope,
+                                                            $Signer.FileAttribRef,
+                                                            'WHQLFilePublisher',
+                                                            $KeyItem,
+                                                            $OpusSigner.SubjectCN,
+                                                            $null, # Intentionally not collecting this info when forming the OpusSigners but the info is there if needed
+                                                            $null, # Intentionally not collecting this info when forming the OpusSigners but the info is there if needed
+                                                            $OpusSigner.TBSHash,
+                                                            $SimulationInput.FilePath
+                                                        ))
+                                                }
                                             }
                                         }
                                     }
-
                                 }
 
                                 <#
@@ -187,20 +185,28 @@ Function Compare-SignerAndCertificate {
                                 4) The signer's CertOemID matches one of the Opus data of the file's certificates (Leaf certificates as they are the ones with EKUs)
                                 #>
                                 elseif ($OpusMatch) {
-                                    $CurrentFileInfo.SignerID = $Signer.ID
-                                    $CurrentFileInfo.SignerName = $Signer.Name
-                                    $CurrentFileInfo.SignerCertRoot = $Signer.CertRoot
-                                    $CurrentFileInfo.SignerCertPublisher = $Signer.CertPublisher
-                                    $CurrentFileInfo.SignerScope = $Signer.SignerScope
-                                    $CurrentFileInfo.HasFileAttrib = $Signer.HasFileAttrib
-                                    $CurrentFileInfo.SignerFileAttributeIDs = $Signer.SignerFileAttributeIDs
-                                    $CurrentFileInfo.MatchCriteria = 'WHQLPublisher'
-                                    $CurrentFileInfo.CertSubjectCN = $Certificate.SubjectCN
-                                    $CurrentFileInfo.CertIssuerCN = $Certificate.IssuerCN
-                                    $CurrentFileInfo.CertNotAfter = $Certificate.NotAfter
-                                    $CurrentFileInfo.CertTBSValue = $Certificate.TBSValue
 
-                                    break MainSignerLoop
+                                    # If the signer has FileAttributes meaning it's either WHQLFilePublisher, FilePublisher or SignedVersion then do not use it for other levels
+                                    if ($Signer.FileAttribRef) { Continue }
+
+                                    return ([WDACConfig.SimulationOutput]::New(
+                                        ([System.IO.Path]::GetFileName($SimulationInput.FilePath)),
+                                            'Signer',
+                                            $true,
+                                            $Signer.ID,
+                                            $Signer.Name,
+                                            $Signer.CertRoot,
+                                            $Signer.CertPublisher,
+                                            $Signer.SignerScope,
+                                            $Signer.FileAttribRef,
+                                            'WHQLPublisher',
+                                            $null,
+                                            $OpusSigner.SubjectCN,
+                                            $null,
+                                            $null,
+                                            $OpusSigner.TBSHash,
+                                            $SimulationInput.FilePath
+                                        ))
                                 }
 
                                 <#
@@ -212,27 +218,35 @@ Function Compare-SignerAndCertificate {
                                 3) The signer's CertEKU points to the WHQL EKU OID and one of the file's leaf certificates contains this EKU OID
                                 #>
                                 else {
-                                    $CurrentFileInfo.SignerID = $Signer.ID
-                                    $CurrentFileInfo.SignerName = $Signer.Name
-                                    $CurrentFileInfo.SignerCertRoot = $Signer.CertRoot
-                                    $CurrentFileInfo.SignerCertPublisher = $Signer.CertPublisher
-                                    $CurrentFileInfo.SignerScope = $Signer.SignerScope
-                                    $CurrentFileInfo.HasFileAttrib = $Signer.HasFileAttrib
-                                    $CurrentFileInfo.SignerFileAttributeIDs = $Signer.SignerFileAttributeIDs
-                                    $CurrentFileInfo.MatchCriteria = 'WHQL'
-                                    $CurrentFileInfo.CertSubjectCN = $Certificate.SubjectCN
-                                    $CurrentFileInfo.CertIssuerCN = $Certificate.IssuerCN
-                                    $CurrentFileInfo.CertNotAfter = $Certificate.NotAfter
-                                    $CurrentFileInfo.CertTBSValue = $Certificate.TBSValue
 
-                                    break MainSignerLoop
+                                    # If the signer has FileAttributes meaning it's either WHQLFilePublisher, FilePublisher or SignedVersion then do not use it for other levels
+                                    if ($Signer.FileAttribRef) { Continue }
+
+                                    return ([WDACConfig.SimulationOutput]::New(
+                                        ([System.IO.Path]::GetFileName($SimulationInput.FilePath)),
+                                            'Signer',
+                                            $true,
+                                            $Signer.ID,
+                                            $Signer.Name,
+                                            $Signer.CertRoot,
+                                            $Signer.CertPublisher,
+                                            $Signer.SignerScope,
+                                            $Signer.FileAttribRef,
+                                            'WHQL',
+                                            $null,
+                                            $OpusSigner.SubjectCN,
+                                            $null,
+                                            $null,
+                                            $OpusSigner.TBSHash,
+                                            $SimulationInput.FilePath
+                                        ))
                                 }
                             }
                         }
 
                         if ($Signer.IsWHQL -and $EKUsMatch) {
 
-                            # If the Signer has EKU, it was WHQL EKU but there was no WHQL level match made with the file's properties then break
+                            # If the Signer has EKU, it was WHQL EKU but there was no WHQL level match made with the file's properties then skip the current signer
                             # as the rest of the levels are not applicable for a WHQL type of signer
                             Continue
                         }
@@ -244,6 +258,7 @@ Function Compare-SignerAndCertificate {
 
                 }
                 else {
+                    Write-Debug -Message "The signer had EKUs but they didn't match with the file's EKUs"
                     # If the signer has EKU but it didn't match with the file's EKU then skip the current signer
                     # as it shouldn't be used for any other levels
                     Continue
@@ -253,244 +268,56 @@ Function Compare-SignerAndCertificate {
             # Loop through each certificate chain
             foreach ($Chain in $SimulationInput.AllFileSigners) {
 
-                Switch ($Chain.CertificateChain.ChainElements.Count) {
+                # Loop over each intermediate certificate in the chain
+                foreach ($IntermediateCert in $Chain.IntermediateCertificates) {
 
-                    # If the current chain in the loop being investigated has Root, at least one Intermediate and Leaf certificate
-                    { $_ -gt 2 } {
+                    <#
+                    ELIGIBILITY CHECK FOR LEVELS: FilePublisher, Publisher, SignedVersion
 
-                        # Loop over each intermediate certificate in the chain
-                        foreach ($IntermediateCert in $Chain.IntermediateCertificates) {
+                    CRITERIA:
+                    1) The signer's CertRoot (referring to the TBS value in the xml file which belongs to an intermediate cert of the file) Matches the TBSValue of one of the file's intermediate certificates
+                    2) The signer's name (Referring to the one in the XML file) matches the same Intermediate certificate's SubjectCN
+                    3) The signer's CertPublisher (aka Leaf Certificate's CN used in the xml policy) matches the current chain's leaf certificate's SubjectCN
+                    #>
+                    if (($Signer.CertRoot -eq $IntermediateCert.TBSValue) -and ($Signer.Name -eq $IntermediateCert.SubjectCN) -and ($Signer.CertPublisher -eq $Chain.LeafCertificate.SubjectCN)) {
 
-                            <#
-                            ELIGIBILITY CHECK FOR LEVELS: FilePublisher, Publisher, SignedVersion
+                        # Check if the matched signer has FileAttrib indicating that it was generated either with FilePublisher or SignedVersion level
+                        if ($Signer.FileAttrib) {
 
-                            CRITERIA:
-                            1) The signer's CertRoot (referring to the TBS value in the xml file which belongs to an intermediate cert of the file) Matches the TBSValue of one of the file's intermediate certificates
-                            2) The signer's name (Referring to the one in the XML file) matches the same Intermediate certificate's SubjectCN
-                            3) The signer's CertPublisher (aka Leaf Certificate's CN used in the xml policy) matches the current chain's leaf certificate's SubjectCN
-                            #>
-                            if (($Signer.CertRoot -eq $IntermediateCert.TBSValue) -and ($Signer.Name -eq $IntermediateCert.SubjectCN) -and ($Signer.CertPublisher -eq $Chain.LeafCertificate.SubjectCN)) {
+                            [System.Collections.Hashtable[]]$CandidateFileAttrib = foreach ($Attrib in $signer.FileAttrib.GetEnumerator()) {
 
-                                # Check if the matched signer has FileAttrib indicating that it was generated either with FilePublisher or SignedVersion level
-                                if ($Signer.FileAttrib) {
-
-                                    [System.Collections.Hashtable[]]$CandidateFileAttrib = foreach ($Attrib in $signer.FileAttrib.GetEnumerator()) {
-
-                                        if ($ExtendedFileInfo['FileVersion'] -ge $Attrib.Value.MinimumFileVersion) {
-                                            $Attrib.Value
-                                        }
-                                    }
-
-                                    # If the signer has a file attribute with a wildcard file name, then it's a SignedVersion level signer
-                                    # These signers have only 1 FileAttribRef and only point to a single FileAttrib
-                                    # If a SignedVersion signer applies to multiple files, the version number of the FileAttrib is set to the minimum version of the files
-                                    if (($CandidateFileAttrib.count -eq 1) -and ($CandidateFileAttrib.FileName -eq '*')) {
-
-                                        $CurrentFileInfo.SignerID = $Signer.ID
-                                        $CurrentFileInfo.SignerName = $Signer.Name
-                                        $CurrentFileInfo.SignerCertRoot = $Signer.CertRoot
-                                        $CurrentFileInfo.SignerCertPublisher = $Signer.CertPublisher
-                                        $CurrentFileInfo.SignerScope = $Signer.SignerScope
-                                        $CurrentFileInfo.HasFileAttrib = $Signer.HasFileAttrib
-                                        $CurrentFileInfo.SignerFileAttributeIDs = $Signer.SignerFileAttributeIDs
-                                        $CurrentFileInfo.SpecificFileNameLevelMatchCriteria = 'Version'
-                                        $CurrentFileInfo.MatchCriteria = 'SignedVersion'
-                                        $CurrentFileInfo.CertSubjectCN = $Certificate.SubjectCN
-                                        $CurrentFileInfo.CertIssuerCN = $Certificate.IssuerCN
-                                        $CurrentFileInfo.CertNotAfter = $Certificate.NotAfter
-                                        $CurrentFileInfo.CertTBSValue = $Certificate.TBSValue
-
-                                        break MainSignerLoop
-                                    }
-
-                                    # Loop over all of the candidate file attributes to find a match with the file's extended info
-                                    foreach ($FileAttrib in $CandidateFileAttrib.GetEnumerator()) {
-
-                                        # Loop over all of the keys in the extended file info to see which one of them is a match, to determine the SpecificFileNameLevel option
-                                        foreach ($KeyItem in $ExtendedFileInfo.Keys) {
-
-                                            if ($ExtendedFileInfo.$KeyItem -eq $FileAttrib.$KeyItem) {
-
-                                                Write-Verbose -Message "The SpecificFileNameLevel is $KeyItem"
-
-                                                # If there was a match then assign the $KeyItem which is the name of the SpecificFileNameLevel option to the $CurrentFileInfo.SpecificFileNameLevelMatchCriteria
-                                                # And break out of the loop by validating the signer as suitable for FilePublisher level
-
-                                                $CurrentFileInfo.SignerID = $Signer.ID
-                                                $CurrentFileInfo.SignerName = $Signer.Name
-                                                $CurrentFileInfo.SignerCertRoot = $Signer.CertRoot
-                                                $CurrentFileInfo.SignerCertPublisher = $Signer.CertPublisher
-                                                $CurrentFileInfo.SignerScope = $Signer.SignerScope
-                                                $CurrentFileInfo.HasFileAttrib = $Signer.HasFileAttrib
-                                                $CurrentFileInfo.SignerFileAttributeIDs = $Signer.SignerFileAttributeIDs
-                                                $CurrentFileInfo.SpecificFileNameLevelMatchCriteria = [System.String]$KeyItem
-                                                $CurrentFileInfo.MatchCriteria = 'FilePublisher'
-                                                $CurrentFileInfo.CertSubjectCN = $Certificate.SubjectCN
-                                                $CurrentFileInfo.CertIssuerCN = $Certificate.IssuerCN
-                                                $CurrentFileInfo.CertNotAfter = $Certificate.NotAfter
-                                                $CurrentFileInfo.CertTBSValue = $Certificate.TBSValue
-
-                                                break MainSignerLoop
-
-                                            }
-                                        }
-                                    }
-                                }
-                                # If the Signer matched and it doesn't have a FileAttrib, then it's a Publisher level signer
-                                else {
-                                    $CurrentFileInfo.SignerID = $Signer.ID
-                                    $CurrentFileInfo.SignerName = $Signer.Name
-                                    $CurrentFileInfo.SignerCertRoot = $Signer.CertRoot
-                                    $CurrentFileInfo.SignerCertPublisher = $Signer.CertPublisher
-                                    $CurrentFileInfo.SignerScope = $Signer.SignerScope
-                                    $CurrentFileInfo.HasFileAttrib = $Signer.HasFileAttrib
-                                    $CurrentFileInfo.SignerFileAttributeIDs = $Signer.SignerFileAttributeIDs
-                                    $CurrentFileInfo.MatchCriteria = 'Publisher'
-                                    $CurrentFileInfo.CertSubjectCN = $Certificate.SubjectCN
-                                    $CurrentFileInfo.CertIssuerCN = $Certificate.IssuerCN
-                                    $CurrentFileInfo.CertNotAfter = $Certificate.NotAfter
-                                    $CurrentFileInfo.CertTBSValue = $Certificate.TBSValue
-
-                                    break MainSignerLoop
+                                if ($ExtendedFileInfo['FileVersion'] -ge $Attrib.Value.MinimumFileVersion) {
+                                    $Attrib.Value
                                 }
                             }
 
-                            <#
-                            ELIGIBILITY CHECK FOR LEVELS: PcaCertificate, RootCertificate
+                            # If the signer has a file attribute with a wildcard file name, then it's a SignedVersion level signer
+                            # These signers have only 1 FileAttribRef and only point to a single FileAttrib
+                            # If a SignedVersion signer applies to multiple files, the version number of the FileAttrib is set to the minimum version of the files
+                            if (($CandidateFileAttrib.count -eq 1) -and ($CandidateFileAttrib.FileName -eq '*')) {
 
-                            CRITERIA:
-                            1) The signer's CertRoot (referring to the TBS value in the xml file which belongs to an intermediate cert of the file) Matches the TBSValue of one of the file's intermediate certificates
-                            2) The signer's name (Referring to the one in the XML file) matches the same Intermediate certificate's SubjectCN
-                            #>
-                            elseif (($Signer.CertRoot -eq $IntermediateCert.TBSValue) -and ($Signer.Name -eq $IntermediateCert.SubjectCN)) {
-
-                                # If the signer has a FileAttrib indicating it was generated with FilePublisher or SignedVersion level, and it wasn't already matched with those levels above, then do not use it for other levels
-                                if ($Signer.HasFileAttrib) { Continue }
-
-                                $CurrentFileInfo.SignerID = $Signer.ID
-                                $CurrentFileInfo.SignerName = $Signer.Name
-                                $CurrentFileInfo.SignerCertRoot = $Signer.CertRoot
-                                $CurrentFileInfo.SignerCertPublisher = $Signer.CertPublisher
-                                $CurrentFileInfo.SignerScope = $Signer.SignerScope
-                                $CurrentFileInfo.HasFileAttrib = $Signer.HasFileAttrib
-                                $CurrentFileInfo.SignerFileAttributeIDs = $Signer.SignerFileAttributeIDs
-                                $CurrentFileInfo.MatchCriteria = 'PcaCertificate/RootCertificate'
-                                $CurrentFileInfo.CertSubjectCN = $Certificate.SubjectCN
-                                $CurrentFileInfo.CertIssuerCN = $Certificate.IssuerCN
-                                $CurrentFileInfo.CertNotAfter = $Certificate.NotAfter
-                                $CurrentFileInfo.CertTBSValue = $Certificate.TBSValue
-
-                                break MainSignerLoop
+                                return ([WDACConfig.SimulationOutput]::New(
+                                    ([System.IO.Path]::GetFileName($SimulationInput.FilePath)),
+                                        'Signer',
+                                        $true,
+                                        $Signer.ID,
+                                        $Signer.Name,
+                                        $Signer.CertRoot,
+                                        $Signer.CertPublisher,
+                                        $Signer.SignerScope,
+                                        $Signer.FileAttribRef,
+                                        'SignedVersion',
+                                        'Version',
+                                        $IntermediateCert.SubjectCN,
+                                        $IntermediateCert.IssuerCN,
+                                        $IntermediateCert.NotAfter,
+                                        $IntermediateCert.TBSValue,
+                                        $SimulationInput.FilePath
+                                    ))
                             }
-                        }
 
-                        <#
-                        ELIGIBILITY CHECK FOR LEVELS: LeafCertificate
-
-                        CRITERIA:
-                        1) The Signer's CertRoot (referring to the TBS value in the xml file, which belongs to the leaf certificate of the file when LeafCertificate level is used) matches the TBSValue of the file's Leaf certificate certificates
-                        2) The signer's name (Referring to the one in the XML file) matches the Leaf certificate's SubjectCN
-                        #>
-                        if (($Signer.CertRoot -eq $Chain.LeafCertificate.TBSValue) -and ($Signer.Name -eq $Chain.LeafCertificate.SubjectCN)) {
-
-                            # If the signer has a FileAttrib indicating it was generated with FilePublisher or SignedVersion level, and it wasn't already matched with those levels above, then do not use it for other levels
-                            if ($Signer.HasFileAttrib) { Continue }
-
-                            $CurrentFileInfo.SignerID = $Signer.ID
-                            $CurrentFileInfo.SignerName = $Signer.Name
-                            $CurrentFileInfo.SignerCertRoot = $Signer.CertRoot
-                            $CurrentFileInfo.SignerCertPublisher = $Signer.CertPublisher
-                            $CurrentFileInfo.MatchCriteria = 'LeafCertificate'
-                            $CurrentFileInfo.SignerScope = $Signer.SignerScope
-                            $CurrentFileInfo.HasFileAttrib = $Signer.HasFileAttrib
-                            $CurrentFileInfo.SignerFileAttributeIDs = $Signer.SignerFileAttributeIDs
-                            $CurrentFileInfo.CertSubjectCN = $Certificate.LeafCertificate.SubjectCN
-                            $CurrentFileInfo.CertIssuerCN = $Certificate.LeafCertificate.IssuerCN
-                            $CurrentFileInfo.CertNotAfter = $Certificate.LeafCertificate.NotAfter
-                            $CurrentFileInfo.CertTBSValue = $Certificate.LeafCertificate.TBSValue
-
-                            break MainSignerLoop
-                        }
-                    }
-                    # If the current chain in the loop being investigated has a Root and a Leaf certificates only
-                    { $_ -eq 2 } {
-
-
-                        #  Checking for LeafCertificate level eligibility
-
-                        #  Check if the Signer's CertRoot (referring to the TBS value in the xml file, which belongs to the leaf certificate of the file when LeafCertificate level is used)
-                        #  Matches the TBSValue of the file's Leaf certificate certificates
-
-                        #  Check if the signer's name (Referring to the one in the XML file) matches the Leaf certificate's SubjectCN
-                        if (($Signer.CertRoot -eq $Chain.LeafCertificate.TBSValue) -and ($Signer.Name -eq $Chain.LeafCertificate.SubjectCN)) {
-
-                            # If the signer has a FileAttrib indicating it was generated with FilePublisher or SignedVersion level, and it wasn't already matched with those levels above, then do not use it for other levels
-                            if ($Signer.HasFileAttrib) { Continue }
-
-                            $CurrentFileInfo.SignerID = $Signer.ID
-                            $CurrentFileInfo.SignerName = $Signer.Name
-                            $CurrentFileInfo.SignerCertRoot = $Signer.CertRoot
-                            $CurrentFileInfo.SignerCertPublisher = $Signer.CertPublisher
-                            $CurrentFileInfo.MatchCriteria = 'LeafCertificate'
-                            $CurrentFileInfo.SignerScope = $Signer.SignerScope
-                            $CurrentFileInfo.HasFileAttrib = $Signer.HasFileAttrib
-                            $CurrentFileInfo.SignerFileAttributeIDs = $Signer.SignerFileAttributeIDs
-                            $CurrentFileInfo.CertSubjectCN = $Certificate.LeafCertificate.SubjectCN
-                            $CurrentFileInfo.CertIssuerCN = $Certificate.LeafCertificate.IssuerCN
-                            $CurrentFileInfo.CertNotAfter = $Certificate.LeafCertificate.NotAfter
-                            $CurrentFileInfo.CertTBSValue = $Certificate.LeafCertificate.TBSValue
-
-                            break MainSignerLoop
-                        }
-
-                    }
-                    # If the current chain in the loop being investigated has only a Root certificate
-                    { $_ -eq 1 } {
-
-                        <#
-                        ELIGIBILITY CHECK FOR LEVELS: FilePublisher, Publisher, SignedVersion
-
-                        CRITERIA:
-                        1) The signer's CertRoot (referring to the TBS value in the xml file which belongs to the Root Certificate of the file when there is only 1 Element in the chain) Matches the TBSValue of the file's root certificate
-                        2) The signer's name (Referring to the one in the XML file) matches the same Root certificate's SubjectCN
-                        3) The signer's CertPublisher matches the Root certificate's SubjectCN
-                        #>
-                        if (($Signer.CertRoot -eq $Chain.RootCertificate.TBSValue) -and ($Signer.Name -eq $Chain.RootCertificate.SubjectCN) -and ($Signer.CertPublisher -eq $Chain.RootCertificate.SubjectCN)) {
-
-                            # Check if the matched signer has FileAttrib indicating that it was generated either with FilePublisher or SignedVersion level
-                            if ($Signer.FileAttrib) {
-
-                                # Get all of the File Attributes associated with the signer and check if the file's version is greater than or equal to the minimum version in them
-                                [System.Collections.Hashtable[]]$CandidateFileAttrib = foreach ($Attrib in $signer.FileAttrib.GetEnumerator()) {
-
-                                    if ($ExtendedFileInfo['FileVersion'] -ge $Attrib.Value.MinimumFileVersion) {
-                                        $Attrib.Value
-                                    }
-                                }
-
-                                # If the signer has a file attribute with a wildcard file name, then it's a SignedVersion level signer
-                                # These signers have only 1 FileAttribRef and only point to a single FileAttrib
-                                # If a SignedVersion signer applies to multiple files, the version number of the FileAttrib is set to the minimum version of the files
-                                if (($CandidateFileAttrib.count -eq 1) -and ($CandidateFileAttrib.FileName -eq '*')) {
-
-                                    $CurrentFileInfo.SignerID = $Signer.ID
-                                    $CurrentFileInfo.SignerName = $Signer.Name
-                                    $CurrentFileInfo.SignerCertRoot = $Signer.CertRoot
-                                    $CurrentFileInfo.SignerCertPublisher = $Signer.CertPublisher
-                                    $CurrentFileInfo.SignerScope = $Signer.SignerScope
-                                    $CurrentFileInfo.HasFileAttrib = $Signer.HasFileAttrib
-                                    $CurrentFileInfo.SignerFileAttributeIDs = $Signer.SignerFileAttributeIDs
-                                    $CurrentFileInfo.SpecificFileNameLevelMatchCriteria = 'Version'
-                                    $CurrentFileInfo.MatchCriteria = 'SignedVersion'
-                                    $CurrentFileInfo.CertSubjectCN = $Certificate.SubjectCN
-                                    $CurrentFileInfo.CertIssuerCN = $Certificate.IssuerCN
-                                    $CurrentFileInfo.CertNotAfter = $Certificate.NotAfter
-                                    $CurrentFileInfo.CertTBSValue = $Certificate.TBSValue
-
-                                    break MainSignerLoop
-                                }
-
-                                # Loop over all of the candidate file attributes to find a match with the file's extended info
+                            # Loop over all of the candidate file attributes (if they exists) to find a match with the file's extended info
+                            if ($null -ne $CandidateFileAttrib) {
                                 foreach ($FileAttrib in $CandidateFileAttrib.GetEnumerator()) {
 
                                     # Loop over all of the keys in the extended file info to see which one of them is a match, to determine the SpecificFileNameLevel option
@@ -502,88 +329,288 @@ Function Compare-SignerAndCertificate {
 
                                             # If there was a match then assign the $KeyItem which is the name of the SpecificFileNameLevel option to the $CurrentFileInfo.SpecificFileNameLevelMatchCriteria
                                             # And break out of the loop by validating the signer as suitable for FilePublisher level
-
-                                            $CurrentFileInfo.SignerID = $Signer.ID
-                                            $CurrentFileInfo.SignerName = $Signer.Name
-                                            $CurrentFileInfo.SignerCertRoot = $Signer.CertRoot
-                                            $CurrentFileInfo.SignerCertPublisher = $Signer.CertPublisher
-                                            $CurrentFileInfo.SignerScope = $Signer.SignerScope
-                                            $CurrentFileInfo.HasFileAttrib = $Signer.HasFileAttrib
-                                            $CurrentFileInfo.SignerFileAttributeIDs = $Signer.SignerFileAttributeIDs
-                                            $CurrentFileInfo.SpecificFileNameLevelMatchCriteria = [System.String]$KeyItem
-                                            $CurrentFileInfo.MatchCriteria = 'FilePublisher'
-                                            $CurrentFileInfo.CertSubjectCN = $Certificate.SubjectCN
-                                            $CurrentFileInfo.CertIssuerCN = $Certificate.IssuerCN
-                                            $CurrentFileInfo.CertNotAfter = $Certificate.NotAfter
-                                            $CurrentFileInfo.CertTBSValue = $Certificate.TBSValue
-
-                                            break MainSignerLoop
-
+                                            return ([WDACConfig.SimulationOutput]::New(
+                                                ([System.IO.Path]::GetFileName($SimulationInput.FilePath)),
+                                                    'Signer',
+                                                    $true,
+                                                    $Signer.ID,
+                                                    $Signer.Name,
+                                                    $Signer.CertRoot,
+                                                    $Signer.CertPublisher,
+                                                    $Signer.SignerScope,
+                                                    $Signer.FileAttribRef,
+                                                    'FilePublisher',
+                                                    $KeyItem,
+                                                    $IntermediateCert.SubjectCN,
+                                                    $IntermediateCert.IssuerCN,
+                                                    $IntermediateCert.NotAfter,
+                                                    $IntermediateCert.TBSValue,
+                                                    $SimulationInput.FilePath
+                                                ))
                                         }
                                     }
                                 }
                             }
-                            # If the Signer matched and it doesn't have a FileAttrib, then it's a Publisher level signer
-                            else {
-                                $CurrentFileInfo.SignerID = $Signer.ID
-                                $CurrentFileInfo.SignerName = $Signer.Name
-                                $CurrentFileInfo.SignerCertRoot = $Signer.CertRoot
-                                $CurrentFileInfo.SignerCertPublisher = $Signer.CertPublisher
-                                $CurrentFileInfo.SignerScope = $Signer.SignerScope
-                                $CurrentFileInfo.HasFileAttrib = $Signer.HasFileAttrib
-                                $CurrentFileInfo.SignerFileAttributeIDs = $Signer.SignerFileAttributeIDs
-                                $CurrentFileInfo.MatchCriteria = 'Publisher'
-                                $CurrentFileInfo.CertSubjectCN = $Certificate.SubjectCN
-                                $CurrentFileInfo.CertIssuerCN = $Certificate.IssuerCN
-                                $CurrentFileInfo.CertNotAfter = $Certificate.NotAfter
-                                $CurrentFileInfo.CertTBSValue = $Certificate.TBSValue
+                        }
+                        # If the Signer matched and it doesn't have a FileAttrib, then it's a Publisher level signer
+                        else {
+                            # If the signer has FileAttributes meaning it's either WHQLFilePublisher, FilePublisher or SignedVersion then do not use it for other levels
+                            if ($Signer.FileAttribRef) { Continue }
 
-                                break MainSignerLoop
+                            return ([WDACConfig.SimulationOutput]::New(
+                                ([System.IO.Path]::GetFileName($SimulationInput.FilePath)),
+                                    'Signer',
+                                    $true,
+                                    $Signer.ID,
+                                    $Signer.Name,
+                                    $Signer.CertRoot,
+                                    $Signer.CertPublisher,
+                                    $Signer.SignerScope,
+                                    $Signer.FileAttribRef,
+                                    'Publisher',
+                                    $null,
+                                    $IntermediateCert.SubjectCN,
+                                    $IntermediateCert.IssuerCN,
+                                    $IntermediateCert.NotAfter,
+                                    $IntermediateCert.TBSValue,
+                                    $SimulationInput.FilePath
+                                ))
+                        }
+                    }
+
+                    <#
+                    ELIGIBILITY CHECK FOR LEVELS: PcaCertificate, RootCertificate
+
+                    CRITERIA:
+                    1) The signer's CertRoot (referring to the TBS value in the xml file which belongs to an intermediate cert of the file) Matches the TBSValue of one of the file's intermediate certificates
+                    2) The signer's name (Referring to the one in the XML file) matches the same Intermediate certificate's SubjectCN
+                    #>
+                    elseif (($Signer.CertRoot -eq $IntermediateCert.TBSValue) -and ($Signer.Name -eq $IntermediateCert.SubjectCN)) {
+
+                        # If the signer has FileAttributes meaning it's either WHQLFilePublisher, FilePublisher or SignedVersion then do not use it for other levels
+                        if ($Signer.FileAttribRef) { Continue }
+
+                        return ([WDACConfig.SimulationOutput]::New(
+                            ([System.IO.Path]::GetFileName($SimulationInput.FilePath)),
+                                'Signer',
+                                $true,
+                                $Signer.ID,
+                                $Signer.Name,
+                                $Signer.CertRoot,
+                                $Signer.CertPublisher,
+                                $Signer.SignerScope,
+                                $Signer.FileAttribRef,
+                                'PcaCertificate/RootCertificate',
+                                $null,
+                                $IntermediateCert.SubjectCN,
+                                $IntermediateCert.IssuerCN,
+                                $IntermediateCert.NotAfter,
+                                $IntermediateCert.TBSValue,
+                                $SimulationInput.FilePath
+                            ))
+                    }
+                }
+
+                <#
+                ELIGIBILITY CHECK FOR LEVELS: LeafCertificate
+
+                CRITERIA:
+                1) The Signer's CertRoot (referring to the TBS value in the xml file, which belongs to the leaf certificate of the file when LeafCertificate level is used) matches the TBSValue of the file's Leaf certificate certificates
+                2) The signer's name (Referring to the one in the XML file) matches the Leaf certificate's SubjectCN
+                #>
+                if (($Signer.CertRoot -eq $Chain.LeafCertificate.TBSValue) -and ($Signer.Name -eq $Chain.LeafCertificate.SubjectCN)) {
+
+                    # If the signer has FileAttributes meaning it's either WHQLFilePublisher, FilePublisher or SignedVersion then do not use it for other levels
+                    if ($Signer.FileAttribRef) { Continue }
+
+                    return ([WDACConfig.SimulationOutput]::New(
+                        ([System.IO.Path]::GetFileName($SimulationInput.FilePath)),
+                            'Signer',
+                            $true,
+                            $Signer.ID,
+                            $Signer.Name,
+                            $Signer.CertRoot,
+                            $Signer.CertPublisher,
+                            $Signer.SignerScope,
+                            $Signer.FileAttribRef,
+                            'LeafCertificate',
+                            $null,
+                            $Chain.LeafCertificate.SubjectCN,
+                            $Chain.LeafCertificate.IssuerCN,
+                            $Chain.LeafCertificate.NotAfter,
+                            $Chain.LeafCertificate.TBSValue,
+                            $SimulationInput.FilePath
+                        ))
+                }
+
+                #Region ROOT CERTIFICATE ELIGIBILITY CHECK
+
+                # This is regardless of how many certificates exist in the current chain
+
+                <#
+                ELIGIBILITY CHECK FOR LEVELS: FilePublisher, Publisher, SignedVersion
+
+                CRITERIA:
+                1) The signer's CertRoot (referring to the TBS value in the xml file which belongs to the Root Certificate of the file when there is only 1 Element in the chain) Matches the TBSValue of the file's root certificate
+                2) The signer's name (Referring to the one in the XML file) matches the same Root certificate's SubjectCN
+                3) The signer's CertPublisher matches the Root certificate's SubjectCN
+                #>
+                if (($Signer.CertRoot -eq $Chain.RootCertificate.TBSValue) -and ($Signer.Name -eq $Chain.RootCertificate.SubjectCN) -and ($Signer.CertPublisher -eq $Chain.RootCertificate.SubjectCN)) {
+
+                    # Check if the matched signer has FileAttrib indicating that it was generated either with FilePublisher or SignedVersion level
+                    if ($Signer.FileAttrib) {
+
+                        # Get all of the File Attributes associated with the signer and check if the file's version is greater than or equal to the minimum version in them
+                        [System.Collections.Hashtable[]]$CandidateFileAttrib = foreach ($Attrib in $signer.FileAttrib.GetEnumerator()) {
+
+                            if ($ExtendedFileInfo['FileVersion'] -ge $Attrib.Value.MinimumFileVersion) {
+                                $Attrib.Value
                             }
                         }
 
-                        <#
-                        ELIGIBILITY CHECK FOR LEVELS: PcaCertificate, RootCertificate (LeafCertificate will also generate the same type of signer)
+                        # If the signer has a file attribute with a wildcard file name, then it's a SignedVersion level signer
+                        # These signers have only 1 FileAttribRef and only point to a single FileAttrib
+                        # If a SignedVersion signer applies to multiple files, the version number of the FileAttrib is set to the minimum version of the files
+                        if (($CandidateFileAttrib.count -eq 1) -and ($CandidateFileAttrib.FileName -eq '*')) {
 
-                        CRITERIA:
-                        1) The signer's CertRoot (referring to the TBS value in the xml file which belongs to the Root Certificate of the file when there is only 1 Element in the chain) Matches the TBSValue of the file's root certificate
-                        2) The signer's name (Referring to the one in the XML file) matches the same Root certificate's SubjectCN
-                        #>
-                        elseif (($Signer.CertRoot -eq $Chain.RootCertificate.TBSValue) -and ($Signer.Name -eq $Chain.RootCertificate.SubjectCN)) {
+                            return ([WDACConfig.SimulationOutput]::New(
+                                ([System.IO.Path]::GetFileName($SimulationInput.FilePath)),
+                                    'Signer',
+                                    $true,
+                                    $Signer.ID,
+                                    $Signer.Name,
+                                    $Signer.CertRoot,
+                                    $Signer.CertPublisher,
+                                    $Signer.SignerScope,
+                                    $Signer.FileAttribRef,
+                                    'SignedVersion',
+                                    'Version',
+                                    $Chain.RootCertificate.SubjectCN,
+                                    $Chain.RootCertificate.IssuerCN,
+                                    $Chain.RootCertificate.NotAfter,
+                                    $Chain.RootCertificate.TBSValue,
+                                    $SimulationInput.FilePath
+                                ))
+                        }
 
-                            # If the signer has a FileAttrib indicating it was generated with FilePublisher or SignedVersion level, and it wasn't already matched with those levels above, then do not use it for other levels
-                            if ($Signer.HasFileAttrib) { Continue }
+                        # Loop over all of the candidate file attributes (if they exists) to find a match with the file's extended info
+                        if ($null -ne $CandidateFileAttrib) {
+                            foreach ($FileAttrib in $CandidateFileAttrib.GetEnumerator()) {
 
-                            $CurrentFileInfo.SignerID = $Signer.ID
-                            $CurrentFileInfo.SignerName = $Signer.Name
-                            $CurrentFileInfo.SignerCertRoot = $Signer.CertRoot
-                            $CurrentFileInfo.SignerCertPublisher = $Signer.CertPublisher
-                            $CurrentFileInfo.SignerScope = $Signer.SignerScope
-                            $CurrentFileInfo.HasFileAttrib = $Signer.HasFileAttrib
-                            $CurrentFileInfo.SignerFileAttributeIDs = $Signer.SignerFileAttributeIDs
-                            $CurrentFileInfo.MatchCriteria = 'PcaCertificate/RootCertificate'
-                            $CurrentFileInfo.CertSubjectCN = $Certificate.SubjectCN
-                            $CurrentFileInfo.CertIssuerCN = $Certificate.IssuerCN
-                            $CurrentFileInfo.CertNotAfter = $Certificate.NotAfter
-                            $CurrentFileInfo.CertTBSValue = $Certificate.TBSValue
+                                # Loop over all of the keys in the extended file info to see which one of them is a match, to determine the SpecificFileNameLevel option
+                                foreach ($KeyItem in $ExtendedFileInfo.Keys) {
 
-                            break MainSignerLoop
+                                    if ($ExtendedFileInfo.$KeyItem -eq $FileAttrib.$KeyItem) {
+
+                                        Write-Verbose -Message "The SpecificFileNameLevel is $KeyItem"
+
+                                        # If there was a match then assign the $KeyItem which is the name of the SpecificFileNameLevel option to the $CurrentFileInfo.SpecificFileNameLevelMatchCriteria
+                                        # And break out of the loop by validating the signer as suitable for FilePublisher level
+
+                                        return ([WDACConfig.SimulationOutput]::New(
+                                            ([System.IO.Path]::GetFileName($SimulationInput.FilePath)),
+                                                'Signer',
+                                                $true,
+                                                $Signer.ID,
+                                                $Signer.Name,
+                                                $Signer.CertRoot,
+                                                $Signer.CertPublisher,
+                                                $Signer.SignerScope,
+                                                $Signer.FileAttribRef,
+                                                'FilePublisher',
+                                                $KeyItem,
+                                                $Chain.RootCertificate.SubjectCN,
+                                                $Chain.RootCertificate.IssuerCN,
+                                                $Chain.RootCertificate.NotAfter,
+                                                $Chain.RootCertificate.TBSValue,
+                                                $SimulationInput.FilePath
+                                            ))
+                                    }
+                                }
+                            }
                         }
                     }
+                    # If the Signer matched and it doesn't have a FileAttrib, then it's a Publisher level signer
+                    else {
+                        # If the signer has FileAttributes meaning it's either WHQLFilePublisher, FilePublisher or SignedVersion then do not use it for other levels
+                        if ($Signer.FileAttribRef) { Continue }
+
+                        return ([WDACConfig.SimulationOutput]::New(
+                            ([System.IO.Path]::GetFileName($SimulationInput.FilePath)),
+                                'Signer',
+                                $true,
+                                $Signer.ID,
+                                $Signer.Name,
+                                $Signer.CertRoot,
+                                $Signer.CertPublisher,
+                                $Signer.SignerScope,
+                                $Signer.FileAttribRef,
+                                'Publisher',
+                                $null,
+                                $Chain.RootCertificate.SubjectCN,
+                                $Chain.RootCertificate.IssuerCN,
+                                $Chain.RootCertificate.NotAfter,
+                                $Chain.RootCertificate.TBSValue,
+                                $SimulationInput.FilePath
+                            ))
+                    }
                 }
+
+                <#
+                ELIGIBILITY CHECK FOR LEVELS: PcaCertificate, RootCertificate (LeafCertificate will also generate the same type of signer)
+
+                CRITERIA:
+                1) The signer's CertRoot (referring to the TBS value in the xml file which belongs to the Root Certificate of the file when there is only 1 Element in the chain) Matches the TBSValue of the file's root certificate
+                2) The signer's name (Referring to the one in the XML file) matches the same Root certificate's SubjectCN
+                #>
+                elseif (($Signer.CertRoot -eq $Chain.RootCertificate.TBSValue) -and ($Signer.Name -eq $Chain.RootCertificate.SubjectCN)) {
+
+                    # If the signer has FileAttributes meaning it's either WHQLFilePublisher, FilePublisher or SignedVersion then do not use it for other levels
+                    if ($Signer.FileAttribRef) { Continue }
+
+                    return ([WDACConfig.SimulationOutput]::New(
+                        ([System.IO.Path]::GetFileName($SimulationInput.FilePath)),
+                            'Signer',
+                            $true,
+                            $Signer.ID,
+                            $Signer.Name,
+                            $Signer.CertRoot,
+                            $Signer.CertPublisher,
+                            $Signer.SignerScope,
+                            $Signer.FileAttribRef,
+                            'PcaCertificate/RootCertificate',
+                            $null,
+                            $Chain.RootCertificate.SubjectCN,
+                            $Chain.RootCertificate.IssuerCN,
+                            $Chain.RootCertificate.NotAfter,
+                            $Chain.RootCertificate.TBSValue,
+                            $SimulationInput.FilePath
+                        ))
+                }
+
+                #Endregion ROOT CERTIFICATE ELIGIBILITY CHECK
             }
         }
-    }
 
-    End {
-        # if the file's primary signer is authorized at least by one criteria and its criteria is not empty
-        if (-NOT ([System.String]::IsNullOrWhiteSpace($CurrentFileInfo.MatchCriteria))) {
-            Return $CurrentFileInfo
-        }
-        else {
-            # Do nothing since the file's primary signer is not authorized, let alone the nested signer
-            Return
-        }
+        # The file is signed but the signer wasn't found in the policy file that allows it
+        return ([WDACConfig.SimulationOutput]::New(
+            ([System.IO.Path]::GetFileName($SimulationInput.FilePath)),
+                'Signer',
+                $false,
+                $null,
+                $null,
+                $null,
+                $null,
+                $null,
+                $null,
+                'Not Allowed',
+                $null,
+                $null,
+                $null,
+                $null,
+                $null,
+                $SimulationInput.FilePath
+            ))
     }
 }
 

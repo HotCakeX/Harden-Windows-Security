@@ -63,6 +63,7 @@ Function Get-SignerInfo {
             }
 
             # Replacing Wellknown root IDs with their corresponding TBS values and Names (Common Names)
+            # These are all root certificates, they have no leaf or intermediate certificates in their chains, that's why they're called Trusted Roots
             if ($WellKnownIDs.Contains($Signer.CertRoot.Value)) {
                 switch ($Signer.CertRoot.Value) {
                     '03' {
@@ -81,13 +82,13 @@ Function Get-SignerInfo {
                         break
                     }
                     '06' {
-                        $Signer.CertRoot.Value = '121AF4B922A74247EA49DF50DE37609CC1451A1FE06B2CB7E1E079B492BD8195'
-                        $Signer.Name = 'Microsoft Code Signing PCA 2010'
+                        $Signer.CertRoot.Value = '08FBA831C08544208F5208686B991CA1B2CFC510E7301784DDF1EB5BF0393239'
+                        $Signer.Name = 'Microsoft Root Certificate Authority 2010'
                         break
                     }
                     '07' {
-                        $Signer.CertRoot.Value = 'F6F717A43AD9ABDDC8CEFDDE1C505462535E7D1307E630F9544A2D14FE8BF26E'
-                        $Signer.Name = 'Microsoft Code Signing PCA 2011'
+                        $Signer.CertRoot.Value = '279CD652C4E252BFBE5217AC722205D7729BA409148CFA9E6D9E5B1CB94EAFF1'
+                        $Signer.Name = 'Microsoft Root Certificate Authority 2011'
                         break
                     }
                     '09' {

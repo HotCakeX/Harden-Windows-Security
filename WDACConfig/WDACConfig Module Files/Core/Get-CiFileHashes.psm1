@@ -128,7 +128,7 @@ Function Get-CiFileHashes {
                             [System.Byte]$Byte = [System.Runtime.InteropServices.Marshal]::ReadByte($HashValue, $Offset)
 
                             # Appending the byte to the StringBuilder object as a hexadecimal string
-                            $HashString.Append($Byte.ToString('X2')) | Out-Null
+                            [System.Void]$HashString.Append($Byte.ToString('X2'))
                         }
                     }
                     finally {
@@ -144,7 +144,8 @@ Function Get-CiFileHashes {
                 finally {
                     # Releasing the CryptCATAdmin context if it is not zero
                     if ($ContextHandle -ne [System.IntPtr]::Zero) {
-                        [WDACConfig.WinTrust]::CryptCATAdminReleaseContext($ContextHandle, 0) | Out-Null # Hide the boolean output
+                        # Hide the boolean output
+                        [System.Void][WDACConfig.WinTrust]::CryptCATAdminReleaseContext($ContextHandle, 0)
                     }
                 }
             }

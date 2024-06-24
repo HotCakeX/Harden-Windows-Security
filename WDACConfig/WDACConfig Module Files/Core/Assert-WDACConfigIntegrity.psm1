@@ -42,7 +42,7 @@ Function Assert-WDACConfigIntegrity {
     process {
 
         Write-Verbose -Message 'Looping through the WDACConfig module files'
-        foreach ($File in (Get-FilesFast -Directory $ModuleRootPath -ExtensionsToFilterBy '*')) {
+        foreach ($File in ([WDACConfig.FileUtility]::GetFilesFast($ModuleRootPath, $null, '*'))) {
 
             # Making sure the PowerShell Gallery file in the WDACConfig module's folder is skipped
             if ($File.Name -eq 'PSGetModuleInfo.xml') {

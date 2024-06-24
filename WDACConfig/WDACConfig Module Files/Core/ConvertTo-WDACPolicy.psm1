@@ -307,7 +307,7 @@ Function ConvertTo-WDACPolicy {
             "$ModuleRootPath\Shared\Test-KernelProtectedFiles.psm1"
         )
         # Add XML Ops module to the list of modules to import
-        $ModulesToImport += (Get-FilesFast -Directory "$ModuleRootPath\XMLOps" -ExtensionsToFilterBy '.psm1').FullName
+        $ModulesToImport += ([WDACConfig.FileUtility]::GetFilesFast("$ModuleRootPath\XMLOps", $null, '.psm1')).FullName
         Import-Module -FullyQualifiedName $ModulesToImport -Force
 
         # Since Dynamic parameters are only available in the parameter dictionary, we have to access them using $PSBoundParameters or assign them manually to another variable in the function's scope

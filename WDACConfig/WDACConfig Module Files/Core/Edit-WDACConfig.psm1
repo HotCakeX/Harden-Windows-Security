@@ -115,10 +115,9 @@ Function Edit-WDACConfig {
             "$ModuleRootPath\Shared\Set-LogPropertiesVisibility.psm1",
             "$ModuleRootPath\Shared\Select-LogProperties.psm1",
             "$ModuleRootPath\Shared\Test-KernelProtectedFiles.psm1",
-            "$ModuleRootPath\Shared\Show-DirectoryPathPicker.psm1",
-            "$ModuleRootPath\Shared\Edit-GUIDs.psm1"
+            "$ModuleRootPath\Shared\Show-DirectoryPathPicker.psm1"
         )
-        $ModulesToImport += (Get-FilesFast -Directory "$ModuleRootPath\XMLOps" -ExtensionsToFilterBy '.psm1').FullName
+        $ModulesToImport += ([WDACConfig.FileUtility]::GetFilesFast("$ModuleRootPath\XMLOps", $null, '.psm1')).FullName
         Import-Module -FullyQualifiedName $ModulesToImport -Force
 
         # if -SkipVersionCheck wasn't passed, run the updater
@@ -739,18 +738,18 @@ Function Edit-WDACConfig {
 
                 Write-Verbose -Message 'Getting the policy ID of the currently deployed base policy based on the policy name that user selected'
                 # In case there are multiple policies with the same name, the first one will be used
-                [System.Object]$CurrentlyDeployedPolicy = ((&'C:\Windows\System32\CiTool.exe' -lp -json | ConvertFrom-Json).Policies | Where-Object -FilterScript { ($_.IsSystemPolicy -ne 'True') -and ($_.Version = Measure-CIPolicyVersion -Number $_.Version) -and ($_.Friendlyname -eq $CurrentBasePolicyName) }) | Select-Object -First 1
+                [System.Object]$CurrentlyDeployedPolicy = ((&'C:\Windows\System32\CiTool.exe' -lp -json | ConvertFrom-Json).Policies | Where-Object -FilterScript { ($_.IsSystemPolicy -ne 'True') -and ($_.Version = [WDACConfig.CIPolicyVersion]::Measure($_.Version)) -and ($_.Friendlyname -eq $CurrentBasePolicyName) }) | Select-Object -First 1
 
                 [System.String]$CurrentID = $CurrentlyDeployedPolicy.BasePolicyID
                 [System.Version]$CurrentVersion = $CurrentlyDeployedPolicy.Version
 
                 # Increment the version and use it to deploy the updated policy
-                [System.Version]$VersionToDeploy = Add-Version -Version $CurrentVersion
+                [System.Version]$VersionToDeploy = [WDACConfig.VersionIncrementer]::AddVersion($CurrentVersion)
 
                 Write-Verbose -Message "This is the current ID of deployed base policy that is going to be used in the new base policy: $CurrentID"
 
                 Write-Verbose -Message 'Setting the policy ID and Base policy ID to the current base policy ID in the generated XML file'
-                Edit-GUIDs -PolicyIDInput $CurrentID -PolicyFilePathInput $BasePolicyPath
+                [WDACConfig.PolicyEditor]::EditGUIDs($CurrentID, $BasePolicyPath)
 
                 Write-Verbose -Message "Setting the policy version to '$VersionToDeploy' - Previous version was '$CurrentVersion'"
                 Set-CIPolicyVersion -FilePath $BasePolicyPath -Version $VersionToDeploy

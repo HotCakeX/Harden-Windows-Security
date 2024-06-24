@@ -72,7 +72,7 @@ Function Get-KernelModeDrivers {
 
             if ($Directory) {
                 [System.Collections.Generic.List[System.String]]$DllKernelDrivers = @()
-                foreach ($File in (Get-FilesFast -ExtensionsToFilterBy '.dll' -Directory $Directory)) {
+                foreach ($File in ([WDACConfig.FileUtility]::GetFilesFast($Directory, $null, '.dll'))) {
                     $HasSIP = $False
                     $IsPE = $False
                     $Imports = [Microsoft.SecureBoot.UserConfig.ImportParser]::GetImports($File.FullName, [ref]$HasSIP, [ref]$IsPE)
@@ -107,10 +107,10 @@ Function Get-KernelModeDrivers {
         if ($null -ne $PSBoundParameters['Directory']) {
 
             # Get the .sys files from the directories
-            $DriverFiles.UnionWith([System.String[]](Get-FilesFast -Directory $PSBoundParameters['Directory'] -ExtensionsToFilterBy '.sys'))
+            $DriverFiles.UnionWith([System.String[]]([WDACConfig.FileUtility]::GetFilesFast($PSBoundParameters['Directory'], $null, '.sys')))
 
             # Get all of the .dll files from the user-selected directories
-            $PotentialKernelModeDlls.UnionWith([System.String[]](Get-FilesFast -Directory $PSBoundParameters['Directory'] -ExtensionsToFilterBy '.dll'))
+            $PotentialKernelModeDlls.UnionWith([System.String[]]([WDACConfig.FileUtility]::GetFilesFast($PSBoundParameters['Directory'], $null, '.dll')))
         }
         # If file paths were passed by the user
         elseif ($null -ne $PSBoundParameters['File']) {
@@ -146,10 +146,10 @@ Function Get-KernelModeDrivers {
             }
 
             # Get all of the .dll files from the system32 directory
-            $PotentialKernelModeDlls.UnionWith([System.String[]](Get-FilesFast -Directory "$env:SystemRoot\System32" -ExtensionsToFilterBy '.dll'))
+            $PotentialKernelModeDlls.UnionWith([System.String[]]([WDACConfig.FileUtility]::GetFilesFast("$env:SystemRoot\System32", $null, '.dll')))
 
             # Get the .sys files from the System32 directory
-            $DriverFiles.UnionWith([System.String[]](Get-FilesFast -Directory "$env:SystemRoot\System32" -ExtensionsToFilterBy '.sys'))
+            $DriverFiles.UnionWith([System.String[]]([WDACConfig.FileUtility]::GetFilesFast("$env:SystemRoot\System32", $null, '.sys')))
         }
 
         Write-Verbose -Message "Number of sys files: $($DriverFiles.Count)"

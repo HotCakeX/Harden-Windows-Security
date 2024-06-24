@@ -13,15 +13,15 @@ Set-PSReadLineKeyHandler -Key 'Tab' -Function 'MenuComplete'
 # Enables additional progress indicators for Windows Terminal and Windows
 $PSStyle.Progress.UseOSCIndicator = $true
 
-# Import the public global modules
-Import-Module -FullyQualifiedName (Get-ChildItem -File -LiteralPath "$ModuleRootPath\Public" -Filter '*.psm1').FullName -Force -Global
+# Import the public global module
+Import-Module -FullyQualifiedName "$ModuleRootPath\Public\Write-FinalOutput.psm1" -Force -Global
 
 # Import the classes
 Import-Module -FullyQualifiedName "$ModuleRootPath\CoreExt\Classes.psm1" -Force
 
 <#
 # Loop through all the relevant files in the module
-foreach ($File in (Get-FilesFast -Directory $ModuleRootPath -ExtensionsToFilterBy '.ps1', '.psm1')) {
+foreach ($File in ([WDACConfig.FileUtility]::GetFilesFast($ModuleRootPath, $null, ('.ps1', '.psm1')))) {
     # Get the signature of the current file
     [System.Management.Automation.Signature]$Signature = Get-AuthenticodeSignature -FilePath $File
     # Ensure that they are code signed properly and have not been tampered with.

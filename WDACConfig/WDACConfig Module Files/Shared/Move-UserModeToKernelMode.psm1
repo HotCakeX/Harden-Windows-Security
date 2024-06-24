@@ -26,10 +26,10 @@ Function Move-UserModeToKernelMode {
     $signingScenarios = $Xml.SiPolicy.SigningScenarios.SigningScenario
 
     # Find the SigningScenario node with Value 131 and store it in a variable
-    $signingScenario131 = $signingScenarios | Where-Object -FilterScript { $_.Value -eq '131' }
+    $signingScenario131 = $signingScenarios.Where({ $_.Value -eq '131' })
 
     # Find the SigningScenario node with Value 12 and store it in a variable
-    $signingScenario12 = $signingScenarios | Where-Object -FilterScript { $_.Value -eq '12' }
+    $signingScenario12 = $signingScenarios.Where({ $_.Value -eq '12' })
 
     # Get the AllowedSigners node from the SigningScenario node with Value 12
     $AllowedSigners12 = $signingScenario12.ProductSigners.AllowedSigners

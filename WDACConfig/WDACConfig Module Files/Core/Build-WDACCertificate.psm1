@@ -35,8 +35,7 @@ Function Build-WDACCertificate {
         Write-Verbose -Message 'Importing the required sub-modules'
         Import-Module -Force -FullyQualifiedName @(
             "$ModuleRootPath\Shared\Update-Self.psm1",
-            "$ModuleRootPath\Shared\Write-ColorfulText.psm1",
-            "$ModuleRootPath\Shared\Compare-SecureString.psm1"
+            "$ModuleRootPath\Shared\Write-ColorfulText.psm1"
         )
 
         # if -SkipVersionCheck wasn't passed, run the updater
@@ -73,7 +72,7 @@ Function Build-WDACCertificate {
                 [System.Security.SecureString]$Password2 = $(Write-ColorfulText -Color Lavender -InputText 'Confirm your password for the certificate'; Read-Host -AsSecureString)
 
                 # Compare the Passwords and make sure they match
-                [System.Boolean]$TheyMatch = Compare-SecureString -SecureString1 $Password1 -SecureString2 $Password2
+                [System.Boolean]$TheyMatch = [WDACConfig.SecureStringComparer]::Compare($Password1, $Password2)
 
                 # If the Passwords match and they are at least 5 characters long, assign the Password to the $Password variable
                 if ( $TheyMatch -and ($Password1.Length -ge 5) -and ($Password2.Length -ge 5) ) {

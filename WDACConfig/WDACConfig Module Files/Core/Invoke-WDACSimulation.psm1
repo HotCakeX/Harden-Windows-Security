@@ -1,6 +1,6 @@
 Function Invoke-WDACSimulation {
     [CmdletBinding()]
-    [OutputType([System.Object[]], [System.Boolean])]
+    [OutputType([System.Collections.Generic.List[WDACConfig.SimulationOutput]], [System.Boolean])]
     Param(
         [Alias('X')]
         [ValidateScript({ Test-CiPolicy -XmlFile $_ })]
@@ -8,34 +8,20 @@ Function Invoke-WDACSimulation {
 
         [Alias('D')]
         [ValidateScript({ Test-Path -LiteralPath $_ -PathType 'Container' }, ErrorMessage = 'The path you selected is not a valid folder path.')]
-        [Parameter(Mandatory = $false)][System.IO.DirectoryInfo]$FolderPath,
+        [Parameter(Mandatory = $false)][System.IO.DirectoryInfo[]]$FolderPath,
 
         [Alias('F')]
-        [ValidateScript({
-                # Ensure the selected path is a file path
-                if (Test-Path -LiteralPath $_ -PathType 'Leaf') {
-                    # Ensure the selected file has a supported extension
-                    [System.IO.FileInfo]$SelectedFile = Get-FilesFast -File $_
-                    # If the selected file has a supported extension, return $true
-                    if ($SelectedFile) {
-                        $true
-                    }
-                    else {
-                        Throw 'The selected file is not supported by the WDAC engine.'
-                    }
-                }
-                else { $false }
-            }, ErrorMessage = 'The path you selected is not a file path.')]
-        [Parameter(Mandatory = $false)][System.IO.FileInfo]$FilePath,
+        [ValidateScript({ Test-Path -LiteralPath $_ -PathType 'Leaf' }, ErrorMessage = 'The path you selected is not a file path.')]
+        [Parameter(Mandatory = $false)][System.IO.FileInfo[]]$FilePath,
 
         [Alias('B')]
         [Parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$BooleanOutput,
 
-        [Alias('L')]
-        [Parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$Log,
-
         [Alias('C')]
         [Parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$CSVOutput,
+
+        [Alias('L')]
+        [Parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$Log,
 
         [Alias('S')]
         [Parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$SkipVersionCheck
@@ -87,13 +73,13 @@ Function Invoke-WDACSimulation {
         }
 
         # The total number of the main steps for the progress bar to render
-        [System.Int16]$TotalSteps = 4
+        [System.Int16]$TotalSteps = 5
         [System.Int16]$CurrentStep = 0
 
-        # Make sure either -FolderPath or -FilePath is specified, but not both
-        if (-not ($PSBoundParameters.ContainsKey('FolderPath') -xor $PSBoundParameters.ContainsKey('FilePath'))) {
+        # Make sure either -FolderPath or -FilePath is specified
+        if (-not ($PSBoundParameters.ContainsKey('FolderPath') -or $PSBoundParameters.ContainsKey('FilePath'))) {
             # Write an error message
-            Write-Error -Message 'You must specify either -FolderPath or -FilePath, but not both.' -Category InvalidArgument
+            Write-Error -Message 'You must specify either -FolderPath or -FilePath.' -Category InvalidArgument
         }
 
         # Check if the supplied XML file contains Allow all rule
@@ -115,56 +101,8 @@ Function Invoke-WDACSimulation {
         # Get the signer information from the XML
         [WDACConfig.Signer[]]$SignerInfo = Get-SignerInfo -XML ([System.Xml.XmlDocument]$XMLContent)
 
-        # Store the PSCustomObjects that contain file paths and SpecificFileNameLevel options of valid Allowed Signed files - FilePublisher level
-        $SignedFile_FilePublisher_Objects = New-Object -TypeName System.Collections.Generic.List[System.Object]
-
-        # Store the file paths of valid Allowed Signed files - Publisher level
-        $SignedFile_Publisher_FilePaths = New-Object -TypeName System.Collections.Generic.HashSet[System.IO.FileInfo]
-
-        # Store the file paths of valid Allowed Signed files - SignedVersion level
-        $SignedFile_SignedVersion_FilePaths = New-Object -TypeName System.Collections.Generic.HashSet[System.IO.FileInfo]
-
-        # Store the file paths of valid Allowed Signed files - PcaCertificate and RootCertificate levels
-        $SignedFile_PcaCertificateAndRootCertificate_FilePaths = New-Object -TypeName System.Collections.Generic.HashSet[System.IO.FileInfo]
-
-        # Store the file paths of valid Allowed Signed files - LeafCertificate level
-        $SignedFile_LeafCertificate_FilePaths = New-Object -TypeName System.Collections.Generic.HashSet[System.IO.FileInfo]
-
-        # Store the paths of files allowed by WHQLFilePublisher level
-        $SignedFile_WHQLFilePublisher_FilePaths = New-Object -TypeName System.Collections.Generic.HashSet[System.IO.FileInfo]
-
-        # Store the PSCustomObjects that contain file paths and SpecificFileNameLevel options of valid Allowed Signed files - WHQLFilePublisher level
-        $SignedFile_WHQLFilePublisher_Objects = New-Object -TypeName System.Collections.Generic.List[System.Object]
-
-        # Store the paths of files allowed by WHQLPublisher level
-        $SignedFile_WHQLPublisher_FilePaths = New-Object -TypeName System.Collections.Generic.HashSet[System.IO.FileInfo]
-
-        # Store the paths of files allowed by WHQL level
-        $SignedFile_WHQ_FilePaths = New-Object -TypeName System.Collections.Generic.HashSet[System.IO.FileInfo]
-
-        # Store the paths of files allowed by Hash
-        $AllowedByHashFilePaths = New-Object -TypeName System.Collections.Generic.HashSet[System.IO.FileInfo]
-
-        # Store the paths of Signed files with HashMismatch Status
-        $SignedHashMismatchFilePaths = New-Object -TypeName System.Collections.Generic.HashSet[System.IO.FileInfo]
-
-        # Store the PSCustomObjects that contain file paths of Signed files with a status that doesn't fall into any other category and their exact signature status
-        $SignedButUnknownObjects = New-Object -TypeName System.Collections.Generic.List[System.Object]
-
-        # Store the paths of Signed files with EKU mismatch
-        $SignedButEKUMismatch = New-Object -TypeName System.Collections.Generic.HashSet[System.IO.FileInfo]
-
-        # Store the paths of the signed files that are inaccessible (Kernel-Protected files, Microsoft Defender files etc.)
-        $InAccessibleFilePaths = New-Object -TypeName System.Collections.Generic.HashSet[System.IO.FileInfo]
-
-        # Store the paths of Signed files that are not allowed
-        $SignedButNotAllowed = New-Object -TypeName System.Collections.Generic.HashSet[System.IO.FileInfo]
-
-        # Store the paths of Unsigned files that are not allowed by hash
-        $UnsignedNotAllowedFilePaths = New-Object -TypeName System.Collections.Generic.HashSet[System.IO.FileInfo]
-
-        # Store the final object of all of the results
-        $MegaOutputObject = New-Object -TypeName System.Collections.Generic.List[System.Object]
+        # The list that contains any and all of the Simulation results
+        $FinalSimulationResults = New-Object -TypeName 'System.Collections.Generic.List[WDACConfig.SimulationOutput]'
 
         # Extensions that are not supported by Authenticode. So if these files are not allowed by hash, they are not allowed at all
         $UnsignedExtensions = [System.Collections.Generic.HashSet[System.String]]::new(
@@ -177,6 +115,26 @@ Function Invoke-WDACSimulation {
     process {
         # Exit the Process block
         if ($ShouldExit) { Return }
+
+        $CurrentStep++
+        Write-Progress -Id 0 -Activity 'Parsing the Security Catalogs on the system' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
+
+        # A dictionary where each key is a hash and value is the file path where that hash is found
+        $AllSecurityCatalogHashes = New-Object -TypeName 'System.Collections.Generic.Dictionary[String, String]'
+
+        # Loop through each .cat security catalog on the system
+        foreach ($File in ([WDACConfig.FileUtility]::GetFilesFast('C:\Windows\System32\CatRoot', $null, '.cat'))) {
+
+            # Get the hashes of the security catalog file
+            $CatHashes = [WDACConfig.MeowParser]::GetHashes($File)
+
+            # If the security catalog file has hashes, then add them to the dictionary
+            if ($CatHashes.Count -gt 0) {
+                foreach ($Hash in $CatHashes) {
+                    [System.Void]$AllSecurityCatalogHashes.TryAdd($Hash, $File)
+                }
+            }
+        }
 
         # Hash Sha256 values of all the file rules based on hash in the supplied xml policy file
         Write-Verbose -Message 'Getting the Sha256 Hash values of all the file rules based on hash in the supplied xml policy file'
@@ -191,7 +149,7 @@ Function Invoke-WDACSimulation {
 
         $CurrentStep++
         Write-Progress -Id 0 -Activity "Getting the supported files' paths" -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
-        $CollectedFiles = [System.Collections.Generic.HashSet[System.IO.FileInfo]]@(Get-FilesFast -Directory $FolderPath -File $FilePath)
+        $CollectedFiles = [System.Collections.Generic.HashSet[System.IO.FileInfo]]@([WDACConfig.FileUtility]::GetFilesFast($FolderPath, $FilePath, $null))
 
         # Make sure the selected directory contains files with the supported extensions
         if (!$CollectedFiles) { Throw 'There are no files in the selected directory that are supported by the WDAC engine.' }
@@ -274,19 +232,79 @@ Function Invoke-WDACSimulation {
 
                 Write-Verbose -Message 'Calculating the file hashes'
                 # Get-CiFileHashes is faster, natively supports -LiteralPath for special characters in file path, and also supports non-conformant files by automatically getting their flat hashes
-                [System.String]$CurrentFilePathHash = (Get-CiFileHashes -FilePath $CurrentFilePath -SkipVersionCheck).SHA256Authenticode
+                try {
+                    $CurrentFileHashResult = Get-CiFileHashes -FilePath $CurrentFilePath -SkipVersionCheck
+                    [System.String]$CurrentFilePathHashSHA256 = $CurrentFileHashResult.SHA256Authenticode
+                    [System.String]$CurrentFilePathHashSHA1 = $CurrentFileHashResult.SHA1Authenticode
+                }
+                catch {
+
+                    $FinalSimulationResults.Add([WDACConfig.SimulationOutput]::New(
+                        ([System.IO.Path]::GetFileName($CurrentFilePath)),
+                            'Signer',
+                            $false,
+                            $null,
+                            $null,
+                            $null,
+                            $null,
+                            $null,
+                            $null,
+                            'Not processed, Inaccessible file',
+                            $null,
+                            $null,
+                            $null,
+                            $null,
+                            $null,
+                            $CurrentFilePath
+                        ))
+                    Continue
+                }
 
                 # if the file's hash exists in the XML file then add the file's path to the allowed files and do not check anymore that whether the file is signed or not
-                if ($SHA256HashesFromXML.Contains($CurrentFilePathHash)) {
+                if ($SHA256HashesFromXML.Contains($CurrentFilePathHashSHA256)) {
                     Write-Verbose -Message 'Hash of the file exists in the supplied XML file'
 
-                    [System.Void]$AllowedByHashFilePaths.Add($CurrentFilePath)
+                    $FinalSimulationResults.Add([WDACConfig.SimulationOutput]::New(
+                        ([System.IO.Path]::GetFileName($CurrentFilePath)),
+                            'Hash',
+                            $true,
+                            $null,
+                            $null,
+                            $null,
+                            $null,
+                            $null,
+                            $null,
+                            'Hash Level',
+                            $null,
+                            $null,
+                            $null,
+                            $null,
+                            $null,
+                            $CurrentFilePath
+                        ))
                 }
                 # If the file's extension is not supported by Authenticode and it wasn't allowed by file hash then it's not allowed and no reason to check its signature
                 elseif ($UnsignedExtensions.Contains($CurrentFilePath.Extension)) {
                     Write-Verbose -Message 'The file is not signed and is not allowed by hash'
 
-                    [System.Void]$UnsignedNotAllowedFilePaths.Add($CurrentFilePath)
+                    $FinalSimulationResults.Add([WDACConfig.SimulationOutput]::New(
+                        ([System.IO.Path]::GetFileName($CurrentFilePath)),
+                            'Unsigned',
+                            $false,
+                            $null,
+                            $null,
+                            $null,
+                            $null,
+                            $null,
+                            $null,
+                            'Not Allowed',
+                            $null,
+                            $null,
+                            $null,
+                            $null,
+                            $null,
+                            $CurrentFilePath
+                        ))
                 }
                 # If the file's hash does not exist in the supplied XML file, then check its signature
                 else {
@@ -294,11 +312,59 @@ Function Invoke-WDACSimulation {
                     try {
                         [WDACConfig.AllCertificatesGrabber.AllFileSigners[]]$FileSignatureResults = [WDACConfig.AllCertificatesGrabber.WinTrust]::GetAllFileSigners($CurrentFilePath)
 
-                        # If there is no result then the file is not signed
+                        # If there is no result then check if the file is allowed by a security catalog
                         if ($FileSignatureResults.Count -eq 0) {
-                            Write-Verbose -Message 'The file is not signed and is not allowed by hash'
 
-                            [System.Void]$UnsignedNotAllowedFilePaths.Add($CurrentFilePath)
+                            $MatchedHashResult = $AllSecurityCatalogHashes[$CurrentFilePathHashSHA1] ?? $AllSecurityCatalogHashes[$CurrentFilePathHashSHA256]
+
+                            if ($MatchedHashResult) {
+
+                                [WDACConfig.AllCertificatesGrabber.AllFileSigners]$CatalogSignerDits = ([WDACConfig.AllCertificatesGrabber.WinTrust]::GetAllFileSigners($MatchedHashResult))[0]
+
+                                Write-Verbose -Message 'The file is authorized by a security catalog on the system'
+
+                                $FinalSimulationResults.Add([WDACConfig.SimulationOutput]::New(
+                                ([System.IO.Path]::GetFileName($CurrentFilePath)),
+                                        'Catalog Signed',
+                                        $true,
+                                        $null,
+                                        $null,
+                                        $null,
+                                        $null,
+                                        $null,
+                                        $null,
+                                        'Catalog Hash',
+                                        $MatchedHashResult,
+                                        [WDACConfig.CryptoAPI]::GetNameString($CatalogSignerDits.Chain.ChainElements.Certificate[0].Handle, [WDACConfig.CryptoAPI]::CERT_NAME_SIMPLE_DISPLAY_TYPE, $null, $false),
+                                        [WDACConfig.CryptoAPI]::GetNameString($CatalogSignerDits.Chain.ChainElements.Certificate[0].Handle, [WDACConfig.CryptoAPI]::CERT_NAME_SIMPLE_DISPLAY_TYPE, $null, $true),
+                                        $CatalogSignerDits.Chain.ChainElements.Certificate[0].NotAfter,
+                                        [WDACConfig.CertificateHelper]::GetTBSCertificate($CatalogSignerDits.Chain.ChainElements.Certificate[0]),
+                                        $CurrentFilePath
+                                    ))
+                            }
+                            else {
+
+                                Write-Verbose -Message 'The file is not signed and is not allowed by hash'
+
+                                $FinalSimulationResults.Add([WDACConfig.SimulationOutput]::New(
+                                ([System.IO.Path]::GetFileName($CurrentFilePath)),
+                                        'Unsigned',
+                                        $false,
+                                        $null,
+                                        $null,
+                                        $null,
+                                        $null,
+                                        $null,
+                                        $null,
+                                        'Not Allowed',
+                                        $null,
+                                        $null,
+                                        $null,
+                                        $null,
+                                        $null,
+                                        $CurrentFilePath
+                                    ))
+                            }
                         }
                         else {
                             # Use the Compare-SignerAndCertificate function to process it
@@ -309,111 +375,56 @@ Function Invoke-WDACSimulation {
                                     $FileSignatureResults.Signer.SignerInfos.Certificate.EnhancedKeyUsageList.ObjectId # The EKU OIDs of the primary signer of the file, just like the output of the Get-AuthenticodeSignature cmdlet, the ones that WDAC policy uses for EKU-based authorization
                                 ))
 
-                            # If there is no comparison result then the file is not allowed by the policy
-                            if (([System.String]::IsNullOrWhiteSpace($ComparisonResult))) {
-
-                                Write-Verbose -Message 'The file is signed and valid, but not allowed by the policy'
-
-                                [System.Void]$SignedButNotAllowed.Add($CurrentFilePath)
-                            }
-
-                            # If the file's signer requires the file to have specific EKU(s) but the file doesn't meet it
-                            elseif ($ComparisonResult.HasEKU -and (-NOT $ComparisonResult.EKUsMatch)) {
-                                Write-Verbose -Message 'The file is signed and valid, but does not meet the EKU requirements'
-
-                                [System.Void]$SignedButEKUMismatch.Add($CurrentFilePath)
-                            }
-                            else {
-                                # If the comparison result actually returned valid results then identify it and put it in the correct category based on the returned MatchCriteria property
-                                :Level2SwitchLabel switch ($ComparisonResult.MatchCriteria) {
-                                    'FilePublisher' {
-                                        Write-Verbose -Message 'The file is signed and valid, and allowed by the policy using FilePublisher level'
-
-                                        $SignedFile_FilePublisher_Objects.Add([PSCustomObject]@{
-                                                FilePath              = [System.IO.FileInfo]$CurrentFilePath
-                                                SpecificFileNameLevel = [System.String]$ComparisonResult.SpecificFileNameLevelMatchCriteria
-                                            })
-
-                                        break Level2SwitchLabel
-                                    }
-
-                                    'Publisher' {
-                                        Write-Verbose -Message 'The file is signed and valid, and allowed by the policy using Publisher level'
-
-                                        [System.Void]$SignedFile_Publisher_FilePaths.Add($CurrentFilePath)
-
-                                        break Level2SwitchLabel
-                                    }
-
-                                    'SignedVersion' {
-                                        Write-Verbose -Message 'The file is signed and valid, and allowed by the policy using SignedVersion level'
-
-                                        [System.Void]$SignedFile_SignedVersion_FilePaths.Add($CurrentFilePath)
-
-                                        break Level2SwitchLabel
-                                    }
-
-                                    'PcaCertificate/RootCertificate' {
-                                        Write-Verbose -Message 'The file is signed and valid, and allowed by the policy using PcaCertificate/RootCertificate levels'
-
-                                        [System.Void]$SignedFile_PcaCertificateAndRootCertificate_FilePaths.Add($CurrentFilePath)
-
-                                        break Level2SwitchLabel
-                                    }
-
-                                    'LeafCertificate' {
-                                        Write-Verbose -Message 'The file is signed and valid, and allowed by the policy using LeafCertificate level'
-
-                                        [System.Void]$SignedFile_LeafCertificate_FilePaths.Add($CurrentFilePath)
-
-                                        break Level2SwitchLabel
-                                    }
-
-                                    'WHQLFilePublisher' {
-                                        Write-Verbose -Message 'The file is signed and valid, and allowed by the policy using WHQLFilePublisher level'
-
-                                        $SignedFile_WHQLFilePublisher_Objects.Add([PSCustomObject]@{
-                                                FilePath              = [System.IO.FileInfo]$CurrentFilePath
-                                                SpecificFileNameLevel = [System.String]$ComparisonResult.SpecificFileNameLevelMatchCriteria
-                                            })
-
-                                        break Level2SwitchLabel
-                                    }
-
-                                    'WHQLPublisher' {
-                                        Write-Verbose -Message 'The file is signed and valid, and allowed by the policy using WHQLPublisher level'
-
-                                        [System.Void]$SignedFile_WHQLPublisher_FilePaths.Add($CurrentFilePath)
-
-                                        break Level2SwitchLabel
-                                    }
-
-                                    'WHQL' {
-                                        Write-Verbose -Message 'The file is signed and valid, and allowed by the policy using WHQL level'
-
-                                        [System.Void]$SignedFile_WHQ_FilePaths.Add($CurrentFilePath)
-
-                                        break Level2SwitchLabel
-                                    }
-
-                                    # If the file is signed but has unknown signature status
-                                    default {
-                                        Write-Verbose -Message 'The file has unknown signature status'
-
-                                        # Store the filepath and reason for the unknown status
-                                        $SignedButUnknownObjects.Add([PSCustomObject]@{
-                                                FilePath      = [System.IO.FileInfo]$CurrentFilePath
-                                                FailureReason = $_.StatusMessage
-                                            })
-                                    }
-                                }
-                            }
+                            $FinalSimulationResults.Add($ComparisonResult)
                         }
                     }
+                    # Handle the HashMismatch situations
                     catch [WDACConfig.AllCertificatesGrabber.ExceptionHashMismatchInCertificate] {
                         Write-Warning -Message "The file: $CurrentFilePath has hash mismatch, it is most likely tampered."
 
-                        [System.Void]$SignedHashMismatchFilePaths.Add($CurrentFilePath)
+                        $FinalSimulationResults.Add([WDACConfig.SimulationOutput]::New(
+                            ([System.IO.Path]::GetFileName($CurrentFilePath)),
+                                'Signer',
+                                $false,
+                                $null,
+                                $null,
+                                $null,
+                                $null,
+                                $null,
+                                $null,
+                                'Hash Mismatch',
+                                $null,
+                                $null,
+                                $null,
+                                $null,
+                                $null,
+                                $CurrentFilePath
+                            ))
+                    }
+                    # Handle any other error by storing the file path and the reason for the error to display to the user
+
+                    catch {
+                        # If the file is signed but has unknown signature status
+                        Write-Verbose -Message 'The file has unknown signature status'
+
+                        $FinalSimulationResults.Add([WDACConfig.SimulationOutput]::New(
+                            ([System.IO.Path]::GetFileName($CurrentFilePath)),
+                                'Signer',
+                                $false,
+                                $null,
+                                $null,
+                                $null,
+                                $null,
+                                $null,
+                                $null,
+                                "UnknownError: $_",
+                                $null,
+                                $null,
+                                $null,
+                                $null,
+                                $null,
+                                $CurrentFilePath
+                            ))
                     }
                 }
             }
@@ -450,201 +461,11 @@ Function Invoke-WDACSimulation {
         $CurrentStep++
         Write-Progress -Id 0 -Activity 'Preparing the output' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
-        if ($AllowedByHashFilePaths.Count -gt 0) {
-            Write-Verbose -Message 'Looping through the array of files allowed by hash'
-            Write-Verbose -Message "$($AllowedByHashFilePaths.count) File(s) are allowed by their Hashes."
-            foreach ($Path in $AllowedByHashFilePaths) {
-                # Create a hash table with the file path and source
-                $MegaOutputObject.Add([PSCustomObject]@{
-                        FilePath     = $Path
-                        Source       = 'Hash'
-                        Permission   = 'Hash Level'
-                        IsAuthorized = $true
-                    })
-            }
-        }
 
-        if ($SignedFile_FilePublisher_Objects.Count -gt 0) {
-            Write-Verbose -Message 'Looping through the array of files allowed by valid signature - FilePublisher Level'
-            Write-Verbose -Message "$($SignedFile_FilePublisher_Objects.count) File(s) are allowed by FilePublisher signer level."
-            foreach ($Item in $SignedFile_FilePublisher_Objects) {
-                $MegaOutputObject.Add([PSCustomObject]@{
-                        FilePath     = $Item.FilePath
-                        Source       = 'Signer'
-                        Permission   = "FilePublisher Level - $($Item.SpecificFileNameLevel)"
-                        IsAuthorized = $true
-                    })
-            }
-        }
 
-        if ($SignedFile_Publisher_FilePaths.Count -gt 0) {
-            Write-Verbose -Message 'Looping through the array of files allowed by valid signature - Publisher Level'
-            Write-Verbose -Message "$($SignedFile_Publisher_FilePaths.count) File(s) are allowed by Publisher signer level."
-            foreach ($Path in $SignedFile_Publisher_FilePaths) {
-                $MegaOutputObject.Add([PSCustomObject]@{
-                        FilePath     = $Path
-                        Source       = 'Signer'
-                        Permission   = 'Publisher Level'
-                        IsAuthorized = $true
-                    })
-            }
-        }
 
-        if ($SignedFile_SignedVersion_FilePaths.Count -gt 0) {
-            Write-Verbose -Message 'Looping through the array of files allowed by valid signature - SignedVersion Level'
-            Write-Verbose -Message "$($SignedFile_SignedVersion_FilePaths.count) File(s) are allowed by SignedVersion signer level."
-            foreach ($Path in $SignedFile_SignedVersion_FilePaths) {
-                $MegaOutputObject.Add([PSCustomObject]@{
-                        FilePath     = $Path
-                        Source       = 'Signer'
-                        Permission   = 'SignedVersion Level'
-                        IsAuthorized = $true
-                    })
-            }
-        }
 
-        if ($SignedFile_PcaCertificateAndRootCertificate_FilePaths.Count -gt 0) {
-            Write-Verbose -Message 'Looping through the array of files allowed by valid signature - PcaCertificate/RootCertificate Levels'
-            Write-Verbose -Message "$($SignedFile_PcaCertificateAndRootCertificate_FilePaths.count) File(s) are allowed by PcaCertificate/RootCertificate signer levels."
-            foreach ($Path in $SignedFile_PcaCertificateAndRootCertificate_FilePaths) {
-                $MegaOutputObject.Add([PSCustomObject]@{
-                        FilePath     = $Path
-                        Source       = 'Signer'
-                        Permission   = 'PcaCertificate / RootCertificate Levels'
-                        IsAuthorized = $true
-                    })
-            }
-        }
 
-        if ($SignedFile_LeafCertificate_FilePaths.Count -gt 0) {
-            Write-Verbose -Message 'Looping through the array of files allowed by valid signature - LeafCertificate Level'
-            Write-Verbose -Message "$($SignedFile_LeafCertificate_FilePaths.count) File(s) are allowed by LeafCertificate signer level."
-            foreach ($Path in $SignedFile_LeafCertificate_FilePaths) {
-                $MegaOutputObject.Add([PSCustomObject]@{
-                        FilePath     = $Path
-                        Source       = 'Signer'
-                        Permission   = 'LeafCertificate Level'
-                        IsAuthorized = $true
-                    })
-            }
-        }
-
-        if ($SignedFile_WHQLFilePublisher_Objects.Count -gt 0) {
-            Write-Verbose -Message 'Looping through the array of files allowed by valid signature - WHQLFilePublisher Level'
-            Write-Verbose -Message "$($SignedFile_WHQLFilePublisher_Objects.count) File(s) are allowed by WHQLFilePublisher signer level."
-            foreach ($Item in $SignedFile_WHQLFilePublisher_Objects) {
-                $MegaOutputObject.Add([PSCustomObject]@{
-                        FilePath     = $Item.FilePath
-                        Source       = 'Signer'
-                        Permission   = "WHQLFilePublisher Level - $($Item.SpecificFileNameLevel)"
-                        IsAuthorized = $true
-                    })
-            }
-        }
-
-        if ($SignedFile_WHQLPublisher_FilePaths.Count -gt 0) {
-            Write-Verbose -Message 'Looping through the array of files allowed by valid signature - WHQLPublisher Level'
-            Write-Verbose -Message "$($SignedFile_WHQLPublisher_FilePaths.count) File(s) are allowed by WHQLPublisher signer level."
-            foreach ($Path in $SignedFile_WHQLPublisher_FilePaths) {
-                $MegaOutputObject.Add([PSCustomObject]@{
-                        FilePath     = $Path
-                        Source       = 'Signer'
-                        Permission   = 'WHQLPublisher Level'
-                        IsAuthorized = $true
-                    })
-            }
-        }
-
-        if ($SignedFile_WHQ_FilePaths.Count -gt 0) {
-            Write-Verbose -Message 'Looping through the array of files allowed by valid signature - WHQL Level'
-            Write-Verbose -Message "$($SignedFile_WHQ_FilePaths.count) File(s) are allowed by WHQL signer level."
-            foreach ($Path in $SignedFile_WHQ_FilePaths) {
-                $MegaOutputObject.Add([PSCustomObject]@{
-                        FilePath     = $Path
-                        Source       = 'Signer'
-                        Permission   = 'WHQL Level'
-                        IsAuthorized = $true
-                    })
-            }
-        }
-
-        if ($SignedButNotAllowed.Count -gt 0) {
-            Write-Verbose -Message 'Looping through the array of signed files that are not allowed'
-            Write-Verbose -Message "$($SignedButNotAllowed.count) File(s) are signed but NOT allowed."
-            foreach ($Path in $SignedButNotAllowed) {
-                $MegaOutputObject.Add([PSCustomObject]@{
-                        FilePath     = $Path
-                        Source       = 'Signer'
-                        Permission   = 'Not Allowed'
-                        IsAuthorized = $false
-                    })
-            }
-        }
-
-        if ($SignedButEKUMismatch.Count -gt 0) {
-            Write-Verbose -Message 'Looping through the array of signed files with EKU mismatch'
-            Write-Verbose -Message "$($SignedButEKUMismatch.count) File(s) have EKU mismatch and are NOT allowed."
-            foreach ($Path in $SignedButEKUMismatch) {
-                $MegaOutputObject.Add([PSCustomObject]@{
-                        FilePath     = $Path
-                        Source       = 'Signer'
-                        Permission   = 'EKU requirements not met'
-                        IsAuthorized = $false
-                    })
-            }
-        }
-
-        if ($SignedHashMismatchFilePaths.Count -gt 0) {
-            Write-Verbose -Message 'Looping through the array of signed files with hash mismatch'
-            Write-Verbose -Message "$($SignedHashMismatchFilePaths.count) File(s) have Hash Mismatch and are NOT allowed."
-            foreach ($Path in $SignedHashMismatchFilePaths) {
-                $MegaOutputObject.Add([PSCustomObject]@{
-                        FilePath     = $Path
-                        Source       = 'Signer'
-                        Permission   = 'Hash Mismatch'
-                        IsAuthorized = $false
-                    })
-            }
-        }
-
-        if ($SignedButUnknownObjects.Count -gt 0) {
-            Write-Verbose -Message 'Looping through the array of files with unknown signature status'
-            Write-Verbose -Message "$($SignedButUnknownObjects.count) File(s) have unknown signature status and are NOT allowed."
-            foreach ($Item in $SignedButUnknownObjects) {
-                $MegaOutputObject.Add([PSCustomObject]@{
-                        FilePath     = $Item.FilePath
-                        Source       = 'Signer'
-                        Permission   = "UnknownError, $($Item.FailureReason)"
-                        IsAuthorized = $false
-                    })
-            }
-        }
-
-        if ($UnsignedNotAllowedFilePaths.Count -gt 0) {
-            Write-Verbose -Message 'Looping through the array of unsigned files that are not allowed'
-            Write-Verbose -Message "$($UnsignedNotAllowedFilePaths.count) File(s) are unsigned and are NOT allowed."
-            foreach ($Path in $UnsignedNotAllowedFilePaths) {
-                $MegaOutputObject.Add([PSCustomObject]@{
-                        FilePath     = $Path
-                        Source       = 'Unsigned'
-                        Permission   = 'Not Allowed'
-                        IsAuthorized = $false
-                    })
-            }
-        }
-
-        if ($InAccessibleFilePaths.Count -gt 0) {
-            Write-Verbose -Message 'Looping through the array of signed files that are not processed due to lack of permission'
-            Write-Verbose -Message "$($InAccessibleFilePaths.count) File(s) are signed but not processed due to lack of permission."
-            foreach ($Path in $InAccessibleFilePaths) {
-                $MegaOutputObject.Add([PSCustomObject]@{
-                        FilePath     = $Path
-                        Source       = 'Signer'
-                        Permission   = 'Not processed, No permission'
-                        IsAuthorized = $false
-                    })
-            }
-        }
     }
 
     end {
@@ -653,10 +474,11 @@ Function Invoke-WDACSimulation {
 
         # If the user selected the -BooleanOutput switch, then return a boolean value and don't display any more output
         if ($BooleanOutput) {
+
             # Get all of the allowed files
-            $AllAllowedRules = $MegaOutputObject.Where({ $_.IsAuthorized -eq $true })
+            $AllAllowedRules = $FinalSimulationResults.Where({ $_.IsAuthorized -eq $true })
             # Get all of the blocked files
-            $BlockedRules = $MegaOutputObject.Where({ $_.IsAuthorized -eq $false })
+            $BlockedRules = $FinalSimulationResults.Where({ $_.IsAuthorized -eq $false })
 
             Write-Verbose -Message "Allowed files: $($AllAllowedRules.count)"
             Write-Verbose -Message "Blocked files: $($BlockedRules.count)"
@@ -694,7 +516,7 @@ Function Invoke-WDACSimulation {
 
         # Export the output as CSV
         if ($CSVOutput) {
-            $MegaOutputObject | Select-Object -Property FilePath, Source, IsAuthorized, Permission | Sort-Object -Property IsAuthorized | Export-Csv -LiteralPath (Join-Path -Path $UserConfigDir -ChildPath "WDAC Simulation Output $(Get-Date -Format "MM-dd-yyyy 'at' HH-mm-ss").csv") -Force
+            $FinalSimulationResults | Sort-Object -Property IsAuthorized -Descending | Export-Csv -LiteralPath (Join-Path -Path $UserConfigDir -ChildPath "WDAC Simulation Output $(Get-Date -Format "MM-dd-yyyy 'at' HH-mm-ss").csv") -Force
         }
 
         Write-Progress -Id 0 -Activity 'WDAC Simulation completed.' -Completed
@@ -706,19 +528,16 @@ Function Invoke-WDACSimulation {
         if ($Log) { Stop-Log }
 
         # Return the final main output array as a table
-        Return $MegaOutputObject | Select-Object -Property @{
-            Label      = 'FilePath'
-            Expression = { (Get-Item -LiteralPath $_.FilePath).Name } # Truncate the FilePath string to only show the File name. The full File path will be displayed in the CSV output file
-        },
+        Return $FinalSimulationResults | Select-Object -Property 'Path',
         @{
             Label      = 'Source'
             Expression =
             { switch ($_.Source) {
-                    { $_ -eq 'Signer' } { $color = "$($PSStyle.Foreground.FromRGB(152,255,152))" }
-                    { $_ -eq 'Hash' } { $color = "$($PSStyle.Foreground.FromRGB(255,255,49))" }
-                    { $_ -eq 'Unsigned' } { $color = "$($PSStyle.Foreground.FromRGB(255,20,147))" }
+                    { $_ -eq 'Signer' } { $Color = "$($PSStyle.Foreground.FromRGB(152,255,152))" }
+                    { $_ -eq 'Hash' } { $Color = "$($PSStyle.Foreground.FromRGB(255,255,49))" }
+                    { $_ -eq 'Unsigned' } { $Color = "$($PSStyle.Foreground.FromRGB(255,20,147))" }
                 }
-                "$color$($_.Source)$($PSStyle.Reset)" # Use PSStyle to reset the color
+                "$Color$($_.Source)$($PSStyle.Reset)" # Use PSStyle to reset the color
             }
         },
         @{
@@ -733,70 +552,71 @@ Function Invoke-WDACSimulation {
             }
         },
         @{
-            Label      = 'Permission'
+            Label      = 'MatchCriteria'
             Expression = {
-                # If the Permission starts with 'UnknownError', truncate it to 50 characters. The full string will be displayed in the CSV output file. If it does not then just display it as it is
-                $_.Permission -match 'UnknownError' ? $_.Permission.Substring(0, 50) + '...' : $_.Permission
+                # If the MatchCriteria starts with 'UnknownError', truncate it to 50 characters. The full string will be displayed in the CSV output file. If it does not then just display it as it is
+                $_.MatchCriteria -match 'UnknownError' ? $_.MatchCriteria.Substring(0, 50) + '...' : "$($_.MatchCriteria) - $($_.SpecificFileNameLevelMatchCriteria)"
             }
         } | Sort-Object -Property IsAuthorized
     }
 
     <#
 .SYNOPSIS
-    Simulates the deployment of the WDAC policy. It returns an object that contains the file path, source, permission, and whether the file is allowed or not.
-    You can use the object returned by this cmdlet to filter the results and perform other checks.
+    Simulates the deployment of the WDAC policy. It can produce a very detailed CSV file that contains the output of the simulation.
+    On the console, it can display a table that shows the file path, source, MatchCriteria, and whether the file is allowed or not.
+    The console results are color coded for easier reading.
 
     Properties explanation:
 
-    FilePath:       The path of the file
-    Source:         The source of the file's permission, e.g., 'Signer' (For signed files only), 'Hash' (For signed and unsigned files), 'Unsigned' (For unsigned files only)
-    Permission:     The reason the file is allowed or not. For files authorized by FilePublisher level, it will show the specific file name level that the file is authorized by. (https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/select-types-of-rules-to-create#table-3--specificfilenamelevel-options)
+    FilePath:       The name of the file gathered from its full path. (the actual long path of the file is not displayed in the console output, only in the CSV file)
+    Source:         The source of the file's MatchCriteria, e.g., 'Signer' (For signed files only), 'Hash' (For signed and unsigned files), 'Unsigned' (For unsigned files only)
+    MatchCriteria:  The reason the file is allowed or not. For files authorized by FilePublisher level, it will show the specific file name level that the file is authorized by. (https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/select-types-of-rules-to-create#table-3--specificfilenamelevel-options)
     IsAuthorized:   A boolean value that indicates whether the file is allowed or not.
 .LINK
     https://github.com/HotCakeX/Harden-Windows-Security/wiki/Invoke-WDACSimulation
 .DESCRIPTION
-    Simulates the deployment of the WDAC policy by analyzing a folder and checking which of the files in the folder are allowed by a user selected policy xml file
-
-    All of the components of the Invoke-WDACSimulation use LiteralPath
+    Simulates the deployment of the WDAC policy by analyzing a folder (recursively) or files and checking which of the detected files are allowed by a user selected policy xml file
 .COMPONENT
-    Windows Defender Application Control, ConfigCI PowerShell module
+    Windows Defender Application Control
+    WDACConfig
 .FUNCTIONALITY
     Simulates the deployment of the WDAC policy
 .PARAMETER FolderPath
-    Provide path to a folder that you want WDAC simulation to run against
+    Provide path to a folders that you want WDAC simulation to run against
 
-    Uses LiteralPath to take the path exactly as typed including Special characters such as [ and ]
+    Takes the paths of the folders literally as typed including Special characters such as [ and ]
 
     Does not support wildcards
 .PARAMETER FilePath
-    Provide path to a file that you want WDAC simulation to run against
+    Provide path to files that you want WDAC simulation to run against
 
-    Uses LiteralPath to take the path exactly as typed including Special characters such as [ and ]
+    Takes the paths of the files literally as typed including Special characters such as [ and ]
 
     Does not support wildcards
 .PARAMETER XmlFilePath
     Provide path to a policy xml file that you want the cmdlet to simulate its deployment and running files against it
 
-    Uses LiteralPath to take the path exactly as typed including Special characters such as [ and ]
+    Takes the paths of the files literally as typed including Special characters such as [ and ]
 
     Does not support wildcards
 .PARAMETER Log
-    Use this switch to start a transcript of the WDAC simulation and log everything displayed on the screen. Highly recommended to use the -Verbose parameter with this switch to log the verbose output as well.
+    Use this switch to start a transcript of the WDAC simulation and log everything displayed on the screen.
+    Use -Verbose parameter to produce more output on the console during the simulation operation.
+    The log file is saved in the WDACConfig folder: C:\Program Files\WDACConfig
 .PARAMETER SkipVersionCheck
     Bypass the online version check - only to be used in rare cases
-    It is used by the entire Cmdlet.
 .PARAMETER Verbose
     Shows verbose output
 .PARAMETER BooleanOutput
     Returns a boolean value instead of displaying the object output
 .PARAMETER CSVOutput
-    Exports the output to a CSV file
+    Exports the output to a CSV file. The CSV output is saved in the WDACConfig folder: C:\Program Files\WDACConfig
 .INPUTS
-    System.IO.FileInfo
-    System.IO.DirectoryInfo
+    System.IO.FileInfo[]
+    System.IO.DirectoryInfo[]
     System.Management.Automation.SwitchParameter
 .OUTPUTS
-    System.Object[]
+    System.Collections.Generic.List[WDACConfig.SimulationOutput]
     System.Boolean
 .EXAMPLE
     Invoke-WDACSimulation -FolderPath 'C:\Windows\System32' -XmlFilePath 'C:\Users\HotCakeX\Desktop\Policy.xml'
@@ -807,9 +627,9 @@ Function Invoke-WDACSimulation {
 #>
 }
 
-Register-ArgumentCompleter -CommandName 'Invoke-WDACSimulation' -ParameterName 'FolderPath' -ScriptBlock ([WDACConfig.ArgumentCompleters]::ArgumentCompleterFolderPathsPicker)
+Register-ArgumentCompleter -CommandName 'Invoke-WDACSimulation' -ParameterName 'FolderPath' -ScriptBlock ([WDACConfig.ArgumentCompleters]::ArgumentCompleterMultipleFolderPathsPicker)
 Register-ArgumentCompleter -CommandName 'Invoke-WDACSimulation' -ParameterName 'XmlFilePath' -ScriptBlock ([WDACConfig.ArgumentCompleters]::ArgumentCompleterXmlFilePathsPicker)
-Register-ArgumentCompleter -CommandName 'Invoke-WDACSimulation' -ParameterName 'FilePath' -ScriptBlock ([WDACConfig.ArgumentCompleters]::ArgumentCompleterAnyFilePathsPicker)
+Register-ArgumentCompleter -CommandName 'Invoke-WDACSimulation' -ParameterName 'FilePath' -ScriptBlock ([WDACConfig.ArgumentCompleters]::ArgumentCompleterMultipleAnyFilePathsPicker)
 
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor

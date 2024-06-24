@@ -262,7 +262,7 @@ Function Receive-CodeIntegrityLogs {
             if (($RawLogGroup.Group.Id -contains '3076') -or ($RawLogGroup.Group.Id -contains '8028')) {
 
                 # Finding the main event in the group - If there are more than 1, selecting the first one because that means the same event was triggered by multiple deployed policies
-                [System.Diagnostics.Eventing.Reader.EventLogRecord]$AuditTemp = $RawLogGroup.Group | Where-Object -FilterScript { $_.Id -in '3076', '8028' } | Select-Object -First 1
+                [System.Diagnostics.Eventing.Reader.EventLogRecord]$AuditTemp = $RawLogGroup.Group.Where({ $_.Id -in '3076', '8028' }) | Select-Object -First 1
 
                 # If the main event is older than the specified date, skip it
                 if (-NOT ([System.String]::IsNullOrWhiteSpace($Date))) {
@@ -275,7 +275,7 @@ Function Receive-CodeIntegrityLogs {
                 [System.Collections.Hashtable]$LocalAuditEventPackageCollections = @{}
 
                 $LocalAuditEventPackageCollections['MainEventData'] = $AuditTemp
-                $LocalAuditEventPackageCollections['CorrelatedEventsData'] = $RawLogGroup.Group | Where-Object -FilterScript { $_.Id -in '3089', '8038' }
+                $LocalAuditEventPackageCollections['CorrelatedEventsData'] = $RawLogGroup.Group.Where({ $_.Id -in '3089', '8038' })
                 $LocalAuditEventPackageCollections['Type'] = 'Audit'
 
                 # Add the main event along with the correlated events as a nested hashtable to the main hashtable
@@ -287,7 +287,7 @@ Function Receive-CodeIntegrityLogs {
             if (($RawLogGroup.Group.Id -contains '3077') -or ($RawLogGroup.Group.Id -contains '8029')) {
 
                 # Finding the main event in the group - If there are more than 1, selecting the first one because that means the same event was triggered by multiple deployed policies
-                [System.Diagnostics.Eventing.Reader.EventLogRecord]$BlockedTemp = $RawLogGroup.Group | Where-Object -FilterScript { $_.Id -in '3077', '8029' } | Select-Object -First 1
+                [System.Diagnostics.Eventing.Reader.EventLogRecord]$BlockedTemp = $RawLogGroup.Group.Where({ $_.Id -in '3077', '8029' }) | Select-Object -First 1
 
                 # If the main event is older than the specified date, skip it
                 if (-NOT ([System.String]::IsNullOrWhiteSpace($Date))) {
@@ -300,7 +300,7 @@ Function Receive-CodeIntegrityLogs {
                 [System.Collections.Hashtable]$LocalBlockedEventPackageCollections = @{}
 
                 $LocalBlockedEventPackageCollections['MainEventData'] = $BlockedTemp
-                $LocalBlockedEventPackageCollections['CorrelatedEventsData'] = $RawLogGroup.Group | Where-Object -FilterScript { $_.Id -in '3089', '8038' }
+                $LocalBlockedEventPackageCollections['CorrelatedEventsData'] = $RawLogGroup.Group.Where({ $_.Id -in '3089', '8038' })
                 $LocalBlockedEventPackageCollections['Type'] = 'Blocked'
 
                 # Add the main event along with the correlated events as a nested hashtable to the main hashtable
@@ -432,7 +432,7 @@ Function Receive-CodeIntegrityLogs {
 
                             [System.UInt32]$HardDiskVolumeNumber = $Matches['HardDiskVolumeNumber']
                             [System.String]$RemainingPath = $Matches['RemainingPath']
-                            [PSCustomObject]$GetLetter = $DriveLettersGlobalRootFix | Where-Object -FilterScript { $_.DevicePath -eq "\Device\HarddiskVolume$HardDiskVolumeNumber" }
+                            [PSCustomObject]$GetLetter = $DriveLettersGlobalRootFix.Where({ $_.DevicePath -eq "\Device\HarddiskVolume$HardDiskVolumeNumber" })
                             [System.IO.FileInfo]$UsablePath = "$($GetLetter.DriveLetter)$RemainingPath"
                             $Log['File Name'] = $Log['File Name'] -replace $Pattern, $UsablePath
                         }

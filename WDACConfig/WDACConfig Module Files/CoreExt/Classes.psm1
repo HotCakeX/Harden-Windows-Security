@@ -1,5 +1,4 @@
 # Classes will be available process-wide and therefore also in other runspaces, defining them with the [NoRunspaceAffinity()] attribute.
-# https://stackoverflow.com/a/78078461/21243735
 # https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_classes#exporting-classes-with-type-accelerators
 
 # argument tab auto-completion and ValidateSet for Levels and Fallbacks parameters in the entire module

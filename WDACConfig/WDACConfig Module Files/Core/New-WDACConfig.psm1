@@ -68,8 +68,7 @@ Function New-WDACConfig {
             "$ModuleRootPath\Shared\Update-Self.psm1",
             "$ModuleRootPath\Shared\Write-ColorfulText.psm1",
             "$ModuleRootPath\Shared\Set-LogSize.psm1",
-            "$ModuleRootPath\Shared\New-StagingArea.psm1",
-            "$ModuleRootPath\Shared\Edit-GUIDs.psm1"
+            "$ModuleRootPath\Shared\New-StagingArea.psm1"
         )
 
         [System.IO.DirectoryInfo]$StagingArea = New-StagingArea -CmdletName 'New-WDACConfig'
@@ -399,7 +398,7 @@ Function New-WDACConfig {
 
                     if (-NOT ([System.String]::IsNullOrWhiteSpace($CurrentlyDeployedBlockRulesGUID))) {
                         Write-Verbose -Message "$Name policy is already deployed, updating it using the same GUID."
-                        Edit-GUIDs -PolicyIDInput $CurrentlyDeployedBlockRulesGUID -PolicyFilePathInput $FinalPolicyPath
+                        [WDACConfig.PolicyEditor]::EditGUIDs($CurrentlyDeployedBlockRulesGUID, $FinalPolicyPath)
                     }
 
                     [System.IO.FileInfo]$CIPPath = ConvertFrom-CIPolicy -XmlFilePath $FinalPolicyPath -BinaryFilePath (Join-Path -Path $StagingArea -ChildPath "$Name.cip")

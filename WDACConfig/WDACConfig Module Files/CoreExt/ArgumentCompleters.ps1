@@ -123,6 +123,31 @@
         }
     })
 
+# Opens File picker GUI so that user can select any files, multiple
+[WDACConfig.ArgumentCompleters]::ArgumentCompleterMultipleAnyFilePathsPicker = [System.Management.Automation.ScriptBlock]::Create({
+        # Create a new OpenFileDialog object
+        [System.Windows.Forms.OpenFileDialog]$Dialog = New-Object -TypeName 'System.Windows.Forms.OpenFileDialog'
+        $Dialog.Multiselect = $true
+        # Show the dialog and get the result
+        [System.String]$Result = $Dialog.ShowDialog()
+        # If the user clicked OK, return the selected file path
+        if ($Result -eq 'OK') {
+            return "`"$($Dialog.FileNames -join '","')`""
+        }
+    })
+
+
+# Opens Folder picker GUI so that user can select folders to be processed, multiple
+[WDACConfig.ArgumentCompleters]::ArgumentCompleterMultipleFolderPathsPicker = [System.Management.Automation.ScriptBlock]::Create({
+        # non-top-most, works better with window focus
+        [System.Windows.Forms.FolderBrowserDialog]$Browser = New-Object -TypeName 'System.Windows.Forms.FolderBrowserDialog'
+        $Browser.Multiselect = $true
+        [System.String]$Result = $Browser.ShowDialog()
+        # If the user clicked OK, return the selected file paths
+        if ($Result -eq 'OK') {
+            return "`"$($Browser.SelectedPaths -join '","')`""
+        }
+    })
 
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor

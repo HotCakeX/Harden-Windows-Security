@@ -103,7 +103,7 @@ Function New-Macros {
             # Also exclude .sys files since driver load can only be done by secure kernel
 
             # '.*\.(exe|sys)\s(FileRule|FileAttribute|Hash).*'
-            $FileRulesToModify = $FileRulesNode.ChildNodes | Where-Object -FilterScript { ($_.Name -in 'Allow', 'Deny', 'FileAttrib', 'FileRule') -and ($_.FriendlyName -notmatch '.*\.(exe|sys).*') }
+            $FileRulesToModify = $FileRulesNode.ChildNodes.Where({ ($_.Name -in 'Allow', 'Deny', 'FileAttrib', 'FileRule') -and ($_.FriendlyName -notmatch '.*\.(exe|sys).*') })
 
             $FileRulesToModify | ForEach-Object -Process {
                 $_.SetAttribute('AppIDs', [System.String]$AppIDsArray)

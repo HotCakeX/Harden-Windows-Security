@@ -40,15 +40,14 @@ Function Test-ECCSignedFiles {
             "$ModuleRootPath\Shared\Get-KernelModeDrivers.psm1",
             "$ModuleRootPath\Core\Get-CiFileHashes.psm1",
             "$ModuleRootPath\XMLOps\New-HashLevelRules.psm1",
-            "$ModuleRootPath\XMLOps\Clear-CiPolicy_Semantic.psm1",
-            "$ModuleRootPath\Shared\Get-FilesFast.psm1"
+            "$ModuleRootPath\XMLOps\Clear-CiPolicy_Semantic.psm1"
         ) -Verbose:$false
 
         $WDACSupportedFiles = [System.Collections.Generic.HashSet[System.String]]@()
         $ECCSignedFiles = [System.Collections.Generic.HashSet[System.String]]@()
 
         # Get the compliant WDAC files from the File and Directory parameters and add them to the HashSet
-        $WDACSupportedFiles.UnionWith([System.String[]]((Get-FilesFast -Directory $Directory -File $File)))
+        $WDACSupportedFiles.UnionWith([System.String[]](([WDACConfig.FileUtility]::GetFilesFast($Directory, $File, $null))))
 
     }
     Process {

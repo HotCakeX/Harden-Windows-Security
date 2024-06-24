@@ -55,10 +55,9 @@ function Get-ExtendedFileInfo {
       $FileInfo['FilePath'] = [System.String]$Path
       $FileInfo['InternalName'] = (-NOT [System.String]::IsNullOrWhiteSpace([System.String]$File.VersionInfo.InternalName)) ? [System.String]$File.VersionInfo.InternalName : $null
       $FileInfo['PackageFamilyName'] = (-NOT [System.String]::IsNullOrWhiteSpace([System.String]$File.PackageFamilyName)) ? [System.String]$File.PackageFamilyName : $null
-      $FileInfo['FileDescription'] = (-NOT [System.String]::IsNullOrWhiteSpace([System.String]$File.VersionInfo.FileDescription)) ? [System.String]$File.VersionInfo.FileDescription : [System.String]$ShellFolder.GetDetailsOf($ShellFile, 34)
-      $FileInfo['ProductName'] = (-NOT [System.String]::IsNullOrWhiteSpace([System.String]$File.VersionInfo.ProductName)) ? [System.String]$File.VersionInfo.ProductName : [System.String]$ShellFolder.GetDetailsOf($ShellFile, 297)
-      $FileInfo['FileVersion'] = (-NOT [System.String]::IsNullOrWhiteSpace([System.String]$File.VersionInfo.FileVersionRaw)) ? [System.String]$File.VersionInfo.FileVersionRaw : [System.Version]($ShellFolder.GetDetailsOf($ShellFile, 166))
-
+      $FileInfo['FileDescription'] = (-NOT [System.String]::IsNullOrWhiteSpace([System.String]$File.VersionInfo.FileDescription)) ? [System.String]$File.VersionInfo.FileDescription : (-NOT [System.String]::IsNullOrWhiteSpace([System.String]$ShellFolder.GetDetailsOf($ShellFile, 34))) ? [System.String]$ShellFolder.GetDetailsOf($ShellFile, 34) : $null
+      $FileInfo['ProductName'] = (-NOT [System.String]::IsNullOrWhiteSpace([System.String]$File.VersionInfo.ProductName)) ? [System.String]$File.VersionInfo.ProductName : (-NOT [System.String]::IsNullOrWhiteSpace([System.String]$ShellFolder.GetDetailsOf($ShellFile, 297))) ? [System.String]$ShellFolder.GetDetailsOf($ShellFile, 297) : $null
+      $FileInfo['FileVersion'] = (-NOT [System.String]::IsNullOrWhiteSpace([System.String]$File.VersionInfo.FileVersionRaw)) ? [System.Version]$File.VersionInfo.FileVersionRaw : (-NOT [System.String]::IsNullOrWhiteSpace([System.String]$ShellFolder.GetDetailsOf($ShellFile, 166))) ? [System.Version]$ShellFolder.GetDetailsOf($ShellFile, 166) : $null
       if (-NOT [System.String]::IsNullOrWhiteSpace([System.String]$File.VersionInfo.OriginalFilename)) {
         $FileInfo['FileName'] = [System.String]$File.VersionInfo.OriginalFilename
       }
@@ -109,8 +108,18 @@ function Get-ExtendedFileInfo {
     }
   }
   End {
+    # No key-value pair with empty/null value should exist in the $ExtendedFileInfo array because that'd generate wrong results during comparison when 2 values are both null and a wrong SpecificFileName would be chosen
+    [System.Collections.Hashtable]$FilteredHashtable = @{}
+
+    # Filter out items with no value or null value
+    foreach ($Key in $FileInfo.Keys) {
+      if ($FileInfo[$Key]) {
+        $FilteredHashtable[$Key] = $FileInfo[$Key]
+      }
+    }
+
     # Return the hashtable
-    return $FileInfo
+    return $FilteredHashtable
   }
 }
 

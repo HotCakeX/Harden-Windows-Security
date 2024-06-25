@@ -91,7 +91,7 @@ This is an advanced PowerShell module for WDAC (Windows Defender Application Con
 
     # Assemblies that must be loaded prior to importing this module
     # Required for File/Folder picker GUI
-    RequiredAssemblies   = @('System.Windows.Forms')
+    # RequiredAssemblies   = @()
 
     # Script files (.ps1) that are run in the caller's environment prior to importing this module.
     ScriptsToProcess     = @('Preloader.ps1')
@@ -287,6 +287,7 @@ This is an advanced PowerShell module for WDAC (Windows Defender Application Con
         'C#\Functions\SecureStringComparer.cs',
         'C#\Functions\GetFilesFast.cs',
         'C#\Functions\MeowOpener.cs',
+        'C#\Functions\XmlFilePathExtractor.cs',
         'C#\Variables\ArgumentCompleters.cs')
 
     # Private data to pass to the module specified in RootModule/ModuleToProcess. This may also contain a PSData hashtable with additional module metadata used by PowerShell.

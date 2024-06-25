@@ -29,18 +29,18 @@ Function Compare-SignerAndCertificate {
 
         $EligibleAllowedSigners = $SimulationInput.SignerInfo.Where({ $_.IsAllowed -eq $true })
 
-        Write-Debug -Message "The number of allowed signers in the XML policy file: $($EligibleAllowedSigners.count)"
+        #  Write-Debug -Message "The number of allowed signers in the XML policy file: $($EligibleAllowedSigners.count)"
 
         # Loop through each Allowed signer in the signer information array, these are the signers in the XML policy file
         foreach ($Signer in $EligibleAllowedSigners) {
 
-            Write-Debug -Message "Checking the signer: $($Signer.Name)"
+            # Write-Debug -Message "Checking the signer: $($Signer.Name)"
 
             # If the signer has any EKUs, try to match it with the file's EKU OIDs
             if ($Signer.HasEKU) {
 
                 Write-Debug -Message 'The signer has EKUs'
-                Write-Debug -Message "The current file has $($SimulationInput.EKUOIDs.Count) EKUs"
+                # Write-Debug -Message "The current file has $($SimulationInput.EKUOIDs.Count) EKUs"
 
                 # Check if any of the Signer's OIDs match any of the file's certificates' OIDs (which are basically Leaf certificates' EKU OIDs)
                 # This is used for all levels, not just WHQL levels

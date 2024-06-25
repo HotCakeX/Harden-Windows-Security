@@ -125,6 +125,12 @@ If you need to define global variables, make sure you set them as [constants or 
 
 <br>
 
+## Use C# If You Need Custom Global Classes
+
+If you need custom types in PowerShell and want them to be globally available to your module, It's recommended to use C# and define custom classes with **specific and unique Namespace and Class names** so that there won't be any possible conflicts with other classes/types that belong to 3rd party modules.
+
+<br>
+
 ## More Resources From Microsoft That You Should Check Out
 
 - [Cmdlet Development Guidelines](https://learn.microsoft.com/en-us/powershell/scripting/developer/cmdlet/cmdlet-development-guidelines)

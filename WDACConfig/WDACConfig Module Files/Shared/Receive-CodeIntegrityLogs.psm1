@@ -79,63 +79,63 @@ Function Receive-CodeIntegrityLogs {
 
         # Requested and Validated Signing Level Mappings: https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/operations/event-tag-explanations#requested-and-validated-signing-level
         [System.Collections.Hashtable]$ReqValSigningLevels = @{
-            [System.UInt16]0  = "Signing level hasn't yet been checked"
-            [System.UInt16]1  = 'File is unsigned or has no signature that passes the active policies'
-            [System.UInt16]2  = 'Trusted by Windows Defender Application Control policy'
-            [System.UInt16]3  = 'Developer signed code'
-            [System.UInt16]4  = 'Authenticode signed'
-            [System.UInt16]5  = 'Microsoft Store signed app PPL (Protected Process Light)'
-            [System.UInt16]6  = 'Microsoft Store-signed'
-            [System.UInt16]7  = 'Signed by an Antimalware vendor whose product is using AMPPL'
-            [System.UInt16]8  = 'Microsoft signed'
-            [System.UInt16]11 = 'Only used for signing of the .NET NGEN compiler'
-            [System.UInt16]12 = 'Windows signed'
-            [System.UInt16]14 = 'Windows Trusted Computing Base signed'
+            0us  = "Signing level hasn't yet been checked"
+            1us  = 'File is unsigned or has no signature that passes the active policies'
+            2us  = 'Trusted by Windows Defender Application Control policy'
+            3us  = 'Developer signed code'
+            4us  = 'Authenticode signed'
+            5us  = 'Microsoft Store signed app PPL (Protected Process Light)'
+            6us  = 'Microsoft Store-signed'
+            7us  = 'Signed by an Antimalware vendor whose product is using AMPPL'
+            8us  = 'Microsoft signed'
+            11us = 'Only used for signing of the .NET NGEN compiler'
+            12us = 'Windows signed'
+            14us = 'Windows Trusted Computing Base signed'
         }
 
         # SignatureType Mappings: https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/operations/event-tag-explanations#signaturetype
         [System.Collections.Hashtable]$SignatureTypeTable = @{
-            [System.UInt16]0 = "Unsigned or verification hasn't been attempted"
-            [System.UInt16]1 = 'Embedded signature'
-            [System.UInt16]2 = 'Cached signature; presence of a CI EA means the file was previously verified'
-            [System.UInt16]3 = 'Cached catalog verified via Catalog Database or searching catalog directly'
-            [System.UInt16]4 = 'Uncached catalog verified via Catalog Database or searching catalog directly'
-            [System.UInt16]5 = 'Successfully verified using an EA that informs CI that catalog to try first'
-            [System.UInt16]6 = 'AppX / MSIX package catalog verified'
-            [System.UInt16]7 = 'File was verified'
+            0us = "Unsigned or verification hasn't been attempted"
+            1us = 'Embedded signature'
+            2us = 'Cached signature; presence of a CI EA means the file was previously verified'
+            3us = 'Cached catalog verified via Catalog Database or searching catalog directly'
+            4us = 'Uncached catalog verified via Catalog Database or searching catalog directly'
+            5us = 'Successfully verified using an EA that informs CI that catalog to try first'
+            6us = 'AppX / MSIX package catalog verified'
+            7us = 'File was verified'
         }
 
         # VerificationError mappings: https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/operations/event-tag-explanations#verificationerror
         [System.Collections.Hashtable]$VerificationErrorTable = @{
-            [System.UInt16]0  =	'Successfully verified signature.'
-            [System.UInt16]1  =	'File has an invalid hash.'
-            [System.UInt16]2  =	'File contains shared writable sections.'
-            [System.UInt16]3  =	"File isn't signed."
-            [System.UInt16]4  =	'Revoked signature.'
-            [System.UInt16]5  =	'Expired signature.'
-            [System.UInt16]6  =	"File is signed using a weak hashing algorithm, which doesn't meet the minimum policy."
-            [System.UInt16]7  =	'Invalid root certificate.'
-            [System.UInt16]8  =	'Signature was unable to be validated; generic error.'
-            [System.UInt16]9  =	'Signing time not trusted.'
-            [System.UInt16]10 =	'The file must be signed using page hashes for this scenario.'
-            [System.UInt16]11 =	'Page hash mismatch.'
-            [System.UInt16]12 =	'Not valid for a PPL (Protected Process Light).'
-            [System.UInt16]13 =	'Not valid for a PP (Protected Process).'
-            [System.UInt16]14 =	'The signature is missing the required ARM processor EKU.'
-            [System.UInt16]15 =	'Failed WHQL check.'
-            [System.UInt16]16 =	'Default policy signing level not met.'
-            [System.UInt16]17 =	"Custom policy signing level not met; returned when signature doesn't validate against an SBCP-defined set of certs."
-            [System.UInt16]18 =	'Custom signing level not met; returned if signature fails to match CISigners in UMCI.'
-            [System.UInt16]19 =	'Binary is revoked based on its file hash.'
-            [System.UInt16]20 =	"SHA1 cert hash's timestamp is missing or after valid cutoff as defined by Weak Crypto Policy."
-            [System.UInt16]21 =	'Failed to pass Windows Defender Application Control policy.'
-            [System.UInt16]22 =	'Not Isolated User Mode (IUM) signed; indicates an attempt to load a standard Windows binary into a virtualization-based security (VBS) trustlet.'
-            [System.UInt16]23 =	"Invalid image hash. This error can indicate file corruption or a problem with the file's signature. Signatures using elliptic curve cryptography (ECC), such as ECDSA, return this VerificationError."
-            [System.UInt16]24 =	'Flight root not allowed; indicates trying to run flight-signed code on production OS.'
-            [System.UInt16]25 =	'Anti-cheat policy violation.'
-            [System.UInt16]26 =	'Explicitly denied by WDAC policy.'
-            [System.UInt16]27 =	'The signing chain appears to be tampered / invalid.'
-            [System.UInt16]28 =	'Resource page hash mismatch.'
+            0us  =	'Successfully verified signature.'
+            1us  =	'File has an invalid hash.'
+            2us  =	'File contains shared writable sections.'
+            3us  =	"File isn't signed."
+            4us  =	'Revoked signature.'
+            5us  =	'Expired signature.'
+            6us  =	"File is signed using a weak hashing algorithm, which doesn't meet the minimum policy."
+            7us  =	'Invalid root certificate.'
+            8us  =	'Signature was unable to be validated; generic error.'
+            9us  =	'Signing time not trusted.'
+            10us =	'The file must be signed using page hashes for this scenario.'
+            11us =	'Page hash mismatch.'
+            12us =	'Not valid for a PPL (Protected Process Light).'
+            13us =	'Not valid for a PP (Protected Process).'
+            14us =	'The signature is missing the required ARM processor EKU.'
+            15us =	'Failed WHQL check.'
+            16us =	'Default policy signing level not met.'
+            17us =	"Custom policy signing level not met; returned when signature doesn't validate against an SBCP-defined set of certs."
+            18us =	'Custom signing level not met; returned if signature fails to match CISigners in UMCI.'
+            19us =	'Binary is revoked based on its file hash.'
+            20us =	"SHA1 cert hash's timestamp is missing or after valid cutoff as defined by Weak Crypto Policy."
+            21us =	'Failed to pass Windows Defender Application Control policy.'
+            22us =	'Not Isolated User Mode (IUM) signed; indicates an attempt to load a standard Windows binary into a virtualization-based security (VBS) trustlet.'
+            23us =	"Invalid image hash. This error can indicate file corruption or a problem with the file's signature. Signatures using elliptic curve cryptography (ECC), such as ECDSA, return this VerificationError."
+            24us =	'Flight root not allowed; indicates trying to run flight-signed code on production OS.'
+            25us =	'Anti-cheat policy violation.'
+            26us =	'Explicitly denied by WDAC policy.'
+            27us =	'The signing chain appears to be tampered / invalid.'
+            28us =	'Resource page hash mismatch.'
         }
 
         #EndRegion Application Control event tags intelligence
@@ -243,20 +243,10 @@ Function Receive-CodeIntegrityLogs {
         $AccumulatedGroupedEvents = ($Category -eq 'All') ? ($CiGroupedEvents + $AppLockerGroupedEvents) : (($Category -eq 'CodeIntegrity') ? $CiGroupedEvents : $AppLockerGroupedEvents)
 
         # Initialize two separate hashtables - going to split the logs into two hashtables to process them in parallel
-        [System.Collections.Hashtable]$EventPackageCollections1 = @{}
-        [System.Collections.Hashtable]$EventPackageCollections2 = @{}
-
-        # A toggle to switch between hashtables
-        [System.Boolean]$Toggle = $false
+        [System.Collections.Hashtable]$EventPackageCollection = @{}
 
         # Loop over each group of logs
         Foreach ($RawLogGroup in $AccumulatedGroupedEvents) {
-
-            # Toggle the value for the next iteration
-            [System.Boolean]$Toggle = -NOT $Toggle
-
-            # Select the target hashtable based on the toggle value where the logs will be added, since hashtables are being assigned, they are already referenced and [ref] is not needed
-            [System.Collections.Hashtable]$TargetHashTable = $Toggle ? $EventPackageCollections1 : $EventPackageCollections2
 
             # Process Audit events
             if (($RawLogGroup.Group.Id -contains '3076') -or ($RawLogGroup.Group.Id -contains '8028')) {
@@ -280,7 +270,7 @@ Function Receive-CodeIntegrityLogs {
 
                 # Add the main event along with the correlated events as a nested hashtable to the main hashtable
                 # Using the correlation ID as the key
-                $TargetHashTable[$RawLogGroup.Name] = $LocalAuditEventPackageCollections
+                $EventPackageCollection[$RawLogGroup.Name] = $LocalAuditEventPackageCollections
             }
 
             # Process Blocked events
@@ -305,7 +295,7 @@ Function Receive-CodeIntegrityLogs {
 
                 # Add the main event along with the correlated events as a nested hashtable to the main hashtable
                 # Using the correlation ID as the key
-                $TargetHashTable[$RawLogGroup.Name] = $LocalBlockedEventPackageCollections
+                $EventPackageCollection[$RawLogGroup.Name] = $LocalBlockedEventPackageCollections
             }
         }
 
@@ -350,8 +340,11 @@ Function Receive-CodeIntegrityLogs {
 
     Process {
 
+        # Split the main hashtable into 5 arrays to run the main loop in parallel
+        $SplitArrays = [System.Linq.Enumerable]::Chunk($EventPackageCollection, [Math]::Ceiling($EventPackageCollection.Count / 5))
+
         # Running the main loop in parallel
-        $EventPackageCollections1, $EventPackageCollections2 | ForEach-Object -Parallel {
+        $SplitArrays | ForEach-Object -Parallel {
 
             # Making the parent scope variables available in the parallel child scope as references
 
@@ -558,11 +551,11 @@ Function Receive-CodeIntegrityLogs {
                     $Log['SHA256 Hash'] + '|' +
                     $Log['SHA256 Flat Hash']
 
-                    # Using the SyncRoot property to lock the $Output hashtable during the check-and-add sequence, making it atomic and thread-safe
-                    # This ensures that only one thread at a time can execute the code within the try block, thus preventing race conditions
-                    [System.Threading.Monitor]::Enter($using:Output.SyncRoot)
-
                     try {
+
+                        # Using the SyncRoot property to lock the $Output hashtable during the check-and-add sequence, making it atomic and thread-safe
+                        # This ensures that only one thread at a time can execute the code within the try block, thus preventing race conditions
+                        [System.Threading.Monitor]::Enter($using:Output.SyncRoot)
 
                         if ($Log.Type -eq 'Audit') {
 
@@ -647,7 +640,7 @@ Function Receive-CodeIntegrityLogs {
                     }
                 }
             }
-        }
+        } -ThrottleLimit 5
     }
 
     End {

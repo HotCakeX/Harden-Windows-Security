@@ -170,3 +170,94 @@ For comparison, the following command takes ~20 minutes to complete on my system
 ```
 
 <br>
+
+## How To View The Loaded Assemblies In PowerShell
+
+```PowerShell
+[System.AppDomain]::CurrentDomain.GetAssemblies() |
+Where-Object -FilterScript { $_.Location } |
+Sort-Object -Property FullName |
+Select-Object -Property FullName, Location, GlobalAssemblyCache, IsFullyTrusted |
+Out-GridView -OutputMode Multiple
+```
+
+<br>
+
+### How To Load All DLLs That Come With PowerShell
+
+```powershell
+foreach ($Dll in (Convert-Path -Path ("$([psobject].Assembly.Location)\..\*.dll"))) {
+    try {
+        Add-Type -Path $Dll
+    }
+    catch {}
+}
+```
+
+<br>
+
+#### Alternative Method
+
+```powershell
+foreach ($Dll in Get-ChildItem -File -Filter '*.dll' -Path $PSHOME) {
+    try {
+        Add-Type -AssemblyName ($Dll.Name).Replace($Dll.Extension, '')
+    }
+    catch {}
+}
+```
+
+<br>
+
+Utilizing a try/catch block is essential in this scenario where not all DLLs located at the root of PowerShell are importable. This code is compatible with PowerShell installed through the Store or the MSI file.
+
+Manually importing DLLs can be advantageous, particularly when transitioning from writing code in VS Code to executing it in PowerShell within Windows Terminal. In VS Code, the integrated extension automatically loads necessary assemblies, ensuring smooth operation. However, this automatic process is absent outside of VS Code, potentially leading to discrepancies in code behavior. To mitigate this, manually identifying and importing the missing assemblies is required. By importing all DLLs preemptively, you eliminate the concern of missing assemblies.
+
+To streamline this process, incorporate that code into your `RootModule.psm1` or `ScriptsToProcess.ps1` file. This ensures the code executes solely during the module's import phase, optimizing performance.
+
+> [!NOTE]\
+> The `-ReferencedAssemblies` in `Add-Type -Path <Paths> -ReferencedAssemblies <Assemblies>` uses lazy loading, if a referenced assembly is not part of the type being added or the type doesn't reference a member from that assembly, nothing really happens. This lazy loading behavior improves load times.
+>
+> Shout out to [SeeminglyScience](https://github.com/SeeminglyScience) for providing this info.
+
+<br>
+
+## Instead of PSCustomObjects, Define And Use Custom Types Wherever Possible
+
+If you don't need the extra features of PSCustomObjects such as dynamically adding/removing properties then consider defining and using custom classes in `C#` and use them in PowerShell. They are at least twice faster and this is very visible in loops. Run the benchmark below to see the difference.
+
+<br>
+
+```PowerShell
+# Define a C# class in PowerShell
+Add-Type -TypeDefinition @'
+public class CustomCSharpClass {
+    public string Property { get; set; }
+    public CustomCSharpClass(string property) {
+        Property = property;
+    }
+}
+'@
+
+# Benchmark PSCustomObject creation
+$psCustomObjectTime = Measure-Command {
+    for ($i = 0; $i -lt 10000; $i++) {
+        $obj = [PSCustomObject]@{Property = 'Value' }
+    }
+}
+
+# Benchmark C# class object creation
+$csharpClassTime = Measure-Command {
+    for ($i = 0; $i -lt 10000; $i++) {
+        $obj = [CustomCSharpClass]::new(
+            'Value'
+        )
+    }
+}
+
+# Output the results
+"PSCustomObject creation time: $($psCustomObjectTime.TotalMilliseconds) ms"
+"C# class object creation time: $($csharpClassTime.TotalMilliseconds) ms"
+```
+
+<br>

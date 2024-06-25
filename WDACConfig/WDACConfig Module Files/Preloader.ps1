@@ -64,6 +64,16 @@ if (-NOT ([System.Decimal]$FullOSBuild -ge [System.Decimal]$Requiredbuild)) {
     Throw [System.PlatformNotSupportedException] "You are not using the latest build of the Windows OS. A minimum build of $Requiredbuild is required but your OS build is $FullOSBuild`nPlease go to Windows Update to install the updates and then try again."
 }
 
+# This is required for the EKUs to work.
+# Load all the DLLs in the PowerShell folder, providing .NET types for the module
+# These types are required for the folder picker with multiple select options. Also the module manifest no longer handles assembly as it's not necessary anymore.
+foreach ($Dll in (Convert-Path -Path ("$([psobject].Assembly.Location)\..\*.dll"))) {
+    try {
+        Add-Type -Path $Dll
+    }
+    catch {}
+}
+
 # Import all C# codes at once so they will get compiled together, have resolved dependencies and recognize each others' classes/types
 Add-Type -Path (Get-ChildItem -File -Recurse -Path "$ModuleRootPath\C#").FullName -ReferencedAssemblies ('System',
     'System.Security.Cryptography.Pkcs',

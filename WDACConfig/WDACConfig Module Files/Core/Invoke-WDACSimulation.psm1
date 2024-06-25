@@ -88,6 +88,8 @@ Function Invoke-WDACSimulation {
         # Get the content of the XML file
         [System.String]$XMLContent = Get-Content -LiteralPath $XmlFilePath -Raw
 
+        #Region Making Sure No AllowAll Rule Exists
+
         if ($XMLContent -match '<Allow ID="ID_ALLOW_.*" FriendlyName=".*" FileName="\*".*/>') {
             Write-Verbose -Message "The supplied XML file '$($XmlFilePath.Name)' contains a rule that allows all files."
 
@@ -97,6 +99,8 @@ Function Invoke-WDACSimulation {
             # Exit the Begin block
             Return
         }
+
+        #Endregion Making Sure No AllowAll Rule Exists
 
         # Get the signer information from the XML
         [WDACConfig.Signer[]]$SignerInfo = Get-SignerInfo -XML ([System.Xml.XmlDocument]$XMLContent)
@@ -110,6 +114,16 @@ Function Invoke-WDACSimulation {
             # Make it case-insensitive
             [System.StringComparer]::InvariantCultureIgnoreCase
         )
+
+        #Region FilePath Rule Checking
+        Write-Verbose -Message 'Checking see if the XML policy has any FilePath rules'
+        $FilePathRules = [System.Collections.Generic.HashSet[System.String]]@([WDACConfig.XmlFilePathExtractor]::GetFilePaths($XmlFilePath))
+
+        [System.Boolean]$HasFilePathRules = $false
+        if ($FilePathRules.Count -gt 0) {
+            $HasFilePathRules = $true
+        }
+        #Endregion FilePath Rule Checking
     }
 
     process {
@@ -229,6 +243,30 @@ Function Invoke-WDACSimulation {
                     [System.String]$CurrentFilePathHash = (Get-CiFileHashes -FilePath $CurrentFilePath -SkipVersionCheck).SHA256Authenticode
                 }
                 #>
+
+                if ($HasFilePathRules -and $FilePathRules.Contains($CurrentFilePath)) {
+
+                    $FinalSimulationResults.Add([WDACConfig.SimulationOutput]::New(
+                        ([System.IO.Path]::GetFileName($CurrentFilePath)),
+                            'FilePath',
+                            $true,
+                            $null,
+                            $null,
+                            $null,
+                            $null,
+                            $null,
+                            $null,
+                            'Allowed By File Path',
+                            $null,
+                            $null,
+                            $null,
+                            $null,
+                            $null,
+                            $CurrentFilePath
+                        ))
+
+                    Continue
+                }
 
                 Write-Verbose -Message 'Calculating the file hashes'
                 # Get-CiFileHashes is faster, natively supports -LiteralPath for special characters in file path, and also supports non-conformant files by automatically getting their flat hashes
@@ -555,9 +593,15 @@ Function Invoke-WDACSimulation {
             Label      = 'MatchCriteria'
             Expression = {
                 # If the MatchCriteria starts with 'UnknownError', truncate it to 50 characters. The full string will be displayed in the CSV output file. If it does not then just display it as it is
-                $_.MatchCriteria -match 'UnknownError' ? $_.MatchCriteria.Substring(0, 50) + '...' : "$($_.MatchCriteria) - $($_.SpecificFileNameLevelMatchCriteria)"
+                $_.MatchCriteria -match 'UnknownError' ? $_.MatchCriteria.Substring(0, 50) + '...' : "$($_.MatchCriteria)"
             }
-        } | Sort-Object -Property IsAuthorized
+        },
+        @{
+            Label      = 'SpecificFileName'
+            Expression = {
+                $_.SpecificFileNameLevelMatchCriteria
+            }
+        } | Sort-Object -Property IsAuthorized | Format-Table
     }
 
     <#

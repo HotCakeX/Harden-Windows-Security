@@ -28,7 +28,7 @@ Function New-DenyWDACConfig {
         [parameter(Mandatory = $true, ParameterSetName = 'Folder Path With WildCards', ValueFromPipelineByPropertyName = $true)]
         [System.IO.DirectoryInfo]$FolderPath,
 
-        [ValidateScript({ Test-Path -Path $_ -PathType 'Container' }, ErrorMessage = 'The path you selected is not a folder path.')]
+        [ValidateScript({ [System.IO.Directory]::Exists($_) }, ErrorMessage = 'One of the paths you selected is not a valid folder path.')]
         [Parameter(Mandatory = $false, ParameterSetName = 'Normal')]
         [Parameter(Mandatory = $false, ParameterSetName = 'Drivers')]
         [System.IO.DirectoryInfo[]]$ScanLocations,
@@ -99,13 +99,12 @@ Function New-DenyWDACConfig {
     process {
 
         Try {
-
             # Create deny supplemental policy for general files, apps etc.
             if ($Normal) {
 
                 # The total number of the main steps for the progress bar to render
-                [System.Int16]$TotalSteps = $Deploy ? 4 : 3
-                [System.Int16]$CurrentStep = 0
+                $TotalSteps = $Deploy ? 4us : 3us
+                $CurrentStep = 0us
 
                 # An array to hold the temporary xml files of each user-selected folders
                 [System.IO.FileInfo[]]$PolicyXMLFilesArray = @()
@@ -180,8 +179,8 @@ Function New-DenyWDACConfig {
             if ($Drivers) {
 
                 # The total number of the main steps for the progress bar to render
-                [System.Int16]$TotalSteps = $Deploy ? 4 : 3
-                [System.Int16]$CurrentStep = 0
+                $TotalSteps = $Deploy ? 4us : 3us
+                $CurrentStep = 0us
 
                 $CurrentStep++
                 Write-Progress -Id 23 -Activity 'Processing user selected Folders' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
@@ -252,8 +251,8 @@ Function New-DenyWDACConfig {
 
                 try {
                     # The total number of the main steps for the progress bar to render
-                    [System.Int16]$TotalSteps = $Deploy ? 3 : 2
-                    [System.Int16]$CurrentStep = 0
+                    $TotalSteps = $Deploy ? 3us : 2us
+                    $CurrentStep = 0us
 
                     $CurrentStep++
                     Write-Progress -Id 24 -Activity 'Getting the Appx package' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
@@ -334,8 +333,8 @@ Function New-DenyWDACConfig {
             if ($PathWildCards) {
 
                 # The total number of the main steps for the progress bar to render
-                [System.Int16]$TotalSteps = $Deploy ? 3 : 2
-                [System.Int16]$CurrentStep = 0
+                $TotalSteps = $Deploy ? 3us : 2us
+                $CurrentStep = 0us
 
                 $CurrentStep++
                 Write-Progress -Id 29 -Activity 'Creating the wildcard deny policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
@@ -389,12 +388,15 @@ Function New-DenyWDACConfig {
         finally {
             # If the cmdlet is not running in embedded mode
             if (-NOT $EmbeddedVerboseOutput) {
-                # Display the output
-                if ($Deploy) {
-                    Write-FinalOutput -Paths $FinalDenyPolicyPath
-                }
-                else {
-                    Write-FinalOutput -Paths $FinalDenyPolicyPath, $FinalDenyPolicyCIPPath
+                # If there was no error
+                if (!$NoCopy) {
+                    # Display the output
+                    if ($Deploy) {
+                        Write-FinalOutput -Paths $FinalDenyPolicyPath
+                    }
+                    else {
+                        Write-FinalOutput -Paths $FinalDenyPolicyPath, $FinalDenyPolicyCIPPath
+                    }
                 }
             }
 
@@ -471,7 +473,7 @@ Function New-DenyWDACConfig {
     Creates a Deny standalone base policy by scanning the specified folders for files.
 #>
 }
-Register-ArgumentCompleter -CommandName 'New-DenyWDACConfig' -ParameterName 'ScanLocations' -ScriptBlock ([WDACConfig.ArgumentCompleters]::ArgumentCompleterFolderPathsPicker)
+Register-ArgumentCompleter -CommandName 'New-DenyWDACConfig' -ParameterName 'ScanLocations' -ScriptBlock ([WDACConfig.ArgumentCompleters]::ArgumentCompleterMultipleFolderPathsPicker)
 Register-ArgumentCompleter -CommandName 'New-DenyWDACConfig' -ParameterName 'PackageName' -ScriptBlock ([WDACConfig.ArgumentCompleters]::ArgumentCompleterAppxPackageNames)
 Register-ArgumentCompleter -CommandName 'New-DenyWDACConfig' -ParameterName 'FolderPath' -ScriptBlock ([WDACConfig.ArgumentCompleters]::ArgumentCompleterFolderPathsPickerWildCards)
 

@@ -369,6 +369,18 @@ Function New-KernelModeWDACConfig {
                             # Deploy the policy if Deploy parameter is used
                             if ($Deploy) {
 
+                                if ([System.IO.File]::Exists('C:\Windows\System32\ntoskrnl.exe')) {
+
+                                    Write-Verbose -Message 'Making sure the current Windows build can work with the NoFlightRoots Strict WDAC Policy'
+
+                                    if (-NOT (Invoke-WDACSimulation -FilePath 'C:\Windows\System32\ntoskrnl.exe' -XmlFilePath $FinalEnforcedPolicyPath -BooleanOutput -NoCatalogScanning)) {
+                                        Throw 'The current Windows build cannot work with the NoFlightRoots Strict Kernel-mode Policy, please use the Default Strict Kernel-mode policy instead.'
+                                    }
+                                }
+                                else {
+                                    Write-Verbose -Message "'C:\Windows\System32\ntoskrnl.exe' could not be found."
+                                }
+
                                 $CurrentStep++
                                 Write-Progress -Id 28 -Activity 'Deploying the final policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 

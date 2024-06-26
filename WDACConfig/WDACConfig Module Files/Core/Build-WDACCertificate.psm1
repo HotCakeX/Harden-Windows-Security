@@ -45,7 +45,7 @@ Function Build-WDACCertificate {
         [System.IO.DirectoryInfo]$StagingArea = Join-Path -Path $UserConfigDir -ChildPath 'StagingArea' -AdditionalChildPath 'Build-WDACCertificate'
 
         # Delete it if it exists already with possible content with previous runs
-        if (Test-Path -PathType Container -LiteralPath $StagingArea) {
+        if ([System.IO.Directory]::Exists($StagingArea)) {
             Remove-Item -LiteralPath $StagingArea -Recurse -Force
         }
 

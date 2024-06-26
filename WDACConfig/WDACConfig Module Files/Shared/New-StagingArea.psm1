@@ -16,7 +16,7 @@ Function New-StagingArea {
     [System.IO.DirectoryInfo]$StagingArea = Join-Path -Path $UserConfigDir -ChildPath 'StagingArea' -AdditionalChildPath $CmdletName
 
     # Delete it if it already exists with possible content from previous runs
-    if (Test-Path -PathType Container -LiteralPath $StagingArea) {
+    if ([System.IO.Directory]::Exists($StagingArea)) {
         Remove-Item -LiteralPath $StagingArea -Recurse -Force
     }
     # Create the staging area for the cmdlet

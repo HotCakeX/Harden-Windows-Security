@@ -5,10 +5,10 @@ Function Set-CommonWDACConfig {
         [ValidateSet([CertCNz])]
         [parameter(Mandatory = $false)][System.String]$CertCN,
 
-        [ValidateScript({ (Test-Path -Path $_ -PathType 'Leaf') -and ($_.extension -eq '.cer') }, ErrorMessage = 'The path you selected is not a file path for a .cer file.')]
+        [ValidateScript({ ([System.IO.File]::Exists($_)) -and ($_.extension -eq '.cer') }, ErrorMessage = 'The path you selected is not a file path for a .cer file.')]
         [parameter(Mandatory = $false)][System.IO.FileInfo]$CertPath,
 
-        [ValidateScript({ (Test-Path -Path $_ -PathType 'Leaf') -and ($_.extension -eq '.exe') }, ErrorMessage = 'The path you selected is not a file path for a .exe file.')]
+        [ValidateScript({ ([System.IO.File]::Exists($_ )) -and ($_.extension -eq '.exe') }, ErrorMessage = 'The path you selected is not a file path for a .exe file.')]
         [parameter(Mandatory = $false)][System.IO.FileInfo]$SignToolPath,
 
         [ValidateScript({
@@ -73,13 +73,13 @@ Function Set-CommonWDACConfig {
         }
 
         # Create User configuration folder if it doesn't already exist
-        if (-NOT (Test-Path -Path (Split-Path -Path $UserConfigJson -Parent))) {
+        if (-NOT ([System.IO.Directory]::Exists((Split-Path -Path $UserConfigJson -Parent)))) {
             $null = New-Item -ItemType Directory -Path (Split-Path -Path $UserConfigJson -Parent) -Force
             Write-Verbose -Message 'The WDACConfig folder in Program Files has been created because it did not exist.'
         }
 
         # Create User configuration file if it doesn't already exist
-        if (-NOT (Test-Path -Path $UserConfigJson)) {
+        if (-NOT ([System.IO.File]::Exists($UserConfigJson))) {
             $null = New-Item -ItemType File -Path (Split-Path -Path $UserConfigJson -Parent) -Name (Split-Path -Path $UserConfigJson -Leaf) -Force
             Write-Verbose -Message 'The UserConfigurations.json file has been created because it did not exist.'
         }

@@ -12,6 +12,8 @@ Invoke-WDACSimulation
   [-BooleanOutput]
   [-CSVOutput]
   [-Log]
+  [-NoCatalogScanning]
+  [[-CatRootPath] <DirectoryInfo[]>]
   [-SkipVersionCheck]
   [<CommonParameters>]
 ```
@@ -57,8 +59,6 @@ This cmdlet allows you to simulate a WDAC (App Control for Business) policy depl
 
 * The engine can determine with 100% accuracy whether a file is authorized by a given policy or not as long as the file was scanned based on one of the supported levels mentioned above.
 
-* The `SpecificFileNameLevel` is established with 99.99% accuracy. The only exception is when a file is damaged in a manner that impairs the detection of its additional attributes. *However, this is a rare occurrence, as I have not encountered any such file in over 1 million tests*.
-
 <br>
 
 ## Some Use Cases
@@ -73,50 +73,6 @@ This cmdlet allows you to simulate a WDAC (App Control for Business) policy depl
 
 ## Parameters
 
-### -FolderPath
-
-Path to folders. Supports argument tab completion, select the parameter then press TAB to open the Folder picker GUI.
-
-> [!IMPORTANT]\
-> Either FilePath or FolderPath must be provided.
-
-<div align='center'>
-
-| Type: |[DirectoryInfo](https://learn.microsoft.com/en-us/dotnet/api/system.io.directoryinfo)[]|
-| :-------------: | :-------------: |
-| Position: | Named |
-| Default value: | None |
-| Required: | True |
-| Accept pipeline input: | False |
-| Accept wildcard characters: | False |
-
-</div>
-
-<br>
-
-### -FilePath
-
-Provide path to files that you want WDAC simulation to run against
-
-Uses LiteralPath to take the path exactly as typed including Special characters such as `[` and `]`
-
-> [!IMPORTANT]\
-> Either FilePath or FolderPath must be provided.
-
-<div align='center'>
-
-| Type: |[FileInfo](https://learn.microsoft.com/en-us/dotnet/api/system.io.fileinfo)[]|
-| :-------------: | :-------------: |
-| Position: | Named |
-| Default value: | None |
-| Required: | True |
-| Accept pipeline input: | False |
-| Accept wildcard characters: | False |
-
-</div>
-
-<br>
-
 ### -XmlFilePath
 
 Path to a xml file. Supports argument tab completion, select the parameter then press TAB to open the file picker GUI that only shows xml files.
@@ -128,6 +84,42 @@ Path to a xml file. Supports argument tab completion, select the parameter then 
 | Position: | Named |
 | Default value: | None |
 | Required: | True |
+| Accept pipeline input: | False |
+| Accept wildcard characters: | False |
+
+</div>
+
+<br>
+
+### -FolderPath
+
+Path to folders. Supports argument tab completion, select the parameter then press TAB to open the Folder picker GUI.
+
+<div align='center'>
+
+| Type: |[DirectoryInfo](https://learn.microsoft.com/en-us/dotnet/api/system.io.directoryinfo)[]|
+| :-------------: | :-------------: |
+| Position: | Named |
+| Default value: | None |
+| Required: | False |
+| Accept pipeline input: | False |
+| Accept wildcard characters: | False |
+
+</div>
+
+<br>
+
+### -FilePath
+
+Provide path to files that you want WDAC simulation to run against
+
+<div align='center'>
+
+| Type: |[FileInfo](https://learn.microsoft.com/en-us/dotnet/api/system.io.fileinfo)[]|
+| :-------------: | :-------------: |
+| Position: | Named |
+| Default value: | None |
+| Required: | False |
 | Accept pipeline input: | False |
 | Accept wildcard characters: | False |
 
@@ -178,6 +170,42 @@ It is saved in the WDACConfig folder in `C:\Program Files\WDACConfig`
 Use this switch to start a transcript of the WDAC simulation and log everything displayed on the screen.
 
 The log file is saved in the WDACConfig folder in `C:\Program Files\WDACConfig`
+
+<div align='center'>
+
+| Type: |[SwitchParameter](https://learn.microsoft.com/en-us/dotnet/api/system.management.automation.switchparameter)|
+| :-------------: | :-------------: |
+| Position: | Named |
+| Default value: | None |
+| Required: | False |
+| Accept pipeline input: | False |
+| Accept wildcard characters: | False |
+
+</div>
+
+<br>
+
+### -CatRootPath
+
+Provide path(s) to directories where security catalog `.cat` files are located. If not provided, the default path is `C:\Windows\System32\CatRoot`. Supports argument tab completion, select the parameter then press TAB to open the Folder picker GUI.
+
+<div align='center'>
+
+| Type: |[DirectoryInfo](https://learn.microsoft.com/en-us/dotnet/api/system.io.directoryinfo)[]|
+| :-------------: | :-------------: |
+| Position: | Named |
+| Default value: | None |
+| Required: | False |
+| Accept pipeline input: | False |
+| Accept wildcard characters: | False |
+
+</div>
+
+<br>
+
+### -NoCatalogScanning
+
+Bypass the scanning of the security catalogs on the system. It can make the scan results less accurate.
 
 <div align='center'>
 

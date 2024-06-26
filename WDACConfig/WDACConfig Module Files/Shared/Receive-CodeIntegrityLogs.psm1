@@ -242,10 +242,10 @@ Function Receive-CodeIntegrityLogs {
         # Add Code Integrity and AppLocker logs to a single array based on the selected category
         $AccumulatedGroupedEvents = ($Category -eq 'All') ? ($CiGroupedEvents + $AppLockerGroupedEvents) : (($Category -eq 'CodeIntegrity') ? $CiGroupedEvents : $AppLockerGroupedEvents)
 
-        # Initialize two separate hashtables - going to split the logs into two hashtables to process them in parallel
-        [System.Collections.Hashtable]$EventPackageCollection = @{}
+        # Create a list of HashTables to store the event log data
+        $EventPackageCollection = New-Object -TypeName 'System.Collections.Generic.List[System.Collections.Hashtable]'
 
-        # Loop over each group of logs
+        # Loop over each group of logs to identify Audit/Block events and also gather correlated events of each main event
         Foreach ($RawLogGroup in $AccumulatedGroupedEvents) {
 
             # Process Audit events
@@ -268,9 +268,8 @@ Function Receive-CodeIntegrityLogs {
                 $LocalAuditEventPackageCollections['CorrelatedEventsData'] = $RawLogGroup.Group.Where({ $_.Id -in '3089', '8038' })
                 $LocalAuditEventPackageCollections['Type'] = 'Audit'
 
-                # Add the main event along with the correlated events as a nested hashtable to the main hashtable
-                # Using the correlation ID as the key
-                $EventPackageCollection[$RawLogGroup.Name] = $LocalAuditEventPackageCollections
+                # Add the main event along with the correlated events as a nested hashtable to the list
+                $EventPackageCollection.Add($LocalAuditEventPackageCollections)
             }
 
             # Process Blocked events
@@ -293,9 +292,8 @@ Function Receive-CodeIntegrityLogs {
                 $LocalBlockedEventPackageCollections['CorrelatedEventsData'] = $RawLogGroup.Group.Where({ $_.Id -in '3089', '8038' })
                 $LocalBlockedEventPackageCollections['Type'] = 'Blocked'
 
-                # Add the main event along with the correlated events as a nested hashtable to the main hashtable
-                # Using the correlation ID as the key
-                $EventPackageCollection[$RawLogGroup.Name] = $LocalBlockedEventPackageCollections
+                # Add the main event along with the correlated events as a nested hashtable to the list
+                $EventPackageCollection.Add($LocalBlockedEventPackageCollections)
             }
         }
 
@@ -341,7 +339,8 @@ Function Receive-CodeIntegrityLogs {
     Process {
 
         # Split the main hashtable into 5 arrays to run the main loop in parallel
-        $SplitArrays = [System.Linq.Enumerable]::Chunk($EventPackageCollection, [Math]::Ceiling($EventPackageCollection.Count / 5))
+        # https://learn.microsoft.com/en-us/dotnet/api/system.linq.enumerable.chunk
+        $SplitArrays = [System.Linq.Enumerable]::Chunk($EventPackageCollection, [System.Math]::Ceiling($EventPackageCollection.Count / 5))
 
         # Running the main loop in parallel
         $SplitArrays | ForEach-Object -Parallel {
@@ -367,7 +366,7 @@ Function Receive-CodeIntegrityLogs {
             foreach ($EventPackage in $_.GetEnumerator()) {
 
                 # Extract the main event data
-                [System.Diagnostics.Eventing.Reader.EventLogRecord]$Event = $EventPackage.Value.MainEventData
+                [System.Diagnostics.Eventing.Reader.EventLogRecord]$Event = $EventPackage.MainEventData
 
                 # Convert the main event data to XML object
                 $Xml = [System.Xml.XmlDocument]$Event.ToXml()
@@ -377,207 +376,206 @@ Function Receive-CodeIntegrityLogs {
                     continue
                 }
 
-                # Place each main event data in a hashtable and return the hashtable at the end
-                [System.Collections.Hashtable[]]$ProcessedEvents = $Xml.event.EventData.data | ForEach-Object -Begin { [System.Collections.Hashtable]$Hash = @{} } -Process { $Hash[$_.Name] = $_.'#text' } -End { [System.Collections.Hashtable]$Hash }
+                # Place each main event data in a hashtable
+                [System.Collections.Hashtable]$Log = @{}
+                foreach ($Item in $Xml.event.EventData.data) {
+                    $Log[$Item.Name] = $Item.'#text'
+                }
 
-                # Loop over each main event data's hashtable - Main loop
-                foreach ($Log in $ProcessedEvents) {
+                # Add the TimeCreated property to the $Log hashtable
+                $Log['TimeCreated'] = $Event.TimeCreated
+                # Add the ActivityId property to the $Log hashtable
+                $Log['ActivityId'] = $Event.ActivityId
+                # Add the UserId property to the $Log hashtable
+                $Log['UserId'] = $Event.UserId
+                # Add the ProviderName property to the $Log hashtable
+                $Log['ProviderName'] = $Event.ProviderName
 
-                    # Add the TimeCreated property to the $Log hashtable
-                    $Log['TimeCreated'] = $Event.TimeCreated
-                    # Add the ActivityId property to the $Log hashtable
-                    $Log['ActivityId'] = $Event.ActivityId
-                    # Add the UserId property to the $Log hashtable
-                    $Log['UserId'] = $Event.UserId
-                    # Add the ProviderName property to the $Log hashtable
-                    $Log['ProviderName'] = $Event.ProviderName
+                # Filter the logs based on the policy that generated them
+                if (-NOT ([System.String]::IsNullOrWhiteSpace($PolicyNames))) {
+                    if ($Log.PolicyName -notin $PolicyNames) {
+                        continue
+                    }
+                }
 
-                    # Filter the logs based on the policy that generated them
-                    if (-NOT ([System.String]::IsNullOrWhiteSpace($PolicyNames))) {
-                        if ($Log.PolicyName -notin $PolicyNames) {
+                # Define the regex pattern for the device path
+                [System.Text.RegularExpressions.Regex]$Pattern = '\\Device\\HarddiskVolume(?<HardDiskVolumeNumber>\d+)\\(?<RemainingPath>.*)$'
+
+                # These are the properties that are different in AppLocker so they need to be manually set to be compliant with the expected output of this function
+                if ($Log['ProviderName'] -eq 'Microsoft-Windows-AppLocker') {
+
+                    # Replace File Name property with the FilePath property and then remove the FilePath property
+                    $Log['File Name'] = $Log['FilePath']
+                    $Log.Remove('FilePath')
+
+                    $Log['SHA256 Hash'] = $Log['Sha256Hash']
+                    $Log.Remove('Sha256Hash')
+
+                    $Log['SHA1 Hash'] = $Log['Sha1Hash']
+                    $Log.Remove('Sha1Hash')
+                }
+
+                # replace the device path with the drive letter if it matches the pattern
+                # Only if the log source is local logs
+                if (($LogSource -eq 'LocalLogs') -and ($Log['File Name'] -match $Pattern)) {
+
+                    # Use the primary method to fix the drive letter mappings
+                    if ($AlternativeDriveLetterFix -eq $false) {
+
+                        [System.UInt32]$HardDiskVolumeNumber = $Matches['HardDiskVolumeNumber']
+                        [System.String]$RemainingPath = $Matches['RemainingPath']
+                        [PSCustomObject]$GetLetter = $DriveLettersGlobalRootFix.Where({ $_.DevicePath -eq "\Device\HarddiskVolume$HardDiskVolumeNumber" })
+                        [System.IO.FileInfo]$UsablePath = "$($GetLetter.DriveLetter)$RemainingPath"
+                        $Log['File Name'] = $Log['File Name'] -replace $Pattern, $UsablePath
+                    }
+                    # Use the alternative method to fix the drive letter mappings
+                    else {
+                        $Log['File Name'] = $Log['File Name'] -replace "\\Device\\HarddiskVolume$($Matches['HardDiskVolumeNumber'])", "$($DriveLetterMappings[$Matches['HardDiskVolumeNumber']]):"
+                    }
+                }
+                # sometimes the file name begins with System32 so we prepend the Windows directory to create a full resolvable path
+                # https://learn.microsoft.com/en-us/dotnet/api/system.string.startswith
+                elseif ($Log['File Name'].StartsWith('System32', $true, [System.Globalization.CultureInfo]::InvariantCulture)) {
+                    $Log['File Name'] = Join-Path -Path $Env:WinDir -ChildPath ($Log['File Name'])
+                }
+
+                # Replace these numbers in the logs with user-friendly strings that represent the signature level at which the code was verified
+                $Log['Requested Signing Level'] = $ReqValSigningLevels[[System.UInt16]$Log['Requested Signing Level']]
+                $Log['Validated Signing Level'] = $ReqValSigningLevels[[System.UInt16]$Log['Validated Signing Level']]
+
+                # Replace the SI Signing Scenario numbers with a user-friendly string
+                $Log['SI Signing Scenario'] = $Log['SI Signing Scenario'] -eq '0' ? 'Kernel-Mode' : 'User-Mode'
+
+                # if the log source is local logs
+                if ($LogSource -eq 'LocalLogs') {
+
+                    # Translate the SID to a UserName if it's not null
+                    if ($null -ne $Log.UserId) {
+                        Try {
+                            [System.Security.Principal.SecurityIdentifier]$ObjSID = New-Object -TypeName System.Security.Principal.SecurityIdentifier($Log.UserId)
+                            $Log.UserId = [System.String]($ObjSID.Translate([System.Security.Principal.NTAccount])).Value
+                        }
+                        Catch {
+                            Write-Verbose -Message "Receive-CodeIntegrityLogs: Could not translate the SID $($Log.UserId) to a username for the Activity ID $($Log['ActivityId']) for the file $($Log['File Name'])"
+                        }
+                    }
+                    else {
+                        Write-Verbose -Message "Receive-CodeIntegrityLogs: The UserId property is null for the Activity ID $($Log['ActivityId']) for the file $($Log['File Name'])"
+                    }
+                }
+
+                # If there are correlated events, then process them
+                if ($null -ne $EventPackage.CorrelatedEventsData) {
+
+                    # A hashtable for storing the correlated logs
+                    [System.Collections.Hashtable]$CorrelatedLogs = @{}
+
+                    # Store the unique publisher name in HashSet
+                    $Publishers = [System.Collections.Generic.HashSet[System.String]]@()
+
+                    # Looping over each correlated event data
+                    # There are more than 1 if the file has multiple signers/publishers
+                    foreach ($CorrelatedEvent in $EventPackage.CorrelatedEventsData) {
+
+                        # Convert the main event data to XML object
+                        $XmlCorrelated = [System.Xml.XmlDocument]$CorrelatedEvent.ToXml()
+
+                        if ($null -eq $XmlCorrelated.event.EventData.data) {
+                            Write-Verbose -Message "Receive-CodeIntegrityLogs: Skipping Publisher check for: '$($Log['File Name'])' due to missing correlated event data"
                             continue
                         }
-                    }
 
-                    # Define the regex pattern for the device path
-                    [System.Text.RegularExpressions.Regex]$Pattern = '\\Device\\HarddiskVolume(?<HardDiskVolumeNumber>\d+)\\(?<RemainingPath>.*)$'
-
-                    # These are the properties that are different in AppLocker so they need to be manually set to be compliant with the expected output of this function
-                    if ($Log['ProviderName'] -eq 'Microsoft-Windows-AppLocker') {
-
-                        # Replace File Name property with the FilePath property and then remove the FilePath property
-                        $Log['File Name'] = $Log['FilePath']
-                        $Log.Remove('FilePath')
-
-                        $Log['SHA256 Hash'] = $Log['Sha256Hash']
-                        $Log.Remove('Sha256Hash')
-
-                        $Log['SHA1 Hash'] = $Log['Sha1Hash']
-                        $Log.Remove('Sha1Hash')
-                    }
-
-                    # replace the device path with the drive letter if it matches the pattern
-                    # Only if the log source is local logs
-                    if (($LogSource -eq 'LocalLogs') -and ($Log['File Name'] -match $Pattern)) {
-
-                        # Use the primary method to fix the drive letter mappings
-                        if ($AlternativeDriveLetterFix -eq $false) {
-
-                            [System.UInt32]$HardDiskVolumeNumber = $Matches['HardDiskVolumeNumber']
-                            [System.String]$RemainingPath = $Matches['RemainingPath']
-                            [PSCustomObject]$GetLetter = $DriveLettersGlobalRootFix.Where({ $_.DevicePath -eq "\Device\HarddiskVolume$HardDiskVolumeNumber" })
-                            [System.IO.FileInfo]$UsablePath = "$($GetLetter.DriveLetter)$RemainingPath"
-                            $Log['File Name'] = $Log['File Name'] -replace $Pattern, $UsablePath
+                        # Place each event data in a hashtable
+                        [System.Collections.Hashtable]$CorrelatedLog = @{}
+                        foreach ($Item in $XmlCorrelated.event.EventData.data) {
+                            $CorrelatedLog[$Item.Name] = $Item.'#text'
                         }
-                        # Use the alternative method to fix the drive letter mappings
-                        else {
-                            $Log['File Name'] = $Log['File Name'] -replace "\\Device\\HarddiskVolume$($Matches['HardDiskVolumeNumber'])", "$($DriveLetterMappings[$Matches['HardDiskVolumeNumber']]):"
+
+                        # Skip signers that don't have PublisherTBSHash (aka LeafCertificate TBS Hash)
+                        # They have "Unknown" as their IssuerName and PublisherName too
+                        if ($null -eq $CorrelatedLog.PublisherTBSHash) {
+                            Continue
                         }
-                    }
-                    # sometimes the file name begins with System32 so we prepend the Windows directory to create a full resolvable path
-                    # https://learn.microsoft.com/en-us/dotnet/api/system.string.startswith
-                    elseif ($Log['File Name'].StartsWith('System32', $true, [System.Globalization.CultureInfo]::InvariantCulture)) {
-                        $Log['File Name'] = Join-Path -Path $Env:WinDir -ChildPath ($Log['File Name'])
-                    }
 
-                    # Replace these numbers in the logs with user-friendly strings that represent the signature level at which the code was verified
-                    $Log['Requested Signing Level'] = $ReqValSigningLevels[[System.UInt16]$Log['Requested Signing Level']]
-                    $Log['Validated Signing Level'] = $ReqValSigningLevels[[System.UInt16]$Log['Validated Signing Level']]
+                        # Replace the properties with their user-friendly strings
+                        $CorrelatedLog.SignatureType = $SignatureTypeTable[[System.UInt16]$CorrelatedLog.SignatureType]
+                        $CorrelatedLog.ValidatedSigningLevel = $ReqValSigningLevels[[System.UInt16]$CorrelatedLog.ValidatedSigningLevel]
+                        $CorrelatedLog.VerificationError = $VerificationErrorTable[[System.UInt16]$CorrelatedLog.VerificationError]
 
-                    # Replace the SI Signing Scenario numbers with a user-friendly string
-                    $Log['SI Signing Scenario'] = $Log['SI Signing Scenario'] -eq '0' ? 'Kernel-Mode' : 'User-Mode'
+                        # Create a unique key for each Publisher
+                        [System.String]$PublisherKey = $CorrelatedLog.PublisherTBSHash + '|' +
+                        $CorrelatedLog.PublisherName + '|' +
+                        $CorrelatedLog.IssuerTBSHash + '|' +
+                        $CorrelatedLog.IssuerName
 
-                    # if the log source is local logs
-                    if ($LogSource -eq 'LocalLogs') {
-
-                        # Translate the SID to a UserName if it's not null
-                        if ($null -ne $Log.UserId) {
-                            Try {
-                                [System.Security.Principal.SecurityIdentifier]$ObjSID = New-Object -TypeName System.Security.Principal.SecurityIdentifier($Log.UserId)
-                                $Log.UserId = [System.String]($ObjSID.Translate([System.Security.Principal.NTAccount])).Value
-                            }
-                            Catch {
-                                Write-Verbose -Message "Receive-CodeIntegrityLogs: Could not translate the SID $($Log.UserId) to a username for the Activity ID $($Log['ActivityId']) for the file $($Log['File Name'])"
-                            }
+                        # Add the Correlated Log to the array of Correlated Logs if it doesn't already exist there
+                        if (-NOT $CorrelatedLogs.ContainsKey($PublisherKey)) {
+                            $CorrelatedLogs[$PublisherKey] = $CorrelatedLog
                         }
-                        else {
-                            Write-Verbose -Message "Receive-CodeIntegrityLogs: The UserId property is null for the Activity ID $($Log['ActivityId']) for the file $($Log['File Name'])"
+
+                        # Add the unique publisher name to the array of Publishers if it doesn't already exist there
+                        if (-NOT $Publishers.Contains($CorrelatedLog.PublisherName)) {
+                            [System.Void]$Publishers.Add($CorrelatedLog.PublisherName)
                         }
                     }
 
-                    # If there are correlated events, then process them
-                    if ($null -ne $EventPackage.Value.CorrelatedEventsData) {
+                    Write-Debug -Message "Receive-CodeIntegrityLogs: The number of unique publishers in the correlated events is $($Publishers.Count)"
+                    $Log['Publishers'] = $Publishers
 
-                        # A hashtable for storing the correlated logs
-                        [System.Collections.Hashtable]$CorrelatedLogs = @{}
+                    # Add a new property to detect whether this log is signed or not
+                    # Primarily used by the Build-SignerAndHashObjects Function and for Evtx log sources
+                    $Log['SignatureStatus'] = $Publishers.Count -ge 1 ? 'Signed' : 'Unsigned'
 
-                        # Store the unique publisher name in HashSet
-                        $Publishers = [System.Collections.Generic.HashSet[System.String]]@()
+                    Write-Debug -Message "Receive-CodeIntegrityLogs: The number of correlated events is $($CorrelatedLogs.Count)"
+                    $Log['SignerInfo'] = $CorrelatedLogs
+                }
 
-                        # Looping over each correlated event data
-                        # There are more than 1 if the file has multiple signers/publishers
-                        foreach ($CorrelatedEvent in $EventPackage.Value.CorrelatedEventsData) {
+                # Add the Type property to the log object
+                $Log['Type'] = $EventPackage.Type
 
-                            # Convert the main event data to XML object
-                            $XmlCorrelated = [System.Xml.XmlDocument]$CorrelatedEvent.ToXml()
+                #Region Post-processing for the logs
 
-                            if ($null -eq $XmlCorrelated.event.EventData.data) {
-                                Write-Verbose -Message "Receive-CodeIntegrityLogs: Skipping Publisher check for: '$($Log['File Name'])' due to missing correlated event data"
-                                continue
-                            }
+                # Creating a unique string key for the current log
+                # The key ending up being too long doesn't matter and doesn't affect the performance
+                # Since all keys are hashed in a hashtable
+                [System.String]$UniqueLogKey = $Log['File Name'] + '|' +
+                $Log.ProductName + '|' +
+                $Log.FileVersion + '|' +
+                $Log.OriginalFileName + '|' +
+                $Log.FileDescription + '|' +
+                $Log.InternalName + '|' +
+                $Log.PackageFamilyName + '|' +
+                $Log.Publishers + '|' +
+                $Log['SHA256 Hash'] + '|' +
+                $Log['SHA256 Flat Hash']
 
-                            # Place each event data in a hashtable and return the hashtable at the end
-                            [System.Collections.Hashtable[]]$ProcessedCorrelatedEvents = $XmlCorrelated.event.EventData.data | ForEach-Object -Begin { [System.Collections.Hashtable]$Hash = @{} } -Process { $Hash[$_.name] = $_.'#text' } -End { [System.Collections.Hashtable]$Hash }
+                try {
 
-                            # Loop over each event data object
-                            foreach ($CorrelatedLog in $ProcessedCorrelatedEvents) {
+                    # Using the SyncRoot property to lock the $Output hashtable during the check-and-add sequence, making it atomic and thread-safe
+                    # This ensures that only one thread at a time can execute the code within the try block, thus preventing race conditions
+                    [System.Threading.Monitor]::Enter($using:Output.SyncRoot)
 
-                                # Skip signers that don't have PublisherTBSHash (aka LeafCertificate TBS Hash)
-                                # They have "Unknown" as their IssuerName and PublisherName too
-                                if ($null -eq $CorrelatedLog.PublisherTBSHash) {
-                                    Continue
-                                }
+                    if ($Log.Type -eq 'Audit') {
 
-                                # Replace the properties with their user-friendly strings
-                                $CorrelatedLog.SignatureType = $SignatureTypeTable[[System.UInt16]$CorrelatedLog.SignatureType]
-                                $CorrelatedLog.ValidatedSigningLevel = $ReqValSigningLevels[[System.UInt16]$CorrelatedLog.ValidatedSigningLevel]
-                                $CorrelatedLog.VerificationError = $VerificationErrorTable[[System.UInt16]$CorrelatedLog.VerificationError]
-
-                                # Create a unique key for each Publisher
-                                [System.String]$PublisherKey = $CorrelatedLog.PublisherTBSHash + '|' +
-                                $CorrelatedLog.PublisherName + '|' +
-                                $CorrelatedLog.IssuerTBSHash + '|' +
-                                $CorrelatedLog.IssuerName
-
-                                # Add the Correlated Log to the array of Correlated Logs if it doesn't already exist there
-                                if (-NOT $CorrelatedLogs.ContainsKey($PublisherKey)) {
-                                    $CorrelatedLogs[$PublisherKey] = $CorrelatedLog
-                                }
-
-                                # Add the unique publisher name to the array of Publishers if it doesn't already exist there
-                                if (-NOT $Publishers.Contains($CorrelatedLog.PublisherName)) {
-                                    [System.Void]$Publishers.Add($CorrelatedLog.PublisherName)
-                                }
-                            }
+                        # Add the log to the output hashtable if it has Audit type and doesn't already exist there
+                        if (-NOT $Output.All.Audit.ContainsKey($UniqueLogKey)) {
+                            $Output.All.Audit[$UniqueLogKey] = $Log
                         }
 
-                        Write-Debug -Message "Receive-CodeIntegrityLogs: The number of unique publishers in the correlated events is $($Publishers.Count)"
-                        $Log['Publishers'] = $Publishers
+                        # If the file the log is referring to is currently on the disk
+                        if ([System.IO.File]::Exists($Log['File Name'])) {
 
-                        # Add a new property to detect whether this log is signed or not
-                        # Primarily used by the Build-SignerAndHashObjects Function and for Evtx log sources
-                        $Log['SignatureStatus'] = $Publishers.Count -ge 1 ? 'Signed' : 'Unsigned'
-
-                        Write-Debug -Message "Receive-CodeIntegrityLogs: The number of correlated events is $($CorrelatedLogs.Count)"
-                        $Log['SignerInfo'] = $CorrelatedLogs
-                    }
-
-                    # Add the Type property to the log object
-                    $Log['Type'] = $EventPackage.Value.Type
-
-                    #Region Post-processing for the logs
-
-                    # Creating a unique string key for the current log
-                    # The key ending up being too long doesn't matter and doesn't affect the performance
-                    # Since all keys are hashed in a hashtable
-                    [System.String]$UniqueLogKey = $Log['File Name'] + '|' +
-                    $Log.ProductName + '|' +
-                    $Log.FileVersion + '|' +
-                    $Log.OriginalFileName + '|' +
-                    $Log.FileDescription + '|' +
-                    $Log.InternalName + '|' +
-                    $Log.PackageFamilyName + '|' +
-                    $Log.Publishers + '|' +
-                    $Log['SHA256 Hash'] + '|' +
-                    $Log['SHA256 Flat Hash']
-
-                    try {
-
-                        # Using the SyncRoot property to lock the $Output hashtable during the check-and-add sequence, making it atomic and thread-safe
-                        # This ensures that only one thread at a time can execute the code within the try block, thus preventing race conditions
-                        [System.Threading.Monitor]::Enter($using:Output.SyncRoot)
-
-                        if ($Log.Type -eq 'Audit') {
-
-                            # Add the log to the output hashtable if it has Audit type and doesn't already exist there
-                            if (-NOT $Output.All.Audit.ContainsKey($UniqueLogKey)) {
-                                $Output.All.Audit[$UniqueLogKey] = $Log
+                            if (-NOT $Output.Existing.Audit.ContainsKey($UniqueLogKey)) {
+                                $Output.Existing.Audit[$UniqueLogKey] = $Log
                             }
 
-                            # If the file the log is referring to is currently on the disk
-                            if (Test-Path -Path $Log['File Name']) {
-
-                                if (-NOT $Output.Existing.Audit.ContainsKey($UniqueLogKey)) {
-                                    $Output.Existing.Audit[$UniqueLogKey] = $Log
-                                }
-
-                                <#
+                            <#
                                 if (-NOT $Output.Separated.Audit.AvailableFilesPaths.Contains($Log['File Name'])) {
                                     [System.Void]$Output.Separated.Audit.AvailableFilesPaths.Add($Log['File Name'])
                                 }
                                 #>
-                            }
-                            <#
+                        }
+                        <#
                             # If the file is not currently on the disk, extract its hashes from the log
                             else {
                                 $TempDeletedOutputAudit = $Log | Select-Object -Property FileVersion, 'File Name', PolicyGUID, 'SHA256 Hash', 'SHA256 Flat Hash', 'SHA1 Hash', 'SHA1 Flat Hash'
@@ -591,29 +589,29 @@ Function Receive-CodeIntegrityLogs {
                                 }
                             }
                             #>
+                    }
+
+                    elseif ($Log.Type -eq 'Blocked') {
+
+                        # Add the log to the output hashtable if it has Blocked type and doesn't already exist there
+                        if (-NOT $Output.All.Blocked.ContainsKey($UniqueLogKey)) {
+                            $Output.All.Blocked[$UniqueLogKey] = $Log
                         }
 
-                        elseif ($Log.Type -eq 'Blocked') {
+                        # If the file the log is referring to is currently on the disk
+                        if ([System.IO.File]::Exists($Log['File Name'])) {
 
-                            # Add the log to the output hashtable if it has Blocked type and doesn't already exist there
-                            if (-NOT $Output.All.Blocked.ContainsKey($UniqueLogKey)) {
-                                $Output.All.Blocked[$UniqueLogKey] = $Log
+                            if (-NOT $Output.Existing.Blocked.ContainsKey($UniqueLogKey)) {
+                                $Output.Existing.Blocked[$UniqueLogKey] = $Log
                             }
 
-                            # If the file the log is referring to is currently on the disk
-                            if (Test-Path -Path $Log['File Name']) {
-
-                                if (-NOT $Output.Existing.Blocked.ContainsKey($UniqueLogKey)) {
-                                    $Output.Existing.Blocked[$UniqueLogKey] = $Log
-                                }
-
-                                <#
+                            <#
                                 if (-NOT $Output.Separated.Blocked.AvailableFilesPaths.Contains($Log['File Name'])) {
                                     [System.Void]$Output.Separated.Blocked.AvailableFilesPaths.Add($Log['File Name'])
                                 }
                                 #>
-                            }
-                            <#
+                        }
+                        <#
                             # If the file is not currently on the disk, extract its hashes from the log
                             else {
                                 $TempDeletedOutputBlocked = $Log | Select-Object -Property FileVersion, 'File Name', PolicyGUID, 'SHA256 Hash', 'SHA256 Flat Hash', 'SHA1 Hash', 'SHA1 Flat Hash'
@@ -627,17 +625,16 @@ Function Receive-CodeIntegrityLogs {
                                 }
                             }
                             #>
-                        }
-                        #Endregion Post-processing for the logs
+                    }
+                    #Endregion Post-processing for the logs
 
-                    }
-                    catch {
-                        Throw $_
-                    }
-                    # Always ensures the lock is released
-                    finally {
-                        [System.Threading.Monitor]::Exit($using:Output.SyncRoot)
-                    }
+                }
+                catch {
+                    Throw $_
+                }
+                # Always ensures the lock is released
+                finally {
+                    [System.Threading.Monitor]::Exit($using:Output.SyncRoot)
                 }
             }
         } -ThrottleLimit 5

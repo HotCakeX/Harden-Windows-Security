@@ -13,14 +13,14 @@ Function Deploy-SignedWDACConfig {
         [Parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$Deploy,
 
         [ValidatePattern('\.cer$')]
-        [ValidateScript({ Test-Path -Path $_ -PathType 'Leaf' }, ErrorMessage = 'The path you selected is not a file path.')]
+        [ValidateScript({ [System.IO.File]::Exists($_) }, ErrorMessage = 'The path you selected is not a file path.')]
         [parameter(Mandatory = $false, ValueFromPipelineByPropertyName = $true, ValueFromPipeline = $true)][System.IO.FileInfo]$CertPath,
 
         [ValidateSet([CertCNz])]
         [parameter(Mandatory = $false, ValueFromPipelineByPropertyName = $true, ValueFromPipeline = $true)][System.String]$CertCN,
 
         [ValidatePattern('\.exe$')]
-        [ValidateScript({ Test-Path -Path $_ -PathType 'Leaf' }, ErrorMessage = 'The path you selected is not a file path.')]
+        [ValidateScript({ [System.IO.File]::Exists($_) }, ErrorMessage = 'The path you selected is not a file path.')]
         [parameter(Mandatory = $false, ValueFromPipelineByPropertyName = $true, ValueFromPipeline = $true)]
         [System.IO.FileInfo]$SignToolPath,
 
@@ -60,7 +60,7 @@ Function Deploy-SignedWDACConfig {
 
         # If CertPath parameter wasn't provided by user, check if a valid value exists in user configs, if so, use it, otherwise throw an error
         if (!$CertPath ) {
-            if (Test-Path -Path (Get-CommonWDACConfig -CertPath)) {
+            if ([System.IO.File]::Exists((Get-CommonWDACConfig -CertPath))) {
                 [System.IO.FileInfo]$CertPath = Get-CommonWDACConfig -CertPath
             }
             else {
@@ -126,7 +126,7 @@ Function Deploy-SignedWDACConfig {
                     if ('Enabled:UMCI' -in $PolicyRuleOptions) {
 
                         Write-Verbose -Message 'Checking whether SignTool.exe is allowed to execute in the policy or not'
-                        if (-NOT (Invoke-WDACSimulation -FilePath $SignToolPathFinal -XmlFilePath $PolicyPath -BooleanOutput)) {
+                        if (-NOT (Invoke-WDACSimulation -FilePath $SignToolPathFinal -XmlFilePath $PolicyPath -BooleanOutput -NoCatalogScanning)) {
 
                             Write-Verbose -Message 'The policy type is base policy and it applies to user mode files, yet the policy prevents SignTool.exe from executing. As a precautionary measure, scanning and including the SignTool.exe in the policy before deployment so you can modify/remove the signed policy later from the system.'
 

@@ -2,6 +2,15 @@
 The module uses tight import/export control, no internal function is exposed on the console/to the user.
 The $PSDefaultParameterValues located in "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1" is imported via dot-sourcing to the current session of each main cmdlet/internal function that calls any (other) internal function or uses any of the cmdlets defined in that file, prior to everything else.
 At the beginning of each main cmdlet, 2 custom $Verbose and/or $Debug variables are defined which help to take actions based on Verbose/Debug preferences and also pass the $VerbosePreference and $DebugPreference to the subsequent sub-functions/modules being called from the main cmdlets.
+
+E.g.,
+
+this captures the $Debug preference from the command line:
+[System.Boolean]$Debug = $PSBoundParameters.Debug.IsPresent ? $true : $false
+
+Then in the PSDefaultParameterValues.ps1 file, there is 'Do-Something:Debug' = $Debug
+
+So that essentially means any instance of 'Do-Something' cmdlet in the code is actually 'Do-Something -Debug:$Debug'
 #>
 
 # Stopping the module process if any error occurs
@@ -47,13 +56,12 @@ put in the preloader script so it only runs once in the runspace.
 No output is shown whatsoever (warning, error etc.)
 Any subsequent attempts to run New-CiPolicy cmdlet will work normally without any errors or warnings.
 The path I chose exists in Windows by default, and it contains very few PEs, something that is required for that error to be produced.
-Test-Path is used for more resiliency.
 -PathToCatroot is used and set to the same path as -ScanPath, this combination causes the operation to gracefully end prematurely.
 The XML file is never created.
 XML file is created but then immediately deleted. Its file name is random to minimize name collisions.
 #>
 
-if (Test-Path -LiteralPath 'C:\Program Files\Windows Defender\Offline' -PathType Container) {
+if ([System.IO.Directory]::Exists('C:\Program Files\Windows Defender\Offline')) {
     [System.String]$RandomGUID = [System.Guid]::NewGuid().ToString()
     New-CIPolicy -UserPEs -ScanPath 'C:\Program Files\Windows Defender\Offline' -Level hash -FilePath ".\$RandomGUID.xml" -NoShadowCopy -PathToCatroot 'C:\Program Files\Windows Defender\Offline' -WarningAction SilentlyContinue
     Remove-Item -LiteralPath ".\$RandomGUID.xml" -Force

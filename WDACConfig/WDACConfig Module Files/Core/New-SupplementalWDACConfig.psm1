@@ -19,7 +19,7 @@ Function New-SupplementalWDACConfig {
         [parameter(Mandatory = $true, ParameterSetName = 'Installed AppXPackages', ValueFromPipelineByPropertyName = $true)]
         [System.String]$PackageName,
 
-        [ValidateScript({ Test-Path -Path $_ -PathType 'Container' }, ErrorMessage = 'The path you selected is not a folder path.')]
+        [ValidateScript({ [System.IO.Directory]::Exists($_) }, ErrorMessage = 'The path you selected is not a folder path.')]
         [parameter(Mandatory = $true, ParameterSetName = 'Normal', ValueFromPipelineByPropertyName = $true)]
         [System.IO.DirectoryInfo]$ScanLocation,
 
@@ -27,7 +27,7 @@ Function New-SupplementalWDACConfig {
         [parameter(Mandatory = $true, ParameterSetName = 'Folder Path With WildCards', ValueFromPipelineByPropertyName = $true)]
         [System.IO.DirectoryInfo]$FolderPath,
 
-        [ValidateScript({ Test-Path -Path $_ -PathType 'Leaf' }, ErrorMessage = 'The path you selected is not a file path.')]
+        [ValidateScript({ [System.IO.File]::Exists($_) }, ErrorMessage = 'The path you selected is not a file path.')]
         [parameter(Mandatory = $true, ParameterSetName = 'Certificate', ValueFromPipelineByPropertyName = $true)]
         [System.IO.FileInfo[]]$CertificatePaths,
 
@@ -98,7 +98,7 @@ Function New-SupplementalWDACConfig {
         #Region User-Configurations-Processing-Validation
         # If PolicyPath was not provided by user, check if a valid value exists in user configs, if so, use it, otherwise throw an error
         if (!$PolicyPath) {
-            if (Test-Path -Path (Get-CommonWDACConfig -UnsignedPolicyPath)) {
+            if ([System.IO.File]::Exists((Get-CommonWDACConfig -UnsignedPolicyPath))) {
                 $PolicyPath = Get-CommonWDACConfig -UnsignedPolicyPath
             }
             else {
@@ -137,8 +137,8 @@ Function New-SupplementalWDACConfig {
             if ($PSBoundParameters['Normal']) {
 
                 # The total number of the main steps for the progress bar to render
-                [System.Int16]$TotalSteps = $Deploy ? 3 : 2
-                [System.Int16]$CurrentStep = 0
+                $TotalSteps = $Deploy ? 3us : 2us
+                $CurrentStep = 0us
 
                 $CurrentStep++
                 Write-Progress -Id 19 -Activity 'Processing user selected folders' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
@@ -194,8 +194,8 @@ Function New-SupplementalWDACConfig {
             if ($PSBoundParameters['PathWildCards']) {
 
                 # The total number of the main steps for the progress bar to render
-                [System.Int16]$TotalSteps = $Deploy ? 2 : 1
-                [System.Int16]$CurrentStep = 0
+                $TotalSteps = $Deploy ? 2us : 1us
+                $CurrentStep = 0us
 
                 $CurrentStep++
                 Write-Progress -Id 20 -Activity 'Creating the Supplemental policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
@@ -232,8 +232,8 @@ Function New-SupplementalWDACConfig {
             if ($PSBoundParameters['InstalledAppXPackages']) {
                 try {
                     # The total number of the main steps for the progress bar to render
-                    [System.Int16]$TotalSteps = $Deploy ? 3 : 2
-                    [System.Int16]$CurrentStep = 0
+                    $TotalSteps = $Deploy ? 3us : 2us
+                    $CurrentStep = 0us
 
                     $CurrentStep++
                     Write-Progress -Id 21 -Activity 'Getting the Appx package' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
@@ -318,8 +318,8 @@ Function New-SupplementalWDACConfig {
             if ($PSBoundParameters['Certificates']) {
 
                 # The total number of the main steps for the progress bar to render
-                [System.Int16]$TotalSteps = $Deploy ? 5 : 4
-                [System.Int16]$CurrentStep = 0
+                $TotalSteps = $Deploy ? 5us : 4us
+                $CurrentStep = 0us
 
                 $CurrentStep++
                 Write-Progress -Id 33 -Activity 'Preparing the policy template' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)

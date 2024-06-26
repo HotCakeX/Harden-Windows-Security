@@ -27,8 +27,9 @@ Function Test-ECCSignedFiles {
     The OID of the ECC algorithm for public keys is '1.2.840.10045.2.1'
 #>
     Param (
-        [ValidateScript({ Test-Path -LiteralPath $_ -PathType Container })]
+        [ValidateScript({ [System.IO.Directory]::Exists($_) })]
         [Parameter(Mandatory = $false)][System.IO.DirectoryInfo[]]$Directory,
+
         [Parameter(Mandatory = $false)][System.IO.FileInfo[]]$File,
 
         [Parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$Process,

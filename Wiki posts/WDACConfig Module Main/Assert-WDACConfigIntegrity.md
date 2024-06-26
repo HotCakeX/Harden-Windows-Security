@@ -7,7 +7,7 @@
 ```powershell
 Assert-WDACConfigIntegrity
     [-SaveLocally]
-    [-Path <FileInfo>]
+    [-Path <DirectoryInfo>]
     [-SkipVersionCheck]
     [<CommonParameters>]
 ```
@@ -48,7 +48,7 @@ Can define a different path for the `Hashes.csv` file. This parameter shouldn't 
 
 <div align='center'>
 
-| Type: |[FileInfo](https://learn.microsoft.com/en-us/dotnet/api/system.io.fileinfo)|
+| Type: |[DirectoryInfo](https://learn.microsoft.com/en-us/dotnet/api/system.io.directoryinfo)|
 | :-------------: | :-------------: |
 | Position: | Named |
 | Default value: | Module's Root Directory |

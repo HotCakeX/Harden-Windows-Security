@@ -24,9 +24,9 @@ Function Get-KernelModeDrivers {
     [CmdletBinding()]
     [OutputType([System.String[]])]
     Param (
-        [ValidateScript({ Test-Path -Path $_ -PathType 'Container' })]
+        [ValidateScript({ [System.IO.Directory]::Exists($_) })]
         [Parameter(Mandatory = $False)][System.IO.DirectoryInfo[]]$Directory,
-        [ValidateScript({ Test-Path -Path $_ -PathType 'Leaf' })]
+        [ValidateScript({ [System.IO.File]::Exists($_) })]
         [Parameter(Mandatory = $False)][System.IO.FileInfo[]]$File
     )
     Begin {

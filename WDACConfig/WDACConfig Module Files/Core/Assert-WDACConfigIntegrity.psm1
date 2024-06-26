@@ -10,8 +10,8 @@ Function Assert-WDACConfigIntegrity {
 
         [Alias('P')]
         [Parameter(Mandatory = $false, ParameterSetName = 'SaveLocally')]
-        [ValidateScript({ Test-Path -Path $_ -PathType 'Container' })]
-        [System.IO.FileInfo]$Path = "$ModuleRootPath\..\Utilities\",
+        [ValidateScript({ [System.IO.Directory]::Exists($_) })]
+        [System.IO.DirectoryInfo]$Path = "$ModuleRootPath\..\Utilities\",
 
         [Parameter(Mandatory = $false)]
         [System.Management.Automation.SwitchParameter]$SkipVersionCheck
@@ -103,7 +103,7 @@ Function Assert-WDACConfigIntegrity {
         }
 
         if ($SaveLocally) {
-            Write-Verbose -Message "Saving the results to a CSV file in $($Path.FullName)"
+            Write-Verbose -Message "Saving the results to a CSV file in $((Join-Path -Path $Path -ChildPath $OutputFileName))"
             $FinalOutput | Export-Csv -Path (Join-Path -Path $Path -ChildPath $OutputFileName) -Force
         }
     }
@@ -144,7 +144,7 @@ Function Assert-WDACConfigIntegrity {
     Indicates that the function should display verbose messages.
 .INPUTS
     System.Management.Automation.SwitchParameter
-    System.IO.FileInfo
+    System.IO.DirectoryInfo
 .OUTPUTS
     System.String
     System.Object[]

@@ -130,7 +130,7 @@ Function Edit-WDACConfig {
         if ($PSCmdlet.ParameterSetName -in 'AllowNewApps', 'MergeSupplementalPolicies') {
             # If PolicyPath was not provided by user, check if a valid value exists in user configs, if so, use it, otherwise throw an error
             if (!$PolicyPath) {
-                if (Test-Path -Path (Get-CommonWDACConfig -UnsignedPolicyPath)) {
+                if ([System.IO.File]::Exists((Get-CommonWDACConfig -UnsignedPolicyPath))) {
                     $PolicyPath = Get-CommonWDACConfig -UnsignedPolicyPath
                 }
                 else {
@@ -293,7 +293,7 @@ Function Edit-WDACConfig {
 
                     [System.Management.Automation.Job2]$DirectoryScanJob = Start-ThreadJob -InitializationScript {
                         # pre-load the ConfigCI module
-                        if (Test-Path -LiteralPath 'C:\Program Files\Windows Defender\Offline' -PathType Container) {
+                        if ([System.IO.Directory]::Exists('C:\Program Files\Windows Defender\Offline')) {
                             [System.String]$RandomGUID = [System.Guid]::NewGuid().ToString()
                             New-CIPolicy -UserPEs -ScanPath 'C:\Program Files\Windows Defender\Offline' -Level hash -FilePath ".\$RandomGUID.xml" -NoShadowCopy -PathToCatroot 'C:\Program Files\Windows Defender\Offline' -WarningAction SilentlyContinue
                             Remove-Item -LiteralPath ".\$RandomGUID.xml" -Force

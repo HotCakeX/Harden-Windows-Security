@@ -5,7 +5,7 @@ Function Test-CiPolicy {
         [Parameter(Mandatory = $true, ValueFromPipeline = $true, ParameterSetName = 'XML File')]
         [System.IO.FileInfo]$XmlFile,
 
-        [ValidateScript({ Test-Path -LiteralPath $_ -PathType 'Leaf' })]
+        [ValidateScript({ [System.IO.File]::Exists($_) })]
         [Parameter(Mandatory = $true, ValueFromPipeline = $true, ParameterSetName = 'CIP File')]
         [System.IO.FileInfo]$CipFile
     )
@@ -20,12 +20,12 @@ Function Test-CiPolicy {
         if ($PSCmdlet.ParameterSetName -eq 'XML File' -and $PSBoundParameters.ContainsKey('XmlFile')) {
 
             # Check if the schema file exists in the system drive
-            if (-NOT (Test-Path -LiteralPath $CISchemaPath)) {
+            if (-NOT ([System.IO.File]::Exists($CISchemaPath))) {
                 Throw "The Code Integrity Schema file could not be found at: $CISchemaPath"
             }
 
             # Check if the XML file exists - performing this check here instead of ValidateScript of the parameter produces a better error message when this function is called from within other main cmdlets' parameters.
-            if (-NOT (Test-Path -LiteralPath $XmlFile -PathType 'Leaf')) {
+            if (-NOT ([System.IO.File]::Exists($XmlFile))) {
                 Throw "The file $XmlFile does not exist."
             }
 

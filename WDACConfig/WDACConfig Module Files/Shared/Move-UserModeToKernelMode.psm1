@@ -14,7 +14,7 @@ Function Move-UserModeToKernelMode {
     [OutputType([System.Void])]
     param(
         [Parameter(Mandatory = $true)]
-        [ValidateScript({ Test-Path -Path $_ -PathType Leaf })]
+        [ValidateScript({ [System.IO.File]::Exists($_) })]
         [System.String]$FilePath
     )
     . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"

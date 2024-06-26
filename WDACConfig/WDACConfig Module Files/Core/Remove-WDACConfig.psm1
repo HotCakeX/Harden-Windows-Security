@@ -247,8 +247,8 @@ Function Remove-WDACConfig {
                 foreach ($PolicyPath in $PolicyPaths) {
 
                     # The total number of the main steps for the progress bar to render
-                    [System.Int16]$TotalSteps = 3
-                    [System.Int16]$CurrentStep = 0
+                    $TotalSteps = 3us
+                    $CurrentStep = 0us
 
                     $CurrentStep++
                     Write-Progress -Id 18 -Activity 'Parsing the XML Policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)

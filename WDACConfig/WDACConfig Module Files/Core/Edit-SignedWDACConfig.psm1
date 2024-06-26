@@ -75,7 +75,7 @@ Function Edit-SignedWDACConfig {
         [System.String]$NewBasePolicyType,
 
         [ValidatePattern('\.cer$')]
-        [ValidateScript({ Test-Path -LiteralPath $_ -PathType 'Leaf' }, ErrorMessage = 'The path you selected is not a file path.')]
+        [ValidateScript({ [System.IO.File]::Exists($_) }, ErrorMessage = 'The path you selected is not a file path.')]
         [Parameter(Mandatory = $false, ValueFromPipelineByPropertyName = $true)]
         [System.IO.FileInfo]$CertPath,
 
@@ -153,7 +153,7 @@ Function Edit-SignedWDACConfig {
 
         # If CertPath parameter wasn't provided by user, check if a valid value exists in user configs, if so, use it, otherwise throw an error
         if (!$CertPath ) {
-            if (Test-Path -Path (Get-CommonWDACConfig -CertPath)) {
+            if ([System.IO.File]::Exists((Get-CommonWDACConfig -CertPath))) {
                 [System.IO.FileInfo]$CertPath = Get-CommonWDACConfig -CertPath
             }
             else {
@@ -175,7 +175,7 @@ Function Edit-SignedWDACConfig {
         if ($PSCmdlet.ParameterSetName -in 'AllowNewApps', 'MergeSupplementalPolicies') {
             # If PolicyPath was not provided by user, check if a valid value exists in user configs, if so, use it, otherwise throw an error
             if (!$PolicyPath) {
-                if (Test-Path -Path (Get-CommonWDACConfig -SignedPolicyPath)) {
+                if ([System.IO.File]::Exists((Get-CommonWDACConfig -SignedPolicyPath))) {
                     $PolicyPath = Get-CommonWDACConfig -SignedPolicyPath
                 }
                 else {
@@ -350,7 +350,7 @@ Function Edit-SignedWDACConfig {
 
                     $DirectoryScanJob = Start-ThreadJob -InitializationScript {
                         # pre-load the ConfigCI module
-                        if (Test-Path -LiteralPath 'C:\Program Files\Windows Defender\Offline' -PathType Container) {
+                        if ([System.IO.Directory]::Exists('C:\Program Files\Windows Defender\Offline')) {
                             [System.String]$RandomGUID = [System.Guid]::NewGuid().ToString()
                             New-CIPolicy -UserPEs -ScanPath 'C:\Program Files\Windows Defender\Offline' -Level hash -FilePath ".\$RandomGUID.xml" -NoShadowCopy -PathToCatroot 'C:\Program Files\Windows Defender\Offline' -WarningAction SilentlyContinue
                             Remove-Item -LiteralPath ".\$RandomGUID.xml" -Force

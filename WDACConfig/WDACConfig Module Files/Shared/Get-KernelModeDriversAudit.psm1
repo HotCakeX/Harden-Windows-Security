@@ -39,12 +39,18 @@ Function Get-KernelModeDriversAudit {
         [System.IO.FileInfo[]]$KernelModeDriversPaths = $RawData.'File Name'
 
         Write-Verbose -Message 'Filtering based on files that exist with .sys and .dll extensions'
-        $KernelModeDriversPaths = $KernelModeDriversPaths | Where-Object -FilterScript { ($_.Extension -in ('.sys', '.dll')) -and ($_.Exists) }
+        $KernelModeDriversPaths = foreach ($Item in $KernelModeDriversPaths) {
+            if (($Item.Extension -in ('.sys', '.dll')) -and $Item.Exists) {
+                $Item
+            }
+        }
 
         Write-Verbose -Message "KernelModeDriversPaths count after filtering based on files that exist with .sys and .dll extensions: $($KernelModeDriversPaths.count)"
 
         Write-Verbose -Message 'Removing duplicates based on file path'
-        $KernelModeDriversPaths = $KernelModeDriversPaths | Group-Object -Property 'FullName' | ForEach-Object -Process { $_.Group[0] }
+        $KernelModeDriversPaths = foreach ($Item in ($KernelModeDriversPaths | Group-Object -Property 'FullName')) {
+            $Item.Group[0]
+        }
 
         Write-Verbose -Message "KernelModeDriversPaths count after deduplication based on file path: $($KernelModeDriversPaths.count)"
 

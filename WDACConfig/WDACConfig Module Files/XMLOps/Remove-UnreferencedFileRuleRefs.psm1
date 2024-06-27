@@ -27,7 +27,9 @@ function Remove-UnreferencedFileRuleRefs {
         $NsManager.AddNamespace('def', 'urn:schemas-microsoft-com:sipolicy')
 
         # Find all Allow elements and store their IDs
-        $AllowedIds = $XmlContent.SelectNodes('//def:Allow', $NsManager) | ForEach-Object -Process { $_.ID }
+        $AllowedIds = foreach ($Item in ($XmlContent.SelectNodes('//def:Allow', $NsManager))) {
+            $Item.ID
+        }
 
         # Find all FileRuleRef elements
         $fileRuleRefs = $XmlContent.SelectNodes('//def:FileRuleRef', $NsManager)

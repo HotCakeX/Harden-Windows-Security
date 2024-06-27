@@ -110,7 +110,10 @@ function Remove-DuplicateFileAttrib_Semantic {
                 $SignerIDs = $FileAttribSignerHash[$Key] | Select-Object -Unique
 
                 # Get the unique SigningScenario IDs associated with the Signer IDs
-                $ScenarioIDs = $SignerIDs | ForEach-Object -Process { $SignerScenarioHash[$_] } | Select-Object -Unique
+                $ScenarioIDs = foreach ($ID in $SignerIDs) {
+                    $SignerScenarioHash[$ID]
+                }
+                $ScenarioIDs = $ScenarioIDs | Select-Object -Unique
 
                 # If there are multiple unique SigningScenario IDs associated with this set of Signer IDs
                 if ($ScenarioIDs.Count -gt 1) {
@@ -128,10 +131,10 @@ function Remove-DuplicateFileAttrib_Semantic {
                         $FileAttribToRemove = $FileAttribHash[$Key][$i]
 
                         # Update FileAttribRef RuleID for associated Signers
-                        $SignerIDs | ForEach-Object -Process {
+                        foreach ($Item in $SignerIDs) {
 
                             # Get the Signer element associated with this Signer ID
-                            $Signer = $XmlDoc.SelectSingleNode("//ns:Signer[@ID='$_']", $NsMgr)
+                            $Signer = $XmlDoc.SelectSingleNode("//ns:Signer[@ID='$Item']", $NsMgr)
 
                             # Get the FileAttribRef element associated with the duplicate FileAttrib element
                             $FileAttribRef = $Signer.SelectSingleNode("ns:FileAttribRef[@RuleID='$($FileAttribToRemove.GetAttribute('ID'))']", $NsMgr)
@@ -140,7 +143,6 @@ function Remove-DuplicateFileAttrib_Semantic {
                             if ($Null -ne $FileAttribRef) {
 
                                 if ($FirstFileAttrib.GetAttribute('ID') -notin $Signer.FileAttribRef.RuleID) {
-
 
                                     $FileAttribRef.SetAttribute('RuleID', $FirstFileAttrib.GetAttribute('ID'))
                                 }

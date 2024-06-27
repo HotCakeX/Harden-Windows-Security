@@ -26,7 +26,9 @@ Function Remove-OrphanAllowedSignersAndCiSigners_IDBased {
         $NsManager.AddNamespace('ns', 'urn:schemas-microsoft-com:sipolicy')
 
         # Get the list of valid signer IDs from the Signers node
-        [System.String[]]$ValidSignerIds = $Xml.SelectNodes('//ns:Signers/ns:Signer', $NsManager) | ForEach-Object -Process { $_.ID }
+        [System.String[]]$ValidSignerIds = foreach ($Item in ($Xml.SelectNodes('//ns:Signers/ns:Signer', $NsManager))) {
+            $Item.ID
+        }
 
         Function Remove-InvalidSignerIds {
             <#

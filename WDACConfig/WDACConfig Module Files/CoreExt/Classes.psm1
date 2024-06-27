@@ -14,8 +14,15 @@ Class ScanLevelz : System.Management.Automation.IValidateSetValuesGenerator {
 [NoRunspaceAffinity()]
 Class BasePolicyNamez : System.Management.Automation.IValidateSetValuesGenerator {
     [System.String[]] GetValidValues() {
-        $BasePolicyNamez = ((&'C:\Windows\System32\CiTool.exe' -lp -json | ConvertFrom-Json).Policies | Where-Object -FilterScript { $_.IsSystemPolicy -ne 'True' } | Where-Object -FilterScript { $_.PolicyID -eq $_.BasePolicyID }).Friendlyname
-        return [System.String[]]$BasePolicyNamez
+
+        [System.String[]]$BasePolicyNamez = foreach ($Policy in (&'C:\Windows\System32\CiTool.exe' -lp -json | ConvertFrom-Json).Policies) {
+            if ($Policy.IsSystemPolicy -ne 'True') {
+                if ($Policy.PolicyID -eq $Policy.BasePolicyID) {
+                    $Policy.FriendlyName
+                }
+            }
+        }
+        return $BasePolicyNamez
     }
 }
 
@@ -23,23 +30,26 @@ Class BasePolicyNamez : System.Management.Automation.IValidateSetValuesGenerator
 [NoRunspaceAffinity()]
 Class CertCNz : System.Management.Automation.IValidateSetValuesGenerator {
     [System.String[]] GetValidValues() {
-        # Cannot define the custom type 'WDACConfig.CryptoAPI' since we're in a class definition and it does not support it, hence using Add-Type with -PassThru
-        $CryptoAPI = Add-Type -Path "$global:ModuleRootPath\C#\Functions\Crypt32CertCN.cs" -PassThru
 
-        [System.String[]]$Output = @()
+        $Output = [System.Collections.Generic.HashSet[System.String]]@()
 
-        # Loop through each certificate that uses RSA algorithm (Because ECDSA is not supported for signing WDAC policies) in the current user's personal store and extract the relevant properties
-        foreach ($Cert in (Get-ChildItem -Path 'Cert:\CurrentUser\My' | Where-Object -FilterScript { $_.PublicKey.Oid.FriendlyName -eq 'RSA' })) {
+        # Loop through each certificate in the current user's personal store
+        foreach ($Cert in (Get-ChildItem -Path 'Cert:\CurrentUser\My')) {
 
-            $CN = $CryptoAPI::GetNameString($Cert.Handle, $CryptoAPI::CERT_NAME_SIMPLE_DISPLAY_TYPE, $null, $false)
+            # Make sure it uses RSA algorithm (Because ECDSA is not supported for signing WDAC policies)
+            if ($Cert.PublicKey.Oid.FriendlyName -eq 'RSA') {
 
-            if ($CN -in $Output) {
-                Write-Warning -Message "There are more than 1 certificates with the common name '$CN' in the Personal certificate store of the Current User, delete one of them if you want to use it."
+                # Get its Subject Common Name (CN)
+                $CN = [WDACConfig.CryptoAPI]::GetNameString($Cert.Handle, [WDACConfig.CryptoAPI]::CERT_NAME_SIMPLE_DISPLAY_TYPE, $null, $false)
+
+                # Add the CN to the output set and warn if there is already CN with the same name in the HashSet
+                if (!$Output.Add($CN)) {
+                    Write-Warning -Message "There are more than 1 certificates with the common name '$CN' in the Personal certificate store of the Current User, delete one of them if you want to use it."
+                }
             }
-            $Output += $CN
         }
         # The ValidateSet attribute expects a unique set of values, and it will throw an error if there are duplicates
-        Return ($Output | Select-Object -Unique)
+        Return $Output
     }
 }
 

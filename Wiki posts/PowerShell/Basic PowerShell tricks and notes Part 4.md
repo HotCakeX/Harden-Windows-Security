@@ -261,3 +261,57 @@ $csharpClassTime = Measure-Command {
 ```
 
 <br>
+
+## For Performance Reasons Avoid Using The Following Operators And Cmdlets For Loops
+
+* `+=` operator
+* `Where-Object` cmdlet
+* `ForEach-Object` cmdlet
+
+**Instead, use `Foreach` loop with Direct Assignment. It's a language construct, it's always faster than the cmdlets and has less overhead.**
+
+Here is a small benchmark you can run to see the difference in timing
+
+```powershell
+# Define your collection
+$Y = 1..10000
+
+# First script
+$firstScript = {
+    $array = foreach ($X in $Y) {
+        $X
+    }
+}
+
+# Second script
+$secondScript = {
+    $array = @()
+    foreach ($X in $Y) {
+        $array += $X
+    }
+}
+
+# Third script
+$thirdScript = {
+    $array = New-Object -TypeName 'System.Collections.Generic.List[psobject]'
+    foreach ($X in $Y) {
+        $array.Add($X)
+    }
+}
+
+# Measure the time taken by the first script
+$firstScriptTime = Measure-Command -Expression $firstScript
+
+# Measure the time taken by the second script
+$secondScriptTime = Measure-Command -Expression $secondScript
+
+# Measure the time taken by the third script
+$thirdScriptTime = Measure-Command -Expression $thirdScript
+
+# Output the results
+"First script execution time: $($firstScriptTime.TotalMilliseconds) ms"
+"Second script execution time: $($secondScriptTime.TotalMilliseconds) ms"
+"Third script execution time: $($thirdScriptTime.TotalMilliseconds) ms"
+```
+
+<br>

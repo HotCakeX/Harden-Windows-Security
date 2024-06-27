@@ -188,8 +188,8 @@ Function Get-SignerInfo {
                 [System.Collections.Hashtable]$EKUAndValuesCorrelation = @{}
 
                 # Add the EKU IDs and their values to the hashtable
-                $XML.SiPolicy.EKUs.EKU | ForEach-Object -Process {
-                    $EKUAndValuesCorrelation.Add($_.ID, $_.Value)
+                foreach ($EKUItem in $XML.SiPolicy.EKUs.EKU) {
+                    $EKUAndValuesCorrelation.Add($EKUItem.ID, $EKUItem.Value)
                 }
             }
 

@@ -87,13 +87,19 @@ Function Build-WDACCertificate {
         }
 
         Write-Verbose -Message 'Checking if a certificate with the same common name already exists.'
-        [System.Security.Cryptography.X509Certificates.X509Certificate2[]]$DuplicateCerts = Get-ChildItem -Path 'Cert:\CurrentUser\My' -CodeSigningCert | Where-Object -FilterScript { $_.Subject -eq "CN=$CommonName" }
+        [System.Security.Cryptography.X509Certificates.X509Certificate2[]]$DuplicateCerts = foreach ($Item in (Get-ChildItem -Path 'Cert:\CurrentUser\My' -CodeSigningCert)) {
+            if ($Item.Subject -ieq "CN=$CommonName") {
+                $Item
+            }
+        }
+
         if ($DuplicateCerts.Count -gt 0 ) {
             if ($Force -or $PSCmdlet.ShouldContinue('Remove all of them and continue with creating a new certificate?', "$($DuplicateCerts.Count) certificate(s) with the common name '$CommonName' already exist on the system.")) {
 
-                $DuplicateCerts | ForEach-Object -Process {
-                    $_ | Remove-Item -Force
+                foreach ($Cert in $DuplicateCerts) {
+                    $Cert | Remove-Item -Force
                 }
+
             }
             else {
                 Throw [System.Data.DuplicateNameException] 'A certificate with the same common name already exists on the system. Please remove it or choose another common name and try again.'
@@ -104,7 +110,7 @@ Function Build-WDACCertificate {
 
         Try {
 
-            if ($BuildingMethod -eq 'Method1') {
+            if ($BuildingMethod -ieq 'Method1') {
 
                 Write-Verbose -Message 'Building the certificate using Method1.'
 
@@ -145,7 +151,9 @@ ValidityPeriod = Years
                 #Region parse-certificate-request-output
 
                 # Split the output by newlines and trim the whitespace
-                [System.String[]]$Lines = $CertReqOutput -split "`n" | ForEach-Object -Process { $_.Trim() }
+                [System.String[]]$Lines = foreach ($Line in $CertReqOutput -split "`n") {
+                    $Line.Trim()
+                }
 
                 # Create a hashtable to store the parsed properties
                 [System.Collections.Hashtable]$Properties = @{}
@@ -153,13 +161,16 @@ ValidityPeriod = Years
                 # Loop through the lines and extract the key-value pairs
                 foreach ($Line in $Lines) {
                     # Skip the first line
-                    if ($Line -eq 'Installed Certificate:') {
+                    if ($Line -ieq 'Installed Certificate:') {
                         continue
                     }
                     # Check if the line has a colon
                     if ($Line -match ':') {
                         # Split the line by colon with a limit of 2 and trim the whitespace
-                        [System.String[]]$Parts = $Line -split ':', 2 | ForEach-Object -Process { $_.Trim() }
+                        [System.String[]]$Parts = foreach ($Item in ($Line -split ':', 2)) {
+                            $Item.Trim()
+                        }
+
                         # Assign the first part as the key and the second part as the value
                         [System.String]$Key = $Parts[0]
                         [System.String]$Value = $Parts[1]
@@ -202,7 +213,11 @@ ValidityPeriod = Years
             }
 
             Write-Verbose -Message 'Finding the certificate that was just created by its thumbprint'
-            [System.Security.Cryptography.X509Certificates.X509Certificate2]$TheCert = Get-ChildItem -Path 'Cert:\CurrentUser\My' -CodeSigningCert | Where-Object -FilterScript { $_.Thumbprint -eq $NewCertificateThumbprint }
+            [System.Security.Cryptography.X509Certificates.X509Certificate2]$TheCert = foreach ($Cert in (Get-ChildItem -Path 'Cert:\CurrentUser\My' -CodeSigningCert)) {
+                if ($Cert.Thumbprint -eq $NewCertificateThumbprint) {
+                    $Cert
+                }
+            }
 
             [System.IO.FileInfo]$CertificateOutputPath = Join-Path -Path $UserConfigDir -ChildPath "$FileName.cer"
 
@@ -219,10 +234,10 @@ ValidityPeriod = Years
             Import-PfxCertificate -ProtectPrivateKey 'VSM' -FilePath (Join-Path -Path $UserConfigDir -ChildPath "$FileName.pfx") -CertStoreLocation 'Cert:\CurrentUser\My' -Password $Password | Out-Null
 
             Write-Verbose -Message 'Saving the common name of the certificate to the User configurations'
-            Set-CommonWDACConfig -CertCN $CommonName | Out-Null
+            $null = Set-CommonWDACConfig -CertCN $CommonName
 
             Write-Verbose -Message 'Saving the path of the .cer file of the certificate to the User configurations'
-            Set-CommonWDACConfig -CertPath $CertificateOutputPath | Out-Null
+            $null = Set-CommonWDACConfig -CertPath $CertificateOutputPath
         }
         Finally {
             Remove-Item -LiteralPath $StagingArea -Recurse -Force

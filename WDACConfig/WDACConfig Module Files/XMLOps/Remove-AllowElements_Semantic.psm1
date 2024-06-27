@@ -78,8 +78,13 @@ function Remove-AllowElements_Semantic {
         }
 
         # Grouping the <Allow> elements by their Hash value, uniquely, So SHA1 and SHA256 hashes
-        [System.Xml.XmlElement[]]$GroupsUserModes = $ArrayOfUserModes | Group-Object -Property Hash | ForEach-Object -Process { $_.Group[0] }
-        [System.Xml.XmlElement[]]$GroupsKernelModes = $ArrayOfKernelModes | Group-Object -Property Hash | ForEach-Object -Process { $_.Group[0] }
+        [System.Xml.XmlElement[]]$GroupsUserModes = foreach ($Item in ($ArrayOfUserModes | Group-Object -Property Hash)) {
+            $Item.Group[0]
+        }
+
+        [System.Xml.XmlElement[]]$GroupsKernelModes = foreach ($Item in ($ArrayOfKernelModes | Group-Object -Property Hash)) {
+            $Item.Group[0]
+        }
 
         # Adding the User-Mode <Allow> elements and their corresponding <FileRuleRef> elements to the Hashtables
         foreach ($UserModeAllowElement in $GroupsUserModes) {

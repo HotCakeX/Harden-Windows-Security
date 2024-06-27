@@ -27,12 +27,13 @@ Function Compare-SignerAndCertificate {
 
     Process {
 
-        $EligibleAllowedSigners = $SimulationInput.SignerInfo.Where({ $_.IsAllowed -eq $true })
+        # Loop through each signer in the signer information array, these are the signers in the XML policy file
+        foreach ($Signer in $SimulationInput.SignerInfo) {
 
-        #  Write-Debug -Message "The number of allowed signers in the XML policy file: $($EligibleAllowedSigners.count)"
-
-        # Loop through each Allowed signer in the signer information array, these are the signers in the XML policy file
-        foreach ($Signer in $EligibleAllowedSigners) {
+            # Make sure it's an allowed signer and not a denier
+            if ($Signer.IsAllowed -ne $true) {
+                continue
+            }
 
             # Write-Debug -Message "Checking the signer: $($Signer.Name)"
 

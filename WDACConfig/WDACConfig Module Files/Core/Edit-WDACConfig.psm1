@@ -34,7 +34,11 @@ Function Edit-WDACConfig {
 
                 # Get the currently deployed policy IDs
                 Try {
-                    [System.Guid[]]$CurrentPolicyIDs = ((&'C:\Windows\System32\CiTool.exe' -lp -json | ConvertFrom-Json).Policies | Where-Object -FilterScript { $_.IsSystemPolicy -ne 'True' }).policyID | ForEach-Object -Process { "{$_}" }
+                    [System.Guid[]]$CurrentPolicyIDs = foreach ($Policy in (&'C:\Windows\System32\CiTool.exe' -lp -json | ConvertFrom-Json).Policies) {
+                        if ( $Policy.IsSystemPolicy -ne 'True') {
+                            "{$($Policy.policyID)}"
+                        }
+                    }
                 }
                 catch {
                     Throw 'No policy is deployed on the system.'
@@ -267,7 +271,9 @@ Function Edit-WDACConfig {
                 if ($ProgramsPaths) {
                     Write-Verbose -Message 'Here are the paths you selected:'
                     if ($Verbose) {
-                        $ProgramsPaths | ForEach-Object -Process { $_.FullName }
+                        foreach ($Path in $ProgramsPaths) {
+                            $Path.FullName
+                        }
                     }
 
                     $HasFolderPaths = $true

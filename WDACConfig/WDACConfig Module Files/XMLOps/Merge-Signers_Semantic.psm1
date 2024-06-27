@@ -70,7 +70,7 @@ Function Merge-Signers_Semantic {
         # Find all of the <FileAttrib> elements in the <FileRules> node
         [System.Xml.XmlNodeList]$FileRulesElements = $Xml.SelectNodes('//ns:FileRules/ns:FileAttrib', $Ns)
 
-        $FileRulesValidID_HashSet = [System.Collections.Generic.HashSet[System.String]]$FileRulesElements.ID
+        $FileRulesValidID_HashSet = [System.Collections.Generic.HashSet[System.String]]@($FileRulesElements.ID)
 
         if ($SignerNodes.Count -eq 0) {
             Write-Verbose -Message 'Merge-Signers: No Signer nodes found in the XML file. Exiting the function.'
@@ -84,18 +84,26 @@ Function Merge-Signers_Semantic {
             if ($Signer.SelectNodes('ns:FileAttribRef', $Ns).Count -gt 0) {
 
                 # Making sure that each FilePublisher Signer has valid and unique FileAttribRef elements with IDs that point to an existing FileAttrib element in the <FileRules> node
-                $ContentToReplaceWith = $Signer.FileAttribRef | Where-Object -FilterScript { $FileRulesValidID_HashSet -contains $_.RuleID } | Group-Object -Property RuleID | ForEach-Object -Process { $_.Group[0] }
+                $Collection1 = New-Object -TypeName 'System.Collections.Generic.List[System.Xml.XmlNode]'
+                foreach ($Item in $Signer.FileAttribRef) {
+                    if ($FileRulesValidID_HashSet.Contains($Item.RuleID)) {
+                        $Collection1.Add($Item)
+                    }
+                }
+                $ContentToReplaceWith = foreach ($Item in ($Collection1 | Group-Object -Property RuleID)) {
+                    $Item.Group[0]
+                }
 
                 [System.Int64]$Before = $Signer.FileAttribRef.count
 
                 # Remove all FileAttribRef elements from the Signer, whether they are valid or not
-                $Signer.FileAttribRef | ForEach-Object -Process {
-                    [System.Void]$_.ParentNode.RemoveChild($_)
+                foreach ($Item in $Signer.FileAttribRef) {
+                    [System.Void]$Item.ParentNode.RemoveChild($Item)
                 }
 
                 # Add the valid FileAttribRef elements back to the Signer
-                $ContentToReplaceWith | ForEach-Object -Process {
-                    [System.Void]$Signer.AppendChild($Xml.ImportNode($_, $true))
+                foreach ($Item in $ContentToReplaceWith) {
+                    [System.Void]$Signer.AppendChild($Xml.ImportNode($Item, $true))
                 }
 
                 [System.Int64]$After = $Signer.FileAttribRef.count
@@ -234,75 +242,75 @@ Function Merge-Signers_Semantic {
             }
         }
 
-        $UniqueFilePublisherSigners12.Values | ForEach-Object -Process {
+        foreach ($Item in $UniqueFilePublisherSigners12.Values) {
 
             # Create a unique ID for each signer
             [System.String]$Guid = [System.Guid]::NewGuid().ToString().replace('-', '').ToUpper()
             $Guid = "ID_SIGNER_A_$Guid"
 
             # Set the ID attribute of the Signer node to the unique ID
-            foreach ($Signer in $_['Signer']) {
+            foreach ($Signer in $Item['Signer']) {
                 $Signer.SetAttribute('ID', $Guid)
             }
             # Set the SignerId attribute of the AllowedSigner node to the unique ID
-            foreach ($AllowedSigner in $_['AllowedSigner']) {
+            foreach ($AllowedSigner in $Item['AllowedSigner']) {
                 $AllowedSigner.SetAttribute('SignerId', $Guid)
             }
             # Set the SignerId attribute of the CiSigner node to the unique ID
-            foreach ($CiSigner in $_['CiSigners']) {
+            foreach ($CiSigner in $Item['CiSigners']) {
                 $CiSigner.SetAttribute('SignerId', $Guid)
             }
         }
 
-        $UniquePublisherSigners12.Values | ForEach-Object -Process {
+        foreach ($Item in $UniquePublisherSigners12.Values) {
 
             # Create a unique ID for each signer
             [System.String]$Guid = [System.Guid]::NewGuid().ToString().replace('-', '').ToUpper()
             $Guid = "ID_SIGNER_B_$Guid"
 
             # Set the ID attribute of the Signer node to the unique ID
-            foreach ($Signer in $_['Signer']) {
+            foreach ($Signer in $Item['Signer']) {
                 $Signer.SetAttribute('ID', $Guid)
             }
             # Set the SignerId attribute of the AllowedSigner node to the unique ID
-            foreach ($AllowedSigner in $_['AllowedSigner']) {
+            foreach ($AllowedSigner in $Item['AllowedSigner']) {
                 $AllowedSigner.SetAttribute('SignerId', $Guid)
             }
             # Set the SignerId attribute of the CiSigner node to the unique ID
-            foreach ($CiSigner in $_['CiSigners']) {
+            foreach ($CiSigner in $Item['CiSigners']) {
                 $CiSigner.SetAttribute('SignerId', $Guid)
             }
         }
 
-        $UniquePublisherSigners131.Values | ForEach-Object -Process {
+        foreach ($Item in $UniquePublisherSigners131.Values) {
 
             # Create a unique ID for each signer
             [System.String]$Guid = [System.Guid]::NewGuid().ToString().replace('-', '').ToUpper()
             $Guid = "ID_SIGNER_B_$Guid"
 
             # Set the ID attribute of the Signer node to the unique ID
-            foreach ($Signer in $_['Signer']) {
+            foreach ($Signer in $Item['Signer']) {
                 $Signer.SetAttribute('ID', $Guid)
             }
             # Set the SignerId attribute of the AllowedSigner node to the unique ID
-            foreach ($AllowedSigner in $_['AllowedSigner']) {
+            foreach ($AllowedSigner in $Item['AllowedSigner']) {
                 $AllowedSigner.SetAttribute('SignerId', $Guid)
             }
         }
 
-        $UniqueFilePublisherSigners131.Values | ForEach-Object -Process {
+        foreach ($Item in $UniqueFilePublisherSigners131.Values) {
 
             # Create a unique ID for each signer
             [System.String]$Guid = [System.Guid]::NewGuid().ToString().replace('-', '').ToUpper()
             $Guid = "ID_SIGNER_A_$Guid"
 
             # Set the ID attribute of the Signer node to the unique ID
-            foreach ($Signer in $_['Signer']) {
+            foreach ($Signer in $Item['Signer']) {
                 $Signer.SetAttribute('ID', $Guid)
             }
 
             # Set the SignerId attribute of the AllowedSigner node to the unique ID
-            foreach ($AllowedSigner in $_['AllowedSigner']) {
+            foreach ($AllowedSigner in $Item['AllowedSigner']) {
                 $AllowedSigner.SetAttribute('SignerId', $Guid)
             }
         }

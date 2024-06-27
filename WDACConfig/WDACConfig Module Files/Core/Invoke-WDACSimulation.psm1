@@ -493,8 +493,8 @@ Function Invoke-WDACSimulation {
                 Remove-Job -Job $EventHandler -Force
 
                 # Restore PS Formatting Styles for progress bar
-                $OriginalStyle.Keys | ForEach-Object -Process {
-                    $PSStyle.Progress.$_ = $OriginalStyle[$_]
+                foreach ($Item in $OriginalStyle.Keys) {
+                    $PSStyle.Progress.$Item = $OriginalStyle[$Item]
                 }
             }
 

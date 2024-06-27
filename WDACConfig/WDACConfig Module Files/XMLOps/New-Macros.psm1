@@ -76,7 +76,7 @@ Function New-Macros {
         }
 
         # To store the AppIDs array as a single string
-        $AppIDsArray = $null
+        $AppIDsArray = New-Object -TypeName 'System.Text.StringBuilder'
     }
     Process {
 
@@ -92,7 +92,7 @@ Function New-Macros {
             # Add the new node to the Macros node
             [System.Void]$MacrosNode.AppendChild($NewMacroNode)
 
-            [System.String]$AppIDsArray += "`$($Macro)"
+            [System.Void]$AppIDsArray.Append("`$($Macro)")
         }
 
         # Update AppIDs for elements between <FileRules> and </FileRules>
@@ -101,12 +101,14 @@ Function New-Macros {
             # Make sure to exclude the .exe files from the AppIDs because only AddIns such as DLLs should have the AppIDs applied to them.
             # AppIDs applied to .exe files make them unrunnable and trigger blocked event.
             # Also exclude .sys files since driver load can only be done by secure kernel
+            $FileRulesToModify = foreach ($Node in $FileRulesNode.ChildNodes) {
+                if (($Node.Name -in 'Allow', 'Deny', 'FileAttrib', 'FileRule') -and ($Node.FriendlyName -notmatch '.*\.(exe|sys).*')) {
+                    $Node
+                }
+            }
 
-            # '.*\.(exe|sys)\s(FileRule|FileAttribute|Hash).*'
-            $FileRulesToModify = $FileRulesNode.ChildNodes.Where({ ($_.Name -in 'Allow', 'Deny', 'FileAttrib', 'FileRule') -and ($_.FriendlyName -notmatch '.*\.(exe|sys).*') })
-
-            $FileRulesToModify | ForEach-Object -Process {
-                $_.SetAttribute('AppIDs', [System.String]$AppIDsArray)
+            foreach ($Rule in $FileRulesToModify) {
+                $Rule.SetAttribute('AppIDs', $AppIDsArray.ToString())
             }
         }
     }

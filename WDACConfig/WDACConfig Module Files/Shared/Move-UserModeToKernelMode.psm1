@@ -23,16 +23,21 @@ Function Move-UserModeToKernelMode {
     $Xml = [System.Xml.XmlDocument](Get-Content -Path $FilePath)
 
     # Get the SigningScenario nodes as an array
-    $signingScenarios = $Xml.SiPolicy.SigningScenarios.SigningScenario
+    $SigningScenarios = $Xml.SiPolicy.SigningScenarios.SigningScenario
 
-    # Find the SigningScenario node with Value 131 and store it in a variable
-    $signingScenario131 = $signingScenarios.Where({ $_.Value -eq '131' })
-
-    # Find the SigningScenario node with Value 12 and store it in a variable
-    $signingScenario12 = $signingScenarios.Where({ $_.Value -eq '12' })
+    foreach ($SigningScenario in $SigningScenarios) {
+        # Find the SigningScenario node with Value 12 and store it in a variable
+        if ($SigningScenario.Value -eq '12') {
+            [System.Xml.XmlElement]$SigningScenario12 = $SigningScenario
+        }
+        # Find the SigningScenario node with Value 131 and store it in a variable
+        if ($SigningScenario.Value -eq '131') {
+            [System.Xml.XmlElement]$SigningScenario131 = $SigningScenario
+        }
+    }
 
     # Get the AllowedSigners node from the SigningScenario node with Value 12
-    $AllowedSigners12 = $signingScenario12.ProductSigners.AllowedSigners
+    $AllowedSigners12 = $SigningScenario12.ProductSigners.AllowedSigners
 
     # Check if the AllowedSigners node has any child nodes
     if ($AllowedSigners12.HasChildNodes) {
@@ -40,21 +45,21 @@ Function Move-UserModeToKernelMode {
         foreach ($AllowedSigner in $AllowedSigners12.AllowedSigner) {
             # Create a new AllowedSigner node and copy the SignerId attribute from the original node
             # Use the namespace of the parent element when creating the new element
-            $NewAllowedSigner = $Xml.CreateElement('AllowedSigner', $signingScenario131.NamespaceURI)
+            $NewAllowedSigner = $Xml.CreateElement('AllowedSigner', $SigningScenario131.NamespaceURI)
             $NewAllowedSigner.SetAttribute('SignerId', $AllowedSigner.SignerId)
 
             # Append the new AllowedSigner node to the AllowedSigners node of the SigningScenario node with Value 131
-            [System.Void]$signingScenario131.ProductSigners.AllowedSigners.AppendChild($NewAllowedSigner)
+            [System.Void]$SigningScenario131.ProductSigners.AllowedSigners.AppendChild($NewAllowedSigner)
         }
 
         # Remove the SigningScenario node with Value 12 from the XML document
-        [System.Void]$Xml.SiPolicy.SigningScenarios.RemoveChild($signingScenario12)
+        [System.Void]$Xml.SiPolicy.SigningScenarios.RemoveChild($SigningScenario12)
     }
 
     # Remove Signing Scenario 12 block only if it exists and has no allowed signers (i.e. is empty)
-    if ($signingScenario12 -and $AllowedSigners12.count -eq 0) {
+    if ($SigningScenario12 -and $AllowedSigners12.count -eq 0) {
         # Remove the SigningScenario node with Value 12 from the XML document
-        $Xml.SiPolicy.SigningScenarios.RemoveChild($signingScenario12)
+        $Xml.SiPolicy.SigningScenarios.RemoveChild($SigningScenario12)
     }
 
     # Save the modified XML document to a new file

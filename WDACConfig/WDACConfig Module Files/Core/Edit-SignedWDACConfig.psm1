@@ -324,7 +324,9 @@ Function Edit-SignedWDACConfig {
                 if ($ProgramsPaths) {
                     Write-Verbose -Message 'Here are the paths you selected:'
                     if ($Verbose) {
-                        $ProgramsPaths | ForEach-Object -Process { $_.FullName }
+                        foreach ($Path in $ProgramsPaths) {
+                            $Path.FullName
+                        }
                     }
 
                     $HasFolderPaths = $true

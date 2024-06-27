@@ -16,13 +16,23 @@ Function ConvertTo-WDACPolicy {
         [ArgumentCompleter({
                 param($CommandName, $ParameterName, $WordToComplete, $CommandAst, $fakeBoundParameters)
 
-                [System.String[]]$PolicyGUIDs = ((&'C:\Windows\System32\CiTool.exe' -lp -json | ConvertFrom-Json).Policies | Where-Object -FilterScript { ($_.IsSystemPolicy -ne 'True') -and ($_.PolicyID -eq $_.BasePolicyID) }).PolicyID
+                [System.String[]]$PolicyGUIDs = foreach ($Policy in (&'C:\Windows\System32\CiTool.exe' -lp -json | ConvertFrom-Json).Policies) {
+                    if ($Policy.IsSystemPolicy -ne 'True') {
+                        if ($Policy.PolicyID -eq $Policy.BasePolicyID) {
+                            $Policy.PolicyID
+                        }
+                    }
+                }
 
                 $Existing = $CommandAst.FindAll({
                         $args[0] -is [System.Management.Automation.Language.StringConstantExpressionAst]
                     }, $false).Value
 
-                $PolicyGUIDs | Where-Object -FilterScript { $_ -notin $Existing } | ForEach-Object -Process { "'{0}'" -f $_ }
+                foreach ($Item in $PolicyGUIDs) {
+                    if ($Item -notin $Existing) {
+                        "'{0}'" -f $Item
+                    }
+                }
             })]
         [Parameter(Mandatory = $false, ParameterSetName = 'Base-Policy GUID Association')]
         [Alias('BaseGUID')]
@@ -40,13 +50,21 @@ Function ConvertTo-WDACPolicy {
         [ArgumentCompleter({
                 param($CommandName, $ParameterName, $WordToComplete, $CommandAst, $FakeBoundParameters)
 
-                [System.String[]]$Policies = ((&'C:\Windows\System32\CiTool.exe' -lp -json | ConvertFrom-Json).Policies | Where-Object -FilterScript { ($_.FriendlyName) -and ($_.PolicyID -eq $_.BasePolicyID) }).FriendlyName
+                [System.String[]]$Policies = foreach ($Policy in (&'C:\Windows\System32\CiTool.exe' -lp -json | ConvertFrom-Json).Policies) {
+                    if ($Policy.FriendlyName -and ($Policy.PolicyID -eq $Policy.BasePolicyID)) {
+                        $Policy.FriendlyName
+                    }
+                }
 
                 $Existing = $CommandAst.FindAll({
                         $args[0] -is [System.Management.Automation.Language.StringConstantExpressionAst]
                     }, $false).Value
 
-                $Policies | Where-Object -FilterScript { $_ -notin $Existing } | ForEach-Object -Process { "'{0}'" -f $_ }
+                foreach ($Policy in $Policies) {
+                    if ($Policy -notin $Existing) {
+                        "'{0}'" -f $Policy
+                    }
+                }
             })]
         [Alias('FilterNames')]
         [Parameter(Mandatory = $false)][System.String[]]$FilterByPolicyNames,
@@ -379,7 +397,11 @@ Function ConvertTo-WDACPolicy {
 
                     # If the KernelModeOnly switch is used, then filter the events by the 'Requested Signing Level' property
                     if ($KernelModeOnly) {
-                        $EventsToDisplay = $EventsToDisplay | Where-Object -FilterScript { $_.'SI Signing Scenario' -eq 'Kernel-Mode' }
+                        $EventsToDisplay = foreach ($Event in $EventsToDisplay) {
+                            if ($Event.'SI Signing Scenario' -eq 'Kernel-Mode') {
+                                $Event
+                            }
+                        }
                     }
 
                     if (($null -eq $EventsToDisplay) -and ($EventsToDisplay.Count -eq 0)) {
@@ -423,7 +445,11 @@ Function ConvertTo-WDACPolicy {
                         Clear-CiPolicy_Semantic -Path $WDACPolicyKernelProtectedPath
 
                         # Find the kernel protected files that have PFN property
-                        $KernelProtectedFileLogsWithPFN = $KernelProtectedFileLogs | Where-Object -FilterScript { $_.PackageFamilyName }
+                        $KernelProtectedFileLogsWithPFN = foreach ($Log in $KernelProtectedFileLogs) {
+                            if ($Log.PackageFamilyName) {
+                                $Log
+                            }
+                        }
 
                         New-PFNLevelRules -PackageFamilyNames $KernelProtectedFileLogsWithPFN.PackageFamilyName -XmlFilePath $WDACPolicyKernelProtectedPath
 
@@ -434,7 +460,11 @@ Function ConvertTo-WDACPolicy {
                         Write-Verbose -Message "ConvertTo-WDACPolicy: Kernel protected files without PFN property: $($KernelProtectedFileLogs.count - $KernelProtectedFileLogsWithPFN.count)"
 
                         # Removing the logs that were used to create PFN rules from the rest of the logs
-                        $SelectedLogs = $SelectedLogs | Where-Object -FilterScript { $_ -notin $KernelProtectedFileLogsWithPFN }
+                        $SelectedLogs = foreach ($Log in $SelectedLogs) {
+                            if ($Log -notin $KernelProtectedFileLogsWithPFN) {
+                                $Log
+                            }
+                        }
                     }
 
                     $CurrentStep++
@@ -613,7 +643,11 @@ Function ConvertTo-WDACPolicy {
 
                     # If the KernelModeOnly switch is used, then filter the logs by the 'SiSigningScenario' property
                     if ($KernelModeOnly) {
-                        $MDEAHLogsToDisplay = $MDEAHLogsToDisplay | Where-Object -FilterScript { $_.'SiSigningScenario' -eq '0' }
+                        $MDEAHLogsToDisplay = foreach ($Event in $MDEAHLogsToDisplay) {
+                            if ($Event.'SiSigningScenario' -eq '0') {
+                                $Event
+                            }
+                        }
                     }
 
                     if (($null -eq $MDEAHLogsToDisplay) -or ($MDEAHLogsToDisplay.Count -eq 0)) {
@@ -827,7 +861,11 @@ Function ConvertTo-WDACPolicy {
 
                     # If the KernelModeOnly switch is used, then filter the events by the 'Requested Signing Level' property
                     if ($KernelModeOnly) {
-                        $EventsToDisplay = $EventsToDisplay | Where-Object -FilterScript { $_.'SI Signing Scenario' -eq 'Kernel-Mode' }
+                        $EventsToDisplay = foreach ($Event in $EventsToDisplay) {
+                            if ($Event.'SI Signing Scenario' -eq 'Kernel-Mode') {
+                                $Event
+                            }
+                        }
                     }
 
                     if (($null -eq $EventsToDisplay) -and ($EventsToDisplay.Count -eq 0)) {

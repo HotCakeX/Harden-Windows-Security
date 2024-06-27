@@ -91,13 +91,25 @@ Function Confirm-WDACConfig {
 
         # Script block to show only Base policies
         [System.Management.Automation.ScriptBlock]$OnlyBasePoliciesBLOCK = {
-            [System.Object[]]$BasePolicies = (&'C:\Windows\System32\CiTool.exe' -lp -json | ConvertFrom-Json).Policies | Where-Object -FilterScript { ($_.IsSystemPolicy -eq $OnlySystemPolicies) -and ($_.PolicyID -eq $_.BasePolicyID) -and ($_.Version = [WDACConfig.CIPolicyVersion]::Measure($_.Version)) }
+            [System.Object[]]$BasePolicies = foreach ($Item in (&'C:\Windows\System32\CiTool.exe' -lp -json | ConvertFrom-Json).Policies) {
+                if (($Item.IsSystemPolicy -eq $OnlySystemPolicies) -and ($Item.PolicyID -eq $Item.BasePolicyID)) {
+                    $Item.Version = [WDACConfig.CIPolicyVersion]::Measure($Item.Version)
+                    $Item
+                }
+            }
+
             Write-ColorfulText -Color Lavender -InputText "`nThere are currently $(($BasePolicies.count)) Base policies deployed"
             $BasePolicies
         }
         # Script block to show only Supplemental policies
         [System.Management.Automation.ScriptBlock]$OnlySupplementalPoliciesBLOCK = {
-            [System.Object[]]$SupplementalPolicies = (&'C:\Windows\System32\CiTool.exe' -lp -json | ConvertFrom-Json).Policies | Where-Object -FilterScript { ($_.IsSystemPolicy -eq $OnlySystemPolicies) -and ($_.PolicyID -ne $_.BasePolicyID) -and ($_.Version = [WDACConfig.CIPolicyVersion]::Measure($_.Version)) }
+            [System.Object[]]$SupplementalPolicies = foreach ($Item in (&'C:\Windows\System32\CiTool.exe' -lp -json | ConvertFrom-Json).Policies) {
+                if (($Item.IsSystemPolicy -eq $OnlySystemPolicies) -and ($Item.PolicyID -ne $Item.BasePolicyID)) {
+                    $Item.Version = [WDACConfig.CIPolicyVersion]::Measure($Item.Version)
+                    $Item
+                }
+            }
+
             Write-ColorfulText -Color Lavender -InputText "`nThere are currently $(($SupplementalPolicies.count)) Supplemental policies deployed`n"
             $SupplementalPolicies
         }

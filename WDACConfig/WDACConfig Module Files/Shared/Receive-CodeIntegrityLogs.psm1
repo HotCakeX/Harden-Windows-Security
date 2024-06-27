@@ -338,6 +338,11 @@ Function Receive-CodeIntegrityLogs {
 
     Process {
 
+        if ($EventPackageCollection.count -eq 0) {
+            Write-Verbose -Message 'Receive-CodeIntegrityLogs: No logs were collected'
+            return
+        }
+
         # Split the main hashtable into 5 arrays to run the main loop in parallel
         # https://learn.microsoft.com/en-us/dotnet/api/system.linq.enumerable.chunk
         $SplitArrays = [System.Linq.Enumerable]::Chunk($EventPackageCollection, [System.Math]::Ceiling($EventPackageCollection.Count / 5))

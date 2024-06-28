@@ -1,7 +1,9 @@
-Function New-RootAndLeafCertificateLevelRules {
+Function New-CertificateSignerRules {
     <#
     .SYNOPSIS
-        Creates new Signer rules based on Root or Leaf Certificate levels, in the XML file
+        Creates new Signer rules for Certificates, in the XML file
+        The level is Pca/Root/Leaf certificate, meaning there is no certificate publisher mentioned
+        Only Certificate TBS and its name is used.
     .PARAMETER SignerData
         The SignerData to be used for creating the rules
     .PARAMETER XmlFilePath
@@ -59,14 +61,6 @@ Function New-RootAndLeafCertificateLevelRules {
             $CertRootNode.SetAttribute('Value', $Data.TBS)
             [System.Void]$NewSignerNode.AppendChild($CertRootNode)
 
-            # Create the CertPublisher attribute for the signer if its type is Leaf
-            if ($Data.SignerType -eq 'Leaf') {
-                # Create the CertPublisher element and add it to the Signer element
-                [System.Xml.XmlElement]$CertPublisherNode = $Xml.CreateElement('CertPublisher', $SignersNode.NamespaceURI)
-                $CertPublisherNode.SetAttribute('Value', $Data.CertPublisher)
-                [System.Void]$NewSignerNode.AppendChild($CertPublisherNode)
-            }
-
             # Add the new Signer element to the Signers node
             [System.Void]$SignersNode.AppendChild($NewSignerNode)
 
@@ -122,7 +116,7 @@ Function New-RootAndLeafCertificateLevelRules {
         $Xml.Save($XmlFilePath)
     }
 }
-Export-ModuleMember -Function 'New-RootAndLeafCertificateLevelRules'
+Export-ModuleMember -Function 'New-CertificateSignerRules'
 
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor

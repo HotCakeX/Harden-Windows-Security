@@ -84,8 +84,7 @@ Function New-SupplementalWDACConfig {
 
         if ($PSBoundParameters['Certificates']) {
             Import-Module -Force -FullyQualifiedName @(
-                "$ModuleRootPath\WDACSimulation\Get-CertificateDetails.psm1",
-                "$ModuleRootPath\XMLOps\New-RootAndLeafCertificateLevelRules.psm1",
+                "$ModuleRootPath\XMLOps\New-CertificateSignerRules.psm1",
                 "$ModuleRootPath\XMLOps\Clear-CiPolicy_Semantic.psm1"
             )
         }
@@ -324,14 +323,6 @@ Function New-SupplementalWDACConfig {
                 $CurrentStep++
                 Write-Progress -Id 33 -Activity 'Preparing the policy template' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
-                Class RootAndLeafSignerCreator {
-                    [System.String]$TBS
-                    [System.String]$SignerName
-                    [System.String]$CertPublisher
-                    [System.Int32]$SiSigningScenario
-                    [System.String]$SignerType
-                }
-
                 Write-Verbose -Message 'Copying the template policy to the staging area'
                 Copy-Item -LiteralPath 'C:\Windows\schemas\CodeIntegrity\ExamplePolicies\AllowAll.xml' -Destination $FinalSupplementalPath -Force
 
@@ -342,53 +333,26 @@ Function New-SupplementalWDACConfig {
                 Write-Progress -Id 33 -Activity 'Extracting details from the selected certificate files' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
                 # a variable to hold the output signer data
-                [RootAndLeafSignerCreator[]]$OutputSignerData = $null
+                $OutputSignerData = New-Object -TypeName System.Collections.Generic.List[WDACConfig.CertificateSignerCreator]
 
                 foreach ($CertPath in $CertificatePaths) {
 
-                    # All certificates have this value, which will create signer rules with TBS Hash only and result in RootCertificate Level
-                    $MainCertificateDetails = [WDACConfig.CertificateHelper]::GetSignedFileCertificates($CertPath)
+                    # Create a certificate object from the .cer file
+                    [System.Security.Cryptography.X509Certificates.X509Certificate2]$SignedFileSigDetails = [System.Security.Cryptography.X509Certificates.X509Certificate2]::CreateFromSignedFile($CertPath)
 
-                    # Only non-root certificates have this value, which will create signer rules with subject name and TBSHash and result in LeafCertificate Level
-                    $LeafCertificateDetails = (Get-CertificateDetails -FilePath "$CertPath").LeafCertificate
-
-                    # Translate the user-friendly strings to numbers
-                    $SigningScenarioTranslated = $SigningScenario -eq 'UserMode' ? '1' :  '0'
-
-                    # Create a new object to store the signer data for the current certificate in the loop
-                    [RootAndLeafSignerCreator]$CurrentRootAndLeafSignerSigner = New-Object -TypeName RootAndLeafSignerCreator
-
-                    # If the certificate has TBS value for the leaf certificate, then it's a leaf certificate
-                    if ($null -ne $LeafCertificateDetails.TBSValue) {
-                        Write-Verbose -Message "New-SupplementalWDACConfig: Leaf certificate signer is going to be created for the certificate located at $CertPath"
-
-                        [System.String]$CurrentRootAndLeafSignerSigner.TBS = $LeafCertificateDetails.TBSValue
-                        $CurrentRootAndLeafSignerSigner.SiSigningScenario = $SigningScenarioTranslated
-                        $CurrentRootAndLeafSignerSigner.SignerName = $MainCertificateDetails.Subject
-                        $CurrentRootAndLeafSignerSigner.SignerType = 'Leaf'
-                        $CurrentRootAndLeafSignerSigner.CertPublisher = $LeafCertificateDetails.SubjectCN
-                    }
-                    # If the certificate does not have a leaf certificate TBS value, then it's a root certificate so only use its TBS value without the subject name (aka CertPublisher value for the Signer in the XML policy file)
-                    else {
-                        Write-Verbose -Message "New-SupplementalWDACConfig: Root certificate signer is going to be created for the certificate located at $CertPath"
-
-                        # Get the TBS value of the certificate
-                        $CurrentRootAndLeafSignerSigner.TBS = [WDACConfig.CertificateHelper]::GetTBSCertificate($MainCertificateDetails)
-
-                        $CurrentRootAndLeafSignerSigner.SiSigningScenario = $SigningScenarioTranslated
-                        $CurrentRootAndLeafSignerSigner.SignerName = $MainCertificateDetails.Subject
-                        $CurrentRootAndLeafSignerSigner.SignerType = 'Root'
-                    }
-
-                    # Add the current certificate's processed results to the output signer data
-                    $OutputSignerData += $CurrentRootAndLeafSignerSigner
+                    # Create rule for the certificate based on the first element in its chain
+                    $OutputSignerData.Add([WDACConfig.CertificateSignerCreator]::New(
+                            [WDACConfig.CertificateHelper]::GetTBSCertificate($SignedFileSigDetails),
+                            ([WDACConfig.CryptoAPI]::GetNameString($SignedFileSigDetails.Handle, [WDACConfig.CryptoAPI]::CERT_NAME_SIMPLE_DISPLAY_TYPE, $null, $false)),
+                            ($SigningScenario -eq 'UserMode' ? '1' :  '0')
+                        ))
                 }
 
                 $CurrentStep++
                 Write-Progress -Id 33 -Activity 'Generating signer rules' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
                 if ($null -ne $OutputSignerData) {
-                    New-RootAndLeafCertificateLevelRules -SignerData $OutputSignerData -XmlFilePath $FinalSupplementalPath
+                    New-CertificateSignerRules -SignerData $OutputSignerData -XmlFilePath $FinalSupplementalPath
                 }
 
                 $CurrentStep++
@@ -403,14 +367,14 @@ Function New-SupplementalWDACConfig {
                 Set-CiRuleOptions -FilePath $FinalSupplementalPath -Template Supplemental
 
                 Write-Verbose -Message 'Converting the Supplemental policy XML file to a CIP file'
-                ConvertFrom-CIPolicy -XmlFilePath $FinalSupplementalPath -BinaryFilePath $FinalSupplementalCIPPath | Out-Null
+                $null = ConvertFrom-CIPolicy -XmlFilePath $FinalSupplementalPath -BinaryFilePath $FinalSupplementalCIPPath
 
                 if ($Deploy) {
                     $CurrentStep++
                     Write-Progress -Id 33 -Activity 'Deploying the Supplemental policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
                     Write-Verbose -Message 'Deploying the Supplemental policy'
-                    &'C:\Windows\System32\CiTool.exe' --update-policy $FinalSupplementalCIPPath -json | Out-Null
+                    $null = &'C:\Windows\System32\CiTool.exe' --update-policy $FinalSupplementalCIPPath -json
                     Write-ColorfulText -Color Pink -InputText "A Supplemental policy with the name '$SuppPolicyName' has been deployed."
                 }
 

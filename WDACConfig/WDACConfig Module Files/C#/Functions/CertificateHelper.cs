@@ -138,34 +138,5 @@ namespace WDACConfig
             // Return the OID value as string
             return oid;
         }
-
-        public static X509Certificate2Collection GetSignedFileCertificates(string filePath, X509Certificate2 x509Certificate2 = null)
-        // gets all the certificates from a signed file or a certificate object and output a Collection
-        {
-            // Create an X509Certificate2Collection object
-            X509Certificate2Collection certCollection = new X509Certificate2Collection();
-
-            // If the FilePath parameter is used, import all the certificates from the files
-            if (!string.IsNullOrEmpty(filePath))
-            {
-                try
-                {
-                    // If the FilePath parameter is used, import all the certificates from the file
-                    certCollection.Import(filePath);
-                }
-                catch (Exception)
-                {
-                    // Throw a custom exception that will be caught by Invoke-WDACPolicySimulation cmdlets
-                    throw new ExceptionFailedToGetCertificateCollection("Could not get the certificate collection of the file due to lack of necessary permissions.", "GetSignedFileCertificates");
-                }
-            }
-            // If the CertObject parameter is used, add the certificate object to the collection
-            else if (x509Certificate2 != null)
-            {
-                certCollection.Add(x509Certificate2);
-            }
-
-            return certCollection;
-        }
     }
 }

@@ -17,7 +17,6 @@ $PSDefaultParameterValues = @{
     'Get-SignTool:Verbose'                                        = $Verbose
     'Move-UserModeToKernelMode:Verbose'                           = $Verbose
     'Set-LogSize:Verbose'                                         = $Verbose
-    'Test-FilePath:Verbose'                                       = $Verbose
     'Update-Self:Verbose'                                         = $Verbose
     'Write-ColorfulText:Verbose'                                  = $Verbose
     'New-SnapBackGuarantee:Verbose'                               = $Verbose
@@ -36,7 +35,6 @@ $PSDefaultParameterValues = @{
     'Set-CiRuleOptions:Verbose'                                   = $Verbose
     'New-WDACConfig:Verbose'                                      = $Verbose
     'Test-CiPolicy:Verbose'                                       = $Verbose
-    'Get-CiFileHashes:Verbose'                                    = $Verbose
     'Invoke-CiSigning:Verbose'                                    = $Verbose
     'Get-KernelModeDrivers:Verbose'                               = $Verbose
     'New-Macros:Verbose'                                          = $Verbose
@@ -60,7 +58,7 @@ $PSDefaultParameterValues = @{
     'Remove-DuplicateFileAttribRef_IDBased:Verbose'               = $Verbose
     'Remove-OrphanAllowedSignersAndCiSigners_IDBased:Verbose'     = $Verbose
     'Remove-UnreferencedFileRuleRefs:Verbose'                     = $Verbose
-    'New-RootAndLeafCertificateLevelRules:Verbose'                = $Verbose
+    'New-CertificateSignerRules:Verbose'                          = $Verbose
 
     'Build-SignerAndHashObjects:Debug'                            = $Debug
     'Clear-CiPolicy_Semantic:Debug'                               = $Debug
@@ -79,7 +77,7 @@ $PSDefaultParameterValues = @{
     'Remove-DuplicateFileAttribRef_IDBased:Debug'                 = $Debug
     'Remove-OrphanAllowedSignersAndCiSigners_IDBased:Debug'       = $Debug
     'Remove-UnreferencedFileRuleRefs:Debug'                       = $Debug
-    'New-RootAndLeafCertificateLevelRules:Debug'                  = $Debug
+    'New-CertificateSignerRules:Debug'                            = $Debug
 }
 
 # SIG # Begin signature block

@@ -218,7 +218,6 @@ This is an advanced PowerShell module for WDAC (Windows Defender Application Con
         'Shared\Get-SignTool.psm1',
         'Shared\Move-UserModeToKernelMode.psm1',
         'Shared\Set-LogSize.psm1',
-        'Shared\Test-FilePath.psm1',
         'Shared\Update-Self.psm1',
         'Shared\Write-ColorfulText.psm1',
         'Shared\New-SnapBackGuarantee.psm1',
@@ -258,7 +257,7 @@ This is an advanced PowerShell module for WDAC (Windows Defender Application Con
         'XMLOps\Remove-DuplicateFileAttribRef_IDBased.psm1',
         'XMLOps\Remove-OrphanAllowedSignersAndCiSigners_IDBased.psm1',
         'XMLOps\Remove-UnreferencedFileRuleRefs.psm1',
-        'XMLOps\New-RootAndLeafCertificateLevelRules.psm1',
+        'XMLOps\New-CertificateSignerRules.psm1',
         'XMLOps\New-PFNLevelRules.psm1',
         'XMLOps\New-Macros.psm1',
         'XMLOps\Checkpoint-Macros.psm1',
@@ -273,6 +272,8 @@ This is an advanced PowerShell module for WDAC (Windows Defender Application Con
         'C#\Custom Types\PublisherSignerCreator.cs',
         'C#\Custom Types\OpusSigner.cs',
         'C#\Custom Types\SimulationOutput.cs',
+        'C#\Custom Types\AuthenticodePageHashes.cs',
+        'C#\Custom Types\CertificateSignerCreator.cs',
         'C#\Functions\AllCertificatesGrabber.cs',
         'C#\Functions\AuthenticodeHashCalc.cs',
         'C#\Functions\CertificateHelper.cs',
@@ -288,6 +289,7 @@ This is an advanced PowerShell module for WDAC (Windows Defender Application Con
         'C#\Functions\GetFilesFast.cs',
         'C#\Functions\MeowOpener.cs',
         'C#\Functions\XmlFilePathExtractor.cs',
+        'C#\Functions\FileDirectoryPathComparer.cs',
         'C#\Variables\ArgumentCompleters.cs')
 
     # Private data to pass to the module specified in RootModule/ModuleToProcess. This may also contain a PSData hashtable with additional module metadata used by PowerShell.

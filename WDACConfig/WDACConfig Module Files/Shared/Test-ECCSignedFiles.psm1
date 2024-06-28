@@ -39,7 +39,6 @@ Function Test-ECCSignedFiles {
         Write-Verbose -Message 'Test-ECCSignedFiles: Importing the required sub-modules'
         Import-Module -Force -FullyQualifiedName @(
             "$ModuleRootPath\Shared\Get-KernelModeDrivers.psm1",
-            "$ModuleRootPath\Core\Get-CiFileHashes.psm1",
             "$ModuleRootPath\XMLOps\New-HashLevelRules.psm1",
             "$ModuleRootPath\XMLOps\Clear-CiPolicy_Semantic.psm1"
         ) -Verbose:$false
@@ -74,7 +73,7 @@ Function Test-ECCSignedFiles {
 
                 foreach ($ECCSignedFile in $ECCSignedFiles) {
 
-                    $HashOutput = Get-CiFileHashes -FilePath $ECCSignedFile -SkipVersionCheck
+                    [WDACConfig.AuthenticodePageHashes]$HashOutput = [WDACConfig.AuthPageHash]::GetCiFileHashes($ECCSignedFile)
 
                     $CompleteHashes.Add([WDACConfig.HashCreator]::New(
                             $HashOutput.SHA256Authenticode,

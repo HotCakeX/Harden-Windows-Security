@@ -32,21 +32,16 @@ Function Edit-WDACConfig {
                 [System.String]$RedFlag2 = $XmlTest.SiPolicy.UpdatePolicySigners.UpdatePolicySigner.SignerId
                 [System.String]$RedFlag3 = $XmlTest.SiPolicy.PolicyID
 
-                # Get the currently deployed policy IDs
-                Try {
-                    [System.Guid[]]$CurrentPolicyIDs = foreach ($Policy in (&'C:\Windows\System32\CiTool.exe' -lp -json | ConvertFrom-Json).Policies) {
-                        if ( $Policy.IsSystemPolicy -ne 'True') {
-                            "{$($Policy.policyID)}"
+                # Get the currently deployed policy IDs and save them in a HashSet
+                $CurrentPolicyIDs = [System.Collections.Generic.HashSet[System.Guid]]@(foreach ($Item in (&'C:\Windows\System32\CiTool.exe' -lp -json | ConvertFrom-Json).Policies) {
+                        if ($Item.IsSystemPolicy -ne 'True') {
+                            "{$($Item.policyID)}"
                         }
-                    }
-                }
-                catch {
-                    Throw 'No policy is deployed on the system.'
-                }
+                    })
 
                 if (!$RedFlag1 -and !$RedFlag2) {
                     # Ensure the selected base policy xml file is deployed
-                    if ($CurrentPolicyIDs -contains $RedFlag3) {
+                    if ($CurrentPolicyIDs -and $CurrentPolicyIDs.Contains($RedFlag3)) {
 
                         # Ensure the selected base policy xml file is valid
                         if ( Test-CiPolicy -XmlFile $_ ) {
@@ -112,7 +107,6 @@ Function Edit-WDACConfig {
             "$ModuleRootPath\Shared\Update-Self.psm1",
             "$ModuleRootPath\Shared\Write-ColorfulText.psm1",
             "$ModuleRootPath\Shared\Set-LogSize.psm1",
-            "$ModuleRootPath\Shared\Test-FilePath.psm1",
             "$ModuleRootPath\Shared\Receive-CodeIntegrityLogs.psm1",
             "$ModuleRootPath\Shared\New-SnapBackGuarantee.psm1",
             "$ModuleRootPath\Shared\New-StagingArea.psm1",
@@ -354,7 +348,7 @@ Function Edit-WDACConfig {
                 }
 
                 if ($HasAuditLogs -and $HasFolderPaths) {
-                    $OutsideFiles = [System.Collections.Generic.HashSet[System.String]]@(Test-FilePath -FilePath $AuditEventLogsProcessingResults.'File Name' -DirectoryPath $ProgramsPaths)
+                    $OutsideFiles = [System.Collections.Generic.HashSet[System.String]]@([WDACConfig.FileDirectoryPathComparer]::TestFilePath($ProgramsPaths, $AuditEventLogsProcessingResults.'File Name'))
                 }
 
                 if (($null -ne $OutsideFiles) -and ($OutsideFiles.count -ne 0)) {

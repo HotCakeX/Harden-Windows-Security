@@ -70,7 +70,11 @@ Function Remove-WDACConfig {
                 ForEach({ if ($_ -match ' ') { "'{0}'" -f $_ } else { $_ } })
             })]
         [ValidateScript({
-                if ($_ -notin [PolicyNamezx]::new().GetValidValues()) { throw "Invalid policy name: $_" }
+                if (
+                    !([System.Collections.Generic.HashSet[System.String]]@([PolicyNamezx]::new().GetValidValues())).Contains($_)
+                ) {
+                    throw "Invalid policy name: $_"
+                }
                 $true
             })]
         [Parameter(Mandatory = $false, ParameterSetName = 'Unsigned Or Supplemental')]
@@ -166,8 +170,13 @@ Function Remove-WDACConfig {
         # ValidateSet for Policy names
         Class PolicyNamezx : System.Management.Automation.IValidateSetValuesGenerator {
             [System.String[]] GetValidValues() {
-                $PolicyNamezx = ((&'C:\Windows\System32\CiTool.exe' -lp -json | ConvertFrom-Json).Policies | Where-Object -FilterScript { ($_.IsOnDisk -eq 'True') -and ($_.IsSystemPolicy -ne 'True') }).Friendlyname | Select-Object -Unique
-                return [System.String[]]$PolicyNamezx
+
+                $PolicyNamezx = [System.Collections.Generic.HashSet[System.String]]@(foreach ($Policy in (&'C:\Windows\System32\CiTool.exe' -lp -json | ConvertFrom-Json).Policies) {
+                        if ( ($Policy.IsOnDisk -eq 'True') -and ($Policy.IsSystemPolicy -ne 'True')) {
+                            $Policy.Friendlyname
+                        }
+                    })
+                return $PolicyNamezx
             }
         }
 

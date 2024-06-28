@@ -32,17 +32,16 @@ Function Edit-SignedWDACConfig {
                 [System.String]$RedFlag2 = $XmlTest.SiPolicy.UpdatePolicySigners.UpdatePolicySigner.SignerId
                 [System.String]$RedFlag3 = $XmlTest.SiPolicy.PolicyID
 
-                # Get the currently deployed policy IDs
-                Try {
-                    [System.Guid[]]$CurrentPolicyIDs = ((&'C:\Windows\System32\CiTool.exe' -lp -json | ConvertFrom-Json).Policies | Where-Object -FilterScript { $_.IsSystemPolicy -ne 'True' }).policyID | ForEach-Object -Process { "{$_}" }
-                }
-                catch {
-                    Throw 'No policy is deployed on the system.'
-                }
+                # Get the currently deployed policy IDs and save them in a HashSet
+                $CurrentPolicyIDs = [System.Collections.Generic.HashSet[System.Guid]]@(foreach ($Item in (&'C:\Windows\System32\CiTool.exe' -lp -json | ConvertFrom-Json).Policies) {
+                        if ($Item.IsSystemPolicy -ne 'True') {
+                            "{$($Item.policyID)}"
+                        }
+                    })
 
                 if ($RedFlag1 -or $RedFlag2) {
                     # Ensure the selected base policy xml file is deployed
-                    if ($CurrentPolicyIDs -contains $RedFlag3) {
+                    if ($CurrentPolicyIDs -and $CurrentPolicyIDs.Contains($RedFlag3)) {
 
                         # Ensure the selected base policy xml file is valid
                         if ( Test-CiPolicy -XmlFile $_ ) {
@@ -124,7 +123,6 @@ Function Edit-SignedWDACConfig {
             "$ModuleRootPath\Shared\Update-Self.psm1",
             "$ModuleRootPath\Shared\Write-ColorfulText.psm1",
             "$ModuleRootPath\Shared\Set-LogSize.psm1",
-            "$ModuleRootPath\Shared\Test-FilePath.psm1",
             "$ModuleRootPath\Shared\Receive-CodeIntegrityLogs.psm1",
             "$ModuleRootPath\Shared\New-SnapBackGuarantee.psm1",
             "$ModuleRootPath\Shared\New-StagingArea.psm1",
@@ -245,9 +243,10 @@ Function Edit-SignedWDACConfig {
                 # Change location so SignTool.exe will create outputs in the Staging Area
                 Push-Location -LiteralPath $StagingArea
                 # Sign both CIPs
-                $AuditModeCIPPath, $EnforcedModeCIPPath | ForEach-Object -Process {
-                    Invoke-CiSigning -CiPath $_ -SignToolPathFinal $SignToolPathFinal -CertCN $CertCN
+                foreach ($CIP in ($AuditModeCIPPath, $EnforcedModeCIPPath)) {
+                    Invoke-CiSigning -CiPath $CIP -SignToolPathFinal $SignToolPathFinal -CertCN $CertCN
                 }
+
                 Pop-Location
 
                 Write-Verbose -Message 'Renaming the signed CIPs to remove the .p7 extension'
@@ -407,7 +406,7 @@ Function Edit-SignedWDACConfig {
                 }
 
                 if ($HasAuditLogs -and $HasFolderPaths) {
-                    $OutsideFiles = [System.Collections.Generic.HashSet[System.String]]@(Test-FilePath -FilePath $AuditEventLogsProcessingResults.'File Name' -DirectoryPath $ProgramsPaths)
+                    $OutsideFiles = [System.Collections.Generic.HashSet[System.String]]@([WDACConfig.FileDirectoryPathComparer]::TestFilePath($ProgramsPaths, $AuditEventLogsProcessingResults.'File Name'))
                 }
 
                 if (($null -ne $OutsideFiles) -and ($OutsideFiles.count -ne 0)) {
@@ -419,8 +418,10 @@ Function Edit-SignedWDACConfig {
                 if ($HasExtraFiles) {
 
                     # Get only the log of the files that were found in event viewer logs but are not in any user selected directories
-                    [PSCustomObject[]]$LogsToShow = $AuditEventLogsProcessingResults | Where-Object -FilterScript {
-                        $OutsideFiles.Contains($_.'File Name')
+                    [PSCustomObject[]]$LogsToShow = foreach ($Item in $AuditEventLogsProcessingResults) {
+                        if ($OutsideFiles.Contains($Item.'File Name')) {
+                            $Item
+                        }
                     }
 
                     [PSCustomObject[]]$LogsToShow = Select-LogProperties -Logs $LogsToShow
@@ -634,6 +635,11 @@ Function Edit-SignedWDACConfig {
                 Write-Progress -Id 16 -Activity 'Verifying the input files' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
                 #Region Input-policy-verification
+                Write-Verbose -Message 'Getting the IDs of the currently deployed policies on the system'
+                $DeployedPoliciesIDs = [System.Collections.Generic.HashSet[System.String]]@(foreach ($Item in (&'C:\Windows\System32\CiTool.exe' -lp -json | ConvertFrom-Json).Policies.PolicyID) {
+                        "{$Item}"
+                    })
+
                 Write-Verbose -Message 'Verifying the input policy files'
                 foreach ($SuppPolicyPath in $SuppPolicyPaths) {
 
@@ -641,9 +647,6 @@ Function Edit-SignedWDACConfig {
                     [System.Xml.XmlDocument]$Supplementalxml = Get-Content -Path $SuppPolicyPath
                     [System.String]$SupplementalPolicyID = $Supplementalxml.SiPolicy.PolicyID
                     [System.String]$SupplementalPolicyType = $Supplementalxml.SiPolicy.PolicyType
-
-                    Write-Verbose -Message 'Getting the IDs of the currently deployed policies on the system'
-                    [System.String[]]$DeployedPoliciesIDs = (&'C:\Windows\System32\CiTool.exe' -lp -json | ConvertFrom-Json).Policies.PolicyID | ForEach-Object -Process { return "{$_}" }
 
                     # Check the type of the user selected Supplemental policy XML files to make sure they are indeed Supplemental policies
                     Write-Verbose -Message 'Checking the type of the policy'
@@ -653,7 +656,7 @@ Function Edit-SignedWDACConfig {
 
                     # Check to make sure the user selected Supplemental policy XML files are deployed on the system
                     Write-Verbose -Message 'Checking the deployment status of the policy'
-                    if ($DeployedPoliciesIDs -notcontains $SupplementalPolicyID) {
+                    if ($DeployedPoliciesIDs -and !$DeployedPoliciesIDs.Contains($SupplementalPolicyID)) {
                         Throw "The Selected Supplemental XML file with GUID $SupplementalPolicyID isn't deployed on the system."
                     }
                 }
@@ -682,7 +685,7 @@ Function Edit-SignedWDACConfig {
                     [System.String]$SupplementalPolicyID = $Supplementalxml.SiPolicy.PolicyID
 
                     Write-Verbose -Message "Removing policy with ID: $SupplementalPolicyID"
-                    &'C:\Windows\System32\CiTool.exe' --remove-policy $SupplementalPolicyID -json | Out-Null
+                    $null = &'C:\Windows\System32\CiTool.exe' --remove-policy $SupplementalPolicyID -json
                 }
 
                 $CurrentStep++
@@ -707,7 +710,7 @@ Function Edit-SignedWDACConfig {
                 }
 
                 Write-Verbose -Message 'Converting the Supplemental policy to a CIP file'
-                ConvertFrom-CIPolicy -XmlFilePath $FinalSupplementalPath -BinaryFilePath $FinalSupplementalCIPPath | Out-Null
+                $null = ConvertFrom-CIPolicy -XmlFilePath $FinalSupplementalPath -BinaryFilePath $FinalSupplementalCIPPath
 
                 # Change location so SignTool.exe will create outputs in the Staging Area
                 Push-Location -LiteralPath $StagingArea

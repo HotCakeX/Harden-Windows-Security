@@ -195,13 +195,13 @@ Function Invoke-WDACSimulation {
 
             # split the file paths by $ThreadsCount which by default is 2
             $SplitArrays = [System.Linq.Enumerable]::Chunk($CollectedFiles, [System.Math]::Ceiling($CollectedFiles.Count / $ThreadsCount))
-           
+
             # Loop over each split array
             [System.Management.Automation.Job2[]]$Jobs = foreach ($Array in $SplitArrays) {
 
                 # Create a new ThreadJob for each array of the filepaths to be processed concurrently
-                Start-ThreadJob -ArgumentList @($ModuleRootPath, $FinalSimulationResults, $Array, $SignerInfo, $SHA256HashesFromXML, $FilePathRules, $HasFilePathRules, $UnsignedExtensions, $VerbosePreference, $AllSecurityCatalogHashes) -StreamingHost $Host -ScriptBlock {
-                    param ($ModuleRootPath, $FinalSimulationResults, $Array, $SignerInfo, $SHA256HashesFromXML, $FilePathRules, $HasFilePathRules, $UnsignedExtensions, $ParentVerbosePreference, $AllSecurityCatalogHashes)
+                Start-ThreadJob -ArgumentList @($ModuleRootPath, $FinalSimulationResults, $Array, $SignerInfo, $SHA256HashesFromXML, $FilePathRules, $HasFilePathRules, $UnsignedExtensions, $AllSecurityCatalogHashes) -StreamingHost $Host -ScriptBlock {
+                    param ($ModuleRootPath, $FinalSimulationResults, $Array, $SignerInfo, $SHA256HashesFromXML, $FilePathRules, $HasFilePathRules, $UnsignedExtensions, $AllSecurityCatalogHashes)
 
                     try {
 
@@ -213,8 +213,6 @@ Function Invoke-WDACSimulation {
                             "$ModuleRootPath\WDACSimulation\Get-CertificateDetails.psm1"
                         )
 
-                        $VerbosePreference = $ParentVerbosePreference
-
                         [System.Drawing.Color]$CurrentColor = [System.Drawing.Color]::Violet
                         # Set the progress bar style to use violet color
                         $PSStyle.Progress.Style = "$($PSStyle.Foreground.FromRGB($CurrentColor.R, $CurrentColor.G, $CurrentColor.B))"
@@ -224,8 +222,6 @@ Function Invoke-WDACSimulation {
                         [System.UInt64]$CurrentSubStep = 0
 
                         foreach ($CurrentFilePath in $Array) {
-
-                            Write-Verbose -Message "Processing file: $CurrentFilePath"
 
                             $CurrentSubStep++
                             Write-Progress -Id ([runspace]::DefaultRunspace.Id) -Activity "Processing file $CurrentSubStep/$TotalSubSteps" -Status "$CurrentFilePath" -PercentComplete ($CurrentSubStep / $TotalSubSteps * 100)
@@ -261,7 +257,6 @@ Function Invoke-WDACSimulation {
                                 Continue
                             }
 
-                            Write-Verbose -Message 'Calculating the file hashes'
                             try {
                                 [WDACConfig.AuthenticodePageHashes]$CurrentFileHashResult = [WDACConfig.AuthPageHash]::GetCiFileHashes($CurrentFilePath)
                                 [System.String]$CurrentFilePathHashSHA256 = $CurrentFileHashResult.SHA256Authenticode
@@ -292,7 +287,6 @@ Function Invoke-WDACSimulation {
 
                             # if the file's hash exists in the XML file then add the file's path to the allowed files and do not check anymore that whether the file is signed or not
                             if ($SHA256HashesFromXML.Contains($CurrentFilePathHashSHA256)) {
-                                Write-Verbose -Message 'Hash of the file exists in the supplied XML file'
 
                                 [System.Void]$FinalSimulationResults.TryAdd([string]$CurrentFilePath, [WDACConfig.SimulationOutput]::New(
                                 ([System.IO.Path]::GetFileName($CurrentFilePath)),
@@ -315,7 +309,6 @@ Function Invoke-WDACSimulation {
                             }
                             # If the file's extension is not supported by Authenticode and it wasn't allowed by file hash then it's not allowed and no reason to check its signature
                             elseif ($UnsignedExtensions.Contains($CurrentFilePath.Extension)) {
-                                Write-Verbose -Message 'The file is not signed and is not allowed by hash'
 
                                 [System.Void]$FinalSimulationResults.TryAdd([string]$CurrentFilePath, [WDACConfig.SimulationOutput]::New(
                                 ([System.IO.Path]::GetFileName($CurrentFilePath)),
@@ -353,8 +346,7 @@ Function Invoke-WDACSimulation {
 
                                             [WDACConfig.AllCertificatesGrabber.AllFileSigners]$CatalogSignerDits = ([WDACConfig.AllCertificatesGrabber.WinTrust]::GetAllFileSigners($MatchedHashResult))[0]
 
-                                            Write-Verbose -Message 'The file is authorized by a security catalog on the system'
-
+                                            # The file is authorized by a security catalog on the system
                                             [System.Void]$FinalSimulationResults.TryAdd([string]$CurrentFilePath, [WDACConfig.SimulationOutput]::New(
                                             ([System.IO.Path]::GetFileName($CurrentFilePath)),
                                                     'Catalog Signed',
@@ -376,8 +368,7 @@ Function Invoke-WDACSimulation {
                                         }
                                         else {
 
-                                            Write-Verbose -Message 'The file is not signed and is not allowed by hash'
-
+                                            # The file is not signed and is not allowed by hash
                                             [System.Void]$FinalSimulationResults.TryAdd([string]$CurrentFilePath, [WDACConfig.SimulationOutput]::New(
                                             ([System.IO.Path]::GetFileName($CurrentFilePath)),
                                                     'Unsigned',
@@ -437,8 +428,6 @@ Function Invoke-WDACSimulation {
 
                                 catch {
                                     # If the file is signed but has unknown signature status
-                                    Write-Verbose -Message 'The file has unknown signature status'
-
                                     [System.Void]$FinalSimulationResults.TryAdd([string]$CurrentFilePath, [WDACConfig.SimulationOutput]::New(
                                     ([System.IO.Path]::GetFileName($CurrentFilePath)),
                                             'Signer',
@@ -468,7 +457,7 @@ Function Invoke-WDACSimulation {
                         # Complete the nested progress bar whether there was an error or not
                         Write-Progress -Id ([runspace]::DefaultRunspace.Id) -Activity 'All of the files have been processed.' -Completed
                     }
-                }
+                } -ThrottleLimit $ThreadsCount
             }
 
             # Wait for all jobs, grab any error that might've ocurred in them and then remove them

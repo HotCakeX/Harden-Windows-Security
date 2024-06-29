@@ -195,16 +195,13 @@ Function Invoke-WDACSimulation {
 
             # split the file paths by $ThreadsCount which by default is 2
             $SplitArrays = [System.Linq.Enumerable]::Chunk($CollectedFiles, [System.Math]::Ceiling($CollectedFiles.Count / $ThreadsCount))
-
-            # a random number to use and begin incrementing for the rendered progress bars
-            [System.Int32]$WriteProgressIDs = 60
-
+           
             # Loop over each split array
             [System.Management.Automation.Job2[]]$Jobs = foreach ($Array in $SplitArrays) {
 
                 # Create a new ThreadJob for each array of the filepaths to be processed concurrently
-                Start-ThreadJob -ArgumentList @($ModuleRootPath, $FinalSimulationResults, $Array, $SignerInfo, $SHA256HashesFromXML, $FilePathRules, $HasFilePathRules, $UnsignedExtensions, $WriteProgressIDs, $VerbosePreference, $AllSecurityCatalogHashes) -StreamingHost $Host -ScriptBlock {
-                    param ($ModuleRootPath, $FinalSimulationResults, $Array, $SignerInfo, $SHA256HashesFromXML, $FilePathRules, $HasFilePathRules, $UnsignedExtensions, $WriteProgressIDs, $ParentVerbosePreference, $AllSecurityCatalogHashes)
+                Start-ThreadJob -ArgumentList @($ModuleRootPath, $FinalSimulationResults, $Array, $SignerInfo, $SHA256HashesFromXML, $FilePathRules, $HasFilePathRules, $UnsignedExtensions, $VerbosePreference, $AllSecurityCatalogHashes) -StreamingHost $Host -ScriptBlock {
+                    param ($ModuleRootPath, $FinalSimulationResults, $Array, $SignerInfo, $SHA256HashesFromXML, $FilePathRules, $HasFilePathRules, $UnsignedExtensions, $ParentVerbosePreference, $AllSecurityCatalogHashes)
 
                     try {
 
@@ -231,7 +228,7 @@ Function Invoke-WDACSimulation {
                             Write-Verbose -Message "Processing file: $CurrentFilePath"
 
                             $CurrentSubStep++
-                            Write-Progress -Id $WriteProgressIDs -Activity "Processing file $CurrentSubStep/$TotalSubSteps" -Status "$CurrentFilePath" -PercentComplete ($CurrentSubStep / $TotalSubSteps * 100)
+                            Write-Progress -Id ([runspace]::DefaultRunspace.Id) -Activity "Processing file $CurrentSubStep/$TotalSubSteps" -Status "$CurrentFilePath" -PercentComplete ($CurrentSubStep / $TotalSubSteps * 100)
 
                             # Check see if the file's hash exists in the XML file regardless of whether it's signed or not
                             # This is because WDAC policies sometimes have hash rules for signed files too
@@ -469,11 +466,9 @@ Function Invoke-WDACSimulation {
                     }
                     finally {
                         # Complete the nested progress bar whether there was an error or not
-                        Write-Progress -Id $WriteProgressIDs -Activity 'All of the files have been processed.' -Completed
+                        Write-Progress -Id ([runspace]::DefaultRunspace.Id) -Activity 'All of the files have been processed.' -Completed
                     }
                 }
-
-                $WriteProgressIDs++
             }
 
             # Wait for all jobs, grab any error that might've ocurred in them and then remove them

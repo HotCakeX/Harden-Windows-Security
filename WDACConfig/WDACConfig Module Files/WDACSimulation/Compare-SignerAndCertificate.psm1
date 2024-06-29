@@ -18,11 +18,8 @@ Function Compare-SignerAndCertificate {
         [System.Boolean]$Verbose = $PSBoundParameters.Verbose.IsPresent ? $true : $false
         . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
 
-        # Importing the required sub-modules
-        Import-Module -FullyQualifiedName "$ModuleRootPath\WDACSimulation\Get-ExtendedFileInfo.psm1" -Force
-
         # Get the extended file attributes
-        [System.Collections.Hashtable]$ExtendedFileInfo = Get-ExtendedFileInfo -Path $SimulationInput.FilePath
+        [WDACConfig.ExFileInfo]$ExtendedFileInfo = [WDACConfig.ExFileInfo]::GetExtendedFileInfo($SimulationInput.FilePath)
     }
 
     Process {
@@ -123,7 +120,7 @@ Function Compare-SignerAndCertificate {
 
                                     [System.Collections.Hashtable[]]$CandidateFileAttrib = foreach ($Attrib in $signer.FileAttrib.GetEnumerator()) {
 
-                                        if ($ExtendedFileInfo['FileVersion'] -ge $Attrib.Value.MinimumFileVersion) {
+                                        if ($ExtendedFileInfo.Version -ge $Attrib.Value.MinimumFileVersion) {
                                             $Attrib.Value
                                         }
                                     }
@@ -132,8 +129,7 @@ Function Compare-SignerAndCertificate {
                                     if ($null -ne $CandidateFileAttrib) {
                                         foreach ($FileAttrib in $CandidateFileAttrib.GetEnumerator()) {
 
-                                            # Loop over all of the keys in the extended file info to see which one of them is a match, to determine the SpecificFileNameLevel option
-                                            foreach ($KeyItem in $ExtendedFileInfo.Keys) {
+                                            foreach ($KeyItem in ('OriginalFileName', 'InternalName', 'ProductName', 'Version', 'FileDescription')) {
 
                                                 if ($ExtendedFileInfo.$KeyItem -eq $FileAttrib.$KeyItem) {
 
@@ -287,7 +283,7 @@ Function Compare-SignerAndCertificate {
 
                             [System.Collections.Hashtable[]]$CandidateFileAttrib = foreach ($Attrib in $signer.FileAttrib.GetEnumerator()) {
 
-                                if ($ExtendedFileInfo['FileVersion'] -ge $Attrib.Value.MinimumFileVersion) {
+                                if ($ExtendedFileInfo.Version -ge $Attrib.Value.MinimumFileVersion) {
                                     $Attrib.Value
                                 }
                             }
@@ -295,7 +291,7 @@ Function Compare-SignerAndCertificate {
                             # If the signer has a file attribute with a wildcard file name, then it's a SignedVersion level signer
                             # These signers have only 1 FileAttribRef and only point to a single FileAttrib
                             # If a SignedVersion signer applies to multiple files, the version number of the FileAttrib is set to the minimum version of the files
-                            if (($CandidateFileAttrib.count -eq 1) -and ($CandidateFileAttrib.FileName -eq '*')) {
+                            if (($CandidateFileAttrib.count -eq 1) -and ($CandidateFileAttrib.OriginalFileName -eq '*')) {
 
                                 return ([WDACConfig.SimulationOutput]::New(
                                     ([System.IO.Path]::GetFileName($SimulationInput.FilePath)),
@@ -322,7 +318,7 @@ Function Compare-SignerAndCertificate {
                                 foreach ($FileAttrib in $CandidateFileAttrib.GetEnumerator()) {
 
                                     # Loop over all of the keys in the extended file info to see which one of them is a match, to determine the SpecificFileNameLevel option
-                                    foreach ($KeyItem in $ExtendedFileInfo.Keys) {
+                                    foreach ($KeyItem in ('OriginalFileName', 'InternalName', 'ProductName', 'Version', 'FileDescription')) {
 
                                         if ($ExtendedFileInfo.$KeyItem -eq $FileAttrib.$KeyItem) {
 
@@ -464,7 +460,7 @@ Function Compare-SignerAndCertificate {
                         # Get all of the File Attributes associated with the signer and check if the file's version is greater than or equal to the minimum version in them
                         [System.Collections.Hashtable[]]$CandidateFileAttrib = foreach ($Attrib in $signer.FileAttrib.GetEnumerator()) {
 
-                            if ($ExtendedFileInfo['FileVersion'] -ge $Attrib.Value.MinimumFileVersion) {
+                            if ($ExtendedFileInfo.Version -ge $Attrib.Value.MinimumFileVersion) {
                                 $Attrib.Value
                             }
                         }
@@ -472,7 +468,7 @@ Function Compare-SignerAndCertificate {
                         # If the signer has a file attribute with a wildcard file name, then it's a SignedVersion level signer
                         # These signers have only 1 FileAttribRef and only point to a single FileAttrib
                         # If a SignedVersion signer applies to multiple files, the version number of the FileAttrib is set to the minimum version of the files
-                        if (($CandidateFileAttrib.count -eq 1) -and ($CandidateFileAttrib.FileName -eq '*')) {
+                        if (($CandidateFileAttrib.count -eq 1) -and ($CandidateFileAttrib.OriginalFileName -eq '*')) {
 
                             return ([WDACConfig.SimulationOutput]::New(
                                 ([System.IO.Path]::GetFileName($SimulationInput.FilePath)),
@@ -498,8 +494,7 @@ Function Compare-SignerAndCertificate {
                         if ($null -ne $CandidateFileAttrib) {
                             foreach ($FileAttrib in $CandidateFileAttrib.GetEnumerator()) {
 
-                                # Loop over all of the keys in the extended file info to see which one of them is a match, to determine the SpecificFileNameLevel option
-                                foreach ($KeyItem in $ExtendedFileInfo.Keys) {
+                                foreach ($KeyItem in ('OriginalFileName', 'InternalName', 'ProductName', 'Version', 'FileDescription')) {
 
                                     if ($ExtendedFileInfo.$KeyItem -eq $FileAttrib.$KeyItem) {
 

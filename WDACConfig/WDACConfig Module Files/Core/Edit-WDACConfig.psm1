@@ -302,7 +302,7 @@ Function Edit-WDACConfig {
 
                         $VerbosePreference = $ParentVerbosePreference
 
-                        Write-Verbose -Message 'Scanning each of the folder paths that user selected'
+                        # Write-Verbose -Message 'Scanning each of the folder paths that user selected'
 
                         for ($i = 0; $i -lt $ProgramsPaths.Count; $i++) {
 
@@ -321,7 +321,7 @@ Function Edit-WDACConfig {
                             if ($using:NoScript) { $UserInputProgramFoldersPolicyMakerHashTable['NoScript'] = $true }
                             if (!$using:NoUserPEs) { $UserInputProgramFoldersPolicyMakerHashTable['UserPEs'] = $true }
 
-                            Write-Verbose -Message "Currently scanning: $($ProgramsPaths[$i])"
+                            #  Write-Verbose -Message "Currently scanning: $($ProgramsPaths[$i])"
                             New-CIPolicy @UserInputProgramFoldersPolicyMakerHashTable
 
                             [System.Void]$PolicyXMLFilesArray.TryAdd("$($ProgramsPaths[$i]) Scan Results", "$StagingArea\ProgramDir_ScanResults$($i).xml")
@@ -565,6 +565,11 @@ Function Edit-WDACConfig {
                 $CurrentStep++
                 Write-Progress -Id 11 -Activity 'Verifying the input files' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
+                Write-Verbose -Message 'Getting the IDs of the currently deployed policies on the system'
+                $DeployedPoliciesIDs = [System.Collections.Generic.HashSet[System.String]]@(foreach ($Item in (&'C:\Windows\System32\CiTool.exe' -lp -json | ConvertFrom-Json).Policies.PolicyID) {
+                        "{$Item}"
+                    })
+
                 #Region Input-policy-verification
                 Write-Verbose -Message 'Verifying the input policy files'
                 foreach ($SuppPolicyPath in $SuppPolicyPaths) {
@@ -574,9 +579,6 @@ Function Edit-WDACConfig {
                     [System.String]$SupplementalPolicyID = $Supplementalxml.SiPolicy.PolicyID
                     [System.String]$SupplementalPolicyType = $Supplementalxml.SiPolicy.PolicyType
 
-                    Write-Verbose -Message 'Getting the IDs of the currently deployed policies on the system'
-                    [System.String[]]$DeployedPoliciesIDs = (&'C:\Windows\System32\CiTool.exe' -lp -json | ConvertFrom-Json).Policies.PolicyID | ForEach-Object -Process { return "{$_}" }
-
                     # Check the type of the user selected Supplemental policy XML files to make sure they are indeed Supplemental policies
                     Write-Verbose -Message 'Checking the type of the policy'
                     if ($SupplementalPolicyType -ne 'Supplemental Policy') {
@@ -585,7 +587,7 @@ Function Edit-WDACConfig {
 
                     # Check to make sure the user selected Supplemental policy XML files are deployed on the system
                     Write-Verbose -Message 'Checking the deployment status of the policy'
-                    if ($DeployedPoliciesIDs -notcontains $SupplementalPolicyID) {
+                    if (!$DeployedPoliciesIDs.Contains($SupplementalPolicyID)) {
                         Throw "The Selected Supplemental XML file with GUID $SupplementalPolicyID isn't deployed on the system."
                     }
                 }
@@ -786,7 +788,9 @@ Function Edit-WDACConfig {
             }
         }
         Finally {
-            10..12 | ForEach-Object -Process { Write-Progress -Id $_ -Activity 'Complete.' -Completed }
+            foreach ($ID in 10..12) {
+                Write-Progress -Id $ID -Activity 'Complete.' -Completed
+            }
             if (!$Debug) {
                 Remove-Item -Path $StagingArea -Recurse -Force
             }

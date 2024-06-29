@@ -2,15 +2,15 @@ Function Remove-WDACConfig {
     [CmdletBinding(
         DefaultParameterSetName = 'Signed Base',
         SupportsShouldProcess = $true,
-        PositionalBinding = $false,
+        PositionalBinding = $False,
         ConfirmImpact = 'High'
     )]
     [OutputType([System.String])]
     Param(
         [Alias('S')]
-        [Parameter(Mandatory = $false, ParameterSetName = 'Signed Base')][System.Management.Automation.SwitchParameter]$SignedBase,
+        [Parameter(Mandatory = $False, ParameterSetName = 'Signed Base')][System.Management.Automation.SwitchParameter]$SignedBase,
         [Alias('U')]
-        [Parameter(Mandatory = $false, ParameterSetName = 'Unsigned Or Supplemental')][System.Management.Automation.SwitchParameter]$UnsignedOrSupplemental,
+        [Parameter(Mandatory = $False, ParameterSetName = 'Unsigned Or Supplemental')][System.Management.Automation.SwitchParameter]$UnsignedOrSupplemental,
 
         [ValidateScript({
 
@@ -33,16 +33,20 @@ Function Remove-WDACConfig {
         [System.IO.FileInfo[]]$PolicyPaths,
 
         [ValidateSet([CertCNz])]
-        [parameter(Mandatory = $false, ParameterSetName = 'Signed Base', ValueFromPipelineByPropertyName = $true)]
+        [parameter(Mandatory = $False, ParameterSetName = 'Signed Base', ValueFromPipelineByPropertyName = $true)]
         [System.String]$CertCN,
 
         [ArgumentCompleter({
                 # Define the parameters that this script block will accept.
-                param($commandName, $parameterName, $wordToComplete, $commandAst, $fakeBoundParameters)
+                param($CommandName, $ParameterName, $WordToComplete, $CommandAst, $FakeBoundParameters)
 
                 # Get a list of policies using the CiTool, excluding system policies and policies that aren't on disk.
-                # by adding "| Where-Object -FilterScript { $_.FriendlyName }" we make sure the auto completion works when at least one of the policies doesn't have a friendly name
-                $Policies = (&'C:\Windows\System32\CiTool.exe' -lp -json | ConvertFrom-Json).Policies | Where-Object -FilterScript { ($_.IsOnDisk -eq 'True') -and ($_.IsSystemPolicy -ne 'True') -and $_.FriendlyName }
+                # by adding "{ $_.FriendlyName }" we make sure the auto completion works when at least one of the policies doesn't have a friendly name
+                $Policies = foreach ($Item in (&'C:\Windows\System32\CiTool.exe' -lp -json | ConvertFrom-Json).Policies) {
+                    if (($Item.IsOnDisk -eq 'True') -and ($Item.IsSystemPolicy -ne 'True') -and $Item.FriendlyName) {
+                        $Item
+                    }
+                }
 
                 # Create a hashtable mapping policy names to policy IDs. This will be used later to check if a policy ID already exists.
                 [System.Collections.Hashtable]$NameIDMap = @{}
@@ -51,23 +55,35 @@ Function Remove-WDACConfig {
                 }
 
                 # Get the IDs of existing policies that are already being used in the current command.
-                $ExistingIDs = $fakeBoundParameters['PolicyIDs']
+                $ExistingIDs = $FakeBoundParameters['PolicyIDs']
 
                 # Get the policy names that are currently being used in the command. This is done by looking at the abstract syntax tree (AST)
                 # of the command and finding all string literals, which are assumed to be policy names.
-                $Existing = $commandAst.FindAll({
+                $Existing = $CommandAst.FindAll({
                         $args[0] -is [System.Management.Automation.Language.StringConstantExpressionAst]
-                    }, $false).Value
+                    }, $False).Value
 
                 # Filter out the policy names that are already being used or whose corresponding policy IDs are already being used.
                 # The resulting list of policy names is what will be shown as autocomplete suggestions.
-                $Candidates = $Policies.Friendlyname | Where-Object -FilterScript { $_ -notin $Existing -and $NameIDMap[$_] -notin $ExistingIDs }
+                $Candidates = foreach ($Item in $Policies.Friendlyname) {
+                    if ($Item -notin $Existing -and $NameIDMap[$Item] -notin $ExistingIDs) {
+                        $Item
+                    }
+                }
 
                 # Additionally, if the policy name contains spaces, it's enclosed in single quotes to ensure it's treated as a single argument.
                 # This is achieved using the Compare-Object cmdlet to compare the existing and candidate values, and outputting the resulting matches.
                 # For each resulting match, it checks if the match contains a space, if so, it's enclosed in single quotes, if not, it's returned as is.
-        (Compare-Object -ReferenceObject $Candidates -DifferenceObject $Existing -PassThru | Where-Object -Property SideIndicator -EQ '<=' ).
-                ForEach({ if ($_ -match ' ') { "'{0}'" -f $_ } else { $_ } })
+                foreach ($Item in (Compare-Object -ReferenceObject $Candidates -DifferenceObject $Existing -PassThru)) {
+                    if ($Item.SideIndicator -eq '<=') {
+                        if ($Item -match ' ') {
+                            "'{0}'" -f $Item
+                        }
+                        else {
+                            $Item
+                        }
+                    }
+                }
             })]
         [ValidateScript({
                 if (
@@ -77,14 +93,18 @@ Function Remove-WDACConfig {
                 }
                 $true
             })]
-        [Parameter(Mandatory = $false, ParameterSetName = 'Unsigned Or Supplemental')]
+        [Parameter(Mandatory = $False, ParameterSetName = 'Unsigned Or Supplemental')]
         [System.String[]]$PolicyNames,
 
         [ArgumentCompleter({
-                param($commandName, $parameterName, $wordToComplete, $commandAst, $fakeBoundParameters)
+                param($CommandName, $ParameterName, $WordToComplete, $CommandAst, $FakeBoundParameters)
 
                 # Get a list of policies using the CiTool, excluding system policies and policies that aren't on disk.
-                $Policies = (&'C:\Windows\System32\CiTool.exe' -lp -json | ConvertFrom-Json).Policies | Where-Object -FilterScript { ($_.IsOnDisk -eq 'True') -and ($_.IsSystemPolicy -ne 'True') }
+                $Policies = foreach ($Item in (&'C:\Windows\System32\CiTool.exe' -lp -json | ConvertFrom-Json).Policies) {
+                    if (($Item.IsOnDisk -eq 'True') -and ($Item.IsSystemPolicy -ne 'True')) {
+                        $Item
+                    }
+                }
 
                 # Create a hashtable mapping policy IDs to policy names. This will be used later to check if a policy name already exists.
                 [System.Collections.Hashtable]$IDNameMap = @{}
@@ -93,37 +113,41 @@ Function Remove-WDACConfig {
                 }
 
                 # Get the names of existing policies that are already being used in the current command.
-                $ExistingNames = $fakeBoundParameters['PolicyNames']
+                $ExistingNames = $FakeBoundParameters['PolicyNames']
 
                 # Get the policy IDs that are currently being used in the command. This is done by looking at the abstract syntax tree (AST)
                 # of the command and finding all string literals, which are assumed to be policy IDs.
-                $Existing = $commandAst.FindAll({
+                $Existing = $CommandAst.FindAll({
                         $args[0] -is [System.Management.Automation.Language.StringConstantExpressionAst]
-                    }, $false).Value
+                    }, $False).Value
 
                 # Filter out the policy IDs that are already being used or whose corresponding policy names are already being used.
                 # The resulting list of policy IDs is what will be shown as autocomplete suggestions.
-                $Candidates = $Policies.policyID | Where-Object -FilterScript { $_ -notin $Existing -and $IDNameMap[$_] -notin $ExistingNames }
+                $Candidates = foreach ($Item in $Policies.policyID) {
+                    if ($Item -notin $Existing -and $IDNameMap[$Item] -notin $ExistingNames) {
+                        $Item
+                    }
+                }
 
-                # Return the candidates.
+                # Return the candidates
                 return $Candidates
             })]
         [ValidateScript({
                 if ($_ -notin [PolicyIDzx]::new().GetValidValues()) { throw "Invalid policy ID: $_" }
                 $true
             })]
-        [Parameter(Mandatory = $false, ParameterSetName = 'Unsigned Or Supplemental')]
+        [Parameter(Mandatory = $False, ParameterSetName = 'Unsigned Or Supplemental')]
         [System.String[]]$PolicyIDs,
 
-        [parameter(Mandatory = $false, ParameterSetName = 'Signed Base', ValueFromPipelineByPropertyName = $true)]
+        [parameter(Mandatory = $False, ParameterSetName = 'Signed Base', ValueFromPipelineByPropertyName = $true)]
         [System.IO.FileInfo]$SignToolPath,
 
-        [Parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$Force,
+        [Parameter(Mandatory = $False)][System.Management.Automation.SwitchParameter]$Force,
 
-        [Parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$SkipVersionCheck
+        [Parameter(Mandatory = $False)][System.Management.Automation.SwitchParameter]$SkipVersionCheck
     )
     Begin {
-        [System.Boolean]$Verbose = $PSBoundParameters.Verbose.IsPresent ? $true : $false
+        [System.Boolean]$Verbose = $PSBoundParameters.Verbose.IsPresent ? $true : $False
         . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
 
         Write-Verbose -Message 'Importing the required sub-modules'
@@ -151,7 +175,6 @@ Function Remove-WDACConfig {
             } # If it is null, then Get-SignTool will behave the same as if it was called without any arguments.
             else {
                 [System.IO.FileInfo]$SignToolPathFinal = Get-SignTool -SignToolExePathInput (Get-CommonWDACConfig -SignToolPath)
-
             }
 
             # If CertCN was not provided by user, check if a valid value exists in user configs, if so, use it, otherwise throw an error
@@ -182,59 +205,14 @@ Function Remove-WDACConfig {
         # ValidateSet for Policy IDs
         Class PolicyIDzx : System.Management.Automation.IValidateSetValuesGenerator {
             [System.String[]] GetValidValues() {
-                $PolicyIDzx = ((&'C:\Windows\System32\CiTool.exe' -lp -json | ConvertFrom-Json).Policies | Where-Object -FilterScript { ($_.IsOnDisk -eq 'True') -and ($_.IsSystemPolicy -ne 'True') }).policyID
 
-                return [System.String[]]$PolicyIDzx
-            }
-        }
-
-        # argument tab auto-completion and ValidateSet for Policy names
-        # Defines the PolicyNamez class that implements the IValidateSetValuesGenerator interface. This class is responsible for generating a list of valid values for the policy names.
-        Class PolicyNamez : System.Management.Automation.IValidateSetValuesGenerator {
-            # Creates a static hashtable to store a mapping of policy IDs to their respective friendly names.
-            static [System.Collections.Hashtable] $IDNameMap = @{}
-
-            # Defines a method to get valid policy names from the policies on disk that aren't system policies.
-            [System.String[]] GetValidValues() {
-                $Policies = (&'C:\Windows\System32\CiTool.exe' -lp -json | ConvertFrom-Json).Policies | Where-Object -FilterScript { ($_.IsOnDisk -eq 'True') -and ($_.IsSystemPolicy -ne 'True') }
-                self::$IDNameMap = @{}
-                foreach ($Policy in $Policies) {
-                    self::$IDNameMap[$Policy.policyID] = $Policy.Friendlyname
-                }
-                # Returns an array of unique policy names.
-                return [System.String[]]($Policies.Friendlyname | Select-Object -Unique)
-            }
-
-            # Defines a static method to get a policy name by its ID. This method will be used to check if a policy ID is already in use.
-            static [System.String] GetPolicyNameByID($ID) {
-                return self::$IDNameMap[$ID]
-            }
-        }
-
-        # Defines the PolicyIDz class that also implements the IValidateSetValuesGenerator interface. This class is responsible for generating a list of valid values for the policy IDs.
-        Class PolicyIDz : System.Management.Automation.IValidateSetValuesGenerator {
-            # Creates a static hashtable to store a mapping of policy friendly names to their respective IDs.
-            static [System.Collections.Hashtable] $NameIDMap = @{}
-
-            # Defines a method to get valid policy IDs from the policies on disk that aren't system policies.
-            [System.String[]] GetValidValues() {
-
-                # Get the policies on disk that aren't system policies
-                [System.Object[]]$Policies = (&'C:\Windows\System32\CiTool.exe' -lp -json | ConvertFrom-Json).Policies | Where-Object -FilterScript { ($_.IsOnDisk -eq 'True') -and ($_.IsSystemPolicy -ne 'True') }
-
-                self::$NameIDMap = @{}
-
-                foreach ($Policy in $Policies) {
-                    self::$NameIDMap[$Policy.Friendlyname] = $Policy.policyID
+                [System.String[]]$PolicyIDzx = foreach ($Item in (&'C:\Windows\System32\CiTool.exe' -lp -json | ConvertFrom-Json).Policies) {
+                    if (($Item.IsOnDisk -eq 'True') -and ($Item.IsSystemPolicy -ne 'True')) {
+                        $Item.PolicyID
+                    }
                 }
 
-                # Returns an array of unique policy IDs.
-                return [System.String[]]($Policies.policyID | Select-Object -Unique)
-            }
-
-            # Defines a static method to get a policy ID by its name. This method will be used to check if a policy name is already in use.
-            static [System.String] GetPolicyIDByName($Name) {
-                return self::$NameIDMap[$Name]
+                return $PolicyIDzx
             }
         }
 
@@ -269,13 +247,21 @@ Function Remove-WDACConfig {
                     Write-Verbose -Message "The policy ID of the currently processing xml file is $PolicyID"
 
                     # Extracting the policy name from the selected XML policy file
-                    [System.String]$PolicyName = ($Xml.SiPolicy.Settings.Setting | Where-Object -FilterScript { $_.provider -eq 'PolicyInfo' -and $_.valuename -eq 'Name' -and $_.key -eq 'Information' }).value.string
+                    [System.String]$PolicyName = foreach ($Item in $Xml.SiPolicy.Settings.Setting) {
+                        if ($Item.Provider -eq 'PolicyInfo' -and $Item.ValueName -eq 'Name' -and $Item.Key -eq 'Information') {
+                            $Item.Value.String
+                        }
+                    }
 
                     # Prevent users from accidentally attempting to remove policies that aren't even deployed on the system
                     Write-Verbose -Message 'Making sure the selected XML policy is deployed on the system'
 
                     Try {
-                        [System.Guid[]]$CurrentPolicyIDs = ((&'C:\Windows\System32\CiTool.exe' -lp -json | ConvertFrom-Json).Policies | Where-Object -FilterScript { $_.IsSystemPolicy -ne 'True' }).policyID | ForEach-Object -Process { "{$_}" }
+                        [System.Guid[]]$CurrentPolicyIDs = foreach ($Item in (&'C:\Windows\System32\CiTool.exe' -lp -json | ConvertFrom-Json).Policies) {
+                            if ($Item.IsSystemPolicy -ne 'True') {
+                                "{$($Item.PolicyID)}"
+                            }
+                        }
                     }
                     catch {
                         Throw 'No policy is deployed on the system.'
@@ -334,19 +320,20 @@ Function Remove-WDACConfig {
                 }
 
                 # If names were supplied by user
-                # Empty array to store Policy IDs based on the input name, this will take care of the situations where multiple policies with the same name are deployed
-                [System.Object[]]$NameID = @()
+                # HashSet to store Unique Policy IDs based on the input name, this will take care of the situations where multiple policies with the same name are deployed
+                $NameID = [System.Collections.Generic.HashSet[System.String]]@(foreach ($PolicyName in $PolicyNames) {
+                        foreach ($Item in (&'C:\Windows\System32\CiTool.exe' -lp -json | ConvertFrom-Json).Policies ) {
+                            if (($Item.IsOnDisk -eq 'True') -and ($Item.FriendlyName -eq $PolicyName)) {
+                                $Item.PolicyID
+                            }
+                        }
+                    })
 
-                foreach ($PolicyName in $PolicyNames) {
-                    $NameID += ((&'C:\Windows\System32\CiTool.exe' -lp -json | ConvertFrom-Json).Policies | Where-Object -FilterScript { ($_.IsOnDisk -eq 'True') -and ($_.FriendlyName -eq $PolicyName) }).PolicyID
-                }
+                Write-Verbose -Message "$($NameID.count) policy IDs have been gathered from the supplied policy names and are going to be removed from the system"
 
-                Write-Verbose -Message 'The Following policy IDs have been gathered from the supplied policy names and are going to be removed from the system'
-                $NameID | Select-Object -Unique | ForEach-Object -Process { Write-Verbose -Message "$_" }
-
-                $NameID | Select-Object -Unique | ForEach-Object -Process {
-                    $null = &'C:\Windows\System32\CiTool.exe' --remove-policy "{$_}" -json
-                    Write-ColorfulText -Color Lavender -InputText "Policy with the ID $_ has been successfully removed."
+                foreach ($ID in $NameID) {
+                    $null = &'C:\Windows\System32\CiTool.exe' --remove-policy "{$ID}" -json
+                    Write-ColorfulText -Color Lavender -InputText "Policy with the ID $ID has been successfully removed."
                 }
             }
         }

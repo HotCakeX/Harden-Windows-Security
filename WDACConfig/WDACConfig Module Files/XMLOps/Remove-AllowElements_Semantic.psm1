@@ -52,8 +52,8 @@ function Remove-AllowElements_Semantic {
         [System.Collections.Hashtable]$UserModeHashTable = @{}
 
         # 2 Arrays to save the <Allow> elements of User and Kernel modes
-        [System.Xml.XmlElement[]]$ArrayOfUserModes = @()
-        [System.Xml.XmlElement[]]$ArrayOfKernelModes = @()
+        $ArrayOfUserModes = New-Object -TypeName System.Collections.Generic.List[System.Xml.XmlElement]
+        $ArrayOfKernelModes = New-Object -TypeName System.Collections.Generic.List[System.Xml.XmlElement]
     }
 
     Process {
@@ -64,13 +64,13 @@ function Remove-AllowElements_Semantic {
             # Check if the User-Mode <FileRulesRef> node has any elements
             # And then check if the current <Allow> element ID is part of the User-Mode <FileRulesRef> node
             if (($Null -ne $UserMode_FileRulesRefIDs_HashSet) -and ($UserMode_FileRulesRefIDs_HashSet.Contains($AllowElement.ID))) {
-                $ArrayOfUserModes += $AllowElement
+                $ArrayOfUserModes.Add($AllowElement)
             }
 
             # Check if the Kernel-Mode <FileRulesRef> node has any elements
             # And then check if the current <Allow> element ID is part of the Kernel-Mode <FileRulesRef> node
             elseif (($Null -ne $KernelMode_FileRulesRefIDs_HashSet) -and ($KernelMode_FileRulesRefIDs_HashSet.Contains($AllowElement.ID))) {
-                $ArrayOfKernelModes += $AllowElement
+                $ArrayOfKernelModes.Add($AllowElement)
             }
             else {
                 Write-Warning -Message "Remove-AllowElements_Semantic: The Allow element with ID $($AllowElement.ID) is not part of any Signing Scenario. It will be ignored."
@@ -129,7 +129,10 @@ function Remove-AllowElements_Semantic {
             # Add the unique <Allow> element
             [System.Void]$FileRulesNode.AppendChild($Group.Key[0])
             # Add the unique <FileRuleRef> element, using [0] index because the key is an array even though it only has 1 element
-            [System.Void]$UserModeFileRefs.AppendChild(($Group.Value.GetEnumerator() | Group-Object -Property RuleID | ForEach-Object -Process { $_.Group[0] }))
+            $ToAppend1 = foreach ($Item in ($Group.Value.GetEnumerator() | Group-Object -Property RuleID)) {
+                $Item.Group[0]
+            }
+            [System.Void]$UserModeFileRefs.AppendChild($ToAppend1)
         }
 
         # Add Unique <Allow> elements and their corresponding <FileRuleRef> elements back to the XML file for the Kernel-Mode files
@@ -137,7 +140,10 @@ function Remove-AllowElements_Semantic {
             # Add the unique <Allow> element, using [0] index because the key is an array even though it only has 1 element
             [System.Void]$FileRulesNode.AppendChild($Group.Key[0])
             # Add the unique <FileRuleRef> element
-            [System.Void]$KernelModeFileRefs.AppendChild(($Group.Value.GetEnumerator() | Group-Object -Property RuleID | ForEach-Object -Process { $_.Group[0] }))
+            $ToAppend2 = foreach ($Item in ($Group.Value.GetEnumerator() | Group-Object -Property RuleID)) {
+                $Item.Group[0]
+            }
+            [System.Void]$KernelModeFileRefs.AppendChild($ToAppend2)
         }
     }
 

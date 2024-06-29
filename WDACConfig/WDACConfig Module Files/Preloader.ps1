@@ -86,7 +86,8 @@ Add-Type -Path (Get-ChildItem -File -Recurse -Path "$ModuleRootPath\C#").FullNam
     'System.Collections',
     'System.Xml.ReaderWriter',
     'System.Collections.NonGeneric',
-    'System.Management')
+    'System.Management',
+    'System.Globalization')
 
 # Importing argument completer ScriptBlocks
 . "$ModuleRootPath\CoreExt\ArgumentCompleters.ps1"

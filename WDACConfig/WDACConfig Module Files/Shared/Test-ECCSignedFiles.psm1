@@ -44,22 +44,32 @@ Function Test-ECCSignedFiles {
         ) -Verbose:$false
 
         $WDACSupportedFiles = [System.Collections.Generic.HashSet[System.String]]@()
-        $ECCSignedFiles = [System.Collections.Generic.HashSet[System.String]]@()
 
         # Get the compliant WDAC files from the File and Directory parameters and add them to the HashSet
         $WDACSupportedFiles.UnionWith([System.String[]](([WDACConfig.FileUtility]::GetFilesFast($Directory, $File, $null))))
-
     }
     Process {
         Write-Verbose -Message "Test-ECCSignedFiles: Processing $($WDACSupportedFiles.Count) WDAC compliant files to check for ECC signatures."
         # The check for existence is mainly for the files detected in audit logs that no longer exist on the disk
         # Audit logs or MDE data simply don't have the data related to the file's signature algorithm, so only local files can be checked
-        foreach ($Path in $WDACSupportedFiles | Where-Object -FilterScript { ([System.IO.FileInfo]$_).Exists -eq $true }) {
-            if ((Get-AuthenticodeSignature -LiteralPath $Path | Where-Object -FilterScript { $_.Status -eq 'Valid' }).SignerCertificate.PublicKey.Oid.Value -eq '1.2.840.10045.2.1') {
-                Write-Verbose -Message "Test-ECCSignedFiles: The file '$Path' is signed with ECC algorithm. Will create Hash Level rules for it."
-                [System.Void]$ECCSignedFiles.Add($Path)
+
+        $ECCSignedFiles = [System.Collections.Generic.HashSet[System.String]]@(
+            foreach ($Path in $WDACSupportedFiles) {
+
+                if (([System.IO.FileInfo]$Path).Exists -eq $true) {
+
+                    $AuthResult = Get-AuthenticodeSignature -LiteralPath $Path
+
+                    if ($AuthResult.Status -ieq 'Valid') {
+
+                        if (($AuthResult.SignerCertificate.PublicKey.Oid.Value).Contains('1.2.840.10045.2.1')) {
+                            #  Write-Verbose -Message "Test-ECCSignedFiles: The file '$Path' is signed with ECC algorithm. Will create Hash Level rules for it."
+                            $Path
+                        }
+                    }
+                }
             }
-        }
+        )
     }
     End {
         if (-NOT $Process) {

@@ -90,7 +90,11 @@ Function Remove-DuplicateFileAttrib_IDBased {
         foreach ($Signer in $Signers) {
 
             # Get all FileAttribRef elements under the Signer
-            [System.Xml.XmlElement[]]$FileAttribRefs = $Signer.ChildNodes | Where-Object -FilterScript { $_.Name -eq 'FileAttribRef' }
+            [System.Xml.XmlElement[]]$FileAttribRefs = foreach ($Item in $Signer.ChildNodes) {
+                if ($Item.Name -eq 'FileAttribRef') {
+                    $Item
+                }
+            }
 
             # Track seen FileAttribRef IDs
             [System.Collections.Hashtable]$SeenFileAttribRefIDs = @{}

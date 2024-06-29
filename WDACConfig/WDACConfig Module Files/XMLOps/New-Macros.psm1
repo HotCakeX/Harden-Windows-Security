@@ -19,8 +19,6 @@ Function New-Macros {
         [Parameter(Mandatory = $true)][System.Collections.Hashtable]$InputObject
     )
     Begin {
-        Import-Module -Force -FullyQualifiedName "$ModuleRootPath\WDACSimulation\Get-ExtendedFileInfo.psm1"
-
         # A HashSet to store the unique OriginalFileName values of the input files
         $Macros = [System.Collections.Generic.HashSet[System.String]] @()
 
@@ -31,8 +29,8 @@ Function New-Macros {
             Foreach ($Directory in $InputObject['SelectedDirectoryPaths']) {
                 foreach ($Exe in (Get-ChildItem -File -LiteralPath $Directory -Recurse -Include '*.exe*')) {
                     # Get the OriginalFileName property of the file
-                    $OFileName = (Get-ExtendedFileInfo -Path $Exe).FileName
-                    if (-NOT ([System.String]::IsNullOrWhiteSpace($OFileName))) {
+                    $OFileName = ([WDACConfig.ExFileInfo]::GetExtendedFileInfo($Exe)).OriginalFileName
+                    if ($null -ne $OFileName) {
                         # Add the OriginalFileName to the HashSet
                         [System.Void]$Macros.Add($OFileName)
                     }

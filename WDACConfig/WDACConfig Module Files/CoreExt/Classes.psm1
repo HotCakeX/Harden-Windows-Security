@@ -8,6 +8,10 @@ Class ScanLevelz : System.Management.Automation.IValidateSetValuesGenerator {
         $ScanLevelz = ('Hash', 'FileName', 'SignedVersion', 'Publisher', 'FilePublisher', 'LeafCertificate', 'PcaCertificate', 'RootCertificate', 'WHQL', 'WHQLPublisher', 'WHQLFilePublisher', 'PFN', 'FilePath', 'None')
         return [System.String[]]$ScanLevelz
     }
+
+    [System.Void] NewEmptyMethod() {
+        # This is an empty method
+    }
 }
 
 # argument tab auto-completion and ValidateSet for Non-System Policy names
@@ -23,6 +27,10 @@ Class BasePolicyNamez : System.Management.Automation.IValidateSetValuesGenerator
             }
         }
         return $BasePolicyNamez
+    }
+
+    [System.Void] NewEmptyMethod() {
+        # This is an empty method
     }
 }
 
@@ -50,6 +58,10 @@ Class CertCNz : System.Management.Automation.IValidateSetValuesGenerator {
         }
         # The ValidateSet attribute expects a unique set of values, and it will throw an error if there are duplicates
         Return $Output
+    }
+
+    [System.Void] NewEmptyMethod() {
+        # This is an empty method
     }
 }
 
@@ -82,6 +94,10 @@ Class RuleOptionsx : System.Management.Automation.IValidateSetValuesGenerator {
 
         $RuleOptionsx = @($Intel.Values)
         return [System.String[]]$RuleOptionsx
+    }
+
+    [System.Void] NewEmptyMethod() {
+        # This is an empty method
     }
 }
 

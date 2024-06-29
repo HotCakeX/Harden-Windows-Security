@@ -235,7 +235,6 @@ This is an advanced PowerShell module for WDAC (Windows Defender Application Con
         'WDACSimulation\Get-FileRuleOutput.psm1',
         'WDACSimulation\Get-CertificateDetails.psm1',
         'WDACSimulation\Compare-SignerAndCertificate.psm1',
-        'WDACSimulation\Get-ExtendedFileInfo.psm1',
         'Help\ConvertTo-WDACPolicy.xml',
         'Help\ConvertTo-WDACPolicy.md',
         'XMLOps\Build-SignerAndHashObjects.psm1',
@@ -290,6 +289,7 @@ This is an advanced PowerShell module for WDAC (Windows Defender Application Con
         'C#\Functions\FileDirectoryPathComparer.cs',
         'C#\Functions\CiPolicyUtility.cs',
         'C#\Functions\StagingArea.cs',
+        'C#\Functions\GetExtendedFileAttrib.cs',
         'C#\Variables\ArgumentCompleters.cs')
 
     # Private data to pass to the module specified in RootModule/ModuleToProcess. This may also contain a PSData hashtable with additional module metadata used by PowerShell.

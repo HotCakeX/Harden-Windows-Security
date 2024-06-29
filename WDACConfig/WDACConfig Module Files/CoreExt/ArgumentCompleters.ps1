@@ -1,10 +1,10 @@
 # Argument tab auto-completion for installed Appx package names
 [WDACConfig.ArgumentCompleters]::ArgumentCompleterAppxPackageNames = [System.Management.Automation.ScriptBlock]::Create( {
         # Get the current command and the already bound parameters
-        param($commandName, $parameterName, $wordToComplete, $commandAst, $fakeBoundParameters)
+        param($CommandName, $ParameterName, $WordToComplete, $CommandAst, $FakeBoundParameters)
         # Get the app package names that match the word to complete
-        Get-AppxPackage -Name *$wordToComplete* | ForEach-Object -Process {
-            "`"$($_.Name)`""
+        foreach ($AppName in (Get-AppxPackage -Name *$WordToComplete*)) {
+            "`"$($AppName.Name)`""
         }
     })
 
@@ -136,18 +136,6 @@
         }
     })
 
-
-# Opens Folder picker GUI so that user can select folders to be processed, multiple
-[WDACConfig.ArgumentCompleters]::ArgumentCompleterMultipleFolderPathsPicker = [System.Management.Automation.ScriptBlock]::Create({
-        # non-top-most, works better with window focus
-        [System.Windows.Forms.FolderBrowserDialog]$Browser = New-Object -TypeName 'System.Windows.Forms.FolderBrowserDialog'
-        $Browser.Multiselect = $true
-        [System.String]$Result = $Browser.ShowDialog()
-        # If the user clicked OK, return the selected file paths
-        if ($Result -eq 'OK') {
-            return "`"$($Browser.SelectedPaths -join '","')`""
-        }
-    })
 
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor

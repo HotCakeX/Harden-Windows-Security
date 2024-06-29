@@ -253,11 +253,11 @@ Function Set-CiRuleOptions {
         $false
     ).Value
 
-    [RuleOptionsx]::new().GetValidValues() | ForEach-Object -Process {
+    foreach ($Item in ([RuleOptionsx]::new().GetValidValues())) {
         # Check if the item is already selected
-        if ($_ -notin $Existing) {
+        if ($Item -notin $Existing) {
             # Return the item
-            "'$_'"
+            "'$Item'"
         }
     }
 }

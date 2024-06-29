@@ -79,7 +79,7 @@ Function Invoke-WDACSimulation {
 
                 Write-Verbose -Message 'Stopping the stopwatch'
                 $StopWatch.Stop()
-                Write-Verbose -Message "WDAC Simulation for $TotalSubSteps files completed in $($StopWatch.Elapsed.Hours) Hours - $($StopWatch.Elapsed.Minutes) Minutes - $($StopWatch.Elapsed.Seconds) Seconds - $($StopWatch.Elapsed.Milliseconds) Milliseconds - $($StopWatch.Elapsed.Microseconds) Microseconds - $($StopWatch.Elapsed.Nanoseconds) Nanoseconds"
+                Write-Verbose -Message "WDAC Simulation for $TotalSubSteps files completed in $($StopWatch.Elapsed.Hours) Hours - $($StopWatch.Elapsed.Minutes) Minutes - $($StopWatch.Elapsed.Seconds) Seconds - $($StopWatch.Elapsed.Milliseconds) Milliseconds - $($StopWatch.Elapsed.Microseconds) Microseconds - $($StopWatch.Elapsed.Nanoseconds) Nanoseconds" -Verbose
 
                 Write-Verbose -Message 'Stopping the transcription'
                 Stop-Transcript
@@ -460,9 +460,11 @@ Function Invoke-WDACSimulation {
             }
 
             # Wait for all jobs, grab any error that might've ocurred in them and then remove them
-            $null = Wait-Job -Job $Jobs
-            Receive-Job -Job $Jobs
-            Remove-Job -Job $Jobs
+            if ($Jobs.count -gt 0) {
+                $null = Wait-Job -Job $Jobs
+                Receive-Job -Job $Jobs
+                Remove-Job -Job $Jobs
+            }
 
             $CurrentStep++
             Write-Progress -Id 0 -Activity 'Preparing the output' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
@@ -501,6 +503,14 @@ Function Invoke-WDACSimulation {
 
             # Change the color of the Table header to SkyBlue
             $PSStyle.Formatting.TableHeader = "$($PSStyle.Foreground.FromRGB(135,206,235))"
+
+            if ($FinalSimulationResults.Count -gt 10000) {
+                # If the result is too big and the user forgot to use CSV Output then output everything to CSV instead of trying to display on the console
+                if (!$CSVOutput) {
+                    $FinalSimulationResults.Values | Sort-Object -Property IsAuthorized -Descending | Export-Csv -LiteralPath (Join-Path -Path $UserConfigDir -ChildPath "WDAC Simulation Output $(Get-Date -Format "MM-dd-yyyy 'at' HH-mm-ss").csv") -Force
+                }
+                Return "The number of files is too many to display on the console. Saving the results in a CSV file in '$((Join-Path -Path $UserConfigDir -ChildPath "WDAC Simulation Output $(Get-Date -Format "MM-dd-yyyy 'at' HH-mm-ss").csv"))'"
+            }
 
             # Return the final main output array as a table
             Return $FinalSimulationResults.Values | Select-Object -Property 'Path',
@@ -624,8 +634,8 @@ Function Invoke-WDACSimulation {
 #>
 }
 
-Register-ArgumentCompleter -CommandName 'Invoke-WDACSimulation' -ParameterName 'FolderPath' -ScriptBlock ([WDACConfig.ArgumentCompleters]::ArgumentCompleterMultipleFolderPathsPicker)
-Register-ArgumentCompleter -CommandName 'Invoke-WDACSimulation' -ParameterName 'CatRootPath' -ScriptBlock ([WDACConfig.ArgumentCompleters]::ArgumentCompleterMultipleFolderPathsPicker)
+Register-ArgumentCompleter -CommandName 'Invoke-WDACSimulation' -ParameterName 'FolderPath' -ScriptBlock ([WDACConfig.ArgumentCompleters]::ArgumentCompleterFolderPathsPicker)
+Register-ArgumentCompleter -CommandName 'Invoke-WDACSimulation' -ParameterName 'CatRootPath' -ScriptBlock ([WDACConfig.ArgumentCompleters]::ArgumentCompleterFolderPathsPicker)
 Register-ArgumentCompleter -CommandName 'Invoke-WDACSimulation' -ParameterName 'XmlFilePath' -ScriptBlock ([WDACConfig.ArgumentCompleters]::ArgumentCompleterXmlFilePathsPicker)
 Register-ArgumentCompleter -CommandName 'Invoke-WDACSimulation' -ParameterName 'FilePath' -ScriptBlock ([WDACConfig.ArgumentCompleters]::ArgumentCompleterMultipleAnyFilePathsPicker)
 

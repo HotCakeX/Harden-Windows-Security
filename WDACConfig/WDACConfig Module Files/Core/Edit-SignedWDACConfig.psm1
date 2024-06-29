@@ -360,7 +360,7 @@ Function Edit-SignedWDACConfig {
 
                         $VerbosePreference = $ParentVerbosePreference
 
-                        Write-Verbose -Message 'Scanning each of the folder paths that user selected'
+                        # Write-Verbose -Message 'Scanning each of the folder paths that user selected'
 
                         for ($i = 0; $i -lt $ProgramsPaths.Count; $i++) {
 
@@ -379,7 +379,7 @@ Function Edit-SignedWDACConfig {
                             if ($using:NoScript) { $UserInputProgramFoldersPolicyMakerHashTable['NoScript'] = $true }
                             if (!$using:NoUserPEs) { $UserInputProgramFoldersPolicyMakerHashTable['UserPEs'] = $true }
 
-                            Write-Verbose -Message "Currently scanning: $($ProgramsPaths[$i])"
+                            #  Write-Verbose -Message "Currently scanning: $($ProgramsPaths[$i])"
                             New-CIPolicy @UserInputProgramFoldersPolicyMakerHashTable
 
                             [System.Void]$PolicyXMLFilesArray.TryAdd("$($ProgramsPaths[$i]) Scan Results", "$StagingArea\ProgramDir_ScanResults$($i).xml")
@@ -477,7 +477,11 @@ Function Edit-SignedWDACConfig {
                         Clear-CiPolicy_Semantic -Path $KernelProtectedPolicyPath
 
                         # Find the kernel protected files that have PFN property
-                        $KernelProtectedFileLogsWithPFN = $KernelProtectedFileLogs | Where-Object -FilterScript { $_.PackageFamilyName }
+                        $KernelProtectedFileLogsWithPFN = foreach ($Item in $KernelProtectedFileLogs) {
+                            if ($Item.PackageFamilyName) {
+                                $Item
+                            }
+                        }
 
                         New-PFNLevelRules -PackageFamilyNames $KernelProtectedFileLogsWithPFN.PackageFamilyName -XmlFilePath $KernelProtectedPolicyPath
 
@@ -488,7 +492,11 @@ Function Edit-SignedWDACConfig {
                         Write-Verbose -Message "Kernel protected files without PFN property: $($KernelProtectedFileLogs.count - $KernelProtectedFileLogsWithPFN.count)"
 
                         # Removing the logs that were used to create PFN rules, from the rest of the logs
-                        $SelectedLogs = $SelectedLogs | Where-Object -FilterScript { $_ -notin $KernelProtectedFileLogsWithPFN }
+                        $SelectedLogs = foreach ($Item in $SelectedLogs) {
+                            if ($Item -notin $KernelProtectedFileLogsWithPFN) {
+                                $Item
+                            }
+                        }
                     }
 
                     Write-Verbose -Message 'Copying the template policy to the staging area'
@@ -901,7 +909,10 @@ Function Edit-SignedWDACConfig {
             }
         }
         finally {
-            15..17 | ForEach-Object -Process { Write-Progress -Id $_ -Activity 'Complete.' -Completed }
+            foreach ($ID in (15..17)) {
+                Write-Progress -Id $ID -Activity 'Complete.' -Completed
+            }
+
             if (!$Debug) {
                 Remove-Item -LiteralPath $StagingArea -Recurse -Force
             }

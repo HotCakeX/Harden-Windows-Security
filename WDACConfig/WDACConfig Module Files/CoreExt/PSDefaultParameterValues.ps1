@@ -27,7 +27,6 @@ $PSDefaultParameterValues = @{
     'Compare-SignerAndCertificate:Verbose'                        = $Verbose
     'Compare-SignerAndCertificate:Debug'                          = $Debug
     'Remove-SupplementalSigners:Verbose'                          = $Verbose
-    'Get-ExtendedFileInfo:Verbose'                                = $Verbose
     'Set-LogPropertiesVisibility:Verbose'                         = $Verbose
     'Test-KernelProtectedFiles:Verbose'                           = $Verbose
     'Set-CiRuleOptions:Verbose'                                   = $Verbose

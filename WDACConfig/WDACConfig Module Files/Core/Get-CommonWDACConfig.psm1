@@ -70,8 +70,10 @@ Function Get-CommonWDACConfig {
         if ($true -eq $ReturnAndDone) { return }
 
         # Remove any empty values from the hashtable
-        @($CurrentUserConfigurations.keys) | ForEach-Object -Process {
-            if (!$CurrentUserConfigurations[$_]) { $CurrentUserConfigurations.Remove($_) }
+        foreach ($Item in @($CurrentUserConfigurations.keys)) {
+            if (!$CurrentUserConfigurations[$Item]) {
+                $CurrentUserConfigurations.Remove($Item)
+            }
         }
     }
 

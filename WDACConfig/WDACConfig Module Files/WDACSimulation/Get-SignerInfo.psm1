@@ -149,8 +149,8 @@ Function Get-SignerInfo {
                     $Temp = New-Object -TypeName 'System.Collections.Generic.Dictionary[[System.String], [System.String]]'
 
                     if ($null -ne $FileAttrib.FileName) {
-                        $Temp.Add('FileName', $FileAttrib.FileName)
-                        $Temp.Add('SpecificFileNameLevel', 'FileName')
+                        $Temp.Add('OriginalFileName', $FileAttrib.FileName)
+                        $Temp.Add('SpecificFileNameLevel', 'OriginalFileName')
                     }
                     if ($null -ne $FileAttrib.FileDescription) {
                         $Temp.Add('FileDescription', $FileAttrib.FileDescription)
@@ -159,10 +159,6 @@ Function Get-SignerInfo {
                     if ($null -ne $FileAttrib.InternalName) {
                         $Temp.Add('InternalName', $FileAttrib.InternalName)
                         $Temp.Add('SpecificFileNameLevel', 'InternalName')
-                    }
-                    if ($null -ne $FileAttrib.PackageFamilyName) {
-                        $Temp.Add('PackageFamilyName', $FileAttrib.PackageFamilyName)
-                        $Temp.Add('SpecificFileNameLevel', 'PackageFamilyName')
                     }
                     if ($null -ne $FileAttrib.ProductName) {
                         $Temp.Add('ProductName', $FileAttrib.ProductName)

@@ -131,15 +131,14 @@ Function Remove-WDACConfig {
             "$ModuleRootPath\Shared\Update-Self.psm1",
             "$ModuleRootPath\Shared\Get-SignTool.psm1",
             "$ModuleRootPath\Shared\Write-ColorfulText.psm1",
-            "$ModuleRootPath\Shared\Remove-SupplementalSigners.psm1",
-            "$ModuleRootPath\Shared\New-StagingArea.psm1",
+            "$ModuleRootPath\Shared\Remove-SupplementalSigners.psm1"
             "$ModuleRootPath\Shared\Invoke-CiSigning.psm1"
         )
 
         # if -SkipVersionCheck wasn't passed, run the updater
         if (-NOT $SkipVersionCheck) { Update-Self -InvocationStatement $MyInvocation.Statement }
 
-        [System.IO.DirectoryInfo]$StagingArea = New-StagingArea -CmdletName 'Remove-WDACConfig'
+        [System.IO.DirectoryInfo]$StagingArea = [WDACConfig.StagingArea]::NewStagingArea('Remove-WDACConfig')
 
         #Region User-Configurations-Processing-Validation
         Write-Verbose -Message 'Validating and processing user configurations'
@@ -408,8 +407,8 @@ Register-ArgumentCompleter -CommandName 'Remove-WDACConfig' -ParameterName 'Sign
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCBnti5h6rIkbWSh
-# px762fsODGX4bQyezKlr9mNEpQ013aCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCBLrCNAAUz6ABDO
+# ggKEEFyo2HcRzOCmBTAcOz1SeDbFcKCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -456,16 +455,16 @@ Register-ArgumentCompleter -CommandName 'Remove-WDACConfig' -ParameterName 'Sign
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQgGac0QKPpH73m8U/pTAQf9dKO+0/HGTkt/UzuGRGvX/QwDQYJKoZIhvcNAQEB
-# BQAEggIAkiPyE/zc3z6gdWH+d6JzVHYxiUA9nPX1ER4mYg+OaOZReOVzdvM7/So8
-# 3ZciOvnFQAv4zndUNoeGAiK5tEpwdO2yvCqtOEhsNmPeT4wnrbiu9m2fiwgmt1TJ
-# XC0qUfEcxA0e2a77/9ph1Dcfb+pz0DZhYZyisiZ6Hi1MV85JGdDrwIF4IjVqStT6
-# beNYxdxXBzhwoUL8Lb2zFXH3ov6cLgAjZDouOiPMc3t0AWOfiZn/6QHeLVTl+pkY
-# INNMovtKSuq7NaWtUGyMjJaxlQtC+osc2aoBfSRrUTwVMYlU0j3ZiuueD6JEdlM4
-# TRf1B1iPcJwjf6yk3pj2EeXlisxXlqMVLFH8qQZnCy1r1ZM5cg6V6mZejB9Fq3cF
-# 8dAKbc3W0q55bI/48ugbCPoLOyrE8sOnM2jgT9o3I+lKiFhfz4l7ITZNu7dJuoOA
-# 7fPRHUM/SJt6JHr+XkpuFHwp9U31sItIvzwmvgViL7P0ArgWa+y6sADYAeIicQN8
-# TKlM9OHoWQeb54urGsJGS+VWBelJ0ugt2+EyQZBfIafWw7j7HdLpDvJlp3q+a4Kn
-# njK9E4MryfQ2cIJ3HNiLtGTcLcdXbIiif8rD8vlaLJP+Kq81bASC7RqN3pIMQCvt
-# LIiYh+1sOqh0z/iG4MgAsRHBpGe+F9/xVG+0GvuH8LztPoMHHgU=
+# IgQgTLHYhCkPnyX6sxoKk+VoMpeQ4sd3sAFiYDz0jL6UOHUwDQYJKoZIhvcNAQEB
+# BQAEggIAfZKhkZuSmOw+2844ZJ7pZ9l3NlAS/cykTzCsXdQgoz8q73XUi0eGvSpA
+# PM6YVaQn32d0Ymfp9aRMFVm7mcl1ciW+oyYff8ixKdhW2IDiD1P4nXevNVAbUntz
+# Gg8NInijtywvyifzll3a9rWCJUCeiNEmTbueiR9xk0A7pSNNyWkWi2GD+pVvRezy
+# O7usg5ahCCj+5RhnAxSRhbyJckKRXUrQcyXHxctItU6bgrv7FB3uTzh3SAHIVeNX
+# G8X4M7R2zZ9TSVVlNAzoPHWUIZEOKDwDjzY+7rSVCy7H1ryZTyDNO2c6KOhLh/9J
+# R5HnfZ9rF88GdVVphx4YxNw8zBZwScCcW4Bsn7VVc1MtRtVLeAS78dfv0C6HzA5a
+# gyewZq2NamQnnufmkcFCoSVKFt/rDGpa38KWfP5gUL2w7racw69ZN7yWMvnpdGLc
+# HZX8nbezJC6ZnDibxWdfkJdHnEkR2nIpw85+R2rpVAV9QWBgu5/j7pomev6kb18h
+# OiG80hkiPNLOcMrP5qA+0InF/ma9m4ZOZlcp1A/nWcbC002IfCYEGM7I2CArtL0X
+# 2O3xFaWKvzm8vxmluVYPdvTTWZ4y0dUNDQd02JvIcocxIJlViuCJGwKT9l9VSj/q
+# 39YfMB2Nb7oaJgJpk+AW/pNlyD3o6gfaA8MorkHRXMgVvmroD7A=
 # SIG # End signature block

@@ -61,7 +61,7 @@ CiTool --update-policy "$((Get-Location).Path)\EnforcedMode.cip" -json; Remove-I
                 # Saving the command to a file that will be executed by the RunOnce key in case of a reboot
                 $Command | Out-File -FilePath 'C:\EnforcedModeSnapBack.ps1' -Force
                 # Saving the command that runs the EnforcedModeSnapBack.ps1 file in the next reboot to the RunOnce key
-                New-ItemProperty -Path $RegistryPath -Name '*CIPolicySnapBack' -Value "powershell.exe -WindowStyle `"Hidden`" -ExecutionPolicy `"Bypass`" -Command `"& {&`"C:\EnforcedModeSnapBack.ps1`";Remove-Item -Path 'C:\EnforcedModeSnapBack.ps1' -Force}`"" -PropertyType String -Force | Out-Null
+                $null = New-ItemProperty -Path $RegistryPath -Name '*CIPolicySnapBack' -Value "powershell.exe -WindowStyle `"Hidden`" -ExecutionPolicy `"Bypass`" -Command `"& {&`"C:\EnforcedModeSnapBack.ps1`";Remove-Item -Path 'C:\EnforcedModeSnapBack.ps1' -Force}`"" -PropertyType String -Force
 #>
 
 # If the alternative way is used, this should be added to the Finally block under the:
@@ -75,8 +75,8 @@ CiTool --update-policy "$((Get-Location).Path)\EnforcedMode.cip" -json; Remove-I
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCB5a/araSn3OQ2S
-# 0Ae5gTuaDQr/Xu8QIQCE45YD+erNQaCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCCE/3vQGLL4sNJu
+# 0MZXTDA3tgYQz8fQSk+cfbnhjqBrgaCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -123,16 +123,16 @@ CiTool --update-policy "$((Get-Location).Path)\EnforcedMode.cip" -json; Remove-I
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQg4EQQiEsaoR63vxiuaprHgwze3OrU9X3H8WELiRHJInowDQYJKoZIhvcNAQEB
-# BQAEggIAMmHKVwXwKU9316MybuK6OCMb8Yn9cRxuFNkbXzXpilc4DmlJwjdaKFAA
-# Ce4Hz98hd8LhA1YYH6OOqZqSGFRBowD8FdMOKUaK9LJ88Rt6pdxIPel8fNxJiMU3
-# nn+Qj++Ck3MOdXCGiiQZGYW2Mw2033XodPCVnMn5Ex3tNm3QSoeqbc3CuPkniqVD
-# tJ4hreEF6DPaGwHIpp5dOqhm3NrI9ekRqXNzkA/wdQ3OMcidYMpL4C5aZkUXF2S1
-# Rkc5edK60CzW1O8cDVD+0nzadjxWDOi6gaOgFK1t5sUMpTGuHZBMMCsNDwXtJq2H
-# 2Z2RYaZsErkZOgqu/WG+v8Q3YAR222H6vbvJ8xmg326YcMg9XWDlDziOOtGTLkvq
-# tIcYubA3qfQvHwISNNv0uiawdiTxzy+bKFZCrlS8Zvd/THVgprNxcQ5lQyDM5cmW
-# RPIypGaDXEWIO/CIt2fRNDS9IKXgbVaLa+1ggAcjYAd1KXd5ZEj3bKsfKw0c5mI2
-# n1GioroYpiPk25USj6cuqxix0Z2MD/pyJOxxB/GHTYZu25CO1jfuIQBkT2dvPwXC
-# luj9zdX8/IH5qpD3ii/Hr5YTB7JXFmkyoCK5m4V+IBR5szumAdphrq7r6nyArXHt
-# 0a+WoAMfRyJT6TlRZzRgH36tNwD8VJSiuADuezMfX9BRAsqafb8=
+# IgQgBLhnLWzk/YwLN/LKcJIb1O4fhqHgJ1NyLY2GDl91v0gwDQYJKoZIhvcNAQEB
+# BQAEggIAorAK11ezvkYiPa2WZNfUkg/cGE7aAFtidojAkK2Uj9V0dSErmUbhvzsV
+# hZjlskNiGvqeqcAWgs1Rn8vZGXc23PeVZO7zBOyY7aBT6ktlbWLeGoRKVzN+a0KY
+# 7Lm2R0zWtG84fqO9vQmT542Qqks8wFHhHuXIsCwhSLKvro7gkccK72zJI9W7VT9r
+# MDEb5ju8voFJj0jbpvNBHCaWRNZ+z80Z7sBhfp/o7ZGnDcK4EeRLH67LBR+A4j1H
+# VF+baRWolw+ivxp/DCteTeCbTzKkeAOpcErbgrN2s+3Igf+Bs99aqxvB1kjBwA7+
+# rMbHnxzL650E/gDCZXGdRv2RypSNsaxs6QTU0w8HXcSLZKXEciuYX0QhdeR98wU8
+# DNXMbfAhtIng0TCDzXCF7CFwoI+F4ciYEmyqZnwonQlsu3RtJUuWSpM/IET6fTPD
+# gwI67vU9yrZ8EI72laUfJ+o9SE5Di4rG5YLDMVCnniim6wr9+PmAYD4vbY2ftLXW
+# VZJnjAw5HgthkkItfwP4UajqDrdM3NClFfHt2x+oTKaRXg8QhgHJHaPZQkJbip2h
+# Ajn2wUFNBh4rhqU61NTVWMjg8URZXqJMUlRrEyuDLK72wymj1jz+ZGaQD0XNM2TY
+# BpJhQP+HsiHjaXvQcyu8Yq/rbO2siaXS6RQYeqPBZ5qUAhsviiY=
 # SIG # End signature block

@@ -39,15 +39,13 @@ Function Deploy-SignedWDACConfig {
             "$ModuleRootPath\Shared\Update-Self.psm1",
             "$ModuleRootPath\Shared\Get-SignTool.psm1",
             "$ModuleRootPath\Shared\Write-ColorfulText.psm1",
-            "$ModuleRootPath\Shared\Copy-CiRules.psm1",
-            "$ModuleRootPath\Shared\New-StagingArea.psm1",
             "$ModuleRootPath\Shared\Invoke-CiSigning.psm1"
         )
 
         # if -SkipVersionCheck wasn't passed, run the updater
         if (-NOT $SkipVersionCheck) { Update-Self -InvocationStatement $MyInvocation.Statement }
 
-        [System.IO.DirectoryInfo]$StagingArea = New-StagingArea -CmdletName 'Deploy-SignedWDACConfig'
+        [System.IO.DirectoryInfo]$StagingArea = [WDACConfig.StagingArea]::NewStagingArea('Deploy-SignedWDACConfig')
 
         #Region User-Configurations-Processing-Validation
         # Get SignToolPath from user parameter or user config file or auto-detect it
@@ -126,7 +124,7 @@ Function Deploy-SignedWDACConfig {
                     if ('Enabled:UMCI' -in $PolicyRuleOptions) {
 
                         Write-Verbose -Message 'Checking whether SignTool.exe is allowed to execute in the policy or not'
-                        if (-NOT (Invoke-WDACSimulation -FilePath $SignToolPathFinal -XmlFilePath $PolicyPath -BooleanOutput -NoCatalogScanning)) {
+                        if (-NOT (Invoke-WDACSimulation -FilePath $SignToolPathFinal -XmlFilePath $PolicyPath -BooleanOutput -NoCatalogScanning -ThreadsCount 1)) {
 
                             Write-Verbose -Message 'The policy type is base policy and it applies to user mode files, yet the policy prevents SignTool.exe from executing. As a precautionary measure, scanning and including the SignTool.exe in the policy before deployment so you can modify/remove the signed policy later from the system.'
 
@@ -134,7 +132,7 @@ Function Deploy-SignedWDACConfig {
                             [System.IO.DirectoryInfo]$SymLinksStorage = New-Item -Path (Join-Path -Path $StagingArea -ChildPath 'SymLinkStorage') -ItemType Directory -Force
 
                             Write-Verbose -Message 'Creating symbolic link to the SignTool.exe'
-                            New-Item -ItemType SymbolicLink -Path "$SymLinksStorage\SignTool.exe" -Target $SignToolPathFinal | Out-Null
+                            $null = New-Item -ItemType SymbolicLink -Path "$SymLinksStorage\SignTool.exe" -Target $SignToolPathFinal -Force
 
                             Write-Verbose -Message 'Scanning the SignTool.exe and generating the SignTool.xml policy'
                             New-CIPolicy -ScanPath $SymLinksStorage -Level FilePublisher -Fallback None -UserPEs -UserWriteablePaths -MultiplePolicyFormat -AllowFileNameFallbacks -FilePath "$SymLinksStorage\SignTool.xml"
@@ -143,10 +141,10 @@ Function Deploy-SignedWDACConfig {
 
                             Write-Verbose -Message 'Merging the SignTool.xml policy with the policy being signed'
                             # First policy in the array should always be the main one so that its settings will be used in the merged policy
-                            Merge-CIPolicy -PolicyPaths $PolicyPath, "$SymLinksStorage\SignTool.xml" -OutputFilePath $AugmentedPolicyPath | Out-Null
+                            $null = Merge-CIPolicy -PolicyPaths $PolicyPath, "$SymLinksStorage\SignTool.xml" -OutputFilePath $AugmentedPolicyPath
 
                             Write-Verbose -Message 'Making sure policy rule options stay the same after merging the policies'
-                            Copy-CiRules -SourceFile $PolicyPath -DestinationFile $AugmentedPolicyPath
+                            [WDACConfig.CiPolicyUtility]::CopyCiRules($PolicyPath, $AugmentedPolicyPath)
 
                             Write-Verbose -Message 'Replacing the new policy with the old one'
                             Move-Item -Path $AugmentedPolicyPath -Destination $PolicyPath -Force
@@ -174,7 +172,7 @@ Function Deploy-SignedWDACConfig {
                 [system.io.FileInfo]$PolicyCIPPath = Join-Path -Path $StagingArea -ChildPath "$PolicyID.cip"
 
                 Write-Verbose -Message 'Converting the policy to .CIP file'
-                ConvertFrom-CIPolicy -XmlFilePath $PolicyPath -BinaryFilePath $PolicyCIPPath | Out-Null
+                $null = ConvertFrom-CIPolicy -XmlFilePath $PolicyPath -BinaryFilePath $PolicyCIPPath
 
                 $CurrentStep++
                 Write-Progress -Id 13 -Activity 'Signing the policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
@@ -195,7 +193,7 @@ Function Deploy-SignedWDACConfig {
                     if ($PSCmdlet.ShouldProcess('This PC', 'Deploying the signed policy')) {
 
                         Write-Verbose -Message 'Deploying the policy'
-                        &'C:\Windows\System32\CiTool.exe' --update-policy $PolicyCIPPath -json | Out-Null
+                        $null = &'C:\Windows\System32\CiTool.exe' --update-policy $PolicyCIPPath -json
 
                         Write-ColorfulText -Color Lavender -InputText 'policy with the following details has been Signed and Deployed in Enforced Mode:'
                         Write-ColorfulText -Color MintGreen -InputText "PolicyName = $PolicyName"
@@ -215,7 +213,7 @@ Function Deploy-SignedWDACConfig {
                                     if ($($PolicyID.TrimStart('{').TrimEnd('}')) -eq $StrictKernelPolicyGUID) {
 
                                         Write-Verbose -Message 'Removing the GUID of the deployed Strict Kernel mode policy from the User Configs'
-                                        Remove-CommonWDACConfig -StrictKernelPolicyGUID | Out-Null
+                                        $null = Remove-CommonWDACConfig -StrictKernelPolicyGUID
                                     }
                                 }
                             }
@@ -227,7 +225,7 @@ Function Deploy-SignedWDACConfig {
                                     if ($($PolicyID.TrimStart('{').TrimEnd('}')) -eq $StrictKernelNoFlightRootsPolicyGUID) {
 
                                         Write-Verbose -Message 'Removing the GUID of the deployed Strict Kernel No Flights mode policy from the User Configs'
-                                        Remove-CommonWDACConfig -StrictKernelNoFlightRootsPolicyGUID | Out-Null
+                                        $null = Remove-CommonWDACConfig -StrictKernelNoFlightRootsPolicyGUID
                                     }
                                 }
                             }
@@ -300,8 +298,8 @@ Register-ArgumentCompleter -CommandName 'Deploy-SignedWDACConfig' -ParameterName
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCDd1kPaoE/mfFvn
-# +FKa4HEzm/1bEc58VAiL8n800qW7YqCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCA0RcxRIdKZf6Ex
+# BsJ2uz12dgbUsTWXpHDM7Kv4p5CNr6CCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -348,16 +346,16 @@ Register-ArgumentCompleter -CommandName 'Deploy-SignedWDACConfig' -ParameterName
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQgAD/QgFC7i0DS/jz9v4YMcxj4nmhthmLU6NB066pfEJEwDQYJKoZIhvcNAQEB
-# BQAEggIAmxtH5LFvO2xH70rhxFcUngjk6It5mnm20R8935+E3/ItGrIB4BnfU+nk
-# aJrz3i8rRuK/p4gQ5LUOYAzRQ1C1vy/3xHiHx2hEQacpBOjLLO+QzMVEmPUku9NZ
-# Wpio4GX4puguXcetHq2aoGozpAshNp3bOWwJ3oK2iYncFxLYQrgZiw9gApVwhIRT
-# fYMzglrUL8wvEEoC+gQO4qIzP1iJoqPVI3gRItqPzhSic34iJamBiRhI1K6t9Y0O
-# nnEGkvh9VXb+HqxdwzyFH81cCikUri0RaeTOX+gun5Z6f1Tiu5L7wd/rPZSCYJdv
-# W4NPkKJty8PpHOYtMdqeZVgea2ZrPakhFVVlATgtbX9LOYKXOmEq3z/PHyRexO8L
-# DQkfs+RIe/BONiKYTKcy/Qb45HeDkWfvtkcLXP5c4kODp3X6yfUWtBHPJf+lgwjS
-# aV7nskaWIMa8HkltzL+g+8Faav/y7RpopzyY7lRbQjUmOX6XKFNNKlBKGzWsKO63
-# 2OoIXff1vUb4ALPF0kwe56gPpc6MzYBiK2DyVi/A6OAFOql8+7IoqbLGBy4Z7owh
-# gF2dGUYEXYY/9ZUPTaM6rLwncOzDE3nUWD9YUsg//X/E4bH72hdIt+Jpv7bMbH7E
-# HpZEbR6n3RoV4QpFWIraejQ2vM8enBH1Ic9w42uNk8Jc1GcqnkM=
+# IgQgzhIlqEFZMa5QoZ2b2xyJxoAWJZc4QP6ggKBrchkW2YYwDQYJKoZIhvcNAQEB
+# BQAEggIAK+ySMaQr37lJRZ+3ZVKVpqi9N9V1m4euBVMgn77GKWzyi9fhy21G4A2d
+# XzjSrn2pUOtvIiFw/g7Ghmny3s4/nOIuS7QL4UESYctNbJvogku/i65W+ya93AaL
+# 5pYA0vMa7J5u6cBTHYpOKjw+7mAJi4NoFKND1Q3xLLcHNfcJUUdaxZIE3HmnlI7G
+# BGcc2CgnJUrFiBKHVngRxW/b3r7/6qThPn3F9v9X5VgOqsinniFeehWpfm9xyHRF
+# DrIjvlZ9N9CFPx8oPwK0HYltgrlAuEFfKFx1Fjuxdr5jOOiNiJ4msfRnEcViB804
+# zfzG307+Z8uDFcIUpyz15GOViCZi43qKyGRwDvK1+XhIlcr3Ztw4Z9lcxSOX9/O1
+# Ppd0BAOCBHzWHrHK/BZSCGbk0rKdfObP2XBEy2aj/onoYDq6SCTguivZaw8kIyWk
+# /0LCkxLpivZopTLaiQem0Z+j4HNd/dHxHknAZoxGFCk9CY9fAaFDYdQ2tRP7YDQx
+# auIss8m1G/ueSGopr6NXhazunKeBqjTRMD+9c8FVAm42vy6Vg4YfuyUTIft4FUxT
+# ic0oo6ThtzGFn3qnvYPskO5Cidol0wVU6FjVuqgucknvIsl1/ne+4Da9YEahwRH0
+# ZcPXCwYpadttgZKcEq9Uy8GOA8C6k/HPMofgBiocifEdPY5y7hg=
 # SIG # End signature block

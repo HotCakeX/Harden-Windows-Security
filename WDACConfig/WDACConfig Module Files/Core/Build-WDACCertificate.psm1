@@ -50,7 +50,7 @@ Function Build-WDACCertificate {
         }
 
         # Create the staging area for the Build-WDACCertificate cmdlet
-        New-Item -Path $StagingArea -ItemType Directory -Force | Out-Null
+        $null = New-Item -Path $StagingArea -ItemType Directory -Force
 
         # If user entered a common name that is not 'Code Signing Certificate' (which is the default value)
         if ($CommonName -ne 'Code Signing Certificate') {
@@ -222,16 +222,16 @@ ValidityPeriod = Years
             [System.IO.FileInfo]$CertificateOutputPath = Join-Path -Path $UserConfigDir -ChildPath "$FileName.cer"
 
             Write-Verbose -Message "Exporting the certificate (public key only) to $FileName.cer"
-            Export-Certificate -Cert $TheCert -FilePath $CertificateOutputPath -Type 'CERT' -Force | Out-Null
+            $null = Export-Certificate -Cert $TheCert -FilePath $CertificateOutputPath -Type 'CERT' -Force
 
             Write-Verbose -Message "Exporting the certificate (public and private keys) to $FileName.pfx"
-            Export-PfxCertificate -Cert $TheCert -CryptoAlgorithmOption 'AES256_SHA256' -Password $Password -ChainOption 'BuildChain' -FilePath (Join-Path -Path $UserConfigDir -ChildPath "$FileName.pfx") -Force | Out-Null
+            $null = Export-PfxCertificate -Cert $TheCert -CryptoAlgorithmOption 'AES256_SHA256' -Password $Password -ChainOption 'BuildChain' -FilePath (Join-Path -Path $UserConfigDir -ChildPath "$FileName.pfx") -Force
 
             Write-Verbose -Message 'Removing the certificate from the certificate store'
             $TheCert | Remove-Item -Force
 
             Write-Verbose -Message 'Importing the certificate to the certificate store again, this time with the private key protected by VSM (Virtual Secure Mode - Virtualization Based Security)'
-            Import-PfxCertificate -ProtectPrivateKey 'VSM' -FilePath (Join-Path -Path $UserConfigDir -ChildPath "$FileName.pfx") -CertStoreLocation 'Cert:\CurrentUser\My' -Password $Password | Out-Null
+            $null = Import-PfxCertificate -ProtectPrivateKey 'VSM' -FilePath (Join-Path -Path $UserConfigDir -ChildPath "$FileName.pfx") -CertStoreLocation 'Cert:\CurrentUser\My' -Password $Password
 
             Write-Verbose -Message 'Saving the common name of the certificate to the User configurations'
             $null = Set-CommonWDACConfig -CertCN $CommonName
@@ -329,8 +329,8 @@ ValidityPeriod = Years
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCCcO2vJgCj4LvDL
-# 4YmhcLYZBVJ5Vs8kR3a14H866GUGnqCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCCI1fQsUmeE7RQj
+# 6wsWtYy6egval3W4xTyGUPVgQkc/JKCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -377,16 +377,16 @@ ValidityPeriod = Years
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQgmePmZCdXjze8XWMs2bfi3gy+dBJBqG1LeQJYNnV1/GkwDQYJKoZIhvcNAQEB
-# BQAEggIAn+6kdL2qtZuDwumJw4j2cehUb4W70jkxVkATegdPCbp0ZxFpCbKkDJri
-# SeX8lmfZu4IaPN41ez1kVwMZhJBnc1GztkkgtnKyHSI5UdkJYtZQUSFrQk5zsW64
-# lIDlimaCtvKTld/zCcCsKA5b62uzL8MmP920/Zsg9cn1xFpNTaZjLKQhlmx6RFtr
-# 5bpthUXVZNkoKxcoU9ONF/Csi1M3JnUNhQmbc0M6FMGWaLg5GxOln8R6ZU4W34wI
-# 7F/5ozK9UpfGWa3UYjEiyz7bpr8BEw0sVbZbqyGAbOYe6m5wDFnyZAakg3uhDm6V
-# I8D+DgkZ8HxT42Uk1rNQuOPWj/f384Ttf5tjOHzi51u0LubANSFLYp+dK+i87Hiq
-# qusTvM+7me1yVMh2JnEI9zODbbKXdmSss4Xg/Tac9n8xjIEeF4b7Wht1ABCSDtaL
-# JJGHzwuoKXX+quAHnziR0/FLwOucmEFfcoAs7wHEEUBcAy4qjQ2fRA1Lm669RVbG
-# bsvGxFBN4t/bzdF/2aBFljSaD1GQm6PPILXy5wPTkxBUIc2SA2DbTwt/24yA9Npw
-# iMpZL8maOfN7BX30h8D1vk47hIskYSer3W+7KDp5TPdTedUC1egGHl17A53vXBPM
-# CQB8WBccDlOVqupooChT+wVumWa5uA+K4fCiHteCZUQG1/B7PgM=
+# IgQgXvFCeKM1Jf6qizROoU0kzmNBq2GnD+itUS1Jtx1qWCwwDQYJKoZIhvcNAQEB
+# BQAEggIAL+hSmoh4gJWr4kAx9acS/t81Mgiu1aSWl2rNVv1YfQ1J8RvvpTAciW+u
+# 42NLpKsreckDES380DUSs6LlXo97hICdSDvCplofqSGunk/wD3Kgwh7NxguruCBZ
+# LE3rC85Zx1lbEHnRnnNnJCbjbNUm6+k9oXfDTcZEGEkMARwxR1zOwOCTwPY0ymsC
+# ozQkkm8Tp2zhuV7h4b0GKdOB4YLjuPhNlzFMKZT5Ntb1F7JGKDqbYx+iHiKz0xDh
+# r1m8UIgQsuPJ4UzW8AbmqbA9z7IsKUBBwNEVCTQqVsZ9BhWI/z8mRVBlQkNzWA5L
+# d4MiAAmeTcB+2qklXaLaLoTKrk1Ri17JdglGVlm4I3OPJqnYgTPX2Gx5blah7XCz
+# NM+HNUhfGRzwSW3SjpB07a2pGGExWBOWX8HPyr7AlWJsWavGkxbIuDDiReq/NpwS
+# qIXyp0Am9GkapF0BvmYIDS3AdW0Q5Cg88v6001bkVyiVctckl2+5k3/zWIEdzoEk
+# slExaJ1uCykyQvtTmuEMvtAIU4AeZqezsmKfSUaHyf9vlGh2G+s/ozK41BfVf1D1
+# Q7dDB40PFRWPhiH/tF0WJJS7TTVIr9No5dYTS3QE+XBP/qSOs8emnTMTie+MUFwH
+# nWVpz5TCD1s80BN3Gj/MZ79WwdFZNztocOPjdcjF7eZIXB6A5HU=
 # SIG # End signature block

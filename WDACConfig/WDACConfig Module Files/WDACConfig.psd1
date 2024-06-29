@@ -222,10 +222,8 @@ This is an advanced PowerShell module for WDAC (Windows Defender Application Con
         'Shared\Write-ColorfulText.psm1',
         'Shared\New-SnapBackGuarantee.psm1',
         'Shared\Get-KernelModeDriversAudit.psm1',
-        'Shared\Copy-CiRules.psm1',
         'Shared\Remove-SupplementalSigners.psm1',
         'Shared\Receive-CodeIntegrityLogs.psm1',
-        'Shared\New-StagingArea.psm1',
         'Shared\Set-LogPropertiesVisibility.psm1',
         'Shared\Test-KernelProtectedFiles.psm1',
         'Shared\Select-LogProperties.psm1',
@@ -290,6 +288,8 @@ This is an advanced PowerShell module for WDAC (Windows Defender Application Con
         'C#\Functions\MeowOpener.cs',
         'C#\Functions\XmlFilePathExtractor.cs',
         'C#\Functions\FileDirectoryPathComparer.cs',
+        'C#\Functions\CiPolicyUtility.cs',
+        'C#\Functions\StagingArea.cs',
         'C#\Variables\ArgumentCompleters.cs')
 
     # Private data to pass to the module specified in RootModule/ModuleToProcess. This may also contain a PSData hashtable with additional module metadata used by PowerShell.

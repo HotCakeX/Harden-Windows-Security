@@ -393,7 +393,7 @@ Function Invoke-WDACSimulation {
                                         # Use the Compare-SignerAndCertificate function to process it
                                         $ComparisonResult = Compare-SignerAndCertificate -SimulationInput ([WDACConfig.SimulationInput]::New(
                                                 $CurrentFilePath, # Path of the signed file
-                                    (Get-CertificateDetails -CompleteSignatureResult $FileSignatureResults), # Get all of the details of all certificates of the signed file
+                                                (Get-CertificateDetails -CompleteSignatureResult $FileSignatureResults), # Get all of the details of all certificates of the signed file
                                                 $SignerInfo, # The entire Signer Info of the WDAC Policy file
                                                 $FileSignatureResults.Signer.SignerInfos.Certificate.EnhancedKeyUsageList.ObjectId # The EKU OIDs of the primary signer of the file, just like the output of the Get-AuthenticodeSignature cmdlet, the ones that WDAC policy uses for EKU-based authorization
                                             ))
@@ -403,7 +403,6 @@ Function Invoke-WDACSimulation {
                                 }
                                 # Handle the HashMismatch situations
                                 catch [WDACConfig.AllCertificatesGrabber.ExceptionHashMismatchInCertificate] {
-                                    Write-Warning -Message "The file: $CurrentFilePath has hash mismatch, it is most likely tampered."
 
                                     [System.Void]$FinalSimulationResults.TryAdd([string]$CurrentFilePath, [WDACConfig.SimulationOutput]::New(
                                     ([System.IO.Path]::GetFileName($CurrentFilePath)),
@@ -633,8 +632,8 @@ Register-ArgumentCompleter -CommandName 'Invoke-WDACSimulation' -ParameterName '
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCD1MU2Kcdljjc5a
-# qffc3oA3Qz4Wt4Ex01QHNh3vWh5y8aCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCBeLXxRP5tpOd+T
+# V0ZWTibxhIn8LOEIVGhfE2HKGk+9TqCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -681,16 +680,16 @@ Register-ArgumentCompleter -CommandName 'Invoke-WDACSimulation' -ParameterName '
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQgZsNWsQaxJrE4u9f3liaRJbc9MslhY9a7OSomKlpqKHswDQYJKoZIhvcNAQEB
-# BQAEggIAaUnB2iHzqjdqRSMCUt+d3GE/lUEGkN8hkgiar6R/zWdd8LTBRjwQyDGy
-# T6fX5XVVGloN5HFgA7W04oC/fTAyoAMbKAM/fH9BuMlmH/sjGxFP+rN2hgB076Wt
-# Yrj0urzaUjsDs9F/x0bZ7PLSixKYgtNjurd38FX72YuvVGGuvSwrYFZhMOoSOIrK
-# O6ki1ha7///GUUTXOzqQcFb84+YE0cTANtRXwhxgkuRtiNfSknS47gNMsVn16hy0
-# Mv1PzFTMjErmTiUctYs6PsEC/AeKXNcbIwIGxL2JeapFKfi/qjqdMz2sF6hMMW7/
-# UzmXf5z2Dd3UEWM92PUBphirJOU0o5BPLTg3BYYzd7gK4LpLDKJIoJ6yHOs2Ih+/
-# Rwt9gojZeJpyvfTSm06pJB2lDTZzILoxHbQ0og9FOASkblrP4Lxz6k7BpfZ9R4Ah
-# 6dwOC3k+7Qq/xGK3+6I+/Xf35ApQBzGj5c1dvfWGWYUmOaICP/vv5my8CZzQ/y9c
-# qVzzqM1TAvd/l8xo5I5M4ahFRGDwTemniKMb9kODODRy0cKw5mFSXDMIGWOHSWye
-# Ad/sdOR719ooaX71LbjEu9P+U/2R15kP4soBEAccVuOFQz4WTV3SXZWiziKKvgM0
-# sQKdIwezhfC2VXj7y8Ff6OntqEn3WlPJbRqbghy18CIlgiLi9iU=
+# IgQgbnAQqDxkuSGMZ2YbIaXo4+RCqJZcZdnSaoj/iIElyocwDQYJKoZIhvcNAQEB
+# BQAEggIAjKEMvwcI4AZKION18VkTbfIKvv5sM4mij39XZ0yeQ3ku5DydyNN4CePJ
+# SEtd1fhWL0eW2TFsEKjHxp7Wv4Lz/Dauo3zl+j5YiIcGEXapyxGRniTNV6J3uB5y
+# +cOwRuyZjvbgQC4/N55jD4RK/0YnDpwvwnRCeVXEBTQC44OquSDOVkjtJsekO1wA
+# +DFGRqqnZKhyw4fiuLWMXV0iX68+H8LenWS5k93nlXBspDYh0ouirTGGcmbMvLAa
+# 0EIVFZ0A3Q2GwJnXBtKWFTxiPLqKlo24ypwZzqoWWlzgbzuKFy6ka1QrpY6fjIWP
+# uSqJTNPjAcq6z9sb4iRqafa/ZLEwdmE/rGhPVXGzpzHccMe5sRZ901Jbv9e9DQ/a
+# G51ZOBbiCNc3emUkB0eKitFJphub0aQkGDCJdRMS9Ea3xzEO17PLnc09BMC4RGbK
+# SSn2rJHabGlWjG/Obiwx2qJx4uPndFxZfKaaG4qnviUdqNhEgVd0TyOW33ubC6mq
+# /NHj90A6MoPrk/G4Q3RnQyenTU3Z1/BVzDbzlbhkhRooW59X/EFW35VRwgIS+s80
+# b3JKHIAeM6BPQCjoND9UhHXOFjwb9ZhVJd/WbEAu03filwT5cniqbdYQbjV1rsEb
+# 5T+0Rj57FNsv5zLEe32fjupwbrYfTlNouRVbRxMLeyqFNN8L5GM=
 # SIG # End signature block

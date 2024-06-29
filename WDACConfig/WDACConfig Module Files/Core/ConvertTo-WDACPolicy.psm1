@@ -319,7 +319,6 @@ Function ConvertTo-WDACPolicy {
             "$ModuleRootPath\Shared\Update-Self.psm1",
             "$ModuleRootPath\Shared\Write-ColorfulText.psm1",
             "$ModuleRootPath\Shared\Receive-CodeIntegrityLogs.psm1",
-            "$ModuleRootPath\Shared\New-StagingArea.psm1",
             "$ModuleRootPath\Shared\Set-LogPropertiesVisibility.psm1",
             "$ModuleRootPath\Shared\Select-LogProperties.psm1",
             "$ModuleRootPath\Shared\Test-KernelProtectedFiles.psm1"
@@ -342,7 +341,7 @@ Function ConvertTo-WDACPolicy {
         if (-NOT $SkipVersionCheck) { Update-Self -InvocationStatement $MyInvocation.Statement }
 
         # Defining a staging area for the current
-        [System.IO.DirectoryInfo]$StagingArea = New-StagingArea -CmdletName 'ConvertTo-WDACPolicy'
+        [System.IO.DirectoryInfo]$StagingArea = [WDACConfig.StagingArea]::NewStagingArea('ConvertTo-WDACPolicy')
 
         # If TimeSpan parameter was selected
         if ($TimeSpan) {
@@ -519,7 +518,7 @@ Function ConvertTo-WDACPolicy {
 
                     $PolicyFilesToMerge.Add($WDACPolicyPathTEMP)
 
-                    Merge-CIPolicy -PolicyPaths $PolicyFilesToMerge -OutputFilePath $WDACPolicyPath | Out-Null
+                    $null = Merge-CIPolicy -PolicyPaths $PolicyFilesToMerge -OutputFilePath $WDACPolicyPath
 
                     Switch ($True) {
 
@@ -540,11 +539,11 @@ Function ConvertTo-WDACPolicy {
                             Copy-Item -Path $WDACPolicyPath -Destination $UserConfigDir -Force
 
                             if ($Deploy) {
-                                ConvertFrom-CIPolicy -XmlFilePath $WDACPolicyPath -BinaryFilePath (Join-Path -Path $StagingArea -ChildPath "$SupplementalPolicyID.cip") | Out-Null
+                                $null = ConvertFrom-CIPolicy -XmlFilePath $WDACPolicyPath -BinaryFilePath (Join-Path -Path $StagingArea -ChildPath "$SupplementalPolicyID.cip")
 
                                 Write-Verbose -Message 'ConvertTo-WDACPolicy: Deploying the Supplemental policy'
 
-                                &'C:\Windows\System32\CiTool.exe' --update-policy (Join-Path -Path $StagingArea -ChildPath "$SupplementalPolicyID.cip") -json | Out-Null
+                                $null = &'C:\Windows\System32\CiTool.exe' --update-policy (Join-Path -Path $StagingArea -ChildPath "$SupplementalPolicyID.cip") -json
                             }
                         }
 
@@ -562,11 +561,11 @@ Function ConvertTo-WDACPolicy {
                             Copy-Item -Path $WDACPolicyPath -Destination $UserConfigDir -Force
 
                             if ($Deploy) {
-                                ConvertFrom-CIPolicy -XmlFilePath $WDACPolicyPath -BinaryFilePath (Join-Path -Path $StagingArea -ChildPath "$SupplementalPolicyID.cip") | Out-Null
+                                $null = ConvertFrom-CIPolicy -XmlFilePath $WDACPolicyPath -BinaryFilePath (Join-Path -Path $StagingArea -ChildPath "$SupplementalPolicyID.cip")
 
                                 Write-Verbose -Message 'ConvertTo-WDACPolicy: Deploying the Supplemental policy'
 
-                                &'C:\Windows\System32\CiTool.exe' --update-policy (Join-Path -Path $StagingArea -ChildPath "$SupplementalPolicyID.cip") -json | Out-Null
+                                $null = &'C:\Windows\System32\CiTool.exe' --update-policy (Join-Path -Path $StagingArea -ChildPath "$SupplementalPolicyID.cip") -json
                             }
                         }
 
@@ -577,22 +576,22 @@ Function ConvertTo-WDACPolicy {
                             # Objectify the user input policy file to extract its policy ID
                             $InputXMLObj = [System.Xml.XmlDocument](Get-Content -Path $PolicyToAddLogsTo)
 
-                            Set-CIPolicyIdInfo -FilePath $WDACPolicyPath -PolicyName $SuppPolicyName -ResetPolicyID | Out-Null
+                            $null = Set-CIPolicyIdInfo -FilePath $WDACPolicyPath -PolicyName $SuppPolicyName -ResetPolicyID
 
                             # Remove all policy rule options prior to merging the policies since we don't need to add/remove any policy rule options to/from the user input policy
                             Set-CiRuleOptions -FilePath $WDACPolicyPath -RemoveAll
 
-                            Merge-CIPolicy -PolicyPaths $PolicyToAddLogsTo, $WDACPolicyPath -OutputFilePath $PolicyToAddLogsTo | Out-Null
+                            $null = Merge-CIPolicy -PolicyPaths $PolicyToAddLogsTo, $WDACPolicyPath -OutputFilePath $PolicyToAddLogsTo
 
                             # Set HVCI to Strict
                             Set-HVCIOptions -Strict -FilePath $PolicyToAddLogsTo
 
                             if ($Deploy) {
-                                ConvertFrom-CIPolicy -XmlFilePath $PolicyToAddLogsTo -BinaryFilePath (Join-Path -Path $StagingArea -ChildPath "$($InputXMLObj.SiPolicy.PolicyID).cip") | Out-Null
+                                $null = ConvertFrom-CIPolicy -XmlFilePath $PolicyToAddLogsTo -BinaryFilePath (Join-Path -Path $StagingArea -ChildPath "$($InputXMLObj.SiPolicy.PolicyID).cip")
 
                                 Write-Verbose -Message 'ConvertTo-WDACPolicy: Deploying the policy that user selected to add the logs to'
 
-                                &'C:\Windows\System32\CiTool.exe' --update-policy (Join-Path -Path $StagingArea -ChildPath "$($InputXMLObj.SiPolicy.PolicyID).cip") -json | Out-Null
+                                $null = &'C:\Windows\System32\CiTool.exe' --update-policy (Join-Path -Path $StagingArea -ChildPath "$($InputXMLObj.SiPolicy.PolicyID).cip") -json
                             }
                         }
                     }
@@ -779,11 +778,11 @@ Function ConvertTo-WDACPolicy {
                             Copy-Item -Path $OutputPolicyPathMDEAH -Destination $UserConfigDir -Force
 
                             if ($Deploy) {
-                                ConvertFrom-CIPolicy -XmlFilePath $OutputPolicyPathMDEAH -BinaryFilePath (Join-Path -Path $StagingArea -ChildPath "$SupplementalPolicyID.cip") | Out-Null
+                                $null = ConvertFrom-CIPolicy -XmlFilePath $OutputPolicyPathMDEAH -BinaryFilePath (Join-Path -Path $StagingArea -ChildPath "$SupplementalPolicyID.cip")
 
                                 Write-Verbose -Message 'ConvertTo-WDACPolicy: Deploying the Supplemental policy'
 
-                                &'C:\Windows\System32\CiTool.exe' --update-policy (Join-Path -Path $StagingArea -ChildPath "$SupplementalPolicyID.cip") -json | Out-Null
+                                $null = &'C:\Windows\System32\CiTool.exe' --update-policy (Join-Path -Path $StagingArea -ChildPath "$SupplementalPolicyID.cip") -json
                             }
                         }
 
@@ -801,11 +800,11 @@ Function ConvertTo-WDACPolicy {
                             Copy-Item -Path $OutputPolicyPathMDEAH -Destination $UserConfigDir -Force
 
                             if ($Deploy) {
-                                ConvertFrom-CIPolicy -XmlFilePath $OutputPolicyPathMDEAH -BinaryFilePath (Join-Path -Path $StagingArea -ChildPath "$SupplementalPolicyID.cip") | Out-Null
+                                $null = ConvertFrom-CIPolicy -XmlFilePath $OutputPolicyPathMDEAH -BinaryFilePath (Join-Path -Path $StagingArea -ChildPath "$SupplementalPolicyID.cip")
 
                                 Write-Verbose -Message 'ConvertTo-WDACPolicy: Deploying the Supplemental policy'
 
-                                &'C:\Windows\System32\CiTool.exe' --update-policy (Join-Path -Path $StagingArea -ChildPath "$SupplementalPolicyID.cip") -json | Out-Null
+                                $null = &'C:\Windows\System32\CiTool.exe' --update-policy (Join-Path -Path $StagingArea -ChildPath "$SupplementalPolicyID.cip") -json
                             }
                         }
 
@@ -816,22 +815,22 @@ Function ConvertTo-WDACPolicy {
                             # Objectify the user input policy file to extract its policy ID
                             $InputXMLObj = [System.Xml.XmlDocument](Get-Content -Path $PolicyToAddLogsTo)
 
-                            Set-CIPolicyIdInfo -FilePath $OutputPolicyPathMDEAH -PolicyName $SuppPolicyName -ResetPolicyID | Out-Null
+                            $null = Set-CIPolicyIdInfo -FilePath $OutputPolicyPathMDEAH -PolicyName $SuppPolicyName -ResetPolicyID
 
                             # Remove all policy rule options prior to merging the policies since we don't need to add/remove any policy rule options to/from the user input policy
                             Set-CiRuleOptions -FilePath $OutputPolicyPathMDEAH -RemoveAll
 
-                            Merge-CIPolicy -PolicyPaths $PolicyToAddLogsTo, $OutputPolicyPathMDEAH -OutputFilePath $PolicyToAddLogsTo | Out-Null
+                            $null = Merge-CIPolicy -PolicyPaths $PolicyToAddLogsTo, $OutputPolicyPathMDEAH -OutputFilePath $PolicyToAddLogsTo
 
                             # Set HVCI to Strict
                             Set-HVCIOptions -Strict -FilePath $PolicyToAddLogsTo
 
                             if ($Deploy) {
-                                ConvertFrom-CIPolicy -XmlFilePath $PolicyToAddLogsTo -BinaryFilePath (Join-Path -Path $StagingArea -ChildPath "$($InputXMLObj.SiPolicy.PolicyID).cip") | Out-Null
+                                $null = ConvertFrom-CIPolicy -XmlFilePath $PolicyToAddLogsTo -BinaryFilePath (Join-Path -Path $StagingArea -ChildPath "$($InputXMLObj.SiPolicy.PolicyID).cip")
 
                                 Write-Verbose -Message 'ConvertTo-WDACPolicy: Deploying the policy that user selected to add the MDE AH logs to'
 
-                                &'C:\Windows\System32\CiTool.exe' --update-policy (Join-Path -Path $StagingArea -ChildPath "$($InputXMLObj.SiPolicy.PolicyID).cip") -json | Out-Null
+                                $null = &'C:\Windows\System32\CiTool.exe' --update-policy (Join-Path -Path $StagingArea -ChildPath "$($InputXMLObj.SiPolicy.PolicyID).cip") -json
                             }
                         }
 
@@ -971,11 +970,11 @@ Function ConvertTo-WDACPolicy {
                             Copy-Item -Path $OutputPolicyPathEVTX -Destination $UserConfigDir -Force
 
                             if ($Deploy) {
-                                ConvertFrom-CIPolicy -XmlFilePath $OutputPolicyPathEVTX -BinaryFilePath (Join-Path -Path $StagingArea -ChildPath "$SupplementalPolicyID.cip") | Out-Null
+                                $null = ConvertFrom-CIPolicy -XmlFilePath $OutputPolicyPathEVTX -BinaryFilePath (Join-Path -Path $StagingArea -ChildPath "$SupplementalPolicyID.cip")
 
                                 Write-Verbose -Message 'ConvertTo-WDACPolicy: Deploying the Supplemental policy'
 
-                                &'C:\Windows\System32\CiTool.exe' --update-policy (Join-Path -Path $StagingArea -ChildPath "$SupplementalPolicyID.cip") -json | Out-Null
+                                $null = &'C:\Windows\System32\CiTool.exe' --update-policy (Join-Path -Path $StagingArea -ChildPath "$SupplementalPolicyID.cip") -json
                             }
                         }
 
@@ -993,11 +992,11 @@ Function ConvertTo-WDACPolicy {
                             Copy-Item -Path $OutputPolicyPathEVTX -Destination $UserConfigDir -Force
 
                             if ($Deploy) {
-                                ConvertFrom-CIPolicy -XmlFilePath $OutputPolicyPathEVTX -BinaryFilePath (Join-Path -Path $StagingArea -ChildPath "$SupplementalPolicyID.cip") | Out-Null
+                                $null = ConvertFrom-CIPolicy -XmlFilePath $OutputPolicyPathEVTX -BinaryFilePath (Join-Path -Path $StagingArea -ChildPath "$SupplementalPolicyID.cip")
 
                                 Write-Verbose -Message 'ConvertTo-WDACPolicy: Deploying the Supplemental policy'
 
-                                &'C:\Windows\System32\CiTool.exe' --update-policy (Join-Path -Path $StagingArea -ChildPath "$SupplementalPolicyID.cip") -json | Out-Null
+                                $null = &'C:\Windows\System32\CiTool.exe' --update-policy (Join-Path -Path $StagingArea -ChildPath "$SupplementalPolicyID.cip") -json
                             }
                         }
 
@@ -1008,22 +1007,22 @@ Function ConvertTo-WDACPolicy {
                             # Objectify the user input policy file to extract its policy ID
                             $InputXMLObj = [System.Xml.XmlDocument](Get-Content -Path $PolicyToAddLogsTo)
 
-                            Set-CIPolicyIdInfo -FilePath $OutputPolicyPathEVTX -PolicyName $SuppPolicyName -ResetPolicyID | Out-Null
+                            $null = Set-CIPolicyIdInfo -FilePath $OutputPolicyPathEVTX -PolicyName $SuppPolicyName -ResetPolicyID
 
                             # Remove all policy rule options prior to merging the policies since we don't need to add/remove any policy rule options to/from the user input policy
                             Set-CiRuleOptions -FilePath $OutputPolicyPathEVTX -RemoveAll
 
-                            Merge-CIPolicy -PolicyPaths $PolicyToAddLogsTo, $OutputPolicyPathEVTX -OutputFilePath $PolicyToAddLogsTo | Out-Null
+                            $null = Merge-CIPolicy -PolicyPaths $PolicyToAddLogsTo, $OutputPolicyPathEVTX -OutputFilePath $PolicyToAddLogsTo
 
                             # Set HVCI to Strict
                             Set-HVCIOptions -Strict -FilePath $PolicyToAddLogsTo
 
                             if ($Deploy) {
-                                ConvertFrom-CIPolicy -XmlFilePath $PolicyToAddLogsTo -BinaryFilePath (Join-Path -Path $StagingArea -ChildPath "$($InputXMLObj.SiPolicy.PolicyID).cip") | Out-Null
+                                $null = ConvertFrom-CIPolicy -XmlFilePath $PolicyToAddLogsTo -BinaryFilePath (Join-Path -Path $StagingArea -ChildPath "$($InputXMLObj.SiPolicy.PolicyID).cip")
 
                                 Write-Verbose -Message 'ConvertTo-WDACPolicy: Deploying the policy that user selected to add the Evtx logs to'
 
-                                &'C:\Windows\System32\CiTool.exe' --update-policy (Join-Path -Path $StagingArea -ChildPath "$($InputXMLObj.SiPolicy.PolicyID).cip") -json | Out-Null
+                                $null = &'C:\Windows\System32\CiTool.exe' --update-policy (Join-Path -Path $StagingArea -ChildPath "$($InputXMLObj.SiPolicy.PolicyID).cip") -json
                             }
                         }
 
@@ -1162,8 +1161,8 @@ Register-ArgumentCompleter -CommandName 'ConvertTo-WDACPolicy' -ParameterName 'B
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCDAT0vp+1WV/7nM
-# +14CtGIIgRnVxxo6ml0IR7wEydJsSKCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCCt1ppSBE/QYiNF
+# fTPyxgF4S50ieIDP8OOYt00l6ogBKKCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -1210,16 +1209,16 @@ Register-ArgumentCompleter -CommandName 'ConvertTo-WDACPolicy' -ParameterName 'B
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQgbcECvCvIhqOmQcSw+McJa7Fikor+6skSIZ8GcNKxqTswDQYJKoZIhvcNAQEB
-# BQAEggIAjJcfKUFwTAS9C0TamDcuNmz9ctxo6zdlzA7jQSwVIj/jYUdb84lL7vXs
-# d78lfS3NNdmaaplB2TnMvUmtUKtmTwDFrPG2i7T4LGWIpfIxen7SdcOWdZ+JhZMv
-# F7QixzT0HaIRF5uMTrnPCwIKrKVABtFD7EaoQkXjhCblS2Hxu59TktAvd/G2/h67
-# EtJpOvS2+l+Ky1Z4JedlXNIpG7LYZK+DQcF6FAhdmS3k6HOCJzC0ANmyBYaLo6R4
-# KWbz+QhbvsTceiHzFgFFAYmlZXbeaDmJACxmv0Ivou/dX+QCa914NVc5A6pHrlbB
-# g/XTYPGzHHZYdRNqf58pOk239qwnkStCnE+3IJLG+fJ6Y4xg8ORWBWP7Ad212NKU
-# zXBjNq/Z5/MX4rpVZD0umnzsoBM1uDeQK0MrQPPNeJE5wYus0qbeW+ovL4a62GDz
-# lPrUAIVjPCf3Qp8YWEgbTpfrJ2eEj/z+lirPZqLjUydeJoE4yI7BSeptaYsbBtjx
-# iGRv8VfKTaTFnfxahx21j4ZTlGrYuCEqI8TYGG/fARaMLT62By8q9Oj7nSCTVB/R
-# j0Bt6xyi2pJ3Op2v2QbQJr7oo8bkOX2EAjRmNFnZO73a3TMwHLx5lrUHIIxFGLfe
-# 2spoL4DsifJdKOjkJ+NuwuszDC+jPCdP5vvKPzh8n0UC7oSj0Xs=
+# IgQgNTLz/sa8Tn9v88PmcpF327fVTSuBT429SmVuhB30EbcwDQYJKoZIhvcNAQEB
+# BQAEggIAaHTUykymscpbv+0DMkXYAZATkQT0tnCx1fFUcdjYNYsuPlzNWsv82xmv
+# QmFHfdd13IW02ZDVDCowl2gNEAvJUOzTL5OyQWv5cno+peUy3Dku1i9BFmDgsa1u
+# JeEz7efMh+1VzU3MMDfm5OC9jdbUyRibUjb99yzNTGmrK75V7HEllsiHGhjevNFW
+# 52szhk9ow4gJTdHC4+ZTTj2Zj/BZyJusiRi3XQDQN6ZTk+eLp42d2Jl9EmS6clyq
+# 0MaWOR9yyW5cIfE70IYGUJY8ZPveXAF4yjO+LyUB8or/ey981XRyg5SGkc70zJ3G
+# AIqeohvz38lw/V3CLNPCGxyGsldaOtKKuS30GjS9wRU9h1sxzvcz9ZST2QOiL3by
+# HllbTs0iHiDX2tAK9O4ljqXdmucSdOexTCKfVpE+HbmXWxDrCALAAN6V/+EYcwKg
+# txEFh9Ruo4Ks7yG7HNK978rMAZE3FMymwWjoZJV+dZFQiWJjHvAmGRaapONb00VN
+# uQKtuGsGikC7prpbiL/H1lm+lccXolo6AQmX37BxudSGeCncI/Vn9NK6JFueJ5y+
+# XlOH+1EHh+1fA8xNSkj4JGh0vCzmpGbUV03pPe6PSJU3GDW5h3hNAZKzT++cwCIE
+# d6EMeZy0w2T689FLWtDkh3wLDeKWuNNNginy28YBbOWUBzOzKT4=
 # SIG # End signature block

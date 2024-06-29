@@ -27,14 +27,13 @@ Function New-KernelModeWDACConfig {
             "$ModuleRootPath\Shared\Update-Self.psm1",
             "$ModuleRootPath\Shared\Write-ColorfulText.psm1",
             "$ModuleRootPath\Shared\Move-UserModeToKernelMode.psm1",
-            "$ModuleRootPath\Shared\Get-KernelModeDriversAudit.psm1",
-            "$ModuleRootPath\Shared\New-StagingArea.psm1"
+            "$ModuleRootPath\Shared\Get-KernelModeDriversAudit.psm1"
         )
 
         # if -SkipVersionCheck wasn't passed, run the updater
         if (-NOT $SkipVersionCheck) { Update-Self -InvocationStatement $MyInvocation.Statement }
 
-        [System.IO.DirectoryInfo]$StagingArea = New-StagingArea -CmdletName 'New-KernelModeWDACConfig'
+        [System.IO.DirectoryInfo]$StagingArea = [WDACConfig.StagingArea]::NewStagingArea('New-KernelModeWDACConfig')
 
         # Create a directory to store the kernel mode drivers symbolic links for both modes
         [System.IO.DirectoryInfo]$KernelModeDriversDirectory = New-Item -ItemType Directory -Path (Join-Path -Path $StagingArea -ChildPath 'KernelModeDriversDirectory') -Force
@@ -147,7 +146,7 @@ Function New-KernelModeWDACConfig {
                             [System.IO.FileInfo]$FinalAuditCIPPath = Join-Path -Path $StagingArea -ChildPath "$PolicyID.cip"
 
                             Write-Verbose -Message 'Converting the XML policy file to CIP binary'
-                            ConvertFrom-CIPolicy -XmlFilePath $AuditPolicyPath -BinaryFilePath $FinalAuditCIPPath | Out-Null
+                            $null = ConvertFrom-CIPolicy -XmlFilePath $AuditPolicyPath -BinaryFilePath $FinalAuditCIPPath
 
                             # Deploy the policy if Deploy parameter is used and perform additional tasks on the system
                             if ($Deploy) {
@@ -156,10 +155,10 @@ Function New-KernelModeWDACConfig {
                                 Write-Progress -Id 25 -Activity 'Deploying the prep mode policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
                                 Write-Verbose -Message 'Setting the GUID and time of deployment of the Audit mode policy in the User Configuration file'
-                                Set-CommonWDACConfig -StrictKernelPolicyGUID $PolicyID -StrictKernelModePolicyTimeOfDeployment (Get-Date) | Out-Null
+                                $null = Set-CommonWDACConfig -StrictKernelPolicyGUID $PolicyID -StrictKernelModePolicyTimeOfDeployment (Get-Date)
 
                                 Write-Verbose -Message 'Deploying the Strict Kernel mode policy'
-                                &'C:\Windows\System32\CiTool.exe' --update-policy $FinalAuditCIPPath -json | Out-Null
+                                $null = &'C:\Windows\System32\CiTool.exe' --update-policy $FinalAuditCIPPath -json
                                 Write-ColorfulText -Color HotPink -InputText 'Strict Kernel mode policy has been deployed in Audit mode, please restart your system.'
                             }
                             else {
@@ -211,10 +210,10 @@ Function New-KernelModeWDACConfig {
                             Copy-Item -Path $TemplatePolicyPath -Destination (Join-Path -Path $StagingArea -ChildPath 'Raw_Normal.xml') -Force
 
                             Write-Verbose -Message 'Merging the base policy with the policy made from driver files, to deploy them as one policy'
-                            Merge-CIPolicy -PolicyPaths (Join-Path -Path $StagingArea -ChildPath 'Raw_Normal.xml'), $DriverFilesScanPolicyPath -OutputFilePath $FinalEnforcedPolicyPath | Out-Null
+                            $null = Merge-CIPolicy -PolicyPaths (Join-Path -Path $StagingArea -ChildPath 'Raw_Normal.xml'), $DriverFilesScanPolicyPath -OutputFilePath $FinalEnforcedPolicyPath
 
                             Write-Verbose -Message 'Moving all AllowedSigners from Usermode to Kernel mode signing scenario'
-                            Move-UserModeToKernelMode -FilePath $FinalEnforcedPolicyPath | Out-Null
+                            $null = Move-UserModeToKernelMode -FilePath $FinalEnforcedPolicyPath
 
                             Write-Verbose -Message 'Setting the GUIDs for the XML policy file'
                             [WDACConfig.PolicyEditor]::EditGUIDs($PolicyID, $FinalEnforcedPolicyPath)
@@ -230,7 +229,7 @@ Function New-KernelModeWDACConfig {
                             [System.IO.FileInfo]$FinalEnforcedCIPPath = Join-Path -Path $StagingArea -ChildPath "$PolicyID.cip"
 
                             Write-Verbose -Message 'Converting the policy XML file to CIP binary'
-                            ConvertFrom-CIPolicy -XmlFilePath $FinalEnforcedPolicyPath -BinaryFilePath $FinalEnforcedCIPPath | Out-Null
+                            $null = ConvertFrom-CIPolicy -XmlFilePath $FinalEnforcedPolicyPath -BinaryFilePath $FinalEnforcedCIPPath
 
                             # Deploy the policy if Deploy parameter is used
                             if ($Deploy) {
@@ -239,18 +238,18 @@ Function New-KernelModeWDACConfig {
                                 Write-Progress -Id 26 -Activity 'Deploying the final policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
                                 Write-Verbose -Message 'Deploying the enforced mode policy with the same ID as the Audit mode policy, effectively overwriting it'
-                                &'C:\Windows\System32\CiTool.exe' --update-policy $FinalEnforcedCIPPath -json | Out-Null
+                                $null = &'C:\Windows\System32\CiTool.exe' --update-policy $FinalEnforcedCIPPath -json
                                 Write-ColorfulText -Color HotPink -InputText 'Strict Kernel mode policy has been deployed in Enforced mode, no restart required.'
 
                                 Write-Verbose -Message 'Removing the GUID and time of deployment of the StrictKernelPolicy from user configuration'
-                                Remove-CommonWDACConfig -StrictKernelPolicyGUID -StrictKernelModePolicyTimeOfDeployment | Out-Null
+                                $null = Remove-CommonWDACConfig -StrictKernelPolicyGUID -StrictKernelModePolicyTimeOfDeployment
                             }
                             else {
                                 # Remove the Audit mode policy from the system
                                 # This step is necessary if user didn't use the -Deploy parameter
                                 # And instead wants to first Sign and then deploy it using the Deploy-SignedWDACConfig cmdlet
                                 Write-Verbose -Message 'Removing the deployed Audit mode policy from the system since -Deploy parameter was not used to overwrite it with the enforced mode policy.'
-                                &'C:\Windows\System32\CiTool.exe' --remove-policy "{$PolicyID}" -json | Out-Null
+                                $null = &'C:\Windows\System32\CiTool.exe' --remove-policy "{$PolicyID}" -json
                                 Write-ColorfulText -Color HotPink -InputText "Strict Kernel mode Enforced policy has been created`n$FinalEnforcedPolicyPath"
                             }
                             Write-Progress -Id 26 -Activity 'Complete.' -Completed
@@ -281,7 +280,7 @@ Function New-KernelModeWDACConfig {
                             [System.IO.FileInfo]$FinalAuditCIPPath = Join-Path -Path $StagingArea -ChildPath "$PolicyID.cip"
 
                             Write-Verbose -Message 'Converting the XML policy file to CIP binary'
-                            ConvertFrom-CIPolicy -XmlFilePath $AuditPolicyPath -BinaryFilePath $FinalAuditCIPPath | Out-Null
+                            $null = ConvertFrom-CIPolicy -XmlFilePath $AuditPolicyPath -BinaryFilePath $FinalAuditCIPPath
 
                             # Deploy the policy if Deploy parameter is used and perform additional tasks on the system
                             if ($Deploy) {
@@ -290,10 +289,10 @@ Function New-KernelModeWDACConfig {
                                 Write-Progress -Id 27 -Activity 'Deploying the prep mode policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
                                 Write-Verbose -Message 'Setting the GUID and time of deployment of the Audit mode policy in the User Configuration file'
-                                Set-CommonWDACConfig -StrictKernelNoFlightRootsPolicyGUID $PolicyID -StrictKernelModePolicyTimeOfDeployment (Get-Date) | Out-Null
+                                $null = Set-CommonWDACConfig -StrictKernelNoFlightRootsPolicyGUID $PolicyID -StrictKernelModePolicyTimeOfDeployment (Get-Date)
 
                                 Write-Verbose -Message 'Deploying the Strict Kernel mode policy'
-                                &'C:\Windows\System32\CiTool.exe' --update-policy $FinalAuditCIPPath -json | Out-Null
+                                $null = &'C:\Windows\System32\CiTool.exe' --update-policy $FinalAuditCIPPath -json
                                 Write-ColorfulText -Color HotPink -InputText 'Strict Kernel mode policy with no flighting root certs has been deployed in Audit mode, please restart your system.'
                             }
                             else {
@@ -373,7 +372,7 @@ Function New-KernelModeWDACConfig {
 
                                     Write-Verbose -Message 'Making sure the current Windows build can work with the NoFlightRoots Strict WDAC Policy'
 
-                                    if (-NOT (Invoke-WDACSimulation -FilePath 'C:\Windows\System32\ntoskrnl.exe' -XmlFilePath $FinalEnforcedPolicyPath -BooleanOutput -NoCatalogScanning)) {
+                                    if (-NOT (Invoke-WDACSimulation -FilePath 'C:\Windows\System32\ntoskrnl.exe' -XmlFilePath $FinalEnforcedPolicyPath -BooleanOutput -NoCatalogScanning -ThreadsCount 1)) {
                                         Throw 'The current Windows build cannot work with the NoFlightRoots Strict Kernel-mode Policy, please change the base to Default instead.'
                                     }
                                 }
@@ -396,7 +395,7 @@ Function New-KernelModeWDACConfig {
                                 # This step is necessary if user didn't use the -Deploy parameter
                                 # And instead wants to first Sign and then deploy it using the Deploy-SignedWDACConfig cmdlet
                                 Write-Verbose -Message 'Removing the deployed Audit mode policy from the system since -Deploy parameter was not used to overwrite it with the enforced mode policy.'
-                                &'C:\Windows\System32\CiTool.exe' --remove-policy "{$PolicyID}" -json | Out-Null
+                                $null = &'C:\Windows\System32\CiTool.exe' --remove-policy "{$PolicyID}" -json
                                 Write-ColorfulText -Color HotPink -InputText "Strict Kernel mode Enforced policy with no flighting root certs has been created`n$FinalEnforcedPolicyPath"
                             }
                             Write-Progress -Id 28 -Activity 'Complete.' -Completed
@@ -464,8 +463,8 @@ Function New-KernelModeWDACConfig {
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCCjbAsSg53pkAsi
-# buRyG08VMxOR1aqV7vjTJnCfc/CS8KCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCCkM9V68qh8s7K1
+# Q2GDoL1bzLhHFehtQW3bpAyQlezdEKCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -512,16 +511,16 @@ Function New-KernelModeWDACConfig {
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQg9CJrbF2qP6qW2qYjsnEidU7L0lia5nZgzRSYad7R+5QwDQYJKoZIhvcNAQEB
-# BQAEggIAKEL48Z2U8kLVRh6aRGFWK4cLGMmi6HXvnLnycNOsKPpSxaB151a8gfOx
-# pghoQWeMglydC/T4MIPhK0LIUxcfN+x1d1zeiZ+7cwIOd6jsyrN3Txdlgn2/cUnA
-# u6SmQc2xnqpPW2ZLkmYp2AgqRdqafZrxXJ/PgvEzFHxE/xyDkyVMlUMBz2YkM0V6
-# zB+zbLbG/GBgHVKdei22H3+VVYlw9u+WpFTB8RKvEwxuPf4OCbG9QQPMvnyQ/0yz
-# PBY9R/fh5rGuBrsicj/NvxLnaHTzJW+3SiGkWiA4dWhxYcn0AJpm13mXpy5XcE+M
-# wzx3/nPSLkAG74Wj+XcM4IPBL5SSngCCqcHwjBJ64Jgezgnqt6CEk2jJTLs/njnK
-# o8epem065xneNvSzG5quUbtvJ0Sw2NZiVjYQxeLc0K8FLlEvmCXfQApGQ2wqlSmj
-# 0Z+vSakumuMxbFd3MeghO37HbfAT4JP/EK9hfXzm6TbCYJYrQbXrhk5lZDQ/qHd1
-# l9JCTjub3PyWrbI6JyzT331rdGDsVD0YaaAkobAFhzv32AVNqpMmKvMb83s6mlqk
-# glRTzeZnSHgEUrv+t+XAGM2soM4AOn3o6S3Q2VUrhicQHGHRJ2t8XkEWllIsN/MK
-# StxAVOCuz1FdVA0U/KRB/cavBuwDk/lsRVehakYFiyqDeayMYQs=
+# IgQgdjJGwiUNYJjPkGNjSJ5q9/gtBpu3PDeXKHx9kDpadUowDQYJKoZIhvcNAQEB
+# BQAEggIAN94RZ0Bv9/A0LMbkfyCmtfs43J5AHUgccfKiAqQje59E2MvgGFuRC+ke
+# yE/98+lCx39h4tcQqIgXxEnYnpHHPFkA39HslDqcE5rCX6bdAT6hE1dPCdsb2Cun
+# o0TyYbG3il+gw+Z78gQUli5tB4fH7ugwAv0pp1nO9wa0HXx5+V2uGFdGyjMTPL/f
+# sckkZz9UMXN1177CyteLeo60aoQsOSNbKja5o9Ju1EpPKyg06r312oa2I7dZl44v
+# U5MCDY6g7aDtbHyzVLVSeVx/caTlKdzWr+JxTY5FzjTEkdP1qiT34hdkXowN30tH
+# yhUY9DnsMjp+/EwQjo4srvlLqpJ+V/m1mND4OdP7JzcTNQpm4hWi5V34jk6J47fx
+# oGG4NTZnyVoVplIvq1dVku6L2Ts4nMKdZo1yM4AwmQ+PrAfCrDKyV1juMw2Qpsjb
+# tC4TrUNNNabZlj7f0Ut7e5l4uHxvdCMY1SNw5ZOu5F1Aui3i3WjWwocL0xtrPXt9
+# LIHveovGDCVX1YwIHfOPLivbCn0MtDo5BMvqmWQMaZbxgpcDKvj7mpXZTrgFBOza
+# FP2dwFVVuUSq/oLebnjrNizMWFfC9mRTvl+2QSAyTrvhhG/f4P7kZ8dVJyNRMLfa
+# pSBg7ZL9LCmj/dxfK8lg3Tk2/77932PobIX30OY7XZTL+SNVCgI=
 # SIG # End signature block

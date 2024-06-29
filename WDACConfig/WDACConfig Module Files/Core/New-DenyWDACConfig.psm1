@@ -69,14 +69,13 @@ Function New-DenyWDACConfig {
         Write-Verbose -Message 'Importing the required sub-modules'
         Import-Module -Force -FullyQualifiedName @(
             "$ModuleRootPath\Shared\Update-Self.psm1",
-            "$ModuleRootPath\Shared\Write-ColorfulText.psm1",
-            "$ModuleRootPath\Shared\New-StagingArea.psm1"
+            "$ModuleRootPath\Shared\Write-ColorfulText.psm1"
         )
 
         # if -SkipVersionCheck wasn't passed, run the updater
         if (-NOT $SkipVersionCheck) { Update-Self -InvocationStatement $MyInvocation.Statement }
 
-        [System.IO.DirectoryInfo]$StagingArea = New-StagingArea -CmdletName 'New-DenyWDACConfig'
+        [System.IO.DirectoryInfo]$StagingArea = [WDACConfig.StagingArea]::NewStagingArea('New-DenyWDACConfig')
 
         # Detecting if Confirm switch is used to bypass the confirmation prompts
         if ($Force -and -Not $Confirm) {
@@ -147,13 +146,13 @@ Function New-DenyWDACConfig {
                 Write-Progress -Id 22 -Activity 'Merging the policies' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
                 Write-Verbose -Message 'Creating the final Deny base policy from the xml files in the paths array'
-                Merge-CIPolicy -PolicyPaths $PolicyXMLFilesArray -OutputFilePath $FinalDenyPolicyPath | Out-Null
+                $null = Merge-CIPolicy -PolicyPaths $PolicyXMLFilesArray -OutputFilePath $FinalDenyPolicyPath
 
                 $CurrentStep++
                 Write-Progress -Id 22 -Activity 'Creating the base policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
                 Write-Verbose -Message 'Assigning a name and resetting the policy ID'
-                Set-CIPolicyIdInfo -FilePath $FinalDenyPolicyPath -ResetPolicyID -PolicyName $PolicyName | Out-Null
+                $null = Set-CIPolicyIdInfo -FilePath $FinalDenyPolicyPath -ResetPolicyID -PolicyName $PolicyName
 
                 Write-Verbose -Message 'Setting the policy version to 1.0.0.0'
                 Set-CIPolicyVersion -FilePath $FinalDenyPolicyPath -Version '1.0.0.0'
@@ -161,14 +160,14 @@ Function New-DenyWDACConfig {
                 Set-CiRuleOptions -FilePath $FinalDenyPolicyPath -Template Base
 
                 Write-Verbose -Message 'Converting the policy XML to .CIP'
-                ConvertFrom-CIPolicy -XmlFilePath $FinalDenyPolicyPath -BinaryFilePath $FinalDenyPolicyCIPPath | Out-Null
+                $null = ConvertFrom-CIPolicy -XmlFilePath $FinalDenyPolicyPath -BinaryFilePath $FinalDenyPolicyCIPPath
 
                 if ($Deploy) {
                     $CurrentStep++
                     Write-Progress -Id 22 -Activity 'Deploying the base policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
                     Write-Verbose -Message 'Deploying the policy'
-                    &'C:\Windows\System32\CiTool.exe' --update-policy $FinalDenyPolicyCIPPath -json | Out-Null
+                    $null = &'C:\Windows\System32\CiTool.exe' --update-policy $FinalDenyPolicyCIPPath -json
 
                     Write-ColorfulText -Color Pink -InputText "A Deny Base policy with the name '$PolicyName' has been deployed."
                 }
@@ -218,13 +217,13 @@ Function New-DenyWDACConfig {
 
                 # Merging AllowAll default policy with our Deny temp policy
                 Write-Verbose -Message 'Merging AllowAll default template policy with our Deny temp policy'
-                Merge-CIPolicy -PolicyPaths $AllowAllPolicyPath, $TempPolicyPath -OutputFilePath $FinalDenyPolicyPath | Out-Null
+                $null = Merge-CIPolicy -PolicyPaths $AllowAllPolicyPath, $TempPolicyPath -OutputFilePath $FinalDenyPolicyPath
 
                 $CurrentStep++
                 Write-Progress -Id 23 -Activity 'Configuring the base policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
                 Write-Verbose -Message 'Assigning a name and resetting the policy ID'
-                Set-CIPolicyIdInfo -FilePath $FinalDenyPolicyPath -ResetPolicyID -PolicyName $PolicyName | Out-Null
+                $null = Set-CIPolicyIdInfo -FilePath $FinalDenyPolicyPath -ResetPolicyID -PolicyName $PolicyName
 
                 Write-Verbose -Message 'Setting the policy version to 1.0.0.0'
                 Set-CIPolicyVersion -FilePath $FinalDenyPolicyPath -Version '1.0.0.0'
@@ -232,14 +231,14 @@ Function New-DenyWDACConfig {
                 Set-CiRuleOptions -FilePath $FinalDenyPolicyPath -Template Base
 
                 Write-Verbose -Message 'Converting the policy XML to .CIP'
-                ConvertFrom-CIPolicy -XmlFilePath $FinalDenyPolicyPath -BinaryFilePath $FinalDenyPolicyCIPPath | Out-Null
+                $null = ConvertFrom-CIPolicy -XmlFilePath $FinalDenyPolicyPath -BinaryFilePath $FinalDenyPolicyCIPPath
 
                 if ($Deploy) {
                     $CurrentStep++
                     Write-Progress -Id 23 -Activity 'Deploying the base policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
                     Write-Verbose -Message 'Deploying the policy'
-                    &'C:\Windows\System32\CiTool.exe' --update-policy $FinalDenyPolicyCIPPath -json | Out-Null
+                    $null = &'C:\Windows\System32\CiTool.exe' --update-policy $FinalDenyPolicyCIPPath -json
 
                     Write-ColorfulText -Color Pink -InputText "A Deny Base policy with the name '$PolicyName' has been deployed."
                 }
@@ -293,10 +292,10 @@ Function New-DenyWDACConfig {
 
                         # Merging AllowAll default policy with our Deny temp policy
                         Write-Verbose -Message 'Merging AllowAll default template policy with our AppX Deny temp policy'
-                        Merge-CIPolicy -PolicyPaths $AllowAllPolicyPath, $TempPolicyPath -OutputFilePath $FinalDenyPolicyPath | Out-Null
+                        $null = Merge-CIPolicy -PolicyPaths $AllowAllPolicyPath, $TempPolicyPath -OutputFilePath $FinalDenyPolicyPath
 
                         Write-Verbose -Message 'Assigning a name and resetting the policy ID'
-                        Set-CIPolicyIdInfo -FilePath $FinalDenyPolicyPath -ResetPolicyID -PolicyName $PolicyName | Out-Null
+                        $null = Set-CIPolicyIdInfo -FilePath $FinalDenyPolicyPath -ResetPolicyID -PolicyName $PolicyName
 
                         Write-Verbose -Message 'Setting the policy version to 1.0.0.0'
                         Set-CIPolicyVersion -FilePath $FinalDenyPolicyPath -Version '1.0.0.0'
@@ -304,14 +303,14 @@ Function New-DenyWDACConfig {
                         Set-CiRuleOptions -FilePath $FinalDenyPolicyPath -Template Base
 
                         Write-Verbose -Message 'Converting the policy XML to .CIP'
-                        ConvertFrom-CIPolicy -XmlFilePath $FinalDenyPolicyPath -BinaryFilePath $FinalDenyPolicyCIPPath | Out-Null
+                        $null = ConvertFrom-CIPolicy -XmlFilePath $FinalDenyPolicyPath -BinaryFilePath $FinalDenyPolicyCIPPath
 
                         if ($Deploy) {
                             $CurrentStep++
                             Write-Progress -Id 24 -Activity 'Deploying the base policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
                             Write-Verbose -Message 'Deploying the policy'
-                            &'C:\Windows\System32\CiTool.exe' --update-policy $FinalDenyPolicyCIPPath -json | Out-Null
+                            $null = &'C:\Windows\System32\CiTool.exe' --update-policy $FinalDenyPolicyCIPPath -json
 
                             Write-ColorfulText -Color Pink -InputText "A Deny Base policy with the name '$PolicyName' has been deployed."
                         }
@@ -348,13 +347,13 @@ Function New-DenyWDACConfig {
 
                 # Merging AllowAll default policy with our Deny temp policy
                 Write-Verbose -Message 'Merging AllowAll default template policy with our Wildcard Deny temp policy'
-                Merge-CIPolicy -PolicyPaths $AllowAllPolicyPath, $TempPolicyPath -OutputFilePath $FinalDenyPolicyPath | Out-Null
+                $null = Merge-CIPolicy -PolicyPaths $AllowAllPolicyPath, $TempPolicyPath -OutputFilePath $FinalDenyPolicyPath
 
                 $CurrentStep++
                 Write-Progress -Id 29 -Activity 'Configuring the wildcard deny policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
                 Write-Verbose -Message 'Assigning a name and resetting the policy ID'
-                Set-CIPolicyIdInfo -FilePath $FinalDenyPolicyPath -ResetPolicyID -PolicyName $PolicyName | Out-Null
+                $null = Set-CIPolicyIdInfo -FilePath $FinalDenyPolicyPath -ResetPolicyID -PolicyName $PolicyName
 
                 Write-Verbose -Message 'Setting the policy version to 1.0.0.0'
                 Set-CIPolicyVersion -FilePath $FinalDenyPolicyPath -Version '1.0.0.0'
@@ -362,14 +361,14 @@ Function New-DenyWDACConfig {
                 Set-CiRuleOptions -FilePath $FinalDenyPolicyPath -Template Base
 
                 Write-Verbose -Message 'Converting the policy XML to .CIP'
-                ConvertFrom-CIPolicy -XmlFilePath $FinalDenyPolicyPath -BinaryFilePath $FinalDenyPolicyCIPPath | Out-Null
+                $null = ConvertFrom-CIPolicy -XmlFilePath $FinalDenyPolicyPath -BinaryFilePath $FinalDenyPolicyCIPPath
 
                 if ($Deploy) {
                     $CurrentStep++
                     Write-Progress -Id 29 -Activity 'Deploying the base policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
                     Write-Verbose -Message 'Deploying the policy'
-                    &'C:\Windows\System32\CiTool.exe' --update-policy $FinalDenyPolicyCIPPath -json | Out-Null
+                    $null = &'C:\Windows\System32\CiTool.exe' --update-policy $FinalDenyPolicyCIPPath -json
 
                     if ($EmbeddedVerboseOutput) {
                         Write-Verbose -Message "A Deny Base policy with the name '$PolicyName' has been deployed."
@@ -480,8 +479,8 @@ Register-ArgumentCompleter -CommandName 'New-DenyWDACConfig' -ParameterName 'Fol
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCA6bcMD4abRaTkc
-# 7fG3+kEafUA5A+oWnPnytAxpJFHT+KCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCBvQLsC+jl6T6oA
+# IbVf/Fb6LE533rL3RfBkfNX0kSVsM6CCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -528,16 +527,16 @@ Register-ArgumentCompleter -CommandName 'New-DenyWDACConfig' -ParameterName 'Fol
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQgKZfFLztaIT5Aw4BPlT5oAKQGtiNB7NfZCiPTn2WSigowDQYJKoZIhvcNAQEB
-# BQAEggIAcqwSvUFiA9W8lDJhR+yRXk0V2Ns4bHvbeBAwx6dphEy4wJVmRXaiU+jb
-# LTOytGd6wNy5qZqX0V2zQPx085bWC7dgMbT/Tt7P8yqerxa9znXi6E4C6JVW2YTj
-# 3PBcu7slCQvFCB6uuChFa4MiJrfQWFanTGMqEo64cSifVMI0GwPB9jRxw/ZM6XKQ
-# 7Ne2Ak2kbqhCttttbB4Xw+ix5vt3FqGx2VRb2HteFjcYTYgfOYR5IAcHYVjaas/u
-# /K5LQA8NQF0uXnKgEzMYL8FWEWy9acANeH69lzkSKsjQ71uRoIWdx1iA5KWK7Pz6
-# umxBJjLVYkI34MPRIpfxwOXEus+uvxzMM9/6fowIxyS+j0O+ysKTZ6zJTfihr+U0
-# /hJVqalP5QN5TLYKHhLa6+uYB5xma55kHiveIps06Pvt2+wqkSamzbMD17g8yYmi
-# Pz6jtOeX34zANh0ktw5cJREJD0xIW5XqNH3jhRlPM+mP5mLhwxSmgqLJjnoQqlq/
-# jXKi3n86uturK0gCtQnPdBTWkSXh7mftWWyDkB2k/EbLgNQ+l2PwMtzE3Y4VVRwe
-# sHM64xMbY/Just6NYusOSEFwxovI89eFi3k+pAvdnTGJHlrrKdf6YYcBG6rxFXNR
-# AlBhpQ4ZeKSzU6fqznHZCaQtc0/4aNRJAGsDW1BCEby2AbL5R+8=
+# IgQgMB7xclVF6JeGY3XduTJn+ov/LRCmZOLJFhSko/tu+2kwDQYJKoZIhvcNAQEB
+# BQAEggIAJYgtZIShoyGnaGFU3FQUsO+bOyEDsF0E96dlkTMLsIsHsPT467IfKgaw
+# htn7FZkw6rsNVO5P5AUAM2lbAH1vJVOf+lgIXvA4ZvBLyOHqzfJk3mF48vtC4/8b
+# Q6pGiMK9nt0xOtbTGkiyDFw8yoXHnHVTujvzgYC+pwZPobJRfKmoedOQLYrKpC7+
+# EqEQPYxYJ/dtRb4FniINctHV+4mIOJWftpd5PzMJi93dtDB3LY7ug9IpvG7UEkUe
+# MyFosMtCNvlCsWhoauhXWeEIGjr34KnWHI3pXXXblxr0Zzwxhmrh6xzWjnNbWF/D
+# BVgwkOVMJLxpshdu7fAA4goZ0TXP65sd9Qmzq1oeUolSExp381tL8WonI1JzwgAB
+# vzWTFi9zOQMbmY/X3uAFUfh9H4afaUWoC95fbULNr4FtcArVtBoXmvFz1n7GYm3v
+# S9k00wRYaOuN0W9+4VmMUUINuacostAwk0IBmA9ZdwvU4pPIQRzImJsM9sF3/FkV
+# vX+j98hhwqVO958RmeEDtKisrNVNWKlYoR/apWfAaEbmW+FIQoO2aFCtfUopSAIU
+# zL3NyrqSxhzgp2A0BN+FnLVOYNPMPS34zZFRXNrbweE/PB16nCKRFqzBT9mrb2Tu
+# +x17n2soJspZSY5+KLEsW0Tkd+T77BGExYjT5T8icacALOhCapw=
 # SIG # End signature block

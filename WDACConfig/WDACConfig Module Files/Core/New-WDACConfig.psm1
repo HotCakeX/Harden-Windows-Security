@@ -67,11 +67,10 @@ Function New-WDACConfig {
         Import-Module -Force -FullyQualifiedName @(
             "$ModuleRootPath\Shared\Update-Self.psm1",
             "$ModuleRootPath\Shared\Write-ColorfulText.psm1",
-            "$ModuleRootPath\Shared\Set-LogSize.psm1",
-            "$ModuleRootPath\Shared\New-StagingArea.psm1"
+            "$ModuleRootPath\Shared\Set-LogSize.psm1"
         )
 
-        [System.IO.DirectoryInfo]$StagingArea = New-StagingArea -CmdletName 'New-WDACConfig'
+        [System.IO.DirectoryInfo]$StagingArea = [WDACConfig.StagingArea]::NewStagingArea('New-WDACConfig')
 
         # Define the variables in the function scope for the dynamic parameters
         New-Variable -Name 'LogSize' -Value $PSBoundParameters['LogSize'] -Force
@@ -158,7 +157,7 @@ Function New-WDACConfig {
                 Write-Progress -Id 1 -Activity 'Refreshing the system policies' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
                 Write-Verbose -Message 'Refreshing the system WDAC policies using CiTool.exe'
-                &'C:\Windows\System32\CiTool.exe' --refresh -json | Out-Null
+                $null = &'C:\Windows\System32\CiTool.exe' --refresh -json
 
                 Write-ColorfulText -Color Pink -InputText 'SiPolicy.p7b has been deployed and policies refreshed.'
 
@@ -222,7 +221,7 @@ Function New-WDACConfig {
                             [System.Xml.XmlElement]$NewGrandNode = $DriverBlockRulesXML.CreateElement($GrandParentNode.Name, $GrandParentNode.NamespaceURI)
 
                             # Replace the grandparent node with the new node
-                            $GrandParentNode.ParentNode.ReplaceChild($NewGrandNode, $GrandParentNode) | Out-Null
+                            [System.Void]$GrandParentNode.ParentNode.ReplaceChild($NewGrandNode, $GrandParentNode)
                         }
                     }
                 }
@@ -277,7 +276,7 @@ Function New-WDACConfig {
             Write-Progress -Id 3 -Activity 'Configuring the policy settings' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
             Write-Verbose -Message 'Resetting the policy ID and assigning policy name'
-            Set-CIPolicyIdInfo -FilePath $FinalPolicyPath -PolicyName "$Name - $(Get-Date -Format 'MM-dd-yyyy')" -ResetPolicyID | Out-Null
+            $null = Set-CIPolicyIdInfo -FilePath $FinalPolicyPath -PolicyName "$Name - $(Get-Date -Format 'MM-dd-yyyy')" -ResetPolicyID
 
             Write-Verbose -Message 'Setting policy version to 1.0.0.0'
             Set-CIPolicyVersion -FilePath $FinalPolicyPath -Version '1.0.0.0'
@@ -292,7 +291,7 @@ Function New-WDACConfig {
                 [System.IO.FileInfo]$CIPPath = ConvertFrom-CIPolicy -XmlFilePath $FinalPolicyPath -BinaryFilePath (Join-Path -Path $StagingArea -ChildPath "$Name.cip")
 
                 Write-Verbose -Message "Deploying the $Name policy"
-                &'C:\Windows\System32\CiTool.exe' --update-policy $CIPPath -json | Out-Null
+                $null = &'C:\Windows\System32\CiTool.exe' --update-policy $CIPPath -json
             }
             Copy-Item -Path $FinalPolicyPath -Destination $UserConfigDir -Force
             Write-FinalOutput -Paths $FinalPolicyPath
@@ -334,14 +333,14 @@ Function New-WDACConfig {
                 New-CIPolicy -ScanPath $PSHOME -Level FilePublisher -NoScript -Fallback Hash -UserPEs -UserWriteablePaths -MultiplePolicyFormat -FilePath (Join-Path -Path $StagingArea -ChildPath 'AllowPowerShell.xml')
 
                 Write-Verbose -Message "Merging the policy files to create the final $Name.xml policy"
-                Merge-CIPolicy -PolicyPaths $FinalPolicyPath, (Join-Path -Path $StagingArea -ChildPath 'AllowPowerShell.xml') -OutputFilePath $FinalPolicyPath | Out-Null
+                $null = Merge-CIPolicy -PolicyPaths $FinalPolicyPath, (Join-Path -Path $StagingArea -ChildPath 'AllowPowerShell.xml') -OutputFilePath $FinalPolicyPath
             }
 
             $CurrentStep++
             Write-Progress -Id 7 -Activity 'Configuring policy settings' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
             Write-Verbose -Message 'Resetting the policy ID and assigning policy name'
-            Set-CIPolicyIdInfo -FilePath $FinalPolicyPath -PolicyName "$Name - $(Get-Date -Format 'MM-dd-yyyy')" -ResetPolicyID | Out-Null
+            $null = Set-CIPolicyIdInfo -FilePath $FinalPolicyPath -PolicyName "$Name - $(Get-Date -Format 'MM-dd-yyyy')" -ResetPolicyID
 
             Write-Verbose -Message 'Setting the policy version to 1.0.0.0'
             Set-CIPolicyVersion -FilePath $FinalPolicyPath -Version '1.0.0.0'
@@ -356,7 +355,7 @@ Function New-WDACConfig {
                 [System.IO.FileInfo]$CIPPath = ConvertFrom-CIPolicy -XmlFilePath $FinalPolicyPath -BinaryFilePath (Join-Path -Path $StagingArea -ChildPath "$Name.cip")
 
                 Write-Verbose -Message 'Deploying the policy'
-                &'C:\Windows\System32\CiTool.exe' --update-policy $CIPPath -json | Out-Null
+                $null = &'C:\Windows\System32\CiTool.exe' --update-policy $CIPPath -json
             }
 
             # Copy the result to the User Config directory at the end
@@ -389,7 +388,7 @@ Function New-WDACConfig {
                 Set-CiRuleOptions -FilePath $FinalPolicyPath -RulesToRemove 'Enabled:Audit Mode' -RulesToAdd 'Enabled:Update Policy No Reboot'
 
                 Write-Verbose -Message 'Assigning policy name and resetting policy ID'
-                Set-CIPolicyIdInfo -ResetPolicyID -FilePath $FinalPolicyPath -PolicyName $Name | Out-Null
+                $null = Set-CIPolicyIdInfo -ResetPolicyID -FilePath $FinalPolicyPath -PolicyName $Name
 
                 if ($Deploy) {
 
@@ -404,7 +403,7 @@ Function New-WDACConfig {
                     [System.IO.FileInfo]$CIPPath = ConvertFrom-CIPolicy -XmlFilePath $FinalPolicyPath -BinaryFilePath (Join-Path -Path $StagingArea -ChildPath "$Name.cip")
 
                     Write-Verbose -Message "Deploying the $Name policy"
-                    &'C:\Windows\System32\CiTool.exe' --update-policy $CIPPath -json | Out-Null
+                    $null = &'C:\Windows\System32\CiTool.exe' --update-policy $CIPPath -json
                 }
                 else {
                     Copy-Item -Path $FinalPolicyPath -Destination $UserConfigDir -Force
@@ -491,7 +490,7 @@ Function New-WDACConfig {
 
                 Write-ColorfulText -Color Lavender -InputText "The document containing the drivers block list on GitHub was last updated on $Date"
                 [System.String]$MicrosoftRecommendedDriverBlockRules = (Invoke-WebRequest -Uri $MSFTRecommendedDriverBlockRulesURL -ProgressAction SilentlyContinue).Content
-                $MicrosoftRecommendedDriverBlockRules -match '<VersionEx>(.*)</VersionEx>' | Out-Null
+                $null = $MicrosoftRecommendedDriverBlockRules -match '<VersionEx>(.*)</VersionEx>'
                 Write-ColorfulText -Color Pink -InputText "The current version of Microsoft recommended drivers block list is $($Matches[1])"
             }
             catch {
@@ -570,8 +569,8 @@ Function New-WDACConfig {
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCCLDxJ9wxQIzu9R
-# 5uriYHSLajl0r6Xu4m8R9hgs6mPOMqCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCDhKL4zsoOeU4fJ
+# Q94OMyqUAiZc7+BJLgc9ZIOyu5kADaCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -618,16 +617,16 @@ Function New-WDACConfig {
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQgX4eROL5YUylXS4ZEMQYkM83rPVwZM2inJ6UkuU7DJaMwDQYJKoZIhvcNAQEB
-# BQAEggIAVSu9y5996+y89qpQLxuHTFfrU7rQSl41YsEeh2GB4arAxFZZkLSeMoju
-# mnRK3rSCcIK/L3vr6kQulJricqAkhYlL9N0TcOF8PEcxDsRhpizm2KxP0yGXCzW1
-# Qj6V4iGysGWeF3jQLMWYbUXrZ88PbYLOTRLYBRQ3YHULOprSGrUVqccaGd8sUnM4
-# 7r4oPJ9stQqsAJ/MC6LLknpLU/+uGsc3t1n5B9SAtG/wgsT4u/DwyDfLUfHK3Yq0
-# KPSaaoHuj4vXHSswIKKfuzG19c98UduRThvVh+PFyEniP4Q40jyTmNJe6W4ZK1Y/
-# sNyYAsVHbkeE+7qLr94w2QuKFgRZ2Z79sMV2UeM7c2IV0I1TTQboGvMjQjCUjchW
-# nuqfxbvlySN86Ih29GkYDIStWFCiqNRL9LJsY6Bgw5PEqP5Z2Bv/N0XtF4EOhMNX
-# DQiKcPInOXaV7SISc4sZ3+P0CcxrD43HTttvlRvtIpUv1a+H9iTcZfGEOwGUX7SY
-# dNh/NzLugvsfFgpoNbbTjXO+rxDXD2e0b5dV47VfuIOjE44A7u2yU8zHh98WZuVG
-# zXDjhlajRxNTU42wZF5IEim8hgLVGuvfxdL6QYZk4DW0rQSek6leIIq0lupsoWoc
-# r0ScIeQ7jWpcECf/P+OZUk6DliWZPVBFqmxecX+Vtp72pKlPuzI=
+# IgQgPE1TuQIRWnD5QYbuDhkB92BG8t0WiLjVtQ9CS0Mez1EwDQYJKoZIhvcNAQEB
+# BQAEggIAHXWjbMDNqa2/v5LIMJ3BQdu22hmu8vbGb4Ws5x52dbQIYHqZsIKhufMB
+# tmRtMNTgb196qd+3gFv4Jiti6LRfS8TQw9/nL5By/wE4u4d1zeu6hRgWAYDuP1qK
+# JmIVlgmVZAhg4t402Ly+3bYxAlSX7h2XlyJWNt8dGcMR+Tfy5Z6t6RDClyoA+wLV
+# uSGAzoVHgERJZWgCQOTIMcrz+C9uIrlgUl3koDhWNZjm+FU//++imXZoYhZJYF7W
+# vFK/bUzkDQKr120iFxL0RTuyYQl5d2oZ36c46uii3LgZ//gNGmRq+LSfig9W8XxN
+# Qg28uKSgpu66theuMlw1ZAxFUy4rkWM5RSOQ55l7iFBjPQUjvAxF3sFCqg8sokGC
+# ZO6MBqccWqfj+18SgcBB3CzPEVEjM2q7gpstJviJeblI9WM2LdNutSAdq/JgspyF
+# Q4NP4c0cO16TUWxYO2A9unyrYvhzkQrp3AhaZ7qqjynkkbuZ6dkDzl8qffmThADT
+# YXt8mq+FcS6WPMsiuE/PYzdPgidUQKu/OoDHROA/gzMnVpgQ71dQpT1UmC8XLq69
+# cKbaIss7QR2aTnpl+0cxDw68PRdIO1/odnuskbQdtY4GNr6rSKfH5jlrfoQaKgi9
+# lI8PJCXM1m8VT6ydEEWHMynnDnQjrz7WzKwubp9oLh07Y5LzaF8=
 # SIG # End signature block

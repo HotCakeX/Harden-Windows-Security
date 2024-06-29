@@ -78,8 +78,7 @@ Function New-SupplementalWDACConfig {
         Write-Verbose -Message 'Importing the required sub-modules'
         Import-Module -Force -FullyQualifiedName @(
             "$ModuleRootPath\Shared\Update-Self.psm1",
-            "$ModuleRootPath\Shared\Write-ColorfulText.psm1",
-            "$ModuleRootPath\Shared\New-StagingArea.psm1"
+            "$ModuleRootPath\Shared\Write-ColorfulText.psm1"
         )
 
         if ($PSBoundParameters['Certificates']) {
@@ -92,7 +91,7 @@ Function New-SupplementalWDACConfig {
         # if -SkipVersionCheck wasn't passed, run the updater
         if (-NOT $SkipVersionCheck) { Update-Self -InvocationStatement $MyInvocation.Statement }
 
-        [System.IO.DirectoryInfo]$StagingArea = New-StagingArea -CmdletName 'New-SupplementalWDACConfig'
+        [System.IO.DirectoryInfo]$StagingArea = [WDACConfig.StagingArea]::NewStagingArea('New-SupplementalWDACConfig')
 
         #Region User-Configurations-Processing-Validation
         # If PolicyPath was not provided by user, check if a valid value exists in user configs, if so, use it, otherwise throw an error
@@ -494,8 +493,8 @@ Register-ArgumentCompleter -CommandName 'New-SupplementalWDACConfig' -ParameterN
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCAQq8AxVqrLqAp3
-# kKa5rgti49QdmyvCxa2gYKxJ/pjWXqCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCBPt5eeuVbOEokV
+# CHSKg6OWzBgum4NAkgcRUDGJ7wWXS6CCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -542,16 +541,16 @@ Register-ArgumentCompleter -CommandName 'New-SupplementalWDACConfig' -ParameterN
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQgmOtF0bJD2lyHBtNgbsFRmIP/8iDOMBUnLfs/xdVSCCUwDQYJKoZIhvcNAQEB
-# BQAEggIASlfnPzGUL/T1NAySox6432CXqLRLfqXB388C4dEdgRGthYbfi5p9dIbQ
-# Jv60j96NPeg+fk50evdZEBINDDjakc84FJTH8O3rpcX8l9o1vKXKbRAc2jvjkV27
-# cCImMDhw6b3+n+2cxA3mWL1d2hReAYfSkl9Y2NNgtOcQlGlk6vmxGh3SVbAo+lHh
-# juZbJYcEUg8cQQSq+FaXft3KnGw0/bMG0bEdfMLJrTbKRxYdRAq1N3YBfATJjiAJ
-# v8N3GdQR1glzVYebdjYIRt+aLzbJ7QUFeJHwnB91wxkGA5BKMi9E3vuEKkQWwsyL
-# MqWJwcw0758X2CvFHsKx6aKK/XpymhQ2PRKBc7MpkzQKFaqGT7XmulKk3Iepf0ju
-# upUlT4FyVoAODOtC4szHm/EgtzeXdbG1thJODJSemOJtkgsPXb1n4SNu3GLr2q3E
-# B2ge3czuRVmZASjRYsPF87JWeSBgDDGuvbhzF6cIyBRGlHNHDpJ5NiSeqpGWA+WN
-# LwILgVxP4zytysofVag9cqMPntpo+QwBPq6ezYvLmQ/OEM5TxQVl7yeX4WwJlifO
-# 1T6o+qs0VNsz8OwI/YR4YyBMmhsPBsvT1Mh1a6gX6GNLcTGmFX9B7ZxM20R5tfC4
-# W4DayPYzeG6noA7FysbXUjM/AQstP9tC+HIJU+QJB8zikc0Y9Jg=
+# IgQgAoUXD/wuk7KSFJ+/wX6Hia/r3iWN1LwUkKiYr3pnj3kwDQYJKoZIhvcNAQEB
+# BQAEggIAEcBtGxI7BlBsGnmIZoTPZ7tGR/+WQWuflKtai/c4REZHspsIbyAK1Qif
+# 6jzYWUgRKXJDzjGAuIRpuOF6ngG2QN6Y4p+CQLAtI1j3daplc/wgw9OKC6vM8DdL
+# JjEOlP3JJf0SSNK5aJsUWi5j0r3c/J11Fg+gCpXQm0VwzpW6Kwecl62hAQDCHfaC
+# alTmfNYKyW61fA185vR+uzz+YE8F9tIeVWDGLxygqoSmorHzX/peKTW6bdmfp1Qo
+# 26pvU7qeQL5eOY1L1Nu7Bee21r1wCMEWJKuSs2eBRSqWkg2GeaujFmWSUVREweVp
+# NzdmQAoC5ksFJap7KzA8BDMQRiq0iZ2AFT7bI7T1oprmwvxYvQg8fI1QXVifyjKj
+# qBguEWKS1IsgUI9GiDnb3FvNfg5GrPCRX8fOw4V+TFoq4xP5XeE76GDkkNokiun3
+# Avy6HEQutWULyaGZobeWEaAIJ5YarNGewz0/kq5PAj2dukXVA1Tbdjuz6Y6uNTf9
+# JQmNzJdnYNdXkCxiivcpdSd5EvmRClGrM5x2UZSPm+XHAXElZi4t608pn1VF3x8f
+# BnvH7DBRSviYfO924jp2Ckk3OC3iLDvLp/bXE6FLAzsUmVULjy8yuk93nbKHU2sy
+# UxGR6L/USqfyHAxS2cJGS9gS4jjqYkp4FAeCDJ1bIZ1N+64Vuc0=
 # SIG # End signature block

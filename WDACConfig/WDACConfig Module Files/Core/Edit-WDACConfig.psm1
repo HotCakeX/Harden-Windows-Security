@@ -109,7 +109,6 @@ Function Edit-WDACConfig {
             "$ModuleRootPath\Shared\Set-LogSize.psm1",
             "$ModuleRootPath\Shared\Receive-CodeIntegrityLogs.psm1",
             "$ModuleRootPath\Shared\New-SnapBackGuarantee.psm1",
-            "$ModuleRootPath\Shared\New-StagingArea.psm1",
             "$ModuleRootPath\Shared\Set-LogPropertiesVisibility.psm1",
             "$ModuleRootPath\Shared\Select-LogProperties.psm1",
             "$ModuleRootPath\Shared\Test-KernelProtectedFiles.psm1",
@@ -121,7 +120,7 @@ Function Edit-WDACConfig {
         # if -SkipVersionCheck wasn't passed, run the updater
         if (-NOT $SkipVersionCheck) { Update-Self -InvocationStatement $MyInvocation.Statement }
 
-        [System.IO.DirectoryInfo]$StagingArea = New-StagingArea -CmdletName 'Edit-WDACConfig'
+        [System.IO.DirectoryInfo]$StagingArea = [WDACConfig.StagingArea]::NewStagingArea('Edit-WDACConfig')
 
         #Region User-Configurations-Processing-Validation
         # make sure the ParameterSet being used has PolicyPath parameter - Then enforces "mandatory" attribute for the parameter
@@ -203,7 +202,7 @@ Function Edit-WDACConfig {
                 Write-Progress -Id 10 -Activity 'Deploying the Audit mode policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
                 Write-Verbose -Message 'Deploying the Audit mode CIP'
-                &'C:\Windows\System32\CiTool.exe' --update-policy $AuditModeCIPPath -json | Out-Null
+                $null = &'C:\Windows\System32\CiTool.exe' --update-policy $AuditModeCIPPath -json
 
                 Write-Verbose -Message 'The Base policy with the following details has been Re-Deployed in Audit Mode:'
                 Write-Verbose -Message "PolicyName = $PolicyName"
@@ -509,7 +508,7 @@ Function Edit-WDACConfig {
                 $CurrentStep++
                 Write-Progress -Id 10 -Activity 'Merging the policies' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
-                Merge-CIPolicy -PolicyPaths $PolicyXMLFilesArray.Values -OutputFilePath $SuppPolicyPath | Out-Null
+                $null = Merge-CIPolicy -PolicyPaths $PolicyXMLFilesArray.Values -OutputFilePath $SuppPolicyPath
 
                 #Region Supplemental-policy-processing-and-deployment
 
@@ -601,7 +600,7 @@ Function Edit-WDACConfig {
                 [System.IO.FileInfo]$FinalSupplementalPath = Join-Path -Path $StagingArea -ChildPath "$SuppPolicyName.xml"
 
                 Write-Verbose -Message 'Merging the Supplemental policies into a single policy file'
-                Merge-CIPolicy -PolicyPaths $SuppPolicyPaths -OutputFilePath $FinalSupplementalPath | Out-Null
+                $null = Merge-CIPolicy -PolicyPaths $SuppPolicyPaths -OutputFilePath $FinalSupplementalPath
 
                 # Remove the deployed Supplemental policies that user selected from the system, because we're going to deploy the new merged policy that contains all of them
                 $CurrentStep++
@@ -615,7 +614,7 @@ Function Edit-WDACConfig {
                     [System.String]$SupplementalPolicyID = $Supplementalxml.SiPolicy.PolicyID
 
                     Write-Verbose -Message "Removing policy with ID: $SupplementalPolicyID"
-                    &'C:\Windows\System32\CiTool.exe' --remove-policy $SupplementalPolicyID -json | Out-Null
+                    $null = &'C:\Windows\System32\CiTool.exe' --remove-policy $SupplementalPolicyID -json
                 }
 
                 $CurrentStep++
@@ -635,13 +634,13 @@ Function Edit-WDACConfig {
                 }
 
                 Write-Verbose -Message 'Converting the Supplemental policy to a CIP file'
-                ConvertFrom-CIPolicy -XmlFilePath $FinalSupplementalPath -BinaryFilePath (Join-Path -Path $StagingArea -ChildPath "$SuppPolicyID.cip") | Out-Null
+                $null = ConvertFrom-CIPolicy -XmlFilePath $FinalSupplementalPath -BinaryFilePath (Join-Path -Path $StagingArea -ChildPath "$SuppPolicyID.cip")
 
                 $CurrentStep++
                 Write-Progress -Id 11 -Activity 'Deploying the final policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
                 Write-Verbose -Message 'Deploying the Supplemental policy'
-                &'C:\Windows\System32\CiTool.exe' --update-policy (Join-Path -Path $StagingArea -ChildPath "$SuppPolicyID.cip") -json | Out-Null
+                $null = &'C:\Windows\System32\CiTool.exe' --update-policy (Join-Path -Path $StagingArea -ChildPath "$SuppPolicyID.cip") -json
 
                 Write-ColorfulText -Color TeaGreen -InputText "The Supplemental policy $SuppPolicyName has been deployed on the system, replacing the old ones."
 
@@ -723,7 +722,7 @@ Function Edit-WDACConfig {
                             New-CIPolicy -ScanPath $PSHOME -Level FilePublisher -NoScript -Fallback Hash -UserPEs -UserWriteablePaths -MultiplePolicyFormat -AllowFileNameFallbacks -FilePath (Join-Path -Path $StagingArea -ChildPath 'AllowPowerShell.xml')
 
                             Write-Verbose -Message 'Merging the DefaultWindows.xml and AllowPowerShell.xml into a single policy file'
-                            Merge-CIPolicy -PolicyPaths $BasePolicyPath, (Join-Path -Path $StagingArea -ChildPath 'AllowPowerShell.xml') -OutputFilePath $BasePolicyPath | Out-Null
+                            $null = Merge-CIPolicy -PolicyPaths $BasePolicyPath, (Join-Path -Path $StagingArea -ChildPath 'AllowPowerShell.xml') -OutputFilePath $BasePolicyPath
                         }
 
                         Write-Verbose -Message 'Setting the policy name'
@@ -761,7 +760,7 @@ Function Edit-WDACConfig {
                 Write-Progress -Id 12 -Activity 'Deploying the policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
                 Write-Verbose -Message 'Deploying the new base policy with the same GUID on the system'
-                &'C:\Windows\System32\CiTool.exe' --update-policy $CIPPath -json | Out-Null
+                $null = &'C:\Windows\System32\CiTool.exe' --update-policy $CIPPath -json
 
                 $CurrentStep++
                 Write-Progress -Id 12 -Activity 'Cleaning up' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
@@ -782,7 +781,7 @@ Function Edit-WDACConfig {
 
                 if (Get-CommonWDACConfig -UnsignedPolicyPath) {
                     Write-Verbose -Message 'Replacing the old unsigned policy path in User Configurations with the new one'
-                    Set-CommonWDACConfig -UnsignedPolicyPath $PolicyFiles[$NewBasePolicyType] | Out-Null
+                    $null = Set-CommonWDACConfig -UnsignedPolicyPath $PolicyFiles[$NewBasePolicyType]
                 }
             }
         }
@@ -864,8 +863,8 @@ Register-ArgumentCompleter -CommandName 'Edit-WDACConfig' -ParameterName 'SuppPo
 # SIG # Begin signature block
 # MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
 # BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCCoYP8+jZT4pFcr
-# erhj36wif8vQTU0KuaGkKqSModPV7aCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
+# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCC8Yxn/HsQogQAm
+# MdgL6+AnN2pk7j1NG9t89gJm6JYoJqCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
 # LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
 # b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
 # C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
@@ -912,16 +911,16 @@ Register-ArgumentCompleter -CommandName 'Edit-WDACConfig' -ParameterName 'SuppPo
 # Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
 # GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
 # NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQg7KeFG51r3dgd1HnHOe3mICb44kk2J3tRusZuX/XWuZowDQYJKoZIhvcNAQEB
-# BQAEggIAo0qF3ui584zYco/kTMRWkAdTxi9d+65XGPmwQ+ioSANnqaMkzRydE5jD
-# H3tmQttToSOsjuL7XCus+ctl6G67/W9xko6htiJOG8C+3bVOEvxmSF8+Tsz4/p87
-# /IyviqALzrD3KhAV4Gk3Y5K5wwZcNStCExUPMNEAkbuNEucwiIjNzVl952c+J7Ue
-# +mWb0dra7Uf4oUjplNwRp8DIw+ORAls7Fisp27BGZ1CsYBBni59BZ/FpwjX5D+5q
-# W1hoJE77pU24EFLqRG1X9VsDbnqFFRMHrYKVZQA0ALXbkV5apUDurk3GwdYHcqRN
-# 2Pu62VVutxZZgC/nz5Lc+B7rILaC+cPXiq4HhagB9NWrNwJR0szNBZjQs5rqZpHm
-# ZBkhEOvfQn5iUs3O8epjGp2Fe7gf8cAtwru82SdVZU3ogbfVF7xxumMgvj61l+4w
-# strR0JRCjBNAm74QDfP+lQe7vGVhjAef9su4Fe74b4oONdJnqxcyfeFmLUd/NliB
-# LnBwuVJUM3IBUP4+hTyFYpbZsefyLXmhEOOf4KYASMi8JxhoP2NqZKcUmtYQA1BY
-# sQ0VaMeFPMxqavbmbOrsE9v3FWY+IsaX7Su7/BKZCSFxR1Gnm44ULGmXoLvXEg6N
-# c8BxMozL/N/3e+8xOpfL0IAjtfcHQoYPSAFEXil9NdvNO0kUZ5I=
+# IgQgrQjwZOmlbaTLD+biiZ7nGINupOG3umCqzNOq465PuxQwDQYJKoZIhvcNAQEB
+# BQAEggIANfUI96Id+yZjFyTAX5ALZTqwqwZ22h4heNNT/ekAgy3Ejc1YLHvr9LpG
+# Spl9C5w5VtN9NvG/bWzvroY3P7lEcWThwTZmIQxdChO2yNaVmF4erN4PSPMPeLKi
+# 0FadlQqeKsxuzXtfQL6F0OXQzJwHndBbZlBOvJFx8LSeEi3QMrE+JUWz4X8jLywQ
+# cvvMfIQVpn3ycQzK5v6TPhy03cVN+bxpvr4F98qolm2llhMK5385c/fYzA+//e08
+# 6WZ8xMreQdhdj4DkqSprxMEdqzEEEqNLXK+2XsmkFDrCsZ+qwEYxAD4H/G++h3kD
+# q9T5N3rDeFDF4G9AJSqSY/0smqglWFOMQcnaeh1l041RZU8alEaLxvxVfGEColtc
+# SrgPIjOuEOvJVkgKBBv3wnEi6FCS/UI8hzQhEHgbwRY+bFMEDNdOCSbR8vkDn3wd
+# 2ZlSlDAzdGvxYrJmBnTxlLj0va2DMQuryIXXd/BYi2U6IP4CohpqyJwFGetlVH3q
+# omFOv2rryenfnQvMdfz8ywe0Hg6QX011bFIBdeB8yo+uftrStmtPIAJtcYYLJodo
+# ZQy9Y9T6uejybhp2LkUDZOB1cJGUKFtSsPbXF4k1pdJ/Bnoo1cNqpmAn+Os0hm/c
+# Hf9SEYPefGqtU2SVqTP3ZooP0jpUIxba4txm4RoBbCqr3hZzPsg=
 # SIG # End signature block

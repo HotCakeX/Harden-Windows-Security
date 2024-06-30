@@ -39,14 +39,14 @@ Function Invoke-WDACSimulation {
     Begin {
         [System.Boolean]$Verbose = $PSBoundParameters.Verbose.IsPresent ? $true : $false
         [System.Boolean]$Debug = $PSBoundParameters.Debug.IsPresent ? $true : $false
-        . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
+        . "$([WDACConfig.GlobalVars]::ModuleRootPath)\CoreExt\PSDefaultParameterValues.ps1"
 
         Write-Verbose -Message 'Importing the required sub-modules'
         Import-Module -Force -FullyQualifiedName @(
-            "$ModuleRootPath\Shared\Update-Self.psm1",
-            "$ModuleRootPath\Shared\Write-ColorfulText.psm1"
-            "$ModuleRootPath\WDACSimulation\Get-FileRuleOutput.psm1",
-            "$ModuleRootPath\WDACSimulation\Get-SignerInfo.psm1"
+            "$([WDACConfig.GlobalVars]::ModuleRootPath)\Shared\Update-Self.psm1",
+            "$([WDACConfig.GlobalVars]::ModuleRootPath)\Shared\Write-ColorfulText.psm1"
+            "$([WDACConfig.GlobalVars]::ModuleRootPath)\WDACSimulation\Get-FileRuleOutput.psm1",
+            "$([WDACConfig.GlobalVars]::ModuleRootPath)\WDACSimulation\Get-SignerInfo.psm1"
         )
 
         # if -SkipVersionCheck wasn't passed, run the updater
@@ -54,12 +54,18 @@ Function Invoke-WDACSimulation {
 
         # Validate the $ThreadsCount parameter
         if ($ThreadsCount -lt 1 -or $ThreadsCount -gt [System.Environment]::ProcessorCount) {
-            Throw "The ThreadsCount parameter must be between 1 and $([System.Environment]::ProcessorCount)."
+
+            Write-Verbose -Message "The ThreadsCount parameter must be between 1 and $([System.Environment]::ProcessorCount), but you entered $ThreadsCount, setting it to $([System.Environment]::ProcessorCount)"
+            $ThreadsCount = [System.Environment]::ProcessorCount
         }
+
+        # The Concurrent Dictionary contains any and all of the Simulation results
+        # Keys of it are the fil paths which aren't important, values are the important items needed at the end of the simulation
+        $FinalSimulationResults = [System.Collections.Concurrent.ConcurrentDictionary[System.String, WDACConfig.SimulationOutput]]::new()
 
         # Start the transcript if the -Log switch is used and create a function to stop the transcript and the stopwatch at the end
         if ($Log) {
-            Start-Transcript -IncludeInvocationHeader -LiteralPath (Join-Path -Path $UserConfigDir -ChildPath "WDAC Simulation Log $(Get-Date -Format "MM-dd-yyyy 'at' HH-mm-ss").txt")
+            Start-Transcript -IncludeInvocationHeader -LiteralPath (Join-Path -Path ([WDACConfig.GlobalVars]::UserConfigDir) -ChildPath "WDAC Simulation Log $(Get-Date -Format "MM-dd-yyyy 'at' HH-mm-ss").txt")
 
             # Create a new stopwatch object to measure the execution time
             Write-Verbose -Message 'Starting the stopwatch...'
@@ -97,7 +103,7 @@ Function Invoke-WDACSimulation {
         }
 
         # Check if the supplied XML file contains Allow all rule
-        [System.Boolean]$ShouldExit = $false
+        [System.Boolean]$HasAllowAllRule = $false
 
         # Get the content of the XML file
         [System.String]$XMLContent = Get-Content -LiteralPath $XmlFilePath -Raw
@@ -107,8 +113,29 @@ Function Invoke-WDACSimulation {
         if ($XMLContent -match '<Allow ID="ID_ALLOW_.*" FriendlyName=".*" FileName="\*".*/>') {
             Write-Verbose -Message "The supplied XML file '$($XmlFilePath.Name)' contains a rule that allows all files."
 
+
+            [System.Void]$FinalSimulationResults.TryAdd([string]$CurrentFilePath, [WDACConfig.SimulationOutput]::New(
+                    $null,
+                    'AllowAllRule',
+                    $true,
+                    $null,
+                    $null,
+                    $null,
+                    $null,
+                    $null,
+                    $null,
+                    'Has AllowAll rule',
+                    $null,
+                    $null,
+                    $null,
+                    $null,
+                    $null,
+                    $null
+                ))
+
+
             # Set a flag to exit the subsequent blocks
-            $ShouldExit = $true
+            $HasAllowAllRule = $true
 
             # Exit the Begin block
             Return
@@ -118,10 +145,6 @@ Function Invoke-WDACSimulation {
 
         # Get the signer information from the XML
         [WDACConfig.Signer[]]$SignerInfo = Get-SignerInfo -XML ([System.Xml.XmlDocument]$XMLContent)
-
-        # The Concurrent Dictionary contains any and all of the Simulation results
-        # Keys of it are the fil paths which aren't important, values are the important items needed at the end of the simulation
-        $FinalSimulationResults = [System.Collections.Concurrent.ConcurrentDictionary[System.String, WDACConfig.SimulationOutput]]::new()
 
         # Extensions that are not supported by Authenticode. So if these files are not allowed by hash, they are not allowed at all
         $UnsignedExtensions = [System.Collections.Generic.HashSet[System.String]]::new(
@@ -143,327 +166,329 @@ Function Invoke-WDACSimulation {
 
     process {
         try {
-            # Exit the Process block
-            if ($ShouldExit) { Return }
+            # Only proceed if the policy doesn't have AllowAll rule
+            if (!$HasAllowAllRule) {
 
-            $CurrentStep++
-            Write-Progress -Id 0 -Activity 'Parsing the Security Catalogs on the system' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
+                $CurrentStep++
+                Write-Progress -Id 0 -Activity 'Parsing the Security Catalogs on the system' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
-            if (!$NoCatalogScanning) {
+                if (!$NoCatalogScanning) {
 
-                # A dictionary where each key is a hash and value is the file path where that hash is found
-                $AllSecurityCatalogHashes = New-Object -TypeName 'System.Collections.Generic.Dictionary[String, String]'
+                    # A dictionary where each key is a hash and value is the file path where that hash is found
+                    $AllSecurityCatalogHashes = New-Object -TypeName 'System.Collections.Generic.Dictionary[String, String]'
 
-                # Loop through each .cat security catalog on the system - If user selected custom CatRoot folders then use them instead
-                foreach ($File in ([WDACConfig.FileUtility]::GetFilesFast(($CatRootPath ?? 'C:\Windows\System32\CatRoot'), $null, '.cat'))) {
+                    # Loop through each .cat security catalog on the system - If user selected custom CatRoot folders then use them instead
+                    foreach ($File in ([WDACConfig.FileUtility]::GetFilesFast(($CatRootPath ?? 'C:\Windows\System32\CatRoot'), $null, '.cat'))) {
 
-                    # Get the hashes of the security catalog file
-                    $CatHashes = [WDACConfig.MeowParser]::GetHashes($File)
+                        # Get the hashes of the security catalog file
+                        $CatHashes = [WDACConfig.MeowParser]::GetHashes($File)
 
-                    # If the security catalog file has hashes, then add them to the dictionary
-                    if ($CatHashes.Count -gt 0) {
-                        foreach ($Hash in $CatHashes) {
-                            [System.Void]$AllSecurityCatalogHashes.TryAdd($Hash, $File)
+                        # If the security catalog file has hashes, then add them to the dictionary
+                        if ($CatHashes.Count -gt 0) {
+                            foreach ($Hash in $CatHashes) {
+                                [System.Void]$AllSecurityCatalogHashes.TryAdd($Hash, $File)
+                            }
                         }
                     }
                 }
-            }
 
-            # Hash Sha256 values of all the file rules based on hash in the supplied xml policy file
-            Write-Verbose -Message 'Getting the Sha256 Hash values of all the file rules based on hash in the supplied xml policy file'
+                # Hash Sha256 values of all the file rules based on hash in the supplied xml policy file
+                Write-Verbose -Message 'Getting the Sha256 Hash values of all the file rules based on hash in the supplied xml policy file'
 
-            $CurrentStep++
-            Write-Progress -Id 0 -Activity 'Getting the Sha256 Hash values from the XML file' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
+                $CurrentStep++
+                Write-Progress -Id 0 -Activity 'Getting the Sha256 Hash values from the XML file' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
-            $SHA256HashesFromXML = [System.Collections.Generic.HashSet[System.String]]@((Get-FileRuleOutput -Xml ([System.Xml.XmlDocument]$XMLContent)).HashValue)
+                $SHA256HashesFromXML = [System.Collections.Generic.HashSet[System.String]]@((Get-FileRuleOutput -Xml ([System.Xml.XmlDocument]$XMLContent)).HashValue)
 
-            # Get all of the file paths of the files that WDAC supports, from the user provided directory
-            Write-Verbose -Message 'Getting all of the file paths of the files that WDAC supports, from the user provided directory'
+                # Get all of the file paths of the files that WDAC supports, from the user provided directory
+                Write-Verbose -Message 'Getting all of the file paths of the files that WDAC supports, from the user provided directory'
 
-            $CurrentStep++
-            Write-Progress -Id 0 -Activity "Getting the supported files' paths" -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
-            $CollectedFiles = [System.Collections.Generic.HashSet[System.IO.FileInfo]]@([WDACConfig.FileUtility]::GetFilesFast($FolderPath, $FilePath, $null))
+                $CurrentStep++
+                Write-Progress -Id 0 -Activity "Getting the supported files' paths" -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
+                $CollectedFiles = [System.Collections.Generic.HashSet[System.IO.FileInfo]]@([WDACConfig.FileUtility]::GetFilesFast($FolderPath, $FilePath, $null))
 
-            # Make sure the selected directory contains files with the supported extensions
-            if (!$CollectedFiles) { Throw 'There are no files in the selected directory that are supported by the WDAC engine.' }
+                # Make sure the selected directory contains files with the supported extensions
+                if (!$CollectedFiles) { Throw 'There are no files in the selected directory that are supported by the WDAC engine.' }
 
-            # Loop through each file
-            Write-Verbose -Message 'Looping through each supported file'
+                # Loop through each file
+                Write-Verbose -Message 'Looping through each supported file'
 
-            $CurrentStep++
-            Write-Progress -Id 0 -Activity 'Looping through each supported file' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
+                $CurrentStep++
+                Write-Progress -Id 0 -Activity 'Looping through each supported file' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
-            # split the file paths by $ThreadsCount which by default is 2
-            $SplitArrays = [System.Linq.Enumerable]::Chunk($CollectedFiles, [System.Math]::Ceiling($CollectedFiles.Count / $ThreadsCount))
+                # split the file paths by $ThreadsCount which by default is 2
+                $SplitArrays = [System.Linq.Enumerable]::Chunk($CollectedFiles, [System.Math]::Ceiling($CollectedFiles.Count / $ThreadsCount))
 
-            # Loop over each split array
-            [System.Management.Automation.Job2[]]$Jobs = foreach ($Array in $SplitArrays) {
+                # Loop over each split array
+                [System.Management.Automation.Job2[]]$Jobs = foreach ($Array in $SplitArrays) {
 
-                # Create a new ThreadJob for each array of the filepaths to be processed concurrently
-                Start-ThreadJob -ArgumentList @($ModuleRootPath, $FinalSimulationResults, $Array, $SignerInfo, $SHA256HashesFromXML, $FilePathRules, $HasFilePathRules, $UnsignedExtensions, $AllSecurityCatalogHashes) -StreamingHost $Host -ScriptBlock {
-                    param ($ModuleRootPath, $FinalSimulationResults, $Array, $SignerInfo, $SHA256HashesFromXML, $FilePathRules, $HasFilePathRules, $UnsignedExtensions, $AllSecurityCatalogHashes)
+                    # Create a new ThreadJob for each array of the filepaths to be processed concurrently
+                    Start-ThreadJob -ArgumentList @($FinalSimulationResults, $Array, $SignerInfo, $SHA256HashesFromXML, $FilePathRules, $HasFilePathRules, $UnsignedExtensions, $AllSecurityCatalogHashes) -StreamingHost $Host -ScriptBlock {
+                        param ($FinalSimulationResults, $Array, $SignerInfo, $SHA256HashesFromXML, $FilePathRules, $HasFilePathRules, $UnsignedExtensions, $AllSecurityCatalogHashes)
 
-                    try {
+                        try {
 
-                        $ErrorActionPreference = 'stop'
+                            $ErrorActionPreference = 'stop'
 
-                        # only importing the functions that are required in this script block
-                        Import-Module -Force -FullyQualifiedName @(
-                            "$ModuleRootPath\WDACSimulation\Compare-SignerAndCertificate.psm1",
-                            "$ModuleRootPath\WDACSimulation\Get-CertificateDetails.psm1"
-                        )
+                            # only importing the functions that are required in this script block
+                            Import-Module -Force -FullyQualifiedName @(
+                                "$([WDACConfig.GlobalVars]::ModuleRootPath)\WDACSimulation\Compare-SignerAndCertificate.psm1",
+                                "$([WDACConfig.GlobalVars]::ModuleRootPath)\WDACSimulation\Get-CertificateDetails.psm1"
+                            )
 
-                        [System.Drawing.Color]$CurrentColor = [System.Drawing.Color]::Violet
-                        # Set the progress bar style to use violet color
-                        $PSStyle.Progress.Style = "$($PSStyle.Foreground.FromRGB($CurrentColor.R, $CurrentColor.G, $CurrentColor.B))"
+                            [System.Drawing.Color]$CurrentColor = [System.Drawing.Color]::Violet
+                            # Set the progress bar style to use violet color
+                            $PSStyle.Progress.Style = "$($PSStyle.Foreground.FromRGB($CurrentColor.R, $CurrentColor.G, $CurrentColor.B))"
 
-                        # The total number of the sub steps for the progress bar to render
-                        [System.UInt64]$TotalSubSteps = $Array.Count
-                        [System.UInt64]$CurrentSubStep = 0
+                            # The total number of the sub steps for the progress bar to render
+                            [System.UInt64]$TotalSubSteps = $Array.Count
+                            [System.UInt64]$CurrentSubStep = 0
 
-                        foreach ($CurrentFilePath in $Array) {
+                            foreach ($CurrentFilePath in $Array) {
 
-                            $CurrentSubStep++
-                            Write-Progress -Id ([runspace]::DefaultRunspace.Id) -Activity "Processing file $CurrentSubStep/$TotalSubSteps" -Status "$CurrentFilePath" -PercentComplete ($CurrentSubStep / $TotalSubSteps * 100)
+                                $CurrentSubStep++
+                                Write-Progress -Id ([runspace]::DefaultRunspace.Id) -Activity "Processing file $CurrentSubStep/$TotalSubSteps" -Status "$CurrentFilePath" -PercentComplete ($CurrentSubStep / $TotalSubSteps * 100)
 
-                            # Check see if the file's hash exists in the XML file regardless of whether it's signed or not
-                            # This is because WDAC policies sometimes have hash rules for signed files too
-                            # So here we prioritize being authorized by file hash over being authorized by Signature
+                                # Check see if the file's hash exists in the XML file regardless of whether it's signed or not
+                                # This is because WDAC policies sometimes have hash rules for signed files too
+                                # So here we prioritize being authorized by file hash over being authorized by Signature
 
-                            # Since Get-AppLockerFileInformation doesn't support special characters such as [ and ], and it doesn't have -LiteralPath parameter, we need to escape them ourselves
-                            # [System.String]$CurrentFilePathHash = (Get-AppLockerFileInformation -Path $($CurrentFilePath -match '\[|\]' ? ($CurrentFilePath -replace '(\[|\])', '`$1') : $CurrentFilePath) -ErrorAction Stop).hash -replace 'SHA256 0x', ''
+                                # Since Get-AppLockerFileInformation doesn't support special characters such as [ and ], and it doesn't have -LiteralPath parameter, we need to escape them ourselves
+                                # [System.String]$CurrentFilePathHash = (Get-AppLockerFileInformation -Path $($CurrentFilePath -match '\[|\]' ? ($CurrentFilePath -replace '(\[|\])', '`$1') : $CurrentFilePath) -ErrorAction Stop).hash -replace 'SHA256 0x', ''
 
-                            if ($HasFilePathRules -and $FilePathRules.Contains($CurrentFilePath)) {
+                                if ($HasFilePathRules -and $FilePathRules.Contains($CurrentFilePath)) {
 
-                                [System.Void]$FinalSimulationResults.TryAdd([string]$CurrentFilePath, [WDACConfig.SimulationOutput]::New(
+                                    [System.Void]$FinalSimulationResults.TryAdd([string]$CurrentFilePath, [WDACConfig.SimulationOutput]::New(
                                 ([System.IO.Path]::GetFileName($CurrentFilePath)),
-                                        'FilePath',
-                                        $true,
-                                        $null,
-                                        $null,
-                                        $null,
-                                        $null,
-                                        $null,
-                                        $null,
-                                        'Allowed By File Path',
-                                        $null,
-                                        $null,
-                                        $null,
-                                        $null,
-                                        $null,
-                                        $CurrentFilePath
-                                    ))
+                                            'FilePath',
+                                            $true,
+                                            $null,
+                                            $null,
+                                            $null,
+                                            $null,
+                                            $null,
+                                            $null,
+                                            'Allowed By File Path',
+                                            $null,
+                                            $null,
+                                            $null,
+                                            $null,
+                                            $null,
+                                            $CurrentFilePath
+                                        ))
 
-                                Continue
-                            }
-
-                            try {
-                                [WDACConfig.AuthenticodePageHashes]$CurrentFileHashResult = [WDACConfig.AuthPageHash]::GetCiFileHashes($CurrentFilePath)
-                                [System.String]$CurrentFilePathHashSHA256 = $CurrentFileHashResult.SHA256Authenticode
-                                [System.String]$CurrentFilePathHashSHA1 = $CurrentFileHashResult.SHA1Authenticode
-                            }
-                            catch {
-
-                                [System.Void]$FinalSimulationResults.TryAdd([string]$CurrentFilePath, [WDACConfig.SimulationOutput]::New(
-                                ([System.IO.Path]::GetFileName($CurrentFilePath)),
-                                        'Signer',
-                                        $false,
-                                        $null,
-                                        $null,
-                                        $null,
-                                        $null,
-                                        $null,
-                                        $null,
-                                        'Not processed, Inaccessible file',
-                                        $null,
-                                        $null,
-                                        $null,
-                                        $null,
-                                        $null,
-                                        $CurrentFilePath
-                                    ))
-                                Continue
-                            }
-
-                            # if the file's hash exists in the XML file then add the file's path to the allowed files and do not check anymore that whether the file is signed or not
-                            if ($SHA256HashesFromXML.Contains($CurrentFilePathHashSHA256)) {
-
-                                [System.Void]$FinalSimulationResults.TryAdd([string]$CurrentFilePath, [WDACConfig.SimulationOutput]::New(
-                                ([System.IO.Path]::GetFileName($CurrentFilePath)),
-                                        'Hash',
-                                        $true,
-                                        $null,
-                                        $null,
-                                        $null,
-                                        $null,
-                                        $null,
-                                        $null,
-                                        'Hash Level',
-                                        $null,
-                                        $null,
-                                        $null,
-                                        $null,
-                                        $null,
-                                        $CurrentFilePath
-                                    ))
-                            }
-                            # If the file's extension is not supported by Authenticode and it wasn't allowed by file hash then it's not allowed and no reason to check its signature
-                            elseif ($UnsignedExtensions.Contains($CurrentFilePath.Extension)) {
-
-                                [System.Void]$FinalSimulationResults.TryAdd([string]$CurrentFilePath, [WDACConfig.SimulationOutput]::New(
-                                ([System.IO.Path]::GetFileName($CurrentFilePath)),
-                                        'Unsigned',
-                                        $false,
-                                        $null,
-                                        $null,
-                                        $null,
-                                        $null,
-                                        $null,
-                                        $null,
-                                        'Not Allowed',
-                                        $null,
-                                        $null,
-                                        $null,
-                                        $null,
-                                        $null,
-                                        $CurrentFilePath
-                                    ))
-                            }
-                            # If the file's hash does not exist in the supplied XML file, then check its signature
-                            else {
+                                    Continue
+                                }
 
                                 try {
-                                    [WDACConfig.AllCertificatesGrabber.AllFileSigners[]]$FileSignatureResults = [WDACConfig.AllCertificatesGrabber.WinTrust]::GetAllFileSigners($CurrentFilePath)
+                                    [WDACConfig.AuthenticodePageHashes]$CurrentFileHashResult = [WDACConfig.AuthPageHash]::GetCiFileHashes($CurrentFilePath)
+                                    [System.String]$CurrentFilePathHashSHA256 = $CurrentFileHashResult.SHA256Authenticode
+                                    [System.String]$CurrentFilePathHashSHA1 = $CurrentFileHashResult.SHA1Authenticode
+                                }
+                                catch {
 
-                                    # If there is no result then check if the file is allowed by a security catalog
-                                    if ($FileSignatureResults.Count -eq 0) {
+                                    [System.Void]$FinalSimulationResults.TryAdd([string]$CurrentFilePath, [WDACConfig.SimulationOutput]::New(
+                                ([System.IO.Path]::GetFileName($CurrentFilePath)),
+                                            'Signer',
+                                            $false,
+                                            $null,
+                                            $null,
+                                            $null,
+                                            $null,
+                                            $null,
+                                            $null,
+                                            'Not processed, Inaccessible file',
+                                            $null,
+                                            $null,
+                                            $null,
+                                            $null,
+                                            $null,
+                                            $CurrentFilePath
+                                        ))
+                                    Continue
+                                }
 
-                                        if (!$NoCatalogScanning) {
-                                            $MatchedHashResult = $AllSecurityCatalogHashes[$CurrentFilePathHashSHA1] ?? $AllSecurityCatalogHashes[$CurrentFilePathHashSHA256]
-                                        }
+                                # if the file's hash exists in the XML file then add the file's path to the allowed files and do not check anymore that whether the file is signed or not
+                                if ($SHA256HashesFromXML.Contains($CurrentFilePathHashSHA256)) {
 
-                                        if (!$NoCatalogScanning -and $MatchedHashResult) {
+                                    [System.Void]$FinalSimulationResults.TryAdd([string]$CurrentFilePath, [WDACConfig.SimulationOutput]::New(
+                                ([System.IO.Path]::GetFileName($CurrentFilePath)),
+                                            'Hash',
+                                            $true,
+                                            $null,
+                                            $null,
+                                            $null,
+                                            $null,
+                                            $null,
+                                            $null,
+                                            'Hash Level',
+                                            $null,
+                                            $null,
+                                            $null,
+                                            $null,
+                                            $null,
+                                            $CurrentFilePath
+                                        ))
+                                }
+                                # If the file's extension is not supported by Authenticode and it wasn't allowed by file hash then it's not allowed and no reason to check its signature
+                                elseif ($UnsignedExtensions.Contains($CurrentFilePath.Extension)) {
 
-                                            [WDACConfig.AllCertificatesGrabber.AllFileSigners]$CatalogSignerDits = ([WDACConfig.AllCertificatesGrabber.WinTrust]::GetAllFileSigners($MatchedHashResult))[0]
+                                    [System.Void]$FinalSimulationResults.TryAdd([string]$CurrentFilePath, [WDACConfig.SimulationOutput]::New(
+                                ([System.IO.Path]::GetFileName($CurrentFilePath)),
+                                            'Unsigned',
+                                            $false,
+                                            $null,
+                                            $null,
+                                            $null,
+                                            $null,
+                                            $null,
+                                            $null,
+                                            'Not Allowed',
+                                            $null,
+                                            $null,
+                                            $null,
+                                            $null,
+                                            $null,
+                                            $CurrentFilePath
+                                        ))
+                                }
+                                # If the file's hash does not exist in the supplied XML file, then check its signature
+                                else {
 
-                                            # The file is authorized by a security catalog on the system
-                                            [System.Void]$FinalSimulationResults.TryAdd([string]$CurrentFilePath, [WDACConfig.SimulationOutput]::New(
+                                    try {
+                                        [WDACConfig.AllCertificatesGrabber.AllFileSigners[]]$FileSignatureResults = [WDACConfig.AllCertificatesGrabber.WinTrust]::GetAllFileSigners($CurrentFilePath)
+
+                                        # If there is no result then check if the file is allowed by a security catalog
+                                        if ($FileSignatureResults.Count -eq 0) {
+
+                                            if (!$NoCatalogScanning) {
+                                                $MatchedHashResult = $AllSecurityCatalogHashes[$CurrentFilePathHashSHA1] ?? $AllSecurityCatalogHashes[$CurrentFilePathHashSHA256]
+                                            }
+
+                                            if (!$NoCatalogScanning -and $MatchedHashResult) {
+
+                                                [WDACConfig.AllCertificatesGrabber.AllFileSigners]$CatalogSignerDits = ([WDACConfig.AllCertificatesGrabber.WinTrust]::GetAllFileSigners($MatchedHashResult))[0]
+
+                                                # The file is authorized by a security catalog on the system
+                                                [System.Void]$FinalSimulationResults.TryAdd([string]$CurrentFilePath, [WDACConfig.SimulationOutput]::New(
                                             ([System.IO.Path]::GetFileName($CurrentFilePath)),
-                                                    'Catalog Signed',
-                                                    $true,
-                                                    $null,
-                                                    $null,
-                                                    $null,
-                                                    $null,
-                                                    $null,
-                                                    $null,
-                                                    'Catalog Hash',
-                                                    $MatchedHashResult,
-                                                    [WDACConfig.CryptoAPI]::GetNameString($CatalogSignerDits.Chain.ChainElements.Certificate[0].Handle, [WDACConfig.CryptoAPI]::CERT_NAME_SIMPLE_DISPLAY_TYPE, $null, $false),
-                                                    [WDACConfig.CryptoAPI]::GetNameString($CatalogSignerDits.Chain.ChainElements.Certificate[0].Handle, [WDACConfig.CryptoAPI]::CERT_NAME_SIMPLE_DISPLAY_TYPE, $null, $true),
-                                                    $CatalogSignerDits.Chain.ChainElements.Certificate[0].NotAfter,
-                                                    [WDACConfig.CertificateHelper]::GetTBSCertificate($CatalogSignerDits.Chain.ChainElements.Certificate[0]),
-                                                    $CurrentFilePath
-                                                ))
+                                                        'Catalog Signed',
+                                                        $true,
+                                                        $null,
+                                                        $null,
+                                                        $null,
+                                                        $null,
+                                                        $null,
+                                                        $null,
+                                                        'Catalog Hash',
+                                                        $MatchedHashResult,
+                                                        [WDACConfig.CryptoAPI]::GetNameString($CatalogSignerDits.Chain.ChainElements.Certificate[0].Handle, [WDACConfig.CryptoAPI]::CERT_NAME_SIMPLE_DISPLAY_TYPE, $null, $false),
+                                                        [WDACConfig.CryptoAPI]::GetNameString($CatalogSignerDits.Chain.ChainElements.Certificate[0].Handle, [WDACConfig.CryptoAPI]::CERT_NAME_SIMPLE_DISPLAY_TYPE, $null, $true),
+                                                        $CatalogSignerDits.Chain.ChainElements.Certificate[0].NotAfter,
+                                                        [WDACConfig.CertificateHelper]::GetTBSCertificate($CatalogSignerDits.Chain.ChainElements.Certificate[0]),
+                                                        $CurrentFilePath
+                                                    ))
+                                            }
+                                            else {
+
+                                                # The file is not signed and is not allowed by hash
+                                                [System.Void]$FinalSimulationResults.TryAdd([string]$CurrentFilePath, [WDACConfig.SimulationOutput]::New(
+                                            ([System.IO.Path]::GetFileName($CurrentFilePath)),
+                                                        'Unsigned',
+                                                        $false,
+                                                        $null,
+                                                        $null,
+                                                        $null,
+                                                        $null,
+                                                        $null,
+                                                        $null,
+                                                        'Not Allowed',
+                                                        $null,
+                                                        $null,
+                                                        $null,
+                                                        $null,
+                                                        $null,
+                                                        $CurrentFilePath
+                                                    ))
+                                            }
                                         }
                                         else {
-
-                                            # The file is not signed and is not allowed by hash
-                                            [System.Void]$FinalSimulationResults.TryAdd([string]$CurrentFilePath, [WDACConfig.SimulationOutput]::New(
-                                            ([System.IO.Path]::GetFileName($CurrentFilePath)),
-                                                    'Unsigned',
-                                                    $false,
-                                                    $null,
-                                                    $null,
-                                                    $null,
-                                                    $null,
-                                                    $null,
-                                                    $null,
-                                                    'Not Allowed',
-                                                    $null,
-                                                    $null,
-                                                    $null,
-                                                    $null,
-                                                    $null,
-                                                    $CurrentFilePath
+                                            # Use the Compare-SignerAndCertificate function to process it
+                                            $ComparisonResult = Compare-SignerAndCertificate -SimulationInput ([WDACConfig.SimulationInput]::New(
+                                                    $CurrentFilePath, # Path of the signed file
+                                                (Get-CertificateDetails -CompleteSignatureResult $FileSignatureResults), # Get all of the details of all certificates of the signed file
+                                                    $SignerInfo, # The entire Signer Info of the WDAC Policy file
+                                                    $FileSignatureResults.Signer.SignerInfos.Certificate.EnhancedKeyUsageList.ObjectId # The EKU OIDs of the primary signer of the file, just like the output of the Get-AuthenticodeSignature cmdlet, the ones that WDAC policy uses for EKU-based authorization
                                                 ))
+
+                                            [System.Void]$FinalSimulationResults.TryAdd($CurrentFilePath, $ComparisonResult)
                                         }
                                     }
-                                    else {
-                                        # Use the Compare-SignerAndCertificate function to process it
-                                        $ComparisonResult = Compare-SignerAndCertificate -SimulationInput ([WDACConfig.SimulationInput]::New(
-                                                $CurrentFilePath, # Path of the signed file
-                                                (Get-CertificateDetails -CompleteSignatureResult $FileSignatureResults), # Get all of the details of all certificates of the signed file
-                                                $SignerInfo, # The entire Signer Info of the WDAC Policy file
-                                                $FileSignatureResults.Signer.SignerInfos.Certificate.EnhancedKeyUsageList.ObjectId # The EKU OIDs of the primary signer of the file, just like the output of the Get-AuthenticodeSignature cmdlet, the ones that WDAC policy uses for EKU-based authorization
+                                    # Handle the HashMismatch situations
+                                    catch [WDACConfig.AllCertificatesGrabber.ExceptionHashMismatchInCertificate] {
+
+                                        [System.Void]$FinalSimulationResults.TryAdd([string]$CurrentFilePath, [WDACConfig.SimulationOutput]::New(
+                                    ([System.IO.Path]::GetFileName($CurrentFilePath)),
+                                                'Signer',
+                                                $false,
+                                                $null,
+                                                $null,
+                                                $null,
+                                                $null,
+                                                $null,
+                                                $null,
+                                                'Hash Mismatch',
+                                                $null,
+                                                $null,
+                                                $null,
+                                                $null,
+                                                $null,
+                                                $CurrentFilePath
                                             ))
-
-                                        [System.Void]$FinalSimulationResults.TryAdd($CurrentFilePath, $ComparisonResult)
                                     }
-                                }
-                                # Handle the HashMismatch situations
-                                catch [WDACConfig.AllCertificatesGrabber.ExceptionHashMismatchInCertificate] {
+                                    # Handle any other error by storing the file path and the reason for the error to display to the user
 
-                                    [System.Void]$FinalSimulationResults.TryAdd([string]$CurrentFilePath, [WDACConfig.SimulationOutput]::New(
+                                    catch {
+                                        # If the file is signed but has unknown signature status
+                                        [System.Void]$FinalSimulationResults.TryAdd([string]$CurrentFilePath, [WDACConfig.SimulationOutput]::New(
                                     ([System.IO.Path]::GetFileName($CurrentFilePath)),
-                                            'Signer',
-                                            $false,
-                                            $null,
-                                            $null,
-                                            $null,
-                                            $null,
-                                            $null,
-                                            $null,
-                                            'Hash Mismatch',
-                                            $null,
-                                            $null,
-                                            $null,
-                                            $null,
-                                            $null,
-                                            $CurrentFilePath
-                                        ))
-                                }
-                                # Handle any other error by storing the file path and the reason for the error to display to the user
-
-                                catch {
-                                    # If the file is signed but has unknown signature status
-                                    [System.Void]$FinalSimulationResults.TryAdd([string]$CurrentFilePath, [WDACConfig.SimulationOutput]::New(
-                                    ([System.IO.Path]::GetFileName($CurrentFilePath)),
-                                            'Signer',
-                                            $false,
-                                            $null,
-                                            $null,
-                                            $null,
-                                            $null,
-                                            $null,
-                                            $null,
-                                            "UnknownError: $_",
-                                            $null,
-                                            $null,
-                                            $null,
-                                            $null,
-                                            $null,
-                                            $CurrentFilePath
-                                        ))
+                                                'Signer',
+                                                $false,
+                                                $null,
+                                                $null,
+                                                $null,
+                                                $null,
+                                                $null,
+                                                $null,
+                                                "UnknownError: $_",
+                                                $null,
+                                                $null,
+                                                $null,
+                                                $null,
+                                                $null,
+                                                $CurrentFilePath
+                                            ))
+                                    }
                                 }
                             }
                         }
-                    }
-                    catch {
-                        throw $_
-                    }
-                    finally {
-                        # Complete the nested progress bar whether there was an error or not
-                        Write-Progress -Id ([runspace]::DefaultRunspace.Id) -Activity 'All of the files have been processed.' -Completed
-                    }
-                } -ThrottleLimit $ThreadsCount
-            }
+                        catch {
+                            throw $_
+                        }
+                        finally {
+                            # Complete the nested progress bar whether there was an error or not
+                            Write-Progress -Id ([runspace]::DefaultRunspace.Id) -Activity 'All of the files have been processed.' -Completed
+                        }
+                    } -ThrottleLimit $ThreadsCount
+                }
 
-            # Wait for all jobs, grab any error that might've ocurred in them and then remove them
-            if ($Jobs.count -gt 0) {
-                $null = Wait-Job -Job $Jobs
-                Receive-Job -Job $Jobs
-                Remove-Job -Job $Jobs
+                # Wait for all jobs, grab any error that might've ocurred in them and then remove them
+                if ($Jobs.count -gt 0) {
+                    $null = Wait-Job -Job $Jobs
+                    Receive-Job -Job $Jobs
+                    Remove-Job -Job $Jobs
+                }
+
             }
 
             $CurrentStep++
@@ -498,7 +523,7 @@ Function Invoke-WDACSimulation {
 
             # Export the output as CSV
             if ($CSVOutput) {
-                $FinalSimulationResults.Values | Sort-Object -Property IsAuthorized -Descending | Export-Csv -LiteralPath (Join-Path -Path $UserConfigDir -ChildPath "WDAC Simulation Output $(Get-Date -Format "MM-dd-yyyy 'at' HH-mm-ss").csv") -Force
+                $FinalSimulationResults.Values | Sort-Object -Property IsAuthorized -Descending | Export-Csv -LiteralPath (Join-Path -Path ([WDACConfig.GlobalVars]::UserConfigDir) -ChildPath "WDAC Simulation Output $(Get-Date -Format "MM-dd-yyyy 'at' HH-mm-ss").csv") -Force
             }
 
             # Change the color of the Table header to SkyBlue
@@ -507,9 +532,9 @@ Function Invoke-WDACSimulation {
             if ($FinalSimulationResults.Count -gt 10000) {
                 # If the result is too big and the user forgot to use CSV Output then output everything to CSV instead of trying to display on the console
                 if (!$CSVOutput) {
-                    $FinalSimulationResults.Values | Sort-Object -Property IsAuthorized -Descending | Export-Csv -LiteralPath (Join-Path -Path $UserConfigDir -ChildPath "WDAC Simulation Output $(Get-Date -Format "MM-dd-yyyy 'at' HH-mm-ss").csv") -Force
+                    $FinalSimulationResults.Values | Sort-Object -Property IsAuthorized -Descending | Export-Csv -LiteralPath (Join-Path -Path ([WDACConfig.GlobalVars]::UserConfigDir) -ChildPath "WDAC Simulation Output $(Get-Date -Format "MM-dd-yyyy 'at' HH-mm-ss").csv") -Force
                 }
-                Return "The number of files is too many to display on the console. Saving the results in a CSV file in '$((Join-Path -Path $UserConfigDir -ChildPath "WDAC Simulation Output $(Get-Date -Format "MM-dd-yyyy 'at' HH-mm-ss").csv"))'"
+                Return "The number of files is too many to display on the console. Saving the results in a CSV file in '$((Join-Path -Path ([WDACConfig.GlobalVars]::UserConfigDir) -ChildPath "WDAC Simulation Output $(Get-Date -Format "MM-dd-yyyy 'at' HH-mm-ss").csv"))'"
             }
 
             # Return the final main output array as a table
@@ -612,6 +637,7 @@ Function Invoke-WDACSimulation {
     By default it uses 2 parallel tasks.
     Max is the number of your system's CPU cores.
     Min is 1.
+    If you enter a number higher than your system's CPU cores, it will be set to your system's CPU cores count.
 .PARAMETER Verbose
     Shows verbose output
 .PARAMETER BooleanOutput
@@ -638,68 +664,3 @@ Register-ArgumentCompleter -CommandName 'Invoke-WDACSimulation' -ParameterName '
 Register-ArgumentCompleter -CommandName 'Invoke-WDACSimulation' -ParameterName 'CatRootPath' -ScriptBlock ([WDACConfig.ArgumentCompleters]::ArgumentCompleterFolderPathsPicker)
 Register-ArgumentCompleter -CommandName 'Invoke-WDACSimulation' -ParameterName 'XmlFilePath' -ScriptBlock ([WDACConfig.ArgumentCompleters]::ArgumentCompleterXmlFilePathsPicker)
 Register-ArgumentCompleter -CommandName 'Invoke-WDACSimulation' -ParameterName 'FilePath' -ScriptBlock ([WDACConfig.ArgumentCompleters]::ArgumentCompleterMultipleAnyFilePathsPicker)
-
-# SIG # Begin signature block
-# MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
-# BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCBeLXxRP5tpOd+T
-# V0ZWTibxhIn8LOEIVGhfE2HKGk+9TqCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
-# LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
-# b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
-# C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
-# MQswCQYDVQQGEwJVSzEeMBwGA1UEAxMVSG90Q2FrZVggQ29kZSBTaWduaW5nMSMw
-# IQYJKoZIhvcNAQkBFhRob3RjYWtleEBvdXRsb29rLmNvbTElMCMGCSqGSIb3DQEJ
-# ARYWU3B5bmV0Z2lybEBvdXRsb29rLmNvbTCCAiIwDQYJKoZIhvcNAQEBBQADggIP
-# ADCCAgoCggIBAKb1BJzTrpu1ERiwr7ivp0UuJ1GmNmmZ65eckLpGSF+2r22+7Tgm
-# pEifj9NhPw0X60F9HhdSM+2XeuikmaNMvq8XRDUFoenv9P1ZU1wli5WTKHJ5ayDW
-# k2NP22G9IPRnIpizkHkQnCwctx0AFJx1qvvd+EFlG6ihM0fKGG+DwMaFqsKCGh+M
-# rb1bKKtY7UEnEVAsVi7KYGkkH+ukhyFUAdUbh/3ZjO0xWPYpkf/1ldvGes6pjK6P
-# US2PHbe6ukiupqYYG3I5Ad0e20uQfZbz9vMSTiwslLhmsST0XAesEvi+SJYz2xAQ
-# x2O4n/PxMRxZ3m5Q0WQxLTGFGjB2Bl+B+QPBzbpwb9JC77zgA8J2ncP2biEguSRJ
-# e56Ezx6YpSoRv4d1jS3tpRL+ZFm8yv6We+hodE++0tLsfpUq42Guy3MrGQ2kTIRo
-# 7TGLOLpayR8tYmnF0XEHaBiVl7u/Szr7kmOe/CfRG8IZl6UX+/66OqZeyJ12Q3m2
-# fe7ZWnpWT5sVp2sJmiuGb3atFXBWKcwNumNuy4JecjQE+7NF8rfIv94NxbBV/WSM
-# pKf6Yv9OgzkjY1nRdIS1FBHa88RR55+7Ikh4FIGPBTAibiCEJMc79+b8cdsQGOo4
-# ymgbKjGeoRNjtegZ7XE/3TUywBBFMf8NfcjF8REs/HIl7u2RHwRaUTJdAgMBAAGj
-# ggJzMIICbzA8BgkrBgEEAYI3FQcELzAtBiUrBgEEAYI3FQiG7sUghM++I4HxhQSF
-# hqV1htyhDXuG5sF2wOlDAgFkAgEIMBMGA1UdJQQMMAoGCCsGAQUFBwMDMA4GA1Ud
-# DwEB/wQEAwIHgDAMBgNVHRMBAf8EAjAAMBsGCSsGAQQBgjcVCgQOMAwwCgYIKwYB
-# BQUHAwMwHQYDVR0OBBYEFOlnnQDHNUpYoPqECFP6JAqGDFM6MB8GA1UdIwQYMBaA
-# FICT0Mhz5MfqMIi7Xax90DRKYJLSMIHUBgNVHR8EgcwwgckwgcaggcOggcCGgb1s
-# ZGFwOi8vL0NOPUhPVENBS0VYLUNBLENOPUhvdENha2VYLENOPUNEUCxDTj1QdWJs
-# aWMlMjBLZXklMjBTZXJ2aWNlcyxDTj1TZXJ2aWNlcyxDTj1Db25maWd1cmF0aW9u
-# LERDPU5vbkV4aXN0ZW50RG9tYWluLERDPWNvbT9jZXJ0aWZpY2F0ZVJldm9jYXRp
-# b25MaXN0P2Jhc2U/b2JqZWN0Q2xhc3M9Y1JMRGlzdHJpYnV0aW9uUG9pbnQwgccG
-# CCsGAQUFBwEBBIG6MIG3MIG0BggrBgEFBQcwAoaBp2xkYXA6Ly8vQ049SE9UQ0FL
-# RVgtQ0EsQ049QUlBLENOPVB1YmxpYyUyMEtleSUyMFNlcnZpY2VzLENOPVNlcnZp
-# Y2VzLENOPUNvbmZpZ3VyYXRpb24sREM9Tm9uRXhpc3RlbnREb21haW4sREM9Y29t
-# P2NBQ2VydGlmaWNhdGU/YmFzZT9vYmplY3RDbGFzcz1jZXJ0aWZpY2F0aW9uQXV0
-# aG9yaXR5MA0GCSqGSIb3DQEBDQUAA4ICAQA7JI76Ixy113wNjiJmJmPKfnn7brVI
-# IyA3ZudXCheqWTYPyYnwzhCSzKJLejGNAsMlXwoYgXQBBmMiSI4Zv4UhTNc4Umqx
-# pZSpqV+3FRFQHOG/X6NMHuFa2z7T2pdj+QJuH5TgPayKAJc+Kbg4C7edL6YoePRu
-# HoEhoRffiabEP/yDtZWMa6WFqBsfgiLMlo7DfuhRJ0eRqvJ6+czOVU2bxvESMQVo
-# bvFTNDlEcUzBM7QxbnsDyGpoJZTx6M3cUkEazuliPAw3IW1vJn8SR1jFBukKcjWn
-# aau+/BE9w77GFz1RbIfH3hJ/CUA0wCavxWcbAHz1YoPTAz6EKjIc5PcHpDO+n8Fh
-# t3ULwVjWPMoZzU589IXi+2Ol0IUWAdoQJr/Llhub3SNKZ3LlMUPNt+tXAs/vcUl0
-# 7+Dp5FpUARE2gMYA/XxfU9T6Q3pX3/NRP/ojO9m0JrKv/KMc9sCGmV9sDygCOosU
-# 5yGS4Ze/DJw6QR7xT9lMiWsfgL96Qcw4lfu1+5iLr0dnDFsGowGTKPGI0EvzK7H+
-# DuFRg+Fyhn40dOUl8fVDqYHuZJRoWJxCsyobVkrX4rA6xUTswl7xYPYWz88WZDoY
-# gI8AwuRkzJyUEA07IYtsbFCYrcUzIHME4uf8jsJhCmb0va1G2WrWuyasv3K/G8Nn
-# f60MsDbDH1mLtzGCAxgwggMUAgEBMGYwTzETMBEGCgmSJomT8ixkARkWA2NvbTEi
-# MCAGCgmSJomT8ixkARkWEkhPVENBS0VYLUNBLURvbWFpbjEUMBIGA1UEAxMLSE9U
-# Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
-# GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
-# NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQgbnAQqDxkuSGMZ2YbIaXo4+RCqJZcZdnSaoj/iIElyocwDQYJKoZIhvcNAQEB
-# BQAEggIAjKEMvwcI4AZKION18VkTbfIKvv5sM4mij39XZ0yeQ3ku5DydyNN4CePJ
-# SEtd1fhWL0eW2TFsEKjHxp7Wv4Lz/Dauo3zl+j5YiIcGEXapyxGRniTNV6J3uB5y
-# +cOwRuyZjvbgQC4/N55jD4RK/0YnDpwvwnRCeVXEBTQC44OquSDOVkjtJsekO1wA
-# +DFGRqqnZKhyw4fiuLWMXV0iX68+H8LenWS5k93nlXBspDYh0ouirTGGcmbMvLAa
-# 0EIVFZ0A3Q2GwJnXBtKWFTxiPLqKlo24ypwZzqoWWlzgbzuKFy6ka1QrpY6fjIWP
-# uSqJTNPjAcq6z9sb4iRqafa/ZLEwdmE/rGhPVXGzpzHccMe5sRZ901Jbv9e9DQ/a
-# G51ZOBbiCNc3emUkB0eKitFJphub0aQkGDCJdRMS9Ea3xzEO17PLnc09BMC4RGbK
-# SSn2rJHabGlWjG/Obiwx2qJx4uPndFxZfKaaG4qnviUdqNhEgVd0TyOW33ubC6mq
-# /NHj90A6MoPrk/G4Q3RnQyenTU3Z1/BVzDbzlbhkhRooW59X/EFW35VRwgIS+s80
-# b3JKHIAeM6BPQCjoND9UhHXOFjwb9ZhVJd/WbEAu03filwT5cniqbdYQbjV1rsEb
-# 5T+0Rj57FNsv5zLEe32fjupwbrYfTlNouRVbRxMLeyqFNN8L5GM=
-# SIG # End signature block

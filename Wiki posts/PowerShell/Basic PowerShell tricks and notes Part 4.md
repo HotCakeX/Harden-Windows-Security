@@ -181,6 +181,8 @@ Select-Object -Property FullName, Location, GlobalAssemblyCache, IsFullyTrusted 
 Out-GridView -OutputMode Multiple
 ```
 
+* [Read more](https://learn.microsoft.com/en-us/dotnet/api/system.appdomain)
+
 <br>
 
 ### How To Load All DLLs That Come With PowerShell

@@ -57,17 +57,17 @@ namespace WDACConfig
                 if (!TryGetVersion(spanData, out var version))
                     throw Marshal.GetExceptionForHR(Marshal.GetHRForLastWin32Error());
 
-                ExFileInfo.Version = version;
+                ExFileInfo.Version = CheckAndSetNull(version);
 
                 // Extract locale and encoding information
                 if (!TryGetLocaleAndEncoding(spanData, out var locale, out var encoding))
                     throw Marshal.GetExceptionForHR(Marshal.GetHRForLastWin32Error());
 
                 // Retrieve various file information based on locale and encoding
-                ExFileInfo.OriginalFileName = GetLocalizedResource(spanData, encoding, locale, "\\OriginalFileName");
-                ExFileInfo.InternalName = GetLocalizedResource(spanData, encoding, locale, "\\InternalName");
-                ExFileInfo.FileDescription = GetLocalizedResource(spanData, encoding, locale, "\\FileDescription");
-                ExFileInfo.ProductName = GetLocalizedResource(spanData, encoding, locale, "\\ProductName");
+                ExFileInfo.OriginalFileName = CheckAndSetNull(GetLocalizedResource(spanData, encoding, locale, "\\OriginalFileName"));
+                ExFileInfo.InternalName = CheckAndSetNull(GetLocalizedResource(spanData, encoding, locale, "\\InternalName"));
+                ExFileInfo.FileDescription = CheckAndSetNull(GetLocalizedResource(spanData, encoding, locale, "\\FileDescription"));
+                ExFileInfo.ProductName = CheckAndSetNull(GetLocalizedResource(spanData, encoding, locale, "\\ProductName"));
             }
             catch
             {
@@ -131,6 +131,12 @@ namespace WDACConfig
                     throw Marshal.GetExceptionForHR(Marshal.GetHRForLastWin32Error());
             }
             return null;
+        }
+
+        // Check if a string is null or whitespace and return null if it is
+        private static string CheckAndSetNull(string value)
+        {
+            return string.IsNullOrWhiteSpace(value) ? null : value;
         }
 
         // Structure to hold file version information

@@ -259,6 +259,7 @@ This is an advanced PowerShell module for WDAC (Windows Defender Application Con
         'XMLOps\New-Macros.psm1',
         'XMLOps\Checkpoint-Macros.psm1',
         'Public\Write-FinalOutput.psm1',
+        'Public\MockConfigCIBootstrap.psm1',
         'C#\Custom Types\ChainElement.cs',
         'C#\Custom Types\PolicyHashObj.cs',
         'C#\Custom Types\Signer.cs',
@@ -290,7 +291,8 @@ This is an advanced PowerShell module for WDAC (Windows Defender Application Con
         'C#\Functions\CiPolicyUtility.cs',
         'C#\Functions\StagingArea.cs',
         'C#\Functions\GetExtendedFileAttrib.cs',
-        'C#\Variables\ArgumentCompleters.cs')
+        'C#\Variables\ArgumentCompleters.cs',
+        'C#\Variables\GlobalVariables.cs')
 
     # Private data to pass to the module specified in RootModule/ModuleToProcess. This may also contain a PSData hashtable with additional module metadata used by PowerShell.
     PrivateData          = @{

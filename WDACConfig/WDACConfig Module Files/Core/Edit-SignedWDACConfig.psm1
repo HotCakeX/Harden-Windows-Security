@@ -66,7 +66,13 @@ Function Edit-SignedWDACConfig {
         [Parameter(Mandatory = $false, ParameterSetName = 'MergeSupplementalPolicies')]
         [System.Management.Automation.SwitchParameter]$KeepOldSupplementalPolicies,
 
-        [ValidateSet([BasePolicyNamez])]
+        [ArgumentCompleter({
+                foreach ($Item in [WDACConfig.BasePolicyNamez]::New().GetValidValues()) {
+                    if ($Item.Contains(' ')) {
+                        "'$Item'"
+                    }
+                }
+            })]
         [Parameter(Mandatory = $true, ParameterSetName = 'UpdateBasePolicy')]
         [System.String[]]$CurrentBasePolicyName,
 
@@ -79,7 +85,13 @@ Function Edit-SignedWDACConfig {
         [Parameter(Mandatory = $false, ValueFromPipelineByPropertyName = $true)]
         [System.IO.FileInfo]$CertPath,
 
-        [ValidateSet([CertCNz])]
+        [ArgumentCompleter({
+                foreach ($Item in [WDACConfig.CertCNz]::new().GetValidValues()) {
+                    if ($Item.Contains(' ')) {
+                        "'$Item'"
+                    }
+                }
+            })]
         [Parameter(Mandatory = $false, ValueFromPipelineByPropertyName = $true)]
         [System.String]$CertCN,
 
@@ -96,11 +108,11 @@ Function Edit-SignedWDACConfig {
         [parameter(Mandatory = $false, ParameterSetName = 'AllowNewApps')]
         [System.String]$SpecificFileNameLevel,
 
-        [ValidateSet([ScanLevelz])]
+        [ArgumentCompleter({ [WDACConfig.ScanLevelz]::New().GetValidValues() })]
         [parameter(Mandatory = $false, ParameterSetName = 'AllowNewApps')]
         [System.String]$Level = 'WHQLFilePublisher',
 
-        [ValidateSet([ScanLevelz])]
+        [ArgumentCompleter({ [WDACConfig.ScanLevelz]::New().GetValidValues() })]
         [parameter(Mandatory = $false, ParameterSetName = 'AllowNewApps')]
         [System.String[]]$Fallbacks = ('FilePublisher', 'Hash'),
 
@@ -166,11 +178,16 @@ Function Edit-SignedWDACConfig {
 
         # If CertCN was not provided by user, check if a valid value exists in user configs, if so, use it, otherwise throw an error
         if (!$CertCN) {
-            if ([CertCNz]::new().GetValidValues() -contains (Get-CommonWDACConfig -CertCN)) {
+            if ([WDACConfig.CertCNz]::new().GetValidValues() -contains (Get-CommonWDACConfig -CertCN)) {
                 [System.String]$CertCN = Get-CommonWDACConfig -CertCN
             }
             else {
                 throw 'CertCN parameter cannot be empty and no valid user configuration was found for it.'
+            }
+        }
+        else {
+            if ([WDACConfig.CertCNz]::new().GetValidValues() -notcontains $CertCN) {
+                throw "$CertCN does not belong to a subject CN of any of the deployed certificates"
             }
         }
 
@@ -1005,8 +1022,3 @@ Function Edit-SignedWDACConfig {
     System.String
 #>
 }
-
-Register-ArgumentCompleter -CommandName 'Edit-SignedWDACConfig' -ParameterName 'CertPath' -ScriptBlock ([WDACConfig.ArgumentCompleters]::ArgumentCompleterCerFilePathsPicker)
-Register-ArgumentCompleter -CommandName 'Edit-SignedWDACConfig' -ParameterName 'SignToolPath' -ScriptBlock ([WDACConfig.ArgumentCompleters]::ArgumentCompleterExeFilePathsPicker)
-Register-ArgumentCompleter -CommandName 'Edit-SignedWDACConfig' -ParameterName 'PolicyPath' -ScriptBlock ([WDACConfig.ArgumentCompleters]::ArgumentCompleterXmlFilePathsPicker)
-Register-ArgumentCompleter -CommandName 'Edit-SignedWDACConfig' -ParameterName 'SuppPolicyPaths' -ScriptBlock ([WDACConfig.ArgumentCompleters]::ArgumentCompleterMultipleXmlFilePathsPicker)

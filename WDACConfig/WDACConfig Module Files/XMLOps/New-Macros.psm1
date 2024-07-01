@@ -20,30 +20,36 @@ Function New-Macros {
     )
     Begin {
 
+        $Macros = New-Object -TypeName 'System.Collections.Generic.HashSet[System.String]'
+
         # If user selected directory paths to be passed to this function
         if ($null -ne $InputObject['SelectedDirectoryPaths'] -and $InputObject['SelectedDirectoryPaths'].count -gt 0) {
 
             # loop over each exe in all directories
-            $Macros = [System.Collections.Generic.HashSet[System.String]] @(foreach ($Exe in ([WDACConfig.FileUtility]::GetFilesFast($InputObject['SelectedDirectoryPaths'], $null, '.exe'))) {
+            foreach ($Exe in ([WDACConfig.FileUtility]::GetFilesFast($InputObject['SelectedDirectoryPaths'], $null, '.exe'))) {
 
-                    # Get the Extended File Info of the current exe file
-                    [WDACConfig.ExFileInfo]$ExFileInfo = [WDACConfig.ExFileInfo]::GetExtendedFileInfo($Exe)
+                # Get the Extended File Info of the current exe file
+                [WDACConfig.ExFileInfo]$ExFileInfo = [WDACConfig.ExFileInfo]::GetExtendedFileInfo($Exe)
 
-                    # make sure the OriginalFileName is not null for the current exe
-                    if ($null -ne $ExFileInfo.OriginalFileName) {
-                        # Send the OriginalFileName to the Macros HashSet
-                        $ExFileInfo.OriginalFileName
-                    }
-                    else {
-                        Write-Verbose -Message "New-Macros: OriginalFileName property is empty for the file: $($Exe.FullName)"
-                    }
-                })
+                # make sure the OriginalFileName is not null for the current exe
+                if ($null -ne $ExFileInfo.OriginalFileName) {
+                    # Send the OriginalFileName to the Macros HashSet
+                    [System.Void]$Macros.Add($ExFileInfo.OriginalFileName)
+                }
+                else {
+                    Write-Verbose -Message "New-Macros: OriginalFileName property is empty for the file: $($Exe.FullName)"
+                }
+            }
         }
 
-        # Add the OriginalFileName value of all of the executable files that exist or don't exist on the disk from audit logs to the Macros HashSet
-        foreach ($Item in $InputObject['SelectedAuditLogs']) {
-            if ((([System.IO.FileInfo]$Item.'File Name').Extension -eq '.exe') -and (-NOT ([System.String]::IsNullOrWhiteSpace($Item.OriginalFileName)))) {
-                [System.Void]$Macros.Add($Item.OriginalFileName)
+        # If audit logs were passed to this function
+        if ($null -ne $InputObject['SelectedAuditLogs'] -and $InputObject['SelectedAuditLogs'].count -gt 0) {
+
+            # Add the OriginalFileName value of all of the executable files that exist or don't exist on the disk from audit logs to the Macros HashSet
+            foreach ($Item in $InputObject['SelectedAuditLogs']) {
+                if ((([System.IO.FileInfo]$Item.'File Name').Extension -eq '.exe') -and (-NOT ([System.String]::IsNullOrWhiteSpace($Item.OriginalFileName)))) {
+                    [System.Void]$Macros.Add($Item.OriginalFileName)
+                }
             }
         }
 

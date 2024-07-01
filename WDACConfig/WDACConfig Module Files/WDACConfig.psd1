@@ -94,7 +94,7 @@ This is an advanced PowerShell module for WDAC (Windows Defender Application Con
     # RequiredAssemblies   = @()
 
     # Script files (.ps1) that are run in the caller's environment prior to importing this module.
-    ScriptsToProcess     = @('Preloader.ps1')
+    # ScriptsToProcess     = @('Preloader.ps1')
 
     # Type files (.ps1xml) to be loaded when importing this module
     # TypesToProcess = @()
@@ -183,7 +183,6 @@ This is an advanced PowerShell module for WDAC (Windows Defender Application Con
     # List of all files packaged with this module
     FileList             = @('WDACConfig.psd1',
         'WDACConfig.psm1',
-        'Preloader.ps1',
         'Core\New-WDACConfig.psm1',
         'Core\Deploy-SignedWDACConfig.psm1',
         'Core\Remove-WDACConfig.psm1',
@@ -206,7 +205,6 @@ This is an advanced PowerShell module for WDAC (Windows Defender Application Con
         'Core\Get-CIPolicySetting.psm1',
         'CoreExt\PSDefaultParameterValues.ps1',
         'CoreExt\ArgumentCompleters.ps1',
-        'CoreExt\Classes.psm1',
         'Resources\WDAC Policies\DefaultWindows_Enforced_Kernel.xml',
         'Resources\WDAC Policies\DefaultWindows_Enforced_Kernel_NoFlights.xml',
         'Resources\User Configurations\Schema.json',
@@ -272,6 +270,7 @@ This is an advanced PowerShell module for WDAC (Windows Defender Application Con
         'C#\Custom Types\SimulationOutput.cs',
         'C#\Custom Types\AuthenticodePageHashes.cs',
         'C#\Custom Types\CertificateSignerCreator.cs',
+        'C#\Custom Types\ChainPackage.cs',
         'C#\Functions\AllCertificatesGrabber.cs',
         'C#\Functions\AuthenticodeHashCalc.cs',
         'C#\Functions\CertificateHelper.cs',
@@ -292,7 +291,11 @@ This is an advanced PowerShell module for WDAC (Windows Defender Application Con
         'C#\Functions\StagingArea.cs',
         'C#\Functions\GetExtendedFileAttrib.cs',
         'C#\Variables\ArgumentCompleters.cs',
-        'C#\Variables\GlobalVariables.cs')
+        'C#\Variables\GlobalVariables.cs',
+        'C#\ArgumentCompleters\BasePolicyNamez.cs',
+        'C#\ArgumentCompleters\CertCNz.cs',
+        'C#\ArgumentCompleters\RuleOptionsx.cs',
+        'C#\ArgumentCompleters\ScanLevelz.cs')
 
     # Private data to pass to the module specified in RootModule/ModuleToProcess. This may also contain a PSData hashtable with additional module metadata used by PowerShell.
     PrivateData          = @{

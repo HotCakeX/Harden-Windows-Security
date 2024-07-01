@@ -32,7 +32,13 @@ Function Remove-WDACConfig {
         [parameter(Mandatory = $true, ParameterSetName = 'Signed Base', ValueFromPipelineByPropertyName = $true)]
         [System.IO.FileInfo[]]$PolicyPaths,
 
-        [ValidateSet([CertCNz])]
+        [ArgumentCompleter({
+                foreach ($Item in [WDACConfig.CertCNz]::new().GetValidValues()) {
+                    if ($Item.Contains(' ')) {
+                        "'$Item'"
+                    }
+                }
+            })]
         [parameter(Mandatory = $False, ParameterSetName = 'Signed Base', ValueFromPipelineByPropertyName = $true)]
         [System.String]$CertCN,
 
@@ -179,11 +185,16 @@ Function Remove-WDACConfig {
 
             # If CertCN was not provided by user, check if a valid value exists in user configs, if so, use it, otherwise throw an error
             if (!$CertCN) {
-                if ([CertCNz]::new().GetValidValues() -contains (Get-CommonWDACConfig -CertCN)) {
+                if ([WDACConfig.CertCNz]::new().GetValidValues() -contains (Get-CommonWDACConfig -CertCN)) {
                     [System.String]$CertCN = Get-CommonWDACConfig -CertCN
                 }
                 else {
                     throw 'CertCN parameter cannot be empty and no valid user configuration was found for it.'
+                }
+            }
+            else {
+                if ([WDACConfig.CertCNz]::new().GetValidValues() -notcontains $CertCN) {
+                    throw "$CertCN does not belong to a subject CN of any of the deployed certificates"
                 }
             }
         }
@@ -388,5 +399,3 @@ Function Remove-WDACConfig {
     System.String
 #>
 }
-Register-ArgumentCompleter -CommandName 'Remove-WDACConfig' -ParameterName 'PolicyPaths' -ScriptBlock ([WDACConfig.ArgumentCompleters]::ArgumentCompleterMultipleXmlFilePathsPicker)
-Register-ArgumentCompleter -CommandName 'Remove-WDACConfig' -ParameterName 'SignToolPath' -ScriptBlock ([WDACConfig.ArgumentCompleters]::ArgumentCompleterExeFilePathsPicker)

@@ -14,7 +14,7 @@ Invoke-WDACSimulation
   [-Log]
   [-NoCatalogScanning]
   [[-CatRootPath] <DirectoryInfo[]>]
-  [-SkipVersionCheck]
+  [[-ThreadsCount] <UInt32>]
   [<CommonParameters>]
 ```
 
@@ -49,7 +49,7 @@ This cmdlet allows you to simulate a WDAC (App Control for Business) policy depl
   * ProductName
   * Filepath
 
-* The Simulation engine *doesn't support* the following [level](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDAC-Rule-Levels-Comparison-and-Guide#--filename) yet:
+* The Simulation engine *doesn't support* the following [level](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDAC-Rule-Levels-Comparison-and-Guide#--filename) yet (they will be added in a future update):
 
     * FileName
 
@@ -193,6 +193,7 @@ Provide path(s) to directories where security catalog `.cat` files are located. 
 
 | Type: |[DirectoryInfo](https://learn.microsoft.com/en-us/dotnet/api/system.io.directoryinfo)[]|
 | :-------------: | :-------------: |
+| Aliases: | Cat |
 | Position: | Named |
 | Default value: | None |
 | Required: | False |
@@ -213,6 +214,29 @@ Bypass the scanning of the security catalogs on the system. It can make the scan
 | :-------------: | :-------------: |
 | Position: | Named |
 | Default value: | None |
+| Required: | False |
+| Accept pipeline input: | False |
+| Accept wildcard characters: | False |
+
+</div>
+
+<br>
+
+### -ThreadsCount
+
+The number of the concurrent/parallel tasks to use when performing WDAC Simulation.
+
+* Max is the number of your system's CPU cores.
+* Min is 1.
+* If you enter a number higher than your system's CPU cores, it will be set to your system's CPU cores count.
+
+<div align='center'>
+
+| Type: |[UInt32](https://learn.microsoft.com/en-us/dotnet/api/system.uint32)|
+| :-------------: | :-------------: |
+| Aliases: | CPU |
+| Position: | Named |
+| Default value: | 2 |
 | Required: | False |
 | Accept pipeline input: | False |
 | Accept wildcard characters: | False |

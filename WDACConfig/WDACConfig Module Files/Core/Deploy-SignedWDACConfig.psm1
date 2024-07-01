@@ -16,7 +16,13 @@ Function Deploy-SignedWDACConfig {
         [ValidateScript({ [System.IO.File]::Exists($_) }, ErrorMessage = 'The path you selected is not a file path.')]
         [parameter(Mandatory = $false, ValueFromPipelineByPropertyName = $true, ValueFromPipeline = $true)][System.IO.FileInfo]$CertPath,
 
-        [ValidateSet([CertCNz])]
+        [ArgumentCompleter({
+                foreach ($Item in [WDACConfig.CertCNz]::new().GetValidValues()) {
+                    if ($Item.Contains(' ')) {
+                        "'$Item'"
+                    }
+                }
+            })]
         [parameter(Mandatory = $false, ValueFromPipelineByPropertyName = $true, ValueFromPipeline = $true)][System.String]$CertCN,
 
         [ValidatePattern('\.exe$')]
@@ -73,11 +79,16 @@ Function Deploy-SignedWDACConfig {
 
         # If CertCN was not provided by user, check if a valid value exists in user configs, if so, use it, otherwise throw an error
         if (!$CertCN) {
-            if ([CertCNz]::new().GetValidValues() -contains (Get-CommonWDACConfig -CertCN)) {
+            if ([WDACConfig.CertCNz]::new().GetValidValues() -contains (Get-CommonWDACConfig -CertCN)) {
                 [System.String]$CertCN = Get-CommonWDACConfig -CertCN
             }
             else {
                 throw 'CertCN parameter cannot be empty and no valid user configuration was found for it.'
+            }
+        }
+        else {
+            if ([WDACConfig.CertCNz]::new().GetValidValues() -notcontains $CertCN) {
+                throw "$CertCN does not belong to a subject CN of any of the deployed certificates"
             }
         }
         #Endregion User-Configurations-Processing-Validation
@@ -140,7 +151,7 @@ Function Deploy-SignedWDACConfig {
                             $null = New-Item -ItemType SymbolicLink -Path "$SymLinksStorage\SignTool.exe" -Target $SignToolPathFinal -Force
 
                             Write-Verbose -Message 'Scanning the SignTool.exe and generating the SignTool.xml policy'
-                            New-CIPolicy -ScanPath $SymLinksStorage -Level FilePublisher -Fallback None -UserPEs -UserWriteablePaths -MultiplePolicyFormat -AllowFileNameFallbacks -FilePath "$SymLinksStorage\SignTool.xml"
+                            New-CIPolicy -ScanPath $SymLinksStorage -Level FilePublisher -Fallback None -UserPEs -UserWriteablePaths -MultiplePolicyFormat -AllowFileNameFallbacks -FilePath "$SymLinksStorage\SignTool.xml" -PathToCatroot 'C:\Program Files\Windows Defender\Offline'
 
                             [System.IO.FileInfo]$AugmentedPolicyPath = Join-Path -Path $SymLinksStorage -ChildPath $PolicyPath.Name
 
@@ -295,7 +306,3 @@ Function Deploy-SignedWDACConfig {
     It accesses the user configs to get the certificate path and common name, if they are not found, it throws an error.
 #>
 }
-
-Register-ArgumentCompleter -CommandName 'Deploy-SignedWDACConfig' -ParameterName 'PolicyPaths' -ScriptBlock ([WDACConfig.ArgumentCompleters]::ArgumentCompleterMultipleXmlFilePathsPicker)
-Register-ArgumentCompleter -CommandName 'Deploy-SignedWDACConfig' -ParameterName 'CertPath' -ScriptBlock ([WDACConfig.ArgumentCompleters]::ArgumentCompleterCerFilePathsPicker)
-Register-ArgumentCompleter -CommandName 'Deploy-SignedWDACConfig' -ParameterName 'SignToolPath' -ScriptBlock ([WDACConfig.ArgumentCompleters]::ArgumentCompleterExeFilePathsPicker)

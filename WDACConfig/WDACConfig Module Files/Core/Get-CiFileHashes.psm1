@@ -44,5 +44,3 @@ Function Get-CiFileHashes {
     And return them as the Authenticode hashes. This is compliant with how the WDAC engine in Windows works.
 #>
 }
-
-Register-ArgumentCompleter -CommandName 'Get-CiFileHashes' -ParameterName 'FilePath' -ScriptBlock ([WDACConfig.ArgumentCompleters]::ArgumentCompleterAnyFilePathsPicker)

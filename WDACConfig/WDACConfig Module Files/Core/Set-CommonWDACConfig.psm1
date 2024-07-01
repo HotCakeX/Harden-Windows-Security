@@ -2,7 +2,13 @@ Function Set-CommonWDACConfig {
     [CmdletBinding()]
     [OutputType([System.Object[]])]
     Param(
-        [ValidateSet([CertCNz])]
+        [ArgumentCompleter({
+                foreach ($Item in [WDACConfig.CertCNz]::new().GetValidValues()) {
+                    if ($Item.Contains(' ')) {
+                        "'$Item'"
+                    }
+                }
+            })]
         [parameter(Mandatory = $false)][System.String]$CertCN,
 
         [ValidateScript({ ([System.IO.File]::Exists($_)) -and ($_.extension -eq '.cer') }, ErrorMessage = 'The path you selected is not a file path for a .cer file.')]
@@ -70,6 +76,12 @@ Function Set-CommonWDACConfig {
 
         if (!$CertCN -And !$CertPath -And !$SignToolPath -And !$UnsignedPolicyPath -And !$SignedPolicyPath -And !$StrictKernelPolicyGUID -And !$StrictKernelNoFlightRootsPolicyGUID -And !$LastUpdateCheck -And !$StrictKernelModePolicyTimeOfDeployment) {
             Throw [System.ArgumentException] 'No parameter was selected.'
+        }
+
+        if ($CertCN) {
+            if ([WDACConfig.CertCNz]::new().GetValidValues() -notcontains $CertCN) {
+                throw "$CertCN does not belong to a subject CN of any of the deployed certificates"
+            }
         }
 
         # Create User configuration folder if it doesn't already exist
@@ -266,7 +278,3 @@ Function Set-CommonWDACConfig {
     Set-CommonWDACConfig -SignToolPath 'D:\Programs\signtool.exe' -CertCN 'wdac certificate' -CertPath 'C:\Users\Admin\WDACCert.cer'
 #>
 }
-Register-ArgumentCompleter -CommandName 'Set-CommonWDACConfig' -ParameterName 'CertPath' -ScriptBlock ([WDACConfig.ArgumentCompleters]::ArgumentCompleterCerFilePathsPicker)
-Register-ArgumentCompleter -CommandName 'Set-CommonWDACConfig' -ParameterName 'SignToolPath' -ScriptBlock ([WDACConfig.ArgumentCompleters]::ArgumentCompleterExeFilePathsPicker)
-Register-ArgumentCompleter -CommandName 'Set-CommonWDACConfig' -ParameterName 'SignedPolicyPath' -ScriptBlock ([WDACConfig.ArgumentCompleters]::ArgumentCompleterXmlFilePathsPicker)
-Register-ArgumentCompleter -CommandName 'Set-CommonWDACConfig' -ParameterName 'UnsignedPolicyPath' -ScriptBlock ([WDACConfig.ArgumentCompleters]::ArgumentCompleterXmlFilePathsPicker)

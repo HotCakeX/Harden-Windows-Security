@@ -124,6 +124,3 @@ Function Test-CiPolicy {
     Test-CiPolicy -CipFile "C:\Users\Admin\{C5F45D1A-97F7-42CF-84F1-40755F1AEB97}.cip"
     #>
 }
-
-Register-ArgumentCompleter -CommandName 'Test-CiPolicy' -ParameterName 'XmlFile' -ScriptBlock ([WDACConfig.ArgumentCompleters]::ArgumentCompleterXmlFilePathsPicker)
-Register-ArgumentCompleter -CommandName 'Test-CiPolicy' -ParameterName 'CipFile' -ScriptBlock ([WDACConfig.ArgumentCompleters]::ArgumentCompleterAnyFilePathsPicker)

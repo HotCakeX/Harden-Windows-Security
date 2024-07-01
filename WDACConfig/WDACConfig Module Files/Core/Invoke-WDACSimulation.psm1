@@ -110,7 +110,9 @@ Function Invoke-WDACSimulation {
 
         #Region Making Sure No AllowAll Rule Exists
 
-        if ($XMLContent -match '<Allow ID="ID_ALLOW_.*" FriendlyName=".*" FileName="\*".*/>') {
+        # Using compiled regex for better performance
+        $AllowAllRegex = [System.Text.RegularExpressions.Regex]::new('<Allow ID="ID_ALLOW_.*" FriendlyName=".*" FileName="\*".*/>', 'Compiled')
+        if ($AllowAllRegex.IsMatch($XMLContent)) {
             Write-Verbose -Message "The supplied XML file '$($XmlFilePath.Name)' contains a rule that allows all files."
 
 
@@ -659,8 +661,3 @@ Function Invoke-WDACSimulation {
     thus they weren't created using FilePublisher level, they were created using Publisher or Root certificate levels to allow Microsoft's wellknown certificates.
 #>
 }
-
-Register-ArgumentCompleter -CommandName 'Invoke-WDACSimulation' -ParameterName 'FolderPath' -ScriptBlock ([WDACConfig.ArgumentCompleters]::ArgumentCompleterFolderPathsPicker)
-Register-ArgumentCompleter -CommandName 'Invoke-WDACSimulation' -ParameterName 'CatRootPath' -ScriptBlock ([WDACConfig.ArgumentCompleters]::ArgumentCompleterFolderPathsPicker)
-Register-ArgumentCompleter -CommandName 'Invoke-WDACSimulation' -ParameterName 'XmlFilePath' -ScriptBlock ([WDACConfig.ArgumentCompleters]::ArgumentCompleterXmlFilePathsPicker)
-Register-ArgumentCompleter -CommandName 'Invoke-WDACSimulation' -ParameterName 'FilePath' -ScriptBlock ([WDACConfig.ArgumentCompleters]::ArgumentCompleterMultipleAnyFilePathsPicker)

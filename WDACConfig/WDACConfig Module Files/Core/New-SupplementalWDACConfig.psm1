@@ -53,11 +53,11 @@ Function New-SupplementalWDACConfig {
         [Parameter(Mandatory = $false, ParameterSetName = 'Normal')]
         [System.Management.Automation.SwitchParameter]$NoScript,
 
-        [ValidateSet([ScanLevelz])]
+        [ArgumentCompleter({ [WDACConfig.ScanLevelz]::New().GetValidValues() })]
         [parameter(Mandatory = $false, ParameterSetName = 'Normal')]
         [System.String]$Level = 'WHQLFilePublisher',
 
-        [ValidateSet([ScanLevelz])]
+        [ArgumentCompleter({ [WDACConfig.ScanLevelz]::New().GetValidValues() })]
         [parameter(Mandatory = $false, ParameterSetName = 'Normal')]
         [System.String[]]$Fallbacks = ('FilePublisher', 'Hash'),
 
@@ -488,9 +488,3 @@ Function New-SupplementalWDACConfig {
     This example will create a Supplemental policy named certs based on the certificates located at "certificate 1 .cer" and "certificate 2 .cer" and the Base policy located at "C:\Program Files\WDACConfig\DefaultWindowsPlusBlockRules.xml".
 #>
 }
-
-Register-ArgumentCompleter -CommandName 'New-SupplementalWDACConfig' -ParameterName 'PolicyPath' -ScriptBlock ([WDACConfig.ArgumentCompleters]::ArgumentCompleterXmlFilePathsPicker)
-Register-ArgumentCompleter -CommandName 'New-SupplementalWDACConfig' -ParameterName 'PackageName' -ScriptBlock ([WDACConfig.ArgumentCompleters]::ArgumentCompleterAppxPackageNames)
-Register-ArgumentCompleter -CommandName 'New-SupplementalWDACConfig' -ParameterName 'ScanLocation' -ScriptBlock ([WDACConfig.ArgumentCompleters]::ArgumentCompleterFolderPathsPicker)
-Register-ArgumentCompleter -CommandName 'New-SupplementalWDACConfig' -ParameterName 'FolderPath' -ScriptBlock ([WDACConfig.ArgumentCompleters]::ArgumentCompleterFolderPathsPickerWildCards)
-Register-ArgumentCompleter -CommandName 'New-SupplementalWDACConfig' -ParameterName 'CertificatePaths' -ScriptBlock ([WDACConfig.ArgumentCompleters]::ArgumentCompleterCerFilesPathsPicker)

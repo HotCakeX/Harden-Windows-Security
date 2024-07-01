@@ -136,3 +136,27 @@
         }
     })
 
+# Note: This argument completer suggest rule options that are not already selected on the command line by *any* other parameter
+# It currently doesn't make a distinction between the RulesToAdd/RulesToRemove parameters and other parameters.
+[WDACConfig.ArgumentCompleters]::ArgumentCompleterPolicyRuleOptions = [System.Management.Automation.ScriptBlock]::Create({
+        # Get the current command and the already bound parameters
+        param($CommandName, $ParameterName, $WordToComplete, $CommandAst, $FakeBoundParameters)
+
+        # Find all string constants in the AST
+        $Existing = $CommandAst.FindAll(
+            # The predicate scriptblock to define the criteria for filtering the AST nodes
+            {
+                $Args[0] -is [System.Management.Automation.Language.StringConstantExpressionAst]
+            },
+            # The recurse flag, whether to search nested scriptblocks or not.
+            $false
+        ).Value
+
+        foreach ($Item in ([WDACConfig.RuleOptionsx]::new().GetValidValues())) {
+            # Check if the item is already selected
+            if ($Item -notin $Existing) {
+                # Return the item
+                "'$Item'"
+            }
+        }
+    })

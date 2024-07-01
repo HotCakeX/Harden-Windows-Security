@@ -59,12 +59,9 @@ Function Remove-SupplementalSigners {
             # Get the unique SignerIds
             [System.String[]]$SupplementalPolicySignerIDs = $SupplementalPolicySignerIDs.SignerId | Select-Object -Unique
 
-            # An array to store the nodes to remove
-            $NodesToRemove_Signers = New-Object -TypeName 'System.Collections.Generic.List[System.Xml.XmlElement]'
-
             # Select all the Signer nodes in <Signers>...</Signers> that have the same ID as the SignerIds of the SupplementalPolicySigners nodes
-            foreach ($SignerID in $SupplementalPolicySignerIDs) {
-                $NodesToRemove_Signers.Add($SiPolicyNode.Signers.SelectNodes("//ns:Signer[@ID='$SignerID']", $NameSpace))
+            $NodesToRemove_Signers = foreach ($SignerID in $SupplementalPolicySignerIDs) {
+                $SiPolicyNode.Signers.SelectNodes("//ns:Signer[@ID='$SignerID']", $NameSpace)
             }
 
             # Loop through the Signer nodes to remove

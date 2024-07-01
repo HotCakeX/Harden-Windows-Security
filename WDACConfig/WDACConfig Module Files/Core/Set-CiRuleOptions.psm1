@@ -10,14 +10,14 @@ Function Set-CiRuleOptions {
         [Parameter(Mandatory = $true)][System.IO.FileInfo]$FilePath,
 
         [ValidateScript({
-                if ($_ -notin [RuleOptionsx]::new().GetValidValues()) { throw "Invalid Policy Rule Option: $_" }
+                if ($_ -notin [WDACConfig.RuleOptionsx]::new().GetValidValues()) { throw "Invalid Policy Rule Option: $_" }
                 # Return true if everything is okay
                 $true
             })]
         [Parameter(Mandatory = $false)][System.String[]]$RulesToAdd,
 
         [ValidateScript({
-                if ($_ -notin [RuleOptionsx]::new().GetValidValues()) { throw "Invalid Policy Rule Option: $_" }
+                if ($_ -notin [WDACConfig.RuleOptionsx]::new().GetValidValues()) { throw "Invalid Policy Rule Option: $_" }
                 # Return true if everything is okay
                 $true
             })]
@@ -237,31 +237,3 @@ Function Set-CiRuleOptions {
         System.Void
     #>
 }
-# Note: This argument completer suggest rule options that are not already selected on the command line by *any* other parameter
-# It currently doesn't make a distinction between the RulesToAdd/RulesToRemove parameters and other parameters.
-[System.Management.Automation.ScriptBlock]$RuleOptionsScriptBlock = {
-    # Get the current command and the already bound parameters
-    param($CommandName, $ParameterName, $WordToComplete, $CommandAst, $FakeBoundParameters)
-
-    # Find all string constants in the AST
-    $Existing = $CommandAst.FindAll(
-        # The predicate scriptblock to define the criteria for filtering the AST nodes
-        {
-            $Args[0] -is [System.Management.Automation.Language.StringConstantExpressionAst]
-        },
-        # The recurse flag, whether to search nested scriptblocks or not.
-        $false
-    ).Value
-
-    foreach ($Item in ([RuleOptionsx]::new().GetValidValues())) {
-        # Check if the item is already selected
-        if ($Item -notin $Existing) {
-            # Return the item
-            "'$Item'"
-        }
-    }
-}
-
-Register-ArgumentCompleter -CommandName 'Set-CiRuleOptions' -ParameterName 'FilePath' -ScriptBlock ([WDACConfig.ArgumentCompleters]::ArgumentCompleterXmlFilePathsPicker)
-Register-ArgumentCompleter -CommandName 'Set-CiRuleOptions' -ParameterName 'RulesToAdd' -ScriptBlock $RuleOptionsScriptBlock
-Register-ArgumentCompleter -CommandName 'Set-CiRuleOptions' -ParameterName 'RulesToRemove' -ScriptBlock $RuleOptionsScriptBlock

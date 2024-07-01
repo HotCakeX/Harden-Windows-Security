@@ -36,11 +36,11 @@ Function New-DenyWDACConfig {
         [Parameter(Mandatory = $false)]
         [System.Management.Automation.SwitchParameter]$Deploy,
 
-        [ValidateSet([ScanLevelz])]
+        [ArgumentCompleter({ [WDACConfig.ScanLevelz]::New().GetValidValues() })]
         [Parameter(Mandatory = $false, ParameterSetName = 'Normal')]
         [System.String]$Level = 'WHQLFilePublisher',
 
-        [ValidateSet([ScanLevelz])]
+        [ArgumentCompleter({ [WDACConfig.ScanLevelz]::New().GetValidValues() })]
         [Parameter(Mandatory = $false, ParameterSetName = 'Normal')]
         [System.String[]]$Fallbacks = ('FilePublisher', 'Hash'),
 
@@ -477,6 +477,3 @@ Function New-DenyWDACConfig {
     Creates a Deny standalone base policy by scanning the specified folders for files.
 #>
 }
-Register-ArgumentCompleter -CommandName 'New-DenyWDACConfig' -ParameterName 'ScanLocations' -ScriptBlock ([WDACConfig.ArgumentCompleters]::ArgumentCompleterFolderPathsPicker)
-Register-ArgumentCompleter -CommandName 'New-DenyWDACConfig' -ParameterName 'PackageName' -ScriptBlock ([WDACConfig.ArgumentCompleters]::ArgumentCompleterAppxPackageNames)
-Register-ArgumentCompleter -CommandName 'New-DenyWDACConfig' -ParameterName 'FolderPath' -ScriptBlock ([WDACConfig.ArgumentCompleters]::ArgumentCompleterFolderPathsPickerWildCards)

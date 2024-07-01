@@ -131,6 +131,65 @@ If you need custom types in PowerShell and want them to be globally available to
 
 <br>
 
+### How Would You Make PowerShell Classes Globally Available?
+
+Even though it's not recommended, here is how you can make custom classes globally available in PowerShell. Classes will be available process-wide and therefore also in other runspaces, defining them with the `[NoRunspaceAffinity()]` attribute.
+
+* [Read more](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_classes#exporting-classes-with-type-accelerators)
+
+<br>
+
+```powershell
+[NoRunspaceAffinity()]
+Class Items : System.Management.Automation.IValidateSetValuesGenerator {
+    [System.String[]] GetValidValues() {
+        $Items = ('Item1', 'Item2', 'Item3')
+        return [System.String[]]$Items
+    }
+}
+
+[NoRunspaceAffinity()]
+Class BasePolicyNames : System.Management.Automation.IValidateSetValuesGenerator {
+    [System.String[]] GetValidValues() {
+
+        [System.String[]]$BasePolicyNames = foreach ($Policy in (&'C:\Windows\System32\CiTool.exe' -lp -json | ConvertFrom-Json).Policies) {
+            if ($Policy.IsSystemPolicy -ne 'True') {
+                if ($Policy.PolicyID -eq $Policy.BasePolicyID) {
+                    $Policy.FriendlyName
+                }
+            }
+        }
+        return $BasePolicyNames
+    }   
+}
+
+# Define the types to export with type accelerators.
+[System.Reflection.TypeInfo[]]$ExportableTypes = @(
+    [Items]
+    [BasePolicyNames]    
+)
+
+# Get the non-public TypeAccelerators class for defining new accelerators.
+[System.Reflection.TypeInfo]$TypeAcceleratorsClass = [psobject].Assembly.GetType('System.Management.Automation.TypeAccelerators')
+
+# Add type accelerators for every exportable type.
+$ExistingTypeAccelerators = $TypeAcceleratorsClass::Get
+
+foreach ($Type in $ExportableTypes) {
+
+    # !! $TypeAcceleratorsClass::Add() quietly ignores attempts to redefine existing
+    # !! accelerators with different target types, so we check explicitly.
+    $Existing = $ExistingTypeAccelerators[$Type.FullName]
+
+    if (($null -ne $Existing) -and ($Existing -ne $Type)) {
+        throw "Unable to register type accelerator [$($Type.FullName)], because it is already defined with a different type ([$Existing])."
+    }
+    $TypeAcceleratorsClass::Add($Type.FullName, $Type)
+}
+```
+
+<br>
+
 ## More Resources From Microsoft That You Should Check Out
 
 - [Cmdlet Development Guidelines](https://learn.microsoft.com/en-us/powershell/scripting/developer/cmdlet/cmdlet-development-guidelines)

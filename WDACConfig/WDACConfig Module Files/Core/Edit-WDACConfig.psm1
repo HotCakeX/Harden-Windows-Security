@@ -66,11 +66,11 @@ Function Edit-WDACConfig {
         [Parameter(Mandatory = $false, ParameterSetName = 'MergeSupplementalPolicies')]
         [System.Management.Automation.SwitchParameter]$KeepOldSupplementalPolicies,
 
-        [ValidateSet([ScanLevelz])]
+        [ArgumentCompleter({ [WDACConfig.ScanLevelz]::New().GetValidValues() })]
         [parameter(Mandatory = $false, ParameterSetName = 'AllowNewApps')]
         [System.String]$Level = 'WHQLFilePublisher',
 
-        [ValidateSet([ScanLevelz])]
+        [ArgumentCompleter({ [WDACConfig.ScanLevelz]::New().GetValidValues() })]
         [parameter(Mandatory = $false, ParameterSetName = 'AllowNewApps')]
         [System.String[]]$Fallbacks = ('FilePublisher', 'Hash'),
 
@@ -88,7 +88,13 @@ Function Edit-WDACConfig {
         [parameter(Mandatory = $false, ParameterSetName = 'AllowNewApps')]
         [System.UInt64]$LogSize,
 
-        [ValidateSet([BasePolicyNamez])]
+        [ArgumentCompleter({
+                foreach ($Item in [WDACConfig.BasePolicyNamez]::New().GetValidValues()) {
+                    if ($Item.Contains(' ')) {
+                        "'$Item'"
+                    }
+                }
+            })]
         [Parameter(Mandatory = $true, ParameterSetName = 'UpdateBasePolicy')][System.String[]]$CurrentBasePolicyName,
 
         [ValidateSet('DefaultWindows', 'AllowMicrosoft', 'SignedAndReputable')]
@@ -376,7 +382,7 @@ Function Edit-WDACConfig {
 
                     Write-ColorfulText -Color Pink -InputText 'Displaying files detected outside of any directories you selected'
 
-                    $SelectedLogs = $LogsToShow | Out-GridView -OutputMode Multiple -Title "Displaying $($LogsToShow.count) Audit Code Integrity and AppLocker Logs"
+                    [PSCustomObject[]]$SelectedLogs = $LogsToShow | Out-GridView -OutputMode Multiple -Title "Displaying $($LogsToShow.count) Audit Code Integrity and AppLocker Logs"
                 }
                 # If user did not select any directory paths but there were files found during the audit phase in the audit event logs
                 elseif (!$HasFolderPaths -and $HasAuditLogs) {
@@ -385,7 +391,7 @@ Function Edit-WDACConfig {
 
                     Write-ColorfulText -Color Pink -InputText 'Displaying files detected outside of any directories you selected'
 
-                    $SelectedLogs = $LogsToShow | Out-GridView -OutputMode Multiple -Title "Displaying $($LogsToShow.count) Audit Code Integrity Logs"
+                    [PSCustomObject[]]$SelectedLogs = $LogsToShow | Out-GridView -OutputMode Multiple -Title "Displaying $($LogsToShow.count) Audit Code Integrity Logs"
                 }
 
                 # if user selected any logs
@@ -412,7 +418,7 @@ Function Edit-WDACConfig {
                         }
                     } -StreamingHost $Host -ArgumentList $PolicyXMLFilesArray, $VerbosePreference, $DebugPreference
 
-                    $KernelProtectedFileLogs = Test-KernelProtectedFiles -Logs $SelectedLogs
+                    [PSCustomObject[]]$KernelProtectedFileLogs = Test-KernelProtectedFiles -Logs $SelectedLogs
 
                     if ($null -ne $KernelProtectedFileLogs) {
 
@@ -425,7 +431,12 @@ Function Edit-WDACConfig {
                         Clear-CiPolicy_Semantic -Path $KernelProtectedPolicyPath
 
                         # Find the kernel protected files that have PFN property
-                        $KernelProtectedFileLogsWithPFN = $KernelProtectedFileLogs | Where-Object -FilterScript { $_.PackageFamilyName }
+                        $KernelProtectedFileLogsWithPFN = New-Object -TypeName 'System.Collections.Generic.List[PSCustomObject]'
+                        $KernelProtectedFileLogsWithPFN = foreach ($Item in $KernelProtectedFileLogs) {
+                            if ($Item.PackageFamilyName) {
+                                $Item
+                            }
+                        }
 
                         New-PFNLevelRules -PackageFamilyNames $KernelProtectedFileLogsWithPFN.PackageFamilyName -XmlFilePath $KernelProtectedPolicyPath
 
@@ -436,7 +447,11 @@ Function Edit-WDACConfig {
                         Write-Verbose -Message "Kernel protected files without PFN property: $($KernelProtectedFileLogs.count - $KernelProtectedFileLogsWithPFN.count)"
 
                         # Removing the logs that were used to create PFN rules, from the rest of the logs
-                        $SelectedLogs = $SelectedLogs | Where-Object -FilterScript { $_ -notin $KernelProtectedFileLogsWithPFN }
+                        $SelectedLogs = foreach ($Item in $SelectedLogs) {
+                            if (!$KernelProtectedFileLogsWithPFN.Contains($Item)) {
+                                $Item
+                            }
+                        }
                     }
 
                     Write-Verbose -Message 'Copying the template policy to the staging area'
@@ -870,6 +885,3 @@ Function Edit-WDACConfig {
     System.String
 #>
 }
-
-Register-ArgumentCompleter -CommandName 'Edit-WDACConfig' -ParameterName 'PolicyPath' -ScriptBlock ([WDACConfig.ArgumentCompleters]::ArgumentCompleterXmlFilePathsPicker)
-Register-ArgumentCompleter -CommandName 'Edit-WDACConfig' -ParameterName 'SuppPolicyPaths' -ScriptBlock ([WDACConfig.ArgumentCompleters]::ArgumentCompleterMultipleXmlFilePathsPicker)

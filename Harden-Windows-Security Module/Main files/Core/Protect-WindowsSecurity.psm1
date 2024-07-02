@@ -996,8 +996,6 @@ Function Protect-WindowsSecurity {
             [CmdletBinding()]
             Param (
                 [Parameter(Mandatory = $true)][System.String]$WorkingDir,
-                [AllowNull()]
-                [Parameter(Mandatory = $false)][System.String]$HardeningModulePath,
                 [Parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$IsLocally,
                 [Parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$Offline,
                 [Parameter(Mandatory = $false)][System.Collections.Hashtable]$SyncHash,
@@ -1111,10 +1109,10 @@ Function Protect-WindowsSecurity {
 
             if ($IsLocally) {
                 Write-Verbose -Message 'Local Mode; Copying the Security-Baselines-X, Registry, ProcessMitigations and EventViewerCustomViews files from the module folder to the working directory'
-                Copy-Item -Path "$HardeningModulePath\Resources\Security-Baselines-X.zip" -Destination "$WorkingDir\Security-Baselines-X.zip"
-                Copy-Item -Path "$HardeningModulePath\Resources\Registry.csv" -Destination "$WorkingDir\Registry.csv"
-                Copy-Item -Path "$HardeningModulePath\Resources\ProcessMitigations.csv" -Destination "$WorkingDir\ProcessMitigations.csv"
-                Copy-Item -Path "$HardeningModulePath\Resources\EventViewerCustomViews.zip" -Destination "$WorkingDir\EventViewerCustomViews.zip"
+                Copy-Item -Path "$([HardeningModule.GlobalVars]::Path)\Resources\Security-Baselines-X.zip" -Destination "$WorkingDir\Security-Baselines-X.zip"
+                Copy-Item -Path "$([HardeningModule.GlobalVars]::Path)\Resources\Registry.csv" -Destination "$WorkingDir\Registry.csv"
+                Copy-Item -Path "$([HardeningModule.GlobalVars]::Path)\Resources\ProcessMitigations.csv" -Destination "$WorkingDir\ProcessMitigations.csv"
+                Copy-Item -Path "$([HardeningModule.GlobalVars]::Path)\Resources\EventViewerCustomViews.zip" -Destination "$WorkingDir\EventViewerCustomViews.zip"
             }
             if ($Offline) {
                 Write-Verbose -Message 'Offline Mode; Copying the Microsoft Security Baselines, Microsoft 365 Apps for Enterprise Security Baselines and LGPO files from the user provided paths to the working directory'
@@ -1159,7 +1157,6 @@ Function Protect-WindowsSecurity {
             param(
                 $SelectedCategories,
                 $IsLocally,
-                $HardeningModulePath,
                 $WorkingDir
             )
             # Display a toast notification when the selected categories have been run
@@ -1226,7 +1223,7 @@ Function Protect-WindowsSecurity {
 
                 Out-ToastNotification -Title 'Completed' -body "$($args[0]) selected categories have been run." -ImagePath $args[1]
                 # If the module is running locally, the toast notification image will be taken from the module directory, if not it will be taken from the working directory where it was already downloaded from the GitHub repo
-            } -args $SelectedCategories.Count, ($IsLocally ? "$HardeningModulePath\Resources\Media\ToastNotificationIcon.png" : "$WorkingDir\ToastNotificationIcon.png") *>&1 # To display any error message or other streams from the script block on the console
+            } -args $SelectedCategories.Count, ($IsLocally ? "$([HardeningModule.GlobalVars]::Path)\Resources\Media\ToastNotificationIcon.png" : "$WorkingDir\ToastNotificationIcon.png") *>&1 # To display any error message or other streams from the script block on the console
         }
         #Endregion Helper-Functions-And-ScriptBlocks
 
@@ -2593,7 +2590,7 @@ https://learn.microsoft.com/en-us/windows/security/operating-system-security/dat
                 Write-Verbose -Message 'Running Protect-WindowsSecurity function as part of the Harden-Windows-Security module'
 
                 Write-Verbose -Message 'Importing the required sub-modules'
-                Import-Module -FullyQualifiedName "$HardeningModulePath\Shared\Update-self.psm1" -Force -Verbose:$false
+                Import-Module -FullyQualifiedName "$([HardeningModule.GlobalVars]::Path)\Shared\Update-self.psm1" -Force -Verbose:$false
 
                 # Set the flag to true to indicate that the module is running locally
                 $IsLocally = $true
@@ -2609,6 +2606,22 @@ https://learn.microsoft.com/en-us/windows/security/operating-system-security/dat
         }
         else {
             Write-Verbose -Message '$PSCommandPath was not found, Protect-WindowsSecurity function was most likely called from the GitHub repository'
+        }
+
+        # If the code is running directly from the GitHub, initialize the following variables so there won't be any error about unavailable types
+        if (!$IsLocally) {
+            Add-Type -TypeDefinition @'
+namespace HardeningModule
+{
+    public static class GlobalVars
+    {
+        // Stores the value of PSScriptRoot in a global constant variable to allow the internal functions to use it when navigating the module structure
+        public static string path;
+        public static object MDAVConfigCurrent;
+        public static object MDAVPreferencesCurrent;
+    }
+}
+'@
         }
 
         [System.Security.Principal.WindowsPrincipal]$Principal = New-Object -TypeName 'Security.Principal.WindowsPrincipal' -ArgumentList ([Security.Principal.WindowsIdentity]::GetCurrent())
@@ -2768,7 +2781,6 @@ Execution Policy: $CurrentExecutionPolicy
                 $SyncHash['GlobalVars']['RequiredbuildHardeningModule'] = $RequiredbuildHardeningModule
                 $SyncHash['GlobalVars']['CurrentUserTempDirectoryPath'] = $CurrentUserTempDirectoryPath
                 $SyncHash['GlobalVars']['ShouldEnableOptionalDiagnosticData'] = $ShouldEnableOptionalDiagnosticData
-                $SyncHash['GlobalVars']['HardeningModulePath'] = $HardeningModulePath
                 $SyncHash['GlobalVars']['MDAVConfigCurrent'] = $MDAVConfigCurrent
                 $SyncHash['GlobalVars']['MDAVPreferencesCurrent'] = $MDAVPreferencesCurrent
                 $SyncHash['GlobalVars']['Offline'] = ($Offline -eq $true) ? $true : $false
@@ -2825,9 +2837,9 @@ Execution Policy: $CurrentExecutionPolicy
 
                 # If the script is running in the context of module then use the local images
                 if ($IsLocally) {
-                    [System.String]$GUIIconPath = "$HardeningModulePath\Resources\Media\path.png"
-                    [System.String]$GUILogPath = "$HardeningModulePath\Resources\Media\log.png"
-                    [System.String]$GUIExecutePath = "$HardeningModulePath\Resources\Media\start.png"
+                    [System.String]$GUIIconPath = "$([HardeningModule.GlobalVars]::Path)\Resources\Media\path.png"
+                    [System.String]$GUILogPath = "$([HardeningModule.GlobalVars]::Path)\Resources\Media\log.png"
+                    [System.String]$GUIExecutePath = "$([HardeningModule.GlobalVars]::Path)\Resources\Media\start.png"
                 }
                 # If the script is running directly from GitHub repository, download the required image files to the working directory and use them
                 else {
@@ -3247,7 +3259,7 @@ Execution Policy: $CurrentExecutionPolicy
                                         # Only download and process the files when GUI is loaded if Offline mode is not used
                                         # Because at this point user might have not selected the files to be used for offline operation
                                         if (-NOT $Offline) {
-                                            Start-FileDownload -WorkingDir $WorkingDir -HardeningModulePath:$HardeningModulePath -Offline:$Offline -SyncHash $SyncHash -IsLocally:$IsLocally -GUI -Verbose:$true
+                                            Start-FileDownload -WorkingDir $WorkingDir -Offline:$Offline -SyncHash $SyncHash -IsLocally:$IsLocally -GUI -Verbose:$true
                                             $SyncHash.NoPreReqCleanup = $false
                                         }
                                         else {
@@ -3390,7 +3402,7 @@ Execution Policy: $CurrentExecutionPolicy
                                                 # Make sure all 3 fields for offline mode files were selected by the users and they are neither empty nor null
                                                 if ($OfflineGreenLightStatus) {
                                                     # Process the offline mode files selected by the user
-                                                    Start-FileDownload -WorkingDir $WorkingDir -HardeningModulePath:$HardeningModulePath -Offline:$Offline -SyncHash $SyncHash -IsLocally:$IsLocally -GUI -Verbose:$true
+                                                    Start-FileDownload -WorkingDir $WorkingDir -Offline:$Offline -SyncHash $SyncHash -IsLocally:$IsLocally -GUI -Verbose:$true
 
                                                     # Set a flag indicating this code block should not happen again when the execute button is pressed
                                                     $SyncHash.StartFileDownloadHasRun = $true
@@ -3445,7 +3457,6 @@ Execution Policy: $CurrentExecutionPolicy
 
                                             $NewToastNotification.Invoke($SyncHash['GlobalVars']['SelectedCategories'],
                                                 $IsLocally,
-                                                $HardeningModulePath,
                                                 $WorkingDir)
                                         }
                                         else {
@@ -3547,7 +3558,7 @@ End time: $(Get-Date)
             $Host.UI.RawUI.WindowTitle = '⏬ Downloading'
 
             # Download the required files and assign the output to variables
-            $FileDownloadOutput = Start-FileDownload -WorkingDir $WorkingDir -HardeningModulePath:$HardeningModulePath -Offline:$Offline -IsLocally:$IsLocally
+            $FileDownloadOutput = Start-FileDownload -WorkingDir $WorkingDir -Offline:$Offline -IsLocally:$IsLocally
             $MicrosoftSecurityBaselinePath = $FileDownloadOutput[0]
             $Microsoft365SecurityBaselinePath = $FileDownloadOutput[1]
             $RegistryCSVItems = $FileDownloadOutput[2]

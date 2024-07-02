@@ -43,11 +43,10 @@ function Confirm-SystemCompliance {
     begin {
         # Importing the required sub-modules
         Write-Verbose -Message 'Importing the required sub-modules'
-        Import-Module -FullyQualifiedName "$HardeningModulePath\Shared\Update-self.psm1" -Force -Verbose:$false
-        Import-Module -FullyQualifiedName "$HardeningModulePath\Shared\Test-IsAdmin.psm1" -Force -Verbose:$false
+        Import-Module -FullyQualifiedName "$([HardeningModule.GlobalVars]::Path)\Shared\Update-self.psm1" -Force -Verbose:$false
 
         # Makes sure this cmdlet is invoked with Admin privileges
-        if (-NOT (Test-IsAdmin)) {
+        if (-NOT ([HardeningModule.UserPrivCheck]::IsAdmin())) {
             Throw [System.Security.AccessControl.PrivilegeNotHeldException] 'Administrator'
         }
 
@@ -78,33 +77,11 @@ function Confirm-SystemCompliance {
             }
         }
 
-        # Import the IndividualResult class if it's not already loaded, will become available to the thread-jobs as well since they share the same app domain
-        if (-NOT ('HardeningModule.IndividualResult' -as [System.Type]) ) {
-            Add-Type -Path "$HardeningModulePath\Shared\IndividualResultClass.cs"
-        }
-
         if ((Get-CimInstance -ClassName Win32_OperatingSystem -Verbose:$false).OperatingSystemSKU -in '101', '100') {
             Write-Warning -Message 'The Windows Home edition has been detected, many features are unavailable in this edition.'
         }
 
         #Region Defining-Variables
-
-        if (-NOT ('HardeningModule.GlobalVars' -as [System.Type]) ) {
-            Add-Type -TypeDefinition @"
-namespace HardeningModule
-{
-    public static class GlobalVars
-    {
-        public static int TotalNumberOfTrueCompliantValues = 238;
-        // Making the HardeningModulePath variable available app-domain wide in a pseudo-lexical scoping manner so it can be accessed from thread jobs without having to pass it as a parameter to each job
-        public static string path = $("`"$($HardeningModulePath -replace '\\', '\\')`"");
-
-        public static object MDAVConfigCurrent;
-        public static object MDAVPreferencesCurrent;
-    }
-}
-"@ -Language CSharp
-        }
 
         # a Synchronized HashTable to safely increment/decrement values from multiple threads and also access parent scope variables inside thread jobs
         $SyncHash = [System.Collections.Hashtable]::Synchronized(@{})
@@ -118,7 +95,7 @@ namespace HardeningModule
         [HardeningModule.GlobalVars]::MDAVConfigCurrent = Get-MpComputerStatus
 
         # Import the CSV file
-        $SyncHash['CSVResource'] = Import-Csv -Path "$HardeningModulePath\Resources\Registry resources.csv"
+        $SyncHash['CSVResource'] = Import-Csv -Path "$([HardeningModule.GlobalVars]::Path)\Resources\Registry resources.csv"
 
         # An object to store the FINAL results
         $FinalMegaObject = [System.Collections.Concurrent.ConcurrentDictionary[System.String, PSCustomObject[]]]::new()
@@ -416,11 +393,11 @@ namespace HardeningModule
 
                         # Process items in Registry resources.csv file with "Group Policy" origin and add them to the $NestedObjectArray array as custom objects
                         foreach ($Result in (&$ScriptBlockInvokeCategoryProcessing -catname $CatName -Method 'Group Policy')) {
-                            [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]$Result)
+                            $NestedObjectArray.Add([HardeningModule.IndividualResult]$Result)
                         }
 
                         $IndividualItemResult = [HardeningModule.GlobalVars]::MDAVPreferencesCurrent.AllowSwitchToAsyncInspection
-                        [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
+                        $NestedObjectArray.Add([HardeningModule.IndividualResult]@{
                                 FriendlyName = 'AllowSwitchToAsyncInspection'
                                 Compliant    = $IndividualItemResult
                                 Value        = $IndividualItemResult
@@ -430,7 +407,7 @@ namespace HardeningModule
                             })
 
                         $IndividualItemResult = [HardeningModule.GlobalVars]::MDAVPreferencesCurrent.oobeEnableRtpAndSigUpdate
-                        [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
+                        $NestedObjectArray.Add([HardeningModule.IndividualResult]@{
                                 FriendlyName = 'oobeEnableRtpAndSigUpdate'
                                 Compliant    = $IndividualItemResult
                                 Value        = $IndividualItemResult
@@ -440,7 +417,7 @@ namespace HardeningModule
                             })
 
                         $IndividualItemResult = [HardeningModule.GlobalVars]::MDAVPreferencesCurrent.IntelTDTEnabled
-                        [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
+                        $NestedObjectArray.Add([HardeningModule.IndividualResult]@{
                                 FriendlyName = 'IntelTDTEnabled'
                                 Compliant    = $IndividualItemResult
                                 Value        = $IndividualItemResult
@@ -450,7 +427,7 @@ namespace HardeningModule
                             })
 
                         $IndividualItemResult = $((Get-ProcessMitigation -System).aslr.ForceRelocateImages)
-                        [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
+                        $NestedObjectArray.Add([HardeningModule.IndividualResult]@{
                                 FriendlyName = 'Mandatory ASLR'
                                 Compliant    = $IndividualItemResult -eq 'on' ? $True : $false
                                 Value        = $IndividualItemResult
@@ -460,7 +437,7 @@ namespace HardeningModule
                             })
 
                         # Verify the NX bit as shown in bcdedit /enum or Get-BcdEntry, info about numbers and values correlation: https://learn.microsoft.com/en-us/previous-versions/windows/desktop/bcd/bcdosloader-nxpolicy
-                        [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
+                        $NestedObjectArray.Add([HardeningModule.IndividualResult]@{
                                 FriendlyName = 'Boot Configuration Data (BCD) No-eXecute (NX) Value'
                                 Compliant    = (((Get-BcdEntry).elements | Where-Object -FilterScript { $_.Name -eq 'nx' }).value -eq '3')
                                 Value        = (((Get-BcdEntry).elements | Where-Object -FilterScript { $_.Name -eq 'nx' }).value -eq '3')
@@ -469,7 +446,7 @@ namespace HardeningModule
                                 Method       = 'Cmdlet'
                             })
 
-                        [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
+                        $NestedObjectArray.Add([HardeningModule.IndividualResult]@{
                                 FriendlyName = 'Smart App Control State'
                                 Compliant    = ([HardeningModule.GlobalVars]::MDAVConfigCurrent.SmartAppControlState -eq 'On') ? $True : $False
                                 Value        = [HardeningModule.GlobalVars]::MDAVConfigCurrent.SmartAppControlState
@@ -484,7 +461,7 @@ namespace HardeningModule
                         catch {
                             # suppress any possible terminating errors
                         }
-                        [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
+                        $NestedObjectArray.Add([HardeningModule.IndividualResult]@{
                                 FriendlyName = 'Fast weekly Microsoft recommended driver block list update'
                                 Compliant    = $IndividualItemResult
                                 Value        = $IndividualItemResult
@@ -502,7 +479,7 @@ namespace HardeningModule
                             6 = 'Delayed'
                         }
 
-                        [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
+                        $NestedObjectArray.Add([HardeningModule.IndividualResult]@{
                                 FriendlyName = 'Microsoft Defender Platform Updates Channel'
                                 Compliant    = 'N/A'
                                 Value        = ($DefenderPlatformUpdatesChannels[[System.Int32]([HardeningModule.GlobalVars]::MDAVPreferencesCurrent).PlatformUpdatesChannel])
@@ -520,7 +497,7 @@ namespace HardeningModule
                             6 = 'Delayed'
                         }
 
-                        [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
+                        $NestedObjectArray.Add([HardeningModule.IndividualResult]@{
                                 FriendlyName = 'Microsoft Defender Engine Updates Channel'
                                 Compliant    = 'N/A'
                                 Value        = ($DefenderEngineUpdatesChannels[[System.Int32]([HardeningModule.GlobalVars]::MDAVPreferencesCurrent).EngineUpdatesChannel])
@@ -530,7 +507,7 @@ namespace HardeningModule
                             })
 
                         # This covers instances where CFA is applied through Intune policy
-                        [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
+                        $NestedObjectArray.Add([HardeningModule.IndividualResult]@{
                                 FriendlyName = 'Controlled Folder Access'
                                 Compliant    = [HardeningModule.GlobalVars]::MDAVPreferencesCurrent.EnableControlledFolderAccess -eq 1 ? $true : $false
                                 Value        = [HardeningModule.GlobalVars]::MDAVPreferencesCurrent.EnableControlledFolderAccess
@@ -539,7 +516,7 @@ namespace HardeningModule
                                 Method       = 'Cmdlet'
                             })
 
-                        [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
+                        $NestedObjectArray.Add([HardeningModule.IndividualResult]@{
                                 FriendlyName = 'Controlled Folder Access Exclusions'
                                 Compliant    = 'N/A'
                                 Value        = ([HardeningModule.GlobalVars]::MDAVPreferencesCurrent.ControlledFolderAccessAllowedApplications -join ',') # Join the array elements into a string to display them properly in the output CSV file
@@ -549,7 +526,7 @@ namespace HardeningModule
                             })
 
                         $IndividualItemResult = [HardeningModule.GlobalVars]::MDAVPreferencesCurrent.DisableRestorePoint
-                        [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
+                        $NestedObjectArray.Add([HardeningModule.IndividualResult]@{
                                 FriendlyName = 'Enable Restore Point scanning'
                                 Compliant    = ($IndividualItemResult -eq $False)
                                 Value        = ($IndividualItemResult -eq $False)
@@ -559,7 +536,7 @@ namespace HardeningModule
                             })
 
                         $IndividualItemResult = [HardeningModule.GlobalVars]::MDAVPreferencesCurrent.PerformanceModeStatus
-                        [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
+                        $NestedObjectArray.Add([HardeningModule.IndividualResult]@{
                                 FriendlyName = 'PerformanceModeStatus'
                                 Compliant    = [System.Boolean]($IndividualItemResult -eq '0')
                                 Value        = $IndividualItemResult
@@ -569,7 +546,7 @@ namespace HardeningModule
                             })
 
                         $IndividualItemResult = [HardeningModule.GlobalVars]::MDAVPreferencesCurrent.EnableConvertWarnToBlock
-                        [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
+                        $NestedObjectArray.Add([HardeningModule.IndividualResult]@{
                                 FriendlyName = 'EnableConvertWarnToBlock'
                                 Compliant    = $IndividualItemResult
                                 Value        = $IndividualItemResult
@@ -579,7 +556,7 @@ namespace HardeningModule
                             })
 
                         $IndividualItemResult = [HardeningModule.GlobalVars]::MDAVPreferencesCurrent.BruteForceProtectionAggressiveness
-                        [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
+                        $NestedObjectArray.Add([HardeningModule.IndividualResult]@{
                                 FriendlyName = 'BruteForceProtectionAggressiveness'
                                 Compliant    = [System.Boolean]($IndividualItemResult -in ('1', '2'))
                                 Value        = $IndividualItemResult
@@ -589,7 +566,7 @@ namespace HardeningModule
                             })
 
                         $IndividualItemResult = [HardeningModule.GlobalVars]::MDAVPreferencesCurrent.BruteForceProtectionConfiguredState
-                        [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
+                        $NestedObjectArray.Add([HardeningModule.IndividualResult]@{
                                 FriendlyName = 'BruteForceProtectionConfiguredState'
                                 Compliant    = [System.Boolean]($IndividualItemResult -eq '1')
                                 Value        = $IndividualItemResult
@@ -599,7 +576,7 @@ namespace HardeningModule
                             })
 
                         $IndividualItemResult = [HardeningModule.GlobalVars]::MDAVPreferencesCurrent.BruteForceProtectionMaxBlockTime
-                        [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
+                        $NestedObjectArray.Add([HardeningModule.IndividualResult]@{
                                 FriendlyName = 'BruteForceProtectionMaxBlockTime'
                                 Compliant    = [System.Boolean]($IndividualItemResult -in ('0', '4294967295'))
                                 Value        = $IndividualItemResult
@@ -609,7 +586,7 @@ namespace HardeningModule
                             })
 
                         $IndividualItemResult = [HardeningModule.GlobalVars]::MDAVPreferencesCurrent.RemoteEncryptionProtectionAggressiveness
-                        [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
+                        $NestedObjectArray.Add([HardeningModule.IndividualResult]@{
                                 FriendlyName = 'RemoteEncryptionProtectionAggressiveness'
                                 Compliant    = [System.Boolean]($IndividualItemResult -eq '2')
                                 Value        = $IndividualItemResult
@@ -619,7 +596,7 @@ namespace HardeningModule
                             })
 
                         $IndividualItemResult = [HardeningModule.GlobalVars]::MDAVPreferencesCurrent.RemoteEncryptionProtectionConfiguredState
-                        [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
+                        $NestedObjectArray.Add([HardeningModule.IndividualResult]@{
                                 FriendlyName = 'RemoteEncryptionProtectionConfiguredState'
                                 Compliant    = [System.Boolean]($IndividualItemResult -eq '1')
                                 Value        = $IndividualItemResult
@@ -629,7 +606,7 @@ namespace HardeningModule
                             })
 
                         $IndividualItemResult = [HardeningModule.GlobalVars]::MDAVPreferencesCurrent.RemoteEncryptionProtectionMaxBlockTime
-                        [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
+                        $NestedObjectArray.Add([HardeningModule.IndividualResult]@{
                                 FriendlyName = 'RemoteEncryptionProtectionMaxBlockTime'
                                 Compliant    = [System.Boolean]($IndividualItemResult -in ('0', '4294967295'))
                                 Value        = $IndividualItemResult
@@ -752,7 +729,7 @@ namespace HardeningModule
                                     # Increment the total number of the verifiable compliant values for each process that has a mitigation applied to it in the CSV file
                                     $SyncHash['TotalNumberOfTrueCompliantValues']++
 
-                                    [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
+                                    $NestedObjectArray.Add([HardeningModule.IndividualResult]@{
                                             FriendlyName = "Process Mitigations for: $ProcessName_Target"
                                             Compliant    = $False
                                             Value        = ($ProcessMitigations_Applied -join ',') # Join the array elements into a string to display them properly in the output CSV file
@@ -768,7 +745,7 @@ namespace HardeningModule
                                     # Increment the total number of the verifiable compliant values for each process that has a mitigation applied to it in the CSV file
                                     $SyncHash['TotalNumberOfTrueCompliantValues']++
 
-                                    [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
+                                    $NestedObjectArray.Add([HardeningModule.IndividualResult]@{
                                             FriendlyName = "Process Mitigations for: $ProcessName_Target"
                                             Compliant    = $true
                                             Value        = ($ProcessMitigations_Target -join ',') # Join the array elements into a string to display them properly in the output CSV file
@@ -785,7 +762,7 @@ namespace HardeningModule
                                 # Increment the total number of the verifiable compliant values for each process that has a mitigation applied to it in the CSV file
                                 $SyncHash['TotalNumberOfTrueCompliantValues']++
 
-                                [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
+                                $NestedObjectArray.Add([HardeningModule.IndividualResult]@{
                                         FriendlyName = "Process Mitigations for: $ProcessName_Target"
                                         Compliant    = $False
                                         Value        = 'N/A'
@@ -836,7 +813,7 @@ namespace HardeningModule
 
                     # Process items in Registry resources.csv file with "Group Policy" origin and add them to the $NestedObjectArray array as custom objects
                     foreach ($Result in (&$ScriptBlockInvokeCategoryProcessing -catname $CatName -Method 'Group Policy')) {
-                        [System.Void]$NestedObjectArray.Add($Result)
+                        $NestedObjectArray.Add($Result)
                     }
 
                     # Individual ASR rules verification
@@ -893,7 +870,7 @@ namespace HardeningModule
                         # Because it's in preview and is set to 6 for Warn instead of 1 for block
                         if ($Name -eq 'c0033c00-d16d-4114-a5a0-dc9b3a7d2ceb') {
                             # Create a custom object with properties
-                            [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
+                            $NestedObjectArray.Add([HardeningModule.IndividualResult]@{
                                     FriendlyName = $ASRsTable[$name]
                                     Compliant    = [System.Boolean]($Action -in '6', '1') # Either 6 or 1 is compliant and acceptable
                                     Value        = $Action
@@ -905,7 +882,7 @@ namespace HardeningModule
                         }
                         else {
                             # Create a custom object with properties
-                            [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
+                            $NestedObjectArray.Add([HardeningModule.IndividualResult]@{
                                     FriendlyName = $ASRsTable[$name]
                                     Compliant    = [System.Boolean]($Action -eq 1) # Compare action value with 1 and cast to boolean
                                     Value        = $Action
@@ -937,17 +914,6 @@ namespace HardeningModule
                     $NestedObjectArray = New-Object -TypeName System.Collections.Generic.List[HardeningModule.IndividualResult]
                     [System.String]$CatName = 'BitLockerSettings'
 
-                    # This PowerShell script can be used to find out if the DMA Protection is ON \ OFF.
-                    # The Script will show this by emitting True \ False for On \ Off respectively.
-                    # if the type is not already loaded, load it
-                    if (-NOT ('SystemInfo.NativeMethods' -as [System.Type])) {
-                        Write-Verbose -Message 'Loading SystemInfo.NativeMethods type' -Verbose:$($SyncHash['VerbosePreference'] -eq 'Continue')
-                        Add-Type -Path "$([HardeningModule.GlobalVars]::Path)\Shared\SystemInfoNativeMethods.cs" -Verbose:$($SyncHash['VerbosePreference'] -eq 'Continue')
-                    }
-                    else {
-                        Write-Verbose -Message 'SystemInfo.NativeMethods type is already loaded, skipping loading it again.' -Verbose:$($SyncHash['VerbosePreference'] -eq 'Continue')
-                    }
-
                     # Returns true or false depending on whether Kernel DMA Protection is on or off
                     [System.Boolean]$BootDMAProtection = ([SystemInfo.NativeMethods]::BootDmaCheck()) -ne 0
 
@@ -964,7 +930,7 @@ namespace HardeningModule
                     [System.Boolean]$ItemState = ($BootDMAProtection -xor ($BitlockerDMAProtectionStatus -eq '1')) ? $True : $False
 
                     # Create a custom object with 5 properties to store them as nested objects inside the main output object
-                    [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
+                    $NestedObjectArray.Add([HardeningModule.IndividualResult]@{
                             FriendlyName = 'DMA protection'
                             Compliant    = $ItemState
                             Value        = $ItemState
@@ -975,7 +941,7 @@ namespace HardeningModule
 
                     # Process items in Registry resources.csv file with "Group Policy" origin and add them to the $NestedObjectArray array as custom objects
                     foreach ($Result in (&$ScriptBlockInvokeCategoryProcessing -catname $CatName -Method 'Group Policy')) {
-                        [System.Void]$NestedObjectArray.Add($Result)
+                        $NestedObjectArray.Add($Result)
                     }
 
                     # To detect if Hibernate is enabled and set to full
@@ -986,7 +952,7 @@ namespace HardeningModule
                         catch {
                             # suppress the errors if any
                         }
-                        [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
+                        $NestedObjectArray.Add([HardeningModule.IndividualResult]@{
                                 FriendlyName = 'Hibernate is set to full'
                                 Compliant    = [System.Boolean]($IndividualItemResult)
                                 Value        = [System.Boolean]($IndividualItemResult)
@@ -1010,7 +976,7 @@ namespace HardeningModule
                         # Check if TPM+PIN and recovery password are being used - Normal Security level
                         if (($KeyProtectors -contains 'Tpmpin') -and ($KeyProtectors -contains 'RecoveryPassword')) {
 
-                            [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
+                            $NestedObjectArray.Add([HardeningModule.IndividualResult]@{
                                     FriendlyName = 'Secure OS Drive encryption'
                                     Compliant    = $True
                                     Value        = 'Normal Security Level'
@@ -1024,7 +990,7 @@ namespace HardeningModule
                         # Check if TPM+PIN+StartupKey and recovery password are being used - Enhanced security level
                         elseif (($KeyProtectors -contains 'TpmPinStartupKey') -and ($KeyProtectors -contains 'RecoveryPassword')) {
 
-                            [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
+                            $NestedObjectArray.Add([HardeningModule.IndividualResult]@{
                                     FriendlyName = 'Secure OS Drive encryption'
                                     Compliant    = $True
                                     Value        = 'Enhanced Security Level'
@@ -1035,7 +1001,7 @@ namespace HardeningModule
                         }
 
                         else {
-                            [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
+                            $NestedObjectArray.Add([HardeningModule.IndividualResult]@{
                                     FriendlyName = 'Secure OS Drive encryption'
                                     Compliant    = $false
                                     Value        = $false
@@ -1046,7 +1012,7 @@ namespace HardeningModule
                         }
                     }
                     else {
-                        [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
+                        $NestedObjectArray.Add([HardeningModule.IndividualResult]@{
                                 FriendlyName = 'Secure OS Drive encryption'
                                 Compliant    = $false
                                 Value        = $false
@@ -1090,7 +1056,7 @@ namespace HardeningModule
                                 [System.Object[]]$KeyProtectors = (Get-BitLockerVolume -MountPoint $MountPoint).KeyProtector.keyprotectortype
                                 if (($KeyProtectors -contains 'RecoveryPassword') -or ($KeyProtectors -contains 'Password')) {
 
-                                    [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
+                                    $NestedObjectArray.Add([HardeningModule.IndividualResult]@{
                                             FriendlyName = "Secure Drive $MountPoint encryption"
                                             Compliant    = $True
                                             Value        = 'Encrypted'
@@ -1100,7 +1066,7 @@ namespace HardeningModule
                                         })
                                 }
                                 else {
-                                    [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
+                                    $NestedObjectArray.Add([HardeningModule.IndividualResult]@{
                                             FriendlyName = "Secure Drive $MountPoint encryption"
                                             Compliant    = $false
                                             Value        = 'Not properly encrypted'
@@ -1111,7 +1077,7 @@ namespace HardeningModule
                                 }
                             }
                             else {
-                                [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
+                                $NestedObjectArray.Add([HardeningModule.IndividualResult]@{
                                         FriendlyName = "Secure Drive $MountPoint encryption"
                                         Compliant    = $false
                                         Value        = 'Not encrypted'
@@ -1142,7 +1108,7 @@ namespace HardeningModule
 
                     # Process items in Registry resources.csv file with "Group Policy" origin and add them to the $NestedObjectArray array as custom objects
                     foreach ($Result in (&$ScriptBlockInvokeCategoryProcessing -catname $CatName -Method 'Group Policy')) {
-                        [System.Void]$NestedObjectArray.Add($Result)
+                        $NestedObjectArray.Add($Result)
                     }
 
                     # ECC Curves
@@ -1152,7 +1118,7 @@ namespace HardeningModule
                     # If this variable is empty that means both arrays are completely identical
                     $IndividualItemResult = Compare-Object -ReferenceObject $ECCCurves -DifferenceObject $List -SyncWindow 0
 
-                    [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
+                    $NestedObjectArray.Add([HardeningModule.IndividualResult]@{
                             FriendlyName = 'ECC Curves and their positions'
                             Compliant    = [System.Boolean]($IndividualItemResult ? $false : $True)
                             Value        = ($List -join ',') # Join the array elements into a string to display them properly in the output CSV file
@@ -1163,7 +1129,7 @@ namespace HardeningModule
 
                     # Process items in Registry resources.csv file with "Registry Keys" origin and add them to the $NestedObjectArray array as custom objects
                     foreach ($Result in (&$ScriptBlockInvokeCategoryProcessing -catname $CatName -Method 'Registry Keys')) {
-                        [System.Void]$NestedObjectArray.Add($Result)
+                        $NestedObjectArray.Add($Result)
                     }
 
                     # Add the array of the custom objects to the main output HashTable
@@ -1185,12 +1151,12 @@ namespace HardeningModule
 
                     # Process items in Registry resources.csv file with "Group Policy" origin and add them to the $NestedObjectArray array as custom objects
                     foreach ($Result in (&$ScriptBlockInvokeCategoryProcessing -catname $CatName -Method 'Group Policy')) {
-                        [System.Void]$NestedObjectArray.Add($Result)
+                        $NestedObjectArray.Add($Result)
                     }
 
                     # Verify a Security Group Policy setting
                     $IndividualItemResult = [System.Boolean]$($SyncHash['SecurityPoliciesIni'].'Registry Values'['MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\InactivityTimeoutSecs'] -eq '4,120') ? $True : $False
-                    [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
+                    $NestedObjectArray.Add([HardeningModule.IndividualResult]@{
                             FriendlyName = 'Machine inactivity limit'
                             Compliant    = $IndividualItemResult
                             Value        = $IndividualItemResult
@@ -1201,7 +1167,7 @@ namespace HardeningModule
 
                     # Verify a Security Group Policy setting
                     $IndividualItemResult = [System.Boolean]$($SyncHash['SecurityPoliciesIni'].'Registry Values'['MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\DisableCAD'] -eq '4,0') ? $True : $False
-                    [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
+                    $NestedObjectArray.Add([HardeningModule.IndividualResult]@{
                             FriendlyName = 'Interactive logon: Do not require CTRL+ALT+DEL'
                             Compliant    = $IndividualItemResult
                             Value        = $IndividualItemResult
@@ -1212,7 +1178,7 @@ namespace HardeningModule
 
                     # Verify a Security Group Policy setting
                     $IndividualItemResult = [System.Boolean]$($SyncHash['SecurityPoliciesIni'].'Registry Values'['MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\MaxDevicePasswordFailedAttempts'] -eq '4,5') ? $True : $False
-                    [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
+                    $NestedObjectArray.Add([HardeningModule.IndividualResult]@{
                             FriendlyName = 'Interactive logon: Machine account lockout threshold'
                             Compliant    = $IndividualItemResult
                             Value        = $IndividualItemResult
@@ -1223,7 +1189,7 @@ namespace HardeningModule
 
                     # Verify a Security Group Policy setting
                     $IndividualItemResult = [System.Boolean]$($SyncHash['SecurityPoliciesIni'].'Registry Values'['MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\DontDisplayLockedUserId'] -eq '4,4') ? $True : $False
-                    [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
+                    $NestedObjectArray.Add([HardeningModule.IndividualResult]@{
                             FriendlyName = 'Interactive logon: Display user information when the session is locked'
                             Compliant    = $IndividualItemResult
                             Value        = $IndividualItemResult
@@ -1234,7 +1200,7 @@ namespace HardeningModule
 
                     # Verify a Security Group Policy setting
                     $IndividualItemResult = [System.Boolean]$($SyncHash['SecurityPoliciesIni'].'Registry Values'['MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\DontDisplayUserName'] -eq '4,1') ? $True : $False
-                    [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
+                    $NestedObjectArray.Add([HardeningModule.IndividualResult]@{
                             FriendlyName = "Interactive logon: Don't display username at sign-in"
                             Compliant    = $IndividualItemResult
                             Value        = $IndividualItemResult
@@ -1245,7 +1211,7 @@ namespace HardeningModule
 
                     # Verify a Security Group Policy setting
                     $IndividualItemResult = [System.Boolean]$($SyncHash['SecurityPoliciesIni'].'System Access'['LockoutBadCount'] -eq '5') ? $True : $False
-                    [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
+                    $NestedObjectArray.Add([HardeningModule.IndividualResult]@{
                             FriendlyName = 'Account lockout threshold'
                             Compliant    = $IndividualItemResult
                             Value        = $IndividualItemResult
@@ -1256,7 +1222,7 @@ namespace HardeningModule
 
                     # Verify a Security Group Policy setting
                     $IndividualItemResult = [System.Boolean]$($SyncHash['SecurityPoliciesIni'].'System Access'['LockoutDuration'] -eq '1440') ? $True : $False
-                    [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
+                    $NestedObjectArray.Add([HardeningModule.IndividualResult]@{
                             FriendlyName = 'Account lockout duration'
                             Compliant    = $IndividualItemResult
                             Value        = $IndividualItemResult
@@ -1267,7 +1233,7 @@ namespace HardeningModule
 
                     # Verify a Security Group Policy setting
                     $IndividualItemResult = [System.Boolean]$($SyncHash['SecurityPoliciesIni'].'System Access'['ResetLockoutCount'] -eq '1440') ? $True : $False
-                    [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
+                    $NestedObjectArray.Add([HardeningModule.IndividualResult]@{
                             FriendlyName = 'Reset account lockout counter after'
                             Compliant    = $IndividualItemResult
                             Value        = $IndividualItemResult
@@ -1278,7 +1244,7 @@ namespace HardeningModule
 
                     # Verify a Security Group Policy setting
                     $IndividualItemResult = [System.Boolean]$($SyncHash['SecurityPoliciesIni'].'Registry Values'['MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\DontDisplayLastUserName'] -eq '4,1') ? $True : $False
-                    [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
+                    $NestedObjectArray.Add([HardeningModule.IndividualResult]@{
                             FriendlyName = "Interactive logon: Don't display last signed-in"
                             Compliant    = $IndividualItemResult
                             Value        = $IndividualItemResult
@@ -1305,12 +1271,12 @@ namespace HardeningModule
 
                     # Process items in Registry resources.csv file with "Group Policy" origin and add them to the $NestedObjectArray array as custom objects
                     foreach ($Result in (&$ScriptBlockInvokeCategoryProcessing -catname $CatName -Method 'Group Policy')) {
-                        [System.Void]$NestedObjectArray.Add($Result)
+                        $NestedObjectArray.Add($Result)
                     }
 
                     # Verify a Security Group Policy setting
                     $IndividualItemResult = [System.Boolean]$($SyncHash['SecurityPoliciesIni'].'Registry Values'['MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\ConsentPromptBehaviorAdmin'] -eq '4,2') ? $True : $False
-                    [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
+                    $NestedObjectArray.Add([HardeningModule.IndividualResult]@{
                             FriendlyName = 'UAC: Behavior of the elevation prompt for administrators in Admin Approval Mode'
                             Compliant    = $IndividualItemResult
                             Value        = $IndividualItemResult
@@ -1321,7 +1287,7 @@ namespace HardeningModule
 
                     # Verify a Security Group Policy setting
                     $IndividualItemResult = [System.Boolean]$($SyncHash['SecurityPoliciesIni'].'Registry Values'['MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\ConsentPromptBehaviorUser'] -eq '4,0') ? $True : $False
-                    [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
+                    $NestedObjectArray.Add([HardeningModule.IndividualResult]@{
                             FriendlyName = 'UAC: Automatically deny elevation requests on Standard accounts'
                             Compliant    = $IndividualItemResult
                             Value        = $IndividualItemResult
@@ -1332,7 +1298,7 @@ namespace HardeningModule
 
                     # Verify a Security Group Policy setting
                     $IndividualItemResult = [System.Boolean]($($SyncHash['SecurityPoliciesIni'].'Registry Values'['MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\ValidateAdminCodeSignatures'] -eq '4,1') ? $True : $False)
-                    [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
+                    $NestedObjectArray.Add([HardeningModule.IndividualResult]@{
                             FriendlyName = 'UAC: Only elevate executables that are signed and validated'
                             Compliant    = $IndividualItemResult
                             Value        = $IndividualItemResult
@@ -1359,7 +1325,7 @@ namespace HardeningModule
 
                     # Process items in Registry resources.csv file with "Group Policy" origin and add them to the $NestedObjectArray array as custom objects
                     foreach ($Result in (&$ScriptBlockInvokeCategoryProcessing -catname $CatName -Method 'Group Policy')) {
-                        [System.Void]$NestedObjectArray.Add($Result)
+                        $NestedObjectArray.Add($Result)
                     }
 
                     # Add the array of the custom objects to the main output HashTable
@@ -1381,7 +1347,7 @@ namespace HardeningModule
 
                     # Process items in Registry resources.csv file with "Group Policy" origin and add them to the $NestedObjectArray array as custom objects
                     foreach ($Result in (&$ScriptBlockInvokeCategoryProcessing -catname $CatName -Method 'Group Policy')) {
-                        [System.Void]$NestedObjectArray.Add($Result)
+                        $NestedObjectArray.Add($Result)
                     }
 
                     # Verify the 3 built-in Firewall rules (for all 3 profiles) for Multicast DNS (mDNS) UDP-in are disabled
@@ -1390,7 +1356,7 @@ namespace HardeningModule
                         Where-Object -FilterScript { ($_.RuleGroup -eq '@%SystemRoot%\system32\firewallapi.dll,-37302') -and ($_.Direction -eq 'inbound') }).Enabled -inotcontains 'True'
                     )
 
-                    [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
+                    $NestedObjectArray.Add([HardeningModule.IndividualResult]@{
                             FriendlyName = 'mDNS UDP-In Firewall Rules are disabled'
                             Compliant    = $IndividualItemResult
                             Value        = $IndividualItemResult
@@ -1437,7 +1403,7 @@ namespace HardeningModule
                         Return $PowerShell1, $PowerShell2, $WorkFoldersClient, $InternetPrintingClient, $WindowsMediaPlayer, $MDAG, $WindowsSandbox, $HyperV, $WMIC, $IEMode, $LegacyNotepad, $LegacyWordPad, $PowerShellISE, $StepsRecorder
                     }
                     # Verify PowerShell v2 is disabled
-                    [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
+                    $NestedObjectArray.Add([HardeningModule.IndividualResult]@{
                             FriendlyName = 'PowerShell v2 is disabled'
                             Compliant    = ($Results[0] -and $Results[1]) ? $True : $False
                             Value        = ($Results[0] -and $Results[1]) ? $True : $False
@@ -1447,7 +1413,7 @@ namespace HardeningModule
                         })
 
                     # Verify Work folders is disabled
-                    [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
+                    $NestedObjectArray.Add([HardeningModule.IndividualResult]@{
                             FriendlyName = 'Work Folders client is disabled'
                             Compliant    = [System.Boolean]($Results[2] -eq 'Disabled')
                             Value        = [System.String]$Results[2]
@@ -1457,7 +1423,7 @@ namespace HardeningModule
                         })
 
                     # Verify Internet Printing Client is disabled
-                    [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
+                    $NestedObjectArray.Add([HardeningModule.IndividualResult]@{
                             FriendlyName = 'Internet Printing Client is disabled'
                             Compliant    = [System.Boolean]($Results[3] -eq 'Disabled')
                             Value        = [System.String]$Results[3]
@@ -1467,7 +1433,7 @@ namespace HardeningModule
                         })
 
                     # Verify the old Windows Media Player is disabled
-                    [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
+                    $NestedObjectArray.Add([HardeningModule.IndividualResult]@{
                             FriendlyName = 'Windows Media Player (legacy) is disabled'
                             Compliant    = [System.Boolean]($Results[4] -eq 'NotPresent')
                             Value        = [System.String]$Results[4]
@@ -1477,7 +1443,7 @@ namespace HardeningModule
                         })
 
                     # Verify MDAG is disabled
-                    [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
+                    $NestedObjectArray.Add([HardeningModule.IndividualResult]@{
                             FriendlyName = 'Microsoft Defender Application Guard is enabled'
                             Compliant    = [System.Boolean]($Results[5] -eq 'Disabled')
                             Value        = [System.String]$Results[5]
@@ -1487,7 +1453,7 @@ namespace HardeningModule
                         })
 
                     # Verify Windows Sandbox is enabled
-                    [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
+                    $NestedObjectArray.Add([HardeningModule.IndividualResult]@{
                             FriendlyName = 'Windows Sandbox is enabled'
                             Compliant    = [System.Boolean]($Results[6] -eq 'Enabled')
                             Value        = [System.String]$Results[6]
@@ -1497,7 +1463,7 @@ namespace HardeningModule
                         })
 
                     # Verify Hyper-V is enabled
-                    [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
+                    $NestedObjectArray.Add([HardeningModule.IndividualResult]@{
                             FriendlyName = 'Hyper-V is enabled'
                             Compliant    = [System.Boolean]($Results[7] -eq 'Enabled')
                             Value        = [System.String]$Results[7]
@@ -1507,7 +1473,7 @@ namespace HardeningModule
                         })
 
                     # Verify WMIC is not present
-                    [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
+                    $NestedObjectArray.Add([HardeningModule.IndividualResult]@{
                             FriendlyName = 'WMIC is not present'
                             Compliant    = [System.Boolean]($Results[8] -eq 'NotPresent')
                             Value        = [System.String]$Results[8]
@@ -1517,7 +1483,7 @@ namespace HardeningModule
                         })
 
                     # Verify Internet Explorer mode functionality for Edge is not present
-                    [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
+                    $NestedObjectArray.Add([HardeningModule.IndividualResult]@{
                             FriendlyName = 'Internet Explorer mode functionality for Edge is not present'
                             Compliant    = [System.Boolean]($Results[9] -eq 'NotPresent')
                             Value        = [System.String]$Results[9]
@@ -1527,7 +1493,7 @@ namespace HardeningModule
                         })
 
                     # Verify Legacy Notepad is not present
-                    [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
+                    $NestedObjectArray.Add([HardeningModule.IndividualResult]@{
                             FriendlyName = 'Legacy Notepad is not present'
                             Compliant    = [System.Boolean]($Results[10] -eq 'NotPresent')
                             Value        = [System.String]$Results[10]
@@ -1537,7 +1503,7 @@ namespace HardeningModule
                         })
 
                     # Verify Legacy WordPad is not present
-                    [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
+                    $NestedObjectArray.Add([HardeningModule.IndividualResult]@{
                             FriendlyName = 'WordPad is not present'
                             Compliant    = [System.Boolean]($Results[11] -eq 'NotPresent')
                             Value        = [System.String]$Results[11]
@@ -1547,7 +1513,7 @@ namespace HardeningModule
                         })
 
                     # Verify PowerShell ISE is not present
-                    [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
+                    $NestedObjectArray.Add([HardeningModule.IndividualResult]@{
                             FriendlyName = 'PowerShell ISE is not present'
                             Compliant    = [System.Boolean]($Results[12] -eq 'NotPresent')
                             Value        = [System.String]$Results[12]
@@ -1557,7 +1523,7 @@ namespace HardeningModule
                         })
 
                     # Verify Steps Recorder is not present
-                    [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
+                    $NestedObjectArray.Add([HardeningModule.IndividualResult]@{
                             FriendlyName = 'Steps Recorder is not present'
                             Compliant    = [System.Boolean]($Results[13] -eq 'NotPresent')
                             Value        = [System.String]$Results[13]
@@ -1585,7 +1551,7 @@ namespace HardeningModule
 
                     # Process items in Registry resources.csv file with "Group Policy" origin and add them to the $NestedObjectArray array as custom objects
                     foreach ($Result in (&$ScriptBlockInvokeCategoryProcessing -catname $CatName -Method 'Group Policy')) {
-                        [System.Void]$NestedObjectArray.Add($Result)
+                        $NestedObjectArray.Add($Result)
                     }
 
                     # Check network location of all connections to see if they are public
@@ -1593,7 +1559,7 @@ namespace HardeningModule
                     [System.Boolean]$IndividualItemResult = -NOT ($Condition -contains $false) ? $True : $false
 
                     # Verify a Security setting using Cmdlet
-                    [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
+                    $NestedObjectArray.Add([HardeningModule.IndividualResult]@{
                             FriendlyName = 'Network Location of all connections set to Public'
                             Compliant    = $IndividualItemResult
                             Value        = $IndividualItemResult
@@ -1609,7 +1575,7 @@ namespace HardeningModule
                     catch {
                         # -ErrorAction SilentlyContinue wouldn't suppress the error if the path exists but property doesn't, so using try-catch
                     }
-                    [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
+                    $NestedObjectArray.Add([HardeningModule.IndividualResult]@{
                             FriendlyName = 'Disable LMHOSTS lookup protocol on all network adapters'
                             Compliant    = $IndividualItemResult
                             Value        = $IndividualItemResult
@@ -1620,7 +1586,7 @@ namespace HardeningModule
 
                     # Verify a Security Group Policy setting
                     $IndividualItemResult = [System.Boolean]$($SyncHash['SecurityPoliciesIni'].'Registry Values'['MACHINE\System\CurrentControlSet\Control\SecurePipeServers\Winreg\AllowedExactPaths\Machine'] -eq '7,') ? $True : $False
-                    [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
+                    $NestedObjectArray.Add([HardeningModule.IndividualResult]@{
                             FriendlyName = 'Network access: Remotely accessible registry paths'
                             Compliant    = $IndividualItemResult
                             Value        = $IndividualItemResult
@@ -1631,7 +1597,7 @@ namespace HardeningModule
 
                     # Verify a Security Group Policy setting
                     $IndividualItemResult = [System.Boolean]$($SyncHash['SecurityPoliciesIni'].'Registry Values'['MACHINE\System\CurrentControlSet\Control\SecurePipeServers\Winreg\AllowedPaths\Machine'] -eq '7,') ? $True : $False
-                    [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
+                    $NestedObjectArray.Add([HardeningModule.IndividualResult]@{
                             FriendlyName = 'Network access: Remotely accessible registry paths and subpaths'
                             Compliant    = $IndividualItemResult
                             Value        = $IndividualItemResult
@@ -1659,13 +1625,13 @@ namespace HardeningModule
 
                     # Process items in Registry resources.csv file with "Group Policy" origin and add them to the $NestedObjectArray array as custom objects
                     foreach ($Result in (&$ScriptBlockInvokeCategoryProcessing -catname $CatName -Method 'Group Policy')) {
-                        [System.Void]$NestedObjectArray.Add($Result)
+                        $NestedObjectArray.Add($Result)
                     }
 
                     # Verify an Audit policy is enabled - only supports systems with English-US language
                     if ((Get-Culture).Name -eq 'en-US') {
                         $IndividualItemResult = [System.Boolean](((auditpol /get /subcategory:"Other Logon/Logoff Events" /r | ConvertFrom-Csv).'Inclusion Setting' -eq 'Success and Failure') ? $True : $False)
-                        [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
+                        $NestedObjectArray.Add([HardeningModule.IndividualResult]@{
                                 FriendlyName = 'Audit policy for Other Logon/Logoff Events'
                                 Compliant    = $IndividualItemResult
                                 Value        = $IndividualItemResult
@@ -1695,7 +1661,7 @@ namespace HardeningModule
                     }
 
                     # Saving the results of the Hyper-V administrators members group to the array as an object
-                    [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
+                    $NestedObjectArray.Add([HardeningModule.IndividualResult]@{
                             FriendlyName = 'All users are part of the Hyper-V Administrators group'
                             Compliant    = $IndividualItemResult
                             Value        = $IndividualItemResult
@@ -1706,7 +1672,7 @@ namespace HardeningModule
 
                     # Process items in Registry resources.csv file with "Registry Keys" origin and add them to the $NestedObjectArray array as custom objects
                     foreach ($Result in (&$ScriptBlockInvokeCategoryProcessing -catname $CatName -Method 'Registry Keys')) {
-                        [System.Void]$NestedObjectArray.Add($Result)
+                        $NestedObjectArray.Add($Result)
                     }
 
                     # Add the array of the custom objects to the main output HashTable
@@ -1729,7 +1695,7 @@ namespace HardeningModule
 
                     # Process items in Registry resources.csv file with "Group Policy" origin and add them to the $NestedObjectArray array as custom objects
                     foreach ($Result in (&$ScriptBlockInvokeCategoryProcessing -catname $CatName -Method 'Group Policy')) {
-                        [System.Void]$NestedObjectArray.Add($Result)
+                        $NestedObjectArray.Add($Result)
                     }
 
                     # Verify a Security setting using registry
@@ -1739,7 +1705,7 @@ namespace HardeningModule
                     catch {
                         # -ErrorAction SilentlyContinue wouldn't suppress the error if the path exists but property doesn't, so using try-catch
                     }
-                    [System.Void]$NestedObjectArray.Add([HardeningModule.IndividualResult]@{
+                    $NestedObjectArray.Add([HardeningModule.IndividualResult]@{
                             FriendlyName = 'Enable restart notification for Windows update'
                             Compliant    = $IndividualItemResult
                             Value        = $IndividualItemResult
@@ -1767,7 +1733,7 @@ namespace HardeningModule
 
                     # Process items in Registry resources.csv file with "Registry Keys" origin and add them to the $NestedObjectArray array as custom objects
                     foreach ($Result in (&$ScriptBlockInvokeCategoryProcessing -catname $CatName -Method 'Registry Keys')) {
-                        [System.Void]$NestedObjectArray.Add($Result)
+                        $NestedObjectArray.Add($Result)
                     }
 
                     # Add the array of the custom objects to the main output HashTable
@@ -1789,7 +1755,7 @@ namespace HardeningModule
 
                     # Process items in Registry resources.csv file with "Registry Keys" origin and add them to the $NestedObjectArray array as custom objects
                     foreach ($Result in (&$ScriptBlockInvokeCategoryProcessing -catname $CatName -Method 'Registry Keys')) {
-                        [System.Void]$NestedObjectArray.Add($Result)
+                        $NestedObjectArray.Add($Result)
                     }
 
                     # Add the array of the custom objects to the main output HashTable
@@ -1847,10 +1813,11 @@ namespace HardeningModule
             if ($ExportToCSV) {
                 # Create an empty list to store the results based on the category order by sorting the concurrent hashtable
                 $AllOrderedResults = New-Object -TypeName System.Collections.Generic.List[HardeningModule.IndividualResult]
-                foreach ($Key in [Categoriex]::new().GetValidValues()) {
+
+                $AllOrderedResults = foreach ($Key in [Categoriex]::new().GetValidValues()) {
                     if ($FinalMegaObject.ContainsKey($Key)) {
                         foreach ($Item in $FinalMegaObject[$Key].GetEnumerator()) {
-                            [System.Void]$AllOrderedResults.Add([HardeningModule.IndividualResult]$Item)
+                            $Item
                         }
                     }
                 }

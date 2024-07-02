@@ -21,11 +21,10 @@ Function Unprotect-WindowsSecurity {
 
     begin {
         Write-Verbose -Message 'Importing the required sub-modules'
-        Import-Module -FullyQualifiedName "$HardeningModulePath\Shared\Update-self.psm1" -Force -Verbose:$false
-        Import-Module -FullyQualifiedName "$HardeningModulePath\Shared\Test-IsAdmin.psm1" -Force -Verbose:$false
+        Import-Module -FullyQualifiedName "$([HardeningModule.GlobalVars]::Path)\Shared\Update-self.psm1" -Force -Verbose:$false
 
         # Makes sure this cmdlet is invoked with Admin privileges
-        if (-NOT (Test-IsAdmin)) {
+        if (-NOT ([HardeningModule.UserPrivCheck]::IsAdmin())) {
             Throw [System.Security.AccessControl.PrivilegeNotHeldException] 'Administrator'
         }
 
@@ -89,7 +88,7 @@ Function Unprotect-WindowsSecurity {
 
             # Only keep the mitigations that are allowed to be removed
             # It is important for any executable whose name is mentioned as a key in "Computer\HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options" Should have its RemovalAllowed property in the Process Mitigations CSV file set to False
-            [System.Object[]]$ProcessMitigations = Import-Csv -Path "$HardeningModulePath\Resources\ProcessMitigations.csv" -Delimiter ',' | Where-Object -FilterScript { $_.RemovalAllowed -eq 'True' }
+            [System.Object[]]$ProcessMitigations = Import-Csv -Path "$([HardeningModule.GlobalVars]::Path)\Resources\ProcessMitigations.csv" -Delimiter ',' | Where-Object -FilterScript { $_.RemovalAllowed -eq 'True' }
             # Group the data by ProgramName
             [System.Object[]]$GroupedMitigations = $ProcessMitigations | Group-Object -Property ProgramName
             [System.Object[]]$AllAvailableMitigations = (Get-ItemProperty -Path 'Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\*')
@@ -181,7 +180,7 @@ Function Unprotect-WindowsSecurity {
                         $CurrentMainStep++
                         Write-Progress -Id 0 -Activity 'Deleting all the registry keys created by the Protect-WindowsSecurity cmdlet' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
 
-                        [System.Object[]]$Items = Import-Csv -Path "$HardeningModulePath\Resources\Registry.csv" -Delimiter ','
+                        [System.Object[]]$Items = Import-Csv -Path "$([HardeningModule.GlobalVars]::Path)\Resources\Registry.csv" -Delimiter ','
                         foreach ($Item in $Items) {
                             if (Test-Path -Path $item.path) {
                                 Remove-ItemProperty -Path $Item.path -Name $Item.key -Force -ErrorAction SilentlyContinue
@@ -201,7 +200,7 @@ Function Unprotect-WindowsSecurity {
 
                         # unzip the LGPO file
                         Expand-Archive -Path .\LGPO.zip -DestinationPath .\ -Force
-                        .\'LGPO_30\LGPO.exe' /q /s "$HardeningModulePath\Resources\Default Security Policy.inf"
+                        .\'LGPO_30\LGPO.exe' /q /s "$([HardeningModule.GlobalVars]::Path)\Resources\Default Security Policy.inf"
 
                         # Enable LMHOSTS lookup protocol on all network adapters again
                         Set-ItemProperty -Path 'Registry::HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\NetBT\Parameters' -Name 'EnableLMHOSTS' -Value '1' -Type DWord

@@ -34,43 +34,32 @@
   <!--EKUS-->
   <EKUs />
   <!--File Rules-->
-  <FileRules>
-    <FileAttrib ID="ID_FILEATTRIB_F_2D_0" FriendlyName="Chakra.dll FileAttribute" FileName="chakra.dll" MinimumFileVersion="0.0.0.0" MaximumFileVersion="65355.65355.65355.65355" />
-    <FileAttrib ID="ID_FILEATTRIB_F_2E_0" FriendlyName="Chakra.dll FileAttribute" FileName="chakra.dll" MinimumFileVersion="0.0.0.0" MaximumFileVersion="65355.65355.65355.65355" />
-    <FileAttrib ID="ID_FILEATTRIB_F_2F_0" FriendlyName="cscript.exe FileAttribute" FileName="cscript.exe" MinimumFileVersion="0.0.0.0" MaximumFileVersion="65355.65355.65355.65355" />
-    <FileAttrib ID="ID_FILEATTRIB_F_30_0" FriendlyName="jscript.dll FileAttribute" FileName="jscript.dll" MinimumFileVersion="0.0.0.0" MaximumFileVersion="65355.65355.65355.65355" />
-    <FileAttrib ID="ID_FILEATTRIB_F_31_0" FriendlyName="jscript9.dll FileAttribute" FileName="jscript9.dll" MinimumFileVersion="0.0.0.0" MaximumFileVersion="65355.65355.65355.65355" />
-    <FileAttrib ID="ID_FILEATTRIB_F_32_0" FriendlyName="mshta.exe FileAttribute" FileName="MSHTA.EXE" MinimumFileVersion="0.0.0.0" MaximumFileVersion="65355.65355.65355.65355" />
-    <FileAttrib ID="ID_FILEATTRIB_F_34_0" FriendlyName="wscript.exe FileAttribute" FileName="wscript.exe" MinimumFileVersion="0.0.0.0" MaximumFileVersion="65355.65355.65355.65355" />
-    <Deny ID="ID_DENY_D_23_0" FriendlyName="vbscript.dll FileRule" FileName="vbscript.dll" MinimumFileVersion="0.0.0.0" MaximumFileVersion="65355.65355.65355.65355" />
+  <FileRules>        
+    <FileAttrib ID="ID_FILEATTRIB_F_2F" FriendlyName="cscript.exe FileAttribute" FileName="cscript.exe" MinimumFileVersion="0.0.0.0" MaximumFileVersion="65355.65355.65355.65355" />
+    <FileAttrib ID="ID_FILEATTRIB_F_30" FriendlyName="jscript.dll FileAttribute" FileName="jscript.dll" MinimumFileVersion="0.0.0.0" MaximumFileVersion="65355.65355.65355.65355" />
+    <FileAttrib ID="ID_FILEATTRIB_F_31" FriendlyName="jscript9.dll FileAttribute" FileName="jscript9.dll" MinimumFileVersion="0.0.0.0" MaximumFileVersion="65355.65355.65355.65355" />
+    <FileAttrib ID="ID_FILEATTRIB_F_32" FriendlyName="mshta.exe FileAttribute" FileName="MSHTA.EXE" MinimumFileVersion="0.0.0.0" MaximumFileVersion="65355.65355.65355.65355" />
+    <FileAttrib ID="ID_FILEATTRIB_F_34" FriendlyName="wscript.exe FileAttribute" FileName="wscript.exe" MinimumFileVersion="0.0.0.0" MaximumFileVersion="65355.65355.65355.65355" />
+    <Deny ID="ID_DENY_D_23" FriendlyName="vbscript.dll FileRule" FileName="vbscript.dll" MinimumFileVersion="0.0.0.0" MaximumFileVersion="65355.65355.65355.65355" />
     <Allow ID="ID_ALLOW_A_1_1" FriendlyName="" FileName="*" />
     <Allow ID="ID_ALLOW_A_2_1" FriendlyName="" FileName="*" />
   </FileRules>
   <!--Signers-->
   <Signers>
-    <Signer ID="ID_SIGNER_F_1_0" Name="Microsoft Windows Production PCA 2011">
+    <Signer ID="ID_SIGNER_F_7" Name="Microsoft Windows Production PCA 2011">
       <CertRoot Type="TBS" Value="4E80BE107C860DE896384B3EFF50504DC2D76AC7151DF3102A4450637A032146" />
       <CertPublisher Value="Microsoft Windows" />
-      <FileAttribRef RuleID="ID_FILEATTRIB_F_2D_0" />
-    </Signer>
-    <Signer ID="ID_SIGNER_F_7_0" Name="Microsoft Windows Production PCA 2011">
-      <CertRoot Type="TBS" Value="4E80BE107C860DE896384B3EFF50504DC2D76AC7151DF3102A4450637A032146" />
-      <CertPublisher Value="Microsoft Windows" />
-      <FileAttribRef RuleID="ID_FILEATTRIB_F_2E_0" />
-      <FileAttribRef RuleID="ID_FILEATTRIB_F_2F_0" />
-      <FileAttribRef RuleID="ID_FILEATTRIB_F_30_0" />
-      <FileAttribRef RuleID="ID_FILEATTRIB_F_31_0" />
-      <FileAttribRef RuleID="ID_FILEATTRIB_F_32_0" />
-      <FileAttribRef RuleID="ID_FILEATTRIB_F_34_0" />
+      <FileAttribRef RuleID="ID_FILEATTRIB_F_2F" />
+      <FileAttribRef RuleID="ID_FILEATTRIB_F_30" />
+      <FileAttribRef RuleID="ID_FILEATTRIB_F_31" />
+      <FileAttribRef RuleID="ID_FILEATTRIB_F_32" />
+      <FileAttribRef RuleID="ID_FILEATTRIB_F_34" />
     </Signer>
   </Signers>
   <!--Driver Signing Scenarios-->
   <SigningScenarios>
     <SigningScenario Value="131" ID="ID_SIGNINGSCENARIO_DRIVERS_1" FriendlyName="Auto generated policy on 07-02-2024">
-      <ProductSigners>
-        <DeniedSigners>
-          <DeniedSigner SignerId="ID_SIGNER_F_1_0" />
-        </DeniedSigners>
+      <ProductSigners>       
         <FileRulesRef>
           <FileRuleRef RuleID="ID_ALLOW_A_1_1" />
         </FileRulesRef>
@@ -79,18 +68,18 @@
     <SigningScenario Value="12" ID="ID_SIGNINGSCENARIO_WINDOWS" FriendlyName="Auto generated policy on 07-02-2024">
       <ProductSigners>
         <DeniedSigners>
-          <DeniedSigner SignerId="ID_SIGNER_F_7_0" />
+          <DeniedSigner SignerId="ID_SIGNER_F_7" />
         </DeniedSigners>
         <FileRulesRef>          
           <FileRuleRef RuleID="ID_ALLOW_A_2_1" />
-          <FileRuleRef RuleID="ID_DENY_D_23_0" />
+          <FileRuleRef RuleID="ID_DENY_D_23" />
         </FileRulesRef>
       </ProductSigners>
     </SigningScenario>
   </SigningScenarios>
   <UpdatePolicySigners />
   <CiSigners>
-    <CiSigner SignerId="ID_SIGNER_F_7_0" />
+    <CiSigner SignerId="ID_SIGNER_F_7" />
   </CiSigners>
   <HvciOptions>2</HvciOptions>
   <BasePolicyID>{9F0581B7-7E1D-4FDD-8D33-6DBE847D3130}</BasePolicyID>

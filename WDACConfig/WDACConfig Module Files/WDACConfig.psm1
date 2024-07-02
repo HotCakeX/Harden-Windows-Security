@@ -1,79 +1,139 @@
 <# -------- Guidance for code readers --------
 The module uses tight import/export control, no internal function is exposed on the console/to the user.
-The $PSDefaultParameterValues located in "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1" is imported via dot-sourcing to the current session of each main cmdlet/internal function that calls any (other) internal function or uses any of the cmdlets defined in that file, prior to everything else.
+The $PSDefaultParameterValues located in "$([WDACConfig.GlobalVars]::ModuleRootPath)\CoreExt\PSDefaultParameterValues.ps1" is imported via dot-sourcing to the current session of each main cmdlet/internal function that calls any (other) internal function or uses any of the cmdlets defined in that file, prior to everything else.
 At the beginning of each main cmdlet, 2 custom $Verbose and/or $Debug variables are defined which help to take actions based on Verbose/Debug preferences and also pass the $VerbosePreference and $DebugPreference to the subsequent sub-functions/modules being called from the main cmdlets.
+
+E.g.,
+
+this captures the $Debug preference from the command line:
+[System.Boolean]$Debug = $PSBoundParameters.Debug.IsPresent ? $true : $false
+
+Then in the PSDefaultParameterValues.ps1 file, there is 'Do-Something:Debug' = $Debug
+
+So that essentially means any instance of 'Do-Something' cmdlet in the code is actually 'Do-Something -Debug:$Debug'
+#>
+
+
+<#
+Load order of the WDACConfig module
+
+1. ScriptsToProcess defined in the manifest
+2. All Individual sub-modules (All psm1 files defined in the NestedModules array in the manifest)
+3. The WDACConfig.psm1 (aka RootModule defined in the manifest)
+4. The cmdlet that the user invoked on the command line, if any.
 #>
 
 # Stopping the module process if any error occurs
 $global:ErrorActionPreference = 'Stop'
 
+if (!$IsWindows) {
+    Throw [System.PlatformNotSupportedException] 'The WDACConfig module only runs on Windows operation systems.'
+}
+
+# Specifies that the WDACConfig module requires Administrator privileges
+#Requires -RunAsAdministrator
+
+# Set-ConstantVariable -Name 'UserAccountDirectoryPath' -Value ((Get-CimInstance Win32_UserProfile -Filter "SID = '$([System.Security.Principal.WindowsIdentity]::GetCurrent().User.Value)'").LocalPath) -Option 'Constant' -Scope 'Script' -Description 'Securely retrieved User profile directory'
+
+# This is required for the EKUs to work.
+# Load all the DLLs in the PowerShell folder, providing .NET types for the module
+# These types are required for the folder picker with multiple select options. Also the module manifest no longer handles assembly as it's not necessary anymore.
+foreach ($Dll in (Convert-Path -Path ("$([psobject].Assembly.Location)\..\*.dll"))) {
+    try {
+        Add-Type -Path $Dll
+    }
+    catch {}
+}
+
+# Import all C# codes at once so they will get compiled together, have resolved dependencies and recognize each others' classes/types
+Add-Type -Path (Get-ChildItem -File -Recurse -Path "$PSScriptRoot\C#").FullName -ReferencedAssemblies ('System',
+    'System.Security.Cryptography.Pkcs',
+    'System.Security.Cryptography.X509Certificates',
+    'System.Security.Cryptography',
+    'System.Xml',
+    'System.Formats.Asn1',
+    'System.IO',
+    'System.Runtime.InteropServices',
+    'System.Collections',
+    'System.Xml.ReaderWriter',
+    'System.Collections.NonGeneric',
+    'System.Management',
+    'System.Globalization',
+    'Microsoft.Win32.registry',
+    'System.Management.Automation',
+    'System.Text.Json',
+    'System.Diagnostics.Process',
+    'System.ComponentModel.Primitives',
+    'System.Memory',
+    'System.Linq')
+
+# Assign the value of the automatic variable $PSScriptRoot to the [WDACConfig.GlobalVars]::ModuleRootPath
+[WDACConfig.GlobalVars]::ModuleRootPath = $PSScriptRoot
+
+# Importing argument completer ScriptBlocks
+. "$([WDACConfig.GlobalVars]::ModuleRootPath)\CoreExt\ArgumentCompleters.ps1"
+
+# Make sure the current OS build is equal or greater than the required build number
+if (-NOT ([System.Decimal]([WDACConfig.GlobalVars]::FullOSBuild) -ge [System.Decimal]([WDACConfig.GlobalVars]::Requiredbuild))) {
+    Throw [System.PlatformNotSupportedException] "You are not using the latest build of the Windows OS. A minimum build of $([WDACConfig.GlobalVars]::Requiredbuild) is required but your OS build is $([WDACConfig.GlobalVars]::FullOSBuild)`nPlease go to Windows Update to install the updates and then try again."
+}
+
 # Set PSReadline tab completion to complete menu for easier access to available parameters - Only for the current session
 Set-PSReadLineKeyHandler -Key 'Tab' -Function 'MenuComplete'
 
-# Import the classes globally to be available to the entire module
-Import-Module -FullyQualifiedName "$ModuleRootPath\CoreExt\Classes.psm1" -Force
+# Enables additional progress indicators for Windows Terminal and Windows
+$PSStyle.Progress.UseOSCIndicator = $true
 
-# SIG # Begin signature block
-# MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
-# BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCBs+s+MhJCPIoXj
-# hWFd9YeUkfI6MAsELSSIA5GODJG6cqCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
-# LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
-# b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
-# C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
-# MQswCQYDVQQGEwJVSzEeMBwGA1UEAxMVSG90Q2FrZVggQ29kZSBTaWduaW5nMSMw
-# IQYJKoZIhvcNAQkBFhRob3RjYWtleEBvdXRsb29rLmNvbTElMCMGCSqGSIb3DQEJ
-# ARYWU3B5bmV0Z2lybEBvdXRsb29rLmNvbTCCAiIwDQYJKoZIhvcNAQEBBQADggIP
-# ADCCAgoCggIBAKb1BJzTrpu1ERiwr7ivp0UuJ1GmNmmZ65eckLpGSF+2r22+7Tgm
-# pEifj9NhPw0X60F9HhdSM+2XeuikmaNMvq8XRDUFoenv9P1ZU1wli5WTKHJ5ayDW
-# k2NP22G9IPRnIpizkHkQnCwctx0AFJx1qvvd+EFlG6ihM0fKGG+DwMaFqsKCGh+M
-# rb1bKKtY7UEnEVAsVi7KYGkkH+ukhyFUAdUbh/3ZjO0xWPYpkf/1ldvGes6pjK6P
-# US2PHbe6ukiupqYYG3I5Ad0e20uQfZbz9vMSTiwslLhmsST0XAesEvi+SJYz2xAQ
-# x2O4n/PxMRxZ3m5Q0WQxLTGFGjB2Bl+B+QPBzbpwb9JC77zgA8J2ncP2biEguSRJ
-# e56Ezx6YpSoRv4d1jS3tpRL+ZFm8yv6We+hodE++0tLsfpUq42Guy3MrGQ2kTIRo
-# 7TGLOLpayR8tYmnF0XEHaBiVl7u/Szr7kmOe/CfRG8IZl6UX+/66OqZeyJ12Q3m2
-# fe7ZWnpWT5sVp2sJmiuGb3atFXBWKcwNumNuy4JecjQE+7NF8rfIv94NxbBV/WSM
-# pKf6Yv9OgzkjY1nRdIS1FBHa88RR55+7Ikh4FIGPBTAibiCEJMc79+b8cdsQGOo4
-# ymgbKjGeoRNjtegZ7XE/3TUywBBFMf8NfcjF8REs/HIl7u2RHwRaUTJdAgMBAAGj
-# ggJzMIICbzA8BgkrBgEEAYI3FQcELzAtBiUrBgEEAYI3FQiG7sUghM++I4HxhQSF
-# hqV1htyhDXuG5sF2wOlDAgFkAgEIMBMGA1UdJQQMMAoGCCsGAQUFBwMDMA4GA1Ud
-# DwEB/wQEAwIHgDAMBgNVHRMBAf8EAjAAMBsGCSsGAQQBgjcVCgQOMAwwCgYIKwYB
-# BQUHAwMwHQYDVR0OBBYEFOlnnQDHNUpYoPqECFP6JAqGDFM6MB8GA1UdIwQYMBaA
-# FICT0Mhz5MfqMIi7Xax90DRKYJLSMIHUBgNVHR8EgcwwgckwgcaggcOggcCGgb1s
-# ZGFwOi8vL0NOPUhPVENBS0VYLUNBLENOPUhvdENha2VYLENOPUNEUCxDTj1QdWJs
-# aWMlMjBLZXklMjBTZXJ2aWNlcyxDTj1TZXJ2aWNlcyxDTj1Db25maWd1cmF0aW9u
-# LERDPU5vbkV4aXN0ZW50RG9tYWluLERDPWNvbT9jZXJ0aWZpY2F0ZVJldm9jYXRp
-# b25MaXN0P2Jhc2U/b2JqZWN0Q2xhc3M9Y1JMRGlzdHJpYnV0aW9uUG9pbnQwgccG
-# CCsGAQUFBwEBBIG6MIG3MIG0BggrBgEFBQcwAoaBp2xkYXA6Ly8vQ049SE9UQ0FL
-# RVgtQ0EsQ049QUlBLENOPVB1YmxpYyUyMEtleSUyMFNlcnZpY2VzLENOPVNlcnZp
-# Y2VzLENOPUNvbmZpZ3VyYXRpb24sREM9Tm9uRXhpc3RlbnREb21haW4sREM9Y29t
-# P2NBQ2VydGlmaWNhdGU/YmFzZT9vYmplY3RDbGFzcz1jZXJ0aWZpY2F0aW9uQXV0
-# aG9yaXR5MA0GCSqGSIb3DQEBDQUAA4ICAQA7JI76Ixy113wNjiJmJmPKfnn7brVI
-# IyA3ZudXCheqWTYPyYnwzhCSzKJLejGNAsMlXwoYgXQBBmMiSI4Zv4UhTNc4Umqx
-# pZSpqV+3FRFQHOG/X6NMHuFa2z7T2pdj+QJuH5TgPayKAJc+Kbg4C7edL6YoePRu
-# HoEhoRffiabEP/yDtZWMa6WFqBsfgiLMlo7DfuhRJ0eRqvJ6+czOVU2bxvESMQVo
-# bvFTNDlEcUzBM7QxbnsDyGpoJZTx6M3cUkEazuliPAw3IW1vJn8SR1jFBukKcjWn
-# aau+/BE9w77GFz1RbIfH3hJ/CUA0wCavxWcbAHz1YoPTAz6EKjIc5PcHpDO+n8Fh
-# t3ULwVjWPMoZzU589IXi+2Ol0IUWAdoQJr/Llhub3SNKZ3LlMUPNt+tXAs/vcUl0
-# 7+Dp5FpUARE2gMYA/XxfU9T6Q3pX3/NRP/ojO9m0JrKv/KMc9sCGmV9sDygCOosU
-# 5yGS4Ze/DJw6QR7xT9lMiWsfgL96Qcw4lfu1+5iLr0dnDFsGowGTKPGI0EvzK7H+
-# DuFRg+Fyhn40dOUl8fVDqYHuZJRoWJxCsyobVkrX4rA6xUTswl7xYPYWz88WZDoY
-# gI8AwuRkzJyUEA07IYtsbFCYrcUzIHME4uf8jsJhCmb0va1G2WrWuyasv3K/G8Nn
-# f60MsDbDH1mLtzGCAxgwggMUAgEBMGYwTzETMBEGCgmSJomT8ixkARkWA2NvbTEi
-# MCAGCgmSJomT8ixkARkWEkhPVENBS0VYLUNBLURvbWFpbjEUMBIGA1UEAxMLSE9U
-# Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
-# GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
-# NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQgQbHB6/51JMeRGGTIj39CJC8YUDI56PNcd6tYx9n/TcAwDQYJKoZIhvcNAQEB
-# BQAEggIAl7Kk3uKo+8a0zSEisQPKkO5OGg5I6R3TL+iz01k6h8vTwuX/o4rdB/Ia
-# hKazvTnCrxFyLuhgVEqmmHJFwb+xvuXnwhanu/etcDKQDBAxkeGSAaQ/WZrCMiNK
-# 25/Fqrpw6Xp7JCh791fH9lgKeCdNs0TOLjdipYBlLzIkJ3dWHMndvbRw92IGi/sE
-# bjQXCGRWSl19qxftU2OmCkjW3Sag/bKdfXaQaPWXW6xVjik0MLCRzy5HiDTB3mnb
-# z9noV7qzL3bQ43Tg97kY0tOddw4H+YTsp/BZAgd+pyXsXUaCU2yijU1NeQXrW9ox
-# BK5OTb4kJJiiXVpyqIlnWHKErpbj9ww9eFCLvGZ0TjeDrhLBLaNjjHFhqF/209k8
-# g5Naf50JZEXLLK/RqRMMeqz1niHTusvP3h76hrDlmrgslrnTaj+OIXSsG8hRMzK3
-# XbMLRw7B6dt/r94DicwsMxCLxfEWonVBvyxRIjYXx7axiv/5laoO1omSp8DB8IR3
-# 0OC0RV1Od2a3cWFNQNTQCl3VVEIAzAZNCTHIA9/rn9/3czk/0E7Yx7EmVEe7Bo3O
-# d1epawFsEAI4fDj4tGLEbGwdF5blIbwsNtkBm6wNyKugLudXQAt4eO6bttll/rYK
-# mYlKlWw80erD2IAtCa2s4zLxJ4ZA7jsWkZMky1Dvoh4UeyoAbME=
-# SIG # End signature block
+# Import the public global module
+Import-Module -FullyQualifiedName ("$([WDACConfig.GlobalVars]::ModuleRootPath)\Public\Write-FinalOutput.psm1", "$([WDACConfig.GlobalVars]::ModuleRootPath)\Public\MockConfigCIBootstrap.psm1") -Force -Global
+
+#Region Argument Completer Registrations
+
+Register-ArgumentCompleter -CommandName 'ConvertTo-WDACPolicy' -ParameterName 'PolicyToAddLogsTo' -ScriptBlock ([WDACConfig.ArgumentCompleters]::ArgumentCompleterXmlFilePathsPicker)
+Register-ArgumentCompleter -CommandName 'ConvertTo-WDACPolicy' -ParameterName 'BasePolicyFile' -ScriptBlock ([WDACConfig.ArgumentCompleters]::ArgumentCompleterXmlFilePathsPicker)
+
+Register-ArgumentCompleter -CommandName 'Deploy-SignedWDACConfig' -ParameterName 'PolicyPaths' -ScriptBlock ([WDACConfig.ArgumentCompleters]::ArgumentCompleterMultipleXmlFilePathsPicker)
+Register-ArgumentCompleter -CommandName 'Deploy-SignedWDACConfig' -ParameterName 'CertPath' -ScriptBlock ([WDACConfig.ArgumentCompleters]::ArgumentCompleterCerFilePathsPicker)
+Register-ArgumentCompleter -CommandName 'Deploy-SignedWDACConfig' -ParameterName 'SignToolPath' -ScriptBlock ([WDACConfig.ArgumentCompleters]::ArgumentCompleterExeFilePathsPicker)
+
+Register-ArgumentCompleter -CommandName 'Edit-SignedWDACConfig' -ParameterName 'CertPath' -ScriptBlock ([WDACConfig.ArgumentCompleters]::ArgumentCompleterCerFilePathsPicker)
+Register-ArgumentCompleter -CommandName 'Edit-SignedWDACConfig' -ParameterName 'SignToolPath' -ScriptBlock ([WDACConfig.ArgumentCompleters]::ArgumentCompleterExeFilePathsPicker)
+Register-ArgumentCompleter -CommandName 'Edit-SignedWDACConfig' -ParameterName 'PolicyPath' -ScriptBlock ([WDACConfig.ArgumentCompleters]::ArgumentCompleterXmlFilePathsPicker)
+Register-ArgumentCompleter -CommandName 'Edit-SignedWDACConfig' -ParameterName 'SuppPolicyPaths' -ScriptBlock ([WDACConfig.ArgumentCompleters]::ArgumentCompleterMultipleXmlFilePathsPicker)
+
+Register-ArgumentCompleter -CommandName 'Edit-WDACConfig' -ParameterName 'PolicyPath' -ScriptBlock ([WDACConfig.ArgumentCompleters]::ArgumentCompleterXmlFilePathsPicker)
+Register-ArgumentCompleter -CommandName 'Edit-WDACConfig' -ParameterName 'SuppPolicyPaths' -ScriptBlock ([WDACConfig.ArgumentCompleters]::ArgumentCompleterMultipleXmlFilePathsPicker)
+
+Register-ArgumentCompleter -CommandName 'Get-CiFileHashes' -ParameterName 'FilePath' -ScriptBlock ([WDACConfig.ArgumentCompleters]::ArgumentCompleterAnyFilePathsPicker)
+
+Register-ArgumentCompleter -CommandName 'Invoke-WDACSimulation' -ParameterName 'FolderPath' -ScriptBlock ([WDACConfig.ArgumentCompleters]::ArgumentCompleterFolderPathsPicker)
+Register-ArgumentCompleter -CommandName 'Invoke-WDACSimulation' -ParameterName 'CatRootPath' -ScriptBlock ([WDACConfig.ArgumentCompleters]::ArgumentCompleterFolderPathsPicker)
+Register-ArgumentCompleter -CommandName 'Invoke-WDACSimulation' -ParameterName 'XmlFilePath' -ScriptBlock ([WDACConfig.ArgumentCompleters]::ArgumentCompleterXmlFilePathsPicker)
+Register-ArgumentCompleter -CommandName 'Invoke-WDACSimulation' -ParameterName 'FilePath' -ScriptBlock ([WDACConfig.ArgumentCompleters]::ArgumentCompleterMultipleAnyFilePathsPicker)
+
+Register-ArgumentCompleter -CommandName 'Test-CiPolicy' -ParameterName 'XmlFile' -ScriptBlock ([WDACConfig.ArgumentCompleters]::ArgumentCompleterXmlFilePathsPicker)
+Register-ArgumentCompleter -CommandName 'Test-CiPolicy' -ParameterName 'CipFile' -ScriptBlock ([WDACConfig.ArgumentCompleters]::ArgumentCompleterAnyFilePathsPicker)
+
+Register-ArgumentCompleter -CommandName 'Set-CommonWDACConfig' -ParameterName 'CertPath' -ScriptBlock ([WDACConfig.ArgumentCompleters]::ArgumentCompleterCerFilePathsPicker)
+Register-ArgumentCompleter -CommandName 'Set-CommonWDACConfig' -ParameterName 'SignToolPath' -ScriptBlock ([WDACConfig.ArgumentCompleters]::ArgumentCompleterExeFilePathsPicker)
+Register-ArgumentCompleter -CommandName 'Set-CommonWDACConfig' -ParameterName 'SignedPolicyPath' -ScriptBlock ([WDACConfig.ArgumentCompleters]::ArgumentCompleterXmlFilePathsPicker)
+Register-ArgumentCompleter -CommandName 'Set-CommonWDACConfig' -ParameterName 'UnsignedPolicyPath' -ScriptBlock ([WDACConfig.ArgumentCompleters]::ArgumentCompleterXmlFilePathsPicker)
+
+Register-ArgumentCompleter -CommandName 'Remove-WDACConfig' -ParameterName 'PolicyPaths' -ScriptBlock ([WDACConfig.ArgumentCompleters]::ArgumentCompleterMultipleXmlFilePathsPicker)
+Register-ArgumentCompleter -CommandName 'Remove-WDACConfig' -ParameterName 'SignToolPath' -ScriptBlock ([WDACConfig.ArgumentCompleters]::ArgumentCompleterExeFilePathsPicker)
+
+Register-ArgumentCompleter -CommandName 'New-SupplementalWDACConfig' -ParameterName 'PolicyPath' -ScriptBlock ([WDACConfig.ArgumentCompleters]::ArgumentCompleterXmlFilePathsPicker)
+Register-ArgumentCompleter -CommandName 'New-SupplementalWDACConfig' -ParameterName 'PackageName' -ScriptBlock ([WDACConfig.ArgumentCompleters]::ArgumentCompleterAppxPackageNames)
+Register-ArgumentCompleter -CommandName 'New-SupplementalWDACConfig' -ParameterName 'ScanLocation' -ScriptBlock ([WDACConfig.ArgumentCompleters]::ArgumentCompleterFolderPathsPicker)
+Register-ArgumentCompleter -CommandName 'New-SupplementalWDACConfig' -ParameterName 'FolderPath' -ScriptBlock ([WDACConfig.ArgumentCompleters]::ArgumentCompleterFolderPathsPickerWildCards)
+Register-ArgumentCompleter -CommandName 'New-SupplementalWDACConfig' -ParameterName 'CertificatePaths' -ScriptBlock ([WDACConfig.ArgumentCompleters]::ArgumentCompleterCerFilesPathsPicker)
+
+Register-ArgumentCompleter -CommandName 'New-DenyWDACConfig' -ParameterName 'ScanLocations' -ScriptBlock ([WDACConfig.ArgumentCompleters]::ArgumentCompleterFolderPathsPicker)
+Register-ArgumentCompleter -CommandName 'New-DenyWDACConfig' -ParameterName 'PackageName' -ScriptBlock ([WDACConfig.ArgumentCompleters]::ArgumentCompleterAppxPackageNames)
+Register-ArgumentCompleter -CommandName 'New-DenyWDACConfig' -ParameterName 'FolderPath' -ScriptBlock ([WDACConfig.ArgumentCompleters]::ArgumentCompleterFolderPathsPickerWildCards)
+
+Register-ArgumentCompleter -CommandName 'Set-CiRuleOptions' -ParameterName 'FilePath' -ScriptBlock ([WDACConfig.ArgumentCompleters]::ArgumentCompleterXmlFilePathsPicker)
+Register-ArgumentCompleter -CommandName 'Set-CiRuleOptions' -ParameterName 'RulesToAdd' -ScriptBlock ([WDACConfig.ArgumentCompleters]::ArgumentCompleterPolicyRuleOptions)
+Register-ArgumentCompleter -CommandName 'Set-CiRuleOptions' -ParameterName 'RulesToRemove' -ScriptBlock ([WDACConfig.ArgumentCompleters]::ArgumentCompleterPolicyRuleOptions)
+
+#Endregion Argument Completer Registrations

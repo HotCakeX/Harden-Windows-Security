@@ -19,7 +19,7 @@ Function New-SupplementalWDACConfig {
         [parameter(Mandatory = $true, ParameterSetName = 'Installed AppXPackages', ValueFromPipelineByPropertyName = $true)]
         [System.String]$PackageName,
 
-        [ValidateScript({ Test-Path -Path $_ -PathType 'Container' }, ErrorMessage = 'The path you selected is not a folder path.')]
+        [ValidateScript({ [System.IO.Directory]::Exists($_) }, ErrorMessage = 'The path you selected is not a folder path.')]
         [parameter(Mandatory = $true, ParameterSetName = 'Normal', ValueFromPipelineByPropertyName = $true)]
         [System.IO.DirectoryInfo]$ScanLocation,
 
@@ -27,7 +27,7 @@ Function New-SupplementalWDACConfig {
         [parameter(Mandatory = $true, ParameterSetName = 'Folder Path With WildCards', ValueFromPipelineByPropertyName = $true)]
         [System.IO.DirectoryInfo]$FolderPath,
 
-        [ValidateScript({ Test-Path -Path $_ -PathType 'Leaf' }, ErrorMessage = 'The path you selected is not a file path.')]
+        [ValidateScript({ [System.IO.File]::Exists($_) }, ErrorMessage = 'The path you selected is not a file path.')]
         [parameter(Mandatory = $true, ParameterSetName = 'Certificate', ValueFromPipelineByPropertyName = $true)]
         [System.IO.FileInfo[]]$CertificatePaths,
 
@@ -53,11 +53,11 @@ Function New-SupplementalWDACConfig {
         [Parameter(Mandatory = $false, ParameterSetName = 'Normal')]
         [System.Management.Automation.SwitchParameter]$NoScript,
 
-        [ValidateSet([ScanLevelz])]
+        [ArgumentCompleter({ [WDACConfig.ScanLevelz]::New().GetValidValues() })]
         [parameter(Mandatory = $false, ParameterSetName = 'Normal')]
         [System.String]$Level = 'WHQLFilePublisher',
 
-        [ValidateSet([ScanLevelz])]
+        [ArgumentCompleter({ [WDACConfig.ScanLevelz]::New().GetValidValues() })]
         [parameter(Mandatory = $false, ParameterSetName = 'Normal')]
         [System.String[]]$Fallbacks = ('FilePublisher', 'Hash'),
 
@@ -71,36 +71,37 @@ Function New-SupplementalWDACConfig {
         [Parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$SkipVersionCheck
     )
     Begin {
-        $PSBoundParameters.Verbose.IsPresent ? ([System.Boolean]$Verbose = $true) : ([System.Boolean]$Verbose = $false) | Out-Null
-        $PSBoundParameters.Debug.IsPresent ? ([System.Boolean]$Debug = $true) : ([System.Boolean]$Debug = $false) | Out-Null
-        . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
+        [System.Boolean]$Verbose = $PSBoundParameters.Verbose.IsPresent ? $true : $false
+        [System.Boolean]$Debug = $PSBoundParameters.Debug.IsPresent ? $true : $false
+        . "$([WDACConfig.GlobalVars]::ModuleRootPath)\CoreExt\PSDefaultParameterValues.ps1"
 
         Write-Verbose -Message 'Importing the required sub-modules'
         Import-Module -Force -FullyQualifiedName @(
-            "$ModuleRootPath\Shared\Update-Self.psm1",
-            "$ModuleRootPath\Shared\Write-ColorfulText.psm1",
-            "$ModuleRootPath\Shared\New-StagingArea.psm1"
+            "$([WDACConfig.GlobalVars]::ModuleRootPath)\Shared\Update-Self.psm1",
+            "$([WDACConfig.GlobalVars]::ModuleRootPath)\Shared\Write-ColorfulText.psm1"
         )
 
         if ($PSBoundParameters['Certificates']) {
             Import-Module -Force -FullyQualifiedName @(
-                "$ModuleRootPath\WDACSimulation\Get-TBSCertificate.psm1",
-                "$ModuleRootPath\WDACSimulation\Get-SignedFileCertificates.psm1",
-                "$ModuleRootPath\WDACSimulation\Get-CertificateDetails.psm1",
-                "$ModuleRootPath\XMLOps\New-RootAndLeafCertificateLevelRules.psm1",
-                "$ModuleRootPath\XMLOps\Clear-CiPolicy_Semantic.psm1"
+                "$([WDACConfig.GlobalVars]::ModuleRootPath)\XMLOps\New-CertificateSignerRules.psm1",
+                "$([WDACConfig.GlobalVars]::ModuleRootPath)\XMLOps\Clear-CiPolicy_Semantic.psm1"
             )
         }
 
         # if -SkipVersionCheck wasn't passed, run the updater
         if (-NOT $SkipVersionCheck) { Update-Self -InvocationStatement $MyInvocation.Statement }
 
-        [System.IO.DirectoryInfo]$StagingArea = New-StagingArea -CmdletName 'New-SupplementalWDACConfig'
+        if ([WDACConfig.GlobalVars]::ConfigCIBootstrap -eq $false) {
+            Invoke-MockConfigCIBootstrap
+            [WDACConfig.GlobalVars]::ConfigCIBootstrap = $true
+        }
+
+        [System.IO.DirectoryInfo]$StagingArea = [WDACConfig.StagingArea]::NewStagingArea('New-SupplementalWDACConfig')
 
         #Region User-Configurations-Processing-Validation
         # If PolicyPath was not provided by user, check if a valid value exists in user configs, if so, use it, otherwise throw an error
         if (!$PolicyPath) {
-            if (Test-Path -Path (Get-CommonWDACConfig -UnsignedPolicyPath)) {
+            if ([System.IO.File]::Exists((Get-CommonWDACConfig -UnsignedPolicyPath))) {
                 $PolicyPath = Get-CommonWDACConfig -UnsignedPolicyPath
             }
             else {
@@ -139,8 +140,8 @@ Function New-SupplementalWDACConfig {
             if ($PSBoundParameters['Normal']) {
 
                 # The total number of the main steps for the progress bar to render
-                [System.Int16]$TotalSteps = $Deploy ? 3 : 2
-                [System.Int16]$CurrentStep = 0
+                $TotalSteps = $Deploy ? 3us : 2us
+                $CurrentStep = 0us
 
                 $CurrentStep++
                 Write-Progress -Id 19 -Activity 'Processing user selected folders' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
@@ -172,7 +173,7 @@ Function New-SupplementalWDACConfig {
                 Write-Progress -Id 19 -Activity 'Configuring the Supplemental policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
                 Write-Verbose -Message 'Changing the policy type from base to Supplemental, assigning its name and resetting its policy ID'
-                Set-CIPolicyIdInfo -FilePath $FinalSupplementalPath -ResetPolicyID -BasePolicyToSupplementPath $PolicyPath -PolicyName "$SuppPolicyName - $(Get-Date -Format 'MM-dd-yyyy')" | Out-Null
+                $null = Set-CIPolicyIdInfo -FilePath $FinalSupplementalPath -ResetPolicyID -BasePolicyToSupplementPath $PolicyPath -PolicyName "$SuppPolicyName - $(Get-Date -Format 'MM-dd-yyyy')"
 
                 Write-Verbose -Message 'Setting the Supplemental policy version to 1.0.0.0'
                 Set-CIPolicyVersion -FilePath $FinalSupplementalPath -Version '1.0.0.0'
@@ -180,14 +181,14 @@ Function New-SupplementalWDACConfig {
                 Set-CiRuleOptions -FilePath $FinalSupplementalPath -Template Supplemental
 
                 Write-Verbose -Message 'Converting the Supplemental policy XML file to a CIP file'
-                ConvertFrom-CIPolicy -XmlFilePath $FinalSupplementalPath -BinaryFilePath $FinalSupplementalCIPPath | Out-Null
+                $null = ConvertFrom-CIPolicy -XmlFilePath $FinalSupplementalPath -BinaryFilePath $FinalSupplementalCIPPath
 
                 if ($Deploy) {
                     $CurrentStep++
                     Write-Progress -Id 19 -Activity 'Deploying the Supplemental policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
                     Write-Verbose -Message 'Deploying the Supplemental policy'
-                    &'C:\Windows\System32\CiTool.exe' --update-policy $FinalSupplementalCIPPath -json | Out-Null
+                    $null = &'C:\Windows\System32\CiTool.exe' --update-policy $FinalSupplementalCIPPath -json
                     Write-ColorfulText -Color Pink -InputText "A Supplemental policy with the name '$SuppPolicyName' has been deployed."
                 }
                 Write-Progress -Id 19 -Activity 'Complete.' -Completed
@@ -196,8 +197,8 @@ Function New-SupplementalWDACConfig {
             if ($PSBoundParameters['PathWildCards']) {
 
                 # The total number of the main steps for the progress bar to render
-                [System.Int16]$TotalSteps = $Deploy ? 2 : 1
-                [System.Int16]$CurrentStep = 0
+                $TotalSteps = $Deploy ? 2us : 1us
+                $CurrentStep = 0us
 
                 $CurrentStep++
                 Write-Progress -Id 20 -Activity 'Creating the Supplemental policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
@@ -210,7 +211,7 @@ Function New-SupplementalWDACConfig {
                 } -args $FolderPath, $SuppPolicyName, $StagingArea
 
                 Write-Verbose -Message 'Changing the policy type from base to Supplemental, assigning its name and resetting its policy ID'
-                Set-CIPolicyIdInfo -FilePath $FinalSupplementalPath -ResetPolicyID -BasePolicyToSupplementPath $PolicyPath -PolicyName "$SuppPolicyName - $(Get-Date -Format 'MM-dd-yyyy')" | Out-Null
+                $null = Set-CIPolicyIdInfo -FilePath $FinalSupplementalPath -ResetPolicyID -BasePolicyToSupplementPath $PolicyPath -PolicyName "$SuppPolicyName - $(Get-Date -Format 'MM-dd-yyyy')"
 
                 Write-Verbose -Message 'Setting the Supplemental policy version to 1.0.0.0'
                 Set-CIPolicyVersion -FilePath $FinalSupplementalPath -Version '1.0.0.0'
@@ -218,14 +219,14 @@ Function New-SupplementalWDACConfig {
                 Set-CiRuleOptions -FilePath $FinalSupplementalPath -Template Supplemental
 
                 Write-Verbose -Message 'Converting the Supplemental policy XML file to a CIP file'
-                ConvertFrom-CIPolicy -XmlFilePath $FinalSupplementalPath -BinaryFilePath $FinalSupplementalCIPPath | Out-Null
+                $null = ConvertFrom-CIPolicy -XmlFilePath $FinalSupplementalPath -BinaryFilePath $FinalSupplementalCIPPath
 
                 if ($Deploy) {
                     $CurrentStep++
                     Write-Progress -Id 20 -Activity 'Deploying the Supplemental policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
                     Write-Verbose -Message 'Deploying the Supplemental policy'
-                    &'C:\Windows\System32\CiTool.exe' --update-policy $FinalSupplementalCIPPath -json | Out-Null
+                    $null = &'C:\Windows\System32\CiTool.exe' --update-policy $FinalSupplementalCIPPath -json
                     Write-ColorfulText -Color Pink -InputText "A Supplemental policy with the name '$SuppPolicyName' has been deployed."
                 }
                 Write-Progress -Id 20 -Activity 'Complete.' -Completed
@@ -234,8 +235,8 @@ Function New-SupplementalWDACConfig {
             if ($PSBoundParameters['InstalledAppXPackages']) {
                 try {
                     # The total number of the main steps for the progress bar to render
-                    [System.Int16]$TotalSteps = $Deploy ? 3 : 2
-                    [System.Int16]$CurrentStep = 0
+                    $TotalSteps = $Deploy ? 3us : 2us
+                    $CurrentStep = 0us
 
                     $CurrentStep++
                     Write-Progress -Id 21 -Activity 'Getting the Appx package' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
@@ -285,7 +286,7 @@ Function New-SupplementalWDACConfig {
                         } -args $PackageName, $SuppPolicyName, $StagingArea
 
                         Write-Verbose -Message 'Converting the policy type from base to Supplemental, assigning its name and resetting its policy ID'
-                        Set-CIPolicyIdInfo -FilePath $FinalSupplementalPath -ResetPolicyID -BasePolicyToSupplementPath $PolicyPath -PolicyName "$SuppPolicyName - $(Get-Date -Format 'MM-dd-yyyy')" | Out-Null
+                        $null = Set-CIPolicyIdInfo -FilePath $FinalSupplementalPath -ResetPolicyID -BasePolicyToSupplementPath $PolicyPath -PolicyName "$SuppPolicyName - $(Get-Date -Format 'MM-dd-yyyy')"
 
                         Write-Verbose -Message 'Setting the Supplemental policy version to 1.0.0.0'
                         Set-CIPolicyVersion -FilePath $FinalSupplementalPath -Version '1.0.0.0'
@@ -293,14 +294,14 @@ Function New-SupplementalWDACConfig {
                         Set-CiRuleOptions -FilePath $FinalSupplementalPath -Template Supplemental
 
                         Write-Verbose -Message 'Converting the Supplemental policy XML file to a CIP file'
-                        ConvertFrom-CIPolicy -XmlFilePath $FinalSupplementalPath -BinaryFilePath $FinalSupplementalCIPPath | Out-Null
+                        $null = ConvertFrom-CIPolicy -XmlFilePath $FinalSupplementalPath -BinaryFilePath $FinalSupplementalCIPPath
 
                         if ($Deploy) {
                             $CurrentStep++
                             Write-Progress -Id 21 -Activity 'Deploying the Supplemental policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
                             Write-Verbose -Message 'Deploying the Supplemental policy'
-                            &'C:\Windows\System32\CiTool.exe' --update-policy $FinalSupplementalCIPPath -json | Out-Null
+                            $null = &'C:\Windows\System32\CiTool.exe' --update-policy $FinalSupplementalCIPPath -json
                             Write-ColorfulText -Color Pink -InputText "A Supplemental policy with the name '$SuppPolicyName' has been deployed."
                         }
                     }
@@ -320,19 +321,11 @@ Function New-SupplementalWDACConfig {
             if ($PSBoundParameters['Certificates']) {
 
                 # The total number of the main steps for the progress bar to render
-                [System.Int16]$TotalSteps = $Deploy ? 5 : 4
-                [System.Int16]$CurrentStep = 0
+                $TotalSteps = $Deploy ? 5us : 4us
+                $CurrentStep = 0us
 
                 $CurrentStep++
                 Write-Progress -Id 33 -Activity 'Preparing the policy template' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
-
-                Class RootAndLeafSignerCreator {
-                    [System.String]$TBS
-                    [System.String]$SignerName
-                    [System.String]$CertPublisher
-                    [System.Int32]$SiSigningScenario
-                    [System.String]$SignerType
-                }
 
                 Write-Verbose -Message 'Copying the template policy to the staging area'
                 Copy-Item -LiteralPath 'C:\Windows\schemas\CodeIntegrity\ExamplePolicies\AllowAll.xml' -Destination $FinalSupplementalPath -Force
@@ -344,59 +337,33 @@ Function New-SupplementalWDACConfig {
                 Write-Progress -Id 33 -Activity 'Extracting details from the selected certificate files' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
                 # a variable to hold the output signer data
-                [RootAndLeafSignerCreator[]]$OutputSignerData = $null
+                $OutputSignerData = New-Object -TypeName System.Collections.Generic.List[WDACConfig.CertificateSignerCreator]
 
                 foreach ($CertPath in $CertificatePaths) {
 
-                    # All certificates have this value, which will create signer rules with TBS Hash only and result in RootCertificate Level
-                    $MainCertificateDetails = Get-SignedFileCertificates -FilePath "$CertPath"
+                    # Create a certificate object from the .cer file
+                    [System.Security.Cryptography.X509Certificates.X509Certificate2]$SignedFileSigDetails = [System.Security.Cryptography.X509Certificates.X509Certificate2]::CreateFromSignedFile($CertPath)
 
-                    # Only non-root certificates have this value, which will create signer rules with subject name and TBSHash and result in LeafCertificate Level
-                    $LeafCertificateDetails = (Get-CertificateDetails -FilePath "$CertPath").LeafCertificate
-
-                    # Translate the user-friendly strings to numbers
-                    $SigningScenarioTranslated = $SigningScenario -eq 'UserMode' ? '1' :  '0'
-
-                    # Create a new object to store the signer data for the current certificate in the loop
-                    [RootAndLeafSignerCreator]$CurrentRootAndLeafSignerSigner = New-Object -TypeName RootAndLeafSignerCreator
-
-                    # If the certificate has TBS value for the leaf certificate, then it's a leaf certificate
-                    if ($null -ne $LeafCertificateDetails.TBSValue) {
-                        Write-Verbose -Message "New-SupplementalWDACConfig: Leaf certificate signer is going to be created for the certificate located at $CertPath"
-
-                        [System.String]$CurrentRootAndLeafSignerSigner.TBS = $LeafCertificateDetails.TBSValue
-                        $CurrentRootAndLeafSignerSigner.SiSigningScenario = $SigningScenarioTranslated
-                        $CurrentRootAndLeafSignerSigner.SignerName = $MainCertificateDetails.Subject
-                        $CurrentRootAndLeafSignerSigner.SignerType = 'Leaf'
-                        $CurrentRootAndLeafSignerSigner.CertPublisher = $LeafCertificateDetails.SubjectCN
-                    }
-                    # If the certificate does not have a leaf certificate TBS value, then it's a root certificate so only use its TBS value without the subject name (aka CertPublisher value for the Signer in the XML policy file)
-                    else {
-                        Write-Verbose -Message "New-SupplementalWDACConfig: Root certificate signer is going to be created for the certificate located at $CertPath"
-
-                        # Get the TBS value of the certificate
-                        $CurrentRootAndLeafSignerSigner.TBS = Get-TBSCertificate -Cert $MainCertificateDetails
-                        $CurrentRootAndLeafSignerSigner.SiSigningScenario = $SigningScenarioTranslated
-                        $CurrentRootAndLeafSignerSigner.SignerName = $MainCertificateDetails.Subject
-                        $CurrentRootAndLeafSignerSigner.SignerType = 'Root'
-                    }
-
-                    # Add the current certificate's processed results to the output signer data
-                    $OutputSignerData += $CurrentRootAndLeafSignerSigner
+                    # Create rule for the certificate based on the first element in its chain
+                    $OutputSignerData.Add([WDACConfig.CertificateSignerCreator]::New(
+                            [WDACConfig.CertificateHelper]::GetTBSCertificate($SignedFileSigDetails),
+                            ([WDACConfig.CryptoAPI]::GetNameString($SignedFileSigDetails.Handle, [WDACConfig.CryptoAPI]::CERT_NAME_SIMPLE_DISPLAY_TYPE, $null, $false)),
+                            ($SigningScenario -eq 'UserMode' ? '1' :  '0')
+                        ))
                 }
 
                 $CurrentStep++
                 Write-Progress -Id 33 -Activity 'Generating signer rules' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
                 if ($null -ne $OutputSignerData) {
-                    New-RootAndLeafCertificateLevelRules -SignerData $OutputSignerData -XmlFilePath $FinalSupplementalPath
+                    New-CertificateSignerRules -SignerData $OutputSignerData -XmlFilePath $FinalSupplementalPath
                 }
 
                 $CurrentStep++
                 Write-Progress -Id 33 -Activity 'Finalizing the Supplemental policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
                 Write-Verbose -Message 'Converting the policy type from base to Supplemental, assigning its name and resetting its policy ID'
-                Set-CIPolicyIdInfo -FilePath $FinalSupplementalPath -ResetPolicyID -BasePolicyToSupplementPath $PolicyPath -PolicyName "$SuppPolicyName - $(Get-Date -Format 'MM-dd-yyyy')" | Out-Null
+                $null = Set-CIPolicyIdInfo -FilePath $FinalSupplementalPath -ResetPolicyID -BasePolicyToSupplementPath $PolicyPath -PolicyName "$SuppPolicyName - $(Get-Date -Format 'MM-dd-yyyy')"
 
                 Write-Verbose -Message 'Setting the Supplemental policy version to 1.0.0.0'
                 Set-CIPolicyVersion -FilePath $FinalSupplementalPath -Version '1.0.0.0'
@@ -404,14 +371,14 @@ Function New-SupplementalWDACConfig {
                 Set-CiRuleOptions -FilePath $FinalSupplementalPath -Template Supplemental
 
                 Write-Verbose -Message 'Converting the Supplemental policy XML file to a CIP file'
-                ConvertFrom-CIPolicy -XmlFilePath $FinalSupplementalPath -BinaryFilePath $FinalSupplementalCIPPath | Out-Null
+                $null = ConvertFrom-CIPolicy -XmlFilePath $FinalSupplementalPath -BinaryFilePath $FinalSupplementalCIPPath
 
                 if ($Deploy) {
                     $CurrentStep++
                     Write-Progress -Id 33 -Activity 'Deploying the Supplemental policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
                     Write-Verbose -Message 'Deploying the Supplemental policy'
-                    &'C:\Windows\System32\CiTool.exe' --update-policy $FinalSupplementalCIPPath -json | Out-Null
+                    $null = &'C:\Windows\System32\CiTool.exe' --update-policy $FinalSupplementalCIPPath -json
                     Write-ColorfulText -Color Pink -InputText "A Supplemental policy with the name '$SuppPolicyName' has been deployed."
                 }
 
@@ -425,15 +392,15 @@ Function New-SupplementalWDACConfig {
         finally {
             # Display the output
             if ($Deploy) {
-                &$WriteFinalOutput $FinalSupplementalPath
+                Write-FinalOutput -Paths $FinalSupplementalPath
             }
             else {
-                &$WriteFinalOutput $FinalSupplementalPath, $FinalSupplementalCIPPath
+                Write-FinalOutput -Paths $FinalSupplementalPath, $FinalSupplementalCIPPath
             }
 
             # Copy the final files to the user config directory
             if (-NOT $NoCopy) {
-                Copy-Item -Path ($Deploy ? $FinalSupplementalPath : $FinalSupplementalPath, $FinalSupplementalCIPPath) -Destination $UserConfigDir -Force
+                Copy-Item -Path ($Deploy ? $FinalSupplementalPath : $FinalSupplementalPath, $FinalSupplementalCIPPath) -Destination ([WDACConfig.GlobalVars]::UserConfigDir) -Force
             }
             if (-NOT $Debug) {
                 Remove-Item -Path $StagingArea -Recurse -Force
@@ -521,76 +488,3 @@ Function New-SupplementalWDACConfig {
     This example will create a Supplemental policy named certs based on the certificates located at "certificate 1 .cer" and "certificate 2 .cer" and the Base policy located at "C:\Program Files\WDACConfig\DefaultWindowsPlusBlockRules.xml".
 #>
 }
-
-# Importing argument completer ScriptBlocks
-. "$ModuleRootPath\CoreExt\ArgumentCompleters.ps1"
-Register-ArgumentCompleter -CommandName 'New-SupplementalWDACConfig' -ParameterName 'PolicyPath' -ScriptBlock $ArgumentCompleterXmlFilePathsPicker
-Register-ArgumentCompleter -CommandName 'New-SupplementalWDACConfig' -ParameterName 'PackageName' -ScriptBlock $ArgumentCompleterAppxPackageNames
-Register-ArgumentCompleter -CommandName 'New-SupplementalWDACConfig' -ParameterName 'ScanLocation' -ScriptBlock $ArgumentCompleterFolderPathsPicker
-Register-ArgumentCompleter -CommandName 'New-SupplementalWDACConfig' -ParameterName 'FolderPath' -ScriptBlock $ArgumentCompleterFolderPathsPickerWildCards
-Register-ArgumentCompleter -CommandName 'New-SupplementalWDACConfig' -ParameterName 'CertificatePaths' -ScriptBlock $ArgumentCompleterCerFilesPathsPicker
-
-# SIG # Begin signature block
-# MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
-# BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCAQq8AxVqrLqAp3
-# kKa5rgti49QdmyvCxa2gYKxJ/pjWXqCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
-# LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
-# b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
-# C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
-# MQswCQYDVQQGEwJVSzEeMBwGA1UEAxMVSG90Q2FrZVggQ29kZSBTaWduaW5nMSMw
-# IQYJKoZIhvcNAQkBFhRob3RjYWtleEBvdXRsb29rLmNvbTElMCMGCSqGSIb3DQEJ
-# ARYWU3B5bmV0Z2lybEBvdXRsb29rLmNvbTCCAiIwDQYJKoZIhvcNAQEBBQADggIP
-# ADCCAgoCggIBAKb1BJzTrpu1ERiwr7ivp0UuJ1GmNmmZ65eckLpGSF+2r22+7Tgm
-# pEifj9NhPw0X60F9HhdSM+2XeuikmaNMvq8XRDUFoenv9P1ZU1wli5WTKHJ5ayDW
-# k2NP22G9IPRnIpizkHkQnCwctx0AFJx1qvvd+EFlG6ihM0fKGG+DwMaFqsKCGh+M
-# rb1bKKtY7UEnEVAsVi7KYGkkH+ukhyFUAdUbh/3ZjO0xWPYpkf/1ldvGes6pjK6P
-# US2PHbe6ukiupqYYG3I5Ad0e20uQfZbz9vMSTiwslLhmsST0XAesEvi+SJYz2xAQ
-# x2O4n/PxMRxZ3m5Q0WQxLTGFGjB2Bl+B+QPBzbpwb9JC77zgA8J2ncP2biEguSRJ
-# e56Ezx6YpSoRv4d1jS3tpRL+ZFm8yv6We+hodE++0tLsfpUq42Guy3MrGQ2kTIRo
-# 7TGLOLpayR8tYmnF0XEHaBiVl7u/Szr7kmOe/CfRG8IZl6UX+/66OqZeyJ12Q3m2
-# fe7ZWnpWT5sVp2sJmiuGb3atFXBWKcwNumNuy4JecjQE+7NF8rfIv94NxbBV/WSM
-# pKf6Yv9OgzkjY1nRdIS1FBHa88RR55+7Ikh4FIGPBTAibiCEJMc79+b8cdsQGOo4
-# ymgbKjGeoRNjtegZ7XE/3TUywBBFMf8NfcjF8REs/HIl7u2RHwRaUTJdAgMBAAGj
-# ggJzMIICbzA8BgkrBgEEAYI3FQcELzAtBiUrBgEEAYI3FQiG7sUghM++I4HxhQSF
-# hqV1htyhDXuG5sF2wOlDAgFkAgEIMBMGA1UdJQQMMAoGCCsGAQUFBwMDMA4GA1Ud
-# DwEB/wQEAwIHgDAMBgNVHRMBAf8EAjAAMBsGCSsGAQQBgjcVCgQOMAwwCgYIKwYB
-# BQUHAwMwHQYDVR0OBBYEFOlnnQDHNUpYoPqECFP6JAqGDFM6MB8GA1UdIwQYMBaA
-# FICT0Mhz5MfqMIi7Xax90DRKYJLSMIHUBgNVHR8EgcwwgckwgcaggcOggcCGgb1s
-# ZGFwOi8vL0NOPUhPVENBS0VYLUNBLENOPUhvdENha2VYLENOPUNEUCxDTj1QdWJs
-# aWMlMjBLZXklMjBTZXJ2aWNlcyxDTj1TZXJ2aWNlcyxDTj1Db25maWd1cmF0aW9u
-# LERDPU5vbkV4aXN0ZW50RG9tYWluLERDPWNvbT9jZXJ0aWZpY2F0ZVJldm9jYXRp
-# b25MaXN0P2Jhc2U/b2JqZWN0Q2xhc3M9Y1JMRGlzdHJpYnV0aW9uUG9pbnQwgccG
-# CCsGAQUFBwEBBIG6MIG3MIG0BggrBgEFBQcwAoaBp2xkYXA6Ly8vQ049SE9UQ0FL
-# RVgtQ0EsQ049QUlBLENOPVB1YmxpYyUyMEtleSUyMFNlcnZpY2VzLENOPVNlcnZp
-# Y2VzLENOPUNvbmZpZ3VyYXRpb24sREM9Tm9uRXhpc3RlbnREb21haW4sREM9Y29t
-# P2NBQ2VydGlmaWNhdGU/YmFzZT9vYmplY3RDbGFzcz1jZXJ0aWZpY2F0aW9uQXV0
-# aG9yaXR5MA0GCSqGSIb3DQEBDQUAA4ICAQA7JI76Ixy113wNjiJmJmPKfnn7brVI
-# IyA3ZudXCheqWTYPyYnwzhCSzKJLejGNAsMlXwoYgXQBBmMiSI4Zv4UhTNc4Umqx
-# pZSpqV+3FRFQHOG/X6NMHuFa2z7T2pdj+QJuH5TgPayKAJc+Kbg4C7edL6YoePRu
-# HoEhoRffiabEP/yDtZWMa6WFqBsfgiLMlo7DfuhRJ0eRqvJ6+czOVU2bxvESMQVo
-# bvFTNDlEcUzBM7QxbnsDyGpoJZTx6M3cUkEazuliPAw3IW1vJn8SR1jFBukKcjWn
-# aau+/BE9w77GFz1RbIfH3hJ/CUA0wCavxWcbAHz1YoPTAz6EKjIc5PcHpDO+n8Fh
-# t3ULwVjWPMoZzU589IXi+2Ol0IUWAdoQJr/Llhub3SNKZ3LlMUPNt+tXAs/vcUl0
-# 7+Dp5FpUARE2gMYA/XxfU9T6Q3pX3/NRP/ojO9m0JrKv/KMc9sCGmV9sDygCOosU
-# 5yGS4Ze/DJw6QR7xT9lMiWsfgL96Qcw4lfu1+5iLr0dnDFsGowGTKPGI0EvzK7H+
-# DuFRg+Fyhn40dOUl8fVDqYHuZJRoWJxCsyobVkrX4rA6xUTswl7xYPYWz88WZDoY
-# gI8AwuRkzJyUEA07IYtsbFCYrcUzIHME4uf8jsJhCmb0va1G2WrWuyasv3K/G8Nn
-# f60MsDbDH1mLtzGCAxgwggMUAgEBMGYwTzETMBEGCgmSJomT8ixkARkWA2NvbTEi
-# MCAGCgmSJomT8ixkARkWEkhPVENBS0VYLUNBLURvbWFpbjEUMBIGA1UEAxMLSE9U
-# Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
-# GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
-# NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQgmOtF0bJD2lyHBtNgbsFRmIP/8iDOMBUnLfs/xdVSCCUwDQYJKoZIhvcNAQEB
-# BQAEggIASlfnPzGUL/T1NAySox6432CXqLRLfqXB388C4dEdgRGthYbfi5p9dIbQ
-# Jv60j96NPeg+fk50evdZEBINDDjakc84FJTH8O3rpcX8l9o1vKXKbRAc2jvjkV27
-# cCImMDhw6b3+n+2cxA3mWL1d2hReAYfSkl9Y2NNgtOcQlGlk6vmxGh3SVbAo+lHh
-# juZbJYcEUg8cQQSq+FaXft3KnGw0/bMG0bEdfMLJrTbKRxYdRAq1N3YBfATJjiAJ
-# v8N3GdQR1glzVYebdjYIRt+aLzbJ7QUFeJHwnB91wxkGA5BKMi9E3vuEKkQWwsyL
-# MqWJwcw0758X2CvFHsKx6aKK/XpymhQ2PRKBc7MpkzQKFaqGT7XmulKk3Iepf0ju
-# upUlT4FyVoAODOtC4szHm/EgtzeXdbG1thJODJSemOJtkgsPXb1n4SNu3GLr2q3E
-# B2ge3czuRVmZASjRYsPF87JWeSBgDDGuvbhzF6cIyBRGlHNHDpJ5NiSeqpGWA+WN
-# LwILgVxP4zytysofVag9cqMPntpo+QwBPq6ezYvLmQ/OEM5TxQVl7yeX4WwJlifO
-# 1T6o+qs0VNsz8OwI/YR4YyBMmhsPBsvT1Mh1a6gX6GNLcTGmFX9B7ZxM20R5tfC4
-# W4DayPYzeG6noA7FysbXUjM/AQstP9tC+HIJU+QJB8zikc0Y9Jg=
-# SIG # End signature block

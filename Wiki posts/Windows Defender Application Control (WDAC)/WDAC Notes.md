@@ -526,6 +526,8 @@ In the signer below
 
 2. Any Intermediate certificate in the certificate chain/path of a file can be used to allow a file using FilePublisher level.
 
+3. In case of a multi-certificate signed file, such as the Office installer which is triple-signed, any of the certificates can be used to allow the file in a Supplemental policy or Deny it in a base policy.
+
 <br>
 
 <img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">

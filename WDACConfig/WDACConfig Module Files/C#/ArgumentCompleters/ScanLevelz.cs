@@ -1,0 +1,20 @@
+using System;
+using System.Management.Automation;
+
+namespace WDACConfig
+{
+    // argument tab auto-completion and ValidateSet for Levels and Fallbacks parameters in the entire module
+    public class ScanLevelz : IValidateSetValuesGenerator
+    {
+        public string[] GetValidValues()
+        {
+            string[] scanLevelz = new string[]
+            {
+            "Hash", "FileName", "SignedVersion", "Publisher", "FilePublisher",
+            "LeafCertificate", "PcaCertificate", "RootCertificate", "WHQL",
+            "WHQLPublisher", "WHQLFilePublisher", "PFN", "FilePath", "None"
+            };
+            return scanLevelz;
+        }
+    }
+}

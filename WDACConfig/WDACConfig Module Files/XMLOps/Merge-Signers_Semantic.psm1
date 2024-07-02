@@ -25,7 +25,7 @@ Function Merge-Signers_Semantic {
         [Parameter(Mandatory = $true)][System.IO.FileInfo]$XmlFilePath
     )
     Begin {
-        . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
+        . "$([WDACConfig.GlobalVars]::ModuleRootPath)\CoreExt\PSDefaultParameterValues.ps1"
 
         # Load the XML file
         [System.Xml.XmlDocument]$Xml = Get-Content -Path $XmlFilePath
@@ -70,7 +70,7 @@ Function Merge-Signers_Semantic {
         # Find all of the <FileAttrib> elements in the <FileRules> node
         [System.Xml.XmlNodeList]$FileRulesElements = $Xml.SelectNodes('//ns:FileRules/ns:FileAttrib', $Ns)
 
-        $FileRulesValidID_HashSet = [System.Collections.Generic.HashSet[System.String]]$FileRulesElements.ID
+        $FileRulesValidID_HashSet = [System.Collections.Generic.HashSet[System.String]]@($FileRulesElements.ID)
 
         if ($SignerNodes.Count -eq 0) {
             Write-Verbose -Message 'Merge-Signers: No Signer nodes found in the XML file. Exiting the function.'
@@ -84,18 +84,26 @@ Function Merge-Signers_Semantic {
             if ($Signer.SelectNodes('ns:FileAttribRef', $Ns).Count -gt 0) {
 
                 # Making sure that each FilePublisher Signer has valid and unique FileAttribRef elements with IDs that point to an existing FileAttrib element in the <FileRules> node
-                $ContentToReplaceWith = $Signer.FileAttribRef | Where-Object -FilterScript { $FileRulesValidID_HashSet -contains $_.RuleID } | Group-Object -Property RuleID | ForEach-Object -Process { $_.Group[0] }
+                $Collection1 = New-Object -TypeName 'System.Collections.Generic.List[System.Xml.XmlNode]'
+                foreach ($Item in $Signer.FileAttribRef) {
+                    if ($FileRulesValidID_HashSet.Contains($Item.RuleID)) {
+                        $Collection1.Add($Item)
+                    }
+                }
+                $ContentToReplaceWith = foreach ($Item in ($Collection1 | Group-Object -Property RuleID)) {
+                    $Item.Group[0]
+                }
 
                 [System.Int64]$Before = $Signer.FileAttribRef.count
 
                 # Remove all FileAttribRef elements from the Signer, whether they are valid or not
-                $Signer.FileAttribRef | ForEach-Object -Process {
-                    [System.Void]$_.ParentNode.RemoveChild($_)
+                foreach ($Item in $Signer.FileAttribRef) {
+                    [System.Void]$Item.ParentNode.RemoveChild($Item)
                 }
 
                 # Add the valid FileAttribRef elements back to the Signer
-                $ContentToReplaceWith | ForEach-Object -Process {
-                    [System.Void]$Signer.AppendChild($Xml.ImportNode($_, $true))
+                foreach ($Item in $ContentToReplaceWith) {
+                    [System.Void]$Signer.AppendChild($Xml.ImportNode($Item, $true))
                 }
 
                 [System.Int64]$After = $Signer.FileAttribRef.count
@@ -234,75 +242,75 @@ Function Merge-Signers_Semantic {
             }
         }
 
-        $UniqueFilePublisherSigners12.Values | ForEach-Object -Process {
+        foreach ($Item in $UniqueFilePublisherSigners12.Values) {
 
             # Create a unique ID for each signer
             [System.String]$Guid = [System.Guid]::NewGuid().ToString().replace('-', '').ToUpper()
             $Guid = "ID_SIGNER_A_$Guid"
 
             # Set the ID attribute of the Signer node to the unique ID
-            foreach ($Signer in $_['Signer']) {
+            foreach ($Signer in $Item['Signer']) {
                 $Signer.SetAttribute('ID', $Guid)
             }
             # Set the SignerId attribute of the AllowedSigner node to the unique ID
-            foreach ($AllowedSigner in $_['AllowedSigner']) {
+            foreach ($AllowedSigner in $Item['AllowedSigner']) {
                 $AllowedSigner.SetAttribute('SignerId', $Guid)
             }
             # Set the SignerId attribute of the CiSigner node to the unique ID
-            foreach ($CiSigner in $_['CiSigners']) {
+            foreach ($CiSigner in $Item['CiSigners']) {
                 $CiSigner.SetAttribute('SignerId', $Guid)
             }
         }
 
-        $UniquePublisherSigners12.Values | ForEach-Object -Process {
+        foreach ($Item in $UniquePublisherSigners12.Values) {
 
             # Create a unique ID for each signer
             [System.String]$Guid = [System.Guid]::NewGuid().ToString().replace('-', '').ToUpper()
             $Guid = "ID_SIGNER_B_$Guid"
 
             # Set the ID attribute of the Signer node to the unique ID
-            foreach ($Signer in $_['Signer']) {
+            foreach ($Signer in $Item['Signer']) {
                 $Signer.SetAttribute('ID', $Guid)
             }
             # Set the SignerId attribute of the AllowedSigner node to the unique ID
-            foreach ($AllowedSigner in $_['AllowedSigner']) {
+            foreach ($AllowedSigner in $Item['AllowedSigner']) {
                 $AllowedSigner.SetAttribute('SignerId', $Guid)
             }
             # Set the SignerId attribute of the CiSigner node to the unique ID
-            foreach ($CiSigner in $_['CiSigners']) {
+            foreach ($CiSigner in $Item['CiSigners']) {
                 $CiSigner.SetAttribute('SignerId', $Guid)
             }
         }
 
-        $UniquePublisherSigners131.Values | ForEach-Object -Process {
+        foreach ($Item in $UniquePublisherSigners131.Values) {
 
             # Create a unique ID for each signer
             [System.String]$Guid = [System.Guid]::NewGuid().ToString().replace('-', '').ToUpper()
             $Guid = "ID_SIGNER_B_$Guid"
 
             # Set the ID attribute of the Signer node to the unique ID
-            foreach ($Signer in $_['Signer']) {
+            foreach ($Signer in $Item['Signer']) {
                 $Signer.SetAttribute('ID', $Guid)
             }
             # Set the SignerId attribute of the AllowedSigner node to the unique ID
-            foreach ($AllowedSigner in $_['AllowedSigner']) {
+            foreach ($AllowedSigner in $Item['AllowedSigner']) {
                 $AllowedSigner.SetAttribute('SignerId', $Guid)
             }
         }
 
-        $UniqueFilePublisherSigners131.Values | ForEach-Object -Process {
+        foreach ($Item in $UniqueFilePublisherSigners131.Values) {
 
             # Create a unique ID for each signer
             [System.String]$Guid = [System.Guid]::NewGuid().ToString().replace('-', '').ToUpper()
             $Guid = "ID_SIGNER_A_$Guid"
 
             # Set the ID attribute of the Signer node to the unique ID
-            foreach ($Signer in $_['Signer']) {
+            foreach ($Signer in $Item['Signer']) {
                 $Signer.SetAttribute('ID', $Guid)
             }
 
             # Set the SignerId attribute of the AllowedSigner node to the unique ID
-            foreach ($AllowedSigner in $_['AllowedSigner']) {
+            foreach ($AllowedSigner in $Item['AllowedSigner']) {
                 $AllowedSigner.SetAttribute('SignerId', $Guid)
             }
         }
@@ -422,68 +430,3 @@ Function Merge-Signers_Semantic {
     }
 }
 Export-ModuleMember -Function 'Merge-Signers_Semantic'
-
-# SIG # Begin signature block
-# MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
-# BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCBo+A3CR0r79Vja
-# kqugkuiKrQI0yzdq/s1d0hzNzY2flqCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
-# LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
-# b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
-# C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
-# MQswCQYDVQQGEwJVSzEeMBwGA1UEAxMVSG90Q2FrZVggQ29kZSBTaWduaW5nMSMw
-# IQYJKoZIhvcNAQkBFhRob3RjYWtleEBvdXRsb29rLmNvbTElMCMGCSqGSIb3DQEJ
-# ARYWU3B5bmV0Z2lybEBvdXRsb29rLmNvbTCCAiIwDQYJKoZIhvcNAQEBBQADggIP
-# ADCCAgoCggIBAKb1BJzTrpu1ERiwr7ivp0UuJ1GmNmmZ65eckLpGSF+2r22+7Tgm
-# pEifj9NhPw0X60F9HhdSM+2XeuikmaNMvq8XRDUFoenv9P1ZU1wli5WTKHJ5ayDW
-# k2NP22G9IPRnIpizkHkQnCwctx0AFJx1qvvd+EFlG6ihM0fKGG+DwMaFqsKCGh+M
-# rb1bKKtY7UEnEVAsVi7KYGkkH+ukhyFUAdUbh/3ZjO0xWPYpkf/1ldvGes6pjK6P
-# US2PHbe6ukiupqYYG3I5Ad0e20uQfZbz9vMSTiwslLhmsST0XAesEvi+SJYz2xAQ
-# x2O4n/PxMRxZ3m5Q0WQxLTGFGjB2Bl+B+QPBzbpwb9JC77zgA8J2ncP2biEguSRJ
-# e56Ezx6YpSoRv4d1jS3tpRL+ZFm8yv6We+hodE++0tLsfpUq42Guy3MrGQ2kTIRo
-# 7TGLOLpayR8tYmnF0XEHaBiVl7u/Szr7kmOe/CfRG8IZl6UX+/66OqZeyJ12Q3m2
-# fe7ZWnpWT5sVp2sJmiuGb3atFXBWKcwNumNuy4JecjQE+7NF8rfIv94NxbBV/WSM
-# pKf6Yv9OgzkjY1nRdIS1FBHa88RR55+7Ikh4FIGPBTAibiCEJMc79+b8cdsQGOo4
-# ymgbKjGeoRNjtegZ7XE/3TUywBBFMf8NfcjF8REs/HIl7u2RHwRaUTJdAgMBAAGj
-# ggJzMIICbzA8BgkrBgEEAYI3FQcELzAtBiUrBgEEAYI3FQiG7sUghM++I4HxhQSF
-# hqV1htyhDXuG5sF2wOlDAgFkAgEIMBMGA1UdJQQMMAoGCCsGAQUFBwMDMA4GA1Ud
-# DwEB/wQEAwIHgDAMBgNVHRMBAf8EAjAAMBsGCSsGAQQBgjcVCgQOMAwwCgYIKwYB
-# BQUHAwMwHQYDVR0OBBYEFOlnnQDHNUpYoPqECFP6JAqGDFM6MB8GA1UdIwQYMBaA
-# FICT0Mhz5MfqMIi7Xax90DRKYJLSMIHUBgNVHR8EgcwwgckwgcaggcOggcCGgb1s
-# ZGFwOi8vL0NOPUhPVENBS0VYLUNBLENOPUhvdENha2VYLENOPUNEUCxDTj1QdWJs
-# aWMlMjBLZXklMjBTZXJ2aWNlcyxDTj1TZXJ2aWNlcyxDTj1Db25maWd1cmF0aW9u
-# LERDPU5vbkV4aXN0ZW50RG9tYWluLERDPWNvbT9jZXJ0aWZpY2F0ZVJldm9jYXRp
-# b25MaXN0P2Jhc2U/b2JqZWN0Q2xhc3M9Y1JMRGlzdHJpYnV0aW9uUG9pbnQwgccG
-# CCsGAQUFBwEBBIG6MIG3MIG0BggrBgEFBQcwAoaBp2xkYXA6Ly8vQ049SE9UQ0FL
-# RVgtQ0EsQ049QUlBLENOPVB1YmxpYyUyMEtleSUyMFNlcnZpY2VzLENOPVNlcnZp
-# Y2VzLENOPUNvbmZpZ3VyYXRpb24sREM9Tm9uRXhpc3RlbnREb21haW4sREM9Y29t
-# P2NBQ2VydGlmaWNhdGU/YmFzZT9vYmplY3RDbGFzcz1jZXJ0aWZpY2F0aW9uQXV0
-# aG9yaXR5MA0GCSqGSIb3DQEBDQUAA4ICAQA7JI76Ixy113wNjiJmJmPKfnn7brVI
-# IyA3ZudXCheqWTYPyYnwzhCSzKJLejGNAsMlXwoYgXQBBmMiSI4Zv4UhTNc4Umqx
-# pZSpqV+3FRFQHOG/X6NMHuFa2z7T2pdj+QJuH5TgPayKAJc+Kbg4C7edL6YoePRu
-# HoEhoRffiabEP/yDtZWMa6WFqBsfgiLMlo7DfuhRJ0eRqvJ6+czOVU2bxvESMQVo
-# bvFTNDlEcUzBM7QxbnsDyGpoJZTx6M3cUkEazuliPAw3IW1vJn8SR1jFBukKcjWn
-# aau+/BE9w77GFz1RbIfH3hJ/CUA0wCavxWcbAHz1YoPTAz6EKjIc5PcHpDO+n8Fh
-# t3ULwVjWPMoZzU589IXi+2Ol0IUWAdoQJr/Llhub3SNKZ3LlMUPNt+tXAs/vcUl0
-# 7+Dp5FpUARE2gMYA/XxfU9T6Q3pX3/NRP/ojO9m0JrKv/KMc9sCGmV9sDygCOosU
-# 5yGS4Ze/DJw6QR7xT9lMiWsfgL96Qcw4lfu1+5iLr0dnDFsGowGTKPGI0EvzK7H+
-# DuFRg+Fyhn40dOUl8fVDqYHuZJRoWJxCsyobVkrX4rA6xUTswl7xYPYWz88WZDoY
-# gI8AwuRkzJyUEA07IYtsbFCYrcUzIHME4uf8jsJhCmb0va1G2WrWuyasv3K/G8Nn
-# f60MsDbDH1mLtzGCAxgwggMUAgEBMGYwTzETMBEGCgmSJomT8ixkARkWA2NvbTEi
-# MCAGCgmSJomT8ixkARkWEkhPVENBS0VYLUNBLURvbWFpbjEUMBIGA1UEAxMLSE9U
-# Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
-# GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
-# NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQgFTfUDcWwzDUSSPFU9v0HWOJe0MI0NcpDXxSma2+xSW4wDQYJKoZIhvcNAQEB
-# BQAEggIAJpOe5uWBzM/8sRCWk/P4Fbb7NNvFx7IlAOcw7zb5Lz/hWfDbmuJA0d2V
-# 3d6Sa94MHNaLbe79lKYXGJFQCkMiIb4Z35Dot6sHkAedCH/b/YFotAVL2KR49A7W
-# A2V/qNkCwHDfgesoTvH5tnkCLmgrOqeP0yMTVjHl0aHzHQpSuKwNwiplR/WrHDS5
-# rGAaXNPLDj0qwOKzSfkf8/tzod36oe8mG0DRkcTCqxQwWgWhXUZT6fTf1uTfqcuu
-# 4x5aA8RfSJOoBv02q22wTK0U1eBxGdaZp3jUUKr72GKNymnYo+1/ffMcb/xv30vf
-# /3vJz7gsCBuLwAljYEn7ZdZo3HCAklPEoY9A5wSoMXpIU3w3BF834GgfG8IVehJL
-# r2UQhRBj4QwM//BffnCM9+v4ORWXHL+Rtnuqj2zdwhaZfogAt1JLUZKeI0bPb9Vo
-# W5w1jeDxCNP1/G/mizn+63U3XsuYm0g8TtOhvKF/IvVwODxEOL5uMaRupdj99iy0
-# VvDpsWjXv7y6RxuU4eTJB0aIjhhiSzENpizGTQG+hnYxZWfRSaIieeKDZHUiVXcK
-# lpqhPqh3Gp5MxWEGv9770+YSRmQC2XzCYJy3/YYO7BJV3JxU+/+qyy0u0ZD8rg+M
-# Uv5HfIbqBmP+5gBsFqA6br+wG83cJfA+xWr4EfzWS6zjJ2bDpyU=
-# SIG # End signature block

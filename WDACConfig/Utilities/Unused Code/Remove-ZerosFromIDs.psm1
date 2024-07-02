@@ -5,7 +5,7 @@ Function Remove-ZerosFromIDs {
     #>
     param(
         [Parameter(Mandatory = $true)]
-        [ValidateScript({ Test-Path -Path $_ -PathType Leaf })]
+        [ValidateScript({ [System.IO.File]::Exists($_) })]
         [System.String]$FilePath
     )
     # Load the xml file

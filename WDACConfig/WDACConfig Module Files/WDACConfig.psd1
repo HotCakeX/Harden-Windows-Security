@@ -4,7 +4,7 @@
     RootModule           = 'WDACConfig.psm1'
 
     # Version number of this module.
-    ModuleVersion        = '0.4.0'
+    ModuleVersion        = '0.4.1'
 
     # Supported PSEditions
     CompatiblePSEditions = @('Core')
@@ -90,11 +90,11 @@ This is an advanced PowerShell module for WDAC (Windows Defender Application Con
     # RequiredModules      = @()
 
     # Assemblies that must be loaded prior to importing this module
-    # Required for File/Folder picker GUI, and Get-NestedSignerSignature function to use the SignedCms class
-    RequiredAssemblies   = @('System.Windows.Forms', 'System.Security')
+    # Required for File/Folder picker GUI
+    # RequiredAssemblies   = @()
 
     # Script files (.ps1) that are run in the caller's environment prior to importing this module.
-    ScriptsToProcess     = @('Preloader.ps1')
+    # ScriptsToProcess     = @('Preloader.ps1')
 
     # Type files (.ps1xml) to be loaded when importing this module
     # TypesToProcess = @()
@@ -183,7 +183,6 @@ This is an advanced PowerShell module for WDAC (Windows Defender Application Con
     # List of all files packaged with this module
     FileList             = @('WDACConfig.psd1',
         'WDACConfig.psm1',
-        'Preloader.ps1',
         'Core\New-WDACConfig.psm1',
         'Core\Deploy-SignedWDACConfig.psm1',
         'Core\Remove-WDACConfig.psm1',
@@ -206,7 +205,6 @@ This is an advanced PowerShell module for WDAC (Windows Defender Application Con
         'Core\Get-CIPolicySetting.psm1',
         'CoreExt\PSDefaultParameterValues.ps1',
         'CoreExt\ArgumentCompleters.ps1',
-        'CoreExt\Classes.psm1',
         'Resources\WDAC Policies\DefaultWindows_Enforced_Kernel.xml',
         'Resources\WDAC Policies\DefaultWindows_Enforced_Kernel_NoFlights.xml',
         'Resources\User Configurations\Schema.json',
@@ -218,40 +216,23 @@ This is an advanced PowerShell module for WDAC (Windows Defender Application Con
         'Shared\Get-SignTool.psm1',
         'Shared\Move-UserModeToKernelMode.psm1',
         'Shared\Set-LogSize.psm1',
-        'Shared\Test-FilePath.psm1',
         'Shared\Update-Self.psm1',
         'Shared\Write-ColorfulText.psm1',
         'Shared\New-SnapBackGuarantee.psm1',
-        'Shared\Compare-SecureString.psm1',
         'Shared\Get-KernelModeDriversAudit.psm1',
-        'Shared\Copy-CiRules.psm1',
         'Shared\Remove-SupplementalSigners.psm1',
         'Shared\Receive-CodeIntegrityLogs.psm1',
-        'Shared\New-StagingArea.psm1',
         'Shared\Set-LogPropertiesVisibility.psm1',
         'Shared\Test-KernelProtectedFiles.psm1',
         'Shared\Select-LogProperties.psm1',
-        'Shared\Edit-GUIDs.psm1',
         'Shared\Get-KernelModeDrivers.psm1',
         'Shared\Invoke-CiSigning.psm1',
         'Shared\Show-DirectoryPathPicker.psm1',
         'Shared\Test-ECCSignedFiles.psm1',
-        'WDACSimulation\Get-TBSCertificate.psm1',
         'WDACSimulation\Get-SignerInfo.psm1',
-        'WDACSimulation\Get-SignedFileCertificates.psm1',
         'WDACSimulation\Get-FileRuleOutput.psm1',
         'WDACSimulation\Get-CertificateDetails.psm1',
-        'WDACSimulation\Get-NestedSignerSignature.psm1',
         'WDACSimulation\Compare-SignerAndCertificate.psm1',
-        'WDACSimulation\Convert-HexToOID.psm1',
-        'WDACSimulation\Get-ExtendedFileInfo.psm1',
-        'C#\Signer.cs',
-        'C#\Kernel32dll.cs',
-        'C#\Crypt32dll.cs',
-        'C#\AuthenticodeHashCalc.cs',
-        'C#\PageHashCalc.cs',
-        'C#\Crypt32CertCN.cs',
-        'C#\WldpQuerySecurityPolicy.cs',
         'Help\ConvertTo-WDACPolicy.xml',
         'Help\ConvertTo-WDACPolicy.md',
         'XMLOps\Build-SignerAndHashObjects.psm1',
@@ -271,10 +252,50 @@ This is an advanced PowerShell module for WDAC (Windows Defender Application Con
         'XMLOps\Remove-DuplicateFileAttribRef_IDBased.psm1',
         'XMLOps\Remove-OrphanAllowedSignersAndCiSigners_IDBased.psm1',
         'XMLOps\Remove-UnreferencedFileRuleRefs.psm1',
-        'XMLOps\New-RootAndLeafCertificateLevelRules.psm1',
+        'XMLOps\New-CertificateSignerRules.psm1',
         'XMLOps\New-PFNLevelRules.psm1',
         'XMLOps\New-Macros.psm1',
-        'XMLOps\Checkpoint-Macros.psm1')
+        'XMLOps\Checkpoint-Macros.psm1',
+        'Public\Write-FinalOutput.psm1',
+        'Public\MockConfigCIBootstrap.psm1',
+        'C#\Custom Types\ChainElement.cs',
+        'C#\Custom Types\PolicyHashObj.cs',
+        'C#\Custom Types\Signer.cs',
+        'C#\Custom Types\SimulationInput.cs',
+        'C#\Custom Types\HashCreator.cs',
+        'C#\Custom Types\CertificateDetailsCreator.cs',
+        'C#\Custom Types\FilePublisherSignerCreator.cs',
+        'C#\Custom Types\PublisherSignerCreator.cs',
+        'C#\Custom Types\OpusSigner.cs',
+        'C#\Custom Types\SimulationOutput.cs',
+        'C#\Custom Types\AuthenticodePageHashes.cs',
+        'C#\Custom Types\CertificateSignerCreator.cs',
+        'C#\Custom Types\ChainPackage.cs',
+        'C#\Functions\AllCertificatesGrabber.cs',
+        'C#\Functions\AuthenticodeHashCalc.cs',
+        'C#\Functions\CertificateHelper.cs',
+        'C#\Functions\Crypt32CertCN.cs',
+        'C#\Functions\Kernel32dll.cs',
+        'C#\Functions\PageHashCalc.cs',
+        'C#\Functions\WldpQuerySecurityPolicy.cs',
+        'C#\Functions\GetOpusData.cs',
+        'C#\Functions\VersionIncrementer.cs',
+        'C#\Functions\CIPolicyVersion.cs',
+        'C#\Functions\EditGUIDs.cs',
+        'C#\Functions\SecureStringComparer.cs',
+        'C#\Functions\GetFilesFast.cs',
+        'C#\Functions\MeowOpener.cs',
+        'C#\Functions\XmlFilePathExtractor.cs',
+        'C#\Functions\FileDirectoryPathComparer.cs',
+        'C#\Functions\CiPolicyUtility.cs',
+        'C#\Functions\StagingArea.cs',
+        'C#\Functions\GetExtendedFileAttrib.cs',
+        'C#\Variables\ArgumentCompleters.cs',
+        'C#\Variables\GlobalVariables.cs',
+        'C#\ArgumentCompleters\BasePolicyNamez.cs',
+        'C#\ArgumentCompleters\CertCNz.cs',
+        'C#\ArgumentCompleters\RuleOptionsx.cs',
+        'C#\ArgumentCompleters\ScanLevelz.cs')
 
     # Private data to pass to the module specified in RootModule/ModuleToProcess. This may also contain a PSData hashtable with additional module metadata used by PowerShell.
     PrivateData          = @{

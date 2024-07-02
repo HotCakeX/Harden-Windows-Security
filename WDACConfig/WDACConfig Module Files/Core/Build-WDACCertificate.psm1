@@ -28,30 +28,29 @@ Function Build-WDACCertificate {
         [System.Management.Automation.SwitchParameter]$SkipVersionCheck
     )
     Begin {
-        $PSBoundParameters.Verbose.IsPresent ? ([System.Boolean]$Verbose = $true) : ([System.Boolean]$Verbose = $false) | Out-Null
+        [System.Boolean]$Verbose = $PSBoundParameters.Verbose.IsPresent ? $true : $false
 
-        . "$ModuleRootPath\CoreExt\PSDefaultParameterValues.ps1"
+        . "$([WDACConfig.GlobalVars]::ModuleRootPath)\CoreExt\PSDefaultParameterValues.ps1"
 
         Write-Verbose -Message 'Importing the required sub-modules'
         Import-Module -Force -FullyQualifiedName @(
-            "$ModuleRootPath\Shared\Update-Self.psm1",
-            "$ModuleRootPath\Shared\Write-ColorfulText.psm1",
-            "$ModuleRootPath\Shared\Compare-SecureString.psm1"
+            "$([WDACConfig.GlobalVars]::ModuleRootPath)\Shared\Update-Self.psm1",
+            "$([WDACConfig.GlobalVars]::ModuleRootPath)\Shared\Write-ColorfulText.psm1"
         )
 
         # if -SkipVersionCheck wasn't passed, run the updater
         if (-NOT $SkipVersionCheck) { Update-Self -InvocationStatement $MyInvocation.Statement }
 
         # Define a staging area for Build-WDACCertificate cmdlet
-        [System.IO.DirectoryInfo]$StagingArea = Join-Path -Path $UserConfigDir -ChildPath 'StagingArea' -AdditionalChildPath 'Build-WDACCertificate'
+        [System.IO.DirectoryInfo]$StagingArea = Join-Path -Path ([WDACConfig.GlobalVars]::UserConfigDir) -ChildPath 'StagingArea' -AdditionalChildPath 'Build-WDACCertificate'
 
         # Delete it if it exists already with possible content with previous runs
-        if (Test-Path -PathType Container -LiteralPath $StagingArea) {
+        if ([System.IO.Directory]::Exists($StagingArea)) {
             Remove-Item -LiteralPath $StagingArea -Recurse -Force
         }
 
         # Create the staging area for the Build-WDACCertificate cmdlet
-        New-Item -Path $StagingArea -ItemType Directory -Force | Out-Null
+        $null = New-Item -Path $StagingArea -ItemType Directory -Force
 
         # If user entered a common name that is not 'Code Signing Certificate' (which is the default value)
         if ($CommonName -ne 'Code Signing Certificate') {
@@ -73,7 +72,7 @@ Function Build-WDACCertificate {
                 [System.Security.SecureString]$Password2 = $(Write-ColorfulText -Color Lavender -InputText 'Confirm your password for the certificate'; Read-Host -AsSecureString)
 
                 # Compare the Passwords and make sure they match
-                [System.Boolean]$TheyMatch = Compare-SecureString -SecureString1 $Password1 -SecureString2 $Password2
+                [System.Boolean]$TheyMatch = [WDACConfig.SecureStringComparer]::Compare($Password1, $Password2)
 
                 # If the Passwords match and they are at least 5 characters long, assign the Password to the $Password variable
                 if ( $TheyMatch -and ($Password1.Length -ge 5) -and ($Password2.Length -ge 5) ) {
@@ -88,13 +87,19 @@ Function Build-WDACCertificate {
         }
 
         Write-Verbose -Message 'Checking if a certificate with the same common name already exists.'
-        [System.Security.Cryptography.X509Certificates.X509Certificate2[]]$DuplicateCerts = Get-ChildItem -Path 'Cert:\CurrentUser\My' -CodeSigningCert | Where-Object -FilterScript { $_.Subject -eq "CN=$CommonName" }
+        [System.Security.Cryptography.X509Certificates.X509Certificate2[]]$DuplicateCerts = foreach ($Item in (Get-ChildItem -Path 'Cert:\CurrentUser\My' -CodeSigningCert)) {
+            if ($Item.Subject -ieq "CN=$CommonName") {
+                $Item
+            }
+        }
+
         if ($DuplicateCerts.Count -gt 0 ) {
             if ($Force -or $PSCmdlet.ShouldContinue('Remove all of them and continue with creating a new certificate?', "$($DuplicateCerts.Count) certificate(s) with the common name '$CommonName' already exist on the system.")) {
 
-                $DuplicateCerts | ForEach-Object -Process {
-                    $_ | Remove-Item -Force
+                foreach ($Cert in $DuplicateCerts) {
+                    $Cert | Remove-Item -Force
                 }
+
             }
             else {
                 Throw [System.Data.DuplicateNameException] 'A certificate with the same common name already exists on the system. Please remove it or choose another common name and try again.'
@@ -105,7 +110,7 @@ Function Build-WDACCertificate {
 
         Try {
 
-            if ($BuildingMethod -eq 'Method1') {
+            if ($BuildingMethod -ieq 'Method1') {
 
                 Write-Verbose -Message 'Building the certificate using Method1.'
 
@@ -146,7 +151,9 @@ ValidityPeriod = Years
                 #Region parse-certificate-request-output
 
                 # Split the output by newlines and trim the whitespace
-                [System.String[]]$Lines = $CertReqOutput -split "`n" | ForEach-Object -Process { $_.Trim() }
+                [System.String[]]$Lines = foreach ($Line in $CertReqOutput -split "`n") {
+                    $Line.Trim()
+                }
 
                 # Create a hashtable to store the parsed properties
                 [System.Collections.Hashtable]$Properties = @{}
@@ -154,13 +161,16 @@ ValidityPeriod = Years
                 # Loop through the lines and extract the key-value pairs
                 foreach ($Line in $Lines) {
                     # Skip the first line
-                    if ($Line -eq 'Installed Certificate:') {
+                    if ($Line -ieq 'Installed Certificate:') {
                         continue
                     }
                     # Check if the line has a colon
                     if ($Line -match ':') {
                         # Split the line by colon with a limit of 2 and trim the whitespace
-                        [System.String[]]$Parts = $Line -split ':', 2 | ForEach-Object -Process { $_.Trim() }
+                        [System.String[]]$Parts = foreach ($Item in ($Line -split ':', 2)) {
+                            $Item.Trim()
+                        }
+
                         # Assign the first part as the key and the second part as the value
                         [System.String]$Key = $Parts[0]
                         [System.String]$Value = $Parts[1]
@@ -203,27 +213,31 @@ ValidityPeriod = Years
             }
 
             Write-Verbose -Message 'Finding the certificate that was just created by its thumbprint'
-            [System.Security.Cryptography.X509Certificates.X509Certificate2]$TheCert = Get-ChildItem -Path 'Cert:\CurrentUser\My' -CodeSigningCert | Where-Object -FilterScript { $_.Thumbprint -eq $NewCertificateThumbprint }
+            [System.Security.Cryptography.X509Certificates.X509Certificate2]$TheCert = foreach ($Cert in (Get-ChildItem -Path 'Cert:\CurrentUser\My' -CodeSigningCert)) {
+                if ($Cert.Thumbprint -eq $NewCertificateThumbprint) {
+                    $Cert
+                }
+            }
 
-            [System.IO.FileInfo]$CertificateOutputPath = Join-Path -Path $UserConfigDir -ChildPath "$FileName.cer"
+            [System.IO.FileInfo]$CertificateOutputPath = Join-Path -Path ([WDACConfig.GlobalVars]::UserConfigDir) -ChildPath "$FileName.cer"
 
             Write-Verbose -Message "Exporting the certificate (public key only) to $FileName.cer"
-            Export-Certificate -Cert $TheCert -FilePath $CertificateOutputPath -Type 'CERT' -Force | Out-Null
+            $null = Export-Certificate -Cert $TheCert -FilePath $CertificateOutputPath -Type 'CERT' -Force
 
             Write-Verbose -Message "Exporting the certificate (public and private keys) to $FileName.pfx"
-            Export-PfxCertificate -Cert $TheCert -CryptoAlgorithmOption 'AES256_SHA256' -Password $Password -ChainOption 'BuildChain' -FilePath (Join-Path -Path $UserConfigDir -ChildPath "$FileName.pfx") -Force | Out-Null
+            $null = Export-PfxCertificate -Cert $TheCert -CryptoAlgorithmOption 'AES256_SHA256' -Password $Password -ChainOption 'BuildChain' -FilePath (Join-Path -Path ([WDACConfig.GlobalVars]::UserConfigDir) -ChildPath "$FileName.pfx") -Force
 
             Write-Verbose -Message 'Removing the certificate from the certificate store'
             $TheCert | Remove-Item -Force
 
             Write-Verbose -Message 'Importing the certificate to the certificate store again, this time with the private key protected by VSM (Virtual Secure Mode - Virtualization Based Security)'
-            Import-PfxCertificate -ProtectPrivateKey 'VSM' -FilePath (Join-Path -Path $UserConfigDir -ChildPath "$FileName.pfx") -CertStoreLocation 'Cert:\CurrentUser\My' -Password $Password | Out-Null
+            $null = Import-PfxCertificate -ProtectPrivateKey 'VSM' -FilePath (Join-Path -Path ([WDACConfig.GlobalVars]::UserConfigDir) -ChildPath "$FileName.pfx") -CertStoreLocation 'Cert:\CurrentUser\My' -Password $Password
 
             Write-Verbose -Message 'Saving the common name of the certificate to the User configurations'
-            Set-CommonWDACConfig -CertCN $CommonName | Out-Null
+            $null = Set-CommonWDACConfig -CertCN $CommonName
 
             Write-Verbose -Message 'Saving the path of the .cer file of the certificate to the User configurations'
-            Set-CommonWDACConfig -CertPath $CertificateOutputPath | Out-Null
+            $null = Set-CommonWDACConfig -CertPath $CertificateOutputPath
         }
         Finally {
             Remove-Item -LiteralPath $StagingArea -Recurse -Force
@@ -311,68 +325,3 @@ ValidityPeriod = Years
     You will be prompted to enter a password.
 #>
 }
-
-# SIG # Begin signature block
-# MIILkgYJKoZIhvcNAQcCoIILgzCCC38CAQExDzANBglghkgBZQMEAgEFADB5Bgor
-# BgEEAYI3AgEEoGswaTA0BgorBgEEAYI3AgEeMCYCAwEAAAQQH8w7YFlLCE63JNLG
-# KX7zUQIBAAIBAAIBAAIBAAIBADAxMA0GCWCGSAFlAwQCAQUABCCcO2vJgCj4LvDL
-# 4YmhcLYZBVJ5Vs8kR3a14H866GUGnqCCB9AwggfMMIIFtKADAgECAhMeAAAABI80
-# LDQz/68TAAAAAAAEMA0GCSqGSIb3DQEBDQUAME8xEzARBgoJkiaJk/IsZAEZFgNj
-# b20xIjAgBgoJkiaJk/IsZAEZFhJIT1RDQUtFWC1DQS1Eb21haW4xFDASBgNVBAMT
-# C0hPVENBS0VYLUNBMCAXDTIzMTIyNzExMjkyOVoYDzIyMDgxMTEyMTEyOTI5WjB5
-# MQswCQYDVQQGEwJVSzEeMBwGA1UEAxMVSG90Q2FrZVggQ29kZSBTaWduaW5nMSMw
-# IQYJKoZIhvcNAQkBFhRob3RjYWtleEBvdXRsb29rLmNvbTElMCMGCSqGSIb3DQEJ
-# ARYWU3B5bmV0Z2lybEBvdXRsb29rLmNvbTCCAiIwDQYJKoZIhvcNAQEBBQADggIP
-# ADCCAgoCggIBAKb1BJzTrpu1ERiwr7ivp0UuJ1GmNmmZ65eckLpGSF+2r22+7Tgm
-# pEifj9NhPw0X60F9HhdSM+2XeuikmaNMvq8XRDUFoenv9P1ZU1wli5WTKHJ5ayDW
-# k2NP22G9IPRnIpizkHkQnCwctx0AFJx1qvvd+EFlG6ihM0fKGG+DwMaFqsKCGh+M
-# rb1bKKtY7UEnEVAsVi7KYGkkH+ukhyFUAdUbh/3ZjO0xWPYpkf/1ldvGes6pjK6P
-# US2PHbe6ukiupqYYG3I5Ad0e20uQfZbz9vMSTiwslLhmsST0XAesEvi+SJYz2xAQ
-# x2O4n/PxMRxZ3m5Q0WQxLTGFGjB2Bl+B+QPBzbpwb9JC77zgA8J2ncP2biEguSRJ
-# e56Ezx6YpSoRv4d1jS3tpRL+ZFm8yv6We+hodE++0tLsfpUq42Guy3MrGQ2kTIRo
-# 7TGLOLpayR8tYmnF0XEHaBiVl7u/Szr7kmOe/CfRG8IZl6UX+/66OqZeyJ12Q3m2
-# fe7ZWnpWT5sVp2sJmiuGb3atFXBWKcwNumNuy4JecjQE+7NF8rfIv94NxbBV/WSM
-# pKf6Yv9OgzkjY1nRdIS1FBHa88RR55+7Ikh4FIGPBTAibiCEJMc79+b8cdsQGOo4
-# ymgbKjGeoRNjtegZ7XE/3TUywBBFMf8NfcjF8REs/HIl7u2RHwRaUTJdAgMBAAGj
-# ggJzMIICbzA8BgkrBgEEAYI3FQcELzAtBiUrBgEEAYI3FQiG7sUghM++I4HxhQSF
-# hqV1htyhDXuG5sF2wOlDAgFkAgEIMBMGA1UdJQQMMAoGCCsGAQUFBwMDMA4GA1Ud
-# DwEB/wQEAwIHgDAMBgNVHRMBAf8EAjAAMBsGCSsGAQQBgjcVCgQOMAwwCgYIKwYB
-# BQUHAwMwHQYDVR0OBBYEFOlnnQDHNUpYoPqECFP6JAqGDFM6MB8GA1UdIwQYMBaA
-# FICT0Mhz5MfqMIi7Xax90DRKYJLSMIHUBgNVHR8EgcwwgckwgcaggcOggcCGgb1s
-# ZGFwOi8vL0NOPUhPVENBS0VYLUNBLENOPUhvdENha2VYLENOPUNEUCxDTj1QdWJs
-# aWMlMjBLZXklMjBTZXJ2aWNlcyxDTj1TZXJ2aWNlcyxDTj1Db25maWd1cmF0aW9u
-# LERDPU5vbkV4aXN0ZW50RG9tYWluLERDPWNvbT9jZXJ0aWZpY2F0ZVJldm9jYXRp
-# b25MaXN0P2Jhc2U/b2JqZWN0Q2xhc3M9Y1JMRGlzdHJpYnV0aW9uUG9pbnQwgccG
-# CCsGAQUFBwEBBIG6MIG3MIG0BggrBgEFBQcwAoaBp2xkYXA6Ly8vQ049SE9UQ0FL
-# RVgtQ0EsQ049QUlBLENOPVB1YmxpYyUyMEtleSUyMFNlcnZpY2VzLENOPVNlcnZp
-# Y2VzLENOPUNvbmZpZ3VyYXRpb24sREM9Tm9uRXhpc3RlbnREb21haW4sREM9Y29t
-# P2NBQ2VydGlmaWNhdGU/YmFzZT9vYmplY3RDbGFzcz1jZXJ0aWZpY2F0aW9uQXV0
-# aG9yaXR5MA0GCSqGSIb3DQEBDQUAA4ICAQA7JI76Ixy113wNjiJmJmPKfnn7brVI
-# IyA3ZudXCheqWTYPyYnwzhCSzKJLejGNAsMlXwoYgXQBBmMiSI4Zv4UhTNc4Umqx
-# pZSpqV+3FRFQHOG/X6NMHuFa2z7T2pdj+QJuH5TgPayKAJc+Kbg4C7edL6YoePRu
-# HoEhoRffiabEP/yDtZWMa6WFqBsfgiLMlo7DfuhRJ0eRqvJ6+czOVU2bxvESMQVo
-# bvFTNDlEcUzBM7QxbnsDyGpoJZTx6M3cUkEazuliPAw3IW1vJn8SR1jFBukKcjWn
-# aau+/BE9w77GFz1RbIfH3hJ/CUA0wCavxWcbAHz1YoPTAz6EKjIc5PcHpDO+n8Fh
-# t3ULwVjWPMoZzU589IXi+2Ol0IUWAdoQJr/Llhub3SNKZ3LlMUPNt+tXAs/vcUl0
-# 7+Dp5FpUARE2gMYA/XxfU9T6Q3pX3/NRP/ojO9m0JrKv/KMc9sCGmV9sDygCOosU
-# 5yGS4Ze/DJw6QR7xT9lMiWsfgL96Qcw4lfu1+5iLr0dnDFsGowGTKPGI0EvzK7H+
-# DuFRg+Fyhn40dOUl8fVDqYHuZJRoWJxCsyobVkrX4rA6xUTswl7xYPYWz88WZDoY
-# gI8AwuRkzJyUEA07IYtsbFCYrcUzIHME4uf8jsJhCmb0va1G2WrWuyasv3K/G8Nn
-# f60MsDbDH1mLtzGCAxgwggMUAgEBMGYwTzETMBEGCgmSJomT8ixkARkWA2NvbTEi
-# MCAGCgmSJomT8ixkARkWEkhPVENBS0VYLUNBLURvbWFpbjEUMBIGA1UEAxMLSE9U
-# Q0FLRVgtQ0ECEx4AAAAEjzQsNDP/rxMAAAAAAAQwDQYJYIZIAWUDBAIBBQCggYQw
-# GAYKKwYBBAGCNwIBDDEKMAigAoAAoQKAADAZBgkqhkiG9w0BCQMxDAYKKwYBBAGC
-# NwIBBDAcBgorBgEEAYI3AgELMQ4wDAYKKwYBBAGCNwIBFTAvBgkqhkiG9w0BCQQx
-# IgQgmePmZCdXjze8XWMs2bfi3gy+dBJBqG1LeQJYNnV1/GkwDQYJKoZIhvcNAQEB
-# BQAEggIAn+6kdL2qtZuDwumJw4j2cehUb4W70jkxVkATegdPCbp0ZxFpCbKkDJri
-# SeX8lmfZu4IaPN41ez1kVwMZhJBnc1GztkkgtnKyHSI5UdkJYtZQUSFrQk5zsW64
-# lIDlimaCtvKTld/zCcCsKA5b62uzL8MmP920/Zsg9cn1xFpNTaZjLKQhlmx6RFtr
-# 5bpthUXVZNkoKxcoU9ONF/Csi1M3JnUNhQmbc0M6FMGWaLg5GxOln8R6ZU4W34wI
-# 7F/5ozK9UpfGWa3UYjEiyz7bpr8BEw0sVbZbqyGAbOYe6m5wDFnyZAakg3uhDm6V
-# I8D+DgkZ8HxT42Uk1rNQuOPWj/f384Ttf5tjOHzi51u0LubANSFLYp+dK+i87Hiq
-# qusTvM+7me1yVMh2JnEI9zODbbKXdmSss4Xg/Tac9n8xjIEeF4b7Wht1ABCSDtaL
-# JJGHzwuoKXX+quAHnziR0/FLwOucmEFfcoAs7wHEEUBcAy4qjQ2fRA1Lm669RVbG
-# bsvGxFBN4t/bzdF/2aBFljSaD1GQm6PPILXy5wPTkxBUIc2SA2DbTwt/24yA9Npw
-# iMpZL8maOfN7BX30h8D1vk47hIskYSer3W+7KDp5TPdTedUC1egGHl17A53vXBPM
-# CQB8WBccDlOVqupooChT+wVumWa5uA+K4fCiHteCZUQG1/B7PgM=
-# SIG # End signature block

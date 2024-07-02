@@ -7,25 +7,30 @@
 ```powershell
 Invoke-WDACSimulation
   [-XmlFilePath] <FileInfo>
-  [[-FolderPath] <DirectoryInfo>]
-  [[-FilePath] <FileInfo>]
+  [[-FolderPath] <DirectoryInfo[]>]
+  [[-FilePath] <FileInfo[]>]
   [-BooleanOutput]
-  [-Log]
   [-CSVOutput]
-  [-SkipVersionCheck]
+  [-Log]
+  [-NoCatalogScanning]
+  [[-CatRootPath] <DirectoryInfo[]>]
+  [[-ThreadsCount] <UInt32>]
   [<CommonParameters>]
 ```
 
 ## Description
 
-This cmdlet allows you to simulate a WDAC (App Control for Business) policy deployment. Simply select a folder or file and a policy XML file, it will show you whether the selected files would be allowed or blocked by your WDAC policy if it was actually deployed on a system and those files were run.
+This cmdlet allows you to simulate a WDAC (App Control for Business) policy deployment. Simply select folders or files and a policy XML file, it will show you whether the selected files would be allowed or blocked by your WDAC policy if it was actually deployed on a system and those files were run.
 
 <br>
 
 ## Supported Levels and SpecificFileNameLevel Options
 
-* The WDAC Simulation engine supports the following levels: (Support for the remaining [levels](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/select-types-of-rules-to-create#table-2-windows-defender-application-control-policy---file-rule-levels) will be added in a future update)
+* The WDAC Simulation engine **supports** the following [levels](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDAC-Rule-Levels-Comparison-and-Guide):
 
+  * WHQLFilePublisher
+  * WHQLPublisher
+  * WHQL
   * FilePublisher
   * Publisher
   * SignedVersion
@@ -33,8 +38,9 @@ This cmdlet allows you to simulate a WDAC (App Control for Business) policy depl
   * Root Certificate
   * Leaf Certificate
   * Hash
+  * FilePath
 
-* The engine supports all of the [SpecificFileNameLevel](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/select-types-of-rules-to-create#table-3--specificfilenamelevel-options) options when validating the FilePublisher level.
+* The engine **supports** all of the [SpecificFileNameLevel](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/select-types-of-rules-to-create#table-3--specificfilenamelevel-options) options when validating the FilePublisher level.
 
   * FileDescription
   * InternalName
@@ -43,15 +49,15 @@ This cmdlet allows you to simulate a WDAC (App Control for Business) policy depl
   * ProductName
   * Filepath
 
+* The Simulation engine *doesn't support* the following [level](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDAC-Rule-Levels-Comparison-and-Guide#--filename) yet (they will be added in a future update):
+
+    * FileName
+
 <br>
 
 ## Accuracy
 
 * The engine can determine with 100% accuracy whether a file is authorized by a given policy or not as long as the file was scanned based on one of the supported levels mentioned above.
-
-* The `SpecificFileNameLevel` is established with 99.99% accuracy. The only exception is when a file is damaged in a manner that impairs the detection of its additional attributes. *However, this is a rare occurrence, as I have not encountered any such file in over 1 million tests*.
-
-* Explicit Deny rules are not taken into account during simulation. Support for them will be added in a future update. **The nature of the WDAC policies is whitelisting and anything not mentioned in them is automatically blocked/denied**.
 
 <br>
 
@@ -66,50 +72,6 @@ This cmdlet allows you to simulate a WDAC (App Control for Business) policy depl
 * And many more.
 
 ## Parameters
-
-### -FolderPath
-
-Path to a folder. Supports argument tab completion, select the parameter then press TAB to open the Folder picker GUI.
-
-> [!IMPORTANT]\
-> Either FilePath or FolderPath must be provided.
-
-<div align='center'>
-
-| Type: |[DirectoryInfo](https://learn.microsoft.com/en-us/dotnet/api/system.io.directoryinfo)|
-| :-------------: | :-------------: |
-| Position: | Named |
-| Default value: | None |
-| Required: | True |
-| Accept pipeline input: | False |
-| Accept wildcard characters: | False |
-
-</div>
-
-<br>
-
-### -FilePath
-
-Provide path to a file that you want WDAC simulation to run against
-
-Uses LiteralPath to take the path exactly as typed including Special characters such as `[` and `]`
-
-> [!IMPORTANT]\
-> Either FilePath or FolderPath must be provided.
-
-<div align='center'>
-
-| Type: |[FileInfo](https://learn.microsoft.com/en-us/dotnet/api/system.io.fileinfo)|
-| :-------------: | :-------------: |
-| Position: | Named |
-| Default value: | None |
-| Required: | True |
-| Accept pipeline input: | False |
-| Accept wildcard characters: | False |
-
-</div>
-
-<br>
 
 ### -XmlFilePath
 
@@ -129,9 +91,65 @@ Path to a xml file. Supports argument tab completion, select the parameter then 
 
 <br>
 
+### -FolderPath
+
+Path to folders. Supports argument tab completion, select the parameter then press TAB to open the Folder picker GUI.
+
+<div align='center'>
+
+| Type: |[DirectoryInfo](https://learn.microsoft.com/en-us/dotnet/api/system.io.directoryinfo)[]|
+| :-------------: | :-------------: |
+| Position: | Named |
+| Default value: | None |
+| Required: | False |
+| Accept pipeline input: | False |
+| Accept wildcard characters: | False |
+
+</div>
+
+<br>
+
+### -FilePath
+
+Provide path to files that you want WDAC simulation to run against
+
+<div align='center'>
+
+| Type: |[FileInfo](https://learn.microsoft.com/en-us/dotnet/api/system.io.fileinfo)[]|
+| :-------------: | :-------------: |
+| Position: | Named |
+| Default value: | None |
+| Required: | False |
+| Accept pipeline input: | False |
+| Accept wildcard characters: | False |
+
+</div>
+
+<br>
+
 ### -BooleanOutput
 
-Can be used with any parameter to return a boolean value instead of displaying the object output
+Can be used with any parameter to return a boolean value instead of displaying the object output. If any of the selected files or any of the files in the selected folders are not authorized by the selected XML file, the result is `$false`. Otherwise, the result is `$true`.
+
+<div align='center'>
+
+| Type: |[SwitchParameter](https://learn.microsoft.com/en-us/dotnet/api/system.management.automation.switchparameter)|
+| :-------------: | :-------------: |
+| Position: | Named |
+| Default value: | None |
+| Required: | False |
+| Accept pipeline input: | False |
+| Accept wildcard characters: | False |
+
+</div>
+
+<br>
+
+### -CSVOutput
+
+Upon completion of the simulation, you will obtain a CSV file containing the output of the simulation with exhaustive details of each file that would be blocked/allowed by the selected policy, and which rule or signer in the XML policy is responsible for the decision.
+
+It is saved in the WDACConfig folder in `C:\Program Files\WDACConfig`
 
 <div align='center'>
 
@@ -151,8 +169,7 @@ Can be used with any parameter to return a boolean value instead of displaying t
 
 Use this switch to start a transcript of the WDAC simulation and log everything displayed on the screen.
 
-> [!IMPORTANT]\
-> Highly recommended to use the `-Verbose` parameter with this switch to log the verbose output as well.
+The log file is saved in the WDACConfig folder in `C:\Program Files\WDACConfig`
 
 <div align='center'>
 
@@ -168,9 +185,28 @@ Use this switch to start a transcript of the WDAC simulation and log everything 
 
 <br>
 
-### -CSVOutput
+### -CatRootPath
 
-Upon completion of the simulation, you will obtain a CSV file containing the output of the simulation with exhaustive details of each file that would be blocked/allowed by the selected policy.
+Provide path(s) to directories where security catalog `.cat` files are located. If not provided, the default path is `C:\Windows\System32\CatRoot`. Supports argument tab completion, select the parameter then press TAB to open the Folder picker GUI.
+
+<div align='center'>
+
+| Type: |[DirectoryInfo](https://learn.microsoft.com/en-us/dotnet/api/system.io.directoryinfo)[]|
+| :-------------: | :-------------: |
+| Aliases: | Cat |
+| Position: | Named |
+| Default value: | None |
+| Required: | False |
+| Accept pipeline input: | False |
+| Accept wildcard characters: | False |
+
+</div>
+
+<br>
+
+### -NoCatalogScanning
+
+Bypass the scanning of the security catalogs on the system. It can make the scan results less accurate.
 
 <div align='center'>
 
@@ -186,12 +222,25 @@ Upon completion of the simulation, you will obtain a CSV file containing the out
 
 <br>
 
-<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">
+### -ThreadsCount
 
-<br>
+The number of the concurrent/parallel tasks to use when performing WDAC Simulation.
 
-## Notes
+* Max is the number of your system's CPU cores.
+* Min is 1.
+* If you enter a number higher than your system's CPU cores, it will be set to your system's CPU cores count.
 
-* A small part of this cmdlet's code includes [Vadims Podāns's](https://www.sysadmins.lv/disclaimer.aspx) code for [nested certificate calculation](https://www.sysadmins.lv/blog-en/reading-multiple-signatures-from-signed-file-with-powershell.aspx) of double signed files.
+<div align='center'>
+
+| Type: |[UInt32](https://learn.microsoft.com/en-us/dotnet/api/system.uint32)|
+| :-------------: | :-------------: |
+| Aliases: | CPU |
+| Position: | Named |
+| Default value: | 2 |
+| Required: | False |
+| Accept pipeline input: | False |
+| Accept wildcard characters: | False |
+
+</div>
 
 <br>

@@ -1,6 +1,6 @@
 function Confirm-SystemCompliance {
     [CmdletBinding()]
-    [OutputType([System.String], [System.Collections.Concurrent.ConcurrentDictionary[System.String, PSCustomObject[]]])]
+    [OutputType([System.String], [System.Collections.Concurrent.ConcurrentDictionary[System.String, HardeningModule.IndividualResult[]]])]
     param (
         [ArgumentCompleter({
                 # Get the current command and the already bound parameters
@@ -16,13 +16,14 @@ function Confirm-SystemCompliance {
                     $false
                 ).Value
 
-                [Categoriex]::new().GetValidValues() | ForEach-Object -Process {
+                foreach ($Item in [Categoriex]::new().GetValidValues()) {
                     # Check if the item is already selected
-                    if ($_ -notin $Existing) {
+                    if ($Item -notin $Existing) {
                         # Return the item
-                        $_
+                        $Item
                     }
                 }
+
             })]
         [ValidateScript({
                 if ($_ -notin [Categoriex]::new().GetValidValues()) { throw "Invalid Category Name: $_" }
@@ -98,7 +99,7 @@ function Confirm-SystemCompliance {
         $SyncHash['CSVResource'] = Import-Csv -Path "$([HardeningModule.GlobalVars]::Path)\Resources\Registry resources.csv"
 
         # An object to store the FINAL results
-        $FinalMegaObject = [System.Collections.Concurrent.ConcurrentDictionary[System.String, PSCustomObject[]]]::new()
+        $FinalMegaObject = [System.Collections.Concurrent.ConcurrentDictionary[System.String, HardeningModule.IndividualResult[]]]::new()
 
         # The total number of the steps for the parent/main progress bar to render
         [System.UInt16]$TotalMainSteps = 2
@@ -107,50 +108,6 @@ function Confirm-SystemCompliance {
         #EndRegion Defining-Variables
 
         #Region Defining-Functions-ScriptBlocks
-        function ConvertFrom-IniFile {
-            <#
-            .SYNOPSIS
-                A helper function to parse the ini file from the output of the "Secedit /export /cfg .\security_policy.inf"
-            .PARAMETER IniFile
-                The path to the ini file
-            .INPUTS
-                System.String
-            .OUTPUTS
-                PSCustomObject
-            #>
-            [CmdletBinding()]
-            Param ([System.String]$IniFile)
-
-            # Don't prompt to continue if '-Debug' is specified.
-            $DebugPreference = 'Continue'
-
-            [System.Collections.Hashtable]$IniObject = @{}
-            [System.String]$SectionName = ''
-
-            switch -regex -file $IniFile {
-                '^\[(.+)\]$' {
-                    # Header of the section
-                    $SectionName = $matches[1]
-                    #Write-Debug "Section: $SectionName"
-                    $IniObject[$SectionName] = @{}
-                    continue
-                }
-                '^(.+?)\s*=\s*(.*)$' {
-                    # Name/value pair
-                    [System.String]$KeyName, [System.String]$KeyValue = $matches[1..2]
-                    #Write-Debug "Name: $KeyName"
-                    # Write-Debug "Value: $KeyValue"
-                    $IniObject[$SectionName][$KeyName] = $KeyValue
-                    continue
-                }
-                default {
-                    # Ignore blank lines or comments
-                    continue
-                }
-            }
-            return [PSCustomObject]$IniObject
-        }
-
         $ScriptBlockInvokeCategoryProcessing = [System.Management.Automation.ScriptBlock]::Create({
                 <#
             .SYNOPSIS
@@ -208,7 +165,7 @@ function Confirm-SystemCompliance {
                     }
 
                     # Create a custom object with the results for this row
-                    [System.Void]$Output.Add([HardeningModule.IndividualResult]@{
+                    $Output.Add([HardeningModule.IndividualResult]@{
                             FriendlyName = $Item.FriendlyName
                             Compliant    = $ValueMatches
                             Value        = $Item.Value
@@ -352,7 +309,7 @@ function Confirm-SystemCompliance {
             $null = &"$env:SystemDrive\Windows\System32\Secedit.exe" /export /cfg .\security_policy.inf
 
             # Storing the output of the ini file parsing function
-            $SyncHash['SecurityPoliciesIni'] = ConvertFrom-IniFile -IniFile .\security_policy.inf
+            $SyncHash['SecurityPoliciesIni'] = [HardeningModule.IniFileConverter]::ConvertFromIniFile('.\security_policy.inf')
 
             $CurrentMainStep++
             Write-Progress -Id 0 -Activity 'Verifying the security settings' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
@@ -1112,8 +1069,8 @@ function Confirm-SystemCompliance {
                     }
 
                     # ECC Curves
-                    [System.Object[]]$ECCCurves = Get-TlsEccCurve
-                    [System.Object[]]$List = ('nistP521', 'curve25519', 'NistP384', 'NistP256')
+                    [System.String[]]$ECCCurves = Get-TlsEccCurve
+                    [System.String[]]$List = ('nistP521', 'curve25519', 'NistP384', 'NistP256')
                     # Make sure both arrays are completely identical in terms of members and their exact position
                     # If this variable is empty that means both arrays are completely identical
                     $IndividualItemResult = Compare-Object -ReferenceObject $ECCCurves -DifferenceObject $List -SyncWindow 0
@@ -1794,14 +1751,16 @@ function Confirm-SystemCompliance {
 
             # If user didn't specify any categories, add all of them to the list of jobs to wait for
             if ($null -eq $Categories) {
-                foreach ($Cat in [Categoriex]::new().GetValidValues()) {
-                    [System.Void]$JobsToWaitFor.Add((Get-Variable -Name ($Cat + 'Job') -ValueOnly))
+                $JobsToWaitFor = foreach ($Cat in [Categoriex]::new().GetValidValues()) {
+                    [System.String]$VariableName = $Cat + 'Job'
+                    (Get-Item -Path "variable:$VariableName").Value
                 }
             }
             # If user specified categories, add only the specified ones to the list of the jobs to wait for
             else {
-                foreach ($Cat in $Categories) {
-                    [System.Void]$JobsToWaitFor.Add((Get-Variable -Name ($Cat + 'Job') -ValueOnly))
+                $JobsToWaitFor = foreach ($Cat in $Categories) {
+                    [System.String]$VariableName = $Cat + 'Job'
+                    (Get-Item -Path "variable:$VariableName").Value
                 }
             }
 
@@ -2122,6 +2081,6 @@ function Confirm-SystemCompliance {
     System.String[]
 .OUTPUTS
     System.String
-    System.Collections.Concurrent.ConcurrentDictionary[System.String, PSCustomObject[]]
+    System.Collections.Concurrent.ConcurrentDictionary[System.String, HardeningModule.IndividualResult[]]
 #>
 }

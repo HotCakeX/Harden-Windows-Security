@@ -140,6 +140,8 @@ Harden Windows Safely, Securely, only with Official Microsoft methods
     'Shared\IndividualResultClass.cs',
     'Shared\SystemInfoNativeMethods.cs',
     'Shared\UserPrivCheck.cs',
+    'Shared\GlobalVars.cs',
+    'Shared\IniFileConverter.cs',
     'Resources\Media\Log.png',
     'Resources\Media\Path.png',
     'Resources\Media\start.png',

@@ -2333,7 +2333,7 @@ https://learn.microsoft.com/en-us/windows/security/operating-system-security/dat
                     # auditpol /list /subcategory:* /r
 
                     # Event Viewer custom views are saved in "$env:SystemDrive\ProgramData\Microsoft\Event Viewer\Views". files in there can be backed up and restored on new Windows installations.
-                    if (Test-Path -Path "$env:SystemDrive\ProgramData\Microsoft\Event Viewer\Views\Hardening Script") {
+                    if ([System.IO.Directory]::Exists("$env:SystemDrive\ProgramData\Microsoft\Event Viewer\Views\Hardening Script")) {
                         Remove-Item -Path "$env:SystemDrive\ProgramData\Microsoft\Event Viewer\Views\Hardening Script" -Recurse -Force
                     }
 
@@ -2778,7 +2778,6 @@ Execution Policy: $CurrentExecutionPolicy
                 $SyncHash['GlobalVars']['IsLocally'] = $IsLocally
                 $SyncHash['GlobalVars']['IsAdmin'] = $IsAdmin
                 $SyncHash['GlobalVars']['CurrentExecutionPolicy'] = $CurrentExecutionPolicy
-                $SyncHash['GlobalVars']['RequiredbuildHardeningModule'] = $RequiredbuildHardeningModule
                 $SyncHash['GlobalVars']['CurrentUserTempDirectoryPath'] = $CurrentUserTempDirectoryPath
                 $SyncHash['GlobalVars']['ShouldEnableOptionalDiagnosticData'] = $ShouldEnableOptionalDiagnosticData
                 $SyncHash['GlobalVars']['MDAVConfigCurrent'] = $MDAVConfigCurrent
@@ -2930,17 +2929,17 @@ Execution Policy: $CurrentExecutionPolicy
 
                 # Add click event for 'Check All' button
                 $SyncHash['GUI'].SelectAllCategories.Add_Checked({
-                        $SyncHash['GUI'].Categories.Items | ForEach-Object -Process {
-                            if ($_.Content.Name -in $ValidAllowedCategories) {
-                                $_.Content.IsChecked = $true
+                        foreach ($Item in $SyncHash['GUI'].Categories.Items) {
+                            if ($Item.Content.Name -in $ValidAllowedCategories) {
+                                $Item.Content.IsChecked = $true
                             }
                         }
                     })
 
                 # Add click event for 'Uncheck All' button
                 $SyncHash['GUI'].SelectAllCategories.Add_Unchecked({
-                        $SyncHash['GUI'].Categories.Items | ForEach-Object -Process {
-                            $_.Content.IsChecked = $false
+                        foreach ($Item in $SyncHash['GUI'].Categories.Items) {
+                            $Item.Content.IsChecked = $false
                         }
                     })
                 #Endregion Check-Uncheck buttons for Categories
@@ -2948,17 +2947,20 @@ Execution Policy: $CurrentExecutionPolicy
                 #Region Check-Uncheck buttons for Sub-Categories
                 # Add click event for 'Check All' button for enabled sub-categories
                 $SyncHash['GUI'].SelectAllSubCategories.Add_Checked({
-                        $SyncHash['GUI'].SubCategories.Items | Where-Object -FilterScript { $_.IsEnabled -eq $true } | ForEach-Object -Process {
-                            $CheckBox = $_.Content
-                            $CheckBox.IsChecked = $true
+
+                        foreach ($ItemObj in $SyncHash['GUI'].SubCategories.Items) {
+                            if ($ItemObj.IsEnabled -eq $true) {
+                                foreach ($ItemObj2 in $ItemObj) {
+                                    $ItemObj2.Content.IsChecked = $true
+                                }
+                            }
                         }
                     })
 
                 # Add click event for 'Uncheck All' button from sub-categories, regardless of whether they are enabled or disabled
                 $SyncHash['GUI'].SelectAllSubCategories.Add_Unchecked({
-                        $SyncHash['GUI'].SubCategories.Items | ForEach-Object -Process {
-                            $CheckBox = $_.Content
-                            $CheckBox.IsChecked = $false
+                        foreach ($ItemObj in $SyncHash['GUI'].SubCategories.Items) {
+                            $ItemObj.Content.IsChecked = $false
                         }
                     })
                 #Endregion Check-Uncheck buttons for Sub-Categories
@@ -3240,13 +3242,13 @@ Execution Policy: $CurrentExecutionPolicy
                                 }
 
                                 # Make all of the main function's variable available again in the 2nd nested RunSpace
-                                $SyncHash.GlobalVars.GetEnumerator() | ForEach-Object -Process {
-                                    Set-Variable -Name $_.Key -Value $_.Value -Force
+                                foreach ($Item in $SyncHash.GlobalVars.GetEnumerator()) {
+                                    Set-Variable -Name $Item.Key -Value $Item.Value -Force
                                 }
 
                                 # Make all of the main function's functions available again in the 2nd nested RunSpace
-                                $SyncHash.ExportedFunctions.GetEnumerator() | ForEach-Object -Process {
-                                    $null = New-Item -Path "Function:\$($_.Key)" -Value $_.Value.ScriptBlock.Ast.Body.GetScriptBlock() -Force
+                                foreach ($Item in $SyncHash.ExportedFunctions.GetEnumerator()) {
+                                    $null = New-Item -Path "Function:\$($Item.Key)" -Value $Item.Value.ScriptBlock.Ast.Body.GetScriptBlock() -Force
                                 }
 
                                 [System.Management.Automation.ScriptBlock]$prerequisitesScriptBlock = {
@@ -3586,9 +3588,9 @@ End time: $(Get-Date)
                 'NonAdminCommands' { Invoke-NonAdminCommands -RunUnattended }
                 default {
                     # Get the values of the ValidateSet attribute of the Categories parameter of the main function
-                    [Categoriex]::new().GetValidValues() | ForEach-Object -Process {
+                    foreach ($Category in [Categoriex]::new().GetValidValues()) {
                         # Run all of the categories' functions if the user didn't specify any
-                        . "Invoke-$_"
+                        . "Invoke-$Category"
                     }
                 }
             }
@@ -3614,7 +3616,7 @@ End time: $(Get-Date)
                 }
             }
 
-            if (Test-Path -Path $WorkingDir) {
+            if ([System.IO.Directory]::Exists($WorkingDir)) {
 
                 if ($GUI) {
                     if (-NOT $SyncHash.NoPreReqCleanup) {
@@ -3631,7 +3633,9 @@ End time: $(Get-Date)
             }
 
             Write-Verbose -Message 'Disabling progress bars'
-            0..2 | ForEach-Object -Process { Write-Progress -Id $_ -Activity 'Done' -Completed }
+            foreach ($ID in 0..2) {
+                Write-Progress -Id $ID -Activity 'Done' -Completed
+            }
 
             Write-Verbose -Message 'Restoring the title of the PowerShell back to what it was prior to running the script/module'
             $Host.UI.RawUI.WindowTitle = $CurrentPowerShellTitle

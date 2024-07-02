@@ -245,12 +245,16 @@ Function Unprotect-WindowsSecurity {
                         }
 
                         # Enables Multicast DNS (mDNS) UDP-in Firewall Rules for all 3 Firewall profiles
-                        Get-NetFirewallRule |
-                        Where-Object -FilterScript { $_.RuleGroup -eq '@%SystemRoot%\system32\firewallapi.dll,-37302' -and $_.Direction -eq 'inbound' } |
-                        ForEach-Object -Process { Enable-NetFirewallRule -DisplayName $_.DisplayName }
+                        foreach ($FirewallRule in Get-NetFirewallRule) {
+                            if ($FirewallRule.RuleGroup -eq '@%SystemRoot%\system32\firewallapi.dll,-37302' -and $FirewallRule.Direction -eq 'inbound') {
+                                foreach ($Item in $FirewallRule) {
+                                    Enable-NetFirewallRule -DisplayName $Item.DisplayName
+                                }
+                            }
+                        }
 
                         # Remove any custom views added by this script for Event Viewer
-                        if (Test-Path -Path "$env:SystemDrive\ProgramData\Microsoft\Event Viewer\Views\Hardening Script") {
+                        if ([System.IO.Directory]::Exists("$env:SystemDrive\ProgramData\Microsoft\Event Viewer\Views\Hardening Script")) {
                             Remove-Item -Path "$env:SystemDrive\ProgramData\Microsoft\Event Viewer\Views\Hardening Script" -Recurse -Force
                         }
 

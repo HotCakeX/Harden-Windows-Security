@@ -996,8 +996,6 @@ Function Protect-WindowsSecurity {
             [CmdletBinding()]
             Param (
                 [Parameter(Mandatory = $true)][System.String]$WorkingDir,
-                [AllowNull()]
-                [Parameter(Mandatory = $false)][System.String]$HardeningModulePath,
                 [Parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$IsLocally,
                 [Parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$Offline,
                 [Parameter(Mandatory = $false)][System.Collections.Hashtable]$SyncHash,
@@ -1111,10 +1109,10 @@ Function Protect-WindowsSecurity {
 
             if ($IsLocally) {
                 Write-Verbose -Message 'Local Mode; Copying the Security-Baselines-X, Registry, ProcessMitigations and EventViewerCustomViews files from the module folder to the working directory'
-                Copy-Item -Path "$HardeningModulePath\Resources\Security-Baselines-X.zip" -Destination "$WorkingDir\Security-Baselines-X.zip"
-                Copy-Item -Path "$HardeningModulePath\Resources\Registry.csv" -Destination "$WorkingDir\Registry.csv"
-                Copy-Item -Path "$HardeningModulePath\Resources\ProcessMitigations.csv" -Destination "$WorkingDir\ProcessMitigations.csv"
-                Copy-Item -Path "$HardeningModulePath\Resources\EventViewerCustomViews.zip" -Destination "$WorkingDir\EventViewerCustomViews.zip"
+                Copy-Item -Path "$([HardeningModule.GlobalVars]::Path)\Resources\Security-Baselines-X.zip" -Destination "$WorkingDir\Security-Baselines-X.zip"
+                Copy-Item -Path "$([HardeningModule.GlobalVars]::Path)\Resources\Registry.csv" -Destination "$WorkingDir\Registry.csv"
+                Copy-Item -Path "$([HardeningModule.GlobalVars]::Path)\Resources\ProcessMitigations.csv" -Destination "$WorkingDir\ProcessMitigations.csv"
+                Copy-Item -Path "$([HardeningModule.GlobalVars]::Path)\Resources\EventViewerCustomViews.zip" -Destination "$WorkingDir\EventViewerCustomViews.zip"
             }
             if ($Offline) {
                 Write-Verbose -Message 'Offline Mode; Copying the Microsoft Security Baselines, Microsoft 365 Apps for Enterprise Security Baselines and LGPO files from the user provided paths to the working directory'
@@ -1159,7 +1157,6 @@ Function Protect-WindowsSecurity {
             param(
                 $SelectedCategories,
                 $IsLocally,
-                $HardeningModulePath,
                 $WorkingDir
             )
             # Display a toast notification when the selected categories have been run
@@ -1226,7 +1223,7 @@ Function Protect-WindowsSecurity {
 
                 Out-ToastNotification -Title 'Completed' -body "$($args[0]) selected categories have been run." -ImagePath $args[1]
                 # If the module is running locally, the toast notification image will be taken from the module directory, if not it will be taken from the working directory where it was already downloaded from the GitHub repo
-            } -args $SelectedCategories.Count, ($IsLocally ? "$HardeningModulePath\Resources\Media\ToastNotificationIcon.png" : "$WorkingDir\ToastNotificationIcon.png") *>&1 # To display any error message or other streams from the script block on the console
+            } -args $SelectedCategories.Count, ($IsLocally ? "$([HardeningModule.GlobalVars]::Path)\Resources\Media\ToastNotificationIcon.png" : "$WorkingDir\ToastNotificationIcon.png") *>&1 # To display any error message or other streams from the script block on the console
         }
         #Endregion Helper-Functions-And-ScriptBlocks
 
@@ -2336,7 +2333,7 @@ https://learn.microsoft.com/en-us/windows/security/operating-system-security/dat
                     # auditpol /list /subcategory:* /r
 
                     # Event Viewer custom views are saved in "$env:SystemDrive\ProgramData\Microsoft\Event Viewer\Views". files in there can be backed up and restored on new Windows installations.
-                    if (Test-Path -Path "$env:SystemDrive\ProgramData\Microsoft\Event Viewer\Views\Hardening Script") {
+                    if ([System.IO.Directory]::Exists("$env:SystemDrive\ProgramData\Microsoft\Event Viewer\Views\Hardening Script")) {
                         Remove-Item -Path "$env:SystemDrive\ProgramData\Microsoft\Event Viewer\Views\Hardening Script" -Recurse -Force
                     }
 
@@ -2593,7 +2590,7 @@ https://learn.microsoft.com/en-us/windows/security/operating-system-security/dat
                 Write-Verbose -Message 'Running Protect-WindowsSecurity function as part of the Harden-Windows-Security module'
 
                 Write-Verbose -Message 'Importing the required sub-modules'
-                Import-Module -FullyQualifiedName "$HardeningModulePath\Shared\Update-self.psm1" -Force -Verbose:$false
+                Import-Module -FullyQualifiedName "$([HardeningModule.GlobalVars]::Path)\Shared\Update-self.psm1" -Force -Verbose:$false
 
                 # Set the flag to true to indicate that the module is running locally
                 $IsLocally = $true
@@ -2609,6 +2606,22 @@ https://learn.microsoft.com/en-us/windows/security/operating-system-security/dat
         }
         else {
             Write-Verbose -Message '$PSCommandPath was not found, Protect-WindowsSecurity function was most likely called from the GitHub repository'
+        }
+
+        # If the code is running directly from the GitHub, initialize the following variables so there won't be any error about unavailable types
+        if (!$IsLocally) {
+            Add-Type -TypeDefinition @'
+namespace HardeningModule
+{
+    public static class GlobalVars
+    {
+        // Stores the value of PSScriptRoot in a global constant variable to allow the internal functions to use it when navigating the module structure
+        public static string path;
+        public static object MDAVConfigCurrent;
+        public static object MDAVPreferencesCurrent;
+    }
+}
+'@
         }
 
         [System.Security.Principal.WindowsPrincipal]$Principal = New-Object -TypeName 'Security.Principal.WindowsPrincipal' -ArgumentList ([Security.Principal.WindowsIdentity]::GetCurrent())
@@ -2765,10 +2778,8 @@ Execution Policy: $CurrentExecutionPolicy
                 $SyncHash['GlobalVars']['IsLocally'] = $IsLocally
                 $SyncHash['GlobalVars']['IsAdmin'] = $IsAdmin
                 $SyncHash['GlobalVars']['CurrentExecutionPolicy'] = $CurrentExecutionPolicy
-                $SyncHash['GlobalVars']['RequiredbuildHardeningModule'] = $RequiredbuildHardeningModule
                 $SyncHash['GlobalVars']['CurrentUserTempDirectoryPath'] = $CurrentUserTempDirectoryPath
                 $SyncHash['GlobalVars']['ShouldEnableOptionalDiagnosticData'] = $ShouldEnableOptionalDiagnosticData
-                $SyncHash['GlobalVars']['HardeningModulePath'] = $HardeningModulePath
                 $SyncHash['GlobalVars']['MDAVConfigCurrent'] = $MDAVConfigCurrent
                 $SyncHash['GlobalVars']['MDAVPreferencesCurrent'] = $MDAVPreferencesCurrent
                 $SyncHash['GlobalVars']['Offline'] = ($Offline -eq $true) ? $true : $false
@@ -2825,9 +2836,9 @@ Execution Policy: $CurrentExecutionPolicy
 
                 # If the script is running in the context of module then use the local images
                 if ($IsLocally) {
-                    [System.String]$GUIIconPath = "$HardeningModulePath\Resources\Media\path.png"
-                    [System.String]$GUILogPath = "$HardeningModulePath\Resources\Media\log.png"
-                    [System.String]$GUIExecutePath = "$HardeningModulePath\Resources\Media\start.png"
+                    [System.String]$GUIIconPath = "$([HardeningModule.GlobalVars]::Path)\Resources\Media\path.png"
+                    [System.String]$GUILogPath = "$([HardeningModule.GlobalVars]::Path)\Resources\Media\log.png"
+                    [System.String]$GUIExecutePath = "$([HardeningModule.GlobalVars]::Path)\Resources\Media\start.png"
                 }
                 # If the script is running directly from GitHub repository, download the required image files to the working directory and use them
                 else {
@@ -2918,17 +2929,17 @@ Execution Policy: $CurrentExecutionPolicy
 
                 # Add click event for 'Check All' button
                 $SyncHash['GUI'].SelectAllCategories.Add_Checked({
-                        $SyncHash['GUI'].Categories.Items | ForEach-Object -Process {
-                            if ($_.Content.Name -in $ValidAllowedCategories) {
-                                $_.Content.IsChecked = $true
+                        foreach ($Item in $SyncHash['GUI'].Categories.Items) {
+                            if ($Item.Content.Name -in $ValidAllowedCategories) {
+                                $Item.Content.IsChecked = $true
                             }
                         }
                     })
 
                 # Add click event for 'Uncheck All' button
                 $SyncHash['GUI'].SelectAllCategories.Add_Unchecked({
-                        $SyncHash['GUI'].Categories.Items | ForEach-Object -Process {
-                            $_.Content.IsChecked = $false
+                        foreach ($Item in $SyncHash['GUI'].Categories.Items) {
+                            $Item.Content.IsChecked = $false
                         }
                     })
                 #Endregion Check-Uncheck buttons for Categories
@@ -2936,17 +2947,20 @@ Execution Policy: $CurrentExecutionPolicy
                 #Region Check-Uncheck buttons for Sub-Categories
                 # Add click event for 'Check All' button for enabled sub-categories
                 $SyncHash['GUI'].SelectAllSubCategories.Add_Checked({
-                        $SyncHash['GUI'].SubCategories.Items | Where-Object -FilterScript { $_.IsEnabled -eq $true } | ForEach-Object -Process {
-                            $CheckBox = $_.Content
-                            $CheckBox.IsChecked = $true
+
+                        foreach ($ItemObj in $SyncHash['GUI'].SubCategories.Items) {
+                            if ($ItemObj.IsEnabled -eq $true) {
+                                foreach ($ItemObj2 in $ItemObj) {
+                                    $ItemObj2.Content.IsChecked = $true
+                                }
+                            }
                         }
                     })
 
                 # Add click event for 'Uncheck All' button from sub-categories, regardless of whether they are enabled or disabled
                 $SyncHash['GUI'].SelectAllSubCategories.Add_Unchecked({
-                        $SyncHash['GUI'].SubCategories.Items | ForEach-Object -Process {
-                            $CheckBox = $_.Content
-                            $CheckBox.IsChecked = $false
+                        foreach ($ItemObj in $SyncHash['GUI'].SubCategories.Items) {
+                            $ItemObj.Content.IsChecked = $false
                         }
                     })
                 #Endregion Check-Uncheck buttons for Sub-Categories
@@ -3228,13 +3242,13 @@ Execution Policy: $CurrentExecutionPolicy
                                 }
 
                                 # Make all of the main function's variable available again in the 2nd nested RunSpace
-                                $SyncHash.GlobalVars.GetEnumerator() | ForEach-Object -Process {
-                                    Set-Variable -Name $_.Key -Value $_.Value -Force
+                                foreach ($Item in $SyncHash.GlobalVars.GetEnumerator()) {
+                                    Set-Variable -Name $Item.Key -Value $Item.Value -Force
                                 }
 
                                 # Make all of the main function's functions available again in the 2nd nested RunSpace
-                                $SyncHash.ExportedFunctions.GetEnumerator() | ForEach-Object -Process {
-                                    $null = New-Item -Path "Function:\$($_.Key)" -Value $_.Value.ScriptBlock.Ast.Body.GetScriptBlock() -Force
+                                foreach ($Item in $SyncHash.ExportedFunctions.GetEnumerator()) {
+                                    $null = New-Item -Path "Function:\$($Item.Key)" -Value $Item.Value.ScriptBlock.Ast.Body.GetScriptBlock() -Force
                                 }
 
                                 [System.Management.Automation.ScriptBlock]$prerequisitesScriptBlock = {
@@ -3247,7 +3261,7 @@ Execution Policy: $CurrentExecutionPolicy
                                         # Only download and process the files when GUI is loaded if Offline mode is not used
                                         # Because at this point user might have not selected the files to be used for offline operation
                                         if (-NOT $Offline) {
-                                            Start-FileDownload -WorkingDir $WorkingDir -HardeningModulePath:$HardeningModulePath -Offline:$Offline -SyncHash $SyncHash -IsLocally:$IsLocally -GUI -Verbose:$true
+                                            Start-FileDownload -WorkingDir $WorkingDir -Offline:$Offline -SyncHash $SyncHash -IsLocally:$IsLocally -GUI -Verbose:$true
                                             $SyncHash.NoPreReqCleanup = $false
                                         }
                                         else {
@@ -3390,7 +3404,7 @@ Execution Policy: $CurrentExecutionPolicy
                                                 # Make sure all 3 fields for offline mode files were selected by the users and they are neither empty nor null
                                                 if ($OfflineGreenLightStatus) {
                                                     # Process the offline mode files selected by the user
-                                                    Start-FileDownload -WorkingDir $WorkingDir -HardeningModulePath:$HardeningModulePath -Offline:$Offline -SyncHash $SyncHash -IsLocally:$IsLocally -GUI -Verbose:$true
+                                                    Start-FileDownload -WorkingDir $WorkingDir -Offline:$Offline -SyncHash $SyncHash -IsLocally:$IsLocally -GUI -Verbose:$true
 
                                                     # Set a flag indicating this code block should not happen again when the execute button is pressed
                                                     $SyncHash.StartFileDownloadHasRun = $true
@@ -3445,7 +3459,6 @@ Execution Policy: $CurrentExecutionPolicy
 
                                             $NewToastNotification.Invoke($SyncHash['GlobalVars']['SelectedCategories'],
                                                 $IsLocally,
-                                                $HardeningModulePath,
                                                 $WorkingDir)
                                         }
                                         else {
@@ -3547,7 +3560,7 @@ End time: $(Get-Date)
             $Host.UI.RawUI.WindowTitle = '⏬ Downloading'
 
             # Download the required files and assign the output to variables
-            $FileDownloadOutput = Start-FileDownload -WorkingDir $WorkingDir -HardeningModulePath:$HardeningModulePath -Offline:$Offline -IsLocally:$IsLocally
+            $FileDownloadOutput = Start-FileDownload -WorkingDir $WorkingDir -Offline:$Offline -IsLocally:$IsLocally
             $MicrosoftSecurityBaselinePath = $FileDownloadOutput[0]
             $Microsoft365SecurityBaselinePath = $FileDownloadOutput[1]
             $RegistryCSVItems = $FileDownloadOutput[2]
@@ -3575,9 +3588,9 @@ End time: $(Get-Date)
                 'NonAdminCommands' { Invoke-NonAdminCommands -RunUnattended }
                 default {
                     # Get the values of the ValidateSet attribute of the Categories parameter of the main function
-                    [Categoriex]::new().GetValidValues() | ForEach-Object -Process {
+                    foreach ($Category in [Categoriex]::new().GetValidValues()) {
                         # Run all of the categories' functions if the user didn't specify any
-                        . "Invoke-$_"
+                        . "Invoke-$Category"
                     }
                 }
             }
@@ -3603,7 +3616,7 @@ End time: $(Get-Date)
                 }
             }
 
-            if (Test-Path -Path $WorkingDir) {
+            if ([System.IO.Directory]::Exists($WorkingDir)) {
 
                 if ($GUI) {
                     if (-NOT $SyncHash.NoPreReqCleanup) {
@@ -3620,7 +3633,9 @@ End time: $(Get-Date)
             }
 
             Write-Verbose -Message 'Disabling progress bars'
-            0..2 | ForEach-Object -Process { Write-Progress -Id $_ -Activity 'Done' -Completed }
+            foreach ($ID in 0..2) {
+                Write-Progress -Id $ID -Activity 'Done' -Completed
+            }
 
             Write-Verbose -Message 'Restoring the title of the PowerShell back to what it was prior to running the script/module'
             $Host.UI.RawUI.WindowTitle = $CurrentPowerShellTitle

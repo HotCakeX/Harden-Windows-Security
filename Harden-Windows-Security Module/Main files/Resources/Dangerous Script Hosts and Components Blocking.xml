@@ -1,0 +1,115 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<SiPolicy xmlns="urn:schemas-microsoft-com:sipolicy" PolicyType="Base Policy">
+  <VersionEx>1.0.0.0</VersionEx>
+  <PlatformID>{2E07F7E4-194C-4D20-B7C9-6F44A6C5A234}</PlatformID>
+  <Rules>
+    <Rule>
+      <Option>Enabled:UMCI</Option>
+    </Rule>
+    <Rule>
+      <Option>Enabled:Inherit Default Policy</Option>
+    </Rule>
+    <Rule>
+      <Option>Enabled:Unsigned System Integrity Policy</Option>
+    </Rule>
+    <Rule>
+      <Option>Disabled:Script Enforcement</Option>
+    </Rule>
+    <Rule>
+      <Option>Required:Enforce Store Applications</Option>
+    </Rule>
+    <Rule>
+      <Option>Enabled:Update Policy No Reboot</Option>
+    </Rule>
+    <Rule>
+      <Option>Enabled:Allow Supplemental Policies</Option>
+    </Rule>
+    <Rule>
+      <Option>Enabled:Dynamic Code Security</Option>
+    </Rule>
+    <Rule>
+      <Option>Enabled:Revoked Expired As Unsigned</Option>
+    </Rule>
+  </Rules>
+  <!--EKUS-->
+  <EKUs />
+  <!--File Rules-->
+  <FileRules>
+    <FileAttrib ID="ID_FILEATTRIB_F_2D_0" FriendlyName="Chakra.dll FileAttribute" FileName="chakra.dll" MinimumFileVersion="0.0.0.0" MaximumFileVersion="65355.65355.65355.65355" />
+    <FileAttrib ID="ID_FILEATTRIB_F_2E_0" FriendlyName="Chakra.dll FileAttribute" FileName="chakra.dll" MinimumFileVersion="0.0.0.0" MaximumFileVersion="65355.65355.65355.65355" />
+    <FileAttrib ID="ID_FILEATTRIB_F_2F_0" FriendlyName="cscript.exe FileAttribute" FileName="cscript.exe" MinimumFileVersion="0.0.0.0" MaximumFileVersion="65355.65355.65355.65355" />
+    <FileAttrib ID="ID_FILEATTRIB_F_30_0" FriendlyName="jscript.dll FileAttribute" FileName="jscript.dll" MinimumFileVersion="0.0.0.0" MaximumFileVersion="65355.65355.65355.65355" />
+    <FileAttrib ID="ID_FILEATTRIB_F_31_0" FriendlyName="jscript9.dll FileAttribute" FileName="jscript9.dll" MinimumFileVersion="0.0.0.0" MaximumFileVersion="65355.65355.65355.65355" />
+    <FileAttrib ID="ID_FILEATTRIB_F_32_0" FriendlyName="mshta.exe FileAttribute" FileName="MSHTA.EXE" MinimumFileVersion="0.0.0.0" MaximumFileVersion="65355.65355.65355.65355" />
+    <FileAttrib ID="ID_FILEATTRIB_F_34_0" FriendlyName="wscript.exe FileAttribute" FileName="wscript.exe" MinimumFileVersion="0.0.0.0" MaximumFileVersion="65355.65355.65355.65355" />
+    <Deny ID="ID_DENY_D_23_0" FriendlyName="vbscript.dll FileRule" FileName="vbscript.dll" MinimumFileVersion="0.0.0.0" MaximumFileVersion="65355.65355.65355.65355" />
+    <Allow ID="ID_ALLOW_A_1_1" FriendlyName="" FileName="*" />
+    <Allow ID="ID_ALLOW_A_2_1" FriendlyName="" FileName="*" />
+  </FileRules>
+  <!--Signers-->
+  <Signers>
+    <Signer ID="ID_SIGNER_F_1_0" Name="Microsoft Windows Production PCA 2011">
+      <CertRoot Type="TBS" Value="4E80BE107C860DE896384B3EFF50504DC2D76AC7151DF3102A4450637A032146" />
+      <CertPublisher Value="Microsoft Windows" />
+      <FileAttribRef RuleID="ID_FILEATTRIB_F_2D_0" />
+    </Signer>
+    <Signer ID="ID_SIGNER_F_7_0" Name="Microsoft Windows Production PCA 2011">
+      <CertRoot Type="TBS" Value="4E80BE107C860DE896384B3EFF50504DC2D76AC7151DF3102A4450637A032146" />
+      <CertPublisher Value="Microsoft Windows" />
+      <FileAttribRef RuleID="ID_FILEATTRIB_F_2E_0" />
+      <FileAttribRef RuleID="ID_FILEATTRIB_F_2F_0" />
+      <FileAttribRef RuleID="ID_FILEATTRIB_F_30_0" />
+      <FileAttribRef RuleID="ID_FILEATTRIB_F_31_0" />
+      <FileAttribRef RuleID="ID_FILEATTRIB_F_32_0" />
+      <FileAttribRef RuleID="ID_FILEATTRIB_F_34_0" />
+    </Signer>
+  </Signers>
+  <!--Driver Signing Scenarios-->
+  <SigningScenarios>
+    <SigningScenario Value="131" ID="ID_SIGNINGSCENARIO_DRIVERS_1" FriendlyName="Auto generated policy on 07-02-2024">
+      <ProductSigners>
+        <DeniedSigners>
+          <DeniedSigner SignerId="ID_SIGNER_F_1_0" />
+        </DeniedSigners>
+        <FileRulesRef>
+          <FileRuleRef RuleID="ID_ALLOW_A_1_1" />
+        </FileRulesRef>
+      </ProductSigners>
+    </SigningScenario>
+    <SigningScenario Value="12" ID="ID_SIGNINGSCENARIO_WINDOWS" FriendlyName="Auto generated policy on 07-02-2024">
+      <ProductSigners>
+        <DeniedSigners>
+          <DeniedSigner SignerId="ID_SIGNER_F_7_0" />
+        </DeniedSigners>
+        <FileRulesRef>          
+          <FileRuleRef RuleID="ID_ALLOW_A_2_1" />
+          <FileRuleRef RuleID="ID_DENY_D_23_0" />
+        </FileRulesRef>
+      </ProductSigners>
+    </SigningScenario>
+  </SigningScenarios>
+  <UpdatePolicySigners />
+  <CiSigners>
+    <CiSigner SignerId="ID_SIGNER_F_7_0" />
+  </CiSigners>
+  <HvciOptions>2</HvciOptions>
+  <BasePolicyID>{9F0581B7-7E1D-4FDD-8D33-6DBE847D3130}</BasePolicyID>
+  <PolicyID>{9F0581B7-7E1D-4FDD-8D33-6DBE847D3130}</PolicyID>
+  <Settings>
+    <Setting Provider="AllHostIds" Key="AllKeys" ValueName="EnterpriseDefinedClsId">
+      <Value>
+        <Boolean>true</Boolean>
+      </Value>
+    </Setting>
+    <Setting Provider="PolicyInfo" Key="Information" ValueName="Id">
+      <Value>
+        <String>022422</String>
+      </Value>
+    </Setting>
+    <Setting Provider="PolicyInfo" Key="Information" ValueName="Name">
+      <Value>
+        <String>Dangerous Script Hosts and Components Blocking</String>
+      </Value>
+    </Setting>
+  </Settings>
+</SiPolicy>

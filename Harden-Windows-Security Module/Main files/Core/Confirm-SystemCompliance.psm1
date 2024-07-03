@@ -16,7 +16,7 @@ function Confirm-SystemCompliance {
                     $false
                 ).Value
 
-                foreach ($Item in [Categoriex]::new().GetValidValues()) {
+                foreach ($Item in [HardeningModule.Categoriex]::new().GetValidValues()) {
                     # Check if the item is already selected
                     if ($Item -notin $Existing) {
                         # Return the item
@@ -26,7 +26,7 @@ function Confirm-SystemCompliance {
 
             })]
         [ValidateScript({
-                if ($_ -notin [Categoriex]::new().GetValidValues()) { throw "Invalid Category Name: $_" }
+                if ($_ -notin [HardeningModule.Categoriex]::new().GetValidValues()) { throw "Invalid Category Name: $_" }
                 # Return true if everything is okay
                 $true
             })]
@@ -54,28 +54,6 @@ function Confirm-SystemCompliance {
         if (-NOT $Offline) {
             Write-Verbose -Message 'Checking for updates...'
             Update-Self -InvocationStatement $MyInvocation.Statement
-        }
-
-        Class Categoriex : System.Management.Automation.IValidateSetValuesGenerator {
-            [System.String[]] GetValidValues() {
-                $Categoriex = @(
-                    'MicrosoftDefender', # 55 - 3x(N/A) = 46
-                    'AttackSurfaceReductionRules', # 19
-                    'BitLockerSettings', # 22 + Number of Non-OS drives which are dynamically increased
-                    'TLSSecurity', # 21
-                    'LockScreen', # 14
-                    'UserAccountControl', # 4
-                    'DeviceGuard', # 8
-                    'WindowsFirewall', # 20
-                    'OptionalWindowsFeatures', # 13
-                    'WindowsNetworking', # 9
-                    'MiscellaneousConfigurations', # 17
-                    'WindowsUpdateConfigurations', # 14
-                    'EdgeBrowserConfigurations', # 14
-                    'NonAdminCommands' # 11
-                )
-                return [System.String[]]$Categoriex
-            }
         }
 
         if ((Get-CimInstance -ClassName Win32_OperatingSystem -Verbose:$false).OperatingSystemSKU -in '101', '100') {
@@ -1739,7 +1717,7 @@ function Confirm-SystemCompliance {
                 'NonAdminCommands' { Invoke-NonAdminCommands -SyncHash $SyncHash -FinalMegaObject $FinalMegaObject }
                 Default {
                     # Get the values of the ValidateSet attribute of the Categories parameter of the main function
-                    [Categoriex]::new().GetValidValues() | ForEach-Object -Process {
+                    [HardeningModule.Categoriex]::new().GetValidValues() | ForEach-Object -Process {
                         # Run all of the categories' functions if the user didn't specify any
                         . "Invoke-$_" -SyncHash $SyncHash -FinalMegaObject $FinalMegaObject
                     }
@@ -1751,7 +1729,7 @@ function Confirm-SystemCompliance {
 
             # If user didn't specify any categories, add all of them to the list of jobs to wait for
             if ($null -eq $Categories) {
-                $JobsToWaitFor = foreach ($Cat in [Categoriex]::new().GetValidValues()) {
+                $JobsToWaitFor = foreach ($Cat in [HardeningModule.Categoriex]::new().GetValidValues()) {
                     [System.String]$VariableName = $Cat + 'Job'
                     (Get-Item -Path "variable:$VariableName").Value
                 }
@@ -1773,7 +1751,7 @@ function Confirm-SystemCompliance {
                 # Create an empty list to store the results based on the category order by sorting the concurrent hashtable
                 $AllOrderedResults = New-Object -TypeName System.Collections.Generic.List[HardeningModule.IndividualResult]
 
-                $AllOrderedResults = foreach ($Key in [Categoriex]::new().GetValidValues()) {
+                $AllOrderedResults = foreach ($Key in [HardeningModule.Categoriex]::new().GetValidValues()) {
                     if ($FinalMegaObject.ContainsKey($Key)) {
                         foreach ($Item in $FinalMegaObject[$Key].GetEnumerator()) {
                             $Item
@@ -1864,7 +1842,7 @@ function Confirm-SystemCompliance {
 
                 # Counting the number of $True Compliant values in the Final Output Object
                 [System.UInt32]$TotalTrueCompliantValuesInOutPut = 0
-                foreach ($Category in [Categoriex]::new().GetValidValues()) {
+                foreach ($Category in [HardeningModule.Categoriex]::new().GetValidValues()) {
                     $TotalTrueCompliantValuesInOutPut += ($FinalMegaObject.$Category).Where({ $_.Compliant -eq $True }).Count
                 }
 

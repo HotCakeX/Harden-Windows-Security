@@ -1377,12 +1377,12 @@ function Confirm-SystemCompliance {
                             Method       = 'Optional Windows Features'
                         })
 
-                    # Verify MDAG is disabled
+                    # Verify MDAG is not present
                     $NestedObjectArray.Add([HardeningModule.IndividualResult]@{
-                            FriendlyName = 'Microsoft Defender Application Guard is enabled'
-                            Compliant    = [System.Boolean]($Results[5] -eq 'Disabled')
+                            FriendlyName = 'Microsoft Defender Application Guard is not present'
+                            Compliant    = [System.Boolean]($Results[5] -eq 'Disabled' -or [System.String]::IsNullOrWhitespace($Results[5]))
                             Value        = [System.String]$Results[5]
-                            Name         = 'Microsoft Defender Application Guard is enabled'
+                            Name         = 'Microsoft Defender Application Guard is not present'
                             Category     = $CatName
                             Method       = 'Optional Windows Features'
                         })
@@ -1440,7 +1440,7 @@ function Confirm-SystemCompliance {
                     # Verify Legacy WordPad is not present
                     $NestedObjectArray.Add([HardeningModule.IndividualResult]@{
                             FriendlyName = 'WordPad is not present'
-                            Compliant    = [System.Boolean]($Results[11] -eq 'NotPresent')
+                            Compliant    = [System.Boolean]($Results[11] -eq 'NotPresent' -or [System.String]::IsNullOrWhitespace($Results[11]))
                             Value        = [System.String]$Results[11]
                             Name         = 'WordPad is not present'
                             Category     = $CatName

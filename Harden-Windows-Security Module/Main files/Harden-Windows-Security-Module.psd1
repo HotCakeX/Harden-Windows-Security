@@ -145,7 +145,8 @@ Harden Windows Safely, Securely, only with Official Microsoft methods
     'Resources\Media\Log.png',
     'Resources\Media\Path.png',
     'Resources\Media\start.png',
-    'Resources\Media\ToastNotificationIcon.png')
+    'Resources\Media\ToastNotificationIcon.png',
+    'Resources\Dangerous Script Hosts and Components Blocking.xml')
 
   # Private data to pass to the module specified in RootModule/ModuleToProcess. This may also contain a PSData hashtable with additional module metadata used by PowerShell.
   PrivateData          = @{

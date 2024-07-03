@@ -34,7 +34,7 @@
   <!--EKUS-->
   <EKUs />
   <!--File Rules-->
-  <FileRules>        
+  <FileRules>
     <FileAttrib ID="ID_FILEATTRIB_F_2F" FriendlyName="cscript.exe FileAttribute" FileName="cscript.exe" MinimumFileVersion="0.0.0.0" MaximumFileVersion="65355.65355.65355.65355" />
     <FileAttrib ID="ID_FILEATTRIB_F_30" FriendlyName="jscript.dll FileAttribute" FileName="jscript.dll" MinimumFileVersion="0.0.0.0" MaximumFileVersion="65355.65355.65355.65355" />
     <FileAttrib ID="ID_FILEATTRIB_F_31" FriendlyName="jscript9.dll FileAttribute" FileName="jscript9.dll" MinimumFileVersion="0.0.0.0" MaximumFileVersion="65355.65355.65355.65355" />
@@ -59,7 +59,7 @@
   <!--Driver Signing Scenarios-->
   <SigningScenarios>
     <SigningScenario Value="131" ID="ID_SIGNINGSCENARIO_DRIVERS_1" FriendlyName="Auto generated policy on 07-02-2024">
-      <ProductSigners>       
+      <ProductSigners>
         <FileRulesRef>
           <FileRuleRef RuleID="ID_ALLOW_A_1_1" />
         </FileRulesRef>
@@ -70,7 +70,7 @@
         <DeniedSigners>
           <DeniedSigner SignerId="ID_SIGNER_F_7" />
         </DeniedSigners>
-        <FileRulesRef>          
+        <FileRulesRef>
           <FileRuleRef RuleID="ID_ALLOW_A_2_1" />
           <FileRuleRef RuleID="ID_DENY_D_23" />
         </FileRulesRef>

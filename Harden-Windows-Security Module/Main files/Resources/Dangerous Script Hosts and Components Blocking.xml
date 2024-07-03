@@ -36,11 +36,8 @@
   <!--File Rules-->
   <FileRules>
     <FileAttrib ID="ID_FILEATTRIB_F_2F" FriendlyName="cscript.exe FileAttribute" FileName="cscript.exe" MinimumFileVersion="0.0.0.0" MaximumFileVersion="65355.65355.65355.65355" />
-    <FileAttrib ID="ID_FILEATTRIB_F_30" FriendlyName="jscript.dll FileAttribute" FileName="jscript.dll" MinimumFileVersion="0.0.0.0" MaximumFileVersion="65355.65355.65355.65355" />
-    <FileAttrib ID="ID_FILEATTRIB_F_31" FriendlyName="jscript9.dll FileAttribute" FileName="jscript9.dll" MinimumFileVersion="0.0.0.0" MaximumFileVersion="65355.65355.65355.65355" />
     <FileAttrib ID="ID_FILEATTRIB_F_32" FriendlyName="mshta.exe FileAttribute" FileName="MSHTA.EXE" MinimumFileVersion="0.0.0.0" MaximumFileVersion="65355.65355.65355.65355" />
     <FileAttrib ID="ID_FILEATTRIB_F_34" FriendlyName="wscript.exe FileAttribute" FileName="wscript.exe" MinimumFileVersion="0.0.0.0" MaximumFileVersion="65355.65355.65355.65355" />
-    <Deny ID="ID_DENY_D_23" FriendlyName="vbscript.dll FileRule" FileName="vbscript.dll" MinimumFileVersion="0.0.0.0" MaximumFileVersion="65355.65355.65355.65355" />
     <Allow ID="ID_ALLOW_A_1_1" FriendlyName="" FileName="*" />
     <Allow ID="ID_ALLOW_A_2_1" FriendlyName="" FileName="*" />
   </FileRules>
@@ -50,8 +47,6 @@
       <CertRoot Type="TBS" Value="4E80BE107C860DE896384B3EFF50504DC2D76AC7151DF3102A4450637A032146" />
       <CertPublisher Value="Microsoft Windows" />
       <FileAttribRef RuleID="ID_FILEATTRIB_F_2F" />
-      <FileAttribRef RuleID="ID_FILEATTRIB_F_30" />
-      <FileAttribRef RuleID="ID_FILEATTRIB_F_31" />
       <FileAttribRef RuleID="ID_FILEATTRIB_F_32" />
       <FileAttribRef RuleID="ID_FILEATTRIB_F_34" />
     </Signer>
@@ -72,7 +67,6 @@
         </DeniedSigners>
         <FileRulesRef>
           <FileRuleRef RuleID="ID_ALLOW_A_2_1" />
-          <FileRuleRef RuleID="ID_DENY_D_23" />
         </FileRulesRef>
       </ProductSigners>
     </SigningScenario>

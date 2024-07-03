@@ -1,4 +1,4 @@
-// Imported by Confirm-SystemCompliance cmdlet
+// Hardening Category results used by the Confirm-SystemCompliance cmdlet
 namespace HardeningModule
 {
     public class IndividualResult

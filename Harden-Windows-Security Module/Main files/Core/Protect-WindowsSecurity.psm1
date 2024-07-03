@@ -3316,8 +3316,12 @@ Execution Policy: $CurrentExecutionPolicy
                 # Add the click event for the execute button in the GUI RunSpace
                 $SyncHash.window.FindName('Execute').Add_Click({
 
-                        Foreach ($JobToRemove in (Get-Job | Where-Object -FilterScript { $_.State -in 'Completed', 'Failed', 'Stopped' })) {
-                            Remove-Job -Job $JobToRemove -Force
+                        Foreach ($JobToRemove in Get-Job) {
+
+                            if ($JobToRemove.State -in 'Completed', 'Failed', 'Stopped') {
+
+                                Remove-Job -Job $JobToRemove -Force
+                            }
                         }
 
                         # If the prerequisites RunSpace and the related PowerShell object are not disposed of yet
@@ -3516,8 +3520,12 @@ End time: $(Get-Date)
                 [System.Void]$SyncHash.Window.ShowDialog()
 
                 # Clear any jobs created during runtime in the current RunSpace
-                Foreach ($JobToRemove in (Get-Job | Where-Object -FilterScript { $_.State -in 'Completed', 'Failed', 'Stopped' })) {
-                    Remove-Job -Job $JobToRemove -Force
+                Foreach ($JobToRemove in Get-Job) {
+
+                    if ($JobToRemove.State -in 'Completed', 'Failed', 'Stopped') {
+
+                        Remove-Job -Job $JobToRemove -Force
+                    }
                 }
             }
         }

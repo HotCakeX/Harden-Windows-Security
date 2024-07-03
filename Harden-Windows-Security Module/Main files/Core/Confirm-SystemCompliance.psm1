@@ -73,9 +73,6 @@ function Confirm-SystemCompliance {
         [HardeningModule.GlobalVars]::MDAVPreferencesCurrent = Get-MpPreference
         [HardeningModule.GlobalVars]::MDAVConfigCurrent = Get-MpComputerStatus
 
-        # Import the CSV file
-        $SyncHash['CSVResource'] = Import-Csv -Path "$([HardeningModule.GlobalVars]::Path)\Resources\Registry resources.csv"
-
         # An object to store the FINAL results
         $FinalMegaObject = [System.Collections.Concurrent.ConcurrentDictionary[System.String, HardeningModule.IndividualResult[]]]::new()
 
@@ -84,77 +81,6 @@ function Confirm-SystemCompliance {
         [System.UInt16]$CurrentMainStep = 0
 
         #EndRegion Defining-Variables
-
-        #Region Defining-Functions-ScriptBlocks
-        $ScriptBlockInvokeCategoryProcessing = [System.Management.Automation.ScriptBlock]::Create({
-                <#
-            .SYNOPSIS
-                A helper function for processing each item in $AllRegistryItems for each category
-            .PARAMETER CatName
-                Name of the hardening category to verify
-            .PARAMETER Method
-                The method used to verify the hardening category, which can be 'Group Policy' or 'Registry Keys'
-            .INPUTS
-                System.String
-            .OUTPUTS
-                System.Object[]
-            #>
-                param(
-                    [System.String]$CatName,
-                    [System.String]$Method
-                )
-
-                # an array to hold the output
-                $Output = New-Object -TypeName System.Collections.Generic.List[PSCustomObject]
-
-                foreach ($Item in $SyncHash['CSVResource'].Where({ ($_.Category -eq $CatName) -and ($_.Origin -eq $Method) })) {
-
-                    # Initialize a flag to indicate if the key exists
-                    [System.Boolean]$KeyExists = $false
-
-                    # Initialize a flag to indicate if the value exists and matches the type
-                    [System.Boolean]$ValueMatches = $false
-
-                    # Try to get the registry key
-                    try {
-                        $null = Get-Item -Path "Registry::$($Item.Key)"
-                        # If no error is thrown, the key exists
-                        $KeyExists = $true
-
-                        # Try to get the registry value and type
-                        try {
-                            $RegValue = Get-ItemPropertyValue -Path "Registry::$($Item.Key)" -Name $Item.Name
-                            # If no error is thrown, the value exists
-
-                            # Check if the value matches the expected one
-                            if ($RegValue -eq $Item.value) {
-                                # If it matches, set the flag to true
-                                $ValueMatches = $true
-                            }
-                        }
-                        catch {
-                            # If an error is thrown, the value does not exist or is not accessible
-                            # Do nothing, the flag remains false
-                        }
-                    }
-                    catch {
-                        # If an error is thrown, the key does not exist or is not accessible
-                        # Do nothing, the flag remains false
-                    }
-
-                    # Create a custom object with the results for this row
-                    $Output.Add([HardeningModule.IndividualResult]@{
-                            FriendlyName = $Item.FriendlyName
-                            Compliant    = $ValueMatches
-                            Value        = $Item.Value
-                            Name         = $Item.Name
-                            Category     = $CatName
-                            Method       = $Method
-                        })
-                }
-                return $Output
-            })
-        #EndRegion Defining-Functions-ScriptBlocks
 
         #Region Colors
         [System.Collections.Hashtable]$global:ColorsMap = @{
@@ -298,7 +224,7 @@ function Confirm-SystemCompliance {
 
                 [System.Management.Automation.Job2]$script:MicrosoftDefenderJob = Start-ThreadJob -ScriptBlock {
 
-                    Param ($SyncHash, $FinalMegaObject, $ScriptBlockInvokeCategoryProcessing)
+                    Param ($SyncHash, $FinalMegaObject)
 
                     Try {
 
@@ -327,7 +253,7 @@ function Confirm-SystemCompliance {
                         [System.String]$CatName = 'MicrosoftDefender'
 
                         # Process items in Registry resources.csv file with "Group Policy" origin and add them to the $NestedObjectArray array as custom objects
-                        foreach ($Result in (&$ScriptBlockInvokeCategoryProcessing -catname $CatName -Method 'Group Policy')) {
+                        foreach ($Result in ([HardeningModule.CategoryProcessing]::ProcessCategory($CatName, 'Group Policy'))) {
                             $NestedObjectArray.Add([HardeningModule.IndividualResult]$Result)
                         }
 
@@ -732,14 +658,14 @@ function Confirm-SystemCompliance {
                         }
                     }
 
-                } -Name 'Invoke-MicrosoftDefender' -StreamingHost $Host -ArgumentList ($SyncHash, $FinalMegaObject, $ScriptBlockInvokeCategoryProcessing)
+                } -Name 'Invoke-MicrosoftDefender' -StreamingHost $Host -ArgumentList ($SyncHash, $FinalMegaObject)
             }
             Function Invoke-AttackSurfaceReductionRules {
                 Param ($SyncHash, $FinalMegaObject)
 
                 [System.Management.Automation.Job2]$script:AttackSurfaceReductionRulesJob = Start-ThreadJob -ScriptBlock {
 
-                    Param ($SyncHash, $FinalMegaObject, $ScriptBlockInvokeCategoryProcessing)
+                    Param ($SyncHash, $FinalMegaObject)
 
                     $ErrorActionPreference = 'Stop'
 
@@ -747,7 +673,7 @@ function Confirm-SystemCompliance {
                     [System.String]$CatName = 'AttackSurfaceReductionRules'
 
                     # Process items in Registry resources.csv file with "Group Policy" origin and add them to the $NestedObjectArray array as custom objects
-                    foreach ($Result in (&$ScriptBlockInvokeCategoryProcessing -catname $CatName -Method 'Group Policy')) {
+                    foreach ($Result in ([HardeningModule.CategoryProcessing]::ProcessCategory($CatName, 'Group Policy'))) {
                         $NestedObjectArray.Add($Result)
                     }
 
@@ -778,6 +704,7 @@ function Confirm-SystemCompliance {
                         'd3e037e1-3eb8-44c8-a917-57927947596d' = 'Block JavaScript or VBScript from launching downloaded executable content'
                         '33ddedf1-c6e0-47cb-833e-de6133960387' = 'Block rebooting machine in Safe Mode'
                         'c0033c00-d16d-4114-a5a0-dc9b3a7d2ceb' = 'Block use of copied or impersonated system tools'
+                        'a8f5898e-1dc8-49a9-9878-85004b8a61e6' = 'Block Webshell creation for Servers'
                     }
 
                     # Loop over each ID in the hashtable
@@ -804,7 +731,6 @@ function Confirm-SystemCompliance {
                         # 'Block use of copied or impersonated system tools'
                         # Because it's in preview and is set to 6 for Warn instead of 1 for block
                         if ($Name -eq 'c0033c00-d16d-4114-a5a0-dc9b3a7d2ceb') {
-                            # Create a custom object with properties
                             $NestedObjectArray.Add([HardeningModule.IndividualResult]@{
                                     FriendlyName = $ASRsTable[$name]
                                     Compliant    = [System.Boolean]($Action -in '6', '1') # Either 6 or 1 is compliant and acceptable
@@ -813,10 +739,19 @@ function Confirm-SystemCompliance {
                                     Category     = $CatName
                                     Method       = 'Cmdlet'
                                 })
-
+                        }
+                        # For ease of use this is valid if it's set to block or warn
+                        elseif ($Name -eq '01443614-cd74-433a-b99e-2ecdc07bfc25') {
+                            $NestedObjectArray.Add([HardeningModule.IndividualResult]@{
+                                    FriendlyName = $ASRsTable[$name]
+                                    Compliant    = [System.Boolean]($Action -in '6', '1') # Either 6 or 1 is compliant and acceptable
+                                    Value        = $Action
+                                    Name         = $Name
+                                    Category     = $CatName
+                                    Method       = 'Cmdlet'
+                                })
                         }
                         else {
-                            # Create a custom object with properties
                             $NestedObjectArray.Add([HardeningModule.IndividualResult]@{
                                     FriendlyName = $ASRsTable[$name]
                                     Compliant    = [System.Boolean]($Action -eq 1) # Compare action value with 1 and cast to boolean
@@ -831,14 +766,14 @@ function Confirm-SystemCompliance {
                     # Add the array of the custom objects to the main output HashTable
                     [System.Void]$FinalMegaObject.TryAdd($CatName, $NestedObjectArray)
 
-                } -Name 'Invoke-AttackSurfaceReductionRules' -StreamingHost $Host -ArgumentList ($SyncHash, $FinalMegaObject, $ScriptBlockInvokeCategoryProcessing)
+                } -Name 'Invoke-AttackSurfaceReductionRules' -StreamingHost $Host -ArgumentList ($SyncHash, $FinalMegaObject)
             }
             Function Invoke-BitLockerSettings {
                 Param ($SyncHash, $FinalMegaObject)
 
                 [System.Management.Automation.Job2]$script:BitLockerSettingsJob = Start-ThreadJob -ScriptBlock {
 
-                    Param ($SyncHash, $FinalMegaObject, $ScriptBlockInvokeCategoryProcessing)
+                    Param ($SyncHash, $FinalMegaObject)
 
                     $ErrorActionPreference = 'Stop'
                     $PSDefaultParameterValues = @{
@@ -875,7 +810,7 @@ function Confirm-SystemCompliance {
                         })
 
                     # Process items in Registry resources.csv file with "Group Policy" origin and add them to the $NestedObjectArray array as custom objects
-                    foreach ($Result in (&$ScriptBlockInvokeCategoryProcessing -catname $CatName -Method 'Group Policy')) {
+                    foreach ($Result in ([HardeningModule.CategoryProcessing]::ProcessCategory($CatName, 'Group Policy'))) {
                         $NestedObjectArray.Add($Result)
                     }
 
@@ -1027,14 +962,14 @@ function Confirm-SystemCompliance {
 
                     # Add the array of the custom objects to the main output HashTable
                     [System.Void]$FinalMegaObject.TryAdd($CatName, $NestedObjectArray)
-                } -Name 'Invoke-BitLockerSettings' -StreamingHost $Host -ArgumentList ($SyncHash, $FinalMegaObject, $ScriptBlockInvokeCategoryProcessing)
+                } -Name 'Invoke-BitLockerSettings' -StreamingHost $Host -ArgumentList ($SyncHash, $FinalMegaObject)
             }
             Function Invoke-TLSSecurity {
                 Param ($SyncHash, $FinalMegaObject)
 
                 [System.Management.Automation.Job2]$script:TLSSecurityJob = Start-ThreadJob -ScriptBlock {
 
-                    Param ($SyncHash, $FinalMegaObject, $ScriptBlockInvokeCategoryProcessing)
+                    Param ($SyncHash, $FinalMegaObject)
 
                     $ErrorActionPreference = 'Stop'
 
@@ -1042,7 +977,7 @@ function Confirm-SystemCompliance {
                     [System.String]$CatName = 'TLSSecurity'
 
                     # Process items in Registry resources.csv file with "Group Policy" origin and add them to the $NestedObjectArray array as custom objects
-                    foreach ($Result in (&$ScriptBlockInvokeCategoryProcessing -catname $CatName -Method 'Group Policy')) {
+                    foreach ($Result in ([HardeningModule.CategoryProcessing]::ProcessCategory($CatName, 'Group Policy'))) {
                         $NestedObjectArray.Add($Result)
                     }
 
@@ -1063,21 +998,21 @@ function Confirm-SystemCompliance {
                         })
 
                     # Process items in Registry resources.csv file with "Registry Keys" origin and add them to the $NestedObjectArray array as custom objects
-                    foreach ($Result in (&$ScriptBlockInvokeCategoryProcessing -catname $CatName -Method 'Registry Keys')) {
+                    foreach ($Result in ([HardeningModule.CategoryProcessing]::ProcessCategory($CatName, 'Registry Keys'))) {
                         $NestedObjectArray.Add($Result)
                     }
 
                     # Add the array of the custom objects to the main output HashTable
                     [System.Void]$FinalMegaObject.TryAdd($CatName, $NestedObjectArray)
 
-                } -Name 'Invoke-TLSSecurity' -StreamingHost $Host -ArgumentList ($SyncHash, $FinalMegaObject, $ScriptBlockInvokeCategoryProcessing)
+                } -Name 'Invoke-TLSSecurity' -StreamingHost $Host -ArgumentList ($SyncHash, $FinalMegaObject)
             }
             Function Invoke-LockScreen {
                 Param ($SyncHash, $FinalMegaObject)
 
                 [System.Management.Automation.Job2]$script:LockScreenJob = Start-ThreadJob -ScriptBlock {
 
-                    Param ($SyncHash, $FinalMegaObject, $ScriptBlockInvokeCategoryProcessing)
+                    Param ($SyncHash, $FinalMegaObject)
 
                     $ErrorActionPreference = 'Stop'
 
@@ -1085,7 +1020,7 @@ function Confirm-SystemCompliance {
                     [System.String]$CatName = 'LockScreen'
 
                     # Process items in Registry resources.csv file with "Group Policy" origin and add them to the $NestedObjectArray array as custom objects
-                    foreach ($Result in (&$ScriptBlockInvokeCategoryProcessing -catname $CatName -Method 'Group Policy')) {
+                    foreach ($Result in ([HardeningModule.CategoryProcessing]::ProcessCategory($CatName, 'Group Policy'))) {
                         $NestedObjectArray.Add($Result)
                     }
 
@@ -1190,14 +1125,14 @@ function Confirm-SystemCompliance {
 
                     # Add the array of the custom objects to the main output HashTable
                     [System.Void]$FinalMegaObject.TryAdd($CatName, $NestedObjectArray)
-                } -Name 'Invoke-LockScreen' -StreamingHost $Host -ArgumentList ($SyncHash, $FinalMegaObject, $ScriptBlockInvokeCategoryProcessing)
+                } -Name 'Invoke-LockScreen' -StreamingHost $Host -ArgumentList ($SyncHash, $FinalMegaObject)
             }
             Function Invoke-UserAccountControl {
                 Param ($SyncHash, $FinalMegaObject)
 
                 [System.Management.Automation.Job2]$script:UserAccountControlJob = Start-ThreadJob -ScriptBlock {
 
-                    Param ($SyncHash, $FinalMegaObject, $ScriptBlockInvokeCategoryProcessing)
+                    Param ($SyncHash, $FinalMegaObject)
 
                     $ErrorActionPreference = 'Stop'
 
@@ -1205,7 +1140,7 @@ function Confirm-SystemCompliance {
                     [System.String]$CatName = 'UserAccountControl'
 
                     # Process items in Registry resources.csv file with "Group Policy" origin and add them to the $NestedObjectArray array as custom objects
-                    foreach ($Result in (&$ScriptBlockInvokeCategoryProcessing -catname $CatName -Method 'Group Policy')) {
+                    foreach ($Result in ([HardeningModule.CategoryProcessing]::ProcessCategory($CatName, 'Group Policy'))) {
                         $NestedObjectArray.Add($Result)
                     }
 
@@ -1244,14 +1179,14 @@ function Confirm-SystemCompliance {
 
                     # Add the array of the custom objects to the main output HashTable
                     [System.Void]$FinalMegaObject.TryAdd($CatName, $NestedObjectArray)
-                } -Name 'Invoke-UserAccountControl' -StreamingHost $Host -ArgumentList ($SyncHash, $FinalMegaObject, $ScriptBlockInvokeCategoryProcessing)
+                } -Name 'Invoke-UserAccountControl' -StreamingHost $Host -ArgumentList ($SyncHash, $FinalMegaObject)
             }
             Function Invoke-DeviceGuard {
                 Param ($SyncHash, $FinalMegaObject)
 
                 [System.Management.Automation.Job2]$script:DeviceGuardJob = Start-ThreadJob -ScriptBlock {
 
-                    Param ($SyncHash, $FinalMegaObject, $ScriptBlockInvokeCategoryProcessing)
+                    Param ($SyncHash, $FinalMegaObject)
 
                     $ErrorActionPreference = 'Stop'
 
@@ -1259,21 +1194,21 @@ function Confirm-SystemCompliance {
                     [System.String]$CatName = 'DeviceGuard'
 
                     # Process items in Registry resources.csv file with "Group Policy" origin and add them to the $NestedObjectArray array as custom objects
-                    foreach ($Result in (&$ScriptBlockInvokeCategoryProcessing -catname $CatName -Method 'Group Policy')) {
+                    foreach ($Result in ([HardeningModule.CategoryProcessing]::ProcessCategory($CatName, 'Group Policy'))) {
                         $NestedObjectArray.Add($Result)
                     }
 
                     # Add the array of the custom objects to the main output HashTable
                     [System.Void]$FinalMegaObject.TryAdd($CatName, $NestedObjectArray)
 
-                } -Name 'Invoke-DeviceGuard' -StreamingHost $Host -ArgumentList ($SyncHash, $FinalMegaObject, $ScriptBlockInvokeCategoryProcessing)
+                } -Name 'Invoke-DeviceGuard' -StreamingHost $Host -ArgumentList ($SyncHash, $FinalMegaObject)
             }
             Function Invoke-WindowsFirewall {
                 Param ($SyncHash, $FinalMegaObject)
 
                 [System.Management.Automation.Job2]$script:WindowsFirewallJob = Start-ThreadJob -ScriptBlock {
 
-                    Param ($SyncHash, $FinalMegaObject, $ScriptBlockInvokeCategoryProcessing)
+                    Param ($SyncHash, $FinalMegaObject)
 
                     $ErrorActionPreference = 'Stop'
 
@@ -1281,7 +1216,7 @@ function Confirm-SystemCompliance {
                     [System.String]$CatName = 'WindowsFirewall'
 
                     # Process items in Registry resources.csv file with "Group Policy" origin and add them to the $NestedObjectArray array as custom objects
-                    foreach ($Result in (&$ScriptBlockInvokeCategoryProcessing -catname $CatName -Method 'Group Policy')) {
+                    foreach ($Result in ([HardeningModule.CategoryProcessing]::ProcessCategory($CatName, 'Group Policy'))) {
                         $NestedObjectArray.Add($Result)
                     }
 
@@ -1303,14 +1238,14 @@ function Confirm-SystemCompliance {
                     # Add the array of the custom objects to the main output HashTable
                     [System.Void]$FinalMegaObject.TryAdd($CatName, $NestedObjectArray)
 
-                } -Name 'Invoke-WindowsFirewall' -StreamingHost $Host -ArgumentList ($SyncHash, $FinalMegaObject, $ScriptBlockInvokeCategoryProcessing)
+                } -Name 'Invoke-WindowsFirewall' -StreamingHost $Host -ArgumentList ($SyncHash, $FinalMegaObject)
             }
             Function Invoke-OptionalWindowsFeatures {
                 Param ($SyncHash, $FinalMegaObject)
 
                 [System.Management.Automation.Job2]$script:OptionalWindowsFeaturesJob = Start-ThreadJob -ScriptBlock {
 
-                    Param ($SyncHash, $FinalMegaObject, $ScriptBlockInvokeCategoryProcessing)
+                    Param ($SyncHash, $FinalMegaObject)
 
                     $ErrorActionPreference = 'Stop'
 
@@ -1470,14 +1405,14 @@ function Confirm-SystemCompliance {
                     # Add the array of the custom objects to the main output HashTable
                     [System.Void]$FinalMegaObject.TryAdd($CatName, $NestedObjectArray)
 
-                } -Name 'Invoke-OptionalWindowsFeatures' -StreamingHost $Host -ArgumentList ($SyncHash, $FinalMegaObject, $ScriptBlockInvokeCategoryProcessing)
+                } -Name 'Invoke-OptionalWindowsFeatures' -StreamingHost $Host -ArgumentList ($SyncHash, $FinalMegaObject)
             }
             Function Invoke-WindowsNetworking {
                 Param ($SyncHash, $FinalMegaObject)
 
                 [System.Management.Automation.Job2]$script:WindowsNetworkingJob = Start-ThreadJob -ScriptBlock {
 
-                    Param ($SyncHash, $FinalMegaObject, $ScriptBlockInvokeCategoryProcessing)
+                    Param ($SyncHash, $FinalMegaObject)
 
                     $ErrorActionPreference = 'Stop'
 
@@ -1485,7 +1420,7 @@ function Confirm-SystemCompliance {
                     [System.String]$CatName = 'WindowsNetworking'
 
                     # Process items in Registry resources.csv file with "Group Policy" origin and add them to the $NestedObjectArray array as custom objects
-                    foreach ($Result in (&$ScriptBlockInvokeCategoryProcessing -catname $CatName -Method 'Group Policy')) {
+                    foreach ($Result in ([HardeningModule.CategoryProcessing]::ProcessCategory($CatName, 'Group Policy'))) {
                         $NestedObjectArray.Add($Result)
                     }
 
@@ -1544,14 +1479,14 @@ function Confirm-SystemCompliance {
                     # Add the array of the custom objects to the main output HashTable
                     [System.Void]$FinalMegaObject.TryAdd($CatName, $NestedObjectArray)
 
-                } -Name 'Invoke-WindowsNetworking' -StreamingHost $Host -ArgumentList ($SyncHash, $FinalMegaObject, $ScriptBlockInvokeCategoryProcessing)
+                } -Name 'Invoke-WindowsNetworking' -StreamingHost $Host -ArgumentList ($SyncHash, $FinalMegaObject)
             }
             Function Invoke-MiscellaneousConfigurations {
                 Param ($SyncHash, $FinalMegaObject)
 
                 [System.Management.Automation.Job2]$script:MiscellaneousConfigurationsJob = Start-ThreadJob -ScriptBlock {
 
-                    Param ($SyncHash, $FinalMegaObject, $ScriptBlockInvokeCategoryProcessing)
+                    Param ($SyncHash, $FinalMegaObject)
 
                     $ErrorActionPreference = 'Stop'
 
@@ -1559,7 +1494,7 @@ function Confirm-SystemCompliance {
                     [System.String]$CatName = 'MiscellaneousConfigurations'
 
                     # Process items in Registry resources.csv file with "Group Policy" origin and add them to the $NestedObjectArray array as custom objects
-                    foreach ($Result in (&$ScriptBlockInvokeCategoryProcessing -catname $CatName -Method 'Group Policy')) {
+                    foreach ($Result in ([HardeningModule.CategoryProcessing]::ProcessCategory($CatName, 'Group Policy'))) {
                         $NestedObjectArray.Add($Result)
                     }
 
@@ -1606,7 +1541,7 @@ function Confirm-SystemCompliance {
                         })
 
                     # Process items in Registry resources.csv file with "Registry Keys" origin and add them to the $NestedObjectArray array as custom objects
-                    foreach ($Result in (&$ScriptBlockInvokeCategoryProcessing -catname $CatName -Method 'Registry Keys')) {
+                    foreach ($Result in ([HardeningModule.CategoryProcessing]::ProcessCategory($CatName, 'Registry Keys'))) {
                         $NestedObjectArray.Add($Result)
                     }
 
@@ -1614,14 +1549,14 @@ function Confirm-SystemCompliance {
                     [System.Void]$FinalMegaObject.TryAdd($CatName, $NestedObjectArray)
 
 
-                } -Name 'Invoke-MiscellaneousConfigurations' -StreamingHost $Host -ArgumentList ($SyncHash, $FinalMegaObject, $ScriptBlockInvokeCategoryProcessing)
+                } -Name 'Invoke-MiscellaneousConfigurations' -StreamingHost $Host -ArgumentList ($SyncHash, $FinalMegaObject)
             }
             Function Invoke-WindowsUpdateConfigurations {
                 Param ($SyncHash, $FinalMegaObject)
 
                 [System.Management.Automation.Job2]$script:WindowsUpdateConfigurationsJob = Start-ThreadJob -ScriptBlock {
 
-                    Param ($SyncHash, $FinalMegaObject, $ScriptBlockInvokeCategoryProcessing)
+                    Param ($SyncHash, $FinalMegaObject)
 
                     $ErrorActionPreference = 'Stop'
 
@@ -1629,7 +1564,7 @@ function Confirm-SystemCompliance {
                     [System.String]$CatName = 'WindowsUpdateConfigurations'
 
                     # Process items in Registry resources.csv file with "Group Policy" origin and add them to the $NestedObjectArray array as custom objects
-                    foreach ($Result in (&$ScriptBlockInvokeCategoryProcessing -catname $CatName -Method 'Group Policy')) {
+                    foreach ($Result in ([HardeningModule.CategoryProcessing]::ProcessCategory($CatName, 'Group Policy'))) {
                         $NestedObjectArray.Add($Result)
                     }
 
@@ -1652,14 +1587,14 @@ function Confirm-SystemCompliance {
                     # Add the array of the custom objects to the main output HashTable
                     [System.Void]$FinalMegaObject.TryAdd($CatName, $NestedObjectArray)
 
-                } -Name 'Invoke-WindowsUpdateConfigurations' -StreamingHost $Host -ArgumentList ($SyncHash, $FinalMegaObject, $ScriptBlockInvokeCategoryProcessing)
+                } -Name 'Invoke-WindowsUpdateConfigurations' -StreamingHost $Host -ArgumentList ($SyncHash, $FinalMegaObject)
             }
             Function Invoke-EdgeBrowserConfigurations {
                 Param ($SyncHash, $FinalMegaObject)
 
                 [System.Management.Automation.Job2]$script:EdgeBrowserConfigurationsJob = Start-ThreadJob -ScriptBlock {
 
-                    Param ($SyncHash, $FinalMegaObject, $ScriptBlockInvokeCategoryProcessing)
+                    Param ($SyncHash, $FinalMegaObject)
 
                     $ErrorActionPreference = 'Stop'
 
@@ -1667,21 +1602,21 @@ function Confirm-SystemCompliance {
                     [System.String]$CatName = 'EdgeBrowserConfigurations'
 
                     # Process items in Registry resources.csv file with "Registry Keys" origin and add them to the $NestedObjectArray array as custom objects
-                    foreach ($Result in (&$ScriptBlockInvokeCategoryProcessing -catname $CatName -Method 'Registry Keys')) {
+                    foreach ($Result in ([HardeningModule.CategoryProcessing]::ProcessCategory($CatName, 'Registry Keys'))) {
                         $NestedObjectArray.Add($Result)
                     }
 
                     # Add the array of the custom objects to the main output HashTable
                     [System.Void]$FinalMegaObject.TryAdd($CatName, $NestedObjectArray)
 
-                } -Name 'Invoke-EdgeBrowserConfigurations' -StreamingHost $Host -ArgumentList ($SyncHash, $FinalMegaObject, $ScriptBlockInvokeCategoryProcessing)
+                } -Name 'Invoke-EdgeBrowserConfigurations' -StreamingHost $Host -ArgumentList ($SyncHash, $FinalMegaObject)
             }
             Function Invoke-NonAdminCommands {
                 Param ($SyncHash, $FinalMegaObject)
 
                 [System.Management.Automation.Job2]$script:NonAdminCommandsJob = Start-ThreadJob -ScriptBlock {
 
-                    Param ($SyncHash, $FinalMegaObject, $ScriptBlockInvokeCategoryProcessing)
+                    Param ($SyncHash, $FinalMegaObject)
 
                     $ErrorActionPreference = 'Stop'
 
@@ -1689,14 +1624,14 @@ function Confirm-SystemCompliance {
                     [System.String]$CatName = 'NonAdminCommands'
 
                     # Process items in Registry resources.csv file with "Registry Keys" origin and add them to the $NestedObjectArray array as custom objects
-                    foreach ($Result in (&$ScriptBlockInvokeCategoryProcessing -catname $CatName -Method 'Registry Keys')) {
+                    foreach ($Result in ([HardeningModule.CategoryProcessing]::ProcessCategory($CatName, 'Registry Keys'))) {
                         $NestedObjectArray.Add($Result)
                     }
 
                     # Add the array of the custom objects to the main output HashTable
                     [System.Void]$FinalMegaObject.TryAdd($CatName, $NestedObjectArray)
 
-                } -Name 'Invoke-NonAdminCommands' -StreamingHost $Host -ArgumentList ($SyncHash, $FinalMegaObject, $ScriptBlockInvokeCategoryProcessing)
+                } -Name 'Invoke-NonAdminCommands' -StreamingHost $Host -ArgumentList ($SyncHash, $FinalMegaObject)
             }
             #Endregion Main-Functions
 
@@ -1717,9 +1652,9 @@ function Confirm-SystemCompliance {
                 'NonAdminCommands' { Invoke-NonAdminCommands -SyncHash $SyncHash -FinalMegaObject $FinalMegaObject }
                 Default {
                     # Get the values of the ValidateSet attribute of the Categories parameter of the main function
-                    [HardeningModule.Categoriex]::new().GetValidValues() | ForEach-Object -Process {
+                    foreach ($Item in [HardeningModule.Categoriex]::new().GetValidValues()) {
                         # Run all of the categories' functions if the user didn't specify any
-                        . "Invoke-$_" -SyncHash $SyncHash -FinalMegaObject $FinalMegaObject
+                        . "Invoke-$Item" -SyncHash $SyncHash -FinalMegaObject $FinalMegaObject
                     }
                 }
             }
@@ -1846,150 +1781,15 @@ function Confirm-SystemCompliance {
                     $TotalTrueCompliantValuesInOutPut += ($FinalMegaObject.$Category).Where({ $_.Compliant -eq $True }).Count
                 }
 
-                #Region ASCII-Arts
-                [System.String]$WhenValue1To40 = @'
-                OH
-
-                N
-                　   O
-                　　　 O
-                　　　　 o
-                　　　　　o
-                　　　　　 o
-                　　　　　o
-                　　　　 。
-                　　　 。
-                　　　.
-                　　　.
-                　　　 .
-                　　　　.
-
-'@
-
-                [System.String]$WhenValue41To80 = @'
-
-‎‏‏‎‏‏‎⣿⣿⣷⡁⢆⠈⠕⢕⢂⢕⢂⢕⢂⢔⢂⢕⢄⠂⣂⠂⠆⢂⢕⢂⢕⢂⢕⢂⢕⢂
-‎‏‏‎‏‏‎⣿⣿⣿⡷⠊⡢⡹⣦⡑⢂⢕⢂⢕⢂⢕⢂⠕⠔⠌⠝⠛⠶⠶⢶⣦⣄⢂⢕⢂⢕
-‎‏‏‎‏‏‎⣿⣿⠏⣠⣾⣦⡐⢌⢿⣷⣦⣅⡑⠕⠡⠐⢿⠿⣛⠟⠛⠛⠛⠛⠡⢷⡈⢂⢕⢂
-‎‏‏‎‏‏‎⠟⣡⣾⣿⣿⣿⣿⣦⣑⠝⢿⣿⣿⣿⣿⣿⡵⢁⣤⣶⣶⣿⢿⢿⢿⡟⢻⣤⢑⢂
-‎‏‏‎‏‏‎⣾⣿⣿⡿⢟⣛⣻⣿⣿⣿⣦⣬⣙⣻⣿⣿⣷⣿⣿⢟⢝⢕⢕⢕⢕⢽⣿⣿⣷⣔
-‎‏‏‎‏‏‎⣿⣿⠵⠚⠉⢀⣀⣀⣈⣿⣿⣿⣿⣿⣿⣿⣿⣿⣗⢕⢕⢕⢕⢕⢕⣽⣿⣿⣿⣿
-‎‏‏‎‏‏‎⢷⣂⣠⣴⣾⡿⡿⡻⡻⣿⣿⣴⣿⣿⣿⣿⣿⣿⣷⣵⣵⣵⣷⣿⣿⣿⣿⣿⣿⡿
-‎‏‏‎‏‏‎⢌⠻⣿⡿⡫⡪⡪⡪⡪⣺⣿⣿⣿⣿⣿⠿⠿⢿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠃
-‎‏‏‎‏‏‎⠣⡁⠹⡪⡪⡪⡪⣪⣾⣿⣿⣿⣿⠋⠐⢉⢍⢄⢌⠻⣿⣿⣿⣿⣿⣿⣿⣿⠏⠈
-‎‏‏‎‏‏‎⡣⡘⢄⠙⣾⣾⣾⣿⣿⣿⣿⣿⣿⡀⢐⢕⢕⢕⢕⢕⡘⣿⣿⣿⣿⣿⣿⠏⠠⠈
-‎‏‏‎‏‏‎⠌⢊⢂⢣⠹⣿⣿⣿⣿⣿⣿⣿⣿⣧⢐⢕⢕⢕⢕⢕⢅⣿⣿⣿⣿⡿⢋⢜⠠⠈
-‎‏‏‎‏‏‎⠄⠁⠕⢝⡢⠈⠻⣿⣿⣿⣿⣿⣿⣿⣷⣕⣑⣑⣑⣵⣿⣿⣿⡿⢋⢔⢕⣿⠠⠈
-‎‏‏‎‏‏‎⠨⡂⡀⢑⢕⡅⠂⠄⠉⠛⠻⠿⢿⣿⣿⣿⣿⣿⣿⣿⣿⡿⢋⢔⢕⢕⣿⣿⠠⠈
-‎‏‏‎‏‏‎⠄⠪⣂⠁⢕⠆⠄⠂⠄⠁⡀⠂⡀⠄⢈⠉⢍⢛⢛⢛⢋⢔⢕⢕⢕⣽⣿⣿⠠⠈
-
-'@
-
-                [System.String]$WhenValue81To120 = @'
-
-            ⣿⡟⠙⠛⠋⠩⠭⣉⡛⢛⠫⠭⠄⠒⠄⠄⠄⠈⠉⠛⢿⣿⣿⣿⣿⣿⣿⣿⣿⣿
-            ⣿⡇⠄⠄⠄⠄⣠⠖⠋⣀⡤⠄⠒⠄⠄⠄⠄⠄⠄⠄⠄⠄⣈⡭⠭⠄⠄⠄⠉⠙
-            ⣿⡇⠄⠄⢀⣞⣡⠴⠚⠁⠄⠄⢀⠠⠄⠄⠄⠄⠄⠄⠄⠉⠄⠄⠄⠄⠄⠄⠄⠄
-            ⣿⡇⠄⡴⠁⡜⣵⢗⢀⠄⢠⡔⠁⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄
-            ⣿⡇⡜⠄⡜⠄⠄⠄⠉⣠⠋⠠⠄⢀⡄⠄⠄⣠⣆⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⢸
-            ⣿⠸⠄⡼⠄⠄⠄⠄⢰⠁⠄⠄⠄⠈⣀⣠⣬⣭⣛⠄⠁⠄⡄⠄⠄⠄⠄⠄⢀⣿
-            ⣏⠄⢀⠁⠄⠄⠄⠄⠇⢀⣠⣴⣶⣿⣿⣿⣿⣿⣿⡇⠄⠄⡇⠄⠄⠄⠄⢀⣾⣿
-            ⣿⣸⠈⠄⠄⠰⠾⠴⢾⣻⣿⣿⣿⣿⣿⣿⣿⣿⣿⢁⣾⢀⠁⠄⠄⠄⢠⢸⣿⣿
-            ⣿⣿⣆⠄⠆⠄⣦⣶⣦⣌⣿⣿⣿⣿⣷⣋⣀⣈⠙⠛⡛⠌⠄⠄⠄⠄⢸⢸⣿⣿
-            ⣿⣿⣿⠄⠄⠄⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠇⠈⠄⠄⠄⠄⠄⠈⢸⣿⣿
-            ⣿⣿⣿⠄⠄⠄⠘⣿⣿⣿⡆⢀⣈⣉⢉⣿⣿⣯⣄⡄⠄⠄⠄⠄⠄⠄⠄⠈⣿⣿
-            ⣿⣿⡟⡜⠄⠄⠄⠄⠙⠿⣿⣧⣽⣍⣾⣿⠿⠛⠁⠄⠄⠄⠄⠄⠄⠄⠄⠃⢿⣿
-            ⣿⡿⠰⠄⠄⠄⠄⠄⠄⠄⠄⠈⠉⠩⠔⠒⠉⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠐⠘⣿
-            ⣿⠃⠃⠄⠄⠄⠄⠄⠄⣀⢀⠄⠄⡀⡀⢀⣤⣴⣤⣤⣀⣀⠄⠄⠄⠄⠄⠄⠁⢹
-
-'@
-
-                [System.String]$WhenValue121To160 = @'
-
-                ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣴⣿⣿⡷⣄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-                ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣴⣿⡿⠋⠈⠻⣮⣳⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-                ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣠⣴⣾⡿⠋⠀⠀⠀⠀⠙⣿⣿⣤⣀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-                ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣤⣶⣿⡿⠟⠛⠉⠀⠀⠀⠀⠀⠀⠀⠈⠛⠛⠿⠿⣿⣷⣶⣤⣄⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-                ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⣴⣾⡿⠟⠋⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠉⠛⠻⠿⣿⣶⣦⣄⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-                ⠀⠀⠀⣀⣠⣤⣤⣀⡀⠀⠀⣀⣴⣿⡿⠛⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⠛⠿⣿⣷⣦⣄⡀⠀⠀⠀⠀⠀⠀⠀⢀⣀⣤⣄⠀⠀
-                ⢀⣤⣾⡿⠟⠛⠛⢿⣿⣶⣾⣿⠟⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⠛⠿⣿⣷⣦⣀⣀⣤⣶⣿⡿⠿⢿⣿⡀⠀
-                ⣿⣿⠏⠀⢰⡆⠀⠀⠉⢿⣿⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠙⠻⢿⡿⠟⠋⠁⠀⠀⢸⣿⠇⠀
-                ⣿⡟⠀⣀⠈⣀⡀⠒⠃⠀⠙⣿⡆⠀⠀⠀⠀⠀⠀⠀⣀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⣿⠇⠀
-                ⣿⡇⠀⠛⢠⡋⢙⡆⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣾⣿⣿⠄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⠀⠀
-                ⣿⣧⠀⠀⠀⠓⠛⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠘⠛⠋⠀⠀⢸⣧⣤⣤⣶⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢰⣿⡿⠀⠀
-                ⣿⣿⣤⣀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⠉⠉⠻⣷⣶⣶⡆⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣿⣿⠁⠀⠀
-                ⠈⠛⠻⠿⢿⣿⣷⣶⣦⣤⣄⣀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣴⣿⣷⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣾⣿⡏⠀⠀⠀
-                ⠀⠀⠀⠀⠀⠀⠀⠉⠙⠛⠻⠿⢿⣿⣷⣶⣦⣤⣄⣀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠙⠿⠛⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠘⢿⣿⡄⠀⠀
-                ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠉⠙⠛⠻⠿⢿⣿⣷⣶⣦⣤⣄⣀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⢿⣿⡄⠀
-                ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⠉⠛⠛⠿⠿⣿⣷⣶⣶⣤⣤⣀⡀⠀⠀⠀⢀⣴⡆⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⢿⡿⣄
-                ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⠉⠛⠛⠿⠿⣿⣷⣶⡿⠋⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⣿⣹
-                ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⠃⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣀⣀⠀⠀⠀⠀⠀⠀⢸⣧
-                ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢻⣿⣆⠀⠀⠀⠀⠀⠀⢀⣀⣠⣤⣶⣾⣿⣿⣿⣿⣤⣄⣀⡀⠀⠀⠀⣿
-                ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠻⢿⣻⣷⣶⣾⣿⣿⡿⢯⣛⣛⡋⠁⠀⠀⠉⠙⠛⠛⠿⣿⣿⡷⣶⣿
-
-'@
-
-                [System.String]$WhenValue161To200 = @'
-
-                ⠀⠀⠀⠀⠀⠀⠀⠀⢀⣀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-                ⠀⠀⠀⠀⠀⠔⠶⠒⠉⠈⠸⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-                ⠀⠀⠀⠀⠀⠪⣦⢄⣀⡠⠁⠀⠀⠀⠀⠀⠀⠀⢀⣀⣠⣤⣤⣤⣤⣤⣄⣀⣀⣀⣀⣀⣀⣀⠀⠀⠀⠀⠀
-                ⠀⠀⠀⠀⠀⠀⠀⠈⠉⠀⠀⠀⣰⣶⣶⣦⠶⠛⠋⠉⠀⠀⠀⠀⠀⠀⠀⠉⠉⢷⡔⠒⠚⢽⠃⠀⠀⠀⠀
-                ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⣰⣿⡿⠋⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠐⢅⢰⣾⠀⠀⠀⠀⠀
-                ⠀⠀⠀⠀⠀⠀⣀⡴⠞⠛⠉⣿⠏⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠙⣧⠀⠀⠀⠀⠀
-                ⠀⣀⣀⣤⣤⡞⠋⠀⠀⠀⢠⡏⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠸⡇⠀⠀⠀⠀
-                ⢸⡏⠉⣴⠏⠀⠀⠀⠀⠀⢸⠃⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⠀⠀⠀⠀
-                ⠈⣧⢰⠏⠀⠀⠀⠀⠀⠀⢸⡆⠀⠀⠀⠀⠀⠀⠀⠀⠰⠯⠥⠠⠒⠄⠀⠀⠀⠀⠀⠀⢠⠀⣿⠀⠀⠀⠀
-                ⠀⠈⣿⠀⠀⠀⠀⠀⠀⠀⠈⡧⢀⢻⠿⠀⠲⡟⣞⠀⠀⠀⠀⠈⠀⠁⠀⠀⠀⠀⠀⢀⠆⣰⠇⠀⠀⠀⠀
-                ⠀⠀⣿⠀⠀⠀⠀⠀⠀⠀⠀⣧⡀⠃⠀⠀⠀⠱⣼⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠠⣂⡴⠋⠀⣀⡀⠀⠀
-                ⠀⠀⢹⡄⠀⠀⠀⠀⠀⠀⠀⠹⣜⢄⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠒⠒⠿⡻⢦⣄⣰⠏⣿⠀⠀
-                ⠀⠀⠀⢿⡢⡀⠀⠀⠀⠀⠀⠀⠙⠳⢮⣥⣤⣤⠶⠖⠒⠛⠓⠀⠀⠀⠀⠀⠀⠀⠀⠀⠑⢌⢻⣴⠏⠀⠀
-                ⠀⠀⠀⠀⠻⣮⣒⠀⠀⠀⠀⠀⠀⠀⠀⠀⠸⣧⣤⣀⣀⣀⣤⡴⠖⠛⢻⡆⠀⠀⠀⠀⠀⠀⢣⢻⡄⠀⠀
-                ⠀⠀⠀⠀⠀⠀⠉⠛⠒⠶⠶⡶⢶⠛⠛⠁⠀⠀⠀⠀⠀⠀⠀⢀⣀⣤⠞⠁⠀⠀⠀⠀⠀⠀⠈⢜⢧⣄⠀
-                ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣸⠃⠇⠀⠀⠀⠀⠀⠀⠀⠀⠈⠛⠉⢻⠀⠀⠀⠀⠀⠀⠀⢀⣀⠀⠀⠉⠈⣷
-                ⠀⠀⠀⠀⠀⠀⠀⣼⠟⠷⣿⣸⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⠲⠶⢶⣶⠶⠶⢛⣻⠏⠙⠛⠛⠛⠁
-                ⠀⠀⠀⠀⠀⠀⠀⠈⠷⣤⣀⠉⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⠀⠀⠀⠉⠛⠓⠚⠋⠀⠀⠀⠀⠀⠀
-                ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⠻⣟⡂⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⡟⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-                ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⢹⡟⡟⢻⡟⠛⢻⡄⠀⠀⣸⠇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-                ⠀⠀⠀⠀⠀⠀⠀⠀⠀⡄⠀⠀⠀⠈⠷⠧⠾⠀⠀⠀⠻⣦⡴⠏⠀⠀⠀⠀⠀⠀⡀⠀⠀⠀⠀⠀⠀⠀⠀
-                ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⠁⠀⠀⠀⠀⠈⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-
-'@
-
-                [System.String]$WhenValueAbove200 = @'
-                ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⣀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-                ⠀⠀⠀⠀⠀⠀⠀⢠⣶⣶⣶⣦⣤⣀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣴⣿⠟⠛⢿⣶⡄⠀⢀⣀⣤⣤⣦⣤⡀⠀⠀⠀⠀⠀
-                ⠀⠀⠀⠀⠀⠀⢠⣿⠋⠀⠀⠈⠙⠻⢿⣶⣶⣶⣶⣶⣶⣶⣿⠟⠀⠀⠀⠀⠹⣿⡿⠟⠋⠉⠁⠈⢻⣷⠀⠀⠀⠀⠀
-                ⠀⠀⠀⠀⠀⠀⣼⡧⠀⠀⠀⠀⠀⠀⠀⠉⠁⠀⠀⠀⠀⣾⡏⠀⠀⢠⣾⢶⣶⣽⣷⣄⡀⠀⠀⠀⠈⣿⡆⠀⠀⠀⠀
-                ⠀⠀⠀⠀⠀⠀⣿⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⠀⠀⠀⢸⣧⣾⠟⠉⠉⠙⢿⣿⠿⠿⠿⣿⣇⠀⠀⠀⠀
-                ⠀⠀⠀⠀⠀⠀⢸⣿⡟⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠻⣷⣄⣀⣠⣼⣿⠀⠀⠀⠀⣸⣿⣦⡀⠀⠈⣿⡄⠀⠀⠀
-                ⠀⠀⠀⠀⠀⢠⣾⠏⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠉⠉⠉⠉⠻⣷⣤⣤⣶⣿⣧⣿⠃⠀⣰⣿⠁⠀⠀⠀
-                ⠀⠀⠀⠀⠀⣾⡏⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠹⣿⣀⠀⠀⣀⣴⣿⣧⠀⠀⠀⠀
-                ⠀⠀⠀⠀⢸⣿⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠙⠻⠿⠿⠛⠉⢸⣿⠀⠀⠀⠀
-                ⢀⣠⣤⣤⣼⣿⣤⣄⠀⠀⠀⡶⠟⠻⣦⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣶⣶⡄⠀⠀⠀⠀⢀⣀⣿⣄⣀⠀⠀
-                ⠀⠉⠉⠉⢹⣿⣩⣿⠿⠿⣶⡄⠀⠀⠀⠀⠀⠀⠀⢀⣤⠶⣤⡀⠀⠀⠀⠀⠀⠿⡿⠃⠀⠀⠀⠘⠛⠛⣿⠋⠉⠙⠃
-                ⠀⠀⠀⣤⣼⣿⣿⡇⠀⠀⠸⣿⠀⠀⠀⠀⠀⠀⠀⠘⠿⣤⡼⠇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣤⣼⣿⣀⠀⠀⠀
-                ⠀⠀⣾⡏⠀⠈⠙⢧⠀⠀⠀⢿⣧⣀⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢠⣿⠟⠙⠛⠓⠀
-                ⠀⠀⠹⣷⡀⠀⠀⠀⠀⠀⠀⠈⠉⠙⠻⣷⣦⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠰⣶⣿⣯⡀⠀⠀⠀⠀
-                ⠀⠀⠀⠈⠻⣷⣄⠀⠀⠀⢀⣴⠿⠿⠗⠈⢻⣧⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⣤⣾⠟⠋⠉⠛⠷⠄⠀⠀
-                ⠀⠀⠀⠀⠀⢸⡏⠀⠀⠀⢿⣇⠀⢀⣠⡄⢘⣿⣶⣶⣤⣤⣤⣤⣀⣤⣤⣤⣤⣶⣶⡿⠿⣿⠁⠀⠀⠀⠀⠀⠀⠀⠀
-                ⠀⠀⠀⠀⠀⠘⣿⡄⠀⠀⠈⠛⠛⠛⠋⠁⣼⡟⠈⠻⣿⣿⣿⣿⡿⠛⠛⢿⣿⣿⣿⣡⣾⠛⠀⠀⠀⠀⠀⠀⠀⠀⠀
-                ⠀⠀⠀⠀⠀⠀⠙⢿⣦⣄⣀⣀⣀⣀⣴⣾⣿⡁⠀⠀⠀⡉⣉⠁⠀⠀⣠⣾⠟⠉⠉⠋⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-                ⠀⠀⠀⠀⠀⠀⠀⠀⠈⠙⠛⠛⠛⠛⠉⠀⠹⣿⣶⣤⣤⣷⣿⣧⣴⣾⣿⠃⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-                ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠘⠻⢦⣭⡽⣯⣡⡴⠟⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-
-'@
-                #Endregion ASCII-Arts
-
                 # Only display the overall score if the user has not specified any categories
                 if (!$Categories) {
                     switch ($True) {
-                    ($TotalTrueCompliantValuesInOutPut -in 1..40) { & $WriteRainbow "$WhenValue1To40`nYour compliance score is $TotalTrueCompliantValuesInOutPut out of $($SyncHash['TotalNumberOfTrueCompliantValues'])!" }
-                    ($TotalTrueCompliantValuesInOutPut -in 41..80) { & $WriteRainbow "$WhenValue41To80`nYour compliance score is $TotalTrueCompliantValuesInOutPut out of $($SyncHash['TotalNumberOfTrueCompliantValues'])!" }
-                    ($TotalTrueCompliantValuesInOutPut -in 81..120) { & $WriteRainbow "$WhenValue81To120`nYour compliance score is $TotalTrueCompliantValuesInOutPut out of $($SyncHash['TotalNumberOfTrueCompliantValues'])!" }
-                    ($TotalTrueCompliantValuesInOutPut -in 121..160) { & $WriteRainbow "$WhenValue121To160`nYour compliance score is $TotalTrueCompliantValuesInOutPut out of $($SyncHash['TotalNumberOfTrueCompliantValues'])!" }
-                    ($TotalTrueCompliantValuesInOutPut -in 161..200) { & $WriteRainbow "$WhenValue161To200`nYour compliance score is $TotalTrueCompliantValuesInOutPut out of $($SyncHash['TotalNumberOfTrueCompliantValues'])!" }
-                    ($TotalTrueCompliantValuesInOutPut -gt 200) { & $WriteRainbow "$WhenValueAbove200`nYour compliance score is $TotalTrueCompliantValuesInOutPut out of $($SyncHash['TotalNumberOfTrueCompliantValues'])!" }
+                    ($TotalTrueCompliantValuesInOutPut -in 1..40) { & $WriteRainbow "$(Get-Content -Raw -Path "$([HardeningModule.GlobalVars]::Path)\Resources\Media\Text Arts\1To40.txt")`nYour compliance score is $TotalTrueCompliantValuesInOutPut out of $($SyncHash['TotalNumberOfTrueCompliantValues'])!" }
+                    ($TotalTrueCompliantValuesInOutPut -in 41..80) { & $WriteRainbow "$(Get-Content -Raw -Path "$([HardeningModule.GlobalVars]::Path)\Resources\Media\Text Arts\41To80.txt")`nYour compliance score is $TotalTrueCompliantValuesInOutPut out of $($SyncHash['TotalNumberOfTrueCompliantValues'])!" }
+                    ($TotalTrueCompliantValuesInOutPut -in 81..120) { & $WriteRainbow "$(Get-Content -Raw -Path "$([HardeningModule.GlobalVars]::Path)\Resources\Media\Text Arts\81To120.txt")`nYour compliance score is $TotalTrueCompliantValuesInOutPut out of $($SyncHash['TotalNumberOfTrueCompliantValues'])!" }
+                    ($TotalTrueCompliantValuesInOutPut -in 121..160) { & $WriteRainbow "$(Get-Content -Raw -Path "$([HardeningModule.GlobalVars]::Path)\Resources\Media\Text Arts\121To160.txt")`nYour compliance score is $TotalTrueCompliantValuesInOutPut out of $($SyncHash['TotalNumberOfTrueCompliantValues'])!" }
+                    ($TotalTrueCompliantValuesInOutPut -in 161..200) { & $WriteRainbow "$(Get-Content -Raw -Path "$([HardeningModule.GlobalVars]::Path)\Resources\Media\Text Arts\161To200.txt")`nYour compliance score is $TotalTrueCompliantValuesInOutPut out of $($SyncHash['TotalNumberOfTrueCompliantValues'])!" }
+                    ($TotalTrueCompliantValuesInOutPut -gt 200) { & $WriteRainbow "$(Get-Content -Raw -Path "$([HardeningModule.GlobalVars]::Path)\Resources\Media\Text Arts\Above200.txt")`nYour compliance score is $TotalTrueCompliantValuesInOutPut out of $($SyncHash['TotalNumberOfTrueCompliantValues'])!" }
                     }
                 }
             }

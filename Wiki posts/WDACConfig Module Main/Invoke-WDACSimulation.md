@@ -2,6 +2,8 @@
 
 ![image](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/Invoke-WDACSimulation/Invoke-WDACSimulation.apng)
 
+<a href="https://www.youtube.com/watch?v=A0bKDaeYomg"><img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/PNG%20and%20JPG/Simulating%20Application%20Control%20(WDAC)%20Policies%20Using%20The%20WDACConfig%20Module%20-%20low%20res.png" Alt="Simulating Application Control (WDAC) Deployment in Windows"></a>
+
 ## Syntax
 
 ```powershell

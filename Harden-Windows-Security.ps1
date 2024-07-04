@@ -45,7 +45,7 @@ Function P {
             $null = Winget install 9MZ1SNWT0N5D --accept-package-agreements --accept-source-agreements
         }
         else {
-            Write-Verbose -Verbose -Message 'Trying to run the command in PowerShell Core'
+            Write-Verbose -Message 'Trying to run the command in PowerShell Core'
             pwsh.exe -NoLogo -NoExit -Command {
                 Install-Module -Name 'Harden-Windows-Security-Module' -Force
                 Protect-WindowsSecurity
@@ -62,7 +62,7 @@ Function P {
             }
         }
         else {
-            Write-Verbose -Verbose -Message 'Trying to run the command in PowerShell Core'
+            Write-Verbose -Message 'Trying to run the command in PowerShell Core'
             pwsh.exe -NoLogo -NoExit -Command {
                 Install-Module -Name 'Harden-Windows-Security-Module' -Force
                 Protect-WindowsSecurity

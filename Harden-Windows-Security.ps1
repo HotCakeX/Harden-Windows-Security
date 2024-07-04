@@ -18,6 +18,9 @@ Function P {
                 $null = Winget install 9MZ1SNWT0N5D --accept-package-agreements --accept-source-agreements
             }
             catch {
+
+                Push-Location -Path ([System.IO.Path]::GetTempPath())
+
                 Write-Verbose -Verbose -Message 'Failed to Install PowerShell Core using Winget' -Verbose
                 $progressPreference = 'silentlyContinue'
                 Write-Verbose -Verbose -Message 'Downloading WinGet and its dependencies...' -Verbose
@@ -33,6 +36,8 @@ Function P {
                 Remove-Item -Path 'Microsoft.DesktopAppInstaller_8wekyb3d8bbwe.msixbundle' -Force
                 Remove-Item -Path 'Microsoft.VCLibs.x64.14.00.Desktop.appx' -Force
                 Remove-Item -Path 'Microsoft.UI.Xaml.2.8.x64.appx' -Force
+
+                Pop-Location
             }
 
             Write-Verbose -Verbose -Message 'Trying to Install PowerShell Core using Winget again' -Verbose

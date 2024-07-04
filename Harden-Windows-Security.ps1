@@ -38,17 +38,10 @@ Function P {
                 Remove-Item -Path 'Microsoft.UI.Xaml.2.8.x64.appx' -Force
 
                 Pop-Location
-            }
 
-            Write-Verbose -Message 'Trying to Install PowerShell Core using Winget again' -Verbose
-            # https://apps.microsoft.com/detail/9mz1snwt0n5d
-            $null = Winget install 9MZ1SNWT0N5D --accept-package-agreements --accept-source-agreements
-        }
-        else {
-            Write-Verbose -Message 'Trying to run the command in PowerShell Core'
-            pwsh.exe -NoLogo -NoExit -Command {
-                Install-Module -Name 'Harden-Windows-Security-Module' -Force
-                Protect-WindowsSecurity
+                Write-Verbose -Message 'Trying to Install PowerShell Core using Winget again' -Verbose
+                # https://apps.microsoft.com/detail/9mz1snwt0n5d
+                $null = Winget install 9MZ1SNWT0N5D --accept-package-agreements --accept-source-agreements
             }
         }
     }
@@ -61,13 +54,11 @@ Function P {
                 throw "Install newer version of PowerShell and try again`nhttps://github.com/PowerShell/PowerShell/releases/latest"
             }
         }
-        else {
-            Write-Verbose -Message 'Trying to run the command in PowerShell Core'
-            pwsh.exe -NoLogo -NoExit -Command {
-                Install-Module -Name 'Harden-Windows-Security-Module' -Force
-                Protect-WindowsSecurity
-            }
-        }
+    }
+    Write-Verbose -Message 'Trying to run the command in PowerShell Core'
+    pwsh.exe -NoLogo -NoExit -Command {
+        Install-Module -Name 'Harden-Windows-Security-Module' -Force
+        Protect-WindowsSecurity
     }
 }
 

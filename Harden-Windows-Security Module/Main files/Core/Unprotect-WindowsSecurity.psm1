@@ -9,8 +9,9 @@ Function Unprotect-WindowsSecurity {
         [Parameter(Mandatory = $false, ParameterSetName = 'OnlyProcessMitigations')]
         [System.Management.Automation.SwitchParameter]$OnlyProcessMitigations,
 
-        [Parameter(Mandatory = $false, ParameterSetName = 'OnlyDownloadsDefenseMeasures')]
-        [System.Management.Automation.SwitchParameter]$OnlyDownloadsDefenseMeasures,
+        [ValidateSet('Downloads-Defense-Measures', 'Dangerous-Script-Hosts-Blocking')]
+        [Parameter(Mandatory = $false, ParameterSetName = 'OnlyWDACPolicies')]
+        [System.String[]]$WDACPoliciesToRemove,
 
         [Parameter(Mandatory = $false, ParameterSetName = 'OnlyCountryIPBlockingFirewallRules')]
         [System.Management.Automation.SwitchParameter]$OnlyCountryIPBlockingFirewallRules,
@@ -20,6 +21,9 @@ Function Unprotect-WindowsSecurity {
     )
 
     begin {
+        [HardeningModule.Initializer]::Initialize()
+        [HardeningModule.GlobalVars]::MDAVConfigCurrent = Get-MpComputerStatus
+
         Write-Verbose -Message 'Importing the required sub-modules'
         Import-Module -FullyQualifiedName "$([HardeningModule.GlobalVars]::Path)\Shared\Update-self.psm1" -Force -Verbose:$false
 
@@ -45,7 +49,8 @@ Function Unprotect-WindowsSecurity {
         }
 
         #Region Helper-Functions
-        Function Remove-DownloadsDefenseMeasures {
+        Function Remove-WDACPolicies {
+            param([System.String[]]$PolicyNames)
             <#
             .SYNOPSIS
                 Helper function to remove the Downloads Defense Measures WDAC policy
@@ -56,19 +61,23 @@ Function Unprotect-WindowsSecurity {
             #>
 
             Write-Verbose -Message 'Getting the currently deployed base policies'
+            [System.String[]]$ToRemove = foreach ($Name in ((&"$env:SystemDrive\Windows\System32\CiTool.exe" -lp -json | ConvertFrom-Json).Policies | Where-Object -FilterScript { ($_.IsSystemPolicy -ne 'True') -and ($_.PolicyID -eq $_.BasePolicyID) -and ($_.IsOnDisk -eq 'True') }).FriendlyName) {
+                if ($Name -in $PolicyNames) {
+                    $Name
+                }
+            }
 
-            if (((&"$env:SystemDrive\Windows\System32\CiTool.exe" -lp -json | ConvertFrom-Json).Policies | Where-Object -FilterScript { ($_.IsSystemPolicy -ne 'True') -and ($_.PolicyID -eq $_.BasePolicyID) -and ($_.FriendlyName -eq 'Downloads-Defense-Measures') -and ($_.IsOnDisk -eq 'True') })) {
+            if ($ToRemove.Count -gt 0) {
 
                 if (-NOT (Get-InstalledModule -Name 'WDACConfig' -ErrorAction SilentlyContinue -Verbose:$false)) {
                     Write-Verbose -Message 'Installing WDACConfig module because it is not installed'
                     Install-Module -Name 'WDACConfig' -Force -Verbose:$false
                 }
-
-                Write-Verbose -Message 'Removing the Downloads Defense Measures WDAC policy'
-                Remove-WDACConfig -UnsignedOrSupplemental -PolicyNames Downloads-Defense-Measures -SkipVersionCheck
+                Write-Verbose -Message "Removing the WDAC policies: $($ToRemove -join ', ')"
+                Remove-WDACConfig -UnsignedOrSupplemental -PolicyNames $ToRemove -SkipVersionCheck
             }
             else {
-                Write-Verbose -Message 'The Downloads Defense Measures WDAC policy is either not deployed or already removed'
+                Write-Verbose -Message "$($PolicyNames -join ', ') is/are either not deployed or already removed"
             }
         }
         Function Remove-ProcessMitigations {
@@ -88,9 +97,10 @@ Function Unprotect-WindowsSecurity {
 
             # Only keep the mitigations that are allowed to be removed
             # It is important for any executable whose name is mentioned as a key in "Computer\HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options" Should have its RemovalAllowed property in the Process Mitigations CSV file set to False
-            [System.Object[]]$ProcessMitigations = Import-Csv -Path "$([HardeningModule.GlobalVars]::Path)\Resources\ProcessMitigations.csv" -Delimiter ',' | Where-Object -FilterScript { $_.RemovalAllowed -eq 'True' }
+            [HardeningModule.ProcessMitigationsParser+ProcessMitigationsRecords[]]$ProcessMitigations = [HardeningModule.GlobalVars]::ProcessMitigations | Where-Object -FilterScript { $_.RemovalAllowed -eq 'True' }
+
             # Group the data by ProgramName
-            [System.Object[]]$GroupedMitigations = $ProcessMitigations | Group-Object -Property ProgramName
+            [Microsoft.PowerShell.Commands.GroupInfo[]]$GroupedMitigations = $ProcessMitigations | Group-Object -Property ProgramName
             [System.Object[]]$AllAvailableMitigations = (Get-ItemProperty -Path 'Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\*')
 
             # Loop through each group
@@ -123,7 +133,7 @@ Function Unprotect-WindowsSecurity {
                 # backup the current allowed apps list in Controlled folder access in order to restore them at the end of the script
                 # doing this so that when we Add and then Remove PowerShell executables in Controlled folder access exclusions
                 # no user customization will be affected
-                [System.String[]]$CFAAllowedAppsBackup = (Get-MpPreference).ControlledFolderAccessAllowedApplications
+                [System.String[]]$CFAAllowedAppsBackup = ([HardeningModule.GlobalVars]::MDAVPreferencesCurrent).ControlledFolderAccessAllowedApplications
 
                 # Temporarily allow the currently running PowerShell executables to the Controlled Folder Access allowed apps
                 # so that the script can run without interruption. This change is reverted at the end.
@@ -142,8 +152,8 @@ Function Unprotect-WindowsSecurity {
                         Start-Process -FilePath GPUpdate.exe -ArgumentList '/force' -NoNewWindow
                         break
                     }
-                    $OnlyDownloadsDefenseMeasures {
-                        Remove-DownloadsDefenseMeasures
+                    { $WDACPoliciesToRemove.count -gt 0 } {
+                        Remove-WDACPolicies -PolicyNames $WDACPoliciesToRemove
                         break
                     }
                     $OnlyProcessMitigations {
@@ -152,8 +162,8 @@ Function Unprotect-WindowsSecurity {
                     }
                     default {
                         $CurrentMainStep++
-                        Write-Progress -Id 0 -Activity 'Removing Downloads Defense Measures' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
-                        Remove-DownloadsDefenseMeasures
+                        Write-Progress -Id 0 -Activity 'Removing WDAC Policies' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
+                        Remove-WDACPolicies -PolicyNames ('Downloads-Defense-Measures', 'Dangerous-Script-Hosts-Blocking')
 
                         # Create the working directory
                         Write-Verbose -Message "Creating a working directory at $CurrentUserTempDirectoryPath\HardeningXStuff\"
@@ -180,11 +190,8 @@ Function Unprotect-WindowsSecurity {
                         $CurrentMainStep++
                         Write-Progress -Id 0 -Activity 'Deleting all the registry keys created by the Protect-WindowsSecurity cmdlet' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
 
-                        [System.Object[]]$Items = Import-Csv -Path "$([HardeningModule.GlobalVars]::Path)\Resources\Registry.csv" -Delimiter ','
-                        foreach ($Item in $Items) {
-                            if (Test-Path -Path $item.path) {
-                                Remove-ItemProperty -Path $Item.path -Name $Item.key -Force -ErrorAction SilentlyContinue
-                            }
+                        foreach ($Item in ([HardeningModule.GlobalVars]::RegistryCSVItems)) {
+                            [HardeningModule.RegistryEditor]::EditRegistry($Item.Path, $Item.Key, $Item.Value, $Item.Type, 'Delete')
                         }
 
                         # To completely remove the Edge policy since only its sub-keys are removed by the command above
@@ -302,8 +309,8 @@ Function Unprotect-WindowsSecurity {
     Removes the hardening measures applied by Protect-WindowsSecurity cmdlet
 .PARAMETER OnlyProcessMitigations
     Only removes the Process Mitigations / Exploit Protection settings and doesn't change anything else
-.PARAMETER OnlyDownloadsDefenseMeasures
-    Only removes the Downloads Defense Measures WDAC policy and doesn't change anything else
+.PARAMETER WDACPoliciesToRemove
+    Names of the WDAC Policies to remove
 .PARAMETER OnlyCountryIPBlockingFirewallRules
     Only removes the country IP blocking firewall rules and doesn't change anything else
 .PARAMETER Force
@@ -322,6 +329,7 @@ Function Unprotect-WindowsSecurity {
     Removes all of the security features applied by the Protect-WindowsSecurity cmdlet without prompting for confirmation
 .INPUTS
     System.Management.Automation.SwitchParameter
+    System.String[]
 .OUTPUTS
     System.String
 #>

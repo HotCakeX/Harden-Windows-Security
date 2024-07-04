@@ -91,7 +91,7 @@
     </Setting>
     <Setting Provider="PolicyInfo" Key="Information" ValueName="Name">
       <Value>
-        <String>Dangerous Script Hosts and Components Blocking</String>
+        <String>Dangerous-Script-Hosts-Blocking</String>
       </Value>
     </Setting>
   </Settings>

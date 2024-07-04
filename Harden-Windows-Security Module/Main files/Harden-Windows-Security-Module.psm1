@@ -1,18 +1,43 @@
 $global:ErrorActionPreference = 'Stop'
+$PSStyle.Progress.UseOSCIndicator = $true
+# Set PSReadline tab completion to complete menu for easier access to available parameters - Only for the current session
+Set-PSReadLineKeyHandler -Key 'Tab' -Function 'MenuComplete'
 
 if (!$IsWindows) {
     Throw [System.PlatformNotSupportedException] 'The Harden Windows Security module only runs on Windows operation systems.'
 }
 
 # Load all of the C# codes
-Add-Type -Path (Get-ChildItem -Filter '*.cs' -Path "$PSScriptRoot\Shared")
+Add-Type -Path ([System.IO.Directory]::GetFiles("$PSScriptRoot\C#")) -ReferencedAssemblies @(
+    'System',
+    'System.IO',
+    'System.Collections',
+    'System.Management',
+    'System.Management.Automation',
+    'System.Security',
+    'System.Security.Principal',
+    'System.ComponentModel.Primitives',
+    'System.Linq',
+    'System.Runtime.InteropServices',
+    'System.Text.RegularExpressions',
+    'System.Security.Principal.Windows',
+    'System.Security.Claims',
+    'Microsoft.Win32.Registry',
+    'System.Net.Http',
+    'System.Threading.Tasks',
+    'System.Net.Primitives',
+    'System.Net',
+    'System.Windows',
+    'PresentationFramework',
+    "$($PSHOME)\WindowsBase.dll", # for some reason it tries to use another version of the dll unless i define its path explicitly like this
+    'PresentationCore',
+    'System.Threading',
+    'System.Threading.Thread',
+    'System.IO.Compression',
+    'System.IO.Compression.zipfile',
+    'System.Runtime',
+    'System.Linq.Expressions'
+)
 
 [HardeningModule.GlobalVars]::Path = $PSScriptRoot
-
-# Make sure the current OS build is equal or greater than the required build number
-if (-NOT ([System.Decimal]([HardeningModule.GlobalVars]::FullOSBuild) -ge [System.Decimal]([HardeningModule.GlobalVars]::Requiredbuild))) {
-    Throw [System.PlatformNotSupportedException] "You are not using the latest build of the Windows OS. A minimum build of $([HardeningModule.GlobalVars]::Requiredbuild) is required but your OS build is $([HardeningModule.GlobalVars]::FullOSBuild)`nPlease go to Windows Update to install the updates and then try again."
-}
-
-# Set PSReadline tab completion to complete menu for easier access to available parameters - Only for the current session
-Set-PSReadLineKeyHandler -Key 'Tab' -Function 'MenuComplete'
+[HardeningModule.Initializer]::Initialize()

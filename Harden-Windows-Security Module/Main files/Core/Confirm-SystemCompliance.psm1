@@ -16,7 +16,7 @@ function Confirm-SystemCompliance {
                     $false
                 ).Value
 
-                foreach ($Item in [HardeningModule.Categoriex]::new().GetValidValues()) {
+                foreach ($Item in [HardeningModule.ComplianceCategoriex]::new().GetValidValues()) {
                     # Check if the item is already selected
                     if ($Item -notin $Existing) {
                         # Return the item
@@ -26,7 +26,7 @@ function Confirm-SystemCompliance {
 
             })]
         [ValidateScript({
-                if ($_ -notin [HardeningModule.Categoriex]::new().GetValidValues()) { throw "Invalid Category Name: $_" }
+                if ($_ -notin [HardeningModule.ComplianceCategoriex]::new().GetValidValues()) { throw "Invalid Category Name: $_" }
                 # Return true if everything is okay
                 $true
             })]
@@ -42,6 +42,9 @@ function Confirm-SystemCompliance {
         [System.Management.Automation.SwitchParameter]$Offline
     )
     begin {
+        [HardeningModule.Initializer]::Initialize()
+        [HardeningModule.GlobalVars]::MDAVConfigCurrent = Get-MpComputerStatus
+
         # Importing the required sub-modules
         Write-Verbose -Message 'Importing the required sub-modules'
         Import-Module -FullyQualifiedName "$([HardeningModule.GlobalVars]::Path)\Shared\Update-self.psm1" -Force -Verbose:$false
@@ -65,13 +68,9 @@ function Confirm-SystemCompliance {
         # a Synchronized HashTable to safely increment/decrement values from multiple threads and also access parent scope variables inside thread jobs
         $SyncHash = [System.Collections.Hashtable]::Synchronized(@{})
         # Total number of Compliant values not equal to N/A
-        $SyncHash['TotalNumberOfTrueCompliantValues'] = 238
+        $SyncHash['TotalNumberOfTrueCompliantValues'] = 239
 
         $SyncHash['VerbosePreference'] = $VerbosePreference
-
-        # Get the current configurations and preferences of the Microsoft Defender and set them as variables
-        [HardeningModule.GlobalVars]::MDAVPreferencesCurrent = Get-MpPreference
-        [HardeningModule.GlobalVars]::MDAVConfigCurrent = Get-MpComputerStatus
 
         # An object to store the FINAL results
         $FinalMegaObject = [System.Collections.Concurrent.ConcurrentDictionary[System.String, HardeningModule.IndividualResult[]]]::new()
@@ -237,7 +236,7 @@ function Confirm-SystemCompliance {
                         # backup the currently allowed apps list in Controlled folder access in order to restore them at the end
                         # doing this so that when we Add and then Remove PowerShell executables in Controlled folder access exclusions
                         # no user customization will be affected
-                        [System.String[]]$CFAAllowedAppsBackup = (Get-MpPreference).ControlledFolderAccessAllowedApplications
+                        [System.String[]]$CFAAllowedAppsBackup = ([HardeningModule.GlobalVars]::MDAVPreferencesCurrent).ControlledFolderAccessAllowedApplications
 
                         # Temporarily allow the currently running PowerShell executables to the Controlled Folder Access allowed apps
                         # so that the script can run without interruption. This change is reverted at the end.
@@ -551,10 +550,10 @@ function Confirm-SystemCompliance {
 
                         #Region Harden-Windows-Security-Module-CSV-Processing
                         # Import the CSV file as an object
-                        [System.Object[]]$ProcessMitigations = Import-Csv -Path "$([HardeningModule.GlobalVars]::Path)\Resources\ProcessMitigations.csv" -Delimiter ','
+                        [HardeningModule.ProcessMitigationsParser+ProcessMitigationsRecords[]]$ProcessMitigations = [HardeningModule.GlobalVars]::ProcessMitigations
 
                         # Only keep the enabled mitigations in the CSV, then Group the data by ProgramName
-                        [System.Object[]]$GroupedMitigations = $ProcessMitigations.Where({ $_.Action -eq 'Enable' }) | Group-Object -Property ProgramName
+                        [Microsoft.PowerShell.Commands.GroupInfo[]]$GroupedMitigations = $ProcessMitigations.Where({ $_.Action -eq 'Enable' }) | Group-Object -Property ProgramName
 
                         # A hashtable to store the output of the CSV file
                         [System.Collections.Hashtable]$TargetMitigations = @{}
@@ -1652,7 +1651,7 @@ function Confirm-SystemCompliance {
                 'NonAdminCommands' { Invoke-NonAdminCommands -SyncHash $SyncHash -FinalMegaObject $FinalMegaObject }
                 Default {
                     # Get the values of the ValidateSet attribute of the Categories parameter of the main function
-                    foreach ($Item in [HardeningModule.Categoriex]::new().GetValidValues()) {
+                    foreach ($Item in [HardeningModule.ComplianceCategoriex]::new().GetValidValues()) {
                         # Run all of the categories' functions if the user didn't specify any
                         . "Invoke-$Item" -SyncHash $SyncHash -FinalMegaObject $FinalMegaObject
                     }
@@ -1664,7 +1663,7 @@ function Confirm-SystemCompliance {
 
             # If user didn't specify any categories, add all of them to the list of jobs to wait for
             if ($null -eq $Categories) {
-                $JobsToWaitFor = foreach ($Cat in [HardeningModule.Categoriex]::new().GetValidValues()) {
+                $JobsToWaitFor = foreach ($Cat in [HardeningModule.ComplianceCategoriex]::new().GetValidValues()) {
                     [System.String]$VariableName = $Cat + 'Job'
                     (Get-Item -Path "variable:$VariableName").Value
                 }
@@ -1686,7 +1685,7 @@ function Confirm-SystemCompliance {
                 # Create an empty list to store the results based on the category order by sorting the concurrent hashtable
                 $AllOrderedResults = New-Object -TypeName System.Collections.Generic.List[HardeningModule.IndividualResult]
 
-                $AllOrderedResults = foreach ($Key in [HardeningModule.Categoriex]::new().GetValidValues()) {
+                $AllOrderedResults = foreach ($Key in [HardeningModule.ComplianceCategoriex]::new().GetValidValues()) {
                     if ($FinalMegaObject.ContainsKey($Key)) {
                         foreach ($Item in $FinalMegaObject[$Key].GetEnumerator()) {
                             $Item
@@ -1777,7 +1776,7 @@ function Confirm-SystemCompliance {
 
                 # Counting the number of $True Compliant values in the Final Output Object
                 [System.UInt32]$TotalTrueCompliantValuesInOutPut = 0
-                foreach ($Category in [HardeningModule.Categoriex]::new().GetValidValues()) {
+                foreach ($Category in [HardeningModule.ComplianceCategoriex]::new().GetValidValues()) {
                     $TotalTrueCompliantValuesInOutPut += ($FinalMegaObject.$Category).Where({ $_.Compliant -eq $True }).Count
                 }
 

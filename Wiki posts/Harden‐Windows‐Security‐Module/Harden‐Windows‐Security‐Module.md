@@ -277,75 +277,28 @@ The path to the 'Microsoft 365 Apps for Enterprise zip'. Make sure it's in the z
 <br>
 
 > [!NOTE]\
-> You can further control the sub-categories of each category by using the following switch parameters. Pay attention to the naming convention of them. They are named after the category they belong to. For example, the switch parameter `-MSFTDefender_SAC` belongs to the `MicrosoftDefender` category. The switch parameters are dynamic and will only appear if you specify the corresponding category in the `-Categories` parameter. For example, if you don't specify the `MicrosoftDefender` category in the `-Categories` parameter, the switch parameters related to it won't appear. The following table shows the available switch parameters and their corresponding categories.
+> You can control the sub-categories of each category by using the following switch parameters on the Command-line.
+>
+> Pay attention to the naming convention of them. They are named after the category they belong to.
+>
+> The switch parameters are dynamic and will only appear if you specify the corresponding category in the `-Categories` parameter. The following table shows the available switch parameters and their corresponding required categories.
 
 <br>
 
 |         Parameter Name                  |          Description                        | Required Category |
 |:---------------------------------------:|:-------------------------------------------:|:-----------------:|
-|-SecBaselines_NoOverrides | Applies the Microsoft Security Baselines without the optional overrides   | MicrosoftSecurityBaselines |
-|-MSFTDefender_SAC | Enables Smart App Control | MicrosoftDefender |
-|-MSFTDefender_NoDiagData | Will not enable optional diagnostics data required for Smart App Control (Does not have any effect if Smart App Control is already turned on) | MicrosoftDefender |
-|-MSFTDefender_NoScheduledTask | Will not create scheduled task for fast MSFT driver block rules  | MicrosoftDefender |
-|-MSFTDefender_BetaChannels | Set Defender Engine and Intelligence update channels to beta | MicrosoftDefender |
-|-LockScreen_CtrlAltDel | Require CTRL + ALT + Delete at lock screen | LockScreen |
-|-LockScreen_NoLastSignedIn | Will not display the last signed in user at the lock screen | LockScreen |
-|-UAC_NoFastSwitching | Hide entry points for fast user switching | UserAccountControl |
-|-UAC_OnlyElevateSigned | Only elevate signed and validated executables | UserAccountControl |
-|-CountryIPBlocking_OFAC | Include the IP ranges of OFAC Sanctioned Countries in the firewall block rules | CountryIPBlocking |
-
-<br>
-
-### What if You Don’t Configure the Sub-Categories?
-
-If you do not specify any sub-categories using the switch parameters above, the following sub-category configuration will be applied when the corresponding category exists in the `-Categories` parameter.
-
-<br>
-
-<div align="center">
-
-| Indicator| Sub-Category Status                   |
-|:--------:|:-----------------------------:|
-| <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/rainbow-planet-heart.gif" alt="planet rainbow heart indicating item that runs in Windows Hardening module" width="30"> | Is Applied |
-| <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/orange-point.gif" alt="spinning random dots indicating the sub-category won't run in headless mode in Windows Hardening module" width="30"> | Is Not Applied |
-
-</div>
-
-<br>
-
-- Microsoft Security Baselines
-    - <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/rainbow-planet-heart.gif" alt="planet rainbow heart indicating item that runs in Windows Hardening module" width="30"> Yes, With the Optional Overrides (Recommended)
-    - <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/orange-point.gif" alt="spinning random dots indicating the sub-category won't run in headless mode in Windows Hardening module" width="30"> Yes
-- Microsoft 365 Apps Security Baselines
-- Microsoft Defender
-    - <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/orange-point.gif" alt="spinning random dots indicating the sub-category won't run in headless mode in Windows Hardening module" width="30"> Smart App Control enablement
-    - <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/rainbow-planet-heart.gif" alt="planet rainbow heart indicating item that runs in Windows Hardening module" width="30"> Enable advanced diagnostic data if Smart App Control is on
-    - <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/rainbow-planet-heart.gif" alt="planet rainbow heart indicating item that runs in Windows Hardening module" width="30"> Scheduled task creation for fast weekly MSFT driver block list update
-    - <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/orange-point.gif" alt="spinning random dots indicating the sub-category won't run in headless mode in Windows Hardening module" width="30"> Set engine and intelligence update channels to beta
-- Attack Surface Reduction Rules
-- BitLocker Settings
-    - <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/orange-point.gif" alt="spinning random dots indicating the sub-category won't run in headless mode in Windows Hardening module" width="30"> Normal: TPM + Startup PIN + Recovery Password
-    - <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/orange-point.gif" alt="spinning random dots indicating the sub-category won't run in headless mode in Windows Hardening module" width="30"> Enhanced: TPM + Startup PIN + Startup Key + Recovery Password
-    - <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/rainbow-planet-heart.gif" alt="planet rainbow heart indicating item that runs in Windows Hardening module" width="30"> Skip encryptions altogether
-- TLS Security
-- Lock Screen
-    - <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/orange-point.gif" alt="spinning random dots indicating the sub-category won't run in headless mode in Windows Hardening module" width="30"> Don't display last signed-in
-    - <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/orange-point.gif" alt="spinning random dots indicating the sub-category won't run in headless mode in Windows Hardening module" width="30"> Require CTRL + ALT + DEL on lock screen
-- User Account Control
-    - <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/orange-point.gif" alt="spinning random dots indicating the sub-category won't run in headless mode in Windows Hardening module" width="30"> Only elevate signed and validated executables
-    - <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/orange-point.gif" alt="spinning random dots indicating the sub-category won't run in headless mode in Windows Hardening module" width="30"> Hide the entry points for Fast User Switching
-- Windows Firewall
-- Optional Windows Features
-- Windows Networking
-- Miscellaneous Configurations
-- Windows Update Configurations
-- Edge Browser Configurations
-- Certificate Checking Commands
-- Country IP Blocking
-    - <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/rainbow-planet-heart.gif" alt="planet rainbow heart indicating item that runs in Windows Hardening module" width="30"> Block State Sponsors of Terrorism IP blocks
-    - <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/orange-point.gif" alt="spinning random dots indicating the sub-category won't run in headless mode in Windows Hardening module" width="30"> Block OFAC Sanctioned Countries IP blocks
-- Downloads Defense Measures
-- Non-Admin Commands
+|SecBaselines_NoOverrides | Applies the Microsoft Security Baselines without the optional overrides   | MicrosoftSecurityBaselines |
+|MSFTDefender_SAC | Enables Smart App Control | MicrosoftDefender |
+|MSFTDefender_NoDiagData | Will not enable optional diagnostics data required for Smart App Control (Does not have any effect if Smart App Control is already turned on) | MicrosoftDefender |
+|MSFTDefender_NoScheduledTask | Will not create scheduled task for fast MSFT driver block rules  | MicrosoftDefender |
+|MSFTDefender_BetaChannels | Set Defender Engine and Intelligence update channels to beta | MicrosoftDefender |
+|LockScreen_CtrlAltDel | Require CTRL + ALT + Delete at lock screen | LockScreen |
+|LockScreen_NoLastSignedIn | Will not display the last signed in user at the lock screen | LockScreen |
+|UAC_NoFastSwitching | Hide entry points for fast user switching | UserAccountControl |
+|UAC_OnlyElevateSigned | Only elevate signed and validated executables | UserAccountControl |
+|CountryIPBlocking_OFAC | Include the IP ranges of OFAC Sanctioned Countries in the firewall block rules | CountryIPBlocking |
+| DangerousScriptHostsBlocking | Deploys the Dangerous Script Hosts Blocking WDAC Policy | DownloadsDefenseMeasures |
+| ClipboardSync | Enables Clipboard Sync with Microsoft Account | NonAdminCommands |
 
 <br>
 
@@ -366,13 +319,21 @@ Protect-WindowsSecurity
 
 ### Example 2
 
+This will display a GUI (Graphical UI) allowing you to easily select various options and categories to apply.
+
+```powershell
+Protect-WindowsSecurity -GUI
+```
+
+### Example 3
+
 If you run the module like this, the 2 categories will be executed automatically without requiring any user input. The results will be displayed on the console.
 
 ```powershell
 Protect-WindowsSecurity -Categories MicrosoftDefender, AttackSurfaceReductionRules
 ```
 
-### Example 3
+### Example 4
 
 This example will apply the Microsoft Defender category with the Smart App Control sub-category, without the need for user interaction, and will show verbose messages.
 
@@ -380,7 +341,7 @@ This example will apply the Microsoft Defender category with the Smart App Contr
 Protect-WindowsSecurity -Categories MicrosoftDefender -MSFTDefender_SAC -Verbose
 ```
 
-### Example 4
+### Example 5
 
 This example will apply the Microsoft Security Baselines, BitLocker, User Account Control, Lock Screen and Downloads Defense Measures categories. It will also apply the "Only Elevate Signed and Validated Executables" sub-category of the User Account Control category, and the "Require CTRL + ALT + DEL on Lock Screen" sub-category of the Lock Screen category.
 
@@ -388,20 +349,12 @@ This example will apply the Microsoft Security Baselines, BitLocker, User Accoun
 Protect-WindowsSecurity -Categories MicrosoftSecurityBaselines,BitLockerSettings,UserAccountControl,LockScreen,DownloadsDefenseMeasures -UAC_OnlyElevateSigned -LockScreen_CtrlAltDel
 ```
 
-### Example 5
+### Example 6
 
 This example instructs the cmdlet to run in offline mode and will not download any files from the internet. It also runs it in headless/silent mode by specifying which categories to automatically run. `-MSFTDefender_SAC` switch is used so the Smart App Control sub-category is also applied in the headless/silent mode. `-Log` switch is mentioned which will save the output of the cmdlet to a text file in the current working directory.
 
 ```powershell
 Protect-WindowsSecurity -Verbose -Offline -PathToLGPO 'C:\Users\Admin\Desktop\LGPO.zip' -PathToMSFTSecurityBaselines 'C:\Users\Admin\Desktop\Baselines.zip' -PathToMSFT365AppsSecurityBaselines 'C:\Users\Admin\Desktop\M365Baselines.zip' -Log -Categories MicrosoftSecurityBaselines,MicrosoftDefender -MSFTDefender_SAC
-```
-
-### Example 6
-
-This will display a GUI (Graphical UI) allowing you to easily select various options and categories to apply.
-
-```powershell
-Protect-WindowsSecurity -GUI
 ```
 
 <br>

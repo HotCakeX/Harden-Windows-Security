@@ -58,15 +58,7 @@
 
 ## How To Use<a href="#how-to-use">![HowToUseIcon](https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/HowToUse.png)</a>
 
-### <img width="35" src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/SVGs/github.svg" alt="GitHub logo SVG"> Apply the Latest Hardening Measures [***directly***](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.utility/invoke-expression?view=powershell-7.3) From This Github Repository
-
-```powershell
-(irm 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Harden-Windows-Security.ps1')+'P'|iex
-```
-
-<br>
-
-### <img width="35" src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/SVGs/github-pink.svg" alt="GitHub logo pink SVG"> Use the GUI [(Graphical User Interface)](https://youtu.be/a8YbihowTVg?si=hGUS2KAW_z80Hnx8) to apply the latest Hardening Measures
+### <img width="35" src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/SVGs/github-pink.svg" alt="GitHub logo pink SVG"> Start The Harden Windows Security Using GUI [(Graphical User Interface)](https://youtu.be/a8YbihowTVg?si=hGUS2KAW_z80Hnx8)
 
 ```powershell
 (irm 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Harden-Windows-Security.ps1')+'P -G'|iex
@@ -1040,16 +1032,14 @@ This repository uses the simplest possible, yet effective, methods that make it 
 - You can fork this repository, verify it until that point in time, then verify any subsequent changes/updates I push to this repository, **at your own pace** (using `Sync fork` and `Compare` options on your fork), and if you are happy with the changes, allow it to be merged with your own copy/fork on your GitHub account.
 - You can [learn PowerShell which is super easy](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Basic-PowerShell-tricks-and-notes), multiplatform, and useful for the future, Microsoft Learn website teaches you everything, then you will understand everything in the module is safe, or you can ask someone that you trust and knows PowerShell to verify the module for you.
 
+- All codes are properly commented for easy and quick understanding.
+
 - #### The module uses the following files, all of them are in plain text, easily readable or verifiable:
 
     - [Registry.csv](https://github.com/HotCakeX/Harden-Windows-Security/blob/main/Harden-Windows-Security%20Module/Main%20files/Resources/Registry.csv) includes registry data.
 
-    - [ProcessMitigations.csv](https://github.com/HotCakeX/Harden-Windows-Security/blob/main/Harden-Windows-Security%20Module/Main%20files/Resources/ProcessMitigations.csv) includes the process mitigations data.
-
-    - [EventViewerCustomViews.zip](https://github.com/HotCakeX/Harden-Windows-Security/blob/main/Harden-Windows-Security%20Module/Main%20files/Resources/EventViewerCustomViews.zip) includes the XML files that are copied to `C:\ProgramData\Microsoft\Event Viewer\Views` so that when you open [Windows Event Viewer](https://learn.microsoft.com/en-us/host-integration-server/core/windows-event-viewer1), you will find custom views as explained in the <a href="#miscellaneous-configurations">Miscellaneous Configurations</a> category.
-
-    - [Security-Baselines-X.zip](https://github.com/HotCakeX/Harden-Windows-Security/blob/main/Harden-Windows-Security%20Module/Main%20files/Resources/Security-Baselines-X.zip) includes Group Policies that are used by this module.
-
+    - [ProcessMitigations.csv](https://github.com/HotCakeX/Harden-Windows-Security/blob/main/Harden-Windows-Security%20Module/Main%20files/Resources/ProcessMitigations.csv) includes the process mitigations data.  
+    
     - [Default Security Policy.inf](https://github.com/HotCakeX/Harden-Windows-Security/blob/main/Harden-Windows-Security%20Module/Main%20files/Resources/Default%20Security%20Policy.inf) contains security policy data used by the `Unprotect-WindowsSecurity` cmdlet.
 
     - [Registry resources.csv](https://github.com/HotCakeX/Harden-Windows-Security/blob/main/Harden-Windows-Security%20Module/Main%20files/Resources/Registry%20resources.csv) Includes the data used by the `Confirm-SystemCompliance` cmdlet.
@@ -1060,16 +1050,9 @@ This repository uses the simplest possible, yet effective, methods that make it 
 
 <br>
 
-<!-- Security-Baselines-X-VT:START --><a href='https://www.virustotal.com/gui/file/670a2cdb44ed5847c128e7d71ce3404ae319c768629536bf970ac2831b2a075b'>Virus Total scan results of Security-Baselines-X.zip</a><!-- Security-Baselines-X-VT:END -->
-
-<br>
-
-<!-- EventViewer-CustomViews-VT:START --><a href='https://www.virustotal.com/gui/file/7895f1d4a45f0fe2fdd38d6e7f7a98ef4c83ad4b05c8fcc3aa45f8e3ffe9081d'>Virus Total scan results of EventViewerCustomViews.zip</a><!-- EventViewer-CustomViews-VT:END -->
-
-<br>
-<br>
-
-*Links above are automatically updated using GitHub workflow that detects changes to the files and uploads them to Virus Total website for scanning.*
+<!-- Security-Baselines-X-VT:START -->
+<!-- <a href="">  </a> -->
+<!-- Security-Baselines-X-VT:END -->
 
 [![Virus Total](https://github.com/HotCakeX/Harden-Windows-Security/actions/workflows/VirusTotal.yml/badge.svg)](https://github.com/HotCakeX/Harden-Windows-Security/actions/workflows/VirusTotal.yml) [![PSScriptAnalyzer](https://github.com/HotCakeX/Harden-Windows-Security/actions/workflows/powershell.yml/badge.svg)](https://github.com/HotCakeX/Harden-Windows-Security/actions/workflows/powershell.yml)
 

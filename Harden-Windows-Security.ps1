@@ -10,6 +10,8 @@ Function P {
         [System.Management.Automation.SwitchParameter]$G
     )
 
+    Set-ExecutionPolicy -ExecutionPolicy 'Unrestricted' -Scope 'Process' -Force
+
     if ($PSVersionTable.PSEdition -eq 'Desktop') {
 
         if (!(Get-Command -Name 'pwsh.exe' -ErrorAction Ignore)) {
@@ -55,11 +57,26 @@ Function P {
             }
         }
     }
+
     Write-Verbose -Message 'Trying to run the command in PowerShell Core'
-    pwsh.exe -NoLogo -NoExit -Command {
-        Install-Module -Name 'Harden-Windows-Security-Module' -Force
-        Protect-WindowsSecurity
+    if ($G) {
+        pwsh.exe -NoLogo -NoExit -Command {
+            Set-ExecutionPolicy -ExecutionPolicy 'Unrestricted' -Scope 'Process' -Force
+            if (!(Get-Module -ListAvailable -Name 'Harden-Windows-Security-Module' -ErrorAction Ignore)) {
+                Write-Verbose -Message 'Installing the Harden Windows Security Module because it could not be found'
+                Install-Module -Name 'Harden-Windows-Security-Module' -Force
+            }
+            Protect-WindowsSecurity -GUI
+        }
+    }
+    else {
+        pwsh.exe -NoLogo -NoExit -Command {
+            Set-ExecutionPolicy -ExecutionPolicy 'Unrestricted' -Scope 'Process' -Force
+            if (!(Get-Module -ListAvailable -Name 'Harden-Windows-Security-Module' -ErrorAction Ignore)) {
+                Write-Verbose -Message 'Installing the Harden Windows Security Module because it could not be found'
+                Install-Module -Name 'Harden-Windows-Security-Module' -Force
+            }
+            Protect-WindowsSecurity
+        }
     }
 }
-
-P

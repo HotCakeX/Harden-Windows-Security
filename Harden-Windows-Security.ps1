@@ -14,16 +14,16 @@ Function P {
 
         if (!(Get-Command -Name 'pwsh.exe' -ErrorAction Ignore)) {
             try {
-                Write-Verbose -Verbose -Message 'Trying to Install PowerShell Core using Winget because it could not be found' -Verbose
+                Write-Verbose -Message 'Trying to Install PowerShell Core using Winget because it could not be found' -Verbose
                 $null = Winget install 9MZ1SNWT0N5D --accept-package-agreements --accept-source-agreements
             }
             catch {
 
                 Push-Location -Path ([System.IO.Path]::GetTempPath())
 
-                Write-Verbose -Verbose -Message 'Failed to Install PowerShell Core using Winget' -Verbose
+                Write-Verbose -Message 'Failed to Install PowerShell Core using Winget' -Verbose
                 $progressPreference = 'silentlyContinue'
-                Write-Verbose -Verbose -Message 'Downloading WinGet and its dependencies...' -Verbose
+                Write-Verbose -Message 'Downloading WinGet and its dependencies...' -Verbose
                 # https://learn.microsoft.com/en-us/windows/package-manager/winget/#install-winget-on-windows-sandbox
                 Invoke-WebRequest -Uri 'https://aka.ms/getwinget' -OutFile 'Microsoft.DesktopAppInstaller_8wekyb3d8bbwe.msixbundle'
                 Invoke-WebRequest -Uri 'https://aka.ms/Microsoft.VCLibs.x64.14.00.Desktop.appx' -OutFile 'Microsoft.VCLibs.x64.14.00.Desktop.appx'
@@ -40,7 +40,7 @@ Function P {
                 Pop-Location
             }
 
-            Write-Verbose -Verbose -Message 'Trying to Install PowerShell Core using Winget again' -Verbose
+            Write-Verbose -Message 'Trying to Install PowerShell Core using Winget again' -Verbose
             # https://apps.microsoft.com/detail/9mz1snwt0n5d
             $null = Winget install 9MZ1SNWT0N5D --accept-package-agreements --accept-source-agreements
         }

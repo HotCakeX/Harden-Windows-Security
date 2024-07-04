@@ -12,7 +12,7 @@ Function P {
 
     if ($PSVersionTable.PSEdition -eq 'Desktop') {
 
-        if (!(Get-Command -Name 'pwsh.exe')) {
+        if (!(Get-Command -Name 'pwsh.exe' -ErrorAction Ignore)) {
             try {
                 Write-Verbose -Verbose -Message 'Trying to Install PowerShell Core using Winget because it could not be found' -Verbose
                 $null = Winget install 9MZ1SNWT0N5D --accept-package-agreements --accept-source-agreements

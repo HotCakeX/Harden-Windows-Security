@@ -1,7 +1,7 @@
 Function P {
     <#
     .SYNOPSIS
-        Effortlessly starts the hardening script on any system
+        Effortlessly starts the Harden Windows Security module on any system
         if necessary, installs PowerShell core using Winget from Microsoft Store
         If Winget is not present, Installs it along with its dependencies on the system
         Can start from Windows PowerShell too
@@ -21,6 +21,7 @@ Function P {
             }
             catch {
 
+                # Change location to temp because Windows PowerShell's default dir is System32 and if running as non-admin cannot be used for download location
                 Push-Location -Path ([System.IO.Path]::GetTempPath())
 
                 Write-Verbose -Message 'Failed to Install PowerShell Core using Winget' -Verbose

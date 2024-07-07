@@ -480,8 +480,8 @@ Skips the online update check and allows you to run the cmdlet in completely off
 ```powershell
 Unprotect-WindowsSecurity
     [-OnlyProcessMitigations]
-    [-OnlyDownloadsDefenseMeasures]
     [-OnlyCountryIPBlockingFirewallRules]
+    [-WDACPoliciesToRemove <String[]>]
     [-Force]
 ```
 
@@ -513,16 +513,17 @@ Indicates that the cmdlet will only remove Process Mitigations (Exploit Protecti
 
 </div>
 
-### -OnlyDownloadsDefenseMeasures
+### -WDACPoliciesToRemove
 
-Indicates that the cmdlet will only remove the [Downloads Defense Measures](https://github.com/HotCakeX/Harden-Windows-Security?tab=readme-ov-file#downloads-defense-measures-) WDAC policy from the system and doesn't change anything else.
+Select the [WDAC Policy](https://github.com/HotCakeX/Harden-Windows-Security?tab=readme-ov-file#downloads-defense-measures-) names to remove.
 
 <div align='center'>
 
-| Type: |[SwitchParameter](https://learn.microsoft.com/en-us/dotnet/api/system.management.automation.switchparameter)|
+| Type: |[String](https://learn.microsoft.com/en-us/dotnet/api/system.string)[]|
 | :-------------: | :-------------: |
 | Position: | Named |
 | Default value: | None |
+| Accepted values: | `Dangerous-Script-Hosts-Blocking`, `Downloads-Defense-Measures` |
 | Required: | False |
 | Accept pipeline input: | False |
 | Accept wildcard characters: | False |

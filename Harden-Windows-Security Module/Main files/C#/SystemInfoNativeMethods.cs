@@ -1,4 +1,7 @@
 // bootDMAProtection check - checks for Kernel DMA Protection status in System information or msinfo32
+// can be used to find out if the DMA Protection is ON \ OFF.
+// will show this by emitting True \ False for On \ Off respectively.
+
 using System;
 using System.Runtime.InteropServices;
 
@@ -34,11 +37,11 @@ namespace SystemInfo
       if (result == 0)
       {
         byte info = Marshal.ReadByte(SystemInformation, 0);
-        Marshal.FreeHGlobal(SystemInformation); // free the allocated memory
+        Marshal.FreeHGlobal(SystemInformation);
         return info;
       }
 
-      Marshal.FreeHGlobal(SystemInformation); // free the allocated memory
+      Marshal.FreeHGlobal(SystemInformation);
       return 0;
     }
   }

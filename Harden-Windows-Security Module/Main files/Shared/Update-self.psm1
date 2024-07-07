@@ -19,12 +19,8 @@ function Update-self {
         [System.String]$InvocationStatement
     )
 
-    # Importing the required sub-modules
-    Write-Verbose -Message 'Importing the required sub-modules'
-    Import-Module -FullyQualifiedName "$HardeningModulePath\Shared\Test-IsAdmin.psm1" -Force -Verbose:$false
-
     # Get the current module's version
-    [System.Version]$CurrentVersion = (Test-ModuleManifest -Path "$HardeningModulePath\Harden-Windows-Security-Module.psd1").Version
+    [System.Version]$CurrentVersion = (Test-ModuleManifest -Path "$([HardeningModule.GlobalVars]::Path)\Harden-Windows-Security-Module.psd1").Version
 
     # Get the latest version from GitHub
     [System.Version]$LatestVersion = Invoke-RestMethod -Uri 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Harden-Windows-Security%20Module/version.txt' -ProgressAction SilentlyContinue
@@ -33,7 +29,9 @@ function Update-self {
         Write-Output -InputObject "$($PSStyle.Foreground.FromRGB(255,105,180))The currently installed module's version is $CurrentVersion while the latest version is $LatestVersion - Auto Updating the module... 💓$($PSStyle.Reset)"
 
         # Only attempt to auto update the module if running as Admin, because Controlled Folder Access exclusion modification requires Admin privs
-        if (-NOT (Test-IsAdmin)) { Throw 'There is a new update available, please run the cmdlet as Admin to update the module.' }
+        if (-NOT ([HardeningModule.UserPrivCheck]::IsAdmin())) {
+            Throw 'There is a new update available, please run the cmdlet as Admin to update the module.'
+        }
 
         Remove-Module -Name 'Harden-Windows-Security-Module' -Force
 
@@ -41,7 +39,7 @@ function Update-self {
             # backup the current allowed apps list in Controlled folder access in order to restore them at the end of the script
             # doing this so that when we Add and then Remove PowerShell executables in Controlled folder access exclusions
             # no user customization will be affected
-            [System.String[]]$CFAAllowedAppsBackup = (Get-MpPreference).ControlledFolderAccessAllowedApplications
+            [System.String[]]$CFAAllowedAppsBackup = ([HardeningModule.GlobalVars]::MDAVPreferencesCurrent).ControlledFolderAccessAllowedApplications
 
             # Temporarily allow the currently running PowerShell executables to the Controlled Folder Access allowed apps
             # so that the script can run without interruption. This change is reverted at the end.

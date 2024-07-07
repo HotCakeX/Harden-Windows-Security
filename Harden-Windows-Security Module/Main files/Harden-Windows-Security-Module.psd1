@@ -4,7 +4,7 @@
   RootModule           = 'Harden-Windows-Security-Module.psm1'
 
   # Version number of this module.
-  ModuleVersion        = '0.4.5'
+  ModuleVersion        = '0.4.6'
 
   # Supported PSEditions
   CompatiblePSEditions = @('Core')
@@ -91,10 +91,10 @@ Harden Windows Safely, Securely, only with Official Microsoft methods
   # RequiredModules = @()
 
   # Assemblies that must be loaded prior to importing this module
-  # RequiredAssemblies = @()
+  RequiredAssemblies   = @('System.Windows.Forms', 'PresentationFramework')
 
   # Script files (.ps1) that are run in the caller's environment prior to importing this module.
-  ScriptsToProcess     = @('Preloader.ps1')
+  # ScriptsToProcess     = @()
 
   # Type files (.ps1xml) to be loaded when importing this module
   # TypesToProcess = @()
@@ -124,27 +124,8 @@ Harden Windows Safely, Securely, only with Official Microsoft methods
   # ModuleList = @()
 
   # List of all files packaged with this module
-  FileList             = @(
-    'Harden-Windows-Security-Module.psd1',
-    'Harden-Windows-Security-Module.psm1',
-    'Preloader.ps1',
-    'Core\Confirm-SystemCompliance.psm1',
-    'Core\Protect-WindowsSecurity.psm1',
-    'Core\Unprotect-WindowsSecurity.psm1',
-    'Resources\Default Security Policy.inf',
-    'Resources\Registry resources.csv',
-    'Resources\EventViewerCustomViews.zip',
-    'Resources\Security-Baselines-X.zip',
-    'Resources\Registry.csv',
-    'Resources\ProcessMitigations.csv',
-    'Shared\Update-self.psm1',
-    'Shared\Test-IsAdmin.psm1',
-    'Shared\IndividualResultClass.cs',
-    'Shared\SystemInfoNativeMethods.cs',
-    'Resources\Media\Log.png',
-    'Resources\Media\Path.png',
-    'Resources\Media\start.png',
-    'Resources\Media\ToastNotificationIcon.png')
+  # Not required as PowerShell Gallery's page will list all of the files on the page automatically
+  # FileList             = @()
 
   # Private data to pass to the module specified in RootModule/ModuleToProcess. This may also contain a PSData hashtable with additional module metadata used by PowerShell.
   PrivateData          = @{

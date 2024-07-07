@@ -97,7 +97,7 @@ Protect-WindowsSecurity
 
 ## Description
 
-The `Protect-WindowsSecurity` cmdlet's hybrid design allows it to operate as a standalone script and as a module component. It allows it to operate with and without administrator privileges. You can use this cmdlet in both interactive and non-interactive modes.
+The `Protect-WindowsSecurity` cmdlet's hybrid design allows it to operate with and without administrator privileges. You can use this cmdlet in both interactive and non-interactive modes.
 
 In Interactive mode, the cmdlet will ask you to confirm the changes before applying them. In non-interactive mode, you can pre-configure the hardening categories you want to apply and the cmdlet will apply them without asking for confirmation.
 

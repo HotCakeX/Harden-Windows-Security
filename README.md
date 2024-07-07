@@ -957,7 +957,17 @@ This policy defends the system from malware that can launch itself automatically
 
 The WDAC policy employs a wildcard pattern to prevent any file from running in the Downloads folder. Additionally, it verifies that the system downloads folder in the user directory matches the downloads folder in the Edge browser's settings. If there is a discrepancy, a warning message is displayed on the console.
 
-The policy can be removed by the [**Unprotect-WindowsSecurity**](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Harden%E2%80%90Windows%E2%80%90Security%E2%80%90Module) or [**Remove-WDACConfig**](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Remove-WDACConfig) cmdlets.
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/magenta-verification.gif" width="25" alt="Rotating pink checkmark denoting registry or cmdlet"> <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/discord-verify-gradient.gif" width="25" alt="Rotating green checkmark denoting Subcategory"> Creates a custom WDAC policy that blocks the execution of the following executables:
+
+* wscript.exe
+* mshta.exe
+* cscript.exe
+
+They are insecure, unsandboxed script hosts that pose a security risk. You can [read more about them in here](https://textslashplain.com/2024/05/20/attack-techniques-full-trust-script-downloads/) which is a blog post by Eric Lawrence from Microsoft.
+
+<br>
+
+All of the policies can be easily removed using the [**Unprotect-WindowsSecurity**](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Harden%E2%80%90Windows%E2%80%90Security%E2%80%90Module#unprotect-windowssecurity-cmdlet) or [**Remove-WDACConfig**](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Remove-WDACConfig) cmdlets.
 
 <p align="right"><a href="#menu-back-to-top">💡 (back to categories)</a></p>
 
@@ -979,7 +989,7 @@ You don't need Admin privileges to run this category, because no system-wide cha
 - <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/magenta-verification.gif" width="25" alt="Rotating pink checkmark denoting registry or cmdlet"> Shows hidden files, folders and drives (toggles the control panel folder options item)
 - <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/magenta-verification.gif" width="25" alt="Rotating pink checkmark denoting registry or cmdlet"> Disables websites accessing local language list - good for privacy
 - <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/magenta-verification.gif" width="25" alt="Rotating pink checkmark denoting registry or cmdlet"> Turns off safe search in Windows search, will enable +18 content to appear in searches; essentially toggles the button in: Windows settings > privacy and security > search permissions > safe search
-- <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/magenta-verification.gif" width="25" alt="Rotating pink checkmark denoting registry or cmdlet"> Enables Clipboard History and sync with Microsoft Account
+- <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/magenta-verification.gif" width="25" alt="Rotating pink checkmark denoting registry or cmdlet"> <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/discord-verify-gradient.gif" width="25" alt="Rotating green checkmark denoting Subcategory"> Enables Clipboard History and sync with Microsoft Account
 - <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/magenta-verification.gif" width="25" alt="Rotating pink checkmark denoting registry or cmdlet"> Turns on text suggestions when typing on the physical keyboard
 - <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/magenta-verification.gif" width="25" alt="Rotating pink checkmark denoting registry or cmdlet"> Turns on "Multilingual text suggestions" for the current user, toggles the option in Windows settings
 - <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/magenta-verification.gif" width="25" alt="Rotating pink checkmark denoting registry or cmdlet"> Turns off sticky key shortcut of pressing shift key 5 times fast
@@ -1040,8 +1050,8 @@ This repository uses the simplest possible, yet effective, methods that make it 
 
     - [Registry.csv](https://github.com/HotCakeX/Harden-Windows-Security/blob/main/Harden-Windows-Security%20Module/Main%20files/Resources/Registry.csv) includes registry data.
 
-    - [ProcessMitigations.csv](https://github.com/HotCakeX/Harden-Windows-Security/blob/main/Harden-Windows-Security%20Module/Main%20files/Resources/ProcessMitigations.csv) includes the process mitigations data.  
-    
+    - [ProcessMitigations.csv](https://github.com/HotCakeX/Harden-Windows-Security/blob/main/Harden-Windows-Security%20Module/Main%20files/Resources/ProcessMitigations.csv) includes the process mitigations data.
+
     - [Default Security Policy.inf](https://github.com/HotCakeX/Harden-Windows-Security/blob/main/Harden-Windows-Security%20Module/Main%20files/Resources/Default%20Security%20Policy.inf) contains security policy data used by the `Unprotect-WindowsSecurity` cmdlet.
 
     - [Registry resources.csv](https://github.com/HotCakeX/Harden-Windows-Security/blob/main/Harden-Windows-Security%20Module/Main%20files/Resources/Registry%20resources.csv) Includes the data used by the `Confirm-SystemCompliance` cmdlet.

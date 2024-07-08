@@ -141,7 +141,7 @@ In Policy Analyzer, there is an option called `Compare to Effective State`. Quot
 
 1. The module downloads the official Microsoft Security Baselines from Microsoft servers and applies them to the system.
 
-2. It then downloads Group Policies from this GitHub repository, which represent the configurations explained in the main Readme page, and applies them to the system, on top of Microsoft Security Baselines, so where there is a conflict of policy, the module will replace the configurations set by Microsoft Security Baselines.
+2. It then uses the group policies included in the Module files for security measures explained on the readme page and applies them to the system, on top of Microsoft Security Baselines, so where there is a conflict of policy, the module will replace the configurations set by Microsoft Security Baselines.
 
 3. When applying the Microsoft Security Baselines, you have the option to apply the optional overrides too, [you can find the details of those overrides in here,](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Overrides-for-Microsoft-Security-Baseline), they are required to be applied if you are using Harden Windows Security Module in Azure VMs and highly recommended in general.
 
@@ -161,7 +161,7 @@ In Policy Analyzer, there is an option called `Compare to Effective State`. Quot
 
 3. After completing each category, used `LGPO.exe /b C:` to backup Group Policies of the system by creating a full GPO.
 
-4. Then I took only files needed from the backup, `registry.pol` and `GptTmpl.inf` and put them in a zip file, renamed it to `Security-Baselines-X.zip`
+4. Then I took only files needed from the backup, `registry.pol` and `GptTmpl.inf` and put them in a folder, renamed it to `Security-Baselines-X`
 
 ### How I Maintain Them
 
@@ -173,7 +173,7 @@ In Policy Analyzer, there is an option called `Compare to Effective State`. Quot
 
 4. Use `PolicyAnalyzer` to double check everything by comparing the old file with the new one and making sure the correct changes are applied.
 
-5. Replace the old Group Policy file with the new file and create a new `Security-Baselines-X` to upload to the GitHub repository.
+5. Replace the old Group Policy file with the new file in the Security-Baselines-X directory and upload it to the GitHub repository.
 
 <br>
 
@@ -203,17 +203,15 @@ Note: At first, when we clean install Windows, the Group Policy folder `C:\Windo
 
 <br>
 
-## How to verify `security-baselines-x.zip` file and 100% trust it?
+## How to verify Security-Baselines-X directory and 100% trust it?
 
-1. Download [the security-baselines-x.zip file](https://github.com/HotCakeX/Harden-Windows-Security/blob/main/Payload/Security-Baselines-X.zip), extract it.
-2. Open Policy Analyzer, Navigate to Add -> File -> Select either `Add User Configuration (registry.pol)` or `Add Security Template (*.inf)` -> Browser for the folder that was extracted from the `security-baselines-x.zip`, navigate to the category you want.
+1. Download [the files from here](https://github.com/HotCakeX/Harden-Windows-Security/tree/main/Harden-Windows-Security%20Module/Main%20files/Resources/Security-Baselines-X).
+2. Open the Policy Analyzer, Navigate to Add -> File -> Select either `Add User Configuration (registry.pol)` or `Add Security Template (*.inf)` -> Browser for the `Security-Baselines-X` directory, navigate to the category you want.
 3. Select either `.pol` or `.inf` file, Import it, give it a name, save it in `\Documents\PolicyAnalyzer\`
 
 4. Back at the main window, use "Compare to Effective State" button to view what policies are included in the file.
 
 5. As you will see, everything is according to what has been explicitly stated in the [GitHub's Readme page](https://github.com/HotCakeX/Harden-Windows-Security).
-
-_You can also use [Virus Total website](https://www.virustotal.com/gui/home/upload) to scan `security-baselines-x.zip` without downloading it first_
 
 <br>
 

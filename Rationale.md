@@ -237,6 +237,6 @@ Please open a new [issue](https://github.com/HotCakeX/Harden-Windows-Security/is
 
 <br>
 
-[^1]: *For Personal users, this is true only when Harden Windows Security script is fully applied too, all categories of it. For other users such as Enterprises, Businesses, Governments, Military etc. this is true only if the rest of the [Enterprise-grade security products mentioned](#-what-about-other-enterprise-security-) are used as well.*
+[^1]: *For Personal users, this is true only when Harden Windows Security module is fully applied too, all categories of it. For other users such as Enterprises, Businesses, Governments, Military etc. this is true only if the rest of the [Enterprise-grade security products mentioned](#-what-about-other-enterprise-security-) are used as well.*
 
 <br>

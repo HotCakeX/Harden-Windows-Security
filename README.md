@@ -263,7 +263,7 @@ From Top to bottom in order:
 
 [Optional Overrides for Microsoft Security Baselines](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Overrides-for-Microsoft-Security-Baseline)
 
-<img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> **Highly recommended** to apply these overrides, the script and module will ask you whether you want to apply them or not. Use Optional Overrides when applying the hardening measures on Azure VMs.
+<img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> **Highly recommended** to apply these overrides, the module will ask you whether you want to apply them or not. Use Optional Overrides when applying the hardening measures on Azure VMs.
 
 <p align="right"><a href="#menu-back-to-top">💡 (back to categories)</a></p>
 
@@ -1058,7 +1058,7 @@ This repository uses the simplest possible, yet effective, methods that make it 
 
 - [How Are Group Policies Used by the Harden Windows Security Module?](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Group-Policy#how-are-group-policies-used-by-the-harden-windows-security-module)
 - [How are Group Policies for this module created and maintained?](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Group-Policy#how-are-group-policies-for-the-module-created-and-maintained)
-- [How to verify security-baselines-x.zip file and 100% trust it?](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Group-Policy#how-to-verify-security-baselines-xzip-file-and-100-trust-it)
+- [How to verify Security-Baselines-X directory and 100% trust it?](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Group-Policy#how-to-verify-security-baselines-x-directory-and-100-trust-it)
 
 <br>
 
@@ -1066,7 +1066,7 @@ This repository uses the simplest possible, yet effective, methods that make it 
 <!-- <a href="">  </a> -->
 <!-- Security-Baselines-X-VT:END -->
 
-[![Virus Total](https://github.com/HotCakeX/Harden-Windows-Security/actions/workflows/VirusTotal.yml/badge.svg)](https://github.com/HotCakeX/Harden-Windows-Security/actions/workflows/VirusTotal.yml) [![PSScriptAnalyzer](https://github.com/HotCakeX/Harden-Windows-Security/actions/workflows/powershell.yml/badge.svg)](https://github.com/HotCakeX/Harden-Windows-Security/actions/workflows/powershell.yml)
+[![PSScriptAnalyzer](https://github.com/HotCakeX/Harden-Windows-Security/actions/workflows/powershell.yml/badge.svg)](https://github.com/HotCakeX/Harden-Windows-Security/actions/workflows/powershell.yml)
 
 <p align="right"><a href="#readme-top">💡 (back to top)</a></p>
 

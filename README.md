@@ -1048,13 +1048,15 @@ This repository uses the simplest possible, yet effective, methods that make it 
 
 - #### The module uses the following files, all of them are in plain text, easily readable or verifiable:
 
-    - [Registry.csv](https://github.com/HotCakeX/Harden-Windows-Security/blob/main/Harden-Windows-Security%20Module/Main%20files/Resources/Registry.csv) includes registry data.
+    - [Registry.csv](https://github.com/HotCakeX/Harden-Windows-Security/blob/main/Harden-Windows-Security%20Module/Main%20files/Resources/Registry.csv) includes registry data used by the `Protect-WindowsSecurity` cmdlet.
 
-    - [ProcessMitigations.csv](https://github.com/HotCakeX/Harden-Windows-Security/blob/main/Harden-Windows-Security%20Module/Main%20files/Resources/ProcessMitigations.csv) includes the process mitigations data.
+    - [ProcessMitigations.csv](https://github.com/HotCakeX/Harden-Windows-Security/blob/main/Harden-Windows-Security%20Module/Main%20files/Resources/ProcessMitigations.csv) includes the process mitigations data used by all of the Harden Windows Security Module's cmdlets.
 
     - [Default Security Policy.inf](https://github.com/HotCakeX/Harden-Windows-Security/blob/main/Harden-Windows-Security%20Module/Main%20files/Resources/Default%20Security%20Policy.inf) contains security policy data used by the `Unprotect-WindowsSecurity` cmdlet.
 
     - [Registry resources.csv](https://github.com/HotCakeX/Harden-Windows-Security/blob/main/Harden-Windows-Security%20Module/Main%20files/Resources/Registry%20resources.csv) Includes the data used by the `Confirm-SystemCompliance` cmdlet.
+
+    - [Harden-Windows-Security.ps1](https://github.com/HotCakeX/Harden-Windows-Security/blob/main/Harden-Windows-Security.ps1) is the bootstrapper for the Harden Windows Security module.
 
 - [How Are Group Policies Used by the Harden Windows Security Module?](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Group-Policy#how-are-group-policies-used-by-the-harden-windows-security-module)
 - [How are Group Policies for this module created and maintained?](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Group-Policy#how-are-group-policies-for-the-module-created-and-maintained)

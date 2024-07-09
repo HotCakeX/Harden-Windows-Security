@@ -8,36 +8,8 @@ if (!$IsWindows) {
 }
 
 # Load all of the C# codes
-Add-Type -Path ([System.IO.Directory]::GetFiles("$PSScriptRoot\C#")) -ReferencedAssemblies @(
-    'System',
-    'System.IO',
-    'System.Collections',
-    'System.Management',
-    'System.Management.Automation',
-    'System.Security',
-    'System.Security.Principal',
-    'System.ComponentModel.Primitives',
-    'System.Linq',
-    'System.Runtime.InteropServices',
-    'System.Text.RegularExpressions',
-    'System.Security.Principal.Windows',
-    'System.Security.Claims',
-    'Microsoft.Win32.Registry',
-    'System.Net.Http',
-    'System.Threading.Tasks',
-    'System.Net.Primitives',
-    'System.Net',
-    'System.Windows',
-    'PresentationFramework',
-    "$($PSHOME)\WindowsBase.dll", # for some reason it tries to use another version of the dll unless i define its path explicitly like this
-    'PresentationCore',
-    'System.Threading',
-    'System.Threading.Thread',
-    'System.IO.Compression',
-    'System.IO.Compression.zipfile',
-    'System.Runtime',
-    'System.Linq.Expressions'
-)
+# for some reason it tries to use another version of the dll unless i define its path explicitly like this
+Add-Type -Path ([System.IO.Directory]::GetFiles("$PSScriptRoot\C#")) -ReferencedAssemblies @((Get-Content -Path "$PSScriptRoot\.NETAssembliesToLoad.txt") + "$($PSHOME)\WindowsBase.dll")
 
 [HardeningModule.GlobalVars]::Path = $PSScriptRoot
 [HardeningModule.Initializer]::Initialize()

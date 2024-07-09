@@ -14,7 +14,6 @@ System.Linq.Expressions
 System.Xml.ReaderWriter
 Microsoft.Win32.registry
 System.Diagnostics.Process
-System.Private.Windows.Core
 System.Security.Cryptography
 System.Management.Automation
 System.Collections.NonGeneric

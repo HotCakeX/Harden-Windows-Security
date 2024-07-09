@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Windows.Forms;
 using System.Linq;
+using System.Runtime.InteropServices;
 
 namespace WDACConfig
 {
@@ -23,17 +24,16 @@ namespace WDACConfig
                     dialog.ShowNewFolderButton = false;
                     dialog.RootFolder = Environment.SpecialFolder.MyComputer;
 
-                    using (Form form = new Form { TopMost = true })
+                    // Use ShowDialog and set top most by using Win32 API
+                    IntPtr hwnd = GetForegroundWindow();
+                    DialogResult result = dialog.ShowDialog(new WindowWrapper(hwnd));
+                    if (result == DialogResult.OK)
                     {
-                        DialogResult result = dialog.ShowDialog(form);
-                        if (result == DialogResult.OK)
-                        {
-                            programsPaths.Add(new DirectoryInfo(dialog.SelectedPath));
-                        }
-                        else
-                        {
-                            break;
-                        }
+                        programsPaths.Add(new DirectoryInfo(dialog.SelectedPath));
+                    }
+                    else
+                    {
+                        break;
                     }
                 }
             } while (true);
@@ -55,6 +55,28 @@ namespace WDACConfig
             public int GetHashCode(DirectoryInfo obj)
             {
                 return obj.FullName.ToLowerInvariant().GetHashCode();
+            }
+        }
+
+        // P/Invoke declarations
+        [DllImport("user32.dll")]
+        // Get the handle of the foreground window
+        // https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getforegroundwindow
+        private static extern IntPtr GetForegroundWindow();
+
+        // Wrapper class to satisfy IWin32Window interface
+        public class WindowWrapper : IWin32Window
+        {
+            private IntPtr _hwnd;
+            public WindowWrapper(IntPtr handle)
+            {
+                _hwnd = handle;
+            }
+
+            // Property to satisfy IWin32Window interface
+            public IntPtr Handle
+            {
+                get { return _hwnd; }
             }
         }
     }

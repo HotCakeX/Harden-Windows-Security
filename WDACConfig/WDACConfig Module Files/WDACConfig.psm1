@@ -65,7 +65,10 @@ Add-Type -Path (Get-ChildItem -File -Recurse -Path "$PSScriptRoot\C#").FullName 
     'System.Diagnostics.Process',
     'System.ComponentModel.Primitives',
     'System.Memory',
-    'System.Linq')
+    'System.Linq',
+    'System.Windows.Forms',
+    'System.Windows.Forms.Primitives',
+    'System.Private.Windows.Core')
 
 # Assign the value of the automatic variable $PSScriptRoot to the [WDACConfig.GlobalVars]::ModuleRootPath
 [WDACConfig.GlobalVars]::ModuleRootPath = $PSScriptRoot

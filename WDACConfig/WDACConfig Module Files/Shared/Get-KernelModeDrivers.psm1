@@ -39,7 +39,7 @@ Function Get-KernelModeDrivers {
         Function Test-UserPE {
             <#
              .SYNOPSIS
-                This function tests if a DLL is a user-mode PE
+                This function tests if a DLL is a user-mode PE by inspecting its imports
              #>
             Param (
                 [AllowNull()]
@@ -140,9 +140,6 @@ Function Get-KernelModeDrivers {
         }
         # If no parameters were passed, scan the system for kernel-mode drivers
         else {
-            # Reference: ReadDriverFolders() method in ConfigCI Helper class
-            # "$env:SystemRoot\System32\DriverStore\FileRepository"
-            # "$env:SystemRoot\System32\drivers"
 
             # Since there can be more than one folder due to localizations such as en-US then from each of the folders, the bootres.dll.mui file is added
             Foreach ($Path in Get-ChildItem -Directory -Path "$env:SystemDrive\Windows\Boot\Resources") {

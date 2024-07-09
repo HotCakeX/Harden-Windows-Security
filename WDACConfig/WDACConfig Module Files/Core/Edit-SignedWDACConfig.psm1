@@ -141,7 +141,6 @@ Function Edit-SignedWDACConfig {
             "$([WDACConfig.GlobalVars]::ModuleRootPath)\Shared\Set-LogPropertiesVisibility.psm1",
             "$([WDACConfig.GlobalVars]::ModuleRootPath)\Shared\Select-LogProperties.psm1",
             "$([WDACConfig.GlobalVars]::ModuleRootPath)\Shared\Test-KernelProtectedFiles.psm1",
-            "$([WDACConfig.GlobalVars]::ModuleRootPath)\Shared\Show-DirectoryPathPicker.psm1",
             "$([WDACConfig.GlobalVars]::ModuleRootPath)\Shared\Invoke-CiSigning.psm1"
         )
         $ModulesToImport += ([WDACConfig.FileUtility]::GetFilesFast("$([WDACConfig.GlobalVars]::ModuleRootPath)\XMLOps", $null, '.psm1')).FullName
@@ -300,7 +299,7 @@ Function Edit-SignedWDACConfig {
                     Write-ColorfulText -Color HotPink -InputText 'When you have finished installing programs, Press Enter to start selecting program directories to scan'
                     Pause
                     Write-ColorfulText -Color Lavender -InputText 'Select directories to scan'
-                    $ProgramsPaths = Show-DirectoryPathPicker | Select-Object -Unique
+                    [System.IO.DirectoryInfo[]]$ProgramsPaths = [WDACConfig.DirectorySelector]::SelectDirectories()
                     #Endregion User-Interaction
                 }
                 catch {

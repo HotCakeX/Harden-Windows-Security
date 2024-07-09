@@ -33,7 +33,6 @@ Function Remove-SupplementalSigners {
 
         # Get the XML content from the file
         [System.Xml.XmlDocument]$XMLContent = Get-Content -Path $Path
-
     }
 
     Process {
@@ -94,14 +93,12 @@ Function Remove-SupplementalSigners {
             # Replace the old element with the new one
             [System.Void]$SiPolicyNode.ReplaceChild($NewSignersNode, $OldSignersNode)
         }
-
     }
 
     End {
         # Save the modified XML content to a file
         $XMLContent.Save($Path)
     }
-
 }
 
 Export-ModuleMember -Function 'Remove-SupplementalSigners'

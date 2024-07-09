@@ -25,6 +25,10 @@ namespace WDACConfig
                     dialog.RootFolder = Environment.SpecialFolder.MyComputer;
 
                     // Use ShowDialog and set top most by using Win32 API
+                    // This method is much better than the ShowDialog overload that takes a parent form
+                    // This makes the opened File/Folder picker top most without the ability to go behind the window that initiated it
+                    // Which is the experience that other native Windows applications have
+                    // Also after picking a directory, the next time the picker GUI opens up will be in the same directory as the last time instead of opening at C drive or some other default location
                     IntPtr hwnd = GetForegroundWindow();
                     DialogResult result = dialog.ShowDialog(new WindowWrapper(hwnd));
                     if (result == DialogResult.OK)

@@ -19,8 +19,6 @@ Function Receive-CodeIntegrityLogs {
     .PARAMETER PostProcessing
         How to process the output for different scenarios
         OnlyExisting: Returns only the logs of files that exist on the disk
-        OnlyDeleted: Returns only the hash details of files that do not exist on the disk
-        Separate: Returns the file paths of files that exist on the disk and the hash details of files that do not exist on the disk, separately in a nested object
     .PARAMETER PolicyNames
         The names of the policies to filter the logs by
     .PARAMETER Category
@@ -51,7 +49,6 @@ Function Receive-CodeIntegrityLogs {
         [Parameter(Mandatory = $false)]
         [System.String]$Type = 'Audit',
 
-        # [ValidateSet('OnlyExisting', 'OnlyDeleted' , 'Separate')]
         [ValidateSet('OnlyExisting')]
         [parameter(mandatory = $false)]
         [System.String]$PostProcessing,
@@ -244,24 +241,6 @@ Function Receive-CodeIntegrityLogs {
                 Audit   = @{}
                 Blocked = @{}
             }
-            <#
-            # only the hash details of files no longer on the disk
-            Deleted   = @{
-                Audit   = @{}
-                Blocked = @{}
-            }
-            # FilePaths of files on the disk and hash details of files not on the disk
-            Separated = @{
-                Audit   = @{
-                    AvailableFilesPaths = [System.Collections.Generic.HashSet[System.String]] @()
-                    DeletedFileHashes   = @{}
-                }
-                Blocked = @{
-                    AvailableFilesPaths = [System.Collections.Generic.HashSet[System.String]] @()
-                    DeletedFileHashes   = @{}
-                }
-            }
-            #>
         }
 
         # Making the hashtable thread-safe by synchronizing it and allowing the Foreach-Object -Parallel to write back data to it safely in real time with $Using scope modifier
@@ -505,27 +484,7 @@ Function Receive-CodeIntegrityLogs {
                             if (-NOT $Output.Existing.Audit.ContainsKey($UniqueLogKey)) {
                                 $Output.Existing.Audit[$UniqueLogKey] = $Log
                             }
-
-                            <#
-                                if (-NOT $Output.Separated.Audit.AvailableFilesPaths.Contains($Log['File Name'])) {
-                                    [System.Void]$Output.Separated.Audit.AvailableFilesPaths.Add($Log['File Name'])
-                                }
-                                #>
                         }
-                        <#
-                            # If the file is not currently on the disk, extract its hashes from the log
-                            else {
-                                $TempDeletedOutputAudit = $Log | Select-Object -Property FileVersion, 'File Name', PolicyGUID, 'SHA256 Hash', 'SHA256 Flat Hash', 'SHA1 Hash', 'SHA1 Flat Hash'
-
-                                if (-NOT $Output.Deleted.Audit.ContainsKey($UniqueLogKey)) {
-                                    $Output.Deleted.Audit[$UniqueLogKey] = $TempDeletedOutputAudit
-                                }
-
-                                if (-NOT $Output.Separated.Audit.DeletedFileHashes.Contains($UniqueLogKey)) {
-                                    $Output.Separated.Audit.DeletedFileHashes[$UniqueLogKey] = $TempDeletedOutputAudit
-                                }
-                            }
-                            #>
                     }
 
                     elseif ($Log.Type -eq 'Blocked') {
@@ -541,30 +500,9 @@ Function Receive-CodeIntegrityLogs {
                             if (-NOT $Output.Existing.Blocked.ContainsKey($UniqueLogKey)) {
                                 $Output.Existing.Blocked[$UniqueLogKey] = $Log
                             }
-
-                            <#
-                                if (-NOT $Output.Separated.Blocked.AvailableFilesPaths.Contains($Log['File Name'])) {
-                                    [System.Void]$Output.Separated.Blocked.AvailableFilesPaths.Add($Log['File Name'])
-                                }
-                                #>
                         }
-                        <#
-                            # If the file is not currently on the disk, extract its hashes from the log
-                            else {
-                                $TempDeletedOutputBlocked = $Log | Select-Object -Property FileVersion, 'File Name', PolicyGUID, 'SHA256 Hash', 'SHA256 Flat Hash', 'SHA1 Hash', 'SHA1 Flat Hash'
-
-                                if (-NOT $Output.Deleted.Blocked.ContainsKey($UniqueLogKey)) {
-                                    $Output.Deleted.Blocked[$UniqueLogKey] = $TempDeletedOutputBlocked
-                                }
-
-                                if (-NOT $Output.Separated.Blocked.DeletedFileHashes.Contains($UniqueLogKey)) {
-                                    $Output.Separated.Blocked.DeletedFileHashes[$UniqueLogKey] = $TempDeletedOutputBlocked
-                                }
-                            }
-                            #>
                     }
                     #Endregion Post-processing for the logs
-
                 }
                 catch {
                     Throw $_
@@ -583,26 +521,8 @@ Function Receive-CodeIntegrityLogs {
         if (-NOT (Test-NotEmpty -Data $Output.All.Blocked)) { $Output.All.Blocked = $null }
         if (-NOT (Test-NotEmpty -Data $Output.Existing.Audit)) { $Output.Existing.Audit = $null }
         if (-NOT (Test-NotEmpty -Data $Output.Existing.Blocked)) { $Output.Existing.Blocked = $null }
-        #    if (-NOT (Test-NotEmpty -Data $Output.Deleted.Audit)) { $Output.Deleted.Audit = $null }
-        #    if (-NOT (Test-NotEmpty -Data $Output.Deleted.Blocked)) { $Output.Deleted.Blocked = $null }
-        #    if (-NOT (Test-NotEmpty -Data $Output.Separated.Audit.AvailableFilesPaths)) { $Output.Separated.Audit.AvailableFilesPaths = $null }
-        #    if (-NOT (Test-NotEmpty -Data $Output.Separated.Audit.DeletedFileHashes)) { $Output.Separated.Audit.DeletedFileHashes = $null }
-        #    if (-NOT (Test-NotEmpty -Data $Output.Separated.Blocked.AvailableFilesPaths)) { $Output.Separated.Blocked.AvailableFilesPaths = $null }
-        #    if (-NOT (Test-NotEmpty -Data $Output.Separated.Blocked.DeletedFileHashes)) { $Output.Separated.Blocked.DeletedFileHashes = $null }
 
         Switch ($PostProcessing) {
-            <#
-            'Separate' {
-                if ($Type -eq 'Audit') {
-                    Write-Verbose -Message "Receive-CodeIntegrityLogs: Returning $($Output.Separated.Audit.AvailableFilesPaths.Count) Audit Code Integrity logs for files on the disk and $($Output.Separated.Audit.DeletedFileHashes.Count) for the files not on the disk."
-                    Return $Output.Separated.Audit
-                }
-                else {
-                    Write-Verbose -Message "Receive-CodeIntegrityLogs: Returning $($Output.Separated.Blocked.AvailableFilesPaths.Count) Blocked Code Integrity logs for files on the disk and $($Output.Separated.Blocked.DeletedFileHashes.Count) for the files not on the disk."
-                    Return $Output.Separated.Blocked
-                }
-            }
-            #>
             'OnlyExisting' {
                 if ($Type -eq 'Audit') {
                     Write-Verbose -Message "Receive-CodeIntegrityLogs: Returning $($Output.Existing.Audit.Values.Count) Audit Code Integrity logs for files on the disk."
@@ -613,18 +533,6 @@ Function Receive-CodeIntegrityLogs {
                     Return $Output.Existing.Blocked.Values
                 }
             }
-            <#
-            'OnlyDeleted' {
-                if ($Type -eq 'Audit') {
-                    Write-Verbose -Message "Receive-CodeIntegrityLogs: Returning $($Output.Deleted.Audit.Values.Count) Audit Code Integrity logs for files not on the disk."
-                    Return $Output.Deleted.Audit.Values
-                }
-                else {
-                    Write-Verbose -Message "Receive-CodeIntegrityLogs: Returning $($Output.Deleted.Blocked.Values.Count) Blocked Code Integrity logs for files not on the disk."
-                    Return $Output.Deleted.Blocked.Values
-                }
-            }
-            #>
             Default {
                 if ($Type -eq 'Audit') {
                     Write-Verbose -Message "Receive-CodeIntegrityLogs: Returning $($Output.All.Audit.Values.Count) Audit Code Integrity logs."

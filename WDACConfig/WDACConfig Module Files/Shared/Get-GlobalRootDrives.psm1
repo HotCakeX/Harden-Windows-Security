@@ -13,7 +13,6 @@ Function Get-GlobalRootDrives {
     [CmdletBinding()]
     [OutputType([System.Object[]])]
     param ()
-    . "$([WDACConfig.GlobalVars]::ModuleRootPath)\CoreExt\PSDefaultParameterValues.ps1"
 
     # Initialize some variables for storing the volume names, paths, and mount points
     [System.UInt32]$lpcchReturnLength = 0

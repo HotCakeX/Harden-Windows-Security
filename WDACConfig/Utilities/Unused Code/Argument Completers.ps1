@@ -32,33 +32,3 @@
         }
     }
 }
-
-# argument tab auto-completion for Supplemental Policy Paths to show only .xml files and only suggest files that haven't been already selected by user
-[System.Management.Automation.ScriptBlock]$ArgumentCompleterPolicyPathsSupplementalPoliciesOnly = {
-    # Get the current command and the already bound parameters
-    param($CommandName, $parameterName, $wordToComplete, $CommandAst, $fakeBoundParameters)
-
-    # Find all string constants in the AST that end in ".xml"
-    $Existing = $CommandAst.FindAll({
-            $args[0] -is [System.Management.Automation.Language.StringConstantExpressionAst] -and
-            $args[0].Value -like '*.xml'
-        },
-        $false
-    ).Value
-
-    # Get the xml files in the current directory
-    Get-ChildItem -File | Where-Object -FilterScript { $_.extension -like '*.xml' } | ForEach-Object -Process {
-
-        $XmlItem = [System.Xml.XmlDocument](Get-Content -Path $_)
-        $PolicyType = $XmlItem.SiPolicy.PolicyType
-
-        if ($PolicyType -eq 'Supplemental Policy') {
-
-            # Check if the file is already selected
-            if ($_.FullName -notin $Existing) {
-                # Return the file name with quotes
-                "`"$_`""
-            }
-        }
-    }
-}

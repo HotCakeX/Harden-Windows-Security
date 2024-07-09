@@ -1034,7 +1034,6 @@ Function ConvertTo-WDACPolicy {
                     }
 
                     #Endregion Base To Supplemental Policy Association and Deployment
-
                 }
             }
         }

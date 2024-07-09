@@ -9,13 +9,9 @@ this captures the $Debug preference from the command line:
 [System.Boolean]$Debug = $PSBoundParameters.Debug.IsPresent ? $true : $false
 
 Then in the PSDefaultParameterValues.ps1 file, there is 'Do-Something:Debug' = $Debug
-
 So that essentially means any instance of 'Do-Something' cmdlet in the code is actually 'Do-Something -Debug:$Debug'
-#>
 
-
-<#
-Load order of the WDACConfig module
+Load order of the WDACConfig module:
 
 1. ScriptsToProcess defined in the manifest
 2. All Individual sub-modules (All psm1 files defined in the NestedModules array in the manifest)
@@ -33,8 +29,6 @@ if (!$IsWindows) {
 # Specifies that the WDACConfig module requires Administrator privileges
 #Requires -RunAsAdministrator
 
-# Set-ConstantVariable -Name 'UserAccountDirectoryPath' -Value ((Get-CimInstance Win32_UserProfile -Filter "SID = '$([System.Security.Principal.WindowsIdentity]::GetCurrent().User.Value)'").LocalPath) -Option 'Constant' -Scope 'Script' -Description 'Securely retrieved User profile directory'
-
 # This is required for the EKUs to work.
 # Load all the DLLs in the PowerShell folder, providing .NET types for the module
 # These types are required for the folder picker with multiple select options. Also the module manifest no longer handles assembly as it's not necessary anymore.
@@ -46,29 +40,7 @@ foreach ($Dll in (Convert-Path -Path ("$([psobject].Assembly.Location)\..\*.dll"
 }
 
 # Import all C# codes at once so they will get compiled together, have resolved dependencies and recognize each others' classes/types
-Add-Type -Path (Get-ChildItem -File -Recurse -Path "$PSScriptRoot\C#").FullName -ReferencedAssemblies ('System',
-    'System.Security.Cryptography.Pkcs',
-    'System.Security.Cryptography.X509Certificates',
-    'System.Security.Cryptography',
-    'System.Xml',
-    'System.Formats.Asn1',
-    'System.IO',
-    'System.Runtime.InteropServices',
-    'System.Collections',
-    'System.Xml.ReaderWriter',
-    'System.Collections.NonGeneric',
-    'System.Management',
-    'System.Globalization',
-    'Microsoft.Win32.registry',
-    'System.Management.Automation',
-    'System.Text.Json',
-    'System.Diagnostics.Process',
-    'System.ComponentModel.Primitives',
-    'System.Memory',
-    'System.Linq',
-    'System.Windows.Forms',
-    'System.Windows.Forms.Primitives',
-    'System.Private.Windows.Core')
+Add-Type -Path (Get-ChildItem -File -Recurse -Path "$PSScriptRoot\C#").FullName -ReferencedAssemblies @(Get-Content -Path "$PSScriptRoot\.NETAssembliesToLoad.txt")
 
 # Assign the value of the automatic variable $PSScriptRoot to the [WDACConfig.GlobalVars]::ModuleRootPath
 [WDACConfig.GlobalVars]::ModuleRootPath = $PSScriptRoot

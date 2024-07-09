@@ -337,7 +337,6 @@ Function Protect-WindowsSecurity {
 
     begin {
         [HardeningModule.Initializer]::Initialize()
-        [HardeningModule.GlobalVars]::MDAVConfigCurrent = Get-MpComputerStatus
 
         # Import all of the required functions
         . "$([HardeningModule.GlobalVars]::Path)\Shared\HardeningFunctions.ps1"

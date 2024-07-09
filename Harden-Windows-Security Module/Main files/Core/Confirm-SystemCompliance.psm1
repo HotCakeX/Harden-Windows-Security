@@ -43,7 +43,6 @@ function Confirm-SystemCompliance {
     )
     begin {
         [HardeningModule.Initializer]::Initialize()
-        [HardeningModule.GlobalVars]::MDAVConfigCurrent = Get-MpComputerStatus
 
         # Importing the required sub-modules
         Write-Verbose -Message 'Importing the required sub-modules'
@@ -67,9 +66,6 @@ function Confirm-SystemCompliance {
 
         # a Synchronized HashTable to safely increment/decrement values from multiple threads and also access parent scope variables inside thread jobs
         $SyncHash = [System.Collections.Hashtable]::Synchronized(@{})
-        # Total number of Compliant values not equal to N/A
-        $SyncHash['TotalNumberOfTrueCompliantValues'] = 239
-
         $SyncHash['VerbosePreference'] = $VerbosePreference
 
         # An object to store the FINAL results
@@ -209,10 +205,10 @@ function Confirm-SystemCompliance {
             Write-Progress -Id 0 -Activity 'Gathering Security Policy Information' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
 
             # Get the security group policies
-            $null = &"$env:SystemDrive\Windows\System32\Secedit.exe" /export /cfg .\security_policy.inf
+            $null = &"$env:SystemDrive\Windows\System32\Secedit.exe" /export /cfg ([HardeningModule.GlobalVars]::securityPolicyInfPath)
 
             # Storing the output of the ini file parsing function
-            $SyncHash['SecurityPoliciesIni'] = [HardeningModule.IniFileConverter]::ConvertFromIniFile('.\security_policy.inf')
+            $SyncHash['SecurityPoliciesIni'] = [HardeningModule.IniFileConverter]::ConvertFromIniFile([HardeningModule.GlobalVars]::securityPolicyInfPath)
 
             $CurrentMainStep++
             Write-Progress -Id 0 -Activity 'Verifying the security settings' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
@@ -587,7 +583,7 @@ function Confirm-SystemCompliance {
                                     Write-Verbose -Message "Mitigations for $ProcessName_Target were found but are not compliant"
 
                                     # Increment the total number of the verifiable compliant values for each process that has a mitigation applied to it in the CSV file
-                                    $SyncHash['TotalNumberOfTrueCompliantValues']++
+                                    ([HardeningModule.GlobalVars]::TotalNumberOfTrueCompliantValues)++
 
                                     $NestedObjectArray.Add([HardeningModule.IndividualResult]@{
                                             FriendlyName = "Process Mitigations for: $ProcessName_Target"
@@ -603,7 +599,7 @@ function Confirm-SystemCompliance {
                                     Write-Verbose -Message "Mitigations for $ProcessName_Target are compliant"
 
                                     # Increment the total number of the verifiable compliant values for each process that has a mitigation applied to it in the CSV file
-                                    $SyncHash['TotalNumberOfTrueCompliantValues']++
+                                    ([HardeningModule.GlobalVars]::TotalNumberOfTrueCompliantValues)++
 
                                     $NestedObjectArray.Add([HardeningModule.IndividualResult]@{
                                             FriendlyName = "Process Mitigations for: $ProcessName_Target"
@@ -620,7 +616,7 @@ function Confirm-SystemCompliance {
                                 Write-Verbose -Message "Mitigations for $ProcessName_Target were not found"
 
                                 # Increment the total number of the verifiable compliant values for each process that has a mitigation applied to it in the CSV file
-                                $SyncHash['TotalNumberOfTrueCompliantValues']++
+                                ([HardeningModule.GlobalVars]::TotalNumberOfTrueCompliantValues)++
 
                                 $NestedObjectArray.Add([HardeningModule.IndividualResult]@{
                                         FriendlyName = "Process Mitigations for: $ProcessName_Target"
@@ -831,7 +827,7 @@ function Confirm-SystemCompliance {
                             })
                     }
                     else {
-                        $SyncHash['TotalNumberOfTrueCompliantValues']--
+                        ([HardeningModule.GlobalVars]::TotalNumberOfTrueCompliantValues)--
                     }
 
                     # OS Drive encryption verifications
@@ -916,7 +912,7 @@ function Confirm-SystemCompliance {
                         foreach ($MountPoint in $($NonOSBitLockerVolumes | Sort-Object).MountPoint) {
 
                             # Increase the number of available compliant values for each non-OS drive that was found
-                            $SyncHash['TotalNumberOfTrueCompliantValues']++
+                            ([HardeningModule.GlobalVars]::TotalNumberOfTrueCompliantValues)++
 
                             # If status is unknown, that means the non-OS volume is encrypted and locked, if it's on then it's on
                             if ((Get-BitLockerVolume -MountPoint $MountPoint).ProtectionStatus -in 'on', 'Unknown') {
@@ -1510,7 +1506,7 @@ function Confirm-SystemCompliance {
                             })
                     }
                     else {
-                        $SyncHash['TotalNumberOfTrueCompliantValues']--
+                        ([HardeningModule.GlobalVars]::TotalNumberOfTrueCompliantValues)--
                     }
 
                     # Checking if all user accounts are part of the Hyper-V security Group
@@ -1783,12 +1779,12 @@ function Confirm-SystemCompliance {
                 # Only display the overall score if the user has not specified any categories
                 if (!$Categories) {
                     switch ($True) {
-                    ($TotalTrueCompliantValuesInOutPut -in 1..40) { & $WriteRainbow "$(Get-Content -Raw -Path "$([HardeningModule.GlobalVars]::Path)\Resources\Media\Text Arts\1To40.txt")`nYour compliance score is $TotalTrueCompliantValuesInOutPut out of $($SyncHash['TotalNumberOfTrueCompliantValues'])!" }
-                    ($TotalTrueCompliantValuesInOutPut -in 41..80) { & $WriteRainbow "$(Get-Content -Raw -Path "$([HardeningModule.GlobalVars]::Path)\Resources\Media\Text Arts\41To80.txt")`nYour compliance score is $TotalTrueCompliantValuesInOutPut out of $($SyncHash['TotalNumberOfTrueCompliantValues'])!" }
-                    ($TotalTrueCompliantValuesInOutPut -in 81..120) { & $WriteRainbow "$(Get-Content -Raw -Path "$([HardeningModule.GlobalVars]::Path)\Resources\Media\Text Arts\81To120.txt")`nYour compliance score is $TotalTrueCompliantValuesInOutPut out of $($SyncHash['TotalNumberOfTrueCompliantValues'])!" }
-                    ($TotalTrueCompliantValuesInOutPut -in 121..160) { & $WriteRainbow "$(Get-Content -Raw -Path "$([HardeningModule.GlobalVars]::Path)\Resources\Media\Text Arts\121To160.txt")`nYour compliance score is $TotalTrueCompliantValuesInOutPut out of $($SyncHash['TotalNumberOfTrueCompliantValues'])!" }
-                    ($TotalTrueCompliantValuesInOutPut -in 161..200) { & $WriteRainbow "$(Get-Content -Raw -Path "$([HardeningModule.GlobalVars]::Path)\Resources\Media\Text Arts\161To200.txt")`nYour compliance score is $TotalTrueCompliantValuesInOutPut out of $($SyncHash['TotalNumberOfTrueCompliantValues'])!" }
-                    ($TotalTrueCompliantValuesInOutPut -gt 200) { & $WriteRainbow "$(Get-Content -Raw -Path "$([HardeningModule.GlobalVars]::Path)\Resources\Media\Text Arts\Above200.txt")`nYour compliance score is $TotalTrueCompliantValuesInOutPut out of $($SyncHash['TotalNumberOfTrueCompliantValues'])!" }
+                    ($TotalTrueCompliantValuesInOutPut -in 1..40) { & $WriteRainbow "$(Get-Content -Raw -Path "$([HardeningModule.GlobalVars]::Path)\Resources\Media\Text Arts\1To40.txt")`nYour compliance score is $TotalTrueCompliantValuesInOutPut out of $([HardeningModule.GlobalVars]::TotalNumberOfTrueCompliantValues)!" }
+                    ($TotalTrueCompliantValuesInOutPut -in 41..80) { & $WriteRainbow "$(Get-Content -Raw -Path "$([HardeningModule.GlobalVars]::Path)\Resources\Media\Text Arts\41To80.txt")`nYour compliance score is $TotalTrueCompliantValuesInOutPut out of $([HardeningModule.GlobalVars]::TotalNumberOfTrueCompliantValues)!" }
+                    ($TotalTrueCompliantValuesInOutPut -in 81..120) { & $WriteRainbow "$(Get-Content -Raw -Path "$([HardeningModule.GlobalVars]::Path)\Resources\Media\Text Arts\81To120.txt")`nYour compliance score is $TotalTrueCompliantValuesInOutPut out of $([HardeningModule.GlobalVars]::TotalNumberOfTrueCompliantValues)!" }
+                    ($TotalTrueCompliantValuesInOutPut -in 121..160) { & $WriteRainbow "$(Get-Content -Raw -Path "$([HardeningModule.GlobalVars]::Path)\Resources\Media\Text Arts\121To160.txt")`nYour compliance score is $TotalTrueCompliantValuesInOutPut out of $([HardeningModule.GlobalVars]::TotalNumberOfTrueCompliantValues)!" }
+                    ($TotalTrueCompliantValuesInOutPut -in 161..200) { & $WriteRainbow "$(Get-Content -Raw -Path "$([HardeningModule.GlobalVars]::Path)\Resources\Media\Text Arts\161To200.txt")`nYour compliance score is $TotalTrueCompliantValuesInOutPut out of $([HardeningModule.GlobalVars]::TotalNumberOfTrueCompliantValues)!" }
+                    ($TotalTrueCompliantValuesInOutPut -gt 200) { & $WriteRainbow "$(Get-Content -Raw -Path "$([HardeningModule.GlobalVars]::Path)\Resources\Media\Text Arts\Above200.txt")`nYour compliance score is $TotalTrueCompliantValuesInOutPut out of $([HardeningModule.GlobalVars]::TotalNumberOfTrueCompliantValues)!" }
                     }
                 }
             }
@@ -1815,7 +1811,10 @@ function Confirm-SystemCompliance {
             #Endregion stopping rainbow progress bar
 
             # Clean up
-            Remove-Item -Path '.\security_policy.inf' -Force
+            if ([System.IO.Directory]::Exists(([HardeningModule.GlobalVars]::WorkingDir))) {
+                Write-Verbose -Message 'Removing the working directory'
+                Remove-Item -Recurse -Path ([HardeningModule.GlobalVars]::WorkingDir) -Force
+            }
         }
     }
     <#

@@ -8,6 +8,14 @@
   Author               = 'HotCakeX'
   CompanyName          = 'SpyNetGirl'
   Copyright            = '(c) HotCakeX. All rights reserved.'
+  HelpInfoURI          = 'https://github.com/HotCakeX/Harden-Windows-Security/wiki/Harden%E2%80%90Windows%E2%80%90Security%E2%80%90Module'
+  PowerShellVersion    = '7.4.2'
+  RequiredAssemblies   = @('System.Windows.Forms', 'PresentationFramework')
+  NestedModules        = @('Core\Confirm-SystemCompliance.psm1', 'Core\Protect-WindowsSecurity.psm1', 'Core\Unprotect-WindowsSecurity.psm1')
+  FunctionsToExport    = @('Confirm-SystemCompliance', 'Protect-WindowsSecurity', 'Unprotect-WindowsSecurity')
+  CmdletsToExport      = @()
+  VariablesToExport    = '*'
+  AliasesToExport      = @()
   Description          = @'
 
 Harden Windows Safely, Securely, only with Official Microsoft methods
@@ -61,30 +69,8 @@ Harden Windows Safely, Securely, only with Official Microsoft methods
 
 '@
 
-  # Minimum version of the PowerShell engine required by this module
-  PowerShellVersion    = '7.4.2'
-
-  # Assemblies that must be loaded prior to importing this module
-  RequiredAssemblies   = @('System.Windows.Forms', 'PresentationFramework')
-
-  # Modules to import as nested modules of the module specified in RootModule/ModuleToProcess
-  NestedModules        = @('Core\Confirm-SystemCompliance.psm1', 'Core\Protect-WindowsSecurity.psm1', 'Core\Unprotect-WindowsSecurity.psm1')
-
-  # Functions to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no functions to export.
-  FunctionsToExport    = @('Confirm-SystemCompliance', 'Protect-WindowsSecurity', 'Unprotect-WindowsSecurity')
-
-  # Cmdlets to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no cmdlets to export.
-  CmdletsToExport      = @()
-
-  # Variables to export from this module
-  VariablesToExport    = '*'
-
-  # Aliases to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no aliases to export.
-  AliasesToExport      = @()
-
   # Private data to pass to the module specified in RootModule/ModuleToProcess. This may also contain a PSData hashtable with additional module metadata used by PowerShell.
   PrivateData          = @{
-
     PSData = @{
       Tags         = @('Harden-Windows-Security', 'Harden', 'Windows', 'Security', 'Compliance', 'Validation', 'Baseline', 'Security-Score', 'Benchmark', 'Group-Policy')
       LicenseUri   = 'https://github.com/HotCakeX/.github/blob/main/LICENSE'
@@ -98,9 +84,6 @@ Complete detailed release notes available on GitHub releases: https://github.com
 
       # Prerelease string of this module
       # Prerelease = ''
-
     }
-
   }
-  HelpInfoURI          = 'https://github.com/HotCakeX/Harden-Windows-Security/wiki/Harden%E2%80%90Windows%E2%80%90Security%E2%80%90Module'
 }

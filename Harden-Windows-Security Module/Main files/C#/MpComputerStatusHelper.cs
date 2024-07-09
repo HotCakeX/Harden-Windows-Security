@@ -1,21 +1,21 @@
 using System;
-using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using System.Management;
+using System.Collections.Generic;
+using System.Globalization;
 
 namespace HardeningModule
 {
-    public static class MpPreferenceHelper
+    public static class MpComputerStatusHelper
     {
-        // Get the MpPreference from the MSFT_MpPreference WMI class and returns it as a dictionary
-        public static Dictionary<string, object> GetMpPreference()
+        // Get the MpComputerStatus from the MSFT_MpComputerStatus WMI class and returns it as a dictionary
+        public static Dictionary<string, object> GetMpComputerStatus()
         {
             try
             {
-                // Defining the WMI query to retrieve the MpPreference
+                // Define the WMI query to retrieve the MpComputerStatus
                 string namespaceName = "ROOT\\Microsoft\\Windows\\Defender";
-                string className = "MSFT_MpPreference";
+                string className = "MSFT_MpComputerStatus";
                 string queryString = $"SELECT * FROM {className}";
 
                 // Execute the query
@@ -35,7 +35,7 @@ namespace HardeningModule
             }
             catch (ManagementException ex)
             {
-                string errorMessage = $"WMI query for 'MSFT_MpPreference' failed: {ex.Message}";
+                string errorMessage = $"WMI query for 'MSFT_MpComputerStatus' failed: {ex.Message}";
                 throw new HardeningModule.PowerShellExecutionException(errorMessage, ex);
             }
         }
@@ -43,22 +43,16 @@ namespace HardeningModule
         // Convert the ManagementBaseObject to a dictionary
         private static Dictionary<string, object> ConvertToDictionary(ManagementBaseObject managementObject)
         {
-            // Creating a dictionary to store the properties of the ManagementBaseObject
             Dictionary<string, object> dictionary = new Dictionary<string, object>();
 
-            // Iterating through the properties of the ManagementBaseObject and adding them to the dictionary
             foreach (var property in managementObject.Properties)
             {
-                // Check if the value of the property is in DMTF datetime format
-                // Properties such as SignatureScheduleTime use that format
                 if (property.Type == CimType.DateTime && property.Value is string dmtfTime)
                 {
-                    // Convert DMTF datetime format to TimeSpan
-                    dictionary[property.Name] = ConvertDmtfToTimeSpan(dmtfTime);
+                    dictionary[property.Name] = ConvertDmtfToDateTime(dmtfTime);
                 }
                 else
                 {
-                    // Add the property to the dictionary as is if it's not DMTF
                     dictionary[property.Name] = property.Value;
                 }
             }
@@ -66,19 +60,16 @@ namespace HardeningModule
             return dictionary;
         }
 
-        private static TimeSpan ConvertDmtfToTimeSpan(string dmtfTime)
+        // Convert DMTF datetime format to DateTime
+        private static DateTime ConvertDmtfToDateTime(string dmtfTime)
         {
             // DMTF datetime format: yyyymmddHHMMSS.mmmmmmsUUU
-            // We only need HHMMSS part for this case
-            if (dmtfTime.Length >= 15)
+            if (ManagementDateTimeConverter.ToDateTime(dmtfTime) is DateTime dateTime)
             {
-                string hhmmss = dmtfTime.Substring(8, 6);
-                if (TimeSpan.TryParseExact(hhmmss, "HHmmss", CultureInfo.InvariantCulture, out TimeSpan timeSpan))
-                {
-                    return timeSpan;
-                }
+                return dateTime;
             }
-            return TimeSpan.Zero;
+
+            throw new FormatException($"Invalid DMTF datetime format: {dmtfTime}");
         }
     }
 }

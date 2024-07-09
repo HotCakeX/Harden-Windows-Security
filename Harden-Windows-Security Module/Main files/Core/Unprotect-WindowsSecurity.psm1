@@ -22,7 +22,6 @@ Function Unprotect-WindowsSecurity {
 
     begin {
         [HardeningModule.Initializer]::Initialize()
-        [HardeningModule.GlobalVars]::MDAVConfigCurrent = Get-MpComputerStatus
 
         Write-Verbose -Message 'Importing the required sub-modules'
         Import-Module -FullyQualifiedName "$([HardeningModule.GlobalVars]::Path)\Shared\Update-self.psm1" -Force -Verbose:$false
@@ -165,16 +164,9 @@ Function Unprotect-WindowsSecurity {
                         Write-Progress -Id 0 -Activity 'Removing WDAC Policies' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
                         Remove-WDACPolicies -PolicyNames ('Downloads-Defense-Measures', 'Dangerous-Script-Hosts-Blocking')
 
-                        # Create the working directory
-                        Write-Verbose -Message "Creating a working directory at $CurrentUserTempDirectoryPath\HardeningXStuff\"
-                        $null = New-Item -ItemType Directory -Path "$CurrentUserTempDirectoryPath\HardeningXStuff\" -Force
-
-                        # working directory assignment
-                        [System.IO.DirectoryInfo]$WorkingDir = "$CurrentUserTempDirectoryPath\HardeningXStuff\"
-
                         # change location to the new directory
-                        Write-Verbose -Message "Changing location to $WorkingDir"
-                        Set-Location -Path $WorkingDir
+                        Write-Verbose -Message 'Changing location'
+                        Set-Location -Path ([HardeningModule.GlobalVars]::WorkingDir)
 
                         $CurrentMainStep++
                         Write-Progress -Id 0 -Activity 'Removing Process Mitigations for apps' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
@@ -243,12 +235,12 @@ Function Unprotect-WindowsSecurity {
                         # Remove the scheduled task that keeps the Microsoft recommended driver block rules updated
 
                         # Define the name and path of the task
-                        [System.String]$taskName = 'MSFT Driver Block list update'
-                        [System.String]$taskPath = '\MSFT Driver Block list update\'
+                        [System.String]$TaskName = 'MSFT Driver Block list update'
+                        [System.String]$TaskPath = '\MSFT Driver Block list update\'
 
-                        Write-Verbose -Message "Removing the scheduled task $taskName"
-                        if (Get-ScheduledTask -TaskName $taskName -TaskPath $taskPath -ErrorAction SilentlyContinue) {
-                            [System.Void](Unregister-ScheduledTask -TaskName $taskName -TaskPath $taskPath -Confirm:$false)
+                        Write-Verbose -Message "Removing the scheduled task $TaskName"
+                        if (Get-ScheduledTask -TaskName $TaskName -TaskPath $TaskPath -ErrorAction SilentlyContinue) {
+                            [System.Void](Unregister-ScheduledTask -TaskName $TaskName -TaskPath $TaskPath -Confirm:$false)
                         }
 
                         # Enables Multicast DNS (mDNS) UDP-in Firewall Rules for all 3 Firewall profiles
@@ -290,8 +282,12 @@ Function Unprotect-WindowsSecurity {
                     Set-MpPreference -ControlledFolderAccessAllowedApplications $CFAAllowedAppsBackup
                 }
 
-                # Remove the working directory
-                Set-Location -Path $HOME; Remove-Item -Recurse -Path "$CurrentUserTempDirectoryPath\HardeningXStuff\" -Force -ErrorAction SilentlyContinue
+                Set-Location -Path $HOME
+
+                if ([System.IO.Directory]::Exists(([HardeningModule.GlobalVars]::WorkingDir))) {
+                    Write-Verbose -Message 'Removing the working directory'
+                    Remove-Item -Recurse -Path ([HardeningModule.GlobalVars]::WorkingDir) -Force
+                }
             }
         }
     }

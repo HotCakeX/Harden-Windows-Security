@@ -11,16 +11,16 @@ namespace WDACConfig
 {
     public static class CiPolicyTest
     {
-        public static object TestCiPolicy(FileInfo xmlFile, FileInfo cipFile)
+        public static object TestCiPolicy(string xmlFilePath, string cipFilePath)
         {
             // Make sure the parameters are mutually exclusive
-            if (xmlFile != null && cipFile != null)
+            if (!string.IsNullOrEmpty(xmlFilePath) && !string.IsNullOrEmpty(cipFilePath))
             {
-                throw new ArgumentException("Only one of XmlFile or CipFile should be provided.");
+                throw new ArgumentException("Only one of xmlFilePath or cipFilePath should be provided.");
             }
 
-            // Check if XML File was provided
-            if (xmlFile != null)
+            // Check if XML file path was provided
+            if (!string.IsNullOrEmpty(xmlFilePath))
             {
                 // Get the Code Integrity Schema file path
                 string schemaPath = WDACConfig.GlobalVars.CISchemaPath;
@@ -32,9 +32,9 @@ namespace WDACConfig
                 }
 
                 // Make sure the input XML file exists
-                if (!xmlFile.Exists)
+                if (!File.Exists(xmlFilePath))
                 {
-                    throw new FileNotFoundException($"The file {xmlFile.FullName} does not exist.");
+                    throw new FileNotFoundException($"The file {xmlFilePath} does not exist.");
                 }
 
                 // Validate XML file against schema
@@ -55,13 +55,13 @@ namespace WDACConfig
                     // Set the validation event handler
                     settings.ValidationEventHandler += (sender, args) =>
                     {
-                        throw new XmlSchemaValidationException($"Validation error in {xmlFile.FullName}: {args.Message}");
+                        throw new XmlSchemaValidationException($"Validation error in {xmlFilePath}: {args.Message}");
                     };
 
                     // Create an XmlDocument object
                     XmlDocument xmlDoc = new XmlDocument();
                     // Load the input XML document
-                    xmlDoc.Load(xmlFile.FullName);
+                    xmlDoc.Load(xmlFilePath);
 
                     using (XmlReader reader = XmlReader.Create(new StringReader(xmlDoc.OuterXml), settings))
                     {
@@ -73,12 +73,12 @@ namespace WDACConfig
                 }
                 catch (XmlSchemaValidationException ex)
                 {
-                    throw new InvalidOperationException($"Validation error in {xmlFile.FullName}: {ex.Message}");
+                    throw new InvalidOperationException($"Validation error in {xmlFilePath}: {ex.Message}");
                 }
             }
 
-            // Check if CIP File was provided
-            else if (cipFile != null)
+            // Check if CIP file path was provided
+            else if (!string.IsNullOrEmpty(cipFilePath))
             {
                 // Code to read signed CIP file
                 try
@@ -86,10 +86,10 @@ namespace WDACConfig
                     // Create a new SignedCms object to store the signed message
                     SignedCms signedCms = new SignedCms();
 
-                    // Decode the signed message from the file specified by $CipFile
+                    // Decode the signed message from the file specified by cipFilePath
                     // The file is read as a byte array because the SignedCms.Decode() method expects a byte array as input
                     // https://learn.microsoft.com/en-us/dotnet/api/system.security.cryptography.pkcs.signedcms.decode
-                    signedCms.Decode(File.ReadAllBytes(cipFile.FullName));
+                    signedCms.Decode(File.ReadAllBytes(cipFilePath));
 
                     X509Certificate2Collection certificates = signedCms.Certificates;
                     X509Certificate2[] certificateArray = new X509Certificate2[certificates.Count];
@@ -100,13 +100,13 @@ namespace WDACConfig
                 }
                 catch (CryptographicException)
                 {
-                    // "The file CipFile does not contain a valid signature."
+                    // "The file cipFilePath does not contain a valid signature."
                     return null;
                 }
             }
             else
             {
-                throw new ArgumentNullException("Either XmlFile or CipFile must be provided.");
+                throw new ArgumentNullException("Either xmlFilePath or cipFilePath must be provided.");
             }
         }
     }

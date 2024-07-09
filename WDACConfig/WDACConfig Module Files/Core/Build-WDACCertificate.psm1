@@ -288,10 +288,8 @@ ValidityPeriod = Years
     '2.5.29.37={text}1.3.6.1.5.5.7.3.3' adds the extended key usage for code signing.
     '1.3.6.1.4.1.311.21.10={text}oid=1.3.6.1.5.5.7.3.3' -> adds "[1]Application Certificate Policy:Policy Identifier=Code Signing" as the value for Application Policies extension. The certificate made in CA role in Windows Server (using Code Signing template) also adds this extension.
 
-
     Get the value of the Application Policies extension
     ($NewCertificate.Extensions | Where-Object -FilterScript { $_.oid.FriendlyName -eq 'Application Policies' }).Format($false)
-
 
     Use certutil -dump -v '.\codesign.cer' to view the certificate properties, such as encoding of the certificate fields like the subject
 

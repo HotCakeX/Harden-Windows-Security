@@ -118,8 +118,7 @@ Function Edit-WDACConfig {
             "$([WDACConfig.GlobalVars]::ModuleRootPath)\Shared\New-SnapBackGuarantee.psm1",
             "$([WDACConfig.GlobalVars]::ModuleRootPath)\Shared\Set-LogPropertiesVisibility.psm1",
             "$([WDACConfig.GlobalVars]::ModuleRootPath)\Shared\Select-LogProperties.psm1",
-            "$([WDACConfig.GlobalVars]::ModuleRootPath)\Shared\Test-KernelProtectedFiles.psm1",
-            "$([WDACConfig.GlobalVars]::ModuleRootPath)\Shared\Show-DirectoryPathPicker.psm1"
+            "$([WDACConfig.GlobalVars]::ModuleRootPath)\Shared\Test-KernelProtectedFiles.psm1"
         )
         $ModulesToImport += ([WDACConfig.FileUtility]::GetFilesFast("$([WDACConfig.GlobalVars]::ModuleRootPath)\XMLOps", $null, '.psm1')).FullName
         Import-Module -FullyQualifiedName $ModulesToImport -Force
@@ -231,7 +230,7 @@ Function Edit-WDACConfig {
                     Write-ColorfulText -Color HotPink -InputText 'When you are finished, Press Enter, you will have the option to select directories to scan'
                     Pause
                     Write-ColorfulText -Color Lavender -InputText 'Select directories to scan'
-                    $ProgramsPaths = Show-DirectoryPathPicker | Select-Object -Unique
+                    [System.IO.DirectoryInfo[]]$ProgramsPaths = [WDACConfig.DirectorySelector]::SelectDirectories()
                     #Endregion User-Interaction
                 }
                 catch {

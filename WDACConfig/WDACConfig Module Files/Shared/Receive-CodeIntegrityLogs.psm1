@@ -19,8 +19,6 @@ Function Receive-CodeIntegrityLogs {
     .PARAMETER PostProcessing
         How to process the output for different scenarios
         OnlyExisting: Returns only the logs of files that exist on the disk
-        OnlyDeleted: Returns only the hash details of files that do not exist on the disk
-        Separate: Returns the file paths of files that exist on the disk and the hash details of files that do not exist on the disk, separately in a nested object
     .PARAMETER PolicyNames
         The names of the policies to filter the logs by
     .PARAMETER Category
@@ -51,7 +49,6 @@ Function Receive-CodeIntegrityLogs {
         [Parameter(Mandatory = $false)]
         [System.String]$Type = 'Audit',
 
-        # [ValidateSet('OnlyExisting', 'OnlyDeleted' , 'Separate')]
         [ValidateSet('OnlyExisting')]
         [parameter(mandatory = $false)]
         [System.String]$PostProcessing,
@@ -74,71 +71,6 @@ Function Receive-CodeIntegrityLogs {
 
         # Importing the required sub-modules
         Import-Module -FullyQualifiedName "$([WDACConfig.GlobalVars]::ModuleRootPath)\Shared\Get-GlobalRootDrives.psm1" -Force
-
-        #Region Application Control event tags intelligence
-
-        # Requested and Validated Signing Level Mappings: https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/operations/event-tag-explanations#requested-and-validated-signing-level
-        [System.Collections.Hashtable]$ReqValSigningLevels = @{
-            0us  = "Signing level hasn't yet been checked"
-            1us  = 'File is unsigned or has no signature that passes the active policies'
-            2us  = 'Trusted by Windows Defender Application Control policy'
-            3us  = 'Developer signed code'
-            4us  = 'Authenticode signed'
-            5us  = 'Microsoft Store signed app PPL (Protected Process Light)'
-            6us  = 'Microsoft Store-signed'
-            7us  = 'Signed by an Antimalware vendor whose product is using AMPPL'
-            8us  = 'Microsoft signed'
-            11us = 'Only used for signing of the .NET NGEN compiler'
-            12us = 'Windows signed'
-            14us = 'Windows Trusted Computing Base signed'
-        }
-
-        # SignatureType Mappings: https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/operations/event-tag-explanations#signaturetype
-        [System.Collections.Hashtable]$SignatureTypeTable = @{
-            0us = "Unsigned or verification hasn't been attempted"
-            1us = 'Embedded signature'
-            2us = 'Cached signature; presence of a CI EA means the file was previously verified'
-            3us = 'Cached catalog verified via Catalog Database or searching catalog directly'
-            4us = 'Uncached catalog verified via Catalog Database or searching catalog directly'
-            5us = 'Successfully verified using an EA that informs CI that catalog to try first'
-            6us = 'AppX / MSIX package catalog verified'
-            7us = 'File was verified'
-        }
-
-        # VerificationError mappings: https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/operations/event-tag-explanations#verificationerror
-        [System.Collections.Hashtable]$VerificationErrorTable = @{
-            0us  =	'Successfully verified signature.'
-            1us  =	'File has an invalid hash.'
-            2us  =	'File contains shared writable sections.'
-            3us  =	"File isn't signed."
-            4us  =	'Revoked signature.'
-            5us  =	'Expired signature.'
-            6us  =	"File is signed using a weak hashing algorithm, which doesn't meet the minimum policy."
-            7us  =	'Invalid root certificate.'
-            8us  =	'Signature was unable to be validated; generic error.'
-            9us  =	'Signing time not trusted.'
-            10us =	'The file must be signed using page hashes for this scenario.'
-            11us =	'Page hash mismatch.'
-            12us =	'Not valid for a PPL (Protected Process Light).'
-            13us =	'Not valid for a PP (Protected Process).'
-            14us =	'The signature is missing the required ARM processor EKU.'
-            15us =	'Failed WHQL check.'
-            16us =	'Default policy signing level not met.'
-            17us =	"Custom policy signing level not met; returned when signature doesn't validate against an SBCP-defined set of certs."
-            18us =	'Custom signing level not met; returned if signature fails to match CISigners in UMCI.'
-            19us =	'Binary is revoked based on its file hash.'
-            20us =	"SHA1 cert hash's timestamp is missing or after valid cutoff as defined by Weak Crypto Policy."
-            21us =	'Failed to pass Windows Defender Application Control policy.'
-            22us =	'Not Isolated User Mode (IUM) signed; indicates an attempt to load a standard Windows binary into a virtualization-based security (VBS) trustlet.'
-            23us =	"Invalid image hash. This error can indicate file corruption or a problem with the file's signature. Signatures using elliptic curve cryptography (ECC), such as ECDSA, return this VerificationError."
-            24us =	'Flight root not allowed; indicates trying to run flight-signed code on production OS.'
-            25us =	'Anti-cheat policy violation.'
-            26us =	'Explicitly denied by WDAC policy.'
-            27us =	'The signing chain appears to be tampered / invalid.'
-            28us =	'Resource page hash mismatch.'
-        }
-
-        #EndRegion Application Control event tags intelligence
 
         Function Test-NotEmpty ($Data) {
             <#
@@ -309,24 +241,6 @@ Function Receive-CodeIntegrityLogs {
                 Audit   = @{}
                 Blocked = @{}
             }
-            <#
-            # only the hash details of files no longer on the disk
-            Deleted   = @{
-                Audit   = @{}
-                Blocked = @{}
-            }
-            # FilePaths of files on the disk and hash details of files not on the disk
-            Separated = @{
-                Audit   = @{
-                    AvailableFilesPaths = [System.Collections.Generic.HashSet[System.String]] @()
-                    DeletedFileHashes   = @{}
-                }
-                Blocked = @{
-                    AvailableFilesPaths = [System.Collections.Generic.HashSet[System.String]] @()
-                    DeletedFileHashes   = @{}
-                }
-            }
-            #>
         }
 
         # Making the hashtable thread-safe by synchronizing it and allowing the Foreach-Object -Parallel to write back data to it safely in real time with $Using scope modifier
@@ -357,9 +271,6 @@ Function Receive-CodeIntegrityLogs {
 
             # Variables that are not modified from within the thread session
             $DriveLettersGlobalRootFix = $using:DriveLettersGlobalRootFix
-            $ReqValSigningLevels = $using:ReqValSigningLevels
-            $SignatureTypeTable = $using:SignatureTypeTable
-            $VerificationErrorTable = $using:VerificationErrorTable
             $AlternativeDriveLetterFix = $using:AlternativeDriveLetterFix
             $DriveLetterMappings = $using:DriveLetterMappings
             $LogSource = $using:LogSource
@@ -445,8 +356,8 @@ Function Receive-CodeIntegrityLogs {
                 }
 
                 # Replace these numbers in the logs with user-friendly strings that represent the signature level at which the code was verified
-                $Log['Requested Signing Level'] = $ReqValSigningLevels[[System.UInt16]$Log['Requested Signing Level']]
-                $Log['Validated Signing Level'] = $ReqValSigningLevels[[System.UInt16]$Log['Validated Signing Level']]
+                $Log['Requested Signing Level'] = [WDACConfig.CILogIntel]::ReqValSigningLevels[[System.UInt16]$Log['Requested Signing Level']]
+                $Log['Validated Signing Level'] = [WDACConfig.CILogIntel]::ReqValSigningLevels[[System.UInt16]$Log['Validated Signing Level']]
 
                 # Replace the SI Signing Scenario numbers with a user-friendly string
                 $Log['SI Signing Scenario'] = $Log['SI Signing Scenario'] -eq '0' ? 'Kernel-Mode' : 'User-Mode'
@@ -503,9 +414,9 @@ Function Receive-CodeIntegrityLogs {
                         }
 
                         # Replace the properties with their user-friendly strings
-                        $CorrelatedLog.SignatureType = $SignatureTypeTable[[System.UInt16]$CorrelatedLog.SignatureType]
-                        $CorrelatedLog.ValidatedSigningLevel = $ReqValSigningLevels[[System.UInt16]$CorrelatedLog.ValidatedSigningLevel]
-                        $CorrelatedLog.VerificationError = $VerificationErrorTable[[System.UInt16]$CorrelatedLog.VerificationError]
+                        $CorrelatedLog.SignatureType = [WDACConfig.CILogIntel]::SignatureTypeTable[[System.UInt16]$CorrelatedLog.SignatureType]
+                        $CorrelatedLog.ValidatedSigningLevel = [WDACConfig.CILogIntel]::ReqValSigningLevels[[System.UInt16]$CorrelatedLog.ValidatedSigningLevel]
+                        $CorrelatedLog.VerificationError = [WDACConfig.CILogIntel]::VerificationErrorTable[[System.UInt16]$CorrelatedLog.VerificationError]
 
                         # Create a unique key for each Publisher
                         [System.String]$PublisherKey = $CorrelatedLog.PublisherTBSHash + '|' +
@@ -573,27 +484,7 @@ Function Receive-CodeIntegrityLogs {
                             if (-NOT $Output.Existing.Audit.ContainsKey($UniqueLogKey)) {
                                 $Output.Existing.Audit[$UniqueLogKey] = $Log
                             }
-
-                            <#
-                                if (-NOT $Output.Separated.Audit.AvailableFilesPaths.Contains($Log['File Name'])) {
-                                    [System.Void]$Output.Separated.Audit.AvailableFilesPaths.Add($Log['File Name'])
-                                }
-                                #>
                         }
-                        <#
-                            # If the file is not currently on the disk, extract its hashes from the log
-                            else {
-                                $TempDeletedOutputAudit = $Log | Select-Object -Property FileVersion, 'File Name', PolicyGUID, 'SHA256 Hash', 'SHA256 Flat Hash', 'SHA1 Hash', 'SHA1 Flat Hash'
-
-                                if (-NOT $Output.Deleted.Audit.ContainsKey($UniqueLogKey)) {
-                                    $Output.Deleted.Audit[$UniqueLogKey] = $TempDeletedOutputAudit
-                                }
-
-                                if (-NOT $Output.Separated.Audit.DeletedFileHashes.Contains($UniqueLogKey)) {
-                                    $Output.Separated.Audit.DeletedFileHashes[$UniqueLogKey] = $TempDeletedOutputAudit
-                                }
-                            }
-                            #>
                     }
 
                     elseif ($Log.Type -eq 'Blocked') {
@@ -609,30 +500,9 @@ Function Receive-CodeIntegrityLogs {
                             if (-NOT $Output.Existing.Blocked.ContainsKey($UniqueLogKey)) {
                                 $Output.Existing.Blocked[$UniqueLogKey] = $Log
                             }
-
-                            <#
-                                if (-NOT $Output.Separated.Blocked.AvailableFilesPaths.Contains($Log['File Name'])) {
-                                    [System.Void]$Output.Separated.Blocked.AvailableFilesPaths.Add($Log['File Name'])
-                                }
-                                #>
                         }
-                        <#
-                            # If the file is not currently on the disk, extract its hashes from the log
-                            else {
-                                $TempDeletedOutputBlocked = $Log | Select-Object -Property FileVersion, 'File Name', PolicyGUID, 'SHA256 Hash', 'SHA256 Flat Hash', 'SHA1 Hash', 'SHA1 Flat Hash'
-
-                                if (-NOT $Output.Deleted.Blocked.ContainsKey($UniqueLogKey)) {
-                                    $Output.Deleted.Blocked[$UniqueLogKey] = $TempDeletedOutputBlocked
-                                }
-
-                                if (-NOT $Output.Separated.Blocked.DeletedFileHashes.Contains($UniqueLogKey)) {
-                                    $Output.Separated.Blocked.DeletedFileHashes[$UniqueLogKey] = $TempDeletedOutputBlocked
-                                }
-                            }
-                            #>
                     }
                     #Endregion Post-processing for the logs
-
                 }
                 catch {
                     Throw $_
@@ -651,26 +521,8 @@ Function Receive-CodeIntegrityLogs {
         if (-NOT (Test-NotEmpty -Data $Output.All.Blocked)) { $Output.All.Blocked = $null }
         if (-NOT (Test-NotEmpty -Data $Output.Existing.Audit)) { $Output.Existing.Audit = $null }
         if (-NOT (Test-NotEmpty -Data $Output.Existing.Blocked)) { $Output.Existing.Blocked = $null }
-        #    if (-NOT (Test-NotEmpty -Data $Output.Deleted.Audit)) { $Output.Deleted.Audit = $null }
-        #    if (-NOT (Test-NotEmpty -Data $Output.Deleted.Blocked)) { $Output.Deleted.Blocked = $null }
-        #    if (-NOT (Test-NotEmpty -Data $Output.Separated.Audit.AvailableFilesPaths)) { $Output.Separated.Audit.AvailableFilesPaths = $null }
-        #    if (-NOT (Test-NotEmpty -Data $Output.Separated.Audit.DeletedFileHashes)) { $Output.Separated.Audit.DeletedFileHashes = $null }
-        #    if (-NOT (Test-NotEmpty -Data $Output.Separated.Blocked.AvailableFilesPaths)) { $Output.Separated.Blocked.AvailableFilesPaths = $null }
-        #    if (-NOT (Test-NotEmpty -Data $Output.Separated.Blocked.DeletedFileHashes)) { $Output.Separated.Blocked.DeletedFileHashes = $null }
 
         Switch ($PostProcessing) {
-            <#
-            'Separate' {
-                if ($Type -eq 'Audit') {
-                    Write-Verbose -Message "Receive-CodeIntegrityLogs: Returning $($Output.Separated.Audit.AvailableFilesPaths.Count) Audit Code Integrity logs for files on the disk and $($Output.Separated.Audit.DeletedFileHashes.Count) for the files not on the disk."
-                    Return $Output.Separated.Audit
-                }
-                else {
-                    Write-Verbose -Message "Receive-CodeIntegrityLogs: Returning $($Output.Separated.Blocked.AvailableFilesPaths.Count) Blocked Code Integrity logs for files on the disk and $($Output.Separated.Blocked.DeletedFileHashes.Count) for the files not on the disk."
-                    Return $Output.Separated.Blocked
-                }
-            }
-            #>
             'OnlyExisting' {
                 if ($Type -eq 'Audit') {
                     Write-Verbose -Message "Receive-CodeIntegrityLogs: Returning $($Output.Existing.Audit.Values.Count) Audit Code Integrity logs for files on the disk."
@@ -681,18 +533,6 @@ Function Receive-CodeIntegrityLogs {
                     Return $Output.Existing.Blocked.Values
                 }
             }
-            <#
-            'OnlyDeleted' {
-                if ($Type -eq 'Audit') {
-                    Write-Verbose -Message "Receive-CodeIntegrityLogs: Returning $($Output.Deleted.Audit.Values.Count) Audit Code Integrity logs for files not on the disk."
-                    Return $Output.Deleted.Audit.Values
-                }
-                else {
-                    Write-Verbose -Message "Receive-CodeIntegrityLogs: Returning $($Output.Deleted.Blocked.Values.Count) Blocked Code Integrity logs for files not on the disk."
-                    Return $Output.Deleted.Blocked.Values
-                }
-            }
-            #>
             Default {
                 if ($Type -eq 'Audit') {
                     Write-Verbose -Message "Receive-CodeIntegrityLogs: Returning $($Output.All.Audit.Values.Count) Audit Code Integrity logs."

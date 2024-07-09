@@ -131,7 +131,7 @@ Function Compare-SignerAndCertificate {
 
                                             foreach ($KeyItem in ('OriginalFileName', 'InternalName', 'ProductName', 'Version', 'FileDescription')) {
 
-                                                if ($ExtendedFileInfo.$KeyItem -eq $FileAttrib.$KeyItem) {
+                                                if (($null -ne $ExtendedFileInfo.$KeyItem) -and ($ExtendedFileInfo.$KeyItem -eq $FileAttrib.$KeyItem)) {
 
                                                     Write-Verbose -Message "The SpecificFileNameLevel is $KeyItem"
 
@@ -320,7 +320,7 @@ Function Compare-SignerAndCertificate {
                                     # Loop over all of the keys in the extended file info to see which one of them is a match, to determine the SpecificFileNameLevel option
                                     foreach ($KeyItem in ('OriginalFileName', 'InternalName', 'ProductName', 'Version', 'FileDescription')) {
 
-                                        if ($ExtendedFileInfo.$KeyItem -eq $FileAttrib.$KeyItem) {
+                                        if (($null -ne $ExtendedFileInfo.$KeyItem) -and ($ExtendedFileInfo.$KeyItem -eq $FileAttrib.$KeyItem)) {
 
                                             Write-Verbose -Message "The SpecificFileNameLevel is $KeyItem"
 
@@ -496,7 +496,7 @@ Function Compare-SignerAndCertificate {
 
                                 foreach ($KeyItem in ('OriginalFileName', 'InternalName', 'ProductName', 'Version', 'FileDescription')) {
 
-                                    if ($ExtendedFileInfo.$KeyItem -eq $FileAttrib.$KeyItem) {
+                                    if (($null -ne $ExtendedFileInfo.$KeyItem) -and ($ExtendedFileInfo.$KeyItem -eq $FileAttrib.$KeyItem)) {
 
                                         Write-Verbose -Message "The SpecificFileNameLevel is $KeyItem"
 

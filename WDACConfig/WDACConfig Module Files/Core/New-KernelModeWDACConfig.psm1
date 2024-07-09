@@ -26,7 +26,6 @@ Function New-KernelModeWDACConfig {
         Import-Module -Force -FullyQualifiedName @(
             "$([WDACConfig.GlobalVars]::ModuleRootPath)\Shared\Update-Self.psm1",
             "$([WDACConfig.GlobalVars]::ModuleRootPath)\Shared\Write-ColorfulText.psm1",
-            "$([WDACConfig.GlobalVars]::ModuleRootPath)\Shared\Move-UserModeToKernelMode.psm1",
             "$([WDACConfig.GlobalVars]::ModuleRootPath)\Shared\Get-KernelModeDriversAudit.psm1"
         )
 
@@ -218,7 +217,7 @@ Function New-KernelModeWDACConfig {
                             $null = Merge-CIPolicy -PolicyPaths (Join-Path -Path $StagingArea -ChildPath 'Raw_Normal.xml'), $DriverFilesScanPolicyPath -OutputFilePath $FinalEnforcedPolicyPath
 
                             Write-Verbose -Message 'Moving all AllowedSigners from Usermode to Kernel mode signing scenario'
-                            $null = Move-UserModeToKernelMode -FilePath $FinalEnforcedPolicyPath
+                            [WDACConfig.MoveUserModeToKernelMode]::Move($FinalEnforcedPolicyPath)
 
                             Write-Verbose -Message 'Setting the GUIDs for the XML policy file'
                             [WDACConfig.PolicyEditor]::EditGUIDs($PolicyID, $FinalEnforcedPolicyPath)
@@ -352,7 +351,7 @@ Function New-KernelModeWDACConfig {
                             $null = Merge-CIPolicy -PolicyPaths (Join-Path -Path $StagingArea -ChildPath 'Raw_NoFlights.xml'), $DriverFilesScanPolicyPath -OutputFilePath $FinalEnforcedPolicyPath
 
                             Write-Verbose -Message 'Moving all AllowedSigners from Usermode to Kernel mode signing scenario'
-                            $null = Move-UserModeToKernelMode -FilePath $FinalEnforcedPolicyPath
+                            [WDACConfig.MoveUserModeToKernelMode]::Move($FinalEnforcedPolicyPath)
 
                             Write-Verbose -Message 'Setting the GUIDs for the XML policy file'
                             [WDACConfig.PolicyEditor]::EditGUIDs($PolicyID, $FinalEnforcedPolicyPath)

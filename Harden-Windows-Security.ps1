@@ -6,6 +6,7 @@ Function P {
         Set-ExecutionPolicy -ExecutionPolicy 'Unrestricted' -Scope 'Process' -Force
         [System.Boolean]$WingetSourceUpdated = $false
         [System.Boolean]$PSInstalled = $false
+        [System.Version]$RequiredPSVer = '7.4.2.0'
         [System.String]$PSDownloadURLMSIX = 'https://github.com/PowerShell/PowerShell/releases/download/v7.4.3/PowerShell-7.4.3-Win.msixbundle'
         $UserSID = [System.Security.Principal.WindowsIdentity]::GetCurrent().User.Value
         $User = Get-LocalUser | Where-Object -FilterScript { $_.SID -eq $UserSID }
@@ -14,11 +15,6 @@ Function P {
             # https://apps.microsoft.com/detail/9mz1snwt0n5d
             Write-Verbose -Message 'Microsoft account detected, using Microsoft Store source for PowerShell installation through Winget'
             $null = Winget install --id 9MZ1SNWT0N5D --accept-package-agreements --accept-source-agreements --source msstore
-        }
-        Function Install-GitHubMSIX {
-            Write-Verbose -Message 'Downloading and Installing PowerShell directly from GitHub using MSIX file'
-            Invoke-WebRequest -Uri $PSDownloadURLMSIX -OutFile 'PowerShell.msixbundle'
-            Add-AppxPackage -Path 'PowerShell.msixbundle'
         }
     }
     process {
@@ -46,27 +42,32 @@ Function P {
                 }
                 catch {
                     try {
-                        # Change location to temp because Windows PowerShell's default dir is System32 and if running as non-admin cannot be used for download location
-                        Push-Location -Path ([System.IO.Path]::GetTempPath())
+                        try {
+                            # Change location to temp because Windows PowerShell's default dir is System32 and if running as non-admin cannot be used for download location
+                            Push-Location -Path ([System.IO.Path]::GetTempPath())
 
-                        Write-Verbose -Message 'Failed to Install PowerShell Core using Winget' -Verbose
+                            Write-Verbose -Message 'Failed to Install PowerShell Core using Winget' -Verbose
 
-                        $ProgressPreference = 'silentlyContinue'
-                        Write-Verbose -Message 'Downloading WinGet and its dependencies...' -Verbose
-                        # https://learn.microsoft.com/en-us/windows/package-manager/winget/#install-winget-on-windows-sandbox
-                        Invoke-WebRequest -Uri 'https://aka.ms/getwinget' -OutFile 'Microsoft.DesktopAppInstaller_8wekyb3d8bbwe.msixbundle'
-                        Invoke-WebRequest -Uri 'https://aka.ms/Microsoft.VCLibs.x64.14.00.Desktop.appx' -OutFile 'Microsoft.VCLibs.x64.14.00.Desktop.appx'
-                        Invoke-WebRequest -Uri 'https://github.com/microsoft/microsoft-ui-xaml/releases/download/v2.8.6/Microsoft.UI.Xaml.2.8.x64.appx' -OutFile 'Microsoft.UI.Xaml.2.8.x64.appx'
+                            $ProgressPreference = 'silentlyContinue'
+                            Write-Verbose -Message 'Downloading WinGet and its dependencies...'
+                            # https://learn.microsoft.com/en-us/windows/package-manager/winget/#install-winget-on-windows-sandbox
+                            Invoke-WebRequest -Uri 'https://aka.ms/getwinget' -OutFile 'Microsoft.DesktopAppInstaller_8wekyb3d8bbwe.msixbundle'
+                            Invoke-WebRequest -Uri 'https://aka.ms/Microsoft.VCLibs.x64.14.00.Desktop.appx' -OutFile 'Microsoft.VCLibs.x64.14.00.Desktop.appx'
+                            Invoke-WebRequest -Uri 'https://github.com/microsoft/microsoft-ui-xaml/releases/download/v2.8.6/Microsoft.UI.Xaml.2.8.x64.appx' -OutFile 'Microsoft.UI.Xaml.2.8.x64.appx'
 
-                        Add-AppxPackage -Path 'Microsoft.VCLibs.x64.14.00.Desktop.appx'
-                        Add-AppxPackage -Path 'Microsoft.UI.Xaml.2.8.x64.appx'
-                        Add-AppxPackage -Path 'Microsoft.DesktopAppInstaller_8wekyb3d8bbwe.msixbundle'
-
-                        Remove-Item -Path 'Microsoft.DesktopAppInstaller_8wekyb3d8bbwe.msixbundle' -Force
-                        Remove-Item -Path 'Microsoft.VCLibs.x64.14.00.Desktop.appx' -Force
-                        Remove-Item -Path 'Microsoft.UI.Xaml.2.8.x64.appx' -Force
-
-                        Pop-Location
+                            Add-AppxPackage -Path 'Microsoft.VCLibs.x64.14.00.Desktop.appx'
+                            Add-AppxPackage -Path 'Microsoft.UI.Xaml.2.8.x64.appx'
+                            Add-AppxPackage -Path 'Microsoft.DesktopAppInstaller_8wekyb3d8bbwe.msixbundle'
+                        }
+                        finally {
+                            try {
+                                Pop-Location
+                                Remove-Item -Path 'Microsoft.DesktopAppInstaller_8wekyb3d8bbwe.msixbundle' -Force
+                                Remove-Item -Path 'Microsoft.VCLibs.x64.14.00.Desktop.appx' -Force
+                                Remove-Item -Path 'Microsoft.UI.Xaml.2.8.x64.appx' -Force
+                            }
+                            catch {}
+                        }
 
                         Write-Verbose -Message 'Trying to Install PowerShell Core using Winget again after installing Winget' -Verbose
 
@@ -91,11 +92,13 @@ Function P {
                     catch {
                         try {
                             Push-Location -Path ([System.IO.Path]::GetTempPath())
-                            Install-GitHubMSIX
+                            Write-Verbose -Message 'Downloading and Installing PowerShell directly from GitHub using MSIX file'
+                            Invoke-WebRequest -Uri $PSDownloadURLMSIX -OutFile 'PowerShell.msixbundle'
+                            Add-AppxPackage -Path 'PowerShell.msixbundle'
                             $PSInstalled = $true
                         }
                         catch {
-                            throw
+                            throw 'Failed to automatically Install PowerShell Core after exhausting all options'
                         }
                         finally {
                             try {
@@ -112,26 +115,8 @@ Function P {
             }
         }
         else {
-            if (($PSVersionTable.PSVersion) -lt '7.4.2') {
-
-                Write-Verbose -Message 'PowerShell version is older than the required version, downloading and installing the latest version' -Verbose
-                if ($PSHome -notlike '*\Program Files\WindowsApps\*') {
-                    Write-Verbose -Message "Your current PowerShell is not installed from Microsoft Store, but the version being automatically downloaded is MSIX version`nYou can remove the old version later from the Windows Settings" -Verbose
-                }
-
-                try {
-                    Install-GitHubMSIX
-                    $PSInstalled = $true
-                }
-                catch {
-                    throw 'Update PowerShell from Microsoft Store because you are using an older version and could not automatically update it'
-                }
-                finally {
-                    try {
-                        Remove-Item -Path 'PowerShell.msixbundle' -Force
-                    }
-                    catch {}
-                }
+            if (($PSVersionTable.PSVersion) -lt $RequiredPSVer) {
+                Throw "Current PowerShell version is $($PSVersionTable.PSVersion), which is less than $RequiredPSVer. Please update it and try again."
             }
             else {
                 $PSInstalled = $true

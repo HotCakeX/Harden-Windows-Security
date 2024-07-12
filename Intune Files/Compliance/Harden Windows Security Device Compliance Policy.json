@@ -3,9 +3,12 @@
     "roleScopeTagIds": [
         "0"
     ],
+    "id": "03d69d53-c042-4985-90f0-51941529fb82",
+    "createdDateTime": "2024-07-12T18:12:26.7432434Z",
     "description": "This compliance policy ensures that the device is valid for the Harden Windows Security measures.",
+    "lastModifiedDateTime": "2024-07-12T20:44:32.990463Z",
     "displayName": "Harden Windows Security Compliance",
-    "version": 2,
+    "version": 3,
     "passwordRequired": false,
     "passwordBlockSimple": false,
     "passwordRequiredToUnlockFromIdle": false,
@@ -50,7 +53,7 @@
                 {
                     "@odata.type": "#microsoft.graph.deviceComplianceActionItem",
                     "actionType": "block",
-                    "gracePeriodHours": 1,
+                    "gracePeriodHours": 24,
                     "notificationTemplateId": null
                 }
             ]

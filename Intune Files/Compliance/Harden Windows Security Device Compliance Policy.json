@@ -1,0 +1,62 @@
+{
+    "@odata.type": "#microsoft.graph.windows10CompliancePolicy",
+    "roleScopeTagIds": [
+        "0"
+    ],
+    "id": "03d69d53-c042-4985-90f0-51941529fb82",
+    "createdDateTime": "2024-07-12T18:12:26.7432434Z",
+    "description": "This compliance policy ensures that the device is valid for the Harden Windows Security measures.",
+    "lastModifiedDateTime": "2024-07-12T20:44:32.990463Z",
+    "displayName": "Harden Windows Security Compliance",
+    "version": 3,
+    "passwordRequired": false,
+    "passwordBlockSimple": false,
+    "passwordRequiredToUnlockFromIdle": false,
+    "passwordMinutesOfInactivityBeforeLock": null,
+    "passwordExpirationDays": null,
+    "passwordMinimumLength": null,
+    "passwordMinimumCharacterSetCount": null,
+    "passwordRequiredType": "deviceDefault",
+    "passwordPreviousPasswordBlockCount": null,
+    "requireHealthyDeviceReport": false,
+    "osMinimumVersion": "10.0.22621.3880",
+    "osMaximumVersion": null,
+    "mobileOsMinimumVersion": null,
+    "mobileOsMaximumVersion": null,
+    "earlyLaunchAntiMalwareDriverEnabled": false,
+    "bitLockerEnabled": true,
+    "secureBootEnabled": true,
+    "codeIntegrityEnabled": true,
+    "memoryIntegrityEnabled": false,
+    "kernelDmaProtectionEnabled": false,
+    "virtualizationBasedSecurityEnabled": false,
+    "firmwareProtectionEnabled": false,
+    "storageRequireEncryption": true,
+    "activeFirewallRequired": true,
+    "defenderEnabled": true,
+    "defenderVersion": "4.18.24050.7",
+    "signatureOutOfDate": true,
+    "rtpEnabled": true,
+    "antivirusRequired": true,
+    "antiSpywareRequired": true,
+    "deviceThreatProtectionEnabled": false,
+    "deviceThreatProtectionRequiredSecurityLevel": "unavailable",
+    "configurationManagerComplianceRequired": false,
+    "tpmRequired": true,
+    "deviceCompliancePolicyScript": null,
+    "validOperatingSystemBuildRanges": [],
+    "scheduledActionsForRule": [
+        {
+            "@odata.type": "#microsoft.graph.deviceComplianceScheduledActionForRule",
+            "ruleName": "NonComplianceDeviceEviction",
+            "scheduledActionConfigurations": [
+                {
+                    "@odata.type": "#microsoft.graph.deviceComplianceActionItem",
+                    "actionType": "block",
+                    "gracePeriodHours": 24,
+                    "notificationTemplateId": null
+                }
+            ]
+        }
+    ]
+}

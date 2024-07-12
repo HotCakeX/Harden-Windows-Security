@@ -1871,7 +1871,7 @@ Function Invoke-NonAdminCommands {
                 }
             }
 
-            :ClipboardSyncLabel switch ($RunUnattended ? ($ClipboardSync ? 'Yes' : 'No') : (Select-Option -SubCategory -Options 'Yes', 'No' -Message 'Enable Clipboard Synching with Microsoft Account')) {
+            :ClipboardSyncLabel switch ($RunUnattended ? ($ClipboardSync ? 'Yes' : 'No') : (Select-Option -SubCategory -Options 'Yes', 'No' -Message 'Enable Clipboard Syncing with Microsoft Account')) {
                 'Yes' {
                     Write-Verbose -Message 'Enabling Clipboard Sync with Microsoft Account'
                     foreach ($Item in ([HardeningModule.GlobalVars]::RegistryCSVItems)) {

@@ -22,14 +22,12 @@ namespace HardeningModule
                     }
                     else
                     {
-                        // Default value in case of error
-                        HardeningModule.GlobalVars.UBR = -1;
+                        throw new InvalidOperationException("The UBR value could not be retrieved from the registry: HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion");
                     }
                 }
                 else
                 {
-                    // Default value in case the registry key is not found
-                    HardeningModule.GlobalVars.UBR = -1;
+                    throw new InvalidOperationException("The UBR key does not exist in the registry path: HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion");
                 }
             }
 
@@ -57,10 +55,11 @@ namespace HardeningModule
             // Save the valid values of the Protect-WindowsSecurity categories to a variable since the process can be time consuming and shouldn't happen every time the categories are fetched
             HardeningModule.GlobalVars.HardeningCategorieX = HardeningModule.ProtectionCategoriex.GetValidValues();
 
-            // Make sure the current OS build is equal or greater than the required build number
+            // Convert the FullOSBuild and RequiredBuild strings to decimals so that we can compare them
             decimal fullOSBuild = Convert.ToDecimal(GlobalVars.FullOSBuild);
             decimal requiredBuild = Convert.ToDecimal(GlobalVars.Requiredbuild);
 
+            // Make sure the current OS build is equal or greater than the required build number
             if (!(fullOSBuild >= requiredBuild))
             {
                 throw new PlatformNotSupportedException($"You are not using the latest build of the Windows OS. A minimum build of {requiredBuild} is required but your OS build is {fullOSBuild}\nPlease go to Windows Update to install the updates and then try again.");
@@ -69,8 +68,12 @@ namespace HardeningModule
             // Resets the current main step to 0 which is used for Write-Progress when using in GUI mode
             HardeningModule.GlobalVars.CurrentMainStep = 0;
 
-            // Run the Get-MpPreference cmdlet and save the result to the global variable HardeningModule.GlobalVars.MDAVPreferencesCurrent
+            // Get the MSFT_MpPreference WMI results and save them to the global variable HardeningModule.GlobalVars.MDAVPreferencesCurrent
             HardeningModule.GlobalVars.MDAVPreferencesCurrent = HardeningModule.MpPreferenceHelper.GetMpPreference();
+
+            // Get the MSFT_MpComputerStatus and save them to the global variable HardeningModule.GlobalVars.MDAVConfigCurrent
+            HardeningModule.GlobalVars.MDAVConfigCurrent = HardeningModule.MpComputerStatusHelper.GetMpComputerStatus();
+
         }
     }
 }

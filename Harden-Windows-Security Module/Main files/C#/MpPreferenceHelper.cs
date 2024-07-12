@@ -1,52 +1,86 @@
 using System;
-using System.Collections.ObjectModel;
-using System.Management.Automation;
+using System.Collections.Generic;
+using System.Dynamic;
+using System.Globalization;
 using System.Linq;
+using System.Management;
 
 namespace HardeningModule
 {
     public static class MpPreferenceHelper
     {
+        // Get the MpPreference from the MSFT_MpPreference WMI class and returns it as a dynamic object
         public static dynamic GetMpPreference()
         {
-            using (PowerShell ps = PowerShell.Create())
+            try
             {
-                ps.AddCommand("Get-MpPreference");
-                var results = ps.Invoke();
+                // Defining the WMI query to retrieve the MpPreference
+                string namespaceName = "ROOT\\Microsoft\\Windows\\Defender";
+                string className = "MSFT_MpPreference";
+                string queryString = $"SELECT * FROM {className}";
 
-                // Check for errors
-                if (ps.HadErrors)
-                {
-                    var errorRecord = ps.Streams.Error.ReadAll().FirstOrDefault();
-                    if (errorRecord != null)
-                    {
-                        string errorMessage = $"PowerShell command 'Get-MpPreference' failed: {errorRecord.Exception.Message}";
-                        throw new PowerShellExecutionException(errorMessage, errorRecord.Exception);
-                    }
-                }
+                // Execute the query
+                ManagementObjectSearcher searcher = new ManagementObjectSearcher(namespaceName, queryString);
+                ManagementObjectCollection results = searcher.Get();
 
-                // Return the result if there are any
+                // Return the first result if there are any
                 if (results.Count > 0)
                 {
-                    return results[0];
+                    var result = results.Cast<ManagementBaseObject>().FirstOrDefault();
+                    return ConvertToDynamic(result);
                 }
                 else
                 {
                     return null;
                 }
             }
-        }
-    }
-
-    // Custom exception class for PowerShell execution errors
-    public class PowerShellExecutionException : Exception
-    {
-        public PowerShellExecutionException(string message) : base(message)
-        {
+            catch (ManagementException ex)
+            {
+                string errorMessage = $"WMI query for 'MSFT_MpPreference' failed: {ex.Message}";
+                throw new HardeningModule.PowerShellExecutionException(errorMessage, ex);
+            }
         }
 
-        public PowerShellExecutionException(string message, Exception innerException) : base(message, innerException)
+        // Convert the ManagementBaseObject to a dynamic object
+        private static dynamic ConvertToDynamic(ManagementBaseObject managementObject)
         {
+            // Creating a dynamic object to store the properties of the ManagementBaseObject
+            dynamic expandoObject = new ExpandoObject();
+            var dictionary = (IDictionary<string, object>)expandoObject;
+
+            // Iterating through the properties of the ManagementBaseObject and adding them to the dynamic object
+            foreach (var property in managementObject.Properties)
+            {
+                // Check if the value of the property is in DMTF datetime format
+                // Properties such as SignatureScheduleTime use that format
+                if (property.Type == CimType.DateTime && property.Value is string dmtfTime)
+                {
+                    // Convert DMTF datetime format to TimeSpan
+                    dictionary[property.Name] = ConvertDmtfToTimeSpan(dmtfTime);
+                }
+                else
+                {
+                    // Add the property to the dynamic object as is if it's not DMTF
+                    dictionary[property.Name] = property.Value;
+                }
+            }
+
+            return expandoObject;
+        }
+
+        private static TimeSpan ConvertDmtfToTimeSpan(string dmtfTime)
+        {
+            // DMTF datetime format: yyyymmddHHMMSS.mmmmmmsUUU
+            // We only need HHMMSS part for this case
+            if (dmtfTime.Length >= 15)
+            {
+                string hhmmss = dmtfTime.Substring(8, 6);
+                if (TimeSpan.TryParseExact(hhmmss, "HHmmss", CultureInfo.InvariantCulture, out TimeSpan timeSpan))
+                {
+                    return timeSpan;
+                }
+            }
+            return TimeSpan.Zero;
         }
     }
 }

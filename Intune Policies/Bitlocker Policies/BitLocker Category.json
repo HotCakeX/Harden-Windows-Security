@@ -1,9 +1,9 @@
 ﻿{
     "@odata.context": "https://graph.microsoft.com/beta/$metadata#deviceManagement/configurationPolicies/$entity",
-    "createdDateTime": "2024-07-03T15:26:36.0654309Z",
+    "createdDateTime": "2024-07-12T14:59:12.3164603Z",
     "creationSource": null,
     "description": "",
-    "lastModifiedDateTime": "2024-07-12T10:46:34.6205348Z",
+    "lastModifiedDateTime": "2024-07-12T16:08:12.9668677Z",
     "name": "BitLocker Category",
     "platforms": "windows10",
     "priorityMetaData": null,
@@ -12,7 +12,7 @@
     ],
     "settingCount": 10,
     "technologies": "mdm",
-    "id": "21e391d5-8a5f-4be2-b2ee-027f4f7d1052",
+    "id": "2fc67394-a288-4e3e-a431-38b159382064",
     "templateReference": {
         "templateId": "",
         "templateFamily": "none",
@@ -218,7 +218,7 @@
                             "settingInstanceTemplateReference": null,
                             "choiceSettingValue": {
                                 "settingValueTemplateReference": null,
-                                "value": "device_vendor_msft_bitlocker_systemdrivesrequirestartupauthentication_configuretpmusagedropdown_name_2",
+                                "value": "device_vendor_msft_bitlocker_systemdrivesrequirestartupauthentication_configuretpmusagedropdown_name_0",
                                 "children": []
                             }
                         }

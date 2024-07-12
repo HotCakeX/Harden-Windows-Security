@@ -1,0 +1,59 @@
+{
+    "@odata.type": "#microsoft.graph.windows10CompliancePolicy",
+    "roleScopeTagIds": [
+        "0"
+    ],
+    "description": "This compliance policy ensures that the device is valid for the Harden Windows Security measures.",
+    "displayName": "Harden Windows Security Compliance",
+    "version": 2,
+    "passwordRequired": false,
+    "passwordBlockSimple": false,
+    "passwordRequiredToUnlockFromIdle": false,
+    "passwordMinutesOfInactivityBeforeLock": null,
+    "passwordExpirationDays": null,
+    "passwordMinimumLength": null,
+    "passwordMinimumCharacterSetCount": null,
+    "passwordRequiredType": "deviceDefault",
+    "passwordPreviousPasswordBlockCount": null,
+    "requireHealthyDeviceReport": false,
+    "osMinimumVersion": "10.0.22621.3880",
+    "osMaximumVersion": null,
+    "mobileOsMinimumVersion": null,
+    "mobileOsMaximumVersion": null,
+    "earlyLaunchAntiMalwareDriverEnabled": false,
+    "bitLockerEnabled": true,
+    "secureBootEnabled": true,
+    "codeIntegrityEnabled": true,
+    "memoryIntegrityEnabled": false,
+    "kernelDmaProtectionEnabled": false,
+    "virtualizationBasedSecurityEnabled": false,
+    "firmwareProtectionEnabled": false,
+    "storageRequireEncryption": true,
+    "activeFirewallRequired": true,
+    "defenderEnabled": true,
+    "defenderVersion": "4.18.24050.7",
+    "signatureOutOfDate": true,
+    "rtpEnabled": true,
+    "antivirusRequired": true,
+    "antiSpywareRequired": true,
+    "deviceThreatProtectionEnabled": false,
+    "deviceThreatProtectionRequiredSecurityLevel": "unavailable",
+    "configurationManagerComplianceRequired": false,
+    "tpmRequired": true,
+    "deviceCompliancePolicyScript": null,
+    "validOperatingSystemBuildRanges": [],
+    "scheduledActionsForRule": [
+        {
+            "@odata.type": "#microsoft.graph.deviceComplianceScheduledActionForRule",
+            "ruleName": "NonComplianceDeviceEviction",
+            "scheduledActionConfigurations": [
+                {
+                    "@odata.type": "#microsoft.graph.deviceComplianceActionItem",
+                    "actionType": "block",
+                    "gracePeriodHours": 1,
+                    "notificationTemplateId": null
+                }
+            ]
+        }
+    ]
+}

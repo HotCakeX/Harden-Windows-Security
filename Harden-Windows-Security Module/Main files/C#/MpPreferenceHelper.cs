@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.Globalization;
 using System.Linq;
 using System.Management;
@@ -8,8 +9,8 @@ namespace HardeningModule
 {
     public static class MpPreferenceHelper
     {
-        // Get the MpPreference from the MSFT_MpPreference WMI class and returns it as a dictionary
-        public static Dictionary<string, object> GetMpPreference()
+        // Get the MpPreference from the MSFT_MpPreference WMI class and returns it as a dynamic object
+        public static dynamic GetMpPreference()
         {
             try
             {
@@ -26,7 +27,7 @@ namespace HardeningModule
                 if (results.Count > 0)
                 {
                     var result = results.Cast<ManagementBaseObject>().FirstOrDefault();
-                    return ConvertToDictionary(result);
+                    return ConvertToDynamic(result);
                 }
                 else
                 {
@@ -40,13 +41,14 @@ namespace HardeningModule
             }
         }
 
-        // Convert the ManagementBaseObject to a dictionary
-        private static Dictionary<string, object> ConvertToDictionary(ManagementBaseObject managementObject)
+        // Convert the ManagementBaseObject to a dynamic object
+        private static dynamic ConvertToDynamic(ManagementBaseObject managementObject)
         {
-            // Creating a dictionary to store the properties of the ManagementBaseObject
-            Dictionary<string, object> dictionary = new Dictionary<string, object>();
+            // Creating a dynamic object to store the properties of the ManagementBaseObject
+            dynamic expandoObject = new ExpandoObject();
+            var dictionary = (IDictionary<string, object>)expandoObject;
 
-            // Iterating through the properties of the ManagementBaseObject and adding them to the dictionary
+            // Iterating through the properties of the ManagementBaseObject and adding them to the dynamic object
             foreach (var property in managementObject.Properties)
             {
                 // Check if the value of the property is in DMTF datetime format
@@ -58,12 +60,12 @@ namespace HardeningModule
                 }
                 else
                 {
-                    // Add the property to the dictionary as is if it's not DMTF
+                    // Add the property to the dynamic object as is if it's not DMTF
                     dictionary[property.Name] = property.Value;
                 }
             }
 
-            return dictionary;
+            return expandoObject;
         }
 
         private static TimeSpan ConvertDmtfToTimeSpan(string dmtfTime)

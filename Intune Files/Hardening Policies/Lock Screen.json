@@ -2,9 +2,9 @@
     "@odata.context": "https://graph.microsoft.com/beta/$metadata#deviceManagement/configurationPolicies/$entity",
     "createdDateTime": "2024-07-13T12:22:33.2814034Z",
     "creationSource": null,
-    "description": "",
+    "description": "Lock Screen Category",
     "lastModifiedDateTime": "2024-07-13T12:29:46.09567Z",
-    "name": "Lock Screen Category",
+    "name": "Lock Screen",
     "platforms": "windows10",
     "priorityMetaData": null,
     "roleScopeTagIds": [

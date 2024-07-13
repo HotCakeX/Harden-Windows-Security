@@ -2,7 +2,7 @@
     "@odata.context": "https://graph.microsoft.com/beta/$metadata#deviceManagement/configurationPolicies/$entity",
     "createdDateTime": "2024-07-12T11:25:26.6505145Z",
     "creationSource": null,
-    "description": "",
+    "description": "Microsoft Defender Category",
     "lastModifiedDateTime": "2024-07-12T14:29:02.2044984Z",
     "name": "Microsoft Defender",
     "platforms": "windows10",

@@ -2,7 +2,7 @@
     "@odata.context": "https://graph.microsoft.com/beta/$metadata#deviceManagement/configurationPolicies/$entity",
     "createdDateTime": "2024-07-12T11:36:14.0688394Z",
     "creationSource": null,
-    "description": "",
+    "description": "ASR Rules Category",
     "lastModifiedDateTime": "2024-07-12T11:36:14.0688394Z",
     "name": "Attack Surface Reduction Rules",
     "platforms": "windows10",

@@ -32,7 +32,7 @@ namespace HardeningModule
         //
 
         // Total number of Compliant values not equal to N/A
-        public static int TotalNumberOfTrueCompliantValues = 239;
+        public static int TotalNumberOfTrueCompliantValues;
 
         //
         // The following variables are only used by the Protect-WindowsSecurity cmdlet
@@ -71,7 +71,7 @@ namespace HardeningModule
         // a global variable to save the output of the [HardeningModule.ProtectionCategoriex]::New().GetValidValues() in
         public static string[] HardeningCategorieX;
 
-
+        // the explicit path to save the security_policy.inf file
         public static string securityPolicyInfPath = Path.Combine(HardeningModule.GlobalVars.WorkingDir, "security_policy.inf");
     }
 }

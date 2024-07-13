@@ -74,7 +74,7 @@ As we've already discussed before, having TPM alone is not enough to protect the
 
 In the image above:
 
-* Red is the insecure methods
+* Red is the insecure method
 * Pinks are the more secure methods
 * Green is the most secure method
 

@@ -34,9 +34,6 @@ Function Unprotect-WindowsSecurity {
         Write-Verbose -Message 'Checking for updates...'
         Update-Self -InvocationStatement $MyInvocation.Statement
 
-        # Fetching Temp Directory
-        [System.String]$CurrentUserTempDirectoryPath = [System.IO.Path]::GetTempPath()
-
         # The total number of the steps for the parent/main progress bar to render
         [System.Int16]$TotalMainSteps = 7
         [System.Int16]$CurrentMainStep = 0

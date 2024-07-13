@@ -167,40 +167,13 @@ function Confirm-SystemCompliance {
             Write-Output -InputObject $StringBuilder.ToString()
         }
         #Endregion Colors
+
+        $PSStyle.Progress.Style = "$($PSStyle.Foreground.FromRGB(221, 160, 221))$($PSStyle.Blink)"
     }
 
     process {
 
         try {
-            #Region Rainbow Progress Bar
-
-            # Define a variable to store the current color index
-            [System.UInt16]$Global:ColorIndex = 0
-
-            # Create a timer object that fires every 2 seconds
-            [System.Timers.Timer]$RainbowTimer = New-Object System.Timers.Timer
-            $RainbowTimer.Interval = 2000 # milliseconds
-            $RainbowTimer.AutoReset = $true # repeat until stopped
-
-            # Register an event handler that changes Write-Progress' style every time the timer elapses
-            [System.Management.Automation.PSEventJob]$EventHandler = Register-ObjectEvent -InputObject $RainbowTimer -EventName Elapsed -Action {
-
-                $Global:ColorIndex++
-                if ($Global:ColorIndex -ge $Global:Colors.Length) {
-                    $Global:ColorIndex = 0
-                }
-
-                # Get the current color from the array
-                [System.Drawing.Color]$CurrentColor = $Global:Colors[$Global:ColorIndex]
-                # Set the progress bar style to use the current color and the blink effect
-                $PSStyle.Progress.Style = "$($PSStyle.Foreground.FromRGB($CurrentColor.R, $CurrentColor.G, $CurrentColor.B))$($PSStyle.Blink)"
-            }
-
-            # Start the timer
-            $RainbowTimer.Start()
-
-            #Endregion Rainbow Progress Bar
-
             $CurrentMainStep++
             Write-Progress -Id 0 -Activity 'Gathering Security Policy Information' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
 
@@ -1795,21 +1768,7 @@ function Confirm-SystemCompliance {
         }
         finally {
             # End the progress bar and mark it as completed
-            Write-Progress -Id 0 -Activity 'Completed' -Completed
-
-            #Region stopping rainbow progress bar
-
-            # Stop the timer
-            $RainbowTimer.Stop()
-
-            # Unregister the event handler
-            Unregister-Event -SourceIdentifier $EventHandler.Name -Force
-
-            # Remove the event handler's job
-            Remove-Job -Job $EventHandler -Force
-
-            #Endregion stopping rainbow progress bar
-
+            Write-Progress -Id 0 -Activity 'Completed' -Completed        
             [HardeningModule.Miscellaneous]::CleanUp()
         }
     }

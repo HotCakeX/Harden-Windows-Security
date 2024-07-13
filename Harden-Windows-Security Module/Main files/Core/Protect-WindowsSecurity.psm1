@@ -1210,10 +1210,7 @@ End time: $(Get-Date)
                 }
             }
 
-            if ([System.IO.Directory]::Exists(([HardeningModule.GlobalVars]::WorkingDir))) {
-                Write-Verbose -Message 'Removing the working directory'
-                Remove-Item -Recurse -Path ([HardeningModule.GlobalVars]::WorkingDir) -Force
-            }
+            [HardeningModule.Miscellaneous]::CleanUp()
 
             Write-Verbose -Message 'Disabling progress bars'
             foreach ($ID in 0..2) {

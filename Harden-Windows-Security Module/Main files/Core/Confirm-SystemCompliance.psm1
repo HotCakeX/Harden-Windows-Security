@@ -1810,11 +1810,7 @@ function Confirm-SystemCompliance {
 
             #Endregion stopping rainbow progress bar
 
-            # Clean up
-            if ([System.IO.Directory]::Exists(([HardeningModule.GlobalVars]::WorkingDir))) {
-                Write-Verbose -Message 'Removing the working directory'
-                Remove-Item -Recurse -Path ([HardeningModule.GlobalVars]::WorkingDir) -Force
-            }
+            [HardeningModule.Miscellaneous]::CleanUp()
         }
     }
     <#

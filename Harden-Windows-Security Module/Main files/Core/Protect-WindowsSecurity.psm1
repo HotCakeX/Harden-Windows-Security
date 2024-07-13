@@ -417,9 +417,8 @@ Function Protect-WindowsSecurity {
             }
 
             Write-Verbose -Message 'Checking if TPM is available and enabled...'
-            [System.Object]$TPM = Get-Tpm
-            if (-NOT ($TPM.tpmpresent -and $TPM.tpmenabled)) {
-                Write-Warning -Message 'TPM is not present or enabled on this system. BitLockerSettings category will be unavailable.'
+            if ([HardeningModule.TpmStatus]::Get().IsActivated -ne $true -or [HardeningModule.TpmStatus]::Get().IsEnabled -ne $true) {
+                Write-Warning -Message 'TPM is not activated or enabled on this system. BitLockerSettings category will be unavailable.'
             }
 
             if (-NOT (([HardeningModule.GlobalVars]::MDAVConfigCurrent).AMServiceEnabled -eq $true)) {

@@ -217,7 +217,7 @@ function Confirm-SystemCompliance {
             Function Invoke-MicrosoftDefender {
                 Param ($SyncHash, $FinalMegaObject)
 
-                [System.Management.Automation.Job2]$script:MicrosoftDefenderJob = Start-ThreadJob -ScriptBlock {
+                [System.Management.Automation.Job2]$script:MicrosoftDefenderJob = Start-ThreadJob -ThrottleLimit ([System.Environment]::ProcessorCount) -ScriptBlock {
 
                     Param ($SyncHash, $FinalMegaObject)
 
@@ -658,7 +658,7 @@ function Confirm-SystemCompliance {
             Function Invoke-AttackSurfaceReductionRules {
                 Param ($SyncHash, $FinalMegaObject)
 
-                [System.Management.Automation.Job2]$script:AttackSurfaceReductionRulesJob = Start-ThreadJob -ScriptBlock {
+                [System.Management.Automation.Job2]$script:AttackSurfaceReductionRulesJob = Start-ThreadJob -ThrottleLimit ([System.Environment]::ProcessorCount) -ScriptBlock {
 
                     Param ($SyncHash, $FinalMegaObject)
 
@@ -766,7 +766,7 @@ function Confirm-SystemCompliance {
             Function Invoke-BitLockerSettings {
                 Param ($SyncHash, $FinalMegaObject)
 
-                [System.Management.Automation.Job2]$script:BitLockerSettingsJob = Start-ThreadJob -ScriptBlock {
+                [System.Management.Automation.Job2]$script:BitLockerSettingsJob = Start-ThreadJob -ThrottleLimit ([System.Environment]::ProcessorCount) -ScriptBlock {
 
                     Param ($SyncHash, $FinalMegaObject)
 
@@ -962,7 +962,7 @@ function Confirm-SystemCompliance {
             Function Invoke-TLSSecurity {
                 Param ($SyncHash, $FinalMegaObject)
 
-                [System.Management.Automation.Job2]$script:TLSSecurityJob = Start-ThreadJob -ScriptBlock {
+                [System.Management.Automation.Job2]$script:TLSSecurityJob = Start-ThreadJob -ThrottleLimit ([System.Environment]::ProcessorCount) -ScriptBlock {
 
                     Param ($SyncHash, $FinalMegaObject)
 
@@ -1005,7 +1005,7 @@ function Confirm-SystemCompliance {
             Function Invoke-LockScreen {
                 Param ($SyncHash, $FinalMegaObject)
 
-                [System.Management.Automation.Job2]$script:LockScreenJob = Start-ThreadJob -ScriptBlock {
+                [System.Management.Automation.Job2]$script:LockScreenJob = Start-ThreadJob -ThrottleLimit ([System.Environment]::ProcessorCount) -ScriptBlock {
 
                     Param ($SyncHash, $FinalMegaObject)
 
@@ -1125,7 +1125,7 @@ function Confirm-SystemCompliance {
             Function Invoke-UserAccountControl {
                 Param ($SyncHash, $FinalMegaObject)
 
-                [System.Management.Automation.Job2]$script:UserAccountControlJob = Start-ThreadJob -ScriptBlock {
+                [System.Management.Automation.Job2]$script:UserAccountControlJob = Start-ThreadJob -ThrottleLimit ([System.Environment]::ProcessorCount) -ScriptBlock {
 
                     Param ($SyncHash, $FinalMegaObject)
 
@@ -1179,7 +1179,7 @@ function Confirm-SystemCompliance {
             Function Invoke-DeviceGuard {
                 Param ($SyncHash, $FinalMegaObject)
 
-                [System.Management.Automation.Job2]$script:DeviceGuardJob = Start-ThreadJob -ScriptBlock {
+                [System.Management.Automation.Job2]$script:DeviceGuardJob = Start-ThreadJob -ThrottleLimit ([System.Environment]::ProcessorCount) -ScriptBlock {
 
                     Param ($SyncHash, $FinalMegaObject)
 
@@ -1201,7 +1201,7 @@ function Confirm-SystemCompliance {
             Function Invoke-WindowsFirewall {
                 Param ($SyncHash, $FinalMegaObject)
 
-                [System.Management.Automation.Job2]$script:WindowsFirewallJob = Start-ThreadJob -ScriptBlock {
+                [System.Management.Automation.Job2]$script:WindowsFirewallJob = Start-ThreadJob -ThrottleLimit ([System.Environment]::ProcessorCount) -ScriptBlock {
 
                     Param ($SyncHash, $FinalMegaObject)
 
@@ -1238,7 +1238,7 @@ function Confirm-SystemCompliance {
             Function Invoke-OptionalWindowsFeatures {
                 Param ($SyncHash, $FinalMegaObject)
 
-                [System.Management.Automation.Job2]$script:OptionalWindowsFeaturesJob = Start-ThreadJob -ScriptBlock {
+                [System.Management.Automation.Job2]$script:OptionalWindowsFeaturesJob = Start-ThreadJob -ThrottleLimit ([System.Environment]::ProcessorCount) -ScriptBlock {
 
                     Param ($SyncHash, $FinalMegaObject)
 
@@ -1405,7 +1405,7 @@ function Confirm-SystemCompliance {
             Function Invoke-WindowsNetworking {
                 Param ($SyncHash, $FinalMegaObject)
 
-                [System.Management.Automation.Job2]$script:WindowsNetworkingJob = Start-ThreadJob -ScriptBlock {
+                [System.Management.Automation.Job2]$script:WindowsNetworkingJob = Start-ThreadJob -ThrottleLimit ([System.Environment]::ProcessorCount) -ScriptBlock {
 
                     Param ($SyncHash, $FinalMegaObject)
 
@@ -1479,7 +1479,7 @@ function Confirm-SystemCompliance {
             Function Invoke-MiscellaneousConfigurations {
                 Param ($SyncHash, $FinalMegaObject)
 
-                [System.Management.Automation.Job2]$script:MiscellaneousConfigurationsJob = Start-ThreadJob -ScriptBlock {
+                [System.Management.Automation.Job2]$script:MiscellaneousConfigurationsJob = Start-ThreadJob -ThrottleLimit ([System.Environment]::ProcessorCount) -ScriptBlock {
 
                     Param ($SyncHash, $FinalMegaObject)
 
@@ -1549,7 +1549,7 @@ function Confirm-SystemCompliance {
             Function Invoke-WindowsUpdateConfigurations {
                 Param ($SyncHash, $FinalMegaObject)
 
-                [System.Management.Automation.Job2]$script:WindowsUpdateConfigurationsJob = Start-ThreadJob -ScriptBlock {
+                [System.Management.Automation.Job2]$script:WindowsUpdateConfigurationsJob = Start-ThreadJob -ThrottleLimit ([System.Environment]::ProcessorCount) -ScriptBlock {
 
                     Param ($SyncHash, $FinalMegaObject)
 
@@ -1587,7 +1587,7 @@ function Confirm-SystemCompliance {
             Function Invoke-EdgeBrowserConfigurations {
                 Param ($SyncHash, $FinalMegaObject)
 
-                [System.Management.Automation.Job2]$script:EdgeBrowserConfigurationsJob = Start-ThreadJob -ScriptBlock {
+                [System.Management.Automation.Job2]$script:EdgeBrowserConfigurationsJob = Start-ThreadJob -ThrottleLimit ([System.Environment]::ProcessorCount) -ScriptBlock {
 
                     Param ($SyncHash, $FinalMegaObject)
 
@@ -1609,7 +1609,7 @@ function Confirm-SystemCompliance {
             Function Invoke-NonAdminCommands {
                 Param ($SyncHash, $FinalMegaObject)
 
-                [System.Management.Automation.Job2]$script:NonAdminCommandsJob = Start-ThreadJob -ScriptBlock {
+                [System.Management.Automation.Job2]$script:NonAdminCommandsJob = Start-ThreadJob -ThrottleLimit ([System.Environment]::ProcessorCount) -ScriptBlock {
 
                     Param ($SyncHash, $FinalMegaObject)
 

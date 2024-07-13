@@ -98,3 +98,5 @@
 ## <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/wings/whitewings.gif" width="50"> [Microsoft Cloud](#-powershell)
 
 - <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/wings/whitewings.gif" width="35">[ Microsoft Graph Explorer and API Basics](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Microsoft-Graph-Explorer-and-API-Basics)
+
+<br>

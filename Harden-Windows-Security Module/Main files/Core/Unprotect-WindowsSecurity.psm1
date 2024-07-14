@@ -91,8 +91,9 @@ Function Unprotect-WindowsSecurity {
             # Disable Mandatory ASLR
             Set-ProcessMitigation -System -Disable ForceRelocateImages
 
-            # Only keep the mitigations that are allowed to be removed
-            # It is important for any executable whose name is mentioned as a key in "Computer\HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options" Should have its RemovalAllowed property in the Process Mitigations CSV file set to False
+            # Only remove the mitigations that are allowed to be removed
+            # It is important for any executable whose name is mentioned as a key in "Computer\HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options" by default in a clean Windows installation, to have its RemovalAllowed property in the Process Mitigations CSV file set to False
+            # So regardless of whether mitigations were added by the module, only remove mitigations for processes whose names do not exist in that registry location by default, this will prevent from removing any possible built-in default mitigations
             [HardeningModule.ProcessMitigationsParser+ProcessMitigationsRecords[]]$ProcessMitigations = [HardeningModule.GlobalVars]::ProcessMitigations | Where-Object -FilterScript { $_.RemovalAllowed -eq 'True' }
 
             # Group the data by ProgramName

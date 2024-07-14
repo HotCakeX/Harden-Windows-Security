@@ -8,6 +8,7 @@ namespace HardeningModule
     {
         public bool IsEnabled { get; set; }
         public bool IsActivated { get; set; }
+        public string ErrorMessage { get; set; }
     }
 
     public static class TpmStatus
@@ -17,6 +18,7 @@ namespace HardeningModule
         {
             bool isEnabled = false;
             bool isActivated = false;
+            string errorMessage = null;
 
             byte isEnabledByte;
             byte isActivatedByte;
@@ -29,7 +31,7 @@ namespace HardeningModule
             }
             else
             {
-                throw new Exception($"Failed to get TPM IsEnabled status, error code: {result}");
+                errorMessage = $"{result}";
             }
 
             // Call TpmIsActivated and check result
@@ -40,10 +42,10 @@ namespace HardeningModule
             }
             else
             {
-                throw new Exception($"Failed to get TPM IsActivated status, error code: {result}");
+                errorMessage = $"{result}";
             }
 
-            return new TpmResult { IsEnabled = isEnabled, IsActivated = isActivated };
+            return new TpmResult { IsEnabled = isEnabled, IsActivated = isActivated, ErrorMessage = errorMessage };
         }
 
         // Class that imports TpmCoreProvisioning.dll and use its exported functions

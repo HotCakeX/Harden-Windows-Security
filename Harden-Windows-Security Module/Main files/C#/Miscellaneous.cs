@@ -71,9 +71,12 @@ namespace HardeningModule
                 }
 
                 Console.WriteLine("Checking if TPM is available and enabled...");
-                if (!HardeningModule.TpmStatus.Get().IsActivated || !HardeningModule.TpmStatus.Get().IsEnabled)
+
+                var tpmStatus = HardeningModule.TpmStatus.Get();
+
+                if (!tpmStatus.IsActivated || !tpmStatus.IsEnabled)
                 {
-                    Console.WriteLine("TPM is not activated or enabled on this system. BitLockerSettings category will be unavailable.");
+                    Console.WriteLine($"TPM is not activated or enabled on this system. BitLockerSettings category will be unavailable - {tpmStatus.ErrorMessage}");
                 }
 
                 if (!HardeningModule.GlobalVars.MDAVConfigCurrent.AMServiceEnabled)

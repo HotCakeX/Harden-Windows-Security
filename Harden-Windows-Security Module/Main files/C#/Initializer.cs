@@ -35,11 +35,14 @@ namespace HardeningModule
             // Concatenate OSBuildNumber and UBR to form the final string
             HardeningModule.GlobalVars.FullOSBuild = $"{HardeningModule.GlobalVars.OSBuildNumber}.{HardeningModule.GlobalVars.UBR}";
 
-            // Create the working directory if it does not exist
-            if (!Directory.Exists(HardeningModule.GlobalVars.WorkingDir))
+            // If the working directory exists, delete it
+            if (Directory.Exists(HardeningModule.GlobalVars.WorkingDir))
             {
-                Directory.CreateDirectory(HardeningModule.GlobalVars.WorkingDir);
+                Directory.Delete(HardeningModule.GlobalVars.WorkingDir, true);
             }
+
+            // Create the working directory
+            Directory.CreateDirectory(HardeningModule.GlobalVars.WorkingDir);
 
             // Initialize the RegistryCSVItems list so that the HardeningModule.HardeningRegistryKeys.ReadCsv() method can write to it
             HardeningModule.GlobalVars.RegistryCSVItems = new List<HardeningModule.HardeningRegistryKeys.CsvRecord>();

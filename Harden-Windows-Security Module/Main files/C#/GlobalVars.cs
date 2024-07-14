@@ -22,10 +22,10 @@ namespace HardeningModule
         public static string path;
 
         // Stores the output of Get-MpComputerStatus which happens early on in the root module .psm1 file
-        public static object MDAVConfigCurrent;
+        public static dynamic MDAVConfigCurrent;
 
         // Stores the output of Get-MpPreference which happens early on in the root module .psm1 file
-        public static object MDAVPreferencesCurrent;
+        public static dynamic MDAVPreferencesCurrent;
 
         //
         // The following variables are only used by the Confirm-SystemCompliance cmdlet

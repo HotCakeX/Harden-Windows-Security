@@ -12,7 +12,7 @@ namespace HardeningModule
 
     public static class TpmStatus
     {
-        // Get the status of the TPM
+        // Method to use the Windows APIs to check if the TPM is enabled and activated
         public static TpmResult Get()
         {
             bool isEnabled = false;

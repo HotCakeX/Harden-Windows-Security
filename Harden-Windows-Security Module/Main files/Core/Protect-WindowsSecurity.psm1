@@ -397,47 +397,14 @@ Function Protect-WindowsSecurity {
             [System.IO.FileInfo[]]$CFAAllowedAppsBackup = ([HardeningModule.GlobalVars]::MDAVPreferencesCurrent).ControlledFolderAccessAllowedApplications
 
             Write-Verbose -Message 'Temporarily adding the currently running PowerShell executables to the Controlled Folder Access allowed apps list'
-            # so that the script can run without interruption. This change is reverted at the end.
+            # so that the module can run without interruption. This change is reverted at the end.
             # Adding powercfg.exe so Controlled Folder Access won't complain about it in BitLocker category when setting hibernate file size to full
             foreach ($FilePath in (((Get-ChildItem -Path "$PSHOME\*.exe" -File).FullName) + "$env:SystemDrive\Windows\System32\powercfg.exe")) {
                 Add-MpPreference -ControlledFolderAccessAllowedApplications $FilePath
             }
+
+            [HardeningModule.Miscellaneous]::RequirementsCheck()
         }
-
-        #region RequirementsCheck
-        # Home edition and Home edition single-language SKUs
-        if ((Get-CimInstance -ClassName Win32_OperatingSystem -Verbose:$false).OperatingSystemSKU -in '101', '100') {
-            Write-Warning -Message 'The Windows Home edition has been detected, some categories are unavailable and the remaining categories are applied in a best effort fashion.'
-        }
-
-        if ([HardeningModule.UserPrivCheck]::IsAdmin()) {
-            Write-Verbose -Message 'Checking if Secure Boot is enabled...'
-            if (-NOT (Confirm-SecureBootUEFI)) {
-                Throw 'Secure Boot is not enabled. Please enable it in your UEFI settings and try again.'
-            }
-
-            Write-Verbose -Message 'Checking if TPM is available and enabled...'
-            if ([HardeningModule.TpmStatus]::Get().IsActivated -ne $true -or [HardeningModule.TpmStatus]::Get().IsEnabled -ne $true) {
-                Write-Warning -Message 'TPM is not activated or enabled on this system. BitLockerSettings category will be unavailable.'
-            }
-
-            if (-NOT (([HardeningModule.GlobalVars]::MDAVConfigCurrent).AMServiceEnabled -eq $true)) {
-                Throw 'Microsoft Defender Anti Malware service is not enabled, please enable it and then try again.'
-            }
-
-            if (-NOT (([HardeningModule.GlobalVars]::MDAVConfigCurrent).AntispywareEnabled -eq $true)) {
-                Throw 'Microsoft Defender Anti Spyware is not enabled, please enable it and then try again.'
-            }
-
-            if (-NOT (([HardeningModule.GlobalVars]::MDAVConfigCurrent).AntivirusEnabled -eq $true)) {
-                Throw 'Microsoft Defender Anti Virus is not enabled, please enable it and then try again.'
-            }
-
-            if (([HardeningModule.GlobalVars]::MDAVConfigCurrent).AMRunningMode -ne 'Normal') {
-                Throw "Microsoft Defender is running in $(([HardeningModule.GlobalVars]::MDAVConfigCurrent).AMRunningMode) state, please remove any 3rd party AV and then try again."
-            }
-        }
-        #endregion RequirementsCheck
         try {
 
             # Detecting whether GUI parameter is present or not
@@ -1129,7 +1096,7 @@ End time: $(Get-Date)
     }
 
     process {
-        # doing a try-catch-finally block on the entire script so that when CTRL + C is pressed to forcefully exit the script,
+        # doing a try-catch-finally block on the entire code so that when CTRL + C is pressed to forcefully exit the operation,
         # or break is passed, clean up will still happen for secure exit. Any error that happens will be thrown
         try {
 
@@ -1216,10 +1183,10 @@ End time: $(Get-Date)
                 Write-Progress -Id $ID -Activity 'Done' -Completed
             }
 
-            Write-Verbose -Message 'Restoring the title of the PowerShell back to what it was prior to running the script/module'
+            Write-Verbose -Message 'Restoring the title of the PowerShell back to what it was prior to running the module'
             $Host.UI.RawUI.WindowTitle = $CurrentPowerShellTitle
 
-            Write-Verbose -Message 'Setting the execution policy back to what it was prior to running the script/module'
+            Write-Verbose -Message 'Setting the execution policy back to what it was prior to running the module'
             Set-ExecutionPolicy -ExecutionPolicy "$CurrentExecutionPolicy" -Scope 'Process' -Force
 
             if ($Log) {

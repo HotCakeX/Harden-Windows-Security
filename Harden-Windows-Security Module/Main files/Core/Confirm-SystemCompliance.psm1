@@ -1768,7 +1768,7 @@ function Confirm-SystemCompliance {
         }
         finally {
             # End the progress bar and mark it as completed
-            Write-Progress -Id 0 -Activity 'Completed' -Completed        
+            Write-Progress -Id 0 -Activity 'Completed' -Completed
             [HardeningModule.Miscellaneous]::CleanUp()
         }
     }

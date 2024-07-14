@@ -2,7 +2,7 @@
     "@odata.context": "https://graph.microsoft.com/beta/$metadata#deviceManagement/configurationPolicies/$entity",
     "createdDateTime": "2024-07-12T14:52:08.4917639Z",
     "creationSource": null,
-    "description": "",
+    "description": "TLS Settings Category",
     "lastModifiedDateTime": "2024-07-12T14:56:14.7388844Z",
     "name": "TLS Settings",
     "platforms": "windows10",

@@ -2,7 +2,7 @@
     "@odata.context": "https://graph.microsoft.com/beta/$metadata#deviceManagement/configurationPolicies/$entity",
     "createdDateTime": "2024-07-12T14:40:00.4244059Z",
     "creationSource": null,
-    "description": "",
+    "description": "Device Guard Category",
     "lastModifiedDateTime": "2024-07-12T14:42:56.1245775Z",
     "name": "Device Guard",
     "platforms": "windows10",

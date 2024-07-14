@@ -167,40 +167,13 @@ function Confirm-SystemCompliance {
             Write-Output -InputObject $StringBuilder.ToString()
         }
         #Endregion Colors
+
+        $PSStyle.Progress.Style = "$($PSStyle.Foreground.FromRGB(221, 160, 221))$($PSStyle.Blink)"
     }
 
     process {
 
         try {
-            #Region Rainbow Progress Bar
-
-            # Define a variable to store the current color index
-            [System.UInt16]$Global:ColorIndex = 0
-
-            # Create a timer object that fires every 2 seconds
-            [System.Timers.Timer]$RainbowTimer = New-Object System.Timers.Timer
-            $RainbowTimer.Interval = 2000 # milliseconds
-            $RainbowTimer.AutoReset = $true # repeat until stopped
-
-            # Register an event handler that changes Write-Progress' style every time the timer elapses
-            [System.Management.Automation.PSEventJob]$EventHandler = Register-ObjectEvent -InputObject $RainbowTimer -EventName Elapsed -Action {
-
-                $Global:ColorIndex++
-                if ($Global:ColorIndex -ge $Global:Colors.Length) {
-                    $Global:ColorIndex = 0
-                }
-
-                # Get the current color from the array
-                [System.Drawing.Color]$CurrentColor = $Global:Colors[$Global:ColorIndex]
-                # Set the progress bar style to use the current color and the blink effect
-                $PSStyle.Progress.Style = "$($PSStyle.Foreground.FromRGB($CurrentColor.R, $CurrentColor.G, $CurrentColor.B))$($PSStyle.Blink)"
-            }
-
-            # Start the timer
-            $RainbowTimer.Start()
-
-            #Endregion Rainbow Progress Bar
-
             $CurrentMainStep++
             Write-Progress -Id 0 -Activity 'Gathering Security Policy Information' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
 
@@ -217,7 +190,7 @@ function Confirm-SystemCompliance {
             Function Invoke-MicrosoftDefender {
                 Param ($SyncHash, $FinalMegaObject)
 
-                [System.Management.Automation.Job2]$script:MicrosoftDefenderJob = Start-ThreadJob -ScriptBlock {
+                [System.Management.Automation.Job2]$script:MicrosoftDefenderJob = Start-ThreadJob -ThrottleLimit ([System.Environment]::ProcessorCount) -ScriptBlock {
 
                     Param ($SyncHash, $FinalMegaObject)
 
@@ -658,7 +631,7 @@ function Confirm-SystemCompliance {
             Function Invoke-AttackSurfaceReductionRules {
                 Param ($SyncHash, $FinalMegaObject)
 
-                [System.Management.Automation.Job2]$script:AttackSurfaceReductionRulesJob = Start-ThreadJob -ScriptBlock {
+                [System.Management.Automation.Job2]$script:AttackSurfaceReductionRulesJob = Start-ThreadJob -ThrottleLimit ([System.Environment]::ProcessorCount) -ScriptBlock {
 
                     Param ($SyncHash, $FinalMegaObject)
 
@@ -766,7 +739,7 @@ function Confirm-SystemCompliance {
             Function Invoke-BitLockerSettings {
                 Param ($SyncHash, $FinalMegaObject)
 
-                [System.Management.Automation.Job2]$script:BitLockerSettingsJob = Start-ThreadJob -ScriptBlock {
+                [System.Management.Automation.Job2]$script:BitLockerSettingsJob = Start-ThreadJob -ThrottleLimit ([System.Environment]::ProcessorCount) -ScriptBlock {
 
                     Param ($SyncHash, $FinalMegaObject)
 
@@ -962,7 +935,7 @@ function Confirm-SystemCompliance {
             Function Invoke-TLSSecurity {
                 Param ($SyncHash, $FinalMegaObject)
 
-                [System.Management.Automation.Job2]$script:TLSSecurityJob = Start-ThreadJob -ScriptBlock {
+                [System.Management.Automation.Job2]$script:TLSSecurityJob = Start-ThreadJob -ThrottleLimit ([System.Environment]::ProcessorCount) -ScriptBlock {
 
                     Param ($SyncHash, $FinalMegaObject)
 
@@ -1005,7 +978,7 @@ function Confirm-SystemCompliance {
             Function Invoke-LockScreen {
                 Param ($SyncHash, $FinalMegaObject)
 
-                [System.Management.Automation.Job2]$script:LockScreenJob = Start-ThreadJob -ScriptBlock {
+                [System.Management.Automation.Job2]$script:LockScreenJob = Start-ThreadJob -ThrottleLimit ([System.Environment]::ProcessorCount) -ScriptBlock {
 
                     Param ($SyncHash, $FinalMegaObject)
 
@@ -1125,7 +1098,7 @@ function Confirm-SystemCompliance {
             Function Invoke-UserAccountControl {
                 Param ($SyncHash, $FinalMegaObject)
 
-                [System.Management.Automation.Job2]$script:UserAccountControlJob = Start-ThreadJob -ScriptBlock {
+                [System.Management.Automation.Job2]$script:UserAccountControlJob = Start-ThreadJob -ThrottleLimit ([System.Environment]::ProcessorCount) -ScriptBlock {
 
                     Param ($SyncHash, $FinalMegaObject)
 
@@ -1179,7 +1152,7 @@ function Confirm-SystemCompliance {
             Function Invoke-DeviceGuard {
                 Param ($SyncHash, $FinalMegaObject)
 
-                [System.Management.Automation.Job2]$script:DeviceGuardJob = Start-ThreadJob -ScriptBlock {
+                [System.Management.Automation.Job2]$script:DeviceGuardJob = Start-ThreadJob -ThrottleLimit ([System.Environment]::ProcessorCount) -ScriptBlock {
 
                     Param ($SyncHash, $FinalMegaObject)
 
@@ -1201,7 +1174,7 @@ function Confirm-SystemCompliance {
             Function Invoke-WindowsFirewall {
                 Param ($SyncHash, $FinalMegaObject)
 
-                [System.Management.Automation.Job2]$script:WindowsFirewallJob = Start-ThreadJob -ScriptBlock {
+                [System.Management.Automation.Job2]$script:WindowsFirewallJob = Start-ThreadJob -ThrottleLimit ([System.Environment]::ProcessorCount) -ScriptBlock {
 
                     Param ($SyncHash, $FinalMegaObject)
 
@@ -1238,7 +1211,7 @@ function Confirm-SystemCompliance {
             Function Invoke-OptionalWindowsFeatures {
                 Param ($SyncHash, $FinalMegaObject)
 
-                [System.Management.Automation.Job2]$script:OptionalWindowsFeaturesJob = Start-ThreadJob -ScriptBlock {
+                [System.Management.Automation.Job2]$script:OptionalWindowsFeaturesJob = Start-ThreadJob -ThrottleLimit ([System.Environment]::ProcessorCount) -ScriptBlock {
 
                     Param ($SyncHash, $FinalMegaObject)
 
@@ -1405,7 +1378,7 @@ function Confirm-SystemCompliance {
             Function Invoke-WindowsNetworking {
                 Param ($SyncHash, $FinalMegaObject)
 
-                [System.Management.Automation.Job2]$script:WindowsNetworkingJob = Start-ThreadJob -ScriptBlock {
+                [System.Management.Automation.Job2]$script:WindowsNetworkingJob = Start-ThreadJob -ThrottleLimit ([System.Environment]::ProcessorCount) -ScriptBlock {
 
                     Param ($SyncHash, $FinalMegaObject)
 
@@ -1479,7 +1452,7 @@ function Confirm-SystemCompliance {
             Function Invoke-MiscellaneousConfigurations {
                 Param ($SyncHash, $FinalMegaObject)
 
-                [System.Management.Automation.Job2]$script:MiscellaneousConfigurationsJob = Start-ThreadJob -ScriptBlock {
+                [System.Management.Automation.Job2]$script:MiscellaneousConfigurationsJob = Start-ThreadJob -ThrottleLimit ([System.Environment]::ProcessorCount) -ScriptBlock {
 
                     Param ($SyncHash, $FinalMegaObject)
 
@@ -1549,7 +1522,7 @@ function Confirm-SystemCompliance {
             Function Invoke-WindowsUpdateConfigurations {
                 Param ($SyncHash, $FinalMegaObject)
 
-                [System.Management.Automation.Job2]$script:WindowsUpdateConfigurationsJob = Start-ThreadJob -ScriptBlock {
+                [System.Management.Automation.Job2]$script:WindowsUpdateConfigurationsJob = Start-ThreadJob -ThrottleLimit ([System.Environment]::ProcessorCount) -ScriptBlock {
 
                     Param ($SyncHash, $FinalMegaObject)
 
@@ -1587,7 +1560,7 @@ function Confirm-SystemCompliance {
             Function Invoke-EdgeBrowserConfigurations {
                 Param ($SyncHash, $FinalMegaObject)
 
-                [System.Management.Automation.Job2]$script:EdgeBrowserConfigurationsJob = Start-ThreadJob -ScriptBlock {
+                [System.Management.Automation.Job2]$script:EdgeBrowserConfigurationsJob = Start-ThreadJob -ThrottleLimit ([System.Environment]::ProcessorCount) -ScriptBlock {
 
                     Param ($SyncHash, $FinalMegaObject)
 
@@ -1609,7 +1582,7 @@ function Confirm-SystemCompliance {
             Function Invoke-NonAdminCommands {
                 Param ($SyncHash, $FinalMegaObject)
 
-                [System.Management.Automation.Job2]$script:NonAdminCommandsJob = Start-ThreadJob -ScriptBlock {
+                [System.Management.Automation.Job2]$script:NonAdminCommandsJob = Start-ThreadJob -ThrottleLimit ([System.Environment]::ProcessorCount) -ScriptBlock {
 
                     Param ($SyncHash, $FinalMegaObject)
 
@@ -1796,25 +1769,7 @@ function Confirm-SystemCompliance {
         finally {
             # End the progress bar and mark it as completed
             Write-Progress -Id 0 -Activity 'Completed' -Completed
-
-            #Region stopping rainbow progress bar
-
-            # Stop the timer
-            $RainbowTimer.Stop()
-
-            # Unregister the event handler
-            Unregister-Event -SourceIdentifier $EventHandler.Name -Force
-
-            # Remove the event handler's job
-            Remove-Job -Job $EventHandler -Force
-
-            #Endregion stopping rainbow progress bar
-
-            # Clean up
-            if ([System.IO.Directory]::Exists(([HardeningModule.GlobalVars]::WorkingDir))) {
-                Write-Verbose -Message 'Removing the working directory'
-                Remove-Item -Recurse -Path ([HardeningModule.GlobalVars]::WorkingDir) -Force
-            }
+            [HardeningModule.Miscellaneous]::CleanUp()
         }
     }
     <#

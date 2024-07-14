@@ -22,17 +22,17 @@ namespace HardeningModule
         public static string path;
 
         // Stores the output of Get-MpComputerStatus which happens early on in the root module .psm1 file
-        public static object MDAVConfigCurrent;
+        public static dynamic MDAVConfigCurrent;
 
         // Stores the output of Get-MpPreference which happens early on in the root module .psm1 file
-        public static object MDAVPreferencesCurrent;
+        public static dynamic MDAVPreferencesCurrent;
 
         //
         // The following variables are only used by the Confirm-SystemCompliance cmdlet
         //
 
         // Total number of Compliant values not equal to N/A
-        public static int TotalNumberOfTrueCompliantValues = 239;
+        public static int TotalNumberOfTrueCompliantValues;
 
         //
         // The following variables are only used by the Protect-WindowsSecurity cmdlet
@@ -71,7 +71,7 @@ namespace HardeningModule
         // a global variable to save the output of the [HardeningModule.ProtectionCategoriex]::New().GetValidValues() in
         public static string[] HardeningCategorieX;
 
-
+        // the explicit path to save the security_policy.inf file
         public static string securityPolicyInfPath = Path.Combine(HardeningModule.GlobalVars.WorkingDir, "security_policy.inf");
     }
 }

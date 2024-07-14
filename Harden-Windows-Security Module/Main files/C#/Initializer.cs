@@ -9,6 +9,7 @@ namespace HardeningModule
     // prepares the environment. It also runs commands that would otherwise run in the default constructors of each method
     public class Initializer
     {
+        // This method runs once in the module root and in the beginning of each cmdlet
         public static void Initialize()
         {
             using (RegistryKey key = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows NT\CurrentVersion"))
@@ -34,11 +35,14 @@ namespace HardeningModule
             // Concatenate OSBuildNumber and UBR to form the final string
             HardeningModule.GlobalVars.FullOSBuild = $"{HardeningModule.GlobalVars.OSBuildNumber}.{HardeningModule.GlobalVars.UBR}";
 
-            // Create the working directory if it does not exist
-            if (!Directory.Exists(HardeningModule.GlobalVars.WorkingDir))
+            // If the working directory exists, delete it
+            if (Directory.Exists(HardeningModule.GlobalVars.WorkingDir))
             {
-                Directory.CreateDirectory(HardeningModule.GlobalVars.WorkingDir);
+                Directory.Delete(HardeningModule.GlobalVars.WorkingDir, true);
             }
+
+            // Create the working directory
+            Directory.CreateDirectory(HardeningModule.GlobalVars.WorkingDir);
 
             // Initialize the RegistryCSVItems list so that the HardeningModule.HardeningRegistryKeys.ReadCsv() method can write to it
             HardeningModule.GlobalVars.RegistryCSVItems = new List<HardeningModule.HardeningRegistryKeys.CsvRecord>();
@@ -74,6 +78,8 @@ namespace HardeningModule
             // Get the MSFT_MpComputerStatus and save them to the global variable HardeningModule.GlobalVars.MDAVConfigCurrent
             HardeningModule.GlobalVars.MDAVConfigCurrent = HardeningModule.MpComputerStatusHelper.GetMpComputerStatus();
 
+            // Total number of Compliant values not equal to N/A
+            HardeningModule.GlobalVars.TotalNumberOfTrueCompliantValues = 239;
         }
     }
 }

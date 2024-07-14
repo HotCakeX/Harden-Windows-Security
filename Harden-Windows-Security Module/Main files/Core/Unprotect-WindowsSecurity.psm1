@@ -34,9 +34,6 @@ Function Unprotect-WindowsSecurity {
         Write-Verbose -Message 'Checking for updates...'
         Update-Self -InvocationStatement $MyInvocation.Statement
 
-        # Fetching Temp Directory
-        [System.String]$CurrentUserTempDirectoryPath = [System.IO.Path]::GetTempPath()
-
         # The total number of the steps for the parent/main progress bar to render
         [System.Int16]$TotalMainSteps = 7
         [System.Int16]$CurrentMainStep = 0
@@ -94,8 +91,9 @@ Function Unprotect-WindowsSecurity {
             # Disable Mandatory ASLR
             Set-ProcessMitigation -System -Disable ForceRelocateImages
 
-            # Only keep the mitigations that are allowed to be removed
-            # It is important for any executable whose name is mentioned as a key in "Computer\HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options" Should have its RemovalAllowed property in the Process Mitigations CSV file set to False
+            # Only remove the mitigations that are allowed to be removed
+            # It is important for any executable whose name is mentioned as a key in "Computer\HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options" by default in a clean Windows installation, to have its RemovalAllowed property in the Process Mitigations CSV file set to False
+            # So regardless of whether mitigations were added by the module, only remove mitigations for processes whose names do not exist in that registry location by default, this will prevent from removing any possible built-in default mitigations
             [HardeningModule.ProcessMitigationsParser+ProcessMitigationsRecords[]]$ProcessMitigations = [HardeningModule.GlobalVars]::ProcessMitigations | Where-Object -FilterScript { $_.RemovalAllowed -eq 'True' }
 
             # Group the data by ProgramName
@@ -284,10 +282,7 @@ Function Unprotect-WindowsSecurity {
 
                 Set-Location -Path $HOME
 
-                if ([System.IO.Directory]::Exists(([HardeningModule.GlobalVars]::WorkingDir))) {
-                    Write-Verbose -Message 'Removing the working directory'
-                    Remove-Item -Recurse -Path ([HardeningModule.GlobalVars]::WorkingDir) -Force
-                }
+                [HardeningModule.Miscellaneous]::CleanUp()
             }
         }
     }

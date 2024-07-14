@@ -2,7 +2,7 @@
     "@odata.context": "https://graph.microsoft.com/beta/$metadata#deviceManagement/configurationPolicies/$entity",
     "createdDateTime": "2024-07-12T14:48:45.4933001Z",
     "creationSource": null,
-    "description": "",
+    "description": "Windows Firewall Category",
     "lastModifiedDateTime": "2024-07-12T14:48:45.4933001Z",
     "name": "Windows Firewall",
     "platforms": "windows10",

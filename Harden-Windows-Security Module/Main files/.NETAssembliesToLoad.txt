@@ -2,6 +2,7 @@ System
 System.IO
 System.Net
 System.Linq
+System.Console
 System.Windows
 System.Runtime
 System.Net.Http
@@ -20,6 +21,8 @@ System.Linq.Expressions
 System.Threading.Thread
 Microsoft.Win32.Registry
 System.Security.Principal
+System.Diagnostics.Process
+Microsoft.Win32.Primitives
 System.Management.Automation
 System.IO.Compression.zipfile
 System.Runtime.InteropServices

@@ -2,9 +2,9 @@
     "@odata.context": "https://graph.microsoft.com/beta/$metadata#deviceManagement/configurationPolicies/$entity",
     "createdDateTime": "2024-07-12T14:59:12.3164603Z",
     "creationSource": null,
-    "description": "",
+    "description": "BitLocker Category",
     "lastModifiedDateTime": "2024-07-12T16:08:12.9668677Z",
-    "name": "BitLocker Category",
+    "name": "BitLocker",
     "platforms": "windows10",
     "priorityMetaData": null,
     "roleScopeTagIds": [

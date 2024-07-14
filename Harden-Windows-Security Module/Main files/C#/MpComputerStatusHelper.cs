@@ -1,15 +1,16 @@
 using System;
 using System.Linq;
 using System.Management;
-using System.Collections.Generic;
+using System.Dynamic;
 using System.Globalization;
+using System.Collections.Generic;
 
 namespace HardeningModule
 {
     public static class MpComputerStatusHelper
     {
-        // Get the MpComputerStatus from the MSFT_MpComputerStatus WMI class and returns it as a dictionary
-        public static Dictionary<string, object> GetMpComputerStatus()
+        // Get the MpComputerStatus from the MSFT_MpComputerStatus WMI class and returns it as a dynamic object
+        public static dynamic GetMpComputerStatus()
         {
             try
             {
@@ -26,7 +27,7 @@ namespace HardeningModule
                 if (results.Count > 0)
                 {
                     var result = results.Cast<ManagementBaseObject>().FirstOrDefault();
-                    return ConvertToDictionary(result);
+                    return ConvertToDynamic(result);
                 }
                 else
                 {
@@ -40,10 +41,12 @@ namespace HardeningModule
             }
         }
 
-        // Convert the ManagementBaseObject to a dictionary
-        private static Dictionary<string, object> ConvertToDictionary(ManagementBaseObject managementObject)
+        // Convert the ManagementBaseObject to a dynamic object
+        private static dynamic ConvertToDynamic(ManagementBaseObject managementObject)
         {
-            Dictionary<string, object> dictionary = new Dictionary<string, object>();
+            // Creating a dynamic object to store the properties of the ManagementBaseObject
+            dynamic expandoObject = new ExpandoObject();
+            var dictionary = (IDictionary<string, object>)expandoObject;
 
             foreach (var property in managementObject.Properties)
             {
@@ -57,7 +60,7 @@ namespace HardeningModule
                 }
             }
 
-            return dictionary;
+            return expandoObject;
         }
 
         // Convert DMTF datetime format to DateTime

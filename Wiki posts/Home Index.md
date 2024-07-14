@@ -87,10 +87,17 @@
 - <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/wings/redwings.gif" width="35"> [Basic PowerShell tricks and notes Part 2](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Basic-PowerShell-tricks-and-notes-Part-2)
 - <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/wings/redwings.gif" width="35"> [Basic PowerShell tricks and notes Part 3](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Basic-PowerShell-Tricks-and-Notes-Part-3)
 - <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/wings/redwings.gif" width="35"> [Basic PowerShell tricks and notes Part 4](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Basic-PowerShell-Tricks-and-Notes-Part-4)
+- <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/wings/redwings.gif" width="35"> [Basic PowerShell tricks and notes Part 5](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Basic-PowerShell-tricks-and-notes-Part-5)
 - <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/wings/redwings.gif" width="35"> [How To Access All Stream Outputs From Thread Jobs In PowerShell In Real Time](https://github.com/HotCakeX/Harden-Windows-Security/wiki/How-To-Access-All-Stream-Outputs-From-Thread-Jobs-In-PowerShell-In-Real-Time)
 - <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/wings/redwings.gif" width="35"> [PowerShell Best Practices To Follow When Coding](https://github.com/HotCakeX/Harden-Windows-Security/wiki/PowerShell-Best-Practices-To-Follow-When-Coding)
 - <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/wings/redwings.gif" width="35"> [How To Asynchronously Access All Stream Outputs From Background Jobs In PowerShell](https://github.com/HotCakeX/Harden-Windows-Security/wiki/How-To-Asynchronously-Access-All-Stream-Outputs-From-Background-Jobs-In-PowerShell)
 - <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/wings/redwings.gif" width="35"> [Powershell Dynamic Parameters and How to Add Them to the Get‐Help Syntax](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Powershell-Dynamic-Parameters-and-How-to-Add-Them-to-the-Get%E2%80%90Help-Syntax)
 - <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/wings/redwings.gif" width="35"> [RunSpaces In PowerShell](https://github.com/HotCakeX/Harden-Windows-Security/wiki/RunSpaces-In-PowerShell)
+
+<br>
+
+## <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/wings/whitewings.gif" width="50"> [Microsoft Cloud](#-powershell)
+
+- <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/wings/whitewings.gif" width="35">[ Microsoft Graph Explorer and API Basics](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Microsoft-Graph-Explorer-and-API-Basics)
 
 <br>

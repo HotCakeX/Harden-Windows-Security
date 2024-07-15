@@ -73,5 +73,8 @@ namespace HardeningModule
 
         // the explicit path to save the security_policy.inf file
         public static string securityPolicyInfPath = Path.Combine(HardeningModule.GlobalVars.WorkingDir, "security_policy.inf");
+
+        // The value of the automatic variable $PSHOME stored during module import in the module root .psm1 file
+        public static string PSHOME;
     }
 }

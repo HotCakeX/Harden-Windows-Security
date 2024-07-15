@@ -959,7 +959,7 @@ function Confirm-SystemCompliance {
                     $NestedObjectArray.Add([HardeningModule.IndividualResult]@{
                             FriendlyName = 'ECC Curves and their positions'
                             Compliant    = [System.Boolean]($IndividualItemResult ? $false : $True)
-                            Value        = ($List -join ',') # Join the array elements into a string to display them properly in the output CSV file
+                            Value        = ($ECCCurves -join ',') # Join the array elements into a string to display them properly in the output CSV file
                             Name         = 'ECC Curves and their positions'
                             Category     = $CatName
                             Method       = 'Cmdlet'

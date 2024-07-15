@@ -12,7 +12,7 @@ namespace HardeningModule
         {
             string[] categoriex = new string[]
             {
-            "MicrosoftDefender", // 55 - 3x(N/A) = 46
+            "MicrosoftDefender", // 55 - 3x(N/A) + Number of Process Mitigations which are dynamically increased
             "AttackSurfaceReductionRules", // 20
             "BitLockerSettings", // 22 + Number of Non-OS drives which are dynamically increased
             "TLSSecurity", // 21

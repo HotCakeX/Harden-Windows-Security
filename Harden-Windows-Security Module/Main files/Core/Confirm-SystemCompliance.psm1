@@ -1650,6 +1650,21 @@ function Confirm-SystemCompliance {
             Remove-Job -Job $JobsToWaitFor -Force
             #Endregion Threading management
 
+            # Making sure all the true/false values have the same case
+            foreach ($Item in $FinalMegaObject.Values) {
+                foreach ($Item2 in $Item) {
+                    try {
+                        if ($Item2.Compliant -ieq 'True') {
+                            $Item2.Compliant = $true
+                        }
+                        elseif ($Item2.Compliant -ieq 'False') {
+                            $Item2.Compliant = $false
+                        }
+                    }
+                    catch {}
+                }
+            }
+
             if ($ExportToCSV) {
                 # Create an empty list to store the results based on the category order by sorting the concurrent hashtable
                 $AllOrderedResults = New-Object -TypeName System.Collections.Generic.List[HardeningModule.IndividualResult]
@@ -1681,21 +1696,6 @@ function Confirm-SystemCompliance {
                 )
                 # If user selected specific categories and the current function call's category name is not included in them, return from this function
                 if (($null -ne $Categories) -and ($CategoryName -notin $Categories)) { Return }
-
-                # Making sure all the true/false values have the same case
-                foreach ($Item in $FinalMegaObject.Values) {                    
-                    foreach ($Item2 in $Item) {      
-                        try {
-                            if ($Item2.Compliant -ieq 'True') {
-                                $Item2.Compliant = $true
-                            }
-                            elseif ($Item2.Compliant -ieq 'False') {
-                                $Item2.Compliant = $false
-                            }
-                        }
-                        catch {}
-                    }
-                }
 
                 # Assign the array of color codes to a variable for easier/shorter assignments
                 [System.Int32[]]$RGBs = $ColorMap[$ColorInput]['Code']

@@ -2,7 +2,7 @@
   # https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_module_manifests
 
   RootModule           = 'Harden-Windows-Security-Module.psm1'
-  ModuleVersion        = '0.4.8'
+  ModuleVersion        = '0.4.9'
   CompatiblePSEditions = @('Core')
   GUID                 = 'afae7a0a-5eff-4a4d-9139-e1702b7ac426'
   Author               = 'HotCakeX'

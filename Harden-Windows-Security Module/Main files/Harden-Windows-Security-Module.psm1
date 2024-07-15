@@ -12,3 +12,4 @@ if (!$IsWindows) {
 Add-Type -Path ([System.IO.Directory]::GetFiles("$PSScriptRoot\C#")) -ReferencedAssemblies @((Get-Content -Path "$PSScriptRoot\.NETAssembliesToLoad.txt") + "$($PSHOME)\WindowsBase.dll")
 
 [HardeningModule.GlobalVars]::Path = $PSScriptRoot
+[HardeningModule.Initializer]::Initialize()

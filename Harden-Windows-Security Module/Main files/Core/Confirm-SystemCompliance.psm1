@@ -1673,7 +1673,7 @@ function Confirm-SystemCompliance {
                     [Parameter(Mandatory)][System.String]$CategoryName,
                     [Parameter(Mandatory)][System.String]$DisplayName,
                     [Parameter(Mandatory)][System.Collections.Hashtable]$ColorMap,
-                    [Parameter(Mandatory)][PSCustomObject[]]$FinalMegaObject,
+                    [Parameter(Mandatory)][System.Collections.Concurrent.ConcurrentDictionary[System.String, HardeningModule.IndividualResult[]]]$FinalMegaObject,
                     [AllowNull()]
                     [Parameter(Mandatory)][System.String[]]$Categories,
                     [ValidateSet('List', 'Table')]
@@ -1681,6 +1681,21 @@ function Confirm-SystemCompliance {
                 )
                 # If user selected specific categories and the current function call's category name is not included in them, return from this function
                 if (($null -ne $Categories) -and ($CategoryName -notin $Categories)) { Return }
+
+                # Making sure all the true/false values have the same case
+                foreach ($Item in $FinalMegaObject.Values) {                    
+                    foreach ($Item2 in $Item) {      
+                        try {
+                            if ($Item2.Compliant -ieq 'True') {
+                                $Item2.Compliant = $true
+                            }
+                            elseif ($Item2.Compliant -ieq 'False') {
+                                $Item2.Compliant = $false
+                            }
+                        }
+                        catch {}
+                    }
+                }
 
                 # Assign the array of color codes to a variable for easier/shorter assignments
                 [System.Int32[]]$RGBs = $ColorMap[$ColorInput]['Code']

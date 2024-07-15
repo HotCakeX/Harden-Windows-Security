@@ -76,5 +76,9 @@ namespace HardeningModule
 
         // The value of the automatic variable $PSHOME stored during module import in the module root .psm1 file
         public static string PSHOME;
+
+        // Backup of the current Controlled Folder Access List
+        // Used to be restored at the end of the operation
+        public static string[] CFABackup;
     }
 }

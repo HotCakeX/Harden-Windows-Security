@@ -201,17 +201,7 @@ function Confirm-SystemCompliance {
 
                         # A try-Catch-finally block to revert the changes being made to the Controlled Folder Access exclusions list
                         # Which is currently required for BCD NX value verification in the MicrosoftDefender category
-
-                        # backup the currently allowed apps list in Controlled folder access in order to restore them at the end
-                        # doing this so that when we Add and then Remove PowerShell executables in Controlled folder access exclusions
-                        # no user customization will be affected
-                        [System.String[]]$CFAAllowedAppsBackup = ([HardeningModule.GlobalVars]::MDAVPreferencesCurrent).ControlledFolderAccessAllowedApplications
-
-                        # Temporarily allow the currently running PowerShell executables to the Controlled Folder Access allowed apps
-                        # so that the script can run without interruption. This change is reverted at the end.
-                        foreach ($FilePath in (Get-ChildItem -Path "$PSHOME\*.exe" -File).FullName) {
-                            Add-MpPreference -ControlledFolderAccessAllowedApplications $FilePath
-                        }
+                        [HardeningModule.ControlledFolderAccessHandler]::Start()
 
                         # Give the Defender internals time to process the updated exclusions list
                         Start-Sleep -Seconds '5'
@@ -614,16 +604,7 @@ function Confirm-SystemCompliance {
                         Throw $_
                     }
                     finally {
-                        # Reverting the PowerShell executables allow listings in Controlled folder access
-                        foreach ($FilePath in (Get-ChildItem -Path "$PSHOME\*.exe" -File).FullName) {
-                            Remove-MpPreference -ControlledFolderAccessAllowedApplications $FilePath
-                        }
-
-                        # restoring the original Controlled folder access allow list - if user already had added PowerShell executables to the list
-                        # they will be restored as well, so user customization will remain intact
-                        if ($null -ne $CFAAllowedAppsBackup) {
-                            Set-MpPreference -ControlledFolderAccessAllowedApplications $CFAAllowedAppsBackup
-                        }
+                        [HardeningModule.ControlledFolderAccessHandler]::reset()
                     }
 
                 } -Name 'Invoke-MicrosoftDefender' -StreamingHost $Host -ArgumentList ($SyncHash, $FinalMegaObject)

@@ -657,7 +657,8 @@ Function Invoke-MicrosoftDefender {
             Set-DefenderConfigWithCheck -Name 'RemoteEncryptionProtectionMaxBlockTime' -Value 0
 
             Write-Verbose -Message 'Adding OneDrive folders of all the user accounts (personal and work accounts) to the Controlled Folder Access for Ransomware Protection'
-            Get-ChildItem -Path "$env:SystemDrive\Users\*\OneDrive*\" -Directory | ForEach-Object -Process { Add-MpPreference -ControlledFolderAccessProtectedFolders $_ }
+            [System.String[]]$DirectoriesToAddToCFA = Get-ChildItem -Path "$env:SystemDrive\Users\*\OneDrive*\" -Directory
+            Invoke-CimMethod -Namespace 'Root/Microsoft/Windows/Defender' -ClassName 'MSFT_MpPreference' -MethodName 'Add' -Arguments @{ControlledFolderAccessProtectedFolders = $DirectoriesToAddToCFA }
 
             Write-Verbose -Message 'Enabling Mandatory ASLR Exploit Protection system-wide'
             Set-ProcessMitigation -System -Enable ForceRelocateImages

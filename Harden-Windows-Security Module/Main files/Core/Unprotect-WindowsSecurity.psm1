@@ -127,17 +127,7 @@ Function Unprotect-WindowsSecurity {
                 $CurrentMainStep++
                 Write-Progress -Id 0 -Activity 'Backing up Controlled Folder Access exclusion list' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
 
-                # backup the current allowed apps list in Controlled folder access in order to restore them at the end of the script
-                # doing this so that when we Add and then Remove PowerShell executables in Controlled folder access exclusions
-                # no user customization will be affected
-                [System.String[]]$CFAAllowedAppsBackup = ([HardeningModule.GlobalVars]::MDAVPreferencesCurrent).ControlledFolderAccessAllowedApplications
-
-                # Temporarily allow the currently running PowerShell executables to the Controlled Folder Access allowed apps
-                # so that the script can run without interruption. This change is reverted at the end.
-                foreach ($FilePath in (Get-ChildItem -Path "$PSHOME\*.exe" -File).FullName) {
-                    Add-MpPreference -ControlledFolderAccessAllowedApplications $FilePath
-                }
-
+                [HardeningModule.ControlledFolderAccessHandler]::Start()
                 Start-Sleep -Seconds 3
 
                 Switch ($True) {
@@ -269,19 +259,8 @@ Function Unprotect-WindowsSecurity {
                 # End the progress bar and mark it as completed
                 Write-Progress -Id 0 -Activity 'Completed' -Completed
 
-                # Reverting the PowerShell executables allow listings in Controlled folder access
-                foreach ($FilePath in (Get-ChildItem -Path "$PSHOME\*.exe" -File).FullName) {
-                    Remove-MpPreference -ControlledFolderAccessAllowedApplications $FilePath
-                }
-
-                # restoring the original Controlled folder access allow list - if user already had added PowerShell executables to the list
-                # they will be restored as well, so user customization will remain intact
-                if ($null -ne $CFAAllowedAppsBackup) {
-                    Set-MpPreference -ControlledFolderAccessAllowedApplications $CFAAllowedAppsBackup
-                }
-
+                [HardeningModule.ControlledFolderAccessHandler]::reset()
                 Set-Location -Path $HOME
-
                 [HardeningModule.Miscellaneous]::CleanUp()
             }
         }

@@ -36,16 +36,7 @@ function Update-self {
         Remove-Module -Name 'Harden-Windows-Security-Module' -Force
 
         try {
-            # backup the current allowed apps list in Controlled folder access in order to restore them at the end of the script
-            # doing this so that when we Add and then Remove PowerShell executables in Controlled folder access exclusions
-            # no user customization will be affected
-            [System.String[]]$CFAAllowedAppsBackup = ([HardeningModule.GlobalVars]::MDAVPreferencesCurrent).ControlledFolderAccessAllowedApplications
-
-            # Temporarily allow the currently running PowerShell executables to the Controlled Folder Access allowed apps
-            # so that the script can run without interruption. This change is reverted at the end.
-            foreach ($FilePath in (Get-ChildItem -Path "$PSHOME\*.exe" -File).FullName) {
-                Add-MpPreference -ControlledFolderAccessAllowedApplications $FilePath
-            }
+            [HardeningModule.ControlledFolderAccessHandler]::Start()
 
             # Do this if the module was installed properly using Install-module cmdlet
             Uninstall-Module -Name 'Harden-Windows-Security-Module' -AllVersions -Force
@@ -58,16 +49,7 @@ function Update-self {
             # Will not import the new module version in the current session because of the constant variables. New version is automatically imported when the main cmdlet is run in a new session.
         }
         finally {
-            # Reverting the PowerShell executables allow listings in Controlled folder access
-            foreach ($FilePath in (Get-ChildItem -Path "$PSHOME\*.exe" -File).FullName) {
-                Remove-MpPreference -ControlledFolderAccessAllowedApplications $FilePath
-            }
-
-            # restoring the original Controlled folder access allow list - if user already had added PowerShell executables to the list
-            # they will be restored as well, so user customization will remain intact
-            if ($null -ne $CFAAllowedAppsBackup) {
-                Set-MpPreference -ControlledFolderAccessAllowedApplications $CFAAllowedAppsBackup
-            }
+            [HardeningModule.ControlledFolderAccessHandler]::reset()
         }
 
         Write-Output -InputObject "$($PSStyle.Foreground.FromRGB(152,255,152))Update has been successful, running your command now$($PSStyle.Reset)"

@@ -390,19 +390,7 @@ Function Protect-WindowsSecurity {
         $Host.UI.RawUI.WindowTitle = '❤️‍🔥Harden Windows Security❤️‍🔥'
 
         if ([HardeningModule.UserPrivCheck]::IsAdmin()) {
-
-            Write-Verbose -Message 'Backing up the current Controlled Folder Access allowed apps list in order to restore them at the end'
-            # doing this so that when we Add and then Remove PowerShell executables in Controlled folder access exclusions
-            # no user customization will be affected
-            [System.IO.FileInfo[]]$CFAAllowedAppsBackup = ([HardeningModule.GlobalVars]::MDAVPreferencesCurrent).ControlledFolderAccessAllowedApplications
-
-            Write-Verbose -Message 'Temporarily adding the currently running PowerShell executables to the Controlled Folder Access allowed apps list'
-            # so that the module can run without interruption. This change is reverted at the end.
-            # Adding powercfg.exe so Controlled Folder Access won't complain about it in BitLocker category when setting hibernate file size to full
-            foreach ($FilePath in (((Get-ChildItem -Path "$PSHOME\*.exe" -File).FullName) + "$env:SystemDrive\Windows\System32\powercfg.exe")) {
-                Add-MpPreference -ControlledFolderAccessAllowedApplications $FilePath
-            }
-
+            [HardeningModule.ControlledFolderAccessHandler]::Start()
             [HardeningModule.Miscellaneous]::RequirementsCheck()
         }
         try {
@@ -1162,20 +1150,7 @@ End time: $(Get-Date)
         }
         finally {
             Write-Verbose -Message 'Finally block is running'
-
-            if ([HardeningModule.UserPrivCheck]::IsAdmin()) {
-                Write-Verbose -Message 'Reverting the PowerShell executables and powercfg.exe allow listings in Controlled folder access'
-                foreach ($FilePath in (((Get-ChildItem -Path "$PSHOME\*.exe" -File).FullName) + "$env:SystemDrive\Windows\System32\powercfg.exe")) {
-                    Remove-MpPreference -ControlledFolderAccessAllowedApplications $FilePath
-                }
-
-                # restoring the original Controlled folder access allow list - if user already had added PowerShell executables to the list
-                # they will be restored as well, so user customization will remain intact
-                if ($null -ne $CFAAllowedAppsBackup) {
-                    Set-MpPreference -ControlledFolderAccessAllowedApplications $CFAAllowedAppsBackup
-                }
-            }
-
+            [HardeningModule.ControlledFolderAccessHandler]::reset()
             [HardeningModule.Miscellaneous]::CleanUp()
 
             Write-Verbose -Message 'Disabling progress bars'

@@ -7,7 +7,7 @@ using System.Linq;
 /// https://learn.microsoft.com/en-us/windows/win32/secprov/win32-encryptablevolume
 /// https://learn.microsoft.com/en-us/windows-hardware/drivers/storage/msft-volume
 /// Example usage:
-/// $output = [HardeningModule.BitLockerInfo]::GetBitLockerVolumeInfo("D:")
+/// $output = [HardeningModule.BitLockerInfo]::GetEncryptedVolumeInfo("D:")
 /// $output
 /// $output.KeyProtector
 
@@ -159,7 +159,7 @@ namespace HardeningModule
     };
 
         // The main method that will generate as much useful info as possible about every BitLocker volume
-        public static BitLockerVolume GetBitLockerVolumeInfo(string targetVolume)
+        public static BitLockerVolume GetEncryptedVolumeInfo(string targetVolume)
         {
             // The MSFT_Volume class requires the volume name without the colon
             var targetVolumeVer2 = targetVolume.Replace(":", "");

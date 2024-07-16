@@ -88,6 +88,12 @@ namespace HardeningModule
 
             // Getting the $VerbosePreference from the calling cmdlet and saving it in the global variable
             HardeningModule.GlobalVars.VerbosePreference = VerbosePreference;
+
+            // Create an empty ConcurrentDictionary to store the final results of the cmdlets
+            HardeningModule.GlobalVars.FinalMegaObject = new System.Collections.Concurrent.ConcurrentDictionary<System.String, System.Collections.Generic.List<HardeningModule.IndividualResult>>();
+
+            // Create an empty dictionary to store the System Security Policies from the security_policy.inf file
+            HardeningModule.GlobalVars.SystemSecurityPoliciesIniObject = new Dictionary<string, Dictionary<string, string>>();
         }
     }
 }

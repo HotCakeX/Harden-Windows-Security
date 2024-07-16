@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.Collections.Generic;
 using System.Management.Automation.Host;
+using System.Collections.Concurrent;
 
 namespace HardeningModule
 {
@@ -89,5 +90,11 @@ namespace HardeningModule
         // The value of the VerbosePreference variable of the PowerShell session
         // stored at the beginning of each cmdlet in the begin block through the Initialize() method
         public static string VerbosePreference;
+
+        // An object to store the final results of Confirm-SystemCompliance cmdlet
+        public static System.Collections.Concurrent.ConcurrentDictionary<System.String, System.Collections.Generic.List<HardeningModule.IndividualResult>> FinalMegaObject;
+
+        // Storing the output of the ini file parsing function
+        public static Dictionary<string, Dictionary<string, string>> SystemSecurityPoliciesIniObject;
     }
 }

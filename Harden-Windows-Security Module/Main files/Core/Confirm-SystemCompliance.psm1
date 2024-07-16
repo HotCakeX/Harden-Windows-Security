@@ -524,11 +524,11 @@ function Confirm-SystemCompliance {
 
                         #Region Comparison
                         # Compare the values of the two hashtables if the keys match
-                        foreach ($Mitigation in $TargetMitigations.GetEnumerator()) {
+                        foreach ($TargetMitigationItem in $TargetMitigations.GetEnumerator()) {
 
                             # Get the current key and value from hashtable containing the CSV data
-                            [System.String]$ProcessName_Target = $Mitigation.Key
-                            [System.String[]]$ProcessMitigations_Target = $Mitigation.Value
+                            [System.String]$ProcessName_Target = $TargetMitigationItem.Key
+                            [System.String[]]$ProcessMitigations_Target = $TargetMitigationItem.Value
 
                             # Check if the hashtable containing the currently applied mitigations contains the same key
                             # Meaning the same executable is present in both hashtables

@@ -340,9 +340,6 @@ Function Protect-WindowsSecurity {
         # Detecting if Verbose switch is used
         [System.Boolean]$Verbose = $PSBoundParameters.Verbose.IsPresent ? $true : $false
 
-        # Import all of the required functions
-        . "$([HardeningModule.GlobalVars]::Path)\Shared\HardeningFunctions.ps1"
-
         # Since Dynamic parameters are only available in the parameter dictionary, we have to access them using $PSBoundParameters or assign them manually to another variable in the function's scope
         New-Variable -Name 'SecBaselines_NoOverrides' -Value $($PSBoundParameters['SecBaselines_NoOverrides']) -Force
         New-Variable -Name 'MSFTDefender_SAC' -Value $($PSBoundParameters['MSFTDefender_SAC']) -Force
@@ -1089,6 +1086,9 @@ End time: $(Get-Date)
 
             # Return from the Process block if GUI was used and then closed, triggers the finally block to run for proper clean-up
             if ($PSBoundParameters.GUI.IsPresent) { Return }
+
+            # Import all of the required functions
+            . "$([HardeningModule.GlobalVars]::Path)\Shared\HardeningFunctions.ps1"
 
             # Start the transcript if the -Log switch is used
             if ($Log) {

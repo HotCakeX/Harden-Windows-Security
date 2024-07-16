@@ -62,7 +62,6 @@ function Update-self {
         catch {
             Throw 'Could not relaunch PowerShell after update. Please close and reopen PowerShell to run your command again.'
         }
-
     }
 }
 # Export external facing functions only, prevent internal functions from getting exported

@@ -61,19 +61,24 @@ namespace HardeningModule
             }
         }
 
+        /// <summary>
+        /// Backup the current Controlled Folder Access allowed applications list and add PowerShell executables to it
+        /// plus powercfg.exe
+        /// </summary>
+        /// <exception cref="InvalidOperationException"></exception>
         public static void Start()
         {
             // Make sure the user as Admin privileges
             if (HardeningModule.UserPrivCheck.IsAdmin())
             {
 
-                Console.WriteLine("Backing up the current Controlled Folder Access allowed apps list in order to restore them at the end");
+                HardeningModule.VerboseLogger.Write("Backing up the current Controlled Folder Access allowed apps list in order to restore them at the end");
 
                 // doing this so that when we Add and then Remove PowerShell executables in Controlled folder access exclusions
                 // no user customization will be affected
                 HardeningModule.GlobalVars.CFABackup = HardeningModule.MpPreferenceHelper.GetMpPreference().ControlledFolderAccessAllowedApplications;
 
-                Console.WriteLine("Temporarily adding the currently running PowerShell executables to the Controlled Folder Access allowed apps list");
+                HardeningModule.VerboseLogger.Write("Temporarily adding the currently running PowerShell executables to the Controlled Folder Access allowed apps list");
 
                 // Get all .exe files in the PSHOME directory
                 string[] psExePaths = Directory.GetFiles(HardeningModule.GlobalVars.PSHOME, "*.exe");
@@ -97,6 +102,9 @@ namespace HardeningModule
             }
         }
 
+        /// <summary>
+        /// Restore the original Controlled Folder Access allowed applications list
+        /// </summary>
         public static void Reset()
         {
 
@@ -108,7 +116,7 @@ namespace HardeningModule
                 // they will be restored as well, so user customization will remain intact
                 if (HardeningModule.GlobalVars.CFABackup != null && HardeningModule.GlobalVars.CFABackup.Length > 0)
                 {
-                    Console.WriteLine("Restoring the original Controlled Folder Access allowed apps list");
+                    HardeningModule.VerboseLogger.Write("Restoring the original Controlled Folder Access allowed apps list");
                     HardeningModule.ControlledFolderAccessHandler.Set(applications: HardeningModule.GlobalVars.CFABackup);
                 }
                 else

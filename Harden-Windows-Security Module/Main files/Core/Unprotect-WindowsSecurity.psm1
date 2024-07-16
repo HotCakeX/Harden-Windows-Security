@@ -21,7 +21,7 @@ Function Unprotect-WindowsSecurity {
     )
 
     begin {
-        [HardeningModule.Initializer]::Initialize()
+        [HardeningModule.Initializer]::Initialize($VerbosePreference)
 
         Write-Verbose -Message 'Importing the required sub-modules'
         Import-Module -FullyQualifiedName "$([HardeningModule.GlobalVars]::Path)\Shared\Update-self.psm1" -Force -Verbose:$false

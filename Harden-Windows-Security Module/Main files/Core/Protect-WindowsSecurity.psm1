@@ -336,7 +336,9 @@ Function Protect-WindowsSecurity {
     }
 
     begin {
-        [HardeningModule.Initializer]::Initialize()
+        [HardeningModule.Initializer]::Initialize($VerbosePreference)
+        # Detecting if Verbose switch is used
+        [System.Boolean]$Verbose = $PSBoundParameters.Verbose.IsPresent ? $true : $false
 
         # Import all of the required functions
         . "$([HardeningModule.GlobalVars]::Path)\Shared\HardeningFunctions.ps1"
@@ -360,11 +362,8 @@ Function Protect-WindowsSecurity {
         New-Variable -Name 'DangerousScriptHostsBlocking' -Value $($PSBoundParameters['DangerousScriptHostsBlocking']) -Force
         New-Variable -Name 'ClipboardSync' -Value $($PSBoundParameters['ClipboardSync']) -Force
 
-        # Detecting if Verbose switch is used
-        [System.Boolean]$Verbose = $PSBoundParameters.Verbose.IsPresent ? $true : $false
-
         # This assignment is used by the GUI RunSpace
-        ([HardeningModule.GlobalVars]::Offline) = $PSBoundParameters['Offline'] ? $true : $falses
+        ([HardeningModule.GlobalVars]::Offline) = $PSBoundParameters['Offline'] ? $true : $false
 
         Write-Verbose -Message 'Importing the required sub-modules'
         Import-Module -FullyQualifiedName "$([HardeningModule.GlobalVars]::Path)\Shared\Update-self.psm1" -Force -Verbose:$false
@@ -434,9 +433,6 @@ Execution Policy: $CurrentExecutionPolicy
                 # Initialize a flag to determine whether to write logs or not, set to false by default
                 $SyncHash.ShouldWriteLogs = $false
 
-                # Adding the parent host to the synchronized hashtable
-                $SyncHash.ParentHost = $Host
-
                 [System.Xml.XmlDocument]$XAML = Get-Content -Raw -Path ("$([HardeningModule.GlobalVars]::Path)\XAML\Main.xml")
 
                 $Reader = New-Object -TypeName 'System.Xml.XmlNodeReader' -ArgumentList $Xaml
@@ -446,6 +442,9 @@ Execution Policy: $CurrentExecutionPolicy
                 [System.Windows.DependencyObject]$ParentGrid = $SyncHash.Window.FindName('ParentGrid')
                 [System.Windows.DependencyObject]$MainTabControlToggle = $ParentGrid.FindName('MainTabControlToggle')
                 [System.Windows.DependencyObject]$MainContentControl = $MainTabControlToggle.FindName('MainContentControl')
+
+                # Set the icon using an absolute path
+                $SyncHash.Window.Icon = "$([HardeningModule.GlobalVars]::path)\Resources\Media\ProgramIcon.ico"
 
                 # Due to using ToggleButton as Tab Control element, this is now considered the parent of all inner elements
                 [System.Windows.Style]$MainContentControlStyle = $MainContentControl.FindName('MainContentControlStyle')
@@ -907,7 +906,7 @@ Execution Policy: $CurrentExecutionPolicy
                         $SyncHash['GlobalVars']['SelectedSubCategories'] = $SyncHash['GUI'].SubCategories.Items | Where-Object -FilterScript { $_.Content.IsChecked } | ForEach-Object -Process { $_.Content.Name }
 
                         if ($DebugPreference -eq 'Continue') {
-                            $SyncHash.ParentHost.UI.WriteDebugLine("$((Get-Job).Count) number of ThreadJobs Before")
+                            [HardeningModule.GlobalVars]::Host.UI.WriteDebugLine("$((Get-Job).Count) number of ThreadJobs Before")
                         }
 
                         $null = Start-ThreadJob -ScriptBlock {
@@ -1036,7 +1035,7 @@ Execution Policy: $CurrentExecutionPolicy
                         } -ArgumentList $SyncHash -ThrottleLimit 1
 
                         if ($DebugPreference -eq 'Continue') {
-                            $SyncHash.ParentHost.UI.WriteDebugLine("$((Get-Job).Count) number of ThreadJobs After")
+                            [HardeningModule.GlobalVars]::Host.UI.WriteDebugLine("$((Get-Job).Count) number of ThreadJobs After")
                         }
                     })
 

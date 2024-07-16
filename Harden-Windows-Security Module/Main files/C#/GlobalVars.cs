@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Collections.Generic;
+using System.Management.Automation.Host;
 
 namespace HardeningModule
 {
@@ -80,5 +81,13 @@ namespace HardeningModule
         // Backup of the current Controlled Folder Access List
         // Used to be restored at the end of the operation
         public static string[] CFABackup;
+
+        // The value of the automatic variable $HOST from the PowerShell session
+        // Stored from the module root .psm1 file
+        public static PSHost Host;
+
+        // The value of the VerbosePreference variable of the PowerShell session
+        // stored at the beginning of each cmdlet in the begin block through the Initialize() method
+        public static string VerbosePreference;
     }
 }

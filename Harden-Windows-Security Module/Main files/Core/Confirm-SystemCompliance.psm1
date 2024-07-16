@@ -42,7 +42,7 @@ function Confirm-SystemCompliance {
         [System.Management.Automation.SwitchParameter]$Offline
     )
     begin {
-        [HardeningModule.Initializer]::Initialize()
+        [HardeningModule.Initializer]::Initialize($VerbosePreference)
 
         # Importing the required sub-modules
         Write-Verbose -Message 'Importing the required sub-modules'
@@ -66,7 +66,6 @@ function Confirm-SystemCompliance {
 
         # a Synchronized HashTable to safely increment/decrement values from multiple threads and also access parent scope variables inside thread jobs
         $SyncHash = [System.Collections.Hashtable]::Synchronized(@{})
-        $SyncHash['VerbosePreference'] = $VerbosePreference
 
         # An object to store the FINAL results
         $FinalMegaObject = [System.Collections.Concurrent.ConcurrentDictionary[System.String, HardeningModule.IndividualResult[]]]::new()
@@ -197,7 +196,7 @@ function Confirm-SystemCompliance {
                     Try {
 
                         $ErrorActionPreference = 'Stop'
-                        $VerbosePreference = $SyncHash['VerbosePreference']
+                        $VerbosePreference = ([HardeningModule.GlobalVars]::VerbosePreference)
 
                         # A try-Catch-finally block to revert the changes being made to the Controlled Folder Access exclusions list
                         # Which is currently required for BCD NX value verification in the MicrosoftDefender category
@@ -525,11 +524,11 @@ function Confirm-SystemCompliance {
 
                         #Region Comparison
                         # Compare the values of the two hashtables if the keys match
-                        $TargetMitigations.GetEnumerator() | ForEach-Object -Process {
+                        foreach ($Mitigation in $TargetMitigations.GetEnumerator()) {
 
                             # Get the current key and value from hashtable containing the CSV data
-                            [System.String]$ProcessName_Target = $_.Key
-                            [System.String[]]$ProcessMitigations_Target = $_.Value
+                            [System.String]$ProcessName_Target = $Mitigation.Key
+                            [System.String[]]$ProcessMitigations_Target = $Mitigation.Value
 
                             # Check if the hashtable containing the currently applied mitigations contains the same key
                             # Meaning the same executable is present in both hashtables
@@ -579,7 +578,7 @@ function Confirm-SystemCompliance {
                                 Write-Verbose -Message "Mitigations for $ProcessName_Target were not found"
 
                                 # Increment the total number of the verifiable compliant values for each process that has a mitigation applied to it in the CSV file
-                                ([HardeningModule.GlobalVars]::TotalNumberOfTrueCompliantValues)++
+                                                        ([HardeningModule.GlobalVars]::TotalNumberOfTrueCompliantValues)++
 
                                 $NestedObjectArray.Add([HardeningModule.IndividualResult]@{
                                         FriendlyName = "Process Mitigations for: $ProcessName_Target"
@@ -931,16 +930,16 @@ function Confirm-SystemCompliance {
                     }
 
                     # ECC Curves
-                    [System.String[]]$ECCCurves = Get-TlsEccCurve
-                    [System.String[]]$List = ('nistP521', 'curve25519', 'NistP384', 'NistP256')
+                    [System.String[]]$CurrentECCCurves = Get-TlsEccCurve
+                    [System.String[]]$CompliantECCCurves = ('nistP521', 'curve25519', 'NistP384', 'NistP256')
                     # Make sure both arrays are completely identical in terms of members and their exact position
                     # If this variable is empty that means both arrays are completely identical
-                    $IndividualItemResult = Compare-Object -ReferenceObject $ECCCurves -DifferenceObject $List -SyncWindow 0
+                    $IndividualItemResult = Compare-Object -ReferenceObject $CurrentECCCurves -DifferenceObject $CompliantECCCurves -SyncWindow 0
 
                     $NestedObjectArray.Add([HardeningModule.IndividualResult]@{
                             FriendlyName = 'ECC Curves and their positions'
                             Compliant    = [System.Boolean]($IndividualItemResult ? $false : $True)
-                            Value        = ($ECCCurves -join ',') # Join the array elements into a string to display them properly in the output CSV file
+                            Value        = ($CurrentECCCurves -join ',') # Join the array elements into a string to display them properly in the output CSV file
                             Name         = 'ECC Curves and their positions'
                             Category     = $CatName
                             Method       = 'Cmdlet'
@@ -1170,10 +1169,7 @@ function Confirm-SystemCompliance {
                     }
 
                     # Verify the 3 built-in Firewall rules (for all 3 profiles) for Multicast DNS (mDNS) UDP-in are disabled
-                    $IndividualItemResult = [System.Boolean](
-                (Get-NetFirewallRule |
-                        Where-Object -FilterScript { ($_.RuleGroup -eq '@%SystemRoot%\system32\firewallapi.dll,-37302') -and ($_.Direction -eq 'inbound') }).Enabled -inotcontains 'True'
-                    )
+                    $IndividualItemResult = [System.Boolean]((Get-NetFirewallRule | Where-Object -FilterScript { ($_.RuleGroup -eq '@%SystemRoot%\system32\firewallapi.dll,-37302') -and ($_.Direction -eq 'inbound') }).Enabled -inotcontains 'True')
 
                     $NestedObjectArray.Add([HardeningModule.IndividualResult]@{
                             FriendlyName = 'mDNS UDP-In Firewall Rules are disabled'

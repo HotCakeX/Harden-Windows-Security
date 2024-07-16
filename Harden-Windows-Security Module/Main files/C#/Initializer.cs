@@ -9,8 +9,13 @@ namespace HardeningModule
     // prepares the environment. It also runs commands that would otherwise run in the default constructors of each method
     public class Initializer
     {
-        // This method runs once in the module root and in the beginning of each cmdlet
-        public static void Initialize()
+        /// <summary>
+        /// This method runs once in the module root and in the beginning of each cmdlet
+        /// </summary>
+        /// <param name="VerbosePreference"></param>
+        /// <exception cref="InvalidOperationException"></exception>
+        /// <exception cref="PlatformNotSupportedException"></exception>
+        public static void Initialize(string VerbosePreference)
         {
             using (RegistryKey key = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows NT\CurrentVersion"))
             {
@@ -80,6 +85,9 @@ namespace HardeningModule
 
             // Total number of Compliant values not equal to N/A
             HardeningModule.GlobalVars.TotalNumberOfTrueCompliantValues = 239;
+
+            // Getting the $VerbosePreference from the calling cmdlet and saving it in the global variable
+            HardeningModule.GlobalVars.VerbosePreference = VerbosePreference;
         }
     }
 }

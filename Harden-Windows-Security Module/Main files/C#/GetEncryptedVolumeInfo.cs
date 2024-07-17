@@ -33,7 +33,10 @@ namespace HardeningModule
         public string EncryptionMethodFlags { get; set; }
         public bool AutoUnlockEnabled { get; set; }
         public bool AutoUnlockKeyStored { get; set; }
-        public int MetadataVersion { get; set; }
+
+        // https://learn.microsoft.com/en-us/windows/win32/secprov/getversion-win32-encryptablevolume#parameters
+        public uint MetadataVersion { get; set; }
+
         public string ConversionStatus { get; set; }
         public string ProtectionStatus { get; set; }
         public string LockStatus { get; set; }
@@ -54,7 +57,7 @@ namespace HardeningModule
 
         // Different types of the key protectors
         // https://learn.microsoft.com/en-us/windows/win32/secprov/getkeyprotectortype-win32-encryptablevolume
-        private static readonly Dictionary<int, string> KeyProtectorTypes = new Dictionary<int, string>
+        private static readonly Dictionary<uint, string> KeyProtectorTypes = new Dictionary<uint, string>
     {
         { 0, "Unknown" },
         { 1, "Tpm" },
@@ -71,7 +74,7 @@ namespace HardeningModule
 
 
         // https://learn.microsoft.com/en-us/windows/win32/secprov/getencryptionmethod-win32-encryptablevolume
-        private static readonly Dictionary<int, string> EncryptionMethods = new Dictionary<int, string>
+        private static readonly Dictionary<uint, string> EncryptionMethods = new Dictionary<uint, string>
     {
         { 0, "None" },
         { 1, "AES_128_WITH_DIFFUSER" },
@@ -85,7 +88,7 @@ namespace HardeningModule
 
 
         // https://learn.microsoft.com/en-us/windows/win32/secprov/getprotectionstatus-win32-encryptablevolume
-        private static readonly Dictionary<int, string> ProtectionStatuses = new Dictionary<int, string>
+        private static readonly Dictionary<uint, string> ProtectionStatuses = new Dictionary<uint, string>
     {
         { 0, "Unprotected" },
         { 1, "Protected" },
@@ -94,14 +97,14 @@ namespace HardeningModule
 
 
         // https://learn.microsoft.com/en-us/windows/win32/secprov/getlockstatus-win32-encryptablevolume
-        private static readonly Dictionary<int, string> LockStatuses = new Dictionary<int, string>
+        private static readonly Dictionary<uint, string> LockStatuses = new Dictionary<uint, string>
     {
         { 0, "Unlocked" },
         { 1, "Locked" }
     };
 
         // https://learn.microsoft.com/en-us/windows/win32/secprov/win32-encryptablevolume#properties
-        private static readonly Dictionary<int, string> VolumeTypes = new Dictionary<int, string>
+        private static readonly Dictionary<uint, string> VolumeTypes = new Dictionary<uint, string>
     {
         { 0, "OperationSystem" },
         { 1, "FixedDisk" },
@@ -109,7 +112,7 @@ namespace HardeningModule
     };
 
         // https://learn.microsoft.com/en-us/windows/win32/secprov/getconversionstatus-win32-encryptablevolume
-        private static readonly Dictionary<int, string> ConversionStatuses = new Dictionary<int, string>
+        private static readonly Dictionary<uint, string> ConversionStatuses = new Dictionary<uint, string>
     {
         { 0, "FULLY DECRYPTED" },
         { 1, "FULLY ENCRYPTED" },
@@ -120,7 +123,7 @@ namespace HardeningModule
     };
 
         // https://learn.microsoft.com/en-us/windows/win32/secprov/getconversionstatus-win32-encryptablevolume
-        private static readonly Dictionary<int, string> WipingStatuses = new Dictionary<int, string>
+        private static readonly Dictionary<uint, string> WipingStatuses = new Dictionary<uint, string>
     {
         { 0, "FreeSpaceNotWiped" },
         { 1, "FreeSpaceWiped" },
@@ -129,7 +132,7 @@ namespace HardeningModule
     };
 
         // https://learn.microsoft.com/en-us/windows-hardware/drivers/storage/msft-volume#properties
-        private static readonly Dictionary<int, string> FileSystemTypes = new Dictionary<int, string>
+        private static readonly Dictionary<ushort, string> FileSystemTypes = new Dictionary<ushort, string>
     {
         { 0, "Unknown" },
         { 2, "UFS" },
@@ -149,7 +152,7 @@ namespace HardeningModule
     };
 
         // https://learn.microsoft.com/en-us/windows-hardware/drivers/storage/msft-volume#properties
-        private static readonly Dictionary<int, string> ReFSDedupModes = new Dictionary<int, string>
+        private static readonly Dictionary<uint, string> ReFSDedupModes = new Dictionary<uint, string>
     {
         { 0, "Disabled" },
         { 1, "GeneralPurpose" },
@@ -171,13 +174,13 @@ namespace HardeningModule
             // This is used a lot as the main input object to get information from other classes
             ManagementBaseObject volume = GetCimInstance("Root\\CIMV2\\Security\\MicrosoftVolumeEncryption", "Win32_EncryptableVolume", $"DriveLetter = '{targetVolume}'");
             newInstance.MountPoint = volume["DriveLetter"].ToString();
-            newInstance.ProtectionStatus = ProtectionStatuses[Convert.ToInt32(volume["ProtectionStatus"])];
-            newInstance.VolumeType = VolumeTypes[Convert.ToInt32(volume["VolumeType"])];
+            newInstance.ProtectionStatus = ProtectionStatuses[Convert.ToUInt32(volume["ProtectionStatus"])];
+            newInstance.VolumeType = VolumeTypes[Convert.ToUInt32(volume["VolumeType"])];
 
             ManagementBaseObject currentLockStatus = InvokeCimMethod(volume, "GetLockStatus");
             if (Convert.ToUInt32(currentLockStatus["ReturnValue"]) == 0)
             {
-                newInstance.LockStatus = LockStatuses[Convert.ToInt32(currentLockStatus["LockStatus"])];
+                newInstance.LockStatus = LockStatuses[Convert.ToUInt32(currentLockStatus["LockStatus"])];
             }
 
             ManagementBaseObject currentVolConversionStatus = InvokeCimMethod(volume, "GetConversionStatus");
@@ -185,30 +188,30 @@ namespace HardeningModule
             {
                 newInstance.EncryptionPercentage = currentVolConversionStatus["EncryptionPercentage"].ToString();
                 newInstance.WipePercentage = currentVolConversionStatus["WipingPercentage"].ToString();
-                newInstance.ConversionStatus = ConversionStatuses[Convert.ToInt32(currentVolConversionStatus["ConversionStatus"])];
-                newInstance.WipingStatus = WipingStatuses[Convert.ToInt32(currentVolConversionStatus["WipingStatus"])];
+                newInstance.ConversionStatus = ConversionStatuses[Convert.ToUInt32(currentVolConversionStatus["ConversionStatus"])];
+                newInstance.WipingStatus = WipingStatuses[Convert.ToUInt32(currentVolConversionStatus["WipingStatus"])];
             }
 
             ManagementBaseObject currentEncryptionMethod = InvokeCimMethod(volume, "GetEncryptionMethod");
             if (Convert.ToUInt32(currentEncryptionMethod["ReturnValue"]) == 0)
             {
-                newInstance.EncryptionMethod = EncryptionMethods[Convert.ToInt32(currentEncryptionMethod["EncryptionMethod"])];
+                newInstance.EncryptionMethod = EncryptionMethods[Convert.ToUInt32(currentEncryptionMethod["EncryptionMethod"])];
                 newInstance.EncryptionMethodFlags = currentEncryptionMethod["EncryptionMethodFlags"].ToString();
             }
 
             ManagementBaseObject currentVolVersion = InvokeCimMethod(volume, "GetVersion");
             if (Convert.ToUInt32(currentVolVersion["ReturnValue"]) == 0)
             {
-                newInstance.MetadataVersion = Convert.ToInt32(currentVolVersion["Version"]);
+                newInstance.MetadataVersion = Convert.ToUInt32(currentVolVersion["Version"]);
             }
 
             // Get volume information using the MSFT_Volume class
             ManagementBaseObject currentStorage = GetCimInstance("Root\\Microsoft\\Windows\\Storage", "MSFT_Volume", $"DriveLetter = '{targetVolumeVer2}'");
             newInstance.CapacityGB = Math.Round(Convert.ToDouble(currentStorage["Size"]) / (1024 * 1024 * 1024), 4).ToString();
-            newInstance.FileSystemType = FileSystemTypes[Convert.ToInt32(currentStorage["FileSystemType"])];
+            newInstance.FileSystemType = FileSystemTypes[Convert.ToUInt16(currentStorage["FileSystemType"])];
             newInstance.FriendlyName = currentStorage["FileSystemLabel"].ToString();
             newInstance.AllocationUnitSize = currentStorage["AllocationUnitSize"].ToString();
-            newInstance.ReFSDedupMode = ReFSDedupModes[Convert.ToInt32(currentStorage["ReFSDedupMode"])];
+            newInstance.ReFSDedupMode = ReFSDedupModes[Convert.ToUInt32(currentStorage["ReFSDedupMode"])];
 
             // Only attempt to get key protectors if the volume is unlocked
             //   if (Convert.ToUInt32(currentLockStatus["LockStatus"]) == 0) // 0 corresponds to Unlocked
@@ -234,7 +237,7 @@ namespace HardeningModule
 
                 // Get the type of the current key protector in the loop
                 ManagementBaseObject keyProtectorTypeResult = InvokeCimMethod(volume, "GetKeyProtectorType", new Dictionary<string, object> { { "VolumeKeyProtectorID", keyProtectorID } });
-                var keyProtectorType = Convert.ToInt32(keyProtectorTypeResult["KeyProtectorType"]);
+                var keyProtectorType = Convert.ToUInt32(keyProtectorTypeResult["KeyProtectorType"]);
 
                 // Get the friendly name for the key protector type
                 type = KeyProtectorTypes[keyProtectorType];

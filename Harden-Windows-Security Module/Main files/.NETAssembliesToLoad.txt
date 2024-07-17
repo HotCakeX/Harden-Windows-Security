@@ -19,6 +19,7 @@ System.Security.Claims
 System.Threading.Tasks
 System.Linq.Expressions
 System.Threading.Thread
+System.DirectoryServices
 Microsoft.Win32.Registry
 System.Security.Principal
 System.Diagnostics.Process
@@ -30,3 +31,4 @@ System.Runtime.InteropServices
 System.Text.RegularExpressions
 System.ComponentModel.Primitives
 System.Security.Principal.Windows
+System.DirectoryServices.AccountManagement

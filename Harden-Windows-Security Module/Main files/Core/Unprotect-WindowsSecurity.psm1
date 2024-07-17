@@ -227,7 +227,7 @@ Function Unprotect-WindowsSecurity {
                         [System.String]$TaskPath = '\MSFT Driver Block list update\'
 
                         Write-Verbose -Message "Removing the scheduled task $TaskName"
-                        if (Get-ScheduledTask -TaskName $TaskName -TaskPath $TaskPath -ErrorAction SilentlyContinue) {
+                        if ([HardeningModule.TaskSchedulerHelper]::Get('MSFT Driver Block list update', '\MSFT Driver Block list update\', 'Boolean')) {
                             [System.Void](Unregister-ScheduledTask -TaskName $TaskName -TaskPath $TaskPath -Confirm:$false)
                         }
 

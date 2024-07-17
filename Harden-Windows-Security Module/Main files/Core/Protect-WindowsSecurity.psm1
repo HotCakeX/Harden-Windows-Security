@@ -844,7 +844,7 @@ Execution Policy: $CurrentExecutionPolicy
 
                         try {
                             $UserSID = [System.Security.Principal.WindowsIdentity]::GetCurrent().User.Value
-                            $User = Get-LocalUser | Where-Object -FilterScript { $_.SID -eq $UserSID }
+                            $User = [HardeningModule.LocalUserRetriever]::Get() | Where-Object -FilterScript { $_.SID -eq $UserSID }
                             [System.String]$NameToDisplay = (-NOT [System.String]::IsNullOrWhitespace($User.FullName)) ? $User.FullName : $User.Name
                         }
                         catch {}

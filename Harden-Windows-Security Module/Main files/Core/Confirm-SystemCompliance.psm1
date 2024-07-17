@@ -178,7 +178,7 @@ function Confirm-SystemCompliance {
             #Region Main-Functions
             Function Invoke-MicrosoftDefender {
 
-                [System.Management.Automation.Job2]$script:MicrosoftDefenderJob = Start-ThreadJob -ThrottleLimit ([System.Environment]::ProcessorCount) -ScriptBlock {
+                [System.Management.Automation.Job2]$script:MicrosoftDefenderJob = Start-ThreadJob -ThrottleLimit 14 -ScriptBlock {
 
                     Try {
 
@@ -259,12 +259,7 @@ function Confirm-SystemCompliance {
                                 Method       = 'Cmdlet'
                             })
 
-                        try {
-                            $IndividualItemResult = $((Get-ScheduledTask -TaskPath '\MSFT Driver Block list update\' -TaskName 'MSFT Driver Block list update' -ErrorAction SilentlyContinue) ? $True : $false)
-                        }
-                        catch {
-                            # suppress any possible terminating errors
-                        }
+                        $IndividualItemResult = [HardeningModule.TaskSchedulerHelper]::Get('MSFT Driver Block list update', '\MSFT Driver Block list update\', 'Boolean')
                         $NestedObjectArray.Add([HardeningModule.IndividualResult]@{
                                 FriendlyName = 'Fast weekly Microsoft recommended driver block list update'
                                 Compliant    = $IndividualItemResult
@@ -594,20 +589,20 @@ function Confirm-SystemCompliance {
                 } -Name 'Invoke-MicrosoftDefender' -StreamingHost $Host
             }
             Function Invoke-AttackSurfaceReductionRules {
-                [System.Management.Automation.Job2]$script:AttackSurfaceReductionRulesJob = Start-ThreadJob -ThrottleLimit ([System.Environment]::ProcessorCount) -ScriptBlock {
+                [System.Management.Automation.Job2]$script:AttackSurfaceReductionRulesJob = Start-ThreadJob -ThrottleLimit 14 -ScriptBlock {
                     $ErrorActionPreference = 'Stop'
                     [HardeningModule.ConfirmSystemComplianceMethods]::VerifyAttackSurfaceReductionRules()
                 } -Name 'Invoke-AttackSurfaceReductionRules'
             }
             Function Invoke-BitLockerSettings {
-                [System.Management.Automation.Job2]$script:BitLockerSettingsJob = Start-ThreadJob -ThrottleLimit ([System.Environment]::ProcessorCount) -ScriptBlock {
+                [System.Management.Automation.Job2]$script:BitLockerSettingsJob = Start-ThreadJob -ThrottleLimit 14 -ScriptBlock {
                     $ErrorActionPreference = 'Stop'
                     [HardeningModule.ConfirmSystemComplianceMethods]::VerifyBitLockerSettings()
                 } -Name 'Invoke-BitLockerSettings'
             }
             Function Invoke-TLSSecurity {
 
-                [System.Management.Automation.Job2]$script:TLSSecurityJob = Start-ThreadJob -ThrottleLimit ([System.Environment]::ProcessorCount) -ScriptBlock {
+                [System.Management.Automation.Job2]$script:TLSSecurityJob = Start-ThreadJob -ThrottleLimit 14 -ScriptBlock {
 
                     $ErrorActionPreference = 'Stop'
 
@@ -641,12 +636,11 @@ function Confirm-SystemCompliance {
                     }
 
                     [System.Void] ([HardeningModule.GlobalVars]::FinalMegaObject).TryAdd($CatName, $NestedObjectArray)
-
                 } -Name 'Invoke-TLSSecurity' -StreamingHost $Host
             }
             Function Invoke-LockScreen {
 
-                [System.Management.Automation.Job2]$script:LockScreenJob = Start-ThreadJob -ThrottleLimit ([System.Environment]::ProcessorCount) -ScriptBlock {
+                [System.Management.Automation.Job2]$script:LockScreenJob = Start-ThreadJob -ThrottleLimit 14 -ScriptBlock {
 
                     $ErrorActionPreference = 'Stop'
 
@@ -753,7 +747,7 @@ function Confirm-SystemCompliance {
             }
             Function Invoke-UserAccountControl {
 
-                [System.Management.Automation.Job2]$script:UserAccountControlJob = Start-ThreadJob -ThrottleLimit ([System.Environment]::ProcessorCount) -ScriptBlock {
+                [System.Management.Automation.Job2]$script:UserAccountControlJob = Start-ThreadJob -ThrottleLimit 14 -ScriptBlock {
 
                     $ErrorActionPreference = 'Stop'
 
@@ -799,14 +793,14 @@ function Confirm-SystemCompliance {
                 } -Name 'Invoke-UserAccountControl' -StreamingHost $Host
             }
             Function Invoke-DeviceGuard {
-                [System.Management.Automation.Job2]$script:DeviceGuardJob = Start-ThreadJob -ThrottleLimit ([System.Environment]::ProcessorCount) -ScriptBlock {
+                [System.Management.Automation.Job2]$script:DeviceGuardJob = Start-ThreadJob -ThrottleLimit 14 -ScriptBlock {
                     $ErrorActionPreference = 'Stop'
                     [HardeningModule.ConfirmSystemComplianceMethods]::VerifyDeviceGuard()
                 } -Name 'Invoke-DeviceGuard'
             }
             Function Invoke-WindowsFirewall {
 
-                [System.Management.Automation.Job2]$script:WindowsFirewallJob = Start-ThreadJob -ThrottleLimit ([System.Environment]::ProcessorCount) -ScriptBlock {
+                [System.Management.Automation.Job2]$script:WindowsFirewallJob = Start-ThreadJob -ThrottleLimit 14 -ScriptBlock {
 
                     $ErrorActionPreference = 'Stop'
 
@@ -831,12 +825,11 @@ function Confirm-SystemCompliance {
                         })
 
                     [System.Void] ([HardeningModule.GlobalVars]::FinalMegaObject).TryAdd($CatName, $NestedObjectArray)
-
                 } -Name 'Invoke-WindowsFirewall' -StreamingHost $Host
             }
             Function Invoke-OptionalWindowsFeatures {
 
-                [System.Management.Automation.Job2]$script:OptionalWindowsFeaturesJob = Start-ThreadJob -ThrottleLimit ([System.Environment]::ProcessorCount) -ScriptBlock {
+                [System.Management.Automation.Job2]$script:OptionalWindowsFeaturesJob = Start-ThreadJob -ThrottleLimit 14 -ScriptBlock {
 
                     $ErrorActionPreference = 'Stop'
 
@@ -994,12 +987,11 @@ function Confirm-SystemCompliance {
                         })
 
                     [System.Void] ([HardeningModule.GlobalVars]::FinalMegaObject).TryAdd($CatName, $NestedObjectArray)
-
                 } -Name 'Invoke-OptionalWindowsFeatures' -StreamingHost $Host
             }
             Function Invoke-WindowsNetworking {
 
-                [System.Management.Automation.Job2]$script:WindowsNetworkingJob = Start-ThreadJob -ThrottleLimit ([System.Environment]::ProcessorCount) -ScriptBlock {
+                [System.Management.Automation.Job2]$script:WindowsNetworkingJob = Start-ThreadJob -ThrottleLimit 14 -ScriptBlock {
 
                     $ErrorActionPreference = 'Stop'
 
@@ -1050,12 +1042,11 @@ function Confirm-SystemCompliance {
                         })
 
                     [System.Void] ([HardeningModule.GlobalVars]::FinalMegaObject).TryAdd($CatName, $NestedObjectArray)
-
                 } -Name 'Invoke-WindowsNetworking' -StreamingHost $Host
             }
             Function Invoke-MiscellaneousConfigurations {
 
-                [System.Management.Automation.Job2]$script:MiscellaneousConfigurationsJob = Start-ThreadJob -ThrottleLimit ([System.Environment]::ProcessorCount) -ScriptBlock {
+                [System.Management.Automation.Job2]$script:MiscellaneousConfigurationsJob = Start-ThreadJob -ThrottleLimit 14 -ScriptBlock {
 
                     $ErrorActionPreference = 'Stop'
 
@@ -1085,7 +1076,7 @@ function Confirm-SystemCompliance {
 
                     # Checking if all user accounts are part of the Hyper-V security Group
                     # Get all the enabled user account SIDs
-                    [System.Security.Principal.SecurityIdentifier[]]$EnabledUsers = (Get-LocalUser | Where-Object -FilterScript { $_.Enabled -eq 'True' }).SID
+                    [System.Security.Principal.SecurityIdentifier[]]$EnabledUsers = ([HardeningModule.LocalUserRetriever]::Get() | Where-Object -FilterScript { $_.Enabled -eq 'True' }).SID
                     # Get the members of the Hyper-V Administrators security group using their SID
                     [System.Security.Principal.SecurityIdentifier[]]$GroupMembers = (Get-LocalGroupMember -SID 'S-1-5-32-578').SID
 
@@ -1115,23 +1106,22 @@ function Confirm-SystemCompliance {
                     }
 
                     [System.Void] ([HardeningModule.GlobalVars]::FinalMegaObject).TryAdd($CatName, $NestedObjectArray)
-
                 } -Name 'Invoke-MiscellaneousConfigurations' -StreamingHost $Host
             }
             Function Invoke-WindowsUpdateConfigurations {
-                [System.Management.Automation.Job2]$script:WindowsUpdateConfigurationsJob = Start-ThreadJob -ThrottleLimit ([System.Environment]::ProcessorCount) -ScriptBlock {
+                [System.Management.Automation.Job2]$script:WindowsUpdateConfigurationsJob = Start-ThreadJob -ThrottleLimit 14 -ScriptBlock {
                     $ErrorActionPreference = 'Stop'
                     [HardeningModule.ConfirmSystemComplianceMethods]::VerifyWindowsUpdateConfigurations()
                 } -Name 'Invoke-WindowsUpdateConfigurations'
             }
             Function Invoke-EdgeBrowserConfigurations {
-                [System.Management.Automation.Job2]$script:EdgeBrowserConfigurationsJob = Start-ThreadJob -ThrottleLimit ([System.Environment]::ProcessorCount) -ScriptBlock {
+                [System.Management.Automation.Job2]$script:EdgeBrowserConfigurationsJob = Start-ThreadJob -ThrottleLimit 14 -ScriptBlock {
                     $ErrorActionPreference = 'Stop'
                     [HardeningModule.ConfirmSystemComplianceMethods]::VerifyEdgeBrowserConfigurations()
                 } -Name 'Invoke-EdgeBrowserConfigurations'
             }
             Function Invoke-NonAdminCommands {
-                [System.Management.Automation.Job2]$script:NonAdminCommandsJob = Start-ThreadJob -ThrottleLimit ([System.Environment]::ProcessorCount) -ScriptBlock {
+                [System.Management.Automation.Job2]$script:NonAdminCommandsJob = Start-ThreadJob -ThrottleLimit 14 -ScriptBlock {
                     $ErrorActionPreference = 'Stop'
                     [HardeningModule.ConfirmSystemComplianceMethods]::VerifyNonAdminCommands()
                 } -Name 'Invoke-NonAdminCommands'

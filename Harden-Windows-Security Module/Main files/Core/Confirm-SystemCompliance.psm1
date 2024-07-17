@@ -597,13 +597,13 @@ function Confirm-SystemCompliance {
                 [System.Management.Automation.Job2]$script:AttackSurfaceReductionRulesJob = Start-ThreadJob -ThrottleLimit ([System.Environment]::ProcessorCount) -ScriptBlock {
                     $ErrorActionPreference = 'Stop'
                     [HardeningModule.ConfirmSystemComplianceMethods]::VerifyAttackSurfaceReductionRules()
-                } -Name 'Invoke-AttackSurfaceReductionRules' -StreamingHost $Host
+                } -Name 'Invoke-AttackSurfaceReductionRules'
             }
             Function Invoke-BitLockerSettings {
                 [System.Management.Automation.Job2]$script:BitLockerSettingsJob = Start-ThreadJob -ThrottleLimit ([System.Environment]::ProcessorCount) -ScriptBlock {
                     $ErrorActionPreference = 'Stop'
                     [HardeningModule.ConfirmSystemComplianceMethods]::VerifyBitLockerSettings()
-                } -Name 'Invoke-BitLockerSettings' -StreamingHost $Host
+                } -Name 'Invoke-BitLockerSettings'
             }
             Function Invoke-TLSSecurity {
 
@@ -802,7 +802,7 @@ function Confirm-SystemCompliance {
                 [System.Management.Automation.Job2]$script:DeviceGuardJob = Start-ThreadJob -ThrottleLimit ([System.Environment]::ProcessorCount) -ScriptBlock {
                     $ErrorActionPreference = 'Stop'
                     [HardeningModule.ConfirmSystemComplianceMethods]::VerifyDeviceGuard()
-                } -Name 'Invoke-DeviceGuard' -StreamingHost $Host
+                } -Name 'Invoke-DeviceGuard'
             }
             Function Invoke-WindowsFirewall {
 
@@ -1122,19 +1122,19 @@ function Confirm-SystemCompliance {
                 [System.Management.Automation.Job2]$script:WindowsUpdateConfigurationsJob = Start-ThreadJob -ThrottleLimit ([System.Environment]::ProcessorCount) -ScriptBlock {
                     $ErrorActionPreference = 'Stop'
                     [HardeningModule.ConfirmSystemComplianceMethods]::VerifyWindowsUpdateConfigurations()
-                } -Name 'Invoke-WindowsUpdateConfigurations' -StreamingHost $Host
+                } -Name 'Invoke-WindowsUpdateConfigurations'
             }
             Function Invoke-EdgeBrowserConfigurations {
                 [System.Management.Automation.Job2]$script:EdgeBrowserConfigurationsJob = Start-ThreadJob -ThrottleLimit ([System.Environment]::ProcessorCount) -ScriptBlock {
                     $ErrorActionPreference = 'Stop'
                     [HardeningModule.ConfirmSystemComplianceMethods]::VerifyEdgeBrowserConfigurations()
-                } -Name 'Invoke-EdgeBrowserConfigurations' -StreamingHost $Host
+                } -Name 'Invoke-EdgeBrowserConfigurations'
             }
             Function Invoke-NonAdminCommands {
                 [System.Management.Automation.Job2]$script:NonAdminCommandsJob = Start-ThreadJob -ThrottleLimit ([System.Environment]::ProcessorCount) -ScriptBlock {
                     $ErrorActionPreference = 'Stop'
                     [HardeningModule.ConfirmSystemComplianceMethods]::VerifyNonAdminCommands()
-                } -Name 'Invoke-NonAdminCommands' -StreamingHost $Host
+                } -Name 'Invoke-NonAdminCommands'
             }
             #Endregion Main-Functions
 

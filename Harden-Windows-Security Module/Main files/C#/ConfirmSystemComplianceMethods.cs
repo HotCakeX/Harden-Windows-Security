@@ -241,7 +241,7 @@ namespace HardeningModule
             }
             catch
             {
-                // if the path exists do nothing
+                // if the path doesn't exist do nothing
             }
 
             // Bitlocker DMA counter measure status
@@ -391,7 +391,6 @@ namespace HardeningModule
 
                         string[] KeyProtectors = BitLockerDrive.KeyProtector.Select(kp => kp.KeyProtectorType).ToArray();
 
-
                         if (KeyProtectors.Contains("RecoveryPassword") || KeyProtectors.Contains("Password") || KeyProtectors.Contains("ExternalKey"))
                         {
                             nestedObjectArray.Add(new HardeningModule.IndividualResult
@@ -433,7 +432,6 @@ namespace HardeningModule
             }
 
             HardeningModule.GlobalVars.FinalMegaObject.TryAdd(CatName, nestedObjectArray);
-
         }
     }
 }

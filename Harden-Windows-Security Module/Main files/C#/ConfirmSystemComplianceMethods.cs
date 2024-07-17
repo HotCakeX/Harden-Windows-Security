@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Microsoft.Win32;
 using System.Linq;
 
 namespace HardeningModule
@@ -187,6 +188,9 @@ namespace HardeningModule
             HardeningModule.GlobalVars.FinalMegaObject.TryAdd(CatName, nestedObjectArray);
         }
 
+        /// <summary>
+        /// Performs all of the tasks for the Device Guard category during system compliance checking
+        /// </summary>
         public static void VerifyDeviceGuard()
         {
             // Create a new list to store the results
@@ -201,6 +205,235 @@ namespace HardeningModule
             }
 
             HardeningModule.GlobalVars.FinalMegaObject.TryAdd(CatName, nestedObjectArray);
+        }
+
+        /// <summary>
+        /// Performs all of the tasks for the BitLocker Settings category during system compliance checking
+        /// </summary>
+        public static void VerifyBitLockerSettings()
+        {
+
+            // Create a new list to store the results
+            List<HardeningModule.IndividualResult> nestedObjectArray = new List<HardeningModule.IndividualResult>();
+
+            // Defining the category name
+            string CatName = "BitLockerSettings";
+
+            // Returns true or false depending on whether Kernel DMA Protection is on or off
+            bool BootDMAProtection = SystemInfo.NativeMethods.BootDmaCheck() != 0;
+
+            if (BootDMAProtection)
+            {
+                HardeningModule.VerboseLogger.Write("Kernel DMA protection is enabled");
+            }
+            else
+            {
+                HardeningModule.VerboseLogger.Write("Kernel DMA protection is disabled");
+            }
+
+
+            // Get the status of Bitlocker DMA protection
+            int BitlockerDMAProtectionStatus = 0;
+            try
+            {
+                // Get the value of the registry key and return 0 if it doesn't exist
+                BitlockerDMAProtectionStatus = (int)Registry.GetValue(@"HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\FVE", "DisableExternalDMAUnderLock", 0);
+            }
+            catch
+            {
+                // if the path exists do nothing
+            }
+
+            // Bitlocker DMA counter measure status
+            // Returns true if only either Kernel DMA protection is on and Bitlocker DMA protection if off
+            // or Kernel DMA protection is off and Bitlocker DMA protection is on
+            bool ItemState = BootDMAProtection ^ (BitlockerDMAProtectionStatus == 1);
+
+            nestedObjectArray.Add(new HardeningModule.IndividualResult
+            {
+                FriendlyName = "DMA protection",
+                Compliant = ItemState ? "True" : "False",
+                Value = ItemState ? "True" : "False",
+                Name = "DMA protection",
+                Category = CatName,
+                Method = "Group Policy"
+            });
+
+            // Process items in Registry resources.csv file with "Registry Keys" origin and add them to the nestedObjectArray array
+            foreach (var Result in (HardeningModule.CategoryProcessing.ProcessCategory(CatName, "Group Policy")))
+            {
+                nestedObjectArray.Add(Result);
+            }
+
+
+            // To detect if Hibernate is enabled and set to full
+            // Only perform the check if the system is not a virtual machine
+            if (!HardeningModule.GlobalVars.MDAVConfigCurrent.IsVirtualMachine)
+            {
+                bool IndividualItemResult = false;
+                try
+                {
+                    object hiberFileType = Registry.GetValue(@"HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Power", "HiberFileType", null);
+                    if (hiberFileType != null && (int)hiberFileType == 2)
+                    {
+                        IndividualItemResult = true;
+                    }
+                }
+                catch
+                {
+                    // suppress the errors if any
+                }
+
+                nestedObjectArray.Add(new HardeningModule.IndividualResult
+                {
+                    FriendlyName = "Hibernate is set to full",
+                    Compliant = IndividualItemResult ? "True" : "False",
+                    Value = IndividualItemResult ? "True" : "False",
+                    Name = "Hibernate is set to full",
+                    Category = CatName,
+                    Method = "Cmdlet"
+                });
+            }
+            else
+            {
+                HardeningModule.GlobalVars.TotalNumberOfTrueCompliantValues--;
+            }
+
+
+            // OS Drive encryption verifications
+            // Check if BitLocker is on for the OS Drive
+            // The ProtectionStatus remains off while the drive is encrypting or decrypting
+            var volumeInfo = HardeningModule.BitLockerInfo.GetEncryptedVolumeInfo(Environment.GetEnvironmentVariable("SystemDrive"));
+            if (volumeInfo.ProtectionStatus == "Protected")
+            {
+                // Get the key protectors of the OS Drive
+                string[] KeyProtectors = volumeInfo.KeyProtector.Select(kp => kp.KeyProtectorType).ToArray();
+
+                //  HardeningModule.VerboseLogger.Write(string.Join(", ", KeyProtectors));
+
+
+                // Check if TPM+PIN and recovery password are being used - Normal Security level
+                if (KeyProtectors.Contains("TpmPin") && KeyProtectors.Contains("RecoveryPassword"))
+                {
+                    nestedObjectArray.Add(new HardeningModule.IndividualResult
+                    {
+                        FriendlyName = "Secure OS Drive encryption",
+                        Compliant = "True",
+                        Value = "Normal Security Level",
+                        Name = "Secure OS Drive encryption",
+                        Category = CatName,
+                        Method = "Cmdlet"
+                    });
+                }
+                // Check if TPM+PIN+StartupKey and recovery password are being used - Enhanced security level
+                else if (KeyProtectors.Contains("TpmPinStartupKey") && KeyProtectors.Contains("RecoveryPassword"))
+                {
+                    nestedObjectArray.Add(new HardeningModule.IndividualResult
+                    {
+                        FriendlyName = "Secure OS Drive encryption",
+                        Compliant = "True",
+                        Value = "Enhanced Security Level",
+                        Name = "Secure OS Drive encryption",
+                        Category = CatName,
+                        Method = "Cmdlet"
+                    });
+                }
+                else
+                {
+                    nestedObjectArray.Add(new HardeningModule.IndividualResult
+                    {
+                        FriendlyName = "Secure OS Drive encryption",
+                        Compliant = "False",
+                        Value = "False",
+                        Name = "Secure OS Drive encryption",
+                        Category = CatName,
+                        Method = "Cmdlet"
+                    });
+                }
+            }
+            else
+            {
+                nestedObjectArray.Add(new HardeningModule.IndividualResult
+                {
+                    FriendlyName = "Secure OS Drive encryption",
+                    Compliant = "False",
+                    Value = "False",
+                    Name = "Secure OS Drive encryption",
+                    Category = CatName,
+                    Method = "Cmdlet"
+                });
+            }
+
+
+            // Non-OS-Drive-BitLocker-Drives-Encryption-Verification
+            List<HardeningModule.BitLockerVolume> NonRemovableNonOSDrives = new List<HardeningModule.BitLockerVolume>();
+
+            foreach (HardeningModule.BitLockerVolume Drive in HardeningModule.BitLockerInfo.GetAllEncryptedVolumeInfo())
+            {
+                if (Drive.VolumeType == "FixedDisk")
+                {
+                    // Increase the number of available compliant values for each non-OS drive that was found
+                    HardeningModule.GlobalVars.TotalNumberOfTrueCompliantValues++;
+                    NonRemovableNonOSDrives.Add(Drive);
+                }
+            }
+
+            // Check if there are any non-OS volumes
+            if (NonRemovableNonOSDrives.Any())
+            {
+                // Loop through each non-OS volume and verify their encryption
+                foreach (var BitLockerDrive in NonRemovableNonOSDrives.OrderBy(d => d.MountPoint))
+                {
+                    // If status is unknown, that means the non-OS volume is encrypted and locked, if it's on then it's on
+                    if (BitLockerDrive.ProtectionStatus == "Protected" || BitLockerDrive.ProtectionStatus == "Unknown")
+                    {
+                        // Check if the non-OS non-Removable drive has one of the following key protectors: RecoveryPassword, Password or ExternalKey (Auto-Unlock)
+
+                        string[] KeyProtectors = BitLockerDrive.KeyProtector.Select(kp => kp.KeyProtectorType).ToArray();
+
+
+                        if (KeyProtectors.Contains("RecoveryPassword") || KeyProtectors.Contains("Password") || KeyProtectors.Contains("ExternalKey"))
+                        {
+                            nestedObjectArray.Add(new HardeningModule.IndividualResult
+                            {
+                                FriendlyName = $"Secure Drive {BitLockerDrive.MountPoint} encryption",
+                                Compliant = "True",
+                                Value = "Encrypted",
+                                Name = $"Secure Drive {BitLockerDrive.MountPoint} encryption",
+                                Category = CatName,
+                                Method = "Cmdlet"
+                            });
+                        }
+                        else
+                        {
+                            nestedObjectArray.Add(new HardeningModule.IndividualResult
+                            {
+                                FriendlyName = $"Secure Drive {BitLockerDrive.MountPoint} encryption",
+                                Compliant = "False",
+                                Value = "Not properly encrypted",
+                                Name = $"Secure Drive {BitLockerDrive.MountPoint} encryption",
+                                Category = CatName,
+                                Method = "Cmdlet"
+                            });
+                        }
+                    }
+                    else
+                    {
+                        nestedObjectArray.Add(new HardeningModule.IndividualResult
+                        {
+                            FriendlyName = $"Secure Drive {BitLockerDrive.MountPoint} encryption",
+                            Compliant = "False",
+                            Value = "Not encrypted",
+                            Name = $"Secure Drive {BitLockerDrive.MountPoint} encryption",
+                            Category = CatName,
+                            Method = "Cmdlet"
+                        });
+                    }
+                }
+            }
+
+            HardeningModule.GlobalVars.FinalMegaObject.TryAdd(CatName, nestedObjectArray);
+
         }
     }
 }

@@ -309,7 +309,7 @@ namespace HardeningModule
             return newInstance;
         }
 
-        // Helper methods to get the information from the WMI classes
+        // Helper method to get the information from the WMI classes
         private static ManagementBaseObject GetCimInstance(string @namespace, string className, string filter)
         {
             SelectQuery query = new SelectQuery(className, filter);
@@ -332,6 +332,57 @@ namespace HardeningModule
                 }
             }
             return ((ManagementObject)instance).InvokeMethod(methodName, inParams, null);
+        }
+
+        // Method to get the drive letters of all volumes on the system, encrypted or not
+        public static string[] GetAllDriveLetters()
+        {
+            List<string> driveLetters = new List<string>();
+
+            ManagementObjectCollection storages = GetCimInstances("Root\\Microsoft\\Windows\\Storage", "MSFT_Volume", string.Empty);
+
+            foreach (ManagementBaseObject storage in storages)
+            {
+                // Iterate through the properties of the storage object
+                foreach (PropertyData property in storage.Properties)
+                {
+                    if (property.Name == "DriveLetter" && property.Value != null)
+                    {
+                        driveLetters.Add(property.Value.ToString());
+                    }
+                }
+            }
+
+            return driveLetters.ToArray();
+        }
+
+        private static ManagementObjectCollection GetCimInstances(string namespacePath, string className, string filter)
+        {
+            ManagementScope scope = new ManagementScope(namespacePath);
+            string queryString = string.IsNullOrEmpty(filter) ? $"SELECT * FROM {className}" : $"SELECT * FROM {className} WHERE {filter}";
+            ObjectQuery query = new ObjectQuery(queryString);
+            ManagementObjectSearcher searcher = new ManagementObjectSearcher(scope, query);
+            return searcher.Get();
+        }
+
+        // Get the BitLocker info of all of the volumes on the system
+        public static List<BitLockerVolume> GetAllEncryptedVolumeInfo()
+        {
+            // Create a new list of BitLockerVolume objects
+            List<BitLockerVolume> volumes = new List<BitLockerVolume>();
+
+            // Call the GetAllDriveLetters method to get all of the drive letters
+            string[] driveLetters = GetAllDriveLetters();
+
+            // Iterate through all of the drive letters
+            foreach (string driveLetter in driveLetters)
+            {
+                // the method requires the drive letter with the colon
+                BitLockerVolume volume = GetEncryptedVolumeInfo(driveLetter + ":");
+                volumes.Add(volume);
+            }
+
+            return volumes;
         }
     }
 }

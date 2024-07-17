@@ -192,7 +192,6 @@ function Confirm-SystemCompliance {
                         # Give the Defender internals time to process the updated exclusions list
                         Start-Sleep -Seconds '5'
 
-                        # An array to store the nested custom objects, inside the main output object
                         $NestedObjectArray = New-Object -TypeName System.Collections.Generic.List[HardeningModule.IndividualResult]
                         [System.String]$CatName = 'MicrosoftDefender'
 
@@ -601,191 +600,9 @@ function Confirm-SystemCompliance {
                 } -Name 'Invoke-AttackSurfaceReductionRules' -StreamingHost $Host
             }
             Function Invoke-BitLockerSettings {
-
                 [System.Management.Automation.Job2]$script:BitLockerSettingsJob = Start-ThreadJob -ThrottleLimit ([System.Environment]::ProcessorCount) -ScriptBlock {
-
-                    $ErrorActionPreference = 'Stop'                   
-
-                    $NestedObjectArray = New-Object -TypeName System.Collections.Generic.List[HardeningModule.IndividualResult]
-                    [System.String]$CatName = 'BitLockerSettings'
-
-                    # Returns true or false depending on whether Kernel DMA Protection is on or off
-                    [System.Boolean]$BootDMAProtection = ([SystemInfo.NativeMethods]::BootDmaCheck()) -ne 0
-
-                    # Get the status of Bitlocker DMA protection
-                    try {
-                        [System.Int32]$BitlockerDMAProtectionStatus = Get-ItemPropertyValue -Path 'Registry::HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\FVE' -Name 'DisableExternalDMAUnderLock' -ErrorAction SilentlyContinue
-                    }
-                    catch {
-                        # -ErrorAction SilentlyContinue wouldn't suppress the error if the path exists but property doesn't, so using try-catch
-                    }
-                    # Bitlocker DMA counter measure status
-                    # Returns true if only either Kernel DMA protection is on and Bitlocker DMA protection if off
-                    # or Kernel DMA protection is off and Bitlocker DMA protection is on
-                    [System.Boolean]$ItemState = ($BootDMAProtection -xor ($BitlockerDMAProtectionStatus -eq '1')) ? $True : $False
-
-                    # Create a custom object with 5 properties to store them as nested objects inside the main output object
-                    $NestedObjectArray.Add([HardeningModule.IndividualResult]@{
-                            FriendlyName = 'DMA protection'
-                            Compliant    = $ItemState
-                            Value        = $ItemState
-                            Name         = 'DMA protection'
-                            Category     = $CatName
-                            Method       = 'Group Policy'
-                        })
-
-                    # Process items in Registry resources.csv file with "Group Policy" origin and add them to the $NestedObjectArray array
-                    foreach ($Result in ([HardeningModule.CategoryProcessing]::ProcessCategory($CatName, 'Group Policy'))) {
-                        $NestedObjectArray.Add($Result)
-                    }
-
-                    # To detect if Hibernate is enabled and set to full
-                    if (-NOT ([HardeningModule.GlobalVars]::MDAVConfigCurrent.IsVirtualMachine)) {
-                        try {
-                            $IndividualItemResult = $($((Get-ItemProperty 'Registry::HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Power' -Name 'HiberFileType' -ErrorAction SilentlyContinue).HiberFileType) -eq 2 ? $True : $False)
-                        }
-                        catch {
-                            # suppress the errors if any
-                        }
-                        $NestedObjectArray.Add([HardeningModule.IndividualResult]@{
-                                FriendlyName = 'Hibernate is set to full'
-                                Compliant    = [System.Boolean]($IndividualItemResult)
-                                Value        = [System.Boolean]($IndividualItemResult)
-                                Name         = 'Hibernate is set to full'
-                                Category     = $CatName
-                                Method       = 'Cmdlet'
-                            })
-                    }
-                    else {
-                        ([HardeningModule.GlobalVars]::TotalNumberOfTrueCompliantValues)--
-                    }
-
-                    # OS Drive encryption verifications
-                    # Check if BitLocker is on for the OS Drive
-                    # The ProtectionStatus remains off while the drive is encrypting or decrypting
-                    if ([HardeningModule.BitLockerInfo]::GetEncryptedVolumeInfo($env:SystemDrive).ProtectionStatus -eq 'Protected') {
-
-                        # Get the key protectors of the OS Drive
-                        [System.String[]]$KeyProtectors = [HardeningModule.BitLockerInfo]::GetEncryptedVolumeInfo($env:SystemDrive).KeyProtector.keyprotectortype
-
-                        # Check if TPM+PIN and recovery password are being used - Normal Security level
-                        if (($KeyProtectors -contains 'Tpmpin') -and ($KeyProtectors -contains 'RecoveryPassword')) {
-
-                            $NestedObjectArray.Add([HardeningModule.IndividualResult]@{
-                                    FriendlyName = 'Secure OS Drive encryption'
-                                    Compliant    = $True
-                                    Value        = 'Normal Security Level'
-                                    Name         = 'Secure OS Drive encryption'
-                                    Category     = $CatName
-                                    Method       = 'Cmdlet'
-
-                                })
-                        }
-
-                        # Check if TPM+PIN+StartupKey and recovery password are being used - Enhanced security level
-                        elseif (($KeyProtectors -contains 'TpmPinStartupKey') -and ($KeyProtectors -contains 'RecoveryPassword')) {
-
-                            $NestedObjectArray.Add([HardeningModule.IndividualResult]@{
-                                    FriendlyName = 'Secure OS Drive encryption'
-                                    Compliant    = $True
-                                    Value        = 'Enhanced Security Level'
-                                    Name         = 'Secure OS Drive encryption'
-                                    Category     = $CatName
-                                    Method       = 'Cmdlet'
-                                })
-                        }
-
-                        else {
-                            $NestedObjectArray.Add([HardeningModule.IndividualResult]@{
-                                    FriendlyName = 'Secure OS Drive encryption'
-                                    Compliant    = $false
-                                    Value        = $false
-                                    Name         = 'Secure OS Drive encryption'
-                                    Category     = $CatName
-                                    Method       = 'Cmdlet'
-                                })
-                        }
-                    }
-                    else {
-                        $NestedObjectArray.Add([HardeningModule.IndividualResult]@{
-                                FriendlyName = 'Secure OS Drive encryption'
-                                Compliant    = $false
-                                Value        = $false
-                                Name         = 'Secure OS Drive encryption'
-                                Category     = $CatName
-                                Method       = 'Cmdlet'
-                            })
-                    }
-                    #region Non-OS-Drive-BitLocker-Drives-Encryption-Verification
-                    # Get the list of non OS volumes
-                    [System.Object[]]$NonOSBitLockerVolumes = Get-BitLockerVolume | Where-Object -FilterScript { $_.volumeType -ne 'OperatingSystem' }
-
-                    # Get all the volumes and filter out removable ones
-                    [System.Object[]]$RemovableVolumes = Get-Volume | Where-Object -FilterScript { ($_.DriveType -eq 'Removable') -and $_.DriveLetter }
-
-                    # Check if there is any removable volumes
-                    if ($RemovableVolumes) {
-
-                        # Get the letters of all the removable volumes
-                        [System.String[]]$RemovableVolumesLetters = foreach ($RemovableVolume in $RemovableVolumes) {
-                            $(($RemovableVolume).DriveLetter + ':' )
-                        }
-
-                        # Filter out removable drives from BitLocker volumes to process
-                        $NonOSBitLockerVolumes = $NonOSBitLockerVolumes | Where-Object -FilterScript { $_.MountPoint -notin $RemovableVolumesLetters }
-                    }
-
-                    # Check if there is any non-OS volumes
-                    if ($NonOSBitLockerVolumes) {
-
-                        # Loop through each non-OS volume and verify their encryption
-                        foreach ($MountPoint in $($NonOSBitLockerVolumes | Sort-Object).MountPoint) {
-
-                            # Increase the number of available compliant values for each non-OS drive that was found
-                            ([HardeningModule.GlobalVars]::TotalNumberOfTrueCompliantValues)++
-
-                            # If status is unknown, that means the non-OS volume is encrypted and locked, if it's on then it's on
-                            if ((Get-BitLockerVolume -MountPoint $MountPoint).ProtectionStatus -in 'on', 'Unknown') {
-
-                                # Check 1: if Recovery Password and Auto Unlock key protectors are available on the drive
-                                [System.Object[]]$KeyProtectors = (Get-BitLockerVolume -MountPoint $MountPoint).KeyProtector.keyprotectortype
-                                if (($KeyProtectors -contains 'RecoveryPassword') -or ($KeyProtectors -contains 'Password')) {
-
-                                    $NestedObjectArray.Add([HardeningModule.IndividualResult]@{
-                                            FriendlyName = "Secure Drive $MountPoint encryption"
-                                            Compliant    = $True
-                                            Value        = 'Encrypted'
-                                            Name         = "Secure Drive $MountPoint encryption"
-                                            Category     = $CatName
-                                            Method       = 'Cmdlet'
-                                        })
-                                }
-                                else {
-                                    $NestedObjectArray.Add([HardeningModule.IndividualResult]@{
-                                            FriendlyName = "Secure Drive $MountPoint encryption"
-                                            Compliant    = $false
-                                            Value        = 'Not properly encrypted'
-                                            Name         = "Secure Drive $MountPoint encryption"
-                                            Category     = $CatName
-                                            Method       = 'Cmdlet'
-                                        })
-                                }
-                            }
-                            else {
-                                $NestedObjectArray.Add([HardeningModule.IndividualResult]@{
-                                        FriendlyName = "Secure Drive $MountPoint encryption"
-                                        Compliant    = $false
-                                        Value        = 'Not encrypted'
-                                        Name         = "Secure Drive $MountPoint encryption"
-                                        Category     = $CatName
-                                        Method       = 'Cmdlet'
-                                    })
-                            }
-                        }
-                    }
-                    #endregion Non-OS-Drive-BitLocker-Drives-Encryption-Verification
-
-                    [System.Void] ([HardeningModule.GlobalVars]::FinalMegaObject).TryAdd($CatName, $NestedObjectArray)
+                    $ErrorActionPreference = 'Stop'
+                    [HardeningModule.ConfirmSystemComplianceMethods]::VerifyBitLockerSettings()
                 } -Name 'Invoke-BitLockerSettings' -StreamingHost $Host
             }
             Function Invoke-TLSSecurity {
@@ -841,7 +658,6 @@ function Confirm-SystemCompliance {
                         $NestedObjectArray.Add($Result)
                     }
 
-                    # Verify a Security Group Policy setting
                     $IndividualItemResult = [System.Boolean]$(([HardeningModule.GlobalVars]::SystemSecurityPoliciesIniObject).'Registry Values'['MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\InactivityTimeoutSecs'] -eq '4,120') ? $True : $False
                     $NestedObjectArray.Add([HardeningModule.IndividualResult]@{
                             FriendlyName = 'Machine inactivity limit'
@@ -852,7 +668,6 @@ function Confirm-SystemCompliance {
                             Method       = 'Security Group Policy'
                         })
 
-                    # Verify a Security Group Policy setting
                     $IndividualItemResult = [System.Boolean]$(([HardeningModule.GlobalVars]::SystemSecurityPoliciesIniObject).'Registry Values'['MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\DisableCAD'] -eq '4,0') ? $True : $False
                     $NestedObjectArray.Add([HardeningModule.IndividualResult]@{
                             FriendlyName = 'Interactive logon: Do not require CTRL+ALT+DEL'
@@ -863,7 +678,6 @@ function Confirm-SystemCompliance {
                             Method       = 'Security Group Policy'
                         })
 
-                    # Verify a Security Group Policy setting
                     $IndividualItemResult = [System.Boolean]$(([HardeningModule.GlobalVars]::SystemSecurityPoliciesIniObject).'Registry Values'['MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\MaxDevicePasswordFailedAttempts'] -eq '4,5') ? $True : $False
                     $NestedObjectArray.Add([HardeningModule.IndividualResult]@{
                             FriendlyName = 'Interactive logon: Machine account lockout threshold'
@@ -874,7 +688,6 @@ function Confirm-SystemCompliance {
                             Method       = 'Security Group Policy'
                         })
 
-                    # Verify a Security Group Policy setting
                     $IndividualItemResult = [System.Boolean]$(([HardeningModule.GlobalVars]::SystemSecurityPoliciesIniObject).'Registry Values'['MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\DontDisplayLockedUserId'] -eq '4,4') ? $True : $False
                     $NestedObjectArray.Add([HardeningModule.IndividualResult]@{
                             FriendlyName = 'Interactive logon: Display user information when the session is locked'
@@ -885,7 +698,6 @@ function Confirm-SystemCompliance {
                             Method       = 'Security Group Policy'
                         })
 
-                    # Verify a Security Group Policy setting
                     $IndividualItemResult = [System.Boolean]$(([HardeningModule.GlobalVars]::SystemSecurityPoliciesIniObject).'Registry Values'['MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\DontDisplayUserName'] -eq '4,1') ? $True : $False
                     $NestedObjectArray.Add([HardeningModule.IndividualResult]@{
                             FriendlyName = "Interactive logon: Don't display username at sign-in"
@@ -896,7 +708,6 @@ function Confirm-SystemCompliance {
                             Method       = 'Security Group Policy'
                         })
 
-                    # Verify a Security Group Policy setting
                     $IndividualItemResult = [System.Boolean]$(([HardeningModule.GlobalVars]::SystemSecurityPoliciesIniObject).'System Access'['LockoutBadCount'] -eq '5') ? $True : $False
                     $NestedObjectArray.Add([HardeningModule.IndividualResult]@{
                             FriendlyName = 'Account lockout threshold'
@@ -907,7 +718,6 @@ function Confirm-SystemCompliance {
                             Method       = 'Security Group Policy'
                         })
 
-                    # Verify a Security Group Policy setting
                     $IndividualItemResult = [System.Boolean]$(([HardeningModule.GlobalVars]::SystemSecurityPoliciesIniObject).'System Access'['LockoutDuration'] -eq '1440') ? $True : $False
                     $NestedObjectArray.Add([HardeningModule.IndividualResult]@{
                             FriendlyName = 'Account lockout duration'
@@ -918,7 +728,6 @@ function Confirm-SystemCompliance {
                             Method       = 'Security Group Policy'
                         })
 
-                    # Verify a Security Group Policy setting
                     $IndividualItemResult = [System.Boolean]$(([HardeningModule.GlobalVars]::SystemSecurityPoliciesIniObject).'System Access'['ResetLockoutCount'] -eq '1440') ? $True : $False
                     $NestedObjectArray.Add([HardeningModule.IndividualResult]@{
                             FriendlyName = 'Reset account lockout counter after'
@@ -929,7 +738,6 @@ function Confirm-SystemCompliance {
                             Method       = 'Security Group Policy'
                         })
 
-                    # Verify a Security Group Policy setting
                     $IndividualItemResult = [System.Boolean]$(([HardeningModule.GlobalVars]::SystemSecurityPoliciesIniObject).'Registry Values'['MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\DontDisplayLastUserName'] -eq '4,1') ? $True : $False
                     $NestedObjectArray.Add([HardeningModule.IndividualResult]@{
                             FriendlyName = "Interactive logon: Don't display last signed-in"
@@ -957,7 +765,6 @@ function Confirm-SystemCompliance {
                         $NestedObjectArray.Add($Result)
                     }
 
-                    # Verify a Security Group Policy setting
                     $IndividualItemResult = [System.Boolean]$(([HardeningModule.GlobalVars]::SystemSecurityPoliciesIniObject).'Registry Values'['MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\ConsentPromptBehaviorAdmin'] -eq '4,2') ? $True : $False
                     $NestedObjectArray.Add([HardeningModule.IndividualResult]@{
                             FriendlyName = 'UAC: Behavior of the elevation prompt for administrators in Admin Approval Mode'
@@ -968,7 +775,6 @@ function Confirm-SystemCompliance {
                             Method       = 'Security Group Policy'
                         })
 
-                    # Verify a Security Group Policy setting
                     $IndividualItemResult = [System.Boolean]$(([HardeningModule.GlobalVars]::SystemSecurityPoliciesIniObject).'Registry Values'['MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\ConsentPromptBehaviorUser'] -eq '4,0') ? $True : $False
                     $NestedObjectArray.Add([HardeningModule.IndividualResult]@{
                             FriendlyName = 'UAC: Automatically deny elevation requests on Standard accounts'
@@ -979,7 +785,6 @@ function Confirm-SystemCompliance {
                             Method       = 'Security Group Policy'
                         })
 
-                    # Verify a Security Group Policy setting
                     $IndividualItemResult = [System.Boolean]($(([HardeningModule.GlobalVars]::SystemSecurityPoliciesIniObject).'Registry Values'['MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\ValidateAdminCodeSignatures'] -eq '4,1') ? $True : $False)
                     $NestedObjectArray.Add([HardeningModule.IndividualResult]@{
                             FriendlyName = 'UAC: Only elevate executables that are signed and validated'
@@ -1218,13 +1023,12 @@ function Confirm-SystemCompliance {
                             Category     = $CatName
                             Method       = 'Cmdlet'
                         })
-                   
+
                     # Process items in Registry resources.csv file with "Registry Keys" origin and add them to the $NestedObjectArray array
                     foreach ($Result in ([HardeningModule.CategoryProcessing]::ProcessCategory($CatName, 'Registry Keys'))) {
-                        $NestedObjectArray.Add($Result)                  
+                        $NestedObjectArray.Add($Result)
                     }
 
-                    # Verify a Security Group Policy setting
                     $IndividualItemResult = [System.Boolean]$(([HardeningModule.GlobalVars]::SystemSecurityPoliciesIniObject).'Registry Values'['MACHINE\System\CurrentControlSet\Control\SecurePipeServers\Winreg\AllowedExactPaths\Machine'] -eq '7,') ? $True : $False
                     $NestedObjectArray.Add([HardeningModule.IndividualResult]@{
                             FriendlyName = 'Network access: Remotely accessible registry paths'
@@ -1235,7 +1039,6 @@ function Confirm-SystemCompliance {
                             Method       = 'Security Group Policy'
                         })
 
-                    # Verify a Security Group Policy setting
                     $IndividualItemResult = [System.Boolean]$(([HardeningModule.GlobalVars]::SystemSecurityPoliciesIniObject).'Registry Values'['MACHINE\System\CurrentControlSet\Control\SecurePipeServers\Winreg\AllowedPaths\Machine'] -eq '7,') ? $True : $False
                     $NestedObjectArray.Add([HardeningModule.IndividualResult]@{
                             FriendlyName = 'Network access: Remotely accessible registry paths and subpaths'

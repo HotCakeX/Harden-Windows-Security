@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.DirectoryServices.AccountManagement;
 using System.Runtime.InteropServices;
-using System.Text;
 
 namespace HardeningModule
 {
@@ -22,6 +21,7 @@ namespace HardeningModule
         public string SID { get; set; }
         public string ObjectClass { get; set; }
         public List<string> Groups { get; set; }
+        public List<string> GroupsSIDs { get; set; }
     }
 
 
@@ -79,7 +79,8 @@ namespace HardeningModule
                                 Name = user.SamAccountName,
                                 SID = user.Sid?.ToString(),
                                 ObjectClass = "User",
-                                Groups = GetGroupNames(user) // Populate group names
+                                Groups = GetGroupNames(user), // Populate group names
+                                GroupsSIDs = GetGroupSIDs(user) // Populate group SIDs
                             };
                             localUsers.Add(localUser);
                         }
@@ -104,6 +105,21 @@ namespace HardeningModule
             }
 
             return groupNames;
+        }
+
+        // Method to retrieve group SIDs for a given user
+        private static List<string> GetGroupSIDs(UserPrincipal user)
+        {
+            List<string> groupSIDs = new List<string>();
+
+            // Iterate over the groups the user is a member of
+            foreach (var group in user.GetGroups())
+            {
+                // Add group SID to the list
+                groupSIDs.Add(group.Sid.ToString());
+            }
+
+            return groupSIDs;
         }
     }
 }

@@ -1059,7 +1059,7 @@ function Confirm-SystemCompliance {
                     }
 
                     # Verify an Audit policy is enabled - only supports systems with English-US language
-                    if ((Get-Culture).Name -eq 'en-US') {
+                    if ([HardeningModule.CultureInfoHelper]::Get().Name -eq 'en-US') {
                         $IndividualItemResult = [System.Boolean](((auditpol /get /subcategory:"Other Logon/Logoff Events" /r | ConvertFrom-Csv).'Inclusion Setting' -eq 'Success and Failure') ? $True : $False)
                         $NestedObjectArray.Add([HardeningModule.IndividualResult]@{
                                 FriendlyName = 'Audit policy for Other Logon/Logoff Events'
@@ -1075,26 +1075,13 @@ function Confirm-SystemCompliance {
                     }
 
                     # Checking if all user accounts are part of the Hyper-V security Group
-                    # Get all the enabled user account SIDs
-                    [System.Security.Principal.SecurityIdentifier[]]$EnabledUsers = ([HardeningModule.LocalUserRetriever]::Get() | Where-Object -FilterScript { $_.Enabled -eq 'True' }).SID
-                    # Get the members of the Hyper-V Administrators security group using their SID
-                    [System.Security.Principal.SecurityIdentifier[]]$GroupMembers = (Get-LocalGroupMember -SID 'S-1-5-32-578').SID
+                    # Get all the enabled user accounts that are not part of the Hyper-V Security group based on SID
+                    $UsersNotInHyperVGroup = [HardeningModule.LocalUserRetriever]::Get() | Where-Object -FilterScript { ($_.Enabled -eq 'True') -and ($_.GroupsSIDs -notcontains 'S-1-5-32-578') }
 
-                    # Make sure the arrays are not empty
-                    if (($null -ne $EnabledUsers) -and ($null -ne $GroupMembers)) {
-                        # only outputs data if there is a difference, so when it returns $false it means both arrays are equal
-                        $IndividualItemResult = [System.Boolean](-NOT (Compare-Object -ReferenceObject $EnabledUsers -DifferenceObject $GroupMembers) )
-                    }
-                    else {
-                        # if either of the arrays are null or empty then return false
-                        [System.Boolean]$IndividualItemResult = $false
-                    }
-
-                    # Saving the results of the Hyper-V administrators members group to the array as an object
                     $NestedObjectArray.Add([HardeningModule.IndividualResult]@{
                             FriendlyName = 'All users are part of the Hyper-V Administrators group'
-                            Compliant    = $IndividualItemResult
-                            Value        = $IndividualItemResult
+                            Compliant    = $UsersNotInHyperVGroup -ne $null -and $UsersNotInHyperVGroup.count -gt 0 ? $false : $true
+                            Value        = $UsersNotInHyperVGroup -ne $null -and $UsersNotInHyperVGroup.count -gt 0 ? $false : $true
                             Name         = 'All users are part of the Hyper-V Administrators group'
                             Category     = $CatName
                             Method       = 'Cmdlet'

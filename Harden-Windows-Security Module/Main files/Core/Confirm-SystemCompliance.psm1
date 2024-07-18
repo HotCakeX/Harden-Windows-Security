@@ -1004,7 +1004,7 @@ function Confirm-SystemCompliance {
                     }
 
                     # Check network location of all connections to see if they are public
-                    $Condition = Get-NetConnectionProfile | ForEach-Object -Process { $_.NetworkCategory -eq 'public' }
+                    $Condition = [HardeningModule.NetConnectionProfiles]::Get() | ForEach-Object -Process { $_.NetworkCategory -eq '0' }
                     [System.Boolean]$IndividualItemResult = -NOT ($Condition -contains $false) ? $True : $false
 
                     $NestedObjectArray.Add([HardeningModule.IndividualResult]@{

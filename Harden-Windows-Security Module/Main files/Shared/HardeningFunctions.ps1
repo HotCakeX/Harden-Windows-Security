@@ -1586,7 +1586,9 @@ Function Invoke-WindowsNetworking {
             [HardeningModule.RegistryEditor]::EditRegistry('Registry::HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\NetBT\Parameters', 'EnableLMHOSTS', '0', 'DWORD', 'AddOrModify')
 
             Write-Verbose -Message 'Setting the Network Location of all connections to Public'
-            Get-NetConnectionProfile | Set-NetConnectionProfile -NetworkCategory Public
+            $InterfaceIndexes = [HardeningModule.NetConnectionProfiles]::Get().InterfaceIndex
+            [HardeningModule.NetConnectionProfiles]::Set($InterfaceIndexes, $null, [HardeningModule.NetConnectionProfiles+NetworkCategory]::public)
+
         } 'No' { break WindowsNetworkingLabel }
         'Exit' { break MainSwitchLabel }
     }

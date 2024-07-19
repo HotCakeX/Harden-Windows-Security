@@ -7,8 +7,8 @@ namespace HardeningModule
     public class NetConnectionProfiles
     {
         /// <summary>
-        /// This method outputs a list of all network connection profiles
-        /// The output is precisely the same as the output of the Get-NetConnectionProfile cmdlet in PowerShell
+        /// This method outputs a list of all network connection profiles.
+        /// The output is precisely the same as the output of the Get-NetConnectionProfile cmdlet in PowerShell.
         /// </summary>
         /// <returns></returns>
         public static List<ManagementObject> Get()
@@ -46,6 +46,67 @@ namespace HardeningModule
             }
             // Return the list of profiles
             return profiles;
+        }
+
+        /// <summary>
+        /// This method sets the NetworkCategory of network connection profiles based on InterfaceIndex or InterfaceAlias.
+        /// </summary>
+        /// <param name="interfaceIndices">Array of InterfaceIndex values of the network connection profiles.</param>
+        /// <param name="interfaceAliases">Array of InterfaceAlias values of the network connection profiles.</param>
+        /// <param name="networkCategory">The new NetworkCategory to set.</param>
+        /// PS Example: [HardeningModule.NetConnectionProfiles]::Set((3, 22), $null, [HardeningModule.NetConnectionProfiles+NetworkCategory]::public)
+        /// PS Example: [HardeningModule.NetConnectionProfiles]::Set($null, ('Ethernet', 'Wi-Fi'), [HardeningModule.NetConnectionProfiles+NetworkCategory]::private)
+        /// <returns>True if successful, otherwise false.</returns>
+        public static bool Set(int[] interfaceIndices, string[] interfaceAliases, NetworkCategory networkCategory)
+        {
+            try
+            {
+                // Define the namespace and class
+                string namespaceName = @"root\StandardCimv2";
+                string className = "MSFT_NetConnectionProfile";
+                ManagementScope scope = new ManagementScope(namespaceName);
+                scope.Connect();
+
+                // Process interface indices
+                if (interfaceIndices != null)
+                {
+                    foreach (int index in interfaceIndices)
+                    {
+                        string queryString = $"SELECT * FROM {className} WHERE InterfaceIndex = {index}";
+                        UpdateNetworkCategory(scope, queryString, networkCategory);
+                    }
+                }
+
+                // Process interface aliases
+                if (interfaceAliases != null)
+                {
+                    foreach (string alias in interfaceAliases)
+                    {
+                        string queryString = $"SELECT * FROM {className} WHERE InterfaceAlias = '{alias}'";
+                        UpdateNetworkCategory(scope, queryString, networkCategory);
+                    }
+                }
+
+                return true;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"An error occurred: {e.Message}");
+                return false;
+            }
+        }
+
+        private static void UpdateNetworkCategory(ManagementScope scope, string queryString, NetworkCategory networkCategory)
+        {
+            ObjectQuery query = new ObjectQuery(queryString);
+            ManagementObjectSearcher searcher = new ManagementObjectSearcher(scope, query);
+            ManagementObjectCollection queryCollection = searcher.Get();
+
+            foreach (ManagementObject m in queryCollection)
+            {
+                m["NetworkCategory"] = (uint)networkCategory;
+                m.Put();
+            }
         }
 
         // The following enums are used to represent the properties of the MSFT_NetConnectionProfile class

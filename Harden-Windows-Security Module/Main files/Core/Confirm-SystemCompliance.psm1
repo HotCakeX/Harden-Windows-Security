@@ -992,108 +992,15 @@ function Confirm-SystemCompliance {
             Function Invoke-WindowsNetworking {
 
                 [System.Management.Automation.Job2]$script:WindowsNetworkingJob = Start-ThreadJob -ThrottleLimit 14 -ScriptBlock {
-
                     $ErrorActionPreference = 'Stop'
-
-                    $NestedObjectArray = New-Object -TypeName System.Collections.Generic.List[HardeningModule.IndividualResult]
-                    [System.String]$CatName = 'WindowsNetworking'
-
-                    # Process items in Registry resources.csv file with "Group Policy" origin and add them to the $NestedObjectArray array
-                    foreach ($Result in ([HardeningModule.CategoryProcessing]::ProcessCategory($CatName, 'Group Policy'))) {
-                        $NestedObjectArray.Add($Result)
-                    }
-
-                    # Check network location of all connections to see if they are public
-                    $Condition = [HardeningModule.NetConnectionProfiles]::Get() | ForEach-Object -Process { $_.NetworkCategory -eq '0' }
-                    [System.Boolean]$IndividualItemResult = -NOT ($Condition -contains $false) ? $True : $false
-
-                    $NestedObjectArray.Add([HardeningModule.IndividualResult]@{
-                            FriendlyName = 'Network Location of all connections set to Public'
-                            Compliant    = $IndividualItemResult
-                            Value        = $IndividualItemResult
-                            Name         = 'Network Location of all connections set to Public'
-                            Category     = $CatName
-                            Method       = 'Cmdlet'
-                        })
-
-                    # Process items in Registry resources.csv file with "Registry Keys" origin and add them to the $NestedObjectArray array
-                    foreach ($Result in ([HardeningModule.CategoryProcessing]::ProcessCategory($CatName, 'Registry Keys'))) {
-                        $NestedObjectArray.Add($Result)
-                    }
-
-                    $IndividualItemResult = [System.Boolean]$(([HardeningModule.GlobalVars]::SystemSecurityPoliciesIniObject).'Registry Values'['MACHINE\System\CurrentControlSet\Control\SecurePipeServers\Winreg\AllowedExactPaths\Machine'] -eq '7,') ? $True : $False
-                    $NestedObjectArray.Add([HardeningModule.IndividualResult]@{
-                            FriendlyName = 'Network access: Remotely accessible registry paths'
-                            Compliant    = $IndividualItemResult
-                            Value        = $IndividualItemResult
-                            Name         = 'Network access: Remotely accessible registry paths'
-                            Category     = $CatName
-                            Method       = 'Security Group Policy'
-                        })
-
-                    $IndividualItemResult = [System.Boolean]$(([HardeningModule.GlobalVars]::SystemSecurityPoliciesIniObject).'Registry Values'['MACHINE\System\CurrentControlSet\Control\SecurePipeServers\Winreg\AllowedPaths\Machine'] -eq '7,') ? $True : $False
-                    $NestedObjectArray.Add([HardeningModule.IndividualResult]@{
-                            FriendlyName = 'Network access: Remotely accessible registry paths and subpaths'
-                            Compliant    = $IndividualItemResult
-                            Value        = $IndividualItemResult
-                            Name         = 'Network access: Remotely accessible registry paths and subpaths'
-                            Category     = $CatName
-                            Method       = 'Security Group Policy'
-                        })
-
-                    [System.Void] ([HardeningModule.GlobalVars]::FinalMegaObject).TryAdd($CatName, $NestedObjectArray)
+                    [HardeningModule.ConfirmSystemComplianceMethods]::VerifyWindowsNetworking()
                 } -Name 'Invoke-WindowsNetworking' -StreamingHost $Host
             }
             Function Invoke-MiscellaneousConfigurations {
-
                 [System.Management.Automation.Job2]$script:MiscellaneousConfigurationsJob = Start-ThreadJob -ThrottleLimit 14 -ScriptBlock {
-
                     $ErrorActionPreference = 'Stop'
-
-                    $NestedObjectArray = New-Object -TypeName System.Collections.Generic.List[HardeningModule.IndividualResult]
-                    [System.String]$CatName = 'MiscellaneousConfigurations'
-
-                    # Process items in Registry resources.csv file with "Group Policy" origin and add them to the $NestedObjectArray array
-                    foreach ($Result in ([HardeningModule.CategoryProcessing]::ProcessCategory($CatName, 'Group Policy'))) {
-                        $NestedObjectArray.Add($Result)
-                    }
-
-                    # Verify an Audit policy is enabled - only supports systems with English-US language
-                    if ([HardeningModule.CultureInfoHelper]::Get().Name -eq 'en-US') {
-                        $IndividualItemResult = [System.Boolean](((auditpol /get /subcategory:"Other Logon/Logoff Events" /r | ConvertFrom-Csv).'Inclusion Setting' -eq 'Success and Failure') ? $True : $False)
-                        $NestedObjectArray.Add([HardeningModule.IndividualResult]@{
-                                FriendlyName = 'Audit policy for Other Logon/Logoff Events'
-                                Compliant    = $IndividualItemResult
-                                Value        = $IndividualItemResult
-                                Name         = 'Audit policy for Other Logon/Logoff Events'
-                                Category     = $CatName
-                                Method       = 'Cmdlet'
-                            })
-                    }
-                    else {
-                        ([HardeningModule.GlobalVars]::TotalNumberOfTrueCompliantValues)--
-                    }
-
-                    # Checking if all user accounts are part of the Hyper-V security Group
-                    # Get all the enabled user accounts that are not part of the Hyper-V Security group based on SID
-                    $UsersNotInHyperVGroup = [HardeningModule.LocalUserRetriever]::Get() | Where-Object -FilterScript { ($_.Enabled -eq 'True') -and ($_.GroupsSIDs -notcontains 'S-1-5-32-578') }
-
-                    $NestedObjectArray.Add([HardeningModule.IndividualResult]@{
-                            FriendlyName = 'All users are part of the Hyper-V Administrators group'
-                            Compliant    = $UsersNotInHyperVGroup -ne $null -and $UsersNotInHyperVGroup.count -gt 0 ? $false : $true
-                            Value        = $UsersNotInHyperVGroup -ne $null -and $UsersNotInHyperVGroup.count -gt 0 ? $false : $true
-                            Name         = 'All users are part of the Hyper-V Administrators group'
-                            Category     = $CatName
-                            Method       = 'Cmdlet'
-                        })
-
-                    # Process items in Registry resources.csv file with "Registry Keys" origin and add them to the $NestedObjectArray array
-                    foreach ($Result in ([HardeningModule.CategoryProcessing]::ProcessCategory($CatName, 'Registry Keys'))) {
-                        $NestedObjectArray.Add($Result)
-                    }
-
-                    [System.Void] ([HardeningModule.GlobalVars]::FinalMegaObject).TryAdd($CatName, $NestedObjectArray)
-                } -Name 'Invoke-MiscellaneousConfigurations' -StreamingHost $Host
+                    [HardeningModule.ConfirmSystemComplianceMethods]::VerifyMiscellaneousConfigurations()
+                } -Name 'Invoke-MiscellaneousConfigurations'
             }
             Function Invoke-WindowsUpdateConfigurations {
                 [System.Management.Automation.Job2]$script:WindowsUpdateConfigurationsJob = Start-ThreadJob -ThrottleLimit 14 -ScriptBlock {

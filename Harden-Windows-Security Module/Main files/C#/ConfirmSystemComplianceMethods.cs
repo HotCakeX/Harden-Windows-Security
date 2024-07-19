@@ -2,6 +2,9 @@ using System;
 using System.Collections.Generic;
 using Microsoft.Win32;
 using System.Linq;
+using System.Diagnostics;
+using System.IO;
+using System.Management;
 
 namespace HardeningModule
 {
@@ -430,6 +433,205 @@ namespace HardeningModule
                     }
                 }
             }
+
+            HardeningModule.GlobalVars.FinalMegaObject.TryAdd(CatName, nestedObjectArray);
+        }
+
+        /// <summary>
+        /// Performs all of the tasks for the Miscellaneous Configurations category during system compliance checking
+        /// </summary>
+        public static void VerifyMiscellaneousConfigurations()
+        {
+
+            // Create a new list to store the results
+            List<HardeningModule.IndividualResult> nestedObjectArray = new List<HardeningModule.IndividualResult>();
+
+            // Defining the category name
+            string CatName = "MiscellaneousConfigurations";
+
+            // Process items in Registry resources.csv file with "Group Policy" origin and add them to the $NestedObjectArray array
+            foreach (var Result in (HardeningModule.CategoryProcessing.ProcessCategory(CatName, "Group Policy")))
+            {
+                nestedObjectArray.Add(Result);
+            }
+
+            // Process items in Registry resources.csv file with "Registry Keys" origin and add them to the nestedObjectArray array
+            foreach (var Result in (HardeningModule.CategoryProcessing.ProcessCategory(CatName, "Registry Keys")))
+            {
+                nestedObjectArray.Add(Result);
+            }
+
+            // Checking if all user accounts are part of the Hyper-V security Group
+            // Get all the enabled user accounts that are not part of the Hyper-V Security group based on SID
+            var usersNotInHyperVGroup = HardeningModule.LocalUserRetriever.Get().Where(user => user.Enabled && !user.GroupsSIDs.Contains("S-1-5-32-578")).ToList();
+
+            string compliant = usersNotInHyperVGroup != null && usersNotInHyperVGroup.Count > 0 ? "False" : "True";
+
+            nestedObjectArray.Add(new HardeningModule.IndividualResult
+            {
+                FriendlyName = "All users are part of the Hyper-V Administrators group",
+                Compliant = compliant,
+                Value = compliant,
+                Name = "All users are part of the Hyper-V Administrators group",
+                Category = CatName,
+                Method = "Cmdlet"
+            });
+
+
+            /// PS Equivalent: (auditpol /get /subcategory:"Other Logon/Logoff Events" /r | ConvertFrom-Csv).'Inclusion Setting'
+            // Verify an Audit policy is enabled - only supports systems with English-US language
+            var cultureInfoHelper = HardeningModule.CultureInfoHelper.Get();
+            string currentCulture = cultureInfoHelper.Name;
+
+            if (currentCulture == "en-US")
+            {
+                // Start a new process to run the auditpol command
+                var process = new Process
+                {
+                    StartInfo = new ProcessStartInfo
+                    {
+                        FileName = "auditpol",
+                        Arguments = "/get /subcategory:\"Other Logon/Logoff Events\" /r",
+                        RedirectStandardOutput = true,
+                        UseShellExecute = false,
+                        CreateNoWindow = true
+                    }
+                };
+
+                process.Start();
+
+                // Read the output from the process
+                var output = process.StandardOutput.ReadToEnd();
+                process.WaitForExit();
+
+                // Check if the output is empty
+                if (string.IsNullOrWhiteSpace(output))
+                {
+                    Console.WriteLine("No output from the auditpol command.");
+                    return;
+                }
+
+                // Convert the CSV output to a dictionary
+                using (var reader = new StringReader(output))
+                {
+                    // Initialize the inclusion setting
+                    string inclusionSetting = null;
+
+                    // Read the first line to get the headers
+                    string headers = reader.ReadLine();
+
+                    // Check if the headers are not null
+                    if (headers != null)
+                    {
+                        // Get the index of the "Inclusion Setting" column
+                        var headerColumns = headers.Split(',');
+
+                        int inclusionSettingIndex = Array.IndexOf(headerColumns, "Inclusion Setting");
+
+                        // Read subsequent lines to get the values
+                        string values;
+                        while ((values = reader.ReadLine()) != null)
+                        {
+                            var valueColumns = values.Split(',');
+                            if (inclusionSettingIndex != -1 && inclusionSettingIndex < valueColumns.Length)
+                            {
+                                inclusionSetting = valueColumns[inclusionSettingIndex].Trim();
+                                break; // break because we are only interested in the first line of values
+                            }
+                        }
+                    }
+
+                    // Verify the inclusion setting
+                    bool individualItemResult = inclusionSetting == "Success and Failure";
+
+                    // Add the result to the nested object array
+                    nestedObjectArray.Add(new HardeningModule.IndividualResult
+                    {
+                        FriendlyName = "Audit policy for Other Logon/Logoff Events",
+                        Compliant = individualItemResult ? "True" : "False",
+                        Value = individualItemResult ? "Success and Failure" : inclusionSetting,
+                        Name = "Audit policy for Other Logon/Logoff Events",
+                        Category = CatName,
+                        Method = "Cmdlet"
+                    });
+                }
+            }
+            else
+            {
+                // Decrement the total number of true compliant values
+                HardeningModule.GlobalVars.TotalNumberOfTrueCompliantValues--;
+            }
+
+            HardeningModule.GlobalVars.FinalMegaObject.TryAdd(CatName, nestedObjectArray);
+        }
+
+
+        public static void VerifyWindowsNetworking()
+        {
+
+            // Create a new list to store the results
+            List<HardeningModule.IndividualResult> nestedObjectArray = new List<HardeningModule.IndividualResult>();
+
+            // Defining the category name
+            string CatName = "WindowsNetworking";
+
+            // Process items in Registry resources.csv file with "Group Policy" origin and add them to the $NestedObjectArray array
+            foreach (var Result in (HardeningModule.CategoryProcessing.ProcessCategory(CatName, "Group Policy")))
+            {
+                nestedObjectArray.Add(Result);
+            }
+
+            // Process items in Registry resources.csv file with "Registry Keys" origin and add them to the nestedObjectArray array
+            foreach (var Result in (HardeningModule.CategoryProcessing.ProcessCategory(CatName, "Registry Keys")))
+            {
+                nestedObjectArray.Add(Result);
+            }
+
+
+            // Check network location of all connections to see if they are public
+            bool individualItemResult = HardeningModule.NetConnectionProfiles.Get().All(profile =>
+            {
+                // Ensure the property exists and is not null before comparing
+                return profile["NetworkCategory"] != null && (uint)profile["NetworkCategory"] == 0;
+            });
+            nestedObjectArray.Add(new HardeningModule.IndividualResult
+            {
+                FriendlyName = "Network Location of all connections set to Public",
+                Compliant = individualItemResult ? "True" : "False",
+                Value = individualItemResult ? "True" : "False",
+                Name = "Network Location of all connections set to Public",
+                Category = CatName,
+                Method = "Cmdlet"
+            });
+
+            // Access the registry values dictionary
+            var registryValues = HardeningModule.GlobalVars.SystemSecurityPoliciesIniObject["Registry Values"] as Dictionary<string, string>;
+
+            // Check if registry value for 'AllowedExactPaths' is '7,'
+            individualItemResult = registryValues.TryGetValue(@"MACHINE\System\CurrentControlSet\Control\SecurePipeServers\Winreg\AllowedExactPaths\Machine", out var allowedExactPaths) &&
+                allowedExactPaths == "7,";
+            nestedObjectArray.Add(new HardeningModule.IndividualResult
+            {
+                FriendlyName = "Network access: Remotely accessible registry paths",
+                Compliant = individualItemResult ? "True" : "False",
+                Value = individualItemResult ? "7," : allowedExactPaths,
+                Name = "Network access: Remotely accessible registry paths",
+                Category = CatName,
+                Method = "Security Group Policy"
+            });
+
+            // Check if registry value for 'AllowedPaths' is '7,'
+            individualItemResult = registryValues.TryGetValue(@"MACHINE\System\CurrentControlSet\Control\SecurePipeServers\Winreg\AllowedPaths\Machine", out var allowedPaths) &&
+                allowedPaths == "7,";
+            nestedObjectArray.Add(new HardeningModule.IndividualResult
+            {
+                FriendlyName = "Network access: Remotely accessible registry paths and subpaths",
+                Compliant = individualItemResult ? "True" : "False",
+                Value = individualItemResult ? "7," : allowedPaths,
+                Name = "Network access: Remotely accessible registry paths and subpaths",
+                Category = CatName,
+                Method = "Security Group Policy"
+            });
 
             HardeningModule.GlobalVars.FinalMegaObject.TryAdd(CatName, nestedObjectArray);
         }

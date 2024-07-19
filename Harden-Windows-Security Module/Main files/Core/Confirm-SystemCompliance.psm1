@@ -172,6 +172,9 @@ function Confirm-SystemCompliance {
             # Storing the output of the ini file parsing function
             [HardeningModule.GlobalVars]::SystemSecurityPoliciesIniObject = [HardeningModule.IniFileConverter]::ConvertFromIniFile([HardeningModule.GlobalVars]::securityPolicyInfPath)
 
+            # Process the SecurityPoliciesVerification.csv and save the output to the global variable HardeningModule.GlobalVars.SecurityPolicyRecords
+            [HardeningModule.GlobalVars]::SecurityPolicyRecords = [HardeningModule.SecurityPolicyCsvProcessor]::ProcessSecurityPolicyCsvFile([System.IO.Path]::Combine([HardeningModule.GlobalVars]::path, 'Resources', 'SecurityPoliciesVerification.csv'))
+
             $CurrentMainStep++
             Write-Progress -Id 0 -Activity 'Verifying the security settings' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
 
@@ -639,158 +642,17 @@ function Confirm-SystemCompliance {
                 } -Name 'Invoke-TLSSecurity' -StreamingHost $Host
             }
             Function Invoke-LockScreen {
-
                 [System.Management.Automation.Job2]$script:LockScreenJob = Start-ThreadJob -ThrottleLimit 14 -ScriptBlock {
-
                     $ErrorActionPreference = 'Stop'
-
-                    $NestedObjectArray = New-Object -TypeName System.Collections.Generic.List[HardeningModule.IndividualResult]
-                    [System.String]$CatName = 'LockScreen'
-
-                    # Process items in Registry resources.csv file with "Group Policy" origin and add them to the $NestedObjectArray array
-                    foreach ($Result in ([HardeningModule.CategoryProcessing]::ProcessCategory($CatName, 'Group Policy'))) {
-                        $NestedObjectArray.Add($Result)
-                    }
-
-                    $IndividualItemResult = [System.Boolean]$(([HardeningModule.GlobalVars]::SystemSecurityPoliciesIniObject).'Registry Values'['MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\InactivityTimeoutSecs'] -eq '4,120') ? $True : $False
-                    $NestedObjectArray.Add([HardeningModule.IndividualResult]@{
-                            FriendlyName = 'Machine inactivity limit'
-                            Compliant    = $IndividualItemResult
-                            Value        = $IndividualItemResult
-                            Name         = 'Machine inactivity limit'
-                            Category     = $CatName
-                            Method       = 'Security Group Policy'
-                        })
-
-                    $IndividualItemResult = [System.Boolean]$(([HardeningModule.GlobalVars]::SystemSecurityPoliciesIniObject).'Registry Values'['MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\DisableCAD'] -eq '4,0') ? $True : $False
-                    $NestedObjectArray.Add([HardeningModule.IndividualResult]@{
-                            FriendlyName = 'Interactive logon: Do not require CTRL+ALT+DEL'
-                            Compliant    = $IndividualItemResult
-                            Value        = $IndividualItemResult
-                            Name         = 'Interactive logon: Do not require CTRL+ALT+DEL'
-                            Category     = $CatName
-                            Method       = 'Security Group Policy'
-                        })
-
-                    $IndividualItemResult = [System.Boolean]$(([HardeningModule.GlobalVars]::SystemSecurityPoliciesIniObject).'Registry Values'['MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\MaxDevicePasswordFailedAttempts'] -eq '4,5') ? $True : $False
-                    $NestedObjectArray.Add([HardeningModule.IndividualResult]@{
-                            FriendlyName = 'Interactive logon: Machine account lockout threshold'
-                            Compliant    = $IndividualItemResult
-                            Value        = $IndividualItemResult
-                            Name         = 'Interactive logon: Machine account lockout threshold'
-                            Category     = $CatName
-                            Method       = 'Security Group Policy'
-                        })
-
-                    $IndividualItemResult = [System.Boolean]$(([HardeningModule.GlobalVars]::SystemSecurityPoliciesIniObject).'Registry Values'['MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\DontDisplayLockedUserId'] -eq '4,4') ? $True : $False
-                    $NestedObjectArray.Add([HardeningModule.IndividualResult]@{
-                            FriendlyName = 'Interactive logon: Display user information when the session is locked'
-                            Compliant    = $IndividualItemResult
-                            Value        = $IndividualItemResult
-                            Name         = 'Interactive logon: Display user information when the session is locked'
-                            Category     = $CatName
-                            Method       = 'Security Group Policy'
-                        })
-
-                    $IndividualItemResult = [System.Boolean]$(([HardeningModule.GlobalVars]::SystemSecurityPoliciesIniObject).'Registry Values'['MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\DontDisplayUserName'] -eq '4,1') ? $True : $False
-                    $NestedObjectArray.Add([HardeningModule.IndividualResult]@{
-                            FriendlyName = "Interactive logon: Don't display username at sign-in"
-                            Compliant    = $IndividualItemResult
-                            Value        = $IndividualItemResult
-                            Name         = "Interactive logon: Don't display username at sign-in"
-                            Category     = $CatName
-                            Method       = 'Security Group Policy'
-                        })
-
-                    $IndividualItemResult = [System.Boolean]$(([HardeningModule.GlobalVars]::SystemSecurityPoliciesIniObject).'System Access'['LockoutBadCount'] -eq '5') ? $True : $False
-                    $NestedObjectArray.Add([HardeningModule.IndividualResult]@{
-                            FriendlyName = 'Account lockout threshold'
-                            Compliant    = $IndividualItemResult
-                            Value        = $IndividualItemResult
-                            Name         = 'Account lockout threshold'
-                            Category     = $CatName
-                            Method       = 'Security Group Policy'
-                        })
-
-                    $IndividualItemResult = [System.Boolean]$(([HardeningModule.GlobalVars]::SystemSecurityPoliciesIniObject).'System Access'['LockoutDuration'] -eq '1440') ? $True : $False
-                    $NestedObjectArray.Add([HardeningModule.IndividualResult]@{
-                            FriendlyName = 'Account lockout duration'
-                            Compliant    = $IndividualItemResult
-                            Value        = $IndividualItemResult
-                            Name         = 'Account lockout duration'
-                            Category     = $CatName
-                            Method       = 'Security Group Policy'
-                        })
-
-                    $IndividualItemResult = [System.Boolean]$(([HardeningModule.GlobalVars]::SystemSecurityPoliciesIniObject).'System Access'['ResetLockoutCount'] -eq '1440') ? $True : $False
-                    $NestedObjectArray.Add([HardeningModule.IndividualResult]@{
-                            FriendlyName = 'Reset account lockout counter after'
-                            Compliant    = $IndividualItemResult
-                            Value        = $IndividualItemResult
-                            Name         = 'Reset account lockout counter after'
-                            Category     = $CatName
-                            Method       = 'Security Group Policy'
-                        })
-
-                    $IndividualItemResult = [System.Boolean]$(([HardeningModule.GlobalVars]::SystemSecurityPoliciesIniObject).'Registry Values'['MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\DontDisplayLastUserName'] -eq '4,1') ? $True : $False
-                    $NestedObjectArray.Add([HardeningModule.IndividualResult]@{
-                            FriendlyName = "Interactive logon: Don't display last signed-in"
-                            Compliant    = $IndividualItemResult
-                            Value        = $IndividualItemResult
-                            Name         = "Interactive logon: Don't display last signed-in"
-                            Category     = $CatName
-                            Method       = 'Security Group Policy'
-                        })
-
-                    [System.Void] ([HardeningModule.GlobalVars]::FinalMegaObject).TryAdd($CatName, $NestedObjectArray)
-                } -Name 'Invoke-LockScreen' -StreamingHost $Host
+                    [HardeningModule.ConfirmSystemComplianceMethods]::VerifyLockScreen()
+                } -Name 'Invoke-LockScreen'
             }
             Function Invoke-UserAccountControl {
 
                 [System.Management.Automation.Job2]$script:UserAccountControlJob = Start-ThreadJob -ThrottleLimit 14 -ScriptBlock {
-
                     $ErrorActionPreference = 'Stop'
-
-                    $NestedObjectArray = New-Object -TypeName System.Collections.Generic.List[HardeningModule.IndividualResult]
-                    [System.String]$CatName = 'UserAccountControl'
-
-                    # Process items in Registry resources.csv file with "Group Policy" origin and add them to the $NestedObjectArray array
-                    foreach ($Result in ([HardeningModule.CategoryProcessing]::ProcessCategory($CatName, 'Group Policy'))) {
-                        $NestedObjectArray.Add($Result)
-                    }
-
-                    $IndividualItemResult = [System.Boolean]$(([HardeningModule.GlobalVars]::SystemSecurityPoliciesIniObject).'Registry Values'['MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\ConsentPromptBehaviorAdmin'] -eq '4,2') ? $True : $False
-                    $NestedObjectArray.Add([HardeningModule.IndividualResult]@{
-                            FriendlyName = 'UAC: Behavior of the elevation prompt for administrators in Admin Approval Mode'
-                            Compliant    = $IndividualItemResult
-                            Value        = $IndividualItemResult
-                            Name         = 'UAC: Behavior of the elevation prompt for administrators in Admin Approval Mode'
-                            Category     = $CatName
-                            Method       = 'Security Group Policy'
-                        })
-
-                    $IndividualItemResult = [System.Boolean]$(([HardeningModule.GlobalVars]::SystemSecurityPoliciesIniObject).'Registry Values'['MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\ConsentPromptBehaviorUser'] -eq '4,0') ? $True : $False
-                    $NestedObjectArray.Add([HardeningModule.IndividualResult]@{
-                            FriendlyName = 'UAC: Automatically deny elevation requests on Standard accounts'
-                            Compliant    = $IndividualItemResult
-                            Value        = $IndividualItemResult
-                            Name         = 'UAC: Automatically deny elevation requests on Standard accounts'
-                            Category     = $CatName
-                            Method       = 'Security Group Policy'
-                        })
-
-                    $IndividualItemResult = [System.Boolean]($(([HardeningModule.GlobalVars]::SystemSecurityPoliciesIniObject).'Registry Values'['MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\ValidateAdminCodeSignatures'] -eq '4,1') ? $True : $False)
-                    $NestedObjectArray.Add([HardeningModule.IndividualResult]@{
-                            FriendlyName = 'UAC: Only elevate executables that are signed and validated'
-                            Compliant    = $IndividualItemResult
-                            Value        = $IndividualItemResult
-                            Name         = 'UAC: Only elevate executables that are signed and validated'
-                            Category     = $CatName
-                            Method       = 'Security Group Policy'
-                        })
-
-                    [System.Void] ([HardeningModule.GlobalVars]::FinalMegaObject).TryAdd($CatName, $NestedObjectArray)
-                } -Name 'Invoke-UserAccountControl' -StreamingHost $Host
+                    [HardeningModule.ConfirmSystemComplianceMethods]::VerifyUserAccountControl()
+                } -Name 'Invoke-UserAccountControl'
             }
             Function Invoke-DeviceGuard {
                 [System.Management.Automation.Job2]$script:DeviceGuardJob = Start-ThreadJob -ThrottleLimit 14 -ScriptBlock {
@@ -990,11 +852,10 @@ function Confirm-SystemCompliance {
                 } -Name 'Invoke-OptionalWindowsFeatures' -StreamingHost $Host
             }
             Function Invoke-WindowsNetworking {
-
                 [System.Management.Automation.Job2]$script:WindowsNetworkingJob = Start-ThreadJob -ThrottleLimit 14 -ScriptBlock {
                     $ErrorActionPreference = 'Stop'
                     [HardeningModule.ConfirmSystemComplianceMethods]::VerifyWindowsNetworking()
-                } -Name 'Invoke-WindowsNetworking' -StreamingHost $Host
+                } -Name 'Invoke-WindowsNetworking'
             }
             Function Invoke-MiscellaneousConfigurations {
                 [System.Management.Automation.Job2]$script:MiscellaneousConfigurationsJob = Start-ThreadJob -ThrottleLimit 14 -ScriptBlock {

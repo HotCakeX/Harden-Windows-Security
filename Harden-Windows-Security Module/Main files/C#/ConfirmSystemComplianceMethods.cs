@@ -566,6 +566,9 @@ namespace HardeningModule
         }
 
 
+        /// <summary>
+        /// Performs all of the tasks for the Windows Networking category during system compliance checking
+        /// </summary>
         public static void VerifyWindowsNetworking()
         {
 
@@ -587,6 +590,11 @@ namespace HardeningModule
                 nestedObjectArray.Add(Result);
             }
 
+            // Process the Security Policies for the current category that reside in the "SecurityPoliciesVerification.csv" file
+            foreach (var Result in (HardeningModule.SecurityPolicyChecker.CheckPolicyCompliance(CatName)))
+            {
+                nestedObjectArray.Add(Result);
+            }
 
             // Check network location of all connections to see if they are public
             bool individualItemResult = HardeningModule.NetConnectionProfiles.Get().All(profile =>
@@ -604,34 +612,60 @@ namespace HardeningModule
                 Method = "Cmdlet"
             });
 
-            // Access the registry values dictionary
-            var registryValues = HardeningModule.GlobalVars.SystemSecurityPoliciesIniObject["Registry Values"] as Dictionary<string, string>;
+            HardeningModule.GlobalVars.FinalMegaObject.TryAdd(CatName, nestedObjectArray);
+        }
 
-            // Check if registry value for 'AllowedExactPaths' is '7,'
-            individualItemResult = registryValues.TryGetValue(@"MACHINE\System\CurrentControlSet\Control\SecurePipeServers\Winreg\AllowedExactPaths\Machine", out var allowedExactPaths) &&
-                allowedExactPaths == "7,";
-            nestedObjectArray.Add(new HardeningModule.IndividualResult
-            {
-                FriendlyName = "Network access: Remotely accessible registry paths",
-                Compliant = individualItemResult ? "True" : "False",
-                Value = individualItemResult ? "7," : allowedExactPaths,
-                Name = "Network access: Remotely accessible registry paths",
-                Category = CatName,
-                Method = "Security Group Policy"
-            });
 
-            // Check if registry value for 'AllowedPaths' is '7,'
-            individualItemResult = registryValues.TryGetValue(@"MACHINE\System\CurrentControlSet\Control\SecurePipeServers\Winreg\AllowedPaths\Machine", out var allowedPaths) &&
-                allowedPaths == "7,";
-            nestedObjectArray.Add(new HardeningModule.IndividualResult
+        /// <summary>
+        /// Performs all of the tasks for the Lock Screen category during system compliance checking
+        /// </summary>
+        public static void VerifyLockScreen()
+        {
+            // Create a new list to store the results
+            List<HardeningModule.IndividualResult> nestedObjectArray = new List<HardeningModule.IndividualResult>();
+
+            // Defining the category name
+            string CatName = "LockScreen";
+
+            // Process items in Registry resources.csv file with "Group Policy" origin and add them to the $NestedObjectArray array
+            foreach (var Result in (HardeningModule.CategoryProcessing.ProcessCategory(CatName, "Group Policy")))
             {
-                FriendlyName = "Network access: Remotely accessible registry paths and subpaths",
-                Compliant = individualItemResult ? "True" : "False",
-                Value = individualItemResult ? "7," : allowedPaths,
-                Name = "Network access: Remotely accessible registry paths and subpaths",
-                Category = CatName,
-                Method = "Security Group Policy"
-            });
+                nestedObjectArray.Add(Result);
+            }
+
+            // Process the Security Policies for the current category that reside in the "SecurityPoliciesVerification.csv" file
+            foreach (var Result in (HardeningModule.SecurityPolicyChecker.CheckPolicyCompliance(CatName)))
+            {
+                nestedObjectArray.Add(Result);
+            }
+
+            HardeningModule.GlobalVars.FinalMegaObject.TryAdd(CatName, nestedObjectArray);
+        }
+
+
+        /// <summary>
+        /// Performs all of the tasks for the User Account Control category during system compliance checking
+        /// </summary>
+        public static void VerifyUserAccountControl()
+        {
+
+            // Create a new list to store the results
+            List<HardeningModule.IndividualResult> nestedObjectArray = new List<HardeningModule.IndividualResult>();
+
+            // Defining the category name
+            string CatName = "UserAccountControl";
+
+            // Process items in Registry resources.csv file with "Group Policy" origin and add them to the $NestedObjectArray array
+            foreach (var Result in (HardeningModule.CategoryProcessing.ProcessCategory(CatName, "Group Policy")))
+            {
+                nestedObjectArray.Add(Result);
+            }
+
+            // Process the Security Policies for the current category that reside in the "SecurityPoliciesVerification.csv" file
+            foreach (var Result in (HardeningModule.SecurityPolicyChecker.CheckPolicyCompliance(CatName)))
+            {
+                nestedObjectArray.Add(Result);
+            }
 
             HardeningModule.GlobalVars.FinalMegaObject.TryAdd(CatName, nestedObjectArray);
         }

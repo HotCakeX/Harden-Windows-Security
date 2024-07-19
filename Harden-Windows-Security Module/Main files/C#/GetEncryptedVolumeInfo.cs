@@ -382,7 +382,7 @@ namespace HardeningModule
             else
             {
                 // Return null instead of "Unknown" and log the issue
-                HardeningModule.VerboseLogger.Write($"Unknown key '{key}' encountered.");
+                // HardeningModule.VerboseLogger.Write($"Unknown key '{key}' encountered.");
                 return null;
             }
         }
@@ -398,7 +398,7 @@ namespace HardeningModule
             else
             {
                 // Return null instead of "Unknown" and log the issue
-                HardeningModule.VerboseLogger.Write($"Unknown key '{key}' encountered.");
+                // HardeningModule.VerboseLogger.Write($"Unknown key '{key}' encountered.");
                 return null;
             }
         }

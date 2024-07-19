@@ -96,5 +96,8 @@ namespace HardeningModule
 
         // Storing the output of the ini file parsing function
         public static Dictionary<string, Dictionary<string, string>> SystemSecurityPoliciesIniObject;
+
+        // a variable to store the security policies CSV file parse output
+        public static List<HardeningModule.SecurityPolicyRecord> SecurityPolicyRecords;
     }
 }

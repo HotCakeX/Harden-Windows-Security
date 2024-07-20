@@ -827,5 +827,44 @@ namespace HardeningModule
 
             HardeningModule.GlobalVars.FinalMegaObject.TryAdd(CatName, nestedObjectArray);
         }
+
+        /// <summary>
+        /// Performs all of the tasks for the TLS Security category during system compliance checking
+        /// </summary>
+        public static void VerifyTLSSecurity()
+        {
+
+            // Create a new list to store the results
+            List<HardeningModule.IndividualResult> nestedObjectArray = new List<HardeningModule.IndividualResult>();
+
+            // Defining the category name
+            string CatName = "TLSSecurity";
+
+            // Process items in Registry resources.csv file with "Group Policy" origin and add them to the $NestedObjectArray array
+            foreach (var Result in (HardeningModule.CategoryProcessing.ProcessCategory(CatName, "Group Policy")))
+            {
+                nestedObjectArray.Add(Result);
+            }
+
+            // Process items in Registry resources.csv file with "Registry Keys" origin and add them to the nestedObjectArray array
+            foreach (var Result in (HardeningModule.CategoryProcessing.ProcessCategory(CatName, "Registry Keys")))
+            {
+                nestedObjectArray.Add(Result);
+            }
+
+            HardeningModule.EccCurveComparisonResult ECCCurvesComparisonResults = HardeningModule.EccCurveComparer.GetEccCurveComparison();
+
+            nestedObjectArray.Add(new HardeningModule.IndividualResult
+            {
+                FriendlyName = "ECC Curves and their positions",
+                Compliant = ECCCurvesComparisonResults.AreCurvesCompliant ? "True" : "False",
+                Value = string.Join(", ", ECCCurvesComparisonResults.CurrentEccCurves),
+                Name = "ECC Curves and their positions",
+                Category = CatName,
+                Method = "Cmdlet"
+            });
+
+            HardeningModule.GlobalVars.FinalMegaObject.TryAdd(CatName, nestedObjectArray);
+        }
     }
 }

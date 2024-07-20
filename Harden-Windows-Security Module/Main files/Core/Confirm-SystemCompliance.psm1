@@ -604,37 +604,10 @@ function Confirm-SystemCompliance {
                 } -Name 'Invoke-BitLockerSettings'
             }
             Function Invoke-TLSSecurity {
-
                 [System.Management.Automation.Job2]$script:TLSSecurityJob = Start-ThreadJob -ThrottleLimit 14 -ScriptBlock {
-
-                    $ErrorActionPreference = 'Stop'
-
-                    $NestedObjectArray = New-Object -TypeName System.Collections.Generic.List[HardeningModule.IndividualResult]
-                    [System.String]$CatName = 'TLSSecurity'
-
-                    # Process items in Registry resources.csv file with "Group Policy" origin and add them to the $NestedObjectArray array
-                    foreach ($Result in ([HardeningModule.CategoryProcessing]::ProcessCategory($CatName, 'Group Policy'))) {
-                        $NestedObjectArray.Add($Result)
-                    }
-
-                    $result02 = [HardeningModule.EccCurveComparer]::GetEccCurveComparison()
-                   
-                    $NestedObjectArray.Add([HardeningModule.IndividualResult]@{
-                            FriendlyName = 'ECC Curves and their positions'
-                            Compliant    = $result02.AreCurvesCompliant
-                            Value        = ($result02.CurrentEccCurves -join ', ')
-                            Name         = 'ECC Curves and their positions'
-                            Category     = $CatName
-                            Method       = 'Cmdlet'
-                        })
-
-                    # Process items in Registry resources.csv file with "Registry Keys" origin and add them to the $NestedObjectArray array
-                    foreach ($Result in ([HardeningModule.CategoryProcessing]::ProcessCategory($CatName, 'Registry Keys'))) {
-                        $NestedObjectArray.Add($Result)
-                    }
-
-                    [System.Void] ([HardeningModule.GlobalVars]::FinalMegaObject).TryAdd($CatName, $NestedObjectArray)
-                } -Name 'Invoke-TLSSecurity' -StreamingHost $Host
+                    $ErrorActionPreference = 'Stop'                  
+                    [HardeningModule.ConfirmSystemComplianceMethods]::VerifyTLSSecurity()
+                } -Name 'Invoke-TLSSecurity'
             }
             Function Invoke-LockScreen {
                 [System.Management.Automation.Job2]$script:LockScreenJob = Start-ThreadJob -ThrottleLimit 14 -ScriptBlock {
@@ -643,7 +616,6 @@ function Confirm-SystemCompliance {
                 } -Name 'Invoke-LockScreen'
             }
             Function Invoke-UserAccountControl {
-
                 [System.Management.Automation.Job2]$script:UserAccountControlJob = Start-ThreadJob -ThrottleLimit 14 -ScriptBlock {
                     $ErrorActionPreference = 'Stop'
                     [HardeningModule.ConfirmSystemComplianceMethods]::VerifyUserAccountControl()
@@ -656,9 +628,7 @@ function Confirm-SystemCompliance {
                 } -Name 'Invoke-DeviceGuard'
             }
             Function Invoke-WindowsFirewall {
-
                 [System.Management.Automation.Job2]$script:WindowsFirewallJob = Start-ThreadJob -ThrottleLimit 14 -ScriptBlock {
-
                     $ErrorActionPreference = 'Stop'
 
                     $NestedObjectArray = New-Object -TypeName System.Collections.Generic.List[HardeningModule.IndividualResult]

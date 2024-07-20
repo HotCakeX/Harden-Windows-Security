@@ -100,6 +100,10 @@ namespace HardeningModule
         }
 
         // This method gracefully parses the OS build version strings to decimals
+        // and performs this in a culture-independent way
+        // in languages such as Swedish where the decimal separator is , instead of .
+        // this will work properly
+        // in PowerShell we can see the separator by running: (Get-Culture).NumberFormat.NumberDecimalSeparator
         private static bool TryParseBuildVersion(string buildVersion, out decimal result)
         {
             // Use CultureInfo.InvariantCulture for parsing

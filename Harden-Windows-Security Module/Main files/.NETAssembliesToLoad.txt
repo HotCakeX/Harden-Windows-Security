@@ -1,5 +1,6 @@
 System
 System.IO
+System.Xml
 System.Net
 System.Linq
 System.Console
@@ -19,6 +20,7 @@ System.Security.Claims
 System.Threading.Tasks
 System.Linq.Expressions
 System.Threading.Thread
+System.Xml.ReaderWriter
 System.DirectoryServices
 Microsoft.Win32.Registry
 System.Security.Principal

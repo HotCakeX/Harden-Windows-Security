@@ -99,5 +99,8 @@ namespace HardeningModule
 
         // a variable to store the security policies CSV file parse output
         public static List<HardeningModule.SecurityPolicyRecord> SecurityPolicyRecords;
+
+        // the explicit path to save the CurrentlyAppliedMitigations.xml file
+        public static string CurrentlyAppliedMitigations = Path.Combine(HardeningModule.GlobalVars.WorkingDir, "CurrentlyAppliedMitigations.xml");
     }
 }

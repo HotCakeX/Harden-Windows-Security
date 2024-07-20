@@ -180,7 +180,6 @@ function Confirm-SystemCompliance {
 
             #Region Main-Functions
             Function Invoke-MicrosoftDefender {
-
                 [System.Management.Automation.Job2]$script:MicrosoftDefenderJob = Start-ThreadJob -ThrottleLimit 14 -ScriptBlock {
 
                     Try {
@@ -420,75 +419,8 @@ function Confirm-SystemCompliance {
                         #Region Microsoft-Defender-Exploit-Guard-Category
 
                         # Get the current system's exploit mitigation policy XML file using the Get-ProcessMitigation cmdlet
-                        [System.String]$RandomGUID = (New-Guid).Guid.ToString()
-                        Get-ProcessMitigation -RegistryConfigFilePath ".\CurrentlyAppliedMitigations-$RandomGUID.xml"
-
-                        # Load the XML file as an XML object
-                        [System.Xml.XmlDocument]$SystemMitigationsXML = Get-Content -Path ".\CurrentlyAppliedMitigations-$RandomGUID.xml" -Force
-
-                        # Delete the XML file after loading it
-                        Remove-Item -Path ".\CurrentlyAppliedMitigations-$RandomGUID.xml" -Force
-
-                        #Region System-Mitigations-Processing
-                        # A hashtable to store the output of the current system's exploit mitigation policy XML file exported by the Get-ProcessMitigation cmdlet
-                        [System.Collections.Hashtable]$ProcessMitigationsOnTheSystem = @{}
-
-                        # Loop through each AppConfig element in the XML object
-                        foreach ($App in $SystemMitigationsXML.MitigationPolicy.AppConfig) {
-                            # Get the executable name of the app
-                            [System.String]$Name = $App.Executable
-
-                            # Create an empty array to store the mitigations
-                            $Mitigations = New-Object -TypeName 'System.Collections.Generic.HashSet[System.String]'
-
-                            # Loop through each child element of the app element
-                            foreach ($Child in $App.ChildNodes ) {
-                                # Get the name of the mitigation
-                                [System.String]$Mitigation = $Child.Name
-
-                                # Loop through each attribute of the child element
-                                foreach ($Attribute in $Child.Attributes) {
-                                    # Get the name and value of the attribute
-                                    [System.String]$AttributeName = $Attribute.Name
-                                    [System.String]$AttributeValue = $Attribute.Value
-
-                                    # If the attribute value is true, add it to the array
-                                    # We don't include the mitigations that are disabled/set to false
-                                    # For example, some poorly designed git apps are incompatible with mandatory ASLR
-                                    # And they pollute the output of the Get-ProcessMitigation cmdlet with items such as "<ASLR ForceRelocateImages="false" RequireInfo="false" />"
-                                    if ($AttributeValue -eq 'true') {
-                                        # If the attribute name is Enable, use the mitigation name instead, because we only need the names of the mitigations that are enabled for comparison with the CSV file.
-                                        # Some attributes such as "<StrictHandle Enable="true" />" don't have a name so we add the mitigation's name to the array instead, which is "StrictHandle" in this case.
-                                        if ($AttributeName -eq 'Enable') {
-                                            [System.Void]$Mitigations.Add($Mitigation)
-                                        }
-                                        else {
-                                            [System.Void]$Mitigations.Add($AttributeName)
-                                        }
-                                    }
-                                }
-                            }
-
-                            # Make sure the array isn't empty which filters out apps with no mitigations or mitigations that are all disabled/set to false
-                            if ($Mitigations.Count -ne 0) {
-                                # Create a hashtable entry with the name and mitigations properties
-                                $ProcessMitigationsOnTheSystem[$Name] = $Mitigations
-                            }
-                        }
-
-                        # Create a new empty hashtable which replaces "ControlFlowGuard" with "CFG" since the shortened name is used in the CSV file and required by the the Set-ProcessMitigation cmdlet
-                        [System.Collections.Hashtable]$RevisedProcessMitigationsOnTheSystem = @{}
-
-                        # Loop over the keys and values of the original hashtable
-                        foreach ($Key in $ProcessMitigationsOnTheSystem.Keys) {
-                            # Get the value array for the current key
-                            [System.String[]]$Value = $ProcessMitigationsOnTheSystem[$Key]
-                            # Replace "ControlFlowGuard" with "CFG" in the value array
-                            [System.String[]]$Value = $Value -replace 'ControlFlowGuard', 'CFG'
-                            # Add the modified key-value pair to the new hashtable
-                            [System.Void]$RevisedProcessMitigationsOnTheSystem.add($Key, $Value)
-                        }
-                        #Endregion System-Mitigations-Processing
+                        Get-ProcessMitigation -RegistryConfigFilePath ([HardeningModule.GlobalVars]::CurrentlyAppliedMitigations)
+                        [System.Collections.Hashtable]$RevisedProcessMitigationsOnTheSystem = [HardeningModule.MitigationPolicyProcessor]::ProcessMitigationPolicies([HardeningModule.GlobalVars]::CurrentlyAppliedMitigations)
 
                         #Region Harden-Windows-Security-Module-CSV-Processing
                         # Import the CSV file as an object
@@ -527,6 +459,8 @@ function Confirm-SystemCompliance {
 
                                     # If the values are different, it means the process has different mitigations applied to it than the ones in the CSV file
                                     Write-Verbose -Message "Mitigations for $ProcessName_Target were found but are not compliant"
+                                    Write-Verbose -Message "Applied Mitigations: $ProcessMitigations_Applied"
+                                    Write-Verbose -Message "Target Mitigations: $ProcessMitigations_Target"
 
                                     # Increment the total number of the verifiable compliant values for each process that has a mitigation applied to it in the CSV file
                                     ([HardeningModule.GlobalVars]::TotalNumberOfTrueCompliantValues)++
@@ -579,7 +513,6 @@ function Confirm-SystemCompliance {
                         #Endregion Microsoft-Defender-Exploit-Guard-Category
 
                         [System.Void] ([HardeningModule.GlobalVars]::FinalMegaObject).TryAdd($CatName, $NestedObjectArray)
-
                     }
                     catch {
                         Write-Verbose -Message $_ -Verbose
@@ -605,7 +538,7 @@ function Confirm-SystemCompliance {
             }
             Function Invoke-TLSSecurity {
                 [System.Management.Automation.Job2]$script:TLSSecurityJob = Start-ThreadJob -ThrottleLimit 14 -ScriptBlock {
-                    $ErrorActionPreference = 'Stop'                  
+                    $ErrorActionPreference = 'Stop'
                     [HardeningModule.ConfirmSystemComplianceMethods]::VerifyTLSSecurity()
                 } -Name 'Invoke-TLSSecurity'
             }
@@ -630,29 +563,8 @@ function Confirm-SystemCompliance {
             Function Invoke-WindowsFirewall {
                 [System.Management.Automation.Job2]$script:WindowsFirewallJob = Start-ThreadJob -ThrottleLimit 14 -ScriptBlock {
                     $ErrorActionPreference = 'Stop'
-
-                    $NestedObjectArray = New-Object -TypeName System.Collections.Generic.List[HardeningModule.IndividualResult]
-                    [System.String]$CatName = 'WindowsFirewall'
-
-                    # Process items in Registry resources.csv file with "Group Policy" origin and add them to the $NestedObjectArray array
-                    foreach ($Result in ([HardeningModule.CategoryProcessing]::ProcessCategory($CatName, 'Group Policy'))) {
-                        $NestedObjectArray.Add($Result)
-                    }
-
-                    # Verify the 3 built-in Firewall rules (for all 3 profiles) for Multicast DNS (mDNS) UDP-in are disabled
-                    $IndividualItemResult = [System.Boolean]((Get-NetFirewallRule | Where-Object -FilterScript { ($_.RuleGroup -eq '@%SystemRoot%\system32\firewallapi.dll,-37302') -and ($_.Direction -eq 'inbound') }).Enabled -inotcontains 'True')
-
-                    $NestedObjectArray.Add([HardeningModule.IndividualResult]@{
-                            FriendlyName = 'mDNS UDP-In Firewall Rules are disabled'
-                            Compliant    = $IndividualItemResult
-                            Value        = $IndividualItemResult
-                            Name         = 'mDNS UDP-In Firewall Rules are disabled'
-                            Category     = $CatName
-                            Method       = 'Cmdlet'
-                        })
-
-                    [System.Void] ([HardeningModule.GlobalVars]::FinalMegaObject).TryAdd($CatName, $NestedObjectArray)
-                } -Name 'Invoke-WindowsFirewall' -StreamingHost $Host
+                    [HardeningModule.ConfirmSystemComplianceMethods]::VerifyWindowsFirewall()
+                } -Name 'Invoke-WindowsFirewall'
             }
             Function Invoke-OptionalWindowsFeatures {
                 [System.Management.Automation.Job2]$script:OptionalWindowsFeaturesJob = Start-ThreadJob -ThrottleLimit 14 -ScriptBlock {

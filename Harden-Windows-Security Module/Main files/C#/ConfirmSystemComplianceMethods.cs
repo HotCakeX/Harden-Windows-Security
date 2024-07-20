@@ -866,5 +866,55 @@ namespace HardeningModule
 
             HardeningModule.GlobalVars.FinalMegaObject.TryAdd(CatName, nestedObjectArray);
         }
+
+
+        /// <summary>
+        /// Performs all of the tasks for the Windows Firewall category during system compliance checking
+        /// </summary>
+        public static void VerifyWindowsFirewall()
+        {
+
+            // Create a new list to store the results
+            List<HardeningModule.IndividualResult> nestedObjectArray = new List<HardeningModule.IndividualResult>();
+
+            // Defining the category name
+            string CatName = "WindowsFirewall";
+
+            // Process items in Registry resources.csv file with "Group Policy" origin and add them to the $NestedObjectArray array
+            foreach (var Result in (HardeningModule.CategoryProcessing.ProcessCategory(CatName, "Group Policy")))
+            {
+                nestedObjectArray.Add(Result);
+            }
+
+            // Use the GetFirewallRules method and check the Enabled status of each rule
+            List<ManagementObject> firewallRuleGroupResultEnabledArray = HardeningModule.FirewallHelper.GetFirewallRules("@%SystemRoot%\\system32\\firewallapi.dll,-37302", 1);
+
+            // Check if all the rules are disabled
+            bool firewallRuleGroupResultEnabledStatus = true;
+
+            // Loop through each rule and check if it's enabled
+            foreach (var rule in firewallRuleGroupResultEnabledArray)
+            {
+                if (rule["Enabled"]?.ToString() == "1")
+                {
+                    firewallRuleGroupResultEnabledStatus = false;
+                    break;
+                }
+            }
+
+            // Verify the 3 built-in Firewall rules (for all 3 profiles) for Multicast DNS (mDNS) UDP-in are disabled
+            nestedObjectArray.Add(new HardeningModule.IndividualResult
+            {
+                FriendlyName = "mDNS UDP-In Firewall Rules are disabled",
+                Compliant = firewallRuleGroupResultEnabledStatus ? "True" : "False",
+                Value = firewallRuleGroupResultEnabledStatus ? "True" : "False",
+                Name = "mDNS UDP-In Firewall Rules are disabled",
+                Category = CatName,
+                Method = "Cmdlet"
+            });
+
+            HardeningModule.GlobalVars.FinalMegaObject.TryAdd(CatName, nestedObjectArray);
+        }
     }
 }
+

@@ -669,5 +669,163 @@ namespace HardeningModule
 
             HardeningModule.GlobalVars.FinalMegaObject.TryAdd(CatName, nestedObjectArray);
         }
+
+
+        /// <summary>
+        /// Performs all of the tasks for the Optional Windows Features category during system compliance checking
+        /// </summary>
+        public static void VerifyOptionalWindowsFeatures()
+        {
+            // Create a new list to store the results
+            List<HardeningModule.IndividualResult> nestedObjectArray = new List<HardeningModule.IndividualResult>();
+
+            // Defining the category name
+            string CatName = "OptionalWindowsFeatures";
+
+            // Get the results of all optional features
+            HardeningModule.WindowsFeatureChecker.FeatureStatus FeaturesCheckResults = HardeningModule.WindowsFeatureChecker.CheckWindowsFeatures();
+
+            nestedObjectArray.Add(new HardeningModule.IndividualResult
+            {
+                FriendlyName = "PowerShell v2 is disabled",
+                Compliant = FeaturesCheckResults.PowerShellv2 == "Disabled" ? "True" : "False",
+                Value = FeaturesCheckResults.PowerShellv2,
+                Name = "PowerShell v2 is disabled",
+                Category = CatName,
+                Method = "Optional Windows Features"
+            });
+
+            nestedObjectArray.Add(new HardeningModule.IndividualResult
+            {
+                FriendlyName = "PowerShell v2 Engine is disabled",
+                Compliant = FeaturesCheckResults.PowerShellv2Engine == "Disabled" ? "True" : "False",
+                Value = FeaturesCheckResults.PowerShellv2Engine,
+                Name = "PowerShell v2 Engine is disabled",
+                Category = CatName,
+                Method = "Optional Windows Features"
+            });
+
+            nestedObjectArray.Add(new HardeningModule.IndividualResult
+            {
+                FriendlyName = "Work Folders client is disabled",
+                Compliant = FeaturesCheckResults.WorkFoldersClient == "Disabled" ? "True" : "False",
+                Value = FeaturesCheckResults.WorkFoldersClient,
+                Name = "Work Folders client is disabled",
+                Category = CatName,
+                Method = "Optional Windows Features"
+            });
+
+            nestedObjectArray.Add(new HardeningModule.IndividualResult
+            {
+                FriendlyName = "Internet Printing Client is disabled",
+                Compliant = FeaturesCheckResults.InternetPrintingClient == "Disabled" ? "True" : "False",
+                Value = FeaturesCheckResults.InternetPrintingClient,
+                Name = "Internet Printing Client is disabled",
+                Category = CatName,
+                Method = "Optional Windows Features"
+            });
+
+            nestedObjectArray.Add(new HardeningModule.IndividualResult
+            {
+                FriendlyName = "Windows Media Player (legacy) is disabled",
+                Compliant = FeaturesCheckResults.WindowsMediaPlayer == "Not Present" ? "True" : "False",
+                Value = FeaturesCheckResults.WindowsMediaPlayer,
+                Name = "Windows Media Player (legacy) is disabled",
+                Category = CatName,
+                Method = "Optional Windows Features"
+            });
+
+            nestedObjectArray.Add(new HardeningModule.IndividualResult
+            {
+                FriendlyName = "Microsoft Defender Application Guard is not present",
+                Compliant = FeaturesCheckResults.MDAG == "Disabled" || FeaturesCheckResults.MDAG == "Unknown" ? "True" : "False",
+                Value = FeaturesCheckResults.MDAG,
+                Name = "Microsoft Defender Application Guard is not present",
+                Category = CatName,
+                Method = "Optional Windows Features"
+            });
+
+            nestedObjectArray.Add(new HardeningModule.IndividualResult
+            {
+                FriendlyName = "Windows Sandbox is enabled",
+                Compliant = FeaturesCheckResults.WindowsSandbox == "Enabled" ? "True" : "False",
+                Value = FeaturesCheckResults.WindowsSandbox,
+                Name = "Windows Sandbox is enabled",
+                Category = CatName,
+                Method = "Optional Windows Features"
+            });
+
+            nestedObjectArray.Add(new HardeningModule.IndividualResult
+            {
+                FriendlyName = "Hyper-V is enabled",
+                Compliant = FeaturesCheckResults.HyperV == "Enabled" ? "True" : "False",
+                Value = FeaturesCheckResults.HyperV,
+                Name = "Hyper-V is enabled",
+                Category = CatName,
+                Method = "Optional Windows Features"
+            });
+
+            nestedObjectArray.Add(new HardeningModule.IndividualResult
+            {
+                FriendlyName = "WMIC is not present",
+                Compliant = FeaturesCheckResults.WMIC == "Not Present" ? "True" : "False",
+                Value = FeaturesCheckResults.WMIC,
+                Name = "WMIC is not present",
+                Category = CatName,
+                Method = "Optional Windows Features"
+            });
+
+            nestedObjectArray.Add(new HardeningModule.IndividualResult
+            {
+                FriendlyName = "Internet Explorer mode functionality for Edge is not present",
+                Compliant = FeaturesCheckResults.IEMode == "Not Present" ? "True" : "False",
+                Value = FeaturesCheckResults.IEMode,
+                Name = "Internet Explorer mode functionality for Edge is not present",
+                Category = CatName,
+                Method = "Optional Windows Features"
+            });
+
+            nestedObjectArray.Add(new HardeningModule.IndividualResult
+            {
+                FriendlyName = "Legacy Notepad is not present",
+                Compliant = FeaturesCheckResults.LegacyNotepad == "Not Present" ? "True" : "False",
+                Value = FeaturesCheckResults.LegacyNotepad,
+                Name = "Legacy Notepad is not present",
+                Category = CatName,
+                Method = "Optional Windows Features"
+            });
+
+            nestedObjectArray.Add(new HardeningModule.IndividualResult
+            {
+                FriendlyName = "WordPad is not present",
+                Compliant = FeaturesCheckResults.LegacyWordPad == "Not Present" || FeaturesCheckResults.LegacyWordPad == "Unknown" ? "True" : "False",
+                Value = FeaturesCheckResults.LegacyWordPad,
+                Name = "WordPad is not present",
+                Category = CatName,
+                Method = "Optional Windows Features"
+            });
+
+            nestedObjectArray.Add(new HardeningModule.IndividualResult
+            {
+                FriendlyName = "PowerShell ISE is not present",
+                Compliant = FeaturesCheckResults.PowerShellISE == "Not Present" ? "True" : "False",
+                Value = FeaturesCheckResults.PowerShellISE,
+                Name = "PowerShell ISE is not present",
+                Category = CatName,
+                Method = "Optional Windows Features"
+            });
+
+            nestedObjectArray.Add(new HardeningModule.IndividualResult
+            {
+                FriendlyName = "Steps Recorder is not present",
+                Compliant = FeaturesCheckResults.StepsRecorder == "Not Present" ? "True" : "False",
+                Value = FeaturesCheckResults.StepsRecorder,
+                Name = "Steps Recorder is not present",
+                Category = CatName,
+                Method = "Optional Windows Features"
+            });
+
+            HardeningModule.GlobalVars.FinalMegaObject.TryAdd(CatName, nestedObjectArray);
+        }
     }
 }

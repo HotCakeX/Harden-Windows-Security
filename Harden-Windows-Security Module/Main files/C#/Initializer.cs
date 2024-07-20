@@ -3,6 +3,7 @@ using System.IO;
 using Microsoft.Win32;
 using System.Management.Automation;
 using System.Collections.Generic;
+using System.Globalization;
 
 namespace HardeningModule
 {
@@ -65,8 +66,11 @@ namespace HardeningModule
             HardeningModule.GlobalVars.HardeningCategorieX = HardeningModule.ProtectionCategoriex.GetValidValues();
 
             // Convert the FullOSBuild and RequiredBuild strings to decimals so that we can compare them
-            decimal fullOSBuild = Convert.ToDecimal(GlobalVars.FullOSBuild);
-            decimal requiredBuild = Convert.ToDecimal(GlobalVars.Requiredbuild);
+            if (!TryParseBuildVersion(GlobalVars.FullOSBuild, out decimal fullOSBuild) ||
+                !TryParseBuildVersion(GlobalVars.Requiredbuild, out decimal requiredBuild))
+            {
+                throw new FormatException("The OS build version strings are not in a correct format.");
+            }
 
             // Make sure the current OS build is equal or greater than the required build number
             if (!(fullOSBuild >= requiredBuild))
@@ -94,6 +98,20 @@ namespace HardeningModule
 
             // Create an empty dictionary to store the System Security Policies from the security_policy.inf file
             HardeningModule.GlobalVars.SystemSecurityPoliciesIniObject = new Dictionary<string, Dictionary<string, string>>();
+        }
+
+        // This method gracefully parses the OS build version strings to decimals
+        private static bool TryParseBuildVersion(string buildVersion, out decimal result)
+        {
+            result = 0;
+            // Define the format provider
+            var formatInfo = new NumberFormatInfo
+            {
+                NumberDecimalSeparator = "."
+            };
+
+            // Try to parse the build version
+            return Decimal.TryParse(buildVersion, NumberStyles.Number, formatInfo, out result);
         }
     }
 }

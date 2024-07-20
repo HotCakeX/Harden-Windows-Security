@@ -617,17 +617,12 @@ function Confirm-SystemCompliance {
                         $NestedObjectArray.Add($Result)
                     }
 
-                    # ECC Curves
-                    [System.String[]]$CurrentECCCurves = Get-TlsEccCurve
-                    [System.String[]]$CompliantECCCurves = ('nistP521', 'curve25519', 'NistP384', 'NistP256')
-                    # Make sure both arrays are completely identical in terms of members and their exact position
-                    # If this variable is empty that means both arrays are completely identical
-                    $IndividualItemResult = Compare-Object -ReferenceObject $CurrentECCCurves -DifferenceObject $CompliantECCCurves -SyncWindow 0
-
+                    $result02 = [HardeningModule.EccCurveComparer]::GetEccCurveComparison()
+                   
                     $NestedObjectArray.Add([HardeningModule.IndividualResult]@{
                             FriendlyName = 'ECC Curves and their positions'
-                            Compliant    = [System.Boolean]($IndividualItemResult ? $false : $True)
-                            Value        = ($CurrentECCCurves -join ',') # Join the array elements into a string to display them properly in the output CSV file
+                            Compliant    = $result02.AreCurvesCompliant
+                            Value        = ($result02.CurrentEccCurves -join ', ')
                             Name         = 'ECC Curves and their positions'
                             Category     = $CatName
                             Method       = 'Cmdlet'

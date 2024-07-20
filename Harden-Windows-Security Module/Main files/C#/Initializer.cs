@@ -66,16 +66,15 @@ namespace HardeningModule
             HardeningModule.GlobalVars.HardeningCategorieX = HardeningModule.ProtectionCategoriex.GetValidValues();
 
             // Convert the FullOSBuild and RequiredBuild strings to decimals so that we can compare them
-            if (!TryParseBuildVersion(GlobalVars.FullOSBuild, out decimal fullOSBuild) ||
-                !TryParseBuildVersion(GlobalVars.Requiredbuild, out decimal requiredBuild))
+            if (!TryParseBuildVersion(HardeningModule.GlobalVars.FullOSBuild, out decimal fullOSBuild))
             {
                 throw new FormatException("The OS build version strings are not in a correct format.");
             }
 
             // Make sure the current OS build is equal or greater than the required build number
-            if (!(fullOSBuild >= requiredBuild))
+            if (!(fullOSBuild >= HardeningModule.GlobalVars.Requiredbuild))
             {
-                throw new PlatformNotSupportedException($"You are not using the latest build of the Windows OS. A minimum build of {requiredBuild} is required but your OS build is {fullOSBuild}\nPlease go to Windows Update to install the updates and then try again.");
+                throw new PlatformNotSupportedException($"You are not using the latest build of the Windows OS. A minimum build of {HardeningModule.GlobalVars.Requiredbuild} is required but your OS build is {fullOSBuild}\nPlease go to Windows Update to install the updates and then try again.");
             }
 
             // Resets the current main step to 0 which is used for Write-Progress when using in GUI mode
@@ -103,15 +102,8 @@ namespace HardeningModule
         // This method gracefully parses the OS build version strings to decimals
         private static bool TryParseBuildVersion(string buildVersion, out decimal result)
         {
-            result = 0;
-            // Define the format provider
-            var formatInfo = new NumberFormatInfo
-            {
-                NumberDecimalSeparator = "."
-            };
-
-            // Try to parse the build version
-            return Decimal.TryParse(buildVersion, NumberStyles.Number, formatInfo, out result);
+            // Use CultureInfo.InvariantCulture for parsing
+            return Decimal.TryParse(buildVersion, NumberStyles.Number, CultureInfo.InvariantCulture, out result);
         }
     }
 }

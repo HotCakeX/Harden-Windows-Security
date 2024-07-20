@@ -9,10 +9,10 @@ namespace HardeningModule
     public static class GlobalVars
     {
         // Minimum required OS build number
-        public const string Requiredbuild = "22621.3155";
+        public const decimal Requiredbuild = 22621.3155M;
 
         // Current OS build version
-        public static readonly int OSBuildNumber = Environment.OSVersion.Version.Build;
+        public static readonly decimal OSBuildNumber = Environment.OSVersion.Version.Build;
 
         // Update Build Revision (UBR) number
         public static int UBR;

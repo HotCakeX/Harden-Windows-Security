@@ -142,8 +142,8 @@ namespace HardeningModule
             // Process each filtered item
             foreach (var item in filteredItems)
             {
-                // Initialize valueMatches to "false"
-                string valueMatches = "false";
+                // Initialize valueMatches to "False"
+                string valueMatches = "False";
                 string regValueStr = null;
 
                 // If the type defined in the CSV is HKLM
@@ -182,8 +182,8 @@ namespace HardeningModule
                             // Check if the registry value matches the expected value
                             if (regValue != null && CompareRegistryValues(type: item.Type, regValue: regValue, expectedValue: parsedValue))
                             {
-                                // Set valueMatches to "true" if it matches
-                                valueMatches = "true";
+                                // Set valueMatches to "True" if it matches
+                                valueMatches = "True";
                             }
                         }
                     }
@@ -220,8 +220,8 @@ namespace HardeningModule
                             // Check if the registry value matches the expected value
                             if (regValue != null && CompareRegistryValues(type: item.Type, regValue: regValue, expectedValue: parsedValue))
                             {
-                                // Set valueMatches to "true" if it matches
-                                valueMatches = "true";
+                                // Set valueMatches to "True" if it matches
+                                valueMatches = "True";
                             }
                         }
                     }

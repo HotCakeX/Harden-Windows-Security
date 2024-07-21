@@ -14,7 +14,7 @@ namespace HardeningModule
             {
             "MicrosoftDefender", // 55 - 3x(N/A) + Number of Process Mitigations which are dynamically increased
             "AttackSurfaceReductionRules", // 20
-            "BitLockerSettings", // 22 + Number of Non-OS drives which are dynamically increased
+            "BitLockerSettings", // 21 + conditional item for Hibernation check (only available on non-VMs) + Number of Non-OS drives which are dynamically increased
             "TLSSecurity", // 21
             "LockScreen", // 14
             "UserAccountControl", // 4

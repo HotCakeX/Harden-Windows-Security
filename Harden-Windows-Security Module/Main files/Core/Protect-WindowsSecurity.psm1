@@ -336,10 +336,9 @@ Function Protect-WindowsSecurity {
     }
 
     begin {
-        [HardeningModule.Initializer]::Initialize()
-
-        # Import all of the required functions
-        . "$([HardeningModule.GlobalVars]::Path)\Shared\HardeningFunctions.ps1"
+        [HardeningModule.Initializer]::Initialize($VerbosePreference)
+        # Detecting if Verbose switch is used
+        [System.Boolean]$Verbose = $PSBoundParameters.Verbose.IsPresent ? $true : $false
 
         # Since Dynamic parameters are only available in the parameter dictionary, we have to access them using $PSBoundParameters or assign them manually to another variable in the function's scope
         New-Variable -Name 'SecBaselines_NoOverrides' -Value $($PSBoundParameters['SecBaselines_NoOverrides']) -Force
@@ -360,11 +359,8 @@ Function Protect-WindowsSecurity {
         New-Variable -Name 'DangerousScriptHostsBlocking' -Value $($PSBoundParameters['DangerousScriptHostsBlocking']) -Force
         New-Variable -Name 'ClipboardSync' -Value $($PSBoundParameters['ClipboardSync']) -Force
 
-        # Detecting if Verbose switch is used
-        [System.Boolean]$Verbose = $PSBoundParameters.Verbose.IsPresent ? $true : $false
-
         # This assignment is used by the GUI RunSpace
-        ([HardeningModule.GlobalVars]::Offline) = $PSBoundParameters['Offline'] ? $true : $falses
+        ([HardeningModule.GlobalVars]::Offline) = $PSBoundParameters['Offline'] ? $true : $false
 
         Write-Verbose -Message 'Importing the required sub-modules'
         Import-Module -FullyQualifiedName "$([HardeningModule.GlobalVars]::Path)\Shared\Update-self.psm1" -Force -Verbose:$false
@@ -390,19 +386,7 @@ Function Protect-WindowsSecurity {
         $Host.UI.RawUI.WindowTitle = '❤️‍🔥Harden Windows Security❤️‍🔥'
 
         if ([HardeningModule.UserPrivCheck]::IsAdmin()) {
-
-            Write-Verbose -Message 'Backing up the current Controlled Folder Access allowed apps list in order to restore them at the end'
-            # doing this so that when we Add and then Remove PowerShell executables in Controlled folder access exclusions
-            # no user customization will be affected
-            [System.IO.FileInfo[]]$CFAAllowedAppsBackup = ([HardeningModule.GlobalVars]::MDAVPreferencesCurrent).ControlledFolderAccessAllowedApplications
-
-            Write-Verbose -Message 'Temporarily adding the currently running PowerShell executables to the Controlled Folder Access allowed apps list'
-            # so that the module can run without interruption. This change is reverted at the end.
-            # Adding powercfg.exe so Controlled Folder Access won't complain about it in BitLocker category when setting hibernate file size to full
-            foreach ($FilePath in (((Get-ChildItem -Path "$PSHOME\*.exe" -File).FullName) + "$env:SystemDrive\Windows\System32\powercfg.exe")) {
-                Add-MpPreference -ControlledFolderAccessAllowedApplications $FilePath
-            }
-
+            [HardeningModule.ControlledFolderAccessHandler]::Start()
             [HardeningModule.Miscellaneous]::RequirementsCheck()
         }
         try {
@@ -446,9 +430,6 @@ Execution Policy: $CurrentExecutionPolicy
                 # Initialize a flag to determine whether to write logs or not, set to false by default
                 $SyncHash.ShouldWriteLogs = $false
 
-                # Adding the parent host to the synchronized hashtable
-                $SyncHash.ParentHost = $Host
-
                 [System.Xml.XmlDocument]$XAML = Get-Content -Raw -Path ("$([HardeningModule.GlobalVars]::Path)\XAML\Main.xml")
 
                 $Reader = New-Object -TypeName 'System.Xml.XmlNodeReader' -ArgumentList $Xaml
@@ -458,6 +439,9 @@ Execution Policy: $CurrentExecutionPolicy
                 [System.Windows.DependencyObject]$ParentGrid = $SyncHash.Window.FindName('ParentGrid')
                 [System.Windows.DependencyObject]$MainTabControlToggle = $ParentGrid.FindName('MainTabControlToggle')
                 [System.Windows.DependencyObject]$MainContentControl = $MainTabControlToggle.FindName('MainContentControl')
+
+                # Set the icon using an absolute path
+                $SyncHash.Window.Icon = "$([HardeningModule.GlobalVars]::path)\Resources\Media\ProgramIcon.ico"
 
                 # Due to using ToggleButton as Tab Control element, this is now considered the parent of all inner elements
                 [System.Windows.Style]$MainContentControlStyle = $MainContentControl.FindName('MainContentControlStyle')
@@ -860,7 +844,7 @@ Execution Policy: $CurrentExecutionPolicy
 
                         try {
                             $UserSID = [System.Security.Principal.WindowsIdentity]::GetCurrent().User.Value
-                            $User = Get-LocalUser | Where-Object -FilterScript { $_.SID -eq $UserSID }
+                            $User = [HardeningModule.LocalUserRetriever]::Get() | Where-Object -FilterScript { $_.SID -eq $UserSID }
                             [System.String]$NameToDisplay = (-NOT [System.String]::IsNullOrWhitespace($User.FullName)) ? $User.FullName : $User.Name
                         }
                         catch {}
@@ -919,7 +903,7 @@ Execution Policy: $CurrentExecutionPolicy
                         $SyncHash['GlobalVars']['SelectedSubCategories'] = $SyncHash['GUI'].SubCategories.Items | Where-Object -FilterScript { $_.Content.IsChecked } | ForEach-Object -Process { $_.Content.Name }
 
                         if ($DebugPreference -eq 'Continue') {
-                            $SyncHash.ParentHost.UI.WriteDebugLine("$((Get-Job).Count) number of ThreadJobs Before")
+                            [HardeningModule.GlobalVars]::Host.UI.WriteDebugLine("$((Get-Job).Count) number of ThreadJobs Before")
                         }
 
                         $null = Start-ThreadJob -ScriptBlock {
@@ -1048,7 +1032,7 @@ Execution Policy: $CurrentExecutionPolicy
                         } -ArgumentList $SyncHash -ThrottleLimit 1
 
                         if ($DebugPreference -eq 'Continue') {
-                            $SyncHash.ParentHost.UI.WriteDebugLine("$((Get-Job).Count) number of ThreadJobs After")
+                            [HardeningModule.GlobalVars]::Host.UI.WriteDebugLine("$((Get-Job).Count) number of ThreadJobs After")
                         }
                     })
 
@@ -1102,6 +1086,9 @@ End time: $(Get-Date)
 
             # Return from the Process block if GUI was used and then closed, triggers the finally block to run for proper clean-up
             if ($PSBoundParameters.GUI.IsPresent) { Return }
+
+            # Import all of the required functions
+            . "$([HardeningModule.GlobalVars]::Path)\Shared\HardeningFunctions.ps1"
 
             # Start the transcript if the -Log switch is used
             if ($Log) {
@@ -1162,20 +1149,7 @@ End time: $(Get-Date)
         }
         finally {
             Write-Verbose -Message 'Finally block is running'
-
-            if ([HardeningModule.UserPrivCheck]::IsAdmin()) {
-                Write-Verbose -Message 'Reverting the PowerShell executables and powercfg.exe allow listings in Controlled folder access'
-                foreach ($FilePath in (((Get-ChildItem -Path "$PSHOME\*.exe" -File).FullName) + "$env:SystemDrive\Windows\System32\powercfg.exe")) {
-                    Remove-MpPreference -ControlledFolderAccessAllowedApplications $FilePath
-                }
-
-                # restoring the original Controlled folder access allow list - if user already had added PowerShell executables to the list
-                # they will be restored as well, so user customization will remain intact
-                if ($null -ne $CFAAllowedAppsBackup) {
-                    Set-MpPreference -ControlledFolderAccessAllowedApplications $CFAAllowedAppsBackup
-                }
-            }
-
+            [HardeningModule.ControlledFolderAccessHandler]::reset()
             [HardeningModule.Miscellaneous]::CleanUp()
 
             Write-Verbose -Message 'Disabling progress bars'

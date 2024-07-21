@@ -1,4 +1,9 @@
-<Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" x:Name="Window" WindowStartupLocation="CenterScreen" SizeToContent="WidthAndHeight" MinHeight="700" MinWidth="700" FontFamily="Trebuchet MS" FontSize="16" Background="#FFFFC0CB">
+<Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+ xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+  x:Name="Window"
+   WindowStartupLocation="CenterScreen" SizeToContent="WidthAndHeight"
+    MinHeight="700" MinWidth="700" FontFamily="Trebuchet MS" FontSize="16"
+     Background="#FFFFC0CB" Title="Harden Windows Security">
     <Window.Resources>
         <!--Begin global scrollbars styles-->
         <Style x:Key="ElderScrolls" TargetType="{x:Type Thumb}">

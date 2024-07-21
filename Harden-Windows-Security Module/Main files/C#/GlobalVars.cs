@@ -1,13 +1,14 @@
 using System;
 using System.IO;
 using System.Collections.Generic;
-using System.Globalization;
+using System.Management.Automation.Host;
+using System.Collections.Concurrent;
 
 namespace HardeningModule
 {
     public static class GlobalVars
     {
-        // Minimum required OS build number, M is the suffix for decimals
+        // Minimum required OS build number
         public const decimal Requiredbuild = 22621.3155M;
 
         // Current OS build version
@@ -74,5 +75,39 @@ namespace HardeningModule
 
         // the explicit path to save the security_policy.inf file
         public static string securityPolicyInfPath = Path.Combine(HardeningModule.GlobalVars.WorkingDir, "security_policy.inf");
+
+        // The value of the automatic variable $PSHOME stored during module import in the module root .psm1 file
+        public static string PSHOME;
+
+        // Backup of the current Controlled Folder Access List
+        // Used to be restored at the end of the operation
+        public static string[] CFABackup;
+
+        // The value of the automatic variable $HOST from the PowerShell session
+        // Stored from the module root .psm1 file
+        public static PSHost Host;
+
+        // The value of the VerbosePreference variable of the PowerShell session
+        // stored at the beginning of each cmdlet in the begin block through the Initialize() method
+        public static string VerbosePreference;
+
+        // An object to store the final results of Confirm-SystemCompliance cmdlet
+        public static System.Collections.Concurrent.ConcurrentDictionary<System.String, System.Collections.Generic.List<HardeningModule.IndividualResult>> FinalMegaObject;
+
+        // Storing the output of the ini file parsing function
+        public static Dictionary<string, Dictionary<string, string>> SystemSecurityPoliciesIniObject;
+
+        // a variable to store the security policies CSV file parse output
+        public static List<HardeningModule.SecurityPolicyRecord> SecurityPolicyRecords;
+
+        // the explicit path to save the CurrentlyAppliedMitigations.xml file
+        public static string CurrentlyAppliedMitigations = Path.Combine(HardeningModule.GlobalVars.WorkingDir, "CurrentlyAppliedMitigations.xml");
+
+        // To store the output of the CSV parsing of CimInstanceProcessing.csv
+        // public static List<HardeningModule.CimInstanceCSVRecord> CimInstanceCSVProcessedOutput;
+
+        // $CSVPath = [System.IO.Path]::Combine([HardeningModule.GlobalVars]::path, 'Resources', 'CimInstanceProcessing.csv')
+        // [HardeningModule.GlobalVars]::CimInstanceCSVProcessedOutput = [HardeningModule.CimInstanceCSVParser]::ReadCsv($CSVPath)
+
     }
 }

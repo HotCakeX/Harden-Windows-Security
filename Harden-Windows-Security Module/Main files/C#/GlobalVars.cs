@@ -7,7 +7,7 @@ namespace HardeningModule
 {
     public static class GlobalVars
     {
-        // Minimum required OS build number
+        // Minimum required OS build number, M is the suffix for decimals
         public const decimal Requiredbuild = 22621.3155M;
 
         // Current OS build version

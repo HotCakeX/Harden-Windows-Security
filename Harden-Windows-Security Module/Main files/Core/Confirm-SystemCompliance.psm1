@@ -63,7 +63,7 @@ function Confirm-SystemCompliance {
         }
 
         # The total number of the steps for the parent/main progress bar to render
-        [System.UInt16]$TotalMainSteps = 2
+        [System.UInt16]$TotalMainSteps = 1
         [System.UInt16]$CurrentMainStep = 0
 
         #Region Colors
@@ -158,162 +158,15 @@ function Confirm-SystemCompliance {
         #Endregion Colors
 
         $PSStyle.Progress.Style = "$($PSStyle.Foreground.FromRGB(221, 160, 221))$($PSStyle.Blink)"
-   
-   
-   
     }
 
     process {
 
         try {
             $CurrentMainStep++
-            Write-Progress -Id 0 -Activity 'Gathering Security Policy Information' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
-
-            # Get the security group policies
-            $null = &"$env:SystemDrive\Windows\System32\Secedit.exe" /export /cfg ([HardeningModule.GlobalVars]::securityPolicyInfPath)
-
-            # Storing the output of the ini file parsing function
-            [HardeningModule.GlobalVars]::SystemSecurityPoliciesIniObject = [HardeningModule.IniFileConverter]::ConvertFromIniFile([HardeningModule.GlobalVars]::securityPolicyInfPath)
-
-            # Process the SecurityPoliciesVerification.csv and save the output to the global variable HardeningModule.GlobalVars.SecurityPolicyRecords
-            [HardeningModule.GlobalVars]::SecurityPolicyRecords = [HardeningModule.SecurityPolicyCsvProcessor]::ProcessSecurityPolicyCsvFile([System.IO.Path]::Combine([HardeningModule.GlobalVars]::path, 'Resources', 'SecurityPoliciesVerification.csv'))
-
-            $CurrentMainStep++
             Write-Progress -Id 0 -Activity 'Verifying the security settings' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
 
-            #Region Main-Functions
-            Function Invoke-MicrosoftDefender {
-                [System.Management.Automation.Job2]$script:MicrosoftDefenderJob = Start-ThreadJob -ThrottleLimit 14 -ScriptBlock {
-                    $ErrorActionPreference = 'Stop'
-                    [HardeningModule.ConfirmSystemComplianceMethods]::VerifyMicrosoftDefender()
-                } -Name 'Invoke-MicrosoftDefender'
-            }
-            Function Invoke-AttackSurfaceReductionRules {
-                [System.Management.Automation.Job2]$script:AttackSurfaceReductionRulesJob = Start-ThreadJob -ThrottleLimit 14 -ScriptBlock {
-                    $ErrorActionPreference = 'Stop'
-                    [HardeningModule.ConfirmSystemComplianceMethods]::VerifyAttackSurfaceReductionRules()
-                } -Name 'Invoke-AttackSurfaceReductionRules'
-            }
-            Function Invoke-BitLockerSettings {
-                [System.Management.Automation.Job2]$script:BitLockerSettingsJob = Start-ThreadJob -ThrottleLimit 14 -ScriptBlock {
-                    $ErrorActionPreference = 'Stop'
-                    [HardeningModule.ConfirmSystemComplianceMethods]::VerifyBitLockerSettings()
-                } -Name 'Invoke-BitLockerSettings'
-            }
-            Function Invoke-TLSSecurity {
-                [System.Management.Automation.Job2]$script:TLSSecurityJob = Start-ThreadJob -ThrottleLimit 14 -ScriptBlock {
-                    $ErrorActionPreference = 'Stop'
-                    [HardeningModule.ConfirmSystemComplianceMethods]::VerifyTLSSecurity()
-                } -Name 'Invoke-TLSSecurity'
-            }
-            Function Invoke-LockScreen {
-                [System.Management.Automation.Job2]$script:LockScreenJob = Start-ThreadJob -ThrottleLimit 14 -ScriptBlock {
-                    $ErrorActionPreference = 'Stop'
-                    [HardeningModule.ConfirmSystemComplianceMethods]::VerifyLockScreen()
-                } -Name 'Invoke-LockScreen'
-            }
-            Function Invoke-UserAccountControl {
-                [System.Management.Automation.Job2]$script:UserAccountControlJob = Start-ThreadJob -ThrottleLimit 14 -ScriptBlock {
-                    $ErrorActionPreference = 'Stop'
-                    [HardeningModule.ConfirmSystemComplianceMethods]::VerifyUserAccountControl()
-                } -Name 'Invoke-UserAccountControl'
-            }
-            Function Invoke-DeviceGuard {
-                [System.Management.Automation.Job2]$script:DeviceGuardJob = Start-ThreadJob -ThrottleLimit 14 -ScriptBlock {
-                    $ErrorActionPreference = 'Stop'
-                    [HardeningModule.ConfirmSystemComplianceMethods]::VerifyDeviceGuard()
-                } -Name 'Invoke-DeviceGuard'
-            }
-            Function Invoke-WindowsFirewall {
-                [System.Management.Automation.Job2]$script:WindowsFirewallJob = Start-ThreadJob -ThrottleLimit 14 -ScriptBlock {
-                    $ErrorActionPreference = 'Stop'
-                    [HardeningModule.ConfirmSystemComplianceMethods]::VerifyWindowsFirewall()
-                } -Name 'Invoke-WindowsFirewall'
-            }
-            Function Invoke-OptionalWindowsFeatures {
-                [System.Management.Automation.Job2]$script:OptionalWindowsFeaturesJob = Start-ThreadJob -ThrottleLimit 14 -ScriptBlock {
-                    $ErrorActionPreference = 'Stop'
-                    [HardeningModule.ConfirmSystemComplianceMethods]::VerifyOptionalWindowsFeatures()
-                } -Name 'Invoke-OptionalWindowsFeatures'
-            }
-            Function Invoke-WindowsNetworking {
-                [System.Management.Automation.Job2]$script:WindowsNetworkingJob = Start-ThreadJob -ThrottleLimit 14 -ScriptBlock {
-                    $ErrorActionPreference = 'Stop'
-                    [HardeningModule.ConfirmSystemComplianceMethods]::VerifyWindowsNetworking()
-                } -Name 'Invoke-WindowsNetworking'
-            }
-            Function Invoke-MiscellaneousConfigurations {
-                [System.Management.Automation.Job2]$script:MiscellaneousConfigurationsJob = Start-ThreadJob -ThrottleLimit 14 -ScriptBlock {
-                    $ErrorActionPreference = 'Stop'
-                    [HardeningModule.ConfirmSystemComplianceMethods]::VerifyMiscellaneousConfigurations()
-                } -Name 'Invoke-MiscellaneousConfigurations'
-            }
-            Function Invoke-WindowsUpdateConfigurations {
-                [System.Management.Automation.Job2]$script:WindowsUpdateConfigurationsJob = Start-ThreadJob -ThrottleLimit 14 -ScriptBlock {
-                    $ErrorActionPreference = 'Stop'
-                    [HardeningModule.ConfirmSystemComplianceMethods]::VerifyWindowsUpdateConfigurations()
-                } -Name 'Invoke-WindowsUpdateConfigurations'
-            }
-            Function Invoke-EdgeBrowserConfigurations {
-                [System.Management.Automation.Job2]$script:EdgeBrowserConfigurationsJob = Start-ThreadJob -ThrottleLimit 14 -ScriptBlock {
-                    $ErrorActionPreference = 'Stop'
-                    [HardeningModule.ConfirmSystemComplianceMethods]::VerifyEdgeBrowserConfigurations()
-                } -Name 'Invoke-EdgeBrowserConfigurations'
-            }
-            Function Invoke-NonAdminCommands {
-                [System.Management.Automation.Job2]$script:NonAdminCommandsJob = Start-ThreadJob -ThrottleLimit 14 -ScriptBlock {
-                    $ErrorActionPreference = 'Stop'
-                    [HardeningModule.ConfirmSystemComplianceMethods]::VerifyNonAdminCommands()
-                } -Name 'Invoke-NonAdminCommands'
-            }
-            #Endregion Main-Functions
-
-            Switch ($Categories) {
-                'MicrosoftDefender' { Invoke-MicrosoftDefender }
-                'AttackSurfaceReductionRules' { Invoke-AttackSurfaceReductionRules }
-                'BitLockerSettings' { Invoke-BitLockerSettings }
-                'TLSSecurity' { Invoke-TLSSecurity }
-                'LockScreen' { Invoke-LockScreen }
-                'UserAccountControl' { Invoke-UserAccountControl }
-                'DeviceGuard' { Invoke-DeviceGuard }
-                'WindowsFirewall' { Invoke-WindowsFirewall }
-                'OptionalWindowsFeatures' { Invoke-OptionalWindowsFeatures }
-                'WindowsNetworking' { Invoke-WindowsNetworking }
-                'MiscellaneousConfigurations' { Invoke-MiscellaneousConfigurations }
-                'WindowsUpdateConfigurations' { Invoke-WindowsUpdateConfigurations }
-                'EdgeBrowserConfigurations' { Invoke-EdgeBrowserConfigurations }
-                'NonAdminCommands' { Invoke-NonAdminCommands }
-                Default {
-                    # Get the values of the ValidateSet attribute of the Categories parameter of the main function
-                    foreach ($Item in [HardeningModule.ComplianceCategoriex]::new().GetValidValues()) {
-                        # Run all of the categories' functions if the user didn't specify any
-                        . "Invoke-$Item"
-                    }
-                }
-            }
-
-            #Region Threading management
-            $JobsToWaitFor = New-Object -TypeName System.Collections.Generic.List[System.Management.Automation.Job2]
-
-            # If user didn't specify any categories, add all of them to the list of jobs to wait for
-            if ($null -eq $Categories) {
-                $JobsToWaitFor = foreach ($Cat in [HardeningModule.ComplianceCategoriex]::new().GetValidValues()) {
-                    [System.String]$VariableName = $Cat + 'Job'
-                    (Get-Item -Path "variable:$VariableName").Value
-                }
-            }
-            # If user specified categories, add only the specified ones to the list of the jobs to wait for
-            else {
-                $JobsToWaitFor = foreach ($Cat in $Categories) {
-                    [System.String]$VariableName = $Cat + 'Job'
-                    (Get-Item -Path "variable:$VariableName").Value
-                }
-            }
-
-            $null = Wait-Job -Job $JobsToWaitFor
-            Receive-Job -Job $JobsToWaitFor
-            Remove-Job -Job $JobsToWaitFor -Force
-            #Endregion Threading management
+            [HardeningModule.ConfirmSystemComplianceMethods]::OrchestrateComplianceChecks($Categories)
 
             # Making sure all the true/false values have the same case
             foreach ($Item in ([HardeningModule.GlobalVars]::FinalMegaObject).Values) {

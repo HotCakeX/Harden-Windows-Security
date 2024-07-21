@@ -108,6 +108,5 @@ namespace HardeningModule
 
         // $CSVPath = [System.IO.Path]::Combine([HardeningModule.GlobalVars]::path, 'Resources', 'CimInstanceProcessing.csv')
         // [HardeningModule.GlobalVars]::CimInstanceCSVProcessedOutput = [HardeningModule.CimInstanceCSVParser]::ReadCsv($CSVPath)
-
     }
 }

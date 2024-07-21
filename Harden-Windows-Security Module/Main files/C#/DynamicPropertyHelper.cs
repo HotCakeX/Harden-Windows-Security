@@ -1,47 +1,36 @@
 using System;
 using System.Collections.Generic;
 using System.Dynamic;
+using System.Linq;
 
 namespace HardeningModule
 {
-    public static class DynamicPropertyHelper
+    public static class PropertyHelper
     {
-        /// <summary>
-        /// Safely retrieves the value of a specified property from a dynamic object.
-        /// </summary>
-        /// <param name="dynamicObject">The dynamic object to query.</param>
-        /// <param name="propertyName">The name of the property to retrieve.</param>
-        /// <returns>The value of the property if found, otherwise null.</returns>
-        public static object GetPropertyValue(dynamic dynamicObject, string propertyName)
+        // Get the value of a property from a dynamic object
+        public static object GetPropertyValue(dynamic obj, string propertyName)
         {
-            // Check if the dynamic object is not null and is of the expected type
-            if (dynamicObject is IDictionary<string, object> dictionary)
+            // Convert dynamic object to IDictionary<string, object> to access properties
+            var dictionary = obj as IDictionary<string, object>;
+
+            // Check if the dictionary is not null
+            if (dictionary != null)
             {
-                // Check if the property exists in the dictionary
-                if (dictionary.ContainsKey(propertyName))
+                // Find the key in a case-insensitive manner
+                var key = dictionary.Keys.FirstOrDefault(k => string.Equals(k, propertyName, StringComparison.OrdinalIgnoreCase));
+                if (key != null)
                 {
-                    try
+                    var value = dictionary[key];
+
+                    // Check if the value is null, empty, or whitespace
+                    if (value != null && !(value is string str && string.IsNullOrWhiteSpace(str)))
                     {
-                        // Return the property value
-                        return dictionary[propertyName];
-                    }
-                    catch (Exception ex)
-                    {
-                        // Log or handle the exception as needed
-                        Console.WriteLine($"Error retrieving property '{propertyName}': {ex.Message}");
+                        return value;
                     }
                 }
-                else
-                {
-                    Console.WriteLine($"Property '{propertyName}' does not exist.");
-                }
-            }
-            else
-            {
-                Console.WriteLine("The dynamic object is not of type IDictionary<string, object>.");
             }
 
-            // Return null if property is not found or if any error occurs
+            // Return null if the property does not exist or is null, empty, or whitespace
             return null;
         }
     }

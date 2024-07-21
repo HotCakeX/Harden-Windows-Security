@@ -1,16 +1,17 @@
 using System;
 using System.IO;
 using System.Collections.Generic;
+using System.Globalization;
 
 namespace HardeningModule
 {
     public static class GlobalVars
     {
-        // Minimum required OS build number
-        public const string Requiredbuild = "22621.3155";
+        // Minimum required OS build number, M is the suffix for decimals
+        public const decimal Requiredbuild = 22621.3155M;
 
         // Current OS build version
-        public static readonly int OSBuildNumber = Environment.OSVersion.Version.Build;
+        public static readonly decimal OSBuildNumber = Environment.OSVersion.Version.Build;
 
         // Update Build Revision (UBR) number
         public static int UBR;

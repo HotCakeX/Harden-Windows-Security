@@ -3,6 +3,7 @@ using System.IO;
 using Microsoft.Win32;
 using System.Management.Automation;
 using System.Collections.Generic;
+using System.Globalization;
 
 namespace HardeningModule
 {

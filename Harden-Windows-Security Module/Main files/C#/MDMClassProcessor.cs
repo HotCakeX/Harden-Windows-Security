@@ -9,11 +9,9 @@ namespace HardeningModule
         {
             List<HardeningModule.MDMClassProcessor> OutputList = new List<HardeningModule.MDMClassProcessor>();
 
-            var CimInstancesOutput = HardeningModule.MDM.Get();
+            Dictionary<string, List<object>> CimInstancesOutput = HardeningModule.MDM.Get();
 
-            foreach (var Item in CimInstancesOutput.GetEnumerator()){
 
-            }
 
 
             return OutputList;

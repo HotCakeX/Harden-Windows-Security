@@ -13,22 +13,22 @@ namespace HardeningModule
     public class MDM
     {
         // Gets the results of all of the Intune policies from the system
-        public static Dictionary<string, List<object>> Get()
+        public static Dictionary<string, List<Dictionary<string, object>>> Get()
         {
             // Running the asynchronous method synchronously and returning the result
             return Task.Run(() => GetAsync()).GetAwaiter().GetResult();
         }
 
         // Asynchronous method to get the results
-        private static async Task<Dictionary<string, List<object>>> GetAsync()
+        private static async Task<Dictionary<string, List<Dictionary<string, object>>>> GetAsync()
         {
             // Set the namespace for MDM queries
             string namespaceName = @"root\cimv2\mdm\dmmap";
             // Set the location of the text file containing the MDM list
             string classNamesFilePath = Path.Combine(HardeningModule.GlobalVars.path, "Resources", "MDMResultClasses.txt");
 
-            // Create a dictionary where keys are the class names and values are lists of results
-            Dictionary<string, List<object>> results = new Dictionary<string, List<object>>();
+            // Create a dictionary where keys are the class names and values are lists of dictionaries
+            Dictionary<string, List<Dictionary<string, object>>> results = new Dictionary<string, List<Dictionary<string, object>>>();
 
             try
             {
@@ -50,7 +50,7 @@ namespace HardeningModule
                     tasks.Add(Task.Run(() =>
                     {
                         // List to store results for the current class
-                        List<object> classResults = new List<object>();
+                        List<Dictionary<string, object>> classResults = new List<Dictionary<string, object>>();
 
                         // Create object query for the current class
                         ObjectQuery query = new ObjectQuery("SELECT * FROM " + className.Trim());
@@ -65,9 +65,6 @@ namespace HardeningModule
                             {
                                 // Dictionary to store properties of the current class instance
                                 Dictionary<string, object> classInstance = new Dictionary<string, object>();
-
-                                // Store class name
-                                classInstance["Class"] = className;
 
                                 // Iterate through properties of the current object
                                 foreach (PropertyData prop in obj.Properties)

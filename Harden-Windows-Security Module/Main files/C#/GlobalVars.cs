@@ -102,11 +102,5 @@ namespace HardeningModule
 
         // the explicit path to save the CurrentlyAppliedMitigations.xml file
         public static string CurrentlyAppliedMitigations = Path.Combine(HardeningModule.GlobalVars.WorkingDir, "CurrentlyAppliedMitigations.xml");
-
-        // To store the output of the CSV parsing of CimInstanceProcessing.csv
-        // public static List<HardeningModule.CimInstanceCSVRecord> CimInstanceCSVProcessedOutput;
-
-        // $CSVPath = [System.IO.Path]::Combine([HardeningModule.GlobalVars]::path, 'Resources', 'CimInstanceProcessing.csv')
-        // [HardeningModule.GlobalVars]::CimInstanceCSVProcessedOutput = [HardeningModule.CimInstanceCSVParser]::ReadCsv($CSVPath)
     }
 }

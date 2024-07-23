@@ -12,10 +12,7 @@ using System.Threading.Tasks;
 
 namespace HardeningModule
 {
-    /// <summary>
-    /// Methods that are responsible for each category of the Confirm-SystemCompliance cmdlet
-    /// </summary>
-    public static class ConfirmSystemComplianceMethods
+    public partial class ConfirmSystemComplianceMethods
     {
 
         /// <summary>
@@ -37,9 +34,9 @@ namespace HardeningModule
 
             // Call the method and supply the category names if any
             // Will run them async
-            Task MethodsTaskOutput = RunMethodsInParallelAsync(methodNames);
+            Task MethodsTaskOutput = RunComplianceMethodsInParallelAsync(methodNames);
 
-            // Since this parent method is not async and we did not use await when calling RunMethodsInParallelAsync method
+            // Since this parent method is not async and we did not use await when calling RunComplianceMethodsInParallelAsync method
             // We need to implement our own manual await process
             while (!MethodsTaskOutput.IsCompleted)
             {
@@ -58,44 +55,6 @@ namespace HardeningModule
                 //   Console.WriteLine("Download completed successfully");
             }
         }
-
-        /// <summary>
-        /// Get the security group policies by utilizing the Secedit.exe
-        /// </summary>
-        public static void ExportSecurityPolicy()
-        {
-            // Assuming securityPolicyInfPath is defined in your environment
-            string securityPolicyInfPath = HardeningModule.GlobalVars.securityPolicyInfPath;
-            string systemDrive = Environment.GetEnvironmentVariable("SystemDrive");
-
-            // Create the process start info
-            ProcessStartInfo processStartInfo = new ProcessStartInfo
-            {
-                FileName = $"{systemDrive}\\Windows\\System32\\Secedit.exe",
-                Arguments = $"/export /cfg \"{securityPolicyInfPath}\"",
-                // RedirectStandardOutput = false,
-                RedirectStandardError = true, // Redirect the StandardError stream
-                UseShellExecute = false,
-                CreateNoWindow = true
-            };
-
-            // Start the process
-            using (Process process = Process.Start(processStartInfo))
-            {
-                // Read the output
-                // string output = process.StandardOutput.ReadToEnd();
-
-                string error = process.StandardError.ReadToEnd();
-
-                process.WaitForExit();
-
-                if (!string.IsNullOrEmpty(error))
-                {
-                    Console.WriteLine("Error: " + error);
-                }
-            }
-        }
-
 
         // Defining delegates for the methods
         private static readonly Dictionary<string, Func<Task>> methodDictionary = new Dictionary<string, Func<Task>>
@@ -123,7 +82,7 @@ namespace HardeningModule
         /// <param name="methodNames">These are the parameter names from the official category names
         /// if no input is supplied for this parameter, all categories will run</param>
         /// <returns>Returns the Task object</returns>
-        public static async Task RunMethodsInParallelAsync(params string[] methodNames)
+        public static async Task RunComplianceMethodsInParallelAsync(params string[] methodNames)
         {
             // Define a list to store the methods to run
             List<Func<Task>> methodsToRun;
@@ -147,6 +106,11 @@ namespace HardeningModule
             var tasks = methodsToRun.Select(method => method());
             await Task.WhenAll(tasks);
         }
+
+
+        /// <summary>
+        /// Methods that are responsible for each category of the Confirm-SystemCompliance cmdlet
+        /// </summary>
 
 
         /// <summary>

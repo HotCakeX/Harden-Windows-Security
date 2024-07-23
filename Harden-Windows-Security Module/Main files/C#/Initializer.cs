@@ -11,7 +11,7 @@ namespace HardeningModule
     public class Initializer
     {
         /// <summary>
-        /// This method runs once in the module root and in the beginning of each cmdlet
+        /// This method runs at the beginning of each cmdlet
         /// </summary>
         /// <param name="VerbosePreference"></param>
         /// <exception cref="InvalidOperationException"></exception>
@@ -61,9 +61,6 @@ namespace HardeningModule
 
             // Parse the ProcessMitigations.csv and save it to the global HardeningModule.GlobalVars.ProcessMitigations list
             HardeningModule.ProcessMitigationsParser.ReadCsv();
-
-            // Save the valid values of the Protect-WindowsSecurity categories to a variable since the process can be time consuming and shouldn't happen every time the categories are fetched
-            HardeningModule.GlobalVars.HardeningCategorieX = HardeningModule.ProtectionCategoriex.GetValidValues();
 
             // Convert the FullOSBuild and RequiredBuild strings to decimals so that we can compare them
             if (!TryParseBuildVersion(HardeningModule.GlobalVars.FullOSBuild, out decimal fullOSBuild))

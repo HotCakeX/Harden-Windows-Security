@@ -14,4 +14,5 @@ Add-Type -Path ([System.IO.Directory]::GetFiles("$PSScriptRoot\C#", '*.*', [Syst
 [HardeningModule.GlobalVars]::Host = $HOST
 [HardeningModule.GlobalVars]::PSHOME = $PSHOME
 [HardeningModule.GlobalVars]::Path = $PSScriptRoot
-[HardeningModule.Initializer]::Initialize($VerbosePreference)
+# Save the valid values of the Protect-WindowsSecurity categories to a variable since the process can be time consuming and shouldn't happen every time the categories are fetched
+[HardeningModule.GlobalVars]::HardeningCategorieX = [HardeningModule.ProtectionCategoriex]::GetValidValues()

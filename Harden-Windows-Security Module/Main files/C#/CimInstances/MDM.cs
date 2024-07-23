@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 
 /// root\cimv2\mdm is the namespace for CSPs
 /// https://learn.microsoft.com/en-us/windows/win32/wmisdk/common-information-model
-
 namespace HardeningModule
 {
     // Class that deals with MDM/CSPs/Intune
@@ -22,73 +21,86 @@ namespace HardeningModule
         // Asynchronous method to get the results
         private static async Task<Dictionary<string, List<Dictionary<string, object>>>> GetAsync()
         {
-            // Set the namespace for MDM queries
-            string namespaceName = @"root\cimv2\mdm\dmmap";
-            // Set the location of the text file containing the MDM list
-            string classNamesFilePath = Path.Combine(HardeningModule.GlobalVars.path, "Resources", "MDMResultClasses.txt");
+            // Set the location of the CSV file containing the MDM list
+            string csvFilePath = Path.Combine(HardeningModule.GlobalVars.path, "Resources", "MDMResultClasses.csv");
 
             // Create a dictionary where keys are the class names and values are lists of dictionaries
             Dictionary<string, List<Dictionary<string, object>>> results = new Dictionary<string, List<Dictionary<string, object>>>();
 
             try
             {
-                // Read class names from file asynchronously
-                string[] classNames = await File.ReadAllLinesAsync(classNamesFilePath);
-
-                // Create management scope object
-                ManagementScope scope = new ManagementScope(namespaceName);
-                // Connect to the WMI namespace
-                scope.Connect();
+                // Read class names and namespaces from CSV file asynchronously
+                var records = await ReadCsvFileAsync(csvFilePath);
 
                 // Create a list of tasks for querying each class
                 List<Task> tasks = new List<Task>();
 
-                // Iterate through class names
-                foreach (string className in classNames)
+                // Iterate through records
+                foreach (var record in records)
                 {
-                    // Add a new task for each class query
-                    tasks.Add(Task.Run(() =>
+                    // Process only authorized records
+                    if (record.Authorized.Equals("TRUE", StringComparison.OrdinalIgnoreCase))
                     {
-                        // List to store results for the current class
-                        List<Dictionary<string, object>> classResults = new List<Dictionary<string, object>>();
+                        // Debugging output
+                        // HardeningModule.VerboseLogger.Write($"Namespace: {record.Namespace}, Class: {record.Class}");
 
-                        // Create object query for the current class
-                        ObjectQuery query = new ObjectQuery("SELECT * FROM " + className.Trim());
-
-                        // Create management object searcher for the query
-                        ManagementObjectSearcher searcher = new ManagementObjectSearcher(scope, query);
-
-                        try
+                        // Add a new task for each class query
+                        tasks.Add(Task.Run(() =>
                         {
-                            // Execute the query and iterate through the results
-                            foreach (ManagementObject obj in searcher.Get())
+                            // List to store results for the current class
+                            List<Dictionary<string, object>> classResults = new List<Dictionary<string, object>>();
+
+                            // Create management scope object
+                            ManagementScope scope = new ManagementScope(record.Namespace);
+                            // Connect to the WMI namespace
+                            try
                             {
-                                // Dictionary to store properties of the current class instance
-                                Dictionary<string, object> classInstance = new Dictionary<string, object>();
-
-                                // Iterate through properties of the current object
-                                foreach (PropertyData prop in obj.Properties)
-                                {
-                                    // Store property name and its value
-                                    classInstance[prop.Name] = GetPropertyOriginalValue(prop);
-                                }
-
-                                // Add class instance to results
-                                classResults.Add(classInstance);
+                                scope.Connect();
                             }
-                        }
-                        catch (ManagementException e)
-                        {
-                            // Throw exception with error message if query fails
-                            throw new Exception($"Error querying {className}: {e.Message}");
-                        }
+                            catch (ManagementException e)
+                            {
+                                // Write verbose error message if connection fails
+                                HardeningModule.VerboseLogger.Write($"Error connecting to namespace {record.Namespace}: {e.Message}");
+                            }
 
-                        // Add class results to main results dictionary in a thread-safe manner
-                        lock (results)
-                        {
-                            results[className] = classResults;
-                        }
-                    }));
+                            // Create object query for the current class
+                            ObjectQuery query = new ObjectQuery("SELECT * FROM " + record.Class.Trim());
+
+                            // Create management object searcher for the query
+                            ManagementObjectSearcher searcher = new ManagementObjectSearcher(scope, query);
+
+                            try
+                            {
+                                // Execute the query and iterate through the results
+                                foreach (ManagementObject obj in searcher.Get())
+                                {
+                                    // Dictionary to store properties of the current class instance
+                                    Dictionary<string, object> classInstance = new Dictionary<string, object>();
+
+                                    // Iterate through properties of the current object
+                                    foreach (PropertyData prop in obj.Properties)
+                                    {
+                                        // Store property name and its value
+                                        classInstance[prop.Name] = GetPropertyOriginalValue(prop);
+                                    }
+
+                                    // Add class instance to results
+                                    classResults.Add(classInstance);
+                                }
+                            }
+                            catch (ManagementException e)
+                            {
+                                // Write verbose error message if query fails
+                                HardeningModule.VerboseLogger.Write($"Error querying {record.Class}: {e.Message}");
+                            }
+
+                            // Add class results to main results dictionary in a thread-safe manner
+                            lock (results)
+                            {
+                                results[record.Class] = classResults;
+                            }
+                        }));
+                    }
                 }
 
                 // Wait for all tasks to complete
@@ -96,8 +108,8 @@ namespace HardeningModule
             }
             catch (IOException ex)
             {
-                // Throw exception with error message if reading class names file fails
-                throw new Exception($"Error reading class names file: {ex.Message}");
+                // Throw exception with error message if reading CSV file fails
+                throw new Exception($"Error reading CSV file: {ex.Message}");
             }
 
             // Return dictionary containing results for each class
@@ -109,6 +121,47 @@ namespace HardeningModule
         {
             // Return the value of the property
             return prop.Value;
+        }
+
+        // Helper method to read CSV file asynchronously
+        private static async Task<List<MdmRecord>> ReadCsvFileAsync(string filePath)
+        {
+            var records = new List<MdmRecord>();
+
+            using (var reader = new StreamReader(filePath))
+            {
+                string line;
+                bool isFirstLine = true;
+                while ((line = await reader.ReadLineAsync()) != null)
+                {
+                    if (isFirstLine)
+                    {
+                        isFirstLine = false;
+                        continue; // Skip the header line
+                    }
+
+                    var values = line.Split(',');
+                    if (values.Length == 3)
+                    {
+                        records.Add(new MdmRecord
+                        {
+                            Namespace = values[0].Trim(),
+                            Class = values[1].Trim(),
+                            Authorized = values[2].Trim()
+                        });
+                    }
+                }
+            }
+
+            return records;
+        }
+
+        // Class to represent a record in the CSV file
+        private class MdmRecord
+        {
+            public string Namespace { get; set; }
+            public string Class { get; set; }
+            public string Authorized { get; set; }
         }
     }
 }

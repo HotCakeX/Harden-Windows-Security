@@ -1736,6 +1736,48 @@ namespace HardeningModule
                         Method = "Cmdlet"
                     });
 
+
+                    // Get the value and convert it to string
+                    // https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-defender#cloudblocklevel
+                    string CloudBlockLevelResult = Convert.ToString(HardeningModule.PropertyHelper.GetPropertyValue(HardeningModule.GlobalVars.MDAVPreferencesCurrent, "CloudBlockLevel"));
+                    nestedObjectArray.Add(new HardeningModule.IndividualResult
+                    {
+                        FriendlyName = "Cloud Block Level",
+                        Compliant = CloudBlockLevelResult.Equals("6", StringComparison.OrdinalIgnoreCase) ? "True" : "False",
+                        Value = CloudBlockLevelResult,
+                        Name = "Cloud Block Level",
+                        Category = CatName,
+                        Method = "Cmdlet"
+                    });
+
+
+                    // Get the value and convert it to bool
+                    // https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-defender#allowemailscanning
+                    bool DisableEmailScanningResult = Convert.ToBoolean(HardeningModule.PropertyHelper.GetPropertyValue(HardeningModule.GlobalVars.MDAVPreferencesCurrent, "DisableEmailScanning"));
+                    nestedObjectArray.Add(new HardeningModule.IndividualResult
+                    {
+                        FriendlyName = "Email Scanning",
+                        Compliant = DisableEmailScanningResult ? "False" : "True",
+                        Value = DisableEmailScanningResult ? "False" : "True",
+                        Name = "Email Scanning",
+                        Category = CatName,
+                        Method = "Cmdlet"
+                    });
+
+
+                    // Get the value and convert it to bool
+                    // https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-defender#submitsamplesconsent
+                    string SubmitSamplesConsentResult = Convert.ToString(HardeningModule.PropertyHelper.GetPropertyValue(HardeningModule.GlobalVars.MDAVPreferencesCurrent, "SubmitSamplesConsent"));
+                    nestedObjectArray.Add(new HardeningModule.IndividualResult
+                    {
+                        FriendlyName = "Send file samples when further analysis is required",
+                        Compliant = SubmitSamplesConsentResult.Equals("3", StringComparison.OrdinalIgnoreCase) ? "True" : "False",
+                        Value = SubmitSamplesConsentResult,
+                        Name = "Send file samples when further analysis is required",
+                        Category = CatName,
+                        Method = "Cmdlet"
+                    });
+
                 }
                 finally
                 {

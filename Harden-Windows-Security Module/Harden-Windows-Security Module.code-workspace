@@ -221,8 +221,7 @@
 			"XDRs",
 			"Zune"
 		],
-		"dotnetAcquisitionExtension.enablePreviewFeatures": true,
-		"rainbow_csv.csv_lint_detect_trailing_spaces": true
+		"dotnetAcquisitionExtension.enablePreviewFeatures": true
 	},
 	"extensions": {
 		"recommendations": [

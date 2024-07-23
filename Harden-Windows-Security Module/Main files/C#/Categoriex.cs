@@ -20,7 +20,7 @@ namespace HardeningModule
             "UserAccountControl", // 4
             "DeviceGuard", // 8
             "WindowsFirewall", // 20
-            "OptionalWindowsFeatures", // 13
+            "OptionalWindowsFeatures", // 14
             "WindowsNetworking", // 9
             "MiscellaneousConfigurations", // 17
             "WindowsUpdateConfigurations", // 14

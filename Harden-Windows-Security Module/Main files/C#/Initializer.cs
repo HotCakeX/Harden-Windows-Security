@@ -87,7 +87,7 @@ namespace HardeningModule
             HardeningModule.GlobalVars.MDAVConfigCurrent = HardeningModule.MpComputerStatusHelper.GetMpComputerStatus();
 
             // Total number of Compliant values not equal to N/A
-            HardeningModule.GlobalVars.TotalNumberOfTrueCompliantValues = 239;
+            HardeningModule.GlobalVars.TotalNumberOfTrueCompliantValues = 240;
 
             // Getting the $VerbosePreference from the calling cmdlet and saving it in the global variable
             HardeningModule.GlobalVars.VerbosePreference = VerbosePreference;

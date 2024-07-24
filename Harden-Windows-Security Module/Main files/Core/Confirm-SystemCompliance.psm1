@@ -63,7 +63,7 @@ function Confirm-SystemCompliance {
         }
 
         # The total number of the steps for the parent/main progress bar to render
-        [System.UInt16]$TotalMainSteps = 1
+        [System.UInt16]$TotalMainSteps = 3
         [System.UInt16]$CurrentMainStep = 0
 
         #Region Colors
@@ -161,8 +161,64 @@ function Confirm-SystemCompliance {
     }
 
     process {
-
         try {
+            $CurrentMainStep++
+            Write-Progress -Id 0 -Activity 'Controlled Folder Access Handling' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
+
+            # A try-Catch-finally block to revert the changes being made to the Controlled Folder Access exclusions list
+            # Which is currently required for BCD NX value verification in the MicrosoftDefender category
+            [HardeningModule.ControlledFolderAccessHandler]::Start()
+
+            # Give the Defender internals time to process the updated exclusions list
+            Start-Sleep -Seconds 5
+
+            $CurrentMainStep++
+            Write-Progress -Id 0 -Activity 'Collecting any possible Intune/MDM policies' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
+
+            #Region SYSTEM-priv Intune info gathering
+            # using schtasks.exe instead of CimInstance/cmdlet wherever it makes the process faster
+            Write-Verbose -Message 'Collecting Intune applied policy details from the System'
+            # MDM_BitLocker
+            [System.String[]]$CimInstancesList = @('MDM_Firewall_DomainProfile02', 'MDM_Firewall_PrivateProfile02', 'MDM_Firewall_PublicProfile02')
+            [System.String]$TaskPathGUID = [System.Guid]::NewGuid().ToString().Replace('-', '')
+            [System.String]$BaseDirectory = [HardeningModule.GlobalVars]::WorkingDir
+            [System.String]$TaskPath = "CimInstances$TaskPathGUID"
+            [System.String]$CimInstancesListString = foreach ($MDMName in $CimInstancesList) {
+                "'$MDMName',"
+            }
+            $CimInstancesListString = $CimInstancesListString.TrimEnd(',')
+            [System.String]$TaskName = 'CIMInstance'
+            $Argument = @"
+-NoProfile -WindowStyle Hidden -Command "& {foreach (`$Item in @($CimInstancesListString)) { Get-CimInstance -Namespace 'root\cimv2\mdm\dmmap' -ClassName `$Item | ConvertTo-Json -Depth 100 | Out-File -FilePath \"$BaseDirectory\`$Item.json\" -Force }}"
+"@
+
+            [Microsoft.Management.Infrastructure.CimInstance]$Action = New-ScheduledTaskAction -Execute 'Powershell.exe' -Argument $Argument
+            [Microsoft.Management.Infrastructure.CimInstance]$TaskPrincipal = New-ScheduledTaskPrincipal -LogonType S4U -UserId 'S-1-5-18' -RunLevel Highest
+            $null = Register-ScheduledTask -Action $Action -Principal $TaskPrincipal -TaskPath $TaskPath -TaskName $TaskName -Description $TaskName -Force
+            [Microsoft.Management.Infrastructure.CimInstance]$TaskSettings = New-ScheduledTaskSettingsSet -AllowStartIfOnBatteries -DontStopIfGoingOnBatteries -Compatibility 'Win8' -StartWhenAvailable -ExecutionTimeLimit (New-TimeSpan -Minutes 3)
+            $null = Set-ScheduledTask -TaskName $TaskName -TaskPath $TaskPath -Settings $TaskSettings
+            Start-ScheduledTask -TaskName $TaskName -TaskPath $TaskPath
+            while ((schtasks.exe /Query /TN "\$TaskPath\$TaskName" /fo CSV | ConvertFrom-Csv).Status -in ('Running', 'Queued')) {
+                Write-Debug -Message 'Waiting half a second more before attempting to delete the scheduled task'
+                Start-Sleep -Milliseconds 500
+            }
+            schtasks.exe /Delete /TN "\$TaskPath\$TaskName" /F # Delete task
+            schtasks.exe /Delete /TN "$TaskPath" /F *>$null # Delete task path
+            if ($LASTEXITCODE -ne '0') {
+                Write-Verbose -Message "Failed to delete the task with the path '$TaskPath' and name '$TaskName'." -Verbose
+            }
+            #Endregion
+
+            # Collect the JSON File Paths
+            [System.IO.FileInfo]$MDM_Firewall_DomainProfile02_Path = [System.IO.Path]::Combine([HardeningModule.GlobalVars]::WorkingDir, 'MDM_Firewall_DomainProfile02.json')
+            [System.IO.FileInfo]$MDM_Firewall_PrivateProfile02_Path = [System.IO.Path]::Combine([HardeningModule.GlobalVars]::WorkingDir, 'MDM_Firewall_PrivateProfile02.json')
+            [System.IO.FileInfo]$MDM_Firewall_PublicProfile02_Path = [System.IO.Path]::Combine([HardeningModule.GlobalVars]::WorkingDir, 'MDM_Firewall_PublicProfile02.json')
+
+            # Parse the JSON Files and store the results in global variables
+            [HardeningModule.GlobalVars]::MDM_Firewall_DomainProfile02 = [HardeningModule.JsonToHashtable]::ProcessJsonFile($MDM_Firewall_DomainProfile02_Path)
+            [HardeningModule.GlobalVars]::MDM_Firewall_PrivateProfile02 = [HardeningModule.JsonToHashtable]::ProcessJsonFile($MDM_Firewall_PrivateProfile02_Path)
+            [HardeningModule.GlobalVars]::MDM_Firewall_PublicProfile02 = [HardeningModule.JsonToHashtable]::ProcessJsonFile($MDM_Firewall_PublicProfile02_Path)
+
             $CurrentMainStep++
             Write-Progress -Id 0 -Activity 'Verifying the security settings' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
 
@@ -301,6 +357,7 @@ function Confirm-SystemCompliance {
         finally {
             # End the progress bar and mark it as completed
             Write-Progress -Id 0 -Activity 'Completed' -Completed
+            [HardeningModule.ControlledFolderAccessHandler]::Reset()
             [HardeningModule.Miscellaneous]::CleanUp()
         }
     }

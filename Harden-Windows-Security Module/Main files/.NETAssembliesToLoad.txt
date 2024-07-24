@@ -3,6 +3,7 @@ System.IO
 System.Xml
 System.Net
 System.Linq
+System.Memory
 System.Console
 System.Windows
 System.CodeDom
@@ -10,6 +11,7 @@ System.Runtime
 System.Net.Http
 System.Security
 PresentationCore
+System.Text.Json
 Microsoft.CSharp
 System.Threading
 System.Management

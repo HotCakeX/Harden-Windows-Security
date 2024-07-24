@@ -84,7 +84,7 @@ namespace HardeningModule
             HardeningModule.GlobalVars.MDAVConfigCurrent = HardeningModule.MpComputerStatusHelper.GetMpComputerStatus();
 
             // Total number of Compliant values not equal to N/A
-            HardeningModule.GlobalVars.TotalNumberOfTrueCompliantValues = 240;
+            HardeningModule.GlobalVars.TotalNumberOfTrueCompliantValues = 238;
 
             // Getting the $VerbosePreference from the calling cmdlet and saving it in the global variable
             HardeningModule.GlobalVars.VerbosePreference = VerbosePreference;
@@ -94,6 +94,9 @@ namespace HardeningModule
 
             // Create an empty dictionary to store the System Security Policies from the security_policy.inf file
             HardeningModule.GlobalVars.SystemSecurityPoliciesIniObject = new Dictionary<string, Dictionary<string, string>>();
+
+            // Process the MDM related CimInstances and store them in a global variable
+            HardeningModule.GlobalVars.MDMResults = HardeningModule.MDMClassProcessor.Process();
         }
 
         // This method gracefully parses the OS build version strings to decimals
@@ -106,5 +109,6 @@ namespace HardeningModule
             // Use CultureInfo.InvariantCulture for parsing
             return Decimal.TryParse(buildVersion, NumberStyles.Number, CultureInfo.InvariantCulture, out result);
         }
+
     }
 }

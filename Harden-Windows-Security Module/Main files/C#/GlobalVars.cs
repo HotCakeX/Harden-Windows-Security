@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Collections;
 using System.Collections.Generic;
 using System.Management.Automation.Host;
 using System.Collections.Concurrent;
@@ -102,5 +103,17 @@ namespace HardeningModule
 
         // the explicit path to save the CurrentlyAppliedMitigations.xml file
         public static string CurrentlyAppliedMitigations = Path.Combine(HardeningModule.GlobalVars.WorkingDir, "CurrentlyAppliedMitigations.xml");
+
+        // variable that contains the results of all of the related MDM CimInstances that can be interacted with using Administrator privilege
+        public static List<HardeningModule.MDMClassProcessor> MDMResults;
+
+        // To store the Firewall Domain MDM profile parsed JSON output
+        public static System.Collections.Hashtable MDM_Firewall_DomainProfile02;
+
+        // To store the Firewall Private MDM profile parsed JSON output
+        public static System.Collections.Hashtable MDM_Firewall_PrivateProfile02;
+
+        // To store the Firewall Public MDM profile parsed JSON output
+        public static System.Collections.Hashtable MDM_Firewall_PublicProfile02;
     }
 }

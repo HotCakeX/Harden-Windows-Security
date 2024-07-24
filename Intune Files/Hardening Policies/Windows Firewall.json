@@ -1,9 +1,9 @@
 ﻿{
     "@odata.context": "https://graph.microsoft.com/beta/$metadata#deviceManagement/configurationPolicies/$entity",
-    "createdDateTime": "2024-07-12T14:48:45.4933001Z",
+    "createdDateTime": "2024-07-25T15:40:13.136302Z",
     "creationSource": null,
     "description": "Windows Firewall Category",
-    "lastModifiedDateTime": "2024-07-12T14:48:45.4933001Z",
+    "lastModifiedDateTime": "2024-07-25T22:18:44.7874331Z",
     "name": "Windows Firewall",
     "platforms": "windows10",
     "priorityMetaData": null,
@@ -12,7 +12,7 @@
     ],
     "settingCount": 3,
     "technologies": "mdm",
-    "id": "58fd1725-dac7-434c-ae96-87db7caff30b",
+    "id": "12742b66-ee62-4dd2-8531-2e12634cc600",
     "templateReference": {
         "templateId": "",
         "templateFamily": "none",
@@ -177,7 +177,7 @@
                             "simpleSettingValue": {
                                 "@odata.type": "#microsoft.graph.deviceManagementConfigurationIntegerSettingValue",
                                 "settingValueTemplateReference": null,
-                                "value": 33000
+                                "value": 32767
                             }
                         },
                         {
@@ -351,7 +351,7 @@
                             "simpleSettingValue": {
                                 "@odata.type": "#microsoft.graph.deviceManagementConfigurationIntegerSettingValue",
                                 "settingValueTemplateReference": null,
-                                "value": 33000
+                                "value": 32767
                             }
                         },
                         {
@@ -525,7 +525,7 @@
                             "simpleSettingValue": {
                                 "@odata.type": "#microsoft.graph.deviceManagementConfigurationIntegerSettingValue",
                                 "settingValueTemplateReference": null,
-                                "value": 33000
+                                "value": 32767
                             }
                         },
                         {

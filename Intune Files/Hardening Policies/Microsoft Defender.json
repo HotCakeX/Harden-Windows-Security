@@ -1,18 +1,18 @@
 ﻿{
     "@odata.context": "https://graph.microsoft.com/beta/$metadata#deviceManagement/configurationPolicies/$entity",
-    "createdDateTime": "2024-07-12T11:25:26.6505145Z",
+    "createdDateTime": "2024-07-25T15:40:49.6801966Z",
     "creationSource": null,
     "description": "Microsoft Defender Category",
-    "lastModifiedDateTime": "2024-07-12T14:29:02.2044984Z",
+    "lastModifiedDateTime": "2024-07-25T22:42:49.2364461Z",
     "name": "Microsoft Defender",
     "platforms": "windows10",
     "priorityMetaData": null,
     "roleScopeTagIds": [
         "0"
     ],
-    "settingCount": 59,
+    "settingCount": 61,
     "technologies": "mdm",
-    "id": "1cf0558a-9bec-44f0-a71f-4edc3cdaa226",
+    "id": "c389cec0-6f97-4714-8132-09bf9481cdf2",
     "templateReference": {
         "templateId": "",
         "templateFamily": "none",
@@ -764,6 +764,32 @@
             "id": "51",
             "settingInstance": {
                 "@odata.type": "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance",
+                "settingDefinitionId": "device_vendor_msft_defender_configuration_behavioralnetworkblocks_remoteencryptionprotection_remoteencryptionprotectionaggressiveness",
+                "settingInstanceTemplateReference": null,
+                "choiceSettingValue": {
+                    "settingValueTemplateReference": null,
+                    "value": "device_vendor_msft_defender_configuration_behavioralnetworkblocks_remoteencryptionprotection_remoteencryptionprotectionaggressiveness_1",
+                    "children": []
+                }
+            }
+        },
+        {
+            "id": "52",
+            "settingInstance": {
+                "@odata.type": "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance",
+                "settingDefinitionId": "device_vendor_msft_defender_configuration_behavioralnetworkblocks_remoteencryptionprotection_remoteencryptionprotectionconfiguredstate",
+                "settingInstanceTemplateReference": null,
+                "choiceSettingValue": {
+                    "settingValueTemplateReference": null,
+                    "value": "device_vendor_msft_defender_configuration_behavioralnetworkblocks_remoteencryptionprotection_remoteencryptionprotectionconfiguredstate_1",
+                    "children": []
+                }
+            }
+        },
+        {
+            "id": "53",
+            "settingInstance": {
+                "@odata.type": "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance",
                 "settingDefinitionId": "device_vendor_msft_defender_configuration_securityintelligenceupdateschannel",
                 "settingInstanceTemplateReference": null,
                 "choiceSettingValue": {
@@ -774,7 +800,7 @@
             }
         },
         {
-            "id": "52",
+            "id": "54",
             "settingInstance": {
                 "@odata.type": "#microsoft.graph.deviceManagementConfigurationSimpleSettingInstance",
                 "settingDefinitionId": "device_vendor_msft_policy_config_defender_signatureupdateinterval",
@@ -787,7 +813,7 @@
             }
         },
         {
-            "id": "53",
+            "id": "55",
             "settingInstance": {
                 "@odata.type": "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance",
                 "settingDefinitionId": "device_vendor_msft_windowsadvancedthreatprotection_configuration_samplesharing",
@@ -800,7 +826,7 @@
             }
         },
         {
-            "id": "54",
+            "id": "56",
             "settingInstance": {
                 "@odata.type": "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance",
                 "settingDefinitionId": "device_vendor_msft_policy_config_webthreatdefense_automaticdatacollection",
@@ -813,7 +839,7 @@
             }
         },
         {
-            "id": "55",
+            "id": "57",
             "settingInstance": {
                 "@odata.type": "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance",
                 "settingDefinitionId": "device_vendor_msft_policy_config_webthreatdefense_notifymalicious",
@@ -826,7 +852,7 @@
             }
         },
         {
-            "id": "56",
+            "id": "58",
             "settingInstance": {
                 "@odata.type": "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance",
                 "settingDefinitionId": "device_vendor_msft_policy_config_webthreatdefense_notifypasswordreuse",
@@ -839,7 +865,7 @@
             }
         },
         {
-            "id": "57",
+            "id": "59",
             "settingInstance": {
                 "@odata.type": "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance",
                 "settingDefinitionId": "device_vendor_msft_policy_config_webthreatdefense_notifyunsafeapp",
@@ -852,7 +878,7 @@
             }
         },
         {
-            "id": "58",
+            "id": "60",
             "settingInstance": {
                 "@odata.type": "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance",
                 "settingDefinitionId": "device_vendor_msft_policy_config_webthreatdefense_serviceenabled",

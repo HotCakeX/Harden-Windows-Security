@@ -2117,6 +2117,20 @@ namespace HardeningModule
                 });
 
 
+                // Get the value and convert it to bool
+                // https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-admx-microsoftdefenderantivirus#mpengine_enablefilehashcomputation
+                bool EnableFileHashComputationResult = Convert.ToBoolean(HardeningModule.PropertyHelper.GetPropertyValue(HardeningModule.GlobalVars.MDAVPreferencesCurrent, "EnableFileHashComputation"));
+                nestedObjectArray.Add(new HardeningModule.IndividualResult
+                {
+                    FriendlyName = "File Hash Computation",
+                    Compliant = EnableFileHashComputationResult ? "True" : "False",
+                    Value = EnableFileHashComputationResult ? "True" : "False",
+                    Name = "File Hash Computation",
+                    Category = CatName,
+                    Method = "CIM"
+                });
+
+
                 // Process items in Registry resources.csv file with "Group Policy" origin and add them to the $NestedObjectArray array
                 foreach (var Result in (HardeningModule.CategoryProcessing.ProcessCategory(CatName, "Group Policy")))
                 {

@@ -317,12 +317,13 @@ namespace HardeningModule
                 string CatName = "DeviceGuard";
 
                 // https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-deviceguard?WT.mc_id=Portal-fx#enablevirtualizationbasedsecurity
-                string EnableVirtualizationBasedSecurity = HardeningModule.GlobalVars.MDMResults.Where(element => element.Name == "EnableVirtualizationBasedSecurity").Select(element => element.Value).FirstOrDefault();
+                bool EnableVirtualizationBasedSecurity = HardeningModule.GetMDMResultValue.Get("EnableVirtualizationBasedSecurity", "1");
+
                 nestedObjectArray.Add(new HardeningModule.IndividualResult
                 {
                     FriendlyName = "Enable Virtualization Based Security",
-                    Compliant = EnableVirtualizationBasedSecurity.Equals("1", StringComparison.OrdinalIgnoreCase) ? "True" : "False",
-                    Value = EnableVirtualizationBasedSecurity,
+                    Compliant = EnableVirtualizationBasedSecurity ? "True" : "False",
+                    Value = EnableVirtualizationBasedSecurity ? "True" : "False",
                     Name = "EnableVirtualizationBasedSecurity",
                     Category = CatName,
                     Method = "MDM"
@@ -330,25 +331,37 @@ namespace HardeningModule
 
 
                 // https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-deviceguard?WT.mc_id=Portal-fx#requireplatformsecurityfeatures
-                string RequirePlatformSecurityFeatures = HardeningModule.GlobalVars.MDMResults.Where(element => element.Name == "RequirePlatformSecurityFeatures").Select(element => element.Value).FirstOrDefault();
+                string RequirePlatformSecurityFeatures = HardeningModule.GlobalVars.MDMResults
+     .Where(element => element.Name == "RequirePlatformSecurityFeatures")
+     .Select(element => element.Value)
+     .FirstOrDefault();
+
                 nestedObjectArray.Add(new HardeningModule.IndividualResult
                 {
                     FriendlyName = "Require Platform Security Features",
-                    Compliant = (RequirePlatformSecurityFeatures.Equals("1", StringComparison.OrdinalIgnoreCase) || RequirePlatformSecurityFeatures.Equals("3", StringComparison.OrdinalIgnoreCase)) ? "True" : "False",
-                    Value = RequirePlatformSecurityFeatures.Equals("1", StringComparison.OrdinalIgnoreCase) ? "VBS with Secure Boot" : RequirePlatformSecurityFeatures.Equals("3", StringComparison.OrdinalIgnoreCase) ? "VBS with Secure Boot and direct memory access (DMA) Protection" : "False",
+                    Compliant = (RequirePlatformSecurityFeatures != null &&
+                                (RequirePlatformSecurityFeatures.Equals("1", StringComparison.OrdinalIgnoreCase) ||
+                                 RequirePlatformSecurityFeatures.Equals("3", StringComparison.OrdinalIgnoreCase))) ? "True" : "False",
+                    Value = (RequirePlatformSecurityFeatures != null && RequirePlatformSecurityFeatures.Equals("1", StringComparison.OrdinalIgnoreCase)) ?
+                            "VBS with Secure Boot" :
+                            (RequirePlatformSecurityFeatures != null && RequirePlatformSecurityFeatures.Equals("3", StringComparison.OrdinalIgnoreCase)) ?
+                            "VBS with Secure Boot and direct memory access (DMA) Protection" :
+                            "False",
                     Name = "RequirePlatformSecurityFeatures",
                     Category = CatName,
                     Method = "MDM"
                 });
 
 
+
                 // https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-VirtualizationBasedTechnology?WT.mc_id=Portal-fx#hypervisorenforcedcodeintegrity
-                string HypervisorEnforcedCodeIntegrity = HardeningModule.GlobalVars.MDMResults.Where(element => element.Name == "HypervisorEnforcedCodeIntegrity").Select(element => element.Value).FirstOrDefault();
+                bool HypervisorEnforcedCodeIntegrity = HardeningModule.GetMDMResultValue.Get("HypervisorEnforcedCodeIntegrity", "1");
+
                 nestedObjectArray.Add(new HardeningModule.IndividualResult
                 {
                     FriendlyName = "Hypervisor Enforced Code Integrity - UEFI Lock",
-                    Compliant = HypervisorEnforcedCodeIntegrity.Equals("1", StringComparison.OrdinalIgnoreCase) ? "True" : "False",
-                    Value = HypervisorEnforcedCodeIntegrity,
+                    Compliant = HypervisorEnforcedCodeIntegrity ? "True" : "False",
+                    Value = HypervisorEnforcedCodeIntegrity ? "True" : "False",
                     Name = "HypervisorEnforcedCodeIntegrity",
                     Category = CatName,
                     Method = "MDM"
@@ -356,12 +369,13 @@ namespace HardeningModule
 
 
                 // https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-VirtualizationBasedTechnology?WT.mc_id=Portal-fx#requireuefimemoryattributestable
-                string RequireUEFIMemoryAttributesTable = HardeningModule.GlobalVars.MDMResults.Where(element => element.Name == "RequireUEFIMemoryAttributesTable").Select(element => element.Value).FirstOrDefault();
+                bool RequireUEFIMemoryAttributesTable = HardeningModule.GetMDMResultValue.Get("RequireUEFIMemoryAttributesTable", "1");
+
                 nestedObjectArray.Add(new HardeningModule.IndividualResult
                 {
                     FriendlyName = "Require HVCI MAT (Memory Attribute Table)",
-                    Compliant = RequireUEFIMemoryAttributesTable.Equals("1", StringComparison.OrdinalIgnoreCase) ? "True" : "False",
-                    Value = RequireUEFIMemoryAttributesTable,
+                    Compliant = RequireUEFIMemoryAttributesTable ? "True" : "False",
+                    Value = RequireUEFIMemoryAttributesTable ? "True" : "False",
                     Name = "HVCIMATRequired",
                     Category = CatName,
                     Method = "MDM"
@@ -369,12 +383,13 @@ namespace HardeningModule
 
 
                 // https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-deviceguard?WT.mc_id=Portal-fx#lsacfgflags
-                string LsaCfgFlags = HardeningModule.GlobalVars.MDMResults.Where(element => element.Name == "LsaCfgFlags").Select(element => element.Value).FirstOrDefault();
+                bool LsaCfgFlags = HardeningModule.GetMDMResultValue.Get("LsaCfgFlags", "1");
+
                 nestedObjectArray.Add(new HardeningModule.IndividualResult
                 {
                     FriendlyName = "Credential Guard Configuration - UEFI Lock",
-                    Compliant = LsaCfgFlags.Equals("1", StringComparison.OrdinalIgnoreCase) ? "True" : "False",
-                    Value = LsaCfgFlags,
+                    Compliant = LsaCfgFlags ? "True" : "False",
+                    Value = LsaCfgFlags ? "True" : "False",
                     Name = "LsaCfgFlags",
                     Category = CatName,
                     Method = "MDM"
@@ -382,12 +397,13 @@ namespace HardeningModule
 
 
                 // https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-deviceguard?WT.mc_id=Portal-fx#configuresystemguardlaunch
-                string ConfigureSystemGuardLaunch = HardeningModule.GlobalVars.MDMResults.Where(element => element.Name == "ConfigureSystemGuardLaunch").Select(element => element.Value).FirstOrDefault();
+                bool ConfigureSystemGuardLaunch = HardeningModule.GetMDMResultValue.Get("ConfigureSystemGuardLaunch", "1");
+
                 nestedObjectArray.Add(new HardeningModule.IndividualResult
                 {
                     FriendlyName = "System Guard Launch",
-                    Compliant = ConfigureSystemGuardLaunch.Equals("1", StringComparison.OrdinalIgnoreCase) ? "True" : "False",
-                    Value = ConfigureSystemGuardLaunch,
+                    Compliant = ConfigureSystemGuardLaunch ? "True" : "False",
+                    Value = ConfigureSystemGuardLaunch ? "True" : "False",
                     Name = "ConfigureSystemGuardLaunch",
                     Category = CatName,
                     Method = "MDM"
@@ -1130,6 +1146,21 @@ namespace HardeningModule
                     Category = CatName,
                     Method = "CIM"
                 });
+
+
+                // Get the control from MDM CIM
+                HardeningModule.HashtableCheckerResult MDM_Firewall_PublicProfile02_EnableFirewall = HardeningModule.HashtableChecker.CheckValue<string>(HardeningModule.GlobalVars.MDM_Firewall_PublicProfile02, "EnableFirewall", "true");
+
+                nestedObjectArray.Add(new HardeningModule.IndividualResult
+                {
+                    FriendlyName = "Enable Windows Firewall for Public profile",
+                    Compliant = MDM_Firewall_PublicProfile02_EnableFirewall.IsMatch ? "True" : "False",
+                    Value = MDM_Firewall_PublicProfile02_EnableFirewall.Value,
+                    Name = "Enable Windows Firewall for Public profile",
+                    Category = CatName,
+                    Method = "CIM"
+                });
+
 
                 // Process items in Registry resources.csv file with "Group Policy" origin and add them to the $NestedObjectArray array
                 foreach (var Result in (HardeningModule.CategoryProcessing.ProcessCategory(CatName, "Group Policy")))

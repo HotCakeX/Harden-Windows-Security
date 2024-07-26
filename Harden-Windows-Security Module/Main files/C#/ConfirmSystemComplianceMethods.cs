@@ -1850,6 +1850,8 @@ namespace HardeningModule
 
 
                 // Get the value and convert it to string
+                // Set-MpPreference -PerformanceModeStatus Enabled => (Get-MpPreference).PerformanceModeStatus == 1 => Turns on Dev Drive Protection in Microsoft Defender GUI
+                // Set-MpPreference -PerformanceModeStatus Disabled => (Get-MpPreference).PerformanceModeStatus == 0 => Turns off Dev Drive Protection in Microsoft Defender GUI
                 string PerformanceModeStatusResult = Convert.ToString(HardeningModule.PropertyHelper.GetPropertyValue(HardeningModule.GlobalVars.MDAVPreferencesCurrent, "PerformanceModeStatus"));
                 nestedObjectArray.Add(new HardeningModule.IndividualResult
                 {
@@ -2183,6 +2185,20 @@ namespace HardeningModule
                     Compliant = CheckForSignaturesBeforeRunningScanResult ? "True" : "False",
                     Value = CheckForSignaturesBeforeRunningScanResult ? "True" : "False",
                     Name = "Check For Signatures Before Running Scan",
+                    Category = CatName,
+                    Method = "CIM"
+                });
+
+
+                // Get the value and convert it to string
+                // https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-defender#enablenetworkprotection
+                string EnableNetworkProtectionResult = Convert.ToString(HardeningModule.PropertyHelper.GetPropertyValue(HardeningModule.GlobalVars.MDAVPreferencesCurrent, "EnableNetworkProtection"));
+                nestedObjectArray.Add(new HardeningModule.IndividualResult
+                {
+                    FriendlyName = "Enable Network Protection",
+                    Compliant = EnableNetworkProtectionResult.Equals("1", StringComparison.OrdinalIgnoreCase) ? "True" : "False",
+                    Value = EnableNetworkProtectionResult,
+                    Name = "Enable Network Protection",
                     Category = CatName,
                     Method = "CIM"
                 });

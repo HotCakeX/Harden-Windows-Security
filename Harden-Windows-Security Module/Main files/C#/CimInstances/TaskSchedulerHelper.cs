@@ -137,7 +137,7 @@ namespace HardeningModule
             catch (ManagementException e)
             {
                 // Handle any ManagementException that may occur during the WMI query execution
-                Console.WriteLine($"An error occurred while querying for WMI data: {e.Message}");
+                HardeningModule.VerboseLogger.Write($"An error occurred while querying for WMI data: {e.Message}");
 
                 // Depending on the outputType parameter, return either false or an empty list
                 if (outputType == OutputType.Boolean)

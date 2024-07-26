@@ -57,17 +57,17 @@ namespace HardeningModule
             // catch exceptions specific to WMI
             catch (ManagementException mex)
             {
-                Console.WriteLine($"WMI ManagementException: {mex.Message}");
+                HardeningModule.VerboseLogger.Write($"WMI ManagementException: {mex.Message}");
             }
             // Catch block for unauthorized access exceptions
             catch (UnauthorizedAccessException uex)
             {
-                Console.WriteLine($"UnauthorizedAccessException: {uex.Message}");
+                HardeningModule.VerboseLogger.Write($"UnauthorizedAccessException: {uex.Message}");
             }
             // General catch block for any other exceptions
             catch (Exception ex)
             {
-                Console.WriteLine($"An error occurred: {ex.Message}");
+                HardeningModule.VerboseLogger.Write($"An error occurred: {ex.Message}");
             }
 
             return results;

@@ -42,7 +42,7 @@ namespace HardeningModule
             }
             catch (Exception e)
             {
-                Console.WriteLine($"An error occurred: {e.Message}");
+                HardeningModule.VerboseLogger.Write($"An error occurred: {e.Message}");
             }
             // Return the list of profiles
             return profiles;
@@ -91,7 +91,7 @@ namespace HardeningModule
             }
             catch (Exception e)
             {
-                Console.WriteLine($"An error occurred: {e.Message}");
+                HardeningModule.VerboseLogger.Write($"An error occurred: {e.Message}");
                 return false;
             }
         }

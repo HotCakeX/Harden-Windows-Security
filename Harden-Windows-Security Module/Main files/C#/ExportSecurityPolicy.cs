@@ -46,7 +46,7 @@ namespace HardeningModule
 
                 if (!string.IsNullOrEmpty(error))
                 {
-                    Console.WriteLine("Error: " + error);
+                    HardeningModule.VerboseLogger.Write("Error: " + error);
                 }
             }
         }

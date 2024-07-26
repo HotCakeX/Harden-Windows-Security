@@ -30,12 +30,12 @@ namespace HardeningModule
                         nestedObjectArray.Remove(existingItem);
                         // Add the current item with Compliant status "True"
                         nestedObjectArray.Add(result);
-                        Console.WriteLine($"Item with Name '{existingItem.Name}' and FriendlyName '{existingItem.FriendlyName}' replaced with a compliant item.");
+                        HardeningModule.VerboseLogger.Write($"Item with Name '{existingItem.Name}' and FriendlyName '{existingItem.FriendlyName}' replaced with a compliant item.");
                     }
                     else
                     {
                         // Write a descriptive and detailed message to the console
-                        Console.WriteLine($"Item not added: An item with Name '{existingItem.Name}' and FriendlyName '{existingItem.FriendlyName}' already exists with Compliant status '{existingItem.Compliant}' and Value '{existingItem.Value}'.");
+                        HardeningModule.VerboseLogger.Write($"Item not added: An item with Name '{existingItem.Name}' and FriendlyName '{existingItem.FriendlyName}' already exists with Compliant status '{existingItem.Compliant}' and Value '{existingItem.Value}'.");
                     }
                 }
                 //    else

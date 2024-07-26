@@ -1287,6 +1287,118 @@ namespace HardeningModule
                 });
 
 
+                // Get the control from MDM CIM
+                HardeningModule.HashtableCheckerResult MDM_Firewall_DomainProfile02_EnableFirewall = HardeningModule.HashtableChecker.CheckValue<string>(HardeningModule.GlobalVars.MDM_Firewall_DomainProfile02, "EnableFirewall", "true");
+
+                nestedObjectArray.Add(new HardeningModule.IndividualResult
+                {
+                    FriendlyName = "Enable Windows Firewall for Domain profile",
+                    Compliant = MDM_Firewall_DomainProfile02_EnableFirewall.IsMatch ? "True" : "False",
+                    Value = MDM_Firewall_DomainProfile02_EnableFirewall.Value,
+                    Name = "Enable Windows Firewall for Domain profile",
+                    Category = CatName,
+                    Method = "CIM"
+                });
+
+
+                // Get the control from MDM CIM
+                HardeningModule.HashtableCheckerResult MDM_Firewall_DomainProfile02_DefaultOutboundAction = HardeningModule.HashtableChecker.CheckValue<string>(HardeningModule.GlobalVars.MDM_Firewall_DomainProfile02, "DefaultOutboundAction", "1");
+
+                nestedObjectArray.Add(new HardeningModule.IndividualResult
+                {
+                    FriendlyName = "Set Default Outbound Action for Domain profile",
+                    Compliant = MDM_Firewall_DomainProfile02_DefaultOutboundAction.IsMatch ? "True" : "False",
+                    Value = MDM_Firewall_DomainProfile02_DefaultOutboundAction.Value,
+                    Name = "Set Default Outbound Action for Domain profile",
+                    Category = CatName,
+                    Method = "CIM"
+                });
+
+
+                // Get the control from MDM CIM
+                HardeningModule.HashtableCheckerResult MDM_Firewall_DomainProfile02_DefaultInboundAction = HardeningModule.HashtableChecker.CheckValue<string>(HardeningModule.GlobalVars.MDM_Firewall_DomainProfile02, "DefaultInboundAction", "1");
+
+                nestedObjectArray.Add(new HardeningModule.IndividualResult
+                {
+                    FriendlyName = "Set Default Inbound Action for Domain profile",
+                    Compliant = MDM_Firewall_DomainProfile02_DefaultInboundAction.IsMatch ? "True" : "False",
+                    Value = MDM_Firewall_DomainProfile02_DefaultInboundAction.Value,
+                    Name = "Set Default Inbound Action for Domain profile",
+                    Category = CatName,
+                    Method = "CIM"
+                });
+
+
+                // Get the control from MDM CIM
+                HardeningModule.HashtableCheckerResult MDM_Firewall_DomainProfile02_Shielded = HardeningModule.HashtableChecker.CheckValue<string>(HardeningModule.GlobalVars.MDM_Firewall_DomainProfile02, "Shielded", "true");
+
+                nestedObjectArray.Add(new HardeningModule.IndividualResult
+                {
+                    FriendlyName = "Block all Domain profile connections",
+                    Compliant = MDM_Firewall_DomainProfile02_Shielded.IsMatch ? "True" : "False",
+                    Value = MDM_Firewall_DomainProfile02_Shielded.Value,
+                    Name = "Shielded",
+                    Category = CatName,
+                    Method = "CIM"
+                });
+
+
+                // Get the control from MDM CIM
+                HardeningModule.HashtableCheckerResult MDM_Firewall_DomainProfile02_LogFilePath = HardeningModule.HashtableChecker.CheckValue<string>(HardeningModule.GlobalVars.MDM_Firewall_DomainProfile02, "LogFilePath", @"%systemroot%\system32\LogFiles\Firewall\Domainfirewall.log");
+
+                nestedObjectArray.Add(new HardeningModule.IndividualResult
+                {
+                    FriendlyName = "Configure Log file path for domain profile",
+                    Compliant = MDM_Firewall_DomainProfile02_LogFilePath.IsMatch ? "True" : "False",
+                    Value = MDM_Firewall_DomainProfile02_LogFilePath.Value,
+                    Name = "Configure Log file path for domain profile",
+                    Category = CatName,
+                    Method = "CIM"
+                });
+
+
+                // Get the control from MDM CIM
+                HardeningModule.HashtableCheckerResult MDM_Firewall_DomainProfile02_LogMaxFileSize = HardeningModule.HashtableChecker.CheckValue<string>(HardeningModule.GlobalVars.MDM_Firewall_DomainProfile02, "LogMaxFileSize", "32767");
+
+                nestedObjectArray.Add(new HardeningModule.IndividualResult
+                {
+                    FriendlyName = "Configure Log file size for domain profile",
+                    Compliant = MDM_Firewall_DomainProfile02_LogMaxFileSize.IsMatch ? "True" : "False",
+                    Value = MDM_Firewall_DomainProfile02_LogMaxFileSize.Value,
+                    Name = "Configure Log file size for domain profile",
+                    Category = CatName,
+                    Method = "CIM"
+                });
+
+
+                // Get the control from MDM CIM
+                HardeningModule.HashtableCheckerResult MDM_Firewall_DomainProfile02_EnableLogDroppedPackets = HardeningModule.HashtableChecker.CheckValue<string>(HardeningModule.GlobalVars.MDM_Firewall_DomainProfile02, "EnableLogDroppedPackets", "true");
+
+                nestedObjectArray.Add(new HardeningModule.IndividualResult
+                {
+                    FriendlyName = "Log blocked connections for domain profile",
+                    Compliant = MDM_Firewall_DomainProfile02_EnableLogDroppedPackets.IsMatch ? "True" : "False",
+                    Value = MDM_Firewall_DomainProfile02_EnableLogDroppedPackets.Value,
+                    Name = "Log blocked connections for domain profile",
+                    Category = CatName,
+                    Method = "CIM"
+                });
+
+
+                // Get the control from MDM CIM
+                HardeningModule.HashtableCheckerResult MDM_Firewall_DomainProfile02_EnableLogSuccessConnections = HardeningModule.HashtableChecker.CheckValue<string>(HardeningModule.GlobalVars.MDM_Firewall_DomainProfile02, "EnableLogSuccessConnections", "true");
+
+                nestedObjectArray.Add(new HardeningModule.IndividualResult
+                {
+                    FriendlyName = "Log successful connections for domain profile",
+                    Compliant = MDM_Firewall_DomainProfile02_EnableLogSuccessConnections.IsMatch ? "True" : "False",
+                    Value = MDM_Firewall_DomainProfile02_EnableLogSuccessConnections.Value,
+                    Name = "Log successful connections for domain profile",
+                    Category = CatName,
+                    Method = "CIM"
+                });
+
+
                 // Process items in Registry resources.csv file with "Group Policy" origin and add them to the $NestedObjectArray array
                 foreach (var Result in (HardeningModule.CategoryProcessing.ProcessCategory(CatName, "Group Policy")))
                 {

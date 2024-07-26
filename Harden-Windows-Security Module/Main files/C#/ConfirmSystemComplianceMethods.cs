@@ -2103,6 +2103,20 @@ namespace HardeningModule
                 });
 
 
+                // Get the value and convert it to string
+                // https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-defender#allowcloudprotection
+                string MAPSReportingResult = Convert.ToString(HardeningModule.PropertyHelper.GetPropertyValue(HardeningModule.GlobalVars.MDAVPreferencesCurrent, "MAPSReporting"));
+                nestedObjectArray.Add(new HardeningModule.IndividualResult
+                {
+                    FriendlyName = "Join Microsoft MAPS (aka SpyNet)",
+                    Compliant = MAPSReportingResult.Equals("2", StringComparison.OrdinalIgnoreCase) ? "True" : "False",
+                    Value = MAPSReportingResult,
+                    Name = "Join Microsoft MAPS (aka SpyNet)",
+                    Category = CatName,
+                    Method = "CIM"
+                });
+
+
                 // Process items in Registry resources.csv file with "Group Policy" origin and add them to the $NestedObjectArray array
                 foreach (var Result in (HardeningModule.CategoryProcessing.ProcessCategory(CatName, "Group Policy")))
                 {

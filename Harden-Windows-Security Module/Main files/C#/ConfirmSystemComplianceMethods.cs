@@ -2040,7 +2040,8 @@ namespace HardeningModule
                 nestedObjectArray.Add(new HardeningModule.IndividualResult
                 {
                     FriendlyName = "Remote Encryption Protection Aggressiveness",
-                    Compliant = RemoteEncryptionProtectionAggressivenessResult.Equals("2", StringComparison.OrdinalIgnoreCase) ? "True" : "False",
+                    // Check if the value is 1 or 2, both are compliant
+                    Compliant = RemoteEncryptionProtectionAggressivenessResult.Equals("1", StringComparison.OrdinalIgnoreCase) || RemoteEncryptionProtectionAggressivenessResult.Equals("2", StringComparison.OrdinalIgnoreCase) ? "True" : "False",
                     Value = RemoteEncryptionProtectionAggressivenessResult,
                     Name = "Remote Encryption Protection Aggressiveness",
                     Category = CatName,
@@ -2140,6 +2141,20 @@ namespace HardeningModule
                     Compliant = CloudExtendedTimeoutResult.Equals("50", StringComparison.OrdinalIgnoreCase) ? "True" : "False",
                     Value = CloudExtendedTimeoutResult,
                     Name = "Extended cloud check (Seconds)",
+                    Category = CatName,
+                    Method = "CIM"
+                });
+
+
+                // Get the value and convert it to string
+                // https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-defender#puaprotection
+                string PUAProtectionResult = Convert.ToString(HardeningModule.PropertyHelper.GetPropertyValue(HardeningModule.GlobalVars.MDAVPreferencesCurrent, "PUAProtection"));
+                nestedObjectArray.Add(new HardeningModule.IndividualResult
+                {
+                    FriendlyName = "Detection for potentially unwanted applications",
+                    Compliant = PUAProtectionResult.Equals("1", StringComparison.OrdinalIgnoreCase) ? "True" : "False",
+                    Value = PUAProtectionResult,
+                    Name = "Detection for potentially unwanted applications",
                     Category = CatName,
                     Method = "CIM"
                 });

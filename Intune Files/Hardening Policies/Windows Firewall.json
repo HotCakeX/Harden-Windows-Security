@@ -3,7 +3,7 @@
     "createdDateTime": "2024-07-25T15:40:13.136302Z",
     "creationSource": null,
     "description": "Windows Firewall Category",
-    "lastModifiedDateTime": "2024-07-25T22:18:44.7874331Z",
+    "lastModifiedDateTime": "2024-07-26T15:54:24.0087482Z",
     "name": "Windows Firewall",
     "platforms": "windows10",
     "priorityMetaData": null,
@@ -76,7 +76,7 @@
                             "settingInstanceTemplateReference": null,
                             "choiceSettingValue": {
                                 "settingValueTemplateReference": null,
-                                "value": "vendor_msft_firewall_mdmstore_domainprofile_defaultoutboundaction_0",
+                                "value": "vendor_msft_firewall_mdmstore_domainprofile_defaultoutboundaction_1",
                                 "children": []
                             }
                         },
@@ -86,7 +86,7 @@
                             "settingInstanceTemplateReference": null,
                             "choiceSettingValue": {
                                 "settingValueTemplateReference": null,
-                                "value": "vendor_msft_firewall_mdmstore_domainprofile_disableinboundnotifications_false",
+                                "value": "vendor_msft_firewall_mdmstore_domainprofile_disableinboundnotifications_true",
                                 "children": []
                             }
                         },
@@ -186,7 +186,7 @@
                             "settingInstanceTemplateReference": null,
                             "choiceSettingValue": {
                                 "settingValueTemplateReference": null,
-                                "value": "vendor_msft_firewall_mdmstore_domainprofile_shielded_false",
+                                "value": "vendor_msft_firewall_mdmstore_domainprofile_shielded_true",
                                 "children": []
                             }
                         }

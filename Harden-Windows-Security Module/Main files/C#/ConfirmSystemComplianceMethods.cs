@@ -1113,7 +1113,6 @@ namespace HardeningModule
             return Task.Run(() =>
             {
 
-
                 // Create a new list to store the results
                 List<HardeningModule.IndividualResult> nestedObjectArray = new List<HardeningModule.IndividualResult>();
 
@@ -1176,8 +1175,6 @@ namespace HardeningModule
                 });
 
 
-
-
                 // Get the control from MDM CIM
                 HardeningModule.HashtableCheckerResult MDM_Firewall_PublicProfile02_LogMaxFileSize = HardeningModule.HashtableChecker.CheckValue<string>(HardeningModule.GlobalVars.MDM_Firewall_PublicProfile02, "LogMaxFileSize", "32767");
 
@@ -1215,6 +1212,76 @@ namespace HardeningModule
                     Compliant = MDM_Firewall_PublicProfile02_LogFilePath.IsMatch ? "True" : "False",
                     Value = MDM_Firewall_PublicProfile02_LogFilePath.Value,
                     Name = "Configure Log file path for Public profile",
+                    Category = CatName,
+                    Method = "CIM"
+                });
+
+
+                // Get the control from MDM CIM
+                HardeningModule.HashtableCheckerResult MDM_Firewall_PrivateProfile02_EnableFirewall = HardeningModule.HashtableChecker.CheckValue<string>(HardeningModule.GlobalVars.MDM_Firewall_PrivateProfile02, "EnableFirewall", "true");
+
+                nestedObjectArray.Add(new HardeningModule.IndividualResult
+                {
+                    FriendlyName = "Enable Windows Firewall for Private profile",
+                    Compliant = MDM_Firewall_PrivateProfile02_EnableFirewall.IsMatch ? "True" : "False",
+                    Value = MDM_Firewall_PrivateProfile02_EnableFirewall.Value,
+                    Name = "Enable Windows Firewall for Private profile",
+                    Category = CatName,
+                    Method = "CIM"
+                });
+
+
+                // Get the control from MDM CIM
+                HardeningModule.HashtableCheckerResult MDM_Firewall_PrivateProfile02_DisableInboundNotifications = HardeningModule.HashtableChecker.CheckValue<string>(HardeningModule.GlobalVars.MDM_Firewall_PrivateProfile02, "DisableInboundNotifications", "false");
+
+                nestedObjectArray.Add(new HardeningModule.IndividualResult
+                {
+                    FriendlyName = "Display notifications for Private profile",
+                    Compliant = MDM_Firewall_PrivateProfile02_DisableInboundNotifications.IsMatch ? "True" : "False",
+                    Value = MDM_Firewall_PrivateProfile02_DisableInboundNotifications.Value,
+                    Name = "Display notifications for Private profile",
+                    Category = CatName,
+                    Method = "CIM"
+                });
+
+
+                // Get the control from MDM CIM
+                HardeningModule.HashtableCheckerResult MDM_Firewall_PrivateProfile02_LogMaxFileSize = HardeningModule.HashtableChecker.CheckValue<string>(HardeningModule.GlobalVars.MDM_Firewall_PrivateProfile02, "LogMaxFileSize", "32767");
+
+                nestedObjectArray.Add(new HardeningModule.IndividualResult
+                {
+                    FriendlyName = "Configure Log file size for Private profile",
+                    Compliant = MDM_Firewall_PrivateProfile02_LogMaxFileSize.IsMatch ? "True" : "False",
+                    Value = MDM_Firewall_PrivateProfile02_LogMaxFileSize.Value,
+                    Name = "Configure Log file size for Private profile",
+                    Category = CatName,
+                    Method = "CIM"
+                });
+
+
+                // Get the control from MDM CIM
+                HardeningModule.HashtableCheckerResult MDM_Firewall_PrivateProfile02_EnableLogDroppedPackets = HardeningModule.HashtableChecker.CheckValue<string>(HardeningModule.GlobalVars.MDM_Firewall_PrivateProfile02, "EnableLogDroppedPackets", "true");
+
+                nestedObjectArray.Add(new HardeningModule.IndividualResult
+                {
+                    FriendlyName = "Log blocked connections for Private profile",
+                    Compliant = MDM_Firewall_PrivateProfile02_EnableLogDroppedPackets.IsMatch ? "True" : "False",
+                    Value = MDM_Firewall_PrivateProfile02_EnableLogDroppedPackets.Value,
+                    Name = "Log blocked connections for Private profile",
+                    Category = CatName,
+                    Method = "CIM"
+                });
+
+
+                // Get the control from MDM CIM
+                HardeningModule.HashtableCheckerResult MDM_Firewall_PrivateProfile02_LogFilePath = HardeningModule.HashtableChecker.CheckValue<string>(HardeningModule.GlobalVars.MDM_Firewall_PrivateProfile02, "LogFilePath", @"%systemroot%\system32\LogFiles\Firewall\Privatefirewall.log");
+
+                nestedObjectArray.Add(new HardeningModule.IndividualResult
+                {
+                    FriendlyName = "Configure Log file path for Private profile",
+                    Compliant = MDM_Firewall_PrivateProfile02_LogFilePath.IsMatch ? "True" : "False",
+                    Value = MDM_Firewall_PrivateProfile02_LogFilePath.Value,
+                    Name = "Configure Log file path for Private profile",
                     Category = CatName,
                     Method = "CIM"
                 });

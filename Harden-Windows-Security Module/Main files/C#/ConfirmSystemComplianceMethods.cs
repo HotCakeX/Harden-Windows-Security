@@ -2090,7 +2090,7 @@ namespace HardeningModule
                 });
 
 
-                // Get the value and convert it to bool
+                // Get the value and convert it to string
                 // https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-defender#submitsamplesconsent
                 string SubmitSamplesConsentResult = Convert.ToString(HardeningModule.PropertyHelper.GetPropertyValue(HardeningModule.GlobalVars.MDAVPreferencesCurrent, "SubmitSamplesConsent"));
                 nestedObjectArray.Add(new HardeningModule.IndividualResult
@@ -2160,7 +2160,7 @@ namespace HardeningModule
                 });
 
 
-                // Get the value and convert it to string
+                // Get the value and convert it to bool
                 // https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-defender#disablecatchupquickscan
                 bool DisableCatchupQuickScanResult = Convert.ToBoolean(HardeningModule.PropertyHelper.GetPropertyValue(HardeningModule.GlobalVars.MDAVPreferencesCurrent, "DisableCatchupQuickScan"));
                 nestedObjectArray.Add(new HardeningModule.IndividualResult
@@ -2169,6 +2169,20 @@ namespace HardeningModule
                     Compliant = DisableCatchupQuickScanResult ? "False" : "True",
                     Value = DisableCatchupQuickScanResult ? "False" : "True",
                     Name = "Catchup Quick Scan",
+                    Category = CatName,
+                    Method = "CIM"
+                });
+
+
+                // Get the value and convert it to bool
+                // https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-defender#checkforsignaturesbeforerunningscan
+                bool CheckForSignaturesBeforeRunningScanResult = Convert.ToBoolean(HardeningModule.PropertyHelper.GetPropertyValue(HardeningModule.GlobalVars.MDAVPreferencesCurrent, "CheckForSignaturesBeforeRunningScan"));
+                nestedObjectArray.Add(new HardeningModule.IndividualResult
+                {
+                    FriendlyName = "Check For Signatures Before Running Scan",
+                    Compliant = CheckForSignaturesBeforeRunningScanResult ? "True" : "False",
+                    Value = CheckForSignaturesBeforeRunningScanResult ? "True" : "False",
+                    Name = "Check For Signatures Before Running Scan",
                     Category = CatName,
                     Method = "CIM"
                 });

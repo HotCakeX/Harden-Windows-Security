@@ -1162,6 +1162,64 @@ namespace HardeningModule
                 });
 
 
+                // Get the control from MDM CIM
+                HardeningModule.HashtableCheckerResult MDM_Firewall_PublicProfile02_DisableInboundNotifications = HardeningModule.HashtableChecker.CheckValue<string>(HardeningModule.GlobalVars.MDM_Firewall_PublicProfile02, "DisableInboundNotifications", "false");
+
+                nestedObjectArray.Add(new HardeningModule.IndividualResult
+                {
+                    FriendlyName = "Display notifications for Public profile",
+                    Compliant = MDM_Firewall_PublicProfile02_DisableInboundNotifications.IsMatch ? "True" : "False",
+                    Value = MDM_Firewall_PublicProfile02_DisableInboundNotifications.Value,
+                    Name = "Display notifications for Public profile",
+                    Category = CatName,
+                    Method = "CIM"
+                });
+
+
+
+
+                // Get the control from MDM CIM
+                HardeningModule.HashtableCheckerResult MDM_Firewall_PublicProfile02_LogMaxFileSize = HardeningModule.HashtableChecker.CheckValue<string>(HardeningModule.GlobalVars.MDM_Firewall_PublicProfile02, "LogMaxFileSize", "32767");
+
+                nestedObjectArray.Add(new HardeningModule.IndividualResult
+                {
+                    FriendlyName = "Configure Log file size for Public profile",
+                    Compliant = MDM_Firewall_PublicProfile02_LogMaxFileSize.IsMatch ? "True" : "False",
+                    Value = MDM_Firewall_PublicProfile02_LogMaxFileSize.Value,
+                    Name = "Configure Log file size for Public profile",
+                    Category = CatName,
+                    Method = "CIM"
+                });
+
+
+                // Get the control from MDM CIM
+                HardeningModule.HashtableCheckerResult MDM_Firewall_PublicProfile02_EnableLogDroppedPackets = HardeningModule.HashtableChecker.CheckValue<string>(HardeningModule.GlobalVars.MDM_Firewall_PublicProfile02, "EnableLogDroppedPackets", "true");
+
+                nestedObjectArray.Add(new HardeningModule.IndividualResult
+                {
+                    FriendlyName = "Log blocked connections for Public profile",
+                    Compliant = MDM_Firewall_PublicProfile02_EnableLogDroppedPackets.IsMatch ? "True" : "False",
+                    Value = MDM_Firewall_PublicProfile02_EnableLogDroppedPackets.Value,
+                    Name = "Log blocked connections for Public profile",
+                    Category = CatName,
+                    Method = "CIM"
+                });
+
+
+                // Get the control from MDM CIM
+                HardeningModule.HashtableCheckerResult MDM_Firewall_PublicProfile02_LogFilePath = HardeningModule.HashtableChecker.CheckValue<string>(HardeningModule.GlobalVars.MDM_Firewall_PublicProfile02, "LogFilePath", @"%systemroot%\system32\LogFiles\Firewall\Publicfirewall.log");
+
+                nestedObjectArray.Add(new HardeningModule.IndividualResult
+                {
+                    FriendlyName = "Configure Log file path for Public profile",
+                    Compliant = MDM_Firewall_PublicProfile02_LogFilePath.IsMatch ? "True" : "False",
+                    Value = MDM_Firewall_PublicProfile02_LogFilePath.Value,
+                    Name = "Configure Log file path for Public profile",
+                    Category = CatName,
+                    Method = "CIM"
+                });
+
+
                 // Process items in Registry resources.csv file with "Group Policy" origin and add them to the $NestedObjectArray array
                 foreach (var Result in (HardeningModule.CategoryProcessing.ProcessCategory(CatName, "Group Policy")))
                 {

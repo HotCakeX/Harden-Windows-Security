@@ -2160,6 +2160,20 @@ namespace HardeningModule
                 });
 
 
+                // Get the value and convert it to string
+                // https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-defender#disablecatchupquickscan
+                bool DisableCatchupQuickScanResult = Convert.ToBoolean(HardeningModule.PropertyHelper.GetPropertyValue(HardeningModule.GlobalVars.MDAVPreferencesCurrent, "DisableCatchupQuickScan"));
+                nestedObjectArray.Add(new HardeningModule.IndividualResult
+                {
+                    FriendlyName = "Catchup Quick Scan",
+                    Compliant = DisableCatchupQuickScanResult ? "False" : "True",
+                    Value = DisableCatchupQuickScanResult ? "False" : "True",
+                    Name = "Catchup Quick Scan",
+                    Category = CatName,
+                    Method = "CIM"
+                });
+
+
                 // Process items in Registry resources.csv file with "Group Policy" origin and add them to the $NestedObjectArray array
                 foreach (var Result in (HardeningModule.CategoryProcessing.ProcessCategory(CatName, "Group Policy")))
                 {

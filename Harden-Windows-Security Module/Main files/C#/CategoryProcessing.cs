@@ -7,6 +7,8 @@ using System.Text;
 
 namespace HardeningModule
 {
+    // Registry keys are case-insensitive
+    // https://learn.microsoft.com/en-us/windows/win32/sysinfo/structure-of-the-registry
     public class CategoryProcessing
     {
         // to store the structure of the Registry resources CSV data

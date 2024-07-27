@@ -2228,6 +2228,20 @@ namespace HardeningModule
                 });
 
 
+                // Get the value and convert it to string
+                // https://learn.microsoft.com/en-us/windows/client-management/mdm/defender-csp#configurationmeteredconnectionupdates
+                bool MeteredConnectionUpdatesResult = Convert.ToBoolean(HardeningModule.PropertyHelper.GetPropertyValue(HardeningModule.GlobalVars.MDAVPreferencesCurrent, "MeteredConnectionUpdates"));
+                nestedObjectArray.Add(new HardeningModule.IndividualResult
+                {
+                    FriendlyName = "Allows Microsoft Defender Antivirus to update over a metered connection",
+                    Compliant = MeteredConnectionUpdatesResult ? "True" : "False",
+                    Value = MeteredConnectionUpdatesResult ? "True" : "False",
+                    Name = "Allows Microsoft Defender Antivirus to update over a metered connection",
+                    Category = CatName,
+                    Method = "CIM"
+                });
+
+
                 // Process items in Registry resources.csv file with "Group Policy" origin and add them to the $NestedObjectArray array
                 foreach (var Result in (HardeningModule.CategoryProcessing.ProcessCategory(CatName, "Group Policy")))
                 {

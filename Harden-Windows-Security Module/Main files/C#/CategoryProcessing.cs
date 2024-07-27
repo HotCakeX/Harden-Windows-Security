@@ -19,7 +19,7 @@ namespace HardeningModule
             public string Name { get; set; }
             public string FriendlyName { get; set; }
             public string Type { get; set; }
-            public string Value { get; set; }
+            public List<string> Value { get; set; }
             public string CSPLink { get; set; }
         }
 
@@ -52,6 +52,9 @@ namespace HardeningModule
 
                     if (fields.Length == 9)
                     {
+                        // Split the value field by commas and remove surrounding quotes
+                        List<string> values = fields[7].Trim('"').Split(',').Select(v => v.Trim()).ToList();
+
                         records.Add(new CsvRecord
                         {
                             Origin = fields[0],
@@ -61,7 +64,7 @@ namespace HardeningModule
                             Name = fields[4],
                             FriendlyName = fields[5],
                             Type = fields[6],
-                            Value = fields[7],
+                            Value = values,
                             CSPLink = fields[8]
                         });
                     }
@@ -179,13 +182,13 @@ namespace HardeningModule
                                 regValueStr = regValue?.ToString();
                             }
 
-                            // Parse the expected value based on its type in the CSV file
-                            object parsedValue = ParseRegistryValue(type: item.Type, value: item.Value);
+                            // Parse the expected values based on their type in the CSV file
+                            var parsedValues = item.Value.Select(v => ParseRegistryValue(type: item.Type, value: v)).ToList();
 
-                            // Check if the registry value matches the expected value
-                            if (regValue != null && CompareRegistryValues(type: item.Type, regValue: regValue, expectedValue: parsedValue))
+                            // Check if the registry value matches any of the expected values
+                            if (regValue != null && parsedValues.Any(parsedValue => CompareRegistryValues(type: item.Type, regValue: regValue, expectedValue: parsedValue)))
                             {
-                                // Set valueMatches to "True" if it matches
+                                // Set valueMatches to "True" if it matches any expected value
                                 valueMatches = "True";
                             }
                         }
@@ -217,13 +220,13 @@ namespace HardeningModule
                                 regValueStr = regValue?.ToString();
                             }
 
-                            // Parse the expected value based on its type in the CSV file
-                            object parsedValue = ParseRegistryValue(type: item.Type, value: item.Value);
+                            // Parse the expected values based on their type in the CSV file
+                            var parsedValues = item.Value.Select(v => ParseRegistryValue(type: item.Type, value: v)).ToList();
 
-                            // Check if the registry value matches the expected value
-                            if (regValue != null && CompareRegistryValues(type: item.Type, regValue: regValue, expectedValue: parsedValue))
+                            // Check if the registry value matches any of the expected values
+                            if (regValue != null && parsedValues.Any(parsedValue => CompareRegistryValues(type: item.Type, regValue: regValue, expectedValue: parsedValue)))
                             {
-                                // Set valueMatches to "True" if it matches
+                                // Set valueMatches to "True" if it matches any expected value
                                 valueMatches = "True";
                             }
                         }

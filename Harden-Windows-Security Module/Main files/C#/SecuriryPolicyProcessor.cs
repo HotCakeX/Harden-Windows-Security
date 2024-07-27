@@ -6,11 +6,20 @@ namespace HardeningModule
 {
     public class SecurityPolicyChecker
     {
+        /// <summary>
+        /// The method is used to verify the compliance of security group policies on the system against the predefined values in the SecurityPoliciesVerification.csv
+        /// </summary>
+        /// <param name="category">The category to filter the CSV file content by</param>
+        /// <returns></returns>
         public static List<HardeningModule.IndividualResult> CheckPolicyCompliance(string category)
         {
+            // Create a list of IndividualResult objects
             List<HardeningModule.IndividualResult> nestedObjectArray = new List<HardeningModule.IndividualResult>();
+
+            // Filter the CSV data to only get the records that match the input category
             var csvRecords = HardeningModule.GlobalVars.SecurityPolicyRecords.Where(record => record.Category.Equals(category, StringComparison.OrdinalIgnoreCase)).ToList();
 
+            // Loop over each filtered CSV data
             foreach (var record in csvRecords)
             {
                 string section = record.Section;

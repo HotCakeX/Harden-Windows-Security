@@ -256,6 +256,20 @@ namespace HardeningModule
                 });
 
 
+                // Get the control from MDM CIM
+                HardeningModule.HashtableCheckerResult MDM_Policy_Result01_Update02_AllowAutoUpdate = HardeningModule.HashtableChecker.CheckValue<string>(HardeningModule.GlobalVars.MDM_Policy_Result01_Update02, "AllowAutoUpdate", "1");
+
+                nestedObjectArray.Add(new HardeningModule.IndividualResult
+                {
+                    FriendlyName = "Automatically download updates and install them on maintenance day",
+                    Compliant = MDM_Policy_Result01_Update02_AllowAutoUpdate.IsMatch ? "True" : "False",
+                    Value = MDM_Policy_Result01_Update02_AllowAutoUpdate.Value,
+                    Name = "Automatically download updates and install them on maintenance day",
+                    Category = CatName,
+                    Method = "CIM"
+                });
+
+
                 // Process items in Registry resources.csv file with "Group Policy" origin and add them to the nestedObjectArray array
                 foreach (var Result in (HardeningModule.CategoryProcessing.ProcessCategory(CatName, "Group Policy")))
                 {

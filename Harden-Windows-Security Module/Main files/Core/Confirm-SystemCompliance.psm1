@@ -179,7 +179,7 @@ function Confirm-SystemCompliance {
             # using schtasks.exe instead of CimInstance/cmdlet wherever it makes the process faster
             Write-Verbose -Message 'Collecting Intune applied policy details from the System'
             # MDM_BitLocker
-            [System.String[]]$CimInstancesList = @('MDM_Firewall_DomainProfile02', 'MDM_Firewall_PrivateProfile02', 'MDM_Firewall_PublicProfile02', 'MDM_Policy_Result01_Update02')
+            [System.String[]]$CimInstancesList = @('MDM_Firewall_DomainProfile02', 'MDM_Firewall_PrivateProfile02', 'MDM_Firewall_PublicProfile02', 'MDM_Policy_Result01_Update02', 'MDM_Policy_Result01_System02')
             [System.String]$TaskPathGUID = [System.Guid]::NewGuid().ToString().Replace('-', '')
             [System.String]$BaseDirectory = [HardeningModule.GlobalVars]::WorkingDir
             [System.String]$TaskPath = "CimInstances$TaskPathGUID"
@@ -214,12 +214,14 @@ function Confirm-SystemCompliance {
             [System.IO.FileInfo]$MDM_Firewall_PrivateProfile02_Path = [System.IO.Path]::Combine([HardeningModule.GlobalVars]::WorkingDir, 'MDM_Firewall_PrivateProfile02.json')
             [System.IO.FileInfo]$MDM_Firewall_PublicProfile02_Path = [System.IO.Path]::Combine([HardeningModule.GlobalVars]::WorkingDir, 'MDM_Firewall_PublicProfile02.json')
             [System.IO.FileInfo]$MDM_Policy_Result01_Update02_Path = [System.IO.Path]::Combine([HardeningModule.GlobalVars]::WorkingDir, 'MDM_Policy_Result01_Update02.json')
+            [System.IO.FileInfo]$MDM_Policy_Result01_System02_Path = [System.IO.Path]::Combine([HardeningModule.GlobalVars]::WorkingDir, 'MDM_Policy_Result01_System02.json')
 
             # Parse the JSON Files and store the results in global variables
             [HardeningModule.GlobalVars]::MDM_Firewall_DomainProfile02 = [HardeningModule.JsonToHashtable]::ProcessJsonFile($MDM_Firewall_DomainProfile02_Path)
             [HardeningModule.GlobalVars]::MDM_Firewall_PrivateProfile02 = [HardeningModule.JsonToHashtable]::ProcessJsonFile($MDM_Firewall_PrivateProfile02_Path)
             [HardeningModule.GlobalVars]::MDM_Firewall_PublicProfile02 = [HardeningModule.JsonToHashtable]::ProcessJsonFile($MDM_Firewall_PublicProfile02_Path)
             [HardeningModule.GlobalVars]::MDM_Policy_Result01_Update02 = [HardeningModule.JsonToHashtable]::ProcessJsonFile($MDM_Policy_Result01_Update02_Path)
+            [HardeningModule.GlobalVars]::MDM_Policy_Result01_System02 = [HardeningModule.JsonToHashtable]::ProcessJsonFile($MDM_Policy_Result01_System02_Path)
 
             $CurrentMainStep++
             Write-Progress -Id 0 -Activity 'Verifying the security settings' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)

@@ -78,7 +78,7 @@ root\cimv2\mdm\dmmap,MDM_Policy_Result01_SmartScreen02,TRUE
 root\cimv2\mdm\dmmap,MDM_Policy_Result01_Speech02,TRUE
 root\cimv2\mdm\dmmap,MDM_Policy_Result01_Start02,TRUE
 root\cimv2\mdm\dmmap,MDM_Policy_Result01_Storage02,TRUE
-root\cimv2\mdm\dmmap,MDM_Policy_Result01_System02,TRUE
+root\cimv2\mdm\dmmap,MDM_Policy_Result01_System02,FALSE,This class only outputs accurate info when queried with SYSTEM privileges
 root\cimv2\mdm\dmmap,MDM_Policy_Result01_TaskManager02,TRUE
 root\cimv2\mdm\dmmap,MDM_Policy_Result01_TaskScheduler02,TRUE
 root\cimv2\mdm\dmmap,MDM_Policy_Result01_TenantRestrictions02,TRUE
@@ -86,7 +86,7 @@ root\cimv2\mdm\dmmap,MDM_Policy_Result01_TextInput02,TRUE
 root\cimv2\mdm\dmmap,MDM_Policy_Result01_Theme02,TRUE
 root\cimv2\mdm\dmmap,MDM_Policy_Result01_TimeLanguageSettings02,TRUE
 root\cimv2\mdm\dmmap,MDM_Policy_Result01_Troubleshooting02,TRUE
-root\cimv2\mdm\dmmap,MDM_Policy_Result01_Update02,FALSE,This class outputs accurate info when queried with SYSTEM privileges
+root\cimv2\mdm\dmmap,MDM_Policy_Result01_Update02,FALSE,This class only outputs accurate info when queried with SYSTEM privileges
 root\cimv2\mdm\dmmap,MDM_Policy_Result01_UserModel02,TRUE
 root\cimv2\mdm\dmmap,MDM_Policy_Result01_UserRights02,TRUE
 root\cimv2\mdm\dmmap,MDM_Policy_Result01_VirtualizationBasedTechnology02,TRUE

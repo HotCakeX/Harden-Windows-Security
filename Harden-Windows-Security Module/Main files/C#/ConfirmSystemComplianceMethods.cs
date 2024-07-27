@@ -811,6 +811,21 @@ namespace HardeningModule
                     HardeningModule.GlobalVars.TotalNumberOfTrueCompliantValues--;
                 }
 
+
+                // Get the control from MDM CIM
+                HardeningModule.HashtableCheckerResult MDM_Policy_Result01_System02_AllowLocation = HardeningModule.HashtableChecker.CheckValue<string>(HardeningModule.GlobalVars.MDM_Policy_Result01_System02, "AllowLocation", "0");
+
+                nestedObjectArray.Add(new HardeningModule.IndividualResult
+                {
+                    FriendlyName = "Disable Location",
+                    Compliant = MDM_Policy_Result01_System02_AllowLocation.IsMatch ? "True" : "False",
+                    Value = MDM_Policy_Result01_System02_AllowLocation.Value,
+                    Name = "Disable Location",
+                    Category = CatName,
+                    Method = "CIM"
+                });
+
+
                 // Process items in Registry resources.csv file with "Group Policy" origin and add them to the $NestedObjectArray array
                 foreach (var Result in (HardeningModule.CategoryProcessing.ProcessCategory(CatName, "Group Policy")))
                 {

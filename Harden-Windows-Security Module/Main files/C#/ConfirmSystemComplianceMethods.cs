@@ -1595,20 +1595,28 @@ namespace HardeningModule
                 }
 
                 // Process the system mitigations result from the XML file
-                Dictionary<string, HashSet<string>> RevisedProcessMitigationsOnTheSystem = MitigationPolicyProcessor.ProcessMitigationPolicies(HardeningModule.GlobalVars.CurrentlyAppliedMitigations);
+                // It's necessary to make the HashSet ordinal IgnoreCase since mitigations applied from Intune vs applied locally might have different casing
+                Dictionary<string, HashSet<string>> RevisedProcessMitigationsOnTheSystem =
+                    MitigationPolicyProcessor.ProcessMitigationPolicies(HardeningModule.GlobalVars.CurrentlyAppliedMitigations)
+                    .ToDictionary(
+                        kvp => kvp.Key,
+                        kvp => new HashSet<string>(kvp.Value, StringComparer.OrdinalIgnoreCase),
+                        StringComparer.OrdinalIgnoreCase
+                    );
 
                 // Import the CSV file as an object
                 List<HardeningModule.ProcessMitigationsParser.ProcessMitigationsRecords> ProcessMitigations = HardeningModule.GlobalVars.ProcessMitigations;
 
                 // Only keep the enabled mitigations in the CSV, then group the data by ProgramName
                 var GroupedMitigations = ProcessMitigations
-          .Where(x => x.Action == "Enable")
-          .GroupBy(x => x.ProgramName)
-          .Select(g => new { ProgramName = g.Key, Mitigations = g.Select(x => x.Mitigation).ToArray() })
-          .ToList();
+                    .Where(x => x.Action.Equals("Enable", StringComparison.OrdinalIgnoreCase))
+                    // case insensitive grouping is necessary so that for e.g., lsass.exe and LSASS.exe will be out in the same group
+                    .GroupBy(x => x.ProgramName, StringComparer.OrdinalIgnoreCase)
+                    .Select(g => new { ProgramName = g.Key, Mitigations = g.Select(x => x.Mitigation).ToArray() })
+                    .ToList();
 
                 // A dictionary to store the output of the CSV file
-                Dictionary<string, string[]> TargetMitigations = new Dictionary<string, string[]>();
+                Dictionary<string, string[]> TargetMitigations = new Dictionary<string, string[]>(StringComparer.OrdinalIgnoreCase);
 
                 // Loop through each group in the grouped mitigations array and add the ProgramName and Mitigations to the dictionary
                 foreach (var item in GroupedMitigations)
@@ -1632,7 +1640,7 @@ namespace HardeningModule
                         HashSet<string> ProcessMitigations_Applied = RevisedProcessMitigationsOnTheSystem[ProcessName_Target];
 
                         // Convert the arrays to HashSet for order-agnostic comparison
-                        HashSet<string> targetSet = new HashSet<string>(ProcessMitigations_Target);
+                        HashSet<string> targetSet = new HashSet<string>(ProcessMitigations_Target, StringComparer.OrdinalIgnoreCase);
 
                         // Compare the values of the two dictionaries to see if they are the same without considering the order of the elements (process mitigations)
                         if (!targetSet.SetEquals(ProcessMitigations_Applied))

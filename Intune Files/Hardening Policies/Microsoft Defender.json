@@ -1,18 +1,18 @@
 ﻿{
     "@odata.context": "https://graph.microsoft.com/beta/$metadata#deviceManagement/configurationPolicies/$entity",
-    "createdDateTime": "2024-07-25T15:40:49.6801966Z",
+    "createdDateTime": "2024-07-27T05:56:17.5257154Z",
     "creationSource": null,
     "description": "Microsoft Defender Category",
-    "lastModifiedDateTime": "2024-07-26T20:31:24.2933521Z",
+    "lastModifiedDateTime": "2024-07-27T07:31:53.7698352Z",
     "name": "Microsoft Defender",
     "platforms": "windows10",
     "priorityMetaData": null,
     "roleScopeTagIds": [
         "0"
     ],
-    "settingCount": 67,
+    "settingCount": 69,
     "technologies": "mdm",
-    "id": "c389cec0-6f97-4714-8132-09bf9481cdf2",
+    "id": "f556b02e-18b2-4309-9451-50153ac3920e",
     "templateReference": {
         "templateId": "",
         "templateFamily": "none",
@@ -725,6 +725,19 @@
             "id": "48",
             "settingInstance": {
                 "@odata.type": "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance",
+                "settingDefinitionId": "device_vendor_msft_defender_configuration_enableconvertwarntoblock",
+                "settingInstanceTemplateReference": null,
+                "choiceSettingValue": {
+                    "settingValueTemplateReference": null,
+                    "value": "device_vendor_msft_defender_configuration_enableconvertwarntoblock_1",
+                    "children": []
+                }
+            }
+        },
+        {
+            "id": "49",
+            "settingInstance": {
+                "@odata.type": "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance",
                 "settingDefinitionId": "device_vendor_msft_policy_config_defender_enablenetworkprotection",
                 "settingInstanceTemplateReference": null,
                 "choiceSettingValue": {
@@ -735,7 +748,7 @@
             }
         },
         {
-            "id": "49",
+            "id": "50",
             "settingInstance": {
                 "@odata.type": "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance",
                 "settingDefinitionId": "device_vendor_msft_defender_configuration_inteltdtenabled",
@@ -748,7 +761,7 @@
             }
         },
         {
-            "id": "50",
+            "id": "51",
             "settingInstance": {
                 "@odata.type": "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance",
                 "settingDefinitionId": "device_vendor_msft_defender_configuration_meteredconnectionupdates",
@@ -761,7 +774,7 @@
             }
         },
         {
-            "id": "51",
+            "id": "52",
             "settingInstance": {
                 "@odata.type": "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance",
                 "settingDefinitionId": "device_vendor_msft_defender_configuration_networkprotectionreputationmode",
@@ -774,7 +787,7 @@
             }
         },
         {
-            "id": "52",
+            "id": "53",
             "settingInstance": {
                 "@odata.type": "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance",
                 "settingDefinitionId": "device_vendor_msft_defender_configuration_oobeenablertpandsigupdate",
@@ -787,7 +800,7 @@
             }
         },
         {
-            "id": "53",
+            "id": "54",
             "settingInstance": {
                 "@odata.type": "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance",
                 "settingDefinitionId": "device_vendor_msft_defender_configuration_performancemodestatus",
@@ -800,7 +813,7 @@
             }
         },
         {
-            "id": "54",
+            "id": "55",
             "settingInstance": {
                 "@odata.type": "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance",
                 "settingDefinitionId": "device_vendor_msft_policy_config_defender_puaprotection",
@@ -813,7 +826,7 @@
             }
         },
         {
-            "id": "55",
+            "id": "56",
             "settingInstance": {
                 "@odata.type": "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance",
                 "settingDefinitionId": "device_vendor_msft_defender_configuration_behavioralnetworkblocks_remoteencryptionprotection_remoteencryptionprotectionaggressiveness",
@@ -826,7 +839,7 @@
             }
         },
         {
-            "id": "56",
+            "id": "57",
             "settingInstance": {
                 "@odata.type": "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance",
                 "settingDefinitionId": "device_vendor_msft_defender_configuration_behavioralnetworkblocks_remoteencryptionprotection_remoteencryptionprotectionconfiguredstate",
@@ -839,7 +852,7 @@
             }
         },
         {
-            "id": "57",
+            "id": "58",
             "settingInstance": {
                 "@odata.type": "#microsoft.graph.deviceManagementConfigurationSimpleSettingInstance",
                 "settingDefinitionId": "device_vendor_msft_defender_configuration_behavioralnetworkblocks_remoteencryptionprotection_remoteencryptionprotectionmaxblocktime",
@@ -852,7 +865,7 @@
             }
         },
         {
-            "id": "58",
+            "id": "59",
             "settingInstance": {
                 "@odata.type": "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance",
                 "settingDefinitionId": "device_vendor_msft_defender_configuration_securityintelligenceupdateschannel",
@@ -865,7 +878,7 @@
             }
         },
         {
-            "id": "59",
+            "id": "60",
             "settingInstance": {
                 "@odata.type": "#microsoft.graph.deviceManagementConfigurationSimpleSettingInstance",
                 "settingDefinitionId": "device_vendor_msft_policy_config_defender_signatureupdateinterval",
@@ -878,7 +891,7 @@
             }
         },
         {
-            "id": "60",
+            "id": "61",
             "settingInstance": {
                 "@odata.type": "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance",
                 "settingDefinitionId": "device_vendor_msft_policy_config_defender_submitsamplesconsent",
@@ -891,7 +904,20 @@
             }
         },
         {
-            "id": "61",
+            "id": "62",
+            "settingInstance": {
+                "@odata.type": "#microsoft.graph.deviceManagementConfigurationSimpleSettingInstance",
+                "settingDefinitionId": "device_vendor_msft_policy_config_exploitguard_exploitprotectionsettings",
+                "settingInstanceTemplateReference": null,
+                "simpleSettingValue": {
+                    "@odata.type": "#microsoft.graph.deviceManagementConfigurationStringSettingValue",
+                    "settingValueTemplateReference": null,
+                    "value": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<MitigationPolicy>\n  <SystemConfig>\n    <ASLR ForceRelocateImages=\"true\" RequireInfo=\"false\" />\n  </SystemConfig>\n  <AppConfig Executable=\"Acrobat.exe\">\n    <ASLR ForceRelocateImages=\"true\" RequireInfo=\"true\" />\n    <StrictHandle Enable=\"true\" />\n    <SignedBinaries EnforceModuleDependencySigning=\"true\" />\n    <Fonts DisableNonSystemFonts=\"true\" AuditOnly=\"false\" />\n    <ImageLoad BlockRemoteImageLoads=\"true\" BlockLowLabelImageLoads=\"true\" />\n    <Payload EnableRopStackPivot=\"true\" EnableRopCallerCheck=\"true\" />\n    <UserShadowStack UserShadowStack=\"true\" UserShadowStackStrictMode=\"false\" />\n  </AppConfig>\n  <AppConfig Executable=\"csrss.exe\">\n    <ImageLoad BlockRemoteImageLoads=\"true\" />\n  </AppConfig>\n  <AppConfig Executable=\"EXCEL.EXE\">\n    <StrictHandle Enable=\"true\" />\n    <ExtensionPoints DisableExtensionPoints=\"true\" />\n    <SignedBinaries MicrosoftSignedOnly=\"true\" AllowStoreSignedBinaries=\"true\" EnforceModuleDependencySigning=\"true\" />\n    <Payload EnableRopStackPivot=\"true\" EnableRopCallerCheck=\"true\" />\n  </AppConfig>\n  <AppConfig Executable=\"explorer.exe\">\n    <StrictHandle Enable=\"true\" />\n    <ExtensionPoints DisableExtensionPoints=\"true\" />\n  </AppConfig>\n  <AppConfig Executable=\"lsass.exe\">\n    <ExtensionPoints DisableExtensionPoints=\"true\" />\n    <DynamicCode BlockDynamicCode=\"true\" AllowThreadsToOptOut=\"false\" />\n    <SignedBinaries MicrosoftSignedOnly=\"true\" AllowStoreSignedBinaries=\"false\" />\n    <ImageLoad BlockRemoteImageLoads=\"true\" />\n    <ChildProcess DisallowChildProcessCreation=\"true\" />\n  </AppConfig>\n  <AppConfig Executable=\"MSACCESS.EXE\">\n    <StrictHandle Enable=\"true\" />\n    <ExtensionPoints DisableExtensionPoints=\"true\" />\n    <SignedBinaries MicrosoftSignedOnly=\"true\" AllowStoreSignedBinaries=\"true\" EnforceModuleDependencySigning=\"true\" />\n    <Payload EnableRopStackPivot=\"true\" EnableRopCallerCheck=\"true\" />\n  </AppConfig>\n  <AppConfig Executable=\"msedge.exe\">\n    <ExtensionPoints DisableExtensionPoints=\"true\" />\n    <ControlFlowGuard Enable=\"true\" SuppressExports=\"false\" StrictControlFlowGuard=\"true\" />\n    <SignedBinaries MicrosoftSignedOnly=\"true\" AllowStoreSignedBinaries=\"true\" EnforceModuleDependencySigning=\"true\" />\n    <ImageLoad BlockRemoteImageLoads=\"true\" BlockLowLabelImageLoads=\"true\" />\n    <UserShadowStack UserShadowStack=\"true\" UserShadowStackStrictMode=\"true\" />\n  </AppConfig>\n  <AppConfig Executable=\"msedgewebview2.exe\">\n    <ExtensionPoints DisableExtensionPoints=\"true\" />\n    <ControlFlowGuard Enable=\"true\" SuppressExports=\"false\" StrictControlFlowGuard=\"true\" />\n    <SignedBinaries EnforceModuleDependencySigning=\"true\" />\n  </AppConfig>\n  <AppConfig Executable=\"MSPUB.EXE\">\n    <StrictHandle Enable=\"true\" />\n    <ExtensionPoints DisableExtensionPoints=\"true\" />\n    <SignedBinaries MicrosoftSignedOnly=\"true\" AllowStoreSignedBinaries=\"true\" EnforceModuleDependencySigning=\"true\" />\n    <Payload EnableRopStackPivot=\"true\" EnableRopCallerCheck=\"true\" />\n  </AppConfig>\n  <AppConfig Executable=\"NisSrv.exe\">\n    <SignedBinaries MicrosoftSignedOnly=\"true\" AllowStoreSignedBinaries=\"false\" />\n  </AppConfig>\n  <AppConfig Executable=\"OneDrive.exe\">\n    <StrictHandle Enable=\"true\" />\n    <ExtensionPoints DisableExtensionPoints=\"true\" />\n    <SignedBinaries MicrosoftSignedOnly=\"true\" AllowStoreSignedBinaries=\"true\" EnforceModuleDependencySigning=\"true\" />\n    <Payload EnableRopStackPivot=\"true\" EnableRopCallerCheck=\"true\" />\n  </AppConfig>\n  <AppConfig Executable=\"ONENOTE.EXE\">\n    <StrictHandle Enable=\"true\" />\n    <ExtensionPoints DisableExtensionPoints=\"true\" />\n    <SignedBinaries MicrosoftSignedOnly=\"true\" AllowStoreSignedBinaries=\"true\" EnforceModuleDependencySigning=\"true\" />\n    <Payload EnableRopStackPivot=\"true\" EnableRopCallerCheck=\"true\" />\n  </AppConfig>\n  <AppConfig Executable=\"OUTLOOK.EXE\">\n    <StrictHandle Enable=\"true\" />\n    <ExtensionPoints DisableExtensionPoints=\"true\" />\n    <SignedBinaries MicrosoftSignedOnly=\"true\" AllowStoreSignedBinaries=\"true\" EnforceModuleDependencySigning=\"true\" />\n    <Payload EnableRopStackPivot=\"true\" EnableRopCallerCheck=\"true\" />\n  </AppConfig>\n  <AppConfig Executable=\"POWERPNT.EXE\">\n    <StrictHandle Enable=\"true\" />\n    <ExtensionPoints DisableExtensionPoints=\"true\" />\n    <SignedBinaries MicrosoftSignedOnly=\"true\" AllowStoreSignedBinaries=\"true\" EnforceModuleDependencySigning=\"true\" />\n    <Payload EnableRopStackPivot=\"true\" EnableRopCallerCheck=\"true\" />\n  </AppConfig>\n  <AppConfig Executable=\"QuickAssist.exe\">\n    <StrictHandle Enable=\"true\" />\n    <ExtensionPoints DisableExtensionPoints=\"true\" />\n    <DynamicCode BlockDynamicCode=\"true\" AllowThreadsToOptOut=\"false\" />\n    <SignedBinaries MicrosoftSignedOnly=\"true\" AllowStoreSignedBinaries=\"true\" EnforceModuleDependencySigning=\"true\" />\n    <Fonts DisableNonSystemFonts=\"true\" AuditOnly=\"false\" />\n    <ImageLoad BlockRemoteImageLoads=\"true\" BlockLowLabelImageLoads=\"true\" />\n    <Payload EnableExportAddressFilter=\"true\" EnableExportAddressFilterPlus=\"true\" EnableImportAddressFilter=\"true\" EnableRopStackPivot=\"true\" EnableRopCallerCheck=\"true\" />\n    <UserShadowStack UserShadowStack=\"true\" UserShadowStackStrictMode=\"true\" />\n  </AppConfig>\n  <AppConfig Executable=\"Regsvr32.exe\">\n    <ImageLoad BlockLowLabelImageLoads=\"true\" />\n  </AppConfig>\n  <AppConfig Executable=\"rundll32.exe\">\n    <ImageLoad BlockRemoteImageLoads=\"true\" BlockLowLabelImageLoads=\"true\" />\n  </AppConfig>\n  <AppConfig Executable=\"RuntimeBroker.exe\">\n    <ExtensionPoints DisableExtensionPoints=\"true\" />\n    <ControlFlowGuard Enable=\"true\" SuppressExports=\"false\" StrictControlFlowGuard=\"true\" />\n    <SignedBinaries EnforceModuleDependencySigning=\"true\" />\n  </AppConfig>\n  <AppConfig Executable=\"services.exe\">\n    <ImageLoad BlockRemoteImageLoads=\"true\" />\n  </AppConfig>\n  <AppConfig Executable=\"SmartScreen.exe\">\n    <ExtensionPoints DisableExtensionPoints=\"true\" />\n    <ControlFlowGuard Enable=\"true\" SuppressExports=\"false\" StrictControlFlowGuard=\"true\" />\n    <SignedBinaries MicrosoftSignedOnly=\"true\" AllowStoreSignedBinaries=\"false\" />\n  </AppConfig>\n  <AppConfig Executable=\"SMSS.exe\">\n    <ImageLoad BlockRemoteImageLoads=\"true\" />\n  </AppConfig>\n  <AppConfig Executable=\"vmcompute.exe\">\n    <ControlFlowGuard Enable=\"true\" SuppressExports=\"false\" StrictControlFlowGuard=\"true\" />\n  </AppConfig>\n  <AppConfig Executable=\"vmwp.exe\">\n    <ControlFlowGuard Enable=\"true\" SuppressExports=\"false\" StrictControlFlowGuard=\"true\" />\n  </AppConfig>\n  <AppConfig Executable=\"WindowsSandbox.exe\">\n    <StrictHandle Enable=\"true\" />\n    <ExtensionPoints DisableExtensionPoints=\"true\" />\n    <ControlFlowGuard Enable=\"true\" SuppressExports=\"false\" StrictControlFlowGuard=\"true\" />\n    <SignedBinaries MicrosoftSignedOnly=\"true\" AllowStoreSignedBinaries=\"false\" EnforceModuleDependencySigning=\"true\" />\n    <ImageLoad BlockRemoteImageLoads=\"true\" BlockLowLabelImageLoads=\"true\" />\n    <Payload EnableExportAddressFilter=\"true\" EnableExportAddressFilterPlus=\"true\" />\n  </AppConfig>\n  <AppConfig Executable=\"WindowsSandboxClient.exe\">\n    <StrictHandle Enable=\"true\" />\n    <ExtensionPoints DisableExtensionPoints=\"true\" />\n    <ControlFlowGuard Enable=\"true\" SuppressExports=\"false\" StrictControlFlowGuard=\"true\" />\n    <SignedBinaries MicrosoftSignedOnly=\"true\" AllowStoreSignedBinaries=\"false\" EnforceModuleDependencySigning=\"true\" />\n    <ImageLoad BlockRemoteImageLoads=\"true\" BlockLowLabelImageLoads=\"true\" />\n    <Payload EnableExportAddressFilter=\"true\" EnableExportAddressFilterPlus=\"true\" />\n  </AppConfig>\n  <AppConfig Executable=\"Wininit.exe\">\n    <ImageLoad BlockRemoteImageLoads=\"true\" />\n  </AppConfig>\n  <AppConfig Executable=\"WINWORD.EXE\">\n    <StrictHandle Enable=\"true\" />\n    <ExtensionPoints DisableExtensionPoints=\"true\" />\n    <SignedBinaries MicrosoftSignedOnly=\"true\" AllowStoreSignedBinaries=\"true\" EnforceModuleDependencySigning=\"true\" />\n    <Payload EnableRopStackPivot=\"true\" EnableRopCallerCheck=\"true\" />\n  </AppConfig>\n</MitigationPolicy>"
+                }
+            }
+        },
+        {
+            "id": "63",
             "settingInstance": {
                 "@odata.type": "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance",
                 "settingDefinitionId": "device_vendor_msft_windowsadvancedthreatprotection_configuration_samplesharing",
@@ -904,7 +930,7 @@
             }
         },
         {
-            "id": "62",
+            "id": "64",
             "settingInstance": {
                 "@odata.type": "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance",
                 "settingDefinitionId": "device_vendor_msft_policy_config_webthreatdefense_automaticdatacollection",
@@ -917,7 +943,7 @@
             }
         },
         {
-            "id": "63",
+            "id": "65",
             "settingInstance": {
                 "@odata.type": "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance",
                 "settingDefinitionId": "device_vendor_msft_policy_config_webthreatdefense_notifymalicious",
@@ -930,7 +956,7 @@
             }
         },
         {
-            "id": "64",
+            "id": "66",
             "settingInstance": {
                 "@odata.type": "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance",
                 "settingDefinitionId": "device_vendor_msft_policy_config_webthreatdefense_notifypasswordreuse",
@@ -943,7 +969,7 @@
             }
         },
         {
-            "id": "65",
+            "id": "67",
             "settingInstance": {
                 "@odata.type": "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance",
                 "settingDefinitionId": "device_vendor_msft_policy_config_webthreatdefense_notifyunsafeapp",
@@ -956,7 +982,7 @@
             }
         },
         {
-            "id": "66",
+            "id": "68",
             "settingInstance": {
                 "@odata.type": "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance",
                 "settingDefinitionId": "device_vendor_msft_policy_config_webthreatdefense_serviceenabled",

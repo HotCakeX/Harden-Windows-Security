@@ -712,10 +712,29 @@ namespace HardeningModule
 
                 // Checking if all user accounts are part of the Hyper-V security Group
                 // Get all the enabled user accounts that are not part of the Hyper-V Security group based on SID
-                var usersNotInHyperVGroup = HardeningModule.LocalUserRetriever.Get().Where(user => user.Enabled && !user.GroupsSIDs.Contains("S-1-5-32-578")).ToList();
 
-                string compliant = usersNotInHyperVGroup != null && usersNotInHyperVGroup.Count > 0 ? "False" : "True";
+                // Initializing the compliant variable
+                string compliant;
+                try
+                {
+                    // The SID for the Hyper-V Administrators group
+                    string hyperVAdminGroupSID = "S-1-5-32-578";
 
+                    // Retrieve the list of local users and filter them based on the enabled status
+                    var usersNotInHyperVGroup = HardeningModule.LocalUserRetriever.Get()
+                        ?.Where(user => user.Enabled && !user.GroupsSIDs.Contains(hyperVAdminGroupSID, StringComparer.OrdinalIgnoreCase))
+                        .ToList();
+
+                    // Determine compliance based on the filtered list to see if the list has any elements
+                    compliant = usersNotInHyperVGroup?.Any() == true ? "False" : "True";
+                }
+                catch
+                {
+                    // Set compliance to False in case of any exception/error
+                    compliant = "False";
+                }
+
+                // Add result to the nested object array
                 nestedObjectArray.Add(new HardeningModule.IndividualResult
                 {
                     FriendlyName = "All users are part of the Hyper-V Administrators group",
@@ -732,7 +751,7 @@ namespace HardeningModule
                 var cultureInfoHelper = HardeningModule.CultureInfoHelper.Get();
                 string currentCulture = cultureInfoHelper.Name;
 
-                if (currentCulture == "en-US")
+                if (string.Equals(currentCulture, "en-US", StringComparison.OrdinalIgnoreCase))
                 {
                     // Start a new process to run the auditpol command
                     var process = new Process

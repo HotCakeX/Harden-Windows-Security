@@ -42,16 +42,15 @@ function Confirm-SystemCompliance {
         [System.Management.Automation.SwitchParameter]$Offline
     )
     begin {
+        # Makes sure this cmdlet is invoked with Admin privileges
+        if (-NOT ([HardeningModule.UserPrivCheck]::IsAdmin())) {
+            Throw [System.Security.AccessControl.PrivilegeNotHeldException] 'Administrator'
+        }
         [HardeningModule.Initializer]::Initialize($VerbosePreference)
 
         # Importing the required sub-modules
         Write-Verbose -Message 'Importing the required sub-modules'
         Import-Module -FullyQualifiedName "$([HardeningModule.GlobalVars]::Path)\Shared\Update-self.psm1" -Force -Verbose:$false
-
-        # Makes sure this cmdlet is invoked with Admin privileges
-        if (-NOT ([HardeningModule.UserPrivCheck]::IsAdmin())) {
-            Throw [System.Security.AccessControl.PrivilegeNotHeldException] 'Administrator'
-        }
 
         if (-NOT $Offline) {
             Write-Verbose -Message 'Checking for updates...'

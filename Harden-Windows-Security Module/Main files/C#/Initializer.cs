@@ -95,8 +95,12 @@ namespace HardeningModule
             // Create an empty dictionary to store the System Security Policies from the security_policy.inf file
             HardeningModule.GlobalVars.SystemSecurityPoliciesIniObject = new Dictionary<string, Dictionary<string, string>>();
 
-            // Process the MDM related CimInstances and store them in a global variable
-            HardeningModule.GlobalVars.MDMResults = HardeningModule.MDMClassProcessor.Process();
+            // Make sure Admin privileges exist before running this method
+            if (HardeningModule.UserPrivCheck.IsAdmin())
+            {
+                // Process the MDM related CimInstances and store them in a global variable
+                HardeningModule.GlobalVars.MDMResults = HardeningModule.MDMClassProcessor.Process();
+            }
         }
 
         // This method gracefully parses the OS build version strings to decimals

@@ -137,7 +137,10 @@ namespace HardeningModule
             List<CsvRecord> csvData = ReadCsv();
 
             // Filter the items based on category and origin
-            var filteredItems = csvData.Where(item => item.Category == catName && item.Origin == method);
+            var filteredItems = csvData.Where(item =>
+                item.Category.Equals(catName, StringComparison.OrdinalIgnoreCase) &&
+                item.Origin.Equals(method, StringComparison.OrdinalIgnoreCase)
+            );
 
             // Process each filtered item
             foreach (var item in filteredItems)
@@ -147,7 +150,7 @@ namespace HardeningModule
                 string regValueStr = null;
 
                 // If the type defined in the CSV is HKLM
-                if (item.Hive == "HKEY_LOCAL_MACHINE")
+                if (item.Hive.Equals("HKEY_LOCAL_MACHINE", StringComparison.OrdinalIgnoreCase))
                 {
                     // Open the registry key in HKEY_LOCAL_MACHINE
                     using (var key = Registry.LocalMachine.OpenSubKey(item.Key))
@@ -189,7 +192,7 @@ namespace HardeningModule
                     }
                 }
                 // If the type defined in the CSV is HKCU
-                else if (item.Hive == "HKEY_CURRENT_USER")
+                else if (item.Hive.Equals("HKEY_CURRENT_USER", StringComparison.OrdinalIgnoreCase))
                 {
                     // Open the registry key in HKEY_CURRENT_USER
                     using (var key = Registry.CurrentUser.OpenSubKey(item.Key))
@@ -266,7 +269,7 @@ namespace HardeningModule
                 // Will add more types later if needed, e.g., BINARY, MULTI_STRING etc.
                 default:
                     {
-                        throw new ArgumentException($"ParseRegistryValue: sUnknown registry value type: {type}");
+                        throw new ArgumentException($"ParseRegistryValue: Unknown registry value type: {type}");
                     }
             }
         }
@@ -299,8 +302,8 @@ namespace HardeningModule
                         }
                     case "String":
                         {
-                            // String values are compared as strings
-                            return regValue.ToString() == expectedValue.ToString();
+                            // String values are compared as strings using ordinal ignore case
+                            return regValue.ToString().Equals(expectedValue.ToString(), StringComparison.OrdinalIgnoreCase);
                         }
                     // Will add more types later if needed, e.g., BINARY, MULTI_STRING etc.
                     default:

@@ -241,6 +241,21 @@ namespace HardeningModule
 
                 string CatName = "WindowsUpdateConfigurations";
 
+
+                // Get the control from MDM CIM
+                HardeningModule.HashtableCheckerResult MDM_Policy_Result01_Update02_AllowAutoWindowsUpdateDownloadOverMeteredNetwork = HardeningModule.HashtableChecker.CheckValue<string>(HardeningModule.GlobalVars.MDM_Policy_Result01_Update02, "AllowAutoWindowsUpdateDownloadOverMeteredNetwork", "1");
+
+                nestedObjectArray.Add(new HardeningModule.IndividualResult
+                {
+                    FriendlyName = "Allow updates to be downloaded automatically over metered connections",
+                    Compliant = MDM_Policy_Result01_Update02_AllowAutoWindowsUpdateDownloadOverMeteredNetwork.IsMatch ? "True" : "False",
+                    Value = MDM_Policy_Result01_Update02_AllowAutoWindowsUpdateDownloadOverMeteredNetwork.Value,
+                    Name = "Allow updates to be downloaded automatically over metered connections",
+                    Category = CatName,
+                    Method = "CIM"
+                });
+
+
                 // Process items in Registry resources.csv file with "Group Policy" origin and add them to the nestedObjectArray array
                 foreach (var Result in (HardeningModule.CategoryProcessing.ProcessCategory(CatName, "Group Policy")))
                 {

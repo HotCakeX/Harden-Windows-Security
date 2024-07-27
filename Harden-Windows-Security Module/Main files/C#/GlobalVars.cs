@@ -115,5 +115,8 @@ namespace HardeningModule
 
         // To store the Firewall Public MDM profile parsed JSON output
         public static System.Collections.Hashtable MDM_Firewall_PublicProfile02;
+
+         // To store the Windows Update MDM parsed JSON output
+        public static System.Collections.Hashtable MDM_Policy_Result01_Update02;
     }
 }

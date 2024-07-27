@@ -141,7 +141,8 @@ namespace HardeningModule
                     }
 
                     var values = line.Split(',');
-                    if (values.Length == 3)
+                    // because of using "Comment" column in the CSV file optionally for certain MDM CIMs
+                    if (values.Length >= 3)
                     {
                         records.Add(new MdmRecord
                         {

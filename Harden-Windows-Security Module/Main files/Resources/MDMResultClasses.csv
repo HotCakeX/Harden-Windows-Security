@@ -1,4 +1,4 @@
-NameSpace,Class,Authorized
+NameSpace,Class,Authorized,Comment
 root\cimv2\mdm\dmmap,MDM_Policy_Result01_AboveLock02,TRUE
 root\cimv2\mdm\dmmap,MDM_Policy_Result01_Accounts02,TRUE
 root\cimv2\mdm\dmmap,MDM_Policy_Result01_ActiveXControls02,TRUE
@@ -86,7 +86,7 @@ root\cimv2\mdm\dmmap,MDM_Policy_Result01_TextInput02,TRUE
 root\cimv2\mdm\dmmap,MDM_Policy_Result01_Theme02,TRUE
 root\cimv2\mdm\dmmap,MDM_Policy_Result01_TimeLanguageSettings02,TRUE
 root\cimv2\mdm\dmmap,MDM_Policy_Result01_Troubleshooting02,TRUE
-root\cimv2\mdm\dmmap,MDM_Policy_Result01_Update02,TRUE
+root\cimv2\mdm\dmmap,MDM_Policy_Result01_Update02,FALSE,This class outputs accurate info when queried with SYSTEM privileges
 root\cimv2\mdm\dmmap,MDM_Policy_Result01_UserModel02,TRUE
 root\cimv2\mdm\dmmap,MDM_Policy_Result01_UserRights02,TRUE
 root\cimv2\mdm\dmmap,MDM_Policy_Result01_VirtualizationBasedTechnology02,TRUE

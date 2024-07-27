@@ -137,10 +137,11 @@ namespace HardeningModule
                 // If $Ids variable is not empty, convert them to lower case because some IDs can be in upper case and result in inaccurate comparison
                 if (ids != null)
                 {
-                    ids = ids.Select(id => id.ToLower()).ToArray();
+                    ids = ids.Select(id => id.ToLowerInvariant()).ToArray();
                 }
 
-                Dictionary<string, string> ASRTable = new Dictionary<string, string>
+                // Updated Dictionary with OrdinalIgnoreCase comparer
+                Dictionary<string, string> ASRTable = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
                 {
                 // Hashtable to store the descriptions for each ID
                 { "26190899-1602-49e8-8b27-eb1d0a1ce869", "Block Office communication application from creating child processes" },
@@ -162,25 +163,26 @@ namespace HardeningModule
                 { "33ddedf1-c6e0-47cb-833e-de6133960387", "Block rebooting machine in Safe Mode" },
                 { "c0033c00-d16d-4114-a5a0-dc9b3a7d2ceb", "Block use of copied or impersonated system tools" },
                 { "a8f5898e-1dc8-49a9-9878-85004b8a61e6", "Block Webshell creation for Servers" }
-          };
+                };
 
-                // Loop over each ID in the hashtable
+                // Loop over each item in the hashtable
                 foreach (var kvp in ASRTable)
                 {
-                    string name = kvp.Key;
+                    // Assign each key/value to local variables
+                    string name = kvp.Key.ToLowerInvariant();
                     string friendlyName = kvp.Value;
 
                     // Default action is set to 0 (Not configured)
                     string action = "0";
 
                     // Check if the $Ids array is not empty and current ID is present in the $Ids array
-                    if (ids != null && ids.Contains(name))
+                    if (ids != null && ids.Contains(name, StringComparer.OrdinalIgnoreCase))
                     {
                         // If yes, check if the $Actions array is not empty
                         if (actions != null)
                         {
                             // If yes, use the index of the ID in the array to access the action value
-                            action = actions[Array.IndexOf(ids, name)];
+                            action = actions[Array.FindIndex(ids, id => id.Equals(name, StringComparison.OrdinalIgnoreCase))];
                         }
                     }
 

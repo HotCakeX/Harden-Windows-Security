@@ -1,9 +1,9 @@
 ﻿{
     "@odata.context": "https://graph.microsoft.com/beta/$metadata#deviceManagement/configurationPolicies/$entity",
-    "createdDateTime": "2024-07-13T13:12:20.2218801Z",
+    "createdDateTime": "2024-07-25T15:39:13.7526116Z",
     "creationSource": null,
     "description": "Windows Update Category",
-    "lastModifiedDateTime": "2024-07-13T13:12:20.2218801Z",
+    "lastModifiedDateTime": "2024-07-27T11:47:14.1594625Z",
     "name": "Windows Update",
     "platforms": "windows10",
     "priorityMetaData": null,
@@ -12,7 +12,7 @@
     ],
     "settingCount": 14,
     "technologies": "mdm",
-    "id": "8204a76b-bd67-41fb-b6e0-b07e8a8d17dc",
+    "id": "6af7eebf-3cd3-4325-b414-7d2c930a8eb9",
     "templateReference": {
         "templateId": "",
         "templateFamily": "none",
@@ -107,7 +107,7 @@
                 "simpleSettingValue": {
                     "@odata.type": "#microsoft.graph.deviceManagementConfigurationIntegerSettingValue",
                     "settingValueTemplateReference": null,
-                    "value": 1
+                    "value": 0
                 }
             }
         },
@@ -120,7 +120,7 @@
                 "simpleSettingValue": {
                     "@odata.type": "#microsoft.graph.deviceManagementConfigurationIntegerSettingValue",
                     "settingValueTemplateReference": null,
-                    "value": 5
+                    "value": 0
                 }
             }
         },

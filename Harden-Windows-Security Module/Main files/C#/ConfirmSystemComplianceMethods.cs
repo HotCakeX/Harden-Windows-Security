@@ -270,6 +270,20 @@ namespace HardeningModule
                 });
 
 
+                // Get the control from MDM CIM
+                HardeningModule.HashtableCheckerResult MDM_Policy_Result01_Update02_AllowMUUpdateService = HardeningModule.HashtableChecker.CheckValue<string>(HardeningModule.GlobalVars.MDM_Policy_Result01_Update02, "AllowMUUpdateService", "1");
+
+                nestedObjectArray.Add(new HardeningModule.IndividualResult
+                {
+                    FriendlyName = "Install updates for other Microsoft products",
+                    Compliant = MDM_Policy_Result01_Update02_AllowMUUpdateService.IsMatch ? "True" : "False",
+                    Value = MDM_Policy_Result01_Update02_AllowMUUpdateService.Value,
+                    Name = "Install updates for other Microsoft products",
+                    Category = CatName,
+                    Method = "CIM"
+                });
+
+
                 // Process items in Registry resources.csv file with "Group Policy" origin and add them to the nestedObjectArray array
                 foreach (var Result in (HardeningModule.CategoryProcessing.ProcessCategory(CatName, "Group Policy")))
                 {

@@ -57,7 +57,7 @@ namespace HardeningModule
         }
 
         // Defining delegates for the methods
-        private static readonly Dictionary<string, Func<Task>> methodDictionary = new Dictionary<string, Func<Task>>
+        private static readonly Dictionary<string, Func<Task>> methodDictionary = new Dictionary<string, Func<Task>>(StringComparer.OrdinalIgnoreCase)
     {
         { "AttackSurfaceReductionRules", VerifyAttackSurfaceReductionRules },
         { "WindowsUpdateConfigurations", VerifyWindowsUpdateConfigurations },

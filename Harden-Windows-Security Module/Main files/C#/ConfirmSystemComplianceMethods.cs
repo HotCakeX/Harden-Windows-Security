@@ -1090,6 +1090,20 @@ namespace HardeningModule
                     Method = "Cmdlet"
                 });
 
+
+                // https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-cryptography#tlsciphersuites
+                bool TLSCipherSuites = HardeningModule.GetMDMResultValue.Get("TLSCipherSuites", "TLS_CHACHA20_POLY1305_SHA256,TLS_AES_256_GCM_SHA384,TLS_AES_128_GCM_SHA256,TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384,TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256,TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384,TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256,TLS_DHE_RSA_WITH_AES_256_GCM_SHA384,TLS_DHE_RSA_WITH_AES_128_GCM_SHA256");
+
+                nestedObjectArray.Add(new HardeningModule.IndividualResult
+                {
+                    FriendlyName = "Configure the correct TLS Cipher Suites",
+                    Compliant = TLSCipherSuites ? "True" : "False",
+                    Value = TLSCipherSuites ? "True" : "False",
+                    Name = "Configure the correct TLS Cipher Suites",
+                    Category = CatName,
+                    Method = "MDM"
+                });
+
                 // Process items in Registry resources.csv file with "Group Policy" origin and add them to the $NestedObjectArray array
                 foreach (var Result in (HardeningModule.CategoryProcessing.ProcessCategory(CatName, "Group Policy")))
                 {

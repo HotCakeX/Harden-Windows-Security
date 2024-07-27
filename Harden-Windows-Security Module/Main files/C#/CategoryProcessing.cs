@@ -22,6 +22,7 @@ namespace HardeningModule
             public string FriendlyName { get; set; }
             public string Type { get; set; }
             public List<string> Value { get; set; }
+            public bool ValueIsList { get; set; }
             public string CSPLink { get; set; }
         }
 
@@ -52,10 +53,15 @@ namespace HardeningModule
 
                     string[] fields = ParseCsvLine(line);
 
-                    if (fields.Length == 9)
+                    if (fields.Length == 10)
                     {
-                        // Split the value field by commas and remove surrounding quotes
-                        List<string> values = fields[7].Trim('"').Split(',').Select(v => v.Trim()).ToList();
+                        // Determine if the ValueIsList field is true
+                        bool valueIsList = bool.Parse(fields[8]);
+
+                        // Split the value field by commas only if ValueIsList is true
+                        List<string> values = valueIsList
+                            ? fields[7].Trim('"').Split(',').Select(v => v.Trim()).ToList()
+                            : new List<string> { fields[7].Trim('"') };
 
                         records.Add(new CsvRecord
                         {
@@ -67,12 +73,13 @@ namespace HardeningModule
                             FriendlyName = fields[5],
                             Type = fields[6],
                             Value = values,
-                            CSPLink = fields[8]
+                            ValueIsList = valueIsList,
+                            CSPLink = fields[9]
                         });
                     }
                     else
                     {
-                        throw new ArgumentException("The CSV file is not formatted correctly. There should be 9 fields in each line.");
+                        throw new ArgumentException("The CSV file is not formatted correctly. There should be 10 fields in each line.");
                     }
                 }
             }

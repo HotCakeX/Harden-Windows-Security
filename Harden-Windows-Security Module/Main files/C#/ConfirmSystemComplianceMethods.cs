@@ -2204,6 +2204,20 @@ namespace HardeningModule
                 });
 
 
+                // Get the value and convert it to string
+                // https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-defender#signatureupdateinterval
+                string SignatureUpdateIntervalResult = Convert.ToString(HardeningModule.PropertyHelper.GetPropertyValue(HardeningModule.GlobalVars.MDAVPreferencesCurrent, "SignatureUpdateInterval"));
+                nestedObjectArray.Add(new HardeningModule.IndividualResult
+                {
+                    FriendlyName = "Interval to check for security intelligence updates",
+                    Compliant = SignatureUpdateIntervalResult.Equals("3", StringComparison.OrdinalIgnoreCase) ? "True" : "False",
+                    Value = SignatureUpdateIntervalResult,
+                    Name = "Interval to check for security intelligence updates",
+                    Category = CatName,
+                    Method = "CIM"
+                });
+
+
                 // Process items in Registry resources.csv file with "Group Policy" origin and add them to the $NestedObjectArray array
                 foreach (var Result in (HardeningModule.CategoryProcessing.ProcessCategory(CatName, "Group Policy")))
                 {

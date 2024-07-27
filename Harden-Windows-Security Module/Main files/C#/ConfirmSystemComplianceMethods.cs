@@ -48,11 +48,14 @@ namespace HardeningModule
             if (MethodsTaskOutput.IsFaulted)
             {
                 // throw the exceptions
-                throw new Exception(MethodsTaskOutput.Exception.Message);
+                throw MethodsTaskOutput.Exception;
+
+                // this should automatically throw ?
+                // MethodsTaskOutput.GetAwaiter().GetResult()
             }
             else if (MethodsTaskOutput.IsCompletedSuccessfully)
             {
-                //   Console.WriteLine("Download completed successfully");
+                // Console.WriteLine("Download completed successfully");
             }
         }
 

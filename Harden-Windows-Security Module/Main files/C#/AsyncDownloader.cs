@@ -168,7 +168,8 @@ namespace HardeningModule
 
                 if (DownloadsTask.IsFaulted)
                 {
-                    throw new Exception(DownloadsTask.Exception.Message);
+                    // throw the exceptions
+                    throw DownloadsTask.Exception;
                 }
                 else if (DownloadsTask.IsCompletedSuccessfully)
                 {

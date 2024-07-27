@@ -13,10 +13,17 @@ namespace HardeningModule
         /// <param name="message"></param>
         public static void Write(string message)
         {
-            if (HardeningModule.GlobalVars.VerbosePreference == "Continue" || HardeningModule.GlobalVars.VerbosePreference == "Inquire")
+            try
             {
-                HardeningModule.GlobalVars.Host.UI.WriteVerboseLine(message);
+                if (HardeningModule.GlobalVars.VerbosePreference == "Continue" || HardeningModule.GlobalVars.VerbosePreference == "Inquire")
+                {
+                    HardeningModule.GlobalVars.Host.UI.WriteVerboseLine(message);
+                }
             }
+            // Do not do anything if errors occur
+            // Since many methods write to the console asynchronously this can throw errors
+            // implement better ways such as using log file or in the near future a GUI for writing verbose messages when -Verbose is used
+            catch { }
         }
     }
 }

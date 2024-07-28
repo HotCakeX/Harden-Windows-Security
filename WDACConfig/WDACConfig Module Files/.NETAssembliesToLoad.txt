@@ -3,6 +3,7 @@ System.IO
 System.Xml
 System.Linq
 System.Memory
+System.Console
 System.Xml.Linq
 System.Text.Json
 System.Management

@@ -22,7 +22,7 @@ namespace HardeningModule
             "WindowsFirewall", // 19
             "OptionalWindowsFeatures", // 14
             "WindowsNetworking", // 9
-            "MiscellaneousConfigurations", // 16
+            "MiscellaneousConfigurations", // 17
             "WindowsUpdateConfigurations", // 14
             "EdgeBrowserConfigurations", // 14
             "NonAdminCommands" // 11

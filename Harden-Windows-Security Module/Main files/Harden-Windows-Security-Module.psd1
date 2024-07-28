@@ -18,7 +18,7 @@
   AliasesToExport      = @()
   Description          = @'
 
-Harden Windows Safely, Securely, only with Official Microsoft methods
+Harden Windows Safely, Securely, only with Official Microsoft methods - 🦄 Intune - 🧩 Group Policy - 🛡️ Local - ☁️ Cloud (All scenarios supported 💯)
 
 ⭕ This module provides 3 main features: Hardening, Auditing/checking the system compliance, and undoing the Hardening
 
@@ -83,7 +83,7 @@ Complete detailed release notes available on GitHub releases: https://github.com
 '@
 
       # Prerelease string of this module
-      # Prerelease = ''
+      # Prerelease   = 'RC2'
     }
   }
 }

@@ -13,14 +13,14 @@ namespace HardeningModule
             string[] categoriex = new string[]
             {
             "MicrosoftDefender", // 55 - 3x(N/A) + Number of Process Mitigations which are dynamically increased
-            "AttackSurfaceReductionRules", // 20
-            "BitLockerSettings", // 22 + Number of Non-OS drives which are dynamically increased
+            "AttackSurfaceReductionRules", // 19 rules
+            "BitLockerSettings", // 21 + conditional item for Hibernation check (only available on non-VMs) + Number of Non-OS drives which are dynamically increased
             "TLSSecurity", // 21
             "LockScreen", // 14
             "UserAccountControl", // 4
             "DeviceGuard", // 8
-            "WindowsFirewall", // 20
-            "OptionalWindowsFeatures", // 13
+            "WindowsFirewall", // 19
+            "OptionalWindowsFeatures", // 14
             "WindowsNetworking", // 9
             "MiscellaneousConfigurations", // 17
             "WindowsUpdateConfigurations", // 14

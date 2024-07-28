@@ -657,7 +657,8 @@ Function Invoke-MicrosoftDefender {
             Set-DefenderConfigWithCheck -Name 'RemoteEncryptionProtectionMaxBlockTime' -Value 0
 
             Write-Verbose -Message 'Adding OneDrive folders of all the user accounts (personal and work accounts) to the Controlled Folder Access for Ransomware Protection'
-            Get-ChildItem -Path "$env:SystemDrive\Users\*\OneDrive*\" -Directory | ForEach-Object -Process { Add-MpPreference -ControlledFolderAccessProtectedFolders $_ }
+            [System.String[]]$DirectoriesToAddToCFA = Get-ChildItem -Path "$env:SystemDrive\Users\*\OneDrive*\" -Directory
+            Invoke-CimMethod -Namespace 'Root/Microsoft/Windows/Defender' -ClassName 'MSFT_MpPreference' -MethodName 'Add' -Arguments @{ControlledFolderAccessProtectedFolders = $DirectoriesToAddToCFA }
 
             Write-Verbose -Message 'Enabling Mandatory ASLR Exploit Protection system-wide'
             Set-ProcessMitigation -System -Enable ForceRelocateImages
@@ -774,10 +775,10 @@ Function Invoke-MicrosoftDefender {
             }
 
             Write-Verbose -Message 'Getting the state of fast weekly Microsoft recommended driver block list update scheduled task'
-            [System.String]$BlockListScheduledTaskState = (Get-ScheduledTask -TaskName 'MSFT Driver Block list update' -TaskPath '\MSFT Driver Block list update\' -ErrorAction SilentlyContinue).State
+            [System.String]$BlockListScheduledTaskState = ([HardeningModule.TaskSchedulerHelper]::Get('MSFT Driver Block list update', '\MSFT Driver Block list update\', 'TaskList')).State
 
             # Create scheduled task for fast weekly Microsoft recommended driver block list update if it doesn't exist or exists but is not Ready/Running
-            if (($BlockListScheduledTaskState -notin 'Ready', 'Running')) {
+            if (($BlockListScheduledTaskState -notin '2', '3', '4')) {
                 :TaskSchedulerCreationLabel switch ($RunUnattended ? ($MSFTDefender_NoScheduledTask ? 'No' : 'Yes') : (Select-Option -SubCategory -Options 'Yes', 'No', 'Exit' -Message "`nCreate scheduled task for fast weekly Microsoft recommended driver block list update ?")) {
                     'Yes' {
                         Write-Verbose -Message 'Creating scheduled task for fast weekly Microsoft recommended driver block list update'
@@ -1585,7 +1586,9 @@ Function Invoke-WindowsNetworking {
             [HardeningModule.RegistryEditor]::EditRegistry('Registry::HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\NetBT\Parameters', 'EnableLMHOSTS', '0', 'DWORD', 'AddOrModify')
 
             Write-Verbose -Message 'Setting the Network Location of all connections to Public'
-            Get-NetConnectionProfile | Set-NetConnectionProfile -NetworkCategory Public
+            $InterfaceIndexes = [HardeningModule.NetConnectionProfiles]::Get().InterfaceIndex
+            [HardeningModule.NetConnectionProfiles]::Set($InterfaceIndexes, $null, [HardeningModule.NetConnectionProfiles+NetworkCategory]::public)
+
         } 'No' { break WindowsNetworkingLabel }
         'Exit' { break MainSwitchLabel }
     }
@@ -1613,7 +1616,7 @@ Function Invoke-MiscellaneousConfigurations {
             &$([HardeningModule.GlobalVars]::LGPOExe) /q /s "$([HardeningModule.GlobalVars]::Path)\Resources\Security-Baselines-X\Miscellaneous Policies\GptTmpl.inf"
 
             Write-Verbose -Message 'Adding all Windows users to the "Hyper-V Administrators" security group to be able to use Hyper-V and Windows Sandbox'
-            Get-LocalUser | Where-Object -FilterScript { $_.enabled -eq 'True' } | ForEach-Object -Process { Add-LocalGroupMember -SID 'S-1-5-32-578' -Member "$($_.SID)" -ErrorAction SilentlyContinue }
+            [HardeningModule.LocalUserRetriever]::Get() | Where-Object -FilterScript { $_.enabled -eq 'True' } | ForEach-Object -Process { Add-LocalGroupMember -SID 'S-1-5-32-578' -Member "$($_.SID)" -ErrorAction SilentlyContinue }
 
             # Makes sure auditing for the "Other Logon/Logoff Events" subcategory under the Logon/Logoff category is enabled, doesn't touch affect any other sub-category
             # For tracking Lock screen unlocks and locks
@@ -1805,7 +1808,7 @@ Function Invoke-DownloadsDefenseMeasures {
 
                 # Getting the current user's name
                 [System.Security.Principal.SecurityIdentifier]$UserSID = [System.Security.Principal.WindowsIdentity]::GetCurrent().user.value
-                [System.String]$UserName = (Get-LocalUser | Where-Object -FilterScript { $_.SID -eq $UserSID }).name
+                [System.String]$UserName = ([HardeningModule.LocalUserRetriever]::Get() | Where-Object -FilterScript { $_.SID -eq $UserSID }).name
 
                 # Checking if the Edge preferences file exists
                 if ([System.IO.File]::Exists("$env:SystemDrive\Users\$UserName\AppData\Local\Microsoft\Edge\User Data\Default\Preferences")) {

@@ -7,6 +7,8 @@ using System.Text;
 
 namespace HardeningModule
 {
+    // Registry keys are case-insensitive
+    // https://learn.microsoft.com/en-us/windows/win32/sysinfo/structure-of-the-registry
     public class CategoryProcessing
     {
         // to store the structure of the Registry resources CSV data
@@ -19,7 +21,8 @@ namespace HardeningModule
             public string Name { get; set; }
             public string FriendlyName { get; set; }
             public string Type { get; set; }
-            public string Value { get; set; }
+            public List<string> Value { get; set; }
+            public bool ValueIsList { get; set; }
             public string CSPLink { get; set; }
         }
 
@@ -50,8 +53,16 @@ namespace HardeningModule
 
                     string[] fields = ParseCsvLine(line);
 
-                    if (fields.Length == 9)
+                    if (fields.Length == 10)
                     {
+                        // Determine if the ValueIsList field is true
+                        bool valueIsList = bool.Parse(fields[8]);
+
+                        // Split the value field by commas only if ValueIsList is true
+                        List<string> values = valueIsList
+                            ? fields[7].Trim('"').Split(',').Select(v => v.Trim()).ToList()
+                            : new List<string> { fields[7].Trim('"') };
+
                         records.Add(new CsvRecord
                         {
                             Origin = fields[0],
@@ -61,13 +72,14 @@ namespace HardeningModule
                             Name = fields[4],
                             FriendlyName = fields[5],
                             Type = fields[6],
-                            Value = fields[7],
-                            CSPLink = fields[8]
+                            Value = values,
+                            ValueIsList = valueIsList,
+                            CSPLink = fields[9]
                         });
                     }
                     else
                     {
-                        throw new ArgumentException("The CSV file is not formatted correctly. There should be 9 fields in each line.");
+                        throw new ArgumentException("The CSV file is not formatted correctly. There should be 10 fields in each line.");
                     }
                 }
             }
@@ -137,17 +149,20 @@ namespace HardeningModule
             List<CsvRecord> csvData = ReadCsv();
 
             // Filter the items based on category and origin
-            var filteredItems = csvData.Where(item => item.Category == catName && item.Origin == method);
+            var filteredItems = csvData.Where(item =>
+                item.Category.Equals(catName, StringComparison.OrdinalIgnoreCase) &&
+                item.Origin.Equals(method, StringComparison.OrdinalIgnoreCase)
+            );
 
             // Process each filtered item
             foreach (var item in filteredItems)
             {
-                // Initialize valueMatches to "false"
-                string valueMatches = "false";
+                // Initialize valueMatches to "False"
+                string valueMatches = "False";
                 string regValueStr = null;
 
                 // If the type defined in the CSV is HKLM
-                if (item.Hive == "HKEY_LOCAL_MACHINE")
+                if (item.Hive.Equals("HKEY_LOCAL_MACHINE", StringComparison.OrdinalIgnoreCase))
                 {
                     // Open the registry key in HKEY_LOCAL_MACHINE
                     using (var key = Registry.LocalMachine.OpenSubKey(item.Key))
@@ -176,20 +191,20 @@ namespace HardeningModule
                                 regValueStr = regValue?.ToString();
                             }
 
-                            // Parse the expected value based on its type in the CSV file
-                            object parsedValue = ParseRegistryValue(type: item.Type, value: item.Value);
+                            // Parse the expected values based on their type in the CSV file
+                            var parsedValues = item.Value.Select(v => ParseRegistryValue(type: item.Type, value: v)).ToList();
 
-                            // Check if the registry value matches the expected value
-                            if (regValue != null && CompareRegistryValues(type: item.Type, regValue: regValue, expectedValue: parsedValue))
+                            // Check if the registry value matches any of the expected values
+                            if (regValue != null && parsedValues.Any(parsedValue => CompareRegistryValues(type: item.Type, regValue: regValue, expectedValue: parsedValue)))
                             {
-                                // Set valueMatches to "true" if it matches
-                                valueMatches = "true";
+                                // Set valueMatches to "True" if it matches any expected value
+                                valueMatches = "True";
                             }
                         }
                     }
                 }
                 // If the type defined in the CSV is HKCU
-                else if (item.Hive == "HKEY_CURRENT_USER")
+                else if (item.Hive.Equals("HKEY_CURRENT_USER", StringComparison.OrdinalIgnoreCase))
                 {
                     // Open the registry key in HKEY_CURRENT_USER
                     using (var key = Registry.CurrentUser.OpenSubKey(item.Key))
@@ -214,14 +229,14 @@ namespace HardeningModule
                                 regValueStr = regValue?.ToString();
                             }
 
-                            // Parse the expected value based on its type in the CSV file
-                            object parsedValue = ParseRegistryValue(type: item.Type, value: item.Value);
+                            // Parse the expected values based on their type in the CSV file
+                            var parsedValues = item.Value.Select(v => ParseRegistryValue(type: item.Type, value: v)).ToList();
 
-                            // Check if the registry value matches the expected value
-                            if (regValue != null && CompareRegistryValues(type: item.Type, regValue: regValue, expectedValue: parsedValue))
+                            // Check if the registry value matches any of the expected values
+                            if (regValue != null && parsedValues.Any(parsedValue => CompareRegistryValues(type: item.Type, regValue: regValue, expectedValue: parsedValue)))
                             {
-                                // Set valueMatches to "true" if it matches
-                                valueMatches = "true";
+                                // Set valueMatches to "True" if it matches any expected value
+                                valueMatches = "True";
                             }
                         }
                     }
@@ -266,7 +281,7 @@ namespace HardeningModule
                 // Will add more types later if needed, e.g., BINARY, MULTI_STRING etc.
                 default:
                     {
-                        throw new ArgumentException($"ParseRegistryValue: sUnknown registry value type: {type}");
+                        throw new ArgumentException($"ParseRegistryValue: Unknown registry value type: {type}");
                     }
             }
         }
@@ -299,8 +314,8 @@ namespace HardeningModule
                         }
                     case "String":
                         {
-                            // String values are compared as strings
-                            return regValue.ToString() == expectedValue.ToString();
+                            // String values are compared as strings using ordinal ignore case
+                            return regValue.ToString().Equals(expectedValue.ToString(), StringComparison.OrdinalIgnoreCase);
                         }
                     // Will add more types later if needed, e.g., BINARY, MULTI_STRING etc.
                     default:

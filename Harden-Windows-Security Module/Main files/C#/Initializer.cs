@@ -10,10 +10,14 @@ namespace HardeningModule
     // prepares the environment. It also runs commands that would otherwise run in the default constructors of each method
     public class Initializer
     {
-        // This method runs once in the module root and in the beginning of each cmdlet
-        public static void Initialize()
+        /// <summary>
+        /// This method runs at the beginning of each cmdlet
+        /// </summary>
+        /// <param name="VerbosePreference"></param>
+        /// <exception cref="InvalidOperationException"></exception>
+        /// <exception cref="PlatformNotSupportedException"></exception>
+        public static void Initialize(string VerbosePreference)
         {
-
             using (RegistryKey key = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows NT\CurrentVersion"))
             {
                 if (key != null)
@@ -58,9 +62,6 @@ namespace HardeningModule
             // Parse the ProcessMitigations.csv and save it to the global HardeningModule.GlobalVars.ProcessMitigations list
             HardeningModule.ProcessMitigationsParser.ReadCsv();
 
-            // Save the valid values of the Protect-WindowsSecurity categories to a variable since the process can be time consuming and shouldn't happen every time the categories are fetched
-            HardeningModule.GlobalVars.HardeningCategorieX = HardeningModule.ProtectionCategoriex.GetValidValues();
-
             // Convert the FullOSBuild and RequiredBuild strings to decimals so that we can compare them
             if (!TryParseBuildVersion(HardeningModule.GlobalVars.FullOSBuild, out decimal fullOSBuild))
             {
@@ -83,12 +84,35 @@ namespace HardeningModule
             HardeningModule.GlobalVars.MDAVConfigCurrent = HardeningModule.MpComputerStatusHelper.GetMpComputerStatus();
 
             // Total number of Compliant values not equal to N/A
-            HardeningModule.GlobalVars.TotalNumberOfTrueCompliantValues = 239;
+            HardeningModule.GlobalVars.TotalNumberOfTrueCompliantValues = 238;
+
+            // Getting the $VerbosePreference from the calling cmdlet and saving it in the global variable
+            HardeningModule.GlobalVars.VerbosePreference = VerbosePreference;
+
+            // Create an empty ConcurrentDictionary to store the final results of the cmdlets
+            HardeningModule.GlobalVars.FinalMegaObject = new System.Collections.Concurrent.ConcurrentDictionary<System.String, System.Collections.Generic.List<HardeningModule.IndividualResult>>();
+
+            // Create an empty dictionary to store the System Security Policies from the security_policy.inf file
+            HardeningModule.GlobalVars.SystemSecurityPoliciesIniObject = new Dictionary<string, Dictionary<string, string>>();
+
+            // Make sure Admin privileges exist before running this method
+            if (HardeningModule.UserPrivCheck.IsAdmin())
+            {
+                // Process the MDM related CimInstances and store them in a global variable
+                HardeningModule.GlobalVars.MDMResults = HardeningModule.MDMClassProcessor.Process();
+            }
         }
+
+        // This method gracefully parses the OS build version strings to decimals
+        // and performs this in a culture-independent way
+        // in languages such as Swedish where the decimal separator is , instead of .
+        // this will work properly
+        // in PowerShell we can see the separator by running: (Get-Culture).NumberFormat.NumberDecimalSeparator
         private static bool TryParseBuildVersion(string buildVersion, out decimal result)
         {
             // Use CultureInfo.InvariantCulture for parsing
             return Decimal.TryParse(buildVersion, NumberStyles.Number, CultureInfo.InvariantCulture, out result);
         }
+
     }
 }

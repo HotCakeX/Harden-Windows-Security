@@ -1,18 +1,18 @@
 ﻿{
     "@odata.context": "https://graph.microsoft.com/beta/$metadata#deviceManagement/configurationPolicies/$entity",
-    "createdDateTime": "2024-07-12T14:59:12.3164603Z",
+    "createdDateTime": "2024-07-25T15:41:22.6719046Z",
     "creationSource": null,
     "description": "BitLocker Category",
-    "lastModifiedDateTime": "2024-07-12T16:08:12.9668677Z",
+    "lastModifiedDateTime": "2024-07-27T09:07:09.5572261Z",
     "name": "BitLocker",
     "platforms": "windows10",
     "priorityMetaData": null,
     "roleScopeTagIds": [
         "0"
     ],
-    "settingCount": 10,
+    "settingCount": 12,
     "technologies": "mdm",
-    "id": "2fc67394-a288-4e3e-a431-38b159382064",
+    "id": "a4f684fe-8c48-4cbf-b1e4-54496bf5dca3",
     "templateReference": {
         "templateId": "",
         "templateFamily": "none",
@@ -22,6 +22,32 @@
     "settings": [
         {
             "id": "0",
+            "settingInstance": {
+                "@odata.type": "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance",
+                "settingDefinitionId": "device_vendor_msft_policy_config_power_allowstandbystateswhensleepingonbattery",
+                "settingInstanceTemplateReference": null,
+                "choiceSettingValue": {
+                    "settingValueTemplateReference": null,
+                    "value": "device_vendor_msft_policy_config_power_allowstandbystateswhensleepingonbattery_0",
+                    "children": []
+                }
+            }
+        },
+        {
+            "id": "1",
+            "settingInstance": {
+                "@odata.type": "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance",
+                "settingDefinitionId": "device_vendor_msft_policy_config_power_allowstandbywhensleepingpluggedin",
+                "settingInstanceTemplateReference": null,
+                "choiceSettingValue": {
+                    "settingValueTemplateReference": null,
+                    "value": "device_vendor_msft_policy_config_power_allowstandbywhensleepingpluggedin_0",
+                    "children": []
+                }
+            }
+        },
+        {
+            "id": "2",
             "settingInstance": {
                 "@odata.type": "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance",
                 "settingDefinitionId": "device_vendor_msft_bitlocker_encryptionmethodbydrivetype",
@@ -65,7 +91,7 @@
             }
         },
         {
-            "id": "1",
+            "id": "3",
             "settingInstance": {
                 "@odata.type": "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance",
                 "settingDefinitionId": "device_vendor_msft_bitlocker_fixeddrivesencryptiontype",
@@ -89,7 +115,7 @@
             }
         },
         {
-            "id": "2",
+            "id": "4",
             "settingInstance": {
                 "@odata.type": "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance",
                 "settingDefinitionId": "device_vendor_msft_bitlocker_systemdrivesenhancedpin",
@@ -102,7 +128,7 @@
             }
         },
         {
-            "id": "3",
+            "id": "5",
             "settingInstance": {
                 "@odata.type": "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance",
                 "settingDefinitionId": "device_vendor_msft_bitlocker_systemdrivesminimumpinlength",
@@ -126,7 +152,7 @@
             }
         },
         {
-            "id": "4",
+            "id": "6",
             "settingInstance": {
                 "@odata.type": "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance",
                 "settingDefinitionId": "device_vendor_msft_bitlocker_systemdrivesdisallowstandarduserscanchangepin",
@@ -139,7 +165,7 @@
             }
         },
         {
-            "id": "5",
+            "id": "7",
             "settingInstance": {
                 "@odata.type": "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance",
                 "settingDefinitionId": "device_vendor_msft_bitlocker_systemdrivesencryptiontype",
@@ -163,7 +189,7 @@
             }
         },
         {
-            "id": "6",
+            "id": "8",
             "settingInstance": {
                 "@odata.type": "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance",
                 "settingDefinitionId": "device_vendor_msft_bitlocker_systemdrivesrequirestartupauthentication",
@@ -227,7 +253,7 @@
             }
         },
         {
-            "id": "7",
+            "id": "9",
             "settingInstance": {
                 "@odata.type": "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance",
                 "settingDefinitionId": "device_vendor_msft_bitlocker_removabledrivesconfigurebde",
@@ -283,7 +309,7 @@
             }
         },
         {
-            "id": "8",
+            "id": "10",
             "settingInstance": {
                 "@odata.type": "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance",
                 "settingDefinitionId": "device_vendor_msft_bitlocker_removabledrivesrequireencryption",
@@ -296,7 +322,7 @@
             }
         },
         {
-            "id": "9",
+            "id": "11",
             "settingInstance": {
                 "@odata.type": "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance",
                 "settingDefinitionId": "device_vendor_msft_bitlocker_requiredeviceencryption",

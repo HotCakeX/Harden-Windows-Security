@@ -9,7 +9,10 @@ if (!$IsWindows) {
 
 # Load all of the C# codes
 # for some reason it tries to use another version of the dll unless i define its path explicitly like this
-Add-Type -Path ([System.IO.Directory]::GetFiles("$PSScriptRoot\C#")) -ReferencedAssemblies @((Get-Content -Path "$PSScriptRoot\.NETAssembliesToLoad.txt") + "$($PSHOME)\WindowsBase.dll")
+Add-Type -Path ([System.IO.Directory]::GetFiles("$PSScriptRoot\C#", '*.*', [System.IO.SearchOption]::AllDirectories)) -ReferencedAssemblies @((Get-Content -Path "$PSScriptRoot\.NETAssembliesToLoad.txt") + "$($PSHOME)\WindowsBase.dll")
 
+[HardeningModule.GlobalVars]::Host = $HOST
+[HardeningModule.GlobalVars]::PSHOME = $PSHOME
 [HardeningModule.GlobalVars]::Path = $PSScriptRoot
-[HardeningModule.Initializer]::Initialize()
+# Save the valid values of the Protect-WindowsSecurity categories to a variable since the process can be time consuming and shouldn't happen every time the categories are fetched
+[HardeningModule.GlobalVars]::HardeningCategorieX = [HardeningModule.ProtectionCategoriex]::GetValidValues()

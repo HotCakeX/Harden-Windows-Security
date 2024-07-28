@@ -163,12 +163,13 @@ namespace HardeningModule
                 while (!DownloadsTask.IsCompleted)
                 {
                     // Wait for 500 milliseconds before checking again
-                    System.Threading.Thread.Sleep(50);
+                    System.Threading.Thread.Sleep(500);
                 }
 
                 if (DownloadsTask.IsFaulted)
                 {
-                    throw new Exception(DownloadsTask.Exception.Message);
+                    // throw the exceptions
+                    throw DownloadsTask.Exception;
                 }
                 else if (DownloadsTask.IsCompletedSuccessfully)
                 {

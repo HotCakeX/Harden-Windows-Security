@@ -43,6 +43,7 @@
 			"BYOVD",
 			"Categoriex",
 			"catname",
+			"Cbac",
 			"CDROM",
 			"CETCOMPAT",
 			"CHACHA",
@@ -157,10 +158,12 @@
 			"psscriptroot",
 			"publicfirewall",
 			"pwsh",
+			"QWORD",
 			"Readline",
 			"rebootlessly",
 			"Regsvr",
 			"RELEASENOTES",
+			"Remoting",
 			"reparse",
 			"Requiredbuild",
 			"REQUIREDSCRIPTS",
@@ -171,6 +174,7 @@
 			"SCHTASKS",
 			"scriptblock",
 			"scriptblocks",
+			"Scroller",
 			"Secureboot",
 			"securestring",
 			"Shellv",
@@ -211,6 +215,7 @@
 			"WDAC",
 			"webmail",
 			"webserver",
+			"Webshell",
 			"WHQL",
 			"Winget",
 			"Winreg",
@@ -220,7 +225,8 @@
 			"WTDS",
 			"XDRs",
 			"Zune"
-		]
+		],
+		"dotnetAcquisitionExtension.enablePreviewFeatures": true
 	},
 	"extensions": {
 		"recommendations": [

@@ -70,7 +70,7 @@ namespace HardeningModule
                     Console.WriteLine($"An error occurred: {ex.Message}");
                 }
 
-                Console.WriteLine("Checking if TPM is available and enabled...");
+                HardeningModule.VerboseLogger.Write("Checking if TPM is available and enabled...");
 
                 var tpmStatus = HardeningModule.TpmStatus.Get();
 

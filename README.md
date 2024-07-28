@@ -149,7 +149,7 @@ Unprotect-WindowsSecurity
 
 <img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/Shiny.gif" width="27" alt="Features Item"> Everything always stays up-to-date with the newest proactive security measures that are industry standards and scalable.
 
-<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/Shiny.gif" width="27" alt="Features Item"> Everything is in [plain text](https://github.com/HotCakeX/Harden-Windows-Security/blob/main/Harden-Windows-Security.ps1), nothing hidden, no 3rd party executable or pre-compiled binary is involved.
+<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/Shiny.gif" width="27" alt="Features Item"> Everything is in clear text, nothing hidden, no 3rd party executable or pre-compiled binary is involved.
 
 <img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/Shiny.gif" width="27" alt="Features Item"> No Windows functionality is removed/disabled against Microsoft's recommendations.
 
@@ -1064,7 +1064,7 @@ This repository uses the simplest possible, yet effective, methods that make it 
 
 - All codes are properly commented for easy and quick understanding.
 
-- #### The module uses the following files, all of them are in plain text, easily readable or verifiable:
+- #### The module uses the following files, all of them are in clear text, easily readable or verifiable:
 
     - [Registry.csv](https://github.com/HotCakeX/Harden-Windows-Security/blob/main/Harden-Windows-Security%20Module/Main%20files/Resources/Registry.csv) includes registry data used by the `Protect-WindowsSecurity` cmdlet.
 

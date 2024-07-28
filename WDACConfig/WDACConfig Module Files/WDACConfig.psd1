@@ -8,6 +8,11 @@
     Author               = 'HotCakeX'
     CompanyName          = 'SpyNetGirl'
     Copyright            = '(c) 2023-2024'
+    PowerShellVersion    = '7.4.2'
+    CmdletsToExport      = @()
+    VariablesToExport    = '*'    
+    AliasesToExport      = @()
+    HelpInfoURI          = 'https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDACConfig'
     Description          = @'
 
 This is an advanced PowerShell module for WDAC (Windows Defender Application Control) and automates a lot of tasks.
@@ -58,12 +63,8 @@ This is an advanced PowerShell module for WDAC (Windows Defender Application Con
 
 ✔️ Get-CIPolicySetting: https://github.com/HotCakeX/Harden-Windows-Security/wiki/Get-CIPolicySetting
 
-'@
+'@    
 
-    # Minimum version of the PowerShell engine required by this module
-    PowerShellVersion    = '7.4.2'
-
-    # Modules to import as nested modules of the module specified in RootModule/ModuleToProcess
     NestedModules        = @('Core\New-WDACConfig.psm1',
         'Core\Remove-WDACConfig.psm1',
         'Core\Deploy-SignedWDACConfig.psm1',
@@ -84,8 +85,7 @@ This is an advanced PowerShell module for WDAC (Windows Defender Application Con
         'Core\Get-CiFileHashes.psm1',
         'Core\Set-CiRuleOptions.psm1',
         'Core\Get-CIPolicySetting.psm1')
-
-    # Functions to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no functions to export.
+  
     FunctionsToExport    = @('New-WDACConfig',
         'Remove-WDACConfig',
         'Deploy-SignedWDACConfig',
@@ -107,18 +107,6 @@ This is an advanced PowerShell module for WDAC (Windows Defender Application Con
         'Set-CiRuleOptions',
         'Get-CIPolicySetting')
 
-    # Cmdlets to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no cmdlets to export.
-    CmdletsToExport      = @()
-
-    # Variables to export from this module
-    VariablesToExport    = '*'
-
-    # Aliases to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no aliases to export.
-    AliasesToExport      = @()
-
-    # List of all modules packaged with this module
-    # ModuleList = @()
-
     # Private data to pass to the module specified in RootModule/ModuleToProcess. This may also contain a PSData hashtable with additional module metadata used by PowerShell.
     PrivateData          = @{
         PSData = @{
@@ -134,7 +122,5 @@ Full Change log available in GitHub releases: https://github.com/HotCakeX/Harden
             # Prerelease string of this module
             # Prerelease   = 'Beta1'
         }
-    }
-
-    HelpInfoURI          = 'https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDACConfig'
+    }    
 }

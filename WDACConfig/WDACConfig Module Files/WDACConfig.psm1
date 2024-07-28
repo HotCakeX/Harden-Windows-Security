@@ -40,18 +40,13 @@ foreach ($Dll in (Convert-Path -Path ("$([psobject].Assembly.Location)\..\*.dll"
 }
 
 # Import all C# codes at once so they will get compiled together, have resolved dependencies and recognize each others' classes/types
-Add-Type -Path (Get-ChildItem -File -Recurse -Path "$PSScriptRoot\C#").FullName -ReferencedAssemblies @(Get-Content -Path "$PSScriptRoot\.NETAssembliesToLoad.txt")
+Add-Type -Path ([System.IO.Directory]::GetFiles("$PSScriptRoot\C#", '*.*', [System.IO.SearchOption]::AllDirectories)) -ReferencedAssemblies @(Get-Content -Path "$PSScriptRoot\.NETAssembliesToLoad.txt")
 
 # Assign the value of the automatic variable $PSScriptRoot to the [WDACConfig.GlobalVars]::ModuleRootPath
 [WDACConfig.GlobalVars]::ModuleRootPath = $PSScriptRoot
 
 # Importing argument completer ScriptBlocks
 . "$([WDACConfig.GlobalVars]::ModuleRootPath)\CoreExt\ArgumentCompleters.ps1"
-
-# Make sure the current OS build is equal or greater than the required build number
-if (-NOT ([System.Decimal]([WDACConfig.GlobalVars]::FullOSBuild) -ge [System.Decimal]([WDACConfig.GlobalVars]::Requiredbuild))) {
-    Throw [System.PlatformNotSupportedException] "You are not using the latest build of the Windows OS. A minimum build of $([WDACConfig.GlobalVars]::Requiredbuild) is required but your OS build is $([WDACConfig.GlobalVars]::FullOSBuild)`nPlease go to Windows Update to install the updates and then try again."
-}
 
 # Set PSReadline tab completion to complete menu for easier access to available parameters - Only for the current session
 Set-PSReadLineKeyHandler -Key 'Tab' -Function 'MenuComplete'
@@ -61,6 +56,8 @@ $PSStyle.Progress.UseOSCIndicator = $true
 
 # Import the public global module
 Import-Module -FullyQualifiedName ("$([WDACConfig.GlobalVars]::ModuleRootPath)\Public\Write-FinalOutput.psm1", "$([WDACConfig.GlobalVars]::ModuleRootPath)\Public\MockConfigCIBootstrap.psm1") -Force -Global
+
+[WDACConfig.Initializer]::Initialize()
 
 #Region Argument Completer Registrations
 

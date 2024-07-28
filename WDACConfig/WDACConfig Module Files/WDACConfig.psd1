@@ -10,7 +10,7 @@
     Copyright            = '(c) 2023-2024'
     PowerShellVersion    = '7.4.2'
     CmdletsToExport      = @()
-    VariablesToExport    = '*'    
+    VariablesToExport    = '*'
     AliasesToExport      = @()
     HelpInfoURI          = 'https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDACConfig'
     Description          = @'
@@ -63,7 +63,7 @@ This is an advanced PowerShell module for WDAC (Windows Defender Application Con
 
 ✔️ Get-CIPolicySetting: https://github.com/HotCakeX/Harden-Windows-Security/wiki/Get-CIPolicySetting
 
-'@    
+'@
 
     NestedModules        = @('Core\New-WDACConfig.psm1',
         'Core\Remove-WDACConfig.psm1',
@@ -85,7 +85,7 @@ This is an advanced PowerShell module for WDAC (Windows Defender Application Con
         'Core\Get-CiFileHashes.psm1',
         'Core\Set-CiRuleOptions.psm1',
         'Core\Get-CIPolicySetting.psm1')
-  
+
     FunctionsToExport    = @('New-WDACConfig',
         'Remove-WDACConfig',
         'Deploy-SignedWDACConfig',
@@ -122,5 +122,5 @@ Full Change log available in GitHub releases: https://github.com/HotCakeX/Harden
             # Prerelease string of this module
             # Prerelease   = 'Beta1'
         }
-    }    
+    }
 }

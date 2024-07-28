@@ -21,15 +21,14 @@ Function Unprotect-WindowsSecurity {
     )
 
     begin {
-        [HardeningModule.Initializer]::Initialize($VerbosePreference)
-
-        Write-Verbose -Message 'Importing the required sub-modules'
-        Import-Module -FullyQualifiedName "$([HardeningModule.GlobalVars]::Path)\Shared\Update-self.psm1" -Force -Verbose:$false
-
         # Makes sure this cmdlet is invoked with Admin privileges
         if (-NOT ([HardeningModule.UserPrivCheck]::IsAdmin())) {
             Throw [System.Security.AccessControl.PrivilegeNotHeldException] 'Administrator'
         }
+        [HardeningModule.Initializer]::Initialize($VerbosePreference)
+
+        Write-Verbose -Message 'Importing the required sub-modules'
+        Import-Module -FullyQualifiedName "$([HardeningModule.GlobalVars]::Path)\Shared\Update-self.psm1" -Force -Verbose:$false
 
         Write-Verbose -Message 'Checking for updates...'
         Update-Self -InvocationStatement $MyInvocation.Statement

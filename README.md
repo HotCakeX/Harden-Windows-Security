@@ -361,17 +361,17 @@ From Top to bottom in order:
     - If it blocks a program from accessing one of your folders it protects, and you absolutely trust that program, then you can add it to exclusion list using Microsoft Defender GUI or PowerShell. you can also query the list of allowed apps using PowerShell (commands below). with these commands, you can backup your personalized list of allowed apps, that are relevant to your system, and restore them in case you clean install your Windows.
     - <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/magenta-verification.gif" width="25" alt="Rotating pink checkmark denoting registry or cmdlet"> The module adds the root of the OneDrive folders of all user accounts present, to the protected folders list of Controlled Folder Access, to provide Ransomware protection for the entire OneDrive folder. <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-defender#controlledfolderaccessprotectedfolders)
 
-```powershell
-# Add multiple programs to the exclusion list of Controlled Folder Access
-Add-MpPreference -ControlledFolderAccessAllowedApplications 'C:\Program Files\App\app.exe','C:\Program Files\App2\app2.exe'
-```
+  -
+    ```powershell
+    # Add multiple programs to the exclusion list of Controlled Folder Access
+    Add-MpPreference -ControlledFolderAccessAllowedApplications 'C:\Program Files\App\app.exe','C:\Program  Files\App2\app2.exe'
+    ```
 
-```powershell
-# Get the list of all allowed apps
-(Get-MpPreference).ControlledFolderAccessAllowedApplications
-```
-
-<br>
+  -
+    ```powershell
+    # Get the list of all allowed apps
+    (Get-MpPreference).ControlledFolderAccessAllowedApplications
+    ```
 
 - <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/magenta-verification.gif" width="25" alt="Rotating pink checkmark denoting registry or cmdlet"> Enables [Mandatory ASLR,](https://learn.microsoft.com/en-us/microsoft-365/security/defender-endpoint/enable-exploit-protection?view=o365-worldwide) *It might cause compatibility issues* only for some **poorly-made 3rd party programs**, specially portable ones. <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-exploitguard)
 

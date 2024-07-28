@@ -376,18 +376,22 @@ From Top to bottom in order:
     - Automatically detects and excludes the Git executables of GitHub Desktop and Git (Standalone version) from mandatory ASLR if they are installed on the system. [More info here](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Git-GitHub-Desktop-and-Mandatory-ASLR)
 
     - You can add Mandatory ASLR override for a trusted program using the PowerShell command below or in the Program Settings section of Exploit Protection in Microsoft Defender app.
-    
-        - `Set-ProcessMitigation -Name "C:\TrustedApp.exe" -Disable ForceRelocateImages`    
-        
-   - Exploit Protection configurations are also accessible in XML format [within this repository](https://github.com/HotCakeX/Harden-Windows-Security/tree/main/Intune%20Files/Hardening%20Policies/Exploit%20Protections). When implementing exploit protections using an XML file, the existing exploit mitigations will seamlessly integrate rather than being overwritten. Should there be pre-existing exploit protections applied to an executable on the system, and the XML file specifies different mitigations for the same executable, these protections will be merged and applied collectively.
+
+        - `Set-ProcessMitigation -Name "C:\TrustedApp.exe" -Disable ForceRelocateImages`
 
 - <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/magenta-verification.gif" width="25" alt="Rotating pink checkmark denoting registry or cmdlet"> Applies [Exploit Protections/Process Mitigations](https://learn.microsoft.com/en-us/microsoft-365/security/defender-endpoint/enable-exploit-protection) from [**this list**](https://github.com/HotCakeX/Harden-Windows-Security/blob/main/Harden-Windows-Security%20Module/Main%20files/Resources/ProcessMitigations.csv) to the following programs: <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-exploitguard)
 
     - All channels of [Microsoft Edge](https://www.microsoft.com/en-us/edge) browser
+    
     - [Quick Assist](https://learn.microsoft.com/en-us/windows/client-management/client-tools/quick-assist) app
+
     - Some System processes
+
     - Microsoft 365 apps
+
     - More apps and processes will be added to the list over time once they are properly validated to be fully compatible.
+
+    - Exploit Protection configurations are also accessible in XML format [within this repository](https://github.com/HotCakeX/Harden-Windows-Security/tree/main/Intune%20Files/Hardening%20Policies/Exploit%20Protections). When implementing exploit protections using an XML file, the existing exploit mitigations will seamlessly integrate rather than being overwritten. Should there be pre-existing exploit protections applied to an executable on the system, and the XML file specifies different mitigations for the same executable, these protections will be merged and applied collectively.
 
 - <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/magenta-verification.gif" width="25" alt="Rotating pink checkmark denoting registry or cmdlet"> [Turns on Data Execution Prevention](https://learn.microsoft.com/en-us/windows-hardware/drivers/devtest/bcdedit--set) (DEP) for all applications, including 32-bit programs. By default, the output of `BCDEdit /enum "{current}"` (in PowerShell) for the NX bit is `OptIn` but this module sets it to `AlwaysOn`
 

@@ -364,7 +364,7 @@ From Top to bottom in order:
   -
     ```powershell
     # Add multiple programs to the exclusion list of Controlled Folder Access
-    Add-MpPreference -ControlledFolderAccessAllowedApplications 'C:\Program Files\App\app.exe','C:\Program  Files\App2\app2.exe'
+    Add-MpPreference -ControlledFolderAccessAllowedApplications 'C:\Program Files\App\app.exe','C:\Program Files\App2\app2.exe'
     ```
 
   -

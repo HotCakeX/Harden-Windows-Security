@@ -863,23 +863,37 @@ Execution Policy: $CurrentExecutionPolicy
                         Start-ThreadJob -ScriptBlock {
                             param ($SyncHash)
 
-                            . "$([HardeningModule.GlobalVars]::Path)\Shared\HardeningFunctions.ps1"
-                            $PSDefaultParameterValues = @{ 'Write-Verbose:Verbose' = $true }
+                            try {
+                                . "$([HardeningModule.GlobalVars]::Path)\Shared\HardeningFunctions.ps1"
+                                $PSDefaultParameterValues = @{ 'Write-Verbose:Verbose' = $true }
 
-                            # Only download and process the files when GUI is loaded and if Offline mode is not used
-                            # Because at this point user might have not selected the files to be used for offline operation
-                            if (!([HardeningModule.GlobalVars]::Offline)) {
-                                Start-FileDownload -SyncHash $SyncHash -GUI -Verbose:$true *>&1 | ForEach-Object -Process {
+                                # Only download and process the files when GUI is loaded and if Offline mode is not used
+                                # Because at this point user might have not selected the files to be used for offline operation
+                                if (!([HardeningModule.GlobalVars]::Offline)) {
+                                    Start-FileDownload -SyncHash $SyncHash -GUI -Verbose:$true *>&1 | ForEach-Object -Process {
 
-                                    [HardeningModule.Logger]::LogMessage(
+                                        [HardeningModule.Logger]::LogMessage(
+                                            $_,
+                                            $SyncHash.Logger,
+                                            $SyncHash['GUI']['OutputTextBlock'],
+                                            $SyncHash['GUI']['ScrollerForOutputTextBlock'],
+                                            $SyncHash.Window
+                                        )
+                                    }
+                                }
+                            }
+                            catch {
+                                $_.Exception.Message, $_.ErrorDetails, $_.ScriptStackTrace *>&1 | ForEach-Object -Process { [HardeningModule.Logger]::LogMessage(
                                         $_,
                                         $SyncHash.Logger,
                                         $SyncHash['GUI']['OutputTextBlock'],
                                         $SyncHash['GUI']['ScrollerForOutputTextBlock'],
                                         $SyncHash.Window
-                                    )
-                                }
+                                    ) }
+                                # when error occurs, Execute button remains disabled
+                                throw $_.Exception
                             }
+
                             # Using dispatch since the execute button is owned by the GUI (parent) RunSpace and we're in another RunSpace (ThreadJob)
                             # Enabling the execute button after all files are downloaded and ready or if Offline switch was used and download was skipped
                             $SyncHash.Window.Dispatcher.Invoke({
@@ -1007,6 +1021,7 @@ Execution Policy: $CurrentExecutionPolicy
                                 }
                                 catch {
                                     Write-Verbose -Message $_
+                                    # throw $_.Exception
                                 }
                             }
 

@@ -10,7 +10,7 @@ It is a PowerShell module that can apply all of the hardening measures described
 
 It is also useful for security researchers and penetration testers who want to assess their system security posture. The module works with any system locale and language.
 
-It is fully capable of performing compliance checks for policies applied through Intune using modern workplace management MDM.
+It is fully capable of performing compliance checks for policies applied through Intune using modern workplace management MDM too.
 
 ### Automatic Updates
 
@@ -389,6 +389,7 @@ The policies can be applied via a wide variety of ways and they will all be dete
 * Registry keys
 * Group Policies
 * PowerShell cmdlets
+* Windows APIs
 
 > [!NOTE]\
 > Based on the score that you get you will see a different ASCII art!

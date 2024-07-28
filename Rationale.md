@@ -12,9 +12,13 @@ This document provides the justification and objective of this GitHub repository
 2. Checking and Auditing the Compliance of the system with the hardening measures
 3. Removing the hardening measures described in the [Readme](https://github.com/HotCakeX/Harden-Windows-Security)
 
-Use the Harden Windows Security module to secure your personal devices against the majority of advanced threats.
+Use the Harden Windows Security module to secure your personal and enterprise devices against the majority of advanced threats.
 
-The module is suitable to be used by everyone, as long as your device is not managed, for example by a Domain Controller or as part of the [Microsoft Entra ID](https://www.microsoft.com/en-gb/security/business/microsoft-entra), because those devices are already controlled in different manners and different set of policies are applied to them.
+The module is suitable to be used by everyone.
+
+If you are a personal user, you can use the Harden Windows Security to harden your Operation System, check its security score or undo the hardening.
+
+If you are an enterprise user or admin, you can use the [provided Intune security policies](https://github.com/HotCakeX/Harden-Windows-Security/tree/main/Intune%20Files) from this repository and apply them from your Intune Portal to all of your workstations using [Microsoft Graph API](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Microsoft-Graph-Explorer-and-API-Basics). You can then use the module to verify the compliance of the workstations against the applied policies and receive a security score.
 
 It uses the same security features built into your device and Windows operating system to fine-tune it towards the highest security and locked-down state.
 

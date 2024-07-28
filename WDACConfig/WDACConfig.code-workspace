@@ -11,6 +11,8 @@
 		"powershell.codeFormatting.trimWhitespaceAroundPipe": true,
 		"powershell.codeFormatting.useConstantStrings": true,
 		"powershell.codeFormatting.useCorrectCasing": true,
+		// To debug C# code, the PowerShell sessions needs to be restarted each time, this takes care of it automatically when we press F5
+		"powershell.debugging.createTemporaryIntegratedConsole": true,
 		"powershell.codeFormatting.whitespaceBetweenParameters": true,
 		"cSpell.words": [
 			"accepteula",

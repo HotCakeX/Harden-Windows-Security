@@ -59,3 +59,22 @@ The version of the PowerShell instance created will correspond to the version in
 This behavior ensures that your PowerShell instance is consistent with the environment in which your `C#` code is executed, providing seamless integration and execution across different PowerShell versions.
 
 <br>
+
+## Make Regex Faster In PowerShell
+
+The Compiled option in Regex is beneficial when you need to reuse the same pattern multiple times, especially within loops. This option improves performance by compiling the regex pattern into a more efficient, executable form. Here, we'll explore the technical advantages and provide a practical example in PowerShell to demonstrate its efficacy.
+
+When working with regular expressions in tight loops, the overhead of interpreting the pattern each time can significantly impact performance. The Compiled option mitigates this by converting the regex pattern into an intermediate language, which the .NET runtime can execute more swiftly.
+
+#### Best Practices
+
+* Pattern Reuse: Utilize the Compiled option when the same regex pattern is used repeatedly.
+
+* Defined Outside Loops: Ensure the regex pattern is defined outside the loop.
+
+```powershell
+$Pattern = [regex]::new('Insert Regex Pattern', [System.Text.RegularExpressions.RegexOptions]::Compiled)
+$Pattern.IsMatch($Data)
+```
+
+<br>

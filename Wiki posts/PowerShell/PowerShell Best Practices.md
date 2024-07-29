@@ -160,13 +160,13 @@ Class BasePolicyNames : System.Management.Automation.IValidateSetValuesGenerator
             }
         }
         return $BasePolicyNames
-    }   
+    }
 }
 
 # Define the types to export with type accelerators.
 [System.Reflection.TypeInfo[]]$ExportableTypes = @(
     [Items]
-    [BasePolicyNames]    
+    [BasePolicyNames]
 )
 
 # Get the non-public TypeAccelerators class for defining new accelerators.

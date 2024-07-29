@@ -78,3 +78,19 @@ $Pattern.IsMatch($Data)
 ```
 
 <br>
+
+## How To See The .NET Version Of The Current PowerShell Instance
+
+Use the following command to determine the .NET version of the current PowerShell core instance:
+
+```powershell
+[System.Runtime.InteropServices.RuntimeInformation]::FrameworkDescription
+```
+
+<br>
+
+## Note About PSReadLine Module
+
+If you install or uninstall a [PSReadLine](https://learn.microsoft.com/en-us/powershell/module/psreadline/about/about_psreadline) version, totally exit the Terminal or VS Code if using the IDE. That's one of those modules that can't be unloaded normally.
+
+<br>

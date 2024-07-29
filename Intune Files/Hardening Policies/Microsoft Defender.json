@@ -1,9 +1,9 @@
 ﻿{
     "@odata.context": "https://graph.microsoft.com/beta/$metadata#deviceManagement/configurationPolicies/$entity",
-    "createdDateTime": "2024-07-27T05:56:17.5257154Z",
+    "createdDateTime": "2024-07-29T12:03:57.8845942Z",
     "creationSource": null,
     "description": "Microsoft Defender Category",
-    "lastModifiedDateTime": "2024-07-27T07:31:53.7698352Z",
+    "lastModifiedDateTime": "2024-07-29T12:10:28.3891105Z",
     "name": "Microsoft Defender",
     "platforms": "windows10",
     "priorityMetaData": null,
@@ -12,7 +12,7 @@
     ],
     "settingCount": 69,
     "technologies": "mdm",
-    "id": "f556b02e-18b2-4309-9451-50153ac3920e",
+    "id": "4e1c08f2-98da-45d4-a64f-8946287f096c",
     "templateReference": {
         "templateId": "",
         "templateFamily": "none",
@@ -22,19 +22,6 @@
     "settings": [
         {
             "id": "0",
-            "settingInstance": {
-                "@odata.type": "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance",
-                "settingDefinitionId": "device_vendor_msft_policy_config_admx_microsoftdefenderantivirus_disablelocaladminmerge",
-                "settingInstanceTemplateReference": null,
-                "choiceSettingValue": {
-                    "settingValueTemplateReference": null,
-                    "value": "device_vendor_msft_policy_config_admx_microsoftdefenderantivirus_disablelocaladminmerge_1",
-                    "children": []
-                }
-            }
-        },
-        {
-            "id": "1",
             "settingInstance": {
                 "@odata.type": "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance",
                 "settingDefinitionId": "device_vendor_msft_policy_config_admx_microsoftdefenderantivirus_disableblockatfirstseen",
@@ -47,7 +34,7 @@
             }
         },
         {
-            "id": "2",
+            "id": "1",
             "settingInstance": {
                 "@odata.type": "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance",
                 "settingDefinitionId": "device_vendor_msft_policy_config_admx_microsoftdefenderantivirus_spynetreporting",
@@ -71,7 +58,7 @@
             }
         },
         {
-            "id": "3",
+            "id": "2",
             "settingInstance": {
                 "@odata.type": "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance",
                 "settingDefinitionId": "device_vendor_msft_policy_config_admx_microsoftdefenderantivirus_mpengine_enablefilehashcomputation",
@@ -84,7 +71,7 @@
             }
         },
         {
-            "id": "4",
+            "id": "3",
             "settingInstance": {
                 "@odata.type": "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance",
                 "settingDefinitionId": "device_vendor_msft_policy_config_admx_microsoftdefenderantivirus_nis_disableprotocolrecognition",
@@ -97,7 +84,7 @@
             }
         },
         {
-            "id": "5",
+            "id": "4",
             "settingInstance": {
                 "@odata.type": "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance",
                 "settingDefinitionId": "device_vendor_msft_policy_config_admx_microsoftdefenderantivirus_quarantine_purgeitemsafterdelay",
@@ -121,7 +108,7 @@
             }
         },
         {
-            "id": "6",
+            "id": "5",
             "settingInstance": {
                 "@odata.type": "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance",
                 "settingDefinitionId": "device_vendor_msft_policy_config_admx_microsoftdefenderantivirus_randomizescheduletasktimes",
@@ -134,7 +121,7 @@
             }
         },
         {
-            "id": "7",
+            "id": "6",
             "settingInstance": {
                 "@odata.type": "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance",
                 "settingDefinitionId": "device_vendor_msft_policy_config_admx_microsoftdefenderantivirus_realtimeprotection_ioavmaxsize",
@@ -158,7 +145,7 @@
             }
         },
         {
-            "id": "8",
+            "id": "7",
             "settingInstance": {
                 "@odata.type": "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance",
                 "settingDefinitionId": "device_vendor_msft_policy_config_admx_microsoftdefenderantivirus_realtimeprotection_disableonaccessprotection",
@@ -171,7 +158,7 @@
             }
         },
         {
-            "id": "9",
+            "id": "8",
             "settingInstance": {
                 "@odata.type": "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance",
                 "settingDefinitionId": "device_vendor_msft_policy_config_admx_microsoftdefenderantivirus_realtimeprotection_disableioavprotection",
@@ -184,7 +171,7 @@
             }
         },
         {
-            "id": "10",
+            "id": "9",
             "settingInstance": {
                 "@odata.type": "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance",
                 "settingDefinitionId": "device_vendor_msft_policy_config_admx_microsoftdefenderantivirus_realtimeprotection_disablebehaviormonitoring",
@@ -197,7 +184,7 @@
             }
         },
         {
-            "id": "11",
+            "id": "10",
             "settingInstance": {
                 "@odata.type": "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance",
                 "settingDefinitionId": "device_vendor_msft_policy_config_admx_microsoftdefenderantivirus_realtimeprotection_disablescanonrealtimeenable",
@@ -210,7 +197,7 @@
             }
         },
         {
-            "id": "12",
+            "id": "11",
             "settingInstance": {
                 "@odata.type": "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance",
                 "settingDefinitionId": "device_vendor_msft_policy_config_admx_microsoftdefenderantivirus_realtimeprotection_disablerawwritenotification",
@@ -223,7 +210,7 @@
             }
         },
         {
-            "id": "13",
+            "id": "12",
             "settingInstance": {
                 "@odata.type": "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance",
                 "settingDefinitionId": "device_vendor_msft_policy_config_admx_microsoftdefenderantivirus_scan_disablescanningmappednetworkdrivesforfullscan",
@@ -236,7 +223,7 @@
             }
         },
         {
-            "id": "14",
+            "id": "13",
             "settingInstance": {
                 "@odata.type": "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance",
                 "settingDefinitionId": "device_vendor_msft_policy_config_admx_microsoftdefenderantivirus_scan_disablearchivescanning",
@@ -249,7 +236,7 @@
             }
         },
         {
-            "id": "15",
+            "id": "14",
             "settingInstance": {
                 "@odata.type": "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance",
                 "settingDefinitionId": "device_vendor_msft_policy_config_admx_microsoftdefenderantivirus_scan_disablescanningnetworkfiles",
@@ -262,7 +249,7 @@
             }
         },
         {
-            "id": "16",
+            "id": "15",
             "settingInstance": {
                 "@odata.type": "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance",
                 "settingDefinitionId": "device_vendor_msft_policy_config_admx_microsoftdefenderantivirus_scan_disablepackedexescanning",
@@ -275,7 +262,7 @@
             }
         },
         {
-            "id": "17",
+            "id": "16",
             "settingInstance": {
                 "@odata.type": "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance",
                 "settingDefinitionId": "device_vendor_msft_policy_config_admx_microsoftdefenderantivirus_scan_disableremovabledrivescanning",
@@ -288,7 +275,7 @@
             }
         },
         {
-            "id": "18",
+            "id": "17",
             "settingInstance": {
                 "@odata.type": "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance",
                 "settingDefinitionId": "device_vendor_msft_policy_config_admx_microsoftdefenderantivirus_scan_archivemaxdepth",
@@ -312,7 +299,7 @@
             }
         },
         {
-            "id": "19",
+            "id": "18",
             "settingInstance": {
                 "@odata.type": "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance",
                 "settingDefinitionId": "device_vendor_msft_policy_config_admx_microsoftdefenderantivirus_scan_archivemaxsize",
@@ -336,7 +323,7 @@
             }
         },
         {
-            "id": "20",
+            "id": "19",
             "settingInstance": {
                 "@odata.type": "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance",
                 "settingDefinitionId": "device_vendor_msft_policy_config_admx_microsoftdefenderantivirus_scan_disableemailscanning",
@@ -349,7 +336,7 @@
             }
         },
         {
-            "id": "21",
+            "id": "20",
             "settingInstance": {
                 "@odata.type": "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance",
                 "settingDefinitionId": "device_vendor_msft_policy_config_admx_microsoftdefenderantivirus_scan_disableheuristics",
@@ -362,7 +349,7 @@
             }
         },
         {
-            "id": "22",
+            "id": "21",
             "settingInstance": {
                 "@odata.type": "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance",
                 "settingDefinitionId": "device_vendor_msft_policy_config_admx_microsoftdefenderantivirus_scan_disablereparsepointscanning",
@@ -370,6 +357,19 @@
                 "choiceSettingValue": {
                     "settingValueTemplateReference": null,
                     "value": "device_vendor_msft_policy_config_admx_microsoftdefenderantivirus_scan_disablereparsepointscanning_1",
+                    "children": []
+                }
+            }
+        },
+        {
+            "id": "22",
+            "settingInstance": {
+                "@odata.type": "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance",
+                "settingDefinitionId": "device_vendor_msft_policy_config_admx_microsoftdefenderantivirus_signatureupdate_updateonstartup",
+                "settingInstanceTemplateReference": null,
+                "choiceSettingValue": {
+                    "settingValueTemplateReference": null,
+                    "value": "device_vendor_msft_policy_config_admx_microsoftdefenderantivirus_signatureupdate_updateonstartup_1",
                     "children": []
                 }
             }
@@ -426,19 +426,6 @@
             "id": "25",
             "settingInstance": {
                 "@odata.type": "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance",
-                "settingDefinitionId": "device_vendor_msft_policy_config_admx_microsoftdefenderantivirus_signatureupdate_disableupdateonstartupwithoutengine",
-                "settingInstanceTemplateReference": null,
-                "choiceSettingValue": {
-                    "settingValueTemplateReference": null,
-                    "value": "device_vendor_msft_policy_config_admx_microsoftdefenderantivirus_signatureupdate_disableupdateonstartupwithoutengine_1",
-                    "children": []
-                }
-            }
-        },
-        {
-            "id": "26",
-            "settingInstance": {
-                "@odata.type": "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance",
                 "settingDefinitionId": "device_vendor_msft_policy_config_defender_allowarchivescanning",
                 "settingInstanceTemplateReference": null,
                 "choiceSettingValue": {
@@ -449,7 +436,7 @@
             }
         },
         {
-            "id": "27",
+            "id": "26",
             "settingInstance": {
                 "@odata.type": "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance",
                 "settingDefinitionId": "device_vendor_msft_policy_config_defender_allowbehaviormonitoring",
@@ -462,7 +449,7 @@
             }
         },
         {
-            "id": "28",
+            "id": "27",
             "settingInstance": {
                 "@odata.type": "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance",
                 "settingDefinitionId": "device_vendor_msft_policy_config_defender_allowcloudprotection",
@@ -475,7 +462,7 @@
             }
         },
         {
-            "id": "29",
+            "id": "28",
             "settingInstance": {
                 "@odata.type": "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance",
                 "settingDefinitionId": "device_vendor_msft_defender_configuration_allowdatagramprocessingonwinserver",
@@ -488,7 +475,7 @@
             }
         },
         {
-            "id": "30",
+            "id": "29",
             "settingInstance": {
                 "@odata.type": "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance",
                 "settingDefinitionId": "device_vendor_msft_policy_config_defender_allowemailscanning",
@@ -501,7 +488,7 @@
             }
         },
         {
-            "id": "31",
+            "id": "30",
             "settingInstance": {
                 "@odata.type": "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance",
                 "settingDefinitionId": "device_vendor_msft_policy_config_defender_allowfullscanonmappednetworkdrives",
@@ -514,7 +501,7 @@
             }
         },
         {
-            "id": "32",
+            "id": "31",
             "settingInstance": {
                 "@odata.type": "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance",
                 "settingDefinitionId": "device_vendor_msft_policy_config_defender_allowfullscanremovabledrivescanning",
@@ -527,7 +514,7 @@
             }
         },
         {
-            "id": "33",
+            "id": "32",
             "settingInstance": {
                 "@odata.type": "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance",
                 "settingDefinitionId": "device_vendor_msft_defender_configuration_allownetworkprotectiondownlevel",
@@ -540,7 +527,7 @@
             }
         },
         {
-            "id": "34",
+            "id": "33",
             "settingInstance": {
                 "@odata.type": "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance",
                 "settingDefinitionId": "device_vendor_msft_defender_configuration_allownetworkprotectiononwinserver",
@@ -553,7 +540,7 @@
             }
         },
         {
-            "id": "35",
+            "id": "34",
             "settingInstance": {
                 "@odata.type": "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance",
                 "settingDefinitionId": "device_vendor_msft_policy_config_defender_allowonaccessprotection",
@@ -566,7 +553,7 @@
             }
         },
         {
-            "id": "36",
+            "id": "35",
             "settingInstance": {
                 "@odata.type": "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance",
                 "settingDefinitionId": "device_vendor_msft_policy_config_defender_allowrealtimemonitoring",
@@ -579,7 +566,7 @@
             }
         },
         {
-            "id": "37",
+            "id": "36",
             "settingInstance": {
                 "@odata.type": "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance",
                 "settingDefinitionId": "device_vendor_msft_policy_config_defender_allowscanningnetworkfiles",
@@ -592,7 +579,7 @@
             }
         },
         {
-            "id": "38",
+            "id": "37",
             "settingInstance": {
                 "@odata.type": "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance",
                 "settingDefinitionId": "device_vendor_msft_policy_config_defender_allowioavprotection",
@@ -605,7 +592,7 @@
             }
         },
         {
-            "id": "39",
+            "id": "38",
             "settingInstance": {
                 "@odata.type": "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance",
                 "settingDefinitionId": "device_vendor_msft_policy_config_defender_allowscriptscanning",
@@ -618,7 +605,7 @@
             }
         },
         {
-            "id": "40",
+            "id": "39",
             "settingInstance": {
                 "@odata.type": "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance",
                 "settingDefinitionId": "device_vendor_msft_defender_configuration_allowswitchtoasyncinspection",
@@ -631,7 +618,7 @@
             }
         },
         {
-            "id": "41",
+            "id": "40",
             "settingInstance": {
                 "@odata.type": "#microsoft.graph.deviceManagementConfigurationSimpleSettingInstance",
                 "settingDefinitionId": "device_vendor_msft_defender_configuration_archivemaxdepth",
@@ -644,7 +631,7 @@
             }
         },
         {
-            "id": "42",
+            "id": "41",
             "settingInstance": {
                 "@odata.type": "#microsoft.graph.deviceManagementConfigurationSimpleSettingInstance",
                 "settingDefinitionId": "device_vendor_msft_defender_configuration_archivemaxsize",
@@ -657,7 +644,7 @@
             }
         },
         {
-            "id": "43",
+            "id": "42",
             "settingInstance": {
                 "@odata.type": "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance",
                 "settingDefinitionId": "device_vendor_msft_policy_config_defender_checkforsignaturesbeforerunningscan",
@@ -670,7 +657,7 @@
             }
         },
         {
-            "id": "44",
+            "id": "43",
             "settingInstance": {
                 "@odata.type": "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance",
                 "settingDefinitionId": "device_vendor_msft_policy_config_defender_cloudblocklevel",
@@ -683,7 +670,7 @@
             }
         },
         {
-            "id": "45",
+            "id": "44",
             "settingInstance": {
                 "@odata.type": "#microsoft.graph.deviceManagementConfigurationSimpleSettingInstance",
                 "settingDefinitionId": "device_vendor_msft_policy_config_defender_cloudextendedtimeout",
@@ -696,7 +683,7 @@
             }
         },
         {
-            "id": "46",
+            "id": "45",
             "settingInstance": {
                 "@odata.type": "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance",
                 "settingDefinitionId": "device_vendor_msft_policy_config_defender_disablecatchupquickscan",
@@ -704,6 +691,19 @@
                 "choiceSettingValue": {
                     "settingValueTemplateReference": null,
                     "value": "device_vendor_msft_policy_config_defender_disablecatchupquickscan_0",
+                    "children": []
+                }
+            }
+        },
+        {
+            "id": "46",
+            "settingInstance": {
+                "@odata.type": "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance",
+                "settingDefinitionId": "device_vendor_msft_defender_configuration_disablelocaladminmerge",
+                "settingInstanceTemplateReference": null,
+                "choiceSettingValue": {
+                    "settingValueTemplateReference": null,
+                    "value": "device_vendor_msft_defender_configuration_disablelocaladminmerge_1",
                     "children": []
                 }
             }

@@ -3,14 +3,14 @@
     "createdDateTime": "2024-07-29T15:10:24.5260441Z",
     "creationSource": null,
     "description": "Microsoft Defender Category",
-    "lastModifiedDateTime": "2024-07-29T15:34:26.8214474Z",
+    "lastModifiedDateTime": "2024-07-29T15:50:46.6215574Z",
     "name": "Microsoft Defender",
     "platforms": "windows10",
     "priorityMetaData": null,
     "roleScopeTagIds": [
         "0"
     ],
-    "settingCount": 70,
+    "settingCount": 72,
     "technologies": "mdm",
     "id": "a54d940d-2d55-49bf-a341-775e0274a6d1",
     "templateReference": {
@@ -1045,6 +1045,32 @@
                 "choiceSettingValue": {
                     "settingValueTemplateReference": null,
                     "value": "device_vendor_msft_policy_config_webthreatdefense_serviceenabled_1",
+                    "children": []
+                }
+            }
+        },
+        {
+            "id": "70",
+            "settingInstance": {
+                "@odata.type": "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance",
+                "settingDefinitionId": "device_vendor_msft_policy_config_system_allowtelemetry",
+                "settingInstanceTemplateReference": null,
+                "choiceSettingValue": {
+                    "settingValueTemplateReference": null,
+                    "value": "device_vendor_msft_policy_config_system_allowtelemetry_3",
+                    "children": []
+                }
+            }
+        },
+        {
+            "id": "71",
+            "settingInstance": {
+                "@odata.type": "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance",
+                "settingDefinitionId": "device_vendor_msft_policy_config_system_configuretelemetryoptinsettingsux",
+                "settingInstanceTemplateReference": null,
+                "choiceSettingValue": {
+                    "settingValueTemplateReference": null,
+                    "value": "device_vendor_msft_policy_config_system_configuretelemetryoptinsettingsux_1",
                     "children": []
                 }
             }

@@ -3,14 +3,14 @@
     "createdDateTime": "2024-07-25T15:40:18.7798321Z",
     "creationSource": null,
     "description": "UAC Category",
-    "lastModifiedDateTime": "2024-07-27T09:35:01.5225468Z",
+    "lastModifiedDateTime": "2024-07-29T16:22:08.364299Z",
     "name": "User Account Control",
     "platforms": "windows10",
     "priorityMetaData": null,
     "roleScopeTagIds": [
         "0"
     ],
-    "settingCount": 4,
+    "settingCount": 5,
     "technologies": "mdm",
     "id": "71861648-10fa-499b-a13e-b901526e6ad5",
     "templateReference": {
@@ -68,6 +68,19 @@
                 "choiceSettingValue": {
                     "settingValueTemplateReference": null,
                     "value": "device_vendor_msft_policy_config_localpoliciessecurityoptions_useraccountcontrol_switchtothesecuredesktopwhenpromptingforelevation_1",
+                    "children": []
+                }
+            }
+        },
+        {
+            "id": "4",
+            "settingInstance": {
+                "@odata.type": "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance",
+                "settingDefinitionId": "device_vendor_msft_policy_config_windowslogon_hidefastuserswitching",
+                "settingInstanceTemplateReference": null,
+                "choiceSettingValue": {
+                    "settingValueTemplateReference": null,
+                    "value": "device_vendor_msft_policy_config_windowslogon_hidefastuserswitching_1",
                     "children": []
                 }
             }

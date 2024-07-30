@@ -18,12 +18,14 @@ Function Edit-SignedWDACConfig {
         [Parameter(Mandatory = $true, ParameterSetName = 'MergeSupplementalPolicies', ValueFromPipelineByPropertyName = $true)]
         [System.String]$SuppPolicyName,
 
+        [ArgumentCompleter([WDACConfig.ArgCompleter.XmlFileMultiSelectPicker])]
         [ValidateScript({ Test-CiPolicy -XmlFile $_ })]
         [Parameter(Mandatory = $true, ParameterSetName = 'MergeSupplementalPolicies', ValueFromPipelineByPropertyName = $true)]
         [System.IO.FileInfo[]]$SuppPolicyPaths,
 
         [Parameter(Mandatory = $false, ParameterSetName = 'AllowNewApps')][System.Management.Automation.SwitchParameter]$BoostedSecurity,
 
+        [ArgumentCompleter([WDACConfig.ArgCompleter.XmlFilePathsPicker])]
         [ValidateScript({
                 # Validate the Policy file to make sure the user isn't accidentally trying to
                 # Edit an Unsigned policy using Edit-SignedWDACConfig cmdlet which is only made for Signed policies
@@ -80,6 +82,7 @@ Function Edit-SignedWDACConfig {
         [Parameter(Mandatory = $true, ParameterSetName = 'UpdateBasePolicy')]
         [System.String]$NewBasePolicyType,
 
+        [ArgumentCompleter([WDACConfig.ArgCompleter.SingleCerFilePicker])]
         [ValidatePattern('\.cer$')]
         [ValidateScript({ [System.IO.File]::Exists($_) }, ErrorMessage = 'The path you selected is not a file path.')]
         [Parameter(Mandatory = $false, ValueFromPipelineByPropertyName = $true)]
@@ -116,6 +119,7 @@ Function Edit-SignedWDACConfig {
         [parameter(Mandatory = $false, ParameterSetName = 'AllowNewApps')]
         [System.String[]]$Fallbacks = ('FilePublisher', 'Hash'),
 
+        [ArgumentCompleter([WDACConfig.ArgCompleter.ExeFilePathsPicker])]
         [Parameter(Mandatory = $false, ValueFromPipelineByPropertyName = $true)]
         [System.IO.FileInfo]$SignToolPath,
 

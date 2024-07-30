@@ -3,11 +3,13 @@ Function ConvertTo-WDACPolicy {
         DefaultParameterSetName = 'All'
     )]
     param(
+        [ArgumentCompleter([WDACConfig.ArgCompleter.XmlFilePathsPicker])]
         [Alias('AddLogs')]
         [ValidateScript({ Test-CiPolicy -XmlFile $_ })]
         [Parameter(Mandatory = $false, ParameterSetName = 'In-Place Upgrade')]
         [System.IO.FileInfo]$PolicyToAddLogsTo,
 
+        [ArgumentCompleter([WDACConfig.ArgCompleter.XmlFilePathsPicker])]
         [Alias('BaseFile')]
         [ValidateScript({ Test-CiPolicy -XmlFile $_ })]
         [Parameter(Mandatory = $false, ParameterSetName = 'Base-Policy File Association')]

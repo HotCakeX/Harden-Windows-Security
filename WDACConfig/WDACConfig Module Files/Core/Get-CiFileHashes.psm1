@@ -2,8 +2,10 @@ Function Get-CiFileHashes {
     [CmdletBinding()]
     [OutputType([WDACConfig.AuthenticodePageHashes])]
     param (
+        [ArgumentCompleter([WDACConfig.ArgCompleter.AnyFilePathsPicker])]
         [Parameter(Mandatory = $true, Position = 0, ValueFromPipeline = $true, ValueFromPipelineByPropertyName = $true)]
         [System.IO.FileInfo]$FilePath,
+
         [Parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$SkipVersionCheck
     )
     [System.Boolean]$Verbose = $PSBoundParameters.Verbose.IsPresent ? $true : $false

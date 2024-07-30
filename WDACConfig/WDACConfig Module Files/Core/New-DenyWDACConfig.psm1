@@ -24,10 +24,12 @@ Function New-DenyWDACConfig {
         [Parameter(Mandatory = $true, ValueFromPipelineByPropertyName = $true)]
         [System.String]$PolicyName,
 
+        [ArgumentCompleter([WDACConfig.ArgCompleter.FolderPickerWithWildcard])]
         [ValidatePattern('\*', ErrorMessage = 'You did not supply a path that contains wildcard character (*) .')]
         [parameter(Mandatory = $true, ParameterSetName = 'Folder Path With WildCards', ValueFromPipelineByPropertyName = $true)]
         [System.IO.DirectoryInfo]$FolderPath,
 
+        [ArgumentCompleter([WDACConfig.ArgCompleter.FolderPicker])]
         [ValidateScript({ [System.IO.Directory]::Exists($_) }, ErrorMessage = 'One of the paths you selected is not a valid folder path.')]
         [Parameter(Mandatory = $false, ParameterSetName = 'Normal')]
         [Parameter(Mandatory = $false, ParameterSetName = 'Drivers')]

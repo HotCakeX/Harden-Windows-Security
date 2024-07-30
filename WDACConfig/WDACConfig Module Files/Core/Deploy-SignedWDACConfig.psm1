@@ -6,12 +6,14 @@ Function Deploy-SignedWDACConfig {
     )]
     [OutputType([System.String])]
     Param(
+        [ArgumentCompleter([WDACConfig.ArgCompleter.XmlFileMultiSelectPicker])]
         [ValidateScript({ Test-CiPolicy -XmlFile $_ })]
         [parameter(Mandatory = $true, ValueFromPipelineByPropertyName = $true, ValueFromPipeline = $true)]
         [System.IO.FileInfo[]]$PolicyPaths,
 
         [Parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$Deploy,
 
+        [ArgumentCompleter([WDACConfig.ArgCompleter.SingleCerFilePicker])]
         [ValidatePattern('\.cer$')]
         [ValidateScript({ [System.IO.File]::Exists($_) }, ErrorMessage = 'The path you selected is not a file path.')]
         [parameter(Mandatory = $false, ValueFromPipelineByPropertyName = $true, ValueFromPipeline = $true)][System.IO.FileInfo]$CertPath,
@@ -25,6 +27,7 @@ Function Deploy-SignedWDACConfig {
             })]
         [parameter(Mandatory = $false, ValueFromPipelineByPropertyName = $true, ValueFromPipeline = $true)][System.String]$CertCN,
 
+        [ArgumentCompleter([WDACConfig.ArgCompleter.ExeFilePathsPicker])]
         [ValidatePattern('\.exe$')]
         [ValidateScript({ [System.IO.File]::Exists($_) }, ErrorMessage = 'The path you selected is not a file path.')]
         [parameter(Mandatory = $false, ValueFromPipelineByPropertyName = $true, ValueFromPipeline = $true)]

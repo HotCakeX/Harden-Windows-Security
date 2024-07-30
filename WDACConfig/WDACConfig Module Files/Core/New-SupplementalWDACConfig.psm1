@@ -19,14 +19,17 @@ Function New-SupplementalWDACConfig {
         [parameter(Mandatory = $true, ParameterSetName = 'Installed AppXPackages', ValueFromPipelineByPropertyName = $true)]
         [System.String]$PackageName,
 
+        [ArgumentCompleter([WDACConfig.ArgCompleter.FolderPicker])]
         [ValidateScript({ [System.IO.Directory]::Exists($_) }, ErrorMessage = 'The path you selected is not a folder path.')]
         [parameter(Mandatory = $true, ParameterSetName = 'Normal', ValueFromPipelineByPropertyName = $true)]
         [System.IO.DirectoryInfo]$ScanLocation,
 
+        [ArgumentCompleter([WDACConfig.ArgCompleter.FolderPickerWithWildcard])]
         [ValidatePattern('\*', ErrorMessage = 'You did not supply a path that contains wildcard character (*) .')]
         [parameter(Mandatory = $true, ParameterSetName = 'Folder Path With WildCards', ValueFromPipelineByPropertyName = $true)]
         [System.IO.DirectoryInfo]$FolderPath,
 
+        [ArgumentCompleter([WDACConfig.ArgCompleter.MultipleCerFilePicker])]
         [ValidateScript({ [System.IO.File]::Exists($_) }, ErrorMessage = 'The path you selected is not a file path.')]
         [parameter(Mandatory = $true, ParameterSetName = 'Certificate', ValueFromPipelineByPropertyName = $true)]
         [System.IO.FileInfo[]]$CertificatePaths,
@@ -36,6 +39,7 @@ Function New-SupplementalWDACConfig {
         [parameter(Mandatory = $true, ValueFromPipelineByPropertyName = $true)]
         [System.String]$SuppPolicyName,
 
+        [ArgumentCompleter([WDACConfig.ArgCompleter.XmlFilePathsPicker])]
         [ValidateScript({ Test-CiPolicy -XmlFile $_ })]
         [parameter(Mandatory = $false, ValueFromPipelineByPropertyName = $true)]
         [System.IO.FileInfo]$PolicyPath,

@@ -11,12 +11,15 @@ Function Set-CommonWDACConfig {
             })]
         [parameter(Mandatory = $false)][System.String]$CertCN,
 
+        [ArgumentCompleter([WDACConfig.ArgCompleter.SingleCerFilePicker])]
         [ValidateScript({ ([System.IO.File]::Exists($_)) -and ($_.extension -eq '.cer') }, ErrorMessage = 'The path you selected is not a file path for a .cer file.')]
         [parameter(Mandatory = $false)][System.IO.FileInfo]$CertPath,
 
+        [ArgumentCompleter([WDACConfig.ArgCompleter.ExeFilePathsPicker])]
         [ValidateScript({ ([System.IO.File]::Exists($_ )) -and ($_.extension -eq '.exe') }, ErrorMessage = 'The path you selected is not a file path for a .exe file.')]
         [parameter(Mandatory = $false)][System.IO.FileInfo]$SignToolPath,
 
+        [ArgumentCompleter([WDACConfig.ArgCompleter.XmlFilePathsPicker])]
         [ValidateScript({
                 try {
                     $XmlTest = [System.Xml.XmlDocument](Get-Content -Path $_)
@@ -41,6 +44,7 @@ Function Set-CommonWDACConfig {
             }, ErrorMessage = 'The selected policy xml file is Signed, Please select an Unsigned policy.')]
         [parameter(Mandatory = $false)][System.IO.FileInfo]$UnsignedPolicyPath,
 
+        [ArgumentCompleter([WDACConfig.ArgCompleter.XmlFilePathsPicker])]
         [ValidateScript({
                 try {
                     $XmlTest = [System.Xml.XmlDocument](Get-Content -Path $_)

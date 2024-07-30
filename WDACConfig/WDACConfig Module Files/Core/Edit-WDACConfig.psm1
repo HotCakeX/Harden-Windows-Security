@@ -18,12 +18,14 @@ Function Edit-WDACConfig {
         [Parameter(Mandatory = $true, ParameterSetName = 'MergeSupplementalPolicies', ValueFromPipelineByPropertyName = $true)]
         [System.String]$SuppPolicyName,
 
+        [ArgumentCompleter([WDACConfig.ArgCompleter.XmlFileMultiSelectPicker])]
         [ValidateScript({ Test-CiPolicy -XmlFile $_ })]
         [Parameter(Mandatory = $true, ParameterSetName = 'MergeSupplementalPolicies', ValueFromPipelineByPropertyName = $true)]
         [System.IO.FileInfo[]]$SuppPolicyPaths,
 
         [Parameter(Mandatory = $false, ParameterSetName = 'AllowNewApps')][System.Management.Automation.SwitchParameter]$BoostedSecurity,
 
+        [ArgumentCompleter([WDACConfig.ArgCompleter.XmlFilePathsPicker])]
         [ValidateScript({
                 # Validate the Policy file to make sure the user isn't accidentally trying to
                 # Edit a Signed policy using Edit-WDACConfig cmdlet which is only made for Unsigned policies

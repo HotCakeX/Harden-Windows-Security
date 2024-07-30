@@ -6,9 +6,11 @@ Function Set-CiRuleOptions {
         [Parameter(Mandatory = $false, ParameterSetName = 'Template')]
         [System.String]$Template,
 
+        [ArgumentCompleter([WDACConfig.ArgCompleter.XmlFilePathsPicker])]
         [ValidateScript({ Test-CiPolicy -XmlFile $_ })]
         [Parameter(Mandatory = $true)][System.IO.FileInfo]$FilePath,
 
+        [ArgumentCompleter([WDACConfig.ArgCompleter.RuleOptionsPicker])]
         [ValidateScript({
                 if ($_ -notin [WDACConfig.RuleOptionsx]::new().GetValidValues()) { throw "Invalid Policy Rule Option: $_" }
                 # Return true if everything is okay
@@ -16,6 +18,7 @@ Function Set-CiRuleOptions {
             })]
         [Parameter(Mandatory = $false)][System.String[]]$RulesToAdd,
 
+        [ArgumentCompleter([WDACConfig.ArgCompleter.RuleOptionsPicker])]
         [ValidateScript({
                 if ($_ -notin [WDACConfig.RuleOptionsx]::new().GetValidValues()) { throw "Invalid Policy Rule Option: $_" }
                 # Return true if everything is okay

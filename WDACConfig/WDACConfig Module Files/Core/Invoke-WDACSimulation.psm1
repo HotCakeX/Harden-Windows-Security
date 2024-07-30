@@ -2,14 +2,17 @@ Function Invoke-WDACSimulation {
     [CmdletBinding()]
     [OutputType([System.Collections.Generic.List[WDACConfig.SimulationOutput]], [System.Boolean])]
     Param(
+        [ArgumentCompleter([WDACConfig.ArgCompleter.XmlFilePathsPicker])]
         [Alias('X')]
         [ValidateScript({ Test-CiPolicy -XmlFile $_ })]
         [Parameter(Mandatory = $true)][System.IO.FileInfo]$XmlFilePath,
 
+        [ArgumentCompleter([WDACConfig.ArgCompleter.FolderPicker])]
         [Alias('D')]
         [ValidateScript({ [System.IO.Directory]::Exists($_) }, ErrorMessage = 'The path you selected is not a valid folder path.')]
         [Parameter(Mandatory = $false)][System.IO.DirectoryInfo[]]$FolderPath,
 
+        [ArgumentCompleter([WDACConfig.ArgCompleter.MultipleAnyFilePathsPicker])]
         [Alias('F')]
         [ValidateScript({ [System.IO.File]::Exists($_) }, ErrorMessage = 'The path you selected is not a file path.')]
         [Parameter(Mandatory = $false)][System.IO.FileInfo[]]$FilePath,
@@ -26,6 +29,7 @@ Function Invoke-WDACSimulation {
         [Alias('N')]
         [Parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$NoCatalogScanning,
 
+        [ArgumentCompleter([WDACConfig.ArgCompleter.FolderPicker])]
         [Alias('Cat')]
         [ValidateScript({ [System.IO.Directory]::Exists($_) }, ErrorMessage = 'The path you selected is not a valid folder path.')]
         [Parameter(Mandatory = $false)][System.IO.DirectoryInfo[]]$CatRootPath,

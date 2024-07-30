@@ -12,8 +12,8 @@ Function Remove-WDACConfig {
         [Alias('U')]
         [Parameter(Mandatory = $False, ParameterSetName = 'Unsigned Or Supplemental')][System.Management.Automation.SwitchParameter]$UnsignedOrSupplemental,
 
+        [ArgumentCompleter([WDACConfig.ArgCompleter.XmlFileMultiSelectPicker])]
         [ValidateScript({
-
                 # Validate each Policy file in PolicyPaths parameter to make sure the user isn't accidentally trying to remove an Unsigned policy
                 $_ | ForEach-Object -Process {
                     [System.Xml.XmlDocument]$XmlTest = Get-Content -Path $_
@@ -145,6 +145,7 @@ Function Remove-WDACConfig {
         [Parameter(Mandatory = $False, ParameterSetName = 'Unsigned Or Supplemental')]
         [System.String[]]$PolicyIDs,
 
+        [ArgumentCompleter([WDACConfig.ArgCompleter.ExeFilePathsPicker])]
         [parameter(Mandatory = $False, ParameterSetName = 'Signed Base', ValueFromPipelineByPropertyName = $true)]
         [System.IO.FileInfo]$SignToolPath,
 

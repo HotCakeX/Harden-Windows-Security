@@ -14,7 +14,6 @@ $PSDefaultParameterValues = @{
     'Test-Path:ErrorAction'                                       = 'SilentlyContinue'
     'Receive-CodeIntegrityLogs:Verbose'                           = $Verbose
     'Get-SignTool:Verbose'                                        = $Verbose
-    'Set-LogSize:Verbose'                                         = $Verbose
     'Update-Self:Verbose'                                         = $Verbose
     'Write-ColorfulText:Verbose'                                  = $Verbose
     'New-SnapBackGuarantee:Verbose'                               = $Verbose

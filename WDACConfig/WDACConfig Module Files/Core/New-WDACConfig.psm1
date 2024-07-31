@@ -67,8 +67,7 @@ Function New-WDACConfig {
         Write-Verbose -Message 'Importing the required sub-modules'
         Import-Module -Force -FullyQualifiedName @(
             "$([WDACConfig.GlobalVars]::ModuleRootPath)\Shared\Update-Self.psm1",
-            "$([WDACConfig.GlobalVars]::ModuleRootPath)\Shared\Write-ColorfulText.psm1",
-            "$([WDACConfig.GlobalVars]::ModuleRootPath)\Shared\Set-LogSize.psm1"
+            "$([WDACConfig.GlobalVars]::ModuleRootPath)\Shared\Write-ColorfulText.psm1"
         )
 
         if ([WDACConfig.GlobalVars]::ConfigCIBootstrap -eq $false) {
@@ -261,7 +260,7 @@ Function New-WDACConfig {
             .OUTPUTS
                 System.String
             #>
-            if ($Audit) { Set-LogSize -LogSize:$LogSize }
+            if ($Audit) { [WDACConfig.EventLogUtility]::SetLogSize($LogSize ?? 0) }
             [System.String]$Name = $Audit ? 'AllowMicrosoftAudit' : 'AllowMicrosoft'
 
             # The total number of the main steps for the progress bar to render
@@ -313,7 +312,7 @@ Function New-WDACConfig {
             .OUTPUTS
                 System.String
             #>
-            if ($Audit) { Set-LogSize -LogSize:$LogSize }
+            if ($Audit) { [WDACConfig.EventLogUtility]::SetLogSize($LogSize ?? 0) }
             [System.String]$Name = $Audit ? 'DefaultWindowsAudit' : 'DefaultWindows'
 
             # The total number of the main steps for the progress bar to render
@@ -427,7 +426,7 @@ Function New-WDACConfig {
             .OUTPUTS
                 System.String
             #>
-            if ($Audit) { Set-LogSize -LogSize:$LogSize }
+            if ($Audit) { [WDACConfig.EventLogUtility]::SetLogSize($LogSize ?? 0) }
             [System.String]$Name = $Audit ? 'SignedAndReputableAudit' : 'SignedAndReputable'
 
             # The total number of the main steps for the progress bar to render

@@ -116,7 +116,6 @@ Function Edit-WDACConfig {
         $ModulesToImport = @(
             "$([WDACConfig.GlobalVars]::ModuleRootPath)\Shared\Update-Self.psm1",
             "$([WDACConfig.GlobalVars]::ModuleRootPath)\Shared\Write-ColorfulText.psm1",
-            "$([WDACConfig.GlobalVars]::ModuleRootPath)\Shared\Set-LogSize.psm1",
             "$([WDACConfig.GlobalVars]::ModuleRootPath)\Shared\Receive-CodeIntegrityLogs.psm1",
             "$([WDACConfig.GlobalVars]::ModuleRootPath)\Shared\New-SnapBackGuarantee.psm1",
             "$([WDACConfig.GlobalVars]::ModuleRootPath)\Shared\Set-LogPropertiesVisibility.psm1",
@@ -172,7 +171,7 @@ Function Edit-WDACConfig {
         try {
 
             if ($AllowNewApps) {
-                Set-LogSize -LogSize:$LogSize
+                [WDACConfig.EventLogUtility]::SetLogSize($LogSize ?? 0)
 
                 # Get the current date so that instead of the entire event viewer logs, only audit logs created after running this module will be captured
                 Write-Verbose -Message 'Getting the current date'

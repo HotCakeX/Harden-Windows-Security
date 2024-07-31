@@ -14,6 +14,7 @@ System.Globalization
 System.Linq.Expressions
 System.Xml.ReaderWriter
 Microsoft.Win32.registry
+Microsoft.Win32.Primitives
 System.Diagnostics.Process
 System.Security.Cryptography
 System.Management.Automation

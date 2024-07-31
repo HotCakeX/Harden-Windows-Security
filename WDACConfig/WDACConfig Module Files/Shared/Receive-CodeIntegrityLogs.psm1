@@ -68,10 +68,7 @@ Function Receive-CodeIntegrityLogs {
     )
     Begin {
         . "$([WDACConfig.GlobalVars]::ModuleRootPath)\CoreExt\PSDefaultParameterValues.ps1"
-
-        # Importing the required sub-modules
-        Import-Module -FullyQualifiedName "$([WDACConfig.GlobalVars]::ModuleRootPath)\Shared\Get-GlobalRootDrives.psm1" -Force
-
+      
         Function Test-NotEmpty ($Data) {
             <#
             .SYNOPSIS
@@ -103,7 +100,7 @@ Function Receive-CodeIntegrityLogs {
             [System.Boolean]$AlternativeDriveLetterFix = $false
 
             # Get the local disks mappings
-            [PSCustomObject[]]$DriveLettersGlobalRootFix = Get-GlobalRootDrives
+            [WDACConfig.DriveLetterMapper+DriveMapping[]]$DriveLettersGlobalRootFix = [WDACConfig.DriveLetterMapper]::GetGlobalRootDrives()
         }
         catch {
             Write-Verbose -Verbose -Message 'Receive-CodeIntegrityLogs: Could not get the drive mappings from the system using the primary method, trying the alternative method now'
@@ -340,7 +337,7 @@ Function Receive-CodeIntegrityLogs {
 
                         [System.UInt32]$HardDiskVolumeNumber = $Matches['HardDiskVolumeNumber']
                         [System.String]$RemainingPath = $Matches['RemainingPath']
-                        [PSCustomObject]$GetLetter = $DriveLettersGlobalRootFix.Where({ $_.DevicePath -eq "\Device\HarddiskVolume$HardDiskVolumeNumber" })
+                        [WDACConfig.DriveLetterMapper+DriveMapping]$GetLetter = $DriveLettersGlobalRootFix.Where({ $_.DevicePath -eq "\Device\HarddiskVolume$HardDiskVolumeNumber" })
                         [System.IO.FileInfo]$UsablePath = "$($GetLetter.DriveLetter)$RemainingPath"
                         $Log['File Name'] = $Log['File Name'] -replace $Pattern, $UsablePath
                     }

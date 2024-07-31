@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Globalization;
+using System.Management.Automation.Host;
 
 namespace WDACConfig
 {
@@ -38,11 +39,19 @@ namespace WDACConfig
             "Windows", "schemas", "CodeIntegrity", "cipolicy.xsd");
 
         // Storing the path to the WDACConfig folder in the Program Files
-        public static readonly string UserConfigDir = System.IO.Path.Combine(
-            Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), "WDACConfig");
+        public static readonly string UserConfigDir = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), "WDACConfig");
 
         // Storing the path to User Config JSON file in the WDACConfig folder in the Program Files
-        public static readonly string UserConfigJson = System.IO.Path.Combine(
-            UserConfigDir, "UserConfigurations", "UserConfigurations.json");
+        public static readonly string UserConfigJson = System.IO.Path.Combine(UserConfigDir, "UserConfigurations", "UserConfigurations.json");
+
+        // The VerbosePreference variable of the PowerShell session
+        public static string VerbosePreference;
+
+        // The DebugPreference variable of the PowerShell session
+        public static string DebugPreference;
+
+        // The value of the automatic variable $HOST from the PowerShell session
+        // Stored using the LoggerInitializer method that is called at the beginning of each cmdlet
+        public static PSHost Host;
     }
 }

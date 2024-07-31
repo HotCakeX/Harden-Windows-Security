@@ -9,6 +9,7 @@ Function Get-CiFileHashes {
         [Parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$SkipVersionCheck
     )
     [System.Boolean]$Verbose = $PSBoundParameters.Verbose.IsPresent ? $true : $false
+    [WDACConfig.LoggerInitializer]::Initialize($VerbosePreference, $DebugPreference, $Host)
     . "$([WDACConfig.GlobalVars]::ModuleRootPath)\CoreExt\PSDefaultParameterValues.ps1"
 
     # if -SkipVersionCheck wasn't passed, run the updater

@@ -68,7 +68,7 @@ Function Receive-CodeIntegrityLogs {
     )
     Begin {
         . "$([WDACConfig.GlobalVars]::ModuleRootPath)\CoreExt\PSDefaultParameterValues.ps1"
-      
+
         Function Test-NotEmpty ($Data) {
             <#
             .SYNOPSIS

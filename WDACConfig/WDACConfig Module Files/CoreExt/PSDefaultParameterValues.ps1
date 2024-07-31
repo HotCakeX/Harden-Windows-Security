@@ -29,7 +29,6 @@ $PSDefaultParameterValues = @{
     'Test-KernelProtectedFiles:Verbose'                           = $Verbose
     'Set-CiRuleOptions:Verbose'                                   = $Verbose
     'New-WDACConfig:Verbose'                                      = $Verbose
-    'Invoke-CiSigning:Verbose'                                    = $Verbose
     'Get-KernelModeDrivers:Verbose'                               = $Verbose
     'New-Macros:Verbose'                                          = $Verbose
     'Checkpoint-Macros:Verbose'                                   = $Verbose

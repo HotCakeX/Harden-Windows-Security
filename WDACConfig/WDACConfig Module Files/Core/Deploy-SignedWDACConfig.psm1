@@ -48,8 +48,7 @@ Function Deploy-SignedWDACConfig {
         Import-Module -Force -FullyQualifiedName @(
             "$([WDACConfig.GlobalVars]::ModuleRootPath)\Shared\Update-Self.psm1",
             "$([WDACConfig.GlobalVars]::ModuleRootPath)\Shared\Get-SignTool.psm1",
-            "$([WDACConfig.GlobalVars]::ModuleRootPath)\Shared\Write-ColorfulText.psm1",
-            "$([WDACConfig.GlobalVars]::ModuleRootPath)\Shared\Invoke-CiSigning.psm1"
+            "$([WDACConfig.GlobalVars]::ModuleRootPath)\Shared\Write-ColorfulText.psm1"
         )
 
         # if -SkipVersionCheck wasn't passed, run the updater
@@ -144,7 +143,7 @@ Function Deploy-SignedWDACConfig {
                     if ('Enabled:UMCI' -in $PolicyRuleOptions) {
 
                         Write-Verbose -Message 'Checking whether SignTool.exe is allowed to execute in the policy or not'
-                        if (-NOT (Invoke-WDACSimulation -FilePath $SignToolPathFinal -XmlFilePath $PolicyPath -BooleanOutput -NoCatalogScanning -ThreadsCount 1)) {
+                        if (-NOT (Invoke-WDACSimulation -FilePath $SignToolPathFinal -XmlFilePath $PolicyPath -BooleanOutput -NoCatalogScanning -ThreadsCount 1 -SkipVersionCheck)) {
 
                             Write-Verbose -Message 'The policy type is base policy and it applies to user mode files, yet the policy prevents SignTool.exe from executing. As a precautionary measure, scanning and including the SignTool.exe in the policy before deployment so you can modify/remove the signed policy later from the system.'
 
@@ -196,10 +195,7 @@ Function Deploy-SignedWDACConfig {
 
                 $CurrentStep++
                 Write-Progress -Id 13 -Activity 'Signing the policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
-
-                Push-Location -Path $StagingArea
-                Invoke-CiSigning -CiPath $PolicyCIPPath -SignToolPathFinal $SignToolPathFinal -CertCN $CertCN
-                Pop-Location
+                [WDACConfig.CodeIntegritySigner]::InvokeCiSigning($PolicyCIPPath, $SignToolPathFinal, $CertCN)
 
                 Write-Verbose -Message 'Renaming the .p7 file to .cip'
                 Move-Item -LiteralPath "$StagingArea\$PolicyID.cip.p7" -Destination $PolicyCIPPath -Force
@@ -262,6 +258,9 @@ Function Deploy-SignedWDACConfig {
                 }
                 Write-Progress -Id 13 -Activity 'Complete.' -Completed
             }
+        }
+        catch {
+            throw $_
         }
         Finally {
             if (-NOT $Debug) {

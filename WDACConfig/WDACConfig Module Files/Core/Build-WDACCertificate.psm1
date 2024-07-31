@@ -239,6 +239,9 @@ ValidityPeriod = Years
             Write-Verbose -Message 'Saving the path of the .cer file of the certificate to the User configurations'
             $null = Set-CommonWDACConfig -CertPath $CertificateOutputPath
         }
+        catch {
+            throw $_
+        }
         Finally {
             Remove-Item -LiteralPath $StagingArea -Recurse -Force
         }

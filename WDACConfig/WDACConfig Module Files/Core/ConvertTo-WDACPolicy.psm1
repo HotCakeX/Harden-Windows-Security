@@ -1040,6 +1040,9 @@ Function ConvertTo-WDACPolicy {
                 }
             }
         }
+        catch {
+            throw $_
+        }
         Finally {
             Write-Progress -Id 30 -Activity 'Complete.' -Completed
             Write-Progress -Id 31 -Activity 'Complete.' -Completed

@@ -11,7 +11,7 @@ Function Test-CiPolicy {
         [Parameter(Mandatory = $true, ValueFromPipeline = $true, ParameterSetName = 'CIP File')]
         [System.IO.FileInfo]$CipFile
     )
-    [WDACConfig.LoggerInitializer]::Initialize($VerbosePreference, $DebugPreference, $Host)    
+    [WDACConfig.LoggerInitializer]::Initialize($VerbosePreference, $DebugPreference, $Host)
     # If a CI XML file is being tested
     if ($PSCmdlet.ParameterSetName -eq 'XML File' -and $PSBoundParameters.ContainsKey('XmlFile')) {
         [WDACConfig.CiPolicyTest]::TestCiPolicy($XmlFile, $null)

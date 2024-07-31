@@ -524,6 +524,9 @@ Function New-WDACConfig {
                 default { Write-Warning -Message 'None of the main parameters were selected.'; break }
             }
         }
+        catch {
+            throw $_
+        }
         Finally {
             if (-NOT $Debug) {
                 Remove-Item -Path $StagingArea -Recurse -Force

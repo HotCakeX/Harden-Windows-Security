@@ -583,6 +583,9 @@ Function Invoke-WDACSimulation {
             } | Sort-Object -Property IsAuthorized | Format-Table
 
         }
+        catch {
+            throw $_
+        }
         finally {
             Write-Progress -Id 0 -Activity 'WDAC Simulation completed.' -Completed
             # If the -Log switch is used, then stop the stopwatch and the transcription

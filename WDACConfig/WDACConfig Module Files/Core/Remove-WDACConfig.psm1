@@ -164,7 +164,6 @@ Function Remove-WDACConfig {
             "$([WDACConfig.GlobalVars]::ModuleRootPath)\Shared\Get-SignTool.psm1",
             "$([WDACConfig.GlobalVars]::ModuleRootPath)\Shared\Write-ColorfulText.psm1",
             "$([WDACConfig.GlobalVars]::ModuleRootPath)\Shared\Remove-SupplementalSigners.psm1"
-            "$([WDACConfig.GlobalVars]::ModuleRootPath)\Shared\Invoke-CiSigning.psm1"
         )
 
         # if -SkipVersionCheck wasn't passed, run the updater
@@ -300,9 +299,7 @@ Function Remove-WDACConfig {
                     $CurrentStep++
                     Write-Progress -Id 18 -Activity 'Signing the policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
-                    Push-Location -Path $StagingArea
-                    Invoke-CiSigning -CiPath $PolicyCIPPath -SignToolPathFinal $SignToolPathFinal -CertCN $CertCN
-                    Pop-Location
+                    [WDACConfig.CodeIntegritySigner]::InvokeCiSigning($PolicyCIPPath, $SignToolPathFinal, $CertCN)
 
                     # Fixing the extension name of the newly signed CIP file
                     Move-Item -Path (Join-Path -Path $StagingArea -ChildPath "$PolicyID.cip.p7") -Destination $PolicyCIPPath -Force
@@ -349,6 +346,9 @@ Function Remove-WDACConfig {
                     Write-ColorfulText -Color Lavender -InputText "Policy with the ID $ID has been successfully removed."
                 }
             }
+        }
+        catch {
+            throw $_
         }
         Finally {
             # Clean up the staging area

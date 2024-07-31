@@ -145,8 +145,7 @@ Function Edit-SignedWDACConfig {
             "$([WDACConfig.GlobalVars]::ModuleRootPath)\Shared\New-SnapBackGuarantee.psm1",
             "$([WDACConfig.GlobalVars]::ModuleRootPath)\Shared\Set-LogPropertiesVisibility.psm1",
             "$([WDACConfig.GlobalVars]::ModuleRootPath)\Shared\Select-LogProperties.psm1",
-            "$([WDACConfig.GlobalVars]::ModuleRootPath)\Shared\Test-KernelProtectedFiles.psm1",
-            "$([WDACConfig.GlobalVars]::ModuleRootPath)\Shared\Invoke-CiSigning.psm1"
+            "$([WDACConfig.GlobalVars]::ModuleRootPath)\Shared\Test-KernelProtectedFiles.psm1"
         )
         $ModulesToImport += ([WDACConfig.FileUtility]::GetFilesFast("$([WDACConfig.GlobalVars]::ModuleRootPath)\XMLOps", $null, '.psm1')).FullName
         Import-Module -FullyQualifiedName $ModulesToImport -Force
@@ -266,14 +265,10 @@ Function Edit-SignedWDACConfig {
                 Set-CiRuleOptions -FilePath $PolicyPath -RulesToRemove 'Enabled:Unsigned System Integrity Policy', 'Enabled:Audit Mode'
                 $null = ConvertFrom-CIPolicy -XmlFilePath $PolicyPath -BinaryFilePath $EnforcedModeCIPPath
 
-                # Change location so SignTool.exe will create outputs in the Staging Area
-                Push-Location -LiteralPath $StagingArea
                 # Sign both CIPs
                 foreach ($CIP in ($AuditModeCIPPath, $EnforcedModeCIPPath)) {
-                    Invoke-CiSigning -CiPath $CIP -SignToolPathFinal $SignToolPathFinal -CertCN $CertCN
+                    [WDACConfig.CodeIntegritySigner]::InvokeCiSigning($CIP, $SignToolPathFinal, $CertCN)
                 }
-
-                Pop-Location
 
                 Write-Verbose -Message 'Renaming the signed CIPs to remove the .p7 extension'
                 Move-Item -LiteralPath "$StagingArea\AuditMode.cip.p7" -Destination $AuditModeCIPPath -Force
@@ -640,10 +635,7 @@ Function Edit-SignedWDACConfig {
                 Write-Verbose -Message 'Converting the Supplemental policy to a CIP file'
                 $null = ConvertFrom-CIPolicy -XmlFilePath $SuppPolicyPath -BinaryFilePath $SupplementalCIPPath
 
-                # Change location so SignTool.exe will create outputs in the Staging Area
-                Push-Location -LiteralPath $StagingArea
-                Invoke-CiSigning -CiPath $SupplementalCIPPath -SignToolPathFinal $SignToolPathFinal -CertCN $CertCN
-                Pop-Location
+                [WDACConfig.CodeIntegritySigner]::InvokeCiSigning($SupplementalCIPPath, $SignToolPathFinal, $CertCN)
 
                 Write-Verbose -Message 'Renaming the signed Supplemental policy file to remove the .p7 extension'
                 Move-Item -LiteralPath "$StagingArea\$SuppPolicyID.cip.p7" -Destination $SupplementalCIPPath -Force
@@ -748,10 +740,7 @@ Function Edit-SignedWDACConfig {
                 Write-Verbose -Message 'Converting the Supplemental policy to a CIP file'
                 $null = ConvertFrom-CIPolicy -XmlFilePath $FinalSupplementalPath -BinaryFilePath $FinalSupplementalCIPPath
 
-                # Change location so SignTool.exe will create outputs in the Staging Area
-                Push-Location -LiteralPath $StagingArea
-                Invoke-CiSigning -CiPath $FinalSupplementalCIPPath -SignToolPathFinal $SignToolPathFinal -CertCN $CertCN
-                Pop-Location
+                [WDACConfig.CodeIntegritySigner]::InvokeCiSigning($FinalSupplementalCIPPath, $SignToolPathFinal, $CertCN)
 
                 Write-Verbose -Message 'Renaming the signed Supplemental policy file to remove the .p7 extension'
                 Move-Item -LiteralPath "$StagingArea\$SuppPolicyID.cip.p7" -Destination $FinalSupplementalCIPPath -Force
@@ -900,10 +889,7 @@ Function Edit-SignedWDACConfig {
                 Write-Verbose -Message 'Converting the base policy to a CIP file'
                 $null = ConvertFrom-CIPolicy -XmlFilePath $BasePolicyPath -BinaryFilePath $BasePolicyCIPPath
 
-                # Change location so SignTool.exe will create outputs in the Staging Area
-                Push-Location -LiteralPath $StagingArea
-                Invoke-CiSigning -CiPath $BasePolicyCIPPath -SignToolPathFinal $SignToolPathFinal -CertCN $CertCN
-                Pop-Location
+                [WDACConfig.CodeIntegritySigner]::InvokeCiSigning($BasePolicyCIPPath, $SignToolPathFinal, $CertCN)
 
                 Write-Verbose -Message 'Renaming the signed base policy file to remove the .p7 extension'
                 Move-Item -LiteralPath "$StagingArea\$CurrentID.cip.p7" -Destination $BasePolicyCIPPath -Force
@@ -936,6 +922,9 @@ Function Edit-SignedWDACConfig {
                     $null = Set-CommonWDACConfig -SignedPolicyPath $PolicyFiles[$NewBasePolicyType]
                 }
             }
+        }
+        catch {
+            throw $_
         }
         finally {
             foreach ($ID in (15..17)) {

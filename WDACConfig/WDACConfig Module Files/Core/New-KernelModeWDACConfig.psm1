@@ -377,7 +377,7 @@ Function New-KernelModeWDACConfig {
 
                                     Write-Verbose -Message 'Making sure the current Windows build can work with the NoFlightRoots Strict WDAC Policy'
 
-                                    if (-NOT (Invoke-WDACSimulation -FilePath 'C:\Windows\System32\ntoskrnl.exe' -XmlFilePath $FinalEnforcedPolicyPath -BooleanOutput -NoCatalogScanning -ThreadsCount 1)) {
+                                    if (-NOT (Invoke-WDACSimulation -FilePath 'C:\Windows\System32\ntoskrnl.exe' -XmlFilePath $FinalEnforcedPolicyPath -BooleanOutput -NoCatalogScanning -ThreadsCount 1 -SkipVersionCheck)) {
                                         Throw 'The current Windows build cannot work with the NoFlightRoots Strict Kernel-mode Policy, please change the base to Default instead.'
                                     }
                                 }

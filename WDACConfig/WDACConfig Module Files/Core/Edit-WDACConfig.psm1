@@ -814,6 +814,9 @@ Function Edit-WDACConfig {
                 }
             }
         }
+        catch {
+            throw $_
+        }
         Finally {
             foreach ($ID in 10..12) {
                 Write-Progress -Id $ID -Activity 'Complete.' -Completed

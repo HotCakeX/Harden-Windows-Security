@@ -15,7 +15,7 @@ Function Receive-CodeIntegrityLogs {
         The date from which the logs should be collected. If not specified, all logs will be collected.
         It accepts empty strings, nulls, and whitespace and they are treated as not specified.
     .PARAMETER Type
-        The type of logs to be collected. Audit or Blocked. The default value is 'Audit'
+        The type of logs to be collected. Audit, Blocked, All. The default value is 'All'
     .PARAMETER PostProcessing
         How to process the output for different scenarios
         OnlyExisting: Returns only the logs of files that exist on the disk
@@ -45,9 +45,9 @@ Function Receive-CodeIntegrityLogs {
         [Parameter(Mandatory = $false)]
         [System.String]$Date,
 
-        [ValidateSet('Audit', 'Blocked')]
+        [ValidateSet('Audit', 'Blocked', 'All')]
         [Parameter(Mandatory = $false)]
-        [System.String]$Type = 'Audit',
+        [System.String]$Type = 'All',
 
         [ValidateSet('OnlyExisting')]
         [parameter(mandatory = $false)]
@@ -337,7 +337,7 @@ Function Receive-CodeIntegrityLogs {
 
                         [System.UInt32]$HardDiskVolumeNumber = $Matches['HardDiskVolumeNumber']
                         [System.String]$RemainingPath = $Matches['RemainingPath']
-                        [WDACConfig.DriveLetterMapper+DriveMapping]$GetLetter = $DriveLettersGlobalRootFix.Where({ $_.DevicePath -eq "\Device\HarddiskVolume$HardDiskVolumeNumber" })
+                        [WDACConfig.DriveLetterMapper+DriveMapping]$GetLetter = $DriveLettersGlobalRootFix | Where-Object -FilterScript { $_.DevicePath -eq "\Device\HarddiskVolume$HardDiskVolumeNumber" }
                         [System.IO.FileInfo]$UsablePath = "$($GetLetter.DriveLetter)$RemainingPath"
                         $Log['File Name'] = $Log['File Name'] -replace $Pattern, $UsablePath
                     }
@@ -521,23 +521,37 @@ Function Receive-CodeIntegrityLogs {
 
         Switch ($PostProcessing) {
             'OnlyExisting' {
-                if ($Type -eq 'Audit') {
-                    Write-Verbose -Message "Receive-CodeIntegrityLogs: Returning $($Output.Existing.Audit.Values.Count) Audit Code Integrity logs for files on the disk."
-                    Return $Output.Existing.Audit.Values
-                }
-                else {
-                    Write-Verbose -Message "Receive-CodeIntegrityLogs: Returning $($Output.Existing.Blocked.Values.Count) Blocked Code Integrity logs for files on the disk."
-                    Return $Output.Existing.Blocked.Values
+                Switch ($Type) {
+                    'Audit' {
+                        Write-Verbose -Message "Receive-CodeIntegrityLogs: Returning $($Output.Existing.Audit.Values.Count) Audit Code Integrity logs for files on the disk."
+                        Return $Output.Existing.Audit.Values
+                    }
+                    'Blocked' {
+                        Write-Verbose -Message "Receive-CodeIntegrityLogs: Returning $($Output.Existing.Blocked.Values.Count) Blocked Code Integrity logs for files on the disk."
+                        Return $Output.Existing.Blocked.Values
+                    }
+                    'All' {
+                        $AllOutput = $Output.Existing.Blocked.Values + $Output.Existing.Audit.Values
+                        Write-Verbose -Message "Receive-CodeIntegrityLogs: Returning $($AllOutput.Count) Code Integrity logs for files on the disk."
+                        Return $AllOutput
+                    }
                 }
             }
             Default {
-                if ($Type -eq 'Audit') {
-                    Write-Verbose -Message "Receive-CodeIntegrityLogs: Returning $($Output.All.Audit.Values.Count) Audit Code Integrity logs."
-                    Return $Output.All.Audit.Values
-                }
-                else {
-                    Write-Verbose -Message "Receive-CodeIntegrityLogs: Returning $($Output.All.Blocked.Values.Count) Blocked Code Integrity logs."
-                    Return $Output.All.Blocked.Values
+                Switch ($Type) {
+                    'Audit' {
+                        Write-Verbose -Message "Receive-CodeIntegrityLogs: Returning $($Output.All.Audit.Values.Count) Audit Code Integrity logs."
+                        Return $Output.All.Audit.Values
+                    }
+                    'Blocked' {
+                        Write-Verbose -Message "Receive-CodeIntegrityLogs: Returning $($Output.All.Blocked.Values.Count) Blocked Code Integrity logs."
+                        Return $Output.All.Blocked.Values
+                    }
+                    'All' {
+                        $AllOutput = $Output.All.Audit.Values + $Output.All.Blocked.Values
+                        Write-Verbose -Message "Receive-CodeIntegrityLogs: Returning $($AllOutput.Count) Code Integrity logs."
+                        Return $AllOutput
+                    }
                 }
             }
         }

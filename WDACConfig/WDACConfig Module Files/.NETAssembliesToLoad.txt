@@ -20,6 +20,7 @@ System.Diagnostics.EventLog
 System.Security.Cryptography
 System.Management.Automation
 System.Collections.NonGeneric
+System.Text.RegularExpressions
 System.Runtime.InteropServices
 System.Windows.Forms.Primitives
 System.ComponentModel.Primitives

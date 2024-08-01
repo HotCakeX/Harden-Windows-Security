@@ -50,7 +50,6 @@ Function Invoke-WDACSimulation {
         Import-Module -Force -FullyQualifiedName @(
             "$([WDACConfig.GlobalVars]::ModuleRootPath)\Shared\Update-Self.psm1",
             "$([WDACConfig.GlobalVars]::ModuleRootPath)\Shared\Write-ColorfulText.psm1"
-            "$([WDACConfig.GlobalVars]::ModuleRootPath)\WDACSimulation\Get-FileRuleOutput.psm1",
             "$([WDACConfig.GlobalVars]::ModuleRootPath)\WDACSimulation\Get-SignerInfo.psm1"
         )
 
@@ -205,7 +204,7 @@ Function Invoke-WDACSimulation {
                 $CurrentStep++
                 Write-Progress -Id 0 -Activity 'Getting the Sha256 Hash values from the XML file' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
-                $SHA256HashesFromXML = [System.Collections.Generic.HashSet[System.String]]@((Get-FileRuleOutput -Xml ([System.Xml.XmlDocument]$XMLContent)).HashValue)
+                $SHA256HashesFromXML = [System.Collections.Generic.HashSet[System.String]]@(([WDACConfig.GetFileRuleOutput]::Get([System.Xml.XmlDocument]$XMLContent)).HashValue)
 
                 # Get all of the file paths of the files that WDAC supports, from the user provided directory
                 Write-Verbose -Message 'Getting all of the file paths of the files that WDAC supports, from the user provided directory'

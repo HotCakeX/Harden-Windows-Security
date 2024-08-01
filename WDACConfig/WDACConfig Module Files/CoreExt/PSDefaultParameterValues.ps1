@@ -19,7 +19,6 @@ $PSDefaultParameterValues = @{
     'New-SnapBackGuarantee:Verbose'                               = $Verbose
     'Get-KernelModeDriversAudit:Verbose'                          = $Verbose
     'Get-SignerInfo:Verbose'                                      = $Verbose
-    'Get-FileRuleOutput:Verbose'                                  = $Verbose
     'Get-CertificateDetails:Verbose'                              = $Verbose
     'Compare-SignerAndCertificate:Verbose'                        = $Verbose
     'Compare-SignerAndCertificate:Debug'                          = $Debug

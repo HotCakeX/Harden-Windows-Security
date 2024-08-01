@@ -6,9 +6,11 @@
 
 <br>
 
-It is a PowerShell module that can apply all of the hardening measures described in the readme. It also offers rigorous compliance verification and security assessment. It enables you to evaluate the conformity of your system based on the security standards and recommendations of this repository. The module employs various techniques such as Security Policy, PowerShell cmdlet and Registry keys to conduct the checks.
+It is a PowerShell module that can apply all of the hardening measures described in the readme. It also offers rigorous compliance verification and security assessment. It enables you to evaluate the conformity of your system based on the security standards and recommendations of this repository. The module employs various techniques such as Security Policy, PowerShell cmdlet, Registry keys, CIM and Windows APIs to conduct the checks.
 
 It is also useful for security researchers and penetration testers who want to assess their system security posture. The module works with any system locale and language.
+
+It is fully capable of performing compliance checks for policies applied through Intune using modern workplace management MDM too.
 
 ### Automatic Updates
 
@@ -378,9 +380,16 @@ Confirm-SystemCompliance
 
 ## Description
 
-This cmdlet verifies and validates all of the applied security measures. It checks registry keys if the module uses Group Policy or registry, PowerShell cmdlets if the module invokes them and Security Group Policy if the module applies them.
+This cmdlet verifies and validates all of the applied security measures described on the Readme page. Compliance checking strictly follows the guidelines and security measures of this GitHub repository. Any minor deviation from them will result in a `false` value for the corresponding check.
 
-Compliance checking strictly follows the guidelines and security measures of this GitHub repository. Any minor deviation from them will result in a `false` value for the corresponding check.
+The policies can be applied via a wide variety of ways and they will all be detected:
+
+* Intune
+* CIM
+* Registry keys
+* Group Policies
+* PowerShell cmdlets
+* Windows APIs
 
 > [!NOTE]\
 > Based on the score that you get you will see a different ASCII art!

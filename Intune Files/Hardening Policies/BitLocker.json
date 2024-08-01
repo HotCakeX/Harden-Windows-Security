@@ -1,18 +1,18 @@
 ﻿{
     "@odata.context": "https://graph.microsoft.com/beta/$metadata#deviceManagement/configurationPolicies/$entity",
-    "createdDateTime": "2024-07-25T15:41:22.6719046Z",
+    "createdDateTime": "2024-07-29T15:10:44.9690943Z",
     "creationSource": null,
     "description": "BitLocker Category",
-    "lastModifiedDateTime": "2024-07-27T09:07:09.5572261Z",
+    "lastModifiedDateTime": "2024-07-29T16:29:40.907158Z",
     "name": "BitLocker",
     "platforms": "windows10",
     "priorityMetaData": null,
     "roleScopeTagIds": [
         "0"
     ],
-    "settingCount": 12,
+    "settingCount": 13,
     "technologies": "mdm",
-    "id": "a4f684fe-8c48-4cbf-b1e4-54496bf5dca3",
+    "id": "8eb1498b-d82d-4bfd-b24a-aaebf271a26a",
     "templateReference": {
         "templateId": "",
         "templateFamily": "none",
@@ -323,6 +323,19 @@
         },
         {
             "id": "11",
+            "settingInstance": {
+                "@odata.type": "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance",
+                "settingDefinitionId": "device_vendor_msft_policy_config_admx_windowsexplorer_showhibernateoption",
+                "settingInstanceTemplateReference": null,
+                "choiceSettingValue": {
+                    "settingValueTemplateReference": null,
+                    "value": "device_vendor_msft_policy_config_admx_windowsexplorer_showhibernateoption_1",
+                    "children": []
+                }
+            }
+        },
+        {
+            "id": "12",
             "settingInstance": {
                 "@odata.type": "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance",
                 "settingDefinitionId": "device_vendor_msft_bitlocker_requiredeviceencryption",

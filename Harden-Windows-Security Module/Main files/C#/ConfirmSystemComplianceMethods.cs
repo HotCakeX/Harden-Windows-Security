@@ -2336,6 +2336,90 @@ namespace HardeningModule
                 });
 
 
+                // Get the value and convert it to string
+                // https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-defender#threatseveritydefaultaction
+                string SevereThreatDefaultActionResult = Convert.ToString(HardeningModule.PropertyHelper.GetPropertyValue(HardeningModule.GlobalVars.MDAVPreferencesCurrent, "SevereThreatDefaultAction"));
+                nestedObjectArray.Add(new HardeningModule.IndividualResult
+                {
+                    FriendlyName = "Severe Threat level default action = Remove",
+                    Compliant = SevereThreatDefaultActionResult.Equals("3", StringComparison.OrdinalIgnoreCase) ? "True" : "False",
+                    Value = SevereThreatDefaultActionResult,
+                    Name = "Severe Threat level default action = Remove",
+                    Category = CatName,
+                    Method = "CIM"
+                });
+
+
+                // Get the value and convert it to string
+                // https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-defender#threatseveritydefaultaction
+                string HighThreatDefaultActionResult = Convert.ToString(HardeningModule.PropertyHelper.GetPropertyValue(HardeningModule.GlobalVars.MDAVPreferencesCurrent, "HighThreatDefaultAction"));
+                nestedObjectArray.Add(new HardeningModule.IndividualResult
+                {
+                    FriendlyName = "High Threat level default action = Remove",
+                    Compliant = HighThreatDefaultActionResult.Equals("3", StringComparison.OrdinalIgnoreCase) ? "True" : "False",
+                    Value = HighThreatDefaultActionResult,
+                    Name = "High Threat level default action = Remove",
+                    Category = CatName,
+                    Method = "CIM"
+                });
+
+
+                // Get the value and convert it to string
+                // https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-defender#threatseveritydefaultaction
+                string ModerateThreatDefaultActionResult = Convert.ToString(HardeningModule.PropertyHelper.GetPropertyValue(HardeningModule.GlobalVars.MDAVPreferencesCurrent, "ModerateThreatDefaultAction"));
+                nestedObjectArray.Add(new HardeningModule.IndividualResult
+                {
+                    FriendlyName = "Moderate Threat level default action = Quarantine",
+                    Compliant = ModerateThreatDefaultActionResult.Equals("2", StringComparison.OrdinalIgnoreCase) ? "True" : "False",
+                    Value = ModerateThreatDefaultActionResult,
+                    Name = "Moderate Threat level default action = Quarantine",
+                    Category = CatName,
+                    Method = "CIM"
+                });
+
+
+                // Get the value and convert it to string
+                // https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-defender#threatseveritydefaultaction
+                string LowThreatDefaultActionResult = Convert.ToString(HardeningModule.PropertyHelper.GetPropertyValue(HardeningModule.GlobalVars.MDAVPreferencesCurrent, "LowThreatDefaultAction"));
+                nestedObjectArray.Add(new HardeningModule.IndividualResult
+                {
+                    FriendlyName = "Low Threat level default action = Quarantine",
+                    Compliant = LowThreatDefaultActionResult.Equals("2", StringComparison.OrdinalIgnoreCase) ? "True" : "False",
+                    Value = LowThreatDefaultActionResult,
+                    Name = "Low Threat level default action = Quarantine",
+                    Category = CatName,
+                    Method = "CIM"
+                });
+
+
+                // Get the control from MDM CIM
+                HardeningModule.HashtableCheckerResult MDM_Policy_Result01_System02_AllowTelemetry = HardeningModule.HashtableChecker.CheckValue<string>(HardeningModule.GlobalVars.MDM_Policy_Result01_System02, "AllowTelemetry", "3");
+
+                nestedObjectArray.Add(new HardeningModule.IndividualResult
+                {
+                    FriendlyName = "Optional Diagnostic Data Required for Smart App Control etc.",
+                    Compliant = MDM_Policy_Result01_System02_AllowTelemetry.IsMatch ? "True" : "False",
+                    Value = MDM_Policy_Result01_System02_AllowTelemetry.Value,
+                    Name = "Optional Diagnostic Data Required for Smart App Control etc.",
+                    Category = CatName,
+                    Method = "CIM"
+                });
+
+
+                // Get the control from MDM CIM
+                HardeningModule.HashtableCheckerResult MDM_Policy_Result01_System02_ConfigureTelemetryOptInSettingsUx = HardeningModule.HashtableChecker.CheckValue<string>(HardeningModule.GlobalVars.MDM_Policy_Result01_System02, "ConfigureTelemetryOptInSettingsUx", "1");
+
+                nestedObjectArray.Add(new HardeningModule.IndividualResult
+                {
+                    FriendlyName = "Configure diagnostic data opt-in settings user interface",
+                    Compliant = MDM_Policy_Result01_System02_ConfigureTelemetryOptInSettingsUx.IsMatch ? "True" : "False",
+                    Value = MDM_Policy_Result01_System02_ConfigureTelemetryOptInSettingsUx.Value,
+                    Name = "Configure diagnostic data opt-in settings user interface",
+                    Category = CatName,
+                    Method = "CIM"
+                });
+
+
                 // Process items in Registry resources.csv file with "Group Policy" origin and add them to the $NestedObjectArray array
                 foreach (var Result in (HardeningModule.CategoryProcessing.ProcessCategory(CatName, "Group Policy")))
                 {

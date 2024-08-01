@@ -15,6 +15,10 @@ Function ConvertTo-WDACPolicy {
         [Parameter(Mandatory = $false, ParameterSetName = 'Base-Policy File Association')]
         [System.IO.FileInfo]$BasePolicyFile,
 
+        [Alias('Lvl')]
+        [ValidateSet('Auto', 'FilePublisher', 'Publisher', 'Hash')]
+        [Parameter(Mandatory = $false)][System.String]$Level = 'Auto',
+
         [ArgumentCompleter({
                 param($CommandName, $ParameterName, $WordToComplete, $CommandAst, $fakeBoundParameters)
 
@@ -320,7 +324,6 @@ Function ConvertTo-WDACPolicy {
         # Defining list of generic modules required for this cmdlet to import
         [System.String[]]$ModulesToImport = @(
             "$([WDACConfig.GlobalVars]::ModuleRootPath)\Shared\Update-Self.psm1",
-            "$([WDACConfig.GlobalVars]::ModuleRootPath)\Shared\Write-ColorfulText.psm1",
             "$([WDACConfig.GlobalVars]::ModuleRootPath)\Shared\Receive-CodeIntegrityLogs.psm1",
             "$([WDACConfig.GlobalVars]::ModuleRootPath)\Shared\Set-LogPropertiesVisibility.psm1",
             "$([WDACConfig.GlobalVars]::ModuleRootPath)\Shared\Select-LogProperties.psm1",
@@ -407,7 +410,7 @@ Function ConvertTo-WDACPolicy {
                     }
 
                     if (($null -eq $EventsToDisplay) -and ($EventsToDisplay.Count -eq 0)) {
-                        Write-ColorfulText -Color HotPink -InputText 'No logs were found to display based on the current filters. Exiting...'
+                        Write-ColorfulTextWDACConfig -Color HotPink -InputText 'No logs were found to display based on the current filters. Exiting...'
                         return
                     }
 
@@ -422,7 +425,7 @@ Function ConvertTo-WDACPolicy {
                     Write-Verbose -Message "ConvertTo-WDACPolicy: Selected logs count: $($SelectedLogs.count)"
 
                     if (!$BasePolicyGUID -and !$BasePolicyFile -and !$PolicyToAddLogsTo) {
-                        Write-ColorfulText -Color HotPink -InputText 'A more specific parameter was not provided to define what to do with the selected logs. Exiting...'
+                        Write-ColorfulTextWDACConfig -Color HotPink -InputText 'A more specific parameter was not provided to define what to do with the selected logs. Exiting...'
                         return
                     }
 
@@ -482,7 +485,7 @@ Function ConvertTo-WDACPolicy {
                     Write-Progress -Id 30 -Activity 'Building Signers and file rule' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
                     Write-Verbose -Message 'Building the Signer and Hash objects from the selected logs'
-                    [PSCustomObject]$DataToUseForBuilding = Build-SignerAndHashObjects -Data $SelectedLogs -IncomingDataType EVTX
+                    [WDACConfig.FileBasedInfoPackage]$DataToUseForBuilding = [WDACConfig.SignerAndHashBuilder]::BuildSignerAndHashObjects((ConvertTo-HashtableArray $SelectedLogs), 'EVTX', $Level, $false)
 
                     if ($Null -ne $DataToUseForBuilding.FilePublisherSigners -and $DataToUseForBuilding.FilePublisherSigners.Count -gt 0) {
                         Write-Verbose -Message 'Creating File Publisher Level rules'
@@ -629,7 +632,7 @@ Function ConvertTo-WDACPolicy {
                     Write-Verbose -Message 'Identifying the correlated data in the MDE CSV data'
 
                     if (($null -eq $OptimizedCSVData) -or ($OptimizedCSVData.Count -eq 0)) {
-                        Write-ColorfulText -Color HotPink -InputText 'No valid MDE Advanced Hunting logs available. Exiting...'
+                        Write-ColorfulTextWDACConfig -Color HotPink -InputText 'No valid MDE Advanced Hunting logs available. Exiting...'
                         return
                     }
 
@@ -653,7 +656,7 @@ Function ConvertTo-WDACPolicy {
                     }
 
                     if (($null -eq $MDEAHLogsToDisplay) -or ($MDEAHLogsToDisplay.Count -eq 0)) {
-                        Write-ColorfulText -Color HotPink -InputText 'No MDE Advanced Hunting logs available based on the selected filters. Exiting...'
+                        Write-ColorfulTextWDACConfig -Color HotPink -InputText 'No MDE Advanced Hunting logs available based on the selected filters. Exiting...'
                         return
                     }
 
@@ -673,7 +676,7 @@ Function ConvertTo-WDACPolicy {
                     [PSCustomObject[]]$SelectMDEAHLogs = $MDEAHLogsToDisplay | Out-GridView -OutputMode Multiple -Title "Displaying $($MDEAHLogsToDisplay.count) Microsoft Defender for Endpoint Advanced Hunting Logs"
 
                     if (($null -eq $SelectMDEAHLogs) -or ($SelectMDEAHLogs.Count -eq 0)) {
-                        Write-ColorfulText -Color HotPink -InputText 'No MDE Advanced Hunting logs were selected to create a WDAC policy from. Exiting...'
+                        Write-ColorfulTextWDACConfig -Color HotPink -InputText 'No MDE Advanced Hunting logs were selected to create a WDAC policy from. Exiting...'
                         return
                     }
 
@@ -693,7 +696,7 @@ Function ConvertTo-WDACPolicy {
                     Write-Progress -Id 31 -Activity 'Building the Signer and Hash objects from the selected MDE AH logs' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
                     Write-Verbose -Message 'Building the Signer and Hash objects from the selected MDE AH logs'
-                    [PSCustomObject]$DataToUseForBuilding = Build-SignerAndHashObjects -Data $SelectMDEAHLogs -IncomingDataType MDEAH
+                    [WDACConfig.FileBasedInfoPackage]$DataToUseForBuilding = [WDACConfig.SignerAndHashBuilder]::BuildSignerAndHashObjects((ConvertTo-HashtableArray $SelectMDEAHLogs), 'MDEAH', $Level, $false)
 
                     $CurrentStep++
                     Write-Progress -Id 31 -Activity 'Creating rules for different levels' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
@@ -871,7 +874,7 @@ Function ConvertTo-WDACPolicy {
                     }
 
                     if (($null -eq $EventsToDisplay) -and ($EventsToDisplay.Count -eq 0)) {
-                        Write-ColorfulText -Color HotPink -InputText 'No logs were found to display based on the current filters. Exiting...'
+                        Write-ColorfulTextWDACConfig -Color HotPink -InputText 'No logs were found to display based on the current filters. Exiting...'
                         return
                     }
 
@@ -893,7 +896,7 @@ Function ConvertTo-WDACPolicy {
                     Write-Verbose -Message "ConvertTo-WDACPolicy: Selected logs count: $($SelectedLogs.count)"
 
                     if (($null -eq $SelectedLogs) -or ( $SelectedLogs.Count -eq 0)) {
-                        Write-ColorfulText -Color HotPink -InputText 'No logs were selected to create a WDAC policy from. Exiting...'
+                        Write-ColorfulTextWDACConfig -Color HotPink -InputText 'No logs were selected to create a WDAC policy from. Exiting...'
                         return
                     }
 
@@ -910,7 +913,7 @@ Function ConvertTo-WDACPolicy {
                     Write-Progress -Id 32 -Activity 'Building Signers and file rule' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
                     Write-Verbose -Message 'Building the Signer and Hash objects from the selected Evtx logs'
-                    [PSCustomObject]$DataToUseForBuilding = Build-SignerAndHashObjects -Data $SelectedLogs -IncomingDataType EVTX
+                    [WDACConfig.FileBasedInfoPackage]$DataToUseForBuilding = [WDACConfig.SignerAndHashBuilder]::BuildSignerAndHashObjects((ConvertTo-HashtableArray $SelectedLogs), 'EVTX', $Level, $false)
 
                     if ($Null -ne $DataToUseForBuilding.FilePublisherSigners -and $DataToUseForBuilding.FilePublisherSigners.Count -gt 0) {
                         Write-Verbose -Message 'Creating File Publisher Level rules'

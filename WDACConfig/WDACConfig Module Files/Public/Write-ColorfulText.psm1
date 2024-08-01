@@ -1,4 +1,4 @@
-Function Write-ColorfulText {
+Function Write-ColorfulTextWDACConfig {
     <#
     .SYNOPSIS
         Function to write modern colorful text
@@ -67,4 +67,3 @@ Function Write-ColorfulText {
         Default { Throw 'Unspecified Color' }
     }
 }
-Export-ModuleMember -Function 'Write-ColorfulText'

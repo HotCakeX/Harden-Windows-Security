@@ -54,7 +54,7 @@ Set-PSReadLineKeyHandler -Key 'Tab' -Function 'MenuComplete'
 $PSStyle.Progress.UseOSCIndicator = $true
 
 # Import the public global module
-Import-Module -FullyQualifiedName ("$([WDACConfig.GlobalVars]::ModuleRootPath)\Public\Write-FinalOutput.psm1", "$([WDACConfig.GlobalVars]::ModuleRootPath)\Public\MockConfigCIBootstrap.psm1") -Force -Global
+Import-Module -FullyQualifiedName ([System.IO.Directory]::GetFiles("$PSScriptRoot\Public", '*.*', [System.IO.SearchOption]::AllDirectories)) -Force -Global
 
 [WDACConfig.Initializer]::Initialize()
 

@@ -33,10 +33,7 @@ Function Build-WDACCertificate {
         . "$([WDACConfig.GlobalVars]::ModuleRootPath)\CoreExt\PSDefaultParameterValues.ps1"
 
         Write-Verbose -Message 'Importing the required sub-modules'
-        Import-Module -Force -FullyQualifiedName @(
-            "$([WDACConfig.GlobalVars]::ModuleRootPath)\Shared\Update-Self.psm1",
-            "$([WDACConfig.GlobalVars]::ModuleRootPath)\Shared\Write-ColorfulText.psm1"
-        )
+        Import-Module -Force -FullyQualifiedName "$([WDACConfig.GlobalVars]::ModuleRootPath)\Shared\Update-Self.psm1"
 
         # if -SkipVersionCheck wasn't passed, run the updater
         if (-NOT $SkipVersionCheck) { Update-Self -InvocationStatement $MyInvocation.Statement }
@@ -68,8 +65,8 @@ Function Build-WDACCertificate {
             Write-Verbose -Message 'Prompting the user to enter a password for the certificate because it was not passed as a parameter.'
 
             do {
-                [System.Security.SecureString]$Password1 = $(Write-ColorfulText -Color Lavender -InputText 'Enter a password for the certificate (at least 5 characters)'; Read-Host -AsSecureString)
-                [System.Security.SecureString]$Password2 = $(Write-ColorfulText -Color Lavender -InputText 'Confirm your password for the certificate'; Read-Host -AsSecureString)
+                [System.Security.SecureString]$Password1 = $(Write-ColorfulTextWDACConfig -Color Lavender -InputText 'Enter a password for the certificate (at least 5 characters)'; Read-Host -AsSecureString)
+                [System.Security.SecureString]$Password2 = $(Write-ColorfulTextWDACConfig -Color Lavender -InputText 'Confirm your password for the certificate'; Read-Host -AsSecureString)
 
                 # Compare the Passwords and make sure they match
                 [System.Boolean]$TheyMatch = [WDACConfig.SecureStringComparer]::Compare($Password1, $Password2)
@@ -247,7 +244,7 @@ ValidityPeriod = Years
         }
     }
     end {
-        Write-ColorfulText -Color MintGreen -InputText "The certificate with the common name '$CommonName' has been successfully created."
+        Write-ColorfulTextWDACConfig -Color MintGreen -InputText "The certificate with the common name '$CommonName' has been successfully created."
     }
     <#
 .SYNOPSIS

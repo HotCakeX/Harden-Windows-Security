@@ -26,7 +26,6 @@ Function New-KernelModeWDACConfig {
         Write-Verbose -Message 'Importing the required sub-modules'
         Import-Module -Force -FullyQualifiedName @(
             "$([WDACConfig.GlobalVars]::ModuleRootPath)\Shared\Update-Self.psm1",
-            "$([WDACConfig.GlobalVars]::ModuleRootPath)\Shared\Write-ColorfulText.psm1",
             "$([WDACConfig.GlobalVars]::ModuleRootPath)\Shared\Get-KernelModeDriversAudit.psm1"
         )
 
@@ -164,10 +163,10 @@ Function New-KernelModeWDACConfig {
 
                                 Write-Verbose -Message 'Deploying the Strict Kernel mode policy'
                                 $null = &'C:\Windows\System32\CiTool.exe' --update-policy $FinalAuditCIPPath -json
-                                Write-ColorfulText -Color HotPink -InputText 'Strict Kernel mode policy has been deployed in Audit mode, please restart your system.'
+                                Write-ColorfulTextWDACConfig -Color HotPink -InputText 'Strict Kernel mode policy has been deployed in Audit mode, please restart your system.'
                             }
                             else {
-                                Write-ColorfulText -Color HotPink -InputText 'Strict Kernel mode Audit policy has been created in the Staging Area.'
+                                Write-ColorfulTextWDACConfig -Color HotPink -InputText 'Strict Kernel mode Audit policy has been created in the Staging Area.'
                             }
                             Write-Progress -Id 25 -Activity 'Done' -Completed
 
@@ -244,7 +243,7 @@ Function New-KernelModeWDACConfig {
 
                                 Write-Verbose -Message 'Deploying the enforced mode policy with the same ID as the Audit mode policy, effectively overwriting it'
                                 $null = &'C:\Windows\System32\CiTool.exe' --update-policy $FinalEnforcedCIPPath -json
-                                Write-ColorfulText -Color HotPink -InputText 'Strict Kernel mode policy has been deployed in Enforced mode, no restart required.'
+                                Write-ColorfulTextWDACConfig -Color HotPink -InputText 'Strict Kernel mode policy has been deployed in Enforced mode, no restart required.'
 
                                 Write-Verbose -Message 'Removing the GUID and time of deployment of the StrictKernelPolicy from user configuration'
                                 $null = Remove-CommonWDACConfig -StrictKernelPolicyGUID -StrictKernelModePolicyTimeOfDeployment
@@ -255,7 +254,7 @@ Function New-KernelModeWDACConfig {
                                 # And instead wants to first Sign and then deploy it using the Deploy-SignedWDACConfig cmdlet
                                 Write-Verbose -Message 'Removing the deployed Audit mode policy from the system since -Deploy parameter was not used to overwrite it with the enforced mode policy.'
                                 $null = &'C:\Windows\System32\CiTool.exe' --remove-policy "{$PolicyID}" -json
-                                Write-ColorfulText -Color HotPink -InputText "Strict Kernel mode Enforced policy has been created`n$FinalEnforcedPolicyPath"
+                                Write-ColorfulTextWDACConfig -Color HotPink -InputText "Strict Kernel mode Enforced policy has been created`n$FinalEnforcedPolicyPath"
                             }
                             Write-Progress -Id 26 -Activity 'Complete.' -Completed
 
@@ -298,10 +297,10 @@ Function New-KernelModeWDACConfig {
 
                                 Write-Verbose -Message 'Deploying the Strict Kernel mode policy'
                                 $null = &'C:\Windows\System32\CiTool.exe' --update-policy $FinalAuditCIPPath -json
-                                Write-ColorfulText -Color HotPink -InputText 'Strict Kernel mode policy with no flighting root certs has been deployed in Audit mode, please restart your system.'
+                                Write-ColorfulTextWDACConfig -Color HotPink -InputText 'Strict Kernel mode policy with no flighting root certs has been deployed in Audit mode, please restart your system.'
                             }
                             else {
-                                Write-ColorfulText -Color HotPink -InputText 'Strict Kernel mode Audit policy with no flighting root certs has been created in the Staging Area.'
+                                Write-ColorfulTextWDACConfig -Color HotPink -InputText 'Strict Kernel mode Audit policy with no flighting root certs has been created in the Staging Area.'
                             }
                             Write-Progress -Id 27 -Activity 'Complete.' -Completed
 
@@ -390,7 +389,7 @@ Function New-KernelModeWDACConfig {
 
                                 Write-Verbose -Message 'Deploying the enforced mode policy with the same ID as the Audit mode policy, effectively overwriting it'
                                 $null = &'C:\Windows\System32\CiTool.exe' --update-policy $FinalEnforcedCIPPath -json
-                                Write-ColorfulText -Color HotPink -InputText 'Strict Kernel mode policy with no flighting root certs has been deployed in Enforced mode, no restart required.'
+                                Write-ColorfulTextWDACConfig -Color HotPink -InputText 'Strict Kernel mode policy with no flighting root certs has been deployed in Enforced mode, no restart required.'
 
                                 Write-Verbose -Message 'Removing the GUID and time of deployment of the StrictKernelNoFlightRootsPolicy from user configuration'
                                 $null = Remove-CommonWDACConfig -StrictKernelNoFlightRootsPolicyGUID -StrictKernelModePolicyTimeOfDeployment
@@ -401,7 +400,7 @@ Function New-KernelModeWDACConfig {
                                 # And instead wants to first Sign and then deploy it using the Deploy-SignedWDACConfig cmdlet
                                 Write-Verbose -Message 'Removing the deployed Audit mode policy from the system since -Deploy parameter was not used to overwrite it with the enforced mode policy.'
                                 $null = &'C:\Windows\System32\CiTool.exe' --remove-policy "{$PolicyID}" -json
-                                Write-ColorfulText -Color HotPink -InputText "Strict Kernel mode Enforced policy with no flighting root certs has been created`n$FinalEnforcedPolicyPath"
+                                Write-ColorfulTextWDACConfig -Color HotPink -InputText "Strict Kernel mode Enforced policy with no flighting root certs has been created`n$FinalEnforcedPolicyPath"
                             }
                             Write-Progress -Id 28 -Activity 'Complete.' -Completed
 

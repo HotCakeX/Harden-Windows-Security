@@ -81,10 +81,7 @@ Function New-SupplementalWDACConfig {
         . "$([WDACConfig.GlobalVars]::ModuleRootPath)\CoreExt\PSDefaultParameterValues.ps1"
 
         Write-Verbose -Message 'Importing the required sub-modules'
-        Import-Module -Force -FullyQualifiedName @(
-            "$([WDACConfig.GlobalVars]::ModuleRootPath)\Shared\Update-Self.psm1",
-            "$([WDACConfig.GlobalVars]::ModuleRootPath)\Shared\Write-ColorfulText.psm1"
-        )
+        Import-Module -Force -FullyQualifiedName "$([WDACConfig.GlobalVars]::ModuleRootPath)\Shared\Update-Self.psm1"
 
         if ($PSBoundParameters['Certificates']) {
             Import-Module -Force -FullyQualifiedName @(
@@ -167,7 +164,7 @@ Function New-SupplementalWDACConfig {
                 if ($NoScript) { $PolicyMakerHashTable['NoScript'] = $true }
                 if (!$NoUserPEs) { $PolicyMakerHashTable['UserPEs'] = $true }
 
-                Write-ColorfulText -Color HotPink -InputText 'Generating Supplemental policy with the following specifications:'
+                Write-ColorfulTextWDACConfig -Color HotPink -InputText 'Generating Supplemental policy with the following specifications:'
                 $PolicyMakerHashTable
                 Write-Host -Object ''
 
@@ -194,7 +191,7 @@ Function New-SupplementalWDACConfig {
 
                     Write-Verbose -Message 'Deploying the Supplemental policy'
                     $null = &'C:\Windows\System32\CiTool.exe' --update-policy $FinalSupplementalCIPPath -json
-                    Write-ColorfulText -Color Pink -InputText "A Supplemental policy with the name '$SuppPolicyName' has been deployed."
+                    Write-ColorfulTextWDACConfig -Color Pink -InputText "A Supplemental policy with the name '$SuppPolicyName' has been deployed."
                 }
                 Write-Progress -Id 19 -Activity 'Complete.' -Completed
             }
@@ -232,7 +229,7 @@ Function New-SupplementalWDACConfig {
 
                     Write-Verbose -Message 'Deploying the Supplemental policy'
                     $null = &'C:\Windows\System32\CiTool.exe' --update-policy $FinalSupplementalCIPPath -json
-                    Write-ColorfulText -Color Pink -InputText "A Supplemental policy with the name '$SuppPolicyName' has been deployed."
+                    Write-ColorfulTextWDACConfig -Color Pink -InputText "A Supplemental policy with the name '$SuppPolicyName' has been deployed."
                 }
                 Write-Progress -Id 20 -Activity 'Complete.' -Completed
             }
@@ -307,7 +304,7 @@ Function New-SupplementalWDACConfig {
 
                             Write-Verbose -Message 'Deploying the Supplemental policy'
                             $null = &'C:\Windows\System32\CiTool.exe' --update-policy $FinalSupplementalCIPPath -json
-                            Write-ColorfulText -Color Pink -InputText "A Supplemental policy with the name '$SuppPolicyName' has been deployed."
+                            Write-ColorfulTextWDACConfig -Color Pink -InputText "A Supplemental policy with the name '$SuppPolicyName' has been deployed."
                         }
                     }
                     else {
@@ -384,7 +381,7 @@ Function New-SupplementalWDACConfig {
 
                     Write-Verbose -Message 'Deploying the Supplemental policy'
                     $null = &'C:\Windows\System32\CiTool.exe' --update-policy $FinalSupplementalCIPPath -json
-                    Write-ColorfulText -Color Pink -InputText "A Supplemental policy with the name '$SuppPolicyName' has been deployed."
+                    Write-ColorfulTextWDACConfig -Color Pink -InputText "A Supplemental policy with the name '$SuppPolicyName' has been deployed."
                 }
 
                 Write-Progress -Id 33 -Activity 'Complete.' -Completed

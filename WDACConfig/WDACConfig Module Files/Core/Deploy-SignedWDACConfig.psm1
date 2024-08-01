@@ -47,8 +47,7 @@ Function Deploy-SignedWDACConfig {
         Write-Verbose -Message 'Importing the required sub-modules'
         Import-Module -Force -FullyQualifiedName @(
             "$([WDACConfig.GlobalVars]::ModuleRootPath)\Shared\Update-Self.psm1",
-            "$([WDACConfig.GlobalVars]::ModuleRootPath)\Shared\Get-SignTool.psm1",
-            "$([WDACConfig.GlobalVars]::ModuleRootPath)\Shared\Write-ColorfulText.psm1"
+            "$([WDACConfig.GlobalVars]::ModuleRootPath)\Shared\Get-SignTool.psm1"
         )
 
         # if -SkipVersionCheck wasn't passed, run the updater
@@ -211,9 +210,9 @@ Function Deploy-SignedWDACConfig {
                         Write-Verbose -Message 'Deploying the policy'
                         $null = &'C:\Windows\System32\CiTool.exe' --update-policy $PolicyCIPPath -json
 
-                        Write-ColorfulText -Color Lavender -InputText 'policy with the following details has been Signed and Deployed in Enforced Mode:'
-                        Write-ColorfulText -Color MintGreen -InputText "PolicyName = $PolicyName"
-                        Write-ColorfulText -Color MintGreen -InputText "PolicyGUID = $PolicyID"
+                        Write-ColorfulTextWDACConfig -Color Lavender -InputText 'policy with the following details has been Signed and Deployed in Enforced Mode:'
+                        Write-ColorfulTextWDACConfig -Color MintGreen -InputText "PolicyName = $PolicyName"
+                        Write-ColorfulTextWDACConfig -Color MintGreen -InputText "PolicyGUID = $PolicyID"
 
                         #Region Detecting Strict Kernel mode policy and removing it from User Configs
                         if ('Enabled:UMCI' -notin $PolicyRuleOptions) {
@@ -252,9 +251,9 @@ Function Deploy-SignedWDACConfig {
                 else {
                     Copy-Item -Path $PolicyCIPPath -Destination ([WDACConfig.GlobalVars]::UserConfigDir) -Force
 
-                    Write-ColorfulText -Color Lavender -InputText 'policy with the following details has been Signed and is ready for deployment:'
-                    Write-ColorfulText -Color MintGreen -InputText "PolicyName = $PolicyName"
-                    Write-ColorfulText -Color MintGreen -InputText "PolicyGUID = $PolicyID"
+                    Write-ColorfulTextWDACConfig -Color Lavender -InputText 'policy with the following details has been Signed and is ready for deployment:'
+                    Write-ColorfulTextWDACConfig -Color MintGreen -InputText "PolicyName = $PolicyName"
+                    Write-ColorfulTextWDACConfig -Color MintGreen -InputText "PolicyGUID = $PolicyID"
                 }
                 Write-Progress -Id 13 -Activity 'Complete.' -Completed
             }

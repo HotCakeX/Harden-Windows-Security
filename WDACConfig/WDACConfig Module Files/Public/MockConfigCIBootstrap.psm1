@@ -1,7 +1,6 @@
 Function Invoke-MockConfigCIBootstrap {
     <#
 The reason behind this:
-
 https://github.com/MicrosoftDocs/WDAC-Toolkit/pull/365
 https://github.com/MicrosoftDocs/WDAC-Toolkit/issues/362
 

@@ -162,7 +162,6 @@ Function Remove-WDACConfig {
         Import-Module -Force -FullyQualifiedName @(
             "$([WDACConfig.GlobalVars]::ModuleRootPath)\Shared\Update-Self.psm1",
             "$([WDACConfig.GlobalVars]::ModuleRootPath)\Shared\Get-SignTool.psm1",
-            "$([WDACConfig.GlobalVars]::ModuleRootPath)\Shared\Write-ColorfulText.psm1",
             "$([WDACConfig.GlobalVars]::ModuleRootPath)\Shared\Remove-SupplementalSigners.psm1"
         )
 
@@ -312,9 +311,9 @@ Function Remove-WDACConfig {
                         Write-Verbose -Message 'Deploying the newly signed CIP file'
                         $null = &'C:\Windows\System32\CiTool.exe' --update-policy $PolicyCIPPath -json
 
-                        Write-ColorfulText -Color Lavender -InputText "Policy with the following details has been Re-signed and Re-deployed in Unsigned mode.`nPlease restart your system."
-                        Write-ColorfulText -Color MintGreen -InputText "PolicyName = $PolicyName"
-                        Write-ColorfulText -Color MintGreen -InputText "PolicyGUID = $PolicyID"
+                        Write-ColorfulTextWDACConfig -Color Lavender -InputText "Policy with the following details has been Re-signed and Re-deployed in Unsigned mode.`nPlease restart your system."
+                        Write-ColorfulTextWDACConfig -Color MintGreen -InputText "PolicyName = $PolicyName"
+                        Write-ColorfulTextWDACConfig -Color MintGreen -InputText "PolicyGUID = $PolicyID"
                     }
                     Write-Progress -Id 18 -Activity 'Complete.' -Completed
                 }
@@ -326,7 +325,7 @@ Function Remove-WDACConfig {
                 # If IDs were supplied by user
                 foreach ($ID in $PolicyIDs ) {
                     $null = &'C:\Windows\System32\CiTool.exe' --remove-policy "{$ID}" -json
-                    Write-ColorfulText -Color Lavender -InputText "Policy with the ID $ID has been successfully removed."
+                    Write-ColorfulTextWDACConfig -Color Lavender -InputText "Policy with the ID $ID has been successfully removed."
                 }
 
                 # If names were supplied by user
@@ -343,7 +342,7 @@ Function Remove-WDACConfig {
 
                 foreach ($ID in $NameID) {
                     $null = &'C:\Windows\System32\CiTool.exe' --remove-policy "{$ID}" -json
-                    Write-ColorfulText -Color Lavender -InputText "Policy with the ID $ID has been successfully removed."
+                    Write-ColorfulTextWDACConfig -Color Lavender -InputText "Policy with the ID $ID has been successfully removed."
                 }
             }
         }

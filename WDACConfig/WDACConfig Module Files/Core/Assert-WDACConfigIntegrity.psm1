@@ -22,10 +22,7 @@ Function Assert-WDACConfigIntegrity {
         . "$([WDACConfig.GlobalVars]::ModuleRootPath)\CoreExt\PSDefaultParameterValues.ps1"
 
         Write-Verbose -Message 'Importing the required sub-modules'
-        Import-Module -Force -FullyQualifiedName @(
-            "$([WDACConfig.GlobalVars]::ModuleRootPath)\Shared\Update-Self.psm1",
-            "$([WDACConfig.GlobalVars]::ModuleRootPath)\Shared\Write-ColorfulText.psm1"
-        )
+        Import-Module -Force -FullyQualifiedName "$([WDACConfig.GlobalVars]::ModuleRootPath)\Shared\Update-Self.psm1"
 
         # if -SkipVersionCheck wasn't passed, run the updater
         if (-NOT $SkipVersionCheck) { Update-Self -InvocationStatement $MyInvocation.Statement }
@@ -114,11 +111,11 @@ Function Assert-WDACConfigIntegrity {
 
         if ($ComparisonResults) {
             Write-Warning -Message 'Tampered files detected!'
-            Write-ColorfulText -Color PinkBoldBlink -InputText 'The following files are different from the ones in the cloud:'
+            Write-ColorfulTextWDACConfig -Color PinkBoldBlink -InputText 'The following files are different from the ones in the cloud:'
             $ComparisonResults
         }
         else {
-            Write-ColorfulText -Color NeonGreen -InputText 'All of your local WDACConfig files are genuine.'
+            Write-ColorfulTextWDACConfig -Color NeonGreen -InputText 'All of your local WDACConfig files are genuine.'
         }
     }
     <#

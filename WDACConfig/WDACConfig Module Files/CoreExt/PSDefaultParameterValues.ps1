@@ -15,7 +15,6 @@ $PSDefaultParameterValues = @{
     'Receive-CodeIntegrityLogs:Verbose'                           = $Verbose
     'Get-SignTool:Verbose'                                        = $Verbose
     'Update-Self:Verbose'                                         = $Verbose
-    'Write-ColorfulText:Verbose'                                  = $Verbose
     'New-SnapBackGuarantee:Verbose'                               = $Verbose
     'Get-KernelModeDriversAudit:Verbose'                          = $Verbose
     'Get-SignerInfo:Verbose'                                      = $Verbose
@@ -31,8 +30,7 @@ $PSDefaultParameterValues = @{
     'New-Macros:Verbose'                                          = $Verbose
     'Checkpoint-Macros:Verbose'                                   = $Verbose
     'Test-ECCSignedFiles:Verbose'                                 = $Verbose
-
-    'Build-SignerAndHashObjects:Verbose'                          = $Verbose
+    
     'Clear-CiPolicy_Semantic:Verbose'                             = $Verbose
     'Close-EmptyXmlNodes_Semantic:Verbose'                        = $Verbose
     'Compare-CorrelatedData:Verbose'                              = $Verbose
@@ -50,8 +48,7 @@ $PSDefaultParameterValues = @{
     'Remove-OrphanAllowedSignersAndCiSigners_IDBased:Verbose'     = $Verbose
     'Remove-UnreferencedFileRuleRefs:Verbose'                     = $Verbose
     'New-CertificateSignerRules:Verbose'                          = $Verbose
-
-    'Build-SignerAndHashObjects:Debug'                            = $Debug
+   
     'Clear-CiPolicy_Semantic:Debug'                               = $Debug
     'Close-EmptyXmlNodes_Semantic:Debug'                          = $Debug
     'Compare-CorrelatedData:Debug'                                = $Debug

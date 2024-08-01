@@ -4,7 +4,7 @@ Function New-FilePublisherLevelRules {
         Creates new FilePublisher level rules in an XML file
         Each rules includes the FileAttribs, Signers, AllowedSigners, and CiSigners (depending on kernel/user mode)
     .PARAMETER FilePublisherSigners
-        The FilePublisherSigners to be used for creating the rules, they are the output of the Build-SignerAndHashObjects function
+        The FilePublisherSigners to be used for creating the rules, they are the output of the BuildSignerAndHashObjects Method
     .PARAMETER XmlFilePath
         The path to the XML file to be modified
     .INPUTS

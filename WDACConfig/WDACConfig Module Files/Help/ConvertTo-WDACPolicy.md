@@ -318,7 +318,7 @@ Accept wildcard characters: False
 ```
 
 ### -LogType
-The type of logs to display: Audit or Blocked
+The type of logs to display: Audit or Blocked. If not specified, All types will be displayed.
 
 ```yaml
 Type: String
@@ -327,7 +327,7 @@ Aliases: LogKind
 
 Required: False
 Position: Named
-Default value: Audit
+Default value: All
 Accept pipeline input: False
 Accept wildcard characters: False
 ```

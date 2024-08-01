@@ -232,7 +232,7 @@ Function ConvertTo-WDACPolicy {
         $LogType_AttributesCollection.Add($LogType_MandatoryAttrib)
 
         # Create a ValidateSet attribute with the allowed values
-        [System.Management.Automation.ValidateSetAttribute]$LogType_ValidateSetAttrib = New-Object -TypeName System.Management.Automation.ValidateSetAttribute('Audit', 'Blocked')
+        [System.Management.Automation.ValidateSetAttribute]$LogType_ValidateSetAttrib = New-Object -TypeName System.Management.Automation.ValidateSetAttribute('Audit', 'Blocked', 'All')
         $LogType_AttributesCollection.Add($LogType_ValidateSetAttrib)
 
         # Create an alias attribute and add it to the collection
@@ -335,7 +335,7 @@ Function ConvertTo-WDACPolicy {
         New-Variable -Name 'MDEAHLogs' -Value $PSBoundParameters['MDEAHLogs'] -Force
         New-Variable -Name 'EVTXLogs' -Value $PSBoundParameters['EVTXLogs'] -Force
         New-Variable -Name 'KernelModeOnly' -Value $PSBoundParameters['KernelModeOnly'] -Force
-        New-Variable -Name 'LogType' -Value ($PSBoundParameters['LogType'] ?? 'Audit') -Force
+        New-Variable -Name 'LogType' -Value ($PSBoundParameters['LogType'] ?? 'All') -Force
         New-Variable -Name 'Deploy' -Value $PSBoundParameters['Deploy'] -Force
         New-Variable -Name 'ExtremeVisibility' -Value $PSBoundParameters['ExtremeVisibility'] -Force
         New-Variable -Name 'SkipVersionCheck' -Value $PSBoundParameters['SkipVersionCheck'] -Force
@@ -417,7 +417,7 @@ Function ConvertTo-WDACPolicy {
                     }
 
                     # Display the logs in a grid view using the build-in cmdlet
-                    $SelectedLogs = $EventsToDisplay | Out-GridView -OutputMode Multiple -Title "Displaying $($EventsToDisplay.count) $LogType Code Integrity Logs"
+                    $SelectedLogs = $EventsToDisplay | Out-GridView -OutputMode Multiple -Title "Displaying $($EventsToDisplay.count) Code Integrity Logs of $LogType type(s)"
 
                     Write-Verbose -Message "ConvertTo-WDACPolicy: Selected logs count: $($SelectedLogs.count)"
 
@@ -888,7 +888,7 @@ Function ConvertTo-WDACPolicy {
                     Write-Progress -Id 32 -Activity 'Displaying the logs' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
                     # Display the logs in a grid view using the build-in cmdlet
-                    $SelectedLogs = $EventsToDisplay | Out-GridView -OutputMode Multiple -Title "Displaying $($EventsToDisplay.count) $LogType Code Integrity Logs"
+                    $SelectedLogs = $EventsToDisplay | Out-GridView -OutputMode Multiple -Title "Displaying $($EventsToDisplay.count) Code Integrity Logs of $LogType type(s)"
 
                     Write-Verbose -Message "ConvertTo-WDACPolicy: Selected logs count: $($SelectedLogs.count)"
 
@@ -1097,7 +1097,7 @@ Function ConvertTo-WDACPolicy {
     If used, will filter the logs by including only the Kernel-Mode logs. You can use this parameter to easily create Supplemental policies for Strict Kernel-Mode WDAC policy.
     More info available here: https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDAC-policy-for-BYOVD-Kernel-mode-only-protection
 .PARAMETER LogType
-    The type of logs to display: Audit or Blocked, the default is Audit.
+    The type of logs to display: Audit or Blocked. If not specified, All types will be displayed.
 .PARAMETER TimeSpan
     The unit of time to use when filtering the logs by the time.
     The allowed values are: Minutes, Hours, Days

@@ -132,14 +132,14 @@
         <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="LogKind">
           <maml:name>LogType</maml:name>
           <maml:description>
-            <maml:para>The type of logs to display: Audit or Blocked</maml:para>
+            <maml:para>The type of logs to display: Audit or Blocked. If not specified, All types will be displayed.</maml:para>
           </maml:description>
           <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
           <dev:type>
             <maml:name>String</maml:name>
             <maml:uri />
           </dev:type>
-          <dev:defaultValue>Audit</dev:defaultValue>
+          <dev:defaultValue>All</dev:defaultValue>
         </command:parameter>
         <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="Up">
           <maml:name>Deploy</maml:name>
@@ -300,14 +300,14 @@
         <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="LogKind">
           <maml:name>LogType</maml:name>
           <maml:description>
-            <maml:para>The type of logs to display: Audit or Blocked</maml:para>
+            <maml:para>The type of logs to display: Audit or Blocked. If not specified, All types will be displayed.</maml:para>
           </maml:description>
           <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
           <dev:type>
             <maml:name>String</maml:name>
             <maml:uri />
           </dev:type>
-          <dev:defaultValue>Audit</dev:defaultValue>
+          <dev:defaultValue>All</dev:defaultValue>
         </command:parameter>
         <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="Up">
           <maml:name>Deploy</maml:name>
@@ -468,14 +468,14 @@
         <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="LogKind">
           <maml:name>LogType</maml:name>
           <maml:description>
-            <maml:para>The type of logs to display: Audit or Blocked</maml:para>
+            <maml:para>The type of logs to display: Audit or Blocked. If not specified, All types will be displayed.</maml:para>
           </maml:description>
           <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
           <dev:type>
             <maml:name>String</maml:name>
             <maml:uri />
           </dev:type>
-          <dev:defaultValue>Audit</dev:defaultValue>
+          <dev:defaultValue>All</dev:defaultValue>
         </command:parameter>
         <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="Up">
           <maml:name>Deploy</maml:name>
@@ -661,14 +661,14 @@
       <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="LogKind">
         <maml:name>LogType</maml:name>
         <maml:description>
-          <maml:para>The type of logs to display: Audit or Blocked</maml:para>
+          <maml:para>The type of logs to display: Audit or Blocked. If not specified, All types will be displayed.</maml:para>
         </maml:description>
         <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
         <dev:type>
           <maml:name>String</maml:name>
           <maml:uri />
         </dev:type>
-        <dev:defaultValue>Audit</dev:defaultValue>
+        <dev:defaultValue>All</dev:defaultValue>
       </command:parameter>
       <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="Up">
         <maml:name>Deploy</maml:name>

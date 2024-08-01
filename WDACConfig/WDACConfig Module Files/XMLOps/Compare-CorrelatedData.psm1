@@ -37,7 +37,7 @@ Function Compare-CorrelatedData {
         [Parameter(Mandatory = $false)][System.DateTime]$StartTime,
         [AllowNull()]
         [Parameter(Mandatory = $false)][System.String[]]$PolicyNamesToFilter,
-        [ValidateSet('Audit', 'Blocked')]
+        [ValidateSet('Audit', 'Blocked', 'All')]
         [Parameter(Mandatory = $true)][System.String]$LogType
     )
     Begin {
@@ -77,7 +77,7 @@ Function Compare-CorrelatedData {
             }
 
             # Detect the Audit events only if the LogType parameter is set to 'Audit'
-            if ($LogType -eq 'Audit') {
+            if ($LogType -in 'Audit', 'All') {
 
                 # Process Audit events for Code Integrity and AppLocker
                 if (($GroupData.ActionType -contains 'AppControlCodeIntegrityPolicyAudited') -or ($GroupData.ActionType -contains 'AppControlCIScriptAudited')) {
@@ -155,7 +155,7 @@ Function Compare-CorrelatedData {
             }
 
             # Detect the blocked events only if the LogType parameter is set to 'Blocked'
-            if ($LogType -eq 'Blocked') {
+            if ($LogType -in 'Blocked', 'All') {
 
                 # Process Blocked events for Code Integrity and AppLocker
                 if (($GroupData.ActionType -contains 'AppControlCodeIntegrityPolicyBlocked') -or ($GroupData.ActionType -contains 'AppControlCIScriptBlocked')) {

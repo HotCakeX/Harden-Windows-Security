@@ -7,10 +7,10 @@ namespace HardeningModule
 {
     public class IniFileConverter
     {
-        //  a helper method to parse the ini file from the output of the "Secedit /export /cfg .\security_policy.inf"
+        // A helper method to parse the ini file from the output of the "Secedit /export /cfg .\security_policy.inf"
         public static Dictionary<string, Dictionary<string, string>> ConvertFromIniFile(string iniFilePath)
         {
-            var iniObject = new Dictionary<string, Dictionary<string, string>>();
+            var iniObject = new Dictionary<string, Dictionary<string, string>>(StringComparer.OrdinalIgnoreCase);
             string[] lines = File.ReadAllLines(iniFilePath);
             string sectionName = string.Empty;
 
@@ -21,7 +21,7 @@ namespace HardeningModule
                 if (sectionMatch.Success)
                 {
                     sectionName = sectionMatch.Groups[1].Value;
-                    iniObject[sectionName] = new Dictionary<string, string>();
+                    iniObject[sectionName] = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
                     continue;
                 }
 
@@ -40,7 +40,7 @@ namespace HardeningModule
                 }
 
                 // Ignore blank lines or comments
-                if (string.IsNullOrWhiteSpace(line) || line.StartsWith(";") || line.StartsWith("#"))
+                if (string.IsNullOrWhiteSpace(line) || line.StartsWith(";", StringComparison.Ordinal) || line.StartsWith("#", StringComparison.Ordinal))
                 {
                     continue;
                 }

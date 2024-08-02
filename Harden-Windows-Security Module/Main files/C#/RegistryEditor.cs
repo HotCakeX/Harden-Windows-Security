@@ -1,4 +1,5 @@
 using System;
+using System.Globalization;
 using Microsoft.Win32;
 
 namespace HardeningModule
@@ -8,7 +9,7 @@ namespace HardeningModule
         public static void EditRegistry(string path, string key, string value, string type, string action)
         {
             // Removing the 'Registry::' prefix from the path
-            if (path.StartsWith("Registry::"))
+            if (path.StartsWith("Registry::", StringComparison.OrdinalIgnoreCase))
             {
                 path = path.Substring(10);
             }
@@ -19,7 +20,7 @@ namespace HardeningModule
 
             RegistryKey baseRegistryKey;
 
-            switch (baseKey.ToUpper())
+            switch (baseKey.ToUpperInvariant())
             {
                 case "HKEY_LOCAL_MACHINE":
                     {
@@ -59,7 +60,7 @@ namespace HardeningModule
                     RegistryValueKind valueType;
                     object convertedValue;
 
-                    switch (type.ToUpper())
+                    switch (type.ToUpperInvariant())
                     {
                         case "STRING":
                             {
@@ -70,13 +71,13 @@ namespace HardeningModule
                         case "DWORD":
                             {
                                 valueType = RegistryValueKind.DWord;
-                                convertedValue = int.Parse(value);
+                                convertedValue = int.Parse(value, NumberStyles.Integer, CultureInfo.InvariantCulture);
                                 break;
                             }
                         case "QWORD":
                             {
                                 valueType = RegistryValueKind.QWord;
-                                convertedValue = long.Parse(value);
+                                convertedValue = long.Parse(value, NumberStyles.Integer, CultureInfo.InvariantCulture);
                                 break;
                             }
                         case "BINARY":

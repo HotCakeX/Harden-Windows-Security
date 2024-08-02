@@ -63,13 +63,15 @@ namespace HardeningModule
                     {
                         foreach (var keyValuePair in dictionary)
                         {
-                            // filter out the items we don't need
-                            if (keyValuePair.Key == "Class" || keyValuePair.Key == "InstanceID" || keyValuePair.Key == "ParentID")
+                            // Filter out the items we don't need using ordinal, case-insensitive comparison
+                            if (String.Equals(keyValuePair.Key, "Class", StringComparison.OrdinalIgnoreCase) ||
+                                String.Equals(keyValuePair.Key, "InstanceID", StringComparison.OrdinalIgnoreCase) ||
+                                String.Equals(keyValuePair.Key, "ParentID", StringComparison.OrdinalIgnoreCase))
                             {
                                 continue;
                             }
 
-                            // Add the date to the list
+                            // Add the data to the list
                             resultsList.Add(new HardeningModule.MDMClassProcessor(
                                 keyValuePair.Key,
                                 keyValuePair.Value?.ToString(),

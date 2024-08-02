@@ -15,7 +15,8 @@ namespace HardeningModule
         {
             try
             {
-                if (HardeningModule.GlobalVars.VerbosePreference == "Continue" || HardeningModule.GlobalVars.VerbosePreference == "Inquire")
+                if (string.Equals(HardeningModule.GlobalVars.VerbosePreference, "Continue", StringComparison.OrdinalIgnoreCase) ||
+                    string.Equals(HardeningModule.GlobalVars.VerbosePreference, "Inquire", StringComparison.OrdinalIgnoreCase))
                 {
                     HardeningModule.GlobalVars.Host.UI.WriteVerboseLine(message);
                 }

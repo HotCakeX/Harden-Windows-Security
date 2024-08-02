@@ -52,7 +52,7 @@ namespace HardeningModule
         private static Dictionary<string, string> GetOptionalFeatureStates()
         {
             // Initialize a dictionary to store the states of optional features
-            var states = new Dictionary<string, string>();
+            var states = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase); // Ensure case-insensitive key comparison
 
             // Create a ManagementObjectSearcher to query Win32_OptionalFeature
             using (var searcher = new ManagementObjectSearcher("SELECT * FROM Win32_OptionalFeature"))
@@ -84,17 +84,20 @@ namespace HardeningModule
             string dismOutput = RunDismCommand($"/Online /Get-CapabilityInfo /CapabilityName:{capabilityName}");
 
             // Check if the output contains "State : Installed"
-            if (dismOutput.Contains("State : Installed"))
+            // check if the return value is greater than or equal to 0 indicating that the substring exists in the string
+            if (dismOutput.IndexOf("State : Installed", StringComparison.Ordinal) >= 0)
             {
                 return "Installed";
             }
             // Check if the output contains "State : Not Present"
-            else if (dismOutput.Contains("State : Not Present"))
+            // check if the return value is greater than or equal to 0 indicating that the substring exists in the string
+            else if (dismOutput.IndexOf("State : Not Present", StringComparison.Ordinal) >= 0)
             {
                 return "Not Present";
             }
             // Check if the output contains "State : Staged"
-            else if (dismOutput.Contains("State : Staged"))
+            // check if the return value is greater than or equal to 0 indicating that the substring exists in the string
+            else if (dismOutput.IndexOf("State : Staged", StringComparison.Ordinal) >= 0)
             {
                 return "Staged";
             }

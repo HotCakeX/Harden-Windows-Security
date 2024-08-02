@@ -112,8 +112,8 @@ namespace HardeningModule
 
                             // Check if the TaskName matches the provided taskName (if specified)
                             // and TaskPath matches the provided taskPath (if specified)
-                            bool nameMatches = string.IsNullOrEmpty(taskName) || name == taskName;
-                            bool pathMatches = string.IsNullOrEmpty(taskPath) || path == taskPath;
+                            bool nameMatches = string.IsNullOrEmpty(taskName) || string.Equals(name, taskName, StringComparison.OrdinalIgnoreCase);
+                            bool pathMatches = string.IsNullOrEmpty(taskPath) || string.Equals(path, taskPath, StringComparison.OrdinalIgnoreCase);
 
                             // If both TaskName and TaskPath match the provided criteria, add the task to the matchingTasks list
                             if (nameMatches && pathMatches)

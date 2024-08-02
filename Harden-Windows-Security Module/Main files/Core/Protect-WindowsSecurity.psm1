@@ -146,19 +146,8 @@ Function Protect-WindowsSecurity {
 
             # Create a validate script attribute and add it to the collection
             [System.Management.Automation.ValidateScriptAttribute]$PathToLGPO_ValidateScriptAttrib = New-Object -TypeName System.Management.Automation.ValidateScriptAttribute( {
-                    try {
-                        # Load the System.IO.Compression assembly
-                        [System.Void][System.Reflection.Assembly]::LoadWithPartialName('System.IO.Compression.FileSystem')
-                        # Open the zip file in read mode
-                        [System.IO.Compression.ZipArchive]$ZipArchive = [IO.Compression.ZipFile]::OpenRead("$_")
-                        # Make sure the selected zip has the required file
-                        if (-NOT ($ZipArchive.Entries | Where-Object -FilterScript { $_.FullName -like 'LGPO_*/LGPO.exe' })) {
-                            Throw 'The selected Zip file does not contain the LGPO.exe which is required for the Protect-WindowsSecurity function to work properly'
-                        }
-                    }
-                    finally {
-                        # Close the handle whether the zip file is valid or not
-                        $ZipArchive.Dispose()
+                    if (-NOT ([HardeningModule.SneakAndPeek]::Search('LGPO_*/LGPO.exe', $_))) {
+                        Throw 'The selected Zip file does not contain the LGPO.exe which is required for the Protect-WindowsSecurity function to work properly'
                     }
                     # Return true if everything is okay
                     $true
@@ -194,19 +183,8 @@ Function Protect-WindowsSecurity {
 
             # Create a validate script attribute and add it to the collection
             [System.Management.Automation.ValidateScriptAttribute]$PathToMSFT365AppsSecurityBaselines_ValidateScriptAttrib = New-Object -TypeName System.Management.Automation.ValidateScriptAttribute( {
-                    try {
-                        # Load the System.IO.Compression assembly
-                        [System.Void][System.Reflection.Assembly]::LoadWithPartialName('System.IO.Compression.FileSystem')
-                        # Open the zip file in read mode
-                        [System.IO.Compression.ZipArchive]$ZipArchive = [IO.Compression.ZipFile]::OpenRead("$_")
-                        # Make sure the selected zip has the required file
-                        if (-NOT ($ZipArchive.Entries | Where-Object -FilterScript { $_.FullName -like 'Microsoft 365 Apps for Enterprise*/Scripts/Baseline-LocalInstall.ps1' })) {
-                            Throw 'The selected Zip file does not contain the Microsoft 365 Apps for Enterprise Security Baselines Baseline-LocalInstall.ps1 which is required for the Protect-WindowsSecurity function to work properly'
-                        }
-                    }
-                    finally {
-                        # Close the handle whether the zip file is valid or not
-                        $ZipArchive.Dispose()
+                    if (-NOT ([HardeningModule.SneakAndPeek]::Search('Microsoft 365 Apps for Enterprise*/Scripts/Baseline-LocalInstall.ps1', $_))) {
+                        Throw 'The selected Zip file does not contain the Microsoft 365 Apps for Enterprise Security Baselines Baseline-LocalInstall.ps1 which is required for the Protect-WindowsSecurity function to work properly'
                     }
                     # Return true if everything is okay
                     $true
@@ -242,19 +220,8 @@ Function Protect-WindowsSecurity {
 
             # Create a validate script attribute and add it to the collection
             [System.Management.Automation.ValidateScriptAttribute]$PathToMSFTSecurityBaselines_ValidateScriptAttrib = New-Object -TypeName System.Management.Automation.ValidateScriptAttribute( {
-                    try {
-                        # Load the System.IO.Compression assembly
-                        [System.Void][System.Reflection.Assembly]::LoadWithPartialName('System.IO.Compression.FileSystem')
-                        # Open the zip file in read mode
-                        [System.IO.Compression.ZipArchive]$ZipArchive = [IO.Compression.ZipFile]::OpenRead("$_")
-                        # Make sure the selected zip has the required file
-                        if (-NOT ($ZipArchive.Entries | Where-Object -FilterScript { $_.FullName -like 'Windows*Security Baseline/Scripts/Baseline-LocalInstall.ps1' })) {
-                            Throw 'The selected Zip file does not contain the Microsoft Security Baselines Baseline-LocalInstall.ps1 which is required for the Protect-WindowsSecurity function to work properly'
-                        }
-                    }
-                    finally {
-                        # Close the handle whether the zip file is valid or not
-                        $ZipArchive.Dispose()
+                    if (-NOT ([HardeningModule.SneakAndPeek]::Search('Windows*Security Baseline/Scripts/Baseline-LocalInstall.ps1', $_))) {
+                        Throw 'The selected Zip file does not contain the Microsoft Security Baselines Baseline-LocalInstall.ps1 which is required for the Protect-WindowsSecurity function to work properly'
                     }
                     # Return true if everything is okay
                     $true
@@ -695,13 +662,7 @@ Execution Policy: $CurrentExecutionPolicy
                         if ($Dialog.ShowDialog() -eq 'OK') {
 
                             try {
-                                # Load the System.IO.Compression assembly
-                                [System.Void][System.Reflection.Assembly]::LoadWithPartialName('System.IO.Compression.FileSystem')
-                                # Open the zip file in read mode
-                                [System.IO.Compression.ZipArchive]$ZipArchive = [IO.Compression.ZipFile]::OpenRead($Dialog.FileName)
-                                # Make sure the selected zip has the required file
-                                if (-NOT ($ZipArchive.Entries | Where-Object -FilterScript { $_.FullName -like 'Windows*Security Baseline/Scripts/Baseline-LocalInstall.ps1' })) {
-
+                                if (-NOT ([HardeningModule.SneakAndPeek]::Search('Windows*Security Baseline/Scripts/Baseline-LocalInstall.ps1', $Dialog.FileName))) {
                                     [HardeningModule.Logger]::LogMessage(
                                         'The selected Zip file does not contain the Microsoft Security Baselines Baseline-LocalInstall.ps1 which is required for the Protect-WindowsSecurity function to work properly',
                                         $SyncHash.Logger,
@@ -726,10 +687,6 @@ Execution Policy: $CurrentExecutionPolicy
                                     $SyncHash.Window
                                 )
                             }
-                            finally {
-                                # Close the handle whether the zip file is valid or not
-                                $ZipArchive.Dispose()
-                            }
                         }
                     })
 
@@ -744,13 +701,7 @@ Execution Policy: $CurrentExecutionPolicy
                         if ($Dialog.ShowDialog() -eq 'OK') {
 
                             try {
-                                # Load the System.IO.Compression assembly
-                                [System.Void][System.Reflection.Assembly]::LoadWithPartialName('System.IO.Compression.FileSystem')
-                                # Open the zip file in read mode
-                                [System.IO.Compression.ZipArchive]$ZipArchive = [IO.Compression.ZipFile]::OpenRead($Dialog.FileName )
-                                # Make sure the selected zip has the required file
-                                if (-NOT ($ZipArchive.Entries | Where-Object -FilterScript { $_.FullName -like 'Microsoft 365 Apps for Enterprise*/Scripts/Baseline-LocalInstall.ps1' })) {
-
+                                if (-NOT ([HardeningModule.SneakAndPeek]::Search('Microsoft 365 Apps for Enterprise*/Scripts/Baseline-LocalInstall.ps1', $Dialog.FileName))) {
                                     [HardeningModule.Logger]::LogMessage(
                                         'The selected Zip file does not contain the Microsoft 365 Apps for Enterprise Security Baselines Baseline-LocalInstall.ps1 which is required for the Protect-WindowsSecurity function to work properly',
                                         $SyncHash.Logger,
@@ -775,10 +726,6 @@ Execution Policy: $CurrentExecutionPolicy
                                     $SyncHash.Window
                                 )
                             }
-                            finally {
-                                # Close the handle whether the zip file is valid or not
-                                $ZipArchive.Dispose()
-                            }
                         }
                     })
 
@@ -793,13 +740,7 @@ Execution Policy: $CurrentExecutionPolicy
                         if ($Dialog.ShowDialog() -eq 'OK') {
 
                             try {
-                                # Load the System.IO.Compression assembly
-                                [System.Void][System.Reflection.Assembly]::LoadWithPartialName('System.IO.Compression.FileSystem')
-                                # Open the zip file in read mode
-                                [System.IO.Compression.ZipArchive]$ZipArchive = [IO.Compression.ZipFile]::OpenRead($Dialog.FileName)
-                                # Make sure the selected zip has the required file
-                                if (-NOT ($ZipArchive.Entries | Where-Object -FilterScript { $_.FullName -like 'LGPO_*/LGPO.exe' })) {
-
+                                if (-NOT ([HardeningModule.SneakAndPeek]::Search('LGPO_*/LGPO.exe', $Dialog.FileName))) {
                                     [HardeningModule.Logger]::LogMessage(
                                         'The selected Zip file does not contain the LGPO.exe which is required for the Protect-WindowsSecurity function to work properly',
                                         $SyncHash.Logger,
@@ -823,10 +764,6 @@ Execution Policy: $CurrentExecutionPolicy
                                     $SyncHash['GUI']['ScrollerForOutputTextBlock'],
                                     $SyncHash.Window
                                 )
-                            }
-                            finally {
-                                # Close the handle whether the zip file is valid or not
-                                $ZipArchive.Dispose()
                             }
                         }
                     })

@@ -15,10 +15,12 @@ namespace WDACConfig
         {
             try
             {
-                if (WDACConfig.GlobalVars.VerbosePreference == "Continue" || WDACConfig.GlobalVars.VerbosePreference == "Inquire")
+                if (string.Equals(WDACConfig.GlobalVars.VerbosePreference, "Continue", StringComparison.OrdinalIgnoreCase) ||
+     string.Equals(WDACConfig.GlobalVars.VerbosePreference, "Inquire", StringComparison.OrdinalIgnoreCase))
                 {
                     WDACConfig.GlobalVars.Host.UI.WriteVerboseLine(message);
                 }
+
             }
             // Do not do anything if errors occur
             // Since many methods write to the console asynchronously this can throw errors

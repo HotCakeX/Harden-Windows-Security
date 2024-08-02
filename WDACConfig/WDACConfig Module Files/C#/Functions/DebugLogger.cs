@@ -15,10 +15,12 @@ namespace WDACConfig
         {
             try
             {
-                if (WDACConfig.GlobalVars.DebugPreference == "Continue" || WDACConfig.GlobalVars.DebugPreference == "Inquire")
+                if (string.Equals(WDACConfig.GlobalVars.DebugPreference, "Continue", StringComparison.OrdinalIgnoreCase) ||
+     string.Equals(WDACConfig.GlobalVars.DebugPreference, "Inquire", StringComparison.OrdinalIgnoreCase))
                 {
                     WDACConfig.GlobalVars.Host.UI.WriteDebugLine(message);
                 }
+
             }
             // Do not do anything if errors occur
             // Since many methods write to the console asynchronously this can throw errors

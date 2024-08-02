@@ -30,7 +30,7 @@ $PSDefaultParameterValues = @{
     'New-Macros:Verbose'                                          = $Verbose
     'Checkpoint-Macros:Verbose'                                   = $Verbose
     'Test-ECCSignedFiles:Verbose'                                 = $Verbose
-    
+
     'Clear-CiPolicy_Semantic:Verbose'                             = $Verbose
     'Close-EmptyXmlNodes_Semantic:Verbose'                        = $Verbose
     'Compare-CorrelatedData:Verbose'                              = $Verbose
@@ -48,7 +48,7 @@ $PSDefaultParameterValues = @{
     'Remove-OrphanAllowedSignersAndCiSigners_IDBased:Verbose'     = $Verbose
     'Remove-UnreferencedFileRuleRefs:Verbose'                     = $Verbose
     'New-CertificateSignerRules:Verbose'                          = $Verbose
-   
+
     'Clear-CiPolicy_Semantic:Debug'                               = $Debug
     'Close-EmptyXmlNodes_Semantic:Debug'                          = $Debug
     'Compare-CorrelatedData:Debug'                                = $Debug

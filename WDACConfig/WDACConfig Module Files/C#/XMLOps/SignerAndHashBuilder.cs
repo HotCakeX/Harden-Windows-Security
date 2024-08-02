@@ -144,7 +144,7 @@ namespace WDACConfig
                 // Loop through each correlated event and process the certificate details
                 foreach (Hashtable corDataValue in correlatedEventsDataValues)
                 {
-                    // currentCorData to store the current SignerInfo/Correlated 
+                    // currentCorData to store the current SignerInfo/Correlated
                     WDACConfig.CertificateDetailsCreator currentCorData;
 
                     // If the file doesn't have Issuer TBS hash (aka Intermediate certificate hash), use the leaf cert's TBS hash and CN instead (aka publisher TBS hash)

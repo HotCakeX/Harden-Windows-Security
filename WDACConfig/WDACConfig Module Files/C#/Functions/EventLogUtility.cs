@@ -7,7 +7,7 @@ namespace WDACConfig
     public static class EventLogUtility
     {
         /// <summary>
-        /// Increase Code Integrity Operational Event Logs size from the default 1MB to user defined size
+        /// Increase Code Integrity Operational Event Logs size from the default 1MB to user-defined size.
         /// Also automatically increases the log size by 1MB if the current free space is less than 1MB and the current maximum log size is less than or equal to 10MB.
         /// This is to prevent infinitely expanding the max log size automatically.
         /// </summary>
@@ -29,7 +29,7 @@ namespace WDACConfig
                 {
                     if (currentLogMaxSize <= 10 * 1024 * 1024)
                     {
-                        WDACConfig.VerboseLogger.Write($"Increasing the Code Integrity log size by 1MB because its current free space is less than 1MB");
+                        WDACConfig.VerboseLogger.Write("Increasing the Code Integrity log size by 1MB because its current free space is less than 1MB.");
                         logConfig.MaximumSizeInBytes = currentLogMaxSize + 1 * 1024 * 1024;
                         logConfig.IsEnabled = true;
                         logConfig.SaveChanges();
@@ -42,7 +42,7 @@ namespace WDACConfig
                 // To prevent from disabling the log or setting it to a very small size that is lower than its default size
                 if (logSize > 1100 * 1024)
                 {
-                    WDACConfig.VerboseLogger.Write($"Setting Code Integrity log size to {logSize}");
+                    WDACConfig.VerboseLogger.Write($"Setting Code Integrity log size to {logSize}.");
                     logConfig.MaximumSizeInBytes = (long)logSize;
                     logConfig.IsEnabled = true;
                     logConfig.SaveChanges();

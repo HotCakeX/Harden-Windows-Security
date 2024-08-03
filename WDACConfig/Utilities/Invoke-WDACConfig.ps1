@@ -10,7 +10,5 @@ Import-Module -FullyQualifiedName "$ScriptFilePath\..\WDACConfig Module Files\WD
 # Assert-WDACConfigIntegrity -SaveLocally -Verbose
 
 # Converts the markdown help file to XML format for the ConvertTo-WDACPolicy cmdlet
-# New-ExternalHelp -Path "$ScriptFilePath\..\WDACConfig Module Files\Help\ConvertTo-WDACPolicy.md" -OutputPath "$ScriptFilePath\..\WDACConfig Module Files\Help\ConvertTo-WDACPolicy.xml" -Force
+# New-ExternalHelp -Path "$ScriptFilePath\..\WDACConfig Module Files\Help\ConvertTo-WDACPolicy.md" -OutputPath "$ScriptFilePath\..\WDACConfig Module Files\Help\ConvertTo-WDACPolicy.xml" -Force | Out-Null
 # Get-Help ConvertTo-WDACPolicy -Full
-
-[WDACConfig.DriveLetterMapper]::GetGlobalRootDrives()[0]

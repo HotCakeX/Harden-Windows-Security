@@ -27,6 +27,7 @@ ConvertTo-WDACPolicy
     [-PolicyToAddLogsTo <FileInfo>]
     [-Source <String>]
     [-SuppPolicyName]
+    [-Level <String>]
     [-MDEAHLogs <FileInfo[]>]
     [-EVTXLogs <FileInfo[]>]
     [-FilterByPolicyNames <String[]>]
@@ -45,6 +46,7 @@ ConvertTo-WDACPolicy
     [-BasePolicyFile <FileInfo>]
     [-Source <String>]
     [-SuppPolicyName]
+    [-Level <String>]
     [-MDEAHLogs <FileInfo[]>]
     [-EVTXLogs <FileInfo[]>]
     [-FilterByPolicyNames <String[]>]
@@ -63,6 +65,7 @@ ConvertTo-WDACPolicy
     [-BasePolicyGUID <Guid>]
     [-Source <String>]
     [-SuppPolicyName]
+    [-Level <String>]
     [-MDEAHLogs <FileInfo[]>]
     [-EVTXLogs <FileInfo[]>]
     [-FilterByPolicyNames <String[]>]
@@ -216,6 +219,25 @@ Aliases: Name
 Required: False
 Position: Named
 Default value: <Depends on the selected source and time>
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -Level
+The level determining rule generation can be one of the following: Auto, FilePublisher, Publisher, or Hash.
+
+The fallback level is always Hash.
+
+By default, which is the same as not using this parameter, the most secure levels are prioritized. If a log contains the requisite details for the FilePublisher level, it will be utilized. If not, the Publisher level will be attempted. Should this also fail, the Hash level will be employed.
+
+```yaml
+Type: String
+Parameter Sets: (All)
+Aliases: Lvl
+
+Required: False
+Position: Named
+Default value: Auto
 Accept pipeline input: False
 Accept wildcard characters: False
 ```

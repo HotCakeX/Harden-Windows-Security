@@ -19,7 +19,7 @@ Function Edit-WDACConfig {
         [System.String]$SuppPolicyName,
 
         [ArgumentCompleter([WDACConfig.ArgCompleter.XmlFileMultiSelectPicker])]
-        [ValidateScript({ Test-CiPolicy -XmlFile $_ })]
+        [ValidateScript({ [WDACConfig.CiPolicyTest]::TestCiPolicy($_, $null) })]
         [Parameter(Mandatory = $true, ParameterSetName = 'MergeSupplementalPolicies', ValueFromPipelineByPropertyName = $true)]
         [System.IO.FileInfo[]]$SuppPolicyPaths,
 
@@ -47,7 +47,7 @@ Function Edit-WDACConfig {
                     if ($CurrentPolicyIDs -and $CurrentPolicyIDs.Contains($RedFlag3)) {
 
                         # Ensure the selected base policy xml file is valid
-                        if ( Test-CiPolicy -XmlFile $_ ) {
+                        if ( [WDACConfig.CiPolicyTest]::TestCiPolicy($_, $null) ) {
                             return $True
                         }
                     }

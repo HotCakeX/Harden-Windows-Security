@@ -523,16 +523,16 @@ Function Receive-CodeIntegrityLogs {
             'OnlyExisting' {
                 Switch ($Type) {
                     'Audit' {
-                        Write-Verbose -Message "Receive-CodeIntegrityLogs: Returning $($Output.Existing.Audit.Values.Count) Audit Code Integrity logs for files on the disk."
+                        [WDACConfig.VerboseLogger]::Write("Receive-CodeIntegrityLogs: Returning $($Output.Existing.Audit.Values.Count) Audit Code Integrity logs for files on the disk.")
                         Return $Output.Existing.Audit.Values
                     }
                     'Blocked' {
-                        Write-Verbose -Message "Receive-CodeIntegrityLogs: Returning $($Output.Existing.Blocked.Values.Count) Blocked Code Integrity logs for files on the disk."
+                        [WDACConfig.VerboseLogger]::Write("Receive-CodeIntegrityLogs: Returning $($Output.Existing.Blocked.Values.Count) Blocked Code Integrity logs for files on the disk.")
                         Return $Output.Existing.Blocked.Values
                     }
                     'All' {
                         $AllOutput = $Output.Existing.Blocked.Values + $Output.Existing.Audit.Values
-                        Write-Verbose -Message "Receive-CodeIntegrityLogs: Returning $($AllOutput.Count) Code Integrity logs for files on the disk."
+                        [WDACConfig.VerboseLogger]::Write("Receive-CodeIntegrityLogs: Returning $($AllOutput.Count) Code Integrity logs for files on the disk.")
                         Return $AllOutput
                     }
                 }
@@ -540,16 +540,16 @@ Function Receive-CodeIntegrityLogs {
             Default {
                 Switch ($Type) {
                     'Audit' {
-                        Write-Verbose -Message "Receive-CodeIntegrityLogs: Returning $($Output.All.Audit.Values.Count) Audit Code Integrity logs."
+                        [WDACConfig.VerboseLogger]::Write("Receive-CodeIntegrityLogs: Returning $($Output.All.Audit.Values.Count) Audit Code Integrity logs.")
                         Return $Output.All.Audit.Values
                     }
                     'Blocked' {
-                        Write-Verbose -Message "Receive-CodeIntegrityLogs: Returning $($Output.All.Blocked.Values.Count) Blocked Code Integrity logs."
+                        [WDACConfig.VerboseLogger]::Write("Receive-CodeIntegrityLogs: Returning $($Output.All.Blocked.Values.Count) Blocked Code Integrity logs.")
                         Return $Output.All.Blocked.Values
                     }
                     'All' {
                         $AllOutput = $Output.All.Audit.Values + $Output.All.Blocked.Values
-                        Write-Verbose -Message "Receive-CodeIntegrityLogs: Returning $($AllOutput.Count) Code Integrity logs."
+                        [WDACConfig.VerboseLogger]::Write("Receive-CodeIntegrityLogs: Returning $($AllOutput.Count) Code Integrity logs.")
                         Return $AllOutput
                     }
                 }

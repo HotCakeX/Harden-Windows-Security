@@ -40,7 +40,7 @@ Function New-SupplementalWDACConfig {
         [System.String]$SuppPolicyName,
 
         [ArgumentCompleter([WDACConfig.ArgCompleter.XmlFilePathsPicker])]
-        [ValidateScript({ Test-CiPolicy -XmlFile $_ })]
+        [ValidateScript({ [WDACConfig.CiPolicyTest]::TestCiPolicy($_, $null) })]
         [parameter(Mandatory = $false, ValueFromPipelineByPropertyName = $true)]
         [System.IO.FileInfo]$PolicyPath,
 

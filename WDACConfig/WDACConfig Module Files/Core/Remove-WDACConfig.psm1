@@ -23,7 +23,7 @@ Function Remove-WDACConfig {
                     if ($RedFlag1 -or $RedFlag2) {
 
                         # Ensure the selected base policy xml file is valid
-                        if ( Test-CiPolicy -XmlFile $_ ) {
+                        if ( [WDACConfig.CiPolicyTest]::TestCiPolicy($_, $null) ) {
                             return $True
                         }
                     }

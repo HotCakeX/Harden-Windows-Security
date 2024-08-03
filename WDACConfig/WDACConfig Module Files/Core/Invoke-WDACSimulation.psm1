@@ -4,7 +4,7 @@ Function Invoke-WDACSimulation {
     Param(
         [ArgumentCompleter([WDACConfig.ArgCompleter.XmlFilePathsPicker])]
         [Alias('X')]
-        [ValidateScript({ Test-CiPolicy -XmlFile $_ })]
+        [ValidateScript({ [WDACConfig.CiPolicyTest]::TestCiPolicy($_, $null) })]
         [Parameter(Mandatory = $true)][System.IO.FileInfo]$XmlFilePath,
 
         [ArgumentCompleter([WDACConfig.ArgCompleter.FolderPicker])]

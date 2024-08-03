@@ -7,7 +7,7 @@ Function Deploy-SignedWDACConfig {
     [OutputType([System.String])]
     Param(
         [ArgumentCompleter([WDACConfig.ArgCompleter.XmlFileMultiSelectPicker])]
-        [ValidateScript({ Test-CiPolicy -XmlFile $_ })]
+        [ValidateScript({ [WDACConfig.CiPolicyTest]::TestCiPolicy($_, $null) })]
         [parameter(Mandatory = $true, ValueFromPipelineByPropertyName = $true, ValueFromPipeline = $true)]
         [System.IO.FileInfo[]]$PolicyPaths,
 

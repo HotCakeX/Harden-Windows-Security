@@ -7,7 +7,7 @@ Function Set-CiRuleOptions {
         [System.String]$Template,
 
         [ArgumentCompleter([WDACConfig.ArgCompleter.XmlFilePathsPicker])]
-        [ValidateScript({ Test-CiPolicy -XmlFile $_ })]
+        [ValidateScript({ [WDACConfig.CiPolicyTest]::TestCiPolicy($_, $null) })]
         [Parameter(Mandatory = $true)][System.IO.FileInfo]$FilePath,
 
         [ArgumentCompleter([WDACConfig.ArgCompleter.RuleOptionsPicker])]
@@ -195,7 +195,9 @@ Function Set-CiRuleOptions {
         Set-HVCIOptions -Strict -FilePath $FilePath
 
         # Validate the XML file at the end
-        $null = Test-CiPolicy -XmlFile $FilePath
+        if (![WDACConfig.CiPolicyTest]::TestCiPolicy($FilePath, $null)) {
+            throw 'The XML file created at the end is not compliant with the CI policy schema'
+        }
     }
     <#
     .SYNOPSIS

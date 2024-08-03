@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace WDACConfig
 {
-    // Used by the Build-BuildSignerAndHashObjects method to store and return the output
+    // Used by the BuildSignerAndHashObjects method to store and return the output
     public class FileBasedInfoPackage
     {
         public List<WDACConfig.FilePublisherSignerCreator> FilePublisherSigners { get; set; }

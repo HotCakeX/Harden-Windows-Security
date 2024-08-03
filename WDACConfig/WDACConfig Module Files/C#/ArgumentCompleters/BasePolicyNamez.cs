@@ -8,7 +8,7 @@ namespace WDACConfig
 {
     public class BasePolicyNamez : IValidateSetValuesGenerator
     {
-        // argument tab auto-completion and ValidateSet for Non-System Policy names
+        // Argument tab auto-completion and ValidateSet for Non-System Policy names
         public string[] GetValidValues()
         {
             // Run CiTool.exe and capture the output
@@ -40,7 +40,8 @@ namespace WDACConfig
                 string basePolicyId = policyElement.GetProperty("BasePolicyID").GetString();
                 string friendlyName = policyElement.GetProperty("FriendlyName").GetString();
 
-                if (!isSystemPolicy && policyId == basePolicyId)
+                // Use ordinal, case-insensitive comparison for the policy IDs
+                if (!isSystemPolicy && string.Equals(policyId, basePolicyId, StringComparison.OrdinalIgnoreCase))
                 {
                     validValues.Add(friendlyName);
                 }

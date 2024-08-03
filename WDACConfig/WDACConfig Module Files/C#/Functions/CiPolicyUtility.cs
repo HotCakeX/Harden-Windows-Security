@@ -13,6 +13,24 @@ namespace WDACConfig
         /// <param name="destinationFilePath">The destination CI policy XML file path.</param>
         public static void CopyCiRules(string sourceFilePath, string destinationFilePath)
         {
+            // Validate file paths
+            if (string.IsNullOrWhiteSpace(sourceFilePath))
+            {
+                throw new ArgumentException("Source file path cannot be null or empty.", nameof(sourceFilePath));
+            }
+            if (string.IsNullOrWhiteSpace(destinationFilePath))
+            {
+                throw new ArgumentException("Destination file path cannot be null or empty.", nameof(destinationFilePath));
+            }
+            if (!File.Exists(sourceFilePath))
+            {
+                throw new FileNotFoundException("Source file not found.", sourceFilePath);
+            }
+            if (!File.Exists(destinationFilePath))
+            {
+                throw new FileNotFoundException("Destination file not found.", destinationFilePath);
+            }
+
             // Load the XML files as XmlDocument objects
             XmlDocument sourceXmlDoc = new XmlDocument();
             sourceXmlDoc.Load(sourceFilePath);

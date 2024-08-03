@@ -27,7 +27,7 @@ namespace WDACConfig
             string xpathQuery = "//xs:simpleType[@name='OptionType']/xs:restriction/xs:enumeration/@value";
 
             // Fetch enumeration values from the schema
-            HashSet<string> validOptions = new HashSet<string>();
+            HashSet<string> validOptions = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
             XmlNodeList optionNodes = schemaData.SelectNodes(xpathQuery, nsManager);
             foreach (XmlNode node in optionNodes)
             {
@@ -50,7 +50,7 @@ namespace WDACConfig
 
             foreach (string option in validOptions)
             {
-                if (!intel.Values.Contains(option))
+                if (!intel.Values.Contains(option, StringComparer.OrdinalIgnoreCase))
                 {
                     // this should be a verbose or warning message
                     //    throw new Exception($"Rule option '{option}' exists in the Code Integrity Schema but not being used by the module.");

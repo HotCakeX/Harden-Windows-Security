@@ -26,23 +26,23 @@ namespace WDACConfig
         // Update Build Revision (UBR) number
         public static int UBR;
 
-        // stores the value of $PSScriptRoot to allow the internal functions to use it when navigating the module structure
-        // it's set by PowerShell code outside of C#
+        // Stores the value of $PSScriptRoot to allow the internal functions to use it when navigating the module structure
+        // It's set by PowerShell code outside of C#
         public static string ModuleRootPath;
 
         // Create full OS build number as seen in Windows Settings
         public static string FullOSBuild;
 
         // Storing the path to the WDAC Code Integrity Schema XSD file
-        public static readonly string CISchemaPath = System.IO.Path.Combine(
+        public static readonly string CISchemaPath = Path.Combine(
             Environment.GetEnvironmentVariable("SystemDrive") + @"\",
             "Windows", "schemas", "CodeIntegrity", "cipolicy.xsd");
 
         // Storing the path to the WDACConfig folder in the Program Files
-        public static readonly string UserConfigDir = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), "WDACConfig");
+        public static readonly string UserConfigDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), "WDACConfig");
 
         // Storing the path to User Config JSON file in the WDACConfig folder in the Program Files
-        public static readonly string UserConfigJson = System.IO.Path.Combine(UserConfigDir, "UserConfigurations", "UserConfigurations.json");
+        public static readonly string UserConfigJson = Path.Combine(UserConfigDir, "UserConfigurations", "UserConfigurations.json");
 
         // The VerbosePreference variable of the PowerShell session
         public static string VerbosePreference;

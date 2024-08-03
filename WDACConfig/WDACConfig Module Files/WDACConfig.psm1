@@ -23,7 +23,7 @@ Load order of the WDACConfig module:
 $global:ErrorActionPreference = 'Stop'
 
 if (!$IsWindows) {
-    Throw [System.PlatformNotSupportedException] 'The WDACConfig module only runs on Windows operation systems.'
+    Throw [System.PlatformNotSupportedException] 'The WDACConfig module only runs on Windows operation systems. Download it from here: https://www.microsoft.com/software-download/windows11'
 }
 
 # Specifies that the WDACConfig module requires Administrator privileges

@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Globalization;
 
 namespace WDACConfig
 {
@@ -53,7 +54,7 @@ namespace WDACConfig
             List<WDACConfig.PublisherSignerCreator> publisherSigners = new List<WDACConfig.PublisherSignerCreator>();
 
             // An array to store the FileAttributes created using Hash Level
-            List<WDACConfig.HashCreator> completeHashes = new List<HashCreator>();
+            List<WDACConfig.HashCreator> completeHashes = new List<WDACConfig.HashCreator>();
 
             // Defining the arrays to store the signed and unsigned data
             List<Hashtable> signedFilePublisherData = new List<Hashtable>();
@@ -184,7 +185,7 @@ namespace WDACConfig
                 currentFilePublisherSigner.FileName = string.Equals(incomingDataType, "MDEAH", StringComparison.OrdinalIgnoreCase) ? signedData["FileName"].ToString() : signedData["File Name"].ToString();
                 currentFilePublisherSigner.AuthenticodeSHA256 = string.Equals(incomingDataType, "MDEAH", StringComparison.OrdinalIgnoreCase) ? signedData["SHA256"].ToString() : signedData["SHA256 Hash"].ToString();
                 currentFilePublisherSigner.AuthenticodeSHA1 = string.Equals(incomingDataType, "MDEAH", StringComparison.OrdinalIgnoreCase) ? signedData["SHA1"].ToString() : signedData["SHA1 Hash"].ToString();
-                currentFilePublisherSigner.SiSigningScenario = string.Equals(incomingDataType, "MDEAH", StringComparison.OrdinalIgnoreCase) ? int.Parse(signedData["SiSigningScenario"].ToString()) : (string.Equals(signedData["SI Signing Scenario"].ToString(), "Kernel-Mode", StringComparison.OrdinalIgnoreCase) ? 0 : 1);
+                currentFilePublisherSigner.SiSigningScenario = string.Equals(incomingDataType, "MDEAH", StringComparison.OrdinalIgnoreCase) ? int.Parse(signedData["SiSigningScenario"].ToString(), CultureInfo.InvariantCulture) : (string.Equals(signedData["SI Signing Scenario"].ToString(), "Kernel-Mode", StringComparison.OrdinalIgnoreCase) ? 0 : 1);
 
                 // Some checks to make sure the necessary details are not empty
                 if (string.IsNullOrWhiteSpace(currentFilePublisherSigner.AuthenticodeSHA256))
@@ -246,7 +247,7 @@ namespace WDACConfig
                 currentPublisherSigner.FileName = string.Equals(incomingDataType, "MDEAH", StringComparison.OrdinalIgnoreCase) ? signedData["FileName"].ToString() : signedData["File Name"].ToString();
                 currentPublisherSigner.AuthenticodeSHA256 = string.Equals(incomingDataType, "MDEAH", StringComparison.OrdinalIgnoreCase) ? signedData["SHA256"].ToString() : signedData["SHA256 Hash"].ToString();
                 currentPublisherSigner.AuthenticodeSHA1 = string.Equals(incomingDataType, "MDEAH", StringComparison.OrdinalIgnoreCase) ? signedData["SHA1"].ToString() : signedData["SHA1 Hash"].ToString();
-                currentPublisherSigner.SiSigningScenario = string.Equals(incomingDataType, "MDEAH", StringComparison.OrdinalIgnoreCase) ? int.Parse(signedData["SiSigningScenario"].ToString()) : (string.Equals(signedData["SI Signing Scenario"].ToString(), "Kernel-Mode", StringComparison.OrdinalIgnoreCase) ? 0 : 1);
+                currentPublisherSigner.SiSigningScenario = string.Equals(incomingDataType, "MDEAH", StringComparison.OrdinalIgnoreCase) ? int.Parse(signedData["SiSigningScenario"].ToString(), CultureInfo.InvariantCulture) : (string.Equals(signedData["SI Signing Scenario"].ToString(), "Kernel-Mode", StringComparison.OrdinalIgnoreCase) ? 0 : 1);
 
                 // Add the completed object to the PublisherSigners array
                 publisherSigners.Add(currentPublisherSigner);
@@ -259,7 +260,7 @@ namespace WDACConfig
                     string.Equals(incomingDataType, "MDEAH", StringComparison.OrdinalIgnoreCase) ? hashData["SHA256"].ToString() : hashData["SHA256 Hash"].ToString(),
                     string.Equals(incomingDataType, "MDEAH", StringComparison.OrdinalIgnoreCase) ? hashData["SHA1"].ToString() : hashData["SHA1 Hash"].ToString(),
                     string.Equals(incomingDataType, "MDEAH", StringComparison.OrdinalIgnoreCase) ? hashData["FileName"].ToString() : hashData["File Name"].ToString(),
-                    string.Equals(incomingDataType, "MDEAH", StringComparison.OrdinalIgnoreCase) ? int.Parse(hashData["SiSigningScenario"].ToString()) : (string.Equals(hashData["SI Signing Scenario"].ToString(), "Kernel-Mode", StringComparison.OrdinalIgnoreCase) ? 0 : 1)
+                    string.Equals(incomingDataType, "MDEAH", StringComparison.OrdinalIgnoreCase) ? int.Parse(hashData["SiSigningScenario"].ToString(), CultureInfo.InvariantCulture) : (string.Equals(hashData["SI Signing Scenario"].ToString(), "Kernel-Mode", StringComparison.OrdinalIgnoreCase) ? 0 : 1)
                 ));
             }
 

@@ -4,10 +4,10 @@ using System.Globalization;
 
 namespace WDACConfig
 {
-    // prepares the environment. It also runs commands that would otherwise run in the default constructor for the GlobalVars Class
+    // Prepares the environment. It also runs commands that would otherwise run in the default constructor for the GlobalVars Class
     public class Initializer
     {
-        /// These are the codes that were present in GlobalVar class's default constructor but defining them as a separate method an allows any errors thrown in them to be properly displayed in PowerShell instead of showing an error occurred in the default constructor of a class
+        /// These are the codes that were present in the GlobalVar class's default constructor but defining them as a separate method allows any errors thrown in them to be properly displayed in PowerShell instead of showing an error occurred in the default constructor of a class
         public static void Initialize()
         {
             using (RegistryKey key = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows NT\CurrentVersion"))
@@ -15,7 +15,7 @@ namespace WDACConfig
                 if (key != null)
                 {
                     object ubrValue = key.GetValue("UBR");
-                    if (ubrValue != null && int.TryParse(ubrValue.ToString(), out int ubr))
+                    if (ubrValue != null && int.TryParse(ubrValue.ToString(), NumberStyles.Integer, CultureInfo.InvariantCulture, out int ubr))
                     {
                         WDACConfig.GlobalVars.UBR = ubr;
                     }
@@ -34,7 +34,7 @@ namespace WDACConfig
             WDACConfig.GlobalVars.FullOSBuild = $"{WDACConfig.GlobalVars.OSBuildNumber}.{WDACConfig.GlobalVars.UBR}";
 
             // Convert the FullOSBuild and RequiredBuild strings to decimals so that we can compare them
-            if (!TryParseBuildVersion(buildVersion: WDACConfig.GlobalVars.FullOSBuild, result: out decimal fullOSBuild))
+            if (!TryParseBuildVersion(WDACConfig.GlobalVars.FullOSBuild, out decimal fullOSBuild))
             {
                 throw new FormatException("The OS build version strings are not in a correct format.");
             }
@@ -46,7 +46,6 @@ namespace WDACConfig
             }
         }
 
-
         // This method gracefully parses the OS build version strings to decimals
         // and performs this in a culture-independent way
         // in languages such as Swedish where the decimal separator is , instead of .
@@ -55,7 +54,7 @@ namespace WDACConfig
         private static bool TryParseBuildVersion(string buildVersion, out decimal result)
         {
             // Use CultureInfo.InvariantCulture for parsing
-            return Decimal.TryParse(buildVersion, NumberStyles.Number, CultureInfo.InvariantCulture, out result);
+            return decimal.TryParse(buildVersion, NumberStyles.Number, CultureInfo.InvariantCulture, out result);
         }
     }
 }

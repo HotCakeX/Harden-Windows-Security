@@ -8,6 +8,11 @@ namespace WDACConfig
     {
         public static void InvokeCiSigning(FileInfo ciPath, FileInfo signToolPathFinal, string certCN)
         {
+            // Validate inputs
+            if (ciPath == null) throw new ArgumentNullException(nameof(ciPath));
+            if (signToolPathFinal == null) throw new ArgumentNullException(nameof(signToolPathFinal));
+            if (string.IsNullOrEmpty(certCN)) throw new ArgumentException("Certificate Common Name cannot be null or empty.", nameof(certCN));
+
             // Build the arguments for the process
             string arguments = $"sign /v /n \"{certCN}\" /p7 . /p7co 1.3.6.1.4.1.311.79.1 /fd certHash \"{ciPath.Name}\"";
 
@@ -26,7 +31,6 @@ namespace WDACConfig
             // Start the process
             using (Process process = new Process { StartInfo = startInfo })
             {
-
                 process.Start();
 
                 // Wait for the process to exit
@@ -50,7 +54,6 @@ namespace WDACConfig
                 {
                     throw new InvalidOperationException($"SignTool failed with exit code {process.ExitCode}. Error: {error}");
                 }
-
             }
         }
     }

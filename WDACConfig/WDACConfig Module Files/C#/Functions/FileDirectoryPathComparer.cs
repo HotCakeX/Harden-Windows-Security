@@ -7,7 +7,7 @@ namespace WDACConfig
     public class FileDirectoryPathComparer
     {
         /// <summary>
-        /// Method that takes 2 arrays, one containing file paths and the other containing folder paths. 
+        /// Method that takes 2 arrays, one containing file paths and the other containing folder paths.
         /// It checks them and returns the unique file paths that are not in any of the folder paths.
         /// Performs this check recursively, so it works if a filepath is in a sub-directory of a folder path.
         /// It works even if the file paths or folder paths are non-existent/deleted, but they still need to be valid file/folder paths.

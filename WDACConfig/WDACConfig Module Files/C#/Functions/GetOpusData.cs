@@ -25,9 +25,9 @@ namespace WDACConfig
         }
 
         // More info about this at the end of the code
-        public static uint SPC_SP_OPUS_INFO_STRUCT = 2007;
+        public const uint SPC_SP_OPUS_INFO_STRUCT = 2007;
         // for the SpcSpOpusInfo structure
-        public static string SPC_SP_OPUS_INFO_OBJID = "1.3.6.1.4.1.311.2.1.12";
+        public const string SPC_SP_OPUS_INFO_OBJID = "1.3.6.1.4.1.311.2.1.12";
 
         // https://learn.microsoft.com/en-us/openspecs/office_file_formats/ms-oshared/91755632-4b0d-44ca-89a9-9699afbbd268
         // Rust implementation: https://microsoft.github.io/windows-docs-rs/doc/windows/Win32/Security/WinTrust/struct.SPC_SP_OPUS_INFO.html
@@ -55,7 +55,7 @@ namespace WDACConfig
                 foreach (CryptographicAttributeObject signedAttribute in signerInfo.SignedAttributes)
                 {
                     // Checking if the OID value of the signed attribute matches the Opus SPC_SP_OPUS_INFO_OBJID
-                    if (signedAttribute.Oid.Value == Opus.SPC_SP_OPUS_INFO_OBJID)
+                    if (string.Equals(signedAttribute.Oid.Value, Opus.SPC_SP_OPUS_INFO_OBJID, StringComparison.Ordinal))
                     {
                         // Initializing pcbStructInfo to 0
                         uint pcbStructInfo = 0;

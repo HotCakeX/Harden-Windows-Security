@@ -31,6 +31,7 @@ namespace WDACConfig
                     // Also after picking a directory, the next time the picker GUI opens up will be in the same directory as the last time instead of opening at C drive or some other default location
                     IntPtr hwnd = GetForegroundWindow();
                     DialogResult result = dialog.ShowDialog(new WindowWrapper(hwnd));
+
                     if (result == DialogResult.OK)
                     {
                         programsPaths.Add(new DirectoryInfo(dialog.SelectedPath));
@@ -52,7 +53,7 @@ namespace WDACConfig
             public bool Equals(DirectoryInfo x, DirectoryInfo y)
             {
                 // Compare full path in a case-insensitive way
-                return x.FullName.Equals(y.FullName, StringComparison.OrdinalIgnoreCase);
+                return string.Equals(x.FullName, y.FullName, StringComparison.OrdinalIgnoreCase);
             }
 
             // Get hash code of the full path in a case-insensitive way
@@ -78,10 +79,7 @@ namespace WDACConfig
             }
 
             // Property to satisfy IWin32Window interface
-            public IntPtr Handle
-            {
-                get { return _hwnd; }
-            }
+            public IntPtr Handle => _hwnd;
         }
     }
 }

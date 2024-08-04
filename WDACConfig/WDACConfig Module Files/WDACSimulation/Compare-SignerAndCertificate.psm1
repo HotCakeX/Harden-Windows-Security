@@ -133,7 +133,7 @@ Function Compare-SignerAndCertificate {
 
                                                 if (($null -ne $ExtendedFileInfo.$KeyItem) -and ($ExtendedFileInfo.$KeyItem -eq $FileAttrib.$KeyItem)) {
 
-                                                    Write-Verbose -Message "The SpecificFileNameLevel is $KeyItem"
+                                                    [WDACConfig.VerboseLogger]::Write("The SpecificFileNameLevel is $KeyItem")
 
                                                     # If there was a match then assign the $KeyItem which is the name of the SpecificFileNameLevel option to the $CurrentFileInfo.SpecificFileNameLevelMatchCriteria
 
@@ -322,7 +322,7 @@ Function Compare-SignerAndCertificate {
 
                                         if (($null -ne $ExtendedFileInfo.$KeyItem) -and ($ExtendedFileInfo.$KeyItem -eq $FileAttrib.$KeyItem)) {
 
-                                            Write-Verbose -Message "The SpecificFileNameLevel is $KeyItem"
+                                            [WDACConfig.VerboseLogger]::Write("The SpecificFileNameLevel is $KeyItem")
 
                                             # If there was a match then assign the $KeyItem which is the name of the SpecificFileNameLevel option to the $CurrentFileInfo.SpecificFileNameLevelMatchCriteria
                                             # And break out of the loop by validating the signer as suitable for FilePublisher level
@@ -498,7 +498,7 @@ Function Compare-SignerAndCertificate {
 
                                     if (($null -ne $ExtendedFileInfo.$KeyItem) -and ($ExtendedFileInfo.$KeyItem -eq $FileAttrib.$KeyItem)) {
 
-                                        Write-Verbose -Message "The SpecificFileNameLevel is $KeyItem"
+                                        [WDACConfig.VerboseLogger]::Write("The SpecificFileNameLevel is $KeyItem")
 
                                         # If there was a match then assign the $KeyItem which is the name of the SpecificFileNameLevel option to the $CurrentFileInfo.SpecificFileNameLevelMatchCriteria
                                         # And break out of the loop by validating the signer as suitable for FilePublisher level

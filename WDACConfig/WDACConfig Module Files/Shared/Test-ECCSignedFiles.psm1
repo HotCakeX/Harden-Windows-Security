@@ -36,7 +36,7 @@ Function Test-ECCSignedFiles {
         [Parameter(Mandatory = $true)][System.IO.FileInfo]$ECCSignedFilesTempPolicy
     )
     Begin {
-        Write-Verbose -Message 'Test-ECCSignedFiles: Importing the required sub-modules'
+        [WDACConfig.VerboseLogger]::Write('Test-ECCSignedFiles: Importing the required sub-modules')
         Import-Module -Force -FullyQualifiedName @(
             "$([WDACConfig.GlobalVars]::ModuleRootPath)\Shared\Get-KernelModeDrivers.psm1",
             "$([WDACConfig.GlobalVars]::ModuleRootPath)\XMLOps\New-HashLevelRules.psm1",
@@ -48,7 +48,7 @@ Function Test-ECCSignedFiles {
 
     }
     Process {
-        Write-Verbose -Message "Test-ECCSignedFiles: Processing $($WDACSupportedFiles.Count) WDAC compliant files to check for ECC signatures."
+        [WDACConfig.VerboseLogger]::Write("Test-ECCSignedFiles: Processing $($WDACSupportedFiles.Count) WDAC compliant files to check for ECC signatures.")
         # The check for existence is mainly for the files detected in audit logs that no longer exist on the disk
         # Audit logs or MDE data simply don't have the data related to the file's signature algorithm, so only local files can be checked
 
@@ -62,7 +62,7 @@ Function Test-ECCSignedFiles {
                     if ($AuthResult.Status -ieq 'Valid') {
 
                         if (($AuthResult.SignerCertificate.PublicKey.Oid.Value).Contains('1.2.840.10045.2.1')) {
-                            #  Write-Verbose -Message "Test-ECCSignedFiles: The file '$Path' is signed with ECC algorithm. Will create Hash Level rules for it."
+                            #  [WDACConfig.VerboseLogger]::Write("Test-ECCSignedFiles: The file '$Path' is signed with ECC algorithm. Will create Hash Level rules for it.")
                             $Path
                         }
                     }
@@ -102,7 +102,7 @@ Function Test-ECCSignedFiles {
                 Return $ECCSignedFilesTempPolicy
             }
             else {
-                Write-Verbose -Message 'Test-ECCSignedFiles: No ECC signed files found. Exiting the function.'
+                [WDACConfig.VerboseLogger]::Write('Test-ECCSignedFiles: No ECC signed files found. Exiting the function.')
                 Return $null
             }
         }

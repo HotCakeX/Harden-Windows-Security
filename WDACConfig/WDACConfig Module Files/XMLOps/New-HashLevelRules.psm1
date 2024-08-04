@@ -9,7 +9,7 @@ Function New-HashLevelRules {
     .PARAMETER XmlFilePath
         The path to the XML file to be modified
     .INPUTS
-        PSCustomObject[]
+        System.Collections.Generic.List[WDACConfig.HashCreator]
         System.IO.FileInfo
     .OUTPUTS
         System.Void
@@ -17,13 +17,13 @@ Function New-HashLevelRules {
     [CmdletBinding()]
     [OutputType([System.Void])]
     Param(
-        [Parameter(Mandatory = $true)][PSCustomObject[]]$Hashes,
+        [Parameter(Mandatory = $true)][System.Collections.Generic.List[WDACConfig.HashCreator]]$Hashes,
         [Parameter(Mandatory = $true)][System.IO.FileInfo]$XmlFilePath
     )
     Begin {
         . "$([WDACConfig.GlobalVars]::ModuleRootPath)\CoreExt\PSDefaultParameterValues.ps1"
 
-        Write-Verbose -Message "New-HashLevelRules: There are $($Hashes.Count) Hash rules to be added to the XML file"
+        [WDACConfig.VerboseLogger]::Write("New-HashLevelRules: There are $($Hashes.Count) Hash rules to be added to the XML file")
 
         # Load the XML file
         [System.Xml.XmlDocument]$Xml = Get-Content -Path $XmlFilePath

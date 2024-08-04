@@ -103,7 +103,7 @@ Function Receive-CodeIntegrityLogs {
             [WDACConfig.DriveLetterMapper+DriveMapping[]]$DriveLettersGlobalRootFix = [WDACConfig.DriveLetterMapper]::GetGlobalRootDrives()
         }
         catch {
-            Write-Verbose -Verbose -Message 'Receive-CodeIntegrityLogs: Could not get the drive mappings from the system using the primary method, trying the alternative method now'
+            [WDACConfig.VerboseLogger]::Write('Receive-CodeIntegrityLogs: Could not get the drive mappings from the system using the primary method, trying the alternative method now')
 
             # Set the flag to true indicating the alternative method is being used
             $AlternativeDriveLetterFix = $true
@@ -120,7 +120,7 @@ Function Receive-CodeIntegrityLogs {
 
         if ($Category -in 'All', 'CodeIntegrity') {
             Try {
-                Write-Verbose -Message 'Receive-CodeIntegrityLogs: Collecting the Code Integrity Operational logs'
+                [WDACConfig.VerboseLogger]::Write('Receive-CodeIntegrityLogs: Collecting the Code Integrity Operational logs')
                 switch ($LogSource) {
                     'EVTXFiles' {
                         # Get all of the Code Integrity logs from the specified EVTX files
@@ -133,19 +133,19 @@ Function Receive-CodeIntegrityLogs {
                 }
             }
             catch {
-                Write-Verbose -Message "Receive-CodeIntegrityLogs: Could not collect the Code Integrity Operational logs, the number of logs collected is $($CiRawEventLogs.Count)"
+                [WDACConfig.VerboseLogger]::Write("Receive-CodeIntegrityLogs: Could not collect the Code Integrity Operational logs, the number of logs collected is $($CiRawEventLogs.Count)")
             }
 
             [Microsoft.PowerShell.Commands.GroupInfo[]]$CiGroupedEvents = $CiRawEventLogs | Group-Object -Property ActivityId
-            Write-Verbose -Message "Receive-CodeIntegrityLogs: Grouped the Code Integrity logs by ActivityId. The total number of groups is $($CiGroupedEvents.Count) and the total number of logs in the groups is $($CiGroupedEvents.Group.Count)"
+            [WDACConfig.VerboseLogger]::Write("Receive-CodeIntegrityLogs: Grouped the Code Integrity logs by ActivityId. The total number of groups is $($CiGroupedEvents.Count) and the total number of logs in the groups is $($CiGroupedEvents.Group.Count)")
         }
         else {
-            Write-Verbose -Message 'Receive-CodeIntegrityLogs: Skipping the collection of the Code Integrity logs'
+            [WDACConfig.VerboseLogger]::Write('Receive-CodeIntegrityLogs: Skipping the collection of the Code Integrity logs')
         }
 
         if ($Category -in 'All', 'AppLocker') {
             Try {
-                Write-Verbose -Message 'Receive-CodeIntegrityLogs: Collecting the AppLocker logs'
+                [WDACConfig.VerboseLogger]::Write('Receive-CodeIntegrityLogs: Collecting the AppLocker logs')
                 switch ($LogSource) {
                     'EVTXFiles' {
                         # Get all of the AppLocker logs from the specified EVTX files
@@ -158,14 +158,14 @@ Function Receive-CodeIntegrityLogs {
                 }
             }
             catch {
-                Write-Verbose -Message "Receive-CodeIntegrityLogs: Could not collect the AppLocker logs, the number of logs collected is $($AppLockerRawEventLogs.Count)"
+                [WDACConfig.VerboseLogger]::Write("Receive-CodeIntegrityLogs: Could not collect the AppLocker logs, the number of logs collected is $($AppLockerRawEventLogs.Count)")
             }
 
             [Microsoft.PowerShell.Commands.GroupInfo[]]$AppLockerGroupedEvents = $AppLockerRawEventLogs | Group-Object -Property ActivityId
-            Write-Verbose -Message "Receive-CodeIntegrityLogs: Grouped the AppLocker logs by ActivityId. The total number of groups is $($AppLockerGroupedEvents.Count) and the total number of logs in the groups is $($AppLockerGroupedEvents.Group.Count)"
+            [WDACConfig.VerboseLogger]::Write("Receive-CodeIntegrityLogs: Grouped the AppLocker logs by ActivityId. The total number of groups is $($AppLockerGroupedEvents.Count) and the total number of logs in the groups is $($AppLockerGroupedEvents.Group.Count)")
         }
         else {
-            Write-Verbose -Message 'Receive-CodeIntegrityLogs: Skipping the collection of the AppLocker logs'
+            [WDACConfig.VerboseLogger]::Write('Receive-CodeIntegrityLogs: Skipping the collection of the AppLocker logs')
         }
 
         # Add Code Integrity and AppLocker logs to a single array based on the selected category
@@ -250,7 +250,7 @@ Function Receive-CodeIntegrityLogs {
     Process {
 
         if ($EventPackageCollection.count -eq 0) {
-            Write-Verbose -Message 'Receive-CodeIntegrityLogs: No logs were collected'
+            [WDACConfig.VerboseLogger]::Write('Receive-CodeIntegrityLogs: No logs were collected')
             return
         }
 
@@ -285,7 +285,7 @@ Function Receive-CodeIntegrityLogs {
                 $Xml = [System.Xml.XmlDocument]$Event.ToXml()
 
                 if ($null -eq $Xml.event.EventData.data) {
-                    Write-Verbose -Message "Receive-CodeIntegrityLogs: Skipping Main event data for: $($Log['File Name'])"
+                    [WDACConfig.VerboseLogger]::Write("Receive-CodeIntegrityLogs: Skipping Main event data for: $($Log['File Name'])")
                     continue
                 }
 
@@ -369,11 +369,11 @@ Function Receive-CodeIntegrityLogs {
                             $Log.UserId = [System.String]($ObjSID.Translate([System.Security.Principal.NTAccount])).Value
                         }
                         Catch {
-                            Write-Verbose -Message "Receive-CodeIntegrityLogs: Could not translate the SID $($Log.UserId) to a username for the Activity ID $($Log['ActivityId']) for the file $($Log['File Name'])"
+                            [WDACConfig.VerboseLogger]::Write("Receive-CodeIntegrityLogs: Could not translate the SID $($Log.UserId) to a username for the Activity ID $($Log['ActivityId']) for the file $($Log['File Name'])")
                         }
                     }
                     else {
-                        Write-Verbose -Message "Receive-CodeIntegrityLogs: The UserId property is null for the Activity ID $($Log['ActivityId']) for the file $($Log['File Name'])"
+                        [WDACConfig.VerboseLogger]::Write("Receive-CodeIntegrityLogs: The UserId property is null for the Activity ID $($Log['ActivityId']) for the file $($Log['File Name'])")
                     }
                 }
 
@@ -394,7 +394,7 @@ Function Receive-CodeIntegrityLogs {
                         $XmlCorrelated = [System.Xml.XmlDocument]$CorrelatedEvent.ToXml()
 
                         if ($null -eq $XmlCorrelated.event.EventData.data) {
-                            Write-Verbose -Message "Receive-CodeIntegrityLogs: Skipping Publisher check for: '$($Log['File Name'])' due to missing correlated event data"
+                            [WDACConfig.VerboseLogger]::Write("Receive-CodeIntegrityLogs: Skipping Publisher check for: '$($Log['File Name'])' due to missing correlated event data")
                             continue
                         }
 

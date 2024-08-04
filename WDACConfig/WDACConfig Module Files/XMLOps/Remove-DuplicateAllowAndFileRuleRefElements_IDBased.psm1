@@ -40,7 +40,7 @@ Function Remove-DuplicateAllowAndFileRuleRefElements_IDBased {
 
             if ($UniqueAllowIDs.ContainsKey($AllowID)) {
 
-                Write-Verbose "Removing duplicate Allow element with ID: $AllowID"
+                [WDACConfig.VerboseLogger]::Write("Removing duplicate Allow element with ID: $AllowID")
                 [System.Void]$AllowElement.ParentNode.RemoveChild($AllowElement)
             }
             else {
@@ -69,7 +69,7 @@ Function Remove-DuplicateAllowAndFileRuleRefElements_IDBased {
 
                     if ($UniqueFileRuleRefIDs.ContainsKey($RuleID)) {
 
-                        Write-Verbose "Removing duplicate FileRuleRef element with ID: $RuleID"
+                        [WDACConfig.VerboseLogger]::Write("Removing duplicate FileRuleRef element with ID: $RuleID")
                         [System.Void]$FileRulesRef.RemoveChild($FileRuleRef)
                     }
                     else {

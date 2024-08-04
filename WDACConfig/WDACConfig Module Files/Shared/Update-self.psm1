@@ -27,12 +27,12 @@ Function Update-Self {
 
     try {
         # Get the last update check time
-        Write-Verbose -Message 'Getting the last update check time'
+        [WDACConfig.VerboseLogger]::Write('Getting the last update check time')
         [System.DateTime]$UserConfigDate = Get-CommonWDACConfig -LastUpdateCheck
     }
     catch {
         # If the User Config file doesn't exist then set this flag to perform online update check
-        Write-Verbose -Message 'No LastUpdateCheck was found in the user configurations, will perform online update check'
+        [WDACConfig.VerboseLogger]::Write('No LastUpdateCheck was found in the user configurations, will perform online update check')
         [System.Boolean]$PerformOnlineUpdateCheck = $true
     }
 
@@ -48,7 +48,7 @@ Function Update-Self {
     # This prevents the module from constantly doing an update check by fetching the version file from GitHub
     if (($TimeDiff -gt 30) -or $PerformOnlineUpdateCheck) {
 
-        Write-Verbose -Message "Performing online update check because the last update check was performed $($TimeDiff ?? [System.Char]::ConvertFromUtf32(8734)) minutes ago"
+        [WDACConfig.VerboseLogger]::Write("Performing online update check because the last update check was performed $($TimeDiff ?? [System.Char]::ConvertFromUtf32(8734)) minutes ago")
 
         [System.Version]$CurrentVersion = (Test-ModuleManifest -Path "$([WDACConfig.GlobalVars]::ModuleRootPath)\WDACConfig.psd1").Version.ToString()
         try {
@@ -66,7 +66,7 @@ Function Update-Self {
         }
 
         # Reset the last update timer to the current time
-        Write-Verbose -Message 'Resetting the last update timer to the current time'
+        [WDACConfig.VerboseLogger]::Write('Resetting the last update timer to the current time')
         $null = Set-CommonWDACConfig -LastUpdateCheck $(Get-Date)
 
         if ($CurrentVersion -lt $LatestVersion) {
@@ -100,7 +100,7 @@ Function Update-Self {
         }
     }
     else {
-        Write-Verbose -Message "Skipping online update check because the last update check was performed $TimeDiff minutes ago"
+        [WDACConfig.VerboseLogger]::Write("Skipping online update check because the last update check was performed $TimeDiff minutes ago")
     }
 }
 Export-ModuleMember -Function 'Update-Self'

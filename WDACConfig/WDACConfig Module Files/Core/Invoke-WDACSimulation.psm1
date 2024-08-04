@@ -43,7 +43,13 @@ Function Invoke-WDACSimulation {
     Begin {
         [System.Boolean]$Verbose = $PSBoundParameters.Verbose.IsPresent ? $true : $false
         [System.Boolean]$Debug = $PSBoundParameters.Debug.IsPresent ? $true : $false
-        [WDACConfig.LoggerInitializer]::Initialize($VerbosePreference, $DebugPreference, $Host)
+        # Only initialize the logger if this function wasn't called from another function, indicating the Verbose Preferences etc. were already set
+        if ($(Get-PSCallStack).Count -le 2) {
+            [WDACConfig.LoggerInitializer]::Initialize($VerbosePreference, $DebugPreference, $Host)
+        }
+        else {
+            [WDACConfig.LoggerInitializer]::Initialize($null, $null, $Host)
+        }
         . "$([WDACConfig.GlobalVars]::ModuleRootPath)\CoreExt\PSDefaultParameterValues.ps1"
 
         Write-Verbose -Message 'Importing the required sub-modules'

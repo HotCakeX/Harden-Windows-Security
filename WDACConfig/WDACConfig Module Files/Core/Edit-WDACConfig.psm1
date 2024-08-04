@@ -287,8 +287,7 @@ Function Edit-WDACConfig {
                     [System.Management.Automation.Job2]$ECCSignedDirectoriesJob = Start-ThreadJob -ScriptBlock {
                         Param ($PolicyXMLFilesArray, $ParentVerbosePreference, $ParentDebugPreference)
 
-                        $global:VerbosePreference = $ParentVerbosePreference
-                        $global:DebugPreference = $ParentDebugPreference
+                        $global:ProgressPreference = 'SilentlyContinue'
                         $global:ErrorActionPreference = 'Stop'
 
                         . "$([WDACConfig.GlobalVars]::ModuleRootPath)\CoreExt\PSDefaultParameterValues.ps1"
@@ -303,6 +302,7 @@ Function Edit-WDACConfig {
                     } -StreamingHost $Host -ArgumentList $PolicyXMLFilesArray, $VerbosePreference, $DebugPreference
 
                     [System.Management.Automation.Job2]$DirectoryScanJob = Start-ThreadJob -InitializationScript {
+                        $global:ProgressPreference = 'SilentlyContinue'
                         # pre-load the ConfigCI module
                         if ([System.IO.Directory]::Exists('C:\Program Files\Windows Defender\Offline')) {
                             [System.String]$RandomGUID = [System.Guid]::NewGuid().ToString()
@@ -403,8 +403,7 @@ Function Edit-WDACConfig {
                     [System.Management.Automation.Job2]$ECCSignedAuditLogsJob = Start-ThreadJob -ScriptBlock {
                         Param ($PolicyXMLFilesArray, $ParentVerbosePreference, $ParentDebugPreference)
 
-                        $global:VerbosePreference = $ParentVerbosePreference
-                        $global:DebugPreference = $ParentDebugPreference
+                        $global:ProgressPreference = 'SilentlyContinue'
                         $global:ErrorActionPreference = 'Stop'
 
                         . "$([WDACConfig.GlobalVars]::ModuleRootPath)\CoreExt\PSDefaultParameterValues.ps1"

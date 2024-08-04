@@ -353,8 +353,7 @@ Function Edit-SignedWDACConfig {
                     [System.Management.Automation.Job2]$ECCSignedDirectoriesJob = Start-ThreadJob -ScriptBlock {
                         Param ($PolicyXMLFilesArray, $ParentVerbosePreference, $ParentDebugPreference)
 
-                        $global:VerbosePreference = $ParentVerbosePreference
-                        $global:DebugPreference = $ParentDebugPreference
+                        $global:ProgressPreference = 'SilentlyContinue'
                         $global:ErrorActionPreference = 'Stop'
 
                         . "$([WDACConfig.GlobalVars]::ModuleRootPath)\CoreExt\PSDefaultParameterValues.ps1"
@@ -369,6 +368,7 @@ Function Edit-SignedWDACConfig {
                     } -StreamingHost $Host -ArgumentList $PolicyXMLFilesArray, $VerbosePreference, $DebugPreference
 
                     $DirectoryScanJob = Start-ThreadJob -InitializationScript {
+                        $global:ProgressPreference = 'SilentlyContinue'
                         # pre-load the ConfigCI module
                         if ([System.IO.Directory]::Exists('C:\Program Files\Windows Defender\Offline')) {
                             [System.String]$RandomGUID = [System.Guid]::NewGuid().ToString()
@@ -378,8 +378,8 @@ Function Edit-SignedWDACConfig {
                     } -ScriptBlock {
                         Param ($ProgramsPaths, $StagingArea, $PolicyXMLFilesArray, $ParentVerbosePreference, $ParentDebugPreference)
 
+                        $global:ProgressPreference = 'SilentlyContinue'
                         $VerbosePreference = $ParentVerbosePreference
-
                         # Write-Verbose -Message 'Scanning each of the folder paths that user selected'
 
                         for ($i = 0; $i -lt $ProgramsPaths.Count; $i++) {
@@ -469,8 +469,7 @@ Function Edit-SignedWDACConfig {
                     [System.Management.Automation.Job2]$ECCSignedAuditLogsJob = Start-ThreadJob -ScriptBlock {
                         Param ($PolicyXMLFilesArray, $ParentVerbosePreference, $ParentDebugPreference)
 
-                        $global:VerbosePreference = $ParentVerbosePreference
-                        $global:DebugPreference = $ParentDebugPreference
+                        $global:ProgressPreference = 'SilentlyContinue'
                         $global:ErrorActionPreference = 'Stop'
 
                         . "$([WDACConfig.GlobalVars]::ModuleRootPath)\CoreExt\PSDefaultParameterValues.ps1"

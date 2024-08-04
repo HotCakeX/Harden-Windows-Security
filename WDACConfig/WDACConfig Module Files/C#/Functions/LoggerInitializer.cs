@@ -13,25 +13,22 @@ namespace WDACConfig
         /// <param name="host"></param>
         public static void Initialize(string verbosePreference, string debugPreference, PSHost host)
         {
-
-            // If they are changed once to Continue/Inquire then another cmdlet in the middle of the operation should not change that
-            // Until another cmdlet is called, which is the same behavior PowerShell employs
-
-            // Check and assign verbosePreference only if it's neither "Continue" nor "Inquire"
-            if (!string.Equals(WDACConfig.GlobalVars.VerbosePreference, "Continue", StringComparison.OrdinalIgnoreCase) &&
-                !string.Equals(WDACConfig.GlobalVars.VerbosePreference, "Inquire", StringComparison.OrdinalIgnoreCase))
+            if (!string.IsNullOrWhiteSpace(verbosePreference))
             {
                 WDACConfig.GlobalVars.VerbosePreference = verbosePreference;
             }
 
-            // Check and assign debugPreference only if it's neither "Continue" nor "Inquire"
-            if (!string.Equals(WDACConfig.GlobalVars.DebugPreference, "Continue", StringComparison.OrdinalIgnoreCase) &&
-                !string.Equals(WDACConfig.GlobalVars.DebugPreference, "Inquire", StringComparison.OrdinalIgnoreCase))
+            if (!string.IsNullOrWhiteSpace(debugPreference))
             {
                 WDACConfig.GlobalVars.DebugPreference = debugPreference;
             }
 
-            WDACConfig.GlobalVars.Host = host;
+            if (host != null)
+            {
+                WDACConfig.GlobalVars.Host = host;
+            }
         }
+
+
     }
 }

@@ -44,7 +44,7 @@ Function Remove-DuplicateFileAttrib_IDBased {
             # Check if the FileAttrib ID has been seen before
             if ($SeenFileAttribIDs.ContainsKey($FileAttribID)) {
 
-                Write-Verbose -Message "Remove-DuplicateFileAttrib: Removed duplicate FileAttrib with ID: $FileAttribID"
+                [WDACConfig.VerboseLogger]::Write("Remove-DuplicateFileAttrib: Removed duplicate FileAttrib with ID: $FileAttribID")
                 [System.Void]$FileAttrib.ParentNode.RemoveChild($FileAttrib)
             }
             else {
@@ -73,7 +73,7 @@ Function Remove-DuplicateFileAttrib_IDBased {
                 # Check if the FileRuleRef ID has been seen before
                 if ($SeenFileRuleRefIDs.ContainsKey($FileRuleRefID)) {
 
-                    Write-Verbose -Message "Remove-DuplicateFileAttrib: Removed duplicate FileRuleRef with ID: $FileRuleRefID"
+                    [WDACConfig.VerboseLogger]::Write("Remove-DuplicateFileAttrib: Removed duplicate FileRuleRef with ID: $FileRuleRefID")
                     [System.Void]$FileRuleRef.ParentNode.RemoveChild($FileRuleRef)
                 }
                 else {
@@ -107,7 +107,7 @@ Function Remove-DuplicateFileAttrib_IDBased {
                 # Check if the FileAttribRef ID has been seen before
                 if ($SeenFileAttribRefIDs.ContainsKey($FileAttribRefID)) {
 
-                    Write-Verbose -Message "Remove-DuplicateFileAttrib: Removed duplicate FileAttribRef with ID: $FileAttribRefID"
+                    [WDACConfig.VerboseLogger]::Write("Remove-DuplicateFileAttrib: Removed duplicate FileAttribRef with ID: $FileAttribRefID")
                     [System.Void]$Signer.RemoveChild($FileAttribRef)
                 }
                 else {

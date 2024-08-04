@@ -149,7 +149,7 @@ function Remove-DuplicateFileAttrib_Semantic {
                             }
                         }
                         # Remove the duplicate FileAttrib element
-                        Write-Verbose -Message "Remove-DuplicateFileAttrib: Removed duplicate FileAttrib with ID: $($FileAttribToRemove.GetAttribute('ID'))"
+                        [WDACConfig.VerboseLogger]::Write("Remove-DuplicateFileAttrib: Removed duplicate FileAttrib with ID: $($FileAttribToRemove.GetAttribute('ID'))")
                         [System.Void]$FileAttribToRemove.ParentNode.RemoveChild($FileAttribToRemove)
                     }
                 }

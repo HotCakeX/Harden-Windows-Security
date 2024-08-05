@@ -1,0 +1,43 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+     <TargetFramework>net9.0-windows10.0.22621.0</TargetFramework>
+    <RootNamespace>Harden_Windows_Security</RootNamespace>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.DirectoryServices.AccountManagement" Version="9.0.0-preview.6.24327.7" />
+    <PackageReference Include="System.Management" Version="9.0.0-preview.6.24327.7" />
+  </ItemGroup>
+
+ <ItemGroup>
+    <Reference Include="PresentationCore">
+      <HintPath>C:\Program Files\dotnet\shared\Microsoft.WindowsDesktop.App\9.0.0-preview.6.24327.6\PresentationCore.dll</HintPath>
+    </Reference>
+    <Reference Include="PresentationFramework">
+      <HintPath>C:\Program Files\dotnet\shared\Microsoft.WindowsDesktop.App\9.0.0-preview.6.24327.6\PresentationFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Diagnostics.EventLog">
+      <HintPath>C:\Program Files\dotnet\shared\Microsoft.WindowsDesktop.App\9.0.0-preview.6.24327.6\System.Diagnostics.EventLog.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Management.Automation">
+      <HintPath>C:\Program Files\PowerShell\7\System.Management.Automation.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Security.Cryptography.Pkcs">
+      <HintPath>C:\Program Files\dotnet\shared\Microsoft.WindowsDesktop.App\9.0.0-preview.6.24327.6\System.Security.Cryptography.Pkcs.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Windows.Controls.Ribbon">
+      <HintPath>C:\Program Files\dotnet\shared\Microsoft.WindowsDesktop.App\9.0.0-preview.6.24327.6\System.Windows.Controls.Ribbon.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Windows.Forms">
+      <HintPath>C:\Program Files\dotnet\shared\Microsoft.WindowsDesktop.App\9.0.0-preview.6.24327.6\System.Windows.Forms.dll</HintPath>
+    </Reference>
+    <Reference Include="WindowsBase">
+      <HintPath>C:\Program Files\dotnet\shared\Microsoft.WindowsDesktop.App\9.0.0-preview.6.24327.6\WindowsBase.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  
+</Project>

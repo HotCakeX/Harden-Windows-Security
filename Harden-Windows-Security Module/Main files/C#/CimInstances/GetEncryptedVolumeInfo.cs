@@ -165,7 +165,7 @@ namespace HardeningModule
         public static BitLockerVolume GetEncryptedVolumeInfo(string targetVolume)
         {
             // The MSFT_Volume class requires the volume name without the colon
-            var targetVolumeVer2 = targetVolume.Replace(":", "");
+            var targetVolumeVer2 = targetVolume.Replace(":", "", StringComparison.OrdinalIgnoreCase);
 
             // Create a new instance of the BitLockerVolume class
             BitLockerVolume newInstance = new BitLockerVolume();

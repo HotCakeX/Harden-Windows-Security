@@ -23,7 +23,7 @@ namespace HardeningModule
 
             // Get all directories under the base path that contain "resources\app\git"
             var directories = Directory.GetDirectories(basePath, "*", SearchOption.AllDirectories)
-                                       .Where(d => d.Contains(@"resources\app\git"));
+                                       .Where(d => d.Contains(@"resources\app\git", StringComparison.OrdinalIgnoreCase));
 
             // Initialize a list to store the found FileInfo objects
             List<FileInfo> fileList = new List<FileInfo>();

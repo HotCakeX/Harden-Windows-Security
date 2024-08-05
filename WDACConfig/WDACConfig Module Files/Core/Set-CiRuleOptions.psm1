@@ -6,9 +6,11 @@ Function Set-CiRuleOptions {
         [Parameter(Mandatory = $false, ParameterSetName = 'Template')]
         [System.String]$Template,
 
-        [ValidateScript({ Test-CiPolicy -XmlFile $_ })]
+        [ArgumentCompleter([WDACConfig.ArgCompleter.XmlFilePathsPicker])]
+        [ValidateScript({ [WDACConfig.CiPolicyTest]::TestCiPolicy($_, $null) })]
         [Parameter(Mandatory = $true)][System.IO.FileInfo]$FilePath,
 
+        [ArgumentCompleter([WDACConfig.ArgCompleter.RuleOptionsPicker])]
         [ValidateScript({
                 if ($_ -notin [WDACConfig.RuleOptionsx]::new().GetValidValues()) { throw "Invalid Policy Rule Option: $_" }
                 # Return true if everything is okay
@@ -16,6 +18,7 @@ Function Set-CiRuleOptions {
             })]
         [Parameter(Mandatory = $false)][System.String[]]$RulesToAdd,
 
+        [ArgumentCompleter([WDACConfig.ArgCompleter.RuleOptionsPicker])]
         [ValidateScript({
                 if ($_ -notin [WDACConfig.RuleOptionsx]::new().GetValidValues()) { throw "Invalid Policy Rule Option: $_" }
                 # Return true if everything is okay
@@ -35,6 +38,7 @@ Function Set-CiRuleOptions {
     )
     Begin {
         [System.Boolean]$Verbose = $PSBoundParameters.Verbose.IsPresent ? $true : $false
+        [WDACConfig.LoggerInitializer]::Initialize($VerbosePreference, $DebugPreference, $Host)
         . "$([WDACConfig.GlobalVars]::ModuleRootPath)\CoreExt\PSDefaultParameterValues.ps1"
 
         Import-Module -FullyQualifiedName "$([WDACConfig.GlobalVars]::ModuleRootPath)\XMLOps\Close-EmptyXmlNodes_Semantic.psm1" -Force
@@ -191,7 +195,9 @@ Function Set-CiRuleOptions {
         Set-HVCIOptions -Strict -FilePath $FilePath
 
         # Validate the XML file at the end
-        $null = Test-CiPolicy -XmlFile $FilePath
+        if (![WDACConfig.CiPolicyTest]::TestCiPolicy($FilePath, $null)) {
+            throw 'The XML file created at the end is not compliant with the CI policy schema'
+        }
     }
     <#
     .SYNOPSIS

@@ -11,12 +11,15 @@ Function Set-CommonWDACConfig {
             })]
         [parameter(Mandatory = $false)][System.String]$CertCN,
 
+        [ArgumentCompleter([WDACConfig.ArgCompleter.SingleCerFilePicker])]
         [ValidateScript({ ([System.IO.File]::Exists($_)) -and ($_.extension -eq '.cer') }, ErrorMessage = 'The path you selected is not a file path for a .cer file.')]
         [parameter(Mandatory = $false)][System.IO.FileInfo]$CertPath,
 
+        [ArgumentCompleter([WDACConfig.ArgCompleter.ExeFilePathsPicker])]
         [ValidateScript({ ([System.IO.File]::Exists($_ )) -and ($_.extension -eq '.exe') }, ErrorMessage = 'The path you selected is not a file path for a .exe file.')]
         [parameter(Mandatory = $false)][System.IO.FileInfo]$SignToolPath,
 
+        [ArgumentCompleter([WDACConfig.ArgCompleter.XmlFilePathsPicker])]
         [ValidateScript({
                 try {
                     $XmlTest = [System.Xml.XmlDocument](Get-Content -Path $_)
@@ -31,7 +34,7 @@ Function Set-CommonWDACConfig {
                 if (!$RedFlag1 -and !$RedFlag2) {
 
                     # Ensure the selected base policy xml file is valid
-                    if ( Test-CiPolicy -XmlFile $_ ) {
+                    if ( [WDACConfig.CiPolicyTest]::TestCiPolicy($_, $null) ) {
                         return $True
                     }
                 }
@@ -41,6 +44,7 @@ Function Set-CommonWDACConfig {
             }, ErrorMessage = 'The selected policy xml file is Signed, Please select an Unsigned policy.')]
         [parameter(Mandatory = $false)][System.IO.FileInfo]$UnsignedPolicyPath,
 
+        [ArgumentCompleter([WDACConfig.ArgCompleter.XmlFilePathsPicker])]
         [ValidateScript({
                 try {
                     $XmlTest = [System.Xml.XmlDocument](Get-Content -Path $_)
@@ -55,7 +59,7 @@ Function Set-CommonWDACConfig {
                 if ($RedFlag1 -or $RedFlag2) {
 
                     # Ensure the selected base policy xml file is valid
-                    if ( Test-CiPolicy -XmlFile $_ ) {
+                    if ( [WDACConfig.CiPolicyTest]::TestCiPolicy($_, $null) ) {
                         return $True
                     }
                 }
@@ -72,6 +76,12 @@ Function Set-CommonWDACConfig {
     )
     begin {
         [System.Boolean]$Verbose = $PSBoundParameters.Verbose.IsPresent ? $true : $false
+        if ($(Get-PSCallStack).Count -le 2) {
+            [WDACConfig.LoggerInitializer]::Initialize($VerbosePreference, $DebugPreference, $Host)
+        }
+        else {
+            [WDACConfig.LoggerInitializer]::Initialize($null, $null, $Host)
+        }
         . "$([WDACConfig.GlobalVars]::ModuleRootPath)\CoreExt\PSDefaultParameterValues.ps1"
 
         if (!$CertCN -And !$CertPath -And !$SignToolPath -And !$UnsignedPolicyPath -And !$SignedPolicyPath -And !$StrictKernelPolicyGUID -And !$StrictKernelNoFlightRootsPolicyGUID -And !$LastUpdateCheck -And !$StrictKernelModePolicyTimeOfDeployment) {

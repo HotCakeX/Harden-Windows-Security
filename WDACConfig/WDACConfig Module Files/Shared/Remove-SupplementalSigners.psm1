@@ -27,14 +27,15 @@ Function Remove-SupplementalSigners {
         [System.IO.FileInfo]$Path
     )
     Begin {
-
         # Make sure the input file is compliant with the CI policy schema
-        $null = Test-CiPolicy -XmlFile $Path
+        if (![WDACConfig.CiPolicyTest]::TestCiPolicy($Path, $null)) {
+
+            throw 'The XML file is not compliant with the CI policy schema'
+        }
 
         # Get the XML content from the file
         [System.Xml.XmlDocument]$XMLContent = Get-Content -Path $Path
     }
-
     Process {
 
         # Get the SiPolicy node
@@ -47,7 +48,7 @@ Function Remove-SupplementalSigners {
         # Check if the SupplementalPolicySigners node exists and has child nodes
         if ($SiPolicyNode.SupplementalPolicySigners -and $SiPolicyNode.SupplementalPolicySigners.HasChildNodes) {
 
-            Write-Verbose -Message 'Removing the SupplementalPolicySigners block and their corresponding Signers'
+            [WDACConfig.VerboseLogger]::Write('Removing the SupplementalPolicySigners block and their corresponding Signers')
 
             # Select the SupplementalPolicySigners node using XPath and the namespace manager
             [System.Xml.XmlElement[]]$NodesToRemove_SupplementalPolicySigners = $SiPolicyNode.SelectNodes('//ns:SupplementalPolicySigners', $NameSpace)
@@ -94,11 +95,9 @@ Function Remove-SupplementalSigners {
             [System.Void]$SiPolicyNode.ReplaceChild($NewSignersNode, $OldSignersNode)
         }
     }
-
     End {
         # Save the modified XML content to a file
         $XMLContent.Save($Path)
     }
 }
-
 Export-ModuleMember -Function 'Remove-SupplementalSigners'

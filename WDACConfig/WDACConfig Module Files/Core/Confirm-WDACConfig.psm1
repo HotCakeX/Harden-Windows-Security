@@ -70,13 +70,11 @@ Function Confirm-WDACConfig {
     }
     Begin {
         [System.Boolean]$Verbose = $PSBoundParameters.Verbose.IsPresent ? $true : $false
+        [WDACConfig.LoggerInitializer]::Initialize($VerbosePreference, $DebugPreference, $Host)
         . "$([WDACConfig.GlobalVars]::ModuleRootPath)\CoreExt\PSDefaultParameterValues.ps1"
 
         Write-Verbose -Message 'Importing the required sub-modules'
-        Import-Module -Force -FullyQualifiedName @(
-            "$([WDACConfig.GlobalVars]::ModuleRootPath)\Shared\Update-Self.psm1",
-            "$([WDACConfig.GlobalVars]::ModuleRootPath)\Shared\Write-ColorfulText.psm1"
-        )
+        Import-Module -Force -FullyQualifiedName "$([WDACConfig.GlobalVars]::ModuleRootPath)\Shared\Update-Self.psm1"
 
         # Regular parameters are automatically bound to variables in the function scope
         # Dynamic parameters however, are only available in the parameter dictionary, which is why we have to access them using $PSBoundParameters
@@ -98,7 +96,7 @@ Function Confirm-WDACConfig {
                 }
             }
 
-            Write-ColorfulText -Color Lavender -InputText "`nThere are currently $(($BasePolicies.count)) Base policies deployed"
+            Write-ColorfulTextWDACConfig -Color Lavender -InputText "`nThere are currently $(($BasePolicies.count)) Base policies deployed"
             $BasePolicies
         }
         # Script block to show only Supplemental policies
@@ -110,7 +108,7 @@ Function Confirm-WDACConfig {
                 }
             }
 
-            Write-ColorfulText -Color Lavender -InputText "`nThere are currently $(($SupplementalPolicies.count)) Supplemental policies deployed`n"
+            Write-ColorfulTextWDACConfig -Color Lavender -InputText "`nThere are currently $(($SupplementalPolicies.count)) Supplemental policies deployed`n"
             $SupplementalPolicies
         }
 
@@ -132,20 +130,20 @@ Function Confirm-WDACConfig {
         if ($VerifyWDACStatus) {
             Write-Verbose -Message 'Checking the status of WDAC using Get-CimInstance'
             Get-CimInstance -ClassName Win32_DeviceGuard -Namespace root\Microsoft\Windows\DeviceGuard | Select-Object -Property *codeintegrity* | Format-List
-            Write-ColorfulText -Color Lavender -InputText "2 -> Enforced`n1 -> Audit mode`n0 -> Disabled/Not running`n"
+            Write-ColorfulTextWDACConfig -Color Lavender -InputText "2 -> Enforced`n1 -> Audit mode`n0 -> Disabled/Not running`n"
         }
 
         if ($CheckSmartAppControlStatus) {
             Write-Verbose -Message 'Checking the status of Smart App Control using Get-MpComputerStatus'
             Get-MpComputerStatus | Select-Object -Property SmartAppControlExpiration, SmartAppControlState
             if ((Get-MpComputerStatus).SmartAppControlState -eq 'Eval') {
-                Write-ColorfulText -Color Pink -InputText "`nSmart App Control is in Evaluation mode."
+                Write-ColorfulTextWDACConfig -Color Pink -InputText "`nSmart App Control is in Evaluation mode."
             }
             elseif ((Get-MpComputerStatus).SmartAppControlState -eq 'On') {
-                Write-ColorfulText -Color Pink -InputText "`nSmart App Control is turned on."
+                Write-ColorfulTextWDACConfig -Color Pink -InputText "`nSmart App Control is turned on."
             }
             elseif ((Get-MpComputerStatus).SmartAppControlState -eq 'Off') {
-                Write-ColorfulText -Color Pink -InputText "`nSmart App Control is turned off."
+                Write-ColorfulTextWDACConfig -Color Pink -InputText "`nSmart App Control is turned off."
             }
         }
     }

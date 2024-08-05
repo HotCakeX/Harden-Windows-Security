@@ -29,13 +29,13 @@ namespace WDACConfig
             }
 
             var other = (PolicyHashObj)obj;
-            return HashValue == other.HashValue;
+            return string.Equals(HashValue, other.HashValue, StringComparison.OrdinalIgnoreCase);
         }
 
         // Override the GetHashCode method
         public override int GetHashCode()
         {
-            return HashValue != null ? HashValue.GetHashCode() : 0;
+            return HashValue != null ? StringComparer.OrdinalIgnoreCase.GetHashCode(HashValue) : 0;
         }
     }
 }

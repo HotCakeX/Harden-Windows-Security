@@ -2,13 +2,16 @@ Function Test-CiPolicy {
     [CmdletBinding()]
     [OutputType([System.Boolean], [System.Security.Cryptography.X509Certificates.X509Certificate2[]])]
     param(
+        [ArgumentCompleter([WDACConfig.ArgCompleter.XmlFilePathsPicker])]
         [Parameter(Mandatory = $true, ValueFromPipeline = $true, ParameterSetName = 'XML File')]
         [System.IO.FileInfo]$XmlFile,
 
+        [ArgumentCompleter([WDACConfig.ArgCompleter.AnyFilePathsPicker])]
         [ValidateScript({ [System.IO.File]::Exists($_) })]
         [Parameter(Mandatory = $true, ValueFromPipeline = $true, ParameterSetName = 'CIP File')]
         [System.IO.FileInfo]$CipFile
     )
+    [WDACConfig.LoggerInitializer]::Initialize($VerbosePreference, $DebugPreference, $Host)
     # If a CI XML file is being tested
     if ($PSCmdlet.ParameterSetName -eq 'XML File' -and $PSBoundParameters.ContainsKey('XmlFile')) {
         [WDACConfig.CiPolicyTest]::TestCiPolicy($XmlFile, $null)

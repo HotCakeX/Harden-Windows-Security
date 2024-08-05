@@ -12,8 +12,8 @@ Function Remove-WDACConfig {
         [Alias('U')]
         [Parameter(Mandatory = $False, ParameterSetName = 'Unsigned Or Supplemental')][System.Management.Automation.SwitchParameter]$UnsignedOrSupplemental,
 
+        [ArgumentCompleter([WDACConfig.ArgCompleter.XmlFileMultiSelectPicker])]
         [ValidateScript({
-
                 # Validate each Policy file in PolicyPaths parameter to make sure the user isn't accidentally trying to remove an Unsigned policy
                 $_ | ForEach-Object -Process {
                     [System.Xml.XmlDocument]$XmlTest = Get-Content -Path $_
@@ -23,7 +23,7 @@ Function Remove-WDACConfig {
                     if ($RedFlag1 -or $RedFlag2) {
 
                         # Ensure the selected base policy xml file is valid
-                        if ( Test-CiPolicy -XmlFile $_ ) {
+                        if ( [WDACConfig.CiPolicyTest]::TestCiPolicy($_, $null) ) {
                             return $True
                         }
                     }
@@ -145,6 +145,7 @@ Function Remove-WDACConfig {
         [Parameter(Mandatory = $False, ParameterSetName = 'Unsigned Or Supplemental')]
         [System.String[]]$PolicyIDs,
 
+        [ArgumentCompleter([WDACConfig.ArgCompleter.ExeFilePathsPicker])]
         [parameter(Mandatory = $False, ParameterSetName = 'Signed Base', ValueFromPipelineByPropertyName = $true)]
         [System.IO.FileInfo]$SignToolPath,
 
@@ -154,15 +155,14 @@ Function Remove-WDACConfig {
     )
     Begin {
         [System.Boolean]$Verbose = $PSBoundParameters.Verbose.IsPresent ? $true : $False
+        [WDACConfig.LoggerInitializer]::Initialize($VerbosePreference, $DebugPreference, $Host)
         . "$([WDACConfig.GlobalVars]::ModuleRootPath)\CoreExt\PSDefaultParameterValues.ps1"
 
         Write-Verbose -Message 'Importing the required sub-modules'
         Import-Module -Force -FullyQualifiedName @(
             "$([WDACConfig.GlobalVars]::ModuleRootPath)\Shared\Update-Self.psm1",
             "$([WDACConfig.GlobalVars]::ModuleRootPath)\Shared\Get-SignTool.psm1",
-            "$([WDACConfig.GlobalVars]::ModuleRootPath)\Shared\Write-ColorfulText.psm1",
             "$([WDACConfig.GlobalVars]::ModuleRootPath)\Shared\Remove-SupplementalSigners.psm1"
-            "$([WDACConfig.GlobalVars]::ModuleRootPath)\Shared\Invoke-CiSigning.psm1"
         )
 
         # if -SkipVersionCheck wasn't passed, run the updater
@@ -298,9 +298,7 @@ Function Remove-WDACConfig {
                     $CurrentStep++
                     Write-Progress -Id 18 -Activity 'Signing the policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
-                    Push-Location -Path $StagingArea
-                    Invoke-CiSigning -CiPath $PolicyCIPPath -SignToolPathFinal $SignToolPathFinal -CertCN $CertCN
-                    Pop-Location
+                    [WDACConfig.CodeIntegritySigner]::InvokeCiSigning($PolicyCIPPath, $SignToolPathFinal, $CertCN)
 
                     # Fixing the extension name of the newly signed CIP file
                     Move-Item -Path (Join-Path -Path $StagingArea -ChildPath "$PolicyID.cip.p7") -Destination $PolicyCIPPath -Force
@@ -313,9 +311,9 @@ Function Remove-WDACConfig {
                         Write-Verbose -Message 'Deploying the newly signed CIP file'
                         $null = &'C:\Windows\System32\CiTool.exe' --update-policy $PolicyCIPPath -json
 
-                        Write-ColorfulText -Color Lavender -InputText "Policy with the following details has been Re-signed and Re-deployed in Unsigned mode.`nPlease restart your system."
-                        Write-ColorfulText -Color MintGreen -InputText "PolicyName = $PolicyName"
-                        Write-ColorfulText -Color MintGreen -InputText "PolicyGUID = $PolicyID"
+                        Write-ColorfulTextWDACConfig -Color Lavender -InputText "Policy with the following details has been Re-signed and Re-deployed in Unsigned mode.`nPlease restart your system."
+                        Write-ColorfulTextWDACConfig -Color MintGreen -InputText "PolicyName = $PolicyName"
+                        Write-ColorfulTextWDACConfig -Color MintGreen -InputText "PolicyGUID = $PolicyID"
                     }
                     Write-Progress -Id 18 -Activity 'Complete.' -Completed
                 }
@@ -327,7 +325,7 @@ Function Remove-WDACConfig {
                 # If IDs were supplied by user
                 foreach ($ID in $PolicyIDs ) {
                     $null = &'C:\Windows\System32\CiTool.exe' --remove-policy "{$ID}" -json
-                    Write-ColorfulText -Color Lavender -InputText "Policy with the ID $ID has been successfully removed."
+                    Write-ColorfulTextWDACConfig -Color Lavender -InputText "Policy with the ID $ID has been successfully removed."
                 }
 
                 # If names were supplied by user
@@ -344,9 +342,12 @@ Function Remove-WDACConfig {
 
                 foreach ($ID in $NameID) {
                     $null = &'C:\Windows\System32\CiTool.exe' --remove-policy "{$ID}" -json
-                    Write-ColorfulText -Color Lavender -InputText "Policy with the ID $ID has been successfully removed."
+                    Write-ColorfulTextWDACConfig -Color Lavender -InputText "Policy with the ID $ID has been successfully removed."
                 }
             }
+        }
+        catch {
+            throw $_
         }
         Finally {
             # Clean up the staging area

@@ -2,14 +2,17 @@ Function Invoke-WDACSimulation {
     [CmdletBinding()]
     [OutputType([System.Collections.Generic.List[WDACConfig.SimulationOutput]], [System.Boolean])]
     Param(
+        [ArgumentCompleter([WDACConfig.ArgCompleter.XmlFilePathsPicker])]
         [Alias('X')]
-        [ValidateScript({ Test-CiPolicy -XmlFile $_ })]
+        [ValidateScript({ [WDACConfig.CiPolicyTest]::TestCiPolicy($_, $null) })]
         [Parameter(Mandatory = $true)][System.IO.FileInfo]$XmlFilePath,
 
+        [ArgumentCompleter([WDACConfig.ArgCompleter.FolderPicker])]
         [Alias('D')]
         [ValidateScript({ [System.IO.Directory]::Exists($_) }, ErrorMessage = 'The path you selected is not a valid folder path.')]
         [Parameter(Mandatory = $false)][System.IO.DirectoryInfo[]]$FolderPath,
 
+        [ArgumentCompleter([WDACConfig.ArgCompleter.MultipleAnyFilePathsPicker])]
         [Alias('F')]
         [ValidateScript({ [System.IO.File]::Exists($_) }, ErrorMessage = 'The path you selected is not a file path.')]
         [Parameter(Mandatory = $false)][System.IO.FileInfo[]]$FilePath,
@@ -26,6 +29,7 @@ Function Invoke-WDACSimulation {
         [Alias('N')]
         [Parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$NoCatalogScanning,
 
+        [ArgumentCompleter([WDACConfig.ArgCompleter.FolderPicker])]
         [Alias('Cat')]
         [ValidateScript({ [System.IO.Directory]::Exists($_) }, ErrorMessage = 'The path you selected is not a valid folder path.')]
         [Parameter(Mandatory = $false)][System.IO.DirectoryInfo[]]$CatRootPath,
@@ -39,13 +43,18 @@ Function Invoke-WDACSimulation {
     Begin {
         [System.Boolean]$Verbose = $PSBoundParameters.Verbose.IsPresent ? $true : $false
         [System.Boolean]$Debug = $PSBoundParameters.Debug.IsPresent ? $true : $false
+        # Only initialize the logger if this function wasn't called from another function, indicating the Verbose Preferences etc. were already set
+        if ($(Get-PSCallStack).Count -le 2) {
+            [WDACConfig.LoggerInitializer]::Initialize($VerbosePreference, $DebugPreference, $Host)
+        }
+        else {
+            [WDACConfig.LoggerInitializer]::Initialize($null, $null, $Host)
+        }
         . "$([WDACConfig.GlobalVars]::ModuleRootPath)\CoreExt\PSDefaultParameterValues.ps1"
 
         Write-Verbose -Message 'Importing the required sub-modules'
         Import-Module -Force -FullyQualifiedName @(
             "$([WDACConfig.GlobalVars]::ModuleRootPath)\Shared\Update-Self.psm1",
-            "$([WDACConfig.GlobalVars]::ModuleRootPath)\Shared\Write-ColorfulText.psm1"
-            "$([WDACConfig.GlobalVars]::ModuleRootPath)\WDACSimulation\Get-FileRuleOutput.psm1",
             "$([WDACConfig.GlobalVars]::ModuleRootPath)\WDACSimulation\Get-SignerInfo.psm1"
         )
 
@@ -200,7 +209,7 @@ Function Invoke-WDACSimulation {
                 $CurrentStep++
                 Write-Progress -Id 0 -Activity 'Getting the Sha256 Hash values from the XML file' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
-                $SHA256HashesFromXML = [System.Collections.Generic.HashSet[System.String]]@((Get-FileRuleOutput -Xml ([System.Xml.XmlDocument]$XMLContent)).HashValue)
+                $SHA256HashesFromXML = [System.Collections.Generic.HashSet[System.String]]@(([WDACConfig.GetFileRuleOutput]::Get([System.Xml.XmlDocument]$XMLContent)).HashValue)
 
                 # Get all of the file paths of the files that WDAC supports, from the user provided directory
                 Write-Verbose -Message 'Getting all of the file paths of the files that WDAC supports, from the user provided directory'
@@ -577,6 +586,9 @@ Function Invoke-WDACSimulation {
                 }
             } | Sort-Object -Property IsAuthorized | Format-Table
 
+        }
+        catch {
+            throw $_
         }
         finally {
             Write-Progress -Id 0 -Activity 'WDAC Simulation completed.' -Completed

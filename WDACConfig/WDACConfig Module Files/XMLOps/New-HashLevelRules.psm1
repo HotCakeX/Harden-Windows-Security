@@ -5,11 +5,11 @@ Function New-HashLevelRules {
         For each hash data, it creates 2 Hash rules, one for Authenticode SHA2-256 and one for SHA1 hash
         It also adds the FileRulesRef for each hash to the ProductSigners node of the correct signing scenario (Kernel/User mode)
     .PARAMETER Hashes
-        The Hashes to be used for creating the rules, they are the output of the Build-SignerAndHashObjects function
+        The Hashes to be used for creating the rules, they are the output of the BuildSignerAndHashObjects Method
     .PARAMETER XmlFilePath
         The path to the XML file to be modified
     .INPUTS
-        PSCustomObject[]
+        System.Collections.Generic.List[WDACConfig.HashCreator]
         System.IO.FileInfo
     .OUTPUTS
         System.Void
@@ -17,13 +17,13 @@ Function New-HashLevelRules {
     [CmdletBinding()]
     [OutputType([System.Void])]
     Param(
-        [Parameter(Mandatory = $true)][PSCustomObject[]]$Hashes,
+        [Parameter(Mandatory = $true)][System.Collections.Generic.List[WDACConfig.HashCreator]]$Hashes,
         [Parameter(Mandatory = $true)][System.IO.FileInfo]$XmlFilePath
     )
     Begin {
         . "$([WDACConfig.GlobalVars]::ModuleRootPath)\CoreExt\PSDefaultParameterValues.ps1"
 
-        Write-Verbose -Message "New-HashLevelRules: There are $($Hashes.Count) Hash rules to be added to the XML file"
+        [WDACConfig.VerboseLogger]::Write("New-HashLevelRules: There are $($Hashes.Count) Hash rules to be added to the XML file")
 
         # Load the XML file
         [System.Xml.XmlDocument]$Xml = Get-Content -Path $XmlFilePath

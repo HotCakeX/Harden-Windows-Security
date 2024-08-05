@@ -19,14 +19,17 @@ Function New-SupplementalWDACConfig {
         [parameter(Mandatory = $true, ParameterSetName = 'Installed AppXPackages', ValueFromPipelineByPropertyName = $true)]
         [System.String]$PackageName,
 
+        [ArgumentCompleter([WDACConfig.ArgCompleter.FolderPicker])]
         [ValidateScript({ [System.IO.Directory]::Exists($_) }, ErrorMessage = 'The path you selected is not a folder path.')]
         [parameter(Mandatory = $true, ParameterSetName = 'Normal', ValueFromPipelineByPropertyName = $true)]
         [System.IO.DirectoryInfo]$ScanLocation,
 
+        [ArgumentCompleter([WDACConfig.ArgCompleter.FolderPickerWithWildcard])]
         [ValidatePattern('\*', ErrorMessage = 'You did not supply a path that contains wildcard character (*) .')]
         [parameter(Mandatory = $true, ParameterSetName = 'Folder Path With WildCards', ValueFromPipelineByPropertyName = $true)]
         [System.IO.DirectoryInfo]$FolderPath,
 
+        [ArgumentCompleter([WDACConfig.ArgCompleter.MultipleCerFilePicker])]
         [ValidateScript({ [System.IO.File]::Exists($_) }, ErrorMessage = 'The path you selected is not a file path.')]
         [parameter(Mandatory = $true, ParameterSetName = 'Certificate', ValueFromPipelineByPropertyName = $true)]
         [System.IO.FileInfo[]]$CertificatePaths,
@@ -36,7 +39,8 @@ Function New-SupplementalWDACConfig {
         [parameter(Mandatory = $true, ValueFromPipelineByPropertyName = $true)]
         [System.String]$SuppPolicyName,
 
-        [ValidateScript({ Test-CiPolicy -XmlFile $_ })]
+        [ArgumentCompleter([WDACConfig.ArgCompleter.XmlFilePathsPicker])]
+        [ValidateScript({ [WDACConfig.CiPolicyTest]::TestCiPolicy($_, $null) })]
         [parameter(Mandatory = $false, ValueFromPipelineByPropertyName = $true)]
         [System.IO.FileInfo]$PolicyPath,
 
@@ -73,13 +77,11 @@ Function New-SupplementalWDACConfig {
     Begin {
         [System.Boolean]$Verbose = $PSBoundParameters.Verbose.IsPresent ? $true : $false
         [System.Boolean]$Debug = $PSBoundParameters.Debug.IsPresent ? $true : $false
+        [WDACConfig.LoggerInitializer]::Initialize($VerbosePreference, $DebugPreference, $Host)
         . "$([WDACConfig.GlobalVars]::ModuleRootPath)\CoreExt\PSDefaultParameterValues.ps1"
 
         Write-Verbose -Message 'Importing the required sub-modules'
-        Import-Module -Force -FullyQualifiedName @(
-            "$([WDACConfig.GlobalVars]::ModuleRootPath)\Shared\Update-Self.psm1",
-            "$([WDACConfig.GlobalVars]::ModuleRootPath)\Shared\Write-ColorfulText.psm1"
-        )
+        Import-Module -Force -FullyQualifiedName "$([WDACConfig.GlobalVars]::ModuleRootPath)\Shared\Update-Self.psm1"
 
         if ($PSBoundParameters['Certificates']) {
             Import-Module -Force -FullyQualifiedName @(
@@ -162,7 +164,7 @@ Function New-SupplementalWDACConfig {
                 if ($NoScript) { $PolicyMakerHashTable['NoScript'] = $true }
                 if (!$NoUserPEs) { $PolicyMakerHashTable['UserPEs'] = $true }
 
-                Write-ColorfulText -Color HotPink -InputText 'Generating Supplemental policy with the following specifications:'
+                Write-ColorfulTextWDACConfig -Color HotPink -InputText 'Generating Supplemental policy with the following specifications:'
                 $PolicyMakerHashTable
                 Write-Host -Object ''
 
@@ -189,7 +191,7 @@ Function New-SupplementalWDACConfig {
 
                     Write-Verbose -Message 'Deploying the Supplemental policy'
                     $null = &'C:\Windows\System32\CiTool.exe' --update-policy $FinalSupplementalCIPPath -json
-                    Write-ColorfulText -Color Pink -InputText "A Supplemental policy with the name '$SuppPolicyName' has been deployed."
+                    Write-ColorfulTextWDACConfig -Color Pink -InputText "A Supplemental policy with the name '$SuppPolicyName' has been deployed."
                 }
                 Write-Progress -Id 19 -Activity 'Complete.' -Completed
             }
@@ -227,7 +229,7 @@ Function New-SupplementalWDACConfig {
 
                     Write-Verbose -Message 'Deploying the Supplemental policy'
                     $null = &'C:\Windows\System32\CiTool.exe' --update-policy $FinalSupplementalCIPPath -json
-                    Write-ColorfulText -Color Pink -InputText "A Supplemental policy with the name '$SuppPolicyName' has been deployed."
+                    Write-ColorfulTextWDACConfig -Color Pink -InputText "A Supplemental policy with the name '$SuppPolicyName' has been deployed."
                 }
                 Write-Progress -Id 20 -Activity 'Complete.' -Completed
             }
@@ -302,7 +304,7 @@ Function New-SupplementalWDACConfig {
 
                             Write-Verbose -Message 'Deploying the Supplemental policy'
                             $null = &'C:\Windows\System32\CiTool.exe' --update-policy $FinalSupplementalCIPPath -json
-                            Write-ColorfulText -Color Pink -InputText "A Supplemental policy with the name '$SuppPolicyName' has been deployed."
+                            Write-ColorfulTextWDACConfig -Color Pink -InputText "A Supplemental policy with the name '$SuppPolicyName' has been deployed."
                         }
                     }
                     else {
@@ -379,7 +381,7 @@ Function New-SupplementalWDACConfig {
 
                     Write-Verbose -Message 'Deploying the Supplemental policy'
                     $null = &'C:\Windows\System32\CiTool.exe' --update-policy $FinalSupplementalCIPPath -json
-                    Write-ColorfulText -Color Pink -InputText "A Supplemental policy with the name '$SuppPolicyName' has been deployed."
+                    Write-ColorfulTextWDACConfig -Color Pink -InputText "A Supplemental policy with the name '$SuppPolicyName' has been deployed."
                 }
 
                 Write-Progress -Id 33 -Activity 'Complete.' -Completed

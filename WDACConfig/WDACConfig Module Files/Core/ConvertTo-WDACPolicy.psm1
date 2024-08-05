@@ -3,15 +3,21 @@ Function ConvertTo-WDACPolicy {
         DefaultParameterSetName = 'All'
     )]
     param(
+        [ArgumentCompleter([WDACConfig.ArgCompleter.XmlFilePathsPicker])]
         [Alias('AddLogs')]
-        [ValidateScript({ Test-CiPolicy -XmlFile $_ })]
+        [ValidateScript({ [WDACConfig.CiPolicyTest]::TestCiPolicy($_, $null) })]
         [Parameter(Mandatory = $false, ParameterSetName = 'In-Place Upgrade')]
         [System.IO.FileInfo]$PolicyToAddLogsTo,
 
+        [ArgumentCompleter([WDACConfig.ArgCompleter.XmlFilePathsPicker])]
         [Alias('BaseFile')]
-        [ValidateScript({ Test-CiPolicy -XmlFile $_ })]
+        [ValidateScript({ [WDACConfig.CiPolicyTest]::TestCiPolicy($_, $null) })]
         [Parameter(Mandatory = $false, ParameterSetName = 'Base-Policy File Association')]
         [System.IO.FileInfo]$BasePolicyFile,
+
+        [Alias('Lvl')]
+        [ValidateSet('Auto', 'FilePublisher', 'Publisher', 'Hash')]
+        [Parameter(Mandatory = $false)][System.String]$Level = 'Auto',
 
         [ArgumentCompleter({
                 param($CommandName, $ParameterName, $WordToComplete, $CommandAst, $fakeBoundParameters)
@@ -230,7 +236,7 @@ Function ConvertTo-WDACPolicy {
         $LogType_AttributesCollection.Add($LogType_MandatoryAttrib)
 
         # Create a ValidateSet attribute with the allowed values
-        [System.Management.Automation.ValidateSetAttribute]$LogType_ValidateSetAttrib = New-Object -TypeName System.Management.Automation.ValidateSetAttribute('Audit', 'Blocked')
+        [System.Management.Automation.ValidateSetAttribute]$LogType_ValidateSetAttrib = New-Object -TypeName System.Management.Automation.ValidateSetAttribute('Audit', 'Blocked', 'All')
         $LogType_AttributesCollection.Add($LogType_ValidateSetAttrib)
 
         # Create an alias attribute and add it to the collection
@@ -311,13 +317,13 @@ Function ConvertTo-WDACPolicy {
     Begin {
         [System.Boolean]$Verbose = $PSBoundParameters.Verbose.IsPresent ? $true : $false
         [System.Boolean]$Debug = $PSBoundParameters.Debug.IsPresent ? $true : $false
+        [WDACConfig.LoggerInitializer]::Initialize($VerbosePreference, $DebugPreference, $Host)
         . "$([WDACConfig.GlobalVars]::ModuleRootPath)\CoreExt\PSDefaultParameterValues.ps1"
 
         Write-Verbose -Message 'ConvertTo-WDACPolicy: Importing the required sub-modules'
         # Defining list of generic modules required for this cmdlet to import
         [System.String[]]$ModulesToImport = @(
             "$([WDACConfig.GlobalVars]::ModuleRootPath)\Shared\Update-Self.psm1",
-            "$([WDACConfig.GlobalVars]::ModuleRootPath)\Shared\Write-ColorfulText.psm1",
             "$([WDACConfig.GlobalVars]::ModuleRootPath)\Shared\Receive-CodeIntegrityLogs.psm1",
             "$([WDACConfig.GlobalVars]::ModuleRootPath)\Shared\Set-LogPropertiesVisibility.psm1",
             "$([WDACConfig.GlobalVars]::ModuleRootPath)\Shared\Select-LogProperties.psm1",
@@ -332,7 +338,7 @@ Function ConvertTo-WDACPolicy {
         New-Variable -Name 'MDEAHLogs' -Value $PSBoundParameters['MDEAHLogs'] -Force
         New-Variable -Name 'EVTXLogs' -Value $PSBoundParameters['EVTXLogs'] -Force
         New-Variable -Name 'KernelModeOnly' -Value $PSBoundParameters['KernelModeOnly'] -Force
-        New-Variable -Name 'LogType' -Value ($PSBoundParameters['LogType'] ?? 'Audit') -Force
+        New-Variable -Name 'LogType' -Value ($PSBoundParameters['LogType'] ?? 'All') -Force
         New-Variable -Name 'Deploy' -Value $PSBoundParameters['Deploy'] -Force
         New-Variable -Name 'ExtremeVisibility' -Value $PSBoundParameters['ExtremeVisibility'] -Force
         New-Variable -Name 'SkipVersionCheck' -Value $PSBoundParameters['SkipVersionCheck'] -Force
@@ -404,7 +410,7 @@ Function ConvertTo-WDACPolicy {
                     }
 
                     if (($null -eq $EventsToDisplay) -and ($EventsToDisplay.Count -eq 0)) {
-                        Write-ColorfulText -Color HotPink -InputText 'No logs were found to display based on the current filters. Exiting...'
+                        Write-ColorfulTextWDACConfig -Color HotPink -InputText 'No logs were found to display based on the current filters. Exiting...'
                         return
                     }
 
@@ -414,12 +420,12 @@ Function ConvertTo-WDACPolicy {
                     }
 
                     # Display the logs in a grid view using the build-in cmdlet
-                    $SelectedLogs = $EventsToDisplay | Out-GridView -OutputMode Multiple -Title "Displaying $($EventsToDisplay.count) $LogType Code Integrity Logs"
+                    $SelectedLogs = $EventsToDisplay | Out-GridView -OutputMode Multiple -Title "Displaying $($EventsToDisplay.count) Code Integrity Logs of $LogType type(s)"
 
                     Write-Verbose -Message "ConvertTo-WDACPolicy: Selected logs count: $($SelectedLogs.count)"
 
                     if (!$BasePolicyGUID -and !$BasePolicyFile -and !$PolicyToAddLogsTo) {
-                        Write-ColorfulText -Color HotPink -InputText 'A more specific parameter was not provided to define what to do with the selected logs. Exiting...'
+                        Write-ColorfulTextWDACConfig -Color HotPink -InputText 'A more specific parameter was not provided to define what to do with the selected logs. Exiting...'
                         return
                     }
 
@@ -479,7 +485,7 @@ Function ConvertTo-WDACPolicy {
                     Write-Progress -Id 30 -Activity 'Building Signers and file rule' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
                     Write-Verbose -Message 'Building the Signer and Hash objects from the selected logs'
-                    [PSCustomObject]$DataToUseForBuilding = Build-SignerAndHashObjects -Data $SelectedLogs -IncomingDataType EVTX
+                    [WDACConfig.FileBasedInfoPackage]$DataToUseForBuilding = [WDACConfig.SignerAndHashBuilder]::BuildSignerAndHashObjects((ConvertTo-HashtableArray $SelectedLogs), 'EVTX', $Level, $false)
 
                     if ($Null -ne $DataToUseForBuilding.FilePublisherSigners -and $DataToUseForBuilding.FilePublisherSigners.Count -gt 0) {
                         Write-Verbose -Message 'Creating File Publisher Level rules'
@@ -546,7 +552,6 @@ Function ConvertTo-WDACPolicy {
                                 $null = &'C:\Windows\System32\CiTool.exe' --update-policy (Join-Path -Path $StagingArea -ChildPath "$SupplementalPolicyID.cip") -json
                             }
                         }
-
                         { $null -ne $BasePolicyGUID } {
 
                             Write-Verbose -Message 'ConvertTo-WDACPolicy: Assigning the user input GUID to the base policy ID of the supplemental policy'
@@ -568,10 +573,10 @@ Function ConvertTo-WDACPolicy {
                                 $null = &'C:\Windows\System32\CiTool.exe' --update-policy (Join-Path -Path $StagingArea -ChildPath "$SupplementalPolicyID.cip") -json
                             }
                         }
-
                         { $null -ne $PolicyToAddLogsTo } {
-
                             Write-Verbose -Message 'ConvertTo-WDACPolicy: Adding the logs to the policy that user selected'
+
+                            $MacrosBackup = Checkpoint-Macros -XmlFilePathIn $PolicyToAddLogsTo -Backup
 
                             # Objectify the user input policy file to extract its policy ID
                             $InputXMLObj = [System.Xml.XmlDocument](Get-Content -Path $PolicyToAddLogsTo)
@@ -583,8 +588,12 @@ Function ConvertTo-WDACPolicy {
 
                             $null = Merge-CIPolicy -PolicyPaths $PolicyToAddLogsTo, $WDACPolicyPath -OutputFilePath $PolicyToAddLogsTo
 
-                            # Set HVCI to Strict
                             Set-HVCIOptions -Strict -FilePath $PolicyToAddLogsTo
+
+                            if ($null -ne $MacrosBackup) {
+                                Write-Verbose -Message 'Restoring the Macros in the policy'
+                                Checkpoint-Macros -XmlFilePathOut $PolicyToAddLogsTo -Restore -MacrosBackup $MacrosBackup
+                            }
 
                             if ($Deploy) {
                                 $null = ConvertFrom-CIPolicy -XmlFilePath $PolicyToAddLogsTo -BinaryFilePath (Join-Path -Path $StagingArea -ChildPath "$($InputXMLObj.SiPolicy.PolicyID).cip")
@@ -626,7 +635,7 @@ Function ConvertTo-WDACPolicy {
                     Write-Verbose -Message 'Identifying the correlated data in the MDE CSV data'
 
                     if (($null -eq $OptimizedCSVData) -or ($OptimizedCSVData.Count -eq 0)) {
-                        Write-ColorfulText -Color HotPink -InputText 'No valid MDE Advanced Hunting logs available. Exiting...'
+                        Write-ColorfulTextWDACConfig -Color HotPink -InputText 'No valid MDE Advanced Hunting logs available. Exiting...'
                         return
                     }
 
@@ -650,7 +659,7 @@ Function ConvertTo-WDACPolicy {
                     }
 
                     if (($null -eq $MDEAHLogsToDisplay) -or ($MDEAHLogsToDisplay.Count -eq 0)) {
-                        Write-ColorfulText -Color HotPink -InputText 'No MDE Advanced Hunting logs available based on the selected filters. Exiting...'
+                        Write-ColorfulTextWDACConfig -Color HotPink -InputText 'No MDE Advanced Hunting logs available based on the selected filters. Exiting...'
                         return
                     }
 
@@ -670,7 +679,7 @@ Function ConvertTo-WDACPolicy {
                     [PSCustomObject[]]$SelectMDEAHLogs = $MDEAHLogsToDisplay | Out-GridView -OutputMode Multiple -Title "Displaying $($MDEAHLogsToDisplay.count) Microsoft Defender for Endpoint Advanced Hunting Logs"
 
                     if (($null -eq $SelectMDEAHLogs) -or ($SelectMDEAHLogs.Count -eq 0)) {
-                        Write-ColorfulText -Color HotPink -InputText 'No MDE Advanced Hunting logs were selected to create a WDAC policy from. Exiting...'
+                        Write-ColorfulTextWDACConfig -Color HotPink -InputText 'No MDE Advanced Hunting logs were selected to create a WDAC policy from. Exiting...'
                         return
                     }
 
@@ -690,7 +699,7 @@ Function ConvertTo-WDACPolicy {
                     Write-Progress -Id 31 -Activity 'Building the Signer and Hash objects from the selected MDE AH logs' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
                     Write-Verbose -Message 'Building the Signer and Hash objects from the selected MDE AH logs'
-                    [PSCustomObject]$DataToUseForBuilding = Build-SignerAndHashObjects -Data $SelectMDEAHLogs -IncomingDataType MDEAH
+                    [WDACConfig.FileBasedInfoPackage]$DataToUseForBuilding = [WDACConfig.SignerAndHashBuilder]::BuildSignerAndHashObjects((ConvertTo-HashtableArray $SelectMDEAHLogs), 'MDEAH', $Level, $false)
 
                     $CurrentStep++
                     Write-Progress -Id 31 -Activity 'Creating rules for different levels' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
@@ -785,7 +794,6 @@ Function ConvertTo-WDACPolicy {
                                 $null = &'C:\Windows\System32\CiTool.exe' --update-policy (Join-Path -Path $StagingArea -ChildPath "$SupplementalPolicyID.cip") -json
                             }
                         }
-
                         { $null -ne $BasePolicyGUID } {
 
                             Write-Verbose -Message 'ConvertTo-WDACPolicy: Assigning the user input GUID to the base policy ID of the supplemental policy'
@@ -807,10 +815,10 @@ Function ConvertTo-WDACPolicy {
                                 $null = &'C:\Windows\System32\CiTool.exe' --update-policy (Join-Path -Path $StagingArea -ChildPath "$SupplementalPolicyID.cip") -json
                             }
                         }
-
                         { $null -ne $PolicyToAddLogsTo } {
-
                             Write-Verbose -Message 'ConvertTo-WDACPolicy: Adding the logs to the policy that user selected'
+
+                            $MacrosBackup = Checkpoint-Macros -XmlFilePathIn $PolicyToAddLogsTo -Backup
 
                             # Objectify the user input policy file to extract its policy ID
                             $InputXMLObj = [System.Xml.XmlDocument](Get-Content -Path $PolicyToAddLogsTo)
@@ -822,8 +830,12 @@ Function ConvertTo-WDACPolicy {
 
                             $null = Merge-CIPolicy -PolicyPaths $PolicyToAddLogsTo, $OutputPolicyPathMDEAH -OutputFilePath $PolicyToAddLogsTo
 
-                            # Set HVCI to Strict
                             Set-HVCIOptions -Strict -FilePath $PolicyToAddLogsTo
+
+                            if ($null -ne $MacrosBackup) {
+                                Write-Verbose -Message 'Restoring the Macros in the policy'
+                                Checkpoint-Macros -XmlFilePathOut $PolicyToAddLogsTo -Restore -MacrosBackup $MacrosBackup
+                            }
 
                             if ($Deploy) {
                                 $null = ConvertFrom-CIPolicy -XmlFilePath $PolicyToAddLogsTo -BinaryFilePath (Join-Path -Path $StagingArea -ChildPath "$($InputXMLObj.SiPolicy.PolicyID).cip")
@@ -833,7 +845,6 @@ Function ConvertTo-WDACPolicy {
                                 $null = &'C:\Windows\System32\CiTool.exe' --update-policy (Join-Path -Path $StagingArea -ChildPath "$($InputXMLObj.SiPolicy.PolicyID).cip") -json
                             }
                         }
-
                         Default {
                             Write-Verbose -Message 'ConvertTo-WDACPolicy: Copying the policy file to the User Config directory'
                             Set-CiRuleOptions -FilePath $OutputPolicyPathMDEAH -Template Supplemental
@@ -868,7 +879,7 @@ Function ConvertTo-WDACPolicy {
                     }
 
                     if (($null -eq $EventsToDisplay) -and ($EventsToDisplay.Count -eq 0)) {
-                        Write-ColorfulText -Color HotPink -InputText 'No logs were found to display based on the current filters. Exiting...'
+                        Write-ColorfulTextWDACConfig -Color HotPink -InputText 'No logs were found to display based on the current filters. Exiting...'
                         return
                     }
 
@@ -885,12 +896,12 @@ Function ConvertTo-WDACPolicy {
                     Write-Progress -Id 32 -Activity 'Displaying the logs' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
                     # Display the logs in a grid view using the build-in cmdlet
-                    $SelectedLogs = $EventsToDisplay | Out-GridView -OutputMode Multiple -Title "Displaying $($EventsToDisplay.count) $LogType Code Integrity Logs"
+                    $SelectedLogs = $EventsToDisplay | Out-GridView -OutputMode Multiple -Title "Displaying $($EventsToDisplay.count) Code Integrity Logs of $LogType type(s)"
 
                     Write-Verbose -Message "ConvertTo-WDACPolicy: Selected logs count: $($SelectedLogs.count)"
 
                     if (($null -eq $SelectedLogs) -or ( $SelectedLogs.Count -eq 0)) {
-                        Write-ColorfulText -Color HotPink -InputText 'No logs were selected to create a WDAC policy from. Exiting...'
+                        Write-ColorfulTextWDACConfig -Color HotPink -InputText 'No logs were selected to create a WDAC policy from. Exiting...'
                         return
                     }
 
@@ -907,7 +918,7 @@ Function ConvertTo-WDACPolicy {
                     Write-Progress -Id 32 -Activity 'Building Signers and file rule' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
                     Write-Verbose -Message 'Building the Signer and Hash objects from the selected Evtx logs'
-                    [PSCustomObject]$DataToUseForBuilding = Build-SignerAndHashObjects -Data $SelectedLogs -IncomingDataType EVTX
+                    [WDACConfig.FileBasedInfoPackage]$DataToUseForBuilding = [WDACConfig.SignerAndHashBuilder]::BuildSignerAndHashObjects((ConvertTo-HashtableArray $SelectedLogs), 'EVTX', $Level, $false)
 
                     if ($Null -ne $DataToUseForBuilding.FilePublisherSigners -and $DataToUseForBuilding.FilePublisherSigners.Count -gt 0) {
                         Write-Verbose -Message 'Creating File Publisher Level rules'
@@ -977,7 +988,6 @@ Function ConvertTo-WDACPolicy {
                                 $null = &'C:\Windows\System32\CiTool.exe' --update-policy (Join-Path -Path $StagingArea -ChildPath "$SupplementalPolicyID.cip") -json
                             }
                         }
-
                         { $null -ne $BasePolicyGUID } {
 
                             Write-Verbose -Message 'ConvertTo-WDACPolicy: Assigning the user input GUID to the base policy ID of the supplemental policy'
@@ -999,10 +1009,10 @@ Function ConvertTo-WDACPolicy {
                                 $null = &'C:\Windows\System32\CiTool.exe' --update-policy (Join-Path -Path $StagingArea -ChildPath "$SupplementalPolicyID.cip") -json
                             }
                         }
-
                         { $null -ne $PolicyToAddLogsTo } {
-
                             Write-Verbose -Message 'ConvertTo-WDACPolicy: Adding the logs to the policy that user selected'
+
+                            $MacrosBackup = Checkpoint-Macros -XmlFilePathIn $PolicyToAddLogsTo -Backup
 
                             # Objectify the user input policy file to extract its policy ID
                             $InputXMLObj = [System.Xml.XmlDocument](Get-Content -Path $PolicyToAddLogsTo)
@@ -1014,8 +1024,12 @@ Function ConvertTo-WDACPolicy {
 
                             $null = Merge-CIPolicy -PolicyPaths $PolicyToAddLogsTo, $OutputPolicyPathEVTX -OutputFilePath $PolicyToAddLogsTo
 
-                            # Set HVCI to Strict
                             Set-HVCIOptions -Strict -FilePath $PolicyToAddLogsTo
+
+                            if ($null -ne $MacrosBackup) {
+                                Write-Verbose -Message 'Restoring the Macros in the policy'
+                                Checkpoint-Macros -XmlFilePathOut $PolicyToAddLogsTo -Restore -MacrosBackup $MacrosBackup
+                            }
 
                             if ($Deploy) {
                                 $null = ConvertFrom-CIPolicy -XmlFilePath $PolicyToAddLogsTo -BinaryFilePath (Join-Path -Path $StagingArea -ChildPath "$($InputXMLObj.SiPolicy.PolicyID).cip")
@@ -1025,7 +1039,6 @@ Function ConvertTo-WDACPolicy {
                                 $null = &'C:\Windows\System32\CiTool.exe' --update-policy (Join-Path -Path $StagingArea -ChildPath "$($InputXMLObj.SiPolicy.PolicyID).cip") -json
                             }
                         }
-
                         Default {
                             Write-Verbose -Message 'ConvertTo-WDACPolicy: Copying the policy file to the User Config directory'
                             Set-CiRuleOptions -FilePath $OutputPolicyPathEVTX -Template Supplemental
@@ -1036,6 +1049,9 @@ Function ConvertTo-WDACPolicy {
                     #Endregion Base To Supplemental Policy Association and Deployment
                 }
             }
+        }
+        catch {
+            throw $_
         }
         Finally {
             Write-Progress -Id 30 -Activity 'Complete.' -Completed
@@ -1048,108 +1064,5 @@ Function ConvertTo-WDACPolicy {
         }
     }
 
-    <#
-.SYNOPSIS
-    This is a multi-purpose cmdlet that offers a wide range of functionalities that can either be used separately or mixed together for very detailed and specific tasks.
-    It currently supports Code Integrity and AppLocker logs from the following sources: Local Event logs, Evtx log files and Microsoft Defender for Endpoint Advanced Hunting results.
-
-    The cmdlet displays the logs in a GUI and allows the user to select the logs to be processed further.
-
-    The logs can be filtered based on many criteria using the available parameters.
-
-    The output of this cmdlet is a Supplemental Application Control (WDAC) policy.
-    Based on the input parameters, it can be associated with a base policy or merged with an existing Base or Supplemental policy.
-.DESCRIPTION
-   The cmdlet can be used for local and remote systems. You can utilize this cmdlet to create Application Control for Business policies from MDE Advanced Hunting and then deploy them using Microsoft Intune to your endpoints.
-
-   You can utilize this cmdlet to use the evtx log files you aggregated from your endpoints and create a WDAC policy from them.
-
-   This offers scalability and flexibility in managing your security policies.
-.PARAMETER PolicyToAddLogsTo
-    The policy to add the selected logs to, it can either be a base or supplemental policy.
-.PARAMETER BasePolicyFile
-    The base policy file to associate the supplemental policy with
-.PARAMETER BasePolicyGUID
-    The GUID of the base policy to associate the supplemental policy with
-.PARAMETER SuppPolicyName
-    The name of the supplemental policy to create. If not specified, the cmdlet will generate a proper name based on the selected source and time.
-.PARAMETER FilterByPolicyNames
-   The names of the policies to filter the logs by.
-   Supports auto-completion, press TAB key to view the list of the deployed base policy names to choose from.
-   It will not display the policies that are already selected on the command line.
-   You can manually enter the name of the policies that are no longer available on the system or are from remote systems in case of MDE Advanced Hunting logs.
-.PARAMETER Source
-    The source of the logs: Local Event logs (LocalEventLogs), Microsoft Defender for Endpoint Advanced Hunting results (MDEAdvancedHunting) or EVTX files (EVTXFiles).
-    Supports validate set.
-.PARAMETER MDEAHLogs
-    The path(s) to use MDE AH CSV files.
-    This is a dynamic parameter and will only be available if the Source parameter is set to MDEAdvancedHunting.
-.PARAMETER EVTXLogs
-    The path(s) to use EVTX files.
-    This is a dynamic parameter and will only be available if the Source parameter is set to EVTXFiles.
-.PARAMETER KernelModeOnly
-    If used, will filter the logs by including only the Kernel-Mode logs. You can use this parameter to easily create Supplemental policies for Strict Kernel-Mode WDAC policy.
-    More info available here: https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDAC-policy-for-BYOVD-Kernel-mode-only-protection
-.PARAMETER LogType
-    The type of logs to display: Audit or Blocked, the default is Audit.
-.PARAMETER TimeSpan
-    The unit of time to use when filtering the logs by the time.
-    The allowed values are: Minutes, Hours, Days
-.PARAMETER TimeSpanAgo
-    The number of the selected time unit to go back in time from the current time.
-.PARAMETER Deploy
-    If used, will deploy the policy on the system
-.PARAMETER ExtremeVisibility
-    If used, will display all the properties of the logs without any filtering.
-.PARAMETER SkipVersionCheck
-    Can be used with any parameter to bypass the online version check - only to be used in rare cases
-.LINK
-    https://github.com/HotCakeX/Harden-Windows-Security/wiki/ConvertTo-WDACPolicy
-.INPUTS
-    System.IO.FileInfo
-    System.Guid
-    System.String
-    System.String[]
-    System.UInt64
-    System.Management.Automation.SwitchParameter
-.OUTPUTS
-    System.String
-.EXAMPLE
-    ConvertTo-WDACPolicy -PolicyToAddLogsTo "C:\Users\Admin\AllowMicrosoftPlusBlockRules.xml" -Verbose
-
-    This example will display the Code Integrity and AppLocker logs in a GUI and allow the user to select the logs to add to the specified policy file.
-.EXAMPLE
-    ConvertTo-WDACPolicy -Verbose -BasePolicyGUID '{ACE9058C-8A24-47F4-86F0-A33FAB5073E3}'
-
-    This example will display the Code Integrity and AppLocker logs in a GUI and allow the user to select the logs to create a new supplemental policy and associate it with the specified base policy GUID.
-.EXAMPLE
-    ConvertTo-WDACPolicy -BasePolicyFile "C:\Users\Admin\AllowMicrosoftPlusBlockRules.xml"
-
-    This example will display the Code Integrity and AppLocker logs in a GUI and allow the user to select the logs to create a new supplemental policy and associate it with the specified base policy file.
-.EXAMPLE
-    ConvertTo-WDACPolicy
-
-    This example will display the Code Integrity and AppLocker logs in a GUI and takes no further action.
-.EXAMPLE
-    ConvertTo-WDACPolicy -FilterByPolicyNames 'VerifiedAndReputableDesktopFlightSupplemental','WindowsE_Lockdown_Flight_Policy_Supplemental' -Verbose
-
-    This example will filter the Code Integrity and AppLocker logs by the specified policy names and display them in a GUI. It will also display verbose messages on the console.
-.EXAMPLE
-    ConvertTo-WDACPolicy -FilterByPolicyNames 'Microsoft Windows Driver Policy - Enforced' -TimeSpan Minutes -TimeSpanAgo 10
-
-    This example will filter the local Code Integrity and AppLocker logs by the specified policy name and the number of minutes ago from the current time and display them in a GUI.
-    So, it will display the logs that are 10 minutes old and are associated with the specified policy name.
-.EXAMPLE
-    ConvertTo-WDACPolicy -BasePolicyFile "C:\Program Files\WDACConfig\DefaultWindowsPlusBlockRules.xml" -Source MDEAdvancedHunting -MDEAHLogs "C:\Users\Admin\Downloads\New query.csv" -Deploy -TimeSpan Days -TimeSpanAgo 2
-
-    This example will create a new supplemental policy from the selected MDE Advanced Hunting logs and associate it with the specified base policy file and it will deploy it on the system.
-    The displayed logs will be from the last 2 days. You will be able to select the logs to create the policy from in the GUI.
-.EXAMPLE
-ConvertTo-WDACPolicy -BasePolicyGUID '{89CD611D-5557-4833-B73D-716B979AEE3D}' -Source EVTXFiles -EVTXLogs "C:\Users\HotCakeX\App Locker logs.evtx","C:\Users\HotCakeX\Code Integrity LOGS.evtx"
-
-This example will create a new supplemental policy from the selected EVTX files and associate it with the specified base policy GUID.
-
-.EXTERNALHELP ..\Help\ConvertTo-WDACPolicy.xml
-#>
-
+    # .EXTERNALHELP ..\Help\ConvertTo-WDACPolicy.xml
 }

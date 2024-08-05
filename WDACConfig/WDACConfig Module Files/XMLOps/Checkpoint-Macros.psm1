@@ -65,7 +65,7 @@ Function Checkpoint-Macros {
             $Xml.Load($XmlFilePathOut.FullName)
 
             if ($null -eq $MacrosBackup) {
-                Write-Verbose -Message 'Checkpoint-Macros: No Macros nodes to restore.'
+                [WDACConfig.VerboseLogger]::Write('Checkpoint-Macros: No Macros nodes to restore.')
                 return
             }
 

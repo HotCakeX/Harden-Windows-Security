@@ -37,7 +37,7 @@ Function Compare-CorrelatedData {
         [Parameter(Mandatory = $false)][System.DateTime]$StartTime,
         [AllowNull()]
         [Parameter(Mandatory = $false)][System.String[]]$PolicyNamesToFilter,
-        [ValidateSet('Audit', 'Blocked')]
+        [ValidateSet('Audit', 'Blocked', 'All')]
         [Parameter(Mandatory = $true)][System.String]$LogType
     )
     Begin {
@@ -47,7 +47,7 @@ Function Compare-CorrelatedData {
         # Group the events based on the EtwActivityId, which is the unique identifier for each group of correlated events
         [Microsoft.PowerShell.Commands.GroupInfo[]]$GroupedEvents = $OptimizedCSVData | Group-Object -Property EtwActivityId
 
-        Write-Verbose -Message "Compare-CorrelatedData: Total number of groups: $($GroupedEvents.Count)"
+        [WDACConfig.VerboseLogger]::Write("Compare-CorrelatedData: Total number of groups: $($GroupedEvents.Count)")
 
         # Create a collection to store the packages of logs to return at the end
         [System.Collections.Hashtable]$EventPackageCollections = @{}
@@ -72,12 +72,12 @@ Function Compare-CorrelatedData {
                     }
                 }
                 Catch {
-                    Write-Verbose -Message "Event Timestamp for the file '$($GroupData.FileName)' was invalid"
+                    [WDACConfig.VerboseLogger]::Write("Event Timestamp for the file '$($GroupData.FileName)' was invalid")
                 }
             }
 
             # Detect the Audit events only if the LogType parameter is set to 'Audit'
-            if ($LogType -eq 'Audit') {
+            if ($LogType -in 'Audit', 'All') {
 
                 # Process Audit events for Code Integrity and AppLocker
                 if (($GroupData.ActionType -contains 'AppControlCodeIntegrityPolicyAudited') -or ($GroupData.ActionType -contains 'AppControlCIScriptAudited')) {
@@ -155,7 +155,7 @@ Function Compare-CorrelatedData {
             }
 
             # Detect the blocked events only if the LogType parameter is set to 'Blocked'
-            if ($LogType -eq 'Blocked') {
+            if ($LogType -in 'Blocked', 'All') {
 
                 # Process Blocked events for Code Integrity and AppLocker
                 if (($GroupData.ActionType -contains 'AppControlCodeIntegrityPolicyBlocked') -or ($GroupData.ActionType -contains 'AppControlCIScriptBlocked')) {
@@ -237,7 +237,7 @@ Function Compare-CorrelatedData {
     End {
 
         if ($Debug) {
-            Write-Verbose -Message 'Compare-CorrelatedData: Debug parameter was used, exporting data to Json...'
+            [WDACConfig.VerboseLogger]::Write('Compare-CorrelatedData: Debug parameter was used, exporting data to Json...')
 
             # Outputs the entire data to a JSON file for debugging purposes with max details
             $EventPackageCollections | ConvertTo-Json -Depth 100 | Set-Content -Path (Join-Path -Path $StagingArea -ChildPath 'Pass2.Json') -Force

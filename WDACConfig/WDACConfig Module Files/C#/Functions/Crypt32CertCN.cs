@@ -1,19 +1,20 @@
-// https://learn.microsoft.com/en-us/windows/win32/api/wincrypt/nf-wincrypt-certgetnamestringa
 using System;
 using System.Runtime.InteropServices;
+using System.Text;
 
 namespace WDACConfig
 {
     public class CryptoAPI
     {
         // Importing function from crypt32.dll to access certificate information
+        // https://learn.microsoft.com/en-us/windows/win32/api/wincrypt/nf-wincrypt-certgetnamestringa
         [DllImport("crypt32.dll", CharSet = CharSet.Auto, SetLastError = true)]
         public static extern bool CertGetNameString(
             IntPtr pCertContext, // the handle property of the certificate object
             int dwType,
             int dwFlags,
             IntPtr pvTypePara,
-            System.Text.StringBuilder pszNameString,
+            StringBuilder pszNameString,
             int cchNameString
         );
 
@@ -25,21 +26,21 @@ namespace WDACConfig
         // Define a helper method to get the name string
         public static string GetNameString(IntPtr pCertContext, int dwType, string pvTypePara, bool isIssuer)
         {
-            // Allocate a buffer for the name string
-            System.Text.StringBuilder nameString = new System.Text.StringBuilder(256);
+            // Allocate a buffer for the name string, setting it big to handle longer names if needed
+            const int bufferSize = 1024;
+            StringBuilder nameString = new StringBuilder(bufferSize);
 
             // Convert the pvTypePara to a pointer if needed
             IntPtr pvTypeParaPtr = IntPtr.Zero;
             if (!string.IsNullOrEmpty(pvTypePara))
             {
-                pvTypeParaPtr = Marshal.StringToHGlobalAnsi(pvTypePara);
+                // Using Unicode encoding for better compatibility
+                pvTypeParaPtr = Marshal.StringToHGlobalUni(pvTypePara);
             }
+
             // Set flags to retrieve issuer name if needed
-            int flags = 0;
-            if (isIssuer)
-            {
-                flags |= CERT_NAME_ISSUER_FLAG;
-            }
+            int flags = isIssuer ? CERT_NAME_ISSUER_FLAG : 0;
+
             // Call the CertGetNameString function to get the name string
             bool result = CertGetNameString(
                 pCertContext,
@@ -49,11 +50,13 @@ namespace WDACConfig
                 nameString,
                 nameString.Capacity
             );
+
             // Free the pointer if allocated
             if (pvTypeParaPtr != IntPtr.Zero)
             {
                 Marshal.FreeHGlobal(pvTypeParaPtr);
             }
+
             // Return the name string or an empty string if failed
             return result ? nameString.ToString() : string.Empty;
         }

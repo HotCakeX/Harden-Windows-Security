@@ -4,11 +4,11 @@ Function New-PublisherLevelRules {
         Creates new Publisher level rules in an XML file
         Each rules includes the Signers, AllowedSigners, and CiSigners (depending on kernel/user mode)
     .PARAMETER PublisherSigners
-        The PublisherSigners to be used for creating the rules, they are the output of the Build-SignerAndHashObjects function
+        The PublisherSigners to be used for creating the rules, they are the output of the BuildSignerAndHashObjects Method
     .PARAMETER XmlFilePath
         The path to the XML file to be modified
     .INPUTS
-        PSCustomObject[]
+        System.Collections.Generic.List[WDACConfig.PublisherSignerCreator]
         System.IO.FileInfo
     .OUTPUTS
         System.Void
@@ -16,13 +16,13 @@ Function New-PublisherLevelRules {
     [CmdletBinding()]
     [OutputType([System.Void])]
     Param (
-        [Parameter(Mandatory = $true)][PSCustomObject[]]$PublisherSigners,
+        [Parameter(Mandatory = $true)][System.Collections.Generic.List[WDACConfig.PublisherSignerCreator]]$PublisherSigners,
         [Parameter(Mandatory = $true)][System.IO.FileInfo]$XmlFilePath
     )
     Begin {
         . "$([WDACConfig.GlobalVars]::ModuleRootPath)\CoreExt\PSDefaultParameterValues.ps1"
 
-        Write-Verbose -Message "New-PublisherLevelRules: There are $($PublisherSigners.Count) Publisher Signers to be added to the XML file"
+        [WDACConfig.VerboseLogger]::Write("New-PublisherLevelRules: There are $($PublisherSigners.Count) Publisher Signers to be added to the XML file")
 
         # Load the XML file
         [System.Xml.XmlDocument]$Xml = Get-Content -Path $XmlFilePath

@@ -3,6 +3,7 @@ System.IO
 System.Xml
 System.Linq
 System.Memory
+System.Console
 System.Xml.Linq
 System.Text.Json
 System.Management
@@ -13,10 +14,13 @@ System.Globalization
 System.Linq.Expressions
 System.Xml.ReaderWriter
 Microsoft.Win32.registry
+Microsoft.Win32.Primitives
 System.Diagnostics.Process
+System.Diagnostics.EventLog
 System.Security.Cryptography
 System.Management.Automation
 System.Collections.NonGeneric
+System.Text.RegularExpressions
 System.Runtime.InteropServices
 System.Windows.Forms.Primitives
 System.ComponentModel.Primitives

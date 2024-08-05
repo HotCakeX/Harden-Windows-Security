@@ -1,19 +1,20 @@
-// necessary logics for Authenticode and First Page hash calculation
 using System;
-using System.Runtime.InteropServices; // for interoperability with unmanaged code
+using System.Runtime.InteropServices;
 using System.Text;
 using System.IO;
 
 namespace WDACConfig
 {
+    // necessary logics for Authenticode and First Page hash calculation
     internal class WinTrust
     {
-        internal const uint CryptcatadminCalchashFlagNonconformantFilesFallbackFlat = 1; // a constant field that defines a flag value for the native function
+        // a constant field that defines a flag value for the native function
         // This causes/helps the GetCiFileHashes method to return the flat file hashes whenever a non-conformant file is encountered
+        internal const uint CryptcatadminCalchashFlagNonconformantFilesFallbackFlat = 1;
 
         // a method to acquire a handle to a catalog administrator context using a native function from WinTrust.dll
-        [DllImport("WinTrust.dll", CharSet = CharSet.Unicode)] // an attribute to specify the DLL name and the character set
-        internal static extern bool CryptCATAdminAcquireContext2( // the method signature
+        [DllImport("WinTrust.dll", CharSet = CharSet.Unicode)]
+        internal static extern bool CryptCATAdminAcquireContext2(
             ref IntPtr hCatAdmin, // the first parameter: a reference to a pointer to store the handle
             IntPtr pgSubsystem, // the second parameter: a pointer to a GUID that identifies the subsystem
             string pwszHashAlgorithm, // the third parameter: a string that specifies the hash algorithm to use
@@ -22,15 +23,15 @@ namespace WDACConfig
         );
 
         // a method to release a handle to a catalog administrator context using a native function from WinTrust.dll
-        [DllImport("WinTrust.dll", CharSet = CharSet.Unicode)] // an attribute to specify the DLL name and the character set
-        internal static extern bool CryptCATAdminReleaseContext( // the method signature
+        [DllImport("WinTrust.dll", CharSet = CharSet.Unicode)]
+        internal static extern bool CryptCATAdminReleaseContext(
             IntPtr hCatAdmin, // the first parameter: a pointer to the handle to release
             uint dwFlags // the second parameter: a flag value that controls the behavior of the function
         );
 
         // a method to calculate the hash of a file using a native function from WinTrust.dll
-        [DllImport("WinTrust.dll", CharSet = CharSet.Unicode)] // an attribute to specify the DLL name and the character set
-        internal static extern bool CryptCATAdminCalcHashFromFileHandle3( // the method signature
+        [DllImport("WinTrust.dll", CharSet = CharSet.Unicode)]
+        internal static extern bool CryptCATAdminCalcHashFromFileHandle3(
             IntPtr hCatAdmin, // the first parameter: a pointer to the handle of the catalog administrator context
             IntPtr hFile, // the second parameter: a pointer to the handle of the file to hash
             ref int pcbHash, // the third parameter: a reference to an integer that specifies the size of the hash buffer
@@ -41,7 +42,11 @@ namespace WDACConfig
 
     public static class AuthPageHash
     {
-        // Method that outputs all 4 kinds of hashes
+        /// <summary>
+        /// Method that outputs all 4 kinds of hashes
+        /// </summary>
+        /// <param name="filePath">The path to the file that is going to be hashed</param>
+        /// <returns>WDACConfig.AuthenticodePageHashes object that contains all 4 kinds of hashes</returns>
         public static WDACConfig.AuthenticodePageHashes GetCiFileHashes(string filePath)
         {
             return new WDACConfig.AuthenticodePageHashes(
@@ -54,6 +59,7 @@ namespace WDACConfig
 
         private static string GetAuthenticodeHash(string filePath, string hashAlgorithm)
         {
+            // A StringBuilder object to store the hash value as a hexadecimal string
             StringBuilder hashString = new StringBuilder(64);
             IntPtr contextHandle = IntPtr.Zero;
             IntPtr fileStreamHandle = IntPtr.Zero;
@@ -63,6 +69,7 @@ namespace WDACConfig
             {
                 using (FileStream fileStream = File.OpenRead(filePath))
                 {
+                    // DangerousGetHandle returns the handle to the file stream
                     fileStreamHandle = fileStream.SafeFileHandle.DangerousGetHandle();
 
                     if (fileStreamHandle == IntPtr.Zero)
@@ -91,7 +98,9 @@ namespace WDACConfig
 
                     for (int offset = 0; offset < hashSize; offset++)
                     {
+                        // Marshal.ReadByte returns a byte from the hashValue buffer at the specified offset
                         byte b = Marshal.ReadByte(hashValue, offset);
+                        // Append the byte to the hashString as a hexadecimal string
                         hashString.Append(b.ToString("X2"));
                     }
                 }

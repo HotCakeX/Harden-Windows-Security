@@ -22,7 +22,7 @@ Function Get-KernelModeDriversAudit {
     begin {
         . "$([WDACConfig.GlobalVars]::ModuleRootPath)\CoreExt\PSDefaultParameterValues.ps1"
 
-        Write-Verbose -Message 'Importing the required sub-modules'
+        [WDACConfig.VerboseLogger]::Write('Importing the required sub-modules')
         Import-Module -FullyQualifiedName "$([WDACConfig.GlobalVars]::ModuleRootPath)\Shared\Receive-CodeIntegrityLogs.psm1" -Force
 
         [System.IO.FileInfo[]]$KernelModeDriversPaths = @()
@@ -31,30 +31,30 @@ Function Get-KernelModeDriversAudit {
     process {
 
         # Get the Code Integrity event logs for kernel mode drivers that have been loaded since the audit mode policy has been deployed
-        [System.Object[]]$RawData = Receive-CodeIntegrityLogs -Date (Get-CommonWDACConfig -StrictKernelModePolicyTimeOfDeployment)
+        [System.Collections.Hashtable[]]$RawData = Receive-CodeIntegrityLogs -Date (Get-CommonWDACConfig -StrictKernelModePolicyTimeOfDeployment) -Type 'Audit'
 
-        Write-Verbose -Message "RawData count: $($RawData.count)"
+        [WDACConfig.VerboseLogger]::Write("RawData count: $($RawData.count)")
 
-        Write-Verbose -Message 'Saving the file paths to a variable'
+        [WDACConfig.VerboseLogger]::Write('Saving the file paths to a variable')
         [System.IO.FileInfo[]]$KernelModeDriversPaths = $RawData.'File Name'
 
-        Write-Verbose -Message 'Filtering based on files that exist with .sys and .dll extensions'
+        [WDACConfig.VerboseLogger]::Write('Filtering based on files that exist with .sys and .dll extensions')
         $KernelModeDriversPaths = foreach ($Item in $KernelModeDriversPaths) {
             if (($Item.Extension -in ('.sys', '.dll')) -and $Item.Exists) {
                 $Item
             }
         }
 
-        Write-Verbose -Message "KernelModeDriversPaths count after filtering based on files that exist with .sys and .dll extensions: $($KernelModeDriversPaths.count)"
+        [WDACConfig.VerboseLogger]::Write("KernelModeDriversPaths count after filtering based on files that exist with .sys and .dll extensions: $($KernelModeDriversPaths.count)")
 
-        Write-Verbose -Message 'Removing duplicates based on file path'
+        [WDACConfig.VerboseLogger]::Write('Removing duplicates based on file path')
         $KernelModeDriversPaths = foreach ($Item in ($KernelModeDriversPaths | Group-Object -Property 'FullName')) {
             $Item.Group[0]
         }
 
-        Write-Verbose -Message "KernelModeDriversPaths count after deduplication based on file path: $($KernelModeDriversPaths.count)"
+        [WDACConfig.VerboseLogger]::Write("KernelModeDriversPaths count after deduplication based on file path: $($KernelModeDriversPaths.count)")
 
-        Write-Verbose -Message 'Creating symbolic links to the driver files'
+        [WDACConfig.VerboseLogger]::Write('Creating symbolic links to the driver files')
         Foreach ($File in $KernelModeDriversPaths) {
             $null = New-Item -ItemType SymbolicLink -Path (Join-Path -Path $SavePath -ChildPath $File.Name) -Target $File.FullName
         }

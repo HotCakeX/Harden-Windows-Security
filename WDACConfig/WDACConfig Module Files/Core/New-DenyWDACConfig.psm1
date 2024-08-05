@@ -24,10 +24,12 @@ Function New-DenyWDACConfig {
         [Parameter(Mandatory = $true, ValueFromPipelineByPropertyName = $true)]
         [System.String]$PolicyName,
 
+        [ArgumentCompleter([WDACConfig.ArgCompleter.FolderPickerWithWildcard])]
         [ValidatePattern('\*', ErrorMessage = 'You did not supply a path that contains wildcard character (*) .')]
         [parameter(Mandatory = $true, ParameterSetName = 'Folder Path With WildCards', ValueFromPipelineByPropertyName = $true)]
         [System.IO.DirectoryInfo]$FolderPath,
 
+        [ArgumentCompleter([WDACConfig.ArgCompleter.FolderPicker])]
         [ValidateScript({ [System.IO.Directory]::Exists($_) }, ErrorMessage = 'One of the paths you selected is not a valid folder path.')]
         [Parameter(Mandatory = $false, ParameterSetName = 'Normal')]
         [Parameter(Mandatory = $false, ParameterSetName = 'Drivers')]
@@ -64,13 +66,11 @@ Function New-DenyWDACConfig {
     Begin {
         [System.Boolean]$Verbose = $PSBoundParameters.Verbose.IsPresent ? $true : $false
         [System.Boolean]$Debug = $PSBoundParameters.Debug.IsPresent ? $true : $false
+        [WDACConfig.LoggerInitializer]::Initialize($VerbosePreference, $DebugPreference, $Host)
         . "$([WDACConfig.GlobalVars]::ModuleRootPath)\CoreExt\PSDefaultParameterValues.ps1"
 
         Write-Verbose -Message 'Importing the required sub-modules'
-        Import-Module -Force -FullyQualifiedName @(
-            "$([WDACConfig.GlobalVars]::ModuleRootPath)\Shared\Update-Self.psm1",
-            "$([WDACConfig.GlobalVars]::ModuleRootPath)\Shared\Write-ColorfulText.psm1"
-        )
+        Import-Module -Force -FullyQualifiedName "$([WDACConfig.GlobalVars]::ModuleRootPath)\Shared\Update-Self.psm1"
 
         # if -SkipVersionCheck wasn't passed, run the updater
         if (-NOT $SkipVersionCheck) { Update-Self -InvocationStatement $MyInvocation.Statement }
@@ -141,7 +141,7 @@ Function New-DenyWDACConfig {
                     $PolicyXMLFilesArray += (Join-Path -Path $StagingArea -ChildPath "ProgramDir_ScanResults$($i).xml")
                 }
 
-                Write-ColorfulText -Color Pink -InputText 'The Deny policy with the following configuration is being created'
+                Write-ColorfulTextWDACConfig -Color Pink -InputText 'The Deny policy with the following configuration is being created'
                 $UserInputProgramFoldersPolicyMakerHashTable
 
                 Write-Verbose -Message 'Adding the AllowAll default template policy path to the array of policy paths to merge'
@@ -174,7 +174,7 @@ Function New-DenyWDACConfig {
                     Write-Verbose -Message 'Deploying the policy'
                     $null = &'C:\Windows\System32\CiTool.exe' --update-policy $FinalDenyPolicyCIPPath -json
 
-                    Write-ColorfulText -Color Pink -InputText "A Deny Base policy with the name '$PolicyName' has been deployed."
+                    Write-ColorfulTextWDACConfig -Color Pink -InputText "A Deny Base policy with the name '$PolicyName' has been deployed."
                 }
                 Write-Progress -Id 22 -Activity 'Complete.' -Completed
             }
@@ -245,7 +245,7 @@ Function New-DenyWDACConfig {
                     Write-Verbose -Message 'Deploying the policy'
                     $null = &'C:\Windows\System32\CiTool.exe' --update-policy $FinalDenyPolicyCIPPath -json
 
-                    Write-ColorfulText -Color Pink -InputText "A Deny Base policy with the name '$PolicyName' has been deployed."
+                    Write-ColorfulTextWDACConfig -Color Pink -InputText "A Deny Base policy with the name '$PolicyName' has been deployed."
                 }
                 Write-Progress -Id 23 -Activity 'Complete.' -Completed
             }
@@ -317,7 +317,7 @@ Function New-DenyWDACConfig {
                             Write-Verbose -Message 'Deploying the policy'
                             $null = &'C:\Windows\System32\CiTool.exe' --update-policy $FinalDenyPolicyCIPPath -json
 
-                            Write-ColorfulText -Color Pink -InputText "A Deny Base policy with the name '$PolicyName' has been deployed."
+                            Write-ColorfulTextWDACConfig -Color Pink -InputText "A Deny Base policy with the name '$PolicyName' has been deployed."
                         }
                     }
                     else {
@@ -379,7 +379,7 @@ Function New-DenyWDACConfig {
                         Write-Verbose -Message "A Deny Base policy with the name '$PolicyName' has been deployed."
                     }
                     else {
-                        Write-ColorfulText -Color Pink -InputText "A Deny Base policy with the name '$PolicyName' has been deployed."
+                        Write-ColorfulTextWDACConfig -Color Pink -InputText "A Deny Base policy with the name '$PolicyName' has been deployed."
                     }
                 }
                 Write-Progress -Id 29 -Activity 'Complete.' -Completed

@@ -7,8 +7,8 @@ namespace WDACConfig
     public class FileUtility
     {
         /// <summary>
-        ///  a flexible and fast method that can accept directory paths and file paths as input and return a list of FileInfo objects that are compliant with the WDAC policy.
-        ///  It supports custom extensions to filter by as well.
+        /// A flexible and fast method that can accept directory paths and file paths as input and return a list of FileInfo objects that are compliant with the WDAC policy.
+        /// It supports custom extensions to filter by as well.
         /// </summary>
         /// <param name="directories">Directories to process.</param>
         /// <param name="files">Files to process.</param>
@@ -43,6 +43,7 @@ namespace WDACConfig
                 AttributesToSkip = FileAttributes.None
             };
 
+            // Process directories if provided
             if (directories != null && directories.Length > 0)
             {
                 foreach (DirectoryInfo directory in directories)

@@ -72,7 +72,7 @@ Function Merge-Signers_Semantic {
         $FileRulesValidID_HashSet = [System.Collections.Generic.HashSet[System.String]]@($FileRulesElements.ID)
 
         if ($SignerNodes.Count -eq 0) {
-            Write-Verbose -Message 'Merge-Signers: No Signer nodes found in the XML file. Exiting the function.'
+            [WDACConfig.VerboseLogger]::Write('Merge-Signers: No Signer nodes found in the XML file. Exiting the function.')
             Return
         }
 
@@ -108,7 +108,7 @@ Function Merge-Signers_Semantic {
                 [System.Int64]$After = $Signer.FileAttribRef.count
 
                 if ($Before -ne $After) {
-                    Write-Verbose -Message "Merge-Signers: Removed $($Before - $After) FileAttribRef elements from Signer with ID $($Signer.ID)."
+                    [WDACConfig.VerboseLogger]::Write("Merge-Signers: Removed $($Before - $After) FileAttribRef elements from Signer with ID $($Signer.ID).")
                 }
 
                 # Determine the Signing Scenario based on the AllowedSigners
@@ -145,7 +145,7 @@ Function Merge-Signers_Semantic {
                             [System.Void]$UniqueFilePublisherSigners131[$FilePublisherKey]['Signer'].AppendChild($Xml.ImportNode($FileAttribRef, $true))
                         }
 
-                        Write-Verbose -Message "Merge-Signers: Merged FilePublisher signer for Signing Scenario 131 with IDs: $($UniqueFilePublisherSigners131[$FilePublisherKey].ID) and $($Signer.ID). Their FileAttribRefs are merged."
+                        [WDACConfig.VerboseLogger]::Write("Merge-Signers: Merged FilePublisher signer for Signing Scenario 131 with IDs: $($UniqueFilePublisherSigners131[$FilePublisherKey].ID) and $($Signer.ID). Their FileAttribRefs are merged.")
                     }
                 }
                 # If the signer is part of Signing Scenario 12
@@ -180,7 +180,7 @@ Function Merge-Signers_Semantic {
                             [System.Void]$UniqueFilePublisherSigners12[$FilePublisherKey]['Signer'].AppendChild($Xml.ImportNode($FileAttribRef, $true))
                         }
 
-                        Write-Verbose -Message "Merge-Signers: Merged FilePublisher signer for Signing Scenario 12 with IDs: $($UniqueFilePublisherSigners12[$FilePublisherKey].ID) and $($Signer.ID). Their FileAttribRefs are merged."
+                        [WDACConfig.VerboseLogger]::Write("Merge-Signers: Merged FilePublisher signer for Signing Scenario 12 with IDs: $($UniqueFilePublisherSigners12[$FilePublisherKey].ID) and $($Signer.ID). Their FileAttribRefs are merged.")
                     }
                 }
             }
@@ -211,7 +211,7 @@ Function Merge-Signers_Semantic {
                         $UniquePublisherSigners131[$PublisherKey] = $PublisherKeyTemp
                     }
                     else {
-                        Write-Verbose -Message "Merge-Signers: Excluded Publisher signer for Signing Scenario 131 with ID: $($Signer.ID). Only one Publisher signer is allowed per TBS, Name, and CertPublisher."
+                        [WDACConfig.VerboseLogger]::Write("Merge-Signers: Excluded Publisher signer for Signing Scenario 131 with ID: $($Signer.ID). Only one Publisher signer is allowed per TBS, Name, and CertPublisher.")
                     }
                 }
                 # If the signer is part of Signing Scenario 12
@@ -235,7 +235,7 @@ Function Merge-Signers_Semantic {
                         $UniquePublisherSigners12[$PublisherKey] = $PublisherKeyTemp
                     }
                     else {
-                        Write-Verbose -Message "Merge-Signers: Excluded Publisher signer for Signing Scenario 12 with ID: $($Signer.ID). Only one Publisher signer is allowed per TBS, Name, and CertPublisher."
+                        [WDACConfig.VerboseLogger]::Write("Merge-Signers: Excluded Publisher signer for Signing Scenario 12 with ID: $($Signer.ID). Only one Publisher signer is allowed per TBS, Name, and CertPublisher.")
                     }
                 }
             }

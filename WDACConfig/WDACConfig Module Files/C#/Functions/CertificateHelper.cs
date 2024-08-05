@@ -6,7 +6,7 @@ using System.Formats.Asn1; // to use the AsnReader and AsnWriter classes
 
 namespace WDACConfig
 {
-    // a class to throw a custom exception when the certificate collection cannot be obtained during WDAC Simulation
+    // A class to throw a custom exception when the certificate collection cannot be obtained during WDAC Simulation
     public class ExceptionFailedToGetCertificateCollection : Exception
     {
         public ExceptionFailedToGetCertificateCollection(string message, string functionName)
@@ -46,7 +46,7 @@ namespace WDACConfig
                     hashFunction = MD5.Create();
                     break;
                 case "1.2.840.113549.1.1.5":
-                case "1.3.14.3.2.29": //sha-1WithRSAEncryption
+                case "1.3.14.3.2.29": // sha-1WithRSAEncryption
                     hashFunction = SHA1.Create();
                     break;
                 case "1.2.840.113549.1.1.11":
@@ -91,7 +91,7 @@ namespace WDACConfig
             byte[] hash = hashFunction.ComputeHash(tbsCertificate.ToArray());
 
             // Convert the hash to a hex string
-            string hexStringOutput = BitConverter.ToString(hash).Replace("-", "");
+            string hexStringOutput = BitConverter.ToString(hash).Replace("-", "", StringComparison.OrdinalIgnoreCase);
 
             return hexStringOutput;
         }

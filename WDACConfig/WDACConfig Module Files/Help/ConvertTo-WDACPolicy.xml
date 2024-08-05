@@ -57,6 +57,20 @@
           </dev:type>
           <dev:defaultValue>&lt;Depends on the selected source and time&gt;</dev:defaultValue>
         </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="Lvl">
+          <maml:name>Level</maml:name>
+          <maml:description>
+            <maml:para>The level determining rule generation can be one of the following: Auto, FilePublisher, Publisher, or Hash.</maml:para>
+            <maml:para>The fallback level is always Hash.</maml:para>
+            <maml:para>By default, which is the same as not using this parameter, the most secure levels are prioritized. If a log contains the requisite details for the FilePublisher level, it will be utilized. If not, the Publisher level will be attempted. Should this also fail, the Hash level will be employed.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>Auto</dev:defaultValue>
+        </command:parameter>
         <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="MDELogs">
           <maml:name>MDEAHLogs</maml:name>
           <maml:description>
@@ -132,14 +146,14 @@
         <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="LogKind">
           <maml:name>LogType</maml:name>
           <maml:description>
-            <maml:para>The type of logs to display: Audit or Blocked</maml:para>
+            <maml:para>The type of logs to display: Audit or Blocked. If not specified, All types will be displayed.</maml:para>
           </maml:description>
           <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
           <dev:type>
             <maml:name>String</maml:name>
             <maml:uri />
           </dev:type>
-          <dev:defaultValue>Audit</dev:defaultValue>
+          <dev:defaultValue>All</dev:defaultValue>
         </command:parameter>
         <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="Up">
           <maml:name>Deploy</maml:name>
@@ -225,6 +239,20 @@
           </dev:type>
           <dev:defaultValue>&lt;Depends on the selected source and time&gt;</dev:defaultValue>
         </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="Lvl">
+          <maml:name>Level</maml:name>
+          <maml:description>
+            <maml:para>The level determining rule generation can be one of the following: Auto, FilePublisher, Publisher, or Hash.</maml:para>
+            <maml:para>The fallback level is always Hash.</maml:para>
+            <maml:para>By default, which is the same as not using this parameter, the most secure levels are prioritized. If a log contains the requisite details for the FilePublisher level, it will be utilized. If not, the Publisher level will be attempted. Should this also fail, the Hash level will be employed.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>Auto</dev:defaultValue>
+        </command:parameter>
         <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="MDELogs">
           <maml:name>MDEAHLogs</maml:name>
           <maml:description>
@@ -300,14 +328,14 @@
         <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="LogKind">
           <maml:name>LogType</maml:name>
           <maml:description>
-            <maml:para>The type of logs to display: Audit or Blocked</maml:para>
+            <maml:para>The type of logs to display: Audit or Blocked. If not specified, All types will be displayed.</maml:para>
           </maml:description>
           <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
           <dev:type>
             <maml:name>String</maml:name>
             <maml:uri />
           </dev:type>
-          <dev:defaultValue>Audit</dev:defaultValue>
+          <dev:defaultValue>All</dev:defaultValue>
         </command:parameter>
         <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="Up">
           <maml:name>Deploy</maml:name>
@@ -393,6 +421,20 @@
           </dev:type>
           <dev:defaultValue>&lt;Depends on the selected source and time&gt;</dev:defaultValue>
         </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="Lvl">
+          <maml:name>Level</maml:name>
+          <maml:description>
+            <maml:para>The level determining rule generation can be one of the following: Auto, FilePublisher, Publisher, or Hash.</maml:para>
+            <maml:para>The fallback level is always Hash.</maml:para>
+            <maml:para>By default, which is the same as not using this parameter, the most secure levels are prioritized. If a log contains the requisite details for the FilePublisher level, it will be utilized. If not, the Publisher level will be attempted. Should this also fail, the Hash level will be employed.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>Auto</dev:defaultValue>
+        </command:parameter>
         <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="MDELogs">
           <maml:name>MDEAHLogs</maml:name>
           <maml:description>
@@ -468,14 +510,14 @@
         <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="LogKind">
           <maml:name>LogType</maml:name>
           <maml:description>
-            <maml:para>The type of logs to display: Audit or Blocked</maml:para>
+            <maml:para>The type of logs to display: Audit or Blocked. If not specified, All types will be displayed.</maml:para>
           </maml:description>
           <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
           <dev:type>
             <maml:name>String</maml:name>
             <maml:uri />
           </dev:type>
-          <dev:defaultValue>Audit</dev:defaultValue>
+          <dev:defaultValue>All</dev:defaultValue>
         </command:parameter>
         <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="Up">
           <maml:name>Deploy</maml:name>
@@ -585,6 +627,20 @@
         </dev:type>
         <dev:defaultValue>&lt;Depends on the selected source and time&gt;</dev:defaultValue>
       </command:parameter>
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="Lvl">
+        <maml:name>Level</maml:name>
+        <maml:description>
+          <maml:para>The level determining rule generation can be one of the following: Auto, FilePublisher, Publisher, or Hash.</maml:para>
+          <maml:para>The fallback level is always Hash.</maml:para>
+          <maml:para>By default, which is the same as not using this parameter, the most secure levels are prioritized. If a log contains the requisite details for the FilePublisher level, it will be utilized. If not, the Publisher level will be attempted. Should this also fail, the Hash level will be employed.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>Auto</dev:defaultValue>
+      </command:parameter>
       <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="MDELogs">
         <maml:name>MDEAHLogs</maml:name>
         <maml:description>
@@ -661,14 +717,14 @@
       <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="LogKind">
         <maml:name>LogType</maml:name>
         <maml:description>
-          <maml:para>The type of logs to display: Audit or Blocked</maml:para>
+          <maml:para>The type of logs to display: Audit or Blocked. If not specified, All types will be displayed.</maml:para>
         </maml:description>
         <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
         <dev:type>
           <maml:name>String</maml:name>
           <maml:uri />
         </dev:type>
-        <dev:defaultValue>Audit</dev:defaultValue>
+        <dev:defaultValue>All</dev:defaultValue>
       </command:parameter>
       <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="Up">
         <maml:name>Deploy</maml:name>

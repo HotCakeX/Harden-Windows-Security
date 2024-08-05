@@ -61,14 +61,11 @@ Function New-WDACConfig {
     Begin {
         [System.Boolean]$Verbose = $PSBoundParameters.Verbose.IsPresent ? $true : $false
         [System.Boolean]$Debug = $PSBoundParameters.Debug.IsPresent ? $true : $false
+        [WDACConfig.LoggerInitializer]::Initialize($VerbosePreference, $DebugPreference, $Host)
         . "$([WDACConfig.GlobalVars]::ModuleRootPath)\CoreExt\PSDefaultParameterValues.ps1"
 
         Write-Verbose -Message 'Importing the required sub-modules'
-        Import-Module -Force -FullyQualifiedName @(
-            "$([WDACConfig.GlobalVars]::ModuleRootPath)\Shared\Update-Self.psm1",
-            "$([WDACConfig.GlobalVars]::ModuleRootPath)\Shared\Write-ColorfulText.psm1",
-            "$([WDACConfig.GlobalVars]::ModuleRootPath)\Shared\Set-LogSize.psm1"
-        )
+        Import-Module -Force -FullyQualifiedName "$([WDACConfig.GlobalVars]::ModuleRootPath)\Shared\Update-Self.psm1"
 
         if ([WDACConfig.GlobalVars]::ConfigCIBootstrap -eq $false) {
             Invoke-MockConfigCIBootstrap
@@ -164,7 +161,7 @@ Function New-WDACConfig {
                 Write-Verbose -Message 'Refreshing the system WDAC policies using CiTool.exe'
                 $null = &'C:\Windows\System32\CiTool.exe' --refresh -json
 
-                Write-ColorfulText -Color Pink -InputText 'SiPolicy.p7b has been deployed and policies refreshed.'
+                Write-ColorfulTextWDACConfig -Color Pink -InputText 'SiPolicy.p7b has been deployed and policies refreshed.'
 
                 Write-Verbose -Message "Displaying extra info about the $Name"
                 Invoke-Command -ScriptBlock $DriversBlockListInfoGatheringSCRIPTBLOCK
@@ -260,7 +257,7 @@ Function New-WDACConfig {
             .OUTPUTS
                 System.String
             #>
-            if ($Audit) { Set-LogSize -LogSize:$LogSize }
+            if ($Audit) { [WDACConfig.EventLogUtility]::SetLogSize($LogSize ?? 0) }
             [System.String]$Name = $Audit ? 'AllowMicrosoftAudit' : 'AllowMicrosoft'
 
             # The total number of the main steps for the progress bar to render
@@ -312,7 +309,7 @@ Function New-WDACConfig {
             .OUTPUTS
                 System.String
             #>
-            if ($Audit) { Set-LogSize -LogSize:$LogSize }
+            if ($Audit) { [WDACConfig.EventLogUtility]::SetLogSize($LogSize ?? 0) }
             [System.String]$Name = $Audit ? 'DefaultWindowsAudit' : 'DefaultWindows'
 
             # The total number of the main steps for the progress bar to render
@@ -334,7 +331,7 @@ Function New-WDACConfig {
 
             # Scan PowerShell core directory (if installed using MSI only, because Microsoft Store installed version doesn't need to be allowed manually) and allow its files in the Default Windows base policy so that module can still be used once it's been deployed
             if ($PSHOME -notlike 'C:\Program Files\WindowsApps\*') {
-                Write-ColorfulText -Color Lavender -InputText 'Creating allow rules for PowerShell in the DefaultWindows base policy so you can continue using this module after deploying it.'
+                Write-ColorfulTextWDACConfig -Color Lavender -InputText 'Creating allow rules for PowerShell in the DefaultWindows base policy so you can continue using this module after deploying it.'
                 New-CIPolicy -ScanPath $PSHOME -Level FilePublisher -NoScript -Fallback Hash -UserPEs -UserWriteablePaths -MultiplePolicyFormat -FilePath (Join-Path -Path $StagingArea -ChildPath 'AllowPowerShell.xml')
 
                 Write-Verbose -Message "Merging the policy files to create the final $Name.xml policy"
@@ -426,7 +423,7 @@ Function New-WDACConfig {
             .OUTPUTS
                 System.String
             #>
-            if ($Audit) { Set-LogSize -LogSize:$LogSize }
+            if ($Audit) { [WDACConfig.EventLogUtility]::SetLogSize($LogSize ?? 0) }
             [System.String]$Name = $Audit ? 'SignedAndReputableAudit' : 'SignedAndReputable'
 
             # The total number of the main steps for the progress bar to render
@@ -493,10 +490,10 @@ Function New-WDACConfig {
                 [System.Object[]]$Response = Invoke-RestMethod -Uri $ApiUrl -ProgressAction SilentlyContinue
                 [System.DateTime]$Date = $Response[0].commit.author.date
 
-                Write-ColorfulText -Color Lavender -InputText "The document containing the drivers block list on GitHub was last updated on $Date"
+                Write-ColorfulTextWDACConfig -Color Lavender -InputText "The document containing the drivers block list on GitHub was last updated on $Date"
                 [System.String]$MicrosoftRecommendedDriverBlockRules = (Invoke-WebRequest -Uri ([WDACConfig.GlobalVars]::MSFTRecommendedDriverBlockRulesURL) -ProgressAction SilentlyContinue).Content
                 $null = $MicrosoftRecommendedDriverBlockRules -match '<VersionEx>(.*)</VersionEx>'
-                Write-ColorfulText -Color Pink -InputText "The current version of Microsoft recommended drivers block list is $($Matches[1])"
+                Write-ColorfulTextWDACConfig -Color Pink -InputText "The current version of Microsoft recommended drivers block list is $($Matches[1])"
             }
             catch {
                 Write-Error -ErrorAction Continue -Message $_
@@ -522,6 +519,9 @@ Function New-WDACConfig {
                 'GetDriverBlockRules' { Get-DriverBlockRules ; break }
                 default { Write-Warning -Message 'None of the main parameters were selected.'; break }
             }
+        }
+        catch {
+            throw $_
         }
         Finally {
             if (-NOT $Debug) {

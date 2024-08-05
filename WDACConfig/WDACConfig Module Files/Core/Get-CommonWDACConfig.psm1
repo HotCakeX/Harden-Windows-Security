@@ -15,7 +15,12 @@ Function Get-CommonWDACConfig {
     )
     begin {
         [System.Boolean]$Verbose = $PSBoundParameters.Verbose.IsPresent ? $true : $false
-
+        if ($(Get-PSCallStack).Count -le 2) {
+            [WDACConfig.LoggerInitializer]::Initialize($VerbosePreference, $DebugPreference, $Host)
+        }
+        else {
+            [WDACConfig.LoggerInitializer]::Initialize($null, $null, $Host)
+        }
         . "$([WDACConfig.GlobalVars]::ModuleRootPath)\CoreExt\PSDefaultParameterValues.ps1"
 
         # Create User configuration folder if it doesn't already exist

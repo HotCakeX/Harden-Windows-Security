@@ -7,6 +7,7 @@ ConvertTo-WDACPolicy
     [-PolicyToAddLogsTo <FileInfo>]
     [-Source <String>]
     [-SuppPolicyName <String>]
+    [-Level <String>]
     [-MDEAHLogs <FileInfo[]>]
     [-EVTXLogs <FileInfo[]>]
     [-FilterByPolicyNames <String[]>]
@@ -24,6 +25,7 @@ ConvertTo-WDACPolicy
     [-BasePolicyFile <FileInfo>]
     [-Source <String>]
     [-SuppPolicyName <String>]
+    [-Level <String>]
     [-MDEAHLogs <FileInfo[]>]
     [-EVTXLogs <FileInfo[]>]
     [-FilterByPolicyNames <String[]>]
@@ -41,6 +43,7 @@ ConvertTo-WDACPolicy
     [-BasePolicyGUID <Guid>]
     [-Source <String>]
     [-SuppPolicyName <String>]
+    [-Level <String>]
     [-MDEAHLogs <FileInfo[]>]
     [-EVTXLogs <FileInfo[]>]
     [-FilterByPolicyNames <String[]>]
@@ -175,6 +178,29 @@ The name of the supplemental policy to create
 | Aliases: | Name |
 | Position: | Named |
 | Default value: | `The cmdlet will generate a proper name based on the selected source and time` |
+| Required: | False |
+| Accept pipeline input: | False |
+| Accept wildcard characters: | False |
+
+</div>
+
+<br>
+
+### -Level
+
+The level determining rule generation can be one of the following: Auto, FilePublisher, Publisher, or Hash.
+
+The fallback level is always Hash.
+
+By default, which is the same as not using this parameter, the [most secure levels](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDAC-Rule-Levels-Comparison-and-Guide) are prioritized. If a log contains the requisite details for the FilePublisher level, it will be utilized. If not, the Publisher level will be attempted. Should this also fail, the Hash level will be employed.
+
+<div align='center'>
+
+| Type: |[String](https://learn.microsoft.com/en-us/dotnet/api/system.string)|
+| :-------------: | :-------------: |
+| Aliases: | Lvl |
+| Position: | Named |
+| Default value: | `Auto` |
 | Required: | False |
 | Accept pipeline input: | False |
 | Accept wildcard characters: | False |

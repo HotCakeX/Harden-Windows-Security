@@ -552,7 +552,6 @@ Function ConvertTo-WDACPolicy {
                                 $null = &'C:\Windows\System32\CiTool.exe' --update-policy (Join-Path -Path $StagingArea -ChildPath "$SupplementalPolicyID.cip") -json
                             }
                         }
-
                         { $null -ne $BasePolicyGUID } {
 
                             Write-Verbose -Message 'ConvertTo-WDACPolicy: Assigning the user input GUID to the base policy ID of the supplemental policy'
@@ -574,10 +573,10 @@ Function ConvertTo-WDACPolicy {
                                 $null = &'C:\Windows\System32\CiTool.exe' --update-policy (Join-Path -Path $StagingArea -ChildPath "$SupplementalPolicyID.cip") -json
                             }
                         }
-
                         { $null -ne $PolicyToAddLogsTo } {
-
                             Write-Verbose -Message 'ConvertTo-WDACPolicy: Adding the logs to the policy that user selected'
+
+                            $MacrosBackup = Checkpoint-Macros -XmlFilePathIn $PolicyToAddLogsTo -Backup
 
                             # Objectify the user input policy file to extract its policy ID
                             $InputXMLObj = [System.Xml.XmlDocument](Get-Content -Path $PolicyToAddLogsTo)
@@ -589,8 +588,12 @@ Function ConvertTo-WDACPolicy {
 
                             $null = Merge-CIPolicy -PolicyPaths $PolicyToAddLogsTo, $WDACPolicyPath -OutputFilePath $PolicyToAddLogsTo
 
-                            # Set HVCI to Strict
                             Set-HVCIOptions -Strict -FilePath $PolicyToAddLogsTo
+
+                            if ($null -ne $MacrosBackup) {
+                                Write-Verbose -Message 'Restoring the Macros in the policy'
+                                Checkpoint-Macros -XmlFilePathOut $PolicyToAddLogsTo -Restore -MacrosBackup $MacrosBackup
+                            }
 
                             if ($Deploy) {
                                 $null = ConvertFrom-CIPolicy -XmlFilePath $PolicyToAddLogsTo -BinaryFilePath (Join-Path -Path $StagingArea -ChildPath "$($InputXMLObj.SiPolicy.PolicyID).cip")
@@ -791,7 +794,6 @@ Function ConvertTo-WDACPolicy {
                                 $null = &'C:\Windows\System32\CiTool.exe' --update-policy (Join-Path -Path $StagingArea -ChildPath "$SupplementalPolicyID.cip") -json
                             }
                         }
-
                         { $null -ne $BasePolicyGUID } {
 
                             Write-Verbose -Message 'ConvertTo-WDACPolicy: Assigning the user input GUID to the base policy ID of the supplemental policy'
@@ -813,10 +815,10 @@ Function ConvertTo-WDACPolicy {
                                 $null = &'C:\Windows\System32\CiTool.exe' --update-policy (Join-Path -Path $StagingArea -ChildPath "$SupplementalPolicyID.cip") -json
                             }
                         }
-
                         { $null -ne $PolicyToAddLogsTo } {
-
                             Write-Verbose -Message 'ConvertTo-WDACPolicy: Adding the logs to the policy that user selected'
+
+                            $MacrosBackup = Checkpoint-Macros -XmlFilePathIn $PolicyToAddLogsTo -Backup
 
                             # Objectify the user input policy file to extract its policy ID
                             $InputXMLObj = [System.Xml.XmlDocument](Get-Content -Path $PolicyToAddLogsTo)
@@ -828,8 +830,12 @@ Function ConvertTo-WDACPolicy {
 
                             $null = Merge-CIPolicy -PolicyPaths $PolicyToAddLogsTo, $OutputPolicyPathMDEAH -OutputFilePath $PolicyToAddLogsTo
 
-                            # Set HVCI to Strict
                             Set-HVCIOptions -Strict -FilePath $PolicyToAddLogsTo
+
+                            if ($null -ne $MacrosBackup) {
+                                Write-Verbose -Message 'Restoring the Macros in the policy'
+                                Checkpoint-Macros -XmlFilePathOut $PolicyToAddLogsTo -Restore -MacrosBackup $MacrosBackup
+                            }
 
                             if ($Deploy) {
                                 $null = ConvertFrom-CIPolicy -XmlFilePath $PolicyToAddLogsTo -BinaryFilePath (Join-Path -Path $StagingArea -ChildPath "$($InputXMLObj.SiPolicy.PolicyID).cip")
@@ -839,7 +845,6 @@ Function ConvertTo-WDACPolicy {
                                 $null = &'C:\Windows\System32\CiTool.exe' --update-policy (Join-Path -Path $StagingArea -ChildPath "$($InputXMLObj.SiPolicy.PolicyID).cip") -json
                             }
                         }
-
                         Default {
                             Write-Verbose -Message 'ConvertTo-WDACPolicy: Copying the policy file to the User Config directory'
                             Set-CiRuleOptions -FilePath $OutputPolicyPathMDEAH -Template Supplemental
@@ -983,7 +988,6 @@ Function ConvertTo-WDACPolicy {
                                 $null = &'C:\Windows\System32\CiTool.exe' --update-policy (Join-Path -Path $StagingArea -ChildPath "$SupplementalPolicyID.cip") -json
                             }
                         }
-
                         { $null -ne $BasePolicyGUID } {
 
                             Write-Verbose -Message 'ConvertTo-WDACPolicy: Assigning the user input GUID to the base policy ID of the supplemental policy'
@@ -1005,10 +1009,10 @@ Function ConvertTo-WDACPolicy {
                                 $null = &'C:\Windows\System32\CiTool.exe' --update-policy (Join-Path -Path $StagingArea -ChildPath "$SupplementalPolicyID.cip") -json
                             }
                         }
-
                         { $null -ne $PolicyToAddLogsTo } {
-
                             Write-Verbose -Message 'ConvertTo-WDACPolicy: Adding the logs to the policy that user selected'
+
+                            $MacrosBackup = Checkpoint-Macros -XmlFilePathIn $PolicyToAddLogsTo -Backup
 
                             # Objectify the user input policy file to extract its policy ID
                             $InputXMLObj = [System.Xml.XmlDocument](Get-Content -Path $PolicyToAddLogsTo)
@@ -1020,8 +1024,12 @@ Function ConvertTo-WDACPolicy {
 
                             $null = Merge-CIPolicy -PolicyPaths $PolicyToAddLogsTo, $OutputPolicyPathEVTX -OutputFilePath $PolicyToAddLogsTo
 
-                            # Set HVCI to Strict
                             Set-HVCIOptions -Strict -FilePath $PolicyToAddLogsTo
+
+                            if ($null -ne $MacrosBackup) {
+                                Write-Verbose -Message 'Restoring the Macros in the policy'
+                                Checkpoint-Macros -XmlFilePathOut $PolicyToAddLogsTo -Restore -MacrosBackup $MacrosBackup
+                            }
 
                             if ($Deploy) {
                                 $null = ConvertFrom-CIPolicy -XmlFilePath $PolicyToAddLogsTo -BinaryFilePath (Join-Path -Path $StagingArea -ChildPath "$($InputXMLObj.SiPolicy.PolicyID).cip")
@@ -1031,7 +1039,6 @@ Function ConvertTo-WDACPolicy {
                                 $null = &'C:\Windows\System32\CiTool.exe' --update-policy (Join-Path -Path $StagingArea -ChildPath "$($InputXMLObj.SiPolicy.PolicyID).cip") -json
                             }
                         }
-
                         Default {
                             Write-Verbose -Message 'ConvertTo-WDACPolicy: Copying the policy file to the User Config directory'
                             Set-CiRuleOptions -FilePath $OutputPolicyPathEVTX -Template Supplemental

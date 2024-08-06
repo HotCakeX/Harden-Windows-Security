@@ -8,23 +8,21 @@ namespace HardeningModule
 {
     public static class Logger
     {
-        public static void LogMessage(string text, TextBox outputTextBlock, ScrollViewer scrollerForOutputTextBlock, Window window)
+        /// <summary>
+        /// Writes messages to the GUI and the log file
+        /// </summary>
+        /// <param name="text">The text to be written</param>
+        public static void LogMessage(string text)
         {
             // Add the text to the synchronized array list as log messages
             HardeningModule.GUI.Logger.Add($"{DateTime.Now}: {text}");
 
-            // Check if the window is null
-            if (window == null)
-            {
-                throw new ArgumentNullException(nameof(window), "Window parameter cannot be null");
-            }
-
             // Invoke the Dispatcher to update the GUI
-            window.Dispatcher.Invoke(new Action(() =>
+            HardeningModule.GUI.window.Dispatcher.Invoke(new Action(() =>
             {
                 // Update the TextBlock with the new log message
-                outputTextBlock.Text += text + "\n";
-                scrollerForOutputTextBlock.ScrollToBottom();
+                HardeningModule.GUI.outputTextBlock.Text += text + "\n";
+                HardeningModule.GUI.scrollerForOutputTextBlock.ScrollToBottom();
             }), DispatcherPriority.Background);
         }
     }

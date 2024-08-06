@@ -361,12 +361,6 @@ Function Protect-WindowsSecurity {
             # Detecting whether GUI parameter is present or not
             if ($PSBoundParameters.GUI.IsPresent) {
 
-                # A synchronized hashtable to store all of the data that needs to be shared between the RunSpaces and ThreadJobs
-                $SyncHash = [System.Collections.Hashtable]::Synchronized(@{})
-
-                # A nested hashtable to store all of the GUI elements
-                $SyncHash['GUI'] = [System.Collections.Hashtable]@{}
-
                 # Create and add the header to the log messages
                 [System.Void][HardeningModule.GUI]::Logger.Add(@"
 **********************
@@ -388,384 +382,11 @@ WSManStackVersion: $([System.String]$(($PSVersionTable).WSManStackVersion))
 Execution Policy: $CurrentExecutionPolicy
 **********************
 "@)
-
-                # Initialize a flag to determine whether to write logs or not, set to false by default
-                $SyncHash.ShouldWriteLogs = $false
-
-                [System.Xml.XmlDocument]$XAML = Get-Content -Raw -Path ("$([HardeningModule.GlobalVars]::Path)\XAML\Main.xml")
-
-                $Reader = New-Object -TypeName 'System.Xml.XmlNodeReader' -ArgumentList $Xaml
-                $SyncHash.Window = [System.Windows.Markup.XamlReader]::Load( $Reader )
-
-                # Finding the ParentGrid
-                [System.Windows.DependencyObject]$ParentGrid = $SyncHash.Window.FindName('ParentGrid')
-                [System.Windows.DependencyObject]$MainTabControlToggle = $ParentGrid.FindName('MainTabControlToggle')
-                [System.Windows.DependencyObject]$MainContentControl = $MainTabControlToggle.FindName('MainContentControl')
-
-                # Set the icon using an absolute path
-                $SyncHash.Window.Icon = "$([HardeningModule.GlobalVars]::path)\Resources\Media\ProgramIcon.ico"
-
-                # Due to using ToggleButton as Tab Control element, this is now considered the parent of all inner elements
-                [System.Windows.Style]$MainContentControlStyle = $MainContentControl.FindName('MainContentControlStyle')
-
-                # Create variables for all elements inside of $MainContentControlStyle
-                $XAML.SelectNodes("//*[@*[contains(translate(name(.),'n','N'),'Name')]]") | ForEach-Object -Process {
-                    $SyncHash['GUI'][$_.Name] = $MainContentControlStyle.FindName($_.Name)
-                }
-
-                # Creating variables for the important elements inside of the ParentGrid
-                $SyncHash['GUI']['OutputTextBlock'] = $SyncHash.Window.FindName('ParentGrid').FindName('OutputTextBlock')
-                $SyncHash['GUI']['ScrollerForOutputTextBlock'] = $SyncHash.Window.FindName('ParentGrid').FindName('ScrollerForOutputTextBlock')
-
-                #Region assigning image source paths to the buttons
-                $SyncHash['GUI'].PathIcon1.Source = "$([HardeningModule.GlobalVars]::Path)\Resources\Media\path.png"
-                $SyncHash['GUI'].PathIcon2.Source = "$([HardeningModule.GlobalVars]::Path)\Resources\Media\path.png"
-                $SyncHash['GUI'].PathIcon3.Source = "$([HardeningModule.GlobalVars]::Path)\Resources\Media\path.png"
-                $SyncHash['GUI'].LogButtonIcon.Source = "$([HardeningModule.GlobalVars]::Path)\Resources\Media\log.png"
-                $ParentGrid.FindName('ExecuteButtonIcon').Source = "$([HardeningModule.GlobalVars]::Path)\Resources\Media\start.png"
-                #Endregion assigning image source paths to the buttons
-
-                # Defining the correlation between Categories and which Sub-Categories they activate
-                [System.Collections.Hashtable]$Correlation = @{
-                    'MicrosoftSecurityBaselines' = @('SecBaselines_NoOverrides')
-                    'MicrosoftDefender'          = @('MSFTDefender_SAC', 'MSFTDefender_NoDiagData', 'MSFTDefender_NoScheduledTask', 'MSFTDefender_BetaChannels')
-                    'LockScreen'                 = @('LockScreen_CtrlAltDel', 'LockScreen_NoLastSignedIn')
-                    'UserAccountControl'         = @('UAC_NoFastSwitching', 'UAC_OnlyElevateSigned')
-                    'CountryIPBlocking'          = @('CountryIPBlocking_OFAC')
-                    'DownloadsDefenseMeasures'   = @('DangerousScriptHostsBlocking')
-                    'NonAdminCommands'           = @('ClipboardSync')
-                }
-                function Update-SubCategories {
-                    <#
-                    .SYNOPSIS
-                        Function to update sub-category items based on the checked categories
-                    #>
-
-                    # Disable all sub-category items first
-                    $SyncHash['GUI'].SubCategories.Items | ForEach-Object -Process { $_.IsEnabled = $false }
-
-                    # Get all checked categories
-                    $CheckedCategories = $SyncHash['GUI'].Categories.Items | Where-Object -FilterScript { $_.Content.IsChecked }
-
-                    # Enable the corresponding sub-category items
-                    foreach ($CategoryItem in $CheckedCategories) {
-                        $CategoryContent = $CategoryItem.Content.Name
-                        $Correlation[$CategoryContent] | ForEach-Object -Process {
-                            $SubCategoryName = $_
-                            $SyncHash['GUI'].SubCategories.Items | Where-Object -FilterScript { $_.Content.Name -eq $SubCategoryName } | ForEach-Object -Process {
-                                $_.IsEnabled = $true
-                            }
-                        }
-                    }
-
-                    # Uncheck sub-category items whose category is not selected
-                    $SyncHash['GUI'].SubCategories.Items | Where-Object -FilterScript { $_.IsEnabled -eq $false } | ForEach-Object -Process {
-                        $_.Content.IsChecked = $false
-                    }
-
-                    # Disable categories that are not valid for the current session
-                    foreach ($Item in $SyncHash['GUI'].Categories.Items) {
-                        if ($Item.Content.Name -notin ([HardeningModule.GlobalVars]::HardeningCategorieX)) {
-                            $Item.IsEnabled = $false
-                        }
-                    }
-                }
-
-                # Add Checked and Unchecked event handlers to category checkboxes
-                foreach ($CategoryItem in $SyncHash['GUI'].Categories.Items) {
-                    $CheckBox = $CategoryItem.Content
-                    # Set the DataContext to the ListViewItem
-                    $CheckBox.DataContext = $CategoryItem
-                    $CheckBox.Add_Checked({ Update-SubCategories })
-                    $CheckBox.Add_Unchecked({ Update-SubCategories })
-                }
-
-                # Register an event handler for the window size changed event
-                $SyncHash.Window.add_SizeChanged({
-                        # Calculate the max width based on the window width
-                        # Subtract 50 to account for the padding and margin
-                        [System.Int64]$NewMaxWidth = $SyncHash.Window.ActualWidth - 50
-
-                        # Update the main TextBox's MaxWidth property dynamically, instead of setting it to a fixed value in the XAML
-                        $SyncHash['GUI']['OutputTextBlock'].MaxWidth = $NewMaxWidth
-                    })
-
-                #Region Check-Uncheck buttons for Categories
-
-                # Add click event for 'Check All' button
-                $SyncHash['GUI'].SelectAllCategories.Add_Checked({
-                        foreach ($Item in $SyncHash['GUI'].Categories.Items) {
-                            if ($Item.Content.Name -in ([HardeningModule.GlobalVars]::HardeningCategorieX)) {
-                                $Item.Content.IsChecked = $true
-                            }
-                        }
-                    })
-
-                # Add click event for 'Uncheck All' button
-                $SyncHash['GUI'].SelectAllCategories.Add_Unchecked({
-                        foreach ($Item in $SyncHash['GUI'].Categories.Items) {
-                            $Item.Content.IsChecked = $false
-                        }
-                    })
-                #Endregion Check-Uncheck buttons for Categories
-
-                #Region Check-Uncheck buttons for Sub-Categories
-                # Add click event for 'Check All' button for enabled sub-categories
-                $SyncHash['GUI'].SelectAllSubCategories.Add_Checked({
-
-                        foreach ($ItemObj in $SyncHash['GUI'].SubCategories.Items) {
-                            if ($ItemObj.IsEnabled -eq $true) {
-                                foreach ($ItemObj2 in $ItemObj) {
-                                    $ItemObj2.Content.IsChecked = $true
-                                }
-                            }
-                        }
-                    })
-
-                # Add click event for 'Uncheck All' button from sub-categories, regardless of whether they are enabled or disabled
-                $SyncHash['GUI'].SelectAllSubCategories.Add_Unchecked({
-                        foreach ($ItemObj in $SyncHash['GUI'].SubCategories.Items) {
-                            $ItemObj.Content.IsChecked = $false
-                        }
-                    })
-                #Endregion Check-Uncheck buttons for Sub-Categories
-
-                #Region 3-Log related elements
-
-                # Initially set the visibility of the text area for the selected LogPath to Collapsed since nothing is selected by the user
-                $SyncHash['GUI'].txtFilePath.Visibility = 'Collapsed'
-
-                # Initialize the LogPath button element as disabled since the checkbox to enable logging hasn't been checked yet
-                $SyncHash['GUI'].LogPath.IsEnabled = $false
-
-                # When the Log checkbox is checked, enable the LogPath button
-                $SyncHash['GUI'].Log.Add_Checked({
-                        $SyncHash['GUI'].LogPath.IsEnabled = $true
-                    })
-
-                # When the Log checkbox is unchecked, disable the LogPath button and set the selected LogPath text area's visibility to collapsed again
-                $SyncHash['GUI'].Log.Add_Unchecked({
-                        $SyncHash['GUI'].LogPath.IsEnabled = $false
-
-                        $SyncHash['GUI'].txtFilePath.Visibility = 'Collapsed'
-                    })
-
-                # Event handler for the Log Path button click to open a file path picker dialog
-                $SyncHash['GUI'].LogPath.Add_Click({
-
-                        [System.Windows.Forms.SaveFileDialog]$Dialog = New-Object -TypeName System.Windows.Forms.SaveFileDialog
-                        $Dialog.InitialDirectory = [System.Environment]::GetFolderPath('Desktop')
-                        $Dialog.Filter = 'Text files (*.txt)|*.txt'
-                        $Dialog.Title = 'Choose where to save the log file'
-
-                        if ($Dialog.ShowDialog() -eq 'OK') {
-                            $SyncHash['GUI'].txtFilePath.Text = $Dialog.FileName
-
-                            # set the selected LogPath text area's visibly to enabled once the user selected a file path
-                            $SyncHash['GUI'].txtFilePath.Visibility = 'Visible'
-
-                            [HardeningModule.Logger]::LogMessage(
-                                "Logs will be saved in: $($SyncHash['GUI'].txtFilePath.Text)",
-                                $SyncHash['GUI']['OutputTextBlock'],
-                                $SyncHash['GUI']['ScrollerForOutputTextBlock'],
-                                $SyncHash.Window
-                            )
-
-                            $SyncHash.ShouldWriteLogs = $true
-                        }
-                    })
-
-                #Endregion 3-Log related elements
-
-                #Region Offline-Mode-Tab
-
-                # When the Offline Mode button it toggled
-                $SyncHash['GUI'].EnableOfflineMode.Add_Checked({
-                        $SyncHash['GUI'].MicrosoftSecurityBaselineZipButton.IsEnabled = $true
-                        $SyncHash['GUI'].MicrosoftSecurityBaselineZipTextBox.IsEnabled = $true
-                        $SyncHash['GUI'].Microsoft365AppsSecurityBaselineZipButton.IsEnabled = $true
-                        $SyncHash['GUI'].Microsoft365AppsSecurityBaselineZipTextBox.IsEnabled = $true
-                        $SyncHash['GUI'].LGPOZipButton.IsEnabled = $true
-                        $SyncHash['GUI'].LGPOZipTextBox.IsEnabled = $true
-                    })
-
-                # Function to disable the Offline Mode configuration inputs
-                Function Disable-OfflineModeConfigInputs {
-                    $SyncHash['GUI'].MicrosoftSecurityBaselineZipButton.IsEnabled = $false
-                    $SyncHash['GUI'].MicrosoftSecurityBaselineZipTextBox.IsEnabled = $false
-                    $SyncHash['GUI'].Microsoft365AppsSecurityBaselineZipButton.IsEnabled = $false
-                    $SyncHash['GUI'].Microsoft365AppsSecurityBaselineZipTextBox.IsEnabled = $false
-                    $SyncHash['GUI'].LGPOZipButton.IsEnabled = $false
-                    $SyncHash['GUI'].LGPOZipTextBox.IsEnabled = $false
-                }
-
-                # Initially disable the Offline Mode configuration inputs until the Offline Mode checkbox is checked
-                Disable-OfflineModeConfigInputs
-
-                # Actions to take when the Offline Mode parameter was not passed with the function
-                if (!([HardeningModule.GlobalVars]::Offline)) {
-
-                    # Disable the Offline mode toggle button if -Offline parameter was not used with the function
-                    $SyncHash['GUI'].EnableOfflineMode.IsEnabled = $false
-
-                    # Display a message showing how to activate the offline mode
-
-                    # Add a new row definition for the text message
-                    [System.Windows.Controls.RowDefinition]$OfflineModeUnavailableRow = New-Object -Type System.Windows.Controls.RowDefinition
-                    $OfflineModeUnavailableRow.Height = 50
-                    [System.Void]$SyncHash['GUI'].Grid2.RowDefinitions.Add($OfflineModeUnavailableRow)
-
-                    # Create a new text box
-                    [System.Windows.Controls.TextBox]$OfflineModeUnavailableNoticeBox = New-Object -Type System.Windows.Controls.TextBox
-                    $OfflineModeUnavailableNoticeBox.HorizontalAlignment = [System.Windows.HorizontalAlignment]::Stretch
-                    $OfflineModeUnavailableNoticeBox.VerticalAlignment = [System.Windows.VerticalAlignment]::Stretch
-                    $OfflineModeUnavailableNoticeBox.TextWrapping = [System.Windows.TextWrapping]::Wrap
-                    $OfflineModeUnavailableNoticeBox.SetValue([System.Windows.Controls.Grid]::ColumnSpanProperty, 2)
-                    $OfflineModeUnavailableNoticeBox.Text = 'To enable offline mode, use: Protect-WindowsSecurity -GUI -Offline'
-                    $OfflineModeUnavailableNoticeBox.TextAlignment = 'Center'
-                    $OfflineModeUnavailableNoticeBox.Background = 'transparent'
-                    $OfflineModeUnavailableNoticeBox.FontSize = 20
-                    $OfflineModeUnavailableNoticeBox.BorderThickness = '0,0,0,0'
-                    $OfflineModeUnavailableNoticeBox.Margin = New-Object -Type System.Windows.Thickness -ArgumentList (10, 20, 10, 0)
-                    $OfflineModeUnavailableNoticeBox.ToolTip = 'To enable offline mode, use: Protect-WindowsSecurity -GUI -Offline'
-                    $OfflineModeUnavailableNoticeBox.SetValue([System.Windows.Controls.Grid]::RowProperty, 4)
-
-                    # Create a gradient brush for the text color
-                    [System.Windows.Media.LinearGradientBrush]$GradientBrush = New-Object -TypeName System.Windows.Media.LinearGradientBrush
-                    [System.Void]$GradientBrush.GradientStops.Add((New-Object -TypeName System.Windows.Media.GradientStop -ArgumentList ('Purple', 0)))
-                    [System.Void]$GradientBrush.GradientStops.Add((New-Object -TypeName System.Windows.Media.GradientStop -ArgumentList ('Blue', 1)))
-                    $OfflineModeUnavailableNoticeBox.Foreground = $GradientBrush
-
-                    # Add the text box to the grid
-                    [System.Void]$SyncHash['GUI'].Grid2.Children.Add($OfflineModeUnavailableNoticeBox)
-                }
-
-                # If the Offline Mode checkbox is Unchecked
-                $SyncHash['GUI'].EnableOfflineMode.Add_Unchecked({
-                        Disable-OfflineModeConfigInputs
-                    })
-
-                # Define the click event for the Microsoft Security Baseline Zip button
-                $SyncHash['GUI'].MicrosoftSecurityBaselineZipButton.Add_Click({
-
-                        [System.Windows.Forms.OpenFileDialog]$Dialog = New-Object -TypeName 'System.Windows.Forms.OpenFileDialog'
-                        $Dialog.InitialDirectory = [System.Environment]::GetFolderPath('Desktop')
-                        $Dialog.Filter = 'Zip files (*.zip)|*.zip'
-                        $Dialog.Title = 'Select the Microsoft Security Baseline Zip file'
-
-                        if ($Dialog.ShowDialog() -eq 'OK') {
-
-                            try {
-                                if (-NOT ([HardeningModule.SneakAndPeek]::Search('Windows*Security Baseline/Scripts/Baseline-LocalInstall.ps1', $Dialog.FileName))) {
-                                    [HardeningModule.Logger]::LogMessage(
-                                        'The selected Zip file does not contain the Microsoft Security Baselines Baseline-LocalInstall.ps1 which is required for the Protect-WindowsSecurity function to work properly',
-                                        $SyncHash['GUI']['OutputTextBlock'],
-                                        $SyncHash['GUI']['ScrollerForOutputTextBlock'],
-                                        $SyncHash.Window
-                                    )
-                                }
-                                else {
-                                    # For displaying the text on the GUI's text box
-                                    $SyncHash['GUI'].MicrosoftSecurityBaselineZipTextBox.Text = $Dialog.FileName
-                                    # The actual value that will be used
-                                    [HardeningModule.GUI]::MicrosoftSecurityBaselineZipPath = $Dialog.FileName
-                                }
-                            }
-                            catch {
-                                [HardeningModule.Logger]::LogMessage(
-                                    $_.Exception.Message,
-                                    $SyncHash['GUI']['OutputTextBlock'],
-                                    $SyncHash['GUI']['ScrollerForOutputTextBlock'],
-                                    $SyncHash.Window
-                                )
-                            }
-                        }
-                    })
-
-                # Define the click event for the Microsoft 365 Apps Security Baseline Zip button
-                $SyncHash['GUI'].Microsoft365AppsSecurityBaselineZipButton.Add_Click({
-
-                        [System.Windows.Forms.OpenFileDialog]$Dialog = New-Object -TypeName 'System.Windows.Forms.OpenFileDialog'
-                        $Dialog.InitialDirectory = [System.Environment]::GetFolderPath('Desktop')
-                        $Dialog.Filter = 'Zip files (*.zip)|*.zip'
-                        $Dialog.Title = 'Select the Microsoft 365 Apps Security Baseline Zip file'
-
-                        if ($Dialog.ShowDialog() -eq 'OK') {
-
-                            try {
-                                if (-NOT ([HardeningModule.SneakAndPeek]::Search('Microsoft 365 Apps for Enterprise*/Scripts/Baseline-LocalInstall.ps1', $Dialog.FileName))) {
-                                    [HardeningModule.Logger]::LogMessage(
-                                        'The selected Zip file does not contain the Microsoft 365 Apps for Enterprise Security Baselines Baseline-LocalInstall.ps1 which is required for the Protect-WindowsSecurity function to work properly',
-                                        $SyncHash['GUI']['OutputTextBlock'],
-                                        $SyncHash['GUI']['ScrollerForOutputTextBlock'],
-                                        $SyncHash.Window
-                                    )
-                                }
-                                else {
-                                    # For displaying the test on the GUI's text box
-                                    $SyncHash['GUI'].Microsoft365AppsSecurityBaselineZipTextBox.Text = $Dialog.FileName
-                                    # The actual value that will be used
-                                    [HardeningModule.GUI]::Microsoft365AppsSecurityBaselineZipPath = $Dialog.FileName
-                                }
-                            }
-                            catch {
-                                [HardeningModule.Logger]::LogMessage(
-                                    $_.Exception.Message,
-                                    $SyncHash['GUI']['OutputTextBlock'],
-                                    $SyncHash['GUI']['ScrollerForOutputTextBlock'],
-                                    $SyncHash.Window
-                                )
-                            }
-                        }
-                    })
-
-                # Define the click event for the LGPO Zip button
-                $SyncHash['GUI'].LGPOZipButton.Add_Click({
-
-                        [System.Windows.Forms.OpenFileDialog]$Dialog = New-Object -TypeName 'System.Windows.Forms.OpenFileDialog'
-                        $Dialog.InitialDirectory = [System.Environment]::GetFolderPath('Desktop')
-                        $Dialog.Filter = 'Zip files (*.zip)|*.zip'
-                        $Dialog.Title = 'Select the LGPO Zip file'
-
-                        if ($Dialog.ShowDialog() -eq 'OK') {
-
-                            try {
-                                if (-NOT ([HardeningModule.SneakAndPeek]::Search('LGPO_*/LGPO.exe', $Dialog.FileName))) {
-                                    [HardeningModule.Logger]::LogMessage(
-                                        'The selected Zip file does not contain the LGPO.exe which is required for the Protect-WindowsSecurity function to work properly',
-                                        $SyncHash['GUI']['OutputTextBlock'],
-                                        $SyncHash['GUI']['ScrollerForOutputTextBlock'],
-                                        $SyncHash.Window
-                                    )
-                                }
-                                else {
-                                    # For displaying the test on the GUI's text box
-                                    $SyncHash['GUI'].LGPOZipTextBox.Text = $Dialog.FileName
-                                    # The actual value that will be used
-                                    [HardeningModule.GUI]::LGPOZipPath = $Dialog.FileName
-                                }
-                            }
-                            catch {
-                                [HardeningModule.Logger]::LogMessage(
-                                    $_.Exception.Message,
-                                    $SyncHash['GUI']['OutputTextBlock'],
-                                    $SyncHash['GUI']['ScrollerForOutputTextBlock'],
-                                    $SyncHash.Window
-                                )
-                            }
-                        }
-                    })
-                #Endregion Offline-Mode-Tab
-
-                # Update the sub-categories based on the initial unchecked state of the categories
-                Update-SubCategories
-
-                # Set a flag indicating that the required files for the Offline operation mode have been processed
-                # When the execute button was clicked, so it won't run twice
-                $SyncHash.StartFileDownloadHasRun = $false
+                # Initialize the WPF GUI
+                [HardeningModule.GUI]::LoadXaml()
 
                 # Defining a set of commands to run when the GUI window is loaded
-                $SyncHash.Window.Add_ContentRendered({
+                [HardeningModule.GUI]::Window.Add_ContentRendered({
 
                         try {
                             $UserSID = [System.Security.Principal.WindowsIdentity]::GetCurrent().User.Value
@@ -774,19 +395,12 @@ Execution Policy: $CurrentExecutionPolicy
                         }
                         catch {}
 
-                        [HardeningModule.Logger]::LogMessage(
-                            ([HardeningModule.UserPrivCheck]::IsAdmin() ? "Hello $NameToDisplay, Running as Administrator" : "Hello $NameToDisplay, Running as Non-Administrator, some categories are disabled"),
-                            $SyncHash['GUI']['OutputTextBlock'],
-                            $SyncHash['GUI']['ScrollerForOutputTextBlock'],
-                            $SyncHash.Window
-                        )
+                        [HardeningModule.Logger]::LogMessage(([HardeningModule.UserPrivCheck]::IsAdmin() ? "Hello $NameToDisplay, Running as Administrator" : "Hello $NameToDisplay, Running as Non-Administrator, some categories are disabled"))
 
                         # Set the execute button to disabled until all the prerequisites are met
-                        $SyncHash.window.FindName('Execute').IsEnabled = $false
+                        [HardeningModule.GUI]::Window.FindName('Execute').IsEnabled = $false
 
                         Start-ThreadJob -ScriptBlock {
-                            param ($SyncHash)
-
                             try {
                                 . "$([HardeningModule.GlobalVars]::Path)\Shared\HardeningFunctions.ps1"
                                 $PSDefaultParameterValues = @{ 'Write-Verbose:Verbose' = $true }
@@ -795,37 +409,26 @@ Execution Policy: $CurrentExecutionPolicy
                                 # Because at this point user might have not selected the files to be used for offline operation
                                 if (!([HardeningModule.GlobalVars]::Offline)) {
                                     Start-FileDownload -GUI -Verbose:$true *>&1 | ForEach-Object -Process {
-
-                                        [HardeningModule.Logger]::LogMessage(
-                                            $_,
-                                            $SyncHash['GUI']['OutputTextBlock'],
-                                            $SyncHash['GUI']['ScrollerForOutputTextBlock'],
-                                            $SyncHash.Window
-                                        )
+                                        [HardeningModule.Logger]::LogMessage($_)
                                     }
                                 }
                             }
                             catch {
-                                $_.Exception.Message, $_.ErrorDetails, $_.ScriptStackTrace *>&1 | ForEach-Object -Process { [HardeningModule.Logger]::LogMessage(
-                                        $_,
-                                        $SyncHash['GUI']['OutputTextBlock'],
-                                        $SyncHash['GUI']['ScrollerForOutputTextBlock'],
-                                        $SyncHash.Window
-                                    ) }
+                                $_.Exception.Message, $_.ErrorDetails, $_.ScriptStackTrace *>&1 | ForEach-Object -Process { [HardeningModule.Logger]::LogMessage($_) }
                                 # when error occurs, Execute button remains disabled
                                 throw $_.Exception
                             }
 
                             # Using dispatch since the execute button is owned by the GUI (parent) RunSpace and we're in another RunSpace (ThreadJob)
                             # Enabling the execute button after all files are downloaded and ready or if Offline switch was used and download was skipped
-                            $SyncHash.Window.Dispatcher.Invoke({
-                                    $SyncHash.window.FindName('Execute').IsEnabled = $true
+                            [HardeningModule.GUI]::Window.Dispatcher.Invoke({
+                                    [HardeningModule.GUI]::Window.FindName('Execute').IsEnabled = $true
                                 })
-                        } -ArgumentList $SyncHash
+                        }
                     })
 
                 # Add the click event for the execute button in the GUI RunSpace
-                $SyncHash.window.FindName('Execute').Add_Click({
+                [HardeningModule.GUI]::Window.FindName('Execute').Add_Click({
 
                         # Clears any jobs from any ThreadJobs that have completed, failed, or stopped
                         Foreach ($JobToRemove in Get-Job) {
@@ -839,16 +442,14 @@ Execution Policy: $CurrentExecutionPolicy
                         [HardeningModule.GUI]::SelectedSubCategories.Clear()
 
                         # Gather selected categories and sub-categories and store them in the GlobalVars hashtable
-                        $SyncHash['GUI'].Categories.Items | Where-Object -FilterScript { $_.Content.IsChecked } | ForEach-Object -Process { [HardeningModule.GUI]::SelectedCategories.Enqueue($_.Content.Name) }
-                        $SyncHash['GUI'].SubCategories.Items | Where-Object -FilterScript { $_.Content.IsChecked } | ForEach-Object -Process { [HardeningModule.GUI]::SelectedSubCategories.Enqueue($_.Content.Name) }
+                        [HardeningModule.GUI]::categories.Items | Where-Object -FilterScript { $_.Content.IsChecked } | ForEach-Object -Process { [HardeningModule.GUI]::SelectedCategories.Enqueue($_.Content.Name) }
+                        [HardeningModule.GUI]::subCategories.Items | Where-Object -FilterScript { $_.Content.IsChecked } | ForEach-Object -Process { [HardeningModule.GUI]::SelectedSubCategories.Enqueue($_.Content.Name) }
 
                         if ($DebugPreference -eq 'Continue') {
                             [HardeningModule.GlobalVars]::Host.UI.WriteDebugLine("$((Get-Job).Count) number of ThreadJobs Before")
                         }
 
                         $null = Start-ThreadJob -ScriptBlock {
-                            param($SyncHash)
-
                             # This tells the Write-ColorfulText function to write verbose texts instead of outputting PSStyle texts that don't work in the UI text block
                             $script:GUI = $true
 
@@ -864,26 +465,26 @@ Execution Policy: $CurrentExecutionPolicy
 
                                 try {
 
-                                    $SyncHash.Window.Dispatcher.Invoke({
+                                    [HardeningModule.GUI]::Window.Dispatcher.Invoke({
                                             # Disable Important elements while commands are being executed
-                                            $SyncHash.window.FindName('Execute').IsEnabled = $false
-                                            $SyncHash.window.FindName('ParentGrid').FindName('MainTabControlToggle').IsEnabled = $false
-                                            $SyncHash['GUI']['LogPath'].IsEnabled = $false
-                                            $SyncHash['GUI']['LoggingViewBox'].IsEnabled = $false
-                                            $SyncHash['GUI']['txtFilePath'].IsEnabled = $false
+                                            [HardeningModule.GUI]::Window.FindName('Execute').IsEnabled = $false
+                                            [HardeningModule.GUI]::Window.FindName('ParentGrid').FindName('MainTabControlToggle').IsEnabled = $false
+                                            [HardeningModule.GUI]::logPath.IsEnabled = $false
+                                            [HardeningModule.GUI]::loggingViewBox.IsEnabled = $false
+                                            [HardeningModule.GUI]::txtFilePath.IsEnabled = $false
                                         })
 
                                     # If Offline mode is used
                                     if (([HardeningModule.GlobalVars]::Offline)) {
 
                                         # Using dispatch to query their status from the GUI thread
-                                        $SyncHash.Window.Dispatcher.Invoke({
-                                                $script:OfflineModeToggleStatus = $SyncHash['GUI'].EnableOfflineMode.IsChecked
-                                                $script:OfflineGreenLightStatus = (-NOT [System.String]::IsNullOrWhitespace($SyncHash['GUI'].MicrosoftSecurityBaselineZipTextBox.Text)) -and (-NOT [System.String]::IsNullOrWhitespace($SyncHash['GUI'].Microsoft365AppsSecurityBaselineZipTextBox.Text)) -and (-NOT [System.String]::IsNullOrWhitespace($SyncHash['GUI'].LGPOZipTextBox.Text))
+                                        [HardeningModule.GUI]::Window.Dispatcher.Invoke({
+                                                $script:OfflineModeToggleStatus = [HardeningModule.GUI]::enableOfflineMode.IsChecked
+                                                $script:OfflineGreenLightStatus = (-NOT [System.String]::IsNullOrWhitespace([HardeningModule.GUI]::microsoftSecurityBaselineZipTextBox.Text)) -and (-NOT [System.String]::IsNullOrWhitespace([HardeningModule.GUI]::microsoft365AppsSecurityBaselineZipTextBox.Text)) -and (-NOT [System.String]::IsNullOrWhitespace([HardeningModule.GUI]::lgpoZipTextBox.Text))
                                             })
 
                                         # If the required files have not been processed for offline mode already
-                                        if ($SyncHash.StartFileDownloadHasRun -eq $false) {
+                                        if (![HardeningModule.GUI]::StartFileDownloadHasRun) {
                                             # If the checkbox on the GUI for Offline mode is checked
                                             if ($OfflineModeToggleStatus) {
                                                 # Make sure all 3 fields for offline mode files were selected by the users and they are neither empty nor null
@@ -892,7 +493,7 @@ Execution Policy: $CurrentExecutionPolicy
                                                     Start-FileDownload -GUI -Verbose:$true
 
                                                     # Set a flag indicating this code block should not happen again when the execute button is pressed
-                                                    $SyncHash.StartFileDownloadHasRun = $true
+                                                    [HardeningModule.GUI]::StartFileDownloadHasRun = $true
                                                 }
                                                 else {
                                                     'Enable Offline Mode checkbox is checked but you have not selected all of the 3 required files for offline mode operation. Please select them and press the execute button again.'
@@ -904,7 +505,7 @@ Execution Policy: $CurrentExecutionPolicy
                                         }
                                     }
 
-                                    if (!([HardeningModule.GlobalVars]::Offline) -or (([HardeningModule.GlobalVars]::Offline) -and $SyncHash.StartFileDownloadHasRun -eq $true)) {
+                                    if (!([HardeningModule.GlobalVars]::Offline) -or (([HardeningModule.GlobalVars]::Offline) -and [HardeningModule.GUI]::StartFileDownloadHasRun)) {
 
                                         if (![System.String]::IsNullOrWhiteSpace([HardeningModule.GUI]::SelectedCategories)) {
 
@@ -951,23 +552,18 @@ Execution Policy: $CurrentExecutionPolicy
 
                             # Run the selected categories and output their results to the GUI
                             &$HardeningFunctionsScriptBlock *>&1 | ForEach-Object -Process {
-                                [HardeningModule.Logger]::LogMessage(
-                                    $_,
-                                    $SyncHash['GUI']['OutputTextBlock'],
-                                    $SyncHash['GUI']['ScrollerForOutputTextBlock'],
-                                    $SyncHash.Window
-                                )
+                                [HardeningModule.Logger]::LogMessage($_)
                             }
 
-                            $SyncHash.Window.Dispatcher.Invoke({
+                            [HardeningModule.GUI]::Window.Dispatcher.Invoke({
                                     # Enable the disabled UI elements once all of the commands have been executed
-                                    $SyncHash.window.FindName('Execute').IsEnabled = $true
-                                    $SyncHash.window.FindName('ParentGrid').FindName('MainTabControlToggle').IsEnabled = $true
-                                    $SyncHash['GUI']['LogPath'].IsEnabled = $true
-                                    $SyncHash['GUI']['LoggingViewBox'].IsEnabled = $true
-                                    $SyncHash['GUI']['txtFilePath'].IsEnabled = $true
+                                    [HardeningModule.GUI]::Window.FindName('Execute').IsEnabled = $true
+                                    [HardeningModule.GUI]::Window.FindName('ParentGrid').FindName('MainTabControlToggle').IsEnabled = $true
+                                    [HardeningModule.GUI]::logPath.IsEnabled = $true
+                                    [HardeningModule.GUI]::loggingViewBox.IsEnabled = $true
+                                    [HardeningModule.GUI]::txtFilePath.IsEnabled = $true
                                 })
-                        } -ArgumentList $SyncHash -ThrottleLimit 1
+                        } -ThrottleLimit 1
 
                         if ($DebugPreference -eq 'Continue') {
                             [HardeningModule.GlobalVars]::Host.UI.WriteDebugLine("$((Get-Job).Count) number of ThreadJobs After")
@@ -975,9 +571,9 @@ Execution Policy: $CurrentExecutionPolicy
                     })
 
                 # Defining what happens when the GUI window is closed
-                $SyncHash.Window.add_Closed({
+                [HardeningModule.GUI]::Window.add_Closed({
 
-                        if ($SyncHash.ShouldWriteLogs) {
+                        if ([HardeningModule.GUI]::ShouldWriteLogs) {
 
                             # Create and add the footer to the log file
                             [System.Void][HardeningModule.GUI]::Logger.Add(@"
@@ -987,17 +583,12 @@ End time: $(Get-Date)
 **********************
 "@)
 
-                            Add-Content -Value [HardeningModule.GUI]::Logger -Path $SyncHash['GUI'].txtFilePath.Text -Force
+                            Add-Content -Value [HardeningModule.GUI]::Logger -Path [HardeningModule.GUI]::txtFilePath.Text -Force
                         }
                     })
 
-                # Inside the GUI RunSpace
-                $SyncHash.Window.add_Loaded({
-                        $SyncHash.IsFullyLoaded = $true
-                    })
-
                 # Show the GUI window
-                [System.Void]$SyncHash.Window.ShowDialog()
+                [System.Void][HardeningModule.GUI]::Window.ShowDialog()
 
                 # Clear any jobs created during runtime in the current RunSpace
                 Foreach ($JobToRemove in Get-Job) {

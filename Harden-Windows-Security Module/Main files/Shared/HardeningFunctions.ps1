@@ -450,15 +450,14 @@ Function Edit-Addons {
 }
 Function Start-FileDownload {
     Param (
-        [Parameter(Mandatory = $false)][System.Collections.Hashtable]$SyncHash,
         [Parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$GUI
     )
     if (!([HardeningModule.GlobalVars]::Offline)) { Write-Verbose -Message 'Downloading the required files' }
     [HardeningModule.FileDownloader]::PrepDownloadedFiles(
         ($GUI ? $True : $False),
-        ($GUI ? "$($SyncHash['GlobalVars'].LGPOZipPath)" : "$PathToLGPO"),
-        ($GUI ? "$($SyncHash['GlobalVars'].MicrosoftSecurityBaselineZipPath)" : "$PathToMSFTSecurityBaselines"),
-        ($GUI ? "$($SyncHash['GlobalVars'].Microsoft365AppsSecurityBaselineZipPath)" : "$PathToMSFT365AppsSecurityBaselines")
+        ($GUI ? [HardeningModule.GUI]::LGPOZipPath : "$PathToLGPO"),
+        ($GUI ? [HardeningModule.GUI]::MicrosoftSecurityBaselineZipPath : "$PathToMSFTSecurityBaselines"),
+        ($GUI ? [HardeningModule.GUI]::Microsoft365AppsSecurityBaselineZipPath : "$PathToMSFT365AppsSecurityBaselines")
     )
     Write-Verbose -Message 'Finished downloading/processing the required files'
 }

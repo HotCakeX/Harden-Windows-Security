@@ -364,16 +364,11 @@ Function Protect-WindowsSecurity {
                 # A synchronized hashtable to store all of the data that needs to be shared between the RunSpaces and ThreadJobs
                 $SyncHash = [System.Collections.Hashtable]::Synchronized(@{})
 
-                $SyncHash['GlobalVars'] = [System.Collections.Hashtable]@{}
-
                 # A nested hashtable to store all of the GUI elements
                 $SyncHash['GUI'] = [System.Collections.Hashtable]@{}
 
-                # To store the log messages
-                $SyncHash.Logger = [System.Collections.ArrayList]::Synchronized((New-Object -TypeName System.Collections.ArrayList))
-
                 # Create and add the header to the log messages
-                [System.Void]$SyncHash.Logger.Add(@"
+                [System.Void][HardeningModule.GUI]::Logger.Add(@"
 **********************
 Harden Windows Security operation log start
 Start time: $(Get-Date)
@@ -571,7 +566,6 @@ Execution Policy: $CurrentExecutionPolicy
 
                             [HardeningModule.Logger]::LogMessage(
                                 "Logs will be saved in: $($SyncHash['GUI'].txtFilePath.Text)",
-                                $SyncHash.Logger,
                                 $SyncHash['GUI']['OutputTextBlock'],
                                 $SyncHash['GUI']['ScrollerForOutputTextBlock'],
                                 $SyncHash.Window
@@ -665,7 +659,6 @@ Execution Policy: $CurrentExecutionPolicy
                                 if (-NOT ([HardeningModule.SneakAndPeek]::Search('Windows*Security Baseline/Scripts/Baseline-LocalInstall.ps1', $Dialog.FileName))) {
                                     [HardeningModule.Logger]::LogMessage(
                                         'The selected Zip file does not contain the Microsoft Security Baselines Baseline-LocalInstall.ps1 which is required for the Protect-WindowsSecurity function to work properly',
-                                        $SyncHash.Logger,
                                         $SyncHash['GUI']['OutputTextBlock'],
                                         $SyncHash['GUI']['ScrollerForOutputTextBlock'],
                                         $SyncHash.Window
@@ -675,13 +668,12 @@ Execution Policy: $CurrentExecutionPolicy
                                     # For displaying the text on the GUI's text box
                                     $SyncHash['GUI'].MicrosoftSecurityBaselineZipTextBox.Text = $Dialog.FileName
                                     # The actual value that will be used
-                                    $SyncHash['GlobalVars'].MicrosoftSecurityBaselineZipPath = $Dialog.FileName
+                                    [HardeningModule.GUI]::MicrosoftSecurityBaselineZipPath = $Dialog.FileName
                                 }
                             }
                             catch {
                                 [HardeningModule.Logger]::LogMessage(
                                     $_.Exception.Message,
-                                    $SyncHash.Logger,
                                     $SyncHash['GUI']['OutputTextBlock'],
                                     $SyncHash['GUI']['ScrollerForOutputTextBlock'],
                                     $SyncHash.Window
@@ -704,7 +696,6 @@ Execution Policy: $CurrentExecutionPolicy
                                 if (-NOT ([HardeningModule.SneakAndPeek]::Search('Microsoft 365 Apps for Enterprise*/Scripts/Baseline-LocalInstall.ps1', $Dialog.FileName))) {
                                     [HardeningModule.Logger]::LogMessage(
                                         'The selected Zip file does not contain the Microsoft 365 Apps for Enterprise Security Baselines Baseline-LocalInstall.ps1 which is required for the Protect-WindowsSecurity function to work properly',
-                                        $SyncHash.Logger,
                                         $SyncHash['GUI']['OutputTextBlock'],
                                         $SyncHash['GUI']['ScrollerForOutputTextBlock'],
                                         $SyncHash.Window
@@ -714,13 +705,12 @@ Execution Policy: $CurrentExecutionPolicy
                                     # For displaying the test on the GUI's text box
                                     $SyncHash['GUI'].Microsoft365AppsSecurityBaselineZipTextBox.Text = $Dialog.FileName
                                     # The actual value that will be used
-                                    $SyncHash['GlobalVars'].Microsoft365AppsSecurityBaselineZipPath = $Dialog.FileName
+                                    [HardeningModule.GUI]::Microsoft365AppsSecurityBaselineZipPath = $Dialog.FileName
                                 }
                             }
                             catch {
                                 [HardeningModule.Logger]::LogMessage(
                                     $_.Exception.Message,
-                                    $SyncHash.Logger,
                                     $SyncHash['GUI']['OutputTextBlock'],
                                     $SyncHash['GUI']['ScrollerForOutputTextBlock'],
                                     $SyncHash.Window
@@ -743,7 +733,6 @@ Execution Policy: $CurrentExecutionPolicy
                                 if (-NOT ([HardeningModule.SneakAndPeek]::Search('LGPO_*/LGPO.exe', $Dialog.FileName))) {
                                     [HardeningModule.Logger]::LogMessage(
                                         'The selected Zip file does not contain the LGPO.exe which is required for the Protect-WindowsSecurity function to work properly',
-                                        $SyncHash.Logger,
                                         $SyncHash['GUI']['OutputTextBlock'],
                                         $SyncHash['GUI']['ScrollerForOutputTextBlock'],
                                         $SyncHash.Window
@@ -753,13 +742,12 @@ Execution Policy: $CurrentExecutionPolicy
                                     # For displaying the test on the GUI's text box
                                     $SyncHash['GUI'].LGPOZipTextBox.Text = $Dialog.FileName
                                     # The actual value that will be used
-                                    $SyncHash['GlobalVars'].LGPOZipPath = $Dialog.FileName
+                                    [HardeningModule.GUI]::LGPOZipPath = $Dialog.FileName
                                 }
                             }
                             catch {
                                 [HardeningModule.Logger]::LogMessage(
                                     $_.Exception.Message,
-                                    $SyncHash.Logger,
                                     $SyncHash['GUI']['OutputTextBlock'],
                                     $SyncHash['GUI']['ScrollerForOutputTextBlock'],
                                     $SyncHash.Window
@@ -788,7 +776,6 @@ Execution Policy: $CurrentExecutionPolicy
 
                         [HardeningModule.Logger]::LogMessage(
                             ([HardeningModule.UserPrivCheck]::IsAdmin() ? "Hello $NameToDisplay, Running as Administrator" : "Hello $NameToDisplay, Running as Non-Administrator, some categories are disabled"),
-                            $SyncHash.Logger,
                             $SyncHash['GUI']['OutputTextBlock'],
                             $SyncHash['GUI']['ScrollerForOutputTextBlock'],
                             $SyncHash.Window
@@ -807,11 +794,10 @@ Execution Policy: $CurrentExecutionPolicy
                                 # Only download and process the files when GUI is loaded and if Offline mode is not used
                                 # Because at this point user might have not selected the files to be used for offline operation
                                 if (!([HardeningModule.GlobalVars]::Offline)) {
-                                    Start-FileDownload -SyncHash $SyncHash -GUI -Verbose:$true *>&1 | ForEach-Object -Process {
+                                    Start-FileDownload -GUI -Verbose:$true *>&1 | ForEach-Object -Process {
 
                                         [HardeningModule.Logger]::LogMessage(
                                             $_,
-                                            $SyncHash.Logger,
                                             $SyncHash['GUI']['OutputTextBlock'],
                                             $SyncHash['GUI']['ScrollerForOutputTextBlock'],
                                             $SyncHash.Window
@@ -822,7 +808,6 @@ Execution Policy: $CurrentExecutionPolicy
                             catch {
                                 $_.Exception.Message, $_.ErrorDetails, $_.ScriptStackTrace *>&1 | ForEach-Object -Process { [HardeningModule.Logger]::LogMessage(
                                         $_,
-                                        $SyncHash.Logger,
                                         $SyncHash['GUI']['OutputTextBlock'],
                                         $SyncHash['GUI']['ScrollerForOutputTextBlock'],
                                         $SyncHash.Window
@@ -849,9 +834,13 @@ Execution Policy: $CurrentExecutionPolicy
                             }
                         }
 
+                        # Clear the categories and sub-categories lists
+                        [HardeningModule.GUI]::SelectedCategories.Clear()
+                        [HardeningModule.GUI]::SelectedSubCategories.Clear()
+
                         # Gather selected categories and sub-categories and store them in the GlobalVars hashtable
-                        $SyncHash['GlobalVars']['SelectedCategories'] = $SyncHash['GUI'].Categories.Items | Where-Object -FilterScript { $_.Content.IsChecked } | ForEach-Object -Process { $_.Content.Name }
-                        $SyncHash['GlobalVars']['SelectedSubCategories'] = $SyncHash['GUI'].SubCategories.Items | Where-Object -FilterScript { $_.Content.IsChecked } | ForEach-Object -Process { $_.Content.Name }
+                        $SyncHash['GUI'].Categories.Items | Where-Object -FilterScript { $_.Content.IsChecked } | ForEach-Object -Process { [HardeningModule.GUI]::SelectedCategories.Enqueue($_.Content.Name) }
+                        $SyncHash['GUI'].SubCategories.Items | Where-Object -FilterScript { $_.Content.IsChecked } | ForEach-Object -Process { [HardeningModule.GUI]::SelectedSubCategories.Enqueue($_.Content.Name) }
 
                         if ($DebugPreference -eq 'Continue') {
                             [HardeningModule.GlobalVars]::Host.UI.WriteDebugLine("$((Get-Job).Count) number of ThreadJobs Before")
@@ -866,7 +855,7 @@ Execution Policy: $CurrentExecutionPolicy
                             . "$([HardeningModule.GlobalVars]::Path)\Shared\HardeningFunctions.ps1"
 
                             # Making the selected sub-categories available in the current scope because the functions called from this scriptblock wouldn't be able to access them otherwise
-                            $SyncHash['GlobalVars']['SelectedSubCategories'] | ForEach-Object -Process {
+                            [HardeningModule.GUI]::SelectedSubCategories | ForEach-Object -Process {
                                 # All of the sub-category variables are boolean since they are originally switch parameters in the CLI experience
                                 Set-Variable -Name $_ -Value $true -Force
                             }
@@ -900,7 +889,7 @@ Execution Policy: $CurrentExecutionPolicy
                                                 # Make sure all 3 fields for offline mode files were selected by the users and they are neither empty nor null
                                                 if ($OfflineGreenLightStatus) {
                                                     # Process the offline mode files selected by the user
-                                                    Start-FileDownload -SyncHash $SyncHash -GUI -Verbose:$true
+                                                    Start-FileDownload -GUI -Verbose:$true
 
                                                     # Set a flag indicating this code block should not happen again when the execute button is pressed
                                                     $SyncHash.StartFileDownloadHasRun = $true
@@ -917,7 +906,7 @@ Execution Policy: $CurrentExecutionPolicy
 
                                     if (!([HardeningModule.GlobalVars]::Offline) -or (([HardeningModule.GlobalVars]::Offline) -and $SyncHash.StartFileDownloadHasRun -eq $true)) {
 
-                                        if ($null -ne $SyncHash['GlobalVars']['SelectedCategories']) {
+                                        if (![System.String]::IsNullOrWhiteSpace([HardeningModule.GUI]::SelectedCategories)) {
 
                                             # Make the Write-Verbose cmdlet write verbose messages regardless of the global preference or selected parameter
                                             # That is the main source of the messages in the GUI
@@ -926,7 +915,7 @@ Execution Policy: $CurrentExecutionPolicy
                                             # Reset the progress bar counter to prevent it from going over 100
                                             [HardeningModule.GlobalVars]::CurrentMainStep = 0
 
-                                            :MainSwitchLabel switch ($SyncHash['GlobalVars']['SelectedCategories']) {
+                                            :MainSwitchLabel switch ([HardeningModule.GUI]::SelectedCategories) {
                                                 'MicrosoftSecurityBaselines' { Invoke-MicrosoftSecurityBaselines -RunUnattended }
                                                 'Microsoft365AppsSecurityBaselines' { Invoke-Microsoft365AppsSecurityBaselines -RunUnattended }
                                                 'MicrosoftDefender' { Invoke-MicrosoftDefender -RunUnattended }
@@ -945,11 +934,9 @@ Execution Policy: $CurrentExecutionPolicy
                                                 'CountryIPBlocking' { Invoke-CountryIPBlocking -RunUnattended -GUI }
                                                 'DownloadsDefenseMeasures' { Invoke-DownloadsDefenseMeasures -RunUnattended }
                                                 'NonAdminCommands' { Invoke-NonAdminCommands -RunUnattended }
-                                                # This never runs because the $SyncHash['GlobalVars']['SelectedCategories'] is empty/null when no categories are selected
-                                                default { 'No category was selected' }
                                             }
 
-                                            New-ToastNotification -SelectedCategories $SyncHash['GlobalVars']['SelectedCategories']
+                                            New-ToastNotification -SelectedCategories [HardeningModule.GUI]::SelectedCategories
                                         }
                                         else {
                                             'No category was selected'
@@ -966,7 +953,6 @@ Execution Policy: $CurrentExecutionPolicy
                             &$HardeningFunctionsScriptBlock *>&1 | ForEach-Object -Process {
                                 [HardeningModule.Logger]::LogMessage(
                                     $_,
-                                    $SyncHash.Logger,
                                     $SyncHash['GUI']['OutputTextBlock'],
                                     $SyncHash['GUI']['ScrollerForOutputTextBlock'],
                                     $SyncHash.Window
@@ -994,14 +980,14 @@ Execution Policy: $CurrentExecutionPolicy
                         if ($SyncHash.ShouldWriteLogs) {
 
                             # Create and add the footer to the log file
-                            [System.Void]$SyncHash.Logger.Add(@"
+                            [System.Void][HardeningModule.GUI]::Logger.Add(@"
 **********************
 Harden Windows Security operation log end
 End time: $(Get-Date)
 **********************
 "@)
 
-                            Add-Content -Value $SyncHash.Logger -Path $SyncHash['GUI'].txtFilePath.Text -Force
+                            Add-Content -Value [HardeningModule.GUI]::Logger -Path $SyncHash['GUI'].txtFilePath.Text -Force
                         }
                     })
 

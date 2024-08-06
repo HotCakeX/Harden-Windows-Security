@@ -8,10 +8,10 @@ namespace HardeningModule
 {
     public static class Logger
     {
-        public static void LogMessage(string text, IList logger, TextBox outputTextBlock, ScrollViewer scrollerForOutputTextBlock, Window window)
+        public static void LogMessage(string text, TextBox outputTextBlock, ScrollViewer scrollerForOutputTextBlock, Window window)
         {
             // Add the text to the synchronized array list as log messages
-            logger.Add($"{DateTime.Now}: {text}");
+            HardeningModule.GUI.Logger.Add($"{DateTime.Now}: {text}");
 
             // Check if the window is null
             if (window == null)

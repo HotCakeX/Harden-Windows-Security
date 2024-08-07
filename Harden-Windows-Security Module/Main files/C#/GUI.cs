@@ -1,5 +1,7 @@
 using System;
+using System.IO;
 using System.Collections;
+using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
@@ -199,6 +201,8 @@ namespace HardeningModule
                         HardeningModule.Logger.LogMessage($"Logs will be saved in: {txtFilePath.Text}");
                     }
                 }
+
+                ShouldWriteLogs = true;
             };
 
             // Initially disable the Offline Mode configuration inputs until the Offline Mode checkbox is checked
@@ -511,6 +515,36 @@ namespace HardeningModule
                 }
             };
 
+            // Defining what happens when the GUI window is closed
+            window.Closed += (sender, e) =>
+            {
+                // Only proceed further if user enabled logging
+                if (HardeningModule.GUI.ShouldWriteLogs)
+                {
+
+                    // Create the footer to the log file
+                    string endOfLogFile = $"""
+**********************
+Harden Windows Security operation log end
+End time: {DateTime.Now}
+**********************
+""";
+
+                    // Add the footer to the log file
+                    HardeningModule.GUI.Logger.Add(endOfLogFile);
+
+                    // Convert ArrayList to List<string>
+                    List<string> logEntries = new List<string>();
+                    foreach (string item in HardeningModule.GUI.Logger)
+                    {
+                        logEntries.Add(item);
+                    }
+
+                    // Append log entries to the file
+                    File.AppendAllLines(txtFilePath.Text, logEntries);
+                };
+
+            };
         }
     }
 }

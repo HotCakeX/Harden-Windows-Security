@@ -330,7 +330,7 @@ Function Protect-WindowsSecurity {
         ([HardeningModule.GlobalVars]::Offline) = $PSBoundParameters['Offline'] ? $true : $false
 
         Write-Verbose -Message 'Importing the required sub-modules'
-        Import-Module -FullyQualifiedName "$([HardeningModule.GlobalVars]::Path)\Shared\Update-self.psm1" -Force -Verbose:$false
+        Import-Module -FullyQualifiedName ([System.IO.Path]::Combine([HardeningModule.GlobalVars]::Path, 'Shared', 'Update-self.psm1')) -Force -Verbose:$false
 
         if (!([HardeningModule.GlobalVars]::Offline)) {
             Write-Verbose -Message 'Checking for updates...'
@@ -567,23 +567,6 @@ Execution Policy: $CurrentExecutionPolicy
 
                         if ($DebugPreference -eq 'Continue') {
                             [HardeningModule.GlobalVars]::Host.UI.WriteDebugLine("$((Get-Job).Count) number of ThreadJobs After")
-                        }
-                    })
-
-                # Defining what happens when the GUI window is closed
-                [HardeningModule.GUI]::Window.add_Closed({
-
-                        if ([HardeningModule.GUI]::ShouldWriteLogs) {
-
-                            # Create and add the footer to the log file
-                            [System.Void][HardeningModule.GUI]::Logger.Add(@"
-**********************
-Harden Windows Security operation log end
-End time: $(Get-Date)
-**********************
-"@)
-
-                            Add-Content -Value [HardeningModule.GUI]::Logger -Path [HardeningModule.GUI]::txtFilePath.Text -Force
                         }
                     })
 

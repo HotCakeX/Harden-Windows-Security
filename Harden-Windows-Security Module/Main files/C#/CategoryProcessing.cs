@@ -6,6 +6,8 @@ using Microsoft.Win32;
 using System.Text;
 using System.Globalization;
 
+#nullable enable
+
 namespace HardenWindowsSecurity
 {
     // Registry keys are case-insensitive
@@ -15,16 +17,16 @@ namespace HardenWindowsSecurity
         // to store the structure of the Registry resources CSV data
         private class CsvRecord
         {
-            public string Origin { get; set; }
-            public string Category { get; set; }
-            public string Hive { get; set; }
-            public string Key { get; set; }
-            public string Name { get; set; }
-            public string FriendlyName { get; set; }
-            public string Type { get; set; }
-            public List<string> Value { get; set; }
+            public string? Origin { get; set; }
+            public string? Category { get; set; }
+            public string? Hive { get; set; }
+            public string? Key { get; set; }
+            public string? Name { get; set; }
+            public string? FriendlyName { get; set; }
+            public string? Type { get; set; }
+            public List<string>? Value { get; set; }
             public bool ValueIsList { get; set; }
-            public string CSPLink { get; set; }
+            public string? CSPLink { get; set; }
         }
 
         // method to parse the CSV file and return a list of CsvRecord objects
@@ -33,6 +35,11 @@ namespace HardenWindowsSecurity
             // Create a list to store the records
             List<CsvRecord> records = new List<CsvRecord>();
 
+            if (GlobalVars.path == null)
+            {
+                throw new ArgumentNullException("The path to the CSV file is not set.");
+            }
+
             // Define the path to the CSV file - hardcoded because it doesn't need to change
             string path = Path.Combine(GlobalVars.path, "Resources", "Registry resources.csv");
 
@@ -40,7 +47,7 @@ namespace HardenWindowsSecurity
             using (StreamReader reader = new StreamReader(path))
             {
                 // Read the header line
-                string header = reader.ReadLine();
+                string? header = reader.ReadLine();
 
                 // Return an empty list if the header is null
                 if (header == null) return records;
@@ -48,7 +55,7 @@ namespace HardenWindowsSecurity
                 // Read the rest of the file line by line
                 while (!reader.EndOfStream)
                 {
-                    string line = reader.ReadLine();
+                    string? line = reader.ReadLine();
 
                     if (line == null) continue;
 
@@ -151,8 +158,8 @@ namespace HardenWindowsSecurity
 
             // Filter the items based on category and origin
             var filteredItems = csvData.Where(item =>
-                item.Category.Equals(catName, StringComparison.OrdinalIgnoreCase) &&
-                item.Origin.Equals(method, StringComparison.OrdinalIgnoreCase)
+                item.Category?.Equals(catName, StringComparison.OrdinalIgnoreCase) == true &&
+                item.Origin?.Equals(method, StringComparison.OrdinalIgnoreCase) == true
             );
 
             // Process each filtered item
@@ -160,84 +167,96 @@ namespace HardenWindowsSecurity
             {
                 // Initialize valueMatches to "False"
                 string valueMatches = "False";
-                string regValueStr = null;
+                string? regValueStr = null;
 
                 // If the type defined in the CSV is HKLM
-                if (item.Hive.Equals("HKEY_LOCAL_MACHINE", StringComparison.OrdinalIgnoreCase))
+                if (item.Hive != null && item.Hive.Equals("HKEY_LOCAL_MACHINE", StringComparison.OrdinalIgnoreCase))
                 {
                     // Open the registry key in HKEY_LOCAL_MACHINE
-                    using (var key = Registry.LocalMachine.OpenSubKey(item.Key))
+                    if (item.Key != null)
                     {
-                        if (key != null)
+                        // Open the registry key in HKEY_LOCAL_MACHINE
+                        using (var key = Registry.LocalMachine.OpenSubKey(item.Key))
                         {
-                            // Get the registry value
-                            var regValue = key.GetValue(item.Name);
+                            if (key != null)
+                            {
+                                // Get the registry value
+                                var regValue = key.GetValue(item.Name);
 
-                            // Check if the registry value is an integer
-                            if (regValue is int)
-                            {
-                                // Handle the case where the DWORD value is returned as an int
-                                // because DWORD is an UInt32
-                                // Then convert it to a string
-                                regValueStr = ((uint)(int)regValue).ToString();
-                            }
-                            else if (regValue is uint)
-                            {
-                                // Handle the case where the DWORD value is returned as a uint
-                                regValueStr = regValue.ToString();
-                            }
-                            else
-                            {
-                                // Convert the registry value to a string otherwise
-                                regValueStr = regValue?.ToString();
-                            }
+                                // Check if the registry value is an integer
+                                if (regValue is int)
+                                {
+                                    // Handle the case where the DWORD value is returned as an int
+                                    // because DWORD is an UInt32
+                                    // Then convert it to a string
+                                    regValueStr = ((uint)(int)regValue).ToString(CultureInfo.InvariantCulture);
+                                }
+                                else if (regValue is uint)
+                                {
+                                    // Handle the case where the DWORD value is returned as a uint
+                                    regValueStr = regValue.ToString();
+                                }
+                                else
+                                {
+                                    // Convert the registry value to a string otherwise
+                                    regValueStr = regValue?.ToString();
+                                }
 
-                            // Parse the expected values based on their type in the CSV file
-                            var parsedValues = item.Value.Select(v => ParseRegistryValue(type: item.Type, value: v)).ToList();
+                                // Parse the expected values based on their type in the CSV file
+                                var parsedValues = item.Type != null
+                                    ? item.Value?.Select(v => ParseRegistryValue(type: item.Type, value: v)).ToList() ?? new List<object>()
+                                    : new List<object>();
 
-                            // Check if the registry value matches any of the expected values
-                            if (regValue != null && parsedValues.Any(parsedValue => CompareRegistryValues(type: item.Type, regValue: regValue, expectedValue: parsedValue)))
-                            {
-                                // Set valueMatches to "True" if it matches any expected value
-                                valueMatches = "True";
+                                // Check if the registry value matches any of the expected values
+                                if (regValue != null && item.Type != null && parsedValues.Any(parsedValue => CompareRegistryValues(type: item.Type, regValue: regValue, expectedValue: parsedValue)))
+                                {
+                                    // Set valueMatches to "True" if it matches any expected value
+                                    valueMatches = "True";
+                                }
                             }
                         }
                     }
                 }
+
                 // If the type defined in the CSV is HKCU
-                else if (item.Hive.Equals("HKEY_CURRENT_USER", StringComparison.OrdinalIgnoreCase))
+                else if (item.Hive?.Equals("HKEY_CURRENT_USER", StringComparison.OrdinalIgnoreCase) == true)
                 {
-                    // Open the registry key in HKEY_CURRENT_USER
-                    using (var key = Registry.CurrentUser.OpenSubKey(item.Key))
+                    if (item.Key != null)
                     {
-                        if (key != null)
+                        // Open the registry key in HKEY_CURRENT_USER
+                        using (var key = Registry.CurrentUser.OpenSubKey(item.Key))
                         {
-                            // Get the registry value
-                            var regValue = key.GetValue(item.Name);
+                            if (key != null)
+                            {
+                                // Get the registry value
+                                var regValue = key.GetValue(item.Name);
 
-                            if (regValue is int)
-                            {
-                                // Handle the case where the DWORD value is returned as an int
-                                regValueStr = ((uint)(int)regValue).ToString(CultureInfo.InvariantCulture);
-                            }
-                            else if (regValue is uint)
-                            {
-                                // Handle the case where the DWORD value is returned as a uint
-                                regValueStr = regValue.ToString();
-                            }
-                            else
-                            {
-                                regValueStr = regValue?.ToString();
-                            }
+                                if (regValue is int)
+                                {
+                                    // Handle the case where the DWORD value is returned as an int
+                                    regValueStr = ((uint)(int)regValue).ToString(CultureInfo.InvariantCulture);
+                                }
+                                else if (regValue is uint)
+                                {
+                                    // Handle the case where the DWORD value is returned as a uint
+                                    regValueStr = regValue.ToString();
+                                }
+                                else
+                                {
+                                    regValueStr = regValue?.ToString();
+                                }
 
-                            // Parse the expected values based on their type in the CSV file
-                            var parsedValues = item.Value.Select(v => ParseRegistryValue(type: item.Type, value: v)).ToList();
+                                // Parse the expected values based on their type in the CSV file
+                                var parsedValues = item.Type != null
+                                    ? item.Value?.Select(v => ParseRegistryValue(type: item.Type, value: v)).ToList() ?? new List<object>()
+                                    : new List<object>();
 
-                            // Check if the registry value matches any of the expected values
-                            if (regValue != null && parsedValues.Any(parsedValue => CompareRegistryValues(type: item.Type, regValue: regValue, expectedValue: parsedValue)))
-                            {
-                                // Set valueMatches to "True" if it matches any expected value
-                                valueMatches = "True";
+                                // Check if the registry value matches any of the expected values
+                                if (regValue != null && item.Type != null && parsedValues.Any(parsedValue => CompareRegistryValues(type: item.Type, regValue: regValue, expectedValue: parsedValue)))
+                                {
+                                    // Set valueMatches to "True" if it matches any expected value
+                                    valueMatches = "True";
+                                }
                             }
                         }
                     }
@@ -246,18 +265,19 @@ namespace HardenWindowsSecurity
                 // Add a new result to the output list
                 output.Add(new IndividualResult
                 {
-                    FriendlyName = item.FriendlyName,
+                    FriendlyName = item.FriendlyName ?? "Unknown", // Ensure FriendlyName is non-null
                     Compliant = valueMatches,
-                    Value = regValueStr,
-                    Name = item.Name,
-                    Category = catName,
-                    Method = method
+                    Value = regValueStr ?? string.Empty,
+                    Name = item.Name ?? "Unknown", // Ensure Name is non-null
+                    Category = catName, // catName is non-null as it's a parameter
+                    Method = method // method is non-null as it's a parameter
                 });
             }
 
             // Return the output list
             return output;
         }
+
 
         // method to parse the registry value based on its type that is defined in the CSV file
         private static object ParseRegistryValue(string type, string value)
@@ -316,7 +336,7 @@ namespace HardenWindowsSecurity
                     case "String":
                         {
                             // String values are compared as strings using ordinal ignore case
-                            return regValue.ToString().Equals(expectedValue.ToString(), StringComparison.OrdinalIgnoreCase);
+                            return string.Equals(regValue.ToString(), expectedValue.ToString(), StringComparison.OrdinalIgnoreCase);
                         }
                     // Will add more types later if needed, e.g., BINARY, MULTI_STRING etc.
                     default:

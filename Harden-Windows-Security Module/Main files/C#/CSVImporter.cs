@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 
+#nullable enable
+
 namespace HardenWindowsSecurity
 {
     public class HardeningRegistryKeys
@@ -9,20 +11,26 @@ namespace HardenWindowsSecurity
         // Define a public class to store the structure of the new CSV data
         public class CsvRecord
         {
-            public string Category { get; set; }       // Column for category
-            public string Path { get; set; }           // Column for registry path
-            public string Key { get; set; }            // Column for registry key
-            public string Value { get; set; }          // Column for the expected value
-            public string Type { get; set; }           // Column for the type of the registry value
-            public string Action { get; set; }         // Column for the action to be taken
-            public string Comment { get; set; }        // Column for comments
+            public string? Category { get; set; }       // Column for category
+            public string? Path { get; set; }           // Column for registry path
+            public string? Key { get; set; }            // Column for registry key
+            public string? Value { get; set; }          // Column for the expected value
+            public string? Type { get; set; }           // Column for the type of the registry value
+            public string? Action { get; set; }         // Column for the action to be taken
+            public string? Comment { get; set; }        // Column for comments
         }
 
         // Define a public method to parse the CSV file and save the records to RegistryCSVItems
         public static void ReadCsv()
         {
+            // Ensure GlobalVars.path is not null
+            string basePath = GlobalVars.path ?? throw new ArgumentNullException(nameof(GlobalVars.path), "GlobalVars.path cannot be null.");
+
+            // Ensure RegistryCSVItems is initialized
+            List<CsvRecord> registryCSVItems = GlobalVars.RegistryCSVItems ?? throw new InvalidOperationException("RegistryCSVItems is not initialized.");
+
             // Define the path to the CSV file
-            string path = Path.Combine(GlobalVars.path, "Resources", "Registry.csv");
+            string path = Path.Combine(basePath, "Resources", "Registry.csv");
 
             // Open the file and read the contents
             using (StreamReader reader = new StreamReader(path))
@@ -48,7 +56,7 @@ namespace HardenWindowsSecurity
                     if (values.Length == 7)
                     {
                         // Add a new CsvRecord to the list
-                        HardenWindowsSecurity.GlobalVars.RegistryCSVItems.Add(new CsvRecord
+                        registryCSVItems.Add(new CsvRecord
                         {
                             Category = values[0],
                             Path = values[1],

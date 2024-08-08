@@ -4,12 +4,14 @@ using System.Management;
 using System.Management.Automation;
 using System.Collections.Generic;
 
+#nullable enable
+
 namespace HardenWindowsSecurity
 {
     public class EccCurveComparisonResult
     {
         public bool AreCurvesCompliant { get; set; }
-        public List<string> CurrentEccCurves { get; set; }
+        public List<string>? CurrentEccCurves { get; set; }
     }
 
     public static class EccCurveComparer

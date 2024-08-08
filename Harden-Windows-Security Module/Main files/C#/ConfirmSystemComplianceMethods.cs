@@ -9,6 +9,9 @@ using System.Management.Automation;
 using System.Collections.ObjectModel;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Globalization;
+
+#nullable enable
 
 namespace HardenWindowsSecurity
 {
@@ -30,7 +33,9 @@ namespace HardenWindowsSecurity
             HardenWindowsSecurity.GlobalVars.SystemSecurityPoliciesIniObject = HardenWindowsSecurity.IniFileConverter.ConvertFromIniFile(HardenWindowsSecurity.GlobalVars.securityPolicyInfPath);
 
             // Process the SecurityPoliciesVerification.csv and save the output to the global variable HardenWindowsSecurity.GlobalVars.SecurityPolicyRecords
-            HardenWindowsSecurity.GlobalVars.SecurityPolicyRecords = HardenWindowsSecurity.SecurityPolicyCsvProcessor.ProcessSecurityPolicyCsvFile(Path.Combine(HardenWindowsSecurity.GlobalVars.path, "Resources", "SecurityPoliciesVerification.csv"));
+            string basePath = HardenWindowsSecurity.GlobalVars.path ?? throw new ArgumentNullException(nameof(HardenWindowsSecurity.GlobalVars.path), "Base path cannot be null.");
+            string fullPath = Path.Combine(basePath, "Resources", "SecurityPoliciesVerification.csv");
+            HardenWindowsSecurity.GlobalVars.SecurityPolicyRecords = HardenWindowsSecurity.SecurityPolicyCsvProcessor.ProcessSecurityPolicyCsvFile(fullPath);
 
             // Call the method and supply the category names if any
             // Will run them async
@@ -130,12 +135,24 @@ namespace HardenWindowsSecurity
 
                 string CatName = "AttackSurfaceReductionRules";
 
-                object idsObj = HardenWindowsSecurity.GlobalVars.MDAVPreferencesCurrent.AttackSurfaceReductionRules_Ids;
-                object actionsObj = HardenWindowsSecurity.GlobalVars.MDAVPreferencesCurrent.AttackSurfaceReductionRules_Actions;
+                // variables to store the ASR rules IDs and their corresponding actions
+                object idsObj;
+                object actionsObj;
+
+                if (HardenWindowsSecurity.GlobalVars.MDAVPreferencesCurrent == null)
+                {
+                    throw new ArgumentNullException(nameof(HardenWindowsSecurity.GlobalVars.MDAVPreferencesCurrent), "MDAVPreferencesCurrent cannot be null.");
+                }
+                else
+                {
+                    idsObj = HardenWindowsSecurity.GlobalVars.MDAVPreferencesCurrent.AttackSurfaceReductionRules_Ids;
+
+                    actionsObj = HardenWindowsSecurity.GlobalVars.MDAVPreferencesCurrent.AttackSurfaceReductionRules_Actions;
+                }
 
                 // Individual ASR rules verification
-                string[] ids = ConvertToStringArray(idsObj);
-                string[] actions = ConvertToStringArray(actionsObj);
+                string[]? ids = ConvertToStringArray(idsObj);
+                string[]? actions = ConvertToStringArray(actionsObj);
 
                 // If $Ids variable is not empty, convert them to lower case because some IDs can be in upper case and result in inaccurate comparison
                 if (ids != null)
@@ -211,13 +228,19 @@ namespace HardenWindowsSecurity
                     });
                 }
 
-                HardenWindowsSecurity.GlobalVars.FinalMegaObject.TryAdd(CatName, nestedObjectArray);
-
+                if (HardenWindowsSecurity.GlobalVars.FinalMegaObject == null)
+                {
+                    throw new ArgumentNullException(nameof(HardenWindowsSecurity.GlobalVars.FinalMegaObject), "FinalMegaObject cannot be null.");
+                }
+                else
+                {
+                    HardenWindowsSecurity.GlobalVars.FinalMegaObject.TryAdd(CatName, nestedObjectArray);
+                };
             });
         }
 
         // Helper function to convert object to string array
-        private static string[] ConvertToStringArray(object input)
+        private static string[]? ConvertToStringArray(object input)
         {
             if (input is string[] stringArray)
             {
@@ -225,7 +248,7 @@ namespace HardenWindowsSecurity
             }
             if (input is byte[] byteArray)
             {
-                return byteArray.Select(b => b.ToString()).ToArray();
+                return byteArray.Select(b => b.ToString(CultureInfo.InvariantCulture)).ToArray();
             }
             return null;
         }
@@ -299,7 +322,14 @@ namespace HardenWindowsSecurity
                     HardenWindowsSecurity.ConditionalResultAdd.Add(nestedObjectArray, Result);
                 }
 
-                HardenWindowsSecurity.GlobalVars.FinalMegaObject.TryAdd(CatName, nestedObjectArray);
+                if (HardenWindowsSecurity.GlobalVars.FinalMegaObject == null)
+                {
+                    throw new ArgumentNullException(nameof(HardenWindowsSecurity.GlobalVars.FinalMegaObject), "FinalMegaObject cannot be null.");
+                }
+                else
+                {
+                    HardenWindowsSecurity.GlobalVars.FinalMegaObject.TryAdd(CatName, nestedObjectArray);
+                };
             });
         }
 
@@ -323,7 +353,14 @@ namespace HardenWindowsSecurity
                     HardenWindowsSecurity.ConditionalResultAdd.Add(nestedObjectArray, Result);
                 }
 
-                HardenWindowsSecurity.GlobalVars.FinalMegaObject.TryAdd(CatName, nestedObjectArray);
+                if (HardenWindowsSecurity.GlobalVars.FinalMegaObject == null)
+                {
+                    throw new ArgumentNullException(nameof(HardenWindowsSecurity.GlobalVars.FinalMegaObject), "FinalMegaObject cannot be null.");
+                }
+                else
+                {
+                    HardenWindowsSecurity.GlobalVars.FinalMegaObject.TryAdd(CatName, nestedObjectArray);
+                };
             });
         }
 
@@ -346,7 +383,14 @@ namespace HardenWindowsSecurity
                     HardenWindowsSecurity.ConditionalResultAdd.Add(nestedObjectArray, Result);
                 }
 
-                HardenWindowsSecurity.GlobalVars.FinalMegaObject.TryAdd(CatName, nestedObjectArray);
+                if (HardenWindowsSecurity.GlobalVars.FinalMegaObject == null)
+                {
+                    throw new ArgumentNullException(nameof(HardenWindowsSecurity.GlobalVars.FinalMegaObject), "FinalMegaObject cannot be null.");
+                }
+                else
+                {
+                    HardenWindowsSecurity.GlobalVars.FinalMegaObject.TryAdd(CatName, nestedObjectArray);
+                };
             });
         }
 
@@ -379,10 +423,11 @@ namespace HardenWindowsSecurity
 
 
                 // https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-deviceguard?WT.mc_id=Portal-fx#requireplatformsecurityfeatures
-                string RequirePlatformSecurityFeatures = HardenWindowsSecurity.GlobalVars.MDMResults
-     .Where(element => element.Name == "RequirePlatformSecurityFeatures")
-     .Select(element => element.Value)
-     .FirstOrDefault();
+                string? RequirePlatformSecurityFeatures = HardenWindowsSecurity.GlobalVars.MDMResults!
+                 .Where(element => element.Name == "RequirePlatformSecurityFeatures")
+                 .Select(element => element.Value)
+                 .FirstOrDefault();
+
 
                 nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
@@ -463,7 +508,14 @@ namespace HardenWindowsSecurity
                     HardenWindowsSecurity.ConditionalResultAdd.Add(nestedObjectArray, Result);
                 }
 
-                HardenWindowsSecurity.GlobalVars.FinalMegaObject.TryAdd(CatName, nestedObjectArray);
+                if (HardenWindowsSecurity.GlobalVars.FinalMegaObject == null)
+                {
+                    throw new ArgumentNullException(nameof(HardenWindowsSecurity.GlobalVars.FinalMegaObject), "FinalMegaObject cannot be null.");
+                }
+                else
+                {
+                    HardenWindowsSecurity.GlobalVars.FinalMegaObject.TryAdd(CatName, nestedObjectArray);
+                };
             });
         }
 
@@ -496,14 +548,19 @@ namespace HardenWindowsSecurity
 
                 // Get the status of Bitlocker DMA protection
                 int BitlockerDMAProtectionStatus = 0;
-                try
+
+                // Get the value of the registry key and return 0 if it doesn't exist
+                object? regValue = Registry.GetValue(@"HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\FVE", "DisableExternalDMAUnderLock", 0);
+
+                // Explicitly check if regValue is null before casting
+                if (regValue is int intValue)
                 {
-                    // Get the value of the registry key and return 0 if it doesn't exist
-                    BitlockerDMAProtectionStatus = (int)Registry.GetValue(@"HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\FVE", "DisableExternalDMAUnderLock", 0);
+                    BitlockerDMAProtectionStatus = intValue;
                 }
-                catch
+                else
                 {
-                    // if the path doesn't exist do nothing
+                    // regValue should not be null due to the default value set in GetValue method
+                    BitlockerDMAProtectionStatus = 0;
                 }
 
                 // Bitlocker DMA counter measure status
@@ -524,12 +581,12 @@ namespace HardenWindowsSecurity
 
                 // To detect if Hibernate is enabled and set to full
                 // Only perform the check if the system is not a virtual machine
-                if (!HardenWindowsSecurity.GlobalVars.MDAVConfigCurrent.IsVirtualMachine)
+                if (!HardenWindowsSecurity.GlobalVars.MDAVConfigCurrent!.IsVirtualMachine)
                 {
                     bool IndividualItemResult = false;
                     try
                     {
-                        object hiberFileType = Registry.GetValue(@"HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Power", "HiberFileType", null);
+                        object? hiberFileType = Registry.GetValue(@"HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Power", "HiberFileType", null);
                         if (hiberFileType != null && (int)hiberFileType == 2)
                         {
                             IndividualItemResult = true;
@@ -559,12 +616,17 @@ namespace HardenWindowsSecurity
                 // OS Drive encryption verifications
                 // Check if BitLocker is on for the OS Drive
                 // The ProtectionStatus remains off while the drive is encrypting or decrypting
-                var volumeInfo = HardenWindowsSecurity.BitLockerInfo.GetEncryptedVolumeInfo(Environment.GetEnvironmentVariable("SystemDrive"));
+                var volumeInfo = HardenWindowsSecurity.BitLockerInfo.GetEncryptedVolumeInfo(Environment.GetEnvironmentVariable("SystemDrive") ?? "C:\\");
+
                 if (volumeInfo.ProtectionStatus == "Protected")
                 {
                     // Get the key protectors of the OS Drive
-                    string[] KeyProtectors = volumeInfo.KeyProtector.Select(kp => kp.KeyProtectorType).ToArray();
+                    string[] KeyProtectors = volumeInfo.KeyProtector?
+                        .Where(kp => kp?.KeyProtectorType != null)
+                        .Select(kp => kp!.KeyProtectorType!) // kp!.KeyProtectorType!: The ! operator is used to tell the compiler that you are sure kp and KeyProtectorType are not null after the Where filtering.
+                        .ToArray() ?? Array.Empty<string>();
 
+                    // display the key protectors
                     //  HardenWindowsSecurity.VerboseLogger.Write(string.Join(", ", KeyProtectors));
 
 
@@ -643,9 +705,13 @@ namespace HardenWindowsSecurity
                         // If status is unknown, that means the non-OS volume is encrypted and locked, if it's on then it's on
                         if (BitLockerDrive.ProtectionStatus == "Protected" || BitLockerDrive.ProtectionStatus == "Unknown")
                         {
-                            // Check if the non-OS non-Removable drive has one of the following key protectors: RecoveryPassword, Password or ExternalKey (Auto-Unlock)
 
-                            string[] KeyProtectors = BitLockerDrive.KeyProtector.Select(kp => kp.KeyProtectorType).ToArray();
+                            // Check if the non-OS non-Removable drive has one of the following key protectors: RecoveryPassword, Password or ExternalKey (Auto-Unlock)
+                            string[] KeyProtectors = BitLockerDrive.KeyProtector?
+                             .Where(kp => kp?.KeyProtectorType != null)
+                             .Select(kp => kp!.KeyProtectorType!) // kp!.KeyProtectorType!: The ! operator is used to tell the compiler that you are sure kp and KeyProtectorType are not null after the Where filtering.
+                             .ToArray() ?? Array.Empty<string>();
+
 
                             if (KeyProtectors.Contains("RecoveryPassword") || KeyProtectors.Contains("Password") || KeyProtectors.Contains("ExternalKey"))
                             {
@@ -694,7 +760,14 @@ namespace HardenWindowsSecurity
                     HardenWindowsSecurity.ConditionalResultAdd.Add(nestedObjectArray, Result);
                 }
 
-                HardenWindowsSecurity.GlobalVars.FinalMegaObject.TryAdd(CatName, nestedObjectArray);
+                if (HardenWindowsSecurity.GlobalVars.FinalMegaObject == null)
+                {
+                    throw new ArgumentNullException(nameof(HardenWindowsSecurity.GlobalVars.FinalMegaObject), "FinalMegaObject cannot be null.");
+                }
+                else
+                {
+                    HardenWindowsSecurity.GlobalVars.FinalMegaObject.TryAdd(CatName, nestedObjectArray);
+                };
             });
         }
 
@@ -718,24 +791,17 @@ namespace HardenWindowsSecurity
 
                 // Initializing the compliant variable
                 string compliant;
-                try
-                {
-                    // The SID for the Hyper-V Administrators group
-                    string hyperVAdminGroupSID = "S-1-5-32-578";
 
-                    // Retrieve the list of local users and filter them based on the enabled status
-                    var usersNotInHyperVGroup = HardenWindowsSecurity.LocalUserRetriever.Get()
-                        ?.Where(user => user.Enabled && !user.GroupsSIDs.Contains(hyperVAdminGroupSID, StringComparer.OrdinalIgnoreCase))
-                        .ToList();
+                // The SID for the Hyper-V Administrators group
+                string hyperVAdminGroupSID = "S-1-5-32-578";
 
-                    // Determine compliance based on the filtered list to see if the list has any elements
-                    compliant = usersNotInHyperVGroup?.Any() == true ? "False" : "True";
-                }
-                catch
-                {
-                    // Set compliance to False in case of any exception/error
-                    compliant = "False";
-                }
+                // Retrieve the list of local users and filter them based on the enabled status
+                var usersNotInHyperVGroup = HardenWindowsSecurity.LocalUserRetriever.Get()
+                    ?.Where(user => user.Enabled && user.GroupsSIDs != null && !user.GroupsSIDs.Contains(hyperVAdminGroupSID, StringComparer.OrdinalIgnoreCase))
+                    .ToList();
+
+                // Determine compliance based on the filtered list to see if the list has any elements
+                compliant = usersNotInHyperVGroup?.Any() == true ? "False" : "True";
 
                 // Add result to the nested object array
                 nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
@@ -786,10 +852,10 @@ namespace HardenWindowsSecurity
                     using (var reader = new StringReader(output))
                     {
                         // Initialize the inclusion setting
-                        string inclusionSetting = null;
+                        string? inclusionSetting = null;
 
                         // Read the first line to get the headers
-                        string headers = reader.ReadLine();
+                        string? headers = reader.ReadLine();
 
                         // Check if the headers are not null
                         if (headers != null)
@@ -800,7 +866,7 @@ namespace HardenWindowsSecurity
                             int inclusionSettingIndex = Array.IndexOf(headerColumns, "Inclusion Setting");
 
                             // Read subsequent lines to get the values
-                            string values;
+                            string? values;
                             while ((values = reader.ReadLine()) != null)
                             {
                                 var valueColumns = values.Split(',');
@@ -820,9 +886,9 @@ namespace HardenWindowsSecurity
                         {
                             FriendlyName = "Audit policy for Other Logon/Logoff Events",
                             Compliant = individualItemResult ? "True" : "False",
-                            Value = individualItemResult ? "Success and Failure" : inclusionSetting,
+                            Value = individualItemResult ? "Success and Failure" : inclusionSetting ?? string.Empty, // just to suppress the warning
                             Name = "Audit policy for Other Logon/Logoff Events",
-                            Category = CatName,
+                            Category = CatName ?? string.Empty, // just to suppress the warning
                             Method = "Cmdlet"
                         });
                     }
@@ -843,24 +909,35 @@ namespace HardenWindowsSecurity
                     Compliant = MDM_Policy_Result01_System02_AllowLocation.IsMatch ? "True" : "False",
                     Value = MDM_Policy_Result01_System02_AllowLocation.Value,
                     Name = "Disable Location",
-                    Category = CatName,
+                    Category = CatName ?? string.Empty, // just to suppress the warning
                     Method = "CIM"
                 });
 
 
                 // Process items in Registry resources.csv file with "Group Policy" origin and add them to the $NestedObjectArray array
-                foreach (var Result in (HardenWindowsSecurity.CategoryProcessing.ProcessCategory(CatName, "Group Policy")))
+                foreach (var Result in (HardenWindowsSecurity.CategoryProcessing.ProcessCategory(CatName ?? string.Empty, "Group Policy")))
                 {
                     HardenWindowsSecurity.ConditionalResultAdd.Add(nestedObjectArray, Result);
                 }
 
                 // Process items in Registry resources.csv file with "Registry Keys" origin and add them to the nestedObjectArray array
-                foreach (var Result in (HardenWindowsSecurity.CategoryProcessing.ProcessCategory(CatName, "Registry Keys")))
+                foreach (var Result in (HardenWindowsSecurity.CategoryProcessing.ProcessCategory(CatName ?? string.Empty, "Registry Keys")))
                 {
                     HardenWindowsSecurity.ConditionalResultAdd.Add(nestedObjectArray, Result);
                 }
 
-                HardenWindowsSecurity.GlobalVars.FinalMegaObject.TryAdd(CatName, nestedObjectArray);
+                if (HardenWindowsSecurity.GlobalVars.FinalMegaObject == null)
+                {
+                    throw new ArgumentNullException(nameof(HardenWindowsSecurity.GlobalVars.FinalMegaObject), "FinalMegaObject cannot be null.");
+                }
+                else if (CatName == null)
+                {
+                    throw new ArgumentNullException(nameof(CatName), "CatName cannot be null.");
+                }
+                else
+                {
+                    HardenWindowsSecurity.GlobalVars.FinalMegaObject.TryAdd(CatName, nestedObjectArray);
+                }
             });
         }
 
@@ -914,7 +991,14 @@ namespace HardenWindowsSecurity
                     HardenWindowsSecurity.ConditionalResultAdd.Add(nestedObjectArray, Result);
                 }
 
-                HardenWindowsSecurity.GlobalVars.FinalMegaObject.TryAdd(CatName, nestedObjectArray);
+                if (HardenWindowsSecurity.GlobalVars.FinalMegaObject == null)
+                {
+                    throw new ArgumentNullException(nameof(HardenWindowsSecurity.GlobalVars.FinalMegaObject), "FinalMegaObject cannot be null.");
+                }
+                else
+                {
+                    HardenWindowsSecurity.GlobalVars.FinalMegaObject.TryAdd(CatName, nestedObjectArray);
+                };
             });
         }
 
@@ -945,8 +1029,14 @@ namespace HardenWindowsSecurity
                     HardenWindowsSecurity.ConditionalResultAdd.Add(nestedObjectArray, Result);
                 }
 
-                HardenWindowsSecurity.GlobalVars.FinalMegaObject.TryAdd(CatName, nestedObjectArray);
-
+                if (HardenWindowsSecurity.GlobalVars.FinalMegaObject == null)
+                {
+                    throw new ArgumentNullException(nameof(HardenWindowsSecurity.GlobalVars.FinalMegaObject), "FinalMegaObject cannot be null.");
+                }
+                else
+                {
+                    HardenWindowsSecurity.GlobalVars.FinalMegaObject.TryAdd(CatName, nestedObjectArray);
+                };
             });
         }
 
@@ -977,7 +1067,14 @@ namespace HardenWindowsSecurity
                     HardenWindowsSecurity.ConditionalResultAdd.Add(nestedObjectArray, Result);
                 }
 
-                HardenWindowsSecurity.GlobalVars.FinalMegaObject.TryAdd(CatName, nestedObjectArray);
+                if (HardenWindowsSecurity.GlobalVars.FinalMegaObject == null)
+                {
+                    throw new ArgumentNullException(nameof(HardenWindowsSecurity.GlobalVars.FinalMegaObject), "FinalMegaObject cannot be null.");
+                }
+                else
+                {
+                    HardenWindowsSecurity.GlobalVars.FinalMegaObject.TryAdd(CatName, nestedObjectArray);
+                };
             });
         }
 
@@ -1139,7 +1236,14 @@ namespace HardenWindowsSecurity
                     Method = "DISM"
                 });
 
-                HardenWindowsSecurity.GlobalVars.FinalMegaObject.TryAdd(CatName, nestedObjectArray);
+                if (HardenWindowsSecurity.GlobalVars.FinalMegaObject == null)
+                {
+                    throw new ArgumentNullException(nameof(HardenWindowsSecurity.GlobalVars.FinalMegaObject), "FinalMegaObject cannot be null.");
+                }
+                else
+                {
+                    HardenWindowsSecurity.GlobalVars.FinalMegaObject.TryAdd(CatName, nestedObjectArray);
+                };
             });
         }
 
@@ -1164,7 +1268,7 @@ namespace HardenWindowsSecurity
                 {
                     FriendlyName = "ECC Curves and their positions",
                     Compliant = ECCCurvesComparisonResults.AreCurvesCompliant ? "True" : "False",
-                    Value = string.Join(", ", ECCCurvesComparisonResults.CurrentEccCurves),
+                    Value = string.Join(", ", ECCCurvesComparisonResults.CurrentEccCurves ?? Enumerable.Empty<string>()),
                     Name = "ECC Curves and their positions",
                     Category = CatName,
                     Method = "Cmdlet"
@@ -1196,7 +1300,14 @@ namespace HardenWindowsSecurity
                     HardenWindowsSecurity.ConditionalResultAdd.Add(nestedObjectArray, Result);
                 }
 
-                HardenWindowsSecurity.GlobalVars.FinalMegaObject.TryAdd(CatName, nestedObjectArray);
+                if (HardenWindowsSecurity.GlobalVars.FinalMegaObject == null)
+                {
+                    throw new ArgumentNullException(nameof(HardenWindowsSecurity.GlobalVars.FinalMegaObject), "FinalMegaObject cannot be null.");
+                }
+                else
+                {
+                    HardenWindowsSecurity.GlobalVars.FinalMegaObject.TryAdd(CatName, nestedObjectArray);
+                };
             });
         }
 
@@ -1501,7 +1612,14 @@ namespace HardenWindowsSecurity
                     HardenWindowsSecurity.ConditionalResultAdd.Add(nestedObjectArray, Result);
                 }
 
-                HardenWindowsSecurity.GlobalVars.FinalMegaObject.TryAdd(CatName, nestedObjectArray);
+                if (HardenWindowsSecurity.GlobalVars.FinalMegaObject == null)
+                {
+                    throw new ArgumentNullException(nameof(HardenWindowsSecurity.GlobalVars.FinalMegaObject), "FinalMegaObject cannot be null.");
+                }
+                else
+                {
+                    HardenWindowsSecurity.GlobalVars.FinalMegaObject.TryAdd(CatName, nestedObjectArray);
+                };
             });
         }
 
@@ -1548,7 +1666,7 @@ namespace HardenWindowsSecurity
                         // Extract the NX value
                         if (results.Count > 0)
                         {
-                            string nxValue = results[0].BaseObject.ToString();
+                            string? nxValue = results[0].BaseObject.ToString();
 
                             // Determine compliance based on the value
                             bool compliant = nxValue == "3";
@@ -1558,7 +1676,7 @@ namespace HardenWindowsSecurity
                             {
                                 FriendlyName = "Boot Configuration Data (BCD) No-eXecute (NX) Value",
                                 Compliant = compliant ? "True" : "False",
-                                Value = nxValue,
+                                Value = nxValue ?? string.Empty,
                                 Name = "Boot Configuration Data (BCD) No-eXecute (NX) Value",
                                 Category = CatName,
                                 Method = "Cmdlet"
@@ -1610,7 +1728,7 @@ namespace HardenWindowsSecurity
                         if (results != null && results.Count > 0)
                         {
                             // initialize a variable to store the ForceRelocateImages value
-                            string ForceRelocateImages = null;
+                            string? ForceRelocateImages = null;
 
                             // Extract the ForceRelocateImages value and store it in the variable
                             ForceRelocateImages = results[0].ToString();
@@ -1701,7 +1819,10 @@ namespace HardenWindowsSecurity
                     );
 
                 // Import the CSV file as an object
-                List<HardenWindowsSecurity.ProcessMitigationsParser.ProcessMitigationsRecords> ProcessMitigations = HardenWindowsSecurity.GlobalVars.ProcessMitigations;
+                List<HardenWindowsSecurity.ProcessMitigationsParser.ProcessMitigationsRecords> ProcessMitigations =
+                HardenWindowsSecurity.GlobalVars.ProcessMitigations
+                ?? throw new ArgumentNullException(nameof(HardenWindowsSecurity.GlobalVars.ProcessMitigations), "ProcessMitigations cannot be null.");
+
 
                 // Only keep the enabled mitigations in the CSV, then group the data by ProgramName
                 var GroupedMitigations = ProcessMitigations
@@ -1806,13 +1927,13 @@ namespace HardenWindowsSecurity
 
                 // Initialize the variable at the time of declaration
                 var DriverBlockListScheduledTaskResultObject = HardenWindowsSecurity.TaskSchedulerHelper.Get(
-          "MSFT Driver Block list update",
-          "\\MSFT Driver Block list update\\",
-          HardenWindowsSecurity.TaskSchedulerHelper.OutputType.Boolean
-      );
+                    "MSFT Driver Block list update",
+                    "\\MSFT Driver Block list update\\",
+                    HardenWindowsSecurity.TaskSchedulerHelper.OutputType.Boolean
+                );
 
                 // Convert to boolean
-                DriverBlockListScheduledTaskResult = Convert.ToBoolean(DriverBlockListScheduledTaskResultObject);
+                DriverBlockListScheduledTaskResult = Convert.ToBoolean(DriverBlockListScheduledTaskResultObject, CultureInfo.InvariantCulture);
                 nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "Fast weekly Microsoft recommended driver block list update",
@@ -1827,14 +1948,20 @@ namespace HardenWindowsSecurity
 
 
                 // Get the value and convert it to unsigned int16
+                if (HardenWindowsSecurity.GlobalVars.MDAVPreferencesCurrent!.PlatformUpdatesChannel == null)
+                {
+                    throw new ArgumentNullException(nameof(HardenWindowsSecurity.GlobalVars.MDAVPreferencesCurrent.PlatformUpdatesChannel), "PlatformUpdatesChannel cannot be null.");
+                }
+
                 ushort PlatformUpdatesChannel = Convert.ToUInt16(HardenWindowsSecurity.GlobalVars.MDAVPreferencesCurrent.PlatformUpdatesChannel);
+
                 // resolve the number to a string using the dictionary
-                HardenWindowsSecurity.DefenderPlatformUpdatesChannels.Channels.TryGetValue(PlatformUpdatesChannel, out string PlatformUpdatesChannelName);
+                HardenWindowsSecurity.DefenderPlatformUpdatesChannels.Channels.TryGetValue(PlatformUpdatesChannel, out string? PlatformUpdatesChannelName);
                 nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "Microsoft Defender Platform Updates Channel",
                     Compliant = "N/A",
-                    Value = PlatformUpdatesChannelName,
+                    Value = PlatformUpdatesChannelName ?? string.Empty,
                     Name = "Microsoft Defender Platform Updates Channel",
                     Category = CatName,
                     Method = "CIM"
@@ -1845,12 +1972,12 @@ namespace HardenWindowsSecurity
                 ushort EngineUpdatesChannel = Convert.ToUInt16(HardenWindowsSecurity.GlobalVars.MDAVPreferencesCurrent.EngineUpdatesChannel);
 
                 // resolve the number to a string using the dictionary
-                HardenWindowsSecurity.DefenderPlatformUpdatesChannels.Channels.TryGetValue(EngineUpdatesChannel, out string EngineUpdatesChannelName);
+                HardenWindowsSecurity.DefenderPlatformUpdatesChannels.Channels.TryGetValue(EngineUpdatesChannel, out string? EngineUpdatesChannelName);
                 nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "Microsoft Defender Engine Updates Channel",
                     Compliant = "N/A",
-                    Value = EngineUpdatesChannelName,
+                    Value = EngineUpdatesChannelName ?? string.Empty,
                     Name = "Microsoft Defender Engine Updates Channel",
                     Category = CatName,
                     Method = "CIM"
@@ -1989,9 +2116,9 @@ namespace HardenWindowsSecurity
                 {
                     // Check if the value is 1 or 2, both are compliant
                     if (
-              BruteForceProtectionAggressivenessResult.Equals("1", StringComparison.OrdinalIgnoreCase) ||
-              BruteForceProtectionAggressivenessResult.Equals("2", StringComparison.OrdinalIgnoreCase)
-          )
+                BruteForceProtectionAggressivenessResult.Equals("1", StringComparison.OrdinalIgnoreCase) ||
+                BruteForceProtectionAggressivenessResult.Equals("2", StringComparison.OrdinalIgnoreCase)
+                    )
                     {
                         nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                         {
@@ -2040,7 +2167,7 @@ namespace HardenWindowsSecurity
                     if (
               BruteForceProtectionMaxBlockTimeResult.Equals("0", StringComparison.OrdinalIgnoreCase) ||
               BruteForceProtectionMaxBlockTimeResult.Equals("4294967295", StringComparison.OrdinalIgnoreCase)
-          )
+                )
                     {
                         nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                         {
@@ -2426,7 +2553,14 @@ namespace HardenWindowsSecurity
                     HardenWindowsSecurity.ConditionalResultAdd.Add(nestedObjectArray, Result);
                 }
 
-                HardenWindowsSecurity.GlobalVars.FinalMegaObject.TryAdd(CatName, nestedObjectArray);
+                if (HardenWindowsSecurity.GlobalVars.FinalMegaObject == null)
+                {
+                    throw new ArgumentNullException(nameof(HardenWindowsSecurity.GlobalVars.FinalMegaObject), "FinalMegaObject cannot be null.");
+                }
+                else
+                {
+                    HardenWindowsSecurity.GlobalVars.FinalMegaObject.TryAdd(CatName, nestedObjectArray);
+                };
             });
         }
     }

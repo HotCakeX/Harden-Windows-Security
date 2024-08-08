@@ -6,11 +6,14 @@
     <RootNamespace>Harden_Windows_Security</RootNamespace>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-  </PropertyGroup>  
+    <UseWpf>true</UseWpf>
+    <UseWindowsForms>true</UseWindowsForms>
+  </PropertyGroup>
 
-  <ItemGroup>   
+  <ItemGroup>
     <PackageReference Include="System.DirectoryServices.AccountManagement" Version="9.0.0-preview.6.24327.7" />
     <PackageReference Include="System.Management" Version="9.0.0-preview.6.24327.7" />
+    <PackageReference Include="System.Management.Automation" Version="7.5.0-preview.3" />
   </ItemGroup>
-  
+
 </Project>

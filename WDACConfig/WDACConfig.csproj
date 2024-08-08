@@ -5,24 +5,12 @@
     <TargetFramework>net9.0-windows10.0.22621.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <UseWindowsForms>true</UseWindowsForms>
   </PropertyGroup>
 
-  <ItemGroup>
-    <Reference Include="Security.Cryptography">
-      <HintPath>C:\Users\HotCakeX\.nuget\packages\security.cryptography\1.7.2\lib\net35\Security.Cryptography.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Diagnostics.EventLog">
-      <HintPath>C:\Program Files\dotnet\shared\Microsoft.WindowsDesktop.App\9.0.0-preview.6.24327.6\System.Diagnostics.EventLog.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Management.Automation">
-      <HintPath>C:\Program Files\PowerShell\7\System.Management.Automation.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Security.Cryptography.Pkcs">
-      <HintPath>C:\Program Files\dotnet\shared\Microsoft.WindowsDesktop.App\9.0.0-preview.6.24327.6\System.Security.Cryptography.Pkcs.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Windows.Forms">
-      <HintPath>C:\Program Files\dotnet\shared\Microsoft.WindowsDesktop.App\9.0.0-preview.6.24327.6\System.Windows.Forms.dll</HintPath>
-    </Reference>
+    <ItemGroup>
+    <PackageReference Include="System.Management" Version="9.0.0-preview.6.24327.7" />
+    <PackageReference Include="System.Management.Automation" Version="7.5.0-preview.3" />
   </ItemGroup>
 
 </Project>

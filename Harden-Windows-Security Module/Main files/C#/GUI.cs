@@ -106,7 +106,7 @@ namespace HardenWindowsSecurity
         public static void LoadXaml()
         {
             // Defining the path to the XAML XML file
-            xamlPath = System.IO.Path.Combine(HardenWindowsSecurity.GlobalVars.path, "Resources", "XAML", "Main.xml");
+            xamlPath = System.IO.Path.Combine(HardenWindowsSecurity.GlobalVars.path, "Resources", "XAML", "Main.xaml");
             // Read the content of the XML
             xamlContent = System.IO.File.ReadAllText(xamlPath);
 

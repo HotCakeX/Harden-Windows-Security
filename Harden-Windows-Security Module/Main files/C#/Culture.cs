@@ -1,6 +1,8 @@
 using System;
 using System.Globalization;
 
+#nullable enable
+
 namespace HardenWindowsSecurity
 {
     // a class to hold the properties of the current culture

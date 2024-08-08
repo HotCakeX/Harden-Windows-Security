@@ -18,6 +18,11 @@ namespace HardenWindowsSecurity
         /// <exception cref="PlatformNotSupportedException"></exception>
         public static void Initialize(string VerbosePreference)
         {
+
+            // Set the default culture to InvariantCulture globally
+            CultureInfo.DefaultThreadCurrentCulture = CultureInfo.InvariantCulture;
+            CultureInfo.DefaultThreadCurrentUICulture = CultureInfo.InvariantCulture;
+
             using (RegistryKey key = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows NT\CurrentVersion"))
             {
                 if (key != null)

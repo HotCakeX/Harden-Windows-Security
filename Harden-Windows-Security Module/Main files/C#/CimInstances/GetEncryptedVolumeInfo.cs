@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Management;
 using System.Linq;
 
+#nullable enable
+
 /// Sources for the code:
 /// https://learn.microsoft.com/en-us/windows/win32/secprov/win32-encryptablevolume
 /// https://learn.microsoft.com/en-us/windows-hardware/drivers/storage/msft-volume
@@ -197,7 +199,7 @@ namespace HardenWindowsSecurity
                 try
                 {
                     // Try to use the GetLockStatus method to get the CurrentLockStatus
-                    var currentLockStatus = InvokeCimMethod(volume, "GetLockStatus");
+                    var currentLockStatus = InvokeCimMethod(volume, "GetLockStatus", null);
                     if (currentLockStatus != null && Convert.ToUInt32(currentLockStatus["ReturnValue"]) == 0)
                     {
                         // Set the LockStatus property if it exists
@@ -208,7 +210,7 @@ namespace HardenWindowsSecurity
 
                 try
                 {
-                    var currentVolConversionStatus = InvokeCimMethod(volume, "GetConversionStatus");
+                    var currentVolConversionStatus = InvokeCimMethod(volume, "GetConversionStatus", null);
                     if (currentVolConversionStatus != null && Convert.ToUInt32(currentVolConversionStatus["ReturnValue"]) == 0)
                     {
                         newInstance.EncryptionPercentage = currentVolConversionStatus["EncryptionPercentage"]?.ToString();
@@ -222,7 +224,7 @@ namespace HardenWindowsSecurity
                 try
                 {
                     // Try to use the GetEncryptionMethod method to get the EncryptionMethod and EncryptionMethodFlags properties
-                    var currentEncryptionMethod = InvokeCimMethod(volume, "GetEncryptionMethod");
+                    var currentEncryptionMethod = InvokeCimMethod(volume, "GetEncryptionMethod", null);
                     if (currentEncryptionMethod != null && Convert.ToUInt32(currentEncryptionMethod["ReturnValue"]) == 0)
                     {
                         newInstance.EncryptionMethod = GetDictionaryValue(EncryptionMethods, Convert.ToUInt32(currentEncryptionMethod["EncryptionMethod"]));
@@ -234,7 +236,7 @@ namespace HardenWindowsSecurity
                 try
                 {
                     // Use the GetVersion method
-                    var currentVolVersion = InvokeCimMethod(volume, "GetVersion");
+                    var currentVolVersion = InvokeCimMethod(volume, "GetVersion", null);
                     if (currentVolVersion != null && Convert.ToUInt32(currentVolVersion["ReturnValue"]) == 0)
                     {
                         newInstance.MetadataVersion = Convert.ToUInt32(currentVolVersion["Version"]);
@@ -245,7 +247,7 @@ namespace HardenWindowsSecurity
                 try
                 {
                     // Use the GetKeyProtectors method
-                    var keyProtectors = InvokeCimMethod(volume, "GetKeyProtectors");
+                    var keyProtectors = InvokeCimMethod(volume, "GetKeyProtectors", null);
 
                     // If there are any key protectors
                     if (keyProtectors != null)
@@ -257,12 +259,12 @@ namespace HardenWindowsSecurity
                         foreach (var keyProtectorID in (string[])keyProtectors["VolumeKeyProtectorID"])
                         {
                             // Set them all to null initially so we don't accidentally use them for the wrong key protector type
-                            string type = null;
-                            string recoveryPassword = null;
+                            string? type = null;
+                            string? recoveryPassword = null;
                             bool autoUnlockProtector = false;
-                            string keyProtectorFileName = null;
-                            string keyProtectorThumbprint = null;
-                            string keyProtectorCertificateType = null;
+                            string? keyProtectorFileName = null;
+                            string? keyProtectorThumbprint = null;
+                            string? keyProtectorCertificateType = null;
 
                             try
                             {
@@ -286,7 +288,7 @@ namespace HardenWindowsSecurity
                                     // if the current key protector is ExternalKey
                                     if (keyProtectorType == 2)
                                     {
-                                        var autoUnlockEnabledResult = InvokeCimMethod(volume, "IsAutoUnlockEnabled");
+                                        var autoUnlockEnabledResult = InvokeCimMethod(volume, "IsAutoUnlockEnabled", null);
                                         if (autoUnlockEnabledResult != null && Convert.ToUInt32(autoUnlockEnabledResult["ReturnValue"]) == 0)
                                         {
                                             if (Convert.ToBoolean(autoUnlockEnabledResult["IsAutoUnlockEnabled"]) && autoUnlockEnabledResult["VolumeKeyProtectorID"]?.ToString() == keyProtectorID)
@@ -373,9 +375,9 @@ namespace HardenWindowsSecurity
 
         // Helper method to get the value from a dictionary and handle the case when the key is not present
         // For uint keys
-        private static string GetDictionaryValue(Dictionary<uint, string> dictionary, uint key)
+        private static string? GetDictionaryValue(Dictionary<uint, string> dictionary, uint key)
         {
-            if (dictionary.TryGetValue(key, out string value))
+            if (dictionary.TryGetValue(key, out string? value))
             {
                 return value;
             }
@@ -389,9 +391,9 @@ namespace HardenWindowsSecurity
 
         // Helper method to get the value from a dictionary and handle the case when the key is not present
         // For ushort keys
-        private static string GetDictionaryValue(Dictionary<ushort, string> dictionary, ushort key)
+        private static string? GetDictionaryValue(Dictionary<ushort, string> dictionary, ushort key)
         {
-            if (dictionary.TryGetValue(key, out string value))
+            if (dictionary.TryGetValue(key, out string? value))
             {
                 return value;
             }
@@ -404,7 +406,7 @@ namespace HardenWindowsSecurity
         }
 
         // Helper method to get the information from the WMI classes
-        private static ManagementBaseObject GetCimInstance(string @namespace, string className, string filter)
+        private static ManagementBaseObject? GetCimInstance(string @namespace, string className, string filter)
         {
             SelectQuery query = new SelectQuery(className, filter);
             using (ManagementObjectSearcher searcher = new ManagementObjectSearcher(@namespace, query.QueryString))
@@ -414,7 +416,7 @@ namespace HardenWindowsSecurity
         }
 
         // Helper method to invoke a method on a WMI class
-        private static ManagementBaseObject InvokeCimMethod(ManagementBaseObject instance, string methodName, Dictionary<string, object> parameters = null)
+        private static ManagementBaseObject InvokeCimMethod(ManagementBaseObject instance, string methodName, Dictionary<string, object>? parameters)
         {
             ManagementClass managementClass = new ManagementClass(instance.ClassPath);
             var inParams = managementClass.GetMethodParameters(methodName);
@@ -440,15 +442,16 @@ namespace HardenWindowsSecurity
                 // Iterate through the properties of the storage object
                 foreach (PropertyData property in storage.Properties)
                 {
-                    if (property.Name == "DriveLetter" && property.Value != null)
+                    if (string.Equals(property.Name, "DriveLetter", StringComparison.OrdinalIgnoreCase) && property.Value != null)
                     {
-                        driveLetters.Add(property.Value.ToString());
+                        driveLetters.Add(property.Value?.ToString() ?? string.Empty);
                     }
                 }
             }
 
             return driveLetters.ToArray();
         }
+
 
         private static ManagementObjectCollection GetCimInstances(string namespacePath, string className, string filter)
         {

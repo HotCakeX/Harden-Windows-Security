@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Management;
 using System.Linq;
+using System.Globalization;
 
 #nullable enable
 
@@ -185,14 +186,14 @@ namespace HardenWindowsSecurity
                 try
                 {
                     // Set the ProtectionStatus property if it exists
-                    newInstance.ProtectionStatus = GetDictionaryValue(ProtectionStatuses, Convert.ToUInt32(volume["ProtectionStatus"]));
+                    newInstance.ProtectionStatus = GetDictionaryValue(ProtectionStatuses, Convert.ToUInt32(volume["ProtectionStatus"], CultureInfo.InvariantCulture));
                 }
                 catch { /* ignore */ }
 
                 try
                 {
                     // Set the VolumeType property if it exists
-                    newInstance.VolumeType = GetDictionaryValue(VolumeTypes, Convert.ToUInt32(volume["VolumeType"]));
+                    newInstance.VolumeType = GetDictionaryValue(VolumeTypes, Convert.ToUInt32(volume["VolumeType"], CultureInfo.InvariantCulture));
                 }
                 catch { /* ignore */ }
 
@@ -200,10 +201,10 @@ namespace HardenWindowsSecurity
                 {
                     // Try to use the GetLockStatus method to get the CurrentLockStatus
                     var currentLockStatus = InvokeCimMethod(volume, "GetLockStatus", null);
-                    if (currentLockStatus != null && Convert.ToUInt32(currentLockStatus["ReturnValue"]) == 0)
+                    if (currentLockStatus != null && Convert.ToUInt32(currentLockStatus["ReturnValue"], CultureInfo.InvariantCulture) == 0)
                     {
                         // Set the LockStatus property if it exists
-                        newInstance.LockStatus = GetDictionaryValue(LockStatuses, Convert.ToUInt32(currentLockStatus["LockStatus"]));
+                        newInstance.LockStatus = GetDictionaryValue(LockStatuses, Convert.ToUInt32(currentLockStatus["LockStatus"], CultureInfo.InvariantCulture));
                     }
                 }
                 catch { /* ignore */ }
@@ -211,12 +212,12 @@ namespace HardenWindowsSecurity
                 try
                 {
                     var currentVolConversionStatus = InvokeCimMethod(volume, "GetConversionStatus", null);
-                    if (currentVolConversionStatus != null && Convert.ToUInt32(currentVolConversionStatus["ReturnValue"]) == 0)
+                    if (currentVolConversionStatus != null && Convert.ToUInt32(currentVolConversionStatus["ReturnValue"], CultureInfo.InvariantCulture) == 0)
                     {
                         newInstance.EncryptionPercentage = currentVolConversionStatus["EncryptionPercentage"]?.ToString();
                         newInstance.WipePercentage = currentVolConversionStatus["WipingPercentage"]?.ToString();
-                        newInstance.ConversionStatus = GetDictionaryValue(ConversionStatuses, Convert.ToUInt32(currentVolConversionStatus["ConversionStatus"]));
-                        newInstance.WipingStatus = GetDictionaryValue(WipingStatuses, Convert.ToUInt32(currentVolConversionStatus["WipingStatus"]));
+                        newInstance.ConversionStatus = GetDictionaryValue(ConversionStatuses, Convert.ToUInt32(currentVolConversionStatus["ConversionStatus"], CultureInfo.InvariantCulture));
+                        newInstance.WipingStatus = GetDictionaryValue(WipingStatuses, Convert.ToUInt32(currentVolConversionStatus["WipingStatus"], CultureInfo.InvariantCulture));
                     }
                 }
                 catch { /* ignore */ }
@@ -225,9 +226,9 @@ namespace HardenWindowsSecurity
                 {
                     // Try to use the GetEncryptionMethod method to get the EncryptionMethod and EncryptionMethodFlags properties
                     var currentEncryptionMethod = InvokeCimMethod(volume, "GetEncryptionMethod", null);
-                    if (currentEncryptionMethod != null && Convert.ToUInt32(currentEncryptionMethod["ReturnValue"]) == 0)
+                    if (currentEncryptionMethod != null && Convert.ToUInt32(currentEncryptionMethod["ReturnValue"], CultureInfo.InvariantCulture) == 0)
                     {
-                        newInstance.EncryptionMethod = GetDictionaryValue(EncryptionMethods, Convert.ToUInt32(currentEncryptionMethod["EncryptionMethod"]));
+                        newInstance.EncryptionMethod = GetDictionaryValue(EncryptionMethods, Convert.ToUInt32(currentEncryptionMethod["EncryptionMethod"], CultureInfo.InvariantCulture));
                         newInstance.EncryptionMethodFlags = currentEncryptionMethod["EncryptionMethodFlags"]?.ToString();
                     }
                 }
@@ -237,9 +238,9 @@ namespace HardenWindowsSecurity
                 {
                     // Use the GetVersion method
                     var currentVolVersion = InvokeCimMethod(volume, "GetVersion", null);
-                    if (currentVolVersion != null && Convert.ToUInt32(currentVolVersion["ReturnValue"]) == 0)
+                    if (currentVolVersion != null && Convert.ToUInt32(currentVolVersion["ReturnValue"], CultureInfo.InvariantCulture) == 0)
                     {
-                        newInstance.MetadataVersion = Convert.ToUInt32(currentVolVersion["Version"]);
+                        newInstance.MetadataVersion = Convert.ToUInt32(currentVolVersion["Version"], CultureInfo.InvariantCulture);
                     }
                 }
                 catch { /* ignore */ }
@@ -272,14 +273,14 @@ namespace HardenWindowsSecurity
                                 var keyProtectorTypeResult = InvokeCimMethod(volume, "GetKeyProtectorType", new Dictionary<string, object> { { "VolumeKeyProtectorID", keyProtectorID } });
                                 if (keyProtectorTypeResult != null)
                                 {
-                                    var keyProtectorType = Convert.ToUInt32(keyProtectorTypeResult["KeyProtectorType"]);
+                                    var keyProtectorType = Convert.ToUInt32(keyProtectorTypeResult["KeyProtectorType"], CultureInfo.InvariantCulture);
                                     type = GetDictionaryValue(KeyProtectorTypes, keyProtectorType);
 
                                     // if the current key protector is RecoveryPassword / Numerical password
                                     if (keyProtectorType == 3)
                                     {
                                         var numericalPassword = InvokeCimMethod(volume, "GetKeyProtectorNumericalPassword", new Dictionary<string, object> { { "VolumeKeyProtectorID", keyProtectorID } });
-                                        if (numericalPassword != null && Convert.ToUInt32(numericalPassword["ReturnValue"]) == 0)
+                                        if (numericalPassword != null && Convert.ToUInt32(numericalPassword["ReturnValue"], CultureInfo.InvariantCulture) == 0)
                                         {
                                             recoveryPassword = numericalPassword["NumericalPassword"]?.ToString();
                                         }
@@ -289,16 +290,19 @@ namespace HardenWindowsSecurity
                                     if (keyProtectorType == 2)
                                     {
                                         var autoUnlockEnabledResult = InvokeCimMethod(volume, "IsAutoUnlockEnabled", null);
-                                        if (autoUnlockEnabledResult != null && Convert.ToUInt32(autoUnlockEnabledResult["ReturnValue"]) == 0)
+                                        if (autoUnlockEnabledResult != null && Convert.ToUInt32(autoUnlockEnabledResult["ReturnValue"], CultureInfo.InvariantCulture) == 0)
                                         {
-                                            if (Convert.ToBoolean(autoUnlockEnabledResult["IsAutoUnlockEnabled"]) && autoUnlockEnabledResult["VolumeKeyProtectorID"]?.ToString() == keyProtectorID)
+                                            var isAutoUnlockEnabled = Convert.ToBoolean(autoUnlockEnabledResult["IsAutoUnlockEnabled"], CultureInfo.InvariantCulture);
+                                            var volumeKeyProtectorID = autoUnlockEnabledResult["VolumeKeyProtectorID"]?.ToString();
+
+                                            if (isAutoUnlockEnabled && string.Equals(volumeKeyProtectorID, keyProtectorID, StringComparison.Ordinal))
                                             {
                                                 autoUnlockProtector = true;
                                             }
                                         }
 
                                         var keyProtectorFileNameResult = InvokeCimMethod(volume, "GetExternalKeyFileName", new Dictionary<string, object> { { "VolumeKeyProtectorID", keyProtectorID } });
-                                        if (keyProtectorFileNameResult != null && Convert.ToUInt32(keyProtectorFileNameResult["ReturnValue"]) == 0)
+                                        if (keyProtectorFileNameResult != null && Convert.ToUInt32(keyProtectorFileNameResult["ReturnValue"], CultureInfo.InvariantCulture) == 0)
                                         {
                                             keyProtectorFileName = keyProtectorFileNameResult["FileName"]?.ToString();
                                         }
@@ -308,7 +312,7 @@ namespace HardenWindowsSecurity
                                     if (keyProtectorType == 7 || keyProtectorType == 9)
                                     {
                                         var keyProtectorCertificateResult = InvokeCimMethod(volume, "GetKeyProtectorCertificate", new Dictionary<string, object> { { "VolumeKeyProtectorID", keyProtectorID } });
-                                        if (keyProtectorCertificateResult != null && Convert.ToUInt32(keyProtectorCertificateResult["ReturnValue"]) == 0)
+                                        if (keyProtectorCertificateResult != null && Convert.ToUInt32(keyProtectorCertificateResult["ReturnValue"], CultureInfo.InvariantCulture) == 0)
                                         {
                                             keyProtectorThumbprint = keyProtectorCertificateResult["CertThumbprint"]?.ToString();
                                             keyProtectorCertificateType = keyProtectorCertificateResult["CertType"]?.ToString();
@@ -341,13 +345,13 @@ namespace HardenWindowsSecurity
             {
                 try
                 {
-                    newInstance.CapacityGB = Math.Round(Convert.ToDouble(currentStorage["Size"]) / (1024 * 1024 * 1024), 4).ToString();
+                    newInstance.CapacityGB = Math.Round(Convert.ToDouble(currentStorage["Size"], CultureInfo.InvariantCulture) / (1024 * 1024 * 1024), 4).ToString(CultureInfo.InvariantCulture);
                 }
                 catch { /* ignore */ }
 
                 try
                 {
-                    newInstance.FileSystemType = GetDictionaryValue(FileSystemTypes, Convert.ToUInt16(currentStorage["FileSystemType"]));
+                    newInstance.FileSystemType = GetDictionaryValue(FileSystemTypes, Convert.ToUInt16(currentStorage["FileSystemType"], CultureInfo.InvariantCulture));
                 }
                 catch { /* ignore */ }
 
@@ -365,7 +369,7 @@ namespace HardenWindowsSecurity
 
                 try
                 {
-                    newInstance.ReFSDedupMode = GetDictionaryValue(ReFSDedupModes, Convert.ToUInt32(currentStorage["ReFSDedupMode"]));
+                    newInstance.ReFSDedupMode = GetDictionaryValue(ReFSDedupModes, Convert.ToUInt32(currentStorage["ReFSDedupMode"], CultureInfo.InvariantCulture));
                 }
                 catch { /* ignore */ }
             }

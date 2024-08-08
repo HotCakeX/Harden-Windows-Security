@@ -13,7 +13,7 @@ using System.Windows.Forms;
 using System.Collections.Concurrent;
 
 
-namespace HardeningModule
+namespace HardenWindowsSecurity
 {
     /// <summary>
     /// A class to store all of the data that is related to the GUI and its operations
@@ -106,7 +106,7 @@ namespace HardeningModule
         public static void LoadXaml()
         {
             // Defining the path to the XAML XML file
-            xamlPath = System.IO.Path.Combine(HardeningModule.GlobalVars.path, "XAML", "Main.xml");
+            xamlPath = System.IO.Path.Combine(HardenWindowsSecurity.GlobalVars.path, "Resources", "XAML", "Main.xml");
             // Read the content of the XML
             xamlContent = System.IO.File.ReadAllText(xamlPath);
 
@@ -122,7 +122,7 @@ namespace HardeningModule
             mainContentControl = (System.Windows.Controls.ContentControl)mainTabControlToggle.FindName("MainContentControl");
 
             // Assigning the icon for the Harden Windows Security GUI
-            window.Icon = new System.Windows.Media.Imaging.BitmapImage(new Uri(System.IO.Path.Combine(HardeningModule.GlobalVars.path, "Resources", "Media", "ProgramIcon.ico")));
+            window.Icon = new System.Windows.Media.Imaging.BitmapImage(new Uri(System.IO.Path.Combine(HardenWindowsSecurity.GlobalVars.path, "Resources", "Media", "ProgramIcon.ico")));
 
             // Due to using ToggleButton as Tab Control element, this is now considered the parent of all inner elements
             mainContentControlStyle = (System.Windows.Style)mainContentControl.FindName("MainContentControlStyle");
@@ -137,11 +137,11 @@ namespace HardeningModule
             //
             // [System.Windows.Style]$MainContentControlStyle = $MainContentControl.FindName('MainContentControlStyle')
             // $MainContentControlStyle.FindName('PathIcon1').Source
-            ((System.Windows.Controls.Image)((System.Windows.Markup.INameScope)mainContentControlStyle).FindName("PathIcon1")).Source = new System.Windows.Media.Imaging.BitmapImage(new Uri(System.IO.Path.Combine(HardeningModule.GlobalVars.path, "Resources", "Media", "path.png")));
-            ((System.Windows.Controls.Image)((System.Windows.Markup.INameScope)mainContentControlStyle).FindName("PathIcon2")).Source = new System.Windows.Media.Imaging.BitmapImage(new Uri(System.IO.Path.Combine(HardeningModule.GlobalVars.path, "Resources", "Media", "path.png")));
-            ((System.Windows.Controls.Image)((System.Windows.Markup.INameScope)mainContentControlStyle).FindName("PathIcon3")).Source = new System.Windows.Media.Imaging.BitmapImage(new Uri(System.IO.Path.Combine(HardeningModule.GlobalVars.path, "Resources", "Media", "path.png")));
-            ((System.Windows.Controls.Image)((System.Windows.Markup.INameScope)mainContentControlStyle).FindName("LogButtonIcon")).Source = new System.Windows.Media.Imaging.BitmapImage(new Uri(System.IO.Path.Combine(HardeningModule.GlobalVars.path, "Resources", "Media", "log.png")));
-            ((System.Windows.Controls.Image)parentGrid.FindName("ExecuteButtonIcon")).Source = new System.Windows.Media.Imaging.BitmapImage(new Uri(System.IO.Path.Combine(HardeningModule.GlobalVars.path, "Resources", "Media", "start.png")));
+            ((System.Windows.Controls.Image)((System.Windows.Markup.INameScope)mainContentControlStyle).FindName("PathIcon1")).Source = new System.Windows.Media.Imaging.BitmapImage(new Uri(System.IO.Path.Combine(HardenWindowsSecurity.GlobalVars.path, "Resources", "Media", "path.png")));
+            ((System.Windows.Controls.Image)((System.Windows.Markup.INameScope)mainContentControlStyle).FindName("PathIcon2")).Source = new System.Windows.Media.Imaging.BitmapImage(new Uri(System.IO.Path.Combine(HardenWindowsSecurity.GlobalVars.path, "Resources", "Media", "path.png")));
+            ((System.Windows.Controls.Image)((System.Windows.Markup.INameScope)mainContentControlStyle).FindName("PathIcon3")).Source = new System.Windows.Media.Imaging.BitmapImage(new Uri(System.IO.Path.Combine(HardenWindowsSecurity.GlobalVars.path, "Resources", "Media", "path.png")));
+            ((System.Windows.Controls.Image)((System.Windows.Markup.INameScope)mainContentControlStyle).FindName("LogButtonIcon")).Source = new System.Windows.Media.Imaging.BitmapImage(new Uri(System.IO.Path.Combine(HardenWindowsSecurity.GlobalVars.path, "Resources", "Media", "log.png")));
+            ((System.Windows.Controls.Image)parentGrid.FindName("ExecuteButtonIcon")).Source = new System.Windows.Media.Imaging.BitmapImage(new Uri(System.IO.Path.Combine(HardenWindowsSecurity.GlobalVars.path, "Resources", "Media", "start.png")));
 
             categories = (System.Windows.Controls.ListView)((System.Windows.Markup.INameScope)mainContentControlStyle).FindName("Categories");
             subCategories = (System.Windows.Controls.ListView)((System.Windows.Markup.INameScope)mainContentControlStyle).FindName("SubCategories");
@@ -198,7 +198,7 @@ namespace HardeningModule
                         txtFilePath.Text = dialog.FileName;
                         txtFilePath.Visibility = Visibility.Visible;
 
-                        HardeningModule.Logger.LogMessage($"Logs will be saved in: {txtFilePath.Text}");
+                        HardenWindowsSecurity.Logger.LogMessage($"Logs will be saved in: {txtFilePath.Text}");
                     }
                 }
 
@@ -215,7 +215,7 @@ namespace HardeningModule
             UpdateSubCategories();
 
 
-            if (!HardeningModule.GlobalVars.Offline)
+            if (!HardenWindowsSecurity.GlobalVars.Offline)
             {
                 // Disable the Offline mode toggle button if -Offline parameter was not used with the function
                 enableOfflineMode.IsEnabled = false;
@@ -309,7 +309,7 @@ namespace HardeningModule
             foreach (var item in categories.Items)
             {
                 System.Windows.Controls.ListViewItem categoryItem = (System.Windows.Controls.ListViewItem)item;
-                if (!HardeningModule.GlobalVars.HardeningCategorieX.Contains(((System.Windows.Controls.CheckBox)categoryItem.Content).Name))
+                if (!HardenWindowsSecurity.GlobalVars.HardeningCategorieX.Contains(((System.Windows.Controls.CheckBox)categoryItem.Content).Name))
                 {
                     categoryItem.IsEnabled = false;
                 }
@@ -358,7 +358,7 @@ namespace HardeningModule
                 foreach (var item in categories.Items)
                 {
                     System.Windows.Controls.ListViewItem categoryItem = (System.Windows.Controls.ListViewItem)item;
-                    if (HardeningModule.GlobalVars.HardeningCategorieX.Contains(((System.Windows.Controls.CheckBox)categoryItem.Content).Name))
+                    if (HardenWindowsSecurity.GlobalVars.HardeningCategorieX.Contains(((System.Windows.Controls.CheckBox)categoryItem.Content).Name))
                     {
                         ((System.Windows.Controls.CheckBox)categoryItem.Content).IsChecked = true;
                     }
@@ -429,21 +429,21 @@ namespace HardeningModule
                     {
                         try
                         {
-                            if (!HardeningModule.SneakAndPeek.Search("Windows*Security Baseline/Scripts/Baseline-LocalInstall.ps1", dialog.FileName))
+                            if (!HardenWindowsSecurity.SneakAndPeek.Search("Windows*Security Baseline/Scripts/Baseline-LocalInstall.ps1", dialog.FileName))
                             {
-                                HardeningModule.Logger.LogMessage("The selected Zip file does not contain the Microsoft Security Baselines Baseline-LocalInstall.ps1 which is required for the Protect-WindowsSecurity function to work properly");
+                                HardenWindowsSecurity.Logger.LogMessage("The selected Zip file does not contain the Microsoft Security Baselines Baseline-LocalInstall.ps1 which is required for the Protect-WindowsSecurity function to work properly");
                             }
                             else
                             {
                                 // For displaying the text on the GUI's text box
                                 microsoftSecurityBaselineZipTextBox.Text = dialog.FileName;
                                 // The actual value that will be used
-                                HardeningModule.GUI.MicrosoftSecurityBaselineZipPath = dialog.FileName;
+                                HardenWindowsSecurity.GUI.MicrosoftSecurityBaselineZipPath = dialog.FileName;
                             }
                         }
                         catch (Exception ex)
                         {
-                            HardeningModule.Logger.LogMessage(ex.Message);
+                            HardenWindowsSecurity.Logger.LogMessage(ex.Message);
                         }
                     }
                 }
@@ -462,21 +462,21 @@ namespace HardeningModule
                     {
                         try
                         {
-                            if (!HardeningModule.SneakAndPeek.Search("Microsoft 365 Apps for Enterprise*/Scripts/Baseline-LocalInstall.ps1", dialog.FileName))
+                            if (!HardenWindowsSecurity.SneakAndPeek.Search("Microsoft 365 Apps for Enterprise*/Scripts/Baseline-LocalInstall.ps1", dialog.FileName))
                             {
-                                HardeningModule.Logger.LogMessage("The selected Zip file does not contain the Microsoft 365 Apps for Enterprise Security Baselines Baseline-LocalInstall.ps1 which is required for the Protect-WindowsSecurity function to work properly");
+                                HardenWindowsSecurity.Logger.LogMessage("The selected Zip file does not contain the Microsoft 365 Apps for Enterprise Security Baselines Baseline-LocalInstall.ps1 which is required for the Protect-WindowsSecurity function to work properly");
                             }
                             else
                             {
                                 // For displaying the text on the GUI's text box
                                 microsoft365AppsSecurityBaselineZipTextBox.Text = dialog.FileName;
                                 // The actual value that will be used
-                                HardeningModule.GUI.Microsoft365AppsSecurityBaselineZipPath = dialog.FileName;
+                                HardenWindowsSecurity.GUI.Microsoft365AppsSecurityBaselineZipPath = dialog.FileName;
                             }
                         }
                         catch (Exception ex)
                         {
-                            HardeningModule.Logger.LogMessage(ex.Message);
+                            HardenWindowsSecurity.Logger.LogMessage(ex.Message);
                         }
                     }
                 }
@@ -495,21 +495,21 @@ namespace HardeningModule
                     {
                         try
                         {
-                            if (!HardeningModule.SneakAndPeek.Search("LGPO_*/LGPO.exe", dialog.FileName))
+                            if (!HardenWindowsSecurity.SneakAndPeek.Search("LGPO_*/LGPO.exe", dialog.FileName))
                             {
-                                HardeningModule.Logger.LogMessage("The selected Zip file does not contain the LGPO.exe which is required for the Protect-WindowsSecurity function to work properly");
+                                HardenWindowsSecurity.Logger.LogMessage("The selected Zip file does not contain the LGPO.exe which is required for the Protect-WindowsSecurity function to work properly");
                             }
                             else
                             {
                                 // For displaying the text on the GUI's text box
                                 lgpoZipTextBox.Text = dialog.FileName;
                                 // The actual value that will be used
-                                HardeningModule.GUI.LGPOZipPath = dialog.FileName;
+                                HardenWindowsSecurity.GUI.LGPOZipPath = dialog.FileName;
                             }
                         }
                         catch (Exception ex)
                         {
-                            HardeningModule.Logger.LogMessage(ex.Message);
+                            HardenWindowsSecurity.Logger.LogMessage(ex.Message);
                         }
                     }
                 }
@@ -519,7 +519,7 @@ namespace HardeningModule
             window.Closed += (sender, e) =>
             {
                 // Only proceed further if user enabled logging
-                if (HardeningModule.GUI.ShouldWriteLogs)
+                if (HardenWindowsSecurity.GUI.ShouldWriteLogs)
                 {
 
                     // Create the footer to the log file
@@ -531,11 +531,11 @@ End time: {DateTime.Now}
 """;
 
                     // Add the footer to the log file
-                    HardeningModule.GUI.Logger.Add(endOfLogFile);
+                    HardenWindowsSecurity.GUI.Logger.Add(endOfLogFile);
 
                     // Convert ArrayList to List<string>
                     List<string> logEntries = new List<string>();
-                    foreach (string item in HardeningModule.GUI.Logger)
+                    foreach (string item in HardenWindowsSecurity.GUI.Logger)
                     {
                         logEntries.Add(item);
                     }

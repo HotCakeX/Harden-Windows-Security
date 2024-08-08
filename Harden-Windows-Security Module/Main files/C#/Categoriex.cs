@@ -4,7 +4,7 @@ using System.Management;
 using System.Management.Automation;
 using System.Security.Principal;
 
-namespace HardeningModule
+namespace HardenWindowsSecurity
 {
     public class ComplianceCategoriex : IValidateSetValuesGenerator
     {
@@ -91,7 +91,7 @@ namespace HardeningModule
         public static string[] GetValidValues()
         {
             // if running under unelevated context then only return the NonAdminCommands category
-            if (!HardeningModule.UserPrivCheck.IsAdmin()) return new string[] { "NonAdminCommands" };
+            if (!HardenWindowsSecurity.UserPrivCheck.IsAdmin()) return new string[] { "NonAdminCommands" };
 
             HashSet<string> categoriex = new HashSet<string>
         {

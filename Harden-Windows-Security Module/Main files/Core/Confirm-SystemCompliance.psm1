@@ -1,6 +1,6 @@
 function Confirm-SystemCompliance {
     [CmdletBinding()]
-    [OutputType([System.String], [System.Collections.Concurrent.ConcurrentDictionary[System.String, HardeningModule.IndividualResult[]]])]
+    [OutputType([System.String], [System.Collections.Concurrent.ConcurrentDictionary[System.String, HardenWindowsSecurity.IndividualResult[]]])]
     param (
         [ArgumentCompleter({
                 # Get the current command and the already bound parameters
@@ -16,7 +16,7 @@ function Confirm-SystemCompliance {
                     $false
                 ).Value
 
-                foreach ($Item in [HardeningModule.ComplianceCategoriex]::new().GetValidValues()) {
+                foreach ($Item in [HardenWindowsSecurity.ComplianceCategoriex]::new().GetValidValues()) {
                     # Check if the item is already selected
                     if ($Item -notin $Existing) {
                         # Return the item
@@ -26,7 +26,7 @@ function Confirm-SystemCompliance {
 
             })]
         [ValidateScript({
-                if ($_ -notin [HardeningModule.ComplianceCategoriex]::new().GetValidValues()) { throw "Invalid Category Name: $_" }
+                if ($_ -notin [HardenWindowsSecurity.ComplianceCategoriex]::new().GetValidValues()) { throw "Invalid Category Name: $_" }
                 # Return true if everything is okay
                 $true
             })]
@@ -43,14 +43,14 @@ function Confirm-SystemCompliance {
     )
     begin {
         # Makes sure this cmdlet is invoked with Admin privileges
-        if (-NOT ([HardeningModule.UserPrivCheck]::IsAdmin())) {
+        if (-NOT ([HardenWindowsSecurity.UserPrivCheck]::IsAdmin())) {
             Throw [System.Security.AccessControl.PrivilegeNotHeldException] 'Administrator'
         }
-        [HardeningModule.Initializer]::Initialize($VerbosePreference)
+        [HardenWindowsSecurity.Initializer]::Initialize($VerbosePreference)
 
         # Importing the required sub-modules
         Write-Verbose -Message 'Importing the required sub-modules'
-        Import-Module -FullyQualifiedName "$([HardeningModule.GlobalVars]::Path)\Shared\Update-self.psm1" -Force -Verbose:$false
+        Import-Module -FullyQualifiedName "$([HardenWindowsSecurity.GlobalVars]::Path)\Shared\Update-self.psm1" -Force -Verbose:$false
 
         if (-NOT $Offline) {
             Write-Verbose -Message 'Checking for updates...'
@@ -166,7 +166,7 @@ function Confirm-SystemCompliance {
 
             # A try-Catch-finally block to revert the changes being made to the Controlled Folder Access exclusions list
             # Which is currently required for BCD NX value verification in the MicrosoftDefender category
-            [HardeningModule.ControlledFolderAccessHandler]::Start()
+            [HardenWindowsSecurity.ControlledFolderAccessHandler]::Start()
 
             # Give the Defender internals time to process the updated exclusions list
             Start-Sleep -Seconds 5
@@ -180,7 +180,7 @@ function Confirm-SystemCompliance {
             # MDM_BitLocker
             [System.String[]]$CimInstancesList = @('MDM_Firewall_DomainProfile02', 'MDM_Firewall_PrivateProfile02', 'MDM_Firewall_PublicProfile02', 'MDM_Policy_Result01_Update02', 'MDM_Policy_Result01_System02')
             [System.String]$TaskPathGUID = [System.Guid]::NewGuid().ToString().Replace('-', '')
-            [System.String]$BaseDirectory = [HardeningModule.GlobalVars]::WorkingDir
+            [System.String]$BaseDirectory = [HardenWindowsSecurity.GlobalVars]::WorkingDir
             [System.String]$TaskPath = "CimInstances$TaskPathGUID"
             [System.String]$CimInstancesListString = foreach ($MDMName in $CimInstancesList) {
                 "'$MDMName',"
@@ -209,26 +209,26 @@ function Confirm-SystemCompliance {
             #Endregion
 
             # Collect the JSON File Paths
-            [System.IO.FileInfo]$MDM_Firewall_DomainProfile02_Path = [System.IO.Path]::Combine([HardeningModule.GlobalVars]::WorkingDir, 'MDM_Firewall_DomainProfile02.json')
-            [System.IO.FileInfo]$MDM_Firewall_PrivateProfile02_Path = [System.IO.Path]::Combine([HardeningModule.GlobalVars]::WorkingDir, 'MDM_Firewall_PrivateProfile02.json')
-            [System.IO.FileInfo]$MDM_Firewall_PublicProfile02_Path = [System.IO.Path]::Combine([HardeningModule.GlobalVars]::WorkingDir, 'MDM_Firewall_PublicProfile02.json')
-            [System.IO.FileInfo]$MDM_Policy_Result01_Update02_Path = [System.IO.Path]::Combine([HardeningModule.GlobalVars]::WorkingDir, 'MDM_Policy_Result01_Update02.json')
-            [System.IO.FileInfo]$MDM_Policy_Result01_System02_Path = [System.IO.Path]::Combine([HardeningModule.GlobalVars]::WorkingDir, 'MDM_Policy_Result01_System02.json')
+            [System.IO.FileInfo]$MDM_Firewall_DomainProfile02_Path = [System.IO.Path]::Combine([HardenWindowsSecurity.GlobalVars]::WorkingDir, 'MDM_Firewall_DomainProfile02.json')
+            [System.IO.FileInfo]$MDM_Firewall_PrivateProfile02_Path = [System.IO.Path]::Combine([HardenWindowsSecurity.GlobalVars]::WorkingDir, 'MDM_Firewall_PrivateProfile02.json')
+            [System.IO.FileInfo]$MDM_Firewall_PublicProfile02_Path = [System.IO.Path]::Combine([HardenWindowsSecurity.GlobalVars]::WorkingDir, 'MDM_Firewall_PublicProfile02.json')
+            [System.IO.FileInfo]$MDM_Policy_Result01_Update02_Path = [System.IO.Path]::Combine([HardenWindowsSecurity.GlobalVars]::WorkingDir, 'MDM_Policy_Result01_Update02.json')
+            [System.IO.FileInfo]$MDM_Policy_Result01_System02_Path = [System.IO.Path]::Combine([HardenWindowsSecurity.GlobalVars]::WorkingDir, 'MDM_Policy_Result01_System02.json')
 
             # Parse the JSON Files and store the results in global variables
-            [HardeningModule.GlobalVars]::MDM_Firewall_DomainProfile02 = [HardeningModule.JsonToHashtable]::ProcessJsonFile($MDM_Firewall_DomainProfile02_Path)
-            [HardeningModule.GlobalVars]::MDM_Firewall_PrivateProfile02 = [HardeningModule.JsonToHashtable]::ProcessJsonFile($MDM_Firewall_PrivateProfile02_Path)
-            [HardeningModule.GlobalVars]::MDM_Firewall_PublicProfile02 = [HardeningModule.JsonToHashtable]::ProcessJsonFile($MDM_Firewall_PublicProfile02_Path)
-            [HardeningModule.GlobalVars]::MDM_Policy_Result01_Update02 = [HardeningModule.JsonToHashtable]::ProcessJsonFile($MDM_Policy_Result01_Update02_Path)
-            [HardeningModule.GlobalVars]::MDM_Policy_Result01_System02 = [HardeningModule.JsonToHashtable]::ProcessJsonFile($MDM_Policy_Result01_System02_Path)
+            [HardenWindowsSecurity.GlobalVars]::MDM_Firewall_DomainProfile02 = [HardenWindowsSecurity.JsonToHashtable]::ProcessJsonFile($MDM_Firewall_DomainProfile02_Path)
+            [HardenWindowsSecurity.GlobalVars]::MDM_Firewall_PrivateProfile02 = [HardenWindowsSecurity.JsonToHashtable]::ProcessJsonFile($MDM_Firewall_PrivateProfile02_Path)
+            [HardenWindowsSecurity.GlobalVars]::MDM_Firewall_PublicProfile02 = [HardenWindowsSecurity.JsonToHashtable]::ProcessJsonFile($MDM_Firewall_PublicProfile02_Path)
+            [HardenWindowsSecurity.GlobalVars]::MDM_Policy_Result01_Update02 = [HardenWindowsSecurity.JsonToHashtable]::ProcessJsonFile($MDM_Policy_Result01_Update02_Path)
+            [HardenWindowsSecurity.GlobalVars]::MDM_Policy_Result01_System02 = [HardenWindowsSecurity.JsonToHashtable]::ProcessJsonFile($MDM_Policy_Result01_System02_Path)
 
             $CurrentMainStep++
             Write-Progress -Id 0 -Activity 'Verifying the security settings' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
 
-            [HardeningModule.ConfirmSystemComplianceMethods]::OrchestrateComplianceChecks($Categories)
+            [HardenWindowsSecurity.ConfirmSystemComplianceMethods]::OrchestrateComplianceChecks($Categories)
 
             # Making sure all the true/false values have the same case
-            foreach ($Item in ([HardeningModule.GlobalVars]::FinalMegaObject).Values) {
+            foreach ($Item in ([HardenWindowsSecurity.GlobalVars]::FinalMegaObject).Values) {
                 foreach ($Item2 in $Item) {
                     try {
                         if ($Item2.Compliant -ieq 'True') {
@@ -244,11 +244,11 @@ function Confirm-SystemCompliance {
 
             if ($ExportToCSV) {
                 # Create an empty list to store the results based on the category order by sorting the concurrent hashtable
-                $AllOrderedResults = New-Object -TypeName System.Collections.Generic.List[HardeningModule.IndividualResult]
+                $AllOrderedResults = New-Object -TypeName System.Collections.Generic.List[HardenWindowsSecurity.IndividualResult]
 
-                $AllOrderedResults = foreach ($Key in [HardeningModule.ComplianceCategoriex]::new().GetValidValues()) {
-                    if (([HardeningModule.GlobalVars]::FinalMegaObject).ContainsKey($Key)) {
-                        foreach ($Item in ([HardeningModule.GlobalVars]::FinalMegaObject)[$Key].GetEnumerator()) {
+                $AllOrderedResults = foreach ($Key in [HardenWindowsSecurity.ComplianceCategoriex]::new().GetValidValues()) {
+                    if (([HardenWindowsSecurity.GlobalVars]::FinalMegaObject).ContainsKey($Key)) {
+                        foreach ($Item in ([HardenWindowsSecurity.GlobalVars]::FinalMegaObject)[$Key].GetEnumerator()) {
                             $Item
                         }
                     }
@@ -282,7 +282,7 @@ function Confirm-SystemCompliance {
                     'List' {
                         # Setting the List Format Accent the same color as the category's title
                         $PSStyle.Formatting.FormatAccent = $($PSStyle.Foreground.FromRGB($RGBs[0], $RGBs[1], $RGBs[2]))
-                        ([HardeningModule.GlobalVars]::FinalMegaObject).$CategoryName | Format-List -Property FriendlyName, @{
+                        ([HardenWindowsSecurity.GlobalVars]::FinalMegaObject).$CategoryName | Format-List -Property FriendlyName, @{
                             Label      = 'Compliant'
                             Expression =
                             { switch ($_.Compliant) {
@@ -297,7 +297,7 @@ function Confirm-SystemCompliance {
                     'Table' {
                         # Setting the Table header the same color as the category's title
                         $PSStyle.Formatting.TableHeader = $($PSStyle.Foreground.FromRGB($RGBs[0], $RGBs[1], $RGBs[2]))
-                        ([HardeningModule.GlobalVars]::FinalMegaObject).$CategoryName | Format-Table -Property FriendlyName,
+                        ([HardenWindowsSecurity.GlobalVars]::FinalMegaObject).$CategoryName | Format-Table -Property FriendlyName,
                         @{
                             Label      = 'Compliant'
                             Expression =
@@ -316,7 +316,7 @@ function Confirm-SystemCompliance {
 
             if ($ShowAsObjectsOnly) {
                 # return the main object that contains multiple nested objects
-                return ([HardeningModule.GlobalVars]::FinalMegaObject)
+                return ([HardenWindowsSecurity.GlobalVars]::FinalMegaObject)
             }
             else {
                 Set-CategoryFormat -ColorInput Plum -CategoryName 'MicrosoftDefender' -DisplayName 'Microsoft Defender' -ColorMap $global:ColorsMap -Categories:$Categories -Type ($DetailedDisplay ? 'List' : 'Table')
@@ -336,19 +336,19 @@ function Confirm-SystemCompliance {
 
                 # Counting the number of $True Compliant values in the Final Output Object
                 [System.UInt32]$TotalTrueCompliantValuesInOutPut = 0
-                foreach ($Category in [HardeningModule.ComplianceCategoriex]::new().GetValidValues()) {
-                    $TotalTrueCompliantValuesInOutPut += (([HardeningModule.GlobalVars]::FinalMegaObject).$Category).Where({ $_.Compliant -eq $True }).Count
+                foreach ($Category in [HardenWindowsSecurity.ComplianceCategoriex]::new().GetValidValues()) {
+                    $TotalTrueCompliantValuesInOutPut += (([HardenWindowsSecurity.GlobalVars]::FinalMegaObject).$Category).Where({ $_.Compliant -eq $True }).Count
                 }
 
                 # Only display the overall score if the user has not specified any categories
                 if (!$Categories) {
                     switch ($True) {
-                    ($TotalTrueCompliantValuesInOutPut -in 1..40) { & $WriteRainbow "$(Get-Content -Raw -Path "$([HardeningModule.GlobalVars]::Path)\Resources\Media\Text Arts\1To40.txt")`nYour compliance score is $TotalTrueCompliantValuesInOutPut out of $([HardeningModule.GlobalVars]::TotalNumberOfTrueCompliantValues)!" }
-                    ($TotalTrueCompliantValuesInOutPut -in 41..80) { & $WriteRainbow "$(Get-Content -Raw -Path "$([HardeningModule.GlobalVars]::Path)\Resources\Media\Text Arts\41To80.txt")`nYour compliance score is $TotalTrueCompliantValuesInOutPut out of $([HardeningModule.GlobalVars]::TotalNumberOfTrueCompliantValues)!" }
-                    ($TotalTrueCompliantValuesInOutPut -in 81..120) { & $WriteRainbow "$(Get-Content -Raw -Path "$([HardeningModule.GlobalVars]::Path)\Resources\Media\Text Arts\81To120.txt")`nYour compliance score is $TotalTrueCompliantValuesInOutPut out of $([HardeningModule.GlobalVars]::TotalNumberOfTrueCompliantValues)!" }
-                    ($TotalTrueCompliantValuesInOutPut -in 121..160) { & $WriteRainbow "$(Get-Content -Raw -Path "$([HardeningModule.GlobalVars]::Path)\Resources\Media\Text Arts\121To160.txt")`nYour compliance score is $TotalTrueCompliantValuesInOutPut out of $([HardeningModule.GlobalVars]::TotalNumberOfTrueCompliantValues)!" }
-                    ($TotalTrueCompliantValuesInOutPut -in 161..200) { & $WriteRainbow "$(Get-Content -Raw -Path "$([HardeningModule.GlobalVars]::Path)\Resources\Media\Text Arts\161To200.txt")`nYour compliance score is $TotalTrueCompliantValuesInOutPut out of $([HardeningModule.GlobalVars]::TotalNumberOfTrueCompliantValues)!" }
-                    ($TotalTrueCompliantValuesInOutPut -gt 200) { & $WriteRainbow "$(Get-Content -Raw -Path "$([HardeningModule.GlobalVars]::Path)\Resources\Media\Text Arts\Above200.txt")`nYour compliance score is $TotalTrueCompliantValuesInOutPut out of $([HardeningModule.GlobalVars]::TotalNumberOfTrueCompliantValues)!" }
+                    ($TotalTrueCompliantValuesInOutPut -in 1..40) { & $WriteRainbow "$(Get-Content -Raw -Path "$([HardenWindowsSecurity.GlobalVars]::Path)\Resources\Media\Text Arts\1To40.txt")`nYour compliance score is $TotalTrueCompliantValuesInOutPut out of $([HardenWindowsSecurity.GlobalVars]::TotalNumberOfTrueCompliantValues)!" }
+                    ($TotalTrueCompliantValuesInOutPut -in 41..80) { & $WriteRainbow "$(Get-Content -Raw -Path "$([HardenWindowsSecurity.GlobalVars]::Path)\Resources\Media\Text Arts\41To80.txt")`nYour compliance score is $TotalTrueCompliantValuesInOutPut out of $([HardenWindowsSecurity.GlobalVars]::TotalNumberOfTrueCompliantValues)!" }
+                    ($TotalTrueCompliantValuesInOutPut -in 81..120) { & $WriteRainbow "$(Get-Content -Raw -Path "$([HardenWindowsSecurity.GlobalVars]::Path)\Resources\Media\Text Arts\81To120.txt")`nYour compliance score is $TotalTrueCompliantValuesInOutPut out of $([HardenWindowsSecurity.GlobalVars]::TotalNumberOfTrueCompliantValues)!" }
+                    ($TotalTrueCompliantValuesInOutPut -in 121..160) { & $WriteRainbow "$(Get-Content -Raw -Path "$([HardenWindowsSecurity.GlobalVars]::Path)\Resources\Media\Text Arts\121To160.txt")`nYour compliance score is $TotalTrueCompliantValuesInOutPut out of $([HardenWindowsSecurity.GlobalVars]::TotalNumberOfTrueCompliantValues)!" }
+                    ($TotalTrueCompliantValuesInOutPut -in 161..200) { & $WriteRainbow "$(Get-Content -Raw -Path "$([HardenWindowsSecurity.GlobalVars]::Path)\Resources\Media\Text Arts\161To200.txt")`nYour compliance score is $TotalTrueCompliantValuesInOutPut out of $([HardenWindowsSecurity.GlobalVars]::TotalNumberOfTrueCompliantValues)!" }
+                    ($TotalTrueCompliantValuesInOutPut -gt 200) { & $WriteRainbow "$(Get-Content -Raw -Path "$([HardenWindowsSecurity.GlobalVars]::Path)\Resources\Media\Text Arts\Above200.txt")`nYour compliance score is $TotalTrueCompliantValuesInOutPut out of $([HardenWindowsSecurity.GlobalVars]::TotalNumberOfTrueCompliantValues)!" }
                     }
                 }
             }
@@ -360,8 +360,8 @@ function Confirm-SystemCompliance {
         finally {
             # End the progress bar and mark it as completed
             Write-Progress -Id 0 -Activity 'Completed' -Completed
-            [HardeningModule.ControlledFolderAccessHandler]::Reset()
-            [HardeningModule.Miscellaneous]::CleanUp()
+            [HardenWindowsSecurity.ControlledFolderAccessHandler]::Reset()
+            [HardenWindowsSecurity.Miscellaneous]::CleanUp()
         }
     }
     <#
@@ -404,6 +404,6 @@ function Confirm-SystemCompliance {
     System.String[]
 .OUTPUTS
     System.String
-    System.Collections.Concurrent.ConcurrentDictionary[System.String, HardeningModule.IndividualResult[]]
+    System.Collections.Concurrent.ConcurrentDictionary[System.String, HardenWindowsSecurity.IndividualResult[]]
 #>
 }

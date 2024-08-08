@@ -3,7 +3,7 @@ using System.Management;
 using System.IO;
 using System.Linq;
 
-namespace HardeningModule
+namespace HardenWindowsSecurity
 {
     /// <summary>
     /// Class to handle Controlled Folder Access allowed applications
@@ -69,19 +69,19 @@ namespace HardeningModule
         public static void Start()
         {
             // Make sure the user as Admin privileges
-            if (HardeningModule.UserPrivCheck.IsAdmin())
+            if (HardenWindowsSecurity.UserPrivCheck.IsAdmin())
             {
 
-                HardeningModule.VerboseLogger.Write("Backing up the current Controlled Folder Access allowed apps list in order to restore them at the end");
+                HardenWindowsSecurity.VerboseLogger.Write("Backing up the current Controlled Folder Access allowed apps list in order to restore them at the end");
 
                 // doing this so that when we Add and then Remove PowerShell executables in Controlled folder access exclusions
                 // no user customization will be affected
-                HardeningModule.GlobalVars.CFABackup = HardeningModule.MpPreferenceHelper.GetMpPreference().ControlledFolderAccessAllowedApplications;
+                HardenWindowsSecurity.GlobalVars.CFABackup = HardenWindowsSecurity.MpPreferenceHelper.GetMpPreference().ControlledFolderAccessAllowedApplications;
 
-                HardeningModule.VerboseLogger.Write("Temporarily adding the currently running PowerShell executables to the Controlled Folder Access allowed apps list");
+                HardenWindowsSecurity.VerboseLogger.Write("Temporarily adding the currently running PowerShell executables to the Controlled Folder Access allowed apps list");
 
                 // Get all .exe files in the PSHOME directory
-                string[] psExePaths = Directory.GetFiles(HardeningModule.GlobalVars.PSHOME, "*.exe");
+                string[] psExePaths = Directory.GetFiles(HardenWindowsSecurity.GlobalVars.PSHOME, "*.exe");
 
                 // Get the powercfg.exe path
                 string systemDrive = Environment.GetEnvironmentVariable("SystemDrive");
@@ -98,7 +98,7 @@ namespace HardeningModule
 
                 // doing this so that the module can run without interruption. This change is reverted at the end.
                 // Adding powercfg.exe so Controlled Folder Access won't complain about it in BitLocker category when setting hibernate file size to full
-                HardeningModule.ControlledFolderAccessHandler.Add(applications: pwshPaths);
+                HardenWindowsSecurity.ControlledFolderAccessHandler.Add(applications: pwshPaths);
             }
         }
 
@@ -109,20 +109,20 @@ namespace HardeningModule
         {
 
             // Make sure the user as Admin privileges
-            if (HardeningModule.UserPrivCheck.IsAdmin())
+            if (HardenWindowsSecurity.UserPrivCheck.IsAdmin())
             {
 
                 // restoring the original Controlled folder access allow list - if user already had added PowerShell executables to the list
                 // they will be restored as well, so user customization will remain intact
-                if (HardeningModule.GlobalVars.CFABackup != null && HardeningModule.GlobalVars.CFABackup.Length > 0)
+                if (HardenWindowsSecurity.GlobalVars.CFABackup != null && HardenWindowsSecurity.GlobalVars.CFABackup.Length > 0)
                 {
-                    HardeningModule.VerboseLogger.Write("Restoring the original Controlled Folder Access allowed apps list");
-                    HardeningModule.ControlledFolderAccessHandler.Set(applications: HardeningModule.GlobalVars.CFABackup);
+                    HardenWindowsSecurity.VerboseLogger.Write("Restoring the original Controlled Folder Access allowed apps list");
+                    HardenWindowsSecurity.ControlledFolderAccessHandler.Set(applications: HardenWindowsSecurity.GlobalVars.CFABackup);
                 }
                 else
                 {
                     // If there was nothing to backup prior to adding the executables then clear the current list that contains the executables by removing everything it contains
-                    HardeningModule.ControlledFolderAccessHandler.Remove(HardeningModule.MpPreferenceHelper.GetMpPreference().ControlledFolderAccessAllowedApplications);
+                    HardenWindowsSecurity.ControlledFolderAccessHandler.Remove(HardenWindowsSecurity.MpPreferenceHelper.GetMpPreference().ControlledFolderAccessAllowedApplications);
                 }
             }
         }

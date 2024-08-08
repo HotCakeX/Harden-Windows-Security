@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
 
-namespace HardeningModule
+namespace HardenWindowsSecurity
 {
     public static class PropertyHelper
     {

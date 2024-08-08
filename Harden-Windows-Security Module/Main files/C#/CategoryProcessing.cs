@@ -5,7 +5,7 @@ using System.Linq;
 using Microsoft.Win32;
 using System.Text;
 
-namespace HardeningModule
+namespace HardenWindowsSecurity
 {
     // Registry keys are case-insensitive
     // https://learn.microsoft.com/en-us/windows/win32/sysinfo/structure-of-the-registry

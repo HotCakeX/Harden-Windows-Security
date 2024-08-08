@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 
-namespace HardeningModule
+namespace HardenWindowsSecurity
 {
     public class ProcessMitigationsParser
     {
@@ -46,7 +46,7 @@ namespace HardeningModule
                     if (values.Length == 5)
                     {
                         // Add a new ProcessMitigationsRecords to the list
-                        HardeningModule.GlobalVars.ProcessMitigations.Add(new ProcessMitigationsRecords
+                        HardenWindowsSecurity.GlobalVars.ProcessMitigations.Add(new ProcessMitigationsRecords
                         {
                             ProgramName = values[0],
                             Mitigation = values[1],

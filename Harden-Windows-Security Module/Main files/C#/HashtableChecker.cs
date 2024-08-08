@@ -2,7 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
-namespace HardeningModule
+namespace HardenWindowsSecurity
 {
     // Class to hold the result of the hashtable check
     public class HashtableCheckerResult

@@ -3,7 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Collections.Generic;
 
-namespace HardeningModule
+namespace HardenWindowsSecurity
 {
     public static class GitExesFinder
     {

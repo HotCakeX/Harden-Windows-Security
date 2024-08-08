@@ -10,7 +10,7 @@ using System.Collections.ObjectModel;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace HardeningModule
+namespace HardenWindowsSecurity
 {
     public partial class ConfirmSystemComplianceMethods
     {
@@ -20,7 +20,7 @@ namespace HardeningModule
         public static void ExportSecurityPolicy()
         {
             // Assuming securityPolicyInfPath is defined in your environment
-            string securityPolicyInfPath = HardeningModule.GlobalVars.securityPolicyInfPath;
+            string securityPolicyInfPath = HardenWindowsSecurity.GlobalVars.securityPolicyInfPath;
             string systemDrive = Environment.GetEnvironmentVariable("SystemDrive");
 
             // Create the process start info
@@ -46,7 +46,7 @@ namespace HardeningModule
 
                 if (!string.IsNullOrEmpty(error))
                 {
-                    HardeningModule.VerboseLogger.Write("Error: " + error);
+                    HardenWindowsSecurity.VerboseLogger.Write("Error: " + error);
                 }
             }
         }

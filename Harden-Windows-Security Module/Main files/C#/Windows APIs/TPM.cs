@@ -1,7 +1,7 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace HardeningModule
+namespace HardenWindowsSecurity
 {
     // Class that contains the results of TPM status checks
     public class TpmResult

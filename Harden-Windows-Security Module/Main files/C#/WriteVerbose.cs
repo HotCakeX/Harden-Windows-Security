@@ -1,7 +1,7 @@
 using System;
 using System.Management.Automation.Host;
 
-namespace HardeningModule
+namespace HardenWindowsSecurity
 {
     public static class VerboseLogger
     {
@@ -15,10 +15,10 @@ namespace HardeningModule
         {
             try
             {
-                if (string.Equals(HardeningModule.GlobalVars.VerbosePreference, "Continue", StringComparison.OrdinalIgnoreCase) ||
-                    string.Equals(HardeningModule.GlobalVars.VerbosePreference, "Inquire", StringComparison.OrdinalIgnoreCase))
+                if (string.Equals(HardenWindowsSecurity.GlobalVars.VerbosePreference, "Continue", StringComparison.OrdinalIgnoreCase) ||
+                    string.Equals(HardenWindowsSecurity.GlobalVars.VerbosePreference, "Inquire", StringComparison.OrdinalIgnoreCase))
                 {
-                    HardeningModule.GlobalVars.Host.UI.WriteVerboseLine(message);
+                    HardenWindowsSecurity.GlobalVars.Host.UI.WriteVerboseLine(message);
                 }
             }
             // Do not do anything if errors occur

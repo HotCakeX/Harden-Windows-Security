@@ -1,7 +1,7 @@
 using System;
 using System.Globalization;
 
-namespace HardeningModule
+namespace HardenWindowsSecurity
 {
     // a class to hold the properties of the current culture
     public class CultureInfoProperties

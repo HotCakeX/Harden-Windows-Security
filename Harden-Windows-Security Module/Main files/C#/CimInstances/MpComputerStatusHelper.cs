@@ -5,7 +5,7 @@ using System.Dynamic;
 using System.Globalization;
 using System.Collections.Generic;
 
-namespace HardeningModule
+namespace HardenWindowsSecurity
 {
     public static class MpComputerStatusHelper
     {
@@ -37,7 +37,7 @@ namespace HardeningModule
             catch (ManagementException ex)
             {
                 string errorMessage = $"WMI query for 'MSFT_MpComputerStatus' failed: {ex.Message}";
-                throw new HardeningModule.PowerShellExecutionException(errorMessage, ex);
+                throw new HardenWindowsSecurity.PowerShellExecutionException(errorMessage, ex);
             }
         }
 

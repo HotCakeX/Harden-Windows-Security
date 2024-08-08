@@ -1,6 +1,6 @@
 // Hardening Category results used by the Confirm-SystemCompliance cmdlet
 
-namespace HardeningModule
+namespace HardenWindowsSecurity
 {
     public class IndividualResult
     {

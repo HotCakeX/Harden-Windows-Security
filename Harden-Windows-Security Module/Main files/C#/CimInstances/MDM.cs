@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 /// root\cimv2\mdm is the namespace for CSPs
 /// https://learn.microsoft.com/en-us/windows/win32/wmisdk/common-information-model
-namespace HardeningModule
+namespace HardenWindowsSecurity
 {
     // Class that deals with MDM/CSPs/Intune
     public class MDM
@@ -22,7 +22,7 @@ namespace HardeningModule
         private static async Task<Dictionary<string, List<Dictionary<string, object>>>> GetAsync()
         {
             // Set the location of the CSV file containing the MDM list
-            string csvFilePath = Path.Combine(HardeningModule.GlobalVars.path, "Resources", "MDMResultClasses.csv");
+            string csvFilePath = Path.Combine(HardenWindowsSecurity.GlobalVars.path, "Resources", "MDMResultClasses.csv");
 
             // Create a dictionary where keys are the class names and values are lists of dictionaries
             Dictionary<string, List<Dictionary<string, object>>> results = new Dictionary<string, List<Dictionary<string, object>>>();
@@ -42,7 +42,7 @@ namespace HardeningModule
                     if (record.Authorized.Equals("TRUE", StringComparison.OrdinalIgnoreCase))
                     {
                         // Debugging output
-                        // HardeningModule.VerboseLogger.Write($"Namespace: {record.Namespace}, Class: {record.Class}");
+                        // HardenWindowsSecurity.VerboseLogger.Write($"Namespace: {record.Namespace}, Class: {record.Class}");
 
                         // Add a new task for each class query
                         tasks.Add(Task.Run(() =>
@@ -60,7 +60,7 @@ namespace HardeningModule
                             catch (ManagementException e)
                             {
                                 // Write verbose error message if connection fails
-                                HardeningModule.VerboseLogger.Write($"Error connecting to namespace {record.Namespace}: {e.Message}");
+                                HardenWindowsSecurity.VerboseLogger.Write($"Error connecting to namespace {record.Namespace}: {e.Message}");
                             }
 
                             // Create object query for the current class
@@ -91,7 +91,7 @@ namespace HardeningModule
                             catch (ManagementException e)
                             {
                                 // Write verbose error message if query fails
-                                HardeningModule.VerboseLogger.Write($"Error querying {record.Class}: {e.Message}");
+                                HardenWindowsSecurity.VerboseLogger.Write($"Error querying {record.Class}: {e.Message}");
                             }
 
                             // Add class results to main results dictionary in a thread-safe manner

@@ -7,7 +7,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO.Compression;
 
-namespace HardeningModule
+namespace HardenWindowsSecurity
 {
     public class FileDownloader
     {
@@ -154,11 +154,11 @@ namespace HardeningModule
         public static void PrepDownloadedFiles(bool GUI = false, string LGPOPath = null, string MSFTSecurityBaselinesPath = null, string MSFT365AppsSecurityBaselinesPath = null)
         {
             // Only download if offline is not used
-            if (!HardeningModule.GlobalVars.Offline)
+            if (!HardenWindowsSecurity.GlobalVars.Offline)
             {
 
                 // Start the download process asynchronously
-                Task DownloadsTask = HardeningModule.FileDownloader.StartFileDownloadAsync(workingDir: HardeningModule.GlobalVars.WorkingDir);
+                Task DownloadsTask = HardenWindowsSecurity.FileDownloader.StartFileDownloadAsync(workingDir: HardenWindowsSecurity.GlobalVars.WorkingDir);
 
                 while (!DownloadsTask.IsCompleted)
                 {
@@ -179,42 +179,42 @@ namespace HardeningModule
             }
 
 
-            if (HardeningModule.GlobalVars.Offline)
+            if (HardenWindowsSecurity.GlobalVars.Offline)
             {
                 // 'Offline Mode; Copying the Microsoft Security Baselines, Microsoft 365 Apps for Enterprise Security Baselines and LGPO files from the user provided paths to the working directory'
 
-                System.IO.File.Copy(LGPOPath, Path.Combine(HardeningModule.GlobalVars.WorkingDir, "LGPO.zip"), true);
+                System.IO.File.Copy(LGPOPath, Path.Combine(HardenWindowsSecurity.GlobalVars.WorkingDir, "LGPO.zip"), true);
 
-                System.IO.File.Copy(MSFTSecurityBaselinesPath, Path.Combine(HardeningModule.GlobalVars.WorkingDir, "MicrosoftSecurityBaseline.zip"), true);
+                System.IO.File.Copy(MSFTSecurityBaselinesPath, Path.Combine(HardenWindowsSecurity.GlobalVars.WorkingDir, "MicrosoftSecurityBaseline.zip"), true);
 
-                System.IO.File.Copy(MSFT365AppsSecurityBaselinesPath, Path.Combine(HardeningModule.GlobalVars.WorkingDir, "Microsoft365SecurityBaseline.zip"), true);
+                System.IO.File.Copy(MSFT365AppsSecurityBaselinesPath, Path.Combine(HardenWindowsSecurity.GlobalVars.WorkingDir, "Microsoft365SecurityBaseline.zip"), true);
             }
 
 
             // Extract MicrosoftSecurityBaseline.zip
-            System.IO.Compression.ZipFile.ExtractToDirectory(Path.Combine(HardeningModule.GlobalVars.WorkingDir, "MicrosoftSecurityBaseline.zip"), Path.Combine(HardeningModule.GlobalVars.WorkingDir, "MicrosoftSecurityBaseline"));
+            System.IO.Compression.ZipFile.ExtractToDirectory(Path.Combine(HardenWindowsSecurity.GlobalVars.WorkingDir, "MicrosoftSecurityBaseline.zip"), Path.Combine(HardenWindowsSecurity.GlobalVars.WorkingDir, "MicrosoftSecurityBaseline"));
 
             // Extract Microsoft365SecurityBaseline.zip
-            System.IO.Compression.ZipFile.ExtractToDirectory(Path.Combine(HardeningModule.GlobalVars.WorkingDir, "Microsoft365SecurityBaseline.zip"), Path.Combine(HardeningModule.GlobalVars.WorkingDir, "Microsoft365SecurityBaseline"));
+            System.IO.Compression.ZipFile.ExtractToDirectory(Path.Combine(HardenWindowsSecurity.GlobalVars.WorkingDir, "Microsoft365SecurityBaseline.zip"), Path.Combine(HardenWindowsSecurity.GlobalVars.WorkingDir, "Microsoft365SecurityBaseline"));
 
             // Extract LGPO.zip
-            System.IO.Compression.ZipFile.ExtractToDirectory(Path.Combine(HardeningModule.GlobalVars.WorkingDir, "LGPO.zip"), HardeningModule.GlobalVars.WorkingDir);
+            System.IO.Compression.ZipFile.ExtractToDirectory(Path.Combine(HardenWindowsSecurity.GlobalVars.WorkingDir, "LGPO.zip"), HardenWindowsSecurity.GlobalVars.WorkingDir);
 
 
             // capturing the Microsoft Security Baselines extracted path in a variable using GetSubDirectoryName method and storing it in a variable so that we won't need to change anything in the code other than the download link when they are updated
-            HardeningModule.GlobalVars.MicrosoftSecurityBaselinePath = GetSubDirectoryName(basePath: Path.Combine(HardeningModule.GlobalVars.WorkingDir, "MicrosoftSecurityBaseline"));
+            HardenWindowsSecurity.GlobalVars.MicrosoftSecurityBaselinePath = GetSubDirectoryName(basePath: Path.Combine(HardenWindowsSecurity.GlobalVars.WorkingDir, "MicrosoftSecurityBaseline"));
 
             // capturing the Microsoft 365 Security Baselines extracted path in a variable using GetSubDirectoryName method and storing it in a variable so that we won't need to change anything in the code other than the download link when they are updated
-            HardeningModule.GlobalVars.Microsoft365SecurityBaselinePath = GetSubDirectoryName(basePath: Path.Combine(HardeningModule.GlobalVars.WorkingDir, "Microsoft365SecurityBaseline"));
+            HardenWindowsSecurity.GlobalVars.Microsoft365SecurityBaselinePath = GetSubDirectoryName(basePath: Path.Combine(HardenWindowsSecurity.GlobalVars.WorkingDir, "Microsoft365SecurityBaseline"));
 
             // Storing the LGPO.exe path in a variable
-            HardeningModule.GlobalVars.LGPOExe = (Path.Combine(HardeningModule.GlobalVars.WorkingDir, "LGPO_30", "LGPO.exe"));
+            HardenWindowsSecurity.GlobalVars.LGPOExe = (Path.Combine(HardenWindowsSecurity.GlobalVars.WorkingDir, "LGPO_30", "LGPO.exe"));
 
             // Copying LGPO.exe from its folder to Microsoft Security Baseline folder in order to get it ready to be used by PowerShell script
-            System.IO.File.Copy(HardeningModule.GlobalVars.LGPOExe, Path.Combine(HardeningModule.GlobalVars.MicrosoftSecurityBaselinePath, "Scripts", "Tools", "LGPO.exe"), true);
+            System.IO.File.Copy(HardenWindowsSecurity.GlobalVars.LGPOExe, Path.Combine(HardenWindowsSecurity.GlobalVars.MicrosoftSecurityBaselinePath, "Scripts", "Tools", "LGPO.exe"), true);
 
             // Copying LGPO.exe from its folder to Microsoft Office 365 Apps for Enterprise Security Baseline folder in order to get it ready to be used by PowerShell script
-            System.IO.File.Copy(HardeningModule.GlobalVars.LGPOExe, Path.Combine(HardeningModule.GlobalVars.Microsoft365SecurityBaselinePath, "Scripts", "Tools", "LGPO.exe"), true);
+            System.IO.File.Copy(HardenWindowsSecurity.GlobalVars.LGPOExe, Path.Combine(HardenWindowsSecurity.GlobalVars.Microsoft365SecurityBaselinePath, "Scripts", "Tools", "LGPO.exe"), true);
 
         }
     }

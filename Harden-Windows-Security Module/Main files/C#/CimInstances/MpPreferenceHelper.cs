@@ -5,7 +5,7 @@ using System.Globalization;
 using System.Linq;
 using System.Management;
 
-namespace HardeningModule
+namespace HardenWindowsSecurity
 {
     public static class MpPreferenceHelper
     {
@@ -37,7 +37,7 @@ namespace HardeningModule
             catch (ManagementException ex)
             {
                 string errorMessage = $"WMI query for 'MSFT_MpPreference' failed: {ex.Message}";
-                throw new HardeningModule.PowerShellExecutionException(errorMessage, ex);
+                throw new HardenWindowsSecurity.PowerShellExecutionException(errorMessage, ex);
             }
         }
 

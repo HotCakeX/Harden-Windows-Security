@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace HardeningModule
+namespace HardenWindowsSecurity
 {
     public class DefenderPlatformUpdatesChannels
     {

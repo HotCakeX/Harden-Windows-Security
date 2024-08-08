@@ -7,11 +7,11 @@ using System.Linq;
 /// https://learn.microsoft.com/en-us/windows/win32/secprov/win32-encryptablevolume
 /// https://learn.microsoft.com/en-us/windows-hardware/drivers/storage/msft-volume
 /// Example usage:
-/// $output = [HardeningModule.BitLockerInfo]::GetEncryptedVolumeInfo("D:")
+/// $output = [HardenWindowsSecurity.BitLockerInfo]::GetEncryptedVolumeInfo("D:")
 /// $output
 /// $output.KeyProtector
 
-namespace HardeningModule
+namespace HardenWindowsSecurity
 {
     // Class that stores the information about each key protector
     public class KeyProtector
@@ -382,7 +382,7 @@ namespace HardeningModule
             else
             {
                 // Return null instead of "Unknown" and log the issue
-                // HardeningModule.VerboseLogger.Write($"Unknown key '{key}' encountered.");
+                // HardenWindowsSecurity.VerboseLogger.Write($"Unknown key '{key}' encountered.");
                 return null;
             }
         }
@@ -398,7 +398,7 @@ namespace HardeningModule
             else
             {
                 // Return null instead of "Unknown" and log the issue
-                // HardeningModule.VerboseLogger.Write($"Unknown key '{key}' encountered.");
+                // HardenWindowsSecurity.VerboseLogger.Write($"Unknown key '{key}' encountered.");
                 return null;
             }
         }

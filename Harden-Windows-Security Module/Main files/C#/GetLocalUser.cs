@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.DirectoryServices.AccountManagement;
 using System.Runtime.InteropServices;
 
-namespace HardeningModule
+namespace HardenWindowsSecurity
 {
     // Class to represent a local user account
     public class LocalUser

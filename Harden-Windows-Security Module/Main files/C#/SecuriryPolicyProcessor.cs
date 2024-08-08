@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace HardeningModule
+namespace HardenWindowsSecurity
 {
     public class SecurityPolicyChecker
     {
@@ -11,13 +11,13 @@ namespace HardeningModule
         /// </summary>
         /// <param name="category">The category to filter the CSV file content by</param>
         /// <returns></returns>
-        public static List<HardeningModule.IndividualResult> CheckPolicyCompliance(string category)
+        public static List<HardenWindowsSecurity.IndividualResult> CheckPolicyCompliance(string category)
         {
             // Create a list of IndividualResult objects
-            List<HardeningModule.IndividualResult> nestedObjectArray = new List<HardeningModule.IndividualResult>();
+            List<HardenWindowsSecurity.IndividualResult> nestedObjectArray = new List<HardenWindowsSecurity.IndividualResult>();
 
             // Filter the CSV data to only get the records that match the input category
-            var csvRecords = HardeningModule.GlobalVars.SecurityPolicyRecords.Where(record => record.Category.Equals(category, StringComparison.OrdinalIgnoreCase)).ToList();
+            var csvRecords = HardenWindowsSecurity.GlobalVars.SecurityPolicyRecords.Where(record => record.Category.Equals(category, StringComparison.OrdinalIgnoreCase)).ToList();
 
             // Loop over each filtered CSV data
             foreach (var record in csvRecords)
@@ -31,14 +31,14 @@ namespace HardeningModule
 
                 string actualValue = null;
 
-                if (HardeningModule.GlobalVars.SystemSecurityPoliciesIniObject.ContainsKey(section) &&
-                    HardeningModule.GlobalVars.SystemSecurityPoliciesIniObject[section].ContainsKey(path))
+                if (HardenWindowsSecurity.GlobalVars.SystemSecurityPoliciesIniObject.ContainsKey(section) &&
+                    HardenWindowsSecurity.GlobalVars.SystemSecurityPoliciesIniObject[section].ContainsKey(path))
                 {
-                    actualValue = HardeningModule.GlobalVars.SystemSecurityPoliciesIniObject[section][path];
+                    actualValue = HardenWindowsSecurity.GlobalVars.SystemSecurityPoliciesIniObject[section][path];
                     complianceResult = actualValue == expectedValue;
                 }
 
-                nestedObjectArray.Add(new HardeningModule.IndividualResult
+                nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = name,
                     Compliant = complianceResult ? "True" : "False",

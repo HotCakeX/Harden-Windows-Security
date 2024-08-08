@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Management;
 
-namespace HardeningModule
+namespace HardenWindowsSecurity
 {
     public static class WindowsFeatureChecker
     {

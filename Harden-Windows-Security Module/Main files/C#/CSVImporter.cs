@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 
-namespace HardeningModule
+namespace HardenWindowsSecurity
 {
     public class HardeningRegistryKeys
     {
@@ -48,7 +48,7 @@ namespace HardeningModule
                     if (values.Length == 7)
                     {
                         // Add a new CsvRecord to the list
-                        HardeningModule.GlobalVars.RegistryCSVItems.Add(new CsvRecord
+                        HardenWindowsSecurity.GlobalVars.RegistryCSVItems.Add(new CsvRecord
                         {
                             Category = values[0],
                             Path = values[1],

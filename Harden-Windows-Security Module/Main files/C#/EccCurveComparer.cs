@@ -4,7 +4,7 @@ using System.Management;
 using System.Management.Automation;
 using System.Collections.Generic;
 
-namespace HardeningModule
+namespace HardenWindowsSecurity
 {
     public class EccCurveComparisonResult
     {

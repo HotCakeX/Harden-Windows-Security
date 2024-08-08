@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
-namespace HardeningModule
+namespace HardenWindowsSecurity
 {
     // Represents a record in the security policy
     public class SecurityPolicyRecord

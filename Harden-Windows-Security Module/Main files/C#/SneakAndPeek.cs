@@ -3,7 +3,7 @@ using System.IO.Compression;
 using System.Linq;
 using System.Text.RegularExpressions;
 
-namespace HardeningModule
+namespace HardenWindowsSecurity
 {
     public static class SneakAndPeek
     {

@@ -4,7 +4,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Threading;
 
-namespace HardeningModule
+namespace HardenWindowsSecurity
 {
     public static class Logger
     {
@@ -15,14 +15,14 @@ namespace HardeningModule
         public static void LogMessage(string text)
         {
             // Add the text to the synchronized array list as log messages
-            HardeningModule.GUI.Logger.Add($"{DateTime.Now}: {text}");
+            HardenWindowsSecurity.GUI.Logger.Add($"{DateTime.Now}: {text}");
 
             // Invoke the Dispatcher to update the GUI
-            HardeningModule.GUI.window.Dispatcher.Invoke(new Action(() =>
+            HardenWindowsSecurity.GUI.window.Dispatcher.Invoke(new Action(() =>
             {
                 // Update the TextBlock with the new log message
-                HardeningModule.GUI.outputTextBlock.Text += text + "\n";
-                HardeningModule.GUI.scrollerForOutputTextBlock.ScrollToBottom();
+                HardenWindowsSecurity.GUI.outputTextBlock.Text += text + "\n";
+                HardenWindowsSecurity.GUI.scrollerForOutputTextBlock.ScrollToBottom();
             }), DispatcherPriority.Background);
         }
     }

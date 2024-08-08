@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Management;
 
-namespace HardeningModule
+namespace HardenWindowsSecurity
 {
     public class TaskSchedulerHelper
     {
@@ -137,7 +137,7 @@ namespace HardeningModule
             catch (ManagementException e)
             {
                 // Handle any ManagementException that may occur during the WMI query execution
-                HardeningModule.VerboseLogger.Write($"An error occurred while querying for WMI data: {e.Message}");
+                HardenWindowsSecurity.VerboseLogger.Write($"An error occurred while querying for WMI data: {e.Message}");
 
                 // Depending on the outputType parameter, return either false or an empty list
                 if (outputType == OutputType.Boolean)

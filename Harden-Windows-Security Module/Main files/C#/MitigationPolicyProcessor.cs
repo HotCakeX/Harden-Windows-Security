@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Xml;
 
-namespace HardeningModule
+namespace HardenWindowsSecurity
 {
     public static class MitigationPolicyProcessor
     {

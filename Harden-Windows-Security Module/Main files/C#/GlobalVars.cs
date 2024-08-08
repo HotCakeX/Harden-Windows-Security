@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Management.Automation.Host;
 using System.Collections.Concurrent;
 
-namespace HardeningModule
+namespace HardenWindowsSecurity
 {
     public static class GlobalVars
     {
@@ -66,16 +66,16 @@ namespace HardeningModule
         public static string LGPOExe;
 
         // To store the registry data CSV parse output - Registry.csv
-        public static List<HardeningModule.HardeningRegistryKeys.CsvRecord> RegistryCSVItems;
+        public static List<HardenWindowsSecurity.HardeningRegistryKeys.CsvRecord> RegistryCSVItems;
 
         // To store the Process mitigations CSV parse output used by all cmdlets - ProcessMitigations.csv
-        public static List<HardeningModule.ProcessMitigationsParser.ProcessMitigationsRecords> ProcessMitigations;
+        public static List<HardenWindowsSecurity.ProcessMitigationsParser.ProcessMitigationsRecords> ProcessMitigations;
 
-        // a global variable to save the output of the [HardeningModule.ProtectionCategoriex]::New().GetValidValues() in
+        // a global variable to save the output of the [HardenWindowsSecurity.ProtectionCategoriex]::New().GetValidValues() in
         public static string[] HardeningCategorieX;
 
         // the explicit path to save the security_policy.inf file
-        public static string securityPolicyInfPath = Path.Combine(HardeningModule.GlobalVars.WorkingDir, "security_policy.inf");
+        public static string securityPolicyInfPath = Path.Combine(HardenWindowsSecurity.GlobalVars.WorkingDir, "security_policy.inf");
 
         // The value of the automatic variable $PSHOME stored during module import in the module root .psm1 file
         public static string PSHOME;
@@ -93,19 +93,19 @@ namespace HardeningModule
         public static string VerbosePreference;
 
         // An object to store the final results of Confirm-SystemCompliance cmdlet
-        public static System.Collections.Concurrent.ConcurrentDictionary<System.String, System.Collections.Generic.List<HardeningModule.IndividualResult>> FinalMegaObject;
+        public static System.Collections.Concurrent.ConcurrentDictionary<System.String, System.Collections.Generic.List<HardenWindowsSecurity.IndividualResult>> FinalMegaObject;
 
         // Storing the output of the ini file parsing function
         public static Dictionary<string, Dictionary<string, string>> SystemSecurityPoliciesIniObject;
 
         // a variable to store the security policies CSV file parse output
-        public static List<HardeningModule.SecurityPolicyRecord> SecurityPolicyRecords;
+        public static List<HardenWindowsSecurity.SecurityPolicyRecord> SecurityPolicyRecords;
 
         // the explicit path to save the CurrentlyAppliedMitigations.xml file
-        public static string CurrentlyAppliedMitigations = Path.Combine(HardeningModule.GlobalVars.WorkingDir, "CurrentlyAppliedMitigations.xml");
+        public static string CurrentlyAppliedMitigations = Path.Combine(HardenWindowsSecurity.GlobalVars.WorkingDir, "CurrentlyAppliedMitigations.xml");
 
         // variable that contains the results of all of the related MDM CimInstances that can be interacted with using Administrator privilege
-        public static List<HardeningModule.MDMClassProcessor> MDMResults;
+        public static List<HardenWindowsSecurity.MDMClassProcessor> MDMResults;
 
         // To store the Firewall Domain MDM profile parsed JSON output
         public static System.Collections.Hashtable MDM_Firewall_DomainProfile02;

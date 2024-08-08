@@ -5,7 +5,7 @@ using System.Management.Automation;
 using System.Collections.Generic;
 using System.Globalization;
 
-namespace HardeningModule
+namespace HardenWindowsSecurity
 {
     // prepares the environment. It also runs commands that would otherwise run in the default constructors of each method
     public class Initializer
@@ -25,7 +25,7 @@ namespace HardeningModule
                     object ubrValue = key.GetValue("UBR");
                     if (ubrValue != null && int.TryParse(ubrValue.ToString(), out int ubr))
                     {
-                        HardeningModule.GlobalVars.UBR = ubr;
+                        HardenWindowsSecurity.GlobalVars.UBR = ubr;
                     }
                     else
                     {
@@ -39,67 +39,67 @@ namespace HardeningModule
             }
 
             // Concatenate OSBuildNumber and UBR to form the final string
-            HardeningModule.GlobalVars.FullOSBuild = $"{HardeningModule.GlobalVars.OSBuildNumber}.{HardeningModule.GlobalVars.UBR}";
+            HardenWindowsSecurity.GlobalVars.FullOSBuild = $"{HardenWindowsSecurity.GlobalVars.OSBuildNumber}.{HardenWindowsSecurity.GlobalVars.UBR}";
 
             // If the working directory exists, delete it
-            if (Directory.Exists(HardeningModule.GlobalVars.WorkingDir))
+            if (Directory.Exists(HardenWindowsSecurity.GlobalVars.WorkingDir))
             {
-                Directory.Delete(HardeningModule.GlobalVars.WorkingDir, true);
+                Directory.Delete(HardenWindowsSecurity.GlobalVars.WorkingDir, true);
             }
 
             // Create the working directory
-            Directory.CreateDirectory(HardeningModule.GlobalVars.WorkingDir);
+            Directory.CreateDirectory(HardenWindowsSecurity.GlobalVars.WorkingDir);
 
-            // Initialize the RegistryCSVItems list so that the HardeningModule.HardeningRegistryKeys.ReadCsv() method can write to it
-            HardeningModule.GlobalVars.RegistryCSVItems = new List<HardeningModule.HardeningRegistryKeys.CsvRecord>();
+            // Initialize the RegistryCSVItems list so that the HardenWindowsSecurity.HardeningRegistryKeys.ReadCsv() method can write to it
+            HardenWindowsSecurity.GlobalVars.RegistryCSVItems = new List<HardenWindowsSecurity.HardeningRegistryKeys.CsvRecord>();
 
-            // Parse the Registry.csv and save it to the global HardeningModule.GlobalVars.RegistryCSVItems list
-            HardeningModule.HardeningRegistryKeys.ReadCsv();
+            // Parse the Registry.csv and save it to the global HardenWindowsSecurity.GlobalVars.RegistryCSVItems list
+            HardenWindowsSecurity.HardeningRegistryKeys.ReadCsv();
 
-            // Initialize the ProcessMitigations list so that the HardeningModule.ProcessMitigationsParser.ReadCsv() method can write to it
-            HardeningModule.GlobalVars.ProcessMitigations = new List<HardeningModule.ProcessMitigationsParser.ProcessMitigationsRecords>();
+            // Initialize the ProcessMitigations list so that the HardenWindowsSecurity.ProcessMitigationsParser.ReadCsv() method can write to it
+            HardenWindowsSecurity.GlobalVars.ProcessMitigations = new List<HardenWindowsSecurity.ProcessMitigationsParser.ProcessMitigationsRecords>();
 
-            // Parse the ProcessMitigations.csv and save it to the global HardeningModule.GlobalVars.ProcessMitigations list
-            HardeningModule.ProcessMitigationsParser.ReadCsv();
+            // Parse the ProcessMitigations.csv and save it to the global HardenWindowsSecurity.GlobalVars.ProcessMitigations list
+            HardenWindowsSecurity.ProcessMitigationsParser.ReadCsv();
 
             // Convert the FullOSBuild and RequiredBuild strings to decimals so that we can compare them
-            if (!TryParseBuildVersion(HardeningModule.GlobalVars.FullOSBuild, out decimal fullOSBuild))
+            if (!TryParseBuildVersion(HardenWindowsSecurity.GlobalVars.FullOSBuild, out decimal fullOSBuild))
             {
                 throw new FormatException("The OS build version strings are not in a correct format.");
             }
 
             // Make sure the current OS build is equal or greater than the required build number
-            if (!(fullOSBuild >= HardeningModule.GlobalVars.Requiredbuild))
+            if (!(fullOSBuild >= HardenWindowsSecurity.GlobalVars.Requiredbuild))
             {
-                throw new PlatformNotSupportedException($"You are not using the latest build of the Windows OS. A minimum build of {HardeningModule.GlobalVars.Requiredbuild} is required but your OS build is {fullOSBuild}\nPlease go to Windows Update to install the updates and then try again.");
+                throw new PlatformNotSupportedException($"You are not using the latest build of the Windows OS. A minimum build of {HardenWindowsSecurity.GlobalVars.Requiredbuild} is required but your OS build is {fullOSBuild}\nPlease go to Windows Update to install the updates and then try again.");
             }
 
             // Resets the current main step to 0 which is used for Write-Progress when using in GUI mode
-            HardeningModule.GlobalVars.CurrentMainStep = 0;
+            HardenWindowsSecurity.GlobalVars.CurrentMainStep = 0;
 
-            // Get the MSFT_MpPreference WMI results and save them to the global variable HardeningModule.GlobalVars.MDAVPreferencesCurrent
-            HardeningModule.GlobalVars.MDAVPreferencesCurrent = HardeningModule.MpPreferenceHelper.GetMpPreference();
+            // Get the MSFT_MpPreference WMI results and save them to the global variable HardenWindowsSecurity.GlobalVars.MDAVPreferencesCurrent
+            HardenWindowsSecurity.GlobalVars.MDAVPreferencesCurrent = HardenWindowsSecurity.MpPreferenceHelper.GetMpPreference();
 
-            // Get the MSFT_MpComputerStatus and save them to the global variable HardeningModule.GlobalVars.MDAVConfigCurrent
-            HardeningModule.GlobalVars.MDAVConfigCurrent = HardeningModule.MpComputerStatusHelper.GetMpComputerStatus();
+            // Get the MSFT_MpComputerStatus and save them to the global variable HardenWindowsSecurity.GlobalVars.MDAVConfigCurrent
+            HardenWindowsSecurity.GlobalVars.MDAVConfigCurrent = HardenWindowsSecurity.MpComputerStatusHelper.GetMpComputerStatus();
 
             // Total number of Compliant values not equal to N/A
-            HardeningModule.GlobalVars.TotalNumberOfTrueCompliantValues = 237;
+            HardenWindowsSecurity.GlobalVars.TotalNumberOfTrueCompliantValues = 237;
 
             // Getting the $VerbosePreference from the calling cmdlet and saving it in the global variable
-            HardeningModule.GlobalVars.VerbosePreference = VerbosePreference;
+            HardenWindowsSecurity.GlobalVars.VerbosePreference = VerbosePreference;
 
             // Create an empty ConcurrentDictionary to store the final results of the cmdlets
-            HardeningModule.GlobalVars.FinalMegaObject = new System.Collections.Concurrent.ConcurrentDictionary<System.String, System.Collections.Generic.List<HardeningModule.IndividualResult>>();
+            HardenWindowsSecurity.GlobalVars.FinalMegaObject = new System.Collections.Concurrent.ConcurrentDictionary<System.String, System.Collections.Generic.List<HardenWindowsSecurity.IndividualResult>>();
 
             // Create an empty dictionary to store the System Security Policies from the security_policy.inf file
-            HardeningModule.GlobalVars.SystemSecurityPoliciesIniObject = new Dictionary<string, Dictionary<string, string>>();
+            HardenWindowsSecurity.GlobalVars.SystemSecurityPoliciesIniObject = new Dictionary<string, Dictionary<string, string>>();
 
             // Make sure Admin privileges exist before running this method
-            if (HardeningModule.UserPrivCheck.IsAdmin())
+            if (HardenWindowsSecurity.UserPrivCheck.IsAdmin())
             {
                 // Process the MDM related CimInstances and store them in a global variable
-                HardeningModule.GlobalVars.MDMResults = HardeningModule.MDMClassProcessor.Process();
+                HardenWindowsSecurity.GlobalVars.MDMResults = HardenWindowsSecurity.MDMClassProcessor.Process();
             }
         }
 

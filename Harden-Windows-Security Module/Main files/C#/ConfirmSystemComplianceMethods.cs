@@ -10,7 +10,7 @@ using System.Collections.ObjectModel;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace HardeningModule
+namespace HardenWindowsSecurity
 {
     public partial class ConfirmSystemComplianceMethods
     {
@@ -24,13 +24,13 @@ namespace HardeningModule
         public static void OrchestrateComplianceChecks(params string[] methodNames)
         {
             // call the method to get the security group policies to be exported to a file
-            HardeningModule.ConfirmSystemComplianceMethods.ExportSecurityPolicy();
+            HardenWindowsSecurity.ConfirmSystemComplianceMethods.ExportSecurityPolicy();
 
             // Storing the output of the ini file parsing function
-            HardeningModule.GlobalVars.SystemSecurityPoliciesIniObject = HardeningModule.IniFileConverter.ConvertFromIniFile(HardeningModule.GlobalVars.securityPolicyInfPath);
+            HardenWindowsSecurity.GlobalVars.SystemSecurityPoliciesIniObject = HardenWindowsSecurity.IniFileConverter.ConvertFromIniFile(HardenWindowsSecurity.GlobalVars.securityPolicyInfPath);
 
-            // Process the SecurityPoliciesVerification.csv and save the output to the global variable HardeningModule.GlobalVars.SecurityPolicyRecords
-            HardeningModule.GlobalVars.SecurityPolicyRecords = HardeningModule.SecurityPolicyCsvProcessor.ProcessSecurityPolicyCsvFile(Path.Combine(HardeningModule.GlobalVars.path, "Resources", "SecurityPoliciesVerification.csv"));
+            // Process the SecurityPoliciesVerification.csv and save the output to the global variable HardenWindowsSecurity.GlobalVars.SecurityPolicyRecords
+            HardenWindowsSecurity.GlobalVars.SecurityPolicyRecords = HardenWindowsSecurity.SecurityPolicyCsvProcessor.ProcessSecurityPolicyCsvFile(Path.Combine(HardenWindowsSecurity.GlobalVars.path, "Resources", "SecurityPoliciesVerification.csv"));
 
             // Call the method and supply the category names if any
             // Will run them async
@@ -126,12 +126,12 @@ namespace HardeningModule
             return Task.Run(() =>
             {
                 // Create a new list to store the results
-                List<HardeningModule.IndividualResult> nestedObjectArray = new List<HardeningModule.IndividualResult>();
+                List<HardenWindowsSecurity.IndividualResult> nestedObjectArray = new List<HardenWindowsSecurity.IndividualResult>();
 
                 string CatName = "AttackSurfaceReductionRules";
 
-                object idsObj = HardeningModule.GlobalVars.MDAVPreferencesCurrent.AttackSurfaceReductionRules_Ids;
-                object actionsObj = HardeningModule.GlobalVars.MDAVPreferencesCurrent.AttackSurfaceReductionRules_Actions;
+                object idsObj = HardenWindowsSecurity.GlobalVars.MDAVPreferencesCurrent.AttackSurfaceReductionRules_Ids;
+                object actionsObj = HardenWindowsSecurity.GlobalVars.MDAVPreferencesCurrent.AttackSurfaceReductionRules_Actions;
 
                 // Individual ASR rules verification
                 string[] ids = ConvertToStringArray(idsObj);
@@ -200,7 +200,7 @@ namespace HardeningModule
                         _ => action == "1"
                     };
 
-                    nestedObjectArray.Add(new HardeningModule.IndividualResult
+                    nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                     {
                         FriendlyName = friendlyName,
                         Compliant = compliant ? "True" : "False",
@@ -211,7 +211,7 @@ namespace HardeningModule
                     });
                 }
 
-                HardeningModule.GlobalVars.FinalMegaObject.TryAdd(CatName, nestedObjectArray);
+                HardenWindowsSecurity.GlobalVars.FinalMegaObject.TryAdd(CatName, nestedObjectArray);
 
             });
         }
@@ -240,15 +240,15 @@ namespace HardeningModule
             return Task.Run(() =>
             {
                 // Create a new list to store the results
-                List<HardeningModule.IndividualResult> nestedObjectArray = new List<HardeningModule.IndividualResult>();
+                List<HardenWindowsSecurity.IndividualResult> nestedObjectArray = new List<HardenWindowsSecurity.IndividualResult>();
 
                 string CatName = "WindowsUpdateConfigurations";
 
 
                 // Get the control from MDM CIM
-                HardeningModule.HashtableCheckerResult MDM_Policy_Result01_Update02_AllowAutoWindowsUpdateDownloadOverMeteredNetwork = HardeningModule.HashtableChecker.CheckValue<string>(HardeningModule.GlobalVars.MDM_Policy_Result01_Update02, "AllowAutoWindowsUpdateDownloadOverMeteredNetwork", "1");
+                HardenWindowsSecurity.HashtableCheckerResult MDM_Policy_Result01_Update02_AllowAutoWindowsUpdateDownloadOverMeteredNetwork = HardenWindowsSecurity.HashtableChecker.CheckValue<string>(HardenWindowsSecurity.GlobalVars.MDM_Policy_Result01_Update02, "AllowAutoWindowsUpdateDownloadOverMeteredNetwork", "1");
 
-                nestedObjectArray.Add(new HardeningModule.IndividualResult
+                nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "Allow updates to be downloaded automatically over metered connections",
                     Compliant = MDM_Policy_Result01_Update02_AllowAutoWindowsUpdateDownloadOverMeteredNetwork.IsMatch ? "True" : "False",
@@ -260,9 +260,9 @@ namespace HardeningModule
 
 
                 // Get the control from MDM CIM
-                HardeningModule.HashtableCheckerResult MDM_Policy_Result01_Update02_AllowAutoUpdate = HardeningModule.HashtableChecker.CheckValue<string>(HardeningModule.GlobalVars.MDM_Policy_Result01_Update02, "AllowAutoUpdate", "1");
+                HardenWindowsSecurity.HashtableCheckerResult MDM_Policy_Result01_Update02_AllowAutoUpdate = HardenWindowsSecurity.HashtableChecker.CheckValue<string>(HardenWindowsSecurity.GlobalVars.MDM_Policy_Result01_Update02, "AllowAutoUpdate", "1");
 
-                nestedObjectArray.Add(new HardeningModule.IndividualResult
+                nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "Automatically download updates and install them on maintenance day",
                     Compliant = MDM_Policy_Result01_Update02_AllowAutoUpdate.IsMatch ? "True" : "False",
@@ -274,9 +274,9 @@ namespace HardeningModule
 
 
                 // Get the control from MDM CIM
-                HardeningModule.HashtableCheckerResult MDM_Policy_Result01_Update02_AllowMUUpdateService = HardeningModule.HashtableChecker.CheckValue<string>(HardeningModule.GlobalVars.MDM_Policy_Result01_Update02, "AllowMUUpdateService", "1");
+                HardenWindowsSecurity.HashtableCheckerResult MDM_Policy_Result01_Update02_AllowMUUpdateService = HardenWindowsSecurity.HashtableChecker.CheckValue<string>(HardenWindowsSecurity.GlobalVars.MDM_Policy_Result01_Update02, "AllowMUUpdateService", "1");
 
-                nestedObjectArray.Add(new HardeningModule.IndividualResult
+                nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "Install updates for other Microsoft products",
                     Compliant = MDM_Policy_Result01_Update02_AllowMUUpdateService.IsMatch ? "True" : "False",
@@ -288,18 +288,18 @@ namespace HardeningModule
 
 
                 // Process items in Registry resources.csv file with "Group Policy" origin and add them to the nestedObjectArray array
-                foreach (var Result in (HardeningModule.CategoryProcessing.ProcessCategory(CatName, "Group Policy")))
+                foreach (var Result in (HardenWindowsSecurity.CategoryProcessing.ProcessCategory(CatName, "Group Policy")))
                 {
-                    HardeningModule.ConditionalResultAdd.Add(nestedObjectArray, Result);
+                    HardenWindowsSecurity.ConditionalResultAdd.Add(nestedObjectArray, Result);
                 }
 
                 // Process items in Registry resources.csv file with "Registry Keys" origin and add them to the nestedObjectArray array
-                foreach (var Result in (HardeningModule.CategoryProcessing.ProcessCategory(CatName, "Registry Keys")))
+                foreach (var Result in (HardenWindowsSecurity.CategoryProcessing.ProcessCategory(CatName, "Registry Keys")))
                 {
-                    HardeningModule.ConditionalResultAdd.Add(nestedObjectArray, Result);
+                    HardenWindowsSecurity.ConditionalResultAdd.Add(nestedObjectArray, Result);
                 }
 
-                HardeningModule.GlobalVars.FinalMegaObject.TryAdd(CatName, nestedObjectArray);
+                HardenWindowsSecurity.GlobalVars.FinalMegaObject.TryAdd(CatName, nestedObjectArray);
             });
         }
 
@@ -313,17 +313,17 @@ namespace HardeningModule
             {
 
                 // Create a new list to store the results
-                List<HardeningModule.IndividualResult> nestedObjectArray = new List<HardeningModule.IndividualResult>();
+                List<HardenWindowsSecurity.IndividualResult> nestedObjectArray = new List<HardenWindowsSecurity.IndividualResult>();
 
                 string CatName = "NonAdminCommands";
 
                 // Process items in Registry resources.csv file with "Registry Keys" origin and add them to the nestedObjectArray array
-                foreach (var Result in (HardeningModule.CategoryProcessing.ProcessCategory(CatName, "Registry Keys")))
+                foreach (var Result in (HardenWindowsSecurity.CategoryProcessing.ProcessCategory(CatName, "Registry Keys")))
                 {
-                    HardeningModule.ConditionalResultAdd.Add(nestedObjectArray, Result);
+                    HardenWindowsSecurity.ConditionalResultAdd.Add(nestedObjectArray, Result);
                 }
 
-                HardeningModule.GlobalVars.FinalMegaObject.TryAdd(CatName, nestedObjectArray);
+                HardenWindowsSecurity.GlobalVars.FinalMegaObject.TryAdd(CatName, nestedObjectArray);
             });
         }
 
@@ -336,17 +336,17 @@ namespace HardeningModule
             {
 
                 // Create a new list to store the results
-                List<HardeningModule.IndividualResult> nestedObjectArray = new List<HardeningModule.IndividualResult>();
+                List<HardenWindowsSecurity.IndividualResult> nestedObjectArray = new List<HardenWindowsSecurity.IndividualResult>();
 
                 string CatName = "EdgeBrowserConfigurations";
 
                 // Process items in Registry resources.csv file with "Registry Keys" origin and add them to the nestedObjectArray array
-                foreach (var Result in (HardeningModule.CategoryProcessing.ProcessCategory(CatName, "Registry Keys")))
+                foreach (var Result in (HardenWindowsSecurity.CategoryProcessing.ProcessCategory(CatName, "Registry Keys")))
                 {
-                    HardeningModule.ConditionalResultAdd.Add(nestedObjectArray, Result);
+                    HardenWindowsSecurity.ConditionalResultAdd.Add(nestedObjectArray, Result);
                 }
 
-                HardeningModule.GlobalVars.FinalMegaObject.TryAdd(CatName, nestedObjectArray);
+                HardenWindowsSecurity.GlobalVars.FinalMegaObject.TryAdd(CatName, nestedObjectArray);
             });
         }
 
@@ -360,14 +360,14 @@ namespace HardeningModule
             {
 
                 // Create a new list to store the results
-                List<HardeningModule.IndividualResult> nestedObjectArray = new List<HardeningModule.IndividualResult>();
+                List<HardenWindowsSecurity.IndividualResult> nestedObjectArray = new List<HardenWindowsSecurity.IndividualResult>();
 
                 string CatName = "DeviceGuard";
 
                 // https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-deviceguard?WT.mc_id=Portal-fx#enablevirtualizationbasedsecurity
-                bool EnableVirtualizationBasedSecurity = HardeningModule.GetMDMResultValue.Get("EnableVirtualizationBasedSecurity", "1");
+                bool EnableVirtualizationBasedSecurity = HardenWindowsSecurity.GetMDMResultValue.Get("EnableVirtualizationBasedSecurity", "1");
 
-                nestedObjectArray.Add(new HardeningModule.IndividualResult
+                nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "Enable Virtualization Based Security",
                     Compliant = EnableVirtualizationBasedSecurity ? "True" : "False",
@@ -379,12 +379,12 @@ namespace HardeningModule
 
 
                 // https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-deviceguard?WT.mc_id=Portal-fx#requireplatformsecurityfeatures
-                string RequirePlatformSecurityFeatures = HardeningModule.GlobalVars.MDMResults
+                string RequirePlatformSecurityFeatures = HardenWindowsSecurity.GlobalVars.MDMResults
      .Where(element => element.Name == "RequirePlatformSecurityFeatures")
      .Select(element => element.Value)
      .FirstOrDefault();
 
-                nestedObjectArray.Add(new HardeningModule.IndividualResult
+                nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "Require Platform Security Features",
                     Compliant = (RequirePlatformSecurityFeatures != null &&
@@ -403,9 +403,9 @@ namespace HardeningModule
 
 
                 // https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-VirtualizationBasedTechnology?WT.mc_id=Portal-fx#hypervisorenforcedcodeintegrity
-                bool HypervisorEnforcedCodeIntegrity = HardeningModule.GetMDMResultValue.Get("HypervisorEnforcedCodeIntegrity", "1");
+                bool HypervisorEnforcedCodeIntegrity = HardenWindowsSecurity.GetMDMResultValue.Get("HypervisorEnforcedCodeIntegrity", "1");
 
-                nestedObjectArray.Add(new HardeningModule.IndividualResult
+                nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "Hypervisor Enforced Code Integrity - UEFI Lock",
                     Compliant = HypervisorEnforcedCodeIntegrity ? "True" : "False",
@@ -417,9 +417,9 @@ namespace HardeningModule
 
 
                 // https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-VirtualizationBasedTechnology?WT.mc_id=Portal-fx#requireuefimemoryattributestable
-                bool RequireUEFIMemoryAttributesTable = HardeningModule.GetMDMResultValue.Get("RequireUEFIMemoryAttributesTable", "1");
+                bool RequireUEFIMemoryAttributesTable = HardenWindowsSecurity.GetMDMResultValue.Get("RequireUEFIMemoryAttributesTable", "1");
 
-                nestedObjectArray.Add(new HardeningModule.IndividualResult
+                nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "Require HVCI MAT (Memory Attribute Table)",
                     Compliant = RequireUEFIMemoryAttributesTable ? "True" : "False",
@@ -431,9 +431,9 @@ namespace HardeningModule
 
 
                 // https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-deviceguard?WT.mc_id=Portal-fx#lsacfgflags
-                bool LsaCfgFlags = HardeningModule.GetMDMResultValue.Get("LsaCfgFlags", "1");
+                bool LsaCfgFlags = HardenWindowsSecurity.GetMDMResultValue.Get("LsaCfgFlags", "1");
 
-                nestedObjectArray.Add(new HardeningModule.IndividualResult
+                nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "Credential Guard Configuration - UEFI Lock",
                     Compliant = LsaCfgFlags ? "True" : "False",
@@ -445,9 +445,9 @@ namespace HardeningModule
 
 
                 // https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-deviceguard?WT.mc_id=Portal-fx#configuresystemguardlaunch
-                bool ConfigureSystemGuardLaunch = HardeningModule.GetMDMResultValue.Get("ConfigureSystemGuardLaunch", "1");
+                bool ConfigureSystemGuardLaunch = HardenWindowsSecurity.GetMDMResultValue.Get("ConfigureSystemGuardLaunch", "1");
 
-                nestedObjectArray.Add(new HardeningModule.IndividualResult
+                nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "System Guard Launch",
                     Compliant = ConfigureSystemGuardLaunch ? "True" : "False",
@@ -458,12 +458,12 @@ namespace HardeningModule
                 });
 
                 // Process items in Registry resources.csv file with "Registry Keys" origin and add them to the nestedObjectArray array
-                foreach (var Result in (HardeningModule.CategoryProcessing.ProcessCategory(CatName, "Group Policy")))
+                foreach (var Result in (HardenWindowsSecurity.CategoryProcessing.ProcessCategory(CatName, "Group Policy")))
                 {
-                    HardeningModule.ConditionalResultAdd.Add(nestedObjectArray, Result);
+                    HardenWindowsSecurity.ConditionalResultAdd.Add(nestedObjectArray, Result);
                 }
 
-                HardeningModule.GlobalVars.FinalMegaObject.TryAdd(CatName, nestedObjectArray);
+                HardenWindowsSecurity.GlobalVars.FinalMegaObject.TryAdd(CatName, nestedObjectArray);
             });
         }
 
@@ -476,7 +476,7 @@ namespace HardeningModule
             {
 
                 // Create a new list to store the results
-                List<HardeningModule.IndividualResult> nestedObjectArray = new List<HardeningModule.IndividualResult>();
+                List<HardenWindowsSecurity.IndividualResult> nestedObjectArray = new List<HardenWindowsSecurity.IndividualResult>();
 
                 // Defining the category name
                 string CatName = "BitLockerSettings";
@@ -486,11 +486,11 @@ namespace HardeningModule
 
                 if (BootDMAProtection)
                 {
-                    HardeningModule.VerboseLogger.Write("Kernel DMA protection is enabled");
+                    HardenWindowsSecurity.VerboseLogger.Write("Kernel DMA protection is enabled");
                 }
                 else
                 {
-                    HardeningModule.VerboseLogger.Write("Kernel DMA protection is disabled");
+                    HardenWindowsSecurity.VerboseLogger.Write("Kernel DMA protection is disabled");
                 }
 
 
@@ -511,7 +511,7 @@ namespace HardeningModule
                 // or Kernel DMA protection is off and Bitlocker DMA protection is on
                 bool ItemState = BootDMAProtection ^ (BitlockerDMAProtectionStatus == 1);
 
-                nestedObjectArray.Add(new HardeningModule.IndividualResult
+                nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "DMA protection",
                     Compliant = ItemState ? "True" : "False",
@@ -524,7 +524,7 @@ namespace HardeningModule
 
                 // To detect if Hibernate is enabled and set to full
                 // Only perform the check if the system is not a virtual machine
-                if (!HardeningModule.GlobalVars.MDAVConfigCurrent.IsVirtualMachine)
+                if (!HardenWindowsSecurity.GlobalVars.MDAVConfigCurrent.IsVirtualMachine)
                 {
                     bool IndividualItemResult = false;
                     try
@@ -540,7 +540,7 @@ namespace HardeningModule
                         // suppress the errors if any
                     }
 
-                    nestedObjectArray.Add(new HardeningModule.IndividualResult
+                    nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                     {
                         FriendlyName = "Hibernate is set to full",
                         Compliant = IndividualItemResult ? "True" : "False",
@@ -552,26 +552,26 @@ namespace HardeningModule
                 }
                 else
                 {
-                    HardeningModule.GlobalVars.TotalNumberOfTrueCompliantValues--;
+                    HardenWindowsSecurity.GlobalVars.TotalNumberOfTrueCompliantValues--;
                 }
 
 
                 // OS Drive encryption verifications
                 // Check if BitLocker is on for the OS Drive
                 // The ProtectionStatus remains off while the drive is encrypting or decrypting
-                var volumeInfo = HardeningModule.BitLockerInfo.GetEncryptedVolumeInfo(Environment.GetEnvironmentVariable("SystemDrive"));
+                var volumeInfo = HardenWindowsSecurity.BitLockerInfo.GetEncryptedVolumeInfo(Environment.GetEnvironmentVariable("SystemDrive"));
                 if (volumeInfo.ProtectionStatus == "Protected")
                 {
                     // Get the key protectors of the OS Drive
                     string[] KeyProtectors = volumeInfo.KeyProtector.Select(kp => kp.KeyProtectorType).ToArray();
 
-                    //  HardeningModule.VerboseLogger.Write(string.Join(", ", KeyProtectors));
+                    //  HardenWindowsSecurity.VerboseLogger.Write(string.Join(", ", KeyProtectors));
 
 
                     // Check if TPM+PIN and recovery password are being used - Normal Security level
                     if (KeyProtectors.Contains("TpmPin") && KeyProtectors.Contains("RecoveryPassword"))
                     {
-                        nestedObjectArray.Add(new HardeningModule.IndividualResult
+                        nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                         {
                             FriendlyName = "Secure OS Drive encryption",
                             Compliant = "True",
@@ -584,7 +584,7 @@ namespace HardeningModule
                     // Check if TPM+PIN+StartupKey and recovery password are being used - Enhanced security level
                     else if (KeyProtectors.Contains("TpmPinStartupKey") && KeyProtectors.Contains("RecoveryPassword"))
                     {
-                        nestedObjectArray.Add(new HardeningModule.IndividualResult
+                        nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                         {
                             FriendlyName = "Secure OS Drive encryption",
                             Compliant = "True",
@@ -596,7 +596,7 @@ namespace HardeningModule
                     }
                     else
                     {
-                        nestedObjectArray.Add(new HardeningModule.IndividualResult
+                        nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                         {
                             FriendlyName = "Secure OS Drive encryption",
                             Compliant = "False",
@@ -609,7 +609,7 @@ namespace HardeningModule
                 }
                 else
                 {
-                    nestedObjectArray.Add(new HardeningModule.IndividualResult
+                    nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                     {
                         FriendlyName = "Secure OS Drive encryption",
                         Compliant = "False",
@@ -622,14 +622,14 @@ namespace HardeningModule
 
 
                 // Non-OS-Drive-BitLocker-Drives-Encryption-Verification
-                List<HardeningModule.BitLockerVolume> NonRemovableNonOSDrives = new List<HardeningModule.BitLockerVolume>();
+                List<HardenWindowsSecurity.BitLockerVolume> NonRemovableNonOSDrives = new List<HardenWindowsSecurity.BitLockerVolume>();
 
-                foreach (HardeningModule.BitLockerVolume Drive in HardeningModule.BitLockerInfo.GetAllEncryptedVolumeInfo())
+                foreach (HardenWindowsSecurity.BitLockerVolume Drive in HardenWindowsSecurity.BitLockerInfo.GetAllEncryptedVolumeInfo())
                 {
                     if (Drive.VolumeType == "FixedDisk")
                     {
                         // Increase the number of available compliant values for each non-OS drive that was found
-                        HardeningModule.GlobalVars.TotalNumberOfTrueCompliantValues++;
+                        HardenWindowsSecurity.GlobalVars.TotalNumberOfTrueCompliantValues++;
                         NonRemovableNonOSDrives.Add(Drive);
                     }
                 }
@@ -649,7 +649,7 @@ namespace HardeningModule
 
                             if (KeyProtectors.Contains("RecoveryPassword") || KeyProtectors.Contains("Password") || KeyProtectors.Contains("ExternalKey"))
                             {
-                                nestedObjectArray.Add(new HardeningModule.IndividualResult
+                                nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                                 {
                                     FriendlyName = $"Secure Drive {BitLockerDrive.MountPoint} encryption",
                                     Compliant = "True",
@@ -661,7 +661,7 @@ namespace HardeningModule
                             }
                             else
                             {
-                                nestedObjectArray.Add(new HardeningModule.IndividualResult
+                                nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                                 {
                                     FriendlyName = $"Secure Drive {BitLockerDrive.MountPoint} encryption",
                                     Compliant = "False",
@@ -674,7 +674,7 @@ namespace HardeningModule
                         }
                         else
                         {
-                            nestedObjectArray.Add(new HardeningModule.IndividualResult
+                            nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                             {
                                 FriendlyName = $"Secure Drive {BitLockerDrive.MountPoint} encryption",
                                 Compliant = "False",
@@ -689,12 +689,12 @@ namespace HardeningModule
 
 
                 // Process items in Registry resources.csv file with "Registry Keys" origin and add them to the nestedObjectArray array
-                foreach (var Result in (HardeningModule.CategoryProcessing.ProcessCategory(CatName, "Group Policy")))
+                foreach (var Result in (HardenWindowsSecurity.CategoryProcessing.ProcessCategory(CatName, "Group Policy")))
                 {
-                    HardeningModule.ConditionalResultAdd.Add(nestedObjectArray, Result);
+                    HardenWindowsSecurity.ConditionalResultAdd.Add(nestedObjectArray, Result);
                 }
 
-                HardeningModule.GlobalVars.FinalMegaObject.TryAdd(CatName, nestedObjectArray);
+                HardenWindowsSecurity.GlobalVars.FinalMegaObject.TryAdd(CatName, nestedObjectArray);
             });
         }
 
@@ -708,7 +708,7 @@ namespace HardeningModule
             {
 
                 // Create a new list to store the results
-                List<HardeningModule.IndividualResult> nestedObjectArray = new List<HardeningModule.IndividualResult>();
+                List<HardenWindowsSecurity.IndividualResult> nestedObjectArray = new List<HardenWindowsSecurity.IndividualResult>();
 
                 // Defining the category name
                 string CatName = "MiscellaneousConfigurations";
@@ -724,7 +724,7 @@ namespace HardeningModule
                     string hyperVAdminGroupSID = "S-1-5-32-578";
 
                     // Retrieve the list of local users and filter them based on the enabled status
-                    var usersNotInHyperVGroup = HardeningModule.LocalUserRetriever.Get()
+                    var usersNotInHyperVGroup = HardenWindowsSecurity.LocalUserRetriever.Get()
                         ?.Where(user => user.Enabled && !user.GroupsSIDs.Contains(hyperVAdminGroupSID, StringComparer.OrdinalIgnoreCase))
                         .ToList();
 
@@ -738,7 +738,7 @@ namespace HardeningModule
                 }
 
                 // Add result to the nested object array
-                nestedObjectArray.Add(new HardeningModule.IndividualResult
+                nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "All users are part of the Hyper-V Administrators group",
                     Compliant = compliant,
@@ -751,7 +751,7 @@ namespace HardeningModule
 
                 /// PS Equivalent: (auditpol /get /subcategory:"Other Logon/Logoff Events" /r | ConvertFrom-Csv).'Inclusion Setting'
                 // Verify an Audit policy is enabled - only supports systems with English-US language
-                var cultureInfoHelper = HardeningModule.CultureInfoHelper.Get();
+                var cultureInfoHelper = HardenWindowsSecurity.CultureInfoHelper.Get();
                 string currentCulture = cultureInfoHelper.Name;
 
                 if (string.Equals(currentCulture, "en-US", StringComparison.OrdinalIgnoreCase))
@@ -778,7 +778,7 @@ namespace HardeningModule
                     // Check if the output is empty
                     if (string.IsNullOrWhiteSpace(output))
                     {
-                        HardeningModule.VerboseLogger.Write("No output from the auditpol command.");
+                        HardenWindowsSecurity.VerboseLogger.Write("No output from the auditpol command.");
                         return;
                     }
 
@@ -816,7 +816,7 @@ namespace HardeningModule
                         bool individualItemResult = inclusionSetting == "Success and Failure";
 
                         // Add the result to the nested object array
-                        nestedObjectArray.Add(new HardeningModule.IndividualResult
+                        nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                         {
                             FriendlyName = "Audit policy for Other Logon/Logoff Events",
                             Compliant = individualItemResult ? "True" : "False",
@@ -830,14 +830,14 @@ namespace HardeningModule
                 else
                 {
                     // Decrement the total number of true compliant values
-                    HardeningModule.GlobalVars.TotalNumberOfTrueCompliantValues--;
+                    HardenWindowsSecurity.GlobalVars.TotalNumberOfTrueCompliantValues--;
                 }
 
 
                 // Get the control from MDM CIM
-                HardeningModule.HashtableCheckerResult MDM_Policy_Result01_System02_AllowLocation = HardeningModule.HashtableChecker.CheckValue<string>(HardeningModule.GlobalVars.MDM_Policy_Result01_System02, "AllowLocation", "0");
+                HardenWindowsSecurity.HashtableCheckerResult MDM_Policy_Result01_System02_AllowLocation = HardenWindowsSecurity.HashtableChecker.CheckValue<string>(HardenWindowsSecurity.GlobalVars.MDM_Policy_Result01_System02, "AllowLocation", "0");
 
-                nestedObjectArray.Add(new HardeningModule.IndividualResult
+                nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "Disable Location",
                     Compliant = MDM_Policy_Result01_System02_AllowLocation.IsMatch ? "True" : "False",
@@ -849,18 +849,18 @@ namespace HardeningModule
 
 
                 // Process items in Registry resources.csv file with "Group Policy" origin and add them to the $NestedObjectArray array
-                foreach (var Result in (HardeningModule.CategoryProcessing.ProcessCategory(CatName, "Group Policy")))
+                foreach (var Result in (HardenWindowsSecurity.CategoryProcessing.ProcessCategory(CatName, "Group Policy")))
                 {
-                    HardeningModule.ConditionalResultAdd.Add(nestedObjectArray, Result);
+                    HardenWindowsSecurity.ConditionalResultAdd.Add(nestedObjectArray, Result);
                 }
 
                 // Process items in Registry resources.csv file with "Registry Keys" origin and add them to the nestedObjectArray array
-                foreach (var Result in (HardeningModule.CategoryProcessing.ProcessCategory(CatName, "Registry Keys")))
+                foreach (var Result in (HardenWindowsSecurity.CategoryProcessing.ProcessCategory(CatName, "Registry Keys")))
                 {
-                    HardeningModule.ConditionalResultAdd.Add(nestedObjectArray, Result);
+                    HardenWindowsSecurity.ConditionalResultAdd.Add(nestedObjectArray, Result);
                 }
 
-                HardeningModule.GlobalVars.FinalMegaObject.TryAdd(CatName, nestedObjectArray);
+                HardenWindowsSecurity.GlobalVars.FinalMegaObject.TryAdd(CatName, nestedObjectArray);
             });
         }
 
@@ -875,18 +875,18 @@ namespace HardeningModule
             {
 
                 // Create a new list to store the results
-                List<HardeningModule.IndividualResult> nestedObjectArray = new List<HardeningModule.IndividualResult>();
+                List<HardenWindowsSecurity.IndividualResult> nestedObjectArray = new List<HardenWindowsSecurity.IndividualResult>();
 
                 // Defining the category name
                 string CatName = "WindowsNetworking";
 
                 // Check network location of all connections to see if they are public
-                bool individualItemResult = HardeningModule.NetConnectionProfiles.Get().All(profile =>
+                bool individualItemResult = HardenWindowsSecurity.NetConnectionProfiles.Get().All(profile =>
                 {
                     // Ensure the property exists and is not null before comparing
                     return profile["NetworkCategory"] != null && (uint)profile["NetworkCategory"] == 0;
                 });
-                nestedObjectArray.Add(new HardeningModule.IndividualResult
+                nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "Network Location of all connections set to Public",
                     Compliant = individualItemResult ? "True" : "False",
@@ -897,24 +897,24 @@ namespace HardeningModule
                 });
 
                 // Process items in Registry resources.csv file with "Group Policy" origin and add them to the $NestedObjectArray array
-                foreach (var Result in (HardeningModule.CategoryProcessing.ProcessCategory(CatName, "Group Policy")))
+                foreach (var Result in (HardenWindowsSecurity.CategoryProcessing.ProcessCategory(CatName, "Group Policy")))
                 {
-                    HardeningModule.ConditionalResultAdd.Add(nestedObjectArray, Result);
+                    HardenWindowsSecurity.ConditionalResultAdd.Add(nestedObjectArray, Result);
                 }
 
                 // Process items in Registry resources.csv file with "Registry Keys" origin and add them to the nestedObjectArray array
-                foreach (var Result in (HardeningModule.CategoryProcessing.ProcessCategory(CatName, "Registry Keys")))
+                foreach (var Result in (HardenWindowsSecurity.CategoryProcessing.ProcessCategory(CatName, "Registry Keys")))
                 {
-                    HardeningModule.ConditionalResultAdd.Add(nestedObjectArray, Result);
+                    HardenWindowsSecurity.ConditionalResultAdd.Add(nestedObjectArray, Result);
                 }
 
                 // Process the Security Policies for the current category that reside in the "SecurityPoliciesVerification.csv" file
-                foreach (var Result in (HardeningModule.SecurityPolicyChecker.CheckPolicyCompliance(CatName)))
+                foreach (var Result in (HardenWindowsSecurity.SecurityPolicyChecker.CheckPolicyCompliance(CatName)))
                 {
-                    HardeningModule.ConditionalResultAdd.Add(nestedObjectArray, Result);
+                    HardenWindowsSecurity.ConditionalResultAdd.Add(nestedObjectArray, Result);
                 }
 
-                HardeningModule.GlobalVars.FinalMegaObject.TryAdd(CatName, nestedObjectArray);
+                HardenWindowsSecurity.GlobalVars.FinalMegaObject.TryAdd(CatName, nestedObjectArray);
             });
         }
 
@@ -928,24 +928,24 @@ namespace HardeningModule
             return Task.Run(() =>
             {
                 // Create a new list to store the results
-                List<HardeningModule.IndividualResult> nestedObjectArray = new List<HardeningModule.IndividualResult>();
+                List<HardenWindowsSecurity.IndividualResult> nestedObjectArray = new List<HardenWindowsSecurity.IndividualResult>();
 
                 // Defining the category name
                 string CatName = "LockScreen";
 
                 // Process items in Registry resources.csv file with "Group Policy" origin and add them to the $NestedObjectArray array
-                foreach (var Result in (HardeningModule.CategoryProcessing.ProcessCategory(CatName, "Group Policy")))
+                foreach (var Result in (HardenWindowsSecurity.CategoryProcessing.ProcessCategory(CatName, "Group Policy")))
                 {
-                    HardeningModule.ConditionalResultAdd.Add(nestedObjectArray, Result);
+                    HardenWindowsSecurity.ConditionalResultAdd.Add(nestedObjectArray, Result);
                 }
 
                 // Process the Security Policies for the current category that reside in the "SecurityPoliciesVerification.csv" file
-                foreach (var Result in (HardeningModule.SecurityPolicyChecker.CheckPolicyCompliance(CatName)))
+                foreach (var Result in (HardenWindowsSecurity.SecurityPolicyChecker.CheckPolicyCompliance(CatName)))
                 {
-                    HardeningModule.ConditionalResultAdd.Add(nestedObjectArray, Result);
+                    HardenWindowsSecurity.ConditionalResultAdd.Add(nestedObjectArray, Result);
                 }
 
-                HardeningModule.GlobalVars.FinalMegaObject.TryAdd(CatName, nestedObjectArray);
+                HardenWindowsSecurity.GlobalVars.FinalMegaObject.TryAdd(CatName, nestedObjectArray);
 
             });
         }
@@ -960,24 +960,24 @@ namespace HardeningModule
             return Task.Run(() =>
             {
                 // Create a new list to store the results
-                List<HardeningModule.IndividualResult> nestedObjectArray = new List<HardeningModule.IndividualResult>();
+                List<HardenWindowsSecurity.IndividualResult> nestedObjectArray = new List<HardenWindowsSecurity.IndividualResult>();
 
                 // Defining the category name
                 string CatName = "UserAccountControl";
 
                 // Process items in Registry resources.csv file with "Group Policy" origin and add them to the $NestedObjectArray array
-                foreach (var Result in (HardeningModule.CategoryProcessing.ProcessCategory(CatName, "Group Policy")))
+                foreach (var Result in (HardenWindowsSecurity.CategoryProcessing.ProcessCategory(CatName, "Group Policy")))
                 {
-                    HardeningModule.ConditionalResultAdd.Add(nestedObjectArray, Result);
+                    HardenWindowsSecurity.ConditionalResultAdd.Add(nestedObjectArray, Result);
                 }
 
                 // Process the Security Policies for the current category that reside in the "SecurityPoliciesVerification.csv" file
-                foreach (var Result in (HardeningModule.SecurityPolicyChecker.CheckPolicyCompliance(CatName)))
+                foreach (var Result in (HardenWindowsSecurity.SecurityPolicyChecker.CheckPolicyCompliance(CatName)))
                 {
-                    HardeningModule.ConditionalResultAdd.Add(nestedObjectArray, Result);
+                    HardenWindowsSecurity.ConditionalResultAdd.Add(nestedObjectArray, Result);
                 }
 
-                HardeningModule.GlobalVars.FinalMegaObject.TryAdd(CatName, nestedObjectArray);
+                HardenWindowsSecurity.GlobalVars.FinalMegaObject.TryAdd(CatName, nestedObjectArray);
             });
         }
 
@@ -991,15 +991,15 @@ namespace HardeningModule
             {
 
                 // Create a new list to store the results
-                List<HardeningModule.IndividualResult> nestedObjectArray = new List<HardeningModule.IndividualResult>();
+                List<HardenWindowsSecurity.IndividualResult> nestedObjectArray = new List<HardenWindowsSecurity.IndividualResult>();
 
                 // Defining the category name
                 string CatName = "OptionalWindowsFeatures";
 
                 // Get the results of all optional features
-                HardeningModule.WindowsFeatureChecker.FeatureStatus FeaturesCheckResults = HardeningModule.WindowsFeatureChecker.CheckWindowsFeatures();
+                HardenWindowsSecurity.WindowsFeatureChecker.FeatureStatus FeaturesCheckResults = HardenWindowsSecurity.WindowsFeatureChecker.CheckWindowsFeatures();
 
-                nestedObjectArray.Add(new HardeningModule.IndividualResult
+                nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "PowerShell v2 is disabled",
                     Compliant = FeaturesCheckResults.PowerShellv2 == "Disabled" ? "True" : "False",
@@ -1009,7 +1009,7 @@ namespace HardeningModule
                     Method = "DISM"
                 });
 
-                nestedObjectArray.Add(new HardeningModule.IndividualResult
+                nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "PowerShell v2 Engine is disabled",
                     Compliant = FeaturesCheckResults.PowerShellv2Engine == "Disabled" ? "True" : "False",
@@ -1019,7 +1019,7 @@ namespace HardeningModule
                     Method = "DISM"
                 });
 
-                nestedObjectArray.Add(new HardeningModule.IndividualResult
+                nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "Work Folders client is disabled",
                     Compliant = FeaturesCheckResults.WorkFoldersClient == "Disabled" ? "True" : "False",
@@ -1029,7 +1029,7 @@ namespace HardeningModule
                     Method = "DISM"
                 });
 
-                nestedObjectArray.Add(new HardeningModule.IndividualResult
+                nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "Internet Printing Client is disabled",
                     Compliant = FeaturesCheckResults.InternetPrintingClient == "Disabled" ? "True" : "False",
@@ -1039,7 +1039,7 @@ namespace HardeningModule
                     Method = "DISM"
                 });
 
-                nestedObjectArray.Add(new HardeningModule.IndividualResult
+                nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "Windows Media Player (legacy) is disabled",
                     Compliant = FeaturesCheckResults.WindowsMediaPlayer == "Not Present" ? "True" : "False",
@@ -1049,7 +1049,7 @@ namespace HardeningModule
                     Method = "DISM"
                 });
 
-                nestedObjectArray.Add(new HardeningModule.IndividualResult
+                nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "Microsoft Defender Application Guard is not present",
                     Compliant = FeaturesCheckResults.MDAG == "Disabled" || FeaturesCheckResults.MDAG == "Unknown" ? "True" : "False",
@@ -1059,7 +1059,7 @@ namespace HardeningModule
                     Method = "DISM"
                 });
 
-                nestedObjectArray.Add(new HardeningModule.IndividualResult
+                nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "Windows Sandbox is enabled",
                     Compliant = FeaturesCheckResults.WindowsSandbox == "Enabled" ? "True" : "False",
@@ -1069,7 +1069,7 @@ namespace HardeningModule
                     Method = "DISM"
                 });
 
-                nestedObjectArray.Add(new HardeningModule.IndividualResult
+                nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "Hyper-V is enabled",
                     Compliant = FeaturesCheckResults.HyperV == "Enabled" ? "True" : "False",
@@ -1079,7 +1079,7 @@ namespace HardeningModule
                     Method = "DISM"
                 });
 
-                nestedObjectArray.Add(new HardeningModule.IndividualResult
+                nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "WMIC is not present",
                     Compliant = FeaturesCheckResults.WMIC == "Not Present" ? "True" : "False",
@@ -1089,7 +1089,7 @@ namespace HardeningModule
                     Method = "DISM"
                 });
 
-                nestedObjectArray.Add(new HardeningModule.IndividualResult
+                nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "Internet Explorer mode functionality for Edge is not present",
                     Compliant = FeaturesCheckResults.IEMode == "Not Present" ? "True" : "False",
@@ -1099,7 +1099,7 @@ namespace HardeningModule
                     Method = "DISM"
                 });
 
-                nestedObjectArray.Add(new HardeningModule.IndividualResult
+                nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "Legacy Notepad is not present",
                     Compliant = FeaturesCheckResults.LegacyNotepad == "Not Present" ? "True" : "False",
@@ -1109,7 +1109,7 @@ namespace HardeningModule
                     Method = "DISM"
                 });
 
-                nestedObjectArray.Add(new HardeningModule.IndividualResult
+                nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "WordPad is not present",
                     Compliant = FeaturesCheckResults.LegacyWordPad == "Not Present" || FeaturesCheckResults.LegacyWordPad == "Unknown" ? "True" : "False",
@@ -1119,7 +1119,7 @@ namespace HardeningModule
                     Method = "DISM"
                 });
 
-                nestedObjectArray.Add(new HardeningModule.IndividualResult
+                nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "PowerShell ISE is not present",
                     Compliant = FeaturesCheckResults.PowerShellISE == "Not Present" ? "True" : "False",
@@ -1129,7 +1129,7 @@ namespace HardeningModule
                     Method = "DISM"
                 });
 
-                nestedObjectArray.Add(new HardeningModule.IndividualResult
+                nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "Steps Recorder is not present",
                     Compliant = FeaturesCheckResults.StepsRecorder == "Not Present" ? "True" : "False",
@@ -1139,7 +1139,7 @@ namespace HardeningModule
                     Method = "DISM"
                 });
 
-                HardeningModule.GlobalVars.FinalMegaObject.TryAdd(CatName, nestedObjectArray);
+                HardenWindowsSecurity.GlobalVars.FinalMegaObject.TryAdd(CatName, nestedObjectArray);
             });
         }
 
@@ -1153,14 +1153,14 @@ namespace HardeningModule
             {
 
                 // Create a new list to store the results
-                List<HardeningModule.IndividualResult> nestedObjectArray = new List<HardeningModule.IndividualResult>();
+                List<HardenWindowsSecurity.IndividualResult> nestedObjectArray = new List<HardenWindowsSecurity.IndividualResult>();
 
                 // Defining the category name
                 string CatName = "TLSSecurity";
 
-                HardeningModule.EccCurveComparisonResult ECCCurvesComparisonResults = HardeningModule.EccCurveComparer.GetEccCurveComparison();
+                HardenWindowsSecurity.EccCurveComparisonResult ECCCurvesComparisonResults = HardenWindowsSecurity.EccCurveComparer.GetEccCurveComparison();
 
-                nestedObjectArray.Add(new HardeningModule.IndividualResult
+                nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "ECC Curves and their positions",
                     Compliant = ECCCurvesComparisonResults.AreCurvesCompliant ? "True" : "False",
@@ -1172,9 +1172,9 @@ namespace HardeningModule
 
 
                 // https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-cryptography#tlsciphersuites
-                bool TLSCipherSuites = HardeningModule.GetMDMResultValue.Get("TLSCipherSuites", "TLS_CHACHA20_POLY1305_SHA256,TLS_AES_256_GCM_SHA384,TLS_AES_128_GCM_SHA256,TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384,TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256,TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384,TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256,TLS_DHE_RSA_WITH_AES_256_GCM_SHA384,TLS_DHE_RSA_WITH_AES_128_GCM_SHA256");
+                bool TLSCipherSuites = HardenWindowsSecurity.GetMDMResultValue.Get("TLSCipherSuites", "TLS_CHACHA20_POLY1305_SHA256,TLS_AES_256_GCM_SHA384,TLS_AES_128_GCM_SHA256,TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384,TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256,TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384,TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256,TLS_DHE_RSA_WITH_AES_256_GCM_SHA384,TLS_DHE_RSA_WITH_AES_128_GCM_SHA256");
 
-                nestedObjectArray.Add(new HardeningModule.IndividualResult
+                nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "Configure the correct TLS Cipher Suites",
                     Compliant = TLSCipherSuites ? "True" : "False",
@@ -1185,18 +1185,18 @@ namespace HardeningModule
                 });
 
                 // Process items in Registry resources.csv file with "Group Policy" origin and add them to the $NestedObjectArray array
-                foreach (var Result in (HardeningModule.CategoryProcessing.ProcessCategory(CatName, "Group Policy")))
+                foreach (var Result in (HardenWindowsSecurity.CategoryProcessing.ProcessCategory(CatName, "Group Policy")))
                 {
-                    HardeningModule.ConditionalResultAdd.Add(nestedObjectArray, Result);
+                    HardenWindowsSecurity.ConditionalResultAdd.Add(nestedObjectArray, Result);
                 }
 
                 // Process items in Registry resources.csv file with "Registry Keys" origin and add them to the nestedObjectArray array
-                foreach (var Result in (HardeningModule.CategoryProcessing.ProcessCategory(CatName, "Registry Keys")))
+                foreach (var Result in (HardenWindowsSecurity.CategoryProcessing.ProcessCategory(CatName, "Registry Keys")))
                 {
-                    HardeningModule.ConditionalResultAdd.Add(nestedObjectArray, Result);
+                    HardenWindowsSecurity.ConditionalResultAdd.Add(nestedObjectArray, Result);
                 }
 
-                HardeningModule.GlobalVars.FinalMegaObject.TryAdd(CatName, nestedObjectArray);
+                HardenWindowsSecurity.GlobalVars.FinalMegaObject.TryAdd(CatName, nestedObjectArray);
             });
         }
 
@@ -1210,13 +1210,13 @@ namespace HardeningModule
             {
 
                 // Create a new list to store the results
-                List<HardeningModule.IndividualResult> nestedObjectArray = new List<HardeningModule.IndividualResult>();
+                List<HardenWindowsSecurity.IndividualResult> nestedObjectArray = new List<HardenWindowsSecurity.IndividualResult>();
 
                 // Defining the category name
                 string CatName = "WindowsFirewall";
 
                 // Use the GetFirewallRules method and check the Enabled status of each rule
-                List<ManagementObject> firewallRuleGroupResultEnabledArray = HardeningModule.FirewallHelper.GetFirewallRules("@%SystemRoot%\\system32\\firewallapi.dll,-37302", 1);
+                List<ManagementObject> firewallRuleGroupResultEnabledArray = HardenWindowsSecurity.FirewallHelper.GetFirewallRules("@%SystemRoot%\\system32\\firewallapi.dll,-37302", 1);
 
                 // Check if all the rules are disabled
                 bool firewallRuleGroupResultEnabledStatus = true;
@@ -1232,7 +1232,7 @@ namespace HardeningModule
                 }
 
                 // Verify the 3 built-in Firewall rules (for all 3 profiles) for Multicast DNS (mDNS) UDP-in are disabled
-                nestedObjectArray.Add(new HardeningModule.IndividualResult
+                nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "mDNS UDP-In Firewall Rules are disabled",
                     Compliant = firewallRuleGroupResultEnabledStatus ? "True" : "False",
@@ -1244,9 +1244,9 @@ namespace HardeningModule
 
 
                 // Get the control from MDM CIM
-                HardeningModule.HashtableCheckerResult MDM_Firewall_PublicProfile02_EnableFirewall = HardeningModule.HashtableChecker.CheckValue<string>(HardeningModule.GlobalVars.MDM_Firewall_PublicProfile02, "EnableFirewall", "true");
+                HardenWindowsSecurity.HashtableCheckerResult MDM_Firewall_PublicProfile02_EnableFirewall = HardenWindowsSecurity.HashtableChecker.CheckValue<string>(HardenWindowsSecurity.GlobalVars.MDM_Firewall_PublicProfile02, "EnableFirewall", "true");
 
-                nestedObjectArray.Add(new HardeningModule.IndividualResult
+                nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "Enable Windows Firewall for Public profile",
                     Compliant = MDM_Firewall_PublicProfile02_EnableFirewall.IsMatch ? "True" : "False",
@@ -1258,9 +1258,9 @@ namespace HardeningModule
 
 
                 // Get the control from MDM CIM
-                HardeningModule.HashtableCheckerResult MDM_Firewall_PublicProfile02_DisableInboundNotifications = HardeningModule.HashtableChecker.CheckValue<string>(HardeningModule.GlobalVars.MDM_Firewall_PublicProfile02, "DisableInboundNotifications", "false");
+                HardenWindowsSecurity.HashtableCheckerResult MDM_Firewall_PublicProfile02_DisableInboundNotifications = HardenWindowsSecurity.HashtableChecker.CheckValue<string>(HardenWindowsSecurity.GlobalVars.MDM_Firewall_PublicProfile02, "DisableInboundNotifications", "false");
 
-                nestedObjectArray.Add(new HardeningModule.IndividualResult
+                nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "Display notifications for Public profile",
                     Compliant = MDM_Firewall_PublicProfile02_DisableInboundNotifications.IsMatch ? "True" : "False",
@@ -1272,9 +1272,9 @@ namespace HardeningModule
 
 
                 // Get the control from MDM CIM
-                HardeningModule.HashtableCheckerResult MDM_Firewall_PublicProfile02_LogMaxFileSize = HardeningModule.HashtableChecker.CheckValue<string>(HardeningModule.GlobalVars.MDM_Firewall_PublicProfile02, "LogMaxFileSize", "32767");
+                HardenWindowsSecurity.HashtableCheckerResult MDM_Firewall_PublicProfile02_LogMaxFileSize = HardenWindowsSecurity.HashtableChecker.CheckValue<string>(HardenWindowsSecurity.GlobalVars.MDM_Firewall_PublicProfile02, "LogMaxFileSize", "32767");
 
-                nestedObjectArray.Add(new HardeningModule.IndividualResult
+                nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "Configure Log file size for Public profile",
                     Compliant = MDM_Firewall_PublicProfile02_LogMaxFileSize.IsMatch ? "True" : "False",
@@ -1286,9 +1286,9 @@ namespace HardeningModule
 
 
                 // Get the control from MDM CIM
-                HardeningModule.HashtableCheckerResult MDM_Firewall_PublicProfile02_EnableLogDroppedPackets = HardeningModule.HashtableChecker.CheckValue<string>(HardeningModule.GlobalVars.MDM_Firewall_PublicProfile02, "EnableLogDroppedPackets", "true");
+                HardenWindowsSecurity.HashtableCheckerResult MDM_Firewall_PublicProfile02_EnableLogDroppedPackets = HardenWindowsSecurity.HashtableChecker.CheckValue<string>(HardenWindowsSecurity.GlobalVars.MDM_Firewall_PublicProfile02, "EnableLogDroppedPackets", "true");
 
-                nestedObjectArray.Add(new HardeningModule.IndividualResult
+                nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "Log blocked connections for Public profile",
                     Compliant = MDM_Firewall_PublicProfile02_EnableLogDroppedPackets.IsMatch ? "True" : "False",
@@ -1300,9 +1300,9 @@ namespace HardeningModule
 
 
                 // Get the control from MDM CIM
-                HardeningModule.HashtableCheckerResult MDM_Firewall_PublicProfile02_LogFilePath = HardeningModule.HashtableChecker.CheckValue<string>(HardeningModule.GlobalVars.MDM_Firewall_PublicProfile02, "LogFilePath", @"%systemroot%\system32\LogFiles\Firewall\Publicfirewall.log");
+                HardenWindowsSecurity.HashtableCheckerResult MDM_Firewall_PublicProfile02_LogFilePath = HardenWindowsSecurity.HashtableChecker.CheckValue<string>(HardenWindowsSecurity.GlobalVars.MDM_Firewall_PublicProfile02, "LogFilePath", @"%systemroot%\system32\LogFiles\Firewall\Publicfirewall.log");
 
-                nestedObjectArray.Add(new HardeningModule.IndividualResult
+                nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "Configure Log file path for Public profile",
                     Compliant = MDM_Firewall_PublicProfile02_LogFilePath.IsMatch ? "True" : "False",
@@ -1314,9 +1314,9 @@ namespace HardeningModule
 
 
                 // Get the control from MDM CIM
-                HardeningModule.HashtableCheckerResult MDM_Firewall_PrivateProfile02_EnableFirewall = HardeningModule.HashtableChecker.CheckValue<string>(HardeningModule.GlobalVars.MDM_Firewall_PrivateProfile02, "EnableFirewall", "true");
+                HardenWindowsSecurity.HashtableCheckerResult MDM_Firewall_PrivateProfile02_EnableFirewall = HardenWindowsSecurity.HashtableChecker.CheckValue<string>(HardenWindowsSecurity.GlobalVars.MDM_Firewall_PrivateProfile02, "EnableFirewall", "true");
 
-                nestedObjectArray.Add(new HardeningModule.IndividualResult
+                nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "Enable Windows Firewall for Private profile",
                     Compliant = MDM_Firewall_PrivateProfile02_EnableFirewall.IsMatch ? "True" : "False",
@@ -1328,9 +1328,9 @@ namespace HardeningModule
 
 
                 // Get the control from MDM CIM
-                HardeningModule.HashtableCheckerResult MDM_Firewall_PrivateProfile02_DisableInboundNotifications = HardeningModule.HashtableChecker.CheckValue<string>(HardeningModule.GlobalVars.MDM_Firewall_PrivateProfile02, "DisableInboundNotifications", "false");
+                HardenWindowsSecurity.HashtableCheckerResult MDM_Firewall_PrivateProfile02_DisableInboundNotifications = HardenWindowsSecurity.HashtableChecker.CheckValue<string>(HardenWindowsSecurity.GlobalVars.MDM_Firewall_PrivateProfile02, "DisableInboundNotifications", "false");
 
-                nestedObjectArray.Add(new HardeningModule.IndividualResult
+                nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "Display notifications for Private profile",
                     Compliant = MDM_Firewall_PrivateProfile02_DisableInboundNotifications.IsMatch ? "True" : "False",
@@ -1342,9 +1342,9 @@ namespace HardeningModule
 
 
                 // Get the control from MDM CIM
-                HardeningModule.HashtableCheckerResult MDM_Firewall_PrivateProfile02_LogMaxFileSize = HardeningModule.HashtableChecker.CheckValue<string>(HardeningModule.GlobalVars.MDM_Firewall_PrivateProfile02, "LogMaxFileSize", "32767");
+                HardenWindowsSecurity.HashtableCheckerResult MDM_Firewall_PrivateProfile02_LogMaxFileSize = HardenWindowsSecurity.HashtableChecker.CheckValue<string>(HardenWindowsSecurity.GlobalVars.MDM_Firewall_PrivateProfile02, "LogMaxFileSize", "32767");
 
-                nestedObjectArray.Add(new HardeningModule.IndividualResult
+                nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "Configure Log file size for Private profile",
                     Compliant = MDM_Firewall_PrivateProfile02_LogMaxFileSize.IsMatch ? "True" : "False",
@@ -1356,9 +1356,9 @@ namespace HardeningModule
 
 
                 // Get the control from MDM CIM
-                HardeningModule.HashtableCheckerResult MDM_Firewall_PrivateProfile02_EnableLogDroppedPackets = HardeningModule.HashtableChecker.CheckValue<string>(HardeningModule.GlobalVars.MDM_Firewall_PrivateProfile02, "EnableLogDroppedPackets", "true");
+                HardenWindowsSecurity.HashtableCheckerResult MDM_Firewall_PrivateProfile02_EnableLogDroppedPackets = HardenWindowsSecurity.HashtableChecker.CheckValue<string>(HardenWindowsSecurity.GlobalVars.MDM_Firewall_PrivateProfile02, "EnableLogDroppedPackets", "true");
 
-                nestedObjectArray.Add(new HardeningModule.IndividualResult
+                nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "Log blocked connections for Private profile",
                     Compliant = MDM_Firewall_PrivateProfile02_EnableLogDroppedPackets.IsMatch ? "True" : "False",
@@ -1370,9 +1370,9 @@ namespace HardeningModule
 
 
                 // Get the control from MDM CIM
-                HardeningModule.HashtableCheckerResult MDM_Firewall_PrivateProfile02_LogFilePath = HardeningModule.HashtableChecker.CheckValue<string>(HardeningModule.GlobalVars.MDM_Firewall_PrivateProfile02, "LogFilePath", @"%systemroot%\system32\LogFiles\Firewall\Privatefirewall.log");
+                HardenWindowsSecurity.HashtableCheckerResult MDM_Firewall_PrivateProfile02_LogFilePath = HardenWindowsSecurity.HashtableChecker.CheckValue<string>(HardenWindowsSecurity.GlobalVars.MDM_Firewall_PrivateProfile02, "LogFilePath", @"%systemroot%\system32\LogFiles\Firewall\Privatefirewall.log");
 
-                nestedObjectArray.Add(new HardeningModule.IndividualResult
+                nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "Configure Log file path for Private profile",
                     Compliant = MDM_Firewall_PrivateProfile02_LogFilePath.IsMatch ? "True" : "False",
@@ -1384,9 +1384,9 @@ namespace HardeningModule
 
 
                 // Get the control from MDM CIM
-                HardeningModule.HashtableCheckerResult MDM_Firewall_DomainProfile02_EnableFirewall = HardeningModule.HashtableChecker.CheckValue<string>(HardeningModule.GlobalVars.MDM_Firewall_DomainProfile02, "EnableFirewall", "true");
+                HardenWindowsSecurity.HashtableCheckerResult MDM_Firewall_DomainProfile02_EnableFirewall = HardenWindowsSecurity.HashtableChecker.CheckValue<string>(HardenWindowsSecurity.GlobalVars.MDM_Firewall_DomainProfile02, "EnableFirewall", "true");
 
-                nestedObjectArray.Add(new HardeningModule.IndividualResult
+                nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "Enable Windows Firewall for Domain profile",
                     Compliant = MDM_Firewall_DomainProfile02_EnableFirewall.IsMatch ? "True" : "False",
@@ -1398,9 +1398,9 @@ namespace HardeningModule
 
 
                 // Get the control from MDM CIM
-                HardeningModule.HashtableCheckerResult MDM_Firewall_DomainProfile02_DefaultOutboundAction = HardeningModule.HashtableChecker.CheckValue<string>(HardeningModule.GlobalVars.MDM_Firewall_DomainProfile02, "DefaultOutboundAction", "1");
+                HardenWindowsSecurity.HashtableCheckerResult MDM_Firewall_DomainProfile02_DefaultOutboundAction = HardenWindowsSecurity.HashtableChecker.CheckValue<string>(HardenWindowsSecurity.GlobalVars.MDM_Firewall_DomainProfile02, "DefaultOutboundAction", "1");
 
-                nestedObjectArray.Add(new HardeningModule.IndividualResult
+                nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "Set Default Outbound Action for Domain profile",
                     Compliant = MDM_Firewall_DomainProfile02_DefaultOutboundAction.IsMatch ? "True" : "False",
@@ -1412,9 +1412,9 @@ namespace HardeningModule
 
 
                 // Get the control from MDM CIM
-                HardeningModule.HashtableCheckerResult MDM_Firewall_DomainProfile02_DefaultInboundAction = HardeningModule.HashtableChecker.CheckValue<string>(HardeningModule.GlobalVars.MDM_Firewall_DomainProfile02, "DefaultInboundAction", "1");
+                HardenWindowsSecurity.HashtableCheckerResult MDM_Firewall_DomainProfile02_DefaultInboundAction = HardenWindowsSecurity.HashtableChecker.CheckValue<string>(HardenWindowsSecurity.GlobalVars.MDM_Firewall_DomainProfile02, "DefaultInboundAction", "1");
 
-                nestedObjectArray.Add(new HardeningModule.IndividualResult
+                nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "Set Default Inbound Action for Domain profile",
                     Compliant = MDM_Firewall_DomainProfile02_DefaultInboundAction.IsMatch ? "True" : "False",
@@ -1426,9 +1426,9 @@ namespace HardeningModule
 
 
                 // Get the control from MDM CIM
-                HardeningModule.HashtableCheckerResult MDM_Firewall_DomainProfile02_Shielded = HardeningModule.HashtableChecker.CheckValue<string>(HardeningModule.GlobalVars.MDM_Firewall_DomainProfile02, "Shielded", "true");
+                HardenWindowsSecurity.HashtableCheckerResult MDM_Firewall_DomainProfile02_Shielded = HardenWindowsSecurity.HashtableChecker.CheckValue<string>(HardenWindowsSecurity.GlobalVars.MDM_Firewall_DomainProfile02, "Shielded", "true");
 
-                nestedObjectArray.Add(new HardeningModule.IndividualResult
+                nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "Block all Domain profile connections",
                     Compliant = MDM_Firewall_DomainProfile02_Shielded.IsMatch ? "True" : "False",
@@ -1440,9 +1440,9 @@ namespace HardeningModule
 
 
                 // Get the control from MDM CIM
-                HardeningModule.HashtableCheckerResult MDM_Firewall_DomainProfile02_LogFilePath = HardeningModule.HashtableChecker.CheckValue<string>(HardeningModule.GlobalVars.MDM_Firewall_DomainProfile02, "LogFilePath", @"%systemroot%\system32\LogFiles\Firewall\Domainfirewall.log");
+                HardenWindowsSecurity.HashtableCheckerResult MDM_Firewall_DomainProfile02_LogFilePath = HardenWindowsSecurity.HashtableChecker.CheckValue<string>(HardenWindowsSecurity.GlobalVars.MDM_Firewall_DomainProfile02, "LogFilePath", @"%systemroot%\system32\LogFiles\Firewall\Domainfirewall.log");
 
-                nestedObjectArray.Add(new HardeningModule.IndividualResult
+                nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "Configure Log file path for domain profile",
                     Compliant = MDM_Firewall_DomainProfile02_LogFilePath.IsMatch ? "True" : "False",
@@ -1454,9 +1454,9 @@ namespace HardeningModule
 
 
                 // Get the control from MDM CIM
-                HardeningModule.HashtableCheckerResult MDM_Firewall_DomainProfile02_LogMaxFileSize = HardeningModule.HashtableChecker.CheckValue<string>(HardeningModule.GlobalVars.MDM_Firewall_DomainProfile02, "LogMaxFileSize", "32767");
+                HardenWindowsSecurity.HashtableCheckerResult MDM_Firewall_DomainProfile02_LogMaxFileSize = HardenWindowsSecurity.HashtableChecker.CheckValue<string>(HardenWindowsSecurity.GlobalVars.MDM_Firewall_DomainProfile02, "LogMaxFileSize", "32767");
 
-                nestedObjectArray.Add(new HardeningModule.IndividualResult
+                nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "Configure Log file size for domain profile",
                     Compliant = MDM_Firewall_DomainProfile02_LogMaxFileSize.IsMatch ? "True" : "False",
@@ -1468,9 +1468,9 @@ namespace HardeningModule
 
 
                 // Get the control from MDM CIM
-                HardeningModule.HashtableCheckerResult MDM_Firewall_DomainProfile02_EnableLogDroppedPackets = HardeningModule.HashtableChecker.CheckValue<string>(HardeningModule.GlobalVars.MDM_Firewall_DomainProfile02, "EnableLogDroppedPackets", "true");
+                HardenWindowsSecurity.HashtableCheckerResult MDM_Firewall_DomainProfile02_EnableLogDroppedPackets = HardenWindowsSecurity.HashtableChecker.CheckValue<string>(HardenWindowsSecurity.GlobalVars.MDM_Firewall_DomainProfile02, "EnableLogDroppedPackets", "true");
 
-                nestedObjectArray.Add(new HardeningModule.IndividualResult
+                nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "Log blocked connections for domain profile",
                     Compliant = MDM_Firewall_DomainProfile02_EnableLogDroppedPackets.IsMatch ? "True" : "False",
@@ -1482,9 +1482,9 @@ namespace HardeningModule
 
 
                 // Get the control from MDM CIM
-                HardeningModule.HashtableCheckerResult MDM_Firewall_DomainProfile02_EnableLogSuccessConnections = HardeningModule.HashtableChecker.CheckValue<string>(HardeningModule.GlobalVars.MDM_Firewall_DomainProfile02, "EnableLogSuccessConnections", "true");
+                HardenWindowsSecurity.HashtableCheckerResult MDM_Firewall_DomainProfile02_EnableLogSuccessConnections = HardenWindowsSecurity.HashtableChecker.CheckValue<string>(HardenWindowsSecurity.GlobalVars.MDM_Firewall_DomainProfile02, "EnableLogSuccessConnections", "true");
 
-                nestedObjectArray.Add(new HardeningModule.IndividualResult
+                nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "Log successful connections for domain profile",
                     Compliant = MDM_Firewall_DomainProfile02_EnableLogSuccessConnections.IsMatch ? "True" : "False",
@@ -1496,12 +1496,12 @@ namespace HardeningModule
 
 
                 // Process items in Registry resources.csv file with "Group Policy" origin and add them to the $NestedObjectArray array
-                foreach (var Result in (HardeningModule.CategoryProcessing.ProcessCategory(CatName, "Group Policy")))
+                foreach (var Result in (HardenWindowsSecurity.CategoryProcessing.ProcessCategory(CatName, "Group Policy")))
                 {
-                    HardeningModule.ConditionalResultAdd.Add(nestedObjectArray, Result);
+                    HardenWindowsSecurity.ConditionalResultAdd.Add(nestedObjectArray, Result);
                 }
 
-                HardeningModule.GlobalVars.FinalMegaObject.TryAdd(CatName, nestedObjectArray);
+                HardenWindowsSecurity.GlobalVars.FinalMegaObject.TryAdd(CatName, nestedObjectArray);
             });
         }
 
@@ -1516,7 +1516,7 @@ namespace HardeningModule
             {
 
                 // Create a new list to store the results
-                List<HardeningModule.IndividualResult> nestedObjectArray = new List<HardeningModule.IndividualResult>();
+                List<HardenWindowsSecurity.IndividualResult> nestedObjectArray = new List<HardenWindowsSecurity.IndividualResult>();
 
                 // Defining the category name
                 string CatName = "MicrosoftDefender";
@@ -1541,7 +1541,7 @@ namespace HardeningModule
                             // Handle errors
                             foreach (var error in ps.Streams.Error)
                             {
-                                HardeningModule.VerboseLogger.Write($"Error: {error.ToString()}");
+                                HardenWindowsSecurity.VerboseLogger.Write($"Error: {error.ToString()}");
                             }
                         }
 
@@ -1566,12 +1566,12 @@ namespace HardeningModule
                         }
                         else
                         {
-                            HardeningModule.VerboseLogger.Write("No results retrieved from Get-BcdEntry command.");
+                            HardenWindowsSecurity.VerboseLogger.Write("No results retrieved from Get-BcdEntry command.");
                         }
                     }
                     catch (Exception ex)
                     {
-                        HardeningModule.VerboseLogger.Write($"Exception: {ex.Message}");
+                        HardenWindowsSecurity.VerboseLogger.Write($"Exception: {ex.Message}");
                     }
                 }
 
@@ -1602,7 +1602,7 @@ namespace HardeningModule
                             // Handle errors
                             foreach (var error in ps.Streams.Error)
                             {
-                                HardeningModule.VerboseLogger.Write($"Error: {error.ToString()}");
+                                HardenWindowsSecurity.VerboseLogger.Write($"Error: {error.ToString()}");
                             }
                         }
 
@@ -1621,7 +1621,7 @@ namespace HardeningModule
                                 // Determine compliance based on the value
                                 bool compliant = string.Equals(ForceRelocateImages, "ON", StringComparison.OrdinalIgnoreCase);
 
-                                nestedObjectArray.Add(new HardeningModule.IndividualResult
+                                nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                                 {
                                     FriendlyName = "Mandatory ASLR",
                                     Compliant = compliant ? "True" : "False",
@@ -1634,7 +1634,7 @@ namespace HardeningModule
                             }
                             else
                             {
-                                nestedObjectArray.Add(new HardeningModule.IndividualResult
+                                nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                                 {
                                     FriendlyName = "Mandatory ASLR",
                                     Compliant = "False",
@@ -1647,7 +1647,7 @@ namespace HardeningModule
                         }
                         else
                         {
-                            nestedObjectArray.Add(new HardeningModule.IndividualResult
+                            nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                             {
                                 FriendlyName = "Mandatory ASLR",
                                 Compliant = "False",
@@ -1660,7 +1660,7 @@ namespace HardeningModule
                     }
                     catch (Exception ex)
                     {
-                        HardeningModule.VerboseLogger.Write($"Exception: {ex.Message}");
+                        HardenWindowsSecurity.VerboseLogger.Write($"Exception: {ex.Message}");
                     }
                 }
 
@@ -1669,7 +1669,7 @@ namespace HardeningModule
                 using (PowerShell ps = PowerShell.Create())
                 {
                     ps.AddCommand("Get-ProcessMitigation")
-                    .AddParameter("RegistryConfigFilePath", HardeningModule.GlobalVars.CurrentlyAppliedMitigations);
+                    .AddParameter("RegistryConfigFilePath", HardenWindowsSecurity.GlobalVars.CurrentlyAppliedMitigations);
 
                     try
                     {
@@ -1680,20 +1680,20 @@ namespace HardeningModule
                             // Handle errors
                             foreach (var error in ps.Streams.Error)
                             {
-                                HardeningModule.VerboseLogger.Write($"Error: {error.ToString()}");
+                                HardenWindowsSecurity.VerboseLogger.Write($"Error: {error.ToString()}");
                             }
                         }
                     }
                     catch (Exception ex)
                     {
-                        HardeningModule.VerboseLogger.Write($"Exception: {ex.Message}");
+                        HardenWindowsSecurity.VerboseLogger.Write($"Exception: {ex.Message}");
                     }
                 }
 
                 // Process the system mitigations result from the XML file
                 // It's necessary to make the HashSet ordinal IgnoreCase since mitigations applied from Intune vs applied locally might have different casing
                 Dictionary<string, HashSet<string>> RevisedProcessMitigationsOnTheSystem =
-                    MitigationPolicyProcessor.ProcessMitigationPolicies(HardeningModule.GlobalVars.CurrentlyAppliedMitigations)
+                    MitigationPolicyProcessor.ProcessMitigationPolicies(HardenWindowsSecurity.GlobalVars.CurrentlyAppliedMitigations)
                     .ToDictionary(
                         kvp => kvp.Key,
                         kvp => new HashSet<string>(kvp.Value, StringComparer.OrdinalIgnoreCase),
@@ -1701,7 +1701,7 @@ namespace HardeningModule
                     );
 
                 // Import the CSV file as an object
-                List<HardeningModule.ProcessMitigationsParser.ProcessMitigationsRecords> ProcessMitigations = HardeningModule.GlobalVars.ProcessMitigations;
+                List<HardenWindowsSecurity.ProcessMitigationsParser.ProcessMitigationsRecords> ProcessMitigations = HardenWindowsSecurity.GlobalVars.ProcessMitigations;
 
                 // Only keep the enabled mitigations in the CSV, then group the data by ProgramName
                 var GroupedMitigations = ProcessMitigations
@@ -1742,14 +1742,14 @@ namespace HardeningModule
                         if (!targetSet.SetEquals(ProcessMitigations_Applied))
                         {
                             // If the values are different, it means the process has different mitigations applied to it than the ones in the CSV file
-                            HardeningModule.VerboseLogger.Write($"Mitigations for {ProcessName_Target} were found but are not compliant");
-                            HardeningModule.VerboseLogger.Write($"Applied Mitigations: {string.Join(",", ProcessMitigations_Applied)}");
-                            HardeningModule.VerboseLogger.Write($"Target Mitigations: {string.Join(",", ProcessMitigations_Target)}");
+                            HardenWindowsSecurity.VerboseLogger.Write($"Mitigations for {ProcessName_Target} were found but are not compliant");
+                            HardenWindowsSecurity.VerboseLogger.Write($"Applied Mitigations: {string.Join(",", ProcessMitigations_Applied)}");
+                            HardenWindowsSecurity.VerboseLogger.Write($"Target Mitigations: {string.Join(",", ProcessMitigations_Target)}");
 
                             // Increment the total number of the verifiable compliant values for each process that has a mitigation applied to it in the CSV file
-                            HardeningModule.GlobalVars.TotalNumberOfTrueCompliantValues++;
+                            HardenWindowsSecurity.GlobalVars.TotalNumberOfTrueCompliantValues++;
 
-                            nestedObjectArray.Add(new HardeningModule.IndividualResult
+                            nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                             {
                                 FriendlyName = $"Process Mitigations for: {ProcessName_Target}",
                                 Compliant = "False",
@@ -1762,12 +1762,12 @@ namespace HardeningModule
                         else
                         {
                             // If the values are the same, it means the process has the same mitigations applied to it as the ones in the CSV file
-                            HardeningModule.VerboseLogger.Write($"Mitigations for {ProcessName_Target} are compliant");
+                            HardenWindowsSecurity.VerboseLogger.Write($"Mitigations for {ProcessName_Target} are compliant");
 
                             // Increment the total number of the verifiable compliant values for each process that has a mitigation applied to it in the CSV file
-                            HardeningModule.GlobalVars.TotalNumberOfTrueCompliantValues++;
+                            HardenWindowsSecurity.GlobalVars.TotalNumberOfTrueCompliantValues++;
 
-                            nestedObjectArray.Add(new HardeningModule.IndividualResult
+                            nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                             {
                                 FriendlyName = $"Process Mitigations for: {ProcessName_Target}",
                                 Compliant = "True",
@@ -1781,12 +1781,12 @@ namespace HardeningModule
                     else
                     {
                         //If the process name is not found in the hashtable containing the currently applied mitigations, it means the process doesn't have any mitigations applied to it
-                        HardeningModule.VerboseLogger.Write($"Mitigations for {ProcessName_Target} were not found");
+                        HardenWindowsSecurity.VerboseLogger.Write($"Mitigations for {ProcessName_Target} were not found");
 
                         // Increment the total number of the verifiable compliant values for each process that has a mitigation applied to it in the CSV file
-                        HardeningModule.GlobalVars.TotalNumberOfTrueCompliantValues++;
+                        HardenWindowsSecurity.GlobalVars.TotalNumberOfTrueCompliantValues++;
 
-                        nestedObjectArray.Add(new HardeningModule.IndividualResult
+                        nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                         {
                             FriendlyName = $"Process Mitigations for: {ProcessName_Target}",
                             Compliant = "False",
@@ -1805,15 +1805,15 @@ namespace HardeningModule
                 bool DriverBlockListScheduledTaskResult = false;
 
                 // Initialize the variable at the time of declaration
-                var DriverBlockListScheduledTaskResultObject = HardeningModule.TaskSchedulerHelper.Get(
+                var DriverBlockListScheduledTaskResultObject = HardenWindowsSecurity.TaskSchedulerHelper.Get(
           "MSFT Driver Block list update",
           "\\MSFT Driver Block list update\\",
-          HardeningModule.TaskSchedulerHelper.OutputType.Boolean
+          HardenWindowsSecurity.TaskSchedulerHelper.OutputType.Boolean
       );
 
                 // Convert to boolean
                 DriverBlockListScheduledTaskResult = Convert.ToBoolean(DriverBlockListScheduledTaskResultObject);
-                nestedObjectArray.Add(new HardeningModule.IndividualResult
+                nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "Fast weekly Microsoft recommended driver block list update",
                     Compliant = DriverBlockListScheduledTaskResult ? "True" : "False",
@@ -1827,10 +1827,10 @@ namespace HardeningModule
 
 
                 // Get the value and convert it to unsigned int16
-                ushort PlatformUpdatesChannel = Convert.ToUInt16(HardeningModule.GlobalVars.MDAVPreferencesCurrent.PlatformUpdatesChannel);
+                ushort PlatformUpdatesChannel = Convert.ToUInt16(HardenWindowsSecurity.GlobalVars.MDAVPreferencesCurrent.PlatformUpdatesChannel);
                 // resolve the number to a string using the dictionary
-                HardeningModule.DefenderPlatformUpdatesChannels.Channels.TryGetValue(PlatformUpdatesChannel, out string PlatformUpdatesChannelName);
-                nestedObjectArray.Add(new HardeningModule.IndividualResult
+                HardenWindowsSecurity.DefenderPlatformUpdatesChannels.Channels.TryGetValue(PlatformUpdatesChannel, out string PlatformUpdatesChannelName);
+                nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "Microsoft Defender Platform Updates Channel",
                     Compliant = "N/A",
@@ -1842,11 +1842,11 @@ namespace HardeningModule
 
 
                 // Get the value and convert it to unsigned int16
-                ushort EngineUpdatesChannel = Convert.ToUInt16(HardeningModule.GlobalVars.MDAVPreferencesCurrent.EngineUpdatesChannel);
+                ushort EngineUpdatesChannel = Convert.ToUInt16(HardenWindowsSecurity.GlobalVars.MDAVPreferencesCurrent.EngineUpdatesChannel);
 
                 // resolve the number to a string using the dictionary
-                HardeningModule.DefenderPlatformUpdatesChannels.Channels.TryGetValue(EngineUpdatesChannel, out string EngineUpdatesChannelName);
-                nestedObjectArray.Add(new HardeningModule.IndividualResult
+                HardenWindowsSecurity.DefenderPlatformUpdatesChannels.Channels.TryGetValue(EngineUpdatesChannel, out string EngineUpdatesChannelName);
+                nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "Microsoft Defender Engine Updates Channel",
                     Compliant = "N/A",
@@ -1859,12 +1859,12 @@ namespace HardeningModule
 
                 // the type of ControlledFolderAccessAllowedApplications is List<string>
                 // Cast to a more general collection type
-                var ControlledFolderAccessExclusionsApplications = HardeningModule.PropertyHelper.GetPropertyValue(HardeningModule.GlobalVars.MDAVPreferencesCurrent, "ControlledFolderAccessAllowedApplications") as IEnumerable<string>;
+                var ControlledFolderAccessExclusionsApplications = HardenWindowsSecurity.PropertyHelper.GetPropertyValue(HardenWindowsSecurity.GlobalVars.MDAVPreferencesCurrent, "ControlledFolderAccessAllowedApplications") as IEnumerable<string>;
 
                 // Convert the list to a comma-separated string to be easier to display in the output CSV file and console
                 string ControlledFolderAccessExclusionsResults = ControlledFolderAccessExclusionsApplications != null ? string.Join(", ", ControlledFolderAccessExclusionsApplications) : string.Empty;
 
-                nestedObjectArray.Add(new HardeningModule.IndividualResult
+                nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "Controlled Folder Access Exclusions",
                     Compliant = "N/A",
@@ -1876,8 +1876,8 @@ namespace HardeningModule
 
 
                 // Get the value and convert it to bool
-                bool AllowSwitchToAsyncInspectionResult = Convert.ToBoolean(HardeningModule.PropertyHelper.GetPropertyValue(HardeningModule.GlobalVars.MDAVPreferencesCurrent, "AllowSwitchToAsyncInspection"));
-                nestedObjectArray.Add(new HardeningModule.IndividualResult
+                bool AllowSwitchToAsyncInspectionResult = Convert.ToBoolean(HardenWindowsSecurity.PropertyHelper.GetPropertyValue(HardenWindowsSecurity.GlobalVars.MDAVPreferencesCurrent, "AllowSwitchToAsyncInspection"));
+                nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "Allow Switch To Async Inspection",
                     Compliant = AllowSwitchToAsyncInspectionResult ? "True" : "False",
@@ -1889,8 +1889,8 @@ namespace HardeningModule
 
 
                 // Get the value and convert it to bool
-                bool OOBEEnableRtpAndSigUpdateResult = Convert.ToBoolean(HardeningModule.PropertyHelper.GetPropertyValue(HardeningModule.GlobalVars.MDAVPreferencesCurrent, "oobeEnableRTpAndSigUpdate"));
-                nestedObjectArray.Add(new HardeningModule.IndividualResult
+                bool OOBEEnableRtpAndSigUpdateResult = Convert.ToBoolean(HardenWindowsSecurity.PropertyHelper.GetPropertyValue(HardenWindowsSecurity.GlobalVars.MDAVPreferencesCurrent, "oobeEnableRTpAndSigUpdate"));
+                nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "OOBE Enable Rtp And Sig Update",
                     Compliant = OOBEEnableRtpAndSigUpdateResult ? "True" : "False",
@@ -1902,8 +1902,8 @@ namespace HardeningModule
 
 
                 // Get the value and convert it to bool
-                bool IntelTDTEnabledResult = Convert.ToBoolean(HardeningModule.PropertyHelper.GetPropertyValue(HardeningModule.GlobalVars.MDAVPreferencesCurrent, "IntelTDTEnabled"));
-                nestedObjectArray.Add(new HardeningModule.IndividualResult
+                bool IntelTDTEnabledResult = Convert.ToBoolean(HardenWindowsSecurity.PropertyHelper.GetPropertyValue(HardenWindowsSecurity.GlobalVars.MDAVPreferencesCurrent, "IntelTDTEnabled"));
+                nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "Intel TDT Enabled",
                     Compliant = IntelTDTEnabledResult ? "True" : "False",
@@ -1915,8 +1915,8 @@ namespace HardeningModule
 
 
                 // Get the value and convert it to string
-                string SmartAppControlStateResult = Convert.ToString(HardeningModule.PropertyHelper.GetPropertyValue(HardeningModule.GlobalVars.MDAVConfigCurrent, "SmartAppControlState"));
-                nestedObjectArray.Add(new HardeningModule.IndividualResult
+                string SmartAppControlStateResult = Convert.ToString(HardenWindowsSecurity.PropertyHelper.GetPropertyValue(HardenWindowsSecurity.GlobalVars.MDAVConfigCurrent, "SmartAppControlState"));
+                nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "Smart App Control State",
                     Compliant = SmartAppControlStateResult.Equals("on", StringComparison.OrdinalIgnoreCase) ? "True" : "False",
@@ -1928,8 +1928,8 @@ namespace HardeningModule
 
 
                 // Get the value and convert it to string
-                string EnableControlledFolderAccessResult = Convert.ToString(HardeningModule.PropertyHelper.GetPropertyValue(HardeningModule.GlobalVars.MDAVPreferencesCurrent, "EnableControlledFolderAccess"));
-                nestedObjectArray.Add(new HardeningModule.IndividualResult
+                string EnableControlledFolderAccessResult = Convert.ToString(HardenWindowsSecurity.PropertyHelper.GetPropertyValue(HardenWindowsSecurity.GlobalVars.MDAVPreferencesCurrent, "EnableControlledFolderAccess"));
+                nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "Controlled Folder Access",
                     Compliant = EnableControlledFolderAccessResult.Equals("1", StringComparison.OrdinalIgnoreCase) ? "True" : "False",
@@ -1941,8 +1941,8 @@ namespace HardeningModule
 
 
                 // Get the value and convert it to bool
-                bool DisableRestorePointResult = Convert.ToBoolean(HardeningModule.PropertyHelper.GetPropertyValue(HardeningModule.GlobalVars.MDAVPreferencesCurrent, "DisableRestorePoint"));
-                nestedObjectArray.Add(new HardeningModule.IndividualResult
+                bool DisableRestorePointResult = Convert.ToBoolean(HardenWindowsSecurity.PropertyHelper.GetPropertyValue(HardenWindowsSecurity.GlobalVars.MDAVPreferencesCurrent, "DisableRestorePoint"));
+                nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "Enable Restore Point scanning",
                     Compliant = DisableRestorePointResult ? "False" : "True",
@@ -1956,8 +1956,8 @@ namespace HardeningModule
                 // Get the value and convert it to string
                 // Set-MpPreference -PerformanceModeStatus Enabled => (Get-MpPreference).PerformanceModeStatus == 1 => Turns on Dev Drive Protection in Microsoft Defender GUI
                 // Set-MpPreference -PerformanceModeStatus Disabled => (Get-MpPreference).PerformanceModeStatus == 0 => Turns off Dev Drive Protection in Microsoft Defender GUI
-                string PerformanceModeStatusResult = Convert.ToString(HardeningModule.PropertyHelper.GetPropertyValue(HardeningModule.GlobalVars.MDAVPreferencesCurrent, "PerformanceModeStatus"));
-                nestedObjectArray.Add(new HardeningModule.IndividualResult
+                string PerformanceModeStatusResult = Convert.ToString(HardenWindowsSecurity.PropertyHelper.GetPropertyValue(HardenWindowsSecurity.GlobalVars.MDAVPreferencesCurrent, "PerformanceModeStatus"));
+                nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "Performance Mode Status",
                     Compliant = PerformanceModeStatusResult.Equals("0", StringComparison.OrdinalIgnoreCase) ? "True" : "False",
@@ -1969,8 +1969,8 @@ namespace HardeningModule
 
 
                 // Get the value and convert it to bool
-                bool EnableConvertWarnToBlockResult = Convert.ToBoolean(HardeningModule.PropertyHelper.GetPropertyValue(HardeningModule.GlobalVars.MDAVPreferencesCurrent, "EnableConvertWarnToBlock"));
-                nestedObjectArray.Add(new HardeningModule.IndividualResult
+                bool EnableConvertWarnToBlockResult = Convert.ToBoolean(HardenWindowsSecurity.PropertyHelper.GetPropertyValue(HardenWindowsSecurity.GlobalVars.MDAVPreferencesCurrent, "EnableConvertWarnToBlock"));
+                nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "Enable Convert Warn To Block",
                     Compliant = EnableConvertWarnToBlockResult ? "True" : "False",
@@ -1982,7 +1982,7 @@ namespace HardeningModule
 
 
                 // Get the value and convert it to string
-                string BruteForceProtectionAggressivenessResult = Convert.ToString(HardeningModule.PropertyHelper.GetPropertyValue(HardeningModule.GlobalVars.MDAVPreferencesCurrent, "BruteForceProtectionAggressiveness"));
+                string BruteForceProtectionAggressivenessResult = Convert.ToString(HardenWindowsSecurity.PropertyHelper.GetPropertyValue(HardenWindowsSecurity.GlobalVars.MDAVPreferencesCurrent, "BruteForceProtectionAggressiveness"));
 
                 // Check if the value is not null
                 if (BruteForceProtectionAggressivenessResult != null)
@@ -1993,7 +1993,7 @@ namespace HardeningModule
               BruteForceProtectionAggressivenessResult.Equals("2", StringComparison.OrdinalIgnoreCase)
           )
                     {
-                        nestedObjectArray.Add(new HardeningModule.IndividualResult
+                        nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                         {
                             FriendlyName = "BruteForce Protection Aggressiveness",
                             Compliant = "True",
@@ -2005,7 +2005,7 @@ namespace HardeningModule
                     }
                     else
                     {
-                        nestedObjectArray.Add(new HardeningModule.IndividualResult
+                        nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                         {
                             FriendlyName = "BruteForce Protection Aggressiveness",
                             Compliant = "False",
@@ -2018,7 +2018,7 @@ namespace HardeningModule
                 }
                 else
                 {
-                    nestedObjectArray.Add(new HardeningModule.IndividualResult
+                    nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                     {
                         FriendlyName = "BruteForce Protection Aggressiveness",
                         Compliant = "False",
@@ -2031,7 +2031,7 @@ namespace HardeningModule
 
 
                 // Get the value and convert it to string
-                string BruteForceProtectionMaxBlockTimeResult = Convert.ToString(HardeningModule.PropertyHelper.GetPropertyValue(HardeningModule.GlobalVars.MDAVPreferencesCurrent, "BruteForceProtectionMaxBlockTime"));
+                string BruteForceProtectionMaxBlockTimeResult = Convert.ToString(HardenWindowsSecurity.PropertyHelper.GetPropertyValue(HardenWindowsSecurity.GlobalVars.MDAVPreferencesCurrent, "BruteForceProtectionMaxBlockTime"));
 
                 // Check if the value is not null
                 if (BruteForceProtectionMaxBlockTimeResult != null)
@@ -2042,7 +2042,7 @@ namespace HardeningModule
               BruteForceProtectionMaxBlockTimeResult.Equals("4294967295", StringComparison.OrdinalIgnoreCase)
           )
                     {
-                        nestedObjectArray.Add(new HardeningModule.IndividualResult
+                        nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                         {
                             FriendlyName = "BruteForce Protection Max Block Time",
                             Compliant = "True",
@@ -2054,7 +2054,7 @@ namespace HardeningModule
                     }
                     else
                     {
-                        nestedObjectArray.Add(new HardeningModule.IndividualResult
+                        nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                         {
                             FriendlyName = "BruteForce Protection Max Block Time",
                             Compliant = "False",
@@ -2067,7 +2067,7 @@ namespace HardeningModule
                 }
                 else
                 {
-                    nestedObjectArray.Add(new HardeningModule.IndividualResult
+                    nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                     {
                         FriendlyName = "BruteForce Protection Max Block Time",
                         Compliant = "False",
@@ -2080,8 +2080,8 @@ namespace HardeningModule
 
 
                 // Get the value and convert it to string
-                string BruteForceProtectionConfiguredStateResult = Convert.ToString(HardeningModule.PropertyHelper.GetPropertyValue(HardeningModule.GlobalVars.MDAVPreferencesCurrent, "BruteForceProtectionConfiguredState"));
-                nestedObjectArray.Add(new HardeningModule.IndividualResult
+                string BruteForceProtectionConfiguredStateResult = Convert.ToString(HardenWindowsSecurity.PropertyHelper.GetPropertyValue(HardenWindowsSecurity.GlobalVars.MDAVPreferencesCurrent, "BruteForceProtectionConfiguredState"));
+                nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "BruteForce Protection Configured State",
                     Compliant = BruteForceProtectionConfiguredStateResult.Equals("1", StringComparison.OrdinalIgnoreCase) ? "True" : "False",
@@ -2093,7 +2093,7 @@ namespace HardeningModule
 
 
                 // Get the value and convert it to string
-                string RemoteEncryptionProtectionMaxBlockTimeResult = Convert.ToString(HardeningModule.PropertyHelper.GetPropertyValue(HardeningModule.GlobalVars.MDAVPreferencesCurrent, "RemoteEncryptionProtectionMaxBlockTime"));
+                string RemoteEncryptionProtectionMaxBlockTimeResult = Convert.ToString(HardenWindowsSecurity.PropertyHelper.GetPropertyValue(HardenWindowsSecurity.GlobalVars.MDAVPreferencesCurrent, "RemoteEncryptionProtectionMaxBlockTime"));
 
                 // Check if the value is not null
                 if (RemoteEncryptionProtectionMaxBlockTimeResult != null)
@@ -2104,7 +2104,7 @@ namespace HardeningModule
               RemoteEncryptionProtectionMaxBlockTimeResult.Equals("4294967295", StringComparison.OrdinalIgnoreCase)
                   )
                     {
-                        nestedObjectArray.Add(new HardeningModule.IndividualResult
+                        nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                         {
                             FriendlyName = "Remote Encryption Protection Max Block Time",
                             Compliant = "True",
@@ -2116,7 +2116,7 @@ namespace HardeningModule
                     }
                     else
                     {
-                        nestedObjectArray.Add(new HardeningModule.IndividualResult
+                        nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                         {
                             FriendlyName = "Remote Encryption Protection Max Block Time",
                             Compliant = "False",
@@ -2129,7 +2129,7 @@ namespace HardeningModule
                 }
                 else
                 {
-                    nestedObjectArray.Add(new HardeningModule.IndividualResult
+                    nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                     {
                         FriendlyName = "Remote Encryption Protection Max Block Time",
                         Compliant = "False",
@@ -2142,8 +2142,8 @@ namespace HardeningModule
 
 
                 // Get the value and convert it to string
-                string RemoteEncryptionProtectionAggressivenessResult = Convert.ToString(HardeningModule.PropertyHelper.GetPropertyValue(HardeningModule.GlobalVars.MDAVPreferencesCurrent, "RemoteEncryptionProtectionAggressiveness"));
-                nestedObjectArray.Add(new HardeningModule.IndividualResult
+                string RemoteEncryptionProtectionAggressivenessResult = Convert.ToString(HardenWindowsSecurity.PropertyHelper.GetPropertyValue(HardenWindowsSecurity.GlobalVars.MDAVPreferencesCurrent, "RemoteEncryptionProtectionAggressiveness"));
+                nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "Remote Encryption Protection Aggressiveness",
                     // Check if the value is 1 or 2, both are compliant
@@ -2156,8 +2156,8 @@ namespace HardeningModule
 
 
                 // Get the value and convert it to string
-                string RemoteEncryptionProtectionConfiguredStateResult = Convert.ToString(HardeningModule.PropertyHelper.GetPropertyValue(HardeningModule.GlobalVars.MDAVPreferencesCurrent, "RemoteEncryptionProtectionConfiguredState"));
-                nestedObjectArray.Add(new HardeningModule.IndividualResult
+                string RemoteEncryptionProtectionConfiguredStateResult = Convert.ToString(HardenWindowsSecurity.PropertyHelper.GetPropertyValue(HardenWindowsSecurity.GlobalVars.MDAVPreferencesCurrent, "RemoteEncryptionProtectionConfiguredState"));
+                nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "Remote Encryption Protection Configured State",
                     Compliant = RemoteEncryptionProtectionConfiguredStateResult.Equals("1", StringComparison.OrdinalIgnoreCase) ? "True" : "False",
@@ -2170,8 +2170,8 @@ namespace HardeningModule
 
                 // Get the value and convert it to string
                 // https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-defender#cloudblocklevel
-                string CloudBlockLevelResult = Convert.ToString(HardeningModule.PropertyHelper.GetPropertyValue(HardeningModule.GlobalVars.MDAVPreferencesCurrent, "CloudBlockLevel"));
-                nestedObjectArray.Add(new HardeningModule.IndividualResult
+                string CloudBlockLevelResult = Convert.ToString(HardenWindowsSecurity.PropertyHelper.GetPropertyValue(HardenWindowsSecurity.GlobalVars.MDAVPreferencesCurrent, "CloudBlockLevel"));
+                nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "Cloud Block Level",
                     Compliant = CloudBlockLevelResult.Equals("6", StringComparison.OrdinalIgnoreCase) ? "True" : "False",
@@ -2184,8 +2184,8 @@ namespace HardeningModule
 
                 // Get the value and convert it to bool
                 // https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-defender#allowemailscanning
-                bool DisableEmailScanningResult = Convert.ToBoolean(HardeningModule.PropertyHelper.GetPropertyValue(HardeningModule.GlobalVars.MDAVPreferencesCurrent, "DisableEmailScanning"));
-                nestedObjectArray.Add(new HardeningModule.IndividualResult
+                bool DisableEmailScanningResult = Convert.ToBoolean(HardenWindowsSecurity.PropertyHelper.GetPropertyValue(HardenWindowsSecurity.GlobalVars.MDAVPreferencesCurrent, "DisableEmailScanning"));
+                nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "Email Scanning",
                     Compliant = DisableEmailScanningResult ? "False" : "True",
@@ -2198,8 +2198,8 @@ namespace HardeningModule
 
                 // Get the value and convert it to string
                 // https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-defender#submitsamplesconsent
-                string SubmitSamplesConsentResult = Convert.ToString(HardeningModule.PropertyHelper.GetPropertyValue(HardeningModule.GlobalVars.MDAVPreferencesCurrent, "SubmitSamplesConsent"));
-                nestedObjectArray.Add(new HardeningModule.IndividualResult
+                string SubmitSamplesConsentResult = Convert.ToString(HardenWindowsSecurity.PropertyHelper.GetPropertyValue(HardenWindowsSecurity.GlobalVars.MDAVPreferencesCurrent, "SubmitSamplesConsent"));
+                nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "Send file samples when further analysis is required",
                     Compliant = SubmitSamplesConsentResult.Equals("3", StringComparison.OrdinalIgnoreCase) ? "True" : "False",
@@ -2212,8 +2212,8 @@ namespace HardeningModule
 
                 // Get the value and convert it to string
                 // https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-defender#allowcloudprotection
-                string MAPSReportingResult = Convert.ToString(HardeningModule.PropertyHelper.GetPropertyValue(HardeningModule.GlobalVars.MDAVPreferencesCurrent, "MAPSReporting"));
-                nestedObjectArray.Add(new HardeningModule.IndividualResult
+                string MAPSReportingResult = Convert.ToString(HardenWindowsSecurity.PropertyHelper.GetPropertyValue(HardenWindowsSecurity.GlobalVars.MDAVPreferencesCurrent, "MAPSReporting"));
+                nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "Join Microsoft MAPS (aka SpyNet)",
                     Compliant = MAPSReportingResult.Equals("2", StringComparison.OrdinalIgnoreCase) ? "True" : "False",
@@ -2226,8 +2226,8 @@ namespace HardeningModule
 
                 // Get the value and convert it to bool
                 // https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-admx-microsoftdefenderantivirus#mpengine_enablefilehashcomputation
-                bool EnableFileHashComputationResult = Convert.ToBoolean(HardeningModule.PropertyHelper.GetPropertyValue(HardeningModule.GlobalVars.MDAVPreferencesCurrent, "EnableFileHashComputation"));
-                nestedObjectArray.Add(new HardeningModule.IndividualResult
+                bool EnableFileHashComputationResult = Convert.ToBoolean(HardenWindowsSecurity.PropertyHelper.GetPropertyValue(HardenWindowsSecurity.GlobalVars.MDAVPreferencesCurrent, "EnableFileHashComputation"));
+                nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "File Hash Computation",
                     Compliant = EnableFileHashComputationResult ? "True" : "False",
@@ -2240,8 +2240,8 @@ namespace HardeningModule
 
                 // Get the value and convert it to string
                 // https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-defender#cloudextendedtimeout
-                string CloudExtendedTimeoutResult = Convert.ToString(HardeningModule.PropertyHelper.GetPropertyValue(HardeningModule.GlobalVars.MDAVPreferencesCurrent, "CloudExtendedTimeout"));
-                nestedObjectArray.Add(new HardeningModule.IndividualResult
+                string CloudExtendedTimeoutResult = Convert.ToString(HardenWindowsSecurity.PropertyHelper.GetPropertyValue(HardenWindowsSecurity.GlobalVars.MDAVPreferencesCurrent, "CloudExtendedTimeout"));
+                nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "Extended cloud check (Seconds)",
                     Compliant = CloudExtendedTimeoutResult.Equals("50", StringComparison.OrdinalIgnoreCase) ? "True" : "False",
@@ -2254,8 +2254,8 @@ namespace HardeningModule
 
                 // Get the value and convert it to string
                 // https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-defender#puaprotection
-                string PUAProtectionResult = Convert.ToString(HardeningModule.PropertyHelper.GetPropertyValue(HardeningModule.GlobalVars.MDAVPreferencesCurrent, "PUAProtection"));
-                nestedObjectArray.Add(new HardeningModule.IndividualResult
+                string PUAProtectionResult = Convert.ToString(HardenWindowsSecurity.PropertyHelper.GetPropertyValue(HardenWindowsSecurity.GlobalVars.MDAVPreferencesCurrent, "PUAProtection"));
+                nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "Detection for potentially unwanted applications",
                     Compliant = PUAProtectionResult.Equals("1", StringComparison.OrdinalIgnoreCase) ? "True" : "False",
@@ -2268,8 +2268,8 @@ namespace HardeningModule
 
                 // Get the value and convert it to bool
                 // https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-defender#disablecatchupquickscan
-                bool DisableCatchupQuickScanResult = Convert.ToBoolean(HardeningModule.PropertyHelper.GetPropertyValue(HardeningModule.GlobalVars.MDAVPreferencesCurrent, "DisableCatchupQuickScan"));
-                nestedObjectArray.Add(new HardeningModule.IndividualResult
+                bool DisableCatchupQuickScanResult = Convert.ToBoolean(HardenWindowsSecurity.PropertyHelper.GetPropertyValue(HardenWindowsSecurity.GlobalVars.MDAVPreferencesCurrent, "DisableCatchupQuickScan"));
+                nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "Catchup Quick Scan",
                     Compliant = DisableCatchupQuickScanResult ? "False" : "True",
@@ -2282,8 +2282,8 @@ namespace HardeningModule
 
                 // Get the value and convert it to bool
                 // https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-defender#checkforsignaturesbeforerunningscan
-                bool CheckForSignaturesBeforeRunningScanResult = Convert.ToBoolean(HardeningModule.PropertyHelper.GetPropertyValue(HardeningModule.GlobalVars.MDAVPreferencesCurrent, "CheckForSignaturesBeforeRunningScan"));
-                nestedObjectArray.Add(new HardeningModule.IndividualResult
+                bool CheckForSignaturesBeforeRunningScanResult = Convert.ToBoolean(HardenWindowsSecurity.PropertyHelper.GetPropertyValue(HardenWindowsSecurity.GlobalVars.MDAVPreferencesCurrent, "CheckForSignaturesBeforeRunningScan"));
+                nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "Check For Signatures Before Running Scan",
                     Compliant = CheckForSignaturesBeforeRunningScanResult ? "True" : "False",
@@ -2296,8 +2296,8 @@ namespace HardeningModule
 
                 // Get the value and convert it to string
                 // https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-defender#enablenetworkprotection
-                string EnableNetworkProtectionResult = Convert.ToString(HardeningModule.PropertyHelper.GetPropertyValue(HardeningModule.GlobalVars.MDAVPreferencesCurrent, "EnableNetworkProtection"));
-                nestedObjectArray.Add(new HardeningModule.IndividualResult
+                string EnableNetworkProtectionResult = Convert.ToString(HardenWindowsSecurity.PropertyHelper.GetPropertyValue(HardenWindowsSecurity.GlobalVars.MDAVPreferencesCurrent, "EnableNetworkProtection"));
+                nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "Enable Network Protection",
                     Compliant = EnableNetworkProtectionResult.Equals("1", StringComparison.OrdinalIgnoreCase) ? "True" : "False",
@@ -2310,8 +2310,8 @@ namespace HardeningModule
 
                 // Get the value and convert it to string
                 // https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-defender#signatureupdateinterval
-                string SignatureUpdateIntervalResult = Convert.ToString(HardeningModule.PropertyHelper.GetPropertyValue(HardeningModule.GlobalVars.MDAVPreferencesCurrent, "SignatureUpdateInterval"));
-                nestedObjectArray.Add(new HardeningModule.IndividualResult
+                string SignatureUpdateIntervalResult = Convert.ToString(HardenWindowsSecurity.PropertyHelper.GetPropertyValue(HardenWindowsSecurity.GlobalVars.MDAVPreferencesCurrent, "SignatureUpdateInterval"));
+                nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "Interval to check for security intelligence updates",
                     Compliant = SignatureUpdateIntervalResult.Equals("3", StringComparison.OrdinalIgnoreCase) ? "True" : "False",
@@ -2324,8 +2324,8 @@ namespace HardeningModule
 
                 // Get the value and convert it to string
                 // https://learn.microsoft.com/en-us/windows/client-management/mdm/defender-csp#configurationmeteredconnectionupdates
-                bool MeteredConnectionUpdatesResult = Convert.ToBoolean(HardeningModule.PropertyHelper.GetPropertyValue(HardeningModule.GlobalVars.MDAVPreferencesCurrent, "MeteredConnectionUpdates"));
-                nestedObjectArray.Add(new HardeningModule.IndividualResult
+                bool MeteredConnectionUpdatesResult = Convert.ToBoolean(HardenWindowsSecurity.PropertyHelper.GetPropertyValue(HardenWindowsSecurity.GlobalVars.MDAVPreferencesCurrent, "MeteredConnectionUpdates"));
+                nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "Allows Microsoft Defender Antivirus to update over a metered connection",
                     Compliant = MeteredConnectionUpdatesResult ? "True" : "False",
@@ -2338,8 +2338,8 @@ namespace HardeningModule
 
                 // Get the value and convert it to string
                 // https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-defender#threatseveritydefaultaction
-                string SevereThreatDefaultActionResult = Convert.ToString(HardeningModule.PropertyHelper.GetPropertyValue(HardeningModule.GlobalVars.MDAVPreferencesCurrent, "SevereThreatDefaultAction"));
-                nestedObjectArray.Add(new HardeningModule.IndividualResult
+                string SevereThreatDefaultActionResult = Convert.ToString(HardenWindowsSecurity.PropertyHelper.GetPropertyValue(HardenWindowsSecurity.GlobalVars.MDAVPreferencesCurrent, "SevereThreatDefaultAction"));
+                nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "Severe Threat level default action = Remove",
                     Compliant = SevereThreatDefaultActionResult.Equals("3", StringComparison.OrdinalIgnoreCase) ? "True" : "False",
@@ -2352,8 +2352,8 @@ namespace HardeningModule
 
                 // Get the value and convert it to string
                 // https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-defender#threatseveritydefaultaction
-                string HighThreatDefaultActionResult = Convert.ToString(HardeningModule.PropertyHelper.GetPropertyValue(HardeningModule.GlobalVars.MDAVPreferencesCurrent, "HighThreatDefaultAction"));
-                nestedObjectArray.Add(new HardeningModule.IndividualResult
+                string HighThreatDefaultActionResult = Convert.ToString(HardenWindowsSecurity.PropertyHelper.GetPropertyValue(HardenWindowsSecurity.GlobalVars.MDAVPreferencesCurrent, "HighThreatDefaultAction"));
+                nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "High Threat level default action = Remove",
                     Compliant = HighThreatDefaultActionResult.Equals("3", StringComparison.OrdinalIgnoreCase) ? "True" : "False",
@@ -2366,8 +2366,8 @@ namespace HardeningModule
 
                 // Get the value and convert it to string
                 // https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-defender#threatseveritydefaultaction
-                string ModerateThreatDefaultActionResult = Convert.ToString(HardeningModule.PropertyHelper.GetPropertyValue(HardeningModule.GlobalVars.MDAVPreferencesCurrent, "ModerateThreatDefaultAction"));
-                nestedObjectArray.Add(new HardeningModule.IndividualResult
+                string ModerateThreatDefaultActionResult = Convert.ToString(HardenWindowsSecurity.PropertyHelper.GetPropertyValue(HardenWindowsSecurity.GlobalVars.MDAVPreferencesCurrent, "ModerateThreatDefaultAction"));
+                nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "Moderate Threat level default action = Quarantine",
                     Compliant = ModerateThreatDefaultActionResult.Equals("2", StringComparison.OrdinalIgnoreCase) ? "True" : "False",
@@ -2380,8 +2380,8 @@ namespace HardeningModule
 
                 // Get the value and convert it to string
                 // https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-defender#threatseveritydefaultaction
-                string LowThreatDefaultActionResult = Convert.ToString(HardeningModule.PropertyHelper.GetPropertyValue(HardeningModule.GlobalVars.MDAVPreferencesCurrent, "LowThreatDefaultAction"));
-                nestedObjectArray.Add(new HardeningModule.IndividualResult
+                string LowThreatDefaultActionResult = Convert.ToString(HardenWindowsSecurity.PropertyHelper.GetPropertyValue(HardenWindowsSecurity.GlobalVars.MDAVPreferencesCurrent, "LowThreatDefaultAction"));
+                nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "Low Threat level default action = Quarantine",
                     Compliant = LowThreatDefaultActionResult.Equals("2", StringComparison.OrdinalIgnoreCase) ? "True" : "False",
@@ -2393,9 +2393,9 @@ namespace HardeningModule
 
 
                 // Get the control from MDM CIM
-                HardeningModule.HashtableCheckerResult MDM_Policy_Result01_System02_AllowTelemetry = HardeningModule.HashtableChecker.CheckValue<string>(HardeningModule.GlobalVars.MDM_Policy_Result01_System02, "AllowTelemetry", "3");
+                HardenWindowsSecurity.HashtableCheckerResult MDM_Policy_Result01_System02_AllowTelemetry = HardenWindowsSecurity.HashtableChecker.CheckValue<string>(HardenWindowsSecurity.GlobalVars.MDM_Policy_Result01_System02, "AllowTelemetry", "3");
 
-                nestedObjectArray.Add(new HardeningModule.IndividualResult
+                nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "Optional Diagnostic Data Required for Smart App Control etc.",
                     Compliant = MDM_Policy_Result01_System02_AllowTelemetry.IsMatch ? "True" : "False",
@@ -2407,9 +2407,9 @@ namespace HardeningModule
 
 
                 // Get the control from MDM CIM
-                HardeningModule.HashtableCheckerResult MDM_Policy_Result01_System02_ConfigureTelemetryOptInSettingsUx = HardeningModule.HashtableChecker.CheckValue<string>(HardeningModule.GlobalVars.MDM_Policy_Result01_System02, "ConfigureTelemetryOptInSettingsUx", "1");
+                HardenWindowsSecurity.HashtableCheckerResult MDM_Policy_Result01_System02_ConfigureTelemetryOptInSettingsUx = HardenWindowsSecurity.HashtableChecker.CheckValue<string>(HardenWindowsSecurity.GlobalVars.MDM_Policy_Result01_System02, "ConfigureTelemetryOptInSettingsUx", "1");
 
-                nestedObjectArray.Add(new HardeningModule.IndividualResult
+                nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "Configure diagnostic data opt-in settings user interface",
                     Compliant = MDM_Policy_Result01_System02_ConfigureTelemetryOptInSettingsUx.IsMatch ? "True" : "False",
@@ -2421,12 +2421,12 @@ namespace HardeningModule
 
 
                 // Process items in Registry resources.csv file with "Group Policy" origin and add them to the $NestedObjectArray array
-                foreach (var Result in (HardeningModule.CategoryProcessing.ProcessCategory(CatName, "Group Policy")))
+                foreach (var Result in (HardenWindowsSecurity.CategoryProcessing.ProcessCategory(CatName, "Group Policy")))
                 {
-                    HardeningModule.ConditionalResultAdd.Add(nestedObjectArray, Result);
+                    HardenWindowsSecurity.ConditionalResultAdd.Add(nestedObjectArray, Result);
                 }
 
-                HardeningModule.GlobalVars.FinalMegaObject.TryAdd(CatName, nestedObjectArray);
+                HardenWindowsSecurity.GlobalVars.FinalMegaObject.TryAdd(CatName, nestedObjectArray);
             });
         }
     }

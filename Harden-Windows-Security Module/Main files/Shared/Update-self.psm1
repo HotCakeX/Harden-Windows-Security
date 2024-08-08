@@ -20,7 +20,7 @@ function Update-self {
     )
 
     # Get the current module's version
-    [System.Version]$CurrentVersion = (Test-ModuleManifest -Path "$([HardeningModule.GlobalVars]::Path)\Harden-Windows-Security-Module.psd1").Version
+    [System.Version]$CurrentVersion = (Test-ModuleManifest -Path "$([HardenWindowsSecurity.GlobalVars]::Path)\Harden-Windows-Security-Module.psd1").Version
 
     # Get the latest version from GitHub
     [System.Version]$LatestVersion = Invoke-RestMethod -Uri 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Harden-Windows-Security%20Module/version.txt' -ProgressAction SilentlyContinue
@@ -29,14 +29,14 @@ function Update-self {
         Write-Output -InputObject "$($PSStyle.Foreground.FromRGB(255,105,180))The currently installed module's version is $CurrentVersion while the latest version is $LatestVersion - Auto Updating the module... 💓$($PSStyle.Reset)"
 
         # Only attempt to auto update the module if running as Admin, because Controlled Folder Access exclusion modification requires Admin privs
-        if (-NOT ([HardeningModule.UserPrivCheck]::IsAdmin())) {
+        if (-NOT ([HardenWindowsSecurity.UserPrivCheck]::IsAdmin())) {
             Throw 'There is a new update available, please run the cmdlet as Admin to update the module.'
         }
 
         Remove-Module -Name 'Harden-Windows-Security-Module' -Force
 
         try {
-            [HardeningModule.ControlledFolderAccessHandler]::Start()
+            [HardenWindowsSecurity.ControlledFolderAccessHandler]::Start()
 
             # Do this if the module was installed properly using Install-module cmdlet
             Uninstall-Module -Name 'Harden-Windows-Security-Module' -AllVersions -Force
@@ -49,7 +49,7 @@ function Update-self {
             # Will not import the new module version in the current session because of the constant variables. New version is automatically imported when the main cmdlet is run in a new session.
         }
         finally {
-            [HardeningModule.ControlledFolderAccessHandler]::reset()
+            [HardenWindowsSecurity.ControlledFolderAccessHandler]::reset()
         }
 
         Write-Output -InputObject "$($PSStyle.Foreground.FromRGB(152,255,152))Update has been successful, running your command now$($PSStyle.Reset)"

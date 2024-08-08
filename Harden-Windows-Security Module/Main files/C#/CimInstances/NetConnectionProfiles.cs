@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Management;
 
-namespace HardeningModule
+namespace HardenWindowsSecurity
 {
     public class NetConnectionProfiles
     {
@@ -42,7 +42,7 @@ namespace HardeningModule
             }
             catch (Exception e)
             {
-                HardeningModule.VerboseLogger.Write($"An error occurred: {e.Message}");
+                HardenWindowsSecurity.VerboseLogger.Write($"An error occurred: {e.Message}");
             }
             // Return the list of profiles
             return profiles;
@@ -54,8 +54,8 @@ namespace HardeningModule
         /// <param name="interfaceIndices">Array of InterfaceIndex values of the network connection profiles.</param>
         /// <param name="interfaceAliases">Array of InterfaceAlias values of the network connection profiles.</param>
         /// <param name="networkCategory">The new NetworkCategory to set.</param>
-        /// PS Example: [HardeningModule.NetConnectionProfiles]::Set((3, 22), $null, [HardeningModule.NetConnectionProfiles+NetworkCategory]::public)
-        /// PS Example: [HardeningModule.NetConnectionProfiles]::Set($null, ('Ethernet', 'Wi-Fi'), [HardeningModule.NetConnectionProfiles+NetworkCategory]::private)
+        /// PS Example: [HardenWindowsSecurity.NetConnectionProfiles]::Set((3, 22), $null, [HardenWindowsSecurity.NetConnectionProfiles+NetworkCategory]::public)
+        /// PS Example: [HardenWindowsSecurity.NetConnectionProfiles]::Set($null, ('Ethernet', 'Wi-Fi'), [HardenWindowsSecurity.NetConnectionProfiles+NetworkCategory]::private)
         /// <returns>True if successful, otherwise false.</returns>
         public static bool Set(int[] interfaceIndices, string[] interfaceAliases, NetworkCategory networkCategory)
         {
@@ -91,7 +91,7 @@ namespace HardeningModule
             }
             catch (Exception e)
             {
-                HardeningModule.VerboseLogger.Write($"An error occurred: {e.Message}");
+                HardenWindowsSecurity.VerboseLogger.Write($"An error occurred: {e.Message}");
                 return false;
             }
         }

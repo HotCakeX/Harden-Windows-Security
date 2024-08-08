@@ -1,7 +1,7 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace HardeningModule
+namespace HardenWindowsSecurity
 {
     public class FirmwareChecker
     {

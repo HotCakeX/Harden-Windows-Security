@@ -16,40 +16,40 @@ namespace HardenWindowsSecurity
     // Class that stores the information about each key protector
     public class KeyProtector
     {
-        public string KeyProtectorType { get; set; }
-        public string KeyProtectorID { get; set; }
+        public string? KeyProtectorType { get; set; }
+        public string? KeyProtectorID { get; set; }
         public bool AutoUnlockProtector { get; set; }
-        public string KeyFileName { get; set; }
-        public string RecoveryPassword { get; set; }
-        public string KeyCertificateType { get; set; }
-        public string Thumbprint { get; set; }
+        public string? KeyFileName { get; set; }
+        public string? RecoveryPassword { get; set; }
+        public string? KeyCertificateType { get; set; }
+        public string? Thumbprint { get; set; }
     }
 
     // class that stores the information about BitLocker protected volumes
     public class BitLockerVolume
     {
-        public string MountPoint { get; set; }
-        public string EncryptionMethod { get; set; }
-        public string EncryptionMethodFlags { get; set; }
+        public string? MountPoint { get; set; }
+        public string? EncryptionMethod { get; set; }
+        public string? EncryptionMethodFlags { get; set; }
         public bool AutoUnlockEnabled { get; set; }
         public bool AutoUnlockKeyStored { get; set; }
 
         // https://learn.microsoft.com/en-us/windows/win32/secprov/getversion-win32-encryptablevolume#parameters
         public uint MetadataVersion { get; set; }
 
-        public string ConversionStatus { get; set; }
-        public string ProtectionStatus { get; set; }
-        public string LockStatus { get; set; }
-        public string EncryptionPercentage { get; set; }
-        public string WipePercentage { get; set; }
-        public string WipingStatus { get; set; }
-        public string VolumeType { get; set; }
-        public string CapacityGB { get; set; }
-        public string FileSystemType { get; set; }
-        public string FriendlyName { get; set; }
-        public string AllocationUnitSize { get; set; }
-        public string ReFSDedupMode { get; set; }
-        public List<KeyProtector> KeyProtector { get; set; }
+        public string? ConversionStatus { get; set; }
+        public string? ProtectionStatus { get; set; }
+        public string? LockStatus { get; set; }
+        public string? EncryptionPercentage { get; set; }
+        public string? WipePercentage { get; set; }
+        public string? WipingStatus { get; set; }
+        public string? VolumeType { get; set; }
+        public string? CapacityGB { get; set; }
+        public string? FileSystemType { get; set; }
+        public string? FriendlyName { get; set; }
+        public string? AllocationUnitSize { get; set; }
+        public string? ReFSDedupMode { get; set; }
+        public List<KeyProtector>? KeyProtector { get; set; }
     }
 
     public static class BitLockerInfo

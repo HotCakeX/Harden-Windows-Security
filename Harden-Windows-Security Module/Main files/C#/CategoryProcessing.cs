@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using Microsoft.Win32;
 using System.Text;
+using System.Globalization;
 
 namespace HardenWindowsSecurity
 {
@@ -217,7 +218,7 @@ namespace HardenWindowsSecurity
                             if (regValue is int)
                             {
                                 // Handle the case where the DWORD value is returned as an int
-                                regValueStr = ((uint)(int)regValue).ToString();
+                                regValueStr = ((uint)(int)regValue).ToString(CultureInfo.InvariantCulture);
                             }
                             else if (regValue is uint)
                             {
@@ -266,12 +267,12 @@ namespace HardenWindowsSecurity
                 case "DWORD":
                     {
                         // DWORD values are typically 32-bit unsigned integers
-                        return uint.Parse(value);
+                        return uint.Parse(value, CultureInfo.InvariantCulture);
                     }
                 case "QWORD":
                     {
                         // QWORD values are typically 64-bit integers
-                        return long.Parse(value);
+                        return long.Parse(value, CultureInfo.InvariantCulture);
                     }
                 case "String":
                     {
@@ -310,7 +311,7 @@ namespace HardenWindowsSecurity
                     case "QWORD":
                         {
                             // QWORD values are typically 64-bit integers
-                            return Convert.ToInt64(regValue) == (long)expectedValue;
+                            return Convert.ToInt64(regValue, CultureInfo.InvariantCulture) == (long)expectedValue;
                         }
                     case "String":
                         {

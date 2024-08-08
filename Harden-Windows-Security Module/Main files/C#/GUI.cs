@@ -88,7 +88,7 @@ namespace HardenWindowsSecurity
         static GUI()
         {
             // Defining the correlation between Categories and which Sub-Categories they activate
-            correlation = new System.Collections.Hashtable
+            correlation = new System.Collections.Hashtable(StringComparer.OrdinalIgnoreCase)
             {
                 { "MicrosoftSecurityBaselines", new string[] { "SecBaselines_NoOverrides" } },
                 { "MicrosoftDefender", new string[] { "MSFTDefender_SAC", "MSFTDefender_NoDiagData", "MSFTDefender_NoScheduledTask", "MSFTDefender_BetaChannels" } },
@@ -281,7 +281,7 @@ namespace HardenWindowsSecurity
                 string categoryContent = ((System.Windows.Controls.CheckBox)categoryItem.Content).Name;
                 if (correlation.Contains(categoryContent))
                 {
-                    foreach (string subCategoryName in (string[])correlation[categoryContent])
+                    foreach (string subCategoryName in correlation[categoryContent] as string[])
                     {
                         foreach (var item in subCategories.Items)
                         {

@@ -1,5 +1,8 @@
 using System;
 using System.Runtime.InteropServices;
+using System.Globalization;
+
+#nullable enable
 
 namespace HardenWindowsSecurity
 {
@@ -8,7 +11,7 @@ namespace HardenWindowsSecurity
     {
         public bool IsEnabled { get; set; }
         public bool IsActivated { get; set; }
-        public string ErrorMessage { get; set; }
+        public string? ErrorMessage { get; set; }
     }
 
     public static class TpmStatus
@@ -18,7 +21,7 @@ namespace HardenWindowsSecurity
         {
             bool isEnabled = false;
             bool isActivated = false;
-            string errorMessage = null;
+            string? errorMessage = null;
 
             byte isEnabledByte;
             byte isActivatedByte;

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Management;
 using System.Threading.Tasks;
+using System.Globalization;
 
 /// root\cimv2\mdm is the namespace for CSPs
 /// https://learn.microsoft.com/en-us/windows/win32/wmisdk/common-information-model

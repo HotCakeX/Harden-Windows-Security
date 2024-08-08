@@ -27,11 +27,20 @@ namespace HardenWindowsSecurity
                 if (results.Count > 0)
                 {
                     var result = results.Cast<ManagementBaseObject>().FirstOrDefault();
-                    return ConvertToDynamic(result);
+
+                    if (result != null)
+                    {
+
+                        return ConvertToDynamic(result);
+                    }
+                    else
+                    {
+                        throw new Exception("Failed to get MpComputerPreference");
+                    }
                 }
                 else
                 {
-                    return null;
+                    throw new Exception("Failed to get MpComputerPreference");
                 }
             }
             catch (ManagementException ex)

@@ -12,6 +12,8 @@ using System.Linq;
 using System.Windows.Forms;
 using System.Collections.Concurrent;
 using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Effects;
 
 namespace HardenWindowsSecurity
 {

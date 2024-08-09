@@ -10,11 +10,11 @@ namespace HardenWindowsSecurity
     // Represents a record in the security policy
     public class SecurityPolicyRecord
     {
-        public string Category { get; set; }
-        public string Section { get; set; }
-        public string Path { get; set; }
-        public string Value { get; set; }
-        public string Name { get; set; }
+        public string? Category { get; set; }
+        public string? Section { get; set; }
+        public string? Path { get; set; }
+        public string? Value { get; set; }
+        public string? Name { get; set; }
     }
 
     // Processes the CSV file "SecurityPoliciesVerification.csv" containing security policy records
@@ -29,7 +29,7 @@ namespace HardenWindowsSecurity
             using (StreamReader reader = new StreamReader(csvFilePath))
             {
                 // Read the header line
-                string header = reader.ReadLine();
+                string? header = reader.ReadLine();
 
                 // Return if the header is null
                 if (header == null) return securityPolicyRecordsOutput;
@@ -37,7 +37,7 @@ namespace HardenWindowsSecurity
                 // Read the rest of the file line by line
                 while (!reader.EndOfStream)
                 {
-                    string line = reader.ReadLine();
+                    string? line = reader.ReadLine();
 
                     // Skip null lines
                     if (line == null) continue;

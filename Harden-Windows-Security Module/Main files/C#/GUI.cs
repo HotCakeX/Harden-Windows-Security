@@ -12,8 +12,6 @@ using System.Linq;
 using System.Windows.Forms;
 using System.Collections.Concurrent;
 
-#nullable enable
-
 namespace HardenWindowsSecurity
 {
     /// <summary>

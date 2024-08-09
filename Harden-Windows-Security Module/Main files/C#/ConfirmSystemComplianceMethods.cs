@@ -267,9 +267,12 @@ namespace HardenWindowsSecurity
 
                 string CatName = "WindowsUpdateConfigurations";
 
-
                 // Get the control from MDM CIM
-                HardenWindowsSecurity.HashtableCheckerResult MDM_Policy_Result01_Update02_AllowAutoWindowsUpdateDownloadOverMeteredNetwork = HardenWindowsSecurity.HashtableChecker.CheckValue<string>(HardenWindowsSecurity.GlobalVars.MDM_Policy_Result01_Update02, "AllowAutoWindowsUpdateDownloadOverMeteredNetwork", "1");
+                var mdmPolicy = HardenWindowsSecurity.GlobalVars.MDM_Policy_Result01_Update02
+                ?? throw new InvalidOperationException("MDM_Policy_Result01_Update02 is null");
+
+                HardenWindowsSecurity.HashtableCheckerResult MDM_Policy_Result01_Update02_AllowAutoWindowsUpdateDownloadOverMeteredNetwork =
+                    HardenWindowsSecurity.HashtableChecker.CheckValue<string>(mdmPolicy, "AllowAutoWindowsUpdateDownloadOverMeteredNetwork", "1");
 
                 nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {

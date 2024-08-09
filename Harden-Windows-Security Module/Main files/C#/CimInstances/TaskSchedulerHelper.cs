@@ -110,8 +110,8 @@ namespace HardenWindowsSecurity
                         foreach (ManagementObject obj in results)
                         {
                             // Retrieve the TaskName and TaskPath properties from the ManagementObject
-                            string name = obj["TaskName"]?.ToString();
-                            string path = obj["TaskPath"]?.ToString();
+                            string? name = obj["TaskName"]?.ToString();
+                            string? path = obj["TaskPath"]?.ToString();
 
                             // Check if the TaskName matches the provided taskName (if specified)
                             // and TaskPath matches the provided taskPath (if specified)

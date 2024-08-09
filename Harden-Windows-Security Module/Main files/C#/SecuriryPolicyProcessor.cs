@@ -19,36 +19,51 @@ namespace HardenWindowsSecurity
             List<HardenWindowsSecurity.IndividualResult> nestedObjectArray = new List<HardenWindowsSecurity.IndividualResult>();
 
             // Filter the CSV data to only get the records that match the input category
-            var csvRecords = HardenWindowsSecurity.GlobalVars.SecurityPolicyRecords.Where(record => record.Category.Equals(category, StringComparison.OrdinalIgnoreCase)).ToList();
+            var csvRecords = HardenWindowsSecurity.GlobalVars.SecurityPolicyRecords?
+                .Where(record => record.Category != null && record.Category.Equals(category, StringComparison.OrdinalIgnoreCase))
+                .ToList();
 
-            // Loop over each filtered CSV data
-            foreach (var record in csvRecords)
+            // Ensure csvRecords is not null before iterating
+            if (csvRecords != null)
             {
-                string section = record.Section;
-                string path = record.Path;
-                string expectedValue = record.Value;
-                string name = record.Name;
-
-                bool complianceResult = false;
-
-                string actualValue = null;
-
-                if (HardenWindowsSecurity.GlobalVars.SystemSecurityPoliciesIniObject.ContainsKey(section) &&
-                    HardenWindowsSecurity.GlobalVars.SystemSecurityPoliciesIniObject[section].ContainsKey(path))
+                // Loop over each filtered CSV data
+                foreach (var record in csvRecords)
                 {
-                    actualValue = HardenWindowsSecurity.GlobalVars.SystemSecurityPoliciesIniObject[section][path];
-                    complianceResult = actualValue == expectedValue;
+                    string? section = record.Section;
+                    string? path = record.Path;
+                    string? expectedValue = record.Value;
+                    string? name = record.Name;
+
+                    bool complianceResult = false;
+
+                    string? actualValue = null;
+
+                    // Ensure SystemSecurityPoliciesIniObject is not null and check for section
+                    if (HardenWindowsSecurity.GlobalVars.SystemSecurityPoliciesIniObject != null &&
+                        section != null && // Check if section is not null
+                        HardenWindowsSecurity.GlobalVars.SystemSecurityPoliciesIniObject.TryGetValue(section, out var sectionDict) &&
+                        sectionDict != null &&
+                        path != null && // Check if path is not null
+                        sectionDict.ContainsKey(path))
+                    {
+                        actualValue = sectionDict[path];
+                        complianceResult = actualValue == expectedValue;
+                    }
+
+                    nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
+                    {
+                        FriendlyName = name,
+                        Compliant = complianceResult ? "True" : "False",
+                        Value = actualValue,
+                        Name = name,
+                        Category = category,
+                        Method = "Security Group Policy"
+                    });
                 }
-
-                nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
-                {
-                    FriendlyName = name,
-                    Compliant = complianceResult ? "True" : "False",
-                    Value = actualValue,
-                    Name = name,
-                    Category = category,
-                    Method = "Security Group Policy"
-                });
+            }
+            else
+            {
+                throw new Exception("CSV Records cannot be null.");
             }
 
             return nestedObjectArray;

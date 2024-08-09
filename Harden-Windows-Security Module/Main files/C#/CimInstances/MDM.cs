@@ -25,7 +25,8 @@ namespace HardenWindowsSecurity
         private static async Task<Dictionary<string, List<Dictionary<string, object>>>> GetAsync()
         {
             // Set the location of the CSV file containing the MDM list
-            string csvFilePath = Path.Combine(HardenWindowsSecurity.GlobalVars.path, "Resources", "MDMResultClasses.csv");
+            string path = HardenWindowsSecurity.GlobalVars.path ?? throw new InvalidOperationException("GlobalVars.path is null");
+            string csvFilePath = Path.Combine(path, "Resources", "MDMResultClasses.csv");
 
             // Create a dictionary where keys are the class names and values are lists of dictionaries
             Dictionary<string, List<Dictionary<string, object>>> results = new Dictionary<string, List<Dictionary<string, object>>>();
@@ -42,8 +43,9 @@ namespace HardenWindowsSecurity
                 foreach (var record in records)
                 {
                     // Process only authorized records
-                    if (record.Authorized.Equals("TRUE", StringComparison.OrdinalIgnoreCase))
+                    if (record.Authorized?.Equals("TRUE", StringComparison.OrdinalIgnoreCase) == true)
                     {
+
                         // Debugging output
                         // HardenWindowsSecurity.VerboseLogger.Write($"Namespace: {record.Namespace}, Class: {record.Class}");
 
@@ -67,7 +69,8 @@ namespace HardenWindowsSecurity
                             }
 
                             // Create object query for the current class
-                            ObjectQuery query = new ObjectQuery("SELECT * FROM " + record.Class.Trim());
+                            string classQuery = record.Class?.Trim() ?? throw new InvalidOperationException("Record.Class is null");
+                            ObjectQuery query = new ObjectQuery("SELECT * FROM " + classQuery);
 
                             // Create management object searcher for the query
                             ManagementObjectSearcher searcher = new ManagementObjectSearcher(scope, query);
@@ -133,7 +136,7 @@ namespace HardenWindowsSecurity
 
             using (var reader = new StreamReader(filePath))
             {
-                string line;
+                string? line; // Explicitly declare line as nullable
                 bool isFirstLine = true;
                 while ((line = await reader.ReadLineAsync()) != null)
                 {
@@ -142,6 +145,9 @@ namespace HardenWindowsSecurity
                         isFirstLine = false;
                         continue; // Skip the header line
                     }
+
+                    if (line is null) // This check is redundant but shows explicit handling
+                        continue;
 
                     var values = line.Split(',');
                     // because of using "Comment" column in the CSV file optionally for certain MDM CIMs
@@ -160,12 +166,13 @@ namespace HardenWindowsSecurity
             return records;
         }
 
+
         // Class to represent a record in the CSV file
         private class MdmRecord
         {
-            public string Namespace { get; set; }
-            public string Class { get; set; }
-            public string Authorized { get; set; }
+            public string? Namespace { get; set; }
+            public string? Class { get; set; }
+            public string? Authorized { get; set; }
         }
     }
 }

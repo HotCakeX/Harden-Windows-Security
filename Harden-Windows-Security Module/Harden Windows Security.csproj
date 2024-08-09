@@ -8,6 +8,7 @@
     <Nullable>enable</Nullable>
     <UseWpf>true</UseWpf>
     <UseWindowsForms>true</UseWindowsForms>
+    <XamlDebuggingInformation>True</XamlDebuggingInformation>
     <StartupObject>HardenWindowsSecurity.Program</StartupObject>
     <PackageProjectUrl>https://github.com/HotCakeX/Harden-Windows-Security</PackageProjectUrl>
     <RepositoryUrl>https://github.com/HotCakeX/Harden-Windows-Security</RepositoryUrl>

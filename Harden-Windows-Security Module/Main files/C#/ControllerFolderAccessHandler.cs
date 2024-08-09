@@ -83,10 +83,10 @@ namespace HardenWindowsSecurity
                 HardenWindowsSecurity.VerboseLogger.Write("Temporarily adding the currently running PowerShell executables to the Controlled Folder Access allowed apps list");
 
                 // Get all .exe files in the PSHOME directory
-                string[] psExePaths = Directory.GetFiles(HardenWindowsSecurity.GlobalVars.PSHOME, "*.exe");
+                string[] psExePaths = Directory.GetFiles(HardenWindowsSecurity.GlobalVars.PSHOME!, "*.exe");
 
                 // Get the powercfg.exe path
-                string systemDrive = Environment.GetEnvironmentVariable("SystemDrive");
+                string? systemDrive = Environment.GetEnvironmentVariable("SystemDrive");
                 if (string.IsNullOrEmpty(systemDrive))
                 {
                     throw new InvalidOperationException("SystemDrive environment variable is not set.");

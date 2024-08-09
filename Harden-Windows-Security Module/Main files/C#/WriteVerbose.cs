@@ -1,6 +1,8 @@
 using System;
 using System.Management.Automation.Host;
 
+#nullable enable
+
 namespace HardenWindowsSecurity
 {
     public static class VerboseLogger
@@ -18,7 +20,7 @@ namespace HardenWindowsSecurity
                 if (string.Equals(HardenWindowsSecurity.GlobalVars.VerbosePreference, "Continue", StringComparison.OrdinalIgnoreCase) ||
                     string.Equals(HardenWindowsSecurity.GlobalVars.VerbosePreference, "Inquire", StringComparison.OrdinalIgnoreCase))
                 {
-                    HardenWindowsSecurity.GlobalVars.Host.UI.WriteVerboseLine(message);
+                    HardenWindowsSecurity.GlobalVars.Host!.UI!.WriteVerboseLine(message);
                 }
             }
             // Do not do anything if errors occur

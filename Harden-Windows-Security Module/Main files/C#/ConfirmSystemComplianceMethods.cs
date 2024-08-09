@@ -534,7 +534,7 @@ namespace HardenWindowsSecurity
                 string CatName = "BitLockerSettings";
 
                 // Returns true or false depending on whether Kernel DMA Protection is on or off
-                bool BootDMAProtection = SystemInfo.NativeMethods.BootDmaCheck() != 0;
+                bool BootDMAProtection = HardenWindowsSecurity.SystemInformationClass.BootDmaCheck() != 0;
 
                 if (BootDMAProtection)
                 {

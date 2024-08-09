@@ -3,6 +3,8 @@ using System.IO.Compression;
 using System.Linq;
 using System.Text.RegularExpressions;
 
+#nullable enable
+
 namespace HardenWindowsSecurity
 {
     public static class SneakAndPeek

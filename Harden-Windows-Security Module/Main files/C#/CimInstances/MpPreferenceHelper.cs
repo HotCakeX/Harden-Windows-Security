@@ -5,6 +5,8 @@ using System.Globalization;
 using System.Linq;
 using System.Management;
 
+#nullable enable
+
 namespace HardenWindowsSecurity
 {
     public static class MpPreferenceHelper

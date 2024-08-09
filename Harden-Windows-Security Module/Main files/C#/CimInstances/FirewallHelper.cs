@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Management;
 using System.Globalization;
 
+#nullable enable
+
 namespace HardenWindowsSecurity
 {
     public static class FirewallHelper

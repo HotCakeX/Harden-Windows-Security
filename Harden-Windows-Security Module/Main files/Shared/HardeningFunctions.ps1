@@ -454,10 +454,10 @@ Function Start-FileDownload {
     )
     if (!([HardenWindowsSecurity.GlobalVars]::Offline)) { Write-Verbose -Message 'Downloading the required files' }
     [HardenWindowsSecurity.FileDownloader]::PrepDownloadedFiles(
-        ($GUI ? $True : $False),
         ($GUI ? [HardenWindowsSecurity.GUI]::LGPOZipPath : "$PathToLGPO"),
         ($GUI ? [HardenWindowsSecurity.GUI]::MicrosoftSecurityBaselineZipPath : "$PathToMSFTSecurityBaselines"),
-        ($GUI ? [HardenWindowsSecurity.GUI]::Microsoft365AppsSecurityBaselineZipPath : "$PathToMSFT365AppsSecurityBaselines")
+        ($GUI ? [HardenWindowsSecurity.GUI]::Microsoft365AppsSecurityBaselineZipPath : "$PathToMSFT365AppsSecurityBaselines"),
+        ($GUI ? $True : $False)
     )
     Write-Verbose -Message 'Finished downloading/processing the required files'
 }
@@ -904,7 +904,7 @@ https://learn.microsoft.com/en-us/windows/security/operating-system-security/dat
             &$([HardenWindowsSecurity.GlobalVars]::LGPOExe) /q /m "$([HardenWindowsSecurity.GlobalVars]::Path)\Resources\Security-Baselines-X\Bitlocker Policies\registry.pol"
 
             # returns true or false depending on whether Kernel DMA Protection is on or off
-            [System.Boolean]$BootDMAProtection = ([SystemInfo.NativeMethods]::BootDmaCheck()) -ne 0
+            [System.Boolean]$BootDMAProtection = ([HardenWindowsSecurity.SystemInformationClass]::BootDmaCheck()) -ne 0
 
             # Enables or disables DMA protection from Bitlocker Countermeasures based on the status of Kernel DMA protection.
             if ($BootDMAProtection) {

@@ -5,6 +5,8 @@ using System.Management.Automation;
 using System.Collections.Generic;
 using System.Globalization;
 
+#nullable enable
+
 namespace HardenWindowsSecurity
 {
     // prepares the environment. It also runs commands that would otherwise run in the default constructors of each method
@@ -23,11 +25,11 @@ namespace HardenWindowsSecurity
             CultureInfo.DefaultThreadCurrentCulture = CultureInfo.InvariantCulture;
             CultureInfo.DefaultThreadCurrentUICulture = CultureInfo.InvariantCulture;
 
-            using (RegistryKey key = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows NT\CurrentVersion"))
+            using (RegistryKey? key = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows NT\CurrentVersion"))
             {
                 if (key != null)
                 {
-                    object ubrValue = key.GetValue("UBR");
+                    object? ubrValue = key.GetValue("UBR");
                     if (ubrValue != null && int.TryParse(ubrValue.ToString(), out int ubr))
                     {
                         HardenWindowsSecurity.GlobalVars.UBR = ubr;

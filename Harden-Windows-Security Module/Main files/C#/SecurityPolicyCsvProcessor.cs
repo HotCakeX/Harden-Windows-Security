@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
+#nullable enable
+
 namespace HardenWindowsSecurity
 {
     // Represents a record in the security policy

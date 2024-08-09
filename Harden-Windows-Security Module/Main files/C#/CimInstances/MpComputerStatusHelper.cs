@@ -6,6 +6,8 @@ using System.Globalization;
 using System.Collections.Generic;
 using System.Collections;
 
+#nullable enable
+
 namespace HardenWindowsSecurity
 {
     public static class MpComputerStatusHelper

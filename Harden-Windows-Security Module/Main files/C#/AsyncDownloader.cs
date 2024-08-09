@@ -7,6 +7,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO.Compression;
 
+#nullable enable
+
 namespace HardenWindowsSecurity
 {
     public class FileDownloader
@@ -151,7 +153,7 @@ namespace HardenWindowsSecurity
         // Finally, it extracts the downloaded zip files to the working directory
         // It also copies the LGPO.exe to the Microsoft Security Baseline and Microsoft 365 Security Baseline folders
         // so that it can be used by the PowerShell script
-        public static void PrepDownloadedFiles(bool GUI = false, string LGPOPath = null, string MSFTSecurityBaselinesPath = null, string MSFT365AppsSecurityBaselinesPath = null)
+        public static void PrepDownloadedFiles(string? LGPOPath, string? MSFTSecurityBaselinesPath, string? MSFT365AppsSecurityBaselinesPath, bool GUI)
         {
             // Only download if offline is not used
             if (!HardenWindowsSecurity.GlobalVars.Offline)
@@ -183,11 +185,33 @@ namespace HardenWindowsSecurity
             {
                 // 'Offline Mode; Copying the Microsoft Security Baselines, Microsoft 365 Apps for Enterprise Security Baselines and LGPO files from the user provided paths to the working directory'
 
-                System.IO.File.Copy(LGPOPath, Path.Combine(HardenWindowsSecurity.GlobalVars.WorkingDir, "LGPO.zip"), true);
+                if (LGPOPath != null)
+                {
+                    System.IO.File.Copy(LGPOPath, Path.Combine(HardenWindowsSecurity.GlobalVars.WorkingDir, "LGPO.zip"), true);
+                }
+                else
+                {
+                    throw new Exception("LGPOPath was empty for the offline mode.");
+                }
 
-                System.IO.File.Copy(MSFTSecurityBaselinesPath, Path.Combine(HardenWindowsSecurity.GlobalVars.WorkingDir, "MicrosoftSecurityBaseline.zip"), true);
+                if (MSFTSecurityBaselinesPath != null)
+                {
+                    System.IO.File.Copy(MSFTSecurityBaselinesPath, Path.Combine(HardenWindowsSecurity.GlobalVars.WorkingDir, "MicrosoftSecurityBaseline.zip"), true);
+                }
+                else
+                {
+                    throw new Exception("MSFTSecurityBaselinesPath was empty for the offline mode.");
+                }
 
-                System.IO.File.Copy(MSFT365AppsSecurityBaselinesPath, Path.Combine(HardenWindowsSecurity.GlobalVars.WorkingDir, "Microsoft365SecurityBaseline.zip"), true);
+                if (MSFT365AppsSecurityBaselinesPath != null)
+                {
+                    System.IO.File.Copy(MSFT365AppsSecurityBaselinesPath, Path.Combine(HardenWindowsSecurity.GlobalVars.WorkingDir, "Microsoft365SecurityBaseline.zip"), true);
+                }
+                else
+                {
+                    throw new Exception("MSFT365AppsSecurityBaselinesPath was empty for the offline mode.");
+                }
+
             }
 
 

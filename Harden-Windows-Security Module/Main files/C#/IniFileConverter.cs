@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text.RegularExpressions;
 
+#nullable enable
+
 namespace HardenWindowsSecurity
 {
     public class IniFileConverter

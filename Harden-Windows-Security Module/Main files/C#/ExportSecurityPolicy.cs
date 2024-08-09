@@ -10,6 +10,8 @@ using System.Collections.ObjectModel;
 using System.Threading;
 using System.Threading.Tasks;
 
+#nullable enable
+
 namespace HardenWindowsSecurity
 {
     public partial class ConfirmSystemComplianceMethods

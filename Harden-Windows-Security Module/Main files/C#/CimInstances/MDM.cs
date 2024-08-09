@@ -5,6 +5,8 @@ using System.Management;
 using System.Threading.Tasks;
 using System.Globalization;
 
+#nullable enable
+
 /// root\cimv2\mdm is the namespace for CSPs
 /// https://learn.microsoft.com/en-us/windows/win32/wmisdk/common-information-model
 namespace HardenWindowsSecurity

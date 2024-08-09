@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 
+#nullable enable
+
 namespace HardenWindowsSecurity
 {
     public partial class MDMClassProcessor
@@ -74,7 +76,7 @@ namespace HardenWindowsSecurity
                             // Add the data to the list
                             resultsList.Add(new HardenWindowsSecurity.MDMClassProcessor(
                                 keyValuePair.Key,
-                                keyValuePair.Value?.ToString(),
+                                keyValuePair.Value?.ToString() ?? string.Empty,
                                 cimInstanceResult.Key
                             ));
                         }

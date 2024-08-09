@@ -2,6 +2,8 @@ using System;
 using System.Runtime.InteropServices;
 using System.Security;
 
+#nullable enable
+
 namespace HardenWindowsSecurity
 {
     public static class SecureStringComparer

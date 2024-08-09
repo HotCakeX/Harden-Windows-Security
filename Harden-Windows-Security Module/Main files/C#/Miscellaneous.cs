@@ -3,6 +3,8 @@ using System.IO;
 using System.Management;
 using System.Management.Automation;
 
+#nullable enable
+
 namespace HardenWindowsSecurity
 {
     public class Miscellaneous
@@ -79,10 +81,16 @@ namespace HardenWindowsSecurity
                     Console.WriteLine($"TPM is not activated or enabled on this system. BitLockerSettings category will be unavailable - {tpmStatus.ErrorMessage}");
                 }
 
+                if (HardenWindowsSecurity.GlobalVars.MDAVConfigCurrent == null)
+                {
+                    throw new Exception("MDAVConfigCurrent is null.");
+                }
+
                 if (!HardenWindowsSecurity.GlobalVars.MDAVConfigCurrent.AMServiceEnabled)
                 {
                     throw new Exception("Microsoft Defender Anti Malware service is not enabled, please enable it and then try again.");
                 }
+
 
                 if (!HardenWindowsSecurity.GlobalVars.MDAVConfigCurrent.AntispywareEnabled)
                 {

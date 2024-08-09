@@ -2,13 +2,15 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
+#nullable enable
+
 namespace HardenWindowsSecurity
 {
     // Class to hold the result of the hashtable check
     public class HashtableCheckerResult
     {
         public bool IsMatch { get; set; } // Indicates if the value matches
-        public string Value { get; set; } // The value from the hashtable if found
+        public string? Value { get; set; } // The value from the hashtable if found
     }
 
     // Static class containing the method to check values in a hashtable

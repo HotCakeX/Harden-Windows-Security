@@ -4,6 +4,8 @@ using System.Management;
 using System.Management.Automation;
 using System.Security.Principal;
 
+#nullable enable
+
 namespace HardenWindowsSecurity
 {
     public class ComplianceCategoriex : IValidateSetValuesGenerator

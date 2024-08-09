@@ -3,6 +3,8 @@ using System.Management;
 using System.IO;
 using System.Linq;
 
+#nullable enable
+
 namespace HardenWindowsSecurity
 {
     /// <summary>

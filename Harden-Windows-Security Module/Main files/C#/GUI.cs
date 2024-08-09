@@ -11,6 +11,7 @@ using System.Windows.Media.Imaging;
 using System.Linq;
 using System.Windows.Forms;
 using System.Collections.Concurrent;
+using System.Windows.Input;
 
 namespace HardenWindowsSecurity
 {
@@ -105,6 +106,10 @@ namespace HardenWindowsSecurity
         public static void LoadXaml()
         {
             // Defining the path to the XAML XML file
+            if (HardenWindowsSecurity.GlobalVars.path == null)
+            {
+                throw new System.ArgumentNullException("GlobalVars.path cannot be null.");
+            }
             xamlPath = System.IO.Path.Combine(HardenWindowsSecurity.GlobalVars.path, "Resources", "XAML", "Main.xaml");
             // Read the content of the XML
             xamlContent = System.IO.File.ReadAllText(xamlPath);
@@ -280,14 +285,17 @@ namespace HardenWindowsSecurity
                 string categoryContent = ((System.Windows.Controls.CheckBox)categoryItem.Content).Name;
                 if (correlation.Contains(categoryContent))
                 {
-                    foreach (string subCategoryName in correlation[categoryContent] as string[])
+                    if (correlation[categoryContent] is string[] subCategoryNames)
                     {
-                        foreach (var item in subCategories.Items)
+                        foreach (string subCategoryName in subCategoryNames)
                         {
-                            System.Windows.Controls.ListViewItem subCategoryItem = (System.Windows.Controls.ListViewItem)item;
-                            if (((System.Windows.Controls.CheckBox)subCategoryItem.Content).Name == subCategoryName)
+                            foreach (var item in subCategories.Items)
                             {
-                                subCategoryItem.IsEnabled = true;
+                                System.Windows.Controls.ListViewItem subCategoryItem = (System.Windows.Controls.ListViewItem)item;
+                                if (((System.Windows.Controls.CheckBox)subCategoryItem.Content).Name == subCategoryName)
+                                {
+                                    subCategoryItem.IsEnabled = true;
+                                }
                             }
                         }
                     }
@@ -302,6 +310,11 @@ namespace HardenWindowsSecurity
                 {
                     ((System.Windows.Controls.CheckBox)subCategoryItem.Content).IsChecked = false;
                 }
+            }
+
+            if (HardenWindowsSecurity.GlobalVars.HardeningCategorieX == null)
+            {
+                throw new System.ArgumentNullException("GlobalVars.HardeningCategorieX cannot be null.");
             }
 
             // Disable categories that are not valid for the current session
@@ -351,9 +364,24 @@ namespace HardenWindowsSecurity
                 outputTextBlock.MaxWidth = newMaxWidth;
             };
 
+            // event handler to make the GUI window draggable wherever it's empty
+            window.MouseDown += (sender, e) =>
+                        {
+                            // Only allow dragging the window when the left mouse button (also includes touch) is clicked
+                            if (e.ChangedButton == MouseButton.Left)
+                            {
+                                window.DragMove();
+                            }
+                        };
+
             // Add click event for 'Check All' button
             selectAllCategories.Checked += (sender, e) =>
             {
+
+                if (HardenWindowsSecurity.GlobalVars.HardeningCategorieX == null)
+                {
+                    throw new System.ArgumentNullException("GlobalVars.HardeningCategorieX cannot be null.");
+                }
                 foreach (var item in categories.Items)
                 {
                     System.Windows.Controls.ListViewItem categoryItem = (System.Windows.Controls.ListViewItem)item;

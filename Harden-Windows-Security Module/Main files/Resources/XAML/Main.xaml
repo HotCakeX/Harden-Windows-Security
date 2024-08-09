@@ -158,12 +158,18 @@
             </LinearGradientBrush.GradientStops>
         </LinearGradientBrush>
     </Window.Resources>
+
+   
+    
     <!-- Grid for Online Mode Tab - Removing the white border with negative margins -->
     <Grid x:Name="ParentGrid" Margin="-2.3,-2.3,-2.3,-2.3">
         <!-- Row definitions for the grid -->
         <Grid.RowDefinitions>
             <!-- row 0 -->
-            <RowDefinition Height="230"/>
+            <RowDefinition Height="220"/>
+            
+            <!-- Progress Bar Row -->
+            <RowDefinition Height="10"/>
             <!-- row 1 -->
             <RowDefinition Height="Auto"/>
             <!-- row 2 -->
@@ -181,8 +187,23 @@
             <!-- its max width is being dynamically set using code behind (PowerShell) -->
             <TextBox x:Name="OutputTextBlock" TextWrapping="Wrap" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="Transparent" BorderThickness="0" IsReadOnly="True" IsTabStop="False" Cursor="IBeam" FontSize="14" FontWeight="Bold"/>
         </ScrollViewer>
+
+
+        <ProgressBar x:Name="MainProgressBar" 
+             Grid.Row="1" 
+             IsIndeterminate="True" 
+             Height="5" 
+             Background="Transparent" 
+             Foreground="DeepPink" 
+             Margin="30,2.5,30,2.5" 
+             Grid.ColumnSpan="2" 
+             BorderThickness="0" />
+
+
+
+
         <!-- ToggleButton -->
-        <ToggleButton x:Name="MainTabControlToggle" ToolTip="Choose between Online or Offline modes" Foreground="White" Height="40" Width="170" FontSize="18" Grid.Row="1" Grid.ColumnSpan="2">
+        <ToggleButton x:Name="MainTabControlToggle" ToolTip="Choose between Online or Offline modes" Foreground="White" Height="40" Width="170" FontSize="18" Grid.Row="2" Grid.ColumnSpan="2">
             <ToggleButton.Template>
                 <ControlTemplate TargetType="ToggleButton">
                     <Border x:Name="Button1" Background="{StaticResource PinkGradient}" CornerRadius="20" Padding="1">
@@ -202,7 +223,7 @@
             </ToggleButton.Template>
         </ToggleButton>
         <!-- ContentControl to display content based on the ToggleButton's state -->
-        <ContentControl Grid.Row="2" Grid.ColumnSpan="2" x:Name="MainContentControl">
+        <ContentControl Grid.Row="3" Grid.ColumnSpan="2" x:Name="MainContentControl">
             <ContentControl.Style>
                 <Style TargetType="ContentControl" x:Name="MainContentControlStyle">
                     <Style.Triggers>
@@ -744,7 +765,7 @@
                 </Style>
             </ContentControl.Style>
         </ContentControl>
-        <Button x:Name="Execute" Grid.Row="3" Grid.ColumnSpan="2" Width="120" Height="50" FontSize="16" FontWeight="Bold" Background="{StaticResource PinkGradient}">
+        <Button x:Name="Execute" Grid.Row="4" Grid.ColumnSpan="2" Width="120" Height="50" FontSize="16" FontWeight="Bold" Background="{StaticResource PinkGradient}">
             <Button.Template>
                 <ControlTemplate TargetType="Button">
                     <Border x:Name="border" BorderThickness="3" Width="{TemplateBinding Width}" Height="{TemplateBinding Height}" Background="{TemplateBinding Background}" CornerRadius="6" BorderBrush="MediumPurple">

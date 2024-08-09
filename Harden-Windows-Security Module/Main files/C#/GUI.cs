@@ -66,6 +66,7 @@ namespace HardenWindowsSecurity
         public static System.Windows.Controls.ListView subCategories;
         public static System.Windows.Controls.CheckBox selectAllCategories;
         public static System.Windows.Controls.CheckBox selectAllSubCategories;
+        public static System.Windows.Controls.ProgressBar mainProgressBar;
 
 
         // fields for Log related elements
@@ -126,6 +127,12 @@ namespace HardenWindowsSecurity
             parentGrid = (System.Windows.Controls.Grid)window.FindName("ParentGrid");
             mainTabControlToggle = (System.Windows.Controls.Primitives.ToggleButton)parentGrid.FindName("MainTabControlToggle");
             mainContentControl = (System.Windows.Controls.ContentControl)mainTabControlToggle.FindName("MainContentControl");
+
+            // Finding the progress bar
+            mainProgressBar = (System.Windows.Controls.ProgressBar)parentGrid.FindName("MainProgressBar");
+
+            // Set Main progress bar visibility initially to Collapsed
+            mainProgressBar.Visibility = Visibility.Collapsed;
 
             // Assigning the icon for the Harden Windows Security GUI
             window.Icon = new System.Windows.Media.Imaging.BitmapImage(new Uri(System.IO.Path.Combine(HardenWindowsSecurity.GlobalVars.path, "Resources", "Media", "ProgramIcon.ico")));

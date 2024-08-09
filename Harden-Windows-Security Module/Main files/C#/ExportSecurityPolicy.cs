@@ -23,7 +23,13 @@ namespace HardenWindowsSecurity
         {
             // Assuming securityPolicyInfPath is defined in your environment
             string securityPolicyInfPath = HardenWindowsSecurity.GlobalVars.securityPolicyInfPath;
-            string systemDrive = Environment.GetEnvironmentVariable("SystemDrive");
+            string? systemDrive = Environment.GetEnvironmentVariable("SystemDrive");
+
+            if (systemDrive == null)
+            {
+                // Handle the case where SystemDrive is not set
+                throw new InvalidOperationException("SystemDrive environment variable is not set.");
+            }
 
             // Create the process start info
             ProcessStartInfo processStartInfo = new ProcessStartInfo
@@ -37,11 +43,15 @@ namespace HardenWindowsSecurity
             };
 
             // Start the process
-            using (Process process = Process.Start(processStartInfo))
+            using (Process? process = Process.Start(processStartInfo))
             {
+                if (process == null)
+                {
+                    throw new InvalidOperationException("Failed to start Secedit.exe process.");
+                }
+
                 // Read the output
                 // string output = process.StandardOutput.ReadToEnd();
-
                 string error = process.StandardError.ReadToEnd();
 
                 process.WaitForExit();

@@ -904,6 +904,11 @@ namespace HardenWindowsSecurity
 
 
                 // Get the control from MDM CIM
+                if (HardenWindowsSecurity.GlobalVars.MDM_Policy_Result01_System02 == null)
+                {
+                    // Handle the case where the global variable is null
+                    throw new InvalidOperationException("MDM_Policy_Result01_System02 is null.");
+                }
                 HardenWindowsSecurity.HashtableCheckerResult MDM_Policy_Result01_System02_AllowLocation = HardenWindowsSecurity.HashtableChecker.CheckValue<string>(HardenWindowsSecurity.GlobalVars.MDM_Policy_Result01_System02, "AllowLocation", "0");
 
                 nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
@@ -1358,6 +1363,11 @@ namespace HardenWindowsSecurity
 
 
                 // Get the control from MDM CIM
+                if (HardenWindowsSecurity.GlobalVars.MDM_Firewall_PublicProfile02 == null)
+                {
+                    // Handle the case where the global variable is null
+                    throw new InvalidOperationException("MDM_Firewall_PublicProfile02 is null.");
+                }
                 HardenWindowsSecurity.HashtableCheckerResult MDM_Firewall_PublicProfile02_EnableFirewall = HardenWindowsSecurity.HashtableChecker.CheckValue<string>(HardenWindowsSecurity.GlobalVars.MDM_Firewall_PublicProfile02, "EnableFirewall", "true");
 
                 nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
@@ -1428,6 +1438,11 @@ namespace HardenWindowsSecurity
 
 
                 // Get the control from MDM CIM
+                if (HardenWindowsSecurity.GlobalVars.MDM_Firewall_PrivateProfile02 == null)
+                {
+                    // Handle the case where the global variable is null
+                    throw new InvalidOperationException("MDM_Firewall_PrivateProfile02 is null.");
+                }
                 HardenWindowsSecurity.HashtableCheckerResult MDM_Firewall_PrivateProfile02_EnableFirewall = HardenWindowsSecurity.HashtableChecker.CheckValue<string>(HardenWindowsSecurity.GlobalVars.MDM_Firewall_PrivateProfile02, "EnableFirewall", "true");
 
                 nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
@@ -1498,6 +1513,11 @@ namespace HardenWindowsSecurity
 
 
                 // Get the control from MDM CIM
+                if (HardenWindowsSecurity.GlobalVars.MDM_Firewall_DomainProfile02 == null)
+                {
+                    // Handle the case where the global variable is null
+                    throw new InvalidOperationException("MDM_Firewall_DomainProfile02 is null.");
+                }
                 HardenWindowsSecurity.HashtableCheckerResult MDM_Firewall_DomainProfile02_EnableFirewall = HardenWindowsSecurity.HashtableChecker.CheckValue<string>(HardenWindowsSecurity.GlobalVars.MDM_Firewall_DomainProfile02, "EnableFirewall", "true");
 
                 nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
@@ -1829,7 +1849,7 @@ namespace HardenWindowsSecurity
 
                 // Only keep the enabled mitigations in the CSV, then group the data by ProgramName
                 var GroupedMitigations = ProcessMitigations
-                    .Where(x => x.Action.Equals("Enable", StringComparison.OrdinalIgnoreCase))
+                    .Where(x => x.Action != null && x.Action.Equals("Enable", StringComparison.OrdinalIgnoreCase))
                     // case insensitive grouping is necessary so that for e.g., lsass.exe and LSASS.exe will be out in the same group
                     .GroupBy(x => x.ProgramName, StringComparer.OrdinalIgnoreCase)
                     .Select(g => new { ProgramName = g.Key, Mitigations = g.Select(x => x.Mitigation).ToArray() })
@@ -1841,7 +1861,11 @@ namespace HardenWindowsSecurity
                 // Loop through each group in the grouped mitigations array and add the ProgramName and Mitigations to the dictionary
                 foreach (var item in GroupedMitigations)
                 {
-                    TargetMitigations[item.ProgramName] = item.Mitigations;
+                    // Ensure the ProgramName is not null
+                    if (item.ProgramName != null && item.Mitigations != null)
+                    {
+                        TargetMitigations[item.ProgramName] = item.Mitigations!; // Suppressing the warning
+                    }
                 }
 
                 // Comparison
@@ -2523,6 +2547,11 @@ namespace HardenWindowsSecurity
 
 
                 // Get the control from MDM CIM
+                if (HardenWindowsSecurity.GlobalVars.MDM_Policy_Result01_System02 == null)
+                {
+                    // Handle the case where the global variable is null
+                    throw new InvalidOperationException("MDM_Policy_Result01_System02 is null.");
+                }
                 HardenWindowsSecurity.HashtableCheckerResult MDM_Policy_Result01_System02_AllowTelemetry = HardenWindowsSecurity.HashtableChecker.CheckValue<string>(HardenWindowsSecurity.GlobalVars.MDM_Policy_Result01_System02, "AllowTelemetry", "3");
 
                 nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult

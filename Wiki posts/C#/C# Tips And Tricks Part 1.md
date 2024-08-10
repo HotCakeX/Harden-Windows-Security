@@ -226,7 +226,8 @@ namespace HardenWindowsSecurity
 ### Why Use Embedded Resources?
 
 * Portability: Since the resource is embedded in the assembly, you don't have to worry about distributing external files with your application.
-Security: The resource is somewhat protected since it’s part of the compiled binary, making it harder (though not impossible) for others to tamper with the file.
+
+* Security: The resource is somewhat protected since it’s part of the compiled binary, making it harder (though not impossible) for others to tamper with the file.
 
 * Ease of Access: Accessing resources via the assembly makes it straightforward, as you don't need to deal with file paths, especially when deploying your application.
 

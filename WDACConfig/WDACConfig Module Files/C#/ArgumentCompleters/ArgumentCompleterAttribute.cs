@@ -6,6 +6,8 @@ using System.Management.Automation.Language;
 using System.Windows.Forms;
 using System.Linq;
 
+#nullable enable
+
 namespace WDACConfig.ArgCompleter
 {
 

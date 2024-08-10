@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Globalization;
 
+#nullable enable
+
 namespace WDACConfig
 {
     public static class SignerAndHashBuilder
@@ -182,7 +184,7 @@ namespace WDACConfig
                 foreach (Hashtable corDataValue in correlatedEventsDataValues)
                 {
                     // currentCorData to store the current SignerInfo/Correlated
-                    WDACConfig.CertificateDetailsCreator currentCorData = null;
+                    WDACConfig.CertificateDetailsCreator? currentCorData = null;
 
                     // If the file doesn't have Issuer TBS hash (aka Intermediate certificate hash), use the leaf cert's TBS hash and CN instead (aka publisher TBS hash)
                     // This is according to the ConfigCI's workflow when encountering specific files
@@ -190,8 +192,8 @@ namespace WDACConfig
                     // For those files, the FilePublisher rule will be created with the file's leaf Certificate details only (Publisher certificate)
 
                     // Safely access dictionary values and handle nulls
-                    string issuerTBSHash = corDataValue.ContainsKey("IssuerTBSHash") ? corDataValue["IssuerTBSHash"]?.ToString() : null;
-                    string publisherTBSHash = corDataValue.ContainsKey("PublisherTBSHash") ? corDataValue["PublisherTBSHash"]?.ToString() : null;
+                    string? issuerTBSHash = corDataValue.ContainsKey("IssuerTBSHash") ? corDataValue["IssuerTBSHash"]?.ToString() : null;
+                    string? publisherTBSHash = corDataValue.ContainsKey("PublisherTBSHash") ? corDataValue["PublisherTBSHash"]?.ToString() : null;
 
                     // Perform the check with null-safe values
                     if (string.IsNullOrWhiteSpace(issuerTBSHash) && !string.IsNullOrWhiteSpace(publisherTBSHash))
@@ -224,24 +226,24 @@ namespace WDACConfig
 
 
                 #region Initialize properties with null-safe checks
-                string fileVersionString = signedData.ContainsKey("FileVersion") ? signedData["FileVersion"]?.ToString() : null;
-                string fileDescription = signedData.ContainsKey("FileDescription") ? signedData["FileDescription"]?.ToString() : null;
-                string internalName = signedData.ContainsKey("InternalName") ? signedData["InternalName"]?.ToString() : null;
-                string originalFileName = signedData.ContainsKey("OriginalFileName") ? signedData["OriginalFileName"]?.ToString() : null;
-                string productName = signedData.ContainsKey("ProductName") ? signedData["ProductName"]?.ToString() : null;
-                string fileName = string.Equals(incomingDataType, "MDEAH", StringComparison.OrdinalIgnoreCase)
+                string? fileVersionString = signedData.ContainsKey("FileVersion") ? signedData["FileVersion"]?.ToString() : null;
+                string? fileDescription = signedData.ContainsKey("FileDescription") ? signedData["FileDescription"]?.ToString() : null;
+                string? internalName = signedData.ContainsKey("InternalName") ? signedData["InternalName"]?.ToString() : null;
+                string? originalFileName = signedData.ContainsKey("OriginalFileName") ? signedData["OriginalFileName"]?.ToString() : null;
+                string? productName = signedData.ContainsKey("ProductName") ? signedData["ProductName"]?.ToString() : null;
+                string? fileName = string.Equals(incomingDataType, "MDEAH", StringComparison.OrdinalIgnoreCase)
                     ? (signedData.ContainsKey("FileName") ? signedData["FileName"]?.ToString() : null)
                     : (signedData.ContainsKey("File Name") ? signedData["File Name"]?.ToString() : null);
 
-                string sha256 = string.Equals(incomingDataType, "MDEAH", StringComparison.OrdinalIgnoreCase)
+                string? sha256 = string.Equals(incomingDataType, "MDEAH", StringComparison.OrdinalIgnoreCase)
                     ? (signedData.ContainsKey("SHA256") ? signedData["SHA256"]?.ToString() : null)
                     : (signedData.ContainsKey("SHA256 Hash") ? signedData["SHA256 Hash"]?.ToString() : null);
 
-                string sha1 = string.Equals(incomingDataType, "MDEAH", StringComparison.OrdinalIgnoreCase)
+                string? sha1 = string.Equals(incomingDataType, "MDEAH", StringComparison.OrdinalIgnoreCase)
                     ? (signedData.ContainsKey("SHA1") ? signedData["SHA1"]?.ToString() : null)
                     : (signedData.ContainsKey("SHA1 Hash") ? signedData["SHA1 Hash"]?.ToString() : null);
 
-                string siSigningScenarioString = string.Equals(incomingDataType, "MDEAH", StringComparison.OrdinalIgnoreCase)
+                string? siSigningScenarioString = string.Equals(incomingDataType, "MDEAH", StringComparison.OrdinalIgnoreCase)
                     ? (signedData.ContainsKey("SiSigningScenario") ? signedData["SiSigningScenario"]?.ToString() : null)
                     : (signedData.ContainsKey("SI Signing Scenario") ? signedData["SI Signing Scenario"]?.ToString() : null);
 
@@ -299,10 +301,10 @@ namespace WDACConfig
                     WDACConfig.CertificateDetailsCreator currentCorData = null;
 
                     // Safely access dictionary values and handle nulls
-                    string issuerTBSHash = corDataValue.ContainsKey("IssuerTBSHash") ? corDataValue["IssuerTBSHash"]?.ToString() : null;
-                    string issuerName = corDataValue.ContainsKey("IssuerName") ? corDataValue["IssuerName"]?.ToString() : null;
-                    string publisherTBSHash = corDataValue.ContainsKey("PublisherTBSHash") ? corDataValue["PublisherTBSHash"]?.ToString() : null;
-                    string publisherName = corDataValue.ContainsKey("PublisherName") ? corDataValue["PublisherName"]?.ToString() : null;
+                    string? issuerTBSHash = corDataValue.ContainsKey("IssuerTBSHash") ? corDataValue["IssuerTBSHash"]?.ToString() : null;
+                    string? issuerName = corDataValue.ContainsKey("IssuerName") ? corDataValue["IssuerName"]?.ToString() : null;
+                    string? publisherTBSHash = corDataValue.ContainsKey("PublisherTBSHash") ? corDataValue["PublisherTBSHash"]?.ToString() : null;
+                    string? publisherName = corDataValue.ContainsKey("PublisherName") ? corDataValue["PublisherName"]?.ToString() : null;
 
                     // Perform the check with null-safe values
                     if (string.IsNullOrWhiteSpace(issuerTBSHash) && !string.IsNullOrWhiteSpace(publisherTBSHash))
@@ -354,15 +356,15 @@ namespace WDACConfig
                     continue;
                 }
 
-                string sha256 = string.Equals(incomingDataType, "MDEAH", StringComparison.OrdinalIgnoreCase)
+                string? sha256 = string.Equals(incomingDataType, "MDEAH", StringComparison.OrdinalIgnoreCase)
                     ? (hashData.ContainsKey("SHA256") ? hashData["SHA256"]?.ToString() : null)
                     : (hashData.ContainsKey("SHA256 Hash") ? hashData["SHA256 Hash"]?.ToString() : null);
 
-                string sha1 = string.Equals(incomingDataType, "MDEAH", StringComparison.OrdinalIgnoreCase)
+                string? sha1 = string.Equals(incomingDataType, "MDEAH", StringComparison.OrdinalIgnoreCase)
                     ? (hashData.ContainsKey("SHA1") ? hashData["SHA1"]?.ToString() : null)
                     : (hashData.ContainsKey("SHA1 Hash") ? hashData["SHA1 Hash"]?.ToString() : null);
 
-                string fileName = string.Equals(incomingDataType, "MDEAH", StringComparison.OrdinalIgnoreCase)
+                string? fileName = string.Equals(incomingDataType, "MDEAH", StringComparison.OrdinalIgnoreCase)
                     ? (hashData.ContainsKey("FileName") ? hashData["FileName"]?.ToString() : null)
                     : (hashData.ContainsKey("File Name") ? hashData["File Name"]?.ToString() : null);
 

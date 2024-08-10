@@ -6,6 +6,22 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <UseWindowsForms>true</UseWindowsForms>
+    <XamlDebuggingInformation>True</XamlDebuggingInformation>
+    <RootNamespace>WDACConfig</RootNamespace>
+    <PackageProjectUrl>https://github.com/HotCakeX/Harden-Windows-Security</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/HotCakeX/Harden-Windows-Security</RepositoryUrl>
+    <PackageTags>Windows</PackageTags>
+    <Title>WDACConfig</Title>
+    <Authors>Violet Hansen</Authors>
+    <Company>SpyNetGirl</Company>
+  </PropertyGroup>
+
+   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <CheckForOverflowUnderflow>True</CheckForOverflowUnderflow>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <CheckForOverflowUnderflow>True</CheckForOverflowUnderflow>
   </PropertyGroup>
 
     <ItemGroup>

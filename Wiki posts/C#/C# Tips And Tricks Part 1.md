@@ -98,7 +98,7 @@ Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Main", "Resources")
 
 ### Alternative Way | Embedding
 
-There are of course other options, such as designating/embedding the file as a resources of your application.
+There are of course other options, such as designating/embedding the file as a resource of your application.
 
 To do that first navigate to the file and right-click on it, select Properties, and in the *Build Action* property select *Embedded Resource*.
 

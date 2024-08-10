@@ -2,25 +2,38 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 
-namespace HardeningModule
+#nullable enable
+
+namespace HardenWindowsSecurity
 {
     public class ProcessMitigationsParser
     {
         // Define a public class to store the structure of the new CSV data
         public class ProcessMitigationsRecords
         {
-            public string ProgramName { get; set; }    // Column for program name
-            public string Mitigation { get; set; }     // Column for mitigation
-            public string Action { get; set; }         // Column for action
-            public string RemovalAllowed { get; set; } // Column for removal allowed
-            public string Comment { get; set; }        // Column for comments
+            public string? ProgramName { get; set; }    // Column for program name
+            public string? Mitigation { get; set; }     // Column for mitigation
+            public string? Action { get; set; }         // Column for action
+            public string? RemovalAllowed { get; set; } // Column for removal allowed
+            public string? Comment { get; set; }        // Column for comments
         }
 
         // Define a public method to parse the CSV file and save the records to RegistryCSVItems
         public static void ReadCsv()
         {
-            // Define the path to the CSV file
-            string path = Path.Combine(GlobalVars.path, "Resources", "ProcessMitigations.csv");
+
+            // Initializing the path variable for the CSV file
+            string path = string.Empty;
+
+            if (GlobalVars.path != null)
+            {
+                // Define the path to the CSV file
+                path = Path.Combine(GlobalVars.path, "Resources", "ProcessMitigations.csv");
+            }
+            else
+            {
+                throw new Exception("");
+            }
 
             // Open the file and read the contents
             using (StreamReader reader = new StreamReader(path))
@@ -46,7 +59,7 @@ namespace HardeningModule
                     if (values.Length == 5)
                     {
                         // Add a new ProcessMitigationsRecords to the list
-                        HardeningModule.GlobalVars.ProcessMitigations.Add(new ProcessMitigationsRecords
+                        HardenWindowsSecurity.GlobalVars.ProcessMitigations!.Add(new ProcessMitigationsRecords
                         {
                             ProgramName = values[0],
                             Mitigation = values[1],

@@ -3,10 +3,13 @@ using System.Collections.Generic;
 using System.IO;
 using System.Management;
 using System.Threading.Tasks;
+using System.Globalization;
+
+#nullable enable
 
 /// root\cimv2\mdm is the namespace for CSPs
 /// https://learn.microsoft.com/en-us/windows/win32/wmisdk/common-information-model
-namespace HardeningModule
+namespace HardenWindowsSecurity
 {
     // Class that deals with MDM/CSPs/Intune
     public class MDM
@@ -22,7 +25,8 @@ namespace HardeningModule
         private static async Task<Dictionary<string, List<Dictionary<string, object>>>> GetAsync()
         {
             // Set the location of the CSV file containing the MDM list
-            string csvFilePath = Path.Combine(HardeningModule.GlobalVars.path, "Resources", "MDMResultClasses.csv");
+            string path = HardenWindowsSecurity.GlobalVars.path ?? throw new InvalidOperationException("GlobalVars.path is null");
+            string csvFilePath = Path.Combine(path, "Resources", "MDMResultClasses.csv");
 
             // Create a dictionary where keys are the class names and values are lists of dictionaries
             Dictionary<string, List<Dictionary<string, object>>> results = new Dictionary<string, List<Dictionary<string, object>>>();
@@ -39,10 +43,11 @@ namespace HardeningModule
                 foreach (var record in records)
                 {
                     // Process only authorized records
-                    if (record.Authorized.Equals("TRUE", StringComparison.OrdinalIgnoreCase))
+                    if (record.Authorized?.Equals("TRUE", StringComparison.OrdinalIgnoreCase) == true)
                     {
+
                         // Debugging output
-                        // HardeningModule.VerboseLogger.Write($"Namespace: {record.Namespace}, Class: {record.Class}");
+                        // HardenWindowsSecurity.VerboseLogger.Write($"Namespace: {record.Namespace}, Class: {record.Class}");
 
                         // Add a new task for each class query
                         tasks.Add(Task.Run(() =>
@@ -60,11 +65,12 @@ namespace HardeningModule
                             catch (ManagementException e)
                             {
                                 // Write verbose error message if connection fails
-                                HardeningModule.VerboseLogger.Write($"Error connecting to namespace {record.Namespace}: {e.Message}");
+                                HardenWindowsSecurity.VerboseLogger.Write($"Error connecting to namespace {record.Namespace}: {e.Message}");
                             }
 
                             // Create object query for the current class
-                            ObjectQuery query = new ObjectQuery("SELECT * FROM " + record.Class.Trim());
+                            string classQuery = record.Class?.Trim() ?? throw new InvalidOperationException("Record.Class is null");
+                            ObjectQuery query = new ObjectQuery("SELECT * FROM " + classQuery);
 
                             // Create management object searcher for the query
                             ManagementObjectSearcher searcher = new ManagementObjectSearcher(scope, query);
@@ -91,7 +97,7 @@ namespace HardeningModule
                             catch (ManagementException e)
                             {
                                 // Write verbose error message if query fails
-                                HardeningModule.VerboseLogger.Write($"Error querying {record.Class}: {e.Message}");
+                                HardenWindowsSecurity.VerboseLogger.Write($"Error querying {record.Class}: {e.Message}");
                             }
 
                             // Add class results to main results dictionary in a thread-safe manner
@@ -130,7 +136,7 @@ namespace HardeningModule
 
             using (var reader = new StreamReader(filePath))
             {
-                string line;
+                string? line; // Explicitly declare line as nullable
                 bool isFirstLine = true;
                 while ((line = await reader.ReadLineAsync()) != null)
                 {
@@ -139,6 +145,9 @@ namespace HardeningModule
                         isFirstLine = false;
                         continue; // Skip the header line
                     }
+
+                    if (line is null) // This check is redundant but shows explicit handling
+                        continue;
 
                     var values = line.Split(',');
                     // because of using "Comment" column in the CSV file optionally for certain MDM CIMs
@@ -157,12 +166,13 @@ namespace HardeningModule
             return records;
         }
 
+
         // Class to represent a record in the CSV file
         private class MdmRecord
         {
-            public string Namespace { get; set; }
-            public string Class { get; set; }
-            public string Authorized { get; set; }
+            public string? Namespace { get; set; }
+            public string? Class { get; set; }
+            public string? Authorized { get; set; }
         }
     }
 }

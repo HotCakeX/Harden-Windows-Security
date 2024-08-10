@@ -450,15 +450,14 @@ Function Edit-Addons {
 }
 Function Start-FileDownload {
     Param (
-        [Parameter(Mandatory = $false)][System.Collections.Hashtable]$SyncHash,
         [Parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$GUI
     )
-    if (!([HardeningModule.GlobalVars]::Offline)) { Write-Verbose -Message 'Downloading the required files' }
-    [HardeningModule.FileDownloader]::PrepDownloadedFiles(
-        ($GUI ? $True : $False),
-        ($GUI ? "$($SyncHash['GlobalVars'].LGPOZipPath)" : "$PathToLGPO"),
-        ($GUI ? "$($SyncHash['GlobalVars'].MicrosoftSecurityBaselineZipPath)" : "$PathToMSFTSecurityBaselines"),
-        ($GUI ? "$($SyncHash['GlobalVars'].Microsoft365AppsSecurityBaselineZipPath)" : "$PathToMSFT365AppsSecurityBaselines")
+    if (!([HardenWindowsSecurity.GlobalVars]::Offline)) { Write-Verbose -Message 'Downloading the required files' }
+    [HardenWindowsSecurity.FileDownloader]::PrepDownloadedFiles(
+        ($GUI ? [HardenWindowsSecurity.GUI]::LGPOZipPath : "$PathToLGPO"),
+        ($GUI ? [HardenWindowsSecurity.GUI]::MicrosoftSecurityBaselineZipPath : "$PathToMSFTSecurityBaselines"),
+        ($GUI ? [HardenWindowsSecurity.GUI]::Microsoft365AppsSecurityBaselineZipPath : "$PathToMSFT365AppsSecurityBaselines"),
+        ($GUI ? $True : $False)
     )
     Write-Verbose -Message 'Finished downloading/processing the required files'
 }
@@ -520,7 +519,7 @@ Function New-ToastNotification {
         $Notifier.Show($Toast)
 
         # If the module is running locally, the toast notification image will be taken from the module directory, if not it will be taken from the working directory where it was already downloaded from the GitHub repo
-    } -args $SelectedCategories.Count, ("$([HardeningModule.GlobalVars]::Path)\Resources\Media\ToastNotificationIcon.png") *>&1 # To display any error message or other streams from the script block on the console
+    } -args $SelectedCategories.Count, ("$([HardenWindowsSecurity.GlobalVars]::Path)\Resources\Media\ToastNotificationIcon.png") *>&1 # To display any error message or other streams from the script block on the console
 }
 #Endregion Helper-Functions-And-ScriptBlocks
 
@@ -528,35 +527,35 @@ Function New-ToastNotification {
 Function Invoke-MicrosoftSecurityBaselines {
     param([System.Management.Automation.SwitchParameter]$RunUnattended)
 
-    ([HardeningModule.GlobalVars]::CurrentMainStep)++
+    ([HardenWindowsSecurity.GlobalVars]::CurrentMainStep)++
     if (-NOT $RunUnattended) { $Host.UI.RawUI.WindowTitle = '🔐 Security Baselines' } else { Write-Verbose -Message '=========================' }
     Write-Verbose -Message 'Processing the Security Baselines category function'
 
     :MicrosoftSecurityBaselinesCategoryLabel switch ($RunUnattended ? ($SecBaselines_NoOverrides ? 'Yes' : 'Yes, With the Optional Overrides (Recommended)') : (Select-Option -Options 'Yes', 'Yes, With the Optional Overrides (Recommended)' , 'No', 'Exit' -Message "`nApply Microsoft Security Baseline ?")) {
         'Yes' {
-            Write-Verbose -Message "Changing the current directory to '$([HardeningModule.GlobalVars]::MicrosoftSecurityBaselinePath)\Scripts\'"
-            Push-Location -Path "$([HardeningModule.GlobalVars]::MicrosoftSecurityBaselinePath)\Scripts\"
+            Write-Verbose -Message "Changing the current directory to '$([HardenWindowsSecurity.GlobalVars]::MicrosoftSecurityBaselinePath)\Scripts\'"
+            Push-Location -Path "$([HardenWindowsSecurity.GlobalVars]::MicrosoftSecurityBaselinePath)\Scripts\"
 
             Write-Verbose -Message 'Applying the Microsoft Security Baselines without the optional overrides'
-            Write-Progress -Id 0 -Activity 'Microsoft Security Baseline' -Status "Step $([HardeningModule.GlobalVars]::CurrentMainStep)/$([HardeningModule.GlobalVars]::TotalMainSteps)" -PercentComplete (([HardeningModule.GlobalVars]::CurrentMainStep) / ([HardeningModule.GlobalVars]::TotalMainSteps) * 100)
+            Write-Progress -Id 0 -Activity 'Microsoft Security Baseline' -Status "Step $([HardenWindowsSecurity.GlobalVars]::CurrentMainStep)/$([HardenWindowsSecurity.GlobalVars]::TotalMainSteps)" -PercentComplete (([HardenWindowsSecurity.GlobalVars]::CurrentMainStep) / ([HardenWindowsSecurity.GlobalVars]::TotalMainSteps) * 100)
 
             Write-Verbose -Message 'Running the official PowerShell script included in the Microsoft Security Baseline file downloaded from Microsoft servers'
             .\Baseline-LocalInstall.ps1 -Win11NonDomainJoined 4>$null
         }
         'Yes, With the Optional Overrides (Recommended)' {
-            Write-Verbose -Message "Changing the current directory to '$([HardeningModule.GlobalVars]::MicrosoftSecurityBaselinePath)\Scripts\'"
-            Push-Location -Path "$([HardeningModule.GlobalVars]::MicrosoftSecurityBaselinePath)\Scripts\"
+            Write-Verbose -Message "Changing the current directory to '$([HardenWindowsSecurity.GlobalVars]::MicrosoftSecurityBaselinePath)\Scripts\'"
+            Push-Location -Path "$([HardenWindowsSecurity.GlobalVars]::MicrosoftSecurityBaselinePath)\Scripts\"
 
             Write-Verbose -Message 'Applying the Microsoft Security Baselines with the optional overrides'
-            Write-Progress -Id 0 -Activity 'Microsoft Security Baseline' -Status "Step $([HardeningModule.GlobalVars]::CurrentMainStep)/$([HardeningModule.GlobalVars]::TotalMainSteps)" -PercentComplete (([HardeningModule.GlobalVars]::CurrentMainStep) / ([HardeningModule.GlobalVars]::TotalMainSteps) * 100)
+            Write-Progress -Id 0 -Activity 'Microsoft Security Baseline' -Status "Step $([HardenWindowsSecurity.GlobalVars]::CurrentMainStep)/$([HardenWindowsSecurity.GlobalVars]::TotalMainSteps)" -PercentComplete (([HardenWindowsSecurity.GlobalVars]::CurrentMainStep) / ([HardenWindowsSecurity.GlobalVars]::TotalMainSteps) * 100)
 
             Write-Verbose -Message 'Running the official PowerShell script included in the Microsoft Security Baseline file downloaded from Microsoft servers'
             .\Baseline-LocalInstall.ps1 -Win11NonDomainJoined 4>$null
 
             Start-Sleep -Seconds 1
 
-            &$([HardeningModule.GlobalVars]::LGPOExe) /q /m "$([HardeningModule.GlobalVars]::Path)\Resources\Security-Baselines-X\Overrides for Microsoft Security Baseline\registry.pol"
-            &$([HardeningModule.GlobalVars]::LGPOExe) /q /s "$([HardeningModule.GlobalVars]::Path)\Resources\Security-Baselines-X\Overrides for Microsoft Security Baseline\GptTmpl.inf"
+            &$([HardenWindowsSecurity.GlobalVars]::LGPOExe) /q /m "$([HardenWindowsSecurity.GlobalVars]::Path)\Resources\Security-Baselines-X\Overrides for Microsoft Security Baseline\registry.pol"
+            &$([HardenWindowsSecurity.GlobalVars]::LGPOExe) /q /s "$([HardenWindowsSecurity.GlobalVars]::Path)\Resources\Security-Baselines-X\Overrides for Microsoft Security Baseline\GptTmpl.inf"
 
             Write-Verbose -Message 'Re-enabling the XblGameSave Standby Task that gets disabled by Microsoft Security Baselines'
             SCHTASKS.EXE /Change /TN \Microsoft\XblGameSave\XblGameSaveTask /Enable
@@ -571,17 +570,17 @@ Function Invoke-MicrosoftSecurityBaselines {
 Function Invoke-Microsoft365AppsSecurityBaselines {
     param([System.Management.Automation.SwitchParameter]$RunUnattended)
 
-    ([HardeningModule.GlobalVars]::CurrentMainStep)++
+    ([HardenWindowsSecurity.GlobalVars]::CurrentMainStep)++
     if (-NOT $RunUnattended) { $Host.UI.RawUI.WindowTitle = '🧁 M365 Apps Security' } else { Write-Verbose -Message '=========================' }
     Write-Verbose -Message 'Processing the M365 Apps Security category function'
 
     :Microsoft365AppsSecurityBaselinesCategoryLabel switch ($RunUnattended ? 'Yes' : (Select-Option -Options 'Yes', 'No', 'Exit' -Message "`nApply Microsoft 365 Apps Security Baseline ?")) {
         'Yes' {
             Write-Verbose -Message 'Applying the Microsoft 365 Apps Security Baseline'
-            Write-Progress -Id 0 -Activity 'Microsoft 365 Apps Security Baseline' -Status "Step $([HardeningModule.GlobalVars]::CurrentMainStep)/$([HardeningModule.GlobalVars]::TotalMainSteps)" -PercentComplete (([HardeningModule.GlobalVars]::CurrentMainStep) / ([HardeningModule.GlobalVars]::TotalMainSteps) * 100)
+            Write-Progress -Id 0 -Activity 'Microsoft 365 Apps Security Baseline' -Status "Step $([HardenWindowsSecurity.GlobalVars]::CurrentMainStep)/$([HardenWindowsSecurity.GlobalVars]::TotalMainSteps)" -PercentComplete (([HardenWindowsSecurity.GlobalVars]::CurrentMainStep) / ([HardenWindowsSecurity.GlobalVars]::TotalMainSteps) * 100)
 
-            Write-Verbose -Message "Changing the current directory to '$([HardeningModule.GlobalVars]::Microsoft365SecurityBaselinePath)\Scripts\'"
-            Push-Location -Path "$([HardeningModule.GlobalVars]::Microsoft365SecurityBaselinePath)\Scripts\"
+            Write-Verbose -Message "Changing the current directory to '$([HardenWindowsSecurity.GlobalVars]::Microsoft365SecurityBaselinePath)\Scripts\'"
+            Push-Location -Path "$([HardenWindowsSecurity.GlobalVars]::Microsoft365SecurityBaselinePath)\Scripts\"
 
             Write-Verbose -Message 'Running the official PowerShell script included in the Microsoft 365 Apps Security Baseline file downloaded from Microsoft servers'
             .\Baseline-LocalInstall.ps1 4>$null
@@ -596,16 +595,16 @@ Function Invoke-Microsoft365AppsSecurityBaselines {
 Function Invoke-MicrosoftDefender {
     param([System.Management.Automation.SwitchParameter]$RunUnattended)
 
-    ([HardeningModule.GlobalVars]::CurrentMainStep)++
+    ([HardenWindowsSecurity.GlobalVars]::CurrentMainStep)++
     if (-NOT $RunUnattended) { $Host.UI.RawUI.WindowTitle = '🍁 MSFT Defender' } else { Write-Verbose -Message '=========================' }
     Write-Verbose -Message 'Processing the Microsoft Defender category function'
 
     :MicrosoftDefenderLabel switch ($RunUnattended ? 'Yes' : (Select-Option -Options 'Yes', 'No', 'Exit' -Message "`nRun Microsoft Defender category ?")) {
         'Yes' {
             Write-Verbose -Message 'Running the Microsoft Defender category'
-            Write-Progress -Id 0 -Activity 'Microsoft Defender' -Status "Step $([HardeningModule.GlobalVars]::CurrentMainStep)/$([HardeningModule.GlobalVars]::TotalMainSteps)" -PercentComplete (([HardeningModule.GlobalVars]::CurrentMainStep) / ([HardeningModule.GlobalVars]::TotalMainSteps) * 100)
+            Write-Progress -Id 0 -Activity 'Microsoft Defender' -Status "Step $([HardenWindowsSecurity.GlobalVars]::CurrentMainStep)/$([HardenWindowsSecurity.GlobalVars]::TotalMainSteps)" -PercentComplete (([HardenWindowsSecurity.GlobalVars]::CurrentMainStep) / ([HardenWindowsSecurity.GlobalVars]::TotalMainSteps) * 100)
 
-            &$([HardeningModule.GlobalVars]::LGPOExe) /q /m "$([HardeningModule.GlobalVars]::Path)\Resources\Security-Baselines-X\Microsoft Defender Policies\registry.pol"
+            &$([HardenWindowsSecurity.GlobalVars]::LGPOExe) /q /m "$([HardenWindowsSecurity.GlobalVars]::Path)\Resources\Security-Baselines-X\Microsoft Defender Policies\registry.pol"
 
             # Make sure the parameters are available in the ConfigDefender module before using them
             [System.Collections.Hashtable]$AvailableDefenderParams = (Get-Command -Name Set-MpPreference).Parameters
@@ -664,13 +663,13 @@ Function Invoke-MicrosoftDefender {
             Set-ProcessMitigation -System -Enable ForceRelocateImages
 
             Write-Verbose -Message 'Excluding GitHub Desktop Git executables from mandatory ASLR if they are found'
-            foreach ($Item in [HardeningModule.GitHubDesktopFinder]::Find()) {
+            foreach ($Item in [HardenWindowsSecurity.GitHubDesktopFinder]::Find()) {
                 Write-Verbose -Message "Excluding $($Item.Name) from mandatory ASLR for GitHub Desktop"
                 Set-ProcessMitigation -Name $Item.Name -Disable ForceRelocateImages
             }
 
             Write-Verbose -Message 'Excluding Git executables from mandatory ASLR if they are found'
-            foreach ($Item in [HardeningModule.GitExesFinder]::Find()) {
+            foreach ($Item in [HardenWindowsSecurity.GitExesFinder]::Find()) {
                 Write-Verbose -Message "Excluding $($Item.Name) from mandatory ASLR for Git"
                 Set-ProcessMitigation -Name $Item.Name -Disable ForceRelocateImages
             }
@@ -678,7 +677,7 @@ Function Invoke-MicrosoftDefender {
             Write-Verbose -Message 'Applying the Process Mitigations'
 
             # Group the data by ProgramName
-            [Microsoft.PowerShell.Commands.GroupInfo[]]$GroupedMitigations = [HardeningModule.GlobalVars]::ProcessMitigations | Group-Object -Property ProgramName
+            [Microsoft.PowerShell.Commands.GroupInfo[]]$GroupedMitigations = [HardenWindowsSecurity.GlobalVars]::ProcessMitigations | Group-Object -Property ProgramName
             # Get the current process mitigations
             [System.Object[]]$AllAvailableMitigations = (Get-ItemProperty -Path 'Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\*')
 
@@ -739,32 +738,32 @@ Function Invoke-MicrosoftDefender {
             Set-BcdElement -Element 'nx' -Type 'Integer' -Value '3' -Force
 
             # Suggest turning on Smart App Control only if it's in Eval mode
-            if (([HardeningModule.GlobalVars]::MDAVConfigCurrent).SmartAppControlState -eq 'Eval') {
+            if (([HardenWindowsSecurity.GlobalVars]::MDAVConfigCurrent).SmartAppControlState -eq 'Eval') {
                 :SmartAppControlLabel switch ($RunUnattended ? ($MSFTDefender_SAC ? 'Yes' : 'No' ) : (Select-Option -SubCategory -Options 'Yes', 'No', 'Exit' -Message "`nTurn on Smart App Control ?")) {
                     'Yes' {
                         Write-Verbose -Message 'Turning on Smart App Control'
 
-                        [HardeningModule.RegistryEditor]::EditRegistry('Registry::HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\CI\Policy', 'VerifiedAndReputablePolicyState', '1', 'DWORD', 'AddOrModify')
+                        [HardenWindowsSecurity.RegistryEditor]::EditRegistry('Registry::HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\CI\Policy', 'VerifiedAndReputablePolicyState', '1', 'DWORD', 'AddOrModify')
 
                         # Let the optional diagnostic data be enabled automatically
-                        ([HardeningModule.GlobalVars]::ShouldEnableOptionalDiagnosticData) = $True
+                        ([HardenWindowsSecurity.GlobalVars]::ShouldEnableOptionalDiagnosticData) = $True
 
                     } 'No' { break SmartAppControlLabel }
                     'Exit' { break MainSwitchLabel }
                 }
             }
 
-            if ((([HardeningModule.GlobalVars]::ShouldEnableOptionalDiagnosticData) -eq $True) -or (([HardeningModule.GlobalVars]::MDAVConfigCurrent).SmartAppControlState -eq 'On')) {
+            if ((([HardenWindowsSecurity.GlobalVars]::ShouldEnableOptionalDiagnosticData) -eq $True) -or (([HardenWindowsSecurity.GlobalVars]::MDAVConfigCurrent).SmartAppControlState -eq 'On')) {
                 Write-Verbose -Message 'Enabling Optional Diagnostic Data because SAC is on or user selected to turn it on'
-                &$([HardeningModule.GlobalVars]::LGPOExe) /q /m "$([HardeningModule.GlobalVars]::Path)\Resources\Security-Baselines-X\Microsoft Defender Policies\Optional Diagnostic Data\registry.pol"
+                &$([HardenWindowsSecurity.GlobalVars]::LGPOExe) /q /m "$([HardenWindowsSecurity.GlobalVars]::Path)\Resources\Security-Baselines-X\Microsoft Defender Policies\Optional Diagnostic Data\registry.pol"
             }
             else {
                 # Ask user if they want to turn on optional diagnostic data only if Smart App Control is not already turned off
-                if (([HardeningModule.GlobalVars]::MDAVConfigCurrent).SmartAppControlState -ne 'Off') {
+                if (([HardenWindowsSecurity.GlobalVars]::MDAVConfigCurrent).SmartAppControlState -ne 'Off') {
                     :SmartAppControlLabel2 switch ($RunUnattended ? ($MSFTDefender_NoDiagData ? 'No' : 'Yes') : (Select-Option -SubCategory -Options 'Yes', 'No', 'Exit' -Message "`nEnable Optional Diagnostic Data ?" -ExtraMessage 'Required for Smart App Control usage and evaluation, read the GitHub Readme!')) {
                         'Yes' {
                             Write-Verbose -Message 'Enabling Optional Diagnostic Data'
-                            &$([HardeningModule.GlobalVars]::LGPOExe) /q /m "$([HardeningModule.GlobalVars]::Path)\Resources\Security-Baselines-X\Microsoft Defender Policies\Optional Diagnostic Data\registry.pol"
+                            &$([HardenWindowsSecurity.GlobalVars]::LGPOExe) /q /m "$([HardenWindowsSecurity.GlobalVars]::Path)\Resources\Security-Baselines-X\Microsoft Defender Policies\Optional Diagnostic Data\registry.pol"
                         } 'No' { break SmartAppControlLabel2 }
                         'Exit' { break MainSwitchLabel }
                     }
@@ -775,7 +774,7 @@ Function Invoke-MicrosoftDefender {
             }
 
             Write-Verbose -Message 'Getting the state of fast weekly Microsoft recommended driver block list update scheduled task'
-            [System.String]$BlockListScheduledTaskState = ([HardeningModule.TaskSchedulerHelper]::Get('MSFT Driver Block list update', '\MSFT Driver Block list update\', 'TaskList')).State
+            [System.String]$BlockListScheduledTaskState = ([HardenWindowsSecurity.TaskSchedulerHelper]::Get('MSFT Driver Block list update', '\MSFT Driver Block list update\', 'TaskList')).State
 
             # Create scheduled task for fast weekly Microsoft recommended driver block list update if it doesn't exist or exists but is not Ready/Running
             if (($BlockListScheduledTaskState -notin '2', '3', '4')) {
@@ -810,7 +809,7 @@ Function Invoke-MicrosoftDefender {
             }
 
             # Only display this prompt if Engine and Platform update channels are not already set to Beta
-            if ((([HardeningModule.GlobalVars]::MDAVPreferencesCurrent).EngineUpdatesChannel -ne '2') -or (([HardeningModule.GlobalVars]::MDAVPreferencesCurrent).PlatformUpdatesChannel -ne '2')) {
+            if ((([HardenWindowsSecurity.GlobalVars]::MDAVPreferencesCurrent).EngineUpdatesChannel -ne '2') -or (([HardenWindowsSecurity.GlobalVars]::MDAVPreferencesCurrent).PlatformUpdatesChannel -ne '2')) {
                 # Set Microsoft Defender engine and platform update channel to beta - Devices in the Windows Insider Program are subscribed to this channel by default.
                 :DefenderUpdateChannelsLabel switch ($RunUnattended ? ($MSFTDefender_BetaChannels ? 'Yes' : 'No') : (Select-Option -SubCategory -Options 'Yes', 'No', 'Exit' -Message "`nSet Microsoft Defender engine and platform update channel to beta ?")) {
                     'Yes' {
@@ -832,16 +831,16 @@ Function Invoke-MicrosoftDefender {
 Function Invoke-AttackSurfaceReductionRules {
     param([System.Management.Automation.SwitchParameter]$RunUnattended)
 
-    ([HardeningModule.GlobalVars]::CurrentMainStep)++
+    ([HardenWindowsSecurity.GlobalVars]::CurrentMainStep)++
     if (-NOT $RunUnattended) { $Host.UI.RawUI.WindowTitle = '🪷 ASR Rules' } else { Write-Verbose -Message '=========================' }
     Write-Verbose -Message 'Processing the ASR Rules category function'
 
     :ASRRulesCategoryLabel switch ($RunUnattended ? 'Yes' : (Select-Option -Options 'Yes', 'No', 'Exit' -Message "`nRun Attack Surface Reduction Rules category ?")) {
         'Yes' {
             Write-Verbose -Message 'Running the Attack Surface Reduction Rules category'
-            Write-Progress -Id 0 -Activity 'Attack Surface Reduction Rules' -Status "Step $([HardeningModule.GlobalVars]::CurrentMainStep)/$([HardeningModule.GlobalVars]::TotalMainSteps)" -PercentComplete (([HardeningModule.GlobalVars]::CurrentMainStep) / ([HardeningModule.GlobalVars]::TotalMainSteps) * 100)
+            Write-Progress -Id 0 -Activity 'Attack Surface Reduction Rules' -Status "Step $([HardenWindowsSecurity.GlobalVars]::CurrentMainStep)/$([HardenWindowsSecurity.GlobalVars]::TotalMainSteps)" -PercentComplete (([HardenWindowsSecurity.GlobalVars]::CurrentMainStep) / ([HardenWindowsSecurity.GlobalVars]::TotalMainSteps) * 100)
 
-            &$([HardeningModule.GlobalVars]::LGPOExe) /q /m "$([HardeningModule.GlobalVars]::Path)\Resources\Security-Baselines-X\Attack Surface Reduction Rules Policies\registry.pol"
+            &$([HardenWindowsSecurity.GlobalVars]::LGPOExe) /q /m "$([HardenWindowsSecurity.GlobalVars]::Path)\Resources\Security-Baselines-X\Attack Surface Reduction Rules Policies\registry.pol"
         } 'No' { break ASRRulesCategoryLabel }
         'Exit' { break MainSwitchLabel }
     }
@@ -849,7 +848,7 @@ Function Invoke-AttackSurfaceReductionRules {
 Function Invoke-BitLockerSettings {
     param([System.Management.Automation.SwitchParameter]$RunUnattended)
 
-    ([HardeningModule.GlobalVars]::CurrentMainStep)++
+    ([HardenWindowsSecurity.GlobalVars]::CurrentMainStep)++
     if (-NOT $RunUnattended) { $Host.UI.RawUI.WindowTitle = '🔑 BitLocker' } else { Write-Verbose -Message '=========================' }
     Write-Verbose -Message 'Processing the BitLocker category function'
 
@@ -900,21 +899,21 @@ https://learn.microsoft.com/en-us/windows/security/operating-system-security/dat
     :BitLockerCategoryLabel switch ($RunUnattended ? 'Yes' : (Select-Option -Options 'Yes', 'No', 'Exit' -Message "`nRun Bitlocker category ?")) {
         'Yes' {
             Write-Verbose -Message 'Running the Bitlocker category'
-            Write-Progress -Id 0 -Activity 'Bitlocker Settings' -Status "Step $([HardeningModule.GlobalVars]::CurrentMainStep)/$([HardeningModule.GlobalVars]::TotalMainSteps)" -PercentComplete (([HardeningModule.GlobalVars]::CurrentMainStep) / ([HardeningModule.GlobalVars]::TotalMainSteps) * 100)
+            Write-Progress -Id 0 -Activity 'Bitlocker Settings' -Status "Step $([HardenWindowsSecurity.GlobalVars]::CurrentMainStep)/$([HardenWindowsSecurity.GlobalVars]::TotalMainSteps)" -PercentComplete (([HardenWindowsSecurity.GlobalVars]::CurrentMainStep) / ([HardenWindowsSecurity.GlobalVars]::TotalMainSteps) * 100)
 
-            &$([HardeningModule.GlobalVars]::LGPOExe) /q /m "$([HardeningModule.GlobalVars]::Path)\Resources\Security-Baselines-X\Bitlocker Policies\registry.pol"
+            &$([HardenWindowsSecurity.GlobalVars]::LGPOExe) /q /m "$([HardenWindowsSecurity.GlobalVars]::Path)\Resources\Security-Baselines-X\Bitlocker Policies\registry.pol"
 
             # returns true or false depending on whether Kernel DMA Protection is on or off
-            [System.Boolean]$BootDMAProtection = ([SystemInfo.NativeMethods]::BootDmaCheck()) -ne 0
+            [System.Boolean]$BootDMAProtection = ([HardenWindowsSecurity.SystemInformationClass]::BootDmaCheck()) -ne 0
 
             # Enables or disables DMA protection from Bitlocker Countermeasures based on the status of Kernel DMA protection.
             if ($BootDMAProtection) {
                 Write-Host -Object 'Kernel DMA protection is enabled on the system, disabling Bitlocker DMA protection.' -ForegroundColor Blue
-                &$([HardeningModule.GlobalVars]::LGPOExe) /q /m "$([HardeningModule.GlobalVars]::Path)\Resources\Security-Baselines-X\Overrides for Microsoft Security Baseline\Bitlocker DMA\Bitlocker DMA Countermeasure OFF\Registry.pol"
+                &$([HardenWindowsSecurity.GlobalVars]::LGPOExe) /q /m "$([HardenWindowsSecurity.GlobalVars]::Path)\Resources\Security-Baselines-X\Overrides for Microsoft Security Baseline\Bitlocker DMA\Bitlocker DMA Countermeasure OFF\Registry.pol"
             }
             else {
                 Write-Host -Object 'Kernel DMA protection is unavailable on the system, enabling Bitlocker DMA protection.' -ForegroundColor Blue
-                &$([HardeningModule.GlobalVars]::LGPOExe) /q /m "$([HardeningModule.GlobalVars]::Path)\Resources\Security-Baselines-X\Overrides for Microsoft Security Baseline\Bitlocker DMA\Bitlocker DMA Countermeasure ON\Registry.pol"
+                &$([HardenWindowsSecurity.GlobalVars]::LGPOExe) /q /m "$([HardenWindowsSecurity.GlobalVars]::Path)\Resources\Security-Baselines-X\Overrides for Microsoft Security Baseline\Bitlocker DMA\Bitlocker DMA Countermeasure ON\Registry.pol"
             }
 
             # Make sure there is no CD/DVD drives or mounted ISO in the system, because BitLocker throws an error when there is
@@ -988,7 +987,7 @@ https://learn.microsoft.com/en-us/windows/security/operating-system-security/dat
                                     [System.Security.SecureString]$Pin2 = $(Write-ColorfulText -C PinkBold -I 'Confirm your Bitlocker Startup Pin (between 10 to 20 characters)'; Read-Host -AsSecureString)
 
                                     # Compare the PINs and make sure they match
-                                    [System.Boolean]$TheyMatch = [HardeningModule.SecureStringComparer]::Compare($Pin1, $Pin2)
+                                    [System.Boolean]$TheyMatch = [HardenWindowsSecurity.SecureStringComparer]::Compare($Pin1, $Pin2)
                                     # If the PINs match and they are at least 10 characters long, max 20 characters
                                     if ( $TheyMatch -and ($Pin1.Length -in 10..20) -and ($Pin2.Length -in 10..20) ) {
                                         [System.Security.SecureString]$Pin = $Pin1
@@ -1023,7 +1022,7 @@ https://learn.microsoft.com/en-us/windows/security/operating-system-security/dat
                             [System.Security.SecureString]$Pin1 = $(Write-ColorfulText -C PinkBold -I 'Enter a Pin for Bitlocker startup (between 10 to 20 characters)'; Read-Host -AsSecureString)
                             [System.Security.SecureString]$Pin2 = $(Write-ColorfulText -C PinkBold -I 'Confirm your Bitlocker Startup Pin (between 10 to 20 characters)'; Read-Host -AsSecureString)
 
-                            [System.Boolean]$TheyMatch = [HardeningModule.SecureStringComparer]::Compare($Pin1, $Pin2)
+                            [System.Boolean]$TheyMatch = [HardenWindowsSecurity.SecureStringComparer]::Compare($Pin1, $Pin2)
 
                             if ( $TheyMatch -and ($Pin1.Length -in 10..20) -and ($Pin2.Length -in 10..20) ) {
                                 [System.Security.SecureString]$Pin = $Pin1
@@ -1107,7 +1106,7 @@ https://learn.microsoft.com/en-us/windows/security/operating-system-security/dat
                                     [System.Security.SecureString]$Pin2 = $(Write-ColorfulText -C PinkBold -I 'Confirm your Bitlocker Startup Pin (between 10 to 20 characters)'; Read-Host -AsSecureString)
 
                                     # Compare the PINs and make sure they match
-                                    [System.Boolean]$TheyMatch = [HardeningModule.SecureStringComparer]::Compare($Pin1, $Pin2)
+                                    [System.Boolean]$TheyMatch = [HardenWindowsSecurity.SecureStringComparer]::Compare($Pin1, $Pin2)
                                     # If the PINs match and they are at least 10 characters long, max 20 characters
                                     if ( $TheyMatch -and ($Pin1.Length -in 10..20) -and ($Pin2.Length -in 10..20) ) {
                                         [System.Security.SecureString]$Pin = $Pin1
@@ -1144,7 +1143,7 @@ https://learn.microsoft.com/en-us/windows/security/operating-system-security/dat
                             [System.Security.SecureString]$Pin2 = $(Write-ColorfulText -C PinkBold -I 'Confirm your Bitlocker Startup Pin (between 10 to 20 characters)'; Read-Host -AsSecureString)
 
                             # Compare the PINs and make sure they match
-                            [System.Boolean]$TheyMatch = [HardeningModule.SecureStringComparer]::Compare($Pin1, $Pin2)
+                            [System.Boolean]$TheyMatch = [HardenWindowsSecurity.SecureStringComparer]::Compare($Pin1, $Pin2)
                             # If the PINs match and they are at least 10 characters long, max 20 characters
                             if ( $TheyMatch -and ($Pin1.Length -in 10..20) -and ($Pin2.Length -in 10..20) ) {
                                 [System.Security.SecureString]$Pin = $Pin1
@@ -1185,7 +1184,7 @@ https://learn.microsoft.com/en-us/windows/security/operating-system-security/dat
 
             # Setting Hibernate file size to full after making sure OS drive is property encrypted for holding hibernate data
             # Making sure the system is not a VM because Hibernate on VM doesn't work and VMs have other/better options than Hibernation
-            if (-NOT (([HardeningModule.GlobalVars]::MDAVConfigCurrent).IsVirtualMachine)) {
+            if (-NOT (([HardenWindowsSecurity.GlobalVars]::MDAVConfigCurrent).IsVirtualMachine)) {
 
                 # Check to see if Hibernate is already set to full and HiberFileType is set to 2 which is Full, 1 is Reduced
                 try {
@@ -1387,14 +1386,14 @@ https://learn.microsoft.com/en-us/windows/security/operating-system-security/dat
 Function Invoke-TLSSecurity {
     param([System.Management.Automation.SwitchParameter]$RunUnattended)
 
-    ([HardeningModule.GlobalVars]::CurrentMainStep)++
+    ([HardenWindowsSecurity.GlobalVars]::CurrentMainStep)++
     if (-NOT $RunUnattended) { $Host.UI.RawUI.WindowTitle = '🛡️ TLS' } else { Write-Verbose -Message '=========================' }
     Write-Verbose -Message 'Processing the TLS Security category function'
 
     :TLSSecurityLabel switch ($RunUnattended ? 'Yes' : (Select-Option -Options 'Yes', 'No', 'Exit' -Message "`nRun TLS Security category ?")) {
         'Yes' {
             Write-Verbose -Message 'Running the TLS Security category'
-            Write-Progress -Id 0 -Activity 'TLS Security' -Status "Step $([HardeningModule.GlobalVars]::CurrentMainStep)/$([HardeningModule.GlobalVars]::TotalMainSteps)" -PercentComplete (([HardeningModule.GlobalVars]::CurrentMainStep) / ([HardeningModule.GlobalVars]::TotalMainSteps) * 100)
+            Write-Progress -Id 0 -Activity 'TLS Security' -Status "Step $([HardenWindowsSecurity.GlobalVars]::CurrentMainStep)/$([HardenWindowsSecurity.GlobalVars]::TotalMainSteps)" -PercentComplete (([HardenWindowsSecurity.GlobalVars]::CurrentMainStep) / ([HardenWindowsSecurity.GlobalVars]::TotalMainSteps) * 100)
 
             # creating these registry keys that have forward slashes in them
             @(  'DES 56/56', # DES 56-bit
@@ -1411,14 +1410,14 @@ Function Invoke-TLSSecurity {
             }
 
             Write-Verbose -Message 'Applying the TLS Security registry settings'
-            foreach ($Item in ([HardeningModule.GlobalVars]::RegistryCSVItems)) {
+            foreach ($Item in ([HardenWindowsSecurity.GlobalVars]::RegistryCSVItems)) {
                 if ($Item.category -eq 'TLS') {
-                    [HardeningModule.RegistryEditor]::EditRegistry($Item.Path, $Item.Key, $Item.Value, $Item.Type, $Item.Action)
+                    [HardenWindowsSecurity.RegistryEditor]::EditRegistry($Item.Path, $Item.Key, $Item.Value, $Item.Type, $Item.Action)
                 }
             }
 
             Write-Verbose -Message 'Applying the TLS Security Group Policies'
-            &$([HardeningModule.GlobalVars]::LGPOExe) /q /m "$([HardeningModule.GlobalVars]::Path)\Resources\Security-Baselines-X\TLS Security\registry.pol"
+            &$([HardenWindowsSecurity.GlobalVars]::LGPOExe) /q /m "$([HardenWindowsSecurity.GlobalVars]::Path)\Resources\Security-Baselines-X\TLS Security\registry.pol"
         } 'No' { break TLSSecurityLabel }
         'Exit' { break MainSwitchLabel }
     }
@@ -1426,23 +1425,23 @@ Function Invoke-TLSSecurity {
 Function Invoke-LockScreen {
     param([System.Management.Automation.SwitchParameter]$RunUnattended)
 
-    ([HardeningModule.GlobalVars]::CurrentMainStep)++
+    ([HardenWindowsSecurity.GlobalVars]::CurrentMainStep)++
     if (-NOT $RunUnattended) { $Host.UI.RawUI.WindowTitle = '💻 Lock Screen' } else { Write-Verbose -Message '=========================' }
     Write-Verbose -Message 'Processing the Lock Screen category function'
 
     :LockScreenLabel switch ($RunUnattended ? 'Yes' : (Select-Option -Options 'Yes', 'No', 'Exit' -Message "`nRun Lock Screen category ?")) {
         'Yes' {
             Write-Verbose -Message 'Running the Lock Screen category'
-            Write-Progress -Id 0 -Activity 'Lock Screen' -Status "Step $([HardeningModule.GlobalVars]::CurrentMainStep)/$([HardeningModule.GlobalVars]::TotalMainSteps)" -PercentComplete (([HardeningModule.GlobalVars]::CurrentMainStep) / ([HardeningModule.GlobalVars]::TotalMainSteps) * 100)
+            Write-Progress -Id 0 -Activity 'Lock Screen' -Status "Step $([HardenWindowsSecurity.GlobalVars]::CurrentMainStep)/$([HardenWindowsSecurity.GlobalVars]::TotalMainSteps)" -PercentComplete (([HardenWindowsSecurity.GlobalVars]::CurrentMainStep) / ([HardenWindowsSecurity.GlobalVars]::TotalMainSteps) * 100)
 
-            &$([HardeningModule.GlobalVars]::LGPOExe) /q /m "$([HardeningModule.GlobalVars]::Path)\Resources\Security-Baselines-X\Lock Screen Policies\registry.pol"
-            &$([HardeningModule.GlobalVars]::LGPOExe) /q /s "$([HardeningModule.GlobalVars]::Path)\Resources\Security-Baselines-X\Lock Screen Policies\GptTmpl.inf"
+            &$([HardenWindowsSecurity.GlobalVars]::LGPOExe) /q /m "$([HardenWindowsSecurity.GlobalVars]::Path)\Resources\Security-Baselines-X\Lock Screen Policies\registry.pol"
+            &$([HardenWindowsSecurity.GlobalVars]::LGPOExe) /q /s "$([HardenWindowsSecurity.GlobalVars]::Path)\Resources\Security-Baselines-X\Lock Screen Policies\GptTmpl.inf"
 
             # Apply the Don't display last signed-in policy
             :LockScreenLastSignedInLabel switch ($RunUnattended ? ($LockScreen_NoLastSignedIn ? 'Yes' : 'No') : (Select-Option -SubCategory -Options 'Yes', 'No', 'Exit' -Message "`nDon't display last signed-in on logon screen ?" -ExtraMessage 'Read the GitHub Readme!')) {
                 'Yes' {
                     Write-Verbose -Message "Applying the Don't display last signed-in policy"
-                    &$([HardeningModule.GlobalVars]::LGPOExe) /q /s "$([HardeningModule.GlobalVars]::Path)\Resources\Security-Baselines-X\Lock Screen Policies\Don't display last signed-in\GptTmpl.inf"
+                    &$([HardenWindowsSecurity.GlobalVars]::LGPOExe) /q /s "$([HardenWindowsSecurity.GlobalVars]::Path)\Resources\Security-Baselines-X\Lock Screen Policies\Don't display last signed-in\GptTmpl.inf"
                 } 'No' { break LockScreenLastSignedInLabel }
                 'Exit' { break MainSwitchLabel }
             }
@@ -1451,7 +1450,7 @@ Function Invoke-LockScreen {
             :CtrlAltDelLabel switch ($RunUnattended ? ($LockScreen_CtrlAltDel ? 'Yes' : 'No') : (Select-Option -SubCategory -Options 'Yes', 'No', 'Exit' -Message "`nEnable requiring CTRL + ALT + DEL on lock screen ?")) {
                 'Yes' {
                     Write-Verbose -Message 'Applying the Enable CTRL + ALT + DEL policy'
-                    &$([HardeningModule.GlobalVars]::LGPOExe) /q /s "$([HardeningModule.GlobalVars]::Path)\Resources\Security-Baselines-X\Lock Screen Policies\Enable CTRL + ALT + DEL\GptTmpl.inf"
+                    &$([HardenWindowsSecurity.GlobalVars]::LGPOExe) /q /s "$([HardenWindowsSecurity.GlobalVars]::Path)\Resources\Security-Baselines-X\Lock Screen Policies\Enable CTRL + ALT + DEL\GptTmpl.inf"
                 } 'No' { break CtrlAltDelLabel }
                 'Exit' { break MainSwitchLabel }
             }
@@ -1462,22 +1461,22 @@ Function Invoke-LockScreen {
 Function Invoke-UserAccountControl {
     param([System.Management.Automation.SwitchParameter]$RunUnattended)
 
-    ([HardeningModule.GlobalVars]::CurrentMainStep)++
+    ([HardenWindowsSecurity.GlobalVars]::CurrentMainStep)++
     if (-NOT $RunUnattended) { $Host.UI.RawUI.WindowTitle = '💎 UAC' } else { Write-Verbose -Message '=========================' }
     Write-Verbose -Message 'Processing the User Account Control category function'
 
     :UACLabel switch ($RunUnattended ? 'Yes' : (Select-Option -Options 'Yes', 'No', 'Exit' -Message "`nRun User Account Control category ?")) {
         'Yes' {
             Write-Verbose -Message 'Running the User Account Control category'
-            Write-Progress -Id 0 -Activity 'User Account Control' -Status "Step $([HardeningModule.GlobalVars]::CurrentMainStep)/$([HardeningModule.GlobalVars]::TotalMainSteps)" -PercentComplete (([HardeningModule.GlobalVars]::CurrentMainStep) / ([HardeningModule.GlobalVars]::TotalMainSteps) * 100)
+            Write-Progress -Id 0 -Activity 'User Account Control' -Status "Step $([HardenWindowsSecurity.GlobalVars]::CurrentMainStep)/$([HardenWindowsSecurity.GlobalVars]::TotalMainSteps)" -PercentComplete (([HardenWindowsSecurity.GlobalVars]::CurrentMainStep) / ([HardenWindowsSecurity.GlobalVars]::TotalMainSteps) * 100)
 
-            &$([HardeningModule.GlobalVars]::LGPOExe) /q /s "$([HardeningModule.GlobalVars]::Path)\Resources\Security-Baselines-X\User Account Control UAC Policies\GptTmpl.inf"
+            &$([HardenWindowsSecurity.GlobalVars]::LGPOExe) /q /s "$([HardenWindowsSecurity.GlobalVars]::Path)\Resources\Security-Baselines-X\User Account Control UAC Policies\GptTmpl.inf"
 
             # Apply the Hide the entry points for Fast User Switching policy
             :FastUserSwitchingLabel switch ($RunUnattended ? ($UAC_NoFastSwitching ? 'Yes' : 'No') : (Select-Option -SubCategory -Options 'Yes', 'No', 'Exit' -Message "`nHide the entry points for Fast User Switching ?" -ExtraMessage 'Read the GitHub Readme!')) {
                 'Yes' {
                     Write-Verbose -Message 'Applying the Hide the entry points for Fast User Switching policy'
-                    &$([HardeningModule.GlobalVars]::LGPOExe) /q /m "$([HardeningModule.GlobalVars]::Path)\Resources\Security-Baselines-X\User Account Control UAC Policies\Hides the entry points for Fast User Switching\registry.pol"
+                    &$([HardenWindowsSecurity.GlobalVars]::LGPOExe) /q /m "$([HardenWindowsSecurity.GlobalVars]::Path)\Resources\Security-Baselines-X\User Account Control UAC Policies\Hides the entry points for Fast User Switching\registry.pol"
                 } 'No' { break FastUserSwitchingLabel }
                 'Exit' { break MainSwitchLabel }
             }
@@ -1486,7 +1485,7 @@ Function Invoke-UserAccountControl {
             :ElevateSignedExeLabel switch ($RunUnattended ? ($UAC_OnlyElevateSigned ? 'Yes' : 'No') : (Select-Option -SubCategory -Options 'Yes', 'No', 'Exit' -Message "`nOnly elevate executables that are signed and validated ?" -ExtraMessage 'Read the GitHub Readme!')) {
                 'Yes' {
                     Write-Verbose -Message 'Applying the Only elevate executables that are signed and validated policy'
-                    &$([HardeningModule.GlobalVars]::LGPOExe) /q /s "$([HardeningModule.GlobalVars]::Path)\Resources\Security-Baselines-X\User Account Control UAC Policies\Only elevate executables that are signed and validated\GptTmpl.inf"
+                    &$([HardenWindowsSecurity.GlobalVars]::LGPOExe) /q /s "$([HardenWindowsSecurity.GlobalVars]::Path)\Resources\Security-Baselines-X\User Account Control UAC Policies\Only elevate executables that are signed and validated\GptTmpl.inf"
                 } 'No' { break ElevateSignedExeLabel }
                 'Exit' { break MainSwitchLabel }
             }
@@ -1497,16 +1496,16 @@ Function Invoke-UserAccountControl {
 Function Invoke-WindowsFirewall {
     param([System.Management.Automation.SwitchParameter]$RunUnattended)
 
-    ([HardeningModule.GlobalVars]::CurrentMainStep)++
+    ([HardenWindowsSecurity.GlobalVars]::CurrentMainStep)++
     if (-NOT $RunUnattended) { $Host.UI.RawUI.WindowTitle = '🔥 Firewall' } else { Write-Verbose -Message '=========================' }
     Write-Verbose -Message 'Processing the Windows Firewall category function'
 
     :WindowsFirewallLabel switch ($RunUnattended ? 'Yes' : (Select-Option -Options 'Yes', 'No', 'Exit' -Message "`nRun Windows Firewall category ?")) {
         'Yes' {
             Write-Verbose -Message 'Running the Windows Firewall category'
-            Write-Progress -Id 0 -Activity 'Windows Firewall' -Status "Step $([HardeningModule.GlobalVars]::CurrentMainStep)/$([HardeningModule.GlobalVars]::TotalMainSteps)" -PercentComplete (([HardeningModule.GlobalVars]::CurrentMainStep) / ([HardeningModule.GlobalVars]::TotalMainSteps) * 100)
+            Write-Progress -Id 0 -Activity 'Windows Firewall' -Status "Step $([HardenWindowsSecurity.GlobalVars]::CurrentMainStep)/$([HardenWindowsSecurity.GlobalVars]::TotalMainSteps)" -PercentComplete (([HardenWindowsSecurity.GlobalVars]::CurrentMainStep) / ([HardenWindowsSecurity.GlobalVars]::TotalMainSteps) * 100)
 
-            &$([HardeningModule.GlobalVars]::LGPOExe) /q /m "$([HardeningModule.GlobalVars]::Path)\Resources\Security-Baselines-X\Windows Firewall Policies\registry.pol"
+            &$([HardenWindowsSecurity.GlobalVars]::LGPOExe) /q /m "$([HardenWindowsSecurity.GlobalVars]::Path)\Resources\Security-Baselines-X\Windows Firewall Policies\registry.pol"
 
             Write-Verbose -Message 'Disabling Multicast DNS (mDNS) UDP-in Firewall Rules for all 3 Firewall profiles - disables only 3 rules'
             Get-NetFirewallRule |
@@ -1520,14 +1519,14 @@ Function Invoke-WindowsFirewall {
 Function Invoke-OptionalWindowsFeatures {
     param([System.Management.Automation.SwitchParameter]$RunUnattended)
 
-    ([HardeningModule.GlobalVars]::CurrentMainStep)++
+    ([HardenWindowsSecurity.GlobalVars]::CurrentMainStep)++
     if (-NOT $RunUnattended) { $Host.UI.RawUI.WindowTitle = '🏅 Optional Features' } else { Write-Verbose -Message '=========================' }
     Write-Verbose -Message 'Processing the Optional Windows Features category function'
 
     :OptionalFeaturesLabel switch ($RunUnattended ? 'Yes' : (Select-Option -Options 'Yes', 'No', 'Exit' -Message "`nRun Optional Windows Features category ?")) {
         'Yes' {
             Write-Verbose -Message 'Running the Optional Windows Features category'
-            Write-Progress -Id 0 -Activity 'Optional Windows Features' -Status "Step $([HardeningModule.GlobalVars]::CurrentMainStep)/$([HardeningModule.GlobalVars]::TotalMainSteps)" -PercentComplete (([HardeningModule.GlobalVars]::CurrentMainStep) / ([HardeningModule.GlobalVars]::TotalMainSteps) * 100)
+            Write-Progress -Id 0 -Activity 'Optional Windows Features' -Status "Step $([HardenWindowsSecurity.GlobalVars]::CurrentMainStep)/$([HardenWindowsSecurity.GlobalVars]::TotalMainSteps)" -PercentComplete (([HardenWindowsSecurity.GlobalVars]::CurrentMainStep) / ([HardenWindowsSecurity.GlobalVars]::TotalMainSteps) * 100)
 
             # PowerShell Core (only if installed from Microsoft Store) has problem with these commands: https://github.com/PowerShell/PowerShell/issues/13866#issuecomment-1519066710
             if ($PSHome -like "*$env:SystemDrive\Program Files\WindowsApps\Microsoft.PowerShell*") {
@@ -1570,24 +1569,24 @@ Function Invoke-OptionalWindowsFeatures {
 Function Invoke-WindowsNetworking {
     param([System.Management.Automation.SwitchParameter]$RunUnattended)
 
-    ([HardeningModule.GlobalVars]::CurrentMainStep)++
+    ([HardenWindowsSecurity.GlobalVars]::CurrentMainStep)++
     if (-NOT $RunUnattended) { $Host.UI.RawUI.WindowTitle = '📶 Networking' } else { Write-Verbose -Message '=========================' }
     Write-Verbose -Message 'Processing the Windows Networking category function'
 
     :WindowsNetworkingLabel switch ($RunUnattended ? 'Yes' : (Select-Option -Options 'Yes', 'No', 'Exit' -Message "`nRun Windows Networking category ?")) {
         'Yes' {
             Write-Verbose -Message 'Running the Windows Networking category'
-            Write-Progress -Id 0 -Activity 'Windows Networking' -Status "Step $([HardeningModule.GlobalVars]::CurrentMainStep)/$([HardeningModule.GlobalVars]::TotalMainSteps)" -PercentComplete (([HardeningModule.GlobalVars]::CurrentMainStep) / ([HardeningModule.GlobalVars]::TotalMainSteps) * 100)
+            Write-Progress -Id 0 -Activity 'Windows Networking' -Status "Step $([HardenWindowsSecurity.GlobalVars]::CurrentMainStep)/$([HardenWindowsSecurity.GlobalVars]::TotalMainSteps)" -PercentComplete (([HardenWindowsSecurity.GlobalVars]::CurrentMainStep) / ([HardenWindowsSecurity.GlobalVars]::TotalMainSteps) * 100)
 
-            &$([HardeningModule.GlobalVars]::LGPOExe) /q /m "$([HardeningModule.GlobalVars]::Path)\Resources\Security-Baselines-X\Windows Networking Policies\registry.pol"
-            &$([HardeningModule.GlobalVars]::LGPOExe) /q /s "$([HardeningModule.GlobalVars]::Path)\Resources\Security-Baselines-X\Windows Networking Policies\GptTmpl.inf"
+            &$([HardenWindowsSecurity.GlobalVars]::LGPOExe) /q /m "$([HardenWindowsSecurity.GlobalVars]::Path)\Resources\Security-Baselines-X\Windows Networking Policies\registry.pol"
+            &$([HardenWindowsSecurity.GlobalVars]::LGPOExe) /q /s "$([HardenWindowsSecurity.GlobalVars]::Path)\Resources\Security-Baselines-X\Windows Networking Policies\GptTmpl.inf"
 
             Write-Verbose -Message 'Disabling LMHOSTS lookup protocol on all network adapters'
-            [HardeningModule.RegistryEditor]::EditRegistry('Registry::HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\NetBT\Parameters', 'EnableLMHOSTS', '0', 'DWORD', 'AddOrModify')
+            [HardenWindowsSecurity.RegistryEditor]::EditRegistry('Registry::HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\NetBT\Parameters', 'EnableLMHOSTS', '0', 'DWORD', 'AddOrModify')
 
             Write-Verbose -Message 'Setting the Network Location of all connections to Public'
-            $InterfaceIndexes = [HardeningModule.NetConnectionProfiles]::Get().InterfaceIndex
-            [HardeningModule.NetConnectionProfiles]::Set($InterfaceIndexes, $null, [HardeningModule.NetConnectionProfiles+NetworkCategory]::public)
+            $InterfaceIndexes = [HardenWindowsSecurity.NetConnectionProfiles]::Get().InterfaceIndex
+            [HardenWindowsSecurity.NetConnectionProfiles]::Set($InterfaceIndexes, $null, [HardenWindowsSecurity.NetConnectionProfiles+NetworkCategory]::public)
 
         } 'No' { break WindowsNetworkingLabel }
         'Exit' { break MainSwitchLabel }
@@ -1596,27 +1595,27 @@ Function Invoke-WindowsNetworking {
 Function Invoke-MiscellaneousConfigurations {
     param([System.Management.Automation.SwitchParameter]$RunUnattended)
 
-    ([HardeningModule.GlobalVars]::CurrentMainStep)++
+    ([HardenWindowsSecurity.GlobalVars]::CurrentMainStep)++
     if (-NOT $RunUnattended) { $Host.UI.RawUI.WindowTitle = '🥌 Miscellaneous' } else { Write-Verbose -Message '=========================' }
     Write-Verbose -Message 'Processing the Miscellaneous Configurations category function'
 
     :MiscellaneousLabel switch ($RunUnattended ? 'Yes' : (Select-Option -Options 'Yes', 'No', 'Exit' -Message "`nRun Miscellaneous Configurations category ?")) {
         'Yes' {
             Write-Verbose -Message 'Running the Miscellaneous Configurations category'
-            Write-Progress -Id 0 -Activity 'Miscellaneous Configurations' -Status "Step $([HardeningModule.GlobalVars]::CurrentMainStep)/$([HardeningModule.GlobalVars]::TotalMainSteps)" -PercentComplete (([HardeningModule.GlobalVars]::CurrentMainStep) / ([HardeningModule.GlobalVars]::TotalMainSteps) * 100)
+            Write-Progress -Id 0 -Activity 'Miscellaneous Configurations' -Status "Step $([HardenWindowsSecurity.GlobalVars]::CurrentMainStep)/$([HardenWindowsSecurity.GlobalVars]::TotalMainSteps)" -PercentComplete (([HardenWindowsSecurity.GlobalVars]::CurrentMainStep) / ([HardenWindowsSecurity.GlobalVars]::TotalMainSteps) * 100)
 
             Write-Verbose -Message 'Applying the Miscellaneous Configurations registry settings'
-            foreach ($Item in ([HardeningModule.GlobalVars]::RegistryCSVItems)) {
+            foreach ($Item in ([HardenWindowsSecurity.GlobalVars]::RegistryCSVItems)) {
                 if ($Item.category -eq 'Miscellaneous') {
-                    [HardeningModule.RegistryEditor]::EditRegistry($Item.Path, $Item.Key, $Item.Value, $Item.Type, $Item.Action)
+                    [HardenWindowsSecurity.RegistryEditor]::EditRegistry($Item.Path, $Item.Key, $Item.Value, $Item.Type, $Item.Action)
                 }
             }
 
-            &$([HardeningModule.GlobalVars]::LGPOExe) /q /m "$([HardeningModule.GlobalVars]::Path)\Resources\Security-Baselines-X\Miscellaneous Policies\registry.pol"
-            &$([HardeningModule.GlobalVars]::LGPOExe) /q /s "$([HardeningModule.GlobalVars]::Path)\Resources\Security-Baselines-X\Miscellaneous Policies\GptTmpl.inf"
+            &$([HardenWindowsSecurity.GlobalVars]::LGPOExe) /q /m "$([HardenWindowsSecurity.GlobalVars]::Path)\Resources\Security-Baselines-X\Miscellaneous Policies\registry.pol"
+            &$([HardenWindowsSecurity.GlobalVars]::LGPOExe) /q /s "$([HardenWindowsSecurity.GlobalVars]::Path)\Resources\Security-Baselines-X\Miscellaneous Policies\GptTmpl.inf"
 
             Write-Verbose -Message 'Adding all Windows users to the "Hyper-V Administrators" security group to be able to use Hyper-V and Windows Sandbox'
-            [HardeningModule.LocalUserRetriever]::Get() | Where-Object -FilterScript { $_.enabled -eq 'True' } | ForEach-Object -Process { Add-LocalGroupMember -SID 'S-1-5-32-578' -Member "$($_.SID)" -ErrorAction SilentlyContinue }
+            [HardenWindowsSecurity.LocalUserRetriever]::Get() | Where-Object -FilterScript { $_.enabled -eq 'True' } | ForEach-Object -Process { Add-LocalGroupMember -SID 'S-1-5-32-578' -Member "$($_.SID)" -ErrorAction SilentlyContinue }
 
             # Makes sure auditing for the "Other Logon/Logoff Events" subcategory under the Logon/Logoff category is enabled, doesn't touch affect any other sub-category
             # For tracking Lock screen unlocks and locks
@@ -1635,7 +1634,7 @@ Function Invoke-MiscellaneousConfigurations {
                 [System.Void] [System.IO.Directory]::CreateDirectory("$env:SystemDrive\ProgramData\Microsoft\Event Viewer\Views\Hardening Script")
             }
 
-            foreach ($File in [System.IO.Directory]::GetFiles("$([HardeningModule.GlobalVars]::Path)\Resources\EventViewerCustomViews")) {
+            foreach ($File in [System.IO.Directory]::GetFiles("$([HardenWindowsSecurity.GlobalVars]::Path)\Resources\EventViewerCustomViews")) {
                 [System.IO.File]::Copy($File, "$env:SystemDrive\ProgramData\Microsoft\Event Viewer\Views\Hardening Script\$([System.IO.Path]::GetFileName($File))", $true)
             }
         } 'No' { break MiscellaneousLabel }
@@ -1645,20 +1644,20 @@ Function Invoke-MiscellaneousConfigurations {
 Function Invoke-WindowsUpdateConfigurations {
     param([System.Management.Automation.SwitchParameter]$RunUnattended)
 
-    ([HardeningModule.GlobalVars]::CurrentMainStep)++
+    ([HardenWindowsSecurity.GlobalVars]::CurrentMainStep)++
     if (-NOT $RunUnattended) { $Host.UI.RawUI.WindowTitle = '🪟 Windows Update' } else { Write-Verbose -Message '=========================' }
     Write-Verbose -Message 'Processing the Windows Update category function'
 
     :WindowsUpdateLabel switch ($RunUnattended ? 'Yes' : (Select-Option -Options 'Yes', 'No', 'Exit' -Message "`nApply Windows Update Policies ?")) {
         'Yes' {
             Write-Verbose -Message 'Running the Windows Update category'
-            Write-Progress -Id 0 -Activity 'Windows Update Configurations' -Status "Step $([HardeningModule.GlobalVars]::CurrentMainStep)/$([HardeningModule.GlobalVars]::TotalMainSteps)" -PercentComplete (([HardeningModule.GlobalVars]::CurrentMainStep) / ([HardeningModule.GlobalVars]::TotalMainSteps) * 100)
+            Write-Progress -Id 0 -Activity 'Windows Update Configurations' -Status "Step $([HardenWindowsSecurity.GlobalVars]::CurrentMainStep)/$([HardenWindowsSecurity.GlobalVars]::TotalMainSteps)" -PercentComplete (([HardenWindowsSecurity.GlobalVars]::CurrentMainStep) / ([HardenWindowsSecurity.GlobalVars]::TotalMainSteps) * 100)
 
             Write-Verbose -Message 'Enabling restart notification for Windows update'
-            [HardeningModule.RegistryEditor]::EditRegistry('Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\WindowsUpdate\UX\Settings', 'RestartNotificationsAllowed2', '1', 'DWORD', 'AddOrModify')
+            [HardenWindowsSecurity.RegistryEditor]::EditRegistry('Registry::HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\WindowsUpdate\UX\Settings', 'RestartNotificationsAllowed2', '1', 'DWORD', 'AddOrModify')
 
             Write-Verbose -Message 'Applying the Windows Update Group Policies'
-            &$([HardeningModule.GlobalVars]::LGPOExe) /q /m "$([HardeningModule.GlobalVars]::Path)\Resources\Security-Baselines-X\Windows Update Policies\registry.pol"
+            &$([HardenWindowsSecurity.GlobalVars]::LGPOExe) /q /m "$([HardenWindowsSecurity.GlobalVars]::Path)\Resources\Security-Baselines-X\Windows Update Policies\registry.pol"
         } 'No' { break WindowsUpdateLabel }
         'Exit' { break MainSwitchLabel }
     }
@@ -1666,19 +1665,19 @@ Function Invoke-WindowsUpdateConfigurations {
 Function Invoke-EdgeBrowserConfigurations {
     param([System.Management.Automation.SwitchParameter]$RunUnattended)
 
-    ([HardeningModule.GlobalVars]::CurrentMainStep)++
+    ([HardenWindowsSecurity.GlobalVars]::CurrentMainStep)++
     if (-NOT $RunUnattended) { $Host.UI.RawUI.WindowTitle = '🦔 Edge' } else { Write-Verbose -Message '=========================' }
     Write-Verbose -Message 'Processing the Edge Browser category function'
 
     :MSEdgeLabel switch ($RunUnattended ? 'Yes' : (Select-Option -Options 'Yes', 'No', 'Exit' -Message "`nApply Edge Browser Configurations ?")) {
         'Yes' {
             Write-Verbose -Message 'Running the Edge Browser category'
-            Write-Progress -Id 0 -Activity 'Edge Browser Configurations' -Status "Step $([HardeningModule.GlobalVars]::CurrentMainStep)/$([HardeningModule.GlobalVars]::TotalMainSteps)" -PercentComplete (([HardeningModule.GlobalVars]::CurrentMainStep) / ([HardeningModule.GlobalVars]::TotalMainSteps) * 100)
+            Write-Progress -Id 0 -Activity 'Edge Browser Configurations' -Status "Step $([HardenWindowsSecurity.GlobalVars]::CurrentMainStep)/$([HardenWindowsSecurity.GlobalVars]::TotalMainSteps)" -PercentComplete (([HardenWindowsSecurity.GlobalVars]::CurrentMainStep) / ([HardenWindowsSecurity.GlobalVars]::TotalMainSteps) * 100)
 
             Write-Verbose -Message 'Applying the Edge Browser registry settings'
-            foreach ($Item in ([HardeningModule.GlobalVars]::RegistryCSVItems)) {
+            foreach ($Item in ([HardenWindowsSecurity.GlobalVars]::RegistryCSVItems)) {
                 if ($Item.category -eq 'Edge') {
-                    [HardeningModule.RegistryEditor]::EditRegistry($Item.Path, $Item.Key, $Item.Value, $Item.Type, $Item.Action)
+                    [HardenWindowsSecurity.RegistryEditor]::EditRegistry($Item.Path, $Item.Key, $Item.Value, $Item.Type, $Item.Action)
                 }
             }
         } 'No' { break MSEdgeLabel }
@@ -1688,14 +1687,14 @@ Function Invoke-EdgeBrowserConfigurations {
 Function Invoke-CertificateCheckingCommands {
     param([System.Management.Automation.SwitchParameter]$RunUnattended)
 
-    ([HardeningModule.GlobalVars]::CurrentMainStep)++
+    ([HardenWindowsSecurity.GlobalVars]::CurrentMainStep)++
     if (-NOT $RunUnattended) { $Host.UI.RawUI.WindowTitle = '🎟️ Certificates' } else { Write-Verbose -Message '=========================' }
     Write-Verbose -Message 'Processing the Certificate Checking category function'
 
     :CertCheckingLabel switch ($RunUnattended ? 'Yes' : (Select-Option -Options 'Yes', 'No', 'Exit' -Message "`nRun Certificate Checking category ?")) {
         'Yes' {
             Write-Verbose -Message 'Running the Certificate Checking category'
-            Write-Progress -Id 0 -Activity 'Certificate Checking Commands' -Status "Step $([HardeningModule.GlobalVars]::CurrentMainStep)/$([HardeningModule.GlobalVars]::TotalMainSteps)" -PercentComplete (([HardeningModule.GlobalVars]::CurrentMainStep) / ([HardeningModule.GlobalVars]::TotalMainSteps) * 100)
+            Write-Progress -Id 0 -Activity 'Certificate Checking Commands' -Status "Step $([HardenWindowsSecurity.GlobalVars]::CurrentMainStep)/$([HardenWindowsSecurity.GlobalVars]::TotalMainSteps)" -PercentComplete (([HardenWindowsSecurity.GlobalVars]::CurrentMainStep) / ([HardenWindowsSecurity.GlobalVars]::TotalMainSteps) * 100)
 
             try {
                 Write-Verbose -Message 'Downloading sigcheck64.exe from https://live.sysinternals.com'
@@ -1722,14 +1721,14 @@ Function Invoke-CountryIPBlocking {
         [System.Management.Automation.SwitchParameter]$RunUnattended, [System.Management.Automation.SwitchParameter]$GUI
     )
 
-    ([HardeningModule.GlobalVars]::CurrentMainStep)++
+    ([HardenWindowsSecurity.GlobalVars]::CurrentMainStep)++
     if (-NOT $RunUnattended) { $Host.UI.RawUI.WindowTitle = '🧾 Country IPs' } else { Write-Verbose -Message '=========================' }
     Write-Verbose -Message 'Processing the Country IP Blocking category function'
 
     :IPBlockingLabel switch ($RunUnattended ? 'Yes' : (Select-Option -Options 'Yes', 'No', 'Exit' -Message "`nRun Country IP Blocking category ?")) {
         'Yes' {
             Write-Verbose -Message 'Running the Country IP Blocking category'
-            Write-Progress -Id 0 -Activity 'Country IP Blocking' -Status "Step $([HardeningModule.GlobalVars]::CurrentMainStep)/$([HardeningModule.GlobalVars]::TotalMainSteps)" -PercentComplete (([HardeningModule.GlobalVars]::CurrentMainStep) / ([HardeningModule.GlobalVars]::TotalMainSteps) * 100)
+            Write-Progress -Id 0 -Activity 'Country IP Blocking' -Status "Step $([HardenWindowsSecurity.GlobalVars]::CurrentMainStep)/$([HardenWindowsSecurity.GlobalVars]::TotalMainSteps)" -PercentComplete (([HardenWindowsSecurity.GlobalVars]::CurrentMainStep) / ([HardenWindowsSecurity.GlobalVars]::TotalMainSteps) * 100)
 
             :IPBlockingTerrLabel switch ($RunUnattended ? 'Yes' : (Select-Option -SubCategory -Options 'Yes', 'No' -Message 'Add countries in the State Sponsors of Terrorism list to the Firewall block list?')) {
                 'Yes' {
@@ -1750,14 +1749,14 @@ Function Invoke-CountryIPBlocking {
 Function Invoke-DownloadsDefenseMeasures {
     param([System.Management.Automation.SwitchParameter]$RunUnattended)
 
-    ([HardeningModule.GlobalVars]::CurrentMainStep)++
+    ([HardenWindowsSecurity.GlobalVars]::CurrentMainStep)++
     if (-NOT $RunUnattended) { $Host.UI.RawUI.WindowTitle = '🎇 Downloads Defense Measures' } else { Write-Verbose -Message '=========================' }
     Write-Verbose -Message 'Processing the Downloads Defense Measures category function'
 
     :DownloadsDefenseMeasuresLabel switch ($RunUnattended ? 'Yes' : (Select-Option -Options 'Yes', 'No', 'Exit' -Message "`nRun Downloads Defense Measures category ?")) {
         'Yes' {
             Write-Verbose -Message 'Running the Downloads Defense Measures category'
-            Write-Progress -Id 0 -Activity 'Downloads Defense Measures' -Status "Step $([HardeningModule.GlobalVars]::CurrentMainStep)/$([HardeningModule.GlobalVars]::TotalMainSteps)" -PercentComplete (([HardeningModule.GlobalVars]::CurrentMainStep) / ([HardeningModule.GlobalVars]::TotalMainSteps) * 100)
+            Write-Progress -Id 0 -Activity 'Downloads Defense Measures' -Status "Step $([HardenWindowsSecurity.GlobalVars]::CurrentMainStep)/$([HardenWindowsSecurity.GlobalVars]::TotalMainSteps)" -PercentComplete (([HardenWindowsSecurity.GlobalVars]::CurrentMainStep) / ([HardenWindowsSecurity.GlobalVars]::TotalMainSteps) * 100)
 
             #Region Installation And Update
 
@@ -1808,7 +1807,7 @@ Function Invoke-DownloadsDefenseMeasures {
 
                 # Getting the current user's name
                 [System.Security.Principal.SecurityIdentifier]$UserSID = [System.Security.Principal.WindowsIdentity]::GetCurrent().user.value
-                [System.String]$UserName = ([HardeningModule.LocalUserRetriever]::Get() | Where-Object -FilterScript { $_.SID -eq $UserSID }).name
+                [System.String]$UserName = ([HardenWindowsSecurity.LocalUserRetriever]::Get() | Where-Object -FilterScript { $_.SID -eq $UserSID }).name
 
                 # Checking if the Edge preferences file exists
                 if ([System.IO.File]::Exists("$env:SystemDrive\Users\$UserName\AppData\Local\Microsoft\Edge\User Data\Default\Preferences")) {
@@ -1842,8 +1841,8 @@ Function Invoke-DownloadsDefenseMeasures {
                     if (($null -eq $CurrentBasePolicyNames) -or (-NOT ($CurrentBasePolicyNames.Contains('Dangerous-Script-Hosts-Blocking')))) {
                         Write-Verbose -Message 'Deploying the Dangerous Script Hosts Blocking WDAC Policy'
 
-                        $null = ConvertFrom-CIPolicy -XmlFilePath "$([HardeningModule.GlobalVars]::Path)\Resources\Dangerous-Script-Hosts-Blocking.xml" -BinaryFilePath "$([HardeningModule.GlobalVars]::WorkingDir)\Dangerous-Script-Hosts-Blocking.cip"
-                        $null = CiTool.exe --update-policy "$([HardeningModule.GlobalVars]::WorkingDir)\Dangerous-Script-Hosts-Blocking.cip" -json
+                        $null = ConvertFrom-CIPolicy -XmlFilePath "$([HardenWindowsSecurity.GlobalVars]::Path)\Resources\Dangerous-Script-Hosts-Blocking.xml" -BinaryFilePath "$([HardenWindowsSecurity.GlobalVars]::WorkingDir)\Dangerous-Script-Hosts-Blocking.cip"
+                        $null = CiTool.exe --update-policy "$([HardenWindowsSecurity.GlobalVars]::WorkingDir)\Dangerous-Script-Hosts-Blocking.cip" -json
                     }
                     else {
                         Write-Verbose -Message 'The Dangerous-Script-Hosts-Blocking policy is already deployed'
@@ -1858,28 +1857,28 @@ Function Invoke-DownloadsDefenseMeasures {
 Function Invoke-NonAdminCommands {
     param([System.Management.Automation.SwitchParameter]$RunUnattended)
 
-    ([HardeningModule.GlobalVars]::CurrentMainStep)++
+    ([HardenWindowsSecurity.GlobalVars]::CurrentMainStep)++
     if (-NOT $RunUnattended) { $Host.UI.RawUI.WindowTitle = '🏷️ Non-Admins' } else { Write-Verbose -Message '=========================' }
     Write-Verbose -Message 'Processing the Non-Admin category function'
 
     :NonAdminLabel switch ($RunUnattended ? 'Yes' : (Select-Option -Options 'Yes', 'No', 'Exit' -Message "`nRun Non-Admin category ?")) {
         'Yes' {
             Write-Verbose -Message 'Running the Non-Admin category'
-            Write-Progress -Id 0 -Activity 'Non-Admin category' -Status "Step $([HardeningModule.GlobalVars]::CurrentMainStep)/$([HardeningModule.GlobalVars]::TotalMainSteps)" -PercentComplete (([HardeningModule.GlobalVars]::CurrentMainStep) / ([HardeningModule.GlobalVars]::TotalMainSteps) * 100)
+            Write-Progress -Id 0 -Activity 'Non-Admin category' -Status "Step $([HardenWindowsSecurity.GlobalVars]::CurrentMainStep)/$([HardenWindowsSecurity.GlobalVars]::TotalMainSteps)" -PercentComplete (([HardenWindowsSecurity.GlobalVars]::CurrentMainStep) / ([HardenWindowsSecurity.GlobalVars]::TotalMainSteps) * 100)
 
             Write-Verbose -Message 'Applying the Non-Admin registry settings'
-            foreach ($Item in ([HardeningModule.GlobalVars]::RegistryCSVItems)) {
+            foreach ($Item in ([HardenWindowsSecurity.GlobalVars]::RegistryCSVItems)) {
                 if ($Item.category -eq 'NonAdmin') {
-                    [HardeningModule.RegistryEditor]::EditRegistry($Item.Path, $Item.Key, $Item.Value, $Item.Type, $Item.Action)
+                    [HardenWindowsSecurity.RegistryEditor]::EditRegistry($Item.Path, $Item.Key, $Item.Value, $Item.Type, $Item.Action)
                 }
             }
 
             :ClipboardSyncLabel switch ($RunUnattended ? ($ClipboardSync ? 'Yes' : 'No') : (Select-Option -SubCategory -Options 'Yes', 'No' -Message 'Enable Clipboard Syncing with Microsoft Account')) {
                 'Yes' {
                     Write-Verbose -Message 'Enabling Clipboard Sync with Microsoft Account'
-                    foreach ($Item in ([HardeningModule.GlobalVars]::RegistryCSVItems)) {
+                    foreach ($Item in ([HardenWindowsSecurity.GlobalVars]::RegistryCSVItems)) {
                         if ($Item.category -eq 'NonAdmin-ClipboardSync') {
-                            [HardeningModule.RegistryEditor]::EditRegistry($Item.Path, $Item.Key, $Item.Value, $Item.Type, $Item.Action)
+                            [HardenWindowsSecurity.RegistryEditor]::EditRegistry($Item.Path, $Item.Key, $Item.Value, $Item.Type, $Item.Action)
                         }
                     }
                 } 'No' { break ClipboardSyncLabel }
@@ -1887,7 +1886,7 @@ Function Invoke-NonAdminCommands {
 
             # Only suggest restarting the device if Admin related categories were run and the code was not running in unattended mode
             if (!$RunUnattended) {
-                if (!$Categories -and [HardeningModule.UserPrivCheck]::IsAdmin()) {
+                if (!$Categories -and [HardenWindowsSecurity.UserPrivCheck]::IsAdmin()) {
                     Write-Host -Object "`r`n"
                     Write-ColorfulText -C Rainbow -I "################################################################################################`r`n"
                     Write-ColorfulText -C MintGreen -I "###  Please Restart your device to completely apply the security measures and Group Policies ###`r`n"

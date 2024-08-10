@@ -4,27 +4,27 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Threading;
 
-namespace HardeningModule
+#nullable enable
+
+namespace HardenWindowsSecurity
 {
     public static class Logger
     {
-        public static void LogMessage(string text, IList logger, TextBox outputTextBlock, ScrollViewer scrollerForOutputTextBlock, Window window)
+        /// <summary>
+        /// Writes messages to the GUI and the log file
+        /// </summary>
+        /// <param name="text">The text to be written</param>
+        public static void LogMessage(string text)
         {
             // Add the text to the synchronized array list as log messages
-            logger.Add($"{DateTime.Now}: {text}");
-
-            // Check if the window is null
-            if (window == null)
-            {
-                throw new ArgumentNullException(nameof(window), "Window parameter cannot be null");
-            }
+            HardenWindowsSecurity.GUI.Logger.Add($"{DateTime.Now}: {text}");
 
             // Invoke the Dispatcher to update the GUI
-            window.Dispatcher.Invoke(new Action(() =>
+            HardenWindowsSecurity.GUI.window.Dispatcher.Invoke(new Action(() =>
             {
                 // Update the TextBlock with the new log message
-                outputTextBlock.Text += text + "\n";
-                scrollerForOutputTextBlock.ScrollToBottom();
+                HardenWindowsSecurity.GUI.outputTextBlock.Text += text + "\n";
+                HardenWindowsSecurity.GUI.scrollerForOutputTextBlock.ScrollToBottom();
             }), DispatcherPriority.Background);
         }
     }

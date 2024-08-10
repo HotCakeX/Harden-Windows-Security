@@ -2,27 +2,30 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Management;
+using System.Globalization;
 
-namespace HardeningModule
+#nullable enable
+
+namespace HardenWindowsSecurity
 {
     public static class WindowsFeatureChecker
     {
         public class FeatureStatus
         {
-            public string PowerShellv2 { get; set; }
-            public string PowerShellv2Engine { get; set; }
-            public string WorkFoldersClient { get; set; }
-            public string InternetPrintingClient { get; set; }
-            public string WindowsMediaPlayer { get; set; }
-            public string MDAG { get; set; }
-            public string WindowsSandbox { get; set; }
-            public string HyperV { get; set; }
-            public string WMIC { get; set; }
-            public string IEMode { get; set; }
-            public string LegacyNotepad { get; set; }
-            public string LegacyWordPad { get; set; }
-            public string PowerShellISE { get; set; }
-            public string StepsRecorder { get; set; }
+            public string? PowerShellv2 { get; set; }
+            public string? PowerShellv2Engine { get; set; }
+            public string? WorkFoldersClient { get; set; }
+            public string? InternetPrintingClient { get; set; }
+            public string? WindowsMediaPlayer { get; set; }
+            public string? MDAG { get; set; }
+            public string? WindowsSandbox { get; set; }
+            public string? HyperV { get; set; }
+            public string? WMIC { get; set; }
+            public string? IEMode { get; set; }
+            public string? LegacyNotepad { get; set; }
+            public string? LegacyWordPad { get; set; }
+            public string? PowerShellISE { get; set; }
+            public string? StepsRecorder { get; set; }
         }
 
         public static FeatureStatus CheckWindowsFeatures()
@@ -61,7 +64,7 @@ namespace HardeningModule
                 foreach (var obj in searcher.Get())
                 {
                     // Retrieve the name of the feature
-                    string name = obj["Name"]?.ToString();
+                    string? name = obj["Name"]?.ToString();
 
                     // Convert the install state to a string representation
                     string state = ConvertStateToString((UInt32)obj["InstallState"]);
@@ -118,9 +121,16 @@ namespace HardeningModule
                 CreateNoWindow = true            // Do not create a window
             };
 
-            // Start the DISM process and read the output
-            using (Process process = Process.Start(startInfo))
+            // Start the DISM process
+            using (Process? process = Process.Start(startInfo))
             {
+                // Check if the process is not null
+                if (process == null)
+                {
+                    throw new InvalidOperationException("Failed to start the process.");
+                }
+
+                // Use the process's standard output
                 using (System.IO.StreamReader reader = process.StandardOutput)
                 {
                     // Return the output of the DISM command
@@ -128,6 +138,7 @@ namespace HardeningModule
                 }
             }
         }
+
 
         private static string ConvertStateToString(uint state)
         {

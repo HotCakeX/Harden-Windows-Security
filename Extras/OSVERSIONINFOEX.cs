@@ -2,7 +2,7 @@ using System;
 using System.Runtime.InteropServices;
 using System.ComponentModel;
 
-namespace HardeningModule
+namespace HardenWindowsSecurity
 {
     public class OSVersionInfo
     {

@@ -1,12 +1,15 @@
 using System;
 using System.Runtime.InteropServices;
+using System.Globalization;
 
-namespace HardeningModule
+#nullable enable
+
+namespace HardenWindowsSecurity
 {
     public class FirmwareChecker
     {
         // https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-getfirmwaretype
-        [DllImport("kernel32.dll", SetLastError = true)]
+        [DllImport(dllName: "kernel32.dll", SetLastError = true)]
         private static extern bool GetFirmwareType(out FirmwareType firmwareType);
 
         // https://learn.microsoft.com/en-us/windows/win32/api/winnt/ne-winnt-firmware_type

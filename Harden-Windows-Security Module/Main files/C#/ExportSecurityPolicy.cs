@@ -10,7 +10,9 @@ using System.Collections.ObjectModel;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace HardeningModule
+#nullable enable
+
+namespace HardenWindowsSecurity
 {
     public partial class ConfirmSystemComplianceMethods
     {
@@ -20,8 +22,14 @@ namespace HardeningModule
         public static void ExportSecurityPolicy()
         {
             // Assuming securityPolicyInfPath is defined in your environment
-            string securityPolicyInfPath = HardeningModule.GlobalVars.securityPolicyInfPath;
-            string systemDrive = Environment.GetEnvironmentVariable("SystemDrive");
+            string securityPolicyInfPath = HardenWindowsSecurity.GlobalVars.securityPolicyInfPath;
+            string? systemDrive = Environment.GetEnvironmentVariable("SystemDrive");
+
+            if (systemDrive == null)
+            {
+                // Handle the case where SystemDrive is not set
+                throw new InvalidOperationException("SystemDrive environment variable is not set.");
+            }
 
             // Create the process start info
             ProcessStartInfo processStartInfo = new ProcessStartInfo
@@ -35,18 +43,22 @@ namespace HardeningModule
             };
 
             // Start the process
-            using (Process process = Process.Start(processStartInfo))
+            using (Process? process = Process.Start(processStartInfo))
             {
+                if (process == null)
+                {
+                    throw new InvalidOperationException("Failed to start Secedit.exe process.");
+                }
+
                 // Read the output
                 // string output = process.StandardOutput.ReadToEnd();
-
                 string error = process.StandardError.ReadToEnd();
 
                 process.WaitForExit();
 
                 if (!string.IsNullOrEmpty(error))
                 {
-                    HardeningModule.VerboseLogger.Write("Error: " + error);
+                    HardenWindowsSecurity.VerboseLogger.Write("Error: " + error);
                 }
             }
         }

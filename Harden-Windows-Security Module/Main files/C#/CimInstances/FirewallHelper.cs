@@ -1,8 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Management;
+using System.Globalization;
 
-namespace HardeningModule
+#nullable enable
+
+namespace HardenWindowsSecurity
 {
     public static class FirewallHelper
     {
@@ -57,17 +60,17 @@ namespace HardeningModule
             // catch exceptions specific to WMI
             catch (ManagementException mex)
             {
-                HardeningModule.VerboseLogger.Write($"WMI ManagementException: {mex.Message}");
+                HardenWindowsSecurity.VerboseLogger.Write($"WMI ManagementException: {mex.Message}");
             }
             // Catch block for unauthorized access exceptions
             catch (UnauthorizedAccessException uex)
             {
-                HardeningModule.VerboseLogger.Write($"UnauthorizedAccessException: {uex.Message}");
+                HardenWindowsSecurity.VerboseLogger.Write($"UnauthorizedAccessException: {uex.Message}");
             }
             // General catch block for any other exceptions
             catch (Exception ex)
             {
-                HardeningModule.VerboseLogger.Write($"An error occurred: {ex.Message}");
+                HardenWindowsSecurity.VerboseLogger.Write($"An error occurred: {ex.Message}");
             }
 
             return results;

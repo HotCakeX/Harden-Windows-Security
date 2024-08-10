@@ -1,14 +1,17 @@
 using System;
 using System.Runtime.InteropServices;
+using System.Globalization;
 
-namespace HardeningModule
+#nullable enable
+
+namespace HardenWindowsSecurity
 {
     // Class that contains the results of TPM status checks
     public class TpmResult
     {
         public bool IsEnabled { get; set; }
         public bool IsActivated { get; set; }
-        public string ErrorMessage { get; set; }
+        public string? ErrorMessage { get; set; }
     }
 
     public static class TpmStatus
@@ -18,7 +21,7 @@ namespace HardeningModule
         {
             bool isEnabled = false;
             bool isActivated = false;
-            string errorMessage = null;
+            string? errorMessage = null;
 
             byte isEnabledByte;
             byte isActivatedByte;

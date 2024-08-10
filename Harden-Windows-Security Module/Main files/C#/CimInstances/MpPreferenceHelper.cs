@@ -5,7 +5,9 @@ using System.Globalization;
 using System.Linq;
 using System.Management;
 
-namespace HardeningModule
+#nullable enable
+
+namespace HardenWindowsSecurity
 {
     public static class MpPreferenceHelper
     {
@@ -27,17 +29,26 @@ namespace HardeningModule
                 if (results.Count > 0)
                 {
                     var result = results.Cast<ManagementBaseObject>().FirstOrDefault();
-                    return ConvertToDynamic(result);
+
+                    if (result != null)
+                    {
+
+                        return ConvertToDynamic(result);
+                    }
+                    else
+                    {
+                        throw new Exception("Failed to get MpComputerPreference");
+                    }
                 }
                 else
                 {
-                    return null;
+                    throw new Exception("Failed to get MpComputerPreference");
                 }
             }
             catch (ManagementException ex)
             {
                 string errorMessage = $"WMI query for 'MSFT_MpPreference' failed: {ex.Message}";
-                throw new HardeningModule.PowerShellExecutionException(errorMessage, ex);
+                throw new HardenWindowsSecurity.PowerShellExecutionException(errorMessage, ex);
             }
         }
 

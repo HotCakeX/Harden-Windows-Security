@@ -3,7 +3,9 @@ using System.IO;
 using System.Management;
 using System.Management.Automation;
 
-namespace HardeningModule
+#nullable enable
+
+namespace HardenWindowsSecurity
 {
     public class Miscellaneous
     {
@@ -20,13 +22,13 @@ namespace HardeningModule
         {
 
             // Check if the user has Administrator privileges before performing the following system requirement checks
-            if (HardeningModule.UserPrivCheck.IsAdmin())
+            if (HardenWindowsSecurity.UserPrivCheck.IsAdmin())
             {
 
                 // Check if the system is running UEFI firmware
-                var firmwareType = HardeningModule.FirmwareChecker.CheckFirmwareType();
+                var firmwareType = HardenWindowsSecurity.FirmwareChecker.CheckFirmwareType();
 
-                if (firmwareType != HardeningModule.FirmwareChecker.FirmwareType.FirmwareTypeUefi)
+                if (firmwareType != HardenWindowsSecurity.FirmwareChecker.FirmwareType.FirmwareTypeUefi)
                 {
                     throw new Exception("Non-UEFI systems are not supported.");
                 }
@@ -70,33 +72,39 @@ namespace HardeningModule
                     Console.WriteLine($"An error occurred: {ex.Message}");
                 }
 
-                HardeningModule.VerboseLogger.Write("Checking if TPM is available and enabled...");
+                HardenWindowsSecurity.VerboseLogger.Write("Checking if TPM is available and enabled...");
 
-                var tpmStatus = HardeningModule.TpmStatus.Get();
+                var tpmStatus = HardenWindowsSecurity.TpmStatus.Get();
 
                 if (!tpmStatus.IsActivated || !tpmStatus.IsEnabled)
                 {
                     Console.WriteLine($"TPM is not activated or enabled on this system. BitLockerSettings category will be unavailable - {tpmStatus.ErrorMessage}");
                 }
 
-                if (!HardeningModule.GlobalVars.MDAVConfigCurrent.AMServiceEnabled)
+                if (HardenWindowsSecurity.GlobalVars.MDAVConfigCurrent == null)
+                {
+                    throw new Exception("MDAVConfigCurrent is null.");
+                }
+
+                if (!HardenWindowsSecurity.GlobalVars.MDAVConfigCurrent.AMServiceEnabled)
                 {
                     throw new Exception("Microsoft Defender Anti Malware service is not enabled, please enable it and then try again.");
                 }
 
-                if (!HardeningModule.GlobalVars.MDAVConfigCurrent.AntispywareEnabled)
+
+                if (!HardenWindowsSecurity.GlobalVars.MDAVConfigCurrent.AntispywareEnabled)
                 {
                     throw new Exception("Microsoft Defender Anti Spyware is not enabled, please enable it and then try again.");
                 }
 
-                if (!HardeningModule.GlobalVars.MDAVConfigCurrent.AntivirusEnabled)
+                if (!HardenWindowsSecurity.GlobalVars.MDAVConfigCurrent.AntivirusEnabled)
                 {
                     throw new Exception("Microsoft Defender Anti Virus is not enabled, please enable it and then try again.");
                 }
 
-                if (HardeningModule.GlobalVars.MDAVConfigCurrent.AMRunningMode != "Normal")
+                if (HardenWindowsSecurity.GlobalVars.MDAVConfigCurrent.AMRunningMode != "Normal")
                 {
-                    throw new Exception($"Microsoft Defender is running in {HardeningModule.GlobalVars.MDAVConfigCurrent.AMRunningMode} state, please remove any 3rd party AV and then try again.");
+                    throw new Exception($"Microsoft Defender is running in {HardenWindowsSecurity.GlobalVars.MDAVConfigCurrent.AMRunningMode} state, please remove any 3rd party AV and then try again.");
                 }
             }
         }

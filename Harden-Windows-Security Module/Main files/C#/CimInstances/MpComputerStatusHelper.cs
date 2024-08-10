@@ -4,8 +4,11 @@ using System.Management;
 using System.Dynamic;
 using System.Globalization;
 using System.Collections.Generic;
+using System.Collections;
 
-namespace HardeningModule
+#nullable enable
+
+namespace HardenWindowsSecurity
 {
     public static class MpComputerStatusHelper
     {
@@ -23,21 +26,30 @@ namespace HardeningModule
                 ManagementObjectSearcher searcher = new ManagementObjectSearcher(namespaceName, queryString);
                 ManagementObjectCollection results = searcher.Get();
 
-                // Return the first result if there are any
+                // Make sure the results isn't empty
                 if (results.Count > 0)
                 {
                     var result = results.Cast<ManagementBaseObject>().FirstOrDefault();
-                    return ConvertToDynamic(result);
+
+                    if (result != null)
+                    {
+
+                        return ConvertToDynamic(result);
+                    }
+                    else
+                    {
+                        throw new Exception("Failed to get MpComputerStatus!");
+                    }
                 }
                 else
                 {
-                    return null;
+                    throw new HardenWindowsSecurity.PowerShellExecutionException("WMI query for 'MSFT_MpComputerStatus' failed");
                 }
             }
             catch (ManagementException ex)
             {
                 string errorMessage = $"WMI query for 'MSFT_MpComputerStatus' failed: {ex.Message}";
-                throw new HardeningModule.PowerShellExecutionException(errorMessage, ex);
+                throw new HardenWindowsSecurity.PowerShellExecutionException(errorMessage, ex);
             }
         }
 

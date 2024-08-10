@@ -3,7 +3,9 @@ using System.IO.Compression;
 using System.Linq;
 using System.Text.RegularExpressions;
 
-namespace HardeningModule
+#nullable enable
+
+namespace HardenWindowsSecurity
 {
     public static class SneakAndPeek
     {
@@ -16,7 +18,7 @@ namespace HardeningModule
         public static bool Search(string query, string zipFile)
         {
             // Convert the query to a regular expression
-            string regexPattern = "^" + Regex.Escape(query).Replace("\\*", ".*") + "$";
+            string regexPattern = "^" + Regex.Escape(query).Replace("\\*", ".*", StringComparison.OrdinalIgnoreCase) + "$";
             Regex regex = new Regex(regexPattern, RegexOptions.IgnoreCase | RegexOptions.CultureInvariant);
 
             // Open the zip file in read mode

@@ -2,6 +2,8 @@ System
 System.IO
 System.Xml
 System.Net
+WindowsBase
+System.Xaml
 System.Linq
 System.Memory
 System.Console
@@ -17,6 +19,7 @@ System.Threading
 System.Management
 System.ObjectModel
 System.Collections
+System.Windows.Forms
 System.Net.Primitives
 PresentationFramework
 System.IO.Compression
@@ -25,6 +28,7 @@ System.Threading.Tasks
 System.Linq.Expressions
 System.Threading.Thread
 System.Xml.ReaderWriter
+WindowsFormsIntegration
 System.DirectoryServices
 Microsoft.Win32.Registry
 System.Security.Principal
@@ -34,6 +38,7 @@ System.Management.Automation
 System.IO.Compression.zipfile
 System.Collections.Concurrent
 System.Runtime.InteropServices
+System.Windows.Controls.Ribbon
 System.Text.RegularExpressions
 System.ComponentModel.Primitives
 System.Security.Principal.Windows

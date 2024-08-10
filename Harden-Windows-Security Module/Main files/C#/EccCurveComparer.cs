@@ -1,14 +1,17 @@
 using System;
 using System.Linq;
+using System.Management;
 using System.Management.Automation;
 using System.Collections.Generic;
 
-namespace HardeningModule
+#nullable enable
+
+namespace HardenWindowsSecurity
 {
     public class EccCurveComparisonResult
     {
         public bool AreCurvesCompliant { get; set; }
-        public List<string> CurrentEccCurves { get; set; }
+        public List<string>? CurrentEccCurves { get; set; }
     }
 
     public static class EccCurveComparer

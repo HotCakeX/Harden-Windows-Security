@@ -1,11 +1,13 @@
 using System;
 using System.Collections.Generic;
 
-namespace HardeningModule
+#nullable enable
+
+namespace HardenWindowsSecurity
 {
     public partial class MDMClassProcessor
     {
-        /// [System.Collections.Generic.Dictionary[string, [System.Collections.Generic.List[System.Collections.Generic.Dictionary[string, object]]]]]$Output = [HardeningModule.MDM]::Get()
+        /// [System.Collections.Generic.Dictionary[string, [System.Collections.Generic.List[System.Collections.Generic.Dictionary[string, object]]]]]$Output = [HardenWindowsSecurity.MDM]::Get()
         /// class Result {
         ///     [string]$Name
         ///     [string]$Value
@@ -46,13 +48,13 @@ namespace HardeningModule
         /// $ResultsList | Out-GridView -Title "$($ResultsList.Count)"
         /// Above is the PowerShell equivalent of the method below
         /// It gets the results of all of the MDM related CimInstances and processes them into a list of MDMClassProcessor objects
-        public static List<HardeningModule.MDMClassProcessor> Process()
+        public static List<HardenWindowsSecurity.MDMClassProcessor> Process()
         {
             // Get the results of all of the Intune policies from the system
-            var output = HardeningModule.MDM.Get();
+            var output = HardenWindowsSecurity.MDM.Get();
 
             // Create a list to store the processed results and return at the end
-            List<HardeningModule.MDMClassProcessor> resultsList = new List<HardeningModule.MDMClassProcessor>();
+            List<HardenWindowsSecurity.MDMClassProcessor> resultsList = new List<HardenWindowsSecurity.MDMClassProcessor>();
 
             // Loop over each data
             foreach (var cimInstanceResult in output)
@@ -72,9 +74,9 @@ namespace HardeningModule
                             }
 
                             // Add the data to the list
-                            resultsList.Add(new HardeningModule.MDMClassProcessor(
+                            resultsList.Add(new HardenWindowsSecurity.MDMClassProcessor(
                                 keyValuePair.Key,
-                                keyValuePair.Value?.ToString(),
+                                keyValuePair.Value?.ToString() ?? string.Empty,
                                 cimInstanceResult.Key
                             ));
                         }
@@ -82,7 +84,7 @@ namespace HardeningModule
                 }
                 catch (Exception ex)
                 {
-                    HardeningModule.VerboseLogger.Write(ex.Message);
+                    HardenWindowsSecurity.VerboseLogger.Write(ex.Message);
                 }
             }
 

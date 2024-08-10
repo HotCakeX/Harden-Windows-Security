@@ -2,7 +2,9 @@ using System;
 using System.Globalization;
 using Microsoft.Win32;
 
-namespace HardeningModule
+#nullable enable
+
+namespace HardenWindowsSecurity
 {
     public static class RegistryEditor
     {

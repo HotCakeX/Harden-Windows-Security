@@ -3,12 +3,14 @@ using System.IO;
 using System.Linq;
 using System.Collections.Generic;
 
-namespace HardeningModule
+#nullable enable
+
+namespace HardenWindowsSecurity
 {
     public static class GitHubDesktopFinder
     {
         // This method searches for .exe files in the specified path and returns a list of FileInfo objects
-        public static List<FileInfo> Find()
+        public static List<FileInfo>? Find()
         {
             // Get the current user's name
             string userName = Environment.UserName;
@@ -23,7 +25,7 @@ namespace HardeningModule
 
             // Get all directories under the base path that contain "resources\app\git"
             var directories = Directory.GetDirectories(basePath, "*", SearchOption.AllDirectories)
-                                       .Where(d => d.Contains(@"resources\app\git"));
+                                       .Where(d => d.Contains(@"resources\app\git", StringComparison.OrdinalIgnoreCase));
 
             // Initialize a list to store the found FileInfo objects
             List<FileInfo> fileList = new List<FileInfo>();

@@ -4,7 +4,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
 
-namespace HardeningModule
+#nullable enable
+
+namespace HardenWindowsSecurity
 {
     public class JsonToHashtable
     {

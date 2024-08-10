@@ -2,54 +2,57 @@ using System;
 using System.Collections.Generic;
 using System.Management;
 using System.Linq;
+using System.Globalization;
+
+#nullable enable
 
 /// Sources for the code:
 /// https://learn.microsoft.com/en-us/windows/win32/secprov/win32-encryptablevolume
 /// https://learn.microsoft.com/en-us/windows-hardware/drivers/storage/msft-volume
 /// Example usage:
-/// $output = [HardeningModule.BitLockerInfo]::GetEncryptedVolumeInfo("D:")
+/// $output = [HardenWindowsSecurity.BitLockerInfo]::GetEncryptedVolumeInfo("D:")
 /// $output
 /// $output.KeyProtector
 
-namespace HardeningModule
+namespace HardenWindowsSecurity
 {
     // Class that stores the information about each key protector
     public class KeyProtector
     {
-        public string KeyProtectorType { get; set; }
-        public string KeyProtectorID { get; set; }
+        public string? KeyProtectorType { get; set; }
+        public string? KeyProtectorID { get; set; }
         public bool AutoUnlockProtector { get; set; }
-        public string KeyFileName { get; set; }
-        public string RecoveryPassword { get; set; }
-        public string KeyCertificateType { get; set; }
-        public string Thumbprint { get; set; }
+        public string? KeyFileName { get; set; }
+        public string? RecoveryPassword { get; set; }
+        public string? KeyCertificateType { get; set; }
+        public string? Thumbprint { get; set; }
     }
 
     // class that stores the information about BitLocker protected volumes
     public class BitLockerVolume
     {
-        public string MountPoint { get; set; }
-        public string EncryptionMethod { get; set; }
-        public string EncryptionMethodFlags { get; set; }
+        public string? MountPoint { get; set; }
+        public string? EncryptionMethod { get; set; }
+        public string? EncryptionMethodFlags { get; set; }
         public bool AutoUnlockEnabled { get; set; }
         public bool AutoUnlockKeyStored { get; set; }
 
         // https://learn.microsoft.com/en-us/windows/win32/secprov/getversion-win32-encryptablevolume#parameters
         public uint MetadataVersion { get; set; }
 
-        public string ConversionStatus { get; set; }
-        public string ProtectionStatus { get; set; }
-        public string LockStatus { get; set; }
-        public string EncryptionPercentage { get; set; }
-        public string WipePercentage { get; set; }
-        public string WipingStatus { get; set; }
-        public string VolumeType { get; set; }
-        public string CapacityGB { get; set; }
-        public string FileSystemType { get; set; }
-        public string FriendlyName { get; set; }
-        public string AllocationUnitSize { get; set; }
-        public string ReFSDedupMode { get; set; }
-        public List<KeyProtector> KeyProtector { get; set; }
+        public string? ConversionStatus { get; set; }
+        public string? ProtectionStatus { get; set; }
+        public string? LockStatus { get; set; }
+        public string? EncryptionPercentage { get; set; }
+        public string? WipePercentage { get; set; }
+        public string? WipingStatus { get; set; }
+        public string? VolumeType { get; set; }
+        public string? CapacityGB { get; set; }
+        public string? FileSystemType { get; set; }
+        public string? FriendlyName { get; set; }
+        public string? AllocationUnitSize { get; set; }
+        public string? ReFSDedupMode { get; set; }
+        public List<KeyProtector>? KeyProtector { get; set; }
     }
 
     public static class BitLockerInfo
@@ -165,7 +168,7 @@ namespace HardeningModule
         public static BitLockerVolume GetEncryptedVolumeInfo(string targetVolume)
         {
             // The MSFT_Volume class requires the volume name without the colon
-            var targetVolumeVer2 = targetVolume.Replace(":", "");
+            var targetVolumeVer2 = targetVolume.Replace(":", "", StringComparison.OrdinalIgnoreCase);
 
             // Create a new instance of the BitLockerVolume class
             BitLockerVolume newInstance = new BitLockerVolume();
@@ -183,38 +186,38 @@ namespace HardeningModule
                 try
                 {
                     // Set the ProtectionStatus property if it exists
-                    newInstance.ProtectionStatus = GetDictionaryValue(ProtectionStatuses, Convert.ToUInt32(volume["ProtectionStatus"]));
+                    newInstance.ProtectionStatus = GetDictionaryValue(ProtectionStatuses, Convert.ToUInt32(volume["ProtectionStatus"], CultureInfo.InvariantCulture));
                 }
                 catch { /* ignore */ }
 
                 try
                 {
                     // Set the VolumeType property if it exists
-                    newInstance.VolumeType = GetDictionaryValue(VolumeTypes, Convert.ToUInt32(volume["VolumeType"]));
+                    newInstance.VolumeType = GetDictionaryValue(VolumeTypes, Convert.ToUInt32(volume["VolumeType"], CultureInfo.InvariantCulture));
                 }
                 catch { /* ignore */ }
 
                 try
                 {
                     // Try to use the GetLockStatus method to get the CurrentLockStatus
-                    var currentLockStatus = InvokeCimMethod(volume, "GetLockStatus");
-                    if (currentLockStatus != null && Convert.ToUInt32(currentLockStatus["ReturnValue"]) == 0)
+                    var currentLockStatus = InvokeCimMethod(volume, "GetLockStatus", null);
+                    if (currentLockStatus != null && Convert.ToUInt32(currentLockStatus["ReturnValue"], CultureInfo.InvariantCulture) == 0)
                     {
                         // Set the LockStatus property if it exists
-                        newInstance.LockStatus = GetDictionaryValue(LockStatuses, Convert.ToUInt32(currentLockStatus["LockStatus"]));
+                        newInstance.LockStatus = GetDictionaryValue(LockStatuses, Convert.ToUInt32(currentLockStatus["LockStatus"], CultureInfo.InvariantCulture));
                     }
                 }
                 catch { /* ignore */ }
 
                 try
                 {
-                    var currentVolConversionStatus = InvokeCimMethod(volume, "GetConversionStatus");
-                    if (currentVolConversionStatus != null && Convert.ToUInt32(currentVolConversionStatus["ReturnValue"]) == 0)
+                    var currentVolConversionStatus = InvokeCimMethod(volume, "GetConversionStatus", null);
+                    if (currentVolConversionStatus != null && Convert.ToUInt32(currentVolConversionStatus["ReturnValue"], CultureInfo.InvariantCulture) == 0)
                     {
                         newInstance.EncryptionPercentage = currentVolConversionStatus["EncryptionPercentage"]?.ToString();
                         newInstance.WipePercentage = currentVolConversionStatus["WipingPercentage"]?.ToString();
-                        newInstance.ConversionStatus = GetDictionaryValue(ConversionStatuses, Convert.ToUInt32(currentVolConversionStatus["ConversionStatus"]));
-                        newInstance.WipingStatus = GetDictionaryValue(WipingStatuses, Convert.ToUInt32(currentVolConversionStatus["WipingStatus"]));
+                        newInstance.ConversionStatus = GetDictionaryValue(ConversionStatuses, Convert.ToUInt32(currentVolConversionStatus["ConversionStatus"], CultureInfo.InvariantCulture));
+                        newInstance.WipingStatus = GetDictionaryValue(WipingStatuses, Convert.ToUInt32(currentVolConversionStatus["WipingStatus"], CultureInfo.InvariantCulture));
                     }
                 }
                 catch { /* ignore */ }
@@ -222,10 +225,10 @@ namespace HardeningModule
                 try
                 {
                     // Try to use the GetEncryptionMethod method to get the EncryptionMethod and EncryptionMethodFlags properties
-                    var currentEncryptionMethod = InvokeCimMethod(volume, "GetEncryptionMethod");
-                    if (currentEncryptionMethod != null && Convert.ToUInt32(currentEncryptionMethod["ReturnValue"]) == 0)
+                    var currentEncryptionMethod = InvokeCimMethod(volume, "GetEncryptionMethod", null);
+                    if (currentEncryptionMethod != null && Convert.ToUInt32(currentEncryptionMethod["ReturnValue"], CultureInfo.InvariantCulture) == 0)
                     {
-                        newInstance.EncryptionMethod = GetDictionaryValue(EncryptionMethods, Convert.ToUInt32(currentEncryptionMethod["EncryptionMethod"]));
+                        newInstance.EncryptionMethod = GetDictionaryValue(EncryptionMethods, Convert.ToUInt32(currentEncryptionMethod["EncryptionMethod"], CultureInfo.InvariantCulture));
                         newInstance.EncryptionMethodFlags = currentEncryptionMethod["EncryptionMethodFlags"]?.ToString();
                     }
                 }
@@ -234,10 +237,10 @@ namespace HardeningModule
                 try
                 {
                     // Use the GetVersion method
-                    var currentVolVersion = InvokeCimMethod(volume, "GetVersion");
-                    if (currentVolVersion != null && Convert.ToUInt32(currentVolVersion["ReturnValue"]) == 0)
+                    var currentVolVersion = InvokeCimMethod(volume, "GetVersion", null);
+                    if (currentVolVersion != null && Convert.ToUInt32(currentVolVersion["ReturnValue"], CultureInfo.InvariantCulture) == 0)
                     {
-                        newInstance.MetadataVersion = Convert.ToUInt32(currentVolVersion["Version"]);
+                        newInstance.MetadataVersion = Convert.ToUInt32(currentVolVersion["Version"], CultureInfo.InvariantCulture);
                     }
                 }
                 catch { /* ignore */ }
@@ -245,7 +248,7 @@ namespace HardeningModule
                 try
                 {
                     // Use the GetKeyProtectors method
-                    var keyProtectors = InvokeCimMethod(volume, "GetKeyProtectors");
+                    var keyProtectors = InvokeCimMethod(volume, "GetKeyProtectors", null);
 
                     // If there are any key protectors
                     if (keyProtectors != null)
@@ -257,12 +260,12 @@ namespace HardeningModule
                         foreach (var keyProtectorID in (string[])keyProtectors["VolumeKeyProtectorID"])
                         {
                             // Set them all to null initially so we don't accidentally use them for the wrong key protector type
-                            string type = null;
-                            string recoveryPassword = null;
+                            string? type = null;
+                            string? recoveryPassword = null;
                             bool autoUnlockProtector = false;
-                            string keyProtectorFileName = null;
-                            string keyProtectorThumbprint = null;
-                            string keyProtectorCertificateType = null;
+                            string? keyProtectorFileName = null;
+                            string? keyProtectorThumbprint = null;
+                            string? keyProtectorCertificateType = null;
 
                             try
                             {
@@ -270,14 +273,14 @@ namespace HardeningModule
                                 var keyProtectorTypeResult = InvokeCimMethod(volume, "GetKeyProtectorType", new Dictionary<string, object> { { "VolumeKeyProtectorID", keyProtectorID } });
                                 if (keyProtectorTypeResult != null)
                                 {
-                                    var keyProtectorType = Convert.ToUInt32(keyProtectorTypeResult["KeyProtectorType"]);
+                                    var keyProtectorType = Convert.ToUInt32(keyProtectorTypeResult["KeyProtectorType"], CultureInfo.InvariantCulture);
                                     type = GetDictionaryValue(KeyProtectorTypes, keyProtectorType);
 
                                     // if the current key protector is RecoveryPassword / Numerical password
                                     if (keyProtectorType == 3)
                                     {
                                         var numericalPassword = InvokeCimMethod(volume, "GetKeyProtectorNumericalPassword", new Dictionary<string, object> { { "VolumeKeyProtectorID", keyProtectorID } });
-                                        if (numericalPassword != null && Convert.ToUInt32(numericalPassword["ReturnValue"]) == 0)
+                                        if (numericalPassword != null && Convert.ToUInt32(numericalPassword["ReturnValue"], CultureInfo.InvariantCulture) == 0)
                                         {
                                             recoveryPassword = numericalPassword["NumericalPassword"]?.ToString();
                                         }
@@ -286,17 +289,20 @@ namespace HardeningModule
                                     // if the current key protector is ExternalKey
                                     if (keyProtectorType == 2)
                                     {
-                                        var autoUnlockEnabledResult = InvokeCimMethod(volume, "IsAutoUnlockEnabled");
-                                        if (autoUnlockEnabledResult != null && Convert.ToUInt32(autoUnlockEnabledResult["ReturnValue"]) == 0)
+                                        var autoUnlockEnabledResult = InvokeCimMethod(volume, "IsAutoUnlockEnabled", null);
+                                        if (autoUnlockEnabledResult != null && Convert.ToUInt32(autoUnlockEnabledResult["ReturnValue"], CultureInfo.InvariantCulture) == 0)
                                         {
-                                            if (Convert.ToBoolean(autoUnlockEnabledResult["IsAutoUnlockEnabled"]) && autoUnlockEnabledResult["VolumeKeyProtectorID"]?.ToString() == keyProtectorID)
+                                            var isAutoUnlockEnabled = Convert.ToBoolean(autoUnlockEnabledResult["IsAutoUnlockEnabled"], CultureInfo.InvariantCulture);
+                                            var volumeKeyProtectorID = autoUnlockEnabledResult["VolumeKeyProtectorID"]?.ToString();
+
+                                            if (isAutoUnlockEnabled && string.Equals(volumeKeyProtectorID, keyProtectorID, StringComparison.Ordinal))
                                             {
                                                 autoUnlockProtector = true;
                                             }
                                         }
 
                                         var keyProtectorFileNameResult = InvokeCimMethod(volume, "GetExternalKeyFileName", new Dictionary<string, object> { { "VolumeKeyProtectorID", keyProtectorID } });
-                                        if (keyProtectorFileNameResult != null && Convert.ToUInt32(keyProtectorFileNameResult["ReturnValue"]) == 0)
+                                        if (keyProtectorFileNameResult != null && Convert.ToUInt32(keyProtectorFileNameResult["ReturnValue"], CultureInfo.InvariantCulture) == 0)
                                         {
                                             keyProtectorFileName = keyProtectorFileNameResult["FileName"]?.ToString();
                                         }
@@ -306,7 +312,7 @@ namespace HardeningModule
                                     if (keyProtectorType == 7 || keyProtectorType == 9)
                                     {
                                         var keyProtectorCertificateResult = InvokeCimMethod(volume, "GetKeyProtectorCertificate", new Dictionary<string, object> { { "VolumeKeyProtectorID", keyProtectorID } });
-                                        if (keyProtectorCertificateResult != null && Convert.ToUInt32(keyProtectorCertificateResult["ReturnValue"]) == 0)
+                                        if (keyProtectorCertificateResult != null && Convert.ToUInt32(keyProtectorCertificateResult["ReturnValue"], CultureInfo.InvariantCulture) == 0)
                                         {
                                             keyProtectorThumbprint = keyProtectorCertificateResult["CertThumbprint"]?.ToString();
                                             keyProtectorCertificateType = keyProtectorCertificateResult["CertType"]?.ToString();
@@ -339,13 +345,13 @@ namespace HardeningModule
             {
                 try
                 {
-                    newInstance.CapacityGB = Math.Round(Convert.ToDouble(currentStorage["Size"]) / (1024 * 1024 * 1024), 4).ToString();
+                    newInstance.CapacityGB = Math.Round(Convert.ToDouble(currentStorage["Size"], CultureInfo.InvariantCulture) / (1024 * 1024 * 1024), 4).ToString(CultureInfo.InvariantCulture);
                 }
                 catch { /* ignore */ }
 
                 try
                 {
-                    newInstance.FileSystemType = GetDictionaryValue(FileSystemTypes, Convert.ToUInt16(currentStorage["FileSystemType"]));
+                    newInstance.FileSystemType = GetDictionaryValue(FileSystemTypes, Convert.ToUInt16(currentStorage["FileSystemType"], CultureInfo.InvariantCulture));
                 }
                 catch { /* ignore */ }
 
@@ -363,7 +369,7 @@ namespace HardeningModule
 
                 try
                 {
-                    newInstance.ReFSDedupMode = GetDictionaryValue(ReFSDedupModes, Convert.ToUInt32(currentStorage["ReFSDedupMode"]));
+                    newInstance.ReFSDedupMode = GetDictionaryValue(ReFSDedupModes, Convert.ToUInt32(currentStorage["ReFSDedupMode"], CultureInfo.InvariantCulture));
                 }
                 catch { /* ignore */ }
             }
@@ -373,38 +379,38 @@ namespace HardeningModule
 
         // Helper method to get the value from a dictionary and handle the case when the key is not present
         // For uint keys
-        private static string GetDictionaryValue(Dictionary<uint, string> dictionary, uint key)
+        private static string? GetDictionaryValue(Dictionary<uint, string> dictionary, uint key)
         {
-            if (dictionary.TryGetValue(key, out string value))
+            if (dictionary.TryGetValue(key, out string? value))
             {
                 return value;
             }
             else
             {
                 // Return null instead of "Unknown" and log the issue
-                // HardeningModule.VerboseLogger.Write($"Unknown key '{key}' encountered.");
+                // HardenWindowsSecurity.VerboseLogger.Write($"Unknown key '{key}' encountered.");
                 return null;
             }
         }
 
         // Helper method to get the value from a dictionary and handle the case when the key is not present
         // For ushort keys
-        private static string GetDictionaryValue(Dictionary<ushort, string> dictionary, ushort key)
+        private static string? GetDictionaryValue(Dictionary<ushort, string> dictionary, ushort key)
         {
-            if (dictionary.TryGetValue(key, out string value))
+            if (dictionary.TryGetValue(key, out string? value))
             {
                 return value;
             }
             else
             {
                 // Return null instead of "Unknown" and log the issue
-                // HardeningModule.VerboseLogger.Write($"Unknown key '{key}' encountered.");
+                // HardenWindowsSecurity.VerboseLogger.Write($"Unknown key '{key}' encountered.");
                 return null;
             }
         }
 
         // Helper method to get the information from the WMI classes
-        private static ManagementBaseObject GetCimInstance(string @namespace, string className, string filter)
+        private static ManagementBaseObject? GetCimInstance(string @namespace, string className, string filter)
         {
             SelectQuery query = new SelectQuery(className, filter);
             using (ManagementObjectSearcher searcher = new ManagementObjectSearcher(@namespace, query.QueryString))
@@ -414,7 +420,7 @@ namespace HardeningModule
         }
 
         // Helper method to invoke a method on a WMI class
-        private static ManagementBaseObject InvokeCimMethod(ManagementBaseObject instance, string methodName, Dictionary<string, object> parameters = null)
+        private static ManagementBaseObject InvokeCimMethod(ManagementBaseObject instance, string methodName, Dictionary<string, object>? parameters)
         {
             ManagementClass managementClass = new ManagementClass(instance.ClassPath);
             var inParams = managementClass.GetMethodParameters(methodName);
@@ -440,15 +446,16 @@ namespace HardeningModule
                 // Iterate through the properties of the storage object
                 foreach (PropertyData property in storage.Properties)
                 {
-                    if (property.Name == "DriveLetter" && property.Value != null)
+                    if (string.Equals(property.Name, "DriveLetter", StringComparison.OrdinalIgnoreCase) && property.Value != null)
                     {
-                        driveLetters.Add(property.Value.ToString());
+                        driveLetters.Add(property.Value?.ToString() ?? string.Empty);
                     }
                 }
             }
 
             return driveLetters.ToArray();
         }
+
 
         private static ManagementObjectCollection GetCimInstances(string namespacePath, string className, string filter)
         {

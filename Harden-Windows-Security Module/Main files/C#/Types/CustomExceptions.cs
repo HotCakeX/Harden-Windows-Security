@@ -1,6 +1,8 @@
 using System;
 
-namespace HardeningModule
+#nullable enable
+
+namespace HardenWindowsSecurity
 {
     // Custom exception class for PowerShell execution errors
     public class PowerShellExecutionException : Exception

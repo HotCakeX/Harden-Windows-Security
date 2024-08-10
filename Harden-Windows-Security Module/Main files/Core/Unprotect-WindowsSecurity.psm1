@@ -22,13 +22,13 @@ Function Unprotect-WindowsSecurity {
 
     begin {
         # Makes sure this cmdlet is invoked with Admin privileges
-        if (-NOT ([HardeningModule.UserPrivCheck]::IsAdmin())) {
+        if (-NOT ([HardenWindowsSecurity.UserPrivCheck]::IsAdmin())) {
             Throw [System.Security.AccessControl.PrivilegeNotHeldException] 'Administrator'
         }
-        [HardeningModule.Initializer]::Initialize($VerbosePreference)
+        [HardenWindowsSecurity.Initializer]::Initialize($VerbosePreference)
 
         Write-Verbose -Message 'Importing the required sub-modules'
-        Import-Module -FullyQualifiedName "$([HardeningModule.GlobalVars]::Path)\Shared\Update-self.psm1" -Force -Verbose:$false
+        Import-Module -FullyQualifiedName "$([HardenWindowsSecurity.GlobalVars]::Path)\Shared\Update-self.psm1" -Force -Verbose:$false
 
         Write-Verbose -Message 'Checking for updates...'
         Update-Self -InvocationStatement $MyInvocation.Statement
@@ -93,7 +93,7 @@ Function Unprotect-WindowsSecurity {
             # Only remove the mitigations that are allowed to be removed
             # It is important for any executable whose name is mentioned as a key in "Computer\HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options" by default in a clean Windows installation, to have its RemovalAllowed property in the Process Mitigations CSV file set to False
             # So regardless of whether mitigations were added by the module, only remove mitigations for processes whose names do not exist in that registry location by default, this will prevent from removing any possible built-in default mitigations
-            [HardeningModule.ProcessMitigationsParser+ProcessMitigationsRecords[]]$ProcessMitigations = [HardeningModule.GlobalVars]::ProcessMitigations | Where-Object -FilterScript { $_.RemovalAllowed -eq 'True' }
+            [HardenWindowsSecurity.ProcessMitigationsParser+ProcessMitigationsRecords[]]$ProcessMitigations = [HardenWindowsSecurity.GlobalVars]::ProcessMitigations | Where-Object -FilterScript { $_.RemovalAllowed -eq 'True' }
 
             # Group the data by ProgramName
             [Microsoft.PowerShell.Commands.GroupInfo[]]$GroupedMitigations = $ProcessMitigations | Group-Object -Property ProgramName
@@ -126,7 +126,7 @@ Function Unprotect-WindowsSecurity {
                 $CurrentMainStep++
                 Write-Progress -Id 0 -Activity 'Backing up Controlled Folder Access exclusion list' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
 
-                [HardeningModule.ControlledFolderAccessHandler]::Start()
+                [HardenWindowsSecurity.ControlledFolderAccessHandler]::Start()
                 Start-Sleep -Seconds 3
 
                 Switch ($True) {
@@ -153,7 +153,7 @@ Function Unprotect-WindowsSecurity {
 
                         # change location to the new directory
                         Write-Verbose -Message 'Changing location'
-                        Set-Location -Path ([HardeningModule.GlobalVars]::WorkingDir)
+                        Set-Location -Path ([HardenWindowsSecurity.GlobalVars]::WorkingDir)
 
                         $CurrentMainStep++
                         Write-Progress -Id 0 -Activity 'Removing Process Mitigations for apps' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
@@ -169,8 +169,8 @@ Function Unprotect-WindowsSecurity {
                         $CurrentMainStep++
                         Write-Progress -Id 0 -Activity 'Deleting all the registry keys created by the Protect-WindowsSecurity cmdlet' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
 
-                        foreach ($Item in ([HardeningModule.GlobalVars]::RegistryCSVItems)) {
-                            [HardeningModule.RegistryEditor]::EditRegistry($Item.Path, $Item.Key, $Item.Value, $Item.Type, 'Delete')
+                        foreach ($Item in ([HardenWindowsSecurity.GlobalVars]::RegistryCSVItems)) {
+                            [HardenWindowsSecurity.RegistryEditor]::EditRegistry($Item.Path, $Item.Key, $Item.Value, $Item.Type, 'Delete')
                         }
 
                         # To completely remove the Edge policy since only its sub-keys are removed by the command above
@@ -186,7 +186,7 @@ Function Unprotect-WindowsSecurity {
 
                         # unzip the LGPO file
                         Expand-Archive -Path .\LGPO.zip -DestinationPath .\ -Force
-                        .\'LGPO_30\LGPO.exe' /q /s "$([HardeningModule.GlobalVars]::Path)\Resources\Default Security Policy.inf"
+                        .\'LGPO_30\LGPO.exe' /q /s "$([HardenWindowsSecurity.GlobalVars]::Path)\Resources\Default Security Policy.inf"
 
                         # Enable LMHOSTS lookup protocol on all network adapters again
                         Set-ItemProperty -Path 'Registry::HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\NetBT\Parameters' -Name 'EnableLMHOSTS' -Value '1' -Type DWord
@@ -226,7 +226,7 @@ Function Unprotect-WindowsSecurity {
                         [System.String]$TaskPath = '\MSFT Driver Block list update\'
 
                         Write-Verbose -Message "Removing the scheduled task $TaskName"
-                        if ([HardeningModule.TaskSchedulerHelper]::Get('MSFT Driver Block list update', '\MSFT Driver Block list update\', 'Boolean')) {
+                        if ([HardenWindowsSecurity.TaskSchedulerHelper]::Get('MSFT Driver Block list update', '\MSFT Driver Block list update\', 'Boolean')) {
                             [System.Void](Unregister-ScheduledTask -TaskName $TaskName -TaskPath $TaskPath -Confirm:$false)
                         }
 
@@ -258,9 +258,9 @@ Function Unprotect-WindowsSecurity {
                 # End the progress bar and mark it as completed
                 Write-Progress -Id 0 -Activity 'Completed' -Completed
 
-                [HardeningModule.ControlledFolderAccessHandler]::reset()
+                [HardenWindowsSecurity.ControlledFolderAccessHandler]::reset()
                 Set-Location -Path $HOME
-                [HardeningModule.Miscellaneous]::CleanUp()
+                [HardenWindowsSecurity.Miscellaneous]::CleanUp()
             }
         }
     }

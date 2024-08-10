@@ -2,7 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace HardeningModule
+#nullable enable
+
+namespace HardenWindowsSecurity
 {
     public static class ConditionalResultAdd
     {
@@ -12,7 +14,7 @@ namespace HardeningModule
         /// </summary>
         /// <param name="nestedObjectArray">A reference to the NestedObjectsArray List from the parent method so we can conditionally modify it</param>
         /// <param name="result">The current item that must be conditionally added to the List</param>
-        public static void Add(List<HardeningModule.IndividualResult> nestedObjectArray, HardeningModule.IndividualResult result)
+        public static void Add(List<HardenWindowsSecurity.IndividualResult> nestedObjectArray, HardenWindowsSecurity.IndividualResult result)
         {
             // Check if there is already an instance with the FriendlyName
             var existingItem = nestedObjectArray.FirstOrDefault(item => string.Equals(item.FriendlyName, result.FriendlyName, StringComparison.OrdinalIgnoreCase));
@@ -30,12 +32,12 @@ namespace HardeningModule
                         nestedObjectArray.Remove(existingItem);
                         // Add the current item with Compliant status "True"
                         nestedObjectArray.Add(result);
-                        HardeningModule.VerboseLogger.Write($"Item with Name '{existingItem.Name}' and FriendlyName '{existingItem.FriendlyName}' replaced with a compliant item.");
+                        HardenWindowsSecurity.VerboseLogger.Write($"Item with Name '{existingItem.Name}' and FriendlyName '{existingItem.FriendlyName}' replaced with a compliant item.");
                     }
                     else
                     {
                         // Write a descriptive and detailed message to the console
-                        HardeningModule.VerboseLogger.Write($"Item not added: An item with Name '{existingItem.Name}' and FriendlyName '{existingItem.FriendlyName}' already exists with Compliant status '{existingItem.Compliant}' and Value '{existingItem.Value}'.");
+                        HardenWindowsSecurity.VerboseLogger.Write($"Item not added: An item with Name '{existingItem.Name}' and FriendlyName '{existingItem.FriendlyName}' already exists with Compliant status '{existingItem.Compliant}' and Value '{existingItem.Value}'.");
                     }
                 }
                 //    else

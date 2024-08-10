@@ -1,8 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Management;
+using System.Globalization;
 
-namespace HardeningModule
+#nullable enable
+
+namespace HardenWindowsSecurity
 {
     public class TaskSchedulerHelper
     {
@@ -107,8 +110,8 @@ namespace HardeningModule
                         foreach (ManagementObject obj in results)
                         {
                             // Retrieve the TaskName and TaskPath properties from the ManagementObject
-                            string name = obj["TaskName"]?.ToString();
-                            string path = obj["TaskPath"]?.ToString();
+                            string? name = obj["TaskName"]?.ToString();
+                            string? path = obj["TaskPath"]?.ToString();
 
                             // Check if the TaskName matches the provided taskName (if specified)
                             // and TaskPath matches the provided taskPath (if specified)
@@ -137,7 +140,7 @@ namespace HardeningModule
             catch (ManagementException e)
             {
                 // Handle any ManagementException that may occur during the WMI query execution
-                HardeningModule.VerboseLogger.Write($"An error occurred while querying for WMI data: {e.Message}");
+                HardenWindowsSecurity.VerboseLogger.Write($"An error occurred while querying for WMI data: {e.Message}");
 
                 // Depending on the outputType parameter, return either false or an empty list
                 if (outputType == OutputType.Boolean)

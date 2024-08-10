@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
 
-namespace HardeningModule
+#nullable enable
+
+namespace HardenWindowsSecurity
 {
     public partial class MDMClassProcessor
     {

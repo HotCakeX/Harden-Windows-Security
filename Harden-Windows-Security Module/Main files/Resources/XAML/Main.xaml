@@ -158,23 +158,21 @@
             </LinearGradientBrush.GradientStops>
         </LinearGradientBrush>
     </Window.Resources>
-
    
     
     <!-- Grid for Online Mode Tab - Removing the white border with negative margins -->
     <Grid x:Name="ParentGrid" Margin="-2.3,-2.3,-2.3,-2.3">
         <!-- Row definitions for the grid -->
         <Grid.RowDefinitions>
-            <!-- row 0 -->
-            <RowDefinition Height="220"/>
-            
+            <!-- Logger area Row -->
+            <RowDefinition Height="220"/>            
             <!-- Progress Bar Row -->
             <RowDefinition Height="10"/>
-            <!-- row 1 -->
+            <!-- Main Toggle Button Row -->
             <RowDefinition Height="Auto"/>
-            <!-- row 2 -->
+            <!-- Main Content Control for all other elements Row -->
             <RowDefinition Height="*"/>
-            <!-- row 3 -->
+            <!-- Execute button Row -->
             <RowDefinition Height="80"/>
         </Grid.RowDefinitions>
         <!-- Column definitions for the grid -->
@@ -198,8 +196,6 @@
              Margin="30,2.5,30,2.5" 
              Grid.ColumnSpan="2" 
              BorderThickness="0" />
-
-
 
 
         <!-- ToggleButton -->

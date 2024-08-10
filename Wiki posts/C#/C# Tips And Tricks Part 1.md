@@ -234,3 +234,15 @@ namespace HardenWindowsSecurity
 * This method is powerful for scenarios where you want to package files directly within your application and access them as needed.
 
 <br>
+
+## Static vs Non-Static Classes
+
+Static classes have fewer functionalities compared to non-static classes. They are designed to serve specific purposes, such as defining global constants, variables, utility functions, or methods that perform similar operations. Because a static class is meant to be a container for these static members, it cannot be instantiated. This means that you cannot create objects from a static class. Instead, all its members must be accessed using the class name itself.
+
+Non-static classes, on the other hand, are much more versatile. **They can do everything a static class can do and offer many additional features.** For example, non-static classes can be instantiated, meaning you can create objects from them. These objects can represent custom types, holding state and behavior specific to each instance. This allows you to create multiple objects from the same class, each with its own unique state and/or property.
+
+**Non-static classes can contain both static and non-static members.** Static members of a non-static class are shared among all instances and are accessed using the class name, just like in a static class. Instance members, however, belong to each specific object and are accessed through that object.
+
+To access static members in both static and non-static classes, you use the same syntax: `ClassName.Member`. This allows consistent access patterns, regardless of whether the class is static or not.
+
+<br>

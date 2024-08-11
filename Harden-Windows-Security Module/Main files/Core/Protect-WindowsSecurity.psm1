@@ -404,7 +404,7 @@ Execution Policy: $CurrentExecutionPolicy
                             try {
                                 # display the progress bar during file download
                                 [HardenWindowsSecurity.GUI]::Window.Dispatcher.Invoke({
-                                        [HardenWindowsSecurity.GUI]::mainProgressBar.Visibility = 'Visible' 
+                                        [HardenWindowsSecurity.GUI]::mainProgressBar.Visibility = 'Visible'
                                     })
 
                                 . "$([HardenWindowsSecurity.GlobalVars]::Path)\Shared\HardeningFunctions.ps1"
@@ -428,7 +428,7 @@ Execution Policy: $CurrentExecutionPolicy
                             # Enabling the execute button after all files are downloaded and ready or if Offline switch was used and download was skipped
                             [HardenWindowsSecurity.GUI]::Window.Dispatcher.Invoke({
                                     [HardenWindowsSecurity.GUI]::Window.FindName('Execute').IsEnabled = $true
-                                    [HardenWindowsSecurity.GUI]::mainProgressBar.Visibility = 'Collapsed' 
+                                    [HardenWindowsSecurity.GUI]::mainProgressBar.Visibility = 'Collapsed'
                                 })
                         }
                     })

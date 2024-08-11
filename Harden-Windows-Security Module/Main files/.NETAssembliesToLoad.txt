@@ -43,3 +43,4 @@ System.Text.RegularExpressions
 System.ComponentModel.Primitives
 System.Security.Principal.Windows
 System.DirectoryServices.AccountManagement
+System.Data

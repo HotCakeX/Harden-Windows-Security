@@ -246,3 +246,11 @@ Non-static classes, on the other hand, are much more versatile. **They can do ev
 To access static members in both static and non-static classes, you use the same syntax: `ClassName.Member`. This allows consistent access patterns, regardless of whether the class is static or not.
 
 <br>
+
+## A Less Known Reason Why XAML Hot Reload Might Not Work In Visual Studio And Visual Studio Blend
+
+Microsoft has a [troubleshooting documentation](https://learn.microsoft.com/en-us/troubleshoot/developer/visualstudio/tools-utilities/xaml-hot-reload-troubleshooting) for [XAML Hot Reload](https://learn.microsoft.com/en-us/visualstudio/xaml-tools/xaml-hot-reload) feature but there is one important thing they don't mention, your WPF GUI needs to be using the Application context/object, not Window, for Hot Reload feature to function.
+
+If your WPF GUI only uses the Window object, then the Hot Reload feature will not work.
+
+<br>

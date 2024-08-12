@@ -14,6 +14,7 @@ using System.Collections.Concurrent;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Effects;
+using System.Windows.Threading;
 // additional assemblies
 using System.Diagnostics;
 using System.Windows.Automation;
@@ -28,6 +29,9 @@ using System.Windows.Media.TextFormatting;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Shell;
+using System.Threading.Tasks;
+using System.Text;
+
 
 #nullable enable
 
@@ -130,23 +134,10 @@ namespace HardenWindowsSecurity
             }
 
             // Create and initialize the application - the WPF GUI uses the App context
-            app = new System.Windows.Application();
+            GUI.app = new System.Windows.Application();
 
-            #region main XAML
-            // Defining the path to the main Window XAML file
-            GUI.xamlPath = System.IO.Path.Combine(HardenWindowsSecurity.GlobalVars.path, "Resources", "XAML", "Main.xaml");
-
-            // Load the MainWindow.xaml
-            using (FileStream fs = new FileStream(GUI.xamlPath, FileMode.Open, FileAccess.Read))
-            {
-                // Load the main window from the XAML file
-                GUI.window = (System.Windows.Window)System.Windows.Markup.XamlReader.Load(fs);
-            }
-            #endregion
-
-            #region resource dictionaries
-            // Defining the path to the ResourceDictionaries folder
-            // Any XAML file in the folder will be loaded and made available to the entire Application, including all of its window(s), as resource dictionaries
+            #region Load Resource Dictionaries (First)
+            // Define the path to the ResourceDictionaries folder
             string resourceFolder = System.IO.Path.Combine(HardenWindowsSecurity.GlobalVars.path, "Resources", "XAML", "ResourceDictionaries");
 
             // Get all of the XAML files in the folder
@@ -158,14 +149,26 @@ namespace HardenWindowsSecurity
                 using (FileStream fs = new FileStream(file, FileMode.Open, FileAccess.Read))
                 {
                     // Load the resource dictionary from the XAML file
-                    System.Windows.ResourceDictionary? resourceDict = (System.Windows.ResourceDictionary)System.Windows.Markup.XamlReader.Load(fs);
-                    GUI.app.Resources.MergedDictionaries.Add(resourceDict);
+                    System.Windows.ResourceDictionary resourceDict = (System.Windows.ResourceDictionary)System.Windows.Markup.XamlReader.Load(fs);
+                    GUI.app.Resources.MergedDictionaries.Add(resourceDict);  // Add to application resources to ensure dictionaries are available to the whole application
                 }
             }
             #endregion
 
-            // This approach effectively replaces the functionality of StartupUri in the mainWindow.XAML by manually loading and setting the MainWindow here in the code
-            app.MainWindow = window;
+            #region Load Main Window XAML (After Resource dictionaries have been loaded)
+            // Define the path to the main Window XAML file
+            GUI.xamlPath = System.IO.Path.Combine(HardenWindowsSecurity.GlobalVars.path, "Resources", "XAML", "Main.xaml");
+
+            // Load the MainWindow.xaml
+            using (FileStream fs = new FileStream(GUI.xamlPath, FileMode.Open, FileAccess.Read))
+            {
+                // Load the main window from the XAML file
+                GUI.window = (System.Windows.Window)System.Windows.Markup.XamlReader.Load(fs);
+            }
+            #endregion
+
+            // Set the MainWindow for the application
+            GUI.app.MainWindow = GUI.window;
 
             GUI.parentGrid = (System.Windows.Controls.Grid)GUI.window.FindName("ParentGrid");
             GUI.mainTabControlToggle = (System.Windows.Controls.Primitives.ToggleButton)GUI.parentGrid.FindName("MainTabControlToggle");
@@ -701,6 +704,49 @@ End time: {DateTime.Now}
                 };
 
             };
+
+            /*
+                        // Startup Event
+                        GUI.app!.Startup += (object s, StartupEventArgs e) =>
+                        {
+                            // Display a welcome message
+                            System.Windows.MessageBox.Show(messageBoxText: "Welcome to the application!", caption: "Startup", button: MessageBoxButton.OK, icon: MessageBoxImage.Information);
+                        };
+
+                        // Exit Event
+                        GUI.app!.Exit += (object s, ExitEventArgs e) =>
+                        {
+                            System.Windows.MessageBox.Show(messageBoxText: "Exiting!", caption: "Exit", button: MessageBoxButton.OK, icon: MessageBoxImage.Information);
+                        };
+
+                        // DispatcherUnhandledException Event is triggered when an unhandled exception occurs in the application
+                        GUI.app!.DispatcherUnhandledException += (object s, DispatcherUnhandledExceptionEventArgs e) =>
+                        {
+
+                            // Display an error message to the user
+                            System.Windows.MessageBox.Show(messageBoxText: "An unexpected error occurred.", caption: "Error", button: MessageBoxButton.OK, icon: MessageBoxImage.Error);
+
+                            // if logging is enabled
+                            if (GUI.ShouldWriteLogs)
+                            {
+                                GUI.Logger.Add($"An unexpected error occurred: {e.Exception.Message}");
+                            }
+
+                            // Mark the exception as handled
+                            e.Handled = true;
+                        };
+            */
+
+            /*
+                        GUI.app!.Resources["GlobalStyle"] = new Style(typeof(System.Windows.Controls.Button))
+                        {
+                            Setters =
+                            {
+                                new Setter(System.Windows.Controls.Button.BackgroundProperty, System.Windows.Media.Brushes.LightBlue),
+                                new Setter(System.Windows.Controls.Button.ForegroundProperty, System.Windows.Media.Brushes.DarkBlue)
+                            }
+                        };
+            */
         }
     }
 }

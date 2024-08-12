@@ -70,7 +70,10 @@ namespace HardenWindowsSecurity
         public static string? xamlContent;
         public static System.Xml.XmlDocument? xamlDocument;
         public static System.Xml.XmlNodeReader? reader;
+        // Main window instance
         public static System.Windows.Window? window;
+        // Application instance
+        public static System.Windows.Application? app;
         public static System.Windows.Controls.Grid? parentGrid;
         public static System.Windows.Controls.Primitives.ToggleButton? mainTabControlToggle;
         public static System.Windows.Controls.ContentControl? mainContentControl;
@@ -126,16 +129,43 @@ namespace HardenWindowsSecurity
                 throw new System.ArgumentNullException("GlobalVars.path cannot be null.");
             }
 
+            // Create and initialize the application - the WPF GUI uses the App context
+            app = new System.Windows.Application();
+
+            #region main XAML
+            // Defining the path to the main Window XAML file
             GUI.xamlPath = System.IO.Path.Combine(HardenWindowsSecurity.GlobalVars.path, "Resources", "XAML", "Main.xaml");
-            // Read the content of the XML
-            GUI.xamlContent = System.IO.File.ReadAllText(GUI.xamlPath);
 
-            // Convert the text to XML document
-            GUI.xamlDocument = new System.Xml.XmlDocument();
-            GUI.xamlDocument.LoadXml(GUI.xamlContent);
-            GUI.reader = new System.Xml.XmlNodeReader(GUI.xamlDocument);
+            // Load the MainWindow.xaml
+            using (FileStream fs = new FileStream(GUI.xamlPath, FileMode.Open, FileAccess.Read))
+            {
+                // Load the main window from the XAML file
+                GUI.window = (System.Windows.Window)System.Windows.Markup.XamlReader.Load(fs);
+            }
+            #endregion
 
-            GUI.window = (System.Windows.Window)System.Windows.Markup.XamlReader.Load(GUI.reader);
+            #region resource dictionaries
+            // Defining the path to the ResourceDictionaries folder
+            // Any XAML file in the folder will be loaded and made available to the entire Application, including all of its window(s), as resource dictionaries
+            string resourceFolder = System.IO.Path.Combine(HardenWindowsSecurity.GlobalVars.path, "Resources", "XAML", "ResourceDictionaries");
+
+            // Get all of the XAML files in the folder
+            var resourceFiles = Directory.GetFiles(resourceFolder, "*.xaml");
+
+            // Load resource dictionaries from the ResourceDictionaries folder
+            foreach (var file in resourceFiles)
+            {
+                using (FileStream fs = new FileStream(file, FileMode.Open, FileAccess.Read))
+                {
+                    // Load the resource dictionary from the XAML file
+                    System.Windows.ResourceDictionary? resourceDict = (System.Windows.ResourceDictionary)System.Windows.Markup.XamlReader.Load(fs);
+                    GUI.app.Resources.MergedDictionaries.Add(resourceDict);
+                }
+            }
+            #endregion
+
+            // This approach effectively replaces the functionality of StartupUri in the mainWindow.XAML by manually loading and setting the MainWindow here in the code
+            app.MainWindow = window;
 
             GUI.parentGrid = (System.Windows.Controls.Grid)GUI.window.FindName("ParentGrid");
             GUI.mainTabControlToggle = (System.Windows.Controls.Primitives.ToggleButton)GUI.parentGrid.FindName("MainTabControlToggle");

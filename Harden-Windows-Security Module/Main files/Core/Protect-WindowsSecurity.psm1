@@ -578,8 +578,8 @@ Execution Policy: $CurrentExecutionPolicy
                         }
                     })
 
-                # Show the GUI window
-                [System.Void][HardenWindowsSecurity.GUI]::Window.ShowDialog()
+                # Show the main window
+                [System.Void][HardenWindowsSecurity.GUI]::app.Run([HardenWindowsSecurity.GUI]::Window)
 
                 # Clear any jobs created during runtime in the current RunSpace
                 Foreach ($JobToRemove in Get-Job) {

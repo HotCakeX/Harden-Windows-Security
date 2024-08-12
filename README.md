@@ -1194,6 +1194,10 @@ Get-Content <Path-To-File> -stream zone.identifier
 
 <br>
 
+* <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/RedStar.gif" width="30" alt="Red Star denoting Security Recommendation"> Enable [***Random Hardware Addresses***](https://support.microsoft.com/en-us/windows/how-to-use-random-hardware-addresses-in-windows-ac58de34-35fc-31ff-c650-823fc48eb1bc) In Windows Settings -> Network & Internet -> WIFI. Currently, there is no Group Policy or associated registry key to automatically turn it on, that is why it is mentioned here in the security recommendations section. It has various security and privacy benefits such as your device cannot be uniquely identified by its hardware Mac address and the routers your connect to cannot uniquely identify you. You can set it to change daily in your WIFI network adapter's settings in Windows settings for even more benefits.
+
+<br>
+
 * <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/RedStar.gif" width="30" alt="Red Star denoting Security Recommendation"> More Security Recommendations coming soon...
 
 <p align="right"><a href="#readme-top">💡 (back to top)</a></p>

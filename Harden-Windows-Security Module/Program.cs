@@ -19,9 +19,9 @@ namespace HardenWindowsSecurity
 
             Thread thread = new Thread(() =>
             {
-                GUI.LoadXaml();
+                GUIProtectWinSecurity.LoadXaml();
 
-                GUI.window.ShowDialog();
+                GUIProtectWinSecurity.window.ShowDialog();
             });
 
             thread.SetApartmentState(ApartmentState.STA);

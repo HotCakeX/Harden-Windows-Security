@@ -454,9 +454,9 @@ Function Start-FileDownload {
     )
     if (!([HardenWindowsSecurity.GlobalVars]::Offline)) { Write-Verbose -Message 'Downloading the required files' }
     [HardenWindowsSecurity.FileDownloader]::PrepDownloadedFiles(
-        ($GUI ? [HardenWindowsSecurity.GUI]::LGPOZipPath : "$PathToLGPO"),
-        ($GUI ? [HardenWindowsSecurity.GUI]::MicrosoftSecurityBaselineZipPath : "$PathToMSFTSecurityBaselines"),
-        ($GUI ? [HardenWindowsSecurity.GUI]::Microsoft365AppsSecurityBaselineZipPath : "$PathToMSFT365AppsSecurityBaselines"),
+        ($GUI ? [HardenWindowsSecurity.GUIProtectWinSecurity]::LGPOZipPath : "$PathToLGPO"),
+        ($GUI ? [HardenWindowsSecurity.GUIProtectWinSecurity]::MicrosoftSecurityBaselineZipPath : "$PathToMSFTSecurityBaselines"),
+        ($GUI ? [HardenWindowsSecurity.GUIProtectWinSecurity]::Microsoft365AppsSecurityBaselineZipPath : "$PathToMSFT365AppsSecurityBaselines"),
         ($GUI ? $True : $False)
     )
     Write-Verbose -Message 'Finished downloading/processing the required files'

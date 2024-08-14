@@ -17,14 +17,14 @@ namespace HardenWindowsSecurity
         public static void LogMessage(string text)
         {
             // Add the text to the synchronized array list as log messages
-            HardenWindowsSecurity.GUI.Logger.Add(value: $"{DateTime.Now}: {text}");
+            HardenWindowsSecurity.GUIProtectWinSecurity.Logger.Add(value: $"{DateTime.Now}: {text}");
 
             // Invoke the Dispatcher to update the GUI
-            HardenWindowsSecurity.GUI.window!.Dispatcher.Invoke(callback: new Action(() =>
+            HardenWindowsSecurity.GUIProtectWinSecurity.window!.Dispatcher.Invoke(callback: new Action(() =>
             {
                 // Update the TextBlock with the new log message
-                HardenWindowsSecurity.GUI.outputTextBlock!.Text += text + "\n";
-                HardenWindowsSecurity.GUI.scrollerForOutputTextBlock!.ScrollToBottom();
+                HardenWindowsSecurity.GUIProtectWinSecurity.outputTextBlock!.Text += text + "\n";
+                HardenWindowsSecurity.GUIProtectWinSecurity.scrollerForOutputTextBlock!.ScrollToBottom();
             }), priority: DispatcherPriority.Background);
         }
     }

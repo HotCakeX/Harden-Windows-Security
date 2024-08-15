@@ -22,7 +22,7 @@ You can create Audit mode policies using the WDACConfig module based on differen
 For instance, the following command will create an Audit mode policy that once deployed on an endpoint, starts generating Audit logs for any file that runs but is not part of the Windows by default.
 
 ```powershell
-New-WDACConfig -PrepDefaultWindowsAudit
+New-WDACConfig -PolicyType DefaultWindows -Audit
 ```
 
 <br>
@@ -30,7 +30,7 @@ New-WDACConfig -PrepDefaultWindowsAudit
 Another option would be the following command, which will create an Audit mode policy that once deployed, starts generating Audit logs for any file that runs but is not signed by Microsoft certificates.
 
 ```powershell
-New-WDACConfig -PrepMSFTOnlyAudit
+New-WDACConfig -PolicyType AllowMicrosoft -Audit
 ```
 
 <br>
@@ -129,16 +129,16 @@ The following video demonstrates the process of collecting the data from MDE Adv
 
 After generating the Supplemental policies based off of the MDE Advanced Hunting data, you need to remove the Audit mode policies you deployed to your endpoints initially and replace them with Enforced mode policies.
 
-#### [Generate Allow Microsoft Base Policy (Enforced Mode)](https://github.com/HotCakeX/Harden-Windows-Security/wiki/New-WDACConfig#new-wdacconfig--makeallowmsftwithblockrules)
+#### [Generate Allow Microsoft Base Policy (Enforced Mode)](https://github.com/HotCakeX/Harden-Windows-Security/wiki/New-WDACConfig#new-wdacconfig--policytype)
 
 ```powershell
-New-WDACConfig -MakeAllowMSFTWithBlockRules
+New-WDACConfig -PolicyType AllowMicrosoft
 ```
 
-#### [Generate Default Windows Base Policy (Enforced Mode)](https://github.com/HotCakeX/Harden-Windows-Security/wiki/New-WDACConfig#new-wdacconfig--makedefaultwindowswithblockrules)
+#### [Generate Default Windows Base Policy (Enforced Mode)](https://github.com/HotCakeX/Harden-Windows-Security/wiki/New-WDACConfig#new-wdacconfig--policytype)
 
 ```powershell
-New-WDACConfig -MakeDefaultWindowsWithBlockRules
+New-WDACConfig -PolicyType DefaultWindows
 ```
 
 <br>

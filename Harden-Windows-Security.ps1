@@ -7,7 +7,18 @@ Function P {
         [System.Boolean]$WingetSourceUpdated = $false
         [System.Boolean]$PSInstalled = $false
         [System.Version]$RequiredPSVer = '7.4.2.0'
-        [System.String]$PSDownloadURLMSIX = 'https://github.com/PowerShell/PowerShell/releases/download/v7.4.3/PowerShell-7.4.3-Win.msixbundle'
+        [System.String]$PSDownloadURLMSIX = 'https://github.com/PowerShell/PowerShell/releases/download/v7.4.4/PowerShell-7.4.4-win.msixbundle'
+        [System.String]$MicrosoftUIXamlDownloadedFileName = 'Microsoft.UI.Xaml.2.8.appx'
+
+        if ($Env:PROCESSOR_ARCHITECTURE -eq 'ARM64') {
+            Write-Verbose -Message 'ARM64 architecture detected, using ARM64 version of Microsoft.UI.Xaml.2.8.appx'
+            [System.String]$MicrosoftUIXamlDownloadLink = 'https://github.com/microsoft/microsoft-ui-xaml/releases/download/v2.8.6/Microsoft.UI.Xaml.2.8.arm64.appx'
+        }
+        else {
+            Write-Verbose -Message 'x64 architecture detected, using x64 version of Microsoft.UI.Xaml.2.8.appx'
+            [System.String]$MicrosoftUIXamlDownloadLink = 'https://github.com/microsoft/microsoft-ui-xaml/releases/download/v2.8.6/Microsoft.UI.Xaml.2.8.x64.appx'
+        }
+
         $UserSID = [System.Security.Principal.WindowsIdentity]::GetCurrent().User.Value
         $User = Get-LocalUser | Where-Object -FilterScript { $_.SID -eq $UserSID }
 
@@ -53,10 +64,10 @@ Function P {
                             # https://learn.microsoft.com/en-us/windows/package-manager/winget/#install-winget-on-windows-sandbox
                             Invoke-WebRequest -Uri 'https://aka.ms/getwinget' -OutFile 'Microsoft.DesktopAppInstaller_8wekyb3d8bbwe.msixbundle'
                             Invoke-WebRequest -Uri 'https://aka.ms/Microsoft.VCLibs.x64.14.00.Desktop.appx' -OutFile 'Microsoft.VCLibs.x64.14.00.Desktop.appx'
-                            Invoke-WebRequest -Uri 'https://github.com/microsoft/microsoft-ui-xaml/releases/download/v2.8.6/Microsoft.UI.Xaml.2.8.x64.appx' -OutFile 'Microsoft.UI.Xaml.2.8.x64.appx'
+                            Invoke-WebRequest -Uri $MicrosoftUIXamlDownloadLink -OutFile $MicrosoftUIXamlDownloadedFileName
 
                             Add-AppxPackage -Path 'Microsoft.VCLibs.x64.14.00.Desktop.appx'
-                            Add-AppxPackage -Path 'Microsoft.UI.Xaml.2.8.x64.appx'
+                            Add-AppxPackage -Path $MicrosoftUIXamlDownloadedFileName
                             Add-AppxPackage -Path 'Microsoft.DesktopAppInstaller_8wekyb3d8bbwe.msixbundle'
                         }
                         finally {
@@ -64,7 +75,7 @@ Function P {
                                 Pop-Location
                                 Remove-Item -Path 'Microsoft.DesktopAppInstaller_8wekyb3d8bbwe.msixbundle' -Force
                                 Remove-Item -Path 'Microsoft.VCLibs.x64.14.00.Desktop.appx' -Force
-                                Remove-Item -Path 'Microsoft.UI.Xaml.2.8.x64.appx' -Force
+                                Remove-Item -Path $MicrosoftUIXamlDownloadedFileName -Force
                             }
                             catch {}
                         }

@@ -33,7 +33,8 @@ using System.Windows.Shapes;
 using System.Windows.Shell;
 using System.Threading.Tasks;
 using System.Text;
-
+using System.Reflection.PortableExecutable;
+using System.Security.Principal;
 
 #nullable enable
 
@@ -122,6 +123,16 @@ namespace HardenWindowsSecurity
             {
                 throw new Exception("AddEventHandlers Method: microsoft365AppsSecurityBaselineZipButton object is empty!");
             }
+
+            if (GUIProtectWinSecurity.ExecuteButton == null)
+            {
+                throw new Exception("AddEventHandlers Method: ExecuteButton object is empty!");
+            }
+
+            if (GUIProtectWinSecurity.mainProgressBar == null)
+            {
+                throw new Exception("AddEventHandlers Method: mainProgressBar object is empty!");
+            }
             #endregion
 
 
@@ -186,6 +197,7 @@ namespace HardenWindowsSecurity
             // Add click event for 'Check All' button for enabled sub-categories
             GUIProtectWinSecurity.selectAllSubCategories.Checked += (sender, e) =>
             {
+
                 foreach (var item in GUIProtectWinSecurity.subCategories.Items)
                 {
                     System.Windows.Controls.ListViewItem subCategoryItem = (System.Windows.Controls.ListViewItem)item;
@@ -199,6 +211,7 @@ namespace HardenWindowsSecurity
             // Add click event for 'Uncheck All' button from sub-categories, regardless of whether they are enabled or disabled
             GUIProtectWinSecurity.selectAllSubCategories.Unchecked += (sender, e) =>
             {
+
                 foreach (var item in GUIProtectWinSecurity.subCategories.Items)
                 {
                     ((System.Windows.Controls.CheckBox)((System.Windows.Controls.ListViewItem)item).Content).IsChecked = false;
@@ -327,8 +340,11 @@ namespace HardenWindowsSecurity
             // Defining what happens when the GUI window is closed
             GUIProtectWinSecurity.window.Closed += (sender, e) =>
             {
-                // Only proceed further if user enabled logging
-                if (GUIProtectWinSecurity.ShouldWriteLogs)
+                // Only proceed further if user enabled logging and the log file path is not empty
+                if (
+                    GUIProtectWinSecurity.log!.IsChecked == true &&
+                !string.IsNullOrEmpty(GUIProtectWinSecurity.txtFilePath.Text)
+                )
                 {
 
                     // Create the footer to the log file
@@ -349,8 +365,22 @@ End time: {DateTime.Now}
                         logEntries.Add(item);
                     }
 
+
+                    // trim any white spaces, single or double quotes in case the user entered the path with quotes around it
+                    GUIProtectWinSecurity.txtFilePath.Text = GUIProtectWinSecurity.txtFilePath.Text.Trim(' ', '\'', '\"'); ;
+
+                    // Ensure the path is absolute
+                    GUIProtectWinSecurity.txtFilePath.Text = System.IO.Path.GetFullPath(GUIProtectWinSecurity.txtFilePath.Text);
+
                     // Append log entries to the file
-                    File.AppendAllLines(GUIProtectWinSecurity.txtFilePath.Text, logEntries);
+                    try
+                    {
+                        File.AppendAllLines(GUIProtectWinSecurity.txtFilePath.Text, logEntries);
+                    }
+                    catch
+                    {
+                        HardenWindowsSecurity.Logger.LogMessage($"Couldn't save the logs in the selected path: {GUIProtectWinSecurity.txtFilePath.Text}");
+                    }
                 };
 
             };
@@ -376,12 +406,6 @@ End time: {DateTime.Now}
                             // Display an error message to the user
                             System.Windows.MessageBox.Show(messageBoxText: "An unexpected error occurred.", caption: "Error", button: MessageBoxButton.OK, icon: MessageBoxImage.Error);
 
-                            // if logging is enabled
-                            if (GUIProtectWinSecurity.ShouldWriteLogs)
-                            {
-                                GUIProtectWinSecurity.Logger.Add($"An unexpected error occurred: {e.Exception.Message}");
-                            }
-
                             // Mark the exception as handled
                             e.Handled = true;
                         };
@@ -397,6 +421,85 @@ End time: {DateTime.Now}
                             }
                         };
             */
+
+
+
+            // Defining a set of commands to run when the GUI window is loaded, async
+            GUIProtectWinSecurity.window.ContentRendered += async (sender, e) =>
+            {
+                // Run this entire section, including the downloading part, asynchronously
+                try
+                {
+
+                    #region Display a Welcome message
+                    string nameToDisplay = string.Empty;
+
+                    string UserValue = string.Empty;
+
+                    System.Security.Principal.WindowsIdentity CurrentUserResult = System.Security.Principal.WindowsIdentity.GetCurrent();
+                    System.Security.Principal.SecurityIdentifier? User = CurrentUserResult.User;
+
+                    if (User != null)
+                    {
+                        UserValue = User.Value.ToString();
+                    }
+
+                    HardenWindowsSecurity.LocalUser? CurrentLocalUser = HardenWindowsSecurity.LocalUserRetriever.Get().FirstOrDefault(Lu => Lu.SID == UserValue);
+
+                    nameToDisplay = (!string.IsNullOrWhiteSpace(CurrentLocalUser!.FullName)) ? CurrentLocalUser.FullName : !string.IsNullOrWhiteSpace(CurrentLocalUser.Name) ? CurrentLocalUser.Name : "Unknown User";
+
+                    HardenWindowsSecurity.Logger.LogMessage(HardenWindowsSecurity.UserPrivCheck.IsAdmin() ? $"Hello {nameToDisplay}, Running as Administrator" : $"Hello {nameToDisplay}, Running as Non-Administrator, some categories are disabled");
+                    #endregion
+
+                    // Use Dispatcher.Invoke to update the UI thread
+                    HardenWindowsSecurity.GUIProtectWinSecurity.window.Dispatcher.Invoke(() =>
+                    {
+                        // Set the execute button to disabled until all the prerequisites are met
+                        HardenWindowsSecurity.GUIProtectWinSecurity.ExecuteButton.IsEnabled = false;
+
+                        // Display the progress bar during file download
+                        HardenWindowsSecurity.GUIProtectWinSecurity.mainProgressBar.Visibility = Visibility.Visible;
+                        HardenWindowsSecurity.GUIProtectWinSecurity.ExecuteButton.IsChecked = true;
+                    });
+
+                    // Only download and process the files when the GUI is loaded and if Offline mode is not used
+                    // Because at this point, the user might have not selected the files to be used for offline operation
+                    if (!HardenWindowsSecurity.GlobalVars.Offline)
+                    {
+                        HardenWindowsSecurity.Logger.LogMessage("Downloading the required files");
+
+                        // Run the file download process asynchronously
+                        await Task.Run(() =>
+                        {
+                            HardenWindowsSecurity.FileDownloader.PrepDownloadedFiles(
+                                LGPOPath: HardenWindowsSecurity.GUIProtectWinSecurity.LGPOZipPath,
+                                MSFTSecurityBaselinesPath: HardenWindowsSecurity.GUIProtectWinSecurity.MicrosoftSecurityBaselineZipPath,
+                                MSFT365AppsSecurityBaselinesPath: HardenWindowsSecurity.GUIProtectWinSecurity.Microsoft365AppsSecurityBaselineZipPath,
+                                GUI: true
+                            );
+                        });
+
+                        HardenWindowsSecurity.Logger.LogMessage("Finished downloading/processing the required files");
+                    }
+
+                    // Using Dispatcher since the execute button is owned by the GUI (parent) RunSpace, and we're in another RunSpace (ThreadJob)
+                    // Enabling the execute button after all files are downloaded and ready or if Offline switch was used and download was skipped
+                    HardenWindowsSecurity.GUIProtectWinSecurity.window.Dispatcher.Invoke(() =>
+                    {
+                        HardenWindowsSecurity.GUIProtectWinSecurity.ExecuteButton.IsEnabled = true;
+                        HardenWindowsSecurity.GUIProtectWinSecurity.mainProgressBar.Visibility = Visibility.Hidden;
+                        HardenWindowsSecurity.GUIProtectWinSecurity.ExecuteButton.IsChecked = false;
+                    });
+                }
+                catch (Exception ex)
+                {
+                    HardenWindowsSecurity.Logger.LogMessage($"An error occurred while downloading the required files: {ex.Message}");
+                    HardenWindowsSecurity.Logger.LogMessage($"{ex.StackTrace}");
+                    HardenWindowsSecurity.Logger.LogMessage($"{ex.InnerException}");
+                    // Re-throw the exception to ensure it's caught and handled appropriately
+                    //   throw;
+                }
+            };
         }
     }
 }

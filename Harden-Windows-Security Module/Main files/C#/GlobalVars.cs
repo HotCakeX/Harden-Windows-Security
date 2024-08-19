@@ -46,12 +46,6 @@ namespace HardenWindowsSecurity
         // The working directory used by the Protect-WindowsSecurity cmdlet
         public static string WorkingDir = Path.Combine(Path.GetTempPath(), "HardeningXStuff");
 
-        // The total number of the steps for the parent/main progress bar to render in the Protect-WindowsSecurity cmdlet
-        public const int TotalMainSteps = 19;
-
-        // a variable to store the current step number for the progress bar
-        public static int CurrentMainStep = 0;
-
         // Defining a boolean variable to determine whether optional diagnostic data should be enabled for Smart App Control or not
         public static bool ShouldEnableOptionalDiagnosticData = false;
 

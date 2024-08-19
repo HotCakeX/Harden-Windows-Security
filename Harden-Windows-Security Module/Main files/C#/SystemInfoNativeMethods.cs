@@ -8,7 +8,7 @@ namespace HardenWindowsSecurity
     /// <summary>
     /// bootDMAProtection check - checks for Kernel DMA Protection status in System information or msinfo32
     /// can be used to find out if the DMA Protection is ON \ OFF.
-    /// will show this by emitting True \ False for On \ Off respectively.
+    /// will show this by emitting 1 for True (Kernel DMA Protection Available) and 0 for False (Kernel DMA Protection Not Available)
     /// </summary>
     public static class SystemInformationClass
     {
@@ -31,6 +31,7 @@ namespace HardenWindowsSecurity
             IntPtr SystemInformation = Marshal.AllocHGlobal(SystemInformationLength);
             Int32 ReturnLength;
 
+            // https://learn.microsoft.com/en-us/windows/win32/api/winternl/nf-winternl-ntquerysysteminformation
             result = SystemInformationClass.NtQuerySystemInformation(
                 SystemInformationClass.SYSTEM_DMA_GUARD_POLICY_INFORMATION.SystemDmaGuardPolicyInformation,
                 SystemInformation,

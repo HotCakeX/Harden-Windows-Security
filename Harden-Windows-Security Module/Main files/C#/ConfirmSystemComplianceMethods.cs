@@ -60,7 +60,7 @@ namespace HardenWindowsSecurity
             }
             else if (MethodsTaskOutput.IsCompletedSuccessfully)
             {
-                // Console.WriteLine("Download completed successfully");
+                // HardenWindowsSecurity.Logger.LogMessage("Download completed successfully");
             }
         }
 
@@ -214,7 +214,7 @@ namespace HardenWindowsSecurity
                         "c0033c00-d16d-4114-a5a0-dc9b3a7d2ceb" => new[] { "6", "1" }.Contains(action),
                         "01443614-cd74-433a-b99e-2ecdc07bfc25" => new[] { "6", "1" }.Contains(action),
                         // All other ASR rules are compliant if they are set to block (1)
-                        _ => action == "1"
+                        _ => string.Equals(action, "1", StringComparison.OrdinalIgnoreCase)
                     };
 
                     nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
@@ -427,10 +427,9 @@ namespace HardenWindowsSecurity
 
                 // https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-deviceguard?WT.mc_id=Portal-fx#requireplatformsecurityfeatures
                 string? RequirePlatformSecurityFeatures = HardenWindowsSecurity.GlobalVars.MDMResults!
-                 .Where(element => element.Name == "RequirePlatformSecurityFeatures")
+                 .Where(element => string.Equals(element.Name, "RequirePlatformSecurityFeatures", StringComparison.OrdinalIgnoreCase))
                  .Select(element => element.Value)
                  .FirstOrDefault();
-
 
                 nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
@@ -621,7 +620,7 @@ namespace HardenWindowsSecurity
                 // The ProtectionStatus remains off while the drive is encrypting or decrypting
                 var volumeInfo = HardenWindowsSecurity.BitLockerInfo.GetEncryptedVolumeInfo(Environment.GetEnvironmentVariable("SystemDrive") ?? "C:\\");
 
-                if (volumeInfo.ProtectionStatus == "Protected")
+                if (string.Equals(volumeInfo.ProtectionStatus, "Protected", StringComparison.OrdinalIgnoreCase))
                 {
                     // Get the key protectors of the OS Drive
                     string[] KeyProtectors = volumeInfo.KeyProtector?
@@ -691,7 +690,7 @@ namespace HardenWindowsSecurity
 
                 foreach (HardenWindowsSecurity.BitLockerVolume Drive in HardenWindowsSecurity.BitLockerInfo.GetAllEncryptedVolumeInfo())
                 {
-                    if (Drive.VolumeType == "FixedDisk")
+                    if (string.Equals(Drive.VolumeType, "FixedDisk", StringComparison.OrdinalIgnoreCase))
                     {
                         // Increase the number of available compliant values for each non-OS drive that was found
                         HardenWindowsSecurity.GlobalVars.TotalNumberOfTrueCompliantValues++;
@@ -706,7 +705,7 @@ namespace HardenWindowsSecurity
                     foreach (var BitLockerDrive in NonRemovableNonOSDrives.OrderBy(d => d.MountPoint))
                     {
                         // If status is unknown, that means the non-OS volume is encrypted and locked, if it's on then it's on
-                        if (BitLockerDrive.ProtectionStatus == "Protected" || BitLockerDrive.ProtectionStatus == "Unknown")
+                        if (string.Equals(BitLockerDrive.ProtectionStatus, "Protected", StringComparison.OrdinalIgnoreCase) || string.Equals(BitLockerDrive.ProtectionStatus, "Unknown", StringComparison.OrdinalIgnoreCase))
                         {
 
                             // Check if the non-OS non-Removable drive has one of the following key protectors: RecoveryPassword, Password or ExternalKey (Auto-Unlock)
@@ -882,7 +881,7 @@ namespace HardenWindowsSecurity
                         }
 
                         // Verify the inclusion setting
-                        bool individualItemResult = inclusionSetting == "Success and Failure";
+                        bool individualItemResult = string.Equals(inclusionSetting, "Success and Failure", StringComparison.OrdinalIgnoreCase);
 
                         // Add the result to the nested object array
                         nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
@@ -1107,7 +1106,7 @@ namespace HardenWindowsSecurity
                 nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "PowerShell v2 is disabled",
-                    Compliant = FeaturesCheckResults.PowerShellv2 == "Disabled" ? "True" : "False",
+                    Compliant = string.Equals(FeaturesCheckResults.PowerShellv2, "Disabled", StringComparison.OrdinalIgnoreCase) ? "True" : "False",
                     Value = FeaturesCheckResults.PowerShellv2,
                     Name = "PowerShell v2 is disabled",
                     Category = CatName,
@@ -1117,7 +1116,7 @@ namespace HardenWindowsSecurity
                 nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "PowerShell v2 Engine is disabled",
-                    Compliant = FeaturesCheckResults.PowerShellv2Engine == "Disabled" ? "True" : "False",
+                    Compliant = string.Equals(FeaturesCheckResults.PowerShellv2Engine, "Disabled", StringComparison.OrdinalIgnoreCase) ? "True" : "False",
                     Value = FeaturesCheckResults.PowerShellv2Engine,
                     Name = "PowerShell v2 Engine is disabled",
                     Category = CatName,
@@ -1127,7 +1126,7 @@ namespace HardenWindowsSecurity
                 nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "Work Folders client is disabled",
-                    Compliant = FeaturesCheckResults.WorkFoldersClient == "Disabled" ? "True" : "False",
+                    Compliant = string.Equals(FeaturesCheckResults.WorkFoldersClient, "Disabled", StringComparison.OrdinalIgnoreCase) ? "True" : "False",
                     Value = FeaturesCheckResults.WorkFoldersClient,
                     Name = "Work Folders client is disabled",
                     Category = CatName,
@@ -1137,7 +1136,7 @@ namespace HardenWindowsSecurity
                 nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "Internet Printing Client is disabled",
-                    Compliant = FeaturesCheckResults.InternetPrintingClient == "Disabled" ? "True" : "False",
+                    Compliant = string.Equals(FeaturesCheckResults.InternetPrintingClient, "Disabled", StringComparison.OrdinalIgnoreCase) ? "True" : "False",
                     Value = FeaturesCheckResults.InternetPrintingClient,
                     Name = "Internet Printing Client is disabled",
                     Category = CatName,
@@ -1147,7 +1146,7 @@ namespace HardenWindowsSecurity
                 nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "Windows Media Player (legacy) is disabled",
-                    Compliant = FeaturesCheckResults.WindowsMediaPlayer == "Not Present" ? "True" : "False",
+                    Compliant = string.Equals(FeaturesCheckResults.WindowsMediaPlayer, "Not Present", StringComparison.OrdinalIgnoreCase) ? "True" : "False",
                     Value = FeaturesCheckResults.WindowsMediaPlayer,
                     Name = "Windows Media Player (legacy) is disabled",
                     Category = CatName,
@@ -1157,7 +1156,7 @@ namespace HardenWindowsSecurity
                 nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "Microsoft Defender Application Guard is not present",
-                    Compliant = FeaturesCheckResults.MDAG == "Disabled" || FeaturesCheckResults.MDAG == "Unknown" ? "True" : "False",
+                    Compliant = string.Equals(FeaturesCheckResults.MDAG, "Disabled", StringComparison.OrdinalIgnoreCase) || string.Equals(FeaturesCheckResults.MDAG, "Unknown", StringComparison.OrdinalIgnoreCase) ? "True" : "False",
                     Value = FeaturesCheckResults.MDAG,
                     Name = "Microsoft Defender Application Guard is not present",
                     Category = CatName,
@@ -1167,7 +1166,7 @@ namespace HardenWindowsSecurity
                 nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "Windows Sandbox is enabled",
-                    Compliant = FeaturesCheckResults.WindowsSandbox == "Enabled" ? "True" : "False",
+                    Compliant = string.Equals(FeaturesCheckResults.WindowsSandbox, "Enabled", StringComparison.OrdinalIgnoreCase) ? "True" : "False",
                     Value = FeaturesCheckResults.WindowsSandbox,
                     Name = "Windows Sandbox is enabled",
                     Category = CatName,
@@ -1177,7 +1176,7 @@ namespace HardenWindowsSecurity
                 nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "Hyper-V is enabled",
-                    Compliant = FeaturesCheckResults.HyperV == "Enabled" ? "True" : "False",
+                    Compliant = string.Equals(FeaturesCheckResults.HyperV, "Enabled", StringComparison.OrdinalIgnoreCase) ? "True" : "False",
                     Value = FeaturesCheckResults.HyperV,
                     Name = "Hyper-V is enabled",
                     Category = CatName,
@@ -1187,7 +1186,7 @@ namespace HardenWindowsSecurity
                 nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "WMIC is not present",
-                    Compliant = FeaturesCheckResults.WMIC == "Not Present" ? "True" : "False",
+                    Compliant = string.Equals(FeaturesCheckResults.WMIC, "Not Present", StringComparison.OrdinalIgnoreCase) ? "True" : "False",
                     Value = FeaturesCheckResults.WMIC,
                     Name = "WMIC is not present",
                     Category = CatName,
@@ -1197,7 +1196,7 @@ namespace HardenWindowsSecurity
                 nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "Internet Explorer mode functionality for Edge is not present",
-                    Compliant = FeaturesCheckResults.IEMode == "Not Present" ? "True" : "False",
+                    Compliant = string.Equals(FeaturesCheckResults.IEMode, "Not Present", StringComparison.OrdinalIgnoreCase) ? "True" : "False",
                     Value = FeaturesCheckResults.IEMode,
                     Name = "Internet Explorer mode functionality for Edge is not present",
                     Category = CatName,
@@ -1207,7 +1206,7 @@ namespace HardenWindowsSecurity
                 nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "Legacy Notepad is not present",
-                    Compliant = FeaturesCheckResults.LegacyNotepad == "Not Present" ? "True" : "False",
+                    Compliant = string.Equals(FeaturesCheckResults.LegacyNotepad, "Not Present", StringComparison.OrdinalIgnoreCase) ? "True" : "False",
                     Value = FeaturesCheckResults.LegacyNotepad,
                     Name = "Legacy Notepad is not present",
                     Category = CatName,
@@ -1217,7 +1216,7 @@ namespace HardenWindowsSecurity
                 nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "WordPad is not present",
-                    Compliant = FeaturesCheckResults.LegacyWordPad == "Not Present" || FeaturesCheckResults.LegacyWordPad == "Unknown" ? "True" : "False",
+                    Compliant = string.Equals(FeaturesCheckResults.LegacyWordPad, "Not Present", StringComparison.OrdinalIgnoreCase) || string.Equals(FeaturesCheckResults.LegacyWordPad, "Unknown", StringComparison.OrdinalIgnoreCase) ? "True" : "False",
                     Value = FeaturesCheckResults.LegacyWordPad,
                     Name = "WordPad is not present",
                     Category = CatName,
@@ -1227,7 +1226,7 @@ namespace HardenWindowsSecurity
                 nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "PowerShell ISE is not present",
-                    Compliant = FeaturesCheckResults.PowerShellISE == "Not Present" ? "True" : "False",
+                    Compliant = string.Equals(FeaturesCheckResults.PowerShellISE, "Not Present", StringComparison.OrdinalIgnoreCase) ? "True" : "False",
                     Value = FeaturesCheckResults.PowerShellISE,
                     Name = "PowerShell ISE is not present",
                     Category = CatName,
@@ -1237,7 +1236,7 @@ namespace HardenWindowsSecurity
                 nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "Steps Recorder is not present",
-                    Compliant = FeaturesCheckResults.StepsRecorder == "Not Present" ? "True" : "False",
+                    Compliant = string.Equals(FeaturesCheckResults.StepsRecorder, "Not Present", StringComparison.OrdinalIgnoreCase) ? "True" : "False",
                     Value = FeaturesCheckResults.StepsRecorder,
                     Name = "Steps Recorder is not present",
                     Category = CatName,
@@ -1335,7 +1334,7 @@ namespace HardenWindowsSecurity
                 string CatName = "WindowsFirewall";
 
                 // Use the GetFirewallRules method and check the Enabled status of each rule
-                List<ManagementObject> firewallRuleGroupResultEnabledArray = HardenWindowsSecurity.FirewallHelper.GetFirewallRules("@%SystemRoot%\\system32\\firewallapi.dll,-37302", 1);
+                List<ManagementObject> firewallRuleGroupResultEnabledArray = HardenWindowsSecurity.FirewallHelper.GetFirewallRules("""@%SystemRoot%\system32\firewallapi.dll,-37302""", 1);
 
                 // Check if all the rules are disabled
                 bool firewallRuleGroupResultEnabledStatus = true;
@@ -1343,7 +1342,7 @@ namespace HardenWindowsSecurity
                 // Loop through each rule and check if it's enabled
                 foreach (var rule in firewallRuleGroupResultEnabledArray)
                 {
-                    if (rule["Enabled"]?.ToString() == "1")
+                    if (string.Equals(rule["Enabled"]?.ToString(), "1", StringComparison.OrdinalIgnoreCase))
                     {
                         firewallRuleGroupResultEnabledStatus = false;
                         break;
@@ -1692,7 +1691,7 @@ namespace HardenWindowsSecurity
                             string? nxValue = results[0].BaseObject.ToString();
 
                             // Determine compliance based on the value
-                            bool compliant = nxValue == "3";
+                            bool compliant = string.Equals(nxValue, "3", StringComparison.OrdinalIgnoreCase);
 
                             // Add the result to the list
                             nestedObjectArray.Add(new IndividualResult

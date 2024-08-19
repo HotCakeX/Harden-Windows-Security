@@ -15,18 +15,24 @@ namespace HardenWindowsSecurity
 
             // Save the valid values of the Protect-WindowsSecurity categories to a variable since the process can be time consuming and shouldn't happen every time the categories are fetched
             GlobalVars.HardeningCategorieX = ProtectionCategoriex.GetValidValues();
+           
+            Initializer.Initialize();
             #endregion
+
+            /*
 
             Thread thread = new Thread(() =>
             {
-                GUIProtectWinSecurity.LoadXaml();
+                GUIMain.LoadMainXaml();
 
-                GUIProtectWinSecurity.window.ShowDialog();
+                GUIMain.mainGUIWindow.ShowDialog();
             });
 
             thread.SetApartmentState(ApartmentState.STA);
             thread.Start();
             thread.Join();
+
+             */
 
         }
     }

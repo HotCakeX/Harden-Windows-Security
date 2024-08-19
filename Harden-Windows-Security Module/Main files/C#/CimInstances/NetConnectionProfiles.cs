@@ -60,7 +60,7 @@ namespace HardenWindowsSecurity
         /// PS Example: [HardenWindowsSecurity.NetConnectionProfiles]::Set((3, 22), $null, [HardenWindowsSecurity.NetConnectionProfiles+NetworkCategory]::public)
         /// PS Example: [HardenWindowsSecurity.NetConnectionProfiles]::Set($null, ('Ethernet', 'Wi-Fi'), [HardenWindowsSecurity.NetConnectionProfiles+NetworkCategory]::private)
         /// <returns>True if successful, otherwise false.</returns>
-        public static bool Set(int[] interfaceIndices, string[] interfaceAliases, NetworkCategory networkCategory)
+        public static bool Set(NetworkCategory networkCategory, int[]? interfaceIndices = null, string[]? interfaceAliases = null)
         {
             try
             {

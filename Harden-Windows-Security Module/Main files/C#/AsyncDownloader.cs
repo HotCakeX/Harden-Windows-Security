@@ -175,7 +175,7 @@ namespace HardenWindowsSecurity
                 }
                 else if (DownloadsTask.IsCompletedSuccessfully)
                 {
-                    //   Console.WriteLine("Download completed successfully");
+                    //   HardenWindowsSecurity.Logger.LogMessage("Download completed successfully");
                 }
 
             }

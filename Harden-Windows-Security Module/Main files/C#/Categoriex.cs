@@ -77,8 +77,8 @@ namespace HardenWindowsSecurity
                     return true;
                     //   foreach (ManagementObject tpm in queryCollection)
                     //    {
-                    //     Console.WriteLine("TPM is present on this system.");
-                    //     Console.WriteLine("TPM Version: " + tpm["SpecVersion"]);
+                    //     HardenWindowsSecurity.Logger.LogMessage("TPM is present on this system.");
+                    //     HardenWindowsSecurity.Logger.LogMessage("TPM Version: " + tpm["SpecVersion"]);
                     //    }
                 }
             }

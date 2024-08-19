@@ -33,7 +33,8 @@ using System.Windows.Shapes;
 using System.Windows.Shell;
 using System.Threading.Tasks;
 using System.Text;
-
+using System.Reflection.PortableExecutable;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.TrayNotify; // !
 
 #nullable enable
 
@@ -93,6 +94,20 @@ namespace HardenWindowsSecurity
             // Set the MainWindow for the application
             GUIProtectWinSecurity.app.MainWindow = GUIProtectWinSecurity.window;
 
+            #region parent border of the ProtectWindowsSecurity
+            // Find the Border control by name
+            System.Windows.Controls.Border border = (System.Windows.Controls.Border)GUIProtectWinSecurity.window.FindName("OuterMostBorder");
+
+            // Access the ImageBrush from the Border's Background property
+            ImageBrush imageBrush = (ImageBrush)border.Background;
+
+            // Set the ImageSource property to the desired image path
+            imageBrush.ImageSource = new System.Windows.Media.Imaging.BitmapImage(
+                    new Uri(System.IO.Path.Combine(HardenWindowsSecurity.GlobalVars.path!, "Resources", "Media", "background.jpg"))
+                );
+            #endregion
+
+
             GUIProtectWinSecurity.parentGrid = (System.Windows.Controls.Grid)GUIProtectWinSecurity.window.FindName("ParentGrid");
             GUIProtectWinSecurity.mainTabControlToggle = (System.Windows.Controls.Primitives.ToggleButton)GUIProtectWinSecurity.parentGrid.FindName("MainTabControlToggle");
             GUIProtectWinSecurity.mainContentControl = (System.Windows.Controls.ContentControl)GUIProtectWinSecurity.mainTabControlToggle.FindName("MainContentControl");
@@ -123,7 +138,25 @@ namespace HardenWindowsSecurity
             ((System.Windows.Controls.Image)((System.Windows.Markup.INameScope)GUIProtectWinSecurity.mainContentControlStyle).FindName("PathIcon2")).Source = new System.Windows.Media.Imaging.BitmapImage(new Uri(System.IO.Path.Combine(HardenWindowsSecurity.GlobalVars.path, "Resources", "Media", "path.png")));
             ((System.Windows.Controls.Image)((System.Windows.Markup.INameScope)GUIProtectWinSecurity.mainContentControlStyle).FindName("PathIcon3")).Source = new System.Windows.Media.Imaging.BitmapImage(new Uri(System.IO.Path.Combine(HardenWindowsSecurity.GlobalVars.path, "Resources", "Media", "path.png")));
             ((System.Windows.Controls.Image)((System.Windows.Markup.INameScope)GUIProtectWinSecurity.mainContentControlStyle).FindName("LogButtonIcon")).Source = new System.Windows.Media.Imaging.BitmapImage(new Uri(System.IO.Path.Combine(HardenWindowsSecurity.GlobalVars.path, "Resources", "Media", "log.png")));
-            ((System.Windows.Controls.Image)GUIProtectWinSecurity.parentGrid.FindName("ExecuteButtonIcon")).Source = new System.Windows.Media.Imaging.BitmapImage(new Uri(System.IO.Path.Combine(HardenWindowsSecurity.GlobalVars.path, "Resources", "Media", "start.png")));
+
+
+            // Access the grid containing the Execute Button
+            GUIProtectWinSecurity.ExecuteButtonGrid = GUIProtectWinSecurity.parentGrid.FindName("ExecuteButtonGrid") as System.Windows.Controls.Grid;
+
+            // Access the Execute Button
+            GUIProtectWinSecurity.ExecuteButton = (System.Windows.Controls.Primitives.ToggleButton)GUIProtectWinSecurity.ExecuteButtonGrid!.FindName("Execute");
+
+            // Apply the template to make sure it's available
+            GUIProtectWinSecurity.ExecuteButton.ApplyTemplate();
+
+            // Access the image within the Execute Button's template
+            GUIProtectWinSecurity.ExecuteButtonImage = ExecuteButton.Template.FindName("ExecuteIconImage", ExecuteButton) as System.Windows.Controls.Image;
+
+            // Update the image source for the execute button
+            GUIProtectWinSecurity.ExecuteButtonImage!.Source =
+                new System.Windows.Media.Imaging.BitmapImage(
+                    new Uri(System.IO.Path.Combine(HardenWindowsSecurity.GlobalVars.path!, "Resources", "Media", "ExecuteButton.png"))
+                );
 
             GUIProtectWinSecurity.categories = (System.Windows.Controls.ListView)((System.Windows.Markup.INameScope)GUIProtectWinSecurity.mainContentControlStyle).FindName("Categories");
             GUIProtectWinSecurity.subCategories = (System.Windows.Controls.ListView)((System.Windows.Markup.INameScope)GUIProtectWinSecurity.mainContentControlStyle).FindName("SubCategories");
@@ -147,22 +180,31 @@ namespace HardenWindowsSecurity
             GUIProtectWinSecurity.lgpoZipButton = (System.Windows.Controls.Button)((System.Windows.Markup.INameScope)GUIProtectWinSecurity.mainContentControlStyle).FindName("LGPOZipButton");
             GUIProtectWinSecurity.lgpoZipTextBox = (System.Windows.Controls.TextBox)((System.Windows.Markup.INameScope)GUIProtectWinSecurity.mainContentControlStyle).FindName("LGPOZipTextBox");
 
-            // Initially set the visibility of the text area for the selected LogPath to Collapsed
-            GUIProtectWinSecurity.txtFilePath.Visibility = Visibility.Collapsed;
+            // Initially set the text area for the selected LogPath to disabled
+            GUIProtectWinSecurity.txtFilePath.IsEnabled = false;
 
             // Initialize the LogPath button element as disabled
             GUIProtectWinSecurity.logPath.IsEnabled = false;
 
             // Defining event handler
-            // When the Log checkbox is checked, enable the LogPath button
-            GUIProtectWinSecurity.log.Checked += (sender, e) => GUIProtectWinSecurity.logPath.IsEnabled = true;
+            // When the Log checkbox is checked, enable the LogPath button and log path text area
+            GUIProtectWinSecurity.log.Checked += (sender, e) =>
+            {
+                GUIProtectWinSecurity.txtFilePath.IsEnabled = true;
+                GUIProtectWinSecurity.logPath.IsEnabled = true;
+            };
 
             // Defining event handler
-            // When the Log checkbox is unchecked, disable the LogPath button and set the visibility of the LogPath text area to Collapsed
+            // When the Log checkbox is unchecked, disable the LogPath button and set the LogPath text area to disabled
             GUIProtectWinSecurity.log.Unchecked += (sender, e) =>
             {
                 GUIProtectWinSecurity.logPath.IsEnabled = false;
-                GUIProtectWinSecurity.txtFilePath.Visibility = Visibility.Collapsed;
+
+                // Only disable the Log text file path element if it's not empty
+                if (string.IsNullOrWhiteSpace(GUIProtectWinSecurity.txtFilePath.Text))
+                {
+                    GUIProtectWinSecurity.txtFilePath.IsEnabled = false;
+                }
             };
 
             // Event handler for the Log Path button click to open a file path picker dialog
@@ -178,13 +220,9 @@ namespace HardenWindowsSecurity
                     if (dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
                     {
                         GUIProtectWinSecurity.txtFilePath.Text = dialog.FileName;
-                        GUIProtectWinSecurity.txtFilePath.Visibility = Visibility.Visible;
-
                         HardenWindowsSecurity.Logger.LogMessage($"Logs will be saved in: {GUIProtectWinSecurity.txtFilePath.Text}");
                     }
                 }
-
-                GUIProtectWinSecurity.ShouldWriteLogs = true;
             };
 
             // Initially disable the Offline Mode configuration inputs until the Offline Mode checkbox is checked

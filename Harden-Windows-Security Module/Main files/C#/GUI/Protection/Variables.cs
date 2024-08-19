@@ -33,6 +33,7 @@ using System.Windows.Shapes;
 using System.Windows.Shell;
 using System.Threading.Tasks;
 using System.Text;
+using System.Reflection.PortableExecutable;
 
 #nullable enable
 
@@ -58,9 +59,6 @@ namespace HardenWindowsSecurity
         // To store the log messages in a thread safe way that will be displayed on the GUI and stored in the Logs text file
         public static ArrayList Logger = ArrayList.Synchronized(new ArrayList());
 
-        // Initialize a flag to determine whether to write logs or not, set to false by default
-        public static bool ShouldWriteLogs = false;
-
 
         // Set a flag indicating that the required files for the Offline operation mode have been processed
         // When the execute button was clicked, so it won't run twice
@@ -72,10 +70,13 @@ namespace HardenWindowsSecurity
         public static string? xamlContent;
         public static System.Xml.XmlDocument? xamlDocument;
         public static System.Xml.XmlNodeReader? reader;
+
         // Main window instance
         public static System.Windows.Window? window;
+
         // Application instance
         public static System.Windows.Application? app;
+
         public static System.Windows.Controls.Grid? parentGrid;
         public static System.Windows.Controls.Primitives.ToggleButton? mainTabControlToggle;
         public static System.Windows.Controls.ContentControl? mainContentControl;
@@ -119,6 +120,11 @@ namespace HardenWindowsSecurity
         public static System.Windows.Controls.TextBox? microsoft365AppsSecurityBaselineZipTextBox;
         public static System.Windows.Controls.Button? lgpoZipButton;
         public static System.Windows.Controls.TextBox? lgpoZipTextBox;
+
+        // Execute button variables
+        public static System.Windows.Controls.Primitives.ToggleButton? ExecuteButton;
+        public static System.Windows.Controls.Grid? ExecuteButtonGrid;
+        public static System.Windows.Controls.Image? ExecuteButtonImage;
     }
 }
 

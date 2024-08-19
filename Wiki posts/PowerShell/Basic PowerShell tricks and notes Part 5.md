@@ -94,3 +94,148 @@ Use the following command to determine the .NET version of the current PowerShel
 If you install or uninstall a [PSReadLine](https://learn.microsoft.com/en-us/powershell/module/psreadline/about/about_psreadline) version, totally exit the Terminal or VS Code if using the IDE. That's one of those modules that can't be unloaded normally.
 
 <br>
+
+## How To Display Modern Toast Notifications In PowerShell
+
+### Prerequisites
+
+You need to first have the following DLL files in one directory:
+
+* **Microsoft.Toolkit.Uwp.Notifications.dll**
+
+  * from [Microsoft.Toolkit.Uwp.Notifications](https://www.nuget.org/packages/Microsoft.Toolkit.Uwp.Notifications/)
+
+  * found in `microsoft.toolkit.uwp.notifications.7.1.3\lib\net5.0-windows10.0.17763\Microsoft.Toolkit.Uwp.Notifications.dll`
+
+* **Microsoft.Win32.SystemEvents.dll**
+
+  * from [Microsoft.Win32.SystemEvents](https://www.nuget.org/packages/Microsoft.Win32.SystemEvents/)
+
+  * found in `microsoft.win32.systemevents.8.0.0\lib\net8.0\Microsoft.Win32.SystemEvents.dll`
+
+* **Microsoft.Windows.SDK.NET.dll**
+
+  * from [Microsoft.Windows.SDK.NET.Ref](https://www.nuget.org/packages/Microsoft.Windows.SDK.NET.Ref)
+
+  * found in `microsoft.windows.sdk.net.ref.10.0.26100.42\lib\net8.0\Microsoft.Windows.SDK.NET.dll`
+
+* **WinRT.Runtime.dll**
+
+  * from [Microsoft.Windows.SDK.NET.Ref](https://www.nuget.org/packages/Microsoft.Windows.SDK.NET.Ref)
+
+  * found in `microsoft.windows.sdk.net.ref.10.0.26100.42\lib\net8.0\WinRT.Runtime.dll`
+
+* **System.Drawing.Common.dll**
+
+  * from [System.Drawing.Common](https://www.nuget.org/packages/System.Drawing.Common/)
+
+  * found in `system.drawing.common.8.0.8\lib\net8.0\System.Drawing.Common.dll`
+
+Then you can use the following PowerShell code to natively display the toast notifications
+
+```powershell
+# Load the required assemblies
+Add-Type -Path 'D:\notifications\Microsoft.Toolkit.Uwp.Notifications.dll'
+Add-Type -Path 'D:\notifications\System.Drawing.Common.dll'
+
+# Create an instance of the ToastContentBuilder class
+$toastContentBuilderType = [Type]::GetType('Microsoft.Toolkit.Uwp.Notifications.ToastContentBuilder, Microsoft.Toolkit.Uwp.Notifications')
+$toastContentBuilder = [Activator]::CreateInstance($toastContentBuilderType)
+
+# Add text elements
+$toastContentBuilder.AddText('Main Notification Title') | Out-Null
+$toastContentBuilder.AddText('This is the first line of content with summary details.') | Out-Null
+$toastContentBuilder.AddText('Additional line of content.') | Out-Null
+
+# Add Attribution Text
+$toastContentBuilder.AddAttributionText('Brought to you by Your Company') | Out-Null
+
+# Add Header
+$toastContentBuilder.AddHeader('6289', 'Camping!!', 'action=openConversation&id=6289') | Out-Null
+
+# Add Hero Image
+$heroImagePath = 'D:\notifications\2.jpg' 
+$toastContentBuilder.AddHeroImage([Uri]::new($heroImagePath)) | Out-Null
+
+# Add Inline Image
+$inlineImagePath = 'D:\notifications\1.jpg' 
+$toastContentBuilder.AddInlineImage([Uri]::new($inlineImagePath)) | Out-Null
+
+# Show the notification
+$toastContentBuilder.Show() | Out-Null
+```
+
+<br>
+
+You can also use the following C# code in PowerShell to do the same
+
+```PowerShell
+[System.String[]]$Assemblies = @(
+    'D:\notifications\Microsoft.Toolkit.Uwp.Notifications.dll',
+    'D:\notifications\Microsoft.Win32.SystemEvents.dll',
+    'D:\notifications\Microsoft.Windows.SDK.NET.dll',
+    'D:\notifications\System.Drawing.Common.dll',
+    'D:\notifications\WinRT.Runtime.dll'
+)
+Add-Type -TypeDefinition @'
+using System;
+using Microsoft.Toolkit.Uwp.Notifications;
+
+public class Notification {
+    public static void ShowNotif()
+    {
+        new ToastContentBuilder()
+            .AddAppLogoOverride(new Uri("file:///D:/notifications/2.jpg"), ToastGenericAppLogoCrop.Circle)
+            .AddText("Main Notification Title")
+            .AddText("This is the first line of content with summary details.")
+            .AddText("Main Notification Title")
+            .AddHeroImage(new Uri("file:///D:/notifications/1.jpg"))
+            .AddInlineImage(new Uri("file:///D:/notifications/3.jpg"))
+            .AddButton(new ToastButton()
+                .SetContent("View Details")
+                .AddArgument("action", "viewDetails")
+                .SetImageUri(new Uri("file:///D:/notifications/view_icon.jpg")))
+            .AddButton(new ToastButton()
+                .SetContent("Dismiss")
+                .AddArgument("action", "dismiss")
+                .SetImageUri(new Uri("file:///D:/notifications/view_icon.jpg")))
+            .AddButton(new ToastButton()
+                .SetContent("Open App")
+                .AddArgument("action", "openApp")
+                .SetImageUri(new Uri("file:///D:/notifications/view_icon.jpg")))
+            .AddButton(new ToastButton()
+                .SetContent("Open App")
+                .AddArgument("action", "openApp")
+                .SetImageUri(new Uri("file:///D:/notifications/view_icon.jpg")))
+            .AddButton(new ToastButton()
+                .SetContent("Open App")
+                .AddArgument("action", "openApp")
+                .SetImageUri(new Uri("file:///D:/notifications/view_icon.jpg")))
+            .AddAudio(new Uri("ms-winsoundevent:Notification.SMS"))
+            .AddAttributionText("Brought to you by Your Company")
+            .AddHeader("6289", "Camping!!", "action=openConversation&id=6289")
+            .Show();
+    }
+}
+'@ -ReferencedAssemblies $Assemblies -CompilerOptions '/nowarn:1701'
+
+$Assemblies | ForEach-Object {Add-Type -Path $_}
+
+[Notification]::ShowNotif()
+```
+
+<br>
+
+#### Related Documentation
+
+* [Send a local toast notification from a C# app](https://learn.microsoft.com/en-us/windows/apps/design/shell/tiles-and-notifications/send-local-toast)
+
+* [App notification content](https://learn.microsoft.com/en-us/windows/apps/design/shell/tiles-and-notifications/adaptive-interactive-toasts)
+
+* [audio (Toast XML Schema)](https://learn.microsoft.com/en-us/uwp/schemas/tiles/toastschema/element-audio)
+
+* [Toast headers](https://learn.microsoft.com/en-us/windows/apps/design/shell/tiles-and-notifications/toast-headers)
+
+* [ToastContentBuilder Class](https://learn.microsoft.com/en-us/dotnet/api/microsoft.toolkit.uwp.notifications.toastcontentbuilder)
+
+<br>

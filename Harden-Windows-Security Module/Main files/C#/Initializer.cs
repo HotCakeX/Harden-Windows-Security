@@ -18,7 +18,7 @@ namespace HardenWindowsSecurity
         /// <param name="VerbosePreference"></param>
         /// <exception cref="InvalidOperationException"></exception>
         /// <exception cref="PlatformNotSupportedException"></exception>
-        public static void Initialize(string VerbosePreference)
+        public static void Initialize(string VerbosePreference = "SilentlyContinue")
         {
 
             // Set the default culture to InvariantCulture globally
@@ -80,9 +80,6 @@ namespace HardenWindowsSecurity
             {
                 throw new PlatformNotSupportedException($"You are not using the latest build of the Windows OS. A minimum build of {HardenWindowsSecurity.GlobalVars.Requiredbuild} is required but your OS build is {fullOSBuild}\nPlease go to Windows Update to install the updates and then try again.");
             }
-
-            // Resets the current main step to 0 which is used for Write-Progress when using in GUI mode
-            HardenWindowsSecurity.GlobalVars.CurrentMainStep = 0;
 
             // Get the MSFT_MpPreference WMI results and save them to the global variable HardenWindowsSecurity.GlobalVars.MDAVPreferencesCurrent
             HardenWindowsSecurity.GlobalVars.MDAVPreferencesCurrent = HardenWindowsSecurity.MpPreferenceHelper.GetMpPreference();

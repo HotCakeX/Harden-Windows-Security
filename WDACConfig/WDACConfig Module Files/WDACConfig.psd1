@@ -2,13 +2,13 @@
     # https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_module_manifests
 
     RootModule           = 'WDACConfig.psm1'
-    ModuleVersion        = '0.4.3'
+    ModuleVersion        = '0.4.4'
     CompatiblePSEditions = @('Core')
     GUID                 = '79920947-efb5-48c1-a567-5b02ebe74793'
     Author               = 'HotCakeX'
     CompanyName          = 'SpyNetGirl'
     Copyright            = '(c) 2023-2024'
-    PowerShellVersion    = '7.4.2'
+    PowerShellVersion    = '7.4.3'
     CmdletsToExport      = @()
     VariablesToExport    = '*'
     AliasesToExport      = @()

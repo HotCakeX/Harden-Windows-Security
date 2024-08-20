@@ -6,7 +6,6 @@ using System.Security.Cryptography.X509Certificates;
 
 // The following functions and methods use the Windows APIs to grab all of the certificates from a signed file
 
-#nullable disable
 namespace WDACConfig.AllCertificatesGrabber
 {
 

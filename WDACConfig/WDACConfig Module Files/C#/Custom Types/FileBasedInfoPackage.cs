@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 
+#nullable enable
+
 namespace WDACConfig
 {
     // Used by the BuildSignerAndHashObjects method to store and return the output

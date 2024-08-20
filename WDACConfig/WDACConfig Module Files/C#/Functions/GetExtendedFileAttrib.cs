@@ -2,6 +2,8 @@ using System;
 using System.Globalization;
 using System.Runtime.InteropServices;
 
+#nullable enable
+
 namespace WDACConfig
 {
     public class ExFileInfo
@@ -13,11 +15,11 @@ namespace WDACConfig
         public const int HR_ERROR_RESOURCE_TYPE_NOT_FOUND = -2147023083;
 
         // Properties to hold file information
-        public string OriginalFileName { get; private set; }
-        public string InternalName { get; private set; }
-        public string ProductName { get; private set; }
-        public string Version { get; private set; }
-        public string FileDescription { get; private set; }
+        public string? OriginalFileName { get; private set; }
+        public string? InternalName { get; private set; }
+        public string? ProductName { get; private set; }
+        public string? Version { get; private set; }
+        public string? FileDescription { get; private set; }
 
         // Importing external functions from Version.dll to work with file version info
         // https://learn.microsoft.com/he-il/windows/win32/api/winver/nf-winver-getfileversioninfosizeexa
@@ -55,19 +57,19 @@ namespace WDACConfig
 
                 // Extract version from the version data
                 if (!TryGetVersion(spanData, out var version))
-                    throw Marshal.GetExceptionForHR(Marshal.GetHRForLastWin32Error());
+                    throw Marshal.GetExceptionForHR(Marshal.GetHRForLastWin32Error())!;
 
                 ExFileInfo.Version = CheckAndSetNull(version);
 
                 // Extract locale and encoding information
                 if (!TryGetLocaleAndEncoding(spanData, out var locale, out var encoding))
-                    throw Marshal.GetExceptionForHR(Marshal.GetHRForLastWin32Error());
+                    throw Marshal.GetExceptionForHR(Marshal.GetHRForLastWin32Error())!;
 
                 // Retrieve various file information based on locale and encoding
-                ExFileInfo.OriginalFileName = CheckAndSetNull(GetLocalizedResource(spanData, encoding, locale, "\\OriginalFileName"));
-                ExFileInfo.InternalName = CheckAndSetNull(GetLocalizedResource(spanData, encoding, locale, "\\InternalName"));
-                ExFileInfo.FileDescription = CheckAndSetNull(GetLocalizedResource(spanData, encoding, locale, "\\FileDescription"));
-                ExFileInfo.ProductName = CheckAndSetNull(GetLocalizedResource(spanData, encoding, locale, "\\ProductName"));
+                ExFileInfo.OriginalFileName = CheckAndSetNull(GetLocalizedResource(spanData, encoding!, locale!, "\\OriginalFileName"));
+                ExFileInfo.InternalName = CheckAndSetNull(GetLocalizedResource(spanData, encoding!, locale!, "\\InternalName"));
+                ExFileInfo.FileDescription = CheckAndSetNull(GetLocalizedResource(spanData, encoding!, locale!, "\\FileDescription"));
+                ExFileInfo.ProductName = CheckAndSetNull(GetLocalizedResource(spanData, encoding!, locale!, "\\ProductName"));
             }
             catch
             {
@@ -82,7 +84,7 @@ namespace WDACConfig
         }
 
         // Extract the version from the data
-        private static bool TryGetVersion(Span<byte> data, out string version)
+        private static bool TryGetVersion(Span<byte> data, out string? version)
         {
             version = null;
             // Query the root block for version info
@@ -98,7 +100,7 @@ namespace WDACConfig
         }
 
         // Extract locale and encoding information from the data
-        private static bool TryGetLocaleAndEncoding(Span<byte> data, out string locale, out string encoding)
+        private static bool TryGetLocaleAndEncoding(Span<byte> data, out string? locale, out string? encoding)
         {
             locale = null;
             encoding = null;
@@ -117,7 +119,7 @@ namespace WDACConfig
         }
 
         // Get localized resource string based on encoding and locale
-        private static string GetLocalizedResource(Span<byte> versionBlock, string encoding, string locale, string resource)
+        private static string? GetLocalizedResource(Span<byte> versionBlock, string encoding, string locale, string resource)
         {
             var encodings = new[] { encoding, Cp1252FallbackCode, UnicodeFallbackCode };
             foreach (var enc in encodings)
@@ -128,13 +130,13 @@ namespace WDACConfig
 
                 // If error is not resource type not found, throw the error
                 if (Marshal.GetHRForLastWin32Error() != HR_ERROR_RESOURCE_TYPE_NOT_FOUND)
-                    throw Marshal.GetExceptionForHR(Marshal.GetHRForLastWin32Error());
+                    throw Marshal.GetExceptionForHR(Marshal.GetHRForLastWin32Error())!;
             }
             return null;
         }
 
         // Check if a string is null or whitespace and return null if it is
-        private static string CheckAndSetNull(string value)
+        private static string? CheckAndSetNull(string? value)
         {
             return string.IsNullOrWhiteSpace(value) ? null : value;
         }

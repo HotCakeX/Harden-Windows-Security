@@ -2,6 +2,8 @@ using System;
 using System.Runtime.InteropServices;
 using System.Text;
 
+#nullable enable
+
 namespace WDACConfig
 {
     public class CryptoAPI
@@ -9,7 +11,7 @@ namespace WDACConfig
         // Importing function from crypt32.dll to access certificate information
         // https://learn.microsoft.com/en-us/windows/win32/api/wincrypt/nf-wincrypt-certgetnamestringa
         [DllImport("crypt32.dll", CharSet = CharSet.Auto, SetLastError = true)]
-        public static extern bool CertGetNameString(
+        internal static extern bool CertGetNameString(
             IntPtr pCertContext, // the handle property of the certificate object
             int dwType,
             int dwFlags,

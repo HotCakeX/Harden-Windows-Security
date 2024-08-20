@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Xml;
 
+#nullable enable
+
 namespace WDACConfig
 {
     public class XmlFilePathExtractor
@@ -20,14 +22,19 @@ namespace WDACConfig
             nsmgr.AddNamespace("ns", "urn:schemas-microsoft-com:sipolicy");
 
             // Select all nodes with the "Allow" tag
-            XmlNodeList allowNodes = doc.SelectNodes("//ns:Allow", nsmgr);
+            XmlNodeList? allowNodes = doc.SelectNodes("//ns:Allow", nsmgr);
 
-            foreach (XmlNode node in allowNodes)
+            if (allowNodes != null)
             {
-                if (node.Attributes["FilePath"] != null)
+
+                foreach (XmlNode node in allowNodes)
                 {
-                    // Add the file path to the HashSet
-                    filePaths.Add(node.Attributes["FilePath"].Value);
+                    // Ensure node.Attributes is not null
+                    if (node.Attributes != null && node.Attributes["FilePath"] != null)
+                    {
+                        // Add the file path to the HashSet
+                        filePaths.Add(node.Attributes["FilePath"]!.Value);
+                    }
                 }
             }
 

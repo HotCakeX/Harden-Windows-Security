@@ -4,6 +4,8 @@ using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using System.Security.Cryptography.Pkcs;
 
+#nullable enable
+
 namespace WDACConfig
 {
     public static class Opus
@@ -84,7 +86,7 @@ namespace WDACConfig
                                 else
                                 {
                                     // Converting the unmanaged memory block to OpusInfoObj structure
-                                    Opus.OpusInfoObj structure = (Opus.OpusInfoObj)Marshal.PtrToStructure(decodedDataPtr, typeof(Opus.OpusInfoObj));
+                                    Opus.OpusInfoObj structure = (Opus.OpusInfoObj)Marshal.PtrToStructure(decodedDataPtr, typeof(Opus.OpusInfoObj))!;
                                     // Adding the structure to OEMOpusData list
                                     OEMOpusData.Add(structure);
                                 }

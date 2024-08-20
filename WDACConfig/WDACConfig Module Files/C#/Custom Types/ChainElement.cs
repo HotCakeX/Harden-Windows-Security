@@ -1,6 +1,8 @@
 using System;
 using System.Security.Cryptography.X509Certificates;
 
+#nullable enable
+
 namespace WDACConfig
 {
     // the enum for CertificateType

@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Text;
 
+#nullable enable
+
 namespace WDACConfig
 {
     public static class DriveLetterMapper
@@ -10,7 +12,7 @@ namespace WDACConfig
         // Importing the GetVolumePathNamesForVolumeNameW function from kernel32.dll
         [DllImport("kernel32.dll", SetLastError = true)]
         [return: MarshalAs(UnmanagedType.Bool)]
-        public static extern bool GetVolumePathNamesForVolumeNameW(
+        private static extern bool GetVolumePathNamesForVolumeNameW(
             [MarshalAs(UnmanagedType.LPWStr)] string lpszVolumeName,
             [MarshalAs(UnmanagedType.LPWStr)][Out] StringBuilder lpszVolumeNamePaths,
             uint cchBuferLength,
@@ -18,20 +20,20 @@ namespace WDACConfig
 
         // Importing the FindFirstVolume function from kernel32.dll
         [DllImport("kernel32.dll", SetLastError = true)]
-        public static extern IntPtr FindFirstVolume(
+        private static extern IntPtr FindFirstVolume(
             [Out] StringBuilder lpszVolumeName,
             uint cchBufferLength);
 
         // Importing the FindNextVolume function from kernel32.dll
         [DllImport("kernel32.dll", SetLastError = true)]
-        public static extern bool FindNextVolume(
+        private static extern bool FindNextVolume(
             IntPtr hFindVolume,
             [Out] StringBuilder lpszVolumeName,
             uint cchBufferLength);
 
         // Importing the QueryDosDevice function from kernel32.dll
         [DllImport("kernel32.dll", SetLastError = true)]
-        public static extern uint QueryDosDevice(
+        private static extern uint QueryDosDevice(
             string lpDeviceName,
             StringBuilder lpTargetPath,
             int ucchMax);
@@ -40,11 +42,11 @@ namespace WDACConfig
         public class DriveMapping
         {
             // Property to store drive letter
-            public string DriveLetter { get; set; }
+            public string? DriveLetter { get; set; }
             // Property to store device path
-            public string DevicePath { get; set; }
+            public string? DevicePath { get; set; }
             // Property to store volume name
-            public string VolumeName { get; set; }
+            public string? VolumeName { get; set; }
         }
 
         /// <summary>

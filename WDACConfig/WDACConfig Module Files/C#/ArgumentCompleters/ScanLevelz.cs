@@ -1,6 +1,8 @@
 using System;
 using System.Management.Automation;
 
+#nullable enable
+
 namespace WDACConfig
 {
     // Argument tab auto-completion and ValidateSet for Levels and Fallbacks parameters in the entire module

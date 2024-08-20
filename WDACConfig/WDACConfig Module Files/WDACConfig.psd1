@@ -8,7 +8,7 @@
     Author               = 'HotCakeX'
     CompanyName          = 'SpyNetGirl'
     Copyright            = '(c) 2023-2024'
-    PowerShellVersion    = '7.4.2'
+    PowerShellVersion    = '7.4.3'
     CmdletsToExport      = @()
     VariablesToExport    = '*'
     AliasesToExport      = @()

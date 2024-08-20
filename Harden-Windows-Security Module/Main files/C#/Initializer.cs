@@ -21,6 +21,8 @@ namespace HardenWindowsSecurity
         public static void Initialize(string VerbosePreference = "SilentlyContinue")
         {
 
+            HardenWindowsSecurity.GlobalVars.LogHeaderHasBeenWritten = false;
+
             // Set the default culture to InvariantCulture globally
             CultureInfo.DefaultThreadCurrentCulture = CultureInfo.InvariantCulture;
             CultureInfo.DefaultThreadCurrentUICulture = CultureInfo.InvariantCulture;

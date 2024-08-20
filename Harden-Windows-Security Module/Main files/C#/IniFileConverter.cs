@@ -9,7 +9,11 @@ namespace HardenWindowsSecurity
 {
     public class IniFileConverter
     {
-        // A helper method to parse the ini file from the output of the "Secedit /export /cfg .\security_policy.inf"
+        /// <summary>
+        /// A helper method to parse the ini file from the output of the "Secedit /export /cfg .\security_policy.inf"
+        /// </summary>
+        /// <param name="iniFilePath"></param>
+        /// <returns></returns>
         public static Dictionary<string, Dictionary<string, string>> ConvertFromIniFile(string iniFilePath)
         {
             var iniObject = new Dictionary<string, Dictionary<string, string>>(StringComparer.OrdinalIgnoreCase);

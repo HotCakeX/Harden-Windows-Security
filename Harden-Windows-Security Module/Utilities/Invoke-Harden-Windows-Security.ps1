@@ -6,9 +6,4 @@
 # Import the module into the current scope using the relative path of the module itself
 Import-Module -FullyQualifiedName "$ScriptFilePath\..\Main files\Harden-Windows-Security-Module.psd1" -Force
 
-# Protect-WindowsSecurity -gui -verbose
-
-[HardenWindowsSecurity.Initializer]::Initialize($VerbosePreference)
-
-[HardenWindowsSecurity.OptionalWindowsFeatures]::Invoke()
-
+Protect-WindowsSecurity -GUI -Verbose

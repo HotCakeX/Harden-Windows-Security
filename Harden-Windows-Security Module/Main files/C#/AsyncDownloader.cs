@@ -153,7 +153,7 @@ namespace HardenWindowsSecurity
         // Finally, it extracts the downloaded zip files to the working directory
         // It also copies the LGPO.exe to the Microsoft Security Baseline and Microsoft 365 Security Baseline folders
         // so that it can be used by the PowerShell script
-        public static void PrepDownloadedFiles(string? LGPOPath, string? MSFTSecurityBaselinesPath, string? MSFT365AppsSecurityBaselinesPath, bool GUI)
+        public static void PrepDownloadedFiles(string? LGPOPath, string? MSFTSecurityBaselinesPath, string? MSFT365AppsSecurityBaselinesPath)
         {
             // Only download if offline is not used
             if (!HardenWindowsSecurity.GlobalVars.Offline)

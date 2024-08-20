@@ -82,8 +82,13 @@ namespace HardenWindowsSecurity
 
                 HardenWindowsSecurity.VerboseLogger.Write("Temporarily adding the currently running PowerShell executables to the Controlled Folder Access allowed apps list");
 
-                // Get all .exe files in the PSHOME directory
-                string[] psExePaths = Directory.GetFiles(HardenWindowsSecurity.GlobalVars.PSHOME!, "*.exe");
+                string[]? psExePaths = null;
+
+                if (HardenWindowsSecurity.GlobalVars.PSHOME != null)
+                {
+                    // Get all .exe files in the PSHOME directory
+                    psExePaths = Directory.GetFiles(HardenWindowsSecurity.GlobalVars.PSHOME, "*.exe");
+                }
 
                 // Get the powercfg.exe path
                 string? systemDrive = Environment.GetEnvironmentVariable("SystemDrive");
@@ -94,13 +99,20 @@ namespace HardenWindowsSecurity
 
                 string powercfgPath = Path.Combine(systemDrive, "Windows", "System32", "powercfg.exe");
 
+                string[]? pwshPaths = null;
 
-                // Combine the paths into a single string array
-                string[] pwshPaths = psExePaths.Concat(new string[] { powercfgPath }).ToArray();
+                if (psExePaths != null)
+                {
+                    // Combine the paths into a single string array
+                    pwshPaths = psExePaths.Concat(new string[] { powercfgPath }).ToArray();
+                }
 
-                // doing this so that the module can run without interruption. This change is reverted at the end.
-                // Adding powercfg.exe so Controlled Folder Access won't complain about it in BitLocker category when setting hibernate file size to full
-                HardenWindowsSecurity.ControlledFolderAccessHandler.Add(applications: pwshPaths);
+                if (pwshPaths != null)
+                {
+                    // doing this so that the module can run without interruption. This change is reverted at the end.
+                    // Adding powercfg.exe so Controlled Folder Access won't complain about it in BitLocker category when setting hibernate file size to full
+                    HardenWindowsSecurity.ControlledFolderAccessHandler.Add(applications: pwshPaths);
+                }
             }
         }
 

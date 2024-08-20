@@ -117,7 +117,7 @@ Function Protect-WindowsSecurity {
                 # Load the System.Windows.Forms assembly
                 Add-Type -AssemblyName 'System.Windows.Forms'
                 # Create a new OpenFileDialog object
-                [System.Windows.Forms.OpenFileDialog]$Dialog = New-Object -TypeName 'System.Windows.Forms.OpenFileDialog'
+                [System.Windows.Forms.OpenFileDialog]$Dialog = [System.Windows.Forms.OpenFileDialog]::new()
                 # Set the filter to show only zip files
                 $Dialog.Filter = 'Zip files (*.zip)|*.zip'
                 # Set the title of the dialog
@@ -307,6 +307,8 @@ Function Protect-WindowsSecurity {
         # Detecting if Verbose switch is used
         [System.Boolean]$Verbose = $PSBoundParameters.Verbose.IsPresent ? $true : $false
 
+        [System.Boolean]$ErrorsOcurred = $false
+
         # Since Dynamic parameters are only available in the parameter dictionary, we have to access them using $PSBoundParameters or assign them manually to another variable in the function's scope
         New-Variable -Name 'SecBaselines_NoOverrides' -Value $($PSBoundParameters['SecBaselines_NoOverrides']) -Force
         New-Variable -Name 'MSFTDefender_SAC' -Value $($PSBoundParameters['MSFTDefender_SAC']) -Force
@@ -357,167 +359,19 @@ Function Protect-WindowsSecurity {
             [HardenWindowsSecurity.Miscellaneous]::RequirementsCheck()
         }
         try {
-
             # Detecting whether GUI parameter is present or not
             if ($PSBoundParameters.GUI.IsPresent) {
-
-                # Create and add the header to the log messages
-                [System.Void][HardenWindowsSecurity.GUIProtectWinSecurity]::Logger.Add(@"
-**********************
-Harden Windows Security operation log start
-Start time: $(Get-Date)
-Username: $env:UserName
-Machine: $env:COMPUTERNAME
-Host Application: $PSHOME
-Process ID: $PID
-PSVersion: $([System.String]($PSVersionTable).PSVersion)
-PSEdition: $PSEdition
-GitCommitId: $([System.String]$(($PSVersionTable).GitCommitId))
-OS Build: $([System.String]$([System.Environment]::OSVersion.Version))
-Platform: $([System.String]$(($PSVersionTable).Platform))
-PSCompatibleVersions: $([System.String]$(($PSVersionTable).PSCompatibleVersions))
-PSRemotingProtocolVersion: $([System.String]$(($PSVersionTable).PSRemotingProtocolVersion))
-SerializationVersion: $([System.String]$(($PSVersionTable).SerializationVersion))
-WSManStackVersion: $([System.String]$(($PSVersionTable).WSManStackVersion))
-Execution Policy: $CurrentExecutionPolicy
-**********************
-"@)
-                # Initialize the WPF GUI
-                [HardenWindowsSecurity.GUIProtectWinSecurity]::LoadXaml()
-
-                # Add the click event for the execute button in the GUI RunSpace
-                [HardenWindowsSecurity.GUIProtectWinSecurity]::ExecuteButton.Add_Click({
-
-                        # Clears any jobs from any ThreadJobs that have completed, failed, or stopped
-                        Foreach ($JobToRemove in Get-Job) {
-                            if ($JobToRemove.State -in 'Completed', 'Failed', 'Stopped') {
-                                Remove-Job -Job $JobToRemove -Force
-                            }
-                        }
-
-                        [HardenWindowsSecurity.GUIProtectWinSecurity]::ExecuteButtonPress()
-
-                        if ($DebugPreference -eq 'Continue') {
-                            [HardenWindowsSecurity.GlobalVars]::Host.UI.WriteDebugLine("$((Get-Job).Count) number of ThreadJobs Before")
-                        }
-
-                        $null = Start-ThreadJob -ScriptBlock {
-                            # This tells the Write-ColorfulText function to write verbose texts instead of outputting PSStyle texts that don't work in the UI text block
-                            $script:GUI = $true
-
-                            . "$([HardenWindowsSecurity.GlobalVars]::Path)\Shared\HardeningFunctions.ps1"
-
-                            # Making the selected sub-categories available in the current scope because the functions called from this scriptblock wouldn't be able to access them otherwise
-                            [HardenWindowsSecurity.GUIProtectWinSecurity]::SelectedSubCategories | ForEach-Object -Process {
-                                # All of the sub-category variables are boolean since they are originally switch parameters in the CLI experience
-                                Set-Variable -Name $_ -Value $true -Force
-                            }
-
-                            [System.Management.Automation.ScriptBlock]$HardeningFunctionsScriptBlock = {
-                                try {
-                                    [HardenWindowsSecurity.GUIProtectWinSecurity]::DisableUIElements()
-
-                                    # If Offline mode is used
-                                    if (([HardenWindowsSecurity.GlobalVars]::Offline)) {
-
-                                        # Using dispatch to query their status from the GUI thread
-                                        [HardenWindowsSecurity.GUIProtectWinSecurity]::Window.Dispatcher.Invoke({
-                                                $script:OfflineModeToggleStatus = [HardenWindowsSecurity.GUIProtectWinSecurity]::enableOfflineMode.IsChecked
-                                                $script:OfflineGreenLightStatus = (-NOT [System.String]::IsNullOrWhitespace([HardenWindowsSecurity.GUIProtectWinSecurity]::microsoftSecurityBaselineZipTextBox.Text)) -and (-NOT [System.String]::IsNullOrWhitespace([HardenWindowsSecurity.GUIProtectWinSecurity]::microsoft365AppsSecurityBaselineZipTextBox.Text)) -and (-NOT [System.String]::IsNullOrWhitespace([HardenWindowsSecurity.GUIProtectWinSecurity]::lgpoZipTextBox.Text))
-                                            })
-
-                                        # If the required files have not been processed for offline mode already
-                                        if (![HardenWindowsSecurity.GUIProtectWinSecurity]::StartFileDownloadHasRun) {
-                                            # If the checkbox on the GUI for Offline mode is checked
-                                            if ($OfflineModeToggleStatus) {
-                                                # Make sure all 3 fields for offline mode files were selected by the users and they are neither empty nor null
-                                                if ($OfflineGreenLightStatus) {
-                                                    # Process the offline mode files selected by the user
-                                                    Start-FileDownload -GUI -Verbose:$true
-
-                                                    # Set a flag indicating this code block should not happen again when the execute button is pressed
-                                                    [HardenWindowsSecurity.GUIProtectWinSecurity]::StartFileDownloadHasRun = $true
-                                                }
-                                                else {
-                                                    'Enable Offline Mode checkbox is checked but you have not selected all of the 3 required files for offline mode operation. Please select them and press the execute button again.'
-                                                }
-                                            }
-                                            else {
-                                                'Offline mode is being used but the Enable Offline Mode checkbox is not checked. Please check it and press the execute button again.'
-                                            }
-                                        }
-                                    }
-
-                                    if (!([HardenWindowsSecurity.GlobalVars]::Offline) -or (([HardenWindowsSecurity.GlobalVars]::Offline) -and [HardenWindowsSecurity.GUIProtectWinSecurity]::StartFileDownloadHasRun)) {
-
-                                        if (![System.String]::IsNullOrWhiteSpace([HardenWindowsSecurity.GUIProtectWinSecurity]::SelectedCategories)) {
-
-                                            # Make the Write-Verbose cmdlet write verbose messages regardless of the global preference or selected parameter
-                                            # That is the main source of the messages in the GUI
-                                            $PSDefaultParameterValues = @{ 'Write-Verbose:Verbose' = $true }
-
-                                            :MainSwitchLabel switch ([HardenWindowsSecurity.GUIProtectWinSecurity]::SelectedCategories) {
-                                                'MicrosoftSecurityBaselines' { Invoke-MicrosoftSecurityBaselines -RunUnattended }
-                                                'Microsoft365AppsSecurityBaselines' { Invoke-Microsoft365AppsSecurityBaselines -RunUnattended }
-                                                'MicrosoftDefender' { Invoke-MicrosoftDefender -RunUnattended }
-                                                'AttackSurfaceReductionRules' { Invoke-AttackSurfaceReductionRules -RunUnattended }
-                                                'BitLockerSettings' { Invoke-BitLockerSettings -RunUnattended }
-                                                'TLSSecurity' { Invoke-TLSSecurity -RunUnattended }
-                                                'LockScreen' { Invoke-LockScreen -RunUnattended }
-                                                'UserAccountControl' { Invoke-UserAccountControl -RunUnattended }
-                                                'WindowsFirewall' { Invoke-WindowsFirewall -RunUnattended }
-                                                'OptionalWindowsFeatures' { Invoke-OptionalWindowsFeatures -RunUnattended }
-                                                'WindowsNetworking' { Invoke-WindowsNetworking -RunUnattended }
-                                                'MiscellaneousConfigurations' { Invoke-MiscellaneousConfigurations -RunUnattended }
-                                                'WindowsUpdateConfigurations' { Invoke-WindowsUpdateConfigurations -RunUnattended }
-                                                'EdgeBrowserConfigurations' { Invoke-EdgeBrowserConfigurations -RunUnattended }
-                                                'CertificateCheckingCommands' { Invoke-CertificateCheckingCommands -RunUnattended }
-                                                'CountryIPBlocking' { Invoke-CountryIPBlocking -RunUnattended -GUI }
-                                                'DownloadsDefenseMeasures' { Invoke-DownloadsDefenseMeasures -RunUnattended }
-                                                'NonAdminCommands' { Invoke-NonAdminCommands -RunUnattended }
-                                            }
-
-                                            [HardenWindowsSecurity.NewToastNotification]::Show()
-                                        }
-                                        else {
-                                            'No category was selected'
-                                        }
-                                    }
-                                }
-                                catch {
-                                    Write-Verbose -Message $_
-                                    # throw $_.Exception
-                                }
-                            }
-
-                            # Run the selected categories and output their results to the GUI
-                            &$HardeningFunctionsScriptBlock *>&1 | ForEach-Object -Process {
-                                [HardenWindowsSecurity.Logger]::LogMessage($_)
-                            }
-
-                            [HardenWindowsSecurity.GUIProtectWinSecurity]::EnableUIElements()
-                        } -ThrottleLimit 1
-
-                        if ($DebugPreference -eq 'Continue') {
-                            [HardenWindowsSecurity.GlobalVars]::Host.UI.WriteDebugLine("$((Get-Job).Count) number of ThreadJobs After")
-                        }
-                    })
-
-                # Show the main window
-                [System.Void][HardenWindowsSecurity.GUIProtectWinSecurity]::app.Run([HardenWindowsSecurity.GUIProtectWinSecurity]::Window)
-
-                # Clear any jobs created during runtime in the current RunSpace
-                Foreach ($JobToRemove in Get-Job) {
-                    if ($JobToRemove.State -in 'Completed', 'Failed', 'Stopped') {
-                        Remove-Job -Job $JobToRemove -Force
-                    }
-                }
+                # For PowerShell debugging, loading and running the GUI here, instead of the Boot() method, will display the errors on the PS console properly
+                [HardenWindowsSecurity.GUIMain]::LoadMainXaml()
+                [HardenWindowsSecurity.GUIMain]::app.Run([HardenWindowsSecurity.GUIMain]::mainGUIWindow)
+                # [HardenWindowsSecurity.GUIBootStrapper]::Boot()
             }
         }
         catch {
             $_
             $_.Exception
             $_.InvocationInfo
+            $ErrorsOcurred = $true
         }
 
         # Return from the Begin block if GUI was used and then closed
@@ -554,7 +408,15 @@ Execution Policy: $CurrentExecutionPolicy
             [HardenWindowsSecurity.GlobalVars]::Host.UI.RawUI.WindowTitle = '⏬ Downloading'
 
             # Download the required files
-            Start-FileDownload
+            if (!([HardenWindowsSecurity.GlobalVars]::Offline)) {
+                Write-Verbose -Message 'Downloading the required files'
+            }
+            [HardenWindowsSecurity.FileDownloader]::PrepDownloadedFiles(
+                "$PathToLGPO",
+                "$PathToMSFTSecurityBaselines",
+                "$PathToMSFT365AppsSecurityBaselines"
+            )
+            Write-Verbose -Message 'Finished downloading/processing the required files'
 
             # a label to break out of the main switch statements and run the finally block when user chooses to exit
             :MainSwitchLabel switch ($Categories) {
@@ -589,22 +451,21 @@ Execution Policy: $CurrentExecutionPolicy
         catch {
             # Throw whatever error that occurred
             Throw $_
+            $ErrorsOcurred = $true
         }
         finally {
-            Write-Verbose -Message 'Finally block is running'
-            [HardenWindowsSecurity.ControlledFolderAccessHandler]::reset()
-            [HardenWindowsSecurity.Miscellaneous]::CleanUp()
-
-            Write-Verbose -Message 'Disabling progress bars'
-            foreach ($ID in 0..2) {
-                Write-Progress -Id $ID -Activity 'Done' -Completed
+            if ($null -ne $CurrentPowerShellTitle) {
+                Write-Verbose -Message 'Restoring the title of the PowerShell back to what it was prior to running the module'
+                $Host.UI.RawUI.WindowTitle = $CurrentPowerShellTitle
             }
 
-            Write-Verbose -Message 'Restoring the title of the PowerShell back to what it was prior to running the module'
-            $Host.UI.RawUI.WindowTitle = $CurrentPowerShellTitle
+            if ($null -ne $CurrentExecutionPolicy) {
+                Write-Verbose -Message 'Setting the execution policy back to what it was prior to running the module'
+                Set-ExecutionPolicy -ExecutionPolicy "$CurrentExecutionPolicy" -Scope 'Process' -Force
+            }
 
-            Write-Verbose -Message 'Setting the execution policy back to what it was prior to running the module'
-            Set-ExecutionPolicy -ExecutionPolicy "$CurrentExecutionPolicy" -Scope 'Process' -Force
+            [HardenWindowsSecurity.ControlledFolderAccessHandler]::reset()
+            [HardenWindowsSecurity.Miscellaneous]::CleanUp()
 
             if ($Log) {
                 Write-Verbose -Message 'Stopping the stopwatch'
@@ -614,6 +475,8 @@ Execution Policy: $CurrentExecutionPolicy
                 Write-Verbose -Message 'Stopping the transcription'
                 Stop-Transcript
             }
+            # If no errors ocurred, recycle the current session for there can't be more than 1 Application in the same App Domain
+            if (!$ErrorsOcurred) { pwsh.exe -NoLogo -NoExit }
         }
     }
     <#

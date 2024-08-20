@@ -20,7 +20,7 @@ namespace HardenWindowsSecurity
 #nullable disable
             foreach (var Item in (HardenWindowsSecurity.GlobalVars.RegistryCSVItems))
             {
-                if (string.Equals(Item.Category, "NonAdmin", StringComparison.InvariantCultureIgnoreCase))
+                if (string.Equals(Item.Category, "NonAdmin", StringComparison.OrdinalIgnoreCase))
                 {
                     HardenWindowsSecurity.RegistryEditor.EditRegistry(Item.Path, Item.Key, Item.Value, Item.Type, Item.Action);
                 }

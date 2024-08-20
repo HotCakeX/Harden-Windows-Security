@@ -12,6 +12,7 @@ System.Windows
 System.CodeDom
 System.Runtime
 System.Net.Http
+System.Xml.Linq
 System.Security
 PresentationCore
 System.Text.Json
@@ -22,6 +23,7 @@ System.ObjectModel
 System.Collections
 System.Windows.Forms
 System.Net.Primitives
+System.ComponentModel
 PresentationFramework
 System.IO.Compression
 System.Security.Claims
@@ -44,4 +46,5 @@ System.Windows.Controls.Ribbon
 System.Text.RegularExpressions
 System.ComponentModel.Primitives
 System.Security.Principal.Windows
+System.ComponentModel.TypeConverter
 System.DirectoryServices.AccountManagement

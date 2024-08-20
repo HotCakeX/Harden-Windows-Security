@@ -89,13 +89,6 @@ Function Write-ColorfulText {
         [Alias('I')]
         [System.String]$InputText
     )
-
-    # If GUI is being used, write verbose text and exit
-    if ($GUI) {
-        Write-Verbose -Message $InputText
-        Return
-    }
-
     switch ($Color) {
         'Fuchsia' { Write-Host -Object "$($PSStyle.Foreground.FromRGB(236,68,155))$InputText$($PSStyle.Reset)"; break }
         'Orange' { Write-Host -Object "$($PSStyle.Foreground.FromRGB(255,165,0))$InputText$($PSStyle.Reset)"; break }
@@ -125,7 +118,7 @@ Function Write-ColorfulText {
                 [System.Drawing.Color]::Gold
             )
 
-            $StringBuilder = New-Object -TypeName System.Text.StringBuilder
+            $StringBuilder = [System.Text.StringBuilder]::new()
             for ($I = 0; $I -lt $InputText.Length; $I++) {
                 $CurrentColor = $RainbowColors[$I % $RainbowColors.Length]
                 [System.Void]$StringBuilder.Append("$($PSStyle.Foreground.FromRGB($CurrentColor.R, $CurrentColor.G, $CurrentColor.B))$($PSStyle.Blink)$($InputText[$I])$($PSStyle.BlinkOff)$($PSStyle.Reset)")
@@ -328,19 +321,6 @@ Function Get-AvailableRemovableDrives {
         return ($($AvailableRemovableDrives[$Choice - 1]).DriveLetter + ':')
     }
 }
-Function Start-FileDownload {
-    Param (
-        [Parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$GUI
-    )
-    if (!([HardenWindowsSecurity.GlobalVars]::Offline)) { Write-Verbose -Message 'Downloading the required files' }
-    [HardenWindowsSecurity.FileDownloader]::PrepDownloadedFiles(
-        ($GUI ? [HardenWindowsSecurity.GUIProtectWinSecurity]::LGPOZipPath : "$PathToLGPO"),
-        ($GUI ? [HardenWindowsSecurity.GUIProtectWinSecurity]::MicrosoftSecurityBaselineZipPath : "$PathToMSFTSecurityBaselines"),
-        ($GUI ? [HardenWindowsSecurity.GUIProtectWinSecurity]::Microsoft365AppsSecurityBaselineZipPath : "$PathToMSFT365AppsSecurityBaselines"),
-        ($GUI ? $True : $False)
-    )
-    Write-Verbose -Message 'Finished downloading/processing the required files'
-}
 #Endregion Helper-Functions-And-ScriptBlocks
 
 #Region Hardening-Categories-Functions
@@ -388,7 +368,7 @@ Function Invoke-MicrosoftDefender {
 
             if ((([HardenWindowsSecurity.GlobalVars]::ShouldEnableOptionalDiagnosticData) -eq $True) -or (([HardenWindowsSecurity.GlobalVars]::MDAVConfigCurrent).SmartAppControlState -eq 'On')) {
                 Write-Verbose -Message 'Enabling Optional Diagnostic Data because SAC is on or user selected to turn it on'
-                &$([HardenWindowsSecurity.GlobalVars]::LGPOExe) /q /m "$([HardenWindowsSecurity.GlobalVars]::Path)\Resources\Security-Baselines-X\Microsoft Defender Policies\Optional Diagnostic Data\registry.pol"
+                [HardenWindowsSecurity.MicrosoftDefender]::MSFTDefender_EnableDiagData()
             }
             else {
                 # Ask user if they want to turn on optional diagnostic data only if Smart App Control is not already turned off

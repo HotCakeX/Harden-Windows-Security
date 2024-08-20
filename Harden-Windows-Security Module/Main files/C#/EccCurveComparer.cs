@@ -8,12 +8,6 @@ using System.Collections.Generic;
 
 namespace HardenWindowsSecurity
 {
-    public class EccCurveComparisonResult
-    {
-        public bool AreCurvesCompliant { get; set; }
-        public List<string>? CurrentEccCurves { get; set; }
-    }
-
     public static class EccCurveComparer
     {
         /// <summary>
@@ -21,7 +15,7 @@ namespace HardenWindowsSecurity
         /// The comparison takes into account the exact position of the curves as well.
         /// </summary>
         /// <returns></returns>
-        public static EccCurveComparisonResult GetEccCurveComparison()
+        public static HardenWindowsSecurity.EccCurveComparisonResult GetEccCurveComparison()
         {
             // Get current ECC curves from PowerShell and store them in a list
             List<string> currentEccCurves = GetCurrentEccCurves();
@@ -33,7 +27,7 @@ namespace HardenWindowsSecurity
             bool areCurvesCompliant = currentEccCurves.SequenceEqual(compliantEccCurves, StringComparer.OrdinalIgnoreCase);
 
             // Create and return the result object
-            return new EccCurveComparisonResult
+            return new HardenWindowsSecurity.EccCurveComparisonResult
             {
                 AreCurvesCompliant = areCurvesCompliant,
                 CurrentEccCurves = currentEccCurves

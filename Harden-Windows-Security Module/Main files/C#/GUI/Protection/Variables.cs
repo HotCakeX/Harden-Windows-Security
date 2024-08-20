@@ -56,26 +56,12 @@ namespace HardenWindowsSecurity
         // List of all the selected subcategories in a thread safe way
         public static ConcurrentQueue<string> SelectedSubCategories = new ConcurrentQueue<string>();
 
-        // To store the log messages in a thread safe way that will be displayed on the GUI and stored in the Logs text file
-        public static ArrayList Logger = ArrayList.Synchronized(new ArrayList());
-
-
         // Set a flag indicating that the required files for the Offline operation mode have been processed
         // When the execute button was clicked, so it won't run twice
         public static bool StartFileDownloadHasRun = false;
 
-
-        // The following are XAML GUI Elements
-        public static string? xamlPath;
-        public static string? xamlContent;
-        public static System.Xml.XmlDocument? xamlDocument;
-        public static System.Xml.XmlNodeReader? reader;
-
-        // Main window instance
-        public static System.Windows.Window? window;
-
-        // Application instance
-        public static System.Windows.Application? app;
+        // View for the ProtectWindowsSecurity
+        public static System.Windows.Controls.UserControl? View;
 
         public static System.Windows.Controls.Grid? parentGrid;
         public static System.Windows.Controls.Primitives.ToggleButton? mainTabControlToggle;
@@ -125,6 +111,10 @@ namespace HardenWindowsSecurity
         public static System.Windows.Controls.Primitives.ToggleButton? ExecuteButton;
         public static System.Windows.Controls.Grid? ExecuteButtonGrid;
         public static System.Windows.Controls.Image? ExecuteButtonImage;
+
+
+        // Flag to run the event for view load only once to prevent file download multiple times when swtiching between views etc.
+        public static bool LoadEventHasBeenTriggered = false;
     }
 }
 

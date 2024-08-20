@@ -63,7 +63,12 @@ namespace HardenWindowsSecurity
             // auditpol /list /subcategory:* /r
 
             // Event Viewer custom views are saved in "$env:SystemDrive\ProgramData\Microsoft\Event Viewer\Views". files in there can be backed up and restored on new Windows installations.
-            string systemDrive = Environment.GetEnvironmentVariable("SystemDrive");
+            string? systemDrive = Environment.GetEnvironmentVariable("SystemDrive");
+
+            if (systemDrive == null)
+            {
+                throw new System.ArgumentNullException("SystemDrive cannot be null.");
+            }
 
             // Create the directory if it doesn't exist
             if (!System.IO.Directory.Exists(Path.Combine(systemDrive, "ProgramData", "Microsoft", "Event Viewer", "Views", "Hardening Script")))

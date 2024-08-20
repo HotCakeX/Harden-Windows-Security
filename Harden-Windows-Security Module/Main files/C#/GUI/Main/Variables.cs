@@ -41,7 +41,14 @@ namespace HardenWindowsSecurity
 {
     public partial class GUIMain
     {
+        // The following are XAML GUI Elements
+        public static string? xamlPath;
 
+        // Main window instance
+        public static System.Windows.Window? mainGUIWindow;
+
+        // Application instance
+        public static System.Windows.Application? app;
     }
 }
 

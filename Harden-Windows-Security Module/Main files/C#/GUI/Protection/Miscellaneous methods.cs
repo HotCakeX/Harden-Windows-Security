@@ -45,7 +45,7 @@ namespace HardenWindowsSecurity
         /// <summary>
         /// A method to update sub-category items based on the checked categories
         /// </summary>
-        private static void UpdateSubCategories()
+        public static void UpdateSubCategories()
         {
             // Disable all sub-category items first
             foreach (var item in GUIProtectWinSecurity.subCategories!.Items)
@@ -110,7 +110,7 @@ namespace HardenWindowsSecurity
 
 
         // Method to disable the Offline Mode configuration inputs
-        private static void DisableOfflineModeConfigInputs()
+        public static void DisableOfflineModeConfigInputs()
         {
             GUIProtectWinSecurity.microsoftSecurityBaselineZipButton!.IsEnabled = false;
             GUIProtectWinSecurity.microsoftSecurityBaselineZipTextBox!.IsEnabled = false;
@@ -125,7 +125,7 @@ namespace HardenWindowsSecurity
         /// </summary>
         public static void EnableUIElements()
         {
-            HardenWindowsSecurity.GUIProtectWinSecurity.window!.Dispatcher.Invoke(() =>
+            HardenWindowsSecurity.GUIProtectWinSecurity.View!.Dispatcher.Invoke(() =>
             {
                 // Enable the disabled UI elements once all of the commands have been executed
                 // Manually trigger the ToggleButton to be unchecked
@@ -150,7 +150,7 @@ namespace HardenWindowsSecurity
         /// </summary>
         public static void DisableUIElements()
         {
-            HardenWindowsSecurity.GUIProtectWinSecurity.window!.Dispatcher.Invoke(() =>
+            HardenWindowsSecurity.GUIProtectWinSecurity.View!.Dispatcher.Invoke(() =>
             {
                 // Disable Important elements while commands are being executed
                 HardenWindowsSecurity.GUIProtectWinSecurity.ExecuteButton!.IsEnabled = false;

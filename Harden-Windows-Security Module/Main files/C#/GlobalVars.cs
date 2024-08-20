@@ -52,6 +52,9 @@ namespace HardenWindowsSecurity
         // Variable indicating whether user launched the module with Offline parameter or not
         public static bool Offline;
 
+        // To track whether the header has been added to the log file
+        public static bool LogHeaderHasBeenWritten = false;
+
         // Path to the Microsoft Security Baselines directory after extraction
         public static string? MicrosoftSecurityBaselinePath;
 

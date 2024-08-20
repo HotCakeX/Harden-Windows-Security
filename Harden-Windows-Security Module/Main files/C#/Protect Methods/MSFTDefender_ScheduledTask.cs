@@ -57,13 +57,13 @@ namespace HardenWindowsSecurity
                     }
                     else
                     {
-                       HardenWindowsSecurity.Logger.LogMessage("Scheduled task has been successfully created.");
+                        HardenWindowsSecurity.Logger.LogMessage("Scheduled task has been successfully created.");
                     }
                 }
-                catch (Exception ex)
+                catch
                 {
                     // Catch any exceptions that occur during execution
-                    throw ex;
+                    throw;
                 }
             }
         }

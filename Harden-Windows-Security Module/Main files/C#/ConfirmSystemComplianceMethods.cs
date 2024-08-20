@@ -819,7 +819,7 @@ namespace HardenWindowsSecurity
 
                 /// PS Equivalent: (auditpol /get /subcategory:"Other Logon/Logoff Events" /r | ConvertFrom-Csv).'Inclusion Setting'
                 // Verify an Audit policy is enabled - only supports systems with English-US language
-                var cultureInfoHelper = HardenWindowsSecurity.CultureInfoHelper.Get();
+                HardenWindowsSecurity.CultureInfoProperties cultureInfoHelper = HardenWindowsSecurity.CultureInfoHelper.Get();
                 string currentCulture = cultureInfoHelper.Name;
 
                 if (string.Equals(currentCulture, "en-US", StringComparison.OrdinalIgnoreCase))

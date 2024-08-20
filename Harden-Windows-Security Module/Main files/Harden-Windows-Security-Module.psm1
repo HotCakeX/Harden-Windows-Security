@@ -1,7 +1,11 @@
 $global:ErrorActionPreference = 'Stop'
-$PSStyle.Progress.UseOSCIndicator = $true
-# Set PSReadline tab completion to complete menu for easier access to available parameters - Only for the current session
-Set-PSReadLineKeyHandler -Key 'Tab' -Function 'MenuComplete'
+
+try {
+    $PSStyle.Progress.UseOSCIndicator = $true
+    # Set PSReadline tab completion to complete menu for easier access to available parameters - Only for the current session
+    Set-PSReadLineKeyHandler -Key 'Tab' -Function 'MenuComplete'
+}
+catch {}
 
 if (!$IsWindows) {
     Throw [System.PlatformNotSupportedException] 'The Harden Windows Security module only runs on Windows operation systems.'

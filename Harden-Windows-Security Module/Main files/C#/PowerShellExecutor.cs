@@ -27,19 +27,19 @@ namespace HardenWindowsSecurity
                 // Display normal output
                 foreach (var output in results)
                 {
-                    Console.WriteLine($"Output: {output}");
+                    HardenWindowsSecurity.Logger.LogMessage($"Output: {output}");
                 }
 
                 // Display verbose output
                 foreach (var verbose in psInstance.Streams.Verbose)
                 {
-                    Console.WriteLine($"Verbose: {verbose.Message}");
+                    HardenWindowsSecurity.Logger.LogMessage($"Verbose: {verbose.Message}");
                 }
 
                 // Display warning output
                 foreach (var warning in psInstance.Streams.Warning)
                 {
-                    Console.WriteLine($"Warning: {warning.Message}");
+                    HardenWindowsSecurity.Logger.LogMessage($"Warning: {warning.Message}");
                 }
 
                 // Handle errors, including non-terminating errors

@@ -101,3 +101,9 @@
 - <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/wings/whitewings.gif" width="35">[ Microsoft Graph Explorer and API Basics](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Microsoft-Graph-Explorer-and-API-Basics)
 
 <br>
+
+## <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/wings/pinkwings2.gif" width="50"> [C#](#-c#)
+
+- <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/wings/pinkwings2.gif" width="35"> [C# Tips And Tricks Part 1](https://github.com/HotCakeX/Harden-Windows-Security/wiki/C%23-Tips-And-Tricks-Part-1)
+
+<br>

@@ -4,6 +4,8 @@ using System.Linq;
 using System.Xml;
 using System.Text.RegularExpressions;
 
+#nullable enable
+
 namespace WDACConfig
 {
     public static class GetFileRuleOutput

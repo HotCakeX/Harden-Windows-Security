@@ -1,6 +1,8 @@
 using System;
 using System.Management.Automation.Host;
 
+#nullable enable
+
 namespace WDACConfig
 {
     public static class VerboseLogger

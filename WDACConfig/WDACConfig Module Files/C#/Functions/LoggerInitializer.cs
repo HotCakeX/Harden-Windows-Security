@@ -1,6 +1,8 @@
 using System;
 using System.Management.Automation.Host;
 
+#nullable enable
+
 namespace WDACConfig
 {
     public class LoggerInitializer
@@ -28,7 +30,5 @@ namespace WDACConfig
                 WDACConfig.GlobalVars.Host = host;
             }
         }
-
-
     }
 }

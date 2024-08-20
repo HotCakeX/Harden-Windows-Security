@@ -3,6 +3,9 @@ using System.Diagnostics;
 using System.Text.Json;
 using System.Collections.Generic;
 using System.Management.Automation;
+using System.Globalization;
+
+#nullable enable
 
 namespace WDACConfig
 {
@@ -36,12 +39,12 @@ namespace WDACConfig
             foreach (JsonElement policyElement in policiesElement.EnumerateArray())
             {
                 bool isSystemPolicy = policyElement.GetProperty("IsSystemPolicy").GetBoolean();
-                string policyId = policyElement.GetProperty("PolicyID").GetString();
-                string basePolicyId = policyElement.GetProperty("BasePolicyID").GetString();
-                string friendlyName = policyElement.GetProperty("FriendlyName").GetString();
+                string? policyId = policyElement.GetProperty("PolicyID").GetString();
+                string? basePolicyId = policyElement.GetProperty("BasePolicyID").GetString();
+                string? friendlyName = policyElement.GetProperty("FriendlyName").GetString();
 
                 // Use ordinal, case-insensitive comparison for the policy IDs
-                if (!isSystemPolicy && string.Equals(policyId, basePolicyId, StringComparison.OrdinalIgnoreCase))
+                if (!isSystemPolicy && string.Equals(policyId, basePolicyId, StringComparison.OrdinalIgnoreCase) && friendlyName != null)
                 {
                     validValues.Add(friendlyName);
                 }

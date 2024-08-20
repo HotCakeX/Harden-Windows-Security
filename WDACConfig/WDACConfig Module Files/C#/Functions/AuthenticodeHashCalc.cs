@@ -2,6 +2,7 @@ using System;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.IO;
+using System.Globalization;
 
 namespace WDACConfig
 {
@@ -101,7 +102,7 @@ namespace WDACConfig
                         // Marshal.ReadByte returns a byte from the hashValue buffer at the specified offset
                         byte b = Marshal.ReadByte(hashValue, offset);
                         // Append the byte to the hashString as a hexadecimal string
-                        hashString.Append(b.ToString("X2"));
+                        hashString.Append(b.ToString("X2", CultureInfo.InvariantCulture));
                     }
                 }
             }

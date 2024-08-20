@@ -1,6 +1,8 @@
 using System;
 using System.Runtime.InteropServices;
 
+#nullable enable
+
 namespace WDACConfig
 {
     public enum WLDP_SECURE_SETTING_VALUE_TYPE
@@ -23,7 +25,7 @@ namespace WDACConfig
     public class WldpQuerySecurityPolicyWrapper
     {
         [DllImport("Wldp.dll", CharSet = CharSet.Unicode)]
-        public static extern int WldpQuerySecurityPolicy(
+        internal static extern int WldpQuerySecurityPolicy(
             ref UNICODE_STRING Provider,
             ref UNICODE_STRING Key,
             ref UNICODE_STRING ValueName,

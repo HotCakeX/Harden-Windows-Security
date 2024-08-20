@@ -1,6 +1,8 @@
 using System;
 using System.IO;
 
+#nullable enable
+
 namespace WDACConfig
 {
     public static class StagingArea

@@ -1,3 +1,6 @@
+
+#nullable enable
+
 // Used by WDAC Simulations
 namespace WDACConfig
 {

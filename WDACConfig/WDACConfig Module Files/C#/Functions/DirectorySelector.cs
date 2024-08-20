@@ -5,13 +5,19 @@ using System.Windows.Forms;
 using System.Linq;
 using System.Runtime.InteropServices;
 
+#nullable enable
+
 namespace WDACConfig
 {
     public static class DirectorySelector
     {
-        // Keeps asking for directories until the user cancels the selection
-        // returns unique DirectoryInfo[] of selected directories
-        public static DirectoryInfo[] SelectDirectories()
+        /// <summary>
+        /// Keeps asking for directories until the user cancels the selection
+        /// returns unique DirectoryInfo[] of selected directories if user actually selected directories
+        /// returns null if user did not select any categories
+        /// </summary>
+        /// <returns></returns>
+        public static DirectoryInfo[]? SelectDirectories()
         {
             // HashSet to store unique selected directories
             HashSet<DirectoryInfo> programsPaths = new HashSet<DirectoryInfo>(new DirectoryInfoComparer());
@@ -50,18 +56,31 @@ namespace WDACConfig
         // Comparer for DirectoryInfo to ensure uniqueness and do it in a case-insensitive way
         private class DirectoryInfoComparer : IEqualityComparer<DirectoryInfo>
         {
-            public bool Equals(DirectoryInfo x, DirectoryInfo y)
+            public bool Equals(DirectoryInfo? x, DirectoryInfo? y)
             {
+                // If both are null, they are considered equal
+                if (x == null && y == null)
+                {
+                    return true;
+                }
+
+                // If one is null but not the other, they are not equal
+                if (x == null || y == null)
+                {
+                    return false;
+                }
+
                 // Compare full path in a case-insensitive way
                 return string.Equals(x.FullName, y.FullName, StringComparison.OrdinalIgnoreCase);
             }
 
-            // Get hash code of the full path in a case-insensitive way
+            // Get hash code of the full path in a case-insensitive way using StringComparer.OrdinalIgnoreCase
             public int GetHashCode(DirectoryInfo obj)
             {
-                return obj.FullName.ToLowerInvariant().GetHashCode();
+                return StringComparer.OrdinalIgnoreCase.GetHashCode(obj.FullName);
             }
         }
+
 
         // P/Invoke declarations
         [DllImport("user32.dll")]

@@ -2,6 +2,8 @@ using System;
 using System.IO;
 using System.Xml;
 
+#nullable enable
+
 namespace WDACConfig
 {
     public static class PolicyEditor
@@ -24,13 +26,13 @@ namespace WDACConfig
             XmlNamespaceManager nsMgr = new XmlNamespaceManager(xmlDoc.NameTable);
             nsMgr.AddNamespace("ns", "urn:schemas-microsoft-com:sipolicy");
 
-            XmlNode policyIdNode = xmlDoc.SelectSingleNode("/ns:SiPolicy/ns:PolicyID", nsMgr);
+            XmlNode? policyIdNode = xmlDoc.SelectSingleNode("/ns:SiPolicy/ns:PolicyID", nsMgr);
             if (policyIdNode != null)
             {
                 policyIdNode.InnerText = newPolicyId;
             }
 
-            XmlNode basePolicyIdNode = xmlDoc.SelectSingleNode("/ns:SiPolicy/ns:BasePolicyID", nsMgr);
+            XmlNode? basePolicyIdNode = xmlDoc.SelectSingleNode("/ns:SiPolicy/ns:BasePolicyID", nsMgr);
             if (basePolicyIdNode != null)
             {
                 basePolicyIdNode.InnerText = newBasePolicyId;

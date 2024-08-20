@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Xml;
 
+#nullable enable
+
 namespace WDACConfig
 {
     // Declares a public static class that cannot be instantiated.

@@ -2,6 +2,8 @@ using System;
 using System.Diagnostics;
 using System.IO;
 
+#nullable enable
+
 namespace WDACConfig
 {
     public static class CodeIntegritySigner

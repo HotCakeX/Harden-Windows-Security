@@ -2,6 +2,8 @@ using System;
 using Microsoft.Win32;
 using System.Globalization;
 
+#nullable enable
+
 namespace WDACConfig
 {
     // Prepares the environment. It also runs commands that would otherwise run in the default constructor for the GlobalVars Class
@@ -10,11 +12,11 @@ namespace WDACConfig
         /// These are the codes that were present in the GlobalVar class's default constructor but defining them as a separate method allows any errors thrown in them to be properly displayed in PowerShell instead of showing an error occurred in the default constructor of a class
         public static void Initialize()
         {
-            using (RegistryKey key = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows NT\CurrentVersion"))
+            using (RegistryKey key = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows NT\CurrentVersion") ?? throw new Exception("Could not get the current Windows version from the registry"))
             {
                 if (key != null)
                 {
-                    object ubrValue = key.GetValue("UBR");
+                    object? ubrValue = key.GetValue("UBR");
                     if (ubrValue != null && int.TryParse(ubrValue.ToString(), NumberStyles.Integer, CultureInfo.InvariantCulture, out int ubr))
                     {
                         WDACConfig.GlobalVars.UBR = ubr;

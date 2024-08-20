@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 
+#nullable enable
+
 namespace WDACConfig
 {
     // Application Control event tags intelligence

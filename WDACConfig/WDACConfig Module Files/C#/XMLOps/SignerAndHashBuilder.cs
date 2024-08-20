@@ -97,7 +97,11 @@ namespace WDACConfig
                         {
                             WDACConfig.VerboseLogger.Write("BuildSignerAndHashObjects: Found a null item in data.");
                         }
-                        else if (string.Equals(item["SignatureStatus"].ToString(), "Signed", StringComparison.OrdinalIgnoreCase) && !publisherToHash)
+                        else if (
+                            item.ContainsKey("SignatureStatus") &&
+                                 item["SignatureStatus"] != null &&
+                                 string.Equals(item["SignatureStatus"]?.ToString(), "Signed", StringComparison.OrdinalIgnoreCase) &&
+                                 !publisherToHash)
                         {
                             signedPublisherData.Add(item);
                         }
@@ -122,7 +126,10 @@ namespace WDACConfig
                         }
                         // If the file's version is empty or it has no file attribute, then add it to the Publishers array
                         // because FilePublisher rule cannot be created for it
-                        else if (string.Equals(item["SignatureStatus"].ToString(), "Signed", StringComparison.OrdinalIgnoreCase))
+                        else if (
+                            item.ContainsKey("SignatureStatus") &&
+                                 item["SignatureStatus"] != null &&
+                            string.Equals(item["SignatureStatus"]?.ToString(), "Signed", StringComparison.OrdinalIgnoreCase))
                         {
                             // Safely get values from the item and check for null or whitespace
                             bool hasNoFileAttributes = string.IsNullOrWhiteSpace(item.ContainsKey("OriginalFileName") ? item["OriginalFileName"]?.ToString() : null) &&
@@ -170,60 +177,63 @@ namespace WDACConfig
                 // Create a new FilePublisherSignerCreator object
                 WDACConfig.FilePublisherSignerCreator currentFilePublisherSigner = new WDACConfig.FilePublisherSignerCreator();
 
-                // Get the certificate details of the current event data based on the incoming type, they can be stored under different names
-                ICollection correlatedEventsDataValues = string.Equals(incomingDataType, "MDEAH", StringComparison.OrdinalIgnoreCase)
-                    ? ((Hashtable)signedData["CorrelatedEventsData"]).Values
-                    : ((Hashtable)signedData["SignerInfo"]).Values;
+                // Get the certificate details of the current event data based on the incoming type, they can be stored under different names.
+                // Safely casting the objects to a HashTable, returning null if the cast fails instead of throwing an exception.
+                ICollection? correlatedEventsDataValues = string.Equals(incomingDataType, "MDEAH", StringComparison.OrdinalIgnoreCase)
+                    ? (signedData["CorrelatedEventsData"] as Hashtable)?.Values
+                    : (signedData["SignerInfo"] as Hashtable)?.Values;
 
                 if (correlatedEventsDataValues == null)
                 {
                     WDACConfig.VerboseLogger.Write("BuildSignerAndHashObjects: correlatedEventsDataValues is null.");
                 }
-
-                // Loop through each correlated event and process the certificate details
-                foreach (Hashtable corDataValue in correlatedEventsDataValues)
+                else
                 {
-                    // currentCorData to store the current SignerInfo/Correlated
-                    WDACConfig.CertificateDetailsCreator? currentCorData = null;
-
-                    // If the file doesn't have Issuer TBS hash (aka Intermediate certificate hash), use the leaf cert's TBS hash and CN instead (aka publisher TBS hash)
-                    // This is according to the ConfigCI's workflow when encountering specific files
-                    // MDE doesn't generate Issuer TBS hash for some files
-                    // For those files, the FilePublisher rule will be created with the file's leaf Certificate details only (Publisher certificate)
-
-                    // Safely access dictionary values and handle nulls
-                    string? issuerTBSHash = corDataValue.ContainsKey("IssuerTBSHash") ? corDataValue["IssuerTBSHash"]?.ToString() : null;
-                    string? publisherTBSHash = corDataValue.ContainsKey("PublisherTBSHash") ? corDataValue["PublisherTBSHash"]?.ToString() : null;
-
-                    // Perform the check with null-safe values
-                    if (string.IsNullOrWhiteSpace(issuerTBSHash) && !string.IsNullOrWhiteSpace(publisherTBSHash))
+                    // Loop through each correlated event and process the certificate details
+                    foreach (Hashtable corDataValue in correlatedEventsDataValues)
                     {
-                        WDACConfig.VerboseLogger.Write($"BuildSignerAndHashObjects: Intermediate Certificate TBS hash is empty for the file: {(string.Equals(incomingDataType, "MDEAH", StringComparison.OrdinalIgnoreCase) ? signedData["FileName"] : signedData["File Name"])}, using the leaf certificate TBS hash instead");
+                        // currentCorData to store the current SignerInfo/Correlated
+                        WDACConfig.CertificateDetailsCreator? currentCorData = null;
 
-                        currentCorData = new WDACConfig.CertificateDetailsCreator(
-                            corDataValue["PublisherTBSHash"].ToString(),
-                            corDataValue["PublisherName"].ToString(),
-                            corDataValue["PublisherTBSHash"].ToString(),
-                            corDataValue["PublisherName"].ToString()
-                        );
-                    }
-                    else
-                    {
-                        currentCorData = new WDACConfig.CertificateDetailsCreator(
-                            corDataValue["IssuerTBSHash"].ToString(),
-                            corDataValue["IssuerName"].ToString(),
-                            corDataValue["PublisherTBSHash"].ToString(),
-                            corDataValue["PublisherName"].ToString()
-                        );
-                    }
+                        // If the file doesn't have Issuer TBS hash (aka Intermediate certificate hash), use the leaf cert's TBS hash and CN instead (aka publisher TBS hash)
+                        // This is according to the ConfigCI's workflow when encountering specific files
+                        // MDE doesn't generate Issuer TBS hash for some files
+                        // For those files, the FilePublisher rule will be created with the file's leaf Certificate details only (Publisher certificate)
 
-                    // Add the Certificate details to the CurrentFilePublisherSigner's CertificateDetails property
-                    if (currentCorData != null)
-                    {
-                        currentFilePublisherSigner.CertificateDetails.Add(currentCorData);
+                        // Safely access dictionary values and handle nulls
+                        string? issuerTBSHash = corDataValue.ContainsKey("IssuerTBSHash") ? corDataValue["IssuerTBSHash"]?.ToString() : null;
+                        string? publisherTBSHash = corDataValue.ContainsKey("PublisherTBSHash") ? corDataValue["PublisherTBSHash"]?.ToString() : null;
+
+                        // Perform the check with null-safe values
+                        if (string.IsNullOrWhiteSpace(issuerTBSHash) && !string.IsNullOrWhiteSpace(publisherTBSHash))
+                        {
+                            WDACConfig.VerboseLogger.Write($"BuildSignerAndHashObjects: Intermediate Certificate TBS hash is empty for the file: {(string.Equals(incomingDataType, "MDEAH", StringComparison.OrdinalIgnoreCase) ? signedData["FileName"] : signedData["File Name"])}, using the leaf certificate TBS hash instead");
+
+                            currentCorData = new WDACConfig.CertificateDetailsCreator(
+                                corDataValue["PublisherTBSHash"]!.ToString()!,
+                                corDataValue["PublisherName"]!.ToString()!,
+                                corDataValue["PublisherTBSHash"]!.ToString()!,
+                                corDataValue["PublisherName"]!.ToString()!
+                            );
+
+                        }
+                        else
+                        {
+                            currentCorData = new WDACConfig.CertificateDetailsCreator(
+                                corDataValue["IssuerTBSHash"]!.ToString()!,
+                                corDataValue["IssuerName"]!.ToString()!,
+                                corDataValue["PublisherTBSHash"]!.ToString()!,
+                                corDataValue["PublisherName"]!.ToString()!
+                            );
+                        }
+
+                        // Add the Certificate details to the CurrentFilePublisherSigner's CertificateDetails property
+                        if (currentCorData != null)
+                        {
+                            currentFilePublisherSigner.CertificateDetails.Add(currentCorData);
+                        }
                     }
                 }
-
 
                 #region Initialize properties with null-safe checks
                 string? fileVersionString = signedData.ContainsKey("FileVersion") ? signedData["FileVersion"]?.ToString() : null;
@@ -260,7 +270,7 @@ namespace WDACConfig
                 currentFilePublisherSigner.AuthenticodeSHA256 = sha256;
                 currentFilePublisherSigner.AuthenticodeSHA1 = sha1;
 
-                currentFilePublisherSigner.SiSigningScenario = string.Equals(incomingDataType, "MDEAH", StringComparison.OrdinalIgnoreCase) ? int.Parse(signedData["SiSigningScenario"].ToString(), CultureInfo.InvariantCulture) : (string.Equals(signedData["SI Signing Scenario"].ToString(), "Kernel-Mode", StringComparison.OrdinalIgnoreCase) ? 0 : 1);
+                currentFilePublisherSigner.SiSigningScenario = string.Equals(incomingDataType, "MDEAH", StringComparison.OrdinalIgnoreCase) ? int.Parse(signedData["SiSigningScenario"]!.ToString()!, CultureInfo.InvariantCulture) : (string.Equals(signedData["SI Signing Scenario"]!.ToString(), "Kernel-Mode", StringComparison.OrdinalIgnoreCase) ? 0 : 1);
                 #endregion
 
                 // Check if necessary details are not empty
@@ -286,61 +296,66 @@ namespace WDACConfig
                 WDACConfig.PublisherSignerCreator currentPublisherSigner = new WDACConfig.PublisherSignerCreator();
 
                 // Get the certificate details of the current event data based on the incoming type, they can be stored under different names
-                ICollection correlatedEventsDataValues = string.Equals(incomingDataType, "MDEAH", StringComparison.OrdinalIgnoreCase)
-                    ? ((Hashtable)signedData["CorrelatedEventsData"]).Values
-                    : ((Hashtable)signedData["SignerInfo"]).Values;
+                ICollection? correlatedEventsDataValues = string.Equals(incomingDataType, "MDEAH", StringComparison.OrdinalIgnoreCase)
+                    ? (signedData?["CorrelatedEventsData"] as Hashtable)?.Values
+                    : (signedData?["SignerInfo"] as Hashtable)?.Values;
 
                 if (correlatedEventsDataValues == null)
                 {
                     WDACConfig.VerboseLogger.Write("BuildSignerAndHashObjects: correlatedEventsDataValues is null.");
                 }
-
-                // Process each correlated event
-                foreach (Hashtable corDataValue in correlatedEventsDataValues)
+                else
                 {
-                    WDACConfig.CertificateDetailsCreator currentCorData = null;
-
-                    // Safely access dictionary values and handle nulls
-                    string? issuerTBSHash = corDataValue.ContainsKey("IssuerTBSHash") ? corDataValue["IssuerTBSHash"]?.ToString() : null;
-                    string? issuerName = corDataValue.ContainsKey("IssuerName") ? corDataValue["IssuerName"]?.ToString() : null;
-                    string? publisherTBSHash = corDataValue.ContainsKey("PublisherTBSHash") ? corDataValue["PublisherTBSHash"]?.ToString() : null;
-                    string? publisherName = corDataValue.ContainsKey("PublisherName") ? corDataValue["PublisherName"]?.ToString() : null;
-
-                    // Perform the check with null-safe values
-                    if (string.IsNullOrWhiteSpace(issuerTBSHash) && !string.IsNullOrWhiteSpace(publisherTBSHash))
+                    // Process each correlated event
+                    foreach (Hashtable corDataValue in correlatedEventsDataValues)
                     {
-                        WDACConfig.VerboseLogger.Write($"BuildSignerAndHashObjects: Intermediate Certificate TBS hash is empty for the file: {(string.Equals(incomingDataType, "MDEAH", StringComparison.OrdinalIgnoreCase) ? signedData["FileName"] : signedData["File Name"])}, using the leaf certificate TBS hash instead");
+                        WDACConfig.CertificateDetailsCreator? currentCorData = null;
 
-                        // Create a new CertificateDetailsCreator object with the safely retrieved and used values
-                        currentCorData = new WDACConfig.CertificateDetailsCreator(
-                            publisherTBSHash,
-                            publisherName,
-                            publisherTBSHash,
-                            publisherName
-                        );
-                    }
-                    else
-                    {
-                        // Create a new CertificateDetailsCreator object with the safely retrieved and used values
-                        currentCorData = new WDACConfig.CertificateDetailsCreator(
-                            issuerTBSHash,
-                            issuerName,
-                            publisherTBSHash,
-                            publisherName
-                        );
-                    }
+                        // Safely access dictionary values and handle nulls
+                        string? issuerTBSHash = corDataValue.ContainsKey("IssuerTBSHash") ? corDataValue["IssuerTBSHash"]?.ToString() : null;
+                        string? issuerName = corDataValue.ContainsKey("IssuerName") ? corDataValue["IssuerName"]?.ToString() : null;
+                        string? publisherTBSHash = corDataValue.ContainsKey("PublisherTBSHash") ? corDataValue["PublisherTBSHash"]?.ToString() : null;
+                        string? publisherName = corDataValue.ContainsKey("PublisherName") ? corDataValue["PublisherName"]?.ToString() : null;
 
-                    // Add the Certificate details to the CurrentPublisherSigner's CertificateDetails property
-                    if (currentCorData != null)
-                    {
-                        currentPublisherSigner.CertificateDetails.Add(currentCorData);
+                        // Perform the check with null-safe values
+                        if (string.IsNullOrWhiteSpace(issuerTBSHash) && !string.IsNullOrWhiteSpace(publisherTBSHash))
+                        {
+                            WDACConfig.VerboseLogger.Write($"BuildSignerAndHashObjects: Intermediate Certificate TBS hash is empty for the file: {(string.Equals(incomingDataType, "MDEAH", StringComparison.OrdinalIgnoreCase) ? signedData!["FileName"] : signedData!["File Name"])}, using the leaf certificate TBS hash instead");
+
+                            // Create a new CertificateDetailsCreator object with the safely retrieved and used values
+                            currentCorData = new WDACConfig.CertificateDetailsCreator(
+                                publisherTBSHash,
+                                publisherName!,
+                                publisherTBSHash,
+                                publisherName!
+                            );
+                        }
+                        else
+                        {
+                            // Create a new CertificateDetailsCreator object with the safely retrieved and used values
+                            currentCorData = new WDACConfig.CertificateDetailsCreator(
+                                issuerTBSHash!,
+                                issuerName!,
+                                publisherTBSHash!,
+                                publisherName!
+                            );
+                        }
+
+                        // Add the Certificate details to the CurrentPublisherSigner's CertificateDetails property
+                        if (currentCorData != null)
+                        {
+                            currentPublisherSigner.CertificateDetails.Add(currentCorData);
+                        }
                     }
                 }
 
+                // Need to spend more time on this part to properly inspect how the methods getting data from the current method handle the nulls in this properties
+#nullable disable
                 currentPublisherSigner.FileName = string.Equals(incomingDataType, "MDEAH", StringComparison.OrdinalIgnoreCase) ? signedData["FileName"].ToString() : signedData["File Name"].ToString();
                 currentPublisherSigner.AuthenticodeSHA256 = string.Equals(incomingDataType, "MDEAH", StringComparison.OrdinalIgnoreCase) ? signedData["SHA256"].ToString() : signedData["SHA256 Hash"].ToString();
                 currentPublisherSigner.AuthenticodeSHA1 = string.Equals(incomingDataType, "MDEAH", StringComparison.OrdinalIgnoreCase) ? signedData["SHA1"].ToString() : signedData["SHA1 Hash"].ToString();
                 currentPublisherSigner.SiSigningScenario = string.Equals(incomingDataType, "MDEAH", StringComparison.OrdinalIgnoreCase) ? int.Parse(signedData["SiSigningScenario"].ToString(), CultureInfo.InvariantCulture) : (string.Equals(signedData["SI Signing Scenario"].ToString(), "Kernel-Mode", StringComparison.OrdinalIgnoreCase) ? 0 : 1);
+#nullable restore
 
                 // Add the completed PublisherSigner to the list
                 publisherSigners.Add(currentPublisherSigner);
@@ -369,7 +384,7 @@ namespace WDACConfig
                     : (hashData.ContainsKey("File Name") ? hashData["File Name"]?.ToString() : null);
 
                 int siSigningScenario = string.Equals(incomingDataType, "MDEAH", StringComparison.OrdinalIgnoreCase)
-                    ? (hashData.ContainsKey("SiSigningScenario") ? int.Parse(hashData["SiSigningScenario"]?.ToString(), CultureInfo.InvariantCulture) : 1)
+                    ? (hashData.ContainsKey("SiSigningScenario") ? int.Parse(hashData["SiSigningScenario"]?.ToString()!, CultureInfo.InvariantCulture) : 1)
                     : (hashData.ContainsKey("SI Signing Scenario") ? (string.Equals(hashData["SI Signing Scenario"]?.ToString(), "Kernel-Mode", StringComparison.OrdinalIgnoreCase) ? 0 : 1) : 1);
 
                 if (string.IsNullOrWhiteSpace(sha256) || string.IsNullOrWhiteSpace(sha1) || string.IsNullOrWhiteSpace(fileName))

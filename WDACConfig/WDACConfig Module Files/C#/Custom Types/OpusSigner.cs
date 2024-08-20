@@ -1,3 +1,6 @@
+
+#nullable enable
+
 namespace WDACConfig
 {
     public class OpusSigner

@@ -1,5 +1,7 @@
 using System;
 
+#nullable enable
+
 // Used by WDAC Simulations
 namespace WDACConfig
 {
@@ -21,7 +23,7 @@ namespace WDACConfig
         // Making sure any HashSet or collection using this class will only keep unique objects based on their HashValue property
 
         // Override the Equals method
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
             if (obj == null || GetType() != obj.GetType())
             {

@@ -1,3 +1,6 @@
+
+#nullable enable
+
 // Used by WDAC Simulations, the output of the comparer function/method
 namespace WDACConfig
 {

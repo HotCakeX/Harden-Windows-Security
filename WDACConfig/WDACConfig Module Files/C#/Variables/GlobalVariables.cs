@@ -3,6 +3,8 @@ using System.IO;
 using System.Globalization;
 using System.Management.Automation.Host;
 
+#nullable disable
+
 namespace WDACConfig
 {
     // This class defines constant variables and makes them available app-domain-wide for PowerShell

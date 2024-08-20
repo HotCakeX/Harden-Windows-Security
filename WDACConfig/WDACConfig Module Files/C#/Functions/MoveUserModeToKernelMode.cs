@@ -4,20 +4,26 @@ using System.Xml;
 using static System.Formats.Asn1.AsnWriter;
 using System.Xml.Linq;
 
+#nullable enable
+
 namespace WDACConfig
 {
     public static class MoveUserModeToKernelMode
     {
-        // Moves all User mode AllowedSigners in the User mode signing scenario to the Kernel mode signing scenario and then
-        // deletes the entire User mode signing scenario block
-        // This is used during the creation of Strict Kernel-mode WDAC policy for complete BYOVD protection scenario.
-        // It doesn't consider <FileRulesRef> node in the SigningScenario 12 when deleting it because for kernel-mode policy everything is signed and we don't deal with unsigned files.
+        /// <summary>
+        /// Moves all User mode AllowedSigners in the User mode signing scenario to the Kernel mode signing scenario and then
+        /// deletes the entire User mode signing scenario block
+        /// This is used during the creation of Strict Kernel-mode WDAC policy for complete BYOVD protection scenario.
+        /// It doesn't consider <FileRulesRef> node in the SigningScenario 12 when deleting it because for kernel-mode policy everything is signed and we don't deal with unsigned files.
+        /// </summary>
+        /// <param name="filePath">The path to the XML file</param>
+        /// <exception cref="Exception"></exception>
         public static void Move(string filePath)
         {
             try
             {
                 // Create an XmlDocument object
-                XmlDocument xml = new XmlDocument();
+                XmlDocument xml = new();
 
                 // Load the XML file
                 xml.Load(filePath);
@@ -28,11 +34,17 @@ namespace WDACConfig
                 nsManager.AddNamespace("sip", "urn:schemas-microsoft-com:sipolicy");
 
                 // Get all SigningScenario nodes in the XML file
-                XmlNodeList signingScenarios = xml.SelectNodes("//sip:SigningScenario", nsManager);
+                XmlNodeList? signingScenarios = xml.SelectNodes("//sip:SigningScenario", nsManager);
 
                 // Variables to store SigningScenario nodes with specific values 12 and 131
-                XmlNode signingScenario12 = null;
-                XmlNode signingScenario131 = null;
+                XmlNode? signingScenario12 = null;
+                XmlNode? signingScenario131 = null;
+
+                // If there is no SigningScenarios block in the XML then exit the method
+                if (signingScenarios == null)
+                {
+                    return;
+                }
 
                 // Find SigningScenario nodes with Value 12 and 131
                 foreach (XmlNode signingScenario in signingScenarios)
@@ -52,7 +64,7 @@ namespace WDACConfig
                 if (signingScenario12 != null && signingScenario131 != null)
                 {
                     // Get AllowedSigners from SigningScenario with Value 12
-                    XmlNode allowedSigners12 = signingScenario12.SelectSingleNode("./sip:ProductSigners/sip:AllowedSigners", nsManager);
+                    XmlNode? allowedSigners12 = signingScenario12.SelectSingleNode("./sip:ProductSigners/sip:AllowedSigners", nsManager);
 
                     // If AllowedSigners node exists in SigningScenario 12 and has child nodes
                     if (allowedSigners12 != null && allowedSigners12.HasChildNodes)
@@ -77,13 +89,13 @@ namespace WDACConfig
                                 XmlAttribute newSignerIdAttr = xml.CreateAttribute("SignerId");
 
                                 // Set the value of the new SignerId attribute to the value of the existing SignerId attribute
-                                newSignerIdAttr.Value = allowedSigner.Attributes["SignerId"].Value;
+                                newSignerIdAttr.Value = allowedSigner.Attributes["SignerId"]!.Value;
 
                                 // Append the new SignerId attribute to the new AllowedSigner node
-                                newAllowedSigner.Attributes.Append(newSignerIdAttr);
+                                newAllowedSigner.Attributes!.Append(newSignerIdAttr);
 
                                 // Find the AllowedSigners node in SigningScenario 131
-                                XmlNode allowedSigners131 = signingScenario131.SelectSingleNode("./sip:ProductSigners/sip:AllowedSigners", nsManager);
+                                XmlNode? allowedSigners131 = signingScenario131.SelectSingleNode("./sip:ProductSigners/sip:AllowedSigners", nsManager);
 
                                 // If the AllowedSigners node exists in SigningScenario 131
                                 if (allowedSigners131 != null)

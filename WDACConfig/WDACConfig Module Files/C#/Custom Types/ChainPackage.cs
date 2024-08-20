@@ -1,6 +1,8 @@
 using System.Security.Cryptography.Pkcs;
 using System.Security.Cryptography.X509Certificates;
 
+#nullable enable
+
 namespace WDACConfig
 {
     public class ChainPackage

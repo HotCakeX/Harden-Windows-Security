@@ -2,6 +2,8 @@ using System;
 using System.IO;
 using System.Xml;
 
+#nullable enable
+
 namespace WDACConfig
 {
     public static class CiPolicyUtility
@@ -43,21 +45,21 @@ namespace WDACConfig
             nsmgr.AddNamespace("ns", "urn:schemas-microsoft-com:sipolicy");
 
             // Select the Rules node in the source XML document
-            XmlNode sourceRulesNode = sourceXmlDoc.SelectSingleNode("/ns:SiPolicy/ns:Rules", nsmgr);
+            XmlNode? sourceRulesNode = sourceXmlDoc.SelectSingleNode("/ns:SiPolicy/ns:Rules", nsmgr);
             if (sourceRulesNode == null)
             {
                 throw new Exception("The <Rules> node was not found in the source XML file.");
             }
 
             // Select the SiPolicy node in the destination XML document
-            XmlNode destinationSiPolicyNode = destinationXmlDoc.SelectSingleNode("/ns:SiPolicy", nsmgr);
+            XmlNode? destinationSiPolicyNode = destinationXmlDoc.SelectSingleNode("/ns:SiPolicy", nsmgr);
             if (destinationSiPolicyNode == null)
             {
                 throw new Exception("The <SiPolicy> node was not found in the destination XML file.");
             }
 
             // Select the existing Rules node in the destination XML document
-            XmlNode destinationRulesNode = destinationSiPolicyNode.SelectSingleNode("ns:Rules", nsmgr);
+            XmlNode? destinationRulesNode = destinationSiPolicyNode.SelectSingleNode("ns:Rules", nsmgr);
             if (destinationRulesNode == null)
             {
                 throw new Exception("The <Rules> node was not found in the destination XML file.");

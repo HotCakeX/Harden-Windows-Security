@@ -2,6 +2,8 @@ using System;
 using System.Diagnostics.Eventing.Reader;
 using System.IO;
 
+#nullable enable
+
 namespace WDACConfig
 {
     public static class EventLogUtility

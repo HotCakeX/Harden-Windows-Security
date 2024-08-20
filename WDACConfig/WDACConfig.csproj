@@ -14,6 +14,8 @@
     <Title>WDACConfig</Title>
     <Authors>Violet Hansen</Authors>
     <Company>SpyNetGirl</Company>
+    <Description>WDACConfig</Description>
+    <PackageReleaseNotes>https://github.com/HotCakeX/Harden-Windows-Security/releases</PackageReleaseNotes>
   </PropertyGroup>
 
    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -25,7 +27,7 @@
   </PropertyGroup>
 
     <ItemGroup>
-    <PackageReference Include="System.Management" Version="9.0.0-preview.6.24327.7" />
+    <PackageReference Include="System.Management" Version="9.0.0-preview.7.24405.7" />
     <PackageReference Include="System.Management.Automation" Version="7.5.0-preview.3" />
   </ItemGroup>
 

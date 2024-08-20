@@ -31,7 +31,7 @@ namespace HardenWindowsSecurity
                     HardenWindowsSecurity.RegistryEditor.EditRegistry(Item.Path, Item.Key, Item.Value, Item.Type, Item.Action);
                 }
             }
-#nullable restore
+#nullable enable
 
             HardenWindowsSecurity.LGPORunner.RunLGPOCommand(System.IO.Path.Combine(HardenWindowsSecurity.GlobalVars.path, "Resources", "Security-Baselines-X", "Miscellaneous Policies", "registry.pol"), LGPORunner.FileType.POL);
             HardenWindowsSecurity.LGPORunner.RunLGPOCommand(System.IO.Path.Combine(HardenWindowsSecurity.GlobalVars.path, "Resources", "Security-Baselines-X", "Miscellaneous Policies", "GptTmpl.inf"), LGPORunner.FileType.INF);

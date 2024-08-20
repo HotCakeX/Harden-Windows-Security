@@ -31,7 +31,7 @@ namespace HardenWindowsSecurity
                     HardenWindowsSecurity.RegistryEditor.EditRegistry(Item.Path, Item.Key, Item.Value, Item.Type, Item.Action);
                 }
             }
-#nullable restore
+#nullable enable
 
         }
     }

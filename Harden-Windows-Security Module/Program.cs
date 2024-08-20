@@ -15,7 +15,7 @@ namespace HardenWindowsSecurity
 
             // Save the valid values of the Protect-WindowsSecurity categories to a variable since the process can be time consuming and shouldn't happen every time the categories are fetched
             GlobalVars.HardeningCategorieX = ProtectionCategoriex.GetValidValues();
-           
+
             Initializer.Initialize();
             #endregion
 

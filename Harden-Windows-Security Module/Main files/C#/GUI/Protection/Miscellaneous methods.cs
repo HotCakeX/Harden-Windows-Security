@@ -196,7 +196,7 @@ namespace HardenWindowsSecurity
                 }
             }
 
-#nullable restore
+#nullable enable
         }
     }
 }

@@ -28,7 +28,7 @@ namespace HardenWindowsSecurity
                 throw new Exception("Failed to get the current user.");
             }
 
-            // PowerShell script with embedded {UserValue} directly in the string using @"" 
+            // PowerShell script with embedded {UserValue} directly in the string using @""
             string script = $@"
 $VerbosePreference = 'Continue'
 

@@ -53,7 +53,7 @@ namespace WDACConfig
             return programsPaths.Count > 0 ? programsPaths.ToArray() : null;
         }
 
-        // Comparer for DirectoryInfo to ensure uniqueness and do it in a case-insensitive way        
+        // Comparer for DirectoryInfo to ensure uniqueness and do it in a case-insensitive way
         private class DirectoryInfoComparer : IEqualityComparer<DirectoryInfo>
         {
             public bool Equals(DirectoryInfo? x, DirectoryInfo? y)

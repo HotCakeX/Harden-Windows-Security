@@ -3,6 +3,7 @@ using System.Linq.Expressions;
 using System.Xml;
 using static System.Formats.Asn1.AsnWriter;
 using System.Xml.Linq;
+using System.Globalization;
 
 #nullable enable
 
@@ -49,12 +50,13 @@ namespace WDACConfig
                 // Find SigningScenario nodes with Value 12 and 131
                 foreach (XmlNode signingScenario in signingScenarios)
                 {
-                    string valueAttr = signingScenario.Attributes["Value"].Value;
-                    if (valueAttr == "12")
+                    string? valueAttr = signingScenario.Attributes?["Value"]?.Value;
+
+                    if (string.Equals(valueAttr, "12", StringComparison.OrdinalIgnoreCase))
                     {
                         signingScenario12 = signingScenario;
                     }
-                    else if (valueAttr == "131")
+                    else if (string.Equals(valueAttr, "131", StringComparison.OrdinalIgnoreCase))
                     {
                         signingScenario131 = signingScenario;
                     }
@@ -107,7 +109,10 @@ namespace WDACConfig
                         }
 
                         // Remove SigningScenario with Value 12 completely after moving all of its AllowedSigners to SigningScenario with the value of 131
-                        signingScenario12.ParentNode.RemoveChild(signingScenario12);
+                        if (signingScenario12 != null)
+                        {
+                            signingScenario12.ParentNode?.RemoveChild(signingScenario12);
+                        }
                     }
                 }
 

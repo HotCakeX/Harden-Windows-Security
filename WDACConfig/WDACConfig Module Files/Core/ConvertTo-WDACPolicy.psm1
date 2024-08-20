@@ -397,7 +397,13 @@ Function ConvertTo-WDACPolicy {
                     $CurrentStep++
                     Write-Progress -Id 30 -Activity "Collecting $LogType events" -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
-                    [PSCustomObject[]]$EventsToDisplay = Receive-CodeIntegrityLogs -PostProcessing OnlyExisting -PolicyName:$FilterByPolicyNames -Date:$StartTime -Type:$LogType
+                    if ($null -ne $StartTime -and $StartTime -is [System.DateTime]) {
+                        [PSCustomObject[]]$EventsToDisplay = Receive-CodeIntegrityLogs -PostProcessing OnlyExisting -PolicyName:$FilterByPolicyNames -Date $StartTime -Type:$LogType
+                    }
+                    else {
+                        [PSCustomObject[]]$EventsToDisplay = Receive-CodeIntegrityLogs -PostProcessing OnlyExisting -PolicyName:$FilterByPolicyNames -Type:$LogType
+                    }
+
                     [PSCustomObject[]]$EventsToDisplay = Select-LogProperties -Logs $EventsToDisplay
 
                     # If the KernelModeOnly switch is used, then filter the events by the 'Requested Signing Level' property
@@ -866,7 +872,13 @@ Function ConvertTo-WDACPolicy {
                     $CurrentStep++
                     Write-Progress -Id 32 -Activity 'Processing the selected Evtx files' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
-                    [PSCustomObject[]]$EventsToDisplay = Receive-CodeIntegrityLogs -PolicyName:$FilterByPolicyNames -Date:$StartTime -Type:$LogType -LogSource EVTXFiles -EVTXFilePaths $EVTXLogs
+                    if ($null -ne $StartTime -and $StartTime -is [System.DateTime]) {
+                        [PSCustomObject[]]$EventsToDisplay = Receive-CodeIntegrityLogs -PolicyName:$FilterByPolicyNames -Date $StartTime -Type:$LogType -LogSource EVTXFiles -EVTXFilePaths $EVTXLogs
+                    }
+                    else {
+                        [PSCustomObject[]]$EventsToDisplay = Receive-CodeIntegrityLogs -PolicyName:$FilterByPolicyNames -Type:$LogType -LogSource EVTXFiles -EVTXFilePaths $EVTXLogs
+                    }
+
                     [PSCustomObject[]]$EventsToDisplay = Select-LogProperties -Logs $EventsToDisplay
 
                     # If the KernelModeOnly switch is used, then filter the events by the 'Requested Signing Level' property

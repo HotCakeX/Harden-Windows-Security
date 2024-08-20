@@ -29,6 +29,15 @@ if (!$IsWindows) {
 # Specifies that the WDACConfig module requires Administrator privileges
 #Requires -RunAsAdministrator
 
+# Unimportant actions that don't need to be terminating if they fail
+try {
+    # Set PSReadline tab completion to complete menu for easier access to available parameters - Only for the current session
+    Set-PSReadLineKeyHandler -Key 'Tab' -Function 'MenuComplete'
+    # Enables additional progress indicators for Windows Terminal and Windows
+    $PSStyle.Progress.UseOSCIndicator = $true
+}
+catch {}
+
 # This is required for the EKUs to work.
 # Load all the DLLs in the PowerShell folder, providing .NET types for the module
 # These types are required for the folder picker with multiple select options. Also the module manifest no longer handles assembly as it's not necessary anymore.
@@ -46,12 +55,6 @@ Add-Type -Path ([System.IO.Directory]::GetFiles("$PSScriptRoot\C#", '*.*', [Syst
 
 # Assign the value of the automatic variable $PSScriptRoot to the [WDACConfig.GlobalVars]::ModuleRootPath
 [WDACConfig.GlobalVars]::ModuleRootPath = $PSScriptRoot
-
-# Set PSReadline tab completion to complete menu for easier access to available parameters - Only for the current session
-Set-PSReadLineKeyHandler -Key 'Tab' -Function 'MenuComplete'
-
-# Enables additional progress indicators for Windows Terminal and Windows
-$PSStyle.Progress.UseOSCIndicator = $true
 
 # Import the public global module
 Import-Module -FullyQualifiedName ([System.IO.Directory]::GetFiles("$PSScriptRoot\Public", '*.*', [System.IO.SearchOption]::AllDirectories)) -Force -Global

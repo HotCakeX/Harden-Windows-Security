@@ -13,7 +13,6 @@ Function Receive-CodeIntegrityLogs {
         Then processes the output based on different criteria
     .PARAMETER Date
         The date from which the logs should be collected. If not specified, all logs will be collected.
-        It accepts empty strings, nulls, and whitespace and they are treated as not specified.
     .PARAMETER Type
         The type of logs to be collected. Audit, Blocked, All. The default value is 'All'
     .PARAMETER PostProcessing
@@ -29,6 +28,7 @@ Function Receive-CodeIntegrityLogs {
         The file paths of the EVTX files to collect the logs from. It accepts an array of FileInfo objects
     .INPUTS
         System.String
+        System.DateTime
         System.String[]
         System.IO.FileInfo[]
     .OUTPUTS
@@ -40,10 +40,8 @@ Function Receive-CodeIntegrityLogs {
     [CmdletBinding()]
     [OutputType([System.Collections.Hashtable])]
     param(
-        [AllowEmptyString()]
-        [AllowNull()]
         [Parameter(Mandatory = $false)]
-        [System.String]$Date,
+        [System.DateTime]$Date,
 
         [ValidateSet('Audit', 'Blocked', 'All')]
         [Parameter(Mandatory = $false)]
@@ -84,13 +82,6 @@ Function Receive-CodeIntegrityLogs {
             }
             else {
                 return $false
-            }
-        }
-
-        # Validate the date provided if it's not null or empty or whitespace
-        if (-NOT ([System.String]::IsNullOrWhiteSpace($Date))) {
-            if (-NOT ([System.DateTime]::TryParse($Date, [ref]$Date))) {
-                Throw 'The date provided is not in a valid DateTime type.'
             }
         }
 
@@ -184,10 +175,8 @@ Function Receive-CodeIntegrityLogs {
                 [System.Diagnostics.Eventing.Reader.EventLogRecord]$AuditTemp = $RawLogGroup.Group.Where({ $_.Id -in '3076', '8028' }) | Select-Object -First 1
 
                 # If the main event is older than the specified date, skip it
-                if (-NOT ([System.String]::IsNullOrWhiteSpace($Date))) {
-                    if ($AuditTemp.TimeCreated -lt $Date) {
-                        continue
-                    }
+                if ($null -ne $Date -and $AuditTemp.TimeCreated -lt $Date) {
+                    continue
                 }
 
                 # Create a local hashtable to store the main event and the correlated events
@@ -208,10 +197,8 @@ Function Receive-CodeIntegrityLogs {
                 [System.Diagnostics.Eventing.Reader.EventLogRecord]$BlockedTemp = $RawLogGroup.Group.Where({ $_.Id -in '3077', '8029' }) | Select-Object -First 1
 
                 # If the main event is older than the specified date, skip it
-                if (-NOT ([System.String]::IsNullOrWhiteSpace($Date))) {
-                    if ($BlockedTemp.TimeCreated -lt $Date) {
-                        continue
-                    }
+                if ($null -ne $Date -and $BlockedTemp.TimeCreated -lt $Date) {
+                    continue
                 }
 
                 # Create a local hashtable to store the main event and the correlated events

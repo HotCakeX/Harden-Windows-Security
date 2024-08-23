@@ -11,6 +11,10 @@ namespace HardenWindowsSecurity
 {
     public class WindowsFirewall
     {
+        /// <summary>
+        /// Runs the Windows Firewall hardening category
+        /// </summary>
+        /// <exception cref="System.ArgumentNullException"></exception>
         public static void Invoke()
         {
             if (HardenWindowsSecurity.GlobalVars.path == null)

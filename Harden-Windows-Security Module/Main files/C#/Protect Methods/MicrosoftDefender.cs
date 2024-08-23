@@ -134,9 +134,16 @@ namespace HardenWindowsSecurity
                 HardenWindowsSecurity.ForceRelocateImagesForFiles.SetProcessMitigationForFiles(gitExes.ToArray());
             }
 
-            HardenWindowsSecurity.Logger.LogMessage("Applying the Process Mitigations");
-            HardenWindowsSecurity.ProcessMitigationsApplication.Apply();
-
+            // Skip applying process mitigations when ARM hardware detected
+            if (string.Equals(Environment.GetEnvironmentVariable("PROCESSOR_ARCHITECTURE"), "ARM64", StringComparison.OrdinalIgnoreCase))
+            {
+                HardenWindowsSecurity.Logger.LogMessage("ARM64 hardware detected, skipping process mitigations due to potential incompatibilities.");
+            }
+            else
+            {
+                HardenWindowsSecurity.Logger.LogMessage("Applying the Process Mitigations");
+                HardenWindowsSecurity.ProcessMitigationsApplication.Apply();
+            }
 
             HardenWindowsSecurity.Logger.LogMessage("Turning on Data Execution Prevention (DEP) for all applications, including 32-bit programs");
             // Old method: bcdedit.exe /set '{current}' nx AlwaysOn

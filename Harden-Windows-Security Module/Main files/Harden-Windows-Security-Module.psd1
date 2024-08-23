@@ -9,7 +9,7 @@
   CompanyName          = 'SpyNetGirl'
   Copyright            = '(c) HotCakeX. All rights reserved.'
   HelpInfoURI          = 'https://github.com/HotCakeX/Harden-Windows-Security/wiki/Harden%E2%80%90Windows%E2%80%90Security%E2%80%90Module'
-  PowerShellVersion    = '7.4.3'
+  PowerShellVersion    = '7.4.4'
   RequiredAssemblies   = @('System.Windows.Forms')
   NestedModules        = @('Core\Confirm-SystemCompliance.psm1', 'Core\Protect-WindowsSecurity.psm1', 'Core\Unprotect-WindowsSecurity.psm1')
   FunctionsToExport    = @('Confirm-SystemCompliance', 'Protect-WindowsSecurity', 'Unprotect-WindowsSecurity')

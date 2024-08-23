@@ -7,6 +7,10 @@ namespace HardenWindowsSecurity
 {
     public partial class UserAccountControl
     {
+        /// <summary>
+        /// Applies the No Fast User Switching optional sub-category policy
+        /// </summary>
+        /// <exception cref="System.ArgumentNullException"></exception>
         public static void UAC_NoFastSwitching()
         {
             if (HardenWindowsSecurity.GlobalVars.path == null)

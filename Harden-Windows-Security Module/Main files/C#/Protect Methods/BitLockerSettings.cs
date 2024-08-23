@@ -7,6 +7,7 @@ namespace HardenWindowsSecurity
 {
     public class BitLockerSettings
     {
+        // Applies all Bitlocker settings hardening category
         public static void Invoke()
         {
             if (HardenWindowsSecurity.GlobalVars.path == null)

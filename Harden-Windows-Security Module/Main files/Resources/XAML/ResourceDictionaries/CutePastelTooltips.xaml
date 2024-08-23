@@ -1,0 +1,116 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+   <!-- These are the global styles for all tooltips -->
+   <!-- Pastel Gradient Brush with Pink, Purple, Yellow, and Light Blue -->
+   <LinearGradientBrush x:Key="RainbowBrush" StartPoint="0,0" EndPoint="1,0">
+       <GradientStop Color="#FFB3B3" Offset="0" />
+       <!-- Pastel Pink -->
+       <GradientStop Color="#DAB6FC" Offset="0.33" />
+       <!-- Pastel Purple -->
+       <GradientStop Color="#FFFFB3" Offset="0.66" />
+       <!-- Pastel Yellow -->
+       <GradientStop Color="#B3E0FF" Offset="1" />
+       <!-- Light Blue -->
+       <LinearGradientBrush.RelativeTransform>
+           <TranslateTransform X="0"/>
+       </LinearGradientBrush.RelativeTransform>
+   </LinearGradientBrush>
+   <!-- Default Style for all ToolTips with Rounded Corners and Enhanced Pastel Gradient Border -->
+   <Style TargetType="ToolTip">
+       <Setter Property="Background" Value="Transparent"/>
+       <Setter Property="Foreground" Value="Black"/>
+       <Setter Property="FontSize" Value="15"/>
+       <Setter Property="Padding" Value="10"/>
+       <Setter Property="BorderBrush" Value="{StaticResource RainbowBrush}"/>
+       <Setter Property="BorderThickness" Value="3"/>
+       <Setter Property="OverridesDefaultStyle" Value="True"/>
+       <Setter Property="Template">
+           <Setter.Value>
+               <ControlTemplate TargetType="ToolTip">
+                   <Border
+               Background="White"
+               BorderBrush="{TemplateBinding BorderBrush}"
+               BorderThickness="{TemplateBinding BorderThickness}"
+               Padding="{TemplateBinding Padding}"
+               CornerRadius="10">
+                       <Grid>
+                           <Grid.RowDefinitions>
+                               <RowDefinition Height="*" />
+                           </Grid.RowDefinitions>
+                           <Grid.ColumnDefinitions>
+                               <ColumnDefinition Width="*" />
+                           </Grid.ColumnDefinitions>
+                           <TextBlock Text="{TemplateBinding Content}"
+                              TextWrapping="Wrap"
+                              VerticalAlignment="Center"
+                              HorizontalAlignment="Center"
+                              MaxWidth="200"
+                              MaxHeight="200"/>
+                       </Grid>
+                   </Border>
+                   <ControlTemplate.Triggers>
+                       <Trigger Property="IsOpen" Value="True">
+                           <Trigger.EnterActions>
+                               <BeginStoryboard>
+                                   <Storyboard RepeatBehavior="Forever">
+                                       <!-- Color Animation Forward and Backward for Border Brush -->
+                                       <ColorAnimation
+                                   Storyboard.TargetProperty="(Border.BorderBrush).(GradientBrush.GradientStops)[0].Color"
+                                   From="#FFB3B3" To="#B3E0FF" Duration="0:0:2"
+                                   AutoReverse="True" RepeatBehavior="Forever"/>
+                                       <ColorAnimation
+                                   Storyboard.TargetProperty="(Border.BorderBrush).(GradientBrush.GradientStops)[1].Color"
+                                   From="#DAB6FC" To="#FFB3B3" Duration="0:0:2"
+                                   AutoReverse="True" RepeatBehavior="Forever"/>
+                                       <ColorAnimation
+                                   Storyboard.TargetProperty="(Border.BorderBrush).(GradientBrush.GradientStops)[2].Color"
+                                   From="#FFFFB3" To="#DAB6FC" Duration="0:0:2"
+                                   AutoReverse="True" RepeatBehavior="Forever"/>
+                                       <ColorAnimation
+                                   Storyboard.TargetProperty="(Border.BorderBrush).(GradientBrush.GradientStops)[3].Color"
+                                   From="#B3E0FF" To="#FFFFB3" Duration="0:0:2"
+                                   AutoReverse="True" RepeatBehavior="Forever"/>
+                                       <DoubleAnimation
+                                   Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)"
+                                   From="0" To="1" Duration="0:0:0.3" />
+                                       <DoubleAnimation
+                                   Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)"
+                                   From="0" To="1" Duration="0:0:0.3" />
+                                       <DoubleAnimation
+                                   Storyboard.TargetProperty="Opacity"
+                                   From="0" To="1" Duration="0:0:0.3" />
+                                       <ThicknessAnimation
+                                   Storyboard.TargetProperty="BorderThickness"
+                                   From="3" To="5" Duration="0:0:0.5"
+                                   AutoReverse="True" RepeatBehavior="Forever"/>
+                                   </Storyboard>
+                               </BeginStoryboard>
+                           </Trigger.EnterActions>
+                           <Trigger.ExitActions>
+                               <BeginStoryboard>
+                                   <Storyboard>
+                                       <DoubleAnimation
+                                   Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleX)"
+                                   From="1" To="0" Duration="0:0:0.2" />
+                                       <DoubleAnimation
+                                   Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)"
+                                   From="1" To="0" Duration="0:0:0.2" />
+                                       <DoubleAnimation
+                                   Storyboard.TargetProperty="Opacity"
+                                   From="1" To="0" Duration="0:0:0.2" />
+                                   </Storyboard>
+                               </BeginStoryboard>
+                           </Trigger.ExitActions>
+                       </Trigger>
+                   </ControlTemplate.Triggers>
+               </ControlTemplate>
+           </Setter.Value>
+       </Setter>
+       <Setter Property="RenderTransformOrigin" Value="0.5,0.5" />
+       <Setter Property="RenderTransform">
+           <Setter.Value>
+               <ScaleTransform ScaleX="0" ScaleY="0" />
+           </Setter.Value>
+       </Setter>
+   </Style>
+</ResourceDictionary>

@@ -11,6 +11,10 @@ namespace HardenWindowsSecurity
 {
     public class WindowsNetworking
     {
+        /// <summary>
+        ///  Runs the Windows Networking Hardening category
+        /// </summary>
+        /// <exception cref="System.ArgumentNullException"></exception>
         public static void Invoke()
         {
             if (HardenWindowsSecurity.GlobalVars.path == null)
@@ -31,7 +35,7 @@ namespace HardenWindowsSecurity
 
             // Extract InterfaceIndex from each ManagementObject and convert to int array
             int[] InterfaceIndexes = AllCurrentNetworkAdapters
-                .Select(n => Convert.ToInt32(n["InterfaceIndex"]))
+                .Select(n => Convert.ToInt32(n["InterfaceIndex"], CultureInfo.InvariantCulture))
                 .ToArray();
 
             // Use the extracted InterfaceIndexes in the method to set all of the network locations to public

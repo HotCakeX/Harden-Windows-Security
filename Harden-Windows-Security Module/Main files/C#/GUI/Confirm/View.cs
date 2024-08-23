@@ -243,22 +243,22 @@ namespace HardenWindowsSecurity
                     };
                 }
 
-                #region ExecuteButton
+                #region RefreshButton
                 // Find the Refresh button and attach the Click event handler
 
-                // Access the grid containing the Execute Button
+                // Access the grid containing the Refresh Button
                 System.Windows.Controls.Grid RefreshButtonGrid = confirmView.FindName("RefreshButtonGrid") as System.Windows.Controls.Grid;
 
-                // Access the Execute Button
+                // Access the Refresh Button
                 System.Windows.Controls.Primitives.ToggleButton RefreshButton = (System.Windows.Controls.Primitives.ToggleButton)RefreshButtonGrid.FindName("RefreshButton");
 
                 // Apply the template to make sure it's available
                 RefreshButton.ApplyTemplate();
 
-                // Access the image within the Execute Button's template
+                // Access the image within the Refresh Button's template
                 System.Windows.Controls.Image RefreshIconImage = RefreshButton.Template.FindName("RefreshIconImage", RefreshButton) as System.Windows.Controls.Image;
 
-                // Update the image source for the execute button
+                // Update the image source for the Refresh button
                 RefreshIconImage.Source =
                     new System.Windows.Media.Imaging.BitmapImage(
                         new System.Uri(System.IO.Path.Combine(HardenWindowsSecurity.GlobalVars.path!, "Resources", "Media", "ExecuteButton.png"))
@@ -266,33 +266,43 @@ namespace HardenWindowsSecurity
 
                 #endregion
 
+
+                // perform the compliance check only if user has Admin privileges
+                if (!HardenWindowsSecurity.UserPrivCheck.IsAdmin())
+                {
+                    // Disable the refresh button
+                    RefreshButton.IsEnabled = false;
+                    HardenWindowsSecurity.Logger.LogMessage("You need Administrator privileges to perform compliance check on the system.");
+                }
+
                 // Set up the Click event handler for the Refresh button
                 RefreshButton.Click += async (sender, e) =>
-                {
-                    // Disable the Refresh button while processing
-                    RefreshButton.Dispatcher.Invoke(() =>
+            {
+
+                // Disable the Refresh button while processing
+                RefreshButton.Dispatcher.Invoke(() =>
                     {
                         RefreshButton.IsEnabled = false;
                     });
 
-                    // Clear the current security options before starting data generation
-                    _members.Clear();
-                    _membersView.Refresh(); // Refresh the collection view to clear the DataGrid
+                // Clear the current security options before starting data generation
+                _members.Clear();
+                _membersView.Refresh(); // Refresh the collection view to clear the DataGrid
 
-                    // Run the method asynchronously in a different thread
-                    await System.Threading.Tasks.Task.Run(() =>
+                // Run the method asynchronously in a different thread
+                await System.Threading.Tasks.Task.Run(() =>
                     {
                         HardenWindowsSecurity.InvokeConfirmation.Invoke(null);
                     });
 
-                    // After InvokeConfirmation is completed, update the security options collection
-                    await System.Windows.Application.Current.Dispatcher.InvokeAsync(() =>
+                // After InvokeConfirmation is completed, update the security options collection
+                await System.Windows.Application.Current.Dispatcher.InvokeAsync(() =>
                     {
                         LoadMembers(); // Load updated security options
                         RefreshButton.IsChecked = false; // Uncheck the Refresh button
                         RefreshButton.IsEnabled = true; // Re-enable the Refresh button
                     });
-                };
+            };
 
                 // Cache the Confirm view for future use
                 _viewCache["ConfirmView"] = confirmView;

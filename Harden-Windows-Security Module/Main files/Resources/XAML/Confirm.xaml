@@ -9,22 +9,18 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="auto"/>
                 <RowDefinition Height="auto"/>
-                <RowDefinition Height="auto"/>
-                <RowDefinition Height="auto"/>
-                <RowDefinition Height="auto"/>
-                <RowDefinition Height="*"/>
-                <RowDefinition Height="auto"/>
+                <RowDefinition Height="*"/>      
             </Grid.RowDefinitions>
             <!--Counter Title-->
             <!-- Grid containing the Refresh Button -->
-            <Grid x:Name="RefreshButtonGrid" Grid.Row="3" Grid.ColumnSpan="2" Height="150">
+            <Grid x:Name="RefreshButtonGrid" Grid.Row="0" Grid.ColumnSpan="2" Height="150">
                 <!-- First Ellipse (Forward1) - Represents the outermost expanding ellipse when the button is clicked -->
                 <!-- Initial height and Width of the Ellipse -->
                 <Ellipse x:Name="EclipseForward1"
-    Height="50"
-    Width="50"
-    HorizontalAlignment="Center"
-    VerticalAlignment="Center">
+                    Height="50"
+                    Width="50"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center">
                     <!-- Ellipse Fill with a gradient from #ED4264 to #cbad6d -->
                     <Ellipse.Fill>
                         <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
@@ -310,17 +306,17 @@
                 </ToggleButton>
             </Grid>
             <!--End of Refresh Button Grid-->
-            <TextBlock x:Name="TotalCountTextBlock" Grid.Row="4" FontSize="18" FontWeight="SemiBold" Foreground="#121518" HorizontalAlignment="Left" VerticalAlignment="Center"/>
-            <TextBlock Text="Filter by" Grid.Row="4" FontSize="13" FontWeight="SemiBold" Margin="0 0 215 0" Foreground="#121518" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+            <TextBlock x:Name="TotalCountTextBlock" Grid.Row="1" FontSize="18" FontWeight="SemiBold" Foreground="#121518" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+            <TextBlock Text="Filter by" Grid.Row="1" FontSize="13" FontWeight="SemiBold" Margin="0 0 215 0" Foreground="#121518" HorizontalAlignment="Right" VerticalAlignment="Center"/>
             <!--Filter Textbox-->
-            <Grid Width="200" HorizontalAlignment="Right" Grid.Row="4">
+            <Grid Width="200" HorizontalAlignment="Right" Grid.Row="1">
                 <TextBlock Margin="15 0" VerticalAlignment="Center" Foreground="#B0B9C6" IsHitTestVisible="False"
                         Panel.ZIndex="1"
                         Visibility="{Binding ElementName=textBoxFilter, Path=Text.IsEmpty}" />
                 <TextBox Name="textBoxFilter" Style="{StaticResource filterTextBox}" />
             </Grid>
             <!--SecOps Data Grid-->
-            <DataGrid RowStyle="{DynamicResource ConfirmationDataGridStyleOfRow}" ColumnHeaderStyle="{DynamicResource DataGridColumnHeaderStyle1}" CellStyle="{DynamicResource DataGridCellStyle1}" x:Name="membersDataGrid" Style="{DynamicResource ConfirmationDataGridStyle}">
+            <DataGrid Grid.Row="2" RowStyle="{DynamicResource ConfirmationDataGridStyleOfRow}" ColumnHeaderStyle="{DynamicResource DataGridColumnHeaderStyle1}" CellStyle="{DynamicResource DataGridCellStyle1}" x:Name="membersDataGrid" Style="{DynamicResource ConfirmationDataGridStyle}">
                 <!-- DataGrid Columns Definitions -->
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="Friendly Name" Binding="{Binding FriendlyName}" IsReadOnly="True" Width="*" />

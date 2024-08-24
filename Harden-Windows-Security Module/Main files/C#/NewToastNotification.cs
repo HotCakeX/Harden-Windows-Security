@@ -14,8 +14,8 @@ namespace HardenWindowsSecurity
             // Combine paths
             string Hero = Path.Combine(HardenWindowsSecurity.GlobalVars.path!, "Resources", "Media", "notification (3).png");
             string Inline = Path.Combine(HardenWindowsSecurity.GlobalVars.path!, "Resources", "Media", "notification (3).png");
-            string LogoOverride = Path.Combine(HardenWindowsSecurity.GlobalVars.path!, "Resources", "Media", "dance.gif");
-            string DismissButtonImage = Path.Combine(HardenWindowsSecurity.GlobalVars.path!, "Resources", "Media", "bandage-bleed.gif");
+            string LogoOverride = Path.Combine(HardenWindowsSecurity.GlobalVars.path!, "Resources", "Media", "notification (2).png");
+            string DismissButtonImage = Path.Combine(HardenWindowsSecurity.GlobalVars.path!, "Resources", "Media", "notification (1).png");
 
             new Microsoft.Toolkit.Uwp.Notifications.ToastContentBuilder()
 

@@ -16,9 +16,10 @@ namespace HardenWindowsSecurity
         /// This method runs at the beginning of each cmdlet
         /// </summary>
         /// <param name="VerbosePreference"></param>
+        /// <param name="IsConfirmationDuringRunTime"></param>
         /// <exception cref="InvalidOperationException"></exception>
         /// <exception cref="PlatformNotSupportedException"></exception>
-        public static void Initialize(string VerbosePreference = "SilentlyContinue")
+        public static void Initialize(string VerbosePreference = "SilentlyContinue", bool IsConfirmationDuringRunTime = false)
         {
 
             HardenWindowsSecurity.GlobalVars.LogHeaderHasBeenWritten = false;
@@ -27,60 +28,66 @@ namespace HardenWindowsSecurity
             CultureInfo.DefaultThreadCurrentCulture = CultureInfo.InvariantCulture;
             CultureInfo.DefaultThreadCurrentUICulture = CultureInfo.InvariantCulture;
 
-            using (RegistryKey? key = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows NT\CurrentVersion"))
+            // Only perform these actions if the Compliance checking is not happening through the GUI in the middle of the operations
+            if (!IsConfirmationDuringRunTime)
             {
-                if (key != null)
+
+                using (RegistryKey? key = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows NT\CurrentVersion"))
                 {
-                    object? ubrValue = key.GetValue("UBR");
-                    if (ubrValue != null && int.TryParse(ubrValue.ToString(), out int ubr))
+                    if (key != null)
                     {
-                        HardenWindowsSecurity.GlobalVars.UBR = ubr;
+                        object? ubrValue = key.GetValue("UBR");
+                        if (ubrValue != null && int.TryParse(ubrValue.ToString(), out int ubr))
+                        {
+                            HardenWindowsSecurity.GlobalVars.UBR = ubr;
+                        }
+                        else
+                        {
+                            throw new InvalidOperationException("The UBR value could not be retrieved from the registry: HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion");
+                        }
                     }
                     else
                     {
-                        throw new InvalidOperationException("The UBR value could not be retrieved from the registry: HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion");
+                        throw new InvalidOperationException("The UBR key does not exist in the registry path: HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion");
                     }
                 }
-                else
+
+                // Concatenate OSBuildNumber and UBR to form the final string
+                HardenWindowsSecurity.GlobalVars.FullOSBuild = $"{HardenWindowsSecurity.GlobalVars.OSBuildNumber}.{HardenWindowsSecurity.GlobalVars.UBR}";
+
+                // If the working directory exists, delete it
+                if (Directory.Exists(HardenWindowsSecurity.GlobalVars.WorkingDir))
                 {
-                    throw new InvalidOperationException("The UBR key does not exist in the registry path: HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion");
+                    Directory.Delete(HardenWindowsSecurity.GlobalVars.WorkingDir, true);
                 }
-            }
 
-            // Concatenate OSBuildNumber and UBR to form the final string
-            HardenWindowsSecurity.GlobalVars.FullOSBuild = $"{HardenWindowsSecurity.GlobalVars.OSBuildNumber}.{HardenWindowsSecurity.GlobalVars.UBR}";
+                // Create the working directory
+                Directory.CreateDirectory(HardenWindowsSecurity.GlobalVars.WorkingDir);
 
-            // If the working directory exists, delete it
-            if (Directory.Exists(HardenWindowsSecurity.GlobalVars.WorkingDir))
-            {
-                Directory.Delete(HardenWindowsSecurity.GlobalVars.WorkingDir, true);
-            }
+                // Initialize the RegistryCSVItems list so that the HardenWindowsSecurity.HardeningRegistryKeys.ReadCsv() method can write to it
+                HardenWindowsSecurity.GlobalVars.RegistryCSVItems = new List<HardenWindowsSecurity.HardeningRegistryKeys.CsvRecord>();
 
-            // Create the working directory
-            Directory.CreateDirectory(HardenWindowsSecurity.GlobalVars.WorkingDir);
+                // Parse the Registry.csv and save it to the global HardenWindowsSecurity.GlobalVars.RegistryCSVItems list
+                HardenWindowsSecurity.HardeningRegistryKeys.ReadCsv();
 
-            // Initialize the RegistryCSVItems list so that the HardenWindowsSecurity.HardeningRegistryKeys.ReadCsv() method can write to it
-            HardenWindowsSecurity.GlobalVars.RegistryCSVItems = new List<HardenWindowsSecurity.HardeningRegistryKeys.CsvRecord>();
+                // Initialize the ProcessMitigations list so that the HardenWindowsSecurity.ProcessMitigationsParser.ReadCsv() method can write to it
+                HardenWindowsSecurity.GlobalVars.ProcessMitigations = new List<HardenWindowsSecurity.ProcessMitigationsParser.ProcessMitigationsRecords>();
 
-            // Parse the Registry.csv and save it to the global HardenWindowsSecurity.GlobalVars.RegistryCSVItems list
-            HardenWindowsSecurity.HardeningRegistryKeys.ReadCsv();
+                // Parse the ProcessMitigations.csv and save it to the global HardenWindowsSecurity.GlobalVars.ProcessMitigations list
+                HardenWindowsSecurity.ProcessMitigationsParser.ReadCsv();
 
-            // Initialize the ProcessMitigations list so that the HardenWindowsSecurity.ProcessMitigationsParser.ReadCsv() method can write to it
-            HardenWindowsSecurity.GlobalVars.ProcessMitigations = new List<HardenWindowsSecurity.ProcessMitigationsParser.ProcessMitigationsRecords>();
+                // Convert the FullOSBuild and RequiredBuild strings to decimals so that we can compare them
+                if (!TryParseBuildVersion(HardenWindowsSecurity.GlobalVars.FullOSBuild, out decimal fullOSBuild))
+                {
+                    throw new FormatException("The OS build version strings are not in a correct format.");
+                }
 
-            // Parse the ProcessMitigations.csv and save it to the global HardenWindowsSecurity.GlobalVars.ProcessMitigations list
-            HardenWindowsSecurity.ProcessMitigationsParser.ReadCsv();
+                // Make sure the current OS build is equal or greater than the required build number
+                if (!(fullOSBuild >= HardenWindowsSecurity.GlobalVars.Requiredbuild))
+                {
+                    throw new PlatformNotSupportedException($"You are not using the latest build of the Windows OS. A minimum build of {HardenWindowsSecurity.GlobalVars.Requiredbuild} is required but your OS build is {fullOSBuild}\nPlease go to Windows Update to install the updates and then try again.");
+                }
 
-            // Convert the FullOSBuild and RequiredBuild strings to decimals so that we can compare them
-            if (!TryParseBuildVersion(HardenWindowsSecurity.GlobalVars.FullOSBuild, out decimal fullOSBuild))
-            {
-                throw new FormatException("The OS build version strings are not in a correct format.");
-            }
-
-            // Make sure the current OS build is equal or greater than the required build number
-            if (!(fullOSBuild >= HardenWindowsSecurity.GlobalVars.Requiredbuild))
-            {
-                throw new PlatformNotSupportedException($"You are not using the latest build of the Windows OS. A minimum build of {HardenWindowsSecurity.GlobalVars.Requiredbuild} is required but your OS build is {fullOSBuild}\nPlease go to Windows Update to install the updates and then try again.");
             }
 
             // Get the MSFT_MpPreference WMI results and save them to the global variable HardenWindowsSecurity.GlobalVars.MDAVPreferencesCurrent
@@ -90,7 +97,7 @@ namespace HardenWindowsSecurity
             HardenWindowsSecurity.GlobalVars.MDAVConfigCurrent = HardenWindowsSecurity.MpComputerStatusHelper.GetMpComputerStatus();
 
             // Total number of Compliant values not equal to N/A
-            HardenWindowsSecurity.GlobalVars.TotalNumberOfTrueCompliantValues = 237;
+            HardenWindowsSecurity.GlobalVars.TotalNumberOfTrueCompliantValues = 239;
 
             // Getting the $VerbosePreference from the calling cmdlet and saving it in the global variable
             HardenWindowsSecurity.GlobalVars.VerbosePreference = VerbosePreference;

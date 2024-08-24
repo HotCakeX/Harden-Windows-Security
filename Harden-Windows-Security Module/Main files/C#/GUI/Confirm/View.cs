@@ -13,6 +13,7 @@ using System.Windows.Markup;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Xml.Linq;
+using static HardenWindowsSecurity.NewToastNotification;
 
 #nullable disable
 
@@ -172,6 +173,19 @@ namespace HardenWindowsSecurity
                         TotalCountTextBlock.Text = $"{totalCount} Total Verifiable Security Checks";
                     }
 
+                    // Get the count of the compliant items
+                    string CompliantItemsCount = _membersView.SourceCollection
+                        .Cast<SecOp>()
+                        .Where(item => item.Compliant)
+                        .Count()
+                        .ToString(CultureInfo.InvariantCulture);
+
+                    // Get the count of the Non-compliant items
+                    string NonCompliantItemsCount = _membersView.SourceCollection
+                        .Cast<SecOp>()
+                        .Where(item => !item.Compliant)
+                        .Count()
+                        .ToString(CultureInfo.InvariantCulture);
 
                     // Find the text blocks that display counts of true/false items
                     var CompliantItemsTextBlock = (System.Windows.Controls.TextBlock)confirmView.FindName("CompliantItemsTextBlock");
@@ -179,31 +193,19 @@ namespace HardenWindowsSecurity
 
                     if (CompliantItemsTextBlock != null)
                     {
-                        // Get the count of the compliant items
-                        string CompliantItemsCount = _membersView.SourceCollection
-                            .Cast<SecOp>()
-                            .Where(item => item.Compliant)
-                            .Count()
-                            .ToString(CultureInfo.InvariantCulture);
-
                         // Set the text block's text
                         CompliantItemsTextBlock.Text = $"{CompliantItemsCount} Compliant Items";
                     }
 
                     if (NonCompliantItemsTextBlock != null)
                     {
-                        // Get the count of the Non-compliant items
-                        string NonCompliantItemsCount = _membersView.SourceCollection
-                            .Cast<SecOp>()
-                            .Where(item => !item.Compliant)
-                            .Count()
-                            .ToString(CultureInfo.InvariantCulture);
-
                         // Set the text block's text
                         NonCompliantItemsTextBlock.Text = $"{NonCompliantItemsCount} Non-Compliant Items";
                     }
-                }
 
+                    // Display a notification
+                    HardenWindowsSecurity.NewToastNotification.Show(ToastNotificationType.EndOfConfirmation, CompliantItemsCount, NonCompliantItemsCount);
+                }
             }
 
             // Private fields to hold the collection view and security options collection
@@ -341,6 +343,10 @@ namespace HardenWindowsSecurity
                 // Run the method asynchronously in a different thread
                 await System.Threading.Tasks.Task.Run(() =>
                     {
+                        // Get fresh data for compliance checking
+                        HardenWindowsSecurity.Initializer.Initialize(null, true);
+
+                        // Perform the compliance check
                         HardenWindowsSecurity.InvokeConfirmation.Invoke(null);
                     });
 

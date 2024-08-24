@@ -1986,7 +1986,7 @@ namespace HardenWindowsSecurity
                 nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "Microsoft Defender Platform Updates Channel",
-                    Compliant = "N/A",
+                    Compliant = string.Equals(PlatformUpdatesChannelName, "Beta", StringComparison.OrdinalIgnoreCase) ? "True" : "False",
                     Value = PlatformUpdatesChannelName ?? string.Empty,
                     Name = "Microsoft Defender Platform Updates Channel",
                     Category = CatName,
@@ -2002,7 +2002,7 @@ namespace HardenWindowsSecurity
                 nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "Microsoft Defender Engine Updates Channel",
-                    Compliant = "N/A",
+                    Compliant = string.Equals(EngineUpdatesChannelName, "Beta", StringComparison.OrdinalIgnoreCase) ? "True" : "False",
                     Value = EngineUpdatesChannelName ?? string.Empty,
                     Name = "Microsoft Defender Engine Updates Channel",
                     Category = CatName,

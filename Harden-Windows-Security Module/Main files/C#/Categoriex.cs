@@ -14,7 +14,7 @@ namespace HardenWindowsSecurity
         {
             string[] categoriex = new string[]
             {
-            "MicrosoftDefender", // 54 - 3x(N/A) + Number of Process Mitigations which are dynamically increased
+            "MicrosoftDefender", // 56 - 1x(N/A) + Number of Process Mitigations which are dynamically increased
             "AttackSurfaceReductionRules", // 19 rules
             "BitLockerSettings", // 21 + conditional item for Hibernation check (only available on non-VMs) + Number of Non-OS drives which are dynamically increased
             "TLSSecurity", // 21

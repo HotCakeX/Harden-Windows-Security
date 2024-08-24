@@ -182,7 +182,6 @@ namespace HardenWindowsSecurity
         }
 
 
-
         public static void LoadMainXaml()
         {
 

@@ -304,9 +304,6 @@ Function Protect-WindowsSecurity {
 
     begin {
         [HardenWindowsSecurity.Initializer]::Initialize($VerbosePreference)
-        # Detecting if Verbose switch is used
-        [System.Boolean]$Verbose = $PSBoundParameters.Verbose.IsPresent ? $true : $false
-
         [System.Boolean]$ErrorsOcurred = $false
 
         # Since Dynamic parameters are only available in the parameter dictionary, we have to access them using $PSBoundParameters or assign them manually to another variable in the function's scope
@@ -328,7 +325,7 @@ Function Protect-WindowsSecurity {
         New-Variable -Name 'DangerousScriptHostsBlocking' -Value $($PSBoundParameters['DangerousScriptHostsBlocking']) -Force
         New-Variable -Name 'ClipboardSync' -Value $($PSBoundParameters['ClipboardSync']) -Force
 
-        # This assignment is used by the GUI RunSpace
+        # Detecting if Offline mode is used
         ([HardenWindowsSecurity.GlobalVars]::Offline) = $PSBoundParameters['Offline'] ? $true : $false
 
         Write-Verbose -Message 'Importing the required sub-modules'
@@ -363,7 +360,7 @@ Function Protect-WindowsSecurity {
             if ($PSBoundParameters.GUI.IsPresent) {
                 # For PowerShell debugging, loading and running the GUI here, instead of the Boot() method, will display the errors on the PS console properly
                 [HardenWindowsSecurity.GUIMain]::LoadMainXaml()
-                [HardenWindowsSecurity.GUIMain]::app.Run([HardenWindowsSecurity.GUIMain]::mainGUIWindow)
+                [System.Void] [HardenWindowsSecurity.GUIMain]::app.Run([HardenWindowsSecurity.GUIMain]::mainGUIWindow)
                 # [HardenWindowsSecurity.GUIBootStrapper]::Boot()
             }
         }

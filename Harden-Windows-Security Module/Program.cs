@@ -29,6 +29,7 @@ namespace HardenWindowsSecurity
 
 
             HardenWindowsSecurity.GUIBootStrapper.Boot();
+
         }
     }
 }

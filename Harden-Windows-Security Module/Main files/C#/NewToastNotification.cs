@@ -8,68 +8,125 @@ namespace HardenWindowsSecurity
 {
     public class NewToastNotification
     {
+
+        // These are the different type of notification types/presets that can be displayed
+        public enum ToastNotificationType
+        {
+            EndOfProtection,
+            EndOfConfirmation
+        }
+
         /// <summary>
-        /// Display a notification
+        /// Displays modern toast notification on Windows
         /// </summary>
-        public static void Show()
+        /// <param name="Type">The type of the toast notification to use</param>
+        public static void Show(ToastNotificationType Type, string? TotalCompliantValues, string? TotalNonCompliantValues)
         {
 
-            // Combine paths
-            string Hero = Path.Combine(HardenWindowsSecurity.GlobalVars.path!, "Resources", "Media", "notification (3).png");
-            string Inline = Path.Combine(HardenWindowsSecurity.GlobalVars.path!, "Resources", "Media", "notification (3).png");
-            string LogoOverride = Path.Combine(HardenWindowsSecurity.GlobalVars.path!, "Resources", "Media", "notification (2).png");
-            string DismissButtonImage = Path.Combine(HardenWindowsSecurity.GlobalVars.path!, "Resources", "Media", "notification (1).png");
+            // Detect the notification type so we can create the proper notification to be displayed
+            switch (Type)
+            {
 
-            new Microsoft.Toolkit.Uwp.Notifications.ToastContentBuilder()
-
-            .AddAppLogoOverride(new Uri($"file:///{LogoOverride}"), ToastGenericAppLogoCrop.Circle)
-
-            .AddText("Protection Completed.")
-
-            .AddText($"Successfully applied {HardenWindowsSecurity.GUIProtectWinSecurity.SelectedCategories.Count} categories")
-
-            .AddText("Your computer is now more secure 👏")
-
-            //   .AddHeroImage(new Uri($"file:///{Hero}"))
-
-            .AddInlineImage(new Uri($"file:///{Inline}"))
+                // Notification to show at the end of applying the hardening measures
+                case ToastNotificationType.EndOfProtection:
+                    {
+                        // Combine paths
+                        string Hero = Path.Combine(HardenWindowsSecurity.GlobalVars.path!, "Resources", "Media", "notification (3).png");
+                        string Inline = Path.Combine(HardenWindowsSecurity.GlobalVars.path!, "Resources", "Media", "notification (3).png");
+                        string LogoOverride = Path.Combine(HardenWindowsSecurity.GlobalVars.path!, "Resources", "Media", "notification (2).png");
+                        string DismissButtonImage = Path.Combine(HardenWindowsSecurity.GlobalVars.path!, "Resources", "Media", "notification (1).png");
 
 
-            /*
+                        new Microsoft.Toolkit.Uwp.Notifications.ToastContentBuilder()
 
-             .AddButton(new ToastButton()
-                            .SetContent("Dismiss")
-                            .AddArgument("action", "dismiss")
-                            .SetImageUri(new Uri($"file:///{DismissButtonImage}")))
+                        .AddAppLogoOverride(new Uri($"file:///{LogoOverride}"), ToastGenericAppLogoCrop.Circle)
 
-                        .AddButton(new ToastButton()
-                            .SetContent("View Details")
-                            .AddArgument("action", "viewDetails")
-                            .SetImageUri(new Uri("file:///D:/notifications/view_icon.jpg")))
+                        .AddText("Protection Completed.")
 
-                        .AddButton(new ToastButton()
-                            .SetContent("Open App")
-                            .AddArgument("action", "openApp")
-                            .SetImageUri(new Uri("file:///D:/notifications/view_icon.jpg")))
+                        .AddText($"Successfully applied {HardenWindowsSecurity.GUIProtectWinSecurity.SelectedCategories.Count} categories")
 
-                        .AddButton(new ToastButton()
-                            .SetContent("Open App")
-                            .AddArgument("action", "openApp")
-                            .SetImageUri(new Uri("file:///D:/notifications/view_icon.jpg")))
+                        .AddText("Your computer is now more secure 👏")
 
-                        .AddButton(new ToastButton()
-                            .SetContent("Open App")
-                            .AddArgument("action", "openApp")
-                            .SetImageUri(new Uri("file:///D:/notifications/view_icon.jpg")))
-            */
+                        //   .AddHeroImage(new Uri($"file:///{Hero}"))
 
-            .AddAudio(new Uri("ms-winsoundevent:Notification.SMS"))
+                        .AddInlineImage(new Uri($"file:///{Inline}"))
 
-            .AddAttributionText("Brought to you by Harden Windows Security")
 
-            //    .AddHeader("6289", "Camping!!", "action=openConversation&id=6289")
+                        /*
 
-            .Show();
+                         .AddButton(new ToastButton()
+                                        .SetContent("Dismiss")
+                                        .AddArgument("action", "dismiss")
+                                        .SetImageUri(new Uri($"file:///{DismissButtonImage}")))
+
+                                    .AddButton(new ToastButton()
+                                        .SetContent("View Details")
+                                        .AddArgument("action", "viewDetails")
+                                        .SetImageUri(new Uri("file:///D:/notifications/view_icon.jpg")))
+
+                                    .AddButton(new ToastButton()
+                                        .SetContent("Open App")
+                                        .AddArgument("action", "openApp")
+                                        .SetImageUri(new Uri("file:///D:/notifications/view_icon.jpg")))
+
+                                    .AddButton(new ToastButton()
+                                        .SetContent("Open App")
+                                        .AddArgument("action", "openApp")
+                                        .SetImageUri(new Uri("file:///D:/notifications/view_icon.jpg")))
+
+                                    .AddButton(new ToastButton()
+                                        .SetContent("Open App")
+                                        .AddArgument("action", "openApp")
+                                        .SetImageUri(new Uri("file:///D:/notifications/view_icon.jpg")))
+                        */
+
+                        .AddAudio(new Uri("ms-winsoundevent:Notification.SMS"))
+
+                        .AddAttributionText("Brought to you by Harden Windows Security")
+
+                            .AddHeader("54331", "End of Protection", "")
+
+                        .Show();
+
+                        break;
+                    }
+
+                // Notification to show for End of compliance checking/Confirmation
+                case ToastNotificationType.EndOfConfirmation:
+                    {
+
+                        // Combine paths
+                        string Hero = Path.Combine(HardenWindowsSecurity.GlobalVars.path!, "Resources", "Media", "notification (3).png");
+                        string Inline = Path.Combine(HardenWindowsSecurity.GlobalVars.path!, "Resources", "Media", "notification (3).png");
+                        string LogoOverride = Path.Combine(HardenWindowsSecurity.GlobalVars.path!, "Resources", "Media", "3d-glassy-gradient-plastic-twisted-torus.png");
+                        string DismissButtonImage = Path.Combine(HardenWindowsSecurity.GlobalVars.path!, "Resources", "Media", "notification (1).png");
+
+
+                        new Microsoft.Toolkit.Uwp.Notifications.ToastContentBuilder()
+
+                        .AddAppLogoOverride(new Uri($"file:///{LogoOverride}"), ToastGenericAppLogoCrop.Circle)
+
+                        .AddText("Compliance checking completed.")
+
+                        .AddText($"Successfully verified the hardening measures on the current system.")
+
+                        .AddText($"{TotalCompliantValues} Compliant and {TotalNonCompliantValues} Non-Compliant items have been detected.")
+
+                        //   .AddHeroImage(new Uri($"file:///{Hero}"))
+
+                        .AddInlineImage(new Uri($"file:///{Inline}"))
+
+                        .AddAudio(new Uri("ms-winsoundevent:Notification.SMS"))
+
+                        .AddAttributionText("Brought to you by Harden Windows Security")
+
+                           .AddHeader("12345", "End of Confirmation", "Action")
+
+                        .Show();
+
+                        break;
+                    }
+            }
         }
     }
 }

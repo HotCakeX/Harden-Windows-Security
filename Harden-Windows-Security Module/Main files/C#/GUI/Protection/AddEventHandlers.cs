@@ -35,6 +35,7 @@ using System.Threading.Tasks;
 using System.Text;
 using System.Reflection.PortableExecutable;
 using System.Security.Principal;
+using static HardenWindowsSecurity.NewToastNotification;
 
 #nullable enable
 
@@ -668,7 +669,7 @@ namespace HardenWindowsSecurity
                             }
                         }
 
-                        HardenWindowsSecurity.NewToastNotification.Show();
+                        HardenWindowsSecurity.NewToastNotification.Show(ToastNotificationType.EndOfProtection, null, null);
                     }
                     else
                     {

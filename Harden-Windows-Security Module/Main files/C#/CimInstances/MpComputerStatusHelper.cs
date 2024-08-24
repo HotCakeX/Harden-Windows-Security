@@ -138,11 +138,18 @@ namespace HardenWindowsSecurity
                 {
                     methodParams[preferenceName] = (string[])(object)preferenceValue;
                 }
+                else if (typeof(T) == typeof(byte))
+                {
+                    methodParams[preferenceName] = (byte)(object)preferenceValue;
+                }
+                else if (typeof(ushort) == typeof(ushort))
+                {
+                    methodParams[preferenceName] = (ushort)(object)preferenceValue;
+                }
                 else
                 {
                     throw new ArgumentException($"Unsupported type {typeof(T)} for preference value");
                 }
-
 
                 // Invoke the method to apply the settings
                 mpPreferenceClass.InvokeMethod("Set", methodParams, null);

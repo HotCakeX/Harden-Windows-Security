@@ -39,7 +39,9 @@ namespace HardenWindowsSecurity
             HardenWindowsSecurity.MpComputerStatusHelper.SetMpComputerStatus<bool>("DisableRestorePoint", false);
 
             HardenWindowsSecurity.Logger.LogMessage("Disabling Performance mode of Defender that only applies to Dev drives by lowering security");
-            HardenWindowsSecurity.MpComputerStatusHelper.SetMpComputerStatus<string>("PerformanceModeStatus", "Disabled");
+            // Due to a possible bug or something, 0 means 1 and 1 means 0
+            // Invoke-CimMethod -Namespace "ROOT\Microsoft\Windows\Defender" -ClassName "MSFT_MpPreference" -MethodName Set -Arguments @{PerformanceModeStatus = [byte]1}
+            HardenWindowsSecurity.MpComputerStatusHelper.SetMpComputerStatus<byte>("PerformanceModeStatus", 1);
 
             HardenWindowsSecurity.Logger.LogMessage("Setting the Network Protection to block network traffic instead of displaying a warning");
             HardenWindowsSecurity.MpComputerStatusHelper.SetMpComputerStatus<bool>("EnableConvertWarnToBlock", true);

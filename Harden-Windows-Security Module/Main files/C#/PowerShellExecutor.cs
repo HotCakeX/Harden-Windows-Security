@@ -65,8 +65,10 @@ namespace HardenWindowsSecurity
                 // Return output if requested
                 if (returnOutput && results.Any())
                 {
+
                     // Since it is guaranteed that the commands will return only one line of string
-                    return results.First().ToString();
+                    return results.FirstOrDefault()?.ToString();
+
                 }
 
                 return null;

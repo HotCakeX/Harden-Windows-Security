@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Management.Automation;
@@ -159,7 +160,8 @@ namespace HardenWindowsSecurity
             // Method to update the total count of security options displayed
             private void UpdateTotalCount()
             {
-                var totalCount = _membersView.Cast<SecOp>().Count(); // Get the total count of security options
+                // Get the total count of security options
+                var totalCount = _membersView.Cast<SecOp>().Count();
                 if (CurrentView is System.Windows.Controls.UserControl confirmView)
                 {
                     // Find the TextBlock used to display the total count
@@ -167,9 +169,41 @@ namespace HardenWindowsSecurity
                     if (TotalCountTextBlock != null)
                     {
                         // Update the text of the TextBlock to show the total count
-                        TotalCountTextBlock.Text = $"{totalCount} verifiable security checks";
+                        TotalCountTextBlock.Text = $"{totalCount} Total Verifiable Security Checks";
+                    }
+
+
+                    // Find the text blocks that display counts of true/false items
+                    var CompliantItemsTextBlock = (System.Windows.Controls.TextBlock)confirmView.FindName("CompliantItemsTextBlock");
+                    var NonCompliantItemsTextBlock = (System.Windows.Controls.TextBlock)confirmView.FindName("NonCompliantItemsTextBlock");
+
+                    if (CompliantItemsTextBlock != null)
+                    {
+                        // Get the count of the compliant items
+                        string CompliantItemsCount = _membersView.SourceCollection
+                            .Cast<SecOp>()
+                            .Where(item => item.Compliant)
+                            .Count()
+                            .ToString(CultureInfo.InvariantCulture);
+
+                        // Set the text block's text
+                        CompliantItemsTextBlock.Text = $"{CompliantItemsCount} Compliant Items";
+                    }
+
+                    if (NonCompliantItemsTextBlock != null)
+                    {
+                        // Get the count of the Non-compliant items
+                        string NonCompliantItemsCount = _membersView.SourceCollection
+                            .Cast<SecOp>()
+                            .Where(item => !item.Compliant)
+                            .Count()
+                            .ToString(CultureInfo.InvariantCulture);
+
+                        // Set the text block's text
+                        NonCompliantItemsTextBlock.Text = $"{NonCompliantItemsCount} Non-Compliant Items";
                     }
                 }
+
             }
 
             // Private fields to hold the collection view and security options collection
@@ -280,9 +314,24 @@ namespace HardenWindowsSecurity
             {
 
                 // Disable the Refresh button while processing
-                RefreshButton.Dispatcher.Invoke(() =>
+                // Set text blocks to empty while new data is being generated
+                System.Windows.Application.Current.Dispatcher.Invoke(() =>
                     {
                         RefreshButton.IsEnabled = false;
+
+                        var CompliantItemsTextBlock = (System.Windows.Controls.TextBlock)confirmView.FindName("CompliantItemsTextBlock");
+                        var NonCompliantItemsTextBlock = (System.Windows.Controls.TextBlock)confirmView.FindName("NonCompliantItemsTextBlock");
+                        CompliantItemsTextBlock.Text = "";
+                        NonCompliantItemsTextBlock.Text = "";
+
+                        var TotalCountTextBlock = (System.Windows.Controls.TextBlock)confirmView.FindName("TotalCountTextBlock");
+
+                        if (TotalCountTextBlock != null)
+                        {
+                            // Update the text of the TextBlock to show the total count
+                            TotalCountTextBlock.Text = "Loading...";
+                        }
+
                     });
 
                 // Clear the current security options before starting data generation
@@ -301,6 +350,7 @@ namespace HardenWindowsSecurity
                         LoadMembers(); // Load updated security options
                         RefreshButton.IsChecked = false; // Uncheck the Refresh button
                         RefreshButton.IsEnabled = true; // Re-enable the Refresh button
+
                     });
             };
 

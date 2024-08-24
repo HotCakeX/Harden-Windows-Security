@@ -9,6 +9,7 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="auto"/>
                 <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
             <!--Counter Title-->
@@ -315,17 +316,27 @@
                         Visibility="{Binding ElementName=textBoxFilter, Path=Text.IsEmpty}" />
                 <TextBox Name="textBoxFilter" Style="{StaticResource filterTextBox}" />
             </Grid>
+            <StackPanel Orientation="Horizontal" Grid.Row="2" Margin="0,0,0,30">
+                <TextBlock x:Name="CompliantItemsTextBlock"
+               FontSize="15" FontWeight="SemiBold" Foreground="#121518"
+               HorizontalAlignment="Left" VerticalAlignment="Center"
+               Margin="0,0,30,0"/>
+                <!-- Add some margin to the right -->
+                <TextBlock x:Name="NonCompliantItemsTextBlock"
+               FontSize="15" FontWeight="SemiBold" Foreground="#121518"
+               HorizontalAlignment="Right" VerticalAlignment="Center"/>
+            </StackPanel>
+
             <!--SecOps Data Grid-->
-            <DataGrid Grid.Row="2" RowStyle="{DynamicResource ConfirmationDataGridStyleOfRow}" ColumnHeaderStyle="{DynamicResource DataGridColumnHeaderStyle1}" CellStyle="{DynamicResource DataGridCellStyle1}" x:Name="membersDataGrid" Style="{DynamicResource ConfirmationDataGridStyle}">
+            <DataGrid Grid.Row="3" RowStyle="{DynamicResource ConfirmationDataGridStyleOfRow}" ColumnHeaderStyle="{DynamicResource DataGridColumnHeaderStyle1}" CellStyle="{DynamicResource DataGridCellStyle1}" x:Name="membersDataGrid" Style="{DynamicResource ConfirmationDataGridStyle}">
                 <!-- DataGrid Columns Definitions -->
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="Friendly Name" Binding="{Binding FriendlyName}" IsReadOnly="True" Width="*" />
-                    <DataGridTextColumn Header="Value" Binding="{Binding Value}" IsReadOnly="True" Width="*" />
                     <!-- Column to Display Character Images based on Compliance -->
                     <DataGridTemplateColumn Header="Compliant" IsReadOnly="True" Width="*">
                         <DataGridTemplateColumn.CellTemplate>
                             <DataTemplate>
-                                <Image Source="{Binding CharacterImage}" Width="32" Height="32" />
+                                <Image Source="{Binding CharacterImage}" Width="32" Height="32" HorizontalAlignment="Left" />
                             </DataTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
@@ -341,8 +352,11 @@
                         </DataGridTextColumn.ElementStyle>
                     </DataGridTextColumn>
                     <!-- Other Columns -->
-                    <DataGridTextColumn Header="Name" Binding="{Binding Name}" IsReadOnly="True" Width="*" />
                     <DataGridTextColumn Header="Method" Binding="{Binding Method}" IsReadOnly="True" Width="*" />
+                    <DataGridTextColumn Header="Value" Binding="{Binding Value}" IsReadOnly="True" Width="*" />
+                    <!-- takes too much unnecessary space -->
+                    <!--  <DataGridTextColumn Header="Name" Binding="{Binding Name}" IsReadOnly="True" Width="*" /> -->
+
                 </DataGrid.Columns>
             </DataGrid>
         </Grid>

@@ -235,8 +235,6 @@ namespace HardenWindowsSecurity
             // Set the DataContext for the main window
             GUIMain.mainGUIWindow.DataContext = new NavigationVM();
 
-
-
             #region Event handlers For The Main GUI
 
             // Defining what happens when the GUI window is closed
@@ -302,31 +300,6 @@ End time: {DateTime.Now}
             };
 
             #endregion
-
-
-
-            #region Load a UserControl (Confirm.xaml)
-
-     //       string xamlPathConfirmView = System.IO.Path.Combine(HardenWindowsSecurity.GlobalVars.path, "Resources", "XAML", "Confirm.xaml");
-    //        System.Windows.Controls.UserControl ConfirmView = null;
-
-      //      using (FileStream fs = new FileStream(xamlPathConfirmView, FileMode.Open, FileAccess.Read))
-  //          {
-     //           ConfirmView = (System.Windows.Controls.UserControl)System.Windows.Markup.XamlReader.Load(fs);
-     //       }
-
-            // Now you have the ConfirmView loaded, let's find the ConfirmGrid within it.
-            //       var ConfirmGrid = ConfirmView.FindName("ConfirmGrid") as Grid;
-
-            // Successfully found ConfirmGrid, you can now work with it.
-            //        Console.WriteLine("ConfirmGrid found!");
-
-            //       var ConfirmViewTextBlock = (TextBlock)ConfirmGrid.FindName("ConfirmViewTextBlock");
-
-            //       ConfirmViewTextBlock.Foreground = System.Windows.Media.Brushes.Red;
-            //     ConfirmViewTextBlock.Background = System.Windows.Media.Brushes.Black;
-            #endregion
-
 
             #region parent border of the Main GUI
             // Find the Border control by name

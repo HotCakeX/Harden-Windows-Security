@@ -9,7 +9,7 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="auto"/>
                 <RowDefinition Height="auto"/>
-                <RowDefinition Height="*"/>      
+                <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
             <!--Counter Title-->
             <!-- Grid containing the Refresh Button -->

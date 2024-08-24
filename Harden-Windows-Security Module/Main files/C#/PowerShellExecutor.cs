@@ -12,22 +12,26 @@ namespace HardenWindowsSecurity
         /// Runs a PowerShell script and displays verbose and normal output.
         /// </summary>
         /// <param name="script">PowerShell script to run</param>
-        public static void ExecuteScript(string script)
+        /// <param name="returnOutput">Indicates whether to return the output of the script</param>
+        /// <returns>The output of the PowerShell script if returnOutput is true; otherwise, nothing is returned</returns>
+        public static string? ExecuteScript(string script, bool returnOutput = false)
         {
             using (PowerShell psInstance = PowerShell.Create())
             {
                 // Set the execution policy to Bypass for the current process
                 psInstance.AddScript("Set-ExecutionPolicy Bypass -Scope Process -Force");
-            //    psInstance.AddScript("$verbosePreference = 'continue'");
                 psInstance.AddScript(script);
 
                 // Execute the script and capture the output
                 var results = psInstance.Invoke();
 
-                // Display normal output
-                foreach (var output in results)
+                // Display normal output only if the normal output isn't already being returned
+                if (!returnOutput)
                 {
-                    HardenWindowsSecurity.Logger.LogMessage($"Output: {output}");
+                    foreach (var output in results)
+                    {
+                        HardenWindowsSecurity.Logger.LogMessage($"Output: {output}");
+                    }
                 }
 
                 // Display verbose output
@@ -57,6 +61,15 @@ namespace HardenWindowsSecurity
                     string errorMessage = string.Join(Environment.NewLine, errorDetails);
                     throw new InvalidOperationException($"PowerShell script execution failed: {errorMessage}");
                 }
+
+                // Return output if requested
+                if (returnOutput && results.Any())
+                {
+                    // Since it is guaranteed that the commands will return only one line of string
+                    return results.First().ToString();
+                }
+
+                return null;
             }
         }
     }

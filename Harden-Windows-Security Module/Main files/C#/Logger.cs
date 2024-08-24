@@ -62,7 +62,17 @@ namespace HardenWindowsSecurity
             // If there is no GUI Window, meaning the code is running in Visual Studio, then use Console for writing logs
             if (HardenWindowsSecurity.GUIProtectWinSecurity.View == null)
             {
-                Console.WriteLine(CurrentText);
+                // See if the host is available, meaning PowerShell host is available
+                if (HardenWindowsSecurity.GlobalVars.Host != null)
+                {
+                    // Write the message as verbose text on PowerShell console
+                    HardenWindowsSecurity.VerboseLogger.Write(CurrentText);
+                }
+                else
+                {
+                    // If PowerShell console host is not available then write to the console that works for both C# and PS consoles
+                    Console.WriteLine(CurrentText);
+                }
             }
             else
             {

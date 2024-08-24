@@ -82,31 +82,48 @@ namespace HardenWindowsSecurity
             return states;
         }
 
+        /// <summary>
+        /// DISM.exe output is localized and changes between different language packs
+        /// But using Get-WindowsCapability output consistent results.
+        /// </summary>
+        /// <param name="capabilityName">The name of the capability to check its state</param>
+        /// <returns></returns>
         public static string GetCapabilityState(string capabilityName)
         {
-            // Run the DISM command to get the state of the specified capability
-            string dismOutput = RunDismCommand($"/Online /Get-CapabilityInfo /CapabilityName:{capabilityName}");
+            // Define the PowerShell script template with placeholder
+            string scriptTemplate = """
+$CompatibilityName = '{CompatibilityName}'
+return ((Get-WindowsCapability -Online | Where-Object -FilterScript { $_.Name -like "*$CompatibilityName*" }).State)
+""";
+            // Replace the placeholder with the actual value
+            string script = scriptTemplate.Replace("{CompatibilityName}", capabilityName, StringComparison.OrdinalIgnoreCase);
 
-            // Check if the output contains "State : Installed"
-            // check if the return value is greater than or equal to 0 indicating that the substring exists in the string
-            if (dismOutput.IndexOf("State : Installed", StringComparison.Ordinal) >= 0)
+            // Execute the script and return the output - true means the PowerShell script will return string output and won't write the normal output to the console or GUI
+            string? output = HardenWindowsSecurity.PowerShellExecutor.ExecuteScript(script, true);
+
+            if (output == null)
+            {
+                HardenWindowsSecurity.Logger.LogMessage($"The output of the {capabilityName} state check was null");
+                return "Unknown";
+            }
+
+            if (string.Equals(output, "Installed", StringComparison.OrdinalIgnoreCase))
             {
                 return "Installed";
             }
-            // Check if the output contains "State : Not Present"
-            // check if the return value is greater than or equal to 0 indicating that the substring exists in the string
-            else if (dismOutput.IndexOf("State : Not Present", StringComparison.Ordinal) >= 0)
+
+            else if (string.Equals(output, "Not Present", StringComparison.OrdinalIgnoreCase) || string.Equals(output, "NotPresent", StringComparison.OrdinalIgnoreCase))
             {
                 return "Not Present";
             }
-            // Check if the output contains "State : Staged"
-            // check if the return value is greater than or equal to 0 indicating that the substring exists in the string
-            else if (dismOutput.IndexOf("State : Staged", StringComparison.Ordinal) >= 0)
+
+            else if (string.Equals(output, "Staged", StringComparison.OrdinalIgnoreCase))
             {
                 return "Staged";
             }
 
-            // If none of the above conditions are met, return "Unknown"
+            HardenWindowsSecurity.Logger.LogMessage($"The output of the {capabilityName} state check is {output}");
+
             return "Unknown";
         }
 

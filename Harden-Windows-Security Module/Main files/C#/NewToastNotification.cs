@@ -8,6 +8,9 @@ namespace HardenWindowsSecurity
 {
     public class NewToastNotification
     {
+        /// <summary>
+        /// Display a notification
+        /// </summary>
         public static void Show()
         {
 
@@ -39,14 +42,10 @@ namespace HardenWindowsSecurity
                             .AddArgument("action", "dismiss")
                             .SetImageUri(new Uri($"file:///{DismissButtonImage}")))
 
-
-
                         .AddButton(new ToastButton()
                             .SetContent("View Details")
                             .AddArgument("action", "viewDetails")
                             .SetImageUri(new Uri("file:///D:/notifications/view_icon.jpg")))
-
-
 
                         .AddButton(new ToastButton()
                             .SetContent("Open App")

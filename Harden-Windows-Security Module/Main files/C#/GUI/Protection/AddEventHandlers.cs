@@ -669,7 +669,10 @@ namespace HardenWindowsSecurity
                             }
                         }
 
-                        HardenWindowsSecurity.NewToastNotification.Show(ToastNotificationType.EndOfProtection, null, null);
+                        if (HardenWindowsSecurity.GlobalVars.UseNewNotificationsExp == true)
+                        {
+                            HardenWindowsSecurity.NewToastNotification.Show(ToastNotificationType.EndOfProtection, null, null);
+                        }
                     }
                     else
                     {

@@ -92,6 +92,7 @@ namespace HardenWindowsSecurity
         {
             // Define the PowerShell script template with placeholder
             string scriptTemplate = """
+Import-Module -Name 'DISM' -UseWindowsPowerShell -Force -WarningAction SilentlyContinue
 $CompatibilityName = '{CompatibilityName}'
 return ((Get-WindowsCapability -Online | Where-Object -FilterScript { $_.Name -like "*$CompatibilityName*" }).State)
 """;

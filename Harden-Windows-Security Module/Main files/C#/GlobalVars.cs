@@ -64,6 +64,11 @@ namespace HardenWindowsSecurity
         // The path to the LGPO.exe utility
         public static string? LGPOExe;
 
+        // A flag to determine whether the new notifications experience should be used or not
+        // It won't be used if there is an interferences detected with DLL load due to other addons being loaded in the PowerShell session
+        // Such as PowerToys' CommandNotFound or Winget's PowerShell module
+        public static bool UseNewNotificationsExp = true;
+
         // To store the registry data CSV parse output - Registry.csv
         public static List<HardenWindowsSecurity.HardeningRegistryKeys.CsvRecord>? RegistryCSVItems;
 

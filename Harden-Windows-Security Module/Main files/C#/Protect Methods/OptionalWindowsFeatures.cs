@@ -47,6 +47,7 @@ namespace HardenWindowsSecurity
 
                 // PowerShell script to run to remove the Windows Capability
                 string PSScript = $@"
+Import-Module -Name 'DISM' -UseWindowsPowerShell -Force -WarningAction SilentlyContinue
 $null = Get-WindowsCapability -Online |
 Where-Object -FilterScript {{ $_.Name -eq '{CapabilityIdentity}' }} |
 Remove-WindowsCapability -Online

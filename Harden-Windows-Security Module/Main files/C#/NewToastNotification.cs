@@ -18,11 +18,13 @@ namespace HardenWindowsSecurity
 
         /// <summary>
         /// Displays modern toast notification on Windows
+        /// The caller must check for HardenWindowsSecurity.GlobalVars.UseNewNotificationsExp and if it's true then use this method
+        /// So that it will only display the notifications if the required DLLs have been loaded in the PowerShell session via Add-Type
+        /// That is different than the DLLs being made available to the Add-Type during C# code compilation
         /// </summary>
         /// <param name="Type">The type of the toast notification to use</param>
         public static void Show(ToastNotificationType Type, string? TotalCompliantValues, string? TotalNonCompliantValues)
         {
-
             // Detect the notification type so we can create the proper notification to be displayed
             switch (Type)
             {

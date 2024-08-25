@@ -170,5 +170,45 @@ namespace HardenWindowsSecurity
             Required = 1,
             Dynamic = 2
         }
+
+
+        public enum FirewallRuleAction
+        {
+            Enable,
+            Disable
+        }
+
+        /// <summary>
+        /// Enable or disable a firewall rule by DisplayName
+        /// Can be expanded in the future to provide the full functionality of the built-in cmdlets but for now these are the features that are needed
+        /// </summary>
+        /// <param name="action">Enable/Disable</param>
+        /// <param name="displayName">The DisplayName of the Firewall rule to Enable/Disable</param>
+        public static void ManageFirewallRule(FirewallRuleAction action, string displayName)
+        {
+            // Convert the enum to the corresponding method name
+            string methodName = action.ToString();
+
+            // Define the WMI query to get the firewall rule by DisplayName
+            // The 'LIKE' operator in WMI queries can be used for case-insensitive matching
+            string query = $"SELECT * FROM MSFT_NetFirewallRule WHERE UPPER(DisplayName) = '{displayName.ToUpperInvariant()}'";
+
+            // Initialize the ManagementScope
+            ManagementScope scope = new ManagementScope(@"\\.\ROOT\StandardCimv2");
+            scope.Connect();
+
+            // Execute the WMI query
+            using (ManagementObjectSearcher searcher = new ManagementObjectSearcher(scope, new ObjectQuery(query)))
+            {
+                using (ManagementObjectCollection results = searcher.Get())
+                {
+                    // Iterate through the results and invoke the specified method
+                    foreach (ManagementObject rule in results)
+                    {
+                        rule.InvokeMethod(methodName, null);
+                    }
+                }
+            }
+        }
     }
 }

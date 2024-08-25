@@ -14,7 +14,7 @@ namespace HardenWindowsSecurity
         {
             string[] categoriex = new string[]
             {
-            "MicrosoftDefender", // 54 - 3x(N/A) + Number of Process Mitigations which are dynamically increased
+            "MicrosoftDefender", // 56 - 1x(N/A) + Number of Process Mitigations which are dynamically increased
             "AttackSurfaceReductionRules", // 19 rules
             "BitLockerSettings", // 21 + conditional item for Hibernation check (only available on non-VMs) + Number of Non-OS drives which are dynamically increased
             "TLSSecurity", // 21
@@ -77,8 +77,8 @@ namespace HardenWindowsSecurity
                     return true;
                     //   foreach (ManagementObject tpm in queryCollection)
                     //    {
-                    //     Console.WriteLine("TPM is present on this system.");
-                    //     Console.WriteLine("TPM Version: " + tpm["SpecVersion"]);
+                    //     HardenWindowsSecurity.Logger.LogMessage("TPM is present on this system.");
+                    //     HardenWindowsSecurity.Logger.LogMessage("TPM Version: " + tpm["SpecVersion"]);
                     //    }
                 }
             }

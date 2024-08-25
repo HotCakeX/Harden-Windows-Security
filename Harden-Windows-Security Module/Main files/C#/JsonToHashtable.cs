@@ -18,7 +18,7 @@ namespace HardenWindowsSecurity
             if (!File.Exists(filePath))
             {
                 // Throw an exception if the file does not exist
-                throw new FileNotFoundException("The specified file does not exist.");
+                throw new FileNotFoundException($"The specified file at '{filePath}' does not exist.");
             }
 
             // Read the JSON file content as a string

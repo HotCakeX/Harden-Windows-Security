@@ -61,10 +61,6 @@ function Confirm-SystemCompliance {
             Write-Warning -Message 'The Windows Home edition has been detected, many features are unavailable in this edition.'
         }
 
-        # The total number of the steps for the parent/main progress bar to render
-        [System.UInt16]$TotalMainSteps = 3
-        [System.UInt16]$CurrentMainStep = 0
-
         #Region Colors
         [System.Collections.Hashtable]$global:ColorsMap = @{
             Plum         = @{
@@ -147,7 +143,7 @@ function Confirm-SystemCompliance {
 
         [System.Management.Automation.ScriptBlock]$WriteRainbow = {
             Param([System.String]$Text)
-            $StringBuilder = New-Object -TypeName System.Text.StringBuilder
+            $StringBuilder = [System.Text.StringBuilder]::new()
             for ($i = 0; $i -lt $Text.Length; $i++) {
                 $Color = $Global:Colors[$i % $Global:Colors.Length]
                 [System.Void]$StringBuilder.Append("$($PSStyle.Foreground.FromRGB($Color.R, $Color.G, $Color.B))$($Text[$i])$($PSStyle.Reset)")
@@ -155,77 +151,11 @@ function Confirm-SystemCompliance {
             Write-Output -InputObject $StringBuilder.ToString()
         }
         #Endregion Colors
-
-        $PSStyle.Progress.Style = "$($PSStyle.Foreground.FromRGB(221, 160, 221))$($PSStyle.Blink)"
     }
 
     process {
         try {
-            $CurrentMainStep++
-            Write-Progress -Id 0 -Activity 'Controlled Folder Access Handling' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
-
-            # A try-Catch-finally block to revert the changes being made to the Controlled Folder Access exclusions list
-            # Which is currently required for BCD NX value verification in the MicrosoftDefender category
-            [HardenWindowsSecurity.ControlledFolderAccessHandler]::Start()
-
-            # Give the Defender internals time to process the updated exclusions list
-            Start-Sleep -Seconds 5
-
-            $CurrentMainStep++
-            Write-Progress -Id 0 -Activity 'Collecting any possible Intune/MDM policies' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
-
-            #Region SYSTEM-priv Intune info gathering
-            # using schtasks.exe instead of CimInstance/cmdlet wherever it makes the process faster
-            Write-Verbose -Message 'Collecting Intune applied policy details from the System'
-            # MDM_BitLocker
-            [System.String[]]$CimInstancesList = @('MDM_Firewall_DomainProfile02', 'MDM_Firewall_PrivateProfile02', 'MDM_Firewall_PublicProfile02', 'MDM_Policy_Result01_Update02', 'MDM_Policy_Result01_System02')
-            [System.String]$TaskPathGUID = [System.Guid]::NewGuid().ToString().Replace('-', '')
-            [System.String]$BaseDirectory = [HardenWindowsSecurity.GlobalVars]::WorkingDir
-            [System.String]$TaskPath = "CimInstances$TaskPathGUID"
-            [System.String]$CimInstancesListString = foreach ($MDMName in $CimInstancesList) {
-                "'$MDMName',"
-            }
-            $CimInstancesListString = $CimInstancesListString.TrimEnd(',')
-            [System.String]$TaskName = 'CIMInstance'
-            $Argument = @"
--NoProfile -WindowStyle Hidden -Command "& {foreach (`$Item in @($CimInstancesListString)) { Get-CimInstance -Namespace 'root\cimv2\mdm\dmmap' -ClassName `$Item | ConvertTo-Json -Depth 100 | Out-File -FilePath \"$BaseDirectory\`$Item.json\" -Force }}"
-"@
-
-            [Microsoft.Management.Infrastructure.CimInstance]$Action = New-ScheduledTaskAction -Execute 'Powershell.exe' -Argument $Argument
-            [Microsoft.Management.Infrastructure.CimInstance]$TaskPrincipal = New-ScheduledTaskPrincipal -LogonType S4U -UserId 'S-1-5-18' -RunLevel Highest
-            $null = Register-ScheduledTask -Action $Action -Principal $TaskPrincipal -TaskPath $TaskPath -TaskName $TaskName -Description $TaskName -Force
-            [Microsoft.Management.Infrastructure.CimInstance]$TaskSettings = New-ScheduledTaskSettingsSet -AllowStartIfOnBatteries -DontStopIfGoingOnBatteries -Compatibility 'Win8' -StartWhenAvailable -ExecutionTimeLimit (New-TimeSpan -Minutes 3)
-            $null = Set-ScheduledTask -TaskName $TaskName -TaskPath $TaskPath -Settings $TaskSettings
-            Start-ScheduledTask -TaskName $TaskName -TaskPath $TaskPath
-            while ((schtasks.exe /Query /TN "\$TaskPath\$TaskName" /fo CSV | ConvertFrom-Csv).Status -in ('Running', 'Queued')) {
-                Write-Debug -Message 'Waiting half a second more before attempting to delete the scheduled task'
-                Start-Sleep -Milliseconds 500
-            }
-            schtasks.exe /Delete /TN "\$TaskPath\$TaskName" /F # Delete task
-            schtasks.exe /Delete /TN "$TaskPath" /F *>$null # Delete task path
-            if ($LASTEXITCODE -ne '0') {
-                Write-Verbose -Message "Failed to delete the task with the path '$TaskPath' and name '$TaskName'." -Verbose
-            }
-            #Endregion
-
-            # Collect the JSON File Paths
-            [System.IO.FileInfo]$MDM_Firewall_DomainProfile02_Path = [System.IO.Path]::Combine([HardenWindowsSecurity.GlobalVars]::WorkingDir, 'MDM_Firewall_DomainProfile02.json')
-            [System.IO.FileInfo]$MDM_Firewall_PrivateProfile02_Path = [System.IO.Path]::Combine([HardenWindowsSecurity.GlobalVars]::WorkingDir, 'MDM_Firewall_PrivateProfile02.json')
-            [System.IO.FileInfo]$MDM_Firewall_PublicProfile02_Path = [System.IO.Path]::Combine([HardenWindowsSecurity.GlobalVars]::WorkingDir, 'MDM_Firewall_PublicProfile02.json')
-            [System.IO.FileInfo]$MDM_Policy_Result01_Update02_Path = [System.IO.Path]::Combine([HardenWindowsSecurity.GlobalVars]::WorkingDir, 'MDM_Policy_Result01_Update02.json')
-            [System.IO.FileInfo]$MDM_Policy_Result01_System02_Path = [System.IO.Path]::Combine([HardenWindowsSecurity.GlobalVars]::WorkingDir, 'MDM_Policy_Result01_System02.json')
-
-            # Parse the JSON Files and store the results in global variables
-            [HardenWindowsSecurity.GlobalVars]::MDM_Firewall_DomainProfile02 = [HardenWindowsSecurity.JsonToHashtable]::ProcessJsonFile($MDM_Firewall_DomainProfile02_Path)
-            [HardenWindowsSecurity.GlobalVars]::MDM_Firewall_PrivateProfile02 = [HardenWindowsSecurity.JsonToHashtable]::ProcessJsonFile($MDM_Firewall_PrivateProfile02_Path)
-            [HardenWindowsSecurity.GlobalVars]::MDM_Firewall_PublicProfile02 = [HardenWindowsSecurity.JsonToHashtable]::ProcessJsonFile($MDM_Firewall_PublicProfile02_Path)
-            [HardenWindowsSecurity.GlobalVars]::MDM_Policy_Result01_Update02 = [HardenWindowsSecurity.JsonToHashtable]::ProcessJsonFile($MDM_Policy_Result01_Update02_Path)
-            [HardenWindowsSecurity.GlobalVars]::MDM_Policy_Result01_System02 = [HardenWindowsSecurity.JsonToHashtable]::ProcessJsonFile($MDM_Policy_Result01_System02_Path)
-
-            $CurrentMainStep++
-            Write-Progress -Id 0 -Activity 'Verifying the security settings' -Status "Step $CurrentMainStep/$TotalMainSteps" -PercentComplete ($CurrentMainStep / $TotalMainSteps * 100)
-
-            [HardenWindowsSecurity.ConfirmSystemComplianceMethods]::OrchestrateComplianceChecks($Categories)
+            [HardenWindowsSecurity.InvokeConfirmation]::Invoke($Categories)
 
             # Making sure all the true/false values have the same case
             foreach ($Item in ([HardenWindowsSecurity.GlobalVars]::FinalMegaObject).Values) {
@@ -244,7 +174,7 @@ function Confirm-SystemCompliance {
 
             if ($ExportToCSV) {
                 # Create an empty list to store the results based on the category order by sorting the concurrent hashtable
-                $AllOrderedResults = New-Object -TypeName System.Collections.Generic.List[HardenWindowsSecurity.IndividualResult]
+                $AllOrderedResults = [System.Collections.Generic.List[HardenWindowsSecurity.IndividualResult]]::new()
 
                 $AllOrderedResults = foreach ($Key in [HardenWindowsSecurity.ComplianceCategoriex]::new().GetValidValues()) {
                     if (([HardenWindowsSecurity.GlobalVars]::FinalMegaObject).ContainsKey($Key)) {
@@ -358,8 +288,6 @@ function Confirm-SystemCompliance {
             Throw $_
         }
         finally {
-            # End the progress bar and mark it as completed
-            Write-Progress -Id 0 -Activity 'Completed' -Completed
             [HardenWindowsSecurity.ControlledFolderAccessHandler]::Reset()
             [HardenWindowsSecurity.Miscellaneous]::CleanUp()
         }

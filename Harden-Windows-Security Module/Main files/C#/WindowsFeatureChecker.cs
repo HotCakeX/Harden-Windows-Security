@@ -31,7 +31,7 @@ namespace HardenWindowsSecurity
         public static FeatureStatus CheckWindowsFeatures()
         {
             // Get the states of optional features using Cim Instance only once so that we can use it multiple times
-            var optionalFeatureStates = GetOptionalFeatureStates();
+            Dictionary<string, string>? optionalFeatureStates = GetOptionalFeatureStates();
 
             return new FeatureStatus
             {
@@ -52,10 +52,11 @@ namespace HardenWindowsSecurity
             };
         }
 
-        private static Dictionary<string, string> GetOptionalFeatureStates()
+        public static Dictionary<string, string> GetOptionalFeatureStates()
         {
             // Initialize a dictionary to store the states of optional features
-            var states = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase); // Ensure case-insensitive key comparison
+            // Ensure case-insensitive key comparison
+            var states = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
 
             // Create a ManagementObjectSearcher to query Win32_OptionalFeature
             using (var searcher = new ManagementObjectSearcher("SELECT * FROM Win32_OptionalFeature"))
@@ -81,31 +82,48 @@ namespace HardenWindowsSecurity
             return states;
         }
 
-        private static string GetCapabilityState(string capabilityName)
+        /// <summary>
+        /// DISM.exe output is localized and changes between different language packs
+        /// But using Get-WindowsCapability output consistent results.
+        /// </summary>
+        /// <param name="capabilityName">The name of the capability to check its state</param>
+        /// <returns></returns>
+        public static string GetCapabilityState(string capabilityName)
         {
-            // Run the DISM command to get the state of the specified capability
-            string dismOutput = RunDismCommand($"/Online /Get-CapabilityInfo /CapabilityName:{capabilityName}");
+            // Define the PowerShell script template with placeholder
+            string scriptTemplate = """
+$CompatibilityName = '{CompatibilityName}'
+return ((Get-WindowsCapability -Online | Where-Object -FilterScript { $_.Name -like "*$CompatibilityName*" }).State)
+""";
+            // Replace the placeholder with the actual value
+            string script = scriptTemplate.Replace("{CompatibilityName}", capabilityName, StringComparison.OrdinalIgnoreCase);
 
-            // Check if the output contains "State : Installed"
-            // check if the return value is greater than or equal to 0 indicating that the substring exists in the string
-            if (dismOutput.IndexOf("State : Installed", StringComparison.Ordinal) >= 0)
+            // Execute the script and return the output - true means the PowerShell script will return string output and won't write the normal output to the console or GUI
+            string? output = HardenWindowsSecurity.PowerShellExecutor.ExecuteScript(script, true);
+
+            if (output == null)
+            {
+                HardenWindowsSecurity.Logger.LogMessage($"The output of the {capabilityName} state check was null");
+                return "Unknown";
+            }
+
+            if (string.Equals(output, "Installed", StringComparison.OrdinalIgnoreCase))
             {
                 return "Installed";
             }
-            // Check if the output contains "State : Not Present"
-            // check if the return value is greater than or equal to 0 indicating that the substring exists in the string
-            else if (dismOutput.IndexOf("State : Not Present", StringComparison.Ordinal) >= 0)
+
+            else if (string.Equals(output, "Not Present", StringComparison.OrdinalIgnoreCase) || string.Equals(output, "NotPresent", StringComparison.OrdinalIgnoreCase))
             {
                 return "Not Present";
             }
-            // Check if the output contains "State : Staged"
-            // check if the return value is greater than or equal to 0 indicating that the substring exists in the string
-            else if (dismOutput.IndexOf("State : Staged", StringComparison.Ordinal) >= 0)
+
+            else if (string.Equals(output, "Staged", StringComparison.OrdinalIgnoreCase))
             {
                 return "Staged";
             }
 
-            // If none of the above conditions are met, return "Unknown"
+            HardenWindowsSecurity.Logger.LogMessage($"The output of the {capabilityName} state check is {output}");
+
             return "Unknown";
         }
 
@@ -117,6 +135,7 @@ namespace HardenWindowsSecurity
                 FileName = "dism.exe",           // Set the file name to "dism.exe"
                 Arguments = arguments,           // Set the arguments to the specified arguments
                 RedirectStandardOutput = true,   // Redirect the standard output
+                RedirectStandardError = true,
                 UseShellExecute = false,         // Do not use the shell to execute
                 CreateNoWindow = true            // Do not create a window
             };
@@ -130,11 +149,42 @@ namespace HardenWindowsSecurity
                     throw new InvalidOperationException("Failed to start the process.");
                 }
 
-                // Use the process's standard output
-                using (System.IO.StreamReader reader = process.StandardOutput)
+                using (System.IO.StreamReader outputReader = process.StandardOutput)
+                using (System.IO.StreamReader errorReader = process.StandardError)
                 {
-                    // Return the output of the DISM command
-                    return reader.ReadToEnd();
+                    string output = outputReader.ReadToEnd();
+                    string error = errorReader.ReadToEnd();
+
+                    process.WaitForExit();
+
+                    // Error code 87 is for when the capability doesn't exist on the system
+                    // Typically when a newer OS build has removed a deprecated feature that the older builds still have
+                    // The logic to handle such cases exist in other methods that call this method, but the error must not be terminating
+                    if (process.ExitCode == 87)
+                    {
+                        //    HardenWindowsSecurity.Logger.LogMessage($"Error details: {error}");
+                        //    HardenWindowsSecurity.Logger.LogMessage($"DISM command output: {output}");
+                        return string.Empty;
+                    }
+                    // https://learn.microsoft.com/en-us/windows/win32/debug/system-error-codes--1700-3999-
+                    else if (process.ExitCode == 3010)
+                    {
+                        HardenWindowsSecurity.Logger.LogMessage($"Reboot required to finish the feature/capability installation/uninstallation.");
+                        return string.Empty;
+                    }
+                    else if (process.ExitCode != 0)
+                    {
+                        // Print or log error and output details for other error codes
+                        HardenWindowsSecurity.Logger.LogMessage($"DISM command failed with exit code {process.ExitCode}. Error details: {error}");
+                        HardenWindowsSecurity.Logger.LogMessage($"DISM command output: {output}");
+
+                        throw new InvalidOperationException($"DISM command failed with exit code {process.ExitCode}. Error details: {error}");
+                    }
+                    else
+                    {
+                        // Return the output of the DISM command if successful
+                        return output;
+                    }
                 }
             }
         }
@@ -150,6 +200,32 @@ namespace HardenWindowsSecurity
                 3 => "Abnormal",       // State code 3 corresponds to "Abnormal"
                 _ => "Unknown"         // Any other state code corresponds to "Unknown"
             };
+        }
+
+        /// <summary>
+        /// Enables or disables a Windows feature using DISM
+        /// </summary>
+        /// <param name="featureName">feature name to enable/disable</param>
+        /// <param name="enable">true means enable, false means disable</param>
+        public static void SetWindowsFeature(string featureName, bool enable)
+        {
+
+            string arguments = string.Empty;
+
+            // Determine the command based on whether we are enabling or disabling the feature
+            if (enable == true)
+            {
+                // Construct the arguments for the DISM command
+                arguments = $"/Online /Enable-Feature /FeatureName:{featureName} /All /NoRestart";
+            }
+            else
+            {
+                // Construct the arguments for the DISM command
+                arguments = $"/Online /Disable-Feature /FeatureName:{featureName} /NoRestart";
+            }
+
+            // Run the DISM command using the helper method
+            string output = RunDismCommand(arguments);
         }
     }
 }

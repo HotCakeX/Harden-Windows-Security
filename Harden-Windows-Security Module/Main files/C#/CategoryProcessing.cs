@@ -347,7 +347,7 @@ namespace HardenWindowsSecurity
             }
             catch (Exception)
             {
-                //   Console.WriteLine($"Error comparing registry values: {ex.Message}");
+                //   HardenWindowsSecurity.Logger.LogMessage($"Error comparing registry values: {ex.Message}");
                 return false;
             }
             return false;

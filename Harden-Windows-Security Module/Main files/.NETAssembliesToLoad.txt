@@ -2,6 +2,7 @@ System
 System.IO
 System.Xml
 System.Net
+System.Data
 WindowsBase
 System.Xaml
 System.Linq
@@ -11,6 +12,7 @@ System.Windows
 System.CodeDom
 System.Runtime
 System.Net.Http
+System.Xml.Linq
 System.Security
 PresentationCore
 System.Text.Json
@@ -21,6 +23,7 @@ System.ObjectModel
 System.Collections
 System.Windows.Forms
 System.Net.Primitives
+System.ComponentModel
 PresentationFramework
 System.IO.Compression
 System.Security.Claims
@@ -32,6 +35,7 @@ WindowsFormsIntegration
 System.DirectoryServices
 Microsoft.Win32.Registry
 System.Security.Principal
+System.Reflection.Metadata
 System.Diagnostics.Process
 Microsoft.Win32.Primitives
 System.Management.Automation
@@ -42,4 +46,5 @@ System.Windows.Controls.Ribbon
 System.Text.RegularExpressions
 System.ComponentModel.Primitives
 System.Security.Principal.Windows
+System.ComponentModel.TypeConverter
 System.DirectoryServices.AccountManagement

@@ -60,16 +60,16 @@ namespace HardenWindowsSecurity
                             var sku = os["OperatingSystemSKU"]?.ToString();
 
                             // Home edition and Home edition single-language SKUs
-                            if (sku == "100" || sku == "101")
+                            if (string.Equals(sku, "100", StringComparison.OrdinalIgnoreCase) || string.Equals(sku, "101", StringComparison.OrdinalIgnoreCase))
                             {
-                                Console.WriteLine("Warning: The Windows Home edition has been detected, some categories are unavailable and the remaining categories are applied in a best effort fashion.");
+                                HardenWindowsSecurity.Logger.LogMessage("Warning: The Windows Home edition has been detected, some categories are unavailable and the remaining categories are applied in a best effort fashion.");
                             }
                         }
                     }
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"An error occurred: {ex.Message}");
+                    HardenWindowsSecurity.Logger.LogMessage($"An error occurred: {ex.Message}");
                 }
 
                 HardenWindowsSecurity.VerboseLogger.Write("Checking if TPM is available and enabled...");
@@ -78,7 +78,7 @@ namespace HardenWindowsSecurity
 
                 if (!tpmStatus.IsActivated || !tpmStatus.IsEnabled)
                 {
-                    Console.WriteLine($"TPM is not activated or enabled on this system. BitLockerSettings category will be unavailable - {tpmStatus.ErrorMessage}");
+                    HardenWindowsSecurity.Logger.LogMessage($"TPM is not activated or enabled on this system. BitLockerSettings category will be unavailable - {tpmStatus.ErrorMessage}");
                 }
 
                 if (HardenWindowsSecurity.GlobalVars.MDAVConfigCurrent == null)

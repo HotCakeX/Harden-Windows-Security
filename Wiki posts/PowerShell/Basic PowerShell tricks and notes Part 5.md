@@ -133,6 +133,11 @@ You need to first have the following DLL files in one directory:
 
 Then you can use the following PowerShell code to natively display the toast notifications
 
+> [!NOTE]\
+> Change `D:\notifications` to the correct folder in your computer where the DLLs exist.
+
+<br>
+
 ```powershell
 # Load the required assemblies
 Add-Type -Path 'D:\notifications\Microsoft.Toolkit.Uwp.Notifications.dll'

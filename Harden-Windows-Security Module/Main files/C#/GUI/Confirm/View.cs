@@ -204,7 +204,10 @@ namespace HardenWindowsSecurity
                     }
 
                     // Display a notification
-                    HardenWindowsSecurity.NewToastNotification.Show(ToastNotificationType.EndOfConfirmation, CompliantItemsCount, NonCompliantItemsCount);
+                    if (HardenWindowsSecurity.GlobalVars.UseNewNotificationsExp == true)
+                    {
+                        HardenWindowsSecurity.NewToastNotification.Show(ToastNotificationType.EndOfConfirmation, CompliantItemsCount, NonCompliantItemsCount);
+                    }
                 }
             }
 

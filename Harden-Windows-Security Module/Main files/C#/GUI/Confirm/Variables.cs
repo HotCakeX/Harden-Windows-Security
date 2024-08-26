@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.IO;
 using System.Collections;
 using System.Collections.Generic;
@@ -34,25 +34,13 @@ using System.Windows.Shell;
 using System.Threading.Tasks;
 using System.Text;
 using System.Reflection.PortableExecutable;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.TrayNotify; // !
 
 #nullable enable
 
 namespace HardenWindowsSecurity
 {
-    /// <summary>
-    /// A class to store all of the data that is related to the GUI and its operations
-    /// </summary>
-    public partial class GUIProtectWinSecurity
+    public partial class ConfirmSystemComplianceGUI
     {
-
-        /// <summary>
-        /// Main method of the class called from the PowerShell code
-        /// </summary>
-        public static void LoadXaml()
-        {
-
-        }
-
+        public static System.Windows.Controls.DataGrid? membersDataGrid;
     }
 }

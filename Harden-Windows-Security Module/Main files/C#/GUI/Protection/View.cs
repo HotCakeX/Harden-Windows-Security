@@ -109,6 +109,9 @@ namespace HardenWindowsSecurity
                 // Access the Execute Button
                 GUIProtectWinSecurity.ExecuteButton = (System.Windows.Controls.Primitives.ToggleButton)GUIProtectWinSecurity.ExecuteButtonGrid!.FindName("Execute");
 
+                // Register the Execute button to be enabled/disabled based on global activity
+                HardenWindowsSecurity.ActivityTracker.RegisterUIElement(GUIProtectWinSecurity.ExecuteButton);
+
                 // Apply the template to make sure it's available
                 GUIProtectWinSecurity.ExecuteButton.ApplyTemplate();
 

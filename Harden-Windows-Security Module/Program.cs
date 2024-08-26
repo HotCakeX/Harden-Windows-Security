@@ -7,6 +7,12 @@ namespace HardenWindowsSecurity
 {
     class Program
     {
+        /// <summary>
+        /// You can use this method when working on the module in Visual Studio
+        /// Simply press F5 and the UI will boot. The same can be done in Visual Studio Code in PowerShell environment.
+        /// The hybrid design allows for both environments to be completely usable.
+        /// </summary>
+        /// <param name="args"></param>
         static void Main(string[] args)
         {
             #region

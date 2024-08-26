@@ -219,6 +219,28 @@ namespace HardenWindowsSecurity
             // Collection of SecOp objects
             private System.Collections.ObjectModel.ObservableCollection<SecOp> _members;
 
+
+            #region a VisualTreeHelper method to find the Image control
+            private T FindVisualChild<T>(DependencyObject parent) where T : DependencyObject
+            {
+                for (int i = 0; i < VisualTreeHelper.GetChildrenCount(parent); i++)
+                {
+                    var child = VisualTreeHelper.GetChild(parent, i);
+                    if (child is T tChild)
+                    {
+                        return tChild;
+                    }
+                    var result = FindVisualChild<T>(child);
+                    if (result != null)
+                    {
+                        return result;
+                    }
+                }
+                return null;
+            }
+            #endregion
+
+
             // Method to handle the "Confirm" view, including loading and modifying it
             private void Confirm(object obj)
             {
@@ -239,18 +261,20 @@ namespace HardenWindowsSecurity
                 // Parse the XAML content to create a UserControl object
                 System.Windows.Controls.UserControl confirmView = (System.Windows.Controls.UserControl)System.Windows.Markup.XamlReader.Parse(xamlContent);
 
+                // Find the membersDataGrid
+                HardenWindowsSecurity.ConfirmSystemComplianceGUI.membersDataGrid = (System.Windows.Controls.DataGrid)confirmView.FindName("membersDataGrid");
+
                 // Initialize an empty security options collection
                 _members = new System.Collections.ObjectModel.ObservableCollection<SecOp>();
 
                 // Create a collection view based on the security options collection
                 _membersView = System.Windows.Data.CollectionViewSource.GetDefaultView(_members);
 
-                // Find the DataGrid in the Confirm view and set its ItemsSource to the collection view
-                var membersDataGrid = (System.Windows.Controls.DataGrid)confirmView.FindName("membersDataGrid");
-                if (membersDataGrid != null)
+                // Set the ItemSource of the DataGrid in the Confirm view to the collection view
+                if (HardenWindowsSecurity.ConfirmSystemComplianceGUI.membersDataGrid != null)
                 {
                     // Bind the DataGrid to the collection view
-                    membersDataGrid.ItemsSource = _membersView;
+                    HardenWindowsSecurity.ConfirmSystemComplianceGUI.membersDataGrid.ItemsSource = _membersView;
                 }
 
                 // Handle the TextBox filter using a lambda expression
@@ -291,6 +315,9 @@ namespace HardenWindowsSecurity
                 // Access the Refresh Button
                 System.Windows.Controls.Primitives.ToggleButton RefreshButton = (System.Windows.Controls.Primitives.ToggleButton)RefreshButtonGrid.FindName("RefreshButton");
 
+                // Register the RefreshButton as an element that will be enabled/disabled based on current activity
+                HardenWindowsSecurity.ActivityTracker.RegisterUIElement(RefreshButton);
+
                 // Apply the template to make sure it's available
                 RefreshButton.ApplyTemplate();
 
@@ -318,49 +345,55 @@ namespace HardenWindowsSecurity
                 RefreshButton.Click += async (sender, e) =>
             {
 
-                // Disable the Refresh button while processing
-                // Set text blocks to empty while new data is being generated
-                System.Windows.Application.Current.Dispatcher.Invoke(() =>
-                    {
-                        RefreshButton.IsEnabled = false;
+                // Only continue if there is no activity other places
+                if (HardenWindowsSecurity.ActivityTracker.IsActive == false)
+                {
+                    // mark as activity started
+                    HardenWindowsSecurity.ActivityTracker.IsActive = true;
 
-                        var CompliantItemsTextBlock = (System.Windows.Controls.TextBlock)confirmView.FindName("CompliantItemsTextBlock");
-                        var NonCompliantItemsTextBlock = (System.Windows.Controls.TextBlock)confirmView.FindName("NonCompliantItemsTextBlock");
-                        CompliantItemsTextBlock.Text = "";
-                        NonCompliantItemsTextBlock.Text = "";
-
-                        var TotalCountTextBlock = (System.Windows.Controls.TextBlock)confirmView.FindName("TotalCountTextBlock");
-
-                        if (TotalCountTextBlock != null)
+                    // Disable the Refresh button while processing
+                    // Set text blocks to empty while new data is being generated
+                    System.Windows.Application.Current.Dispatcher.Invoke(() =>
                         {
-                            // Update the text of the TextBlock to show the total count
-                            TotalCountTextBlock.Text = "Loading...";
-                        }
+                            var CompliantItemsTextBlock = (System.Windows.Controls.TextBlock)confirmView.FindName("CompliantItemsTextBlock");
+                            var NonCompliantItemsTextBlock = (System.Windows.Controls.TextBlock)confirmView.FindName("NonCompliantItemsTextBlock");
+                            CompliantItemsTextBlock.Text = "";
+                            NonCompliantItemsTextBlock.Text = "";
 
-                    });
+                            var TotalCountTextBlock = (System.Windows.Controls.TextBlock)confirmView.FindName("TotalCountTextBlock");
 
-                // Clear the current security options before starting data generation
-                _members.Clear();
-                _membersView.Refresh(); // Refresh the collection view to clear the DataGrid
+                            if (TotalCountTextBlock != null)
+                            {
+                                // Update the text of the TextBlock to show the total count
+                                TotalCountTextBlock.Text = "Loading...";
+                            }
 
-                // Run the method asynchronously in a different thread
-                await System.Threading.Tasks.Task.Run(() =>
-                    {
-                        // Get fresh data for compliance checking
-                        HardenWindowsSecurity.Initializer.Initialize(null, true);
+                        });
 
-                        // Perform the compliance check
-                        HardenWindowsSecurity.InvokeConfirmation.Invoke(null);
-                    });
+                    // Clear the current security options before starting data generation
+                    _members.Clear();
+                    _membersView.Refresh(); // Refresh the collection view to clear the DataGrid
 
-                // After InvokeConfirmation is completed, update the security options collection
-                await System.Windows.Application.Current.Dispatcher.InvokeAsync(() =>
-                    {
-                        LoadMembers(); // Load updated security options
-                        RefreshButton.IsChecked = false; // Uncheck the Refresh button
-                        RefreshButton.IsEnabled = true; // Re-enable the Refresh button
+                    // Run the method asynchronously in a different thread
+                    await System.Threading.Tasks.Task.Run(() =>
+                        {
+                            // Get fresh data for compliance checking
+                            HardenWindowsSecurity.Initializer.Initialize(null, true);
 
-                    });
+                            // Perform the compliance check
+                            HardenWindowsSecurity.InvokeConfirmation.Invoke(null);
+                        });
+
+                    // After InvokeConfirmation is completed, update the security options collection
+                    await System.Windows.Application.Current.Dispatcher.InvokeAsync(() =>
+                        {
+                            LoadMembers(); // Load updated security options
+                            RefreshButton.IsChecked = false; // Uncheck the Refresh button
+                        });
+
+                    // mark as activity completed
+                    HardenWindowsSecurity.ActivityTracker.IsActive = false;
+                }
             };
 
                 // Cache the Confirm view for future use

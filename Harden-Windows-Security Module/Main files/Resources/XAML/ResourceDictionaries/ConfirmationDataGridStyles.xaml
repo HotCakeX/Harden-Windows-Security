@@ -100,6 +100,7 @@
         <Setter Property="CanUserResizeRows" Value="True" />
         <!-- Grid Text font size -->
         <Setter Property="FontSize" Value="14" />
+        <Setter Property="Foreground" Value="Black"/>
         <Setter Property="GridLinesVisibility" Value="None" />
         <Setter Property="ColumnWidth" Value="*" />
         <Setter Property="Template">
@@ -163,6 +164,7 @@
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
+        <Setter Property="Foreground" Value="Black"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type DataGridRow}">
@@ -181,9 +183,18 @@
                             <DataGridRowHeader Grid.RowSpan="2" SelectiveScrollingGrid.SelectiveScrollingOrientation="Vertical" Visibility="{Binding HeadersVisibility, Converter={x:Static DataGrid.HeadersVisibilityConverter}, ConverterParameter={x:Static DataGridHeadersVisibility.Row}, RelativeSource={RelativeSource AncestorType={x:Type DataGrid}}}"/>
                         </SelectiveScrollingGrid>
                     </Border>
+                    <!--
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsSelected" Value="True">
+                            <Setter Property="Background" TargetName="DGR_Border" Value="LightGray" />
+                            <Setter Property="Foreground" Value="Black" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                    -->
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
+        <!--
         <Style.Triggers>
             <Trigger Property="IsMouseOver" Value="True">
                 <Setter Property="Background" Value="#623ED0"/>
@@ -201,12 +212,15 @@
                 <Setter Property="Background" Value="#dfdfdf"/>
             </MultiTrigger>
         </Style.Triggers>
+        -->
     </Style>
+    <!-- Background of the DataGrid for confirmation page -->
     <Style x:Key="DataGridCellStyle1" TargetType="{x:Type DataGridCell}">
         <Setter Property="Background" Value="Transparent"/>
         <Setter Property="VerticalAlignment" Value="Center" />
         <Setter Property="FocusVisualStyle" Value="{x:Null}" />
         <Setter Property="Margin" Value="15 0" />
+        <Setter Property="Foreground" Value="Black"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type DataGridCell}">
@@ -216,6 +230,15 @@
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
+        <!-- Another trigger for row selection, the first trigger set is disabled above -->
+        <!--
+        <Style.Triggers>
+            <Trigger Property="IsSelected" Value="True">
+                <Setter Property="Background" Value="LightGray"/>
+                <Setter Property="Foreground" Value="Black"/>
+            </Trigger>
+        </Style.Triggers>
+        -->
     </Style>
     <Style x:Key="ColumnHeaderGripperStyle" TargetType="{x:Type Thumb}">
         <Setter Property="Width" Value="8"/>

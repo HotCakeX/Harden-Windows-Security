@@ -1,4 +1,4 @@
-$ErrorActionPreference = 'Stop'
+$script:ErrorActionPreference = 'Stop'
 
 #Region Helper-Functions-And-ScriptBlocks
 # The following functions do not rely on any script-wide or global variables

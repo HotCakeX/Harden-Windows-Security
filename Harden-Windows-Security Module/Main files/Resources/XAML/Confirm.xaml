@@ -316,19 +316,19 @@
                         Visibility="{Binding ElementName=textBoxFilter, Path=Text.IsEmpty}" />
                 <TextBox Name="textBoxFilter" Style="{StaticResource filterTextBox}" />
             </Grid>
-            
+
             <StackPanel Orientation="Horizontal" Grid.Row="2" Margin="0,0,0,30">
-                
+
                 <TextBlock x:Name="CompliantItemsTextBlock"
                FontSize="15" FontWeight="SemiBold" Foreground="#121518"
                HorizontalAlignment="Left" VerticalAlignment="Center"
-               Margin="0,0,40,0"/>               
-                
+               Margin="0,0,40,0"/>
+
                 <!-- Add some margin to the right -->
                 <TextBlock x:Name="NonCompliantItemsTextBlock"
                FontSize="15" FontWeight="SemiBold" Foreground="#121518"
                HorizontalAlignment="Right" VerticalAlignment="Center"/>
-           
+
             </StackPanel>
 
             <!--SecOps Data Grid-->

@@ -270,7 +270,7 @@ namespace HardenWindowsSecurity
                 // Create a collection view based on the security options collection
                 _membersView = System.Windows.Data.CollectionViewSource.GetDefaultView(_members);
 
-                // Set the ItemSource of the DataGrid in the Confirm view to the collection view               
+                // Set the ItemSource of the DataGrid in the Confirm view to the collection view
                 if (HardenWindowsSecurity.ConfirmSystemComplianceGUI.membersDataGrid != null)
                 {
                     // Bind the DataGrid to the collection view
@@ -388,7 +388,7 @@ namespace HardenWindowsSecurity
                     await System.Windows.Application.Current.Dispatcher.InvokeAsync(() =>
                         {
                             LoadMembers(); // Load updated security options
-                            RefreshButton.IsChecked = false; // Uncheck the Refresh button 
+                            RefreshButton.IsChecked = false; // Uncheck the Refresh button
                         });
 
                     // mark as activity completed

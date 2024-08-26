@@ -25,6 +25,7 @@ Function Unprotect-WindowsSecurity {
         if (-NOT ([HardenWindowsSecurity.UserPrivCheck]::IsAdmin())) {
             Throw [System.Security.AccessControl.PrivilegeNotHeldException] 'Administrator'
         }
+        $script:ErrorActionPreference = 'Stop'
         [HardenWindowsSecurity.Initializer]::Initialize($VerbosePreference)
 
         Write-Verbose -Message 'Importing the required sub-modules'

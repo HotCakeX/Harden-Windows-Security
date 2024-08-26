@@ -42,6 +42,7 @@ function Confirm-SystemCompliance {
         [System.Management.Automation.SwitchParameter]$Offline
     )
     begin {
+        $script:ErrorActionPreference = 'Stop'
         # Makes sure this cmdlet is invoked with Admin privileges
         if (-NOT ([HardenWindowsSecurity.UserPrivCheck]::IsAdmin())) {
             Throw [System.Security.AccessControl.PrivilegeNotHeldException] 'Administrator'
@@ -155,6 +156,8 @@ function Confirm-SystemCompliance {
 
     process {
         try {
+            Write-Progress -Activity 'Performing Compliance Check...' -Status 'Running' -PercentComplete 50
+
             [HardenWindowsSecurity.InvokeConfirmation]::Invoke($Categories)
 
             # Making sure all the true/false values have the same case
@@ -288,6 +291,7 @@ function Confirm-SystemCompliance {
             Throw $_
         }
         finally {
+            Write-Progress -Activity 'Compliance checks have been completed' -Status 'Completed' -Completed
             [HardenWindowsSecurity.ControlledFolderAccessHandler]::Reset()
             [HardenWindowsSecurity.Miscellaneous]::CleanUp()
         }

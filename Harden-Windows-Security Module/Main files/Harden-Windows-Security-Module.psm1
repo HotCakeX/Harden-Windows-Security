@@ -1,4 +1,4 @@
-$global:ErrorActionPreference = 'Stop'
+$script:ErrorActionPreference = 'Stop'
 
 try {
     $PSStyle.Progress.UseOSCIndicator = $true

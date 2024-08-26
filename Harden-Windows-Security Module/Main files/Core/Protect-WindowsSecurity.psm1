@@ -303,6 +303,7 @@ Function Protect-WindowsSecurity {
     }
 
     begin {
+        $script:ErrorActionPreference = 'Stop'
         [HardenWindowsSecurity.Initializer]::Initialize($VerbosePreference)
         [System.Boolean]$ErrorsOcurred = $false
 
@@ -407,6 +408,7 @@ Function Protect-WindowsSecurity {
             # Download the required files
             if (!([HardenWindowsSecurity.GlobalVars]::Offline)) {
                 Write-Verbose -Message 'Downloading the required files'
+                Write-Progress -Activity 'Downloading the required files' -Status 'Downloading' -PercentComplete 20
             }
             [HardenWindowsSecurity.FileDownloader]::PrepDownloadedFiles(
                 "$PathToLGPO",
@@ -414,6 +416,8 @@ Function Protect-WindowsSecurity {
                 "$PathToMSFT365AppsSecurityBaselines"
             )
             Write-Verbose -Message 'Finished downloading/processing the required files'
+
+            Write-Progress -Activity 'Applying the security measures' -Status 'Protecting' -PercentComplete 50
 
             # a label to break out of the main switch statements and run the finally block when user chooses to exit
             :MainSwitchLabel switch ($Categories) {
@@ -451,6 +455,7 @@ Function Protect-WindowsSecurity {
             $ErrorsOcurred = $true
         }
         finally {
+            Write-Progress -Activity 'Protection completed' -Status 'Completed' -Completed
             if ($null -ne $CurrentPowerShellTitle) {
                 Write-Verbose -Message 'Restoring the title of the PowerShell back to what it was prior to running the module'
                 $Host.UI.RawUI.WindowTitle = $CurrentPowerShellTitle

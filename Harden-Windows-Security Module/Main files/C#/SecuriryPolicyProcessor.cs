@@ -53,7 +53,7 @@ namespace HardenWindowsSecurity
                     nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                     {
                         FriendlyName = name,
-                        Compliant = complianceResult ? "True" : "False",
+                        Compliant = complianceResult,
                         Value = actualValue,
                         Name = name,
                         Category = category,

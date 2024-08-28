@@ -39,7 +39,7 @@ using System.Reflection.PortableExecutable;
 
 namespace HardenWindowsSecurity
 {
-    public partial class ConfirmSystemComplianceGUI
+    public partial class GUIConfirmSystemCompliance
     {
         public static System.Windows.Controls.DataGrid? membersDataGrid;
     }

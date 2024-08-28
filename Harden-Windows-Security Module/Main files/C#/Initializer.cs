@@ -96,8 +96,8 @@ namespace HardenWindowsSecurity
             // Get the MSFT_MpComputerStatus and save them to the global variable HardenWindowsSecurity.GlobalVars.MDAVConfigCurrent
             HardenWindowsSecurity.GlobalVars.MDAVConfigCurrent = HardenWindowsSecurity.MpComputerStatusHelper.GetMpComputerStatus();
 
-            // Total number of Compliant values not equal to N/A
-            HardenWindowsSecurity.GlobalVars.TotalNumberOfTrueCompliantValues = 239;
+            // Total number of Compliant values
+            HardenWindowsSecurity.GlobalVars.TotalNumberOfTrueCompliantValues = 240;
 
             // Getting the $VerbosePreference from the calling cmdlet and saving it in the global variable
             HardenWindowsSecurity.GlobalVars.VerbosePreference = VerbosePreference;

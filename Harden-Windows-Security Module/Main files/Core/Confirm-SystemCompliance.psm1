@@ -160,21 +160,6 @@ function Confirm-SystemCompliance {
 
             [HardenWindowsSecurity.InvokeConfirmation]::Invoke($Categories)
 
-            # Making sure all the true/false values have the same case
-            foreach ($Item in ([HardenWindowsSecurity.GlobalVars]::FinalMegaObject).Values) {
-                foreach ($Item2 in $Item) {
-                    try {
-                        if ($Item2.Compliant -ieq 'True') {
-                            $Item2.Compliant = $true
-                        }
-                        elseif ($Item2.Compliant -ieq 'False') {
-                            $Item2.Compliant = $false
-                        }
-                    }
-                    catch {}
-                }
-            }
-
             if ($ExportToCSV) {
                 # Create an empty list to store the results based on the category order by sorting the concurrent hashtable
                 $AllOrderedResults = [System.Collections.Generic.List[HardenWindowsSecurity.IndividualResult]]::new()
@@ -221,7 +206,6 @@ function Confirm-SystemCompliance {
                             { switch ($_.Compliant) {
                                     { $_ -eq $true } { $SwitchColor = $($PSStyle.Foreground.FromRGB($RGBs[0], $RGBs[1], $RGBs[2])); break }
                                     { $_ -eq $false } { $SwitchColor = "$($PSStyle.Foreground.FromRGB(229,43,80))$($PSStyle.Blink)"; break }
-                                    { $_ -eq 'N/A' } { $SwitchColor = "$($PSStyle.Foreground.FromRGB(238,255,204))"; break }
                                 }
                                 "$SwitchColor$($_.Compliant)$($PSStyle.Reset)"
                             }
@@ -237,7 +221,6 @@ function Confirm-SystemCompliance {
                             { switch ($_.Compliant) {
                                     { $_ -eq $true } { $SwitchColor = $($PSStyle.Foreground.FromRGB($RGBs[0], $RGBs[1], $RGBs[2])); break }
                                     { $_ -eq $false } { $SwitchColor = "$($PSStyle.Foreground.FromRGB(229,43,80))$($PSStyle.Blink)"; break }
-                                    { $_ -eq 'N/A' } { $SwitchColor = "$($PSStyle.Foreground.FromRGB(238,255,204))"; break }
                                 }
                                 "$SwitchColor$($_.Compliant)$($PSStyle.Reset)"
                             }

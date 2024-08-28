@@ -36,7 +36,7 @@ namespace HardenWindowsSecurity
         // The following variables are only used by the Confirm-SystemCompliance cmdlet
         //
 
-        // Total number of Compliant values not equal to N/A
+        // Total number of Compliant values
         public static int TotalNumberOfTrueCompliantValues;
 
         //

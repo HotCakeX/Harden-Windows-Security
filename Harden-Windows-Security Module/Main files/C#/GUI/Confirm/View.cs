@@ -14,6 +14,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Xml.Linq;
 using static HardenWindowsSecurity.NewToastNotification;
+using System.Collections.Generic;
 
 #nullable disable
 
@@ -106,110 +107,6 @@ namespace HardenWindowsSecurity
         // Partial class definition for handling navigation and view models
         public partial class NavigationVM : ViewModelBase
         {
-            // Method to get the background color based on the category
-            private System.Windows.Media.Brush GetCategoryColor(string category)
-            {
-                // Determine the background color for each category
-                switch (category)
-                {
-                    // Light Pastel Sky Blue
-                    case "MicrosoftDefender":
-                        return new System.Windows.Media.BrushConverter().ConvertFromString("#B3E5FC") as System.Windows.Media.Brush;
-
-                    // Light Pastel Coral
-                    case "AttackSurfaceReductionRules":
-                        return new System.Windows.Media.BrushConverter().ConvertFromString("#FFDAB9") as System.Windows.Media.Brush;
-
-                    // Light Pastel Green (unchanged)
-                    case "BitLockerSettings":
-                        return new System.Windows.Media.BrushConverter().ConvertFromString("#C3FDB8") as System.Windows.Media.Brush;
-
-                    // Light Pastel Lemon (unchanged)
-                    case "TLSSecurity":
-                        return new System.Windows.Media.BrushConverter().ConvertFromString("#FFFACD") as System.Windows.Media.Brush;
-
-                    // Light Pastel Lavender
-                    case "LockScreen":
-                        return new System.Windows.Media.BrushConverter().ConvertFromString("#E6E6FA") as System.Windows.Media.Brush;
-
-                    // Light Pastel Aqua
-                    case "UserAccountControl":
-                        return new System.Windows.Media.BrushConverter().ConvertFromString("#C1F0F6") as System.Windows.Media.Brush;
-
-                    // Light Pastel Teal (unchanged)
-                    case "DeviceGuard":
-                        return new System.Windows.Media.BrushConverter().ConvertFromString("#B2DFDB") as System.Windows.Media.Brush;
-
-                    // Light Pastel Pink
-                    case "WindowsFirewall":
-                        return new System.Windows.Media.BrushConverter().ConvertFromString("#F8BBD0") as System.Windows.Media.Brush;
-
-                    // Light Pastel Peach (unchanged)
-                    case "OptionalWindowsFeatures":
-                        return new System.Windows.Media.BrushConverter().ConvertFromString("#FFE4E1") as System.Windows.Media.Brush;
-
-                    // Light Pastel Mint
-                    case "WindowsNetworking":
-                        return new System.Windows.Media.BrushConverter().ConvertFromString("#F5FFFA") as System.Windows.Media.Brush;
-
-                    // Light Pastel Gray (unchanged)
-                    default:
-                        return new System.Windows.Media.BrushConverter().ConvertFromString("#EDEDED") as System.Windows.Media.Brush;
-                }
-            }
-
-            // Method to update the total count of security options displayed
-            private void UpdateTotalCount()
-            {
-                // Get the total count of security options
-                var totalCount = _membersView.Cast<SecOp>().Count();
-                if (CurrentView is System.Windows.Controls.UserControl confirmView)
-                {
-                    // Find the TextBlock used to display the total count
-                    var TotalCountTextBlock = (System.Windows.Controls.TextBlock)confirmView.FindName("TotalCountTextBlock");
-                    if (TotalCountTextBlock != null)
-                    {
-                        // Update the text of the TextBlock to show the total count
-                        TotalCountTextBlock.Text = $"{totalCount} Total Verifiable Security Checks";
-                    }
-
-                    // Get the count of the compliant items
-                    string CompliantItemsCount = _membersView.SourceCollection
-                        .Cast<SecOp>()
-                        .Where(item => item.Compliant)
-                        .Count()
-                        .ToString(CultureInfo.InvariantCulture);
-
-                    // Get the count of the Non-compliant items
-                    string NonCompliantItemsCount = _membersView.SourceCollection
-                        .Cast<SecOp>()
-                        .Where(item => !item.Compliant)
-                        .Count()
-                        .ToString(CultureInfo.InvariantCulture);
-
-                    // Find the text blocks that display counts of true/false items
-                    var CompliantItemsTextBlock = (System.Windows.Controls.TextBlock)confirmView.FindName("CompliantItemsTextBlock");
-                    var NonCompliantItemsTextBlock = (System.Windows.Controls.TextBlock)confirmView.FindName("NonCompliantItemsTextBlock");
-
-                    if (CompliantItemsTextBlock != null)
-                    {
-                        // Set the text block's text
-                        CompliantItemsTextBlock.Text = $"{CompliantItemsCount} Compliant Items";
-                    }
-
-                    if (NonCompliantItemsTextBlock != null)
-                    {
-                        // Set the text block's text
-                        NonCompliantItemsTextBlock.Text = $"{NonCompliantItemsCount} Non-Compliant Items";
-                    }
-
-                    // Display a notification
-                    if (HardenWindowsSecurity.GlobalVars.UseNewNotificationsExp == true)
-                    {
-                        HardenWindowsSecurity.NewToastNotification.Show(ToastNotificationType.EndOfConfirmation, CompliantItemsCount, NonCompliantItemsCount);
-                    }
-                }
-            }
 
             // Private fields to hold the collection view and security options collection
 
@@ -262,7 +159,7 @@ namespace HardenWindowsSecurity
                 System.Windows.Controls.UserControl confirmView = (System.Windows.Controls.UserControl)System.Windows.Markup.XamlReader.Parse(xamlContent);
 
                 // Find the membersDataGrid
-                HardenWindowsSecurity.ConfirmSystemComplianceGUI.membersDataGrid = (System.Windows.Controls.DataGrid)confirmView.FindName("membersDataGrid");
+                HardenWindowsSecurity.GUIConfirmSystemCompliance.membersDataGrid = (System.Windows.Controls.DataGrid)confirmView.FindName("membersDataGrid");
 
                 // Initialize an empty security options collection
                 _members = new System.Collections.ObjectModel.ObservableCollection<SecOp>();
@@ -271,10 +168,10 @@ namespace HardenWindowsSecurity
                 _membersView = System.Windows.Data.CollectionViewSource.GetDefaultView(_members);
 
                 // Set the ItemSource of the DataGrid in the Confirm view to the collection view
-                if (HardenWindowsSecurity.ConfirmSystemComplianceGUI.membersDataGrid != null)
+                if (HardenWindowsSecurity.GUIConfirmSystemCompliance.membersDataGrid != null)
                 {
                     // Bind the DataGrid to the collection view
-                    HardenWindowsSecurity.ConfirmSystemComplianceGUI.membersDataGrid.ItemsSource = _membersView;
+                    HardenWindowsSecurity.GUIConfirmSystemCompliance.membersDataGrid.ItemsSource = _membersView;
                 }
 
                 // Handle the TextBox filter using a lambda expression
@@ -343,58 +240,58 @@ namespace HardenWindowsSecurity
 
                 // Set up the Click event handler for the Refresh button
                 RefreshButton.Click += async (sender, e) =>
-            {
-
-                // Only continue if there is no activity other places
-                if (HardenWindowsSecurity.ActivityTracker.IsActive == false)
                 {
-                    // mark as activity started
-                    HardenWindowsSecurity.ActivityTracker.IsActive = true;
 
-                    // Disable the Refresh button while processing
-                    // Set text blocks to empty while new data is being generated
-                    System.Windows.Application.Current.Dispatcher.Invoke(() =>
-                        {
-                            var CompliantItemsTextBlock = (System.Windows.Controls.TextBlock)confirmView.FindName("CompliantItemsTextBlock");
-                            var NonCompliantItemsTextBlock = (System.Windows.Controls.TextBlock)confirmView.FindName("NonCompliantItemsTextBlock");
-                            CompliantItemsTextBlock.Text = "";
-                            NonCompliantItemsTextBlock.Text = "";
+                    // Only continue if there is no activity other places
+                    if (HardenWindowsSecurity.ActivityTracker.IsActive == false)
+                    {
+                        // mark as activity started
+                        HardenWindowsSecurity.ActivityTracker.IsActive = true;
 
-                            var TotalCountTextBlock = (System.Windows.Controls.TextBlock)confirmView.FindName("TotalCountTextBlock");
-
-                            if (TotalCountTextBlock != null)
+                        // Disable the Refresh button while processing
+                        // Set text blocks to empty while new data is being generated
+                        System.Windows.Application.Current.Dispatcher.Invoke(() =>
                             {
-                                // Update the text of the TextBlock to show the total count
-                                TotalCountTextBlock.Text = "Loading...";
-                            }
+                                var CompliantItemsTextBlock = (System.Windows.Controls.TextBlock)confirmView.FindName("CompliantItemsTextBlock");
+                                var NonCompliantItemsTextBlock = (System.Windows.Controls.TextBlock)confirmView.FindName("NonCompliantItemsTextBlock");
+                                CompliantItemsTextBlock.Text = "";
+                                NonCompliantItemsTextBlock.Text = "";
 
-                        });
+                                var TotalCountTextBlock = (System.Windows.Controls.TextBlock)confirmView.FindName("TotalCountTextBlock");
 
-                    // Clear the current security options before starting data generation
-                    _members.Clear();
-                    _membersView.Refresh(); // Refresh the collection view to clear the DataGrid
+                                if (TotalCountTextBlock != null)
+                                {
+                                    // Update the text of the TextBlock to show the total count
+                                    TotalCountTextBlock.Text = "Loading...";
+                                }
 
-                    // Run the method asynchronously in a different thread
-                    await System.Threading.Tasks.Task.Run(() =>
-                        {
-                            // Get fresh data for compliance checking
-                            HardenWindowsSecurity.Initializer.Initialize(null, true);
+                            });
 
-                            // Perform the compliance check
-                            HardenWindowsSecurity.InvokeConfirmation.Invoke(null);
-                        });
+                        // Clear the current security options before starting data generation
+                        _members.Clear();
+                        _membersView.Refresh(); // Refresh the collection view to clear the DataGrid
 
-                    // After InvokeConfirmation is completed, update the security options collection
-                    await System.Windows.Application.Current.Dispatcher.InvokeAsync(() =>
-                        {
-                            LoadMembers(); // Load updated security options
-                            RefreshButton.IsChecked = false; // Uncheck the Refresh button
-                        });
+                        // Run the method asynchronously in a different thread
+                        await System.Threading.Tasks.Task.Run(() =>
+                            {
+                                // Get fresh data for compliance checking
+                                HardenWindowsSecurity.Initializer.Initialize(null, true);
 
-                    // mark as activity completed
-                    HardenWindowsSecurity.ActivityTracker.IsActive = false;
-                }
-            };
+                                // Perform the compliance check
+                                HardenWindowsSecurity.InvokeConfirmation.Invoke(null);
+                            });
+
+                        // After InvokeConfirmation is completed, update the security options collection
+                        await System.Windows.Application.Current.Dispatcher.InvokeAsync(() =>
+                            {
+                                LoadMembers(); // Load updated security options
+                                RefreshButton.IsChecked = false; // Uncheck the Refresh button
+                            });
+
+                        // mark as activity completed
+                        HardenWindowsSecurity.ActivityTracker.IsActive = false;
+                    }
+                };
 
                 // Cache the Confirm view for future use
                 _viewCache["ConfirmView"] = confirmView;
@@ -403,7 +300,124 @@ namespace HardenWindowsSecurity
                 CurrentView = confirmView;
             }
 
-            // Method to load security options from the FinalMegaObject and update the DataGrid
+
+            /// <summary>
+            /// Method that returns background color based on the category
+            /// Used by the LoadMembers() method only
+            /// </summary>
+            /// <param name="category">Name of the category</param>
+            /// <returns>The color of the category to be used for display purposes on the DataGrid GUI</returns>
+            private System.Windows.Media.Brush GetCategoryColor(string category)
+            {
+                // Determine the background color for each category
+                switch (category)
+                {
+                    // Light Pastel Sky Blue
+                    case "MicrosoftDefender":
+                        return new System.Windows.Media.BrushConverter().ConvertFromString("#B3E5FC") as System.Windows.Media.Brush;
+
+                    // Light Pastel Coral
+                    case "AttackSurfaceReductionRules":
+                        return new System.Windows.Media.BrushConverter().ConvertFromString("#FFDAB9") as System.Windows.Media.Brush;
+
+                    // Light Pastel Green (unchanged)
+                    case "BitLockerSettings":
+                        return new System.Windows.Media.BrushConverter().ConvertFromString("#C3FDB8") as System.Windows.Media.Brush;
+
+                    // Light Pastel Lemon (unchanged)
+                    case "TLSSecurity":
+                        return new System.Windows.Media.BrushConverter().ConvertFromString("#FFFACD") as System.Windows.Media.Brush;
+
+                    // Light Pastel Lavender
+                    case "LockScreen":
+                        return new System.Windows.Media.BrushConverter().ConvertFromString("#E6E6FA") as System.Windows.Media.Brush;
+
+                    // Light Pastel Aqua
+                    case "UserAccountControl":
+                        return new System.Windows.Media.BrushConverter().ConvertFromString("#C1F0F6") as System.Windows.Media.Brush;
+
+                    // Light Pastel Teal (unchanged)
+                    case "DeviceGuard":
+                        return new System.Windows.Media.BrushConverter().ConvertFromString("#B2DFDB") as System.Windows.Media.Brush;
+
+                    // Light Pastel Pink
+                    case "WindowsFirewall":
+                        return new System.Windows.Media.BrushConverter().ConvertFromString("#F8BBD0") as System.Windows.Media.Brush;
+
+                    // Light Pastel Peach (unchanged)
+                    case "OptionalWindowsFeatures":
+                        return new System.Windows.Media.BrushConverter().ConvertFromString("#FFE4E1") as System.Windows.Media.Brush;
+
+                    // Light Pastel Mint
+                    case "WindowsNetworking":
+                        return new System.Windows.Media.BrushConverter().ConvertFromString("#F5FFFA") as System.Windows.Media.Brush;
+
+                    // Light Pastel Gray (unchanged)
+                    default:
+                        return new System.Windows.Media.BrushConverter().ConvertFromString("#EDEDED") as System.Windows.Media.Brush;
+                }
+            }
+
+            /// <summary>
+            /// Method to update the total count of security options displayed on the Text Block
+            /// In the Confirmation page view
+            /// </summary>
+            private void UpdateTotalCount()
+            {
+                // Get the total count of security options
+                int totalCount = _membersView.Cast<SecOp>().Count();
+                if (CurrentView is System.Windows.Controls.UserControl confirmView)
+                {
+                    // Find the TextBlock used to display the total count
+                    System.Windows.Controls.TextBlock TotalCountTextBlock = (System.Windows.Controls.TextBlock)confirmView.FindName("TotalCountTextBlock");
+                    if (TotalCountTextBlock != null)
+                    {
+                        // Update the text of the TextBlock to show the total count
+                        TotalCountTextBlock.Text = $"{totalCount} Total Verifiable Security Checks";
+                    }
+
+                    // Get the count of the compliant items
+                    string CompliantItemsCount = _membersView.SourceCollection
+                        .Cast<SecOp>()
+                        .Where(item => item.Compliant)
+                        .Count()
+                        .ToString(CultureInfo.InvariantCulture);
+
+                    // Get the count of the Non-compliant items
+                    string NonCompliantItemsCount = _membersView.SourceCollection
+                        .Cast<SecOp>()
+                        .Where(item => !item.Compliant)
+                        .Count()
+                        .ToString(CultureInfo.InvariantCulture);
+
+                    // Find the text blocks that display counts of true/false items
+                    var CompliantItemsTextBlock = (System.Windows.Controls.TextBlock)confirmView.FindName("CompliantItemsTextBlock");
+                    var NonCompliantItemsTextBlock = (System.Windows.Controls.TextBlock)confirmView.FindName("NonCompliantItemsTextBlock");
+
+                    if (CompliantItemsTextBlock != null)
+                    {
+                        // Set the text block's text
+                        CompliantItemsTextBlock.Text = $"{CompliantItemsCount} Compliant Items";
+                    }
+
+                    if (NonCompliantItemsTextBlock != null)
+                    {
+                        // Set the text block's text
+                        NonCompliantItemsTextBlock.Text = $"{NonCompliantItemsCount} Non-Compliant Items";
+                    }
+
+                    // Display a notification
+                    if (HardenWindowsSecurity.GlobalVars.UseNewNotificationsExp == true)
+                    {
+                        HardenWindowsSecurity.NewToastNotification.Show(ToastNotificationType.EndOfConfirmation, CompliantItemsCount, NonCompliantItemsCount);
+                    }
+                }
+            }
+
+            /// <summary>
+            /// Method to load security options from the FinalMegaObject and update the DataGrid
+            /// Also sets custom background colors for each category
+            /// </summary>
             private void LoadMembers()
             {
                 // Clear the current security options
@@ -414,13 +428,11 @@ namespace HardenWindowsSecurity
                 {
                     foreach (var kvp in HardenWindowsSecurity.GlobalVars.FinalMegaObject)
                     {
-                        var category = kvp.Key; // Get the category of results
-                        var results = kvp.Value; // Get the results for the category
+                        string category = kvp.Key; // Get the category of results
+                        List<IndividualResult> results = kvp.Value; // Get the results for the category
 
-                        foreach (var result in results)
+                        foreach (IndividualResult result in results)
                         {
-                            var compliant = string.Equals(result.Compliant, "true", System.StringComparison.OrdinalIgnoreCase);
-
                             // Add each result as a new SecOp object to the collection
                             _members.Add(new SecOp
                             {
@@ -429,7 +441,7 @@ namespace HardenWindowsSecurity
                                 Name = result.Name,
                                 Category = result.Category,
                                 Method = result.Method,
-                                Compliant = compliant, // Set the compliance status
+                                Compliant = result.Compliant,
                                 BgColor = GetCategoryColor(result.Category) // Set the background color based on the category
                             });
                         }

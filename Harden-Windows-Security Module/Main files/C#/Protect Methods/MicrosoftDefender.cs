@@ -48,22 +48,25 @@ namespace HardenWindowsSecurity
 
             //2nd level aggression will come after further testing
             HardenWindowsSecurity.Logger.LogMessage("Setting the Brute-Force Protection to use cloud aggregation to block IP addresses that are over 99% likely malicious");
-            HardenWindowsSecurity.MpComputerStatusHelper.SetMpComputerStatus<string>("BruteForceProtectionAggressiveness", "1");
+            HardenWindowsSecurity.MpComputerStatusHelper.SetMpComputerStatus<byte>("BruteForceProtectionAggressiveness", 1);
 
             HardenWindowsSecurity.Logger.LogMessage("Setting the Brute-Force Protection to prevent suspicious and malicious behaviors");
-            HardenWindowsSecurity.MpComputerStatusHelper.SetMpComputerStatus<string>("BruteForceProtectionConfiguredState", "1");
+            HardenWindowsSecurity.MpComputerStatusHelper.SetMpComputerStatus<byte>("BruteForceProtectionConfiguredState", 1);
 
             HardenWindowsSecurity.Logger.LogMessage("Setting the internal feature logic to determine blocking time for the Brute-Force Protections");
-            HardenWindowsSecurity.MpComputerStatusHelper.SetMpComputerStatus<string>("BruteForceProtectionMaxBlockTime", "0");
+            HardenWindowsSecurity.MpComputerStatusHelper.SetMpComputerStatus<uint>("BruteForceProtectionMaxBlockTime", 0);
 
             HardenWindowsSecurity.Logger.LogMessage("Setting the Remote Encryption Protection to use cloud intel and context, and block when confidence level is above 90%");
-            HardenWindowsSecurity.MpComputerStatusHelper.SetMpComputerStatus<string>("RemoteEncryptionProtectionAggressiveness", "2");
+            HardenWindowsSecurity.MpComputerStatusHelper.SetMpComputerStatus<byte>("RemoteEncryptionProtectionAggressiveness", 2);
 
             HardenWindowsSecurity.Logger.LogMessage("Setting the Remote Encryption Protection to prevent suspicious and malicious behaviors");
-            HardenWindowsSecurity.MpComputerStatusHelper.SetMpComputerStatus<string>("RemoteEncryptionProtectionConfiguredState", "1");
+            HardenWindowsSecurity.MpComputerStatusHelper.SetMpComputerStatus<byte>("RemoteEncryptionProtectionConfiguredState", 1);
 
             HardenWindowsSecurity.Logger.LogMessage("Setting the internal feature logic to determine blocking time for the Remote Encryption Protection");
-            HardenWindowsSecurity.MpComputerStatusHelper.SetMpComputerStatus<string>("RemoteEncryptionProtectionMaxBlockTime", "0");
+            HardenWindowsSecurity.MpComputerStatusHelper.SetMpComputerStatus<uint>("RemoteEncryptionProtectionMaxBlockTime", 0);
+
+            HardenWindowsSecurity.Logger.LogMessage("Extending brute-force protection coverage to block local network addresses.");
+            HardenWindowsSecurity.MpComputerStatusHelper.SetMpComputerStatus<bool>("BruteForceProtectionLocalNetworkBlocking", true);
 
             HardenWindowsSecurity.Logger.LogMessage("Adding OneDrive folders of all the user accounts (personal and work accounts) to the Controlled Folder Access for Ransomware Protection");
             string[] OneDrivePaths = HardenWindowsSecurity.GetOneDriveDirectories.Get().ToArray();

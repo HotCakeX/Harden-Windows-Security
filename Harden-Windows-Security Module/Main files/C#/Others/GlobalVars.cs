@@ -12,7 +12,7 @@ namespace HardenWindowsSecurity
     public static class GlobalVars
     {
         // Minimum required OS build number
-        public const decimal Requiredbuild = 22621.3155M;
+        public const decimal Requiredbuild = 22621.3880M;
 
         // Current OS build version
         public static readonly decimal OSBuildNumber = Environment.OSVersion.Version.Build;

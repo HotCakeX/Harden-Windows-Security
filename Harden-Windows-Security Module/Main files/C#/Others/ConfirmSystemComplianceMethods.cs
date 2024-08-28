@@ -220,7 +220,7 @@ namespace HardenWindowsSecurity
                     nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                     {
                         FriendlyName = friendlyName,
-                        Compliant = compliant ? "True" : "False",
+                        Compliant = compliant,
                         Value = action,
                         Name = name,
                         Category = CatName,
@@ -277,7 +277,7 @@ namespace HardenWindowsSecurity
                 nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "Allow updates to be downloaded automatically over metered connections",
-                    Compliant = MDM_Policy_Result01_Update02_AllowAutoWindowsUpdateDownloadOverMeteredNetwork.IsMatch ? "True" : "False",
+                    Compliant = MDM_Policy_Result01_Update02_AllowAutoWindowsUpdateDownloadOverMeteredNetwork.IsMatch,
                     Value = MDM_Policy_Result01_Update02_AllowAutoWindowsUpdateDownloadOverMeteredNetwork.Value,
                     Name = "Allow updates to be downloaded automatically over metered connections",
                     Category = CatName,
@@ -291,7 +291,7 @@ namespace HardenWindowsSecurity
                 nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "Automatically download updates and install them on maintenance day",
-                    Compliant = MDM_Policy_Result01_Update02_AllowAutoUpdate.IsMatch ? "True" : "False",
+                    Compliant = MDM_Policy_Result01_Update02_AllowAutoUpdate.IsMatch,
                     Value = MDM_Policy_Result01_Update02_AllowAutoUpdate.Value,
                     Name = "Automatically download updates and install them on maintenance day",
                     Category = CatName,
@@ -305,7 +305,7 @@ namespace HardenWindowsSecurity
                 nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "Install updates for other Microsoft products",
-                    Compliant = MDM_Policy_Result01_Update02_AllowMUUpdateService.IsMatch ? "True" : "False",
+                    Compliant = MDM_Policy_Result01_Update02_AllowMUUpdateService.IsMatch,
                     Value = MDM_Policy_Result01_Update02_AllowMUUpdateService.Value,
                     Name = "Install updates for other Microsoft products",
                     Category = CatName,
@@ -417,7 +417,7 @@ namespace HardenWindowsSecurity
                 nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "Enable Virtualization Based Security",
-                    Compliant = EnableVirtualizationBasedSecurity ? "True" : "False",
+                    Compliant = EnableVirtualizationBasedSecurity,
                     Value = EnableVirtualizationBasedSecurity ? "True" : "False",
                     Name = "EnableVirtualizationBasedSecurity",
                     Category = CatName,
@@ -436,7 +436,7 @@ namespace HardenWindowsSecurity
                     FriendlyName = "Require Platform Security Features",
                     Compliant = (RequirePlatformSecurityFeatures != null &&
                                 (RequirePlatformSecurityFeatures.Equals("1", StringComparison.OrdinalIgnoreCase) ||
-                                 RequirePlatformSecurityFeatures.Equals("3", StringComparison.OrdinalIgnoreCase))) ? "True" : "False",
+                                 RequirePlatformSecurityFeatures.Equals("3", StringComparison.OrdinalIgnoreCase))) ? true : false,
                     Value = (RequirePlatformSecurityFeatures != null && RequirePlatformSecurityFeatures.Equals("1", StringComparison.OrdinalIgnoreCase)) ?
                             "VBS with Secure Boot" :
                             (RequirePlatformSecurityFeatures != null && RequirePlatformSecurityFeatures.Equals("3", StringComparison.OrdinalIgnoreCase)) ?
@@ -455,7 +455,7 @@ namespace HardenWindowsSecurity
                 nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "Hypervisor Enforced Code Integrity - UEFI Lock",
-                    Compliant = HypervisorEnforcedCodeIntegrity ? "True" : "False",
+                    Compliant = HypervisorEnforcedCodeIntegrity,
                     Value = HypervisorEnforcedCodeIntegrity ? "True" : "False",
                     Name = "HypervisorEnforcedCodeIntegrity",
                     Category = CatName,
@@ -469,7 +469,7 @@ namespace HardenWindowsSecurity
                 nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "Require HVCI MAT (Memory Attribute Table)",
-                    Compliant = RequireUEFIMemoryAttributesTable ? "True" : "False",
+                    Compliant = RequireUEFIMemoryAttributesTable,
                     Value = RequireUEFIMemoryAttributesTable ? "True" : "False",
                     Name = "HVCIMATRequired",
                     Category = CatName,
@@ -483,7 +483,7 @@ namespace HardenWindowsSecurity
                 nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "Credential Guard Configuration - UEFI Lock",
-                    Compliant = LsaCfgFlags ? "True" : "False",
+                    Compliant = LsaCfgFlags,
                     Value = LsaCfgFlags ? "True" : "False",
                     Name = "LsaCfgFlags",
                     Category = CatName,
@@ -497,7 +497,7 @@ namespace HardenWindowsSecurity
                 nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "System Guard Launch",
-                    Compliant = ConfigureSystemGuardLaunch ? "True" : "False",
+                    Compliant = ConfigureSystemGuardLaunch,
                     Value = ConfigureSystemGuardLaunch ? "True" : "False",
                     Name = "ConfigureSystemGuardLaunch",
                     Category = CatName,
@@ -573,7 +573,7 @@ namespace HardenWindowsSecurity
                 nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "DMA protection",
-                    Compliant = ItemState ? "True" : "False",
+                    Compliant = ItemState,
                     Value = ItemState ? "True" : "False",
                     Name = "DMA protection",
                     Category = CatName,
@@ -602,7 +602,7 @@ namespace HardenWindowsSecurity
                     nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                     {
                         FriendlyName = "Hibernate is set to full",
-                        Compliant = IndividualItemResult ? "True" : "False",
+                        Compliant = IndividualItemResult,
                         Value = IndividualItemResult ? "True" : "False",
                         Name = "Hibernate is set to full",
                         Category = CatName,
@@ -638,7 +638,7 @@ namespace HardenWindowsSecurity
                         nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                         {
                             FriendlyName = "Secure OS Drive encryption",
-                            Compliant = "True",
+                            Compliant = true,
                             Value = "Normal Security Level",
                             Name = "Secure OS Drive encryption",
                             Category = CatName,
@@ -651,7 +651,7 @@ namespace HardenWindowsSecurity
                         nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                         {
                             FriendlyName = "Secure OS Drive encryption",
-                            Compliant = "True",
+                            Compliant = true,
                             Value = "Enhanced Security Level",
                             Name = "Secure OS Drive encryption",
                             Category = CatName,
@@ -663,7 +663,7 @@ namespace HardenWindowsSecurity
                         nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                         {
                             FriendlyName = "Secure OS Drive encryption",
-                            Compliant = "False",
+                            Compliant = false,
                             Value = "False",
                             Name = "Secure OS Drive encryption",
                             Category = CatName,
@@ -676,7 +676,7 @@ namespace HardenWindowsSecurity
                     nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                     {
                         FriendlyName = "Secure OS Drive encryption",
-                        Compliant = "False",
+                        Compliant = false,
                         Value = "False",
                         Name = "Secure OS Drive encryption",
                         Category = CatName,
@@ -720,7 +720,7 @@ namespace HardenWindowsSecurity
                                 nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                                 {
                                     FriendlyName = $"Secure Drive {BitLockerDrive.MountPoint} encryption",
-                                    Compliant = "True",
+                                    Compliant = true,
                                     Value = "Encrypted",
                                     Name = $"Secure Drive {BitLockerDrive.MountPoint} encryption",
                                     Category = CatName,
@@ -732,7 +732,7 @@ namespace HardenWindowsSecurity
                                 nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                                 {
                                     FriendlyName = $"Secure Drive {BitLockerDrive.MountPoint} encryption",
-                                    Compliant = "False",
+                                    Compliant = false,
                                     Value = "Not properly encrypted",
                                     Name = $"Secure Drive {BitLockerDrive.MountPoint} encryption",
                                     Category = CatName,
@@ -745,7 +745,7 @@ namespace HardenWindowsSecurity
                             nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                             {
                                 FriendlyName = $"Secure Drive {BitLockerDrive.MountPoint} encryption",
-                                Compliant = "False",
+                                Compliant = false,
                                 Value = "Not encrypted",
                                 Name = $"Secure Drive {BitLockerDrive.MountPoint} encryption",
                                 Category = CatName,
@@ -791,9 +791,6 @@ namespace HardenWindowsSecurity
                 // Checking if all user accounts are part of the Hyper-V security Group
                 // Get all the enabled user accounts that are not part of the Hyper-V Security group based on SID
 
-                // Initializing the compliant variable
-                string compliant;
-
                 // The SID for the Hyper-V Administrators group
                 string hyperVAdminGroupSID = "S-1-5-32-578";
 
@@ -803,14 +800,14 @@ namespace HardenWindowsSecurity
                     .ToList();
 
                 // Determine compliance based on the filtered list to see if the list has any elements
-                compliant = usersNotInHyperVGroup?.Any() == true ? "False" : "True";
+                bool compliant = usersNotInHyperVGroup?.Count == 0;
 
                 // Add result to the nested object array
                 nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "All users are part of the Hyper-V Administrators group",
                     Compliant = compliant,
-                    Value = compliant,
+                    Value = compliant ? "True" : "False",
                     Name = "All users are part of the Hyper-V Administrators group",
                     Category = CatName,
                     Method = "CIM"
@@ -887,7 +884,7 @@ namespace HardenWindowsSecurity
                         nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                         {
                             FriendlyName = "Audit policy for Other Logon/Logoff Events",
-                            Compliant = individualItemResult ? "True" : "False",
+                            Compliant = individualItemResult,
                             Value = individualItemResult ? "Success and Failure" : inclusionSetting ?? string.Empty, // just to suppress the warning
                             Name = "Audit policy for Other Logon/Logoff Events",
                             Category = CatName ?? string.Empty, // just to suppress the warning
@@ -913,7 +910,7 @@ namespace HardenWindowsSecurity
                 nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "Disable Location",
-                    Compliant = MDM_Policy_Result01_System02_AllowLocation.IsMatch ? "True" : "False",
+                    Compliant = MDM_Policy_Result01_System02_AllowLocation.IsMatch,
                     Value = MDM_Policy_Result01_System02_AllowLocation.Value,
                     Name = "Disable Location",
                     Category = CatName ?? string.Empty, // just to suppress the warning
@@ -973,7 +970,7 @@ namespace HardenWindowsSecurity
                 nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "Network Location of all connections set to Public",
-                    Compliant = individualItemResult ? "True" : "False",
+                    Compliant = individualItemResult,
                     Value = individualItemResult ? "True" : "False",
                     Name = "Network Location of all connections set to Public",
                     Category = CatName,
@@ -1106,7 +1103,7 @@ namespace HardenWindowsSecurity
                 nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "PowerShell v2 is disabled",
-                    Compliant = string.Equals(FeaturesCheckResults.PowerShellv2, "Disabled", StringComparison.OrdinalIgnoreCase) ? "True" : "False",
+                    Compliant = string.Equals(FeaturesCheckResults.PowerShellv2, "Disabled", StringComparison.OrdinalIgnoreCase),
                     Value = FeaturesCheckResults.PowerShellv2,
                     Name = "PowerShell v2 is disabled",
                     Category = CatName,
@@ -1116,7 +1113,7 @@ namespace HardenWindowsSecurity
                 nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "PowerShell v2 Engine is disabled",
-                    Compliant = string.Equals(FeaturesCheckResults.PowerShellv2Engine, "Disabled", StringComparison.OrdinalIgnoreCase) ? "True" : "False",
+                    Compliant = string.Equals(FeaturesCheckResults.PowerShellv2Engine, "Disabled", StringComparison.OrdinalIgnoreCase),
                     Value = FeaturesCheckResults.PowerShellv2Engine,
                     Name = "PowerShell v2 Engine is disabled",
                     Category = CatName,
@@ -1126,7 +1123,7 @@ namespace HardenWindowsSecurity
                 nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "Work Folders client is disabled",
-                    Compliant = string.Equals(FeaturesCheckResults.WorkFoldersClient, "Disabled", StringComparison.OrdinalIgnoreCase) ? "True" : "False",
+                    Compliant = string.Equals(FeaturesCheckResults.WorkFoldersClient, "Disabled", StringComparison.OrdinalIgnoreCase),
                     Value = FeaturesCheckResults.WorkFoldersClient,
                     Name = "Work Folders client is disabled",
                     Category = CatName,
@@ -1136,7 +1133,7 @@ namespace HardenWindowsSecurity
                 nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "Internet Printing Client is disabled",
-                    Compliant = string.Equals(FeaturesCheckResults.InternetPrintingClient, "Disabled", StringComparison.OrdinalIgnoreCase) ? "True" : "False",
+                    Compliant = string.Equals(FeaturesCheckResults.InternetPrintingClient, "Disabled", StringComparison.OrdinalIgnoreCase),
                     Value = FeaturesCheckResults.InternetPrintingClient,
                     Name = "Internet Printing Client is disabled",
                     Category = CatName,
@@ -1146,7 +1143,7 @@ namespace HardenWindowsSecurity
                 nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "Windows Media Player (legacy) is disabled",
-                    Compliant = string.Equals(FeaturesCheckResults.WindowsMediaPlayer, "Not Present", StringComparison.OrdinalIgnoreCase) ? "True" : "False",
+                    Compliant = string.Equals(FeaturesCheckResults.WindowsMediaPlayer, "Not Present", StringComparison.OrdinalIgnoreCase),
                     Value = FeaturesCheckResults.WindowsMediaPlayer,
                     Name = "Windows Media Player (legacy) is disabled",
                     Category = CatName,
@@ -1156,7 +1153,7 @@ namespace HardenWindowsSecurity
                 nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "Microsoft Defender Application Guard is not present",
-                    Compliant = string.Equals(FeaturesCheckResults.MDAG, "Disabled", StringComparison.OrdinalIgnoreCase) || string.Equals(FeaturesCheckResults.MDAG, "Unknown", StringComparison.OrdinalIgnoreCase) ? "True" : "False",
+                    Compliant = string.Equals(FeaturesCheckResults.MDAG, "Disabled", StringComparison.OrdinalIgnoreCase) || string.Equals(FeaturesCheckResults.MDAG, "Unknown", StringComparison.OrdinalIgnoreCase),
                     Value = FeaturesCheckResults.MDAG,
                     Name = "Microsoft Defender Application Guard is not present",
                     Category = CatName,
@@ -1166,7 +1163,7 @@ namespace HardenWindowsSecurity
                 nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "Windows Sandbox is enabled",
-                    Compliant = string.Equals(FeaturesCheckResults.WindowsSandbox, "Enabled", StringComparison.OrdinalIgnoreCase) ? "True" : "False",
+                    Compliant = string.Equals(FeaturesCheckResults.WindowsSandbox, "Enabled", StringComparison.OrdinalIgnoreCase),
                     Value = FeaturesCheckResults.WindowsSandbox,
                     Name = "Windows Sandbox is enabled",
                     Category = CatName,
@@ -1176,7 +1173,7 @@ namespace HardenWindowsSecurity
                 nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "Hyper-V is enabled",
-                    Compliant = string.Equals(FeaturesCheckResults.HyperV, "Enabled", StringComparison.OrdinalIgnoreCase) ? "True" : "False",
+                    Compliant = string.Equals(FeaturesCheckResults.HyperV, "Enabled", StringComparison.OrdinalIgnoreCase),
                     Value = FeaturesCheckResults.HyperV,
                     Name = "Hyper-V is enabled",
                     Category = CatName,
@@ -1186,7 +1183,7 @@ namespace HardenWindowsSecurity
                 nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "WMIC is not present",
-                    Compliant = string.Equals(FeaturesCheckResults.WMIC, "Not Present", StringComparison.OrdinalIgnoreCase) ? "True" : "False",
+                    Compliant = string.Equals(FeaturesCheckResults.WMIC, "Not Present", StringComparison.OrdinalIgnoreCase),
                     Value = FeaturesCheckResults.WMIC,
                     Name = "WMIC is not present",
                     Category = CatName,
@@ -1196,7 +1193,7 @@ namespace HardenWindowsSecurity
                 nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "Internet Explorer mode functionality for Edge is not present",
-                    Compliant = string.Equals(FeaturesCheckResults.IEMode, "Not Present", StringComparison.OrdinalIgnoreCase) ? "True" : "False",
+                    Compliant = string.Equals(FeaturesCheckResults.IEMode, "Not Present", StringComparison.OrdinalIgnoreCase),
                     Value = FeaturesCheckResults.IEMode,
                     Name = "Internet Explorer mode functionality for Edge is not present",
                     Category = CatName,
@@ -1206,7 +1203,7 @@ namespace HardenWindowsSecurity
                 nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "Legacy Notepad is not present",
-                    Compliant = string.Equals(FeaturesCheckResults.LegacyNotepad, "Not Present", StringComparison.OrdinalIgnoreCase) ? "True" : "False",
+                    Compliant = string.Equals(FeaturesCheckResults.LegacyNotepad, "Not Present", StringComparison.OrdinalIgnoreCase),
                     Value = FeaturesCheckResults.LegacyNotepad,
                     Name = "Legacy Notepad is not present",
                     Category = CatName,
@@ -1216,7 +1213,7 @@ namespace HardenWindowsSecurity
                 nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "WordPad is not present",
-                    Compliant = string.Equals(FeaturesCheckResults.LegacyWordPad, "Not Present", StringComparison.OrdinalIgnoreCase) || string.Equals(FeaturesCheckResults.LegacyWordPad, "Unknown", StringComparison.OrdinalIgnoreCase) ? "True" : "False",
+                    Compliant = string.Equals(FeaturesCheckResults.LegacyWordPad, "Not Present", StringComparison.OrdinalIgnoreCase) || string.Equals(FeaturesCheckResults.LegacyWordPad, "Unknown", StringComparison.OrdinalIgnoreCase),
                     Value = FeaturesCheckResults.LegacyWordPad,
                     Name = "WordPad is not present",
                     Category = CatName,
@@ -1226,7 +1223,7 @@ namespace HardenWindowsSecurity
                 nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "PowerShell ISE is not present",
-                    Compliant = string.Equals(FeaturesCheckResults.PowerShellISE, "Not Present", StringComparison.OrdinalIgnoreCase) ? "True" : "False",
+                    Compliant = string.Equals(FeaturesCheckResults.PowerShellISE, "Not Present", StringComparison.OrdinalIgnoreCase),
                     Value = FeaturesCheckResults.PowerShellISE,
                     Name = "PowerShell ISE is not present",
                     Category = CatName,
@@ -1236,7 +1233,7 @@ namespace HardenWindowsSecurity
                 nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "Steps Recorder is not present",
-                    Compliant = string.Equals(FeaturesCheckResults.StepsRecorder, "Not Present", StringComparison.OrdinalIgnoreCase) ? "True" : "False",
+                    Compliant = string.Equals(FeaturesCheckResults.StepsRecorder, "Not Present", StringComparison.OrdinalIgnoreCase),
                     Value = FeaturesCheckResults.StepsRecorder,
                     Name = "Steps Recorder is not present",
                     Category = CatName,
@@ -1274,7 +1271,7 @@ namespace HardenWindowsSecurity
                 nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "ECC Curves and their positions",
-                    Compliant = ECCCurvesComparisonResults.AreCurvesCompliant ? "True" : "False",
+                    Compliant = ECCCurvesComparisonResults.AreCurvesCompliant,
                     Value = string.Join(", ", ECCCurvesComparisonResults.CurrentEccCurves ?? Enumerable.Empty<string>()),
                     Name = "ECC Curves and their positions",
                     Category = CatName,
@@ -1288,7 +1285,7 @@ namespace HardenWindowsSecurity
                 nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "Configure the correct TLS Cipher Suites",
-                    Compliant = TLSCipherSuites ? "True" : "False",
+                    Compliant = TLSCipherSuites,
                     Value = TLSCipherSuites ? "True" : "False",
                     Name = "Configure the correct TLS Cipher Suites",
                     Category = CatName,
@@ -1353,7 +1350,7 @@ namespace HardenWindowsSecurity
                 nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "mDNS UDP-In Firewall Rules are disabled",
-                    Compliant = firewallRuleGroupResultEnabledStatus ? "True" : "False",
+                    Compliant = firewallRuleGroupResultEnabledStatus,
                     Value = firewallRuleGroupResultEnabledStatus ? "True" : "False",
                     Name = "mDNS UDP-In Firewall Rules are disabled",
                     Category = CatName,
@@ -1372,7 +1369,7 @@ namespace HardenWindowsSecurity
                 nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "Enable Windows Firewall for Public profile",
-                    Compliant = MDM_Firewall_PublicProfile02_EnableFirewall.IsMatch ? "True" : "False",
+                    Compliant = MDM_Firewall_PublicProfile02_EnableFirewall.IsMatch,
                     Value = MDM_Firewall_PublicProfile02_EnableFirewall.Value,
                     Name = "Enable Windows Firewall for Public profile",
                     Category = CatName,
@@ -1386,7 +1383,7 @@ namespace HardenWindowsSecurity
                 nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "Display notifications for Public profile",
-                    Compliant = MDM_Firewall_PublicProfile02_DisableInboundNotifications.IsMatch ? "True" : "False",
+                    Compliant = MDM_Firewall_PublicProfile02_DisableInboundNotifications.IsMatch,
                     Value = MDM_Firewall_PublicProfile02_DisableInboundNotifications.Value,
                     Name = "Display notifications for Public profile",
                     Category = CatName,
@@ -1400,7 +1397,7 @@ namespace HardenWindowsSecurity
                 nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "Configure Log file size for Public profile",
-                    Compliant = MDM_Firewall_PublicProfile02_LogMaxFileSize.IsMatch ? "True" : "False",
+                    Compliant = MDM_Firewall_PublicProfile02_LogMaxFileSize.IsMatch,
                     Value = MDM_Firewall_PublicProfile02_LogMaxFileSize.Value,
                     Name = "Configure Log file size for Public profile",
                     Category = CatName,
@@ -1414,7 +1411,7 @@ namespace HardenWindowsSecurity
                 nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "Log blocked connections for Public profile",
-                    Compliant = MDM_Firewall_PublicProfile02_EnableLogDroppedPackets.IsMatch ? "True" : "False",
+                    Compliant = MDM_Firewall_PublicProfile02_EnableLogDroppedPackets.IsMatch,
                     Value = MDM_Firewall_PublicProfile02_EnableLogDroppedPackets.Value,
                     Name = "Log blocked connections for Public profile",
                     Category = CatName,
@@ -1428,7 +1425,7 @@ namespace HardenWindowsSecurity
                 nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "Configure Log file path for Public profile",
-                    Compliant = MDM_Firewall_PublicProfile02_LogFilePath.IsMatch ? "True" : "False",
+                    Compliant = MDM_Firewall_PublicProfile02_LogFilePath.IsMatch,
                     Value = MDM_Firewall_PublicProfile02_LogFilePath.Value,
                     Name = "Configure Log file path for Public profile",
                     Category = CatName,
@@ -1447,7 +1444,7 @@ namespace HardenWindowsSecurity
                 nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "Enable Windows Firewall for Private profile",
-                    Compliant = MDM_Firewall_PrivateProfile02_EnableFirewall.IsMatch ? "True" : "False",
+                    Compliant = MDM_Firewall_PrivateProfile02_EnableFirewall.IsMatch,
                     Value = MDM_Firewall_PrivateProfile02_EnableFirewall.Value,
                     Name = "Enable Windows Firewall for Private profile",
                     Category = CatName,
@@ -1461,7 +1458,7 @@ namespace HardenWindowsSecurity
                 nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "Display notifications for Private profile",
-                    Compliant = MDM_Firewall_PrivateProfile02_DisableInboundNotifications.IsMatch ? "True" : "False",
+                    Compliant = MDM_Firewall_PrivateProfile02_DisableInboundNotifications.IsMatch,
                     Value = MDM_Firewall_PrivateProfile02_DisableInboundNotifications.Value,
                     Name = "Display notifications for Private profile",
                     Category = CatName,
@@ -1475,7 +1472,7 @@ namespace HardenWindowsSecurity
                 nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "Configure Log file size for Private profile",
-                    Compliant = MDM_Firewall_PrivateProfile02_LogMaxFileSize.IsMatch ? "True" : "False",
+                    Compliant = MDM_Firewall_PrivateProfile02_LogMaxFileSize.IsMatch,
                     Value = MDM_Firewall_PrivateProfile02_LogMaxFileSize.Value,
                     Name = "Configure Log file size for Private profile",
                     Category = CatName,
@@ -1489,7 +1486,7 @@ namespace HardenWindowsSecurity
                 nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "Log blocked connections for Private profile",
-                    Compliant = MDM_Firewall_PrivateProfile02_EnableLogDroppedPackets.IsMatch ? "True" : "False",
+                    Compliant = MDM_Firewall_PrivateProfile02_EnableLogDroppedPackets.IsMatch,
                     Value = MDM_Firewall_PrivateProfile02_EnableLogDroppedPackets.Value,
                     Name = "Log blocked connections for Private profile",
                     Category = CatName,
@@ -1503,7 +1500,7 @@ namespace HardenWindowsSecurity
                 nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "Configure Log file path for Private profile",
-                    Compliant = MDM_Firewall_PrivateProfile02_LogFilePath.IsMatch ? "True" : "False",
+                    Compliant = MDM_Firewall_PrivateProfile02_LogFilePath.IsMatch,
                     Value = MDM_Firewall_PrivateProfile02_LogFilePath.Value,
                     Name = "Configure Log file path for Private profile",
                     Category = CatName,
@@ -1522,7 +1519,7 @@ namespace HardenWindowsSecurity
                 nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "Enable Windows Firewall for Domain profile",
-                    Compliant = MDM_Firewall_DomainProfile02_EnableFirewall.IsMatch ? "True" : "False",
+                    Compliant = MDM_Firewall_DomainProfile02_EnableFirewall.IsMatch,
                     Value = MDM_Firewall_DomainProfile02_EnableFirewall.Value,
                     Name = "Enable Windows Firewall for Domain profile",
                     Category = CatName,
@@ -1536,7 +1533,7 @@ namespace HardenWindowsSecurity
                 nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "Set Default Outbound Action for Domain profile",
-                    Compliant = MDM_Firewall_DomainProfile02_DefaultOutboundAction.IsMatch ? "True" : "False",
+                    Compliant = MDM_Firewall_DomainProfile02_DefaultOutboundAction.IsMatch,
                     Value = MDM_Firewall_DomainProfile02_DefaultOutboundAction.Value,
                     Name = "Set Default Outbound Action for Domain profile",
                     Category = CatName,
@@ -1550,7 +1547,7 @@ namespace HardenWindowsSecurity
                 nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "Set Default Inbound Action for Domain profile",
-                    Compliant = MDM_Firewall_DomainProfile02_DefaultInboundAction.IsMatch ? "True" : "False",
+                    Compliant = MDM_Firewall_DomainProfile02_DefaultInboundAction.IsMatch,
                     Value = MDM_Firewall_DomainProfile02_DefaultInboundAction.Value,
                     Name = "Set Default Inbound Action for Domain profile",
                     Category = CatName,
@@ -1564,7 +1561,7 @@ namespace HardenWindowsSecurity
                 nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "Block all Domain profile connections",
-                    Compliant = MDM_Firewall_DomainProfile02_Shielded.IsMatch ? "True" : "False",
+                    Compliant = MDM_Firewall_DomainProfile02_Shielded.IsMatch,
                     Value = MDM_Firewall_DomainProfile02_Shielded.Value,
                     Name = "Shielded",
                     Category = CatName,
@@ -1578,7 +1575,7 @@ namespace HardenWindowsSecurity
                 nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "Configure Log file path for domain profile",
-                    Compliant = MDM_Firewall_DomainProfile02_LogFilePath.IsMatch ? "True" : "False",
+                    Compliant = MDM_Firewall_DomainProfile02_LogFilePath.IsMatch,
                     Value = MDM_Firewall_DomainProfile02_LogFilePath.Value,
                     Name = "Configure Log file path for domain profile",
                     Category = CatName,
@@ -1592,7 +1589,7 @@ namespace HardenWindowsSecurity
                 nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "Configure Log file size for domain profile",
-                    Compliant = MDM_Firewall_DomainProfile02_LogMaxFileSize.IsMatch ? "True" : "False",
+                    Compliant = MDM_Firewall_DomainProfile02_LogMaxFileSize.IsMatch,
                     Value = MDM_Firewall_DomainProfile02_LogMaxFileSize.Value,
                     Name = "Configure Log file size for domain profile",
                     Category = CatName,
@@ -1606,7 +1603,7 @@ namespace HardenWindowsSecurity
                 nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "Log blocked connections for domain profile",
-                    Compliant = MDM_Firewall_DomainProfile02_EnableLogDroppedPackets.IsMatch ? "True" : "False",
+                    Compliant = MDM_Firewall_DomainProfile02_EnableLogDroppedPackets.IsMatch,
                     Value = MDM_Firewall_DomainProfile02_EnableLogDroppedPackets.Value,
                     Name = "Log blocked connections for domain profile",
                     Category = CatName,
@@ -1620,7 +1617,7 @@ namespace HardenWindowsSecurity
                 nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "Log successful connections for domain profile",
-                    Compliant = MDM_Firewall_DomainProfile02_EnableLogSuccessConnections.IsMatch ? "True" : "False",
+                    Compliant = MDM_Firewall_DomainProfile02_EnableLogSuccessConnections.IsMatch,
                     Value = MDM_Firewall_DomainProfile02_EnableLogSuccessConnections.Value,
                     Name = "Log successful connections for domain profile",
                     Category = CatName,
@@ -1697,7 +1694,7 @@ namespace HardenWindowsSecurity
                             nestedObjectArray.Add(new IndividualResult
                             {
                                 FriendlyName = "Boot Configuration Data (BCD) No-eXecute (NX) Value",
-                                Compliant = compliant ? "True" : "False",
+                                Compliant = compliant,
                                 Value = nxValue ?? string.Empty,
                                 Name = "Boot Configuration Data (BCD) No-eXecute (NX) Value",
                                 Category = CatName,
@@ -1764,7 +1761,7 @@ namespace HardenWindowsSecurity
                                 nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                                 {
                                     FriendlyName = "Mandatory ASLR",
-                                    Compliant = compliant ? "True" : "False",
+                                    Compliant = compliant,
                                     Value = ForceRelocateImages,
                                     Name = "Mandatory ASLR",
                                     Category = CatName,
@@ -1777,7 +1774,7 @@ namespace HardenWindowsSecurity
                                 nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                                 {
                                     FriendlyName = "Mandatory ASLR",
-                                    Compliant = "False",
+                                    Compliant = false,
                                     Value = "False",
                                     Name = "Mandatory ASLR",
                                     Category = CatName,
@@ -1790,7 +1787,7 @@ namespace HardenWindowsSecurity
                             nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                             {
                                 FriendlyName = "Mandatory ASLR",
-                                Compliant = "False",
+                                Compliant = false,
                                 Value = "False",
                                 Name = "Mandatory ASLR",
                                 Category = CatName,
@@ -1868,7 +1865,7 @@ namespace HardenWindowsSecurity
                 }
 
                 // Comparison
-                // Compare the values of the two hashtables if the keys match
+                // Compare the values of the two HashTables if the keys match
                 foreach (var targetMitigationItem in TargetMitigations)
                 {
                     // Get the current key and value from dictionary containing the CSV data
@@ -1899,7 +1896,7 @@ namespace HardenWindowsSecurity
                             nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                             {
                                 FriendlyName = $"Process Mitigations for: {ProcessName_Target}",
-                                Compliant = "False",
+                                Compliant = false,
                                 Value = string.Join(",", ProcessMitigations_Applied),
                                 Name = $"Process Mitigations for: {ProcessName_Target}",
                                 Category = CatName,
@@ -1917,7 +1914,7 @@ namespace HardenWindowsSecurity
                             nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                             {
                                 FriendlyName = $"Process Mitigations for: {ProcessName_Target}",
-                                Compliant = "True",
+                                Compliant = true,
                                 Value = string.Join(",", ProcessMitigations_Target), // Join the array elements into a string to display them properly in the output CSV file
                                 Name = $"Process Mitigations for: {ProcessName_Target}",
                                 Category = CatName,
@@ -1936,7 +1933,7 @@ namespace HardenWindowsSecurity
                         nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                         {
                             FriendlyName = $"Process Mitigations for: {ProcessName_Target}",
-                            Compliant = "False",
+                            Compliant = false,
                             Value = "N/A",
                             Name = $"Process Mitigations for: {ProcessName_Target}",
                             Category = CatName,
@@ -1963,7 +1960,7 @@ namespace HardenWindowsSecurity
                 nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "Fast weekly Microsoft recommended driver block list update",
-                    Compliant = DriverBlockListScheduledTaskResult ? "True" : "False",
+                    Compliant = DriverBlockListScheduledTaskResult,
                     Value = DriverBlockListScheduledTaskResult ? "True" : "False",
                     Name = "Fast weekly Microsoft recommended driver block list update",
                     Category = CatName,
@@ -1986,7 +1983,7 @@ namespace HardenWindowsSecurity
                 nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "Microsoft Defender Platform Updates Channel",
-                    Compliant = string.Equals(PlatformUpdatesChannelName, "Beta", StringComparison.OrdinalIgnoreCase) ? "True" : "False",
+                    Compliant = string.Equals(PlatformUpdatesChannelName, "Beta", StringComparison.OrdinalIgnoreCase),
                     Value = PlatformUpdatesChannelName ?? string.Empty,
                     Name = "Microsoft Defender Platform Updates Channel",
                     Category = CatName,
@@ -2002,27 +1999,9 @@ namespace HardenWindowsSecurity
                 nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "Microsoft Defender Engine Updates Channel",
-                    Compliant = string.Equals(EngineUpdatesChannelName, "Beta", StringComparison.OrdinalIgnoreCase) ? "True" : "False",
+                    Compliant = string.Equals(EngineUpdatesChannelName, "Beta", StringComparison.OrdinalIgnoreCase),
                     Value = EngineUpdatesChannelName ?? string.Empty,
                     Name = "Microsoft Defender Engine Updates Channel",
-                    Category = CatName,
-                    Method = "CIM"
-                });
-
-
-                // the type of ControlledFolderAccessAllowedApplications is List<string>
-                // Cast to a more general collection type
-                var ControlledFolderAccessExclusionsApplications = HardenWindowsSecurity.PropertyHelper.GetPropertyValue(HardenWindowsSecurity.GlobalVars.MDAVPreferencesCurrent, "ControlledFolderAccessAllowedApplications") as IEnumerable<string>;
-
-                // Convert the list to a comma-separated string to be easier to display in the output CSV file and console
-                string ControlledFolderAccessExclusionsResults = ControlledFolderAccessExclusionsApplications != null ? string.Join(", ", ControlledFolderAccessExclusionsApplications) : string.Empty;
-
-                nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
-                {
-                    FriendlyName = "Controlled Folder Access Exclusions",
-                    Compliant = "N/A",
-                    Value = ControlledFolderAccessExclusionsResults,
-                    Name = "Controlled Folder Access Exclusions",
                     Category = CatName,
                     Method = "CIM"
                 });
@@ -2033,7 +2012,7 @@ namespace HardenWindowsSecurity
                 nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "Allow Switch To Async Inspection",
-                    Compliant = AllowSwitchToAsyncInspectionResult ? "True" : "False",
+                    Compliant = AllowSwitchToAsyncInspectionResult,
                     Value = AllowSwitchToAsyncInspectionResult ? "True" : "False",
                     Name = "Allow Switch To Async Inspection",
                     Category = CatName,
@@ -2046,7 +2025,7 @@ namespace HardenWindowsSecurity
                 nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "OOBE Enable Rtp And Sig Update",
-                    Compliant = OOBEEnableRtpAndSigUpdateResult ? "True" : "False",
+                    Compliant = OOBEEnableRtpAndSigUpdateResult,
                     Value = OOBEEnableRtpAndSigUpdateResult ? "True" : "False",
                     Name = "OOBE Enable Rtp And Sig Update",
                     Category = CatName,
@@ -2059,7 +2038,7 @@ namespace HardenWindowsSecurity
                 nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "Intel TDT Enabled",
-                    Compliant = IntelTDTEnabledResult ? "True" : "False",
+                    Compliant = IntelTDTEnabledResult,
                     Value = IntelTDTEnabledResult ? "True" : "False",
                     Name = "Intel TDT Enabled",
                     Category = CatName,
@@ -2072,7 +2051,7 @@ namespace HardenWindowsSecurity
                 nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "Smart App Control State",
-                    Compliant = SmartAppControlStateResult.Equals("on", StringComparison.OrdinalIgnoreCase) ? "True" : "False",
+                    Compliant = SmartAppControlStateResult.Equals("on", StringComparison.OrdinalIgnoreCase),
                     Value = SmartAppControlStateResult,
                     Name = "Smart App Control State",
                     Category = CatName,
@@ -2085,7 +2064,7 @@ namespace HardenWindowsSecurity
                 nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "Controlled Folder Access",
-                    Compliant = EnableControlledFolderAccessResult.Equals("1", StringComparison.OrdinalIgnoreCase) ? "True" : "False",
+                    Compliant = EnableControlledFolderAccessResult.Equals("1", StringComparison.OrdinalIgnoreCase),
                     Value = EnableControlledFolderAccessResult,
                     Name = "Controlled Folder Access",
                     Category = CatName,
@@ -2098,7 +2077,7 @@ namespace HardenWindowsSecurity
                 nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "Enable Restore Point scanning",
-                    Compliant = DisableRestorePointResult ? "False" : "True",
+                    Compliant = !DisableRestorePointResult,
                     Value = DisableRestorePointResult ? "False" : "True",
                     Name = "Enable Restore Point scanning",
                     Category = CatName,
@@ -2113,7 +2092,7 @@ namespace HardenWindowsSecurity
                 nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "Performance Mode Status",
-                    Compliant = PerformanceModeStatusResult.Equals("0", StringComparison.OrdinalIgnoreCase) ? "True" : "False",
+                    Compliant = PerformanceModeStatusResult.Equals("0", StringComparison.OrdinalIgnoreCase),
                     Value = PerformanceModeStatusResult,
                     Name = "Performance Mode Status",
                     Category = CatName,
@@ -2126,7 +2105,7 @@ namespace HardenWindowsSecurity
                 nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "Enable Convert Warn To Block",
-                    Compliant = EnableConvertWarnToBlockResult ? "True" : "False",
+                    Compliant = EnableConvertWarnToBlockResult,
                     Value = EnableConvertWarnToBlockResult ? "True" : "False",
                     Name = "Enable Convert Warn To Block",
                     Category = CatName,
@@ -2149,7 +2128,7 @@ namespace HardenWindowsSecurity
                         nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                         {
                             FriendlyName = "BruteForce Protection Aggressiveness",
-                            Compliant = "True",
+                            Compliant = true,
                             Value = BruteForceProtectionAggressivenessResult,
                             Name = "BruteForce Protection Aggressiveness",
                             Category = CatName,
@@ -2161,7 +2140,7 @@ namespace HardenWindowsSecurity
                         nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                         {
                             FriendlyName = "BruteForce Protection Aggressiveness",
-                            Compliant = "False",
+                            Compliant = false,
                             Value = "N/A",
                             Name = "BruteForce Protection Aggressiveness",
                             Category = CatName,
@@ -2174,7 +2153,7 @@ namespace HardenWindowsSecurity
                     nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                     {
                         FriendlyName = "BruteForce Protection Aggressiveness",
-                        Compliant = "False",
+                        Compliant = false,
                         Value = "N/A",
                         Name = "BruteForce Protection Aggressiveness",
                         Category = CatName,
@@ -2198,7 +2177,7 @@ namespace HardenWindowsSecurity
                         nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                         {
                             FriendlyName = "BruteForce Protection Max Block Time",
-                            Compliant = "True",
+                            Compliant = true,
                             Value = BruteForceProtectionMaxBlockTimeResult,
                             Name = "BruteForce Protection Max Block Time",
                             Category = CatName,
@@ -2210,7 +2189,7 @@ namespace HardenWindowsSecurity
                         nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                         {
                             FriendlyName = "BruteForce Protection Max Block Time",
-                            Compliant = "False",
+                            Compliant = false,
                             Value = "N/A",
                             Name = "BruteForce Protection Max Block Time",
                             Category = CatName,
@@ -2223,7 +2202,7 @@ namespace HardenWindowsSecurity
                     nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                     {
                         FriendlyName = "BruteForce Protection Max Block Time",
-                        Compliant = "False",
+                        Compliant = false,
                         Value = "N/A",
                         Name = "BruteForce Protection Max Block Time",
                         Category = CatName,
@@ -2237,7 +2216,7 @@ namespace HardenWindowsSecurity
                 nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "BruteForce Protection Configured State",
-                    Compliant = BruteForceProtectionConfiguredStateResult.Equals("1", StringComparison.OrdinalIgnoreCase) ? "True" : "False",
+                    Compliant = BruteForceProtectionConfiguredStateResult.Equals("1", StringComparison.OrdinalIgnoreCase),
                     Value = BruteForceProtectionConfiguredStateResult,
                     Name = "BruteForce Protection Configured State",
                     Category = CatName,
@@ -2260,7 +2239,7 @@ namespace HardenWindowsSecurity
                         nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                         {
                             FriendlyName = "Remote Encryption Protection Max Block Time",
-                            Compliant = "True",
+                            Compliant = true,
                             Value = RemoteEncryptionProtectionMaxBlockTimeResult,
                             Name = "Remote Encryption Protection Max Block Time",
                             Category = CatName,
@@ -2272,7 +2251,7 @@ namespace HardenWindowsSecurity
                         nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                         {
                             FriendlyName = "Remote Encryption Protection Max Block Time",
-                            Compliant = "False",
+                            Compliant = false,
                             Value = "N/A",
                             Name = "Remote Encryption Protection Max Block Time",
                             Category = CatName,
@@ -2285,7 +2264,7 @@ namespace HardenWindowsSecurity
                     nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                     {
                         FriendlyName = "Remote Encryption Protection Max Block Time",
-                        Compliant = "False",
+                        Compliant = false,
                         Value = "N/A",
                         Name = "Remote Encryption Protection Max Block Time",
                         Category = CatName,
@@ -2300,7 +2279,7 @@ namespace HardenWindowsSecurity
                 {
                     FriendlyName = "Remote Encryption Protection Aggressiveness",
                     // Check if the value is 1 or 2, both are compliant
-                    Compliant = RemoteEncryptionProtectionAggressivenessResult.Equals("1", StringComparison.OrdinalIgnoreCase) || RemoteEncryptionProtectionAggressivenessResult.Equals("2", StringComparison.OrdinalIgnoreCase) ? "True" : "False",
+                    Compliant = RemoteEncryptionProtectionAggressivenessResult.Equals("1", StringComparison.OrdinalIgnoreCase) || RemoteEncryptionProtectionAggressivenessResult.Equals("2", StringComparison.OrdinalIgnoreCase),
                     Value = RemoteEncryptionProtectionAggressivenessResult,
                     Name = "Remote Encryption Protection Aggressiveness",
                     Category = CatName,
@@ -2313,7 +2292,7 @@ namespace HardenWindowsSecurity
                 nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "Remote Encryption Protection Configured State",
-                    Compliant = RemoteEncryptionProtectionConfiguredStateResult.Equals("1", StringComparison.OrdinalIgnoreCase) ? "True" : "False",
+                    Compliant = RemoteEncryptionProtectionConfiguredStateResult.Equals("1", StringComparison.OrdinalIgnoreCase),
                     Value = RemoteEncryptionProtectionConfiguredStateResult,
                     Name = "Remote Encryption Protection Configured State",
                     Category = CatName,
@@ -2327,7 +2306,7 @@ namespace HardenWindowsSecurity
                 nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "Cloud Block Level",
-                    Compliant = CloudBlockLevelResult.Equals("6", StringComparison.OrdinalIgnoreCase) ? "True" : "False",
+                    Compliant = CloudBlockLevelResult.Equals("6", StringComparison.OrdinalIgnoreCase),
                     Value = CloudBlockLevelResult,
                     Name = "Cloud Block Level",
                     Category = CatName,
@@ -2341,7 +2320,7 @@ namespace HardenWindowsSecurity
                 nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "Email Scanning",
-                    Compliant = DisableEmailScanningResult ? "False" : "True",
+                    Compliant = !DisableEmailScanningResult,
                     Value = DisableEmailScanningResult ? "False" : "True",
                     Name = "Email Scanning",
                     Category = CatName,
@@ -2355,7 +2334,7 @@ namespace HardenWindowsSecurity
                 nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "Send file samples when further analysis is required",
-                    Compliant = SubmitSamplesConsentResult.Equals("3", StringComparison.OrdinalIgnoreCase) ? "True" : "False",
+                    Compliant = SubmitSamplesConsentResult.Equals("3", StringComparison.OrdinalIgnoreCase),
                     Value = SubmitSamplesConsentResult,
                     Name = "Send file samples when further analysis is required",
                     Category = CatName,
@@ -2369,7 +2348,7 @@ namespace HardenWindowsSecurity
                 nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "Join Microsoft MAPS (aka SpyNet)",
-                    Compliant = MAPSReportingResult.Equals("2", StringComparison.OrdinalIgnoreCase) ? "True" : "False",
+                    Compliant = MAPSReportingResult.Equals("2", StringComparison.OrdinalIgnoreCase),
                     Value = MAPSReportingResult,
                     Name = "Join Microsoft MAPS (aka SpyNet)",
                     Category = CatName,
@@ -2383,7 +2362,7 @@ namespace HardenWindowsSecurity
                 nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "File Hash Computation",
-                    Compliant = EnableFileHashComputationResult ? "True" : "False",
+                    Compliant = EnableFileHashComputationResult,
                     Value = EnableFileHashComputationResult ? "True" : "False",
                     Name = "File Hash Computation",
                     Category = CatName,
@@ -2397,7 +2376,7 @@ namespace HardenWindowsSecurity
                 nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "Extended cloud check (Seconds)",
-                    Compliant = CloudExtendedTimeoutResult.Equals("50", StringComparison.OrdinalIgnoreCase) ? "True" : "False",
+                    Compliant = CloudExtendedTimeoutResult.Equals("50", StringComparison.OrdinalIgnoreCase),
                     Value = CloudExtendedTimeoutResult,
                     Name = "Extended cloud check (Seconds)",
                     Category = CatName,
@@ -2411,7 +2390,7 @@ namespace HardenWindowsSecurity
                 nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "Detection for potentially unwanted applications",
-                    Compliant = PUAProtectionResult.Equals("1", StringComparison.OrdinalIgnoreCase) ? "True" : "False",
+                    Compliant = PUAProtectionResult.Equals("1", StringComparison.OrdinalIgnoreCase),
                     Value = PUAProtectionResult,
                     Name = "Detection for potentially unwanted applications",
                     Category = CatName,
@@ -2425,7 +2404,7 @@ namespace HardenWindowsSecurity
                 nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "Catchup Quick Scan",
-                    Compliant = DisableCatchupQuickScanResult ? "False" : "True",
+                    Compliant = !DisableCatchupQuickScanResult,
                     Value = DisableCatchupQuickScanResult ? "False" : "True",
                     Name = "Catchup Quick Scan",
                     Category = CatName,
@@ -2439,7 +2418,7 @@ namespace HardenWindowsSecurity
                 nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "Check For Signatures Before Running Scan",
-                    Compliant = CheckForSignaturesBeforeRunningScanResult ? "True" : "False",
+                    Compliant = CheckForSignaturesBeforeRunningScanResult,
                     Value = CheckForSignaturesBeforeRunningScanResult ? "True" : "False",
                     Name = "Check For Signatures Before Running Scan",
                     Category = CatName,
@@ -2453,7 +2432,7 @@ namespace HardenWindowsSecurity
                 nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "Enable Network Protection",
-                    Compliant = EnableNetworkProtectionResult.Equals("1", StringComparison.OrdinalIgnoreCase) ? "True" : "False",
+                    Compliant = EnableNetworkProtectionResult.Equals("1", StringComparison.OrdinalIgnoreCase),
                     Value = EnableNetworkProtectionResult,
                     Name = "Enable Network Protection",
                     Category = CatName,
@@ -2467,7 +2446,7 @@ namespace HardenWindowsSecurity
                 nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "Interval to check for security intelligence updates",
-                    Compliant = SignatureUpdateIntervalResult.Equals("3", StringComparison.OrdinalIgnoreCase) ? "True" : "False",
+                    Compliant = SignatureUpdateIntervalResult.Equals("3", StringComparison.OrdinalIgnoreCase),
                     Value = SignatureUpdateIntervalResult,
                     Name = "Interval to check for security intelligence updates",
                     Category = CatName,
@@ -2481,7 +2460,7 @@ namespace HardenWindowsSecurity
                 nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "Allows Microsoft Defender Antivirus to update over a metered connection",
-                    Compliant = MeteredConnectionUpdatesResult ? "True" : "False",
+                    Compliant = MeteredConnectionUpdatesResult,
                     Value = MeteredConnectionUpdatesResult ? "True" : "False",
                     Name = "Allows Microsoft Defender Antivirus to update over a metered connection",
                     Category = CatName,
@@ -2495,7 +2474,7 @@ namespace HardenWindowsSecurity
                 nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "Severe Threat level default action = Remove",
-                    Compliant = SevereThreatDefaultActionResult.Equals("3", StringComparison.OrdinalIgnoreCase) ? "True" : "False",
+                    Compliant = SevereThreatDefaultActionResult.Equals("3", StringComparison.OrdinalIgnoreCase),
                     Value = SevereThreatDefaultActionResult,
                     Name = "Severe Threat level default action = Remove",
                     Category = CatName,
@@ -2509,7 +2488,7 @@ namespace HardenWindowsSecurity
                 nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "High Threat level default action = Remove",
-                    Compliant = HighThreatDefaultActionResult.Equals("3", StringComparison.OrdinalIgnoreCase) ? "True" : "False",
+                    Compliant = HighThreatDefaultActionResult.Equals("3", StringComparison.OrdinalIgnoreCase),
                     Value = HighThreatDefaultActionResult,
                     Name = "High Threat level default action = Remove",
                     Category = CatName,
@@ -2523,7 +2502,7 @@ namespace HardenWindowsSecurity
                 nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "Moderate Threat level default action = Quarantine",
-                    Compliant = ModerateThreatDefaultActionResult.Equals("2", StringComparison.OrdinalIgnoreCase) ? "True" : "False",
+                    Compliant = ModerateThreatDefaultActionResult.Equals("2", StringComparison.OrdinalIgnoreCase),
                     Value = ModerateThreatDefaultActionResult,
                     Name = "Moderate Threat level default action = Quarantine",
                     Category = CatName,
@@ -2537,7 +2516,7 @@ namespace HardenWindowsSecurity
                 nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "Low Threat level default action = Quarantine",
-                    Compliant = LowThreatDefaultActionResult.Equals("2", StringComparison.OrdinalIgnoreCase) ? "True" : "False",
+                    Compliant = LowThreatDefaultActionResult.Equals("2", StringComparison.OrdinalIgnoreCase),
                     Value = LowThreatDefaultActionResult,
                     Name = "Low Threat level default action = Quarantine",
                     Category = CatName,
@@ -2556,7 +2535,7 @@ namespace HardenWindowsSecurity
                 nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "Optional Diagnostic Data Required for Smart App Control etc.",
-                    Compliant = MDM_Policy_Result01_System02_AllowTelemetry.IsMatch ? "True" : "False",
+                    Compliant = MDM_Policy_Result01_System02_AllowTelemetry.IsMatch,
                     Value = MDM_Policy_Result01_System02_AllowTelemetry.Value,
                     Name = "Optional Diagnostic Data Required for Smart App Control etc.",
                     Category = CatName,
@@ -2570,7 +2549,7 @@ namespace HardenWindowsSecurity
                 nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "Configure diagnostic data opt-in settings user interface",
-                    Compliant = MDM_Policy_Result01_System02_ConfigureTelemetryOptInSettingsUx.IsMatch ? "True" : "False",
+                    Compliant = MDM_Policy_Result01_System02_ConfigureTelemetryOptInSettingsUx.IsMatch,
                     Value = MDM_Policy_Result01_System02_ConfigureTelemetryOptInSettingsUx.Value,
                     Name = "Configure diagnostic data opt-in settings user interface",
                     Category = CatName,
@@ -2592,6 +2571,18 @@ namespace HardenWindowsSecurity
                 {
                     HardenWindowsSecurity.GlobalVars.FinalMegaObject.TryAdd(CatName, nestedObjectArray);
                 };
+
+                // Get the value and convert it to bool
+                bool BruteForceProtectionLocalNetworkBlockingResult = Convert.ToBoolean(HardenWindowsSecurity.PropertyHelper.GetPropertyValue(HardenWindowsSecurity.GlobalVars.MDAVPreferencesCurrent, "BruteForceProtectionLocalNetworkBlocking"));
+                nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
+                {
+                    FriendlyName = "Brute Force Protection Local Network Blocking State",
+                    Compliant = BruteForceProtectionLocalNetworkBlockingResult,
+                    Value = BruteForceProtectionLocalNetworkBlockingResult ? "True" : "False",
+                    Name = "Brute Force Protection Local Network Blocking State",
+                    Category = CatName,
+                    Method = "CIM"
+                });
             });
         }
     }

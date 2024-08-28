@@ -166,7 +166,7 @@ namespace HardenWindowsSecurity
             foreach (var item in filteredItems)
             {
                 // Initialize valueMatches to "False"
-                string valueMatches = "False";
+                bool valueMatches = false;
                 string? regValueStr = null;
 
                 // If the type defined in the CSV is HKLM
@@ -211,7 +211,7 @@ namespace HardenWindowsSecurity
                                 if (regValue != null && item.Type != null && parsedValues.Any(parsedValue => CompareRegistryValues(type: item.Type, regValue: regValue, expectedValue: parsedValue)))
                                 {
                                     // Set valueMatches to "True" if it matches any expected value
-                                    valueMatches = "True";
+                                    valueMatches = true;
                                 }
                             }
                         }
@@ -255,7 +255,7 @@ namespace HardenWindowsSecurity
                                 if (regValue != null && item.Type != null && parsedValues.Any(parsedValue => CompareRegistryValues(type: item.Type, regValue: regValue, expectedValue: parsedValue)))
                                 {
                                     // Set valueMatches to "True" if it matches any expected value
-                                    valueMatches = "True";
+                                    valueMatches = true;
                                 }
                             }
                         }

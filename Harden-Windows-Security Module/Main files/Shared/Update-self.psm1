@@ -34,21 +34,16 @@ function Update-self {
             Throw 'There is a new update available, please run the cmdlet as Admin to update the module.'
         }
 
-        Remove-Module -Name 'Harden-Windows-Security-Module' -Force
+        Remove-Module -Name 'Harden-Windows-Security-Module' -Force -WarningAction SilentlyContinue
 
         try {
             [HardenWindowsSecurity.ControlledFolderAccessHandler]::Start()
-
-            # Do this if the module was installed properly using Install-module cmdlet
-            Uninstall-Module -Name 'Harden-Windows-Security-Module' -AllVersions -Force
+            # Suppressing errors and warnings on this one because it can't uninstall the module currently in use even after Remove attempt earlier so it removes any leftover versions except for the one currently in use.
+            Uninstall-Module -Name 'Harden-Windows-Security-Module' -AllVersions -Force -WarningAction SilentlyContinue -ErrorAction Ignore
             Install-Module -Name 'Harden-Windows-Security-Module' -RequiredVersion $LatestVersion -Force
-            # Will not import the new module version in the current session because of the constant variables. New version is automatically imported when the main cmdlet is run in a new session.
+            # Will not import the new module version in the current session. New version is automatically imported and used when the main cmdlet is run in a new session.
         }
-        # Do this if module files/folder was just copied to Documents folder and not properly installed - Should rarely happen
-        catch {
-            Install-Module -Name 'Harden-Windows-Security-Module' -RequiredVersion $LatestVersion -Force
-            # Will not import the new module version in the current session because of the constant variables. New version is automatically imported when the main cmdlet is run in a new session.
-        }
+        catch {}
         finally {
             [HardenWindowsSecurity.ControlledFolderAccessHandler]::reset()
         }

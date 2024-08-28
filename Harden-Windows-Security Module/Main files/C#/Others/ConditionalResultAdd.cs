@@ -23,10 +23,10 @@ namespace HardenWindowsSecurity
             {
                 // Check the Compliant status of the existing item in the results list
                 // If the item already exists and is Non-compliant
-                if (string.Equals(existingItem.Compliant, "False", StringComparison.OrdinalIgnoreCase))
+                if (existingItem.Compliant == false)
                 {
                     // Check the Compliant status of the current item being added to the results list
-                    if (string.Equals(result.Compliant, "True", StringComparison.OrdinalIgnoreCase))
+                    if (result.Compliant == true)
                     {
                         // Remove the existing item with Compliant status "False"
                         nestedObjectArray.Remove(existingItem);

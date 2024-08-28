@@ -3,7 +3,7 @@
     "createdDateTime": "2024-07-25T15:40:59.4753796Z",
     "creationSource": null,
     "description": "Lock Screen Category",
-    "lastModifiedDateTime": "2024-07-27T09:21:26.5758391Z",
+    "lastModifiedDateTime": "2024-08-28T21:55:32.6962214Z",
     "name": "Lock Screen",
     "platforms": "windows10",
     "priorityMetaData": null,
@@ -173,19 +173,6 @@
         {
             "id": "9",
             "settingInstance": {
-                "@odata.type": "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance",
-                "settingDefinitionId": "device_vendor_msft_passportforwork_biometrics_facialfeaturesuseenhancedantispoofing",
-                "settingInstanceTemplateReference": null,
-                "choiceSettingValue": {
-                    "settingValueTemplateReference": null,
-                    "value": "device_vendor_msft_passportforwork_biometrics_facialfeaturesuseenhancedantispoofing_true",
-                    "children": []
-                }
-            }
-        },
-        {
-            "id": "10",
-            "settingInstance": {
                 "@odata.type": "#microsoft.graph.deviceManagementConfigurationGroupSettingCollectionInstance",
                 "settingDefinitionId": "device_vendor_msft_passportforwork_{tenantid}",
                 "settingInstanceTemplateReference": null,
@@ -240,7 +227,7 @@
                                 "simpleSettingValue": {
                                     "@odata.type": "#microsoft.graph.deviceManagementConfigurationIntegerSettingValue",
                                     "settingValueTemplateReference": null,
-                                    "value": 3
+                                    "value": 1
                                 }
                             },
                             {
@@ -276,6 +263,19 @@
                         ]
                     }
                 ]
+            }
+        },
+        {
+            "id": "10",
+            "settingInstance": {
+                "@odata.type": "#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance",
+                "settingDefinitionId": "device_vendor_msft_passportforwork_biometrics_facialfeaturesuseenhancedantispoofing",
+                "settingInstanceTemplateReference": null,
+                "choiceSettingValue": {
+                    "settingValueTemplateReference": null,
+                    "value": "device_vendor_msft_passportforwork_biometrics_facialfeaturesuseenhancedantispoofing_true",
+                    "children": []
+                }
             }
         },
         {
@@ -315,7 +315,7 @@
                                 "simpleSettingValue": {
                                     "@odata.type": "#microsoft.graph.deviceManagementConfigurationIntegerSettingValue",
                                     "settingValueTemplateReference": null,
-                                    "value": 3
+                                    "value": 1
                                 }
                             },
                             {

@@ -33,7 +33,7 @@ namespace HardenWindowsSecurity
             }
             #endregion
 
-
+            HardenWindowsSecurity.GlobalVars.Offline = true;
             HardenWindowsSecurity.GUIBootStrapper.Boot();
 
         }

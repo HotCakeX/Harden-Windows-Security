@@ -57,6 +57,13 @@ namespace HardenWindowsSecurity
         /// <param name="text">The text to be written</param>
         public static void LogMessage(string text)
         {
+
+            // Avoid writing empty messages that only have time stamps
+            if (string.IsNullOrWhiteSpace(text))
+            {
+                return;
+            }
+
             string CurrentText = $"{DateTime.Now}: {text}";
 
             // If there is no GUI Window, meaning the code is running in Visual Studio, then use Console for writing logs

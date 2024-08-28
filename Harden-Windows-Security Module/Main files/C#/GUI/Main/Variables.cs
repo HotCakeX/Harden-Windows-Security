@@ -14,12 +14,7 @@ using System.Collections.Concurrent;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Effects;
-using System.Windows.Threading;
 using System.Runtime.CompilerServices;
-using System.Diagnostics;
-using System.ComponentModel;
-using System.Threading;
-using System.Windows.Automation;
 using System.Windows.Controls.Ribbon;
 using System.Windows.Data;
 using System.Windows.Documents;
@@ -31,9 +26,7 @@ using System.Windows.Media.TextFormatting;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Shell;
-using System.Threading.Tasks;
 using System.Text;
-using System.Reflection.PortableExecutable;
 
 #nullable enable
 
@@ -49,6 +42,8 @@ namespace HardenWindowsSecurity
 
         // Application instance
         public static System.Windows.Application? app;
+
+        // Sidebar menu Grid in the main Window
+        public static System.Windows.Controls.Grid? SidebarGrid;
     }
 }
-

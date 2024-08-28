@@ -9,4 +9,3 @@ $script:ErrorActionPreference = 'Stop'
 Import-Module -FullyQualifiedName "$ScriptFilePath\..\Main files\Harden-Windows-Security-Module.psd1" -Force
 
 Protect-WindowsSecurity -GUI -Verbose
-# Confirm-SystemCompliance -v

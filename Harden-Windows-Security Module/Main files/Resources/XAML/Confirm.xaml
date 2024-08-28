@@ -332,7 +332,7 @@
             </StackPanel>
 
             <!--SecOps Data Grid-->
-            <DataGrid Grid.Row="3" RowStyle="{DynamicResource ConfirmationDataGridStyleOfRow}" ColumnHeaderStyle="{DynamicResource DataGridColumnHeaderStyle1}" CellStyle="{DynamicResource DataGridCellStyle1}" x:Name="SecOpcsDataGrid" Style="{DynamicResource ConfirmationDataGridStyle}">
+            <DataGrid Grid.Row="3" RowStyle="{DynamicResource ConfirmationDataGridStyleOfRow}" ColumnHeaderStyle="{DynamicResource DataGridColumnHeaderStyle1}" CellStyle="{DynamicResource DataGridCellStyle1}" x:Name="SecOpsDataGrid" Style="{DynamicResource ConfirmationDataGridStyle}">
                 <!-- DataGrid Columns Definitions -->
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="Friendly Name" Binding="{Binding FriendlyName}" IsReadOnly="True" Width="*" />

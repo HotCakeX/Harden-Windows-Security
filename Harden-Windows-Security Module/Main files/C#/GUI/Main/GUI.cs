@@ -314,15 +314,15 @@ End time: {DateTime.Now}
             #endregion
 
             // Finding the sidebar Grid
-            System.Windows.Controls.Grid SidebarGrid = GUIMain.mainGUIWindow.FindName("SidebarGrid") as System.Windows.Controls.Grid;
+            HardenWindowsSecurity.GUIMain.SidebarGrid = GUIMain.mainGUIWindow.FindName("SidebarGrid") as System.Windows.Controls.Grid;
 
             // Protect button icon
-            var ProtectButtonGrid = SidebarGrid.FindName("ProtectButtonGrid") as System.Windows.Controls.Grid;
+            System.Windows.Controls.Grid ProtectButtonGrid = SidebarGrid.FindName("ProtectButtonGrid") as System.Windows.Controls.Grid;
             System.Windows.Controls.Image ProtectButtonIcon = ProtectButtonGrid.FindName("ProtectButtonIcon") as System.Windows.Controls.Image;
             ProtectButtonIcon.Source = new System.Windows.Media.Imaging.BitmapImage(new Uri(System.IO.Path.Combine(HardenWindowsSecurity.GlobalVars.path, "Resources", "Media", "3d-techny-secure-lock-and-key-successfully-unlocked.png")));
 
             // Confirm button icon
-            var ConfirmButtonGrid = SidebarGrid.FindName("ConfirmButtonGrid") as System.Windows.Controls.Grid;
+            System.Windows.Controls.Grid ConfirmButtonGrid = SidebarGrid.FindName("ConfirmButtonGrid") as System.Windows.Controls.Grid;
             System.Windows.Controls.Image ConfirmButtonIcon = ConfirmButtonGrid.FindName("ConfirmButtonIcon") as System.Windows.Controls.Image;
             ConfirmButtonIcon.Source = new System.Windows.Media.Imaging.BitmapImage(new Uri(System.IO.Path.Combine(HardenWindowsSecurity.GlobalVars.path, "Resources", "Media", "3d-glassy-fuzzy-gradient-ball.png")));
 

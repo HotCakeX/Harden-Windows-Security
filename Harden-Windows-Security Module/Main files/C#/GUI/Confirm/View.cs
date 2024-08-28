@@ -30,7 +30,7 @@ namespace HardenWindowsSecurity
             // Private fields to hold the collection view and security options collection
 
             // Collection view for filtering and sorting
-            private ICollectionView _SecOpcsCollectionView;
+            private ICollectionView _SecOpsCollectionView;
 
             // Collection of SecOp objects
             private System.Collections.ObjectModel.ObservableCollection<SecOp> __SecOpses;
@@ -43,6 +43,14 @@ namespace HardenWindowsSecurity
                 {
                     // Use the cached view if available
                     CurrentView = cachedView;
+
+                    // Only update the UI if work is not being done (i.e. the confirmation job is not already active)
+                    if (HardenWindowsSecurity.ActivityTracker.IsActive == false)
+                    {
+                        // Update the UI every time the user switches to Confirm tab but do not display toast notification when it happens because it won't make sense
+                        UpdateTotalCount(false);
+                    }
+
                     return;
                 }
 
@@ -55,20 +63,20 @@ namespace HardenWindowsSecurity
                 // Parse the XAML content to create a UserControl object
                 System.Windows.Controls.UserControl confirmView = (System.Windows.Controls.UserControl)System.Windows.Markup.XamlReader.Parse(xamlContent);
 
-                // Find the SecOpcsDataGrid
-                HardenWindowsSecurity.GUIConfirmSystemCompliance.SecOpcsDataGrid = (System.Windows.Controls.DataGrid)confirmView.FindName("SecOpcsDataGrid");
+                // Find the SecOpsDataGrid
+                HardenWindowsSecurity.GUIConfirmSystemCompliance.SecOpsDataGrid = (System.Windows.Controls.DataGrid)confirmView.FindName("SecOpsDataGrid");
 
                 // Initialize an empty security options collection
                 __SecOpses = new System.Collections.ObjectModel.ObservableCollection<SecOp>();
 
                 // Create a collection view based on the security options collection
-                _SecOpcsCollectionView = System.Windows.Data.CollectionViewSource.GetDefaultView(__SecOpses);
+                _SecOpsCollectionView = System.Windows.Data.CollectionViewSource.GetDefaultView(__SecOpses);
 
                 // Set the ItemSource of the DataGrid in the Confirm view to the collection view
-                if (HardenWindowsSecurity.GUIConfirmSystemCompliance.SecOpcsDataGrid != null)
+                if (HardenWindowsSecurity.GUIConfirmSystemCompliance.SecOpsDataGrid != null)
                 {
                     // Bind the DataGrid to the collection view
-                    HardenWindowsSecurity.GUIConfirmSystemCompliance.SecOpcsDataGrid.ItemsSource = _SecOpcsCollectionView;
+                    HardenWindowsSecurity.GUIConfirmSystemCompliance.SecOpsDataGrid.ItemsSource = _SecOpsCollectionView;
                 }
 
                 // Handle the TextBox filter using a lambda expression
@@ -79,10 +87,10 @@ namespace HardenWindowsSecurity
                     {
                         // Get the filter text from the TextBox
                         string filterText = textBoxFilter.Text;
-                        if (_SecOpcsCollectionView != null)
+                        if (_SecOpsCollectionView != null)
                         {
                             // Apply a filter to the collection view based on the filter text
-                            _SecOpcsCollectionView.Filter = memberObj =>
+                            _SecOpsCollectionView.Filter = memberObj =>
                             {
                                 if (memberObj is SecOp member)
                                 {
@@ -95,7 +103,7 @@ namespace HardenWindowsSecurity
                                 }
                                 return false;
                             };
-                            _SecOpcsCollectionView.Refresh(); // Refresh the collection view to apply the filter
+                            _SecOpsCollectionView.Refresh(); // Refresh the collection view to apply the filter
                         }
                     };
                 }
@@ -166,7 +174,7 @@ namespace HardenWindowsSecurity
 
                         // Clear the current security options before starting data generation
                         __SecOpses.Clear();
-                        _SecOpcsCollectionView.Refresh(); // Refresh the collection view to clear the DataGrid
+                        _SecOpsCollectionView.Refresh(); // Refresh the collection view to clear the DataGrid
 
                         // Run the method asynchronously in a different thread
                         await System.Threading.Tasks.Task.Run(() =>
@@ -259,10 +267,11 @@ namespace HardenWindowsSecurity
             /// Method to update the total count of security options displayed on the Text Block
             /// In the Confirmation page view
             /// </summary>
-            private void UpdateTotalCount()
+            /// <param name="ShowNotification">If set to true, this method will display end of confirmation toast notification</param>
+            private void UpdateTotalCount(bool ShowNotification)
             {
                 // Get the total count of security options
-                int totalCount = _SecOpcsCollectionView.Cast<SecOp>().Count();
+                int totalCount = _SecOpsCollectionView.Cast<SecOp>().Count();
                 if (CurrentView is System.Windows.Controls.UserControl confirmView)
                 {
                     // Find the TextBlock used to display the total count
@@ -274,14 +283,14 @@ namespace HardenWindowsSecurity
                     }
 
                     // Get the count of the compliant items
-                    string CompliantItemsCount = _SecOpcsCollectionView.SourceCollection
+                    string CompliantItemsCount = _SecOpsCollectionView.SourceCollection
                         .Cast<SecOp>()
                         .Where(item => item.Compliant)
                         .Count()
                         .ToString(CultureInfo.InvariantCulture);
 
                     // Get the count of the Non-compliant items
-                    string NonCompliantItemsCount = _SecOpcsCollectionView.SourceCollection
+                    string NonCompliantItemsCount = _SecOpsCollectionView.SourceCollection
                         .Cast<SecOp>()
                         .Where(item => !item.Compliant)
                         .Count()
@@ -303,8 +312,8 @@ namespace HardenWindowsSecurity
                         NonCompliantItemsTextBlock.Text = $"{NonCompliantItemsCount} Non-Compliant Items";
                     }
 
-                    // Display a notification
-                    if (HardenWindowsSecurity.GlobalVars.UseNewNotificationsExp == true)
+                    // Display a notification if it's allowed to do so, and ShowNotification is set to true
+                    if (HardenWindowsSecurity.GlobalVars.UseNewNotificationsExp == true && ShowNotification == true)
                     {
                         HardenWindowsSecurity.NewToastNotification.Show(ToastNotificationType.EndOfConfirmation, CompliantItemsCount, NonCompliantItemsCount);
                     }
@@ -323,7 +332,7 @@ namespace HardenWindowsSecurity
                 // Retrieve data from GlobalVars.FinalMegaObject and populate the security options collection
                 if (HardenWindowsSecurity.GlobalVars.FinalMegaObject != null)
                 {
-                    foreach (var kvp in HardenWindowsSecurity.GlobalVars.FinalMegaObject)
+                    foreach (KeyValuePair<string, List<IndividualResult>> kvp in HardenWindowsSecurity.GlobalVars.FinalMegaObject)
                     {
                         string category = kvp.Key; // Get the category of results
                         List<IndividualResult> results = kvp.Value; // Get the results for the category
@@ -346,10 +355,10 @@ namespace HardenWindowsSecurity
                 }
 
                 // Refresh the collection view to update the DataGrid
-                _SecOpcsCollectionView.Refresh();
+                _SecOpsCollectionView.Refresh();
 
                 // Update the total count display
-                UpdateTotalCount();
+                UpdateTotalCount(true);
             }
         }
     }

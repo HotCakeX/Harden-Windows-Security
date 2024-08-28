@@ -317,9 +317,10 @@
                 <TextBox Name="textBoxFilter" Style="{StaticResource filterTextBox}" />
             </Grid>
 
+            <!--Toggle buttons and textblocks rows-->
             <StackPanel Orientation="Horizontal" Grid.Row="2" Margin="0,0,0,20">
 
-                <StackPanel Orientation="Horizontal" Margin="0,0,50,0">
+                <StackPanel Orientation="Horizontal" Margin="0,0,40,0">
 
                     <TextBlock x:Name="CompliantItemsTextBlock" Text="Compliant Items"
                FontSize="15" FontWeight="SemiBold" Foreground="#121518"
@@ -333,7 +334,7 @@
                 </StackPanel>
 
 
-                <StackPanel Orientation="Horizontal">
+                <StackPanel Orientation="Horizontal" Margin="0,0,30,0">
 
                     <!-- Add some margin to the right -->
                     <TextBlock x:Name="NonCompliantItemsTextBlock" Text="Non-Compliant Items"
@@ -346,6 +347,10 @@
                Template="{DynamicResource ConfirmationPageToggleButtonStyle}"/>
 
                 </StackPanel>
+
+
+                <TextBlock x:Name="TotalCurrentlyDisplayedSecOps" FontSize="15" FontWeight="SemiBold" Foreground="#121518"
+HorizontalAlignment="Right" VerticalAlignment="Center"/>
 
             </StackPanel>
 

@@ -67,6 +67,8 @@ namespace HardenWindowsSecurity
                 // Find the SecOpsDataGrid
                 HardenWindowsSecurity.GUIConfirmSystemCompliance.SecOpsDataGrid = (System.Windows.Controls.DataGrid)confirmView.FindName("SecOpsDataGrid");
 
+                System.Windows.Controls.TextBlock TotalCurrentlyDisplayedSecOpsTextBlock = (System.Windows.Controls.TextBlock)confirmView.FindName("TotalCurrentlyDisplayedSecOps");
+
                 #region ToggleButtons
                 System.Windows.Controls.Primitives.ToggleButton CompliantItemsToggleButton = (System.Windows.Controls.Primitives.ToggleButton)confirmView.FindName("CompliantItemsToggleButton");
                 System.Windows.Controls.Primitives.ToggleButton NonCompliantItemsToggleButton = (System.Windows.Controls.Primitives.ToggleButton)confirmView.FindName("NonCompliantItemsToggleButton");
@@ -78,6 +80,15 @@ namespace HardenWindowsSecurity
                 CompliantItemsToggleButton.IsChecked = true;
                 NonCompliantItemsToggleButton.IsChecked = true;
                 #endregion
+
+                // Method to update the text block showing the total count of currently displayed items in the GUI
+                void UpdateCurrentVisibleItemsTextBlock()
+                {
+                    // Get the count of all of the current items in the CollectionView
+                    string totalDisplayedItemsCount = _SecOpsCollectionView.Cast<SecOp>().Count().ToString(CultureInfo.InvariantCulture);
+                    // Display the count in a text box in the GUI
+                    TotalCurrentlyDisplayedSecOpsTextBlock.Text = $"Showing {totalDisplayedItemsCount} Items";
+                }
 
                 // A Method to apply filters on the DataGrid based on the filter text and toggle buttons
                 void ApplyFilters(string filterText, bool includeCompliant, bool includeNonCompliant)
@@ -109,6 +120,8 @@ namespace HardenWindowsSecurity
                         };
 
                         _SecOpsCollectionView.Refresh(); // Refresh the collection view to apply the filter
+
+                        UpdateCurrentVisibleItemsTextBlock();
                     }
                 }
 
@@ -184,6 +197,10 @@ namespace HardenWindowsSecurity
                         // mark as activity started
                         HardenWindowsSecurity.ActivityTracker.IsActive = true;
 
+                        // Clear the current security options before starting data generation
+                        __SecOpses.Clear();
+                        _SecOpsCollectionView.Refresh(); // Refresh the collection view to clear the DataGrid
+
                         // Disable the Refresh button while processing
                         // Set text blocks to empty while new data is being generated
                         System.Windows.Application.Current.Dispatcher.Invoke(() =>
@@ -204,11 +221,8 @@ namespace HardenWindowsSecurity
                                     TotalCountTextBlock.Text = "Loading...";
                                 }
 
+                                UpdateCurrentVisibleItemsTextBlock();
                             });
-
-                        // Clear the current security options before starting data generation
-                        __SecOpses.Clear();
-                        _SecOpsCollectionView.Refresh(); // Refresh the collection view to clear the DataGrid
 
                         // Run the method asynchronously in a different thread
                         await System.Threading.Tasks.Task.Run(() =>
@@ -225,6 +239,8 @@ namespace HardenWindowsSecurity
                             {
                                 LoadMembers(); // Load updated security options
                                 RefreshButton.IsChecked = false; // Uncheck the Refresh button
+
+                                UpdateCurrentVisibleItemsTextBlock();
                             });
 
                         // mark as activity completed
@@ -304,8 +320,10 @@ namespace HardenWindowsSecurity
             /// <param name="ShowNotification">If set to true, this method will display end of confirmation toast notification</param>
             private void UpdateTotalCount(bool ShowNotification)
             {
-                // Get the total count of security options
-                int totalCount = _SecOpsCollectionView.Cast<SecOp>().Count();
+
+                // calculates the total number of all security options across all lists, so all the items in each category that exist in the values of the main dictionary object
+                int totalCount = HardenWindowsSecurity.GlobalVars.FinalMegaObject?.Values.Sum(list => list.Count) ?? 0;
+
                 if (CurrentView is System.Windows.Controls.UserControl confirmView)
                 {
                     // Find the TextBlock used to display the total count

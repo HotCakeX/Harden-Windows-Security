@@ -22,87 +22,6 @@ namespace HardenWindowsSecurity
 {
     public partial class GUIMain
     {
-        // Define the SecOp class, representing an individual security option in the data grid
-        public class SecOp : System.ComponentModel.INotifyPropertyChanged
-        {
-            // Private fields to hold property values
-
-            // Stores whether the security option is compliant
-            private bool _Compliant;
-
-            // Stores the security option's character image
-            private System.Windows.Media.ImageSource _characterImage;
-
-            // Stores the background color for the security option
-            private System.Windows.Media.Brush _bgColor;
-
-            // Event to notify listeners when a property value changes
-            public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
-
-            // Public property to get or set the security option's character image
-            public System.Windows.Media.ImageSource CharacterImage
-            {
-                get => _characterImage;
-                set
-                {
-                    _characterImage = value;
-
-                    // Notify that the CharacterImage property has changed
-                    OnPropertyChanged(nameof(CharacterImage));
-                }
-            }
-
-            // Public property to get or set the background color
-            public System.Windows.Media.Brush BgColor
-            {
-                get => _bgColor;
-                set
-                {
-                    _bgColor = value;
-
-                    // Notify that the BgColor property has changed
-                    OnPropertyChanged(nameof(BgColor));
-                }
-            }
-
-            // Public properties for security option details
-            public string FriendlyName { get; set; }
-            public string Value { get; set; }
-            public string Name { get; set; }
-            public string Category { get; set; }
-            public string Method { get; set; }
-
-            // Public property to get or set whether the security option is compliant
-            public bool Compliant
-            {
-                get => _Compliant;
-                set
-                {
-                    _Compliant = value;
-
-                    // Update CharacterImage based on compliance
-                    CharacterImage = LoadImage(_Compliant ? "ConfirmationTrue.png" : "ConfirmationFalse.png");
-
-                    // Notify that the Compliant property has changed
-                    OnPropertyChanged(nameof(Compliant));
-                }
-            }
-
-            // Method to notify listeners that a property value has changed
-            protected void OnPropertyChanged(string propertyName)
-            {
-                PropertyChanged?.Invoke(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
-            }
-
-            // Private method to load an image from the specified file name
-            private System.Windows.Media.ImageSource LoadImage(string fileName)
-            {
-                // Construct the full path to the image file
-                string imagePath = System.IO.Path.Combine(GlobalVars.path, "Resources", "Media", fileName);
-                // Return the loaded image as a BitmapImage
-                return new System.Windows.Media.Imaging.BitmapImage(new System.Uri(imagePath, System.UriKind.Absolute));
-            }
-        }
 
         // Partial class definition for handling navigation and view models
         public partial class NavigationVM : ViewModelBase
@@ -111,32 +30,10 @@ namespace HardenWindowsSecurity
             // Private fields to hold the collection view and security options collection
 
             // Collection view for filtering and sorting
-            private ICollectionView _membersView;
+            private ICollectionView _SecOpcsCollectionView;
 
             // Collection of SecOp objects
-            private System.Collections.ObjectModel.ObservableCollection<SecOp> _members;
-
-
-            #region a VisualTreeHelper method to find the Image control
-            private T FindVisualChild<T>(DependencyObject parent) where T : DependencyObject
-            {
-                for (int i = 0; i < VisualTreeHelper.GetChildrenCount(parent); i++)
-                {
-                    var child = VisualTreeHelper.GetChild(parent, i);
-                    if (child is T tChild)
-                    {
-                        return tChild;
-                    }
-                    var result = FindVisualChild<T>(child);
-                    if (result != null)
-                    {
-                        return result;
-                    }
-                }
-                return null;
-            }
-            #endregion
-
+            private System.Collections.ObjectModel.ObservableCollection<SecOp> __SecOpses;
 
             // Method to handle the "Confirm" view, including loading and modifying it
             private void Confirm(object obj)
@@ -158,20 +55,20 @@ namespace HardenWindowsSecurity
                 // Parse the XAML content to create a UserControl object
                 System.Windows.Controls.UserControl confirmView = (System.Windows.Controls.UserControl)System.Windows.Markup.XamlReader.Parse(xamlContent);
 
-                // Find the membersDataGrid
-                HardenWindowsSecurity.GUIConfirmSystemCompliance.membersDataGrid = (System.Windows.Controls.DataGrid)confirmView.FindName("membersDataGrid");
+                // Find the SecOpcsDataGrid
+                HardenWindowsSecurity.GUIConfirmSystemCompliance.SecOpcsDataGrid = (System.Windows.Controls.DataGrid)confirmView.FindName("SecOpcsDataGrid");
 
                 // Initialize an empty security options collection
-                _members = new System.Collections.ObjectModel.ObservableCollection<SecOp>();
+                __SecOpses = new System.Collections.ObjectModel.ObservableCollection<SecOp>();
 
                 // Create a collection view based on the security options collection
-                _membersView = System.Windows.Data.CollectionViewSource.GetDefaultView(_members);
+                _SecOpcsCollectionView = System.Windows.Data.CollectionViewSource.GetDefaultView(__SecOpses);
 
                 // Set the ItemSource of the DataGrid in the Confirm view to the collection view
-                if (HardenWindowsSecurity.GUIConfirmSystemCompliance.membersDataGrid != null)
+                if (HardenWindowsSecurity.GUIConfirmSystemCompliance.SecOpcsDataGrid != null)
                 {
                     // Bind the DataGrid to the collection view
-                    HardenWindowsSecurity.GUIConfirmSystemCompliance.membersDataGrid.ItemsSource = _membersView;
+                    HardenWindowsSecurity.GUIConfirmSystemCompliance.SecOpcsDataGrid.ItemsSource = _SecOpcsCollectionView;
                 }
 
                 // Handle the TextBox filter using a lambda expression
@@ -182,10 +79,10 @@ namespace HardenWindowsSecurity
                     {
                         // Get the filter text from the TextBox
                         string filterText = textBoxFilter.Text;
-                        if (_membersView != null)
+                        if (_SecOpcsCollectionView != null)
                         {
                             // Apply a filter to the collection view based on the filter text
-                            _membersView.Filter = memberObj =>
+                            _SecOpcsCollectionView.Filter = memberObj =>
                             {
                                 if (memberObj is SecOp member)
                                 {
@@ -198,7 +95,7 @@ namespace HardenWindowsSecurity
                                 }
                                 return false;
                             };
-                            _membersView.Refresh(); // Refresh the collection view to apply the filter
+                            _SecOpcsCollectionView.Refresh(); // Refresh the collection view to apply the filter
                         }
                     };
                 }
@@ -268,8 +165,8 @@ namespace HardenWindowsSecurity
                             });
 
                         // Clear the current security options before starting data generation
-                        _members.Clear();
-                        _membersView.Refresh(); // Refresh the collection view to clear the DataGrid
+                        __SecOpses.Clear();
+                        _SecOpcsCollectionView.Refresh(); // Refresh the collection view to clear the DataGrid
 
                         // Run the method asynchronously in a different thread
                         await System.Threading.Tasks.Task.Run(() =>
@@ -365,7 +262,7 @@ namespace HardenWindowsSecurity
             private void UpdateTotalCount()
             {
                 // Get the total count of security options
-                int totalCount = _membersView.Cast<SecOp>().Count();
+                int totalCount = _SecOpcsCollectionView.Cast<SecOp>().Count();
                 if (CurrentView is System.Windows.Controls.UserControl confirmView)
                 {
                     // Find the TextBlock used to display the total count
@@ -377,14 +274,14 @@ namespace HardenWindowsSecurity
                     }
 
                     // Get the count of the compliant items
-                    string CompliantItemsCount = _membersView.SourceCollection
+                    string CompliantItemsCount = _SecOpcsCollectionView.SourceCollection
                         .Cast<SecOp>()
                         .Where(item => item.Compliant)
                         .Count()
                         .ToString(CultureInfo.InvariantCulture);
 
                     // Get the count of the Non-compliant items
-                    string NonCompliantItemsCount = _membersView.SourceCollection
+                    string NonCompliantItemsCount = _SecOpcsCollectionView.SourceCollection
                         .Cast<SecOp>()
                         .Where(item => !item.Compliant)
                         .Count()
@@ -421,7 +318,7 @@ namespace HardenWindowsSecurity
             private void LoadMembers()
             {
                 // Clear the current security options
-                _members.Clear();
+                __SecOpses.Clear();
 
                 // Retrieve data from GlobalVars.FinalMegaObject and populate the security options collection
                 if (HardenWindowsSecurity.GlobalVars.FinalMegaObject != null)
@@ -434,7 +331,7 @@ namespace HardenWindowsSecurity
                         foreach (IndividualResult result in results)
                         {
                             // Add each result as a new SecOp object to the collection
-                            _members.Add(new SecOp
+                            __SecOpses.Add(new SecOp
                             {
                                 FriendlyName = result.FriendlyName,
                                 Value = result.Value,
@@ -449,7 +346,7 @@ namespace HardenWindowsSecurity
                 }
 
                 // Refresh the collection view to update the DataGrid
-                _membersView.Refresh();
+                _SecOpcsCollectionView.Refresh();
 
                 // Update the total count display
                 UpdateTotalCount();

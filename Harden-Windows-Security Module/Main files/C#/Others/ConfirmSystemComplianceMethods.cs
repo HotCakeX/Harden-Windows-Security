@@ -676,7 +676,7 @@ namespace HardenWindowsSecurity
                     nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                     {
                         FriendlyName = "Secure OS Drive encryption",
-                        Compliant = true,
+                        Compliant = false,
                         Value = "False",
                         Name = "Secure OS Drive encryption",
                         Category = CatName,
@@ -2572,13 +2572,13 @@ namespace HardenWindowsSecurity
                     HardenWindowsSecurity.GlobalVars.FinalMegaObject.TryAdd(CatName, nestedObjectArray);
                 };
 
-                // Get the value and convert it to string
-                string BruteForceProtectionLocalNetworkBlockingResult = Convert.ToString(HardenWindowsSecurity.PropertyHelper.GetPropertyValue(HardenWindowsSecurity.GlobalVars.MDAVPreferencesCurrent, "BruteForceProtectionLocalNetworkBlocking"));
+                // Get the value and convert it to bool
+                bool BruteForceProtectionLocalNetworkBlockingResult = Convert.ToBoolean(HardenWindowsSecurity.PropertyHelper.GetPropertyValue(HardenWindowsSecurity.GlobalVars.MDAVPreferencesCurrent, "BruteForceProtectionLocalNetworkBlocking"));
                 nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "Brute Force Protection Local Network Blocking State",
-                    Compliant = BruteForceProtectionLocalNetworkBlockingResult.Equals("1", StringComparison.OrdinalIgnoreCase),
-                    Value = BruteForceProtectionLocalNetworkBlockingResult,
+                    Compliant = BruteForceProtectionLocalNetworkBlockingResult,
+                    Value = BruteForceProtectionLocalNetworkBlockingResult ? "True" : "False",
                     Name = "Brute Force Protection Local Network Blocking State",
                     Category = CatName,
                     Method = "CIM"

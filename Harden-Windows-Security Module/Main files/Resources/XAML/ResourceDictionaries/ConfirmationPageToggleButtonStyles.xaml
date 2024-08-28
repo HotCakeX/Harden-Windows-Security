@@ -7,7 +7,7 @@
     <SolidColorBrush x:Key="ConfirmationPageToggleButtonStyleBackgroundBrush" Color="{StaticResource grayColor}"/>
 
     <ControlTemplate x:Key="ConfirmationPageToggleButtonStyle" TargetType="{x:Type ToggleButton}">
-        <Border x:Name="border" 
+        <Border x:Name="border"
               Background="{DynamicResource ConfirmationPageToggleButtonStyleBackgroundBrush}"
               CornerRadius="12.5"
             SnapsToDevicePixels="true">
@@ -16,7 +16,7 @@
                        Fill="White"
                        Width="23.5" Height="23.5"
                     Canvas.Top="2" Canvas.Left="3"
-                   
+
                     SnapsToDevicePixels="True"/>
             </Canvas>
         </Border>

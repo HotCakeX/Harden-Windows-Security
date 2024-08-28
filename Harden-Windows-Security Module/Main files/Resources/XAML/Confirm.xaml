@@ -343,7 +343,7 @@
 
                     <ToggleButton x:Name="NonCompliantItemsToggleButton" VerticalAlignment="Center"
                HorizontalAlignment="Center"
-               Width="75" Height="27.5"               
+               Width="75" Height="27.5"
                Template="{DynamicResource ConfirmationPageToggleButtonStyle}"/>
 
                 </StackPanel>

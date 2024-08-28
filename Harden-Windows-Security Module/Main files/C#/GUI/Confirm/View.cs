@@ -15,6 +15,7 @@ using System.Windows.Media.Imaging;
 using System.Xml.Linq;
 using static HardenWindowsSecurity.NewToastNotification;
 using System.Collections.Generic;
+using System.Windows.Controls.Primitives;
 
 #nullable disable
 
@@ -66,6 +67,51 @@ namespace HardenWindowsSecurity
                 // Find the SecOpsDataGrid
                 HardenWindowsSecurity.GUIConfirmSystemCompliance.SecOpsDataGrid = (System.Windows.Controls.DataGrid)confirmView.FindName("SecOpsDataGrid");
 
+                #region ToggleButtons
+                System.Windows.Controls.Primitives.ToggleButton CompliantItemsToggleButton = (System.Windows.Controls.Primitives.ToggleButton)confirmView.FindName("CompliantItemsToggleButton");
+                System.Windows.Controls.Primitives.ToggleButton NonCompliantItemsToggleButton = (System.Windows.Controls.Primitives.ToggleButton)confirmView.FindName("NonCompliantItemsToggleButton");
+
+                // Apply the templates so that we can set the IsChecked property to true
+                CompliantItemsToggleButton.ApplyTemplate();
+                NonCompliantItemsToggleButton.ApplyTemplate();
+
+                CompliantItemsToggleButton.IsChecked = true;
+                NonCompliantItemsToggleButton.IsChecked = true;
+                #endregion
+
+                // A Method to apply filters on the DataGrid based on the filter text and toggle buttons
+                void ApplyFilters(string filterText, bool includeCompliant, bool includeNonCompliant)
+                {
+                    // Make sure the collection has data and is not null
+                    if (_SecOpsCollectionView != null)
+                    {
+                        // Apply a filter to the collection view based on the filter text and toggle buttons
+                        _SecOpsCollectionView.Filter = memberObj =>
+                        {
+                            if (memberObj is SecOp member)
+                            {
+                                // Check if the item passes the text filter
+                                bool passesTextFilter =
+                                       (member.FriendlyName?.Contains(filterText, StringComparison.OrdinalIgnoreCase) ?? false) ||
+                                       (member.Value?.Contains(filterText, StringComparison.OrdinalIgnoreCase) ?? false) ||
+                                       (member.Name?.Contains(filterText, StringComparison.OrdinalIgnoreCase) ?? false) ||
+                                       (member.Category?.Contains(filterText, StringComparison.OrdinalIgnoreCase) ?? false) ||
+                                       (member.Method?.Contains(filterText, StringComparison.OrdinalIgnoreCase) ?? false);
+
+                                // Check if the item passes the compliant toggle buttons filters
+                                bool passesCompliantFilter = (includeCompliant && member.Compliant) ||
+                                                             (includeNonCompliant && !member.Compliant);
+
+                                // Return true if the item passes all filters
+                                return passesTextFilter && passesCompliantFilter;
+                            }
+                            return false;
+                        };
+
+                        _SecOpsCollectionView.Refresh(); // Refresh the collection view to apply the filter
+                    }
+                }
+
                 // Initialize an empty security options collection
                 __SecOpses = new System.Collections.ObjectModel.ObservableCollection<SecOp>();
 
@@ -79,34 +125,19 @@ namespace HardenWindowsSecurity
                     HardenWindowsSecurity.GUIConfirmSystemCompliance.SecOpsDataGrid.ItemsSource = _SecOpsCollectionView;
                 }
 
-                // Handle the TextBox filter using a lambda expression
+                // Finding the textboxFilter element
                 var textBoxFilter = (System.Windows.Controls.TextBox)confirmView.FindName("textBoxFilter");
-                if (textBoxFilter != null)
-                {
-                    textBoxFilter.TextChanged += (sender, e) =>
-                    {
-                        // Get the filter text from the TextBox
-                        string filterText = textBoxFilter.Text;
-                        if (_SecOpsCollectionView != null)
-                        {
-                            // Apply a filter to the collection view based on the filter text
-                            _SecOpsCollectionView.Filter = memberObj =>
-                            {
-                                if (memberObj is SecOp member)
-                                {
-                                    // Check if any of the security option properties contain the filter text
-                                    return (member.FriendlyName?.Contains(filterText, StringComparison.OrdinalIgnoreCase) ?? false) ||
-                                           (member.Value?.Contains(filterText, StringComparison.OrdinalIgnoreCase) ?? false) ||
-                                           (member.Name?.Contains(filterText, StringComparison.OrdinalIgnoreCase) ?? false) ||
-                                           (member.Category?.Contains(filterText, StringComparison.OrdinalIgnoreCase) ?? false) ||
-                                           (member.Method?.Contains(filterText, StringComparison.OrdinalIgnoreCase) ?? false);
-                                }
-                                return false;
-                            };
-                            _SecOpsCollectionView.Refresh(); // Refresh the collection view to apply the filter
-                        }
-                    };
-                }
+
+                #region event handlers for data filtration
+                // Attach event handlers to the text box filter and toggle buttons
+                textBoxFilter.TextChanged += (sender, e) => ApplyFilters(textBoxFilter.Text, CompliantItemsToggleButton.IsChecked ?? false, NonCompliantItemsToggleButton.IsChecked ?? false);
+
+                CompliantItemsToggleButton.Checked += (sender, e) => ApplyFilters(textBoxFilter.Text, CompliantItemsToggleButton.IsChecked ?? false, NonCompliantItemsToggleButton.IsChecked ?? false);
+                CompliantItemsToggleButton.Unchecked += (sender, e) => ApplyFilters(textBoxFilter.Text, CompliantItemsToggleButton.IsChecked ?? false, NonCompliantItemsToggleButton.IsChecked ?? false);
+
+                NonCompliantItemsToggleButton.Checked += (sender, e) => ApplyFilters(textBoxFilter.Text, CompliantItemsToggleButton.IsChecked ?? false, NonCompliantItemsToggleButton.IsChecked ?? false);
+                NonCompliantItemsToggleButton.Unchecked += (sender, e) => ApplyFilters(textBoxFilter.Text, CompliantItemsToggleButton.IsChecked ?? false, NonCompliantItemsToggleButton.IsChecked ?? false);
+                #endregion
 
                 #region RefreshButton
                 // Find the Refresh button and attach the Click event handler
@@ -157,10 +188,13 @@ namespace HardenWindowsSecurity
                         // Set text blocks to empty while new data is being generated
                         System.Windows.Application.Current.Dispatcher.Invoke(() =>
                             {
+                                // Finding the elements
                                 var CompliantItemsTextBlock = (System.Windows.Controls.TextBlock)confirmView.FindName("CompliantItemsTextBlock");
                                 var NonCompliantItemsTextBlock = (System.Windows.Controls.TextBlock)confirmView.FindName("NonCompliantItemsTextBlock");
-                                CompliantItemsTextBlock.Text = "";
-                                NonCompliantItemsTextBlock.Text = "";
+
+                                // Setting these texts the same as the text in the XAML for these text blocks so that every time Refresh button is pressed, they lose their numbers until the new data is generated and new counts are calculated
+                                CompliantItemsTextBlock.Text = "Compliant Items";
+                                NonCompliantItemsTextBlock.Text = "Non-Compliant Items";
 
                                 var TotalCountTextBlock = (System.Windows.Controls.TextBlock)confirmView.FindName("TotalCountTextBlock");
 

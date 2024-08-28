@@ -114,7 +114,7 @@ Unprotect-WindowsSecurity
 
 <div align="center">
 
-<img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/HardenWindowsSecurityAppDemo.gif" width="600" alt="Harden Windows Security App Demo">
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/HardenWindowsSecurityAppDemo%20v3.gif" width="600" alt="Harden Windows Security App Demo">
 
 </div>
 

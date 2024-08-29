@@ -20,8 +20,9 @@ namespace HardenWindowsSecurity
         /// </summary>
         /// <param name="filePath">Path of the .Pol or .Inf file to apply using LGPO.exe</param>
         /// <param name="fileType">Whether it's Policy file or Inf file for security group policies</param>
+        /// <param name="LGPOExePath">Optional: provide the path to the LGPO.exe that will be used</param>
         /// <exception cref="ArgumentException"></exception>
-        public static void RunLGPOCommand(string filePath, FileType fileType)
+        public static void RunLGPOCommand(string filePath, FileType fileType, string? LGPOExePath = null)
         {
             // Construct the command based on the file type
             string commandArgs;
@@ -40,7 +41,8 @@ namespace HardenWindowsSecurity
             // Start the process with LGPO.exe
             ProcessStartInfo processInfo = new ProcessStartInfo
             {
-                FileName = GlobalVars.LGPOExe,
+                // If the path to LGPO.exe was provided then use it, otherwise use the global variable
+                FileName = LGPOExePath ?? GlobalVars.LGPOExe,
                 Arguments = commandArgs,
                 RedirectStandardOutput = true,
                 UseShellExecute = false,

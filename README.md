@@ -433,6 +433,8 @@ From Top to bottom in order:
 
 - <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/magenta-verification.gif" width="25" alt="Rotating pink checkmark denoting registry or cmdlet"> Extends the brute-force protection coverage in the Microsoft Defender Antivirus to block local network addresses. <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/en-us/windows/client-management/mdm/defender-csp#configurationbehavioralnetworkblocksbruteforceprotectionbruteforceprotectionpluginsbruteforceprotectionlocalnetworkblocking)
 
+- <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/magenta-verification.gif" width="25" alt="Rotating pink checkmark denoting registry or cmdlet"> Enables [ECS Configurations](https://learn.microsoft.com/en-us/defender-endpoint/microsoft-defender-core-service-configurations-and-experimentation) in the Microsoft Defender. They improve product health and security by *automatically* fixing any possible issues/bugs that may arise, in a timely manner.
+
 <p align="right"><a href="#menu-back-to-top">💡 (back to categories)</a></p>
 
 <br>

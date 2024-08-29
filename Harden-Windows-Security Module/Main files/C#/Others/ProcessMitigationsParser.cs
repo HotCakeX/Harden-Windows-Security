@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 
 #nullable enable
@@ -14,7 +15,7 @@ namespace HardenWindowsSecurity
             public string? ProgramName { get; set; }    // Column for program name
             public string? Mitigation { get; set; }     // Column for mitigation
             public string? Action { get; set; }         // Column for action
-            public string? RemovalAllowed { get; set; } // Column for removal allowed
+            public bool RemovalAllowed { get; set; } // Column for removal allowed
             public string? Comment { get; set; }        // Column for comments
         }
 
@@ -64,7 +65,7 @@ namespace HardenWindowsSecurity
                             ProgramName = values[0],
                             Mitigation = values[1],
                             Action = values[2],
-                            RemovalAllowed = values[3],
+                            RemovalAllowed = Convert.ToBoolean(values[3], CultureInfo.InvariantCulture),
                             Comment = values[4]
                         });
                     }

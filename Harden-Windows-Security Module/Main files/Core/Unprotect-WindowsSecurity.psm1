@@ -217,7 +217,8 @@ Function Unprotect-WindowsSecurity {
                         Set-MpPreference -RemoteEncryptionProtectionConfiguredState 0
                         Set-MpPreference -RemoteEncryptionProtectionMaxBlockTime 0
                         Set-MpPreference -BruteForceProtectionLocalNetworkBlocking $False
-
+                        Set-MpPreference -EnableEcsConfiguration $False
+                        
                         # Set Data Execution Prevention (DEP) back to its default value
                         Set-BcdElement -Element 'nx' -Type 'Integer' -Value '0'
 

@@ -68,6 +68,9 @@ namespace HardenWindowsSecurity
             HardenWindowsSecurity.Logger.LogMessage("Extending brute-force protection coverage to block local network addresses.");
             HardenWindowsSecurity.MpComputerStatusHelper.SetMpComputerStatus<bool>("BruteForceProtectionLocalNetworkBlocking", true);
 
+            HardenWindowsSecurity.Logger.LogMessage("Enabling ECS in Microsoft Defender for better product health and security.");
+            HardenWindowsSecurity.MpComputerStatusHelper.SetMpComputerStatus<bool>("EnableEcsConfiguration", true);
+
             HardenWindowsSecurity.Logger.LogMessage("Adding OneDrive folders of all the user accounts (personal and work accounts) to the Controlled Folder Access for Ransomware Protection");
             string[] OneDrivePaths = HardenWindowsSecurity.GetOneDriveDirectories.Get().ToArray();
             HardenWindowsSecurity.MpComputerStatusHelper.SetMpComputerStatus<string[]>("ControlledFolderAccessProtectedFolders", OneDrivePaths);

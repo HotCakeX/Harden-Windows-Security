@@ -2583,6 +2583,19 @@ namespace HardenWindowsSecurity
                     Category = CatName,
                     Method = "CIM"
                 });
+
+                // Get the value and convert it to bool
+                bool EnableEcsConfigurationResult = Convert.ToBoolean(HardenWindowsSecurity.PropertyHelper.GetPropertyValue(HardenWindowsSecurity.GlobalVars.MDAVPreferencesCurrent, "EnableEcsConfigurationResult"));
+                nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
+                {
+                    FriendlyName = "ECS is enabled in Microsoft Defender",
+                    Compliant = EnableEcsConfigurationResult,
+                    Value = EnableEcsConfigurationResult ? "True" : "False",
+                    Name = "ECS is enabled in Microsoft Defender",
+                    Category = CatName,
+                    Method = "CIM"
+                });
+
             });
         }
     }

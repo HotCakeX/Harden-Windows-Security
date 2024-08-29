@@ -22,7 +22,6 @@ Miscellaneous,HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows Search,EnableFindMyF
 Miscellaneous,HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\EdgeUpdate\ClientStateMedium\{56EB18F8-B008-4CBD-B6D2-8C97FE7E9062},allowautoupdatesmetered,1,DWORD,AddOrModify,Set Microsoft Edge (Stable) to update over Metered connections
 Miscellaneous,HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\EdgeUpdate\ClientStateMedium\{2CD8A007-E189-409D-A2C8-9AF4EF3C72AA},allowautoupdatesmetered,1,DWORD,AddOrModify,Set Microsoft Edge (Beta) to update over Metered connections
 Miscellaneous,HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\EdgeUpdate\ClientStateMedium\{0D50BFEC-CD6A-4F9A-964C-C7416E3ACB10},allowautoupdatesmetered,1,DWORD,AddOrModify,Set Microsoft Edge (Dev) to update over Metered connections
-Miscellaneous,HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Services\W32Time\TimeProviders\NtpClient,SpecialPollInterval,345600,DWORD,Delete,Change Windows time sync interval from every 7 days to every 4 days (= every 345600 seconds)
 Miscellaneous,HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters,EncryptData,1,DWORD,AddOrModify,Enable SMB Encryption
 Miscellaneous,HKEY_LOCAL_MACHINE\Software\Microsoft\Cryptography\Wintrust\Config,EnableCertPaddingCheck,1,String,AddOrModify,WinVerifyTrust Signature Validation
 Miscellaneous,HKEY_LOCAL_MACHINE\Software\Wow6432Node\Microsoft\Cryptography\Wintrust\Config,EnableCertPaddingCheck,1,String,AddOrModify,WinVerifyTrust Signature Validation
@@ -31,7 +30,6 @@ Edge,HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Edge,DnsOverHttpsMode,automa
 Edge,HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Edge,AutomaticHttpsDefault,2,DWORD,AddOrModify,Automatically upgrade HTTP connections to HTTPS
 Edge,HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Edge,EncryptedClientHelloEnabled,1,DWORD,AddOrModify,Enable Encrypted Client Hello
 Edge,HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Edge,BasicAuthOverHttpEnabled,0,DWORD,AddOrModify,Block Basic authentication for HTTP
-Edge,HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Edge,WebRtcRespectOsRoutingTableEnabled,0,DWORD,Delete,Causes problem with Discord Voice Chat in Edge browser - Leads to no route error - when you are using VPN like Mullvad that has tight kill switch feature
 Edge,HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Edge,ExperimentationAndConfigurationServiceControl,2,DWORD,AddOrModify,Allow devices using Edge category of the hardening script to receive new features and experimentations like normal devices
 Edge,HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Edge,AudioSandboxEnabled,1,DWORD,AddOrModify,Enforces the audio process to run sandboxed
 Edge,HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Edge\Recommended,DefaultShareAdditionalOSRegionSetting,2,DWORD,AddOrModify,Recommends that the share additional operating system region setting to be set to never.

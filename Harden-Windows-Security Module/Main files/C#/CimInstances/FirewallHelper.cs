@@ -60,17 +60,17 @@ namespace HardenWindowsSecurity
             // catch exceptions specific to WMI
             catch (ManagementException mex)
             {
-                HardenWindowsSecurity.VerboseLogger.Write($"WMI ManagementException: {mex.Message}");
+                HardenWindowsSecurity.Logger.LogMessage($"WMI ManagementException: {mex.Message}");
             }
             // Catch block for unauthorized access exceptions
             catch (UnauthorizedAccessException uex)
             {
-                HardenWindowsSecurity.VerboseLogger.Write($"UnauthorizedAccessException: {uex.Message}");
+                HardenWindowsSecurity.Logger.LogMessage($"UnauthorizedAccessException: {uex.Message}");
             }
             // General catch block for any other exceptions
             catch (Exception ex)
             {
-                HardenWindowsSecurity.VerboseLogger.Write($"An error occurred: {ex.Message}");
+                HardenWindowsSecurity.Logger.LogMessage($"An error occurred: {ex.Message}");
             }
 
             return results;

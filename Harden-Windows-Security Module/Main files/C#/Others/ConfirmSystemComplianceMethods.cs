@@ -540,11 +540,11 @@ namespace HardenWindowsSecurity
 
                 if (BootDMAProtection)
                 {
-                    HardenWindowsSecurity.VerboseLogger.Write("Kernel DMA protection is enabled");
+                    HardenWindowsSecurity.Logger.LogMessage("Kernel DMA protection is enabled");
                 }
                 else
                 {
-                    HardenWindowsSecurity.VerboseLogger.Write("Kernel DMA protection is disabled");
+                    HardenWindowsSecurity.Logger.LogMessage("Kernel DMA protection is disabled");
                 }
 
 
@@ -629,7 +629,7 @@ namespace HardenWindowsSecurity
                         .ToArray() ?? Array.Empty<string>();
 
                     // display the key protectors
-                    //  HardenWindowsSecurity.VerboseLogger.Write(string.Join(", ", KeyProtectors));
+                    //  HardenWindowsSecurity.Logger.LogMessage(string.Join(", ", KeyProtectors));
 
 
                     // Check if TPM+PIN and recovery password are being used - Normal Security level
@@ -843,7 +843,7 @@ namespace HardenWindowsSecurity
                     // Check if the output is empty
                     if (string.IsNullOrWhiteSpace(output))
                     {
-                        HardenWindowsSecurity.VerboseLogger.Write("No output from the auditpol command.");
+                        HardenWindowsSecurity.Logger.LogMessage("No output from the auditpol command.");
                         return;
                     }
 
@@ -1678,7 +1678,7 @@ namespace HardenWindowsSecurity
                             // Handle errors
                             foreach (var error in ps.Streams.Error)
                             {
-                                HardenWindowsSecurity.VerboseLogger.Write($"Error: {error.ToString()}");
+                                HardenWindowsSecurity.Logger.LogMessage($"Error: {error.ToString()}");
                             }
                         }
 
@@ -1703,12 +1703,12 @@ namespace HardenWindowsSecurity
                         }
                         else
                         {
-                            HardenWindowsSecurity.VerboseLogger.Write("No results retrieved from Get-BcdEntry command.");
+                            HardenWindowsSecurity.Logger.LogMessage("No results retrieved from Get-BcdEntry command.");
                         }
                     }
                     catch (Exception ex)
                     {
-                        HardenWindowsSecurity.VerboseLogger.Write($"Exception: {ex.Message}");
+                        HardenWindowsSecurity.Logger.LogMessage($"Exception: {ex.Message}");
                     }
                 }
 
@@ -1739,7 +1739,7 @@ namespace HardenWindowsSecurity
                             // Handle errors
                             foreach (var error in ps.Streams.Error)
                             {
-                                HardenWindowsSecurity.VerboseLogger.Write($"Error: {error.ToString()}");
+                                HardenWindowsSecurity.Logger.LogMessage($"Error: {error.ToString()}");
                             }
                         }
 
@@ -1797,7 +1797,7 @@ namespace HardenWindowsSecurity
                     }
                     catch (Exception ex)
                     {
-                        HardenWindowsSecurity.VerboseLogger.Write($"Exception: {ex.Message}");
+                        HardenWindowsSecurity.Logger.LogMessage($"Exception: {ex.Message}");
                     }
                 }
 
@@ -1817,13 +1817,13 @@ namespace HardenWindowsSecurity
                             // Handle errors
                             foreach (var error in ps.Streams.Error)
                             {
-                                HardenWindowsSecurity.VerboseLogger.Write($"Error: {error.ToString()}");
+                                HardenWindowsSecurity.Logger.LogMessage($"Error: {error.ToString()}");
                             }
                         }
                     }
                     catch (Exception ex)
                     {
-                        HardenWindowsSecurity.VerboseLogger.Write($"Exception: {ex.Message}");
+                        HardenWindowsSecurity.Logger.LogMessage($"Exception: {ex.Message}");
                     }
                 }
 
@@ -1886,9 +1886,9 @@ namespace HardenWindowsSecurity
                         if (!targetSet.SetEquals(ProcessMitigations_Applied))
                         {
                             // If the values are different, it means the process has different mitigations applied to it than the ones in the CSV file
-                            HardenWindowsSecurity.VerboseLogger.Write($"Mitigations for {ProcessName_Target} were found but are not compliant");
-                            HardenWindowsSecurity.VerboseLogger.Write($"Applied Mitigations: {string.Join(",", ProcessMitigations_Applied)}");
-                            HardenWindowsSecurity.VerboseLogger.Write($"Target Mitigations: {string.Join(",", ProcessMitigations_Target)}");
+                            HardenWindowsSecurity.Logger.LogMessage($"Mitigations for {ProcessName_Target} were found but are not compliant");
+                            HardenWindowsSecurity.Logger.LogMessage($"Applied Mitigations: {string.Join(",", ProcessMitigations_Applied)}");
+                            HardenWindowsSecurity.Logger.LogMessage($"Target Mitigations: {string.Join(",", ProcessMitigations_Target)}");
 
                             // Increment the total number of the verifiable compliant values for each process that has a mitigation applied to it in the CSV file
                             HardenWindowsSecurity.GlobalVars.TotalNumberOfTrueCompliantValues++;
@@ -1906,7 +1906,7 @@ namespace HardenWindowsSecurity
                         else
                         {
                             // If the values are the same, it means the process has the same mitigations applied to it as the ones in the CSV file
-                            HardenWindowsSecurity.VerboseLogger.Write($"Mitigations for {ProcessName_Target} are compliant");
+                            HardenWindowsSecurity.Logger.LogMessage($"Mitigations for {ProcessName_Target} are compliant");
 
                             // Increment the total number of the verifiable compliant values for each process that has a mitigation applied to it in the CSV file
                             HardenWindowsSecurity.GlobalVars.TotalNumberOfTrueCompliantValues++;
@@ -1925,7 +1925,7 @@ namespace HardenWindowsSecurity
                     else
                     {
                         //If the process name is not found in the hashtable containing the currently applied mitigations, it means the process doesn't have any mitigations applied to it
-                        HardenWindowsSecurity.VerboseLogger.Write($"Mitigations for {ProcessName_Target} were not found");
+                        HardenWindowsSecurity.Logger.LogMessage($"Mitigations for {ProcessName_Target} were not found");
 
                         // Increment the total number of the verifiable compliant values for each process that has a mitigation applied to it in the CSV file
                         HardenWindowsSecurity.GlobalVars.TotalNumberOfTrueCompliantValues++;
@@ -2585,7 +2585,7 @@ namespace HardenWindowsSecurity
                 });
 
                 // Get the value and convert it to bool
-                bool EnableEcsConfigurationResult = Convert.ToBoolean(HardenWindowsSecurity.PropertyHelper.GetPropertyValue(HardenWindowsSecurity.GlobalVars.MDAVPreferencesCurrent, "EnableEcsConfigurationResult"));
+                bool EnableEcsConfigurationResult = Convert.ToBoolean(HardenWindowsSecurity.PropertyHelper.GetPropertyValue(HardenWindowsSecurity.GlobalVars.MDAVPreferencesCurrent, "EnableEcsConfiguration"));
                 nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "ECS is enabled in Microsoft Defender",

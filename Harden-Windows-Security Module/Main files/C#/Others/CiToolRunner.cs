@@ -47,7 +47,7 @@ namespace HardenWindowsSecurity
             catch (Exception ex)
             {
                 // Handle errors by printing an error message and returning a default version of 0.0.0.0
-                Console.WriteLine($"Error converting number to version: {ex.Message}");
+                HardenWindowsSecurity.Logger.LogMessage($"Error converting number to version: {ex.Message}");
                 return new Version(0, 0, 0, 0);
             }
         }
@@ -95,10 +95,17 @@ namespace HardenWindowsSecurity
                 // Wait for the process to complete
                 process.WaitForExit();
 
-                // Set up options to parse the JSON output
-                var options = new JsonSerializerOptions
+                if (process.ExitCode != 0)
                 {
-                    PropertyNameCaseInsensitive = true, // Ignore case when matching JSON property names
+                    // Throw an exception with the error message
+                    throw new InvalidOperationException($"Command execution failed with error code {process.ExitCode}");
+                }
+
+                // Set up options to parse the JSON output
+                JsonSerializerOptions? options = new JsonSerializerOptions
+                {
+                    // Ignore case when matching JSON property names
+                    PropertyNameCaseInsensitive = true,
                 };
 
                 // Deserialize the JSON into a JsonElement for easy traversal
@@ -107,10 +114,10 @@ namespace HardenWindowsSecurity
                 // If "Policies" property exists and is an array, start processing each policy
                 if (rootElement.TryGetProperty("Policies", out JsonElement policiesElement) && policiesElement.ValueKind == JsonValueKind.Array)
                 {
-                    foreach (var policyElement in policiesElement.EnumerateArray())
+                    foreach (JsonElement policyElement in policiesElement.EnumerateArray())
                     {
                         // Create a new Policy object and populate its properties from the JSON data
-                        var policy = new CiPolicyInfo
+                        CiPolicyInfo? policy = new CiPolicyInfo
                         {
                             PolicyID = policyElement.GetPropertyOrDefault("PolicyID", string.Empty),
                             BasePolicyID = policyElement.GetPropertyOrDefault("BasePolicyID", string.Empty),
@@ -150,7 +157,7 @@ namespace HardenWindowsSecurity
         /// <summary>
         /// Removes a deployed WDAC policy from the system
         /// </summary>
-        /// <param name="policyId">the GUID which is the policy ID of the policy to be removed, without the {} curly brackets </param>
+        /// <param name="policyId">the GUID which is the policy ID of the policy to be removed, with the curly brackets {} wrapped with double quotes "" </param>
         /// <exception cref="ArgumentException"></exception>
         public static void RemovePolicy(string policyId)
         {
@@ -159,48 +166,41 @@ namespace HardenWindowsSecurity
                 throw new ArgumentException("Policy ID cannot be null or empty.", nameof(policyId));
             }
 
-            // Define the command and arguments
-            string command = "citool.exe";
-            string arguments = $"--remove-policy {policyId}";
+            // Combine the path to CiTool.exe using the system's special folder path
+            string ciToolPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.System), "CiTool.exe");
 
-            // Initialize a new process
+            // Set up the process start info to run CiTool.exe with necessary arguments
             ProcessStartInfo processStartInfo = new ProcessStartInfo
             {
-                FileName = command,
-                Arguments = arguments,
-                RedirectStandardOutput = true,
-                RedirectStandardError = true,
-                UseShellExecute = false,
-                CreateNoWindow = true
+                FileName = ciToolPath,
+                Arguments = $"--remove-policy \"{{{policyId}}}\" -json",   // Arguments to remove a WDAC policy
+                RedirectStandardOutput = true, // Capture the standard output
+                UseShellExecute = false,   // Do not use the OS shell to start the process
+                CreateNoWindow = true      // Run the process without creating a window
             };
 
-            try
+            // Start the process and capture the output
+            using (Process? process = Process.Start(processStartInfo))
             {
-                using (Process process = new Process())
+
+                if (process == null)
                 {
-                    process.StartInfo = processStartInfo;
-                    process.Start();
+                    throw new Exception("There was a problem running the CiTool.exe in the RunCiTool method.");
+                }
 
-                    // Read the output and error
-                    string output = process.StandardOutput.ReadToEnd();
-                    string error = process.StandardError.ReadToEnd();
+                // Read all output as a string
+                string jsonOutput = process.StandardOutput.ReadToEnd();
 
-                    process.WaitForExit();
+                // Wait for the process to complete
+                process.WaitForExit();
 
-                    if (process.ExitCode != 0)
-                    {
-                        // Throw an exception with the error message
-                        throw new InvalidOperationException($"Command execution failed with error: {error}");
-                    }
+                if (process.ExitCode != 0)
+                {
+                    // Throw an exception with the error message
+                    throw new InvalidOperationException($"Command execution failed with error code {process.ExitCode}");
                 }
             }
-            catch
-            {
-                // Rethrow the exception without catching it
-                throw;
-            }
         }
-
     }
 
     // Extension methods for JsonElement to simplify retrieving properties with default values

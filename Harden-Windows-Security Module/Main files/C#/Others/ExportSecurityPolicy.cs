@@ -58,7 +58,7 @@ namespace HardenWindowsSecurity
 
                 if (!string.IsNullOrEmpty(error))
                 {
-                    HardenWindowsSecurity.VerboseLogger.Write("Error: " + error);
+                    HardenWindowsSecurity.Logger.LogMessage("Error: " + error);
                 }
             }
         }

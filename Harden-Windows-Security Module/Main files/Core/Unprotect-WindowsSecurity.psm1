@@ -28,10 +28,10 @@ Function Unprotect-WindowsSecurity {
         $script:ErrorActionPreference = 'Stop'
         [HardenWindowsSecurity.Initializer]::Initialize($VerbosePreference)
 
-        Write-Verbose -Message 'Importing the required sub-modules'
+        [HardenWindowsSecurity.Logger]::LogMessage('Importing the required sub-modules')
         Import-Module -FullyQualifiedName "$([HardenWindowsSecurity.GlobalVars]::Path)\Shared\Update-self.psm1" -Force -Verbose:$false
 
-        Write-Verbose -Message 'Checking for updates...'
+        [HardenWindowsSecurity.Logger]::LogMessage('Checking for updates...')
         Update-Self -InvocationStatement $MyInvocation.Statement
 
         # do not prompt for confirmation if the -Force switch is used

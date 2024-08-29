@@ -72,7 +72,7 @@ namespace HardenWindowsSecurity
                     HardenWindowsSecurity.Logger.LogMessage($"An error occurred: {ex.Message}");
                 }
 
-                HardenWindowsSecurity.VerboseLogger.Write("Checking if TPM is available and enabled...");
+                HardenWindowsSecurity.Logger.LogMessage("Checking if TPM is available and enabled...");
 
                 var tpmStatus = HardenWindowsSecurity.TpmStatus.Get();
 

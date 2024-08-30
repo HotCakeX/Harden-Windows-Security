@@ -178,6 +178,15 @@ namespace HardenWindowsSecurity
 
                 #endregion
 
+                // Finding the ComplianceCategoriesSelectionComboBox ComboBox
+                System.Windows.Controls.ComboBox ComplianceCategoriesSelectionComboBox = confirmView.FindName("ComplianceCategoriesSelectionComboBox") as System.Windows.Controls.ComboBox;
+
+                // Get the valid compliance checking categories
+                var cats = new ComplianceCategoriex();
+
+                // Add the valid compliance checking categories to the ComboBox source
+                ComplianceCategoriesSelectionComboBox.ItemsSource = cats.GetValidValues();
+
 
                 // perform the compliance check only if user has Admin privileges
                 if (!HardenWindowsSecurity.UserPrivCheck.IsAdmin())
@@ -230,8 +239,35 @@ namespace HardenWindowsSecurity
                                 // Get fresh data for compliance checking
                                 HardenWindowsSecurity.Initializer.Initialize(null, true);
 
-                                // Perform the compliance check
-                                HardenWindowsSecurity.InvokeConfirmation.Invoke(null);
+                                // initialize the variable to null
+                                string SelectedCategory = null;
+
+                                // Use the App dispatcher since this is being done in a different thread
+                                GUIMain.app.Dispatcher.Invoke(() =>
+                                {
+
+                                    // Get the currently selected value in the Compliance Checking category ComboBox if it exists
+                                    if (ComplianceCategoriesSelectionComboBox.SelectedItem != null)
+                                    {
+                                        var SelectedComplianceCategories = ComplianceCategoriesSelectionComboBox.SelectedItem;
+
+                                        // Get the currently selected compliance category
+                                        SelectedCategory = SelectedComplianceCategories?.ToString();
+                                    }
+
+                                });
+
+                                // if user selected a category for compliance checking
+                                if (SelectedCategory != null)
+                                {
+                                    // Perform the compliance check using the selected compliance category
+                                    HardenWindowsSecurity.InvokeConfirmation.Invoke(new string[] { SelectedCategory });
+                                }
+                                else
+                                {
+                                    // Perform the compliance check for all categories
+                                    HardenWindowsSecurity.InvokeConfirmation.Invoke(null);
+                                }
                             });
 
                         // After InvokeConfirmation is completed, update the security options collection

@@ -131,6 +131,11 @@ namespace HardenWindowsSecurity
             // Additional properties can be added here for Confirm page content
         }
 
+        public class LogsVM : ViewModelBase
+        {
+
+        }
+
         // NavigationVM class
         // ViewModel for handling navigation between different views, inheriting from ViewModelBase
         public partial class NavigationVM : ViewModelBase
@@ -152,6 +157,7 @@ namespace HardenWindowsSecurity
             // ICommand properties for handling navigation commands
             public ICommand ConfirmCommand { get; set; }
             public ICommand ProtectCommand { get; set; }
+            public ICommand LogsCommand { get; set; }
 
             // Dictionary to cache views by their identifiers
             private Dictionary<string, object> _viewCache = new Dictionary<string, object>();
@@ -162,10 +168,13 @@ namespace HardenWindowsSecurity
                 // Initialize commands with methods to execute
                 ProtectCommand = new RelayCommand(Protect); // Command to handle Protect action
                 ConfirmCommand = new RelayCommand(Confirm); // Command to handle Confirm action
+                LogsCommand = new RelayCommand(Logs); // Command to handle the Log action
 
-                // Load the Protect view initially
-                // Set Protect view as the default startup page
-                Protect(null); // Call the Protect method to set the initial view
+                // Load the Logs view initially to make it ready for logs to be written to it
+                Logs(null);
+
+                // Load the Protect view next, it will be set as the default startup page
+                Protect(null);
             }
         }
 
@@ -319,12 +328,17 @@ End time: {DateTime.Now}
             // Protect button icon
             System.Windows.Controls.Grid ProtectButtonGrid = SidebarGrid.FindName("ProtectButtonGrid") as System.Windows.Controls.Grid;
             System.Windows.Controls.Image ProtectButtonIcon = ProtectButtonGrid.FindName("ProtectButtonIcon") as System.Windows.Controls.Image;
-            ProtectButtonIcon.Source = new System.Windows.Media.Imaging.BitmapImage(new Uri(System.IO.Path.Combine(HardenWindowsSecurity.GlobalVars.path, "Resources", "Media", "3d-techny-secure-lock-and-key-successfully-unlocked.png")));
+            ProtectButtonIcon.Source = new System.Windows.Media.Imaging.BitmapImage(new Uri(System.IO.Path.Combine(HardenWindowsSecurity.GlobalVars.path, "Resources", "Media", "ProtectMenuButton.png")));
 
             // Confirm button icon
             System.Windows.Controls.Grid ConfirmButtonGrid = SidebarGrid.FindName("ConfirmButtonGrid") as System.Windows.Controls.Grid;
             System.Windows.Controls.Image ConfirmButtonIcon = ConfirmButtonGrid.FindName("ConfirmButtonIcon") as System.Windows.Controls.Image;
-            ConfirmButtonIcon.Source = new System.Windows.Media.Imaging.BitmapImage(new Uri(System.IO.Path.Combine(HardenWindowsSecurity.GlobalVars.path, "Resources", "Media", "3d-glassy-fuzzy-gradient-ball.png")));
+            ConfirmButtonIcon.Source = new System.Windows.Media.Imaging.BitmapImage(new Uri(System.IO.Path.Combine(HardenWindowsSecurity.GlobalVars.path, "Resources", "Media", "ConfirmMenuButton.png")));
+
+            // Logs button icon
+            System.Windows.Controls.Grid LogsButtonGrid = SidebarGrid.FindName("LogsButtonGrid") as System.Windows.Controls.Grid;
+            System.Windows.Controls.Image LogsButtonIcon = ConfirmButtonGrid.FindName("LogsButtonIcon") as System.Windows.Controls.Image;
+            LogsButtonIcon.Source = new System.Windows.Media.Imaging.BitmapImage(new Uri(System.IO.Path.Combine(HardenWindowsSecurity.GlobalVars.path, "Resources", "Media", "LogsMenuButton.png")));
 
         }
     }

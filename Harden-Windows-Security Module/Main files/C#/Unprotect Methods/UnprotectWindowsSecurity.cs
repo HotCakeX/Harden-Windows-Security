@@ -82,6 +82,8 @@ namespace HardenWindowsSecurity
             // Defining the path where the ZIP file will be saved
             string zipFilePath = Path.Combine(GlobalVars.WorkingDir, "LGPO.zip");
 
+            HardenWindowsSecurity.Logger.LogMessage("Downloading the LGPO.exe from the Microsoft servers");
+
             // Download the ZIP file from the URL using HttpClient
             using (HttpClient client = new HttpClient())
             {

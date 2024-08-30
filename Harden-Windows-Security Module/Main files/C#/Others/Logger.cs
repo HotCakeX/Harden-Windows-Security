@@ -40,7 +40,7 @@ namespace HardenWindowsSecurity
 
             // If there is no GUI Window, or there was a GUI window but it was closed by the user
             // then use Console for writing logs
-            if (HardenWindowsSecurity.GUIProtectWinSecurity.View == null || HardenWindowsSecurity.GUIProtectWinSecurity.View.Dispatcher.HasShutdownStarted == true)
+            if (HardenWindowsSecurity.GUILogs.View == null || HardenWindowsSecurity.GUILogs.View.Dispatcher.HasShutdownStarted == true)
             {
                 // See if the host is available, meaning PowerShell host is available
                 if (HardenWindowsSecurity.GlobalVars.Host != null)
@@ -57,7 +57,7 @@ namespace HardenWindowsSecurity
             else
             {
                 // Invoke the Dispatcher to update the GUI
-                HardenWindowsSecurity.GUIProtectWinSecurity.View.Dispatcher.Invoke(callback: new Action(() =>
+                HardenWindowsSecurity.GUILogs.View.Dispatcher.Invoke(callback: new Action(() =>
                 {
 
                     // if user enabled logging
@@ -83,10 +83,10 @@ Machine: {Environment.MachineName}
                     }
 
                     // Update the TextBlock with the new log message, making sure each log is written to a new line
-                    HardenWindowsSecurity.GUIProtectWinSecurity.outputTextBlock!.Text += CurrentText + "\n";
+                    HardenWindowsSecurity.GUILogs.MainLoggerTextBox!.Text += CurrentText + "\n";
 
                     // scroll down the scroller
-                    HardenWindowsSecurity.GUIProtectWinSecurity.scrollerForOutputTextBlock!.ScrollToBottom();
+                    HardenWindowsSecurity.GUILogs.scrollerForOutputTextBox!.ScrollToBottom();
                 }), priority: DispatcherPriority.Background);
             }
         }

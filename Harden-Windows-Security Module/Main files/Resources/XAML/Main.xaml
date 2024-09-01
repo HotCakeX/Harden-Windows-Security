@@ -43,6 +43,27 @@
                                         <TextBlock Text='Confirm &amp; Verify' Style='{StaticResource Text_Style}' />
                                     </Grid>
                                 </RadioButton>
+
+
+                                <!--// ASRRules //-->
+                                <RadioButton Style='{StaticResource BtnStyle}' Command='{Binding ASRRulesCommand}'>
+                                    <Grid x:Name="ASRRulesButtonGrid">
+                                        <Image x:Name="ASRRulesButtonIcon" Style="{StaticResource Image_Style}" />
+                                        <TextBlock Text='ASR Rules' Style='{StaticResource Text_Style}' />
+                                    </Grid>
+                                </RadioButton>
+
+
+                                <!--// Unprotect //-->
+                                <RadioButton Style='{StaticResource BtnStyle}' Command='{Binding UnprotectCommand}'>
+                                    <Grid x:Name="UnprotectButtonGrid">
+                                        <Image x:Name="UnprotectButtonIcon" Style="{StaticResource Image_Style}" />
+                                        <TextBlock Text='Unprotect' Style='{StaticResource Text_Style}' />
+                                    </Grid>
+                                </RadioButton>
+
+
+
                                 <!--// Logs //-->
                                 <RadioButton Style='{StaticResource BtnStyle}' Command='{Binding LogsCommand}'>
                                     <Grid x:Name="LogsButtonGrid">

@@ -38,7 +38,7 @@
            BorderThickness="0" />
 
         <StackPanel Margin="0" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Row="1" Grid.ColumnSpan="2">
-                        
+
             <!-- ComboBox -->
             <ComboBox x:Name="ProtectionPresetComboBox"
               Width="200" Margin="0,0,20,0"
@@ -53,13 +53,13 @@
             </ComboBox>
 
             <!-- ToggleButton -->
-            <ToggleButton HorizontalAlignment="Center" 
+            <ToggleButton HorizontalAlignment="Center"
                   Margin="20,0,0,0"
-                  x:Name="MainTabControlToggle" 
-                  ToolTip="Choose between Online or Offline modes" 
-                  Foreground="White" 
-                  Height="40" 
-                  Width="170" 
+                  x:Name="MainTabControlToggle"
+                  ToolTip="Choose between Online or Offline modes"
+                  Foreground="White"
+                  Height="40"
+                  Width="170"
                   FontSize="18">
                 <ToggleButton.Template>
                     <ControlTemplate TargetType="ToggleButton">

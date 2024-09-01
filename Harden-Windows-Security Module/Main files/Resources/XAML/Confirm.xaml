@@ -15,7 +15,7 @@
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
             <!--Counter Title-->
-                     
+
                 <!-- Grid containing the Refresh Button -->
                 <Grid x:Name="RefreshButtonGrid" Height="150" Grid.Row="0"
                   Margin="0,0,100,0">
@@ -313,15 +313,15 @@
                 <!--End of Refresh Button Grid-->
 
 
-                <!-- Compliance Categories Selection ComboBox -->            
+                <!-- Compliance Categories Selection ComboBox -->
             <ComboBox x:Name="ComplianceCategoriesSelectionComboBox"
 Width="200" Margin="50,0,50,0" VerticalAlignment="Center"
 Style="{StaticResource ModernComboBoxStyle}"
-ItemContainerStyle="{StaticResource ModernComboBoxItemStyle}" Grid.Row="0" HorizontalAlignment="Right">                    
+ItemContainerStyle="{StaticResource ModernComboBoxItemStyle}" Grid.Row="0" HorizontalAlignment="Right">
                 </ComboBox>
 
-        
-            
+
+
             <TextBlock x:Name="TotalCountTextBlock" Grid.Row="1" FontSize="18" FontWeight="SemiBold" Foreground="#121518" HorizontalAlignment="Left" VerticalAlignment="Center"/>
             <TextBlock Text="Filter by" Grid.Row="1" FontSize="13" FontWeight="SemiBold" Margin="0 0 215 0" Foreground="#121518" HorizontalAlignment="Right" VerticalAlignment="Center"/>
             <!--Filter Textbox-->

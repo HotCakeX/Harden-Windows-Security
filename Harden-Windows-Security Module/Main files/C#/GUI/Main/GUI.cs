@@ -136,6 +136,16 @@ namespace HardenWindowsSecurity
 
         }
 
+        public class UnprotectCommand : ViewModelBase
+        {
+
+        }
+
+        public class ASRRulesCommand : ViewModelBase
+        {
+
+        }
+
         // NavigationVM class
         // ViewModel for handling navigation between different views, inheriting from ViewModelBase
         public partial class NavigationVM : ViewModelBase
@@ -155,8 +165,10 @@ namespace HardenWindowsSecurity
             }
 
             // ICommand properties for handling navigation commands
-            public ICommand ConfirmCommand { get; set; }
             public ICommand ProtectCommand { get; set; }
+            public ICommand ConfirmCommand { get; set; }
+            public ICommand ASRRulesCommand { get; set; }
+            public ICommand UnprotectCommand { get; set; }
             public ICommand LogsCommand { get; set; }
 
             // Dictionary to cache views by their identifiers
@@ -168,6 +180,8 @@ namespace HardenWindowsSecurity
                 // Initialize commands with methods to execute
                 ProtectCommand = new RelayCommand(Protect); // Command to handle Protect action
                 ConfirmCommand = new RelayCommand(Confirm); // Command to handle Confirm action
+                ASRRulesCommand = new RelayCommand(ASRRules); // Command to handle the ASRRules action
+                UnprotectCommand = new RelayCommand(Unprotect); // Command to handle the Unprotect action
                 LogsCommand = new RelayCommand(Logs); // Command to handle the Log action
 
                 // Load the Logs view initially to make it ready for logs to be written to it
@@ -334,6 +348,16 @@ End time: {DateTime.Now}
             System.Windows.Controls.Grid ConfirmButtonGrid = SidebarGrid.FindName("ConfirmButtonGrid") as System.Windows.Controls.Grid;
             System.Windows.Controls.Image ConfirmButtonIcon = ConfirmButtonGrid.FindName("ConfirmButtonIcon") as System.Windows.Controls.Image;
             ConfirmButtonIcon.Source = new System.Windows.Media.Imaging.BitmapImage(new Uri(System.IO.Path.Combine(HardenWindowsSecurity.GlobalVars.path, "Resources", "Media", "ConfirmMenuButton.png")));
+
+            // ASRRules button icon
+            System.Windows.Controls.Grid ASRRulesButtonGrid = SidebarGrid.FindName("ASRRulesButtonGrid") as System.Windows.Controls.Grid;
+            System.Windows.Controls.Image ASRRulesButtonIcon = ConfirmButtonGrid.FindName("ASRRulesButtonIcon") as System.Windows.Controls.Image;
+            ASRRulesButtonIcon.Source = new System.Windows.Media.Imaging.BitmapImage(new Uri(System.IO.Path.Combine(HardenWindowsSecurity.GlobalVars.path, "Resources", "Media", "ASRRulesMenuButton.png")));
+
+            // Unprotect button icon
+            System.Windows.Controls.Grid UnprotectButtonGrid = SidebarGrid.FindName("UnprotectButtonGrid") as System.Windows.Controls.Grid;
+            System.Windows.Controls.Image UnprotectButtonIcon = ConfirmButtonGrid.FindName("UnprotectButtonIcon") as System.Windows.Controls.Image;
+            UnprotectButtonIcon.Source = new System.Windows.Media.Imaging.BitmapImage(new Uri(System.IO.Path.Combine(HardenWindowsSecurity.GlobalVars.path, "Resources", "Media", "UnprotectButton.png")));
 
             // Logs button icon
             System.Windows.Controls.Grid LogsButtonGrid = SidebarGrid.FindName("LogsButtonGrid") as System.Windows.Controls.Grid;

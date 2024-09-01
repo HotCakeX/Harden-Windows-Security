@@ -8,22 +8,33 @@ using System.Windows;
 namespace HardenWindowsSecurity
 {
     /// <summary>
-    /// This class defines a member that is responsible for tracking activity across the Harden Windows Security Application
-    /// It is thread safe
-    /// It also offers methods for registering UI elements to be enabled/disabled based on the global Application activity
+    /// This class is responsible for tracking the activity status of the application and managing the 
+    /// enabled/disabled state of registered UI elements based on this status. It is thread-safe to ensure
+    /// that concurrent access to the activity state and UI elements list is handled properly.
     /// </summary>
     internal static class ActivityTracker
     {
+        // A volatile boolean to indicate whether the application is currently active or not.
+        // The 'volatile' keyword ensures that the value is always read directly from memory, 
+        // not from a processor cache, which is important in a multithreaded environment.
         private static volatile bool _isActive;
+
+        // An object used for locking critical sections of code to make them thread-safe. 
+        // This ensures that only one thread can access the locked section at a time.
         private static readonly object _lock = new object();
 
-        // A list to keep track of UIElements that should be disabled/enabled
+        // A list to keep track of UIElements that should be disabled/enabled based on the application's activity status.
         private static readonly List<UIElement> _uiElements = new List<UIElement>();
 
+        /// <summary>
+        /// Gets or sets the current activity status of the application.
+        /// When setting the status, it also updates the state of all registered UI elements.
+        /// </summary>
         public static bool IsActive
         {
             get
             {
+                // Lock the critical section to ensure thread-safe access to the _isActive variable.
                 lock (_lock)
                 {
                     return _isActive;
@@ -31,34 +42,57 @@ namespace HardenWindowsSecurity
             }
             set
             {
+                // Lock the critical section to ensure thread-safe update of the _isActive variable.
                 lock (_lock)
                 {
                     _isActive = value;
 
-                    // Update UI elements when the activity status changes
+                    // Update the enabled/disabled state of all registered UI elements when the activity status changes.
                     UpdateUIElements();
                 }
             }
         }
 
-        // Method to register UI elements to be managed by ActivityTracker
+        /// <summary>
+        /// Registers a UI element to be managed by the ActivityTracker. 
+        /// The element's enabled/disabled state will be controlled based on the application's activity status.
+        /// If the application is currently active, the element will be immediately disabled.
+        /// </summary>
+        /// <param name="element">The UI element to register.</param>
         public static void RegisterUIElement(UIElement element)
         {
+            // Lock the critical section to ensure thread-safe access to the _uiElements list.
             lock (_lock)
             {
-                // Ensure the element is not already in the list
+                // Check if the element is not already in the list to prevent duplicate entries.
                 if (!_uiElements.Contains(element))
                 {
                     _uiElements.Add(element);
+
+                    // If the application is currently active, disable the newly registered element immediately.
+                    if (_isActive)
+                    {
+                        // Ensure that the update to the UI element happens on the UI thread.
+                        HardenWindowsSecurity.GUIMain.app!.Dispatcher.Invoke(() =>
+                        {
+                            element.IsEnabled = false; // Disable the element if the application is active.
+                        });
+                    }
                 }
             }
         }
 
-        // Method to unregister UI elements
+        /// <summary>
+        /// Unregisters a UI element from being managed by the ActivityTracker. 
+        /// The element's enabled/disabled state will no longer be controlled by the application's activity status.
+        /// </summary>
+        /// <param name="element">The UI element to unregister.</param>
         public static void UnregisterUIElement(UIElement element)
         {
+            // Lock the critical section to ensure thread-safe access to the _uiElements list.
             lock (_lock)
             {
+                // Remove the element from the list if it exists.
                 if (_uiElements.Contains(element))
                 {
                     _uiElements.Remove(element);
@@ -66,14 +100,21 @@ namespace HardenWindowsSecurity
             }
         }
 
-        // Method to update the enabled/disabled state of registered UI elements
+        /// <summary>
+        /// Updates the enabled/disabled state of all registered UI elements based on the current activity status.
+        /// This method is called whenever the activity status changes.
+        /// </summary>
         private static void UpdateUIElements()
         {
+            // Iterate through each registered UI element.
             foreach (var element in _uiElements)
             {
-                // Ensure the update happens on the UI thread
+                // Ensure that the update to each UI element happens on the UI thread.
                 HardenWindowsSecurity.GUIMain.app!.Dispatcher.Invoke(() =>
                 {
+                    // Set the IsEnabled property of the element based on the current activity status.
+                    // If the application is active (_isActive is true), disable the element (IsEnabled = false).
+                    // If the application is not active (_isActive is false), enable the element (IsEnabled = true).
                     element.IsEnabled = !_isActive;
                 });
             }

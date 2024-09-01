@@ -73,7 +73,7 @@ namespace HardenWindowsSecurity
                 // Set the DataContext for Protect view
                 HardenWindowsSecurity.GUILogs.View.DataContext = new LogsVM();
 
-                // Find the DataGrid
+                // Find the Parent Grid
                 HardenWindowsSecurity.GUILogs.ParentGrid = (System.Windows.Controls.Grid)HardenWindowsSecurity.GUILogs.View.FindName("ParentGrid");
 
                 HardenWindowsSecurity.GUILogs.MainLoggerTextBox = HardenWindowsSecurity.GUILogs.ParentGrid.FindName("MainLoggerTextBox") as System.Windows.Controls.TextBox;

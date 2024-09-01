@@ -18,7 +18,7 @@
 
 <h6 align="center">
 
-<a href="https://twitter.com/intent/tweet?text=Harden%20Windows%20Security%20Using%20Official%20Microsoft%20Methods%20https://github.com/HotCakeX/Harden-Windows-Security/"><img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/SVGs/Twitter%20with%20URL.svg" alt="Twitter Share button"></a>
+<a href="https://twitter.com/intent/tweet?text=Harden%20Windows%20Security%20Using%20Official%20Microsoft%20Methods%20https://github.com/HotCakeX/Harden-Windows-Security/"><img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/SVGs/Twitter%20with%20URL.svg" alt="Twitter Share button"></a> <a href="https://dotnet.microsoft.com/en-us/download"><img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/SVG/Badges/.NET9.svg" alt=".NET Badge"></a> <a href="https://github.com/PowerShell/PowerShell"><img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/SVG/Badges/PowerShell.svg" alt="PowerShell Badge"></a> <a href="https://visualstudio.microsoft.com/"><img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/SVG/Badges/VisualStudio.svg" alt="Visual Studio Badge"></a>
 
 </h6>
 
@@ -82,7 +82,7 @@ Install-Module -Name 'Harden-Windows-Security-Module' -Force
 </summary>
 
 ```powershell
-Protect-WindowsSecurity
+Protect-WindowsSecurity -GUI
 ```
 ```powershell
 Confirm-SystemCompliance

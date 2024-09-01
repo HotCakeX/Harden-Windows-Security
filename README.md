@@ -93,7 +93,13 @@ Unprotect-WindowsSecurity
 
 </details>
 
-![Animated APNG demonstrating how the Harden Windows Security PowerShell module works](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/APNGs/Harden%20Windows%20Security%20Demo%201.apng)
+<br>
+
+<div align="center">
+
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/HardenWindowsSecurityAppDemo%20v4.gif" width="700" alt="Harden Windows Security App Demo">
+
+</div>
 
 <br>
 
@@ -107,18 +113,6 @@ Unprotect-WindowsSecurity
          alt="YouTube Video showcase">
   </a>
 </p>
-
-<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">
-
-<br>
-
-<div align="center">
-
-<img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/HardenWindowsSecurityAppDemo%20v3.gif" width="600" alt="Harden Windows Security App Demo">
-
-</div>
-
-<br>
 
 <img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">
 

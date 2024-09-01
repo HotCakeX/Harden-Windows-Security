@@ -1,6 +1,5 @@
 using System;
 using System.IO;
-using System.Net.Http;
 using System.IO.Compression;
 using System.Collections.Generic;
 using System.Linq;
@@ -70,32 +69,27 @@ namespace HardenWindowsSecurity
             HardenWindowsSecurity.MpComputerStatusHelper.SetMpComputerStatus<byte>("RemoteEncryptionProtectionConfiguredState", 0);
             HardenWindowsSecurity.MpComputerStatusHelper.SetMpComputerStatus<bool>("BruteForceProtectionLocalNetworkBlocking", false);
             HardenWindowsSecurity.MpComputerStatusHelper.SetMpComputerStatus<bool>("EnableEcsConfiguration", false);
+            HardenWindowsSecurity.MpComputerStatusHelper.SetMpComputerStatus<string>("EngineUpdatesChannel", "0");
+            HardenWindowsSecurity.MpComputerStatusHelper.SetMpComputerStatus<string>("PlatformUpdatesChannel", "0");
             #endregion
 
 
             #region
             HardenWindowsSecurity.Logger.LogMessage("Restoring the default Security group policies");
 
-            // Defining the URL to download the LGPO.zip from
-            string LgpoURL = "https://download.microsoft.com/download/8/5/C/85C25433-A1B0-4FFA-9429-7E023E7DA8D8/LGPO.zip";
-
-            // Defining the path where the ZIP file will be saved
-            string zipFilePath = Path.Combine(GlobalVars.WorkingDir, "LGPO.zip");
-
-            HardenWindowsSecurity.Logger.LogMessage("Downloading the LGPO.exe from the Microsoft servers");
-
-            // Download the ZIP file from the URL using HttpClient
-            using (HttpClient client = new HttpClient())
+            // if LGPO doesn't already exist in the working directory, then download it
+            // No ActivityTracker is implemented in here because this file download only happens
+            // When this method is run from PowerShell
+            // When this method is run from the GUI, check for existence of LGPO and downloading it will happen in that code
+            if (!System.IO.Path.Exists(GlobalVars.LGPOExe))
             {
-                // Download the file as a byte array synchronously
-                byte[] zipFileBytes = client.GetByteArrayAsync(LgpoURL).Result;
-
-                // Save the byte array to a file
-                File.WriteAllBytes(zipFilePath, zipFileBytes);
+                Logger.LogMessage("LGPO.exe doesn't exist, downloading it.");
+                AsyncDownloader.PrepDownloadedFiles(GlobalVars.LGPOExe, null, null, true);
             }
-
-            // Extract the ZIP file
-            ZipFile.ExtractToDirectory(zipFilePath, GlobalVars.WorkingDir, true);
+            else
+            {
+                Logger.LogMessage("LGPO.exe already exists, skipping downloading it.");
+            }
 
             // Apply the default security policy on the system
             HardenWindowsSecurity.LGPORunner.RunLGPOCommand(Path.Combine(GlobalVars.path!, "Resources", "Default Security Policy.inf"), LGPORunner.FileType.INF, Path.Combine(GlobalVars.WorkingDir, "LGPO_30", "LGPO.exe"));
@@ -199,8 +193,9 @@ Start-Process -FilePath GPUpdate.exe -ArgumentList '/force' -NoNewWindow
             }
 
             // Only remove the mitigations that are allowed to be removed
-            // It is important for any executable whose name is mentioned as a key in "Computer\HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options" by default in a clean Windows installation, to have its RemovalAllowed property in the Process Mitigations CSV file set to False
+            // It is important for any executable whose name is mentioned as a key in "Computer\HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options" by default in a clean Windows installation, to have the RemovalAllowed property of ALL OF ITS MITIGATIONS defined in the Process Mitigations CSV file set to False
             // So regardless of whether mitigations were added by the module, only remove mitigations for processes whose names do not exist in that registry location by default, this will prevent from removing any possible built-in default mitigations
+            // The following removals only affect the registry keys, they do not alter the mitigations defined in Microsoft Defender GUI
             List<HardenWindowsSecurity.ProcessMitigationsParser.ProcessMitigationsRecords> processMitigations = HardenWindowsSecurity.GlobalVars.ProcessMitigations
                 .Where(mitigation => mitigation.RemovalAllowed)
                 .ToList();

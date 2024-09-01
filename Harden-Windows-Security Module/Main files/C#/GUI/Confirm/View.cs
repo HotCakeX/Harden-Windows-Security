@@ -161,9 +161,6 @@ namespace HardenWindowsSecurity
                 // Access the Refresh Button
                 System.Windows.Controls.Primitives.ToggleButton RefreshButton = (System.Windows.Controls.Primitives.ToggleButton)RefreshButtonGrid.FindName("RefreshButton");
 
-                // Register the RefreshButton as an element that will be enabled/disabled based on current activity
-                HardenWindowsSecurity.ActivityTracker.RegisterUIElement(RefreshButton);
-
                 // Apply the template to make sure it's available
                 RefreshButton.ApplyTemplate();
 
@@ -207,6 +204,12 @@ namespace HardenWindowsSecurity
                     // Disable the refresh button
                     RefreshButton.IsEnabled = false;
                     HardenWindowsSecurity.Logger.LogMessage("You need Administrator privileges to perform compliance check on the system.");
+                }
+                // If there is no Admin rights, this dynamic enablement/disablement isn't necessary as it will override the disablement that happens above.
+                else
+                {
+                    // Register the RefreshButton as an element that will be enabled/disabled based on current activity
+                    HardenWindowsSecurity.ActivityTracker.RegisterUIElement(RefreshButton);
                 }
 
                 // Set up the Click event handler for the Refresh button

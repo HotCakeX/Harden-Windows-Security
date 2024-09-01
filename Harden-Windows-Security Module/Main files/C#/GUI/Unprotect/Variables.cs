@@ -14,5 +14,10 @@ namespace HardenWindowsSecurity
 
         public static System.Windows.Controls.Grid? ParentGrid;
 
+        public static byte UnprotectCategoriesComboBoxSelection;
+
+        public static byte WDACPoliciesComboBoxSelection;
+
+
     }
 }

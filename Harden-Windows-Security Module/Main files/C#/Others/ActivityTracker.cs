@@ -8,18 +8,18 @@ using System.Windows;
 namespace HardenWindowsSecurity
 {
     /// <summary>
-    /// This class is responsible for tracking the activity status of the application and managing the 
+    /// This class is responsible for tracking the activity status of the application and managing the
     /// enabled/disabled state of registered UI elements based on this status. It is thread-safe to ensure
     /// that concurrent access to the activity state and UI elements list is handled properly.
     /// </summary>
     internal static class ActivityTracker
     {
         // A volatile boolean to indicate whether the application is currently active or not.
-        // The 'volatile' keyword ensures that the value is always read directly from memory, 
+        // The 'volatile' keyword ensures that the value is always read directly from memory,
         // not from a processor cache, which is important in a multithreaded environment.
         private static volatile bool _isActive;
 
-        // An object used for locking critical sections of code to make them thread-safe. 
+        // An object used for locking critical sections of code to make them thread-safe.
         // This ensures that only one thread can access the locked section at a time.
         private static readonly object _lock = new object();
 
@@ -54,7 +54,7 @@ namespace HardenWindowsSecurity
         }
 
         /// <summary>
-        /// Registers a UI element to be managed by the ActivityTracker. 
+        /// Registers a UI element to be managed by the ActivityTracker.
         /// The element's enabled/disabled state will be controlled based on the application's activity status.
         /// If the application is currently active, the element will be immediately disabled.
         /// </summary>
@@ -83,7 +83,7 @@ namespace HardenWindowsSecurity
         }
 
         /// <summary>
-        /// Unregisters a UI element from being managed by the ActivityTracker. 
+        /// Unregisters a UI element from being managed by the ActivityTracker.
         /// The element's enabled/disabled state will no longer be controlled by the application's activity status.
         /// </summary>
         /// <param name="element">The UI element to unregister.</param>

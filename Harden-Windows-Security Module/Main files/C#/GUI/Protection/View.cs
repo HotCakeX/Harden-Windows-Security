@@ -357,9 +357,6 @@ namespace HardenWindowsSecurity
                 // Access the Execute Button
                 GUIProtectWinSecurity.ExecuteButton = (System.Windows.Controls.Primitives.ToggleButton)GUIProtectWinSecurity.ExecuteButtonGrid!.FindName("Execute");
 
-                // Register the Execute button to be enabled/disabled based on global activity
-                HardenWindowsSecurity.ActivityTracker.RegisterUIElement(GUIProtectWinSecurity.ExecuteButton);
-
                 // Apply the template to make sure it's available
                 GUIProtectWinSecurity.ExecuteButton.ApplyTemplate();
 
@@ -397,23 +394,17 @@ namespace HardenWindowsSecurity
                 // Initially set the text area for the selected LogPath to disabled
                 GUIProtectWinSecurity.txtFilePath.IsEnabled = false;
 
-                // Initialize the LogPath button element as disabled
-                GUIProtectWinSecurity.logPath.IsEnabled = false;
-
                 // Defining event handler
-                // When the Log checkbox is checked, enable the LogPath button and log path text area
+                // When the Log checkbox is checked, enable the log path text area
                 GUIProtectWinSecurity.log.Checked += (sender, e) =>
                 {
                     GUIProtectWinSecurity.txtFilePath.IsEnabled = true;
-                    GUIProtectWinSecurity.logPath.IsEnabled = true;
                 };
 
                 // Defining event handler
-                // When the Log checkbox is unchecked, disable the LogPath button and set the LogPath text area to disabled
+                // When the Log checkbox is unchecked, set the LogPath text area to disabled
                 GUIProtectWinSecurity.log.Unchecked += (sender, e) =>
                 {
-                    GUIProtectWinSecurity.logPath.IsEnabled = false;
-
                     // Only disable the Log text file path element if it's not empty
                     if (string.IsNullOrWhiteSpace(GUIProtectWinSecurity.txtFilePath.Text))
                     {
@@ -489,6 +480,14 @@ namespace HardenWindowsSecurity
                     // Add the text box to the grid
                     GUIProtectWinSecurity.grid2.Children.Add(offlineModeUnavailableNoticeBox);
                 };
+
+                // Register the Execute button to be enabled/disabled based on global activity
+                HardenWindowsSecurity.ActivityTracker.RegisterUIElement(GUIProtectWinSecurity.ExecuteButton);
+
+                // Register additional elements for automatic enablement/disablement
+                HardenWindowsSecurity.ActivityTracker.RegisterUIElement(GUIProtectWinSecurity.logPath);
+                HardenWindowsSecurity.ActivityTracker.RegisterUIElement(GUIProtectWinSecurity.loggingViewBox);
+
 
                 // Cache the view before setting it as the CurrentView
                 _viewCache["ProtectView"] = GUIProtectWinSecurity.View;

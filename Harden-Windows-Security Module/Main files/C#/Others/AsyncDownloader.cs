@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO.Compression;
-using Humanizer;
 using System.Diagnostics;
 using Windows.Media.Ocr;
 
@@ -161,13 +160,15 @@ namespace HardenWindowsSecurity
 
 
         /// <summary>
-        /// The main method of this class, called from the Protected-WindowsSecurity cmdlet
+        /// The main method of this class
         /// First checks if the module is running in offline mode, if not, it starts the download process asynchronously
         /// Then extracts the downloaded files to the working directory
         /// If the module is running in offline mode, it copies the files from the user provided paths to the working directory
         /// Finally, it extracts the downloaded zip files to the working directory
         /// It also copies the LGPO.exe to the Microsoft Security Baseline and Microsoft 365 Security Baseline folders
         /// so that it can be used by the PowerShell script
+        /// Whether online or offline mode is used, it assigns the paths to the downloaded or copied files to the same variables
+        /// Which allows seamless usage of the files regardless of whether they were downloaded or provided by the user
         /// </summary>
         /// <param name="LGPOPath"></param>
         /// <param name="MSFTSecurityBaselinesPath"></param>
@@ -176,12 +177,6 @@ namespace HardenWindowsSecurity
         /// <exception cref="Exception"></exception>
         public static void PrepDownloadedFiles(string? LGPOPath, string? MSFTSecurityBaselinesPath, string? MSFT365AppsSecurityBaselinesPath, bool OnlyLGPO)
         {
-
-            // mark as activity started
-            // This way other buttons won't initiate the download if download is already running
-            // by first checking with the ActivityTracker
-            HardenWindowsSecurity.ActivityTracker.IsActive = true;
-
             // Only download if offline is not used or OnlyLGPO is true meaning LGPO must be downloaded from the MSFT servers
             if (!HardenWindowsSecurity.GlobalVars.Offline || OnlyLGPO)
             {
@@ -290,9 +285,6 @@ namespace HardenWindowsSecurity
                 System.IO.File.Copy(HardenWindowsSecurity.GlobalVars.LGPOExe, Path.Combine(HardenWindowsSecurity.GlobalVars.Microsoft365SecurityBaselinePath, "Scripts", "Tools", "LGPO.exe"), true);
 
             }
-
-            // mark as activity finished
-            HardenWindowsSecurity.ActivityTracker.IsActive = false;
         }
     }
 }

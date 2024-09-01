@@ -270,7 +270,7 @@ End time: {DateTime.Now}
 **********************
 """;
 
-                HardenWindowsSecurity.Logger.LogToFile(endOfLogFile);
+                HardenWindowsSecurity.Logger.LogMessage(endOfLogFile);
             };
 
             /*

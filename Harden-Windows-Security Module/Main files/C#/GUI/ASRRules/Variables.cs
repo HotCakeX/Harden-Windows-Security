@@ -13,6 +13,5 @@ namespace HardenWindowsSecurity
         public static System.Windows.Controls.UserControl? View;
 
         public static System.Windows.Controls.Grid? ParentGrid;
-
     }
 }

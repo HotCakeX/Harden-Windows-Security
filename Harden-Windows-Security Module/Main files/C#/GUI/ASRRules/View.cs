@@ -99,9 +99,6 @@ namespace HardenWindowsSecurity
                     throw new Exception("Couldn't find the ExecuteButton in ASRRules view");
                 }
 
-                // Register the ExecuteButton as an element that will be enabled/disabled based on current activity
-                HardenWindowsSecurity.ActivityTracker.RegisterUIElement(ExecuteButton);
-
                 // Apply the template to make sure it's available
                 ExecuteButton.ApplyTemplate();
 
@@ -148,7 +145,7 @@ namespace HardenWindowsSecurity
                         }
                     }
                 }
-                                
+
 
                 // Correlation between the ComboBox Names in the XAML and the GUID of the ASR Rule they belong to
                 System.Collections.Generic.Dictionary<string, string> ASRRulesCorrelation = new Dictionary<string, string>()
@@ -228,6 +225,21 @@ namespace HardenWindowsSecurity
                 if (ExecuteButton == null)
                 {
                     throw new Exception("ExecuteButton is null.");
+                }
+
+
+                // Apply the ASR Rule configs only if user has Admin privileges
+                if (!HardenWindowsSecurity.UserPrivCheck.IsAdmin())
+                {
+                    // Disable the execute button
+                    ExecuteButton.IsEnabled = false;
+                    HardenWindowsSecurity.Logger.LogMessage("You need Administrator privileges to ASR Rule configurations on the system.");
+                }
+                // If there is no Admin rights, this dynamic enablement/disablement isn't necessary as it will override the disablement that happens above.
+                else
+                {
+                    // Register the ExecuteButton as an element that will be enabled/disabled based on current activity
+                    HardenWindowsSecurity.ActivityTracker.RegisterUIElement(ExecuteButton);
                 }
 
                 // Set up the Click event handler for the ExecuteButton button
@@ -409,9 +421,8 @@ namespace HardenWindowsSecurity
 
                         // mark as activity completed
                         HardenWindowsSecurity.ActivityTracker.IsActive = false;
-
                     }
-                };                
+                };
 
                 // Cache the view before setting it as the CurrentView
                 _viewCache["ASRRulesView"] = HardenWindowsSecurity.GUIASRRules.View;

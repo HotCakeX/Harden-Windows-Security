@@ -47,7 +47,7 @@ namespace HardenWindowsSecurity
                     {
 
                         // Debugging output
-                        // HardenWindowsSecurity.VerboseLogger.Write($"Namespace: {record.Namespace}, Class: {record.Class}");
+                        // HardenWindowsSecurity.Logger.LogMessage($"Namespace: {record.Namespace}, Class: {record.Class}");
 
                         // Add a new task for each class query
                         tasks.Add(Task.Run(() =>
@@ -65,7 +65,7 @@ namespace HardenWindowsSecurity
                             catch (ManagementException e)
                             {
                                 // Write verbose error message if connection fails
-                                HardenWindowsSecurity.VerboseLogger.Write($"Error connecting to namespace {record.Namespace}: {e.Message}");
+                                HardenWindowsSecurity.Logger.LogMessage($"Error connecting to namespace {record.Namespace}: {e.Message}");
                             }
 
                             // Create object query for the current class
@@ -97,7 +97,7 @@ namespace HardenWindowsSecurity
                             catch (ManagementException e)
                             {
                                 // Write verbose error message if query fails
-                                HardenWindowsSecurity.VerboseLogger.Write($"Error querying {record.Class}: {e.Message}");
+                                HardenWindowsSecurity.Logger.LogMessage($"Error querying {record.Class}: {e.Message}");
                             }
 
                             // Add class results to main results dictionary in a thread-safe manner

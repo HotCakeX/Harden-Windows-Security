@@ -12,9 +12,16 @@ namespace HardenWindowsSecurity
         // Clean up the working directory at the end of each cmdlet
         public static void CleanUp()
         {
-            if (Directory.Exists(GlobalVars.WorkingDir))
+            try
             {
-                Directory.Delete(GlobalVars.WorkingDir, true);
+                if (Directory.Exists(GlobalVars.WorkingDir))
+                {
+                    Directory.Delete(GlobalVars.WorkingDir, true);
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.LogMessage("Couldn't delete the working directory in the temp folder: " + ex.Message);
             }
         }
 
@@ -72,7 +79,7 @@ namespace HardenWindowsSecurity
                     HardenWindowsSecurity.Logger.LogMessage($"An error occurred: {ex.Message}");
                 }
 
-                HardenWindowsSecurity.VerboseLogger.Write("Checking if TPM is available and enabled...");
+                HardenWindowsSecurity.Logger.LogMessage("Checking if TPM is available and enabled...");
 
                 var tpmStatus = HardenWindowsSecurity.TpmStatus.Get();
 

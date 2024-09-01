@@ -93,7 +93,13 @@ Unprotect-WindowsSecurity
 
 </details>
 
-![Animated APNG demonstrating how the Harden Windows Security PowerShell module works](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/APNGs/Harden%20Windows%20Security%20Demo%201.apng)
+<br>
+
+<div align="center">
+
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/HardenWindowsSecurityAppDemo%20v4.gif" width="700" alt="Harden Windows Security App Demo">
+
+</div>
 
 <br>
 
@@ -107,18 +113,6 @@ Unprotect-WindowsSecurity
          alt="YouTube Video showcase">
   </a>
 </p>
-
-<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">
-
-<br>
-
-<div align="center">
-
-<img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/HardenWindowsSecurityAppDemo%20v3.gif" width="600" alt="Harden Windows Security App Demo">
-
-</div>
-
-<br>
 
 <img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">
 
@@ -432,6 +426,8 @@ From Top to bottom in order:
 - <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/magenta-verification.gif" width="25" alt="Rotating pink checkmark denoting registry or cmdlet"> Sets the internal feature logic to determine blocking time for the Remote Encryption Protection <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/en-us/windows/client-management/mdm/defender-csp#configurationbehavioralnetworkblocksremoteencryptionprotectionremoteencryptionprotectionmaxblocktime)
 
 - <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/magenta-verification.gif" width="25" alt="Rotating pink checkmark denoting registry or cmdlet"> Extends the brute-force protection coverage in the Microsoft Defender Antivirus to block local network addresses. <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/en-us/windows/client-management/mdm/defender-csp#configurationbehavioralnetworkblocksbruteforceprotectionbruteforceprotectionpluginsbruteforceprotectionlocalnetworkblocking)
+
+- <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/magenta-verification.gif" width="25" alt="Rotating pink checkmark denoting registry or cmdlet"> Enables [ECS Configurations](https://learn.microsoft.com/en-us/defender-endpoint/microsoft-defender-core-service-configurations-and-experimentation) in the Microsoft Defender. They improve product health and security by *automatically* fixing any possible issues/bugs that may arise, in a timely manner.
 
 <p align="right"><a href="#menu-back-to-top">💡 (back to categories)</a></p>
 

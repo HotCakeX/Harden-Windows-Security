@@ -60,11 +60,6 @@ namespace HardenWindowsSecurity
                 throw new Exception("AddEventHandlers Method: Window object is empty!");
             }
 
-            if (GUIProtectWinSecurity.outputTextBlock == null)
-            {
-                throw new Exception("AddEventHandlers Method: outputTextBlock object is empty!");
-            }
-
             if (GUIProtectWinSecurity.categories == null)
             {
                 throw new Exception("AddEventHandlers Method: categories object is empty!");
@@ -146,18 +141,6 @@ namespace HardenWindowsSecurity
                 checkBox.Checked += (sender, e) => UpdateSubCategories();
                 checkBox.Unchecked += (sender, e) => UpdateSubCategories();
             }
-
-            // Register an event handler for the window size changed event
-            GUIProtectWinSecurity.View.SizeChanged += (sender, e) =>
-            {
-                // Calculate the max width based on the window width
-                // Subtract 50 to account for the padding and margin
-                long newMaxWidth = (long)GUIProtectWinSecurity.View.ActualWidth - 50;
-
-                // Update the main TextBox's MaxWidth property dynamically, instead of setting it to a fixed value in the XAML
-                GUIProtectWinSecurity.outputTextBlock.MaxWidth = newMaxWidth;
-            };
-
 
             // Add click event for 'Check All' button
             GUIProtectWinSecurity.selectAllCategories.Checked += (sender, e) =>
@@ -336,84 +319,168 @@ namespace HardenWindowsSecurity
             // Defining a set of commands to run when the GUI window is loaded, async
             GUIProtectWinSecurity.View.Loaded += async (sender, e) =>
             {
-                // Only proceed if this event hasn't already been triggered
-                if (!HardenWindowsSecurity.GUIProtectWinSecurity.LoadEventHasBeenTriggered)
+
+                // Only continue if there is no activity in other places
+                if (HardenWindowsSecurity.ActivityTracker.IsActive == false)
                 {
+                    // mark as activity started
+                    HardenWindowsSecurity.ActivityTracker.IsActive = true;
 
-                    // Set the flag to true indicating the view loaded event has been triggered
-                    HardenWindowsSecurity.GUIProtectWinSecurity.LoadEventHasBeenTriggered = true;
-
-                    // Run this entire section, including the downloading part, asynchronously
-                    try
+                    // Only proceed if this event hasn't already been triggered
+                    if (!HardenWindowsSecurity.GUIProtectWinSecurity.LoadEventHasBeenTriggered)
                     {
 
-                        #region Display a Welcome message
-                        string nameToDisplay = string.Empty;
+                        // Set the flag to true indicating the view loaded event has been triggered
+                        HardenWindowsSecurity.GUIProtectWinSecurity.LoadEventHasBeenTriggered = true;
 
-                        string UserValue = string.Empty;
+                        // Run this entire section, including the downloading part, asynchronously
 
-                        System.Security.Principal.WindowsIdentity CurrentUserResult = System.Security.Principal.WindowsIdentity.GetCurrent();
-                        System.Security.Principal.SecurityIdentifier? User = CurrentUserResult.User;
-
-                        if (User != null)
+                        #region Initial Preset Configuration
+                        // Configure the categories and sub-categories for the Recommended preset when the Protect view page is first loaded
+                        GUIMain.app!.Dispatcher.Invoke(() =>
                         {
-                            UserValue = User.Value.ToString();
-                        }
 
-                        HardenWindowsSecurity.LocalUser? CurrentLocalUser = HardenWindowsSecurity.LocalUserRetriever.Get().FirstOrDefault(Lu => Lu.SID == UserValue);
+                            string presetName = "preset: recommended";
 
-                        nameToDisplay = (!string.IsNullOrWhiteSpace(CurrentLocalUser!.FullName)) ? CurrentLocalUser.FullName : !string.IsNullOrWhiteSpace(CurrentLocalUser.Name) ? CurrentLocalUser.Name : "Unknown User";
+                            // Check if the preset exists in the dictionary
+                            if (GUIProtectWinSecurity.PresetsIntel.TryGetValue(presetName, out var categoriesAndSubcategories))
+                            {
+                                // Access the categories and subcategories
+                                List<string> categories = categoriesAndSubcategories["Categories"];
+                                List<string> subcategories = categoriesAndSubcategories["SubCategories"];
 
-                        HardenWindowsSecurity.Logger.LogMessage(HardenWindowsSecurity.UserPrivCheck.IsAdmin() ? $"Hello {nameToDisplay}, Running as Administrator" : $"Hello {nameToDisplay}, Running as Non-Administrator, some categories are disabled");
+                                // Loop over each category in the dictionary
+                                foreach (string category in categories)
+                                {
+
+                                    // Loop over each category in the GUI
+                                    foreach (var item in GUIProtectWinSecurity.categories.Items)
+                                    {
+                                        // Get the category item list view item
+                                        System.Windows.Controls.ListViewItem categoryItem = (System.Windows.Controls.ListViewItem)item;
+
+                                        // get the name of the list view item as string
+                                        string categoryItemName = ((System.Windows.Controls.CheckBox)categoryItem.Content).Name.ToString();
+
+                                        // if the category is authorized to be available
+                                        if (HardenWindowsSecurity.GlobalVars.HardeningCategorieX!.Contains(categoryItemName))
+                                        {
+                                            // If the name of the current checkbox list view item in the loop is the same as the category name in the outer loop, then set the category on the GUI to checked
+                                            if (string.Equals(categoryItemName, category, StringComparison.OrdinalIgnoreCase))
+                                            {
+                                                ((System.Windows.Controls.CheckBox)categoryItem.Content).IsChecked = true;
+                                            }
+
+                                        }
+                                    }
+                                }
+
+                                foreach (string subcategory in subcategories)
+                                {
+
+                                    // Loop over each sub-category in the GUI
+                                    foreach (var item in GUIProtectWinSecurity.subCategories.Items)
+                                    {
+                                        // Get the sub-category item list view item
+                                        System.Windows.Controls.ListViewItem SubCategoryItem = (System.Windows.Controls.ListViewItem)item;
+
+                                        // get the name of the list view item as string
+                                        string SubcategoryItemName = ((System.Windows.Controls.CheckBox)SubCategoryItem.Content).Name.ToString();
+
+                                        // If the name of the current checkbox list view item in the loop is the same as the sub-category name in the outer loop, then set the sub-category on the GUI to checked
+                                        if (string.Equals(SubcategoryItemName, subcategory, StringComparison.OrdinalIgnoreCase))
+                                        {
+                                            ((System.Windows.Controls.CheckBox)SubCategoryItem.Content).IsChecked = true;
+                                        }
+
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                Console.WriteLine($"Preset '{presetName}' not found.");
+                            }
+
+                        });
                         #endregion
 
-                        // Use Dispatcher.Invoke to update the UI thread
-                        HardenWindowsSecurity.GUIProtectWinSecurity.View.Dispatcher.Invoke(() =>
+                        try
                         {
-                            // Set the execute button to disabled until all the prerequisites are met
-                            HardenWindowsSecurity.GUIProtectWinSecurity.ExecuteButton.IsEnabled = false;
 
-                            // Display the progress bar during file download
-                            HardenWindowsSecurity.GUIProtectWinSecurity.mainProgressBar.Visibility = Visibility.Visible;
-                            HardenWindowsSecurity.GUIProtectWinSecurity.ExecuteButton.IsChecked = true;
-                        });
+                            #region Display a Welcome message
+                            string nameToDisplay = string.Empty;
 
-                        // Only download and process the files when the GUI is loaded and if Offline mode is not used
-                        // Because at this point, the user might have not selected the files to be used for offline operation
-                        if (!HardenWindowsSecurity.GlobalVars.Offline)
-                        {
-                            HardenWindowsSecurity.Logger.LogMessage("Downloading the required files");
+                            string UserValue = string.Empty;
 
-                            // Run the file download process asynchronously
-                            await Task.Run(() =>
+                            System.Security.Principal.WindowsIdentity CurrentUserResult = System.Security.Principal.WindowsIdentity.GetCurrent();
+                            System.Security.Principal.SecurityIdentifier? User = CurrentUserResult.User;
+
+                            if (User != null)
                             {
-                                HardenWindowsSecurity.FileDownloader.PrepDownloadedFiles(
-                                    LGPOPath: HardenWindowsSecurity.GUIProtectWinSecurity.LGPOZipPath,
-                                    MSFTSecurityBaselinesPath: HardenWindowsSecurity.GUIProtectWinSecurity.MicrosoftSecurityBaselineZipPath,
-                                    MSFT365AppsSecurityBaselinesPath: HardenWindowsSecurity.GUIProtectWinSecurity.Microsoft365AppsSecurityBaselineZipPath
-                                );
+                                UserValue = User.Value.ToString();
+                            }
+
+                            HardenWindowsSecurity.LocalUser? CurrentLocalUser = HardenWindowsSecurity.LocalUserRetriever.Get().FirstOrDefault(Lu => Lu.SID == UserValue);
+
+                            nameToDisplay = (!string.IsNullOrWhiteSpace(CurrentLocalUser!.FullName)) ? CurrentLocalUser.FullName : !string.IsNullOrWhiteSpace(CurrentLocalUser.Name) ? CurrentLocalUser.Name : "Unknown User";
+
+                            HardenWindowsSecurity.Logger.LogMessage(HardenWindowsSecurity.UserPrivCheck.IsAdmin() ? $"Hello {nameToDisplay}, Running as Administrator" : $"Hello {nameToDisplay}, Running as Non-Administrator, some categories are disabled");
+                            #endregion
+
+                            // Use Dispatcher.Invoke to update the UI thread
+                            HardenWindowsSecurity.GUIProtectWinSecurity.View.Dispatcher.Invoke(() =>
+                            {
+                                // Set the execute button to disabled until all the prerequisites are met
+                                HardenWindowsSecurity.GUIProtectWinSecurity.ExecuteButton.IsEnabled = false;
+
+                                // Display the progress bar during file download
+                                HardenWindowsSecurity.GUIProtectWinSecurity.mainProgressBar.Visibility = Visibility.Visible;
+
+                                // Start the execute button's operation to show the files are being downloaded
+                                HardenWindowsSecurity.GUIProtectWinSecurity.ExecuteButton.IsChecked = true;
                             });
 
-                            HardenWindowsSecurity.Logger.LogMessage("Finished downloading the required files");
-                        }
+                            // Only download and process the files when the GUI is loaded and if Offline mode is not used
+                            // Because at this point, the user might have not selected the files to be used for offline operation
+                            if (!HardenWindowsSecurity.GlobalVars.Offline)
+                            {
+                                HardenWindowsSecurity.Logger.LogMessage("Downloading the required files");
 
-                        // Using Dispatcher since the execute button is owned by the GUI (parent) RunSpace, and we're in another RunSpace (ThreadJob)
-                        // Enabling the execute button after all files are downloaded and ready or if Offline switch was used and download was skipped
-                        HardenWindowsSecurity.GUIProtectWinSecurity.View.Dispatcher.Invoke(() =>
+                                // Run the file download process asynchronously
+                                await Task.Run(() =>
+                                {
+                                    HardenWindowsSecurity.AsyncDownloader.PrepDownloadedFiles(
+                                        LGPOPath: HardenWindowsSecurity.GUIProtectWinSecurity.LGPOZipPath,
+                                        MSFTSecurityBaselinesPath: HardenWindowsSecurity.GUIProtectWinSecurity.MicrosoftSecurityBaselineZipPath,
+                                        MSFT365AppsSecurityBaselinesPath: HardenWindowsSecurity.GUIProtectWinSecurity.Microsoft365AppsSecurityBaselineZipPath,
+                                        false
+                                    );
+                                });
+
+                                HardenWindowsSecurity.Logger.LogMessage("Finished downloading the required files");
+                            }
+
+                            // Using Dispatcher since the execute button is owned by the GUI thread, and we're in another thread
+                            // Enabling the execute button after all files are downloaded and ready or if Offline switch was used and download was skipped
+                            HardenWindowsSecurity.GUIProtectWinSecurity.View.Dispatcher.Invoke(() =>
+                            {
+                                HardenWindowsSecurity.GUIProtectWinSecurity.ExecuteButton.IsEnabled = true;
+                                HardenWindowsSecurity.GUIProtectWinSecurity.mainProgressBar.Visibility = Visibility.Hidden;
+                                HardenWindowsSecurity.GUIProtectWinSecurity.ExecuteButton.IsChecked = false;
+                            });
+                        }
+                        catch (Exception ex)
                         {
-                            HardenWindowsSecurity.GUIProtectWinSecurity.ExecuteButton.IsEnabled = true;
-                            HardenWindowsSecurity.GUIProtectWinSecurity.mainProgressBar.Visibility = Visibility.Hidden;
-                            HardenWindowsSecurity.GUIProtectWinSecurity.ExecuteButton.IsChecked = false;
-                        });
+                            HardenWindowsSecurity.Logger.LogMessage($"An error occurred while downloading the required files: {ex.Message}");
+                            HardenWindowsSecurity.Logger.LogMessage($"{ex.StackTrace}");
+                            HardenWindowsSecurity.Logger.LogMessage($"{ex.InnerException}");
+                            // Re-throw the exception to ensure it's caught and handled appropriately
+                            //   throw;
+                        }
                     }
-                    catch (Exception ex)
-                    {
-                        HardenWindowsSecurity.Logger.LogMessage($"An error occurred while downloading the required files: {ex.Message}");
-                        HardenWindowsSecurity.Logger.LogMessage($"{ex.StackTrace}");
-                        HardenWindowsSecurity.Logger.LogMessage($"{ex.InnerException}");
-                        // Re-throw the exception to ensure it's caught and handled appropriately
-                        //   throw;
-                    }
+
+                    // mark as activity finished
+                    HardenWindowsSecurity.ActivityTracker.IsActive = false;
                 }
             };
 
@@ -421,7 +488,7 @@ namespace HardenWindowsSecurity
             // When Execute button is pressed
             GUIProtectWinSecurity.ExecuteButton.Click += async (sender, e) =>
            {
-               // Only continue if there is no activity other places
+               // Only continue if there is no activity in other places
                if (HardenWindowsSecurity.ActivityTracker.IsActive == false)
                {
                    // mark as activity started
@@ -437,8 +504,12 @@ namespace HardenWindowsSecurity
                        // Dispatcher to interact with the GUI elements
                        HardenWindowsSecurity.GUIProtectWinSecurity.View.Dispatcher.Invoke(() =>
                        {
+                           // Call the method to get the selected categories and sub-categories
                            HardenWindowsSecurity.GUIProtectWinSecurity.ExecuteButtonPress();
-                           HardenWindowsSecurity.GUIProtectWinSecurity.DisableUIElements();
+                           // Disable the textfilepath for the log file path
+                           HardenWindowsSecurity.GUIProtectWinSecurity.txtFilePath!.IsEnabled = false;
+                           // Display the progress bar while activity is running
+                           HardenWindowsSecurity.GUIProtectWinSecurity.mainProgressBar!.Visibility = Visibility.Visible;
 
                        });
 
@@ -473,17 +544,17 @@ namespace HardenWindowsSecurity
                                    {
 
                                        // Process the offline mode files selected by the user
-                                       HardenWindowsSecurity.FileDownloader.PrepDownloadedFiles(
+                                       HardenWindowsSecurity.AsyncDownloader.PrepDownloadedFiles(
                                       LGPOPath: HardenWindowsSecurity.GUIProtectWinSecurity.LGPOZipPath,
                                       MSFTSecurityBaselinesPath: HardenWindowsSecurity.GUIProtectWinSecurity.MicrosoftSecurityBaselineZipPath,
-                                      MSFT365AppsSecurityBaselinesPath: HardenWindowsSecurity.GUIProtectWinSecurity.Microsoft365AppsSecurityBaselineZipPath
+                                      MSFT365AppsSecurityBaselinesPath: HardenWindowsSecurity.GUIProtectWinSecurity.Microsoft365AppsSecurityBaselineZipPath,
+                                      false
                                        );
 
                                        HardenWindowsSecurity.Logger.LogMessage("Finished processing the required files");
 
-                                       //Set a flag indicating this code block should not happen again when the execute button is pressed
+                                       // Set a flag indicating this code block should not run again when the execute button is pressed
                                        HardenWindowsSecurity.GUIProtectWinSecurity.StartFileDownloadHasRun = true;
-
 
                                    }
                                    else
@@ -687,7 +758,16 @@ namespace HardenWindowsSecurity
 
                        HardenWindowsSecurity.GUIProtectWinSecurity.View.Dispatcher.Invoke(() =>
                        {
-                           HardenWindowsSecurity.GUIProtectWinSecurity.EnableUIElements();
+                           // Manually trigger the ToggleButton to be unchecked to trigger the ending animation
+                           HardenWindowsSecurity.GUIProtectWinSecurity.ExecuteButton!.IsChecked = false;
+
+                           // Only enable the log file path TextBox if the log toggle button is toggled
+                           if (GUIProtectWinSecurity.log!.IsChecked == true)
+                           {
+                               HardenWindowsSecurity.GUIProtectWinSecurity.txtFilePath!.IsEnabled = true;
+                           }
+                           // stop displaying the progress bar
+                           HardenWindowsSecurity.GUIProtectWinSecurity.mainProgressBar!.Visibility = Visibility.Collapsed;
                        });
 
                    });

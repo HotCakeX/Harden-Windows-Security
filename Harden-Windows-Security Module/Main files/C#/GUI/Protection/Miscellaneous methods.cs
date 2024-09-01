@@ -121,63 +121,22 @@ namespace HardenWindowsSecurity
         }
 
         /// <summary>
-        /// This method runs at the end after execute button is pressed
-        /// </summary>
-        public static void EnableUIElements()
-        {
-            HardenWindowsSecurity.GUIProtectWinSecurity.View!.Dispatcher.Invoke(() =>
-            {
-                // Enable the disabled UI elements once all of the commands have been executed
-                // Manually trigger the ToggleButton to be unchecked
-                HardenWindowsSecurity.GUIProtectWinSecurity.ExecuteButton!.IsChecked = false;
-                HardenWindowsSecurity.GUIProtectWinSecurity.ExecuteButton.IsEnabled = true;
-                HardenWindowsSecurity.GUIProtectWinSecurity.mainTabControlToggle!.IsEnabled = true;
-                HardenWindowsSecurity.GUIProtectWinSecurity.logPath!.IsEnabled = true;
-                HardenWindowsSecurity.GUIProtectWinSecurity.loggingViewBox!.IsEnabled = true;
-
-                // Only enable the log file path textbox if the log toggle button is toggled
-                if (GUIProtectWinSecurity.log!.IsChecked == true)
-                {
-                    HardenWindowsSecurity.GUIProtectWinSecurity.txtFilePath!.IsEnabled = true;
-                }
-
-                HardenWindowsSecurity.GUIProtectWinSecurity.mainProgressBar!.Visibility = Visibility.Collapsed;
-            });
-        }
-
-        /// <summary>
-        /// This method runs at the beginning when execute button is pressed
-        /// </summary>
-        public static void DisableUIElements()
-        {
-            HardenWindowsSecurity.GUIProtectWinSecurity.View!.Dispatcher.Invoke(() =>
-            {
-                // Disable Important elements while commands are being executed
-                HardenWindowsSecurity.GUIProtectWinSecurity.ExecuteButton!.IsEnabled = false;
-                HardenWindowsSecurity.GUIProtectWinSecurity.mainTabControlToggle!.IsEnabled = false;
-                HardenWindowsSecurity.GUIProtectWinSecurity.logPath!.IsEnabled = false;
-                HardenWindowsSecurity.GUIProtectWinSecurity.loggingViewBox!.IsEnabled = false;
-                HardenWindowsSecurity.GUIProtectWinSecurity.txtFilePath!.IsEnabled = false;
-                HardenWindowsSecurity.GUIProtectWinSecurity.mainProgressBar!.Visibility = Visibility.Visible;
-            });
-        }
-
-        /// <summary>
-        /// When the execute button is pressed, this method is called
+        /// When the execute button is pressed, this method is called to gather the selected categories and sub-categories
         /// </summary>
         public static void ExecuteButtonPress()
         {
 
 #nullable disable
 
-            // Clear the categories and sub-categories lists
+            // Clear the categories and sub-categories lists from the saved variables
             HardenWindowsSecurity.GUIProtectWinSecurity.SelectedCategories = new System.Collections.Concurrent.ConcurrentQueue<string>();
             HardenWindowsSecurity.GUIProtectWinSecurity.SelectedSubCategories = new System.Collections.Concurrent.ConcurrentQueue<string>();
 
-            // Gather selected categories and sub-categories and store them in the GlobalVars hashtable
+            // Gather the selected categories and sub-categories and store them in the GlobalVars hashtable
             System.Collections.IEnumerable categoriesItems = HardenWindowsSecurity.GUIProtectWinSecurity.categories!.Items;
             System.Collections.IEnumerable subCategoriesItems = HardenWindowsSecurity.GUIProtectWinSecurity.subCategories!.Items;
 
+            // Get the Categories status and add them to the variables
             foreach (System.Windows.Controls.ListBoxItem categoryItem in categoriesItems)
             {
                 if ((bool)((System.Windows.Controls.CheckBox)categoryItem.Content).IsChecked)
@@ -187,6 +146,7 @@ namespace HardenWindowsSecurity
                 }
             }
 
+            // Get the Sub-Categories status and add them to the variables
             foreach (System.Windows.Controls.ListBoxItem subCategoryItem in subCategoriesItems)
             {
                 if ((bool)((System.Windows.Controls.CheckBox)subCategoryItem.Content).IsChecked)

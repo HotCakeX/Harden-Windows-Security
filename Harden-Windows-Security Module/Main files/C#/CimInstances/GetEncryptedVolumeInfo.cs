@@ -388,7 +388,7 @@ namespace HardenWindowsSecurity
             else
             {
                 // Return null instead of "Unknown" and log the issue
-                // HardenWindowsSecurity.VerboseLogger.Write($"Unknown key '{key}' encountered.");
+                // HardenWindowsSecurity.Logger.LogMessage($"Unknown key '{key}' encountered.");
                 return null;
             }
         }
@@ -404,7 +404,7 @@ namespace HardenWindowsSecurity
             else
             {
                 // Return null instead of "Unknown" and log the issue
-                // HardenWindowsSecurity.VerboseLogger.Write($"Unknown key '{key}' encountered.");
+                // HardenWindowsSecurity.Logger.LogMessage($"Unknown key '{key}' encountered.");
                 return null;
             }
         }

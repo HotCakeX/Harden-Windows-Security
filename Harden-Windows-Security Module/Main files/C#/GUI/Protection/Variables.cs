@@ -67,9 +67,6 @@ namespace HardenWindowsSecurity
         public static System.Windows.Controls.Primitives.ToggleButton? mainTabControlToggle;
         public static System.Windows.Controls.ContentControl? mainContentControl;
         public static System.Windows.Style? mainContentControlStyle;
-        public static System.Windows.Controls.TextBox? outputTextBlock;
-        public static System.Windows.Controls.ScrollViewer? scrollerForOutputTextBlock;
-
 
         // Defining the correlation between Categories and which Sub-Categories they activate
         public static System.Collections.Hashtable correlation = new System.Collections.Hashtable(StringComparer.OrdinalIgnoreCase)
@@ -115,6 +112,43 @@ namespace HardenWindowsSecurity
 
         // Flag to run the event for view load only once to prevent file download multiple times when swtiching between views etc.
         public static bool LoadEventHasBeenTriggered = false;
+
+
+        public static System.Windows.Controls.ComboBox? ProtectionPresetComboBox;
+
+        public static string? SelectedProtectionPreset;
+
+
+        // Defining the presets configurations for the protection
+        public static System.Collections.Generic.Dictionary<string, System.Collections.Generic.Dictionary<string, List<string>>> PresetsIntel = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.Dictionary<string, List<string>>>(StringComparer.OrdinalIgnoreCase)
+{
+    {
+        "preset: basic", new System.Collections.Generic.Dictionary<string, List<string>>
+        {
+            { "Categories", new List<string> { "MicrosoftSecurityBaselines", "Microsoft365AppsSecurityBaselines", "MicrosoftDefender", "OptionalWindowsFeatures" } },
+            { "SubCategories", new List<string> {} }
+        }
+    },
+    {
+        "preset: recommended", new System.Collections.Generic.Dictionary<string, List<string>>
+        {
+            { "Categories", new List<string> { "MicrosoftSecurityBaselines", "Microsoft365AppsSecurityBaselines", "MicrosoftDefender", "AttackSurfaceReductionRules", "BitLockerSettings", "TLSSecurity", "LockScreen", "UserAccountControl", "WindowsFirewall", "OptionalWindowsFeatures", "WindowsNetworking", "MiscellaneousConfigurations", "WindowsUpdateConfigurations", "EdgeBrowserConfigurations", "DownloadsDefenseMeasures", "NonAdminCommands" } },
+            { "SubCategories", new List<string> { "DangerousScriptHostsBlocking" } }
+        }
+    },
+    {
+       "preset: complete", new System.Collections.Generic.Dictionary<string, List<string>>
+        {
+            { "Categories", new List<string> { "MicrosoftSecurityBaselines", "Microsoft365AppsSecurityBaselines", "MicrosoftDefender", "AttackSurfaceReductionRules", "BitLockerSettings", "TLSSecurity", "LockScreen", "UserAccountControl", "WindowsFirewall", "OptionalWindowsFeatures", "WindowsNetworking", "MiscellaneousConfigurations", "WindowsUpdateConfigurations", "EdgeBrowserConfigurations", "CountryIPBlocking", "DownloadsDefenseMeasures", "NonAdminCommands" } },
+            { "SubCategories", new List<string> { "MSFTDefender_SAC", "UAC_OnlyElevateSigned", "CountryIPBlocking_OFAC", "DangerousScriptHostsBlocking" } }
+        }
+    }
+};
+
+
+
+
+
     }
 }
 

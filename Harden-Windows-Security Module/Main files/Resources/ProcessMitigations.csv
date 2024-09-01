@@ -10,7 +10,7 @@ msedge.exe,BlockLowLabelImageLoads,Enable,True,Edge All Channels - prevents the 
 msedge.exe,UserShadowStack,Enable,True,Edge All Channels - user-mode Hardware-enforced Stack Protection is enabled for the process in compatibility mode. This means that the CPU verifies function return addresses at runtime by employing a shadow stack mechanism if supported by the hardware. In compatibility mode only shadow stack violations occurring in modules that are considered compatible with shadow stacks (CETCOMPAT) are fatal. For a module to be considered CETCOMPAT it needs to be either compiled with CETCOMPAT for binaries or marked using SetProcessDynamicEnforcedCetCompatibleRanges for dynamic code.
 msedge.exe,UserShadowStackStrictMode,Enable,True,Edge All Channels - All shadow stack violations are fatal - No compatibility mode - See https://learn.microsoft.com/en-us/windows/win32/api/winnt/ns-winnt-process_mitigation_user_shadow_stack_policy
 explorer.exe,StrictHandle,Enable,True,Explorer - A mitigation that helps protect against an attacker using an existing handle to access a protected object.
-explorer.exe,DisableExtensionPoints,Enable,False,Explorer - This mitigation disables various extension points for an application which might be used to establish persistence or elevate privileges of malicious content.
+explorer.exe,DisableExtensionPoints,Enable,True,Explorer - This mitigation disables various extension points for an application which might be used to establish persistence or elevate privileges of malicious content.
 vmcompute.exe,CFG,Enable,True,part of the Hyper-V Host Compute Service - Enabled by default System-Wide
 vmcompute.exe,StrictCFG,Enable,True,part of the Hyper-V Host Compute Service - In strict mode all binaries loaded into the process must be compiled for Control Flow Guard (or have no executable code in them - such as resource dlls) in order to be loaded.
 vmwp.exe,CFG,Enable,True,Virtual Machine Worker Process - Enabled by default System-Wide
@@ -102,7 +102,7 @@ lsass.exe,BlockDynamicCode,Enable,False,Local Security Authority Subsystem Servi
 lsass.exe,DisallowChildProcessCreation,Enable,False,Local Security Authority Subsystem Service
 lsass.exe,BlockRemoteImageLoads,Enable,False,Protecting PPL process to prevent loading of DLLs from network locations such as SMB - WebDAV - etc.
 lsass.exe,MicrosoftSignedOnly,Enable,False,(a.k.a Code integrity guard) ensures that all binaries loaded into a process are digitally signed by Microsoft.
-SmartScreen.exe,DisableExtensionPoints,Enable,False,Smart Screen process - This mitigation disables various extension points for an application which might be used to establish persistence or elevate privileges of malicious content.
+SmartScreen.exe,DisableExtensionPoints,Enable,True,Smart Screen process - This mitigation disables various extension points for an application which might be used to establish persistence or elevate privileges of malicious content.
 SmartScreen.exe,CFG,Enable,True,Smart Screen process - Enabled by default System-Wide
 SmartScreen.exe,StrictCFG,Enable,True,Smart Screen process - In strict mode all binaries loaded into the process must be compiled for Control Flow Guard (or have no executable code in them - such as resource dlls) in order to be loaded.
 SmartScreen.exe,MicrosoftSignedOnly,Enable,True,Smart Screen process - (a.k.a Code integrity guard) ensures that all binaries loaded into a process are digitally signed by Microsoft.
@@ -139,6 +139,6 @@ csrss.exe,BlockRemoteImageLoads,Enable,True,Protecting PPL process to prevent lo
 services.exe,BlockRemoteImageLoads,Enable,True,Protecting PPL process to prevent loading of DLLs from network locations such as SMB - WebDAV - etc.
 rundll32.exe,BlockRemoteImageLoads,Enable,True,Prevent loading of DLLs from network locations such as SMB - WebDAV - etc.
 rundll32.exe,BlockLowLabelImageLoads,Enable,True,Prevent loading of files that are untrusted typically because they've been downloaded from the internet from a sandboxed browser - Some malware use rundll32.exe to load malicious file that was just downloaded from the internet
-SMSS.exe,BlockRemoteImageLoads,Enable,False,Protecting PPL process to prevent loading of DLLs from network locations such as SMB - WebDAV - etc. - It's called Session Manager SubSystem
-Wininit.exe,BlockRemoteImageLoads,Enable,False,Protecting PPL process to prevent loading of DLLs from network locations such as SMB - WebDAV - etc. - It stands for Windows Initialization and is a process that is responsible for starting and terminating system services and processes during startup and shutdown
-NisSrv.exe,MicrosoftSignedOnly,Enable,False,Protecting PPL process to prevent loading Non-Microsoft signed code into the process - This is a component of Microsoft Defender called Network Inspection Service
+SMSS.exe,BlockRemoteImageLoads,Enable,True,Protecting PPL process to prevent loading of DLLs from network locations such as SMB - WebDAV - etc. - It's called Session Manager SubSystem
+Wininit.exe,BlockRemoteImageLoads,Enable,True,Protecting PPL process to prevent loading of DLLs from network locations such as SMB - WebDAV - etc. - It stands for Windows Initialization and is a process that is responsible for starting and terminating system services and processes during startup and shutdown
+NisSrv.exe,MicrosoftSignedOnly,Enable,True,Protecting PPL process to prevent loading Non-Microsoft signed code into the process - This is a component of Microsoft Defender called Network Inspection Service

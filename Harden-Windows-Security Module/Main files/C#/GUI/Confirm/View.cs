@@ -62,16 +62,16 @@ namespace HardenWindowsSecurity
                 string xamlContent = System.IO.File.ReadAllText(xamlPath);
 
                 // Parse the XAML content to create a UserControl object
-                System.Windows.Controls.UserControl confirmView = (System.Windows.Controls.UserControl)System.Windows.Markup.XamlReader.Parse(xamlContent);
+                GUIConfirmSystemCompliance.View = (System.Windows.Controls.UserControl)System.Windows.Markup.XamlReader.Parse(xamlContent);
 
                 // Find the SecOpsDataGrid
-                HardenWindowsSecurity.GUIConfirmSystemCompliance.SecOpsDataGrid = (System.Windows.Controls.DataGrid)confirmView.FindName("SecOpsDataGrid");
+                HardenWindowsSecurity.GUIConfirmSystemCompliance.SecOpsDataGrid = (System.Windows.Controls.DataGrid)GUIConfirmSystemCompliance.View.FindName("SecOpsDataGrid");
 
-                System.Windows.Controls.TextBlock TotalCurrentlyDisplayedSecOpsTextBlock = (System.Windows.Controls.TextBlock)confirmView.FindName("TotalCurrentlyDisplayedSecOps");
+                System.Windows.Controls.TextBlock TotalCurrentlyDisplayedSecOpsTextBlock = (System.Windows.Controls.TextBlock)GUIConfirmSystemCompliance.View.FindName("TotalCurrentlyDisplayedSecOps");
 
                 #region ToggleButtons
-                System.Windows.Controls.Primitives.ToggleButton CompliantItemsToggleButton = (System.Windows.Controls.Primitives.ToggleButton)confirmView.FindName("CompliantItemsToggleButton");
-                System.Windows.Controls.Primitives.ToggleButton NonCompliantItemsToggleButton = (System.Windows.Controls.Primitives.ToggleButton)confirmView.FindName("NonCompliantItemsToggleButton");
+                System.Windows.Controls.Primitives.ToggleButton CompliantItemsToggleButton = (System.Windows.Controls.Primitives.ToggleButton)GUIConfirmSystemCompliance.View.FindName("CompliantItemsToggleButton");
+                System.Windows.Controls.Primitives.ToggleButton NonCompliantItemsToggleButton = (System.Windows.Controls.Primitives.ToggleButton)GUIConfirmSystemCompliance.View.FindName("NonCompliantItemsToggleButton");
 
                 // Apply the templates so that we can set the IsChecked property to true
                 CompliantItemsToggleButton.ApplyTemplate();
@@ -139,7 +139,7 @@ namespace HardenWindowsSecurity
                 }
 
                 // Finding the textboxFilter element
-                var textBoxFilter = (System.Windows.Controls.TextBox)confirmView.FindName("textBoxFilter");
+                var textBoxFilter = (System.Windows.Controls.TextBox)GUIConfirmSystemCompliance.View.FindName("textBoxFilter");
 
                 #region event handlers for data filtration
                 // Attach event handlers to the text box filter and toggle buttons
@@ -156,13 +156,10 @@ namespace HardenWindowsSecurity
                 // Find the Refresh button and attach the Click event handler
 
                 // Access the grid containing the Refresh Button
-                System.Windows.Controls.Grid RefreshButtonGrid = confirmView.FindName("RefreshButtonGrid") as System.Windows.Controls.Grid;
+                System.Windows.Controls.Grid RefreshButtonGrid = GUIConfirmSystemCompliance.View.FindName("RefreshButtonGrid") as System.Windows.Controls.Grid;
 
                 // Access the Refresh Button
                 System.Windows.Controls.Primitives.ToggleButton RefreshButton = (System.Windows.Controls.Primitives.ToggleButton)RefreshButtonGrid.FindName("RefreshButton");
-
-                // Register the RefreshButton as an element that will be enabled/disabled based on current activity
-                HardenWindowsSecurity.ActivityTracker.RegisterUIElement(RefreshButton);
 
                 // Apply the template to make sure it's available
                 RefreshButton.ApplyTemplate();
@@ -179,12 +176,40 @@ namespace HardenWindowsSecurity
                 #endregion
 
 
+                #region ComboBox
+                // Finding the ComplianceCategoriesSelectionComboBox ComboBox
+                System.Windows.Controls.ComboBox ComplianceCategoriesSelectionComboBox = GUIConfirmSystemCompliance.View.FindName("ComplianceCategoriesSelectionComboBox") as System.Windows.Controls.ComboBox;
+
+                // Create an instance of the class
+                var cats = new ComplianceCategoriex();
+
+                // Get the valid compliance checking categories
+                string[] catsStrings = cats.GetValidValues();
+
+                // Convert the array to a list to easily add items
+                List<string> catsList = new List<string>(catsStrings);
+
+                // Add an empty item to the list at the beginning
+                // Add an empty string as the first item
+                catsList.Insert(0, "");
+
+                // Set the ComboBox's ItemsSource to the updated list
+                ComplianceCategoriesSelectionComboBox.ItemsSource = catsList;
+
+                #endregion
+
                 // perform the compliance check only if user has Admin privileges
                 if (!HardenWindowsSecurity.UserPrivCheck.IsAdmin())
                 {
                     // Disable the refresh button
                     RefreshButton.IsEnabled = false;
                     HardenWindowsSecurity.Logger.LogMessage("You need Administrator privileges to perform compliance check on the system.");
+                }
+                // If there is no Admin rights, this dynamic enablement/disablement isn't necessary as it will override the disablement that happens above.
+                else
+                {
+                    // Register the RefreshButton as an element that will be enabled/disabled based on current activity
+                    HardenWindowsSecurity.ActivityTracker.RegisterUIElement(RefreshButton);
                 }
 
                 // Set up the Click event handler for the Refresh button
@@ -206,14 +231,14 @@ namespace HardenWindowsSecurity
                         System.Windows.Application.Current.Dispatcher.Invoke(() =>
                             {
                                 // Finding the elements
-                                var CompliantItemsTextBlock = (System.Windows.Controls.TextBlock)confirmView.FindName("CompliantItemsTextBlock");
-                                var NonCompliantItemsTextBlock = (System.Windows.Controls.TextBlock)confirmView.FindName("NonCompliantItemsTextBlock");
+                                var CompliantItemsTextBlock = (System.Windows.Controls.TextBlock)GUIConfirmSystemCompliance.View.FindName("CompliantItemsTextBlock");
+                                var NonCompliantItemsTextBlock = (System.Windows.Controls.TextBlock)GUIConfirmSystemCompliance.View.FindName("NonCompliantItemsTextBlock");
 
                                 // Setting these texts the same as the text in the XAML for these text blocks so that every time Refresh button is pressed, they lose their numbers until the new data is generated and new counts are calculated
                                 CompliantItemsTextBlock.Text = "Compliant Items";
                                 NonCompliantItemsTextBlock.Text = "Non-Compliant Items";
 
-                                var TotalCountTextBlock = (System.Windows.Controls.TextBlock)confirmView.FindName("TotalCountTextBlock");
+                                var TotalCountTextBlock = (System.Windows.Controls.TextBlock)GUIConfirmSystemCompliance.View.FindName("TotalCountTextBlock");
 
                                 if (TotalCountTextBlock != null)
                                 {
@@ -230,8 +255,35 @@ namespace HardenWindowsSecurity
                                 // Get fresh data for compliance checking
                                 HardenWindowsSecurity.Initializer.Initialize(null, true);
 
-                                // Perform the compliance check
-                                HardenWindowsSecurity.InvokeConfirmation.Invoke(null);
+                                // initialize the variable to null
+                                string SelectedCategory = string.Empty;
+
+                                // Use the App dispatcher since this is being done in a different thread
+                                GUIMain.app.Dispatcher.Invoke(() =>
+                                {
+
+                                    if (ComplianceCategoriesSelectionComboBox.SelectedItem != null)
+                                    {
+                                        // Get the currently selected value in the Compliance Checking category ComboBox if it exists
+                                        var SelectedComplianceCategories = ComplianceCategoriesSelectionComboBox.SelectedItem;
+
+                                        // Get the currently selected compliance category
+                                        SelectedCategory = SelectedComplianceCategories?.ToString();
+                                    }
+
+                                });
+
+                                // if user selected a category for compliance checking
+                                if (SelectedCategory != null && !string.IsNullOrEmpty(SelectedCategory))
+                                {
+                                    // Perform the compliance check using the selected compliance category
+                                    HardenWindowsSecurity.InvokeConfirmation.Invoke(new string[] { SelectedCategory });
+                                }
+                                else
+                                {
+                                    // Perform the compliance check for all categories
+                                    HardenWindowsSecurity.InvokeConfirmation.Invoke(null);
+                                }
                             });
 
                         // After InvokeConfirmation is completed, update the security options collection
@@ -249,10 +301,10 @@ namespace HardenWindowsSecurity
                 };
 
                 // Cache the Confirm view for future use
-                _viewCache["ConfirmView"] = confirmView;
+                _viewCache["ConfirmView"] = GUIConfirmSystemCompliance.View;
 
                 // Set the CurrentView to the modified Confirm view
-                CurrentView = confirmView;
+                CurrentView = GUIConfirmSystemCompliance.View;
             }
 
 
@@ -324,51 +376,48 @@ namespace HardenWindowsSecurity
                 // calculates the total number of all security options across all lists, so all the items in each category that exist in the values of the main dictionary object
                 int totalCount = HardenWindowsSecurity.GlobalVars.FinalMegaObject?.Values.Sum(list => list.Count) ?? 0;
 
-                if (CurrentView is System.Windows.Controls.UserControl confirmView)
+                // Find the TextBlock used to display the total count
+                System.Windows.Controls.TextBlock TotalCountTextBlock = (System.Windows.Controls.TextBlock)GUIConfirmSystemCompliance.View.FindName("TotalCountTextBlock");
+                if (TotalCountTextBlock != null)
                 {
-                    // Find the TextBlock used to display the total count
-                    System.Windows.Controls.TextBlock TotalCountTextBlock = (System.Windows.Controls.TextBlock)confirmView.FindName("TotalCountTextBlock");
-                    if (TotalCountTextBlock != null)
-                    {
-                        // Update the text of the TextBlock to show the total count
-                        TotalCountTextBlock.Text = $"{totalCount} Total Verifiable Security Checks";
-                    }
+                    // Update the text of the TextBlock to show the total count
+                    TotalCountTextBlock.Text = $"{totalCount} Total Verifiable Security Checks";
+                }
 
-                    // Get the count of the compliant items
-                    string CompliantItemsCount = _SecOpsCollectionView.SourceCollection
-                        .Cast<SecOp>()
-                        .Where(item => item.Compliant)
-                        .Count()
-                        .ToString(CultureInfo.InvariantCulture);
+                // Get the count of the compliant items
+                string CompliantItemsCount = _SecOpsCollectionView.SourceCollection
+                    .Cast<SecOp>()
+                    .Where(item => item.Compliant)
+                    .Count()
+                    .ToString(CultureInfo.InvariantCulture);
 
-                    // Get the count of the Non-compliant items
-                    string NonCompliantItemsCount = _SecOpsCollectionView.SourceCollection
-                        .Cast<SecOp>()
-                        .Where(item => !item.Compliant)
-                        .Count()
-                        .ToString(CultureInfo.InvariantCulture);
+                // Get the count of the Non-compliant items
+                string NonCompliantItemsCount = _SecOpsCollectionView.SourceCollection
+                    .Cast<SecOp>()
+                    .Where(item => !item.Compliant)
+                    .Count()
+                    .ToString(CultureInfo.InvariantCulture);
 
-                    // Find the text blocks that display counts of true/false items
-                    var CompliantItemsTextBlock = (System.Windows.Controls.TextBlock)confirmView.FindName("CompliantItemsTextBlock");
-                    var NonCompliantItemsTextBlock = (System.Windows.Controls.TextBlock)confirmView.FindName("NonCompliantItemsTextBlock");
+                // Find the text blocks that display counts of true/false items
+                var CompliantItemsTextBlock = (System.Windows.Controls.TextBlock)GUIConfirmSystemCompliance.View.FindName("CompliantItemsTextBlock");
+                var NonCompliantItemsTextBlock = (System.Windows.Controls.TextBlock)GUIConfirmSystemCompliance.View.FindName("NonCompliantItemsTextBlock");
 
-                    if (CompliantItemsTextBlock != null)
-                    {
-                        // Set the text block's text
-                        CompliantItemsTextBlock.Text = $"{CompliantItemsCount} Compliant Items";
-                    }
+                if (CompliantItemsTextBlock != null)
+                {
+                    // Set the text block's text
+                    CompliantItemsTextBlock.Text = $"{CompliantItemsCount} Compliant Items";
+                }
 
-                    if (NonCompliantItemsTextBlock != null)
-                    {
-                        // Set the text block's text
-                        NonCompliantItemsTextBlock.Text = $"{NonCompliantItemsCount} Non-Compliant Items";
-                    }
+                if (NonCompliantItemsTextBlock != null)
+                {
+                    // Set the text block's text
+                    NonCompliantItemsTextBlock.Text = $"{NonCompliantItemsCount} Non-Compliant Items";
+                }
 
-                    // Display a notification if it's allowed to do so, and ShowNotification is set to true
-                    if (HardenWindowsSecurity.GlobalVars.UseNewNotificationsExp == true && ShowNotification == true)
-                    {
-                        HardenWindowsSecurity.NewToastNotification.Show(ToastNotificationType.EndOfConfirmation, CompliantItemsCount, NonCompliantItemsCount);
-                    }
+                // Display a notification if it's allowed to do so, and ShowNotification is set to true
+                if (HardenWindowsSecurity.GlobalVars.UseNewNotificationsExp == true && ShowNotification == true)
+                {
+                    HardenWindowsSecurity.NewToastNotification.Show(ToastNotificationType.EndOfConfirmation, CompliantItemsCount, NonCompliantItemsCount);
                 }
             }
 

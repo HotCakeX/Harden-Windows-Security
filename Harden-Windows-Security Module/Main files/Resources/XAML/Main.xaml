@@ -1,14 +1,16 @@
-<Window xmlns='http://schemas.microsoft.com/winfx/2006/xaml/presentation'
-        xmlns:x='http://schemas.microsoft.com/winfx/2006/xaml'
+<Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         Title='Harden Windows Security App' WindowStartupLocation='CenterScreen'>
     <!-- Window Border -->
     <Border x:Name="OuterMostBorder">
         <Border.Background>
             <ImageBrush Stretch="UniformToFill"></ImageBrush>
         </Border.Background>
-        <Border Opacity="0.98">
+        <Border>
             <Border.Background>
-                <RadialGradientBrush GradientOrigin="0.5,0.5" Center="0.5,0.5" RadiusX="0.5" RadiusY="0.5">
+                <RadialGradientBrush GradientOrigin="0.5,0.5" Center="0.5,0.5" RadiusX="0.5" RadiusY="0.5" Opacity="0.96">
                     <!-- Center color -->
                     <GradientStop Color="#ffdde1" Offset="0.0" />
                     <!-- Edge color - original background color -->
@@ -39,6 +41,34 @@
                                     <Grid x:Name="ConfirmButtonGrid">
                                         <Image x:Name="ConfirmButtonIcon" Style="{StaticResource Image_Style}" />
                                         <TextBlock Text='Confirm &amp; Verify' Style='{StaticResource Text_Style}' />
+                                    </Grid>
+                                </RadioButton>
+
+
+                                <!--// ASRRules //-->
+                                <RadioButton Style='{StaticResource BtnStyle}' Command='{Binding ASRRulesCommand}'>
+                                    <Grid x:Name="ASRRulesButtonGrid">
+                                        <Image x:Name="ASRRulesButtonIcon" Style="{StaticResource Image_Style}" />
+                                        <TextBlock Text='ASR Rules' Style='{StaticResource Text_Style}' />
+                                    </Grid>
+                                </RadioButton>
+
+
+                                <!--// Unprotect //-->
+                                <RadioButton Style='{StaticResource BtnStyle}' Command='{Binding UnprotectCommand}'>
+                                    <Grid x:Name="UnprotectButtonGrid">
+                                        <Image x:Name="UnprotectButtonIcon" Style="{StaticResource Image_Style}" />
+                                        <TextBlock Text='Unprotect' Style='{StaticResource Text_Style}' />
+                                    </Grid>
+                                </RadioButton>
+
+
+
+                                <!--// Logs //-->
+                                <RadioButton Style='{StaticResource BtnStyle}' Command='{Binding LogsCommand}'>
+                                    <Grid x:Name="LogsButtonGrid">
+                                        <Image x:Name="LogsButtonIcon" Style="{StaticResource Image_Style}" />
+                                        <TextBlock Text='Logs' Style='{StaticResource Text_Style}' />
                                     </Grid>
                                 </RadioButton>
                             </StackPanel>

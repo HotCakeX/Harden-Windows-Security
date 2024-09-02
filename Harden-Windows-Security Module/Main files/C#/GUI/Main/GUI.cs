@@ -231,7 +231,9 @@ namespace HardenWindowsSecurity
                 {
                     // Load the resource dictionary from the XAML file
                     System.Windows.ResourceDictionary resourceDict = (System.Windows.ResourceDictionary)System.Windows.Markup.XamlReader.Load(fs);
-                    GUIMain.app.Resources.MergedDictionaries.Add(resourceDict);  // Add to application resources to ensure dictionaries are available to the whole application
+
+                    // Add to application resources to ensure dictionaries are available to the whole application
+                    GUIMain.app.Resources.MergedDictionaries.Add(resourceDict);
                 }
             }
             #endregion
@@ -273,43 +275,45 @@ End time: {DateTime.Now}
                 HardenWindowsSecurity.Logger.LogMessage(endOfLogFile, LogTypeIntel.Information);
             };
 
-            /*
-                        // Startup Event
-                        GUIMain.app!.Startup += (object s, StartupEventArgs e) =>
-                        {
-                            // Display a welcome message
-                            System.Windows.MessageBox.Show(messageBoxText: "Welcome to the application!", caption: "Startup", button: MessageBoxButton.OK, icon: MessageBoxImage.Information);
-                        };
+            // Exit Event, will work for the GUI when using compiled version of the app or in Visual Studio
+            GUIMain.app!.Exit += (object s, ExitEventArgs e) =>
+            {
+                HardenWindowsSecurity.ControlledFolderAccessHandler.Reset();
+                HardenWindowsSecurity.Miscellaneous.CleanUp();
 
-                        // Exit Event
-                        GUIMain.app!.Exit += (object s, ExitEventArgs e) =>
-                        {
-                            System.Windows.MessageBox.Show(messageBoxText: "Exiting!", caption: "Exit", button: MessageBoxButton.OK, icon: MessageBoxImage.Information);
-                        };
-
-                        // DispatcherUnhandledException Event is triggered when an unhandled exception occurs in the application
-                        GUIMain.app!.DispatcherUnhandledException += (object s, DispatcherUnhandledExceptionEventArgs e) =>
-                        {
-
-                            // Display an error message to the user
-                            System.Windows.MessageBox.Show(messageBoxText: "An unexpected error occurred.", caption: "Error", button: MessageBoxButton.OK, icon: MessageBoxImage.Error);
-
-                            // Mark the exception as handled
-                            e.Handled = true;
-                        };
-            */
+                // System.Windows.MessageBox.Show(messageBoxText: "Exiting!", caption: "Exit", button: MessageBoxButton.OK, icon: MessageBoxImage.Information);
+            };
 
             /*
-                        GUIMain.app!.Resources["GlobalStyle"] = new Style(typeof(System.Windows.Controls.Button))
-                        {
-                            Setters =
-                            {
-                                new Setter(System.Windows.Controls.Button.BackgroundProperty, System.Windows.Media.Brushes.LightBlue),
-                                new Setter(System.Windows.Controls.Button.ForegroundProperty, System.Windows.Media.Brushes.DarkBlue)
-                            }
-                        };
-            */
 
+           // Startup Event
+           GUIMain.app!.Startup += (object s, StartupEventArgs e) =>
+           {
+               // Display a welcome message
+               System.Windows.MessageBox.Show(messageBoxText: "Welcome to the application!", caption: "Startup", button: MessageBoxButton.OK, icon: MessageBoxImage.Information);
+           };
+
+           // DispatcherUnhandledException Event is triggered when an unhandled exception occurs in the application
+           GUIMain.app!.DispatcherUnhandledException += (object s, DispatcherUnhandledExceptionEventArgs e) =>
+           {
+
+               // Display an error message to the user
+               System.Windows.MessageBox.Show(messageBoxText: "An unexpected error occurred.", caption: "Error", button: MessageBoxButton.OK, icon: MessageBoxImage.Error);
+
+               // Mark the exception as handled
+               e.Handled = true;
+           };
+
+            GUIMain.app!.Resources["GlobalStyle"] = new Style(typeof(System.Windows.Controls.Button))
+            {
+                Setters =
+                {
+                    new Setter(System.Windows.Controls.Button.BackgroundProperty, System.Windows.Media.Brushes.LightBlue),
+                    new Setter(System.Windows.Controls.Button.ForegroundProperty, System.Windows.Media.Brushes.DarkBlue)
+                }
+            };
+
+            */
 
             // event handler to make the GUI window draggable wherever it's empty
             GUIMain.mainGUIWindow.MouseDown += (sender, e) =>

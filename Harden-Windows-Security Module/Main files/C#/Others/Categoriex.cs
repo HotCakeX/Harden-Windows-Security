@@ -37,7 +37,7 @@ namespace HardenWindowsSecurity
     public class ProtectionCategoriex
     {
         // a method to detect Windows edition SKU number
-        public static bool IsWindowsHome()
+        private static bool IsWindowsHome()
         {
             using (ManagementObjectSearcher searcher = new ManagementObjectSearcher("SELECT OperatingSystemSKU FROM Win32_OperatingSystem"))
             {
@@ -55,7 +55,7 @@ namespace HardenWindowsSecurity
         }
 
         // Detect if TPM is present on the system
-        public static bool IsTpmPresentAndEnabled()
+        private static bool IsTpmPresentAndEnabled()
         {
             try
             {
@@ -90,7 +90,7 @@ namespace HardenWindowsSecurity
         }
 
         // Main method of the class to return the final authorized categories
-        public static string[] GetValidValues()
+        internal static string[] GetValidValues()
         {
             // if running under unelevated context then only return the NonAdminCommands category
             if (!HardenWindowsSecurity.UserPrivCheck.IsAdmin()) return new string[] { "NonAdminCommands" };

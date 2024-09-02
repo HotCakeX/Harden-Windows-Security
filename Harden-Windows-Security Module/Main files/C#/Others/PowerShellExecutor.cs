@@ -1,5 +1,6 @@
 using System;
 using System.Management.Automation;
+using System.Management.Automation.Runspaces;
 using System.Linq;
 
 #nullable enable
@@ -9,11 +10,12 @@ namespace HardenWindowsSecurity
     public class PowerShellExecutor
     {
         /// <summary>
-        /// Runs a PowerShell script and displays verbose and normal output.
+        /// Runs a PowerShell script and displays verbose and normal output in real-time.
         /// </summary>
         /// <param name="script">PowerShell script to run</param>
         /// <param name="returnOutput">Indicates whether to return the output of the script</param>
         /// <returns>The output of the PowerShell script if returnOutput is true; otherwise, nothing is returned</returns>
+        /// <exception cref="InvalidOperationException">Thrown when the PowerShell script execution results in errors.</exception>
         public static string? ExecuteScript(string script, bool returnOutput = false)
         {
             using (PowerShell psInstance = PowerShell.Create())
@@ -22,53 +24,86 @@ namespace HardenWindowsSecurity
                 psInstance.AddScript("Set-ExecutionPolicy Bypass -Scope Process -Force");
                 psInstance.AddScript(script);
 
-                // Execute the script and capture the output
-                var results = psInstance.Invoke();
-
-                // Display normal output only if the normal output isn't already being returned
-                if (!returnOutput)
+                // Prepare to capture output if requested
+                PSDataCollection<PSObject>? outputCollection = null;
+                if (returnOutput)
                 {
-                    foreach (var output in results)
+                    outputCollection = new PSDataCollection<PSObject>();
+                    outputCollection.DataAdded += (sender, args) =>
                     {
-                        HardenWindowsSecurity.Logger.LogMessage($"Output: {output}", LogTypeIntel.Information);
+                        if (sender != null)
+                        {
+                            var outputStream = (PSDataCollection<PSObject>)sender;
+                            var output = outputStream[args.Index]?.ToString();
+                            HardenWindowsSecurity.Logger.LogMessage($"Output: {output}", LogTypeIntel.Information);
+                        }
+                    };
+                }
+
+                // Handle verbose output
+                psInstance.Streams.Verbose.DataAdded += (sender, args) =>
+                {
+                    if (sender != null)
+                    {
+                        var verboseStream = (PSDataCollection<VerboseRecord>)sender;
+                        HardenWindowsSecurity.Logger.LogMessage($"Verbose: {verboseStream[args.Index].Message}", LogTypeIntel.Information);
                     }
-                }
+                };
 
-                // Display verbose output
-                foreach (var verbose in psInstance.Streams.Verbose)
+                // Handle warning output
+                psInstance.Streams.Warning.DataAdded += (sender, args) =>
                 {
-                    HardenWindowsSecurity.Logger.LogMessage($"Verbose: {verbose.Message}", LogTypeIntel.Information);
-                }
+                    if (sender != null)
+                    {
+                        var warningStream = (PSDataCollection<WarningRecord>)sender;
+                        HardenWindowsSecurity.Logger.LogMessage($"Warning: {warningStream[args.Index].Message}", LogTypeIntel.Warning);
+                    }
+                };
 
-                // Display warning output
-                foreach (var warning in psInstance.Streams.Warning)
+                // Handle error output and throw exception
+                psInstance.Streams.Error.DataAdded += (sender, args) =>
                 {
-                    HardenWindowsSecurity.Logger.LogMessage($"Warning: {warning.Message}", LogTypeIntel.Warning);
-                }
+                    if (sender != null)
+                    {
+                        var errorStream = (PSDataCollection<ErrorRecord>)sender;
+                        var error = errorStream[args.Index];
+                        var errorMessage = $"Error: {error.Exception.Message}\n" +
+                                           $"Category: {error.CategoryInfo.Category}\n" +
+                                           $"Target: {error.TargetObject}\n" +
+                                           $"Script StackTrace: {error.ScriptStackTrace}\n" +
+                                           $"Exception Type: {error.Exception.GetType().FullName}\n" +
+                                           $"StackTrace: {error.Exception.StackTrace}";
 
-                // Handle errors, including non-terminating errors
-                if (psInstance.Streams.Error.Count > 0)
+                        HardenWindowsSecurity.Logger.LogMessage(errorMessage, LogTypeIntel.Error);
+
+                        // Throw an exception with the error details
+                        throw new InvalidOperationException($"PowerShell script execution failed: {errorMessage}");
+                    }
+                };
+
+                /*
+                    // Handle progress updates
+                    psInstance.Streams.Progress.DataAdded += (sender, args) =>
+                    {
+                        if (sender != null)
+                        {
+                            var progressStream = (PSDataCollection<ProgressRecord>)sender;
+                            var progress = progressStream[args.Index];
+                            HardenWindowsSecurity.Logger.LogMessage($"Progress: {progress.StatusDescription} - {progress.PercentComplete}% complete", LogTypeIntel.Information);
+                        }
+                    };
+                */
+
+                // Execute the script
+                if (returnOutput)
                 {
-                    var errorDetails = psInstance.Streams.Error.Select(e =>
-                        $"Error: {e.Exception.Message}\n" +
-                        $"Category: {e.CategoryInfo.Category}\n" +
-                        $"Target: {e.TargetObject}\n" +
-                        $"Script StackTrace: {e.ScriptStackTrace}\n" +
-                        $"Exception Type: {e.Exception.GetType().FullName}\n" +
-                        $"StackTrace: {e.Exception.StackTrace}"
-                    );
-
-                    string errorMessage = string.Join(Environment.NewLine, errorDetails);
-                    throw new InvalidOperationException($"PowerShell script execution failed: {errorMessage}");
+                    // Use Invoke to run the script and collect output
+                    var results = psInstance.Invoke<PSObject>();
+                    return results.Any() ? results.FirstOrDefault()?.ToString() : null;
                 }
-
-                // Return output if requested
-                if (returnOutput && results.Any())
+                else
                 {
-
-                    // Since it is guaranteed that the commands will return only one line of string
-                    return results.FirstOrDefault()?.ToString();
-
+                    psInstance.Invoke();
                 }
 
                 return null;

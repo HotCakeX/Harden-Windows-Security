@@ -2,6 +2,9 @@ using System;
 using System.Management;
 using System.IO;
 using System.Linq;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Reflection;
 
 #nullable enable
 
@@ -19,7 +22,7 @@ namespace HardenWindowsSecurity
         /// needs arrays
         /// </summary>
         /// <param name="applications"></param>
-        public static void Set(string[] applications)
+        private static void Set(string[] applications)
         {
             using (var managementClass = new ManagementClass(@"root\Microsoft\Windows\Defender", "MSFT_MpPreference", null))
             {
@@ -36,7 +39,7 @@ namespace HardenWindowsSecurity
         /// Unlike Set method, it doesn't remove the existing applications
         /// </summary>
         /// <param name="applications"></param>
-        public static void Add(string[] applications)
+        private static void Add(string[] applications)
         {
             using (var managementClass = new ManagementClass(@"root\Microsoft\Windows\Defender", "MSFT_MpPreference", null))
             {
@@ -52,7 +55,7 @@ namespace HardenWindowsSecurity
         /// needs arrays
         /// </summary>
         /// <param name="applications"></param>
-        public static void Remove(string[] applications)
+        private static void Remove(string[] applications)
         {
             using (var managementClass = new ManagementClass(@"root\Microsoft\Windows\Defender", "MSFT_MpPreference", null))
             {
@@ -70,26 +73,21 @@ namespace HardenWindowsSecurity
         /// <exception cref="InvalidOperationException"></exception>
         public static void Start()
         {
-            // Make sure the user as Admin privileges
+            // Make sure the user has Admin privileges
             if (HardenWindowsSecurity.UserPrivCheck.IsAdmin())
             {
-
                 HardenWindowsSecurity.Logger.LogMessage("Backing up the current Controlled Folder Access allowed apps list in order to restore them at the end", LogTypeIntel.Information);
 
-                // doing this so that when we Add and then Remove PowerShell executables in Controlled folder access exclusions
+                // Doing this so that when we Add and then Remove PowerShell executables in Controlled folder access exclusions
                 // no user customization will be affected
                 HardenWindowsSecurity.GlobalVars.CFABackup = HardenWindowsSecurity.MpPreferenceHelper.GetMpPreference().ControlledFolderAccessAllowedApplications;
 
                 HardenWindowsSecurity.Logger.LogMessage("Temporarily adding the currently running PowerShell executables to the Controlled Folder Access allowed apps list", LogTypeIntel.Information);
 
-                string[]? psExePaths = null;
+                // A HashSet of string to store the paths of the files that will be added to the CFA exclusions
+                HashSet<string> CFAExclusionsToBeAdded = new HashSet<string>();
 
-                if (HardenWindowsSecurity.GlobalVars.PSHOME != null)
-                {
-                    // Get all .exe files in the PSHOME directory
-                    psExePaths = Directory.GetFiles(HardenWindowsSecurity.GlobalVars.PSHOME, "*.exe");
-                }
-
+                #region powercfg.exe executable
                 // Get the powercfg.exe path
                 string? systemDrive = Environment.GetEnvironmentVariable("SystemDrive");
                 if (string.IsNullOrEmpty(systemDrive))
@@ -99,19 +97,51 @@ namespace HardenWindowsSecurity
 
                 string powercfgPath = Path.Combine(systemDrive, "Windows", "System32", "powercfg.exe");
 
-                string[]? pwshPaths = null;
+                // Add the powercfg.exe path to the CFA Exclusion list
+                CFAExclusionsToBeAdded.Add(powercfgPath);
+                #endregion
 
-                if (psExePaths != null)
+                #region PowerShell and/or standalone executable
+                // If Harden Windows Security App is being executed using compiled binary, or in the context of PowerShell as a module, then this part will take care of CFA exclusion
+
+                // Get the path of the currently executing assembly
+                string? executablePath = Assembly.GetExecutingAssembly()?.Location;
+
+                if (!string.IsNullOrWhiteSpace(executablePath))
                 {
-                    // Combine the paths into a single string array
-                    pwshPaths = psExePaths.Concat(new string[] { powercfgPath }).ToArray();
+                    Logger.LogMessage("Executable Path: " + executablePath, LogTypeIntel.Information);
+
+                    // Ensure the file has a .exe extension
+                    if (System.IO.Path.GetExtension(executablePath).Equals(".exe", StringComparison.OrdinalIgnoreCase))
+                    {
+                        CFAExclusionsToBeAdded.Add(executablePath);
+                    }
                 }
 
-                if (pwshPaths != null)
+                // Get the path of the current process executable
+                string? executablePathExe = Process.GetCurrentProcess()?.MainModule?.FileName;
+
+                if (!string.IsNullOrWhiteSpace(executablePathExe))
                 {
-                    // doing this so that the module can run without interruption. This change is reverted at the end.
+                    Logger.LogMessage("Executable Path: " + executablePathExe, LogTypeIntel.Information);
+
+                    // Ensure the file has a .exe extension because it could be the dll
+                    if (System.IO.Path.GetExtension(executablePathExe).Equals(".exe", StringComparison.OrdinalIgnoreCase))
+                    {
+                        CFAExclusionsToBeAdded.Add(executablePathExe);
+                    }
+                }
+                #endregion
+
+                // Convert the HashSet to a string array
+                string[] CFAExclusionsToBeAddedArray = CFAExclusionsToBeAdded.ToArray();
+
+                // Adding powercfg.exe so Controlled Folder Access won't complain about it in BitLocker category when setting hibernate file size to full
+                if (CFAExclusionsToBeAddedArray.Length > 0)
+                {
+                    // Doing this so that the module can run without interruption. This change is reverted at the end.
                     // Adding powercfg.exe so Controlled Folder Access won't complain about it in BitLocker category when setting hibernate file size to full
-                    HardenWindowsSecurity.ControlledFolderAccessHandler.Add(applications: pwshPaths);
+                    HardenWindowsSecurity.ControlledFolderAccessHandler.Add(CFAExclusionsToBeAddedArray);
                 }
             }
         }
@@ -121,11 +151,9 @@ namespace HardenWindowsSecurity
         /// </summary>
         public static void Reset()
         {
-
             // Make sure the user as Admin privileges
             if (HardenWindowsSecurity.UserPrivCheck.IsAdmin())
             {
-
                 // restoring the original Controlled folder access allow list - if user already had added PowerShell executables to the list
                 // they will be restored as well, so user customization will remain intact
                 if (HardenWindowsSecurity.GlobalVars.CFABackup != null && HardenWindowsSecurity.GlobalVars.CFABackup.Length > 0)
@@ -139,6 +167,9 @@ namespace HardenWindowsSecurity
                     HardenWindowsSecurity.ControlledFolderAccessHandler.Remove(HardenWindowsSecurity.MpPreferenceHelper.GetMpPreference().ControlledFolderAccessAllowedApplications);
                 }
             }
+
+            // Set the variable to null after being done with it so subsequent attempts of this method won't run in the same session
+            HardenWindowsSecurity.GlobalVars.CFABackup = null;
         }
     }
 }

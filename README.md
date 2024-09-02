@@ -1273,6 +1273,7 @@ Get-Content <Path-To-File> -stream zone.identifier
 - [Microsoft Cybersecurity Reference Architectures](https://aka.ms/mcra)
 - [BlueHat IL 2023 - David Weston - Default Security](https://youtu.be/8T6ClX-y2AE?si=aICh_wZIJrMpM6xB)
 - [Windows Security best practices for integrating and managing security tools](https://www.microsoft.com/en-us/security/blog/2024/07/27/windows-security-best-practices-for-integrating-and-managing-security-tools/)
+- [Microsoft Exploitability Index](https://www.microsoft.com/en-us/msrc/exploitability-index)
 
 <p align="right"><a href="#readme-top">💡 (back to top)</a></p>
 

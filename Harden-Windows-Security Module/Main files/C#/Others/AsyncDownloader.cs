@@ -88,7 +88,7 @@ namespace HardenWindowsSecurity
                     continue;
                 }
 
-                Logger.LogMessage($"Downloading {kvp.Value}");
+                Logger.LogMessage($"Downloading {kvp.Value}", LogTypeIntel.Information);
 
                 string url = kvp.Key;
                 string fileName = kvp.Value;
@@ -182,7 +182,7 @@ namespace HardenWindowsSecurity
             {
                 if (OnlyLGPO)
                 {
-                    Logger.LogMessage("Will only download LGPO.zip file");
+                    Logger.LogMessage("Will only download LGPO.zip file", LogTypeIntel.Information);
                 }
 
                 // Start the download process asynchronously
@@ -201,7 +201,7 @@ namespace HardenWindowsSecurity
                 }
                 else if (DownloadsTask.IsCompletedSuccessfully)
                 {
-                    Logger.LogMessage("Download completed successfully");
+                    Logger.LogMessage("Download completed successfully", LogTypeIntel.Information);
                 }
 
             }
@@ -211,7 +211,7 @@ namespace HardenWindowsSecurity
 
                 if (HardenWindowsSecurity.GlobalVars.Offline)
                 {
-                    Logger.LogMessage("Offline Mode; Copying the Microsoft Security Baselines, Microsoft 365 Apps for Enterprise Security Baselines and LGPO files from the user provided paths to the working directory");
+                    Logger.LogMessage("Offline Mode; Copying the Microsoft Security Baselines, Microsoft 365 Apps for Enterprise Security Baselines and LGPO files from the user provided paths to the working directory", LogTypeIntel.Information);
 
                     if (LGPOPath != null)
                     {
@@ -242,7 +242,7 @@ namespace HardenWindowsSecurity
 
                 }
 
-                Logger.LogMessage("Extracting the downloaded zip files");
+                Logger.LogMessage("Extracting the downloaded zip files", LogTypeIntel.Information);
 
                 // Extract MicrosoftSecurityBaseline.zip
                 System.IO.Compression.ZipFile.ExtractToDirectory(Path.Combine(HardenWindowsSecurity.GlobalVars.WorkingDir, "MicrosoftSecurityBaseline.zip"), Path.Combine(HardenWindowsSecurity.GlobalVars.WorkingDir, "MicrosoftSecurityBaseline"));

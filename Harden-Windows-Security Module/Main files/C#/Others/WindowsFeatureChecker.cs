@@ -104,7 +104,7 @@ return ((Get-WindowsCapability -Online | Where-Object -FilterScript { $_.Name -l
 
             if (output == null)
             {
-                HardenWindowsSecurity.Logger.LogMessage($"The output of the {capabilityName} state check was null");
+                HardenWindowsSecurity.Logger.LogMessage($"The output of the {capabilityName} state check was null", LogTypeIntel.Information);
                 return "Unknown";
             }
 
@@ -123,7 +123,7 @@ return ((Get-WindowsCapability -Online | Where-Object -FilterScript { $_.Name -l
                 return "Staged";
             }
 
-            HardenWindowsSecurity.Logger.LogMessage($"The output of the {capabilityName} state check is {output}");
+            HardenWindowsSecurity.Logger.LogMessage($"The output of the {capabilityName} state check is {output}", LogTypeIntel.Information);
 
             return "Unknown";
         }
@@ -170,14 +170,14 @@ return ((Get-WindowsCapability -Online | Where-Object -FilterScript { $_.Name -l
                     // https://learn.microsoft.com/en-us/windows/win32/debug/system-error-codes--1700-3999-
                     else if (process.ExitCode == 3010)
                     {
-                        HardenWindowsSecurity.Logger.LogMessage($"Reboot required to finish the feature/capability installation/uninstallation.");
+                        HardenWindowsSecurity.Logger.LogMessage($"Reboot required to finish the feature/capability installation/uninstallation.", LogTypeIntel.Information);
                         return string.Empty;
                     }
                     else if (process.ExitCode != 0)
                     {
                         // Print or log error and output details for other error codes
-                        HardenWindowsSecurity.Logger.LogMessage($"DISM command failed with exit code {process.ExitCode}. Error details: {error}");
-                        HardenWindowsSecurity.Logger.LogMessage($"DISM command output: {output}");
+                        HardenWindowsSecurity.Logger.LogMessage($"DISM command failed with exit code {process.ExitCode}. Error details: {error}", LogTypeIntel.Error);
+                        HardenWindowsSecurity.Logger.LogMessage($"DISM command output: {output}", LogTypeIntel.Error);
 
                         throw new InvalidOperationException($"DISM command failed with exit code {process.ExitCode}. Error details: {error}");
                     }

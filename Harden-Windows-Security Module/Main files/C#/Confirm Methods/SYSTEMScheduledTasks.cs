@@ -12,7 +12,7 @@ namespace HardenWindowsSecurity
     {
         public static void Invoke()
         {
-            HardenWindowsSecurity.Logger.LogMessage("Collecting Intune applied policy details from the System");
+            HardenWindowsSecurity.Logger.LogMessage("Collecting Intune applied policy details from the System", LogTypeIntel.Information);
 
             // Path to the PowerShell script
             string scriptPath = Path.Combine(HardenWindowsSecurity.GlobalVars.path!, "Shared", "SYSTEMInfoGathering.ps1");

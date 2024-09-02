@@ -28,12 +28,12 @@ namespace HardenWindowsSecurity
             // Sleep for 1 second (1000 milliseconds)
             Thread.Sleep(1000);
 
-            HardenWindowsSecurity.Logger.LogMessage("Applying the optional overrides");
+            HardenWindowsSecurity.Logger.LogMessage("Applying the optional overrides", LogTypeIntel.Information);
 
             HardenWindowsSecurity.LGPORunner.RunLGPOCommand(System.IO.Path.Combine(HardenWindowsSecurity.GlobalVars.path, "Resources", "Security-Baselines-X", "Overrides for Microsoft Security Baseline", "registry.pol"), LGPORunner.FileType.POL);
             HardenWindowsSecurity.LGPORunner.RunLGPOCommand(System.IO.Path.Combine(HardenWindowsSecurity.GlobalVars.path, "Resources", "Security-Baselines-X", "Overrides for Microsoft Security Baseline", "GptTmpl.inf"), LGPORunner.FileType.INF);
 
-            HardenWindowsSecurity.Logger.LogMessage("Re-enabling the XblGameSave Standby Task that gets disabled by Microsoft Security Baselines");
+            HardenWindowsSecurity.Logger.LogMessage("Re-enabling the XblGameSave Standby Task that gets disabled by Microsoft Security Baselines", LogTypeIntel.Information);
 
             // Create a new process
             Process process = new Process();
@@ -61,7 +61,7 @@ namespace HardenWindowsSecurity
                 throw new Exception($"Process failed with exit code {process.ExitCode}: {error}");
             }
 
-            HardenWindowsSecurity.Logger.LogMessage(output);
+            HardenWindowsSecurity.Logger.LogMessage(output, LogTypeIntel.Information);
 
         }
     }

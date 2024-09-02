@@ -25,8 +25,8 @@ namespace HardenWindowsSecurity
                 throw new System.ArgumentNullException("GlobalVars.path cannot be null.");
             }
 
-            HardenWindowsSecurity.Logger.LogMessage("Applying the Microsoft Security Baselines");
-            HardenWindowsSecurity.Logger.LogMessage("Running the official PowerShell script included in the Microsoft Security Baseline file downloaded from Microsoft servers");
+            HardenWindowsSecurity.Logger.LogMessage("Applying the Microsoft Security Baselines", LogTypeIntel.Information);
+            HardenWindowsSecurity.Logger.LogMessage("Running the official PowerShell script included in the Microsoft Security Baseline file downloaded from Microsoft servers", LogTypeIntel.Information);
 
             // Define the path to the script
             string baselineScriptPath = Path.Combine(
@@ -67,7 +67,7 @@ namespace HardenWindowsSecurity
                 // Write non-error output to the console
                 if (!string.IsNullOrEmpty(output))
                 {
-                    HardenWindowsSecurity.Logger.LogMessage(output);
+                    HardenWindowsSecurity.Logger.LogMessage(output, LogTypeIntel.Information);
                 }
 
                 // If there was an error, throw it

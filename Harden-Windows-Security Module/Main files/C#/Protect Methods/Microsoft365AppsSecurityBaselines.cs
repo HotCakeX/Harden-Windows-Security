@@ -20,8 +20,8 @@ namespace HardenWindowsSecurity
                 throw new Exception("The path to the Microsoft 365 Apps Security Baseline has not been set.");
             }
 
-            HardenWindowsSecurity.Logger.LogMessage("Applying the Microsoft 365 Apps Security Baseline");
-            HardenWindowsSecurity.Logger.LogMessage("Running the official PowerShell script included in the Microsoft 365 Apps Security Baseline file downloaded from Microsoft servers");
+            HardenWindowsSecurity.Logger.LogMessage("Applying the Microsoft 365 Apps Security Baseline", LogTypeIntel.Information);
+            HardenWindowsSecurity.Logger.LogMessage("Running the official PowerShell script included in the Microsoft 365 Apps Security Baseline file downloaded from Microsoft servers", LogTypeIntel.Information);
 
 
             string M365AppsBaselineScriptPath = Path.Combine(
@@ -62,7 +62,7 @@ namespace HardenWindowsSecurity
                 // Write non-error output to the console
                 if (!string.IsNullOrEmpty(output))
                 {
-                    HardenWindowsSecurity.Logger.LogMessage(output);
+                    HardenWindowsSecurity.Logger.LogMessage(output, LogTypeIntel.Information);
                 }
 
                 // If there was an error, throw it

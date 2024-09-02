@@ -15,7 +15,7 @@ namespace HardenWindowsSecurity
                 throw new System.ArgumentNullException("GlobalVars.path cannot be null.");
             }
 
-            HardenWindowsSecurity.Logger.LogMessage("Enabling Clipboard Sync with Microsoft Account");
+            HardenWindowsSecurity.Logger.LogMessage("Enabling Clipboard Sync with Microsoft Account", LogTypeIntel.Information);
 
 #nullable disable
             foreach (var Item in (HardenWindowsSecurity.GlobalVars.RegistryCSVItems))

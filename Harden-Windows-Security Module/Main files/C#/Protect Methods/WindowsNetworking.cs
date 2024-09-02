@@ -22,15 +22,15 @@ namespace HardenWindowsSecurity
                 throw new System.ArgumentNullException("GlobalVars.path cannot be null.");
             }
 
-            HardenWindowsSecurity.Logger.LogMessage("Running the Windows Networking category");
+            HardenWindowsSecurity.Logger.LogMessage("Running the Windows Networking category", LogTypeIntel.Information);
 
             HardenWindowsSecurity.LGPORunner.RunLGPOCommand(System.IO.Path.Combine(HardenWindowsSecurity.GlobalVars.path, "Resources", "Security-Baselines-X", "Windows Networking Policies", "registry.pol"), LGPORunner.FileType.POL);
             HardenWindowsSecurity.LGPORunner.RunLGPOCommand(System.IO.Path.Combine(HardenWindowsSecurity.GlobalVars.path, "Resources", "Security-Baselines-X", "Windows Networking Policies", "GptTmpl.inf"), LGPORunner.FileType.INF);
 
-            HardenWindowsSecurity.Logger.LogMessage("Disabling LMHOSTS lookup protocol on all network adapters");
+            HardenWindowsSecurity.Logger.LogMessage("Disabling LMHOSTS lookup protocol on all network adapters", LogTypeIntel.Information);
             HardenWindowsSecurity.RegistryEditor.EditRegistry(@"Registry::HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\NetBT\Parameters", "EnableLMHOSTS", "0", "DWORD", "AddOrModify");
 
-            HardenWindowsSecurity.Logger.LogMessage("Setting the Network Location of all connections to Public");
+            HardenWindowsSecurity.Logger.LogMessage("Setting the Network Location of all connections to Public", LogTypeIntel.Information);
             List<ManagementObject> AllCurrentNetworkAdapters = HardenWindowsSecurity.NetConnectionProfiles.Get();
 
             // Extract InterfaceIndex from each ManagementObject and convert to int array

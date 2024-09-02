@@ -20,9 +20,9 @@ namespace HardenWindowsSecurity
                 throw new System.ArgumentNullException("GlobalVars.RegistryCSVItems cannot be null.");
             }
 
-            HardenWindowsSecurity.Logger.LogMessage("Running the Miscellaneous Configurations category");
+            HardenWindowsSecurity.Logger.LogMessage("Running the Miscellaneous Configurations category", LogTypeIntel.Information);
 
-            HardenWindowsSecurity.Logger.LogMessage("Applying the Miscellaneous Configurations registry settings");
+            HardenWindowsSecurity.Logger.LogMessage("Applying the Miscellaneous Configurations registry settings", LogTypeIntel.Information);
 #nullable disable
             foreach (var Item in (HardenWindowsSecurity.GlobalVars.RegistryCSVItems))
             {
@@ -36,7 +36,7 @@ namespace HardenWindowsSecurity
             HardenWindowsSecurity.LGPORunner.RunLGPOCommand(System.IO.Path.Combine(HardenWindowsSecurity.GlobalVars.path, "Resources", "Security-Baselines-X", "Miscellaneous Policies", "registry.pol"), LGPORunner.FileType.POL);
             HardenWindowsSecurity.LGPORunner.RunLGPOCommand(System.IO.Path.Combine(HardenWindowsSecurity.GlobalVars.path, "Resources", "Security-Baselines-X", "Miscellaneous Policies", "GptTmpl.inf"), LGPORunner.FileType.INF);
 
-            HardenWindowsSecurity.Logger.LogMessage("""Adding all Windows users to the "Hyper-V Administrators" security group to be able to use Hyper-V and Windows Sandbox""");
+            HardenWindowsSecurity.Logger.LogMessage("""Adding all Windows users to the "Hyper-V Administrators" security group to be able to use Hyper-V and Windows Sandbox""", LogTypeIntel.Information);
             List<HardenWindowsSecurity.LocalUser> AllLocalUsers = HardenWindowsSecurity.LocalUserRetriever.Get();
 
             foreach (HardenWindowsSecurity.LocalUser user in AllLocalUsers)
@@ -53,7 +53,7 @@ namespace HardenWindowsSecurity
             // auditpol /set /subcategory:"Other Logon/Logoff Events" /success:enable /failure:enable
             // Using GUID
 
-            HardenWindowsSecurity.Logger.LogMessage("""Enabling auditing for the "Other Logon/Logoff Events" subcategory under the Logon/Logoff category""");
+            HardenWindowsSecurity.Logger.LogMessage("""Enabling auditing for the "Other Logon/Logoff Events" subcategory under the Logon/Logoff category""", LogTypeIntel.Information);
 
             HardenWindowsSecurity.RunCommandLineCommands.Run("auditpol", "/set /subcategory:\"{0CCE921C-69AE-11D9-BED3-505054503030}\" /success:enable /failure:enable");
 

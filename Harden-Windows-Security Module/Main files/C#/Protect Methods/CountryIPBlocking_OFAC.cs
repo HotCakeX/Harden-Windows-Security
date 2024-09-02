@@ -10,7 +10,7 @@ namespace HardenWindowsSecurity
         public static void CountryIPBlocking_OFAC()
         {
 
-            HardenWindowsSecurity.Logger.LogMessage("Blocking IP ranges of countries in OFAC sanction list");
+            HardenWindowsSecurity.Logger.LogMessage("Blocking IP ranges of countries in OFAC sanction list", LogTypeIntel.Information);
 
             // another benefit of using LocalStore is that it supports large arrays of IP addresses
             // the default store which goes to Windows firewall store does not support large arrays and throws: "The array bounds are invalid"

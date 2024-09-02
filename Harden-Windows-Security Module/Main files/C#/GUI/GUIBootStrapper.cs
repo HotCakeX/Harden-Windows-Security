@@ -26,7 +26,7 @@ namespace HardenWindowsSecurity
                 catch (Exception ex)
                 {
                     // Log or handle the exception appropriately
-                    HardenWindowsSecurity.Logger.LogMessage($"An error occurred: {ex.Message}");
+                    HardenWindowsSecurity.Logger.LogMessage($"An error occurred: {ex.Message}", LogTypeIntel.Error);
                     throw;
                 }
                 finally

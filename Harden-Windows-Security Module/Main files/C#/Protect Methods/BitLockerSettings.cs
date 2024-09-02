@@ -15,7 +15,7 @@ namespace HardenWindowsSecurity
                 throw new System.ArgumentNullException("GlobalVars.path cannot be null.");
             }
 
-            HardenWindowsSecurity.Logger.LogMessage("Running the Bitlocker category");
+            HardenWindowsSecurity.Logger.LogMessage("Running the Bitlocker category", LogTypeIntel.Information);
 
             HardenWindowsSecurity.LGPORunner.RunLGPOCommand(System.IO.Path.Combine(HardenWindowsSecurity.GlobalVars.path, "Resources", "Security-Baselines-X", "Bitlocker Policies", "registry.pol"), LGPORunner.FileType.POL);
 
@@ -34,13 +34,13 @@ namespace HardenWindowsSecurity
             // Enables or disables DMA protection from Bitlocker Countermeasures based on the status of Kernel DMA protection.
             if (BootDMAProtectionResult == true)
             {
-                HardenWindowsSecurity.Logger.LogMessage("Kernel DMA protection is enabled on the system, disabling Bitlocker DMA protection.");
+                HardenWindowsSecurity.Logger.LogMessage("Kernel DMA protection is enabled on the system, disabling Bitlocker DMA protection.", LogTypeIntel.Information);
 
                 HardenWindowsSecurity.LGPORunner.RunLGPOCommand(System.IO.Path.Combine(HardenWindowsSecurity.GlobalVars.path, "Resources", "Security-Baselines-X", "Overrides for Microsoft Security Baseline", "Bitlocker DMA", "Bitlocker DMA Countermeasure OFF", "registry.pol"), LGPORunner.FileType.POL);
             }
             else
             {
-                HardenWindowsSecurity.Logger.LogMessage("Kernel DMA protection is unavailable on the system, enabling Bitlocker DMA protection.");
+                HardenWindowsSecurity.Logger.LogMessage("Kernel DMA protection is unavailable on the system, enabling Bitlocker DMA protection.", LogTypeIntel.Information);
 
                 HardenWindowsSecurity.LGPORunner.RunLGPOCommand(System.IO.Path.Combine(HardenWindowsSecurity.GlobalVars.path, "Resources", "Security-Baselines-X", "Overrides for Microsoft Security Baseline", "Bitlocker DMA", "Bitlocker DMA Countermeasure ON", "registry.pol"), LGPORunner.FileType.POL);
             }

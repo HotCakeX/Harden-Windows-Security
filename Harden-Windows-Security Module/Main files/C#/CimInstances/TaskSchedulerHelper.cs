@@ -140,7 +140,7 @@ namespace HardenWindowsSecurity
             catch (ManagementException e)
             {
                 // Handle any ManagementException that may occur during the WMI query execution
-                HardenWindowsSecurity.Logger.LogMessage($"An error occurred while querying for WMI data: {e.Message}");
+                HardenWindowsSecurity.Logger.LogMessage($"An error occurred while querying for WMI data: {e.Message}", LogTypeIntel.Error);
 
                 // Depending on the outputType parameter, return either false or an empty list
                 if (outputType == OutputType.Boolean)

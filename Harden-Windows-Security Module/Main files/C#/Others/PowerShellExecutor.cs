@@ -30,20 +30,20 @@ namespace HardenWindowsSecurity
                 {
                     foreach (var output in results)
                     {
-                        HardenWindowsSecurity.Logger.LogMessage($"Output: {output}");
+                        HardenWindowsSecurity.Logger.LogMessage($"Output: {output}", LogTypeIntel.Information);
                     }
                 }
 
                 // Display verbose output
                 foreach (var verbose in psInstance.Streams.Verbose)
                 {
-                    HardenWindowsSecurity.Logger.LogMessage($"Verbose: {verbose.Message}");
+                    HardenWindowsSecurity.Logger.LogMessage($"Verbose: {verbose.Message}", LogTypeIntel.Information);
                 }
 
                 // Display warning output
                 foreach (var warning in psInstance.Streams.Warning)
                 {
-                    HardenWindowsSecurity.Logger.LogMessage($"Warning: {warning.Message}");
+                    HardenWindowsSecurity.Logger.LogMessage($"Warning: {warning.Message}", LogTypeIntel.Warning);
                 }
 
                 // Handle errors, including non-terminating errors

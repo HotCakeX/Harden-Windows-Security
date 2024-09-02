@@ -329,15 +329,15 @@ Function Protect-WindowsSecurity {
         # Detecting if Offline mode is used
         ([HardenWindowsSecurity.GlobalVars]::Offline) = $PSBoundParameters['Offline'] ? $true : $false
 
-        [HardenWindowsSecurity.Logger]::LogMessage('Importing the required sub-modules')
+        [HardenWindowsSecurity.Logger]::LogMessage('Importing the required sub-modules', [HardenWindowsSecurity.LogTypeIntel]::Information)
         Import-Module -FullyQualifiedName ([System.IO.Path]::Combine([HardenWindowsSecurity.GlobalVars]::Path, 'Shared', 'Update-self.psm1')) -Force -Verbose:$false
 
         if (!([HardenWindowsSecurity.GlobalVars]::Offline)) {
-            [HardenWindowsSecurity.Logger]::LogMessage('Checking for updates...')
+            [HardenWindowsSecurity.Logger]::LogMessage('Checking for updates...', [HardenWindowsSecurity.LogTypeIntel]::Information)
             Update-Self -InvocationStatement $MyInvocation.Statement
         }
         else {
-            [HardenWindowsSecurity.Logger]::LogMessage('Skipping update check since the -Offline switch was used')
+            [HardenWindowsSecurity.Logger]::LogMessage('Skipping update check since the -Offline switch was used', [HardenWindowsSecurity.LogTypeIntel]::Information)
         }
 
         # Get the execution policy for the current process
@@ -392,7 +392,7 @@ Function Protect-WindowsSecurity {
                 Start-Transcript -IncludeInvocationHeader -Path $LogPath
 
                 # Create a new stopwatch object to measure the execution time
-                [HardenWindowsSecurity.Logger]::LogMessage('Starting the stopwatch...')
+                [HardenWindowsSecurity.Logger]::LogMessage('Starting the stopwatch...', [HardenWindowsSecurity.LogTypeIntel]::Information)
                 [System.Diagnostics.Stopwatch]$StopWatch = [Diagnostics.Stopwatch]::StartNew()
             }
 
@@ -407,7 +407,7 @@ Function Protect-WindowsSecurity {
 
             # Download the required files
             if (!([HardenWindowsSecurity.GlobalVars]::Offline)) {
-                [HardenWindowsSecurity.Logger]::LogMessage('Downloading the required files')
+                [HardenWindowsSecurity.Logger]::LogMessage('Downloading the required files', [HardenWindowsSecurity.LogTypeIntel]::Information)
                 Write-Progress -Activity 'Downloading the required files' -Status 'Downloading' -PercentComplete 20
             }
             [HardenWindowsSecurity.AsyncDownloader]::PrepDownloadedFiles(
@@ -416,7 +416,7 @@ Function Protect-WindowsSecurity {
                 "$PathToMSFT365AppsSecurityBaselines",
                 $false
             )
-            [HardenWindowsSecurity.Logger]::LogMessage('Finished downloading/processing the required files')
+            [HardenWindowsSecurity.Logger]::LogMessage('Finished downloading/processing the required files', [HardenWindowsSecurity.LogTypeIntel]::Information)
 
             Write-Progress -Activity 'Applying the security measures' -Status 'Protecting' -PercentComplete 50
 
@@ -458,12 +458,12 @@ Function Protect-WindowsSecurity {
         finally {
             Write-Progress -Activity 'Protection completed' -Status 'Completed' -Completed
             if ($null -ne $CurrentPowerShellTitle) {
-                [HardenWindowsSecurity.Logger]::LogMessage('Restoring the title of the PowerShell back to what it was prior to running the module')
+                [HardenWindowsSecurity.Logger]::LogMessage('Restoring the title of the PowerShell back to what it was prior to running the module', [HardenWindowsSecurity.LogTypeIntel]::Information)
                 $Host.UI.RawUI.WindowTitle = $CurrentPowerShellTitle
             }
 
             if ($null -ne $CurrentExecutionPolicy) {
-                [HardenWindowsSecurity.Logger]::LogMessage('Setting the execution policy back to what it was prior to running the module')
+                [HardenWindowsSecurity.Logger]::LogMessage('Setting the execution policy back to what it was prior to running the module', [HardenWindowsSecurity.LogTypeIntel]::Information)
                 Set-ExecutionPolicy -ExecutionPolicy "$CurrentExecutionPolicy" -Scope 'Process' -Force
             }
 
@@ -471,11 +471,11 @@ Function Protect-WindowsSecurity {
             [HardenWindowsSecurity.Miscellaneous]::CleanUp()
 
             if ($Log) {
-                [HardenWindowsSecurity.Logger]::LogMessage('Stopping the stopwatch')
+                [HardenWindowsSecurity.Logger]::LogMessage('Stopping the stopwatch', [HardenWindowsSecurity.LogTypeIntel]::Information)
                 $StopWatch.Stop()
-                [HardenWindowsSecurity.Logger]::LogMessage("Protect-WindowsSecurity completed in $($StopWatch.Elapsed.Hours) Hours - $($StopWatch.Elapsed.Minutes) Minutes - $($StopWatch.Elapsed.Seconds) Seconds - $($StopWatch.Elapsed.Milliseconds) Milliseconds - $($StopWatch.Elapsed.Microseconds) Microseconds - $($StopWatch.Elapsed.Nanoseconds) Nanoseconds")
+                [HardenWindowsSecurity.Logger]::LogMessage("Protect-WindowsSecurity completed in $($StopWatch.Elapsed.Hours) Hours - $($StopWatch.Elapsed.Minutes) Minutes - $($StopWatch.Elapsed.Seconds) Seconds - $($StopWatch.Elapsed.Milliseconds) Milliseconds - $($StopWatch.Elapsed.Microseconds) Microseconds - $($StopWatch.Elapsed.Nanoseconds) Nanoseconds", [HardenWindowsSecurity.LogTypeIntel]::Information)
 
-                [HardenWindowsSecurity.Logger]::LogMessage('Stopping the transcription')
+                [HardenWindowsSecurity.Logger]::LogMessage('Stopping the transcription', [HardenWindowsSecurity.LogTypeIntel]::Information)
                 Stop-Transcript
             }
             # If no errors ocurred, recycle the current session for there can't be more than 1 Application in the same App Domain

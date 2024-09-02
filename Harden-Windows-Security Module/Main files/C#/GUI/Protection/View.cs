@@ -425,7 +425,7 @@ namespace HardenWindowsSecurity
                         if (dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
                         {
                             GUIProtectWinSecurity.txtFilePath.Text = dialog.FileName;
-                            HardenWindowsSecurity.Logger.LogMessage($"Logs will be saved in: {GUIProtectWinSecurity.txtFilePath.Text}");
+                            HardenWindowsSecurity.Logger.LogMessage($"Logs will be saved in: {GUIProtectWinSecurity.txtFilePath.Text}", LogTypeIntel.Information);
                         }
                     }
                 };

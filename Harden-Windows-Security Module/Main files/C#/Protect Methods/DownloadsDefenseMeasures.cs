@@ -12,7 +12,7 @@ namespace HardenWindowsSecurity
     {
         public static void Invoke()
         {
-            HardenWindowsSecurity.Logger.LogMessage("Running the Downloads Defense Measures category");
+            HardenWindowsSecurity.Logger.LogMessage("Running the Downloads Defense Measures category", LogTypeIntel.Information);
 
             string UserValue = string.Empty;
 

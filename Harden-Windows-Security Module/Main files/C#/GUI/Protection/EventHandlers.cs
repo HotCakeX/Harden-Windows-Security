@@ -228,7 +228,7 @@ namespace HardenWindowsSecurity
                         {
                             if (!HardenWindowsSecurity.SneakAndPeek.Search("Windows*Security Baseline/Scripts/Baseline-LocalInstall.ps1", dialog.FileName))
                             {
-                                HardenWindowsSecurity.Logger.LogMessage("The selected Zip file does not contain the Microsoft Security Baselines Baseline-LocalInstall.ps1 which is required for the Protect-WindowsSecurity function to work properly");
+                                HardenWindowsSecurity.Logger.LogMessage("The selected Zip file does not contain the Microsoft Security Baselines Baseline-LocalInstall.ps1 which is required for the Protect-WindowsSecurity function to work properly", LogTypeIntel.Error);
                             }
                             else
                             {
@@ -240,7 +240,7 @@ namespace HardenWindowsSecurity
                         }
                         catch (Exception ex)
                         {
-                            HardenWindowsSecurity.Logger.LogMessage(ex.Message);
+                            HardenWindowsSecurity.Logger.LogMessage(ex.Message, LogTypeIntel.Error);
                         }
                     }
                 }
@@ -261,7 +261,7 @@ namespace HardenWindowsSecurity
                         {
                             if (!HardenWindowsSecurity.SneakAndPeek.Search("Microsoft 365 Apps for Enterprise*/Scripts/Baseline-LocalInstall.ps1", dialog.FileName))
                             {
-                                HardenWindowsSecurity.Logger.LogMessage("The selected Zip file does not contain the Microsoft 365 Apps for Enterprise Security Baselines Baseline-LocalInstall.ps1 which is required for the Protect-WindowsSecurity function to work properly");
+                                HardenWindowsSecurity.Logger.LogMessage("The selected Zip file does not contain the Microsoft 365 Apps for Enterprise Security Baselines Baseline-LocalInstall.ps1 which is required for the Protect-WindowsSecurity function to work properly", LogTypeIntel.Error);
                             }
                             else
                             {
@@ -273,7 +273,7 @@ namespace HardenWindowsSecurity
                         }
                         catch (Exception ex)
                         {
-                            HardenWindowsSecurity.Logger.LogMessage(ex.Message);
+                            HardenWindowsSecurity.Logger.LogMessage(ex.Message, LogTypeIntel.Error);
                         }
                     }
                 }
@@ -294,7 +294,7 @@ namespace HardenWindowsSecurity
                         {
                             if (!HardenWindowsSecurity.SneakAndPeek.Search("LGPO_*/LGPO.exe", dialog.FileName))
                             {
-                                HardenWindowsSecurity.Logger.LogMessage("The selected Zip file does not contain the LGPO.exe which is required for the Protect-WindowsSecurity function to work properly");
+                                HardenWindowsSecurity.Logger.LogMessage("The selected Zip file does not contain the LGPO.exe which is required for the Protect-WindowsSecurity function to work properly", LogTypeIntel.Error);
                             }
                             else
                             {
@@ -306,7 +306,7 @@ namespace HardenWindowsSecurity
                         }
                         catch (Exception ex)
                         {
-                            HardenWindowsSecurity.Logger.LogMessage(ex.Message);
+                            HardenWindowsSecurity.Logger.LogMessage(ex.Message, LogTypeIntel.Error);
                         }
                     }
                 }
@@ -424,7 +424,7 @@ namespace HardenWindowsSecurity
 
                             nameToDisplay = (!string.IsNullOrWhiteSpace(CurrentLocalUser!.FullName)) ? CurrentLocalUser.FullName : !string.IsNullOrWhiteSpace(CurrentLocalUser.Name) ? CurrentLocalUser.Name : "Unknown User";
 
-                            HardenWindowsSecurity.Logger.LogMessage(HardenWindowsSecurity.UserPrivCheck.IsAdmin() ? $"Hello {nameToDisplay}, Running as Administrator" : $"Hello {nameToDisplay}, Running as Non-Administrator, some categories are disabled");
+                            HardenWindowsSecurity.Logger.LogMessage(HardenWindowsSecurity.UserPrivCheck.IsAdmin() ? $"Hello {nameToDisplay}, Running as Administrator" : $"Hello {nameToDisplay}, Running as Non-Administrator, some categories are disabled", LogTypeIntel.Information);
                             #endregion
 
                             // Use Dispatcher.Invoke to update the UI thread
@@ -444,7 +444,7 @@ namespace HardenWindowsSecurity
                             // Because at this point, the user might have not selected the files to be used for offline operation
                             if (!HardenWindowsSecurity.GlobalVars.Offline)
                             {
-                                HardenWindowsSecurity.Logger.LogMessage("Downloading the required files");
+                                HardenWindowsSecurity.Logger.LogMessage("Downloading the required files", LogTypeIntel.Information);
 
                                 // Run the file download process asynchronously
                                 await Task.Run(() =>
@@ -457,7 +457,7 @@ namespace HardenWindowsSecurity
                                     );
                                 });
 
-                                HardenWindowsSecurity.Logger.LogMessage("Finished downloading the required files");
+                                HardenWindowsSecurity.Logger.LogMessage("Finished downloading the required files", LogTypeIntel.Information);
                             }
 
                             // Using Dispatcher since the execute button is owned by the GUI thread, and we're in another thread
@@ -471,9 +471,9 @@ namespace HardenWindowsSecurity
                         }
                         catch (Exception ex)
                         {
-                            HardenWindowsSecurity.Logger.LogMessage($"An error occurred while downloading the required files: {ex.Message}");
-                            HardenWindowsSecurity.Logger.LogMessage($"{ex.StackTrace}");
-                            HardenWindowsSecurity.Logger.LogMessage($"{ex.InnerException}");
+                            HardenWindowsSecurity.Logger.LogMessage($"An error occurred while downloading the required files: {ex.Message}", LogTypeIntel.Error);
+                            HardenWindowsSecurity.Logger.LogMessage($"{ex.StackTrace}", LogTypeIntel.Error);
+                            HardenWindowsSecurity.Logger.LogMessage($"{ex.InnerException}", LogTypeIntel.Error);
                             // Re-throw the exception to ensure it's caught and handled appropriately
                             //   throw;
                         }
@@ -551,7 +551,7 @@ namespace HardenWindowsSecurity
                                       false
                                        );
 
-                                       HardenWindowsSecurity.Logger.LogMessage("Finished processing the required files");
+                                       HardenWindowsSecurity.Logger.LogMessage("Finished processing the required files", LogTypeIntel.Information);
 
                                        // Set a flag indicating this code block should not run again when the execute button is pressed
                                        HardenWindowsSecurity.GUIProtectWinSecurity.StartFileDownloadHasRun = true;
@@ -559,12 +559,12 @@ namespace HardenWindowsSecurity
                                    }
                                    else
                                    {
-                                       HardenWindowsSecurity.Logger.LogMessage("Enable Offline Mode checkbox is checked but you have not selected all of the 3 required files for offline mode operation. Please select them and press the execute button again.");
+                                       HardenWindowsSecurity.Logger.LogMessage("Enable Offline Mode checkbox is checked but you have not selected all of the 3 required files for offline mode operation. Please select them and press the execute button again.", LogTypeIntel.Warning);
                                    }
                                }
                                else
                                {
-                                   HardenWindowsSecurity.Logger.LogMessage("Offline mode is being used but the Enable Offline Mode checkbox is not checked. Please check it and press the execute button again.");
+                                   HardenWindowsSecurity.Logger.LogMessage("Offline mode is being used but the Enable Offline Mode checkbox is not checked. Please check it and press the execute button again.", LogTypeIntel.Warning);
                                }
                            }
                        }
@@ -612,7 +612,7 @@ namespace HardenWindowsSecurity
 
                                                if (HardenWindowsSecurity.GlobalVars.ShouldEnableOptionalDiagnosticData || string.Equals(HardenWindowsSecurity.GlobalVars.MDAVConfigCurrent!.SmartAppControlState, "on", StringComparison.OrdinalIgnoreCase))
                                                {
-                                                   HardenWindowsSecurity.Logger.LogMessage("Enabling Optional Diagnostic Data because SAC is on or user selected to turn it on");
+                                                   HardenWindowsSecurity.Logger.LogMessage("Enabling Optional Diagnostic Data because SAC is on or user selected to turn it on", LogTypeIntel.Information);
                                                    HardenWindowsSecurity.MicrosoftDefender.MSFTDefender_EnableDiagData();
                                                }
 
@@ -752,7 +752,7 @@ namespace HardenWindowsSecurity
                            }
                            else
                            {
-                               HardenWindowsSecurity.Logger.LogMessage("No category was selected");
+                               HardenWindowsSecurity.Logger.LogMessage("No category was selected", LogTypeIntel.Warning);
                            }
                        }
 

@@ -122,7 +122,7 @@ namespace HardenWindowsSecurity
                 {
                     // Disable the execute button
                     ExecuteButton.IsEnabled = false;
-                    HardenWindowsSecurity.Logger.LogMessage("You need Administrator privileges to remove protections from the system.");
+                    HardenWindowsSecurity.Logger.LogMessage("You need Administrator privileges to remove protections from the system.", LogTypeIntel.Warning);
                 }
                 // If there is no Admin rights, this dynamic enablement/disablement isn't necessary as it will override the disablement that happens above.
                 else
@@ -167,12 +167,12 @@ namespace HardenWindowsSecurity
                             // if LGPO doesn't already exist in the working directory, then download it
                             if (!System.IO.Path.Exists(GlobalVars.LGPOExe))
                             {
-                                Logger.LogMessage("LGPO.exe doesn't exist, downloading it.");
+                                Logger.LogMessage("LGPO.exe doesn't exist, downloading it.", LogTypeIntel.Information);
                                 AsyncDownloader.PrepDownloadedFiles(GlobalVars.LGPOExe, null, null, true);
                             }
                             else
                             {
-                                Logger.LogMessage("LGPO.exe already exists, skipping downloading it.");
+                                Logger.LogMessage("LGPO.exe already exists, skipping downloading it.", LogTypeIntel.Information);
                             }
 
 

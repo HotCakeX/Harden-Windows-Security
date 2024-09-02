@@ -203,7 +203,7 @@ namespace HardenWindowsSecurity
                 {
                     // Disable the refresh button
                     RefreshButton.IsEnabled = false;
-                    HardenWindowsSecurity.Logger.LogMessage("You need Administrator privileges to perform compliance check on the system.");
+                    HardenWindowsSecurity.Logger.LogMessage("You need Administrator privileges to perform compliance check on the system.", LogTypeIntel.Warning);
                 }
                 // If there is no Admin rights, this dynamic enablement/disablement isn't necessary as it will override the disablement that happens above.
                 else

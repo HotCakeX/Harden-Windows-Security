@@ -21,7 +21,7 @@ namespace HardenWindowsSecurity
             }
             catch (Exception ex)
             {
-                Logger.LogMessage("Couldn't delete the working directory in the temp folder: " + ex.Message);
+                Logger.LogMessage("Couldn't delete the working directory in the temp folder: " + ex.Message, LogTypeIntel.Warning);
             }
         }
 
@@ -69,23 +69,23 @@ namespace HardenWindowsSecurity
                             // Home edition and Home edition single-language SKUs
                             if (string.Equals(sku, "100", StringComparison.OrdinalIgnoreCase) || string.Equals(sku, "101", StringComparison.OrdinalIgnoreCase))
                             {
-                                HardenWindowsSecurity.Logger.LogMessage("Warning: The Windows Home edition has been detected, some categories are unavailable and the remaining categories are applied in a best effort fashion.");
+                                HardenWindowsSecurity.Logger.LogMessage("The Windows Home edition has been detected, some categories are unavailable and the remaining categories are applied in a best effort fashion.", LogTypeIntel.Warning);
                             }
                         }
                     }
                 }
                 catch (Exception ex)
                 {
-                    HardenWindowsSecurity.Logger.LogMessage($"An error occurred: {ex.Message}");
+                    HardenWindowsSecurity.Logger.LogMessage($"An error occurred: {ex.Message}", LogTypeIntel.Error);
                 }
 
-                HardenWindowsSecurity.Logger.LogMessage("Checking if TPM is available and enabled...");
+                HardenWindowsSecurity.Logger.LogMessage("Checking if TPM is available and enabled...", LogTypeIntel.Information);
 
                 var tpmStatus = HardenWindowsSecurity.TpmStatus.Get();
 
                 if (!tpmStatus.IsActivated || !tpmStatus.IsEnabled)
                 {
-                    HardenWindowsSecurity.Logger.LogMessage($"TPM is not activated or enabled on this system. BitLockerSettings category will be unavailable - {tpmStatus.ErrorMessage}");
+                    HardenWindowsSecurity.Logger.LogMessage($"TPM is not activated or enabled on this system. BitLockerSettings category will be unavailable - {tpmStatus.ErrorMessage}", LogTypeIntel.Warning);
                 }
 
                 if (HardenWindowsSecurity.GlobalVars.MDAVConfigCurrent == null)

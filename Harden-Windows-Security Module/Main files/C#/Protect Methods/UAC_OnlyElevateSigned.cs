@@ -18,8 +18,8 @@ namespace HardenWindowsSecurity
                 throw new System.ArgumentNullException("GlobalVars.path cannot be null.");
             }
 
-            HardenWindowsSecurity.Logger.LogMessage("Applying the Only elevate executables that are signed and validated policy");
-            HardenWindowsSecurity.LGPORunner.RunLGPOCommand(System.IO.Path.Combine(HardenWindowsSecurity.GlobalVars.path, "Resources", "Security-Baselines-X", "User Account Control UAC Policies", "Only elevate executables that are signed and validated" , "GptTmpl.inf"), LGPORunner.FileType.INF);
+            HardenWindowsSecurity.Logger.LogMessage("Applying the Only elevate executables that are signed and validated policy", LogTypeIntel.Information);
+            HardenWindowsSecurity.LGPORunner.RunLGPOCommand(System.IO.Path.Combine(HardenWindowsSecurity.GlobalVars.path, "Resources", "Security-Baselines-X", "User Account Control UAC Policies", "Only elevate executables that are signed and validated", "GptTmpl.inf"), LGPORunner.FileType.INF);
         }
     }
 }

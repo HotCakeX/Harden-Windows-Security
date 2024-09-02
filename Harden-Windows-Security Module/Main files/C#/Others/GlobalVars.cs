@@ -92,6 +92,9 @@ namespace HardenWindowsSecurity
         // Stored from the module root .psm1 file
         public static PSHost? Host;
 
+        // Determines whether log messages should be written to the Event Viewer logs or not
+        public static bool WriteEventLogs = false;
+
         // The value of the VerbosePreference variable of the PowerShell session
         // stored at the beginning of each cmdlet in the begin block through the Initialize() method
         public static string? VerbosePreference;

@@ -18,15 +18,15 @@ namespace HardenWindowsSecurity
         /// <param name="Categories"></param>
         public static void Invoke(string[] Categories)
         {
-            HardenWindowsSecurity.Logger.LogMessage("Collecting Intune applied policy details from the System");
+            HardenWindowsSecurity.Logger.LogMessage("Collecting Intune applied policy details from the System", LogTypeIntel.Information);
 
-            HardenWindowsSecurity.Logger.LogMessage("Controlled Folder Access Handling");
+            HardenWindowsSecurity.Logger.LogMessage("Controlled Folder Access Handling", LogTypeIntel.Information);
             HardenWindowsSecurity.ControlledFolderAccessHandler.Start();
 
             // Give the Defender internals time to process the updated exclusions list
             Thread.Sleep(5000);
 
-            HardenWindowsSecurity.Logger.LogMessage("Collecting any possible Intune/MDM policies");
+            HardenWindowsSecurity.Logger.LogMessage("Collecting any possible Intune/MDM policies", LogTypeIntel.Information);
             HardenWindowsSecurity.SYSTEMScheduledTasks.Invoke();
 
             // Collect the JSON File Paths
@@ -78,7 +78,7 @@ namespace HardenWindowsSecurity
             HardenWindowsSecurity.GlobalVars.MDM_Policy_Result01_Update02 = HardenWindowsSecurity.JsonToHashtable.ProcessJsonFile(MDM_Policy_Result01_Update02_Path);
             HardenWindowsSecurity.GlobalVars.MDM_Policy_Result01_System02 = HardenWindowsSecurity.JsonToHashtable.ProcessJsonFile(MDM_Policy_Result01_System02_Path);
 
-            HardenWindowsSecurity.Logger.LogMessage("Verifying the security settings");
+            HardenWindowsSecurity.Logger.LogMessage("Verifying the security settings", LogTypeIntel.Information);
             HardenWindowsSecurity.ConfirmSystemComplianceMethods.OrchestrateComplianceChecks(Categories);
 
         }

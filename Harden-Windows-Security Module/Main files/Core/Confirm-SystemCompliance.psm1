@@ -50,11 +50,11 @@ function Confirm-SystemCompliance {
         [HardenWindowsSecurity.Initializer]::Initialize($VerbosePreference)
 
         # Importing the required sub-modules
-        [HardenWindowsSecurity.Logger]::LogMessage('Importing the required sub-modules')
+        [HardenWindowsSecurity.Logger]::LogMessage('Importing the required sub-modules', [HardenWindowsSecurity.LogTypeIntel]::Information)
         Import-Module -FullyQualifiedName "$([HardenWindowsSecurity.GlobalVars]::Path)\Shared\Update-self.psm1" -Force -Verbose:$false
 
         if (-NOT $Offline) {
-            [HardenWindowsSecurity.Logger]::LogMessage('Checking for updates...')
+            [HardenWindowsSecurity.Logger]::LogMessage('Checking for updates...', [HardenWindowsSecurity.LogTypeIntel]::Information)
             Update-Self -InvocationStatement $MyInvocation.Statement
         }
 

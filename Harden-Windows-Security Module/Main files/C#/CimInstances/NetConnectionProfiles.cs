@@ -45,7 +45,7 @@ namespace HardenWindowsSecurity
             }
             catch (Exception e)
             {
-                HardenWindowsSecurity.Logger.LogMessage($"An error occurred: {e.Message}");
+                HardenWindowsSecurity.Logger.LogMessage($"An error occurred: {e.Message}", LogTypeIntel.Error);
             }
             // Return the list of profiles
             return profiles;
@@ -94,7 +94,7 @@ namespace HardenWindowsSecurity
             }
             catch (Exception e)
             {
-                HardenWindowsSecurity.Logger.LogMessage($"An error occurred: {e.Message}");
+                HardenWindowsSecurity.Logger.LogMessage($"An error occurred: {e.Message}", LogTypeIntel.Error);
                 return false;
             }
         }

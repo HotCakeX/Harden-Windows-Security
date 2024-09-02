@@ -38,6 +38,7 @@ System.Security.Principal
 System.Reflection.Metadata
 System.Diagnostics.Process
 Microsoft.Win32.Primitives
+System.Diagnostics.EventLog
 System.Management.Automation
 System.IO.Compression.zipfile
 System.Collections.Concurrent

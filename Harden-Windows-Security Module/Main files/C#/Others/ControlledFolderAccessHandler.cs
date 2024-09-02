@@ -74,13 +74,13 @@ namespace HardenWindowsSecurity
             if (HardenWindowsSecurity.UserPrivCheck.IsAdmin())
             {
 
-                HardenWindowsSecurity.Logger.LogMessage("Backing up the current Controlled Folder Access allowed apps list in order to restore them at the end");
+                HardenWindowsSecurity.Logger.LogMessage("Backing up the current Controlled Folder Access allowed apps list in order to restore them at the end", LogTypeIntel.Information);
 
                 // doing this so that when we Add and then Remove PowerShell executables in Controlled folder access exclusions
                 // no user customization will be affected
                 HardenWindowsSecurity.GlobalVars.CFABackup = HardenWindowsSecurity.MpPreferenceHelper.GetMpPreference().ControlledFolderAccessAllowedApplications;
 
-                HardenWindowsSecurity.Logger.LogMessage("Temporarily adding the currently running PowerShell executables to the Controlled Folder Access allowed apps list");
+                HardenWindowsSecurity.Logger.LogMessage("Temporarily adding the currently running PowerShell executables to the Controlled Folder Access allowed apps list", LogTypeIntel.Information);
 
                 string[]? psExePaths = null;
 
@@ -130,7 +130,7 @@ namespace HardenWindowsSecurity
                 // they will be restored as well, so user customization will remain intact
                 if (HardenWindowsSecurity.GlobalVars.CFABackup != null && HardenWindowsSecurity.GlobalVars.CFABackup.Length > 0)
                 {
-                    HardenWindowsSecurity.Logger.LogMessage("Restoring the original Controlled Folder Access allowed apps list");
+                    HardenWindowsSecurity.Logger.LogMessage("Restoring the original Controlled Folder Access allowed apps list", LogTypeIntel.Information);
                     HardenWindowsSecurity.ControlledFolderAccessHandler.Set(applications: HardenWindowsSecurity.GlobalVars.CFABackup);
                 }
                 else

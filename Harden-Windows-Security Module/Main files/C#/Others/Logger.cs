@@ -5,11 +5,21 @@ using System.Windows.Controls;
 using System.Windows.Threading;
 using System.IO;
 using System.Management.Automation.Host;
+using System.Diagnostics;
+using Microsoft.CodeAnalysis;
 
 #nullable enable
 
 namespace HardenWindowsSecurity
 {
+    // Log type used when calling the LogMessage method
+    public enum LogTypeIntel
+    {
+        Information,
+        Error,
+        Warning
+    }
+
     /// <summary>
     /// This class is responsible for all of the logging functionalities: Verbose messages, GUI messages, Console messages and so on.
     /// They are all centrally managed from here. No Write-Verbose is used in native PowerShell codes that run directly (i.e. they don't run inside of a PS process in C#)
@@ -26,7 +36,8 @@ namespace HardenWindowsSecurity
         ///  4) Log file
         /// </summary>
         /// <param name="text">The text to be written</param>
-        public static void LogMessage(string text)
+        /// <param name="LogType">The type of the log message, get it from the enum</param>
+        public static void LogMessage(string text, LogTypeIntel LogType)
         {
 
             // Avoid writing empty messages that only have time stamps
@@ -37,6 +48,30 @@ namespace HardenWindowsSecurity
 
             // attach timestamps to the text
             string CurrentText = $"{DateTime.Now}: {text}";
+
+            // Write the same message to the event logs if event log write is enabled
+            if (GlobalVars.WriteEventLogs == true)
+            {
+                switch (LogType)
+                {
+                    case LogTypeIntel.Information:
+                        {
+                            WriteEventLog(CurrentText, EventLogEntryType.Information);
+                            break;
+                        }
+                    case LogTypeIntel.Error:
+                        {
+                            WriteEventLog(CurrentText, EventLogEntryType.Error);
+                            break;
+                        }
+                    case LogTypeIntel.Warning:
+                        {
+                            WriteEventLog(CurrentText, EventLogEntryType.Warning);
+                            break;
+                        }
+                }
+            }
+
 
             // If there is no GUI Window, or there was a GUI window but it was closed by the user
             // then use Console for writing logs
@@ -161,6 +196,33 @@ Machine: {Environment.MachineName}
                 // Since many methods write to the console asynchronously this can throw errors
                 catch { }
             }
+        }
+
+
+        /// <summary>
+        /// Writes the log messages to the event viewer log
+        /// </summary>
+        /// <param name="message"></param>
+        /// <param name="Type">Entry type (Information, Warning, Error)</param>
+        private static void WriteEventLog(string message, EventLogEntryType Type)
+        {
+            string eventLogName = "Application";
+            string eventLogSource = "Harden-Windows-Security";
+            int eventId = 1;
+            short category = 0;
+            EventLogEntryType entryType = Type;
+
+            // Check if the event source exists, if not, create it
+            if (!EventLog.SourceExists(eventLogSource))
+            {
+                EventLog.CreateEventSource(eventLogSource, eventLogName);
+                // Console.WriteLine($"Event source '{eventLogSource}' created.");
+            }
+
+            // Write the event log entry
+            EventLog.WriteEntry(eventLogSource, message, entryType, eventId, category);
+
+            // Console.WriteLine("Event log entry written successfully.");
         }
     }
 }

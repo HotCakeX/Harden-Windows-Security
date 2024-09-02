@@ -61,7 +61,7 @@ Function Select-Option {
         }
     }
     # Add verbose output, helpful when reviewing the log file
-    [HardenWindowsSecurity.Logger]::LogMessage("Selected: $Selected")
+    [HardenWindowsSecurity.Logger]::LogMessage("Selected: $Selected", [HardenWindowsSecurity.LogTypeIntel]::Information)
     return [System.String]$Selected
 }
 Function Write-ColorfulText {
@@ -367,7 +367,7 @@ Function Invoke-MicrosoftDefender {
             }
 
             if ((([HardenWindowsSecurity.GlobalVars]::ShouldEnableOptionalDiagnosticData) -eq $True) -or (([HardenWindowsSecurity.GlobalVars]::MDAVConfigCurrent).SmartAppControlState -eq 'On')) {
-                [HardenWindowsSecurity.Logger]::LogMessage('Enabling Optional Diagnostic Data because SAC is on or user selected to turn it on')
+                [HardenWindowsSecurity.Logger]::LogMessage('Enabling Optional Diagnostic Data because SAC is on or user selected to turn it on', [HardenWindowsSecurity.LogTypeIntel]::Information)
                 [HardenWindowsSecurity.MicrosoftDefender]::MSFTDefender_EnableDiagData()
             }
             else {
@@ -381,11 +381,11 @@ Function Invoke-MicrosoftDefender {
                     }
                 }
                 else {
-                    [HardenWindowsSecurity.Logger]::LogMessage('Smart App Control is turned off, so Optional Diagnostic Data will not be enabled')
+                    [HardenWindowsSecurity.Logger]::LogMessage('Smart App Control is turned off, so Optional Diagnostic Data will not be enabled', [HardenWindowsSecurity.LogTypeIntel]::Information)
                 }
             }
 
-            [HardenWindowsSecurity.Logger]::LogMessage('Getting the state of fast weekly Microsoft recommended driver block list update scheduled task')
+            [HardenWindowsSecurity.Logger]::LogMessage('Getting the state of fast weekly Microsoft recommended driver block list update scheduled task', [HardenWindowsSecurity.LogTypeIntel]::Information)
             [System.String]$BlockListScheduledTaskState = ([HardenWindowsSecurity.TaskSchedulerHelper]::Get('MSFT Driver Block list update', '\MSFT Driver Block list update\', 'TaskList')).State
 
             # Create scheduled task for fast weekly Microsoft recommended driver block list update if it doesn't exist or exists but is not Ready/Running
@@ -398,7 +398,7 @@ Function Invoke-MicrosoftDefender {
                 }
             }
             else {
-                [HardenWindowsSecurity.Logger]::LogMessage("Scheduled task for fast weekly Microsoft recommended driver block list update already exists and is in $BlockListScheduledTaskState state")
+                [HardenWindowsSecurity.Logger]::LogMessage("Scheduled task for fast weekly Microsoft recommended driver block list update already exists and is in $BlockListScheduledTaskState state", [HardenWindowsSecurity.LogTypeIntel]::Information)
             }
 
             # Only display this prompt if Engine and Platform update channels are not already set to Beta
@@ -412,7 +412,7 @@ Function Invoke-MicrosoftDefender {
                 }
             }
             else {
-                [HardenWindowsSecurity.Logger]::LogMessage('Microsoft Defender engine and platform update channel is already set to beta')
+                [HardenWindowsSecurity.Logger]::LogMessage('Microsoft Defender engine and platform update channel is already set to beta', [HardenWindowsSecurity.LogTypeIntel]::Information)
             }
 
         } 'No' { break MicrosoftDefenderLabel }

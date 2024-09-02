@@ -14,7 +14,7 @@ namespace HardenWindowsSecurity
     {
         public static void MSFTDefender_ScheduledTask()
         {
-            HardenWindowsSecurity.Logger.LogMessage("Creating scheduled task for fast weekly Microsoft recommended driver block list update");
+            HardenWindowsSecurity.Logger.LogMessage("Creating scheduled task for fast weekly Microsoft recommended driver block list update", LogTypeIntel.Information);
 
             HardenWindowsSecurity.PowerShellExecutor.ExecuteScript("""
 # Create a scheduled task action, this defines how to download and install the latest Microsoft Recommended Driver Block Rules

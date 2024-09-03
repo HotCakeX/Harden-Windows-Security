@@ -4,6 +4,9 @@
 
 Reflection in [.NET](https://dotnet.microsoft.com/en-us/download) is a powerful feature that allows a program to inspect and interact with its own metadata, types, and assemblies at runtime. This capability is part of the [System.Reflection namespace](https://learn.microsoft.com/en-us/dotnet/api/system.reflection) and is integral to many advanced programming tasks, such as dynamic type loading, runtime method invocation, and metadata inspection.
 
+> [!IMPORTANT]\
+> This is a research article demoing only one of many ways to use reflection and to prevent it. It isn't designed to be used in production code nor does it 100% protect against reflection usage.
+
 ## What Reflection Is
 
 * Runtime Type Inspection: Reflection allows you to examine the types defined in an assembly at runtime. This includes finding out which classes, interfaces, methods, properties, and fields are available, and retrieving metadata about them.
@@ -84,9 +87,6 @@ $Result
 <br>
 
 One way to prevent that is by implementing a method that checks for reflection usage and throws an error once detected. This method can be called at the beginning of any method that you want to protect against reflection-based access.
-
-> [!IMPORTANT]\
-> This is just an example for this research demo and is not designed to be used in production code.
 
 <br>
 

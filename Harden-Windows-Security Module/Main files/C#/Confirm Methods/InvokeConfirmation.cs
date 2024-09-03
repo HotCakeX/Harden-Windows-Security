@@ -1,10 +1,7 @@
 using System;
-using System.IO;
-using System.Globalization;
-using System.Management.Automation;
-using System.Security.Principal;
-using System.Threading;
 using System.Diagnostics;
+using System.IO;
+using System.Threading;
 
 #nullable enable
 

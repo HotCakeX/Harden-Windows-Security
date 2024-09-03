@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 
@@ -7,20 +6,20 @@ using System.IO;
 
 namespace HardenWindowsSecurity
 {
-    internal class ProcessMitigationsParser
+    public class ProcessMitigationsParser
     {
-        // Define a internal class to store the structure of the new CSV data
-        internal class ProcessMitigationsRecords
+        // Define a public class to store the structure of the new CSV data
+        public class ProcessMitigationsRecords
         {
-            internal string? ProgramName { get; set; }    // Column for program name
-            internal string? Mitigation { get; set; }     // Column for mitigation
-            internal string? Action { get; set; }         // Column for action
-            internal bool RemovalAllowed { get; set; } // Column for removal allowed
-            internal string? Comment { get; set; }        // Column for comments
+            public string? ProgramName { get; set; }    // Column for program name
+            public string? Mitigation { get; set; }     // Column for mitigation
+            public string? Action { get; set; }         // Column for action
+            public bool RemovalAllowed { get; set; } // Column for removal allowed
+            public string? Comment { get; set; }        // Column for comments
         }
 
-        // Define a internal method to parse the CSV file and save the records to RegistryCSVItems
-        internal static void ReadCsv()
+        // Define a public method to parse the CSV file and save the records to RegistryCSVItems
+        public static void ReadCsv()
         {
 
             // Initializing the path variable for the CSV file

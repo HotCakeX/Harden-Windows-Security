@@ -1,6 +1,4 @@
-﻿using HardenWindowsSecurity;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Windows;
 
 #nullable enable
@@ -12,7 +10,7 @@ namespace HardenWindowsSecurity
     /// enabled/disabled state of registered UI elements based on this status. It is thread-safe to ensure
     /// that concurrent access to the activity state and UI elements list is handled properly.
     /// </summary>
-    internal static class ActivityTracker
+    public static class ActivityTracker
     {
         // A volatile boolean to indicate whether the application is currently active or not.
         // The 'volatile' keyword ensures that the value is always read directly from memory,
@@ -30,7 +28,7 @@ namespace HardenWindowsSecurity
         /// Gets or sets the current activity status of the application.
         /// When setting the status, it also updates the state of all registered UI elements.
         /// </summary>
-        internal static bool IsActive
+        public static bool IsActive
         {
             get
             {
@@ -62,7 +60,7 @@ namespace HardenWindowsSecurity
         /// If the application is currently active, the element will be immediately disabled.
         /// </summary>
         /// <param name="element">The UI element to register.</param>
-        internal static void RegisterUIElement(UIElement element)
+        public static void RegisterUIElement(UIElement element)
         {
             // Lock the critical section to ensure thread-safe access to the _uiElements list.
             lock (_lock)
@@ -90,7 +88,7 @@ namespace HardenWindowsSecurity
         /// The element's enabled/disabled state will no longer be controlled by the application's activity status.
         /// </summary>
         /// <param name="element">The UI element to unregister.</param>
-        internal static void UnregisterUIElement(UIElement element)
+        public static void UnregisterUIElement(UIElement element)
         {
             // Lock the critical section to ensure thread-safe access to the _uiElements list.
             lock (_lock)

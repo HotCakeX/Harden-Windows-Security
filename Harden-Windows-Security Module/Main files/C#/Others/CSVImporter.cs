@@ -6,22 +6,22 @@ using System.IO;
 
 namespace HardenWindowsSecurity
 {
-    internal class HardeningRegistryKeys
+    public class HardeningRegistryKeys
     {
-        // Define a internal class to store the structure of the new CSV data
-        internal class CsvRecord
+        // Define a public class to store the structure of the new CSV data
+        public class CsvRecord
         {
-            internal string? Category { get; set; }       // Column for category
-            internal string? Path { get; set; }           // Column for registry path
-            internal string? Key { get; set; }            // Column for registry key
-            internal string? Value { get; set; }          // Column for the expected value
-            internal string? Type { get; set; }           // Column for the type of the registry value
-            internal string? Action { get; set; }         // Column for the action to be taken
-            internal string? Comment { get; set; }        // Column for comments
+            public string? Category { get; set; }       // Column for category
+            public string? Path { get; set; }           // Column for registry path
+            public string? Key { get; set; }            // Column for registry key
+            public string? Value { get; set; }          // Column for the expected value
+            public string? Type { get; set; }           // Column for the type of the registry value
+            public string? Action { get; set; }         // Column for the action to be taken
+            public string? Comment { get; set; }        // Column for comments
         }
 
-        // Define a internal method to parse the CSV file and save the records to RegistryCSVItems
-        internal static void ReadCsv()
+        // Define a public method to parse the CSV file and save the records to RegistryCSVItems
+        public static void ReadCsv()
         {
             // Ensure GlobalVars.path is not null
             string basePath = GlobalVars.path ?? throw new ArgumentNullException(nameof(GlobalVars.path), "GlobalVars.path cannot be null.");

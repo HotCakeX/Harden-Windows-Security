@@ -1,16 +1,15 @@
+using Microsoft.Win32;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Management.Automation;
-using Microsoft.Win32;
 
 #nullable enable
 
 namespace HardenWindowsSecurity
 {
-    internal static class ProcessMitigationsApplication
+    public static class ProcessMitigationsApplication
     {
-        internal static void Apply()
+        public static void Apply()
         {
 
             if (GlobalVars.ProcessMitigations == null)

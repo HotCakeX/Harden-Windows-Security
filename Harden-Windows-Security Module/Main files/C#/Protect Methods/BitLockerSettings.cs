@@ -1,6 +1,3 @@
-using System;
-using System.IO;
-
 #nullable enable
 
 namespace HardenWindowsSecurity
@@ -23,7 +20,7 @@ namespace HardenWindowsSecurity
             // returns true or false depending on whether Kernel DMA Protection is on or off
             byte BootDMAProtection = HardenWindowsSecurity.SystemInformationClass.BootDmaCheck();
 
-           bool BootDMAProtectionResult = false;
+            bool BootDMAProtectionResult = false;
 
             if (BootDMAProtection == 1)
             {

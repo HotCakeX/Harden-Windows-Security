@@ -1,40 +1,7 @@
 ﻿using System;
-using System.IO;
-using System.Collections;
 using System.Collections.Generic;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Controls.Primitives;
-using System.Windows.Markup;
-using System.Xml;
-using System.Windows.Media.Imaging;
 using System.Linq;
-using System.Windows.Forms;
-using System.Collections.Concurrent;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Effects;
-using System.Windows.Threading;
-using System.Runtime.CompilerServices;
-using System.Diagnostics;
-using System.ComponentModel;
-using System.Threading;
-using System.Windows.Automation;
-using System.Windows.Controls.Ribbon;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Forms.Integration;
-using System.Windows.Ink;
-using System.Windows.Media.Animation;
-using System.Windows.Media.Media3D;
-using System.Windows.Media.TextFormatting;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using System.Windows.Shell;
 using System.Threading.Tasks;
-using System.Text;
-using System.Reflection.PortableExecutable;
-using System.Security.Principal;
 using static HardenWindowsSecurity.NewToastNotification;
 
 #nullable enable
@@ -124,7 +91,7 @@ namespace HardenWindowsSecurity
             {
                 throw new Exception("AddEventHandlers Method: ExecuteButton object is empty!");
             }
-          
+
             #endregion
 
 
@@ -428,7 +395,7 @@ namespace HardenWindowsSecurity
                             {
                                 // Set the execute button to disabled until all the prerequisites are met
                                 HardenWindowsSecurity.GUIProtectWinSecurity.ExecuteButton.IsEnabled = false;
-                               
+
                                 // Start the execute button's operation to show the files are being downloaded
                                 HardenWindowsSecurity.GUIProtectWinSecurity.ExecuteButton.IsChecked = true;
                             });
@@ -457,7 +424,7 @@ namespace HardenWindowsSecurity
                             // Enabling the execute button after all files are downloaded and ready or if Offline switch was used and download was skipped
                             HardenWindowsSecurity.GUIProtectWinSecurity.View.Dispatcher.Invoke(() =>
                             {
-                                HardenWindowsSecurity.GUIProtectWinSecurity.ExecuteButton.IsEnabled = true;                               
+                                HardenWindowsSecurity.GUIProtectWinSecurity.ExecuteButton.IsEnabled = true;
                                 HardenWindowsSecurity.GUIProtectWinSecurity.ExecuteButton.IsChecked = false;
                             });
                         }
@@ -499,7 +466,7 @@ namespace HardenWindowsSecurity
                            // Call the method to get the selected categories and sub-categories
                            HardenWindowsSecurity.GUIProtectWinSecurity.ExecuteButtonPress();
                            // Disable the textfilepath for the log file path
-                           HardenWindowsSecurity.GUIProtectWinSecurity.txtFilePath!.IsEnabled = false; 
+                           HardenWindowsSecurity.GUIProtectWinSecurity.txtFilePath!.IsEnabled = false;
                        });
 
                        // If Offline mode is used
@@ -754,7 +721,7 @@ namespace HardenWindowsSecurity
                            if (GUIProtectWinSecurity.log!.IsChecked == true)
                            {
                                HardenWindowsSecurity.GUIProtectWinSecurity.txtFilePath!.IsEnabled = true;
-                           }                         
+                           }
                        });
 
                    });

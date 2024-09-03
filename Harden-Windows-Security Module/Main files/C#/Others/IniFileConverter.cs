@@ -7,14 +7,14 @@ using System.Text.RegularExpressions;
 
 namespace HardenWindowsSecurity
 {
-    internal class IniFileConverter
+    public class IniFileConverter
     {
         /// <summary>
         /// A helper method to parse the ini file from the output of the "Secedit /export /cfg .\security_policy.inf"
         /// </summary>
         /// <param name="iniFilePath"></param>
         /// <returns></returns>
-        internal static Dictionary<string, Dictionary<string, string>> ConvertFromIniFile(string iniFilePath)
+        public static Dictionary<string, Dictionary<string, string>> ConvertFromIniFile(string iniFilePath)
         {
             var iniObject = new Dictionary<string, Dictionary<string, string>>(StringComparer.OrdinalIgnoreCase);
             string[] lines = File.ReadAllLines(iniFilePath);

@@ -1,21 +1,20 @@
 using System;
-using System.Linq;
-using System.Management;
-using System.Management.Automation;
 using System.Collections.Generic;
+using System.Linq;
+using System.Management.Automation;
 
 #nullable enable
 
 namespace HardenWindowsSecurity
 {
-    internal static class EccCurveComparer
+    public static class EccCurveComparer
     {
         /// <summary>
         /// This method gets the currently applied ECC Curves from the system using PowerShell and evaluates them against the hardcoded list
         /// The comparison takes into account the exact position of the curves as well.
         /// </summary>
         /// <returns></returns>
-        internal static HardenWindowsSecurity.EccCurveComparisonResult GetEccCurveComparison()
+        public static HardenWindowsSecurity.EccCurveComparisonResult GetEccCurveComparison()
         {
             // Get current ECC curves from PowerShell and store them in a list
             List<string> currentEccCurves = GetCurrentEccCurves();

@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace HardenWindowsSecurity
 {
-    internal partial class MDMClassProcessor
+    public partial class MDMClassProcessor
     {
         /// [System.Collections.Generic.Dictionary[string, [System.Collections.Generic.List[System.Collections.Generic.Dictionary[string, object]]]]]$Output = [HardenWindowsSecurity.MDM]::Get()
         /// class Result {
@@ -48,7 +48,7 @@ namespace HardenWindowsSecurity
         /// $ResultsList | Out-GridView -Title "$($ResultsList.Count)"
         /// Above is the PowerShell equivalent of the method below
         /// It gets the results of all of the MDM related CimInstances and processes them into a list of MDMClassProcessor objects
-        internal static List<HardenWindowsSecurity.MDMClassProcessor> Process()
+        public static List<HardenWindowsSecurity.MDMClassProcessor> Process()
         {
             // Get the results of all of the Intune policies from the system
             var output = HardenWindowsSecurity.MDM.Get();

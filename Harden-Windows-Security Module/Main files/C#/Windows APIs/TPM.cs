@@ -1,23 +1,21 @@
-using System;
 using System.Runtime.InteropServices;
-using System.Globalization;
 
 #nullable enable
 
 namespace HardenWindowsSecurity
 {
     // Class that contains the results of TPM status checks
-    internal class TpmResult
+    public class TpmResult
     {
-        internal bool IsEnabled { get; set; }
-        internal bool IsActivated { get; set; }
-        internal string? ErrorMessage { get; set; }
+        public bool IsEnabled { get; set; }
+        public bool IsActivated { get; set; }
+        public string? ErrorMessage { get; set; }
     }
 
-    internal static class TpmStatus
+    public static class TpmStatus
     {
         // Method to use the Windows APIs to check if the TPM is enabled and activated
-        internal static TpmResult Get()
+        public static TpmResult Get()
         {
             bool isEnabled = false;
             bool isActivated = false;

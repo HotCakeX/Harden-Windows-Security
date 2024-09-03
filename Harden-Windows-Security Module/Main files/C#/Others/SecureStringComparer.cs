@@ -6,7 +6,7 @@ using System.Security;
 
 namespace HardenWindowsSecurity
 {
-    internal static class SecureStringComparer
+    public static class SecureStringComparer
     {
         /// <summary>
         /// Safely compares two SecureString objects without decrypting them.
@@ -15,7 +15,7 @@ namespace HardenWindowsSecurity
         /// <param name="secureString1">First secure string</param>
         /// <param name="secureString2">Second secure string to compare with the first secure string</param>
         /// <returns>true if the SecureStrings are equal; otherwise, false.</returns>
-        internal static bool Compare(SecureString secureString1, SecureString secureString2)
+        public static bool Compare(SecureString secureString1, SecureString secureString2)
         {
             IntPtr bstr1 = IntPtr.Zero;
             IntPtr bstr2 = IntPtr.Zero;

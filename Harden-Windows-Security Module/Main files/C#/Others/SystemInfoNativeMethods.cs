@@ -10,9 +10,9 @@ namespace HardenWindowsSecurity
     /// can be used to find out if the DMA Protection is ON \ OFF.
     /// will show this by emitting 1 for True (Kernel DMA Protection Available) and 0 for False (Kernel DMA Protection Not Available)
     /// </summary>
-    internal static class SystemInformationClass
+    public static class SystemInformationClass
     {
-        internal enum SYSTEM_DMA_GUARD_POLICY_INFORMATION : int
+        public enum SYSTEM_DMA_GUARD_POLICY_INFORMATION : int
         {
             SystemDmaGuardPolicyInformation = 202
         }
@@ -24,7 +24,7 @@ namespace HardenWindowsSecurity
             Int32 SystemInformationLength,
             out Int32 ReturnLength);
 
-        internal static byte BootDmaCheck()
+        public static byte BootDmaCheck()
         {
             Int32 result;
             Int32 SystemInformationLength = 1;

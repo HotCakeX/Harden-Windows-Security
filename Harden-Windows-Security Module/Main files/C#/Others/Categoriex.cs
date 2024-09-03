@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Management;
 using System.Management.Automation;
-using System.Security.Principal;
 
 #nullable enable
 
@@ -90,7 +89,7 @@ namespace HardenWindowsSecurity
         }
 
         // Main method of the class to return the final authorized categories
-        internal static string[] GetValidValues()
+        public static string[] GetValidValues()
         {
             // if running under unelevated context then only return the NonAdminCommands category
             if (!HardenWindowsSecurity.UserPrivCheck.IsAdmin()) return new string[] { "NonAdminCommands" };

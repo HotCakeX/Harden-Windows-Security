@@ -1,16 +1,16 @@
+using Microsoft.Toolkit.Uwp.Notifications;
 using System;
 using System.IO;
-using Microsoft.Toolkit.Uwp.Notifications;
 
 #nullable enable
 
 namespace HardenWindowsSecurity
 {
-    internal class NewToastNotification
+    public class NewToastNotification
     {
 
         // These are the different type of notification types/presets that can be displayed
-        internal enum ToastNotificationType
+        public enum ToastNotificationType
         {
             EndOfProtection,
             EndOfConfirmation
@@ -23,7 +23,7 @@ namespace HardenWindowsSecurity
         /// That is different than the DLLs being made available to the Add-Type during C# code compilation
         /// </summary>
         /// <param name="Type">The type of the toast notification to use</param>
-        internal static void Show(ToastNotificationType Type, string? TotalCompliantValues, string? TotalNonCompliantValues)
+        public static void Show(ToastNotificationType Type, string? TotalCompliantValues, string? TotalNonCompliantValues)
         {
             // Detect the notification type so we can create the proper notification to be displayed
             switch (Type)

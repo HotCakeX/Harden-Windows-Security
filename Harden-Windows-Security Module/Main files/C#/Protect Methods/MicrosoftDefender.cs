@@ -1,9 +1,7 @@
 using System;
-using System.IO;
-using System.Diagnostics;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
-using System.Management.Automation;
 
 #nullable enable
 

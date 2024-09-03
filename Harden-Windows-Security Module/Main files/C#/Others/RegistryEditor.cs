@@ -1,14 +1,14 @@
+using Microsoft.Win32;
 using System;
 using System.Globalization;
-using Microsoft.Win32;
 
 #nullable enable
 
 namespace HardenWindowsSecurity
 {
-    internal static class RegistryEditor
+    public static class RegistryEditor
     {
-        internal static void EditRegistry(string path, string key, string value, string type, string action)
+        public static void EditRegistry(string path, string key, string value, string type, string action)
         {
             // Removing the 'Registry::' prefix from the path
             if (path.StartsWith("Registry::", StringComparison.OrdinalIgnoreCase))

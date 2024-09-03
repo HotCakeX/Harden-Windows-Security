@@ -2,13 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Globalization;
 
 #nullable enable
 
 namespace HardenWindowsSecurity
 {
-    internal class GetOneDriveDirectories
+    public class GetOneDriveDirectories
     {
 
         /// <summary>
@@ -16,7 +15,7 @@ namespace HardenWindowsSecurity
         /// These paths are under each user directory can start with OneDrive such as "OneDrive", "OneDrive Personal", "OneDrive Business" etc.
         /// </summary>
         /// <returns></returns>
-        internal static List<string> Get()
+        public static List<string> Get()
         {
             // List to store the OneDrive directories found
             List<string> directoriesList = new List<string>();

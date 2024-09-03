@@ -1,22 +1,19 @@
 using System;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Management.Automation;
 using System.Collections.ObjectModel;
+using System.Management.Automation;
 
 #nullable enable
 
 namespace HardenWindowsSecurity
 {
-    internal class ForceRelocateImagesForFiles
+    public class ForceRelocateImagesForFiles
     {
 
         /// <summary>
         /// Method that accepts a string array and disables Mandatory ASLR for them
         /// </summary>
         /// <param name="items">program names to disable mandatory ASLR for</param>
-        internal static void SetProcessMitigationForFiles(string[] items)
+        public static void SetProcessMitigationForFiles(string[] items)
         {
             // Initialize PowerShell instance
             using (PowerShell powerShell = PowerShell.Create())

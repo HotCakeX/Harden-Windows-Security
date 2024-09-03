@@ -1,21 +1,20 @@
+using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
-using Microsoft.Win32;
-using System.Linq;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Management;
 using System.Management.Automation;
-using System.Collections.ObjectModel;
-using System.Threading;
 using System.Threading.Tasks;
-using System.Globalization;
 
 #nullable enable
 
 namespace HardenWindowsSecurity
 {
-    internal partial class ConfirmSystemComplianceMethods
+    public partial class ConfirmSystemComplianceMethods
     {
 
         /// <summary>

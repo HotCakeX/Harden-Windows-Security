@@ -1,25 +1,16 @@
 using System;
-using System.Collections.Generic;
-using Microsoft.Win32;
-using System.Linq;
 using System.Diagnostics;
-using System.IO;
-using System.Management;
-using System.Management.Automation;
-using System.Collections.ObjectModel;
-using System.Threading;
-using System.Threading.Tasks;
 
 #nullable enable
 
 namespace HardenWindowsSecurity
 {
-    internal partial class ConfirmSystemComplianceMethods
+    public partial class ConfirmSystemComplianceMethods
     {
         /// <summary>
         /// Get the security group policies by utilizing the Secedit.exe
         /// </summary>
-        internal static void ExportSecurityPolicy()
+        public static void ExportSecurityPolicy()
         {
             // Assuming securityPolicyInfPath is defined in your environment
             string securityPolicyInfPath = HardenWindowsSecurity.GlobalVars.securityPolicyInfPath;

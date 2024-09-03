@@ -1,6 +1,3 @@
-using System;
-using System.Management.Automation;
-
 #nullable enable
 
 namespace HardenWindowsSecurity

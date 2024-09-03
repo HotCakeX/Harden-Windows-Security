@@ -1,17 +1,14 @@
-using System;
-using System.Collections.Generic;
-
 #nullable enable
 
 namespace HardenWindowsSecurity
 {
-    internal partial class MDMClassProcessor
+    public partial class MDMClassProcessor
     {
-        internal string Name { get; set; }
-        internal string Value { get; set; }
-        internal string CimInstance { get; set; }
+        public string Name { get; set; }
+        public string Value { get; set; }
+        public string CimInstance { get; set; }
 
-        internal MDMClassProcessor(string name, string value, string cimInstance)
+        public MDMClassProcessor(string name, string value, string cimInstance)
         {
             Name = name;
             Value = value;

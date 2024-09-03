@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Management;
 using System.Threading.Tasks;
-using System.Globalization;
 
 #nullable enable
 

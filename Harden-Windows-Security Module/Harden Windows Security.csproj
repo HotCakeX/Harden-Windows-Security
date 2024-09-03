@@ -4,7 +4,14 @@
     <OutputType>Exe</OutputType>
     <TargetFramework>net9.0-windows10.0.22621.0</TargetFramework>
     <RootNamespace>HardenWindowsSecurity</RootNamespace>
-    <ImplicitUsings>enable</ImplicitUsings>
+
+    <!--
+    Setting it to disable so that code clean up will properly remove unused usings.
+    With this enabled, VS would take into account the global usings and would remove required usings from .cs files during Code Cleanup task,
+    which would lead to errors in VS Code when running the code via Add-Type in PowerShell.
+    -->
+    <ImplicitUsings>disable</ImplicitUsings>
+
     <Nullable>enable</Nullable>
     <UseWpf>true</UseWpf>
     <UseWindowsForms>true</UseWindowsForms>

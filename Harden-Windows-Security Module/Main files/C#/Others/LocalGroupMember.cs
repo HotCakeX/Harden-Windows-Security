@@ -1,17 +1,13 @@
-using System;
-using System.Collections.Generic;
 using System.DirectoryServices.AccountManagement;
-using System.Globalization;
-using System.Runtime.InteropServices;
 using System.Security.Principal;
 
 #nullable enable
 
 namespace HardenWindowsSecurity
 {
-    internal class LocalGroupMember
+    public class LocalGroupMember
     {
-        internal static void Add(string userSid, string groupSid)
+        public static void Add(string userSid, string groupSid)
         {
             // Convert the group SID to a SecurityIdentifier object
             var groupSecurityId = new SecurityIdentifier(groupSid);

@@ -1,6 +1,4 @@
-using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
 
@@ -8,11 +6,11 @@ using System.Text.Json;
 
 namespace HardenWindowsSecurity
 {
-    internal class JsonToHashtable
+    public class JsonToHashtable
     {
         // Using HashTable since they don't throw error for non-existing keys
         // This method acts like ConvertFrom-Json -AsHashtable in PowerShell
-        internal static Hashtable ProcessJsonFile(string filePath)
+        public static Hashtable ProcessJsonFile(string filePath)
         {
             // Check if the file exists at the specified path
             if (!File.Exists(filePath))

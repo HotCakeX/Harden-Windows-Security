@@ -31,30 +31,8 @@ namespace HardenWindowsSecurity
         };
 
         /// <summary>
-        /// Synchronously checks if all URLs are valid and accessible.
-        /// </summary>
-        /// <exception cref="Exception">Thrown if any URL is invalid or inaccessible.</exception>
-        private static void CheckUrls()
-        {
-            foreach (var url in fileDictionary.Keys)
-            {
-                try
-                {
-                    var response = _httpClient.GetAsync(url).Result;
-                    if (!response.IsSuccessStatusCode)
-                    {
-                        throw new Exception($"URL check failed for {url} with status code {response.StatusCode}");
-                    }
-                }
-                catch (Exception ex)
-                {
-                    throw new Exception($"Failed to access {url}: {ex.Message}", ex);
-                }
-            }
-        }
-
-        /// <summary>
         /// Asynchronously starts the file download process for multiple files.
+        /// outputs proper errors and data to verify success/failure.
         /// </summary>
         /// <param name="workingDir">The directory where files will be downloaded.</param>
         /// <param name="OnlyLGPO">If used, only LGPO will be downloaded</param>
@@ -66,10 +44,6 @@ namespace HardenWindowsSecurity
             {
                 throw new DirectoryNotFoundException($"The directory '{HardenWindowsSecurity.GlobalVars.WorkingDir}' does not exist.");
             }
-
-            // Check if all URLs are valid and accessible
-            // Not necessary as the async method outputs proper errors and data to verify success/failure
-            // CheckUrls();
 
             List<Task> tasks = new List<Task>();
 

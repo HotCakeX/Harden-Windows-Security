@@ -44,29 +44,6 @@ namespace HardenWindowsSecurity
             // attach timestamps to the text
             string CurrentText = $"{DateTime.Now}: {text}";
 
-            // Write the same message to the event logs if event log write is enabled
-            if (GlobalVars.WriteEventLogs == true)
-            {
-                switch (LogType)
-                {
-                    case LogTypeIntel.Information:
-                        {
-                            WriteEventLog(CurrentText, EventLogEntryType.Information);
-                            break;
-                        }
-                    case LogTypeIntel.Error:
-                        {
-                            WriteEventLog(CurrentText, EventLogEntryType.Error);
-                            break;
-                        }
-                    case LogTypeIntel.Warning:
-                        {
-                            WriteEventLog(CurrentText, EventLogEntryType.Warning);
-                            break;
-                        }
-                }
-            }
-
 
             // If there is no GUI Window, or there was a GUI window but it was closed by the user
             // then use Console for writing logs
@@ -93,7 +70,7 @@ namespace HardenWindowsSecurity
                 {
 
                     #region Writing to the Log file if user enabled logging
-                    if (GUIProtectWinSecurity.log != null && GUIProtectWinSecurity.log!.IsChecked == true)
+                    if (GUIProtectWinSecurity.log != null && GUIProtectWinSecurity.log.IsChecked == true)
                     {
                         // only write the header to the log file if it hasn't already been written to it
                         if (HardenWindowsSecurity.GlobalVars.LogHeaderHasBeenWritten == false)
@@ -131,6 +108,32 @@ Machine: {Environment.MachineName}
                     // of the current class and then based on that variable's value logging to file must happen outside of the dispatcher.
                     LogToFile(CurrentText);
                     #endregion
+
+                    #region Writing to the Event Logs
+                    // Write the same message to the event logs if event log write is enabled
+                    if (GUIProtectWinSecurity.EventLogging != null && GUIProtectWinSecurity.EventLogging.IsChecked == true)
+                    {
+                        switch (LogType)
+                        {
+                            case LogTypeIntel.Information:
+                                {
+                                    WriteEventLog(CurrentText, EventLogEntryType.Information);
+                                    break;
+                                }
+                            case LogTypeIntel.Error:
+                                {
+                                    WriteEventLog(CurrentText, EventLogEntryType.Error);
+                                    break;
+                                }
+                            case LogTypeIntel.Warning:
+                                {
+                                    WriteEventLog(CurrentText, EventLogEntryType.Warning);
+                                    break;
+                                }
+                        }
+                    }
+                    #endregion
+
 
                 }), priority: DispatcherPriority.Background);
             }

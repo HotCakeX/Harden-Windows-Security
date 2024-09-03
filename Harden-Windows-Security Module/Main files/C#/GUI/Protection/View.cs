@@ -343,8 +343,7 @@ namespace HardenWindowsSecurity
                 GUIProtectWinSecurity.txtFilePath = (System.Windows.Controls.TextBox)((System.Windows.Markup.INameScope)GUIProtectWinSecurity.mainContentControlStyle).FindName("txtFilePath");
                 GUIProtectWinSecurity.logPath = (System.Windows.Controls.Button)((System.Windows.Markup.INameScope)GUIProtectWinSecurity.mainContentControlStyle).FindName("LogPath");
                 GUIProtectWinSecurity.log = (System.Windows.Controls.Primitives.ToggleButton)((System.Windows.Markup.INameScope)GUIProtectWinSecurity.mainContentControlStyle).FindName("Log");
-                GUIProtectWinSecurity.loggingViewBox = (System.Windows.Controls.Viewbox)((System.Windows.Markup.INameScope)GUIProtectWinSecurity.mainContentControlStyle).FindName("LoggingViewBox");
-
+                GUIProtectWinSecurity.EventLogging = (System.Windows.Controls.Primitives.ToggleButton)((System.Windows.Markup.INameScope)GUIProtectWinSecurity.mainContentControlStyle).FindName("EventLogging");
 
                 // initializations for Offline-Mode related elements
                 GUIProtectWinSecurity.grid2 = (System.Windows.Controls.Grid)((System.Windows.Markup.INameScope)GUIProtectWinSecurity.mainContentControlStyle).FindName("Grid2");
@@ -451,8 +450,7 @@ namespace HardenWindowsSecurity
 
                 // Register additional elements for automatic enablement/disablement
                 HardenWindowsSecurity.ActivityTracker.RegisterUIElement(GUIProtectWinSecurity.logPath);
-                HardenWindowsSecurity.ActivityTracker.RegisterUIElement(GUIProtectWinSecurity.loggingViewBox);
-
+                HardenWindowsSecurity.ActivityTracker.RegisterUIElement(GUIProtectWinSecurity.log);
 
                 // Cache the view before setting it as the CurrentView
                 _viewCache["ProtectView"] = GUIProtectWinSecurity.View;

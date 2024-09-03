@@ -29,7 +29,7 @@ namespace HardenWindowsSecurity
             #endregion
 
 
-            #region
+            #region registry keys
             HardenWindowsSecurity.Logger.LogMessage("Deleting all the registry keys created during protection.", LogTypeIntel.Information);
 
             foreach (var Item in HardenWindowsSecurity.GlobalVars.RegistryCSVItems!)
@@ -53,7 +53,7 @@ namespace HardenWindowsSecurity
             #endregion
 
 
-            #region
+            #region Advanced Microsoft Defender features
             HardenWindowsSecurity.Logger.LogMessage("Reverting the advanced protections in the Microsoft Defender.", LogTypeIntel.Information);
 
             HardenWindowsSecurity.MpComputerStatusHelper.SetMpComputerStatus<bool>("AllowSwitchToAsyncInspection", false);
@@ -73,7 +73,7 @@ namespace HardenWindowsSecurity
             #endregion
 
 
-            #region
+            #region Group Policies
             HardenWindowsSecurity.Logger.LogMessage("Restoring the default Security group policies", LogTypeIntel.Information);
 
             // if LGPO doesn't already exist in the working directory, then download it
@@ -95,19 +95,39 @@ namespace HardenWindowsSecurity
             #endregion
 
 
-            #region
-            HardenWindowsSecurity.Logger.LogMessage("Re-enables the XblGameSave Standby Task that gets disabled by Microsoft Security Baselines", LogTypeIntel.Information);
-            HardenWindowsSecurity.PowerShellExecutor.ExecuteScript(@"SCHTASKS.EXE /Change /TN \Microsoft\XblGameSave\XblGameSaveTask /Enable");
+            #region Xbox scheduled task
+
+            bool XblGameSaveTaskResult = false;
+
+            var XblGameSaveTaskResultObject = HardenWindowsSecurity.TaskSchedulerHelper.Get(
+                "XblGameSaveTask",
+                @"\Microsoft\XblGameSave\",
+                HardenWindowsSecurity.TaskSchedulerHelper.OutputType.Boolean
+            );
+
+            // Convert to boolean
+            XblGameSaveTaskResult = Convert.ToBoolean(XblGameSaveTaskResultObject, CultureInfo.InvariantCulture);
+
+            if (XblGameSaveTaskResult == true)
+            {
+
+                HardenWindowsSecurity.Logger.LogMessage("Re-enables the XblGameSave Standby Task that gets disabled by Microsoft Security Baselines", LogTypeIntel.Information);
+                HardenWindowsSecurity.PowerShellExecutor.ExecuteScript(@"SCHTASKS.EXE /Change /TN \Microsoft\XblGameSave\XblGameSaveTask /Enable");
+            }
+            else
+            {
+                HardenWindowsSecurity.Logger.LogMessage("XblGameSave scheduled task couldn't be found in the task scheduler.", LogTypeIntel.Information);
+            }
             #endregion
 
 
-            #region
+            #region DEP
             HardenWindowsSecurity.Logger.LogMessage("Setting Data Execution Prevention (DEP) back to its default value", LogTypeIntel.Information);
             HardenWindowsSecurity.PowerShellExecutor.ExecuteScript(@"Set-BcdElement -Element 'nx' -Type 'Integer' -Value '0'");
             #endregion
 
 
-            #region
+            #region Fast MSFT Driver Block list task
             HardenWindowsSecurity.Logger.LogMessage("Removing the scheduled task that keeps the Microsoft recommended driver block rules updated", LogTypeIntel.Information);
 
             // If the task exists, delete it
@@ -122,7 +142,7 @@ schtasks.exe /Delete /TN "MSFT Driver Block list update" /F *>$null # Delete tas
             #endregion
 
 
-            #region
+            #region Custom event viewer views
 
             // Defining the directory path to the Harden Windows Security's event viewer custom views
             string directoryPath = Path.Combine(Environment.GetEnvironmentVariable("SystemDrive")!, "ProgramData", "Microsoft", "Event Viewer", "Views", "Hardening Script");
@@ -136,7 +156,8 @@ schtasks.exe /Delete /TN "MSFT Driver Block list update" /F *>$null # Delete tas
 
             #endregion
 
-            #region
+
+            #region Firewall
 
             HardenWindowsSecurity.PowerShellExecutor.ExecuteScript("""
 # Enables Multicast DNS (mDNS) UDP-in Firewall Rules for all 3 Firewall profiles

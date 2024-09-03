@@ -18,5 +18,11 @@ namespace HardenWindowsSecurity
 
         // The main progress bar for the entire GUI
         public static System.Windows.Controls.ProgressBar? mainProgressBar;
+
+        // The Inner border of the entire GUI
+        public static System.Windows.Media.RadialGradientBrush? InnerBorderBackground;
+
+        // The slider at the bottom left that controls the background image opacity
+        public static System.Windows.Controls.Slider? BackgroundSlider;
     }
 }

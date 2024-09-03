@@ -8,7 +8,7 @@
         <Border.Background>
             <ImageBrush Stretch="UniformToFill"></ImageBrush>
         </Border.Background>
-        <Border>
+        <Border x:Name="InnerBorder">
             <Border.Background>
                 <RadialGradientBrush GradientOrigin="0.5,0.5" Center="0.5,0.5" RadiusX="0.5" RadiusY="0.5" Opacity="0.96">
                     <!-- Center color -->
@@ -27,7 +27,6 @@
                     <RowDefinition Height="10"/>
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
-
                 <ProgressBar x:Name="MainProgressBar"
     Grid.Row="0"
     IsIndeterminate="True"
@@ -37,7 +36,6 @@
     Margin="0,0,0,5"
     Grid.ColumnSpan="2"
     BorderThickness="0" />
-
                 <!--// Navigation Panel //-->
                 <Grid Grid.Column="0" Grid.Row="1" HorizontalAlignment='Left' Width='228' Margin="0,50,0,50" x:Name="SidebarGrid">
                     <!--// background of the tabs sidebar can be set using border background //-->
@@ -58,8 +56,6 @@
                                         <TextBlock Text='Confirm &amp; Verify' Style='{StaticResource Text_Style}' />
                                     </Grid>
                                 </RadioButton>
-
-
                                 <!--// ASRRules //-->
                                 <RadioButton Style='{StaticResource BtnStyle}' Command='{Binding ASRRulesCommand}'>
                                     <Grid x:Name="ASRRulesButtonGrid">
@@ -67,8 +63,6 @@
                                         <TextBlock Text='ASR Rules' Style='{StaticResource Text_Style}' />
                                     </Grid>
                                 </RadioButton>
-
-
                                 <!--// Unprotect //-->
                                 <RadioButton Style='{StaticResource BtnStyle}' Command='{Binding UnprotectCommand}'>
                                     <Grid x:Name="UnprotectButtonGrid">
@@ -76,9 +70,6 @@
                                         <TextBlock Text='Unprotect' Style='{StaticResource Text_Style}' />
                                     </Grid>
                                 </RadioButton>
-
-
-
                                 <!--// Logs //-->
                                 <RadioButton Style='{StaticResource BtnStyle}' Command='{Binding LogsCommand}'>
                                     <Grid x:Name="LogsButtonGrid">
@@ -93,6 +84,20 @@
                 <Grid Grid.Column='1' Grid.Row="1" x:Name="CurrentViewGrid">
                     <ContentControl x:Name='Pages' Content='{Binding CurrentView}' />
                 </Grid>
+                <!-- Stackpanel that holds the bottom left elements related to background -->
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Bottom" Grid.Column="0" Grid.Row="1">
+                    <!-- Slider in the bottom left corner -->
+                    <Slider x:Name="BackgroundOpacitySlider"
+                       Width="140"
+                       Margin="3,0,3,0"
+                       Minimum="0"
+                       Maximum="100"
+                       TickFrequency="1"
+                       IsSnapToTickEnabled="False"
+                       Value="96"/>
+                    <!-- Change background button -->
+                    <Button Content="Background" x:Name="BackgroundChangeButton" Width="70" Height="20" FontSize="11" Background="Transparent" BorderThickness="0" ></Button>
+                </StackPanel>
             </Grid>
         </Border>
     </Border>

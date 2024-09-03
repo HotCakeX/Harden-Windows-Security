@@ -1,0 +1,119 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+   <!-- Thumb Geometry -->
+   <Geometry x:Key="ThumbData">M18 3C17.25 3 16.5 3.29 16.19 3.81L3.81 16.19C2.7 17.06 2.7 18.94 3.81 19.81L16.19 32.19C17.06 33.3 18.94 33.3 19.81 32.19L32.19 19.81C33.3 18.94 33.3 17.06 32.19 16.19L19.81 3.81C19.5 3.29 18.75 3 18 3M18 6L22.94 10.94L18 15.94L13.06 10.94L18 6M10.94 13.06L15.94 18L10.94 22.94L6 18L10.94 13.06M25.94 13.06L30.94 18L25.94 22.94L18 18L25.94 13.06M18 19.81L22.94 24.94L18 30.94L13.06 24.94L18 19.81Z</Geometry>
+   <!-- Thumb Brushes for Pink Color -->
+   <LinearGradientBrush x:Key="ThumbColor" StartPoint="0.5,0" EndPoint="0.5,1">
+       <GradientStop Color="#FF69B4" Offset="0"/>
+       <!-- HotPink -->
+       <GradientStop Color="#FF1493" Offset="0.5"/>
+       <!-- DeepPink -->
+       <GradientStop Color="#C71585" Offset="1"/>
+       <!-- MediumVioletRed -->
+   </LinearGradientBrush>
+   <LinearGradientBrush x:Key="ThumbOver" StartPoint="0.5,0" EndPoint="0.5,1">
+       <GradientStop Color="#FFB6C1" Offset="0"/>
+       <!-- LightPink -->
+       <GradientStop Color="#FF69B4" Offset="0.5"/>
+       <!-- HotPink -->
+       <GradientStop Color="#FF1493" Offset="1"/>
+       <!-- DeepPink -->
+   </LinearGradientBrush>
+   <LinearGradientBrush x:Key="ThumbDrag" StartPoint="0.5,0" EndPoint="0.5,1">
+       <GradientStop Color="#C71585" Offset="0"/>
+       <!-- MediumVioletRed -->
+       <GradientStop Color="#FF1493" Offset="0.5"/>
+       <!-- DeepPink -->
+       <GradientStop Color="#FF69B4" Offset="1"/>
+       <!-- HotPink -->
+   </LinearGradientBrush>
+   <!-- Slider Brushes for Light Yellow Color -->
+   <SolidColorBrush x:Key="SliderColor" Color="#FFFFE0"/>
+   <!-- LightYellow -->
+   <LinearGradientBrush x:Key="RangeColor" StartPoint="0,0.5" EndPoint="1,0.5">
+       <GradientStop Color="#F5F5DC" Offset="0"/>
+       <!-- Beige -->
+       <GradientStop Color="#FFFFE0" Offset="0.5"/>
+       <!-- LightYellow -->
+       <GradientStop Color="#FFFFF0" Offset="1"/>
+       <!-- Ivory -->
+   </LinearGradientBrush>
+   <LinearGradientBrush x:Key="SliderOver" StartPoint="0,0.5" EndPoint="1,0.5">
+       <GradientStop Color="#F5F5DC" Offset="0"/>
+       <!-- Beige -->
+       <GradientStop Color="#FFFFE0" Offset="0.5"/>
+       <!-- LightYellow -->
+       <GradientStop Color="#FFFFF0" Offset="1"/>
+       <!-- Ivory -->
+   </LinearGradientBrush>
+   <LinearGradientBrush x:Key="SliderDrag" StartPoint="0,0.5" EndPoint="1,0.5">
+       <GradientStop Color="#FFFFE0" Offset="0"/>
+       <!-- LightYellow -->
+       <GradientStop Color="#F5F5DC" Offset="0.5"/>
+       <!-- Beige -->
+       <GradientStop Color="#FFFFF0" Offset="1"/>
+       <!-- Ivory -->
+   </LinearGradientBrush>
+   <!-- Thumb Style -->
+   <Style TargetType="{x:Type Thumb}" x:Key="ThumbStyle">
+       <Setter Property="Width" Value="36"/>
+       <Setter Property="Height" Value="36"/>
+       <Setter Property="Template">
+           <Setter.Value>
+               <ControlTemplate TargetType="{x:Type Thumb}">
+                   <Grid Width="36" Height="36">
+                   <!-- Making sure the entire thumb is draggable, including the holes in it -->
+                       <Border Background="Transparent" IsHitTestVisible="True"/>
+                       <Path x:Name="path" Data="{StaticResource ThumbData}" Fill="{StaticResource ThumbColor}" IsHitTestVisible="False"/>
+                   </Grid>
+                   <ControlTemplate.Triggers>
+                       <Trigger Property="IsMouseOver" Value="True">
+                           <Setter TargetName="path" Property="Fill" Value="{StaticResource ThumbOver}"/>
+                       </Trigger>
+                       <Trigger Property="IsDragging" Value="True">
+                           <Setter TargetName="path" Property="Fill" Value="{StaticResource ThumbDrag}"/>
+                       </Trigger>
+                   </ControlTemplate.Triggers>
+               </ControlTemplate>
+           </Setter.Value>
+       </Setter>
+   </Style>
+   <Thumb x:Key="SliderThumb" Style="{StaticResource ThumbStyle}"/>
+   <!-- Slider Style -->
+   <Style TargetType="{x:Type Slider}">
+       <Setter Property="Minimum" Value="0"/>
+       <Setter Property="Maximum" Value="100"/>
+       <Setter Property="SelectionStart" Value="0"/>
+       <Setter Property="SelectionEnd" Value="{Binding RelativeSource={RelativeSource Self},Path=Value}"/>
+       <Setter Property="Background" Value="Transparent"/>
+       <Setter Property="Template">
+           <Setter.Value>
+               <ControlTemplate TargetType="{x:Type Slider}">
+                   <Grid Background="{TemplateBinding Background}">
+                       <Grid Height="2.5" Margin="12 0 12 0">
+                           <Grid.RowDefinitions>
+                               <RowDefinition Height="*"/>
+                           </Grid.RowDefinitions>
+                           <Grid.ColumnDefinitions>
+                               <ColumnDefinition Width="Auto"/>
+                               <ColumnDefinition Width="*"/>
+                           </Grid.ColumnDefinitions>
+                           <Border Background="{StaticResource RangeColor}" x:Name="PART_SelectionRange" Grid.Column="0" Grid.ColumnSpan="2"/>
+                           <Border Background="{StaticResource SliderColor}" Grid.Column="0" Grid.ColumnSpan="2"/>
+                       </Grid>
+                       <Track x:Name="PART_Track" Thumb="{StaticResource SliderThumb}" Grid.Column="0" Grid.ColumnSpan="2"/>
+                   </Grid>
+                   <ControlTemplate.Triggers>
+                       <DataTrigger Binding="{Binding ElementName=PART_Track, Path=Thumb.IsMouseOver}" Value="True">
+                           <Setter TargetName="PART_SelectionRange" Property="Background" Value="{StaticResource SliderOver}"/>
+                       </DataTrigger>
+                       <DataTrigger Binding="{Binding ElementName=PART_Track, Path=Thumb.IsDragging}" Value="True">
+                           <Setter TargetName="PART_SelectionRange" Property="Background" Value="{StaticResource SliderDrag}"/>
+                       </DataTrigger>
+                   </ControlTemplate.Triggers>
+               </ControlTemplate>
+           </Setter.Value>
+       </Setter>
+   </Style>
+</ResourceDictionary>

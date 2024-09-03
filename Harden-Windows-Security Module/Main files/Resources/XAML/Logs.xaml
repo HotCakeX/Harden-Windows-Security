@@ -2,21 +2,17 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" Style="{StaticResource Page_Style}">
-
-    <Grid x:Name="ParentGrid">
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*" />
-        </Grid.ColumnDefinitions>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="*" />
-        </Grid.RowDefinitions>
-
-        <!-- Logging Area -->
-        <ScrollViewer x:Name="ScrollerForOutputTextBox" Grid.ColumnSpan="1" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto" Margin="10,15,10,10">
-            <!-- its max width is being dynamically set using code behind (PowerShell) -->
-            <TextBox x:Name="MainLoggerTextBox" TextWrapping="Wrap" HorizontalAlignment="Left" VerticalAlignment="Top" Background="Transparent" BorderThickness="0" IsReadOnly="True" IsTabStop="False" Cursor="IBeam" FontSize="15"/>
-        </ScrollViewer>
-
-    </Grid>
-
+   <Grid x:Name="ParentGrid">
+       <Grid.ColumnDefinitions>
+           <ColumnDefinition Width="*" />
+       </Grid.ColumnDefinitions>
+       <Grid.RowDefinitions>
+           <RowDefinition Height="*" />
+       </Grid.RowDefinitions>
+       <!-- Logging Area -->
+       <ScrollViewer x:Name="ScrollerForOutputTextBox" Grid.ColumnSpan="1" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto" Margin="10,15,10,10">
+           <!-- its max width is being dynamically set using code behind (PowerShell) -->
+           <TextBox x:Name="MainLoggerTextBox" TextWrapping="Wrap" HorizontalAlignment="Left" VerticalAlignment="Top" Background="Transparent" BorderThickness="0" IsReadOnly="True" IsTabStop="False" Cursor="IBeam" FontSize="15"/>
+       </ScrollViewer>
+   </Grid>
 </UserControl>

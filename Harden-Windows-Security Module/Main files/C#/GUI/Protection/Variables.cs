@@ -52,13 +52,11 @@ namespace HardenWindowsSecurity
         public static System.Windows.Controls.CheckBox? selectAllCategories;
         public static System.Windows.Controls.CheckBox? selectAllSubCategories;
 
-
         // fields for Log related elements
         public static System.Windows.Controls.TextBox? txtFilePath;
         public static System.Windows.Controls.Button? logPath;
         public static System.Windows.Controls.Primitives.ToggleButton? log;
-        public static System.Windows.Controls.Viewbox? loggingViewBox;
-
+        public static System.Windows.Controls.Primitives.ToggleButton? EventLogging;
 
         // fields for Offline-Mode related elements
         public static System.Windows.Controls.Grid? grid2;
@@ -76,14 +74,12 @@ namespace HardenWindowsSecurity
         public static System.Windows.Controls.Image? ExecuteButtonImage;
 
 
-        // Flag to run the event for view load only once to prevent file download multiple times when swtiching between views etc.
+        // Flag to run the event for view load only once to prevent file download multiple times when switching between views etc.
         public static bool LoadEventHasBeenTriggered = false;
-
 
         public static System.Windows.Controls.ComboBox? ProtectionPresetComboBox;
 
         public static string? SelectedProtectionPreset;
-
 
         // Defining the presets configurations for the protection
         public static System.Collections.Generic.Dictionary<string, System.Collections.Generic.Dictionary<string, List<string>>> PresetsIntel = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.Dictionary<string, List<string>>>(StringComparer.OrdinalIgnoreCase)
@@ -110,10 +106,6 @@ namespace HardenWindowsSecurity
         }
     }
 };
-
-
-
-
 
     }
 }

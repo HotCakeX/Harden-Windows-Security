@@ -7,7 +7,6 @@
         ToolTipService.ShowDuration="2147483647"
         ToolTipService.BetweenShowDelay="0"
         ToolTipService.ShowOnDisabled="True">
-
     <!-- The UserControl's 4 tooltip related elements are necessary for the style to appear properly and they only appear to this User Control/View -->
     <!-- Grid for Online Mode Tab - Removing the white border with negative margins -->
     <Grid x:Name="ParentGrid" Margin="-2.3,-2.3,-2.3,-2.3">
@@ -25,9 +24,7 @@
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
-
         <StackPanel Margin="0" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Row="0" Grid.ColumnSpan="2">
-
             <!-- ComboBox -->
             <ComboBox x:Name="ProtectionPresetComboBox"
               Width="200" Margin="0,0,20,0"
@@ -40,7 +37,6 @@
                 <ComboBoxItem Content="Preset: Recommended" />
                 <ComboBoxItem Content="Preset: Complete" />
             </ComboBox>
-
             <!-- ToggleButton -->
             <ToggleButton HorizontalAlignment="Center"
                   Margin="20,0,0,0"
@@ -68,9 +64,7 @@
                     </ControlTemplate>
                 </ToggleButton.Template>
             </ToggleButton>
-
         </StackPanel>
-
         <!-- ContentControl to display content based on the ToggleButton's state -->
         <ContentControl Grid.Row="1" Grid.ColumnSpan="2" x:Name="MainContentControl">
             <ContentControl.Style>
@@ -224,9 +218,9 @@
                                                 </ListViewItem>
                                             </ListView>
                                         </Grid>
-                                        <!-- Enable Logging CheckBox -->
-                                        <Viewbox x:Name="LoggingViewBox" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="1" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="14">
-                                            <ToggleButton x:Name="Log" ToolTip="Enable logging" Foreground="White" Height="40" Width="170" FontSize="16">
+                                        <StackPanel Orientation="Horizontal" Grid.Row="2" Grid.ColumnSpan="2" HorizontalAlignment="Center">
+                                            <!-- Enable Logging CheckBox -->
+                                            <ToggleButton x:Name="Log" ToolTip="Enable logging" Foreground="White" Height="40" Width="170" FontSize="14" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="10,0,0,0">
                                                 <ToggleButton.Template>
                                                     <ControlTemplate TargetType="ToggleButton">
                                                         <Border x:Name="Button11" Background="LightGray" CornerRadius="10" Padding="3">
@@ -244,53 +238,72 @@
                                                     </ControlTemplate>
                                                 </ToggleButton.Template>
                                             </ToggleButton>
-                                        </Viewbox>
-                                        <!-- Log Path TextBox -->
-                                        <Button x:Name="LogPath" Grid.Row="2" Grid.Column="1" Width="150" Height="40" FontSize="16" FontWeight="Bold" Background="{StaticResource PinkGradient}" ToolTip="The path to save the log file to">
-                                            <Button.Template>
-                                                <ControlTemplate TargetType="Button">
-                                                    <Border x:Name="border" BorderThickness="3" Width="{TemplateBinding Width}" Height="{TemplateBinding Height}" Background="{TemplateBinding Background}" CornerRadius="6" BorderBrush="MediumPurple">
-                                                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                                    </Border>
-                                                    <ControlTemplate.Triggers>
-                                                        <Trigger Property="IsMouseOver" Value="true">
-                                                            <Trigger.EnterActions>
-                                                                <BeginStoryboard>
-                                                                    <Storyboard>
-                                                                        <DoubleAnimation To="160" Storyboard.TargetProperty="Width" Duration="0:0:0.3"/>
-                                                                        <DoubleAnimation To="45" Storyboard.TargetProperty="Height" Duration="0:0:0.3"/>
-                                                                        <ColorAnimation To="Coral" Storyboard.TargetProperty="Background.(SolidColorBrush.Color)" Duration="0:0:0.3"/>
-                                                                    </Storyboard>
-                                                                </BeginStoryboard>
-                                                            </Trigger.EnterActions>
-                                                            <Trigger.ExitActions>
-                                                                <BeginStoryboard>
-                                                                    <Storyboard>
-                                                                        <DoubleAnimation To="150" Storyboard.TargetProperty="Width" Duration="0:0:0.3"/>
-                                                                        <DoubleAnimation To="40" Storyboard.TargetProperty="Height" Duration="0:0:0.3"/>
-                                                                        <ColorAnimation To="White" Storyboard.TargetProperty="Background.(SolidColorBrush.Color)" Duration="0:0:0.3"/>
-                                                                    </Storyboard>
-                                                                </BeginStoryboard>
-                                                            </Trigger.ExitActions>
-                                                        </Trigger>
-                                                        <Trigger Property="IsPressed" Value="true">
-                                                            <Setter TargetName="border" Property="Background">
-                                                                <Setter.Value>
-                                                                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                                                                        <GradientStop Color="#eaafc8" Offset="0.0"/>
-                                                                        <GradientStop Color="#e1eec3" Offset="1.0"/>
-                                                                    </LinearGradientBrush>
-                                                                </Setter.Value>
-                                                            </Setter>
-                                                        </Trigger>
-                                                    </ControlTemplate.Triggers>
-                                                </ControlTemplate>
-                                            </Button.Template>
-                                            <StackPanel Orientation="Horizontal">
-                                                <Image x:Name="LogButtonIcon" Width="40" Height="30"/>
-                                                <TextBlock Text="Log Path" VerticalAlignment="Center"/>
-                                            </StackPanel>
-                                        </Button>
+                                            <!-- Enable EventLogging CheckBox -->
+                                            <ToggleButton x:Name="EventLogging" ToolTip="Enable Event logging" Foreground="White" Height="40" Width="200" FontSize="14" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10,0,10,0">
+                                                <ToggleButton.Template>
+                                                    <ControlTemplate TargetType="ToggleButton">
+                                                        <Border x:Name="Button11" Background="LightGray" CornerRadius="10" Padding="3">
+                                                            <Border x:Name="Button22" Background="Black" Width="125" CornerRadius="10" HorizontalAlignment="Left">
+                                                                <TextBlock x:Name="TextBlock11" Text="Event Logging Off" HorizontalAlignment="Center" VerticalAlignment="Center" TextAlignment="Center"/>
+                                                            </Border>
+                                                        </Border>
+                                                        <ControlTemplate.Triggers>
+                                                            <Trigger Property="IsChecked" Value="True">
+                                                                <Setter TargetName="Button22" Property="HorizontalAlignment" Value="Right"/>
+                                                                <Setter TargetName="Button11" Property="Background" Value="#99f2c8"/>
+                                                                <Setter TargetName="TextBlock11" Property="Text" Value="Event Logging On"/>
+                                                            </Trigger>
+                                                        </ControlTemplate.Triggers>
+                                                    </ControlTemplate>
+                                                </ToggleButton.Template>
+                                            </ToggleButton>
+                                            <!-- Log Path TextBox -->
+                                            <Button x:Name="LogPath" HorizontalAlignment="Right" VerticalAlignment="Center" Width="150" Height="40" FontSize="14" FontWeight="Bold" Background="{StaticResource PinkGradient}" ToolTip="The path to save the log file to" Margin="0,0,10,0">
+                                                <Button.Template>
+                                                    <ControlTemplate TargetType="Button">
+                                                        <Border x:Name="border" BorderThickness="3" Width="{TemplateBinding Width}" Height="{TemplateBinding Height}" Background="{TemplateBinding Background}" CornerRadius="6" BorderBrush="MediumPurple">
+                                                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                        </Border>
+                                                        <ControlTemplate.Triggers>
+                                                            <Trigger Property="IsMouseOver" Value="true">
+                                                                <Trigger.EnterActions>
+                                                                    <BeginStoryboard>
+                                                                        <Storyboard>
+                                                                            <DoubleAnimation To="160" Storyboard.TargetProperty="Width" Duration="0:0:0.3"/>
+                                                                            <DoubleAnimation To="45" Storyboard.TargetProperty="Height" Duration="0:0:0.3"/>
+                                                                            <ColorAnimation To="Coral" Storyboard.TargetProperty="Background.(SolidColorBrush.Color)" Duration="0:0:0.3"/>
+                                                                        </Storyboard>
+                                                                    </BeginStoryboard>
+                                                                </Trigger.EnterActions>
+                                                                <Trigger.ExitActions>
+                                                                    <BeginStoryboard>
+                                                                        <Storyboard>
+                                                                            <DoubleAnimation To="150" Storyboard.TargetProperty="Width" Duration="0:0:0.3"/>
+                                                                            <DoubleAnimation To="40" Storyboard.TargetProperty="Height" Duration="0:0:0.3"/>
+                                                                            <ColorAnimation To="White" Storyboard.TargetProperty="Background.(SolidColorBrush.Color)" Duration="0:0:0.3"/>
+                                                                        </Storyboard>
+                                                                    </BeginStoryboard>
+                                                                </Trigger.ExitActions>
+                                                            </Trigger>
+                                                            <Trigger Property="IsPressed" Value="true">
+                                                                <Setter TargetName="border" Property="Background">
+                                                                    <Setter.Value>
+                                                                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                                                            <GradientStop Color="#eaafc8" Offset="0.0"/>
+                                                                            <GradientStop Color="#e1eec3" Offset="1.0"/>
+                                                                        </LinearGradientBrush>
+                                                                    </Setter.Value>
+                                                                </Setter>
+                                                            </Trigger>
+                                                        </ControlTemplate.Triggers>
+                                                    </ControlTemplate>
+                                                </Button.Template>
+                                                <StackPanel Orientation="Horizontal">
+                                                    <Image x:Name="LogButtonIcon" Width="40" Height="30"/>
+                                                    <TextBlock Text="Log Path" VerticalAlignment="Center"/>
+                                                </StackPanel>
+                                            </Button>
+                                        </StackPanel>
                                         <!-- File Path TextBox which is dynamic -->
                                         <TextBox x:Name="txtFilePath" Grid.Row="3" Grid.ColumnSpan="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="30,0,30,0" BorderThickness="0" ToolTip="The selected log file path" MaxWidth="700">
                                             <TextBox.Style>

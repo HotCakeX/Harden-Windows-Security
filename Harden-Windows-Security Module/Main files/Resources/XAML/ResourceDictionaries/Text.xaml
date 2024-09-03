@@ -1,23 +1,19 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-
-    <!-- Applied to the Sidebar button texts -->
-    <Style x:Key="Text_Style"
+   <!-- Applied to the Sidebar button texts -->
+   <Style x:Key="Text_Style"
            TargetType="TextBlock">
-
-        <Setter Property="FontFamily"
+       <Setter Property="FontFamily"
                 Value="Trebuchet MS" />
-        <Setter Property="VerticalAlignment"
+       <Setter Property="VerticalAlignment"
                 Value="Center" />
-        <Setter Property="HorizontalAlignment"
+       <Setter Property="HorizontalAlignment"
                 Value="Left" />
-        <Setter Property="Foreground"
+       <Setter Property="Foreground"
                 Value="#DBDBDB" />
-        <Setter Property="FontSize"
+       <Setter Property="FontSize"
                 Value="16" />
-        <Setter Property="Margin"
+       <Setter Property="Margin"
                 Value="90,0,0,0" />
-
-    </Style>
-
+   </Style>
 </ResourceDictionary>

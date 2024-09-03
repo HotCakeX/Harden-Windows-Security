@@ -12,7 +12,7 @@ namespace HardenWindowsSecurity
     /// </summary>
     public static class SystemInformationClass
     {
-        public enum SYSTEM_DMA_GUARD_POLICY_INFORMATION : int
+        internal enum SYSTEM_DMA_GUARD_POLICY_INFORMATION : int
         {
             SystemDmaGuardPolicyInformation = 202
         }

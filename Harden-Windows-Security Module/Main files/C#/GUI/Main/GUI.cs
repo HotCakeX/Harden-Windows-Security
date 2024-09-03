@@ -6,6 +6,8 @@ using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using Microsoft.Win32;
 
 #nullable disable
 
@@ -312,11 +314,73 @@ End time: {DateTime.Now}
                 );
             #endregion
 
+            #region Inner border of the main GUI
+            System.Windows.Controls.Border InnerBorder = (System.Windows.Controls.Border)GUIMain.mainGUIWindow.FindName("InnerBorder");
+
+            // Finding the gradient brush background of the inner border
+            GUIMain.InnerBorderBackground = (System.Windows.Media.RadialGradientBrush)InnerBorder.Background;
+
+            // Finding the bottom left slider
+            GUIMain.BackgroundSlider = (System.Windows.Controls.Slider)GUIMain.mainGUIWindow.FindName("BackgroundOpacitySlider");
+
+            // Creating event handler for the slider
+            GUIMain.BackgroundSlider.ValueChanged += (sender, e) =>
+            {
+                var slider = (System.Windows.Controls.Slider)sender;
+
+                // Scale value from 0-100 to 0-1
+                double opacityValue = slider.Value / 100.0;
+
+                // Apply the scaled opacity value to the RadialGradientBrush background
+                GUIMain.InnerBorderBackground.Opacity = opacityValue;
+            };
+
+            #endregion
+
             // Finding the sidebar Grid
             HardenWindowsSecurity.GUIMain.SidebarGrid = GUIMain.mainGUIWindow.FindName("SidebarGrid") as System.Windows.Controls.Grid;
 
             // Finding the progress bar
             GUIMain.mainProgressBar = (System.Windows.Controls.ProgressBar)GUIMain.mainGUIWindow.FindName("MainProgressBar");
+
+            // Finding the button responsible for changing the background image by browsing for image file
+            System.Windows.Controls.Button BackgroundChangeButton = (System.Windows.Controls.Button)GUIMain.mainGUIWindow.FindName("BackgroundChangeButton");
+
+            // event handler for button to open file picker to browse for image files
+            BackgroundChangeButton.Click += (sender, e) =>
+            {
+                try
+                {
+                    // Creating and configuring the OpenFileDialog
+                    OpenFileDialog openFileDialog = new OpenFileDialog();
+
+                    // Filter for image files
+                    openFileDialog.Filter = "Image Files|*.jpg;*.jpeg;*.png;";
+                    openFileDialog.Title = "Select an Image to set as the Harden Windows Security App's Background";
+
+                    // Show the dialog and get the result
+                    bool? result = openFileDialog.ShowDialog();
+
+                    if (result == true)
+                    {
+                        // Get the selected file path
+                        string filePath = openFileDialog.FileName;
+
+                        // Create a BitmapImage from the selected file
+                        BitmapImage bitmapImage = new BitmapImage();
+                        bitmapImage.BeginInit();
+                        bitmapImage.UriSource = new Uri(filePath, UriKind.Absolute);
+                        bitmapImage.EndInit();
+
+                        // Set the image as the source for the ImageBrush defined in the Border's Background earlier
+                        imageBrush.ImageSource = bitmapImage;
+                    }
+                }
+                catch
+                {
+                    Logger.LogMessage("An error occurred while trying to change the background image.", LogTypeIntel.Error);
+                }
+            };
 
             // Protect button icon
             System.Windows.Controls.Grid ProtectButtonGrid = SidebarGrid.FindName("ProtectButtonGrid") as System.Windows.Controls.Grid;

@@ -15,7 +15,7 @@ using System.Globalization;
 
 namespace HardenWindowsSecurity
 {
-    public partial class ConfirmSystemComplianceMethods
+    internal partial class ConfirmSystemComplianceMethods
     {
 
         /// <summary>

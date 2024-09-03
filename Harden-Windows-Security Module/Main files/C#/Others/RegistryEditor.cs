@@ -6,9 +6,9 @@ using Microsoft.Win32;
 
 namespace HardenWindowsSecurity
 {
-    public static class RegistryEditor
+    internal static class RegistryEditor
     {
-        public static void EditRegistry(string path, string key, string value, string type, string action)
+        internal static void EditRegistry(string path, string key, string value, string type, string action)
         {
             // Removing the 'Registry::' prefix from the path
             if (path.StartsWith("Registry::", StringComparison.OrdinalIgnoreCase))

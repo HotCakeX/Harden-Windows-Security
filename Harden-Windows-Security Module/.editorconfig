@@ -26,3 +26,60 @@ dotnet_diagnostic.CA1311.severity = error
 
 # CA1416: Validate platform compatibility
 dotnet_diagnostic.CA1416.severity = error
+
+# CA5384: Do Not Use Digital Signature Algorithm (DSA)
+dotnet_diagnostic.CA5384.severity = error
+
+# CA1508: Avoid dead conditional code
+dotnet_diagnostic.CA1508.severity = error
+
+# CA1200: Avoid using cref tags with a prefix
+dotnet_diagnostic.CA1200.severity = error
+
+# CA1812: Avoid uninstantiated internal classes
+dotnet_diagnostic.CA1812.severity = error
+
+# CA1825: Avoid zero-length array allocations
+dotnet_diagnostic.CA1825.severity = error
+
+# CA1841: Prefer Dictionary.Contains methods
+dotnet_diagnostic.CA1841.severity = error
+
+# CA1845: Use span-based 'string.Concat'
+dotnet_diagnostic.CA1845.severity = error
+
+# CA1851: Possible multiple enumerations of 'IEnumerable' collection
+dotnet_diagnostic.CA1851.severity = error
+
+# CA1855: Prefer 'Clear' over 'Fill'
+dotnet_diagnostic.CA1855.severity = error
+
+# CA1865: Use char overload
+dotnet_diagnostic.CA1865.severity = error
+
+# CA1866: Use char overload
+dotnet_diagnostic.CA1866.severity = error
+
+# CA2014: Do not use stackalloc in loops
+dotnet_diagnostic.CA2014.severity = error
+
+# CA2200: Rethrow to preserve stack details
+dotnet_diagnostic.CA2200.severity = error
+
+# CA1821: Remove empty Finalizers
+dotnet_diagnostic.CA1821.severity = error
+
+# CA1820: Test for empty strings using string length
+dotnet_diagnostic.CA1820.severity = error
+
+# CA2251: Use 'string.Equals'
+dotnet_diagnostic.CA2251.severity = error
+
+# CA1064: Exceptions should be public
+dotnet_diagnostic.CA1064.severity = error
+
+# CA1040: Avoid empty interfaces
+dotnet_diagnostic.CA1040.severity = error
+
+# CA1816: Dispose methods should call SuppressFinalize
+dotnet_diagnostic.CA1816.severity = error

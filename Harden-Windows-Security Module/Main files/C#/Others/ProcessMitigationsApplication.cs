@@ -8,9 +8,9 @@ using Microsoft.Win32;
 
 namespace HardenWindowsSecurity
 {
-    public static class ProcessMitigationsApplication
+    internal static class ProcessMitigationsApplication
     {
-        public static void Apply()
+        internal static void Apply()
         {
 
             if (GlobalVars.ProcessMitigations == null)

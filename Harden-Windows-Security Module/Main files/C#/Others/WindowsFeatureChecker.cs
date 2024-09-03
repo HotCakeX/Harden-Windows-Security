@@ -8,27 +8,27 @@ using System.Globalization;
 
 namespace HardenWindowsSecurity
 {
-    public static class WindowsFeatureChecker
+    internal static class WindowsFeatureChecker
     {
-        public class FeatureStatus
+        internal class FeatureStatus
         {
-            public string? PowerShellv2 { get; set; }
-            public string? PowerShellv2Engine { get; set; }
-            public string? WorkFoldersClient { get; set; }
-            public string? InternetPrintingClient { get; set; }
-            public string? WindowsMediaPlayer { get; set; }
-            public string? MDAG { get; set; }
-            public string? WindowsSandbox { get; set; }
-            public string? HyperV { get; set; }
-            public string? WMIC { get; set; }
-            public string? IEMode { get; set; }
-            public string? LegacyNotepad { get; set; }
-            public string? LegacyWordPad { get; set; }
-            public string? PowerShellISE { get; set; }
-            public string? StepsRecorder { get; set; }
+            internal string? PowerShellv2 { get; set; }
+            internal string? PowerShellv2Engine { get; set; }
+            internal string? WorkFoldersClient { get; set; }
+            internal string? InternetPrintingClient { get; set; }
+            internal string? WindowsMediaPlayer { get; set; }
+            internal string? MDAG { get; set; }
+            internal string? WindowsSandbox { get; set; }
+            internal string? HyperV { get; set; }
+            internal string? WMIC { get; set; }
+            internal string? IEMode { get; set; }
+            internal string? LegacyNotepad { get; set; }
+            internal string? LegacyWordPad { get; set; }
+            internal string? PowerShellISE { get; set; }
+            internal string? StepsRecorder { get; set; }
         }
 
-        public static FeatureStatus CheckWindowsFeatures()
+        internal static FeatureStatus CheckWindowsFeatures()
         {
             // Get the states of optional features using Cim Instance only once so that we can use it multiple times
             Dictionary<string, string>? optionalFeatureStates = GetOptionalFeatureStates();
@@ -52,7 +52,7 @@ namespace HardenWindowsSecurity
             };
         }
 
-        public static Dictionary<string, string> GetOptionalFeatureStates()
+        internal static Dictionary<string, string> GetOptionalFeatureStates()
         {
             // Initialize a dictionary to store the states of optional features
             // Ensure case-insensitive key comparison
@@ -88,7 +88,7 @@ namespace HardenWindowsSecurity
         /// </summary>
         /// <param name="capabilityName">The name of the capability to check its state</param>
         /// <returns></returns>
-        public static string GetCapabilityState(string capabilityName)
+        internal static string GetCapabilityState(string capabilityName)
         {
             // Define the PowerShell script template with placeholder
             string scriptTemplate = """
@@ -208,7 +208,7 @@ return ((Get-WindowsCapability -Online | Where-Object -FilterScript { $_.Name -l
         /// </summary>
         /// <param name="featureName">feature name to enable/disable</param>
         /// <param name="enable">true means enable, false means disable</param>
-        public static void SetWindowsFeature(string featureName, bool enable)
+        internal static void SetWindowsFeature(string featureName, bool enable)
         {
 
             string arguments = string.Empty;

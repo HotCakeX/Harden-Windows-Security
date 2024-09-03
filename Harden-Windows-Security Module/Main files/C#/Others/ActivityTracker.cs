@@ -30,7 +30,7 @@ namespace HardenWindowsSecurity
         /// Gets or sets the current activity status of the application.
         /// When setting the status, it also updates the state of all registered UI elements.
         /// </summary>
-        public static bool IsActive
+        internal static bool IsActive
         {
             get
             {
@@ -59,7 +59,7 @@ namespace HardenWindowsSecurity
         /// If the application is currently active, the element will be immediately disabled.
         /// </summary>
         /// <param name="element">The UI element to register.</param>
-        public static void RegisterUIElement(UIElement element)
+        internal static void RegisterUIElement(UIElement element)
         {
             // Lock the critical section to ensure thread-safe access to the _uiElements list.
             lock (_lock)
@@ -87,7 +87,7 @@ namespace HardenWindowsSecurity
         /// The element's enabled/disabled state will no longer be controlled by the application's activity status.
         /// </summary>
         /// <param name="element">The UI element to unregister.</param>
-        public static void UnregisterUIElement(UIElement element)
+        internal static void UnregisterUIElement(UIElement element)
         {
             // Lock the critical section to ensure thread-safe access to the _uiElements list.
             lock (_lock)

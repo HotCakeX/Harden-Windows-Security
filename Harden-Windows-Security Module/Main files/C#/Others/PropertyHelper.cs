@@ -7,10 +7,10 @@ using System.Linq;
 
 namespace HardenWindowsSecurity
 {
-    public static class PropertyHelper
+    internal static class PropertyHelper
     {
         // Get the value of a property from a dynamic object
-        public static object? GetPropertyValue(dynamic obj, string propertyName)
+        internal static object? GetPropertyValue(dynamic obj, string propertyName)
         {
             // Convert dynamic object to IDictionary<string, object> to access properties
             var dictionary = obj as IDictionary<string, object>;

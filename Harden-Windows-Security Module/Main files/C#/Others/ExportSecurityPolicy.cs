@@ -14,12 +14,12 @@ using System.Threading.Tasks;
 
 namespace HardenWindowsSecurity
 {
-    public partial class ConfirmSystemComplianceMethods
+    internal partial class ConfirmSystemComplianceMethods
     {
         /// <summary>
         /// Get the security group policies by utilizing the Secedit.exe
         /// </summary>
-        public static void ExportSecurityPolicy()
+        internal static void ExportSecurityPolicy()
         {
             // Assuming securityPolicyInfPath is defined in your environment
             string securityPolicyInfPath = HardenWindowsSecurity.GlobalVars.securityPolicyInfPath;

@@ -9,14 +9,14 @@ using System.Collections.ObjectModel;
 
 namespace HardenWindowsSecurity
 {
-    public class ForceRelocateImagesForFiles
+    internal class ForceRelocateImagesForFiles
     {
 
         /// <summary>
         /// Method that accepts a string array and disables Mandatory ASLR for them
         /// </summary>
         /// <param name="items">program names to disable mandatory ASLR for</param>
-        public static void SetProcessMitigationForFiles(string[] items)
+        internal static void SetProcessMitigationForFiles(string[] items)
         {
             // Initialize PowerShell instance
             using (PowerShell powerShell = PowerShell.Create())

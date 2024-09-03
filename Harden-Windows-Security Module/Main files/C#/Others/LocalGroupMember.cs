@@ -9,9 +9,9 @@ using System.Security.Principal;
 
 namespace HardenWindowsSecurity
 {
-    public class LocalGroupMember
+    internal class LocalGroupMember
     {
-        public static void Add(string userSid, string groupSid)
+        internal static void Add(string userSid, string groupSid)
         {
             // Convert the group SID to a SecurityIdentifier object
             var groupSecurityId = new SecurityIdentifier(groupSid);

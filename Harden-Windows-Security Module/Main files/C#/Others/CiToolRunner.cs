@@ -9,7 +9,7 @@ using System.Text.Json;
 
 namespace HardenWindowsSecurity
 {
-    public class CiToolRunner
+    internal class CiToolRunner
     {
         /// <summary>
         /// Converts a 64-bit unsigned integer into a version type, used for converting the numbers from CiTool.exe output to proper versions.
@@ -61,7 +61,7 @@ namespace HardenWindowsSecurity
         /// <param name="SupplementalPolicies">Will include Supplemental policies in the output</param>
         /// <returns></returns>
         /// <exception cref="Exception"></exception>
-        public static List<CiPolicyInfo> RunCiTool(bool SystemPolicies = false, bool BasePolicies = false, bool SupplementalPolicies = false)
+        internal static List<CiPolicyInfo> RunCiTool(bool SystemPolicies = false, bool BasePolicies = false, bool SupplementalPolicies = false)
         {
             // Create an empty list of Policy objects to return at the end
             var policies = new List<CiPolicyInfo>();
@@ -159,7 +159,7 @@ namespace HardenWindowsSecurity
         /// </summary>
         /// <param name="policyId">the GUID which is the policy ID of the policy to be removed, with the curly brackets {} wrapped with double quotes "" </param>
         /// <exception cref="ArgumentException"></exception>
-        public static void RemovePolicy(string policyId)
+        internal static void RemovePolicy(string policyId)
         {
             if (string.IsNullOrWhiteSpace(policyId))
             {
@@ -215,7 +215,7 @@ namespace HardenWindowsSecurity
         /// <param name="propertyName">The name of the property to retrieve.</param>
         /// <param name="defaultValue">The default value to return if the property does not exist or is not a string.</param>
         /// <returns>The value of the property as a string if it exists and is of type string; otherwise, returns the default value.</returns>
-        public static string? GetPropertyOrDefault(this JsonElement element, string propertyName, string defaultValue)
+        internal static string? GetPropertyOrDefault(this JsonElement element, string propertyName, string defaultValue)
         {
             // Attempt to retrieve the property with the specified name from the JSON element.
             // Check if the property exists and if its value is of type string.
@@ -234,7 +234,7 @@ namespace HardenWindowsSecurity
         /// <param name="propertyName">The name of the property to retrieve.</param>
         /// <param name="defaultValue">The default value to return if the property does not exist or is not a boolean.</param>
         /// <returns>The value of the property as a boolean if it exists and is of type boolean; otherwise, returns the default value.</returns>
-        public static bool GetPropertyOrDefault(this JsonElement element, string propertyName, bool defaultValue)
+        internal static bool GetPropertyOrDefault(this JsonElement element, string propertyName, bool defaultValue)
         {
             // Attempt to retrieve the property with the specified name from the JSON element.
             // Check if the property exists and if its value is of type boolean.
@@ -253,7 +253,7 @@ namespace HardenWindowsSecurity
         /// <param name="element">The JSON element containing the policy options.</param>
         /// <returns>A list of policy options as strings. Returns an empty list if no options are found
         /// or if the element is not formatted correctly.</returns>
-        public static List<string> GetPolicyOptionsOrDefault(this JsonElement element)
+        internal static List<string> GetPolicyOptionsOrDefault(this JsonElement element)
         {
             // Attempt to retrieve the "PolicyOptions" property from the JSON element.
             if (element.TryGetProperty("PolicyOptions", out JsonElement value))

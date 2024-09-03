@@ -5,9 +5,9 @@ using System.Diagnostics;
 
 namespace HardenWindowsSecurity
 {
-    public class RunCommandLineCommands
+    internal class RunCommandLineCommands
     {
-        public static void Run(string command, string arguments)
+        internal static void Run(string command, string arguments)
         {
             ProcessStartInfo processStartInfo = new ProcessStartInfo
             {

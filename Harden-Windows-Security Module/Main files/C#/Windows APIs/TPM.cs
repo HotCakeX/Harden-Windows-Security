@@ -7,17 +7,17 @@ using System.Globalization;
 namespace HardenWindowsSecurity
 {
     // Class that contains the results of TPM status checks
-    public class TpmResult
+    internal class TpmResult
     {
-        public bool IsEnabled { get; set; }
-        public bool IsActivated { get; set; }
-        public string? ErrorMessage { get; set; }
+        internal bool IsEnabled { get; set; }
+        internal bool IsActivated { get; set; }
+        internal string? ErrorMessage { get; set; }
     }
 
-    public static class TpmStatus
+    internal static class TpmStatus
     {
         // Method to use the Windows APIs to check if the TPM is enabled and activated
-        public static TpmResult Get()
+        internal static TpmResult Get()
         {
             bool isEnabled = false;
             bool isActivated = false;

@@ -7,14 +7,14 @@ using System.Collections.Generic;
 namespace HardenWindowsSecurity
 {
     // Class to hold the result of the hashtable check
-    public class HashtableCheckerResult
+    internal class HashtableCheckerResult
     {
-        public bool IsMatch { get; set; } // Indicates if the value matches
-        public string? Value { get; set; } // The value from the hashtable if found
+        internal bool IsMatch { get; set; } // Indicates if the value matches
+        internal string? Value { get; set; } // The value from the hashtable if found
     }
 
     // Static class containing the method to check values in a hashtable
-    public static class HashtableChecker
+    internal static class HashtableChecker
     {
         /// <summary>
         /// Method to check if a value in the hashtable matches the supplied value
@@ -24,7 +24,7 @@ namespace HardenWindowsSecurity
         /// <param name="key">The key to be used against the Hashtable in order to get the value</param>
         /// <param name="compareValue">Our desired value which will be compared against the value found in the Hashtable after finding it based on the key we supply</param>
         /// <returns></returns>
-        public static HashtableCheckerResult CheckValue<T>(Hashtable hashtable, string key, T compareValue)
+        internal static HashtableCheckerResult CheckValue<T>(Hashtable hashtable, string key, T compareValue)
         {
             // Initialize the result object
             var result = new HashtableCheckerResult();

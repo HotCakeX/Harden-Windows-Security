@@ -5,12 +5,12 @@ using System.Globalization;
 
 namespace HardenWindowsSecurity
 {
-    public static class CultureInfoHelper
+    internal static class CultureInfoHelper
     {
         /// <summary>
         /// Get the current culture information just like PowerShell's Get-Culture cmdlet
         /// </summary>
-        public static HardenWindowsSecurity.CultureInfoProperties Get()
+        internal static HardenWindowsSecurity.CultureInfoProperties Get()
         {
             // Get the current culture information
             CultureInfo cultureInfo = CultureInfo.CurrentCulture;

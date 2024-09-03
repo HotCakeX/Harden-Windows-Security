@@ -5,13 +5,13 @@ using System.Collections.Generic;
 
 namespace HardenWindowsSecurity
 {
-    public partial class MDMClassProcessor
+    internal partial class MDMClassProcessor
     {
-        public string Name { get; set; }
-        public string Value { get; set; }
-        public string CimInstance { get; set; }
+        internal string Name { get; set; }
+        internal string Value { get; set; }
+        internal string CimInstance { get; set; }
 
-        public MDMClassProcessor(string name, string value, string cimInstance)
+        internal MDMClassProcessor(string name, string value, string cimInstance)
         {
             Name = name;
             Value = value;

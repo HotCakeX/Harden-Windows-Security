@@ -9,22 +9,22 @@ using System.Runtime.InteropServices;
 namespace HardenWindowsSecurity
 {
     // Class to represent a local user account
-    public class LocalUser
+    internal class LocalUser
     {
-        public string? AccountExpires { get; set; }
-        public string? Description { get; set; }
-        public bool Enabled { get; set; }
-        public string? FullName { get; set; }
-        public string? PasswordChangeableDate { get; set; }
-        public bool UserMayChangePassword { get; set; }
-        public bool PasswordRequired { get; set; }
-        public string? PasswordLastSet { get; set; }
-        public string? LastLogon { get; set; }
-        public string? Name { get; set; }
-        public string? SID { get; set; }
-        public string? ObjectClass { get; set; }
-        public List<string>? Groups { get; set; }
-        public List<string>? GroupsSIDs { get; set; }
+        internal string? AccountExpires { get; set; }
+        internal string? Description { get; set; }
+        internal bool Enabled { get; set; }
+        internal string? FullName { get; set; }
+        internal string? PasswordChangeableDate { get; set; }
+        internal bool UserMayChangePassword { get; set; }
+        internal bool PasswordRequired { get; set; }
+        internal string? PasswordLastSet { get; set; }
+        internal string? LastLogon { get; set; }
+        internal string? Name { get; set; }
+        internal string? SID { get; set; }
+        internal string? ObjectClass { get; set; }
+        internal List<string>? Groups { get; set; }
+        internal List<string>? GroupsSIDs { get; set; }
     }
 
 
@@ -33,7 +33,7 @@ namespace HardenWindowsSecurity
     /// It doesn't contain some properties such as PrincipalSource
     /// It doest contain additional properties about each user account such as their group memberships
     /// </summary>
-    public class LocalUserRetriever
+    internal class LocalUserRetriever
     {
         // https://learn.microsoft.com/en-us/windows/win32/api/sddl/nf-sddl-convertsidtostringsida
         [DllImport("advapi32.dll", CharSet = CharSet.Auto, SetLastError = true)]
@@ -43,7 +43,7 @@ namespace HardenWindowsSecurity
         /// Retrieves local user accounts on the system and returns them as a list of LocalUser objects
         /// </summary>
         /// <returns></returns>
-        public static List<LocalUser> Get()
+        internal static List<LocalUser> Get()
         {
             // List to hold retrieved local users
             List<LocalUser> localUsers = new List<LocalUser>();

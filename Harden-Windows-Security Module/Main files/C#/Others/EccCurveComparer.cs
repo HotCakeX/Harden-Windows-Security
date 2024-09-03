@@ -8,14 +8,14 @@ using System.Collections.Generic;
 
 namespace HardenWindowsSecurity
 {
-    public static class EccCurveComparer
+    internal static class EccCurveComparer
     {
         /// <summary>
         /// This method gets the currently applied ECC Curves from the system using PowerShell and evaluates them against the hardcoded list
         /// The comparison takes into account the exact position of the curves as well.
         /// </summary>
         /// <returns></returns>
-        public static HardenWindowsSecurity.EccCurveComparisonResult GetEccCurveComparison()
+        internal static HardenWindowsSecurity.EccCurveComparisonResult GetEccCurveComparison()
         {
             // Get current ECC curves from PowerShell and store them in a list
             List<string> currentEccCurves = GetCurrentEccCurves();

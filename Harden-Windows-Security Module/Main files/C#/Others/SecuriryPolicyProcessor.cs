@@ -6,14 +6,14 @@ using System.Linq;
 
 namespace HardenWindowsSecurity
 {
-    public class SecurityPolicyChecker
+    internal class SecurityPolicyChecker
     {
         /// <summary>
         /// The method is used to verify the compliance of security group policies on the system against the predefined values in the SecurityPoliciesVerification.csv
         /// </summary>
         /// <param name="category">The category to filter the CSV file content by</param>
         /// <returns></returns>
-        public static List<HardenWindowsSecurity.IndividualResult> CheckPolicyCompliance(string category)
+        internal static List<HardenWindowsSecurity.IndividualResult> CheckPolicyCompliance(string category)
         {
             // Create a list of IndividualResult objects
             List<HardenWindowsSecurity.IndividualResult> nestedObjectArray = new List<HardenWindowsSecurity.IndividualResult>();

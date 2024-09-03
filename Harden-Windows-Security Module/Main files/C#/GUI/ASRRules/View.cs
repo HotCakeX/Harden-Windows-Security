@@ -222,12 +222,7 @@ namespace HardenWindowsSecurity
                     return FilePath;
                 }
 
-                if (ExecuteButton == null)
-                {
-                    throw new Exception("ExecuteButton is null.");
-                }
-
-
+                
                 // Apply the ASR Rule configs only if user has Admin privileges
                 if (!HardenWindowsSecurity.UserPrivCheck.IsAdmin())
                 {

@@ -6,10 +6,10 @@ using System.Xml;
 
 namespace HardenWindowsSecurity
 {
-    public static class MitigationPolicyProcessor
+    internal static class MitigationPolicyProcessor
     {
         // This method processes the exploit mitigation policies of the current system and returns a dictionary of the mitigations applied to each executable
-        public static Dictionary<string, HashSet<string>> ProcessMitigationPolicies(string xmlPath)
+        internal static Dictionary<string, HashSet<string>> ProcessMitigationPolicies(string xmlPath)
         {
             // Load the XML document
             XmlDocument xmlDoc = new XmlDocument();

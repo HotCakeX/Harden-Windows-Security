@@ -23,8 +23,23 @@
                     <ColumnDefinition Width='228' />
                     <ColumnDefinition Width='*' />
                 </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="10"/>
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+
+                <ProgressBar x:Name="MainProgressBar"
+    Grid.Row="0"
+    IsIndeterminate="True"
+    Height="5"
+    Background="Transparent"
+    Foreground="DeepPink"
+    Margin="0,0,0,5"
+    Grid.ColumnSpan="2"
+    BorderThickness="0" />
+
                 <!--// Navigation Panel //-->
-                <Grid HorizontalAlignment='Left' Width='228' Margin="0,50,0,50" x:Name="SidebarGrid">
+                <Grid Grid.Column="0" Grid.Row="1" HorizontalAlignment='Left' Width='228' Margin="0,50,0,50" x:Name="SidebarGrid">
                     <!--// background of the tabs sidebar can be set using border background //-->
                     <Border>
                         <ScrollViewer VerticalScrollBarVisibility="Auto">
@@ -75,7 +90,7 @@
                         </ScrollViewer>
                     </Border>
                 </Grid>
-                <Grid Grid.Column='1' x:Name="CurrentViewGrid">
+                <Grid Grid.Column='1' Grid.Row="1" x:Name="CurrentViewGrid">
                     <ContentControl x:Name='Pages' Content='{Binding CurrentView}' />
                 </Grid>
             </Grid>

@@ -49,6 +49,9 @@ namespace HardenWindowsSecurity
 
                     // Update the enabled/disabled state of all registered UI elements when the activity status changes.
                     UpdateUIElements();
+
+                    // Update the visibility of the main progress bar based on the activity status.
+                    UpdateMainProgressBarVisibility();
                 }
             }
         }
@@ -118,6 +121,22 @@ namespace HardenWindowsSecurity
                     element.IsEnabled = !_isActive;
                 });
             }
+        }
+
+        /// <summary>
+        /// Updates the visibility of the main progress bar based on the current activity status.
+        /// This method is called whenever the activity status changes.
+        /// </summary>
+        private static void UpdateMainProgressBarVisibility()
+        {
+            // Ensure that the update to the progress bar's visibility happens on the UI thread.
+            HardenWindowsSecurity.GUIMain.app!.Dispatcher.Invoke(() =>
+            {
+                // Set the Visibility property of the main progress bar based on the current activity status.
+                // If the application is active (_isActive is true), set Visibility to Visible.
+                // If the application is not active (_isActive is false), set Visibility to Collapsed.
+                GUIMain.mainProgressBar!.Visibility = _isActive ? Visibility.Visible : Visibility.Collapsed;
+            });
         }
     }
 }

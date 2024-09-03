@@ -77,13 +77,8 @@ namespace HardenWindowsSecurity
                 GUIProtectWinSecurity.parentGrid = (System.Windows.Controls.Grid)GUIProtectWinSecurity.View.FindName("ParentGrid");
                 GUIProtectWinSecurity.mainTabControlToggle = (System.Windows.Controls.Primitives.ToggleButton)GUIProtectWinSecurity.parentGrid.FindName("MainTabControlToggle");
                 GUIProtectWinSecurity.mainContentControl = (System.Windows.Controls.ContentControl)GUIProtectWinSecurity.mainTabControlToggle.FindName("MainContentControl");
-
-                // Finding the progress bar
-                GUIProtectWinSecurity.mainProgressBar = (System.Windows.Controls.ProgressBar)GUIProtectWinSecurity.parentGrid.FindName("MainProgressBar");
-
-                // Set Main progress bar visibility initially to Collapsed
-                GUIProtectWinSecurity.mainProgressBar.Visibility = Visibility.Collapsed;
-
+                
+                
                 // Due to using ToggleButton as Tab Control element, this is now considered the parent of all inner elements
                 GUIProtectWinSecurity.mainContentControlStyle = (System.Windows.Style)GUIProtectWinSecurity.mainContentControl.FindName("MainContentControlStyle");
 

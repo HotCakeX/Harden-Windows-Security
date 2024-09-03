@@ -1,12 +1,7 @@
 using System;
-using System.Collections;
-using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Threading;
 using System.IO;
-using System.Management.Automation.Host;
 using System.Diagnostics;
-using Microsoft.CodeAnalysis;
 
 #nullable enable
 

@@ -84,7 +84,6 @@ namespace HardenWindowsSecurity
         public static System.Windows.Controls.ListView? subCategories;
         public static System.Windows.Controls.CheckBox? selectAllCategories;
         public static System.Windows.Controls.CheckBox? selectAllSubCategories;
-        public static System.Windows.Controls.ProgressBar? mainProgressBar;
 
 
         // fields for Log related elements

@@ -45,5 +45,8 @@ namespace HardenWindowsSecurity
 
         // Sidebar menu Grid in the main Window
         public static System.Windows.Controls.Grid? SidebarGrid;
+
+        // The main progress bar for the entire GUI
+        public static System.Windows.Controls.ProgressBar? mainProgressBar;
     }
 }

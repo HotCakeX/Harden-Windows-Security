@@ -13,8 +13,6 @@
     <Grid x:Name="ParentGrid" Margin="-2.3,-2.3,-2.3,-2.3">
         <!-- Row definitions for the grid -->
         <Grid.RowDefinitions>
-            <!-- Progress Bar Row -->
-            <RowDefinition Height="20"/>
             <!-- Main Toggle Button Row -->
             <RowDefinition Height="Auto"/>
             <!-- Main Content Control for all other elements Row -->
@@ -27,17 +25,8 @@
             <ColumnDefinition Width="*"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
-        <ProgressBar x:Name="MainProgressBar"
-           Grid.Row="0"
-           IsIndeterminate="True"
-           Height="5"
-           Background="Transparent"
-           Foreground="DeepPink"
-           Margin="0,0,0,10"
-           Grid.ColumnSpan="2"
-           BorderThickness="0" />
 
-        <StackPanel Margin="0" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Row="1" Grid.ColumnSpan="2">
+        <StackPanel Margin="0" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Row="0" Grid.ColumnSpan="2">
 
             <!-- ComboBox -->
             <ComboBox x:Name="ProtectionPresetComboBox"
@@ -83,7 +72,7 @@
         </StackPanel>
 
         <!-- ContentControl to display content based on the ToggleButton's state -->
-        <ContentControl Grid.Row="2" Grid.ColumnSpan="2" x:Name="MainContentControl">
+        <ContentControl Grid.Row="1" Grid.ColumnSpan="2" x:Name="MainContentControl">
             <ContentControl.Style>
                 <Style TargetType="ContentControl" x:Name="MainContentControlStyle">
                     <Style.Triggers>
@@ -638,7 +627,7 @@
             </ContentControl.Style>
         </ContentControl>
         <!-- Grid containing the Execute Button -->
-        <Grid x:Name="ExecuteButtonGrid" Grid.Row="3" Grid.ColumnSpan="2" Height="150">
+        <Grid x:Name="ExecuteButtonGrid" Grid.Row="2" Grid.ColumnSpan="2" Height="150">
             <!-- First Ellipse (Forward1) - Represents the outermost expanding ellipse when the button is clicked -->
             <!-- Initial height and Width of the Ellipse -->
             <Ellipse x:Name="EclipseForward1"

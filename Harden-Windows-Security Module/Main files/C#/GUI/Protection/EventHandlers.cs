@@ -124,11 +124,7 @@ namespace HardenWindowsSecurity
             {
                 throw new Exception("AddEventHandlers Method: ExecuteButton object is empty!");
             }
-
-            if (GUIProtectWinSecurity.mainProgressBar == null)
-            {
-                throw new Exception("AddEventHandlers Method: mainProgressBar object is empty!");
-            }
+          
             #endregion
 
 
@@ -432,10 +428,7 @@ namespace HardenWindowsSecurity
                             {
                                 // Set the execute button to disabled until all the prerequisites are met
                                 HardenWindowsSecurity.GUIProtectWinSecurity.ExecuteButton.IsEnabled = false;
-
-                                // Display the progress bar during file download
-                                HardenWindowsSecurity.GUIProtectWinSecurity.mainProgressBar.Visibility = Visibility.Visible;
-
+                               
                                 // Start the execute button's operation to show the files are being downloaded
                                 HardenWindowsSecurity.GUIProtectWinSecurity.ExecuteButton.IsChecked = true;
                             });
@@ -464,8 +457,7 @@ namespace HardenWindowsSecurity
                             // Enabling the execute button after all files are downloaded and ready or if Offline switch was used and download was skipped
                             HardenWindowsSecurity.GUIProtectWinSecurity.View.Dispatcher.Invoke(() =>
                             {
-                                HardenWindowsSecurity.GUIProtectWinSecurity.ExecuteButton.IsEnabled = true;
-                                HardenWindowsSecurity.GUIProtectWinSecurity.mainProgressBar.Visibility = Visibility.Hidden;
+                                HardenWindowsSecurity.GUIProtectWinSecurity.ExecuteButton.IsEnabled = true;                               
                                 HardenWindowsSecurity.GUIProtectWinSecurity.ExecuteButton.IsChecked = false;
                             });
                         }
@@ -507,10 +499,7 @@ namespace HardenWindowsSecurity
                            // Call the method to get the selected categories and sub-categories
                            HardenWindowsSecurity.GUIProtectWinSecurity.ExecuteButtonPress();
                            // Disable the textfilepath for the log file path
-                           HardenWindowsSecurity.GUIProtectWinSecurity.txtFilePath!.IsEnabled = false;
-                           // Display the progress bar while activity is running
-                           HardenWindowsSecurity.GUIProtectWinSecurity.mainProgressBar!.Visibility = Visibility.Visible;
-
+                           HardenWindowsSecurity.GUIProtectWinSecurity.txtFilePath!.IsEnabled = false; 
                        });
 
                        // If Offline mode is used
@@ -765,9 +754,7 @@ namespace HardenWindowsSecurity
                            if (GUIProtectWinSecurity.log!.IsChecked == true)
                            {
                                HardenWindowsSecurity.GUIProtectWinSecurity.txtFilePath!.IsEnabled = true;
-                           }
-                           // stop displaying the progress bar
-                           HardenWindowsSecurity.GUIProtectWinSecurity.mainProgressBar!.Visibility = Visibility.Collapsed;
+                           }                         
                        });
 
                    });

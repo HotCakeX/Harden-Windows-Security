@@ -343,6 +343,9 @@ End time: {DateTime.Now}
             // Finding the sidebar Grid
             HardenWindowsSecurity.GUIMain.SidebarGrid = GUIMain.mainGUIWindow.FindName("SidebarGrid") as System.Windows.Controls.Grid;
 
+            // Finding the progress bar
+            GUIMain.mainProgressBar = (System.Windows.Controls.ProgressBar)GUIMain.mainGUIWindow.FindName("MainProgressBar");
+
             // Protect button icon
             System.Windows.Controls.Grid ProtectButtonGrid = SidebarGrid.FindName("ProtectButtonGrid") as System.Windows.Controls.Grid;
             System.Windows.Controls.Image ProtectButtonIcon = ProtectButtonGrid.FindName("ProtectButtonIcon") as System.Windows.Controls.Image;

@@ -93,6 +93,7 @@
 - <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/wings/redwings.gif" width="35"> [How To Asynchronously Access All Stream Outputs From Background Jobs In PowerShell](https://github.com/HotCakeX/Harden-Windows-Security/wiki/How-To-Asynchronously-Access-All-Stream-Outputs-From-Background-Jobs-In-PowerShell)
 - <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/wings/redwings.gif" width="35"> [Powershell Dynamic Parameters and How to Add Them to the Get‐Help Syntax](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Powershell-Dynamic-Parameters-and-How-to-Add-Them-to-the-Get%E2%80%90Help-Syntax)
 - <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/wings/redwings.gif" width="35"> [RunSpaces In PowerShell](https://github.com/HotCakeX/Harden-Windows-Security/wiki/RunSpaces-In-PowerShell)
+- <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/wings/redwings.gif" width="35"> [How To Use Reflection And Prevent Using Internal & Private C# Methods in PowerShell](https://github.com/HotCakeX/Harden-Windows-Security/wiki/How-To-Use-Reflection-And-Prevent-Using-Internal-&-Private-C%23-Methods-in-PowerShell)
 
 <br>
 

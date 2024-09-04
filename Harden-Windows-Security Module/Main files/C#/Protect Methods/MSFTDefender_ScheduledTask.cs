@@ -1,11 +1,3 @@
-using System;
-using System.IO;
-using System.Diagnostics;
-using System.Collections.Generic;
-using System.Linq;
-using System.Management.Automation;
-using System.Collections.ObjectModel;
-
 #nullable enable
 
 namespace HardenWindowsSecurity
@@ -14,7 +6,7 @@ namespace HardenWindowsSecurity
     {
         public static void MSFTDefender_ScheduledTask()
         {
-            HardenWindowsSecurity.Logger.LogMessage("Creating scheduled task for fast weekly Microsoft recommended driver block list update");
+            HardenWindowsSecurity.Logger.LogMessage("Creating scheduled task for fast weekly Microsoft recommended driver block list update", LogTypeIntel.Information);
 
             HardenWindowsSecurity.PowerShellExecutor.ExecuteScript("""
 # Create a scheduled task action, this defines how to download and install the latest Microsoft Recommended Driver Block Rules

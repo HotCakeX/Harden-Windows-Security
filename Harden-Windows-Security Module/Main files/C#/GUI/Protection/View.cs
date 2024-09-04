@@ -1,39 +1,9 @@
 ﻿using System;
-using System.IO;
-using System.Collections;
 using System.Collections.Generic;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Controls.Primitives;
-using System.Windows.Markup;
-using System.Xml;
-using System.Windows.Media.Imaging;
+using System.IO;
 using System.Linq;
 using System.Windows.Forms;
-using System.Collections.Concurrent;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Effects;
-using System.Windows.Threading;
-using System.Runtime.CompilerServices;
-using System.Diagnostics;
-using System.ComponentModel;
-using System.Threading;
-using System.Windows.Automation;
-using System.Windows.Controls.Ribbon;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Forms.Integration;
-using System.Windows.Ink;
-using System.Windows.Media.Animation;
-using System.Windows.Media.Media3D;
-using System.Windows.Media.TextFormatting;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using System.Windows.Shell;
-using System.Threading.Tasks;
-using System.Text;
-using System.Reflection.PortableExecutable;
+using System.Windows.Markup;
 
 #nullable disable
 
@@ -78,11 +48,6 @@ namespace HardenWindowsSecurity
                 GUIProtectWinSecurity.mainTabControlToggle = (System.Windows.Controls.Primitives.ToggleButton)GUIProtectWinSecurity.parentGrid.FindName("MainTabControlToggle");
                 GUIProtectWinSecurity.mainContentControl = (System.Windows.Controls.ContentControl)GUIProtectWinSecurity.mainTabControlToggle.FindName("MainContentControl");
 
-                // Finding the progress bar
-                GUIProtectWinSecurity.mainProgressBar = (System.Windows.Controls.ProgressBar)GUIProtectWinSecurity.parentGrid.FindName("MainProgressBar");
-
-                // Set Main progress bar visibility initially to Collapsed
-                GUIProtectWinSecurity.mainProgressBar.Visibility = Visibility.Collapsed;
 
                 // Due to using ToggleButton as Tab Control element, this is now considered the parent of all inner elements
                 GUIProtectWinSecurity.mainContentControlStyle = (System.Windows.Style)GUIProtectWinSecurity.mainContentControl.FindName("MainContentControlStyle");
@@ -94,10 +59,38 @@ namespace HardenWindowsSecurity
                 //
                 // [System.Windows.Style]$MainContentControlStyle = $MainContentControl.FindName('MainContentControlStyle')
                 // $MainContentControlStyle.FindName('PathIcon1').Source
-                ((System.Windows.Controls.Image)((System.Windows.Markup.INameScope)GUIProtectWinSecurity.mainContentControlStyle).FindName("PathIcon1")).Source = new System.Windows.Media.Imaging.BitmapImage(new Uri(System.IO.Path.Combine(HardenWindowsSecurity.GlobalVars.path, "Resources", "Media", "path.png")));
-                ((System.Windows.Controls.Image)((System.Windows.Markup.INameScope)GUIProtectWinSecurity.mainContentControlStyle).FindName("PathIcon2")).Source = new System.Windows.Media.Imaging.BitmapImage(new Uri(System.IO.Path.Combine(HardenWindowsSecurity.GlobalVars.path, "Resources", "Media", "path.png")));
-                ((System.Windows.Controls.Image)((System.Windows.Markup.INameScope)GUIProtectWinSecurity.mainContentControlStyle).FindName("PathIcon3")).Source = new System.Windows.Media.Imaging.BitmapImage(new Uri(System.IO.Path.Combine(HardenWindowsSecurity.GlobalVars.path, "Resources", "Media", "path.png")));
-                ((System.Windows.Controls.Image)((System.Windows.Markup.INameScope)GUIProtectWinSecurity.mainContentControlStyle).FindName("LogButtonIcon")).Source = new System.Windows.Media.Imaging.BitmapImage(new Uri(System.IO.Path.Combine(HardenWindowsSecurity.GlobalVars.path, "Resources", "Media", "log.png")));
+
+                // PathIcon1
+                var PathIcon1Image = new System.Windows.Media.Imaging.BitmapImage();
+                PathIcon1Image.BeginInit();
+                PathIcon1Image.UriSource = new Uri(System.IO.Path.Combine(HardenWindowsSecurity.GlobalVars.path, "Resources", "Media", "path.png"));
+                PathIcon1Image.CacheOption = System.Windows.Media.Imaging.BitmapCacheOption.OnLoad; // Load the image data into memory
+                PathIcon1Image.EndInit();
+                ((System.Windows.Controls.Image)((System.Windows.Markup.INameScope)GUIProtectWinSecurity.mainContentControlStyle).FindName("PathIcon1")).Source = PathIcon1Image;
+
+                // PathIcon2
+                var PathIcon2Image = new System.Windows.Media.Imaging.BitmapImage();
+                PathIcon2Image.BeginInit();
+                PathIcon2Image.UriSource = new Uri(System.IO.Path.Combine(HardenWindowsSecurity.GlobalVars.path, "Resources", "Media", "path.png"));
+                PathIcon2Image.CacheOption = System.Windows.Media.Imaging.BitmapCacheOption.OnLoad; // Load the image data into memory
+                PathIcon2Image.EndInit();
+                ((System.Windows.Controls.Image)((System.Windows.Markup.INameScope)GUIProtectWinSecurity.mainContentControlStyle).FindName("PathIcon2")).Source = PathIcon2Image;
+
+                // PathIcon3
+                var PathIcon3Image = new System.Windows.Media.Imaging.BitmapImage();
+                PathIcon3Image.BeginInit();
+                PathIcon3Image.UriSource = new Uri(System.IO.Path.Combine(HardenWindowsSecurity.GlobalVars.path, "Resources", "Media", "path.png"));
+                PathIcon3Image.CacheOption = System.Windows.Media.Imaging.BitmapCacheOption.OnLoad; // Load the image data into memory
+                PathIcon3Image.EndInit();
+                ((System.Windows.Controls.Image)((System.Windows.Markup.INameScope)GUIProtectWinSecurity.mainContentControlStyle).FindName("PathIcon3")).Source = PathIcon3Image;
+
+                // LogButtonIcon
+                var LogButtonIconImage = new System.Windows.Media.Imaging.BitmapImage();
+                LogButtonIconImage.BeginInit();
+                LogButtonIconImage.UriSource = new Uri(System.IO.Path.Combine(HardenWindowsSecurity.GlobalVars.path, "Resources", "Media", "log.png"));
+                LogButtonIconImage.CacheOption = System.Windows.Media.Imaging.BitmapCacheOption.OnLoad; // Load the image data into memory
+                LogButtonIconImage.EndInit();
+                ((System.Windows.Controls.Image)((System.Windows.Markup.INameScope)GUIProtectWinSecurity.mainContentControlStyle).FindName("LogButtonIcon")).Source = LogButtonIconImage;
 
                 #region Combobox
                 GUIProtectWinSecurity.ProtectionPresetComboBox = GUIProtectWinSecurity.parentGrid.FindName("ProtectionPresetComboBox") as System.Windows.Controls.ComboBox;
@@ -364,10 +357,15 @@ namespace HardenWindowsSecurity
                 GUIProtectWinSecurity.ExecuteButtonImage = GUIProtectWinSecurity.ExecuteButton.Template.FindName("ExecuteIconImage", GUIProtectWinSecurity.ExecuteButton) as System.Windows.Controls.Image;
 
                 // Update the image source for the execute button
-                GUIProtectWinSecurity.ExecuteButtonImage!.Source =
-                    new System.Windows.Media.Imaging.BitmapImage(
-                        new Uri(System.IO.Path.Combine(HardenWindowsSecurity.GlobalVars.path!, "Resources", "Media", "ExecuteButton.png"))
-                    );
+                // Load the Execute button image into memory and set it as the source
+                var ExecuteButtonBitmapImage = new System.Windows.Media.Imaging.BitmapImage();
+                ExecuteButtonBitmapImage.BeginInit();
+                ExecuteButtonBitmapImage.UriSource = new Uri(System.IO.Path.Combine(HardenWindowsSecurity.GlobalVars.path!, "Resources", "Media", "ExecuteButton.png"));
+                ExecuteButtonBitmapImage.CacheOption = System.Windows.Media.Imaging.BitmapCacheOption.OnLoad; // Load the image data into memory
+                ExecuteButtonBitmapImage.EndInit();
+
+                GUIProtectWinSecurity.ExecuteButtonImage!.Source = ExecuteButtonBitmapImage;
+
 
                 GUIProtectWinSecurity.categories = (System.Windows.Controls.ListView)((System.Windows.Markup.INameScope)GUIProtectWinSecurity.mainContentControlStyle).FindName("Categories");
                 GUIProtectWinSecurity.subCategories = (System.Windows.Controls.ListView)((System.Windows.Markup.INameScope)GUIProtectWinSecurity.mainContentControlStyle).FindName("SubCategories");
@@ -378,8 +376,7 @@ namespace HardenWindowsSecurity
                 GUIProtectWinSecurity.txtFilePath = (System.Windows.Controls.TextBox)((System.Windows.Markup.INameScope)GUIProtectWinSecurity.mainContentControlStyle).FindName("txtFilePath");
                 GUIProtectWinSecurity.logPath = (System.Windows.Controls.Button)((System.Windows.Markup.INameScope)GUIProtectWinSecurity.mainContentControlStyle).FindName("LogPath");
                 GUIProtectWinSecurity.log = (System.Windows.Controls.Primitives.ToggleButton)((System.Windows.Markup.INameScope)GUIProtectWinSecurity.mainContentControlStyle).FindName("Log");
-                GUIProtectWinSecurity.loggingViewBox = (System.Windows.Controls.Viewbox)((System.Windows.Markup.INameScope)GUIProtectWinSecurity.mainContentControlStyle).FindName("LoggingViewBox");
-
+                GUIProtectWinSecurity.EventLogging = (System.Windows.Controls.Primitives.ToggleButton)((System.Windows.Markup.INameScope)GUIProtectWinSecurity.mainContentControlStyle).FindName("EventLogging");
 
                 // initializations for Offline-Mode related elements
                 GUIProtectWinSecurity.grid2 = (System.Windows.Controls.Grid)((System.Windows.Markup.INameScope)GUIProtectWinSecurity.mainContentControlStyle).FindName("Grid2");
@@ -425,7 +422,7 @@ namespace HardenWindowsSecurity
                         if (dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
                         {
                             GUIProtectWinSecurity.txtFilePath.Text = dialog.FileName;
-                            HardenWindowsSecurity.Logger.LogMessage($"Logs will be saved in: {GUIProtectWinSecurity.txtFilePath.Text}");
+                            HardenWindowsSecurity.Logger.LogMessage($"Logs will be saved in: {GUIProtectWinSecurity.txtFilePath.Text}", LogTypeIntel.Information);
                         }
                     }
                 };
@@ -486,8 +483,7 @@ namespace HardenWindowsSecurity
 
                 // Register additional elements for automatic enablement/disablement
                 HardenWindowsSecurity.ActivityTracker.RegisterUIElement(GUIProtectWinSecurity.logPath);
-                HardenWindowsSecurity.ActivityTracker.RegisterUIElement(GUIProtectWinSecurity.loggingViewBox);
-
+                HardenWindowsSecurity.ActivityTracker.RegisterUIElement(GUIProtectWinSecurity.log);
 
                 // Cache the view before setting it as the CurrentView
                 _viewCache["ProtectView"] = GUIProtectWinSecurity.View;

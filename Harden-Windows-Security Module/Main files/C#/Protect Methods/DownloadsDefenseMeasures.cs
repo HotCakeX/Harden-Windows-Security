@@ -1,8 +1,4 @@
 using System;
-using System.IO;
-using System.Globalization;
-using System.Management.Automation;
-using System.Security.Principal;
 
 #nullable enable
 
@@ -12,7 +8,7 @@ namespace HardenWindowsSecurity
     {
         public static void Invoke()
         {
-            HardenWindowsSecurity.Logger.LogMessage("Running the Downloads Defense Measures category");
+            HardenWindowsSecurity.Logger.LogMessage("Running the Downloads Defense Measures category", LogTypeIntel.Information);
 
             string UserValue = string.Empty;
 
@@ -31,22 +27,24 @@ namespace HardenWindowsSecurity
             // PowerShell script with embedded {UserValue} directly in the string using @""
             string script = $@"
 $VerbosePreference = 'Continue'
+$script:ErrorActionPreference = 'Stop'
 
 #region Installation And Update
 
 # a flag indicating the WDACConfig module must be downloaded and installed on the system
 [System.Boolean]$ShouldInstallWDACConfigModule = $true
 
-# Getting the latest available version number of the WDACConfig module
+Write-Verbose -Message 'Getting the latest available version number of the WDACConfig module'
 [System.Version]$WDACConfigLatestVersion = Invoke-RestMethod -Uri 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/WDACConfig/version.txt'
 
-# Getting the latest available version of the WDACConfig module from the local system, if it exists
+Write-Verbose -Message 'Getting the latest available version of the WDACConfig module from the local system, if it exists'
 [System.Management.Automation.PSModuleInfo]$WDACConfigModuleLocalStatus = Get-Module -ListAvailable -Name 'WDACConfig' -Verbose:$false | Sort-Object -Property Version -Descending | Select-Object -First 1
 
 # If the WDACConfig module is already installed on the system and its version is greater than or equal to the latest version available on GitHub repo then don't install it again
 if (($null -ne $WDACConfigModuleLocalStatus) -and ($WDACConfigModuleLocalStatus.count -gt 0)) {{
     if ($WDACConfigModuleLocalStatus.Version -ge $WDACConfigLatestVersion) {{
         $ShouldInstallWDACConfigModule = $false
+        Write-Verbose -Message 'Skipping WDACConfig module installation, it is already installed.'
     }}
     else {{
         [System.String]$ReasonToInstallWDACConfigModule = ""the installed WDACConfig module version $($WDACConfigModuleLocalStatus.Version) is less than the latest available version $($WDACConfigLatestVersion)""

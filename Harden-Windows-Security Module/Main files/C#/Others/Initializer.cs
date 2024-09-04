@@ -1,9 +1,8 @@
-using System;
-using System.IO;
 using Microsoft.Win32;
-using System.Management.Automation;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 
 #nullable enable
 

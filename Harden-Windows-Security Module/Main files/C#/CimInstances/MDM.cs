@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Management;
 using System.Threading.Tasks;
-using System.Globalization;
 
 #nullable enable
 
@@ -65,7 +64,7 @@ namespace HardenWindowsSecurity
                             catch (ManagementException e)
                             {
                                 // Write verbose error message if connection fails
-                                HardenWindowsSecurity.Logger.LogMessage($"Error connecting to namespace {record.Namespace}: {e.Message}");
+                                HardenWindowsSecurity.Logger.LogMessage($"Error connecting to namespace {record.Namespace}: {e.Message}", LogTypeIntel.Error);
                             }
 
                             // Create object query for the current class
@@ -97,7 +96,7 @@ namespace HardenWindowsSecurity
                             catch (ManagementException e)
                             {
                                 // Write verbose error message if query fails
-                                HardenWindowsSecurity.Logger.LogMessage($"Error querying {record.Class}: {e.Message}");
+                                HardenWindowsSecurity.Logger.LogMessage($"Error querying {record.Class}: {e.Message}", LogTypeIntel.Error);
                             }
 
                             // Add class results to main results dictionary in a thread-safe manner

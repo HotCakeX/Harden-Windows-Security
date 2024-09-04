@@ -1,14 +1,5 @@
 using System;
-using System.Collections.Generic;
-using Microsoft.Win32;
-using System.Linq;
 using System.Diagnostics;
-using System.IO;
-using System.Management;
-using System.Management.Automation;
-using System.Collections.ObjectModel;
-using System.Threading;
-using System.Threading.Tasks;
 
 #nullable enable
 
@@ -58,7 +49,7 @@ namespace HardenWindowsSecurity
 
                 if (!string.IsNullOrEmpty(error))
                 {
-                    HardenWindowsSecurity.Logger.LogMessage("Error: " + error);
+                    HardenWindowsSecurity.Logger.LogMessage("Error: " + error, LogTypeIntel.Error);
                 }
             }
         }

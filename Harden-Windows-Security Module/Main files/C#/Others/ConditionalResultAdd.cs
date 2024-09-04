@@ -32,12 +32,12 @@ namespace HardenWindowsSecurity
                         nestedObjectArray.Remove(existingItem);
                         // Add the current item with Compliant status "True"
                         nestedObjectArray.Add(result);
-                        HardenWindowsSecurity.Logger.LogMessage($"Item with Name '{existingItem.Name}' and FriendlyName '{existingItem.FriendlyName}' replaced with a compliant item.");
+                        HardenWindowsSecurity.Logger.LogMessage($"Item with Name '{existingItem.Name}' and FriendlyName '{existingItem.FriendlyName}' replaced with a compliant item.", LogTypeIntel.Information);
                     }
                     else
                     {
                         // Write a descriptive and detailed message to the console
-                        HardenWindowsSecurity.Logger.LogMessage($"Item not added: An item with Name '{existingItem.Name}' and FriendlyName '{existingItem.FriendlyName}' already exists with Compliant status '{existingItem.Compliant}' and Value '{existingItem.Value}'.");
+                        HardenWindowsSecurity.Logger.LogMessage($"Item not added: An item with Name '{existingItem.Name}' and FriendlyName '{existingItem.FriendlyName}' already exists with Compliant status '{existingItem.Compliant}' and Value '{existingItem.Value}'.", LogTypeIntel.Information);
                     }
                 }
                 //    else

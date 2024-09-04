@@ -1,8 +1,4 @@
-using System;
 using System.IO;
-using System.Globalization;
-using System.Management.Automation;
-using System.Collections.ObjectModel;
 
 #nullable enable
 
@@ -17,7 +13,7 @@ namespace HardenWindowsSecurity
                 throw new System.ArgumentNullException("GlobalVars.path cannot be null.");
             }
 
-            HardenWindowsSecurity.Logger.LogMessage("Running the Dangerous Script Hosts Blocking section");
+            HardenWindowsSecurity.Logger.LogMessage("Running the Dangerous Script Hosts Blocking section", LogTypeIntel.Information);
 
             string CIPPath = Path.Combine(HardenWindowsSecurity.GlobalVars.WorkingDir, "Dangerous-Script-Hosts-Blocking.cip");
             string XMLPath = Path.Combine(HardenWindowsSecurity.GlobalVars.path, "Resources", "Dangerous-Script-Hosts-Blocking.xml");

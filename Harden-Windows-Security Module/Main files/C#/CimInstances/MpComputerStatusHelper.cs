@@ -1,10 +1,8 @@
 using System;
+using System.Collections.Generic;
+using System.Dynamic;
 using System.Linq;
 using System.Management;
-using System.Dynamic;
-using System.Globalization;
-using System.Collections.Generic;
-using System.Collections;
 
 #nullable enable
 
@@ -154,11 +152,11 @@ namespace HardenWindowsSecurity
                 // Invoke the method to apply the settings
                 mpPreferenceClass.InvokeMethod("Set", methodParams, null);
 
-                HardenWindowsSecurity.Logger.LogMessage($"{preferenceName} set to {preferenceValue} (Type: {typeof(T).Name}) successfully.");
+                HardenWindowsSecurity.Logger.LogMessage($"{preferenceName} set to {preferenceValue} (Type: {typeof(T).Name}) successfully.", LogTypeIntel.Information);
             }
             catch (Exception ex)
             {
-                HardenWindowsSecurity.Logger.LogMessage($"Error setting {preferenceName}: {ex.Message}- You might need you Update your OS first.");
+                HardenWindowsSecurity.Logger.LogMessage($"Error setting {preferenceName}: {ex.Message}- You might need you Update your OS first.", LogTypeIntel.Warning);
             }
         }
     }

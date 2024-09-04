@@ -1,39 +1,15 @@
+using Microsoft.Win32;
 using System;
-using System.IO;
-using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.IO;
+using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Controls.Primitives;
-using System.Windows.Markup;
-using System.Xml;
-using System.Windows.Media.Imaging;
-using System.Linq;
-using System.Windows.Forms;
-using System.Collections.Concurrent;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Effects;
+using System.Windows.Media.Imaging;
 using System.Windows.Threading;
-using System.Runtime.CompilerServices;
-using System.Diagnostics;
-using System.ComponentModel;
-using System.Threading;
-using System.Windows.Automation;
-using System.Windows.Controls.Ribbon;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Forms.Integration;
-using System.Windows.Ink;
-using System.Windows.Media.Animation;
-using System.Windows.Media.Media3D;
-using System.Windows.Media.TextFormatting;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using System.Windows.Shell;
-using System.Threading.Tasks;
-using System.Text;
-using System.Reflection.PortableExecutable;
 
 #nullable disable
 
@@ -231,7 +207,9 @@ namespace HardenWindowsSecurity
                 {
                     // Load the resource dictionary from the XAML file
                     System.Windows.ResourceDictionary resourceDict = (System.Windows.ResourceDictionary)System.Windows.Markup.XamlReader.Load(fs);
-                    GUIMain.app.Resources.MergedDictionaries.Add(resourceDict);  // Add to application resources to ensure dictionaries are available to the whole application
+
+                    // Add to application resources to ensure dictionaries are available to the whole application
+                    GUIMain.app.Resources.MergedDictionaries.Add(resourceDict);
                 }
             }
             #endregion
@@ -251,8 +229,21 @@ namespace HardenWindowsSecurity
             // Set the MainWindow for the application
             GUIMain.app.MainWindow = GUIMain.mainGUIWindow;
 
-            // Assigning the icon for the Harden Windows Security GUI
-            GUIMain.mainGUIWindow.Icon = new System.Windows.Media.Imaging.BitmapImage(new Uri(System.IO.Path.Combine(HardenWindowsSecurity.GlobalVars.path, "Resources", "Media", "ProgramIcon.ico")));
+            #region
+            // Caching the icon in memory so that when the GUI is closed in PowerShell module, there wil be no files in the module directory preventing deletion of the module itself
+            // "UriKind.Absolute" ensures that the path to the icon file is correctly interpreted as an absolute path.
+            Uri iconUri = new Uri(System.IO.Path.Combine(HardenWindowsSecurity.GlobalVars.path, "Resources", "Media", "ProgramIcon.ico"), UriKind.Absolute);
+
+            // Load the icon into a BitmapImage and cache it in memory
+            var IconBitmapImage = new BitmapImage();
+            IconBitmapImage.BeginInit();
+            IconBitmapImage.UriSource = iconUri;
+            IconBitmapImage.CacheOption = BitmapCacheOption.OnLoad; // Load the image data into memory
+            IconBitmapImage.EndInit();
+
+            // Assign the cached icon to the MainWindow
+            GUIMain.mainGUIWindow.Icon = IconBitmapImage;
+            #endregion
 
             // Set the DataContext for the main window
             GUIMain.mainGUIWindow.DataContext = new NavigationVM();
@@ -270,46 +261,110 @@ End time: {DateTime.Now}
 **********************
 """;
 
-                HardenWindowsSecurity.Logger.LogMessage(endOfLogFile);
+                HardenWindowsSecurity.Logger.LogMessage(endOfLogFile, LogTypeIntel.Information);
             };
 
+            // Exit Event, will work for the GUI when using compiled version of the app or in Visual Studio
+            GUIMain.app!.Exit += (object s, ExitEventArgs e) =>
+            {
+                HardenWindowsSecurity.ControlledFolderAccessHandler.Reset();
+                HardenWindowsSecurity.Miscellaneous.CleanUp();
+
+                // System.Windows.MessageBox.Show(messageBoxText: "Exiting!", caption: "Exit", button: MessageBoxButton.OK, icon: MessageBoxImage.Information);
+            };
+
+
+            // DispatcherUnhandledException Event is triggered when an unhandled exception occurs in the application
+            GUIMain.app!.DispatcherUnhandledException += (object s, DispatcherUnhandledExceptionEventArgs e) =>
+            {
+                // Create a custom error window
+                Window errorWindow = new Window
+                {
+                    Title = "An Error Occurred",
+                    Width = 450,
+                    Height = 300,
+                    WindowStartupLocation = WindowStartupLocation.CenterScreen,
+                    ResizeMode = ResizeMode.NoResize
+                };
+
+                StackPanel stackPanel = new StackPanel { Margin = new Thickness(20) };
+
+                TextBlock errorMessage = new TextBlock
+                {
+                    Text = "An error has occurred in the Harden Windows Security App. Please return to the PowerShell window to review the error details. Reporting this issue on GitHub will greatly assist me in addressing and resolving it promptly. Your feedback is invaluable to improving the software. 💚",
+                    Margin = new Thickness(0, 0, 0, 20),
+                    TextWrapping = TextWrapping.Wrap,
+                    FontSize = 14,
+                    FontWeight = FontWeights.SemiBold
+                };
+
+                Button okButton = new Button
+                {
+                    Content = "OK",
+                    Width = 120,
+                    Margin = new Thickness(10),
+                    FontSize = 12,
+                    Height = 50
+                };
+
+                okButton.Click += (sender, args) =>
+                {
+                    errorWindow.Close();
+                };
+
+                Button githubButton = new Button
+                {
+                    Content = "Report on GitHub",
+                    Width = 160,
+                    Margin = new Thickness(10),
+                    FontSize = 12,
+                    Height = 50
+                };
+                githubButton.Click += (sender, args) =>
+                {
+                    // Open the GitHub issues page
+                    System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
+                    {
+                        FileName = "https://github.com/HotCakeX/Harden-Windows-Security/issues",
+                        UseShellExecute = true // Ensure the link opens in the default browser
+                    });
+                    errorWindow.Close();
+                };
+
+                StackPanel buttonPanel = new StackPanel { Orientation = Orientation.Horizontal, HorizontalAlignment = HorizontalAlignment.Center };
+                buttonPanel.Children.Add(okButton);
+                buttonPanel.Children.Add(githubButton);
+
+                stackPanel.Children.Add(errorMessage);
+                stackPanel.Children.Add(buttonPanel);
+
+                errorWindow.Content = stackPanel;
+                errorWindow.ShowDialog();
+
+                e.Handled = false;
+            };
+
+
+
             /*
-                        // Startup Event
-                        GUIMain.app!.Startup += (object s, StartupEventArgs e) =>
-                        {
-                            // Display a welcome message
-                            System.Windows.MessageBox.Show(messageBoxText: "Welcome to the application!", caption: "Startup", button: MessageBoxButton.OK, icon: MessageBoxImage.Information);
-                        };
 
-                        // Exit Event
-                        GUIMain.app!.Exit += (object s, ExitEventArgs e) =>
-                        {
-                            System.Windows.MessageBox.Show(messageBoxText: "Exiting!", caption: "Exit", button: MessageBoxButton.OK, icon: MessageBoxImage.Information);
-                        };
+           // Startup Event
+           GUIMain.app!.Startup += (object s, StartupEventArgs e) =>
+           {
+               // Display a welcome message
+               System.Windows.MessageBox.Show(messageBoxText: "Welcome to the application!", caption: "Startup", button: MessageBoxButton.OK, icon: MessageBoxImage.Information);
+           };
 
-                        // DispatcherUnhandledException Event is triggered when an unhandled exception occurs in the application
-                        GUIMain.app!.DispatcherUnhandledException += (object s, DispatcherUnhandledExceptionEventArgs e) =>
-                        {
+            GUIMain.app!.Resources["GlobalStyle"] = new Style(typeof(System.Windows.Controls.Button))
+            {
+                Setters =
+                {
+                    new Setter(System.Windows.Controls.Button.BackgroundProperty, System.Windows.Media.Brushes.LightBlue),
+                    new Setter(System.Windows.Controls.Button.ForegroundProperty, System.Windows.Media.Brushes.DarkBlue)
+                }
+            };
 
-                            // Display an error message to the user
-                            System.Windows.MessageBox.Show(messageBoxText: "An unexpected error occurred.", caption: "Error", button: MessageBoxButton.OK, icon: MessageBoxImage.Error);
-
-                            // Mark the exception as handled
-                            e.Handled = true;
-                        };
             */
-
-            /*
-                        GUIMain.app!.Resources["GlobalStyle"] = new Style(typeof(System.Windows.Controls.Button))
-                        {
-                            Setters =
-                            {
-                                new Setter(System.Windows.Controls.Button.BackgroundProperty, System.Windows.Media.Brushes.LightBlue),
-                                new Setter(System.Windows.Controls.Button.ForegroundProperty, System.Windows.Media.Brushes.DarkBlue)
-                            }
-                        };
-            */
-
 
             // event handler to make the GUI window draggable wherever it's empty
             GUIMain.mainGUIWindow.MouseDown += (sender, e) =>
@@ -331,38 +386,136 @@ End time: {DateTime.Now}
             ImageBrush imageBrush = (ImageBrush)border.Background;
 
             // Set the ImageSource property to the desired image path
-            imageBrush.ImageSource = new System.Windows.Media.Imaging.BitmapImage(
-                    new Uri(System.IO.Path.Combine(HardenWindowsSecurity.GlobalVars.path!, "Resources", "Media", "background.jpg"))
-                );
+            // Load the background image into memory and set it as the ImageSource for the ImageBrush
+            var BackgroundBitmapImage = new System.Windows.Media.Imaging.BitmapImage();
+            BackgroundBitmapImage.BeginInit();
+            BackgroundBitmapImage.UriSource = new Uri(System.IO.Path.Combine(HardenWindowsSecurity.GlobalVars.path!, "Resources", "Media", "background.jpg"));
+            BackgroundBitmapImage.CacheOption = System.Windows.Media.Imaging.BitmapCacheOption.OnLoad; // Load the image data into memory
+            BackgroundBitmapImage.EndInit();
+
+            imageBrush.ImageSource = BackgroundBitmapImage;
+
+            #endregion
+
+            #region Inner border of the main GUI
+            System.Windows.Controls.Border InnerBorder = (System.Windows.Controls.Border)GUIMain.mainGUIWindow.FindName("InnerBorder");
+
+            // Finding the gradient brush background of the inner border
+            GUIMain.InnerBorderBackground = (System.Windows.Media.RadialGradientBrush)InnerBorder.Background;
+
+            // Finding the bottom left slider
+            GUIMain.BackgroundSlider = (System.Windows.Controls.Slider)GUIMain.mainGUIWindow.FindName("BackgroundOpacitySlider");
+
+            // Creating event handler for the slider
+            GUIMain.BackgroundSlider.ValueChanged += (sender, e) =>
+            {
+                var slider = (System.Windows.Controls.Slider)sender;
+
+                // Scale value from 0-100 to 0-1
+                double opacityValue = slider.Value / 100.0;
+
+                // Apply the scaled opacity value to the RadialGradientBrush background
+                GUIMain.InnerBorderBackground.Opacity = opacityValue;
+            };
+
             #endregion
 
             // Finding the sidebar Grid
             HardenWindowsSecurity.GUIMain.SidebarGrid = GUIMain.mainGUIWindow.FindName("SidebarGrid") as System.Windows.Controls.Grid;
 
+            // Finding the progress bar
+            GUIMain.mainProgressBar = (System.Windows.Controls.ProgressBar)GUIMain.mainGUIWindow.FindName("MainProgressBar");
+
+            // Finding the button responsible for changing the background image by browsing for image file
+            System.Windows.Controls.Button BackgroundChangeButton = (System.Windows.Controls.Button)GUIMain.mainGUIWindow.FindName("BackgroundChangeButton");
+
+            // event handler for button to open file picker to browse for image files
+            BackgroundChangeButton.Click += (sender, e) =>
+            {
+                try
+                {
+                    // Creating and configuring the OpenFileDialog
+                    OpenFileDialog openFileDialog = new OpenFileDialog();
+
+                    // Filter for image files
+                    openFileDialog.Filter = "Image Files|*.jpg;*.jpeg;*.png;";
+                    openFileDialog.Title = "Select an Image to set as the Harden Windows Security App's Background";
+
+                    // Show the dialog and get the result
+                    bool? result = openFileDialog.ShowDialog();
+
+                    if (result == true)
+                    {
+                        // Get the selected file path
+                        string filePath = openFileDialog.FileName;
+
+                        // Create a BitmapImage from the selected file
+                        BitmapImage bitmapImage = new BitmapImage();
+                        bitmapImage.BeginInit();
+                        bitmapImage.UriSource = new Uri(filePath, UriKind.Absolute);
+                        bitmapImage.EndInit();
+
+                        // Set the image as the source for the ImageBrush defined in the Border's Background earlier
+                        imageBrush.ImageSource = bitmapImage;
+                    }
+                }
+                catch
+                {
+                    Logger.LogMessage("An error occurred while trying to change the background image.", LogTypeIntel.Error);
+                }
+            };
+
+            #region sidebar menu assignments
             // Protect button icon
             System.Windows.Controls.Grid ProtectButtonGrid = SidebarGrid.FindName("ProtectButtonGrid") as System.Windows.Controls.Grid;
             System.Windows.Controls.Image ProtectButtonIcon = ProtectButtonGrid.FindName("ProtectButtonIcon") as System.Windows.Controls.Image;
-            ProtectButtonIcon.Source = new System.Windows.Media.Imaging.BitmapImage(new Uri(System.IO.Path.Combine(HardenWindowsSecurity.GlobalVars.path, "Resources", "Media", "ProtectMenuButton.png")));
+            var ProtectButtonImage = new System.Windows.Media.Imaging.BitmapImage();
+            ProtectButtonImage.BeginInit();
+            ProtectButtonImage.UriSource = new Uri(System.IO.Path.Combine(HardenWindowsSecurity.GlobalVars.path, "Resources", "Media", "ProtectMenuButton.png"));
+            ProtectButtonImage.CacheOption = System.Windows.Media.Imaging.BitmapCacheOption.OnLoad; // Load the image data into memory
+            ProtectButtonImage.EndInit();
+            ProtectButtonIcon.Source = ProtectButtonImage;
 
             // Confirm button icon
             System.Windows.Controls.Grid ConfirmButtonGrid = SidebarGrid.FindName("ConfirmButtonGrid") as System.Windows.Controls.Grid;
             System.Windows.Controls.Image ConfirmButtonIcon = ConfirmButtonGrid.FindName("ConfirmButtonIcon") as System.Windows.Controls.Image;
-            ConfirmButtonIcon.Source = new System.Windows.Media.Imaging.BitmapImage(new Uri(System.IO.Path.Combine(HardenWindowsSecurity.GlobalVars.path, "Resources", "Media", "ConfirmMenuButton.png")));
+            var ConfirmButtonImage = new System.Windows.Media.Imaging.BitmapImage();
+            ConfirmButtonImage.BeginInit();
+            ConfirmButtonImage.UriSource = new Uri(System.IO.Path.Combine(HardenWindowsSecurity.GlobalVars.path, "Resources", "Media", "ConfirmMenuButton.png"));
+            ConfirmButtonImage.CacheOption = System.Windows.Media.Imaging.BitmapCacheOption.OnLoad; // Load the image data into memory
+            ConfirmButtonImage.EndInit();
+            ConfirmButtonIcon.Source = ConfirmButtonImage;
 
             // ASRRules button icon
             System.Windows.Controls.Grid ASRRulesButtonGrid = SidebarGrid.FindName("ASRRulesButtonGrid") as System.Windows.Controls.Grid;
-            System.Windows.Controls.Image ASRRulesButtonIcon = ConfirmButtonGrid.FindName("ASRRulesButtonIcon") as System.Windows.Controls.Image;
-            ASRRulesButtonIcon.Source = new System.Windows.Media.Imaging.BitmapImage(new Uri(System.IO.Path.Combine(HardenWindowsSecurity.GlobalVars.path, "Resources", "Media", "ASRRulesMenuButton.png")));
+            System.Windows.Controls.Image ASRRulesButtonIcon = ASRRulesButtonGrid.FindName("ASRRulesButtonIcon") as System.Windows.Controls.Image;
+            var ASRRulesButtonImage = new System.Windows.Media.Imaging.BitmapImage();
+            ASRRulesButtonImage.BeginInit();
+            ASRRulesButtonImage.UriSource = new Uri(System.IO.Path.Combine(HardenWindowsSecurity.GlobalVars.path, "Resources", "Media", "ASRRulesMenuButton.png"));
+            ASRRulesButtonImage.CacheOption = System.Windows.Media.Imaging.BitmapCacheOption.OnLoad; // Load the image data into memory
+            ASRRulesButtonImage.EndInit();
+            ASRRulesButtonIcon.Source = ASRRulesButtonImage;
 
             // Unprotect button icon
             System.Windows.Controls.Grid UnprotectButtonGrid = SidebarGrid.FindName("UnprotectButtonGrid") as System.Windows.Controls.Grid;
-            System.Windows.Controls.Image UnprotectButtonIcon = ConfirmButtonGrid.FindName("UnprotectButtonIcon") as System.Windows.Controls.Image;
-            UnprotectButtonIcon.Source = new System.Windows.Media.Imaging.BitmapImage(new Uri(System.IO.Path.Combine(HardenWindowsSecurity.GlobalVars.path, "Resources", "Media", "UnprotectButton.png")));
+            System.Windows.Controls.Image UnprotectButtonIcon = UnprotectButtonGrid.FindName("UnprotectButtonIcon") as System.Windows.Controls.Image;
+            var UnprotectButtonImage = new System.Windows.Media.Imaging.BitmapImage();
+            UnprotectButtonImage.BeginInit();
+            UnprotectButtonImage.UriSource = new Uri(System.IO.Path.Combine(HardenWindowsSecurity.GlobalVars.path, "Resources", "Media", "UnprotectButton.png"));
+            UnprotectButtonImage.CacheOption = System.Windows.Media.Imaging.BitmapCacheOption.OnLoad; // Load the image data into memory
+            UnprotectButtonImage.EndInit();
+            UnprotectButtonIcon.Source = UnprotectButtonImage;
 
             // Logs button icon
             System.Windows.Controls.Grid LogsButtonGrid = SidebarGrid.FindName("LogsButtonGrid") as System.Windows.Controls.Grid;
-            System.Windows.Controls.Image LogsButtonIcon = ConfirmButtonGrid.FindName("LogsButtonIcon") as System.Windows.Controls.Image;
-            LogsButtonIcon.Source = new System.Windows.Media.Imaging.BitmapImage(new Uri(System.IO.Path.Combine(HardenWindowsSecurity.GlobalVars.path, "Resources", "Media", "LogsMenuButton.png")));
+            System.Windows.Controls.Image LogsButtonIcon = LogsButtonGrid.FindName("LogsButtonIcon") as System.Windows.Controls.Image;
+            var LogsButtonImage = new System.Windows.Media.Imaging.BitmapImage();
+            LogsButtonImage.BeginInit();
+            LogsButtonImage.UriSource = new Uri(System.IO.Path.Combine(HardenWindowsSecurity.GlobalVars.path, "Resources", "Media", "LogsMenuButton.png"));
+            LogsButtonImage.CacheOption = System.Windows.Media.Imaging.BitmapCacheOption.OnLoad; // Load the image data into memory
+            LogsButtonImage.EndInit();
+            LogsButtonIcon.Source = LogsButtonImage;
+            #endregion
 
         }
     }

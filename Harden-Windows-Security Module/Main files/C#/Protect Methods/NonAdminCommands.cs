@@ -1,6 +1,4 @@
 using System;
-using System.IO;
-using System.Globalization;
 
 #nullable enable
 
@@ -15,8 +13,8 @@ namespace HardenWindowsSecurity
                 throw new System.ArgumentNullException("GlobalVars.path cannot be null.");
             }
 
-            HardenWindowsSecurity.Logger.LogMessage("Running the Non-Admin category");
-            HardenWindowsSecurity.Logger.LogMessage("Applying the Non-Admin registry settings");
+            HardenWindowsSecurity.Logger.LogMessage("Running the Non-Admin category", LogTypeIntel.Information);
+            HardenWindowsSecurity.Logger.LogMessage("Applying the Non-Admin registry settings", LogTypeIntel.Information);
 #nullable disable
             foreach (var Item in (HardenWindowsSecurity.GlobalVars.RegistryCSVItems))
             {

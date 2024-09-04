@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Management;
 using System.Management.Automation;
-using System.Security.Principal;
 
 #nullable enable
 
@@ -37,7 +36,7 @@ namespace HardenWindowsSecurity
     public class ProtectionCategoriex
     {
         // a method to detect Windows edition SKU number
-        public static bool IsWindowsHome()
+        private static bool IsWindowsHome()
         {
             using (ManagementObjectSearcher searcher = new ManagementObjectSearcher("SELECT OperatingSystemSKU FROM Win32_OperatingSystem"))
             {
@@ -55,7 +54,7 @@ namespace HardenWindowsSecurity
         }
 
         // Detect if TPM is present on the system
-        public static bool IsTpmPresentAndEnabled()
+        private static bool IsTpmPresentAndEnabled()
         {
             try
             {

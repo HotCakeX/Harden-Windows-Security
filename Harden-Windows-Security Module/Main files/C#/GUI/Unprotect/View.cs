@@ -1,39 +1,6 @@
 ﻿using System;
 using System.IO;
-using System.Collections;
-using System.Collections.Generic;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Controls.Primitives;
 using System.Windows.Markup;
-using System.Xml;
-using System.Windows.Media.Imaging;
-using System.Linq;
-using System.Windows.Forms;
-using System.Collections.Concurrent;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Effects;
-using System.Windows.Threading;
-using System.Runtime.CompilerServices;
-using System.Diagnostics;
-using System.ComponentModel;
-using System.Threading;
-using System.Windows.Automation;
-using System.Windows.Controls.Ribbon;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Forms.Integration;
-using System.Windows.Ink;
-using System.Windows.Media.Animation;
-using System.Windows.Media.Media3D;
-using System.Windows.Media.TextFormatting;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using System.Windows.Shell;
-using System.Threading.Tasks;
-using System.Text;
-using System.Reflection.PortableExecutable;
 
 #nullable enable
 
@@ -105,10 +72,14 @@ namespace HardenWindowsSecurity
                 }
 
                 // Update the image source for the Refresh button
-                RefreshIconImage.Source =
-                    new System.Windows.Media.Imaging.BitmapImage(
-                        new System.Uri(System.IO.Path.Combine(HardenWindowsSecurity.GlobalVars.path!, "Resources", "Media", "ExecuteButton.png"))
-                    );
+                // Load the Refresh icon image into memory and set it as the source
+                var RefreshIconBitmapImage = new System.Windows.Media.Imaging.BitmapImage();
+                RefreshIconBitmapImage.BeginInit();
+                RefreshIconBitmapImage.UriSource = new System.Uri(System.IO.Path.Combine(HardenWindowsSecurity.GlobalVars.path!, "Resources", "Media", "ExecuteButton.png"));
+                RefreshIconBitmapImage.CacheOption = System.Windows.Media.Imaging.BitmapCacheOption.OnLoad; // Load the image data into memory
+                RefreshIconBitmapImage.EndInit();
+
+                RefreshIconImage.Source = RefreshIconBitmapImage;
 
                 #endregion
 
@@ -122,7 +93,7 @@ namespace HardenWindowsSecurity
                 {
                     // Disable the execute button
                     ExecuteButton.IsEnabled = false;
-                    HardenWindowsSecurity.Logger.LogMessage("You need Administrator privileges to remove protections from the system.");
+                    HardenWindowsSecurity.Logger.LogMessage("You need Administrator privileges to remove protections from the system.", LogTypeIntel.Warning);
                 }
                 // If there is no Admin rights, this dynamic enablement/disablement isn't necessary as it will override the disablement that happens above.
                 else
@@ -167,12 +138,12 @@ namespace HardenWindowsSecurity
                             // if LGPO doesn't already exist in the working directory, then download it
                             if (!System.IO.Path.Exists(GlobalVars.LGPOExe))
                             {
-                                Logger.LogMessage("LGPO.exe doesn't exist, downloading it.");
+                                Logger.LogMessage("LGPO.exe doesn't exist, downloading it.", LogTypeIntel.Information);
                                 AsyncDownloader.PrepDownloadedFiles(GlobalVars.LGPOExe, null, null, true);
                             }
                             else
                             {
-                                Logger.LogMessage("LGPO.exe already exists, skipping downloading it.");
+                                Logger.LogMessage("LGPO.exe already exists, skipping downloading it.", LogTypeIntel.Information);
                             }
 
 

@@ -1,39 +1,6 @@
 ﻿using System;
-using System.IO;
-using System.Collections;
-using System.Collections.Generic;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Controls.Primitives;
-using System.Windows.Markup;
-using System.Xml;
-using System.Windows.Media.Imaging;
-using System.Linq;
-using System.Windows.Forms;
 using System.Collections.Concurrent;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Effects;
-using System.Windows.Threading;
-using System.Runtime.CompilerServices;
-using System.Diagnostics;
-using System.ComponentModel;
-using System.Threading;
-using System.Windows.Automation;
-using System.Windows.Controls.Ribbon;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Forms.Integration;
-using System.Windows.Ink;
-using System.Windows.Media.Animation;
-using System.Windows.Media.Media3D;
-using System.Windows.Media.TextFormatting;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using System.Windows.Shell;
-using System.Threading.Tasks;
-using System.Text;
-using System.Reflection.PortableExecutable;
+using System.Collections.Generic;
 
 #nullable enable
 
@@ -84,15 +51,12 @@ namespace HardenWindowsSecurity
         public static System.Windows.Controls.ListView? subCategories;
         public static System.Windows.Controls.CheckBox? selectAllCategories;
         public static System.Windows.Controls.CheckBox? selectAllSubCategories;
-        public static System.Windows.Controls.ProgressBar? mainProgressBar;
-
 
         // fields for Log related elements
         public static System.Windows.Controls.TextBox? txtFilePath;
         public static System.Windows.Controls.Button? logPath;
         public static System.Windows.Controls.Primitives.ToggleButton? log;
-        public static System.Windows.Controls.Viewbox? loggingViewBox;
-
+        public static System.Windows.Controls.Primitives.ToggleButton? EventLogging;
 
         // fields for Offline-Mode related elements
         public static System.Windows.Controls.Grid? grid2;
@@ -110,14 +74,12 @@ namespace HardenWindowsSecurity
         public static System.Windows.Controls.Image? ExecuteButtonImage;
 
 
-        // Flag to run the event for view load only once to prevent file download multiple times when swtiching between views etc.
+        // Flag to run the event for view load only once to prevent file download multiple times when switching between views etc.
         public static bool LoadEventHasBeenTriggered = false;
-
 
         public static System.Windows.Controls.ComboBox? ProtectionPresetComboBox;
 
         public static string? SelectedProtectionPreset;
-
 
         // Defining the presets configurations for the protection
         public static System.Collections.Generic.Dictionary<string, System.Collections.Generic.Dictionary<string, List<string>>> PresetsIntel = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.Dictionary<string, List<string>>>(StringComparer.OrdinalIgnoreCase)
@@ -144,10 +106,6 @@ namespace HardenWindowsSecurity
         }
     }
 };
-
-
-
-
 
     }
 }

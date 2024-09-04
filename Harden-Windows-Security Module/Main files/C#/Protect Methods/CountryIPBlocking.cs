@@ -1,6 +1,3 @@
-using System;
-using System.Management.Automation;
-
 #nullable enable
 
 namespace HardenWindowsSecurity
@@ -9,7 +6,7 @@ namespace HardenWindowsSecurity
     {
         public static void Invoke()
         {
-            HardenWindowsSecurity.Logger.LogMessage("Blocking IP ranges of countries in State Sponsors of Terrorism list");
+            HardenWindowsSecurity.Logger.LogMessage("Blocking IP ranges of countries in State Sponsors of Terrorism list", LogTypeIntel.Information);
 
             // PowerShell script
             string script = """

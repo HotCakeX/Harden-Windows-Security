@@ -46,7 +46,7 @@ namespace HardenWindowsSecurity
                 }
 
                 // Ignore blank lines or comments
-                if (string.IsNullOrWhiteSpace(line) || line.StartsWith(";", StringComparison.Ordinal) || line.StartsWith("#", StringComparison.Ordinal))
+                if (string.IsNullOrWhiteSpace(line) || line.StartsWith(';') || line.StartsWith('#'))
                 {
                     continue;
                 }

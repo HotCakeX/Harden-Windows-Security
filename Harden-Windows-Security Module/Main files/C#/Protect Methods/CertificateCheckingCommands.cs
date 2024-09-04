@@ -16,7 +16,7 @@ namespace HardenWindowsSecurity
                 throw new ArgumentNullException(nameof(HardenWindowsSecurity.GlobalVars.WorkingDir), "The working directory variable is either null or the directory doesn't exist.");
             }
 
-            HardenWindowsSecurity.Logger.LogMessage("Running the Certificate Checking category");
+            HardenWindowsSecurity.Logger.LogMessage("Running the Certificate Checking category", LogTypeIntel.Information);
 
             string sigcheck64Path = Path.Combine(HardenWindowsSecurity.GlobalVars.WorkingDir, "sigcheck64.exe");
             string fileUrl = "https://live.sysinternals.com/sigcheck64.exe";
@@ -25,7 +25,7 @@ namespace HardenWindowsSecurity
             {
                 using (HttpClient client = new HttpClient())
                 {
-                    HardenWindowsSecurity.Logger.LogMessage("Downloading file...");
+                    HardenWindowsSecurity.Logger.LogMessage("Downloading file...", LogTypeIntel.Information);
 
                     // Download the file synchronously
                     byte[] fileBytes = client.GetByteArrayAsync(fileUrl).GetAwaiter().GetResult();
@@ -35,15 +35,15 @@ namespace HardenWindowsSecurity
                 }
 
                 // Run the downloaded executable with the specified arguments
-                HardenWindowsSecurity.Logger.LogMessage("Listing valid certificates not rooted to the Microsoft Certificate Trust List in the Local Machine Store");
+                HardenWindowsSecurity.Logger.LogMessage("Listing valid certificates not rooted to the Microsoft Certificate Trust List in the Local Machine Store", LogTypeIntel.Information);
                 RunSigcheck(sigcheck64Path, "-tv -accepteula -nobanner");
 
-                HardenWindowsSecurity.Logger.LogMessage("Listing valid certificates not rooted to the Microsoft Certificate Trust List in the Current User store");
+                HardenWindowsSecurity.Logger.LogMessage("Listing valid certificates not rooted to the Microsoft Certificate Trust List in the Current User store", LogTypeIntel.Information);
                 RunSigcheck(sigcheck64Path, "-tuv -accepteula -nobanner");
             }
             catch (Exception ex)
             {
-                HardenWindowsSecurity.Logger.LogMessage($"An error occurred: {ex.Message}");
+                HardenWindowsSecurity.Logger.LogMessage($"An error occurred: {ex.Message}", LogTypeIntel.Error);
             }
         }
 
@@ -60,7 +60,7 @@ namespace HardenWindowsSecurity
                     process.StartInfo.UseShellExecute = false;
                     process.StartInfo.CreateNoWindow = true;
 
-                    HardenWindowsSecurity.Logger.LogMessage($"Running: {exePath} {arguments}");
+                    HardenWindowsSecurity.Logger.LogMessage($"Running: {exePath} {arguments}", LogTypeIntel.Information);
 
                     process.Start();
 
@@ -70,19 +70,19 @@ namespace HardenWindowsSecurity
 
                     process.WaitForExit();
 
-                    HardenWindowsSecurity.Logger.LogMessage("Output:");
-                    HardenWindowsSecurity.Logger.LogMessage(output);
+                    HardenWindowsSecurity.Logger.LogMessage("Output:", LogTypeIntel.Information);
+                    HardenWindowsSecurity.Logger.LogMessage(output, LogTypeIntel.Information);
 
                     if (!string.IsNullOrEmpty(error))
                     {
-                        HardenWindowsSecurity.Logger.LogMessage("Error:");
-                        HardenWindowsSecurity.Logger.LogMessage(error);
+                        HardenWindowsSecurity.Logger.LogMessage("Error:", LogTypeIntel.Error);
+                        HardenWindowsSecurity.Logger.LogMessage(error, LogTypeIntel.Error);
                     }
                 }
             }
             catch (Exception ex)
             {
-                HardenWindowsSecurity.Logger.LogMessage($"An error occurred while running the process: {ex.Message}");
+                HardenWindowsSecurity.Logger.LogMessage($"An error occurred while running the process: {ex.Message}", LogTypeIntel.Error);
             }
         }
     }

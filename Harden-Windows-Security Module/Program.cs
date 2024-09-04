@@ -1,7 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Windows.Input;
+
+#nullable enable
 
 namespace HardenWindowsSecurity
 {
@@ -15,7 +15,7 @@ namespace HardenWindowsSecurity
         /// <param name="args"></param>
         static void Main(string[] args)
         {
-            #region
+            #region misc
             // The following are the required code that are handled in module manifest .psm1 file
 
             // Acts as PSScriptRoot assignment in the module manifest for the GlobalVars.path variable
@@ -24,6 +24,7 @@ namespace HardenWindowsSecurity
             // Save the valid values of the Protect-WindowsSecurity categories to a variable since the process can be time consuming and shouldn't happen every time the categories are fetched
             GlobalVars.HardeningCategorieX = ProtectionCategoriex.GetValidValues();
 
+            // Prepare the environment and variables
             Initializer.Initialize();
 
             if (HardenWindowsSecurity.UserPrivCheck.IsAdmin())
@@ -33,7 +34,7 @@ namespace HardenWindowsSecurity
             }
             #endregion
 
-            HardenWindowsSecurity.GlobalVars.Offline = true;
+            // Launch the GUI
             HardenWindowsSecurity.GUIBootStrapper.Boot();
 
         }

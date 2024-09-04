@@ -1,40 +1,7 @@
 ﻿using System;
-using System.IO;
-using System.Collections;
 using System.Collections.Generic;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Controls.Primitives;
-using System.Windows.Markup;
-using System.Xml;
-using System.Windows.Media.Imaging;
 using System.Linq;
-using System.Windows.Forms;
-using System.Collections.Concurrent;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Effects;
-using System.Windows.Threading;
-using System.Runtime.CompilerServices;
-using System.Diagnostics;
-using System.ComponentModel;
-using System.Threading;
-using System.Windows.Automation;
-using System.Windows.Controls.Ribbon;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Forms.Integration;
-using System.Windows.Ink;
-using System.Windows.Media.Animation;
-using System.Windows.Media.Media3D;
-using System.Windows.Media.TextFormatting;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using System.Windows.Shell;
 using System.Threading.Tasks;
-using System.Text;
-using System.Reflection.PortableExecutable;
-using System.Security.Principal;
 using static HardenWindowsSecurity.NewToastNotification;
 
 #nullable enable
@@ -125,10 +92,6 @@ namespace HardenWindowsSecurity
                 throw new Exception("AddEventHandlers Method: ExecuteButton object is empty!");
             }
 
-            if (GUIProtectWinSecurity.mainProgressBar == null)
-            {
-                throw new Exception("AddEventHandlers Method: mainProgressBar object is empty!");
-            }
             #endregion
 
 
@@ -228,7 +191,7 @@ namespace HardenWindowsSecurity
                         {
                             if (!HardenWindowsSecurity.SneakAndPeek.Search("Windows*Security Baseline/Scripts/Baseline-LocalInstall.ps1", dialog.FileName))
                             {
-                                HardenWindowsSecurity.Logger.LogMessage("The selected Zip file does not contain the Microsoft Security Baselines Baseline-LocalInstall.ps1 which is required for the Protect-WindowsSecurity function to work properly");
+                                HardenWindowsSecurity.Logger.LogMessage("The selected Zip file does not contain the Microsoft Security Baselines Baseline-LocalInstall.ps1 which is required for the Protect-WindowsSecurity function to work properly", LogTypeIntel.Error);
                             }
                             else
                             {
@@ -240,7 +203,7 @@ namespace HardenWindowsSecurity
                         }
                         catch (Exception ex)
                         {
-                            HardenWindowsSecurity.Logger.LogMessage(ex.Message);
+                            HardenWindowsSecurity.Logger.LogMessage(ex.Message, LogTypeIntel.Error);
                         }
                     }
                 }
@@ -261,7 +224,7 @@ namespace HardenWindowsSecurity
                         {
                             if (!HardenWindowsSecurity.SneakAndPeek.Search("Microsoft 365 Apps for Enterprise*/Scripts/Baseline-LocalInstall.ps1", dialog.FileName))
                             {
-                                HardenWindowsSecurity.Logger.LogMessage("The selected Zip file does not contain the Microsoft 365 Apps for Enterprise Security Baselines Baseline-LocalInstall.ps1 which is required for the Protect-WindowsSecurity function to work properly");
+                                HardenWindowsSecurity.Logger.LogMessage("The selected Zip file does not contain the Microsoft 365 Apps for Enterprise Security Baselines Baseline-LocalInstall.ps1 which is required for the Protect-WindowsSecurity function to work properly", LogTypeIntel.Error);
                             }
                             else
                             {
@@ -273,7 +236,7 @@ namespace HardenWindowsSecurity
                         }
                         catch (Exception ex)
                         {
-                            HardenWindowsSecurity.Logger.LogMessage(ex.Message);
+                            HardenWindowsSecurity.Logger.LogMessage(ex.Message, LogTypeIntel.Error);
                         }
                     }
                 }
@@ -294,7 +257,7 @@ namespace HardenWindowsSecurity
                         {
                             if (!HardenWindowsSecurity.SneakAndPeek.Search("LGPO_*/LGPO.exe", dialog.FileName))
                             {
-                                HardenWindowsSecurity.Logger.LogMessage("The selected Zip file does not contain the LGPO.exe which is required for the Protect-WindowsSecurity function to work properly");
+                                HardenWindowsSecurity.Logger.LogMessage("The selected Zip file does not contain the LGPO.exe which is required for the Protect-WindowsSecurity function to work properly", LogTypeIntel.Error);
                             }
                             else
                             {
@@ -306,7 +269,7 @@ namespace HardenWindowsSecurity
                         }
                         catch (Exception ex)
                         {
-                            HardenWindowsSecurity.Logger.LogMessage(ex.Message);
+                            HardenWindowsSecurity.Logger.LogMessage(ex.Message, LogTypeIntel.Error);
                         }
                     }
                 }
@@ -424,7 +387,7 @@ namespace HardenWindowsSecurity
 
                             nameToDisplay = (!string.IsNullOrWhiteSpace(CurrentLocalUser!.FullName)) ? CurrentLocalUser.FullName : !string.IsNullOrWhiteSpace(CurrentLocalUser.Name) ? CurrentLocalUser.Name : "Unknown User";
 
-                            HardenWindowsSecurity.Logger.LogMessage(HardenWindowsSecurity.UserPrivCheck.IsAdmin() ? $"Hello {nameToDisplay}, Running as Administrator" : $"Hello {nameToDisplay}, Running as Non-Administrator, some categories are disabled");
+                            HardenWindowsSecurity.Logger.LogMessage(HardenWindowsSecurity.UserPrivCheck.IsAdmin() ? $"Hello {nameToDisplay}, Running as Administrator" : $"Hello {nameToDisplay}, Running as Non-Administrator, some categories are disabled", LogTypeIntel.Information);
                             #endregion
 
                             // Use Dispatcher.Invoke to update the UI thread
@@ -432,9 +395,6 @@ namespace HardenWindowsSecurity
                             {
                                 // Set the execute button to disabled until all the prerequisites are met
                                 HardenWindowsSecurity.GUIProtectWinSecurity.ExecuteButton.IsEnabled = false;
-
-                                // Display the progress bar during file download
-                                HardenWindowsSecurity.GUIProtectWinSecurity.mainProgressBar.Visibility = Visibility.Visible;
 
                                 // Start the execute button's operation to show the files are being downloaded
                                 HardenWindowsSecurity.GUIProtectWinSecurity.ExecuteButton.IsChecked = true;
@@ -444,7 +404,7 @@ namespace HardenWindowsSecurity
                             // Because at this point, the user might have not selected the files to be used for offline operation
                             if (!HardenWindowsSecurity.GlobalVars.Offline)
                             {
-                                HardenWindowsSecurity.Logger.LogMessage("Downloading the required files");
+                                HardenWindowsSecurity.Logger.LogMessage("Downloading the required files", LogTypeIntel.Information);
 
                                 // Run the file download process asynchronously
                                 await Task.Run(() =>
@@ -457,7 +417,7 @@ namespace HardenWindowsSecurity
                                     );
                                 });
 
-                                HardenWindowsSecurity.Logger.LogMessage("Finished downloading the required files");
+                                HardenWindowsSecurity.Logger.LogMessage("Finished downloading the required files", LogTypeIntel.Information);
                             }
 
                             // Using Dispatcher since the execute button is owned by the GUI thread, and we're in another thread
@@ -465,15 +425,14 @@ namespace HardenWindowsSecurity
                             HardenWindowsSecurity.GUIProtectWinSecurity.View.Dispatcher.Invoke(() =>
                             {
                                 HardenWindowsSecurity.GUIProtectWinSecurity.ExecuteButton.IsEnabled = true;
-                                HardenWindowsSecurity.GUIProtectWinSecurity.mainProgressBar.Visibility = Visibility.Hidden;
                                 HardenWindowsSecurity.GUIProtectWinSecurity.ExecuteButton.IsChecked = false;
                             });
                         }
                         catch (Exception ex)
                         {
-                            HardenWindowsSecurity.Logger.LogMessage($"An error occurred while downloading the required files: {ex.Message}");
-                            HardenWindowsSecurity.Logger.LogMessage($"{ex.StackTrace}");
-                            HardenWindowsSecurity.Logger.LogMessage($"{ex.InnerException}");
+                            HardenWindowsSecurity.Logger.LogMessage($"An error occurred while downloading the required files: {ex.Message}", LogTypeIntel.Error);
+                            HardenWindowsSecurity.Logger.LogMessage($"{ex.StackTrace}", LogTypeIntel.Error);
+                            HardenWindowsSecurity.Logger.LogMessage($"{ex.InnerException}", LogTypeIntel.Error);
                             // Re-throw the exception to ensure it's caught and handled appropriately
                             //   throw;
                         }
@@ -508,9 +467,6 @@ namespace HardenWindowsSecurity
                            HardenWindowsSecurity.GUIProtectWinSecurity.ExecuteButtonPress();
                            // Disable the textfilepath for the log file path
                            HardenWindowsSecurity.GUIProtectWinSecurity.txtFilePath!.IsEnabled = false;
-                           // Display the progress bar while activity is running
-                           HardenWindowsSecurity.GUIProtectWinSecurity.mainProgressBar!.Visibility = Visibility.Visible;
-
                        });
 
                        // If Offline mode is used
@@ -551,7 +507,7 @@ namespace HardenWindowsSecurity
                                       false
                                        );
 
-                                       HardenWindowsSecurity.Logger.LogMessage("Finished processing the required files");
+                                       HardenWindowsSecurity.Logger.LogMessage("Finished processing the required files", LogTypeIntel.Information);
 
                                        // Set a flag indicating this code block should not run again when the execute button is pressed
                                        HardenWindowsSecurity.GUIProtectWinSecurity.StartFileDownloadHasRun = true;
@@ -559,12 +515,12 @@ namespace HardenWindowsSecurity
                                    }
                                    else
                                    {
-                                       HardenWindowsSecurity.Logger.LogMessage("Enable Offline Mode checkbox is checked but you have not selected all of the 3 required files for offline mode operation. Please select them and press the execute button again.");
+                                       HardenWindowsSecurity.Logger.LogMessage("Enable Offline Mode checkbox is checked but you have not selected all of the 3 required files for offline mode operation. Please select them and press the execute button again.", LogTypeIntel.Warning);
                                    }
                                }
                                else
                                {
-                                   HardenWindowsSecurity.Logger.LogMessage("Offline mode is being used but the Enable Offline Mode checkbox is not checked. Please check it and press the execute button again.");
+                                   HardenWindowsSecurity.Logger.LogMessage("Offline mode is being used but the Enable Offline Mode checkbox is not checked. Please check it and press the execute button again.", LogTypeIntel.Warning);
                                }
                            }
                        }
@@ -612,7 +568,7 @@ namespace HardenWindowsSecurity
 
                                                if (HardenWindowsSecurity.GlobalVars.ShouldEnableOptionalDiagnosticData || string.Equals(HardenWindowsSecurity.GlobalVars.MDAVConfigCurrent!.SmartAppControlState, "on", StringComparison.OrdinalIgnoreCase))
                                                {
-                                                   HardenWindowsSecurity.Logger.LogMessage("Enabling Optional Diagnostic Data because SAC is on or user selected to turn it on");
+                                                   HardenWindowsSecurity.Logger.LogMessage("Enabling Optional Diagnostic Data because SAC is on or user selected to turn it on", LogTypeIntel.Information);
                                                    HardenWindowsSecurity.MicrosoftDefender.MSFTDefender_EnableDiagData();
                                                }
 
@@ -752,7 +708,7 @@ namespace HardenWindowsSecurity
                            }
                            else
                            {
-                               HardenWindowsSecurity.Logger.LogMessage("No category was selected");
+                               HardenWindowsSecurity.Logger.LogMessage("No category was selected", LogTypeIntel.Warning);
                            }
                        }
 
@@ -766,8 +722,6 @@ namespace HardenWindowsSecurity
                            {
                                HardenWindowsSecurity.GUIProtectWinSecurity.txtFilePath!.IsEnabled = true;
                            }
-                           // stop displaying the progress bar
-                           HardenWindowsSecurity.GUIProtectWinSecurity.mainProgressBar!.Visibility = Visibility.Collapsed;
                        });
 
                    });

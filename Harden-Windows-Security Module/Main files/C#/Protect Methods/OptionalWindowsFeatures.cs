@@ -1,6 +1,4 @@
 using System;
-using System.IO;
-using System.Reflection;
 
 #nullable enable
 
@@ -36,11 +34,11 @@ namespace HardenWindowsSecurity
 
             if (string.Equals(CapabilityState, "Not Present", StringComparison.OrdinalIgnoreCase))
             {
-                HardenWindowsSecurity.Logger.LogMessage($"The {CapabilityName} is already removed.");
+                HardenWindowsSecurity.Logger.LogMessage($"The {CapabilityName} is already removed.", LogTypeIntel.Information);
             }
             else if (string.Equals(CapabilityState, "Installed", StringComparison.OrdinalIgnoreCase))
             {
-                HardenWindowsSecurity.Logger.LogMessage($"Removing {CapabilityName}");
+                HardenWindowsSecurity.Logger.LogMessage($"Removing {CapabilityName}", LogTypeIntel.Information);
 
                 // For capabilities, using DISM would do the job but would hang and not exit
                 // Running DISM in a different thread wouldn't fix it. DISM has this problem only for capabilities, but for using features DISM works fine.
@@ -59,7 +57,7 @@ Remove-WindowsCapability -Online
             }
             else
             {
-                HardenWindowsSecurity.Logger.LogMessage($"The {CapabilityName} is in {CapabilityState} state. Skipping.");
+                HardenWindowsSecurity.Logger.LogMessage($"The {CapabilityName} is in {CapabilityState} state. Skipping.", LogTypeIntel.Information);
             }
         }
 
@@ -96,27 +94,27 @@ Remove-WindowsCapability -Online
 
             if (string.IsNullOrWhiteSpace(propertyValue))
             {
-                HardenWindowsSecurity.Logger.LogMessage($"couldn't get the state of {FeatureNameToCheckWith}");
+                HardenWindowsSecurity.Logger.LogMessage($"couldn't get the state of {FeatureNameToCheckWith}", LogTypeIntel.Information);
             }
 
             if (string.Equals(propertyValue, ValueToCheckAgainst, StringComparison.OrdinalIgnoreCase))
             {
-                HardenWindowsSecurity.Logger.LogMessage($"{FriendlyName} is already {ValueToCheckAgainst}");
+                HardenWindowsSecurity.Logger.LogMessage($"{FriendlyName} is already {ValueToCheckAgainst}", LogTypeIntel.Information);
             }
             else if (string.Equals(propertyValue, ValueToCheckFor, StringComparison.OrdinalIgnoreCase))
             {
-                HardenWindowsSecurity.Logger.LogMessage($"{TextToUseForMessages} {FriendlyName}");
+                HardenWindowsSecurity.Logger.LogMessage($"{TextToUseForMessages} {FriendlyName}", LogTypeIntel.Information);
                 HardenWindowsSecurity.WindowsFeatureChecker.SetWindowsFeature(FeatureNameToActOn, Action);
             }
             else
             {
-                HardenWindowsSecurity.Logger.LogMessage($"The {FriendlyName} is in {propertyValue} state. Skipping.");
+                HardenWindowsSecurity.Logger.LogMessage($"The {FriendlyName} is in {propertyValue} state. Skipping.", LogTypeIntel.Information);
             }
         }
 
         public static void Invoke()
         {
-            HardenWindowsSecurity.Logger.LogMessage("Running the Optional Windows Features category");
+            HardenWindowsSecurity.Logger.LogMessage("Running the Optional Windows Features category", LogTypeIntel.Information);
 
             // Get the results of all optional features once and store them in the static variable to be reused later
             _FeaturesCheckResults = HardenWindowsSecurity.WindowsFeatureChecker.CheckWindowsFeatures();

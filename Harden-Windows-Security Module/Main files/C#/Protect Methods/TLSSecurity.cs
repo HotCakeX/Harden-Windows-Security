@@ -1,6 +1,5 @@
-using System;
-using System.IO;
 using Microsoft.Win32;
+using System;
 
 #nullable enable
 
@@ -15,7 +14,7 @@ namespace HardenWindowsSecurity
                 throw new System.ArgumentNullException("GlobalVars.path cannot be null.");
             }
 
-            HardenWindowsSecurity.Logger.LogMessage("Running the TLS Security category");
+            HardenWindowsSecurity.Logger.LogMessage("Running the TLS Security category", LogTypeIntel.Information);
 
 
             // Creating these registry keys that have forward slashes in them
@@ -48,7 +47,7 @@ namespace HardenWindowsSecurity
 
 
 
-            HardenWindowsSecurity.Logger.LogMessage("Applying the TLS Security registry settings");
+            HardenWindowsSecurity.Logger.LogMessage("Applying the TLS Security registry settings", LogTypeIntel.Information);
 
             foreach (var Item in HardenWindowsSecurity.GlobalVars.RegistryCSVItems!)
             {
@@ -58,7 +57,7 @@ namespace HardenWindowsSecurity
                 }
             }
 
-            HardenWindowsSecurity.Logger.LogMessage("Applying the TLS Security Group Policies");
+            HardenWindowsSecurity.Logger.LogMessage("Applying the TLS Security Group Policies", LogTypeIntel.Information);
             HardenWindowsSecurity.LGPORunner.RunLGPOCommand(System.IO.Path.Combine(HardenWindowsSecurity.GlobalVars.path, "Resources", "Security-Baselines-X", "TLS Security", "registry.pol"), LGPORunner.FileType.POL);
 
         }

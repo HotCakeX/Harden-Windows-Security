@@ -1,25 +1,22 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-
-    <!-- Defining the gradient brush for text color -->
-    <LinearGradientBrush x:Key="TextGradientBrush05" StartPoint="0,0" EndPoint="1,1">
-        <GradientStop Color="Purple" Offset="0"/>
-        <GradientStop Color="Blue" Offset="1"/>
-    </LinearGradientBrush>
-
-    <!-- Defining the style for the TextBox -->
-    <Style x:Key="TextBoxStyle05" TargetType="TextBox">
-        <Setter Property="HorizontalAlignment" Value="Stretch"/>
-        <Setter Property="VerticalAlignment" Value="Stretch"/>
-        <Setter Property="TextWrapping" Value="Wrap"/>
-        <Setter Property="Text" Value="To enable offline mode, use: Protect-WindowsSecurity -GUI -Offline"/>
-        <Setter Property="TextAlignment" Value="Center"/>
-        <Setter Property="Background" Value="Transparent"/>
-        <Setter Property="FontSize" Value="18"/>
-        <Setter Property="BorderThickness" Value="0"/>
-        <Setter Property="Margin" Value="10,20,10,0"/>
-        <Setter Property="ToolTip" Value="To enable offline mode, use: Protect-WindowsSecurity -GUI -Offline"/>
-        <Setter Property="Foreground" Value="{StaticResource TextGradientBrush05}"/>
-    </Style>
-
+   <!-- Defining the gradient brush for text color -->
+   <LinearGradientBrush x:Key="TextGradientBrush05" StartPoint="0,0" EndPoint="1,1">
+       <GradientStop Color="Purple" Offset="0"/>
+       <GradientStop Color="Blue" Offset="1"/>
+   </LinearGradientBrush>
+   <!-- Defining the style for the TextBox -->
+   <Style x:Key="TextBoxStyle05" TargetType="TextBox">
+       <Setter Property="HorizontalAlignment" Value="Stretch"/>
+       <Setter Property="VerticalAlignment" Value="Stretch"/>
+       <Setter Property="TextWrapping" Value="Wrap"/>
+       <Setter Property="Text" Value="To enable offline mode, use: Protect-WindowsSecurity -GUI -Offline"/>
+       <Setter Property="TextAlignment" Value="Center"/>
+       <Setter Property="Background" Value="Transparent"/>
+       <Setter Property="FontSize" Value="18"/>
+       <Setter Property="BorderThickness" Value="0"/>
+       <Setter Property="Margin" Value="10,20,10,0"/>
+       <Setter Property="ToolTip" Value="To enable offline mode, use: Protect-WindowsSecurity -GUI -Offline"/>
+       <Setter Property="Foreground" Value="{StaticResource TextGradientBrush05}"/>
+   </Style>
 </ResourceDictionary>

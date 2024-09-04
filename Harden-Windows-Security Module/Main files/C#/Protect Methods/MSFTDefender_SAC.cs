@@ -1,9 +1,3 @@
-using System;
-using System.IO;
-using System.Diagnostics;
-using System.Collections.Generic;
-using System.Linq;
-
 #nullable enable
 
 namespace HardenWindowsSecurity
@@ -15,7 +9,7 @@ namespace HardenWindowsSecurity
         /// </summary>
         public static void MSFTDefender_SAC()
         {
-            HardenWindowsSecurity.Logger.LogMessage("Turning on Smart App Control");
+            HardenWindowsSecurity.Logger.LogMessage("Turning on Smart App Control", LogTypeIntel.Information);
 
             HardenWindowsSecurity.RegistryEditor.EditRegistry(@"HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\CI\Policy", "VerifiedAndReputablePolicyState", "1", "DWORD", "AddOrModify");
 

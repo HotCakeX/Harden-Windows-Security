@@ -1,10 +1,6 @@
-using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Collections.Generic;
-
-// about nullables in C#
-// https://devblogs.microsoft.com/dotnet/embracing-nullable-reference-types/
 
 #nullable enable
 

@@ -1,10 +1,3 @@
-using System;
-using System.IO;
-using System.Management.Automation;
-using System.Collections.ObjectModel;
-using System.Collections.Generic;
-using System.Globalization;
-
 #nullable enable
 
 namespace HardenWindowsSecurity
@@ -22,10 +15,10 @@ namespace HardenWindowsSecurity
                 throw new System.ArgumentNullException("GlobalVars.path cannot be null.");
             }
 
-            HardenWindowsSecurity.Logger.LogMessage("Running the Windows Firewall category");
+            HardenWindowsSecurity.Logger.LogMessage("Running the Windows Firewall category", LogTypeIntel.Information);
             HardenWindowsSecurity.LGPORunner.RunLGPOCommand(System.IO.Path.Combine(HardenWindowsSecurity.GlobalVars.path, "Resources", "Security-Baselines-X", "Windows Firewall Policies", "registry.pol"), LGPORunner.FileType.POL);
 
-            HardenWindowsSecurity.Logger.LogMessage("Disabling Multicast DNS (mDNS) UDP-in Firewall Rules for all 3 Firewall profiles - disables only 3 rules");
+            HardenWindowsSecurity.Logger.LogMessage("Disabling Multicast DNS (mDNS) UDP-in Firewall Rules for all 3 Firewall profiles - disables only 3 rules", LogTypeIntel.Information);
 
 
             HardenWindowsSecurity.PowerShellExecutor.ExecuteScript("""

@@ -47,7 +47,7 @@ namespace HardenWindowsSecurity
             catch (Exception ex)
             {
                 // Handle errors by printing an error message and returning a default version of 0.0.0.0
-                HardenWindowsSecurity.Logger.LogMessage($"Error converting number to version: {ex.Message}");
+                HardenWindowsSecurity.Logger.LogMessage($"Error converting number to version: {ex.Message}", LogTypeIntel.Error);
                 return new Version(0, 0, 0, 0);
             }
         }
@@ -204,7 +204,7 @@ namespace HardenWindowsSecurity
     }
 
     // Extension methods for JsonElement to simplify retrieving properties with default values
-    internal static class JsonElementExtensions
+    public static class JsonElementExtensions
     {
 
         /// <summary>

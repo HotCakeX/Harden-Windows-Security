@@ -84,7 +84,7 @@ namespace HardenWindowsSecurity
                 }
                 catch (Exception ex)
                 {
-                    HardenWindowsSecurity.Logger.LogMessage(ex.Message);
+                    HardenWindowsSecurity.Logger.LogMessage(ex.Message, LogTypeIntel.Error);
                 }
             }
 

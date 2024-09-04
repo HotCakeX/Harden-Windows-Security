@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Management;
-using System.Globalization;
 
 #nullable enable
 
@@ -60,17 +59,17 @@ namespace HardenWindowsSecurity
             // catch exceptions specific to WMI
             catch (ManagementException mex)
             {
-                HardenWindowsSecurity.Logger.LogMessage($"WMI ManagementException: {mex.Message}");
+                HardenWindowsSecurity.Logger.LogMessage($"WMI ManagementException: {mex.Message}", LogTypeIntel.Error);
             }
             // Catch block for unauthorized access exceptions
             catch (UnauthorizedAccessException uex)
             {
-                HardenWindowsSecurity.Logger.LogMessage($"UnauthorizedAccessException: {uex.Message}");
+                HardenWindowsSecurity.Logger.LogMessage($"UnauthorizedAccessException: {uex.Message}", LogTypeIntel.Error);
             }
             // General catch block for any other exceptions
             catch (Exception ex)
             {
-                HardenWindowsSecurity.Logger.LogMessage($"An error occurred: {ex.Message}");
+                HardenWindowsSecurity.Logger.LogMessage($"An error occurred: {ex.Message}", LogTypeIntel.Error);
             }
 
             return results;

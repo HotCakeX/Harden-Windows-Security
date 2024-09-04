@@ -1,13 +1,8 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
-using System.Threading;
 using System.Threading.Tasks;
-using System.Collections;
-using System.Collections.Generic;
-using System.IO.Compression;
-using System.Diagnostics;
-using Windows.Media.Ocr;
 
 #nullable enable
 
@@ -36,30 +31,8 @@ namespace HardenWindowsSecurity
         };
 
         /// <summary>
-        /// Synchronously checks if all URLs are valid and accessible.
-        /// </summary>
-        /// <exception cref="Exception">Thrown if any URL is invalid or inaccessible.</exception>
-        private static void CheckUrls()
-        {
-            foreach (var url in fileDictionary.Keys)
-            {
-                try
-                {
-                    var response = _httpClient.GetAsync(url).Result;
-                    if (!response.IsSuccessStatusCode)
-                    {
-                        throw new Exception($"URL check failed for {url} with status code {response.StatusCode}");
-                    }
-                }
-                catch (Exception ex)
-                {
-                    throw new Exception($"Failed to access {url}: {ex.Message}", ex);
-                }
-            }
-        }
-
-        /// <summary>
         /// Asynchronously starts the file download process for multiple files.
+        /// outputs proper errors and data to verify success/failure.
         /// </summary>
         /// <param name="workingDir">The directory where files will be downloaded.</param>
         /// <param name="OnlyLGPO">If used, only LGPO will be downloaded</param>
@@ -71,10 +44,6 @@ namespace HardenWindowsSecurity
             {
                 throw new DirectoryNotFoundException($"The directory '{HardenWindowsSecurity.GlobalVars.WorkingDir}' does not exist.");
             }
-
-            // Check if all URLs are valid and accessible
-            // Not necessary as the async method outputs proper errors and data to verify success/failure
-            // CheckUrls();
 
             List<Task> tasks = new List<Task>();
 
@@ -88,7 +57,7 @@ namespace HardenWindowsSecurity
                     continue;
                 }
 
-                Logger.LogMessage($"Downloading {kvp.Value}");
+                Logger.LogMessage($"Downloading {kvp.Value}", LogTypeIntel.Information);
 
                 string url = kvp.Key;
                 string fileName = kvp.Value;
@@ -182,7 +151,7 @@ namespace HardenWindowsSecurity
             {
                 if (OnlyLGPO)
                 {
-                    Logger.LogMessage("Will only download LGPO.zip file");
+                    Logger.LogMessage("Will only download LGPO.zip file", LogTypeIntel.Information);
                 }
 
                 // Start the download process asynchronously
@@ -201,7 +170,7 @@ namespace HardenWindowsSecurity
                 }
                 else if (DownloadsTask.IsCompletedSuccessfully)
                 {
-                    Logger.LogMessage("Download completed successfully");
+                    Logger.LogMessage("Download completed successfully", LogTypeIntel.Information);
                 }
 
             }
@@ -211,7 +180,7 @@ namespace HardenWindowsSecurity
 
                 if (HardenWindowsSecurity.GlobalVars.Offline)
                 {
-                    Logger.LogMessage("Offline Mode; Copying the Microsoft Security Baselines, Microsoft 365 Apps for Enterprise Security Baselines and LGPO files from the user provided paths to the working directory");
+                    Logger.LogMessage("Offline Mode; Copying the Microsoft Security Baselines, Microsoft 365 Apps for Enterprise Security Baselines and LGPO files from the user provided paths to the working directory", LogTypeIntel.Information);
 
                     if (LGPOPath != null)
                     {
@@ -242,7 +211,7 @@ namespace HardenWindowsSecurity
 
                 }
 
-                Logger.LogMessage("Extracting the downloaded zip files");
+                Logger.LogMessage("Extracting the downloaded zip files", LogTypeIntel.Information);
 
                 // Extract MicrosoftSecurityBaseline.zip
                 System.IO.Compression.ZipFile.ExtractToDirectory(Path.Combine(HardenWindowsSecurity.GlobalVars.WorkingDir, "MicrosoftSecurityBaseline.zip"), Path.Combine(HardenWindowsSecurity.GlobalVars.WorkingDir, "MicrosoftSecurityBaseline"));

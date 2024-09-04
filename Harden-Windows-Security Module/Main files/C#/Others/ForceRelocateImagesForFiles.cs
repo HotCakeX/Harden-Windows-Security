@@ -1,9 +1,6 @@
 using System;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Management.Automation;
 using System.Collections.ObjectModel;
+using System.Management.Automation;
 
 #nullable enable
 
@@ -39,17 +36,17 @@ namespace HardenWindowsSecurity
                         {
                             foreach (ErrorRecord error in powerShell.Streams.Error)
                             {
-                                HardenWindowsSecurity.Logger.LogMessage($"Error: {error.Exception.Message}");
+                                HardenWindowsSecurity.Logger.LogMessage($"Error: {error.Exception.Message}", LogTypeIntel.Error);
                             }
                         }
                         else
                         {
-                            HardenWindowsSecurity.Logger.LogMessage($"Excluding {item} from mandatory ASLR.");
+                            HardenWindowsSecurity.Logger.LogMessage($"Excluding {item} from mandatory ASLR.", LogTypeIntel.Information);
                         }
                     }
                     catch (Exception ex)
                     {
-                        HardenWindowsSecurity.Logger.LogMessage($"An exception occurred: {ex.Message}");
+                        HardenWindowsSecurity.Logger.LogMessage($"An exception occurred: {ex.Message}", LogTypeIntel.Error);
                     }
                 }
             }

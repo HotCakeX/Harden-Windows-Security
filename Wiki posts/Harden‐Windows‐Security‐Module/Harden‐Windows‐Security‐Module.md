@@ -6,13 +6,33 @@
 
 <br>
 
-It is a PowerShell module that can apply all of the hardening measures described in the readme. It also offers rigorous compliance verification and security assessment. It enables you to evaluate the conformity of your system based on the security standards and recommendations of this repository. The module employs various techniques such as Security Policy, PowerShell cmdlet, Registry keys, CIM and Windows APIs to conduct the checks.
+Harden Windows Security is a PowerShell module designed to simplify the application of critical security configurations in Windows. This tool offers a range of intuitive and innovative methods to enhance your system's security posture effortlessly. Detailed explanations of all available security measures can be found in the repository's README file. Harden Windows Security provides several modes of interaction to cater to different user preferences:
 
-It is also useful for security researchers and penetration testers who want to assess their system security posture. The module works with any system locale and language.
+* Graphical User Interface (GUI): For those who prefer an interactive experience, a fully-featured GUI is available.
 
-It is fully capable of performing compliance checks for policies applied through Intune using modern workplace management MDM too.
+* Command-Line Interface (CLI): The complete feature set is accessible via the PowerShell command line for users who favor a script-based approach.
 
-### Automatic Updates
+* Unattended Mode: Ideal for automation, this mode allows you to schedule and execute all or specific security configurations at predefined intervals.
+
+* Executable Format: Thanks to its hybrid design, the same codebase, without any changes to it, can be compiled into an executable file, catering to users who prefer a standalone application.
+
+Harden Windows Security also excels in rigorous compliance verification and security assessment. It empowers you to evaluate your system's adherence to security standards and recommendations outlined in this repository. The module is fully capable of conducting compliance checks and detecting policies applied through modern workplace management tools like Intune MDM, traditional Group Policies, Registry keys, Windows APIs, CIM, and more.
+
+Furthermore, this module is invaluable for security researchers and penetration testers seeking to assess and improve their system's security posture. It is compatible with any system locale and language, ensuring broad usability.
+
+## Comprehensive Logging Capabilities
+
+Harden Windows Security includes detailed logging features that track every part of its operations. These logs are helpful for reviewing what actions were taken, making it easier to audit and troubleshoot. You can choose where these logs are saved:
+
+* Log Files: Save logs in files for easy review and storage.
+
+* Windows Event Logs: Add logs to Windows Event Viewer for centralized monitoring.
+
+* Console Output: Display logs in the console for real-time updates.
+
+These logging options ensure that all actions taken by Harden Windows Security are recorded, giving you clear visibility into your security processes. Whether you’re conducting security checks, responding to issues, or just keeping an eye on things, these logs provide valuable information.
+
+## Automatic Updates
 
 The module checks for updates every time you run it and updates itself if there is a new version available, so you don't have to manually do anything.
 
@@ -103,18 +123,14 @@ The `Protect-WindowsSecurity` cmdlet's hybrid design allows it to operate with a
 
 In Interactive mode, the cmdlet will ask you to confirm the changes before applying them. In non-interactive mode, you can pre-configure the hardening categories you want to apply and the cmdlet will apply them without asking for confirmation.
 
-It possesses the ability to operate entirely in isolation, useful for systems or servers that are disconnected from the Internet.
+> [!TIP]\
+> It possesses the ability to operate entirely in isolation, useful for systems or servers that are disconnected from the Internet.
 
 ## Parameters
 
 ### -GUI
 
-Shows a graphical user interface (GUI) that allows you to select the hardening categories you want to apply.
-
-> [!TIP]\
-> In the GUI experience:
-> * Toast Notification is displayed when all of the selected categories are applied.
-> * When using the logging feature, the log file will be created in the path you selected once the GUI is closed.
+Launched the Graphical User Interface (GUI). This is the primary way of launching the GUI of the Harden Windows Security. You will have access to the entire feature set and more.
 
 <br>
 
@@ -138,7 +154,7 @@ You can specify multiple categories by separating them with a comma. If you don'
 
 If a selected category requires Administrator privileges and the module is running with Standard privileges, that category is skipped.
 
-This parameter has automatic tab completion. You can press the `Tab` key to see the available categories.
+This parameter has automatic tab completion. You can press the `Tab` key to see the available categories on the PowerShell console.
 
 <div align='center'>
 
@@ -170,7 +186,7 @@ Shows verbose messages on the console about what the cmdlet is doing.
 
 ### -Log
 
-Activates comprehensive logging by recording all the information shown on the screen and some additional data to a text file. It is strongly advised to use the -Verbose parameter when you want to enable logging.
+Activates comprehensive logging by recording all the information shown on the screen and some additional data to a text file. It is strongly advised to use the `-Verbose` parameter when you want to enable logging.
 
 <div align='center'>
 
@@ -562,6 +578,16 @@ Indicates that the cmdlet will only remove the [country IP blocking firewall rul
 <img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">
 
 <br>
+
+## Technical Details
+
+Harden Windows Security is a hybrid software solution built on the latest available .NET runtime. Approximately 99% of its codebase is written in C#, with PowerShell serving as the initial launch platform. Upon startup in PowerShell, control is quickly transferred to the C# code, and then returned to PowerShell upon completion. This approach leverages the .NET runtime DLLs that are included with PowerShell, eliminating the need for users to install the .NET runtime separately.
+
+The repository includes a Visual Studio solution that allows you to build the software directly. If you decide to compile it, it's highly recommended to completely review the code first, then sign the binaries with your code-signing certificate for use as a standalone application in personal, business, or enterprise environments. While the code can be modified if needed, no changes are required for a successful compilation result in the latest version of Visual Studio.
+ 
+<br>
+
+<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">
 
 <br>
 

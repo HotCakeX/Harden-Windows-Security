@@ -72,10 +72,14 @@ namespace HardenWindowsSecurity
                 }
 
                 // Update the image source for the Refresh button
-                RefreshIconImage.Source =
-                    new System.Windows.Media.Imaging.BitmapImage(
-                        new System.Uri(System.IO.Path.Combine(HardenWindowsSecurity.GlobalVars.path!, "Resources", "Media", "ExecuteButton.png"))
-                    );
+                // Load the Refresh icon image into memory and set it as the source
+                var RefreshIconBitmapImage = new System.Windows.Media.Imaging.BitmapImage();
+                RefreshIconBitmapImage.BeginInit();
+                RefreshIconBitmapImage.UriSource = new System.Uri(System.IO.Path.Combine(HardenWindowsSecurity.GlobalVars.path!, "Resources", "Media", "ExecuteButton.png"));
+                RefreshIconBitmapImage.CacheOption = System.Windows.Media.Imaging.BitmapCacheOption.OnLoad; // Load the image data into memory
+                RefreshIconBitmapImage.EndInit();
+
+                RefreshIconImage.Source = RefreshIconBitmapImage;
 
                 #endregion
 

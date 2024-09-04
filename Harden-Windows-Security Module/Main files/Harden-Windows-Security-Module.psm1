@@ -32,6 +32,5 @@ try {
 catch {
     [HardenWindowsSecurity.GlobalVars]::UseNewNotificationsExp = $false
 }
-
 [HardenWindowsSecurity.GlobalVars]::Host = $HOST
 [HardenWindowsSecurity.GlobalVars]::path = $PSScriptRoot

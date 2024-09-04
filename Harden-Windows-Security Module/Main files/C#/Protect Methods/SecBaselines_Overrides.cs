@@ -84,7 +84,6 @@ namespace HardenWindowsSecurity
                 HardenWindowsSecurity.Logger.LogMessage("XblGameSave scheduled task couldn't be found in the task scheduler.", LogTypeIntel.Information);
             }
             #endregion
-
         }
     }
 }

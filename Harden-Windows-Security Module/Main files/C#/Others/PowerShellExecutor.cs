@@ -15,12 +15,19 @@ namespace HardenWindowsSecurity
         /// <param name="returnOutput">Indicates whether to return the output of the script</param>
         /// <returns>The output of the PowerShell script if returnOutput is true; otherwise, nothing is returned</returns>
         /// <exception cref="InvalidOperationException">Thrown when the PowerShell script execution results in errors.</exception>
-        public static string? ExecuteScript(string script, bool returnOutput = false)
+        public static string? ExecuteScript(string script, bool returnOutput = false, bool NonTerminatingErrors = false)
         {
             using (PowerShell psInstance = PowerShell.Create())
             {
                 // Set the execution policy to Bypass for the current process
                 psInstance.AddScript("Set-ExecutionPolicy Bypass -Scope Process -Force");
+
+                // Set the error action preference to Continue if NonTerminatingErrors is true
+                if (NonTerminatingErrors == true)
+                {
+                    psInstance.AddScript("$ErrorActionPreference = 'Continue'");
+                }
+
                 psInstance.AddScript(script);
 
                 // Prepare to capture output if requested
@@ -64,6 +71,7 @@ namespace HardenWindowsSecurity
                 {
                     if (sender != null)
                     {
+                        // Get the error details
                         var errorStream = (PSDataCollection<ErrorRecord>)sender;
                         var error = errorStream[args.Index];
                         var errorMessage = $"Error: {error.Exception.Message}\n" +
@@ -73,10 +81,20 @@ namespace HardenWindowsSecurity
                                            $"Exception Type: {error.Exception.GetType().FullName}\n" +
                                            $"StackTrace: {error.Exception.StackTrace}";
 
-                        HardenWindowsSecurity.Logger.LogMessage(errorMessage, LogTypeIntel.Error);
+                        // If NonTerminatingErrors is false, throw an exception with the error details
+                        // The error stream contains terminating and non terminating errors
+                        if (NonTerminatingErrors == false)
+                        {
+                            HardenWindowsSecurity.Logger.LogMessage(errorMessage, LogTypeIntel.Error);
 
-                        // Throw an exception with the error details
-                        throw new InvalidOperationException($"PowerShell script execution failed: {errorMessage}");
+                            // Throw an exception with the error details
+                            throw new InvalidOperationException($"PowerShell script execution failed: {errorMessage}");
+                        }
+                        else
+                        {
+                            // Only log the error in a non-terminating way
+                            HardenWindowsSecurity.Logger.LogMessage(errorMessage, LogTypeIntel.Warning);
+                        }
                     }
                 };
 

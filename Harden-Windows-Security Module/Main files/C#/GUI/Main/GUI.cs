@@ -4,9 +4,11 @@ using System.ComponentModel;
 using System.IO;
 using System.Runtime.CompilerServices;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Threading;
 using Microsoft.Win32;
 
 #nullable disable
@@ -271,6 +273,79 @@ End time: {DateTime.Now}
                 // System.Windows.MessageBox.Show(messageBoxText: "Exiting!", caption: "Exit", button: MessageBoxButton.OK, icon: MessageBoxImage.Information);
             };
 
+
+            // DispatcherUnhandledException Event is triggered when an unhandled exception occurs in the application
+            GUIMain.app!.DispatcherUnhandledException += (object s, DispatcherUnhandledExceptionEventArgs e) =>
+            {
+                // Create a custom error window
+                Window errorWindow = new Window
+                {
+                    Title = "An Error Occurred",
+                    Width = 450,
+                    Height = 300,
+                    WindowStartupLocation = WindowStartupLocation.CenterScreen,
+                    ResizeMode = ResizeMode.NoResize
+                };
+
+                StackPanel stackPanel = new StackPanel { Margin = new Thickness(20) };
+
+                TextBlock errorMessage = new TextBlock
+                {
+                    Text = "An error has occurred in the Harden Windows Security App. Please return to the PowerShell window to review the error details. Reporting this issue on GitHub will greatly assist me in addressing and resolving it promptly. Your feedback is invaluable to improving the software. 💚",
+                    Margin = new Thickness(0, 0, 0, 20),
+                    TextWrapping = TextWrapping.Wrap,
+                    FontSize = 14,
+                    FontWeight = FontWeights.SemiBold
+                };
+
+                Button okButton = new Button
+                {
+                    Content = "OK",
+                    Width = 120,
+                    Margin = new Thickness(10),
+                    FontSize = 12,
+                    Height = 50
+                };
+
+                okButton.Click += (sender, args) =>
+                {
+                    errorWindow.Close();
+                };
+
+                Button githubButton = new Button
+                {
+                    Content = "Report on GitHub",
+                    Width = 160,
+                    Margin = new Thickness(10),
+                    FontSize = 12,
+                    Height = 50
+                };
+                githubButton.Click += (sender, args) =>
+                {
+                    // Open the GitHub issues page
+                    System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
+                    {
+                        FileName = "https://github.com/HotCakeX/Harden-Windows-Security/issues",
+                        UseShellExecute = true // Ensure the link opens in the default browser
+                    });
+                    errorWindow.Close();
+                };
+
+                StackPanel buttonPanel = new StackPanel { Orientation = Orientation.Horizontal, HorizontalAlignment = HorizontalAlignment.Center };
+                buttonPanel.Children.Add(okButton);
+                buttonPanel.Children.Add(githubButton);
+
+                stackPanel.Children.Add(errorMessage);
+                stackPanel.Children.Add(buttonPanel);
+
+                errorWindow.Content = stackPanel;
+                errorWindow.ShowDialog();
+
+                e.Handled = false;
+            };
+
+
+
             /*
 
            // Startup Event
@@ -278,17 +353,6 @@ End time: {DateTime.Now}
            {
                // Display a welcome message
                System.Windows.MessageBox.Show(messageBoxText: "Welcome to the application!", caption: "Startup", button: MessageBoxButton.OK, icon: MessageBoxImage.Information);
-           };
-
-           // DispatcherUnhandledException Event is triggered when an unhandled exception occurs in the application
-           GUIMain.app!.DispatcherUnhandledException += (object s, DispatcherUnhandledExceptionEventArgs e) =>
-           {
-
-               // Display an error message to the user
-               System.Windows.MessageBox.Show(messageBoxText: "An unexpected error occurred.", caption: "Error", button: MessageBoxButton.OK, icon: MessageBoxImage.Error);
-
-               // Mark the exception as handled
-               e.Handled = true;
            };
 
             GUIMain.app!.Resources["GlobalStyle"] = new Style(typeof(System.Windows.Controls.Button))

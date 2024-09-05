@@ -49,3 +49,4 @@ System.ComponentModel.Primitives
 System.Security.Principal.Windows
 System.ComponentModel.TypeConverter
 System.DirectoryServices.AccountManagement
+Microsoft.Management.Infrastructure

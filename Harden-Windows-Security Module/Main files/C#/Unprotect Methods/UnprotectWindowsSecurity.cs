@@ -184,10 +184,12 @@ foreach ($FirewallRule in Get-NetFirewallRule) {
         {
             HardenWindowsSecurity.Logger.LogMessage("Removing the country IP blocking firewall rules only", LogTypeIntel.Information);
 
+            FirewallHelper.BlockIPAddressListsInGroupPolicy("OFAC Sanctioned Countries IP range blocking", null, false);
+
+            FirewallHelper.BlockIPAddressListsInGroupPolicy("State Sponsors of Terrorism IP range blocking", null, false);
+
+            // Refresh the group policies to apply the changes instantly
             HardenWindowsSecurity.PowerShellExecutor.ExecuteScript("""
-# Normally these are removed when all group policies are removed, but in case only the firewall rules are removed
-Remove-NetFirewallRule -DisplayName 'OFAC Sanctioned Countries IP range blocking' -PolicyStore localhost -ErrorAction SilentlyContinue
-Remove-NetFirewallRule -DisplayName 'State Sponsors of Terrorism IP range blocking' -PolicyStore localhost -ErrorAction SilentlyContinue
 Start-Process -FilePath GPUpdate.exe -ArgumentList '/force' -NoNewWindow
 """);
         }

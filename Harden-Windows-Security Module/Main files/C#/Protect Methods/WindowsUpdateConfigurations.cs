@@ -11,6 +11,8 @@ namespace HardenWindowsSecurity
                 throw new System.ArgumentNullException("GlobalVars.path cannot be null.");
             }
 
+            ChangePSConsoleTitle.Set("🪟 Windows Update");
+
             HardenWindowsSecurity.Logger.LogMessage("Running the Windows Update category", LogTypeIntel.Information);
 
             HardenWindowsSecurity.Logger.LogMessage("Enabling restart notification for Windows update", LogTypeIntel.Information);

@@ -20,6 +20,8 @@ namespace HardenWindowsSecurity
                 throw new System.ArgumentNullException("GlobalVars.path cannot be null.");
             }
 
+            ChangePSConsoleTitle.Set("🍁 MSFT Defender");
+
             HardenWindowsSecurity.Logger.LogMessage("Running the Microsoft Defender category", LogTypeIntel.Information);
 
             HardenWindowsSecurity.LGPORunner.RunLGPOCommand(System.IO.Path.Combine(HardenWindowsSecurity.GlobalVars.path, "Resources", "Security-Baselines-X", "Microsoft Defender Policies", "registry.pol"), LGPORunner.FileType.POL);

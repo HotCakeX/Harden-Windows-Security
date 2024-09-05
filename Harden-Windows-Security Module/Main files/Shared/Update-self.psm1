@@ -53,7 +53,7 @@ function Update-self {
         # Make sure the old version isn't run after update
         try {
             # Try to re-run the command that invoked the Update-self function in a new session after the module is updated.
-            pwsh.exe -NoLogo -NoExit -command $InvocationStatement
+            pwsh.exe -NoProfile -NoLogo -NoExit -command $InvocationStatement
         }
         catch {
             Throw 'Could not relaunch PowerShell after update. Please close and reopen PowerShell to run your command again.'

@@ -14,8 +14,9 @@ namespace HardenWindowsSecurity
                 throw new System.ArgumentNullException("GlobalVars.path cannot be null.");
             }
 
-            HardenWindowsSecurity.Logger.LogMessage("Running the TLS Security category", LogTypeIntel.Information);
+            ChangePSConsoleTitle.Set("🛡️ TLS");
 
+            HardenWindowsSecurity.Logger.LogMessage("Running the TLS Security category", LogTypeIntel.Information);
 
             // Creating these registry keys that have forward slashes in them
             // Values are added to them in the next step using registry.csv file

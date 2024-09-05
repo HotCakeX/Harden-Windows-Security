@@ -23,6 +23,8 @@ namespace HardenWindowsSecurity
                 throw new System.ArgumentNullException("GlobalVars.path cannot be null.");
             }
 
+            ChangePSConsoleTitle.Set("🔐 Security Baselines");
+
             HardenWindowsSecurity.Logger.LogMessage("Applying the Microsoft Security Baselines", LogTypeIntel.Information);
             HardenWindowsSecurity.Logger.LogMessage("Running the official PowerShell script included in the Microsoft Security Baseline file downloaded from Microsoft servers", LogTypeIntel.Information);
 

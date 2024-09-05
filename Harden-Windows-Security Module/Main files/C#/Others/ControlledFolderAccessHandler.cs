@@ -109,7 +109,7 @@ namespace HardenWindowsSecurity
 
                 if (!string.IsNullOrWhiteSpace(executablePath))
                 {
-                    Logger.LogMessage("Executable Path: " + executablePath, LogTypeIntel.Information);
+                    Logger.LogMessage("Executable Path temporarily being added to the Controlled Folder Access Exclusions: " + executablePath, LogTypeIntel.Information);
 
                     // Ensure the file has a .exe extension
                     if (System.IO.Path.GetExtension(executablePath).Equals(".exe", StringComparison.OrdinalIgnoreCase))
@@ -123,7 +123,7 @@ namespace HardenWindowsSecurity
 
                 if (!string.IsNullOrWhiteSpace(executablePathExe))
                 {
-                    Logger.LogMessage("Executable Path: " + executablePathExe, LogTypeIntel.Information);
+                    Logger.LogMessage("Executable Path temporarily being added to the Controlled Folder Access Exclusions: " + executablePathExe, LogTypeIntel.Information);
 
                     // Ensure the file has a .exe extension because it could be the dll
                     if (System.IO.Path.GetExtension(executablePathExe).Equals(".exe", StringComparison.OrdinalIgnoreCase))

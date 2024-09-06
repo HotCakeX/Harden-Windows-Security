@@ -108,6 +108,10 @@ namespace HardenWindowsSecurity
                     // Only continue if there is no activity other places
                     if (HardenWindowsSecurity.ActivityTracker.IsActive == false)
                     {
+                        // This will be filled in the switch statement based on the selected category
+                        // And used to send to the Notification method to be used on the toast notification
+                        string NotificationMessage = string.Empty;
+
                         // mark as activity started
                         HardenWindowsSecurity.ActivityTracker.IsActive = true;
 
@@ -153,6 +157,8 @@ namespace HardenWindowsSecurity
                                 // Only Remove The Process Mitigations
                                 case 0:
                                     {
+                                        NotificationMessage = "Process Mitigations";
+
                                         HardenWindowsSecurity.UnprotectWindowsSecurity.RemoveExploitMitigations();
                                         break;
                                     }
@@ -162,16 +168,22 @@ namespace HardenWindowsSecurity
                                         // Downloads Defense Measures
                                         if (GUIUnprotect.WDACPoliciesComboBoxSelection == 0)
                                         {
+                                            NotificationMessage = "Downloads Defense Measures WDAC Policy";
+
                                             HardenWindowsSecurity.UnprotectWindowsSecurity.RemoveWDACPolicies(true, false);
                                         }
                                         // Dangerous Script Hosts Blocking
                                         else if (GUIUnprotect.WDACPoliciesComboBoxSelection == 1)
                                         {
+                                            NotificationMessage = "Dangerous Script Hosts Blocking WDAC Policy";
+
                                             HardenWindowsSecurity.UnprotectWindowsSecurity.RemoveWDACPolicies(false, true);
                                         }
                                         // All WDAC Policies
                                         else
                                         {
+                                            NotificationMessage = "WDAC Policies";
+
                                             HardenWindowsSecurity.UnprotectWindowsSecurity.RemoveWDACPolicies(true, true);
                                         }
 
@@ -180,12 +192,16 @@ namespace HardenWindowsSecurity
                                 // Only Remove The Country IP Blocking Firewall Rules
                                 case 2:
                                     {
+                                        NotificationMessage = "Country IP Blocking Firewall Rules";
+
                                         HardenWindowsSecurity.UnprotectWindowsSecurity.RemoveCountryIPBlockingFirewallRules();
                                         break;
                                     }
                                 // Remove All Protections
                                 case 3:
                                     {
+                                        NotificationMessage = "Entire Applied Protections";
+
                                         HardenWindowsSecurity.UnprotectWindowsSecurity.RemoveWDACPolicies(true, true);
                                         HardenWindowsSecurity.UnprotectWindowsSecurity.Unprotect();
                                         HardenWindowsSecurity.UnprotectWindowsSecurity.RemoveExploitMitigations();
@@ -207,6 +223,8 @@ namespace HardenWindowsSecurity
                         // mark as activity completed
                         HardenWindowsSecurity.ActivityTracker.IsActive = false;
 
+                        // Display notification at the end
+                        NewToastNotification.Show(NewToastNotification.ToastNotificationType.EndOfUnprotection, null, null, NotificationMessage);
                     }
                 };
 

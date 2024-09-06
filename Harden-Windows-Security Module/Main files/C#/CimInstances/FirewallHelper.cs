@@ -1,10 +1,10 @@
-using Microsoft.Management.Infrastructure.Options;
 using Microsoft.Management.Infrastructure;
+using Microsoft.Management.Infrastructure.Options;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Management;
 using System.Net.Http;
-using System.Linq;
 
 #nullable enable
 

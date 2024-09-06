@@ -410,7 +410,7 @@ namespace HardenWindowsSecurity
                 // Display a notification if it's allowed to do so, and ShowNotification is set to true
                 if (HardenWindowsSecurity.GlobalVars.UseNewNotificationsExp == true && ShowNotification == true)
                 {
-                    HardenWindowsSecurity.NewToastNotification.Show(ToastNotificationType.EndOfConfirmation, CompliantItemsCount, NonCompliantItemsCount);
+                    HardenWindowsSecurity.NewToastNotification.Show(ToastNotificationType.EndOfConfirmation, CompliantItemsCount, NonCompliantItemsCount, null);
                 }
             }
 

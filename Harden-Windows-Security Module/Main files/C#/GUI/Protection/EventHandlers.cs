@@ -703,7 +703,7 @@ namespace HardenWindowsSecurity
 
                                if (HardenWindowsSecurity.GlobalVars.UseNewNotificationsExp == true)
                                {
-                                   HardenWindowsSecurity.NewToastNotification.Show(ToastNotificationType.EndOfProtection, null, null);
+                                   HardenWindowsSecurity.NewToastNotification.Show(ToastNotificationType.EndOfProtection, null, null, null);
                                }
                            }
                            else

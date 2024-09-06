@@ -566,13 +566,13 @@ namespace HardenWindowsSecurity
                                                    HardenWindowsSecurity.MicrosoftDefender.MSFTDefender_SAC();
                                                }
 
-                                               if (HardenWindowsSecurity.GlobalVars.ShouldEnableOptionalDiagnosticData || string.Equals(HardenWindowsSecurity.GlobalVars.MDAVConfigCurrent!.SmartAppControlState, "on", StringComparison.OrdinalIgnoreCase))
+                                               if (HardenWindowsSecurity.GlobalVars.ShouldEnableOptionalDiagnosticData || string.Equals(PropertyHelper.GetPropertyValue(GlobalVars.MDAVConfigCurrent, "SmartAppControlState") ?? string.Empty, "on", StringComparison.OrdinalIgnoreCase))
                                                {
                                                    HardenWindowsSecurity.Logger.LogMessage("Enabling Optional Diagnostic Data because SAC is on or user selected to turn it on", LogTypeIntel.Information);
                                                    HardenWindowsSecurity.MicrosoftDefender.MSFTDefender_EnableDiagData();
                                                }
 
-                                               if (!string.Equals(HardenWindowsSecurity.GlobalVars.MDAVConfigCurrent!.SmartAppControlState, "off", StringComparison.OrdinalIgnoreCase))
+                                               if (!string.Equals(PropertyHelper.GetPropertyValue(GlobalVars.MDAVConfigCurrent, "SmartAppControlState") ?? string.Empty, "off", StringComparison.OrdinalIgnoreCase))
                                                {
                                                    if (HardenWindowsSecurity.GUIProtectWinSecurity.SelectedSubCategories.Contains("MSFTDefender_NoDiagData"))
                                                    {

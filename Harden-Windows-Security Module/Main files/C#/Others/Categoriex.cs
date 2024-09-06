@@ -66,19 +66,21 @@ namespace HardenWindowsSecurity
                 ObjectQuery query = new ObjectQuery("SELECT * FROM Win32_Tpm");
 
                 // Create a ManagementObjectSearcher to execute the query
-                ManagementObjectSearcher searcher = new ManagementObjectSearcher(scope, query);
-
-                // Get the TPM instances
-                ManagementObjectCollection queryCollection = searcher.Get();
-
-                if (queryCollection.Count > 0)
+                using (ManagementObjectSearcher searcher = new ManagementObjectSearcher(scope, query))
                 {
-                    return true;
-                    //   foreach (ManagementObject tpm in queryCollection)
-                    //    {
-                    //     HardenWindowsSecurity.Logger.LogMessage("TPM is present on this system.");
-                    //     HardenWindowsSecurity.Logger.LogMessage("TPM Version: " + tpm["SpecVersion"]);
-                    //    }
+
+                    // Get the TPM instances
+                    ManagementObjectCollection queryCollection = searcher.Get();
+
+                    if (queryCollection.Count > 0)
+                    {
+                        return true;
+                        //   foreach (ManagementObject tpm in queryCollection)
+                        //    {
+                        //     HardenWindowsSecurity.Logger.LogMessage("TPM is present on this system.");
+                        //     HardenWindowsSecurity.Logger.LogMessage("TPM Version: " + tpm["SpecVersion"]);
+                        //    }
+                    }
                 }
             }
             catch (Exception ex)

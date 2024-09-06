@@ -52,40 +52,43 @@ namespace HardenWindowsSecurity
             // https://learn.microsoft.com/en-us/dotnet/api/system.directoryservices.accountmanagement.principalcontext
             using (PrincipalContext context = new PrincipalContext(ContextType.Machine))
             {
+
                 // Create a user principal object used as a query filter
                 // https://learn.microsoft.com/en-us/dotnet/api/system.directoryservices.accountmanagement.userprincipal
-                UserPrincipal userPrincipal = new UserPrincipal(context);
-
-                // Initialize a searcher with the user principal object
-                // https://learn.microsoft.com/en-us/dotnet/api/system.directoryservices.accountmanagement.principalsearcher
-                using (PrincipalSearcher searcher = new PrincipalSearcher(userPrincipal))
+                using (UserPrincipal userPrincipal = new UserPrincipal(context))
                 {
-                    // Iterate over the search results
-                    foreach (var result in searcher.FindAll())
+
+                    // Initialize a searcher with the user principal object
+                    // https://learn.microsoft.com/en-us/dotnet/api/system.directoryservices.accountmanagement.principalsearcher
+                    using (PrincipalSearcher searcher = new PrincipalSearcher(userPrincipal))
                     {
-                        // Cast the result to a UserPrincipal object
-                        UserPrincipal? user = result as UserPrincipal;
-                        if (user != null)
+                        // Iterate over the search results
+                        foreach (var result in searcher.FindAll())
                         {
-                            // Create a new LocalUser object and populate its properties
-                            LocalUser localUser = new LocalUser
+                            // Cast the result to a UserPrincipal object
+                            UserPrincipal? user = result as UserPrincipal;
+                            if (user != null)
                             {
-                                AccountExpires = user.AccountExpirationDate?.ToString(CultureInfo.InvariantCulture),
-                                Description = user.Description,
-                                Enabled = user.Enabled.HasValue ? user.Enabled.Value : false,
-                                FullName = user.DisplayName,
-                                PasswordChangeableDate = user.LastPasswordSet?.ToString(CultureInfo.InvariantCulture),
-                                UserMayChangePassword = !user.UserCannotChangePassword,
-                                PasswordRequired = !user.PasswordNotRequired,
-                                PasswordLastSet = user.LastPasswordSet?.ToString(CultureInfo.InvariantCulture),
-                                LastLogon = user.LastLogon?.ToString(CultureInfo.InvariantCulture),
-                                Name = user.SamAccountName,
-                                SID = user.Sid?.ToString(),
-                                ObjectClass = "User",
-                                Groups = GetGroupNames(user), // Populate group names
-                                GroupsSIDs = GetGroupSIDs(user) // Populate group SIDs
-                            };
-                            localUsers.Add(localUser);
+                                // Create a new LocalUser object and populate its properties
+                                LocalUser localUser = new LocalUser
+                                {
+                                    AccountExpires = user.AccountExpirationDate?.ToString(CultureInfo.InvariantCulture),
+                                    Description = user.Description,
+                                    Enabled = user.Enabled.HasValue ? user.Enabled.Value : false,
+                                    FullName = user.DisplayName,
+                                    PasswordChangeableDate = user.LastPasswordSet?.ToString(CultureInfo.InvariantCulture),
+                                    UserMayChangePassword = !user.UserCannotChangePassword,
+                                    PasswordRequired = !user.PasswordNotRequired,
+                                    PasswordLastSet = user.LastPasswordSet?.ToString(CultureInfo.InvariantCulture),
+                                    LastLogon = user.LastLogon?.ToString(CultureInfo.InvariantCulture),
+                                    Name = user.SamAccountName,
+                                    SID = user.Sid?.ToString(),
+                                    ObjectClass = "User",
+                                    Groups = GetGroupNames(user), // Populate group names
+                                    GroupsSIDs = GetGroupSIDs(user) // Populate group SIDs
+                                };
+                                localUsers.Add(localUser);
+                            }
                         }
                     }
                 }

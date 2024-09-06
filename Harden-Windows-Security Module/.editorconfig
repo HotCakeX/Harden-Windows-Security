@@ -83,3 +83,45 @@ dotnet_diagnostic.CA1040.severity = error
 
 # CA1816: Dispose methods should call SuppressFinalize
 dotnet_diagnostic.CA1816.severity = error
+
+# CA2153: Do Not Catch Corrupted State Exceptions
+dotnet_diagnostic.CA2153.severity = error
+
+# CA2300: Do not use insecure deserializer BinaryFormatter
+dotnet_diagnostic.CA2300.severity = error
+
+# CA2302: Ensure BinaryFormatter.Binder is set before calling BinaryFormatter.Deserialize
+dotnet_diagnostic.CA2302.severity = error
+
+# CA2327: Do not use insecure JsonSerializerSettings
+dotnet_diagnostic.CA2327.severity = error
+
+# CA3012: Review code for regex injection vulnerabilities
+dotnet_diagnostic.CA3012.severity = error
+
+# CA3011: Review code for DLL injection vulnerabilities
+dotnet_diagnostic.CA3011.severity = error
+
+# CA2217: Do not mark enums with FlagsAttribute
+dotnet_diagnostic.CA2217.severity = error
+
+# CA1069: Enums values should not be duplicated
+dotnet_diagnostic.CA1069.severity = error
+
+# CA1823: Avoid unused private fields
+dotnet_diagnostic.CA1823.severity = error
+
+# CA1836: Prefer IsEmpty over Count
+dotnet_diagnostic.CA1836.severity = error
+
+# CA2000: Dispose objects before losing scope
+dotnet_diagnostic.CA2000.severity = error
+
+# CA1830: Prefer strongly-typed Append and Insert method overloads on StringBuilder
+dotnet_diagnostic.CA1830.severity = error
+
+# CA1822: Mark members as static
+dotnet_diagnostic.CA1822.severity = error
+
+# CA1050: Declare types in namespaces
+dotnet_diagnostic.CA1050.severity = error

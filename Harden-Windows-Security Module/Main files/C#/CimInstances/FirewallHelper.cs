@@ -86,7 +86,6 @@ namespace HardenWindowsSecurity
             False = 2
         }
 
-        [Flags]
         public enum NetSecurityProfile : ushort
         {
             Any = 0,
@@ -210,22 +209,28 @@ namespace HardenWindowsSecurity
             }
 
             // Establish a CIM session to localhost
-            CimSession cimSession = CimSession.Create(null);
-
-            // Define options to specify the policy store
-            CimOperationOptions options = new CimOperationOptions();
-            options.SetCustomOption("PolicyStore", "localhost", mustComply: true);
-
-            // Delete existing rules with the same name
-            // it is thorough, any number of firewall rules that match the same name in both inbound and outbound sections of the Group policy firewall rules will be included
-            DeleteFirewallRules(cimSession, DisplayName, "localhost");
-
-            if (ToAdd)
+            using (CimSession cimSession = CimSession.Create(null))
             {
-                // Create inbound and outbound rules
-                CreateFirewallRule(cimSession, DisplayName, ipList, isInbound: true);
-                CreateFirewallRule(cimSession, DisplayName, ipList, isInbound: false);
+
+                // Define options to specify the policy store
+                using (CimOperationOptions options = new CimOperationOptions())
+                {
+                    options.SetCustomOption("PolicyStore", "localhost", mustComply: true);
+
+                    // Delete existing rules with the same name
+                    // it is thorough, any number of firewall rules that match the same name in both inbound and outbound sections of the Group policy firewall rules will be included
+                    DeleteFirewallRules(cimSession, DisplayName, "localhost");
+
+                    if (ToAdd)
+                    {
+                        // Create inbound and outbound rules
+                        CreateFirewallRule(cimSession, DisplayName, ipList, isInbound: true);
+                        CreateFirewallRule(cimSession, DisplayName, ipList, isInbound: false);
+                    }
+                }
             }
+
+            #region Helper Methods
 
             // Downloads the IP Address list from the GitHub URLs and converts them into string arrays
             string[] DownloadIPList(string URL)
@@ -243,17 +248,19 @@ namespace HardenWindowsSecurity
             void DeleteFirewallRules(CimSession cimSession, string ruleName, string policyStore)
             {
                 // Define custom options for the operation
-                CimOperationOptions options = new CimOperationOptions();
-                options.SetCustomOption("PolicyStore", policyStore, mustComply: true);
-
-                // Check for existing rules with the same name and delete them
-                var existingRules = cimSession.EnumerateInstances("root/StandardCimv2", "MSFT_NetFirewallRule", options)
-                                              .Where(instance => instance.CimInstanceProperties["ElementName"].Value.ToString() == ruleName);
-
-                foreach (var rule in existingRules)
+                using (CimOperationOptions options = new CimOperationOptions())
                 {
-                    cimSession.DeleteInstance("root/StandardCimv2", rule, options);
-                    Logger.LogMessage($"Deleted existing firewall rule: {ruleName}", LogTypeIntel.Information);
+                    options.SetCustomOption("PolicyStore", policyStore, mustComply: true);
+
+                    // Check for existing rules with the same name and delete them
+                    var existingRules = cimSession.EnumerateInstances("root/StandardCimv2", "MSFT_NetFirewallRule", options)
+                                                  .Where(instance => instance.CimInstanceProperties["ElementName"].Value.ToString() == ruleName);
+
+                    foreach (var rule in existingRules)
+                    {
+                        cimSession.DeleteInstance("root/StandardCimv2", rule, options);
+                        Logger.LogMessage($"Deleted existing firewall rule: {ruleName}", LogTypeIntel.Information);
+                    }
                 }
             }
 
@@ -261,32 +268,39 @@ namespace HardenWindowsSecurity
             void CreateFirewallRule(CimSession cimSession, string name, string[] ipList, bool isInbound)
             {
                 // Define custom options for the operation
-                CimOperationOptions options = new CimOperationOptions();
-                options.SetCustomOption("PolicyStore", "localhost", mustComply: true);
+                using (CimOperationOptions options = new CimOperationOptions())
+                {
+                    options.SetCustomOption("PolicyStore", "localhost", mustComply: true);
 
-                // The LocalAddress and RemoteAddress accept String[] type
-                // SetCustomOption doesn't support string arrays using 3 overloads variations
-                // so we have to use the 4 overload variation that allows us to explicitly define the type
-                string[] emptyArray = Array.Empty<string>();
-                // Empty array will set it to "Any"
-                options.SetCustomOption("LocalAddress", emptyArray, Microsoft.Management.Infrastructure.CimType.StringArray, mustComply: true);
-                options.SetCustomOption("RemoteAddress", ipList, Microsoft.Management.Infrastructure.CimType.StringArray, mustComply: true);
+                    // The LocalAddress and RemoteAddress accept String[] type
+                    // SetCustomOption doesn't support string arrays using 3 overloads variations
+                    // so we have to use the 4 overload variation that allows us to explicitly define the type
+                    string[] emptyArray = Array.Empty<string>();
+                    // Empty array will set it to "Any"
+                    options.SetCustomOption("LocalAddress", emptyArray, Microsoft.Management.Infrastructure.CimType.StringArray, mustComply: true);
+                    options.SetCustomOption("RemoteAddress", ipList, Microsoft.Management.Infrastructure.CimType.StringArray, mustComply: true);
 
-                // Define properties for the new firewall rule
-                CimInstance newFirewallRule = new CimInstance("MSFT_NetFirewallRule", "root/StandardCimv2");
-                newFirewallRule.CimInstanceProperties.Add(CimProperty.Create("ElementName", name, CimFlags.None)); // ElementName is the same as DisplayName
-                newFirewallRule.CimInstanceProperties.Add(CimProperty.Create("Description", name, CimFlags.None)); // Setting the Description the same value as the DisplayName
-                newFirewallRule.CimInstanceProperties.Add(CimProperty.Create("Direction", (ushort)(isInbound ? 1 : 2), CimFlags.None)); // 1 for Inbound, 2 for Outbound
-                newFirewallRule.CimInstanceProperties.Add(CimProperty.Create("Action", (ushort)4, CimFlags.None)); // Block
-                newFirewallRule.CimInstanceProperties.Add(CimProperty.Create("Enabled", (ushort)1, CimFlags.None)); // Enable
-                newFirewallRule.CimInstanceProperties.Add(CimProperty.Create("Profiles", (ushort)0, CimFlags.None)); // Any
-                newFirewallRule.CimInstanceProperties.Add(CimProperty.Create("EdgeTraversalPolicy", (ushort)0, CimFlags.None)); // Block
+                    // Define properties for the new firewall rule
+                    using (CimInstance newFirewallRule = new CimInstance("MSFT_NetFirewallRule", "root/StandardCimv2"))
+                    {
+                        newFirewallRule.CimInstanceProperties.Add(CimProperty.Create("ElementName", name, CimFlags.None)); // ElementName is the same as DisplayName
+                        newFirewallRule.CimInstanceProperties.Add(CimProperty.Create("Description", name, CimFlags.None)); // Setting the Description the same value as the DisplayName
+                        newFirewallRule.CimInstanceProperties.Add(CimProperty.Create("Direction", (ushort)(isInbound ? 1 : 2), CimFlags.None)); // 1 for Inbound, 2 for Outbound
+                        newFirewallRule.CimInstanceProperties.Add(CimProperty.Create("Action", (ushort)4, CimFlags.None)); // Block
+                        newFirewallRule.CimInstanceProperties.Add(CimProperty.Create("Enabled", (ushort)1, CimFlags.None)); // Enable
+                        newFirewallRule.CimInstanceProperties.Add(CimProperty.Create("Profiles", (ushort)0, CimFlags.None)); // Any
+                        newFirewallRule.CimInstanceProperties.Add(CimProperty.Create("EdgeTraversalPolicy", (ushort)0, CimFlags.None)); // Block
 
-                // Create the instance
-                cimSession.CreateInstance("root/StandardCimv2", newFirewallRule, options);
+                        // Create the instance
+                        cimSession.CreateInstance("root/StandardCimv2", newFirewallRule, options);
 
-                Logger.LogMessage($"Successfully created a Firewall rule with the name {name} and the direction {(isInbound ? "Inbound" : "Outbound")}.", LogTypeIntel.Information);
+                        Logger.LogMessage($"Successfully created a Firewall rule with the name {name} and the direction {(isInbound ? "Inbound" : "Outbound")}.", LogTypeIntel.Information);
+                    }
+                }
             }
+
+            #endregion
+
         }
     }
 }

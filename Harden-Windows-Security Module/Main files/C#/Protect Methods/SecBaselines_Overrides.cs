@@ -52,32 +52,35 @@ namespace HardenWindowsSecurity
                 HardenWindowsSecurity.Logger.LogMessage("Re-enabling the XblGameSave Standby Task that gets disabled by Microsoft Security Baselines", LogTypeIntel.Information);
 
                 // Create a new process
-                Process process = new Process();
-                process.StartInfo.FileName = "SCHTASKS.EXE";
-                process.StartInfo.Arguments = "/Change /TN \\Microsoft\\XblGameSave\\XblGameSaveTask /Enable";
-
-                // Set to false to display output/error in the console
-                process.StartInfo.UseShellExecute = false;
-                process.StartInfo.RedirectStandardOutput = true;
-                process.StartInfo.RedirectStandardError = true;
-
-                // Start the process
-                process.Start();
-
-                // Read the output (if any)
-                string output = process.StandardOutput.ReadToEnd();
-                string error = process.StandardError.ReadToEnd();
-
-                // Wait for the process to exit
-                process.WaitForExit();
-
-                // Check for errors
-                if (process.ExitCode != 0)
+                using (Process process = new Process())
                 {
-                    throw new Exception($"Process failed with exit code {process.ExitCode}: {error}");
-                }
+                    process.StartInfo.FileName = "SCHTASKS.EXE";
+                    process.StartInfo.Arguments = "/Change /TN \\Microsoft\\XblGameSave\\XblGameSaveTask /Enable";
 
-                HardenWindowsSecurity.Logger.LogMessage(output, LogTypeIntel.Information);
+                    // Set to false to display output/error in the console
+                    process.StartInfo.UseShellExecute = false;
+                    process.StartInfo.RedirectStandardOutput = true;
+                    process.StartInfo.RedirectStandardError = true;
+
+                    // Start the process
+                    process.Start();
+
+                    // Read the output (if any)
+                    string output = process.StandardOutput.ReadToEnd();
+                    string error = process.StandardError.ReadToEnd();
+
+                    // Wait for the process to exit
+                    process.WaitForExit();
+
+                    // Check for errors
+                    if (process.ExitCode != 0)
+                    {
+                        throw new Exception($"Process failed with exit code {process.ExitCode}: {error}");
+                    }
+
+                    HardenWindowsSecurity.Logger.LogMessage(output, LogTypeIntel.Information);
+
+                }
             }
             else
             {

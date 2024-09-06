@@ -307,7 +307,7 @@ namespace HardenWindowsSecurity
             /// </summary>
             /// <param name="category">Name of the category</param>
             /// <returns>The color of the category to be used for display purposes on the DataGrid GUI</returns>
-            private System.Windows.Media.Brush GetCategoryColor(string category)
+            static private System.Windows.Media.Brush GetCategoryColor(string category)
             {
                 // Determine the background color for each category
                 switch (category)

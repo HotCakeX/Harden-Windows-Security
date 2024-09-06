@@ -101,7 +101,7 @@ namespace HardenWindowsSecurity
                 case ToastNotificationType.EndOfConfirmation:
                     {
 
-                        // Combine paths                       
+                        // Combine paths
                         string Inline = Path.Combine(HardenWindowsSecurity.GlobalVars.path!, "Resources", "Media", "ConfirmToastNotificationImage.png");
 
                         new Microsoft.Toolkit.Uwp.Notifications.ToastContentBuilder()
@@ -161,7 +161,7 @@ namespace HardenWindowsSecurity
                     }
                 case ToastNotificationType.EndOfUnprotection:
                     {
-                        // Combine paths                      
+                        // Combine paths
                         string Inline = Path.Combine(HardenWindowsSecurity.GlobalVars.path!, "Resources", "Media", "UnprotectToastNotificationImage.png");
 
                         new Microsoft.Toolkit.Uwp.Notifications.ToastContentBuilder()

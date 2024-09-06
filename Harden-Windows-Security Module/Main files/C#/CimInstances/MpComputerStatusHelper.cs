@@ -21,27 +21,29 @@ namespace HardenWindowsSecurity
                 string queryString = $"SELECT * FROM {className}";
 
                 // Execute the query
-                ManagementObjectSearcher searcher = new ManagementObjectSearcher(namespaceName, queryString);
-                ManagementObjectCollection results = searcher.Get();
-
-                // Make sure the results isn't empty
-                if (results.Count > 0)
+                using (ManagementObjectSearcher searcher = new ManagementObjectSearcher(namespaceName, queryString))
                 {
-                    var result = results.Cast<ManagementBaseObject>().FirstOrDefault();
+                    ManagementObjectCollection results = searcher.Get();
 
-                    if (result != null)
+                    // Make sure the results isn't empty
+                    if (results.Count > 0)
                     {
+                        var result = results.Cast<ManagementBaseObject>().FirstOrDefault();
 
-                        return ConvertToDynamic(result);
+                        if (result != null)
+                        {
+
+                            return ConvertToDynamic(result);
+                        }
+                        else
+                        {
+                            throw new Exception("Failed to get MpComputerStatus!");
+                        }
                     }
                     else
                     {
-                        throw new Exception("Failed to get MpComputerStatus!");
+                        throw new HardenWindowsSecurity.PowerShellExecutionException("WMI query for 'MSFT_MpComputerStatus' failed");
                     }
-                }
-                else
-                {
-                    throw new HardenWindowsSecurity.PowerShellExecutionException("WMI query for 'MSFT_MpComputerStatus' failed");
                 }
             }
             catch (ManagementException ex)
@@ -101,58 +103,60 @@ namespace HardenWindowsSecurity
                 scope.Connect();
 
                 // Create an instance of the MSFT_MpPreference class
-                var mpPreferenceClass = new ManagementClass(scope, new ManagementPath("MSFT_MpPreference"), null);
+                using (var mpPreferenceClass = new ManagementClass(scope, new ManagementPath("MSFT_MpPreference"), null))
+                {
 
-                // Get the available methods for the class
-                var methodParams = mpPreferenceClass.GetMethodParameters("Set");
+                    // Get the available methods for the class
+                    var methodParams = mpPreferenceClass.GetMethodParameters("Set");
 
-                if (preferenceValue == null)
-                {
-                    throw new ArgumentNullException(nameof(preferenceValue));
-                }
+                    if (preferenceValue == null)
+                    {
+                        throw new ArgumentNullException(nameof(preferenceValue));
+                    }
 
-                // Set the preference based on the type T
-                if (typeof(T) == typeof(string))
-                {
-                    methodParams[preferenceName] = (string)(object)preferenceValue;
-                }
-                else if (typeof(T) == typeof(bool))
-                {
-                    methodParams[preferenceName] = (bool)(object)preferenceValue;
-                }
-                else if (typeof(T) == typeof(int))
-                {
-                    methodParams[preferenceName] = (int)(object)preferenceValue;
-                }
-                else if (typeof(T) == typeof(double))
-                {
-                    methodParams[preferenceName] = (double)(object)preferenceValue;
-                }
-                else if (typeof(T) == typeof(float))
-                {
-                    methodParams[preferenceName] = (float)(object)preferenceValue;
-                }
-                else if (typeof(T) == typeof(string[]))
-                {
-                    methodParams[preferenceName] = (string[])(object)preferenceValue;
-                }
-                else if (typeof(T) == typeof(byte))
-                {
-                    methodParams[preferenceName] = (byte)(object)preferenceValue;
-                }
-                else if (typeof(ushort) == typeof(ushort))
-                {
-                    methodParams[preferenceName] = (ushort)(object)preferenceValue;
-                }
-                else
-                {
-                    throw new ArgumentException($"Unsupported type {typeof(T)} for preference value");
-                }
+                    // Set the preference based on the type T
+                    if (typeof(T) == typeof(string))
+                    {
+                        methodParams[preferenceName] = (string)(object)preferenceValue;
+                    }
+                    else if (typeof(T) == typeof(bool))
+                    {
+                        methodParams[preferenceName] = (bool)(object)preferenceValue;
+                    }
+                    else if (typeof(T) == typeof(int))
+                    {
+                        methodParams[preferenceName] = (int)(object)preferenceValue;
+                    }
+                    else if (typeof(T) == typeof(double))
+                    {
+                        methodParams[preferenceName] = (double)(object)preferenceValue;
+                    }
+                    else if (typeof(T) == typeof(float))
+                    {
+                        methodParams[preferenceName] = (float)(object)preferenceValue;
+                    }
+                    else if (typeof(T) == typeof(string[]))
+                    {
+                        methodParams[preferenceName] = (string[])(object)preferenceValue;
+                    }
+                    else if (typeof(T) == typeof(byte))
+                    {
+                        methodParams[preferenceName] = (byte)(object)preferenceValue;
+                    }
+                    else if (typeof(ushort) == typeof(ushort))
+                    {
+                        methodParams[preferenceName] = (ushort)(object)preferenceValue;
+                    }
+                    else
+                    {
+                        throw new ArgumentException($"Unsupported type {typeof(T)} for preference value");
+                    }
 
-                // Invoke the method to apply the settings
-                mpPreferenceClass.InvokeMethod("Set", methodParams, null);
+                    // Invoke the method to apply the settings
+                    mpPreferenceClass.InvokeMethod("Set", methodParams, null);
 
-                HardenWindowsSecurity.Logger.LogMessage($"{preferenceName} set to {preferenceValue} (Type: {typeof(T).Name}) successfully.", LogTypeIntel.Information);
+                    HardenWindowsSecurity.Logger.LogMessage($"{preferenceName} set to {preferenceValue} (Type: {typeof(T).Name}) successfully.", LogTypeIntel.Information);
+                }
             }
             catch (Exception ex)
             {

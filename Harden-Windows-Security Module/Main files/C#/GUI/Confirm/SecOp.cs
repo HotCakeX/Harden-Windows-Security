@@ -76,7 +76,7 @@ namespace HardenWindowsSecurity
         }
 
         // Private method to load an image from the specified file name
-        private System.Windows.Media.ImageSource LoadImage(string fileName)
+        static private System.Windows.Media.ImageSource LoadImage(string fileName)
         {
             // Construct the full path to the image file
             string imagePath = System.IO.Path.Combine(GlobalVars.path, "Resources", "Media", fileName);

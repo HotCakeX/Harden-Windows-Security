@@ -1,9 +1,5 @@
 using System;
-using System.Linq.Expressions;
 using System.Xml;
-using static System.Formats.Asn1.AsnWriter;
-using System.Xml.Linq;
-using System.Globalization;
 
 #nullable enable
 
@@ -109,10 +105,7 @@ namespace WDACConfig
                         }
 
                         // Remove SigningScenario with Value 12 completely after moving all of its AllowedSigners to SigningScenario with the value of 131
-                        if (signingScenario12 != null)
-                        {
-                            signingScenario12.ParentNode?.RemoveChild(signingScenario12);
-                        }
+                        signingScenario12.ParentNode?.RemoveChild(signingScenario12);
                     }
                 }
 

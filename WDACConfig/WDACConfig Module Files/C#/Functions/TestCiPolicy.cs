@@ -1,9 +1,8 @@
 using System;
 using System.IO;
-using System.Management.Automation;
+using System.Security.Cryptography;
 using System.Security.Cryptography.Pkcs;
 using System.Security.Cryptography.X509Certificates;
-using System.Security.Cryptography;
 using System.Xml;
 using System.Xml.Schema;
 

@@ -1,8 +1,7 @@
 using System;
-using System.Collections.Generic;
+using System.Formats.Asn1;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
-using System.Formats.Asn1;
 
 #nullable enable
 
@@ -89,19 +88,21 @@ namespace WDACConfig
                     throw new Exception($"No handler for algorithm {algorithmOid}");
             }
 
-            // Compute the hash of the TBS value using the hash function
-            byte[] hash = hashFunction.ComputeHash(tbsCertificate.ToArray());
+            using (hashFunction)
+            {
+                // Compute the hash of the TBS value using the hash function
+                byte[] hash = hashFunction.ComputeHash(tbsCertificate.ToArray());
 
-            // Convert the hash to a hex string
-            string hexStringOutput = BitConverter.ToString(hash).Replace("-", "", StringComparison.OrdinalIgnoreCase);
+                // Convert the hash to a hex string
+                string hexStringOutput = BitConverter.ToString(hash).Replace("-", "", StringComparison.OrdinalIgnoreCase);
 
-            return hexStringOutput;
+                return hexStringOutput;
+            }
         }
 
         public static string ConvertHexToOID(string hex)
         // Converts a hexadecimal string to an OID
         // Used for converting hexadecimal values found in the EKU sections of the WDAC policies to their respective OIDs.
-
         {
             if (string.IsNullOrEmpty(hex))
             {

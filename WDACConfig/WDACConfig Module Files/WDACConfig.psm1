@@ -38,6 +38,7 @@ try {
 }
 catch {}
 
+<#
 # This is required for the EKUs to work.
 # Load all the DLLs in the PowerShell folder, providing .NET types for the module
 # These types are required for the folder picker with multiple select options. Also the module manifest no longer handles assembly as it's not necessary anymore.
@@ -49,6 +50,10 @@ foreach ($Dll in (Convert-Path -Path ("$([psobject].Assembly.Location)\..\*.dll"
 }
 # Clear the Get-Error from Add-Type errors that are unnecessary
 $Error.Clear()
+
+#>
+# Because we need it to construct Microsoft.Powershell.Commands.EnhancedKeyUsageProperty object for EKUs
+Add-Type -AssemblyName 'Microsoft.PowerShell.Security'
 
 # Import all C# codes at once so they will get compiled together, have resolved dependencies and recognize each others' classes/types
 Add-Type -Path ([System.IO.Directory]::GetFiles("$PSScriptRoot\C#", '*.*', [System.IO.SearchOption]::AllDirectories)) -ReferencedAssemblies @(Get-Content -Path "$PSScriptRoot\.NETAssembliesToLoad.txt")

@@ -4,6 +4,8 @@ using System.Runtime.InteropServices;
 using System.Security.Cryptography.Pkcs;
 using System.Security.Cryptography.X509Certificates;
 
+#nullable enable
+
 // The following functions and methods use the Windows APIs to grab all of the certificates from a signed file
 
 namespace WDACConfig.AllCertificatesGrabber
@@ -160,7 +162,7 @@ namespace WDACConfig.AllCertificatesGrabber
             public uint StateAction = StateActionVerify;   // State action for trust verification
             public IntPtr StateData = IntPtr.Zero;   // Pointer to state data
             [MarshalAs(UnmanagedType.LPTStr)]
-            private string URLReference;   // URL reference for trust verification
+            private string? URLReference;   // URL reference for trust verification
             public uint ProvFlags = 4112;   // Provider flags for trust verification
             public uint UIContext;   // UI context for trust verification
             public IntPtr pSignatureSettings;   // Pointer to signature settings
@@ -201,7 +203,7 @@ namespace WDACConfig.AllCertificatesGrabber
                 IntPtr hCryptMsg,
                 int dwParamType,
                 int dwIndex,
-                byte[] pvData,
+                byte[]? pvData,
                 ref int pcbData
                 );
         }
@@ -235,7 +237,7 @@ namespace WDACConfig.AllCertificatesGrabber
 
             do
             {
-                WinTrustData TrustedData = null;   // Declare a WinTrustData structure variable
+                WinTrustData? TrustedData = null;   // Declare a WinTrustData structure variable
                 IntPtr winTrustDataPointer = IntPtr.Zero;   // Pointer to WinTrustData structure
 
                 try
@@ -260,7 +262,18 @@ namespace WDACConfig.AllCertificatesGrabber
                     // Check signature settings and process the signer's certificate
                     if (maxSigners == uint.MaxValue)
                     {
-                        maxSigners = ((WinTrustSignatureSettings)Marshal.PtrToStructure(TrustedData.pSignatureSettings, typeof(WinTrustSignatureSettings))).SecondarySignersCount;
+                        // First, checking if TrustedData.pSignatureSettings is not IntPtr.Zero (which means it is not null)
+                        if (TrustedData.pSignatureSettings != IntPtr.Zero)
+                        {
+                            // Using the generic overload of Marshal.PtrToStructure for better type safety and performance
+                            var signatureSettings = Marshal.PtrToStructure<WinTrustSignatureSettings>(TrustedData.pSignatureSettings);
+
+                            // Ensuring that the structure is not null before accessing its members
+                            if (signatureSettings != null)
+                            {
+                                maxSigners = signatureSettings.SecondarySignersCount;
+                            }
+                        }
                     }
 
                     // If the certificate is expired, continue to the next iteration
@@ -280,7 +293,8 @@ namespace WDACConfig.AllCertificatesGrabber
                     if (TrustedData.StateData != IntPtr.Zero)
                     {
                         // Get provider data from state data
-                        CryptProviderData providerData = (CryptProviderData)Marshal.PtrToStructure(WTHelperProvDataFromStateData(TrustedData.StateData), typeof(CryptProviderData));
+                        CryptProviderData providerData = Marshal.PtrToStructure<CryptProviderData>(WTHelperProvDataFromStateData(TrustedData.StateData));
+
                         int pcbData = 0;   // Size of data in bytes
 
                         // https://learn.microsoft.com/en-us/windows/win32/api/wincrypt/nf-wincrypt-cryptmsggetparam
@@ -322,8 +336,9 @@ namespace WDACConfig.AllCertificatesGrabber
                                 }
                                 else
                                 {
-                                    // Otherwise, get the CryptProviderSigner structure from pasSigners pointer
-                                    CryptProviderSigner signer = (CryptProviderSigner)Marshal.PtrToStructure(providerData.pasSigners, typeof(CryptProviderSigner));
+                                    // Otherwise, get the CryptProviderSigner structure from pasSigners pointer                                  
+                                    // Using the generic overload to marshal the structure for better performance and type safety
+                                    CryptProviderSigner signer = Marshal.PtrToStructure<CryptProviderSigner>(providerData.pasSigners);
 
                                     // Initialize X509Chain with the pChainContext from the signer structure
                                     certificateChain = new X509Chain(signer.pChainContext);
@@ -337,12 +352,15 @@ namespace WDACConfig.AllCertificatesGrabber
                 }
                 finally
                 {
-                    // Set StateAction to close the WinTrustData structure
-                    TrustedData.StateAction = StateActionClose;
+                    if (TrustedData != null)
+                    {
+                        // Set StateAction to close the WinTrustData structure
+                        TrustedData.StateAction = StateActionClose;
 
-                    // Convert TrustedData back to pointer and call WinVerifyTrust to close the structure
-                    Marshal.StructureToPtr(TrustedData, winTrustDataPointer, false);
-                    WinVerifyTrust(IntPtr.Zero, GenericWinTrustVerifyActionGuid, winTrustDataPointer);
+                        // Convert TrustedData back to pointer and call WinVerifyTrust to close the structure
+                        Marshal.StructureToPtr(TrustedData, winTrustDataPointer, false);
+                        WinVerifyTrust(IntPtr.Zero, GenericWinTrustVerifyActionGuid, winTrustDataPointer);
+                    }
 
                     // Free memory allocated to winTrustDataPointer
                     Marshal.FreeHGlobal(winTrustDataPointer);

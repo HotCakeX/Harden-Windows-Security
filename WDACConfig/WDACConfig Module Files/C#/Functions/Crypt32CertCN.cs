@@ -26,7 +26,7 @@ namespace WDACConfig
         public const int CERT_NAME_ISSUER_FLAG = 0x1; // Flag indicating that the issuer name should be retrieved
 
         // Define a helper method to get the name string
-        public static string GetNameString(IntPtr pCertContext, int dwType, string pvTypePara, bool isIssuer)
+        public static string GetNameString(IntPtr pCertContext, int dwType, string? pvTypePara, bool isIssuer)
         {
             // Allocate a buffer for the name string, setting it big to handle longer names if needed
             const int bufferSize = 1024;

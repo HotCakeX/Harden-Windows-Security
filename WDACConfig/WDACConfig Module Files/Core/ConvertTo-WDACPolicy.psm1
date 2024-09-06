@@ -762,18 +762,7 @@ Function ConvertTo-WDACPolicy {
                     # This function runs twice, once for signed data and once for unsigned data
                     Close-EmptyXmlNodes_Semantic -XmlFilePath $OutputPolicyPathMDEAH
 
-                    # UNUSED FUNCTIONS - Their jobs have been replaced by semantic functions
-                    # Keeping them here for reference
-
-                    # Remove-OrphanAllowedSignersAndCiSigners_IDBased -Path $OutputPolicyPathMDEAH
-                    # Remove-DuplicateAllowedSignersAndCiSigners_IDBased -Path $OutputPolicyPathMDEAH
-                    # Remove-DuplicateFileAttrib_IDBased -XmlFilePath $OutputPolicyPathMDEAH
-                    # Remove-DuplicateAllowAndFileRuleRefElements_IDBased -XmlFilePath $OutputPolicyPathMDEAH
-                    # Remove-DuplicateFileAttrib_Semantic -XmlFilePath $OutputPolicyPathMDEAH
-                    # Remove-DuplicateFileAttribRef_IDBased -XmlFilePath $OutputPolicyPathMDEAH -Verbose
-
                     #Region Base To Supplemental Policy Association and Deployment
-
                     Switch ($True) {
 
                         { $null -ne $BasePolicyFile } {

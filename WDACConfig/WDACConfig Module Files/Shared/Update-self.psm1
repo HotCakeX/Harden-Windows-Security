@@ -74,25 +74,22 @@ Function Update-Self {
             Write-Output -InputObject "$($PSStyle.Foreground.FromRGB(255,0,230))The currently installed module's version is $CurrentVersion while the latest version is $LatestVersion - Auto Updating the module...$($PSStyle.Reset)"
 
             # Remove the old module version from the current session
-            Remove-Module -Name 'WDACConfig' -Force
+            Remove-Module -Name 'WDACConfig' -Force -WarningAction SilentlyContinue
 
-            # Do this if the module was installed properly using Install-module cmdlet
             try {
-                Uninstall-Module -Name 'WDACConfig' -AllVersions -Force -ErrorAction Stop
-                Install-Module -Name 'WDACConfig' -RequiredVersion $LatestVersion -Scope AllUsers -Force
-                # Will not import the new module version in the current session because of the constant variables. New version is automatically imported when the main cmdlet is run in a new session.
+                Uninstall-Module -Name 'WDACConfig' -AllVersions -Force -ErrorAction Ignore -WarningAction SilentlyContinue
             }
-            # Do this if module files/folder was just copied to Documents folder and not properly installed - Should rarely happen
-            catch {
-                Install-Module -Name 'WDACConfig' -RequiredVersion $LatestVersion -Scope AllUsers -Force
-                # Will not import the new module version in the current session because of the constant variables. New version is automatically imported when the main cmdlet is run in a new session.
-            }
+            catch {}
+
+            Install-Module -Name 'WDACConfig' -RequiredVersion $LatestVersion -Scope AllUsers -Force
+            # Will not import the new module version in the current session because of the constant variables. New version is automatically imported when the main cmdlet is run in a new session.
+
             # Make sure the old version isn't run after update
             Write-Output -InputObject "$($PSStyle.Foreground.FromRGB(152,255,152))Update has been successful, running your command now$($PSStyle.Reset)"
 
             try {
                 # Try to re-run the command that invoked the Update-Self function in a new session after the module is updated.
-                pwsh.exe -NoLogo -NoExit -command $InvocationStatement
+                pwsh.exe -NoProfile -NoLogo -NoExit -command $InvocationStatement
             }
             catch {
                 Throw 'Could not relaunch PowerShell after update. Please close and reopen PowerShell to run your command again.'

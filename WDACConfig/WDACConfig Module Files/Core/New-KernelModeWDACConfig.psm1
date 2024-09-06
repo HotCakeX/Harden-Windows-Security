@@ -199,7 +199,7 @@ Function New-KernelModeWDACConfig {
                             # Get the kernel mode drivers directory path containing symlinks
                             Get-KernelModeDriversAudit -SavePath $KernelModeDriversDirectory
 
-                            powershell.exe -Command {
+                            powershell.exe -NoProfile -Command {
                                 Write-Verbose -Message 'Scanning the kernel-mode drivers detected in Event viewer logs'
                                 [System.Collections.ArrayList]$DriverFilesObj = Get-SystemDriver -ScanPath $args[0]
 
@@ -333,7 +333,7 @@ Function New-KernelModeWDACConfig {
                             # Get the kernel mode drivers directory path containing symlinks
                             Get-KernelModeDriversAudit -SavePath $KernelModeDriversDirectory
 
-                            powershell.exe -Command {
+                            powershell.exe -NoProfile -Command {
                                 Write-Verbose -Message 'Scanning the kernel-mode drivers detected in Event viewer logs'
                                 [System.Collections.ArrayList]$DriverFilesObj = Get-SystemDriver -ScanPath $args[0]
 

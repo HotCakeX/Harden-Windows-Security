@@ -190,7 +190,7 @@ Function New-DenyWDACConfig {
                 Write-Progress -Id 23 -Activity 'Processing user selected Folders' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
                 Write-Verbose -Message 'Looping through each user-selected folder paths, scanning them, creating a temp policy file based on them'
-                powershell.exe -Command {
+                powershell.exe -NoProfile -Command {
 
                     [System.Collections.ArrayList]$DriverFilesObject = @()
 
@@ -280,7 +280,7 @@ Function New-DenyWDACConfig {
                         Write-Progress -Id 24 -Activity 'Creating the base policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
                         Write-Verbose -Message 'Creating a temporary Deny policy for the supplied Appx package name'
-                        powershell.exe -Command {
+                        powershell.exe -NoProfile -Command {
                             # Get all the packages based on the supplied name
                             [Microsoft.Windows.Appx.PackageManager.Commands.AppxPackage[]]$Package = Get-AppxPackage -Name $args[0]
 
@@ -345,7 +345,7 @@ Function New-DenyWDACConfig {
 
                 # Using Windows PowerShell to handle serialized data since PowerShell core throws an error
                 Write-Verbose -Message 'Creating the deny policy file'
-                powershell.exe -Command {
+                powershell.exe -NoProfile -Command {
                     $RulesWildCards = New-CIPolicyRule -Deny -FilePathRule $args[0]
                     New-CIPolicy -MultiplePolicyFormat -FilePath $args[1] -Rules $RulesWildCards
                 } -args $FolderPath, $TempPolicyPath

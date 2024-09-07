@@ -1,5 +1,4 @@
 using System;
-using System.Management.Automation.Host;
 
 #nullable enable
 
@@ -20,7 +19,10 @@ namespace WDACConfig
                 if (string.Equals(WDACConfig.GlobalVars.DebugPreference, "Continue", StringComparison.OrdinalIgnoreCase) ||
      string.Equals(WDACConfig.GlobalVars.DebugPreference, "Inquire", StringComparison.OrdinalIgnoreCase))
                 {
-                    WDACConfig.GlobalVars.Host.UI.WriteDebugLine(message);
+                    if (WDACConfig.GlobalVars.Host != null)
+                    {
+                        WDACConfig.GlobalVars.Host.UI.WriteDebugLine(message);
+                    }
                 }
 
             }

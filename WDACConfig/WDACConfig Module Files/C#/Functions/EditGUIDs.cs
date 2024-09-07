@@ -1,4 +1,3 @@
-using System;
 using System.IO;
 using System.Xml;
 
@@ -38,7 +37,6 @@ namespace WDACConfig
                 basePolicyIdNode.InnerText = newBasePolicyId;
             }
 
-            // Save the modified XML file
             xmlDoc.Save(policyFilePathInput.FullName);
         }
     }

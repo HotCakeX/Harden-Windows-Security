@@ -96,7 +96,6 @@ Function Remove-SupplementalSigners {
         }
     }
     End {
-        # Save the modified XML content to a file
         $XMLContent.Save($Path)
     }
 }

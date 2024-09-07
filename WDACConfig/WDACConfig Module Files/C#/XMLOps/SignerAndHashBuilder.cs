@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using System.Globalization;
 
 #nullable enable
@@ -228,10 +227,8 @@ namespace WDACConfig
                         }
 
                         // Add the Certificate details to the CurrentFilePublisherSigner's CertificateDetails property
-                        if (currentCorData != null)
-                        {
-                            currentFilePublisherSigner.CertificateDetails.Add(currentCorData);
-                        }
+                        currentFilePublisherSigner.CertificateDetails.Add(currentCorData);
+
                     }
                 }
 
@@ -342,10 +339,7 @@ namespace WDACConfig
                         }
 
                         // Add the Certificate details to the CurrentPublisherSigner's CertificateDetails property
-                        if (currentCorData != null)
-                        {
-                            currentPublisherSigner.CertificateDetails.Add(currentCorData);
-                        }
+                        currentPublisherSigner.CertificateDetails.Add(currentCorData);
                     }
                 }
 

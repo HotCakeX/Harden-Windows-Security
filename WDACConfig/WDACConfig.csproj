@@ -3,11 +3,19 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>net9.0-windows10.0.22621.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
+    <RootNamespace>WDACConfig</RootNamespace>
+
+    <!--
+    Setting it to disable so that code clean up will properly remove unused usings.
+    With this enabled, VS would take into account the global usings and would remove required usings from .cs files during Code Cleanup task,
+    which would lead to errors in VS Code when running the code via Add-Type in PowerShell.
+    -->
+    <ImplicitUsings>disable</ImplicitUsings>
+
     <Nullable>enable</Nullable>
     <UseWindowsForms>true</UseWindowsForms>
+    <HighEntropyVA>true</HighEntropyVA>
     <XamlDebuggingInformation>True</XamlDebuggingInformation>
-    <RootNamespace>WDACConfig</RootNamespace>
     <PackageProjectUrl>https://github.com/HotCakeX/Harden-Windows-Security</PackageProjectUrl>
     <RepositoryUrl>https://github.com/HotCakeX/Harden-Windows-Security</RepositoryUrl>
     <PackageTags>Windows</PackageTags>
@@ -15,20 +23,29 @@
     <Authors>Violet Hansen</Authors>
     <Company>SpyNetGirl</Company>
     <Description>WDACConfig</Description>
+    <PackageId>WDACConfig</PackageId>
     <PackageReleaseNotes>https://github.com/HotCakeX/Harden-Windows-Security/releases</PackageReleaseNotes>
   </PropertyGroup>
 
-   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <CheckForOverflowUnderflow>True</CheckForOverflowUnderflow>
+    <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <CheckForOverflowUnderflow>True</CheckForOverflowUnderflow>
+    <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <RuntimeIdentifiers>win-x64;win-arm64</RuntimeIdentifiers>
+    <SelfContained>false</SelfContained>
+    <NeutralLanguage>en-US</NeutralLanguage>
   </PropertyGroup>
 
     <ItemGroup>
     <PackageReference Include="System.Management" Version="9.0.0-preview.7.24405.7" />
-    <PackageReference Include="System.Management.Automation" Version="7.5.0-preview.3" />
+    <PackageReference Include="System.Management.Automation" Version="7.5.0-preview.4" />
   </ItemGroup>
 
 </Project>

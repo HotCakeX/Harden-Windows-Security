@@ -72,7 +72,6 @@ namespace WDACConfig
             XmlNode importedRulesNode = destinationXmlDoc.ImportNode(sourceRulesNode, true);
             destinationSiPolicyNode.ReplaceChild(importedRulesNode, destinationRulesNode);
 
-            // Save the modified XML file
             destinationXmlDoc.Save(destinationFilePath);
         }
     }

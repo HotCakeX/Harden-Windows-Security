@@ -4,6 +4,7 @@ System.Xml
 System.Linq
 System.Memory
 System.Console
+System.Net.Http
 System.Xml.Linq
 System.Text.Json
 System.Management
@@ -19,6 +20,7 @@ System.Diagnostics.Process
 System.Diagnostics.EventLog
 System.Security.Cryptography
 System.Management.Automation
+System.IO.Compression.zipfile
 System.Collections.NonGeneric
 System.Text.RegularExpressions
 System.Runtime.InteropServices

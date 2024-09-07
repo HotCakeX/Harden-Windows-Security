@@ -82,14 +82,16 @@ Function Test-ECCSignedFiles {
 
                 foreach ($ECCSignedFile in $ECCSignedFiles) {
 
+                    [WDACConfig.VerboseLogger]::Write("Test-ECCSignedFiles: Creating Hash Level rules for the ECC signed file '$ECCSignedFile'.")
+
                     [WDACConfig.AuthenticodePageHashes]$HashOutput = [WDACConfig.AuthPageHash]::GetCiFileHashes($ECCSignedFile)
 
                     $CompleteHashes.Add([WDACConfig.HashCreator]::New(
                             $HashOutput.SHA256Authenticode,
                             $HashOutput.SHA1Authenticode,
                         ([System.IO.FileInfo]$ECCSignedFile).Name,
-                            # Check if the file is kernel-mode or user-mode -- Don't need the verbose output of the cmdlet when using it in embedded mode
-                        ($null -eq (Get-KernelModeDrivers -File $ECCSignedFile 4>$null)) ? 1 : 0
+                            # Check if the file is kernel-mode or user-mode
+                        ($null -eq (Get-KernelModeDrivers -File $ECCSignedFile)) ? 1 : 0
                         )
                     )
                 }

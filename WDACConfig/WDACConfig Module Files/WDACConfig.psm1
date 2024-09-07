@@ -1,5 +1,4 @@
 <# -------- Guidance for code readers --------
-The module uses tight import/export control, no internal function is exposed on the console/to the user.
 The $PSDefaultParameterValues located in "$([WDACConfig.GlobalVars]::ModuleRootPath)\CoreExt\PSDefaultParameterValues.ps1" is imported via dot-sourcing to the current session of each main cmdlet/internal function that calls any (other) internal function or uses any of the cmdlets defined in that file, prior to everything else.
 At the beginning of each main cmdlet, 2 custom $Verbose and/or $Debug variables are defined which help to take actions based on Verbose/Debug preferences and also pass the $VerbosePreference and $DebugPreference to the subsequent sub-functions/modules being called from the main cmdlets.
 
@@ -26,7 +25,6 @@ if (!$IsWindows) {
     Throw [System.PlatformNotSupportedException] 'The WDACConfig module only runs on Windows operation systems. Download it from here: https://www.microsoft.com/software-download/windows11'
 }
 
-# Specifies that the WDACConfig module requires Administrator privileges
 #Requires -RunAsAdministrator
 
 # Unimportant actions that don't need to be terminating if they fail
@@ -38,6 +36,7 @@ try {
 }
 catch {}
 
+<#
 # This is required for the EKUs to work.
 # Load all the DLLs in the PowerShell folder, providing .NET types for the module
 # These types are required for the folder picker with multiple select options. Also the module manifest no longer handles assembly as it's not necessary anymore.
@@ -49,6 +48,10 @@ foreach ($Dll in (Convert-Path -Path ("$([psobject].Assembly.Location)\..\*.dll"
 }
 # Clear the Get-Error from Add-Type errors that are unnecessary
 $Error.Clear()
+
+#>
+# Because we need it to construct Microsoft.Powershell.Commands.EnhancedKeyUsageProperty object for EKUs
+Add-Type -AssemblyName 'Microsoft.PowerShell.Security'
 
 # Import all C# codes at once so they will get compiled together, have resolved dependencies and recognize each others' classes/types
 Add-Type -Path ([System.IO.Directory]::GetFiles("$PSScriptRoot\C#", '*.*', [System.IO.SearchOption]::AllDirectories)) -ReferencedAssemblies @(Get-Content -Path "$PSScriptRoot\.NETAssembliesToLoad.txt")

@@ -1,8 +1,9 @@
 using System;
 using System.Collections.Generic;
-using System.Management.Automation;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
+
+#nullable enable
 
 namespace WDACConfig
 {

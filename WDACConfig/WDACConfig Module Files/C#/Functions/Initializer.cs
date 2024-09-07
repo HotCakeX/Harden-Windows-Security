@@ -1,5 +1,5 @@
-using System;
 using Microsoft.Win32;
+using System;
 using System.Globalization;
 
 #nullable enable
@@ -14,21 +14,14 @@ namespace WDACConfig
         {
             using (RegistryKey key = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows NT\CurrentVersion") ?? throw new Exception("Could not get the current Windows version from the registry"))
             {
-                if (key != null)
+                object? ubrValue = key.GetValue("UBR");
+                if (ubrValue != null && int.TryParse(ubrValue.ToString(), NumberStyles.Integer, CultureInfo.InvariantCulture, out int ubr))
                 {
-                    object? ubrValue = key.GetValue("UBR");
-                    if (ubrValue != null && int.TryParse(ubrValue.ToString(), NumberStyles.Integer, CultureInfo.InvariantCulture, out int ubr))
-                    {
-                        WDACConfig.GlobalVars.UBR = ubr;
-                    }
-                    else
-                    {
-                        throw new InvalidOperationException("The UBR value could not be retrieved from the registry: HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion");
-                    }
+                    WDACConfig.GlobalVars.UBR = ubr;
                 }
                 else
                 {
-                    throw new InvalidOperationException("The UBR key does not exist in the registry path: HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion");
+                    throw new InvalidOperationException("The UBR value could not be retrieved from the registry: HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion");
                 }
             }
 

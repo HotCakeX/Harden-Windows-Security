@@ -40,12 +40,7 @@ $PSDefaultParameterValues = @{
     'New-PublisherLevelRules:Verbose'                             = $Verbose
     'Optimize-MDECSVData:Verbose'                                 = $Verbose
     'Remove-AllowElements_Semantic:Verbose'                       = $Verbose
-    'Remove-DuplicateAllowAndFileRuleRefElements_IDBased:Verbose' = $Verbose
-    'Remove-DuplicateAllowedSignersAndCiSigners_IDBased:Verbose'  = $Verbose
-    'Remove-DuplicateFileAttrib_IDBased:Verbose'                  = $Verbose
     'Remove-DuplicateFileAttrib_Semantic:Verbose'                 = $Verbose
-    'Remove-DuplicateFileAttribRef_IDBased:Verbose'               = $Verbose
-    'Remove-OrphanAllowedSignersAndCiSigners_IDBased:Verbose'     = $Verbose
     'Remove-UnreferencedFileRuleRefs:Verbose'                     = $Verbose
     'New-CertificateSignerRules:Verbose'                          = $Verbose
 
@@ -58,12 +53,7 @@ $PSDefaultParameterValues = @{
     'New-PublisherLevelRules:Debug'                               = $Debug
     'Optimize-MDECSVData:Debug'                                   = $Debug
     'Remove-AllowElements_Semantic:Debug'                         = $Debug
-    'Remove-DuplicateAllowAndFileRuleRefElements_IDBased:Debug'   = $Debug
-    'Remove-DuplicateAllowedSignersAndCiSigners_IDBased:Debug'    = $Debug
-    'Remove-DuplicateFileAttrib_IDBased:Debug'                    = $Debug
     'Remove-DuplicateFileAttrib_Semantic:Debug'                   = $Debug
-    'Remove-DuplicateFileAttribRef_IDBased:Debug'                 = $Debug
-    'Remove-OrphanAllowedSignersAndCiSigners_IDBased:Debug'       = $Debug
     'Remove-UnreferencedFileRuleRefs:Debug'                       = $Debug
     'New-CertificateSignerRules:Debug'                            = $Debug
 }

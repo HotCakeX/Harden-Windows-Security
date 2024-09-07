@@ -19,39 +19,42 @@ namespace WDACConfig
             WDACConfig.VerboseLogger.Write("Set-SetLogSize method started...");
 
             string logName = "Microsoft-Windows-CodeIntegrity/Operational";
-            var logConfig = new EventLogConfiguration(logName);
-            string logFilePath = Environment.ExpandEnvironmentVariables(logConfig.LogFilePath);
-            FileInfo logFileInfo = new FileInfo(logFilePath);
-            long currentLogFileSize = logFileInfo.Length;
-            long currentLogMaxSize = logConfig.MaximumSizeInBytes;
 
-            if (logSize == 0)
+            using (var logConfig = new EventLogConfiguration(logName))
             {
-                if ((currentLogMaxSize - currentLogFileSize) < 1 * 1024 * 1024)
+                string logFilePath = Environment.ExpandEnvironmentVariables(logConfig.LogFilePath);
+                FileInfo logFileInfo = new FileInfo(logFilePath);
+                long currentLogFileSize = logFileInfo.Length;
+                long currentLogMaxSize = logConfig.MaximumSizeInBytes;
+
+                if (logSize == 0)
                 {
-                    if (currentLogMaxSize <= 10 * 1024 * 1024)
+                    if ((currentLogMaxSize - currentLogFileSize) < 1 * 1024 * 1024)
                     {
-                        WDACConfig.VerboseLogger.Write("Increasing the Code Integrity log size by 1MB because its current free space is less than 1MB.");
-                        logConfig.MaximumSizeInBytes = currentLogMaxSize + 1 * 1024 * 1024;
-                        logConfig.IsEnabled = true;
-                        logConfig.SaveChanges();
+                        if (currentLogMaxSize <= 10 * 1024 * 1024)
+                        {
+                            WDACConfig.VerboseLogger.Write("Increasing the Code Integrity log size by 1MB because its current free space is less than 1MB.");
+                            logConfig.MaximumSizeInBytes = currentLogMaxSize + 1 * 1024 * 1024;
+                            logConfig.IsEnabled = true;
+                            logConfig.SaveChanges();
+                        }
                     }
-                }
-            }
-            else
-            {
-                // Check if the provided log size is greater than 1100 KB
-                // To prevent from disabling the log or setting it to a very small size that is lower than its default size
-                if (logSize > 1100 * 1024)
-                {
-                    WDACConfig.VerboseLogger.Write($"Setting Code Integrity log size to {logSize}.");
-                    logConfig.MaximumSizeInBytes = (long)logSize;
-                    logConfig.IsEnabled = true;
-                    logConfig.SaveChanges();
                 }
                 else
                 {
-                    WDACConfig.VerboseLogger.Write("Provided log size is less than or equal to 1100 KB. No changes made.");
+                    // Check if the provided log size is greater than 1100 KB
+                    // To prevent from disabling the log or setting it to a very small size that is lower than its default size
+                    if (logSize > 1100 * 1024)
+                    {
+                        WDACConfig.VerboseLogger.Write($"Setting Code Integrity log size to {logSize}.");
+                        logConfig.MaximumSizeInBytes = (long)logSize;
+                        logConfig.IsEnabled = true;
+                        logConfig.SaveChanges();
+                    }
+                    else
+                    {
+                        WDACConfig.VerboseLogger.Write("Provided log size is less than or equal to 1100 KB. No changes made.");
+                    }
                 }
             }
         }

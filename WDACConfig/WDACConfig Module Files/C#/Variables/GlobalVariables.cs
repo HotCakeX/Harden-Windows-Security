@@ -1,9 +1,8 @@
 using System;
 using System.IO;
-using System.Globalization;
 using System.Management.Automation.Host;
 
-#nullable disable
+#nullable enable
 
 namespace WDACConfig
 {
@@ -30,10 +29,10 @@ namespace WDACConfig
 
         // Stores the value of $PSScriptRoot to allow the internal functions to use it when navigating the module structure
         // It's set by PowerShell code outside of C#
-        public static string ModuleRootPath;
+        public static string? ModuleRootPath;
 
         // Create full OS build number as seen in Windows Settings
-        public static string FullOSBuild;
+        public static string? FullOSBuild;
 
         // Storing the path to the WDAC Code Integrity Schema XSD file
         public static readonly string CISchemaPath = Path.Combine(
@@ -47,13 +46,13 @@ namespace WDACConfig
         public static readonly string UserConfigJson = Path.Combine(UserConfigDir, "UserConfigurations", "UserConfigurations.json");
 
         // The VerbosePreference variable of the PowerShell session
-        public static string VerbosePreference;
+        public static string? VerbosePreference;
 
         // The DebugPreference variable of the PowerShell session
-        public static string DebugPreference;
+        public static string? DebugPreference;
 
         // The value of the automatic variable $HOST from the PowerShell session
         // Stored using the LoggerInitializer method that is called at the beginning of each cmdlet
-        public static PSHost Host;
+        public static PSHost? Host;
     }
 }

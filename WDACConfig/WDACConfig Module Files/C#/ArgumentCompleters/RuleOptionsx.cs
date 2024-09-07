@@ -43,6 +43,11 @@ namespace WDACConfig
                 }
             }
 
+            if (WDACConfig.GlobalVars.ModuleRootPath == null)
+            {
+                throw new Exception("ModuleRootPath is null!");
+            }
+
             // Construct the full path to PolicyRuleOptions.Json
             string jsonFilePath = Path.Combine(WDACConfig.GlobalVars.ModuleRootPath, "Resources", "PolicyRuleOptions.Json");
 

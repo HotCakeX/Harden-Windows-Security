@@ -1,9 +1,7 @@
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text.Json;
-using System.Collections.Generic;
-using System.Management.Automation;
-using System.Globalization;
 
 #nullable enable
 
@@ -24,33 +22,35 @@ namespace WDACConfig
                 CreateNoWindow = true
             };
 
-            Process process = new Process { StartInfo = startInfo };
-            process.Start();
-
-            string jsonOutput = process.StandardOutput.ReadToEnd();
-            process.WaitForExit();
-
-            // Parse the JSON output
-            JsonDocument jsonDoc = JsonDocument.Parse(jsonOutput);
-            JsonElement policiesElement = jsonDoc.RootElement.GetProperty("Policies");
-
-            List<string> validValues = new List<string>();
-
-            foreach (JsonElement policyElement in policiesElement.EnumerateArray())
+            using (Process process = new Process { StartInfo = startInfo })
             {
-                bool isSystemPolicy = policyElement.GetProperty("IsSystemPolicy").GetBoolean();
-                string? policyId = policyElement.GetProperty("PolicyID").GetString();
-                string? basePolicyId = policyElement.GetProperty("BasePolicyID").GetString();
-                string? friendlyName = policyElement.GetProperty("FriendlyName").GetString();
+                process.Start();
 
-                // Use ordinal, case-insensitive comparison for the policy IDs
-                if (!isSystemPolicy && string.Equals(policyId, basePolicyId, StringComparison.OrdinalIgnoreCase) && friendlyName != null)
+                string jsonOutput = process.StandardOutput.ReadToEnd();
+                process.WaitForExit();
+
+                // Parse the JSON output
+                JsonDocument jsonDoc = JsonDocument.Parse(jsonOutput);
+                JsonElement policiesElement = jsonDoc.RootElement.GetProperty("Policies");
+
+                List<string> validValues = new List<string>();
+
+                foreach (JsonElement policyElement in policiesElement.EnumerateArray())
                 {
-                    validValues.Add(friendlyName);
-                }
-            }
+                    bool isSystemPolicy = policyElement.GetProperty("IsSystemPolicy").GetBoolean();
+                    string? policyId = policyElement.GetProperty("PolicyID").GetString();
+                    string? basePolicyId = policyElement.GetProperty("BasePolicyID").GetString();
+                    string? friendlyName = policyElement.GetProperty("FriendlyName").GetString();
 
-            return validValues.ToArray();
+                    // Use ordinal, case-insensitive comparison for the policy IDs
+                    if (!isSystemPolicy && string.Equals(policyId, basePolicyId, StringComparison.OrdinalIgnoreCase) && friendlyName != null)
+                    {
+                        validValues.Add(friendlyName);
+                    }
+                }
+
+                return validValues.ToArray();
+            }
         }
     }
 }

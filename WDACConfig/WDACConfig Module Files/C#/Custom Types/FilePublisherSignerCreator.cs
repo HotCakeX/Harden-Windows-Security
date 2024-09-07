@@ -19,7 +19,18 @@ namespace WDACConfig
         public string? AuthenticodeSHA1 { get; set; }
         public int SiSigningScenario { get; set; }
 
-        public FilePublisherSignerCreator(List<WDACConfig.CertificateDetailsCreator> certificateDetails, Version fileVersion, string fileDescription, string internalName, string originalFileName, string packageFamilyName, string productName, string fileName, string authenticodeSHA256, string authenticodeSHA1, int siSigningScenario)
+        public FilePublisherSignerCreator(
+            List<WDACConfig.CertificateDetailsCreator> certificateDetails,
+            Version fileVersion,
+            string? fileDescription,
+            string? internalName,
+            string? originalFileName,
+            string? packageFamilyName,
+            string? productName,
+            string? fileName,
+            string? authenticodeSHA256,
+            string? authenticodeSHA1,
+            int siSigningScenario)
         {
             CertificateDetails = certificateDetails;
             FileVersion = fileVersion;

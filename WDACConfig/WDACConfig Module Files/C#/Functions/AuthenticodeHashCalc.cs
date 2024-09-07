@@ -1,8 +1,10 @@
 using System;
+using System.Globalization;
+using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
-using System.IO;
-using System.Globalization;
+
+#nullable enable
 
 namespace WDACConfig
 {
@@ -58,7 +60,7 @@ namespace WDACConfig
             );
         }
 
-        private static string GetAuthenticodeHash(string filePath, string hashAlgorithm)
+        private static string? GetAuthenticodeHash(string filePath, string hashAlgorithm)
         {
             // A StringBuilder object to store the hash value as a hexadecimal string
             StringBuilder hashString = new StringBuilder(64);

@@ -32,11 +32,6 @@ Function New-KernelModeWDACConfig {
         # if -SkipVersionCheck wasn't passed, run the updater
         if (-NOT $SkipVersionCheck) { Update-Self -InvocationStatement $MyInvocation.Statement }
 
-        if ([WDACConfig.GlobalVars]::ConfigCIBootstrap -eq $false) {
-            Invoke-MockConfigCIBootstrap
-            [WDACConfig.GlobalVars]::ConfigCIBootstrap = $true
-        }
-
         [System.IO.DirectoryInfo]$StagingArea = [WDACConfig.StagingArea]::NewStagingArea('New-KernelModeWDACConfig')
 
         # Create a directory to store the kernel mode drivers symbolic links for both modes
@@ -199,7 +194,14 @@ Function New-KernelModeWDACConfig {
                             # Get the kernel mode drivers directory path containing symlinks
                             Get-KernelModeDriversAudit -SavePath $KernelModeDriversDirectory
 
-                            powershell.exe -Command {
+                            powershell.exe -NoProfile -Command {
+                                # Prep the environment as a workaround for the ConfigCI bug
+                                if ([System.IO.Directory]::Exists('C:\Program Files\Windows Defender\Offline')) {
+                                    [System.String]$RandomGUID = [System.Guid]::NewGuid().ToString()
+                                    New-CIPolicy -UserPEs -ScanPath 'C:\Program Files\Windows Defender\Offline' -Level hash -FilePath ".\$RandomGUID.xml" -NoShadowCopy -PathToCatroot 'C:\Program Files\Windows Defender\Offline' -WarningAction SilentlyContinue
+                                    Remove-Item -LiteralPath ".\$RandomGUID.xml" -Force
+                                }
+
                                 Write-Verbose -Message 'Scanning the kernel-mode drivers detected in Event viewer logs'
                                 [System.Collections.ArrayList]$DriverFilesObj = Get-SystemDriver -ScanPath $args[0]
 
@@ -333,7 +335,14 @@ Function New-KernelModeWDACConfig {
                             # Get the kernel mode drivers directory path containing symlinks
                             Get-KernelModeDriversAudit -SavePath $KernelModeDriversDirectory
 
-                            powershell.exe -Command {
+                            powershell.exe -NoProfile -Command {
+                                # Prep the environment as a workaround for the ConfigCI bug
+                                if ([System.IO.Directory]::Exists('C:\Program Files\Windows Defender\Offline')) {
+                                    [System.String]$RandomGUID = [System.Guid]::NewGuid().ToString()
+                                    New-CIPolicy -UserPEs -ScanPath 'C:\Program Files\Windows Defender\Offline' -Level hash -FilePath ".\$RandomGUID.xml" -NoShadowCopy -PathToCatroot 'C:\Program Files\Windows Defender\Offline' -WarningAction SilentlyContinue
+                                    Remove-Item -LiteralPath ".\$RandomGUID.xml" -Force
+                                }
+
                                 Write-Verbose -Message 'Scanning the kernel-mode drivers detected in Event viewer logs'
                                 [System.Collections.ArrayList]$DriverFilesObj = Get-SystemDriver -ScanPath $args[0]
 

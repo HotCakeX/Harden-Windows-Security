@@ -207,7 +207,7 @@ Function New-SupplementalWDACConfig {
 
                 # Using Windows PowerShell to handle serialized data since PowerShell core throws an error
                 Write-Verbose -Message 'Creating the Supplemental policy file'
-                powershell.exe -Command {
+                powershell.exe -NoProfile -Command {
                     $RulesWildCards = New-CIPolicyRule -FilePathRule $args[0]
                     New-CIPolicy -MultiplePolicyFormat -FilePath "$($args[2])\SupplementalPolicy $($args[1]).xml" -Rules $RulesWildCards
                 } -args $FolderPath, $SuppPolicyName, $StagingArea
@@ -262,7 +262,7 @@ Function New-SupplementalWDACConfig {
                         Write-Progress -Id 21 -Activity 'Creating the Supplemental policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
                         Write-Verbose -Message 'Creating a policy for the supplied Appx package name and its dependencies (if any)'
-                        powershell.exe -Command {
+                        powershell.exe -NoProfile -Command {
                             # Get all the packages based on the supplied name
                             [Microsoft.Windows.Appx.PackageManager.Commands.AppxPackage[]]$Package = Get-AppxPackage -Name $args[0]
 

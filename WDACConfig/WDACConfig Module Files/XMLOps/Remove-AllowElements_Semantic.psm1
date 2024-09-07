@@ -148,7 +148,6 @@ function Remove-AllowElements_Semantic {
     }
 
     End {
-        # Save the modified XML file
         $Xml.Save($Path)
     }
 }

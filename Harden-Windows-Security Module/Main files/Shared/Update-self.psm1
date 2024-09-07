@@ -38,12 +38,19 @@ function Update-self {
 
         try {
             [HardenWindowsSecurity.ControlledFolderAccessHandler]::Start()
-            # Suppressing errors and warnings on this one because it can't uninstall the module currently in use even after Remove attempt earlier so it removes any leftover versions except for the one currently in use.
-            Uninstall-Module -Name 'Harden-Windows-Security-Module' -AllVersions -Force -WarningAction SilentlyContinue -ErrorAction Ignore
-            Install-Module -Name 'Harden-Windows-Security-Module' -RequiredVersion $LatestVersion -Force
+
+            try {
+                # Suppressing errors and warnings on this one because it can't uninstall the module currently in use even after Remove attempt earlier so it removes any leftover versions except for the one currently in use.
+                Uninstall-Module -Name 'Harden-Windows-Security-Module' -AllVersions -Force -WarningAction SilentlyContinue -ErrorAction Ignore
+            }
+            catch {}
+
+            Install-Module -Name 'Harden-Windows-Security-Module' -RequiredVersion $LatestVersion -Force -ErrorAction Stop
             # Will not import the new module version in the current session. New version is automatically imported and used when the main cmdlet is run in a new session.
         }
-        catch {}
+        catch {
+            throw
+        }
         finally {
             [HardenWindowsSecurity.ControlledFolderAccessHandler]::reset()
         }
@@ -53,7 +60,7 @@ function Update-self {
         # Make sure the old version isn't run after update
         try {
             # Try to re-run the command that invoked the Update-self function in a new session after the module is updated.
-            pwsh.exe -NoLogo -NoExit -command $InvocationStatement
+            pwsh.exe -NoProfile -NoLogo -NoExit -command $InvocationStatement
         }
         catch {
             Throw 'Could not relaunch PowerShell after update. Please close and reopen PowerShell to run your command again.'

@@ -144,9 +144,8 @@ namespace HardenWindowsSecurity
                 }
                 else
                 {
-                    idsObj = HardenWindowsSecurity.GlobalVars.MDAVPreferencesCurrent.AttackSurfaceReductionRules_Ids;
-
-                    actionsObj = HardenWindowsSecurity.GlobalVars.MDAVPreferencesCurrent.AttackSurfaceReductionRules_Actions;
+                    idsObj = PropertyHelper.GetPropertyValue(GlobalVars.MDAVPreferencesCurrent, "AttackSurfaceReductionRules_Ids");
+                    actionsObj = PropertyHelper.GetPropertyValue(GlobalVars.MDAVPreferencesCurrent, "AttackSurfaceReductionRules_Actions");
                 }
 
                 // Individual ASR rules verification
@@ -582,7 +581,9 @@ namespace HardenWindowsSecurity
 
                 // To detect if Hibernate is enabled and set to full
                 // Only perform the check if the system is not a virtual machine
-                if (!HardenWindowsSecurity.GlobalVars.MDAVConfigCurrent!.IsVirtualMachine)
+                var isVirtualMachine = PropertyHelper.GetPropertyValue(GlobalVars.MDAVConfigCurrent, "IsVirtualMachine");
+
+                if (isVirtualMachine != null && (bool)isVirtualMachine != true)
                 {
                     bool IndividualItemResult = false;
                     try
@@ -1677,7 +1678,7 @@ namespace HardenWindowsSecurity
                             // Handle errors
                             foreach (var error in ps.Streams.Error)
                             {
-                                HardenWindowsSecurity.Logger.LogMessage($"Error: {error.ToString()}", LogTypeIntel.Error);
+                                HardenWindowsSecurity.Logger.LogMessage($"Error: {error}", LogTypeIntel.Error);
                             }
                         }
 
@@ -1738,7 +1739,7 @@ namespace HardenWindowsSecurity
                             // Handle errors
                             foreach (var error in ps.Streams.Error)
                             {
-                                HardenWindowsSecurity.Logger.LogMessage($"Error: {error.ToString()}", LogTypeIntel.Error);
+                                HardenWindowsSecurity.Logger.LogMessage($"Error: {error}", LogTypeIntel.Error);
                             }
                         }
 
@@ -1816,7 +1817,7 @@ namespace HardenWindowsSecurity
                             // Handle errors
                             foreach (var error in ps.Streams.Error)
                             {
-                                HardenWindowsSecurity.Logger.LogMessage($"Error: {error.ToString()}", LogTypeIntel.Error);
+                                HardenWindowsSecurity.Logger.LogMessage($"Error: {error}", LogTypeIntel.Error);
                             }
                         }
                     }
@@ -1970,12 +1971,13 @@ namespace HardenWindowsSecurity
 
 
                 // Get the value and convert it to unsigned int16
-                if (HardenWindowsSecurity.GlobalVars.MDAVPreferencesCurrent!.PlatformUpdatesChannel == null)
+                if (PropertyHelper.GetPropertyValue(GlobalVars.MDAVPreferencesCurrent, "PlatformUpdatesChannel") == null)
                 {
                     throw new ArgumentNullException(nameof(HardenWindowsSecurity.GlobalVars.MDAVPreferencesCurrent.PlatformUpdatesChannel), "PlatformUpdatesChannel cannot be null.");
                 }
 
-                ushort PlatformUpdatesChannel = Convert.ToUInt16(HardenWindowsSecurity.GlobalVars.MDAVPreferencesCurrent.PlatformUpdatesChannel);
+                // If the PlatformUpdatesChannel property does not exist, satisfy the conversion and prevent any error by assigning max Ushort to it
+                ushort PlatformUpdatesChannel = Convert.ToUInt16(PropertyHelper.GetPropertyValue(GlobalVars.MDAVPreferencesCurrent, "PlatformUpdatesChannel") ?? ushort.MaxValue);
 
                 // resolve the number to a string using the dictionary
                 HardenWindowsSecurity.DefenderPlatformUpdatesChannels.Channels.TryGetValue(PlatformUpdatesChannel, out string? PlatformUpdatesChannelName);
@@ -1991,7 +1993,8 @@ namespace HardenWindowsSecurity
 
 
                 // Get the value and convert it to unsigned int16
-                ushort EngineUpdatesChannel = Convert.ToUInt16(HardenWindowsSecurity.GlobalVars.MDAVPreferencesCurrent.EngineUpdatesChannel);
+                // If the EngineUpdatesChannel property does not exist, satisfy the conversion and prevent any error by assigning max Ushort to it
+                ushort EngineUpdatesChannel = Convert.ToUInt16(PropertyHelper.GetPropertyValue(GlobalVars.MDAVPreferencesCurrent, "EngineUpdatesChannel") ?? ushort.MaxValue);
 
                 // resolve the number to a string using the dictionary
                 HardenWindowsSecurity.DefenderPlatformUpdatesChannels.Channels.TryGetValue(EngineUpdatesChannel, out string? EngineUpdatesChannelName);
@@ -2007,7 +2010,7 @@ namespace HardenWindowsSecurity
 
 
                 // Get the value and convert it to bool
-                bool AllowSwitchToAsyncInspectionResult = Convert.ToBoolean(HardenWindowsSecurity.PropertyHelper.GetPropertyValue(HardenWindowsSecurity.GlobalVars.MDAVPreferencesCurrent, "AllowSwitchToAsyncInspection"));
+                bool AllowSwitchToAsyncInspectionResult = Convert.ToBoolean(HardenWindowsSecurity.PropertyHelper.GetPropertyValue(HardenWindowsSecurity.GlobalVars.MDAVPreferencesCurrent, "AllowSwitchToAsyncInspection") ?? false);
                 nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "Allow Switch To Async Inspection",
@@ -2020,7 +2023,7 @@ namespace HardenWindowsSecurity
 
 
                 // Get the value and convert it to bool
-                bool OOBEEnableRtpAndSigUpdateResult = Convert.ToBoolean(HardenWindowsSecurity.PropertyHelper.GetPropertyValue(HardenWindowsSecurity.GlobalVars.MDAVPreferencesCurrent, "oobeEnableRTpAndSigUpdate"));
+                bool OOBEEnableRtpAndSigUpdateResult = Convert.ToBoolean(HardenWindowsSecurity.PropertyHelper.GetPropertyValue(HardenWindowsSecurity.GlobalVars.MDAVPreferencesCurrent, "oobeEnableRTpAndSigUpdate") ?? false);
                 nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "OOBE Enable Rtp And Sig Update",
@@ -2033,7 +2036,7 @@ namespace HardenWindowsSecurity
 
 
                 // Get the value and convert it to bool
-                bool IntelTDTEnabledResult = Convert.ToBoolean(HardenWindowsSecurity.PropertyHelper.GetPropertyValue(HardenWindowsSecurity.GlobalVars.MDAVPreferencesCurrent, "IntelTDTEnabled"));
+                bool IntelTDTEnabledResult = Convert.ToBoolean(HardenWindowsSecurity.PropertyHelper.GetPropertyValue(HardenWindowsSecurity.GlobalVars.MDAVPreferencesCurrent, "IntelTDTEnabled") ?? false);
                 nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "Intel TDT Enabled",
@@ -2046,7 +2049,7 @@ namespace HardenWindowsSecurity
 
 
                 // Get the value and convert it to string
-                string SmartAppControlStateResult = Convert.ToString(HardenWindowsSecurity.PropertyHelper.GetPropertyValue(HardenWindowsSecurity.GlobalVars.MDAVConfigCurrent, "SmartAppControlState"));
+                string SmartAppControlStateResult = Convert.ToString(HardenWindowsSecurity.PropertyHelper.GetPropertyValue(HardenWindowsSecurity.GlobalVars.MDAVConfigCurrent, "SmartAppControlState") ?? string.Empty);
                 nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "Smart App Control State",
@@ -2059,7 +2062,7 @@ namespace HardenWindowsSecurity
 
 
                 // Get the value and convert it to string
-                string EnableControlledFolderAccessResult = Convert.ToString(HardenWindowsSecurity.PropertyHelper.GetPropertyValue(HardenWindowsSecurity.GlobalVars.MDAVPreferencesCurrent, "EnableControlledFolderAccess"));
+                string EnableControlledFolderAccessResult = Convert.ToString(HardenWindowsSecurity.PropertyHelper.GetPropertyValue(HardenWindowsSecurity.GlobalVars.MDAVPreferencesCurrent, "EnableControlledFolderAccess") ?? string.Empty);
                 nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "Controlled Folder Access",
@@ -2072,7 +2075,7 @@ namespace HardenWindowsSecurity
 
 
                 // Get the value and convert it to bool
-                bool DisableRestorePointResult = Convert.ToBoolean(HardenWindowsSecurity.PropertyHelper.GetPropertyValue(HardenWindowsSecurity.GlobalVars.MDAVPreferencesCurrent, "DisableRestorePoint"));
+                bool DisableRestorePointResult = Convert.ToBoolean(HardenWindowsSecurity.PropertyHelper.GetPropertyValue(HardenWindowsSecurity.GlobalVars.MDAVPreferencesCurrent, "DisableRestorePoint") ?? true);
                 nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "Enable Restore Point scanning",
@@ -2087,7 +2090,7 @@ namespace HardenWindowsSecurity
                 // Get the value and convert it to string
                 // Set-MpPreference -PerformanceModeStatus Enabled => (Get-MpPreference).PerformanceModeStatus == 1 => Turns on Dev Drive Protection in Microsoft Defender GUI
                 // Set-MpPreference -PerformanceModeStatus Disabled => (Get-MpPreference).PerformanceModeStatus == 0 => Turns off Dev Drive Protection in Microsoft Defender GUI
-                string PerformanceModeStatusResult = Convert.ToString(HardenWindowsSecurity.PropertyHelper.GetPropertyValue(HardenWindowsSecurity.GlobalVars.MDAVPreferencesCurrent, "PerformanceModeStatus"));
+                string PerformanceModeStatusResult = Convert.ToString(HardenWindowsSecurity.PropertyHelper.GetPropertyValue(HardenWindowsSecurity.GlobalVars.MDAVPreferencesCurrent, "PerformanceModeStatus") ?? string.Empty);
                 nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "Performance Mode Status",
@@ -2100,7 +2103,7 @@ namespace HardenWindowsSecurity
 
 
                 // Get the value and convert it to bool
-                bool EnableConvertWarnToBlockResult = Convert.ToBoolean(HardenWindowsSecurity.PropertyHelper.GetPropertyValue(HardenWindowsSecurity.GlobalVars.MDAVPreferencesCurrent, "EnableConvertWarnToBlock"));
+                bool EnableConvertWarnToBlockResult = Convert.ToBoolean(HardenWindowsSecurity.PropertyHelper.GetPropertyValue(HardenWindowsSecurity.GlobalVars.MDAVPreferencesCurrent, "EnableConvertWarnToBlock") ?? false);
                 nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "Enable Convert Warn To Block",
@@ -2113,7 +2116,7 @@ namespace HardenWindowsSecurity
 
 
                 // Get the value and convert it to string
-                string BruteForceProtectionAggressivenessResult = Convert.ToString(HardenWindowsSecurity.PropertyHelper.GetPropertyValue(HardenWindowsSecurity.GlobalVars.MDAVPreferencesCurrent, "BruteForceProtectionAggressiveness"));
+                string BruteForceProtectionAggressivenessResult = Convert.ToString(HardenWindowsSecurity.PropertyHelper.GetPropertyValue(HardenWindowsSecurity.GlobalVars.MDAVPreferencesCurrent, "BruteForceProtectionAggressiveness") ?? string.Empty);
 
                 // Check if the value is not null
                 if (BruteForceProtectionAggressivenessResult != null)
@@ -2162,7 +2165,7 @@ namespace HardenWindowsSecurity
 
 
                 // Get the value and convert it to string
-                string BruteForceProtectionMaxBlockTimeResult = Convert.ToString(HardenWindowsSecurity.PropertyHelper.GetPropertyValue(HardenWindowsSecurity.GlobalVars.MDAVPreferencesCurrent, "BruteForceProtectionMaxBlockTime"));
+                string BruteForceProtectionMaxBlockTimeResult = Convert.ToString(HardenWindowsSecurity.PropertyHelper.GetPropertyValue(HardenWindowsSecurity.GlobalVars.MDAVPreferencesCurrent, "BruteForceProtectionMaxBlockTime") ?? string.Empty);
 
                 // Check if the value is not null
                 if (BruteForceProtectionMaxBlockTimeResult != null)
@@ -2211,7 +2214,7 @@ namespace HardenWindowsSecurity
 
 
                 // Get the value and convert it to string
-                string BruteForceProtectionConfiguredStateResult = Convert.ToString(HardenWindowsSecurity.PropertyHelper.GetPropertyValue(HardenWindowsSecurity.GlobalVars.MDAVPreferencesCurrent, "BruteForceProtectionConfiguredState"));
+                string BruteForceProtectionConfiguredStateResult = Convert.ToString(HardenWindowsSecurity.PropertyHelper.GetPropertyValue(HardenWindowsSecurity.GlobalVars.MDAVPreferencesCurrent, "BruteForceProtectionConfiguredState") ?? string.Empty);
                 nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "BruteForce Protection Configured State",
@@ -2224,7 +2227,7 @@ namespace HardenWindowsSecurity
 
 
                 // Get the value and convert it to string
-                string RemoteEncryptionProtectionMaxBlockTimeResult = Convert.ToString(HardenWindowsSecurity.PropertyHelper.GetPropertyValue(HardenWindowsSecurity.GlobalVars.MDAVPreferencesCurrent, "RemoteEncryptionProtectionMaxBlockTime"));
+                string RemoteEncryptionProtectionMaxBlockTimeResult = Convert.ToString(HardenWindowsSecurity.PropertyHelper.GetPropertyValue(HardenWindowsSecurity.GlobalVars.MDAVPreferencesCurrent, "RemoteEncryptionProtectionMaxBlockTime") ?? string.Empty);
 
                 // Check if the value is not null
                 if (RemoteEncryptionProtectionMaxBlockTimeResult != null)
@@ -2273,7 +2276,7 @@ namespace HardenWindowsSecurity
 
 
                 // Get the value and convert it to string
-                string RemoteEncryptionProtectionAggressivenessResult = Convert.ToString(HardenWindowsSecurity.PropertyHelper.GetPropertyValue(HardenWindowsSecurity.GlobalVars.MDAVPreferencesCurrent, "RemoteEncryptionProtectionAggressiveness"));
+                string RemoteEncryptionProtectionAggressivenessResult = Convert.ToString(HardenWindowsSecurity.PropertyHelper.GetPropertyValue(HardenWindowsSecurity.GlobalVars.MDAVPreferencesCurrent, "RemoteEncryptionProtectionAggressiveness") ?? string.Empty);
                 nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "Remote Encryption Protection Aggressiveness",
@@ -2287,7 +2290,7 @@ namespace HardenWindowsSecurity
 
 
                 // Get the value and convert it to string
-                string RemoteEncryptionProtectionConfiguredStateResult = Convert.ToString(HardenWindowsSecurity.PropertyHelper.GetPropertyValue(HardenWindowsSecurity.GlobalVars.MDAVPreferencesCurrent, "RemoteEncryptionProtectionConfiguredState"));
+                string RemoteEncryptionProtectionConfiguredStateResult = Convert.ToString(HardenWindowsSecurity.PropertyHelper.GetPropertyValue(HardenWindowsSecurity.GlobalVars.MDAVPreferencesCurrent, "RemoteEncryptionProtectionConfiguredState") ?? string.Empty);
                 nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "Remote Encryption Protection Configured State",
@@ -2301,7 +2304,7 @@ namespace HardenWindowsSecurity
 
                 // Get the value and convert it to string
                 // https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-defender#cloudblocklevel
-                string CloudBlockLevelResult = Convert.ToString(HardenWindowsSecurity.PropertyHelper.GetPropertyValue(HardenWindowsSecurity.GlobalVars.MDAVPreferencesCurrent, "CloudBlockLevel"));
+                string CloudBlockLevelResult = Convert.ToString(HardenWindowsSecurity.PropertyHelper.GetPropertyValue(HardenWindowsSecurity.GlobalVars.MDAVPreferencesCurrent, "CloudBlockLevel") ?? string.Empty);
                 nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "Cloud Block Level",
@@ -2315,7 +2318,7 @@ namespace HardenWindowsSecurity
 
                 // Get the value and convert it to bool
                 // https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-defender#allowemailscanning
-                bool DisableEmailScanningResult = Convert.ToBoolean(HardenWindowsSecurity.PropertyHelper.GetPropertyValue(HardenWindowsSecurity.GlobalVars.MDAVPreferencesCurrent, "DisableEmailScanning"));
+                bool DisableEmailScanningResult = Convert.ToBoolean(HardenWindowsSecurity.PropertyHelper.GetPropertyValue(HardenWindowsSecurity.GlobalVars.MDAVPreferencesCurrent, "DisableEmailScanning") ?? true);
                 nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "Email Scanning",
@@ -2329,7 +2332,7 @@ namespace HardenWindowsSecurity
 
                 // Get the value and convert it to string
                 // https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-defender#submitsamplesconsent
-                string SubmitSamplesConsentResult = Convert.ToString(HardenWindowsSecurity.PropertyHelper.GetPropertyValue(HardenWindowsSecurity.GlobalVars.MDAVPreferencesCurrent, "SubmitSamplesConsent"));
+                string SubmitSamplesConsentResult = Convert.ToString(HardenWindowsSecurity.PropertyHelper.GetPropertyValue(HardenWindowsSecurity.GlobalVars.MDAVPreferencesCurrent, "SubmitSamplesConsent") ?? string.Empty);
                 nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "Send file samples when further analysis is required",
@@ -2343,7 +2346,7 @@ namespace HardenWindowsSecurity
 
                 // Get the value and convert it to string
                 // https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-defender#allowcloudprotection
-                string MAPSReportingResult = Convert.ToString(HardenWindowsSecurity.PropertyHelper.GetPropertyValue(HardenWindowsSecurity.GlobalVars.MDAVPreferencesCurrent, "MAPSReporting"));
+                string MAPSReportingResult = Convert.ToString(HardenWindowsSecurity.PropertyHelper.GetPropertyValue(HardenWindowsSecurity.GlobalVars.MDAVPreferencesCurrent, "MAPSReporting") ?? string.Empty);
                 nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "Join Microsoft MAPS (aka SpyNet)",
@@ -2357,7 +2360,7 @@ namespace HardenWindowsSecurity
 
                 // Get the value and convert it to bool
                 // https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-admx-microsoftdefenderantivirus#mpengine_enablefilehashcomputation
-                bool EnableFileHashComputationResult = Convert.ToBoolean(HardenWindowsSecurity.PropertyHelper.GetPropertyValue(HardenWindowsSecurity.GlobalVars.MDAVPreferencesCurrent, "EnableFileHashComputation"));
+                bool EnableFileHashComputationResult = Convert.ToBoolean(HardenWindowsSecurity.PropertyHelper.GetPropertyValue(HardenWindowsSecurity.GlobalVars.MDAVPreferencesCurrent, "EnableFileHashComputation") ?? false);
                 nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "File Hash Computation",
@@ -2371,7 +2374,7 @@ namespace HardenWindowsSecurity
 
                 // Get the value and convert it to string
                 // https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-defender#cloudextendedtimeout
-                string CloudExtendedTimeoutResult = Convert.ToString(HardenWindowsSecurity.PropertyHelper.GetPropertyValue(HardenWindowsSecurity.GlobalVars.MDAVPreferencesCurrent, "CloudExtendedTimeout"));
+                string CloudExtendedTimeoutResult = Convert.ToString(HardenWindowsSecurity.PropertyHelper.GetPropertyValue(HardenWindowsSecurity.GlobalVars.MDAVPreferencesCurrent, "CloudExtendedTimeout") ?? string.Empty);
                 nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "Extended cloud check (Seconds)",
@@ -2385,7 +2388,7 @@ namespace HardenWindowsSecurity
 
                 // Get the value and convert it to string
                 // https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-defender#puaprotection
-                string PUAProtectionResult = Convert.ToString(HardenWindowsSecurity.PropertyHelper.GetPropertyValue(HardenWindowsSecurity.GlobalVars.MDAVPreferencesCurrent, "PUAProtection"));
+                string PUAProtectionResult = Convert.ToString(HardenWindowsSecurity.PropertyHelper.GetPropertyValue(HardenWindowsSecurity.GlobalVars.MDAVPreferencesCurrent, "PUAProtection") ?? string.Empty);
                 nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "Detection for potentially unwanted applications",
@@ -2399,7 +2402,7 @@ namespace HardenWindowsSecurity
 
                 // Get the value and convert it to bool
                 // https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-defender#disablecatchupquickscan
-                bool DisableCatchupQuickScanResult = Convert.ToBoolean(HardenWindowsSecurity.PropertyHelper.GetPropertyValue(HardenWindowsSecurity.GlobalVars.MDAVPreferencesCurrent, "DisableCatchupQuickScan"));
+                bool DisableCatchupQuickScanResult = Convert.ToBoolean(HardenWindowsSecurity.PropertyHelper.GetPropertyValue(HardenWindowsSecurity.GlobalVars.MDAVPreferencesCurrent, "DisableCatchupQuickScan") ?? true);
                 nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "Catchup Quick Scan",
@@ -2413,7 +2416,7 @@ namespace HardenWindowsSecurity
 
                 // Get the value and convert it to bool
                 // https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-defender#checkforsignaturesbeforerunningscan
-                bool CheckForSignaturesBeforeRunningScanResult = Convert.ToBoolean(HardenWindowsSecurity.PropertyHelper.GetPropertyValue(HardenWindowsSecurity.GlobalVars.MDAVPreferencesCurrent, "CheckForSignaturesBeforeRunningScan"));
+                bool CheckForSignaturesBeforeRunningScanResult = Convert.ToBoolean(HardenWindowsSecurity.PropertyHelper.GetPropertyValue(HardenWindowsSecurity.GlobalVars.MDAVPreferencesCurrent, "CheckForSignaturesBeforeRunningScan") ?? false);
                 nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "Check For Signatures Before Running Scan",
@@ -2427,7 +2430,7 @@ namespace HardenWindowsSecurity
 
                 // Get the value and convert it to string
                 // https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-defender#enablenetworkprotection
-                string EnableNetworkProtectionResult = Convert.ToString(HardenWindowsSecurity.PropertyHelper.GetPropertyValue(HardenWindowsSecurity.GlobalVars.MDAVPreferencesCurrent, "EnableNetworkProtection"));
+                string EnableNetworkProtectionResult = Convert.ToString(HardenWindowsSecurity.PropertyHelper.GetPropertyValue(HardenWindowsSecurity.GlobalVars.MDAVPreferencesCurrent, "EnableNetworkProtection") ?? string.Empty);
                 nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "Enable Network Protection",
@@ -2441,7 +2444,7 @@ namespace HardenWindowsSecurity
 
                 // Get the value and convert it to string
                 // https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-defender#signatureupdateinterval
-                string SignatureUpdateIntervalResult = Convert.ToString(HardenWindowsSecurity.PropertyHelper.GetPropertyValue(HardenWindowsSecurity.GlobalVars.MDAVPreferencesCurrent, "SignatureUpdateInterval"));
+                string SignatureUpdateIntervalResult = Convert.ToString(HardenWindowsSecurity.PropertyHelper.GetPropertyValue(HardenWindowsSecurity.GlobalVars.MDAVPreferencesCurrent, "SignatureUpdateInterval") ?? string.Empty);
                 nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "Interval to check for security intelligence updates",
@@ -2455,7 +2458,7 @@ namespace HardenWindowsSecurity
 
                 // Get the value and convert it to string
                 // https://learn.microsoft.com/en-us/windows/client-management/mdm/defender-csp#configurationmeteredconnectionupdates
-                bool MeteredConnectionUpdatesResult = Convert.ToBoolean(HardenWindowsSecurity.PropertyHelper.GetPropertyValue(HardenWindowsSecurity.GlobalVars.MDAVPreferencesCurrent, "MeteredConnectionUpdates"));
+                bool MeteredConnectionUpdatesResult = Convert.ToBoolean(HardenWindowsSecurity.PropertyHelper.GetPropertyValue(HardenWindowsSecurity.GlobalVars.MDAVPreferencesCurrent, "MeteredConnectionUpdates") ?? false);
                 nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "Allows Microsoft Defender Antivirus to update over a metered connection",
@@ -2469,7 +2472,7 @@ namespace HardenWindowsSecurity
 
                 // Get the value and convert it to string
                 // https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-defender#threatseveritydefaultaction
-                string SevereThreatDefaultActionResult = Convert.ToString(HardenWindowsSecurity.PropertyHelper.GetPropertyValue(HardenWindowsSecurity.GlobalVars.MDAVPreferencesCurrent, "SevereThreatDefaultAction"));
+                string SevereThreatDefaultActionResult = Convert.ToString(HardenWindowsSecurity.PropertyHelper.GetPropertyValue(HardenWindowsSecurity.GlobalVars.MDAVPreferencesCurrent, "SevereThreatDefaultAction") ?? string.Empty);
                 nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "Severe Threat level default action = Remove",
@@ -2483,7 +2486,7 @@ namespace HardenWindowsSecurity
 
                 // Get the value and convert it to string
                 // https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-defender#threatseveritydefaultaction
-                string HighThreatDefaultActionResult = Convert.ToString(HardenWindowsSecurity.PropertyHelper.GetPropertyValue(HardenWindowsSecurity.GlobalVars.MDAVPreferencesCurrent, "HighThreatDefaultAction"));
+                string HighThreatDefaultActionResult = Convert.ToString(HardenWindowsSecurity.PropertyHelper.GetPropertyValue(HardenWindowsSecurity.GlobalVars.MDAVPreferencesCurrent, "HighThreatDefaultAction") ?? string.Empty);
                 nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "High Threat level default action = Remove",
@@ -2497,7 +2500,7 @@ namespace HardenWindowsSecurity
 
                 // Get the value and convert it to string
                 // https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-defender#threatseveritydefaultaction
-                string ModerateThreatDefaultActionResult = Convert.ToString(HardenWindowsSecurity.PropertyHelper.GetPropertyValue(HardenWindowsSecurity.GlobalVars.MDAVPreferencesCurrent, "ModerateThreatDefaultAction"));
+                string ModerateThreatDefaultActionResult = Convert.ToString(HardenWindowsSecurity.PropertyHelper.GetPropertyValue(HardenWindowsSecurity.GlobalVars.MDAVPreferencesCurrent, "ModerateThreatDefaultAction") ?? string.Empty);
                 nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "Moderate Threat level default action = Quarantine",
@@ -2511,7 +2514,7 @@ namespace HardenWindowsSecurity
 
                 // Get the value and convert it to string
                 // https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-defender#threatseveritydefaultaction
-                string LowThreatDefaultActionResult = Convert.ToString(HardenWindowsSecurity.PropertyHelper.GetPropertyValue(HardenWindowsSecurity.GlobalVars.MDAVPreferencesCurrent, "LowThreatDefaultAction"));
+                string LowThreatDefaultActionResult = Convert.ToString(HardenWindowsSecurity.PropertyHelper.GetPropertyValue(HardenWindowsSecurity.GlobalVars.MDAVPreferencesCurrent, "LowThreatDefaultAction") ?? string.Empty);
                 nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "Low Threat level default action = Quarantine",
@@ -2572,7 +2575,7 @@ namespace HardenWindowsSecurity
                 };
 
                 // Get the value and convert it to bool
-                bool BruteForceProtectionLocalNetworkBlockingResult = Convert.ToBoolean(HardenWindowsSecurity.PropertyHelper.GetPropertyValue(HardenWindowsSecurity.GlobalVars.MDAVPreferencesCurrent, "BruteForceProtectionLocalNetworkBlocking"));
+                bool BruteForceProtectionLocalNetworkBlockingResult = Convert.ToBoolean(HardenWindowsSecurity.PropertyHelper.GetPropertyValue(HardenWindowsSecurity.GlobalVars.MDAVPreferencesCurrent, "BruteForceProtectionLocalNetworkBlocking") ?? false);
                 nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "Brute Force Protection Local Network Blocking State",
@@ -2584,7 +2587,7 @@ namespace HardenWindowsSecurity
                 });
 
                 // Get the value and convert it to bool
-                bool EnableEcsConfigurationResult = Convert.ToBoolean(HardenWindowsSecurity.PropertyHelper.GetPropertyValue(HardenWindowsSecurity.GlobalVars.MDAVPreferencesCurrent, "EnableEcsConfiguration"));
+                bool EnableEcsConfigurationResult = Convert.ToBoolean(HardenWindowsSecurity.PropertyHelper.GetPropertyValue(HardenWindowsSecurity.GlobalVars.MDAVPreferencesCurrent, "EnableEcsConfiguration") ?? false);
                 nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "ECS is enabled in Microsoft Defender",

@@ -22,27 +22,29 @@ namespace HardenWindowsSecurity
                 string queryString = $"SELECT * FROM {className}";
 
                 // Execute the query
-                ManagementObjectSearcher searcher = new ManagementObjectSearcher(namespaceName, queryString);
-                ManagementObjectCollection results = searcher.Get();
-
-                // Return the first result if there are any
-                if (results.Count > 0)
+                using (ManagementObjectSearcher searcher = new ManagementObjectSearcher(namespaceName, queryString))
                 {
-                    var result = results.Cast<ManagementBaseObject>().FirstOrDefault();
+                    ManagementObjectCollection results = searcher.Get();
 
-                    if (result != null)
+                    // Return the first result if there are any
+                    if (results.Count > 0)
                     {
+                        var result = results.Cast<ManagementBaseObject>().FirstOrDefault();
 
-                        return ConvertToDynamic(result);
+                        if (result != null)
+                        {
+
+                            return ConvertToDynamic(result);
+                        }
+                        else
+                        {
+                            throw new Exception("Failed to get MpComputerPreference");
+                        }
                     }
                     else
                     {
                         throw new Exception("Failed to get MpComputerPreference");
                     }
-                }
-                else
-                {
-                    throw new Exception("Failed to get MpComputerPreference");
                 }
             }
             catch (ManagementException ex)

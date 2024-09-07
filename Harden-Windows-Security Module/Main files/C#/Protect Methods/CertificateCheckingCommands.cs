@@ -16,6 +16,8 @@ namespace HardenWindowsSecurity
                 throw new ArgumentNullException(nameof(HardenWindowsSecurity.GlobalVars.WorkingDir), "The working directory variable is either null or the directory doesn't exist.");
             }
 
+            ChangePSConsoleTitle.Set("🎟️ Certificates");
+
             HardenWindowsSecurity.Logger.LogMessage("Running the Certificate Checking category", LogTypeIntel.Information);
 
             string sigcheck64Path = Path.Combine(HardenWindowsSecurity.GlobalVars.WorkingDir, "sigcheck64.exe");

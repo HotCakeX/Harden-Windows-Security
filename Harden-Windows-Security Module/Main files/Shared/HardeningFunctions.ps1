@@ -326,7 +326,6 @@ Function Get-AvailableRemovableDrives {
 #Region Hardening-Categories-Functions
 Function Invoke-MicrosoftSecurityBaselines {
     param([System.Management.Automation.SwitchParameter]$RunUnattended)
-    [HardenWindowsSecurity.GlobalVars]::Host.UI.RawUI.WindowTitle = '🔐 Security Baselines'
     :MicrosoftSecurityBaselinesCategoryLabel switch ($RunUnattended ? ($SecBaselines_NoOverrides ? 'Yes' : 'Yes, With the Optional Overrides (Recommended)') : (Select-Option -Options 'Yes', 'Yes, With the Optional Overrides (Recommended)' , 'No', 'Exit' -Message "`nApply Microsoft Security Baseline ?")) {
         'Yes' {
             [HardenWindowsSecurity.MicrosoftSecurityBaselines]::Invoke()
@@ -341,7 +340,6 @@ Function Invoke-MicrosoftSecurityBaselines {
 }
 Function Invoke-Microsoft365AppsSecurityBaselines {
     param([System.Management.Automation.SwitchParameter]$RunUnattended)
-    [HardenWindowsSecurity.GlobalVars]::Host.UI.RawUI.WindowTitle = '🧁 M365 Apps Security'
     :Microsoft365AppsSecurityBaselinesCategoryLabel switch ($RunUnattended ? 'Yes' : (Select-Option -Options 'Yes', 'No', 'Exit' -Message "`nApply Microsoft 365 Apps Security Baseline ?")) {
         'Yes' {
             [HardenWindowsSecurity.Microsoft365AppsSecurityBaselines]::Invoke()
@@ -351,7 +349,6 @@ Function Invoke-Microsoft365AppsSecurityBaselines {
 }
 Function Invoke-MicrosoftDefender {
     param([System.Management.Automation.SwitchParameter]$RunUnattended)
-    [HardenWindowsSecurity.GlobalVars]::Host.UI.RawUI.WindowTitle = '🍁 MSFT Defender'
     :MicrosoftDefenderLabel switch ($RunUnattended ? 'Yes' : (Select-Option -Options 'Yes', 'No', 'Exit' -Message "`nRun Microsoft Defender category ?")) {
         'Yes' {
             [HardenWindowsSecurity.MicrosoftDefender]::Invoke()
@@ -385,20 +382,12 @@ Function Invoke-MicrosoftDefender {
                 }
             }
 
-            [HardenWindowsSecurity.Logger]::LogMessage('Getting the state of fast weekly Microsoft recommended driver block list update scheduled task', [HardenWindowsSecurity.LogTypeIntel]::Information)
-            [System.String]$BlockListScheduledTaskState = ([HardenWindowsSecurity.TaskSchedulerHelper]::Get('MSFT Driver Block list update', '\MSFT Driver Block list update\', 'TaskList')).State
-
-            # Create scheduled task for fast weekly Microsoft recommended driver block list update if it doesn't exist or exists but is not Ready/Running
-            if (($BlockListScheduledTaskState -notin '2', '3', '4')) {
-                :TaskSchedulerCreationLabel switch ($RunUnattended ? ($MSFTDefender_NoScheduledTask ? 'No' : 'Yes') : (Select-Option -SubCategory -Options 'Yes', 'No', 'Exit' -Message "`nCreate scheduled task for fast weekly Microsoft recommended driver block list update ?")) {
-                    'Yes' {
-                        [HardenWindowsSecurity.MicrosoftDefender]::MSFTDefender_ScheduledTask()
-                    } 'No' { break TaskSchedulerCreationLabel }
-                    'Exit' { break MainSwitchLabel }
-                }
-            }
-            else {
-                [HardenWindowsSecurity.Logger]::LogMessage("Scheduled task for fast weekly Microsoft recommended driver block list update already exists and is in $BlockListScheduledTaskState state", [HardenWindowsSecurity.LogTypeIntel]::Information)
+            # Create scheduled task for fast weekly Microsoft recommended driver block list update. The method will overwrite the task if it exists which is the desired behavior.
+            :TaskSchedulerCreationLabel switch ($RunUnattended ? ($MSFTDefender_NoScheduledTask ? 'No' : 'Yes') : (Select-Option -SubCategory -Options 'Yes', 'No', 'Exit' -Message "`nCreate scheduled task for fast weekly Microsoft recommended driver block list update ?")) {
+                'Yes' {
+                    [HardenWindowsSecurity.MicrosoftDefender]::MSFTDefender_ScheduledTask()
+                } 'No' { break TaskSchedulerCreationLabel }
+                'Exit' { break MainSwitchLabel }
             }
 
             # Only display this prompt if Engine and Platform update channels are not already set to Beta
@@ -421,7 +410,6 @@ Function Invoke-MicrosoftDefender {
 }
 Function Invoke-AttackSurfaceReductionRules {
     param([System.Management.Automation.SwitchParameter]$RunUnattended)
-    [HardenWindowsSecurity.GlobalVars]::Host.UI.RawUI.WindowTitle = '🪷 ASR Rules'
     :ASRRulesCategoryLabel switch ($RunUnattended ? 'Yes' : (Select-Option -Options 'Yes', 'No', 'Exit' -Message "`nRun Attack Surface Reduction Rules category ?")) {
         'Yes' {
             [HardenWindowsSecurity.AttackSurfaceReductionRules]::Invoke()
@@ -431,7 +419,6 @@ Function Invoke-AttackSurfaceReductionRules {
 }
 Function Invoke-BitLockerSettings {
     param([System.Management.Automation.SwitchParameter]$RunUnattended)
-    [HardenWindowsSecurity.GlobalVars]::Host.UI.RawUI.WindowTitle = '🔑 BitLocker'
     # a ScriptBlock that gets the BitLocker recovery information for all drives that have a RecoveryPassword key protector
     [System.Management.Automation.ScriptBlock]$GetBitLockerRecoveryInfo = {
         Class BitLockerRecoveryInfo {
@@ -947,7 +934,6 @@ https://learn.microsoft.com/en-us/windows/security/operating-system-security/dat
 }
 Function Invoke-TLSSecurity {
     param([System.Management.Automation.SwitchParameter]$RunUnattended)
-    [HardenWindowsSecurity.GlobalVars]::Host.UI.RawUI.WindowTitle = '🛡️ TLS'
     :TLSSecurityLabel switch ($RunUnattended ? 'Yes' : (Select-Option -Options 'Yes', 'No', 'Exit' -Message "`nRun TLS Security category ?")) {
         'Yes' {
             [HardenWindowsSecurity.TLSSecurity]::Invoke()
@@ -957,7 +943,6 @@ Function Invoke-TLSSecurity {
 }
 Function Invoke-LockScreen {
     param([System.Management.Automation.SwitchParameter]$RunUnattended)
-    [HardenWindowsSecurity.GlobalVars]::Host.UI.RawUI.WindowTitle = '💻 Lock Screen'
     :LockScreenLabel switch ($RunUnattended ? 'Yes' : (Select-Option -Options 'Yes', 'No', 'Exit' -Message "`nRun Lock Screen category ?")) {
         'Yes' {
             [HardenWindowsSecurity.LockScreen]::Invoke()
@@ -979,7 +964,6 @@ Function Invoke-LockScreen {
 }
 Function Invoke-UserAccountControl {
     param([System.Management.Automation.SwitchParameter]$RunUnattended)
-    [HardenWindowsSecurity.GlobalVars]::Host.UI.RawUI.WindowTitle = '💎 UAC'
     :UACLabel switch ($RunUnattended ? 'Yes' : (Select-Option -Options 'Yes', 'No', 'Exit' -Message "`nRun User Account Control category ?")) {
         'Yes' {
             [HardenWindowsSecurity.UserAccountControl]::Invoke()
@@ -1001,7 +985,6 @@ Function Invoke-UserAccountControl {
 }
 Function Invoke-WindowsFirewall {
     param([System.Management.Automation.SwitchParameter]$RunUnattended)
-    [HardenWindowsSecurity.GlobalVars]::Host.UI.RawUI.WindowTitle = '🔥 Firewall'
     :WindowsFirewallLabel switch ($RunUnattended ? 'Yes' : (Select-Option -Options 'Yes', 'No', 'Exit' -Message "`nRun Windows Firewall category ?")) {
         'Yes' {
             [HardenWindowsSecurity.WindowsFirewall]::Invoke()
@@ -1011,7 +994,6 @@ Function Invoke-WindowsFirewall {
 }
 Function Invoke-OptionalWindowsFeatures {
     param([System.Management.Automation.SwitchParameter]$RunUnattended)
-    [HardenWindowsSecurity.GlobalVars]::Host.UI.RawUI.WindowTitle = '🏅 Optional Features'
     :OptionalFeaturesLabel switch ($RunUnattended ? 'Yes' : (Select-Option -Options 'Yes', 'No', 'Exit' -Message "`nRun Optional Windows Features category ?")) {
         'Yes' {
             [HardenWindowsSecurity.OptionalWindowsFeatures]::Invoke()
@@ -1021,7 +1003,6 @@ Function Invoke-OptionalWindowsFeatures {
 }
 Function Invoke-WindowsNetworking {
     param([System.Management.Automation.SwitchParameter]$RunUnattended)
-    [HardenWindowsSecurity.GlobalVars]::Host.UI.RawUI.WindowTitle = '📶 Networking'
     :WindowsNetworkingLabel switch ($RunUnattended ? 'Yes' : (Select-Option -Options 'Yes', 'No', 'Exit' -Message "`nRun Windows Networking category ?")) {
         'Yes' {
             [HardenWindowsSecurity.WindowsNetworking]::Invoke()
@@ -1031,7 +1012,6 @@ Function Invoke-WindowsNetworking {
 }
 Function Invoke-MiscellaneousConfigurations {
     param([System.Management.Automation.SwitchParameter]$RunUnattended)
-    [HardenWindowsSecurity.GlobalVars]::Host.UI.RawUI.WindowTitle = '🥌 Miscellaneous'
     :MiscellaneousLabel switch ($RunUnattended ? 'Yes' : (Select-Option -Options 'Yes', 'No', 'Exit' -Message "`nRun Miscellaneous Configurations category ?")) {
         'Yes' {
             [HardenWindowsSecurity.MiscellaneousConfigurations]::Invoke()
@@ -1041,7 +1021,6 @@ Function Invoke-MiscellaneousConfigurations {
 }
 Function Invoke-WindowsUpdateConfigurations {
     param([System.Management.Automation.SwitchParameter]$RunUnattended)
-    [HardenWindowsSecurity.GlobalVars]::Host.UI.RawUI.WindowTitle = '🪟 Windows Update'
     :WindowsUpdateLabel switch ($RunUnattended ? 'Yes' : (Select-Option -Options 'Yes', 'No', 'Exit' -Message "`nApply Windows Update Policies ?")) {
         'Yes' {
             [HardenWindowsSecurity.WindowsUpdateConfigurations]::Invoke()
@@ -1051,7 +1030,6 @@ Function Invoke-WindowsUpdateConfigurations {
 }
 Function Invoke-EdgeBrowserConfigurations {
     param([System.Management.Automation.SwitchParameter]$RunUnattended)
-    [HardenWindowsSecurity.GlobalVars]::Host.UI.RawUI.WindowTitle = '🦔 Edge'
     :MSEdgeLabel switch ($RunUnattended ? 'Yes' : (Select-Option -Options 'Yes', 'No', 'Exit' -Message "`nApply Edge Browser Configurations ?")) {
         'Yes' {
             [HardenWindowsSecurity.EdgeBrowserConfigurations]::Invoke()
@@ -1061,7 +1039,6 @@ Function Invoke-EdgeBrowserConfigurations {
 }
 Function Invoke-CertificateCheckingCommands {
     param([System.Management.Automation.SwitchParameter]$RunUnattended)
-    [HardenWindowsSecurity.GlobalVars]::Host.UI.RawUI.WindowTitle = '🎟️ Certificates'
     :CertCheckingLabel switch ($RunUnattended ? 'Yes' : (Select-Option -Options 'Yes', 'No', 'Exit' -Message "`nRun Certificate Checking category ?")) {
         'Yes' {
             [HardenWindowsSecurity.CertificateCheckingCommands]::Invoke()
@@ -1073,7 +1050,6 @@ Function Invoke-CountryIPBlocking {
     param(
         [System.Management.Automation.SwitchParameter]$RunUnattended
     )
-    [HardenWindowsSecurity.GlobalVars]::Host.UI.RawUI.WindowTitle = '🧾 Country IPs'
     :IPBlockingLabel switch ($RunUnattended ? 'Yes' : (Select-Option -Options 'Yes', 'No', 'Exit' -Message "`nRun Country IP Blocking category ?")) {
         'Yes' {
             :IPBlockingTerrLabel switch ($RunUnattended ? 'Yes' : (Select-Option -SubCategory -Options 'Yes', 'No' -Message 'Add countries in the State Sponsors of Terrorism list to the Firewall block list?')) {
@@ -1092,7 +1068,6 @@ Function Invoke-CountryIPBlocking {
 }
 Function Invoke-DownloadsDefenseMeasures {
     param([System.Management.Automation.SwitchParameter]$RunUnattended)
-    [HardenWindowsSecurity.GlobalVars]::Host.UI.RawUI.WindowTitle = '🎇 Downloads Defense Measures'
     :DownloadsDefenseMeasuresLabel switch ($RunUnattended ? 'Yes' : (Select-Option -Options 'Yes', 'No', 'Exit' -Message "`nRun Downloads Defense Measures category ?")) {
         'Yes' {
             [HardenWindowsSecurity.DownloadsDefenseMeasures]::Invoke()
@@ -1107,7 +1082,6 @@ Function Invoke-DownloadsDefenseMeasures {
 }
 Function Invoke-NonAdminCommands {
     param([System.Management.Automation.SwitchParameter]$RunUnattended)
-    [HardenWindowsSecurity.GlobalVars]::Host.UI.RawUI.WindowTitle = '🏷️ Non-Admins'
     :NonAdminLabel switch ($RunUnattended ? 'Yes' : (Select-Option -Options 'Yes', 'No', 'Exit' -Message "`nRun Non-Admin category ?")) {
         'Yes' {
             [HardenWindowsSecurity.NonAdminCommands]::Invoke()

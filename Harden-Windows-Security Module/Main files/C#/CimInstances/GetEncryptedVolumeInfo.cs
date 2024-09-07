@@ -422,16 +422,18 @@ namespace HardenWindowsSecurity
         // Helper method to invoke a method on a WMI class
         private static ManagementBaseObject InvokeCimMethod(ManagementBaseObject instance, string methodName, Dictionary<string, object>? parameters)
         {
-            ManagementClass managementClass = new ManagementClass(instance.ClassPath);
-            var inParams = managementClass.GetMethodParameters(methodName);
-            if (parameters != null)
+            using (ManagementClass managementClass = new ManagementClass(instance.ClassPath))
             {
-                foreach (var param in parameters)
+                var inParams = managementClass.GetMethodParameters(methodName);
+                if (parameters != null)
                 {
-                    inParams[param.Key] = param.Value;
+                    foreach (var param in parameters)
+                    {
+                        inParams[param.Key] = param.Value;
+                    }
                 }
+                return ((ManagementObject)instance).InvokeMethod(methodName, inParams, null);
             }
-            return ((ManagementObject)instance).InvokeMethod(methodName, inParams, null);
         }
 
         // Method to get the drive letters of all volumes on the system, encrypted or not
@@ -462,9 +464,19 @@ namespace HardenWindowsSecurity
             ManagementScope scope = new ManagementScope(namespacePath);
             string queryString = string.IsNullOrEmpty(filter) ? $"SELECT * FROM {className}" : $"SELECT * FROM {className} WHERE {filter}";
             ObjectQuery query = new ObjectQuery(queryString);
-            ManagementObjectSearcher searcher = new ManagementObjectSearcher(scope, query);
-            return searcher.Get();
+
+            // Declare the collection to return
+            ManagementObjectCollection result;
+
+            using (ManagementObjectSearcher searcher = new ManagementObjectSearcher(scope, query))
+            {
+                // Get the collection from the searcher
+                result = searcher.Get();
+            }
+
+            return result;
         }
+
 
         // Get the BitLocker info of all of the volumes on the system
         public static List<BitLockerVolume> GetAllEncryptedVolumeInfo()

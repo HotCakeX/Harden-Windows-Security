@@ -390,6 +390,9 @@ namespace HardenWindowsSecurity
 
                         // mark as activity completed
                         HardenWindowsSecurity.ActivityTracker.IsActive = false;
+
+                        // Display notification at the end
+                        NewToastNotification.Show(NewToastNotification.ToastNotificationType.EndOfASRRules, null, null, null);
                     }
                 };
 

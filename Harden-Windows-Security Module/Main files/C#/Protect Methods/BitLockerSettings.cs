@@ -12,6 +12,8 @@ namespace HardenWindowsSecurity
                 throw new System.ArgumentNullException("GlobalVars.path cannot be null.");
             }
 
+            ChangePSConsoleTitle.Set("🔑 BitLocker");
+
             HardenWindowsSecurity.Logger.LogMessage("Running the Bitlocker category", LogTypeIntel.Information);
 
             HardenWindowsSecurity.LGPORunner.RunLGPOCommand(System.IO.Path.Combine(HardenWindowsSecurity.GlobalVars.path, "Resources", "Security-Baselines-X", "Bitlocker Policies", "registry.pol"), LGPORunner.FileType.POL);

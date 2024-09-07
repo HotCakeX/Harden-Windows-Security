@@ -307,7 +307,7 @@ namespace HardenWindowsSecurity
             /// </summary>
             /// <param name="category">Name of the category</param>
             /// <returns>The color of the category to be used for display purposes on the DataGrid GUI</returns>
-            private System.Windows.Media.Brush GetCategoryColor(string category)
+            static private System.Windows.Media.Brush GetCategoryColor(string category)
             {
                 // Determine the background color for each category
                 switch (category)
@@ -410,7 +410,7 @@ namespace HardenWindowsSecurity
                 // Display a notification if it's allowed to do so, and ShowNotification is set to true
                 if (HardenWindowsSecurity.GlobalVars.UseNewNotificationsExp == true && ShowNotification == true)
                 {
-                    HardenWindowsSecurity.NewToastNotification.Show(ToastNotificationType.EndOfConfirmation, CompliantItemsCount, NonCompliantItemsCount);
+                    HardenWindowsSecurity.NewToastNotification.Show(ToastNotificationType.EndOfConfirmation, CompliantItemsCount, NonCompliantItemsCount, null);
                 }
             }
 

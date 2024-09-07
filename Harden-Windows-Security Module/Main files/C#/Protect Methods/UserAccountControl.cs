@@ -15,6 +15,8 @@ namespace HardenWindowsSecurity
                 throw new System.ArgumentNullException("GlobalVars.path cannot be null.");
             }
 
+            ChangePSConsoleTitle.Set("💎 UAC");
+
             HardenWindowsSecurity.Logger.LogMessage("Running the User Account Control category", LogTypeIntel.Information);
             HardenWindowsSecurity.LGPORunner.RunLGPOCommand(System.IO.Path.Combine(HardenWindowsSecurity.GlobalVars.path, "Resources", "Security-Baselines-X", "User Account Control UAC Policies", "GptTmpl.inf"), LGPORunner.FileType.INF);
         }

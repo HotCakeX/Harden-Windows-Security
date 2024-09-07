@@ -37,7 +37,6 @@ namespace WDACConfig
                 basePolicyIdNode.InnerText = newBasePolicyId;
             }
 
-            // Save the modified XML file
             xmlDoc.Save(policyFilePathInput.FullName);
         }
     }

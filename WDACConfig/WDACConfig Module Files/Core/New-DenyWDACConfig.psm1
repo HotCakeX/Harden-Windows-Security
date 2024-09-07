@@ -192,6 +192,13 @@ Function New-DenyWDACConfig {
                 Write-Verbose -Message 'Looping through each user-selected folder paths, scanning them, creating a temp policy file based on them'
                 powershell.exe -NoProfile -Command {
 
+                    # Prep the environment as a workaround for the ConfigCI bug
+                    if ([System.IO.Directory]::Exists('C:\Program Files\Windows Defender\Offline')) {
+                        [System.String]$RandomGUID = [System.Guid]::NewGuid().ToString()
+                        New-CIPolicy -UserPEs -ScanPath 'C:\Program Files\Windows Defender\Offline' -Level hash -FilePath ".\$RandomGUID.xml" -NoShadowCopy -PathToCatroot 'C:\Program Files\Windows Defender\Offline' -WarningAction SilentlyContinue
+                        Remove-Item -LiteralPath ".\$RandomGUID.xml" -Force
+                    }
+
                     [System.Collections.ArrayList]$DriverFilesObject = @()
 
                     # loop through each user-selected folder paths

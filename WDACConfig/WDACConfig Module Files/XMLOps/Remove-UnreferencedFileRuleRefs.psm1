@@ -17,10 +17,8 @@ function Remove-UnreferencedFileRuleRefs {
     Begin {
         . "$([WDACConfig.GlobalVars]::ModuleRootPath)\CoreExt\PSDefaultParameterValues.ps1"
 
-        # Load the XML file
         [System.Xml.XmlDocument]$XmlContent = Get-Content $XmlFilePath
     }
-
     Process {
         # Define the namespace to use with the namespace manager
         [System.Xml.XmlNamespaceManager]$NsManager = New-Object -TypeName System.Xml.XmlNamespaceManager -ArgumentList $XmlContent.NameTable
@@ -42,7 +40,6 @@ function Remove-UnreferencedFileRuleRefs {
             }
         }
     }
-
     End {
         # Save the modified XML back to the file or to a new file
         $XmlContent.Save($XmlFilePath)

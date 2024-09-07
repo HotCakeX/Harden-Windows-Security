@@ -1,5 +1,4 @@
 <# -------- Guidance for code readers --------
-The module uses tight import/export control, no internal function is exposed on the console/to the user.
 The $PSDefaultParameterValues located in "$([WDACConfig.GlobalVars]::ModuleRootPath)\CoreExt\PSDefaultParameterValues.ps1" is imported via dot-sourcing to the current session of each main cmdlet/internal function that calls any (other) internal function or uses any of the cmdlets defined in that file, prior to everything else.
 At the beginning of each main cmdlet, 2 custom $Verbose and/or $Debug variables are defined which help to take actions based on Verbose/Debug preferences and also pass the $VerbosePreference and $DebugPreference to the subsequent sub-functions/modules being called from the main cmdlets.
 
@@ -26,7 +25,6 @@ if (!$IsWindows) {
     Throw [System.PlatformNotSupportedException] 'The WDACConfig module only runs on Windows operation systems. Download it from here: https://www.microsoft.com/software-download/windows11'
 }
 
-# Specifies that the WDACConfig module requires Administrator privileges
 #Requires -RunAsAdministrator
 
 # Unimportant actions that don't need to be terminating if they fail

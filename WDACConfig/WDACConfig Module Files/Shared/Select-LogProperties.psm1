@@ -50,12 +50,5 @@ Function Select-LogProperties {
     'SignatureStatus',
     'ProviderName',
     'SignerInfo' | Sort-Object -Property TimeCreated -Descending
-
-    <#
-    Return [System.Linq.Enumerable]::OrderByDescending(
-        [System.Collections.Generic.List[System.Object]]$Logs,
-        [System.Func[System.Object, System.DateTime]] { param($Item) $Item.TimeCreated }
-    )
-        #>
 }
 Export-ModuleMember -Function 'Select-LogProperties'

@@ -41,11 +41,8 @@ function Remove-DuplicateFileAttrib_Semantic {
 
         # Define a hashtable to store Signer IDs and their associated SigningScenario IDs
         [System.Collections.Hashtable]$SignerScenarioHash = @{}
-
     }
-
     Process {
-
         # Iterate through each FileAttrib element
         foreach ($FileAttrib in $XmlDoc.SelectNodes('//ns:FileAttrib', $NsMgr)) {
 
@@ -155,11 +152,9 @@ function Remove-DuplicateFileAttrib_Semantic {
                 }
             }
         }
-
     }
 
     End {
-        # Save the modified XML back to file
         $XmlDoc.Save($XmlFilePath)
     }
 }

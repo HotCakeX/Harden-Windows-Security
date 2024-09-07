@@ -1970,7 +1970,6 @@ namespace HardenWindowsSecurity
                 #endregion
 
 
-
                 // Get the value and convert it to unsigned int16
                 if (PropertyHelper.GetPropertyValue(GlobalVars.MDAVPreferencesCurrent, "PlatformUpdatesChannel") == null)
                 {

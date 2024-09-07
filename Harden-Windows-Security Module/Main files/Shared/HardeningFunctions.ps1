@@ -382,20 +382,12 @@ Function Invoke-MicrosoftDefender {
                 }
             }
 
-            [HardenWindowsSecurity.Logger]::LogMessage('Getting the state of fast weekly Microsoft recommended driver block list update scheduled task', [HardenWindowsSecurity.LogTypeIntel]::Information)
-            [System.String]$BlockListScheduledTaskState = ([HardenWindowsSecurity.TaskSchedulerHelper]::Get('MSFT Driver Block list update', '\MSFT Driver Block list update\', 'TaskList')).State
-
-            # Create scheduled task for fast weekly Microsoft recommended driver block list update if it doesn't exist or exists but is not Ready/Running
-            if (($BlockListScheduledTaskState -notin '2', '3', '4')) {
-                :TaskSchedulerCreationLabel switch ($RunUnattended ? ($MSFTDefender_NoScheduledTask ? 'No' : 'Yes') : (Select-Option -SubCategory -Options 'Yes', 'No', 'Exit' -Message "`nCreate scheduled task for fast weekly Microsoft recommended driver block list update ?")) {
-                    'Yes' {
-                        [HardenWindowsSecurity.MicrosoftDefender]::MSFTDefender_ScheduledTask()
-                    } 'No' { break TaskSchedulerCreationLabel }
-                    'Exit' { break MainSwitchLabel }
-                }
-            }
-            else {
-                [HardenWindowsSecurity.Logger]::LogMessage("Scheduled task for fast weekly Microsoft recommended driver block list update already exists and is in $BlockListScheduledTaskState state", [HardenWindowsSecurity.LogTypeIntel]::Information)
+            # Create scheduled task for fast weekly Microsoft recommended driver block list update. The method will overwrite the task if it exists which is the desired behavior.
+            :TaskSchedulerCreationLabel switch ($RunUnattended ? ($MSFTDefender_NoScheduledTask ? 'No' : 'Yes') : (Select-Option -SubCategory -Options 'Yes', 'No', 'Exit' -Message "`nCreate scheduled task for fast weekly Microsoft recommended driver block list update ?")) {
+                'Yes' {
+                    [HardenWindowsSecurity.MicrosoftDefender]::MSFTDefender_ScheduledTask()
+                } 'No' { break TaskSchedulerCreationLabel }
+                'Exit' { break MainSwitchLabel }
             }
 
             # Only display this prompt if Engine and Platform update channels are not already set to Beta

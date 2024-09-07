@@ -336,7 +336,7 @@ namespace WDACConfig.AllCertificatesGrabber
                                 }
                                 else
                                 {
-                                    // Otherwise, get the CryptProviderSigner structure from pasSigners pointer                                  
+                                    // Otherwise, get the CryptProviderSigner structure from pasSigners pointer
                                     // Using the generic overload to marshal the structure for better performance and type safety
                                     CryptProviderSigner signer = Marshal.PtrToStructure<CryptProviderSigner>(providerData.pasSigners);
 

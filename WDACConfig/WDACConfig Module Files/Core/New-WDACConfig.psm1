@@ -98,7 +98,7 @@ Function New-WDACConfig {
                 Write-Verbose -Message 'Deleting the MSFT Driver Block list update Scheduled task if it exists'
                 Get-ScheduledTask -TaskName 'MSFT Driver Block list update' -TaskPath '\MSFT Driver Block list update\' -ErrorAction Ignore | Unregister-ScheduledTask -Confirm:$false
 
-                Write-Verbose -Message "Creating the MSFT Driver Block list update task because its state is neither Running nor Ready, it's $BlockListScheduledTaskState"
+                Write-Verbose -Message 'Creating the MSFT Driver Block list update task'
                 # Get the SID of the SYSTEM account. It is a well-known SID, but still querying it, going to use it to create the scheduled task
                 [System.Security.Principal.SecurityIdentifier]$SYSTEMSID = New-Object -TypeName System.Security.Principal.SecurityIdentifier([System.Security.Principal.WellKnownSidType]::LocalSystemSid, $null)
 
@@ -122,7 +122,7 @@ Function New-WDACConfig {
 
                 # Add the advanced settings we defined above to the scheduled task
                 Set-ScheduledTask -TaskName 'MSFT Driver Block list update' -TaskPath 'MSFT Driver Block list update' -Settings $TaskSettings
-                
+
                 Write-Verbose -Message 'Displaying extra info about the Microsoft recommended Drivers block list'
                 Invoke-Command -ScriptBlock $DriversBlockListInfoGatheringSCRIPTBLOCK
 

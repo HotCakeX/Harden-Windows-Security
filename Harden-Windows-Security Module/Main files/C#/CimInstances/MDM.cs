@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Management;
 using System.Threading.Tasks;
 
@@ -36,7 +37,7 @@ namespace HardenWindowsSecurity
                 var records = await ReadCsvFileAsync(csvFilePath);
 
                 // Create a list of tasks for querying each class
-                List<Task> tasks = new List<Task>();
+                List<Task> tasks = new();
 
                 // Iterate through records
                 foreach (var record in records)
@@ -52,7 +53,7 @@ namespace HardenWindowsSecurity
                         tasks.Add(Task.Run(() =>
                         {
                             // List to store results for the current class
-                            List<Dictionary<string, object>> classResults = new List<Dictionary<string, object>>();
+                            List<Dictionary<string, object>> classResults = new();
 
                             // Create management scope object
                             ManagementScope scope = new ManagementScope(record.Namespace);
@@ -77,10 +78,10 @@ namespace HardenWindowsSecurity
                             try
                             {
                                 // Execute the query and iterate through the results
-                                foreach (ManagementObject obj in searcher.Get())
+                                foreach (ManagementObject obj in searcher.Get().Cast<ManagementObject>())
                                 {
                                     // Dictionary to store properties of the current class instance
-                                    Dictionary<string, object> classInstance = new Dictionary<string, object>();
+                                    Dictionary<string, object> classInstance = new();
 
                                     // Iterate through properties of the current object
                                     foreach (PropertyData prop in obj.Properties)

@@ -16,7 +16,7 @@ dotnet_diagnostic.CA1310.severity = error
 dotnet_diagnostic.CA1401.severity = error
 
 # CA1303: Do not pass literals as localized parameters
-dotnet_diagnostic.CA1303.severity = silent
+dotnet_diagnostic.CA1303.severity = error
 
 # CA1309: Use ordinal string comparison
 dotnet_diagnostic.CA1309.severity = error

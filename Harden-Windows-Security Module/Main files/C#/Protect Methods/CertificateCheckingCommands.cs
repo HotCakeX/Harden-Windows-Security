@@ -33,15 +33,23 @@ namespace HardenWindowsSecurity
                     byte[] fileBytes = client.GetByteArrayAsync(fileUrl).GetAwaiter().GetResult();
                     File.WriteAllBytes(sigcheck64Path, fileBytes);
 
-                    // HardenWindowsSecurity.Logger.LogMessage($"File saved to {sigcheck64Path}");
+                    HardenWindowsSecurity.Logger.LogMessage($"File saved to {sigcheck64Path}", LogTypeIntel.Information);
                 }
 
-                // Run the downloaded executable with the specified arguments
-                HardenWindowsSecurity.Logger.LogMessage("Listing valid certificates not rooted to the Microsoft Certificate Trust List in the Local Machine Store", LogTypeIntel.Information);
-                RunSigcheck(sigcheck64Path, "-tv -accepteula -nobanner");
+                // Make sure the file exists after download
+                if (File.Exists(sigcheck64Path))
+                {
+                    // Run the downloaded executable with the specified arguments
+                    HardenWindowsSecurity.Logger.LogMessage("Listing valid certificates not rooted to the Microsoft Certificate Trust List in the Local Machine Store", LogTypeIntel.Information);
+                    RunSigcheck(sigcheck64Path, "-tv -accepteula -nobanner");
 
-                HardenWindowsSecurity.Logger.LogMessage("Listing valid certificates not rooted to the Microsoft Certificate Trust List in the Current User store", LogTypeIntel.Information);
-                RunSigcheck(sigcheck64Path, "-tuv -accepteula -nobanner");
+                    HardenWindowsSecurity.Logger.LogMessage("Listing valid certificates not rooted to the Microsoft Certificate Trust List in the Current User store", LogTypeIntel.Information);
+                    RunSigcheck(sigcheck64Path, "-tuv -accepteula -nobanner");
+                }
+                else
+                {
+                    HardenWindowsSecurity.Logger.LogMessage($"File {sigcheck64Path} does not exist after download.", LogTypeIntel.Error);
+                }
             }
             catch (Exception ex)
             {

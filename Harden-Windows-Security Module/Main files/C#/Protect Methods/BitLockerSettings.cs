@@ -16,32 +16,27 @@ namespace HardenWindowsSecurity
 
             HardenWindowsSecurity.Logger.LogMessage("Running the Bitlocker category", LogTypeIntel.Information);
 
-            HardenWindowsSecurity.LGPORunner.RunLGPOCommand(System.IO.Path.Combine(HardenWindowsSecurity.GlobalVars.path, "Resources", "Security-Baselines-X", "Bitlocker Policies", "registry.pol"), LGPORunner.FileType.POL);
+            // Create a path to reuse in the code below
+            string basePath = System.IO.Path.Combine(HardenWindowsSecurity.GlobalVars.path, "Resources", "Security-Baselines-X");
 
+            HardenWindowsSecurity.LGPORunner.RunLGPOCommand(System.IO.Path.Combine(basePath, "Bitlocker Policies", "registry.pol"), LGPORunner.FileType.POL);
 
-            // returns true or false depending on whether Kernel DMA Protection is on or off
+            // Returns true or false depending on whether Kernel DMA Protection is on or off
             byte BootDMAProtection = HardenWindowsSecurity.SystemInformationClass.BootDmaCheck();
-
-            bool BootDMAProtectionResult = false;
-
-            if (BootDMAProtection == 1)
-            {
-                BootDMAProtectionResult = true;
-            }
-
+            bool BootDMAProtectionResult = BootDMAProtection == 1;
 
             // Enables or disables DMA protection from Bitlocker Countermeasures based on the status of Kernel DMA protection.
-            if (BootDMAProtectionResult == true)
+            if (BootDMAProtectionResult)
             {
                 HardenWindowsSecurity.Logger.LogMessage("Kernel DMA protection is enabled on the system, disabling Bitlocker DMA protection.", LogTypeIntel.Information);
 
-                HardenWindowsSecurity.LGPORunner.RunLGPOCommand(System.IO.Path.Combine(HardenWindowsSecurity.GlobalVars.path, "Resources", "Security-Baselines-X", "Overrides for Microsoft Security Baseline", "Bitlocker DMA", "Bitlocker DMA Countermeasure OFF", "registry.pol"), LGPORunner.FileType.POL);
+                HardenWindowsSecurity.LGPORunner.RunLGPOCommand(System.IO.Path.Combine(basePath, "Overrides for Microsoft Security Baseline", "Bitlocker DMA", "Bitlocker DMA Countermeasure OFF", "registry.pol"), LGPORunner.FileType.POL);
             }
             else
             {
                 HardenWindowsSecurity.Logger.LogMessage("Kernel DMA protection is unavailable on the system, enabling Bitlocker DMA protection.", LogTypeIntel.Information);
 
-                HardenWindowsSecurity.LGPORunner.RunLGPOCommand(System.IO.Path.Combine(HardenWindowsSecurity.GlobalVars.path, "Resources", "Security-Baselines-X", "Overrides for Microsoft Security Baseline", "Bitlocker DMA", "Bitlocker DMA Countermeasure ON", "registry.pol"), LGPORunner.FileType.POL);
+                HardenWindowsSecurity.LGPORunner.RunLGPOCommand(System.IO.Path.Combine(basePath, "Overrides for Microsoft Security Baseline", "Bitlocker DMA", "Bitlocker DMA Countermeasure ON", "registry.pol"), LGPORunner.FileType.POL);
             }
         }
     }

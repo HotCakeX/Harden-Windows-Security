@@ -202,7 +202,7 @@ namespace HardenWindowsSecurity
                 {
                     // Disable the execute button
                     ExecuteButton.IsEnabled = false;
-                    HardenWindowsSecurity.Logger.LogMessage("You need Administrator privileges to ASR Rule configurations on the system.", LogTypeIntel.Warning);
+                    HardenWindowsSecurity.Logger.LogMessage("You need Administrator privileges to configure ASR Rules on the system.", LogTypeIntel.Warning);
                 }
                 // If there is no Admin rights, this dynamic enablement/disablement isn't necessary as it will override the disablement that happens above.
                 else

@@ -13,7 +13,7 @@ namespace HardenWindowsSecurity
         /// The hybrid design allows for both environments to be completely usable.
         /// </summary>
         /// <param name="args"></param>
-        static void Main(string[] args)
+        static void Main()
         {
             #region misc
             // The following are the required code that are handled in module manifest .psm1 file

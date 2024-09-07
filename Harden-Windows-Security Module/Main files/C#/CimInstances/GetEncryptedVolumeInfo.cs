@@ -60,8 +60,8 @@ namespace HardenWindowsSecurity
 
         // Different types of the key protectors
         // https://learn.microsoft.com/en-us/windows/win32/secprov/getkeyprotectortype-win32-encryptablevolume
-        private static readonly Dictionary<uint, string> KeyProtectorTypes = new Dictionary<uint, string>
-    {
+        private static readonly Dictionary<uint, string> KeyProtectorTypes = new()
+        {
         { 0, "Unknown" },
         { 1, "Tpm" },
         { 2, "ExternalKey" },
@@ -77,8 +77,8 @@ namespace HardenWindowsSecurity
 
 
         // https://learn.microsoft.com/en-us/windows/win32/secprov/getencryptionmethod-win32-encryptablevolume
-        private static readonly Dictionary<uint, string> EncryptionMethods = new Dictionary<uint, string>
-    {
+        private static readonly Dictionary<uint, string> EncryptionMethods = new()
+        {
         { 0, "None" },
         { 1, "AES_128_WITH_DIFFUSER" },
         { 2, "AES_256_WITH_DIFFUSER" },
@@ -91,7 +91,7 @@ namespace HardenWindowsSecurity
 
 
         // https://learn.microsoft.com/en-us/windows/win32/secprov/getprotectionstatus-win32-encryptablevolume
-        private static readonly Dictionary<uint, string> ProtectionStatuses = new Dictionary<uint, string>
+        private static readonly Dictionary<uint, string> ProtectionStatuses = new()
     {
         { 0, "Unprotected" },
         { 1, "Protected" },
@@ -100,22 +100,22 @@ namespace HardenWindowsSecurity
 
 
         // https://learn.microsoft.com/en-us/windows/win32/secprov/getlockstatus-win32-encryptablevolume
-        private static readonly Dictionary<uint, string> LockStatuses = new Dictionary<uint, string>
-    {
+        private static readonly Dictionary<uint, string> LockStatuses = new()
+        {
         { 0, "Unlocked" },
         { 1, "Locked" }
     };
 
         // https://learn.microsoft.com/en-us/windows/win32/secprov/win32-encryptablevolume#properties
-        private static readonly Dictionary<uint, string> VolumeTypes = new Dictionary<uint, string>
-    {
+        private static readonly Dictionary<uint, string> VolumeTypes = new()
+        {
         { 0, "OperationSystem" },
         { 1, "FixedDisk" },
         { 2, "Removable" }
     };
 
         // https://learn.microsoft.com/en-us/windows/win32/secprov/getconversionstatus-win32-encryptablevolume
-        private static readonly Dictionary<uint, string> ConversionStatuses = new Dictionary<uint, string>
+        private static readonly Dictionary<uint, string> ConversionStatuses = new()
     {
         { 0, "FULLY DECRYPTED" },
         { 1, "FULLY ENCRYPTED" },
@@ -126,7 +126,7 @@ namespace HardenWindowsSecurity
     };
 
         // https://learn.microsoft.com/en-us/windows/win32/secprov/getconversionstatus-win32-encryptablevolume
-        private static readonly Dictionary<uint, string> WipingStatuses = new Dictionary<uint, string>
+        private static readonly Dictionary<uint, string> WipingStatuses = new()
     {
         { 0, "FreeSpaceNotWiped" },
         { 1, "FreeSpaceWiped" },
@@ -135,7 +135,7 @@ namespace HardenWindowsSecurity
     };
 
         // https://learn.microsoft.com/en-us/windows-hardware/drivers/storage/msft-volume#properties
-        private static readonly Dictionary<ushort, string> FileSystemTypes = new Dictionary<ushort, string>
+        private static readonly Dictionary<ushort, string> FileSystemTypes = new()
     {
         { 0, "Unknown" },
         { 2, "UFS" },
@@ -155,7 +155,7 @@ namespace HardenWindowsSecurity
     };
 
         // https://learn.microsoft.com/en-us/windows-hardware/drivers/storage/msft-volume#properties
-        private static readonly Dictionary<uint, string> ReFSDedupModes = new Dictionary<uint, string>
+        private static readonly Dictionary<uint, string> ReFSDedupModes = new()
     {
         { 0, "Disabled" },
         { 1, "GeneralPurpose" },
@@ -413,10 +413,9 @@ namespace HardenWindowsSecurity
         private static ManagementBaseObject? GetCimInstance(string @namespace, string className, string filter)
         {
             SelectQuery query = new SelectQuery(className, filter);
-            using (ManagementObjectSearcher searcher = new ManagementObjectSearcher(@namespace, query.QueryString))
-            {
-                return searcher.Get().Cast<ManagementBaseObject>().FirstOrDefault();
-            }
+            using ManagementObjectSearcher searcher = new ManagementObjectSearcher(@namespace, query.QueryString);
+
+            return searcher.Get().Cast<ManagementBaseObject>().FirstOrDefault();
         }
 
         // Helper method to invoke a method on a WMI class

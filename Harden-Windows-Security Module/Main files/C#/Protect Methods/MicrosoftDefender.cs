@@ -27,53 +27,53 @@ namespace HardenWindowsSecurity
             HardenWindowsSecurity.LGPORunner.RunLGPOCommand(System.IO.Path.Combine(HardenWindowsSecurity.GlobalVars.path, "Resources", "Security-Baselines-X", "Microsoft Defender Policies", "registry.pol"), LGPORunner.FileType.POL);
 
             HardenWindowsSecurity.Logger.LogMessage("Optimizing Network Protection Performance of the Microsoft Defender", LogTypeIntel.Information);
-            HardenWindowsSecurity.MpComputerStatusHelper.SetMpComputerStatus<bool>("AllowSwitchToAsyncInspection", true);
+            HardenWindowsSecurity.ConfigDefenderHelper.ManageMpPreference<bool>("AllowSwitchToAsyncInspection", true, true);
 
             HardenWindowsSecurity.Logger.LogMessage("Enabling Real-time protection and Security Intelligence Updates during OOBE", LogTypeIntel.Information);
-            HardenWindowsSecurity.MpComputerStatusHelper.SetMpComputerStatus<bool>("OobeEnableRtpAndSigUpdate", true);
+            HardenWindowsSecurity.ConfigDefenderHelper.ManageMpPreference<bool>("OobeEnableRtpAndSigUpdate", true, true);
 
             HardenWindowsSecurity.Logger.LogMessage("Enabling Intel Threat Detection Technology", LogTypeIntel.Information);
-            HardenWindowsSecurity.MpComputerStatusHelper.SetMpComputerStatus<bool>("IntelTDTEnabled", true);
+            HardenWindowsSecurity.ConfigDefenderHelper.ManageMpPreference<bool>("IntelTDTEnabled", true, true);
 
             HardenWindowsSecurity.Logger.LogMessage("Enabling Restore point scan", LogTypeIntel.Information);
-            HardenWindowsSecurity.MpComputerStatusHelper.SetMpComputerStatus<bool>("DisableRestorePoint", false);
+            HardenWindowsSecurity.ConfigDefenderHelper.ManageMpPreference<bool>("DisableRestorePoint", false, true);
 
             HardenWindowsSecurity.Logger.LogMessage("Disabling Performance mode of Defender that only applies to Dev drives by lowering security", LogTypeIntel.Information);
             // Due to a possible bug or something, 0 means 1 and 1 means 0
             // Invoke-CimMethod -Namespace "ROOT\Microsoft\Windows\Defender" -ClassName "MSFT_MpPreference" -MethodName Set -Arguments @{PerformanceModeStatus = [byte]1}
-            HardenWindowsSecurity.MpComputerStatusHelper.SetMpComputerStatus<byte>("PerformanceModeStatus", 1);
+            HardenWindowsSecurity.ConfigDefenderHelper.ManageMpPreference<byte>("PerformanceModeStatus", 1, true);
 
             HardenWindowsSecurity.Logger.LogMessage("Setting the Network Protection to block network traffic instead of displaying a warning", LogTypeIntel.Information);
-            HardenWindowsSecurity.MpComputerStatusHelper.SetMpComputerStatus<bool>("EnableConvertWarnToBlock", true);
+            HardenWindowsSecurity.ConfigDefenderHelper.ManageMpPreference<bool>("EnableConvertWarnToBlock", true, true);
 
             //2nd level aggression will come after further testing
             HardenWindowsSecurity.Logger.LogMessage("Setting the Brute-Force Protection to use cloud aggregation to block IP addresses that are over 99% likely malicious", LogTypeIntel.Information);
-            HardenWindowsSecurity.MpComputerStatusHelper.SetMpComputerStatus<byte>("BruteForceProtectionAggressiveness", 1);
+            HardenWindowsSecurity.ConfigDefenderHelper.ManageMpPreference<byte>("BruteForceProtectionAggressiveness", 1, true);
 
             HardenWindowsSecurity.Logger.LogMessage("Setting the Brute-Force Protection to prevent suspicious and malicious behaviors", LogTypeIntel.Information);
-            HardenWindowsSecurity.MpComputerStatusHelper.SetMpComputerStatus<byte>("BruteForceProtectionConfiguredState", 1);
+            HardenWindowsSecurity.ConfigDefenderHelper.ManageMpPreference<byte>("BruteForceProtectionConfiguredState", 1, true);
 
             HardenWindowsSecurity.Logger.LogMessage("Setting the internal feature logic to determine blocking time for the Brute-Force Protections", LogTypeIntel.Information);
-            HardenWindowsSecurity.MpComputerStatusHelper.SetMpComputerStatus<uint>("BruteForceProtectionMaxBlockTime", 0);
+            HardenWindowsSecurity.ConfigDefenderHelper.ManageMpPreference<uint>("BruteForceProtectionMaxBlockTime", 0, true);
 
             HardenWindowsSecurity.Logger.LogMessage("Setting the Remote Encryption Protection to use cloud intel and context, and block when confidence level is above 90%", LogTypeIntel.Information);
-            HardenWindowsSecurity.MpComputerStatusHelper.SetMpComputerStatus<byte>("RemoteEncryptionProtectionAggressiveness", 2);
+            HardenWindowsSecurity.ConfigDefenderHelper.ManageMpPreference<byte>("RemoteEncryptionProtectionAggressiveness", 2, true);
 
             HardenWindowsSecurity.Logger.LogMessage("Setting the Remote Encryption Protection to prevent suspicious and malicious behaviors", LogTypeIntel.Information);
-            HardenWindowsSecurity.MpComputerStatusHelper.SetMpComputerStatus<byte>("RemoteEncryptionProtectionConfiguredState", 1);
+            HardenWindowsSecurity.ConfigDefenderHelper.ManageMpPreference<byte>("RemoteEncryptionProtectionConfiguredState", 1, true);
 
             HardenWindowsSecurity.Logger.LogMessage("Setting the internal feature logic to determine blocking time for the Remote Encryption Protection", LogTypeIntel.Information);
-            HardenWindowsSecurity.MpComputerStatusHelper.SetMpComputerStatus<uint>("RemoteEncryptionProtectionMaxBlockTime", 0);
+            HardenWindowsSecurity.ConfigDefenderHelper.ManageMpPreference<uint>("RemoteEncryptionProtectionMaxBlockTime", 0, true);
 
             HardenWindowsSecurity.Logger.LogMessage("Extending brute-force protection coverage to block local network addresses.", LogTypeIntel.Information);
-            HardenWindowsSecurity.MpComputerStatusHelper.SetMpComputerStatus<bool>("BruteForceProtectionLocalNetworkBlocking", true);
+            HardenWindowsSecurity.ConfigDefenderHelper.ManageMpPreference<bool>("BruteForceProtectionLocalNetworkBlocking", true, true);
 
             HardenWindowsSecurity.Logger.LogMessage("Enabling ECS in Microsoft Defender for better product health and security.", LogTypeIntel.Information);
-            HardenWindowsSecurity.MpComputerStatusHelper.SetMpComputerStatus<bool>("EnableEcsConfiguration", true);
+            HardenWindowsSecurity.ConfigDefenderHelper.ManageMpPreference<bool>("EnableEcsConfiguration", true, true);
 
             HardenWindowsSecurity.Logger.LogMessage("Adding OneDrive folders of all the user accounts (personal and work accounts) to the Controlled Folder Access for Ransomware Protection", LogTypeIntel.Information);
             string[] OneDrivePaths = HardenWindowsSecurity.GetOneDriveDirectories.Get().ToArray();
-            HardenWindowsSecurity.MpComputerStatusHelper.SetMpComputerStatus<string[]>("ControlledFolderAccessProtectedFolders", OneDrivePaths);
+            HardenWindowsSecurity.ConfigDefenderHelper.ManageMpPreference<string[]>("ControlledFolderAccessProtectedFolders", OneDrivePaths, true);
 
             HardenWindowsSecurity.Logger.LogMessage("Enabling Mandatory ASLR Exploit Protection system-wide", LogTypeIntel.Information);
 

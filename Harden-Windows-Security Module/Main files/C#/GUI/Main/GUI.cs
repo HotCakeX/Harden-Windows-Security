@@ -122,6 +122,11 @@ namespace HardenWindowsSecurity
 
         }
 
+        public class ExclusionsCommand : ViewModelBase
+        {
+
+        }
+
         // NavigationVM class
         // ViewModel for handling navigation between different views, inheriting from ViewModelBase
         public partial class NavigationVM : ViewModelBase
@@ -146,6 +151,7 @@ namespace HardenWindowsSecurity
             public ICommand ASRRulesCommand { get; set; }
             public ICommand UnprotectCommand { get; set; }
             public ICommand LogsCommand { get; set; }
+            public ICommand ExclusionsCommand { get; set; }
 
             // Dictionary to cache views by their identifiers
             private Dictionary<string, object> _viewCache = new Dictionary<string, object>();
@@ -158,6 +164,7 @@ namespace HardenWindowsSecurity
                 ConfirmCommand = new RelayCommand(Confirm); // Command to handle Confirm action
                 ASRRulesCommand = new RelayCommand(ASRRules); // Command to handle the ASRRules action
                 UnprotectCommand = new RelayCommand(Unprotect); // Command to handle the Unprotect action
+                ExclusionsCommand = new RelayCommand(Exclusions); // Command to handle the Exclusions action
                 LogsCommand = new RelayCommand(Logs); // Command to handle the Log action
 
                 // Load the Logs view initially to make it ready for logs to be written to it
@@ -508,6 +515,16 @@ End time: {DateTime.Now}
             UnprotectButtonImage.CacheOption = System.Windows.Media.Imaging.BitmapCacheOption.OnLoad; // Load the image data into memory
             UnprotectButtonImage.EndInit();
             UnprotectButtonIcon.Source = UnprotectButtonImage;
+
+            // Exclusions button icon
+            System.Windows.Controls.Grid ExclusionsButtonGridButtonGrid = SidebarGrid.FindName("ExclusionsButtonGrid") as System.Windows.Controls.Grid;
+            System.Windows.Controls.Image ExclusionsButtonIcon = ExclusionsButtonGridButtonGrid.FindName("ExclusionsButtonIcon") as System.Windows.Controls.Image;
+            var ExclusionsButtonImage = new System.Windows.Media.Imaging.BitmapImage();
+            ExclusionsButtonImage.BeginInit();
+            ExclusionsButtonImage.UriSource = new Uri(System.IO.Path.Combine(HardenWindowsSecurity.GlobalVars.path, "Resources", "Media", "ExclusionMenuButton.png"));
+            ExclusionsButtonImage.CacheOption = System.Windows.Media.Imaging.BitmapCacheOption.OnLoad; // Load the image data into memory
+            ExclusionsButtonImage.EndInit();
+            ExclusionsButtonIcon.Source = ExclusionsButtonImage;
 
             // Logs button icon
             System.Windows.Controls.Grid LogsButtonGrid = SidebarGrid.FindName("LogsButtonGrid") as System.Windows.Controls.Grid;

@@ -1,6 +1,7 @@
 using Microsoft.Toolkit.Uwp.Notifications;
 using System;
 using System.IO;
+using System.Linq;
 
 #nullable enable
 
@@ -15,7 +16,8 @@ namespace HardenWindowsSecurity
             EndOfProtection,
             EndOfConfirmation,
             EndOfASRRules,
-            EndOfUnprotection
+            EndOfUnprotection,
+            EndOfExclusions
         }
 
         /// <summary>
@@ -179,6 +181,31 @@ namespace HardenWindowsSecurity
                         .AddAttributionText("Brought to you by Harden Windows Security")
 
                         .AddHeader("00004", "End of Unprotection", "Action")
+
+                        .Show();
+
+                        break;
+                    }
+                case ToastNotificationType.EndOfExclusions:
+                    {
+                        // Combine paths
+                        string Inline = Path.Combine(HardenWindowsSecurity.GlobalVars.path!, "Resources", "Media", "UnprotectToastNotificationImage.png");
+
+                        new Microsoft.Toolkit.Uwp.Notifications.ToastContentBuilder()
+
+                        .AddAppLogoOverride(new Uri($"file:///{LogoOverride}"), ToastGenericAppLogoCrop.Circle)
+
+                        .AddText("Exclusions Processed.")
+
+                        .AddText($"Successfully Processed {(GUIExclusions.selectedFiles!.Count())} file path(s) for exclusions.")
+
+                        .AddInlineImage(new Uri($"file:///{Inline}"))
+
+                        .AddAudio(new Uri("ms-winsoundevent:Notification.SMS"))
+
+                        .AddAttributionText("Brought to you by Harden Windows Security")
+
+                        .AddHeader("00004", "End of Exclusions", "Action")
 
                         .Show();
 

@@ -70,6 +70,13 @@
                                         <TextBlock Text='Unprotect' Style='{StaticResource Text_Style}' />
                                     </Grid>
                                 </RadioButton>
+                                <!--// Exclusions //-->
+                                <RadioButton Style='{StaticResource BtnStyle}' Command='{Binding ExclusionsCommand}'>
+                                    <Grid x:Name="ExclusionsButtonGrid">
+                                        <Image x:Name="ExclusionsButtonIcon" Style="{StaticResource Image_Style}" />
+                                        <TextBlock Text='Exclusions' Style='{StaticResource Text_Style}' />
+                                    </Grid>
+                                </RadioButton>
                                 <!--// Logs //-->
                                 <RadioButton Style='{StaticResource BtnStyle}' Command='{Binding LogsCommand}'>
                                     <Grid x:Name="LogsButtonGrid">

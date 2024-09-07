@@ -56,20 +56,20 @@ namespace HardenWindowsSecurity
             #region Advanced Microsoft Defender features
             HardenWindowsSecurity.Logger.LogMessage("Reverting the advanced protections in the Microsoft Defender.", LogTypeIntel.Information);
 
-            HardenWindowsSecurity.MpComputerStatusHelper.SetMpComputerStatus<bool>("AllowSwitchToAsyncInspection", false);
-            HardenWindowsSecurity.MpComputerStatusHelper.SetMpComputerStatus<bool>("OobeEnableRtpAndSigUpdate", false);
-            HardenWindowsSecurity.MpComputerStatusHelper.SetMpComputerStatus<bool>("IntelTDTEnabled", false);
-            HardenWindowsSecurity.MpComputerStatusHelper.SetMpComputerStatus<bool>("DisableRestorePoint", true);
-            HardenWindowsSecurity.MpComputerStatusHelper.SetMpComputerStatus<byte>("PerformanceModeStatus", 0);
-            HardenWindowsSecurity.MpComputerStatusHelper.SetMpComputerStatus<bool>("EnableConvertWarnToBlock", false);
-            HardenWindowsSecurity.MpComputerStatusHelper.SetMpComputerStatus<byte>("BruteForceProtectionAggressiveness", 0);
-            HardenWindowsSecurity.MpComputerStatusHelper.SetMpComputerStatus<byte>("BruteForceProtectionConfiguredState", 0);
-            HardenWindowsSecurity.MpComputerStatusHelper.SetMpComputerStatus<byte>("RemoteEncryptionProtectionAggressiveness", 0);
-            HardenWindowsSecurity.MpComputerStatusHelper.SetMpComputerStatus<byte>("RemoteEncryptionProtectionConfiguredState", 0);
-            HardenWindowsSecurity.MpComputerStatusHelper.SetMpComputerStatus<bool>("BruteForceProtectionLocalNetworkBlocking", false);
-            HardenWindowsSecurity.MpComputerStatusHelper.SetMpComputerStatus<bool>("EnableEcsConfiguration", false);
-            HardenWindowsSecurity.MpComputerStatusHelper.SetMpComputerStatus<string>("EngineUpdatesChannel", "0");
-            HardenWindowsSecurity.MpComputerStatusHelper.SetMpComputerStatus<string>("PlatformUpdatesChannel", "0");
+            HardenWindowsSecurity.ConfigDefenderHelper.ManageMpPreference<bool>("AllowSwitchToAsyncInspection", false, true);
+            HardenWindowsSecurity.ConfigDefenderHelper.ManageMpPreference<bool>("OobeEnableRtpAndSigUpdate", false, true);
+            HardenWindowsSecurity.ConfigDefenderHelper.ManageMpPreference<bool>("IntelTDTEnabled", false, true);
+            HardenWindowsSecurity.ConfigDefenderHelper.ManageMpPreference<bool>("DisableRestorePoint", true, true);
+            HardenWindowsSecurity.ConfigDefenderHelper.ManageMpPreference<byte>("PerformanceModeStatus", 0, true);
+            HardenWindowsSecurity.ConfigDefenderHelper.ManageMpPreference<bool>("EnableConvertWarnToBlock", false, true);
+            HardenWindowsSecurity.ConfigDefenderHelper.ManageMpPreference<byte>("BruteForceProtectionAggressiveness", 0, true);
+            HardenWindowsSecurity.ConfigDefenderHelper.ManageMpPreference<byte>("BruteForceProtectionConfiguredState", 0, true);
+            HardenWindowsSecurity.ConfigDefenderHelper.ManageMpPreference<byte>("RemoteEncryptionProtectionAggressiveness", 0, true);
+            HardenWindowsSecurity.ConfigDefenderHelper.ManageMpPreference<byte>("RemoteEncryptionProtectionConfiguredState", 0, true);
+            HardenWindowsSecurity.ConfigDefenderHelper.ManageMpPreference<bool>("BruteForceProtectionLocalNetworkBlocking", false, true);
+            HardenWindowsSecurity.ConfigDefenderHelper.ManageMpPreference<bool>("EnableEcsConfiguration", false, true);
+            HardenWindowsSecurity.ConfigDefenderHelper.ManageMpPreference<string>("EngineUpdatesChannel", "0", true);
+            HardenWindowsSecurity.ConfigDefenderHelper.ManageMpPreference<string>("PlatformUpdatesChannel", "0", true);
             #endregion
 
 

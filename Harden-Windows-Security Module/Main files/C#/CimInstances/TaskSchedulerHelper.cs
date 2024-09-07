@@ -148,7 +148,8 @@ namespace HardenWindowsSecurity
                 }
                 else
                 {
-                    return new List<ManagementObject>(); // Return an empty list of tasks
+                    // Return an empty list of tasks
+                    return new List<ManagementObject>();
                 }
             }
 
@@ -159,10 +160,87 @@ namespace HardenWindowsSecurity
             }
             else
             {
-                return new List<ManagementObject>(); // Return an empty list of tasks
+                // Return an empty list of tasks
+                return new List<ManagementObject>();
             }
         }
 
-        /// More methods on the way...
+
+
+        /// <summary>
+        /// Deletes a scheduled task if it exists
+        /// </summary>
+        /// <param name="taskName">The task name to be deleted</param>
+        /// <param name="taskPath">The path where the task is located</param>
+        /// <returns></returns>
+        public static bool Delete(string taskName, string taskPath)
+        {
+            try
+            {
+                // The WMI query to select the specific instance of MSFT_ScheduledTask
+                string query = "SELECT * FROM MSFT_ScheduledTask";
+
+                // Defining the WMI namespace
+                string scope = @"\\.\Root\Microsoft\Windows\TaskScheduler";
+
+                // Creating a ManagementObjectSearcher instance with the query and scope
+                using (ManagementObjectSearcher searcher = new ManagementObjectSearcher(scope, query))
+                {
+                    // Execute the WMI query and retrieve the results
+                    using (ManagementObjectCollection results = searcher.Get())
+                    {
+                        // If no tasks were found, return false
+                        if (results.Count == 0)
+                        {
+                            HardenWindowsSecurity.Logger.LogMessage($"No tasks found in Task Scheduler.", LogTypeIntel.Warning);
+                            return false;
+                        }
+
+                        // Iterate through each ManagementObject in the results
+                        foreach (ManagementObject obj in results)
+                        {
+                            string? name = obj["TaskName"]?.ToString();
+                            string? path = obj["TaskPath"]?.ToString();
+
+                            // Match based on taskName and taskPath
+                            if (string.Equals(name, taskName, StringComparison.OrdinalIgnoreCase) &&
+                                string.Equals(path, taskPath, StringComparison.OrdinalIgnoreCase))
+                            {
+                                try
+                                {
+                                    // Call DeleteInstance to delete the task
+                                    obj.Delete();
+
+                                    HardenWindowsSecurity.Logger.LogMessage($"Task '{taskName}' with path '{taskPath}' was deleted successfully.", LogTypeIntel.Information);
+
+                                    // Return true indicating the task was deleted
+                                    return true;
+                                }
+                                catch (ManagementException ex)
+                                {
+                                    HardenWindowsSecurity.Logger.LogMessage($"Failed to delete task '{taskName}' with path '{taskPath}': {ex.Message}", LogTypeIntel.Error);
+
+                                    // Return false indicating failure to delete the task
+                                    return false;
+                                }
+                            }
+                        }
+
+                        HardenWindowsSecurity.Logger.LogMessage($"No task found with the name '{taskName}' and path '{taskPath}'.", LogTypeIntel.Information);
+                        return false; // Task not found
+                    }
+                }
+            }
+            catch (ManagementException e)
+            {
+                // for any ManagementException that may occur during the WMI query execution
+                HardenWindowsSecurity.Logger.LogMessage($"An error occurred while querying for WMI data: {e.Message}", LogTypeIntel.Error);
+
+                // Return false indicating no task was deleted (error occurred)
+                return false;
+            }
+        }
+
+
     }
 }

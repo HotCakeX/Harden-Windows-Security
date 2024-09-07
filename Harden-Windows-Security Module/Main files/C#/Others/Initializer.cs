@@ -93,7 +93,7 @@ namespace HardenWindowsSecurity
             HardenWindowsSecurity.GlobalVars.MDAVPreferencesCurrent = HardenWindowsSecurity.MpPreferenceHelper.GetMpPreference();
 
             // Get the MSFT_MpComputerStatus and save them to the global variable HardenWindowsSecurity.GlobalVars.MDAVConfigCurrent
-            HardenWindowsSecurity.GlobalVars.MDAVConfigCurrent = HardenWindowsSecurity.MpComputerStatusHelper.GetMpComputerStatus();
+            HardenWindowsSecurity.GlobalVars.MDAVConfigCurrent = HardenWindowsSecurity.ConfigDefenderHelper.GetMpComputerStatus();
 
             // Total number of Compliant values
             HardenWindowsSecurity.GlobalVars.TotalNumberOfTrueCompliantValues = 241;

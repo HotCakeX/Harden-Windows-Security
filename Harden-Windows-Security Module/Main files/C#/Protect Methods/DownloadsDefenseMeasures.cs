@@ -8,6 +8,9 @@ namespace HardenWindowsSecurity
     {
         public static void Invoke()
         {
+
+            ChangePSConsoleTitle.Set("🎇 Downloads Defense Measures");
+
             HardenWindowsSecurity.Logger.LogMessage("Running the Downloads Defense Measures category", LogTypeIntel.Information);
 
             string UserValue = string.Empty;

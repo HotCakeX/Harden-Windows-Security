@@ -19,6 +19,8 @@ namespace HardenWindowsSecurity
                 throw new System.ArgumentNullException("GlobalVars.RegistryCSVItems cannot be null.");
             }
 
+            ChangePSConsoleTitle.Set("🥌 Miscellaneous");
+
             HardenWindowsSecurity.Logger.LogMessage("Running the Miscellaneous Configurations category", LogTypeIntel.Information);
 
             HardenWindowsSecurity.Logger.LogMessage("Applying the Miscellaneous Configurations registry settings", LogTypeIntel.Information);

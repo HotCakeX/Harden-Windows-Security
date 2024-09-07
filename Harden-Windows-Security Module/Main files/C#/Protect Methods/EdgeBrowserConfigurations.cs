@@ -17,6 +17,8 @@ namespace HardenWindowsSecurity
                 throw new System.ArgumentNullException("GlobalVars.RegistryCSVItems cannot be null.");
             }
 
+            ChangePSConsoleTitle.Set("🦔 Edge");
+
             HardenWindowsSecurity.Logger.LogMessage("Running the Edge Browser category", LogTypeIntel.Information);
 
             HardenWindowsSecurity.Logger.LogMessage("Applying the Edge Browser registry settings", LogTypeIntel.Information);

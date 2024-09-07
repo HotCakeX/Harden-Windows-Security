@@ -26,7 +26,7 @@ namespace HardenWindowsSecurity
                 // Query the list
                 var result = GlobalVars.MDMResults
                     .Where(element => element != null && element.Name == propertyName)
-                    .Select(element => element.Value as string) // Value is cast to string
+                    .Select(element => element.Value)
                     .FirstOrDefault();
 
                 // Perform the comparison

@@ -13,6 +13,8 @@ namespace HardenWindowsSecurity
                 throw new System.ArgumentNullException("GlobalVars.path cannot be null.");
             }
 
+            ChangePSConsoleTitle.Set("🏷️ Non-Admins");
+
             HardenWindowsSecurity.Logger.LogMessage("Running the Non-Admin category", LogTypeIntel.Information);
             HardenWindowsSecurity.Logger.LogMessage("Applying the Non-Admin registry settings", LogTypeIntel.Information);
 #nullable disable

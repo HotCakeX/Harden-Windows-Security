@@ -114,11 +114,13 @@ Remove-WindowsCapability -Online
 
         public static void Invoke()
         {
+
+            ChangePSConsoleTitle.Set("🏅 Optional Features");
+
             HardenWindowsSecurity.Logger.LogMessage("Running the Optional Windows Features category", LogTypeIntel.Information);
 
             // Get the results of all optional features once and store them in the static variable to be reused later
             _FeaturesCheckResults = HardenWindowsSecurity.WindowsFeatureChecker.CheckWindowsFeatures();
-
 
             ConfigureWindowsOptionalFeature(false, "MicrosoftWindowsPowerShellV2", "PowerShell v2", "PowerShellv2");
             ConfigureWindowsOptionalFeature(false, "MicrosoftWindowsPowerShellV2Root", "PowerShell v2 root", "PowerShellv2Engine");

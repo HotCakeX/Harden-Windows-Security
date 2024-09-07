@@ -347,10 +347,15 @@ Function Protect-WindowsSecurity {
         Set-ExecutionPolicy -ExecutionPolicy 'Unrestricted' -Scope 'Process' -Force
 
         # Get the current title of the PowerShell
-        [System.String]$CurrentPowerShellTitle = $Host.UI.RawUI.WindowTitle
+        try {
+            [System.String]$CurrentPowerShellTitle = $Host.UI.RawUI.WindowTitle
+        }
+        catch {
+            [System.String]$CurrentPowerShellTitle = $null
+        }
 
         # Change the title of the Windows Terminal for PowerShell tab
-        [HardenWindowsSecurity.GlobalVars]::Host.UI.RawUI.WindowTitle = '❤️‍🔥Harden Windows Security❤️‍🔥'
+        [HardenWindowsSecurity.ChangePSConsoleTitle]::Set('❤️‍🔥Harden Windows Security❤️‍🔥')
 
         if ([HardenWindowsSecurity.UserPrivCheck]::IsAdmin()) {
             [HardenWindowsSecurity.ControlledFolderAccessHandler]::Start()
@@ -403,7 +408,7 @@ Function Protect-WindowsSecurity {
                 Write-ColorfulText -Color Rainbow -InputText "############################################################################################################`r`n"
             }
             # Change the title of the Windows Terminal for PowerShell tab
-            [HardenWindowsSecurity.GlobalVars]::Host.UI.RawUI.WindowTitle = '⏬ Downloading'
+            [HardenWindowsSecurity.ChangePSConsoleTitle]::Set('⏬ Downloading')
 
             # Download the required files
             if (!([HardenWindowsSecurity.GlobalVars]::Offline)) {
@@ -459,7 +464,7 @@ Function Protect-WindowsSecurity {
             Write-Progress -Activity 'Protection completed' -Status 'Completed' -Completed
             if ($null -ne $CurrentPowerShellTitle) {
                 [HardenWindowsSecurity.Logger]::LogMessage('Restoring the title of the PowerShell back to what it was prior to running the module', [HardenWindowsSecurity.LogTypeIntel]::Information)
-                $Host.UI.RawUI.WindowTitle = $CurrentPowerShellTitle
+                [HardenWindowsSecurity.ChangePSConsoleTitle]::Set($CurrentPowerShellTitle)
             }
 
             if ($null -ne $CurrentExecutionPolicy) {
@@ -497,7 +502,7 @@ Function Protect-WindowsSecurity {
                 }
                 catch {}
 '@
-                pwsh.exe -NoLogo -NoExit -command $Command
+                pwsh.exe -NoProfile -NoLogo -NoExit -command $Command
             }
         }
     }

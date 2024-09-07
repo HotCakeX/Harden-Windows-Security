@@ -93,25 +93,32 @@ namespace HardenWindowsSecurity
                     throw new Exception("MDAVConfigCurrent is null.");
                 }
 
-                if (!HardenWindowsSecurity.GlobalVars.MDAVConfigCurrent.AMServiceEnabled)
+
+                var AMServiceEnabled = PropertyHelper.GetPropertyValue(GlobalVars.MDAVConfigCurrent, "AMServiceEnabled");
+                if (AMServiceEnabled != null && (bool)AMServiceEnabled != true)
                 {
                     throw new Exception("Microsoft Defender Anti Malware service is not enabled, please enable it and then try again.");
                 }
 
 
-                if (!HardenWindowsSecurity.GlobalVars.MDAVConfigCurrent.AntispywareEnabled)
+                var AntispywareEnabled = PropertyHelper.GetPropertyValue(GlobalVars.MDAVConfigCurrent, "AntispywareEnabled");
+                if (AntispywareEnabled != null && (bool)AntispywareEnabled != true)
                 {
                     throw new Exception("Microsoft Defender Anti Spyware is not enabled, please enable it and then try again.");
                 }
 
-                if (!HardenWindowsSecurity.GlobalVars.MDAVConfigCurrent.AntivirusEnabled)
+
+                var AntivirusEnabled = PropertyHelper.GetPropertyValue(GlobalVars.MDAVConfigCurrent, "AntivirusEnabled");
+                if (AntivirusEnabled != null && (bool)AntivirusEnabled != true)
                 {
                     throw new Exception("Microsoft Defender Anti Virus is not enabled, please enable it and then try again.");
                 }
 
-                if (HardenWindowsSecurity.GlobalVars.MDAVConfigCurrent.AMRunningMode != "Normal")
+
+                string AMRunningMode = PropertyHelper.GetPropertyValue(GlobalVars.MDAVConfigCurrent, "AMRunningMode") ?? string.Empty;
+                if (!string.Equals(AMRunningMode, "Normal", StringComparison.OrdinalIgnoreCase))
                 {
-                    throw new Exception($"Microsoft Defender is running in {HardenWindowsSecurity.GlobalVars.MDAVConfigCurrent.AMRunningMode} state, please remove any 3rd party AV and then try again.");
+                    throw new Exception("Microsoft Defender is not running normally, please remove any 3rd party AV and then try again.");
                 }
             }
         }

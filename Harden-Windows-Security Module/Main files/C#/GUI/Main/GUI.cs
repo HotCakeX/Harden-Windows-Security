@@ -267,6 +267,9 @@ End time: {DateTime.Now}
             // Exit Event, will work for the GUI when using compiled version of the app or in Visual Studio
             GUIMain.app!.Exit += (object s, ExitEventArgs e) =>
             {
+                // Revert the changes to the PowerShell console Window Title
+                ChangePSConsoleTitle.Set("PowerShell");
+
                 HardenWindowsSecurity.ControlledFolderAccessHandler.Reset();
                 HardenWindowsSecurity.Miscellaneous.CleanUp();
 

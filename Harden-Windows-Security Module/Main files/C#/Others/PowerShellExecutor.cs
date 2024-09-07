@@ -2,6 +2,8 @@ using System;
 using System.Linq;
 using System.Management.Automation;
 
+#pragma warning disable CA2000
+
 #nullable enable
 
 namespace HardenWindowsSecurity

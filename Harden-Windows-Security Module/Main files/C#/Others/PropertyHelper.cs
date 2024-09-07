@@ -8,7 +8,15 @@ namespace HardenWindowsSecurity
 {
     public static class PropertyHelper
     {
-        // Get the value of a property from a dynamic object
+        /// <summary>
+        /// Get the value of a property from a dynamic object
+        /// All of the queries made to the dynamic objects GlobalVars.MDAVConfigCurrent or GlobalVars.MDAVPreferencesCurrent
+        /// Must go through this method so that their value is acquired properly and in case of nonexistence, null is returned, otherwise direct access to the nonexistent property would lead to error.
+        /// If the code that calls this method tries to compare its value using string.Equals, Convert.ToInt or something similar, a default value must be supplied to it via ?? string.Empty or ?? ushort.MaxValue or ?? false/true when this method returns null.
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <param name="propertyName"></param>
+        /// <returns></returns>
         public static object? GetPropertyValue(dynamic obj, string propertyName)
         {
             // Convert dynamic object to IDictionary<string, object> to access properties

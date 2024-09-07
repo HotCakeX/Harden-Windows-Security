@@ -18,6 +18,8 @@ namespace HardenWindowsSecurity
                 throw new Exception("The path to the Microsoft 365 Apps Security Baseline has not been set.");
             }
 
+            ChangePSConsoleTitle.Set("🧁 M365 Apps Security'");
+
             HardenWindowsSecurity.Logger.LogMessage("Applying the Microsoft 365 Apps Security Baseline", LogTypeIntel.Information);
             HardenWindowsSecurity.Logger.LogMessage("Running the official PowerShell script included in the Microsoft 365 Apps Security Baseline file downloaded from Microsoft servers", LogTypeIntel.Information);
 

@@ -48,4 +48,5 @@ System.Text.RegularExpressions
 System.ComponentModel.Primitives
 System.Security.Principal.Windows
 System.ComponentModel.TypeConverter
+Microsoft.Management.Infrastructure
 System.DirectoryServices.AccountManagement

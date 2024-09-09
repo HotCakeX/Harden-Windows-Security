@@ -7,7 +7,7 @@ Function P {
         [System.Boolean]$WingetSourceUpdated = $false
         [System.Boolean]$PSInstalled = $false
         [System.Version]$RequiredPSVer = '7.4.2.0'
-        [System.String]$PSDownloadURLMSIX = 'https://github.com/PowerShell/PowerShell/releases/download/v7.4.4/PowerShell-7.4.4-win.msixbundle'
+        [System.String]$PSDownloadURLMSIX = 'https://github.com/PowerShell/PowerShell/releases/download/v7.4.5/PowerShell-7.4.5-win.msixbundle'
         [System.String]$MicrosoftUIXamlDownloadedFileName = 'Microsoft.UI.Xaml.2.8.appx'
 
         if ($Env:PROCESSOR_ARCHITECTURE -eq 'ARM64') {

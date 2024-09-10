@@ -24,13 +24,12 @@ namespace HardenWindowsSecurity
         /// <param name="applications"></param>
         private static void Set(string[] applications)
         {
-            using (var managementClass = new ManagementClass(@"root\Microsoft\Windows\Defender", "MSFT_MpPreference", null))
-            {
-                ManagementBaseObject inParams = managementClass.GetMethodParameters("Set");
-                inParams["ControlledFolderAccessAllowedApplications"] = applications;
+            using var managementClass = new ManagementClass(@"root\Microsoft\Windows\Defender", "MSFT_MpPreference", null);
 
-                managementClass.InvokeMethod("Set", inParams, null);
-            }
+            ManagementBaseObject inParams = managementClass.GetMethodParameters("Set");
+            inParams["ControlledFolderAccessAllowedApplications"] = applications;
+
+            _ = managementClass.InvokeMethod("Set", inParams, null);
         }
 
         /// <summary>
@@ -41,13 +40,12 @@ namespace HardenWindowsSecurity
         /// <param name="applications"></param>
         private static void Add(string[] applications)
         {
-            using (var managementClass = new ManagementClass(@"root\Microsoft\Windows\Defender", "MSFT_MpPreference", null))
-            {
-                ManagementBaseObject inParams = managementClass.GetMethodParameters("Add");
-                inParams["ControlledFolderAccessAllowedApplications"] = applications;
+            using var managementClass = new ManagementClass(@"root\Microsoft\Windows\Defender", "MSFT_MpPreference", null);
 
-                managementClass.InvokeMethod("Add", inParams, null);
-            }
+            ManagementBaseObject inParams = managementClass.GetMethodParameters("Add");
+            inParams["ControlledFolderAccessAllowedApplications"] = applications;
+
+            _ = managementClass.InvokeMethod("Add", inParams, null);
         }
 
         /// <summary>
@@ -57,13 +55,12 @@ namespace HardenWindowsSecurity
         /// <param name="applications"></param>
         private static void Remove(string[] applications)
         {
-            using (var managementClass = new ManagementClass(@"root\Microsoft\Windows\Defender", "MSFT_MpPreference", null))
-            {
-                ManagementBaseObject inParams = managementClass.GetMethodParameters("Remove");
-                inParams["ControlledFolderAccessAllowedApplications"] = applications;
+            using var managementClass = new ManagementClass(@"root\Microsoft\Windows\Defender", "MSFT_MpPreference", null);
 
-                managementClass.InvokeMethod("Remove", inParams, null);
-            }
+            ManagementBaseObject inParams = managementClass.GetMethodParameters("Remove");
+            inParams["ControlledFolderAccessAllowedApplications"] = applications;
+
+            _ = managementClass.InvokeMethod("Remove", inParams, null);
         }
 
         /// <summary>
@@ -85,7 +82,7 @@ namespace HardenWindowsSecurity
                 HardenWindowsSecurity.Logger.LogMessage("Temporarily adding the currently running PowerShell executables to the Controlled Folder Access allowed apps list", LogTypeIntel.Information);
 
                 // A HashSet of string to store the paths of the files that will be added to the CFA exclusions
-                HashSet<string> CFAExclusionsToBeAdded = new HashSet<string>();
+                HashSet<string> CFAExclusionsToBeAdded = [];
 
                 #region powercfg.exe executable
                 // Get the powercfg.exe path
@@ -98,7 +95,7 @@ namespace HardenWindowsSecurity
                 string powercfgPath = Path.Combine(systemDrive, "Windows", "System32", "powercfg.exe");
 
                 // Add the powercfg.exe path to the CFA Exclusion list
-                CFAExclusionsToBeAdded.Add(powercfgPath);
+                _ = CFAExclusionsToBeAdded.Add(powercfgPath);
                 #endregion
 
                 #region PowerShell and/or standalone executable
@@ -114,7 +111,7 @@ namespace HardenWindowsSecurity
                     // Ensure the file has a .exe extension
                     if (System.IO.Path.GetExtension(executablePath).Equals(".exe", StringComparison.OrdinalIgnoreCase))
                     {
-                        CFAExclusionsToBeAdded.Add(executablePath);
+                        _ = CFAExclusionsToBeAdded.Add(executablePath);
                     }
                 }
 
@@ -128,7 +125,7 @@ namespace HardenWindowsSecurity
                     // Ensure the file has a .exe extension because it could be the dll
                     if (System.IO.Path.GetExtension(executablePathExe).Equals(".exe", StringComparison.OrdinalIgnoreCase))
                     {
-                        CFAExclusionsToBeAdded.Add(executablePathExe);
+                        _ = CFAExclusionsToBeAdded.Add(executablePathExe);
                     }
                 }
                 #endregion

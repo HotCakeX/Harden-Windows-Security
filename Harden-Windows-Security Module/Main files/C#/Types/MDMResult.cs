@@ -2,17 +2,10 @@
 
 namespace HardenWindowsSecurity
 {
-    public partial class MDMClassProcessor
+    public partial class MDMClassProcessor(string name, string value, string cimInstance)
     {
-        public string Name { get; set; }
-        public string Value { get; set; }
-        public string CimInstance { get; set; }
-
-        public MDMClassProcessor(string name, string value, string cimInstance)
-        {
-            Name = name;
-            Value = value;
-            CimInstance = cimInstance;
-        }
+        public string Name { get; set; } = name;
+        public string Value { get; set; } = value;
+        public string CimInstance { get; set; } = cimInstance;
     }
 }

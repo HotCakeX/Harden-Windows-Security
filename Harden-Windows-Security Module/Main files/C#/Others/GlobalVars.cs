@@ -10,16 +10,16 @@ namespace HardenWindowsSecurity
     public static class GlobalVars
     {
         // Minimum required OS build number
-        public const decimal Requiredbuild = 22621.3880M;
+        internal const decimal Requiredbuild = 22621.3880M;
 
         // Current OS build version
-        public static readonly decimal OSBuildNumber = Environment.OSVersion.Version.Build;
+        internal static readonly decimal OSBuildNumber = Environment.OSVersion.Version.Build;
 
         // Update Build Revision (UBR) number
-        public static int UBR;
+        internal static int UBR;
 
         // Create full OS build number as seen in Windows Settings
-        public static string? FullOSBuild;
+        internal static string? FullOSBuild;
 
         // Stores the value of $PSScriptRoot in a global variable to allow the internal functions to use it when navigating the module structure
         public static string? path;
@@ -45,13 +45,13 @@ namespace HardenWindowsSecurity
         internal static string WorkingDir = Path.Combine(Path.GetTempPath(), "HardeningXStuff");
 
         // Defining a boolean variable to determine whether optional diagnostic data should be enabled for Smart App Control or not
-        public static bool ShouldEnableOptionalDiagnosticData = false;
+        public static bool ShouldEnableOptionalDiagnosticData;
 
         // Variable indicating whether user launched the module with Offline parameter or not
         public static bool Offline;
 
         // To track whether the header has been added to the log file
-        internal static bool LogHeaderHasBeenWritten = false;
+        internal static bool LogHeaderHasBeenWritten;
 
         // Path to the Microsoft Security Baselines directory after extraction
         internal static string? MicrosoftSecurityBaselinePath;
@@ -64,7 +64,7 @@ namespace HardenWindowsSecurity
 
         // A flag to determine whether the new notifications experience should be used or not
         // It won't be used if there is an interferences detected with DLL load due to other addons being loaded in the PowerShell session
-        // Such as PowerToys' CommandNotFound or Winget's PowerShell module
+        // Such as PowerToys' CommandNotFound or WinGet's PowerShell module
         public static bool UseNewNotificationsExp = true;
 
         // To store the registry data CSV parse output - Registry.csv

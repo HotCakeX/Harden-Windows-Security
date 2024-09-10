@@ -32,7 +32,7 @@ namespace HardenWindowsSecurity
             HardenWindowsSecurity.GlobalVars.SystemSecurityPoliciesIniObject = HardenWindowsSecurity.IniFileConverter.ConvertFromIniFile(HardenWindowsSecurity.GlobalVars.securityPolicyInfPath);
 
             // Process the SecurityPoliciesVerification.csv and save the output to the global variable HardenWindowsSecurity.GlobalVars.SecurityPolicyRecords
-            string basePath = HardenWindowsSecurity.GlobalVars.path ?? throw new ArgumentNullException(nameof(HardenWindowsSecurity.GlobalVars.path), "Base path cannot be null.");
+            string basePath = HardenWindowsSecurity.GlobalVars.path ?? throw new InvalidOperationException("GlobalVars.path cannot be null.");
             string fullPath = Path.Combine(basePath, "Resources", "SecurityPoliciesVerification.csv");
             HardenWindowsSecurity.GlobalVars.SecurityPolicyRecords = HardenWindowsSecurity.SecurityPolicyCsvProcessor.ProcessSecurityPolicyCsvFile(fullPath);
 
@@ -64,7 +64,7 @@ namespace HardenWindowsSecurity
         }
 
         // Defining delegates for the methods
-        private static readonly Dictionary<string, Func<Task>> methodDictionary = new Dictionary<string, Func<Task>>(StringComparer.OrdinalIgnoreCase)
+        private static readonly Dictionary<string, Func<Task>> methodDictionary = new(StringComparer.OrdinalIgnoreCase)
     {
         { "AttackSurfaceReductionRules", VerifyAttackSurfaceReductionRules },
         { "WindowsUpdateConfigurations", VerifyWindowsUpdateConfigurations },
@@ -81,6 +81,9 @@ namespace HardenWindowsSecurity
         { "WindowsFirewall", VerifyWindowsFirewall },
         { "MicrosoftDefender", VerifyMicrosoftDefender }
     };
+
+        // Warn + Block array - meaning either states are acceptable
+        private static readonly string[] MultipleAcceptableStates = ["6", "1"];
 
         // Task status codes: https://learn.microsoft.com/en-us/dotnet/api/system.threading.tasks.taskstatus
         /// <summary>
@@ -130,7 +133,7 @@ namespace HardenWindowsSecurity
             return Task.Run(() =>
             {
                 // Create a new list to store the results
-                List<HardenWindowsSecurity.IndividualResult> nestedObjectArray = new List<HardenWindowsSecurity.IndividualResult>();
+                List<HardenWindowsSecurity.IndividualResult> nestedObjectArray = [];
 
                 string CatName = "AttackSurfaceReductionRules";
 
@@ -159,9 +162,9 @@ namespace HardenWindowsSecurity
                 }
 
                 // Updated Dictionary with OrdinalIgnoreCase comparer
-                Dictionary<string, string> ASRTable = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
+                Dictionary<string, string> ASRTable = new(StringComparer.OrdinalIgnoreCase)
                 {
-                // Hashtable to store the descriptions for each ID
+                // HashTable to store the descriptions for each ID
                 { "26190899-1602-49e8-8b27-eb1d0a1ce869", "Block Office communication application from creating child processes" },
                 { "d1e49aac-8f56-4280-b9ba-993a6d77406c", "Block process creations originating from PSExec and WMI commands" },
                 { "b2b3f03d-6a65-4f7b-a9c7-1c7ef74a9ba4", "Block untrusted and unsigned processes that run from USB" },
@@ -183,7 +186,7 @@ namespace HardenWindowsSecurity
                 { "a8f5898e-1dc8-49a9-9878-85004b8a61e6", "Block Webshell creation for Servers" }
                 };
 
-                // Loop over each item in the hashtable
+                // Loop over each item in the HashTable
                 foreach (var kvp in ASRTable)
                 {
                     // Assign each key/value to local variables
@@ -209,8 +212,8 @@ namespace HardenWindowsSecurity
                     // "Block executable files from running unless they meet a prevalence; age or trusted list criterion" -> for ease of use it's compliant if set to 6 (Warn) or 1 (Block)
                     bool compliant = name switch
                     {
-                        "c0033c00-d16d-4114-a5a0-dc9b3a7d2ceb" => new[] { "6", "1" }.Contains(action),
-                        "01443614-cd74-433a-b99e-2ecdc07bfc25" => new[] { "6", "1" }.Contains(action),
+                        "c0033c00-d16d-4114-a5a0-dc9b3a7d2ceb" => MultipleAcceptableStates.Contains(action),
+                        "01443614-cd74-433a-b99e-2ecdc07bfc25" => MultipleAcceptableStates.Contains(action),
                         // All other ASR rules are compliant if they are set to block (1)
                         _ => string.Equals(action, "1", StringComparison.OrdinalIgnoreCase)
                     };
@@ -232,7 +235,7 @@ namespace HardenWindowsSecurity
                 }
                 else
                 {
-                    HardenWindowsSecurity.GlobalVars.FinalMegaObject.TryAdd(CatName, nestedObjectArray);
+                    _ = HardenWindowsSecurity.GlobalVars.FinalMegaObject.TryAdd(CatName, nestedObjectArray);
                 };
             });
         }
@@ -261,7 +264,7 @@ namespace HardenWindowsSecurity
             return Task.Run(() =>
             {
                 // Create a new list to store the results
-                List<HardenWindowsSecurity.IndividualResult> nestedObjectArray = new List<HardenWindowsSecurity.IndividualResult>();
+                List<HardenWindowsSecurity.IndividualResult> nestedObjectArray = [];
 
                 string CatName = "WindowsUpdateConfigurations";
 
@@ -329,7 +332,7 @@ namespace HardenWindowsSecurity
                 }
                 else
                 {
-                    HardenWindowsSecurity.GlobalVars.FinalMegaObject.TryAdd(CatName, nestedObjectArray);
+                    _ = HardenWindowsSecurity.GlobalVars.FinalMegaObject.TryAdd(CatName, nestedObjectArray);
                 };
             });
         }
@@ -344,7 +347,7 @@ namespace HardenWindowsSecurity
             {
 
                 // Create a new list to store the results
-                List<HardenWindowsSecurity.IndividualResult> nestedObjectArray = new List<HardenWindowsSecurity.IndividualResult>();
+                List<HardenWindowsSecurity.IndividualResult> nestedObjectArray = [];
 
                 string CatName = "NonAdminCommands";
 
@@ -360,7 +363,7 @@ namespace HardenWindowsSecurity
                 }
                 else
                 {
-                    HardenWindowsSecurity.GlobalVars.FinalMegaObject.TryAdd(CatName, nestedObjectArray);
+                    _ = HardenWindowsSecurity.GlobalVars.FinalMegaObject.TryAdd(CatName, nestedObjectArray);
                 };
             });
         }
@@ -374,7 +377,7 @@ namespace HardenWindowsSecurity
             {
 
                 // Create a new list to store the results
-                List<HardenWindowsSecurity.IndividualResult> nestedObjectArray = new List<HardenWindowsSecurity.IndividualResult>();
+                List<HardenWindowsSecurity.IndividualResult> nestedObjectArray = [];
 
                 string CatName = "EdgeBrowserConfigurations";
 
@@ -390,7 +393,7 @@ namespace HardenWindowsSecurity
                 }
                 else
                 {
-                    HardenWindowsSecurity.GlobalVars.FinalMegaObject.TryAdd(CatName, nestedObjectArray);
+                    _ = HardenWindowsSecurity.GlobalVars.FinalMegaObject.TryAdd(CatName, nestedObjectArray);
                 };
             });
         }
@@ -405,7 +408,7 @@ namespace HardenWindowsSecurity
             {
 
                 // Create a new list to store the results
-                List<HardenWindowsSecurity.IndividualResult> nestedObjectArray = new List<HardenWindowsSecurity.IndividualResult>();
+                List<HardenWindowsSecurity.IndividualResult> nestedObjectArray = [];
 
                 string CatName = "DeviceGuard";
 
@@ -514,7 +517,7 @@ namespace HardenWindowsSecurity
                 }
                 else
                 {
-                    HardenWindowsSecurity.GlobalVars.FinalMegaObject.TryAdd(CatName, nestedObjectArray);
+                    _ = HardenWindowsSecurity.GlobalVars.FinalMegaObject.TryAdd(CatName, nestedObjectArray);
                 };
             });
         }
@@ -528,7 +531,7 @@ namespace HardenWindowsSecurity
             {
 
                 // Create a new list to store the results
-                List<HardenWindowsSecurity.IndividualResult> nestedObjectArray = new List<HardenWindowsSecurity.IndividualResult>();
+                List<HardenWindowsSecurity.IndividualResult> nestedObjectArray = [];
 
                 // Defining the category name
                 string CatName = "BitLockerSettings";
@@ -583,20 +586,14 @@ namespace HardenWindowsSecurity
                 // Only perform the check if the system is not a virtual machine
                 var isVirtualMachine = PropertyHelper.GetPropertyValue(GlobalVars.MDAVConfigCurrent, "IsVirtualMachine");
 
-                if (isVirtualMachine != null && (bool)isVirtualMachine != true)
+                if (isVirtualMachine != null && !(bool)isVirtualMachine)
                 {
                     bool IndividualItemResult = false;
-                    try
+
+                    object? hiberFileType = Registry.GetValue(@"HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Power", "HiberFileType", null);
+                    if (hiberFileType != null && (int)hiberFileType == 2)
                     {
-                        object? hiberFileType = Registry.GetValue(@"HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Power", "HiberFileType", null);
-                        if (hiberFileType != null && (int)hiberFileType == 2)
-                        {
-                            IndividualItemResult = true;
-                        }
-                    }
-                    catch
-                    {
-                        // suppress the errors if any
+                        IndividualItemResult = true;
                     }
 
                     nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
@@ -618,22 +615,19 @@ namespace HardenWindowsSecurity
                 // OS Drive encryption verifications
                 // Check if BitLocker is on for the OS Drive
                 // The ProtectionStatus remains off while the drive is encrypting or decrypting
-                var volumeInfo = HardenWindowsSecurity.BitLockerInfo.GetEncryptedVolumeInfo(Environment.GetEnvironmentVariable("SystemDrive") ?? "C:\\");
+                var volumeInfo = HardenWindowsSecurity.BitLocker.GetEncryptedVolumeInfo(Environment.GetEnvironmentVariable("SystemDrive") ?? "C:\\");
 
-                if (string.Equals(volumeInfo.ProtectionStatus, "Protected", StringComparison.OrdinalIgnoreCase))
+                if (volumeInfo.ProtectionStatus is BitLocker.ProtectionStatus.Protected)
                 {
-                    // Get the key protectors of the OS Drive
-                    string[] KeyProtectors = volumeInfo.KeyProtector?
-                        .Where(kp => kp?.KeyProtectorType != null)
-                        .Select(kp => kp!.KeyProtectorType!) // kp!.KeyProtectorType!: The ! operator is used to tell the compiler that you are sure kp and KeyProtectorType are not null after the Where filtering.
-                        .ToArray() ?? Array.Empty<string>();
+                    // Get the key protectors of the OS Drive after making sure it is encrypted
+                    IEnumerable<BitLocker.KeyProtectorType?> KeyProtectors = volumeInfo.KeyProtector!
+                    .Select(kp => kp.KeyProtectorType);
 
-                    // display the key protectors
-                    //  HardenWindowsSecurity.Logger.LogMessage(string.Join(", ", KeyProtectors));
-
+                    // Display the key protectors
+                    // HardenWindowsSecurity.Logger.LogMessage(string.Join(", ", KeyProtectors));
 
                     // Check if TPM+PIN and recovery password are being used - Normal Security level
-                    if (KeyProtectors.Contains("TpmPin") && KeyProtectors.Contains("RecoveryPassword"))
+                    if (KeyProtectors.Contains(BitLocker.KeyProtectorType.TpmPin) && KeyProtectors.Contains(BitLocker.KeyProtectorType.RecoveryPassword))
                     {
                         nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                         {
@@ -646,7 +640,7 @@ namespace HardenWindowsSecurity
                         });
                     }
                     // Check if TPM+PIN+StartupKey and recovery password are being used - Enhanced security level
-                    else if (KeyProtectors.Contains("TpmPinStartupKey") && KeyProtectors.Contains("RecoveryPassword"))
+                    else if (KeyProtectors.Contains(BitLocker.KeyProtectorType.TpmPinStartupKey) && KeyProtectors.Contains(BitLocker.KeyProtectorType.RecoveryPassword))
                     {
                         nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                         {
@@ -686,36 +680,31 @@ namespace HardenWindowsSecurity
 
 
                 // Non-OS-Drive-BitLocker-Drives-Encryption-Verification
-                List<HardenWindowsSecurity.BitLockerVolume> NonRemovableNonOSDrives = new List<HardenWindowsSecurity.BitLockerVolume>();
+                List<HardenWindowsSecurity.BitLocker.BitLockerVolume> NonRemovableNonOSDrives = [];
 
-                foreach (HardenWindowsSecurity.BitLockerVolume Drive in HardenWindowsSecurity.BitLockerInfo.GetAllEncryptedVolumeInfo())
+                foreach (HardenWindowsSecurity.BitLocker.BitLockerVolume Drive in HardenWindowsSecurity.BitLocker.GetAllEncryptedVolumeInfo(true, false))
                 {
-                    if (string.Equals(Drive.VolumeType, "FixedDisk", StringComparison.OrdinalIgnoreCase))
-                    {
-                        // Increase the number of available compliant values for each non-OS drive that was found
-                        HardenWindowsSecurity.GlobalVars.TotalNumberOfTrueCompliantValues++;
-                        NonRemovableNonOSDrives.Add(Drive);
-                    }
+                    // Increase the number of available compliant values for each non-OS drive that was found
+                    HardenWindowsSecurity.GlobalVars.TotalNumberOfTrueCompliantValues++;
+                    NonRemovableNonOSDrives.Add(Drive);
                 }
 
                 // Check if there are any non-OS volumes
-                if (NonRemovableNonOSDrives.Any())
+                if (NonRemovableNonOSDrives.Count != 0)
                 {
                     // Loop through each non-OS volume and verify their encryption
                     foreach (var BitLockerDrive in NonRemovableNonOSDrives.OrderBy(d => d.MountPoint))
                     {
                         // If status is unknown, that means the non-OS volume is encrypted and locked, if it's on then it's on
-                        if (string.Equals(BitLockerDrive.ProtectionStatus, "Protected", StringComparison.OrdinalIgnoreCase) || string.Equals(BitLockerDrive.ProtectionStatus, "Unknown", StringComparison.OrdinalIgnoreCase))
+                        if (BitLockerDrive.ProtectionStatus is BitLocker.ProtectionStatus.Protected or BitLocker.ProtectionStatus.Unknown)
                         {
 
                             // Check if the non-OS non-Removable drive has one of the following key protectors: RecoveryPassword, Password or ExternalKey (Auto-Unlock)
-                            string[] KeyProtectors = BitLockerDrive.KeyProtector?
-                             .Where(kp => kp?.KeyProtectorType != null)
-                             .Select(kp => kp!.KeyProtectorType!) // kp!.KeyProtectorType!: The ! operator is used to tell the compiler that you are sure kp and KeyProtectorType are not null after the Where filtering.
-                             .ToArray() ?? Array.Empty<string>();
+                            IEnumerable<BitLocker.KeyProtectorType?> KeyProtectors = volumeInfo.KeyProtector!
+                             .Select(kp => kp.KeyProtectorType);
 
 
-                            if (KeyProtectors.Contains("RecoveryPassword") || KeyProtectors.Contains("Password") || KeyProtectors.Contains("ExternalKey"))
+                            if (KeyProtectors.Contains(BitLocker.KeyProtectorType.RecoveryPassword) || KeyProtectors.Contains(BitLocker.KeyProtectorType.Password) || KeyProtectors.Contains(BitLocker.KeyProtectorType.ExternalKey))
                             {
                                 nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                                 {
@@ -768,7 +757,7 @@ namespace HardenWindowsSecurity
                 }
                 else
                 {
-                    HardenWindowsSecurity.GlobalVars.FinalMegaObject.TryAdd(CatName, nestedObjectArray);
+                    _ = HardenWindowsSecurity.GlobalVars.FinalMegaObject.TryAdd(CatName, nestedObjectArray);
                 };
             });
         }
@@ -783,7 +772,7 @@ namespace HardenWindowsSecurity
             {
 
                 // Create a new list to store the results
-                List<HardenWindowsSecurity.IndividualResult> nestedObjectArray = new List<HardenWindowsSecurity.IndividualResult>();
+                List<HardenWindowsSecurity.IndividualResult> nestedObjectArray = [];
 
                 // Defining the category name
                 string CatName = "MiscellaneousConfigurations";
@@ -834,7 +823,7 @@ namespace HardenWindowsSecurity
                         }
                     };
 
-                    process.Start();
+                    _ = process.Start();
 
                     // Read the output from the process
                     var output = process.StandardOutput.ReadToEnd();
@@ -848,49 +837,48 @@ namespace HardenWindowsSecurity
                     }
 
                     // Convert the CSV output to a dictionary
-                    using (var reader = new StringReader(output))
+                    using var reader = new StringReader(output);
+
+                    // Initialize the inclusion setting
+                    string? inclusionSetting = null;
+
+                    // Read the first line to get the headers
+                    string? headers = reader.ReadLine();
+
+                    // Check if the headers are not null
+                    if (headers != null)
                     {
-                        // Initialize the inclusion setting
-                        string? inclusionSetting = null;
+                        // Get the index of the "Inclusion Setting" column
+                        var headerColumns = headers.Split(',');
 
-                        // Read the first line to get the headers
-                        string? headers = reader.ReadLine();
+                        int inclusionSettingIndex = Array.IndexOf(headerColumns, "Inclusion Setting");
 
-                        // Check if the headers are not null
-                        if (headers != null)
+                        // Read subsequent lines to get the values
+                        string? values;
+                        while ((values = reader.ReadLine()) != null)
                         {
-                            // Get the index of the "Inclusion Setting" column
-                            var headerColumns = headers.Split(',');
-
-                            int inclusionSettingIndex = Array.IndexOf(headerColumns, "Inclusion Setting");
-
-                            // Read subsequent lines to get the values
-                            string? values;
-                            while ((values = reader.ReadLine()) != null)
+                            var valueColumns = values.Split(',');
+                            if (inclusionSettingIndex != -1 && inclusionSettingIndex < valueColumns.Length)
                             {
-                                var valueColumns = values.Split(',');
-                                if (inclusionSettingIndex != -1 && inclusionSettingIndex < valueColumns.Length)
-                                {
-                                    inclusionSetting = valueColumns[inclusionSettingIndex].Trim();
-                                    break; // break because we are only interested in the first line of values
-                                }
+                                inclusionSetting = valueColumns[inclusionSettingIndex].Trim();
+                                break; // break because we are only interested in the first line of values
                             }
                         }
-
-                        // Verify the inclusion setting
-                        bool individualItemResult = string.Equals(inclusionSetting, "Success and Failure", StringComparison.OrdinalIgnoreCase);
-
-                        // Add the result to the nested object array
-                        nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
-                        {
-                            FriendlyName = "Audit policy for Other Logon/Logoff Events",
-                            Compliant = individualItemResult,
-                            Value = individualItemResult ? "Success and Failure" : inclusionSetting ?? string.Empty, // just to suppress the warning
-                            Name = "Audit policy for Other Logon/Logoff Events",
-                            Category = CatName ?? string.Empty, // just to suppress the warning
-                            Method = "Cmdlet"
-                        });
                     }
+
+                    // Verify the inclusion setting
+                    bool individualItemResult = string.Equals(inclusionSetting, "Success and Failure", StringComparison.OrdinalIgnoreCase);
+
+                    // Add the result to the nested object array
+                    nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
+                    {
+                        FriendlyName = "Audit policy for Other Logon/Logoff Events",
+                        Compliant = individualItemResult,
+                        Value = individualItemResult ? "Success and Failure" : inclusionSetting ?? string.Empty, // just to suppress the warning
+                        Name = "Audit policy for Other Logon/Logoff Events",
+                        Category = CatName ?? string.Empty, // just to suppress the warning
+                        Method = "Cmdlet"
+                    });
                 }
                 else
                 {
@@ -940,7 +928,7 @@ namespace HardenWindowsSecurity
                 }
                 else
                 {
-                    HardenWindowsSecurity.GlobalVars.FinalMegaObject.TryAdd(CatName, nestedObjectArray);
+                    _ = HardenWindowsSecurity.GlobalVars.FinalMegaObject.TryAdd(CatName, nestedObjectArray);
                 }
             });
         }
@@ -956,7 +944,7 @@ namespace HardenWindowsSecurity
             {
 
                 // Create a new list to store the results
-                List<HardenWindowsSecurity.IndividualResult> nestedObjectArray = new List<HardenWindowsSecurity.IndividualResult>();
+                List<HardenWindowsSecurity.IndividualResult> nestedObjectArray = [];
 
                 // Defining the category name
                 string CatName = "WindowsNetworking";
@@ -1001,7 +989,7 @@ namespace HardenWindowsSecurity
                 }
                 else
                 {
-                    HardenWindowsSecurity.GlobalVars.FinalMegaObject.TryAdd(CatName, nestedObjectArray);
+                    _ = HardenWindowsSecurity.GlobalVars.FinalMegaObject.TryAdd(CatName, nestedObjectArray);
                 };
             });
         }
@@ -1016,7 +1004,7 @@ namespace HardenWindowsSecurity
             return Task.Run(() =>
             {
                 // Create a new list to store the results
-                List<HardenWindowsSecurity.IndividualResult> nestedObjectArray = new List<HardenWindowsSecurity.IndividualResult>();
+                List<HardenWindowsSecurity.IndividualResult> nestedObjectArray = [];
 
                 // Defining the category name
                 string CatName = "LockScreen";
@@ -1039,7 +1027,7 @@ namespace HardenWindowsSecurity
                 }
                 else
                 {
-                    HardenWindowsSecurity.GlobalVars.FinalMegaObject.TryAdd(CatName, nestedObjectArray);
+                    _ = HardenWindowsSecurity.GlobalVars.FinalMegaObject.TryAdd(CatName, nestedObjectArray);
                 };
             });
         }
@@ -1054,7 +1042,7 @@ namespace HardenWindowsSecurity
             return Task.Run(() =>
             {
                 // Create a new list to store the results
-                List<HardenWindowsSecurity.IndividualResult> nestedObjectArray = new List<HardenWindowsSecurity.IndividualResult>();
+                List<HardenWindowsSecurity.IndividualResult> nestedObjectArray = [];
 
                 // Defining the category name
                 string CatName = "UserAccountControl";
@@ -1077,7 +1065,7 @@ namespace HardenWindowsSecurity
                 }
                 else
                 {
-                    HardenWindowsSecurity.GlobalVars.FinalMegaObject.TryAdd(CatName, nestedObjectArray);
+                    _ = HardenWindowsSecurity.GlobalVars.FinalMegaObject.TryAdd(CatName, nestedObjectArray);
                 };
             });
         }
@@ -1092,7 +1080,7 @@ namespace HardenWindowsSecurity
             {
 
                 // Create a new list to store the results
-                List<HardenWindowsSecurity.IndividualResult> nestedObjectArray = new List<HardenWindowsSecurity.IndividualResult>();
+                List<HardenWindowsSecurity.IndividualResult> nestedObjectArray = [];
 
                 // Defining the category name
                 string CatName = "OptionalWindowsFeatures";
@@ -1246,7 +1234,7 @@ namespace HardenWindowsSecurity
                 }
                 else
                 {
-                    HardenWindowsSecurity.GlobalVars.FinalMegaObject.TryAdd(CatName, nestedObjectArray);
+                    _ = HardenWindowsSecurity.GlobalVars.FinalMegaObject.TryAdd(CatName, nestedObjectArray);
                 };
             });
         }
@@ -1261,7 +1249,7 @@ namespace HardenWindowsSecurity
             {
 
                 // Create a new list to store the results
-                List<HardenWindowsSecurity.IndividualResult> nestedObjectArray = new List<HardenWindowsSecurity.IndividualResult>();
+                List<HardenWindowsSecurity.IndividualResult> nestedObjectArray = [];
 
                 // Defining the category name
                 string CatName = "TLSSecurity";
@@ -1310,7 +1298,7 @@ namespace HardenWindowsSecurity
                 }
                 else
                 {
-                    HardenWindowsSecurity.GlobalVars.FinalMegaObject.TryAdd(CatName, nestedObjectArray);
+                    _ = HardenWindowsSecurity.GlobalVars.FinalMegaObject.TryAdd(CatName, nestedObjectArray);
                 };
             });
         }
@@ -1325,7 +1313,7 @@ namespace HardenWindowsSecurity
             {
 
                 // Create a new list to store the results
-                List<HardenWindowsSecurity.IndividualResult> nestedObjectArray = new List<HardenWindowsSecurity.IndividualResult>();
+                List<HardenWindowsSecurity.IndividualResult> nestedObjectArray = [];
 
                 // Defining the category name
                 string CatName = "WindowsFirewall";
@@ -1637,7 +1625,7 @@ namespace HardenWindowsSecurity
                 }
                 else
                 {
-                    HardenWindowsSecurity.GlobalVars.FinalMegaObject.TryAdd(CatName, nestedObjectArray);
+                    _ = HardenWindowsSecurity.GlobalVars.FinalMegaObject.TryAdd(CatName, nestedObjectArray);
                 };
             });
         }
@@ -1653,7 +1641,7 @@ namespace HardenWindowsSecurity
             {
 
                 // Create a new list to store the results
-                List<HardenWindowsSecurity.IndividualResult> nestedObjectArray = new List<HardenWindowsSecurity.IndividualResult>();
+                List<HardenWindowsSecurity.IndividualResult> nestedObjectArray = [];
 
                 // Defining the category name
                 string CatName = "MicrosoftDefender";
@@ -1664,7 +1652,7 @@ namespace HardenWindowsSecurity
                 using (PowerShell ps = PowerShell.Create())
                 {
                     // Add the PowerShell script to the instance
-                    ps.AddScript(@"
+                    _ = ps.AddScript(@"
                     (Get-BcdEntry).Elements | Where-Object -FilterScript { $_.Name -ieq 'nx' } | Select-Object -ExpandProperty Value
                 ");
 
@@ -1728,7 +1716,7 @@ namespace HardenWindowsSecurity
                     try
                     {
                         // Add the script to the PowerShell instance
-                        ps.AddScript(script);
+                        _ = ps.AddScript(script);
 
                         // Invoke the command and get the results
                         var results = ps.Invoke();
@@ -1805,7 +1793,7 @@ namespace HardenWindowsSecurity
                 // Get the current system's exploit mitigation policy XML file using the Get-ProcessMitigation cmdlet
                 using (PowerShell ps = PowerShell.Create())
                 {
-                    ps.AddCommand("Get-ProcessMitigation")
+                    _ = ps.AddCommand("Get-ProcessMitigation")
                     .AddParameter("RegistryConfigFilePath", HardenWindowsSecurity.GlobalVars.CurrentlyAppliedMitigations);
 
                     try
@@ -1852,7 +1840,7 @@ namespace HardenWindowsSecurity
                     .ToList();
 
                 // A dictionary to store the output of the CSV file
-                Dictionary<string, string[]> TargetMitigations = new Dictionary<string, string[]>(StringComparer.OrdinalIgnoreCase);
+                Dictionary<string, string[]> TargetMitigations = new(StringComparer.OrdinalIgnoreCase);
 
                 // Loop through each group in the grouped mitigations array and add the ProgramName and Mitigations to the dictionary
                 foreach (var item in GroupedMitigations)
@@ -1874,13 +1862,12 @@ namespace HardenWindowsSecurity
 
                     // Check if the dictionary containing the currently applied mitigations contains the same key
                     // Meaning the same executable is present in both dictionaries
-                    if (RevisedProcessMitigationsOnTheSystem.ContainsKey(ProcessName_Target))
+                    // If it is, get the value from the applied mitigations dictionary
+                    if (RevisedProcessMitigationsOnTheSystem.TryGetValue(ProcessName_Target, out HashSet<string>? ProcessMitigations_Applied))
                     {
-                        // Get the value from the applied mitigations dictionary
-                        HashSet<string> ProcessMitigations_Applied = RevisedProcessMitigationsOnTheSystem[ProcessName_Target];
 
                         // Convert the arrays to HashSet for order-agnostic comparison
-                        HashSet<string> targetSet = new HashSet<string>(ProcessMitigations_Target, StringComparer.OrdinalIgnoreCase);
+                        HashSet<string> targetSet = new(ProcessMitigations_Target, StringComparer.OrdinalIgnoreCase);
 
                         // Compare the values of the two dictionaries to see if they are the same without considering the order of the elements (process mitigations)
                         if (!targetSet.SetEquals(ProcessMitigations_Applied))
@@ -1924,7 +1911,7 @@ namespace HardenWindowsSecurity
                     }
                     else
                     {
-                        //If the process name is not found in the hashtable containing the currently applied mitigations, it means the process doesn't have any mitigations applied to it
+                        //If the process name is not found in the HashTable containing the currently applied mitigations, it means the process doesn't have any mitigations applied to it
                         HardenWindowsSecurity.Logger.LogMessage($"Mitigations for {ProcessName_Target} were not found", LogTypeIntel.Information);
 
                         // Increment the total number of the verifiable compliant values for each process that has a mitigation applied to it in the CSV file
@@ -1980,7 +1967,7 @@ namespace HardenWindowsSecurity
                 ushort PlatformUpdatesChannel = Convert.ToUInt16(PropertyHelper.GetPropertyValue(GlobalVars.MDAVPreferencesCurrent, "PlatformUpdatesChannel") ?? ushort.MaxValue);
 
                 // resolve the number to a string using the dictionary
-                HardenWindowsSecurity.DefenderPlatformUpdatesChannels.Channels.TryGetValue(PlatformUpdatesChannel, out string? PlatformUpdatesChannelName);
+                _ = HardenWindowsSecurity.DefenderPlatformUpdatesChannels.Channels.TryGetValue(PlatformUpdatesChannel, out string? PlatformUpdatesChannelName);
                 nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "Microsoft Defender Platform Updates Channel",
@@ -1997,7 +1984,7 @@ namespace HardenWindowsSecurity
                 ushort EngineUpdatesChannel = Convert.ToUInt16(PropertyHelper.GetPropertyValue(GlobalVars.MDAVPreferencesCurrent, "EngineUpdatesChannel") ?? ushort.MaxValue);
 
                 // resolve the number to a string using the dictionary
-                HardenWindowsSecurity.DefenderPlatformUpdatesChannels.Channels.TryGetValue(EngineUpdatesChannel, out string? EngineUpdatesChannelName);
+                _ = HardenWindowsSecurity.DefenderPlatformUpdatesChannels.Channels.TryGetValue(EngineUpdatesChannel, out string? EngineUpdatesChannelName);
                 nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "Microsoft Defender Engine Updates Channel",
@@ -2571,7 +2558,7 @@ namespace HardenWindowsSecurity
                 }
                 else
                 {
-                    HardenWindowsSecurity.GlobalVars.FinalMegaObject.TryAdd(CatName, nestedObjectArray);
+                    _ = HardenWindowsSecurity.GlobalVars.FinalMegaObject.TryAdd(CatName, nestedObjectArray);
                 };
 
                 // Get the value and convert it to bool

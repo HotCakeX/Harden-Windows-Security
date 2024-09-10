@@ -12,10 +12,6 @@ namespace HardenWindowsSecurity
             HardenWindowsSecurity.Logger.LogMessage("Creating scheduled task for fast weekly Microsoft recommended driver block list update", LogTypeIntel.Information);
 
 
-            // Deleting the MSFT Driver Block list update Scheduled task if it exists
-            TaskSchedulerHelper.Delete("MSFT Driver Block list update", @"\MSFT Driver Block list update\");
-
-
             // Initialize ManagementScope to interact with Task Scheduler's WMI namespace
             var scope = new ManagementScope(@"root\Microsoft\Windows\TaskScheduler");
             scope.Connect(); // Establish connection to the WMI namespace
@@ -28,7 +24,7 @@ namespace HardenWindowsSecurity
             // Prepare method parameters for creating the task action
             var actionInParams = actionClass.GetMethodParameters("NewActionByExec");
             actionInParams["Execute"] = "PowerShell.exe";
-            // The PowerShell command to run, downloading and deploying the drivers block list                                  
+            // The PowerShell command to run, downloading and deploying the drivers block list
             actionInParams["Argument"] = """
 -NoProfile -WindowStyle Hidden -command "& {try {Invoke-WebRequest -Uri 'https://aka.ms/VulnerableDriverBlockList' -OutFile 'VulnerableDriverBlockList.zip' -ErrorAction Stop}catch{exit 1};Expand-Archive -Path '.\VulnerableDriverBlockList.zip' -DestinationPath 'VulnerableDriverBlockList' -Force;$SiPolicy_EnforcedFile = Get-ChildItem -Recurse -File -Path '.\VulnerableDriverBlockList' -Filter 'SiPolicy_Enforced.p7b' | Select-Object -First 1;Move-Item -Path $SiPolicy_EnforcedFile.FullName -Destination ($env:SystemDrive + '\Windows\System32\CodeIntegrity\SiPolicy.p7b') -Force;citool --refresh -json;Remove-Item -Path '.\VulnerableDriverBlockList' -Recurse -Force;Remove-Item -Path '.\VulnerableDriverBlockList.zip' -Force;}"
 """;
@@ -39,7 +35,7 @@ namespace HardenWindowsSecurity
             // Check if the action was created successfully
             if ((uint)actionResult["ReturnValue"] != 0)
             {
-                throw new Exception($"Failed to create task action: {((uint)actionResult["ReturnValue"])}");
+                throw new InvalidOperationException($"Failed to create task action: {((uint)actionResult["ReturnValue"])}");
             }
 
             // Extract CIM instance for further use in task registration
@@ -64,7 +60,7 @@ namespace HardenWindowsSecurity
             // Check if the principal was created successfully
             if ((uint)principalResult["ReturnValue"] != 0)
             {
-                throw new Exception($"Failed to create task principal: {((uint)principalResult["ReturnValue"])}");
+                throw new InvalidOperationException($"Failed to create task principal: {((uint)principalResult["ReturnValue"])}");
             }
 
             // Extract CIM instance for further use in task registration
@@ -76,7 +72,7 @@ namespace HardenWindowsSecurity
             // Create a trigger for the scheduled task. The task will first run one hour after its creation and from then on will run every 7 days, indefinitely
             using var triggerClass = new ManagementClass(scope, new ManagementPath("PS_ScheduledTask"), null);
 
-            // Prepare method parameters for setting the task trigger                        
+            // Prepare method parameters for setting the task trigger
             // DateTime and TimeSpan are .NET constructs that are not directly compatible with WMI methods, which require the use of DMTF DateTime and TimeInterval formats.
             // The conversion ensures that time-related parameters (e.g., DateTime.Now.AddHours(1) or TimeSpan.FromDays(7)) are formatted in a way that the WMI provider can interpret them correctly.
             // The ManagementDateTimeConverter class provides methods like ToDmtfDateTime and ToDmtfTimeInterval that perform these necessary conversions.
@@ -92,7 +88,7 @@ namespace HardenWindowsSecurity
             // Check if the trigger was created successfully
             if ((uint)triggerResult["ReturnValue"] != 0)
             {
-                throw new Exception($"Failed to create task trigger: {((uint)triggerResult["ReturnValue"])}");
+                throw new InvalidOperationException($"Failed to create task trigger: {((uint)triggerResult["ReturnValue"])}");
             }
 
             // Extract CIM instance for further use in task registration
@@ -119,7 +115,7 @@ namespace HardenWindowsSecurity
             var settingsResult = settingsClass.InvokeMethod("NewSettings", settingsInParams, null);
             if ((uint)settingsResult["ReturnValue"] != 0)
             {
-                throw new Exception($"Failed to define task settings: {((uint)settingsResult["ReturnValue"])}");
+                throw new InvalidOperationException($"Failed to define task settings: {((uint)settingsResult["ReturnValue"])}");
             }
 
             // Extract CIM instance for further use in task registration
@@ -148,7 +144,7 @@ namespace HardenWindowsSecurity
             // Check if the task was registered successfully
             if ((uint)registerResult["ReturnValue"] != 0)
             {
-                throw new Exception($"Failed to register the task: {((uint)registerResult["ReturnValue"])}");
+                throw new InvalidOperationException($"Failed to register the task: {((uint)registerResult["ReturnValue"])}");
             }
             #endregion
 
@@ -227,7 +223,7 @@ else {
 
 
 $RegisterByPrincipalResult = Invoke-CimMethod -Namespace 'Root\Microsoft\Windows\TaskScheduler' -ClassName 'PS_ScheduledTask' -MethodName 'RegisterByPrincipal' -Arguments @{
-   Force       = $true 
+   Force       = $true
    Principal   = $TaskPrincipal
    Action      = [Microsoft.Management.Infrastructure.CimInstance[]]$Action
    Trigger     = [Microsoft.Management.Infrastructure.CimInstance[]]$Trigger

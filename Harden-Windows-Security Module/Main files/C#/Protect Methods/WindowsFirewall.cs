@@ -23,7 +23,7 @@ namespace HardenWindowsSecurity
             HardenWindowsSecurity.Logger.LogMessage("Disabling Multicast DNS (mDNS) UDP-in Firewall Rules for all 3 Firewall profiles - disables only 3 rules", LogTypeIntel.Information);
 
 
-            HardenWindowsSecurity.PowerShellExecutor.ExecuteScript("""
+            _ = HardenWindowsSecurity.PowerShellExecutor.ExecuteScript("""
 Get-NetFirewallRule |
 Where-Object -FilterScript { ($_.RuleGroup -eq '@%SystemRoot%\system32\firewallapi.dll,-37302') -and ($_.Direction -eq 'inbound') } |
 ForEach-Object -Process { Disable-NetFirewallRule -DisplayName $_.DisplayName }

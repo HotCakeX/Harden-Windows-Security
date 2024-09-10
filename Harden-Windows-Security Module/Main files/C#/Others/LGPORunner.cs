@@ -24,21 +24,15 @@ namespace HardenWindowsSecurity
         public static void RunLGPOCommand(string filePath, FileType fileType, string? LGPOExePath = null)
         {
             // Construct the command based on the file type
-            string commandArgs;
-            switch (fileType)
+            string commandArgs = fileType switch
             {
-                case FileType.POL:
-                    commandArgs = $"/q /m \"{filePath}\"";
-                    break;
-                case FileType.INF:
-                    commandArgs = $"/q /s \"{filePath}\"";
-                    break;
-                default:
-                    throw new ArgumentException("Invalid file type");
-            }
+                FileType.POL => $"/q /m \"{filePath}\"",
+                FileType.INF => $"/q /s \"{filePath}\"",
+                _ => throw new ArgumentException("Invalid file type"),
+            };
 
             // Start the process with LGPO.exe
-            ProcessStartInfo processInfo = new ProcessStartInfo
+            ProcessStartInfo processInfo = new()
             {
                 // If the path to LGPO.exe was provided then use it, otherwise use the global variable
                 FileName = LGPOExePath ?? GlobalVars.LGPOExe,
@@ -50,13 +44,13 @@ namespace HardenWindowsSecurity
 
             try
             {
-                using (Process? process = Process.Start(processInfo))
-                {
-                    // Capture and output the process result
-                    string output = process!.StandardOutput.ReadToEnd();
-                    process.WaitForExit();
-                    HardenWindowsSecurity.Logger.LogMessage(output, LogTypeIntel.Information);
-                }
+                using Process? process = Process.Start(processInfo);
+
+                // Capture and output the process result
+                string output = process!.StandardOutput.ReadToEnd();
+                process.WaitForExit();
+                HardenWindowsSecurity.Logger.LogMessage(output, LogTypeIntel.Information);
+
             }
             catch (Exception ex)
             {

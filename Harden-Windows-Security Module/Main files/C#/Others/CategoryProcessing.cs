@@ -6,6 +6,8 @@ using System.IO;
 using System.Linq;
 using System.Text;
 
+#pragma warning disable IDE0038
+
 #nullable enable
 
 namespace HardenWindowsSecurity
@@ -33,7 +35,7 @@ namespace HardenWindowsSecurity
         private static List<CsvRecord> ReadCsv()
         {
             // Create a list to store the records
-            List<CsvRecord> records = new List<CsvRecord>();
+            List<CsvRecord> records = [];
 
             if (GlobalVars.path == null)
             {
@@ -44,7 +46,7 @@ namespace HardenWindowsSecurity
             string path = Path.Combine(GlobalVars.path, "Resources", "Registry resources.csv");
 
             // Open the file and read the contents
-            using (StreamReader reader = new StreamReader(path))
+            using (StreamReader reader = new(path))
             {
                 // Read the header line
                 string? header = reader.ReadLine();
@@ -69,7 +71,7 @@ namespace HardenWindowsSecurity
                         // Split the value field by commas only if ValueIsList is true
                         List<string> values = valueIsList
                             ? fields[7].Trim('"').Split(',').Select(v => v.Trim()).ToList()
-                            : new List<string> { fields[7].Trim('"') };
+                            : [fields[7].Trim('"')];
 
                         records.Add(new CsvRecord
                         {
@@ -105,10 +107,10 @@ namespace HardenWindowsSecurity
         private static string[] ParseCsvLine(string line)
         {
             // List to store parsed fields
-            List<string> fields = new List<string>();
+            List<string> fields = [];
 
             // StringBuilder to build the current field
-            StringBuilder currentField = new StringBuilder();
+            StringBuilder currentField = new();
 
             // Flag to track if currently inside quoted segment
             bool inQuotes = false;
@@ -129,12 +131,12 @@ namespace HardenWindowsSecurity
                     fields.Add(currentField.ToString().Trim('"'));
 
                     // Clear StringBuilder for next field
-                    currentField.Clear();
+                    _ = currentField.Clear();
                 }
                 else
                 {
                     // Append the character to the current field
-                    currentField.Append(c);
+                    _ = currentField.Append(c);
                 }
             }
 
@@ -151,7 +153,7 @@ namespace HardenWindowsSecurity
         public static List<IndividualResult> ProcessCategory(string catName, string method)
         {
             // Create a list to store the results
-            List<IndividualResult> output = new List<IndividualResult>();
+            List<IndividualResult> output = [];
 
             // Read the CSV data
             List<CsvRecord> csvData = ReadCsv();
@@ -165,7 +167,7 @@ namespace HardenWindowsSecurity
             // Process each filtered item
             foreach (var item in filteredItems)
             {
-                // Initialize valueMatches to "False"
+                // Initialize variables
                 bool valueMatches = false;
                 string? regValueStr = null;
 
@@ -176,41 +178,60 @@ namespace HardenWindowsSecurity
                     if (item.Key != null)
                     {
                         // Open the registry key in HKEY_LOCAL_MACHINE
-                        using (var key = Registry.LocalMachine.OpenSubKey(item.Key))
+                        using var key = Registry.LocalMachine.OpenSubKey(item.Key);
+
+                        if (key != null)
                         {
-                            if (key != null)
+                            // Get the registry value
+                            var regValue = key.GetValue(item.Name);
+
+                            // Check if the registry value is an integer
+                            if (regValue is int)
                             {
-                                // Get the registry value
-                                var regValue = key.GetValue(item.Name);
+                                // Handle the case where the DWORD value is returned as an int
+                                // because DWORD is an UInt32
+                                // Then convert it to a string
+                                regValueStr = unchecked((uint)(int)regValue).ToString(CultureInfo.InvariantCulture);
+                            }
+                            else if (regValue is uint)
+                            {
+                                // Handle the case where the DWORD value is returned as a uint
+                                regValueStr = regValue.ToString();
+                            }
+                            else
+                            {
+                                // Convert the registry value to a string otherwise
+                                regValueStr = regValue?.ToString();
+                            }
 
-                                // Check if the registry value is an integer
-                                if (regValue is int)
+                            // Parse the expected values based on their type in the CSV file
+                            var parsedValues = item.Type != null
+                                ? item.Value?.Select(v => ParseRegistryValue(type: item.Type, value: v)).ToList() ?? []
+                                : [];
+
+                            // Check if the registry value matches any of the expected values
+                            if (regValue != null && item.Type != null)
+                            {
+                                // Convert regValueStr to uint if applicable
+                                uint? regValueUInt = null;
+                                if (uint.TryParse(regValueStr, NumberStyles.Integer, CultureInfo.InvariantCulture, out uint parsedRegValue))
                                 {
-                                    // Handle the case where the DWORD value is returned as an int
-                                    // because DWORD is an UInt32
-                                    // Then convert it to a string
-                                    regValueStr = ((uint)(int)regValue).ToString(CultureInfo.InvariantCulture);
-                                }
-                                else if (regValue is uint)
-                                {
-                                    // Handle the case where the DWORD value is returned as a uint
-                                    regValueStr = regValue.ToString();
-                                }
-                                else
-                                {
-                                    // Convert the registry value to a string otherwise
-                                    regValueStr = regValue?.ToString();
+                                    regValueUInt = parsedRegValue;
                                 }
 
-                                // Parse the expected values based on their type in the CSV file
-                                var parsedValues = item.Type != null
-                                    ? item.Value?.Select(v => ParseRegistryValue(type: item.Type, value: v)).ToList() ?? new List<object>()
-                                    : new List<object>();
-
-                                // Check if the registry value matches any of the expected values
-                                if (regValue != null && item.Type != null && parsedValues.Any(parsedValue => CompareRegistryValues(type: item.Type, regValue: regValue, expectedValue: parsedValue)))
+                                // Handle -1 case (which is equivalent to 4294967295 for DWORD)
+                                // Because CompareRegistryValues doesn't do the comparison properly
+                                if (regValueUInt == 4294967295 && item.Value is not null && item.Value.Contains("4294967295"))
                                 {
-                                    // Set valueMatches to "True" if it matches any expected value
+                                    valueMatches = true;
+                                }
+                                else if (regValueUInt == 2147483647 && item.Value is not null && item.Value.Contains("2147483647"))
+                                {
+                                    valueMatches = true;
+                                }
+                                // Used for any other value that is not DWORD max int32 or maxUint32
+                                else if (parsedValues.Any(parsedValue => CompareRegistryValues(type: item.Type, regValue: regValue, expectedValue: parsedValue)))
+                                {
                                     valueMatches = true;
                                 }
                             }
@@ -224,37 +245,57 @@ namespace HardenWindowsSecurity
                     if (item.Key != null)
                     {
                         // Open the registry key in HKEY_CURRENT_USER
-                        using (var key = Registry.CurrentUser.OpenSubKey(item.Key))
+                        using var key = Registry.CurrentUser.OpenSubKey(item.Key);
+
+                        if (key != null)
                         {
-                            if (key != null)
+                            // Get the registry value
+                            var regValue = key.GetValue(item.Name);
+
+                            if (regValue is int)
                             {
-                                // Get the registry value
-                                var regValue = key.GetValue(item.Name);
+                                // Handle the case where the DWORD value is returned as an int
+                                regValueStr = unchecked((uint)(int)regValue).ToString(CultureInfo.InvariantCulture);
+                            }
+                            else if (regValue is uint)
+                            {
+                                // Handle the case where the DWORD value is returned as a uint
+                                regValueStr = regValue.ToString();
+                            }
+                            else
+                            {
+                                regValueStr = regValue?.ToString();
+                            }
 
-                                if (regValue is int)
+                            // Parse the expected values based on their type in the CSV file
+                            var parsedValues = item.Type != null
+                                ? item.Value?.Select(v => ParseRegistryValue(type: item.Type, value: v)).ToList() ?? []
+                                : [];
+
+                            // Check if the registry value matches any of the expected values
+                            if (regValue != null && item.Type != null)
+                            {
+                                // Convert regValueStr to uint if applicable
+                                uint? regValueUInt = null;
+                                if (uint.TryParse(regValueStr, NumberStyles.Integer, CultureInfo.InvariantCulture, out uint parsedRegValue))
                                 {
-                                    // Handle the case where the DWORD value is returned as an int
-                                    regValueStr = ((uint)(int)regValue).ToString(CultureInfo.InvariantCulture);
-                                }
-                                else if (regValue is uint)
-                                {
-                                    // Handle the case where the DWORD value is returned as a uint
-                                    regValueStr = regValue.ToString();
-                                }
-                                else
-                                {
-                                    regValueStr = regValue?.ToString();
+                                    regValueUInt = parsedRegValue;
                                 }
 
-                                // Parse the expected values based on their type in the CSV file
-                                var parsedValues = item.Type != null
-                                    ? item.Value?.Select(v => ParseRegistryValue(type: item.Type, value: v)).ToList() ?? new List<object>()
-                                    : new List<object>();
-
-                                // Check if the registry value matches any of the expected values
-                                if (regValue != null && item.Type != null && parsedValues.Any(parsedValue => CompareRegistryValues(type: item.Type, regValue: regValue, expectedValue: parsedValue)))
+                                // Handle special DWORD cases manually
+                                if (regValueUInt == 4294967295 && item.Value is not null && item.Value.Contains("4294967295"))
                                 {
-                                    // Set valueMatches to "True" if it matches any expected value
+                                    // DWORD -1 case, equivalent to max Uint32
+                                    valueMatches = true;
+                                }
+                                else if (regValueUInt == 2147483647 && item.Value is not null && item.Value.Contains("2147483647"))
+                                {
+                                    // DWORD maximum signed int32 case
+                                    valueMatches = true;
+                                }
+                                // Fallback to general comparison using CompareRegistryValues
+                                else if (parsedValues.Any(parsedValue => CompareRegistryValues(type: item.Type, regValue: regValue, expectedValue: parsedValue)))
+                                {
                                     valueMatches = true;
                                 }
                             }

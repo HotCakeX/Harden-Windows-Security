@@ -1,8 +1,8 @@
-﻿using System;
+﻿using Microsoft.Win32;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Windows.Forms;
 using System.Windows.Markup;
 
 #nullable disable
@@ -29,7 +29,7 @@ namespace HardenWindowsSecurity
                 // Defining the path to the XAML XML file
                 if (HardenWindowsSecurity.GlobalVars.path == null)
                 {
-                    throw new System.ArgumentNullException("GlobalVars.path cannot be null.");
+                    throw new InvalidOperationException("GlobalVars.path cannot be null.");
                 }
 
                 // Construct the file path for the Protect view XAML
@@ -61,7 +61,7 @@ namespace HardenWindowsSecurity
                 // $MainContentControlStyle.FindName('PathIcon1').Source
 
                 // PathIcon1
-                var PathIcon1Image = new System.Windows.Media.Imaging.BitmapImage();
+                System.Windows.Media.Imaging.BitmapImage PathIcon1Image = new();
                 PathIcon1Image.BeginInit();
                 PathIcon1Image.UriSource = new Uri(System.IO.Path.Combine(HardenWindowsSecurity.GlobalVars.path, "Resources", "Media", "path.png"));
                 PathIcon1Image.CacheOption = System.Windows.Media.Imaging.BitmapCacheOption.OnLoad; // Load the image data into memory
@@ -100,12 +100,10 @@ namespace HardenWindowsSecurity
                 GUIProtectWinSecurity.ProtectionPresetComboBox.SelectionChanged += (sender, args) =>
                 {
                     // Cast the sender back to a ComboBox
-                    var comboBox = sender as System.Windows.Controls.ComboBox;
-                    if (comboBox != null)
+                    if (sender is System.Windows.Controls.ComboBox comboBox)
                     {
                         // Get the selected item as a ComboBoxItem
-                        var selectedItem = comboBox.SelectedItem as System.Windows.Controls.ComboBoxItem;
-                        if (selectedItem != null)
+                        if (comboBox.SelectedItem is System.Windows.Controls.ComboBoxItem selectedItem)
                         {
                             // Assign the selected content to the SelectedProtectionPreset property
                             GUIProtectWinSecurity.SelectedProtectionPreset = selectedItem.Content.ToString();
@@ -190,7 +188,7 @@ namespace HardenWindowsSecurity
                                              }
                                              else
                                              {
-                                                 Console.WriteLine($"Preset '{presetName}' not found.");
+                                                 Logger.LogMessage($"Preset '{presetName}' not found.", LogTypeIntel.Error);
                                              }
 
 
@@ -262,7 +260,7 @@ namespace HardenWindowsSecurity
                                             }
                                             else
                                             {
-                                                Console.WriteLine($"Preset '{presetName}' not found.");
+                                                Logger.LogMessage($"Preset '{presetName}' not found.", LogTypeIntel.Error);
                                             }
 
                                         });
@@ -331,10 +329,13 @@ namespace HardenWindowsSecurity
                                         }
                                         else
                                         {
-                                            Console.WriteLine($"Preset '{presetName}' not found.");
+                                            Logger.LogMessage($"Preset '{presetName}' not found.", LogTypeIntel.Error);
                                         }
                                         break;
                                     }
+
+                                default:
+                                    break;
                             }
 
 
@@ -351,7 +352,7 @@ namespace HardenWindowsSecurity
                 GUIProtectWinSecurity.ExecuteButton = (System.Windows.Controls.Primitives.ToggleButton)GUIProtectWinSecurity.ExecuteButtonGrid!.FindName("Execute");
 
                 // Apply the template to make sure it's available
-                GUIProtectWinSecurity.ExecuteButton.ApplyTemplate();
+                _ = GUIProtectWinSecurity.ExecuteButton.ApplyTemplate();
 
                 // Access the image within the Execute Button's template
                 GUIProtectWinSecurity.ExecuteButtonImage = GUIProtectWinSecurity.ExecuteButton.Template.FindName("ExecuteIconImage", GUIProtectWinSecurity.ExecuteButton) as System.Windows.Controls.Image;
@@ -412,18 +413,21 @@ namespace HardenWindowsSecurity
                 // Event handler for the Log Path button click to open a file path picker dialog
                 GUIProtectWinSecurity.logPath.Click += (sender, e) =>
                 {
-                    using (SaveFileDialog dialog = new SaveFileDialog())
+                    SaveFileDialog dialog = new()
                     {
                         // Defining the initial directory where the file picker GUI will be opened for the user
-                        dialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
-                        dialog.Filter = "Text files (*.txt)|*.txt";
-                        dialog.Title = "Choose where to save the log file";
+                        InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Desktop),
+                        Filter = "Text files (*.txt)|*.txt",
+                        Title = "Choose where to save the log file"
+                    };
 
-                        if (dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
-                        {
-                            GUIProtectWinSecurity.txtFilePath.Text = dialog.FileName;
-                            HardenWindowsSecurity.Logger.LogMessage($"Logs will be saved in: {GUIProtectWinSecurity.txtFilePath.Text}", LogTypeIntel.Information);
-                        }
+                    // Show the dialog and process the result
+                    if (dialog.ShowDialog() == true)
+                    {
+                        // Set the chosen file path in the text box
+                        GUIProtectWinSecurity.txtFilePath.Text = dialog.FileName;
+                        // Log a message to indicate where the logs will be saved
+                        HardenWindowsSecurity.Logger.LogMessage($"Logs will be saved in: {GUIProtectWinSecurity.txtFilePath.Text}", LogTypeIntel.Information);
                     }
                 };
 
@@ -445,14 +449,14 @@ namespace HardenWindowsSecurity
                     // Display a message showing how to activate the offline mode
 
                     // Add a new row definition for the text message
-                    System.Windows.Controls.RowDefinition offlineModeUnavailableRow = new System.Windows.Controls.RowDefinition
+                    System.Windows.Controls.RowDefinition offlineModeUnavailableRow = new()
                     {
                         Height = new System.Windows.GridLength(50)
                     };
                     GUIProtectWinSecurity.grid2.RowDefinitions.Add(offlineModeUnavailableRow);
 
                     // Create a new text box
-                    System.Windows.Controls.TextBox offlineModeUnavailableNoticeBox = new System.Windows.Controls.TextBox
+                    System.Windows.Controls.TextBox offlineModeUnavailableNoticeBox = new()
                     {
                         HorizontalAlignment = System.Windows.HorizontalAlignment.Stretch,
                         VerticalAlignment = System.Windows.VerticalAlignment.Stretch,
@@ -469,13 +473,13 @@ namespace HardenWindowsSecurity
                     offlineModeUnavailableNoticeBox.SetValue(System.Windows.Controls.Grid.RowProperty, 4);
 
                     // Create a gradient brush for the text color
-                    System.Windows.Media.LinearGradientBrush gradientBrush = new System.Windows.Media.LinearGradientBrush();
+                    System.Windows.Media.LinearGradientBrush gradientBrush = new();
                     gradientBrush.GradientStops.Add(new System.Windows.Media.GradientStop(System.Windows.Media.Colors.Purple, 0));
                     gradientBrush.GradientStops.Add(new System.Windows.Media.GradientStop(System.Windows.Media.Colors.Blue, 1));
                     offlineModeUnavailableNoticeBox.Foreground = gradientBrush;
 
                     // Add the text box to the grid
-                    GUIProtectWinSecurity.grid2.Children.Add(offlineModeUnavailableNoticeBox);
+                    _ = GUIProtectWinSecurity.grid2.Children.Add(offlineModeUnavailableNoticeBox);
                 };
 
                 // Register the Execute button to be enabled/disabled based on global activity

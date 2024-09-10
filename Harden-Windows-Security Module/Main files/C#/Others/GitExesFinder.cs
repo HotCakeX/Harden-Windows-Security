@@ -24,7 +24,7 @@ namespace HardenWindowsSecurity
             var directories = Directory.GetDirectories(basePath, "*", SearchOption.AllDirectories);
 
             // Initialize a list to store the found FileInfo objects
-            List<FileInfo> fileList = new List<FileInfo>();
+            List<FileInfo> fileList = [];
 
             // Iterate through each directory
             foreach (var dir in directories)

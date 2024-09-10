@@ -6,7 +6,7 @@ namespace HardenWindowsSecurity
 {
     public class DefenderPlatformUpdatesChannels
     {
-        public static readonly Dictionary<ushort, string> Channels = new Dictionary<ushort, string>
+        public static readonly Dictionary<ushort, string> Channels = new()
     {
             { 0, "NotConfigured" },
             { 2, "Beta" },

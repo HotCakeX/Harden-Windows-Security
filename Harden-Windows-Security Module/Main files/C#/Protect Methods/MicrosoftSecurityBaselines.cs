@@ -15,7 +15,7 @@ namespace HardenWindowsSecurity
         {
             if (HardenWindowsSecurity.GlobalVars.MicrosoftSecurityBaselinePath == null)
             {
-                throw new Exception("The path to the Microsoft Security Baselines has not been set.");
+                throw new InvalidOperationException("The path to the Microsoft Security Baselines has not been set.");
             }
 
             if (HardenWindowsSecurity.GlobalVars.path == null)
@@ -43,7 +43,7 @@ namespace HardenWindowsSecurity
 Set-Location -Path "{scriptDirectory}"; .\Baseline-LocalInstall.ps1 -Win11NonDomainJoined 4>&1
 """;
 
-            PowerShellExecutor.ExecuteScript(Command, false, true);
+            _ = PowerShellExecutor.ExecuteScript(Command, false, true);
         }
     }
 }

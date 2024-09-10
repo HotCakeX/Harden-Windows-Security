@@ -25,7 +25,7 @@ namespace HardenWindowsSecurity
 
             HardenWindowsSecurity.Logger.LogMessage("Applying the Miscellaneous Configurations registry settings", LogTypeIntel.Information);
 #nullable disable
-            foreach (var Item in (HardenWindowsSecurity.GlobalVars.RegistryCSVItems))
+            foreach (HardeningRegistryKeys.CsvRecord Item in (HardenWindowsSecurity.GlobalVars.RegistryCSVItems))
             {
                 if (string.Equals(Item.Category, "Miscellaneous", StringComparison.OrdinalIgnoreCase))
                 {
@@ -43,7 +43,7 @@ namespace HardenWindowsSecurity
             foreach (HardenWindowsSecurity.LocalUser user in AllLocalUsers)
             {
                 // If the user has SID and the user is enabled
-                if (user.SID != null && user.Enabled == true)
+                if (user.SID != null && user.Enabled)
                 {
                     HardenWindowsSecurity.LocalGroupMember.Add(user.SID, "S-1-5-32-578");
                 }
@@ -64,20 +64,15 @@ namespace HardenWindowsSecurity
             // auditpol /list /subcategory:* /r
 
             // Event Viewer custom views are saved in "$env:SystemDrive\ProgramData\Microsoft\Event Viewer\Views". files in there can be backed up and restored on new Windows installations.
-            string? systemDrive = Environment.GetEnvironmentVariable("SystemDrive");
-
-            if (systemDrive == null)
-            {
-                throw new System.ArgumentNullException("SystemDrive cannot be null.");
-            }
+            string? systemDrive = Environment.GetEnvironmentVariable("SystemDrive") ?? throw new System.ArgumentNullException("SystemDrive cannot be null.");
 
             // Create the directory if it doesn't exist
             if (!System.IO.Directory.Exists(Path.Combine(systemDrive, "ProgramData", "Microsoft", "Event Viewer", "Views", "Hardening Script")))
             {
-                System.IO.Directory.CreateDirectory(Path.Combine(systemDrive, "ProgramData", "Microsoft", "Event Viewer", "Views", "Hardening Script"));
+                _ = System.IO.Directory.CreateDirectory(Path.Combine(systemDrive, "ProgramData", "Microsoft", "Event Viewer", "Views", "Hardening Script"));
             }
 
-            foreach (var File in System.IO.Directory.GetFiles(Path.Combine(HardenWindowsSecurity.GlobalVars.path, "Resources", "EventViewerCustomViews")))
+            foreach (string File in System.IO.Directory.GetFiles(Path.Combine(HardenWindowsSecurity.GlobalVars.path, "Resources", "EventViewerCustomViews")))
             {
                 System.IO.File.Copy(File, Path.Combine(systemDrive, "ProgramData", "Microsoft", "Event Viewer", "Views", "Hardening Script", System.IO.Path.GetFileName(File)), true);
             }

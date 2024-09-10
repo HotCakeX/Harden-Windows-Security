@@ -79,7 +79,7 @@ namespace HardenWindowsSecurity
 
             // Define the PowerShell command to execute
             string command = "Set-ProcessMitigation -System -Enable ForceRelocateImages";
-            HardenWindowsSecurity.PowerShellExecutor.ExecuteScript(command);
+            _ = HardenWindowsSecurity.PowerShellExecutor.ExecuteScript(command);
 
 
             HardenWindowsSecurity.Logger.LogMessage("Excluding GitHub Desktop Git executables from mandatory ASLR if they are found", LogTypeIntel.Information);
@@ -117,7 +117,7 @@ namespace HardenWindowsSecurity
             HardenWindowsSecurity.Logger.LogMessage("Turning on Data Execution Prevention (DEP) for all applications, including 32-bit programs", LogTypeIntel.Information);
             // Old method: bcdedit.exe /set '{current}' nx AlwaysOn
             // New method using PowerShell cmdlets added in Windows 11
-            HardenWindowsSecurity.PowerShellExecutor.ExecuteScript(@"Set-BcdElement -Element 'nx' -Type 'Integer' -Value '3'");
+            _ = HardenWindowsSecurity.PowerShellExecutor.ExecuteScript(@"Set-BcdElement -Element 'nx' -Type 'Integer' -Value '3'");
         }
     }
 }

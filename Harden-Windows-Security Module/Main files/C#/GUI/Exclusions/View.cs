@@ -18,7 +18,6 @@ namespace HardenWindowsSecurity
             // Method to handle the Exclusions view, including loading
             private void Exclusions(object obj)
             {
-
                 // Check if the view is already cached
                 if (_viewCache.TryGetValue("ExclusionsView", out var cachedView))
                 {
@@ -29,7 +28,15 @@ namespace HardenWindowsSecurity
                 // Defining the path to the XAML XML file
                 if (HardenWindowsSecurity.GlobalVars.path == null)
                 {
-                    throw new System.ArgumentNullException("GlobalVars.path cannot be null.");
+                    throw new InvalidOperationException("GlobalVars.path cannot be null.");
+                }
+
+                // if Admin privileges are not available, return and do not proceed any further
+                // Will prevent the page from being loaded since the CurrentView won't be set/changed
+                if (!HardenWindowsSecurity.UserPrivCheck.IsAdmin())
+                {
+                    Logger.LogMessage("Exclusions page can only be used when running the Harden Windows Security Application with Administrator privileges", LogTypeIntel.ErrorInteractionRequired);
+                    return;
                 }
 
                 // Construct the file path for the Exclusions view XAML
@@ -41,36 +48,27 @@ namespace HardenWindowsSecurity
                 // Parse the XAML content to create a UserControl
                 HardenWindowsSecurity.GUIExclusions.View = (System.Windows.Controls.UserControl)XamlReader.Parse(xamlContent);
 
+                // Set the DataContext for the Exclusions view
+                GUIExclusions.View.DataContext = new ExclusionsVM();
+
                 // Find the Parent Grid
                 HardenWindowsSecurity.GUIExclusions.ParentGrid = (System.Windows.Controls.Grid)HardenWindowsSecurity.GUIExclusions.View.FindName("ParentGrid");
 
                 #region finding Execute button related elements
 
                 // Finding the Execute Button Grid
-                System.Windows.Controls.Grid? ExecuteButtonGrid = GUIExclusions.ParentGrid.FindName("ExecuteButtonGrid") as System.Windows.Controls.Grid;
-
-                if (ExecuteButtonGrid == null)
-                {
-                    throw new Exception("ExecuteButtonGrid is null in the Exclusions View");
-                }
+                System.Windows.Controls.Grid? ExecuteButtonGrid = GUIExclusions.ParentGrid.FindName("ExecuteButtonGrid") as System.Windows.Controls.Grid ?? throw new InvalidOperationException("ExecuteButtonGrid is null in the Exclusions View");
 
                 // Finding the Execute Button
-                System.Windows.Controls.Primitives.ToggleButton? ExecuteButton = ExecuteButtonGrid.FindName("ExecuteButton") as System.Windows.Controls.Primitives.ToggleButton;
-
-                if (ExecuteButton == null)
-                {
-                    throw new Exception("Couldn't find the ExecuteButton in Exclusions view");
-                }
+                System.Windows.Controls.Primitives.ToggleButton? ExecuteButton = ExecuteButtonGrid.FindName("ExecuteButton") as System.Windows.Controls.Primitives.ToggleButton ?? throw new InvalidOperationException("Couldn't find the ExecuteButton in Exclusions view");
 
                 // Apply the template to make sure it's available
-                ExecuteButton.ApplyTemplate();
+                _ = ExecuteButton.ApplyTemplate();
 
                 // Access the image within the Execute Button's template
-                System.Windows.Controls.Image? RefreshIconImage = ExecuteButton.Template.FindName("RefreshIconImage", ExecuteButton) as System.Windows.Controls.Image;
-
-                if (RefreshIconImage == null)
+                if (ExecuteButton.Template.FindName("RefreshIconImage", ExecuteButton) is not System.Windows.Controls.Image RefreshIconImage)
                 {
-                    throw new Exception("RefreshIconImage could not be found in the Exclusions view");
+                    throw new InvalidOperationException("RefreshIconImage could not be found in the Exclusions view");
                 }
 
                 // Update the image source for the Refresh button
@@ -92,26 +90,12 @@ namespace HardenWindowsSecurity
                 System.Windows.Controls.Primitives.ToggleButton? ControlledFolderAccessToggleButton = GUIExclusions.ParentGrid.FindName("ControlledFolderAccessToggleButton") as System.Windows.Controls.Primitives.ToggleButton;
                 System.Windows.Controls.Primitives.ToggleButton? AttackSurfaceReductionRulesToggleButton = GUIExclusions.ParentGrid.FindName("AttackSurfaceReductionRulesToggleButton") as System.Windows.Controls.Primitives.ToggleButton;
 
-                System.Windows.Controls.TextBox? SelectedFilePaths = GUIExclusions.ParentGrid.FindName("SelectedFilePaths") as System.Windows.Controls.TextBox;
+                System.Windows.Controls.TextBox? SelectedFilePaths = GUIExclusions.ParentGrid.FindName("SelectedFilePaths") as System.Windows.Controls.TextBox ?? throw new InvalidOperationException("Couldn't find SelectedFilePaths in the Exclusions view.");
 
-                System.Windows.Controls.Button? BrowseForFilesButton = GUIExclusions.ParentGrid.FindName("BrowseForFilesButton") as System.Windows.Controls.Button;
-
+                System.Windows.Controls.Button? BrowseForFilesButton = GUIExclusions.ParentGrid.FindName("BrowseForFilesButton") as System.Windows.Controls.Button ?? throw new InvalidOperationException("Couldn't find BrowseForFilesButton in the Exclusions view.");
 
                 // Finding the button's image to assign an icon to it
-                System.Windows.Controls.Image? BrowseButtonIcon = GUIExclusions.ParentGrid.FindName("BrowseButtonIcon") as System.Windows.Controls.Image;
-
-                if (BrowseButtonIcon == null)
-                {
-                    throw new Exception("Couldn't find BrowseButtonIcon in the Exclusions view.");
-                }
-                if (BrowseForFilesButton == null)
-                {
-                    throw new Exception("Couldn't find BrowseForFilesButton in the Exclusions view.");
-                }
-                if (SelectedFilePaths == null)
-                {
-                    throw new Exception("Couldn't find SelectedFilePaths in the Exclusions view.");
-                }
+                System.Windows.Controls.Image? BrowseButtonIcon = GUIExclusions.ParentGrid.FindName("BrowseButtonIcon") as System.Windows.Controls.Image ?? throw new InvalidOperationException("Couldn't find BrowseButtonIcon in the Exclusions view.");
 
                 // BrowseButtonIconImage
                 var BrowseButtonIconImage = new System.Windows.Media.Imaging.BitmapImage();
@@ -131,7 +115,7 @@ namespace HardenWindowsSecurity
                     GUIExclusions.selectedFiles = null;
 
                     // Create OpenFileDialog instance
-                    OpenFileDialog openFileDialog = new OpenFileDialog
+                    OpenFileDialog openFileDialog = new()
                     {
                         // Set the title of the dialog
                         Title = "Select Executable Files for Exclusion",
@@ -164,27 +148,12 @@ namespace HardenWindowsSecurity
                 };
 
 
-                #region
-                // Set exclusions only if user has Admin privileges
-                if (!HardenWindowsSecurity.UserPrivCheck.IsAdmin())
-                {
-                    // Disable the execute button
-                    ExecuteButton.IsEnabled = false;
-                    HardenWindowsSecurity.Logger.LogMessage("You need Administrator privileges to configure exclusions on the system.", LogTypeIntel.Warning);
-                }
-                // If there is no Admin rights, this dynamic enablement/disablement isn't necessary as it will override the disablement that happens above.
-                else
-                {
-                    // Register the ExecuteButton as an element that will be enabled/disabled based on current activity
-                    HardenWindowsSecurity.ActivityTracker.RegisterUIElement(ExecuteButton);
-                    HardenWindowsSecurity.ActivityTracker.RegisterUIElement(BrowseForFilesButton);
-                    HardenWindowsSecurity.ActivityTracker.RegisterUIElement(BrowseForFilesButton);
-                    HardenWindowsSecurity.ActivityTracker.RegisterUIElement(BrowseForFilesButton);
-                    HardenWindowsSecurity.ActivityTracker.RegisterUIElement(BrowseForFilesButton);
-
-                }
-                #endregion
-
+                // Register the ExecuteButton as an element that will be enabled/disabled based on current activity
+                HardenWindowsSecurity.ActivityTracker.RegisterUIElement(ExecuteButton);
+                HardenWindowsSecurity.ActivityTracker.RegisterUIElement(BrowseForFilesButton);
+                HardenWindowsSecurity.ActivityTracker.RegisterUIElement(BrowseForFilesButton);
+                HardenWindowsSecurity.ActivityTracker.RegisterUIElement(BrowseForFilesButton);
+                HardenWindowsSecurity.ActivityTracker.RegisterUIElement(BrowseForFilesButton);
 
                 // Add the path to the Controlled folder access backup list of the Harden Windows Security
                 // Only if it's not already in here
@@ -192,11 +161,8 @@ namespace HardenWindowsSecurity
                 static void AddItemToBackup(string itemToAdd)
                 {
                     // Check if CFABackup is null; if so, initialize it
-                    if (GlobalVars.CFABackup == null)
-                    {
-                        GlobalVars.CFABackup = Array.Empty<string>();
+                    GlobalVars.CFABackup ??= [];
 
-                    }
                     // Convert GlobalVars.CFABackup to a List for easier manipulation
                     var CFABackupLocal = new List<string>(GlobalVars.CFABackup!);
 
@@ -216,7 +182,7 @@ namespace HardenWindowsSecurity
                 ExecuteButton.Click += async (sender, e) =>
                     {
                         // Only continue if there is no activity other places
-                        if (HardenWindowsSecurity.ActivityTracker.IsActive == false)
+                        if (!HardenWindowsSecurity.ActivityTracker.IsActive)
                         {
                             // mark as activity started
                             HardenWindowsSecurity.ActivityTracker.IsActive = true;
@@ -253,7 +219,7 @@ namespace HardenWindowsSecurity
                                     // Check if the result is not null, then convert to List<string>, or initialize an empty list if null
                                     List<string> ExclusionPathList = ExclusionPathArray != null
                                         ? new List<string>(ExclusionPathArray)
-                                        : new List<string>();
+                                        : [];
 
 
                                     // Attempt to retrieve the property value as string[]
@@ -262,7 +228,7 @@ namespace HardenWindowsSecurity
                                     // Check if the result is not null, then convert to List<string>, or initialize an empty list if null
                                     List<string> ControlledFolderAccessAllowedApplicationsList = ControlledFolderAccessAllowedApplicationsArray != null
                                         ? new List<string>(ControlledFolderAccessAllowedApplicationsArray)
-                                        : new List<string>();
+                                        : [];
 
 
                                     // Attempt to retrieve the property value as string[]
@@ -272,7 +238,7 @@ namespace HardenWindowsSecurity
                                     // Makes it easier to check items in it later
                                     List<string> attackSurfaceReductionOnlyExclusionsList = attackSurfaceReductionOnlyExclusionsArray != null
                                         ? new List<string>(attackSurfaceReductionOnlyExclusionsArray)
-                                        : new List<string>();
+                                        : [];
                                     #endregion
 
 
@@ -289,7 +255,7 @@ namespace HardenWindowsSecurity
                                                 Logger.LogMessage($"Adding {path} to the Microsoft Defender exclusions list", LogTypeIntel.Information);
 
                                                 // ADD the program path to the Microsoft Defender's main Exclusions
-                                                HardenWindowsSecurity.ConfigDefenderHelper.ManageMpPreference<string[]>("ExclusionPath", new string[] { path }, false);
+                                                HardenWindowsSecurity.ConfigDefenderHelper.ManageMpPreference<string[]>("ExclusionPath", [path], false);
                                             }
                                             else
                                             {
@@ -307,7 +273,7 @@ namespace HardenWindowsSecurity
                                                 Logger.LogMessage($"Adding {path} to the Controlled Folder Access Allowed Applications", LogTypeIntel.Information);
 
                                                 // ADD the program path to the Controlled Folder Access Exclusions
-                                                HardenWindowsSecurity.ConfigDefenderHelper.ManageMpPreference<string[]>("ControlledFolderAccessAllowedApplications", new string[] { path }, false);
+                                                HardenWindowsSecurity.ConfigDefenderHelper.ManageMpPreference<string[]>("ControlledFolderAccessAllowedApplications", [path], false);
 
                                                 // ADD the same path for CFA to the CFA backup that the program uses by default so that during the restore, the user change will be included and not left out
                                                 AddItemToBackup(path);
@@ -327,7 +293,7 @@ namespace HardenWindowsSecurity
                                                 Logger.LogMessage($"Adding {path} to the Attack Surface Reduction Rules exclusions list", LogTypeIntel.Information);
 
                                                 // ADD the program path to the Attack Surface Exclusions
-                                                HardenWindowsSecurity.ConfigDefenderHelper.ManageMpPreference<string[]>("AttackSurfaceReductionOnlyExclusions", new string[] { path }, false);
+                                                HardenWindowsSecurity.ConfigDefenderHelper.ManageMpPreference<string[]>("AttackSurfaceReductionOnlyExclusions", [path], false);
                                             }
                                             else
                                             {
@@ -338,7 +304,7 @@ namespace HardenWindowsSecurity
                                     }
 
                                     // Display notification at the end if files were selected
-                                    NewToastNotification.Show(NewToastNotification.ToastNotificationType.EndOfExclusions, null, null, null);
+                                    NewToastNotification.Show(NewToastNotification.ToastNotificationType.EndOfExclusions, null, null, null, null);
 
                                 }
                                 else

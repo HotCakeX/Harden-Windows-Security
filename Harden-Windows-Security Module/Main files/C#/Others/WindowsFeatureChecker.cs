@@ -130,7 +130,7 @@ return ((Get-WindowsCapability -Online | Where-Object -FilterScript { $_.Name -l
         private static string RunDismCommand(string arguments)
         {
             // Create a ProcessStartInfo object to configure the DISM process
-            ProcessStartInfo startInfo = new ProcessStartInfo
+            ProcessStartInfo startInfo = new()
             {
                 FileName = "dism.exe",           // Set the file name to "dism.exe"
                 Arguments = arguments,           // Set the arguments to the specified arguments
@@ -141,51 +141,42 @@ return ((Get-WindowsCapability -Online | Where-Object -FilterScript { $_.Name -l
             };
 
             // Start the DISM process
-            using (Process? process = Process.Start(startInfo))
+            using Process? process = Process.Start(startInfo) ?? throw new InvalidOperationException("Failed to start the process.");
+
+            using System.IO.StreamReader outputReader = process.StandardOutput;
+            using System.IO.StreamReader errorReader = process.StandardError;
+            string output = outputReader.ReadToEnd();
+            string error = errorReader.ReadToEnd();
+
+            process.WaitForExit();
+
+            // Error code 87 is for when the capability doesn't exist on the system
+            // Typically when a newer OS build has removed a deprecated feature that the older builds still have
+            // The logic to handle such cases exist in other methods that call this method, but the error must not be terminating
+            if (process.ExitCode == 87)
             {
-                // Check if the process is not null
-                if (process == null)
-                {
-                    throw new InvalidOperationException("Failed to start the process.");
-                }
+                //    HardenWindowsSecurity.Logger.LogMessage($"Error details: {error}");
+                //    HardenWindowsSecurity.Logger.LogMessage($"DISM command output: {output}");
+                return string.Empty;
+            }
+            // https://learn.microsoft.com/en-us/windows/win32/debug/system-error-codes--1700-3999-
+            else if (process.ExitCode == 3010)
+            {
+                HardenWindowsSecurity.Logger.LogMessage($"Reboot required to finish the feature/capability installation/uninstallation.", LogTypeIntel.Information);
+                return string.Empty;
+            }
+            else if (process.ExitCode != 0)
+            {
+                // Print or log error and output details for other error codes
+                HardenWindowsSecurity.Logger.LogMessage($"DISM command failed with exit code {process.ExitCode}. Error details: {error}", LogTypeIntel.Error);
+                HardenWindowsSecurity.Logger.LogMessage($"DISM command output: {output}", LogTypeIntel.Error);
 
-                using (System.IO.StreamReader outputReader = process.StandardOutput)
-                using (System.IO.StreamReader errorReader = process.StandardError)
-                {
-                    string output = outputReader.ReadToEnd();
-                    string error = errorReader.ReadToEnd();
-
-                    process.WaitForExit();
-
-                    // Error code 87 is for when the capability doesn't exist on the system
-                    // Typically when a newer OS build has removed a deprecated feature that the older builds still have
-                    // The logic to handle such cases exist in other methods that call this method, but the error must not be terminating
-                    if (process.ExitCode == 87)
-                    {
-                        //    HardenWindowsSecurity.Logger.LogMessage($"Error details: {error}");
-                        //    HardenWindowsSecurity.Logger.LogMessage($"DISM command output: {output}");
-                        return string.Empty;
-                    }
-                    // https://learn.microsoft.com/en-us/windows/win32/debug/system-error-codes--1700-3999-
-                    else if (process.ExitCode == 3010)
-                    {
-                        HardenWindowsSecurity.Logger.LogMessage($"Reboot required to finish the feature/capability installation/uninstallation.", LogTypeIntel.Information);
-                        return string.Empty;
-                    }
-                    else if (process.ExitCode != 0)
-                    {
-                        // Print or log error and output details for other error codes
-                        HardenWindowsSecurity.Logger.LogMessage($"DISM command failed with exit code {process.ExitCode}. Error details: {error}", LogTypeIntel.Error);
-                        HardenWindowsSecurity.Logger.LogMessage($"DISM command output: {output}", LogTypeIntel.Error);
-
-                        throw new InvalidOperationException($"DISM command failed with exit code {process.ExitCode}. Error details: {error}");
-                    }
-                    else
-                    {
-                        // Return the output of the DISM command if successful
-                        return output;
-                    }
-                }
+                throw new InvalidOperationException($"DISM command failed with exit code {process.ExitCode}. Error details: {error}");
+            }
+            else
+            {
+                // Return the output of the DISM command if successful
+                return output;
             }
         }
 
@@ -210,10 +201,10 @@ return ((Get-WindowsCapability -Online | Where-Object -FilterScript { $_.Name -l
         public static void SetWindowsFeature(string featureName, bool enable)
         {
 
-            string arguments = string.Empty;
+            string arguments;
 
             // Determine the command based on whether we are enabling or disabling the feature
-            if (enable == true)
+            if (enable)
             {
                 // Construct the arguments for the DISM command
                 arguments = $"/Online /Enable-Feature /FeatureName:{featureName} /All /NoRestart";
@@ -225,7 +216,7 @@ return ((Get-WindowsCapability -Online | Where-Object -FilterScript { $_.Name -l
             }
 
             // Run the DISM command using the helper method
-            string output = RunDismCommand(arguments);
+            _ = RunDismCommand(arguments);
         }
     }
 }

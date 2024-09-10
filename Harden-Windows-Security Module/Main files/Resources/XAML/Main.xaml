@@ -77,6 +77,13 @@
                                         <TextBlock Text='Exclusions' Style='{StaticResource Text_Style}' />
                                     </Grid>
                                 </RadioButton>
+                                <!--// BitLocker //-->
+                                <RadioButton Style='{StaticResource BtnStyle}' Command='{Binding BitLockerCommand}'>
+                                    <Grid x:Name="BitLockerButtonGrid">
+                                        <Image x:Name="BitLockerButtonIcon" Style="{StaticResource Image_Style}" />
+                                        <TextBlock Text='BitLocker' Style='{StaticResource Text_Style}' />
+                                    </Grid>
+                                </RadioButton>
                                 <!--// Logs //-->
                                 <RadioButton Style='{StaticResource BtnStyle}' Command='{Binding LogsCommand}'>
                                     <Grid x:Name="LogsButtonGrid">

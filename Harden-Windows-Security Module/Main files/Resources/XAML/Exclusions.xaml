@@ -8,13 +8,11 @@
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
-            <RowDefinition Height="2*" />
-            <RowDefinition Height="4*" />
-            <RowDefinition Height="2*" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-
         <StackPanel Orientation="Vertical" Grid.Row="0" Margin="0,30,0,20" HorizontalAlignment="Center" VerticalAlignment="Center">
-
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,20">
                 <TextBlock x:Name="MicrosoftDefender" Text="Microsoft Defender"
                FontSize="15" FontWeight="SemiBold" Foreground="#121518"
@@ -24,8 +22,6 @@
                 Width="75" Height="27.5"
                 Template="{DynamicResource ConfirmationPageToggleButtonStyle}"/>
             </StackPanel>
-
-
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,20">
                 <TextBlock x:Name="ControlledFolderAccess" Text="Controlled Folder Access"
     FontSize="15" FontWeight="SemiBold" Foreground="#121518"
@@ -35,8 +31,6 @@
      Width="75" Height="27.5"
      Template="{DynamicResource ConfirmationPageToggleButtonStyle}"/>
             </StackPanel>
-
-
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,0,20">
                 <TextBlock x:Name="AttackSurfaceReductionRules" Text="Attack Surface Reduction Rules"
     FontSize="15" FontWeight="SemiBold" Foreground="#121518"
@@ -46,45 +40,13 @@
      Width="75" Height="27.5"
      Template="{DynamicResource ConfirmationPageToggleButtonStyle}"/>
             </StackPanel>
-
         </StackPanel>
-
-        <Button x:Name="BrowseForFilesButton" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Center" Width="170" Height="40" FontSize="14" FontWeight="Bold" Background="{StaticResource PinkGradient}" ToolTip="Browse for files to exclude" Margin="0,0,0,20">
-            <Button.Template>
-                <ControlTemplate TargetType="Button">
-                    <Border x:Name="border" BorderThickness="3" Width="{TemplateBinding Width}" Height="{TemplateBinding Height}" Background="{TemplateBinding Background}" CornerRadius="6" BorderBrush="MediumPurple">
-                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                    </Border>
-                    <ControlTemplate.Triggers>
-                        <Trigger Property="IsMouseOver" Value="true">
-                            <Setter TargetName="border" Property="Background">
-                                <Setter.Value>
-                                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                                        <GradientStop Color="#e1eec3" Offset="0.0"/>
-                                        <GradientStop Color="#eaafc8" Offset="1.0"/>
-                                    </LinearGradientBrush>
-                                </Setter.Value>
-                            </Setter>
-                        </Trigger>
-                        <Trigger Property="IsPressed" Value="true">
-                            <Setter TargetName="border" Property="Background">
-                                <Setter.Value>
-                                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                                        <GradientStop Color="#eaafc8" Offset="0.0"/>
-                                        <GradientStop Color="#e1eec3" Offset="1.0"/>
-                                    </LinearGradientBrush>
-                                </Setter.Value>
-                            </Setter>
-                        </Trigger>
-                    </ControlTemplate.Triggers>
-                </ControlTemplate>
-            </Button.Template>
+        <Button x:Name="BrowseForFilesButton" Grid.Row="1" Style="{StaticResource CustomButtonStyle2}" ToolTip="Browse for files to exclude" Margin="0,0,0,20">
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
                 <Image x:Name="BrowseButtonIcon" Width="40" Height="30"/>
-                <TextBlock Text="Browse For Files" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                <TextBlock Text="Browse For Files" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,0,8,0"/>
             </StackPanel>
         </Button>
-
         <TextBox x:Name="SelectedFilePaths" Grid.Row="2" HorizontalAlignment="Stretch"
          VerticalAlignment="Stretch" Margin="30,0,30,0"
          BorderThickness="0"
@@ -93,7 +55,7 @@
          ScrollViewer.HorizontalScrollBarVisibility="Auto"
          ScrollViewer.VerticalScrollBarVisibility="Auto" Cursor="Arrow"
         VerticalContentAlignment="Top" HorizontalContentAlignment="Left" Background="Transparent">
-        <TextBox.Style>
+            <TextBox.Style>
                 <Style TargetType="{x:Type TextBox}">
                     <Setter Property="VerticalContentAlignment" Value="Center"/>
                     <Setter Property="Template">
@@ -125,7 +87,6 @@
                 </Style>
             </TextBox.Style>
         </TextBox>
-
         <!-- Grid containing the Execute Button -->
         <Grid x:Name="ExecuteButtonGrid" Height="150" Grid.Row="3"  Margin="0,0,0,0">
             <!-- First Ellipse (Forward1) - Represents the outermost expanding ellipse when the button is clicked -->

@@ -37,6 +37,7 @@ namespace HardenWindowsSecurity
             // Launch the GUI
             HardenWindowsSecurity.GUIBootStrapper.Boot();
 
+
         }
     }
 }

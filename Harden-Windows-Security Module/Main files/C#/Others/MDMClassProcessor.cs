@@ -54,7 +54,7 @@ namespace HardenWindowsSecurity
             var output = HardenWindowsSecurity.MDM.Get();
 
             // Create a list to store the processed results and return at the end
-            List<HardenWindowsSecurity.MDMClassProcessor> resultsList = new List<HardenWindowsSecurity.MDMClassProcessor>();
+            List<HardenWindowsSecurity.MDMClassProcessor> resultsList = [];
 
             // Loop over each data
             foreach (var cimInstanceResult in output)

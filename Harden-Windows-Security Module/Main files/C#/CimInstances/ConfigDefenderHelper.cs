@@ -36,7 +36,7 @@ namespace HardenWindowsSecurity
                     }
                     else
                     {
-                        throw new Exception("Failed to get MpComputerStatus!");
+                        throw new InvalidOperationException("Failed to get MpComputerStatus!");
                     }
                 }
                 else
@@ -155,7 +155,7 @@ namespace HardenWindowsSecurity
                 }
 
                 // Invoke the method to apply the settings
-                mpPreferenceClass.InvokeMethod(MethodName, methodParams, null);
+                _ = mpPreferenceClass.InvokeMethod(MethodName, methodParams, null);
 
                 HardenWindowsSecurity.Logger.LogMessage($"{preferenceName} set to {preferenceValue} (Type: {typeof(T).Name}) successfully.", LogTypeIntel.Information);
             }

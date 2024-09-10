@@ -20,8 +20,8 @@ namespace HardenWindowsSecurity
 
             // Creating these registry keys that have forward slashes in them
             // Values are added to them in the next step using registry.csv file
-            string[] cipherKeys = new string[]
-            {
+            string[] cipherKeys =
+            [
             "DES 56/56",       // DES 56-bit
             "RC2 40/128",      // RC2 40-bit
             "RC2 56/128",      // RC2 56-bit
@@ -31,18 +31,16 @@ namespace HardenWindowsSecurity
             "RC4 64/128",      // RC4 64-bit
             "RC4 128/128",     // RC4 128-bit
             "Triple DES 168"   // 3DES 168-bit (Triple DES 168)
-            };
+            ];
 
             foreach (var cipherKey in cipherKeys)
             {
-                using (RegistryKey baseKey = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64))
-                {
-                    string keyPath = $@"SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers\{cipherKey}";
-                    using (RegistryKey subKey = baseKey.CreateSubKey(keyPath))
-                    {
-                        // Key is created, but no values are set
-                    }
-                }
+                using RegistryKey baseKey = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64);
+
+                string keyPath = $@"SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers\{cipherKey}";
+
+                using RegistryKey subKey = baseKey.CreateSubKey(keyPath);
+                // Key is created, but no values are set
             }
 
 

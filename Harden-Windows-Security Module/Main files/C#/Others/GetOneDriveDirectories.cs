@@ -18,14 +18,14 @@ namespace HardenWindowsSecurity
         public static List<string> Get()
         {
             // List to store the OneDrive directories found
-            List<string> directoriesList = new List<string>();
+            List<string> directoriesList = [];
 
             // Retrieve the system drive
             string systemDrive = Environment.GetEnvironmentVariable("SystemDrive") ?? string.Empty;
 
             if (string.IsNullOrEmpty(systemDrive))
             {
-                throw new Exception("SystemDrive environment variable is not set.");
+                throw new InvalidOperationException("SystemDrive environment variable is not set.");
             }
 
             // Combine system drive with "Users" to get the path to the Users directory

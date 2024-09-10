@@ -34,12 +34,20 @@ namespace HardenWindowsSecurity
                     CurrentView = cachedView;
 
                     // Only update the UI if work is not being done (i.e. the confirmation job is not already active)
-                    if (HardenWindowsSecurity.ActivityTracker.IsActive == false)
+                    if (!HardenWindowsSecurity.ActivityTracker.IsActive)
                     {
                         // Update the UI every time the user switches to Confirm tab but do not display toast notification when it happens because it won't make sense
                         UpdateTotalCount(false);
                     }
 
+                    return;
+                }
+
+                // if Admin privileges are not available, return and do not proceed any further
+                // Will prevent the page from being loaded since the CurrentView won't be set/changed
+                if (!HardenWindowsSecurity.UserPrivCheck.IsAdmin())
+                {
+                    Logger.LogMessage("Confirmation page can only be used when running the Harden Windows Security Application with Administrator privileges", LogTypeIntel.ErrorInteractionRequired);
                     return;
                 }
 
@@ -52,6 +60,9 @@ namespace HardenWindowsSecurity
                 // Parse the XAML content to create a UserControl object
                 GUIConfirmSystemCompliance.View = (System.Windows.Controls.UserControl)System.Windows.Markup.XamlReader.Parse(xamlContent);
 
+                // Set the DataContext for the Confirm view
+                GUIConfirmSystemCompliance.View.DataContext = new ConfirmVM();
+
                 // Find the SecOpsDataGrid
                 HardenWindowsSecurity.GUIConfirmSystemCompliance.SecOpsDataGrid = (System.Windows.Controls.DataGrid)GUIConfirmSystemCompliance.View.FindName("SecOpsDataGrid");
 
@@ -62,8 +73,8 @@ namespace HardenWindowsSecurity
                 System.Windows.Controls.Primitives.ToggleButton NonCompliantItemsToggleButton = (System.Windows.Controls.Primitives.ToggleButton)GUIConfirmSystemCompliance.View.FindName("NonCompliantItemsToggleButton");
 
                 // Apply the templates so that we can set the IsChecked property to true
-                CompliantItemsToggleButton.ApplyTemplate();
-                NonCompliantItemsToggleButton.ApplyTemplate();
+                _ = CompliantItemsToggleButton.ApplyTemplate();
+                _ = NonCompliantItemsToggleButton.ApplyTemplate();
 
                 CompliantItemsToggleButton.IsChecked = true;
                 NonCompliantItemsToggleButton.IsChecked = true;
@@ -114,7 +125,7 @@ namespace HardenWindowsSecurity
                 }
 
                 // Initialize an empty security options collection
-                __SecOpses = new System.Collections.ObjectModel.ObservableCollection<SecOp>();
+                __SecOpses = [];
 
                 // Create a collection view based on the security options collection
                 _SecOpsCollectionView = System.Windows.Data.CollectionViewSource.GetDefaultView(__SecOpses);
@@ -150,7 +161,7 @@ namespace HardenWindowsSecurity
                 System.Windows.Controls.Primitives.ToggleButton RefreshButton = (System.Windows.Controls.Primitives.ToggleButton)RefreshButtonGrid.FindName("RefreshButton");
 
                 // Apply the template to make sure it's available
-                RefreshButton.ApplyTemplate();
+                _ = RefreshButton.ApplyTemplate();
 
                 // Access the image within the Refresh Button's template
                 System.Windows.Controls.Image RefreshIconImage = RefreshButton.Template.FindName("RefreshIconImage", RefreshButton) as System.Windows.Controls.Image;
@@ -180,7 +191,7 @@ namespace HardenWindowsSecurity
                 string[] catsStrings = cats.GetValidValues();
 
                 // Convert the array to a list to easily add items
-                List<string> catsList = new List<string>(catsStrings);
+                List<string> catsList = new(catsStrings);
 
                 // Add an empty item to the list at the beginning
                 // Add an empty string as the first item
@@ -191,26 +202,17 @@ namespace HardenWindowsSecurity
 
                 #endregion
 
-                // perform the compliance check only if user has Admin privileges
-                if (!HardenWindowsSecurity.UserPrivCheck.IsAdmin())
-                {
-                    // Disable the refresh button
-                    RefreshButton.IsEnabled = false;
-                    HardenWindowsSecurity.Logger.LogMessage("You need Administrator privileges to perform compliance check on the system.", LogTypeIntel.Warning);
-                }
-                // If there is no Admin rights, this dynamic enablement/disablement isn't necessary as it will override the disablement that happens above.
-                else
-                {
-                    // Register the RefreshButton as an element that will be enabled/disabled based on current activity
-                    HardenWindowsSecurity.ActivityTracker.RegisterUIElement(RefreshButton);
-                }
+
+                // Register the RefreshButton as an element that will be enabled/disabled based on current activity
+                HardenWindowsSecurity.ActivityTracker.RegisterUIElement(RefreshButton);
+
 
                 // Set up the Click event handler for the Refresh button
                 RefreshButton.Click += async (sender, e) =>
                 {
 
                     // Only continue if there is no activity other places
-                    if (HardenWindowsSecurity.ActivityTracker.IsActive == false)
+                    if (!HardenWindowsSecurity.ActivityTracker.IsActive)
                     {
                         // mark as activity started
                         HardenWindowsSecurity.ActivityTracker.IsActive = true;
@@ -270,7 +272,7 @@ namespace HardenWindowsSecurity
                                 if (SelectedCategory != null && !string.IsNullOrEmpty(SelectedCategory))
                                 {
                                     // Perform the compliance check using the selected compliance category
-                                    HardenWindowsSecurity.InvokeConfirmation.Invoke(new string[] { SelectedCategory });
+                                    HardenWindowsSecurity.InvokeConfirmation.Invoke([SelectedCategory]);
                                 }
                                 else
                                 {
@@ -310,52 +312,31 @@ namespace HardenWindowsSecurity
             static private System.Windows.Media.Brush GetCategoryColor(string category)
             {
                 // Determine the background color for each category
-                switch (category)
+                return category switch
                 {
                     // Light Pastel Sky Blue
-                    case "MicrosoftDefender":
-                        return new System.Windows.Media.BrushConverter().ConvertFromString("#B3E5FC") as System.Windows.Media.Brush;
-
+                    "MicrosoftDefender" => new System.Windows.Media.BrushConverter().ConvertFromString("#B3E5FC") as System.Windows.Media.Brush,
                     // Light Pastel Coral
-                    case "AttackSurfaceReductionRules":
-                        return new System.Windows.Media.BrushConverter().ConvertFromString("#FFDAB9") as System.Windows.Media.Brush;
-
+                    "AttackSurfaceReductionRules" => new System.Windows.Media.BrushConverter().ConvertFromString("#FFDAB9") as System.Windows.Media.Brush,
                     // Light Pastel Green (unchanged)
-                    case "BitLockerSettings":
-                        return new System.Windows.Media.BrushConverter().ConvertFromString("#C3FDB8") as System.Windows.Media.Brush;
-
+                    "BitLockerSettings" => new System.Windows.Media.BrushConverter().ConvertFromString("#C3FDB8") as System.Windows.Media.Brush,
                     // Light Pastel Lemon (unchanged)
-                    case "TLSSecurity":
-                        return new System.Windows.Media.BrushConverter().ConvertFromString("#FFFACD") as System.Windows.Media.Brush;
-
+                    "TLSSecurity" => new System.Windows.Media.BrushConverter().ConvertFromString("#FFFACD") as System.Windows.Media.Brush,
                     // Light Pastel Lavender
-                    case "LockScreen":
-                        return new System.Windows.Media.BrushConverter().ConvertFromString("#E6E6FA") as System.Windows.Media.Brush;
-
+                    "LockScreen" => new System.Windows.Media.BrushConverter().ConvertFromString("#E6E6FA") as System.Windows.Media.Brush,
                     // Light Pastel Aqua
-                    case "UserAccountControl":
-                        return new System.Windows.Media.BrushConverter().ConvertFromString("#C1F0F6") as System.Windows.Media.Brush;
-
+                    "UserAccountControl" => new System.Windows.Media.BrushConverter().ConvertFromString("#C1F0F6") as System.Windows.Media.Brush,
                     // Light Pastel Teal (unchanged)
-                    case "DeviceGuard":
-                        return new System.Windows.Media.BrushConverter().ConvertFromString("#B2DFDB") as System.Windows.Media.Brush;
-
+                    "DeviceGuard" => new System.Windows.Media.BrushConverter().ConvertFromString("#B2DFDB") as System.Windows.Media.Brush,
                     // Light Pastel Pink
-                    case "WindowsFirewall":
-                        return new System.Windows.Media.BrushConverter().ConvertFromString("#F8BBD0") as System.Windows.Media.Brush;
-
+                    "WindowsFirewall" => new System.Windows.Media.BrushConverter().ConvertFromString("#F8BBD0") as System.Windows.Media.Brush,
                     // Light Pastel Peach (unchanged)
-                    case "OptionalWindowsFeatures":
-                        return new System.Windows.Media.BrushConverter().ConvertFromString("#FFE4E1") as System.Windows.Media.Brush;
-
+                    "OptionalWindowsFeatures" => new System.Windows.Media.BrushConverter().ConvertFromString("#FFE4E1") as System.Windows.Media.Brush,
                     // Light Pastel Mint
-                    case "WindowsNetworking":
-                        return new System.Windows.Media.BrushConverter().ConvertFromString("#F5FFFA") as System.Windows.Media.Brush;
-
+                    "WindowsNetworking" => new System.Windows.Media.BrushConverter().ConvertFromString("#F5FFFA") as System.Windows.Media.Brush,
                     // Light Pastel Gray (unchanged)
-                    default:
-                        return new System.Windows.Media.BrushConverter().ConvertFromString("#EDEDED") as System.Windows.Media.Brush;
-                }
+                    _ => new System.Windows.Media.BrushConverter().ConvertFromString("#EDEDED") as System.Windows.Media.Brush,
+                };
             }
 
             /// <summary>
@@ -408,9 +389,9 @@ namespace HardenWindowsSecurity
                 }
 
                 // Display a notification if it's allowed to do so, and ShowNotification is set to true
-                if (HardenWindowsSecurity.GlobalVars.UseNewNotificationsExp == true && ShowNotification == true)
+                if (HardenWindowsSecurity.GlobalVars.UseNewNotificationsExp && ShowNotification)
                 {
-                    HardenWindowsSecurity.NewToastNotification.Show(ToastNotificationType.EndOfConfirmation, CompliantItemsCount, NonCompliantItemsCount, null);
+                    HardenWindowsSecurity.NewToastNotification.Show(ToastNotificationType.EndOfConfirmation, CompliantItemsCount, NonCompliantItemsCount, null, null);
                 }
             }
 

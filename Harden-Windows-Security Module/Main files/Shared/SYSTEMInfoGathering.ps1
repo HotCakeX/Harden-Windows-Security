@@ -1,4 +1,3 @@
-#Region SYSTEM-priv Intune info gathering
 # using schtasks.exe instead of CimInstance/cmdlet wherever it makes the process faster
 Write-Verbose -Message 'Collecting Intune applied policy details from the System'
 # MDM_BitLocker
@@ -30,4 +29,3 @@ schtasks.exe /Delete /TN "$TaskPath" /F *>$null # Delete task path
 if ($LASTEXITCODE -ne '0') {
     Write-Verbose -Message "Failed to delete the task with the path '$TaskPath' and name '$TaskName'." -Verbose
 }
-#Endregion

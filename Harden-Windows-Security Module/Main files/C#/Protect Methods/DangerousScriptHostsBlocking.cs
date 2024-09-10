@@ -34,7 +34,7 @@ namespace HardenWindowsSecurity
                 }}
             ";
 
-            HardenWindowsSecurity.PowerShellExecutor.ExecuteScript(script);
+            _ = HardenWindowsSecurity.PowerShellExecutor.ExecuteScript(script);
         }
     }
 }

@@ -17,18 +17,11 @@ namespace HardenWindowsSecurity
         private static void RemoveCapability(string CapabilityIdentity, string CapabilityName)
         {
 
-            if (CapabilityIdentity == null)
-            {
-                throw new ArgumentNullException(nameof(CapabilityIdentity));
-            }
-
-            if (CapabilityName == null)
-            {
-                throw new ArgumentNullException(nameof(CapabilityName));
-            }
+            ArgumentNullException.ThrowIfNull(CapabilityIdentity);
+            ArgumentNullException.ThrowIfNull(CapabilityName);
 
             // The queried state of the capability
-            string CapabilityState = string.Empty;
+            string CapabilityState;
 
             CapabilityState = HardenWindowsSecurity.WindowsFeatureChecker.GetCapabilityState(CapabilityIdentity);
 
@@ -52,7 +45,7 @@ Remove-WindowsCapability -Online
 ";
 
                 // Run the PowerShell script
-                HardenWindowsSecurity.PowerShellExecutor.ExecuteScript(PSScript);
+                _ = HardenWindowsSecurity.PowerShellExecutor.ExecuteScript(PSScript);
 
             }
             else

@@ -1,4 +1,4 @@
-#nullable disable
+#nullable enable
 
 namespace HardenWindowsSecurity
 {
@@ -12,16 +12,16 @@ namespace HardenWindowsSecurity
         private bool _Compliant;
 
         // Stores the security option's character image
-        private System.Windows.Media.ImageSource _characterImage;
+        private System.Windows.Media.ImageSource? _characterImage;
 
         // Stores the background color for the security option
-        private System.Windows.Media.Brush _bgColor;
+        private System.Windows.Media.Brush? _bgColor;
 
         // Event to notify listeners when a property value changes
-        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        public event System.ComponentModel.PropertyChangedEventHandler? PropertyChanged;
 
         // Public property to get or set the security option's character image
-        public System.Windows.Media.ImageSource CharacterImage
+        public System.Windows.Media.ImageSource? CharacterImage
         {
             get => _characterImage;
             set
@@ -34,7 +34,7 @@ namespace HardenWindowsSecurity
         }
 
         // Public property to get or set the background color
-        public System.Windows.Media.Brush BgColor
+        public System.Windows.Media.Brush? BgColor
         {
             get => _bgColor;
             set
@@ -47,11 +47,11 @@ namespace HardenWindowsSecurity
         }
 
         // Public properties for security option details
-        public string FriendlyName { get; set; }
-        public string Value { get; set; }
-        public string Name { get; set; }
-        public string Category { get; set; }
-        public string Method { get; set; }
+        public string? FriendlyName { get; set; }
+        public string? Value { get; set; }
+        public string? Name { get; set; }
+        public string? Category { get; set; }
+        public string? Method { get; set; }
 
         // Public property to get or set whether the security option is compliant
         public bool Compliant
@@ -76,10 +76,10 @@ namespace HardenWindowsSecurity
         }
 
         // Private method to load an image from the specified file name
-        static private System.Windows.Media.ImageSource LoadImage(string fileName)
+        static private System.Windows.Media.Imaging.BitmapImage LoadImage(string fileName)
         {
             // Construct the full path to the image file
-            string imagePath = System.IO.Path.Combine(GlobalVars.path, "Resources", "Media", fileName);
+            string imagePath = System.IO.Path.Combine(GlobalVars.path!, "Resources", "Media", fileName);
             // Return the loaded image as a BitmapImage
             return new System.Windows.Media.Imaging.BitmapImage(new System.Uri(imagePath, System.UriKind.Absolute));
         }

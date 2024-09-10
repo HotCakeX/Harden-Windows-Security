@@ -40,14 +40,11 @@ namespace HardenWindowsSecurity
             // To completely remove the Edge policy since only its sub-keys are removed by the command above
             using (RegistryKey? key = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Policies\Microsoft\Edge", writable: true))
             {
-                if (key != null)
-                {
-                    // Delete the specified subkey and its contents
-                    key.DeleteSubKeyTree("TLSCipherSuiteDenyList", throwOnMissingSubKey: false);
-                }
+                // Delete the specified subkey and its contents if it exists
+                key?.DeleteSubKeyTree("TLSCipherSuiteDenyList", throwOnMissingSubKey: false);
             }
 
-            //Set a tattooed Group policy for Svchost.exe process mitigations back to disabled state
+            //Set a tattooed Group policy for SvcHost.exe process mitigations back to disabled state
             HardenWindowsSecurity.RegistryEditor.EditRegistry(@"HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\SCMConfig", "EnableSvchostMitigationPolicy", "0", "DWORD", "AddOrModify");
 
             #endregion
@@ -97,7 +94,7 @@ namespace HardenWindowsSecurity
 
             #region Xbox scheduled task
 
-            bool XblGameSaveTaskResult = false;
+            bool XblGameSaveTaskResult;
 
             var XblGameSaveTaskResultObject = HardenWindowsSecurity.TaskSchedulerHelper.Get(
                 "XblGameSaveTask",
@@ -108,11 +105,11 @@ namespace HardenWindowsSecurity
             // Convert to boolean
             XblGameSaveTaskResult = Convert.ToBoolean(XblGameSaveTaskResultObject, CultureInfo.InvariantCulture);
 
-            if (XblGameSaveTaskResult == true)
+            if (XblGameSaveTaskResult)
             {
 
                 HardenWindowsSecurity.Logger.LogMessage("Re-enables the XblGameSave Standby Task that gets disabled by Microsoft Security Baselines", LogTypeIntel.Information);
-                HardenWindowsSecurity.PowerShellExecutor.ExecuteScript(@"SCHTASKS.EXE /Change /TN \Microsoft\XblGameSave\XblGameSaveTask /Enable");
+                _ = HardenWindowsSecurity.PowerShellExecutor.ExecuteScript(@"SCHTASKS.EXE /Change /TN \Microsoft\XblGameSave\XblGameSaveTask /Enable");
             }
             else
             {
@@ -123,21 +120,15 @@ namespace HardenWindowsSecurity
 
             #region DEP
             HardenWindowsSecurity.Logger.LogMessage("Setting Data Execution Prevention (DEP) back to its default value", LogTypeIntel.Information);
-            HardenWindowsSecurity.PowerShellExecutor.ExecuteScript(@"Set-BcdElement -Element 'nx' -Type 'Integer' -Value '0'");
+            _ = HardenWindowsSecurity.PowerShellExecutor.ExecuteScript(@"Set-BcdElement -Element 'nx' -Type 'Integer' -Value '0'");
             #endregion
 
 
             #region Fast MSFT Driver Block list task
             HardenWindowsSecurity.Logger.LogMessage("Removing the scheduled task that keeps the Microsoft recommended driver block rules updated", LogTypeIntel.Information);
 
-            // If the task exists, delete it
-            if (Convert.ToBoolean(HardenWindowsSecurity.TaskSchedulerHelper.Get("MSFT Driver Block list update", @"\MSFT Driver Block list update\", TaskSchedulerHelper.OutputType.Boolean), CultureInfo.InvariantCulture))
-            {
-                HardenWindowsSecurity.PowerShellExecutor.ExecuteScript("""
-schtasks.exe /Delete /TN "\MSFT Driver Block list update\MSFT Driver Block list update" /F # Delete task
-schtasks.exe /Delete /TN "MSFT Driver Block list update" /F *>$null # Delete task path
-""");
-            }
+            // Deleting the MSFT Driver Block list update Scheduled task if it exists
+            _ = TaskSchedulerHelper.Delete("MSFT Driver Block list update", @"\MSFT Driver Block list update\", "MSFT Driver Block list update");
 
             #endregion
 
@@ -159,7 +150,7 @@ schtasks.exe /Delete /TN "MSFT Driver Block list update" /F *>$null # Delete tas
 
             #region Firewall
 
-            HardenWindowsSecurity.PowerShellExecutor.ExecuteScript("""
+            _ = HardenWindowsSecurity.PowerShellExecutor.ExecuteScript("""
 # Enables Multicast DNS (mDNS) UDP-in Firewall Rules for all 3 Firewall profiles
 foreach ($FirewallRule in Get-NetFirewallRule) {
     if ($FirewallRule.RuleGroup -eq '@%SystemRoot%\system32\firewallapi.dll,-37302' -and $FirewallRule.Direction -eq 'inbound') {
@@ -189,7 +180,7 @@ foreach ($FirewallRule in Get-NetFirewallRule) {
             FirewallHelper.BlockIPAddressListsInGroupPolicy("State Sponsors of Terrorism IP range blocking", null, false);
 
             // Refresh the group policies to apply the changes instantly
-            HardenWindowsSecurity.PowerShellExecutor.ExecuteScript("""
+            _ = HardenWindowsSecurity.PowerShellExecutor.ExecuteScript("""
 Start-Process -FilePath GPUpdate.exe -ArgumentList '/force' -NoNewWindow
 """);
         }
@@ -206,12 +197,12 @@ Start-Process -FilePath GPUpdate.exe -ArgumentList '/force' -NoNewWindow
             // Disable Mandatory ASLR
             // Define the PowerShell command to execute
             string command = "Set-ProcessMitigation -System -Disable ForceRelocateImages";
-            HardenWindowsSecurity.PowerShellExecutor.ExecuteScript(command);
+            _ = HardenWindowsSecurity.PowerShellExecutor.ExecuteScript(command);
 
 
             if (HardenWindowsSecurity.GlobalVars.ProcessMitigations == null)
             {
-                throw new Exception("GlobalVars.ProcessMitigations is null.");
+                throw new InvalidOperationException("GlobalVars.ProcessMitigations is null.");
             }
 
             // Only remove the mitigations that are allowed to be removed
@@ -259,12 +250,12 @@ Start-Process -FilePath GPUpdate.exe -ArgumentList '/force' -NoNewWindow
         public static void RemoveWDACPolicies(bool DownloadsDefenseMeasures, bool DangerousScriptHostsBlocking)
         {
             // Run the CiTool and retrieve a list of base policies
-            List<CiPolicyInfo> policies = CiToolRunner.RunCiTool(SystemPolicies: false, BasePolicies: true, SupplementalPolicies: false);
+            List<CiPolicyInfo> policies = CiToolRunner.RunCiTool(CiToolRunner.GetOptions(), SystemPolicies: false, BasePolicies: true, SupplementalPolicies: false);
 
-            if (DownloadsDefenseMeasures == true)
+            if (DownloadsDefenseMeasures)
             {
                 // loop over all policies that currently exist on the disk and can be removed
-                foreach (CiPolicyInfo item in policies.Where(policy => policy.IsOnDisk == true))
+                foreach (CiPolicyInfo item in policies.Where(policy => policy.IsOnDisk))
                 {
                     // find the policy with the right name
                     if (string.Equals(item.FriendlyName, "Downloads-Defense-Measures", StringComparison.OrdinalIgnoreCase))
@@ -278,10 +269,10 @@ Start-Process -FilePath GPUpdate.exe -ArgumentList '/force' -NoNewWindow
                 }
             }
 
-            if (DangerousScriptHostsBlocking == true)
+            if (DangerousScriptHostsBlocking)
             {
                 // loop over all policies that currently exist on the disk and can be removed
-                foreach (CiPolicyInfo item in policies.Where(policy => policy.IsOnDisk == true))
+                foreach (CiPolicyInfo item in policies.Where(policy => policy.IsOnDisk))
                 {
                     // find the policy with the right name
                     if (string.Equals(item.FriendlyName, "Dangerous-Script-Hosts-Blocking", StringComparison.OrdinalIgnoreCase))

@@ -441,6 +441,13 @@ namespace HardenWindowsSecurity
                 GUIProtectWinSecurity.UpdateSubCategories();
 
 
+                // If not running as Admin, disable the event logging since it requires Administrator privileges
+                // To write to the event source
+                if (!HardenWindowsSecurity.UserPrivCheck.IsAdmin())
+                {
+                    GUIProtectWinSecurity.EventLogging.IsEnabled = false;
+                }
+
                 if (!HardenWindowsSecurity.GlobalVars.Offline)
                 {
                     // Disable the Offline mode toggle button if -Offline parameter was not used with the function

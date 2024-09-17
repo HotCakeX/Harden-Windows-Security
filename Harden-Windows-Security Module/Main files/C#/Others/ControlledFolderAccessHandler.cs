@@ -16,6 +16,11 @@ namespace HardenWindowsSecurity
     /// </summary>
     public class ControlledFolderAccessHandler
     {
+        // To track if the Reset() method has been run
+        private static bool HasResetHappenedBefore;
+        // To track if the Start() method has been run
+        private static bool HasBackupHappenedBefore;
+
 
         /// <summary>
         /// Set the Controlled Folder Access allowed applications
@@ -73,6 +78,12 @@ namespace HardenWindowsSecurity
             // Make sure the user has Admin privileges
             if (HardenWindowsSecurity.UserPrivCheck.IsAdmin())
             {
+
+                if (HasBackupHappenedBefore)
+                {
+                    return;
+                }
+
                 HardenWindowsSecurity.Logger.LogMessage("Backing up the current Controlled Folder Access allowed apps list in order to restore them at the end", LogTypeIntel.Information);
 
                 // Doing this so that when we Add and then Remove PowerShell executables in Controlled folder access exclusions
@@ -140,6 +151,9 @@ namespace HardenWindowsSecurity
                     // Adding powercfg.exe so Controlled Folder Access won't complain about it in BitLocker category when setting hibernate file size to full
                     HardenWindowsSecurity.ControlledFolderAccessHandler.Add(CFAExclusionsToBeAddedArray);
                 }
+
+                // Set this to true indicating CFA exclusions backup has already happened
+                HasBackupHappenedBefore = true;
             }
         }
 
@@ -151,6 +165,12 @@ namespace HardenWindowsSecurity
             // Make sure the user as Admin privileges
             if (HardenWindowsSecurity.UserPrivCheck.IsAdmin())
             {
+                // Since this method is called in multiple places, make sure it only runs once during app exit
+                if (HasResetHappenedBefore)
+                {
+                    return;
+                }
+
                 // restoring the original Controlled folder access allow list - if user already had added PowerShell executables to the list
                 // they will be restored as well, so user customization will remain intact
                 if (HardenWindowsSecurity.GlobalVars.CFABackup != null && HardenWindowsSecurity.GlobalVars.CFABackup.Length > 0)
@@ -163,6 +183,9 @@ namespace HardenWindowsSecurity
                     // If there was nothing to backup prior to adding the executables then clear the current list that contains the executables by removing everything it contains
                     HardenWindowsSecurity.ControlledFolderAccessHandler.Remove(HardenWindowsSecurity.MpPreferenceHelper.GetMpPreference().ControlledFolderAccessAllowedApplications);
                 }
+
+                // Set this to true indicating CFA exclusion reset has already happened
+                HasResetHappenedBefore = true;
             }
 
             // Set the variable to null after being done with it so subsequent attempts of this method won't run in the same session

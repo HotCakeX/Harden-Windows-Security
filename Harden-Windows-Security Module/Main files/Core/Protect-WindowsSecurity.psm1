@@ -475,14 +475,7 @@ Function Protect-WindowsSecurity {
 
             # If no errors Occurred, recycle the current session for there can't be more than 1 Application in the same App Domain
             if (!$ErrorsOccurred) {
-
-                # Since the module loads DLLs during its operation, the following section makes sure the module folder is completely removable after the GUI is closed or all operations have finished.
-                try {
-                    $null = New-Item -Path '.\12345678987654.txt' -ItemType File -Force -ErrorAction Stop
-                    Set-Content -Path '.\12345678987654.txt' -Value $PID -ErrorAction Stop
-                }
-                catch {}
-                pwsh.exe -NoProfile -NoLogo -NoExit -Command "try { \$12345678987654 = Get-Content -Path '.\12345678987654.txt' -ErrorAction Stop; Remove-Item -Path '.\12345678987654.txt' -Force -ErrorAction Stop; Stop-Process -Id \$12345678987654 -Force -ErrorAction Stop } catch {}"
+                pwsh.exe -NoProfile -NoLogo -NoExit
             }
         }
     }

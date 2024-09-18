@@ -22,9 +22,7 @@ Function Protect-WindowsSecurity {
                 ).Value
 
                 ([HardenWindowsSecurity.GlobalVars]::HardeningCategorieX) | ForEach-Object -Process {
-                    # Check if the item is already selected
                     if ($_ -notin $Existing) {
-                        # Return the item
                         $_
                     }
                 }
@@ -42,7 +40,6 @@ Function Protect-WindowsSecurity {
 
         [System.Management.Automation.SwitchParameter]$Offline
     )
-
     # This offers granular control over sub-category automation, handles the parameter validation and correlation between selected categories and the subcategory switch parameter, doesn't populate the argument completer on the console with unrelated parameters
     DynamicParam {
 
@@ -297,7 +294,6 @@ Function Protect-WindowsSecurity {
             return $ParamDictionary
         }
     }
-
     begin {
         $script:ErrorActionPreference = 'Stop'
         [HardenWindowsSecurity.Initializer]::Initialize($VerbosePreference)
@@ -486,16 +482,7 @@ Function Protect-WindowsSecurity {
                     Set-Content -Path '.\12345678987654.txt' -Value $PID -ErrorAction Stop
                 }
                 catch {}
-
-                [System.String]$Command = @'
-                try {
-                    $12345678987654 = Get-Content -Path '.\12345678987654.txt' -ErrorAction Stop
-                    Remove-Item -Path '.\12345678987654.txt' -Force -ErrorAction Stop
-                    Stop-Process -Id $12345678987654 -Force -ErrorAction Stop
-                }
-                catch {}
-'@
-                pwsh.exe -NoProfile -NoLogo -NoExit -command $Command
+                pwsh.exe -NoProfile -NoLogo -NoExit -Command "try { \$12345678987654 = Get-Content -Path '.\12345678987654.txt' -ErrorAction Stop; Remove-Item -Path '.\12345678987654.txt' -Force -ErrorAction Stop; Stop-Process -Id \$12345678987654 -Force -ErrorAction Stop } catch {}"
             }
         }
     }

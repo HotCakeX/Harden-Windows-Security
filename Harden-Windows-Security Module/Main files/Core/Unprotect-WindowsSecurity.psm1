@@ -19,9 +19,7 @@ Function Unprotect-WindowsSecurity {
         [Parameter(Mandatory = $false)]
         [System.Management.Automation.SwitchParameter]$Force
     )
-
     begin {
-        # Makes sure this cmdlet is invoked with Admin privileges
         if (-NOT ([HardenWindowsSecurity.UserPrivCheck]::IsAdmin())) {
             Throw [System.Security.AccessControl.PrivilegeNotHeldException] 'Administrator'
         }

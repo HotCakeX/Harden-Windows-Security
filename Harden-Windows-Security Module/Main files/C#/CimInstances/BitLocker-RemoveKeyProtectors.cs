@@ -7,7 +7,7 @@ using System.Management;
 
 namespace HardenWindowsSecurity
 {
-    partial class BitLocker
+    public partial class BitLocker
     {
 
         // https://learn.microsoft.com/en-us/windows/win32/secprov/deletekeyprotector-win32-encryptablevolume#return-value

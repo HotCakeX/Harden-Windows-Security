@@ -30,6 +30,7 @@
               Width="200" Margin="0,0,20,0"
               HorizontalAlignment="Center"
               VerticalAlignment="Center"
+              ToolTip="Optionally choose a preset that automatically configures the categories and sub-categories for you"
               Style="{StaticResource ModernComboBoxStyle}"
               ItemContainerStyle="{StaticResource ModernComboBoxItemStyle}"
               SelectedIndex="1">
@@ -39,7 +40,7 @@
             </ComboBox>
             <!-- ToggleButton -->
             <ToggleButton HorizontalAlignment="Center"
-                  Margin="20,0,0,0"
+                  Margin="0"
                   x:Name="MainTabControlToggle"
                   ToolTip="Choose between Online or Offline modes"
                   Foreground="White"

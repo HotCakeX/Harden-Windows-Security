@@ -23,7 +23,7 @@ namespace HardenWindowsSecurity
         private static ManagementObject GetVolumeFromLetter(string DriveLetter)
         {
             // Use `using` to properly dispose of the `ManagementObjectSearcher` and `ManagementObjectCollection`
-            using var searcher = new ManagementObjectSearcher(
+            using ManagementObjectSearcher searcher = new(
                 @"root\cimv2\Security\MicrosoftVolumeEncryption",
                 "SELECT * FROM Win32_EncryptableVolume");
 

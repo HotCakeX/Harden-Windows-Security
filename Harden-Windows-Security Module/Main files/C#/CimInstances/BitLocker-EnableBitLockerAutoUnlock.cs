@@ -6,7 +6,7 @@ using System.Management;
 
 namespace HardenWindowsSecurity
 {
-    partial class BitLocker
+    public partial class BitLocker
     {
         /// <summary>
         /// Enables Auto unlock | Suitable for Non-OS Drives

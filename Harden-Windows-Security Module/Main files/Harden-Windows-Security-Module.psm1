@@ -1,4 +1,7 @@
 $script:ErrorActionPreference = 'Stop'
+if (!$IsWindows) {
+    Throw [System.PlatformNotSupportedException] 'The Harden Windows Security module only runs on Windows operation systems.'
+}
 
 function Update-HardenWindowsSecurity {
     <#
@@ -84,10 +87,6 @@ try {
 }
 catch {}
 
-if (!$IsWindows) {
-    Throw [System.PlatformNotSupportedException] 'The Harden Windows Security module only runs on Windows operation systems.'
-}
-
 $ToastNotificationDLLs = [System.Collections.Generic.List[System.String]]::new()
 $ToastNotificationDLLs.Add([System.IO.Path]::Combine($PSScriptRoot, 'DLLs', 'Toast Notifications', 'Microsoft.Toolkit.Uwp.Notifications.dll'))
 $ToastNotificationDLLs.Add([System.IO.Path]::Combine($PSScriptRoot, 'DLLs', 'Toast Notifications', 'Microsoft.Win32.SystemEvents.dll'))
@@ -109,12 +108,10 @@ try {
 catch {
     [HardenWindowsSecurity.GlobalVars]::UseNewNotificationsExp = $false
 }
-
 try {
     [HardenWindowsSecurity.GlobalVars]::Host = $HOST
 }
 catch {
     [HardenWindowsSecurity.GlobalVars]::Host = $null
 }
-
 [HardenWindowsSecurity.GlobalVars]::path = $PSScriptRoot

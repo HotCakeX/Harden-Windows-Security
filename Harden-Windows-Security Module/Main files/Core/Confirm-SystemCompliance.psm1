@@ -17,9 +17,7 @@ function Confirm-SystemCompliance {
                 ).Value
 
                 foreach ($Item in [HardenWindowsSecurity.ComplianceCategoriex]::new().GetValidValues()) {
-                    # Check if the item is already selected
                     if ($Item -notin $Existing) {
-                        # Return the item
                         $Item
                     }
                 }
@@ -43,7 +41,6 @@ function Confirm-SystemCompliance {
     )
     begin {
         $script:ErrorActionPreference = 'Stop'
-        # Makes sure this cmdlet is invoked with Admin privileges
         if (-NOT ([HardenWindowsSecurity.UserPrivCheck]::IsAdmin())) {
             Throw [System.Security.AccessControl.PrivilegeNotHeldException] 'Administrator'
         }
@@ -149,7 +146,6 @@ function Confirm-SystemCompliance {
         }
         #Endregion Colors
     }
-
     process {
         try {
             Write-Progress -Activity 'Performing Compliance Check...' -Status 'Running' -PercentComplete 50

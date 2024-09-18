@@ -97,22 +97,11 @@ Unprotect-WindowsSecurity
 
 <div align="center">
 
-<img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/HardenWindowsSecurityAppDemo%20v4.gif" width="700" alt="Harden Windows Security App Demo">
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/HardenWindowsSecurityAppDemo%20v4.gif" width="750" alt="Harden Windows Security App Demo">
 
 </div>
 
 <br>
-
-<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">
-
-<br>
-
-<p align="center">
-  <a href="https://youtu.be/AksQ0NACRxY?si=b4L1lA4VGsZJsfV7">
-    <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/PNG%20and%20JPG/Harden%20Windows%20Security%20Module%20Demo.png" width="500"
-         alt="YouTube Video showcase">
-  </a>
-</p>
 
 <img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">
 

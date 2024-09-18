@@ -112,20 +112,15 @@ Function Protect-WindowsSecurity {
         # Creating dynamic parameters for the offline mode files
         if ($PSBoundParameters.Offline.IsPresent) {
 
-            # Opens File picker GUI so that user can select an .zip file
+            # Opens File picker GUI so that user can select a .zip file using WPF
             [System.Management.Automation.ScriptBlock]$ArgumentCompleterZipFilePathsPicker = {
-                # Load the System.Windows.Forms assembly
-                Add-Type -AssemblyName 'System.Windows.Forms'
-                # Create a new OpenFileDialog object
-                [System.Windows.Forms.OpenFileDialog]$Dialog = [System.Windows.Forms.OpenFileDialog]::new()
-                # Set the filter to show only zip files
+                Add-Type -AssemblyName 'PresentationFramework'
+                [Microsoft.Win32.OpenFileDialog]$Dialog = [Microsoft.Win32.OpenFileDialog]::new()
                 $Dialog.Filter = 'Zip files (*.zip)|*.zip'
-                # Set the title of the dialog
                 $Dialog.Title = 'Select the Zip file'
-                # Show the dialog and get the result
-                [System.String]$Result = $Dialog.ShowDialog()
-                # If the user clicked OK, return the selected file path
-                if ($Result -eq 'OK') {
+                $Result = $Dialog.ShowDialog()
+                # If the user clicked OK
+                if ($Result -eq $true) {
                     return "`'$($Dialog.FileName)`'"
                 }
             }
@@ -250,12 +245,13 @@ Function Protect-WindowsSecurity {
 
             # Define argument completer's scriptblock
             [System.Management.Automation.ScriptBlock]$ArgumentCompleterLogFilePathPicker = {
-                [System.Windows.Forms.SaveFileDialog]$Dialog = New-Object -TypeName System.Windows.Forms.SaveFileDialog
+                Add-Type -AssemblyName 'PresentationFramework'
+                [Microsoft.Win32.SaveFileDialog]$Dialog = [Microsoft.Win32.SaveFileDialog]::new()
                 $Dialog.InitialDirectory = [System.Environment]::GetFolderPath('Desktop')
                 $Dialog.Filter = 'Text files (*.txt)|*.txt'
                 $Dialog.Title = 'Choose where to save the log file'
-                [System.String]$Result = $Dialog.ShowDialog()
-                if ($Result -eq 'OK') {
+                $Result = $Dialog.ShowDialog()
+                if ($Result -eq $true) {
                     return "`'$($Dialog.FileName)`'"
                 }
             }
@@ -305,7 +301,7 @@ Function Protect-WindowsSecurity {
     begin {
         $script:ErrorActionPreference = 'Stop'
         [HardenWindowsSecurity.Initializer]::Initialize($VerbosePreference)
-        [System.Boolean]$ErrorsOcurred = $false
+        [System.Boolean]$ErrorsOccurred = $false
 
         # Since Dynamic parameters are only available in the parameter dictionary, we have to access them using $PSBoundParameters or assign them manually to another variable in the function's scope
         New-Variable -Name 'SecBaselines_NoOverrides' -Value $($PSBoundParameters['SecBaselines_NoOverrides']) -Force
@@ -329,12 +325,9 @@ Function Protect-WindowsSecurity {
         # Detecting if Offline mode is used
         ([HardenWindowsSecurity.GlobalVars]::Offline) = $PSBoundParameters['Offline'] ? $true : $false
 
-        [HardenWindowsSecurity.Logger]::LogMessage('Importing the required sub-modules', [HardenWindowsSecurity.LogTypeIntel]::Information)
-        Import-Module -FullyQualifiedName ([System.IO.Path]::Combine([HardenWindowsSecurity.GlobalVars]::Path, 'Shared', 'Update-self.psm1')) -Force -Verbose:$false
-
         if (!([HardenWindowsSecurity.GlobalVars]::Offline)) {
             [HardenWindowsSecurity.Logger]::LogMessage('Checking for updates...', [HardenWindowsSecurity.LogTypeIntel]::Information)
-            Update-Self -InvocationStatement $MyInvocation.Statement
+            Update-HardenWindowsSecurity -InvocationStatement $MyInvocation.Statement
         }
         else {
             [HardenWindowsSecurity.Logger]::LogMessage('Skipping update check since the -Offline switch was used', [HardenWindowsSecurity.LogTypeIntel]::Information)
@@ -374,7 +367,7 @@ Function Protect-WindowsSecurity {
             $_
             $_.Exception
             $_.InvocationInfo
-            $ErrorsOcurred = $true
+            $ErrorsOccurred = $true
         }
 
         # Return from the Begin block if GUI was used and then closed
@@ -458,7 +451,7 @@ Function Protect-WindowsSecurity {
         catch {
             # Throw whatever error that occurred
             Throw $_
-            $ErrorsOcurred = $true
+            $ErrorsOccurred = $true
         }
         finally {
             Write-Progress -Activity 'Protection completed' -Status 'Completed' -Completed
@@ -484,8 +477,8 @@ Function Protect-WindowsSecurity {
                 Stop-Transcript
             }
 
-            # If no errors ocurred, recycle the current session for there can't be more than 1 Application in the same App Domain
-            if (!$ErrorsOcurred) {
+            # If no errors Occurred, recycle the current session for there can't be more than 1 Application in the same App Domain
+            if (!$ErrorsOccurred) {
 
                 # Since the module loads DLLs during its operation, the following section makes sure the module folder is completely removable after the GUI is closed or all operations have finished.
                 try {

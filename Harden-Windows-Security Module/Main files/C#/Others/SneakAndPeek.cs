@@ -19,17 +19,16 @@ namespace HardenWindowsSecurity
         {
             // Convert the query to a regular expression
             string regexPattern = "^" + Regex.Escape(query).Replace("\\*", ".*", StringComparison.OrdinalIgnoreCase) + "$";
-            Regex regex = new Regex(regexPattern, RegexOptions.IgnoreCase | RegexOptions.CultureInvariant);
+            Regex regex = new(regexPattern, RegexOptions.IgnoreCase | RegexOptions.CultureInvariant);
 
             // Open the zip file in read mode
-            using (ZipArchive zipArchive = ZipFile.OpenRead(zipFile))
-            {
-                // Make sure the selected zip has the required file
-                var content = zipArchive.Entries.Where(entry => regex.IsMatch(entry.FullName)).ToList();
+            using ZipArchive zipArchive = ZipFile.OpenRead(zipFile);
 
-                // Return true if the number of files found is greater than 0
-                return content.Count > 0;
-            }
+            // Make sure the selected zip has the required file
+            var content = zipArchive.Entries.Where(entry => regex.IsMatch(entry.FullName)).ToList();
+
+            // Return true if the number of files found is greater than 0
+            return content.Count > 0;
         }
     }
 }

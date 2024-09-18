@@ -33,40 +33,39 @@ namespace HardenWindowsSecurity
             string path = Path.Combine(basePath, "Resources", "Registry.csv");
 
             // Open the file and read the contents
-            using (StreamReader reader = new StreamReader(path))
+            using StreamReader reader = new(path);
+
+            // Read the header line
+            var header = reader.ReadLine();
+
+            // Return if the header is null
+            if (header == null) return;
+
+            // Read the rest of the file line by line
+            while (!reader.EndOfStream)
             {
-                // Read the header line
-                var header = reader.ReadLine();
+                var line = reader.ReadLine();
 
-                // Return if the header is null
-                if (header == null) return;
+                // Skip if the line is null
+                if (line == null) continue;
 
-                // Read the rest of the file line by line
-                while (!reader.EndOfStream)
+                // Split the line by commas to get the values, that's the CSV's delimiter
+                var values = line.Split(',');
+
+                // Check if the number of values is 7
+                if (values.Length == 7)
                 {
-                    var line = reader.ReadLine();
-
-                    // Skip if the line is null
-                    if (line == null) continue;
-
-                    // Split the line by commas to get the values, that's the CSV's delimiter
-                    var values = line.Split(',');
-
-                    // Check if the number of values is 7
-                    if (values.Length == 7)
+                    // Add a new CsvRecord to the list
+                    registryCSVItems.Add(new CsvRecord
                     {
-                        // Add a new CsvRecord to the list
-                        registryCSVItems.Add(new CsvRecord
-                        {
-                            Category = values[0],
-                            Path = values[1],
-                            Key = values[2],
-                            Value = values[3],
-                            Type = values[4],
-                            Action = values[5],
-                            Comment = values[6]
-                        });
-                    }
+                        Category = values[0],
+                        Path = values[1],
+                        Key = values[2],
+                        Value = values[3],
+                        Type = values[4],
+                        Action = values[5],
+                        Comment = values[6]
+                    });
                 }
             }
         }

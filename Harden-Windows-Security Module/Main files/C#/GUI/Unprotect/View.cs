@@ -16,7 +16,6 @@ namespace HardenWindowsSecurity
             // Method to handle the Unprotect view, including loading
             private void Unprotect(object obj)
             {
-
                 // Check if the view is already cached
                 if (_viewCache.TryGetValue("UnprotectView", out var cachedView))
                 {
@@ -27,7 +26,15 @@ namespace HardenWindowsSecurity
                 // Defining the path to the XAML XML file
                 if (HardenWindowsSecurity.GlobalVars.path == null)
                 {
-                    throw new System.ArgumentNullException("GlobalVars.path cannot be null.");
+                    throw new InvalidOperationException("GlobalVars.path cannot be null.");
+                }
+
+                // if Admin privileges are not available, return and do not proceed any further
+                // Will prevent the page from being loaded since the CurrentView won't be set/changed
+                if (!HardenWindowsSecurity.UserPrivCheck.IsAdmin())
+                {
+                    Logger.LogMessage("Unprotect page can only be used when running the Harden Windows Security Application with Administrator privileges", LogTypeIntel.ErrorInteractionRequired);
+                    return;
                 }
 
                 // Construct the file path for the Unprotect view XAML
@@ -39,37 +46,25 @@ namespace HardenWindowsSecurity
                 // Parse the XAML content to create a UserControl
                 HardenWindowsSecurity.GUIUnprotect.View = (System.Windows.Controls.UserControl)XamlReader.Parse(xamlContent);
 
+                // Set the DataContext for the Unprotect view
+                GUIUnprotect.View.DataContext = new UnprotectVM();
+
                 #region Finding The Elements
 
                 // Find the Parent Grid
                 HardenWindowsSecurity.GUIUnprotect.ParentGrid = (System.Windows.Controls.Grid)HardenWindowsSecurity.GUIUnprotect.View.FindName("ParentGrid");
 
                 // Finding the Execute Button Grid
-                System.Windows.Controls.Grid? ExecuteButtonGrid = GUIUnprotect.ParentGrid.FindName("ExecuteButtonGrid") as System.Windows.Controls.Grid;
-
-                if (ExecuteButtonGrid == null)
-                {
-                    throw new Exception("ExecuteButtonGrid is null in the ASRRules View");
-                }
+                System.Windows.Controls.Grid? ExecuteButtonGrid = GUIUnprotect.ParentGrid.FindName("ExecuteButtonGrid") as System.Windows.Controls.Grid ?? throw new InvalidOperationException("ExecuteButtonGrid is null in the ASRRules View");
 
                 // Finding the Execute Button
-                System.Windows.Controls.Primitives.ToggleButton? ExecuteButton = ExecuteButtonGrid.FindName("ExecuteButton") as System.Windows.Controls.Primitives.ToggleButton;
-
-                if (ExecuteButton == null)
-                {
-                    throw new Exception("Couldn't find the ExecuteButton in ASRRules view");
-                }
+                System.Windows.Controls.Primitives.ToggleButton? ExecuteButton = ExecuteButtonGrid.FindName("ExecuteButton") as System.Windows.Controls.Primitives.ToggleButton ?? throw new InvalidOperationException("Couldn't find the ExecuteButton in ASRRules view");
 
                 // Apply the template to make sure it's available
-                ExecuteButton.ApplyTemplate();
+                _ = ExecuteButton.ApplyTemplate();
 
                 // Access the image within the Execute Button's template
-                System.Windows.Controls.Image? RefreshIconImage = ExecuteButton.Template.FindName("RefreshIconImage", ExecuteButton) as System.Windows.Controls.Image;
-
-                if (RefreshIconImage == null)
-                {
-                    throw new Exception("RefreshIconImage could not be found in the ASRRules view");
-                }
+                System.Windows.Controls.Image? RefreshIconImage = ExecuteButton.Template.FindName("RefreshIconImage", ExecuteButton) as System.Windows.Controls.Image ?? throw new InvalidOperationException("RefreshIconImage could not be found in the ASRRules view");
 
                 // Update the image source for the Refresh button
                 // Load the Refresh icon image into memory and set it as the source
@@ -83,30 +78,15 @@ namespace HardenWindowsSecurity
 
                 #endregion
 
-                System.Windows.Controls.ComboBox? UnprotectCategoriesComboBox = GUIUnprotect.ParentGrid.FindName("UnprotectCategories") as System.Windows.Controls.ComboBox;
 
-                System.Windows.Controls.ComboBox? WDACPoliciesComboBox = GUIUnprotect.ParentGrid.FindName("WDACPolicies") as System.Windows.Controls.ComboBox;
-
-
-                // Remove Windows protections only if user has Admin privileges
-                if (!HardenWindowsSecurity.UserPrivCheck.IsAdmin())
-                {
-                    // Disable the execute button
-                    ExecuteButton.IsEnabled = false;
-                    HardenWindowsSecurity.Logger.LogMessage("You need Administrator privileges to remove protections from the system.", LogTypeIntel.Warning);
-                }
-                // If there is no Admin rights, this dynamic enablement/disablement isn't necessary as it will override the disablement that happens above.
-                else
-                {
-                    // Register the ExecuteButton as an element that will be enabled/disabled based on current activity
-                    HardenWindowsSecurity.ActivityTracker.RegisterUIElement(ExecuteButton);
-                }
+                // Register the ExecuteButton as an element that will be enabled/disabled based on current activity
+                HardenWindowsSecurity.ActivityTracker.RegisterUIElement(ExecuteButton);
 
                 // Set up the Click event handler for the ExecuteButton button
                 ExecuteButton.Click += async (sender, e) =>
                 {
                     // Only continue if there is no activity other places
-                    if (HardenWindowsSecurity.ActivityTracker.IsActive == false)
+                    if (!HardenWindowsSecurity.ActivityTracker.IsActive)
                     {
                         // This will be filled in the switch statement based on the selected category
                         // And used to send to the Notification method to be used on the toast notification
@@ -118,16 +98,15 @@ namespace HardenWindowsSecurity
                         // Disable the ExecuteButton button while processing
                         System.Windows.Application.Current.Dispatcher.Invoke(() =>
                         {
-                            ExecuteButton.IsEnabled = false;
 
-                            if (WDACPoliciesComboBox == null)
+                            if (GUIUnprotect.ParentGrid.FindName("WDACPolicies") is not System.Windows.Controls.ComboBox WDACPoliciesComboBox)
                             {
-                                throw new Exception("WDACPoliciesComboBox is null");
+                                throw new InvalidOperationException("WDACPoliciesComboBox is null");
                             }
 
-                            if (UnprotectCategoriesComboBox == null)
+                            if (GUIUnprotect.ParentGrid.FindName("UnprotectCategories") is not System.Windows.Controls.ComboBox UnprotectCategoriesComboBox)
                             {
-                                throw new Exception("UnprotectCategoriesComboBox is null");
+                                throw new InvalidOperationException("UnprotectCategoriesComboBox is null");
                             }
 
                             // Store the values of the combo boxes in View variables since they need to be acquired through the Application dispatcher since they belong to the UI thread
@@ -149,7 +128,6 @@ namespace HardenWindowsSecurity
                             {
                                 Logger.LogMessage("LGPO.exe already exists, skipping downloading it.", LogTypeIntel.Information);
                             }
-
 
 
                             switch (GUIUnprotect.UnprotectCategoriesComboBoxSelection)
@@ -215,16 +193,14 @@ namespace HardenWindowsSecurity
                         // Update the UI Elements at the end of the run
                         await System.Windows.Application.Current.Dispatcher.InvokeAsync(() =>
                         {
-                            ExecuteButton.IsEnabled = true; // Enable the ExecuteButton button
                             ExecuteButton.IsChecked = false; // Uncheck the ExecuteButton button to start the reverse animation
-
                         });
 
                         // mark as activity completed
                         HardenWindowsSecurity.ActivityTracker.IsActive = false;
 
                         // Display notification at the end
-                        NewToastNotification.Show(NewToastNotification.ToastNotificationType.EndOfUnprotection, null, null, NotificationMessage);
+                        NewToastNotification.Show(NewToastNotification.ToastNotificationType.EndOfUnprotection, null, null, NotificationMessage, null);
                     }
                 };
 

@@ -16,7 +16,7 @@ namespace HardenWindowsSecurity
         public static List<HardenWindowsSecurity.IndividualResult> CheckPolicyCompliance(string category)
         {
             // Create a list of IndividualResult objects
-            List<HardenWindowsSecurity.IndividualResult> nestedObjectArray = new List<HardenWindowsSecurity.IndividualResult>();
+            List<HardenWindowsSecurity.IndividualResult> nestedObjectArray = [];
 
             // Filter the CSV data to only get the records that match the input category
             var csvRecords = HardenWindowsSecurity.GlobalVars.SecurityPolicyRecords?
@@ -44,9 +44,9 @@ namespace HardenWindowsSecurity
                         HardenWindowsSecurity.GlobalVars.SystemSecurityPoliciesIniObject.TryGetValue(section, out var sectionDict) &&
                         sectionDict != null &&
                         path != null && // Check if path is not null
-                        sectionDict.ContainsKey(path))
+                        sectionDict.TryGetValue(path, out string? value))
                     {
-                        actualValue = sectionDict[path];
+                        actualValue = value;
                         complianceResult = actualValue == expectedValue;
                     }
 
@@ -63,7 +63,7 @@ namespace HardenWindowsSecurity
             }
             else
             {
-                throw new Exception("CSV Records cannot be null.");
+                throw new InvalidOperationException("CSV Records cannot be null.");
             }
 
             return nestedObjectArray;

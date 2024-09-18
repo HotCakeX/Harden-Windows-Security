@@ -23,13 +23,13 @@ namespace HardenWindowsSecurity
             {
                 // Check the Compliant status of the existing item in the results list
                 // If the item already exists and is Non-compliant
-                if (existingItem.Compliant == false)
+                if (!existingItem.Compliant)
                 {
                     // Check the Compliant status of the current item being added to the results list
-                    if (result.Compliant == true)
+                    if (result.Compliant)
                     {
                         // Remove the existing item with Compliant status "False"
-                        nestedObjectArray.Remove(existingItem);
+                        _ = nestedObjectArray.Remove(existingItem);
                         // Add the current item with Compliant status "True"
                         nestedObjectArray.Add(result);
                         HardenWindowsSecurity.Logger.LogMessage($"Item with Name '{existingItem.Name}' and FriendlyName '{existingItem.FriendlyName}' replaced with a compliant item.", LogTypeIntel.Information);

@@ -15,7 +15,7 @@ namespace HardenWindowsSecurity
 
             if (HardenWindowsSecurity.GlobalVars.Microsoft365SecurityBaselinePath == null)
             {
-                throw new Exception("The path to the Microsoft 365 Apps Security Baseline has not been set.");
+                throw new InvalidOperationException("The path to the Microsoft 365 Apps Security Baseline has not been set.");
             }
 
             ChangePSConsoleTitle.Set("🧁 M365 Apps Security'");
@@ -37,7 +37,7 @@ namespace HardenWindowsSecurity
 Set-Location -Path "{scriptDirectory}"; .\Baseline-LocalInstall.ps1 4>&1
 """;
 
-            PowerShellExecutor.ExecuteScript(Command, false, true);
+            _ = PowerShellExecutor.ExecuteScript(Command, false, true);
 
         }
     }

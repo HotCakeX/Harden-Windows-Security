@@ -16,38 +16,37 @@ namespace HardenWindowsSecurity
         public static void SetProcessMitigationForFiles(string[] items)
         {
             // Initialize PowerShell instance
-            using (PowerShell powerShell = PowerShell.Create())
+            using PowerShell powerShell = PowerShell.Create();
+
+            foreach (string item in items)
             {
-                foreach (string item in items)
+                // Create a command to set process mitigation
+                powerShell.Commands.Clear();
+                _ = powerShell.AddCommand("Set-ProcessMitigation")
+                           .AddParameter("Name", item)
+                           .AddParameter("Disable", "ForceRelocateImages");
+
+                // Execute the command and get the result
+                try
                 {
-                    // Create a command to set process mitigation
-                    powerShell.Commands.Clear();
-                    powerShell.AddCommand("Set-ProcessMitigation")
-                              .AddParameter("Name", item)
-                              .AddParameter("Disable", "ForceRelocateImages");
+                    Collection<PSObject> results = powerShell.Invoke();
 
-                    // Execute the command and get the result
-                    try
+                    // Check for errors
+                    if (powerShell.Streams.Error.Count > 0)
                     {
-                        Collection<PSObject> results = powerShell.Invoke();
-
-                        // Check for errors
-                        if (powerShell.Streams.Error.Count > 0)
+                        foreach (ErrorRecord error in powerShell.Streams.Error)
                         {
-                            foreach (ErrorRecord error in powerShell.Streams.Error)
-                            {
-                                HardenWindowsSecurity.Logger.LogMessage($"Error: {error.Exception.Message}", LogTypeIntel.Error);
-                            }
-                        }
-                        else
-                        {
-                            HardenWindowsSecurity.Logger.LogMessage($"Excluding {item} from mandatory ASLR.", LogTypeIntel.Information);
+                            HardenWindowsSecurity.Logger.LogMessage($"Error: {error.Exception.Message}", LogTypeIntel.Error);
                         }
                     }
-                    catch (Exception ex)
+                    else
                     {
-                        HardenWindowsSecurity.Logger.LogMessage($"An exception occurred: {ex.Message}", LogTypeIntel.Error);
+                        HardenWindowsSecurity.Logger.LogMessage($"Excluding {item} from mandatory ASLR.", LogTypeIntel.Information);
                     }
+                }
+                catch (Exception ex)
+                {
+                    HardenWindowsSecurity.Logger.LogMessage($"An exception occurred: {ex.Message}", LogTypeIntel.Error);
                 }
             }
         }

@@ -28,7 +28,7 @@ namespace HardenWindowsSecurity
                                        .Where(d => d.Contains(@"resources\app\git", StringComparison.OrdinalIgnoreCase));
 
             // Initialize a list to store the found FileInfo objects
-            List<FileInfo> fileList = new List<FileInfo>();
+            List<FileInfo> fileList = [];
 
             // Iterate through each directory
             foreach (var dir in directories)

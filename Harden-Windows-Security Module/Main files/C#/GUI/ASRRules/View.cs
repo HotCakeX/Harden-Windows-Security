@@ -19,7 +19,6 @@ namespace HardenWindowsSecurity
             // Method to handle the ASRRules view, including loading
             private void ASRRules(object obj)
             {
-
                 // Check if the view is already cached
                 if (_viewCache.TryGetValue("ASRRulesView", out var cachedView))
                 {
@@ -30,7 +29,15 @@ namespace HardenWindowsSecurity
                 // Defining the path to the XAML XML file
                 if (HardenWindowsSecurity.GlobalVars.path == null)
                 {
-                    throw new System.ArgumentNullException("GlobalVars.path cannot be null.");
+                    throw new InvalidOperationException("GlobalVars.path cannot be null.");
+                }
+
+                // if Admin privileges are not available, return and do not proceed any further
+                // Will prevent the page from being loaded since the CurrentView won't be set/changed
+                if (!HardenWindowsSecurity.UserPrivCheck.IsAdmin())
+                {
+                    Logger.LogMessage("ASR Rules page can only be used when running the Harden Windows Security Application with Administrator privileges", LogTypeIntel.ErrorInteractionRequired);
+                    return;
                 }
 
                 // Construct the file path for the ASRRules view XAML
@@ -42,41 +49,30 @@ namespace HardenWindowsSecurity
                 // Parse the XAML content to create a UserControl
                 HardenWindowsSecurity.GUIASRRules.View = (System.Windows.Controls.UserControl)XamlReader.Parse(xamlContent);
 
+                // Set the DataContext for the ASRRules view
+                GUIASRRules.View.DataContext = new ASRRulesVM();
+
                 // Find the Parent Grid
                 HardenWindowsSecurity.GUIASRRules.ParentGrid = (System.Windows.Controls.Grid)HardenWindowsSecurity.GUIASRRules.View.FindName("ParentGrid");
 
                 #region finding elements
 
-                // Get the ListViews
-                System.Windows.Controls.ListView? ASRRuleSet1 = GUIASRRules.ParentGrid.FindName("ASRRuleSet1") as System.Windows.Controls.ListView;
-                System.Windows.Controls.ListView? ASRRuleSet2 = GUIASRRules.ParentGrid.FindName("ASRRuleSet2") as System.Windows.Controls.ListView;
-
-
                 // Finding the Execute Button Grid
-                System.Windows.Controls.Grid? ExecuteButtonGrid = GUIASRRules.ParentGrid.FindName("ExecuteButtonGrid") as System.Windows.Controls.Grid;
-
-                if (ExecuteButtonGrid == null)
-                {
-                    throw new Exception("ExecuteButtonGrid is null in the ASRRules View");
-                }
+                System.Windows.Controls.Grid? ExecuteButtonGrid = GUIASRRules.ParentGrid.FindName("ExecuteButtonGrid") as System.Windows.Controls.Grid ?? throw new InvalidOperationException("ExecuteButtonGrid is null in the ASRRules View");
 
                 // Finding the Execute Button
-                System.Windows.Controls.Primitives.ToggleButton? ExecuteButton = ExecuteButtonGrid.FindName("ExecuteButton") as System.Windows.Controls.Primitives.ToggleButton;
-
-                if (ExecuteButton == null)
+                if (ExecuteButtonGrid.FindName("ExecuteButton") is not System.Windows.Controls.Primitives.ToggleButton ExecuteButton)
                 {
-                    throw new Exception("Couldn't find the ExecuteButton in ASRRules view");
+                    throw new InvalidOperationException("Couldn't find the ExecuteButton in ASRRules view");
                 }
 
                 // Apply the template to make sure it's available
-                ExecuteButton.ApplyTemplate();
+                _ = ExecuteButton.ApplyTemplate();
 
                 // Access the image within the Execute Button's template
-                System.Windows.Controls.Image? RefreshIconImage = ExecuteButton.Template.FindName("RefreshIconImage", ExecuteButton) as System.Windows.Controls.Image;
-
-                if (RefreshIconImage == null)
+                if (ExecuteButton.Template.FindName("RefreshIconImage", ExecuteButton) is not System.Windows.Controls.Image RefreshIconImage)
                 {
-                    throw new Exception("RefreshIconImage could not be found in the ASRRules view");
+                    throw new InvalidOperationException("RefreshIconImage could not be found in the ASRRules view");
                 }
 
                 // Update the image source for the Refresh button
@@ -94,7 +90,7 @@ namespace HardenWindowsSecurity
 
 
                 // Create a dictionary to store the ComboBox names and their corresponding SelectedIndex so that we will loop over this dictionary instead of access UI elements and won't need to use UI Dispatcher
-                Dictionary<string, byte> comboBoxDictionary = new Dictionary<string, byte>();
+                Dictionary<string, byte> comboBoxDictionary = [];
 
                 // Method to process ListView items
                 void ProcessListViewItems(System.Windows.Controls.ListView listView)
@@ -102,8 +98,7 @@ namespace HardenWindowsSecurity
                     foreach (System.Windows.Controls.ListViewItem item in listView.Items.Cast<System.Windows.Controls.ListViewItem>())
                     {
                         // Find the StackPanel inside the ListViewItem
-                        StackPanel? stackPanel = item.Content as StackPanel;
-                        if (stackPanel != null)
+                        if (item.Content is StackPanel stackPanel)
                         {
                             // Find the Label inside the StackPanel
                             // System.Windows.Controls.Label label = stackPanel.Children.OfType<System.Windows.Controls.Label>().FirstOrDefault();
@@ -122,7 +117,7 @@ namespace HardenWindowsSecurity
 
 
                 // Correlation between the ComboBox Names in the XAML and the GUID of the ASR Rule they belong to
-                System.Collections.Generic.Dictionary<string, string> ASRRulesCorrelation = new Dictionary<string, string>()
+                System.Collections.Generic.Dictionary<string, string> ASRRulesCorrelation = new()
                 {
                     {"BlockAbuseOfExploitedVulnerableSignedDrivers" , "56a863a9-875e-4185-98a7-b882c64b5ce5"},
                     {"BlockAdobeReaderFromCreatingChildProcesses" , "7674ba52-37eb-4a4f-a9a1-f0f9a1619a2c"},
@@ -153,12 +148,12 @@ namespace HardenWindowsSecurity
 
                     if (HardenWindowsSecurity.GlobalVars.path == null)
                     {
-                        throw new Exception("HardenWindowsSecurity.GlobalVars.path is null.");
+                        throw new InvalidOperationException("HardenWindowsSecurity.GlobalVars.path is null.");
                     }
 
                     if (ASRRulesCorrelation == null)
                     {
-                        throw new Exception("ASRRulesCorrelation is null");
+                        throw new InvalidOperationException("ASRRulesCorrelation is null");
                     }
 
                     // Initialize the FilePath variable, it will be returned at the end of the method
@@ -197,38 +192,26 @@ namespace HardenWindowsSecurity
                 }
 
 
-                // Apply the ASR Rule configs only if user has Admin privileges
-                if (!HardenWindowsSecurity.UserPrivCheck.IsAdmin())
-                {
-                    // Disable the execute button
-                    ExecuteButton.IsEnabled = false;
-                    HardenWindowsSecurity.Logger.LogMessage("You need Administrator privileges to ASR Rule configurations on the system.", LogTypeIntel.Warning);
-                }
-                // If there is no Admin rights, this dynamic enablement/disablement isn't necessary as it will override the disablement that happens above.
-                else
-                {
-                    // Register the ExecuteButton as an element that will be enabled/disabled based on current activity
-                    HardenWindowsSecurity.ActivityTracker.RegisterUIElement(ExecuteButton);
-                }
+                // Register the ExecuteButton as an element that will be enabled/disabled based on current activity
+                HardenWindowsSecurity.ActivityTracker.RegisterUIElement(ExecuteButton);
+
 
                 // Set up the Click event handler for the ExecuteButton button
                 ExecuteButton.Click += async (sender, e) =>
                 {
                     // Only continue if there is no activity other places
-                    if (HardenWindowsSecurity.ActivityTracker.IsActive == false)
+                    if (!HardenWindowsSecurity.ActivityTracker.IsActive)
                     {
                         // mark as activity started
                         HardenWindowsSecurity.ActivityTracker.IsActive = true;
 
-                        // Disable the ExecuteButton button while processing
                         // Set text blocks to empty while new data is being generated
                         System.Windows.Application.Current.Dispatcher.Invoke(() =>
                         {
-                            ExecuteButton.IsEnabled = false;
-
-                            if (ASRRuleSet1 == null || ASRRuleSet2 == null)
+                            // Get the ListViews
+                            if (GUIASRRules.ParentGrid.FindName("ASRRuleSet1") is not System.Windows.Controls.ListView ASRRuleSet1 || GUIASRRules.ParentGrid.FindName("ASRRuleSet2") is not System.Windows.Controls.ListView ASRRuleSet2)
                             {
-                                throw new Exception("One of the ListViews in the ASRRules view XAML is empty.");
+                                throw new InvalidOperationException("One of the ListViews in the ASRRules view XAML is empty.");
                             }
 
                             // Empty the dictionary from previous ComboBox values in order to collect new data
@@ -383,16 +366,14 @@ namespace HardenWindowsSecurity
                         // Update the UI Elements at the end of the run
                         await System.Windows.Application.Current.Dispatcher.InvokeAsync(() =>
                         {
-                            ExecuteButton.IsEnabled = true; // Enable the ExecuteButton button
                             ExecuteButton.IsChecked = false; // Uncheck the ExecuteButton button to start the reverse animation
-
                         });
 
                         // mark as activity completed
                         HardenWindowsSecurity.ActivityTracker.IsActive = false;
 
                         // Display notification at the end
-                        NewToastNotification.Show(NewToastNotification.ToastNotificationType.EndOfASRRules, null, null, null);
+                        NewToastNotification.Show(NewToastNotification.ToastNotificationType.EndOfASRRules, null, null, null, null);
                     }
                 };
 

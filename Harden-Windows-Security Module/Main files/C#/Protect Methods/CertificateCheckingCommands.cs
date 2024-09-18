@@ -11,7 +11,7 @@ namespace HardenWindowsSecurity
     {
         public static void Invoke()
         {
-            if (HardenWindowsSecurity.GlobalVars.WorkingDir == null || Directory.Exists(HardenWindowsSecurity.GlobalVars.WorkingDir) == false)
+            if (HardenWindowsSecurity.GlobalVars.WorkingDir == null || !Directory.Exists(HardenWindowsSecurity.GlobalVars.WorkingDir))
             {
                 throw new ArgumentNullException(nameof(HardenWindowsSecurity.GlobalVars.WorkingDir), "The working directory variable is either null or the directory doesn't exist.");
             }
@@ -25,7 +25,7 @@ namespace HardenWindowsSecurity
 
             try
             {
-                using (HttpClient client = new HttpClient())
+                using (HttpClient client = new())
                 {
                     HardenWindowsSecurity.Logger.LogMessage("Downloading file...", LogTypeIntel.Information);
 
@@ -33,15 +33,23 @@ namespace HardenWindowsSecurity
                     byte[] fileBytes = client.GetByteArrayAsync(fileUrl).GetAwaiter().GetResult();
                     File.WriteAllBytes(sigcheck64Path, fileBytes);
 
-                    // HardenWindowsSecurity.Logger.LogMessage($"File saved to {sigcheck64Path}");
+                    HardenWindowsSecurity.Logger.LogMessage($"File saved to {sigcheck64Path}", LogTypeIntel.Information);
                 }
 
-                // Run the downloaded executable with the specified arguments
-                HardenWindowsSecurity.Logger.LogMessage("Listing valid certificates not rooted to the Microsoft Certificate Trust List in the Local Machine Store", LogTypeIntel.Information);
-                RunSigcheck(sigcheck64Path, "-tv -accepteula -nobanner");
+                // Make sure the file exists after download
+                if (File.Exists(sigcheck64Path))
+                {
+                    // Run the downloaded executable with the specified arguments
+                    HardenWindowsSecurity.Logger.LogMessage("Listing valid certificates not rooted to the Microsoft Certificate Trust List in the Local Machine Store", LogTypeIntel.Information);
+                    RunSigcheck(sigcheck64Path, "-tv -accepteula -nobanner");
 
-                HardenWindowsSecurity.Logger.LogMessage("Listing valid certificates not rooted to the Microsoft Certificate Trust List in the Current User store", LogTypeIntel.Information);
-                RunSigcheck(sigcheck64Path, "-tuv -accepteula -nobanner");
+                    HardenWindowsSecurity.Logger.LogMessage("Listing valid certificates not rooted to the Microsoft Certificate Trust List in the Current User store", LogTypeIntel.Information);
+                    RunSigcheck(sigcheck64Path, "-tuv -accepteula -nobanner");
+                }
+                else
+                {
+                    HardenWindowsSecurity.Logger.LogMessage($"File {sigcheck64Path} does not exist after download.", LogTypeIntel.Error);
+                }
             }
             catch (Exception ex)
             {
@@ -53,33 +61,32 @@ namespace HardenWindowsSecurity
         {
             try
             {
-                using (Process process = new Process())
+                using Process process = new();
+
+                process.StartInfo.FileName = exePath;
+                process.StartInfo.Arguments = arguments;
+                process.StartInfo.RedirectStandardOutput = true;
+                process.StartInfo.RedirectStandardError = true;
+                process.StartInfo.UseShellExecute = false;
+                process.StartInfo.CreateNoWindow = true;
+
+                HardenWindowsSecurity.Logger.LogMessage($"Running: {exePath} {arguments}", LogTypeIntel.Information);
+
+                _ = process.Start();
+
+                // Read the output (standard and error)
+                string output = process.StandardOutput.ReadToEnd();
+                string error = process.StandardError.ReadToEnd();
+
+                process.WaitForExit();
+
+                HardenWindowsSecurity.Logger.LogMessage("Output:", LogTypeIntel.Information);
+                HardenWindowsSecurity.Logger.LogMessage(output, LogTypeIntel.Information);
+
+                if (!string.IsNullOrEmpty(error))
                 {
-                    process.StartInfo.FileName = exePath;
-                    process.StartInfo.Arguments = arguments;
-                    process.StartInfo.RedirectStandardOutput = true;
-                    process.StartInfo.RedirectStandardError = true;
-                    process.StartInfo.UseShellExecute = false;
-                    process.StartInfo.CreateNoWindow = true;
-
-                    HardenWindowsSecurity.Logger.LogMessage($"Running: {exePath} {arguments}", LogTypeIntel.Information);
-
-                    process.Start();
-
-                    // Read the output (standard and error)
-                    string output = process.StandardOutput.ReadToEnd();
-                    string error = process.StandardError.ReadToEnd();
-
-                    process.WaitForExit();
-
-                    HardenWindowsSecurity.Logger.LogMessage("Output:", LogTypeIntel.Information);
-                    HardenWindowsSecurity.Logger.LogMessage(output, LogTypeIntel.Information);
-
-                    if (!string.IsNullOrEmpty(error))
-                    {
-                        HardenWindowsSecurity.Logger.LogMessage("Error:", LogTypeIntel.Error);
-                        HardenWindowsSecurity.Logger.LogMessage(error, LogTypeIntel.Error);
-                    }
+                    HardenWindowsSecurity.Logger.LogMessage("Error:", LogTypeIntel.Error);
+                    HardenWindowsSecurity.Logger.LogMessage(error, LogTypeIntel.Error);
                 }
             }
             catch (Exception ex)

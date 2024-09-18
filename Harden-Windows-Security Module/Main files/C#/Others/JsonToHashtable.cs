@@ -9,7 +9,7 @@ namespace HardenWindowsSecurity
     public class JsonToHashtable
     {
         // Using HashTable since they don't throw error for non-existing keys
-        // This method acts like ConvertFrom-Json -AsHashtable in PowerShell
+        // This method acts like ConvertFrom-Json -AsHashTable in PowerShell
         public static Hashtable ProcessJsonFile(string filePath)
         {
             // Check if the file exists at the specified path
@@ -25,15 +25,15 @@ namespace HardenWindowsSecurity
             // Parse the JSON content into a JsonDocument
             JsonDocument jsonDocument = JsonDocument.Parse(jsonContent);
 
-            // Convert the root element of the JsonDocument to a Hashtable and return it
+            // Convert the root element of the JsonDocument to a HashTable and return it
             return ConvertJsonElementToHashtable(jsonDocument.RootElement);
         }
 
-        // Private method to convert a JsonElement representing a JSON object into a Hashtable
+        // Private method to convert a JsonElement representing a JSON object into a HashTable
         private static Hashtable ConvertJsonElementToHashtable(JsonElement jsonElement)
         {
-            // Create a new Hashtable to store the key-value pairs
-            Hashtable hashtable = new Hashtable();
+            // Create a new HashTable to store the key-value pairs
+            Hashtable hashtable = [];
 
             // Enumerate through all properties of the JSON object
             foreach (JsonProperty property in jsonElement.EnumerateObject())
@@ -56,7 +56,7 @@ namespace HardenWindowsSecurity
                 }
             }
 
-            // Return the constructed Hashtable
+            // Return the constructed HashTable
             return hashtable;
         }
 
@@ -64,7 +64,7 @@ namespace HardenWindowsSecurity
         private static ArrayList ConvertJsonArrayToArrayList(JsonElement jsonArray)
         {
             // Create a new ArrayList to store the elements
-            ArrayList arrayList = new ArrayList();
+            ArrayList arrayList = [];
 
             // Enumerate through all elements of the JSON array
             foreach (JsonElement item in jsonArray.EnumerateArray())
@@ -72,18 +72,18 @@ namespace HardenWindowsSecurity
                 // Check the type of the JSON element
                 if (item.ValueKind == JsonValueKind.Object)
                 {
-                    // If the element is an object, recursively convert it to a Hashtable
-                    arrayList.Add(ConvertJsonElementToHashtable(item));
+                    // If the element is an object, recursively convert it to a HashTable
+                    _ = arrayList.Add(ConvertJsonElementToHashtable(item));
                 }
                 else if (item.ValueKind == JsonValueKind.Array)
                 {
                     // If the element is an array, recursively convert it to an ArrayList
-                    arrayList.Add(ConvertJsonArrayToArrayList(item));
+                    _ = arrayList.Add(ConvertJsonArrayToArrayList(item));
                 }
                 else
                 {
                     // For primitive values, add them directly to the ArrayList
-                    arrayList.Add(item.ToString());
+                    _ = arrayList.Add(item.ToString());
                 }
             }
 

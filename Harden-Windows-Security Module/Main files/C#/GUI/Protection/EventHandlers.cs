@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Win32;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -24,72 +25,72 @@ namespace HardenWindowsSecurity
 
             if (GUIProtectWinSecurity.View == null)
             {
-                throw new Exception("AddEventHandlers Method: Window object is empty!");
+                throw new InvalidOperationException("AddEventHandlers Method: Window object is empty!");
             }
 
             if (GUIProtectWinSecurity.categories == null)
             {
-                throw new Exception("AddEventHandlers Method: categories object is empty!");
+                throw new InvalidOperationException("AddEventHandlers Method: categories object is empty!");
             }
 
             if (GUIProtectWinSecurity.selectAllCategories == null)
             {
-                throw new Exception("AddEventHandlers Method: selectAllCategories object is empty!");
+                throw new InvalidOperationException("AddEventHandlers Method: selectAllCategories object is empty!");
             }
 
             if (GUIProtectWinSecurity.subCategories == null)
             {
-                throw new Exception("AddEventHandlers Method: subCategories object is empty!");
+                throw new InvalidOperationException("AddEventHandlers Method: subCategories object is empty!");
             }
 
             if (GUIProtectWinSecurity.selectAllSubCategories == null)
             {
-                throw new Exception("AddEventHandlers Method: selectAllSubCategories object is empty!");
+                throw new InvalidOperationException("AddEventHandlers Method: selectAllSubCategories object is empty!");
             }
 
             if (GUIProtectWinSecurity.microsoft365AppsSecurityBaselineZipTextBox == null)
             {
-                throw new Exception("AddEventHandlers Method: microsoft365AppsSecurityBaselineZipTextBox object is empty!");
+                throw new InvalidOperationException("AddEventHandlers Method: microsoft365AppsSecurityBaselineZipTextBox object is empty!");
             }
 
             if (GUIProtectWinSecurity.lgpoZipButton == null)
             {
-                throw new Exception("AddEventHandlers Method: lgpoZipButton object is empty!");
+                throw new InvalidOperationException("AddEventHandlers Method: lgpoZipButton object is empty!");
             }
 
             if (GUIProtectWinSecurity.lgpoZipTextBox == null)
             {
-                throw new Exception("AddEventHandlers Method: lgpoZipTextBox object is empty!");
+                throw new InvalidOperationException("AddEventHandlers Method: lgpoZipTextBox object is empty!");
             }
 
             if (GUIProtectWinSecurity.txtFilePath == null)
             {
-                throw new Exception("AddEventHandlers Method: txtFilePath object is empty!");
+                throw new InvalidOperationException("AddEventHandlers Method: txtFilePath object is empty!");
             }
 
             if (GUIProtectWinSecurity.enableOfflineMode == null)
             {
-                throw new Exception("AddEventHandlers Method: enableOfflineMode object is empty!");
+                throw new InvalidOperationException("AddEventHandlers Method: enableOfflineMode object is empty!");
             }
 
             if (GUIProtectWinSecurity.microsoftSecurityBaselineZipButton == null)
             {
-                throw new Exception("AddEventHandlers Method: microsoftSecurityBaselineZipButton object is empty!");
+                throw new InvalidOperationException("AddEventHandlers Method: microsoftSecurityBaselineZipButton object is empty!");
             }
 
             if (GUIProtectWinSecurity.microsoftSecurityBaselineZipTextBox == null)
             {
-                throw new Exception("AddEventHandlers Method: microsoftSecurityBaselineZipTextBox object is empty!");
+                throw new InvalidOperationException("AddEventHandlers Method: microsoftSecurityBaselineZipTextBox object is empty!");
             }
 
             if (GUIProtectWinSecurity.microsoft365AppsSecurityBaselineZipButton == null)
             {
-                throw new Exception("AddEventHandlers Method: microsoft365AppsSecurityBaselineZipButton object is empty!");
+                throw new InvalidOperationException("AddEventHandlers Method: microsoft365AppsSecurityBaselineZipButton object is empty!");
             }
 
             if (GUIProtectWinSecurity.ExecuteButton == null)
             {
-                throw new Exception("AddEventHandlers Method: ExecuteButton object is empty!");
+                throw new InvalidOperationException("AddEventHandlers Method: ExecuteButton object is empty!");
             }
 
             #endregion
@@ -179,32 +180,35 @@ namespace HardenWindowsSecurity
             // Define the click event for the Microsoft Security Baseline Zip button
             GUIProtectWinSecurity.microsoftSecurityBaselineZipButton.Click += (sender, e) =>
             {
-                using (var dialog = new System.Windows.Forms.OpenFileDialog())
+                var dialog = new OpenFileDialog
                 {
-                    dialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
-                    dialog.Filter = "Zip files (*.zip)|*.zip";
-                    dialog.Title = "Select the Microsoft Security Baseline Zip file";
+                    InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Desktop),
+                    Filter = "Zip files (*.zip)|*.zip",
+                    Title = "Select the Microsoft Security Baseline Zip file"
+                };
 
-                    if (dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                // Show the dialog and process the result
+                if (dialog.ShowDialog() == true)
+                {
+                    try
                     {
-                        try
+                        // Check if the file contains the required script
+                        if (!HardenWindowsSecurity.SneakAndPeek.Search("Windows*Security Baseline/Scripts/Baseline-LocalInstall.ps1", dialog.FileName))
                         {
-                            if (!HardenWindowsSecurity.SneakAndPeek.Search("Windows*Security Baseline/Scripts/Baseline-LocalInstall.ps1", dialog.FileName))
-                            {
-                                HardenWindowsSecurity.Logger.LogMessage("The selected Zip file does not contain the Microsoft Security Baselines Baseline-LocalInstall.ps1 which is required for the Protect-WindowsSecurity function to work properly", LogTypeIntel.Error);
-                            }
-                            else
-                            {
-                                // For displaying the text on the GUI's text box
-                                GUIProtectWinSecurity.microsoftSecurityBaselineZipTextBox.Text = dialog.FileName;
-                                // The actual value that will be used
-                                GUIProtectWinSecurity.MicrosoftSecurityBaselineZipPath = dialog.FileName;
-                            }
+                            HardenWindowsSecurity.Logger.LogMessage("The selected Zip file does not contain the Microsoft Security Baselines Baseline-LocalInstall.ps1 which is required for the Harden Windows Security App to work properly", LogTypeIntel.WarningInteractionRequired);
                         }
-                        catch (Exception ex)
+                        else
                         {
-                            HardenWindowsSecurity.Logger.LogMessage(ex.Message, LogTypeIntel.Error);
+                            // For displaying the text on the GUI's text box
+                            GUIProtectWinSecurity.microsoftSecurityBaselineZipTextBox.Text = dialog.FileName;
+                            // The actual value that will be used
+                            GUIProtectWinSecurity.MicrosoftSecurityBaselineZipPath = dialog.FileName;
                         }
+                    }
+                    catch (Exception ex)
+                    {
+                        // Log the exception if any error occurs
+                        HardenWindowsSecurity.Logger.LogMessage(ex.Message, LogTypeIntel.Error);
                     }
                 }
             };
@@ -212,32 +216,35 @@ namespace HardenWindowsSecurity
             // Define the click event for the Microsoft 365 Apps Security Baseline Zip button
             GUIProtectWinSecurity.microsoft365AppsSecurityBaselineZipButton.Click += (sender, e) =>
             {
-                using (var dialog = new System.Windows.Forms.OpenFileDialog())
+                var dialog = new OpenFileDialog
                 {
-                    dialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
-                    dialog.Filter = "Zip files (*.zip)|*.zip";
-                    dialog.Title = "Select the Microsoft 365 Apps Security Baseline Zip file";
+                    InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Desktop),
+                    Filter = "Zip files (*.zip)|*.zip",
+                    Title = "Select the Microsoft 365 Apps Security Baseline Zip file"
+                };
 
-                    if (dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                // Show the dialog and process the result
+                if (dialog.ShowDialog() == true)
+                {
+                    try
                     {
-                        try
+                        // Check if the file contains the required script
+                        if (!HardenWindowsSecurity.SneakAndPeek.Search("Microsoft 365 Apps for Enterprise*/Scripts/Baseline-LocalInstall.ps1", dialog.FileName))
                         {
-                            if (!HardenWindowsSecurity.SneakAndPeek.Search("Microsoft 365 Apps for Enterprise*/Scripts/Baseline-LocalInstall.ps1", dialog.FileName))
-                            {
-                                HardenWindowsSecurity.Logger.LogMessage("The selected Zip file does not contain the Microsoft 365 Apps for Enterprise Security Baselines Baseline-LocalInstall.ps1 which is required for the Protect-WindowsSecurity function to work properly", LogTypeIntel.Error);
-                            }
-                            else
-                            {
-                                // For displaying the text on the GUI's text box
-                                GUIProtectWinSecurity.microsoft365AppsSecurityBaselineZipTextBox.Text = dialog.FileName;
-                                // The actual value that will be used
-                                GUIProtectWinSecurity.Microsoft365AppsSecurityBaselineZipPath = dialog.FileName;
-                            }
+                            HardenWindowsSecurity.Logger.LogMessage("The selected Zip file does not contain the Microsoft 365 Apps for Enterprise Security Baselines Baseline-LocalInstall.ps1 which is required for the Harden Windows Security App to work properly", LogTypeIntel.WarningInteractionRequired);
                         }
-                        catch (Exception ex)
+                        else
                         {
-                            HardenWindowsSecurity.Logger.LogMessage(ex.Message, LogTypeIntel.Error);
+                            // For displaying the text on the GUI's text box
+                            GUIProtectWinSecurity.microsoft365AppsSecurityBaselineZipTextBox.Text = dialog.FileName;
+                            // The actual value that will be used
+                            GUIProtectWinSecurity.Microsoft365AppsSecurityBaselineZipPath = dialog.FileName;
                         }
+                    }
+                    catch (Exception ex)
+                    {
+                        // Log the exception if any error occurs
+                        HardenWindowsSecurity.Logger.LogMessage(ex.Message, LogTypeIntel.Error);
                     }
                 }
             };
@@ -245,37 +252,38 @@ namespace HardenWindowsSecurity
             // Define the click event for the LGPO Zip button
             GUIProtectWinSecurity.lgpoZipButton.Click += (sender, e) =>
             {
-                using (var dialog = new System.Windows.Forms.OpenFileDialog())
+                var dialog = new OpenFileDialog
                 {
-                    dialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
-                    dialog.Filter = "Zip files (*.zip)|*.zip";
-                    dialog.Title = "Select the LGPO Zip file";
+                    InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Desktop),
+                    Filter = "Zip files (*.zip)|*.zip",
+                    Title = "Select the LGPO Zip file"
+                };
 
-                    if (dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                // Show the dialog and process the result
+                if (dialog.ShowDialog() == true)
+                {
+                    try
                     {
-                        try
+                        // Check if the file contains the required LGPO.exe
+                        if (!HardenWindowsSecurity.SneakAndPeek.Search("LGPO_*/LGPO.exe", dialog.FileName))
                         {
-                            if (!HardenWindowsSecurity.SneakAndPeek.Search("LGPO_*/LGPO.exe", dialog.FileName))
-                            {
-                                HardenWindowsSecurity.Logger.LogMessage("The selected Zip file does not contain the LGPO.exe which is required for the Protect-WindowsSecurity function to work properly", LogTypeIntel.Error);
-                            }
-                            else
-                            {
-                                // For displaying the text on the GUI's text box
-                                GUIProtectWinSecurity.lgpoZipTextBox.Text = dialog.FileName;
-                                // The actual value that will be used
-                                GUIProtectWinSecurity.LGPOZipPath = dialog.FileName;
-                            }
+                            HardenWindowsSecurity.Logger.LogMessage("The selected Zip file does not contain the LGPO.exe which is required for the Harden Windows Security App to work properly", LogTypeIntel.WarningInteractionRequired);
                         }
-                        catch (Exception ex)
+                        else
                         {
-                            HardenWindowsSecurity.Logger.LogMessage(ex.Message, LogTypeIntel.Error);
+                            // For displaying the text on the GUI's text box
+                            GUIProtectWinSecurity.lgpoZipTextBox.Text = dialog.FileName;
+                            // The actual value that will be used
+                            GUIProtectWinSecurity.LGPOZipPath = dialog.FileName;
                         }
+                    }
+                    catch (Exception ex)
+                    {
+                        // Log the exception if any error occurs
+                        HardenWindowsSecurity.Logger.LogMessage(ex.Message, LogTypeIntel.Error);
                     }
                 }
             };
-
-
 
 
 
@@ -284,7 +292,7 @@ namespace HardenWindowsSecurity
             {
 
                 // Only continue if there is no activity in other places
-                if (HardenWindowsSecurity.ActivityTracker.IsActive == false)
+                if (!HardenWindowsSecurity.ActivityTracker.IsActive)
                 {
                     // mark as activity started
                     HardenWindowsSecurity.ActivityTracker.IsActive = true;
@@ -361,7 +369,7 @@ namespace HardenWindowsSecurity
                             }
                             else
                             {
-                                Console.WriteLine($"Preset '{presetName}' not found.");
+                                Logger.LogMessage($"Preset '{presetName}' not found.", LogTypeIntel.Error);
                             }
 
                         });
@@ -448,7 +456,7 @@ namespace HardenWindowsSecurity
             GUIProtectWinSecurity.ExecuteButton.Click += async (sender, e) =>
            {
                // Only continue if there is no activity in other places
-               if (HardenWindowsSecurity.ActivityTracker.IsActive == false)
+               if (!HardenWindowsSecurity.ActivityTracker.IsActive)
                {
                    // mark as activity started
                    HardenWindowsSecurity.ActivityTracker.IsActive = true;
@@ -465,7 +473,7 @@ namespace HardenWindowsSecurity
                        {
                            // Call the method to get the selected categories and sub-categories
                            HardenWindowsSecurity.GUIProtectWinSecurity.ExecuteButtonPress();
-                           // Disable the textfilepath for the log file path
+                           // Disable the TextFilePath for the log file path
                            HardenWindowsSecurity.GUIProtectWinSecurity.txtFilePath!.IsEnabled = false;
                        });
 
@@ -515,12 +523,12 @@ namespace HardenWindowsSecurity
                                    }
                                    else
                                    {
-                                       HardenWindowsSecurity.Logger.LogMessage("Enable Offline Mode checkbox is checked but you have not selected all of the 3 required files for offline mode operation. Please select them and press the execute button again.", LogTypeIntel.Warning);
+                                       HardenWindowsSecurity.Logger.LogMessage("Enable Offline Mode checkbox is checked but you have not selected all of the 3 required files for offline mode operation. Please select them and press the execute button again.", LogTypeIntel.WarningInteractionRequired);
                                    }
                                }
                                else
                                {
-                                   HardenWindowsSecurity.Logger.LogMessage("Offline mode is being used but the Enable Offline Mode checkbox is not checked. Please check it and press the execute button again.", LogTypeIntel.Warning);
+                                   HardenWindowsSecurity.Logger.LogMessage("Offline mode is being used but the Enable Offline Mode checkbox is not checked. Please check it and press the execute button again.", LogTypeIntel.WarningInteractionRequired);
                                }
                            }
                        }
@@ -576,7 +584,7 @@ namespace HardenWindowsSecurity
                                                {
                                                    if (HardenWindowsSecurity.GUIProtectWinSecurity.SelectedSubCategories.Contains("MSFTDefender_NoDiagData"))
                                                    {
-                                                       // do nothing !?
+                                                       // do nothing
                                                    }
                                                }
 
@@ -701,9 +709,9 @@ namespace HardenWindowsSecurity
                                    }
                                }
 
-                               if (HardenWindowsSecurity.GlobalVars.UseNewNotificationsExp == true)
+                               if (HardenWindowsSecurity.GlobalVars.UseNewNotificationsExp)
                                {
-                                   HardenWindowsSecurity.NewToastNotification.Show(ToastNotificationType.EndOfProtection, null, null, null);
+                                   HardenWindowsSecurity.NewToastNotification.Show(ToastNotificationType.EndOfProtection, null, null, null, null);
                                }
                            }
                            else

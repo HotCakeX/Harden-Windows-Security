@@ -26,43 +26,42 @@ namespace HardenWindowsSecurity
             var securityPolicyRecordsOutput = new List<SecurityPolicyRecord>();
 
             // Open the CSV file for reading
-            using (StreamReader reader = new StreamReader(csvFilePath))
+            using StreamReader reader = new(csvFilePath);
+
+            // Read the header line
+            string? header = reader.ReadLine();
+
+            // Return if the header is null
+            if (header == null) return securityPolicyRecordsOutput;
+
+            // Read the rest of the file line by line
+            while (!reader.EndOfStream)
             {
-                // Read the header line
-                string? header = reader.ReadLine();
+                string? line = reader.ReadLine();
 
-                // Return if the header is null
-                if (header == null) return securityPolicyRecordsOutput;
+                // Skip null lines
+                if (line == null) continue;
 
-                // Read the rest of the file line by line
-                while (!reader.EndOfStream)
+                // Parse the CSV line into fields
+                string[] fields = ParseCsvLine(line);
+
+                // Ensure the line has exactly 5 fields
+                if (fields.Length == 5)
                 {
-                    string? line = reader.ReadLine();
-
-                    // Skip null lines
-                    if (line == null) continue;
-
-                    // Parse the CSV line into fields
-                    string[] fields = ParseCsvLine(line);
-
-                    // Ensure the line has exactly 5 fields
-                    if (fields.Length == 5)
+                    // Add a new SecurityPolicyRecord to the output list
+                    securityPolicyRecordsOutput.Add(new SecurityPolicyRecord
                     {
-                        // Add a new SecurityPolicyRecord to the output list
-                        securityPolicyRecordsOutput.Add(new SecurityPolicyRecord
-                        {
-                            Category = fields[0].Trim(),
-                            Section = fields[1].Trim(),
-                            Path = fields[2].Trim(),
-                            Value = fields[3].Trim(),
-                            Name = fields[4].Trim()
-                        });
-                    }
-                    else
-                    {
-                        // Throw an exception if the line does not have 5 fields
-                        throw new ArgumentException("The CSV file is not formatted correctly. There should be 5 fields in each line.");
-                    }
+                        Category = fields[0].Trim(),
+                        Section = fields[1].Trim(),
+                        Path = fields[2].Trim(),
+                        Value = fields[3].Trim(),
+                        Name = fields[4].Trim()
+                    });
+                }
+                else
+                {
+                    // Throw an exception if the line does not have 5 fields
+                    throw new ArgumentException("The CSV file is not formatted correctly. There should be 5 fields in each line.");
                 }
             }
 
@@ -72,8 +71,8 @@ namespace HardenWindowsSecurity
         // Parses a single line of CSV, taking into account quoted fields
         private static string[] ParseCsvLine(string line)
         {
-            List<string> fields = new List<string>();
-            StringBuilder currentField = new StringBuilder();
+            List<string> fields = [];
+            StringBuilder currentField = new();
             bool inQuotes = false;
 
             // Iterate through each character in the line
@@ -88,12 +87,12 @@ namespace HardenWindowsSecurity
                 {
                     // Add the current field to the list if a comma is encountered outside quotes
                     fields.Add(currentField.ToString().Trim('"'));
-                    currentField.Clear();
+                    _ = currentField.Clear();
                 }
                 else
                 {
                     // Append the character to the current field
-                    currentField.Append(c);
+                    _ = currentField.Append(c);
                 }
             }
 

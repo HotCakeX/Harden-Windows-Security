@@ -21,7 +21,6 @@ System.Threading
 System.Management
 System.ObjectModel
 System.Collections
-System.Windows.Forms
 System.Net.Primitives
 System.ComponentModel
 PresentationFramework
@@ -45,6 +44,7 @@ System.Collections.Concurrent
 System.Runtime.InteropServices
 System.Windows.Controls.Ribbon
 System.Text.RegularExpressions
+System.Text.Encoding.Extensions
 System.ComponentModel.Primitives
 System.Security.Principal.Windows
 System.ComponentModel.TypeConverter

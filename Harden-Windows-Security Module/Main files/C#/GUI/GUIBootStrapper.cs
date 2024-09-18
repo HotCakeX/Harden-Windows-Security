@@ -15,13 +15,13 @@ namespace HardenWindowsSecurity
         /// </summary>
         public static void Boot()
         {
-            Thread thread = new Thread(() =>
+            Thread thread = new(() =>
             {
                 try
                 {
                     // Initialize and run the WPF GUI
                     HardenWindowsSecurity.GUIMain.LoadMainXaml();
-                    HardenWindowsSecurity.GUIMain.app!.Run(HardenWindowsSecurity.GUIMain.mainGUIWindow);
+                    _ = HardenWindowsSecurity.GUIMain.app!.Run(HardenWindowsSecurity.GUIMain.mainGUIWindow);
                 }
                 catch (Exception ex)
                 {

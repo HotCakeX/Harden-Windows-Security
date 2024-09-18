@@ -21,7 +21,7 @@ namespace HardenWindowsSecurity
             script = script.Replace("[System.String]$BaseDirectory = [HardenWindowsSecurity.GlobalVars]::WorkingDir", $"[System.String]$BaseDirectory = '{HardenWindowsSecurity.GlobalVars.WorkingDir}'", StringComparison.OrdinalIgnoreCase);
 
             // Run the PowerShell script
-            HardenWindowsSecurity.PowerShellExecutor.ExecuteScript(script);
+            _ = HardenWindowsSecurity.PowerShellExecutor.ExecuteScript(script);
         }
     }
 }

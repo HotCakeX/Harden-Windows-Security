@@ -14,16 +14,10 @@ namespace HardenWindowsSecurity
         {
             // Assuming securityPolicyInfPath is defined in your environment
             string securityPolicyInfPath = HardenWindowsSecurity.GlobalVars.securityPolicyInfPath;
-            string? systemDrive = Environment.GetEnvironmentVariable("SystemDrive");
-
-            if (systemDrive == null)
-            {
-                // Handle the case where SystemDrive is not set
-                throw new InvalidOperationException("SystemDrive environment variable is not set.");
-            }
+            string? systemDrive = Environment.GetEnvironmentVariable("SystemDrive") ?? throw new InvalidOperationException("SystemDrive environment variable is not set.");
 
             // Create the process start info
-            ProcessStartInfo processStartInfo = new ProcessStartInfo
+            ProcessStartInfo processStartInfo = new()
             {
                 FileName = $"{systemDrive}\\Windows\\System32\\Secedit.exe",
                 Arguments = $"/export /cfg \"{securityPolicyInfPath}\"",
@@ -34,23 +28,17 @@ namespace HardenWindowsSecurity
             };
 
             // Start the process
-            using (Process? process = Process.Start(processStartInfo))
+            using Process? process = Process.Start(processStartInfo) ?? throw new InvalidOperationException("Failed to start Secedit.exe process.");
+
+            // Read the output
+            // string output = process.StandardOutput.ReadToEnd();
+            string error = process.StandardError.ReadToEnd();
+
+            process.WaitForExit();
+
+            if (!string.IsNullOrEmpty(error))
             {
-                if (process == null)
-                {
-                    throw new InvalidOperationException("Failed to start Secedit.exe process.");
-                }
-
-                // Read the output
-                // string output = process.StandardOutput.ReadToEnd();
-                string error = process.StandardError.ReadToEnd();
-
-                process.WaitForExit();
-
-                if (!string.IsNullOrEmpty(error))
-                {
-                    HardenWindowsSecurity.Logger.LogMessage("Error: " + error, LogTypeIntel.Error);
-                }
+                HardenWindowsSecurity.Logger.LogMessage("Error: " + error, LogTypeIntel.Error);
             }
         }
     }

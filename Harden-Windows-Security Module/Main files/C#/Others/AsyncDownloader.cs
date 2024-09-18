@@ -11,10 +11,10 @@ namespace HardenWindowsSecurity
     public class AsyncDownloader
     {
         // HttpClient instance to be used and re-used for downloading files
-        private static readonly HttpClient _httpClient = new HttpClient();
+        private static readonly HttpClient _httpClient = new();
 
         // Dictionary to map URLs to their local file paths
-        private static readonly Dictionary<string, string> fileDictionary = new Dictionary<string, string>
+        private static readonly Dictionary<string, string> fileDictionary = new()
         {
             {
                 "https://download.microsoft.com/download/8/5/C/85C25433-A1B0-4FFA-9429-7E023E7DA8D8/Windows%2011%20v23H2%20Security%20Baseline.zip",
@@ -45,14 +45,14 @@ namespace HardenWindowsSecurity
                 throw new DirectoryNotFoundException($"The directory '{HardenWindowsSecurity.GlobalVars.WorkingDir}' does not exist.");
             }
 
-            List<Task> tasks = new List<Task>();
+            List<Task> tasks = [];
 
             // Start asynchronous download for each file
             foreach (var kvp in fileDictionary)
             {
 
                 // if OnlyLGPO was used/is true then skip files that are not LGPO.zip in order to only download the LGPO.zip
-                if (OnlyLGPO == true && !string.Equals(kvp.Value, "LGPO.zip", StringComparison.OrdinalIgnoreCase))
+                if (OnlyLGPO && !string.Equals(kvp.Value, "LGPO.zip", StringComparison.OrdinalIgnoreCase))
                 {
                     continue;
                 }
@@ -88,23 +88,21 @@ namespace HardenWindowsSecurity
             try
             {
                 // Send GET request to download the file
-                using (var response = await _httpClient.GetAsync(url))
-                {
-                    // Ensure the response indicates success
-                    response.EnsureSuccessStatusCode();
+                using var response = await _httpClient.GetAsync(url);
 
-                    // Open file stream to save the downloaded content
-                    using (FileStream fs = new FileStream(filePath, FileMode.Create, FileAccess.Write, FileShare.None))
-                    {
-                        // Copy the content from the HTTP response to the file stream
-                        await response.Content.CopyToAsync(fs);
-                    }
-                }
+                // Ensure the response indicates success
+                _ = response.EnsureSuccessStatusCode();
+
+                // Open file stream to save the downloaded content
+                using FileStream fs = new(filePath, FileMode.Create, FileAccess.Write, FileShare.None);
+
+                // Copy the content from the HTTP response to the file stream
+                await response.Content.CopyToAsync(fs);
             }
             catch (Exception ex)
             {
                 // Throw a new exception with a meaningful message indicating the failure
-                throw new Exception($"Failed to download {url}: {ex.Message}", ex);
+                throw new InvalidOperationException($"Failed to download {url}: {ex.Message}", ex);
             }
         }
 
@@ -175,7 +173,7 @@ namespace HardenWindowsSecurity
 
             }
 
-            if (OnlyLGPO == false)
+            if (!OnlyLGPO)
             {
 
                 if (HardenWindowsSecurity.GlobalVars.Offline)
@@ -188,7 +186,7 @@ namespace HardenWindowsSecurity
                     }
                     else
                     {
-                        throw new Exception("LGPOPath was empty for the offline mode.");
+                        throw new InvalidOperationException("LGPOPath was empty for the offline mode.");
                     }
 
                     if (MSFTSecurityBaselinesPath != null)
@@ -197,7 +195,7 @@ namespace HardenWindowsSecurity
                     }
                     else
                     {
-                        throw new Exception("MSFTSecurityBaselinesPath was empty for the offline mode.");
+                        throw new InvalidOperationException("MSFTSecurityBaselinesPath was empty for the offline mode.");
                     }
 
                     if (MSFT365AppsSecurityBaselinesPath != null)
@@ -206,7 +204,7 @@ namespace HardenWindowsSecurity
                     }
                     else
                     {
-                        throw new Exception("MSFT365AppsSecurityBaselinesPath was empty for the offline mode.");
+                        throw new InvalidOperationException("MSFT365AppsSecurityBaselinesPath was empty for the offline mode.");
                     }
 
                 }
@@ -225,7 +223,7 @@ namespace HardenWindowsSecurity
             // Extract LGPO.zip
             System.IO.Compression.ZipFile.ExtractToDirectory(Path.Combine(HardenWindowsSecurity.GlobalVars.WorkingDir, "LGPO.zip"), HardenWindowsSecurity.GlobalVars.WorkingDir);
 
-            if (OnlyLGPO == false)
+            if (!OnlyLGPO)
             {
 
                 // capturing the Microsoft Security Baselines extracted path in a variable using GetSubDirectoryName method and storing it in a variable so that we won't need to change anything in the code other than the download link when they are updated
@@ -239,12 +237,12 @@ namespace HardenWindowsSecurity
             // Storing the LGPO.exe path in a variable
             HardenWindowsSecurity.GlobalVars.LGPOExe = Path.Combine(HardenWindowsSecurity.GlobalVars.WorkingDir, "LGPO_30", "LGPO.exe");
 
-            if (OnlyLGPO == false)
+            if (!OnlyLGPO)
             {
 
                 if (GlobalVars.MicrosoftSecurityBaselinePath == null || GlobalVars.Microsoft365SecurityBaselinePath == null)
                 {
-                    throw new Exception("One or more of the paths were null after extracting the zip files.");
+                    throw new InvalidOperationException("One or more of the paths were null after extracting the zip files.");
                 }
 
                 // Copying LGPO.exe from its folder to Microsoft Security Baseline folder in order to get it ready to be used by PowerShell script

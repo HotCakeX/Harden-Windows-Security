@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Management;
 
 #nullable enable
@@ -16,7 +17,7 @@ namespace HardenWindowsSecurity
         public static List<ManagementObject> Get()
         {
             // Create a list to store the profiles
-            List<ManagementObject> profiles = new List<ManagementObject>();
+            List<ManagementObject> profiles = [];
 
             try
             {
@@ -26,23 +27,21 @@ namespace HardenWindowsSecurity
                 string queryString = $"SELECT * FROM {className}";
 
                 // Create a ManagementScope object and connect to it
-                ManagementScope scope = new ManagementScope(namespaceName);
+                ManagementScope scope = new(namespaceName);
                 scope.Connect();
 
                 // Create a ManagementObjectQuery object and a ManagementObjectSearcher object
-                ObjectQuery query = new ObjectQuery(queryString);
+                ObjectQuery query = new(queryString);
 
-                using (ManagementObjectSearcher searcher = new ManagementObjectSearcher(scope, query))
+                using ManagementObjectSearcher searcher = new(scope, query);
+
+                // Execute the query and store the results in a ManagementObjectCollection object
+                ManagementObjectCollection queryCollection = searcher.Get();
+
+                // Add each profile to the list
+                foreach (ManagementObject m in queryCollection.Cast<ManagementObject>())
                 {
-
-                    // Execute the query and store the results in a ManagementObjectCollection object
-                    ManagementObjectCollection queryCollection = searcher.Get();
-
-                    // Add each profile to the list
-                    foreach (ManagementObject m in queryCollection)
-                    {
-                        profiles.Add(m);
-                    }
+                    profiles.Add(m);
                 }
             }
             catch (Exception e)
@@ -70,7 +69,7 @@ namespace HardenWindowsSecurity
                 // Define the namespace and class
                 string namespaceName = @"root\StandardCimv2";
                 string className = "MSFT_NetConnectionProfile";
-                ManagementScope scope = new ManagementScope(namespaceName);
+                ManagementScope scope = new(namespaceName);
                 scope.Connect();
 
                 // Process interface indices
@@ -104,17 +103,16 @@ namespace HardenWindowsSecurity
 
         private static void UpdateNetworkCategory(ManagementScope scope, string queryString, NetworkCategory networkCategory)
         {
-            ObjectQuery query = new ObjectQuery(queryString);
+            ObjectQuery query = new(queryString);
 
-            using (ManagementObjectSearcher searcher = new ManagementObjectSearcher(scope, query))
+            using ManagementObjectSearcher searcher = new(scope, query);
+
+            ManagementObjectCollection queryCollection = searcher.Get();
+
+            foreach (ManagementObject m in queryCollection.Cast<ManagementObject>())
             {
-                ManagementObjectCollection queryCollection = searcher.Get();
-
-                foreach (ManagementObject m in queryCollection)
-                {
-                    m["NetworkCategory"] = (uint)networkCategory;
-                    m.Put();
-                }
+                m["NetworkCategory"] = (uint)networkCategory;
+                _ = m.Put();
             }
         }
 

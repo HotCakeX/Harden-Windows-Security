@@ -15,7 +15,9 @@ namespace HardenWindowsSecurity
             EndOfProtection,
             EndOfConfirmation,
             EndOfASRRules,
-            EndOfUnprotection
+            EndOfUnprotection,
+            EndOfExclusions,
+            EndOfBitLocker
         }
 
         /// <summary>
@@ -25,7 +27,7 @@ namespace HardenWindowsSecurity
         /// That is different than the DLLs being made available to the Add-Type during C# code compilation
         /// </summary>
         /// <param name="Type">The type of the toast notification to use</param>
-        public static void Show(ToastNotificationType Type, string? TotalCompliantValues, string? TotalNonCompliantValues, string? UnprotectCategory)
+        public static void Show(ToastNotificationType Type, string? TotalCompliantValues, string? TotalNonCompliantValues, string? UnprotectCategory, string? BitLockerEncryptionTab)
         {
 
             // Notifications Icon Override for all of the toast notification styles
@@ -179,6 +181,56 @@ namespace HardenWindowsSecurity
                         .AddAttributionText("Brought to you by Harden Windows Security")
 
                         .AddHeader("00004", "End of Unprotection", "Action")
+
+                        .Show();
+
+                        break;
+                    }
+                case ToastNotificationType.EndOfExclusions:
+                    {
+                        // Combine paths
+                        string Inline = Path.Combine(HardenWindowsSecurity.GlobalVars.path!, "Resources", "Media", "UnprotectToastNotificationImage.png");
+
+                        new Microsoft.Toolkit.Uwp.Notifications.ToastContentBuilder()
+
+                        .AddAppLogoOverride(new Uri($"file:///{LogoOverride}"), ToastGenericAppLogoCrop.Circle)
+
+                        .AddText("Exclusions Processed.")
+
+                        .AddText($"Successfully Processed {(GUIExclusions.selectedFiles!.Length)} file path(s) for exclusions.")
+
+                        .AddInlineImage(new Uri($"file:///{Inline}"))
+
+                        .AddAudio(new Uri("ms-winsoundevent:Notification.SMS"))
+
+                        .AddAttributionText("Brought to you by Harden Windows Security")
+
+                        .AddHeader("00004", "End of Exclusions", "Action")
+
+                        .Show();
+
+                        break;
+                    }
+                case ToastNotificationType.EndOfBitLocker:
+                    {
+                        // Combine paths
+                        string Inline = Path.Combine(HardenWindowsSecurity.GlobalVars.path!, "Resources", "Media", "BitLockerToastNotificationImage.png");
+
+                        new Microsoft.Toolkit.Uwp.Notifications.ToastContentBuilder()
+
+                        .AddAppLogoOverride(new Uri($"file:///{LogoOverride}"), ToastGenericAppLogoCrop.Circle)
+
+                        .AddText("BitLocker section Completed.")
+
+                        .AddText($"{BitLockerEncryptionTab} encryption section completed.")
+
+                        .AddInlineImage(new Uri($"file:///{Inline}"))
+
+                        .AddAudio(new Uri("ms-winsoundevent:Notification.SMS"))
+
+                        .AddAttributionText("Brought to you by Harden Windows Security")
+
+                        .AddHeader("00004", "End of BitLocker Encryption", "Action")
 
                         .Show();
 

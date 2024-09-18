@@ -19,11 +19,8 @@ namespace HardenWindowsSecurity
         /// <returns></returns>
         public static object? GetPropertyValue(dynamic obj, string propertyName)
         {
-            // Convert dynamic object to IDictionary<string, object> to access properties
-            var dictionary = obj as IDictionary<string, object>;
-
-            // Check if the dictionary is not null
-            if (dictionary != null)
+            // Convert dynamic object to IDictionary<string, object> to access properties and check for nulls
+            if (obj is IDictionary<string, object> dictionary)
             {
                 // Find the key in a case-insensitive manner
                 var key = dictionary.Keys.FirstOrDefault(k => string.Equals(k, propertyName, StringComparison.OrdinalIgnoreCase));

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Management;
 using System.Threading.Tasks;
 
@@ -28,7 +29,7 @@ namespace HardenWindowsSecurity
             string csvFilePath = Path.Combine(path, "Resources", "MDMResultClasses.csv");
 
             // Create a dictionary where keys are the class names and values are lists of dictionaries
-            Dictionary<string, List<Dictionary<string, object>>> results = new Dictionary<string, List<Dictionary<string, object>>>();
+            Dictionary<string, List<Dictionary<string, object>>> results = [];
 
             try
             {
@@ -36,7 +37,7 @@ namespace HardenWindowsSecurity
                 var records = await ReadCsvFileAsync(csvFilePath);
 
                 // Create a list of tasks for querying each class
-                List<Task> tasks = new List<Task>();
+                List<Task> tasks = [];
 
                 // Iterate through records
                 foreach (var record in records)
@@ -52,10 +53,10 @@ namespace HardenWindowsSecurity
                         tasks.Add(Task.Run(() =>
                         {
                             // List to store results for the current class
-                            List<Dictionary<string, object>> classResults = new List<Dictionary<string, object>>();
+                            List<Dictionary<string, object>> classResults = [];
 
                             // Create management scope object
-                            ManagementScope scope = new ManagementScope(record.Namespace);
+                            ManagementScope scope = new(record.Namespace);
                             // Connect to the WMI namespace
                             try
                             {
@@ -69,18 +70,18 @@ namespace HardenWindowsSecurity
 
                             // Create object query for the current class
                             string classQuery = record.Class?.Trim() ?? throw new InvalidOperationException("Record.Class is null");
-                            ObjectQuery query = new ObjectQuery("SELECT * FROM " + classQuery);
+                            ObjectQuery query = new("SELECT * FROM " + classQuery);
 
                             // Create management object searcher for the query
-                            ManagementObjectSearcher searcher = new ManagementObjectSearcher(scope, query);
+                            ManagementObjectSearcher searcher = new(scope, query);
 
                             try
                             {
                                 // Execute the query and iterate through the results
-                                foreach (ManagementObject obj in searcher.Get())
+                                foreach (ManagementObject obj in searcher.Get().Cast<ManagementObject>())
                                 {
                                     // Dictionary to store properties of the current class instance
-                                    Dictionary<string, object> classInstance = new Dictionary<string, object>();
+                                    Dictionary<string, object> classInstance = [];
 
                                     // Iterate through properties of the current object
                                     foreach (PropertyData prop in obj.Properties)
@@ -114,7 +115,7 @@ namespace HardenWindowsSecurity
             catch (IOException ex)
             {
                 // Throw exception with error message if reading CSV file fails
-                throw new Exception($"Error reading CSV file: {ex.Message}");
+                throw new InvalidOperationException($"Error reading CSV file: {ex.Message}");
             }
 
             // Return dictionary containing results for each class

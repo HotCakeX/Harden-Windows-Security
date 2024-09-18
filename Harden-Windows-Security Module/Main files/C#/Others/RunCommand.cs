@@ -9,7 +9,7 @@ namespace HardenWindowsSecurity
     {
         public static void Run(string command, string arguments)
         {
-            ProcessStartInfo processStartInfo = new ProcessStartInfo
+            ProcessStartInfo processStartInfo = new()
             {
                 FileName = command,
                 Arguments = arguments,
@@ -19,20 +19,14 @@ namespace HardenWindowsSecurity
                 CreateNoWindow = true
             };
 
-            using (Process? process = Process.Start(processStartInfo))
+            using Process? process = Process.Start(processStartInfo) ?? throw new InvalidOperationException("Failed to start the process.");
+
+            process.WaitForExit();
+
+            if (process.ExitCode != 0)
             {
-                if (process == null)
-                {
-                    throw new InvalidOperationException("Failed to start the process.");
-                }
-
-                process.WaitForExit();
-
-                if (process.ExitCode != 0)
-                {
-                    string error = process.StandardError.ReadToEnd();
-                    throw new Exception(error);
-                }
+                string error = process.StandardError.ReadToEnd();
+                throw new InvalidOperationException(error);
             }
         }
     }

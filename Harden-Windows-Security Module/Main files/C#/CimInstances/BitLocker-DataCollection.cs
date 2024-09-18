@@ -10,172 +10,171 @@ using System.Management;
 /// https://learn.microsoft.com/en-us/windows/win32/secprov/win32-encryptablevolume
 /// https://learn.microsoft.com/en-us/windows-hardware/drivers/storage/msft-volume
 /// Example usage:
-/// $output = [HardenWindowsSecurity.BitLockerInfo]::GetEncryptedVolumeInfo("D:")
+/// $output = [HardenWindowsSecurity.BitLocker]::GetEncryptedVolumeInfo("D:")
 /// $output
 /// $output.KeyProtector
 
 namespace HardenWindowsSecurity
 {
-    // Class that stores the information about each key protector
-    public class KeyProtector
+
+    public partial class BitLocker
     {
-        public string? KeyProtectorType { get; set; }
-        public string? KeyProtectorID { get; set; }
-        public bool AutoUnlockProtector { get; set; }
-        public string? KeyFileName { get; set; }
-        public string? RecoveryPassword { get; set; }
-        public string? KeyCertificateType { get; set; }
-        public string? Thumbprint { get; set; }
-    }
 
-    // class that stores the information about BitLocker protected volumes
-    public class BitLockerVolume
-    {
-        public string? MountPoint { get; set; }
-        public string? EncryptionMethod { get; set; }
-        public string? EncryptionMethodFlags { get; set; }
-        public bool AutoUnlockEnabled { get; set; }
-        public bool AutoUnlockKeyStored { get; set; }
+        // Class that stores the information about each key protector
+        public class KeyProtector
+        {
+            public KeyProtectorType? KeyProtectorType { get; set; }
+            public string? KeyProtectorID { get; set; }
+            public bool AutoUnlockProtector { get; set; }
+            public string? KeyFileName { get; set; }
+            public string? RecoveryPassword { get; set; }
+            public string? KeyCertificateType { get; set; }
+            public string? Thumbprint { get; set; }
+        }
 
-        // https://learn.microsoft.com/en-us/windows/win32/secprov/getversion-win32-encryptablevolume#parameters
-        public uint MetadataVersion { get; set; }
+        // class that stores the information about BitLocker protected volumes
+        public class BitLockerVolume
+        {
+            public string? MountPoint { get; set; }
+            public EncryptionMethod? EncryptionMethod { get; set; }
+            public string? EncryptionMethodFlags { get; set; }
+            public bool AutoUnlockEnabled { get; set; }
+            public bool AutoUnlockKeyStored { get; set; }
 
-        public string? ConversionStatus { get; set; }
-        public string? ProtectionStatus { get; set; }
-        public string? LockStatus { get; set; }
-        public string? EncryptionPercentage { get; set; }
-        public string? WipePercentage { get; set; }
-        public string? WipingStatus { get; set; }
-        public string? VolumeType { get; set; }
-        public string? CapacityGB { get; set; }
-        public string? FileSystemType { get; set; }
-        public string? FriendlyName { get; set; }
-        public string? AllocationUnitSize { get; set; }
-        public string? ReFSDedupMode { get; set; }
-        public List<KeyProtector>? KeyProtector { get; set; }
-    }
+            // https://learn.microsoft.com/en-us/windows/win32/secprov/getversion-win32-encryptablevolume#parameters
+            public uint MetadataVersion { get; set; }
 
-    public static class BitLockerInfo
-    {
+            public ConversionStatus? ConversionStatus { get; set; }
+            public ProtectionStatus? ProtectionStatus { get; set; }
+            public LockStatus? LockStatus { get; set; }
+            public string? EncryptionPercentage { get; set; }
+            public string? WipePercentage { get; set; }
+            public WipingStatus? WipingStatus { get; set; }
+            public VolumeType? VolumeType { get; set; }
+            public string? CapacityGB { get; set; }
+            public FileSystemType? FileSystemType { get; set; }
+            public string? FriendlyName { get; set; }
+            public string? AllocationUnitSize { get; set; }
+            public ReFSDedupMode? ReFSDedupMode { get; set; }
+            public List<KeyProtector>? KeyProtector { get; set; }
+        }
 
         // Different types of the key protectors
         // https://learn.microsoft.com/en-us/windows/win32/secprov/getkeyprotectortype-win32-encryptablevolume
-        private static readonly Dictionary<uint, string> KeyProtectorTypes = new Dictionary<uint, string>
-    {
-        { 0, "Unknown" },
-        { 1, "Tpm" },
-        { 2, "ExternalKey" },
-        { 3, "RecoveryPassword" },
-        { 4, "TpmPin" },
-        { 5, "TpmStartupKey" },
-        { 6, "TpmPinStartupKey" },
-        { 7, "PublicKey" },
-        { 8, "Password" },
-        { 9, "TpmNetworkKey" },
-        { 10, "AdAccountOrGroup" }
-    };
-
+        public enum KeyProtectorType : uint
+        {
+            Unknown = 0,
+            Tpm = 1,
+            ExternalKey = 2,
+            RecoveryPassword = 3,
+            TpmPin = 4,
+            TpmStartupKey = 5,
+            TpmPinStartupKey = 6,
+            PublicKey = 7,
+            Password = 8,
+            TpmNetworkKey = 9,
+            AdAccountOrGroup = 10
+        }
 
         // https://learn.microsoft.com/en-us/windows/win32/secprov/getencryptionmethod-win32-encryptablevolume
-        private static readonly Dictionary<uint, string> EncryptionMethods = new Dictionary<uint, string>
-    {
-        { 0, "None" },
-        { 1, "AES_128_WITH_DIFFUSER" },
-        { 2, "AES_256_WITH_DIFFUSER" },
-        { 3, "AES_128" },
-        { 4, "AES_256" },
-        { 5, "HARDWARE_ENCRYPTION" },
-        { 6, "XTS_AES_128" },
-        { 7, "XTS_AES_256" }
-    };
-
+        public enum EncryptionMethod : uint
+        {
+            None = 0,
+            AES_128_WITH_DIFFUSER = 1,
+            AES_256_WITH_DIFFUSER = 2,
+            AES_128 = 3,
+            AES_256 = 4,
+            HARDWARE_ENCRYPTION = 5,
+            XTS_AES_128 = 6,
+            XTS_AES_256 = 7
+        }
 
         // https://learn.microsoft.com/en-us/windows/win32/secprov/getprotectionstatus-win32-encryptablevolume
-        private static readonly Dictionary<uint, string> ProtectionStatuses = new Dictionary<uint, string>
-    {
-        { 0, "Unprotected" },
-        { 1, "Protected" },
-        { 2, "Unknown" }
-    };
-
+        public enum ProtectionStatus : uint
+        {
+            Unprotected = 0,
+            Protected = 1,
+            Unknown = 2
+        }
 
         // https://learn.microsoft.com/en-us/windows/win32/secprov/getlockstatus-win32-encryptablevolume
-        private static readonly Dictionary<uint, string> LockStatuses = new Dictionary<uint, string>
-    {
-        { 0, "Unlocked" },
-        { 1, "Locked" }
-    };
+        public enum LockStatus
+        {
+            Unlocked = 0,
+            Locked = 1
+        }
 
         // https://learn.microsoft.com/en-us/windows/win32/secprov/win32-encryptablevolume#properties
-        private static readonly Dictionary<uint, string> VolumeTypes = new Dictionary<uint, string>
-    {
-        { 0, "OperationSystem" },
-        { 1, "FixedDisk" },
-        { 2, "Removable" }
-    };
+        public enum VolumeType
+        {
+            OperationSystem = 0,
+            FixedDisk = 1,
+            Removable = 2
+        }
 
         // https://learn.microsoft.com/en-us/windows/win32/secprov/getconversionstatus-win32-encryptablevolume
-        private static readonly Dictionary<uint, string> ConversionStatuses = new Dictionary<uint, string>
-    {
-        { 0, "FULLY DECRYPTED" },
-        { 1, "FULLY ENCRYPTED" },
-        { 2, "ENCRYPTION IN PROGRESS" },
-        { 3, "DECRYPTION IN PROGRESS" },
-        { 4, "ENCRYPTION PAUSED" },
-        { 5, "DECRYPTION PAUSED" }
-    };
+        public enum ConversionStatus : uint
+        {
+            FullyDecrypted = 0,
+            FullyEncrypted = 1,
+            EncryptionInProgress = 2,
+            DecryptionInProgress = 3,
+            EncryptionPaused = 4,
+            DecryptionPaused = 5
+        }
 
         // https://learn.microsoft.com/en-us/windows/win32/secprov/getconversionstatus-win32-encryptablevolume
-        private static readonly Dictionary<uint, string> WipingStatuses = new Dictionary<uint, string>
-    {
-        { 0, "FreeSpaceNotWiped" },
-        { 1, "FreeSpaceWiped" },
-        { 2, "FreeSpaceWipingInProgress" },
-        { 3, "FreeSpaceWipingPaused" }
-    };
+        public enum WipingStatus : uint
+        {
+            FreeSpaceNotWiped = 0,
+            FreeSpaceWiped = 1,
+            FreeSpaceWipingInProgress = 2,
+            FreeSpaceWipingPaused = 3
+        }
 
         // https://learn.microsoft.com/en-us/windows-hardware/drivers/storage/msft-volume#properties
-        private static readonly Dictionary<ushort, string> FileSystemTypes = new Dictionary<ushort, string>
-    {
-        { 0, "Unknown" },
-        { 2, "UFS" },
-        { 3, "HFS" },
-        { 4, "FAT" },
-        { 5, "FAT16" },
-        { 6, "FAT32" },
-        { 7, "NTFS4" },
-        { 8, "NTFS5" },
-        { 9, "XFS" },
-        { 10, "AFS" },
-        { 11, "EXT2" },
-        { 12, "EXT3" },
-        { 13, "ReiserFS" },
-        { 14, "NTFS" },
-        { 15, "ReFS" }
-    };
+        public enum FileSystemType : ushort
+        {
+            Unknown = 0,
+            UFS = 2,
+            HFS = 3,
+            FAT = 4,
+            FAT16 = 5,
+            FAT32 = 6,
+            NTFS4 = 7,
+            NTFS5 = 8,
+            XFS = 9,
+            AFS = 10,
+            EXT2 = 11,
+            EXT3 = 12,
+            ReiserFS = 13,
+            NTFS = 14,
+            ReFS = 15
+        }
 
         // https://learn.microsoft.com/en-us/windows-hardware/drivers/storage/msft-volume#properties
-        private static readonly Dictionary<uint, string> ReFSDedupModes = new Dictionary<uint, string>
-    {
-        { 0, "Disabled" },
-        { 1, "GeneralPurpose" },
-        { 2, "HyperV" },
-        { 3, "Backup" },
-        { 4, "NotAvailable" }
-    };
+        public enum ReFSDedupMode : uint
+        {
+            Disabled = 0,
+            GeneralPurpose = 1,
+            HyperV = 2,
+            Backup = 3,
+            NotAvailable = 4
+        }
+
 
         // The main method that will generate as much useful info as possible about every BitLocker volume
         public static BitLockerVolume GetEncryptedVolumeInfo(string targetVolume)
         {
             // The MSFT_Volume class requires the volume name without the colon
-            var targetVolumeVer2 = targetVolume.Replace(":", "", StringComparison.OrdinalIgnoreCase);
+            string targetVolumeVer2 = targetVolume.Replace(":", "", StringComparison.OrdinalIgnoreCase);
 
             // Create a new instance of the BitLockerVolume class
-            BitLockerVolume newInstance = new BitLockerVolume();
+            BitLockerVolume newInstance = new();
 
             // Get the information about the volume using Win32_EncryptableVolume class
             // This is used a lot as the main input object to get information from other classes
-            var volume = GetCimInstance("Root\\CIMV2\\Security\\MicrosoftVolumeEncryption", "Win32_EncryptableVolume", $"DriveLetter = '{targetVolume}'");
+            ManagementBaseObject? volume = GetCimInstance("Root\\CIMV2\\Security\\MicrosoftVolumeEncryption", "Win32_EncryptableVolume", $"DriveLetter = '{targetVolume}'");
 
             // Make sure there is data
             if (volume != null)
@@ -186,38 +185,38 @@ namespace HardenWindowsSecurity
                 try
                 {
                     // Set the ProtectionStatus property if it exists
-                    newInstance.ProtectionStatus = GetDictionaryValue(ProtectionStatuses, Convert.ToUInt32(volume["ProtectionStatus"], CultureInfo.InvariantCulture));
+                    newInstance.ProtectionStatus = (ProtectionStatus)Convert.ToUInt32(volume["ProtectionStatus"], CultureInfo.InvariantCulture);
                 }
                 catch { /* ignore */ }
 
                 try
                 {
                     // Set the VolumeType property if it exists
-                    newInstance.VolumeType = GetDictionaryValue(VolumeTypes, Convert.ToUInt32(volume["VolumeType"], CultureInfo.InvariantCulture));
+                    newInstance.VolumeType = (VolumeType)Convert.ToUInt32(volume["VolumeType"], CultureInfo.InvariantCulture);
                 }
                 catch { /* ignore */ }
 
                 try
                 {
                     // Try to use the GetLockStatus method to get the CurrentLockStatus
-                    var currentLockStatus = InvokeCimMethod(volume, "GetLockStatus", null);
+                    ManagementBaseObject currentLockStatus = InvokeCimMethod(volume, "GetLockStatus", null);
                     if (currentLockStatus != null && Convert.ToUInt32(currentLockStatus["ReturnValue"], CultureInfo.InvariantCulture) == 0)
                     {
                         // Set the LockStatus property if it exists
-                        newInstance.LockStatus = GetDictionaryValue(LockStatuses, Convert.ToUInt32(currentLockStatus["LockStatus"], CultureInfo.InvariantCulture));
+                        newInstance.LockStatus = (LockStatus)Convert.ToUInt32(currentLockStatus["LockStatus"], CultureInfo.InvariantCulture);
                     }
                 }
                 catch { /* ignore */ }
 
                 try
                 {
-                    var currentVolConversionStatus = InvokeCimMethod(volume, "GetConversionStatus", null);
+                    ManagementBaseObject currentVolConversionStatus = InvokeCimMethod(volume, "GetConversionStatus", null);
                     if (currentVolConversionStatus != null && Convert.ToUInt32(currentVolConversionStatus["ReturnValue"], CultureInfo.InvariantCulture) == 0)
                     {
                         newInstance.EncryptionPercentage = currentVolConversionStatus["EncryptionPercentage"]?.ToString();
                         newInstance.WipePercentage = currentVolConversionStatus["WipingPercentage"]?.ToString();
-                        newInstance.ConversionStatus = GetDictionaryValue(ConversionStatuses, Convert.ToUInt32(currentVolConversionStatus["ConversionStatus"], CultureInfo.InvariantCulture));
-                        newInstance.WipingStatus = GetDictionaryValue(WipingStatuses, Convert.ToUInt32(currentVolConversionStatus["WipingStatus"], CultureInfo.InvariantCulture));
+                        newInstance.ConversionStatus = (ConversionStatus)Convert.ToUInt32(currentVolConversionStatus["ConversionStatus"], CultureInfo.InvariantCulture);
+                        newInstance.WipingStatus = (WipingStatus)Convert.ToUInt32(currentVolConversionStatus["WipingStatus"], CultureInfo.InvariantCulture);
                     }
                 }
                 catch { /* ignore */ }
@@ -228,7 +227,11 @@ namespace HardenWindowsSecurity
                     var currentEncryptionMethod = InvokeCimMethod(volume, "GetEncryptionMethod", null);
                     if (currentEncryptionMethod != null && Convert.ToUInt32(currentEncryptionMethod["ReturnValue"], CultureInfo.InvariantCulture) == 0)
                     {
-                        newInstance.EncryptionMethod = GetDictionaryValue(EncryptionMethods, Convert.ToUInt32(currentEncryptionMethod["EncryptionMethod"], CultureInfo.InvariantCulture));
+                        uint EncryptionMethodNum = Convert.ToUInt32(currentEncryptionMethod["EncryptionMethod"], CultureInfo.InvariantCulture);
+
+                        // Cast the uint to the EncryptionMethod enum
+                        newInstance.EncryptionMethod = (EncryptionMethod)EncryptionMethodNum;
+
                         newInstance.EncryptionMethodFlags = currentEncryptionMethod["EncryptionMethodFlags"]?.ToString();
                     }
                 }
@@ -237,7 +240,7 @@ namespace HardenWindowsSecurity
                 try
                 {
                     // Use the GetVersion method
-                    var currentVolVersion = InvokeCimMethod(volume, "GetVersion", null);
+                    ManagementBaseObject currentVolVersion = InvokeCimMethod(volume, "GetVersion", null);
                     if (currentVolVersion != null && Convert.ToUInt32(currentVolVersion["ReturnValue"], CultureInfo.InvariantCulture) == 0)
                     {
                         newInstance.MetadataVersion = Convert.ToUInt32(currentVolVersion["Version"], CultureInfo.InvariantCulture);
@@ -248,19 +251,19 @@ namespace HardenWindowsSecurity
                 try
                 {
                     // Use the GetKeyProtectors method
-                    var keyProtectors = InvokeCimMethod(volume, "GetKeyProtectors", null);
+                    ManagementBaseObject keyProtectors = InvokeCimMethod(volume, "GetKeyProtectors", null);
 
                     // If there are any key protectors
                     if (keyProtectors != null)
                     {
                         // Create a new list of KeyProtector objects to store the results of processing each key protector in the loop below
-                        newInstance.KeyProtector = new List<KeyProtector>();
+                        newInstance.KeyProtector = [];
 
                         // Iterate through all of the key protectors' IDs
-                        foreach (var keyProtectorID in (string[])keyProtectors["VolumeKeyProtectorID"])
+                        foreach (string keyProtectorID in (string[])keyProtectors["VolumeKeyProtectorID"])
                         {
                             // Set them all to null initially so we don't accidentally use them for the wrong key protector type
-                            string? type = null;
+                            KeyProtectorType? type = null;
                             string? recoveryPassword = null;
                             bool autoUnlockProtector = false;
                             string? keyProtectorFileName = null;
@@ -270,16 +273,17 @@ namespace HardenWindowsSecurity
                             try
                             {
                                 // Use the GetKeyProtectorType method
-                                var keyProtectorTypeResult = InvokeCimMethod(volume, "GetKeyProtectorType", new Dictionary<string, object> { { "VolumeKeyProtectorID", keyProtectorID } });
+                                ManagementBaseObject keyProtectorTypeResult = InvokeCimMethod(volume, "GetKeyProtectorType", new Dictionary<string, object> { { "VolumeKeyProtectorID", keyProtectorID } });
                                 if (keyProtectorTypeResult != null)
                                 {
-                                    var keyProtectorType = Convert.ToUInt32(keyProtectorTypeResult["KeyProtectorType"], CultureInfo.InvariantCulture);
-                                    type = GetDictionaryValue(KeyProtectorTypes, keyProtectorType);
+                                    uint keyProtectorType = Convert.ToUInt32(keyProtectorTypeResult["KeyProtectorType"], CultureInfo.InvariantCulture);
+                                    // Cast the uint value to the KeyProtectorType enum
+                                    type = (KeyProtectorType)keyProtectorType;
 
                                     // if the current key protector is RecoveryPassword / Numerical password
                                     if (keyProtectorType == 3)
                                     {
-                                        var numericalPassword = InvokeCimMethod(volume, "GetKeyProtectorNumericalPassword", new Dictionary<string, object> { { "VolumeKeyProtectorID", keyProtectorID } });
+                                        ManagementBaseObject numericalPassword = InvokeCimMethod(volume, "GetKeyProtectorNumericalPassword", new Dictionary<string, object> { { "VolumeKeyProtectorID", keyProtectorID } });
                                         if (numericalPassword != null && Convert.ToUInt32(numericalPassword["ReturnValue"], CultureInfo.InvariantCulture) == 0)
                                         {
                                             recoveryPassword = numericalPassword["NumericalPassword"]?.ToString();
@@ -289,11 +293,11 @@ namespace HardenWindowsSecurity
                                     // if the current key protector is ExternalKey
                                     if (keyProtectorType == 2)
                                     {
-                                        var autoUnlockEnabledResult = InvokeCimMethod(volume, "IsAutoUnlockEnabled", null);
+                                        ManagementBaseObject autoUnlockEnabledResult = InvokeCimMethod(volume, "IsAutoUnlockEnabled", null);
                                         if (autoUnlockEnabledResult != null && Convert.ToUInt32(autoUnlockEnabledResult["ReturnValue"], CultureInfo.InvariantCulture) == 0)
                                         {
-                                            var isAutoUnlockEnabled = Convert.ToBoolean(autoUnlockEnabledResult["IsAutoUnlockEnabled"], CultureInfo.InvariantCulture);
-                                            var volumeKeyProtectorID = autoUnlockEnabledResult["VolumeKeyProtectorID"]?.ToString();
+                                            bool isAutoUnlockEnabled = Convert.ToBoolean(autoUnlockEnabledResult["IsAutoUnlockEnabled"], CultureInfo.InvariantCulture);
+                                            string? volumeKeyProtectorID = autoUnlockEnabledResult["VolumeKeyProtectorID"]?.ToString();
 
                                             if (isAutoUnlockEnabled && string.Equals(volumeKeyProtectorID, keyProtectorID, StringComparison.Ordinal))
                                             {
@@ -301,7 +305,7 @@ namespace HardenWindowsSecurity
                                             }
                                         }
 
-                                        var keyProtectorFileNameResult = InvokeCimMethod(volume, "GetExternalKeyFileName", new Dictionary<string, object> { { "VolumeKeyProtectorID", keyProtectorID } });
+                                        ManagementBaseObject keyProtectorFileNameResult = InvokeCimMethod(volume, "GetExternalKeyFileName", new Dictionary<string, object> { { "VolumeKeyProtectorID", keyProtectorID } });
                                         if (keyProtectorFileNameResult != null && Convert.ToUInt32(keyProtectorFileNameResult["ReturnValue"], CultureInfo.InvariantCulture) == 0)
                                         {
                                             keyProtectorFileName = keyProtectorFileNameResult["FileName"]?.ToString();
@@ -309,9 +313,9 @@ namespace HardenWindowsSecurity
                                     }
 
                                     // if the current key protector is PublicKey or TpmNetworkKey
-                                    if (keyProtectorType == 7 || keyProtectorType == 9)
+                                    if (keyProtectorType is 7 or 9)
                                     {
-                                        var keyProtectorCertificateResult = InvokeCimMethod(volume, "GetKeyProtectorCertificate", new Dictionary<string, object> { { "VolumeKeyProtectorID", keyProtectorID } });
+                                        ManagementBaseObject keyProtectorCertificateResult = InvokeCimMethod(volume, "GetKeyProtectorCertificate", new Dictionary<string, object> { { "VolumeKeyProtectorID", keyProtectorID } });
                                         if (keyProtectorCertificateResult != null && Convert.ToUInt32(keyProtectorCertificateResult["ReturnValue"], CultureInfo.InvariantCulture) == 0)
                                         {
                                             keyProtectorThumbprint = keyProtectorCertificateResult["CertThumbprint"]?.ToString();
@@ -340,7 +344,7 @@ namespace HardenWindowsSecurity
             }
 
             // Get volume information using the MSFT_Volume class
-            var currentStorage = GetCimInstance("Root\\Microsoft\\Windows\\Storage", "MSFT_Volume", $"DriveLetter = '{targetVolumeVer2}'");
+            ManagementBaseObject? currentStorage = GetCimInstance("Root\\Microsoft\\Windows\\Storage", "MSFT_Volume", $"DriveLetter = '{targetVolumeVer2}'");
             if (currentStorage != null)
             {
                 try
@@ -351,7 +355,7 @@ namespace HardenWindowsSecurity
 
                 try
                 {
-                    newInstance.FileSystemType = GetDictionaryValue(FileSystemTypes, Convert.ToUInt16(currentStorage["FileSystemType"], CultureInfo.InvariantCulture));
+                    newInstance.FileSystemType = (FileSystemType)Convert.ToUInt16(currentStorage["FileSystemType"], CultureInfo.InvariantCulture);
                 }
                 catch { /* ignore */ }
 
@@ -369,7 +373,7 @@ namespace HardenWindowsSecurity
 
                 try
                 {
-                    newInstance.ReFSDedupMode = GetDictionaryValue(ReFSDedupModes, Convert.ToUInt32(currentStorage["ReFSDedupMode"], CultureInfo.InvariantCulture));
+                    newInstance.ReFSDedupMode = (ReFSDedupMode)Convert.ToUInt32(currentStorage["ReFSDedupMode"], CultureInfo.InvariantCulture);
                 }
                 catch { /* ignore */ }
             }
@@ -377,69 +381,36 @@ namespace HardenWindowsSecurity
             return newInstance;
         }
 
-        // Helper method to get the value from a dictionary and handle the case when the key is not present
-        // For uint keys
-        private static string? GetDictionaryValue(Dictionary<uint, string> dictionary, uint key)
-        {
-            if (dictionary.TryGetValue(key, out string? value))
-            {
-                return value;
-            }
-            else
-            {
-                // Return null instead of "Unknown" and log the issue
-                // HardenWindowsSecurity.Logger.LogMessage($"Unknown key '{key}' encountered.");
-                return null;
-            }
-        }
-
-        // Helper method to get the value from a dictionary and handle the case when the key is not present
-        // For ushort keys
-        private static string? GetDictionaryValue(Dictionary<ushort, string> dictionary, ushort key)
-        {
-            if (dictionary.TryGetValue(key, out string? value))
-            {
-                return value;
-            }
-            else
-            {
-                // Return null instead of "Unknown" and log the issue
-                // HardenWindowsSecurity.Logger.LogMessage($"Unknown key '{key}' encountered.");
-                return null;
-            }
-        }
 
         // Helper method to get the information from the WMI classes
         private static ManagementBaseObject? GetCimInstance(string @namespace, string className, string filter)
         {
-            SelectQuery query = new SelectQuery(className, filter);
-            using (ManagementObjectSearcher searcher = new ManagementObjectSearcher(@namespace, query.QueryString))
-            {
-                return searcher.Get().Cast<ManagementBaseObject>().FirstOrDefault();
-            }
+            SelectQuery query = new(className, filter);
+            using ManagementObjectSearcher searcher = new(@namespace, query.QueryString);
+
+            return searcher.Get().Cast<ManagementBaseObject>().FirstOrDefault();
         }
 
         // Helper method to invoke a method on a WMI class
         private static ManagementBaseObject InvokeCimMethod(ManagementBaseObject instance, string methodName, Dictionary<string, object>? parameters)
         {
-            using (ManagementClass managementClass = new ManagementClass(instance.ClassPath))
+            using ManagementClass managementClass = new(instance.ClassPath);
+
+            ManagementBaseObject inParams = managementClass.GetMethodParameters(methodName);
+            if (parameters != null)
             {
-                var inParams = managementClass.GetMethodParameters(methodName);
-                if (parameters != null)
+                foreach (KeyValuePair<string, object> param in parameters)
                 {
-                    foreach (var param in parameters)
-                    {
-                        inParams[param.Key] = param.Value;
-                    }
+                    inParams[param.Key] = param.Value;
                 }
-                return ((ManagementObject)instance).InvokeMethod(methodName, inParams, null);
             }
+            return ((ManagementObject)instance).InvokeMethod(methodName, inParams, null);
         }
 
         // Method to get the drive letters of all volumes on the system, encrypted or not
         public static string[] GetAllDriveLetters()
         {
-            List<string> driveLetters = new List<string>();
+            List<string> driveLetters = [];
 
             ManagementObjectCollection storages = GetCimInstances("Root\\Microsoft\\Windows\\Storage", "MSFT_Volume", string.Empty);
 
@@ -461,14 +432,14 @@ namespace HardenWindowsSecurity
 
         private static ManagementObjectCollection GetCimInstances(string namespacePath, string className, string filter)
         {
-            ManagementScope scope = new ManagementScope(namespacePath);
+            ManagementScope scope = new(namespacePath);
             string queryString = string.IsNullOrEmpty(filter) ? $"SELECT * FROM {className}" : $"SELECT * FROM {className} WHERE {filter}";
-            ObjectQuery query = new ObjectQuery(queryString);
+            ObjectQuery query = new(queryString);
 
             // Declare the collection to return
             ManagementObjectCollection result;
 
-            using (ManagementObjectSearcher searcher = new ManagementObjectSearcher(scope, query))
+            using (ManagementObjectSearcher searcher = new(scope, query))
             {
                 // Get the collection from the searcher
                 result = searcher.Get();
@@ -478,11 +449,16 @@ namespace HardenWindowsSecurity
         }
 
 
-        // Get the BitLocker info of all of the volumes on the system
-        public static List<BitLockerVolume> GetAllEncryptedVolumeInfo()
+        /// <summary>
+        /// Gets the BitLocker info of all of the volumes on the system
+        /// </summary>
+        /// <param name="OnlyRemovableDrives">Will only return Removable Drives</param>
+        /// <param name="OnlyNonOSDrives">Will only return Non-OSDrives, excluding Removable Drives</param>
+        /// <returns></returns>
+        public static List<BitLockerVolume> GetAllEncryptedVolumeInfo(bool OnlyNonOSDrives, bool OnlyRemovableDrives)
         {
             // Create a new list of BitLockerVolume objects
-            List<BitLockerVolume> volumes = new List<BitLockerVolume>();
+            List<BitLockerVolume> volumes = [];
 
             // Call the GetAllDriveLetters method to get all of the drive letters
             string[] driveLetters = GetAllDriveLetters();
@@ -492,6 +468,25 @@ namespace HardenWindowsSecurity
             {
                 // the method requires the drive letter with the colon
                 BitLockerVolume volume = GetEncryptedVolumeInfo(driveLetter + ":");
+
+                // If only Non-OS Drives are requested, skip any other drive types
+                if (OnlyNonOSDrives)
+                {
+                    if (volume.VolumeType is not VolumeType.FixedDisk)
+                    {
+                        continue;
+                    }
+                }
+
+                // If only Removable Drives are requested, skip any other drive types
+                if (OnlyRemovableDrives)
+                {
+                    if (volume.VolumeType is not VolumeType.Removable)
+                    {
+                        continue;
+                    }
+                }
+
                 volumes.Add(volume);
             }
 

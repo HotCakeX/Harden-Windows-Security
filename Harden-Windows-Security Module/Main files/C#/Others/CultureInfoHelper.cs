@@ -16,7 +16,7 @@ namespace HardenWindowsSecurity
             CultureInfo cultureInfo = CultureInfo.CurrentCulture;
 
             // Create a new CultureInfoProperties object and populate it with the current culture information
-            HardenWindowsSecurity.CultureInfoProperties cultureProperties = new HardenWindowsSecurity.CultureInfoProperties
+            HardenWindowsSecurity.CultureInfoProperties cultureProperties = new()
             {
                 Parent = cultureInfo.Parent.Name,
                 LCID = cultureInfo.LCID,

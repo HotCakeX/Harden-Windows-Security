@@ -12,7 +12,10 @@ namespace HardenWindowsSecurity
     {
         Information,
         Error,
-        Warning
+        Warning,
+        InformationInteractionRequired, // Same as "Information" but also displays DialogBox to the user
+        WarningInteractionRequired, // Same as "Warning" but also displays DialogBox to the user
+        ErrorInteractionRequired, // Same as "Error" but also displays DialogBox to the user
     }
 
     /// <summary>
@@ -29,6 +32,7 @@ namespace HardenWindowsSecurity
         ///  2) Console - regular messages - works in both Visual Studio console and PowerShell console
         ///  3) Console - Verbose messages - works only in the PowerShell console
         ///  4) Log file
+        ///  5) New WPF Window as DialogBox
         /// </summary>
         /// <param name="text">The text to be written</param>
         /// <param name="LogType">The type of the log message, get it from the enum</param>
@@ -44,13 +48,29 @@ namespace HardenWindowsSecurity
             // attach timestamps to the text
             string CurrentText = $"{DateTime.Now}: {text}";
 
+            // Display DialogBox to the user in addition to all other tasks
+            if (LogType is LogTypeIntel.ErrorInteractionRequired)
+            {
+                DialogMsgHelper.Show(text, $"Error At {DateTime.Now}");
+            }
+            else if (LogType is LogTypeIntel.WarningInteractionRequired)
+            {
+                DialogMsgHelper.Show(text, $"Warning At {DateTime.Now}");
+            }
+            else if (LogType is LogTypeIntel.InformationInteractionRequired)
+            {
+                DialogMsgHelper.Show(text, $"Information At {DateTime.Now}");
+            }
+
 
             // If there is no GUI Window, or there was a GUI window but it was closed by the user
             // then use Console for writing logs
-            if (HardenWindowsSecurity.GUILogs.View == null || HardenWindowsSecurity.GUILogs.View.Dispatcher.HasShutdownStarted == true)
+            if (HardenWindowsSecurity.GUILogs.View == null || HardenWindowsSecurity.GUILogs.View.Dispatcher.HasShutdownStarted)
             {
                 // See if the host is available, meaning PowerShell host is available
-                if (HardenWindowsSecurity.GlobalVars.Host != null)
+                // And also VerbosePreference is not null, in case the methods are running manually by using the Harden Windows Security methods directly in PowerShell like as a library
+                // Because then the Verbose Preference is not set in the Initialize method since the module is only imported.
+                if (HardenWindowsSecurity.GlobalVars.Host != null && GlobalVars.VerbosePreference != null)
                 {
                     // Write the message as verbose text on PowerShell console
                     WriteVerbose(CurrentText);
@@ -73,7 +93,7 @@ namespace HardenWindowsSecurity
                     if (GUIProtectWinSecurity.log != null && GUIProtectWinSecurity.log.IsChecked == true)
                     {
                         // only write the header to the log file if it hasn't already been written to it
-                        if (HardenWindowsSecurity.GlobalVars.LogHeaderHasBeenWritten == false)
+                        if (!HardenWindowsSecurity.GlobalVars.LogHeaderHasBeenWritten)
                         {
 
                             HardenWindowsSecurity.Logger.LogToFile($"""
@@ -96,8 +116,11 @@ Machine: {Environment.MachineName}
                     // Update the TextBlock with the new log message, making sure each log is written to a new line
                     HardenWindowsSecurity.GUILogs.MainLoggerTextBox!.Text += CurrentText + "\n";
 
-                    // scroll down the scroller
-                    HardenWindowsSecurity.GUILogs.scrollerForOutputTextBox!.ScrollToBottom();
+                    // scroll down the scroller if Auto-scrolling is enabled
+                    if (GUILogs.AutoScroll)
+                    {
+                        HardenWindowsSecurity.GUILogs.scrollerForOutputTextBox!.ScrollToBottom();
+                    }
                     #endregion
 
                     #region Writing to the log file
@@ -120,14 +143,30 @@ Machine: {Environment.MachineName}
                                     WriteEventLog(CurrentText, EventLogEntryType.Information);
                                     break;
                                 }
-                            case LogTypeIntel.Error:
+                            case LogTypeIntel.InformationInteractionRequired:
                                 {
-                                    WriteEventLog(CurrentText, EventLogEntryType.Error);
+                                    WriteEventLog(CurrentText, EventLogEntryType.Information);
                                     break;
                                 }
                             case LogTypeIntel.Warning:
                                 {
                                     WriteEventLog(CurrentText, EventLogEntryType.Warning);
+                                    break;
+                                }
+                            case LogTypeIntel.WarningInteractionRequired:
+                                {
+                                    WriteEventLog(CurrentText, EventLogEntryType.Warning);
+                                    break;
+
+                                }
+                            case LogTypeIntel.Error:
+                                {
+                                    WriteEventLog(CurrentText, EventLogEntryType.Error);
+                                    break;
+                                }
+                            case LogTypeIntel.ErrorInteractionRequired:
+                                {
+                                    WriteEventLog(CurrentText, EventLogEntryType.Error);
                                     break;
                                 }
                         }
@@ -147,7 +186,7 @@ Machine: {Environment.MachineName}
         private static void LogToFile(string Text)
         {
             //  if the log file path is not empty
-            if (!string.IsNullOrEmpty(GUIProtectWinSecurity.txtFilePath!.Text))
+            if (GUIProtectWinSecurity.txtFilePath != null && !string.IsNullOrEmpty(GUIProtectWinSecurity.txtFilePath.Text))
             {
 
                 // trim any white spaces, single or double quotes in case the user entered the path with quotes around it
@@ -159,10 +198,8 @@ Machine: {Environment.MachineName}
                 // Append log entries to the file
                 try
                 {
-                    using (StreamWriter sw = File.AppendText(GUIProtectWinSecurity.txtFilePath.Text))
-                    {
-                        sw.WriteLine($"{Text}");
-                    }
+                    using StreamWriter sw = File.AppendText(GUIProtectWinSecurity.txtFilePath.Text);
+                    sw.WriteLine($"{Text}");
                 }
                 catch
                 {

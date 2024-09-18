@@ -1,6 +1,5 @@
 using Microsoft.Win32;
 using System;
-using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 
@@ -61,16 +60,16 @@ namespace HardenWindowsSecurity
                 }
 
                 // Create the working directory
-                Directory.CreateDirectory(HardenWindowsSecurity.GlobalVars.WorkingDir);
+                _ = Directory.CreateDirectory(HardenWindowsSecurity.GlobalVars.WorkingDir);
 
                 // Initialize the RegistryCSVItems list so that the HardenWindowsSecurity.HardeningRegistryKeys.ReadCsv() method can write to it
-                HardenWindowsSecurity.GlobalVars.RegistryCSVItems = new List<HardenWindowsSecurity.HardeningRegistryKeys.CsvRecord>();
+                HardenWindowsSecurity.GlobalVars.RegistryCSVItems = [];
 
                 // Parse the Registry.csv and save it to the global HardenWindowsSecurity.GlobalVars.RegistryCSVItems list
                 HardenWindowsSecurity.HardeningRegistryKeys.ReadCsv();
 
                 // Initialize the ProcessMitigations list so that the HardenWindowsSecurity.ProcessMitigationsParser.ReadCsv() method can write to it
-                HardenWindowsSecurity.GlobalVars.ProcessMitigations = new List<HardenWindowsSecurity.ProcessMitigationsParser.ProcessMitigationsRecords>();
+                HardenWindowsSecurity.GlobalVars.ProcessMitigations = [];
 
                 // Parse the ProcessMitigations.csv and save it to the global HardenWindowsSecurity.GlobalVars.ProcessMitigations list
                 HardenWindowsSecurity.ProcessMitigationsParser.ReadCsv();
@@ -93,7 +92,7 @@ namespace HardenWindowsSecurity
             HardenWindowsSecurity.GlobalVars.MDAVPreferencesCurrent = HardenWindowsSecurity.MpPreferenceHelper.GetMpPreference();
 
             // Get the MSFT_MpComputerStatus and save them to the global variable HardenWindowsSecurity.GlobalVars.MDAVConfigCurrent
-            HardenWindowsSecurity.GlobalVars.MDAVConfigCurrent = HardenWindowsSecurity.MpComputerStatusHelper.GetMpComputerStatus();
+            HardenWindowsSecurity.GlobalVars.MDAVConfigCurrent = HardenWindowsSecurity.ConfigDefenderHelper.GetMpComputerStatus();
 
             // Total number of Compliant values
             HardenWindowsSecurity.GlobalVars.TotalNumberOfTrueCompliantValues = 241;
@@ -105,7 +104,7 @@ namespace HardenWindowsSecurity
             HardenWindowsSecurity.GlobalVars.FinalMegaObject = new System.Collections.Concurrent.ConcurrentDictionary<System.String, System.Collections.Generic.List<HardenWindowsSecurity.IndividualResult>>();
 
             // Create an empty dictionary to store the System Security Policies from the security_policy.inf file
-            HardenWindowsSecurity.GlobalVars.SystemSecurityPoliciesIniObject = new Dictionary<string, Dictionary<string, string>>();
+            HardenWindowsSecurity.GlobalVars.SystemSecurityPoliciesIniObject = [];
 
             // Make sure Admin privileges exist before running this method
             if (HardenWindowsSecurity.UserPrivCheck.IsAdmin())

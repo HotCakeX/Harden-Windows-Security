@@ -29,14 +29,13 @@ namespace HardenWindowsSecurity
             Int32 result;
             Int32 SystemInformationLength = 1;
             IntPtr SystemInformation = Marshal.AllocHGlobal(SystemInformationLength);
-            Int32 ReturnLength;
 
             // https://learn.microsoft.com/en-us/windows/win32/api/winternl/nf-winternl-ntquerysysteminformation
             result = SystemInformationClass.NtQuerySystemInformation(
                 SystemInformationClass.SYSTEM_DMA_GUARD_POLICY_INFORMATION.SystemDmaGuardPolicyInformation,
                 SystemInformation,
                 SystemInformationLength,
-                out ReturnLength);
+                out _);
 
             if (result == 0)
             {

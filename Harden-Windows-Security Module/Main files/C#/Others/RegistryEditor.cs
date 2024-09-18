@@ -8,12 +8,14 @@ namespace HardenWindowsSecurity
 {
     public static class RegistryEditor
     {
+        private static readonly string[] separator = [";"];
+
         public static void EditRegistry(string path, string key, string value, string type, string action)
         {
             // Removing the 'Registry::' prefix from the path
             if (path.StartsWith("Registry::", StringComparison.OrdinalIgnoreCase))
             {
-                path = path.Substring(10);
+                path = path[10..];
             }
 
             // Get the registry base key and the sub key path
@@ -55,70 +57,69 @@ namespace HardenWindowsSecurity
                     }
             }
 
-            using (RegistryKey subKey = baseRegistryKey.OpenSubKey(subKeyPath, true) ?? baseRegistryKey.CreateSubKey(subKeyPath))
+            using RegistryKey subKey = baseRegistryKey.OpenSubKey(subKeyPath, true) ?? baseRegistryKey.CreateSubKey(subKeyPath);
+
+            if (action.Equals("AddOrModify", StringComparison.OrdinalIgnoreCase))
             {
-                if (action.Equals("AddOrModify", StringComparison.OrdinalIgnoreCase))
-                {
-                    RegistryValueKind valueType;
-                    object convertedValue;
+                RegistryValueKind valueType;
+                object convertedValue;
 
-                    switch (type.ToUpperInvariant())
-                    {
-                        case "STRING":
-                            {
-                                valueType = RegistryValueKind.String;
-                                convertedValue = value;
-                                break;
-                            }
-                        case "DWORD":
-                            {
-                                valueType = RegistryValueKind.DWord;
-                                convertedValue = int.Parse(value, NumberStyles.Integer, CultureInfo.InvariantCulture);
-                                break;
-                            }
-                        case "QWORD":
-                            {
-                                valueType = RegistryValueKind.QWord;
-                                convertedValue = long.Parse(value, NumberStyles.Integer, CultureInfo.InvariantCulture);
-                                break;
-                            }
-                        case "BINARY":
-                            {
-                                valueType = RegistryValueKind.Binary;
-                                convertedValue = Convert.FromBase64String(value);
-                                break;
-                            }
-                        case "MULTI_STRING":
-                            {
-                                valueType = RegistryValueKind.MultiString;
-                                convertedValue = value.Split(new string[] { ";" }, StringSplitOptions.None);
-                                break;
-                            }
-                        case "EXPAND_STRING":
-                            {
-                                valueType = RegistryValueKind.ExpandString;
-                                convertedValue = value;
-                                break;
-                            }
-                        default:
-                            {
-                                throw new ArgumentException("Invalid registry value type");
-                            }
-                    }
+                switch (type.ToUpperInvariant())
+                {
+                    case "STRING":
+                        {
+                            valueType = RegistryValueKind.String;
+                            convertedValue = value;
+                            break;
+                        }
+                    case "DWORD":
+                        {
+                            valueType = RegistryValueKind.DWord;
+                            convertedValue = int.Parse(value, NumberStyles.Integer, CultureInfo.InvariantCulture);
+                            break;
+                        }
+                    case "QWORD":
+                        {
+                            valueType = RegistryValueKind.QWord;
+                            convertedValue = long.Parse(value, NumberStyles.Integer, CultureInfo.InvariantCulture);
+                            break;
+                        }
+                    case "BINARY":
+                        {
+                            valueType = RegistryValueKind.Binary;
+                            convertedValue = Convert.FromBase64String(value);
+                            break;
+                        }
+                    case "MULTI_STRING":
+                        {
+                            valueType = RegistryValueKind.MultiString;
+                            convertedValue = value.Split(separator, StringSplitOptions.None);
+                            break;
+                        }
+                    case "EXPAND_STRING":
+                        {
+                            valueType = RegistryValueKind.ExpandString;
+                            convertedValue = value;
+                            break;
+                        }
+                    default:
+                        {
+                            throw new ArgumentException("Invalid registry value type");
+                        }
+                }
 
-                    subKey.SetValue(key, convertedValue, valueType);
-                }
-                else if (action.Equals("Delete", StringComparison.OrdinalIgnoreCase))
+                subKey.SetValue(key, convertedValue, valueType);
+            }
+            else if (action.Equals("Delete", StringComparison.OrdinalIgnoreCase))
+            {
+                if (subKey.GetValue(key) != null)
                 {
-                    if (subKey.GetValue(key) != null)
-                    {
-                        subKey.DeleteValue(key, true);
-                    }
+                    subKey.DeleteValue(key, true);
                 }
-                else
-                {
-                    throw new ArgumentException($"Invalid action specified: {action}");
-                }
+            }
+            else
+            {
+                throw new ArgumentException($"Invalid action specified: {action}");
             }
         }
     }

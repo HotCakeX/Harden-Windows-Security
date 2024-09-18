@@ -40,7 +40,12 @@ namespace HardenWindowsSecurity
                 .ToArray();
 
             // Use the extracted InterfaceIndexes in the method to set all of the network locations to public
-            HardenWindowsSecurity.NetConnectionProfiles.Set(HardenWindowsSecurity.NetConnectionProfiles.NetworkCategory.Public, InterfaceIndexes, null);
+            bool ReturnResult = HardenWindowsSecurity.NetConnectionProfiles.Set(HardenWindowsSecurity.NetConnectionProfiles.NetworkCategory.Public, InterfaceIndexes, null);
+
+            if (!ReturnResult)
+            {
+                HardenWindowsSecurity.Logger.LogMessage("An error occurred while setting the Network Location of all connections to Public", LogTypeIntel.ErrorInteractionRequired);
+            }
         }
     }
 }

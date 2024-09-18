@@ -4,8 +4,8 @@ namespace HardenWindowsSecurity
 {
     public partial class GUIASRRules
     {
-        public static System.Windows.Controls.UserControl? View;
+        internal static System.Windows.Controls.UserControl? View;
 
-        public static System.Windows.Controls.Grid? ParentGrid;
+        internal static System.Windows.Controls.Grid? ParentGrid;
     }
 }

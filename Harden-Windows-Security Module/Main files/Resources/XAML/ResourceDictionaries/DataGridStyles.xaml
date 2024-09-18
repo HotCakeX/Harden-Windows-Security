@@ -229,10 +229,10 @@
        <Setter Property="VerticalContentAlignment" Value="Center"/>
        <Setter Property="Background" Value="Transparent" />
        <!-- Header text font size -->
-       <Setter Property="FontSize" Value="15"/>
+       <Setter Property="FontSize" Value="14"/>
        <Setter Property="FontWeight" Value="Bold"/>
        <Setter Property="Foreground" Value="#333333" />
-       <Setter Property="Margin" Value="15 0 15 10" />
+       <Setter Property="Margin" Value="8,0,8,10" />
        <Setter Property="BorderThickness" Value="0,0,1,0" />
        <!-- Only vertical borders -->
        <Setter Property="BorderBrush" Value="#333333" />

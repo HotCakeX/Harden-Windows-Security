@@ -1,5 +1,11 @@
 ﻿[*.cs]
 
+# Spell Checker dictionary
+spelling_exclusion_path = .\exclusion.dic
+
+# Miscellaneous settings
+trim_trailing_whitespace = true
+
 # CA1304: Specify CultureInfo
 dotnet_diagnostic.CA1304.severity = error
 
@@ -16,7 +22,7 @@ dotnet_diagnostic.CA1310.severity = error
 dotnet_diagnostic.CA1401.severity = error
 
 # CA1303: Do not pass literals as localized parameters
-dotnet_diagnostic.CA1303.severity = silent
+dotnet_diagnostic.CA1303.severity = error
 
 # CA1309: Use ordinal string comparison
 dotnet_diagnostic.CA1309.severity = error
@@ -125,3 +131,126 @@ dotnet_diagnostic.CA1822.severity = error
 
 # CA1050: Declare types in namespaces
 dotnet_diagnostic.CA1050.severity = error
+
+# IDE0290: Use primary constructor | https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/ide0290
+dotnet_diagnostic.IDE0290.severity = error
+
+# IDE0220: Add explicit cast in foreach loop | https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/ide0220
+dotnet_diagnostic.IDE0220.severity = error
+
+# CA1868: Unnecessary call to 'Contains(item)'
+dotnet_diagnostic.CA1868.severity = error
+
+# CA1869: Cache and reuse 'JsonSerializerOptions' instances
+dotnet_diagnostic.CA1869.severity = error
+
+# IDE0090: Simplify new expression | https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/ide0090
+dotnet_diagnostic.IDE0090.severity = error
+
+# IDE0059: Remove unnecessary value assignment | https://learn.microsoft.com/en-us/dotnet/fundamentals/code-analysis/style-rules/ide0059
+dotnet_diagnostic.IDE0059.severity = error
+
+# CA1829: Use Length/Count property instead of Count() when available
+dotnet_diagnostic.CA1829.severity = error
+
+# CA1860: Avoid using 'Enumerable.Any()' extension method
+dotnet_diagnostic.CA1860.severity = error
+
+# CA1854: Prefer the 'IDictionary.TryGetValue(TKey, out TValue)' method
+dotnet_diagnostic.CA1854.severity = error
+
+# CA2208: Instantiate argument exceptions correctly
+dotnet_diagnostic.CA2208.severity = error
+
+# IDE0100: Remove redundant equality
+dotnet_diagnostic.IDE0100.severity = error
+
+# IDE0041: Use 'is null' check
+dotnet_diagnostic.IDE0041.severity = error
+
+# IDE0028: Simplify collection initialization
+dotnet_diagnostic.IDE0028.severity = error
+
+# CA1510: Use ArgumentNullException throw helper
+dotnet_diagnostic.CA1510.severity = error
+
+# CA1509: Invalid entry in code metrics rule specification file
+dotnet_diagnostic.CA1509.severity = error
+
+# CA1512: Use ArgumentOutOfRangeException throw helper
+dotnet_diagnostic.CA1512.severity = error
+
+# CA1511: Use ArgumentException throw helper
+dotnet_diagnostic.CA1511.severity = error
+
+# CA1514: Avoid redundant length argument
+dotnet_diagnostic.CA1514.severity = error
+
+# CA1802: Use literals where appropriate
+dotnet_diagnostic.CA1802.severity = error
+
+# CA1805: Do not initialize unnecessarily
+dotnet_diagnostic.CA1805.severity = error
+
+# CA1806: Do not ignore method results
+dotnet_diagnostic.CA1806.severity = error
+
+# CA1819: Properties should not return arrays
+dotnet_diagnostic.CA1819.severity = error
+
+# CA1834: Consider using 'StringBuilder.Append(char)' when applicable
+dotnet_diagnostic.CA1834.severity = error
+
+# CA1832: Use AsSpan or AsMemory instead of Range-based indexers when appropriate
+dotnet_diagnostic.CA1832.severity = error
+
+# CA1846: Prefer 'AsSpan' over 'Substring'
+dotnet_diagnostic.CA1846.severity = error
+
+# CA1862: Use the 'StringComparison' method overloads to perform case-insensitive string comparisons
+dotnet_diagnostic.CA1862.severity = error
+
+# CA1863: Use 'CompositeFormat'
+dotnet_diagnostic.CA1863.severity = error
+
+# CA1838: Avoid 'StringBuilder' parameters for P/Invokes
+dotnet_diagnostic.CA1838.severity = error
+
+# CA1871: Do not pass a nullable struct to 'ArgumentNullException.ThrowIfNull'
+dotnet_diagnostic.CA1871.severity = error
+
+# CA1872: Prefer 'Convert.ToHexString' and 'Convert.ToHexStringLower' over call chains based on 'BitConverter.ToString'
+dotnet_diagnostic.CA1872.severity = error
+
+# CA1864: Prefer the 'IDictionary.TryAdd(TKey, TValue)' method
+dotnet_diagnostic.CA1864.severity = error
+
+# CA1861: Avoid constant arrays as arguments
+dotnet_diagnostic.CA1861.severity = error
+
+# CA1858: Use 'StartsWith' instead of 'IndexOf'
+dotnet_diagnostic.CA1858.severity = error
+
+# CA1853: Unnecessary call to 'Dictionary.ContainsKey(key)'
+dotnet_diagnostic.CA1853.severity = error
+
+# CA1826: Do not use Enumerable methods on indexable collections
+dotnet_diagnostic.CA1826.severity = error
+
+# CA1827: Do not use Count() or LongCount() when Any() can be used
+dotnet_diagnostic.CA1827.severity = error
+
+# CA1828: Do not use CountAsync() or LongCountAsync() when AnyAsync() can be used
+dotnet_diagnostic.CA1828.severity = error
+
+# IDE0019: Use pattern matching to avoid 'as' followed by a 'null' check
+dotnet_diagnostic.IDE0019.severity = error
+
+# IDE0038: Use pattern matching to avoid 'is' check followed by a cast
+dotnet_diagnostic.IDE0038.severity = error
+
+# IDE0058: Expression value is never used
+dotnet_diagnostic.IDE0058.severity = error
+
+# CA2201: Do not raise reserved exception types
+dotnet_diagnostic.CA2201.severity = error

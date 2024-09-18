@@ -33,15 +33,19 @@ namespace HardenWindowsSecurity
             }
         }
 
-        // RelayCommand class
-        // Implementation of ICommand to handle command execution and checking whether a command can execute
-        public class RelayCommand : ICommand
+
+        /// <summary>
+        /// Implementation of ICommand to handle command execution and checking whether a command can execute
+        /// </summary>
+        /// <param name="execute">Assign the execute delegate</param>
+        /// <param name="canExecute">Assign the canExecute delegate (optional)</param>
+        public class RelayCommand(Action<object> execute, Func<object, bool> canExecute = null) : ICommand
         {
             // Delegate to define the method that will be executed when the command is invoked
-            private readonly Action<object> _execute;
+            private readonly Action<object> _execute = execute;
 
             // Delegate to define the method that determines if the command can execute
-            private readonly Func<object, bool> _canExecute;
+            private readonly Func<object, bool> _canExecute = canExecute;
 
             // Event that is triggered when the ability of the command to execute changes
             public event EventHandler CanExecuteChanged
@@ -53,19 +57,16 @@ namespace HardenWindowsSecurity
                 remove { CommandManager.RequerySuggested -= value; }
             }
 
-            // Constructor to initialize the RelayCommand with execute and canExecute delegates
-            public RelayCommand(Action<object> execute, Func<object, bool> canExecute = null)
-            {
-                _execute = execute;        // Assign the execute delegate
-                _canExecute = canExecute;  // Assign the canExecute delegate (optional)
-            }
-
             // Check if the command can execute
             public bool CanExecute(object parameter) => _canExecute == null || _canExecute(parameter);
 
             // Execute the command
             public void Execute(object parameter) => _execute(parameter);
         }
+
+
+        // Uncomment these section when actually need it
+        /*
 
         // PageModel class
         // Model class representing the data for a page
@@ -78,10 +79,15 @@ namespace HardenWindowsSecurity
             public string Confirmation { get; set; }
         }
 
+        */
+
+
         // ProtectVM class
         // ViewModel for a specific page that inherits from ViewModelBase
         public class ProtectVM : ViewModelBase
         {
+            /*
+
             // Field to hold the PageModel instance
             private readonly PageModel _pageModel;
 
@@ -98,28 +104,34 @@ namespace HardenWindowsSecurity
                 _pageModel = new PageModel(); // Instantiate PageModel
                 SomeInt = 123456;           // Set an initial value for SomeInt
             }
+
+            */
         }
 
         // ConfirmVM class
         // ViewModel for the Confirm page, currently empty but can be extended with additional properties
         public class ConfirmVM : ViewModelBase
         {
-            // Additional properties can be added here for Confirm page content
+        }
+
+        public class UnprotectVM : ViewModelBase
+        {
+        }
+
+        public class ASRRulesVM : ViewModelBase
+        {
+        }
+
+        public class ExclusionsVM : ViewModelBase
+        {
+        }
+
+        public class BitLockerVM : ViewModelBase
+        {
         }
 
         public class LogsVM : ViewModelBase
         {
-
-        }
-
-        public class UnprotectCommand : ViewModelBase
-        {
-
-        }
-
-        public class ASRRulesCommand : ViewModelBase
-        {
-
         }
 
         // NavigationVM class
@@ -145,25 +157,29 @@ namespace HardenWindowsSecurity
             public ICommand ConfirmCommand { get; set; }
             public ICommand ASRRulesCommand { get; set; }
             public ICommand UnprotectCommand { get; set; }
+            public ICommand ExclusionsCommand { get; set; }
+            public ICommand BitLockerCommand { get; set; }
             public ICommand LogsCommand { get; set; }
 
             // Dictionary to cache views by their identifiers
-            private Dictionary<string, object> _viewCache = new Dictionary<string, object>();
+            private readonly Dictionary<string, object> _viewCache = [];
 
             // Constructor for initializing the NavigationVM
             public NavigationVM()
             {
                 // Initialize commands with methods to execute
-                ProtectCommand = new RelayCommand(Protect); // Command to handle Protect action
-                ConfirmCommand = new RelayCommand(Confirm); // Command to handle Confirm action
+                ProtectCommand = new RelayCommand(Protect); // Command to handle the Protect action
+                ConfirmCommand = new RelayCommand(Confirm); // Command to handle the Confirm action
                 ASRRulesCommand = new RelayCommand(ASRRules); // Command to handle the ASRRules action
                 UnprotectCommand = new RelayCommand(Unprotect); // Command to handle the Unprotect action
-                LogsCommand = new RelayCommand(Logs); // Command to handle the Log action
+                ExclusionsCommand = new RelayCommand(Exclusions); // Command to handle the Exclusions action
+                BitLockerCommand = new RelayCommand(BitLocker); // Command to handle the BitLocker action
+                LogsCommand = new RelayCommand(Logs); // Command to handle the Logs action
 
                 // Load the Logs view initially to make it ready for logs to be written to it
                 Logs(null);
 
-                // Load the Protect view next, it will be set as the default startup page
+                // Load the Protect view next, it will be set as the default startup page because of "CurrentView = GUIProtectWinSecurity.View;"
                 Protect(null);
             }
         }
@@ -203,14 +219,13 @@ namespace HardenWindowsSecurity
             // Load resource dictionaries from the ResourceDictionaries folder
             foreach (var file in resourceFiles)
             {
-                using (FileStream fs = new FileStream(file, FileMode.Open, FileAccess.Read))
-                {
-                    // Load the resource dictionary from the XAML file
-                    System.Windows.ResourceDictionary resourceDict = (System.Windows.ResourceDictionary)System.Windows.Markup.XamlReader.Load(fs);
+                using FileStream fs = new(file, FileMode.Open, FileAccess.Read);
 
-                    // Add to application resources to ensure dictionaries are available to the whole application
-                    GUIMain.app.Resources.MergedDictionaries.Add(resourceDict);
-                }
+                // Load the resource dictionary from the XAML file
+                System.Windows.ResourceDictionary resourceDict = (System.Windows.ResourceDictionary)System.Windows.Markup.XamlReader.Load(fs);
+
+                // Add to application resources to ensure dictionaries are available to the whole application
+                GUIMain.app.Resources.MergedDictionaries.Add(resourceDict);
             }
             #endregion
 
@@ -219,7 +234,7 @@ namespace HardenWindowsSecurity
             GUIMain.xamlPath = System.IO.Path.Combine(HardenWindowsSecurity.GlobalVars.path, "Resources", "XAML", "Main.xaml");
 
             // Load the MainWindow.xaml
-            using (FileStream fs = new FileStream(GUIMain.xamlPath, FileMode.Open, FileAccess.Read))
+            using (FileStream fs = new(GUIMain.xamlPath, FileMode.Open, FileAccess.Read))
             {
                 // Load the main window from the XAML file
                 GUIMain.mainGUIWindow = (System.Windows.Window)System.Windows.Markup.XamlReader.Load(fs);
@@ -232,7 +247,7 @@ namespace HardenWindowsSecurity
             #region
             // Caching the icon in memory so that when the GUI is closed in PowerShell module, there wil be no files in the module directory preventing deletion of the module itself
             // "UriKind.Absolute" ensures that the path to the icon file is correctly interpreted as an absolute path.
-            Uri iconUri = new Uri(System.IO.Path.Combine(HardenWindowsSecurity.GlobalVars.path, "Resources", "Media", "ProgramIcon.ico"), UriKind.Absolute);
+            Uri iconUri = new(System.IO.Path.Combine(HardenWindowsSecurity.GlobalVars.path, "Resources", "Media", "ProgramIcon.ico"), UriKind.Absolute);
 
             // Load the icon into a BitmapImage and cache it in memory
             var IconBitmapImage = new BitmapImage();
@@ -281,7 +296,7 @@ End time: {DateTime.Now}
             GUIMain.app!.DispatcherUnhandledException += (object s, DispatcherUnhandledExceptionEventArgs e) =>
             {
                 // Create a custom error window
-                Window errorWindow = new Window
+                Window errorWindow = new()
                 {
                     Title = "An Error Occurred",
                     Width = 450,
@@ -290,9 +305,9 @@ End time: {DateTime.Now}
                     ResizeMode = ResizeMode.NoResize
                 };
 
-                StackPanel stackPanel = new StackPanel { Margin = new Thickness(20) };
+                StackPanel stackPanel = new() { Margin = new Thickness(20) };
 
-                TextBlock errorMessage = new TextBlock
+                TextBlock errorMessage = new()
                 {
                     Text = "An error has occurred in the Harden Windows Security App. Please return to the PowerShell window to review the error details. Reporting this issue on GitHub will greatly assist me in addressing and resolving it promptly. Your feedback is invaluable to improving the software. 💚",
                     Margin = new Thickness(0, 0, 0, 20),
@@ -301,7 +316,7 @@ End time: {DateTime.Now}
                     FontWeight = FontWeights.SemiBold
                 };
 
-                Button okButton = new Button
+                Button okButton = new()
                 {
                     Content = "OK",
                     Width = 120,
@@ -315,7 +330,7 @@ End time: {DateTime.Now}
                     errorWindow.Close();
                 };
 
-                Button githubButton = new Button
+                Button githubButton = new()
                 {
                     Content = "Report on GitHub",
                     Width = 160,
@@ -326,7 +341,7 @@ End time: {DateTime.Now}
                 githubButton.Click += (sender, args) =>
                 {
                     // Open the GitHub issues page
-                    System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
+                    _ = System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
                     {
                         FileName = "https://github.com/HotCakeX/Harden-Windows-Security/issues",
                         UseShellExecute = true // Ensure the link opens in the default browser
@@ -334,16 +349,17 @@ End time: {DateTime.Now}
                     errorWindow.Close();
                 };
 
-                StackPanel buttonPanel = new StackPanel { Orientation = Orientation.Horizontal, HorizontalAlignment = HorizontalAlignment.Center };
-                buttonPanel.Children.Add(okButton);
-                buttonPanel.Children.Add(githubButton);
+                StackPanel buttonPanel = new() { Orientation = Orientation.Horizontal, HorizontalAlignment = HorizontalAlignment.Center };
+                _ = buttonPanel.Children.Add(okButton);
+                _ = buttonPanel.Children.Add(githubButton);
 
-                stackPanel.Children.Add(errorMessage);
-                stackPanel.Children.Add(buttonPanel);
+                _ = stackPanel.Children.Add(errorMessage);
+                _ = stackPanel.Children.Add(buttonPanel);
 
                 errorWindow.Content = stackPanel;
-                errorWindow.ShowDialog();
+                _ = errorWindow.ShowDialog();
 
+                // The error will be terminating the application
                 e.Handled = false;
             };
 
@@ -438,11 +454,12 @@ End time: {DateTime.Now}
                 try
                 {
                     // Creating and configuring the OpenFileDialog
-                    OpenFileDialog openFileDialog = new OpenFileDialog();
-
-                    // Filter for image files
-                    openFileDialog.Filter = "Image Files|*.jpg;*.jpeg;*.png;";
-                    openFileDialog.Title = "Select an Image to set as the Harden Windows Security App's Background";
+                    OpenFileDialog openFileDialog = new()
+                    {
+                        // Filter for image files
+                        Filter = "Image Files|*.jpg;*.jpeg;*.png;",
+                        Title = "Select an Image to set as the Harden Windows Security App's Background"
+                    };
 
                     // Show the dialog and get the result
                     bool? result = openFileDialog.ShowDialog();
@@ -453,7 +470,7 @@ End time: {DateTime.Now}
                         string filePath = openFileDialog.FileName;
 
                         // Create a BitmapImage from the selected file
-                        BitmapImage bitmapImage = new BitmapImage();
+                        BitmapImage bitmapImage = new();
                         bitmapImage.BeginInit();
                         bitmapImage.UriSource = new Uri(filePath, UriKind.Absolute);
                         bitmapImage.EndInit();
@@ -508,6 +525,26 @@ End time: {DateTime.Now}
             UnprotectButtonImage.CacheOption = System.Windows.Media.Imaging.BitmapCacheOption.OnLoad; // Load the image data into memory
             UnprotectButtonImage.EndInit();
             UnprotectButtonIcon.Source = UnprotectButtonImage;
+
+            // Exclusions button icon
+            System.Windows.Controls.Grid ExclusionsButtonGridButtonGrid = SidebarGrid.FindName("ExclusionsButtonGrid") as System.Windows.Controls.Grid;
+            System.Windows.Controls.Image ExclusionsButtonIcon = ExclusionsButtonGridButtonGrid.FindName("ExclusionsButtonIcon") as System.Windows.Controls.Image;
+            var ExclusionsButtonImage = new System.Windows.Media.Imaging.BitmapImage();
+            ExclusionsButtonImage.BeginInit();
+            ExclusionsButtonImage.UriSource = new Uri(System.IO.Path.Combine(HardenWindowsSecurity.GlobalVars.path, "Resources", "Media", "ExclusionMenuButton.png"));
+            ExclusionsButtonImage.CacheOption = System.Windows.Media.Imaging.BitmapCacheOption.OnLoad; // Load the image data into memory
+            ExclusionsButtonImage.EndInit();
+            ExclusionsButtonIcon.Source = ExclusionsButtonImage;
+
+            // BitLocker button icon
+            System.Windows.Controls.Grid BitLockerButtonGridButtonGrid = SidebarGrid.FindName("BitLockerButtonGrid") as System.Windows.Controls.Grid;
+            System.Windows.Controls.Image BitLockerButtonIcon = BitLockerButtonGridButtonGrid.FindName("BitLockerButtonIcon") as System.Windows.Controls.Image;
+            var BitLockerButtonImage = new System.Windows.Media.Imaging.BitmapImage();
+            BitLockerButtonImage.BeginInit();
+            BitLockerButtonImage.UriSource = new Uri(System.IO.Path.Combine(HardenWindowsSecurity.GlobalVars.path, "Resources", "Media", "BitLockerMenuButton.png"));
+            BitLockerButtonImage.CacheOption = System.Windows.Media.Imaging.BitmapCacheOption.OnLoad; // Load the image data into memory
+            BitLockerButtonImage.EndInit();
+            BitLockerButtonIcon.Source = BitLockerButtonImage;
 
             // Logs button icon
             System.Windows.Controls.Grid LogsButtonGrid = SidebarGrid.FindName("LogsButtonGrid") as System.Windows.Controls.Grid;

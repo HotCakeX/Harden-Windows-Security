@@ -38,8 +38,8 @@ namespace HardenWindowsSecurity
                 ushort part3 = (ushort)((num & 0x00000000FFFF0000) >> 16); // Third 16 bits
                 ushort part4 = (ushort)(num & 0x000000000000FFFF);         // Lowest 16 bits
 
-                // Form the version string and attempt to parse it into a Version object
-                Version.TryParse($"{part1}.{part2}.{part3}.{part4}"!, out Version? VersionOutput);
+                // Form the version string and attempt to parse it into a Version object, don't need the bool output of the parse result
+                _ = Version.TryParse($"{part1}.{part2}.{part3}.{part4}"!, out Version? VersionOutput);
 
                 // Return the constructed Version object
                 return VersionOutput!;
@@ -52,6 +52,15 @@ namespace HardenWindowsSecurity
             }
         }
 
+        public static JsonSerializerOptions GetOptions()
+        {
+            return new JsonSerializerOptions
+            {
+                // Ignore case when matching JSON property names
+                PropertyNameCaseInsensitive = true,
+            };
+        }
+
 
         /// <summary>
         /// Gets a list of WDAC policies on the system with filtering
@@ -61,7 +70,7 @@ namespace HardenWindowsSecurity
         /// <param name="SupplementalPolicies">Will include Supplemental policies in the output</param>
         /// <returns></returns>
         /// <exception cref="Exception"></exception>
-        public static List<CiPolicyInfo> RunCiTool(bool SystemPolicies = false, bool BasePolicies = false, bool SupplementalPolicies = false)
+        public static List<CiPolicyInfo> RunCiTool(JsonSerializerOptions options, bool SystemPolicies = false, bool BasePolicies = false, bool SupplementalPolicies = false)
         {
             // Create an empty list of Policy objects to return at the end
             var policies = new List<CiPolicyInfo>();
@@ -70,7 +79,7 @@ namespace HardenWindowsSecurity
             string ciToolPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.System), "CiTool.exe");
 
             // Set up the process start info to run CiTool.exe with necessary arguments
-            ProcessStartInfo processStartInfo = new ProcessStartInfo
+            ProcessStartInfo processStartInfo = new()
             {
                 FileName = ciToolPath,
                 Arguments = "-lp -json",   // Arguments to list policies and output as JSON
@@ -81,76 +90,62 @@ namespace HardenWindowsSecurity
 
 
             // Start the process and capture the output
-            using (Process? process = Process.Start(processStartInfo))
+            using Process? process = Process.Start(processStartInfo) ?? throw new InvalidOperationException("There was a problem running the CiTool.exe in the RunCiTool method.");
+
+            // Read all output as a string
+            string jsonOutput = process.StandardOutput.ReadToEnd();
+
+            // Wait for the process to complete
+            process.WaitForExit();
+
+            if (process.ExitCode != 0)
             {
+                // Throw an exception with the error message
+                throw new InvalidOperationException($"Command execution failed with error code {process.ExitCode}");
+            }
 
-                if (process == null)
+            // Deserialize the JSON into a JsonElement for easy traversal
+            var rootElement = JsonSerializer.Deserialize<JsonElement>(jsonOutput, options);
+
+            // If "Policies" property exists and is an array, start processing each policy
+            if (rootElement.TryGetProperty("Policies", out JsonElement policiesElement) && policiesElement.ValueKind == JsonValueKind.Array)
+            {
+                foreach (JsonElement policyElement in policiesElement.EnumerateArray())
                 {
-                    throw new Exception("There was a problem running the CiTool.exe in the RunCiTool method.");
-                }
-
-                // Read all output as a string
-                string jsonOutput = process.StandardOutput.ReadToEnd();
-
-                // Wait for the process to complete
-                process.WaitForExit();
-
-                if (process.ExitCode != 0)
-                {
-                    // Throw an exception with the error message
-                    throw new InvalidOperationException($"Command execution failed with error code {process.ExitCode}");
-                }
-
-                // Set up options to parse the JSON output
-                JsonSerializerOptions? options = new JsonSerializerOptions
-                {
-                    // Ignore case when matching JSON property names
-                    PropertyNameCaseInsensitive = true,
-                };
-
-                // Deserialize the JSON into a JsonElement for easy traversal
-                var rootElement = JsonSerializer.Deserialize<JsonElement>(jsonOutput, options);
-
-                // If "Policies" property exists and is an array, start processing each policy
-                if (rootElement.TryGetProperty("Policies", out JsonElement policiesElement) && policiesElement.ValueKind == JsonValueKind.Array)
-                {
-                    foreach (JsonElement policyElement in policiesElement.EnumerateArray())
+                    // Create a new Policy object and populate its properties from the JSON data
+                    CiPolicyInfo? policy = new()
                     {
-                        // Create a new Policy object and populate its properties from the JSON data
-                        CiPolicyInfo? policy = new CiPolicyInfo
-                        {
-                            PolicyID = policyElement.GetPropertyOrDefault("PolicyID", string.Empty),
-                            BasePolicyID = policyElement.GetPropertyOrDefault("BasePolicyID", string.Empty),
-                            FriendlyName = policyElement.GetPropertyOrDefault("FriendlyName", string.Empty),
-                            Version = Measure(policyElement.GetProperty("Version").GetUInt64().ToString(CultureInfo.InvariantCulture)),
-                            VersionString = policyElement.GetPropertyOrDefault("VersionString", string.Empty),
-                            IsSystemPolicy = policyElement.GetPropertyOrDefault("IsSystemPolicy", false),
-                            IsSignedPolicy = policyElement.GetPropertyOrDefault("IsSignedPolicy", false),
-                            IsOnDisk = policyElement.GetPropertyOrDefault("IsOnDisk", false),
-                            IsEnforced = policyElement.GetPropertyOrDefault("IsEnforced", false),
-                            IsAuthorized = policyElement.GetPropertyOrDefault("IsAuthorized", false),
-                            PolicyOptions = policyElement.GetPolicyOptionsOrDefault()
-                        };
+                        PolicyID = policyElement.GetPropertyOrDefault("PolicyID", string.Empty),
+                        BasePolicyID = policyElement.GetPropertyOrDefault("BasePolicyID", string.Empty),
+                        FriendlyName = policyElement.GetPropertyOrDefault("FriendlyName", string.Empty),
+                        Version = Measure(policyElement.GetProperty("Version").GetUInt64().ToString(CultureInfo.InvariantCulture)),
+                        VersionString = policyElement.GetPropertyOrDefault("VersionString", string.Empty),
+                        IsSystemPolicy = policyElement.GetPropertyOrDefault("IsSystemPolicy", false),
+                        IsSignedPolicy = policyElement.GetPropertyOrDefault("IsSignedPolicy", false),
+                        IsOnDisk = policyElement.GetPropertyOrDefault("IsOnDisk", false),
+                        IsEnforced = policyElement.GetPropertyOrDefault("IsEnforced", false),
+                        IsAuthorized = policyElement.GetPropertyOrDefault("IsAuthorized", false),
+                        PolicyOptions = policyElement.GetPolicyOptionsOrDefault()
+                    };
 
-                        // Add the policy to the list based on filtering options
+                    // Add the policy to the list based on filtering options
 
-                        // If the policy is System and SystemPolicies parameter was used then add it to the list
-                        if (SystemPolicies && policy.IsSystemPolicy) { policies.Add(policy); }
+                    // If the policy is System and SystemPolicies parameter was used then add it to the list
+                    if (SystemPolicies && policy.IsSystemPolicy) { policies.Add(policy); }
 
-                        // If the policy is Not System, and the policy is Base and BasePolicies parameter was used then add it to the list
-                        else if (BasePolicies && !policy.IsSystemPolicy && policy.BasePolicyID == policy.PolicyID) { policies.Add(policy); }
+                    // If the policy is Not System, and the policy is Base and BasePolicies parameter was used then add it to the list
+                    else if (BasePolicies && !policy.IsSystemPolicy && policy.BasePolicyID == policy.PolicyID) { policies.Add(policy); }
 
-                        // If the policy is Not System, and the policy is supplemental and the SupplementalPolicies parameter was used then add it to the list
-                        else if (SupplementalPolicies && !policy.IsSystemPolicy && policy.BasePolicyID != policy.PolicyID) { policies.Add(policy); }
-                    }
-
-                    // Return the list of policies
-                    return policies;
+                    // If the policy is Not System, and the policy is supplemental and the SupplementalPolicies parameter was used then add it to the list
+                    else if (SupplementalPolicies && !policy.IsSystemPolicy && policy.BasePolicyID != policy.PolicyID) { policies.Add(policy); }
                 }
 
-                // Return an empty list if no policies were found
+                // Return the list of policies
                 return policies;
             }
+
+            // Return an empty list if no policies were found
+            return policies;
         }
 
 
@@ -170,7 +165,7 @@ namespace HardenWindowsSecurity
             string ciToolPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.System), "CiTool.exe");
 
             // Set up the process start info to run CiTool.exe with necessary arguments
-            ProcessStartInfo processStartInfo = new ProcessStartInfo
+            ProcessStartInfo processStartInfo = new()
             {
                 FileName = ciToolPath,
                 Arguments = $"--remove-policy \"{{{policyId}}}\" -json",   // Arguments to remove a WDAC policy
@@ -180,25 +175,18 @@ namespace HardenWindowsSecurity
             };
 
             // Start the process and capture the output
-            using (Process? process = Process.Start(processStartInfo))
+            using Process? process = Process.Start(processStartInfo) ?? throw new InvalidOperationException("There was a problem running the CiTool.exe in the RunCiTool method.");
+
+            // Read all output as a string
+            string jsonOutput = process.StandardOutput.ReadToEnd();
+
+            // Wait for the process to complete
+            process.WaitForExit();
+
+            if (process.ExitCode != 0)
             {
-
-                if (process == null)
-                {
-                    throw new Exception("There was a problem running the CiTool.exe in the RunCiTool method.");
-                }
-
-                // Read all output as a string
-                string jsonOutput = process.StandardOutput.ReadToEnd();
-
-                // Wait for the process to complete
-                process.WaitForExit();
-
-                if (process.ExitCode != 0)
-                {
-                    // Throw an exception with the error message
-                    throw new InvalidOperationException($"Command execution failed with error code {process.ExitCode}");
-                }
+                // Throw an exception with the error message
+                throw new InvalidOperationException($"Command execution failed with error code {process.ExitCode}");
             }
         }
     }
@@ -289,13 +277,13 @@ namespace HardenWindowsSecurity
                     // Return a list containing the single string if it is not null.
                     if (str != null)
                     {
-                        return new List<string> { str };
+                        return [str];
                     }
                 }
             }
 
             // If the "PolicyOptions" property is not found or is not in the expected format, return an empty list.
-            return new List<string>();
+            return [];
         }
     }
 }

@@ -20,7 +20,7 @@ namespace HardenWindowsSecurity
             List<string> currentEccCurves = GetCurrentEccCurves();
 
             // List of compliant ECC curves to compare against
-            List<string> compliantEccCurves = new List<string> { "nistP521", "curve25519", "NistP384", "NistP256" };
+            List<string> compliantEccCurves = ["nistP521", "curve25519", "NistP384", "NistP256"];
 
             // Compare both arrays for equality in terms of members and their exact position
             bool areCurvesCompliant = currentEccCurves.SequenceEqual(compliantEccCurves, StringComparer.OrdinalIgnoreCase);
@@ -33,17 +33,19 @@ namespace HardenWindowsSecurity
             };
         }
 
+        private static readonly char[] separator = [' ', '\r', '\n'];
+
         // Get the current ECC curves from the system
         private static List<string> GetCurrentEccCurves()
         {
             // List to store the current ECC curves
-            List<string> currentEccCurvesToOutput = new List<string>();
+            List<string> currentEccCurvesToOutput = [];
 
             // Initialize PowerShell instance
             using (PowerShell powerShell = PowerShell.Create())
             {
                 // Add the PowerShell command to get ECC curves
-                powerShell.AddCommand("Get-TlsEccCurve");
+                _ = powerShell.AddCommand("Get-TlsEccCurve");
 
                 // Execute the command and get the result
                 var results = powerShell.Invoke();
@@ -57,7 +59,7 @@ namespace HardenWindowsSecurity
                         // Split the result string into an array of substrings based on specified delimiters
                         // new[] { ' ', '\r', '\n' } - An array of characters to use as delimiters: space, carriage return, and newline
                         // StringSplitOptions.RemoveEmptyEntries - An option to remove empty entries from the result array
-                        var curves = result.ToString().Split(new[] { ' ', '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
+                        var curves = result.ToString().Split(separator, StringSplitOptions.RemoveEmptyEntries);
                         currentEccCurvesToOutput.AddRange(curves);
                     }
                 }

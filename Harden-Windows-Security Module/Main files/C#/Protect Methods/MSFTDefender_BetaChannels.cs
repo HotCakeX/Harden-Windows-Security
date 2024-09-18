@@ -13,9 +13,9 @@ namespace HardenWindowsSecurity
 
             HardenWindowsSecurity.Logger.LogMessage("Setting Microsoft Defender engine and platform update channel to beta", LogTypeIntel.Information);
 
-            HardenWindowsSecurity.MpComputerStatusHelper.SetMpComputerStatus<string>("EngineUpdatesChannel", "2");
+            HardenWindowsSecurity.ConfigDefenderHelper.ManageMpPreference<string>("EngineUpdatesChannel", "2", true);
 
-            HardenWindowsSecurity.MpComputerStatusHelper.SetMpComputerStatus<string>("PlatformUpdatesChannel", "2");
+            HardenWindowsSecurity.ConfigDefenderHelper.ManageMpPreference<string>("PlatformUpdatesChannel", "2", true);
 
         }
     }

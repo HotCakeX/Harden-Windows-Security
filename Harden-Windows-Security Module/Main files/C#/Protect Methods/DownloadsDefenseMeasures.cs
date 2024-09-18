@@ -13,7 +13,7 @@ namespace HardenWindowsSecurity
 
             HardenWindowsSecurity.Logger.LogMessage("Running the Downloads Defense Measures category", LogTypeIntel.Information);
 
-            string UserValue = string.Empty;
+            string UserValue;
 
             System.Security.Principal.WindowsIdentity CurrentUserResult = System.Security.Principal.WindowsIdentity.GetCurrent();
             System.Security.Principal.SecurityIdentifier? User = CurrentUserResult.User;
@@ -24,7 +24,7 @@ namespace HardenWindowsSecurity
             }
             else
             {
-                throw new Exception("Failed to get the current user.");
+                throw new InvalidOperationException("Failed to get the current user.");
             }
 
             // PowerShell script with embedded {UserValue} directly in the string using @""
@@ -107,7 +107,7 @@ else {{
 }}
 ";
 
-            HardenWindowsSecurity.PowerShellExecutor.ExecuteScript(script);
+            _ = HardenWindowsSecurity.PowerShellExecutor.ExecuteScript(script);
         }
     }
 }

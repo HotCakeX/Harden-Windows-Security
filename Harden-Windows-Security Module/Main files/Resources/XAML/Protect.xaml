@@ -258,53 +258,14 @@
                                                 </ToggleButton.Template>
                                             </ToggleButton>
                                             <!-- Log Path TextBox -->
-                                            <Button x:Name="LogPath" HorizontalAlignment="Right" VerticalAlignment="Center" Width="150" Height="40" FontSize="14" FontWeight="Bold" Background="{StaticResource PinkGradient}" ToolTip="The path to save the log file to" Margin="0,0,10,0">
-                                                <Button.Template>
-                                                    <ControlTemplate TargetType="Button">
-                                                        <Border x:Name="border" BorderThickness="3" Width="{TemplateBinding Width}" Height="{TemplateBinding Height}" Background="{TemplateBinding Background}" CornerRadius="6" BorderBrush="MediumPurple">
-                                                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                                        </Border>
-                                                        <ControlTemplate.Triggers>
-                                                            <Trigger Property="IsMouseOver" Value="true">
-                                                                <Trigger.EnterActions>
-                                                                    <BeginStoryboard>
-                                                                        <Storyboard>
-                                                                            <DoubleAnimation To="160" Storyboard.TargetProperty="Width" Duration="0:0:0.3"/>
-                                                                            <DoubleAnimation To="45" Storyboard.TargetProperty="Height" Duration="0:0:0.3"/>
-                                                                            <ColorAnimation To="Coral" Storyboard.TargetProperty="Background.(SolidColorBrush.Color)" Duration="0:0:0.3"/>
-                                                                        </Storyboard>
-                                                                    </BeginStoryboard>
-                                                                </Trigger.EnterActions>
-                                                                <Trigger.ExitActions>
-                                                                    <BeginStoryboard>
-                                                                        <Storyboard>
-                                                                            <DoubleAnimation To="150" Storyboard.TargetProperty="Width" Duration="0:0:0.3"/>
-                                                                            <DoubleAnimation To="40" Storyboard.TargetProperty="Height" Duration="0:0:0.3"/>
-                                                                            <ColorAnimation To="White" Storyboard.TargetProperty="Background.(SolidColorBrush.Color)" Duration="0:0:0.3"/>
-                                                                        </Storyboard>
-                                                                    </BeginStoryboard>
-                                                                </Trigger.ExitActions>
-                                                            </Trigger>
-                                                            <Trigger Property="IsPressed" Value="true">
-                                                                <Setter TargetName="border" Property="Background">
-                                                                    <Setter.Value>
-                                                                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                                                                            <GradientStop Color="#eaafc8" Offset="0.0"/>
-                                                                            <GradientStop Color="#e1eec3" Offset="1.0"/>
-                                                                        </LinearGradientBrush>
-                                                                    </Setter.Value>
-                                                                </Setter>
-                                                            </Trigger>
-                                                        </ControlTemplate.Triggers>
-                                                    </ControlTemplate>
-                                                </Button.Template>
+                                            <Button x:Name="LogPath" Style="{StaticResource CustomButtonStyle2}" ToolTip="The path to save the log file to" Margin="0,0,10,0">
                                                 <StackPanel Orientation="Horizontal">
                                                     <Image x:Name="LogButtonIcon" Width="40" Height="30"/>
-                                                    <TextBlock Text="Log Path" VerticalAlignment="Center"/>
+                                                    <TextBlock Text="Log Path" VerticalAlignment="Center" Margin="0,0,8,0"/>
                                                 </StackPanel>
                                             </Button>
                                         </StackPanel>
-                                        <!-- File Path TextBox which is dynamic -->
+                                        <!-- File Path TextBox -->
                                         <TextBox x:Name="txtFilePath" Grid.Row="3" Grid.ColumnSpan="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="30,0,30,0" BorderThickness="0" ToolTip="The selected log file path" MaxWidth="700">
                                             <TextBox.Style>
                                                 <Style TargetType="{x:Type TextBox}">
@@ -331,7 +292,7 @@
                                                                     <BlurEffect Radius="5"/>
                                                                 </Setter.Value>
                                                             </Setter>
-                                                            <!-- Optional: Reduce opacity to further indicate that the TextBox is disabled -->
+                                                            <!-- Reducing the opacity to further indicate that the TextBox is disabled -->
                                                             <Setter Property="Opacity" Value="0.7"/>
                                                         </Trigger>
                                                     </Style.Triggers>
@@ -388,49 +349,10 @@
                                         <!-- Row 1 -->
                                         <StackPanel Orientation="Horizontal" Grid.Row="1" Grid.ColumnSpan="2" HorizontalAlignment="Center" Margin="30,0,30,0">
                                             <!-- LGPO Button -->
-                                            <Button x:Name="LGPOZipButton" Width="100" Height="40" FontSize="15" FontWeight="Bold" Background="{StaticResource PinkGradient}" Margin="0,0,0,0" ToolTip="Browse for the path to LGPO zip file">
-                                                <Button.Template>
-                                                    <ControlTemplate TargetType="Button">
-                                                        <Border x:Name="border" BorderThickness="3" Width="{TemplateBinding Width}" Height="{TemplateBinding Height}" Background="{TemplateBinding Background}" CornerRadius="6" BorderBrush="MediumPurple">
-                                                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                                        </Border>
-                                                        <ControlTemplate.Triggers>
-                                                            <Trigger Property="IsMouseOver" Value="true">
-                                                                <Trigger.EnterActions>
-                                                                    <BeginStoryboard>
-                                                                        <Storyboard>
-                                                                            <DoubleAnimation To="115" Storyboard.TargetProperty="Width" Duration="0:0:0.3"/>
-                                                                            <DoubleAnimation To="45" Storyboard.TargetProperty="Height" Duration="0:0:0.3"/>
-                                                                            <ColorAnimation To="Coral" Storyboard.TargetProperty="Background.(SolidColorBrush.Color)" Duration="0:0:0.3"/>
-                                                                        </Storyboard>
-                                                                    </BeginStoryboard>
-                                                                </Trigger.EnterActions>
-                                                                <Trigger.ExitActions>
-                                                                    <BeginStoryboard>
-                                                                        <Storyboard>
-                                                                            <DoubleAnimation To="100" Storyboard.TargetProperty="Width" Duration="0:0:0.3"/>
-                                                                            <DoubleAnimation To="40" Storyboard.TargetProperty="Height" Duration="0:0:0.3"/>
-                                                                            <ColorAnimation To="White" Storyboard.TargetProperty="Background.(SolidColorBrush.Color)" Duration="0:0:0.3"/>
-                                                                        </Storyboard>
-                                                                    </BeginStoryboard>
-                                                                </Trigger.ExitActions>
-                                                            </Trigger>
-                                                            <Trigger Property="IsPressed" Value="true">
-                                                                <Setter TargetName="border" Property="Background">
-                                                                    <Setter.Value>
-                                                                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                                                                            <GradientStop Color="#eaafc8" Offset="0.0"/>
-                                                                            <GradientStop Color="#e1eec3" Offset="1.0"/>
-                                                                        </LinearGradientBrush>
-                                                                    </Setter.Value>
-                                                                </Setter>
-                                                            </Trigger>
-                                                        </ControlTemplate.Triggers>
-                                                    </ControlTemplate>
-                                                </Button.Template>
+                                            <Button x:Name="LGPOZipButton" Style="{StaticResource CustomButtonStyle2}" Margin="0,0,0,0" ToolTip="Browse for the path to LGPO zip file">
                                                 <StackPanel Orientation="Horizontal">
                                                     <Image x:Name="PathIcon3" Width="40" Height="30"/>
-                                                    <TextBlock Text="LGPO" VerticalAlignment="Center"/>
+                                                    <TextBlock Text="LGPO" VerticalAlignment="Center" Margin="0,0,8,0"/>
                                                 </StackPanel>
                                             </Button>
                                             <!-- LGPO Path Text box -->
@@ -470,49 +392,10 @@
                                         <!-- Row 2 -->
                                         <StackPanel Orientation="Horizontal" Grid.Row="2" Grid.ColumnSpan="2" HorizontalAlignment="Center" Margin="30,0,30,0">
                                             <!-- Microsoft Security Baselines Button -->
-                                            <Button x:Name="MicrosoftSecurityBaselineZipButton" Width="270" Height="40" FontSize="15" FontWeight="Bold" Background="{StaticResource PinkGradient}" Margin="0,0,0,0" ToolTip="Browse for the path to Microsoft Security Baseline zip file">
-                                                <Button.Template>
-                                                    <ControlTemplate TargetType="Button">
-                                                        <Border x:Name="border" BorderThickness="3" Width="{TemplateBinding Width}" Height="{TemplateBinding Height}" Background="{TemplateBinding Background}" CornerRadius="6" BorderBrush="MediumPurple">
-                                                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                                        </Border>
-                                                        <ControlTemplate.Triggers>
-                                                            <Trigger Property="IsMouseOver" Value="true">
-                                                                <Trigger.EnterActions>
-                                                                    <BeginStoryboard>
-                                                                        <Storyboard>
-                                                                            <DoubleAnimation To="280" Storyboard.TargetProperty="Width" Duration="0:0:0.3"/>
-                                                                            <DoubleAnimation To="45" Storyboard.TargetProperty="Height" Duration="0:0:0.3"/>
-                                                                            <ColorAnimation To="Coral" Storyboard.TargetProperty="Background.(SolidColorBrush.Color)" Duration="0:0:0.3"/>
-                                                                        </Storyboard>
-                                                                    </BeginStoryboard>
-                                                                </Trigger.EnterActions>
-                                                                <Trigger.ExitActions>
-                                                                    <BeginStoryboard>
-                                                                        <Storyboard>
-                                                                            <DoubleAnimation To="270" Storyboard.TargetProperty="Width" Duration="0:0:0.3"/>
-                                                                            <DoubleAnimation To="40" Storyboard.TargetProperty="Height" Duration="0:0:0.3"/>
-                                                                            <ColorAnimation To="White" Storyboard.TargetProperty="Background.(SolidColorBrush.Color)" Duration="0:0:0.3"/>
-                                                                        </Storyboard>
-                                                                    </BeginStoryboard>
-                                                                </Trigger.ExitActions>
-                                                            </Trigger>
-                                                            <Trigger Property="IsPressed" Value="true">
-                                                                <Setter TargetName="border" Property="Background">
-                                                                    <Setter.Value>
-                                                                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                                                                            <GradientStop Color="#eaafc8" Offset="0.0"/>
-                                                                            <GradientStop Color="#e1eec3" Offset="1.0"/>
-                                                                        </LinearGradientBrush>
-                                                                    </Setter.Value>
-                                                                </Setter>
-                                                            </Trigger>
-                                                        </ControlTemplate.Triggers>
-                                                    </ControlTemplate>
-                                                </Button.Template>
+                                            <Button x:Name="MicrosoftSecurityBaselineZipButton" Style="{StaticResource CustomButtonStyle2}" Margin="0,0,0,0" ToolTip="Browse for the path to Microsoft Security Baseline zip file">
                                                 <StackPanel Orientation="Horizontal">
                                                     <Image x:Name="PathIcon1" Width="40" Height="30"/>
-                                                    <TextBlock Text="Microsoft Security Baseline" VerticalAlignment="Center"/>
+                                                    <TextBlock Text="Microsoft Security Baseline" VerticalAlignment="Center" Margin="0,0,8,0"/>
                                                 </StackPanel>
                                             </Button>
                                             <!-- Microsoft Security Baselines Text block -->
@@ -552,49 +435,10 @@
                                         <!-- Row 3 -->
                                         <StackPanel Orientation="Horizontal" Grid.Row="3" Grid.ColumnSpan="2" HorizontalAlignment="Center" Margin="30,0,30,0">
                                             <!-- M365 apps security baselines button -->
-                                            <Button x:Name="Microsoft365AppsSecurityBaselineZipButton" Width="320" Height="40" FontSize="15" FontWeight="Bold" Background="{StaticResource PinkGradient}" Margin="0,0,0,0" ToolTip="Browse for the path to Microsoft 365 Apps Security Baseline zip file">
-                                                <Button.Template>
-                                                    <ControlTemplate TargetType="Button">
-                                                        <Border x:Name="border" BorderThickness="3" Width="{TemplateBinding Width}" Height="{TemplateBinding Height}" Background="{TemplateBinding Background}" CornerRadius="6" BorderBrush="MediumPurple">
-                                                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                                        </Border>
-                                                        <ControlTemplate.Triggers>
-                                                            <Trigger Property="IsMouseOver" Value="true">
-                                                                <Trigger.EnterActions>
-                                                                    <BeginStoryboard>
-                                                                        <Storyboard>
-                                                                            <DoubleAnimation To="345" Storyboard.TargetProperty="Width" Duration="0:0:0.3"/>
-                                                                            <DoubleAnimation To="45" Storyboard.TargetProperty="Height" Duration="0:0:0.3"/>
-                                                                            <ColorAnimation To="Coral" Storyboard.TargetProperty="Background.(SolidColorBrush.Color)" Duration="0:0:0.3"/>
-                                                                        </Storyboard>
-                                                                    </BeginStoryboard>
-                                                                </Trigger.EnterActions>
-                                                                <Trigger.ExitActions>
-                                                                    <BeginStoryboard>
-                                                                        <Storyboard>
-                                                                            <DoubleAnimation To="320" Storyboard.TargetProperty="Width" Duration="0:0:0.3"/>
-                                                                            <DoubleAnimation To="40" Storyboard.TargetProperty="Height" Duration="0:0:0.3"/>
-                                                                            <ColorAnimation To="White" Storyboard.TargetProperty="Background.(SolidColorBrush.Color)" Duration="0:0:0.3"/>
-                                                                        </Storyboard>
-                                                                    </BeginStoryboard>
-                                                                </Trigger.ExitActions>
-                                                            </Trigger>
-                                                            <Trigger Property="IsPressed" Value="true">
-                                                                <Setter TargetName="border" Property="Background">
-                                                                    <Setter.Value>
-                                                                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                                                                            <GradientStop Color="#eaafc8" Offset="0.0"/>
-                                                                            <GradientStop Color="#e1eec3" Offset="1.0"/>
-                                                                        </LinearGradientBrush>
-                                                                    </Setter.Value>
-                                                                </Setter>
-                                                            </Trigger>
-                                                        </ControlTemplate.Triggers>
-                                                    </ControlTemplate>
-                                                </Button.Template>
+                                            <Button x:Name="Microsoft365AppsSecurityBaselineZipButton" Style="{StaticResource CustomButtonStyle2}" Margin="0,0,0,0" ToolTip="Browse for the path to Microsoft 365 Apps Security Baseline zip file">
                                                 <StackPanel Orientation="Horizontal">
                                                     <Image x:Name="PathIcon2" Width="40" Height="30"/>
-                                                    <TextBlock Text="Microsoft 365 Apps Security Baseline" VerticalAlignment="Center"/>
+                                                    <TextBlock Text="Microsoft 365 Apps Security Baseline" VerticalAlignment="Center" Margin="0,0,8,0"/>
                                                 </StackPanel>
                                             </Button>
                                             <!-- M365 apps security baselines text block -->

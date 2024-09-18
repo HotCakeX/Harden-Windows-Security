@@ -12,11 +12,11 @@ namespace HardenWindowsSecurity
         public static Dictionary<string, HashSet<string>> ProcessMitigationPolicies(string xmlPath)
         {
             // Load the XML document
-            XmlDocument xmlDoc = new XmlDocument();
+            XmlDocument xmlDoc = new();
             xmlDoc.Load(xmlPath);
 
             // Initialize the dictionary to store the output of the current system's exploit mitigation policy XML file exported by the Get-ProcessMitigation cmdlet
-            Dictionary<string, HashSet<string>> processMitigations = new Dictionary<string, HashSet<string>>();
+            Dictionary<string, HashSet<string>> processMitigations = [];
 
             // Get all AppConfig elements in the XML document
             XmlNodeList? appConfigNodes = xmlDoc.SelectNodes("//MitigationPolicy/AppConfig");
@@ -34,7 +34,7 @@ namespace HardenWindowsSecurity
                         if (!string.IsNullOrEmpty(executableName))
                         {
                             // Create a hash set to store the mitigations
-                            HashSet<string> mitigations = new HashSet<string>();
+                            HashSet<string> mitigations = [];
 
                             // Loop through each child element of the app element
                             foreach (XmlNode? childNode in appNode.ChildNodes)
@@ -66,12 +66,12 @@ namespace HardenWindowsSecurity
                                                     if (attributeName.Equals("Enable", StringComparison.OrdinalIgnoreCase))
                                                     {
                                                         // Add the mitigation name to the hash set
-                                                        mitigations.Add(mitigationName);
+                                                        _ = mitigations.Add(mitigationName);
                                                     }
                                                     else
                                                     {
                                                         // Add the attribute name to the hash set
-                                                        mitigations.Add(attributeName);
+                                                        _ = mitigations.Add(attributeName);
                                                     }
                                                 }
                                             }
@@ -91,9 +91,9 @@ namespace HardenWindowsSecurity
                 }
             }
 
-            // Create a new empty hashtable which replaces "StrictControlFlowGuard" with "StrictCFG" and "ControlFlowGuard" with "CFG"
+            // Create a new empty HashTable which replaces "StrictControlFlowGuard" with "StrictCFG" and "ControlFlowGuard" with "CFG"
             // since the shortened name is used in the CSV file and required by the Set-ProcessMitigation cmdlet
-            Dictionary<string, HashSet<string>> revisedProcessMitigations = new Dictionary<string, HashSet<string>>();
+            Dictionary<string, HashSet<string>> revisedProcessMitigations = [];
 
             // Loop over the keys and values of the original dictionary
             foreach (var kvp in processMitigations)
@@ -103,25 +103,25 @@ namespace HardenWindowsSecurity
 
                 // Replace "StrictControlFlowGuard" with "StrictCFG" in the value set
                 // Replace "ControlFlowGuard" with "CFG" in the value set
-                HashSet<string> revisedValueSet = new HashSet<string>();
+                HashSet<string> revisedValueSet = [];
                 foreach (var value in valueSet)
                 {
                     // Check if the value is "StrictControlFlowGuard" and replace it with "StrictCFG"
                     if (value.Equals("StrictControlFlowGuard", StringComparison.OrdinalIgnoreCase))
                     {
                         // Add "StrictCFG" to the revised value set instead of "StrictControlFlowGuard"
-                        revisedValueSet.Add("StrictCFG");
+                        _ = revisedValueSet.Add("StrictCFG");
                     }
                     // Check if the value is "ControlFlowGuard" and replace it with "CFG"
                     else if (value.Equals("ControlFlowGuard", StringComparison.OrdinalIgnoreCase))
                     {
                         // Add "CFG" to the revised value set instead of "ControlFlowGuard"
-                        revisedValueSet.Add("CFG");
+                        _ = revisedValueSet.Add("CFG");
                     }
                     else
                     {
                         // Add the original value to the revised value set if it's not "ControlFlowGuard" or "StrictControlFlowGuard"
-                        revisedValueSet.Add(value);
+                        _ = revisedValueSet.Add(value);
                     }
                 }
 

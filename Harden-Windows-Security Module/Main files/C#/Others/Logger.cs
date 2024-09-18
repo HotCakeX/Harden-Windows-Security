@@ -169,6 +169,8 @@ Machine: {Environment.MachineName}
                                     WriteEventLog(CurrentText, EventLogEntryType.Error);
                                     break;
                                 }
+                            default:
+                                break;
                         }
                     }
                     #endregion

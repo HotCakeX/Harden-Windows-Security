@@ -6,7 +6,7 @@ using System.Management;
 
 namespace HardenWindowsSecurity
 {
-    partial class BitLocker
+    public partial class BitLocker
     {
         /// <summary>
         /// Enables the key protectors of an encrypted volume, doesn't decrypt or encrypt the drive.

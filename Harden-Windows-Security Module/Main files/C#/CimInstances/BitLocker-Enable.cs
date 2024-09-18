@@ -9,7 +9,7 @@ using System.Windows;
 
 namespace HardenWindowsSecurity
 {
-    partial class BitLocker
+    public partial class BitLocker
     {
 
         // A variable that keeps track of errors if they occur during BitLocker workflows
@@ -39,7 +39,8 @@ namespace HardenWindowsSecurity
         /// <param name="OSEncryptionType"></param>
         /// <param name="PIN"></param>
         /// <param name="StartupKeyPath"></param>
-        internal static void Enable(string DriveLetter, OSEncryptionType OSEncryptionType, string? PIN, string? StartupKeyPath)
+        /// <param name="FreePlusUsedSpace">if true, both used and free space will be encrypted</param>
+        internal static void Enable(string DriveLetter, OSEncryptionType OSEncryptionType, string? PIN, string? StartupKeyPath, bool FreePlusUsedSpace)
         {
             #region TPM Status Check
             TpmResult TPMResult = TpmStatus.GetV2();
@@ -283,7 +284,7 @@ namespace HardenWindowsSecurity
                 // Prepare the method with arguments
                 ManagementBaseObject EncryptArgs = VolumeInfo.GetMethodParameters("Encrypt");
                 EncryptArgs["EncryptionMethod"] = 7; // XTS-AEX-256
-                EncryptArgs["EncryptionFlags"] = 0; // Used + Free Space Encryption - 1 would be Used-Space Only
+                EncryptArgs["EncryptionFlags"] = FreePlusUsedSpace ? 0 : (uint)1; // 0 = Used + Free space | 1 = Used Space only
 
                 // Invoke the method to Encrypt the volume
                 ManagementBaseObject EncryptMethodInvocationResult = VolumeInfo.InvokeMethod("Encrypt", EncryptArgs, null);
@@ -331,7 +332,8 @@ namespace HardenWindowsSecurity
         /// 4) Encryption Method = XTS-AES-256
         /// </summary>
         /// <param name="DriveLetter"></param>
-        internal static void Enable(string DriveLetter)
+        /// <param name="FreePlusUsedSpace">if true, both used and free space will be encrypted</param>
+        internal static void Enable(string DriveLetter, bool FreePlusUsedSpace)
         {
 
             // Get the volume info based on the drive letter
@@ -508,7 +510,7 @@ namespace HardenWindowsSecurity
                 // Prepare the method with arguments
                 ManagementBaseObject EncryptArgs = VolumeInfo.GetMethodParameters("Encrypt");
                 EncryptArgs["EncryptionMethod"] = 7; // XTS-AEX-256
-                EncryptArgs["EncryptionFlags"] = 0; // Used + Free Space Encryption - 1 would be Used-Space Only
+                EncryptArgs["EncryptionFlags"] = FreePlusUsedSpace ? 0 : (uint)1; // 0 = Used + Free space | 1 = Used Space only
 
                 // Invoke the method to Encrypt the volume
                 ManagementBaseObject EncryptMethodInvocationResult = VolumeInfo.InvokeMethod("Encrypt", EncryptArgs, null);
@@ -544,7 +546,6 @@ namespace HardenWindowsSecurity
         }
 
 
-
         /// <summary>
         /// Enables BitLocker encryption for Removable drives
         /// 1) Full Space (instead of Used-space only)
@@ -554,7 +555,8 @@ namespace HardenWindowsSecurity
         /// </summary>
         /// <param name="DriveLetter"></param>
         /// <param name="Password"></param>
-        internal static void Enable(string DriveLetter, string? Password)
+        /// <param name="FreePlusUsedSpace">if true, both used and free space will be encrypted</param>
+        internal static void Enable(string DriveLetter, string? Password, bool FreePlusUsedSpace)
         {
 
             // Get the volume info based on the drive letter
@@ -646,7 +648,7 @@ namespace HardenWindowsSecurity
             // Prepare the method with arguments
             ManagementBaseObject EncryptArgs = VolumeInfo.GetMethodParameters("Encrypt");
             EncryptArgs["EncryptionMethod"] = 7; // XTS-AEX-256
-            EncryptArgs["EncryptionFlags"] = 0; // Used + Free Space Encryption - 1 would be Used-Space Only
+            EncryptArgs["EncryptionFlags"] = FreePlusUsedSpace ? 0 : (uint)1; // 0 = Used + Free space | 1 = Used Space only
 
             // Invoke the method to Encrypt the volume
             ManagementBaseObject EncryptMethodInvocationResult = VolumeInfo.InvokeMethod("Encrypt", EncryptArgs, null);
@@ -674,6 +676,5 @@ namespace HardenWindowsSecurity
         }
 
     }
-
 
 }

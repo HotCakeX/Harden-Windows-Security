@@ -361,16 +361,12 @@ namespace HardenWindowsSecurity
                 // Get the count of the compliant items
                 string CompliantItemsCount = _SecOpsCollectionView.SourceCollection
                     .Cast<SecOp>()
-                    .Where(item => item.Compliant)
-                    .Count()
-                    .ToString(CultureInfo.InvariantCulture);
+                    .Count(item => item.Compliant).ToString(CultureInfo.InvariantCulture);
 
                 // Get the count of the Non-compliant items
                 string NonCompliantItemsCount = _SecOpsCollectionView.SourceCollection
                     .Cast<SecOp>()
-                    .Where(item => !item.Compliant)
-                    .Count()
-                    .ToString(CultureInfo.InvariantCulture);
+                    .Count(item => !item.Compliant).ToString(CultureInfo.InvariantCulture);
 
                 // Find the text blocks that display counts of true/false items
                 var CompliantItemsTextBlock = (System.Windows.Controls.TextBlock)GUIConfirmSystemCompliance.View.FindName("CompliantItemsTextBlock");

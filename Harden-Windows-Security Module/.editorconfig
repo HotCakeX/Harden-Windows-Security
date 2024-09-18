@@ -254,3 +254,18 @@ dotnet_diagnostic.IDE0058.severity = error
 
 # CA2201: Do not raise reserved exception types
 dotnet_diagnostic.CA2201.severity = error
+
+# IDE0240: Remove redundant nullable directive
+dotnet_diagnostic.IDE0240.severity = silent
+
+# IDE0040: Add accessibility modifiers
+dotnet_diagnostic.IDE0040.severity = error
+
+# IDE0010: Add missing cases
+dotnet_diagnostic.IDE0010.severity = error
+
+# IDE0120: Simplify LINQ expression
+dotnet_diagnostic.IDE0120.severity = error
+
+# IDE0110: Remove unnecessary discard
+dotnet_diagnostic.IDE0110.severity = error

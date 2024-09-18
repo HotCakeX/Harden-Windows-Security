@@ -186,6 +186,8 @@ namespace HardenWindowsSecurity
                                 FilePath = System.IO.Path.Combine(HardenWindowsSecurity.GlobalVars.path, "Resources", "Individual ASR Rule Configs", ASRRulesCorrelation.GetValueOrDefault(ASRRuleName)!, "Warn.pol");
                                 break;
                             }
+                        default:
+                            break;
                     }
 
                     return FilePath;
@@ -358,6 +360,8 @@ namespace HardenWindowsSecurity
                                             HardenWindowsSecurity.LGPORunner.RunLGPOCommand(ASRRuleActionBasedPath, LGPORunner.FileType.POL);
                                             break;
                                         }
+                                    default:
+                                        break;
                                 }
                             }
 

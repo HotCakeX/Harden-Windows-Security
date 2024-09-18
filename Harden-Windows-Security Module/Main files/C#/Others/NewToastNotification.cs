@@ -236,6 +236,9 @@ namespace HardenWindowsSecurity
 
                         break;
                     }
+
+                default:
+                    break;
             }
         }
     }

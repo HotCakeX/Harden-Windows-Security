@@ -410,11 +410,11 @@ Start-Process -FilePath GPUpdate.exe -ArgumentList '/force' -NoNewWindow
                                         // Determine the security level of the OS encryption
                                         if (string.Equals(SecurityLevel, "Normal", StringComparison.OrdinalIgnoreCase))
                                         {
-                                            HardenWindowsSecurity.BitLocker.Enable(TrimmedSystemDrive, HardenWindowsSecurity.BitLocker.OSEncryptionType.Normal, PIN1, null);
+                                            HardenWindowsSecurity.BitLocker.Enable(TrimmedSystemDrive, HardenWindowsSecurity.BitLocker.OSEncryptionType.Normal, PIN1, null, true);
                                         }
                                         else
                                         {
-                                            HardenWindowsSecurity.BitLocker.Enable(TrimmedSystemDrive, HardenWindowsSecurity.BitLocker.OSEncryptionType.Enhanced, PIN1, RemovableDriveLetter);
+                                            HardenWindowsSecurity.BitLocker.Enable(TrimmedSystemDrive, HardenWindowsSecurity.BitLocker.OSEncryptionType.Enhanced, PIN1, RemovableDriveLetter, true);
                                         }
 
 
@@ -437,7 +437,7 @@ Start-Process -FilePath GPUpdate.exe -ArgumentList '/force' -NoNewWindow
 
                                         Logger.LogMessage($"Executing BitLocker Ops for the Non-OS Drives on drive {NonOSDrivesLetter} .", LogTypeIntel.Information);
 
-                                        HardenWindowsSecurity.BitLocker.Enable(NonOSDrivesLetter);
+                                        HardenWindowsSecurity.BitLocker.Enable(NonOSDrivesLetter, true);
 
 
                                         if (!HardenWindowsSecurity.BitLocker.HasErrorsOccurred)
@@ -476,7 +476,7 @@ Start-Process -FilePath GPUpdate.exe -ArgumentList '/force' -NoNewWindow
                                             break;
                                         }
 
-                                        HardenWindowsSecurity.BitLocker.Enable(RemovableDrivesTabDriveSelection, Password1);
+                                        HardenWindowsSecurity.BitLocker.Enable(RemovableDrivesTabDriveSelection, Password1, true);
 
 
                                         if (!HardenWindowsSecurity.BitLocker.HasErrorsOccurred)
@@ -487,6 +487,9 @@ Start-Process -FilePath GPUpdate.exe -ArgumentList '/force' -NoNewWindow
 
                                         break;
                                     }
+
+                                default:
+                                    break;
                             }
 
                         }); // End of Async Thread

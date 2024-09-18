@@ -10,7 +10,7 @@ using System.Net.Http;
 
 namespace HardenWindowsSecurity
 {
-    public static class FirewallHelper
+    internal static class FirewallHelper
     {
         // Method to get firewall rules based on RuleGroup and Direction
         public static List<ManagementObject> GetFirewallRules(string ruleGroup, ushort direction)
@@ -80,13 +80,13 @@ namespace HardenWindowsSecurity
         }
 
 
-        public enum NetSecurityEnabled : ushort
+        internal enum NetSecurityEnabled : ushort
         {
             True = 1,
             False = 2
         }
 
-        public enum NetSecurityProfile : ushort
+        internal enum NetSecurityProfile : ushort
         {
             Any = 0,
             Public = 4,
@@ -95,20 +95,20 @@ namespace HardenWindowsSecurity
             NotApplicable = 65535
         }
 
-        public enum NetSecurityDirection : ushort
+        internal enum NetSecurityDirection : ushort
         {
             Inbound = 1,
             Outbound = 2
         }
 
-        public enum NetSecurityAction : ushort
+        internal enum NetSecurityAction : ushort
         {
             NotConfigured = 0,
             Allow = 2,
             Block = 4
         }
 
-        public enum NetSecurityEdgeTraversal : ushort
+        internal enum NetSecurityEdgeTraversal : ushort
         {
             Block = 0,
             Allow = 1,
@@ -116,7 +116,7 @@ namespace HardenWindowsSecurity
             DeferToApp = 3
         }
 
-        public enum NetSecurityPrimaryStatus : ushort
+        internal enum NetSecurityPrimaryStatus : ushort
         {
             Unknown = 0,
             OK = 1,
@@ -124,7 +124,7 @@ namespace HardenWindowsSecurity
             Error = 3
         }
 
-        public enum NetSecurityPolicyStoreType : ushort
+        internal enum NetSecurityPolicyStoreType : ushort
         {
             None = 0,
             Local = 1,
@@ -140,7 +140,7 @@ namespace HardenWindowsSecurity
         }
 
         [Flags]
-        public enum NetSecurityDynamicTransport : uint
+        internal enum NetSecurityDynamicTransport : uint
         {
             Any = 0,
             ProximityApps = 1,
@@ -151,7 +151,7 @@ namespace HardenWindowsSecurity
         }
 
         [Flags]
-        public enum NetSecurityInterfaceType : uint
+        internal enum NetSecurityInterfaceType : uint
         {
             Any = 0,
             Wired = 1,
@@ -159,14 +159,14 @@ namespace HardenWindowsSecurity
             RemoteAccess = 4
         }
 
-        public enum NetSecurityAuthentication : ushort
+        internal enum NetSecurityAuthentication : ushort
         {
             NotRequired = 0,
             Required = 1,
             NoEncap = 2
         }
 
-        public enum NetSecurityEncryption : ushort
+        internal enum NetSecurityEncryption : ushort
         {
             NotRequired = 0,
             Required = 1,
@@ -174,7 +174,7 @@ namespace HardenWindowsSecurity
         }
 
 
-        public enum FirewallRuleAction
+        internal enum FirewallRuleAction
         {
             Enable,
             Disable

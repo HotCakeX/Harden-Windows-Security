@@ -81,7 +81,7 @@
                                    From="0" To="1" Duration="0:0:0.3" />
                                        <ThicknessAnimation
                                    Storyboard.TargetProperty="BorderThickness"
-                                   From="3" To="5" Duration="0:0:0.5"
+                                   From="3" To="5" Duration="0:0:3.5"
                                    AutoReverse="True" RepeatBehavior="Forever"/>
                                    </Storyboard>
                                </BeginStoryboard>

@@ -43,9 +43,21 @@
     <NeutralLanguage>en-US</NeutralLanguage>
   </PropertyGroup>
 
-    <ItemGroup>
+  <ItemGroup>
     <PackageReference Include="System.Management" Version="9.0.0-preview.7.24405.7" />
     <PackageReference Include="System.Management.Automation" Version="7.5.0-preview.4" />
+  </ItemGroup>
+
+  <!-- Exclude this folder since it belongs to another solution and project. Also Hides it in the solution explorer and search results. -->
+  <ItemGroup>
+    <Compile Remove="WinUI3\**" />
+    <Content Remove="WinUI3\**" />
+    <None Remove="WinUI3\**" />
+
+    <Compile Remove="WDACConfig.code-workspace" />
+    <Content Remove="WDACConfig.code-workspace" />
+    <None Remove="WDACConfig.code-workspace" />
+
   </ItemGroup>
 
 </Project>

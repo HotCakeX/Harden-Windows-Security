@@ -59,13 +59,7 @@ Function New-WDACConfig {
         return $ParamDictionary
     }
     Begin {
-        [System.Boolean]$Verbose = $PSBoundParameters.Verbose.IsPresent ? $true : $false
-        [System.Boolean]$Debug = $PSBoundParameters.Debug.IsPresent ? $true : $false
         [WDACConfig.LoggerInitializer]::Initialize($VerbosePreference, $DebugPreference, $Host)
-        . "$([WDACConfig.GlobalVars]::ModuleRootPath)\CoreExt\PSDefaultParameterValues.ps1"
-
-        Write-Verbose -Message 'Importing the required sub-modules'
-        Import-Module -Force -FullyQualifiedName "$([WDACConfig.GlobalVars]::ModuleRootPath)\Shared\Update-Self.psm1"
 
         if ([WDACConfig.GlobalVars]::ConfigCIBootstrap -eq $false) {
             Invoke-MockConfigCIBootstrap
@@ -95,14 +89,14 @@ Function New-WDACConfig {
                 $CurrentStep++
                 Write-Progress -Id 2 -Activity 'Setting up the Scheduled task' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
-                Write-Verbose -Message 'Deleting the MSFT Driver Block list update Scheduled task if it exists'
+                [WDACConfig.Logger]::Write('Deleting the MSFT Driver Block list update Scheduled task if it exists')
                 Get-ScheduledTask -TaskName 'MSFT Driver Block list update' -TaskPath '\MSFT Driver Block list update\' -ErrorAction Ignore | Unregister-ScheduledTask -Confirm:$false
 
-                Write-Verbose -Message 'Creating the MSFT Driver Block list update task'
+                [WDACConfig.Logger]::Write('Creating the MSFT Driver Block list update task')
                 # Get the SID of the SYSTEM account. It is a well-known SID, but still querying it, going to use it to create the scheduled task
                 [System.Security.Principal.SecurityIdentifier]$SYSTEMSID = New-Object -TypeName System.Security.Principal.SecurityIdentifier([System.Security.Principal.WellKnownSidType]::LocalSystemSid, $null)
 
-[System.String]$TaskArgument = @'
+                [System.String]$TaskArgument = @'
 -NoProfile -WindowStyle Hidden -command "& {try {Invoke-WebRequest -Uri 'https://aka.ms/VulnerableDriverBlockList' -OutFile 'VulnerableDriverBlockList.zip' -ErrorAction Stop}catch{exit 1};Expand-Archive -Path '.\VulnerableDriverBlockList.zip' -DestinationPath 'VulnerableDriverBlockList' -Force;$SiPolicy_EnforcedFile = Get-ChildItem -Recurse -File -Path '.\VulnerableDriverBlockList' -Filter 'SiPolicy_Enforced.p7b' | Select-Object -First 1;Move-Item -Path $SiPolicy_EnforcedFile.FullName -Destination ($env:SystemDrive + '\Windows\System32\CodeIntegrity\SiPolicy.p7b') -Force;citool --refresh -json;Remove-Item -Path '.\VulnerableDriverBlockList' -Recurse -Force;Remove-Item -Path '.\VulnerableDriverBlockList.zip' -Force;}"
 '@
                 # Create a scheduled task action, this defines how to download and install the latest Microsoft Recommended Driver Block Rules
@@ -123,7 +117,7 @@ Function New-WDACConfig {
                 # Add the advanced settings we defined above to the scheduled task
                 Set-ScheduledTask -TaskName 'MSFT Driver Block list update' -TaskPath 'MSFT Driver Block list update' -Settings $TaskSettings
 
-                Write-Verbose -Message 'Displaying extra info about the Microsoft recommended Drivers block list'
+                [WDACConfig.Logger]::Write('Displaying extra info about the Microsoft recommended Drivers block list')
                 Invoke-Command -ScriptBlock $DriversBlockListInfoGatheringSCRIPTBLOCK
 
                 Write-Progress -Id 2 -Activity 'complete.' -Completed
@@ -146,12 +140,12 @@ Function New-WDACConfig {
                 $CurrentStep++
                 Write-Progress -Id 1 -Activity 'Refreshing the system policies' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
-                Write-Verbose -Message 'Refreshing the system WDAC policies using CiTool.exe'
+                [WDACConfig.Logger]::Write('Refreshing the system WDAC policies using CiTool.exe')
                 $null = &'C:\Windows\System32\CiTool.exe' --refresh -json
 
                 Write-ColorfulTextWDACConfig -Color Pink -InputText 'SiPolicy.p7b has been deployed and policies refreshed.'
 
-                Write-Verbose -Message "Displaying extra info about the $Name"
+                [WDACConfig.Logger]::Write("Displaying extra info about the $Name")
                 Invoke-Command -ScriptBlock $DriversBlockListInfoGatheringSCRIPTBLOCK
             }
             else {
@@ -170,7 +164,7 @@ Function New-WDACConfig {
                 # Get the SiPolicy node
                 [System.Xml.XmlElement]$SiPolicyNode = $DriverBlockRulesXML.SiPolicy
 
-                Write-Verbose -Message "Removing the 'Allow all rules' from the policy"
+                [WDACConfig.Logger]::Write("Removing the 'Allow all rules' from the policy")
 
                 # Declare the namespace manager and add the default namespace with a prefix
                 [System.Xml.XmlNamespaceManager]$NameSpace = New-Object -TypeName System.Xml.XmlNamespaceManager -ArgumentList $DriverBlockRulesXML.NameTable
@@ -226,7 +220,7 @@ Function New-WDACConfig {
 
                 Set-CiRuleOptions -FilePath $XMLPath -RulesToRemove 'Enabled:Audit Mode'
 
-                Write-Verbose -Message "Displaying extra info about the $Name"
+                [WDACConfig.Logger]::Write("Displaying extra info about the $Name")
                 Invoke-Command -ScriptBlock $DriversBlockListInfoGatheringSCRIPTBLOCK
 
                 # Copy the result to the User Config directory at the end
@@ -259,16 +253,16 @@ Function New-WDACConfig {
 
             Get-BlockRules
 
-            Write-Verbose -Message 'Copying the AllowMicrosoft.xml from Windows directory to the Staging Area'
+            [WDACConfig.Logger]::Write('Copying the AllowMicrosoft.xml from Windows directory to the Staging Area')
             Copy-Item -Path 'C:\Windows\schemas\CodeIntegrity\ExamplePolicies\AllowMicrosoft.xml' -Destination $FinalPolicyPath -Force
 
             $CurrentStep++
             Write-Progress -Id 3 -Activity 'Configuring the policy settings' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
-            Write-Verbose -Message 'Resetting the policy ID and assigning policy name'
+            [WDACConfig.Logger]::Write('Resetting the policy ID and assigning policy name')
             $null = Set-CIPolicyIdInfo -FilePath $FinalPolicyPath -PolicyName "$Name - $(Get-Date -Format 'MM-dd-yyyy')" -ResetPolicyID
 
-            Write-Verbose -Message 'Setting policy version to 1.0.0.0'
+            [WDACConfig.Logger]::Write('Setting policy version to 1.0.0.0')
             Set-CIPolicyVersion -FilePath $FinalPolicyPath -Version '1.0.0.0'
 
             Set-CiRuleOptions -FilePath $FinalPolicyPath -Template Base -TestMode:$TestMode -RequireEVSigners:$RequireEVSigners -ScriptEnforcement:$EnableScriptEnforcement -EnableAuditMode:$Audit
@@ -277,10 +271,10 @@ Function New-WDACConfig {
                 $CurrentStep++
                 Write-Progress -Id 3 -Activity 'Creating CIP file' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
-                Write-Verbose -Message 'Converting the policy file to .CIP binary'
+                [WDACConfig.Logger]::Write('Converting the policy file to .CIP binary')
                 [System.IO.FileInfo]$CIPPath = ConvertFrom-CIPolicy -XmlFilePath $FinalPolicyPath -BinaryFilePath (Join-Path -Path $StagingArea -ChildPath "$Name.cip")
 
-                Write-Verbose -Message "Deploying the $Name policy"
+                [WDACConfig.Logger]::Write("Deploying the $Name policy")
                 $null = &'C:\Windows\System32\CiTool.exe' --update-policy $CIPPath -json
             }
             Copy-Item -Path $FinalPolicyPath -Destination ([WDACConfig.GlobalVars]::UserConfigDir) -Force
@@ -311,7 +305,7 @@ Function New-WDACConfig {
 
             [System.IO.FileInfo]$FinalPolicyPath = Join-Path -Path $StagingArea -ChildPath "$Name.xml"
 
-            Write-Verbose -Message 'Copying the DefaultWindows_Enforced.xml from Windows directory to the Staging Area'
+            [WDACConfig.Logger]::Write('Copying the DefaultWindows_Enforced.xml from Windows directory to the Staging Area')
             Copy-Item -Path 'C:\Windows\schemas\CodeIntegrity\ExamplePolicies\DefaultWindows_Enforced.xml' -Destination $FinalPolicyPath -Force
 
             $CurrentStep++
@@ -322,17 +316,17 @@ Function New-WDACConfig {
                 Write-ColorfulTextWDACConfig -Color Lavender -InputText 'Creating allow rules for PowerShell in the DefaultWindows base policy so you can continue using this module after deploying it.'
                 New-CIPolicy -ScanPath $PSHOME -Level FilePublisher -NoScript -Fallback Hash -UserPEs -UserWriteablePaths -MultiplePolicyFormat -FilePath (Join-Path -Path $StagingArea -ChildPath 'AllowPowerShell.xml')
 
-                Write-Verbose -Message "Merging the policy files to create the final $Name.xml policy"
+                [WDACConfig.Logger]::Write("Merging the policy files to create the final $Name.xml policy")
                 $null = Merge-CIPolicy -PolicyPaths $FinalPolicyPath, (Join-Path -Path $StagingArea -ChildPath 'AllowPowerShell.xml') -OutputFilePath $FinalPolicyPath
             }
 
             $CurrentStep++
             Write-Progress -Id 7 -Activity 'Configuring policy settings' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
-            Write-Verbose -Message 'Resetting the policy ID and assigning policy name'
+            [WDACConfig.Logger]::Write('Resetting the policy ID and assigning policy name')
             $null = Set-CIPolicyIdInfo -FilePath $FinalPolicyPath -PolicyName "$Name - $(Get-Date -Format 'MM-dd-yyyy')" -ResetPolicyID
 
-            Write-Verbose -Message 'Setting the policy version to 1.0.0.0'
+            [WDACConfig.Logger]::Write('Setting the policy version to 1.0.0.0')
             Set-CIPolicyVersion -FilePath $FinalPolicyPath -Version '1.0.0.0'
 
             Set-CiRuleOptions -FilePath $FinalPolicyPath -Template Base -TestMode:$TestMode -RequireEVSigners:$RequireEVSigners -ScriptEnforcement:$EnableScriptEnforcement -EnableAuditMode:$Audit
@@ -341,10 +335,10 @@ Function New-WDACConfig {
                 $CurrentStep++
                 Write-Progress -Id 7 -Activity 'Creating the CIP file' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
-                Write-Verbose -Message 'Converting the policy file to .CIP binary'
+                [WDACConfig.Logger]::Write('Converting the policy file to .CIP binary')
                 [System.IO.FileInfo]$CIPPath = ConvertFrom-CIPolicy -XmlFilePath $FinalPolicyPath -BinaryFilePath (Join-Path -Path $StagingArea -ChildPath "$Name.cip")
 
-                Write-Verbose -Message 'Deploying the policy'
+                [WDACConfig.Logger]::Write('Deploying the policy')
                 $null = &'C:\Windows\System32\CiTool.exe' --update-policy $CIPPath -json
             }
 
@@ -367,7 +361,7 @@ Function New-WDACConfig {
                 [System.IO.FileInfo]$FinalPolicyPath = Join-Path -Path $StagingArea -ChildPath "$Name.xml"
             }
             Process {
-                Write-Verbose -Message "Getting the latest $Name from the official Microsoft GitHub repository"
+                [WDACConfig.Logger]::Write("Getting the latest $Name from the official Microsoft GitHub repository")
                 [System.String]$MSFTRecommendedBlockRulesAsString = (Invoke-WebRequest -Uri ([WDACConfig.GlobalVars]::MSFTRecommendedBlockRulesURL) -ProgressAction SilentlyContinue).Content
 
                 # Load the Block Rules into a variable after extracting them from the markdown string
@@ -377,22 +371,22 @@ Function New-WDACConfig {
 
                 Set-CiRuleOptions -FilePath $FinalPolicyPath -RulesToRemove 'Enabled:Audit Mode' -RulesToAdd 'Enabled:Update Policy No Reboot'
 
-                Write-Verbose -Message 'Assigning policy name and resetting policy ID'
+                [WDACConfig.Logger]::Write('Assigning policy name and resetting policy ID')
                 $null = Set-CIPolicyIdInfo -ResetPolicyID -FilePath $FinalPolicyPath -PolicyName $Name
 
                 if ($Deploy) {
 
-                    Write-Verbose -Message "Checking if the $Name policy is already deployed"
+                    [WDACConfig.Logger]::Write("Checking if the $Name policy is already deployed")
                     [System.String]$CurrentlyDeployedBlockRulesGUID = ((&'C:\Windows\System32\CiTool.exe' -lp -json | ConvertFrom-Json).Policies | Where-Object -FilterScript { ($_.IsSystemPolicy -ne 'True') -and ($_.PolicyID -eq $_.BasePolicyID) -and ($_.FriendlyName -eq $Name) }).PolicyID
 
                     if (-NOT ([System.String]::IsNullOrWhiteSpace($CurrentlyDeployedBlockRulesGUID))) {
-                        Write-Verbose -Message "$Name policy is already deployed, updating it using the same GUID."
+                        [WDACConfig.Logger]::Write("$Name policy is already deployed, updating it using the same GUID.")
                         [WDACConfig.PolicyEditor]::EditGUIDs($CurrentlyDeployedBlockRulesGUID, $FinalPolicyPath)
                     }
 
                     [System.IO.FileInfo]$CIPPath = ConvertFrom-CIPolicy -XmlFilePath $FinalPolicyPath -BinaryFilePath (Join-Path -Path $StagingArea -ChildPath "$Name.cip")
 
-                    Write-Verbose -Message "Deploying the $Name policy"
+                    [WDACConfig.Logger]::Write("Deploying the $Name policy")
                     $null = &'C:\Windows\System32\CiTool.exe' --update-policy $CIPPath -json
                 }
                 else {
@@ -425,7 +419,7 @@ Function New-WDACConfig {
 
             Get-BlockRules
 
-            Write-Verbose -Message 'Copying the AllowMicrosoft.xml from Windows directory to the Staging Area'
+            [WDACConfig.Logger]::Write('Copying the AllowMicrosoft.xml from Windows directory to the Staging Area')
             Copy-Item -Path 'C:\Windows\schemas\CodeIntegrity\ExamplePolicies\AllowMicrosoft.xml' -Destination $FinalPolicyPath -Force
 
             $CurrentStep++
@@ -436,10 +430,10 @@ Function New-WDACConfig {
             $CurrentStep++
             Write-Progress -Id 6 -Activity 'Configuring the policy settings' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
-            Write-Verbose -Message 'Resetting the policy ID and assigning policy name'
+            [WDACConfig.Logger]::Write('Resetting the policy ID and assigning policy name')
             $null = Set-CIPolicyIdInfo -FilePath $FinalPolicyPath -ResetPolicyID -PolicyName "$Name - $(Get-Date -Format 'MM-dd-yyyy')"
 
-            Write-Verbose -Message 'Setting the policy version to 1.0.0.0'
+            [WDACConfig.Logger]::Write('Setting the policy version to 1.0.0.0')
             Set-CIPolicyVersion -FilePath $FinalPolicyPath -Version '1.0.0.0'
 
             if ($Deploy) {
@@ -447,17 +441,17 @@ Function New-WDACConfig {
                 $CurrentStep++
                 Write-Progress -Id 6 -Activity 'Creating the CIP file' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
-                Write-Verbose -Message 'Converting the policy to .CIP binary'
+                [WDACConfig.Logger]::Write('Converting the policy to .CIP binary')
                 [System.IO.FileInfo]$CIPPath = ConvertFrom-CIPolicy -XmlFilePath $FinalPolicyPath -BinaryFilePath (Join-Path -Path $StagingArea -ChildPath "$Name.cip")
 
                 $CurrentStep++
                 Write-Progress -Id 6 -Activity 'Configuring Windows Services' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
-                Write-Verbose -Message 'Configuring required services for ISG authorization'
+                [WDACConfig.Logger]::Write('Configuring required services for ISG authorization')
                 Start-Process -FilePath 'C:\Windows\System32\appidtel.exe' -ArgumentList 'start' -NoNewWindow
                 Start-Process -FilePath 'C:\Windows\System32\sc.exe' -ArgumentList 'config', 'appidsvc', 'start= auto' -NoNewWindow
 
-                Write-Verbose -Message 'Deploying the policy'
+                [WDACConfig.Logger]::Write('Deploying the policy')
                 $null = &'C:\Windows\System32\CiTool.exe' --update-policy $CIPPath -json
             }
 
@@ -489,8 +483,7 @@ Function New-WDACConfig {
             }
         }
 
-        # if -SkipVersionCheck wasn't passed, run the updater
-        if (-NOT $SkipVersionCheck) { Update-Self -InvocationStatement $MyInvocation.Statement }
+        if (-NOT $SkipVersionCheck) { Update-WDACConfigPSModule -InvocationStatement $MyInvocation.Statement }
     }
 
     process {
@@ -512,7 +505,7 @@ Function New-WDACConfig {
             throw $_
         }
         Finally {
-            if (-NOT $Debug) {
+            if (![WDACConfig.GlobalVars]::DebugPreference) {
                 Remove-Item -Path $StagingArea -Recurse -Force
             }
         }

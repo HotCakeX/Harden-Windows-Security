@@ -32,7 +32,7 @@ Function Get-KernelModeDrivers {
     Begin {
         # Import the ConfigCI assembly resources if they are not already imported
         if (-NOT ('Microsoft.SecureBoot.UserConfig.ImportParser' -as [System.Type]) ) {
-            [WDACConfig.VerboseLogger]::Write('Importing the ConfigCI assembly resources')
+            [WDACConfig.Logger]::Write('Importing the ConfigCI assembly resources')
             Add-Type -Path ([System.String](PowerShell.exe -NoProfile -Command { (Get-Command -Name Merge-CIPolicy).DLL }))
         }
 
@@ -157,8 +157,8 @@ Function Get-KernelModeDrivers {
             }
         }
 
-        [WDACConfig.VerboseLogger]::Write("Number of sys files: $($DriverFiles.Count)")
-        [WDACConfig.VerboseLogger]::Write("Number of potential kernel-mode DLLs: $($PotentialKernelModeDlls.Count)")
+        [WDACConfig.Logger]::Write("Number of sys files: $($DriverFiles.Count)")
+        [WDACConfig.Logger]::Write("Number of potential kernel-mode DLLs: $($PotentialKernelModeDlls.Count)")
 
         # Scan all of the .dll files to see if they are kernel-mode drivers
         foreach ($KernelDll in $PotentialKernelModeDlls) {
@@ -168,10 +168,10 @@ Function Get-KernelModeDrivers {
             }
         }
 
-        [WDACConfig.VerboseLogger]::Write("Number of kernel-mode DLLs folder: $($KernelModeDlls.Count)")
+        [WDACConfig.Logger]::Write("Number of kernel-mode DLLs folder: $($KernelModeDlls.Count)")
     }
     End {
-        [WDACConfig.VerboseLogger]::Write("Returning $($DriverFiles.Count) kernel-mode driver file paths")
+        [WDACConfig.Logger]::Write("Returning $($DriverFiles.Count) kernel-mode driver file paths")
         Return $DriverFiles
     }
 }

@@ -14,25 +14,23 @@ Function Get-CommonWDACConfig {
         [parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$StrictKernelModePolicyTimeOfDeployment
     )
     begin {
-        [System.Boolean]$Verbose = $PSBoundParameters.Verbose.IsPresent ? $true : $false
         if ($(Get-PSCallStack).Count -le 2) {
             [WDACConfig.LoggerInitializer]::Initialize($VerbosePreference, $DebugPreference, $Host)
         }
         else {
             [WDACConfig.LoggerInitializer]::Initialize($null, $null, $Host)
         }
-        . "$([WDACConfig.GlobalVars]::ModuleRootPath)\CoreExt\PSDefaultParameterValues.ps1"
 
         # Create User configuration folder if it doesn't already exist
         if (-NOT ([System.IO.Directory]::Exists((Split-Path -Path ([WDACConfig.GlobalVars]::UserConfigJson) -Parent)))) {
             $null = New-Item -ItemType Directory -Path (Split-Path -Path ([WDACConfig.GlobalVars]::UserConfigJson) -Parent) -Force
-            Write-Verbose -Message 'The WDACConfig folder in Program Files has been created because it did not exist.'
+            [WDACConfig.Logger]::Write('The WDACConfig folder in Program Files has been created because it did not exist.')
         }
 
         # Create User configuration file if it doesn't already exist
         if (-NOT ([System.IO.File]::Exists(([WDACConfig.GlobalVars]::UserConfigJson)))) {
             $null = New-Item -ItemType File -Path (Split-Path -Path ([WDACConfig.GlobalVars]::UserConfigJson) -Parent) -Name (Split-Path -Path ([WDACConfig.GlobalVars]::UserConfigJson) -Leaf) -Force
-            Write-Verbose -Message 'The UserConfigurations.json file has been created because it did not exist.'
+            [WDACConfig.Logger]::Write('The UserConfigurations.json file has been created because it did not exist.')
         }
 
         if ($Open) {
@@ -46,14 +44,14 @@ Function Get-CommonWDACConfig {
 
         # Display this message if User Configuration file is empty or only has spaces/new lines
         if ([System.String]::IsNullOrWhiteSpace((Get-Content -Path ([WDACConfig.GlobalVars]::UserConfigJson)))) {
-            Write-Verbose -Message 'Your current WDAC User Configurations is empty.'
+            [WDACConfig.Logger]::Write('Your current WDAC User Configurations is empty.')
 
             [System.Boolean]$ReturnAndDone = $true
             # return/exit from the begin block
             Return
         }
 
-        Write-Verbose -Message 'Reading the current user configurations'
+        [WDACConfig.Logger]::Write('Reading the current user configurations')
         [System.Object[]]$CurrentUserConfigurations = Get-Content -Path ([WDACConfig.GlobalVars]::UserConfigJson) -Force
 
         # If the file exists but is corrupted and has bad values, rewrite it

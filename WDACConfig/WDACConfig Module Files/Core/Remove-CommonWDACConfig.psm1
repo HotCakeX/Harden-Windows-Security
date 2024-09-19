@@ -18,25 +18,22 @@ Function Remove-CommonWDACConfig {
         [Parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$Force
     )
     begin {
-        [System.Boolean]$Verbose = $PSBoundParameters.Verbose.IsPresent ? $true : $false
         if ($(Get-PSCallStack).Count -le 2) {
             [WDACConfig.LoggerInitializer]::Initialize($VerbosePreference, $DebugPreference, $Host)
         }
         else {
             [WDACConfig.LoggerInitializer]::Initialize($null, $null, $Host)
         }
-        . "$([WDACConfig.GlobalVars]::ModuleRootPath)\CoreExt\PSDefaultParameterValues.ps1"
-
         # Create User configuration folder if it doesn't already exist
         if (-NOT ([System.IO.Directory]::Exists((Split-Path -Path ([WDACConfig.GlobalVars]::UserConfigJson) -Parent)))) {
             $null = New-Item -ItemType Directory -Path (Split-Path -Path ([WDACConfig.GlobalVars]::UserConfigJson) -Parent) -Force
-            Write-Verbose -Message 'The WDACConfig folder in Program Files has been created because it did not exist.'
+            [WDACConfig.Logger]::Write('The WDACConfig folder in Program Files has been created because it did not exist.')
         }
 
         # Create User configuration file if it doesn't already exist
         if (-NOT ([System.IO.File]::Exists(([WDACConfig.GlobalVars]::UserConfigJson)))) {
             $null = New-Item -ItemType File -Path (Split-Path -Path ([WDACConfig.GlobalVars]::UserConfigJson) -Parent) -Name (Split-Path -Path ([WDACConfig.GlobalVars]::UserConfigJson) -Leaf) -Force
-            Write-Verbose -Message 'The UserConfigurations.json file has been created because it did not exist.'
+            [WDACConfig.Logger]::Write('The UserConfigurations.json file has been created because it did not exist.')
         }
 
         # Detecting if Confirm switch is used to bypass the confirmation prompts
@@ -52,7 +49,7 @@ Function Remove-CommonWDACConfig {
             if ($PSCmdlet.ShouldProcess('This PC', 'Delete the entire User Configurations for WDACConfig module')) {
 
                 Remove-Item -Path ([WDACConfig.GlobalVars]::UserConfigJson) -Force
-                Write-Verbose -Message 'User Configurations for WDACConfig module have been deleted.'
+                [WDACConfig.Logger]::Write('User Configurations for WDACConfig module have been deleted.')
             }
 
             # set a boolean value that returns from the Process and End blocks as well
@@ -90,7 +87,7 @@ Function Remove-CommonWDACConfig {
         if ($true -eq $ReturnAndDone) { return }
 
         if ($SignedPolicyPath) {
-            Write-Verbose -Message 'Removing the SignedPolicyPath'
+            [WDACConfig.Logger]::Write('Removing the SignedPolicyPath')
             $UserConfigurationsObject.SignedPolicyPath = ''
         }
         else {
@@ -98,7 +95,7 @@ Function Remove-CommonWDACConfig {
         }
 
         if ($UnsignedPolicyPath) {
-            Write-Verbose -Message 'Removing the UnsignedPolicyPath'
+            [WDACConfig.Logger]::Write('Removing the UnsignedPolicyPath')
             $UserConfigurationsObject.UnsignedPolicyPath = ''
         }
         else {
@@ -106,7 +103,7 @@ Function Remove-CommonWDACConfig {
         }
 
         if ($SignToolPath) {
-            Write-Verbose -Message 'Removing the SignToolPath'
+            [WDACConfig.Logger]::Write('Removing the SignToolPath')
             $UserConfigurationsObject.SignToolCustomPath = ''
         }
         else {
@@ -114,7 +111,7 @@ Function Remove-CommonWDACConfig {
         }
 
         if ($CertPath) {
-            Write-Verbose -Message 'Removing the CertPath'
+            [WDACConfig.Logger]::Write('Removing the CertPath')
             $UserConfigurationsObject.CertificatePath = ''
         }
         else {
@@ -122,7 +119,7 @@ Function Remove-CommonWDACConfig {
         }
 
         if ($CertCN) {
-            Write-Verbose -Message 'Removing the CertCN'
+            [WDACConfig.Logger]::Write('Removing the CertCN')
             $UserConfigurationsObject.CertificateCommonName = ''
         }
         else {
@@ -130,7 +127,7 @@ Function Remove-CommonWDACConfig {
         }
 
         if ($StrictKernelPolicyGUID) {
-            Write-Verbose -Message 'Removing the StrictKernelPolicyGUID'
+            [WDACConfig.Logger]::Write('Removing the StrictKernelPolicyGUID')
             $UserConfigurationsObject.StrictKernelPolicyGUID = ''
         }
         else {
@@ -138,7 +135,7 @@ Function Remove-CommonWDACConfig {
         }
 
         if ($StrictKernelNoFlightRootsPolicyGUID) {
-            Write-Verbose -Message 'Removing the StrictKernelNoFlightRootsPolicyGUID'
+            [WDACConfig.Logger]::Write('Removing the StrictKernelNoFlightRootsPolicyGUID')
             $UserConfigurationsObject.StrictKernelNoFlightRootsPolicyGUID = ''
         }
         else {
@@ -146,7 +143,7 @@ Function Remove-CommonWDACConfig {
         }
 
         if ($LastUpdateCheck) {
-            Write-Verbose -Message 'Removing the LastUpdateCheck'
+            [WDACConfig.Logger]::Write('Removing the LastUpdateCheck')
             $UserConfigurationsObject.LastUpdateCheck = ''
         }
         else {
@@ -154,7 +151,7 @@ Function Remove-CommonWDACConfig {
         }
 
         if ($StrictKernelModePolicyTimeOfDeployment) {
-            Write-Verbose -Message 'Removing the Strict Kernel-Mode Policy Time Of Deployment'
+            [WDACConfig.Logger]::Write('Removing the Strict Kernel-Mode Policy Time Of Deployment')
             $UserConfigurationsObject.StrictKernelModePolicyTimeOfDeployment = ''
         }
         else {
@@ -168,7 +165,7 @@ Function Remove-CommonWDACConfig {
         $UserConfigurationsJSON = $UserConfigurationsObject | ConvertTo-Json
 
         try {
-            Write-Verbose -Message 'Validating the JSON against the schema'
+            [WDACConfig.Logger]::Write('Validating the JSON against the schema')
             [System.Boolean]$IsValid = Test-Json -Json $UserConfigurationsJSON -SchemaFile "$([WDACConfig.GlobalVars]::ModuleRootPath)\Resources\User Configurations\Schema.json"
         }
         catch {
@@ -178,7 +175,7 @@ Function Remove-CommonWDACConfig {
 
         if ($IsValid) {
             # Update the User Configurations file
-            Write-Verbose -Message 'Saving the changes'
+            [WDACConfig.Logger]::Write('Saving the changes')
             $UserConfigurationsJSON | Set-Content -Path ([WDACConfig.GlobalVars]::UserConfigJson) -Force
         }
         else {

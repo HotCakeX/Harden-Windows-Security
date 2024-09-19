@@ -75,15 +75,12 @@ Function Set-CommonWDACConfig {
         [parameter(Mandatory = $false)][System.DateTime]$StrictKernelModePolicyTimeOfDeployment
     )
     begin {
-        [System.Boolean]$Verbose = $PSBoundParameters.Verbose.IsPresent ? $true : $false
         if ($(Get-PSCallStack).Count -le 2) {
             [WDACConfig.LoggerInitializer]::Initialize($VerbosePreference, $DebugPreference, $Host)
         }
         else {
             [WDACConfig.LoggerInitializer]::Initialize($null, $null, $Host)
         }
-        . "$([WDACConfig.GlobalVars]::ModuleRootPath)\CoreExt\PSDefaultParameterValues.ps1"
-
         if (!$CertCN -And !$CertPath -And !$SignToolPath -And !$UnsignedPolicyPath -And !$SignedPolicyPath -And !$StrictKernelPolicyGUID -And !$StrictKernelNoFlightRootsPolicyGUID -And !$LastUpdateCheck -And !$StrictKernelModePolicyTimeOfDeployment) {
             Throw [System.ArgumentException] 'No parameter was selected.'
         }
@@ -97,17 +94,17 @@ Function Set-CommonWDACConfig {
         # Create User configuration folder if it doesn't already exist
         if (-NOT ([System.IO.Directory]::Exists((Split-Path -Path ([WDACConfig.GlobalVars]::UserConfigJson) -Parent)))) {
             $null = New-Item -ItemType Directory -Path (Split-Path -Path ([WDACConfig.GlobalVars]::UserConfigJson) -Parent) -Force
-            Write-Verbose -Message 'The WDACConfig folder in Program Files has been created because it did not exist.'
+            [WDACConfig.Logger]::Write('The WDACConfig folder in Program Files has been created because it did not exist.')
         }
 
         # Create User configuration file if it doesn't already exist
         if (-NOT ([System.IO.File]::Exists(([WDACConfig.GlobalVars]::UserConfigJson)))) {
             $null = New-Item -ItemType File -Path (Split-Path -Path ([WDACConfig.GlobalVars]::UserConfigJson) -Parent) -Name (Split-Path -Path ([WDACConfig.GlobalVars]::UserConfigJson) -Leaf) -Force
-            Write-Verbose -Message 'The UserConfigurations.json file has been created because it did not exist.'
+            [WDACConfig.Logger]::Write('The UserConfigurations.json file has been created because it did not exist.')
         }
 
         # Trying to read the current user configurations
-        Write-Verbose -Message 'Trying to read the current user configurations'
+        [WDACConfig.Logger]::Write('Trying to read the current user configurations')
         [System.Object[]]$CurrentUserConfigurations = Get-Content -Path ([WDACConfig.GlobalVars]::UserConfigJson)
 
         # If the file exists but is corrupted and has bad values, rewrite it
@@ -115,7 +112,7 @@ Function Set-CommonWDACConfig {
             $CurrentUserConfigurations = $CurrentUserConfigurations | ConvertFrom-Json
         }
         catch {
-            Write-Verbose -Message 'The user configurations file exists but is corrupted and has bad values, rewriting it'
+            [WDACConfig.Logger]::Write('The user configurations file exists but is corrupted and has bad values, rewriting it')
             Set-Content -Path ([WDACConfig.GlobalVars]::UserConfigJson) -Value ''
         }
 
@@ -134,86 +131,86 @@ Function Set-CommonWDACConfig {
     }
     process {
 
-        Write-Verbose -Message 'Processing each user configuration property'
+        [WDACConfig.Logger]::Write('Processing each user configuration property')
 
         if ($SignedPolicyPath) {
-            Write-Verbose -Message 'Saving the supplied Signed Policy path in user configurations.'
+            [WDACConfig.Logger]::Write('Saving the supplied Signed Policy path in user configurations.')
             $UserConfigurationsObject.SignedPolicyPath = $SignedPolicyPath.FullName
         }
         else {
-            Write-Verbose -Message 'No changes to the Signed Policy path property was detected.'
+            [WDACConfig.Logger]::Write('No changes to the Signed Policy path property was detected.')
             $UserConfigurationsObject.SignedPolicyPath = $CurrentUserConfigurations.SignedPolicyPath
         }
 
         if ($UnsignedPolicyPath) {
-            Write-Verbose -Message 'Saving the supplied Unsigned Policy path in user configurations.'
+            [WDACConfig.Logger]::Write('Saving the supplied Unsigned Policy path in user configurations.')
             $UserConfigurationsObject.UnsignedPolicyPath = $UnsignedPolicyPath.FullName
         }
         else {
-            Write-Verbose -Message 'No changes to the Unsigned Policy path property was detected.'
+            [WDACConfig.Logger]::Write('No changes to the Unsigned Policy path property was detected.')
             $UserConfigurationsObject.UnsignedPolicyPath = $CurrentUserConfigurations.UnsignedPolicyPath
         }
 
         if ($SignToolPath) {
-            Write-Verbose -Message 'Saving the supplied SignTool path in user configurations.'
+            [WDACConfig.Logger]::Write('Saving the supplied SignTool path in user configurations.')
             $UserConfigurationsObject.SignToolCustomPath = $SignToolPath.FullName
         }
         else {
-            Write-Verbose -Message 'No changes to the Signtool path property was detected.'
+            [WDACConfig.Logger]::Write('No changes to the Signtool path property was detected.')
             $UserConfigurationsObject.SignToolCustomPath = $CurrentUserConfigurations.SignToolCustomPath
         }
 
         if ($CertPath) {
-            Write-Verbose -Message 'Saving the supplied Certificate path in user configurations.'
+            [WDACConfig.Logger]::Write('Saving the supplied Certificate path in user configurations.')
             $UserConfigurationsObject.CertificatePath = $CertPath.FullName
         }
         else {
-            Write-Verbose -Message 'No changes to the Certificate path property was detected.'
+            [WDACConfig.Logger]::Write('No changes to the Certificate path property was detected.')
             $UserConfigurationsObject.CertificatePath = $CurrentUserConfigurations.CertificatePath
         }
 
         if ($CertCN) {
-            Write-Verbose -Message 'Saving the supplied Certificate common name in user configurations.'
+            [WDACConfig.Logger]::Write('Saving the supplied Certificate common name in user configurations.')
             $UserConfigurationsObject.CertificateCommonName = $CertCN
         }
         else {
-            Write-Verbose -Message 'No changes to the Certificate common name property was detected.'
+            [WDACConfig.Logger]::Write('No changes to the Certificate common name property was detected.')
             $UserConfigurationsObject.CertificateCommonName = $CurrentUserConfigurations.CertificateCommonName
         }
 
         if ($StrictKernelPolicyGUID) {
-            Write-Verbose -Message 'Saving the supplied Strict Kernel policy GUID in user configurations.'
+            [WDACConfig.Logger]::Write('Saving the supplied Strict Kernel policy GUID in user configurations.')
             $UserConfigurationsObject.StrictKernelPolicyGUID = $StrictKernelPolicyGUID
         }
         else {
-            Write-Verbose -Message 'No changes to the Strict Kernel policy GUID property was detected.'
+            [WDACConfig.Logger]::Write('No changes to the Strict Kernel policy GUID property was detected.')
             $UserConfigurationsObject.StrictKernelPolicyGUID = $CurrentUserConfigurations.StrictKernelPolicyGUID
         }
 
         if ($StrictKernelNoFlightRootsPolicyGUID) {
-            Write-Verbose -Message 'Saving the supplied Strict Kernel NoFlightRoot policy GUID in user configurations.'
+            [WDACConfig.Logger]::Write('Saving the supplied Strict Kernel NoFlightRoot policy GUID in user configurations.')
             $UserConfigurationsObject.StrictKernelNoFlightRootsPolicyGUID = $StrictKernelNoFlightRootsPolicyGUID
         }
         else {
-            Write-Verbose -Message 'No changes to the Strict Kernel NoFlightRoot policy GUID property was detected.'
+            [WDACConfig.Logger]::Write('No changes to the Strict Kernel NoFlightRoot policy GUID property was detected.')
             $UserConfigurationsObject.StrictKernelNoFlightRootsPolicyGUID = $CurrentUserConfigurations.StrictKernelNoFlightRootsPolicyGUID
         }
 
         if ($LastUpdateCheck) {
-            Write-Verbose -Message 'Saving the supplied Last Update Check in user configurations.'
+            [WDACConfig.Logger]::Write('Saving the supplied Last Update Check in user configurations.')
             $UserConfigurationsObject.LastUpdateCheck = $LastUpdateCheck
         }
         else {
-            Write-Verbose -Message 'No changes to the Last Update Check property was detected.'
+            [WDACConfig.Logger]::Write('No changes to the Last Update Check property was detected.')
             $UserConfigurationsObject.LastUpdateCheck = $CurrentUserConfigurations.LastUpdateCheck
         }
 
         if ($StrictKernelModePolicyTimeOfDeployment) {
-            Write-Verbose -Message 'Saving the supplied Strict Kernel-Mode Policy Time Of Deployment in user configurations.'
+            [WDACConfig.Logger]::Write('Saving the supplied Strict Kernel-Mode Policy Time Of Deployment in user configurations.')
             $UserConfigurationsObject.StrictKernelModePolicyTimeOfDeployment = $StrictKernelModePolicyTimeOfDeployment
         }
         else {
-            Write-Verbose -Message 'No changes to the Strict Kernel-Mode Policy Time Of Deployment property was detected.'
+            [WDACConfig.Logger]::Write('No changes to the Strict Kernel-Mode Policy Time Of Deployment property was detected.')
             $UserConfigurationsObject.StrictKernelModePolicyTimeOfDeployment = $CurrentUserConfigurations.StrictKernelModePolicyTimeOfDeployment
         }
     }
@@ -222,7 +219,7 @@ Function Set-CommonWDACConfig {
         $UserConfigurationsJSON = $UserConfigurationsObject | ConvertTo-Json
 
         try {
-            Write-Verbose -Message 'Validating the JSON against the schema'
+            [WDACConfig.Logger]::Write('Validating the JSON against the schema')
             [System.Boolean]$IsValid = Test-Json -Json $UserConfigurationsJSON -SchemaFile "$([WDACConfig.GlobalVars]::ModuleRootPath)\Resources\User Configurations\Schema.json"
         }
         catch {
@@ -232,7 +229,7 @@ Function Set-CommonWDACConfig {
 
         if ($IsValid) {
             # Update the User Configurations file
-            Write-Verbose -Message 'Saving the changes'
+            [WDACConfig.Logger]::Write('Saving the changes')
             $UserConfigurationsJSON | Set-Content -Path ([WDACConfig.GlobalVars]::UserConfigJson) -Force
 
             # Display the updated User Configurations

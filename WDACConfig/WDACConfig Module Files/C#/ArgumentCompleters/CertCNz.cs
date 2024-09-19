@@ -14,10 +14,10 @@ namespace WDACConfig
         {
             // The ValidateSet attribute expects a unique set of values, and it will throw an error if there are duplicates
             // This HashSet will take care of that requirement
-            HashSet<string> output = new HashSet<string>();
+            HashSet<string> output = [];
 
             // Open the current user's personal store
-            using (X509Store store = new X509Store(StoreName.My, StoreLocation.CurrentUser))
+            using (X509Store store = new(StoreName.My, StoreLocation.CurrentUser))
             {
                 store.Open(OpenFlags.ReadOnly);
 

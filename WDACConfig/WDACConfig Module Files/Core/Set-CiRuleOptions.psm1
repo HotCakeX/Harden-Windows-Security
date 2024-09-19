@@ -37,13 +37,11 @@ Function Set-CiRuleOptions {
         [System.Management.Automation.SwitchParameter]$RemoveAll
     )
     Begin {
-        [System.Boolean]$Verbose = $PSBoundParameters.Verbose.IsPresent ? $true : $false
         [WDACConfig.LoggerInitializer]::Initialize($VerbosePreference, $DebugPreference, $Host)
-        . "$([WDACConfig.GlobalVars]::ModuleRootPath)\CoreExt\PSDefaultParameterValues.ps1"
 
         Import-Module -FullyQualifiedName "$([WDACConfig.GlobalVars]::ModuleRootPath)\XMLOps\Close-EmptyXmlNodes_Semantic.psm1" -Force
 
-        Write-Verbose -Message "Set-CiRuleOptions: Configuring the policy rule options for: $($FilePath.Name)"
+        [WDACConfig.Logger]::Write("Set-CiRuleOptions: Configuring the policy rule options for: $($FilePath.Name)")
 
         [System.Collections.Hashtable]$Intel = ConvertFrom-Json -AsHashtable -InputObject (Get-Content -Path "$([WDACConfig.GlobalVars]::ModuleRootPath)\Resources\PolicyRuleOptions.Json" -Raw)
 
@@ -155,10 +153,10 @@ Function Set-CiRuleOptions {
         Compare-Object -ReferenceObject ([System.Int32[]]$RuleOptionsToImplement) -DifferenceObject ([System.Int32[]]$ExistingRuleOptions.Keys) |
         ForEach-Object -Process {
             if ($_.SideIndicator -eq '<=') {
-                Write-Verbose -Message "Set-CiRuleOptions: Adding Rule Option: $($Intel[[System.String]$_.InputObject])"
+                [WDACConfig.Logger]::Write("Set-CiRuleOptions: Adding Rule Option: $($Intel[[System.String]$_.InputObject])")
             }
             else {
-                Write-Verbose -Message "Set-CiRuleOptions: Removing Rule Option: $($Intel[[System.String]$_.InputObject])"
+                [WDACConfig.Logger]::Write("Set-CiRuleOptions: Removing Rule Option: $($Intel[[System.String]$_.InputObject])")
             }
         }
 

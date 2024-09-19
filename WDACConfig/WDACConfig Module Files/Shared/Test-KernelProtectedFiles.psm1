@@ -16,7 +16,7 @@ Function Test-KernelProtectedFiles {
         [Parameter(Mandatory = $true)][PSCustomObject[]]$Logs
     )
     Begin {
-        [WDACConfig.VerboseLogger]::Write('Test-KernelProtectedFiles: Checking for Kernel-Protected files')
+        [WDACConfig.Logger]::Write('Test-KernelProtectedFiles: Checking for Kernel-Protected files')
     }
     Process {
         # Looping through every existing file with .exe and .dll extensions to check if they are kernel protected
@@ -34,7 +34,7 @@ Function Test-KernelProtectedFiles {
                     $Log
                 }
                 catch {
-                    [WDACConfig.VerboseLogger]::Write("Test-KernelProtectedFiles: An unexpected error occurred while checking the file: $($Log.'Full Path')")
+                    [WDACConfig.Logger]::Write("Test-KernelProtectedFiles: An unexpected error occurred while checking the file: $($Log.'Full Path')")
                 }
             }
         }

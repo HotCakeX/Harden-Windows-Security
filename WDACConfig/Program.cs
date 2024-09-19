@@ -1,8 +1,14 @@
-﻿using System.Collections.Generic;
+﻿
 
-#nullable enable
+namespace WDACConfig
+{
+    public class Program
+    {
+        public static void Main()
+        {
+            // Some test
+            // List<WDACConfig.AllCertificatesGrabber.AllFileSigners> Certificates = WDACConfig.AllCertificatesGrabber.WinTrust.GetAllFileSigners(@"");
+        }
 
-// Some test
-List<WDACConfig.AllCertificatesGrabber.AllFileSigners> Certificates = WDACConfig.AllCertificatesGrabber.WinTrust.GetAllFileSigners(@"");
-
-
+    }
+}

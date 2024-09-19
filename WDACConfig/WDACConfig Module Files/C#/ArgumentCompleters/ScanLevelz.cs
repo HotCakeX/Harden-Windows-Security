@@ -7,12 +7,12 @@ namespace WDACConfig
     {
         public string[] GetValidValues()
         {
-            string[] scanLevelz = new string[]
-            {
+            string[] scanLevelz =
+            [
                 "Hash", "FileName", "SignedVersion", "Publisher", "FilePublisher",
                 "LeafCertificate", "PcaCertificate", "RootCertificate", "WHQL",
                 "WHQLPublisher", "WHQLFilePublisher", "PFN", "FilePath", "None"
-            };
+            ];
             return scanLevelz;
         }
     }

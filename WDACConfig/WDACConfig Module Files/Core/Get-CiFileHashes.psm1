@@ -1,6 +1,6 @@
 Function Get-CiFileHashes {
     [CmdletBinding()]
-    [OutputType([WDACConfig.AuthenticodePageHashes])]
+    [OutputType([WDACConfig.CodeIntegrityHashes])]
     param (
         [ArgumentCompleter([WDACConfig.ArgCompleter.AnyFilePathsPicker])]
         [Parameter(Mandatory = $true, Position = 0, ValueFromPipeline = $true, ValueFromPipelineByPropertyName = $true)]
@@ -8,19 +8,9 @@ Function Get-CiFileHashes {
 
         [Parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$SkipVersionCheck
     )
-    [System.Boolean]$Verbose = $PSBoundParameters.Verbose.IsPresent ? $true : $false
     [WDACConfig.LoggerInitializer]::Initialize($VerbosePreference, $DebugPreference, $Host)
-    . "$([WDACConfig.GlobalVars]::ModuleRootPath)\CoreExt\PSDefaultParameterValues.ps1"
-
-    # if -SkipVersionCheck wasn't passed, run the updater
-    if (-NOT $SkipVersionCheck) {
-        # Importing the required sub-module for update checking
-        Import-Module -FullyQualifiedName "$([WDACConfig.GlobalVars]::ModuleRootPath)\Shared\Update-Self.psm1" -Force
-
-        Update-Self -InvocationStatement $MyInvocation.Statement
-    }
-
-    return [WDACConfig.AuthPageHash]::GetCiFileHashes($FilePath)
+    if (!$SkipVersionCheck) { Update-WDACConfigPSModule -InvocationStatement $MyInvocation.Statement }
+    return [WDACConfig.CiFileHash]::GetCiFileHashes($FilePath)
     <#
 .SYNOPSIS
     Calculates the Authenticode hash and first page hash of the PEs with SHA1 and SHA256 algorithms.
@@ -35,7 +25,7 @@ Function Get-CiFileHashes {
 .INPUTS
     System.IO.FileInfo
 .OUTPUTS
-    [WDACConfig.AuthenticodePageHashes]
+    [WDACConfig.CodeIntegrityHashes]
 
     The output has the following properties
     - SHA1Page: The SHA1 hash of the first page of the PE file.

@@ -154,24 +154,17 @@ Function Remove-WDACConfig {
         [Parameter(Mandatory = $False)][System.Management.Automation.SwitchParameter]$SkipVersionCheck
     )
     Begin {
-        [System.Boolean]$Verbose = $PSBoundParameters.Verbose.IsPresent ? $true : $False
         [WDACConfig.LoggerInitializer]::Initialize($VerbosePreference, $DebugPreference, $Host)
-        . "$([WDACConfig.GlobalVars]::ModuleRootPath)\CoreExt\PSDefaultParameterValues.ps1"
 
-        Write-Verbose -Message 'Importing the required sub-modules'
-        Import-Module -Force -FullyQualifiedName @(
-            "$([WDACConfig.GlobalVars]::ModuleRootPath)\Shared\Update-Self.psm1",
-            "$([WDACConfig.GlobalVars]::ModuleRootPath)\Shared\Get-SignTool.psm1",
-            "$([WDACConfig.GlobalVars]::ModuleRootPath)\Shared\Remove-SupplementalSigners.psm1"
-        )
+        [WDACConfig.Logger]::Write('Importing the required sub-modules')
+        Import-Module -Force -FullyQualifiedName @("$([WDACConfig.GlobalVars]::ModuleRootPath)\Shared\Get-SignTool.psm1")
 
-        # if -SkipVersionCheck wasn't passed, run the updater
-        if (-NOT $SkipVersionCheck) { Update-Self -InvocationStatement $MyInvocation.Statement }
+        if (-NOT $SkipVersionCheck) { Update-WDACConfigPSModule -InvocationStatement $MyInvocation.Statement }
 
         [System.IO.DirectoryInfo]$StagingArea = [WDACConfig.StagingArea]::NewStagingArea('Remove-WDACConfig')
 
         #Region User-Configurations-Processing-Validation
-        Write-Verbose -Message 'Validating and processing user configurations'
+        [WDACConfig.Logger]::Write('Validating and processing user configurations')
 
         if ($PSCmdlet.ParameterSetName -eq 'Signed Base') {
 
@@ -240,7 +233,7 @@ Function Remove-WDACConfig {
             # If a signed policy is being removed
             if ($SignedBase) {
 
-                Write-Verbose -Message 'Looping over each selected policy XML file'
+                [WDACConfig.Logger]::Write('Looping over each selected policy XML file')
                 foreach ($PolicyPath in $PolicyPaths) {
 
                     # The total number of the main steps for the progress bar to render
@@ -250,12 +243,12 @@ Function Remove-WDACConfig {
                     $CurrentStep++
                     Write-Progress -Id 18 -Activity 'Parsing the XML Policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
-                    Write-Verbose -Message 'Converting the XML file to an XML object'
+                    [WDACConfig.Logger]::Write('Converting the XML file to an XML object')
                     [System.Xml.XmlDocument]$Xml = Get-Content -Path $PolicyPath
 
-                    Write-Verbose -Message 'Extracting the Policy ID from the XML object'
+                    [WDACConfig.Logger]::Write('Extracting the Policy ID from the XML object')
                     [System.String]$PolicyID = $Xml.SiPolicy.PolicyID
-                    Write-Verbose -Message "The policy ID of the currently processing xml file is $PolicyID"
+                    [WDACConfig.Logger]::Write("The policy ID of the currently processing xml file is $PolicyID")
 
                     # Extracting the policy name from the selected XML policy file
                     [System.String]$PolicyName = foreach ($Item in $Xml.SiPolicy.Settings.Setting) {
@@ -265,7 +258,7 @@ Function Remove-WDACConfig {
                     }
 
                     # Prevent users from accidentally attempting to remove policies that aren't even deployed on the system
-                    Write-Verbose -Message 'Making sure the selected XML policy is deployed on the system'
+                    [WDACConfig.Logger]::Write('Making sure the selected XML policy is deployed on the system')
 
                     Try {
                         [System.Guid[]]$CurrentPolicyIDs = foreach ($Item in (&'C:\Windows\System32\CiTool.exe' -lp -json | ConvertFrom-Json).Policies) {
@@ -285,8 +278,8 @@ Function Remove-WDACConfig {
                     $CurrentStep++
                     Write-Progress -Id 18 -Activity 'Processing the policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
-                    Write-Verbose -Message 'Making sure SupplementalPolicySigners do not exist in the XML policy'
-                    Remove-SupplementalSigners -Path $PolicyPath
+                    [WDACConfig.Logger]::Write('Making sure SupplementalPolicySigners do not exist in the XML policy')
+                    [WDACConfig.CiPolicyHandler]::RemoveSupplementalSigners($PolicyPath.FullName)
 
                     Set-CiRuleOptions -FilePath $PolicyPath -RulesToAdd 'Enabled:Unsigned System Integrity Policy'
 
@@ -308,7 +301,7 @@ Function Remove-WDACConfig {
                     # Prompt for confirmation before proceeding
                     if ($PSCmdlet.ShouldProcess('This PC', 'Deploying the signed policy')) {
 
-                        Write-Verbose -Message 'Deploying the newly signed CIP file'
+                        [WDACConfig.Logger]::Write('Deploying the newly signed CIP file')
                         $null = &'C:\Windows\System32\CiTool.exe' --update-policy $PolicyCIPPath -json
 
                         Write-ColorfulTextWDACConfig -Color Lavender -InputText "Policy with the following details has been Re-signed and Re-deployed in Unsigned mode.`nPlease restart your system."
@@ -338,7 +331,7 @@ Function Remove-WDACConfig {
                         }
                     })
 
-                Write-Verbose -Message "$($NameID.count) policy IDs have been gathered from the supplied policy names and are going to be removed from the system"
+                [WDACConfig.Logger]::Write("$($NameID.count) policy IDs have been gathered from the supplied policy names and are going to be removed from the system")
 
                 foreach ($ID in $NameID) {
                     $null = &'C:\Windows\System32\CiTool.exe' --remove-policy "{$ID}" -json

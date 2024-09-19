@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "WDACConfig (Package)": {
+      "commandName": "MsixPackage"
+    },
+    "WDACConfig (Unpackaged)": {
+      "commandName": "Project"
+    }
+  }
+}

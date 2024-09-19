@@ -13,7 +13,7 @@ namespace WDACConfig
         public string[] GetValidValues()
         {
             // Run CiTool.exe and capture the output
-            ProcessStartInfo startInfo = new ProcessStartInfo
+            ProcessStartInfo startInfo = new()
             {
                 FileName = @"C:\Windows\System32\CiTool.exe",
                 Arguments = "-lp -json",
@@ -22,35 +22,34 @@ namespace WDACConfig
                 CreateNoWindow = true
             };
 
-            using (Process process = new Process { StartInfo = startInfo })
+            using Process process = new()
+            { StartInfo = startInfo };
+            _ = process.Start();
+
+            string jsonOutput = process.StandardOutput.ReadToEnd();
+            process.WaitForExit();
+
+            // Parse the JSON output
+            JsonDocument jsonDoc = JsonDocument.Parse(jsonOutput);
+            JsonElement policiesElement = jsonDoc.RootElement.GetProperty("Policies");
+
+            List<string> validValues = [];
+
+            foreach (JsonElement policyElement in policiesElement.EnumerateArray())
             {
-                process.Start();
+                bool isSystemPolicy = policyElement.GetProperty("IsSystemPolicy").GetBoolean();
+                string? policyId = policyElement.GetProperty("PolicyID").GetString();
+                string? basePolicyId = policyElement.GetProperty("BasePolicyID").GetString();
+                string? friendlyName = policyElement.GetProperty("FriendlyName").GetString();
 
-                string jsonOutput = process.StandardOutput.ReadToEnd();
-                process.WaitForExit();
-
-                // Parse the JSON output
-                JsonDocument jsonDoc = JsonDocument.Parse(jsonOutput);
-                JsonElement policiesElement = jsonDoc.RootElement.GetProperty("Policies");
-
-                List<string> validValues = new List<string>();
-
-                foreach (JsonElement policyElement in policiesElement.EnumerateArray())
+                // Use ordinal, case-insensitive comparison for the policy IDs
+                if (!isSystemPolicy && string.Equals(policyId, basePolicyId, StringComparison.OrdinalIgnoreCase) && friendlyName != null)
                 {
-                    bool isSystemPolicy = policyElement.GetProperty("IsSystemPolicy").GetBoolean();
-                    string? policyId = policyElement.GetProperty("PolicyID").GetString();
-                    string? basePolicyId = policyElement.GetProperty("BasePolicyID").GetString();
-                    string? friendlyName = policyElement.GetProperty("FriendlyName").GetString();
-
-                    // Use ordinal, case-insensitive comparison for the policy IDs
-                    if (!isSystemPolicy && string.Equals(policyId, basePolicyId, StringComparison.OrdinalIgnoreCase) && friendlyName != null)
-                    {
-                        validValues.Add(friendlyName);
-                    }
+                    validValues.Add(friendlyName);
                 }
-
-                return validValues.ToArray();
             }
+
+            return validValues.ToArray();
         }
     }
 }

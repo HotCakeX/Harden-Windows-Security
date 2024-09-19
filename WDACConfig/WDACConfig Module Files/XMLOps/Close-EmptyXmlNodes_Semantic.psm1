@@ -40,7 +40,6 @@ Function Close-EmptyXmlNodes_Semantic {
         [Parameter(Mandatory = $true)][System.IO.FileInfo]$XmlFilePath
     )
     Begin {
-        . "$([WDACConfig.GlobalVars]::ModuleRootPath)\CoreExt\PSDefaultParameterValues.ps1"
 
         # Define the base node names that should not be removed even if empty
         [System.String[]]$BaseNodeNames = @('SiPolicy', 'Rules', 'EKUs', 'FileRules', 'Signers', 'SigningScenarios', 'UpdatePolicySigners', 'CiSigners', 'HvciOptions', 'BasePolicyID', 'PolicyID')

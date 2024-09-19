@@ -23,29 +23,29 @@ namespace WDACConfig
             schemaData.Load(Path.Combine(WDACConfig.GlobalVars.CISchemaPath));
 
             // Create a namespace manager to handle namespaces
-            XmlNamespaceManager nsManager = new XmlNamespaceManager(schemaData.NameTable);
+            XmlNamespaceManager nsManager = new(schemaData.NameTable);
             nsManager.AddNamespace("xs", "http://www.w3.org/2001/XMLSchema");
 
             // Define the XPath query to fetch enumeration values
             string xpathQuery = "//xs:simpleType[@name='OptionType']/xs:restriction/xs:enumeration/@value";
 
             // Create a new HashSet to store the valid policy rule options
-            HashSet<string> validOptions = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            HashSet<string> validOptions = new(StringComparer.OrdinalIgnoreCase);
 
             // Fetch enumeration values from the schema
-            XmlNodeList? optionNodes = schemaData.SelectNodes(xpathQuery, nsManager) ?? throw new Exception("No valid options found in the Code Integrity Schema.");
+            XmlNodeList? optionNodes = schemaData.SelectNodes(xpathQuery, nsManager) ?? throw new InvalidOperationException("No valid options found in the Code Integrity Schema.");
 
             foreach (XmlNode node in optionNodes)
             {
                 if (node.Value != null)
                 {
-                    validOptions.Add(node.Value);
+                    _ = validOptions.Add(node.Value);
                 }
             }
 
             if (WDACConfig.GlobalVars.ModuleRootPath == null)
             {
-                throw new Exception("ModuleRootPath is null!");
+                throw new InvalidOperationException("ModuleRootPath is null!");
             }
 
             // Construct the full path to PolicyRuleOptions.Json
@@ -55,19 +55,14 @@ namespace WDACConfig
             string jsonContent = File.ReadAllText(jsonFilePath);
 
             // Deserialize the JSON content
-            Dictionary<string, string>? intel = System.Text.Json.JsonSerializer.Deserialize<Dictionary<string, string>>(jsonContent);
-
-            if (intel == null)
-            {
-                throw new Exception("The PolicyRuleOptions.Json file did not have valid JSON content to be deserialized.");
-            }
+            Dictionary<string, string>? intel = System.Text.Json.JsonSerializer.Deserialize<Dictionary<string, string>>(jsonContent) ?? throw new InvalidOperationException("The PolicyRuleOptions.Json file did not have valid JSON content to be deserialized.");
 
             // Perform validation
             foreach (string key in intel.Values)
             {
                 if (!validOptions.Contains(key))
                 {
-                    throw new Exception($"Invalid Policy Rule Option detected that is not part of the Code Integrity Schema: {key}");
+                    throw new InvalidOperationException($"Invalid Policy Rule Option detected that is not part of the Code Integrity Schema: {key}");
                 }
             }
 

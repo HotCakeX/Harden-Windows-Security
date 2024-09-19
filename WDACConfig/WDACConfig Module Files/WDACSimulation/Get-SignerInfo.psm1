@@ -16,8 +16,6 @@ Function Get-SignerInfo {
         [System.Xml.XmlDocument]$XML
     )
     begin {
-        [System.Boolean]$Verbose = $PSBoundParameters.Verbose.IsPresent ? $true : $false
-
         # Get User Mode Signers IDs
         $AllowedUMCISigners = [System.Collections.Generic.HashSet[System.String]]@(($XML.SiPolicy.SigningScenarios.SigningScenario.Where({ $_.value -eq '12' })).ProductSigners.AllowedSigners.AllowedSigner.SignerId)
         $DeniedUMCISigners = [System.Collections.Generic.HashSet[System.String]]@(($XML.SiPolicy.SigningScenarios.SigningScenario.Where({ $_.value -eq '12' })).ProductSigners.DeniedSigners.DeniedSigner.SignerId)

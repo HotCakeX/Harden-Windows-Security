@@ -19,9 +19,6 @@ Function Get-CertificateDetails {
         [Parameter(Mandatory = $true)][WDACConfig.AllCertificatesGrabber.AllFileSigners[]]$CompleteSignatureResult
     )
     Begin {
-        [System.Boolean]$Verbose = $PSBoundParameters.Verbose.IsPresent ? $true : $false
-        . "$([WDACConfig.GlobalVars]::ModuleRootPath)\CoreExt\PSDefaultParameterValues.ps1"
-
         $FinalObject = New-Object -TypeName System.Collections.Generic.List[WDACConfig.ChainPackage]
     }
 

@@ -1,6 +1,4 @@
 ﻿using Microsoft.UI.Xaml;
-using System.Diagnostics;
-using System;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -40,14 +38,14 @@ namespace WDACConfig
 
 
 
-             /*
-                private void App_UnhandledException(object sender, Microsoft.UI.Xaml.UnhandledExceptionEventArgs e)
-                {
-                    Console.WriteLine($"Unhandled exception: {e.Exception.Message}");
-                    e.Handled = true; // Prevent the app from crashing
-                }
-            }
-            */
+        /*
+           private void App_UnhandledException(object sender, Microsoft.UI.Xaml.UnhandledExceptionEventArgs e)
+           {
+               Console.WriteLine($"Unhandled exception: {e.Exception.Message}");
+               e.Handled = true; // Prevent the app from crashing
+           }
+       }
+       */
 
 
     }

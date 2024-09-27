@@ -67,7 +67,7 @@ Function Set-CommonWDACConfig {
                     throw 'The selected policy xml file is Unsigned, Please select a Signed policy.'
                 }
             }, ErrorMessage = 'The selected policy xml file is Unsigned, Please select a Signed policy.')]
-        [parameter(Mandatory = $false)][System.IO.FileInfo]$SignedPolicyPath        
+        [parameter(Mandatory = $false)][System.IO.FileInfo]$SignedPolicyPath
     )
     [WDACConfig.LoggerInitializer]::Initialize($VerbosePreference, $DebugPreference, $Host)
     [WDACConfig.UserConfiguration]::Set($SignedPolicyPath, $UnsignedPolicyPath, $SignToolPath, $CertCN, $CertPath, $null, $null, $null, $null)

@@ -125,7 +125,7 @@ Function Get-SignTool {
                 [WDACConfig.Logger]::Write('SignTool executable was found and verified successfully.')
 
                 [WDACConfig.Logger]::Write('Setting the SignTool path in the common WDAC user configurations')
-                $null = Set-CommonWDACConfig -SignToolPath $SignToolExePathOutput
+                $null = [WDACConfig.UserConfiguration]::Set($null, $null, $SignToolExePathOutput, $null, $null, $null, $null, $null , $null)
 
                 return $SignToolExePathOutput
             }

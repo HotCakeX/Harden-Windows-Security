@@ -22,13 +22,7 @@ Function ConvertTo-WDACPolicy {
         [ArgumentCompleter({
                 param($CommandName, $ParameterName, $WordToComplete, $CommandAst, $fakeBoundParameters)
 
-                [System.String[]]$PolicyGUIDs = foreach ($Policy in (&'C:\Windows\System32\CiTool.exe' -lp -json | ConvertFrom-Json).Policies) {
-                    if ($Policy.IsSystemPolicy -ne 'True') {
-                        if ($Policy.PolicyID -eq $Policy.BasePolicyID) {
-                            $Policy.PolicyID
-                        }
-                    }
-                }
+                [System.String[]]$PolicyGUIDs = [WDACConfig.CiToolHelper]::GetPolicies($false, $true, $false).PolicyID
 
                 $Existing = $CommandAst.FindAll({
                         $args[0] -is [System.Management.Automation.Language.StringConstantExpressionAst]
@@ -56,11 +50,7 @@ Function ConvertTo-WDACPolicy {
         [ArgumentCompleter({
                 param($CommandName, $ParameterName, $WordToComplete, $CommandAst, $FakeBoundParameters)
 
-                [System.String[]]$Policies = foreach ($Policy in (&'C:\Windows\System32\CiTool.exe' -lp -json | ConvertFrom-Json).Policies) {
-                    if ($Policy.FriendlyName -and ($Policy.PolicyID -eq $Policy.BasePolicyID)) {
-                        $Policy.FriendlyName
-                    }
-                }
+                [System.String[]]$Policies = [WDACConfig.CiToolHelper]::GetPolicies($true, $true, $false).FriendlyName
 
                 $Existing = $CommandAst.FindAll({
                         $args[0] -is [System.Management.Automation.Language.StringConstantExpressionAst]
@@ -549,8 +539,7 @@ Function ConvertTo-WDACPolicy {
                                 $null = ConvertFrom-CIPolicy -XmlFilePath $WDACPolicyPath -BinaryFilePath (Join-Path -Path $StagingArea -ChildPath "$SupplementalPolicyID.cip")
 
                                 [WDACConfig.Logger]::Write('ConvertTo-WDACPolicy: Deploying the Supplemental policy')
-
-                                $null = &'C:\Windows\System32\CiTool.exe' --update-policy (Join-Path -Path $StagingArea -ChildPath "$SupplementalPolicyID.cip") -json
+                                [WDACConfig.CiToolHelper]::UpdatePolicy((Join-Path -Path $StagingArea -ChildPath "$SupplementalPolicyID.cip"))
                             }
                         }
                         { $null -ne $BasePolicyGUID } {
@@ -570,8 +559,7 @@ Function ConvertTo-WDACPolicy {
                                 $null = ConvertFrom-CIPolicy -XmlFilePath $WDACPolicyPath -BinaryFilePath (Join-Path -Path $StagingArea -ChildPath "$SupplementalPolicyID.cip")
 
                                 [WDACConfig.Logger]::Write('ConvertTo-WDACPolicy: Deploying the Supplemental policy')
-
-                                $null = &'C:\Windows\System32\CiTool.exe' --update-policy (Join-Path -Path $StagingArea -ChildPath "$SupplementalPolicyID.cip") -json
+                                [WDACConfig.CiToolHelper]::UpdatePolicy((Join-Path -Path $StagingArea -ChildPath "$SupplementalPolicyID.cip"))
                             }
                         }
                         { $null -ne $PolicyToAddLogsTo } {
@@ -600,8 +588,7 @@ Function ConvertTo-WDACPolicy {
                                 $null = ConvertFrom-CIPolicy -XmlFilePath $PolicyToAddLogsTo -BinaryFilePath (Join-Path -Path $StagingArea -ChildPath "$($InputXMLObj.SiPolicy.PolicyID).cip")
 
                                 [WDACConfig.Logger]::Write('ConvertTo-WDACPolicy: Deploying the policy that user selected to add the logs to')
-
-                                $null = &'C:\Windows\System32\CiTool.exe' --update-policy (Join-Path -Path $StagingArea -ChildPath "$($InputXMLObj.SiPolicy.PolicyID).cip") -json
+                                [WDACConfig.CiToolHelper]::UpdatePolicy((Join-Path -Path $StagingArea -ChildPath "$($InputXMLObj.SiPolicy.PolicyID).cip"))
                             }
                         }
                     }
@@ -780,8 +767,7 @@ Function ConvertTo-WDACPolicy {
                                 $null = ConvertFrom-CIPolicy -XmlFilePath $OutputPolicyPathMDEAH -BinaryFilePath (Join-Path -Path $StagingArea -ChildPath "$SupplementalPolicyID.cip")
 
                                 [WDACConfig.Logger]::Write('ConvertTo-WDACPolicy: Deploying the Supplemental policy')
-
-                                $null = &'C:\Windows\System32\CiTool.exe' --update-policy (Join-Path -Path $StagingArea -ChildPath "$SupplementalPolicyID.cip") -json
+                                [WDACConfig.CiToolHelper]::UpdatePolicy((Join-Path -Path $StagingArea -ChildPath "$SupplementalPolicyID.cip"))
                             }
                         }
                         { $null -ne $BasePolicyGUID } {
@@ -801,8 +787,7 @@ Function ConvertTo-WDACPolicy {
                                 $null = ConvertFrom-CIPolicy -XmlFilePath $OutputPolicyPathMDEAH -BinaryFilePath (Join-Path -Path $StagingArea -ChildPath "$SupplementalPolicyID.cip")
 
                                 [WDACConfig.Logger]::Write('ConvertTo-WDACPolicy: Deploying the Supplemental policy')
-
-                                $null = &'C:\Windows\System32\CiTool.exe' --update-policy (Join-Path -Path $StagingArea -ChildPath "$SupplementalPolicyID.cip") -json
+                                [WDACConfig.CiToolHelper]::UpdatePolicy((Join-Path -Path $StagingArea -ChildPath "$SupplementalPolicyID.cip"))
                             }
                         }
                         { $null -ne $PolicyToAddLogsTo } {
@@ -831,8 +816,7 @@ Function ConvertTo-WDACPolicy {
                                 $null = ConvertFrom-CIPolicy -XmlFilePath $PolicyToAddLogsTo -BinaryFilePath (Join-Path -Path $StagingArea -ChildPath "$($InputXMLObj.SiPolicy.PolicyID).cip")
 
                                 [WDACConfig.Logger]::Write('ConvertTo-WDACPolicy: Deploying the policy that user selected to add the MDE AH logs to')
-
-                                $null = &'C:\Windows\System32\CiTool.exe' --update-policy (Join-Path -Path $StagingArea -ChildPath "$($InputXMLObj.SiPolicy.PolicyID).cip") -json
+                                [WDACConfig.CiToolHelper]::UpdatePolicy((Join-Path -Path $StagingArea -ChildPath "$($InputXMLObj.SiPolicy.PolicyID).cip"))
                             }
                         }
                         Default {
@@ -980,8 +964,7 @@ Function ConvertTo-WDACPolicy {
                                 $null = ConvertFrom-CIPolicy -XmlFilePath $OutputPolicyPathEVTX -BinaryFilePath (Join-Path -Path $StagingArea -ChildPath "$SupplementalPolicyID.cip")
 
                                 [WDACConfig.Logger]::Write('ConvertTo-WDACPolicy: Deploying the Supplemental policy')
-
-                                $null = &'C:\Windows\System32\CiTool.exe' --update-policy (Join-Path -Path $StagingArea -ChildPath "$SupplementalPolicyID.cip") -json
+                                [WDACConfig.CiToolHelper]::UpdatePolicy((Join-Path -Path $StagingArea -ChildPath "$SupplementalPolicyID.cip"))
                             }
                         }
                         { $null -ne $BasePolicyGUID } {
@@ -1001,8 +984,7 @@ Function ConvertTo-WDACPolicy {
                                 $null = ConvertFrom-CIPolicy -XmlFilePath $OutputPolicyPathEVTX -BinaryFilePath (Join-Path -Path $StagingArea -ChildPath "$SupplementalPolicyID.cip")
 
                                 [WDACConfig.Logger]::Write('ConvertTo-WDACPolicy: Deploying the Supplemental policy')
-
-                                $null = &'C:\Windows\System32\CiTool.exe' --update-policy (Join-Path -Path $StagingArea -ChildPath "$SupplementalPolicyID.cip") -json
+                                [WDACConfig.CiToolHelper]::UpdatePolicy((Join-Path -Path $StagingArea -ChildPath "$SupplementalPolicyID.cip"))
                             }
                         }
                         { $null -ne $PolicyToAddLogsTo } {
@@ -1031,8 +1013,7 @@ Function ConvertTo-WDACPolicy {
                                 $null = ConvertFrom-CIPolicy -XmlFilePath $PolicyToAddLogsTo -BinaryFilePath (Join-Path -Path $StagingArea -ChildPath "$($InputXMLObj.SiPolicy.PolicyID).cip")
 
                                 [WDACConfig.Logger]::Write('ConvertTo-WDACPolicy: Deploying the policy that user selected to add the Evtx logs to')
-
-                                $null = &'C:\Windows\System32\CiTool.exe' --update-policy (Join-Path -Path $StagingArea -ChildPath "$($InputXMLObj.SiPolicy.PolicyID).cip") -json
+                                [WDACConfig.CiToolHelper]::UpdatePolicy((Join-Path -Path $StagingArea -ChildPath "$($InputXMLObj.SiPolicy.PolicyID).cip"))
                             }
                         }
                         Default {

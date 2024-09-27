@@ -48,8 +48,8 @@ Function Remove-WDACConfig {
 
                 # Get a list of policies using the CiTool, excluding system policies and policies that aren't on disk.
                 # by adding "{ $_.FriendlyName }" we make sure the auto completion works when at least one of the policies doesn't have a friendly name
-                $Policies = foreach ($Item in (&'C:\Windows\System32\CiTool.exe' -lp -json | ConvertFrom-Json).Policies) {
-                    if (($Item.IsOnDisk -eq 'True') -and ($Item.IsSystemPolicy -ne 'True') -and $Item.FriendlyName) {
+                $Policies = foreach ($Item in [WDACConfig.CiToolHelper]::GetPolicies($false, $true, $true)) {
+                    if (($Item.IsOnDisk -eq 'True') -and $Item.FriendlyName) {
                         $Item
                     }
                 }
@@ -106,8 +106,8 @@ Function Remove-WDACConfig {
                 param($CommandName, $ParameterName, $WordToComplete, $CommandAst, $FakeBoundParameters)
 
                 # Get a list of policies using the CiTool, excluding system policies and policies that aren't on disk.
-                $Policies = foreach ($Item in (&'C:\Windows\System32\CiTool.exe' -lp -json | ConvertFrom-Json).Policies) {
-                    if (($Item.IsOnDisk -eq 'True') -and ($Item.IsSystemPolicy -ne 'True')) {
+                $Policies = foreach ($Item in [WDACConfig.CiToolHelper]::GetPolicies($false, $true, $true)) {
+                    if ($Item.IsOnDisk -eq 'True') {
                         $Item
                     }
                 }
@@ -173,13 +173,13 @@ Function Remove-WDACConfig {
                 [System.IO.FileInfo]$SignToolPathFinal = Get-SignTool -SignToolExePathInput $SignToolPath
             } # If it is null, then Get-SignTool will behave the same as if it was called without any arguments.
             else {
-                [System.IO.FileInfo]$SignToolPathFinal = Get-SignTool -SignToolExePathInput (Get-CommonWDACConfig -SignToolPath)
+                [System.IO.FileInfo]$SignToolPathFinal = Get-SignTool -SignToolExePathInput ([WDACConfig.UserConfiguration]::Get().SignToolCustomPath)
             }
 
             # If CertCN was not provided by user, check if a valid value exists in user configs, if so, use it, otherwise throw an error
             if (!$CertCN) {
-                if ([WDACConfig.CertCNz]::new().GetValidValues() -contains (Get-CommonWDACConfig -CertCN)) {
-                    [System.String]$CertCN = Get-CommonWDACConfig -CertCN
+                if ([WDACConfig.CertCNz]::new().GetValidValues() -contains ([WDACConfig.UserConfiguration]::Get().CertificateCommonName)) {
+                    [System.String]$CertCN = [WDACConfig.UserConfiguration]::Get().CertificateCommonName
                 }
                 else {
                     throw 'CertCN parameter cannot be empty and no valid user configuration was found for it.'
@@ -261,7 +261,7 @@ Function Remove-WDACConfig {
                     [WDACConfig.Logger]::Write('Making sure the selected XML policy is deployed on the system')
 
                     Try {
-                        [System.Guid[]]$CurrentPolicyIDs = foreach ($Item in (&'C:\Windows\System32\CiTool.exe' -lp -json | ConvertFrom-Json).Policies) {
+                        [System.Guid[]]$CurrentPolicyIDs = foreach ($Item in [WDACConfig.CiToolHelper]::GetPolicies($false, $true, $true)) {
                             if ($Item.IsSystemPolicy -ne 'True') {
                                 "{$($Item.PolicyID)}"
                             }
@@ -291,7 +291,7 @@ Function Remove-WDACConfig {
                     $CurrentStep++
                     Write-Progress -Id 18 -Activity 'Signing the policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
-                    [WDACConfig.CodeIntegritySigner]::InvokeCiSigning($PolicyCIPPath, $SignToolPathFinal, $CertCN)
+                    [WDACConfig.SignToolHelper]::Sign($PolicyCIPPath, $SignToolPathFinal, $CertCN)
 
                     # Fixing the extension name of the newly signed CIP file
                     Move-Item -Path (Join-Path -Path $StagingArea -ChildPath "$PolicyID.cip.p7") -Destination $PolicyCIPPath -Force
@@ -302,7 +302,7 @@ Function Remove-WDACConfig {
                     if ($PSCmdlet.ShouldProcess('This PC', 'Deploying the signed policy')) {
 
                         [WDACConfig.Logger]::Write('Deploying the newly signed CIP file')
-                        $null = &'C:\Windows\System32\CiTool.exe' --update-policy $PolicyCIPPath -json
+                        [WDACConfig.CiToolHelper]::UpdatePolicy($PolicyCIPPath)
 
                         Write-ColorfulTextWDACConfig -Color Lavender -InputText "Policy with the following details has been Re-signed and Re-deployed in Unsigned mode.`nPlease restart your system."
                         Write-ColorfulTextWDACConfig -Color MintGreen -InputText "PolicyName = $PolicyName"
@@ -317,14 +317,14 @@ Function Remove-WDACConfig {
 
                 # If IDs were supplied by user
                 foreach ($ID in $PolicyIDs ) {
-                    $null = &'C:\Windows\System32\CiTool.exe' --remove-policy "{$ID}" -json
+                    [WDACConfig.CiToolHelper]::RemovePolicy($ID)
                     Write-ColorfulTextWDACConfig -Color Lavender -InputText "Policy with the ID $ID has been successfully removed."
                 }
 
                 # If names were supplied by user
                 # HashSet to store Unique Policy IDs based on the input name, this will take care of the situations where multiple policies with the same name are deployed
                 $NameID = [System.Collections.Generic.HashSet[System.String]]@(foreach ($PolicyName in $PolicyNames) {
-                        foreach ($Item in (&'C:\Windows\System32\CiTool.exe' -lp -json | ConvertFrom-Json).Policies ) {
+                        foreach ($Item in [WDACConfig.CiToolHelper]::GetPolicies($true, $true, $true)) {
                             if (($Item.IsOnDisk -eq 'True') -and ($Item.FriendlyName -eq $PolicyName)) {
                                 $Item.PolicyID
                             }
@@ -334,7 +334,7 @@ Function Remove-WDACConfig {
                 [WDACConfig.Logger]::Write("$($NameID.count) policy IDs have been gathered from the supplied policy names and are going to be removed from the system")
 
                 foreach ($ID in $NameID) {
-                    $null = &'C:\Windows\System32\CiTool.exe' --remove-policy "{$ID}" -json
+                    [WDACConfig.CiToolHelper]::RemovePolicy($ID)
                     Write-ColorfulTextWDACConfig -Color Lavender -InputText "Policy with the ID $ID has been successfully removed."
                 }
             }
@@ -356,7 +356,7 @@ Function Remove-WDACConfig {
 .DESCRIPTION
     Using official Microsoft methods, Removes Signed and unsigned deployed WDAC policies (Windows Defender Application Control)
 .COMPONENT
-    Windows Defender Application Control, ConfigCI PowerShell module
+    Windows Defender Application Control
 .FUNCTIONALITY
     Using official Microsoft methods, Removes Signed and unsigned deployed WDAC policies (Windows Defender Application Control)
 .PARAMETER PolicyNames

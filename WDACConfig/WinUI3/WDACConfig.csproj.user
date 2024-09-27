@@ -25,6 +25,9 @@
     <None Update="Package.appxmanifest">
       <SubType>Designer</SubType>
     </None>
+    <Page Update="Pages\ViewCurrentPolicies.xaml">
+      <SubType>Designer</SubType>
+    </Page>
     <Page Update="Pages\GetSecurePolicySettings.xaml">
       <SubType>Designer</SubType>
     </Page>

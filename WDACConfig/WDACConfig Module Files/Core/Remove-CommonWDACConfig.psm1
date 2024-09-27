@@ -1,6 +1,5 @@
 Function Remove-CommonWDACConfig {
     [CmdletBinding(
-        SupportsShouldProcess = $true,
         PositionalBinding = $false,
         ConfirmImpact = 'High'
     )]
@@ -13,175 +12,11 @@ Function Remove-CommonWDACConfig {
         [parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$SignedPolicyPath,
         [parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$StrictKernelPolicyGUID,
         [parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$StrictKernelNoFlightRootsPolicyGUID,
-        [parameter(Mandatory = $false, DontShow = $true)][System.Management.Automation.SwitchParameter]$LastUpdateCheck,
         [parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$StrictKernelModePolicyTimeOfDeployment,
         [Parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$Force
     )
-    begin {
-        if ($(Get-PSCallStack).Count -le 2) {
-            [WDACConfig.LoggerInitializer]::Initialize($VerbosePreference, $DebugPreference, $Host)
-        }
-        else {
-            [WDACConfig.LoggerInitializer]::Initialize($null, $null, $Host)
-        }
-        # Create User configuration folder if it doesn't already exist
-        if (-NOT ([System.IO.Directory]::Exists((Split-Path -Path ([WDACConfig.GlobalVars]::UserConfigJson) -Parent)))) {
-            $null = New-Item -ItemType Directory -Path (Split-Path -Path ([WDACConfig.GlobalVars]::UserConfigJson) -Parent) -Force
-            [WDACConfig.Logger]::Write('The WDACConfig folder in Program Files has been created because it did not exist.')
-        }
-
-        # Create User configuration file if it doesn't already exist
-        if (-NOT ([System.IO.File]::Exists(([WDACConfig.GlobalVars]::UserConfigJson)))) {
-            $null = New-Item -ItemType File -Path (Split-Path -Path ([WDACConfig.GlobalVars]::UserConfigJson) -Parent) -Name (Split-Path -Path ([WDACConfig.GlobalVars]::UserConfigJson) -Leaf) -Force
-            [WDACConfig.Logger]::Write('The UserConfigurations.json file has been created because it did not exist.')
-        }
-
-        # Detecting if Confirm switch is used to bypass the confirmation prompts
-        if ($Force -and -Not $Confirm) {
-            $ConfirmPreference = 'None'
-        }
-
-        # Delete the entire User Configs if a more specific parameter wasn't used
-        # This method is better than $PSBoundParameters since it also contains common parameters
-        if (!$CertCN -And !$CertPath -And !$SignToolPath -And !$UnsignedPolicyPath -And !$SignedPolicyPath -And !$StrictKernelPolicyGUID -And !$StrictKernelNoFlightRootsPolicyGUID -And !$LastUpdateCheck -And !$StrictKernelModePolicyTimeOfDeployment) {
-
-            # Prompt for confirmation before deleting the entire User Configurations
-            if ($PSCmdlet.ShouldProcess('This PC', 'Delete the entire User Configurations for WDACConfig module')) {
-
-                Remove-Item -Path ([WDACConfig.GlobalVars]::UserConfigJson) -Force
-                [WDACConfig.Logger]::Write('User Configurations for WDACConfig module have been deleted.')
-            }
-
-            # set a boolean value that returns from the Process and End blocks as well
-            [System.Boolean]$ReturnAndDone = $true
-            # Exit the begin block
-            Return
-        }
-
-        # Read the current user configurations
-        [System.Object[]]$CurrentUserConfigurations = Get-Content -Path ([WDACConfig.GlobalVars]::UserConfigJson)
-
-        # If the file exists but is corrupted and has bad values, rewrite it
-        try {
-            $CurrentUserConfigurations = $CurrentUserConfigurations | ConvertFrom-Json
-        }
-        catch {
-            Set-Content -Path ([WDACConfig.GlobalVars]::UserConfigJson) -Value ''
-        }
-
-        # A hashtable to hold the User configurations
-        [System.Collections.Hashtable]$UserConfigurationsObject = @{
-            SignedPolicyPath                       = ''
-            UnsignedPolicyPath                     = ''
-            SignToolCustomPath                     = ''
-            CertificateCommonName                  = ''
-            CertificatePath                        = ''
-            StrictKernelPolicyGUID                 = ''
-            StrictKernelNoFlightRootsPolicyGUID    = ''
-            LastUpdateCheck                        = ''
-            StrictKernelModePolicyTimeOfDeployment = ''
-        }
-    }
-    process {
-        # Exit the process block
-        if ($true -eq $ReturnAndDone) { return }
-
-        if ($SignedPolicyPath) {
-            [WDACConfig.Logger]::Write('Removing the SignedPolicyPath')
-            $UserConfigurationsObject.SignedPolicyPath = ''
-        }
-        else {
-            $UserConfigurationsObject.SignedPolicyPath = $CurrentUserConfigurations.SignedPolicyPath
-        }
-
-        if ($UnsignedPolicyPath) {
-            [WDACConfig.Logger]::Write('Removing the UnsignedPolicyPath')
-            $UserConfigurationsObject.UnsignedPolicyPath = ''
-        }
-        else {
-            $UserConfigurationsObject.UnsignedPolicyPath = $CurrentUserConfigurations.UnsignedPolicyPath
-        }
-
-        if ($SignToolPath) {
-            [WDACConfig.Logger]::Write('Removing the SignToolPath')
-            $UserConfigurationsObject.SignToolCustomPath = ''
-        }
-        else {
-            $UserConfigurationsObject.SignToolCustomPath = $CurrentUserConfigurations.SignToolCustomPath
-        }
-
-        if ($CertPath) {
-            [WDACConfig.Logger]::Write('Removing the CertPath')
-            $UserConfigurationsObject.CertificatePath = ''
-        }
-        else {
-            $UserConfigurationsObject.CertificatePath = $CurrentUserConfigurations.CertificatePath
-        }
-
-        if ($CertCN) {
-            [WDACConfig.Logger]::Write('Removing the CertCN')
-            $UserConfigurationsObject.CertificateCommonName = ''
-        }
-        else {
-            $UserConfigurationsObject.CertificateCommonName = $CurrentUserConfigurations.CertificateCommonName
-        }
-
-        if ($StrictKernelPolicyGUID) {
-            [WDACConfig.Logger]::Write('Removing the StrictKernelPolicyGUID')
-            $UserConfigurationsObject.StrictKernelPolicyGUID = ''
-        }
-        else {
-            $UserConfigurationsObject.StrictKernelPolicyGUID = $CurrentUserConfigurations.StrictKernelPolicyGUID
-        }
-
-        if ($StrictKernelNoFlightRootsPolicyGUID) {
-            [WDACConfig.Logger]::Write('Removing the StrictKernelNoFlightRootsPolicyGUID')
-            $UserConfigurationsObject.StrictKernelNoFlightRootsPolicyGUID = ''
-        }
-        else {
-            $UserConfigurationsObject.StrictKernelNoFlightRootsPolicyGUID = $CurrentUserConfigurations.StrictKernelNoFlightRootsPolicyGUID
-        }
-
-        if ($LastUpdateCheck) {
-            [WDACConfig.Logger]::Write('Removing the LastUpdateCheck')
-            $UserConfigurationsObject.LastUpdateCheck = ''
-        }
-        else {
-            $UserConfigurationsObject.LastUpdateCheck = $CurrentUserConfigurations.LastUpdateCheck
-        }
-
-        if ($StrictKernelModePolicyTimeOfDeployment) {
-            [WDACConfig.Logger]::Write('Removing the Strict Kernel-Mode Policy Time Of Deployment')
-            $UserConfigurationsObject.StrictKernelModePolicyTimeOfDeployment = ''
-        }
-        else {
-            $UserConfigurationsObject.StrictKernelModePolicyTimeOfDeployment = $CurrentUserConfigurations.StrictKernelModePolicyTimeOfDeployment
-        }
-    }
-    end {
-        # Exit the end block
-        if ($true -eq $ReturnAndDone) { return }
-
-        $UserConfigurationsJSON = $UserConfigurationsObject | ConvertTo-Json
-
-        try {
-            [WDACConfig.Logger]::Write('Validating the JSON against the schema')
-            [System.Boolean]$IsValid = Test-Json -Json $UserConfigurationsJSON -SchemaFile "$([WDACConfig.GlobalVars]::ModuleRootPath)\Resources\User Configurations\Schema.json"
-        }
-        catch {
-            Write-Warning -Message "$_`nclearing it."
-            Set-Content -Path ([WDACConfig.GlobalVars]::UserConfigJson) -Value '' -Force
-        }
-
-        if ($IsValid) {
-            # Update the User Configurations file
-            [WDACConfig.Logger]::Write('Saving the changes')
-            $UserConfigurationsJSON | Set-Content -Path ([WDACConfig.GlobalVars]::UserConfigJson) -Force
-        }
-        else {
-            Throw 'The User Configurations file is not valid.'
-        }
-    }
+    [WDACConfig.LoggerInitializer]::Initialize($VerbosePreference, $DebugPreference, $Host)
+    [WDACConfig.UserConfiguration]::Remove($SignedPolicyPath, $UnsignedPolicyPath, $SignToolPath, $CertCN, $CertPath, $StrictKernelPolicyGUID, $StrictKernelNoFlightRootsPolicyGUID, $LastUpdateCheck, $StrictKernelModePolicyTimeOfDeployment)
     <#
 .SYNOPSIS
     Removes common values for parameters used by WDACConfig module
@@ -190,7 +25,7 @@ Function Remove-CommonWDACConfig {
 .DESCRIPTION
     Removes common values for parameters used by WDACConfig module from the User Configurations JSON file. If you don't use it with any parameters, then all User Configs will be deleted.
 .COMPONENT
-    Windows Defender Application Control, ConfigCI PowerShell module, WDACConfig module
+    Windows Defender Application Control, WDACConfig module
 .FUNCTIONALITY
     Removes common values for parameters used by WDACConfig module from the User Configurations JSON file. If you don't use it with any parameters, then all User Configs will be deleted.
 .PARAMETER SignedPolicyPath
@@ -207,8 +42,6 @@ Function Remove-CommonWDACConfig {
     Removes the StrictKernelPolicyGUID from User Configs
 .PARAMETER StrictKernelNoFlightRootsPolicyGUID
     Removes the StrictKernelNoFlightRootsPolicyGUID from User Configs
-.PARAMETER LastUpdateCheck
-    Using DontShow for this parameter which prevents common parameters from being displayed too
 .PARAMETER StrictKernelModePolicyTimeOfDeployment
     Removes the StrictKernelModePolicyTimeOfDeployment from User Configs
 .INPUTS

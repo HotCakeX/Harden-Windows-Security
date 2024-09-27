@@ -6,7 +6,7 @@ using System.IO;
 
 namespace WDACConfig
 {
-    public static class CodeIntegritySigner
+    public static class SignToolHelper
     {
         /// <summary>
         /// Invokes SignTool.exe to sign a Code Integrity Policy file.
@@ -16,7 +16,7 @@ namespace WDACConfig
         /// <param name="certCN"></param>
         /// <exception cref="ArgumentException"></exception>
         /// <exception cref="InvalidOperationException"></exception>
-        public static void InvokeCiSigning(FileInfo ciPath, FileInfo signToolPathFinal, string certCN)
+        public static void Sign(FileInfo ciPath, FileInfo signToolPathFinal, string certCN)
         {
             // Validate inputs
             ArgumentNullException.ThrowIfNull(ciPath);

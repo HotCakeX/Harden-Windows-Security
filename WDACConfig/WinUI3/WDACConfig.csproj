@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <!-- The following are the details for WDACConfig, a Self-Contained Trimmed MSIX Packaged App -->
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
@@ -22,6 +22,7 @@
     <None Remove="Pages\GitHubDocumentation.xaml" />
     <None Remove="Pages\MicrosoftDocumentation.xaml" />
     <None Remove="Pages\Settings.xaml" />
+    <None Remove="Pages\ViewCurrentPolicies.xaml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Assets\SplashScreen.scale-200.png" />
@@ -43,13 +44,19 @@
     <ProjectCapability Include="Msix" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="Microsoft.Windows.CsWin32" Version="0.3.106">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="Microsoft.Windows.CsWinRT" Version="2.1.3" />
     <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.26100.1" />
     <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.6.240829007" />
     <PackageReference Include="System.Diagnostics.EventLog" Version="9.0.0-rc.1.24431.7" />
     <PackageReference Include="System.Management" Version="9.0.0-rc.1.24431.7" />
     <PackageReference Include="System.Management.Automation" Version="7.5.0-preview.4" />
+    <PackageReference Include="System.Memory" Version="4.5.5" />
     <PackageReference Include="System.Security.Cryptography.Pkcs" Version="9.0.0-rc.1.24431.7" />
+    <PackageReference Include="System.Text.Json" Version="9.0.0-rc.1.24431.7" />
   </ItemGroup>
   <ItemGroup>
     <Page Update="Pages\MicrosoftDocumentation.xaml">
@@ -88,8 +95,12 @@
   <PropertyGroup>
     <PublishReadyToRun Condition="'$(Configuration)' == 'Debug'">False</PublishReadyToRun>
     <PublishReadyToRun Condition="'$(Configuration)' != 'Debug'">True</PublishReadyToRun>
-    <PublishTrimmed Condition="'$(Configuration)' == 'Debug'">True</PublishTrimmed>
-    <PublishTrimmed Condition="'$(Configuration)' != 'Debug'">True</PublishTrimmed>
+
+   <!-- <PublishTrimmed Condition="'$(Configuration)' == 'Debug'">True</PublishTrimmed> -->
+   <!-- <PublishTrimmed Condition="'$(Configuration)' != 'Debug'">True</PublishTrimmed> -->
+   <!-- Disabling trimming temporarily -->
+    <PublishTrimmed>false</PublishTrimmed>
+
     <SupportedOSPlatformVersion>10.0.22621.0</SupportedOSPlatformVersion>
     <ImplicitUsings>disable</ImplicitUsings>
     <Description>An application that simplifies management of Application Control in Windows.</Description>
@@ -97,7 +108,7 @@
     <RepositoryUrl>https://github.com/HotCakeX/Harden-Windows-Security</RepositoryUrl>
     <PackageTags>App Control,WDAC,WDACConfig</PackageTags>
     <PackageReleaseNotes>https://github.com/HotCakeX/Harden-Windows-Security/releases</PackageReleaseNotes>
-    
+
     <!-- Automatically created for packing -->
     <GenerateAppInstallerFile>False</GenerateAppInstallerFile>
     <AppxPackageSigningEnabled>False</AppxPackageSigningEnabled>
@@ -110,7 +121,7 @@
     <AppxBundle>Auto</AppxBundle>
     <AppxBundlePlatforms>x64</AppxBundlePlatforms>
     <HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
-    
+
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <CheckForOverflowUnderflow>True</CheckForOverflowUnderflow>
@@ -139,6 +150,11 @@
     <Content Remove="MSIXOutput\**" />
     <None Remove="MSIXOutput\**" />
   </ItemGroup>
+<ItemGroup>
+  <Page Update="Pages\ViewCurrentPolicies.xaml">
+    <Generator>MSBuild:Compile</Generator>
+  </Page>
+</ItemGroup>
 <ItemGroup>
   <Page Update="Pages\GetSecurePolicySettings.xaml">
     <Generator>MSBuild:Compile</Generator>

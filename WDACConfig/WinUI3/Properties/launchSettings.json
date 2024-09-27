@@ -1,7 +1,9 @@
 {
   "profiles": {
     "WDACConfig (Package)": {
-      "commandName": "MsixPackage"
+      "commandName": "MsixPackage",
+      "nativeDebugging": true,
+      "remoteDebugEnabled": false
     },
     "WDACConfig (Unpackaged)": {
       "commandName": "Project"

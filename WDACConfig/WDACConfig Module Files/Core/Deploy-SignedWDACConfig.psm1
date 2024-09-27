@@ -59,13 +59,13 @@ Function Deploy-SignedWDACConfig {
             [System.IO.FileInfo]$SignToolPathFinal = Get-SignTool -SignToolExePathInput $SignToolPath
         } # If it is null, then Get-SignTool will behave the same as if it was called without any arguments.
         else {
-            [System.IO.FileInfo]$SignToolPathFinal = Get-SignTool -SignToolExePathInput (Get-CommonWDACConfig -SignToolPath)
+            [System.IO.FileInfo]$SignToolPathFinal = Get-SignTool -SignToolExePathInput ([WDACConfig.UserConfiguration]::Get().SignToolCustomPath)
         }
 
         # If CertPath parameter wasn't provided by user, check if a valid value exists in user configs, if so, use it, otherwise throw an error
         if (!$CertPath ) {
-            if ([System.IO.File]::Exists((Get-CommonWDACConfig -CertPath))) {
-                [System.IO.FileInfo]$CertPath = Get-CommonWDACConfig -CertPath
+            if ([System.IO.File]::Exists(([WDACConfig.UserConfiguration]::Get().CertificatePath))) {
+                [System.IO.FileInfo]$CertPath = [WDACConfig.UserConfiguration]::Get().CertificatePath
             }
             else {
                 throw 'CertPath parameter cannot be empty and no valid user configuration was found for it. Use the Build-WDACCertificate cmdlet to create one.'
@@ -74,8 +74,8 @@ Function Deploy-SignedWDACConfig {
 
         # If CertCN was not provided by user, check if a valid value exists in user configs, if so, use it, otherwise throw an error
         if (!$CertCN) {
-            if ([WDACConfig.CertCNz]::new().GetValidValues() -contains (Get-CommonWDACConfig -CertCN)) {
-                [System.String]$CertCN = Get-CommonWDACConfig -CertCN
+            if ([WDACConfig.CertCNz]::new().GetValidValues() -contains ([WDACConfig.UserConfiguration]::Get().CertificateCommonName)) {
+                [System.String]$CertCN = [WDACConfig.UserConfiguration]::Get().CertificateCommonName
             }
             else {
                 throw 'CertCN parameter cannot be empty and no valid user configuration was found for it.'
@@ -187,7 +187,7 @@ Function Deploy-SignedWDACConfig {
 
                 $CurrentStep++
                 Write-Progress -Id 13 -Activity 'Signing the policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
-                [WDACConfig.CodeIntegritySigner]::InvokeCiSigning($PolicyCIPPath, $SignToolPathFinal, $CertCN)
+                [WDACConfig.SignToolHelper]::Sign($PolicyCIPPath, $SignToolPathFinal, $CertCN)
 
                 [WDACConfig.Logger]::Write('Renaming the .p7 file to .cip')
                 Move-Item -LiteralPath "$StagingArea\$PolicyID.cip.p7" -Destination $PolicyCIPPath -Force
@@ -201,7 +201,7 @@ Function Deploy-SignedWDACConfig {
                     if ($PSCmdlet.ShouldProcess('This PC', 'Deploying the signed policy')) {
 
                         [WDACConfig.Logger]::Write('Deploying the policy')
-                        $null = &'C:\Windows\System32\CiTool.exe' --update-policy $PolicyCIPPath -json
+                        [WDACConfig.CiToolHelper]::UpdatePolicy($PolicyCIPPath)
 
                         Write-ColorfulTextWDACConfig -Color Lavender -InputText 'policy with the following details has been Signed and Deployed in Enforced Mode:'
                         Write-ColorfulTextWDACConfig -Color MintGreen -InputText "PolicyName = $PolicyName"
@@ -210,8 +210,8 @@ Function Deploy-SignedWDACConfig {
                         #Region Detecting Strict Kernel mode policy and removing it from User Configs
                         if ('Enabled:UMCI' -notin $PolicyRuleOptions) {
 
-                            [System.String]$StrictKernelPolicyGUID = Get-CommonWDACConfig -StrictKernelPolicyGUID
-                            [System.String]$StrictKernelNoFlightRootsPolicyGUID = Get-CommonWDACConfig -StrictKernelNoFlightRootsPolicyGUID
+                            [System.String]$StrictKernelPolicyGUID = [WDACConfig.UserConfiguration]::Get().StrictKernelPolicyGUID
+                            [System.String]$StrictKernelNoFlightRootsPolicyGUID = [WDACConfig.UserConfiguration]::Get().StrictKernelNoFlightRootsPolicyGUID
 
                             if (($PolicyName -like '*Strict Kernel mode policy Enforced*')) {
 
@@ -221,7 +221,7 @@ Function Deploy-SignedWDACConfig {
                                     if ($($PolicyID.TrimStart('{').TrimEnd('}')) -eq $StrictKernelPolicyGUID) {
 
                                         [WDACConfig.Logger]::Write('Removing the GUID of the deployed Strict Kernel mode policy from the User Configs')
-                                        $null = Remove-CommonWDACConfig -StrictKernelPolicyGUID
+                                        [WDACConfig.UserConfiguration]::Remove($false, $false, $false, $false, $false, $true, $false, $false, $false)
                                     }
                                 }
                             }
@@ -233,7 +233,7 @@ Function Deploy-SignedWDACConfig {
                                     if ($($PolicyID.TrimStart('{').TrimEnd('}')) -eq $StrictKernelNoFlightRootsPolicyGUID) {
 
                                         [WDACConfig.Logger]::Write('Removing the GUID of the deployed Strict Kernel No Flights mode policy from the User Configs')
-                                        $null = Remove-CommonWDACConfig -StrictKernelNoFlightRootsPolicyGUID
+                                        [WDACConfig.UserConfiguration]::Remove($false, $false, $false, $false, $false, $false, $true, $false, $false)
                                     }
                                 }
                             }
@@ -269,7 +269,7 @@ Function Deploy-SignedWDACConfig {
 .DESCRIPTION
     Using official Microsoft methods, Signs and Deploys WDAC policies, accepts signed or unsigned policies and deploys them (Windows Defender Application Control)
 .COMPONENT
-    Windows Defender Application Control, ConfigCI PowerShell module
+    Windows Defender Application Control
 .FUNCTIONALITY
     Using official Microsoft methods, Signs and Deploys WDAC policies, accepts signed or unsigned policies and deploys them (Windows Defender Application Control)
 .PARAMETER CertPath

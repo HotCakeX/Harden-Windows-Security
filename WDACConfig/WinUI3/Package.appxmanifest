@@ -48,6 +48,6 @@
 
   <Capabilities>
     <rescap:Capability Name="runFullTrust" />
-    <Capability Name="internetClientServer"/>
+    <rescap:Capability Name="allowElevation" />
   </Capabilities>
 </Package>

@@ -64,21 +64,21 @@ Function New-KernelModeWDACConfig {
 
                 if ($Normal) {
                     # Check if there is a pending Audit mode Kernel mode WDAC policy already available in User Config file
-                    [System.String]$CurrentStrictKernelPolicyGUID = Get-CommonWDACConfig -StrictKernelPolicyGUID
+                    [System.String]$CurrentStrictKernelPolicyGUID = [WDACConfig.UserConfiguration]::Get().StrictKernelPolicyGUID
 
                     If ($null -ne $CurrentStrictKernelPolicyGUID) {
                         # Check if the pending Audit mode Kernel mode WDAC policy is deployed on the system
-                        [System.String]$CurrentStrictKernelPolicyGUIDConfirmation = ((&'C:\Windows\System32\CiTool.exe' -lp -json | ConvertFrom-Json).Policies | Where-Object -FilterScript { $_.PolicyID -eq $CurrentStrictKernelPolicyGUID }).policyID
+                        [System.String]$CurrentStrictKernelPolicyGUIDConfirmation = ([WDACConfig.CiToolHelper]::GetPolicies($false, $true, $true) | Where-Object -FilterScript { $_.PolicyID -eq $CurrentStrictKernelPolicyGUID }).policyID
                     }
                 }
 
                 if ($NoFlights) {
                     # Check if there is a pending Audit mode Kernel mode WDAC NoFlightRoots policy already available in User Config file
-                    [System.String]$CurrentStrictKernelNoFlightRootsPolicyGUID = Get-CommonWDACConfig -StrictKernelNoFlightRootsPolicyGUID
+                    [System.String]$CurrentStrictKernelNoFlightRootsPolicyGUID = [WDACConfig.UserConfiguration]::Get().StrictKernelNoFlightRootsPolicyGUID
 
                     If ($null -ne $CurrentStrictKernelNoFlightRootsPolicyGUID) {
                         # Check if the pending Audit mode Kernel mode WDAC NoFlightRoots policy is deployed on the system
-                        [System.String]$CurrentStrictKernelPolicyGUIDConfirmation = ((&'C:\Windows\System32\CiTool.exe' -lp -json | ConvertFrom-Json).Policies | Where-Object -FilterScript { $_.PolicyID -eq $CurrentStrictKernelNoFlightRootsPolicyGUID }).policyID
+                        [System.String]$CurrentStrictKernelPolicyGUIDConfirmation = ([WDACConfig.CiToolHelper]::GetPolicies($false, $true, $true) | Where-Object -FilterScript { $_.PolicyID -eq $CurrentStrictKernelNoFlightRootsPolicyGUID }).policyID
                     }
                 }
             }
@@ -147,10 +147,10 @@ Function New-KernelModeWDACConfig {
                                 Write-Progress -Id 25 -Activity 'Deploying the prep mode policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
                                 [WDACConfig.Logger]::Write('Setting the GUID and time of deployment of the Audit mode policy in the User Configuration file')
-                                $null = Set-CommonWDACConfig -StrictKernelPolicyGUID $PolicyID -StrictKernelModePolicyTimeOfDeployment (Get-Date)
+                                $null = [WDACConfig.UserConfiguration]::Set($null, $null, $null, $null, $null, $PolicyID, $null, $null , (Get-Date))
 
                                 [WDACConfig.Logger]::Write('Deploying the Strict Kernel mode policy')
-                                $null = &'C:\Windows\System32\CiTool.exe' --update-policy $FinalAuditCIPPath -json
+                                [WDACConfig.CiToolHelper]::UpdatePolicy($FinalAuditCIPPath)
                                 Write-ColorfulTextWDACConfig -Color HotPink -InputText 'Strict Kernel mode policy has been deployed in Audit mode, please restart your system.'
                             }
                             else {
@@ -170,7 +170,7 @@ Function New-KernelModeWDACConfig {
                             # Get the Strict Kernel Audit mode policy's GUID to use for the Enforced mode policy
                             # This will eliminate the need for an extra reboot
                             [WDACConfig.Logger]::Write('Trying to get the GUID of Strict Kernel Audit mode policy to use for the Enforced mode policy, from the user configurations')
-                            [System.String]$PolicyID = Get-CommonWDACConfig -StrictKernelPolicyGUID
+                            [System.String]$PolicyID = [WDACConfig.UserConfiguration]::Get().StrictKernelPolicyGUID
 
                             [WDACConfig.Logger]::Write('Verifying the Policy ID in the User Config exists and is valid')
                             $ObjectGuid = [System.Guid]::Empty
@@ -237,18 +237,18 @@ Function New-KernelModeWDACConfig {
                                 Write-Progress -Id 26 -Activity 'Deploying the final policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
                                 [WDACConfig.Logger]::Write('Deploying the enforced mode policy with the same ID as the Audit mode policy, effectively overwriting it')
-                                $null = &'C:\Windows\System32\CiTool.exe' --update-policy $FinalEnforcedCIPPath -json
+                                [WDACConfig.CiToolHelper]::UpdatePolicy($FinalEnforcedCIPPath)
                                 Write-ColorfulTextWDACConfig -Color HotPink -InputText 'Strict Kernel mode policy has been deployed in Enforced mode, no restart required.'
 
                                 [WDACConfig.Logger]::Write('Removing the GUID and time of deployment of the StrictKernelPolicy from user configuration')
-                                $null = Remove-CommonWDACConfig -StrictKernelPolicyGUID -StrictKernelModePolicyTimeOfDeployment
+                                [WDACConfig.UserConfiguration]::Remove($false, $false, $false, $false, $false, $true, $false, $false, $true)
                             }
                             else {
                                 # Remove the Audit mode policy from the system
                                 # This step is necessary if user didn't use the -Deploy parameter
                                 # And instead wants to first Sign and then deploy it using the Deploy-SignedWDACConfig cmdlet
                                 [WDACConfig.Logger]::Write('Removing the deployed Audit mode policy from the system since -Deploy parameter was not used to overwrite it with the enforced mode policy.')
-                                $null = &'C:\Windows\System32\CiTool.exe' --remove-policy "{$PolicyID}" -json
+                                [WDACConfig.CiToolHelper]::RemovePolicy($PolicyID)
                                 Write-ColorfulTextWDACConfig -Color HotPink -InputText "Strict Kernel mode Enforced policy has been created`n$FinalEnforcedPolicyPath"
                             }
                             Write-Progress -Id 26 -Activity 'Complete.' -Completed
@@ -288,10 +288,10 @@ Function New-KernelModeWDACConfig {
                                 Write-Progress -Id 27 -Activity 'Deploying the prep mode policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
                                 [WDACConfig.Logger]::Write('Setting the GUID and time of deployment of the Audit mode policy in the User Configuration file')
-                                $null = Set-CommonWDACConfig -StrictKernelNoFlightRootsPolicyGUID $PolicyID -StrictKernelModePolicyTimeOfDeployment (Get-Date)
+                                $null = [WDACConfig.UserConfiguration]::Set($null, $null, $null, $null, $null, $null, $PolicyID, $null , (Get-Date))
 
                                 [WDACConfig.Logger]::Write('Deploying the Strict Kernel mode policy')
-                                $null = &'C:\Windows\System32\CiTool.exe' --update-policy $FinalAuditCIPPath -json
+                                [WDACConfig.CiToolHelper]::UpdatePolicy($FinalAuditCIPPath)
                                 Write-ColorfulTextWDACConfig -Color HotPink -InputText 'Strict Kernel mode policy with no flighting root certs has been deployed in Audit mode, please restart your system.'
                             }
                             else {
@@ -311,7 +311,7 @@ Function New-KernelModeWDACConfig {
                             # Get the Strict Kernel Audit mode policy's GUID to use for the Enforced mode policy
                             # This will eliminate the need for an extra reboot
                             [WDACConfig.Logger]::Write('Trying to get the GUID of Strict Kernel Audit mode policy to use for the Enforced mode policy, from the user configurations')
-                            [System.String]$PolicyID = Get-CommonWDACConfig -StrictKernelNoFlightRootsPolicyGUID
+                            [System.String]$PolicyID = [WDACConfig.UserConfiguration]::Get().StrictKernelNoFlightRootsPolicyGUID
 
                             [WDACConfig.Logger]::Write('Verifying the Policy ID in the User Config exists and is valid')
                             $ObjectGuid = [System.Guid]::Empty
@@ -390,18 +390,18 @@ Function New-KernelModeWDACConfig {
                                 Write-Progress -Id 28 -Activity 'Deploying the final policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
                                 [WDACConfig.Logger]::Write('Deploying the enforced mode policy with the same ID as the Audit mode policy, effectively overwriting it')
-                                $null = &'C:\Windows\System32\CiTool.exe' --update-policy $FinalEnforcedCIPPath -json
+                                [WDACConfig.CiToolHelper]::UpdatePolicy($FinalEnforcedCIPPath)
                                 Write-ColorfulTextWDACConfig -Color HotPink -InputText 'Strict Kernel mode policy with no flighting root certs has been deployed in Enforced mode, no restart required.'
 
                                 [WDACConfig.Logger]::Write('Removing the GUID and time of deployment of the StrictKernelNoFlightRootsPolicy from user configuration')
-                                $null = Remove-CommonWDACConfig -StrictKernelNoFlightRootsPolicyGUID -StrictKernelModePolicyTimeOfDeployment
+                                [WDACConfig.UserConfiguration]::Remove($false, $false, $false, $false, $false, $false, $true, $false, $true)
                             }
                             else {
                                 # Remove the Audit mode policy from the system
                                 # This step is necessary if user didn't use the -Deploy parameter
                                 # And instead wants to first Sign and then deploy it using the Deploy-SignedWDACConfig cmdlet
                                 [WDACConfig.Logger]::Write('Removing the deployed Audit mode policy from the system since -Deploy parameter was not used to overwrite it with the enforced mode policy.')
-                                $null = &'C:\Windows\System32\CiTool.exe' --remove-policy "{$PolicyID}" -json
+                                [WDACConfig.CiToolHelper]::RemovePolicy($PolicyID)
                                 Write-ColorfulTextWDACConfig -Color HotPink -InputText "Strict Kernel mode Enforced policy with no flighting root certs has been created`n$FinalEnforcedPolicyPath"
                             }
                             Write-Progress -Id 28 -Activity 'Complete.' -Completed
@@ -435,7 +435,7 @@ Function New-KernelModeWDACConfig {
 .DESCRIPTION
     Using official Microsoft methods, configure and use Windows Defender Application Control
 .COMPONENT
-    Windows Defender Application Control, ConfigCI PowerShell module
+    Windows Defender Application Control
 .FUNCTIONALITY
     Creates Kernel only mode WDAC policy capable of protecting against BYOVD attacks category
 .PARAMETER Base

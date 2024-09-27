@@ -44,7 +44,7 @@ Function Update-WDACConfigPSModule {
     try {
         # Get the last update check time
         [WDACConfig.Logger]::Write('Getting the last update check time')
-        [System.DateTime]$UserConfigDate = Get-CommonWDACConfig -LastUpdateCheck
+        [System.DateTime]$UserConfigDate = [WDACConfig.UserConfiguration]::Get().LastUpdateCheck
     }
     catch {
         # If the User Config file doesn't exist then set this flag to perform online update check
@@ -83,7 +83,7 @@ Function Update-WDACConfigPSModule {
 
         # Reset the last update timer to the current time
         [WDACConfig.Logger]::Write('Resetting the last update timer to the current time')
-        $null = Set-CommonWDACConfig -LastUpdateCheck $(Get-Date)
+        $null = [WDACConfig.UserConfiguration]::Set($null, $null, $null, $null, $null, $null, $null, $(Get-Date) , $null)
 
         if ($CurrentVersion -lt $LatestVersion) {
 

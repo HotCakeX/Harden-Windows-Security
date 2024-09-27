@@ -36,10 +36,8 @@ Function Edit-WDACConfig {
 
                 # Get the currently deployed policy IDs and save them in a HashSet
                 $CurrentPolicyIDs = [System.Collections.Generic.HashSet[System.String]]::new([System.StringComparer]::InvariantCultureIgnoreCase)
-                foreach ($Item in (&'C:\Windows\System32\CiTool.exe' -lp -json | ConvertFrom-Json).Policies) {
-                    if ($Item.IsSystemPolicy -ne 'True') {
-                        [System.Void]$CurrentPolicyIDs.Add("{$($Item.policyID)}")
-                    }
+                foreach ($Item in [WDACConfig.CiToolHelper]::GetPolicies($false, $true, $true).policyID) {
+                    [System.Void]$CurrentPolicyIDs.Add("{$($Item)}")
                 }
 
                 if (!$RedFlag1 -and !$RedFlag2) {
@@ -133,8 +131,8 @@ Function Edit-WDACConfig {
         if ($PSCmdlet.ParameterSetName -in 'AllowNewApps', 'MergeSupplementalPolicies') {
             # If PolicyPath was not provided by user, check if a valid value exists in user configs, if so, use it, otherwise throw an error
             if (!$PolicyPath) {
-                if ([System.IO.File]::Exists((Get-CommonWDACConfig -UnsignedPolicyPath))) {
-                    $PolicyPath = Get-CommonWDACConfig -UnsignedPolicyPath
+                if ([System.IO.File]::Exists(([WDACConfig.UserConfiguration]::Get().UnsignedPolicyPath))) {
+                    $PolicyPath = [WDACConfig.UserConfiguration]::Get().UnsignedPolicyPath
                 }
                 else {
                     throw 'PolicyPath parameter cannot be empty and no valid user configuration was found for UnsignedPolicyPath.'
@@ -208,7 +206,7 @@ Function Edit-WDACConfig {
                 Write-Progress -Id 10 -Activity 'Deploying the Audit mode policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
                 [WDACConfig.Logger]::Write('Deploying the Audit mode CIP')
-                $null = &'C:\Windows\System32\CiTool.exe' --update-policy $AuditModeCIPPath -json
+                [WDACConfig.CiToolHelper]::UpdatePolicy($AuditModeCIPPath)
 
                 [WDACConfig.Logger]::Write('The Base policy with the following details has been Re-Deployed in Audit Mode:')
                 [WDACConfig.Logger]::Write("PolicyName = $PolicyName")
@@ -236,7 +234,7 @@ Function Edit-WDACConfig {
                     Write-Progress -Id 10 -Activity 'Redeploying the Base policy in Enforced Mode' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
                     [WDACConfig.Logger]::Write('Finally Block Running')
-                    $null = &'C:\Windows\System32\CiTool.exe' --update-policy $EnforcedModeCIPPath -json
+                    [WDACConfig.CiToolHelper]::UpdatePolicy($EnforcedModeCIPPath)
 
                     [WDACConfig.Logger]::Write('The Base policy with the following details has been Re-Deployed in Enforced Mode:')
                     [WDACConfig.Logger]::Write("PolicyName = $PolicyName")
@@ -556,7 +554,7 @@ Function Edit-WDACConfig {
                 Write-Progress -Id 10 -Activity 'Deploying the Supplemental policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
                 [WDACConfig.Logger]::Write('Deploying the Supplemental policy')
-                $null = &'C:\Windows\System32\CiTool.exe' --update-policy $SupplementalCIPPath -json
+                [WDACConfig.CiToolHelper]::UpdatePolicy($SupplementalCIPPath)
 
                 #Endregion Supplemental-policy-processing-and-deployment
 
@@ -577,8 +575,7 @@ Function Edit-WDACConfig {
 
                 [WDACConfig.Logger]::Write('Getting the IDs of the currently deployed policies on the system')
                 $DeployedPoliciesIDs = [System.Collections.Generic.HashSet[System.String]]::new([System.StringComparer]::InvariantCultureIgnoreCase)
-
-                foreach ($Item in (&'C:\Windows\System32\CiTool.exe' -lp -json | ConvertFrom-Json).Policies.PolicyID) {
+                foreach ($Item in [WDACConfig.CiToolHelper]::GetPolicies($true, $true, $true).policyID) {
                     [System.Void]$DeployedPoliciesIDs.Add("{$Item}")
                 }
 
@@ -628,7 +625,7 @@ Function Edit-WDACConfig {
                     [System.String]$SupplementalPolicyID = $Supplementalxml.SiPolicy.PolicyID
 
                     [WDACConfig.Logger]::Write("Removing policy with ID: $SupplementalPolicyID")
-                    $null = &'C:\Windows\System32\CiTool.exe' --remove-policy $SupplementalPolicyID -json
+                    [WDACConfig.CiToolHelper]::RemovePolicy($SupplementalPolicyID)
                 }
 
                 $CurrentStep++
@@ -654,7 +651,7 @@ Function Edit-WDACConfig {
                 Write-Progress -Id 11 -Activity 'Deploying the final policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
                 [WDACConfig.Logger]::Write('Deploying the Supplemental policy')
-                $null = &'C:\Windows\System32\CiTool.exe' --update-policy (Join-Path -Path $StagingArea -ChildPath "$SuppPolicyID.cip") -json
+                [WDACConfig.CiToolHelper]::UpdatePolicy((Join-Path -Path $StagingArea -ChildPath "$SuppPolicyID.cip"))
 
                 Write-ColorfulTextWDACConfig -Color TeaGreen -InputText "The Supplemental policy $SuppPolicyName has been deployed on the system, replacing the old ones."
 
@@ -751,7 +748,7 @@ Function Edit-WDACConfig {
 
                 [WDACConfig.Logger]::Write('Getting the policy ID of the currently deployed base policy based on the policy name that user selected')
                 # In case there are multiple policies with the same name, the first one will be used
-                [System.Object]$CurrentlyDeployedPolicy = ((&'C:\Windows\System32\CiTool.exe' -lp -json | ConvertFrom-Json).Policies | Where-Object -FilterScript { ($_.IsSystemPolicy -ne 'True') -and ($_.Version = [WDACConfig.CIPolicyVersion]::Measure($_.Version)) -and ($_.Friendlyname -eq $CurrentBasePolicyName) }) | Select-Object -First 1
+                [WDACConfig.CiPolicyInfo]$CurrentlyDeployedPolicy = [WDACConfig.CiToolHelper]::GetPolicies($false, $true, $true) | Where-Object -FilterScript { $_.Friendlyname -eq $CurrentBasePolicyName } | Select-Object -First 1
 
                 [System.String]$CurrentID = $CurrentlyDeployedPolicy.BasePolicyID
                 [System.Version]$CurrentVersion = $CurrentlyDeployedPolicy.Version
@@ -774,7 +771,7 @@ Function Edit-WDACConfig {
                 Write-Progress -Id 12 -Activity 'Deploying the policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
                 [WDACConfig.Logger]::Write('Deploying the new base policy with the same GUID on the system')
-                $null = &'C:\Windows\System32\CiTool.exe' --update-policy $CIPPath -json
+                [WDACConfig.CiToolHelper]::UpdatePolicy($CIPPath)
 
                 $CurrentStep++
                 Write-Progress -Id 12 -Activity 'Cleaning up' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
@@ -793,9 +790,9 @@ Function Edit-WDACConfig {
 
                 Write-ColorfulTextWDACConfig -Color Pink -InputText "Base Policy has been successfully updated to $NewBasePolicyType"
 
-                if (Get-CommonWDACConfig -UnsignedPolicyPath) {
+                if ([WDACConfig.UserConfiguration]::Get().UnsignedPolicyPath) {
                     [WDACConfig.Logger]::Write('Replacing the old unsigned policy path in User Configurations with the new one')
-                    $null = Set-CommonWDACConfig -UnsignedPolicyPath $PolicyFiles[$NewBasePolicyType]
+                    $null = [WDACConfig.UserConfiguration]::Set($null, $PolicyFiles[$NewBasePolicyType], $null, $null, $null, $null, $null, $null , $null)
                 }
             }
         }

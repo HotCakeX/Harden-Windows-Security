@@ -1,7 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Text.Json;
 
 #nullable enable
 
@@ -12,44 +10,24 @@ namespace WDACConfig
         // Argument tab auto-completion and ValidateSet for Non-System Policy names
         public string[] GetValidValues()
         {
-            // Run CiTool.exe and capture the output
-            ProcessStartInfo startInfo = new()
+            List<CiPolicyInfo>? BasePolicies = CiToolHelper.GetPolicies(false, true, false);
+
+            if (BasePolicies is not null)
             {
-                FileName = @"C:\Windows\System32\CiTool.exe",
-                Arguments = "-lp -json",
-                RedirectStandardOutput = true,
-                UseShellExecute = false,
-                CreateNoWindow = true
-            };
-
-            using Process process = new()
-            { StartInfo = startInfo };
-            _ = process.Start();
-
-            string jsonOutput = process.StandardOutput.ReadToEnd();
-            process.WaitForExit();
-
-            // Parse the JSON output
-            JsonDocument jsonDoc = JsonDocument.Parse(jsonOutput);
-            JsonElement policiesElement = jsonDoc.RootElement.GetProperty("Policies");
-
-            List<string> validValues = [];
-
-            foreach (JsonElement policyElement in policiesElement.EnumerateArray())
-            {
-                bool isSystemPolicy = policyElement.GetProperty("IsSystemPolicy").GetBoolean();
-                string? policyId = policyElement.GetProperty("PolicyID").GetString();
-                string? basePolicyId = policyElement.GetProperty("BasePolicyID").GetString();
-                string? friendlyName = policyElement.GetProperty("FriendlyName").GetString();
-
-                // Use ordinal, case-insensitive comparison for the policy IDs
-                if (!isSystemPolicy && string.Equals(policyId, basePolicyId, StringComparison.OrdinalIgnoreCase) && friendlyName != null)
+                List<string> BasePolicyNames = [];
+                foreach (CiPolicyInfo policy in BasePolicies)
                 {
-                    validValues.Add(friendlyName);
+                    if (policy.FriendlyName is not null)
+                    {
+                        BasePolicyNames.Add(policy.FriendlyName);
+                    }
                 }
+                return BasePolicyNames.ToArray();
             }
-
-            return validValues.ToArray();
+            else
+            {
+                return Array.Empty<string>();
+            }
         }
     }
 }

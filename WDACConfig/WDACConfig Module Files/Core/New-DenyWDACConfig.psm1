@@ -164,7 +164,7 @@ Function New-DenyWDACConfig {
                     Write-Progress -Id 22 -Activity 'Deploying the base policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
                     [WDACConfig.Logger]::Write('Deploying the policy')
-                    $null = &'C:\Windows\System32\CiTool.exe' --update-policy $FinalDenyPolicyCIPPath -json
+                    [WDACConfig.CiToolHelper]::UpdatePolicy($FinalDenyPolicyCIPPath)
 
                     Write-ColorfulTextWDACConfig -Color Pink -InputText "A Deny Base policy with the name '$PolicyName' has been deployed."
                 }
@@ -242,7 +242,7 @@ Function New-DenyWDACConfig {
                     Write-Progress -Id 23 -Activity 'Deploying the base policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
                     [WDACConfig.Logger]::Write('Deploying the policy')
-                    $null = &'C:\Windows\System32\CiTool.exe' --update-policy $FinalDenyPolicyCIPPath -json
+                    [WDACConfig.CiToolHelper]::UpdatePolicy($FinalDenyPolicyCIPPath)
 
                     Write-ColorfulTextWDACConfig -Color Pink -InputText "A Deny Base policy with the name '$PolicyName' has been deployed."
                 }
@@ -314,7 +314,7 @@ Function New-DenyWDACConfig {
                             Write-Progress -Id 24 -Activity 'Deploying the base policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
                             [WDACConfig.Logger]::Write('Deploying the policy')
-                            $null = &'C:\Windows\System32\CiTool.exe' --update-policy $FinalDenyPolicyCIPPath -json
+                            [WDACConfig.CiToolHelper]::UpdatePolicy($FinalDenyPolicyCIPPath)
 
                             Write-ColorfulTextWDACConfig -Color Pink -InputText "A Deny Base policy with the name '$PolicyName' has been deployed."
                         }
@@ -343,39 +343,39 @@ Function New-DenyWDACConfig {
                 Write-Progress -Id 29 -Activity 'Creating the wildcard deny policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
                 # Using Windows PowerShell to handle serialized data since PowerShell core throws an error
-                Write-Verbose -Message 'Creating the deny policy file'
+                [WDACConfig.Logger]::Write('Creating the deny policy file')
                 powershell.exe -NoProfile -Command {
                     $RulesWildCards = New-CIPolicyRule -Deny -FilePathRule $args[0]
                     New-CIPolicy -MultiplePolicyFormat -FilePath $args[1] -Rules $RulesWildCards
                 } -args $FolderPath, $TempPolicyPath
 
                 # Merging AllowAll default policy with our Deny temp policy
-                Write-Verbose -Message 'Merging AllowAll default template policy with our Wildcard Deny temp policy'
+                [WDACConfig.Logger]::Write('Merging AllowAll default template policy with our Wildcard Deny temp policy')
                 $null = Merge-CIPolicy -PolicyPaths $AllowAllPolicyPath, $TempPolicyPath -OutputFilePath $FinalDenyPolicyPath
 
                 $CurrentStep++
                 Write-Progress -Id 29 -Activity 'Configuring the wildcard deny policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
-                Write-Verbose -Message 'Assigning a name and resetting the policy ID'
+                [WDACConfig.Logger]::Write('Assigning a name and resetting the policy ID')
                 $null = Set-CIPolicyIdInfo -FilePath $FinalDenyPolicyPath -ResetPolicyID -PolicyName $PolicyName
 
-                Write-Verbose -Message 'Setting the policy version to 1.0.0.0'
+                [WDACConfig.Logger]::Write('Setting the policy version to 1.0.0.0')
                 Set-CIPolicyVersion -FilePath $FinalDenyPolicyPath -Version '1.0.0.0'
 
                 Set-CiRuleOptions -FilePath $FinalDenyPolicyPath -Template Base
 
-                Write-Verbose -Message 'Converting the policy XML to .CIP'
+                [WDACConfig.Logger]::Write('Converting the policy XML to .CIP')
                 $null = ConvertFrom-CIPolicy -XmlFilePath $FinalDenyPolicyPath -BinaryFilePath $FinalDenyPolicyCIPPath
 
                 if ($Deploy) {
                     $CurrentStep++
                     Write-Progress -Id 29 -Activity 'Deploying the base policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
-                    Write-Verbose -Message 'Deploying the policy'
-                    $null = &'C:\Windows\System32\CiTool.exe' --update-policy $FinalDenyPolicyCIPPath -json
+                    [WDACConfig.Logger]::Write('Deploying the policy')
+                    [WDACConfig.CiToolHelper]::UpdatePolicy($FinalDenyPolicyCIPPath)
 
                     if ($EmbeddedVerboseOutput) {
-                        Write-Verbose -Message "A Deny Base policy with the name '$PolicyName' has been deployed."
+                        [WDACConfig.Logger]::Write("A Deny Base policy with the name '$PolicyName' has been deployed.")
                     }
                     else {
                         Write-ColorfulTextWDACConfig -Color Pink -InputText "A Deny Base policy with the name '$PolicyName' has been deployed."
@@ -421,7 +421,7 @@ Function New-DenyWDACConfig {
 .DESCRIPTION
     Using official Microsoft methods to create Deny base policies (Windows Defender Application Control)
 .COMPONENT
-    Windows Defender Application Control, ConfigCI PowerShell module
+    Windows Defender Application Control
 .FUNCTIONALITY
     Using official Microsoft methods, Removes Signed and unsigned deployed WDAC policies (Windows Defender Application Control)
 .PARAMETER PolicyName

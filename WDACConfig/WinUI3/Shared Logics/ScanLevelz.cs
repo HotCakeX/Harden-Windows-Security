@@ -1,3 +1,5 @@
+using System.Management.Automation;
+
 #nullable enable
 
 namespace WDACConfig

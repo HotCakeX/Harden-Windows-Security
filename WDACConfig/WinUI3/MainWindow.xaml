@@ -41,6 +41,10 @@
                     <FontIcon Glyph="&#xEEA3;" />
                 </NavigationViewItem.Icon>
             </NavigationViewItem>
+
+
+            <NavigationViewItem Content="View Current Policies" Icon="Flag" ToolTipService.ToolTip="View currently deployed policies" Tag="ViewCurrentPolicies"/>
+
             <NavigationViewItemHeader Content="Documentation"/>
             <NavigationViewItem Content="GitHub Documentation" Icon="Document" ToolTipService.ToolTip="Get online documentations from GitHub about how to use the application" Tag="GitHubDocumentation" />
             <NavigationViewItem Content="Microsoft Documentation" Icon="Document" ToolTipService.ToolTip="Get online documentations from Microsoft about App Control for Business policies" Tag="MicrosoftDocumentation" />

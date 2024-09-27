@@ -10,7 +10,6 @@ Function Confirm-WDACConfig {
         [Parameter(Mandatory = $false, ParameterSetName = 'Check SmartAppControl Status')][System.Management.Automation.SwitchParameter]$CheckSmartAppControlStatus
     )
     DynamicParam {
-
         # Add the dynamic parameters to the param dictionary
         $ParamDictionary = [System.Management.Automation.RuntimeDefinedParameterDictionary]::new()
 
@@ -81,34 +80,13 @@ Function Confirm-WDACConfig {
 
         if (-NOT $SkipVersionCheck) { Update-WDACConfigPSModule -InvocationStatement $MyInvocation.Statement }
 
-        # Script block to show only Base policies
-        [System.Management.Automation.ScriptBlock]$OnlyBasePoliciesBLOCK = {
-            [System.Object[]]$BasePolicies = foreach ($Item in (&'C:\Windows\System32\CiTool.exe' -lp -json | ConvertFrom-Json).Policies) {
-                if (($Item.IsSystemPolicy -eq $OnlySystemPolicies) -and ($Item.PolicyID -eq $Item.BasePolicyID)) {
-                    $Item.Version = [WDACConfig.CIPolicyVersion]::Measure($Item.Version)
-                    $Item
-                }
-            }
-
-            Write-ColorfulTextWDACConfig -Color Lavender -InputText "`nThere are currently $(($BasePolicies.count)) Base policies deployed"
-            $BasePolicies
-        }
-        # Script block to show only Supplemental policies
-        [System.Management.Automation.ScriptBlock]$OnlySupplementalPoliciesBLOCK = {
-            [System.Object[]]$SupplementalPolicies = foreach ($Item in (&'C:\Windows\System32\CiTool.exe' -lp -json | ConvertFrom-Json).Policies) {
-                if (($Item.IsSystemPolicy -eq $OnlySystemPolicies) -and ($Item.PolicyID -ne $Item.BasePolicyID)) {
-                    $Item.Version = [WDACConfig.CIPolicyVersion]::Measure($Item.Version)
-                    $Item
-                }
-            }
-
-            Write-ColorfulTextWDACConfig -Color Lavender -InputText "`nThere are currently $(($SupplementalPolicies.count)) Supplemental policies deployed`n"
-            $SupplementalPolicies
-        }
-
         # If no main parameter was passed, run all of them
         if (!$ListActivePolicies -and !$VerifyWDACStatus -and !$CheckSmartAppControlStatus) {
-            $ListActivePolicies = $true
+
+            [System.Collections.Generic.List[WDACConfig.CiPolicyInfo]]$PoliciesDeployedResults = [WDACConfig.CiToolHelper]::GetPolicies($false, $true, $true)
+            Write-Host -Object "$($PoliciesDeployedResults.count) policies are deployed"
+            $PoliciesDeployedResults
+
             $VerifyWDACStatus = $true
             $CheckSmartAppControlStatus = $true
         }
@@ -116,14 +94,31 @@ Function Confirm-WDACConfig {
 
     process {
         if ($ListActivePolicies) {
-            if ($OnlyBasePolicies) { &$OnlyBasePoliciesBLOCK }
-            if ($OnlySupplementalPolicies) { &$OnlySupplementalPoliciesBLOCK }
-            if (!$OnlyBasePolicies -and !$OnlySupplementalPolicies) { &$OnlyBasePoliciesBLOCK; &$OnlySupplementalPoliciesBLOCK }
+            if ($OnlyBasePolicies) {
+                [System.Collections.Generic.List[WDACConfig.CiPolicyInfo]]$OnlyBasePoliciesResults = [WDACConfig.CiToolHelper]::GetPolicies($false, $true, $false)
+                Write-ColorfulTextWDACConfig -Color Lavender -InputText "$($OnlyBasePoliciesResults.count) base policies are deployed"
+                $OnlyBasePoliciesResults
+            }
+            elseif ($OnlySupplementalPolicies) {
+                [System.Collections.Generic.List[WDACConfig.CiPolicyInfo]]$OnlySupplementalPoliciesResults = [WDACConfig.CiToolHelper]::GetPolicies($false, $false, $true)
+                Write-ColorfulTextWDACConfig -Color Lavender -InputText "$($OnlySupplementalPoliciesResults.count) Supplemental policies are deployed"
+                $OnlySupplementalPoliciesResults
+            }
+            elseif ($OnlySystemPolicies) {
+                [System.Collections.Generic.List[WDACConfig.CiPolicyInfo]]$OnlySystemPoliciesResults = [WDACConfig.CiToolHelper]::GetPolicies($true, $false, $false)
+                Write-ColorfulTextWDACConfig -Color Lavender -InputText "$($OnlySystemPoliciesResults.count) System policies are deployed"
+                $OnlySystemPoliciesResults
+            }
+            else {
+                [System.Collections.Generic.List[WDACConfig.CiPolicyInfo]]$PoliciesDeployedResults = [WDACConfig.CiToolHelper]::GetPolicies($false, $true, $true)
+                Write-ColorfulTextWDACConfig -Color Lavender -InputText "$($PoliciesDeployedResults.count) policies are deployed"
+                $PoliciesDeployedResults
+            }
         }
 
         if ($VerifyWDACStatus) {
             [WDACConfig.Logger]::Write('Checking the status of WDAC using Get-CimInstance')
-            Get-CimInstance -ClassName Win32_DeviceGuard -Namespace root\Microsoft\Windows\DeviceGuard | Select-Object -Property *codeintegrity* | Format-List
+            [WDACConfig.DeviceGuardInfo]::GetDeviceGuardStatus()
             Write-ColorfulTextWDACConfig -Color Lavender -InputText "2 -> Enforced`n1 -> Audit mode`n0 -> Disabled/Not running`n"
         }
 

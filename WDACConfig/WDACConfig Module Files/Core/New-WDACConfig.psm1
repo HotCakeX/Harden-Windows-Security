@@ -140,8 +140,8 @@ Function New-WDACConfig {
                 $CurrentStep++
                 Write-Progress -Id 1 -Activity 'Refreshing the system policies' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
-                [WDACConfig.Logger]::Write('Refreshing the system WDAC policies using CiTool.exe')
-                $null = &'C:\Windows\System32\CiTool.exe' --refresh -json
+                [WDACConfig.Logger]::Write('Refreshing the system WDAC policies')
+                [WDACConfig.CiToolHelper]::RefreshPolicy()
 
                 Write-ColorfulTextWDACConfig -Color Pink -InputText 'SiPolicy.p7b has been deployed and policies refreshed.'
 
@@ -275,7 +275,7 @@ Function New-WDACConfig {
                 [System.IO.FileInfo]$CIPPath = ConvertFrom-CIPolicy -XmlFilePath $FinalPolicyPath -BinaryFilePath (Join-Path -Path $StagingArea -ChildPath "$Name.cip")
 
                 [WDACConfig.Logger]::Write("Deploying the $Name policy")
-                $null = &'C:\Windows\System32\CiTool.exe' --update-policy $CIPPath -json
+                [WDACConfig.CiToolHelper]::UpdatePolicy($CIPPath)
             }
             Copy-Item -Path $FinalPolicyPath -Destination ([WDACConfig.GlobalVars]::UserConfigDir) -Force
             Write-FinalOutput -Paths $FinalPolicyPath
@@ -339,7 +339,7 @@ Function New-WDACConfig {
                 [System.IO.FileInfo]$CIPPath = ConvertFrom-CIPolicy -XmlFilePath $FinalPolicyPath -BinaryFilePath (Join-Path -Path $StagingArea -ChildPath "$Name.cip")
 
                 [WDACConfig.Logger]::Write('Deploying the policy')
-                $null = &'C:\Windows\System32\CiTool.exe' --update-policy $CIPPath -json
+                [WDACConfig.CiToolHelper]::UpdatePolicy($CIPPath)
             }
 
             # Copy the result to the User Config directory at the end
@@ -377,7 +377,7 @@ Function New-WDACConfig {
                 if ($Deploy) {
 
                     [WDACConfig.Logger]::Write("Checking if the $Name policy is already deployed")
-                    [System.String]$CurrentlyDeployedBlockRulesGUID = ((&'C:\Windows\System32\CiTool.exe' -lp -json | ConvertFrom-Json).Policies | Where-Object -FilterScript { ($_.IsSystemPolicy -ne 'True') -and ($_.PolicyID -eq $_.BasePolicyID) -and ($_.FriendlyName -eq $Name) }).PolicyID
+                    [System.String]$CurrentlyDeployedBlockRulesGUID = ([WDACConfig.CiToolHelper]::GetPolicies($false, $true, $false) | Where-Object -FilterScript { $_.FriendlyName -eq $Name }).PolicyID
 
                     if (-NOT ([System.String]::IsNullOrWhiteSpace($CurrentlyDeployedBlockRulesGUID))) {
                         [WDACConfig.Logger]::Write("$Name policy is already deployed, updating it using the same GUID.")
@@ -387,7 +387,7 @@ Function New-WDACConfig {
                     [System.IO.FileInfo]$CIPPath = ConvertFrom-CIPolicy -XmlFilePath $FinalPolicyPath -BinaryFilePath (Join-Path -Path $StagingArea -ChildPath "$Name.cip")
 
                     [WDACConfig.Logger]::Write("Deploying the $Name policy")
-                    $null = &'C:\Windows\System32\CiTool.exe' --update-policy $CIPPath -json
+                    [WDACConfig.CiToolHelper]::UpdatePolicy($CIPPath)
                 }
                 else {
                     Copy-Item -Path $FinalPolicyPath -Destination ([WDACConfig.GlobalVars]::UserConfigDir) -Force
@@ -452,7 +452,7 @@ Function New-WDACConfig {
                 Start-Process -FilePath 'C:\Windows\System32\sc.exe' -ArgumentList 'config', 'appidsvc', 'start= auto' -NoNewWindow
 
                 [WDACConfig.Logger]::Write('Deploying the policy')
-                $null = &'C:\Windows\System32\CiTool.exe' --update-policy $CIPPath -json
+                [WDACConfig.CiToolHelper]::UpdatePolicy($CIPPath)
             }
 
             Copy-Item -Path $FinalPolicyPath -Destination ([WDACConfig.GlobalVars]::UserConfigDir) -Force

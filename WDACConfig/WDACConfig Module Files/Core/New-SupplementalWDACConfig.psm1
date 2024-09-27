@@ -96,8 +96,8 @@ Function New-SupplementalWDACConfig {
         #Region User-Configurations-Processing-Validation
         # If PolicyPath was not provided by user, check if a valid value exists in user configs, if so, use it, otherwise throw an error
         if (!$PolicyPath) {
-            if ([System.IO.File]::Exists((Get-CommonWDACConfig -UnsignedPolicyPath))) {
-                $PolicyPath = Get-CommonWDACConfig -UnsignedPolicyPath
+            if ([System.IO.File]::Exists(([WDACConfig.UserConfiguration]::Get().UnsignedPolicyPath))) {
+                $PolicyPath = [WDACConfig.UserConfiguration]::Get().UnsignedPolicyPath
             }
             else {
                 throw 'PolicyPath parameter cannot be empty and no valid user configuration was found for UnsignedPolicyPath.'
@@ -183,7 +183,7 @@ Function New-SupplementalWDACConfig {
                     Write-Progress -Id 19 -Activity 'Deploying the Supplemental policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
                     [WDACConfig.Logger]::Write('Deploying the Supplemental policy')
-                    $null = &'C:\Windows\System32\CiTool.exe' --update-policy $FinalSupplementalCIPPath -json
+                    [WDACConfig.CiToolHelper]::UpdatePolicy($FinalSupplementalCIPPath)
                     Write-ColorfulTextWDACConfig -Color Pink -InputText "A Supplemental policy with the name '$SuppPolicyName' has been deployed."
                 }
                 Write-Progress -Id 19 -Activity 'Complete.' -Completed
@@ -221,7 +221,7 @@ Function New-SupplementalWDACConfig {
                     Write-Progress -Id 20 -Activity 'Deploying the Supplemental policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
                     [WDACConfig.Logger]::Write('Deploying the Supplemental policy')
-                    $null = &'C:\Windows\System32\CiTool.exe' --update-policy $FinalSupplementalCIPPath -json
+                    [WDACConfig.CiToolHelper]::UpdatePolicy($FinalSupplementalCIPPath)
                     Write-ColorfulTextWDACConfig -Color Pink -InputText "A Supplemental policy with the name '$SuppPolicyName' has been deployed."
                 }
                 Write-Progress -Id 20 -Activity 'Complete.' -Completed
@@ -296,7 +296,7 @@ Function New-SupplementalWDACConfig {
                             Write-Progress -Id 21 -Activity 'Deploying the Supplemental policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
                             [WDACConfig.Logger]::Write('Deploying the Supplemental policy')
-                            $null = &'C:\Windows\System32\CiTool.exe' --update-policy $FinalSupplementalCIPPath -json
+                            [WDACConfig.CiToolHelper]::UpdatePolicy($FinalSupplementalCIPPath)
                             Write-ColorfulTextWDACConfig -Color Pink -InputText "A Supplemental policy with the name '$SuppPolicyName' has been deployed."
                         }
                     }
@@ -373,7 +373,7 @@ Function New-SupplementalWDACConfig {
                     Write-Progress -Id 33 -Activity 'Deploying the Supplemental policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
                     [WDACConfig.Logger]::Write('Deploying the Supplemental policy')
-                    $null = &'C:\Windows\System32\CiTool.exe' --update-policy $FinalSupplementalCIPPath -json
+                    [WDACConfig.CiToolHelper]::UpdatePolicy($FinalSupplementalCIPPath)
                     Write-ColorfulTextWDACConfig -Color Pink -InputText "A Supplemental policy with the name '$SuppPolicyName' has been deployed."
                 }
 
@@ -412,7 +412,7 @@ Function New-SupplementalWDACConfig {
 .DESCRIPTION
     Using official Microsoft methods, configure and use Windows Defender Application Control
 .COMPONENT
-    Windows Defender Application Control, ConfigCI PowerShell module
+    Windows Defender Application Control
 .FUNCTIONALITY
     Automate various tasks related to Windows Defender Application Control (WDAC)
 .PARAMETER Normal

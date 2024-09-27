@@ -50,6 +50,9 @@ namespace WDACConfig
                     case "GetSecurePolicySettings":
                         _ = ContentFrame.Navigate(typeof(Pages.GetSecurePolicySettings));
                         break;
+                    case "ViewCurrentPolicies":
+                        _ = ContentFrame.Navigate(typeof(Pages.ViewCurrentPolicies));
+                        break;
                     default:
                         break;
                 }

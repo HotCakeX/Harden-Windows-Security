@@ -36,10 +36,8 @@ Function Edit-SignedWDACConfig {
 
                 # Get the currently deployed policy IDs and save them in a HashSet
                 $CurrentPolicyIDs = [System.Collections.Generic.HashSet[System.String]]::new([System.StringComparer]::InvariantCultureIgnoreCase)
-                foreach ($Item in (&'C:\Windows\System32\CiTool.exe' -lp -json | ConvertFrom-Json).Policies) {
-                    if ($Item.IsSystemPolicy -ne 'True') {
-                        [System.Void]$CurrentPolicyIDs.Add("{$($Item.policyID)}")
-                    }
+                foreach ($Item in [WDACConfig.CiToolHelper]::GetPolicies($false, $true, $true).policyID) {
+                    [System.Void]$CurrentPolicyIDs.Add("{$($Item)}")
                 }
 
                 if ($RedFlag1 -or $RedFlag2) {
@@ -158,13 +156,13 @@ Function Edit-SignedWDACConfig {
             [System.IO.FileInfo]$SignToolPathFinal = Get-SignTool -SignToolExePathInput $SignToolPath
         } # If it is null, then Get-SignTool will behave the same as if it was called without any arguments.
         else {
-            [System.IO.FileInfo]$SignToolPathFinal = Get-SignTool -SignToolExePathInput (Get-CommonWDACConfig -SignToolPath)
+            [System.IO.FileInfo]$SignToolPathFinal = Get-SignTool -SignToolExePathInput ([WDACConfig.UserConfiguration]::Get().SignToolCustomPath)
         }
 
         # If CertPath parameter wasn't provided by user, check if a valid value exists in user configs, if so, use it, otherwise throw an error
         if (!$CertPath ) {
-            if ([System.IO.File]::Exists((Get-CommonWDACConfig -CertPath))) {
-                [System.IO.FileInfo]$CertPath = Get-CommonWDACConfig -CertPath
+            if ([System.IO.File]::Exists(([WDACConfig.UserConfiguration]::Get().CertificatePath))) {
+                [System.IO.FileInfo]$CertPath = [WDACConfig.UserConfiguration]::Get().CertificatePath
             }
             else {
                 throw 'CertPath parameter cannot be empty and no valid user configuration was found for it. Use the Build-WDACCertificate cmdlet to create one.'
@@ -173,8 +171,8 @@ Function Edit-SignedWDACConfig {
 
         # If CertCN was not provided by user, check if a valid value exists in user configs, if so, use it, otherwise throw an error
         if (!$CertCN) {
-            if ([WDACConfig.CertCNz]::new().GetValidValues() -contains (Get-CommonWDACConfig -CertCN)) {
-                [System.String]$CertCN = Get-CommonWDACConfig -CertCN
+            if ([WDACConfig.CertCNz]::new().GetValidValues() -contains ([WDACConfig.UserConfiguration]::Get().CertificateCommonName)) {
+                [System.String]$CertCN = [WDACConfig.UserConfiguration]::Get().CertificateCommonName
             }
             else {
                 throw 'CertCN parameter cannot be empty and no valid user configuration was found for it.'
@@ -190,8 +188,8 @@ Function Edit-SignedWDACConfig {
         if ($PSCmdlet.ParameterSetName -in 'AllowNewApps', 'MergeSupplementalPolicies') {
             # If PolicyPath was not provided by user, check if a valid value exists in user configs, if so, use it, otherwise throw an error
             if (!$PolicyPath) {
-                if ([System.IO.File]::Exists((Get-CommonWDACConfig -SignedPolicyPath))) {
-                    $PolicyPath = Get-CommonWDACConfig -SignedPolicyPath
+                if ([System.IO.File]::Exists(([WDACConfig.UserConfiguration]::Get().SignedPolicyPath))) {
+                    $PolicyPath = [WDACConfig.UserConfiguration]::Get().SignedPolicyPath
                 }
                 else {
                     throw 'PolicyPath parameter cannot be empty and no valid user configuration was found for SignedPolicyPath.'
@@ -259,7 +257,7 @@ Function Edit-SignedWDACConfig {
 
                 # Sign both CIPs
                 foreach ($CIP in ($AuditModeCIPPath, $EnforcedModeCIPPath)) {
-                    [WDACConfig.CodeIntegritySigner]::InvokeCiSigning($CIP, $SignToolPathFinal, $CertCN)
+                    [WDACConfig.SignToolHelper]::Sign($CIP, $SignToolPathFinal, $CertCN)
                 }
 
                 [WDACConfig.Logger]::Write('Renaming the signed CIPs to remove the .p7 extension')
@@ -274,7 +272,7 @@ Function Edit-SignedWDACConfig {
                 Write-Progress -Id 15 -Activity 'Deploying the Audit mode policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
                 [WDACConfig.Logger]::Write('Deploying the Audit mode CIP')
-                $null = &'C:\Windows\System32\CiTool.exe' --update-policy $AuditModeCIPPath -json
+                [WDACConfig.CiToolHelper]::UpdatePolicy($AuditModeCIPPath)
 
                 [WDACConfig.Logger]::Write('The Base policy with the following details has been Re-Signed and Re-Deployed in Audit Mode:')
                 [WDACConfig.Logger]::Write("PolicyName = $PolicyName")
@@ -302,7 +300,7 @@ Function Edit-SignedWDACConfig {
                     Write-Progress -Id 15 -Activity 'Redeploying the Base policy in Enforced Mode' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
                     [WDACConfig.Logger]::Write('Finally Block Running')
-                    $null = &'C:\Windows\System32\CiTool.exe' --update-policy $EnforcedModeCIPPath -json
+                    [WDACConfig.CiToolHelper]::UpdatePolicy($EnforcedModeCIPPath)
 
                     [WDACConfig.Logger]::Write('The Base policy with the following details has been Re-Signed and Re-Deployed in Enforced Mode:')
                     [WDACConfig.Logger]::Write("PolicyName = $PolicyName")
@@ -621,7 +619,7 @@ Function Edit-SignedWDACConfig {
                 [WDACConfig.Logger]::Write('Converting the Supplemental policy to a CIP file')
                 $null = ConvertFrom-CIPolicy -XmlFilePath $SuppPolicyPath -BinaryFilePath $SupplementalCIPPath
 
-                [WDACConfig.CodeIntegritySigner]::InvokeCiSigning($SupplementalCIPPath, $SignToolPathFinal, $CertCN)
+                [WDACConfig.SignToolHelper]::Sign($SupplementalCIPPath, $SignToolPathFinal, $CertCN)
 
                 [WDACConfig.Logger]::Write('Renaming the signed Supplemental policy file to remove the .p7 extension')
                 Move-Item -LiteralPath "$StagingArea\$SuppPolicyID.cip.p7" -Destination $SupplementalCIPPath -Force
@@ -630,7 +628,7 @@ Function Edit-SignedWDACConfig {
                 Write-Progress -Id 15 -Activity 'Deploying Supplemental policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
                 [WDACConfig.Logger]::Write('Deploying the Supplemental policy')
-                $null = &'C:\Windows\System32\CiTool.exe' --update-policy $SupplementalCIPPath -json
+                [WDACConfig.CiToolHelper]::UpdatePolicy($SupplementalCIPPath)
 
                 #Endregion Supplemental-policy-processing-and-deployment
 
@@ -650,7 +648,7 @@ Function Edit-SignedWDACConfig {
                 [WDACConfig.Logger]::Write('Getting the IDs of the currently deployed policies on the system')
                 $DeployedPoliciesIDs = [System.Collections.Generic.HashSet[System.String]]::new([System.StringComparer]::InvariantCultureIgnoreCase)
 
-                foreach ($Item in (&'C:\Windows\System32\CiTool.exe' -lp -json | ConvertFrom-Json).Policies.PolicyID) {
+                foreach ($Item in [WDACConfig.CiToolHelper]::GetPolicies($true, $true, $true).policyID) {
                     [System.Void]$DeployedPoliciesIDs.Add("{$Item}")
                 }
 
@@ -699,7 +697,7 @@ Function Edit-SignedWDACConfig {
                     [System.String]$SupplementalPolicyID = $Supplementalxml.SiPolicy.PolicyID
 
                     [WDACConfig.Logger]::Write("Removing policy with ID: $SupplementalPolicyID")
-                    $null = &'C:\Windows\System32\CiTool.exe' --remove-policy $SupplementalPolicyID -json
+                    [WDACConfig.CiToolHelper]::RemovePolicy($SupplementalPolicyID)
                 }
 
                 $CurrentStep++
@@ -726,7 +724,7 @@ Function Edit-SignedWDACConfig {
                 [WDACConfig.Logger]::Write('Converting the Supplemental policy to a CIP file')
                 $null = ConvertFrom-CIPolicy -XmlFilePath $FinalSupplementalPath -BinaryFilePath $FinalSupplementalCIPPath
 
-                [WDACConfig.CodeIntegritySigner]::InvokeCiSigning($FinalSupplementalCIPPath, $SignToolPathFinal, $CertCN)
+                [WDACConfig.SignToolHelper]::Sign($FinalSupplementalCIPPath, $SignToolPathFinal, $CertCN)
 
                 [WDACConfig.Logger]::Write('Renaming the signed Supplemental policy file to remove the .p7 extension')
                 Move-Item -LiteralPath "$StagingArea\$SuppPolicyID.cip.p7" -Destination $FinalSupplementalCIPPath -Force
@@ -735,7 +733,7 @@ Function Edit-SignedWDACConfig {
                 Write-Progress -Id 16 -Activity 'Deploying the final policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
                 [WDACConfig.Logger]::Write('Deploying the Supplemental policy')
-                $null = &'C:\Windows\System32\CiTool.exe' --update-policy $FinalSupplementalCIPPath -json
+                [WDACConfig.CiToolHelper]::UpdatePolicy($FinalSupplementalCIPPath)
 
                 Write-ColorfulTextWDACConfig -Color TeaGreen -InputText "The Signed Supplemental policy $SuppPolicyName has been deployed on the system, replacing the old ones."
 
@@ -850,7 +848,7 @@ Function Edit-SignedWDACConfig {
 
                 [WDACConfig.Logger]::Write('Getting the policy ID of the currently deployed base policy based on the policy name that user selected')
                 # In case there are multiple policies with the same name, the first one will be used
-                [System.Object]$CurrentlyDeployedPolicy = ((&'C:\Windows\System32\CiTool.exe' -lp -json | ConvertFrom-Json).Policies | Where-Object -FilterScript { ($_.IsSystemPolicy -ne 'True') -and ($_.Version = [WDACConfig.CIPolicyVersion]::Measure($_.Version)) -and ($_.Friendlyname -eq $CurrentBasePolicyName) }) | Select-Object -First 1
+                [WDACConfig.CiPolicyInfo]$CurrentlyDeployedPolicy = [WDACConfig.CiToolHelper]::GetPolicies($false, $true, $true) | Where-Object -FilterScript { $_.Friendlyname -eq $CurrentBasePolicyName } | Select-Object -First 1
 
                 [System.String]$CurrentID = $CurrentlyDeployedPolicy.BasePolicyID
                 [System.Version]$CurrentVersion = $CurrentlyDeployedPolicy.Version
@@ -875,7 +873,7 @@ Function Edit-SignedWDACConfig {
                 [WDACConfig.Logger]::Write('Converting the base policy to a CIP file')
                 $null = ConvertFrom-CIPolicy -XmlFilePath $BasePolicyPath -BinaryFilePath $BasePolicyCIPPath
 
-                [WDACConfig.CodeIntegritySigner]::InvokeCiSigning($BasePolicyCIPPath, $SignToolPathFinal, $CertCN)
+                [WDACConfig.SignToolHelper]::Sign($BasePolicyCIPPath, $SignToolPathFinal, $CertCN)
 
                 [WDACConfig.Logger]::Write('Renaming the signed base policy file to remove the .p7 extension')
                 Move-Item -LiteralPath "$StagingArea\$CurrentID.cip.p7" -Destination $BasePolicyCIPPath -Force
@@ -884,7 +882,7 @@ Function Edit-SignedWDACConfig {
                 Write-Progress -Id 17 -Activity 'Deploying the policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
                 [WDACConfig.Logger]::Write('Deploying the new base policy with the same GUID on the system')
-                $null = &'C:\Windows\System32\CiTool.exe' --update-policy $BasePolicyCIPPath -json
+                [WDACConfig.CiToolHelper]::UpdatePolicy($BasePolicyCIPPath)
 
                 $CurrentStep++
                 Write-Progress -Id 17 -Activity 'Cleaning up' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
@@ -903,9 +901,9 @@ Function Edit-SignedWDACConfig {
 
                 Write-ColorfulTextWDACConfig -Color Pink -InputText "Base Policy has been successfully updated to $NewBasePolicyType"
 
-                if (Get-CommonWDACConfig -SignedPolicyPath) {
+                if ([WDACConfig.UserConfiguration]::Get().SignedPolicyPath) {
                     [WDACConfig.Logger]::Write('Replacing the old signed policy path in User Configurations with the new one')
-                    $null = Set-CommonWDACConfig -SignedPolicyPath $PolicyFiles[$NewBasePolicyType]
+                    $null = [WDACConfig.UserConfiguration]::Set($PolicyFiles[$NewBasePolicyType], $null, $null, $null, $null, $null, $null, $null , $null)
                 }
             }
         }
@@ -933,7 +931,7 @@ Function Edit-SignedWDACConfig {
 
     All of the files the cmdlet creates and interacts with are stored in the following directory: C:\Program Files\WDACConfig\StagingArea\Edit-SignedWDACConfig
 .COMPONENT
-    Windows Defender Application Control, ConfigCI PowerShell module
+    Windows Defender Application Control
 .FUNCTIONALITY
     Using official Microsoft methods, Edits Signed WDAC policies deployed on the system (Windows Defender Application Control)
 .PARAMETER AllowNewApps

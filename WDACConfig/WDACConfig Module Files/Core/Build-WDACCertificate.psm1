@@ -224,10 +224,10 @@ ValidityPeriod = Years
             $null = Import-PfxCertificate -ProtectPrivateKey 'VSM' -FilePath (Join-Path -Path ([WDACConfig.GlobalVars]::UserConfigDir) -ChildPath "$FileName.pfx") -CertStoreLocation 'Cert:\CurrentUser\My' -Password $Password
 
             [WDACConfig.Logger]::Write('Saving the common name of the certificate to the User configurations')
-            $null = Set-CommonWDACConfig -CertCN $CommonName
+            $null = [WDACConfig.UserConfiguration]::Set($null, $null, $null, $CommonName, $null, $null, $null, $null , $null)
 
             [WDACConfig.Logger]::Write('Saving the path of the .cer file of the certificate to the User configurations')
-            $null = Set-CommonWDACConfig -CertPath $CertificateOutputPath
+            $null = [WDACConfig.UserConfiguration]::Set($null, $null, $null, $null, $CertificateOutputPath, $null, $null, $null , $null)
         }
         catch {
             throw $_

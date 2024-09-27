@@ -28,7 +28,7 @@ Function Get-KernelModeDriversAudit {
     process {
 
         # Get the Code Integrity event logs for kernel mode drivers that have been loaded since the audit mode policy has been deployed
-        [System.Collections.Hashtable[]]$RawData = Receive-CodeIntegrityLogs -Date (Get-CommonWDACConfig -StrictKernelModePolicyTimeOfDeployment) -Type 'Audit'
+        [System.Collections.Hashtable[]]$RawData = Receive-CodeIntegrityLogs -Date ([WDACConfig.UserConfiguration]::Get().StrictKernelModePolicyTimeOfDeployment) -Type 'Audit'
 
         [WDACConfig.Logger]::Write("RawData count: $($RawData.count)")
 

@@ -27,38 +27,13 @@ Function Edit-SignedWDACConfig {
 
         [ArgumentCompleter([WDACConfig.ArgCompleter.XmlFilePathsPicker])]
         [ValidateScript({
-                # Validate the Policy file to make sure the user isn't accidentally trying to
-                # Edit an Unsigned policy using Edit-SignedWDACConfig cmdlet which is only made for Signed policies
-                [System.Xml.XmlDocument]$XmlTest = Get-Content -LiteralPath $_
-                [System.String]$RedFlag1 = $XmlTest.SiPolicy.SupplementalPolicySigners.SupplementalPolicySigner.SignerId
-                [System.String]$RedFlag2 = $XmlTest.SiPolicy.UpdatePolicySigners.UpdatePolicySigner.SignerId
-                [System.String]$RedFlag3 = $XmlTest.SiPolicy.PolicyID
-
-                # Get the currently deployed policy IDs and save them in a HashSet
-                $CurrentPolicyIDs = [System.Collections.Generic.HashSet[System.String]]::new([System.StringComparer]::InvariantCultureIgnoreCase)
-                foreach ($Item in [WDACConfig.CiToolHelper]::GetPolicies($false, $true, $true).policyID) {
-                    [System.Void]$CurrentPolicyIDs.Add("{$($Item)}")
+                if ([WDACConfig.PolicyFileSigningStatusDetection]::Check($_) -ne [WDACConfig.PolicyFileSigningStatusDetection+SigningStatus]::Signed) {
+                    Throw 'The currently selected policy xml file is unsigned'
                 }
-
-                if ($RedFlag1 -or $RedFlag2) {
-                    # Ensure the selected base policy xml file is deployed
-                    if ($CurrentPolicyIDs -and $CurrentPolicyIDs.Contains($RedFlag3)) {
-
-                        # Ensure the selected base policy xml file is valid
-                        if ( [WDACConfig.CiPolicyTest]::TestCiPolicy($_, $null) ) {
-                            return $True
-                        }
-                    }
-                    else {
-                        throw 'The currently selected policy xml file is not deployed.'
-                    }
+                if (![WDACConfig.CheckPolicyDeploymentStatus]::IsDeployed($_)) {
+                    throw 'The currently selected policy xml file is not deployed.'
                 }
-                # This throw is shown only when User added a Signed policy xml file for Unsigned policy file path property in user configuration file
-                # Without this, the error shown would be vague: The variable cannot be validated because the value System.String[] is not a valid value for the PolicyPath variable.
-                else {
-                    throw 'The currently selected policy xml file is unsigned.'
-                }
-            }, ErrorMessage = 'The selected policy xml file is Unsigned. Please use Edit-WDACConfig cmdlet to edit Unsigned policies.')]
+            })]
         [Parameter(Mandatory = $false, ParameterSetName = 'AllowNewApps', ValueFromPipelineByPropertyName = $true)]
         [Parameter(Mandatory = $false, ParameterSetName = 'MergeSupplementalPolicies', ValueFromPipelineByPropertyName = $true)]
         [System.IO.FileInfo]$PolicyPath,
@@ -247,12 +222,12 @@ Function Edit-SignedWDACConfig {
 
                 [WDACConfig.Logger]::Write('Creating Audit Mode CIP')
                 [System.IO.FileInfo]$AuditModeCIPPath = Join-Path -Path $StagingArea -ChildPath 'AuditMode.cip'
-                Set-CiRuleOptions -FilePath $PolicyPath -RulesToRemove 'Enabled:Unsigned System Integrity Policy' -RulesToAdd 'Enabled:Audit Mode'
+                [WDACConfig.CiRuleOptions]::Set($PolicyPath, $null, ([WDACConfig.CiRuleOptions+PolicyRuleOptions]::EnabledAuditMode), ([WDACConfig.CiRuleOptions+PolicyRuleOptions]::EnabledUnsignedSystemIntegrityPolicy), $null, $null, $null, $null, $null, $null, $null)
                 $null = ConvertFrom-CIPolicy -XmlFilePath $PolicyPath -BinaryFilePath $AuditModeCIPPath
 
                 [WDACConfig.Logger]::Write('Creating Enforced Mode CIP')
                 [System.IO.FileInfo]$EnforcedModeCIPPath = Join-Path -Path $StagingArea -ChildPath 'EnforcedMode.cip'
-                Set-CiRuleOptions -FilePath $PolicyPath -RulesToRemove 'Enabled:Unsigned System Integrity Policy', 'Enabled:Audit Mode'
+                [WDACConfig.CiRuleOptions]::Set($PolicyPath, $null, $null, @([WDACConfig.CiRuleOptions+PolicyRuleOptions]::EnabledUnsignedSystemIntegrityPolicy, [WDACConfig.CiRuleOptions+PolicyRuleOptions]::EnabledAuditMode), $null, $null, $null, $null, $null, $null, $null)
                 $null = ConvertFrom-CIPolicy -XmlFilePath $PolicyPath -BinaryFilePath $EnforcedModeCIPPath
 
                 # Sign both CIPs
@@ -530,7 +505,7 @@ Function Edit-SignedWDACConfig {
                     # MERGERS
                     [WDACConfig.Logger]::Write('Merging the Hash Level rules')
                     Remove-AllowElements_Semantic -Path $WDACPolicyPathTEMP
-                    Close-EmptyXmlNodes_Semantic -XmlFilePath $WDACPolicyPathTEMP
+                    [WDACConfig.CloseEmptyXmlNodesSemantic]::Close($WDACPolicyPathTEMP)
 
                     [WDACConfig.Logger]::Write('Merging the Signer Level rules')
                     Remove-DuplicateFileAttrib_Semantic -XmlFilePath $WDACPolicyPathTEMP
@@ -540,7 +515,7 @@ Function Edit-SignedWDACConfig {
                     Merge-Signers_Semantic -XmlFilePath $WDACPolicyPathTEMP
 
                     # This function runs twice, once for signed data and once for unsigned data
-                    Close-EmptyXmlNodes_Semantic -XmlFilePath $WDACPolicyPathTEMP
+                    [WDACConfig.CloseEmptyXmlNodesSemantic]::Close($WDACPolicyPathTEMP)
 
                     # Add the policy XML file to the array that holds policy XML files
                     [System.Void]$PolicyXMLFilesArray.TryAdd('Temp WDAC Policy', $WDACPolicyPathTEMP)
@@ -598,7 +573,7 @@ Function Edit-SignedWDACConfig {
                 [WDACConfig.Logger]::Write('Adding signer rule to the Supplemental policy')
                 Add-SignerRule -FilePath $SuppPolicyPath -CertificatePath $CertPath -Update -User -Kernel
 
-                Set-CiRuleOptions -FilePath $SuppPolicyPath -Template Supplemental
+                [WDACConfig.CiRuleOptions]::Set($SuppPolicyPath, [WDACConfig.CiRuleOptions+PolicyTemplate]::Supplemental, $null, $null, $null, $null, $null, $null, $null, $null, $null)
 
                 [WDACConfig.Logger]::Write('Setting the Supplemental policy version to 1.0.0.0')
                 Set-CIPolicyVersion -FilePath $SuppPolicyPath -Version '1.0.0.0'
@@ -711,7 +686,7 @@ Function Edit-SignedWDACConfig {
                 [WDACConfig.Logger]::Write('Adding signer rules to the Supplemental policy')
                 Add-SignerRule -FilePath $FinalSupplementalPath -CertificatePath $CertPath -Update -User -Kernel
 
-                Set-CiRuleOptions -FilePath $FinalSupplementalPath -RulesToRemove 'Enabled:Unsigned System Integrity Policy'
+                [WDACConfig.CiRuleOptions]::Set($FinalSupplementalPath, $null, $null, @([WDACConfig.CiRuleOptions+PolicyRuleOptions]::EnabledUnsignedSystemIntegrityPolicy), $null, $null, $null, $null, $null, $null, $null)
 
                 # Defining paths for the final Supplemental policy CIP
                 [System.IO.FileInfo]$FinalSupplementalCIPPath = Join-Path -Path $StagingArea -ChildPath "$SuppPolicyID.cip"
@@ -780,8 +755,8 @@ Function Edit-SignedWDACConfig {
 
                         [WDACConfig.Logger]::Write('Setting the policy name')
                         Set-CIPolicyIdInfo -FilePath $BasePolicyPath -PolicyName "$Name - $(Get-Date -Format 'MM-dd-yyyy')"
-
-                        Set-CiRuleOptions -FilePath $BasePolicyPath -Template Base -RequireEVSigners:$RequireEVSigners
+                       
+                        [WDACConfig.CiRuleOptions]::Set($BasePolicyPath, [WDACConfig.CiRuleOptions+PolicyTemplate]::Base, $null, $null, $null, $null, $null, $RequireEVSigners, $null, $null, $null)
                     }
                     'SignedAndReputable' {
                         $Name = 'SignedAndReputable'
@@ -794,7 +769,7 @@ Function Edit-SignedWDACConfig {
                         [WDACConfig.Logger]::Write('Setting the policy name')
                         Set-CIPolicyIdInfo -FilePath $BasePolicyPath -PolicyName "$Name - $(Get-Date -Format 'MM-dd-yyyy')"
 
-                        Set-CiRuleOptions -FilePath $BasePolicyPath -Template BaseISG -RequireEVSigners:$RequireEVSigners
+                        [WDACConfig.CiRuleOptions]::Set($BasePolicyPath, [WDACConfig.CiRuleOptions+PolicyTemplate]::BaseISG, $null, $null, $null, $null, $null, $RequireEVSigners, $null, $null, $null)
 
                         # Configure required services for ISG authorization
                         [WDACConfig.Logger]::Write('Configuring required services for ISG authorization')
@@ -839,7 +814,7 @@ Function Edit-SignedWDACConfig {
                         [WDACConfig.Logger]::Write('Setting the policy name')
                         Set-CIPolicyIdInfo -FilePath $BasePolicyPath -PolicyName "$Name - $(Get-Date -Format 'MM-dd-yyyy')"
 
-                        Set-CiRuleOptions -FilePath $BasePolicyPath -Template Base -RequireEVSigners:$RequireEVSigners
+                        [WDACConfig.CiRuleOptions]::Set($BasePolicyPath, [WDACConfig.CiRuleOptions+PolicyTemplate]::Base, $null, $null, $null, $null, $null, $RequireEVSigners, $null, $null, $null)
                     }
                 }
 
@@ -868,7 +843,7 @@ Function Edit-SignedWDACConfig {
                 [WDACConfig.Logger]::Write("Setting the policy version to '$VersionToDeploy' - Previous version was '$CurrentVersion'")
                 Set-CIPolicyVersion -FilePath $BasePolicyPath -Version $VersionToDeploy
 
-                Set-CiRuleOptions -FilePath $BasePolicyPath -RulesToRemove 'Enabled:Unsigned System Integrity Policy'
+                [WDACConfig.CiRuleOptions]::Set($BasePolicyPath, $null, $null, @([WDACConfig.CiRuleOptions+PolicyRuleOptions]::EnabledUnsignedSystemIntegrityPolicy), $null, $null, $null, $null, $null, $null, $null)
 
                 [WDACConfig.Logger]::Write('Converting the base policy to a CIP file')
                 $null = ConvertFrom-CIPolicy -XmlFilePath $BasePolicyPath -BinaryFilePath $BasePolicyCIPPath

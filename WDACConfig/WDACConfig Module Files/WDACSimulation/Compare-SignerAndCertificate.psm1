@@ -117,7 +117,7 @@ Function Compare-SignerAndCertificate {
 
                                     [System.Collections.Hashtable[]]$CandidateFileAttrib = foreach ($Attrib in $signer.FileAttrib.GetEnumerator()) {
 
-                                        if ($ExtendedFileInfo.Version -ge $Attrib.Value.MinimumFileVersion) {
+                                        if ($ExtendedFileInfo.Version -ge [System.Version]::New($Attrib.Value.MinimumFileVersion)) {
                                             $Attrib.Value
                                         }
                                     }
@@ -280,7 +280,7 @@ Function Compare-SignerAndCertificate {
 
                             [System.Collections.Hashtable[]]$CandidateFileAttrib = foreach ($Attrib in $signer.FileAttrib.GetEnumerator()) {
 
-                                if ($ExtendedFileInfo.Version -ge $Attrib.Value.MinimumFileVersion) {
+                                if ($ExtendedFileInfo.Version -ge [System.Version]::New($Attrib.Value.MinimumFileVersion)) {
                                     $Attrib.Value
                                 }
                             }
@@ -457,7 +457,7 @@ Function Compare-SignerAndCertificate {
                         # Get all of the File Attributes associated with the signer and check if the file's version is greater than or equal to the minimum version in them
                         [System.Collections.Hashtable[]]$CandidateFileAttrib = foreach ($Attrib in $signer.FileAttrib.GetEnumerator()) {
 
-                            if ($ExtendedFileInfo.Version -ge $Attrib.Value.MinimumFileVersion) {
+                            if ($ExtendedFileInfo.Version -ge [System.Version]::New($Attrib.Value.MinimumFileVersion)) {
                                 $Attrib.Value
                             }
                         }

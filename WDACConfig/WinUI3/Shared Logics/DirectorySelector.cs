@@ -2,8 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices;
-using System.Windows.Forms;
 
 #nullable enable
 
@@ -24,22 +22,11 @@ namespace WDACConfig
 
             do
             {
-                using FolderBrowserDialog dialog = new();
-                dialog.Description = "To stop selecting directories, press ESC or select Cancel.";
-                dialog.ShowNewFolderButton = false;
-                dialog.RootFolder = Environment.SpecialFolder.MyComputer;
+                string? SelectedFolderPath = FileSystemPicker.ShowDirectoryPicker("Select a folder | To stop selecting folders, press ESC or select Cancel.");
 
-                // Use ShowDialog and set top most by using Win32 API
-                // This method is much better than the ShowDialog overload that takes a parent form
-                // This makes the opened File/Folder picker top most without the ability to go behind the window that initiated it
-                // Which is the experience that other native Windows applications have
-                // Also after picking a directory, the next time the picker GUI opens up will be in the same directory as the last time instead of opening at C drive or some other default location
-                IntPtr hwnd = GetForegroundWindow();
-                DialogResult result = dialog.ShowDialog(new WindowWrapper(hwnd));
-
-                if (result == DialogResult.OK)
+                if (SelectedFolderPath is not null)
                 {
-                    _ = programsPaths.Add(new DirectoryInfo(dialog.SelectedPath));
+                    _ = programsPaths.Add(new DirectoryInfo(SelectedFolderPath));
                 }
                 else
                 {
@@ -77,22 +64,6 @@ namespace WDACConfig
             {
                 return StringComparer.OrdinalIgnoreCase.GetHashCode(obj.FullName);
             }
-        }
-
-
-        // P/Invoke declarations
-        [DllImport("user32.dll")]
-        // Get the handle of the foreground window
-        // https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-getforegroundwindow
-        private static extern IntPtr GetForegroundWindow();
-
-        // Wrapper class to satisfy IWin32Window interface
-        public class WindowWrapper(IntPtr handle) : IWin32Window
-        {
-            private IntPtr _hwnd = handle;
-
-            // Property to satisfy IWin32Window interface
-            public IntPtr Handle => _hwnd;
         }
     }
 }

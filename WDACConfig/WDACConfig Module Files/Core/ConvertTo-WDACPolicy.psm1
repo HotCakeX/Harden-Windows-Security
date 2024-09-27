@@ -498,7 +498,7 @@ Function ConvertTo-WDACPolicy {
 
                     [WDACConfig.Logger]::Write('Merging the Hash Level rules')
                     Remove-AllowElements_Semantic -Path $WDACPolicyPathTEMP
-                    Close-EmptyXmlNodes_Semantic -XmlFilePath $WDACPolicyPathTEMP
+                    [WDACConfig.CloseEmptyXmlNodesSemantic]::Close($WDACPolicyPathTEMP)
 
                     $CurrentStep++
                     Write-Progress -Id 30 -Activity 'Making sure there are no duplicates' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
@@ -511,7 +511,7 @@ Function ConvertTo-WDACPolicy {
                     Merge-Signers_Semantic -XmlFilePath $WDACPolicyPathTEMP
 
                     # This function runs twice, once for signed data and once for unsigned data
-                    Close-EmptyXmlNodes_Semantic -XmlFilePath $WDACPolicyPathTEMP
+                    [WDACConfig.CloseEmptyXmlNodesSemantic]::Close($WDACPolicyPathTEMP)
 
                     $PolicyFilesToMerge.Add($WDACPolicyPathTEMP)
 
@@ -530,7 +530,7 @@ Function ConvertTo-WDACPolicy {
                             [System.String]$SupplementalPolicyID = $SupplementalPolicyID.Substring(11)
 
                             # Configure policy rule options
-                            Set-CiRuleOptions -FilePath $WDACPolicyPath -Template Supplemental
+                            [WDACConfig.CiRuleOptions]::Set($WDACPolicyPath, [WDACConfig.CiRuleOptions+PolicyTemplate]::Supplemental, $null, $null, $null, $null, $null, $null, $null, $null, $null)
 
                             [WDACConfig.Logger]::Write('ConvertTo-WDACPolicy: Copying the policy file to the User Config directory')
                             Copy-Item -Path $WDACPolicyPath -Destination ([WDACConfig.GlobalVars]::UserConfigDir) -Force
@@ -550,7 +550,7 @@ Function ConvertTo-WDACPolicy {
                             [System.String]$SupplementalPolicyID = $SupplementalPolicyID.Substring(11)
 
                             # Configure policy rule options
-                            Set-CiRuleOptions -FilePath $WDACPolicyPath -Template Supplemental
+                            [WDACConfig.CiRuleOptions]::Set($WDACPolicyPath, [WDACConfig.CiRuleOptions+PolicyTemplate]::Supplemental, $null, $null, $null, $null, $null, $null, $null, $null, $null)
 
                             [WDACConfig.Logger]::Write('ConvertTo-WDACPolicy: Copying the policy file to the User Config directory')
                             Copy-Item -Path $WDACPolicyPath -Destination ([WDACConfig.GlobalVars]::UserConfigDir) -Force
@@ -573,11 +573,11 @@ Function ConvertTo-WDACPolicy {
                             $null = Set-CIPolicyIdInfo -FilePath $WDACPolicyPath -PolicyName $SuppPolicyName -ResetPolicyID
 
                             # Remove all policy rule options prior to merging the policies since we don't need to add/remove any policy rule options to/from the user input policy
-                            Set-CiRuleOptions -FilePath $WDACPolicyPath -RemoveAll
+                            [WDACConfig.CiRuleOptions]::Set($WDACPolicyPath, $null, $null, $null, $null, $null, $null, $null, $null, $null, $true)
 
                             $null = Merge-CIPolicy -PolicyPaths $PolicyToAddLogsTo, $WDACPolicyPath -OutputFilePath $PolicyToAddLogsTo
 
-                            Set-HVCIOptions -Strict -FilePath $PolicyToAddLogsTo
+                            [WDACConfig.UpdateHvciOptions]::Update($PolicyToAddLogsTo)
 
                             if ($null -ne $MacrosBackup) {
                                 [WDACConfig.Logger]::Write('Restoring the Macros in the policy')
@@ -712,7 +712,7 @@ Function ConvertTo-WDACPolicy {
 
                     [WDACConfig.Logger]::Write('Merging the Hash Level rules')
                     Remove-AllowElements_Semantic -Path $OutputPolicyPathMDEAH
-                    Close-EmptyXmlNodes_Semantic -XmlFilePath $OutputPolicyPathMDEAH
+                    [WDACConfig.CloseEmptyXmlNodesSemantic]::Close($OutputPolicyPathMDEAH)
 
                     # Remove-UnreferencedFileRuleRefs -xmlFilePath $OutputPolicyPathMDEAH
 
@@ -742,7 +742,7 @@ Function ConvertTo-WDACPolicy {
                     Merge-Signers_Semantic -XmlFilePath $OutputPolicyPathMDEAH
 
                     # This function runs twice, once for signed data and once for unsigned data
-                    Close-EmptyXmlNodes_Semantic -XmlFilePath $OutputPolicyPathMDEAH
+                    [WDACConfig.CloseEmptyXmlNodesSemantic]::Close($OutputPolicyPathMDEAH)
 
                     #Region Base To Supplemental Policy Association and Deployment
                     Switch ($True) {
@@ -758,7 +758,7 @@ Function ConvertTo-WDACPolicy {
                             [System.String]$SupplementalPolicyID = $SupplementalPolicyID.Substring(11)
 
                             # Configure policy rule options
-                            Set-CiRuleOptions -FilePath $OutputPolicyPathMDEAH -Template Supplemental
+                            [WDACConfig.CiRuleOptions]::Set($OutputPolicyPathMDEAH, [WDACConfig.CiRuleOptions+PolicyTemplate]::Supplemental, $null, $null, $null, $null, $null, $null, $null, $null, $null)
 
                             [WDACConfig.Logger]::Write('ConvertTo-WDACPolicy: Copying the policy file to the User Config directory')
                             Copy-Item -Path $OutputPolicyPathMDEAH -Destination ([WDACConfig.GlobalVars]::UserConfigDir) -Force
@@ -777,8 +777,8 @@ Function ConvertTo-WDACPolicy {
                             [System.String]$SupplementalPolicyID = Set-CIPolicyIdInfo -FilePath $OutputPolicyPathMDEAH -PolicyName $SuppPolicyName -SupplementsBasePolicyID $BasePolicyGUID -ResetPolicyID
                             [System.String]$SupplementalPolicyID = $SupplementalPolicyID.Substring(11)
 
-                            # Configure policy rule options
-                            Set-CiRuleOptions -FilePath $OutputPolicyPathMDEAH -Template Supplemental
+                            # Configure policy rule options                            
+                            [WDACConfig.CiRuleOptions]::Set($OutputPolicyPathMDEAH, [WDACConfig.CiRuleOptions+PolicyTemplate]::Supplemental, $null, $null, $null, $null, $null, $null, $null, $null, $null)
 
                             [WDACConfig.Logger]::Write('ConvertTo-WDACPolicy: Copying the policy file to the User Config directory')
                             Copy-Item -Path $OutputPolicyPathMDEAH -Destination ([WDACConfig.GlobalVars]::UserConfigDir) -Force
@@ -801,11 +801,11 @@ Function ConvertTo-WDACPolicy {
                             $null = Set-CIPolicyIdInfo -FilePath $OutputPolicyPathMDEAH -PolicyName $SuppPolicyName -ResetPolicyID
 
                             # Remove all policy rule options prior to merging the policies since we don't need to add/remove any policy rule options to/from the user input policy
-                            Set-CiRuleOptions -FilePath $OutputPolicyPathMDEAH -RemoveAll
+                            [WDACConfig.CiRuleOptions]::Set($OutputPolicyPathMDEAH, $null, $null, $null, $null, $null, $null, $null, $null, $null, $true)
 
                             $null = Merge-CIPolicy -PolicyPaths $PolicyToAddLogsTo, $OutputPolicyPathMDEAH -OutputFilePath $PolicyToAddLogsTo
 
-                            Set-HVCIOptions -Strict -FilePath $PolicyToAddLogsTo
+                            [WDACConfig.UpdateHvciOptions]::Update($PolicyToAddLogsTo)
 
                             if ($null -ne $MacrosBackup) {
                                 [WDACConfig.Logger]::Write('Restoring the Macros in the policy')
@@ -821,7 +821,7 @@ Function ConvertTo-WDACPolicy {
                         }
                         Default {
                             [WDACConfig.Logger]::Write('ConvertTo-WDACPolicy: Copying the policy file to the User Config directory')
-                            Set-CiRuleOptions -FilePath $OutputPolicyPathMDEAH -Template Supplemental
+                            [WDACConfig.CiRuleOptions]::Set($OutputPolicyPathMDEAH, [WDACConfig.CiRuleOptions+PolicyTemplate]::Supplemental, $null, $null, $null, $null, $null, $null, $null, $null, $null)
                             Copy-Item -Path $OutputPolicyPathMDEAH -Destination ([WDACConfig.GlobalVars]::UserConfigDir) -Force
                         }
                     }
@@ -920,7 +920,7 @@ Function ConvertTo-WDACPolicy {
 
                     [WDACConfig.Logger]::Write('Merging the Hash Level rules')
                     Remove-AllowElements_Semantic -Path $OutputPolicyPathEVTX
-                    Close-EmptyXmlNodes_Semantic -XmlFilePath $OutputPolicyPathEVTX
+                    [WDACConfig.CloseEmptyXmlNodesSemantic]::Close($OutputPolicyPathEVTX)
 
                     # Remove-UnreferencedFileRuleRefs -xmlFilePath $OutputPolicyPathEVTX
 
@@ -935,7 +935,7 @@ Function ConvertTo-WDACPolicy {
                     Merge-Signers_Semantic -XmlFilePath $OutputPolicyPathEVTX
 
                     # This function runs twice, once for signed data and once for unsigned data
-                    Close-EmptyXmlNodes_Semantic -XmlFilePath $OutputPolicyPathEVTX
+                    [WDACConfig.CloseEmptyXmlNodesSemantic]::Close($OutputPolicyPathEVTX)
 
                     #Region Base To Supplemental Policy Association and Deployment
 
@@ -955,7 +955,7 @@ Function ConvertTo-WDACPolicy {
                             [System.String]$SupplementalPolicyID = $SupplementalPolicyID.Substring(11)
 
                             # Configure policy rule options
-                            Set-CiRuleOptions -FilePath $OutputPolicyPathEVTX -Template Supplemental
+                            [WDACConfig.CiRuleOptions]::Set($OutputPolicyPathEVTX, [WDACConfig.CiRuleOptions+PolicyTemplate]::Supplemental, $null, $null, $null, $null, $null, $null, $null, $null, $null)
 
                             [WDACConfig.Logger]::Write('ConvertTo-WDACPolicy: Copying the policy file to the User Config directory')
                             Copy-Item -Path $OutputPolicyPathEVTX -Destination ([WDACConfig.GlobalVars]::UserConfigDir) -Force
@@ -975,7 +975,7 @@ Function ConvertTo-WDACPolicy {
                             [System.String]$SupplementalPolicyID = $SupplementalPolicyID.Substring(11)
 
                             # Configure policy rule options
-                            Set-CiRuleOptions -FilePath $OutputPolicyPathEVTX -Template Supplemental
+                            [WDACConfig.CiRuleOptions]::Set($OutputPolicyPathEVTX, [WDACConfig.CiRuleOptions+PolicyTemplate]::Supplemental, $null, $null, $null, $null, $null, $null, $null, $null, $null)
 
                             [WDACConfig.Logger]::Write('ConvertTo-WDACPolicy: Copying the policy file to the User Config directory')
                             Copy-Item -Path $OutputPolicyPathEVTX -Destination ([WDACConfig.GlobalVars]::UserConfigDir) -Force
@@ -998,11 +998,11 @@ Function ConvertTo-WDACPolicy {
                             $null = Set-CIPolicyIdInfo -FilePath $OutputPolicyPathEVTX -PolicyName $SuppPolicyName -ResetPolicyID
 
                             # Remove all policy rule options prior to merging the policies since we don't need to add/remove any policy rule options to/from the user input policy
-                            Set-CiRuleOptions -FilePath $OutputPolicyPathEVTX -RemoveAll
+                            [WDACConfig.CiRuleOptions]::Set($OutputPolicyPathEVTX, $null, $null, $null, $null, $null, $null, $null, $null, $null, $true)
 
                             $null = Merge-CIPolicy -PolicyPaths $PolicyToAddLogsTo, $OutputPolicyPathEVTX -OutputFilePath $PolicyToAddLogsTo
 
-                            Set-HVCIOptions -Strict -FilePath $PolicyToAddLogsTo
+                            [WDACConfig.UpdateHvciOptions]::Update($PolicyToAddLogsTo)
 
                             if ($null -ne $MacrosBackup) {
                                 [WDACConfig.Logger]::Write('Restoring the Macros in the policy')
@@ -1018,7 +1018,7 @@ Function ConvertTo-WDACPolicy {
                         }
                         Default {
                             [WDACConfig.Logger]::Write('ConvertTo-WDACPolicy: Copying the policy file to the User Config directory')
-                            Set-CiRuleOptions -FilePath $OutputPolicyPathEVTX -Template Supplemental
+                            [WDACConfig.CiRuleOptions]::Set($OutputPolicyPathEVTX, [WDACConfig.CiRuleOptions+PolicyTemplate]::Supplemental, $null, $null, $null, $null, $null, $null, $null, $null, $null)
                             Copy-Item -Path $OutputPolicyPathEVTX -Destination ([WDACConfig.GlobalVars]::UserConfigDir) -Force
                         }
                     }

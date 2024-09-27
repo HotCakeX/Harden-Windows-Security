@@ -36,7 +36,7 @@ namespace WDACConfig.Pages
         private void EditButton_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
         {
             var button = sender as Button;
-            string? fieldName = button.Tag.ToString();
+            string? fieldName = button!.Tag.ToString();
             string? newValue = null;
 
             // Determine the new value based on the associated TextBox
@@ -92,7 +92,7 @@ namespace WDACConfig.Pages
         private void ClearButton_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
         {
             var button = sender as Button;
-            string? fieldName = button.Tag.ToString();
+            string? fieldName = button!.Tag.ToString();
 
             WDACConfig.UserConfiguration.Remove(
                 fieldName == "SignedPolicyPath",
@@ -166,21 +166,21 @@ namespace WDACConfig.Pages
         private void BrowseButton_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
         {
             var button = sender as Button;
-            string? fieldName = button.Tag.ToString();
+            string? fieldName = button!.Tag.ToString();
 
             switch (fieldName)
             {
                 case "SignedPolicyPath":
-                    SignedPolicyPathTextBox.Text = FilePicker.ShowFilePicker("Choose a Signed Policy XML File path", ("XML Files", "*.xml"));
+                    SignedPolicyPathTextBox.Text = FileSystemPicker.ShowFilePicker("Choose a Signed Policy XML File path", ("XML Files", "*.xml"));
                     break;
                 case "UnsignedPolicyPath":
-                    UnsignedPolicyPathTextBox.Text = FilePicker.ShowFilePicker("Choose an Unsigned Policy XML File path", ("XML Files", "*.xml"));
+                    UnsignedPolicyPathTextBox.Text = FileSystemPicker.ShowFilePicker("Choose an Unsigned Policy XML File path", ("XML Files", "*.xml"));
                     break;
                 case "SignToolCustomPath":
-                    SignToolCustomPathTextBox.Text = FilePicker.ShowFilePicker("Choose the SignTool.exe path", ("Exe Files", "*.exe"));
+                    SignToolCustomPathTextBox.Text = FileSystemPicker.ShowFilePicker("Choose the SignTool.exe path", ("Exe Files", "*.exe"));
                     break;
                 case "CertificatePath":
-                    CertificatePathTextBox.Text = FilePicker.ShowFilePicker("Choose the Certificate file path", ("Cert Files", "*.cer"));
+                    CertificatePathTextBox.Text = FileSystemPicker.ShowFilePicker("Choose the Certificate file path", ("Cert Files", "*.cer"));
                     break;
                 default:
                     break;

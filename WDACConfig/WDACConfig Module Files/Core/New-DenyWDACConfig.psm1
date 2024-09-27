@@ -153,8 +153,8 @@ Function New-DenyWDACConfig {
 
                 [WDACConfig.Logger]::Write('Setting the policy version to 1.0.0.0')
                 Set-CIPolicyVersion -FilePath $FinalDenyPolicyPath -Version '1.0.0.0'
-
-                Set-CiRuleOptions -FilePath $FinalDenyPolicyPath -Template Base
+                
+                [WDACConfig.CiRuleOptions]::Set($FinalDenyPolicyPath, [WDACConfig.CiRuleOptions+PolicyTemplate]::Base, $null, $null, $null, $null, $null, $null, $null, $null, $null)
 
                 [WDACConfig.Logger]::Write('Converting the policy XML to .CIP')
                 $null = ConvertFrom-CIPolicy -XmlFilePath $FinalDenyPolicyPath -BinaryFilePath $FinalDenyPolicyCIPPath
@@ -232,7 +232,7 @@ Function New-DenyWDACConfig {
                 [WDACConfig.Logger]::Write('Setting the policy version to 1.0.0.0')
                 Set-CIPolicyVersion -FilePath $FinalDenyPolicyPath -Version '1.0.0.0'
 
-                Set-CiRuleOptions -FilePath $FinalDenyPolicyPath -Template Base
+                [WDACConfig.CiRuleOptions]::Set($FinalDenyPolicyPath, [WDACConfig.CiRuleOptions+PolicyTemplate]::Base, $null, $null, $null, $null, $null, $null, $null, $null, $null)
 
                 [WDACConfig.Logger]::Write('Converting the policy XML to .CIP')
                 $null = ConvertFrom-CIPolicy -XmlFilePath $FinalDenyPolicyPath -BinaryFilePath $FinalDenyPolicyCIPPath
@@ -304,7 +304,7 @@ Function New-DenyWDACConfig {
                         [WDACConfig.Logger]::Write('Setting the policy version to 1.0.0.0')
                         Set-CIPolicyVersion -FilePath $FinalDenyPolicyPath -Version '1.0.0.0'
 
-                        Set-CiRuleOptions -FilePath $FinalDenyPolicyPath -Template Base
+                        [WDACConfig.CiRuleOptions]::Set($FinalDenyPolicyPath, [WDACConfig.CiRuleOptions+PolicyTemplate]::Base, $null, $null, $null, $null, $null, $null, $null, $null, $null)
 
                         [WDACConfig.Logger]::Write('Converting the policy XML to .CIP')
                         $null = ConvertFrom-CIPolicy -XmlFilePath $FinalDenyPolicyPath -BinaryFilePath $FinalDenyPolicyCIPPath
@@ -362,7 +362,7 @@ Function New-DenyWDACConfig {
                 [WDACConfig.Logger]::Write('Setting the policy version to 1.0.0.0')
                 Set-CIPolicyVersion -FilePath $FinalDenyPolicyPath -Version '1.0.0.0'
 
-                Set-CiRuleOptions -FilePath $FinalDenyPolicyPath -Template Base
+                [WDACConfig.CiRuleOptions]::Set($FinalDenyPolicyPath, [WDACConfig.CiRuleOptions+PolicyTemplate]::Base, $null, $null, $null, $null, $null, $null, $null, $null, $null)
 
                 [WDACConfig.Logger]::Write('Converting the policy XML to .CIP')
                 $null = ConvertFrom-CIPolicy -XmlFilePath $FinalDenyPolicyPath -BinaryFilePath $FinalDenyPolicyCIPPath

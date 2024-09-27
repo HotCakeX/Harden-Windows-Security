@@ -79,137 +79,27 @@ Function New-WDACConfig {
                 2) set them to be auto-updated via task scheduler
                 3) create XML file with the rules and remove the allow all rules from the policy
             #>
-
             if ($AutoUpdate) {
-
-                # The total number of the main steps for the progress bar to render
-                [System.UInt16]$TotalSteps = 1
-                [System.UInt16]$CurrentStep = 0
-
-                $CurrentStep++
-                Write-Progress -Id 2 -Activity 'Setting up the Scheduled task' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
-
-                [WDACConfig.Logger]::Write('Deleting the MSFT Driver Block list update Scheduled task if it exists')
-                Get-ScheduledTask -TaskName 'MSFT Driver Block list update' -TaskPath '\MSFT Driver Block list update\' -ErrorAction Ignore | Unregister-ScheduledTask -Confirm:$false
-
-                [WDACConfig.Logger]::Write('Creating the MSFT Driver Block list update task')
-                # Get the SID of the SYSTEM account. It is a well-known SID, but still querying it, going to use it to create the scheduled task
-                [System.Security.Principal.SecurityIdentifier]$SYSTEMSID = New-Object -TypeName System.Security.Principal.SecurityIdentifier([System.Security.Principal.WellKnownSidType]::LocalSystemSid, $null)
-
-                [System.String]$TaskArgument = @'
--NoProfile -WindowStyle Hidden -command "& {try {Invoke-WebRequest -Uri 'https://aka.ms/VulnerableDriverBlockList' -OutFile 'VulnerableDriverBlockList.zip' -ErrorAction Stop}catch{exit 1};Expand-Archive -Path '.\VulnerableDriverBlockList.zip' -DestinationPath 'VulnerableDriverBlockList' -Force;$SiPolicy_EnforcedFile = Get-ChildItem -Recurse -File -Path '.\VulnerableDriverBlockList' -Filter 'SiPolicy_Enforced.p7b' | Select-Object -First 1;Move-Item -Path $SiPolicy_EnforcedFile.FullName -Destination ($env:SystemDrive + '\Windows\System32\CodeIntegrity\SiPolicy.p7b') -Force;citool --refresh -json;Remove-Item -Path '.\VulnerableDriverBlockList' -Recurse -Force;Remove-Item -Path '.\VulnerableDriverBlockList.zip' -Force;}"
-'@
-                # Create a scheduled task action, this defines how to download and install the latest Microsoft Recommended Driver Block Rules
-                [Microsoft.Management.Infrastructure.CimInstance]$Action = New-ScheduledTaskAction -Execute 'Powershell.exe' -Argument $TaskArgument
-
-                # Create a scheduled task principal and assign the SYSTEM account's SID to it so that the task will run under its context
-                [Microsoft.Management.Infrastructure.CimInstance]$TaskPrincipal = New-ScheduledTaskPrincipal -LogonType S4U -UserId $($SYSTEMSID.Value) -RunLevel Highest
-
-                # Create a trigger for the scheduled task. The task will first run one hour after its creation and from then on will run every 7 days, indefinitely
-                [Microsoft.Management.Infrastructure.CimInstance]$Time = New-ScheduledTaskTrigger -Once -At (Get-Date).AddHours(1) -RepetitionInterval (New-TimeSpan -Days 7)
-
-                # Register the scheduled task. If the task's state is disabled, it will be overwritten with a new task that is enabled
-                Register-ScheduledTask -Action $Action -Trigger $Time -Principal $TaskPrincipal -TaskPath 'MSFT Driver Block list update' -TaskName 'MSFT Driver Block list update' -Description 'Microsoft Recommended Driver Block List update' -Force
-
-                # Define advanced settings for the scheduled task
-                [Microsoft.Management.Infrastructure.CimInstance]$TaskSettings = New-ScheduledTaskSettingsSet -AllowStartIfOnBatteries -DontStopIfGoingOnBatteries -Compatibility 'Win8' -StartWhenAvailable -ExecutionTimeLimit (New-TimeSpan -Minutes 3) -RestartCount 4 -RestartInterval (New-TimeSpan -Hours 6) -RunOnlyIfNetworkAvailable
-
-                # Add the advanced settings we defined above to the scheduled task
-                Set-ScheduledTask -TaskName 'MSFT Driver Block list update' -TaskPath 'MSFT Driver Block list update' -Settings $TaskSettings
-
-                [WDACConfig.Logger]::Write('Displaying extra info about the Microsoft recommended Drivers block list')
-                Invoke-Command -ScriptBlock $DriversBlockListInfoGatheringSCRIPTBLOCK
-
-                Write-Progress -Id 2 -Activity 'complete.' -Completed
-
+                [WDACConfig.BasePolicyCreator]::SetAutoUpdateDriverBlockRules()
                 Return
             }
 
-            # The total number of the main steps for the progress bar to render
-            [System.UInt16]$TotalSteps = 3
-            [System.UInt16]$CurrentStep = 0
-
-            [System.String]$Name = 'Microsoft Recommended Driver Block Rules'
-
-            if ($Deploy) {
-                $CurrentStep++
-                Write-Progress -Id 1 -Activity "Downloading the $Name" -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
-
-                [WDACConfig.DriversBlockRulesFetcher]::Fetch($StagingArea)
-
-                $CurrentStep++
-                Write-Progress -Id 1 -Activity 'Refreshing the system policies' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
-
-                [WDACConfig.Logger]::Write('Refreshing the system WDAC policies')
-                [WDACConfig.CiToolHelper]::RefreshPolicy()
-
-                Write-ColorfulTextWDACConfig -Color Pink -InputText 'SiPolicy.p7b has been deployed and policies refreshed.'
-
-                [WDACConfig.Logger]::Write("Displaying extra info about the $Name")
-                Invoke-Command -ScriptBlock $DriversBlockListInfoGatheringSCRIPTBLOCK
+            if ($Deploy) {               
+                [WDACConfig.BasePolicyCreator]::DeployDriversBlockRules($StagingArea)
+                return
             }
             else {
-                $CurrentStep++
-                Write-Progress -Id 1 -Activity "Downloading the $Name" -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
-
+                [System.String]$Name = 'Microsoft Recommended Driver Block Rules'
+            
                 # Download the markdown page from GitHub containing the latest Microsoft recommended driver block rules
-                [System.String]$MSFTDriverBlockRulesAsString = (Invoke-WebRequest -Uri ([WDACConfig.GlobalVars]::MSFTRecommendedDriverBlockRulesURL) -ProgressAction SilentlyContinue).Content
+                [System.String]$MSFTDriverBlockRulesAsString = (Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/MicrosoftDocs/windows-itpro-docs/public/windows/security/application-security/application-control/windows-defender-application-control/design/microsoft-recommended-driver-block-rules.md').Content
 
                 $CurrentStep++
                 Write-Progress -Id 1 -Activity "Removing the 'Allow all rules' from the policy" -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
                 # Load the Driver Block Rules as XML into a variable after extracting them from the markdown string
                 [System.Xml.XmlDocument]$DriverBlockRulesXML = ($MSFTDriverBlockRulesAsString -replace "(?s).*``````xml(.*)``````.*", '$1').Trim()
-
-                # Get the SiPolicy node
-                [System.Xml.XmlElement]$SiPolicyNode = $DriverBlockRulesXML.SiPolicy
-
-                [WDACConfig.Logger]::Write("Removing the 'Allow all rules' from the policy")
-
-                # Declare the namespace manager and add the default namespace with a prefix
-                [System.Xml.XmlNamespaceManager]$NameSpace = New-Object -TypeName System.Xml.XmlNamespaceManager -ArgumentList $DriverBlockRulesXML.NameTable
-                $NameSpace.AddNamespace('ns', 'urn:schemas-microsoft-com:sipolicy')
-
-                # Select the FileRuleRef nodes that have a RuleID attribute that starts with ID_ALLOW_
-                [System.Object[]]$NodesToRemove = $SiPolicyNode.FileRules.SelectNodes("//ns:FileRuleRef[starts-with(@RuleID, 'ID_ALLOW_')]", $NameSpace)
-
-                # Append the Allow nodes that have an ID attribute that starts with ID_ALLOW_ to the array
-                $NodesToRemove += $SiPolicyNode.FileRules.SelectNodes("//ns:Allow[starts-with(@ID, 'ID_ALLOW_')]", $NameSpace)
-
-                # Loop through the nodes to remove
-                foreach ($Node in $NodesToRemove) {
-                    # Get the parent node of the node to remove
-                    [System.Xml.XmlElement]$ParentNode = $Node.ParentNode
-
-                    # Check if the parent node has more than one child node, if it does then only remove the child node
-                    if ($ParentNode.ChildNodes.Count -gt 1) {
-                        # Remove the node from the parent node
-                        [System.Void]$ParentNode.RemoveChild($Node)
-                    }
-
-                    # If the parent node only has one child node then replace the parent node with an empty node
-                    else {
-                        # Create a new node with the same name and namespace as the parent node
-                        [System.Xml.XmlElement]$NewNode = $DriverBlockRulesXML.CreateElement($ParentNode.Name, $ParentNode.NamespaceURI)
-                        # Replace the parent node with the new node
-                        [System.Void]$ParentNode.ParentNode.ReplaceChild($NewNode, $ParentNode)
-
-                        # Check if the new node has any sibling nodes, if not then replace its parent node with an empty node
-                        # We do this because the built-in PowerShell cmdlets would throw errors if empty <FileRulesRef /> exists inside <ProductSigners> node
-                        if ($null -eq $NewNode.PreviousSibling -and $null -eq $NewNode.NextSibling) {
-
-                            # Get the grandparent node of the new node
-                            [System.Xml.XmlElement]$GrandParentNode = $NewNode.ParentNode
-
-                            # Create a new node with the same name and namespace as the grandparent node
-                            [System.Xml.XmlElement]$NewGrandNode = $DriverBlockRulesXML.CreateElement($GrandParentNode.Name, $GrandParentNode.NamespaceURI)
-
-                            # Replace the grandparent node with the new node
-                            [System.Void]$GrandParentNode.ParentNode.ReplaceChild($NewGrandNode, $GrandParentNode)
-                        }
-                    }
-                }
-
+               
                 [System.IO.FileInfo]$XMLPath = Join-Path -Path $StagingArea -ChildPath "$Name.xml"
 
                 # Save the modified XML content to a file
@@ -217,11 +107,10 @@ Function New-WDACConfig {
 
                 $CurrentStep++
                 Write-Progress -Id 1 -Activity 'Configuring the policy settings' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
-
-                Set-CiRuleOptions -FilePath $XMLPath -RulesToRemove 'Enabled:Audit Mode'
+                [WDACConfig.CiRuleOptions]::Set($XMLPath, $null, $null, @([WDACConfig.CiRuleOptions+PolicyRuleOptions]::EnabledAuditMode), $null, $null, $null, $null, $null, $null, $null)
 
                 [WDACConfig.Logger]::Write("Displaying extra info about the $Name")
-                Invoke-Command -ScriptBlock $DriversBlockListInfoGatheringSCRIPTBLOCK
+                [WDACConfig.BasePolicyCreator]::DriversBlockListInfoGathering()
 
                 # Copy the result to the User Config directory at the end
                 Copy-Item -Path $XMLPath -Destination ([WDACConfig.GlobalVars]::UserConfigDir) -Force
@@ -265,7 +154,7 @@ Function New-WDACConfig {
             [WDACConfig.Logger]::Write('Setting policy version to 1.0.0.0')
             Set-CIPolicyVersion -FilePath $FinalPolicyPath -Version '1.0.0.0'
 
-            Set-CiRuleOptions -FilePath $FinalPolicyPath -Template Base -TestMode:$TestMode -RequireEVSigners:$RequireEVSigners -ScriptEnforcement:$EnableScriptEnforcement -EnableAuditMode:$Audit
+            [WDACConfig.CiRuleOptions]::Set($FinalPolicyPath, [WDACConfig.CiRuleOptions+PolicyTemplate]::Base, $null, $null, $null, $Audit, $null, $RequireEVSigners, $EnableScriptEnforcement, $TestMode , $null)
 
             if ($Deploy) {
                 $CurrentStep++
@@ -328,8 +217,8 @@ Function New-WDACConfig {
 
             [WDACConfig.Logger]::Write('Setting the policy version to 1.0.0.0')
             Set-CIPolicyVersion -FilePath $FinalPolicyPath -Version '1.0.0.0'
-
-            Set-CiRuleOptions -FilePath $FinalPolicyPath -Template Base -TestMode:$TestMode -RequireEVSigners:$RequireEVSigners -ScriptEnforcement:$EnableScriptEnforcement -EnableAuditMode:$Audit
+        
+            [WDACConfig.CiRuleOptions]::Set($FinalPolicyPath, [WDACConfig.CiRuleOptions+PolicyTemplate]::Base, $null, $null, $null, $Audit, $null, $RequireEVSigners, $EnableScriptEnforcement, $TestMode, $null)
 
             if ($Deploy) {
                 $CurrentStep++
@@ -369,7 +258,7 @@ Function New-WDACConfig {
 
                 Set-Content -Value $XMLContent -LiteralPath $FinalPolicyPath -Force
 
-                Set-CiRuleOptions -FilePath $FinalPolicyPath -RulesToRemove 'Enabled:Audit Mode' -RulesToAdd 'Enabled:Update Policy No Reboot'
+                [WDACConfig.CiRuleOptions]::Set($FinalPolicyPath, $null, @([WDACConfig.CiRuleOptions+PolicyRuleOptions]::EnabledUpdatePolicyNoReboot), @([WDACConfig.CiRuleOptions+PolicyRuleOptions]::EnabledAuditMode), $null, $null, $null, $null, $null, $null, $null)
 
                 [WDACConfig.Logger]::Write('Assigning policy name and resetting policy ID')
                 $null = Set-CIPolicyIdInfo -ResetPolicyID -FilePath $FinalPolicyPath -PolicyName $Name
@@ -425,7 +314,7 @@ Function New-WDACConfig {
             $CurrentStep++
             Write-Progress -Id 6 -Activity 'Configuring the policy rule options' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
-            Set-CiRuleOptions -FilePath $FinalPolicyPath -Template BaseISG -TestMode:$TestMode -RequireEVSigners:$RequireEVSigners -ScriptEnforcement:$EnableScriptEnforcement -EnableAuditMode:$Audit
+            [WDACConfig.CiRuleOptions]::Set($FinalPolicyPath, [WDACConfig.CiRuleOptions+PolicyTemplate]::BaseISG, $null, $null, $null, $Audit, $null, $RequireEVSigners, $EnableScriptEnforcement, $TestMode, $null)
 
             $CurrentStep++
             Write-Progress -Id 6 -Activity 'Configuring the policy settings' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
@@ -460,29 +349,7 @@ Function New-WDACConfig {
 
             Write-Progress -Id 6 -Activity 'Complete.' -Completed
         }
-
-        # Script block that is used to supply extra information regarding Microsoft recommended driver block rules in commands that use them
-        [System.Management.Automation.ScriptBlock]$DriversBlockListInfoGatheringSCRIPTBLOCK = {
-            try {
-                [System.String]$Owner = 'MicrosoftDocs'
-                [System.String]$Repo = 'windows-itpro-docs'
-                [System.String]$Path = 'windows/security/application-security/application-control/windows-defender-application-control/design/microsoft-recommended-driver-block-rules.md'
-
-                [System.String]$ApiUrl = "https://api.github.com/repos/$Owner/$Repo/commits?path=$Path"
-                [System.Object[]]$Response = Invoke-RestMethod -Uri $ApiUrl -ProgressAction SilentlyContinue
-                [System.DateTime]$Date = $Response[0].commit.author.date
-
-                Write-ColorfulTextWDACConfig -Color Lavender -InputText "The document containing the drivers block list on GitHub was last updated on $Date"
-                [System.String]$MicrosoftRecommendedDriverBlockRules = (Invoke-WebRequest -Uri ([WDACConfig.GlobalVars]::MSFTRecommendedDriverBlockRulesURL) -ProgressAction SilentlyContinue).Content
-                $null = $MicrosoftRecommendedDriverBlockRules -match '<VersionEx>(.*)</VersionEx>'
-                Write-ColorfulTextWDACConfig -Color Pink -InputText "The current version of Microsoft recommended drivers block list is $($Matches[1])"
-            }
-            catch {
-                Write-Error -ErrorAction Continue -Message $_
-                Write-Error -ErrorAction Continue -Message 'Could not get additional information about the Microsoft recommended driver block list'
-            }
-        }
-
+        
         if (-NOT $SkipVersionCheck) { Update-WDACConfigPSModule -InvocationStatement $MyInvocation.Statement }
     }
 

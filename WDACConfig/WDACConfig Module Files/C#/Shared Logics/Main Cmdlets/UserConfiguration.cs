@@ -107,6 +107,25 @@ namespace WDACConfig
                 }
             }
 
+            // Validate the SignedPolicyPath parameter
+            if (!string.IsNullOrWhiteSpace(SignedPolicyPath))
+            {
+                if (PolicyFileSigningStatusDetection.Check(SignedPolicyPath) is not PolicyFileSigningStatusDetection.SigningStatus.Signed)
+                {
+                    throw new InvalidOperationException($"The specified policy file '{SignedPolicyPath}' is not signed. Please provide a signed policy file.");
+                }
+            }
+
+            // Validate the UnsignedPolicyPath parameter
+            if (!string.IsNullOrWhiteSpace(UnsignedPolicyPath))
+            {
+                if (PolicyFileSigningStatusDetection.Check(UnsignedPolicyPath) is PolicyFileSigningStatusDetection.SigningStatus.Signed)
+                {
+                    throw new InvalidOperationException($"The specified policy file '{UnsignedPolicyPath}' is signed. Please provide an Unsigned policy file.");
+                }
+            }
+
+
 
             Logger.Write("Trying to parse and read the current user configurations file");
             UserConfiguration UserConfiguration = ReadUserConfiguration();

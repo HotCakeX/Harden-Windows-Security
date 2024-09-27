@@ -7,7 +7,7 @@ namespace WDACConfig
 {
     public class FilePublisherSignerCreator
     {
-        public List<WDACConfig.CertificateDetailsCreator> CertificateDetails { get; set; }
+        public List<CertificateDetailsCreator> CertificateDetails { get; set; }
         public Version? FileVersion { get; set; }
         public string? FileDescription { get; set; }
         public string? InternalName { get; set; }
@@ -20,7 +20,7 @@ namespace WDACConfig
         public int SiSigningScenario { get; set; }
 
         public FilePublisherSignerCreator(
-            List<WDACConfig.CertificateDetailsCreator> certificateDetails,
+            List<CertificateDetailsCreator> certificateDetails,
             Version fileVersion,
             string? fileDescription,
             string? internalName,

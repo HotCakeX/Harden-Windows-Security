@@ -56,7 +56,7 @@ namespace WDACConfig
             {
 
                 // Making sure the PowerShell Gallery file in the WDACConfig module's folder is skipped
-                if (file.Name == "PSGetModuleInfo.xml")
+                if (string.Equals(file.Name, "PSGetModuleInfo.xml", StringComparison.OrdinalIgnoreCase))
                 {
                     continue;
                 }

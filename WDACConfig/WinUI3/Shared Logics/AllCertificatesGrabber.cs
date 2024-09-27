@@ -6,6 +6,8 @@ using System.Security.Cryptography.X509Certificates;
 
 #nullable enable
 
+#pragma warning disable CA2000
+
 // The following functions and methods use the Windows APIs to grab all of the certificates from a signed file
 
 namespace WDACConfig
@@ -205,7 +207,7 @@ namespace WDACConfig
                     // Call WinVerifyTrust to verify trust on the file
                     WinTrust.WinVerifyTrustResult verifyTrustResult = WinTrust.WinVerifyTrust(
                         IntPtr.Zero,
-                        WinTrust.GenericWinTrustVerifyActionGuid,
+                       WinTrust.GenericWinTrustVerifyActionGuid,
                         winTrustDataPointer
                     );
 
@@ -279,14 +281,13 @@ namespace WDACConfig
                                 signerCertificate.Decode(numArray);
 
                                 // Initialize X509Chain object based on signer's certificate chain context
+                                X509Chain certificateChain;
+
                                 // Check if csSigners is less than or equal to 0
                                 if (providerData.csSigners <= 0U)
                                 {
                                     // If csSigners is 0 or negative, create a new X509Chain without parameters
-                                    using X509Chain certificateChain = new();
-
-                                    // Add signer's certificate and certificate chain to AllFileSigners list
-                                    AllFileSigners.Add(new AllFileSigners(signerCertificate, certificateChain));
+                                    certificateChain = new X509Chain();
                                 }
                                 else
                                 {
@@ -295,20 +296,17 @@ namespace WDACConfig
                                     CryptProviderSigner signer = Marshal.PtrToStructure<CryptProviderSigner>(providerData.pasSigners);
 
                                     // Initialize X509Chain with the pChainContext from the signer structure
-                                    using X509Chain certificateChain = new(signer.pChainContext);
-
-                                    // Add signer's certificate and certificate chain to AllFileSigners list
-                                    AllFileSigners.Add(new AllFileSigners(signerCertificate, certificateChain));
+                                    certificateChain = new X509Chain(signer.pChainContext);
                                 }
+
+                                // Add signer's certificate and certificate chain to AllFileSigners list
+                                AllFileSigners.Add(new AllFileSigners(signerCertificate, certificateChain));
                             }
                         }
                     }
                 }
                 finally
                 {
-
-#pragma warning disable CA1508 // Avoid dead conditional code
-
                     if (TrustedData != null)
                     {
                         // Set StateAction to close the WinTrustData structure
@@ -318,8 +316,6 @@ namespace WDACConfig
                         Marshal.StructureToPtr(TrustedData, winTrustDataPointer, false);
                         _ = WinTrust.WinVerifyTrust(IntPtr.Zero, WinTrust.GenericWinTrustVerifyActionGuid, winTrustDataPointer);
                     }
-
-#pragma warning restore CA1508 // Avoid dead conditional code
 
                     // Free memory allocated to winTrustDataPointer
                     Marshal.FreeHGlobal(winTrustDataPointer);

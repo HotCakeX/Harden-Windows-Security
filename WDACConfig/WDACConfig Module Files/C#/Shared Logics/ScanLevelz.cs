@@ -1,6 +1,6 @@
-using System.Management.Automation;
-
 #nullable enable
+
+using System.Management.Automation;
 
 namespace WDACConfig
 {

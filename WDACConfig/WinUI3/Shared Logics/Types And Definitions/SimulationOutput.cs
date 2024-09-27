@@ -32,22 +32,22 @@ namespace WDACConfig
         // Whether the file is authorized or not
         public bool IsAuthorized { get; set; } = isAuthorized;
 
-        // Gathered from the Get-SignerInfo function
+        // Gathered from the GetSignerInfo method
         public string SignerID { get; set; } = signerID;
 
-        // Gathered from the Get-SignerInfo function
+        // Gathered from the GetSignerInfo method
         public string SignerName { get; set; } = signerName;
 
-        // Gathered from the Get-SignerInfo function
+        // Gathered from the GetSignerInfo method
         public string SignerCertRoot { get; set; } = signerCertRoot;
 
-        // Gathered from the Get-SignerInfo function
+        // Gathered from the GetSignerInfo method
         public string SignerCertPublisher { get; set; } = signerCertPublisher;
 
-        // Gathered from the Get-SignerInfo function
+        // Gathered from the GetSignerInfo method
         public string SignerScope { get; set; } = signerScope;
 
-        // Gathered from the Get-SignerInfo function
+        // Gathered from the GetSignerInfo method
         public string[] SignerFileAttributeIDs { get; set; } = signerFileAttributeIDs;
 
         // The main level based on which the file is authorized

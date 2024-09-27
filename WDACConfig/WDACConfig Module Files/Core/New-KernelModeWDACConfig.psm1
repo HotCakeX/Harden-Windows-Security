@@ -94,7 +94,7 @@ Function New-KernelModeWDACConfig {
                 [WDACConfig.Logger]::Write('Setting the policy version to 1.0.0.0')
                 Set-CIPolicyVersion -FilePath $OutputPolicyPath -Version '1.0.0.0'
 
-                Set-CiRuleOptions -FilePath $OutputPolicyPath -Template BaseKernel -RulesToAdd 'Enabled:Audit Mode' -RequireEVSigners:$EVSigners -DisableFlightSigning:$NoFlights
+                [WDACConfig.CiRuleOptions]::Set($OutputPolicyPath, [WDACConfig.CiRuleOptions+PolicyTemplate]::BaseKernel, @([WDACConfig.CiRuleOptions+PolicyRuleOptions]::EnabledAuditMode), $null, $null, $null, $NoFlights, $EVSigners, $null, $null, $null)
 
                 # Set the already available and deployed GUID as the new PolicyID to prevent deploying duplicate Audit mode policies
                 if ($CurrentStrictKernelPolicyGUIDConfirmation) {
@@ -223,7 +223,7 @@ Function New-KernelModeWDACConfig {
                             [WDACConfig.Logger]::Write('Setting the policy version to 1.0.0.0')
                             Set-CIPolicyVersion -FilePath $FinalEnforcedPolicyPath -Version '1.0.0.0'
 
-                            Set-CiRuleOptions -FilePath $FinalEnforcedPolicyPath -Template BaseKernel -RequireEVSigners:$EVSigners
+                            [WDACConfig.CiRuleOptions]::Set($FinalEnforcedPolicyPath, [WDACConfig.CiRuleOptions+PolicyTemplate]::BaseKernel, $null, $null, $null, $null, $null, $EVSigners, $null, $null, $null)
 
                             [System.IO.FileInfo]$FinalEnforcedCIPPath = Join-Path -Path $StagingArea -ChildPath "$PolicyID.cip"
 
@@ -364,7 +364,7 @@ Function New-KernelModeWDACConfig {
                             [WDACConfig.Logger]::Write('Setting the policy version to 1.0.0.0')
                             Set-CIPolicyVersion -FilePath $FinalEnforcedPolicyPath -Version '1.0.0.0'
 
-                            Set-CiRuleOptions -FilePath $FinalEnforcedPolicyPath -Template BaseKernel -RulesToAdd 'Disabled:Flight Signing' -RequireEVSigners:$EVSigners
+                            [WDACConfig.CiRuleOptions]::Set($FinalEnforcedPolicyPath, [WDACConfig.CiRuleOptions+PolicyTemplate]::BaseKernel, @([WDACConfig.CiRuleOptions+PolicyRuleOptions]::DisabledFlightSigning), $null, $null, $null, $null, $EVSigners, $null, $null, $null)
 
                             [System.IO.FileInfo]$FinalEnforcedCIPPath = Join-Path -Path $StagingArea -ChildPath "$PolicyID.cip"
 

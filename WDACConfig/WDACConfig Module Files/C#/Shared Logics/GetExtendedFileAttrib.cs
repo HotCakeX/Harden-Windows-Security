@@ -18,7 +18,7 @@ namespace WDACConfig
         public string? OriginalFileName { get; private set; }
         public string? InternalName { get; private set; }
         public string? ProductName { get; private set; }
-        public string? Version { get; private set; }
+        public Version? Version { get; private set; }
         public string? FileDescription { get; private set; }
 
         // Importing external functions from Version.dll to work with file version info
@@ -59,7 +59,7 @@ namespace WDACConfig
                 if (!TryGetVersion(spanData, out var version))
                     throw Marshal.GetExceptionForHR(Marshal.GetHRForLastWin32Error())!;
 
-                ExFileInfo.Version = CheckAndSetNull(version);
+                ExFileInfo.Version = version; // Set the Version property
 
                 // Extract locale and encoding information
                 if (!TryGetLocaleAndEncoding(spanData, out var locale, out var encoding))
@@ -84,7 +84,7 @@ namespace WDACConfig
         }
 
         // Extract the version from the data
-        private static bool TryGetVersion(Span<byte> data, out string? version)
+        private static bool TryGetVersion(Span<byte> data, out Version? version)
         {
             version = null;
             // Query the root block for version info
@@ -94,8 +94,13 @@ namespace WDACConfig
             // Marshal the version info structure
             var fileInfo = Marshal.PtrToStructure<FileVersionInfo>(buffer);
 
-            // Construct version string
-            version = $"{fileInfo.dwFileVersionMS >> 16}.{fileInfo.dwFileVersionMS & ushort.MaxValue}.{fileInfo.dwFileVersionLS >> 16}.{fileInfo.dwFileVersionLS & ushort.MaxValue}";
+            // Construct Version object from version info
+            version = new Version(
+                (int)(fileInfo.dwFileVersionMS >> 16),
+                (int)(fileInfo.dwFileVersionMS & ushort.MaxValue),
+                (int)(fileInfo.dwFileVersionLS >> 16),
+                (int)(fileInfo.dwFileVersionLS & ushort.MaxValue)
+            );
             return true;
         }
 

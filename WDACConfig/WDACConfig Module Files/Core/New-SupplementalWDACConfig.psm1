@@ -107,10 +107,7 @@ Function New-SupplementalWDACConfig {
 
         # Ensure when user selects the -Deploy parameter, the base policy is not signed
         if ($Deploy) {
-            $XmlTest = [System.Xml.XmlDocument](Get-Content -Path $PolicyPath)
-            $RedFlag1 = $XmlTest.SiPolicy.SupplementalPolicySigners.SupplementalPolicySigner.SignerId
-            $RedFlag2 = $XmlTest.SiPolicy.UpdatePolicySigners.UpdatePolicySigner.SignerId
-            if ($RedFlag1 -or $RedFlag2) {
+            if ([WDACConfig.PolicyFileSigningStatusDetection]::Check($PolicyPath) -eq [WDACConfig.PolicyFileSigningStatusDetection+SigningStatus]::Signed) {
                 Throw 'You are using -Deploy parameter and the selected base policy is Signed. Please use Deploy-SignedWDACConfig to deploy it.'
             }
         }
@@ -173,7 +170,7 @@ Function New-SupplementalWDACConfig {
                 [WDACConfig.Logger]::Write('Setting the Supplemental policy version to 1.0.0.0')
                 Set-CIPolicyVersion -FilePath $FinalSupplementalPath -Version '1.0.0.0'
 
-                Set-CiRuleOptions -FilePath $FinalSupplementalPath -Template Supplemental
+                [WDACConfig.CiRuleOptions]::Set($FinalSupplementalPath, [WDACConfig.CiRuleOptions+PolicyTemplate]::Supplemental, $null, $null, $null, $null, $null, $null, $null, $null, $null)
 
                 [WDACConfig.Logger]::Write('Converting the Supplemental policy XML file to a CIP file')
                 $null = ConvertFrom-CIPolicy -XmlFilePath $FinalSupplementalPath -BinaryFilePath $FinalSupplementalCIPPath
@@ -211,7 +208,7 @@ Function New-SupplementalWDACConfig {
                 [WDACConfig.Logger]::Write('Setting the Supplemental policy version to 1.0.0.0')
                 Set-CIPolicyVersion -FilePath $FinalSupplementalPath -Version '1.0.0.0'
 
-                Set-CiRuleOptions -FilePath $FinalSupplementalPath -Template Supplemental
+                [WDACConfig.CiRuleOptions]::Set($FinalSupplementalPath, [WDACConfig.CiRuleOptions+PolicyTemplate]::Supplemental, $null, $null, $null, $null, $null, $null, $null, $null, $null)
 
                 [WDACConfig.Logger]::Write('Converting the Supplemental policy XML file to a CIP file')
                 $null = ConvertFrom-CIPolicy -XmlFilePath $FinalSupplementalPath -BinaryFilePath $FinalSupplementalCIPPath
@@ -286,7 +283,7 @@ Function New-SupplementalWDACConfig {
                         [WDACConfig.Logger]::Write('Setting the Supplemental policy version to 1.0.0.0')
                         Set-CIPolicyVersion -FilePath $FinalSupplementalPath -Version '1.0.0.0'
 
-                        Set-CiRuleOptions -FilePath $FinalSupplementalPath -Template Supplemental
+                        [WDACConfig.CiRuleOptions]::Set($FinalSupplementalPath, [WDACConfig.CiRuleOptions+PolicyTemplate]::Supplemental, $null, $null, $null, $null, $null, $null, $null, $null, $null)
 
                         [WDACConfig.Logger]::Write('Converting the Supplemental policy XML file to a CIP file')
                         $null = ConvertFrom-CIPolicy -XmlFilePath $FinalSupplementalPath -BinaryFilePath $FinalSupplementalCIPPath
@@ -363,7 +360,7 @@ Function New-SupplementalWDACConfig {
                 [WDACConfig.Logger]::Write('Setting the Supplemental policy version to 1.0.0.0')
                 Set-CIPolicyVersion -FilePath $FinalSupplementalPath -Version '1.0.0.0'
 
-                Set-CiRuleOptions -FilePath $FinalSupplementalPath -Template Supplemental
+                [WDACConfig.CiRuleOptions]::Set($FinalSupplementalPath, [WDACConfig.CiRuleOptions+PolicyTemplate]::Supplemental, $null, $null, $null, $null, $null, $null, $null, $null, $null)
 
                 [WDACConfig.Logger]::Write('Converting the Supplemental policy XML file to a CIP file')
                 $null = ConvertFrom-CIPolicy -XmlFilePath $FinalSupplementalPath -BinaryFilePath $FinalSupplementalCIPPath

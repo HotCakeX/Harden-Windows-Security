@@ -2,13 +2,6 @@ Function Set-CommonWDACConfig {
     [CmdletBinding()]
     [OutputType([System.Object[]])]
     Param(
-        [ArgumentCompleter({
-                foreach ($Item in [WDACConfig.CertCNz]::new().GetValidValues()) {
-                    if ($Item.Contains(' ')) {
-                        "'$Item'"
-                    }
-                }
-            })]
         [parameter(Mandatory = $false)][System.String]$CertCN,
 
         [ArgumentCompleter([WDACConfig.ArgCompleter.SingleCerFilePicker])]
@@ -20,53 +13,9 @@ Function Set-CommonWDACConfig {
         [parameter(Mandatory = $false)][System.IO.FileInfo]$SignToolPath,
 
         [ArgumentCompleter([WDACConfig.ArgCompleter.XmlFilePathsPicker])]
-        [ValidateScript({
-                try {
-                    $XmlTest = [System.Xml.XmlDocument](Get-Content -Path $_)
-                    [System.String]$RedFlag1 = $XmlTest.SiPolicy.SupplementalPolicySigners.SupplementalPolicySigner.SignerId
-                    [System.String]$RedFlag2 = $XmlTest.SiPolicy.UpdatePolicySigners.UpdatePolicySigner.SignerId
-                }
-                catch {
-                    throw 'The selected file is not a valid WDAC XML policy.'
-                }
-
-                # If no indicators of a signed policy are found, proceed to the next validation
-                if (!$RedFlag1 -and !$RedFlag2) {
-
-                    # Ensure the selected base policy xml file is valid
-                    if ( [WDACConfig.CiPolicyTest]::TestCiPolicy($_, $null) ) {
-                        return $True
-                    }
-                }
-                else {
-                    throw 'The selected policy xml file is Signed, Please select an Unsigned policy.'
-                }
-            }, ErrorMessage = 'The selected policy xml file is Signed, Please select an Unsigned policy.')]
         [parameter(Mandatory = $false)][System.IO.FileInfo]$UnsignedPolicyPath,
 
         [ArgumentCompleter([WDACConfig.ArgCompleter.XmlFilePathsPicker])]
-        [ValidateScript({
-                try {
-                    $XmlTest = [System.Xml.XmlDocument](Get-Content -Path $_)
-                    [System.String]$RedFlag1 = $XmlTest.SiPolicy.SupplementalPolicySigners.SupplementalPolicySigner.SignerId
-                    [System.String]$RedFlag2 = $XmlTest.SiPolicy.UpdatePolicySigners.UpdatePolicySigner.SignerId
-                }
-                catch {
-                    throw 'The selected file is not a valid WDAC XML policy.'
-                }
-
-                # If indicators of a signed policy are found, proceed to the next validation
-                if ($RedFlag1 -or $RedFlag2) {
-
-                    # Ensure the selected base policy xml file is valid
-                    if ( [WDACConfig.CiPolicyTest]::TestCiPolicy($_, $null) ) {
-                        return $True
-                    }
-                }
-                else {
-                    throw 'The selected policy xml file is Unsigned, Please select a Signed policy.'
-                }
-            }, ErrorMessage = 'The selected policy xml file is Unsigned, Please select a Signed policy.')]
         [parameter(Mandatory = $false)][System.IO.FileInfo]$SignedPolicyPath
     )
     [WDACConfig.LoggerInitializer]::Initialize($VerbosePreference, $DebugPreference, $Host)

@@ -83,7 +83,6 @@ This is an advanced PowerShell module for WDAC (Windows Defender Application Con
         'Core\Test-CiPolicy.psm1',
         'Core\ConvertTo-WDACPolicy.psm1',
         'Core\Get-CiFileHashes.psm1',
-        'Core\Set-CiRuleOptions.psm1',
         'Core\Get-CIPolicySetting.psm1')
 
     FunctionsToExport    = @('New-WDACConfig',
@@ -104,7 +103,6 @@ This is an advanced PowerShell module for WDAC (Windows Defender Application Con
         'Test-CiPolicy',
         'ConvertTo-WDACPolicy',
         'Get-CiFileHashes',
-        'Set-CiRuleOptions',
         'Get-CIPolicySetting',
         'Update-WDACConfigPSModule')
 

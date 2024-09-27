@@ -14,19 +14,8 @@ Function Remove-WDACConfig {
 
         [ArgumentCompleter([WDACConfig.ArgCompleter.XmlFileMultiSelectPicker])]
         [ValidateScript({
-                # Validate each Policy file in PolicyPaths parameter to make sure the user isn't accidentally trying to remove an Unsigned policy
                 $_ | ForEach-Object -Process {
-                    [System.Xml.XmlDocument]$XmlTest = Get-Content -Path $_
-                    [System.String]$RedFlag1 = $XmlTest.SiPolicy.SupplementalPolicySigners.SupplementalPolicySigner.SignerId
-                    [System.String]$RedFlag2 = $XmlTest.SiPolicy.UpdatePolicySigners.UpdatePolicySigner.SignerId
-
-                    if ($RedFlag1 -or $RedFlag2) {
-
-                        # Ensure the selected base policy xml file is valid
-                        if ( [WDACConfig.CiPolicyTest]::TestCiPolicy($_, $null) ) {
-                            return $True
-                        }
-                    }
+                    [WDACConfig.PolicyFileSigningStatusDetection]::Check($_) -eq [WDACConfig.PolicyFileSigningStatusDetection+SigningStatus]::Signed ? $true : $false
                 }
             }, ErrorMessage = 'One of the selected XML policy files is unsigned. Please use Remove-WDACConfig cmdlet with -UnsignedOrSupplemental parameter instead.')]
         [parameter(Mandatory = $true, ParameterSetName = 'Signed Base', ValueFromPipelineByPropertyName = $true)]
@@ -281,7 +270,7 @@ Function Remove-WDACConfig {
                     [WDACConfig.Logger]::Write('Making sure SupplementalPolicySigners do not exist in the XML policy')
                     [WDACConfig.CiPolicyHandler]::RemoveSupplementalSigners($PolicyPath.FullName)
 
-                    Set-CiRuleOptions -FilePath $PolicyPath -RulesToAdd 'Enabled:Unsigned System Integrity Policy'
+                    [WDACConfig.CiRuleOptions]::Set($PolicyPath, $null, [WDACConfig.CiRuleOptions+PolicyRuleOptions]::EnabledUnsignedSystemIntegrityPolicy, $null, $null, $null, $null, $null, $null, $null, $null)
 
                     [System.IO.FileInfo]$PolicyCIPPath = Join-Path -Path $StagingArea -ChildPath "$PolicyID.cip"
 

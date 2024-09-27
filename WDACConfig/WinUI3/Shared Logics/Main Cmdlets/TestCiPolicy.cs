@@ -12,7 +12,7 @@ namespace WDACConfig
 {
     public static class CiPolicyTest
     {
-        public static object? TestCiPolicy(string xmlFilePath, string cipFilePath)
+        public static object? TestCiPolicy(string? xmlFilePath, string? cipFilePath)
         {
             // Make sure the parameters are mutually exclusive
             if (!string.IsNullOrEmpty(xmlFilePath) && !string.IsNullOrEmpty(cipFilePath))

@@ -40,14 +40,21 @@
                 <NavigationViewItem.Icon>
                     <FontIcon Glyph="&#xEEA3;" />
                 </NavigationViewItem.Icon>
-            </NavigationViewItem>
-
+            </NavigationViewItem>        
 
             <NavigationViewItem Content="View Current Policies" Icon="Flag" ToolTipService.ToolTip="View currently deployed policies" Tag="ViewCurrentPolicies"/>
+
+            <NavigationViewItem Content="Configure Policy Rule Options" ToolTipService.ToolTip="Configure Policy Rule Options" Tag="ConfigurePolicyRuleOptions">
+                <NavigationViewItem.Icon>
+                    <FontIcon Glyph="&#xEEA3;" />
+                </NavigationViewItem.Icon>
+            </NavigationViewItem>
 
             <NavigationViewItemHeader Content="Documentation"/>
             <NavigationViewItem Content="GitHub Documentation" Icon="Document" ToolTipService.ToolTip="Get online documentations from GitHub about how to use the application" Tag="GitHubDocumentation" />
             <NavigationViewItem Content="Microsoft Documentation" Icon="Document" ToolTipService.ToolTip="Get online documentations from Microsoft about App Control for Business policies" Tag="MicrosoftDocumentation" />
+          
+
         </NavigationView.MenuItems>
         <Frame x:Name="ContentFrame" />
     </NavigationView>

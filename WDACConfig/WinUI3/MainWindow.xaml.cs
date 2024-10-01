@@ -53,6 +53,9 @@ namespace WDACConfig
                     case "ViewCurrentPolicies":
                         _ = ContentFrame.Navigate(typeof(Pages.ViewCurrentPolicies));
                         break;
+                    case "ConfigurePolicyRuleOptions":
+                        _ = ContentFrame.Navigate(typeof(Pages.ConfigurePolicyRuleOptions));
+                        break;
                     default:
                         break;
                 }

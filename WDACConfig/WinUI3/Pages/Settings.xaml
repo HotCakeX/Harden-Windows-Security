@@ -29,8 +29,6 @@
     </Page.Resources>
 
 
-
-
     <ScrollViewer>
         <Grid Margin="20">
             <StackPanel HorizontalAlignment="Stretch"
@@ -201,5 +199,4 @@
             </StackPanel>
         </Grid>
     </ScrollViewer>
-
 </Page>

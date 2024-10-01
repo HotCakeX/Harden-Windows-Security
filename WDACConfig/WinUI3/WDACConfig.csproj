@@ -2,7 +2,7 @@
   <!-- The following are the details for WDACConfig, a Self-Contained Trimmed MSIX Packaged App -->
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net9.0-windows10.0.22621.0</TargetFramework>
+    <TargetFramework>net9.0-windows10.0.26100.0</TargetFramework>
     <TargetPlatformMinVersion>10.0.22621.0</TargetPlatformMinVersion>
     <RootNamespace>WDACConfig</RootNamespace>
     <ApplicationManifest>app.manifest</ApplicationManifest>
@@ -17,6 +17,7 @@
   </PropertyGroup>
   <ItemGroup>
     <None Remove="Pages\BlockRules.xaml" />
+    <None Remove="Pages\ConfigurePolicyRuleOptions.xaml" />
     <None Remove="Pages\GetCIHashes.xaml" />
     <None Remove="Pages\GetSecurePolicySettings.xaml" />
     <None Remove="Pages\GitHubDocumentation.xaml" />
@@ -103,7 +104,7 @@
    <!-- Disabling trimming temporarily -->
     <PublishTrimmed>false</PublishTrimmed>
 
-    <SupportedOSPlatformVersion>10.0.22621.0</SupportedOSPlatformVersion>
+    <SupportedOSPlatformVersion>10.0.26100.0</SupportedOSPlatformVersion>
     <ImplicitUsings>disable</ImplicitUsings>
     <Description>An application that simplifies management of Application Control in Windows.</Description>
     <PackageProjectUrl>https://github.com/HotCakeX/Harden-Windows-Security</PackageProjectUrl>
@@ -152,6 +153,11 @@
     <Content Remove="MSIXOutput\**" />
     <None Remove="MSIXOutput\**" />
   </ItemGroup>
+<ItemGroup>
+  <Page Update="Pages\ConfigurePolicyRuleOptions.xaml">
+    <Generator>MSBuild:Compile</Generator>
+  </Page>
+</ItemGroup>
 <ItemGroup>
   <Page Update="Pages\ViewCurrentPolicies.xaml">
     <Generator>MSBuild:Compile</Generator>

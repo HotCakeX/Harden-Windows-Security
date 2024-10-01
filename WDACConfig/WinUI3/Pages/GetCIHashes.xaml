@@ -8,7 +8,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
-    <Grid>
+    <Grid Margin="15,30,15,15">
         <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="10" Margin="15,0,15,0">
 
             <!-- Button to trigger file picker -->

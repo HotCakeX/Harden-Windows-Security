@@ -17,7 +17,7 @@ namespace HardenWindowsSecurity
         private static readonly Dictionary<string, string> fileDictionary = new()
         {
             {
-                "https://download.microsoft.com/download/8/5/C/85C25433-A1B0-4FFA-9429-7E023E7DA8D8/Windows%2011%20v23H2%20Security%20Baseline.zip",
+                "https://download.microsoft.com/download/8/5/C/85C25433-A1B0-4FFA-9429-7E023E7DA8D8/Windows%2011%20v24H2%20Security%20Baseline.zip",
                 "MicrosoftSecurityBaseline.zip"
             },
             {

@@ -292,7 +292,7 @@ From Top to bottom in order:
 
 <br>
 
-- <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> Configures the Cloud Block/Protection Level to the **maximum level of Zero Tolerance and [Block At First Sight](https://learn.microsoft.com/en-us/microsoft-365/security/defender-endpoint/configure-block-at-first-sight-microsoft-defender-antivirus?view=o365-worldwide#turn-on-block-at-first-sight-with-group-policy)**. No unknown file can run on your system without first being recognized by the Microsoft's Security Graph and other **globally omniscient systems**. <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-defender#cloudblocklevel) 
+- <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> Configures the Cloud Block/Protection Level to the **maximum level of Zero Tolerance and [Block At First Sight](https://learn.microsoft.com/en-us/microsoft-365/security/defender-endpoint/configure-block-at-first-sight-microsoft-defender-antivirus?view=o365-worldwide#turn-on-block-at-first-sight-with-group-policy)**. No unknown file can run on your system without first being recognized by the Microsoft's Security Graph and other **globally omniscient systems**. <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-defender#cloudblocklevel)
 
 <img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/Lines/HorizontalLineSeparator.png" height="1" width="90000" alt="horizontal line separator">
 
@@ -929,13 +929,13 @@ NistP384
 - <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> Applies the following [PIN Complexity rules](https://learn.microsoft.com/en-us/windows/security/identity-protection/hello-for-business/hello-manage-in-organization#pin-complexity) to Windows Hello <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/en-us/windows/client-management/mdm/passportforwork-csp#devicetenantidpoliciespincomplexity). Please note that, by default, any character can be set as a PIN. However, the following policies ensure that certain characters are always included as a minimum requirement.
 
     - [Must include digits](https://learn.microsoft.com/en-us/windows/client-management/mdm/passportforwork-csp#usertenantidpoliciespincomplexitydigits) <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/en-us/windows/client-management/mdm/passportforwork-csp#devicetenantidpoliciespincomplexitydigits)
-    
+
     - [Expires](https://learn.microsoft.com/en-us/windows/client-management/mdm/passportforwork-csp#usertenantidpoliciespincomplexityexpiration) **every 180 days** (default behavior is to never expire) <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/en-us/windows/client-management/mdm/passportforwork-csp#devicetenantidpoliciespincomplexityexpiration)
-      
+
       - Setting an expiration date ensures that, in the event of theft, a threat actor cannot indefinitely attempt to guess the PIN. After 180 days, the PIN expires, rendering it unusable even if guessed correctly. To reset the PIN, authentication via a Microsoft account or EntraID—likely inaccessible to the attacker—will be required. Combined with anti-hammering and BitLocker policies, this expiration guarantees that a threat actor cannot endlessly persist in guessing the PIN.
-    
+
     - [History](https://learn.microsoft.com/en-us/windows/client-management/mdm/passportforwork-csp#usertenantidpoliciespincomplexityhistory) of the **1** most recent selected PIN is preserved to prevent the user from reusing it <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/en-us/windows/client-management/mdm/passportforwork-csp#devicetenantidpoliciespincomplexityhistory)
-    
+
     - [Must include lower-case letters](https://learn.microsoft.com/en-us/windows/client-management/mdm/passportforwork-csp#usertenantidpoliciespincomplexitylowercaseletters) <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/en-us/windows/client-management/mdm/passportforwork-csp#devicetenantidpoliciespincomplexitylowercaseletters)
 
 <p align="right"><a href="#menu-back-to-top">💡 (back to categories)</a></p>
@@ -1308,7 +1308,7 @@ In Windows by default, devices will scan daily, automatically download and insta
 
 <br>
 
-- <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> Sets the number of grace period days before quality updates are installed on devices automatically to 1 day. <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-update#configuredeadlinegraceperiod) 
+- <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> Sets the number of grace period days before quality updates are installed on devices automatically to 1 day. <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-update#configuredeadlinegraceperiod)
 
 <img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/Lines/HorizontalLineSeparator.png" height="1" width="90000" alt="horizontal line separator">
 
@@ -1385,9 +1385,9 @@ In Windows by default, devices will scan daily, automatically download and insta
 <br>
 
 - <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/magenta-verification.gif" width="25" alt="Rotating pink checkmark denoting registry or cmdlet"> [Disables the following weak Cipher Suites](https://learn.microsoft.com/en-us/DeployEdge/microsoft-edge-policies#tlsciphersuitedenylist)
-    
+
     - [Site 1 to test TLS in your browser](https://clienttest.ssllabs.com:8443/ssltest/viewMyClient.html)
-    
+
     - [Site 2 to test TLS in your browser](https://browserleaks.com/tls)
 
 <img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/Lines/HorizontalLineSeparator.png" height="1" width="90000" alt="horizontal line separator">

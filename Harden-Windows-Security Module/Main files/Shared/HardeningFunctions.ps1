@@ -376,7 +376,7 @@ Function Invoke-NonAdminCommands {
     param([System.Management.Automation.SwitchParameter]$RunUnattended)
     :NonAdminLabel switch ($RunUnattended ? 'Yes' : (Select-Option -Options 'Yes', 'No', 'Exit' -Message "`nRun Non-Admin category ?")) {
         'Yes' {
-            [HardenWindowsSecurity.NonAdminCommands]::Invoke()           
+            [HardenWindowsSecurity.NonAdminCommands]::Invoke()
             # Only suggest restarting the device if Admin related categories were run and the code was not running in unattended mode
             if (!$RunUnattended) {
                 if (!$Categories -and [HardenWindowsSecurity.UserPrivCheck]::IsAdmin()) {

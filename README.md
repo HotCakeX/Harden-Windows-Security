@@ -982,7 +982,7 @@ NistP384
 
 <br>
 
-- <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> Configures the type of Admin Approval Mode to be Admin Approval Mode with enhanced privilege protection.
+- <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> Configures the type of [Admin Approval Mode](https://techcommunity.microsoft.com/t5/microsoft-security-baselines/windows-11-version-24h2-security-baseline/ba-p/4252801) to be Admin Approval Mode with enhanced privilege protection.
 
 <p align="right"><a href="#menu-back-to-top">💡 (back to categories)</a></p>
 

@@ -954,8 +954,9 @@ NistP384
 
 - <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> [Prompt for elevation of privilege on secure desktop for all binaries](https://learn.microsoft.com/en-us/windows/security/identity-protection/user-account-control/user-account-control-group-policy-and-registry-key-settings#user-account-control-behavior-of-the-elevation-prompt-for-administrators-in-admin-approval-mode) in [Administrator accounts](https://learn.microsoft.com/en-us/openspecs/windows_protocols/ms-gpsb/341747f5-6b5d-4d30-85fc-fa1cc04038d4), which presents the sign-in UI and restricts functionality and access to the system until the sign-in requirements are satisfied. The [secure desktop's](https://learn.microsoft.com/en-us/windows/security/threat-protection/security-policy-settings/user-account-control-switch-to-the-secure-desktop-when-prompting-for-elevation#reference) primary difference from the user desktop is that only trusted processes running as SYSTEM are allowed to run here (that is, nothing is running at the user's privilege level). The path to get to the secure desktop from the user desktop must also be trusted through the entire chain. <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-localpoliciessecurityoptions#useraccountcontrol_behavioroftheelevationpromptforadministrators)
 
-    - **This is the default behavior:** prompt the administrator in Admin Approval Mode to select either "Permit" or "Deny" for an operation that requires elevation of privilege for any non-Windows binaries. If the Consent Admin selects Permit, the operation will continue with the highest available privilege. This operation will happen on the secure desktop
-    - **This is the behavior that this module sets:** prompts the administrator in Admin Approval Mode to select either "Permit" or "Deny" an operation that requires elevation of privilege. If the Consent Admin selects Permit, the operation will continue with the highest available privilege. "Prompt for consent" removes the inconvenience of requiring that users enter their name and password to perform a privileged task. This operation occurs on the secure desktop.
+    - **Default Behavior:** Prompt for consent for non-Windows binaries: When an operation for a non-Microsoft application requires elevation of privilege, the user is prompted on the secure desktop to select either Permit or Deny. If the user selects Permit, the operation continues with the user's highest available privilege.
+
+    - **Harden Windows Security Behavior:** When an operation requires elevation of privilege, the user is prompted on the secure desktop to select either Permit or Deny. If the user selects Permit, the operation continues with the user's highest available privilege.
 
 <img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/Lines/HorizontalLineSeparator.png" height="1" width="90000" alt="horizontal line separator">
 
@@ -970,6 +971,18 @@ NistP384
 - <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/discord-verify-gradient.gif" width="25" alt="Rotating green checkmark denoting Subcategory"> Hides the entry points for [Fast User Switching](https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-windowslogon). <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-windowslogon#hidefastuserswitching)
 
     - This policy will prevent you from using "Forgot my PIN" feature in lock screen or logon screen. If you forget your PIN, you won't be able to recover it.
+
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/Lines/HorizontalLineSeparator.png" height="1" width="90000" alt="horizontal line separator">
+
+<br>
+
+- <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> Sets the behavior of the elevation prompt for Standard users to Prompt for Credentials on the Secure Desktop. <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-localpoliciessecurityoptions#useraccountcontrol_behavioroftheelevationpromptforstandardusers)
+
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/Lines/HorizontalLineSeparator.png" height="1" width="90000" alt="horizontal line separator">
+
+<br>
+
+- <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> Configures the type of Admin Approval Mode to be Admin Approval Mode with enhanced privilege protection.
 
 <p align="right"><a href="#menu-back-to-top">💡 (back to categories)</a></p>
 

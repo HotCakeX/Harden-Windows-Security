@@ -654,6 +654,8 @@ namespace HardenWindowsSecurity
                     }
                     else
                     {
+                        HardenWindowsSecurity.Logger.LogMessage("BitLocker is enabled for the OS Drive but it does not conform to the Normal or Enhanced Security levels requirements.", LogTypeIntel.Information);
+
                         nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                         {
                             FriendlyName = "Secure OS Drive encryption",
@@ -667,6 +669,8 @@ namespace HardenWindowsSecurity
                 }
                 else
                 {
+                    HardenWindowsSecurity.Logger.LogMessage("BitLocker is not enabled for the OS Drive.", LogTypeIntel.Information);
+
                     nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                     {
                         FriendlyName = "Secure OS Drive encryption",

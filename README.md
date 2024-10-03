@@ -1290,13 +1290,31 @@ In Windows by default, devices will scan daily, automatically download and insta
 
 <br>
 
-- <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> Sets the grace period for auto restart to 1 day. <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-update#configuredeadlinegraceperiod) <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-update#configuredeadlinegraceperiodforfeatureupdates)
+- <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> Specifies the number of days before quality updates are installed on devices automatically to 1 day. <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-update#configuredeadlinenoautorebootforqualityupdates)
 
 <img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/Lines/HorizontalLineSeparator.png" height="1" width="90000" alt="horizontal line separator">
 
 <br>
 
-- <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> Configures the [automatic updates to happen every day](https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-update#allowautoupdate), automatically be downloaded and installed, notify users for restart. <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-update#allowautoupdate)
+- <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> Specifies the number of days before feature updates are installed on devices automatically to 1 day. <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-update#configuredeadlinenoautorebootforfeatureupdates)
+
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/Lines/HorizontalLineSeparator.png" height="1" width="90000" alt="horizontal line separator">
+
+<br>
+
+- <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> Sets the number of grace period days before feature updates are installed on devices automatically to 1 day. <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-update#configuredeadlinegraceperiodforfeatureupdates)
+
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/Lines/HorizontalLineSeparator.png" height="1" width="90000" alt="horizontal line separator">
+
+<br>
+
+- <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> Sets the number of grace period days before quality updates are installed on devices automatically to 1 day. <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-update#configuredeadlinegraceperiod) 
+
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/Lines/HorizontalLineSeparator.png" height="1" width="90000" alt="horizontal line separator">
+
+<br>
+
+- <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> Configures the automatic updates to happen every day, automatically be downloaded and installed, notify users for restart. <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-update#allowautoupdate)
 
 <img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/Lines/HorizontalLineSeparator.png" height="1" width="90000" alt="horizontal line separator">
 

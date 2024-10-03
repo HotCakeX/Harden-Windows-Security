@@ -43,8 +43,7 @@ namespace HardenWindowsSecurity
                 { "LockScreen", new string[] { "LockScreen_CtrlAltDel", "LockScreen_NoLastSignedIn" } },
                 { "UserAccountControl", new string[] { "UAC_NoFastSwitching", "UAC_OnlyElevateSigned" } },
                 { "CountryIPBlocking", new string[] { "CountryIPBlocking_OFAC" } },
-                { "DownloadsDefenseMeasures", new string[] { "DangerousScriptHostsBlocking" } },
-                { "NonAdminCommands", new string[] { "ClipboardSync" } }
+                { "DownloadsDefenseMeasures", new string[] { "DangerousScriptHostsBlocking" } }
             };
 
         internal static System.Windows.Controls.ListView? categories;

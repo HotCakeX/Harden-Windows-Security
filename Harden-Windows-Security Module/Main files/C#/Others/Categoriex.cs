@@ -27,7 +27,7 @@ namespace HardenWindowsSecurity
             "MiscellaneousConfigurations", // 17
             "WindowsUpdateConfigurations", // 15
             "EdgeBrowserConfigurations", // 14
-            "NonAdminCommands" // 11
+            "NonAdminCommands" // 9
             ];
             return categoriex;
         }

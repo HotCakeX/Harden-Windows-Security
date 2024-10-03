@@ -1538,7 +1538,7 @@ You don't need Admin privileges to run this category, because no system-wide cha
 
 <br>
 
-- <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/magenta-verification.gif" width="25" alt="Rotating pink checkmark denoting registry or cmdlet"> <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/discord-verify-gradient.gif" width="25" alt="Rotating green checkmark denoting Subcategory"> Enables Clipboard History and sync with Microsoft Account
+- <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/magenta-verification.gif" width="25" alt="Rotating pink checkmark denoting registry or cmdlet"> Enables Clipboard History
 
 <img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/Lines/HorizontalLineSeparator.png" height="1" width="90000" alt="horizontal line separator">
 

@@ -284,11 +284,6 @@ Function Protect-WindowsSecurity {
             Invoke-Command -ScriptBlock $DynParamCreatorSubCategories -ArgumentList 'DangerousScriptHostsBlocking'
         }
 
-        if ('NonAdminCommands' -in $PSBoundParameters['Categories']) {
-            # Create a dynamic parameter for -ClipboardSync
-            Invoke-Command -ScriptBlock $DynParamCreatorSubCategories -ArgumentList 'ClipboardSync'
-        }
-
         # Only use the dynamic parameters if the GUI switch is not present
         if (-NOT $PSBoundParameters.GUI.IsPresent) {
             return $ParamDictionary
@@ -316,7 +311,6 @@ Function Protect-WindowsSecurity {
         # Set the default value for LogPath to the current working directory if not specified
         New-Variable -Name 'LogPath' -Value $($PSBoundParameters['LogPath'] ?? (Join-Path -Path $(Get-Location).Path -ChildPath "Log-Protect-WindowsSecurity-$(Get-Date -Format 'yyyy-MM-dd HH-mm-ss').txt")) -Force
         New-Variable -Name 'DangerousScriptHostsBlocking' -Value $($PSBoundParameters['DangerousScriptHostsBlocking']) -Force
-        New-Variable -Name 'ClipboardSync' -Value $($PSBoundParameters['ClipboardSync']) -Force
 
         # Detecting if Offline mode is used
         ([HardenWindowsSecurity.GlobalVars]::Offline) = $PSBoundParameters['Offline'] ? $true : $false

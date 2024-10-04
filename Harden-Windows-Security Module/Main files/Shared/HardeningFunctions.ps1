@@ -377,11 +377,6 @@ Function Invoke-NonAdminCommands {
     :NonAdminLabel switch ($RunUnattended ? 'Yes' : (Select-Option -Options 'Yes', 'No', 'Exit' -Message "`nRun Non-Admin category ?")) {
         'Yes' {
             [HardenWindowsSecurity.NonAdminCommands]::Invoke()
-            :ClipboardSyncLabel switch ($RunUnattended ? ($ClipboardSync ? 'Yes' : 'No') : (Select-Option -SubCategory -Options 'Yes', 'No' -Message 'Enable Clipboard Syncing with Microsoft Account')) {
-                'Yes' {
-                    [HardenWindowsSecurity.NonAdminCommands]::ClipboardSync()
-                } 'No' { break ClipboardSyncLabel }
-            }
             # Only suggest restarting the device if Admin related categories were run and the code was not running in unattended mode
             if (!$RunUnattended) {
                 if (!$Categories -and [HardenWindowsSecurity.UserPrivCheck]::IsAdmin()) {

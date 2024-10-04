@@ -40,7 +40,7 @@ namespace HardenWindowsSecurity
                 string PSScript = $@"
 Import-Module -Name 'DISM' -UseWindowsPowerShell -Force -WarningAction SilentlyContinue
 $null = Get-WindowsCapability -Online |
-Where-Object -FilterScript {{ $_.Name -eq '{CapabilityIdentity}' }} |
+Where-Object -FilterScript {{ $_.Name -like '*{CapabilityIdentity}*' }} |
 Remove-WindowsCapability -Online
 ";
 
@@ -123,14 +123,14 @@ Remove-WindowsCapability -Online
             ConfigureWindowsOptionalFeature(true, "Containers-DisposableClientVM", "Windows Sandbox", "WindowsSandbox");
             ConfigureWindowsOptionalFeature(true, "Microsoft-Hyper-V", "Hyper-V", "HyperV");
 
-            RemoveCapability("Media.WindowsMediaPlayer~~~~0.0.12.0", "The old Windows Media Player");
-            RemoveCapability("Browser.InternetExplorer~~~~0.0.11.0", "Internet Explorer Mode for Edge");
-            RemoveCapability("WMIC~~~~", "Deprecated WMIC");
-            RemoveCapability("Microsoft.Windows.Notepad.System~~~~0.0.1.0", "Old classic Notepad");
-            RemoveCapability("Microsoft.Windows.WordPad~~~~0.0.1.0", "Deprecated WordPad");
-            RemoveCapability("Microsoft.Windows.PowerShell.ISE~~~~0.0.1.0", "PowerShell ISE");
-            RemoveCapability("App.StepsRecorder~~~~0.0.1.0", "Deprecated Steps Recorder");
-            RemoveCapability("VBSCRIPT~~~~", "Deprecated VBScript");
+            RemoveCapability("Media.WindowsMediaPlayer", "The old Windows Media Player");
+            RemoveCapability("WMIC", "Deprecated WMIC");
+            RemoveCapability("Microsoft.Windows.Notepad.System", "Old classic Notepad");
+            RemoveCapability("Microsoft.Windows.WordPad", "Deprecated WordPad");
+            RemoveCapability("Microsoft.Windows.PowerShell.ISE", "PowerShell ISE");
+            RemoveCapability("App.StepsRecorder", "Deprecated Steps Recorder");
+            RemoveCapability("VBSCRIPT", "Deprecated VBScript");
+            RemoveCapability("Browser.InternetExplorer", "Internet Explorer Mode for Edge");
         }
     }
 }

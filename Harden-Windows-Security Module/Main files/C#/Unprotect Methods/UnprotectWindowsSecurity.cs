@@ -44,7 +44,7 @@ namespace HardenWindowsSecurity
                 key?.DeleteSubKeyTree("TLSCipherSuiteDenyList", throwOnMissingSubKey: false);
             }
 
-            //Set a tattooed Group policy for SvcHost.exe process mitigations back to disabled state
+            // Set a tattooed Group policy for SvcHost.exe process mitigations back to disabled state
             HardenWindowsSecurity.RegistryEditor.EditRegistry(@"HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\SCMConfig", "EnableSvchostMitigationPolicy", "0", "DWORD", "AddOrModify");
 
             #endregion
@@ -52,17 +52,9 @@ namespace HardenWindowsSecurity
 
             #region Advanced Microsoft Defender features
             HardenWindowsSecurity.Logger.LogMessage("Reverting the advanced protections in the Microsoft Defender.", LogTypeIntel.Information);
-
             HardenWindowsSecurity.ConfigDefenderHelper.ManageMpPreference<bool>("AllowSwitchToAsyncInspection", false, true);
-            HardenWindowsSecurity.ConfigDefenderHelper.ManageMpPreference<bool>("OobeEnableRtpAndSigUpdate", false, true);
-            HardenWindowsSecurity.ConfigDefenderHelper.ManageMpPreference<bool>("IntelTDTEnabled", false, true);
             HardenWindowsSecurity.ConfigDefenderHelper.ManageMpPreference<bool>("DisableRestorePoint", true, true);
-            HardenWindowsSecurity.ConfigDefenderHelper.ManageMpPreference<byte>("PerformanceModeStatus", 0, true);
             HardenWindowsSecurity.ConfigDefenderHelper.ManageMpPreference<bool>("EnableConvertWarnToBlock", false, true);
-            HardenWindowsSecurity.ConfigDefenderHelper.ManageMpPreference<byte>("BruteForceProtectionAggressiveness", 0, true);
-            HardenWindowsSecurity.ConfigDefenderHelper.ManageMpPreference<byte>("BruteForceProtectionConfiguredState", 0, true);
-            HardenWindowsSecurity.ConfigDefenderHelper.ManageMpPreference<byte>("RemoteEncryptionProtectionAggressiveness", 0, true);
-            HardenWindowsSecurity.ConfigDefenderHelper.ManageMpPreference<byte>("RemoteEncryptionProtectionConfiguredState", 0, true);
             HardenWindowsSecurity.ConfigDefenderHelper.ManageMpPreference<bool>("BruteForceProtectionLocalNetworkBlocking", false, true);
             HardenWindowsSecurity.ConfigDefenderHelper.ManageMpPreference<bool>("EnableEcsConfiguration", false, true);
             HardenWindowsSecurity.ConfigDefenderHelper.ManageMpPreference<string>("EngineUpdatesChannel", "0", true);

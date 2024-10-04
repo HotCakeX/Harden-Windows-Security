@@ -214,9 +214,6 @@
                                                 <ListViewItem ToolTipService.InitialShowDelay="500" ToolTip="Recommend to use">
                                                     <CheckBox x:Name="DangerousScriptHostsBlocking" Content="Block Dangerous Script Hosts" VerticalContentAlignment="Center" Padding="10,10,40,10" Template="{StaticResource CustomCheckBoxTemplate}"/>
                                                 </ListViewItem>
-                                                <ListViewItem ToolTipService.InitialShowDelay="500" ToolTip="Optional">
-                                                    <CheckBox x:Name="ClipboardSync" Content="Enable Clipboard Sync" VerticalContentAlignment="Center" Padding="10,10,40,10" Template="{StaticResource CustomCheckBoxTemplate}"/>
-                                                </ListViewItem>
                                             </ListView>
                                         </Grid>
                                         <StackPanel Orientation="Horizontal" Grid.Row="2" Grid.ColumnSpan="2" HorizontalAlignment="Center">

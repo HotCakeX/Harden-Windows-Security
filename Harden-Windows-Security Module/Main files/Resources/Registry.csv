@@ -47,6 +47,4 @@ NonAdmin,HKEY_CURRENT_USER\Software\Microsoft\Input\Settings,EnableHwkbTextPredi
 NonAdmin,HKEY_CURRENT_USER\Software\Microsoft\Input\Settings,MultilingualEnabled,1,DWORD,AddOrModify,turn on Multilingual text suggestions for the current user toggles the option in Windows settings
 NonAdmin,HKEY_CURRENT_USER\Control Panel\Accessibility\StickyKeys,Flags,506,String,AddOrModify,turn off sticky key shortcut of pressing shift key 5 time fast
 NonAdmin,HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Notifications\Settings,NOC_GLOBAL_SETTING_ALLOW_CRITICAL_TOASTS_ABOVE_LOCK,0,DWORD,AddOrModify,Disables show reminders and incoming VoIP calls on the lock screen in Settings > System > Notifications
-NonAdmin-ClipboardSync,HKEY_CURRENT_USER\Software\Microsoft\Clipboard,EnableClipboardHistory,1,DWORD,AddOrModify,Enable Clipboard History for the current user
-NonAdmin-ClipboardSync,HKEY_CURRENT_USER\Software\Microsoft\Clipboard,CloudClipboardAutomaticUpload,1,DWORD,AddOrModify,2nd commands to enable sync of Clipboard history in Windows between devices
-NonAdmin-ClipboardSync,HKEY_CURRENT_USER\Software\Microsoft\Clipboard,EnableCloudClipboard,1,DWORD,AddOrModify,last one to enable Clipboard sync
+NonAdmin,HKEY_CURRENT_USER\Software\Microsoft\Clipboard,EnableClipboardHistory,1,DWORD,AddOrModify,Enable Clipboard History for the current user

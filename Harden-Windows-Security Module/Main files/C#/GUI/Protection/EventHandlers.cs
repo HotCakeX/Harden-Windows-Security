@@ -700,10 +700,6 @@ namespace HardenWindowsSecurity
                                        case "NonAdminCommands":
                                            {
                                                HardenWindowsSecurity.NonAdminCommands.Invoke();
-                                               if (HardenWindowsSecurity.GUIProtectWinSecurity.SelectedSubCategories.Contains("ClipboardSync"))
-                                               {
-                                                   HardenWindowsSecurity.NonAdminCommands.ClipboardSync();
-                                               }
                                                break;
                                            }
 

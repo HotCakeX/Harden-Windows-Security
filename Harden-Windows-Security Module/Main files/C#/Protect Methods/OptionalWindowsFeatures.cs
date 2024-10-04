@@ -123,7 +123,7 @@ Remove-WindowsCapability -Online
             ConfigureWindowsOptionalFeature(true, "Containers-DisposableClientVM", "Windows Sandbox", "WindowsSandbox");
             ConfigureWindowsOptionalFeature(true, "Microsoft-Hyper-V", "Hyper-V", "HyperV");
 
-            RemoveCapability("Media.WindowsMediaPlayer", "The old Windows Media Player");            
+            RemoveCapability("Media.WindowsMediaPlayer", "The old Windows Media Player");
             RemoveCapability("WMIC", "Deprecated WMIC");
             RemoveCapability("Microsoft.Windows.Notepad.System", "Old classic Notepad");
             RemoveCapability("Microsoft.Windows.WordPad", "Deprecated WordPad");

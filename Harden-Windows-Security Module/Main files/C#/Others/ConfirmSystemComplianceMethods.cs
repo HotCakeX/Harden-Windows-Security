@@ -1860,6 +1860,10 @@ namespace HardenWindowsSecurity
                 // Compare the values of the two HashTables if the keys match
                 foreach (var targetMitigationItem in TargetMitigations)
                 {
+
+                    // Increment the total number of the verifiable compliant values for each process that has a mitigation applied to it in the CSV file
+                    HardenWindowsSecurity.GlobalVars.TotalNumberOfTrueCompliantValues++;
+
                     // Get the current key and value from dictionary containing the CSV data
                     string ProcessName_Target = targetMitigationItem.Key;
                     string[] ProcessMitigations_Target = targetMitigationItem.Value;
@@ -1876,31 +1880,52 @@ namespace HardenWindowsSecurity
                         // Compare the values of the two dictionaries to see if they are the same without considering the order of the elements (process mitigations)
                         if (!targetSet.SetEquals(ProcessMitigations_Applied))
                         {
-                            // If the values are different, it means the process has different mitigations applied to it than the ones in the CSV file
-                            HardenWindowsSecurity.Logger.LogMessage($"Mitigations for {ProcessName_Target} were found but are not compliant", LogTypeIntel.Information);
-                            HardenWindowsSecurity.Logger.LogMessage($"Applied Mitigations: {string.Join(",", ProcessMitigations_Applied)}", LogTypeIntel.Information);
-                            HardenWindowsSecurity.Logger.LogMessage($"Target Mitigations: {string.Join(",", ProcessMitigations_Target)}", LogTypeIntel.Information);
 
-                            // Increment the total number of the verifiable compliant values for each process that has a mitigation applied to it in the CSV file
-                            HardenWindowsSecurity.GlobalVars.TotalNumberOfTrueCompliantValues++;
+                            Logger.LogMessage($"Mitigations for {ProcessName_Target} were found but they do not exactly match, performing further checks", LogTypeIntel.Information);
 
-                            nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
+                            // Check if the mitigations applied to the current process at least include all of the mitigations required by the CSV file for that process
+                            if (ProcessMitigations_Applied.IsSupersetOf(targetSet))
                             {
-                                FriendlyName = $"Process Mitigations for: {ProcessName_Target}",
-                                Compliant = false,
-                                Value = string.Join(",", ProcessMitigations_Applied),
-                                Name = $"Process Mitigations for: {ProcessName_Target}",
-                                Category = CatName,
-                                Method = "Cmdlet"
-                            });
+
+                                HardenWindowsSecurity.Logger.LogMessage($"Mitigations for {ProcessName_Target} contain all the required mitigations plus more", LogTypeIntel.Information);
+                                HardenWindowsSecurity.Logger.LogMessage($"Applied Mitigations: {string.Join(",", ProcessMitigations_Applied)}", LogTypeIntel.Information);
+                                HardenWindowsSecurity.Logger.LogMessage($"Target Mitigations: {string.Join(",", ProcessMitigations_Target)}", LogTypeIntel.Information);
+
+                                nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
+                                {
+                                    FriendlyName = $"Process Mitigations for: {ProcessName_Target}",
+                                    Compliant = true,
+                                    Value = string.Join(",", ProcessMitigations_Target), // Join the array elements into a string to display them properly in the output CSV file
+                                    Name = $"Process Mitigations for: {ProcessName_Target}",
+                                    Category = CatName,
+                                    Method = "Cmdlet"
+                                });
+
+                            }
+                            else
+                            {
+
+                                HardenWindowsSecurity.Logger.LogMessage($"Mitigations for {ProcessName_Target} do not contain all of the required mitigations", LogTypeIntel.Information);
+                                HardenWindowsSecurity.Logger.LogMessage($"Applied Mitigations: {string.Join(",", ProcessMitigations_Applied)}", LogTypeIntel.Information);
+                                HardenWindowsSecurity.Logger.LogMessage($"Target Mitigations: {string.Join(",", ProcessMitigations_Target)}", LogTypeIntel.Information);
+
+                                nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
+                                {
+                                    FriendlyName = $"Process Mitigations for: {ProcessName_Target}",
+                                    Compliant = false,
+                                    Value = string.Join(",", ProcessMitigations_Applied),
+                                    Name = $"Process Mitigations for: {ProcessName_Target}",
+                                    Category = CatName,
+                                    Method = "Cmdlet"
+                                });
+
+                            }
+
                         }
                         else
                         {
                             // If the values are the same, it means the process has the same mitigations applied to it as the ones in the CSV file
-                            HardenWindowsSecurity.Logger.LogMessage($"Mitigations for {ProcessName_Target} are compliant", LogTypeIntel.Information);
-
-                            // Increment the total number of the verifiable compliant values for each process that has a mitigation applied to it in the CSV file
-                            HardenWindowsSecurity.GlobalVars.TotalNumberOfTrueCompliantValues++;
+                            HardenWindowsSecurity.Logger.LogMessage($"Mitigations for {ProcessName_Target} are precisely compliant and match.", LogTypeIntel.Information);
 
                             nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                             {
@@ -1917,9 +1942,6 @@ namespace HardenWindowsSecurity
                     {
                         //If the process name is not found in the HashTable containing the currently applied mitigations, it means the process doesn't have any mitigations applied to it
                         HardenWindowsSecurity.Logger.LogMessage($"Mitigations for {ProcessName_Target} were not found", LogTypeIntel.Information);
-
-                        // Increment the total number of the verifiable compliant values for each process that has a mitigation applied to it in the CSV file
-                        HardenWindowsSecurity.GlobalVars.TotalNumberOfTrueCompliantValues++;
 
                         nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                         {

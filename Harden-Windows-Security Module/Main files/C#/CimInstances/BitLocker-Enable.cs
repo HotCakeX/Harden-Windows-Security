@@ -413,6 +413,8 @@ namespace HardenWindowsSecurity
 
 
                     // If the Auto-unlock (aka ExternalKey) key protector is not present, add it
+                    // This only runs if all the ExternalKey key protectors were deleted in the previous step
+                    // Indicating that none of them were bound to the OS Drive and were leftovers of previous OS Installations
                     if (!KeyProtectors.Contains(BitLocker.KeyProtectorType.ExternalKey))
                     {
                         Logger.LogMessage($"Adding a new {BitLocker.KeyProtectorType.ExternalKey} key protector for Auto-unlock to the drive {DriveLetter}.", LogTypeIntel.Information);

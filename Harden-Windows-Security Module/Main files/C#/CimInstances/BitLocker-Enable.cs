@@ -348,8 +348,8 @@ namespace HardenWindowsSecurity
 
 
             // Make sure the OS Drive is encrypted first, or else we would add recovery password key protector and then get error about the same problem during auto-unlock key protector enablement
-            var volumeInfo = HardenWindowsSecurity.BitLocker.GetEncryptedVolumeInfo(Environment.GetEnvironmentVariable("SystemDrive") ?? "C:\\");
-            if (volumeInfo.ProtectionStatus is not BitLocker.ProtectionStatus.Protected)
+            BitLockerVolume OSDriveVolumeInfo = HardenWindowsSecurity.BitLocker.GetEncryptedVolumeInfo(Environment.GetEnvironmentVariable("SystemDrive") ?? "C:\\");
+            if (OSDriveVolumeInfo.ProtectionStatus is not BitLocker.ProtectionStatus.Protected)
             {
                 Logger.LogMessage($"Operation System drive must be encrypted first before encrypting Non-OS drives.", LogTypeIntel.ErrorInteractionRequired);
                 BitLocker.HasErrorsOccurred = true;
@@ -385,27 +385,52 @@ namespace HardenWindowsSecurity
 
                     #region
                     // Delete any possible old leftover ExternalKey key protectors
-                    List<BitLocker.KeyProtector> ExternalKeys = volumeInfo.KeyProtector!.Where(kp => kp.KeyProtectorType is KeyProtectorType.ExternalKey).ToList();
+                    List<BitLocker.KeyProtector> ExternalKeys = VolumeInfoExtended.KeyProtector!.Where(kp => kp.KeyProtectorType is KeyProtectorType.ExternalKey).ToList();
 
-                    if (ExternalKeys.Count > 1)
+                    // This step ensures any leftover or unbound external key key protectors will be removed and a working one will be added
+                    // If the current one is working and bound, it won't be removed and will be gracefully skipped over.
+                    foreach (KeyProtector ExKp in ExternalKeys)
                     {
-                        Logger.LogMessage($"The drive {DriveLetter} has more than 1 ExternalKey (Auto-unlock) key protectors, possibly from previous OS installations. Removing all but the one that is currently being used to unlock the drive.", LogTypeIntel.Information);
-
-                        foreach (KeyProtector ExKp in ExternalKeys)
+                        if (ExKp.KeyProtectorID is not null)
                         {
-                            if (ExKp.KeyProtectorID is not null)
-                            {
-                                RemoveKeyProtector(DriveLetter, ExKp.KeyProtectorID, true);
-                            }
+                            Logger.LogMessage($"Removing ExternalKey key protector with the ID {ExKp.KeyProtectorID} for the drive {DriveLetter}. Will set a new one bound to the OS drive in the next step.", LogTypeIntel.Information);
+
+                            RemoveKeyProtector(DriveLetter, ExKp.KeyProtectorID, true);
                         }
                     }
+
+
+                    // Get the extended volume info based on the drive letter again
+                    // Because if the ExternalKey key protectors were deleted in the previous steps,
+                    // The extended drive info must be updated to reflect that change
+                    VolumeInfoExtended = GetEncryptedVolumeInfo(DriveLetter);
+
+                    if (HasErrorsOccurred) { return; }
+
+                    // Get the key protectors of the Drive again for the reason mentioned above
+                    KeyProtectors = VolumeInfoExtended.KeyProtector!
+                    .Select(kp => kp.KeyProtectorType).ToList();
+
+
+                    // If the Auto-unlock (aka ExternalKey) key protector is not present, add it
+                    // This only runs if all the ExternalKey key protectors were deleted in the previous step
+                    // Indicating that none of them were bound to the OS Drive and were leftovers of previous OS Installations
+                    if (!KeyProtectors.Contains(BitLocker.KeyProtectorType.ExternalKey))
+                    {
+                        Logger.LogMessage($"Adding a new {BitLocker.KeyProtectorType.ExternalKey} key protector for Auto-unlock to the drive {DriveLetter}.", LogTypeIntel.Information);
+
+                        EnableBitLockerAutoUnlock(DriveLetter);
+
+                        if (HasErrorsOccurred) { return; }
+                    }
+
                     #endregion
 
 
                     #region
                     // Check for presence of multiple recovery password key protectors
 
-                    List<BitLocker.KeyProtector> PasswordProtectors = volumeInfo.KeyProtector!.Where(kp => kp.KeyProtectorType is KeyProtectorType.RecoveryPassword).ToList();
+                    List<BitLocker.KeyProtector> PasswordProtectors = VolumeInfoExtended.KeyProtector!.Where(kp => kp.KeyProtectorType is KeyProtectorType.RecoveryPassword).ToList();
 
                     if (PasswordProtectors.Count > 1)
                     {
@@ -414,6 +439,9 @@ namespace HardenWindowsSecurity
                     #endregion
 
                     Logger.LogMessage($"The drive {DriveLetter} is fully encrypted with all the required key protectors.", LogTypeIntel.InformationInteractionRequired);
+
+                    // Exit the method and do not proceed further if the drive was already encrypted
+                    // And key protector checks have been performed
                     HasErrorsOccurred = true;
                     return;
                 }

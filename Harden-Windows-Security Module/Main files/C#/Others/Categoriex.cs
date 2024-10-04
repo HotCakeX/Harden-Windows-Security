@@ -19,15 +19,15 @@ namespace HardenWindowsSecurity
             "BitLockerSettings", // 21 + conditional item for Hibernation check (only available on non-VMs) + Number of Non-OS drives which are dynamically increased
             "TLSSecurity", // 21
             "LockScreen", // 14
-            "UserAccountControl", // 4
+            "UserAccountControl", // 6
             "DeviceGuard", // 8
             "WindowsFirewall", // 19
             "OptionalWindowsFeatures", // 14
             "WindowsNetworking", // 9
             "MiscellaneousConfigurations", // 17
-            "WindowsUpdateConfigurations", // 14
+            "WindowsUpdateConfigurations", // 15
             "EdgeBrowserConfigurations", // 14
-            "NonAdminCommands" // 11
+            "NonAdminCommands" // 9
             ];
             return categoriex;
         }

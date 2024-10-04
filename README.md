@@ -246,6 +246,10 @@ From Top to bottom in order:
 
 [Optional Overrides for Microsoft Security Baselines](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Overrides-for-Microsoft-Security-Baseline)
 
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/Lines/HorizontalLineSeparator.png" height="1" width="90000" alt="horizontal line separator">
+
+<br>
+
 <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> **Highly recommended** to apply these overrides, the module will ask you whether you want to apply them or not. Use Optional Overrides when applying the hardening measures on Azure VMs.
 
 <p align="right"><a href="#menu-back-to-top">💡 (back to categories)</a></p>
@@ -278,23 +282,81 @@ From Top to bottom in order:
 
 <p align="center"><img src="https://raw.githubusercontent.com/HotCakeX/.github/d6960a261913f979526c0fac7901effa4b72d813/Pictures/Readme%20Categories/Microsoft%20Defender/Microsoft%20Defender.svg" alt="Microsoft Defender Cloud Protection features and abilities" width="450"></p>
 
-- <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> Enables **additional** security features of Microsoft Defender, You can refer to [this official document](https://docs.microsoft.com/en-us/powershell/module/defender/set-mppreference?view=windowsserver2022-ps) for full details. <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-defender)
+- <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> Extends the [Cloud Security Scan](https://support.microsoft.com/en-us/topic/what-is-a-cloud-security-scan-75112696-7660-4450-9194-d717f72a8ad8) time to the maximum amount of 60 seconds, by default it is 10 seconds. You need to be aware that this means actions like downloading and opening an unknown file **will** make Microsoft Defender send samples of it to the Cloud for more advanced analysis and it can take a maximum of 60 seconds from the time you try to open that unknown file to the time when it will be opened (if deemed safe). <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-defender#cloudextendedtimeout)
 
-    - [Performance analyzer for Microsoft Defender Antivirus](https://learn.microsoft.com/en-us/microsoft-365/security/defender-endpoint/tune-performance-defender-antivirus)
-
-- <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> The module makes sure [Cloud Security Scan](https://support.microsoft.com/en-us/topic/what-is-a-cloud-security-scan-75112696-7660-4450-9194-d717f72a8ad8) and [Block At First Sight](https://learn.microsoft.com/en-us/microsoft-365/security/defender-endpoint/configure-block-at-first-sight-microsoft-defender-antivirus?view=o365-worldwide#turn-on-block-at-first-sight-with-group-policy) are enabled to the highest possible security states available, **Zero Tolerance Cloud Block level**. You need to be aware that this means actions like downloading and opening an unknown file **will** make Microsoft Defender send samples of it to the Cloud for more advanced analysis and it can take a maximum of 60 seconds (this module sets it to max) from the time you try to open that unknown file to the time when it will be opened (if deemed safe), so you will have to wait. All of these security measures are in place by default in Windows to some extent and happen automatically, but this module **maxes them out and sets them to the highest possible levels**. <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-defender#cloudblocklevel) <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-defender#cloudextendedtimeout)
-
-    - Here is an example of the notification you will see in Windows 11 if that happens.
+   - Here is an example of the notification you will see in Windows 11 if that happens.
 
     <p align="center"><img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Windows%20Security%20Cloud%20Analysis.png" alt="Windows Security Cloud Scan Notification" width="200"></p>
 
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/Lines/HorizontalLineSeparator.png" height="1" width="90000" alt="horizontal line separator">
+
+<br>
+
+- <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> Configures the Cloud Block/Protection Level to the **maximum level of Zero Tolerance and [Block At First Sight](https://learn.microsoft.com/en-us/microsoft-365/security/defender-endpoint/configure-block-at-first-sight-microsoft-defender-antivirus?view=o365-worldwide#turn-on-block-at-first-sight-with-group-policy)**. No unknown file can run on your system without first being recognized by the Microsoft's Security Graph and other **globally omniscient systems**. <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-defender#cloudblocklevel)
+
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/Lines/HorizontalLineSeparator.png" height="1" width="90000" alt="horizontal line separator">
+
+<br>
+
+- <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> Configures the Microsoft Defender to send all samples automatically. Increasing protection by participating in the SpyNet / MAPS network. <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-defender#submitsamplesconsent)
+
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/Lines/HorizontalLineSeparator.png" height="1" width="90000" alt="horizontal line separator">
+
+<br>
+
+- <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> Sets the SpyNet membership to Advanced, improving Cloud Protection. <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-defender#allowcloudprotection)
+
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/Lines/HorizontalLineSeparator.png" height="1" width="90000" alt="horizontal line separator">
+
+<br>
+
 - <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> Enables file hash computation; [designed](https://learn.microsoft.com/en-us/powershell/module/defender/set-mppreference?view=windowsserver2022-ps#-enablefilehashcomputation) to allow admins to force the anti-malware solution to "compute file hashes for every executable file that is scanned if it wasn't previously computed" to "improve blocking for custom indicators in Microsoft Defender Advanced Threat Protection (Microsoft Defender ATP). <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-admx-microsoftdefenderantivirus#mpengine_enablefilehashcomputation)
+
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/Lines/HorizontalLineSeparator.png" height="1" width="90000" alt="horizontal line separator">
+
+<br>
 
 - <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> Clears Quarantined items after 1 day instead of the default behavior of keeping them indefinitely. <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-admx-microsoftdefenderantivirus#quarantine_purgeitemsafterdelay)
 
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/Lines/HorizontalLineSeparator.png" height="1" width="90000" alt="horizontal line separator">
+
+<br>
+
 - <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> Allows Microsoft Defender to download security updates even on a metered connection. <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/en-us/windows/client-management/mdm/defender-csp?WT.mc_id=Portal-fx#configurationmeteredconnectionupdates)
 
-- <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> Enables [Microsoft Defender](https://learn.microsoft.com/en-us/microsoft-365/security/defender-endpoint/configure-advanced-scan-types-microsoft-defender-antivirus?view=o365-worldwide#settings-and-locations) to scan mapped network drives, network files, [reparse points](https://learn.microsoft.com/en-us/windows/win32/fileio/reparse-points), Emails and removable drives during a full scan. <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-defender#allowemailscanning) <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-defender#allowfullscanonmappednetworkdrives) <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-defender#allowfullscanremovabledrivescanning) <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-admx-microsoftdefenderantivirus#scan_disablereparsepointscanning) <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-defender#allowscanningnetworkfiles)
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/Lines/HorizontalLineSeparator.png" height="1" width="90000" alt="horizontal line separator">
+
+<br>
+
+- <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> Enables Microsoft Defender to scan mapped network drives during full scan. <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-defender#allowfullscanonmappednetworkdrives)
+
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/Lines/HorizontalLineSeparator.png" height="1" width="90000" alt="horizontal line separator">
+
+<br>
+
+- <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> Enables Microsoft Defender to scan emails. The engine will parse the mailbox and mail files. <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-defender#allowemailscanning)
+
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/Lines/HorizontalLineSeparator.png" height="1" width="90000" alt="horizontal line separator">
+
+<br>
+
+- <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> Enables Microsoft Defender to scan Removable Drives. <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-defender#allowfullscanremovabledrivescanning)
+
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/Lines/HorizontalLineSeparator.png" height="1" width="90000" alt="horizontal line separator">
+
+<br>
+
+- <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> Enables Microsoft Defender to scan [Reparse Points](https://learn.microsoft.com/en-us/windows/win32/fileio/reparse-points). <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-admx-microsoftdefenderantivirus#scan_disablereparsepointscanning)
+
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/Lines/HorizontalLineSeparator.png" height="1" width="90000" alt="horizontal line separator">
+
+<br>
+
+- <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> Forces [Microsoft Defender](https://learn.microsoft.com/en-us/microsoft-365/security/defender-endpoint/configure-advanced-scan-types-microsoft-defender-antivirus?view=o365-worldwide#settings-and-locations) to scan network files.  <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-defender#allowscanningnetworkfiles)
+
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/Lines/HorizontalLineSeparator.png" height="1" width="90000" alt="horizontal line separator">
+
+<br>
 
 - <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> Sets the Signature Update Interval to every 3 hours instead of automatically. <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-defender#signatureupdateinterval)
 
@@ -313,15 +375,39 @@ From Top to bottom in order:
     @{Engine = $X.versions.engine; Signatures = $X.versions.signatures.'#text'; Platform = $X.versions.platform} | ft -AutoSize
     ```
 
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/Lines/HorizontalLineSeparator.png" height="1" width="90000" alt="horizontal line separator">
+
+<br>
+
 - <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> Forces Microsoft Defender to check for new virus and spyware definitions before it runs a scan. <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-defender#checkforsignaturesbeforerunningscan)
+
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/Lines/HorizontalLineSeparator.png" height="1" width="90000" alt="horizontal line separator">
+
+<br>
 
 - <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> Makes Microsoft Defender run [catch-up scans](https://learn.microsoft.com/en-us/powershell/module/defender/set-mppreference?view=windowsserver2022-ps#-disablecatchupquickscan) for scheduled quick scans. A computer can miss a scheduled scan, usually because the computer is off at the scheduled time, but now after the computer misses two scheduled quick scans, Microsoft Defender runs a catch-up scan the next time someone logs onto the computer. <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-defender#disablecatchupquickscan)
 
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/Lines/HorizontalLineSeparator.png" height="1" width="90000" alt="horizontal line separator">
+
+<br>
+
 - <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> Enables [Network Protection of Microsoft Defender](https://learn.microsoft.com/en-us/microsoft-365/security/defender-endpoint/network-protection?view=o365-worldwide) <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-defender#enablenetworkprotection)
+
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/Lines/HorizontalLineSeparator.png" height="1" width="90000" alt="horizontal line separator">
+
+<br>
 
 - <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/magenta-verification.gif" width="25" alt="Rotating pink checkmark denoting registry or cmdlet"> Enables [scanning of restore points](https://learn.microsoft.com/en-us/powershell/module/defender/set-mppreference#-disablerestorepoint) <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-admx-microsoftdefenderantivirus#scan_disablerestorepoint)
 
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/Lines/HorizontalLineSeparator.png" height="1" width="90000" alt="horizontal line separator">
+
+<br>
+
 - <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/magenta-verification.gif" width="25" alt="Rotating pink checkmark denoting registry or cmdlet"> Makes sure [Async Inspection for Network protection](https://learn.microsoft.com/en-us/microsoft-365/security/defender-endpoint/network-protection?view=o365-worldwide#optimizing-network-protection-performance) of Microsoft Defender is turned on - Network protection now has a performance optimization that allows Block mode to start asynchronously inspecting long connections after they're validated and allowed by SmartScreen, which might provide a potential reduction in the cost that inspection has on bandwidth and can also help with app compatibility problems. <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/en-us/windows/client-management/mdm/defender-csp?WT.mc_id=Portal-fx#configurationallowswitchtoasyncinspection)
+
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/Lines/HorizontalLineSeparator.png" height="1" width="90000" alt="horizontal line separator">
+
+<br>
 
 - <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/magenta-verification.gif" width="25" alt="Rotating pink checkmark denoting registry or cmdlet"> <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/discord-verify-gradient.gif" width="25" alt="Rotating green checkmark denoting Subcategory"> Enables [Smart App Control](https://support.microsoft.com/en-us/topic/what-is-smart-app-control-285ea03d-fa88-4d56-882e-6698afdb7003) (*if it's in Evaluation mode*): adds significant protection from new and emerging threats by blocking apps that are malicious or untrusted. Smart App Control also helps to block potentially unwanted apps, which are apps that may cause your device to run slowly, display unexpected ads, offer extra software you didn't want, or do other things you don't expect.
 
@@ -335,12 +421,21 @@ From Top to bottom in order:
 
     - Once you turn Smart App Control off, it can't be turned on without resetting or reinstalling Windows.
 
-- <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/discord-verify-gradient.gif" width="25" alt="Rotating green checkmark denoting Subcategory"> Enables ["Send optional diagnostic data"](https://learn.microsoft.com/en-us/windows/privacy/windows-diagnostic-data) because [it](https://learn.microsoft.com/en-us/windows/privacy/configure-windows-diagnostic-data-in-your-organization) is [required for Smart App Control](https://support.microsoft.com/en-us/topic/what-is-smart-app-control-285ea03d-fa88-4d56-882e-6698afdb7003) **to operate when it's in evaluation mode or turned on, and for communication with [Intelligent Security Graph (ISG)](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/use-wdac-with-intelligent-security-graph).** You won't see this prompt if Smart App Control is already turned on (this setting will be applied), turned off (this setting will be skipped) or you choose to enable it in the previous step (this setting will be applied). <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-system#allowtelemetry)
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/Lines/HorizontalLineSeparator.png" height="1" width="90000" alt="horizontal line separator">
+
+<br>
+
+- <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/discord-verify-gradient.gif" width="25" alt="Rotating green checkmark denoting Subcategory"> Enables ["Send optional diagnostic data"](https://learn.microsoft.com/en-us/windows/privacy/windows-diagnostic-data) because [it](https://learn.microsoft.com/en-us/windows/privacy/configure-windows-diagnostic-data-in-your-organization) is [required for Smart App Control](https://support.microsoft.com/en-us/topic/what-is-smart-app-control-285ea03d-fa88-4d56-882e-6698afdb7003) **to operate when it's in evaluation mode or turned on, and for communication with [Intelligent Security Graph (ISG)](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/use-wdac-with-intelligent-security-graph).** This setting will be automatically applied if Smart App Control is already turned on or you choose to turn it on. <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-system#allowtelemetry)
+
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/Lines/HorizontalLineSeparator.png" height="1" width="90000" alt="horizontal line separator">
+
+<br>
 
 - <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> Enables [Controlled Folder Access](https://learn.microsoft.com/en-us/microsoft-365/security/defender-endpoint/enable-controlled-folders). It [helps protect your valuable data](https://learn.microsoft.com/en-us/microsoft-365/security/defender-endpoint/controlled-folders) from malicious apps and threats, such as ransomware. Controlled folder access protects your data by checking apps against a list of known, trusted apps. Due to the recent wave of global ransomware attacks, it is important to use this feature to protect your valuables files, specially OneDrive folders. <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-defender#enablecontrolledfolderaccess)
 
     - If it blocks a program from accessing one of your folders it protects, and you absolutely trust that program, then you can add it to exclusion list using Microsoft Defender GUI or PowerShell. you can also query the list of allowed apps using PowerShell (commands below). with these commands, you can backup your personalized list of allowed apps, that are relevant to your system, and restore them in case you clean install your Windows.
-    - <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/magenta-verification.gif" width="25" alt="Rotating pink checkmark denoting registry or cmdlet"> The module adds the root of the OneDrive folders of all user accounts present, to the protected folders list of Controlled Folder Access, to provide Ransomware protection for the entire OneDrive folder. <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-defender#controlledfolderaccessprotectedfolders)
+
+    - <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/magenta-verification.gif" width="25" alt="Rotating pink checkmark denoting registry or cmdlet"> The root of the OneDrive folders of all the user accounts will be added to the protected folders list of Controlled Folder Access, to provide Ransomware protection for the entire OneDrive folder. <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-defender#controlledfolderaccessprotectedfolders)
 
   -
     ```powershell
@@ -354,6 +449,10 @@ From Top to bottom in order:
     (Get-MpPreference).ControlledFolderAccessAllowedApplications
     ```
 
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/Lines/HorizontalLineSeparator.png" height="1" width="90000" alt="horizontal line separator">
+
+<br>
+
 - <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/magenta-verification.gif" width="25" alt="Rotating pink checkmark denoting registry or cmdlet"> Enables [Mandatory ASLR,](https://learn.microsoft.com/en-us/microsoft-365/security/defender-endpoint/enable-exploit-protection?view=o365-worldwide) *It might cause compatibility issues* only for some **poorly-made 3rd party programs**, specially portable ones. <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-exploitguard)
 
     - Automatically detects and excludes the Git executables of GitHub Desktop and Git (Standalone version) from mandatory ASLR if they are installed on the system. [More info here](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Git-GitHub-Desktop-and-Mandatory-ASLR)
@@ -361,6 +460,10 @@ From Top to bottom in order:
     - You can add Mandatory ASLR override for a trusted program using the PowerShell command below or in the Program Settings section of Exploit Protection in Microsoft Defender app.
 
         - `Set-ProcessMitigation -Name "C:\TrustedApp.exe" -Disable ForceRelocateImages`
+
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/Lines/HorizontalLineSeparator.png" height="1" width="90000" alt="horizontal line separator">
+
+<br>
 
 - <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/magenta-verification.gif" width="25" alt="Rotating pink checkmark denoting registry or cmdlet"> Applies [Exploit Protections/Process Mitigations](https://learn.microsoft.com/en-us/microsoft-365/security/defender-endpoint/enable-exploit-protection) from [**this list**](https://github.com/HotCakeX/Harden-Windows-Security/blob/main/Harden-Windows-Security%20Module/Main%20files/Resources/ProcessMitigations.csv) to the following programs: <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-exploitguard)
 
@@ -376,47 +479,174 @@ From Top to bottom in order:
 
     - Exploit Protection configurations are also accessible in XML format [within this repository](https://github.com/HotCakeX/Harden-Windows-Security/tree/main/Intune%20Files/Hardening%20Policies/Exploit%20Protections). When implementing exploit protections using an XML file, the existing exploit mitigations will seamlessly integrate rather than being overwritten. Should there be pre-existing exploit protections applied to an executable on the system, and the XML file specifies different mitigations for the same executable, these protections will be merged and applied collectively.
 
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/Lines/HorizontalLineSeparator.png" height="1" width="90000" alt="horizontal line separator">
+
+<br>
+
 - <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/magenta-verification.gif" width="25" alt="Rotating pink checkmark denoting registry or cmdlet"> [Turns on Data Execution Prevention](https://learn.microsoft.com/en-us/windows-hardware/drivers/devtest/bcdedit--set) (DEP) for all applications, including 32-bit programs. By default, the output of `BCDEdit /enum "{current}"` (in PowerShell) for the NX bit is `OptIn` but this module sets it to `AlwaysOn`
+
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/Lines/HorizontalLineSeparator.png" height="1" width="90000" alt="horizontal line separator">
+
+<br>
 
 - <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> Check for the latest virus and spyware security intelligence on startup. <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-admx-microsoftdefenderantivirus#signatureupdate_updateonstartup)
 
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/Lines/HorizontalLineSeparator.png" height="1" width="90000" alt="horizontal line separator">
+
+<br>
+
 - <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> Specifies the maximum depth to scan archive files to the maximum possible value of `4,294,967,295` <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-admx-microsoftdefenderantivirus#scan_archivemaxdepth)
+
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/Lines/HorizontalLineSeparator.png" height="1" width="90000" alt="horizontal line separator">
+
+<br>
 
 - <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> [Defines the maximum size of downloaded files and attachments to be scanned](https://learn.microsoft.com/en-us/microsoft-365/security/defender-endpoint/configure-advanced-scan-types-microsoft-defender-antivirus?view=o365-worldwide) and set it to the maximum possible value of `10,000,000 KB` or `10 GB`. [the default is](https://github.com/MicrosoftDocs/microsoft-365-docs/pull/5600) `20480 KB` or `~20MB` <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-admx-microsoftdefenderantivirus#realtimeprotection_ioavmaxsize)
 
-- <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> Enables automatic data collection (formerly known as Capture Threat Window) of [Enhanced Phishing Protection](https://learn.microsoft.com/en-us/windows/security/operating-system-security/virus-and-threat-protection/microsoft-defender-smartscreen/enhanced-phishing-protection) in Microsoft Defender SmartScreen for security analysis from a suspicious website or app. <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-webthreatdefense#automaticdatacollection)
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/Lines/HorizontalLineSeparator.png" height="1" width="90000" alt="horizontal line separator">
 
-- <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/magenta-verification.gif" width="25" alt="Rotating pink checkmark denoting registry or cmdlet"> <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/discord-verify-gradient.gif" width="25" alt="Rotating green checkmark denoting Subcategory"> [Create scheduled task for fast weekly Microsoft recommended driver block list update.](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Fast-and-Automatic-Microsoft-Recommended-Driver-Block-Rules-updates). You won't see this prompt if the task already exists and is enabled or running.
+<br>
+
+- <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> Enables the [Enhanced Phishing Protection](https://learn.microsoft.com/en-us/windows/security/operating-system-security/virus-and-threat-protection/microsoft-defender-smartscreen/enhanced-phishing-protection) service. <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-webthreatdefense#serviceenabled)
+
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/Lines/HorizontalLineSeparator.png" height="1" width="90000" alt="horizontal line separator">
+
+<br>
+
+- <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> Enables notifying user of malicious and phishing scenarios in Microsoft Defender Enhanced Phishing Protection. <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-webthreatdefense#notifymalicious)
+
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/Lines/HorizontalLineSeparator.png" height="1" width="90000" alt="horizontal line separator">
+
+<br>
+
+- <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> Enables the feature in Enhanced Phishing Protection in Microsoft Defender SmartScreen that warns users if they reuse their work or school password. <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-webthreatdefense#notifypasswordreuse)
+
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/Lines/HorizontalLineSeparator.png" height="1" width="90000" alt="horizontal line separator">
+
+<br>
+
+- <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> Enables warning users if they type their work or school passwords in unsafe apps. <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-webthreatdefense#notifyunsafeapp)
+
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/Lines/HorizontalLineSeparator.png" height="1" width="90000" alt="horizontal line separator">
+
+<br>
+
+- <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> Enables automatic data collection (formerly known as Capture Threat Window) of Enhanced Phishing Protection in Microsoft Defender SmartScreen for security analysis from a suspicious website or app. <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-webthreatdefense#automaticdatacollection)
+
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/Lines/HorizontalLineSeparator.png" height="1" width="90000" alt="horizontal line separator">
+
+<br>
+
+- <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/magenta-verification.gif" width="25" alt="Rotating pink checkmark denoting registry or cmdlet"> <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/discord-verify-gradient.gif" width="25" alt="Rotating green checkmark denoting Subcategory"> [Creates scheduled task for fast weekly Microsoft recommended driver block list update.](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Fast-and-Automatic-Microsoft-Recommended-Driver-Block-Rules-updates). You won't see this prompt if the task already exists and is enabled or running.
+
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/Lines/HorizontalLineSeparator.png" height="1" width="90000" alt="horizontal line separator">
+
+<br>
 
 - <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/magenta-verification.gif" width="25" alt="Rotating pink checkmark denoting registry or cmdlet"> <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/discord-verify-gradient.gif" width="25" alt="Rotating green checkmark denoting Subcategory"> Set Microsoft [Defender engine](https://learn.microsoft.com/en-us/powershell/module/defender/set-mppreference#-engineupdateschannel) and [platform update channel](https://learn.microsoft.com/en-us/powershell/module/defender/set-mppreference#-platformupdateschannel) to beta. <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/en-us/windows/client-management/mdm/defender-csp?WT.mc_id=Portal-fx#configurationengineupdateschannel) <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/en-us/windows/client-management/mdm/defender-csp?WT.mc_id=Portal-fx#configurationplatformupdateschannel)
 
-- <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> [Defines the number of days before spyware and virus security intelligence definitions](https://learn.microsoft.com/en-us/microsoft-365/security/defender-endpoint/manage-outdated-endpoints-microsoft-defender-antivirus?view=o365-worldwide#use-group-policy-to-specify-the-number-of-days-before-protection-is-considered-out-of-date) are considered out of date to 2 days, instead of the default 7 days. <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-admx-microsoftdefenderantivirus#signatureupdate_assignaturedue)
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/Lines/HorizontalLineSeparator.png" height="1" width="90000" alt="horizontal line separator">
+
+<br>
+
+- <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> [Defines](https://learn.microsoft.com/en-us/defender-endpoint/manage-outdated-endpoints-microsoft-defender-antivirus?view=o365-worldwide#use-group-policy-to-specify-the-number-of-days-before-protection-is-considered-out-of-date) the number of days before spyware security intelligence is considered out of date to 2. The default is 7. <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-admx-microsoftdefenderantivirus#signatureupdate_assignaturedue)
+
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/Lines/HorizontalLineSeparator.png" height="1" width="90000" alt="horizontal line separator">
+
+<br>
+
+- <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> Defines the number of days before virus security intelligence is considered out of date to 2. The default is 7. <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-admx-microsoftdefenderantivirus#signatureupdate_avsignaturedue)
+
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/Lines/HorizontalLineSeparator.png" height="1" width="90000" alt="horizontal line separator">
+
+<br>
 
 - <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> Sets the [default action](https://learn.microsoft.com/en-us/microsoft-365/security/defender-endpoint/configure-remediation-microsoft-defender-antivirus) for Severe and High threat levels to Remove, for Medium and Low threat levels to Quarantine. <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-admx-microsoftdefenderantivirus#threats_threatiddefaultaction)
 
-- <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/magenta-verification.gif" width="25" alt="Rotating pink checkmark denoting registry or cmdlet"> Configures real-time protection and Security Intelligence Updates to be enabled during OOBE. <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/en-us/windows/client-management/mdm/defender-csp#configurationoobeenablertpandsigupdate)
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/Lines/HorizontalLineSeparator.png" height="1" width="90000" alt="horizontal line separator">
 
-- <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/magenta-verification.gif" width="25" alt="Rotating pink checkmark denoting registry or cmdlet"> Enables the [Intel TDT](https://techcommunity.microsoft.com/t5/microsoft-defender-for-endpoint/defending-against-ransomware-with-microsoft-defender-for/ba-p/3243941) (Intel® Threat Detection Technology) integration with Microsoft Defender. <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/en-us/windows/client-management/mdm/defender-csp#configurationinteltdtenabled)
+<br>
 
-- <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/magenta-verification.gif" width="25" alt="Rotating pink checkmark denoting registry or cmdlet"> Disables [Performance Mode](https://learn.microsoft.com/en-us/microsoft-365/security/defender-endpoint/microsoft-defender-endpoint-antivirus-performance-mode) - [Security risks in relation to Dev Drive](https://learn.microsoft.com/en-us/windows/dev-drive/#understanding-security-risks-and-trust-in-relation-to-dev-drive) <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/en-us/windows/client-management/mdm/defender-csp?WT.mc_id=Portal-fx#configurationperformancemodestatus)
+- <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> Configures real-time protection and Security Intelligence Updates to be enabled during OOBE. <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/en-us/windows/client-management/mdm/defender-csp#configurationoobeenablertpandsigupdate)
+
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/Lines/HorizontalLineSeparator.png" height="1" width="90000" alt="horizontal line separator">
+
+<br>
+
+- <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> Enables the [Intel TDT](https://techcommunity.microsoft.com/t5/microsoft-defender-for-endpoint/defending-against-ransomware-with-microsoft-defender-for/ba-p/3243941) (Intel® Threat Detection Technology) integration with Microsoft Defender. <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/en-us/windows/client-management/mdm/defender-csp#configurationinteltdtenabled)
+
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/Lines/HorizontalLineSeparator.png" height="1" width="90000" alt="horizontal line separator">
+
+<br>
+
+- <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> Disables [Performance Mode](https://learn.microsoft.com/en-us/microsoft-365/security/defender-endpoint/microsoft-defender-endpoint-antivirus-performance-mode) - [Security risks in relation to Dev Drive](https://learn.microsoft.com/en-us/windows/dev-drive/#understanding-security-risks-and-trust-in-relation-to-dev-drive) <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/en-us/windows/client-management/mdm/defender-csp?WT.mc_id=Portal-fx#configurationperformancemodestatus)
+
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/Lines/HorizontalLineSeparator.png" height="1" width="90000" alt="horizontal line separator">
+
+<br>
 
 - <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/magenta-verification.gif" width="25" alt="Rotating pink checkmark denoting registry or cmdlet"> Enables a network protection setting that blocks malicious network traffic instead of displaying a warning. <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/en-us/windows/client-management/mdm/defender-csp#configurationenableconvertwarntoblock)
 
-- <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/magenta-verification.gif" width="25" alt="Rotating pink checkmark denoting registry or cmdlet"> Configures the Brute-Force Protection to use cloud aggregation to block IP addresses that are over 99% likely malicious <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/en-us/windows/client-management/mdm/defender-csp#configurationbehavioralnetworkblocksbruteforceprotectionbruteforceprotectionaggressiveness)
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/Lines/HorizontalLineSeparator.png" height="1" width="90000" alt="horizontal line separator">
 
-- <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/magenta-verification.gif" width="25" alt="Rotating pink checkmark denoting registry or cmdlet"> Configures the Brute-Force Protection to detect and block attempts to forcibly sign in and initiate sessions <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/en-us/windows/client-management/mdm/defender-csp#configurationbehavioralnetworkblocksbruteforceprotectionbruteforceprotectionconfiguredstate)
+<br>
 
-- <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/magenta-verification.gif" width="25" alt="Rotating pink checkmark denoting registry or cmdlet"> Sets the internal feature logic to determine blocking time for the Brute-Force Protections <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/en-us/windows/client-management/mdm/defender-csp#configurationbehavioralnetworkblocksbruteforceprotectionbruteforceprotectionmaxblocktime)
+- <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> Configures the Brute-Force Protection to use cloud aggregation to block IP addresses that are over 99% likely malicious <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/en-us/windows/client-management/mdm/defender-csp#configurationbehavioralnetworkblocksbruteforceprotectionbruteforceprotectionaggressiveness)
 
-- <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/magenta-verification.gif" width="25" alt="Rotating pink checkmark denoting registry or cmdlet"> Configures the Remote Encryption Protection to use cloud intel and context, and block when confidence level is above 90%. <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/en-us/windows/client-management/mdm/defender-csp#configurationbehavioralnetworkblocksremoteencryptionprotectionremoteencryptionprotectionaggressiveness)
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/Lines/HorizontalLineSeparator.png" height="1" width="90000" alt="horizontal line separator">
 
-- <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/magenta-verification.gif" width="25" alt="Rotating pink checkmark denoting registry or cmdlet"> Configures the Remote Encryption Protection to detect and block attempts to replace local files with encrypted versions from another device <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/en-us/windows/client-management/mdm/defender-csp#configurationbehavioralnetworkblocksremoteencryptionprotectionremoteencryptionprotectionconfiguredstate)
+<br>
 
-- <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/magenta-verification.gif" width="25" alt="Rotating pink checkmark denoting registry or cmdlet"> Sets the internal feature logic to determine blocking time for the Remote Encryption Protection <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/en-us/windows/client-management/mdm/defender-csp#configurationbehavioralnetworkblocksremoteencryptionprotectionremoteencryptionprotectionmaxblocktime)
+- <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> Configures the Brute-Force Protection to detect and block attempts to forcibly sign in and initiate sessions <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/en-us/windows/client-management/mdm/defender-csp#configurationbehavioralnetworkblocksbruteforceprotectionbruteforceprotectionconfiguredstate)
+
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/Lines/HorizontalLineSeparator.png" height="1" width="90000" alt="horizontal line separator">
+
+<br>
+
+- <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> Sets the internal feature logic to determine blocking time for the Brute-Force Protections <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/en-us/windows/client-management/mdm/defender-csp#configurationbehavioralnetworkblocksbruteforceprotectionbruteforceprotectionmaxblocktime)
+
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/Lines/HorizontalLineSeparator.png" height="1" width="90000" alt="horizontal line separator">
+
+<br>
+
+- <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> Configures the Remote Encryption Protection to use cloud intel and context, and block when confidence level is above 90%. <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/en-us/windows/client-management/mdm/defender-csp#configurationbehavioralnetworkblocksremoteencryptionprotectionremoteencryptionprotectionaggressiveness)
+
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/Lines/HorizontalLineSeparator.png" height="1" width="90000" alt="horizontal line separator">
+
+<br>
+
+- <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> Configures the Remote Encryption Protection to detect and block attempts to replace local files with encrypted versions from another device <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/en-us/windows/client-management/mdm/defender-csp#configurationbehavioralnetworkblocksremoteencryptionprotectionremoteencryptionprotectionconfiguredstate)
+
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/Lines/HorizontalLineSeparator.png" height="1" width="90000" alt="horizontal line separator">
+
+<br>
+
+- <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> Sets the internal feature logic to determine blocking time for the Remote Encryption Protection <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/en-us/windows/client-management/mdm/defender-csp#configurationbehavioralnetworkblocksremoteencryptionprotectionremoteencryptionprotectionmaxblocktime)
+
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/Lines/HorizontalLineSeparator.png" height="1" width="90000" alt="horizontal line separator">
+
+<br>
 
 - <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/magenta-verification.gif" width="25" alt="Rotating pink checkmark denoting registry or cmdlet"> Extends the brute-force protection coverage in the Microsoft Defender Antivirus to block local network addresses. <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/en-us/windows/client-management/mdm/defender-csp#configurationbehavioralnetworkblocksbruteforceprotectionbruteforceprotectionpluginsbruteforceprotectionlocalnetworkblocking)
 
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/Lines/HorizontalLineSeparator.png" height="1" width="90000" alt="horizontal line separator">
+
+<br>
+
 - <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/magenta-verification.gif" width="25" alt="Rotating pink checkmark denoting registry or cmdlet"> Enables [ECS Configurations](https://learn.microsoft.com/en-us/defender-endpoint/microsoft-defender-core-service-configurations-and-experimentation) in the Microsoft Defender. They improve product health and security by *automatically* fixing any possible issues/bugs that may arise, in a timely manner.
+
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/Lines/HorizontalLineSeparator.png" height="1" width="90000" alt="horizontal line separator">
+
+<br>
+
+- <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> Enables Network Protection to be configured into block or audit mode on Windows Server. <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/en-us/windows/client-management/mdm/defender-csp#configurationallownetworkprotectiononwinserver)
+
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/Lines/HorizontalLineSeparator.png" height="1" width="90000" alt="horizontal line separator">
+
+<br>
+
+> [!TIP]\
+> [Performance analyzer for Microsoft Defender Antivirus](https://learn.microsoft.com/en-us/defender-endpoint/tune-performance-defender-antivirus)
 
 <p align="right"><a href="#menu-back-to-top">💡 (back to categories)</a></p>
 
@@ -430,8 +660,6 @@ From Top to bottom in order:
 
 <p align="center"><img src="https://raw.githubusercontent.com/HotCakeX/.github/0180bc6ace1ea086653cc405f142d1aada424150/Pictures/Readme%20Categories/Attack%20Surface%20Reduction/Attack%20Surface%20Reduction.svg" alt="Attack surface reduction rules - Harden Windows Security GitHub repository" width="550"></p>
 
-<img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> [Reducing your attack surface](https://learn.microsoft.com/en-us/microsoft-365/security/defender-endpoint/attack-surface-reduction) means protecting your devices and network, which leaves attackers with fewer ways to perform attacks. Configuring attack surface reduction rules in Windows can help!
-
 <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> [Attack surface reduction rules](https://learn.microsoft.com/en-us/microsoft-365/security/defender-endpoint/attack-surface-reduction-rules-reference?view=o365-worldwide) target certain software behaviors, such as: <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-defender#attacksurfacereductionrules)
 
 * Launching executable files and scripts that attempt to download or run files
@@ -440,7 +668,10 @@ From Top to bottom in order:
 
 Such software behaviors are sometimes seen in legitimate applications. However, these behaviors are often considered risky because they are commonly abused by attackers through malware. Attack surface reduction rules can constrain software-based risky behaviors and help keep your organization safe.
 
-<img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> This module enables [all 19 available Attack Surface Reduction rules shown in the official chart](https://learn.microsoft.com/en-us/microsoft-365/security/defender-endpoint/attack-surface-reduction-rules-reference?view=o365-worldwide#asr-rule-to-guid-matrix).
+[Reducing your attack surface](https://learn.microsoft.com/en-us/microsoft-365/security/defender-endpoint/attack-surface-reduction) means protecting your devices and network, which leaves attackers with fewer ways to perform attacks. Configuring attack surface reduction rules in Windows can help!
+
+> [!TIP]\
+> [all 19 available Attack Surface Reduction rules shown in the official chart](https://learn.microsoft.com/en-us/microsoft-365/security/defender-endpoint/attack-surface-reduction-rules-reference?view=o365-worldwide#asr-rule-to-guid-matrix) will be enabled. The Harden Windows Security application also allows you to individually configure each Attack Surface Reduction rule.
 
 <p align="right"><a href="#menu-back-to-top">💡 (back to categories)</a></p>
 
@@ -483,23 +714,49 @@ Such software behaviors are sometimes seen in legitimate applications. However, 
 > [!IMPORTANT]\
 > [AMD Zen 2 and 3 CPUs have a vulnerability in them](https://github.com/HotCakeX/Harden-Windows-Security/issues/63), if you use one of them, make sure your Bitlocker Startup PIN is at least 16 characters long [*(max is 20)*](https://learn.microsoft.com/en-us/windows/security/operating-system-security/data-protection/bitlocker/bitlocker-group-policy-settings#configure-minimum-pin-length-for-startup).
 
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/Lines/HorizontalLineSeparator.png" height="1" width="90000" alt="horizontal line separator">
+
 <br>
 
 - <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> Enables or disables [DMA protection from Bitlocker Countermeasures](https://learn.microsoft.com/en-us/windows/security/information-protection/bitlocker/bitlocker-countermeasures#protecting-thunderbolt-and-other-dma-ports) based [on the status](https://github.com/MicrosoftDocs/windows-itpro-docs/issues/6878#issuecomment-742429128) of [Kernel DMA protection](https://learn.microsoft.com/en-us/windows/security/information-protection/kernel-dma-protection-for-thunderbolt). Kernel DMA Protection is [not compatible](https://learn.microsoft.com/en-us/windows/security/information-protection/kernel-dma-protection-for-thunderbolt#system-compatibility) with other BitLocker DMA attacks countermeasures. It is recommended to disable the BitLocker DMA attacks countermeasures if the system supports Kernel DMA Protection (this module does that exactly). Kernel DMA Protection provides higher security bar for the system over the BitLocker DMA attack countermeasures, while maintaining usability of external peripherals. you can check the status of Kernel DMA protection [using this official guide](https://learn.microsoft.com/en-us/windows/security/information-protection/kernel-dma-protection-for-thunderbolt#how-to-check-if-kernel-dma-protection-is-enabled). <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-dataprotection#allowdirectmemoryaccess)
 
     - [Kernel DMA Protection (Memory Access Protection) for OEMs](https://learn.microsoft.com/en-us/windows-hardware/design/device-experiences/oem-kernel-dma-protection) page shows the requirements for Kernel DMA Protection. for Intel CPUs, support for requirements such as VT-X and VT-D can be found in each CPU's respective product page. e.g. [Intel i7 13700K](https://ark.intel.com/content/www/us/en/ark/products/230500/intel-core-i713700k-processor-30m-cache-up-to-5-40-ghz.html)
 
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/Lines/HorizontalLineSeparator.png" height="1" width="90000" alt="horizontal line separator">
+
+<br>
+
 - <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> Disallows standard (non-Administrator) users from changing the Bitlocker Startup PIN or password <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/en-us/windows/client-management/mdm/bitlocker-csp#systemdrivesdisallowstandarduserscanchangepin)
 
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/Lines/HorizontalLineSeparator.png" height="1" width="90000" alt="horizontal line separator">
+
+<br>
+
 - <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> [Requires you to choose a PIN that contains at least 10 characters](https://learn.microsoft.com/en-us/windows/security/information-protection/bitlocker/bitlocker-group-policy-settings#configure-minimum-pin-length-for-startup) <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/en-us/windows/client-management/mdm/bitlocker-csp#systemdrivesminimumpinlength)
+
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/Lines/HorizontalLineSeparator.png" height="1" width="90000" alt="horizontal line separator">
+
+<br>
 
 - <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> (Only on Physical machines) Enables Hibernate and adds Hibernate to Start menu's power options. <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-power#allowhibernate)
 
     - Devices that support [Modern Standby](https://learn.microsoft.com/en-us/windows-hardware/design/device-experiences/modern-standby) have the most security because [(S1-S3) power states](https://learn.microsoft.com/en-us/windows-hardware/drivers/kernel/system-power-states) which belong to the [legacy sleep modes](https://learn.microsoft.com/en-us/windows-hardware/design/device-experiences/modern-standby-vs-s3) are not available. In Modern Standby, security components remain vigilant and the OS stays protected. Applying Microsoft Security Baselines also automatically disables the legacy (S1-S3) sleep states.
 
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/Lines/HorizontalLineSeparator.png" height="1" width="90000" alt="horizontal line separator">
+
+<br>
+
 - <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/magenta-verification.gif" width="25" alt="Rotating pink checkmark denoting registry or cmdlet"> [sets Hibernate to full](https://learn.microsoft.com/en-us/windows/win32/power/system-power-states#hibernation-file-types)
 
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/Lines/HorizontalLineSeparator.png" height="1" width="90000" alt="horizontal line separator">
+
+<br>
+
 - <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> Enables network connectivity in standby on modern standby-capable systems. This ensures security updates for Microsoft Defender and Windows will be installed automatically. <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-admx-power#acconnectivityinstandby_2)
+
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/Lines/HorizontalLineSeparator.png" height="1" width="90000" alt="horizontal line separator">
+
+<br>
 
 - <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> [Disallows access to Bitlocker-protected removable data drives from earlier versions of Windows.](https://learn.microsoft.com/en-us/windows/security/information-protection/bitlocker/bitlocker-group-policy-settings#allow-access-to-bitlocker-protected-removable-data-drives-from-earlier-versions-of-windows)
 
@@ -530,9 +787,21 @@ If you want to read more: [Demystifying Schannel](https://techcommunity.microsof
 
 - <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/magenta-verification.gif" width="25" alt="Rotating pink checkmark denoting registry or cmdlet"> Disables TLS 1 and TLS 1.1 security protocols that only **exist for backward compatibility**. All modern software should and do use `TLS 1.2` and `TLS 1.3`. <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-cryptography#overrideminimumenabledtlsversionclient) <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-cryptography#overrideminimumenabledtlsversionserver)
 
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/Lines/HorizontalLineSeparator.png" height="1" width="90000" alt="horizontal line separator">
+
+<br>
+
 - <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/magenta-verification.gif" width="25" alt="Rotating pink checkmark denoting registry or cmdlet"> Disables [MD5 Hashing Algorithm](https://security.stackexchange.com/questions/52461/how-weak-is-md5-as-a-password-hashing-function) that is **only available for backward compatibility**
 
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/Lines/HorizontalLineSeparator.png" height="1" width="90000" alt="horizontal line separator">
+
+<br>
+
 - <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/magenta-verification.gif" width="25" alt="Rotating pink checkmark denoting registry or cmdlet"> Disables the following [weak ciphers](https://github.com/ssllabs/research/wiki/SSL-and-TLS-Deployment-Best-Practices) that are **only available for backward compatibility**: `"DES 56-bit"`,`"RC2 40-bit"`,`"RC2 56-bit"`,`"RC2 128-bit"`,`"RC4 40-bit"`,`"RC4 56-bit"`,`"RC4 64-bit"`,`"RC4 128-bit"`,`"3DES 168-bit (Triple DES 168)"`
+
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/Lines/HorizontalLineSeparator.png" height="1" width="90000" alt="horizontal line separator">
+
+<br>
 
 - <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> Configures the [TLS](https://www.ncsc.gov.uk/guidance/using-tls-to-protect-data) to only use the [following](https://developers.cloudflare.com/ssl/reference/cipher-suites/recommendations/) secure [cipher suites](https://learn.microsoft.com/en-us/windows/win32/secauthn/tls-cipher-suites-in-windows-11) and in this [exact](https://scanigma.com/knowledge-base) order: <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-cryptography#tlsciphersuites)
 
@@ -547,6 +816,10 @@ TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
 TLS_DHE_RSA_WITH_AES_256_GCM_SHA384
 TLS_DHE_RSA_WITH_AES_128_GCM_SHA256
 ```
+
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/Lines/HorizontalLineSeparator.png" height="1" width="90000" alt="horizontal line separator">
+
+<br>
 
 - <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> [Configures](https://learn.microsoft.com/en-us/windows-server/security/tls/manage-tls) TLS ECC Curves to [use the following](https://github.com/HotCakeX/Harden-Windows-Security/commit/5b5be1fcab8f7bf5d364f48459aecfc54c6eff9d#commitcomment-115982586) prioritized Curves order: <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-cryptography#configureellipticcurvecryptography)
 
@@ -583,25 +856,57 @@ NistP384
 
 - <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> [Automatically locks device after X seconds of inactivity](https://learn.microsoft.com/en-us/windows/security/threat-protection/security-policy-settings/interactive-logon-machine-inactivity-limit) (just like mobile phones), which is set to 120 seconds (2 minutes) in this module, you can change that to any value you like. <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-localpoliciessecurityoptions#interactivelogon_machineinactivitylimit)
 
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/Lines/HorizontalLineSeparator.png" height="1" width="90000" alt="horizontal line separator">
+
+<br>
+
 - <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/discord-verify-gradient.gif" width="25" alt="Rotating green checkmark denoting Subcategory"> [Requires **CTRL+ALT+DEL** on the lock screen](https://learn.microsoft.com/en-us/windows/security/threat-protection/security-policy-settings/interactive-logon-do-not-require-ctrl-alt-del), kernel protected set of key strokes. The reason and logic behind it is: <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-localpoliciessecurityoptions#interactivelogon_donotrequirectrlaltdel)
 
     - A malicious user might install malware that looks like the standard sign-in dialog box for the Windows operating system and capture a user's password. The attacker can then sign into the compromised account with whatever level of user rights that user has.
+
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/Lines/HorizontalLineSeparator.png" height="1" width="90000" alt="horizontal line separator">
+
+<br>
 
 - <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> Enables [a security anti-hammering feature](https://learn.microsoft.com/en-us/windows/security/threat-protection/security-policy-settings/interactive-logon-machine-account-lockout-threshold) that sets a threshold of **5** for the number of failed sign-in attempts that causes the device to be locked by using BitLocker. Sign-in attempts include Windows password or Windows Hello authentication methods. This threshold means, if the specified maximum number of failed sign-in attempts is exceeded, the device will invalidate the Trusted Platform Module (TPM) protector and any other protector except the 48-digit recovery password, and then reboot. During Device Lockout mode, the computer or device only boots into the touch-enabled Windows Recovery Environment (WinRE) until an authorized user enters the recovery password to restore full access.
 
     - This module (<a href="#bitlocker-settings">in the Bitlocker category</a>) automatically saves the 48-digit recovery password of each drive in itself, the location of it will also be visible on the PowerShell console when you run it. It is **very important to keep it in a safe and reachable place, e.g. in OneDrive's Personal Vault which requires authentication to access. See [Here](https://www.microsoft.com/en-us/microsoft-365/onedrive/personal-vault) and [Here](https://support.microsoft.com/en-us/office/protect-your-onedrive-files-in-personal-vault-6540ef37-e9bf-4121-a773-56f98dce78c4) for more info about OneDrive's Personal Vault**
 
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/Lines/HorizontalLineSeparator.png" height="1" width="90000" alt="horizontal line separator">
+
+<br>
+
 - <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> Configures account lockout policy: [Account lockout threshold](https://learn.microsoft.com/en-us/windows/security/threat-protection/security-policy-settings/account-lockout-threshold), Sets the number of allowed failed sign-in attempts to **5**. In combination with other policies in this category, this means every 5 failed sign-in attempts will need a full day to pass before 5 more attempts can be made, otherwise Bitlocker will engage, system will be restarted and 48-digit Bitlocker code will be asked. **This policy greatly prevents brute force attempts.** <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-devicelock#accountlockoutpolicy)
+
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/Lines/HorizontalLineSeparator.png" height="1" width="90000" alt="horizontal line separator">
+
+<br>
 
 - <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> Configures account lockout policy: Sets [Account lockout duration](https://learn.microsoft.com/en-us/windows/security/threat-protection/security-policy-settings/account-lockout-duration) to **1440 minutes or 1 day**. In combination with other policies in this category, this means every 5 failed sign-in attempts will need a full day to pass before 5 more attempts can be made, otherwise Bitlocker will engage, system will be restarted and 48-digit Bitlocker code will be asked. <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-devicelock#accountlockoutpolicy)
 
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/Lines/HorizontalLineSeparator.png" height="1" width="90000" alt="horizontal line separator">
+
+<br>
+
 - <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> Configures account lockout policy: Sets [Reset account lockout counter](https://learn.microsoft.com/en-us/windows/security/threat-protection/security-policy-settings/reset-account-lockout-counter-after) to **1440 minutes or 1 day**. In combination with other policies in this category, this means every 5 failed sign-in attempts will need a full day to pass before 5 more attempts can be made, otherwise Bitlocker will engage, system will be restarted and 48-digit Bitlocker code will be asked. <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-devicelock#accountlockoutpolicy)
 
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/Lines/HorizontalLineSeparator.png" height="1" width="90000" alt="horizontal line separator">
+
+<br>
+
 - <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> [Hides email address of the Microsoft account on lock screen](https://learn.microsoft.com/en-us/windows/security/threat-protection/security-policy-settings/interactive-logon-display-user-information-when-the-session-is-locked), if your device is in a trusted place like at home then this isn't necessary.
+
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/Lines/HorizontalLineSeparator.png" height="1" width="90000" alt="horizontal line separator">
+
+<br>
 
 - <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> [Don't display username at sign-in](https://learn.microsoft.com/en-us/windows/security/threat-protection/security-policy-settings/interactive-logon-dont-display-username-at-sign-in); If a user signs in as Other user, the full name of the user isn't displayed during sign-in. In the same context, if users type their email address and password at the sign-in screen and press Enter, the displayed text "Other user" remains unchanged, and is no longer replaced by the user's first and last name, as in previous versions of Windows 10. Additionally, if users enter their domain user name and password and click Submit, their full name isn't shown until the Start screen displays. <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-localpoliciessecurityoptions#interactivelogon_donotdisplayusernameatsignin)
 
     - [Useful](https://learn.microsoft.com/en-us/windows/security/threat-protection/security-policy-settings/interactive-logon-dont-display-username-at-sign-in#best-practices) If you have devices that store sensitive data, with monitors displayed in unsecured locations, or if you have devices with sensitive data that are remotely accessed, revealing logged on user's full names or domain account names
+
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/Lines/HorizontalLineSeparator.png" height="1" width="90000" alt="horizontal line separator">
+
+<br>
 
 - <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/discord-verify-gradient.gif" width="25" alt="Rotating green checkmark denoting Subcategory"> [Don't display last signed-in](https://learn.microsoft.com/en-us/windows/security/threat-protection/security-policy-settings/interactive-logon-do-not-display-last-user-name); This security policy setting determines whether the name of the last user to sign in to the device is displayed on the Secure Desktop. If this policy is enabled, the full name of the last user to successfully sign in isn't displayed on the Secure Desktop, nor is the user's sign-in tile displayed. Additionally, if the Switch user feature is used, the full name and sign-in tile aren't displayed. The sign-in screen requests both Username + Windows Hello credentials. <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-localpoliciessecurityoptions#interactivelogon_donotdisplaylastsignedin)
 
@@ -611,18 +916,26 @@ NistP384
 
     - If you use Windows Hello Face or Fingerprint, you can easily login using those credential providers without the need to supply username first.
 
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/Lines/HorizontalLineSeparator.png" height="1" width="90000" alt="horizontal line separator">
+
+<br>
+
 - <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> [Don't Display Network Selection UI on Lock Screen](https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-windowslogon#dontdisplaynetworkselectionui) (like WIFI Icon); This setting allows you to control whether anyone can interact with available networks UI on the logon screen. Once enabled, the device's network connectivity state cannot be changed without signing into Windows. Suitable for *High-Risk Environments*. <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-windowslogon#dontdisplaynetworkselectionui)
+
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/Lines/HorizontalLineSeparator.png" height="1" width="90000" alt="horizontal line separator">
+
+<br>
 
 - <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> Applies the following [PIN Complexity rules](https://learn.microsoft.com/en-us/windows/security/identity-protection/hello-for-business/hello-manage-in-organization#pin-complexity) to Windows Hello <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/en-us/windows/client-management/mdm/passportforwork-csp#devicetenantidpoliciespincomplexity). Please note that, by default, any character can be set as a PIN. However, the following policies ensure that certain characters are always included as a minimum requirement.
 
     - [Must include digits](https://learn.microsoft.com/en-us/windows/client-management/mdm/passportforwork-csp#usertenantidpoliciespincomplexitydigits) <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/en-us/windows/client-management/mdm/passportforwork-csp#devicetenantidpoliciespincomplexitydigits)
-    
+
     - [Expires](https://learn.microsoft.com/en-us/windows/client-management/mdm/passportforwork-csp#usertenantidpoliciespincomplexityexpiration) **every 180 days** (default behavior is to never expire) <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/en-us/windows/client-management/mdm/passportforwork-csp#devicetenantidpoliciespincomplexityexpiration)
-      
+
       - Setting an expiration date ensures that, in the event of theft, a threat actor cannot indefinitely attempt to guess the PIN. After 180 days, the PIN expires, rendering it unusable even if guessed correctly. To reset the PIN, authentication via a Microsoft account or EntraID—likely inaccessible to the attacker—will be required. Combined with anti-hammering and BitLocker policies, this expiration guarantees that a threat actor cannot endlessly persist in guessing the PIN.
-    
+
     - [History](https://learn.microsoft.com/en-us/windows/client-management/mdm/passportforwork-csp#usertenantidpoliciespincomplexityhistory) of the **1** most recent selected PIN is preserved to prevent the user from reusing it <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/en-us/windows/client-management/mdm/passportforwork-csp#devicetenantidpoliciespincomplexityhistory)
-    
+
     - [Must include lower-case letters](https://learn.microsoft.com/en-us/windows/client-management/mdm/passportforwork-csp#usertenantidpoliciespincomplexitylowercaseletters) <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/en-us/windows/client-management/mdm/passportforwork-csp#devicetenantidpoliciespincomplexitylowercaseletters)
 
 <p align="right"><a href="#menu-back-to-top">💡 (back to categories)</a></p>
@@ -641,14 +954,35 @@ NistP384
 
 - <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> [Prompt for elevation of privilege on secure desktop for all binaries](https://learn.microsoft.com/en-us/windows/security/identity-protection/user-account-control/user-account-control-group-policy-and-registry-key-settings#user-account-control-behavior-of-the-elevation-prompt-for-administrators-in-admin-approval-mode) in [Administrator accounts](https://learn.microsoft.com/en-us/openspecs/windows_protocols/ms-gpsb/341747f5-6b5d-4d30-85fc-fa1cc04038d4), which presents the sign-in UI and restricts functionality and access to the system until the sign-in requirements are satisfied. The [secure desktop's](https://learn.microsoft.com/en-us/windows/security/threat-protection/security-policy-settings/user-account-control-switch-to-the-secure-desktop-when-prompting-for-elevation#reference) primary difference from the user desktop is that only trusted processes running as SYSTEM are allowed to run here (that is, nothing is running at the user's privilege level). The path to get to the secure desktop from the user desktop must also be trusted through the entire chain. <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-localpoliciessecurityoptions#useraccountcontrol_behavioroftheelevationpromptforadministrators)
 
-    - **This is the default behavior:** prompt the administrator in Admin Approval Mode to select either "Permit" or "Deny" for an operation that requires elevation of privilege for any non-Windows binaries. If the Consent Admin selects Permit, the operation will continue with the highest available privilege. This operation will happen on the secure desktop
-    - **This is the behavior that this module sets:** prompts the administrator in Admin Approval Mode to select either "Permit" or "Deny" an operation that requires elevation of privilege. If the Consent Admin selects Permit, the operation will continue with the highest available privilege. "Prompt for consent" removes the inconvenience of requiring that users enter their name and password to perform a privileged task. This operation occurs on the secure desktop.
+    - **Default Behavior:** Prompt for consent for non-Windows binaries: When an operation for a non-Microsoft application requires elevation of privilege, the user is prompted on the secure desktop to select either Permit or Deny. If the user selects Permit, the operation continues with the user's highest available privilege.
+
+    - **Harden Windows Security Behavior:** When an operation requires elevation of privilege, the user is prompted on the secure desktop to select either Permit or Deny. If the user selects Permit, the operation continues with the user's highest available privilege.
+
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/Lines/HorizontalLineSeparator.png" height="1" width="90000" alt="horizontal line separator">
+
+<br>
 
 - <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/discord-verify-gradient.gif" width="25" alt="Rotating green checkmark denoting Subcategory"> Only elevate executables that are signed and validated [by enforcing cryptographic signatures on any interactive application](https://learn.microsoft.com/en-us/windows/security/threat-protection/security-policy-settings/user-account-control-only-elevate-executables-that-are-signed-and-validated) that requests elevation of privilege. One of the [Potential impacts](https://learn.microsoft.com/en-us/windows/security/threat-protection/security-policy-settings/user-account-control-only-elevate-executables-that-are-signed-and-validated#potential-impact) of it is that it can prevent certain poorly designed programs from prompting for UAC. <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-localpoliciessecurityoptions#useraccountcontrol_onlyelevateexecutablefilesthataresignedandvalidated)
+
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/Lines/HorizontalLineSeparator.png" height="1" width="90000" alt="horizontal line separator">
+
+<br>
 
 - <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/discord-verify-gradient.gif" width="25" alt="Rotating green checkmark denoting Subcategory"> Hides the entry points for [Fast User Switching](https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-windowslogon). <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-windowslogon#hidefastuserswitching)
 
     - This policy will prevent you from using "Forgot my PIN" feature in lock screen or logon screen. If you forget your PIN, you won't be able to recover it.
+
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/Lines/HorizontalLineSeparator.png" height="1" width="90000" alt="horizontal line separator">
+
+<br>
+
+- <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> Sets the behavior of the elevation prompt for Standard users to Prompt for Credentials on the Secure Desktop. <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-localpoliciessecurityoptions#useraccountcontrol_behavioroftheelevationpromptforstandardusers)
+
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/Lines/HorizontalLineSeparator.png" height="1" width="90000" alt="horizontal line separator">
+
+<br>
+
+- <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> Configures the type of [Admin Approval Mode](https://techcommunity.microsoft.com/t5/microsoft-security-baselines/windows-11-version-24h2-security-baseline/ba-p/4252801) to be Admin Approval Mode with enhanced privilege protection.
 
 <p align="right"><a href="#menu-back-to-top">💡 (back to categories)</a></p>
 
@@ -666,9 +1000,21 @@ NistP384
 
 - <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> Makes sure Windows Firewall is enabled for all profiles (which is the default) <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/en-us/windows/client-management/mdm/firewall-csp#mdmstorepublicprofileenablefirewall) <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/en-us/windows/client-management/mdm/firewall-csp#mdmstoreprivateprofileenablefirewall) <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/en-us/windows/client-management/mdm/firewall-csp#mdmstoredomainprofileenablefirewall)
 
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/Lines/HorizontalLineSeparator.png" height="1" width="90000" alt="horizontal line separator">
+
+<br>
+
 - <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> Sets inbound and outbound default actions for Domain Firewall Profile to Block; because this module is Not intended to be used on devices that are part of a domain or controlled by an Active Directory Domain Controller, since they will have their own policies and policy management systems in place. <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/en-us/windows/client-management/mdm/firewall-csp#mdmstoredomainprofiledefaultinboundaction) <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/en-us/windows/client-management/mdm/firewall-csp#mdmstoredomainprofiledefaultoutboundaction)
 
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/Lines/HorizontalLineSeparator.png" height="1" width="90000" alt="horizontal line separator">
+
+<br>
+
 - <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> Enables Windows Firewall logging for Domain, Private and Public profiles, sets the log file size for each of them to the max `32.767 MB`. Defines separate log files for each of the firewall profiles. Logs only dropped packets for Private and Public profiles, Logs both dropped and successful packets for Domain profile. <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/en-us/windows/client-management/mdm/firewall-csp#mdmstoredomainprofileenablelogdroppedpackets) <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/en-us/windows/client-management/mdm/firewall-csp#mdmstoredomainprofilelogfilepath) <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/en-us/windows/client-management/mdm/firewall-csp#mdmstoredomainprofilelogmaxfilesize) <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/en-us/windows/client-management/mdm/firewall-csp#mdmstoreprivateprofileenablelogdroppedpackets) <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/en-us/windows/client-management/mdm/firewall-csp#mdmstoreprivateprofilelogfilepath) <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/en-us/windows/client-management/mdm/firewall-csp#mdmstoreprivateprofilelogmaxfilesize) <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/en-us/windows/client-management/mdm/firewall-csp#mdmstorepublicprofileenablelogdroppedpackets) <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/en-us/windows/client-management/mdm/firewall-csp#mdmstorepublicprofilelogfilepath) <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/en-us/windows/client-management/mdm/firewall-csp#mdmstorepublicprofilelogmaxfilesize)
+
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/Lines/HorizontalLineSeparator.png" height="1" width="90000" alt="horizontal line separator">
+
+<br>
 
 - <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/magenta-verification.gif" width="25" alt="Rotating pink checkmark denoting registry or cmdlet"> Disables [Multicast DNS (mDNS) UDP-in Firewall Rules for all 3 Firewall profiles](https://techcommunity.microsoft.com/t5/networking-blog/mdns-in-the-enterprise/ba-p/3275777), This might interfere with Miracast screen sharing, which relies on the Public profile, and homes where the Private profile is not selected, but it does add an extra measure of security in public places, like a coffee shop.
     - The domain name `.local` which is used in mDNS (Multicast DNS) [is a special-use domain name reserved by the Internet Engineering Task Force (IETF)](https://en.wikipedia.org/wiki/.local) so that it may not be installed as a top-level domain in the Domain Name System (DNS) of the Internet.
@@ -699,6 +1045,10 @@ NistP384
 
     - [Microsoft Defender Application Guard](https://learn.microsoft.com/en-us/windows/security/application-security/application-isolation/microsoft-defender-application-guard/md-app-guard-overview), it's [deprecated](https://learn.microsoft.com/en-us/windows/whats-new/deprecated-features#deprecated-features). Learn more about [Microsoft Edge Security Features here](https://edgestatic.azureedge.net/shared/cms/pdfs/Microsoft_Edge_Security_Whitepaper_v2.pdf).
 
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/Lines/HorizontalLineSeparator.png" height="1" width="90000" alt="horizontal line separator">
+
+<br>
+
 - <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/magenta-verification.gif" width="25" alt="Rotating pink checkmark denoting registry or cmdlet"> [Uninstalls](https://learn.microsoft.com/en-us/powershell/module/dism/remove-windowscapability) these optional features (Windows Settings -> Apps -> Optional Features):
 
     - Notepad (system): legacy Notepad program. Windows 11 has multi-tabbed modern Notepad app.
@@ -714,6 +1064,10 @@ NistP384
     - [PowerShell ISE](https://learn.microsoft.com/en-us/powershell/scripting/windows-powershell/ise/introducing-the-windows-powershell-ise): Old PowerShell environment that doesn't support versions above 5.1. Highly recommended to use [Visual Studio Code](https://apps.microsoft.com/detail/visual-studio-code/XP9KHM4BK9FZ7Q) for PowerShell usage and [learning](https://github.com/HotCakeX/Harden-Windows-Security/wiki#-powershell). You can even replicate the [ISE experience in Visual Studio Code](https://learn.microsoft.com/en-us/powershell/scripting/dev-cross-plat/vscode/how-to-replicate-the-ise-experience-in-vscode). You can access [Visual Studio Code online in your browser](https://vscode.dev/) without the need to install anything.
 
     - Steps Recorder: it's [deprecated](https://prod.support.services.microsoft.com/en-us/windows/steps-recorder-deprecation-a64888d7-8482-4965-8ce3-25fb004e975f).
+
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/Lines/HorizontalLineSeparator.png" height="1" width="90000" alt="horizontal line separator">
+
+<br>
 
 - <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/magenta-verification.gif" width="25" alt="Rotating pink checkmark denoting registry or cmdlet"> [Enables](https://learn.microsoft.com/en-us/powershell/module/dism/enable-windowsoptionalfeature) these optional features (Control Panel):
 
@@ -737,15 +1091,39 @@ NistP384
 
 - <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> [Disables NetBIOS over TCP/IP](https://learn.microsoft.com/en-us/windows-hardware/customize/desktop/unattend/microsoft-windows-netbt-interfaces-interface-netbiosoptions) on all network interfaces.
 
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/Lines/HorizontalLineSeparator.png" height="1" width="90000" alt="horizontal line separator">
+
+<br>
+
 - <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> Disables Smart Multi-Homed Name Resolution because it uses NetBIOS and LLMNR, [protocols that shouldn't be used](https://techcommunity.microsoft.com/t5/networking-blog/aligning-on-mdns-ramping-down-netbios-name-resolution-and-llmnr/bc-p/3644260/highlight/true#M515) anymore. <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-admx-dnsclient#dns_smartmultihomednameresolution)
+
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/Lines/HorizontalLineSeparator.png" height="1" width="90000" alt="horizontal line separator">
+
+<br>
 
 - <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/magenta-verification.gif" width="25" alt="Rotating pink checkmark denoting registry or cmdlet"> Disables [LMHOSTS lookup protocol](https://learn.microsoft.com/en-us/openspecs/windows_protocols/ms-nbte/bec3913a-c359-4e6f-8c7e-40c2f43f546b#gt_5f0744c1-5105-4e4a-b71c-b9c7ecaed910) on all network adapters, legacy feature that's not used anymore.
 
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/Lines/HorizontalLineSeparator.png" height="1" width="90000" alt="horizontal line separator">
+
+<br>
+
 - <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/magenta-verification.gif" width="25" alt="Rotating pink checkmark denoting registry or cmdlet"> Sets the Network Location of all connections to Public; [Public network means less trust to other network devices](https://support.microsoft.com/en-us/windows/make-a-wi-fi-network-public-or-private-in-windows-0460117d-8d3e-a7ac-f003-7a0da607448d).
+
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/Lines/HorizontalLineSeparator.png" height="1" width="90000" alt="horizontal line separator">
+
+<br>
 
 - <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> Disables [Printing over HTTP](https://learn.microsoft.com/en-us/troubleshoot/windows-server/printing/manage-connect-printers-use-web-browser) because HTTP is not encrypted and it's an old feature that's not used anymore. <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-connectivity?WT.mc_id=Portal-fx#diableprintingoverhttp)
 
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/Lines/HorizontalLineSeparator.png" height="1" width="90000" alt="horizontal line separator">
+
+<br>
+
 - <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> Clears all the entries in [Remotely accessible registry paths](https://learn.microsoft.com/en-us/windows/security/threat-protection/security-policy-settings/network-access-remotely-accessible-registry-paths).
+
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/Lines/HorizontalLineSeparator.png" height="1" width="90000" alt="horizontal line separator">
+
+<br>
 
 - <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> Clears all the entries in [Remotely accessible registry paths and subpaths](https://learn.microsoft.com/en-us/windows/security/threat-protection/security-policy-settings/network-access-remotely-accessible-registry-paths-and-subpaths).
 
@@ -767,24 +1145,60 @@ NistP384
 
     - By being launched first by the kernel, ELAM is ensured to be launched before any third-party software and is therefore able to detect malware in the boot process and prevent it from initializing. ELAM drivers must be specially signed by Microsoft to ensure they are started by the Windows kernel early in the boot process.
 
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/Lines/HorizontalLineSeparator.png" height="1" width="90000" alt="horizontal line separator">
+
+<br>
+
 - <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> Disables location services (Location, Windows Location Provider, Location Scripting) system wide. Websites and apps won't be able to use your precise location, however they will still be able to detect your location using your IP address. <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-System?WT.mc_id=Portal-fx#allowlocation) <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-admx-locationprovideradm#disablewindowslocationprovider_1) <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-admx-sensors#disablelocationscripting_2)
+
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/Lines/HorizontalLineSeparator.png" height="1" width="90000" alt="horizontal line separator">
+
+<br>
 
 - <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> Enables `svchost.exe` mitigations. built-in system services hosted in `svchost.exe` processes will have stricter security policies enabled on them. These stricter security policies include a policy requiring all binaries loaded in these processes to be signed by Microsoft, and a policy disallowing dynamically generated code. <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-servicecontrolmanager)
 
     - Requires Business Windows licenses. e.g., [Windows 11 pro for Workstations](https://www.microsoft.com/en-us/windows/business/windows-11-pro-workstations), [Enterprise](https://www.microsoft.com/en-us/microsoft-365/windows/windows-11-enterprise) or [Education](https://www.microsoft.com/en-us/education/products/windows).
 
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/Lines/HorizontalLineSeparator.png" height="1" width="90000" alt="horizontal line separator">
+
+<br>
+
 - <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/magenta-verification.gif" width="25" alt="Rotating pink checkmark denoting registry or cmdlet"> Turns on Enhanced mode search for Windows indexer. The default is classic mode. <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-search#allowfindmyfiles)
     - This causes some UI elements in the search settings in Windows settings to become unavailable for Standard user accounts to view, because it will be a managed feature by an Administrator.
 
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/Lines/HorizontalLineSeparator.png" height="1" width="90000" alt="horizontal line separator">
+
+<br>
+
 - <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> [Enforce the Administrator role for adding printer drivers](https://learn.microsoft.com/en-us/windows/security/threat-protection/security-policy-settings/devices-prevent-users-from-installing-printer-drivers) <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-LocalPoliciesSecurityOptions?WT.mc_id=Portal-fx#devices_preventusersfrominstallingprinterdriverswhenconnectingtosharedprinters)
+
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/Lines/HorizontalLineSeparator.png" height="1" width="90000" alt="horizontal line separator">
+
+<br>
 
 - <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> Enables [SMB/LDAP Signing](https://techcommunity.microsoft.com/t5/storage-at-microsoft/configure-smb-signing-with-confidence/ba-p/2418102) <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-LocalPoliciesSecurityOptions?WT.mc_id=Portal-fx#microsoftnetworkclient_digitallysigncommunicationsalways) <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-LocalPoliciesSecurityOptions?WT.mc_id=Portal-fx#microsoftnetworkserver_digitallysigncommunicationsalways)
 
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/Lines/HorizontalLineSeparator.png" height="1" width="90000" alt="horizontal line separator">
+
+<br>
+
 - <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/magenta-verification.gif" width="25" alt="Rotating pink checkmark denoting registry or cmdlet"> Enables [SMB Encryption](https://learn.microsoft.com/en-us/windows-server/storage/file-server/smb-security). Its status can be checked using the following PowerShell command: `(get-SmbServerConfiguration).EncryptData`. If the returned value is `$True` then SMB Encryption is turned on.
+
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/Lines/HorizontalLineSeparator.png" height="1" width="90000" alt="horizontal line separator">
+
+<br>
 
 - <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/magenta-verification.gif" width="25" alt="Rotating pink checkmark denoting registry or cmdlet"> Enables Edge browser (stable/beta/dev channels) to download and install updates on any network, metered or not; because the updates are important and should not be suppressed.
 
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/Lines/HorizontalLineSeparator.png" height="1" width="90000" alt="horizontal line separator">
+
+<br>
+
 - <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/magenta-verification.gif" width="25" alt="Rotating pink checkmark denoting registry or cmdlet"> [Enables all Windows users to use Hyper-V and Windows Sandbox](https://learn.microsoft.com/en-us/archive/blogs/virtual_pc_guy/why-do-you-have-to-elevate-powershell-to-use-hyper-v-cmdlets) by adding all Windows users to the "Hyper-V Administrators" security group using its [SID](https://learn.microsoft.com/en-us/windows/win32/secauthz/well-known-sids). By default, only Administrators can use Hyper-V or Windows Sandbox.
+
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/Lines/HorizontalLineSeparator.png" height="1" width="90000" alt="horizontal line separator">
+
+<br>
 
 - <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/magenta-verification.gif" width="25" alt="Rotating pink checkmark denoting registry or cmdlet"> Creates custom views for [Windows Event Viewer](https://learn.microsoft.com/en-us/shows/inside/event-viewer) to help keep tabs on important security events:
 
@@ -814,11 +1228,27 @@ NistP384
 
     - USB storage Connects & Disconnects (Flash drives, phones etc.)
 
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/Lines/HorizontalLineSeparator.png" height="1" width="90000" alt="horizontal line separator">
+
+<br>
+
 - <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/magenta-verification.gif" width="25" alt="Rotating pink checkmark denoting registry or cmdlet"> Enables **WinVerifyTrust Signature Validation**, [a security feature related to WinVerifyTrust function that handles Windows Authenticode signature verification for portable executable (PE) files.](https://msrc.microsoft.com/update-guide/vulnerability/CVE-2013-3900)
+
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/Lines/HorizontalLineSeparator.png" height="1" width="90000" alt="horizontal line separator">
+
+<br>
 
 - <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> Enables [Command line process auditing](https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/manage/component-updates/command-line-process-auditing) <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-admx-auditsettings#includecmdline)
 
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/Lines/HorizontalLineSeparator.png" height="1" width="90000" alt="horizontal line separator">
+
+<br>
+
 - <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> Enables the RPC Endpoint Mapper Client Authentication policy <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-remoteprocedurecall#rpcendpointmapperclientauthentication)
+
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/Lines/HorizontalLineSeparator.png" height="1" width="90000" alt="horizontal line separator">
+
+<br>
 
 - <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> Enables a policy that requests claims and compound authentication for Dynamic Access Control and Kerberos armoring. <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-kerberos#kerberosclientsupportsclaimscompoundarmor)
 
@@ -844,13 +1274,51 @@ In Windows by default, devices will scan daily, automatically download and insta
 
 - <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> Enables [Windows Update to download and install updates on any network](https://techcommunity.microsoft.com/t5/windows-it-pro-blog/the-windows-update-policies-you-should-set-and-why/ba-p/3270914), metered or not; because the updates are important and should not be suppressed, **that's what bad actors would want.** <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-update#allowautowindowsupdatedownloadovermeterednetwork)
 
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/Lines/HorizontalLineSeparator.png" height="1" width="90000" alt="horizontal line separator">
+
+<br>
+
 - <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> Enables "Receive Updates for other Microsoft products" (such as PowerShell)
+
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/Lines/HorizontalLineSeparator.png" height="1" width="90000" alt="horizontal line separator">
+
+<br>
 
 - <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/magenta-verification.gif" width="25" alt="Rotating pink checkmark denoting registry or cmdlet"> Enables "Notify me when a restart is required to finish updating" <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-update#schedulerestartwarning)
 
-- <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> Sets the grace period for auto restart to 1 day. <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-update#configuredeadlinegraceperiod) <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-update#configuredeadlinegraceperiodforfeatureupdates)
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/Lines/HorizontalLineSeparator.png" height="1" width="90000" alt="horizontal line separator">
 
-- <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> Configures the [automatic updates to happen every day](https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-update#allowautoupdate), automatically be downloaded and installed, notify users for restart. <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-update#allowautoupdate)
+<br>
+
+- <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> Specifies the number of days before quality updates are installed on devices automatically to 1 day. <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-update#configuredeadlinenoautorebootforqualityupdates)
+
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/Lines/HorizontalLineSeparator.png" height="1" width="90000" alt="horizontal line separator">
+
+<br>
+
+- <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> Specifies the number of days before feature updates are installed on devices automatically to 1 day. <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-update#configuredeadlinenoautorebootforfeatureupdates)
+
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/Lines/HorizontalLineSeparator.png" height="1" width="90000" alt="horizontal line separator">
+
+<br>
+
+- <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> Sets the number of grace period days before feature updates are installed on devices automatically to 1 day. <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-update#configuredeadlinegraceperiodforfeatureupdates)
+
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/Lines/HorizontalLineSeparator.png" height="1" width="90000" alt="horizontal line separator">
+
+<br>
+
+- <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> Sets the number of grace period days before quality updates are installed on devices automatically to 1 day. <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-update#configuredeadlinegraceperiod)
+
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/Lines/HorizontalLineSeparator.png" height="1" width="90000" alt="horizontal line separator">
+
+<br>
+
+- <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> Configures the automatic updates to happen every day, automatically be downloaded and installed, notify users for restart. <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-update#allowautoupdate)
+
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/Lines/HorizontalLineSeparator.png" height="1" width="90000" alt="horizontal line separator">
+
+<br>
 
 - <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> [Enables features introduced via servicing that are off by default](https://learn.microsoft.com/en-us/windows/deployment/update/waas-configure-wufb) so that users will be able to get new features after having Windows Update settings managed by Group Policy as the result of running this category. <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="15" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-update?toc=%2Fwindows%2Fdeployment%2Ftoc.json&bc=%2Fwindows%2Fdeployment%2Fbreadcrumb%2Ftoc.json#allowtemporaryenterprisefeaturecontrol)
 
@@ -869,16 +1337,63 @@ In Windows by default, devices will scan daily, automatically download and insta
 <br>
 
 - <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/magenta-verification.gif" width="25" alt="Rotating pink checkmark denoting registry or cmdlet"> [Block 3rd party cookies](https://learn.microsoft.com/en-us/deployedge/microsoft-edge-policies#blockthirdpartycookies) - Recommendatory policy
+
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/Lines/HorizontalLineSeparator.png" height="1" width="90000" alt="horizontal line separator">
+
+<br>
+
 - <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/magenta-verification.gif" width="25" alt="Rotating pink checkmark denoting registry or cmdlet"> [Set Edge to use system's DNS over HTTPS](https://learn.microsoft.com/en-us/deployedge/microsoft-edge-policies#control-the-mode-of-dns-over-https)
+
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/Lines/HorizontalLineSeparator.png" height="1" width="90000" alt="horizontal line separator">
+
+<br>
+
 - <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/magenta-verification.gif" width="25" alt="Rotating pink checkmark denoting registry or cmdlet"> [Automatic HTTPS upgrade of HTTP connections](https://learn.microsoft.com/en-us/deployedge/microsoft-edge-policies#configure-automatic-https)
+
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/Lines/HorizontalLineSeparator.png" height="1" width="90000" alt="horizontal line separator">
+
+<br>
+
 - <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/magenta-verification.gif" width="25" alt="Rotating pink checkmark denoting registry or cmdlet"> [Enable Encrypted Client Hello](https://learn.microsoft.com/en-us/deployedge/microsoft-edge-policies#encryptedclienthelloenabled)
+
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/Lines/HorizontalLineSeparator.png" height="1" width="90000" alt="horizontal line separator">
+
+<br>
+
 - <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/magenta-verification.gif" width="25" alt="Rotating pink checkmark denoting registry or cmdlet"> [Disable Basic HTTP authentication scheme](https://learn.microsoft.com/en-us/deployedge/microsoft-edge-policies#basicauthoverhttpenabled)
+
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/Lines/HorizontalLineSeparator.png" height="1" width="90000" alt="horizontal line separator">
+
+<br>
+
 - <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/magenta-verification.gif" width="25" alt="Rotating pink checkmark denoting registry or cmdlet"> [Allow devices using this hardening category to receive new features and experimentations like normal devices](https://learn.microsoft.com/en-us/deployedge/microsoft-edge-policies#control-communication-with-the-experimentation-and-configuration-service)
+
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/Lines/HorizontalLineSeparator.png" height="1" width="90000" alt="horizontal line separator">
+
+<br>
+
 - <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/magenta-verification.gif" width="25" alt="Rotating pink checkmark denoting registry or cmdlet"> [Enforce the audio process to run sandboxed](https://learn.microsoft.com/en-us/deployedge/microsoft-edge-policies#allow-the-audio-sandbox-to-run)
+
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/Lines/HorizontalLineSeparator.png" height="1" width="90000" alt="horizontal line separator">
+
+<br>
+
 - <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/magenta-verification.gif" width="25" alt="Rotating pink checkmark denoting registry or cmdlet"> [Sets the share additional operating system region setting to never](https://learn.microsoft.com/en-us/deployedge/microsoft-edge-policies#set-the-default-share-additional-operating-system-region-setting) - Recommendatory policy
+
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/Lines/HorizontalLineSeparator.png" height="1" width="90000" alt="horizontal line separator">
+
+<br>
+
 - <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/magenta-verification.gif" width="25" alt="Rotating pink checkmark denoting registry or cmdlet"> [Disables the following weak Cipher Suites](https://learn.microsoft.com/en-us/DeployEdge/microsoft-edge-policies#tlsciphersuitedenylist)
+
     - [Site 1 to test TLS in your browser](https://clienttest.ssllabs.com:8443/ssltest/viewMyClient.html)
+
     - [Site 2 to test TLS in your browser](https://browserleaks.com/tls)
+
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/Lines/HorizontalLineSeparator.png" height="1" width="90000" alt="horizontal line separator">
+
+<br>
+
 - <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/green-verification.gif" width="25" alt="Rotating green checkmark denoting CSP"> [CSP](https://learn.microsoft.com/en-us/deployedge/configure-edge-with-mdm)
 
 ```
@@ -967,6 +1482,10 @@ This policy defends the system from malware that can launch itself automatically
 
 The WDAC policy employs a wildcard pattern to prevent any file from running in the Downloads folder. Additionally, it verifies that the system downloads folder in the user directory matches the downloads folder in the Edge browser's settings. If there is a discrepancy, a warning message is displayed on the console.
 
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/Lines/HorizontalLineSeparator.png" height="1" width="90000" alt="horizontal line separator">
+
+<br>
+
 <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/magenta-verification.gif" width="25" alt="Rotating pink checkmark denoting registry or cmdlet"> <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/discord-verify-gradient.gif" width="25" alt="Rotating green checkmark denoting Subcategory"> Creates a custom [WDAC](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Introduction) policy that blocks the execution of the following executables:
 
 * wscript.exe
@@ -996,13 +1515,53 @@ All of the policies can be easily removed using the [**Unprotect-WindowsSecurity
 You don't need Admin privileges to run this category, because no system-wide changes is made. Changes in this category only apply to the current user account that is running the PowerShell session.
 
 - <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/magenta-verification.gif" width="25" alt="Rotating pink checkmark denoting registry or cmdlet"> Shows known file extensions in File explorer
+
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/Lines/HorizontalLineSeparator.png" height="1" width="90000" alt="horizontal line separator">
+
+<br>
+
 - <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/magenta-verification.gif" width="25" alt="Rotating pink checkmark denoting registry or cmdlet"> Shows hidden files, folders and drives (toggles the control panel folder options item)
+
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/Lines/HorizontalLineSeparator.png" height="1" width="90000" alt="horizontal line separator">
+
+<br>
+
 - <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/magenta-verification.gif" width="25" alt="Rotating pink checkmark denoting registry or cmdlet"> Disables websites accessing local language list - good for privacy
+
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/Lines/HorizontalLineSeparator.png" height="1" width="90000" alt="horizontal line separator">
+
+<br>
+
 - <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/magenta-verification.gif" width="25" alt="Rotating pink checkmark denoting registry or cmdlet"> Turns off safe search in Windows search, will enable +18 content to appear in searches; essentially toggles the button in: Windows settings > privacy and security > search permissions > safe search
-- <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/magenta-verification.gif" width="25" alt="Rotating pink checkmark denoting registry or cmdlet"> <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/discord-verify-gradient.gif" width="25" alt="Rotating green checkmark denoting Subcategory"> Enables Clipboard History and sync with Microsoft Account
+
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/Lines/HorizontalLineSeparator.png" height="1" width="90000" alt="horizontal line separator">
+
+<br>
+
+- <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/magenta-verification.gif" width="25" alt="Rotating pink checkmark denoting registry or cmdlet"> Enables Clipboard History
+
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/Lines/HorizontalLineSeparator.png" height="1" width="90000" alt="horizontal line separator">
+
+<br>
+
 - <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/magenta-verification.gif" width="25" alt="Rotating pink checkmark denoting registry or cmdlet"> Turns on text suggestions when typing on the physical keyboard
+
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/Lines/HorizontalLineSeparator.png" height="1" width="90000" alt="horizontal line separator">
+
+<br>
+
 - <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/magenta-verification.gif" width="25" alt="Rotating pink checkmark denoting registry or cmdlet"> Turns on "Multilingual text suggestions" for the current user, toggles the option in Windows settings
+
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/Lines/HorizontalLineSeparator.png" height="1" width="90000" alt="horizontal line separator">
+
+<br>
+
 - <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/magenta-verification.gif" width="25" alt="Rotating pink checkmark denoting registry or cmdlet"> Turns off sticky key shortcut of pressing shift key 5 times fast
+
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/Lines/HorizontalLineSeparator.png" height="1" width="90000" alt="horizontal line separator">
+
+<br>
+
 - <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/magenta-verification.gif" width="25" alt="Rotating pink checkmark denoting registry or cmdlet"> Disables Show reminders and incoming VoIP calls on the lock screen
 
 <p align="right"><a href="#menu-back-to-top">💡 (back to categories)</a></p>

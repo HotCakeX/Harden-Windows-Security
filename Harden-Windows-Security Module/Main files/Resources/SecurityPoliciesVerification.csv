@@ -8,8 +8,10 @@ LockScreen,System Access,LockoutBadCount,5,Account lockout threshold
 LockScreen,System Access,LockoutDuration,1440,Account lockout duration
 LockScreen,System Access,ResetLockoutCount,1440,Reset account lockout counter after
 LockScreen,Registry Values,MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\DontDisplayLastUserName,"4,1",Interactive logon: Don't display last signed-in
-UserAccountControl,Registry Values,MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\ConsentPromptBehaviorAdmin,"4,2",UAC: Behavior of the elevation prompt for administrators in Admin Approval Mode
-UserAccountControl,Registry Values,MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\ConsentPromptBehaviorUser,"4,0",UAC: Automatically deny elevation requests on Standard accounts
-UserAccountControl,Registry Values,MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\ValidateAdminCodeSignatures,"4,1",UAC: Only elevate executables that are signed and
+UserAccountControl,Registry Values,MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\ConsentPromptBehaviorAdmin,"4,2",UAC: Behavior of the elevation prompt for administrators in Admin Approval Mode: Prompt for Consent on the Secure Desktop
+UserAccountControl,Registry Values,MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\ConsentPromptBehaviorUser,"4,1",UAC: Behavior of the elevation prompt for standard users: Prompt for Credentials on the Secure Desktop
+UserAccountControl,Registry Values,MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\ValidateAdminCodeSignatures,"4,1",UAC: Only elevate executables that are signed and Validated
+UserAccountControl,Registry Values,MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\ConsentPromptBehaviorEnhancedAdmin,"4,1",UAC: Behavior of the elevation prompt for administrators in Enhanced Privilege Protection Mode: Prompt for Credentials on the Secure Desktop
+UserAccountControl,Registry Values,MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\TypeOfAdminApprovalMode,"4,2",UAC: The type of Admin Approval Mode to be Admin Approval Mode with enhanced privilege protection
 WindowsNetworking,Registry Values,MACHINE\System\CurrentControlSet\Control\SecurePipeServers\Winreg\AllowedExactPaths\Machine,"7,",Network access: Remotely accessible registry paths
 WindowsNetworking,Registry Values,MACHINE\System\CurrentControlSet\Control\SecurePipeServers\Winreg\AllowedPaths\Machine,"7,",Network access: Remotely accessible registry paths and subpaths

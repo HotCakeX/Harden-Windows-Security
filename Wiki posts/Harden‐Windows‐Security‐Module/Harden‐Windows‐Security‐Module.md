@@ -316,7 +316,6 @@ The path to the 'Microsoft 365 Apps for Enterprise zip'. Make sure it's in the z
 |UAC_OnlyElevateSigned | Only elevate signed and validated executables | UserAccountControl |
 |CountryIPBlocking_OFAC | Include the IP ranges of OFAC Sanctioned Countries in the firewall block rules | CountryIPBlocking |
 | DangerousScriptHostsBlocking | Deploys the Dangerous Script Hosts Blocking WDAC Policy | DownloadsDefenseMeasures |
-| ClipboardSync | Enables Clipboard Sync with Microsoft Account | NonAdminCommands |
 
 <br>
 

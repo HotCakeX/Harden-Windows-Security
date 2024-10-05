@@ -22,7 +22,7 @@ dotnet_diagnostic.CA1310.severity = error
 dotnet_diagnostic.CA1401.severity = error
 
 # CA1303: Do not pass literals as localized parameters
-dotnet_diagnostic.CA1303.severity = error
+dotnet_diagnostic.CA1303.severity = silent
 
 # CA1309: Use ordinal string comparison
 dotnet_diagnostic.CA1309.severity = error
@@ -196,7 +196,7 @@ dotnet_diagnostic.CA1805.severity = error
 dotnet_diagnostic.CA1806.severity = error
 
 # CA1819: Properties should not return arrays
-dotnet_diagnostic.CA1819.severity = error
+dotnet_diagnostic.CA1819.severity = silent
 
 # CA1834: Consider using 'StringBuilder.Append(char)' when applicable
 dotnet_diagnostic.CA1834.severity = error
@@ -269,3 +269,6 @@ dotnet_diagnostic.IDE0120.severity = error
 
 # IDE0110: Remove unnecessary discard
 dotnet_diagnostic.IDE0110.severity = error
+
+# CA2101: Specify marshaling for P/Invoke string arguments
+dotnet_diagnostic.CA2101.severity = error

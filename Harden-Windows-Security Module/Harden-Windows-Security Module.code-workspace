@@ -227,7 +227,13 @@
 			"XDRs",
 			"Zune"
 		],
-		"dotnetAcquisitionExtension.enablePreviewFeatures": true
+		"dotnetAcquisitionExtension.enablePreviewFeatures": true,
+		"files.exclude": {
+			"**/.vs": true,
+			"**/bin": true,
+			"**/obj": true,
+			"**/Properties": true
+		}
 	},
 	"extensions": {
 		"recommendations": [

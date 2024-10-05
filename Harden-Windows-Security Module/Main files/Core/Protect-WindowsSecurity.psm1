@@ -415,6 +415,7 @@ Function Protect-WindowsSecurity {
                 'MicrosoftDefender' { Invoke-MicrosoftDefender -RunUnattended }
                 'AttackSurfaceReductionRules' { Invoke-AttackSurfaceReductionRules -RunUnattended }
                 'BitLockerSettings' { Invoke-BitLockerSettings -RunUnattended }
+                'DeviceGuard' { Invoke-DeviceGuard -RunUnattended }
                 'TLSSecurity' { Invoke-TLSSecurity -RunUnattended }
                 'LockScreen' { Invoke-LockScreen -RunUnattended }
                 'UserAccountControl' { Invoke-UserAccountControl -RunUnattended }

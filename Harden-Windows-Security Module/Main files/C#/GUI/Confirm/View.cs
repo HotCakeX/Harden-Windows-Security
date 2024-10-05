@@ -318,23 +318,23 @@ namespace HardenWindowsSecurity
                     "MicrosoftDefender" => new System.Windows.Media.BrushConverter().ConvertFromString("#B3E5FC") as System.Windows.Media.Brush,
                     // Light Pastel Coral
                     "AttackSurfaceReductionRules" => new System.Windows.Media.BrushConverter().ConvertFromString("#FFDAB9") as System.Windows.Media.Brush,
-                    // Light Pastel Green (unchanged)
+                    // Light Pastel Green
                     "BitLockerSettings" => new System.Windows.Media.BrushConverter().ConvertFromString("#C3FDB8") as System.Windows.Media.Brush,
-                    // Light Pastel Lemon (unchanged)
+                    // Light Pastel Lemon
                     "TLSSecurity" => new System.Windows.Media.BrushConverter().ConvertFromString("#FFFACD") as System.Windows.Media.Brush,
                     // Light Pastel Lavender
                     "LockScreen" => new System.Windows.Media.BrushConverter().ConvertFromString("#E6E6FA") as System.Windows.Media.Brush,
                     // Light Pastel Aqua
                     "UserAccountControl" => new System.Windows.Media.BrushConverter().ConvertFromString("#C1F0F6") as System.Windows.Media.Brush,
-                    // Light Pastel Teal (unchanged)
+                    // Light Pastel Teal
                     "DeviceGuard" => new System.Windows.Media.BrushConverter().ConvertFromString("#B2DFDB") as System.Windows.Media.Brush,
                     // Light Pastel Pink
                     "WindowsFirewall" => new System.Windows.Media.BrushConverter().ConvertFromString("#F8BBD0") as System.Windows.Media.Brush,
-                    // Light Pastel Peach (unchanged)
+                    // Light Pastel Peach
                     "OptionalWindowsFeatures" => new System.Windows.Media.BrushConverter().ConvertFromString("#FFE4E1") as System.Windows.Media.Brush,
                     // Light Pastel Mint
                     "WindowsNetworking" => new System.Windows.Media.BrushConverter().ConvertFromString("#F5FFFA") as System.Windows.Media.Brush,
-                    // Light Pastel Gray (unchanged)
+                    // Light Pastel Gray
                     _ => new System.Windows.Media.BrushConverter().ConvertFromString("#EDEDED") as System.Windows.Media.Brush,
                 };
             }

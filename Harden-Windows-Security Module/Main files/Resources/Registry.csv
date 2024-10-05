@@ -18,11 +18,11 @@ TLS,HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANN
 TLS,HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers\RC4 128/128,Enabled,0,DWORD,AddOrModify,RC4 128-bit
 TLS,HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers\Triple DES 168,Enabled,0,DWORD,AddOrModify,3DES 168-bit (Triple DES 168)
 TLS,HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Hashes\MD5,Enabled,0,DWORD,AddOrModify,Disable MD5 Hashing Algorithm
+WindowsNetworking,HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters,EncryptData,1,DWORD,AddOrModify,Enable SMB Server Encryption
 Miscellaneous,HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows Search,EnableFindMyFiles,1,DWORD,AddOrModify,Turn on Enhanced mode search for Windows indexer
 Miscellaneous,HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\EdgeUpdate\ClientStateMedium\{56EB18F8-B008-4CBD-B6D2-8C97FE7E9062},allowautoupdatesmetered,1,DWORD,AddOrModify,Set Microsoft Edge (Stable) to update over Metered connections
 Miscellaneous,HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\EdgeUpdate\ClientStateMedium\{2CD8A007-E189-409D-A2C8-9AF4EF3C72AA},allowautoupdatesmetered,1,DWORD,AddOrModify,Set Microsoft Edge (Beta) to update over Metered connections
 Miscellaneous,HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\EdgeUpdate\ClientStateMedium\{0D50BFEC-CD6A-4F9A-964C-C7416E3ACB10},allowautoupdatesmetered,1,DWORD,AddOrModify,Set Microsoft Edge (Dev) to update over Metered connections
-Miscellaneous,HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters,EncryptData,1,DWORD,AddOrModify,Enable SMB Encryption
 Miscellaneous,HKEY_LOCAL_MACHINE\Software\Microsoft\Cryptography\Wintrust\Config,EnableCertPaddingCheck,1,String,AddOrModify,WinVerifyTrust Signature Validation
 Miscellaneous,HKEY_LOCAL_MACHINE\Software\Wow6432Node\Microsoft\Cryptography\Wintrust\Config,EnableCertPaddingCheck,1,String,AddOrModify,WinVerifyTrust Signature Validation
 Edge,HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Edge\Recommended,BlockThirdPartyCookies,1,DWORD,AddOrModify,Recommends to block 3rd party cookies

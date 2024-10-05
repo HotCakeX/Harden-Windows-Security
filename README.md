@@ -764,6 +764,8 @@ Refer to this [official documentation about the countermeasures of Bitlocker](ht
 > </ol>
 >
 
+<p align="right"><a href="#menu-back-to-top">💡 (back to categories)</a></p>
+
 <br>
 
 <img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">

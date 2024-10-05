@@ -214,7 +214,7 @@ Computer Configuration\Administrative Templates\MS Security Guide
 Microsoft Security baselines disable the usage of [Sudo](https://devblogs.microsoft.com/commandline/introducing-sudo-for-windows/) which also makes the Sudo option hidden from Windows settings.
 
 ```
-Computer Configuration\System\Configure the behavior of the sudo command --> Maximum allowed sudo mode
+Computer Configuration\Administrative Templates\System\Configure the behavior of the sudo command --> Maximum allowed sudo mode
 ```
 
 <br>

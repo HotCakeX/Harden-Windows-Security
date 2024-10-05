@@ -153,7 +153,7 @@ SCHTASKS.EXE /Change /TN \Microsoft\XblGameSave\XblGameSaveTask /Enable
 
 ## 8. Enable Microsoft Defender exclusion lists to be visible to Local Admins
 
-This [policy](https://learn.microsoft.com/en-us/windows/client-management/mdm/defender-csp#configurationhideexclusionsfromlocaladmins) is located in the following Group Policy path
+Disables this [policy](https://learn.microsoft.com/en-us/windows/client-management/mdm/defender-csp#configurationhideexclusionsfromlocaladmins) which is located in the following Group Policy path
 
 ```
 Computer Configuration\Administrative Templates\Windows Components\Microsoft Defender Antivirus\Control whether or not exclusions are visible to Local Admins

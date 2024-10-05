@@ -15,7 +15,7 @@ namespace HardenWindowsSecurity
         /// Converts a 64-bit unsigned integer into a version type, used for converting the numbers from CiTool.exe output to proper versions.
         /// </summary>
         /// <param name="number">The 64-bit unsigned integer as a string.</param>
-        /// <returns>The version string in the format 'part1.part2.part3.part4'.</returns>
+        /// <returns>The parsed version</returns>
         private static Version Measure(string number)
         {
             try

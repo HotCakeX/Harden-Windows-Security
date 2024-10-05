@@ -1,7 +1,7 @@
-#nullable enable
-
 using System;
 using System.Management;
+
+#nullable enable
 
 namespace HardenWindowsSecurity
 {
@@ -11,18 +11,18 @@ namespace HardenWindowsSecurity
         {
             HardenWindowsSecurity.Logger.LogMessage("Creating scheduled task for fast weekly Microsoft recommended driver block list update", LogTypeIntel.Information);
 
-
             // Initialize ManagementScope to interact with Task Scheduler's WMI namespace
             var scope = new ManagementScope(@"root\Microsoft\Windows\TaskScheduler");
-            scope.Connect(); // Establish connection to the WMI namespace
+            // Establish connection to the WMI namespace
+            scope.Connect();
 
 
             #region Action
             // Create a scheduled task action, this defines how to download and install the latest Microsoft Recommended Driver Block Rules
-            using var actionClass = new ManagementClass(scope, new ManagementPath("PS_ScheduledTask"), null);
+            using ManagementClass actionClass = new(scope, new ManagementPath("PS_ScheduledTask"), null);
 
             // Prepare method parameters for creating the task action
-            var actionInParams = actionClass.GetMethodParameters("NewActionByExec");
+            ManagementBaseObject actionInParams = actionClass.GetMethodParameters("NewActionByExec");
             actionInParams["Execute"] = "PowerShell.exe";
             // The PowerShell command to run, downloading and deploying the drivers block list
             actionInParams["Argument"] = """
@@ -30,7 +30,7 @@ namespace HardenWindowsSecurity
 """;
 
             // Execute the WMI method to create the action
-            var actionResult = actionClass.InvokeMethod("NewActionByExec", actionInParams, null);
+            ManagementBaseObject actionResult = actionClass.InvokeMethod("NewActionByExec", actionInParams, null);
 
             // Check if the action was created successfully
             if ((uint)actionResult["ReturnValue"] != 0)
@@ -39,23 +39,23 @@ namespace HardenWindowsSecurity
             }
 
             // Extract CIM instance for further use in task registration
-            var actionCimInstance = (ManagementBaseObject)actionResult["cmdletOutput"];
+            ManagementBaseObject actionCimInstance = (ManagementBaseObject)actionResult["cmdletOutput"];
 
             #endregion
 
 
             #region Principal
             // Create a scheduled task principal and assign the SYSTEM account's SID to it so that the task will run under its context
-            using var principalClass = new ManagementClass(scope, new ManagementPath("PS_ScheduledTask"), null);
+            using ManagementClass principalClass = new(scope, new ManagementPath("PS_ScheduledTask"), null);
 
             // Prepare method parameters to set up the principal (user context)
-            var principalInParams = principalClass.GetMethodParameters("NewPrincipalByUser");
+            ManagementBaseObject principalInParams = principalClass.GetMethodParameters("NewPrincipalByUser");
             principalInParams["UserId"] = "S-1-5-18"; // SYSTEM SID (runs with the highest system privileges)
             principalInParams["LogonType"] = 2; // S4U logon type, allows the task to run without storing credentials
             principalInParams["RunLevel"] = 1; // Highest run level, ensuring the task runs with elevated privileges
 
             // Execute the WMI method to create the principal
-            var principalResult = principalClass.InvokeMethod("NewPrincipalByUser", principalInParams, null);
+            ManagementBaseObject principalResult = principalClass.InvokeMethod("NewPrincipalByUser", principalInParams, null);
 
             // Check if the principal was created successfully
             if ((uint)principalResult["ReturnValue"] != 0)
@@ -64,26 +64,26 @@ namespace HardenWindowsSecurity
             }
 
             // Extract CIM instance for further use in task registration
-            var principalCimInstance = (ManagementBaseObject)principalResult["cmdletOutput"];
+            ManagementBaseObject principalCimInstance = (ManagementBaseObject)principalResult["cmdletOutput"];
             #endregion
 
 
             #region Trigger
             // Create a trigger for the scheduled task. The task will first run one hour after its creation and from then on will run every 7 days, indefinitely
-            using var triggerClass = new ManagementClass(scope, new ManagementPath("PS_ScheduledTask"), null);
+            using ManagementClass triggerClass = new(scope, new ManagementPath("PS_ScheduledTask"), null);
 
             // Prepare method parameters for setting the task trigger
             // DateTime and TimeSpan are .NET constructs that are not directly compatible with WMI methods, which require the use of DMTF DateTime and TimeInterval formats.
             // The conversion ensures that time-related parameters (e.g., DateTime.Now.AddHours(1) or TimeSpan.FromDays(7)) are formatted in a way that the WMI provider can interpret them correctly.
             // The ManagementDateTimeConverter class provides methods like ToDmtfDateTime and ToDmtfTimeInterval that perform these necessary conversions.
 
-            var triggerInParams = triggerClass.GetMethodParameters("NewTriggerByOnce");
+            ManagementBaseObject triggerInParams = triggerClass.GetMethodParameters("NewTriggerByOnce");
             triggerInParams["Once"] = true; // This switch indicates the task should run once
             triggerInParams["At"] = ManagementDateTimeConverter.ToDmtfDateTime(DateTime.Now.AddHours(1)); // Convert the current time +1 hour to DMTF format
             triggerInParams["RepetitionInterval"] = ManagementDateTimeConverter.ToDmtfTimeInterval(TimeSpan.FromDays(7)); // Convert 7-day interval to DMTF format
 
             // Execute the WMI method to create the trigger
-            var triggerResult = triggerClass.InvokeMethod("NewTriggerByOnce", triggerInParams, null);
+            ManagementBaseObject triggerResult = triggerClass.InvokeMethod("NewTriggerByOnce", triggerInParams, null);
 
             // Check if the trigger was created successfully
             if ((uint)triggerResult["ReturnValue"] != 0)
@@ -92,16 +92,16 @@ namespace HardenWindowsSecurity
             }
 
             // Extract CIM instance for further use in task registration
-            var triggerCimInstance = (ManagementBaseObject)triggerResult["cmdletOutput"];
+            ManagementBaseObject triggerCimInstance = (ManagementBaseObject)triggerResult["cmdletOutput"];
             #endregion
 
 
             #region Settings
             // Define advanced settings for the scheduled task
-            using var settingsClass = new ManagementClass(scope, new ManagementPath("PS_ScheduledTask"), null);
+            using ManagementClass settingsClass = new(scope, new ManagementPath("PS_ScheduledTask"), null);
 
             // Prepare method parameters to define advanced settings for the task
-            var settingsInParams = settingsClass.GetMethodParameters("NewSettings");
+            ManagementBaseObject settingsInParams = settingsClass.GetMethodParameters("NewSettings");
             settingsInParams["AllowStartIfOnBatteries"] = true; // Allow the task to start if the system is on battery
             settingsInParams["DontStopIfGoingOnBatteries"] = true; // Ensure the task isn't stopped if the system switches to battery power
             settingsInParams["Compatibility"] = 4;
@@ -112,23 +112,23 @@ namespace HardenWindowsSecurity
             settingsInParams["RestartInterval"] = ManagementDateTimeConverter.ToDmtfTimeInterval(TimeSpan.FromHours(6)); // Wait 6 hours between restarts (converted to DMTF format)
 
             // Execute the WMI method to set the task's advanced settings
-            var settingsResult = settingsClass.InvokeMethod("NewSettings", settingsInParams, null);
+            ManagementBaseObject settingsResult = settingsClass.InvokeMethod("NewSettings", settingsInParams, null);
             if ((uint)settingsResult["ReturnValue"] != 0)
             {
                 throw new InvalidOperationException($"Failed to define task settings: {((uint)settingsResult["ReturnValue"])}");
             }
 
             // Extract CIM instance for further use in task registration
-            var settingsCimInstance = (ManagementBaseObject)settingsResult["cmdletOutput"];
+            ManagementBaseObject settingsCimInstance = (ManagementBaseObject)settingsResult["cmdletOutput"];
             #endregion
 
 
             #region Register Task
             // Register the scheduled task. If the task's state is disabled, it will be overwritten with a new task that is enabled
-            using var registerClass = new ManagementClass(scope, new ManagementPath("PS_ScheduledTask"), null);
+            using ManagementClass registerClass = new(scope, new ManagementPath("PS_ScheduledTask"), null);
 
             // Prepare method parameters to register the task
-            var registerInParams = registerClass.GetMethodParameters("RegisterByPrincipal");
+            ManagementBaseObject registerInParams = registerClass.GetMethodParameters("RegisterByPrincipal");
             registerInParams["Force"] = true; // Overwrite any existing task with the same name
             registerInParams["Principal"] = principalCimInstance;
             registerInParams["Action"] = new ManagementBaseObject[] { actionCimInstance };
@@ -139,7 +139,7 @@ namespace HardenWindowsSecurity
             registerInParams["Description"] = "Microsoft Recommended Driver Block List update";
 
             // Execute the WMI method to register the task
-            var registerResult = registerClass.InvokeMethod("RegisterByPrincipal", registerInParams, null);
+            ManagementBaseObject registerResult = registerClass.InvokeMethod("RegisterByPrincipal", registerInParams, null);
 
             // Check if the task was registered successfully
             if ((uint)registerResult["ReturnValue"] != 0)

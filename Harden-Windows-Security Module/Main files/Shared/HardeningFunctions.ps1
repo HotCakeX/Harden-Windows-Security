@@ -224,6 +224,15 @@ Function Invoke-BitLockerSettings {
         'Exit' { break MainSwitchLabel }
     }
 }
+Function Invoke-DeviceGuard {
+    param([System.Management.Automation.SwitchParameter]$RunUnattended)
+    :DeviceGuardCategoryLabel switch ($RunUnattended ? 'Yes' : (Select-Option -Options 'Yes', 'No', 'Exit' -Message "`nRun Device Guard category ?")) {
+        'Yes' {
+            [HardenWindowsSecurity.DeviceGuard]::Invoke()
+        } 'No' { break DeviceGuardCategoryLabel }
+        'Exit' { break MainSwitchLabel }
+    }
+}
 Function Invoke-TLSSecurity {
     param([System.Management.Automation.SwitchParameter]$RunUnattended)
     :TLSSecurityLabel switch ($RunUnattended ? 'Yes' : (Select-Option -Options 'Yes', 'No', 'Exit' -Message "`nRun TLS Security category ?")) {

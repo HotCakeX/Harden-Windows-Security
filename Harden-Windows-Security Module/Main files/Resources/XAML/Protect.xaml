@@ -129,6 +129,9 @@
                                                 <ListViewItem ToolTipService.InitialShowDelay="500" ToolTip="BitLocker Settings | Highly Recommended to apply">
                                                     <CheckBox x:Name="BitLockerSettings" Content="BitLocker Settings" VerticalContentAlignment="Center" Padding="10,10,40,10" Template="{StaticResource CustomCheckBoxTemplate}"/>
                                                 </ListViewItem>
+                                                <ListViewItem ToolTipService.InitialShowDelay="500" ToolTip="Device Guard | Highly Recommended to apply">
+                                                    <CheckBox x:Name="DeviceGuard" Content="Device Guard" VerticalContentAlignment="Center" Padding="10,10,40,10" Template="{StaticResource CustomCheckBoxTemplate}"/>
+                                                </ListViewItem>
                                                 <ListViewItem ToolTipService.InitialShowDelay="500" ToolTip="TLS Security | Highly Recommended to apply">
                                                     <CheckBox x:Name="TLSSecurity" Content="TLS Security" VerticalContentAlignment="Center" Padding="10,10,40,10" Template="{StaticResource CustomCheckBoxTemplate}"/>
                                                 </ListViewItem>

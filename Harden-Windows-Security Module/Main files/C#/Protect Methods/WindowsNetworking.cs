@@ -46,6 +46,19 @@ namespace HardenWindowsSecurity
             {
                 HardenWindowsSecurity.Logger.LogMessage("An error occurred while setting the Network Location of all connections to Public", LogTypeIntel.ErrorInteractionRequired);
             }
+
+
+            HardenWindowsSecurity.Logger.LogMessage("Applying the Windows Networking registry settings", LogTypeIntel.Information);
+#nullable disable
+            foreach (HardeningRegistryKeys.CsvRecord Item in (HardenWindowsSecurity.GlobalVars.RegistryCSVItems))
+            {
+                if (string.Equals(Item.Category, "WindowsNetworking", StringComparison.OrdinalIgnoreCase))
+                {
+                    HardenWindowsSecurity.RegistryEditor.EditRegistry(Item.Path, Item.Key, Item.Value, Item.Type, Item.Action);
+                }
+            }
+#nullable enable
+
         }
     }
 }

@@ -418,7 +418,8 @@ namespace HardenWindowsSecurity
                         // Defining the initial directory where the file picker GUI will be opened for the user
                         InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Desktop),
                         Filter = "Text files (*.txt)|*.txt",
-                        Title = "Choose where to save the log file"
+                        Title = "Choose where to save the log file",
+                        FileName = $"Harden Windows Security App Logs Export At {DateTime.Now:yyyy-MM-dd HH-mm-ss}.txt" // Default file name
                     };
 
                     // Show the dialog and process the result

@@ -20,11 +20,11 @@ namespace HardenWindowsSecurity
             "TLSSecurity", // 21
             "LockScreen", // 14
             "UserAccountControl", // 6
-            "DeviceGuard", // 8
+            "DeviceGuard", // 9
             "WindowsFirewall", // 19
             "OptionalWindowsFeatures", // 14
-            "WindowsNetworking", // 9
-            "MiscellaneousConfigurations", // 17
+            "WindowsNetworking", // 14
+            "MiscellaneousConfigurations", // 16
             "WindowsUpdateConfigurations", // 15
             "EdgeBrowserConfigurations", // 14
             "NonAdminCommands" // 9
@@ -88,7 +88,12 @@ namespace HardenWindowsSecurity
             return false;
         }
 
-        // Main method of the class to return the final authorized categories
+
+        /// <summary>
+        /// Main method of the class to return the final authorized categories
+        /// For PowerShell cmdlets and GUI elements that will light up based on different criteria
+        /// </summary>
+        /// <returns></returns>
         public static string[] GetValidValues()
         {
             // if running under unelevated context then only return the NonAdminCommands category
@@ -101,6 +106,7 @@ namespace HardenWindowsSecurity
             "MicrosoftDefender",
             "AttackSurfaceReductionRules",
             "BitLockerSettings",
+            "DeviceGuard",
             "TLSSecurity",
             "LockScreen",
             "UserAccountControl",
@@ -122,6 +128,7 @@ namespace HardenWindowsSecurity
                 string[] homeEditionCategories =
                 [
                 "BitLockerSettings",
+                "DeviceGuard",
                 "DownloadsDefenseMeasures",
                 "TLSSecurity",
                 "AttackSurfaceReductionRules",

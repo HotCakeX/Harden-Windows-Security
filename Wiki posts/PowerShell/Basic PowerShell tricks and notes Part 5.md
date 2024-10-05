@@ -159,11 +159,11 @@ $toastContentBuilder.AddAttributionText('Brought to you by Your Company') | Out-
 $toastContentBuilder.AddHeader('6289', 'Camping!!', 'action=openConversation&id=6289') | Out-Null
 
 # Add Hero Image
-$heroImagePath = 'D:\notifications\2.jpg' 
+$heroImagePath = 'D:\notifications\2.jpg'
 $toastContentBuilder.AddHeroImage([Uri]::new($heroImagePath)) | Out-Null
 
 # Add Inline Image
-$inlineImagePath = 'D:\notifications\1.jpg' 
+$inlineImagePath = 'D:\notifications\1.jpg'
 $toastContentBuilder.AddInlineImage([Uri]::new($inlineImagePath)) | Out-Null
 
 # Show the notification

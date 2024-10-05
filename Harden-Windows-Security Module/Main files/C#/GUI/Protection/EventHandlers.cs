@@ -609,6 +609,11 @@ namespace HardenWindowsSecurity
                                                HardenWindowsSecurity.BitLockerSettings.Invoke();
                                                break;
                                            }
+                                       case "DeviceGuard":
+                                           {
+                                               HardenWindowsSecurity.DeviceGuard.Invoke();
+                                               break;
+                                           }
                                        case "TLSSecurity":
                                            {
                                                HardenWindowsSecurity.TLSSecurity.Invoke();

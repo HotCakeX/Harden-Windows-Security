@@ -204,3 +204,17 @@ Computer Configuration\Administrative Templates\MS Security Guide
 ```
 
 <br>
+
+<img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">
+
+<br>
+
+## 12. Restores the ability of Administrator to enable Sudo
+
+Microsoft Security baselines disable the usage of [Sudo](https://devblogs.microsoft.com/commandline/introducing-sudo-for-windows/) which also makes the Sudo option hidden from Windows settings.
+
+```
+Computer Configuration\System\Configure the behavior of the sudo command --> Maximum allowed sudo mode
+```
+
+<br>

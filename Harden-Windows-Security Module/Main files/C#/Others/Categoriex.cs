@@ -23,7 +23,7 @@ namespace HardenWindowsSecurity
             "DeviceGuard", // 8
             "WindowsFirewall", // 19
             "OptionalWindowsFeatures", // 14
-            "WindowsNetworking", // 14 
+            "WindowsNetworking", // 14
             "MiscellaneousConfigurations", // 16
             "WindowsUpdateConfigurations", // 15
             "EdgeBrowserConfigurations", // 14

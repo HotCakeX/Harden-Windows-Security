@@ -31,7 +31,7 @@ Template="{DynamicResource ConfirmationPageToggleButtonStyle}"/>
                     <TextBlock Text="Clear Logs" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,0,8,0" FontWeight="Normal"/>
                 </StackPanel>
             </Button>
-            
+
         </StackPanel>
         <!-- Logging Area -->
         <ScrollViewer Grid.Row="1" Grid.ColumnSpan="2" x:Name="ScrollerForOutputTextBox" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto" Margin="10,15,10,10">

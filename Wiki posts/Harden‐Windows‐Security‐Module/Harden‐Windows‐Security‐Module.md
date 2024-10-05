@@ -583,7 +583,7 @@ Indicates that the cmdlet will only remove the [country IP blocking firewall rul
 Harden Windows Security is a hybrid software solution built on the latest available .NET runtime. Approximately 99% of its codebase is written in C#, with PowerShell serving as the initial launch platform. Upon startup in PowerShell, control is quickly transferred to the C# code, and then returned to PowerShell upon completion. This approach leverages the .NET runtime DLLs that are included with PowerShell, eliminating the need for users to install the .NET runtime separately.
 
 The repository includes a Visual Studio solution that allows you to build the software directly. If you decide to compile it, it's highly recommended to completely review the code first, then sign the binaries with your code-signing certificate for use as a standalone application in personal, business, or enterprise environments. While the code can be modified if needed, no changes are required for a successful compilation result in the latest version of Visual Studio.
- 
+
 <br>
 
 <img src="https://github.com/HotCakeX/Harden-Windows-Security/raw/main/images/Gifs/1pxRainbowLine.gif" width= "300000" alt="horizontal super thin rainbow RGB line">

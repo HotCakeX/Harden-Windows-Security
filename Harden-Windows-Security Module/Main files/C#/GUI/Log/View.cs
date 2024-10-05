@@ -52,6 +52,9 @@ namespace HardenWindowsSecurity
                 HardenWindowsSecurity.GUILogs.MainLoggerTextBox = HardenWindowsSecurity.GUILogs.ParentGrid.FindName("MainLoggerTextBox") as System.Windows.Controls.TextBox ?? throw new InvalidOperationException("MainLoggerTextBox is null.");
                 HardenWindowsSecurity.GUILogs.scrollerForOutputTextBox = HardenWindowsSecurity.GUILogs.ParentGrid.FindName("ScrollerForOutputTextBox") as System.Windows.Controls.ScrollViewer ?? throw new InvalidOperationException("ScrollerForOutputTextBox is null.");
                 System.Windows.Controls.Image ExportLogsIcon = GUILogs.ParentGrid.FindName("ExportLogsIcon") as System.Windows.Controls.Image ?? throw new InvalidOperationException("ExportLogsIcon is null.");
+                System.Windows.Controls.Button ClearLogsButton = HardenWindowsSecurity.GUILogs.ParentGrid.FindName("ClearLogsButton") as System.Windows.Controls.Button ?? throw new InvalidOperationException("ClearLogsButton is null.");
+                System.Windows.Controls.Image ClearLogsIcon = GUILogs.ParentGrid.FindName("ClearLogsIcon") as System.Windows.Controls.Image ?? throw new InvalidOperationException("ClearLogsIcon is null.");
+
 
                 // Add image to the ExportLogsIcon
                 var ExportLogsIconBitmapImage = new System.Windows.Media.Imaging.BitmapImage();
@@ -60,6 +63,16 @@ namespace HardenWindowsSecurity
                 ExportLogsIconBitmapImage.CacheOption = System.Windows.Media.Imaging.BitmapCacheOption.OnLoad; // Load the image data into memory
                 ExportLogsIconBitmapImage.EndInit();
                 ExportLogsIcon.Source = ExportLogsIconBitmapImage;
+
+
+                // Add image to the ClearLogsIcon
+                var ClearLogsIconBitmapImage = new System.Windows.Media.Imaging.BitmapImage();
+                ClearLogsIconBitmapImage.BeginInit();
+                ClearLogsIconBitmapImage.UriSource = new System.Uri(System.IO.Path.Combine(HardenWindowsSecurity.GlobalVars.path!, "Resources", "Media", "ClearLogsIcon.png"));
+                ClearLogsIconBitmapImage.CacheOption = System.Windows.Media.Imaging.BitmapCacheOption.OnLoad; // Load the image data into memory
+                ClearLogsIconBitmapImage.EndInit();
+                ClearLogsIcon.Source = ClearLogsIconBitmapImage;
+
 
                 // Need to apply the template before we can set the toggle button to true
                 _ = AutoScrollToggleButton.ApplyTemplate();
@@ -100,6 +113,14 @@ namespace HardenWindowsSecurity
 
                         _ = MessageBox.Show("Logs successfully saved.", "Success", MessageBoxButton.OK, MessageBoxImage.Information);
                     }
+                };
+
+
+                // Event handler for ClearLogsButton
+                ClearLogsButton.Click += (sender, e) =>
+                {
+                    // Set the logs text box to an empty string, clearing all the logs from the GUI logger
+                    GUILogs.MainLoggerTextBox.Text = string.Empty;
                 };
 
 

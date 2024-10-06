@@ -165,10 +165,9 @@ Function New-SupplementalWDACConfig {
                 Write-Progress -Id 19 -Activity 'Configuring the Supplemental policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
                 [WDACConfig.Logger]::Write('Changing the policy type from base to Supplemental, assigning its name and resetting its policy ID')
-                $null = Set-CIPolicyIdInfo -FilePath $FinalSupplementalPath -ResetPolicyID -BasePolicyToSupplementPath $PolicyPath -PolicyName "$SuppPolicyName - $(Get-Date -Format 'MM-dd-yyyy')"
+                $null = [WDACConfig.SetCiPolicyInfo]::Set($FinalSupplementalPath, $true, "$SuppPolicyName - $(Get-Date -Format 'MM-dd-yyyy')", $null, $PolicyPath)
 
-                [WDACConfig.Logger]::Write('Setting the Supplemental policy version to 1.0.0.0')
-                Set-CIPolicyVersion -FilePath $FinalSupplementalPath -Version '1.0.0.0'
+                [WDACConfig.SetCiPolicyInfo]::Set($FinalSupplementalPath, ([version]'1.0.0.0'))
 
                 [WDACConfig.CiRuleOptions]::Set($FinalSupplementalPath, [WDACConfig.CiRuleOptions+PolicyTemplate]::Supplemental, $null, $null, $null, $null, $null, $null, $null, $null, $null)
 
@@ -203,10 +202,9 @@ Function New-SupplementalWDACConfig {
                 } -args $FolderPath, $SuppPolicyName, $StagingArea
 
                 [WDACConfig.Logger]::Write('Changing the policy type from base to Supplemental, assigning its name and resetting its policy ID')
-                $null = Set-CIPolicyIdInfo -FilePath $FinalSupplementalPath -ResetPolicyID -BasePolicyToSupplementPath $PolicyPath -PolicyName "$SuppPolicyName - $(Get-Date -Format 'MM-dd-yyyy')"
+                $null = [WDACConfig.SetCiPolicyInfo]::Set($FinalSupplementalPath, $true, "$SuppPolicyName - $(Get-Date -Format 'MM-dd-yyyy')", $null, $PolicyPath)
 
-                [WDACConfig.Logger]::Write('Setting the Supplemental policy version to 1.0.0.0')
-                Set-CIPolicyVersion -FilePath $FinalSupplementalPath -Version '1.0.0.0'
+                [WDACConfig.SetCiPolicyInfo]::Set($FinalSupplementalPath, ([version]'1.0.0.0'))
 
                 [WDACConfig.CiRuleOptions]::Set($FinalSupplementalPath, [WDACConfig.CiRuleOptions+PolicyTemplate]::Supplemental, $null, $null, $null, $null, $null, $null, $null, $null, $null)
 
@@ -278,10 +276,9 @@ Function New-SupplementalWDACConfig {
                         } -args $PackageName, $SuppPolicyName, $StagingArea
 
                         [WDACConfig.Logger]::Write('Converting the policy type from base to Supplemental, assigning its name and resetting its policy ID')
-                        $null = Set-CIPolicyIdInfo -FilePath $FinalSupplementalPath -ResetPolicyID -BasePolicyToSupplementPath $PolicyPath -PolicyName "$SuppPolicyName - $(Get-Date -Format 'MM-dd-yyyy')"
+                        $null = [WDACConfig.SetCiPolicyInfo]::Set($FinalSupplementalPath, $true, "$SuppPolicyName - $(Get-Date -Format 'MM-dd-yyyy')", $null, $PolicyPath)
 
-                        [WDACConfig.Logger]::Write('Setting the Supplemental policy version to 1.0.0.0')
-                        Set-CIPolicyVersion -FilePath $FinalSupplementalPath -Version '1.0.0.0'
+                        [WDACConfig.SetCiPolicyInfo]::Set($FinalSupplementalPath, ([version]'1.0.0.0'))
 
                         [WDACConfig.CiRuleOptions]::Set($FinalSupplementalPath, [WDACConfig.CiRuleOptions+PolicyTemplate]::Supplemental, $null, $null, $null, $null, $null, $null, $null, $null, $null)
 
@@ -355,10 +352,9 @@ Function New-SupplementalWDACConfig {
                 Write-Progress -Id 33 -Activity 'Finalizing the Supplemental policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
                 [WDACConfig.Logger]::Write('Converting the policy type from base to Supplemental, assigning its name and resetting its policy ID')
-                $null = Set-CIPolicyIdInfo -FilePath $FinalSupplementalPath -ResetPolicyID -BasePolicyToSupplementPath $PolicyPath -PolicyName "$SuppPolicyName - $(Get-Date -Format 'MM-dd-yyyy')"
+                $null = [WDACConfig.SetCiPolicyInfo]::Set($FinalSupplementalPath, $true, "$SuppPolicyName - $(Get-Date -Format 'MM-dd-yyyy')", $null, $PolicyPath)
 
-                [WDACConfig.Logger]::Write('Setting the Supplemental policy version to 1.0.0.0')
-                Set-CIPolicyVersion -FilePath $FinalSupplementalPath -Version '1.0.0.0'
+                [WDACConfig.SetCiPolicyInfo]::Set($FinalSupplementalPath, ([version]'1.0.0.0'))
 
                 [WDACConfig.CiRuleOptions]::Set($FinalSupplementalPath, [WDACConfig.CiRuleOptions+PolicyTemplate]::Supplemental, $null, $null, $null, $null, $null, $null, $null, $null, $null)
 

@@ -526,8 +526,7 @@ Function ConvertTo-WDACPolicy {
                             # Objectify the user input base policy file to extract its Base policy ID
                             $InputXMLObj = [System.Xml.XmlDocument](Get-Content -Path $BasePolicyFile)
 
-                            [System.String]$SupplementalPolicyID = Set-CIPolicyIdInfo -FilePath $WDACPolicyPath -PolicyName $SuppPolicyName -SupplementsBasePolicyID $InputXMLObj.SiPolicy.BasePolicyID -ResetPolicyID
-                            [System.String]$SupplementalPolicyID = $SupplementalPolicyID.Substring(11)
+                            [System.String]$SupplementalPolicyID = [WDACConfig.SetCiPolicyInfo]::Set($WDACPolicyPath, $true, $SuppPolicyName, $InputXMLObj.SiPolicy.BasePolicyID, $null)
 
                             # Configure policy rule options
                             [WDACConfig.CiRuleOptions]::Set($WDACPolicyPath, [WDACConfig.CiRuleOptions+PolicyTemplate]::Supplemental, $null, $null, $null, $null, $null, $null, $null, $null, $null)
@@ -546,8 +545,7 @@ Function ConvertTo-WDACPolicy {
 
                             [WDACConfig.Logger]::Write('ConvertTo-WDACPolicy: Assigning the user input GUID to the base policy ID of the supplemental policy')
 
-                            [System.String]$SupplementalPolicyID = Set-CIPolicyIdInfo -FilePath $WDACPolicyPath -PolicyName $SuppPolicyName -SupplementsBasePolicyID $BasePolicyGUID -ResetPolicyID
-                            [System.String]$SupplementalPolicyID = $SupplementalPolicyID.Substring(11)
+                            [System.String]$SupplementalPolicyID = [WDACConfig.SetCiPolicyInfo]::Set($WDACPolicyPath, $true, $SuppPolicyName, $BasePolicyGUID, $null)
 
                             # Configure policy rule options
                             [WDACConfig.CiRuleOptions]::Set($WDACPolicyPath, [WDACConfig.CiRuleOptions+PolicyTemplate]::Supplemental, $null, $null, $null, $null, $null, $null, $null, $null, $null)
@@ -570,7 +568,7 @@ Function ConvertTo-WDACPolicy {
                             # Objectify the user input policy file to extract its policy ID
                             $InputXMLObj = [System.Xml.XmlDocument](Get-Content -Path $PolicyToAddLogsTo)
 
-                            $null = Set-CIPolicyIdInfo -FilePath $WDACPolicyPath -PolicyName $SuppPolicyName -ResetPolicyID
+                            $null = [WDACConfig.SetCiPolicyInfo]::Set($WDACPolicyPath, $true, $SuppPolicyName, $null, $null)
 
                             # Remove all policy rule options prior to merging the policies since we don't need to add/remove any policy rule options to/from the user input policy
                             [WDACConfig.CiRuleOptions]::Set($WDACPolicyPath, $null, $null, $null, $null, $null, $null, $null, $null, $null, $true)
@@ -754,8 +752,7 @@ Function ConvertTo-WDACPolicy {
                             # Objectify the user input base policy file to extract its Base policy ID
                             $InputXMLObj = [System.Xml.XmlDocument](Get-Content -Path $BasePolicyFile)
 
-                            [System.String]$SupplementalPolicyID = Set-CIPolicyIdInfo -FilePath $OutputPolicyPathMDEAH -PolicyName $SuppPolicyName -SupplementsBasePolicyID $InputXMLObj.SiPolicy.BasePolicyID -ResetPolicyID
-                            [System.String]$SupplementalPolicyID = $SupplementalPolicyID.Substring(11)
+                            [System.String]$SupplementalPolicyID = [WDACConfig.SetCiPolicyInfo]::Set($OutputPolicyPathMDEAH, $true, $SuppPolicyName, $InputXMLObj.SiPolicy.BasePolicyID, $null)
 
                             # Configure policy rule options
                             [WDACConfig.CiRuleOptions]::Set($OutputPolicyPathMDEAH, [WDACConfig.CiRuleOptions+PolicyTemplate]::Supplemental, $null, $null, $null, $null, $null, $null, $null, $null, $null)
@@ -774,10 +771,9 @@ Function ConvertTo-WDACPolicy {
 
                             [WDACConfig.Logger]::Write('ConvertTo-WDACPolicy: Assigning the user input GUID to the base policy ID of the supplemental policy')
 
-                            [System.String]$SupplementalPolicyID = Set-CIPolicyIdInfo -FilePath $OutputPolicyPathMDEAH -PolicyName $SuppPolicyName -SupplementsBasePolicyID $BasePolicyGUID -ResetPolicyID
-                            [System.String]$SupplementalPolicyID = $SupplementalPolicyID.Substring(11)
+                            [System.String]$SupplementalPolicyID = [WDACConfig.SetCiPolicyInfo]::Set($OutputPolicyPathMDEAH, $true, $SuppPolicyName, $BasePolicyGUID, $null)
 
-                            # Configure policy rule options                            
+                            # Configure policy rule options
                             [WDACConfig.CiRuleOptions]::Set($OutputPolicyPathMDEAH, [WDACConfig.CiRuleOptions+PolicyTemplate]::Supplemental, $null, $null, $null, $null, $null, $null, $null, $null, $null)
 
                             [WDACConfig.Logger]::Write('ConvertTo-WDACPolicy: Copying the policy file to the User Config directory')
@@ -798,7 +794,7 @@ Function ConvertTo-WDACPolicy {
                             # Objectify the user input policy file to extract its policy ID
                             $InputXMLObj = [System.Xml.XmlDocument](Get-Content -Path $PolicyToAddLogsTo)
 
-                            $null = Set-CIPolicyIdInfo -FilePath $OutputPolicyPathMDEAH -PolicyName $SuppPolicyName -ResetPolicyID
+                            $null = [WDACConfig.SetCiPolicyInfo]::Set($OutputPolicyPathMDEAH, $true, $SuppPolicyName, $null, $null)
 
                             # Remove all policy rule options prior to merging the policies since we don't need to add/remove any policy rule options to/from the user input policy
                             [WDACConfig.CiRuleOptions]::Set($OutputPolicyPathMDEAH, $null, $null, $null, $null, $null, $null, $null, $null, $null, $true)
@@ -951,8 +947,7 @@ Function ConvertTo-WDACPolicy {
                             # Objectify the user input base policy file to extract its Base policy ID
                             $InputXMLObj = [System.Xml.XmlDocument](Get-Content -Path $BasePolicyFile)
 
-                            [System.String]$SupplementalPolicyID = Set-CIPolicyIdInfo -FilePath $OutputPolicyPathEVTX -PolicyName $SuppPolicyName -SupplementsBasePolicyID $InputXMLObj.SiPolicy.BasePolicyID -ResetPolicyID
-                            [System.String]$SupplementalPolicyID = $SupplementalPolicyID.Substring(11)
+                            [System.String]$SupplementalPolicyID = [WDACConfig.SetCiPolicyInfo]::Set($OutputPolicyPathEVTX, $true, $SuppPolicyName, $InputXMLObj.SiPolicy.BasePolicyID, $null)
 
                             # Configure policy rule options
                             [WDACConfig.CiRuleOptions]::Set($OutputPolicyPathEVTX, [WDACConfig.CiRuleOptions+PolicyTemplate]::Supplemental, $null, $null, $null, $null, $null, $null, $null, $null, $null)
@@ -971,8 +966,7 @@ Function ConvertTo-WDACPolicy {
 
                             [WDACConfig.Logger]::Write('ConvertTo-WDACPolicy: Assigning the user input GUID to the base policy ID of the supplemental policy')
 
-                            [System.String]$SupplementalPolicyID = Set-CIPolicyIdInfo -FilePath $OutputPolicyPathEVTX -PolicyName $SuppPolicyName -SupplementsBasePolicyID $BasePolicyGUID -ResetPolicyID
-                            [System.String]$SupplementalPolicyID = $SupplementalPolicyID.Substring(11)
+                            [System.String]$SupplementalPolicyID = [WDACConfig.SetCiPolicyInfo]::Set($OutputPolicyPathEVTX, $true, $SuppPolicyName, $BasePolicyGUID, $null)
 
                             # Configure policy rule options
                             [WDACConfig.CiRuleOptions]::Set($OutputPolicyPathEVTX, [WDACConfig.CiRuleOptions+PolicyTemplate]::Supplemental, $null, $null, $null, $null, $null, $null, $null, $null, $null)
@@ -995,7 +989,7 @@ Function ConvertTo-WDACPolicy {
                             # Objectify the user input policy file to extract its policy ID
                             $InputXMLObj = [System.Xml.XmlDocument](Get-Content -Path $PolicyToAddLogsTo)
 
-                            $null = Set-CIPolicyIdInfo -FilePath $OutputPolicyPathEVTX -PolicyName $SuppPolicyName -ResetPolicyID
+                            $null = [WDACConfig.SetCiPolicyInfo]::Set($OutputPolicyPathEVTX, $true, $SuppPolicyName, $null, $null)
 
                             # Remove all policy rule options prior to merging the policies since we don't need to add/remove any policy rule options to/from the user input policy
                             [WDACConfig.CiRuleOptions]::Set($OutputPolicyPathEVTX, $null, $null, $null, $null, $null, $null, $null, $null, $null, $true)

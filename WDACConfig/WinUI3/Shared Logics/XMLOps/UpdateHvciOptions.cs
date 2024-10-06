@@ -69,6 +69,8 @@ namespace WDACConfig
             {
                 throw new InvalidOperationException("UpdateHvciOptions: The XML file created at the end is not compliant with the CI policy schema");
             }
+
+            Logger.Write($"Successfully set the HVCI in the policy file '{filePath}' to Strict.");
         }
     }
 }

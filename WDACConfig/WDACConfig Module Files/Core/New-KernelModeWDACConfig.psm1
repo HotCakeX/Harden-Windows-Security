@@ -88,11 +88,9 @@ Function New-KernelModeWDACConfig {
                 Copy-Item -Path $TemplatePolicyPath -Destination $OutputPolicyPath -Force
 
                 [WDACConfig.Logger]::Write('Resetting the policy ID and assigning a name for the policy')
-                [System.String]$PolicyID = Set-CIPolicyIdInfo -FilePath $OutputPolicyPath -PolicyName "$PolicyName" -ResetPolicyID
-                $PolicyID = $PolicyID.Substring(11)
+                [System.String]$PolicyID = [WDACConfig.SetCiPolicyInfo]::Set($OutputPolicyPath, $true, $PolicyName, $null, $null)
 
-                [WDACConfig.Logger]::Write('Setting the policy version to 1.0.0.0')
-                Set-CIPolicyVersion -FilePath $OutputPolicyPath -Version '1.0.0.0'
+                [WDACConfig.SetCiPolicyInfo]::Set($OutputPolicyPath, ([version]'1.0.0.0'))
 
                 [WDACConfig.CiRuleOptions]::Set($OutputPolicyPath, [WDACConfig.CiRuleOptions+PolicyTemplate]::BaseKernel, @([WDACConfig.CiRuleOptions+PolicyRuleOptions]::EnabledAuditMode), $null, $null, $null, $NoFlights, $EVSigners, $null, $null, $null)
 
@@ -218,10 +216,9 @@ Function New-KernelModeWDACConfig {
                             [WDACConfig.PolicyEditor]::EditGUIDs($PolicyID, $FinalEnforcedPolicyPath)
 
                             [WDACConfig.Logger]::Write('Setting a new policy name with the current date attached to it')
-                            Set-CIPolicyIdInfo -FilePath $FinalEnforcedPolicyPath -PolicyName "Strict Kernel mode policy Enforced - $(Get-Date -Format 'MM-dd-yyyy')"
+                            $null = [WDACConfig.SetCiPolicyInfo]::Set($FinalEnforcedPolicyPath, $null, "Strict Kernel mode policy Enforced - $(Get-Date -Format 'MM-dd-yyyy')", $null, $null)
 
-                            [WDACConfig.Logger]::Write('Setting the policy version to 1.0.0.0')
-                            Set-CIPolicyVersion -FilePath $FinalEnforcedPolicyPath -Version '1.0.0.0'
+                            [WDACConfig.SetCiPolicyInfo]::Set($FinalEnforcedPolicyPath, ([version]'1.0.0.0'))
 
                             [WDACConfig.CiRuleOptions]::Set($FinalEnforcedPolicyPath, [WDACConfig.CiRuleOptions+PolicyTemplate]::BaseKernel, $null, $null, $null, $null, $null, $EVSigners, $null, $null, $null)
 
@@ -359,10 +356,9 @@ Function New-KernelModeWDACConfig {
                             [WDACConfig.PolicyEditor]::EditGUIDs($PolicyID, $FinalEnforcedPolicyPath)
 
                             [WDACConfig.Logger]::Write('Setting a new policy name with the current date attached to it')
-                            Set-CIPolicyIdInfo -FilePath $FinalEnforcedPolicyPath -PolicyName "Strict Kernel No Flights mode policy Enforced - $(Get-Date -Format 'MM-dd-yyyy')"
+                            $null = [WDACConfig.SetCiPolicyInfo]::Set($FinalEnforcedPolicyPath, $null, "Strict Kernel No Flights mode policy Enforced - $(Get-Date -Format 'MM-dd-yyyy')", $null, $null)
 
-                            [WDACConfig.Logger]::Write('Setting the policy version to 1.0.0.0')
-                            Set-CIPolicyVersion -FilePath $FinalEnforcedPolicyPath -Version '1.0.0.0'
+                            [WDACConfig.SetCiPolicyInfo]::Set($FinalEnforcedPolicyPath, ([version]'1.0.0.0'))
 
                             [WDACConfig.CiRuleOptions]::Set($FinalEnforcedPolicyPath, [WDACConfig.CiRuleOptions+PolicyTemplate]::BaseKernel, @([WDACConfig.CiRuleOptions+PolicyRuleOptions]::DisabledFlightSigning), $null, $null, $null, $null, $EVSigners, $null, $null, $null)
 

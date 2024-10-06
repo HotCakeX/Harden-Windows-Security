@@ -206,7 +206,7 @@ namespace WDACConfig
                 }
 
                 // Fetch the content of the Markdown file
-                string markdownUrl = "https://raw.githubusercontent.com/MicrosoftDocs/windows-itpro-docs/public/windows/security/application-security/application-control/windows-defender-application-control/design/microsoft-recommended-driver-block-rules.md";
+                string markdownUrl = GlobalVars.MSFTRecommendedDriverBlockRulesURL;
                 string markdownContent = httpClient.GetStringAsync(markdownUrl).GetAwaiter().GetResult();
 
                 // Use Regex to find the version

@@ -149,11 +149,10 @@ Function New-DenyWDACConfig {
                 Write-Progress -Id 22 -Activity 'Creating the base policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
                 [WDACConfig.Logger]::Write('Assigning a name and resetting the policy ID')
-                $null = Set-CIPolicyIdInfo -FilePath $FinalDenyPolicyPath -ResetPolicyID -PolicyName $PolicyName
+                $null = [WDACConfig.SetCiPolicyInfo]::Set($FinalDenyPolicyPath, $true, $PolicyName, $null, $null)
 
-                [WDACConfig.Logger]::Write('Setting the policy version to 1.0.0.0')
-                Set-CIPolicyVersion -FilePath $FinalDenyPolicyPath -Version '1.0.0.0'
-                
+                [WDACConfig.SetCiPolicyInfo]::Set($FinalDenyPolicyPath, ([version]'1.0.0.0'))
+
                 [WDACConfig.CiRuleOptions]::Set($FinalDenyPolicyPath, [WDACConfig.CiRuleOptions+PolicyTemplate]::Base, $null, $null, $null, $null, $null, $null, $null, $null, $null)
 
                 [WDACConfig.Logger]::Write('Converting the policy XML to .CIP')
@@ -227,10 +226,9 @@ Function New-DenyWDACConfig {
                 Write-Progress -Id 23 -Activity 'Configuring the base policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
                 [WDACConfig.Logger]::Write('Assigning a name and resetting the policy ID')
-                $null = Set-CIPolicyIdInfo -FilePath $FinalDenyPolicyPath -ResetPolicyID -PolicyName $PolicyName
+                $null = [WDACConfig.SetCiPolicyInfo]::Set($FinalDenyPolicyPath, $true, $PolicyName, $null, $null)
 
-                [WDACConfig.Logger]::Write('Setting the policy version to 1.0.0.0')
-                Set-CIPolicyVersion -FilePath $FinalDenyPolicyPath -Version '1.0.0.0'
+                [WDACConfig.SetCiPolicyInfo]::Set($FinalDenyPolicyPath, ([version]'1.0.0.0'))
 
                 [WDACConfig.CiRuleOptions]::Set($FinalDenyPolicyPath, [WDACConfig.CiRuleOptions+PolicyTemplate]::Base, $null, $null, $null, $null, $null, $null, $null, $null, $null)
 
@@ -299,10 +297,9 @@ Function New-DenyWDACConfig {
                         $null = Merge-CIPolicy -PolicyPaths $AllowAllPolicyPath, $TempPolicyPath -OutputFilePath $FinalDenyPolicyPath
 
                         [WDACConfig.Logger]::Write('Assigning a name and resetting the policy ID')
-                        $null = Set-CIPolicyIdInfo -FilePath $FinalDenyPolicyPath -ResetPolicyID -PolicyName $PolicyName
+                        $null = [WDACConfig.SetCiPolicyInfo]::Set($FinalDenyPolicyPath, $true, $PolicyName, $null, $null)
 
-                        [WDACConfig.Logger]::Write('Setting the policy version to 1.0.0.0')
-                        Set-CIPolicyVersion -FilePath $FinalDenyPolicyPath -Version '1.0.0.0'
+                        [WDACConfig.SetCiPolicyInfo]::Set($FinalDenyPolicyPath, ([version]'1.0.0.0'))
 
                         [WDACConfig.CiRuleOptions]::Set($FinalDenyPolicyPath, [WDACConfig.CiRuleOptions+PolicyTemplate]::Base, $null, $null, $null, $null, $null, $null, $null, $null, $null)
 
@@ -357,10 +354,9 @@ Function New-DenyWDACConfig {
                 Write-Progress -Id 29 -Activity 'Configuring the wildcard deny policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
                 [WDACConfig.Logger]::Write('Assigning a name and resetting the policy ID')
-                $null = Set-CIPolicyIdInfo -FilePath $FinalDenyPolicyPath -ResetPolicyID -PolicyName $PolicyName
+                $null = [WDACConfig.SetCiPolicyInfo]::Set($FinalDenyPolicyPath, $true, $PolicyName, $null, $null)
 
-                [WDACConfig.Logger]::Write('Setting the policy version to 1.0.0.0')
-                Set-CIPolicyVersion -FilePath $FinalDenyPolicyPath -Version '1.0.0.0'
+                [WDACConfig.SetCiPolicyInfo]::Set($FinalDenyPolicyPath, ([version]'1.0.0.0'))
 
                 [WDACConfig.CiRuleOptions]::Set($FinalDenyPolicyPath, [WDACConfig.CiRuleOptions+PolicyTemplate]::Base, $null, $null, $null, $null, $null, $null, $null, $null, $null)
 

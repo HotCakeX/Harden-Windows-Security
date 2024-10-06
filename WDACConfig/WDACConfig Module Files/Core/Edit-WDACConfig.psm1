@@ -501,13 +501,11 @@ Function Edit-WDACConfig {
                 [WDACConfig.Logger]::Write('Supplemental policy processing and deployment')
 
                 [WDACConfig.Logger]::Write('Converting the policy to a Supplemental policy type and resetting its ID')
-                [System.String]$SuppPolicyID = Set-CIPolicyIdInfo -FilePath $SuppPolicyPath -PolicyName "$SuppPolicyName - $(Get-Date -Format 'MM-dd-yyyy')" -ResetPolicyID -BasePolicyToSupplementPath $PolicyPath
-                $SuppPolicyID = $SuppPolicyID.Substring(11)
+                [System.String]$SuppPolicyID = [WDACConfig.SetCiPolicyInfo]::Set($SuppPolicyPath, $true, "$SuppPolicyName - $(Get-Date -Format 'MM-dd-yyyy')", $null, $PolicyPath)
 
                 [WDACConfig.CiRuleOptions]::Set($SuppPolicyPath, [WDACConfig.CiRuleOptions+PolicyTemplate]::Supplemental, $null, $null, $null, $null, $null, $null, $null, $null, $null)
 
-                [WDACConfig.Logger]::Write('Setting the Supplemental policy version to 1.0.0.0')
-                Set-CIPolicyVersion -FilePath $SuppPolicyPath -Version '1.0.0.0'
+                [WDACConfig.SetCiPolicyInfo]::Set($SuppPolicyPath, ([version]'1.0.0.0'))
 
                 # Define the path for the final Supplemental policy CIP
                 [System.IO.FileInfo]$SupplementalCIPPath = Join-Path -Path $StagingArea -ChildPath "$SuppPolicyID.cip"
@@ -608,10 +606,8 @@ Function Edit-WDACConfig {
 
                 [WDACConfig.Logger]::Write('Preparing the final merged Supplemental policy for deployment')
                 [WDACConfig.Logger]::Write('Converting the policy to a Supplemental policy type and resetting its ID')
-                [System.String]$SuppPolicyID = Set-CIPolicyIdInfo -FilePath $FinalSupplementalPath -ResetPolicyID -PolicyName "$SuppPolicyName - $(Get-Date -Format 'MM-dd-yyyy')" -BasePolicyToSupplementPath $PolicyPath
-                [System.String]$SuppPolicyID = $SuppPolicyID.Substring(11)
+                [System.String]$SuppPolicyID = [WDACConfig.SetCiPolicyInfo]::Set($FinalSupplementalPath, $true, "$SuppPolicyName - $(Get-Date -Format 'MM-dd-yyyy')", $null, $PolicyPath)
 
-                [WDACConfig.Logger]::Write('Setting HVCI to Strict')
                 [WDACConfig.UpdateHvciOptions]::Update($FinalSupplementalPath)
 
                 if ($null -ne $MacrosBackup) {
@@ -671,7 +667,7 @@ Function Edit-WDACConfig {
                         Copy-Item -Path 'C:\Windows\schemas\CodeIntegrity\ExamplePolicies\AllowMicrosoft.xml' -Destination $BasePolicyPath -Force
 
                         [WDACConfig.Logger]::Write('Setting the policy name')
-                        Set-CIPolicyIdInfo -FilePath $BasePolicyPath -PolicyName "$Name - $(Get-Date -Format 'MM-dd-yyyy')"
+                        $null = [WDACConfig.SetCiPolicyInfo]::Set($BasePolicyPath, $null, "$Name - $(Get-Date -Format 'MM-dd-yyyy')", $null, $null)
 
                         [WDACConfig.CiRuleOptions]::Set($BasePolicyPath, [WDACConfig.CiRuleOptions+PolicyTemplate]::Base, $null, $null, $null, $null, $null, $RequireEVSigners, $null, $null, $null)
                     }
@@ -684,7 +680,7 @@ Function Edit-WDACConfig {
                         Copy-Item -Path 'C:\Windows\schemas\CodeIntegrity\ExamplePolicies\AllowMicrosoft.xml' -Destination $BasePolicyPath -Force
 
                         [WDACConfig.Logger]::Write('Setting the policy name')
-                        Set-CIPolicyIdInfo -FilePath $BasePolicyPath -PolicyName "$Name - $(Get-Date -Format 'MM-dd-yyyy')"
+                        $null = [WDACConfig.SetCiPolicyInfo]::Set($BasePolicyPath, $null, "$Name - $(Get-Date -Format 'MM-dd-yyyy')", $null, $null)
 
                         [WDACConfig.CiRuleOptions]::Set($BasePolicyPath, [WDACConfig.CiRuleOptions+PolicyTemplate]::BaseISG, $null, $null, $null, $null, $null, $RequireEVSigners, $null, $null, $null)
 
@@ -712,7 +708,7 @@ Function Edit-WDACConfig {
                         }
 
                         [WDACConfig.Logger]::Write('Setting the policy name')
-                        Set-CIPolicyIdInfo -FilePath $BasePolicyPath -PolicyName "$Name - $(Get-Date -Format 'MM-dd-yyyy')"
+                        $null = [WDACConfig.SetCiPolicyInfo]::Set($BasePolicyPath, $null, "$Name - $(Get-Date -Format 'MM-dd-yyyy')", $null, $null)
 
                         [WDACConfig.CiRuleOptions]::Set($BasePolicyPath, [WDACConfig.CiRuleOptions+PolicyTemplate]::Base, $null, $null, $null, $null, $null, $RequireEVSigners, $null, $null, $null)
                     }
@@ -736,8 +732,7 @@ Function Edit-WDACConfig {
                 [WDACConfig.Logger]::Write('Setting the policy ID and Base policy ID to the current base policy ID in the generated XML file')
                 [WDACConfig.PolicyEditor]::EditGUIDs($CurrentID, $BasePolicyPath)
 
-                [WDACConfig.Logger]::Write("Setting the policy version to '$VersionToDeploy' - Previous version was '$CurrentVersion'")
-                Set-CIPolicyVersion -FilePath $BasePolicyPath -Version $VersionToDeploy
+                [WDACConfig.SetCiPolicyInfo]::Set($BasePolicyPath, ([version]$VersionToDeploy))
 
                 [WDACConfig.Logger]::Write('Converting the base policy to a CIP file')
                 [System.IO.FileInfo]$CIPPath = ConvertFrom-CIPolicy -XmlFilePath $BasePolicyPath -BinaryFilePath (Join-Path -Path $StagingArea -ChildPath "$CurrentID.cip")

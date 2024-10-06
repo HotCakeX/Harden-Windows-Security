@@ -13,13 +13,13 @@ namespace WDACConfig
         public static bool ConfigCIBootstrap;
 
         // User Mode block rules
-        public const string MSFTRecommendedBlockRulesURL = "https://raw.githubusercontent.com/MicrosoftDocs/windows-itpro-docs/public/windows/security/application-security/application-control/windows-defender-application-control/design/applications-that-can-bypass-wdac.md";
+        public const string MSFTRecommendedBlockRulesURL = "https://raw.githubusercontent.com/MicrosoftDocs/windows-itpro-docs/refs/heads/public/windows/security/application-security/application-control/app-control-for-business/design/applications-that-can-bypass-appcontrol.md";
 
         // Kernel Mode block rules
-        public const string MSFTRecommendedDriverBlockRulesURL = "https://raw.githubusercontent.com/MicrosoftDocs/windows-itpro-docs/public/windows/security/application-security/application-control/windows-defender-application-control/design/microsoft-recommended-driver-block-rules.md";
+        public const string MSFTRecommendedDriverBlockRulesURL = "https://raw.githubusercontent.com/MicrosoftDocs/windows-itpro-docs/refs/heads/public/windows/security/application-security/application-control/app-control-for-business/design/microsoft-recommended-driver-block-rules.md";
 
         // Minimum required OS build number
-        public const decimal Requiredbuild = 22621.3447M;
+        public const decimal Requiredbuild = 22631.4169M;
 
         // Current OS build version
         public static decimal OSBuildNumber = Environment.OSVersion.Version.Build;

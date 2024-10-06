@@ -567,16 +567,14 @@ Function Edit-SignedWDACConfig {
                 [WDACConfig.Logger]::Write('Supplemental policy processing and deployment')
 
                 [WDACConfig.Logger]::Write('Converting the policy to a Supplemental policy type and resetting its ID')
-                [System.String]$SuppPolicyID = Set-CIPolicyIdInfo -FilePath $SuppPolicyPath -PolicyName "$SuppPolicyName - $(Get-Date -Format 'MM-dd-yyyy')" -ResetPolicyID -BasePolicyToSupplementPath $PolicyPath
-                $SuppPolicyID = $SuppPolicyID.Substring(11)
+                [System.String]$SuppPolicyID = [WDACConfig.SetCiPolicyInfo]::Set($SuppPolicyPath, $true, "$SuppPolicyName - $(Get-Date -Format 'MM-dd-yyyy')", $null, $PolicyPath)
 
                 [WDACConfig.Logger]::Write('Adding signer rule to the Supplemental policy')
                 Add-SignerRule -FilePath $SuppPolicyPath -CertificatePath $CertPath -Update -User -Kernel
 
                 [WDACConfig.CiRuleOptions]::Set($SuppPolicyPath, [WDACConfig.CiRuleOptions+PolicyTemplate]::Supplemental, $null, $null, $null, $null, $null, $null, $null, $null, $null)
 
-                [WDACConfig.Logger]::Write('Setting the Supplemental policy version to 1.0.0.0')
-                Set-CIPolicyVersion -FilePath $SuppPolicyPath -Version '1.0.0.0'
+                [WDACConfig.SetCiPolicyInfo]::Set($SuppPolicyPath, ([version]'1.0.0.0'))
 
                 # Define the path for the final Supplemental policy CIP
                 [System.IO.FileInfo]$SupplementalCIPPath = Join-Path -Path $StagingArea -ChildPath "$SuppPolicyID.cip"
@@ -680,8 +678,7 @@ Function Edit-SignedWDACConfig {
 
                 [WDACConfig.Logger]::Write('Preparing the final merged Supplemental policy for deployment')
                 [WDACConfig.Logger]::Write('Converting the policy to a Supplemental policy type and resetting its ID')
-                [System.String]$SuppPolicyID = Set-CIPolicyIdInfo -FilePath $FinalSupplementalPath -ResetPolicyID -PolicyName "$SuppPolicyName - $(Get-Date -Format 'MM-dd-yyyy')" -BasePolicyToSupplementPath $PolicyPath
-                [System.String]$SuppPolicyID = $SuppPolicyID.Substring(11)
+                [System.String]$SuppPolicyID = [WDACConfig.SetCiPolicyInfo]::Set($FinalSupplementalPath, $true, "$SuppPolicyName - $(Get-Date -Format 'MM-dd-yyyy')", $null, $PolicyPath)
 
                 [WDACConfig.Logger]::Write('Adding signer rules to the Supplemental policy')
                 Add-SignerRule -FilePath $FinalSupplementalPath -CertificatePath $CertPath -Update -User -Kernel
@@ -754,8 +751,8 @@ Function Edit-SignedWDACConfig {
                         Copy-Item -Path 'C:\Windows\schemas\CodeIntegrity\ExamplePolicies\AllowMicrosoft.xml' -Destination $BasePolicyPath -Force
 
                         [WDACConfig.Logger]::Write('Setting the policy name')
-                        Set-CIPolicyIdInfo -FilePath $BasePolicyPath -PolicyName "$Name - $(Get-Date -Format 'MM-dd-yyyy')"
-                       
+                        $null = [WDACConfig.SetCiPolicyInfo]::Set($BasePolicyPath, $null, "$Name - $(Get-Date -Format 'MM-dd-yyyy')", $null, $null)
+
                         [WDACConfig.CiRuleOptions]::Set($BasePolicyPath, [WDACConfig.CiRuleOptions+PolicyTemplate]::Base, $null, $null, $null, $null, $null, $RequireEVSigners, $null, $null, $null)
                     }
                     'SignedAndReputable' {
@@ -767,7 +764,7 @@ Function Edit-SignedWDACConfig {
                         Copy-Item -Path 'C:\Windows\schemas\CodeIntegrity\ExamplePolicies\AllowMicrosoft.xml' -Destination $BasePolicyPath -Force
 
                         [WDACConfig.Logger]::Write('Setting the policy name')
-                        Set-CIPolicyIdInfo -FilePath $BasePolicyPath -PolicyName "$Name - $(Get-Date -Format 'MM-dd-yyyy')"
+                        $null = [WDACConfig.SetCiPolicyInfo]::Set($BasePolicyPath, $null, "$Name - $(Get-Date -Format 'MM-dd-yyyy')", $null, $null)
 
                         [WDACConfig.CiRuleOptions]::Set($BasePolicyPath, [WDACConfig.CiRuleOptions+PolicyTemplate]::BaseISG, $null, $null, $null, $null, $null, $RequireEVSigners, $null, $null, $null)
 
@@ -812,7 +809,7 @@ Function Edit-SignedWDACConfig {
                         }
 
                         [WDACConfig.Logger]::Write('Setting the policy name')
-                        Set-CIPolicyIdInfo -FilePath $BasePolicyPath -PolicyName "$Name - $(Get-Date -Format 'MM-dd-yyyy')"
+                        $null = [WDACConfig.SetCiPolicyInfo]::Set($BasePolicyPath, $null, "$Name - $(Get-Date -Format 'MM-dd-yyyy')", $null, $null)
 
                         [WDACConfig.CiRuleOptions]::Set($BasePolicyPath, [WDACConfig.CiRuleOptions+PolicyTemplate]::Base, $null, $null, $null, $null, $null, $RequireEVSigners, $null, $null, $null)
                     }
@@ -840,8 +837,7 @@ Function Edit-SignedWDACConfig {
                 [WDACConfig.Logger]::Write('Adding signer rules to the base policy')
                 Add-SignerRule -FilePath $BasePolicyPath -CertificatePath $CertPath -Update -User -Kernel -Supplemental
 
-                [WDACConfig.Logger]::Write("Setting the policy version to '$VersionToDeploy' - Previous version was '$CurrentVersion'")
-                Set-CIPolicyVersion -FilePath $BasePolicyPath -Version $VersionToDeploy
+                [WDACConfig.SetCiPolicyInfo]::Set($BasePolicyPath, ([version]$VersionToDeploy))
 
                 [WDACConfig.CiRuleOptions]::Set($BasePolicyPath, $null, $null, @([WDACConfig.CiRuleOptions+PolicyRuleOptions]::EnabledUnsignedSystemIntegrityPolicy), $null, $null, $null, $null, $null, $null, $null)
 

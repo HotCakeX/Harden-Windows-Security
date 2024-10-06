@@ -48,7 +48,7 @@ namespace WDACConfig
 
         // Mapping enum values to custom string representations that match rule options in the policy XML file
         // Since they include colons and spaces, cannot be included in the enum
-        private readonly static Dictionary<string, int> PolicyRuleOptionsActual = new()
+        internal readonly static Dictionary<string, int> PolicyRuleOptionsActual = new()
         {
             { "Enabled:UMCI", (int)PolicyRuleOptions.EnabledUMCI },
             { "Enabled:Boot Menu Protection", (int)PolicyRuleOptions.EnabledBootMenuProtection },
@@ -76,7 +76,7 @@ namespace WDACConfig
         };
 
 
-        private readonly static Dictionary<int, string> PolicyRuleOptionsActualInverted = new()
+        internal readonly static Dictionary<int, string> PolicyRuleOptionsActualInverted = new()
         {
             { (int)PolicyRuleOptions.EnabledUMCI, "Enabled:UMCI" },
             { (int)PolicyRuleOptions.EnabledBootMenuProtection, "Enabled:Boot Menu Protection" },

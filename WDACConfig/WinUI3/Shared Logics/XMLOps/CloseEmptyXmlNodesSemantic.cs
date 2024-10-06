@@ -15,7 +15,7 @@ namespace WDACConfig
         /// <param name="xmlFilePath">The path to the XML file to be processed</param>
 
         /*
-         
+
           For example, it converts this
 
           <SigningScenario Value="12" ID="ID_SIGNINGSCENARIO_WINDOWS" FriendlyName="Auto generated policy on 03-13-2024">

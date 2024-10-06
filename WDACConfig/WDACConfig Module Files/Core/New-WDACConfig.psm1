@@ -84,22 +84,22 @@ Function New-WDACConfig {
                 Return
             }
 
-            if ($Deploy) {               
+            if ($Deploy) {
                 [WDACConfig.BasePolicyCreator]::DeployDriversBlockRules($StagingArea)
                 return
             }
             else {
                 [System.String]$Name = 'Microsoft Recommended Driver Block Rules'
-            
+
                 # Download the markdown page from GitHub containing the latest Microsoft recommended driver block rules
-                [System.String]$MSFTDriverBlockRulesAsString = (Invoke-WebRequest -Uri 'https://raw.githubusercontent.com/MicrosoftDocs/windows-itpro-docs/public/windows/security/application-security/application-control/windows-defender-application-control/design/microsoft-recommended-driver-block-rules.md').Content
+                [System.String]$MSFTDriverBlockRulesAsString = (Invoke-WebRequest -Uri [WDACConfig.GlobalVars]::MSFTRecommendedDriverBlockRulesURL).Content
 
                 $CurrentStep++
                 Write-Progress -Id 1 -Activity "Removing the 'Allow all rules' from the policy" -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
                 # Load the Driver Block Rules as XML into a variable after extracting them from the markdown string
                 [System.Xml.XmlDocument]$DriverBlockRulesXML = ($MSFTDriverBlockRulesAsString -replace "(?s).*``````xml(.*)``````.*", '$1').Trim()
-               
+
                 [System.IO.FileInfo]$XMLPath = Join-Path -Path $StagingArea -ChildPath "$Name.xml"
 
                 # Save the modified XML content to a file
@@ -149,10 +149,9 @@ Function New-WDACConfig {
             Write-Progress -Id 3 -Activity 'Configuring the policy settings' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
             [WDACConfig.Logger]::Write('Resetting the policy ID and assigning policy name')
-            $null = Set-CIPolicyIdInfo -FilePath $FinalPolicyPath -PolicyName "$Name - $(Get-Date -Format 'MM-dd-yyyy')" -ResetPolicyID
+            $null = [WDACConfig.SetCiPolicyInfo]::Set($FinalPolicyPath, $true, "$Name - $(Get-Date -Format 'MM-dd-yyyy')", $null, $null)
 
-            [WDACConfig.Logger]::Write('Setting policy version to 1.0.0.0')
-            Set-CIPolicyVersion -FilePath $FinalPolicyPath -Version '1.0.0.0'
+            [WDACConfig.SetCiPolicyInfo]::Set($FinalPolicyPath, ([version]'1.0.0.0'))
 
             [WDACConfig.CiRuleOptions]::Set($FinalPolicyPath, [WDACConfig.CiRuleOptions+PolicyTemplate]::Base, $null, $null, $null, $Audit, $null, $RequireEVSigners, $EnableScriptEnforcement, $TestMode , $null)
 
@@ -213,11 +212,10 @@ Function New-WDACConfig {
             Write-Progress -Id 7 -Activity 'Configuring policy settings' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
             [WDACConfig.Logger]::Write('Resetting the policy ID and assigning policy name')
-            $null = Set-CIPolicyIdInfo -FilePath $FinalPolicyPath -PolicyName "$Name - $(Get-Date -Format 'MM-dd-yyyy')" -ResetPolicyID
+            $null = [WDACConfig.SetCiPolicyInfo]::Set($FinalPolicyPath, $true, "$Name - $(Get-Date -Format 'MM-dd-yyyy')", $null, $null)
 
-            [WDACConfig.Logger]::Write('Setting the policy version to 1.0.0.0')
-            Set-CIPolicyVersion -FilePath $FinalPolicyPath -Version '1.0.0.0'
-        
+            [WDACConfig.SetCiPolicyInfo]::Set($FinalPolicyPath, ([version]'1.0.0.0'))
+
             [WDACConfig.CiRuleOptions]::Set($FinalPolicyPath, [WDACConfig.CiRuleOptions+PolicyTemplate]::Base, $null, $null, $null, $Audit, $null, $RequireEVSigners, $EnableScriptEnforcement, $TestMode, $null)
 
             if ($Deploy) {
@@ -261,7 +259,7 @@ Function New-WDACConfig {
                 [WDACConfig.CiRuleOptions]::Set($FinalPolicyPath, $null, @([WDACConfig.CiRuleOptions+PolicyRuleOptions]::EnabledUpdatePolicyNoReboot), @([WDACConfig.CiRuleOptions+PolicyRuleOptions]::EnabledAuditMode), $null, $null, $null, $null, $null, $null, $null)
 
                 [WDACConfig.Logger]::Write('Assigning policy name and resetting policy ID')
-                $null = Set-CIPolicyIdInfo -ResetPolicyID -FilePath $FinalPolicyPath -PolicyName $Name
+                $null = [WDACConfig.SetCiPolicyInfo]::Set($FinalPolicyPath, $true, $Name, $null, $null)
 
                 if ($Deploy) {
 
@@ -320,10 +318,9 @@ Function New-WDACConfig {
             Write-Progress -Id 6 -Activity 'Configuring the policy settings' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
             [WDACConfig.Logger]::Write('Resetting the policy ID and assigning policy name')
-            $null = Set-CIPolicyIdInfo -FilePath $FinalPolicyPath -ResetPolicyID -PolicyName "$Name - $(Get-Date -Format 'MM-dd-yyyy')"
+            $null = [WDACConfig.SetCiPolicyInfo]::Set($FinalPolicyPath, $true, "$Name - $(Get-Date -Format 'MM-dd-yyyy')", $null, $null)
 
-            [WDACConfig.Logger]::Write('Setting the policy version to 1.0.0.0')
-            Set-CIPolicyVersion -FilePath $FinalPolicyPath -Version '1.0.0.0'
+            [WDACConfig.SetCiPolicyInfo]::Set($FinalPolicyPath, ([version]'1.0.0.0'))
 
             if ($Deploy) {
 
@@ -349,7 +346,7 @@ Function New-WDACConfig {
 
             Write-Progress -Id 6 -Activity 'Complete.' -Completed
         }
-        
+
         if (-NOT $SkipVersionCheck) { Update-WDACConfigPSModule -InvocationStatement $MyInvocation.Statement }
     }
 

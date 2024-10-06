@@ -149,7 +149,7 @@ Make sure to use Surface products that support [Device Firmware Configuration In
 
 * Business class Surface devices have dedicated TPM chips.
 
-* Check out [this article](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Device-Guard-and-Virtualization-Based-Security-in-Windows#device-protection-in-windows-security-gives-you-one-of-these-4-hardware-scores) about Secured-Core specifications.
+* Check out [the Device Guard category](https://github.com/HotCakeX/Harden-Windows-Security?tab=readme-ov-file#device-guard) about Secured-Core specifications.
 
 * Pluton security chip is **not** a requirement for Secured-Core certification.
 

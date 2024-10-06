@@ -230,7 +230,7 @@ UEFI locked security measures are rooted in Proof of Physical Presence and they 
 
 The only way to disable UEFI locked security measures is to have physical access to the computer, reboot and access the UEFI settings, supply the credentials to access the UEFI, turn off Secure Boot, reboot the system and then you will be able to disable those security measures with Administrator privileges.
 
-* [Read More](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Device-Guard-and-Virtualization-Based-Security-in-Windows)
+* [Read More](https://github.com/HotCakeX/Harden-Windows-Security?tab=readme-ov-file#device-guard)
 
 <br>
 

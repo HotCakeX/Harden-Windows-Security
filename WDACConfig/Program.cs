@@ -6,7 +6,7 @@ namespace WDACConfig
     {
         public static void Main()
         {
-           
+
         }
     }
 }

@@ -59,16 +59,16 @@
                            Header="Policy Rule Options"
                            HeaderIcon="{ui:FontIcon Glyph=&#xE71D;}">
 
-                    <controls:WrapPanel Orientation="Horizontal">
+                    <controls:WrapPanel Orientation="Horizontal" HorizontalSpacing="15" VerticalSpacing="10">
 
                         <Button x:Name="Add" Content="Add" 
-            Style="{StaticResource AccentButtonStyle}" Margin="0,0,15,0" />
+            Style="{StaticResource AccentButtonStyle}" />
 
                         <Button x:Name="Remove" Content="Remove" 
-Style="{StaticResource AccentButtonStyle}" Margin="0,0,15,0" />
+Style="{StaticResource AccentButtonStyle}" />
 
                         <Button x:Name="ResetSelections" Content="Reset Selections" 
-Style="{StaticResource AccentButtonStyle}" Margin="0,0,15,0" />
+Style="{StaticResource AccentButtonStyle}" />
 
                         <!-- Select All button to select all checkboxes -->
                         <Button x:Name="SelectAll" Content="Select All" 

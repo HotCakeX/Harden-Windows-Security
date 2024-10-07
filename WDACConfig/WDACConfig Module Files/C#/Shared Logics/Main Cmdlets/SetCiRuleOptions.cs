@@ -396,14 +396,14 @@ namespace WDACConfig
             {
                 _ = PolicyRuleOptionsActualInverted.TryGetValue(option, out string? parsed);
 
-                Console.WriteLine($"Adding Rule Option: {parsed}");
+                Logger.Write($"Adding Rule Option: {parsed}");
             }
 
             foreach (var option in toRemove)
             {
                 _ = PolicyRuleOptionsActualInverted.TryGetValue(option, out string? parsed);
 
-                Console.WriteLine($"Removing Rule Option: {parsed}");
+                Logger.Write($"Removing Rule Option: {parsed}");
             }
             #endregion
 

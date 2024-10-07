@@ -71,105 +71,6 @@ Function New-WDACConfig {
         # Define the variables in the function scope for the dynamic parameters
         New-Variable -Name 'LogSize' -Value $PSBoundParameters['LogSize'] -Force
 
-        Function Get-DriverBlockRules {
-            <#
-            .SYNOPSIS
-                Gets the latest Microsoft Recommended Driver Block rules
-                1) can deploy them
-                2) set them to be auto-updated via task scheduler
-                3) create XML file with the rules and remove the allow all rules from the policy
-            #>
-            if ($AutoUpdate) {
-                [WDACConfig.BasePolicyCreator]::SetAutoUpdateDriverBlockRules()
-                Return
-            }
-
-            if ($Deploy) {
-                [WDACConfig.BasePolicyCreator]::DeployDriversBlockRules($StagingArea)
-                return
-            }
-            else {
-                [System.String]$Name = 'Microsoft Recommended Driver Block Rules'
-
-                # Download the markdown page from GitHub containing the latest Microsoft recommended driver block rules
-                [System.String]$MSFTDriverBlockRulesAsString = (Invoke-WebRequest -Uri [WDACConfig.GlobalVars]::MSFTRecommendedDriverBlockRulesURL).Content
-
-                $CurrentStep++
-                Write-Progress -Id 1 -Activity "Removing the 'Allow all rules' from the policy" -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
-
-                # Load the Driver Block Rules as XML into a variable after extracting them from the markdown string
-                [System.Xml.XmlDocument]$DriverBlockRulesXML = ($MSFTDriverBlockRulesAsString -replace "(?s).*``````xml(.*)``````.*", '$1').Trim()
-
-                [System.IO.FileInfo]$XMLPath = Join-Path -Path $StagingArea -ChildPath "$Name.xml"
-
-                # Save the modified XML content to a file
-                $DriverBlockRulesXML.Save($XMLPath)
-
-                $CurrentStep++
-                Write-Progress -Id 1 -Activity 'Configuring the policy settings' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
-                [WDACConfig.CiRuleOptions]::Set($XMLPath, $null, $null, @([WDACConfig.CiRuleOptions+PolicyRuleOptions]::EnabledAuditMode), $null, $null, $null, $null, $null, $null, $null)
-
-                [WDACConfig.Logger]::Write("Displaying extra info about the $Name")
-                [WDACConfig.BasePolicyCreator]::DriversBlockListInfoGathering()
-
-                # Copy the result to the User Config directory at the end
-                Copy-Item -Path $XMLPath -Destination ([WDACConfig.GlobalVars]::UserConfigDir) -Force
-
-                Write-FinalOutput -Paths $XMLPath
-            }
-            Write-Progress -Id 1 -Activity 'Complete.' -Completed
-        }
-        Function Build-AllowMSFT {
-            <#
-            .SYNOPSIS
-                Creates a base policy based on the AllowMicrosoft template.
-            .INPUTS
-                None
-            .OUTPUTS
-                System.String
-            #>
-            if ($Audit) { [WDACConfig.EventLogUtility]::SetLogSize($LogSize ?? 0) }
-            [System.String]$Name = $Audit ? 'AllowMicrosoftAudit' : 'AllowMicrosoft'
-
-            # The total number of the main steps for the progress bar to render
-            [System.UInt16]$TotalSteps = $Deploy ? 3 : 2
-            [System.UInt16]$CurrentStep = 0
-
-            [System.IO.FileInfo]$FinalPolicyPath = Join-Path -Path $StagingArea -ChildPath "$Name.xml"
-
-            $CurrentStep++
-            Write-Progress -Id 3 -Activity 'Getting the recommended block rules' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
-
-            Get-BlockRules
-
-            [WDACConfig.Logger]::Write('Copying the AllowMicrosoft.xml from Windows directory to the Staging Area')
-            Copy-Item -Path 'C:\Windows\schemas\CodeIntegrity\ExamplePolicies\AllowMicrosoft.xml' -Destination $FinalPolicyPath -Force
-
-            $CurrentStep++
-            Write-Progress -Id 3 -Activity 'Configuring the policy settings' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
-
-            [WDACConfig.Logger]::Write('Resetting the policy ID and assigning policy name')
-            $null = [WDACConfig.SetCiPolicyInfo]::Set($FinalPolicyPath, $true, "$Name - $(Get-Date -Format 'MM-dd-yyyy')", $null, $null)
-
-            [WDACConfig.SetCiPolicyInfo]::Set($FinalPolicyPath, ([version]'1.0.0.0'))
-
-            [WDACConfig.CiRuleOptions]::Set($FinalPolicyPath, [WDACConfig.CiRuleOptions+PolicyTemplate]::Base, $null, $null, $null, $Audit, $null, $RequireEVSigners, $EnableScriptEnforcement, $TestMode , $null)
-
-            if ($Deploy) {
-                $CurrentStep++
-                Write-Progress -Id 3 -Activity 'Creating CIP file' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
-
-                [WDACConfig.Logger]::Write('Converting the policy file to .CIP binary')
-                [System.IO.FileInfo]$CIPPath = ConvertFrom-CIPolicy -XmlFilePath $FinalPolicyPath -BinaryFilePath (Join-Path -Path $StagingArea -ChildPath "$Name.cip")
-
-                [WDACConfig.Logger]::Write("Deploying the $Name policy")
-                [WDACConfig.CiToolHelper]::UpdatePolicy($CIPPath)
-            }
-            Copy-Item -Path $FinalPolicyPath -Destination ([WDACConfig.GlobalVars]::UserConfigDir) -Force
-            Write-FinalOutput -Paths $FinalPolicyPath
-
-            Write-Progress -Id 3 -Activity 'Complete' -Completed
-        }
         Function Build-DefaultWindows {
             <#
             .SYNOPSIS
@@ -189,7 +90,7 @@ Function New-WDACConfig {
             $CurrentStep++
             Write-Progress -Id 7 -Activity 'Getting the recommended block rules' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
-            Get-BlockRules
+            [WDACConfig.BasePolicyCreator]::GetBlockRules($StagingArea, $Deploy)
 
             [System.IO.FileInfo]$FinalPolicyPath = Join-Path -Path $StagingArea -ChildPath "$Name.xml"
 
@@ -225,7 +126,6 @@ Function New-WDACConfig {
                 [WDACConfig.Logger]::Write('Converting the policy file to .CIP binary')
                 [System.IO.FileInfo]$CIPPath = ConvertFrom-CIPolicy -XmlFilePath $FinalPolicyPath -BinaryFilePath (Join-Path -Path $StagingArea -ChildPath "$Name.cip")
 
-                [WDACConfig.Logger]::Write('Deploying the policy')
                 [WDACConfig.CiToolHelper]::UpdatePolicy($CIPPath)
             }
 
@@ -234,117 +134,6 @@ Function New-WDACConfig {
             Write-FinalOutput -Paths $FinalPolicyPath
 
             Write-Progress -Id 7 -Activity 'Complete.' -Completed
-        }
-        Function Get-BlockRules {
-            <#
-            .SYNOPSIS
-                Gets the latest Microsoft Recommended block rules for User Mode files, removes the audit mode policy rule option and sets HVCI to strict
-                It generates a XML file compliant with CI Policies Schema.
-            .OUTPUTS
-                System.IO.FileInfo
-            #>
-            Begin {
-                [System.String]$Name = 'Microsoft Windows Recommended User Mode BlockList'
-                [System.IO.FileInfo]$FinalPolicyPath = Join-Path -Path $StagingArea -ChildPath "$Name.xml"
-            }
-            Process {
-                [WDACConfig.Logger]::Write("Getting the latest $Name from the official Microsoft GitHub repository")
-                [System.String]$MSFTRecommendedBlockRulesAsString = (Invoke-WebRequest -Uri ([WDACConfig.GlobalVars]::MSFTRecommendedBlockRulesURL) -ProgressAction SilentlyContinue).Content
-
-                # Load the Block Rules into a variable after extracting them from the markdown string
-                [System.String]$XMLContent = ($MSFTRecommendedBlockRulesAsString -replace "(?s).*``````xml(.*)``````.*", '$1').Trim()
-
-                Set-Content -Value $XMLContent -LiteralPath $FinalPolicyPath -Force
-
-                [WDACConfig.CiRuleOptions]::Set($FinalPolicyPath, $null, @([WDACConfig.CiRuleOptions+PolicyRuleOptions]::EnabledUpdatePolicyNoReboot), @([WDACConfig.CiRuleOptions+PolicyRuleOptions]::EnabledAuditMode), $null, $null, $null, $null, $null, $null, $null)
-
-                [WDACConfig.Logger]::Write('Assigning policy name and resetting policy ID')
-                $null = [WDACConfig.SetCiPolicyInfo]::Set($FinalPolicyPath, $true, $Name, $null, $null)
-
-                if ($Deploy) {
-
-                    [WDACConfig.Logger]::Write("Checking if the $Name policy is already deployed")
-                    [System.String]$CurrentlyDeployedBlockRulesGUID = ([WDACConfig.CiToolHelper]::GetPolicies($false, $true, $false) | Where-Object -FilterScript { $_.FriendlyName -eq $Name }).PolicyID
-
-                    if (-NOT ([System.String]::IsNullOrWhiteSpace($CurrentlyDeployedBlockRulesGUID))) {
-                        [WDACConfig.Logger]::Write("$Name policy is already deployed, updating it using the same GUID.")
-                        [WDACConfig.PolicyEditor]::EditGUIDs($CurrentlyDeployedBlockRulesGUID, $FinalPolicyPath)
-                    }
-
-                    [System.IO.FileInfo]$CIPPath = ConvertFrom-CIPolicy -XmlFilePath $FinalPolicyPath -BinaryFilePath (Join-Path -Path $StagingArea -ChildPath "$Name.cip")
-
-                    [WDACConfig.Logger]::Write("Deploying the $Name policy")
-                    [WDACConfig.CiToolHelper]::UpdatePolicy($CIPPath)
-                }
-                else {
-                    Copy-Item -Path $FinalPolicyPath -Destination ([WDACConfig.GlobalVars]::UserConfigDir) -Force
-                    Write-FinalOutput -Paths $FinalPolicyPath
-                }
-            }
-        }
-        Function Build-SignedAndReputable {
-            <#
-            .SYNOPSIS
-                Creates SignedAndReputable WDAC policy which is based on AllowMicrosoft template policy.
-                It uses ISG to authorize files with good reputation.
-            .INPUTS
-                None
-            .OUTPUTS
-                System.String
-            #>
-            if ($Audit) { [WDACConfig.EventLogUtility]::SetLogSize($LogSize ?? 0) }
-            [System.String]$Name = $Audit ? 'SignedAndReputableAudit' : 'SignedAndReputable'
-
-            # The total number of the main steps for the progress bar to render
-            [System.UInt16]$TotalSteps = $Deploy ? 5 : 3
-            [System.UInt16]$CurrentStep = 0
-
-            [System.IO.FileInfo]$FinalPolicyPath = Join-Path -Path $StagingArea -ChildPath "$Name.xml"
-
-            $CurrentStep++
-            Write-Progress -Id 6 -Activity 'Getting the recommended block rules' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
-
-            Get-BlockRules
-
-            [WDACConfig.Logger]::Write('Copying the AllowMicrosoft.xml from Windows directory to the Staging Area')
-            Copy-Item -Path 'C:\Windows\schemas\CodeIntegrity\ExamplePolicies\AllowMicrosoft.xml' -Destination $FinalPolicyPath -Force
-
-            $CurrentStep++
-            Write-Progress -Id 6 -Activity 'Configuring the policy rule options' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
-
-            [WDACConfig.CiRuleOptions]::Set($FinalPolicyPath, [WDACConfig.CiRuleOptions+PolicyTemplate]::BaseISG, $null, $null, $null, $Audit, $null, $RequireEVSigners, $EnableScriptEnforcement, $TestMode, $null)
-
-            $CurrentStep++
-            Write-Progress -Id 6 -Activity 'Configuring the policy settings' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
-
-            [WDACConfig.Logger]::Write('Resetting the policy ID and assigning policy name')
-            $null = [WDACConfig.SetCiPolicyInfo]::Set($FinalPolicyPath, $true, "$Name - $(Get-Date -Format 'MM-dd-yyyy')", $null, $null)
-
-            [WDACConfig.SetCiPolicyInfo]::Set($FinalPolicyPath, ([version]'1.0.0.0'))
-
-            if ($Deploy) {
-
-                $CurrentStep++
-                Write-Progress -Id 6 -Activity 'Creating the CIP file' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
-
-                [WDACConfig.Logger]::Write('Converting the policy to .CIP binary')
-                [System.IO.FileInfo]$CIPPath = ConvertFrom-CIPolicy -XmlFilePath $FinalPolicyPath -BinaryFilePath (Join-Path -Path $StagingArea -ChildPath "$Name.cip")
-
-                $CurrentStep++
-                Write-Progress -Id 6 -Activity 'Configuring Windows Services' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
-
-                [WDACConfig.Logger]::Write('Configuring required services for ISG authorization')
-                Start-Process -FilePath 'C:\Windows\System32\appidtel.exe' -ArgumentList 'start' -NoNewWindow
-                Start-Process -FilePath 'C:\Windows\System32\sc.exe' -ArgumentList 'config', 'appidsvc', 'start= auto' -NoNewWindow
-
-                [WDACConfig.Logger]::Write('Deploying the policy')
-                [WDACConfig.CiToolHelper]::UpdatePolicy($CIPPath)
-            }
-
-            Copy-Item -Path $FinalPolicyPath -Destination ([WDACConfig.GlobalVars]::UserConfigDir) -Force
-            Write-FinalOutput -Paths $FinalPolicyPath
-
-            Write-Progress -Id 6 -Activity 'Complete.' -Completed
         }
 
         if (-NOT $SkipVersionCheck) { Update-WDACConfigPSModule -InvocationStatement $MyInvocation.Statement }
@@ -356,12 +145,23 @@ Function New-WDACConfig {
                 'PolicyType' {
                     Switch ($PSBoundParameters['PolicyType']) {
                         'DefaultWindows' { Build-DefaultWindows ; break }
-                        'AllowMicrosoft' { Build-AllowMSFT ; break }
-                        'SignedAndReputable' { Build-SignedAndReputable ; break }
+                        'AllowMicrosoft' { [WDACConfig.BasePolicyCreator]::BuildAllowMSFT($StagingArea, $Audit, $LogSize, $Deploy, $RequireEVSigners, $EnableScriptEnforcement, $TestMode) ; break }
+                        'SignedAndReputable' { [WDACConfig.BasePolicyCreator]::BuildSignedAndReputable($StagingArea, $Audit, $LogSize, $Deploy, $RequireEVSigners, $EnableScriptEnforcement, $TestMode) ; break }
                     }
                 }
-                'GetUserModeBlockRules' { Get-BlockRules ; break }
-                'GetDriverBlockRules' { Get-DriverBlockRules ; break }
+                'GetUserModeBlockRules' { [WDACConfig.BasePolicyCreator]::GetBlockRules($StagingArea, $Deploy) ; break }
+                'GetDriverBlockRules' {
+                    if ($AutoUpdate) {
+                        [WDACConfig.BasePolicyCreator]::SetAutoUpdateDriverBlockRules(); break
+                    }
+                    if ($Deploy) {
+                        [WDACConfig.BasePolicyCreator]::DeployDriversBlockRules($StagingArea); break
+                    }
+                    else {
+                        [WDACConfig.BasePolicyCreator]::GetDriversBlockRules($StagingArea); break
+                    }
+                    break
+                }
                 default { Write-Warning -Message 'None of the main parameters were selected.'; break }
             }
         }

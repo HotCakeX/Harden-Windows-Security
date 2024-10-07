@@ -147,7 +147,6 @@ Function New-KernelModeWDACConfig {
                                 [WDACConfig.Logger]::Write('Setting the GUID and time of deployment of the Audit mode policy in the User Configuration file')
                                 $null = [WDACConfig.UserConfiguration]::Set($null, $null, $null, $null, $null, $PolicyID, $null, $null , (Get-Date))
 
-                                [WDACConfig.Logger]::Write('Deploying the Strict Kernel mode policy')
                                 [WDACConfig.CiToolHelper]::UpdatePolicy($FinalAuditCIPPath)
                                 Write-ColorfulTextWDACConfig -Color HotPink -InputText 'Strict Kernel mode policy has been deployed in Audit mode, please restart your system.'
                             }
@@ -233,7 +232,6 @@ Function New-KernelModeWDACConfig {
                                 $CurrentStep++
                                 Write-Progress -Id 26 -Activity 'Deploying the final policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
-                                [WDACConfig.Logger]::Write('Deploying the enforced mode policy with the same ID as the Audit mode policy, effectively overwriting it')
                                 [WDACConfig.CiToolHelper]::UpdatePolicy($FinalEnforcedCIPPath)
                                 Write-ColorfulTextWDACConfig -Color HotPink -InputText 'Strict Kernel mode policy has been deployed in Enforced mode, no restart required.'
 
@@ -287,7 +285,6 @@ Function New-KernelModeWDACConfig {
                                 [WDACConfig.Logger]::Write('Setting the GUID and time of deployment of the Audit mode policy in the User Configuration file')
                                 $null = [WDACConfig.UserConfiguration]::Set($null, $null, $null, $null, $null, $null, $PolicyID, $null , (Get-Date))
 
-                                [WDACConfig.Logger]::Write('Deploying the Strict Kernel mode policy')
                                 [WDACConfig.CiToolHelper]::UpdatePolicy($FinalAuditCIPPath)
                                 Write-ColorfulTextWDACConfig -Color HotPink -InputText 'Strict Kernel mode policy with no flighting root certs has been deployed in Audit mode, please restart your system.'
                             }
@@ -385,7 +382,6 @@ Function New-KernelModeWDACConfig {
                                 $CurrentStep++
                                 Write-Progress -Id 28 -Activity 'Deploying the final policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
-                                [WDACConfig.Logger]::Write('Deploying the enforced mode policy with the same ID as the Audit mode policy, effectively overwriting it')
                                 [WDACConfig.CiToolHelper]::UpdatePolicy($FinalEnforcedCIPPath)
                                 Write-ColorfulTextWDACConfig -Color HotPink -InputText 'Strict Kernel mode policy with no flighting root certs has been deployed in Enforced mode, no restart required.'
 

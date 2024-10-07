@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Management;
 using System.Net.Http;
 using System.Text.Json;
 using System.Text.RegularExpressions;
+using System.Xml;
 
 #nullable enable
-
 
 namespace WDACConfig
 {
@@ -294,6 +295,395 @@ namespace WDACConfig
 
             Logger.Write("Displaying extra info about the $Name");
             DriversBlockListInfoGathering();
+        }
+
+
+        /// <summary>
+        /// Downloads the latest Microsoft Recommended Block rules from Microsoft's GitHub repository
+        /// And creates a valid Code Integrity XML policy file from it.
+        /// </summary>
+        /// <param name="StagingArea">The directory where the XML file will be saved to.</param>
+        public static void GetDriversBlockRules(string StagingArea)
+        {
+            string name = "Microsoft Recommended Driver Block Rules";
+
+            // Download the markdown page from GitHub containing the latest Microsoft recommended driver block rules
+            string msftDriverBlockRulesAsString;
+            using (HttpClient client = new())
+            {
+                msftDriverBlockRulesAsString = client.GetStringAsync(GlobalVars.MSFTRecommendedDriverBlockRulesURL).GetAwaiter().GetResult();
+            }
+
+            // Extracted the XML content from the markdown string will saved in this variable
+            string xmlContent;
+
+            // Regex pattern to capture XML content between ```xml and ```
+            string pattern = @"```xml\s*(.*?)\s*```";
+
+            // Extract the XML content with Regex
+            Match match = Regex.Match(msftDriverBlockRulesAsString, pattern, RegexOptions.Singleline);
+
+            if (match.Success)
+            {
+                // Capture the XML content
+                xmlContent = match.Groups[1].Value;
+            }
+            else
+            {
+                throw new InvalidOperationException("No XML content found on the Microsoft GitHub source.");
+            }
+
+            // Load the XML content into an XmlDocument
+            XmlDocument driverBlockRulesXML = new();
+            driverBlockRulesXML.LoadXml(xmlContent);
+
+            // Fix the elements
+            driverBlockRulesXML = FixMissingElements(driverBlockRulesXML);
+
+            // Generate the path for the XML file
+            string xmlPath = Path.Combine(StagingArea, $"{name}.xml");
+
+            // Save the XML content to a file
+            driverBlockRulesXML.Save(xmlPath);
+
+            CiRuleOptions.Set(filePath: xmlPath, rulesToRemove: [CiRuleOptions.PolicyRuleOptions.EnabledAuditMode]);
+
+            Logger.Write($"Displaying extra info about the {name}");
+            DriversBlockListInfoGathering();
+
+            // The final path where the XML policy file will be located
+            string savePathLocation = Path.Combine(GlobalVars.UserConfigDir, $"{name}.xml");
+
+            // Copy the result to the User Config directory at the end
+            File.Copy(xmlPath, savePathLocation, true);
+
+            Logger.Write($"The policy file was created and saved to {savePathLocation}");
+        }
+
+
+
+        /// <summary>
+        /// Creates a base policy based on the AllowMicrosoft template
+        /// </summary>
+        /// <param name="StagingArea"></param>
+        /// <param name="IsAudit"></param>
+        /// <param name="LogSize"></param>
+        /// <param name="deploy"></param>
+        /// <param name="RequireEVSigners"></param>
+        /// <param name="EnableScriptEnforcement"></param>
+        /// <param name="TestMode"></param>
+        public static void BuildAllowMSFT(string StagingArea, bool IsAudit, ulong? LogSize, bool deploy, bool RequireEVSigners, bool EnableScriptEnforcement, bool TestMode)
+        {
+
+            string policyName;
+
+            if (IsAudit)
+            {
+                EventLogUtility.SetLogSize(LogSize ?? 0);
+
+                policyName = "AllowMicrosoftAudit";
+            }
+            else
+            {
+                policyName = "AllowMicrosoft";
+            }
+
+            string tempPolicyPath = Path.Combine(StagingArea, $"{policyName}.xml");
+
+            string tempPolicyCIPPath = Path.Combine(StagingArea, $"{policyName}.cip");
+
+            string finalPolicyPath = Path.Combine(GlobalVars.UserConfigDir, $"{policyName}.xml");
+
+            GetBlockRules(StagingArea, deploy);
+
+
+            Logger.Write("Copying the AllowMicrosoft.xml from Windows directory to the Staging Area");
+
+            File.Copy(@"C:\Windows\schemas\CodeIntegrity\ExamplePolicies\AllowMicrosoft.xml", tempPolicyPath, true);
+
+
+
+
+            Logger.Write("Resetting the policy ID and assigning policy name");
+            _ = WDACConfig.SetCiPolicyInfo.Set(tempPolicyPath, true, $"{policyName} - {DateTime.Now.ToString("MM-dd-yyyy", CultureInfo.InvariantCulture)}", null, null);
+
+            SetCiPolicyInfo.Set(tempPolicyPath, new Version("1.0.0.0"));
+
+            CiRuleOptions.Set(
+                tempPolicyPath,
+                template: CiRuleOptions.PolicyTemplate.Base,
+                EnableAuditMode: IsAudit,
+                RequireEVSigners: RequireEVSigners,
+                ScriptEnforcement: EnableScriptEnforcement,
+                TestMode: TestMode);
+
+
+            if (deploy)
+            {
+
+                Logger.Write("Converting the policy file to .CIP binary");
+
+                PolicyToCIPConverter.Convert(tempPolicyPath, tempPolicyCIPPath);
+
+                CiToolHelper.UpdatePolicy(tempPolicyCIPPath);
+            }
+            else
+            {
+                File.Copy(tempPolicyPath, finalPolicyPath, true);
+
+            }
+
+
+        }
+
+
+
+        /// <summary>
+        /// Gets the latest Microsoft Recommended block rules for User Mode files, removes the audit mode policy rule option and sets HVCI to strict
+        /// It generates a XML file compliant with CI Policies Schema.
+        /// </summary>
+        /// <param name="StagingArea"></param>
+        public static void GetBlockRules(string StagingArea, bool deploy)
+        {
+
+            string policyName = "Microsoft Windows Recommended User Mode BlockList";
+
+            Logger.Write($"Getting the latest {policyName} from the official Microsoft GitHub repository");
+
+            // Download the markdown page from GitHub containing the latest Microsoft recommended block rules (User Mode)
+            string msftUserModeBlockRulesAsString;
+            using (HttpClient client = new())
+            {
+                msftUserModeBlockRulesAsString = client.GetStringAsync(GlobalVars.MSFTRecommendedBlockRulesURL).GetAwaiter().GetResult();
+            }
+
+            // Extracted the XML content from the markdown string will saved in this variable
+            string xmlContent;
+
+            // Regex pattern to capture XML content between ```xml and ```
+            string pattern = @"```xml\s*(.*?)\s*```";
+
+            // Extract the XML content with Regex
+            Match match = Regex.Match(msftUserModeBlockRulesAsString, pattern, RegexOptions.Singleline);
+
+            if (match.Success)
+            {
+                // Capture the XML content
+                xmlContent = match.Groups[1].Value;
+            }
+            else
+            {
+                throw new InvalidOperationException("No XML content found on the Microsoft GitHub source for Microsoft Recommended User Mode Block Rules.");
+            }
+
+            // Load the XML content into an XmlDocument
+            XmlDocument userModeBlockRulesXML = new();
+            userModeBlockRulesXML.LoadXml(xmlContent);
+
+            // Fix the elements
+            userModeBlockRulesXML = FixMissingElements(userModeBlockRulesXML);
+
+            string tempPolicyPath = Path.Combine(StagingArea, $"{policyName}.xml");
+
+            string tempPolicyCIPPath = Path.Combine(StagingArea, $"{policyName}.cip");
+
+
+            // Save the XML content to a file
+            userModeBlockRulesXML.Save(tempPolicyPath);
+
+
+            CiRuleOptions.Set(filePath: tempPolicyPath, rulesToAdd: [CiRuleOptions.PolicyRuleOptions.EnabledUpdatePolicyNoReboot], rulesToRemove: [CiRuleOptions.PolicyRuleOptions.EnabledAuditMode]);
+
+            Logger.Write("Assigning policy name and resetting policy ID");
+            _ = SetCiPolicyInfo.Set(tempPolicyPath, true, policyName, null, null);
+
+
+            _ = SetCiPolicyInfo.Set(tempPolicyPath, true, policyName, null, null);
+
+
+            string finalPolicyPath = Path.Combine(GlobalVars.UserConfigDir, $"{policyName}.xml");
+
+            if (deploy)
+            {
+
+                Logger.Write($"Checking if the {policyName} policy is already deployed");
+
+                string? CurrentlyDeployedBlockRulesGUID = CiToolHelper.GetPolicies(false, true, false).Where(policy => string.Equals(policy.FriendlyName, policyName, StringComparison.OrdinalIgnoreCase)).Select(policy => policy.PolicyID).ToString();
+
+
+                if (!String.IsNullOrWhiteSpace(CurrentlyDeployedBlockRulesGUID))
+                {
+                    Logger.Write($"{policyName} policy is already deployed, updating it using the same GUID.");
+                    PolicyEditor.EditGuids(CurrentlyDeployedBlockRulesGUID, new FileInfo(tempPolicyPath));
+                }
+
+
+                PolicyToCIPConverter.Convert(tempPolicyPath, tempPolicyCIPPath);
+
+                CiToolHelper.UpdatePolicy(tempPolicyCIPPath);
+
+            }
+            else
+            {
+                File.Copy(tempPolicyPath, finalPolicyPath, true);
+            }
+
+        }
+
+
+
+        /// <summary>
+        /// Creates SignedAndReputable WDAC policy which is based on AllowMicrosoft template policy.
+        /// It uses ISG to authorize files with good reputation.
+        /// </summary>
+        /// <param name="StagingArea"></param>
+        /// <param name="IsAudit"></param>
+        /// <param name="LogSize"></param>
+        /// <param name="deploy"></param>
+        /// <param name="RequireEVSigners"></param>
+        /// <param name="EnableScriptEnforcement"></param>
+        /// <param name="TestMode"></param>
+        public static void BuildSignedAndReputable(string StagingArea, bool IsAudit, ulong? LogSize, bool deploy, bool RequireEVSigners, bool EnableScriptEnforcement, bool TestMode)
+        {
+
+
+            string policyName;
+
+            if (IsAudit)
+            {
+                EventLogUtility.SetLogSize(LogSize ?? 0);
+
+                policyName = "SignedAndReputableAudit";
+            }
+            else
+            {
+                policyName = "SignedAndReputable";
+            }
+
+            string tempPolicyPath = Path.Combine(StagingArea, $"{policyName}.xml");
+
+            string tempPolicyCIPPath = Path.Combine(StagingArea, $"{policyName}.cip");
+
+            string finalPolicyPath = Path.Combine(GlobalVars.UserConfigDir, $"{policyName}.xml");
+
+            GetBlockRules(StagingArea, deploy);
+
+
+            Logger.Write("Copying the AllowMicrosoft.xml from Windows directory to the Staging Area");
+
+            File.Copy(@"C:\Windows\schemas\CodeIntegrity\ExamplePolicies\AllowMicrosoft.xml", tempPolicyPath, true);
+
+
+            CiRuleOptions.Set(
+tempPolicyPath,
+template: CiRuleOptions.PolicyTemplate.BaseISG,
+EnableAuditMode: IsAudit,
+RequireEVSigners: RequireEVSigners,
+ScriptEnforcement: EnableScriptEnforcement,
+TestMode: TestMode);
+
+
+
+            Logger.Write("Resetting the policy ID and assigning policy name");
+
+            _ = SetCiPolicyInfo.Set(tempPolicyPath, true, $"{policyName} - {DateTime.Now.ToString("MM-dd-yyyy", CultureInfo.InvariantCulture)}", null, null);
+
+            SetCiPolicyInfo.Set(tempPolicyPath, new Version("1.0.0.0"));
+
+
+
+            if (deploy)
+            {
+
+                Logger.Write("Converting the policy file to .CIP binary");
+
+                PolicyToCIPConverter.Convert(tempPolicyPath, tempPolicyCIPPath);
+
+                CiToolHelper.UpdatePolicy(tempPolicyCIPPath);
+            }
+            else
+            {
+                File.Copy(tempPolicyPath, finalPolicyPath, true);
+
+            }
+
+
+        }
+
+
+
+        /// <summary>
+        /// Make sure PolicyType attribute, BasePolicyID node and PolicyID nodes exist and remove PolicyTypeID node if it exists
+        /// </summary>
+        /// <param name="XML"> The XML document to modify, the modified XML document will be returned at the end </param>
+        /// <returns></returns>
+        /// <exception cref="InvalidOperationException"></exception>
+        private static XmlDocument FixMissingElements(XmlDocument XML)
+        {
+
+            // Create namespace manager and add the default namespace with a prefix
+            XmlNamespaceManager namespaceManager = new(XML.NameTable);
+            namespaceManager.AddNamespace("ns", "urn:schemas-microsoft-com:sipolicy");
+
+            // Get SiPolicy node
+            XmlNode siPolicyNode = XML.SelectSingleNode("ns:SiPolicy", namespaceManager)
+                ?? throw new InvalidOperationException("Invalid XML structure, SiPolicy node not found");
+
+            string? policyType = siPolicyNode.Attributes?["PolicyType"]?.Value;
+
+            if (policyType is null)
+            {
+                // Create PolicyType attribute and set it to "Base Policy"
+                XmlAttribute newPolicyTypeAttribute = XML.CreateAttribute("PolicyType");
+                newPolicyTypeAttribute.Value = "Base Policy";
+                _ = siPolicyNode.Attributes!.Append(newPolicyTypeAttribute);
+            }
+
+
+            // Get the nodes
+            XmlNode? policyIDNode = siPolicyNode.SelectSingleNode("ns:PolicyID", namespaceManager);
+            XmlNode? basePolicyIDNode = siPolicyNode.SelectSingleNode("ns:BasePolicyID", namespaceManager);
+            XmlNode? policyTypeIDNode = siPolicyNode.SelectSingleNode("ns:PolicyTypeID", namespaceManager);
+
+            // Generate a new GUID
+            Guid newRandomGUID = System.Guid.NewGuid();
+
+            // Convert it to string
+            string newRandomGUIDString = $"{{{newRandomGUID.ToString().ToUpperInvariant()}}}";
+
+
+            if (basePolicyIDNode is null)
+            {
+                // Create the node
+                XmlElement newBasePolicyIDNode = XML.CreateElement("BasePolicyID", "urn:schemas-microsoft-com:sipolicy");
+
+                // Set its value to match PolicyID because this is a Base policy
+                newBasePolicyIDNode.InnerText = newRandomGUIDString;
+
+                // Append the new BasePolicyID node to the SiPolicy node
+                _ = siPolicyNode.AppendChild(newBasePolicyIDNode);
+            }
+
+
+            if (policyIDNode is null)
+            {
+                // Create the node
+                XmlElement newPolicyIDNode = XML.CreateElement("PolicyID", "urn:schemas-microsoft-com:sipolicy");
+
+                // Set its value to match PolicyID because this is a Base policy
+                newPolicyIDNode.InnerText = newRandomGUIDString;
+
+                // Append the new BasePolicyID node to the SiPolicy node
+                _ = siPolicyNode.AppendChild(newPolicyIDNode);
+            }
+
+            if (policyTypeIDNode is not null)
+            {
+                // Remove the policyTypeIDNode from its parent (siPolicyNode)
+                _ = siPolicyNode.RemoveChild(policyTypeIDNode);
+            }
+
+            return XML;
         }
 
 

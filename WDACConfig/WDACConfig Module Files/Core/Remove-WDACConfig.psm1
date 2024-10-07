@@ -290,7 +290,6 @@ Function Remove-WDACConfig {
                     # Prompt for confirmation before proceeding
                     if ($PSCmdlet.ShouldProcess('This PC', 'Deploying the signed policy')) {
 
-                        [WDACConfig.Logger]::Write('Deploying the newly signed CIP file')
                         [WDACConfig.CiToolHelper]::UpdatePolicy($PolicyCIPPath)
 
                         Write-ColorfulTextWDACConfig -Color Lavender -InputText "Policy with the following details has been Re-signed and Re-deployed in Unsigned mode.`nPlease restart your system."

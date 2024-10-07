@@ -47,7 +47,7 @@ namespace WDACConfig
 
             if (supplementalPolicySignersNodes is not null && supplementalPolicySignersNodes.Count > 0)
             {
-                Console.WriteLine("Removing the SupplementalPolicySigners blocks and corresponding Signers");
+                Logger.Write("Removing the SupplementalPolicySigners blocks and corresponding Signers");
 
                 // Store SignerIds to remove
                 var signerIds = new HashSet<string>();

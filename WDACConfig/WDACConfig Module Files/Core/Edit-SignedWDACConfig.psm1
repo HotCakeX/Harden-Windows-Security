@@ -246,7 +246,6 @@ Function Edit-SignedWDACConfig {
                 $CurrentStep++
                 Write-Progress -Id 15 -Activity 'Deploying the Audit mode policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
-                [WDACConfig.Logger]::Write('Deploying the Audit mode CIP')
                 [WDACConfig.CiToolHelper]::UpdatePolicy($AuditModeCIPPath)
 
                 [WDACConfig.Logger]::Write('The Base policy with the following details has been Re-Signed and Re-Deployed in Audit Mode:')
@@ -600,7 +599,6 @@ Function Edit-SignedWDACConfig {
                 $CurrentStep++
                 Write-Progress -Id 15 -Activity 'Deploying Supplemental policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
-                [WDACConfig.Logger]::Write('Deploying the Supplemental policy')
                 [WDACConfig.CiToolHelper]::UpdatePolicy($SupplementalCIPPath)
 
                 #Endregion Supplemental-policy-processing-and-deployment
@@ -704,7 +702,6 @@ Function Edit-SignedWDACConfig {
                 $CurrentStep++
                 Write-Progress -Id 16 -Activity 'Deploying the final policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
-                [WDACConfig.Logger]::Write('Deploying the Supplemental policy')
                 [WDACConfig.CiToolHelper]::UpdatePolicy($FinalSupplementalCIPPath)
 
                 Write-ColorfulTextWDACConfig -Color TeaGreen -InputText "The Signed Supplemental policy $SuppPolicyName has been deployed on the system, replacing the old ones."
@@ -852,7 +849,6 @@ Function Edit-SignedWDACConfig {
                 $CurrentStep++
                 Write-Progress -Id 17 -Activity 'Deploying the policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
-                [WDACConfig.Logger]::Write('Deploying the new base policy with the same GUID on the system')
                 [WDACConfig.CiToolHelper]::UpdatePolicy($BasePolicyCIPPath)
 
                 $CurrentStep++

@@ -233,6 +233,8 @@ namespace WDACConfig
             // Combine the path to CiTool.exe using the system's special folder path
             string ciToolPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.System), "CiTool.exe");
 
+            Logger.Write($"Deploying the following CIP file: {CipPath}");
+
             // Set up the process start info to run CiTool.exe with necessary arguments
             ProcessStartInfo processStartInfo = new()
             {

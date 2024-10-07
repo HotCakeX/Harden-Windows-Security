@@ -200,7 +200,6 @@ Function Deploy-SignedWDACConfig {
                     # Prompt for confirmation before proceeding
                     if ($PSCmdlet.ShouldProcess('This PC', 'Deploying the signed policy')) {
 
-                        [WDACConfig.Logger]::Write('Deploying the policy')
                         [WDACConfig.CiToolHelper]::UpdatePolicy($PolicyCIPPath)
 
                         Write-ColorfulTextWDACConfig -Color Lavender -InputText 'policy with the following details has been Signed and Deployed in Enforced Mode:'

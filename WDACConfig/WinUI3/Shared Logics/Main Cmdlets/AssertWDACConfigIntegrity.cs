@@ -110,12 +110,12 @@ namespace WDACConfig
 
             if (MismatchedEntries.Count > 0)
             {
-                Console.WriteLine("The following files are different from the ones in the cloud:");
+                Logger.Write("The following files are different from the ones in the cloud:");
                 return MismatchedEntries;
             }
             else
             {
-                Console.WriteLine("All of your local WDACConfig files are genuine.");
+                Logger.Write("All of your local WDACConfig files are genuine.");
                 return null;
             }
         }

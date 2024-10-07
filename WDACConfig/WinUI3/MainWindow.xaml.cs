@@ -56,6 +56,9 @@ namespace WDACConfig
                     case "ConfigurePolicyRuleOptions":
                         _ = ContentFrame.Navigate(typeof(Pages.ConfigurePolicyRuleOptions));
                         break;
+                    case "Logs":
+                        _ = ContentFrame.Navigate(typeof(Pages.Logs));
+                        break;
                     default:
                         break;
                 }

@@ -178,7 +178,6 @@ Function New-SupplementalWDACConfig {
                     $CurrentStep++
                     Write-Progress -Id 19 -Activity 'Deploying the Supplemental policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
-                    [WDACConfig.Logger]::Write('Deploying the Supplemental policy')
                     [WDACConfig.CiToolHelper]::UpdatePolicy($FinalSupplementalCIPPath)
                     Write-ColorfulTextWDACConfig -Color Pink -InputText "A Supplemental policy with the name '$SuppPolicyName' has been deployed."
                 }
@@ -215,7 +214,6 @@ Function New-SupplementalWDACConfig {
                     $CurrentStep++
                     Write-Progress -Id 20 -Activity 'Deploying the Supplemental policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
-                    [WDACConfig.Logger]::Write('Deploying the Supplemental policy')
                     [WDACConfig.CiToolHelper]::UpdatePolicy($FinalSupplementalCIPPath)
                     Write-ColorfulTextWDACConfig -Color Pink -InputText "A Supplemental policy with the name '$SuppPolicyName' has been deployed."
                 }
@@ -289,7 +287,6 @@ Function New-SupplementalWDACConfig {
                             $CurrentStep++
                             Write-Progress -Id 21 -Activity 'Deploying the Supplemental policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
-                            [WDACConfig.Logger]::Write('Deploying the Supplemental policy')
                             [WDACConfig.CiToolHelper]::UpdatePolicy($FinalSupplementalCIPPath)
                             Write-ColorfulTextWDACConfig -Color Pink -InputText "A Supplemental policy with the name '$SuppPolicyName' has been deployed."
                         }
@@ -365,7 +362,6 @@ Function New-SupplementalWDACConfig {
                     $CurrentStep++
                     Write-Progress -Id 33 -Activity 'Deploying the Supplemental policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
-                    [WDACConfig.Logger]::Write('Deploying the Supplemental policy')
                     [WDACConfig.CiToolHelper]::UpdatePolicy($FinalSupplementalCIPPath)
                     Write-ColorfulTextWDACConfig -Color Pink -InputText "A Supplemental policy with the name '$SuppPolicyName' has been deployed."
                 }

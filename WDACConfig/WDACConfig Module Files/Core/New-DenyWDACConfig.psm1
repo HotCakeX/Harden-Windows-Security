@@ -162,7 +162,6 @@ Function New-DenyWDACConfig {
                     $CurrentStep++
                     Write-Progress -Id 22 -Activity 'Deploying the base policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
-                    [WDACConfig.Logger]::Write('Deploying the policy')
                     [WDACConfig.CiToolHelper]::UpdatePolicy($FinalDenyPolicyCIPPath)
 
                     Write-ColorfulTextWDACConfig -Color Pink -InputText "A Deny Base policy with the name '$PolicyName' has been deployed."
@@ -239,7 +238,6 @@ Function New-DenyWDACConfig {
                     $CurrentStep++
                     Write-Progress -Id 23 -Activity 'Deploying the base policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
-                    [WDACConfig.Logger]::Write('Deploying the policy')
                     [WDACConfig.CiToolHelper]::UpdatePolicy($FinalDenyPolicyCIPPath)
 
                     Write-ColorfulTextWDACConfig -Color Pink -InputText "A Deny Base policy with the name '$PolicyName' has been deployed."
@@ -310,7 +308,6 @@ Function New-DenyWDACConfig {
                             $CurrentStep++
                             Write-Progress -Id 24 -Activity 'Deploying the base policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
-                            [WDACConfig.Logger]::Write('Deploying the policy')
                             [WDACConfig.CiToolHelper]::UpdatePolicy($FinalDenyPolicyCIPPath)
 
                             Write-ColorfulTextWDACConfig -Color Pink -InputText "A Deny Base policy with the name '$PolicyName' has been deployed."
@@ -367,7 +364,6 @@ Function New-DenyWDACConfig {
                     $CurrentStep++
                     Write-Progress -Id 29 -Activity 'Deploying the base policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
-                    [WDACConfig.Logger]::Write('Deploying the policy')
                     [WDACConfig.CiToolHelper]::UpdatePolicy($FinalDenyPolicyCIPPath)
 
                     if ($EmbeddedVerboseOutput) {

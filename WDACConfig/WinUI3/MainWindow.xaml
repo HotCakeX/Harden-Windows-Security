@@ -50,6 +50,12 @@
                 </NavigationViewItem.Icon>
             </NavigationViewItem>
 
+            <NavigationViewItem Content="Logs" ToolTipService.ToolTip="View the application logs in real time" Tag="Logs">
+                <NavigationViewItem.Icon>
+                    <FontIcon Glyph="&#xF5A0;" />
+                </NavigationViewItem.Icon>
+            </NavigationViewItem>
+
             <NavigationViewItemHeader Content="Documentation"/>
             <NavigationViewItem Content="GitHub Documentation" Icon="Document" ToolTipService.ToolTip="Get online documentations from GitHub about how to use the application" Tag="GitHubDocumentation" />
             <NavigationViewItem Content="Microsoft Documentation" Icon="Document" ToolTipService.ToolTip="Get online documentations from Microsoft about App Control for Business policies" Tag="MicrosoftDocumentation" />

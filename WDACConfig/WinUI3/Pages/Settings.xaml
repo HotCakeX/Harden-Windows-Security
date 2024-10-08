@@ -69,7 +69,7 @@
 
                                 <!-- Signed Policy Path -->
                                 <controls:WrapPanel Orientation="Horizontal" Margin="0,0,0,10">
-                                    <TextBox Header="Signed Policy Path:" x:Name="SignedPolicyPathTextBox" Width="300" Margin="0,0,10,0" VerticalAlignment="Center"/>
+                                    <TextBox Header="Signed Policy Path:" x:Name="SignedPolicyPathTextBox" MinWidth="300" Margin="0,0,10,0" VerticalAlignment="Center"/>
                                     <CommandBar Background="Transparent" IsOpen="False" DefaultLabelPosition="Right" VerticalAlignment="Center" Margin="0,25,0,0">
                                         <AppBarButton Icon="Save" Label="Save" Click="EditButton_Click" Tag="SignedPolicyPath"/>
                                         <AppBarButton Icon="Clear" Label="Clear" Click="ClearButton_Click" Tag="SignedPolicyPath"/>
@@ -79,7 +79,7 @@
 
                                 <!-- Unsigned Policy Path -->
                                 <controls:WrapPanel Orientation="Horizontal" Margin="0,0,0,10">
-                                    <TextBox Header="Unsigned Policy Path:" x:Name="UnsignedPolicyPathTextBox" Width="300" Margin="0,0,10,0" VerticalAlignment="Center"/>
+                                    <TextBox Header="Unsigned Policy Path:" x:Name="UnsignedPolicyPathTextBox" MinWidth="300" Margin="0,0,10,0" VerticalAlignment="Center"/>
                                     <CommandBar Background="Transparent" IsOpen="False" DefaultLabelPosition="Right" VerticalAlignment="Center" Margin="0,25,0,0">
                                         <AppBarButton Icon="Save" Label="Save" Click="EditButton_Click" Tag="UnsignedPolicyPath"/>
                                         <AppBarButton Icon="Clear" Label="Clear" Click="ClearButton_Click" Tag="UnsignedPolicyPath"/>
@@ -89,7 +89,7 @@
 
                                 <!-- Sign Tool Custom Path -->
                                 <controls:WrapPanel Orientation="Horizontal" Margin="0,0,0,10">
-                                    <TextBox Header="Sign Tool Custom Path:" x:Name="SignToolCustomPathTextBox" Width="300" Margin="0,0,10,0" VerticalAlignment="Center"/>
+                                    <TextBox Header="Sign Tool Custom Path:" x:Name="SignToolCustomPathTextBox" MinWidth="300" Margin="0,0,10,0" VerticalAlignment="Center"/>
                                     <CommandBar Background="Transparent" IsOpen="False" DefaultLabelPosition="Right" VerticalAlignment="Center" Margin="0,25,0,0">
                                         <AppBarButton Icon="Save" Label="Save" Click="EditButton_Click" Tag="SignToolCustomPath"/>
                                         <AppBarButton Icon="Clear" Label="Clear" Click="ClearButton_Click" Tag="SignToolCustomPath"/>
@@ -99,7 +99,7 @@
 
                                 <!-- Certificate Common Name -->
                                 <controls:WrapPanel Orientation="Horizontal" Margin="0,0,0,10">
-                                    <TextBox Header="Certificate Common Name:" x:Name="CertificateCommonNameTextBox" Width="300" Margin="0,0,10,0" VerticalAlignment="Center"/>
+                                    <TextBox Header="Certificate Common Name:" x:Name="CertificateCommonNameTextBox" MinWidth="300" Margin="0,0,10,0" VerticalAlignment="Center"/>
                                     <CommandBar Background="Transparent" IsOpen="False" DefaultLabelPosition="Right" VerticalAlignment="Center" Margin="0,25,0,0">
                                         <AppBarButton Icon="Save" Label="Save" Click="EditButton_Click" Tag="CertificateCommonName"/>
                                         <AppBarButton Icon="Clear" Label="Clear" Click="ClearButton_Click" Tag="CertificateCommonName"/>
@@ -108,7 +108,7 @@
 
                                 <!-- Certificate Path -->
                                 <controls:WrapPanel Orientation="Horizontal" Margin="0,0,0,10">
-                                    <TextBox Header="Certificate Path:" x:Name="CertificatePathTextBox" Width="300" Margin="0,0,10,0" VerticalAlignment="Center"/>
+                                    <TextBox Header="Certificate Path:" x:Name="CertificatePathTextBox" MinWidth="300" Margin="0,0,10,0" VerticalAlignment="Center"/>
                                     <CommandBar Background="Transparent" IsOpen="False" DefaultLabelPosition="Right" VerticalAlignment="Center" Margin="0,25,0,0">
                                         <AppBarButton Icon="Save" Label="Save" Click="EditButton_Click" Tag="CertificatePath"/>
                                         <AppBarButton Icon="Clear" Label="Clear" Click="ClearButton_Click" Tag="CertificatePath"/>
@@ -118,7 +118,7 @@
 
                                 <!-- Strict Kernel Policy GUID -->
                                 <controls:WrapPanel Orientation="Horizontal" Margin="0,0,0,10">
-                                    <TextBox Header="Strict Kernel Policy GUID:" x:Name="StrictKernelPolicyGUIDTextBox" Width="300" Margin="0,0,10,0" VerticalAlignment="Center"/>
+                                    <TextBox Header="Strict Kernel Policy GUID:" x:Name="StrictKernelPolicyGUIDTextBox" MinWidth="300" Margin="0,0,10,0" VerticalAlignment="Center"/>
                                     <CommandBar Background="Transparent" IsOpen="False" DefaultLabelPosition="Right" VerticalAlignment="Center" Margin="0,25,0,0">
                                         <AppBarButton Icon="Save" Label="Save" Click="EditButton_Click" Tag="StrictKernelPolicyGUID"/>
                                         <AppBarButton Icon="Clear" Label="Clear" Click="ClearButton_Click" Tag="StrictKernelPolicyGUID"/>
@@ -127,7 +127,7 @@
 
                                 <!-- Strict Kernel No Flight Roots Policy GUID -->
                                 <controls:WrapPanel Orientation="Horizontal" Margin="0,0,0,10">
-                                    <TextBox Header="Strict Kernel No Flight Roots Policy GUID:" x:Name="StrictKernelNoFlightRootsPolicyGUIDTextBox" Width="300" Margin="0,0,10,0" VerticalAlignment="Center"/>
+                                    <TextBox Header="Strict Kernel No Flight Roots Policy GUID:" x:Name="StrictKernelNoFlightRootsPolicyGUIDTextBox" MinWidth="300" Margin="0,0,10,0" VerticalAlignment="Center"/>
                                     <CommandBar Background="Transparent" IsOpen="False" DefaultLabelPosition="Right" VerticalAlignment="Center" Margin="0,25,0,0">
                                         <AppBarButton Icon="Save" Label="Save" Click="EditButton_Click" Tag="StrictKernelNoFlightRootsPolicyGUID"/>
                                         <AppBarButton Icon="Clear" Label="Clear" Click="ClearButton_Click" Tag="StrictKernelNoFlightRootsPolicyGUID"/>
@@ -136,7 +136,7 @@
 
                                 <!-- Strict Kernel Mode Policy Time of Deployment -->
                                 <controls:WrapPanel Orientation="Horizontal" Margin="0,0,0,10">
-                                    <TextBox Header="Strict Kernel Mode Policy Time of Deployment (YYYY-MM-DD):" x:Name="StrictKernelModePolicyTimeTextBox" Width="300" Margin="0,0,10,0" VerticalAlignment="Center"/>
+                                    <TextBox Header="Strict Kernel Mode Policy Time of Deployment (YYYY-MM-DD):" x:Name="StrictKernelModePolicyTimeTextBox" MinWidth="300" Margin="0,0,10,0" VerticalAlignment="Center"/>
                                     <CommandBar Background="Transparent" IsOpen="False" DefaultLabelPosition="Right" VerticalAlignment="Center" Margin="0,25,0,0">
                                         <AppBarButton Icon="Save" Label="Save" Click="EditButton_Click" Tag="StrictKernelModePolicyTime"/>
                                         <AppBarButton Icon="Clear" Label="Clear" Click="ClearButton_Click" Tag="StrictKernelModePolicyTime"/>
@@ -145,7 +145,7 @@
 
                                 <!-- Last Update Check -->
                                 <controls:WrapPanel Orientation="Horizontal" Margin="0,0,0,10">
-                                    <TextBox Header="Last Update Check (YYYY-MM-DD):" x:Name="LastUpdateCheckTextBox" Width="300" Margin="0,0,10,0" VerticalAlignment="Center"/>
+                                    <TextBox Header="Last Update Check (YYYY-MM-DD):" x:Name="LastUpdateCheckTextBox" MinWidth="300" Margin="0,0,10,0" VerticalAlignment="Center"/>
                                     <CommandBar Background="Transparent" IsOpen="False" DefaultLabelPosition="Right" VerticalAlignment="Center" Margin="0,25,0,0">
                                         <AppBarButton Icon="Save" Label="Save" Click="EditButton_Click" Tag="LastUpdateCheck"/>
                                         <AppBarButton Icon="Clear" Label="Clear" Click="ClearButton_Click" Tag="LastUpdateCheck"/>

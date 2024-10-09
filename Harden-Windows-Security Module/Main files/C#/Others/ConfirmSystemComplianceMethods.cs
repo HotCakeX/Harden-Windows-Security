@@ -435,9 +435,9 @@ namespace HardenWindowsSecurity
                 nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "Require Platform Security Features",
-                    Compliant = (RequirePlatformSecurityFeatures != null &&
+                    Compliant = RequirePlatformSecurityFeatures != null &&
                                 (RequirePlatformSecurityFeatures.Equals("1", StringComparison.OrdinalIgnoreCase) ||
-                                 RequirePlatformSecurityFeatures.Equals("3", StringComparison.OrdinalIgnoreCase))) ? true : false,
+                                 RequirePlatformSecurityFeatures.Equals("3", StringComparison.OrdinalIgnoreCase)),
                     Value = (RequirePlatformSecurityFeatures != null && RequirePlatformSecurityFeatures.Equals("1", StringComparison.OrdinalIgnoreCase)) ?
                             "VBS with Secure Boot" :
                             (RequirePlatformSecurityFeatures != null && RequirePlatformSecurityFeatures.Equals("3", StringComparison.OrdinalIgnoreCase)) ?

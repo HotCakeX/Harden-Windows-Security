@@ -37,12 +37,10 @@
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <CheckForOverflowUnderflow>True</CheckForOverflowUnderflow>
-    <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <CheckForOverflowUnderflow>True</CheckForOverflowUnderflow>
-    <TreatWarningsAsErrors>True</TreatWarningsAsErrors>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -64,8 +62,8 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.PowerShell.SDK" Version="7.5.0-preview.5" />
     <PackageReference Include="Microsoft.Toolkit.Uwp.Notifications" Version="7.1.3" />
-    <PackageReference Include="System.DirectoryServices.AccountManagement" Version="9.0.0-rc.1.24431.7" />
-    <PackageReference Include="System.Management" Version="9.0.0-rc.1.24431.7" />
+    <PackageReference Include="System.DirectoryServices.AccountManagement" Version="9.0.0-rc.2.24473.5" />
+    <PackageReference Include="System.Management" Version="9.0.0-rc.2.24473.5" />
     <PackageReference Include="System.Management.Automation" Version="7.5.0-preview.5" />
   </ItemGroup>
 

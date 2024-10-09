@@ -2,7 +2,7 @@
   # https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_module_manifests
 
   RootModule           = 'Harden-Windows-Security-Module.psm1'
-  ModuleVersion        = '0.6.5'
+  ModuleVersion        = '0.6.6'
   CompatiblePSEditions = @('Core')
   GUID                 = 'afae7a0a-5eff-4a4d-9139-e1702b7ac426'
   Author               = 'Violet Hansen'
@@ -74,7 +74,7 @@ Harden Windows Safely, Securely, only with Official Microsoft methods - 🦄 Int
       Tags         = @('Harden-Windows-Security', 'Harden', 'Windows', 'Security', 'Compliance', 'Validation', 'Baseline', 'Security-Score', 'Benchmark', 'Group-Policy')
       LicenseUri   = 'https://github.com/HotCakeX/.github/blob/main/LICENSE'
       ProjectUri   = 'https://github.com/HotCakeX/Harden-Windows-Security'
-      IconUri      = 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Harden-Windows-Security%20Module/PowerShell%20Gallery%20Icon/Peach%20Small.png'
+      IconUri      = 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/refs/heads/main/Harden-Windows-Security%20Module/ICON-FULLSIZE.png'
       ReleaseNotes = @'
 
 Complete detailed release notes available on GitHub releases: https://github.com/HotCakeX/Harden-Windows-Security/releases/

@@ -3,9 +3,9 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              Style="{StaticResource Page_Style}" Background="Transparent" FontFamily="Trebuchet MS" FontSize="16"
-        ToolTipService.InitialShowDelay="500"
+        ToolTipService.InitialShowDelay="1000"
         ToolTipService.ShowDuration="2147483647"
-        ToolTipService.BetweenShowDelay="0"
+        ToolTipService.BetweenShowDelay="1000"
         ToolTipService.ShowOnDisabled="True">
     <!-- The UserControl's 4 tooltip related elements are necessary for the style to appear properly and they only appear to this User Control/View -->
     <!-- Grid for Online Mode Tab - Removing the white border with negative margins -->
@@ -114,61 +114,61 @@
                                                 <ListView.Background>
                                                     <SolidColorBrush Color="transparent"/>
                                                 </ListView.Background>
-                                                <ListViewItem ToolTipService.InitialShowDelay="500" ToolTip="Microsoft Security Baselines | This is the foundation of all policies and is highly recommended to be selected.">
+                                                <ListViewItem ToolTipService.InitialShowDelay="1000" ToolTip="Microsoft Security Baselines | This is the foundation of all policies and is highly recommended to be selected.">
                                                     <CheckBox x:Name="MicrosoftSecurityBaselines" Content="Microsoft Security Baselines" VerticalContentAlignment="Center" Padding="10,10,40,10" Template="{StaticResource CustomCheckBoxTemplate}" />
                                                 </ListViewItem>
-                                                <ListViewItem ToolTipService.InitialShowDelay="500" ToolTip="MSFT365 Apps Security Baselines | You can use it even if you don't have Office apps installed.">
+                                                <ListViewItem ToolTipService.InitialShowDelay="1000" ToolTip="MSFT365 Apps Security Baselines | You can use it even if you don't have Office apps installed.">
                                                     <CheckBox x:Name="Microsoft365AppsSecurityBaselines" Content="MSFT365 Apps Security Baselines" VerticalContentAlignment="Center" Padding="10,10,40,10" Template="{StaticResource CustomCheckBoxTemplate}"/>
                                                 </ListViewItem>
-                                                <ListViewItem ToolTipService.InitialShowDelay="500" ToolTip="Microsoft Defender | Highly Recommended to apply">
+                                                <ListViewItem ToolTipService.InitialShowDelay="1000" ToolTip="Microsoft Defender | Highly Recommended to apply">
                                                     <CheckBox x:Name="MicrosoftDefender" Content="Microsoft Defender" VerticalContentAlignment="Center" Padding="10,10,40,10" Template="{StaticResource CustomCheckBoxTemplate}"/>
                                                 </ListViewItem>
-                                                <ListViewItem ToolTipService.InitialShowDelay="500" ToolTip="Attack Surface Reduction Rules | Highly Recommended to apply">
+                                                <ListViewItem ToolTipService.InitialShowDelay="1000" ToolTip="Attack Surface Reduction Rules | Highly Recommended to apply">
                                                     <CheckBox x:Name="AttackSurfaceReductionRules" Content="Attack Surface Reduction Rules" VerticalContentAlignment="Center" Padding="10,10,40,10" Template="{StaticResource CustomCheckBoxTemplate}"/>
                                                 </ListViewItem>
-                                                <ListViewItem ToolTipService.InitialShowDelay="500" ToolTip="BitLocker Settings | Highly Recommended to apply">
+                                                <ListViewItem ToolTipService.InitialShowDelay="1000" ToolTip="BitLocker Settings | Highly Recommended to apply">
                                                     <CheckBox x:Name="BitLockerSettings" Content="BitLocker Settings" VerticalContentAlignment="Center" Padding="10,10,40,10" Template="{StaticResource CustomCheckBoxTemplate}"/>
                                                 </ListViewItem>
-                                                <ListViewItem ToolTipService.InitialShowDelay="500" ToolTip="Device Guard | Highly Recommended to apply">
+                                                <ListViewItem ToolTipService.InitialShowDelay="1000" ToolTip="Device Guard | Highly Recommended to apply">
                                                     <CheckBox x:Name="DeviceGuard" Content="Device Guard" VerticalContentAlignment="Center" Padding="10,10,40,10" Template="{StaticResource CustomCheckBoxTemplate}"/>
                                                 </ListViewItem>
-                                                <ListViewItem ToolTipService.InitialShowDelay="500" ToolTip="TLS Security | Highly Recommended to apply">
+                                                <ListViewItem ToolTipService.InitialShowDelay="1000" ToolTip="TLS Security | Highly Recommended to apply">
                                                     <CheckBox x:Name="TLSSecurity" Content="TLS Security" VerticalContentAlignment="Center" Padding="10,10,40,10" Template="{StaticResource CustomCheckBoxTemplate}"/>
                                                 </ListViewItem>
-                                                <ListViewItem ToolTipService.InitialShowDelay="500" ToolTip="Lock Screen">
+                                                <ListViewItem ToolTipService.InitialShowDelay="1000" ToolTip="Lock Screen">
                                                     <CheckBox x:Name="LockScreen" Content="Lock Screen" VerticalContentAlignment="Center" Padding="10,10,40,10" Template="{StaticResource CustomCheckBoxTemplate}"/>
                                                 </ListViewItem>
-                                                <ListViewItem ToolTipService.InitialShowDelay="500" ToolTip="User Account Control | Highly Recommended to apply">
+                                                <ListViewItem ToolTipService.InitialShowDelay="1000" ToolTip="User Account Control | Highly Recommended to apply">
                                                     <CheckBox x:Name="UserAccountControl" Content="User Account Control" VerticalContentAlignment="Center" Padding="10,10,40,10" Template="{StaticResource CustomCheckBoxTemplate}"/>
                                                 </ListViewItem>
-                                                <ListViewItem ToolTipService.InitialShowDelay="500" ToolTip="Windows Firewall Category">
+                                                <ListViewItem ToolTipService.InitialShowDelay="1000" ToolTip="Windows Firewall Category">
                                                     <CheckBox x:Name="WindowsFirewall" Content="Windows Firewall" VerticalContentAlignment="Center" Padding="10,10,40,10" Template="{StaticResource CustomCheckBoxTemplate}"/>
                                                 </ListViewItem>
-                                                <ListViewItem ToolTipService.InitialShowDelay="500" ToolTip="Optional Windows Features Category | Highly Recommended to apply">
+                                                <ListViewItem ToolTipService.InitialShowDelay="1000" ToolTip="Optional Windows Features Category | Highly Recommended to apply">
                                                     <CheckBox x:Name="OptionalWindowsFeatures" Content="Optional Windows Features" VerticalContentAlignment="Center" Padding="10,10,40,10" Template="{StaticResource CustomCheckBoxTemplate}"/>
                                                 </ListViewItem>
-                                                <ListViewItem ToolTipService.InitialShowDelay="500" ToolTip="Windows Networking Category">
+                                                <ListViewItem ToolTipService.InitialShowDelay="1000" ToolTip="Windows Networking Category">
                                                     <CheckBox x:Name="WindowsNetworking" Content="Windows Networking" VerticalContentAlignment="Center" Padding="10,10,40,10" Template="{StaticResource CustomCheckBoxTemplate}"/>
                                                 </ListViewItem>
-                                                <ListViewItem ToolTipService.InitialShowDelay="500" ToolTip="Miscellaneous Configurations | Highly Recommended to apply">
+                                                <ListViewItem ToolTipService.InitialShowDelay="1000" ToolTip="Miscellaneous Configurations | Highly Recommended to apply">
                                                     <CheckBox x:Name="MiscellaneousConfigurations" Content="Miscellaneous Configurations" VerticalContentAlignment="Center" Padding="10,10,40,10" Template="{StaticResource CustomCheckBoxTemplate}"/>
                                                 </ListViewItem>
-                                                <ListViewItem ToolTipService.InitialShowDelay="500" ToolTip="Windows Update Configurations | Highly Recommended to apply">
+                                                <ListViewItem ToolTipService.InitialShowDelay="1000" ToolTip="Windows Update Configurations | Highly Recommended to apply">
                                                     <CheckBox x:Name="WindowsUpdateConfigurations" Content="Windows Update Configurations" VerticalContentAlignment="Center" Padding="10,10,40,10" Template="{StaticResource CustomCheckBoxTemplate}"/>
                                                 </ListViewItem>
-                                                <ListViewItem ToolTipService.InitialShowDelay="500" ToolTip="Edge Browser Configurations">
+                                                <ListViewItem ToolTipService.InitialShowDelay="1000" ToolTip="Edge Browser Configurations">
                                                     <CheckBox x:Name="EdgeBrowserConfigurations" Content="Edge Browser Configurations" VerticalContentAlignment="Center" Padding="10,10,40,10" Template="{StaticResource CustomCheckBoxTemplate}"/>
                                                 </ListViewItem>
-                                                <ListViewItem ToolTipService.InitialShowDelay="500" ToolTip="Certificate Checking Commands">
+                                                <ListViewItem ToolTipService.InitialShowDelay="1000" ToolTip="Certificate Checking Commands">
                                                     <CheckBox x:Name="CertificateCheckingCommands" Content="Certificate Checking Commands" VerticalContentAlignment="Center" Padding="10,10,40,10" Template="{StaticResource CustomCheckBoxTemplate}"/>
                                                 </ListViewItem>
-                                                <ListViewItem ToolTipService.InitialShowDelay="500" ToolTip="Country IP Blocking">
+                                                <ListViewItem ToolTipService.InitialShowDelay="1000" ToolTip="Country IP Blocking">
                                                     <CheckBox x:Name="CountryIPBlocking" Content="Country IP Blocking" VerticalContentAlignment="Center" Padding="10,10,40,10" Template="{StaticResource CustomCheckBoxTemplate}"/>
                                                 </ListViewItem>
-                                                <ListViewItem ToolTipService.InitialShowDelay="500" ToolTip="Downloads Defense Measures">
+                                                <ListViewItem ToolTipService.InitialShowDelay="1000" ToolTip="Downloads Defense Measures">
                                                     <CheckBox x:Name="DownloadsDefenseMeasures" Content="Downloads Defense Measures" VerticalContentAlignment="Center" Padding="10,10,40,10" Template="{StaticResource CustomCheckBoxTemplate}"/>
                                                 </ListViewItem>
-                                                <ListViewItem ToolTipService.InitialShowDelay="500" ToolTip="Non-Admin Commands">
+                                                <ListViewItem ToolTipService.InitialShowDelay="1000" ToolTip="Non-Admin Commands">
                                                     <CheckBox x:Name="NonAdminCommands" Content="Non-Admin Commands" VerticalContentAlignment="Center" Padding="10,10,40,10" Template="{StaticResource CustomCheckBoxTemplate}"/>
                                                 </ListViewItem>
                                             </ListView>
@@ -184,37 +184,43 @@
                                                 <ListView.Background>
                                                     <SolidColorBrush Color="transparent"/>
                                                 </ListView.Background>
-                                                <ListViewItem ToolTipService.InitialShowDelay="500" ToolTip="NOT Recommended to use!">
+                                                <ListViewItem ToolTipService.InitialShowDelay="1000" ToolTip="NOT Recommended to use!">
                                                     <CheckBox x:Name="SecBaselines_NoOverrides" Content="Security Baselines No Overrides" VerticalContentAlignment="Center" Padding="10,10,40,10" Template="{StaticResource CustomCheckBoxTemplate}"/>
                                                 </ListViewItem>
-                                                <ListViewItem ToolTipService.InitialShowDelay="500" ToolTip="Enables Smart App Control">
+                                                <ListViewItem ToolTipService.InitialShowDelay="1000" ToolTip="Enables Smart App Control">
                                                     <CheckBox x:Name="MSFTDefender_SAC" Content="Smart App Control" VerticalContentAlignment="Center" Padding="10,10,40,10" Template="{StaticResource CustomCheckBoxTemplate}"/>
                                                 </ListViewItem>
-                                                <ListViewItem ToolTipService.InitialShowDelay="500" ToolTip="NOT Recommended to use!">
+                                                <ListViewItem ToolTipService.InitialShowDelay="1000" ToolTip="NOT Recommended to use!">
                                                     <CheckBox x:Name="MSFTDefender_NoDiagData" Content="Defender: No Diagnostics Data" VerticalContentAlignment="Center" Padding="10,10,40,10" Template="{StaticResource CustomCheckBoxTemplate}"/>
                                                 </ListViewItem>
-                                                <ListViewItem ToolTipService.InitialShowDelay="500" ToolTip="NOT Recommended to use!">
+                                                <ListViewItem ToolTipService.InitialShowDelay="1000" ToolTip="NOT Recommended to use!">
                                                     <CheckBox x:Name="MSFTDefender_NoScheduledTask" Content="Defender: No Scheduled Task" VerticalContentAlignment="Center" Padding="10,10,40,10" Template="{StaticResource CustomCheckBoxTemplate}"/>
                                                 </ListViewItem>
-                                                <ListViewItem ToolTipService.InitialShowDelay="500" ToolTip="Faster updates for Defender">
+                                                <ListViewItem ToolTipService.InitialShowDelay="1000" ToolTip="Faster updates for Defender">
                                                     <CheckBox x:Name="MSFTDefender_BetaChannels" Content="Defender: Use Beta Update Channels" VerticalContentAlignment="Center" Padding="10,10,40,10" Template="{StaticResource CustomCheckBoxTemplate}"/>
                                                 </ListViewItem>
-                                                <ListViewItem ToolTipService.InitialShowDelay="500" ToolTip="More robust lock screen">
+                                                <ListViewItem ToolTipService.InitialShowDelay="1000" ToolTip="More robust lock screen">
                                                     <CheckBox x:Name="LockScreen_CtrlAltDel" Content="Require CTRL + Alt + Del" VerticalContentAlignment="Center" Padding="10,10,40,10" Template="{StaticResource CustomCheckBoxTemplate}"/>
                                                 </ListViewItem>
-                                                <ListViewItem ToolTipService.InitialShowDelay="500" ToolTip="WILL PREVENT PIN RESET IF YOU FORGET YOUR PIN ON LOCK SCREEN!">
+                                                <ListViewItem ToolTipService.InitialShowDelay="1000" ToolTip="WILL PREVENT PIN RESET IF YOU FORGET YOUR PIN ON LOCK SCREEN!">
                                                     <CheckBox x:Name="LockScreen_NoLastSignedIn" Content="No Last Signed-In" VerticalContentAlignment="Center" Padding="10,10,40,10" Template="{StaticResource CustomCheckBoxTemplate}"/>
                                                 </ListViewItem>
-                                                <ListViewItem ToolTipService.InitialShowDelay="500" ToolTip="WILL PREVENT PIN RESET IF YOU FORGET YOUR PIN ON LOCK SCREEN!">
+                                                <ListViewItem ToolTipService.InitialShowDelay="1000" ToolTip="WILL PREVENT PIN RESET IF YOU FORGET YOUR PIN ON LOCK SCREEN!">
                                                     <CheckBox x:Name="UAC_NoFastSwitching" Content="No Fast User Switching" VerticalContentAlignment="Center" Padding="10,10,40,10" Template="{StaticResource CustomCheckBoxTemplate}"/>
                                                 </ListViewItem>
-                                                <ListViewItem ToolTipService.InitialShowDelay="500" ToolTip="Only Signed programs will be able to run as Admin!">
+                                                <ListViewItem ToolTipService.InitialShowDelay="1000" ToolTip="Only Signed programs will be able to run as Admin!">
                                                     <CheckBox x:Name="UAC_OnlyElevateSigned" Content="Only Elevated Signed" VerticalContentAlignment="Center" Padding="10,10,40,10" Template="{StaticResource CustomCheckBoxTemplate}"/>
                                                 </ListViewItem>
-                                                <ListViewItem ToolTipService.InitialShowDelay="500" ToolTip="Blocks OFAC sanctioned countries' IPs in Firewall.">
+                                                <ListViewItem ToolTipService.InitialShowDelay="1000" ToolTip="Block NTLM completely">
+                                                    <CheckBox x:Name="WindowsNetworking_BlockNTLM" Content="Block NTLM" VerticalContentAlignment="Center" Padding="10,10,40,10" Template="{StaticResource CustomCheckBoxTemplate}"/>
+                                                </ListViewItem>
+                                                <ListViewItem ToolTipService.InitialShowDelay="1000" ToolTip="Recommended if you either don't connect to printers or your printers use modern secure drivers">
+                                                    <CheckBox x:Name="Miscellaneous_WindowsProtectedPrint" Content="Enable Windows Protected Print" VerticalContentAlignment="Center" Padding="10,10,40,10" Template="{StaticResource CustomCheckBoxTemplate}"/>
+                                                </ListViewItem>
+                                                <ListViewItem ToolTipService.InitialShowDelay="1000" ToolTip="Blocks OFAC sanctioned countries' IPs in Firewall.">
                                                     <CheckBox x:Name="CountryIPBlocking_OFAC" Content="Block OFAC Sanctions Countries" VerticalContentAlignment="Center" Padding="10,10,40,10" Template="{StaticResource CustomCheckBoxTemplate}"/>
                                                 </ListViewItem>
-                                                <ListViewItem ToolTipService.InitialShowDelay="500" ToolTip="Recommend to use">
+                                                <ListViewItem ToolTipService.InitialShowDelay="1000" ToolTip="Recommend to use">
                                                     <CheckBox x:Name="DangerousScriptHostsBlocking" Content="Block Dangerous Script Hosts" VerticalContentAlignment="Center" Padding="10,10,40,10" Template="{StaticResource CustomCheckBoxTemplate}"/>
                                                 </ListViewItem>
                                             </ListView>

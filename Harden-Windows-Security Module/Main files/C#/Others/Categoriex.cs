@@ -10,6 +10,7 @@ namespace HardenWindowsSecurity
 {
     public class ComplianceCategoriex : IValidateSetValuesGenerator
     {
+        // Categories for Confirmation / Compliance Checks
         public string[] GetValidValues()
         {
             string[] categoriex =
@@ -23,8 +24,8 @@ namespace HardenWindowsSecurity
             "DeviceGuard", // 9
             "WindowsFirewall", // 19
             "OptionalWindowsFeatures", // 14
-            "WindowsNetworking", // 14
-            "MiscellaneousConfigurations", // 16
+            "WindowsNetworking", // 18
+            "MiscellaneousConfigurations", // 17
             "WindowsUpdateConfigurations", // 15
             "EdgeBrowserConfigurations", // 14
             "NonAdminCommands" // 9
@@ -90,7 +91,7 @@ namespace HardenWindowsSecurity
 
 
         /// <summary>
-        /// Main method of the class to return the final authorized categories
+        /// Main method of the class to return the final authorized categories for Protection
         /// For PowerShell cmdlets and GUI elements that will light up based on different criteria
         /// </summary>
         /// <returns></returns>

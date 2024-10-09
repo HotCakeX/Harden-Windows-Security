@@ -20,7 +20,7 @@ namespace HardenWindowsSecurity
 
             // Get the registry base key and the sub key path
             string baseKey = path.Split('\\')[0];
-            string subKeyPath = path.Substring(baseKey.Length + 1);
+            string subKeyPath = path[(baseKey.Length + 1)..];
 
             RegistryKey baseRegistryKey;
 

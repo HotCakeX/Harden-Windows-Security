@@ -43,7 +43,7 @@ namespace HardenWindowsSecurity
                 { "LockScreen", new string[] { "LockScreen_CtrlAltDel", "LockScreen_NoLastSignedIn" } },
                 { "UserAccountControl", new string[] { "UAC_NoFastSwitching", "UAC_OnlyElevateSigned" } },
                 { "WindowsNetworking", new string[] { "WindowsNetworking_BlockNTLM" } },
-                { "MiscellaneousConfigurations", new string[] { "Miscellaneous_ProtectedPrinting" } },
+                { "MiscellaneousConfigurations", new string[] { "Miscellaneous_WindowsProtectedPrint" } },
                 { "CountryIPBlocking", new string[] { "CountryIPBlocking_OFAC" } },
                 { "DownloadsDefenseMeasures", new string[] { "DangerousScriptHostsBlocking" } }
             };
@@ -96,14 +96,14 @@ namespace HardenWindowsSecurity
         "preset: recommended", new System.Collections.Generic.Dictionary<string, List<string>>
         {
             { "Categories", new List<string> { "MicrosoftSecurityBaselines", "Microsoft365AppsSecurityBaselines", "MicrosoftDefender", "AttackSurfaceReductionRules", "BitLockerSettings", "DeviceGuard", "TLSSecurity", "LockScreen", "UserAccountControl", "WindowsFirewall", "OptionalWindowsFeatures", "WindowsNetworking", "MiscellaneousConfigurations", "WindowsUpdateConfigurations", "EdgeBrowserConfigurations", "DownloadsDefenseMeasures", "NonAdminCommands" } },
-            { "SubCategories", new List<string> { "DangerousScriptHostsBlocking" } }
+            { "SubCategories", new List<string> { "WindowsNetworking_BlockNTLM", "DangerousScriptHostsBlocking" } }
         }
         },
         {
        "preset: complete", new System.Collections.Generic.Dictionary<string, List<string>>
         {
             { "Categories", new List<string> { "MicrosoftSecurityBaselines", "Microsoft365AppsSecurityBaselines", "MicrosoftDefender", "AttackSurfaceReductionRules", "BitLockerSettings", "DeviceGuard", "TLSSecurity", "LockScreen", "UserAccountControl", "WindowsFirewall", "OptionalWindowsFeatures", "WindowsNetworking", "MiscellaneousConfigurations", "WindowsUpdateConfigurations", "EdgeBrowserConfigurations", "CountryIPBlocking", "DownloadsDefenseMeasures", "NonAdminCommands" } },
-            { "SubCategories", new List<string> { "MSFTDefender_SAC", "UAC_OnlyElevateSigned", "CountryIPBlocking_OFAC", "DangerousScriptHostsBlocking" } }
+            { "SubCategories", new List<string> { "MSFTDefender_SAC", "UAC_OnlyElevateSigned", "WindowsNetworking_BlockNTLM", "Miscellaneous_WindowsProtectedPrint", "CountryIPBlocking_OFAC", "DangerousScriptHostsBlocking" } }
         }
         }
         };

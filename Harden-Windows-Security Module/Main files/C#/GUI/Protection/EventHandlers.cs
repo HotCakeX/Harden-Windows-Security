@@ -672,6 +672,12 @@ namespace HardenWindowsSecurity
                                        case "MiscellaneousConfigurations":
                                            {
                                                HardenWindowsSecurity.MiscellaneousConfigurations.Invoke();
+
+                                               if (HardenWindowsSecurity.GUIProtectWinSecurity.SelectedSubCategories.Contains("Miscellaneous_WindowsProtectedPrint"))
+                                               {
+                                                   HardenWindowsSecurity.MiscellaneousConfigurations.MiscellaneousConfigurations_WindowsProtectedPrint();
+                                               }
+
                                                break;
                                            }
                                        case "WindowsUpdateConfigurations":

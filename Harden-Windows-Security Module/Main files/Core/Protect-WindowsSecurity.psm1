@@ -106,6 +106,11 @@ Function Protect-WindowsSecurity {
             Invoke-Command -ScriptBlock $DynParamCreatorSubCategories -ArgumentList 'WindowsNetworking_BlockNTLM'
         }
 
+        if ('MiscellaneousConfigurations' -in $PSBoundParameters['Categories']) {
+            # Create a dynamic parameter for -Miscellaneous_WindowsProtectedPrint
+            Invoke-Command -ScriptBlock $DynParamCreatorSubCategories -ArgumentList 'Miscellaneous_WindowsProtectedPrint'
+        }
+
         if ('CountryIPBlocking' -in $PSBoundParameters['Categories']) {
             # Create a dynamic parameter for -CountryIPBlocking_OFAC
             Invoke-Command -ScriptBlock $DynParamCreatorSubCategories -ArgumentList 'CountryIPBlocking_OFAC'
@@ -310,6 +315,7 @@ Function Protect-WindowsSecurity {
         New-Variable -Name 'UAC_NoFastSwitching' -Value $($PSBoundParameters['UAC_NoFastSwitching']) -Force
         New-Variable -Name 'UAC_OnlyElevateSigned' -Value $($PSBoundParameters['UAC_OnlyElevateSigned']) -Force
         New-Variable -Name 'WindowsNetworking_BlockNTLM' -Value $($PSBoundParameters['WindowsNetworking_BlockNTLM']) -Force
+        New-Variable -Name 'Miscellaneous_WindowsProtectedPrint' -Value $($PSBoundParameters['Miscellaneous_WindowsProtectedPrint']) -Force
         New-Variable -Name 'CountryIPBlocking_OFAC' -Value $($PSBoundParameters['CountryIPBlocking_OFAC']) -Force
         New-Variable -Name 'PathToLGPO' -Value $($PSBoundParameters['PathToLGPO']) -Force
         New-Variable -Name 'PathToMSFT365AppsSecurityBaselines' -Value $($PSBoundParameters['PathToMSFT365AppsSecurityBaselines']) -Force

@@ -322,6 +322,12 @@ Function Invoke-MiscellaneousConfigurations {
     :MiscellaneousLabel switch ($RunUnattended ? 'Yes' : (Select-Option -Options 'Yes', 'No', 'Exit' -Message "`nRun Miscellaneous Configurations category ?")) {
         'Yes' {
             [HardenWindowsSecurity.MiscellaneousConfigurations]::Invoke()
+            :Miscellaneous_WindowsProtectedPrintLabel switch ($RunUnattended ? ($Miscellaneous_WindowsProtectedPrint ? 'Yes' : 'No') : (Select-Option -SubCategory -Options 'Yes', 'No', 'Exit' -Message "`nEnable Windows Protected Print ?" -ExtraMessage 'Read the GitHub Readme!')) {
+                'Yes' {
+                    [HardenWindowsSecurity.MiscellaneousConfigurations]::MiscellaneousConfigurations_WindowsProtectedPrint()
+                } 'No' { break Miscellaneous_WindowsProtectedPrintLabel }
+                'Exit' { break MainSwitchLabel }
+            }
         } 'No' { break MiscellaneousLabel }
         'Exit' { break MainSwitchLabel }
     }

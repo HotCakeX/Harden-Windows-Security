@@ -25,7 +25,7 @@ namespace HardenWindowsSecurity
             "WindowsFirewall", // 19
             "OptionalWindowsFeatures", // 14
             "WindowsNetworking", // 18
-            "MiscellaneousConfigurations", // 16
+            "MiscellaneousConfigurations", // 17
             "WindowsUpdateConfigurations", // 15
             "EdgeBrowserConfigurations", // 14
             "NonAdminCommands" // 9

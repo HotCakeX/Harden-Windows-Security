@@ -99,6 +99,10 @@ Group Policy,WindowsNetworking,HKEY_LOCAL_MACHINE,Software\Policies\Microsoft\Wi
 Group Policy,WindowsNetworking,HKEY_LOCAL_MACHINE,Software\Policies\Microsoft\Windows NT\Printers,DisableHTTPPrinting,Disable HTTP Printing,DWORD,1,false,https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-connectivity?WT.mc_id=Portal-fx#diableprintingoverhttp
 Group Policy,WindowsNetworking,HKEY_LOCAL_MACHINE,Software\Policies\Microsoft\Windows NT\Printers,DisableWebPnPDownload,Disable Web PnP Download,DWORD,1,false,https://learn.microsoft.com/en-us/windows/client-management/mdm/policy-csp-admx-icm#disablewebpnpdownload_1
 Registry Keys,WindowsNetworking,HKEY_LOCAL_MACHINE,SYSTEM\CurrentControlSet\Services\NetBT\Parameters,EnableLMHOSTS,Disable LMHOSTS lookup protocol on all network adapters,DWORD,0,false,
+Group Policy,WindowsNetworking,HKEY_LOCAL_MACHINE,Software\Policies\Microsoft\Windows\LanmanServer,EnableSMBQUIC,Enable SMB Server Over QUIC,DWORD,1,false,
+Group Policy,WindowsNetworking,HKEY_LOCAL_MACHINE,Software\Policies\Microsoft\Windows\LanmanWorkstation,EnableSMBQUIC,Enable SMB Client Over QUIC,DWORD,1,false,
+Group Policy,WindowsNetworking,HKEY_LOCAL_MACHINE,Software\Policies\Microsoft\Windows\LanmanServer,CipherSuiteOrder,SMB Server Cipher Suite Order,MULTI_STRING,"AES_256_GCM,AES_256_CCM,AES_128_GCM,AES_128_CCM",false,
+Group Policy,WindowsNetworking,HKEY_LOCAL_MACHINE,Software\Policies\Microsoft\Windows\LanmanWorkstation,CipherSuiteOrder,SMB Client Cipher Suite Order,MULTI_STRING,"AES_256_GCM,AES_256_CCM,AES_128_GCM,AES_128_CCM",false,
 Group Policy,WindowsNetworking,HKEY_LOCAL_MACHINE,Software\Policies\Microsoft\Windows\LanmanServer,MinSmb2Dialect,Sets the minimum SMB server version,DWORD,785,false,
 Group Policy,WindowsNetworking,HKEY_LOCAL_MACHINE,Software\Policies\Microsoft\Windows\LanmanWorkstation,MinSmb2Dialect,Sets the minimum SMB client version,DWORD,785,false,
 Group Policy,WindowsNetworking,HKEY_LOCAL_MACHINE,Software\Policies\Microsoft\Windows\LanmanWorkstation,BlockNTLM,Blocks NTLM for SMB,DWORD,1,false,

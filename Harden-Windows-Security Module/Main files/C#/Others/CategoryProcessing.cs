@@ -198,6 +198,11 @@ namespace HardenWindowsSecurity
                                 // Handle the case where the DWORD value is returned as a uint
                                 regValueStr = regValue.ToString();
                             }
+                            else if (regValue is string[])
+                            {
+                                // Convert MULTI_STRING (string[]) to a comma-separated string for display
+                                regValueStr = string.Join(",", (string[])regValue);
+                            }
                             else
                             {
                                 // Convert the registry value to a string otherwise
@@ -262,6 +267,11 @@ namespace HardenWindowsSecurity
                                 // Handle the case where the DWORD value is returned as a uint
                                 regValueStr = regValue.ToString();
                             }
+                            else if (regValue is string[])
+                            {
+                                // Convert MULTI_STRING (string[]) to a comma-separated string for display
+                                regValueStr = string.Join(",", (string[])regValue);
+                            }
                             else
                             {
                                 regValueStr = regValue?.ToString();
@@ -319,6 +329,9 @@ namespace HardenWindowsSecurity
             return output;
         }
 
+        private static readonly char[] separator = [','];
+
+
 
         // method to parse the registry value based on its type that is defined in the CSV file
         private static object ParseRegistryValue(string type, string value)
@@ -340,14 +353,19 @@ namespace HardenWindowsSecurity
                         // String values are kept as strings
                         return value;
                     }
-                // Will add more types later if needed, e.g., BINARY, MULTI_STRING etc.
+                case "MULTI_STRING":
+                    {
+                        // MULTI_STRING values are represented as an array of strings, separated by commas in the CSV file
+                        // Split the CSV value by comma and return as a string array
+                        return value.Split(separator, StringSplitOptions.None);
+                    }
+                // Will add more types later if needed, e.g., BINARY
                 default:
                     {
                         throw new ArgumentException($"ParseRegistryValue: Unknown registry value type: {type}");
                     }
             }
         }
-
 
         // method to compare the registry value based on its type that is defined in the CSV file
         private static bool CompareRegistryValues(string type, object regValue, object expectedValue)
@@ -379,7 +397,21 @@ namespace HardenWindowsSecurity
                             // String values are compared as strings using ordinal ignore case
                             return string.Equals(regValue.ToString(), expectedValue.ToString(), StringComparison.OrdinalIgnoreCase);
                         }
-                    // Will add more types later if needed, e.g., BINARY, MULTI_STRING etc.
+                    case "MULTI_STRING":
+                        {
+                            // MULTI_STRING values are arrays of strings
+                            // Return false if either is not a string array
+                            if (regValue is not string[] regValueArray || expectedValue is not string[] expectedValueArray)
+                            {
+                                return false;
+                            }
+
+                            // Compare the arrays by length first, then compare each element using ordinal ignore case
+                            // The order of the MULTI_STRING registry keys will be taken into account when comparing the reg key value against the values defined in the CSV file
+                            return regValueArray.Length == expectedValueArray.Length &&
+                                   regValueArray.SequenceEqual(expectedValueArray, StringComparer.OrdinalIgnoreCase);
+                        }
+                    // Will add more types later if needed, e.g., BINARY
                     default:
                         {
                             throw new ArgumentException($"CompareRegistryValues: Unknown registry value type: {type}");
@@ -393,5 +425,6 @@ namespace HardenWindowsSecurity
             }
             return false;
         }
+
     }
 }

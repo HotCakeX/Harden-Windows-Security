@@ -661,6 +661,12 @@ namespace HardenWindowsSecurity
                                        case "WindowsNetworking":
                                            {
                                                HardenWindowsSecurity.WindowsNetworking.Invoke();
+
+                                               if (HardenWindowsSecurity.GUIProtectWinSecurity.SelectedSubCategories.Contains("WindowsNetworking_BlockNTLM"))
+                                               {
+                                                   HardenWindowsSecurity.WindowsNetworking.WindowsNetworking_BlockNTLM();
+                                               }
+
                                                break;
                                            }
                                        case "MiscellaneousConfigurations":

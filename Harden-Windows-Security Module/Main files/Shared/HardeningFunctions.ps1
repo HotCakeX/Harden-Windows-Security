@@ -307,6 +307,12 @@ Function Invoke-WindowsNetworking {
     :WindowsNetworkingLabel switch ($RunUnattended ? 'Yes' : (Select-Option -Options 'Yes', 'No', 'Exit' -Message "`nRun Windows Networking category ?")) {
         'Yes' {
             [HardenWindowsSecurity.WindowsNetworking]::Invoke()
+            :WindowsNetworking_BlockNTLMLabel switch ($RunUnattended ? ($WindowsNetworking_BlockNTLM ? 'Yes' : 'No') : (Select-Option -SubCategory -Options 'Yes', 'No', 'Exit' -Message "`nBlock NTLM Completely ?" -ExtraMessage 'Read the GitHub Readme!')) {
+                'Yes' {
+                    [HardenWindowsSecurity.WindowsNetworking]::WindowsNetworking_BlockNTLM()
+                } 'No' { break WindowsNetworking_BlockNTLMLabel }
+                'Exit' { break MainSwitchLabel }
+            }
         } 'No' { break WindowsNetworkingLabel }
         'Exit' { break MainSwitchLabel }
     }

@@ -5,7 +5,7 @@
              Style="{StaticResource Page_Style}" Background="Transparent" FontFamily="Trebuchet MS" FontSize="16"
         ToolTipService.InitialShowDelay="500"
         ToolTipService.ShowDuration="2147483647"
-        ToolTipService.BetweenShowDelay="0"
+        ToolTipService.BetweenShowDelay="500"
         ToolTipService.ShowOnDisabled="True">
     <!-- The UserControl's 4 tooltip related elements are necessary for the style to appear properly and they only appear to this User Control/View -->
     <!-- Grid for Online Mode Tab - Removing the white border with negative margins -->
@@ -210,6 +210,12 @@
                                                 </ListViewItem>
                                                 <ListViewItem ToolTipService.InitialShowDelay="500" ToolTip="Only Signed programs will be able to run as Admin!">
                                                     <CheckBox x:Name="UAC_OnlyElevateSigned" Content="Only Elevated Signed" VerticalContentAlignment="Center" Padding="10,10,40,10" Template="{StaticResource CustomCheckBoxTemplate}"/>
+                                                </ListViewItem>
+                                                <ListViewItem ToolTipService.InitialShowDelay="500" ToolTip="Block NTLM completely">
+                                                    <CheckBox x:Name="WindowsNetworking_BlockNTLM" Content="Block NTLM" VerticalContentAlignment="Center" Padding="10,10,40,10" Template="{StaticResource CustomCheckBoxTemplate}"/>
+                                                </ListViewItem>
+                                                <ListViewItem ToolTipService.InitialShowDelay="500" ToolTip="Recommended if you either don't connect to printers or your printers use modern secure drivers">
+                                                    <CheckBox x:Name="Miscellaneous_ProtectedPrinting" Content="Enable Windows Protected Print" VerticalContentAlignment="Center" Padding="10,10,40,10" Template="{StaticResource CustomCheckBoxTemplate}"/>
                                                 </ListViewItem>
                                                 <ListViewItem ToolTipService.InitialShowDelay="500" ToolTip="Blocks OFAC sanctioned countries' IPs in Firewall.">
                                                     <CheckBox x:Name="CountryIPBlocking_OFAC" Content="Block OFAC Sanctions Countries" VerticalContentAlignment="Center" Padding="10,10,40,10" Template="{StaticResource CustomCheckBoxTemplate}"/>

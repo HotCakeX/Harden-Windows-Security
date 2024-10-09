@@ -42,6 +42,8 @@ namespace HardenWindowsSecurity
                 { "MicrosoftDefender", new string[] { "MSFTDefender_SAC", "MSFTDefender_NoDiagData", "MSFTDefender_NoScheduledTask", "MSFTDefender_BetaChannels" } },
                 { "LockScreen", new string[] { "LockScreen_CtrlAltDel", "LockScreen_NoLastSignedIn" } },
                 { "UserAccountControl", new string[] { "UAC_NoFastSwitching", "UAC_OnlyElevateSigned" } },
+                { "WindowsNetworking", new string[] { "WindowsNetworking_BlockNTLM" } },
+                { "MiscellaneousConfigurations", new string[] { "Miscellaneous_ProtectedPrinting" } },
                 { "CountryIPBlocking", new string[] { "CountryIPBlocking_OFAC" } },
                 { "DownloadsDefenseMeasures", new string[] { "DangerousScriptHostsBlocking" } }
             };

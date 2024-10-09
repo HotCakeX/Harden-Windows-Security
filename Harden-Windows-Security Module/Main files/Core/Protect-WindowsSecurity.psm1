@@ -101,6 +101,16 @@ Function Protect-WindowsSecurity {
             Invoke-Command -ScriptBlock $DynParamCreatorSubCategories -ArgumentList 'UAC_OnlyElevateSigned'
         }
 
+        if ('WindowsNetworking' -in $PSBoundParameters['Categories']) {
+            # Create a dynamic parameter for -WindowsNetworking_BlockNTLM
+            Invoke-Command -ScriptBlock $DynParamCreatorSubCategories -ArgumentList 'WindowsNetworking_BlockNTLM'
+        }
+
+        if ('MiscellaneousConfigurations' -in $PSBoundParameters['Categories']) {
+            # Create a dynamic parameter for -Miscellaneous_WindowsProtectedPrint
+            Invoke-Command -ScriptBlock $DynParamCreatorSubCategories -ArgumentList 'Miscellaneous_WindowsProtectedPrint'
+        }
+
         if ('CountryIPBlocking' -in $PSBoundParameters['Categories']) {
             # Create a dynamic parameter for -CountryIPBlocking_OFAC
             Invoke-Command -ScriptBlock $DynParamCreatorSubCategories -ArgumentList 'CountryIPBlocking_OFAC'
@@ -304,6 +314,8 @@ Function Protect-WindowsSecurity {
         New-Variable -Name 'LockScreen_NoLastSignedIn' -Value $($PSBoundParameters['LockScreen_NoLastSignedIn']) -Force
         New-Variable -Name 'UAC_NoFastSwitching' -Value $($PSBoundParameters['UAC_NoFastSwitching']) -Force
         New-Variable -Name 'UAC_OnlyElevateSigned' -Value $($PSBoundParameters['UAC_OnlyElevateSigned']) -Force
+        New-Variable -Name 'WindowsNetworking_BlockNTLM' -Value $($PSBoundParameters['WindowsNetworking_BlockNTLM']) -Force
+        New-Variable -Name 'Miscellaneous_WindowsProtectedPrint' -Value $($PSBoundParameters['Miscellaneous_WindowsProtectedPrint']) -Force
         New-Variable -Name 'CountryIPBlocking_OFAC' -Value $($PSBoundParameters['CountryIPBlocking_OFAC']) -Force
         New-Variable -Name 'PathToLGPO' -Value $($PSBoundParameters['PathToLGPO']) -Force
         New-Variable -Name 'PathToMSFT365AppsSecurityBaselines' -Value $($PSBoundParameters['PathToMSFT365AppsSecurityBaselines']) -Force
@@ -494,6 +506,7 @@ Function Protect-WindowsSecurity {
     LockScreen_NoLastSignedIn -> Will not display the last signed in user at the lock screen
     UAC_NoFastSwitching -> Hide entry points for fast user switching
     UAC_OnlyElevateSigned -> Only elevate signed and validated executables
+    WindowsNetworking_BlockNTLM -> Will block NTLM completely
     CountryIPBlocking_OFAC -> Include the IP ranges of OFAC Sanctioned Countries in the firewall block rules
 
     Each of the switch parameters above will be dynamically generated based on the categories you choose.

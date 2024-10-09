@@ -305,16 +305,18 @@ The path to the 'Microsoft 365 Apps for Enterprise zip'. Make sure it's in the z
 
 |         Parameter Name                  |          Description                        | Required Category |
 |:---------------------------------------:|:-------------------------------------------:|:-----------------:|
-|SecBaselines_NoOverrides | Applies the Microsoft Security Baselines without the optional overrides   | MicrosoftSecurityBaselines |
-|MSFTDefender_SAC | Enables Smart App Control | MicrosoftDefender |
-|MSFTDefender_NoDiagData | Will not enable optional diagnostics data required for Smart App Control (Does not have any effect if Smart App Control is already turned on) | MicrosoftDefender |
-|MSFTDefender_NoScheduledTask | Will not create scheduled task for fast MSFT driver block rules  | MicrosoftDefender |
-|MSFTDefender_BetaChannels | Set Defender Engine and Intelligence update channels to beta | MicrosoftDefender |
-|LockScreen_CtrlAltDel | Require CTRL + ALT + Delete at lock screen | LockScreen |
-|LockScreen_NoLastSignedIn | Will not display the last signed in user at the lock screen | LockScreen |
-|UAC_NoFastSwitching | Hide entry points for fast user switching | UserAccountControl |
-|UAC_OnlyElevateSigned | Only elevate signed and validated executables | UserAccountControl |
-|CountryIPBlocking_OFAC | Include the IP ranges of OFAC Sanctioned Countries in the firewall block rules | CountryIPBlocking |
+| SecBaselines_NoOverrides | Applies the Microsoft Security Baselines without the optional overrides   | MicrosoftSecurityBaselines |
+| MSFTDefender_SAC | Enables Smart App Control | MicrosoftDefender |
+| MSFTDefender_NoDiagData | Will not enable optional diagnostics data required for Smart App Control (Does not have any effect if Smart App Control is already turned on) | MicrosoftDefender |
+| MSFTDefender_NoScheduledTask | Will not create scheduled task for fast MSFT driver block rules  | MicrosoftDefender |
+| MSFTDefender_BetaChannels | Set Defender Engine and Intelligence update channels to beta | MicrosoftDefender |
+| LockScreen_CtrlAltDel | Require CTRL + ALT + Delete at lock screen | LockScreen |
+| LockScreen_NoLastSignedIn | Will not display the last signed in user at the lock screen | LockScreen |
+| UAC_NoFastSwitching | Hide entry points for fast user switching | UserAccountControl |
+| UAC_OnlyElevateSigned | Only elevate signed and validated executables | UserAccountControl |
+| WindowsNetworking_BlockNTLM | Blocks NTLM Completely | WindowsNetworking |
+| Miscellaneous_WindowsProtectedPrint | Enables Windows Protected Print Mode | MiscellaneousConfigurations |
+| CountryIPBlocking_OFAC | Include the IP ranges of OFAC Sanctioned Countries in the firewall block rules | CountryIPBlocking |
 | DangerousScriptHostsBlocking | Deploys the Dangerous Script Hosts Blocking WDAC Policy | DownloadsDefenseMeasures |
 
 <br>

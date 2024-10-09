@@ -18,13 +18,13 @@
                    <Storyboard>
                        <!-- Opacity Animation -->
                        <DoubleAnimation Storyboard.TargetProperty="Opacity"
-                                         Duration="0:0:0.35"
+                                         Duration="0:0:0.1"
                                          From="0"
                                          To="1"
                                          EasingFunction="{StaticResource QuadraticEaseOut}"/>
                        <!-- Y Translation Animation -->
                        <DoubleAnimation Storyboard.TargetProperty="(UIElement.RenderTransform).(TranslateTransform.Y)"
-                                         Duration="0:0:0.3"
+                                         Duration="0:0:0.1"
                                          From="50"
                                          To="0"
                                          DecelerationRatio="0.2"

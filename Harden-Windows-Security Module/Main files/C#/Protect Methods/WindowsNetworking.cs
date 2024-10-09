@@ -8,7 +8,7 @@ using System.Management;
 
 namespace HardenWindowsSecurity
 {
-    public class WindowsNetworking
+    public partial class WindowsNetworking
     {
         /// <summary>
         ///  Runs the Windows Networking Hardening category

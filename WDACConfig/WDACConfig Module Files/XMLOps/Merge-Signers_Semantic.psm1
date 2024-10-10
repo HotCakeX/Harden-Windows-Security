@@ -25,8 +25,6 @@ Function Merge-Signers_Semantic {
         [Parameter(Mandatory = $true)][System.IO.FileInfo]$XmlFilePath
     )
     Begin {
-        . "$([WDACConfig.GlobalVars]::ModuleRootPath)\CoreExt\PSDefaultParameterValues.ps1"
-
         [System.Xml.XmlDocument]$Xml = Get-Content -Path $XmlFilePath
     }
 
@@ -72,7 +70,7 @@ Function Merge-Signers_Semantic {
         $FileRulesValidID_HashSet = [System.Collections.Generic.HashSet[System.String]]@($FileRulesElements.ID)
 
         if ($SignerNodes.Count -eq 0) {
-            [WDACConfig.VerboseLogger]::Write('Merge-Signers: No Signer nodes found in the XML file. Exiting the function.')
+            [WDACConfig.Logger]::Write('Merge-Signers: No Signer nodes found in the XML file. Exiting the function.')
             Return
         }
 
@@ -108,7 +106,7 @@ Function Merge-Signers_Semantic {
                 [System.Int64]$After = $Signer.FileAttribRef.count
 
                 if ($Before -ne $After) {
-                    [WDACConfig.VerboseLogger]::Write("Merge-Signers: Removed $($Before - $After) FileAttribRef elements from Signer with ID $($Signer.ID).")
+                    [WDACConfig.Logger]::Write("Merge-Signers: Removed $($Before - $After) FileAttribRef elements from Signer with ID $($Signer.ID).")
                 }
 
                 # Determine the Signing Scenario based on the AllowedSigners
@@ -145,7 +143,7 @@ Function Merge-Signers_Semantic {
                             [System.Void]$UniqueFilePublisherSigners131[$FilePublisherKey]['Signer'].AppendChild($Xml.ImportNode($FileAttribRef, $true))
                         }
 
-                        [WDACConfig.VerboseLogger]::Write("Merge-Signers: Merged FilePublisher signer for Signing Scenario 131 with IDs: $($UniqueFilePublisherSigners131[$FilePublisherKey].ID) and $($Signer.ID). Their FileAttribRefs are merged.")
+                        [WDACConfig.Logger]::Write("Merge-Signers: Merged FilePublisher signer for Signing Scenario 131 with IDs: $($UniqueFilePublisherSigners131[$FilePublisherKey].ID) and $($Signer.ID). Their FileAttribRefs are merged.")
                     }
                 }
                 # If the signer is part of Signing Scenario 12
@@ -180,7 +178,7 @@ Function Merge-Signers_Semantic {
                             [System.Void]$UniqueFilePublisherSigners12[$FilePublisherKey]['Signer'].AppendChild($Xml.ImportNode($FileAttribRef, $true))
                         }
 
-                        [WDACConfig.VerboseLogger]::Write("Merge-Signers: Merged FilePublisher signer for Signing Scenario 12 with IDs: $($UniqueFilePublisherSigners12[$FilePublisherKey].ID) and $($Signer.ID). Their FileAttribRefs are merged.")
+                        [WDACConfig.Logger]::Write("Merge-Signers: Merged FilePublisher signer for Signing Scenario 12 with IDs: $($UniqueFilePublisherSigners12[$FilePublisherKey].ID) and $($Signer.ID). Their FileAttribRefs are merged.")
                     }
                 }
             }
@@ -211,7 +209,7 @@ Function Merge-Signers_Semantic {
                         $UniquePublisherSigners131[$PublisherKey] = $PublisherKeyTemp
                     }
                     else {
-                        [WDACConfig.VerboseLogger]::Write("Merge-Signers: Excluded Publisher signer for Signing Scenario 131 with ID: $($Signer.ID). Only one Publisher signer is allowed per TBS, Name, and CertPublisher.")
+                        [WDACConfig.Logger]::Write("Merge-Signers: Excluded Publisher signer for Signing Scenario 131 with ID: $($Signer.ID). Only one Publisher signer is allowed per TBS, Name, and CertPublisher.")
                     }
                 }
                 # If the signer is part of Signing Scenario 12
@@ -235,7 +233,7 @@ Function Merge-Signers_Semantic {
                         $UniquePublisherSigners12[$PublisherKey] = $PublisherKeyTemp
                     }
                     else {
-                        [WDACConfig.VerboseLogger]::Write("Merge-Signers: Excluded Publisher signer for Signing Scenario 12 with ID: $($Signer.ID). Only one Publisher signer is allowed per TBS, Name, and CertPublisher.")
+                        [WDACConfig.Logger]::Write("Merge-Signers: Excluded Publisher signer for Signing Scenario 12 with ID: $($Signer.ID). Only one Publisher signer is allowed per TBS, Name, and CertPublisher.")
                     }
                 }
             }

@@ -20,7 +20,7 @@ Remove-WDACConfig
 
 ## Description
 
-Uses [the official procedure](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/deployment/disable-wdac-policies) to Re-Deploy the Signed base WDAC policies with ***Enabled:Unsigned System Integrity Policy*** rule option.
+Uses [the official procedure](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/app-control-for-business/deployment/disable-appcontrol-policies) to Re-Deploy the Signed base WDAC policies with ***Enabled:Unsigned System Integrity Policy*** rule option.
 
 ## Parameters
 

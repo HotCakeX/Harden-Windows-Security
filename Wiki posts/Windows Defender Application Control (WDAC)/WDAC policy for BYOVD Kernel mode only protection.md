@@ -90,7 +90,7 @@ We take the Default Windows example policy from `C:\Windows\schemas\CodeIntegrit
 
 * `"ID_EKU_STORE"` for Microsoft Store apps, Usermode only.
 
-* `"ID_EKU_DCODEGEN"` for .NET hardening [Dynamic Code Security](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/wdac-and-dotnet), user mode only, the linked document mentions it's Usermode too.
+* `"ID_EKU_DCODEGEN"` for .NET hardening [Dynamic Code Security](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/app-control-for-business/design/appcontrol-and-dotnet), user mode only, the linked document mentions it's Usermode too.
 
 * `"ID_EKU_AM"` Usermode only.
 
@@ -286,7 +286,7 @@ Or replaced with
 
 They can also be removed if you don't intend to use Windows insider builds. They all have `flight` or `_flight` in their ID.
 
-When removing them, also use the [4 Disabled:Flight Signing policy rule option.](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/select-types-of-rules-to-create)
+When removing them, also use the [4 Disabled:Flight Signing policy rule option.](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/app-control-for-business/design/select-types-of-rules-to-create)
 
 <br>
 
@@ -312,11 +312,11 @@ As mentioned earlier, this policy only enforces and applies to Kernel-mode drive
 
 This strict Kernel mode policy can be perfectly deployed side by side any other WDAC policy.
 
-For instance, since HVCI is turned on by default on my system, the [Microsoft Recommended driver block rules](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/microsoft-recommended-driver-block-rules) is automatically deployed and it's only Kernel mode. It has 2 allow all rules, making it primarily a block-list policy.
+For instance, since HVCI is turned on by default on my system, the [Microsoft Recommended driver block rules](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/app-control-for-business/design/microsoft-recommended-driver-block-rules) is automatically deployed and it's only Kernel mode. It has 2 allow all rules, making it primarily a block-list policy.
 
 Then I deploy Strict Kernel-mode WDAC policy, which also only applies to Kernel-mode drivers. It doesn't have allow all rules of course, instead it allows Windows components that are required for Windows to function properly to run and then will let you hand pick any 3rd party Kernel-mode drivers and easily allow them in your policy.
 
-Now the Allow all rules that exist in the first policy are neutralized. [Only applications allowed by both policies run without generating block events.](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/deploy-multiple-wdac-policies), so since the same allow all rules do not exist in our Strict Kernel-mode base policy, they no longer apply.
+Now the Allow all rules that exist in the first policy are neutralized. [Only applications allowed by both policies run without generating block events.](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/app-control-for-business/design/deploy-multiple-appcontrol-policies), so since the same allow all rules do not exist in our Strict Kernel-mode base policy, they no longer apply.
 
 <br>
 
@@ -328,7 +328,7 @@ Now the Allow all rules that exist in the first policy are neutralized. [Only ap
 
 So far, we've only been doing Kernel-mode administration. We can use User-mode WDAC policies as well.
 
-After using those 2 Kernel-mode policies, I deploy a 3rd policy which is going to authorize and validate User-mode binaries too. I choose the [Lightly managed WDAC policy](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDAC-for-Lightly-Managed-Devices) that utilizes [ISG (Intelligent Security Graph)](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/use-wdac-with-intelligent-security-graph). This policy applies to both Kernel and User modes, but since we already know the logic and learned that only applications allowed by all base policies are allowed to run, we're confident that our Strict Kernel-mode base policy is the only one in charge of authorizing and validating Kernel-mode files/drivers. Our User-mode WDAC policy that utilizes ISG validates User-mode binaries only.
+After using those 2 Kernel-mode policies, I deploy a 3rd policy which is going to authorize and validate User-mode binaries too. I choose the [Lightly managed WDAC policy](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDAC-for-Lightly-Managed-Devices) that utilizes [ISG (Intelligent Security Graph)](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/app-control-for-business/design/use-appcontrol-with-intelligent-security-graph). This policy applies to both Kernel and User modes, but since we already know the logic and learned that only applications allowed by all base policies are allowed to run, we're confident that our Strict Kernel-mode base policy is the only one in charge of authorizing and validating Kernel-mode files/drivers. Our User-mode WDAC policy that utilizes ISG validates User-mode binaries only.
 
 <br>
 

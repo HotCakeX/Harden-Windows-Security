@@ -79,7 +79,7 @@ ConvertTo-WDACPolicy
 ```
 
 ## DESCRIPTION
-The cmdlet can be used for local and remote systems. You can utilize this cmdlet to create Application Control for Business policies from MDE Advanced Hunting and then deploy them using Microsoft Intune to your endpoints.
+The cmdlet can be used for local and remote systems. You can utilize this cmdlet to create App Control for Business policies from MDE Advanced Hunting and then deploy them using Microsoft Intune to your endpoints.
 
 You can utilize this cmdlet to use the evtx log files you aggregated from your endpoints and create a WDAC policy from them.
 

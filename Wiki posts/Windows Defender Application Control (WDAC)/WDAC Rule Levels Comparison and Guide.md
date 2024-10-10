@@ -161,6 +161,6 @@ For instance, suppose a folder has 10 signed files with identical signatures and
 
 The `MinimumVersion` is the smallest version among the files with the same signature and SpecificFileNameLevel in the folder.
 
-Find more information in [Microsoft Learn](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/select-types-of-rules-to-create)
+Find more information in [Microsoft Learn](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/app-control-for-business/design/select-types-of-rules-to-create)
 
 <br>

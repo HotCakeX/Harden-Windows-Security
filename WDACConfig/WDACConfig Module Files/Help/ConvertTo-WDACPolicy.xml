@@ -14,7 +14,7 @@
       </maml:description>
     </command:details>
     <maml:description>
-      <maml:para>The cmdlet can be used for local and remote systems. You can utilize this cmdlet to create Application Control for Business policies from MDE Advanced Hunting and then deploy them using Microsoft Intune to your endpoints.</maml:para>
+      <maml:para>The cmdlet can be used for local and remote systems. You can utilize this cmdlet to create App Control for Business policies from MDE Advanced Hunting and then deploy them using Microsoft Intune to your endpoints.</maml:para>
       <maml:para>You can utilize this cmdlet to use the evtx log files you aggregated from your endpoints and create a WDAC policy from them.</maml:para>
       <maml:para>This offers scalability and flexibility in managing your security policies.</maml:para>
     </maml:description>

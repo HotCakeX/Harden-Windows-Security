@@ -38,13 +38,13 @@ It uses the same security features built into your device and Windows operating 
 
 <br>
 
-## <img width="40" src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/PNGs/Windows11.png" alt="Modern Windows 11 logo"> Windows Defender Application Control
+## <img width="40" src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/PNGs/Windows11.png" alt="Modern Windows 11 logo"> App Control for Business
 
-[Windows Defender Application Control (WDAC) resources](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Introduction) are suitable for both personal users as well as enterprises, businesses and highly secure workstations.
+[App Control for Business resources](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Introduction) are suitable for both personal users as well as enterprises, businesses and highly secure workstations.
 
 When a proper WDAC policy is deployed on your device, it will be secure against 99.999% of the threats [^1], either from the Internet or physical. It's true that there is no absolute security, but then again there is nothing absolute in the universe either. Everything, even the most fundamental physical laws, are and have been subject to change and conditions.
 
-I've created a PowerShell module called [**WDACConfig**](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDACConfig), designed with the aim of automating Application and File whitelisting in Windows using Windows Defender Application Control. It's an alternative to [WDAC Wizard](https://webapp-wdac-wizard.azurewebsites.net/) which only has a fraction of the features that WDACConfig module offers.
+I've created a PowerShell module called [**WDACConfig**](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDACConfig), designed with the aim of automating Application and File whitelisting in Windows using App Control for Business feature. It's an alternative to [WDAC Wizard](https://webapp-wdac-wizard.azurewebsites.net/) which only has a fraction of the features that WDACConfig module offers.
 
 Full details, guides and videos available [here on GitHub](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDACConfig) and on [my website.](https://spynetgirl.github.io/WDACConfig%20Module/WDACConfig/)
 
@@ -56,9 +56,9 @@ First use the Harden Windows Security Module to apply the hardening measures des
 
 ### If you want even more security and control, you have at least 2 more options:
 
-1. you can either use **[Smart App Control](https://learn.microsoft.com/en-us/windows/apps/develop/smart-app-control/overview)**, which deploys an automatic and AI based WDAC policy that uses [Intelligent Security Graph](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/use-wdac-with-intelligent-security-graph) to authorize safe and reputable applications and files and blocks unknown and malicious files.
+1. you can either use **[Smart App Control](https://learn.microsoft.com/en-us/windows/apps/develop/smart-app-control/overview)**, which deploys an automatic and AI based WDAC policy that uses [Intelligent Security Graph](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/app-control-for-business/design/use-appcontrol-with-intelligent-security-graph) to authorize safe and reputable applications and files and blocks unknown and malicious files.
 
-2. Use [WDACConfig module](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDACConfig) to deploy a WDAC policy and have even more control over the operation of the Windows Defender Application Control.
+2. Use [WDACConfig module](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDACConfig) to deploy an App Control for Business policy and have even more control over the operation of the Windows Application Control.
 
 These methods will create multiple layers of security; also known as defense in depth. Additionally, you can create [**Kernel-level Zero-Trust strategy**](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDAC-policy-for-BYOVD-Kernel-mode-only-protection) for your system.
 
@@ -125,7 +125,7 @@ To achieve the Highest level of Security **at Scale** for Businesses, Enterprise
 
 ## <img width="40" src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/PNGs/673731848341553152.png" alt="head patting"> Important Considerations
 
-* Avoid using any 3rd party security solutions when using Harden Windows Security module or Windows Defender Application Control (WDAC). 3rd party solutions are weak, incompatible and unnecessary, **they also increase your attack surface**.
+* Avoid using any 3rd party security solutions when using Harden Windows Security module or App Control for Business. 3rd party solutions are weak, incompatible and unnecessary, **they also increase your attack surface**.
 
 * Use Virtual machines for any questionable or unsafe software. Use [Windows Sandbox or Hyper-V VM](https://github.com/HotCakeX/Privacy-Anonymity-Compartmentalization). Also consider using Virtual machines or Microsoft Defender Application Guard (MDAG) for browsing on highly secure workstations.
 
@@ -169,7 +169,7 @@ Make sure to use Surface products that support [Device Firmware Configuration In
 
 ### <img width="40" src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/9935-catkeyboard.gif" alt="BYOVD device gif animated"> [Protection against BYOVD (Bring Your Own Vulnerable Driver) attacks](#-protection-against-byovd-bring-your-own-vulnerable-driver-attacks)
 
-* Secured core PCs provide the hardware that is capable of protecting against BYOVD attacks. It is your responsibility to turn the features on, those include WDAC (Windows Defender Application Control), ASR (Attack Surface Reduction) rules, Dynamic/static root of trust and [firmware](https://learn.microsoft.com/en-us/windows-hardware/drivers/bringup/firmware-attack-surface-reduction) that is extensible for revoking drivers. They are specially useful for drivers not explicitly mentioned in the [Microsoft Recommended Driver Block List](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/microsoft-recommended-driver-block-rules), which are the more dynamic side of things.
+* Secured core PCs provide the hardware that is capable of protecting against BYOVD attacks. It is your responsibility to turn the features on, those include App Control for Business, ASR (Attack Surface Reduction) rules, Dynamic/static root of trust and [firmware](https://learn.microsoft.com/en-us/windows-hardware/drivers/bringup/firmware-attack-surface-reduction) that is extensible for revoking drivers. They are specially useful for drivers not explicitly mentioned in the [Microsoft Recommended Driver Block List](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/app-control-for-business/design/microsoft-recommended-driver-block-rules), which are the more dynamic side of things.
 
 * Use [Strict Kernel-mode WDAC policy for complete BYOVD protection](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDAC-policy-for-BYOVD-Kernel-mode-only-protection)
 

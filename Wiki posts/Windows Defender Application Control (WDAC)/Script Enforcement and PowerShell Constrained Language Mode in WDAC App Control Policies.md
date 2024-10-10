@@ -8,7 +8,7 @@ This article explores some of the technical details of how to deploy a WDAC (App
 > Check out these 2 documents from Microsoft for more info and basics:
 > * [PowerShell Constrained Language Mode](https://devblogs.microsoft.com/powershell/powershell-constrained-language-mode/)
 >
-> * [Script enforcement with Windows Defender Application Control (WDAC)](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/script-enforcement)
+> * [Script enforcement with App Control for Business](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/app-control-for-business/design/script-enforcement)
 
 <br>
 
@@ -38,7 +38,7 @@ For instance, if you generated a Code Signing certificate from Windows Server Ac
 
 ## Base Policy Requirements
 
-The WDAC (Application Control) base policy you're going to deploy must have `0 Enabled:UMCI` and it must not have the `11 Disabled:Script Enforcement` [rule options](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/select-types-of-rules-to-create#table-1-windows-defender-application-control-policy---policy-rule-options).
+The WDAC (Application Control) base policy you're going to deploy must have `0 Enabled:UMCI` and it must not have the `11 Disabled:Script Enforcement` [rule options](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/app-control-for-business/design/select-types-of-rules-to-create#table-1-app-control-for-business-policy---policy-rule-options).
 
 <br>
 

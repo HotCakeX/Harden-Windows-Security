@@ -1,6 +1,6 @@
 # How to Use Microsoft Defender for Endpoint Advanced Hunting With WDAC App Control
 
-Windows Defender Application Control (WDAC), also referred to as Application Control for Business, is a highly effective security feature that empowers you to manage the execution of applications on your endpoints.
+App Control for Business is a highly effective security feature that empowers you to manage the execution of applications on your endpoints.
 
 The application whitelisting approach serves as a potent defense against emerging and unknown threats. By emphasizing the identification of trusted applications, it automatically blocks any software that falls outside this trusted realm.
 
@@ -40,7 +40,7 @@ Please refer to [this document](https://github.com/HotCakeX/Harden-Windows-Secur
 You will then use Intune to deploy the generated policies to as many endpoints as you want.
 
 > [!TIP]\
-> [Deploy WDAC policies using Mobile Device Management (MDM)](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/deployment/deploy-wdac-policies-using-intune)
+> [Deploy WDAC policies using Mobile Device Management (MDM)](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/app-control-for-business/deployment/deploy-appcontrol-policies-using-intune)
 
 <br>
 
@@ -154,7 +154,7 @@ You can put your endpoints into different groups and each group can receive diff
 
 <br>
 
-<img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/PNG%20and%20JPG/Wiki%20MDE%20Advanced%20Hunting%20WDAC/Intune%20portal%201.png" alt="Intune portal for Application Control for Business policies">
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/PNG%20and%20JPG/Wiki%20MDE%20Advanced%20Hunting%20WDAC/Intune%20portal%201.png" alt="Intune portal for App Control for Business policies">
 
 <br>
 

@@ -26,7 +26,7 @@
 
 This cloud-based AI is based on trillions of signals collected from Windows endpoints and other data sources, and processed every 24 hours. As a result, the decision from the cloud can change.
 
-* [Read More](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/use-wdac-with-intelligent-security-graph)
+* [Read More](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/app-control-for-business/design/use-appcontrol-with-intelligent-security-graph)
 
 <br>
 
@@ -132,7 +132,7 @@ Regularly updating Microsoft Defender Antivirus is crucial for maintaining robus
 
 ## ULTIMATUM
 
-### Application Control For Business (WDAC)
+### App Control for Business (WDAC)
 
 Application control is a crucial line of defense for protecting computer systems given today's threat landscape, and it has an inherent advantage over traditional antivirus solutions. Specifically, application control moves away from an application trust model where all applications are assumed trustworthy to one where applications must earn trust in order to run.
 
@@ -198,7 +198,7 @@ Windows Firewall is a **Stateful Firewall**. It is a security feature that helps
 
 ### Automated Firewall With AppID Tagging
 
-Windows Firewall supports the use of Windows Defender Application Control (WDAC) Application ID (AppID) tags. With this capability, you'll be able to scope your firewall rules to an application or a group of applications and rely on WDAC policies to define those applications. The WDAC AppID functionality adds an administrator defined tag to the given process token.
+Windows Firewall supports the use of App Control for Business AppID tags in policies. With this capability, you'll be able to scope your firewall rules to an application or a group of applications and rely on App Control policies to define those applications. The App Control AppID functionality adds an administrator defined tag to the given process token.
 
 For example, you can easily use a policy that allows only files that come with Windows by default to be allowed to access the Internet while everything else will be blocked.
 

@@ -41,13 +41,10 @@ Function Compare-CorrelatedData {
         [Parameter(Mandatory = $true)][System.String]$LogType
     )
     Begin {
-        [System.Boolean]$Debug = $PSBoundParameters.Debug.IsPresent ? $true : $false
-        . "$([WDACConfig.GlobalVars]::ModuleRootPath)\CoreExt\PSDefaultParameterValues.ps1"
-
         # Group the events based on the EtwActivityId, which is the unique identifier for each group of correlated events
         [Microsoft.PowerShell.Commands.GroupInfo[]]$GroupedEvents = $OptimizedCSVData | Group-Object -Property EtwActivityId
 
-        [WDACConfig.VerboseLogger]::Write("Compare-CorrelatedData: Total number of groups: $($GroupedEvents.Count)")
+        [WDACConfig.Logger]::Write("Compare-CorrelatedData: Total number of groups: $($GroupedEvents.Count)")
 
         # Create a collection to store the packages of logs to return at the end
         [System.Collections.Hashtable]$EventPackageCollections = @{}
@@ -72,7 +69,7 @@ Function Compare-CorrelatedData {
                     }
                 }
                 Catch {
-                    [WDACConfig.VerboseLogger]::Write("Event Timestamp for the file '$($GroupData.FileName)' was invalid")
+                    [WDACConfig.Logger]::Write("Event Timestamp for the file '$($GroupData.FileName)' was invalid")
                 }
             }
 
@@ -137,7 +134,7 @@ Function Compare-CorrelatedData {
                         # If it does, check if the current log is signed and the main log is unsigned
                         if (($EventPackageCollections[$UniqueAuditMainEventDataKey]['SignatureStatus'] -eq 'Unsigned') -and ($TempAuditHashTable['SignatureStatus'] -eq 'Signed')) {
 
-                            Write-Debug -Message "The unsigned log of the file $($TempAuditHashTable['FileName']) is being replaced with its signed log."
+                            [WDACConfig.Logger]::Write("The unsigned log of the file $($TempAuditHashTable['FileName']) is being replaced with its signed log.")
 
                             # Remove the Unsigned log from the main HashTable
                             $EventPackageCollections.Remove($UniqueAuditMainEventDataKey)
@@ -215,7 +212,7 @@ Function Compare-CorrelatedData {
                         # If it does, check if the current log is signed and the main log is unsigned
                         if (($EventPackageCollections[$UniqueBlockedMainEventDataKey]['SignatureStatus'] -eq 'Unsigned') -and ($TempBlockedHashTable['SignatureStatus'] -eq 'Signed')) {
 
-                            Write-Debug -Message "The unsigned log of the file $($TempBlockedHashTable['FileName']) is being replaced with its signed log."
+                            [WDACConfig.Logger]::Write("The unsigned log of the file $($TempBlockedHashTable['FileName']) is being replaced with its signed log.")
 
                             # Remove the Unsigned log from the main HashTable
                             $EventPackageCollections.Remove($UniqueBlockedMainEventDataKey)
@@ -236,8 +233,8 @@ Function Compare-CorrelatedData {
 
     End {
 
-        if ($Debug) {
-            [WDACConfig.VerboseLogger]::Write('Compare-CorrelatedData: Debug parameter was used, exporting data to Json...')
+        if ([WDACConfig.GlobalVars]::DebugPreference) {
+            [WDACConfig.Logger]::Write('Compare-CorrelatedData: Debug parameter was used, exporting data to Json...')
 
             # Outputs the entire data to a JSON file for debugging purposes with max details
             $EventPackageCollections | ConvertTo-Json -Depth 100 | Set-Content -Path (Join-Path -Path $StagingArea -ChildPath 'Pass2.Json') -Force

@@ -6,6 +6,9 @@ using System.Management.Automation;
 using System.Management.Automation.Language;
 using System.Windows.Forms;
 
+// The returned collections for the argument completers need to be mutable so they should stay List<T> instead of the immutable Enumerable
+#pragma warning disable IDE0028
+
 #nullable enable
 
 namespace WDACConfig.ArgCompleter
@@ -25,7 +28,7 @@ namespace WDACConfig.ArgCompleter
             IDictionary fakeBoundParameters)
         {
             // Initialize the file open dialog
-            using (OpenFileDialog dialog = new OpenFileDialog())
+            using (OpenFileDialog dialog = new())
             {
                 // Show the dialog and get the result
                 DialogResult result = dialog.ShowDialog();
@@ -38,7 +41,7 @@ namespace WDACConfig.ArgCompleter
                     // Return the file path wrapped in quotes as a completion result
                     return new List<CompletionResult>
                 {
-                    new CompletionResult($"\"{selectedFilePath}\"")
+                    new($"\"{selectedFilePath}\"")
                 };
                 }
             }
@@ -79,7 +82,7 @@ namespace WDACConfig.ArgCompleter
             IDictionary fakeBoundParameters)
         {
             // Initialize the file open dialog
-            using (OpenFileDialog dialog = new OpenFileDialog())
+            using (OpenFileDialog dialog = new())
             {
                 // Set the dialog filter to XML files
                 dialog.Filter = "XML files (*.xml)|*.xml";
@@ -99,7 +102,7 @@ namespace WDACConfig.ArgCompleter
                     // Return the file path wrapped in quotes as a completion result
                     return new List<CompletionResult>
                 {
-                    new CompletionResult($"\"{selectedFilePath}\"")
+                    new($"\"{selectedFilePath}\"")
                 };
                 }
             }
@@ -137,7 +140,7 @@ namespace WDACConfig.ArgCompleter
             IDictionary fakeBoundParameters)
         {
             // Initialize the folder browser dialog
-            using (FolderBrowserDialog dialog = new FolderBrowserDialog())
+            using (FolderBrowserDialog dialog = new())
             {
                 // Show the dialog and get the result
                 DialogResult result = dialog.ShowDialog();
@@ -150,7 +153,7 @@ namespace WDACConfig.ArgCompleter
                     // Return the folder path wrapped in quotes as a completion result
                     return new List<CompletionResult>
                 {
-                    new CompletionResult($"\"{selectedFolderPath}\"")
+                    new($"\"{selectedFolderPath}\"")
                 };
                 }
             }
@@ -191,7 +194,7 @@ namespace WDACConfig.ArgCompleter
             IDictionary fakeBoundParameters)
         {
             // Initialize the file open dialog
-            using (OpenFileDialog dialog = new OpenFileDialog())
+            using (OpenFileDialog dialog = new())
             {
                 // Set the dialog filter to XML files
                 dialog.Filter = "XML files (*.xml)|*.xml";
@@ -213,7 +216,7 @@ namespace WDACConfig.ArgCompleter
                     // Return the file paths wrapped in quotes as a completion result
                     return new List<CompletionResult>
                 {
-                    new CompletionResult($"\"{selectedFilePaths}\"")
+                    new($"\"{selectedFilePaths}\"")
                 };
                 }
             }
@@ -251,7 +254,7 @@ namespace WDACConfig.ArgCompleter
             IDictionary fakeBoundParameters)
         {
             // Initialize the file open dialog
-            using (OpenFileDialog dialog = new OpenFileDialog())
+            using (OpenFileDialog dialog = new())
             {
                 // Enable multi-select
                 dialog.Multiselect = true;
@@ -269,7 +272,7 @@ namespace WDACConfig.ArgCompleter
                     // Return the file paths wrapped in quotes as a completion result
                     return new List<CompletionResult>
                 {
-                    new CompletionResult($"\"{selectedFilePaths}\"")
+                    new($"\"{selectedFilePaths}\"")
                 };
                 }
             }
@@ -310,7 +313,7 @@ namespace WDACConfig.ArgCompleter
             IDictionary fakeBoundParameters)
         {
             // Initialize the file open dialog
-            using (OpenFileDialog dialog = new OpenFileDialog())
+            using (OpenFileDialog dialog = new())
             {
                 // Set the dialog filter to executable files
                 dialog.Filter = "Executable files (*.exe)|*.exe";
@@ -330,7 +333,7 @@ namespace WDACConfig.ArgCompleter
                     // Return the file path wrapped in quotes as a completion result
                     return new List<CompletionResult>
                 {
-                    new CompletionResult($"\"{selectedFilePath}\"")
+                    new($"\"{selectedFilePath}\"")
                 };
                 }
             }
@@ -371,7 +374,7 @@ namespace WDACConfig.ArgCompleter
             IDictionary fakeBoundParameters)
         {
             // Initialize the file open dialog
-            using (OpenFileDialog dialog = new OpenFileDialog())
+            using (OpenFileDialog dialog = new())
             {
                 // Set the dialog filter to certificate files
                 dialog.Filter = "Certificate files (*.cer)|*.cer";
@@ -393,7 +396,7 @@ namespace WDACConfig.ArgCompleter
                     // Return the file path wrapped in quotes as a completion result
                     return new List<CompletionResult>
                 {
-                    new CompletionResult($"\"{selectedFilePath}\"")
+                    new($"\"{selectedFilePath}\"")
                 };
                 }
             }
@@ -434,7 +437,7 @@ namespace WDACConfig.ArgCompleter
             IDictionary fakeBoundParameters)
         {
             // Initialize the file open dialog
-            using (OpenFileDialog dialog = new OpenFileDialog())
+            using (OpenFileDialog dialog = new())
             {
                 // Set the dialog filter to certificate files
                 dialog.Filter = "Certificate files (*.cer)|*.cer";
@@ -456,7 +459,7 @@ namespace WDACConfig.ArgCompleter
                     // Return the file paths wrapped in quotes as a completion result
                     return new List<CompletionResult>
                 {
-                    new CompletionResult($"\"{selectedFilePaths}\"")
+                    new($"\"{selectedFilePaths}\"")
                 };
                 }
             }
@@ -494,7 +497,7 @@ namespace WDACConfig.ArgCompleter
             IDictionary fakeBoundParameters)
         {
             // Initialize the folder browser dialog
-            using (FolderBrowserDialog dialog = new FolderBrowserDialog())
+            using (FolderBrowserDialog dialog = new())
             {
                 // Show the dialog and get the result
                 DialogResult result = dialog.ShowDialog();
@@ -507,7 +510,7 @@ namespace WDACConfig.ArgCompleter
                     // Return the folder path wrapped in quotes with a wildcard character as a completion result
                     return new List<CompletionResult>
                 {
-                    new CompletionResult($"\"{selectedFolderPath}\\*\"")
+                    new($"\"{selectedFolderPath}\\*\"")
                 };
                 }
             }

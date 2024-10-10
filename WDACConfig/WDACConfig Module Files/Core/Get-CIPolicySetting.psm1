@@ -7,65 +7,9 @@ Function Get-CIPolicySetting {
         [Parameter(Mandatory = $true)][System.String]$ValueName,
         [Parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$SkipVersionCheck
     )
-    Begin {
-        [System.Boolean]$Verbose = $PSBoundParameters.Verbose.IsPresent ? $true : $false
-        [WDACConfig.LoggerInitializer]::Initialize($VerbosePreference, $DebugPreference, $Host)
-
-        Write-Verbose -Message 'Importing the required sub-modules'
-        Import-Module -FullyQualifiedName "$([WDACConfig.GlobalVars]::ModuleRootPath)\Shared\Update-Self.psm1" -Force
-
-        # if -SkipVersionCheck wasn't passed, run the updater
-        if (-NOT $SkipVersionCheck) { Update-Self -InvocationStatement $MyInvocation.Statement }
-    }
-    Process {
-        try {
-            # Create UNICODE_STRING structures
-            $ProviderUS = [WDACConfig.WldpQuerySecurityPolicyWrapper]::InitUnicodeString($Provider)
-            $KeyUS = [WDACConfig.WldpQuerySecurityPolicyWrapper]::InitUnicodeString($Key)
-            $ValueNameUS = [WDACConfig.WldpQuerySecurityPolicyWrapper]::InitUnicodeString($ValueName)
-
-            # Prepare output variables
-            $ValueType = [WDACConfig.WLDP_SECURE_SETTING_VALUE_TYPE]::WldpNone
-            $ValueSize = [System.UInt64]1024
-            $Value = [System.Runtime.InteropServices.Marshal]::AllocHGlobal($ValueSize)
-
-            $Result = [WDACConfig.WldpQuerySecurityPolicyWrapper]::WldpQuerySecurityPolicy([ref]$ProviderUS, [ref]$KeyUS, [ref]$ValueNameUS, [ref]$ValueType, $Value, [ref]$ValueSize)
-
-            $DecodedValue = $null
-
-            if ($Result -eq 0) {
-                switch ($ValueType) {
-                    'WldpBoolean' {
-                        $DecodedValue = [System.Runtime.InteropServices.Marshal]::ReadByte($Value) -ne 0
-                    }
-                    'WldpString' {
-                        $DecodedValue = [System.Runtime.InteropServices.Marshal]::PtrToStringUni($Value)
-                    }
-                    'WldpInteger' {
-                        $DecodedValue = [System.Runtime.InteropServices.Marshal]::ReadInt32($Value)
-                    }
-                }
-            }
-
-            Return [PSCustomObject]@{
-                Value      = $DecodedValue
-                ValueType  = $ValueType
-                ValueSize  = $ValueSize
-                Status     = $Result -eq 0 ? $true : $false
-                StatusCode = $Result
-            }
-        }
-        catch {
-            throw $_
-        }
-        finally {
-            # Clean up
-            [System.Runtime.InteropServices.Marshal]::FreeHGlobal($ProviderUS.Buffer)
-            [System.Runtime.InteropServices.Marshal]::FreeHGlobal($KeyUS.Buffer)
-            [System.Runtime.InteropServices.Marshal]::FreeHGlobal($ValueNameUS.Buffer)
-            [System.Runtime.InteropServices.Marshal]::FreeHGlobal($Value)
-        }
-    }
+    [WDACConfig.LoggerInitializer]::Initialize($VerbosePreference, $DebugPreference, $Host)
+    if (-NOT $SkipVersionCheck) { Update-WDACConfigPSModule -InvocationStatement $MyInvocation.Statement }
+    [WDACConfig.GetCIPolicySetting]::Invoke($Provider, $Key, $ValueName)
     <#
     .SYNOPSIS
         Gets the secure settings value from the deployed CI policies.
@@ -80,7 +24,7 @@ Function Get-CIPolicySetting {
         Please use the following resources for more information
 
         https://learn.microsoft.com/en-us/powershell/module/configci/set-cipolicysetting
-        https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/understanding-wdac-policy-settings
+        https://learn.microsoft.com/en-us/windows/security/application-security/application-control/app-control-for-business/design/understanding-appcontrol-policy-settings
     .LINK
         https://github.com/HotCakeX/Harden-Windows-Security/wiki/Get-CIPolicySetting
     .INPUTS

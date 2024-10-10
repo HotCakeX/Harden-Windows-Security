@@ -258,7 +258,13 @@
 			"XDRs",
 			"Zune"
 		],
-		"cSpell.language": "en,en-US,en-GB"
+		"cSpell.language": "en,en-US,en-GB",
+		"files.exclude": {
+			"**/WinUI3": true,
+			"**/.vs": true,
+			"**/obj": true,
+			"**/bin": true
+		}
 	},
 	"extensions": {
 		"recommendations": [

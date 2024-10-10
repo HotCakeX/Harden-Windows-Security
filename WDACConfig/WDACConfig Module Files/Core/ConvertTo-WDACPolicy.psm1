@@ -22,13 +22,7 @@ Function ConvertTo-WDACPolicy {
         [ArgumentCompleter({
                 param($CommandName, $ParameterName, $WordToComplete, $CommandAst, $fakeBoundParameters)
 
-                [System.String[]]$PolicyGUIDs = foreach ($Policy in (&'C:\Windows\System32\CiTool.exe' -lp -json | ConvertFrom-Json).Policies) {
-                    if ($Policy.IsSystemPolicy -ne 'True') {
-                        if ($Policy.PolicyID -eq $Policy.BasePolicyID) {
-                            $Policy.PolicyID
-                        }
-                    }
-                }
+                [System.String[]]$PolicyGUIDs = [WDACConfig.CiToolHelper]::GetPolicies($false, $true, $false).PolicyID
 
                 $Existing = $CommandAst.FindAll({
                         $args[0] -is [System.Management.Automation.Language.StringConstantExpressionAst]
@@ -56,11 +50,7 @@ Function ConvertTo-WDACPolicy {
         [ArgumentCompleter({
                 param($CommandName, $ParameterName, $WordToComplete, $CommandAst, $FakeBoundParameters)
 
-                [System.String[]]$Policies = foreach ($Policy in (&'C:\Windows\System32\CiTool.exe' -lp -json | ConvertFrom-Json).Policies) {
-                    if ($Policy.FriendlyName -and ($Policy.PolicyID -eq $Policy.BasePolicyID)) {
-                        $Policy.FriendlyName
-                    }
-                }
+                [System.String[]]$Policies = [WDACConfig.CiToolHelper]::GetPolicies($true, $true, $false).FriendlyName
 
                 $Existing = $CommandAst.FindAll({
                         $args[0] -is [System.Management.Automation.Language.StringConstantExpressionAst]
@@ -315,15 +305,11 @@ Function ConvertTo-WDACPolicy {
         return $ParamDictionary
     }
     Begin {
-        [System.Boolean]$Verbose = $PSBoundParameters.Verbose.IsPresent ? $true : $false
-        [System.Boolean]$Debug = $PSBoundParameters.Debug.IsPresent ? $true : $false
         [WDACConfig.LoggerInitializer]::Initialize($VerbosePreference, $DebugPreference, $Host)
-        . "$([WDACConfig.GlobalVars]::ModuleRootPath)\CoreExt\PSDefaultParameterValues.ps1"
 
-        Write-Verbose -Message 'ConvertTo-WDACPolicy: Importing the required sub-modules'
+        [WDACConfig.Logger]::Write('ConvertTo-WDACPolicy: Importing the required sub-modules')
         # Defining list of generic modules required for this cmdlet to import
         [System.String[]]$ModulesToImport = @(
-            "$([WDACConfig.GlobalVars]::ModuleRootPath)\Shared\Update-Self.psm1",
             "$([WDACConfig.GlobalVars]::ModuleRootPath)\Shared\Receive-CodeIntegrityLogs.psm1",
             "$([WDACConfig.GlobalVars]::ModuleRootPath)\Shared\Set-LogPropertiesVisibility.psm1",
             "$([WDACConfig.GlobalVars]::ModuleRootPath)\Shared\Select-LogProperties.psm1",
@@ -343,8 +329,7 @@ Function ConvertTo-WDACPolicy {
         New-Variable -Name 'ExtremeVisibility' -Value $PSBoundParameters['ExtremeVisibility'] -Force
         New-Variable -Name 'SkipVersionCheck' -Value $PSBoundParameters['SkipVersionCheck'] -Force
 
-        # if -SkipVersionCheck wasn't passed, run the updater
-        if (-NOT $SkipVersionCheck) { Update-Self -InvocationStatement $MyInvocation.Statement }
+        if (-NOT $SkipVersionCheck) { Update-WDACConfigPSModule -InvocationStatement $MyInvocation.Statement }
 
         # Defining a staging area for the current
         [System.IO.DirectoryInfo]$StagingArea = [WDACConfig.StagingArea]::NewStagingArea('ConvertTo-WDACPolicy')
@@ -428,7 +413,7 @@ Function ConvertTo-WDACPolicy {
                     # Display the logs in a grid view using the build-in cmdlet
                     $SelectedLogs = $EventsToDisplay | Out-GridView -OutputMode Multiple -Title "Displaying $($EventsToDisplay.count) Code Integrity Logs of $LogType type(s)"
 
-                    Write-Verbose -Message "ConvertTo-WDACPolicy: Selected logs count: $($SelectedLogs.count)"
+                    [WDACConfig.Logger]::Write("ConvertTo-WDACPolicy: Selected logs count: $($SelectedLogs.count)")
 
                     if (!$BasePolicyGUID -and !$BasePolicyFile -and !$PolicyToAddLogsTo) {
                         Write-ColorfulTextWDACConfig -Color HotPink -InputText 'A more specific parameter was not provided to define what to do with the selected logs. Exiting...'
@@ -447,12 +432,12 @@ Function ConvertTo-WDACPolicy {
 
                     if ($null -ne $KernelProtectedFileLogs) {
 
-                        Write-Verbose -Message "ConvertTo-WDACPolicy: Kernel protected files count: $($KernelProtectedFileLogs.count)"
+                        [WDACConfig.Logger]::Write("ConvertTo-WDACPolicy: Kernel protected files count: $($KernelProtectedFileLogs.count)")
 
-                        Write-Verbose -Message 'Copying the template policy to the staging area'
+                        [WDACConfig.Logger]::Write('Copying the template policy to the staging area')
                         Copy-Item -LiteralPath 'C:\Windows\schemas\CodeIntegrity\ExamplePolicies\AllowAll.xml' -Destination $WDACPolicyKernelProtectedPath -Force
 
-                        Write-Verbose -Message 'Emptying the policy file in preparation for the new data insertion'
+                        [WDACConfig.Logger]::Write('Emptying the policy file in preparation for the new data insertion')
                         Clear-CiPolicy_Semantic -Path $WDACPolicyKernelProtectedPath
 
                         # Find the kernel protected files that have PFN property
@@ -467,8 +452,8 @@ Function ConvertTo-WDACPolicy {
                         # Add the Kernel protected files policy to the list of policies to merge
                         $PolicyFilesToMerge.Add($WDACPolicyKernelProtectedPath)
 
-                        Write-Verbose -Message "ConvertTo-WDACPolicy: Kernel protected files with PFN property: $($KernelProtectedFileLogsWithPFN.count)"
-                        Write-Verbose -Message "ConvertTo-WDACPolicy: Kernel protected files without PFN property: $($KernelProtectedFileLogs.count - $KernelProtectedFileLogsWithPFN.count)"
+                        [WDACConfig.Logger]::Write("ConvertTo-WDACPolicy: Kernel protected files with PFN property: $($KernelProtectedFileLogsWithPFN.count)")
+                        [WDACConfig.Logger]::Write("ConvertTo-WDACPolicy: Kernel protected files without PFN property: $($KernelProtectedFileLogs.count - $KernelProtectedFileLogsWithPFN.count)")
 
                         # Removing the logs that were used to create PFN rules from the rest of the logs
                         $SelectedLogs = foreach ($Log in $SelectedLogs) {
@@ -481,28 +466,28 @@ Function ConvertTo-WDACPolicy {
                     $CurrentStep++
                     Write-Progress -Id 30 -Activity 'Generating the policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
-                    Write-Verbose -Message 'Copying the template policy to the staging area'
+                    [WDACConfig.Logger]::Write('Copying the template policy to the staging area')
                     Copy-Item -LiteralPath 'C:\Windows\schemas\CodeIntegrity\ExamplePolicies\AllowAll.xml' -Destination $WDACPolicyPathTEMP -Force
 
-                    Write-Verbose -Message 'Emptying the policy file in preparation for the new data insertion'
+                    [WDACConfig.Logger]::Write('Emptying the policy file in preparation for the new data insertion')
                     Clear-CiPolicy_Semantic -Path $WDACPolicyPathTEMP
 
                     $CurrentStep++
                     Write-Progress -Id 30 -Activity 'Building Signers and file rule' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
-                    Write-Verbose -Message 'Building the Signer and Hash objects from the selected logs'
+                    [WDACConfig.Logger]::Write('Building the Signer and Hash objects from the selected logs')
                     [WDACConfig.FileBasedInfoPackage]$DataToUseForBuilding = [WDACConfig.SignerAndHashBuilder]::BuildSignerAndHashObjects((ConvertTo-HashtableArray $SelectedLogs), 'EVTX', $Level, $false)
 
                     if ($Null -ne $DataToUseForBuilding.FilePublisherSigners -and $DataToUseForBuilding.FilePublisherSigners.Count -gt 0) {
-                        Write-Verbose -Message 'Creating File Publisher Level rules'
+                        [WDACConfig.Logger]::Write('Creating File Publisher Level rules')
                         New-FilePublisherLevelRules -FilePublisherSigners $DataToUseForBuilding.FilePublisherSigners -XmlFilePath $WDACPolicyPathTEMP
                     }
                     if ($Null -ne $DataToUseForBuilding.PublisherSigners -and $DataToUseForBuilding.PublisherSigners.Count -gt 0) {
-                        Write-Verbose -Message 'Creating Publisher Level rules'
+                        [WDACConfig.Logger]::Write('Creating Publisher Level rules')
                         New-PublisherLevelRules -PublisherSigners $DataToUseForBuilding.PublisherSigners -XmlFilePath $WDACPolicyPathTEMP
                     }
                     if ($Null -ne $DataToUseForBuilding.CompleteHashes -and $DataToUseForBuilding.CompleteHashes.Count -gt 0) {
-                        Write-Verbose -Message 'Creating Hash Level rules'
+                        [WDACConfig.Logger]::Write('Creating Hash Level rules')
                         New-HashLevelRules -Hashes $DataToUseForBuilding.CompleteHashes -XmlFilePath $WDACPolicyPathTEMP
                     }
 
@@ -511,14 +496,14 @@ Function ConvertTo-WDACPolicy {
                     $CurrentStep++
                     Write-Progress -Id 30 -Activity 'Performing merge operations' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
-                    Write-Verbose -Message 'Merging the Hash Level rules'
+                    [WDACConfig.Logger]::Write('Merging the Hash Level rules')
                     Remove-AllowElements_Semantic -Path $WDACPolicyPathTEMP
-                    Close-EmptyXmlNodes_Semantic -XmlFilePath $WDACPolicyPathTEMP
+                    [WDACConfig.CloseEmptyXmlNodesSemantic]::Close($WDACPolicyPathTEMP)
 
                     $CurrentStep++
                     Write-Progress -Id 30 -Activity 'Making sure there are no duplicates' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
-                    Write-Verbose -Message 'Merging the Signer Level rules'
+                    [WDACConfig.Logger]::Write('Merging the Signer Level rules')
                     Remove-DuplicateFileAttrib_Semantic -XmlFilePath $WDACPolicyPathTEMP
 
                     # 2 passes are necessary
@@ -526,7 +511,7 @@ Function ConvertTo-WDACPolicy {
                     Merge-Signers_Semantic -XmlFilePath $WDACPolicyPathTEMP
 
                     # This function runs twice, once for signed data and once for unsigned data
-                    Close-EmptyXmlNodes_Semantic -XmlFilePath $WDACPolicyPathTEMP
+                    [WDACConfig.CloseEmptyXmlNodesSemantic]::Close($WDACPolicyPathTEMP)
 
                     $PolicyFilesToMerge.Add($WDACPolicyPathTEMP)
 
@@ -536,77 +521,69 @@ Function ConvertTo-WDACPolicy {
 
                         { $null -ne $BasePolicyFile } {
 
-                            Write-Verbose -Message 'ConvertTo-WDACPolicy: Associating the Supplemental policy with the user input base policy'
+                            [WDACConfig.Logger]::Write('ConvertTo-WDACPolicy: Associating the Supplemental policy with the user input base policy')
 
                             # Objectify the user input base policy file to extract its Base policy ID
                             $InputXMLObj = [System.Xml.XmlDocument](Get-Content -Path $BasePolicyFile)
 
-                            [System.String]$SupplementalPolicyID = Set-CIPolicyIdInfo -FilePath $WDACPolicyPath -PolicyName $SuppPolicyName -SupplementsBasePolicyID $InputXMLObj.SiPolicy.BasePolicyID -ResetPolicyID
-                            [System.String]$SupplementalPolicyID = $SupplementalPolicyID.Substring(11)
+                            [System.String]$SupplementalPolicyID = [WDACConfig.SetCiPolicyInfo]::Set($WDACPolicyPath, $true, $SuppPolicyName, $InputXMLObj.SiPolicy.BasePolicyID, $null)
 
                             # Configure policy rule options
-                            Set-CiRuleOptions -FilePath $WDACPolicyPath -Template Supplemental
+                            [WDACConfig.CiRuleOptions]::Set($WDACPolicyPath, [WDACConfig.CiRuleOptions+PolicyTemplate]::Supplemental, $null, $null, $null, $null, $null, $null, $null, $null, $null)
 
-                            Write-Verbose -Message 'ConvertTo-WDACPolicy: Copying the policy file to the User Config directory'
+                            [WDACConfig.Logger]::Write('ConvertTo-WDACPolicy: Copying the policy file to the User Config directory')
                             Copy-Item -Path $WDACPolicyPath -Destination ([WDACConfig.GlobalVars]::UserConfigDir) -Force
 
                             if ($Deploy) {
                                 $null = ConvertFrom-CIPolicy -XmlFilePath $WDACPolicyPath -BinaryFilePath (Join-Path -Path $StagingArea -ChildPath "$SupplementalPolicyID.cip")
 
-                                Write-Verbose -Message 'ConvertTo-WDACPolicy: Deploying the Supplemental policy'
-
-                                $null = &'C:\Windows\System32\CiTool.exe' --update-policy (Join-Path -Path $StagingArea -ChildPath "$SupplementalPolicyID.cip") -json
+                                [WDACConfig.CiToolHelper]::UpdatePolicy((Join-Path -Path $StagingArea -ChildPath "$SupplementalPolicyID.cip"))
                             }
                         }
                         { $null -ne $BasePolicyGUID } {
 
-                            Write-Verbose -Message 'ConvertTo-WDACPolicy: Assigning the user input GUID to the base policy ID of the supplemental policy'
+                            [WDACConfig.Logger]::Write('ConvertTo-WDACPolicy: Assigning the user input GUID to the base policy ID of the supplemental policy')
 
-                            [System.String]$SupplementalPolicyID = Set-CIPolicyIdInfo -FilePath $WDACPolicyPath -PolicyName $SuppPolicyName -SupplementsBasePolicyID $BasePolicyGUID -ResetPolicyID
-                            [System.String]$SupplementalPolicyID = $SupplementalPolicyID.Substring(11)
+                            [System.String]$SupplementalPolicyID = [WDACConfig.SetCiPolicyInfo]::Set($WDACPolicyPath, $true, $SuppPolicyName, $BasePolicyGUID, $null)
 
                             # Configure policy rule options
-                            Set-CiRuleOptions -FilePath $WDACPolicyPath -Template Supplemental
+                            [WDACConfig.CiRuleOptions]::Set($WDACPolicyPath, [WDACConfig.CiRuleOptions+PolicyTemplate]::Supplemental, $null, $null, $null, $null, $null, $null, $null, $null, $null)
 
-                            Write-Verbose -Message 'ConvertTo-WDACPolicy: Copying the policy file to the User Config directory'
+                            [WDACConfig.Logger]::Write('ConvertTo-WDACPolicy: Copying the policy file to the User Config directory')
                             Copy-Item -Path $WDACPolicyPath -Destination ([WDACConfig.GlobalVars]::UserConfigDir) -Force
 
                             if ($Deploy) {
                                 $null = ConvertFrom-CIPolicy -XmlFilePath $WDACPolicyPath -BinaryFilePath (Join-Path -Path $StagingArea -ChildPath "$SupplementalPolicyID.cip")
 
-                                Write-Verbose -Message 'ConvertTo-WDACPolicy: Deploying the Supplemental policy'
-
-                                $null = &'C:\Windows\System32\CiTool.exe' --update-policy (Join-Path -Path $StagingArea -ChildPath "$SupplementalPolicyID.cip") -json
+                                [WDACConfig.CiToolHelper]::UpdatePolicy((Join-Path -Path $StagingArea -ChildPath "$SupplementalPolicyID.cip"))
                             }
                         }
                         { $null -ne $PolicyToAddLogsTo } {
-                            Write-Verbose -Message 'ConvertTo-WDACPolicy: Adding the logs to the policy that user selected'
+                            [WDACConfig.Logger]::Write('ConvertTo-WDACPolicy: Adding the logs to the policy that user selected')
 
                             $MacrosBackup = Checkpoint-Macros -XmlFilePathIn $PolicyToAddLogsTo -Backup
 
                             # Objectify the user input policy file to extract its policy ID
                             $InputXMLObj = [System.Xml.XmlDocument](Get-Content -Path $PolicyToAddLogsTo)
 
-                            $null = Set-CIPolicyIdInfo -FilePath $WDACPolicyPath -PolicyName $SuppPolicyName -ResetPolicyID
+                            $null = [WDACConfig.SetCiPolicyInfo]::Set($WDACPolicyPath, $true, $SuppPolicyName, $null, $null)
 
                             # Remove all policy rule options prior to merging the policies since we don't need to add/remove any policy rule options to/from the user input policy
-                            Set-CiRuleOptions -FilePath $WDACPolicyPath -RemoveAll
+                            [WDACConfig.CiRuleOptions]::Set($WDACPolicyPath, $null, $null, $null, $null, $null, $null, $null, $null, $null, $true)
 
                             $null = Merge-CIPolicy -PolicyPaths $PolicyToAddLogsTo, $WDACPolicyPath -OutputFilePath $PolicyToAddLogsTo
 
-                            Set-HVCIOptions -Strict -FilePath $PolicyToAddLogsTo
+                            [WDACConfig.UpdateHvciOptions]::Update($PolicyToAddLogsTo)
 
                             if ($null -ne $MacrosBackup) {
-                                Write-Verbose -Message 'Restoring the Macros in the policy'
+                                [WDACConfig.Logger]::Write('Restoring the Macros in the policy')
                                 Checkpoint-Macros -XmlFilePathOut $PolicyToAddLogsTo -Restore -MacrosBackup $MacrosBackup
                             }
 
                             if ($Deploy) {
                                 $null = ConvertFrom-CIPolicy -XmlFilePath $PolicyToAddLogsTo -BinaryFilePath (Join-Path -Path $StagingArea -ChildPath "$($InputXMLObj.SiPolicy.PolicyID).cip")
 
-                                Write-Verbose -Message 'ConvertTo-WDACPolicy: Deploying the policy that user selected to add the logs to'
-
-                                $null = &'C:\Windows\System32\CiTool.exe' --update-policy (Join-Path -Path $StagingArea -ChildPath "$($InputXMLObj.SiPolicy.PolicyID).cip") -json
+                                [WDACConfig.CiToolHelper]::UpdatePolicy((Join-Path -Path $StagingArea -ChildPath "$($InputXMLObj.SiPolicy.PolicyID).cip"))
                             }
                         }
                     }
@@ -632,13 +609,13 @@ Function ConvertTo-WDACPolicy {
                     $CurrentStep++
                     Write-Progress -Id 31 -Activity 'Optimizing the MDE CSV data' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
-                    Write-Verbose -Message 'Optimizing the MDE CSV data'
+                    [WDACConfig.Logger]::Write('Optimizing the MDE CSV data')
                     [System.Collections.Hashtable[]]$OptimizedCSVData = Optimize-MDECSVData -CSVPath $MDEAHLogs -StagingArea $StagingArea
 
                     $CurrentStep++
                     Write-Progress -Id 31 -Activity 'Identifying the correlated data in the MDE CSV data' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
-                    Write-Verbose -Message 'Identifying the correlated data in the MDE CSV data'
+                    [WDACConfig.Logger]::Write('Identifying the correlated data in the MDE CSV data')
 
                     if (($null -eq $OptimizedCSVData) -or ($OptimizedCSVData.Count -eq 0)) {
                         Write-ColorfulTextWDACConfig -Color HotPink -InputText 'No valid MDE Advanced Hunting logs available. Exiting...'
@@ -681,7 +658,7 @@ Function ConvertTo-WDACPolicy {
                     $CurrentStep++
                     Write-Progress -Id 31 -Activity 'Displaying the MDE Advanced Hunting logs in a GUI' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
-                    Write-Verbose -Message 'Displaying the MDE Advanced Hunting logs in a GUI'
+                    [WDACConfig.Logger]::Write('Displaying the MDE Advanced Hunting logs in a GUI')
                     [PSCustomObject[]]$SelectMDEAHLogs = $MDEAHLogsToDisplay | Out-GridView -OutputMode Multiple -Title "Displaying $($MDEAHLogsToDisplay.count) Microsoft Defender for Endpoint Advanced Hunting Logs"
 
                     if (($null -eq $SelectMDEAHLogs) -or ($SelectMDEAHLogs.Count -eq 0)) {
@@ -695,31 +672,31 @@ Function ConvertTo-WDACPolicy {
                     # Define the path where the final MDE AH XML policy file will be saved
                     [System.IO.FileInfo]$OutputPolicyPathMDEAH = Join-Path -Path $StagingArea -ChildPath "$SuppPolicyName.xml"
 
-                    Write-Verbose -Message 'Copying the template policy to the staging area'
+                    [WDACConfig.Logger]::Write('Copying the template policy to the staging area')
                     Copy-Item -LiteralPath 'C:\Windows\schemas\CodeIntegrity\ExamplePolicies\AllowAll.xml' -Destination $OutputPolicyPathMDEAH -Force
 
-                    Write-Verbose -Message 'Emptying the policy file in preparation for the new data insertion'
+                    [WDACConfig.Logger]::Write('Emptying the policy file in preparation for the new data insertion')
                     Clear-CiPolicy_Semantic -Path $OutputPolicyPathMDEAH
 
                     $CurrentStep++
                     Write-Progress -Id 31 -Activity 'Building the Signer and Hash objects from the selected MDE AH logs' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
-                    Write-Verbose -Message 'Building the Signer and Hash objects from the selected MDE AH logs'
+                    [WDACConfig.Logger]::Write('Building the Signer and Hash objects from the selected MDE AH logs')
                     [WDACConfig.FileBasedInfoPackage]$DataToUseForBuilding = [WDACConfig.SignerAndHashBuilder]::BuildSignerAndHashObjects((ConvertTo-HashtableArray $SelectMDEAHLogs), 'MDEAH', $Level, $false)
 
                     $CurrentStep++
                     Write-Progress -Id 31 -Activity 'Creating rules for different levels' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
                     if ($Null -ne $DataToUseForBuilding.FilePublisherSigners -and $DataToUseForBuilding.FilePublisherSigners.Count -gt 0) {
-                        Write-Verbose -Message 'Creating File Publisher Level rules'
+                        [WDACConfig.Logger]::Write('Creating File Publisher Level rules')
                         New-FilePublisherLevelRules -FilePublisherSigners $DataToUseForBuilding.FilePublisherSigners -XmlFilePath $OutputPolicyPathMDEAH
                     }
                     if ($Null -ne $DataToUseForBuilding.PublisherSigners -and $DataToUseForBuilding.PublisherSigners.Count -gt 0) {
-                        Write-Verbose -Message 'Creating Publisher Level rules'
+                        [WDACConfig.Logger]::Write('Creating Publisher Level rules')
                         New-PublisherLevelRules -PublisherSigners $DataToUseForBuilding.PublisherSigners -XmlFilePath $OutputPolicyPathMDEAH
                     }
                     if ($Null -ne $DataToUseForBuilding.CompleteHashes -and $DataToUseForBuilding.CompleteHashes.Count -gt 0) {
-                        Write-Verbose -Message 'Creating Hash Level rules'
+                        [WDACConfig.Logger]::Write('Creating Hash Level rules')
                         New-HashLevelRules -Hashes $DataToUseForBuilding.CompleteHashes -XmlFilePath $OutputPolicyPathMDEAH
                     }
 
@@ -728,16 +705,16 @@ Function ConvertTo-WDACPolicy {
                     $CurrentStep++
                     Write-Progress -Id 31 -Activity 'Merging the Hash Level rules' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
-                    Write-Verbose -Message 'Merging the Hash Level rules'
+                    [WDACConfig.Logger]::Write('Merging the Hash Level rules')
                     Remove-AllowElements_Semantic -Path $OutputPolicyPathMDEAH
-                    Close-EmptyXmlNodes_Semantic -XmlFilePath $OutputPolicyPathMDEAH
+                    [WDACConfig.CloseEmptyXmlNodesSemantic]::Close($OutputPolicyPathMDEAH)
 
                     # Remove-UnreferencedFileRuleRefs -xmlFilePath $OutputPolicyPathMDEAH
 
                     $CurrentStep++
                     Write-Progress -Id 31 -Activity 'Merging the Signer Level rules' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
-                    Write-Verbose -Message 'Merging the Signer Level rules'
+                    [WDACConfig.Logger]::Write('Merging the Signer Level rules')
                     Remove-DuplicateFileAttrib_Semantic -XmlFilePath $OutputPolicyPathMDEAH
 
                     $CurrentStep++
@@ -760,89 +737,81 @@ Function ConvertTo-WDACPolicy {
                     Merge-Signers_Semantic -XmlFilePath $OutputPolicyPathMDEAH
 
                     # This function runs twice, once for signed data and once for unsigned data
-                    Close-EmptyXmlNodes_Semantic -XmlFilePath $OutputPolicyPathMDEAH
+                    [WDACConfig.CloseEmptyXmlNodesSemantic]::Close($OutputPolicyPathMDEAH)
 
                     #Region Base To Supplemental Policy Association and Deployment
                     Switch ($True) {
 
                         { $null -ne $BasePolicyFile } {
 
-                            Write-Verbose -Message 'ConvertTo-WDACPolicy: Associating the Supplemental policy with the user input base policy'
+                            [WDACConfig.Logger]::Write('ConvertTo-WDACPolicy: Associating the Supplemental policy with the user input base policy')
 
                             # Objectify the user input base policy file to extract its Base policy ID
                             $InputXMLObj = [System.Xml.XmlDocument](Get-Content -Path $BasePolicyFile)
 
-                            [System.String]$SupplementalPolicyID = Set-CIPolicyIdInfo -FilePath $OutputPolicyPathMDEAH -PolicyName $SuppPolicyName -SupplementsBasePolicyID $InputXMLObj.SiPolicy.BasePolicyID -ResetPolicyID
-                            [System.String]$SupplementalPolicyID = $SupplementalPolicyID.Substring(11)
+                            [System.String]$SupplementalPolicyID = [WDACConfig.SetCiPolicyInfo]::Set($OutputPolicyPathMDEAH, $true, $SuppPolicyName, $InputXMLObj.SiPolicy.BasePolicyID, $null)
 
                             # Configure policy rule options
-                            Set-CiRuleOptions -FilePath $OutputPolicyPathMDEAH -Template Supplemental
+                            [WDACConfig.CiRuleOptions]::Set($OutputPolicyPathMDEAH, [WDACConfig.CiRuleOptions+PolicyTemplate]::Supplemental, $null, $null, $null, $null, $null, $null, $null, $null, $null)
 
-                            Write-Verbose -Message 'ConvertTo-WDACPolicy: Copying the policy file to the User Config directory'
+                            [WDACConfig.Logger]::Write('ConvertTo-WDACPolicy: Copying the policy file to the User Config directory')
                             Copy-Item -Path $OutputPolicyPathMDEAH -Destination ([WDACConfig.GlobalVars]::UserConfigDir) -Force
 
                             if ($Deploy) {
                                 $null = ConvertFrom-CIPolicy -XmlFilePath $OutputPolicyPathMDEAH -BinaryFilePath (Join-Path -Path $StagingArea -ChildPath "$SupplementalPolicyID.cip")
 
-                                Write-Verbose -Message 'ConvertTo-WDACPolicy: Deploying the Supplemental policy'
-
-                                $null = &'C:\Windows\System32\CiTool.exe' --update-policy (Join-Path -Path $StagingArea -ChildPath "$SupplementalPolicyID.cip") -json
+                                [WDACConfig.CiToolHelper]::UpdatePolicy((Join-Path -Path $StagingArea -ChildPath "$SupplementalPolicyID.cip"))
                             }
                         }
                         { $null -ne $BasePolicyGUID } {
 
-                            Write-Verbose -Message 'ConvertTo-WDACPolicy: Assigning the user input GUID to the base policy ID of the supplemental policy'
+                            [WDACConfig.Logger]::Write('ConvertTo-WDACPolicy: Assigning the user input GUID to the base policy ID of the supplemental policy')
 
-                            [System.String]$SupplementalPolicyID = Set-CIPolicyIdInfo -FilePath $OutputPolicyPathMDEAH -PolicyName $SuppPolicyName -SupplementsBasePolicyID $BasePolicyGUID -ResetPolicyID
-                            [System.String]$SupplementalPolicyID = $SupplementalPolicyID.Substring(11)
+                            [System.String]$SupplementalPolicyID = [WDACConfig.SetCiPolicyInfo]::Set($OutputPolicyPathMDEAH, $true, $SuppPolicyName, $BasePolicyGUID, $null)
 
                             # Configure policy rule options
-                            Set-CiRuleOptions -FilePath $OutputPolicyPathMDEAH -Template Supplemental
+                            [WDACConfig.CiRuleOptions]::Set($OutputPolicyPathMDEAH, [WDACConfig.CiRuleOptions+PolicyTemplate]::Supplemental, $null, $null, $null, $null, $null, $null, $null, $null, $null)
 
-                            Write-Verbose -Message 'ConvertTo-WDACPolicy: Copying the policy file to the User Config directory'
+                            [WDACConfig.Logger]::Write('ConvertTo-WDACPolicy: Copying the policy file to the User Config directory')
                             Copy-Item -Path $OutputPolicyPathMDEAH -Destination ([WDACConfig.GlobalVars]::UserConfigDir) -Force
 
                             if ($Deploy) {
                                 $null = ConvertFrom-CIPolicy -XmlFilePath $OutputPolicyPathMDEAH -BinaryFilePath (Join-Path -Path $StagingArea -ChildPath "$SupplementalPolicyID.cip")
 
-                                Write-Verbose -Message 'ConvertTo-WDACPolicy: Deploying the Supplemental policy'
-
-                                $null = &'C:\Windows\System32\CiTool.exe' --update-policy (Join-Path -Path $StagingArea -ChildPath "$SupplementalPolicyID.cip") -json
+                                [WDACConfig.CiToolHelper]::UpdatePolicy((Join-Path -Path $StagingArea -ChildPath "$SupplementalPolicyID.cip"))
                             }
                         }
                         { $null -ne $PolicyToAddLogsTo } {
-                            Write-Verbose -Message 'ConvertTo-WDACPolicy: Adding the logs to the policy that user selected'
+                            [WDACConfig.Logger]::Write('ConvertTo-WDACPolicy: Adding the logs to the policy that user selected')
 
                             $MacrosBackup = Checkpoint-Macros -XmlFilePathIn $PolicyToAddLogsTo -Backup
 
                             # Objectify the user input policy file to extract its policy ID
                             $InputXMLObj = [System.Xml.XmlDocument](Get-Content -Path $PolicyToAddLogsTo)
 
-                            $null = Set-CIPolicyIdInfo -FilePath $OutputPolicyPathMDEAH -PolicyName $SuppPolicyName -ResetPolicyID
+                            $null = [WDACConfig.SetCiPolicyInfo]::Set($OutputPolicyPathMDEAH, $true, $SuppPolicyName, $null, $null)
 
                             # Remove all policy rule options prior to merging the policies since we don't need to add/remove any policy rule options to/from the user input policy
-                            Set-CiRuleOptions -FilePath $OutputPolicyPathMDEAH -RemoveAll
+                            [WDACConfig.CiRuleOptions]::Set($OutputPolicyPathMDEAH, $null, $null, $null, $null, $null, $null, $null, $null, $null, $true)
 
                             $null = Merge-CIPolicy -PolicyPaths $PolicyToAddLogsTo, $OutputPolicyPathMDEAH -OutputFilePath $PolicyToAddLogsTo
 
-                            Set-HVCIOptions -Strict -FilePath $PolicyToAddLogsTo
+                            [WDACConfig.UpdateHvciOptions]::Update($PolicyToAddLogsTo)
 
                             if ($null -ne $MacrosBackup) {
-                                Write-Verbose -Message 'Restoring the Macros in the policy'
+                                [WDACConfig.Logger]::Write('Restoring the Macros in the policy')
                                 Checkpoint-Macros -XmlFilePathOut $PolicyToAddLogsTo -Restore -MacrosBackup $MacrosBackup
                             }
 
                             if ($Deploy) {
                                 $null = ConvertFrom-CIPolicy -XmlFilePath $PolicyToAddLogsTo -BinaryFilePath (Join-Path -Path $StagingArea -ChildPath "$($InputXMLObj.SiPolicy.PolicyID).cip")
 
-                                Write-Verbose -Message 'ConvertTo-WDACPolicy: Deploying the policy that user selected to add the MDE AH logs to'
-
-                                $null = &'C:\Windows\System32\CiTool.exe' --update-policy (Join-Path -Path $StagingArea -ChildPath "$($InputXMLObj.SiPolicy.PolicyID).cip") -json
+                                [WDACConfig.CiToolHelper]::UpdatePolicy((Join-Path -Path $StagingArea -ChildPath "$($InputXMLObj.SiPolicy.PolicyID).cip"))
                             }
                         }
                         Default {
-                            Write-Verbose -Message 'ConvertTo-WDACPolicy: Copying the policy file to the User Config directory'
-                            Set-CiRuleOptions -FilePath $OutputPolicyPathMDEAH -Template Supplemental
+                            [WDACConfig.Logger]::Write('ConvertTo-WDACPolicy: Copying the policy file to the User Config directory')
+                            [WDACConfig.CiRuleOptions]::Set($OutputPolicyPathMDEAH, [WDACConfig.CiRuleOptions+PolicyTemplate]::Supplemental, $null, $null, $null, $null, $null, $null, $null, $null, $null)
                             Copy-Item -Path $OutputPolicyPathMDEAH -Destination ([WDACConfig.GlobalVars]::UserConfigDir) -Force
                         }
                     }
@@ -899,7 +868,7 @@ Function ConvertTo-WDACPolicy {
                     # Display the logs in a grid view using the build-in cmdlet
                     $SelectedLogs = $EventsToDisplay | Out-GridView -OutputMode Multiple -Title "Displaying $($EventsToDisplay.count) Code Integrity Logs of $LogType type(s)"
 
-                    Write-Verbose -Message "ConvertTo-WDACPolicy: Selected logs count: $($SelectedLogs.count)"
+                    [WDACConfig.Logger]::Write("ConvertTo-WDACPolicy: Selected logs count: $($SelectedLogs.count)")
 
                     if (($null -eq $SelectedLogs) -or ( $SelectedLogs.Count -eq 0)) {
                         Write-ColorfulTextWDACConfig -Color HotPink -InputText 'No logs were selected to create a WDAC policy from. Exiting...'
@@ -909,28 +878,28 @@ Function ConvertTo-WDACPolicy {
                     # Define the path where the final Evtx XML policy file will be saved
                     [System.IO.FileInfo]$OutputPolicyPathEVTX = Join-Path -Path $StagingArea -ChildPath "$SuppPolicyName.xml"
 
-                    Write-Verbose -Message 'Copying the template policy to the staging area'
+                    [WDACConfig.Logger]::Write('Copying the template policy to the staging area')
                     Copy-Item -LiteralPath 'C:\Windows\schemas\CodeIntegrity\ExamplePolicies\AllowAll.xml' -Destination $OutputPolicyPathEVTX -Force
 
-                    Write-Verbose -Message 'Emptying the policy file in preparation for the new data insertion'
+                    [WDACConfig.Logger]::Write('Emptying the policy file in preparation for the new data insertion')
                     Clear-CiPolicy_Semantic -Path $OutputPolicyPathEVTX
 
                     $CurrentStep++
                     Write-Progress -Id 32 -Activity 'Building Signers and file rule' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
-                    Write-Verbose -Message 'Building the Signer and Hash objects from the selected Evtx logs'
+                    [WDACConfig.Logger]::Write('Building the Signer and Hash objects from the selected Evtx logs')
                     [WDACConfig.FileBasedInfoPackage]$DataToUseForBuilding = [WDACConfig.SignerAndHashBuilder]::BuildSignerAndHashObjects((ConvertTo-HashtableArray $SelectedLogs), 'EVTX', $Level, $false)
 
                     if ($Null -ne $DataToUseForBuilding.FilePublisherSigners -and $DataToUseForBuilding.FilePublisherSigners.Count -gt 0) {
-                        Write-Verbose -Message 'Creating File Publisher Level rules'
+                        [WDACConfig.Logger]::Write('Creating File Publisher Level rules')
                         New-FilePublisherLevelRules -FilePublisherSigners $DataToUseForBuilding.FilePublisherSigners -XmlFilePath $OutputPolicyPathEVTX
                     }
                     if ($Null -ne $DataToUseForBuilding.PublisherSigners -and $DataToUseForBuilding.PublisherSigners.Count -gt 0) {
-                        Write-Verbose -Message 'Creating Publisher Level rules'
+                        [WDACConfig.Logger]::Write('Creating Publisher Level rules')
                         New-PublisherLevelRules -PublisherSigners $DataToUseForBuilding.PublisherSigners -XmlFilePath $OutputPolicyPathEVTX
                     }
                     if ($Null -ne $DataToUseForBuilding.CompleteHashes -and $DataToUseForBuilding.CompleteHashes.Count -gt 0) {
-                        Write-Verbose -Message 'Creating Hash Level rules'
+                        [WDACConfig.Logger]::Write('Creating Hash Level rules')
                         New-HashLevelRules -Hashes $DataToUseForBuilding.CompleteHashes -XmlFilePath $OutputPolicyPathEVTX
                     }
 
@@ -939,16 +908,16 @@ Function ConvertTo-WDACPolicy {
                     $CurrentStep++
                     Write-Progress -Id 32 -Activity 'Performing merge operations' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
-                    Write-Verbose -Message 'Merging the Hash Level rules'
+                    [WDACConfig.Logger]::Write('Merging the Hash Level rules')
                     Remove-AllowElements_Semantic -Path $OutputPolicyPathEVTX
-                    Close-EmptyXmlNodes_Semantic -XmlFilePath $OutputPolicyPathEVTX
+                    [WDACConfig.CloseEmptyXmlNodesSemantic]::Close($OutputPolicyPathEVTX)
 
                     # Remove-UnreferencedFileRuleRefs -xmlFilePath $OutputPolicyPathEVTX
 
                     $CurrentStep++
                     Write-Progress -Id 32 -Activity 'Making sure there are no duplicates' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
-                    Write-Verbose -Message 'Merging the Signer Level rules'
+                    [WDACConfig.Logger]::Write('Merging the Signer Level rules')
                     Remove-DuplicateFileAttrib_Semantic -XmlFilePath $OutputPolicyPathEVTX
 
                     # 2 passes are necessary
@@ -956,7 +925,7 @@ Function ConvertTo-WDACPolicy {
                     Merge-Signers_Semantic -XmlFilePath $OutputPolicyPathEVTX
 
                     # This function runs twice, once for signed data and once for unsigned data
-                    Close-EmptyXmlNodes_Semantic -XmlFilePath $OutputPolicyPathEVTX
+                    [WDACConfig.CloseEmptyXmlNodesSemantic]::Close($OutputPolicyPathEVTX)
 
                     #Region Base To Supplemental Policy Association and Deployment
 
@@ -967,82 +936,74 @@ Function ConvertTo-WDACPolicy {
 
                         { $null -ne $BasePolicyFile } {
 
-                            Write-Verbose -Message 'ConvertTo-WDACPolicy: Associating the Supplemental policy with the user input base policy'
+                            [WDACConfig.Logger]::Write('ConvertTo-WDACPolicy: Associating the Supplemental policy with the user input base policy')
 
                             # Objectify the user input base policy file to extract its Base policy ID
                             $InputXMLObj = [System.Xml.XmlDocument](Get-Content -Path $BasePolicyFile)
 
-                            [System.String]$SupplementalPolicyID = Set-CIPolicyIdInfo -FilePath $OutputPolicyPathEVTX -PolicyName $SuppPolicyName -SupplementsBasePolicyID $InputXMLObj.SiPolicy.BasePolicyID -ResetPolicyID
-                            [System.String]$SupplementalPolicyID = $SupplementalPolicyID.Substring(11)
+                            [System.String]$SupplementalPolicyID = [WDACConfig.SetCiPolicyInfo]::Set($OutputPolicyPathEVTX, $true, $SuppPolicyName, $InputXMLObj.SiPolicy.BasePolicyID, $null)
 
                             # Configure policy rule options
-                            Set-CiRuleOptions -FilePath $OutputPolicyPathEVTX -Template Supplemental
+                            [WDACConfig.CiRuleOptions]::Set($OutputPolicyPathEVTX, [WDACConfig.CiRuleOptions+PolicyTemplate]::Supplemental, $null, $null, $null, $null, $null, $null, $null, $null, $null)
 
-                            Write-Verbose -Message 'ConvertTo-WDACPolicy: Copying the policy file to the User Config directory'
+                            [WDACConfig.Logger]::Write('ConvertTo-WDACPolicy: Copying the policy file to the User Config directory')
                             Copy-Item -Path $OutputPolicyPathEVTX -Destination ([WDACConfig.GlobalVars]::UserConfigDir) -Force
 
                             if ($Deploy) {
                                 $null = ConvertFrom-CIPolicy -XmlFilePath $OutputPolicyPathEVTX -BinaryFilePath (Join-Path -Path $StagingArea -ChildPath "$SupplementalPolicyID.cip")
 
-                                Write-Verbose -Message 'ConvertTo-WDACPolicy: Deploying the Supplemental policy'
-
-                                $null = &'C:\Windows\System32\CiTool.exe' --update-policy (Join-Path -Path $StagingArea -ChildPath "$SupplementalPolicyID.cip") -json
+                                [WDACConfig.CiToolHelper]::UpdatePolicy((Join-Path -Path $StagingArea -ChildPath "$SupplementalPolicyID.cip"))
                             }
                         }
                         { $null -ne $BasePolicyGUID } {
 
-                            Write-Verbose -Message 'ConvertTo-WDACPolicy: Assigning the user input GUID to the base policy ID of the supplemental policy'
+                            [WDACConfig.Logger]::Write('ConvertTo-WDACPolicy: Assigning the user input GUID to the base policy ID of the supplemental policy')
 
-                            [System.String]$SupplementalPolicyID = Set-CIPolicyIdInfo -FilePath $OutputPolicyPathEVTX -PolicyName $SuppPolicyName -SupplementsBasePolicyID $BasePolicyGUID -ResetPolicyID
-                            [System.String]$SupplementalPolicyID = $SupplementalPolicyID.Substring(11)
+                            [System.String]$SupplementalPolicyID = [WDACConfig.SetCiPolicyInfo]::Set($OutputPolicyPathEVTX, $true, $SuppPolicyName, $BasePolicyGUID, $null)
 
                             # Configure policy rule options
-                            Set-CiRuleOptions -FilePath $OutputPolicyPathEVTX -Template Supplemental
+                            [WDACConfig.CiRuleOptions]::Set($OutputPolicyPathEVTX, [WDACConfig.CiRuleOptions+PolicyTemplate]::Supplemental, $null, $null, $null, $null, $null, $null, $null, $null, $null)
 
-                            Write-Verbose -Message 'ConvertTo-WDACPolicy: Copying the policy file to the User Config directory'
+                            [WDACConfig.Logger]::Write('ConvertTo-WDACPolicy: Copying the policy file to the User Config directory')
                             Copy-Item -Path $OutputPolicyPathEVTX -Destination ([WDACConfig.GlobalVars]::UserConfigDir) -Force
 
                             if ($Deploy) {
                                 $null = ConvertFrom-CIPolicy -XmlFilePath $OutputPolicyPathEVTX -BinaryFilePath (Join-Path -Path $StagingArea -ChildPath "$SupplementalPolicyID.cip")
 
-                                Write-Verbose -Message 'ConvertTo-WDACPolicy: Deploying the Supplemental policy'
-
-                                $null = &'C:\Windows\System32\CiTool.exe' --update-policy (Join-Path -Path $StagingArea -ChildPath "$SupplementalPolicyID.cip") -json
+                                [WDACConfig.CiToolHelper]::UpdatePolicy((Join-Path -Path $StagingArea -ChildPath "$SupplementalPolicyID.cip"))
                             }
                         }
                         { $null -ne $PolicyToAddLogsTo } {
-                            Write-Verbose -Message 'ConvertTo-WDACPolicy: Adding the logs to the policy that user selected'
+                            [WDACConfig.Logger]::Write('ConvertTo-WDACPolicy: Adding the logs to the policy that user selected')
 
                             $MacrosBackup = Checkpoint-Macros -XmlFilePathIn $PolicyToAddLogsTo -Backup
 
                             # Objectify the user input policy file to extract its policy ID
                             $InputXMLObj = [System.Xml.XmlDocument](Get-Content -Path $PolicyToAddLogsTo)
 
-                            $null = Set-CIPolicyIdInfo -FilePath $OutputPolicyPathEVTX -PolicyName $SuppPolicyName -ResetPolicyID
+                            $null = [WDACConfig.SetCiPolicyInfo]::Set($OutputPolicyPathEVTX, $true, $SuppPolicyName, $null, $null)
 
                             # Remove all policy rule options prior to merging the policies since we don't need to add/remove any policy rule options to/from the user input policy
-                            Set-CiRuleOptions -FilePath $OutputPolicyPathEVTX -RemoveAll
+                            [WDACConfig.CiRuleOptions]::Set($OutputPolicyPathEVTX, $null, $null, $null, $null, $null, $null, $null, $null, $null, $true)
 
                             $null = Merge-CIPolicy -PolicyPaths $PolicyToAddLogsTo, $OutputPolicyPathEVTX -OutputFilePath $PolicyToAddLogsTo
 
-                            Set-HVCIOptions -Strict -FilePath $PolicyToAddLogsTo
+                            [WDACConfig.UpdateHvciOptions]::Update($PolicyToAddLogsTo)
 
                             if ($null -ne $MacrosBackup) {
-                                Write-Verbose -Message 'Restoring the Macros in the policy'
+                                [WDACConfig.Logger]::Write('Restoring the Macros in the policy')
                                 Checkpoint-Macros -XmlFilePathOut $PolicyToAddLogsTo -Restore -MacrosBackup $MacrosBackup
                             }
 
                             if ($Deploy) {
                                 $null = ConvertFrom-CIPolicy -XmlFilePath $PolicyToAddLogsTo -BinaryFilePath (Join-Path -Path $StagingArea -ChildPath "$($InputXMLObj.SiPolicy.PolicyID).cip")
 
-                                Write-Verbose -Message 'ConvertTo-WDACPolicy: Deploying the policy that user selected to add the Evtx logs to'
-
-                                $null = &'C:\Windows\System32\CiTool.exe' --update-policy (Join-Path -Path $StagingArea -ChildPath "$($InputXMLObj.SiPolicy.PolicyID).cip") -json
+                                [WDACConfig.CiToolHelper]::UpdatePolicy((Join-Path -Path $StagingArea -ChildPath "$($InputXMLObj.SiPolicy.PolicyID).cip"))
                             }
                         }
                         Default {
-                            Write-Verbose -Message 'ConvertTo-WDACPolicy: Copying the policy file to the User Config directory'
-                            Set-CiRuleOptions -FilePath $OutputPolicyPathEVTX -Template Supplemental
+                            [WDACConfig.Logger]::Write('ConvertTo-WDACPolicy: Copying the policy file to the User Config directory')
+                            [WDACConfig.CiRuleOptions]::Set($OutputPolicyPathEVTX, [WDACConfig.CiRuleOptions+PolicyTemplate]::Supplemental, $null, $null, $null, $null, $null, $null, $null, $null, $null)
                             Copy-Item -Path $OutputPolicyPathEVTX -Destination ([WDACConfig.GlobalVars]::UserConfigDir) -Force
                         }
                     }
@@ -1059,7 +1020,7 @@ Function ConvertTo-WDACPolicy {
             Write-Progress -Id 31 -Activity 'Complete.' -Completed
             Write-Progress -Id 32 -Activity 'Complete.' -Completed
 
-            if (-NOT $Debug) {
+            if (![WDACConfig.GlobalVars]::DebugPreference) {
                 Remove-Item -Path $StagingArea -Recurse -Force
             }
         }

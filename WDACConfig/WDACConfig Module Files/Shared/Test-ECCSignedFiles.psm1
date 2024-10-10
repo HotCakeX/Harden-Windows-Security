@@ -36,7 +36,7 @@ Function Test-ECCSignedFiles {
         [Parameter(Mandatory = $true)][System.IO.FileInfo]$ECCSignedFilesTempPolicy
     )
     Begin {
-        [WDACConfig.VerboseLogger]::Write('Test-ECCSignedFiles: Importing the required sub-modules')
+        [WDACConfig.Logger]::Write('Test-ECCSignedFiles: Importing the required sub-modules')
         Import-Module -Force -FullyQualifiedName @(
             "$([WDACConfig.GlobalVars]::ModuleRootPath)\Shared\Get-KernelModeDrivers.psm1",
             "$([WDACConfig.GlobalVars]::ModuleRootPath)\XMLOps\New-HashLevelRules.psm1",
@@ -48,7 +48,7 @@ Function Test-ECCSignedFiles {
 
     }
     Process {
-        [WDACConfig.VerboseLogger]::Write("Test-ECCSignedFiles: Processing $($WDACSupportedFiles.Count) WDAC compliant files to check for ECC signatures.")
+        [WDACConfig.Logger]::Write("Test-ECCSignedFiles: Processing $($WDACSupportedFiles.Count) WDAC compliant files to check for ECC signatures.")
         # The check for existence is mainly for the files detected in audit logs that no longer exist on the disk
         # Audit logs or MDE data simply don't have the data related to the file's signature algorithm, so only local files can be checked
 
@@ -62,7 +62,7 @@ Function Test-ECCSignedFiles {
                     if ($AuthResult.Status -ieq 'Valid') {
 
                         if (($AuthResult.SignerCertificate.PublicKey.Oid.Value).Contains('1.2.840.10045.2.1')) {
-                            #  [WDACConfig.VerboseLogger]::Write("Test-ECCSignedFiles: The file '$Path' is signed with ECC algorithm. Will create Hash Level rules for it.")
+                            #  [WDACConfig.Logger]::Write("Test-ECCSignedFiles: The file '$Path' is signed with ECC algorithm. Will create Hash Level rules for it.")
                             $Path
                         }
                     }
@@ -82,9 +82,9 @@ Function Test-ECCSignedFiles {
 
                 foreach ($ECCSignedFile in $ECCSignedFiles) {
 
-                    [WDACConfig.VerboseLogger]::Write("Test-ECCSignedFiles: Creating Hash Level rules for the ECC signed file '$ECCSignedFile'.")
+                    [WDACConfig.Logger]::Write("Test-ECCSignedFiles: Creating Hash Level rules for the ECC signed file '$ECCSignedFile'.")
 
-                    [WDACConfig.AuthenticodePageHashes]$HashOutput = [WDACConfig.AuthPageHash]::GetCiFileHashes($ECCSignedFile)
+                    [WDACConfig.CodeIntegrityHashes]$HashOutput = [WDACConfig.CiFileHash]::GetCiFileHashes($ECCSignedFile)
 
                     $CompleteHashes.Add([WDACConfig.HashCreator]::New(
                             $HashOutput.SHA256Authenticode,
@@ -104,7 +104,7 @@ Function Test-ECCSignedFiles {
                 Return $ECCSignedFilesTempPolicy
             }
             else {
-                [WDACConfig.VerboseLogger]::Write('Test-ECCSignedFiles: No ECC signed files found. Exiting the function.')
+                [WDACConfig.Logger]::Write('Test-ECCSignedFiles: No ECC signed files found. Exiting the function.')
                 Return $null
             }
         }

@@ -21,9 +21,7 @@ Function New-HashLevelRules {
         [Parameter(Mandatory = $true)][System.IO.FileInfo]$XmlFilePath
     )
     Begin {
-        . "$([WDACConfig.GlobalVars]::ModuleRootPath)\CoreExt\PSDefaultParameterValues.ps1"
-
-        [WDACConfig.VerboseLogger]::Write("New-HashLevelRules: There are $($Hashes.Count) Hash rules to be added to the XML file")
+        [WDACConfig.Logger]::Write("New-HashLevelRules: There are $($Hashes.Count) Hash rules to be added to the XML file")
 
         # Load the XML file
         [System.Xml.XmlDocument]$Xml = Get-Content -Path $XmlFilePath

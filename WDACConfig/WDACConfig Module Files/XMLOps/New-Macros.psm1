@@ -37,7 +37,7 @@ Function New-Macros {
                     [System.Void]$Macros.Add($ExFileInfo.OriginalFileName)
                 }
                 else {
-                    [WDACConfig.VerboseLogger]::Write("New-Macros: OriginalFileName property is empty for the file: $($Exe.FullName)")
+                    [WDACConfig.Logger]::Write("New-Macros: OriginalFileName property is empty for the file: $($Exe.FullName)")
                 }
             }
         }

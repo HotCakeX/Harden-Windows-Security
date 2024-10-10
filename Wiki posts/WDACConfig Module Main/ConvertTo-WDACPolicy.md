@@ -73,7 +73,7 @@ The logs can be filtered based on many criteria using the available parameters.
 The output of this cmdlet is a Supplemental Application Control (WDAC) policy.
 Based on the input parameters, it can be associated with a base policy or merged with an existing Base or Supplemental policy.
 
-The cmdlet can be used for local and remote systems. You can utilize this cmdlet to create Application Control for Business policies from MDE Advanced Hunting and then deploy them using Microsoft Intune to your endpoints.
+The cmdlet can be used for local and remote systems. You can utilize this cmdlet to create App Control for Business policies from MDE Advanced Hunting and then deploy them using Microsoft Intune to your endpoints.
 
 You can utilize this cmdlet to use the evtx log files you aggregated from your endpoints and create a WDAC policy from them.
 

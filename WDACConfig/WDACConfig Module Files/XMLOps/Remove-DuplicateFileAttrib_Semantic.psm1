@@ -23,8 +23,6 @@ function Remove-DuplicateFileAttrib_Semantic {
         [Parameter(Mandatory = $true)][System.IO.FileInfo]$XmlFilePath
     )
     Begin {
-        . "$([WDACConfig.GlobalVars]::ModuleRootPath)\CoreExt\PSDefaultParameterValues.ps1"
-
         # Load the XML file
         [System.Xml.XmlDocument]$XmlDoc = New-Object -TypeName System.Xml.XmlDocument
         $XmlDoc.Load($XmlFilePath)
@@ -146,7 +144,7 @@ function Remove-DuplicateFileAttrib_Semantic {
                             }
                         }
                         # Remove the duplicate FileAttrib element
-                        [WDACConfig.VerboseLogger]::Write("Remove-DuplicateFileAttrib: Removed duplicate FileAttrib with ID: $($FileAttribToRemove.GetAttribute('ID'))")
+                        [WDACConfig.Logger]::Write("Remove-DuplicateFileAttrib: Removed duplicate FileAttrib with ID: $($FileAttribToRemove.GetAttribute('ID'))")
                         [System.Void]$FileAttribToRemove.ParentNode.RemoveChild($FileAttribToRemove)
                     }
                 }

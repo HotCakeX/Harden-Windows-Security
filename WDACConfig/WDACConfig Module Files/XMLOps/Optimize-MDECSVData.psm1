@@ -22,15 +22,12 @@ Function Optimize-MDECSVData {
         [Parameter(Mandatory = $true)][System.IO.DirectoryInfo]$StagingArea
     )
     Begin {
-        [System.Boolean]$Debug = $PSBoundParameters.Debug.IsPresent ? $true : $false
-        . "$([WDACConfig.GlobalVars]::ModuleRootPath)\CoreExt\PSDefaultParameterValues.ps1"
-
         Try {
             # Get the number of enabled CPU cores
             $CPUEnabledCores = [System.Int64](Get-CimInstance -ClassName Win32_Processor -Verbose:$false).NumberOfEnabledCore
         }
         Catch {
-            [WDACConfig.VerboseLogger]::Write('Optimize-MDECSVData: Unable to detect the number of enabled CPU cores, defaulting to 5...')
+            [WDACConfig.Logger]::Write('Optimize-MDECSVData: Unable to detect the number of enabled CPU cores, defaulting to 5...')
         }
     }
 
@@ -71,9 +68,9 @@ Function Optimize-MDECSVData {
 
     End {
 
-        if ($Debug) {
+        if ([WDACConfig.GlobalVars]::DebugPreference) {
 
-            [WDACConfig.VerboseLogger]::Write('Optimize-MDECSVData: Debug parameter was used, exporting the new array to a CSV file...')
+            [WDACConfig.Logger]::Write('Optimize-MDECSVData: Debug parameter was used, exporting the new array to a CSV file...')
 
             # Initialize a HashSet to keep track of all property names (aka keys in the HashTable Array)
             $PropertyNames = [System.Collections.Generic.HashSet[System.String]] @()

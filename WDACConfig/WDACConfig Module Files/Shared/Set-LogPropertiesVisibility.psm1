@@ -20,8 +20,6 @@ Function Set-LogPropertiesVisibility {
         [Parameter(Mandatory = $true)][PSCustomObject[]]$EventsToDisplay
     )
     Begin {
-        . "$([WDACConfig.GlobalVars]::ModuleRootPath)\CoreExt\PSDefaultParameterValues.ps1"
-
         Switch ($LogType) {
             'Evtx/Local' {
                 [System.String[]]$PropertiesToDisplay = @('TimeCreated', 'File Name', 'Full Path', 'Process Name', 'ProductName', 'OriginalFileName', 'InternalName', 'PackageFamilyName', 'FileVersion', 'Publishers', 'PolicyName', 'SI Signing Scenario')

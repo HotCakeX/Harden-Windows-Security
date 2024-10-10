@@ -90,7 +90,7 @@ Function New-WDACConfig {
             $CurrentStep++
             Write-Progress -Id 7 -Activity 'Getting the recommended block rules' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
-            [WDACConfig.BasePolicyCreator]::GetBlockRules($StagingArea, $Deploy)
+            [WDACConfig.BasePolicyCreator]::GetBlockRules($StagingArea, $Deploy, $false)
 
             [System.IO.FileInfo]$FinalPolicyPath = Join-Path -Path $StagingArea -ChildPath "$Name.xml"
 
@@ -145,11 +145,11 @@ Function New-WDACConfig {
                 'PolicyType' {
                     Switch ($PSBoundParameters['PolicyType']) {
                         'DefaultWindows' { Build-DefaultWindows ; break }
-                        'AllowMicrosoft' { [WDACConfig.BasePolicyCreator]::BuildAllowMSFT($StagingArea, $Audit, $LogSize, $Deploy, $RequireEVSigners, $EnableScriptEnforcement, $TestMode) ; break }
-                        'SignedAndReputable' { [WDACConfig.BasePolicyCreator]::BuildSignedAndReputable($StagingArea, $Audit, $LogSize, $Deploy, $RequireEVSigners, $EnableScriptEnforcement, $TestMode) ; break }
+                        'AllowMicrosoft' { [WDACConfig.BasePolicyCreator]::BuildAllowMSFT($StagingArea, $Audit, $LogSize, $Deploy, $RequireEVSigners, $EnableScriptEnforcement, $TestMode, $false) ; break }
+                        'SignedAndReputable' { [WDACConfig.BasePolicyCreator]::BuildSignedAndReputable($StagingArea, $Audit, $LogSize, $Deploy, $RequireEVSigners, $EnableScriptEnforcement, $TestMode, $false) ; break }
                     }
                 }
-                'GetUserModeBlockRules' { [WDACConfig.BasePolicyCreator]::GetBlockRules($StagingArea, $Deploy) ; break }
+                'GetUserModeBlockRules' { [WDACConfig.BasePolicyCreator]::GetBlockRules($StagingArea, $Deploy, $false) ; break }
                 'GetDriverBlockRules' {
                     if ($AutoUpdate) {
                         [WDACConfig.BasePolicyCreator]::SetAutoUpdateDriverBlockRules(); break

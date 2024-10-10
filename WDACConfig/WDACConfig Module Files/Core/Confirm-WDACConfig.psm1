@@ -145,8 +145,6 @@ Function Confirm-WDACConfig {
     https://github.com/HotCakeX/Harden-Windows-Security/wiki/Confirm-WDACConfig
 .DESCRIPTION
     Using official Microsoft methods, Show the status of App Control for Business on the system, list the current deployed policies and show details about each of them.
-.FUNCTIONALITY
-    Using official Microsoft methods, Show the status of App Control for Business on the system, list the current deployed policies and show details about each of them.
 .PARAMETER ListActivePolicies
     Lists the currently deployed policies and shows details about each of them
 .PARAMETER OnlySystemPolicies

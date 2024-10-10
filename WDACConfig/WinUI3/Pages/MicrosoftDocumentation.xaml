@@ -56,7 +56,7 @@
             x:Name="MicrosoftDocumentationWebView2"
             Source="https://learn.microsoft.com/en-us/windows/security/application-security/application-control/app-control-for-business/appcontrol"
             HorizontalAlignment="Stretch"
-            VerticalAlignment="Stretch"            
+            VerticalAlignment="Stretch"
             MinHeight="200"
             MinWidth="200" />
     </Grid>

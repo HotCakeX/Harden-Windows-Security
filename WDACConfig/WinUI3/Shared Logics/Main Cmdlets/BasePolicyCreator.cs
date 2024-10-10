@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -163,20 +164,25 @@ namespace WDACConfig
 
 
             Logger.Write("Displaying extra info about the Microsoft recommended Drivers block list");
-            DriversBlockListInfoGathering();
+            _ = DriversBlockListInfoGathering();
 
+        }
+
+        public class DriverBlockListInfo
+        {
+            public string? Version { get; set; }
+            public DateTime LastUpdated { get; set; }
         }
 
 
         /// <summary>
         /// Used to supply extra information regarding Microsoft recommended driver block rules
         /// </summary>
-        public static void DriversBlockListInfoGathering()
+        /// <returns></returns>
+        public static DriverBlockListInfo? DriversBlockListInfoGathering()
         {
-
             try
             {
-
                 // The returned date is based on the local system's time-zone
 
                 // Set variables
@@ -188,7 +194,6 @@ namespace WDACConfig
 
                 using HttpClient httpClient = new();
                 httpClient.DefaultRequestHeaders.UserAgent.ParseAdd("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36");
-
 
                 // Call GitHub API to get commit details
                 string response = httpClient.GetStringAsync(apiUrl).GetAwaiter().GetResult();
@@ -203,11 +208,13 @@ namespace WDACConfig
                                            .GetProperty("date")
                                            .GetString();
 
+                DateTime lastUpdated = DateTime.MinValue;
+
                 if (dateString is not null)
                 {
-                    DateTime date = DateTime.Parse(dateString, CultureInfo.InvariantCulture);
+                    lastUpdated = DateTime.Parse(dateString, CultureInfo.InvariantCulture);
 
-                    Logger.Write($"The document containing the drivers block list on GitHub was last updated on {date}");
+                    Logger.Write($"The document containing the drivers block list on GitHub was last updated on {lastUpdated}");
                 }
 
                 // Fetch the content of the Markdown file
@@ -215,20 +222,31 @@ namespace WDACConfig
                 string markdownContent = httpClient.GetStringAsync(markdownUrl).GetAwaiter().GetResult();
 
                 // Use Regex to find the version
+                string version = string.Empty;
                 var match = Regex.Match(markdownContent, @"<VersionEx>(.*?)<\/VersionEx>");
                 if (match.Success)
                 {
-                    string version = match.Groups[1].Value;
+                    version = match.Groups[1].Value;
                     Logger.Write($"The current version of Microsoft recommended drivers block list is {version}");
                 }
                 else
                 {
                     Logger.Write("Version not found in the Markdown content.");
                 }
+
+                // Return an instance of DriverBlockListInfo with extracted data
+                return new DriverBlockListInfo
+                {
+                    Version = version,
+                    LastUpdated = lastUpdated
+                };
             }
             catch (Exception ex)
             {
                 Logger.Write($"An error occurred: {ex.Message}");
+
+                // Return null in case of an error
+                return null;
             }
         }
 
@@ -297,8 +315,8 @@ namespace WDACConfig
             Logger.Write("SiPolicy.p7b has been deployed and policies refreshed.");
 
 
-            Logger.Write("Displaying extra info about the $Name");
-            DriversBlockListInfoGathering();
+            Logger.Write("Displaying extra info about the Microsoft recommended Drivers block list");
+            _ = DriversBlockListInfoGathering();
         }
 
 
@@ -353,7 +371,7 @@ namespace WDACConfig
             CiRuleOptions.Set(filePath: xmlPath, rulesToRemove: [CiRuleOptions.PolicyRuleOptions.EnabledAuditMode]);
 
             Logger.Write($"Displaying extra info about the {name}");
-            DriversBlockListInfoGathering();
+            _ = DriversBlockListInfoGathering();
 
             // The final path where the XML policy file will be located
             string savePathLocation = Path.Combine(GlobalVars.UserConfigDir, $"{name}.xml");
@@ -376,7 +394,7 @@ namespace WDACConfig
         /// <param name="RequireEVSigners"></param>
         /// <param name="EnableScriptEnforcement"></param>
         /// <param name="TestMode"></param>
-        public static void BuildAllowMSFT(string StagingArea, bool IsAudit, ulong? LogSize, bool deploy, bool RequireEVSigners, bool EnableScriptEnforcement, bool TestMode)
+        public static void BuildAllowMSFT(string StagingArea, bool IsAudit, ulong? LogSize, bool deploy, bool RequireEVSigners, bool EnableScriptEnforcement, bool TestMode, bool? deployAppControlSupplementalPolicy)
         {
 
             string policyName;
@@ -399,7 +417,7 @@ namespace WDACConfig
 
             string finalPolicyPath = Path.Combine(GlobalVars.UserConfigDir, $"{policyName}.xml");
 
-            GetBlockRules(StagingArea, deploy);
+            GetBlockRules(StagingArea, deploy, false);
 
 
             Logger.Write("Copying the AllowMicrosoft.xml from Windows directory to the Staging Area");
@@ -409,7 +427,15 @@ namespace WDACConfig
 
 
             Logger.Write("Resetting the policy ID and assigning policy name");
-            _ = WDACConfig.SetCiPolicyInfo.Set(tempPolicyPath, true, $"{policyName} - {DateTime.Now.ToString("MM-dd-yyyy", CultureInfo.InvariantCulture)}", null, null);
+
+            // Get the policy ID of the policy being created
+            string policyID = WDACConfig.SetCiPolicyInfo.Set(tempPolicyPath, true, $"{policyName} - {DateTime.Now.ToString("MM-dd-yyyy", CultureInfo.InvariantCulture)}", null, null);
+
+            if (deployAppControlSupplementalPolicy == true)
+            {
+                // Supply the policy ID of the policy being deployed to this method
+                SupplementalForSelf.Deploy(StagingArea, policyID);
+            }
 
             SetCiPolicyInfo.Set(tempPolicyPath, new Version("1.0.0.0"));
 
@@ -447,7 +473,7 @@ namespace WDACConfig
         /// It generates a XML file compliant with CI Policies Schema.
         /// </summary>
         /// <param name="StagingArea"></param>
-        public static void GetBlockRules(string StagingArea, bool deploy)
+        public static void GetBlockRules(string StagingArea, bool deploy, bool? deployAppControlSupplementalPolicy)
         {
 
             string policyName = "Microsoft Windows Recommended User Mode BlockList";
@@ -497,11 +523,18 @@ namespace WDACConfig
             userModeBlockRulesXML.Save(tempPolicyPath);
 
 
-            CiRuleOptions.Set(filePath: tempPolicyPath, rulesToAdd: [CiRuleOptions.PolicyRuleOptions.EnabledUpdatePolicyNoReboot], rulesToRemove: [CiRuleOptions.PolicyRuleOptions.EnabledAuditMode]);
+            CiRuleOptions.Set(filePath: tempPolicyPath, rulesToAdd: [CiRuleOptions.PolicyRuleOptions.EnabledUpdatePolicyNoReboot, CiRuleOptions.PolicyRuleOptions.DisabledScriptEnforcement], rulesToRemove: [CiRuleOptions.PolicyRuleOptions.EnabledAuditMode, CiRuleOptions.PolicyRuleOptions.EnabledAdvancedBootOptionsMenu]);
 
             Logger.Write("Assigning policy name and resetting policy ID");
-            _ = SetCiPolicyInfo.Set(tempPolicyPath, true, policyName, null, null);
 
+            // Get the policyID of the policy being created
+            string policyID = SetCiPolicyInfo.Set(tempPolicyPath, true, policyName, null, null);
+
+
+            if (deployAppControlSupplementalPolicy == true)
+            {
+                SupplementalForSelf.Deploy(StagingArea, policyID);
+            }
 
             string finalPolicyPath = Path.Combine(GlobalVars.UserConfigDir, $"{policyName}.xml");
 
@@ -510,15 +543,21 @@ namespace WDACConfig
 
                 Logger.Write($"Checking if the {policyName} policy is already deployed");
 
-                string? CurrentlyDeployedBlockRulesGUID = CiToolHelper.GetPolicies(false, true, false).Where(policy => string.Equals(policy.FriendlyName, policyName, StringComparison.OrdinalIgnoreCase)).Select(policy => policy.PolicyID).ToString();
 
+                List<CiPolicyInfo> CurrentlyDeployedBlockRules = CiToolHelper.GetPolicies(false, true, false).Where(policy => string.Equals(policy.FriendlyName, policyName, StringComparison.OrdinalIgnoreCase)).ToList();
 
-                if (!String.IsNullOrWhiteSpace(CurrentlyDeployedBlockRulesGUID))
+                if (CurrentlyDeployedBlockRules.Count > 0)
                 {
-                    Logger.Write($"{policyName} policy is already deployed, updating it using the same GUID.");
-                    PolicyEditor.EditGuids(CurrentlyDeployedBlockRulesGUID, new FileInfo(tempPolicyPath));
-                }
+                    string CurrentlyDeployedBlockRulesGUID = CurrentlyDeployedBlockRules.First().PolicyID!;
 
+                    Logger.Write($"{policyName} policy is already deployed, updating it using the same GUID which is {CurrentlyDeployedBlockRulesGUID}.");
+                    PolicyEditor.EditGuids(CurrentlyDeployedBlockRulesGUID, new FileInfo(tempPolicyPath));
+
+                }
+                else
+                {
+                    Logger.Write($"{policyName} policy is not deployed, deploying it now.");
+                }
 
                 PolicyToCIPConverter.Convert(tempPolicyPath, tempPolicyCIPPath);
 
@@ -545,7 +584,7 @@ namespace WDACConfig
         /// <param name="RequireEVSigners"></param>
         /// <param name="EnableScriptEnforcement"></param>
         /// <param name="TestMode"></param>
-        public static void BuildSignedAndReputable(string StagingArea, bool IsAudit, ulong? LogSize, bool deploy, bool RequireEVSigners, bool EnableScriptEnforcement, bool TestMode)
+        public static void BuildSignedAndReputable(string StagingArea, bool IsAudit, ulong? LogSize, bool deploy, bool RequireEVSigners, bool EnableScriptEnforcement, bool TestMode, bool? deployAppControlSupplementalPolicy)
         {
 
             string policyName;
@@ -568,7 +607,7 @@ namespace WDACConfig
 
             string finalPolicyPath = Path.Combine(GlobalVars.UserConfigDir, $"{policyName}.xml");
 
-            GetBlockRules(StagingArea, deploy);
+            GetBlockRules(StagingArea, deploy, false);
 
 
             Logger.Write("Copying the AllowMicrosoft.xml from Windows directory to the Staging Area");
@@ -588,10 +627,15 @@ TestMode: TestMode);
 
             Logger.Write("Resetting the policy ID and assigning policy name");
 
-            _ = SetCiPolicyInfo.Set(tempPolicyPath, true, $"{policyName} - {DateTime.Now.ToString("MM-dd-yyyy", CultureInfo.InvariantCulture)}", null, null);
+            // Get the policyID of the policy being created
+            string policyID = SetCiPolicyInfo.Set(tempPolicyPath, true, $"{policyName} - {DateTime.Now.ToString("MM-dd-yyyy", CultureInfo.InvariantCulture)}", null, null);
+
+            if (deployAppControlSupplementalPolicy == true)
+            {
+                SupplementalForSelf.Deploy(StagingArea, policyID);
+            }
 
             SetCiPolicyInfo.Set(tempPolicyPath, new Version("1.0.0.0"));
-
 
 
             if (deploy)

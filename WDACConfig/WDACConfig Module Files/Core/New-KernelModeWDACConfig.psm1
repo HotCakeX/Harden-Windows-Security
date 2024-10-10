@@ -426,8 +426,6 @@ Function New-KernelModeWDACConfig {
     https://github.com/HotCakeX/Harden-Windows-Security/wiki/New%E2%80%90KernelModeWDACConfig
 .DESCRIPTION
     Using official Microsoft methods, configure and use App Control for Business
-.FUNCTIONALITY
-    Creates Kernel only mode WDAC policy capable of protecting against BYOVD attacks category
 .PARAMETER Base
     The base policy to use for creating the strict Kernel mode WDAC policy, offers 2 options:
     Default: meaning flight root certs will be allowed, suitable for most users.

@@ -31,9 +31,6 @@ namespace WDACConfig
                     case "CreatePolicy":
                         _ = ContentFrame.Navigate(typeof(Pages.CreatePolicy));
                         break;
-                    case "BlockRules":
-                        _ = ContentFrame.Navigate(typeof(Pages.BlockRules));
-                        break;
                     case "GetCIHashes":
                         _ = ContentFrame.Navigate(typeof(Pages.GetCIHashes));
                         break;

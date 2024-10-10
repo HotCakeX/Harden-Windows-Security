@@ -46,9 +46,6 @@
     <Page Update="Pages\Settings.xaml">
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="Pages\BlockRules.xaml">
-      <SubType>Designer</SubType>
-    </Page>
     <Page Update="Pages\GetCIHashes.xaml">
       <SubType>Designer</SubType>
     </Page>

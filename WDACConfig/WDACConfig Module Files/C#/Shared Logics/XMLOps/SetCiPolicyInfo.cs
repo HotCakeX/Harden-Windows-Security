@@ -11,6 +11,7 @@ namespace WDACConfig
         /// Configures a XML Code Integrity policy by modifying its details.
         /// When it comes to PolicyID, the only time it is modified is through random GUID generation.
         /// The BasePolicyID however can be modified by supplying a XML file, or providing the GUID directory, or through GUID random generation.
+        /// If the policy doesn't have a <Setttings> node with a <Setting> node inside of it for PolicyName, it will be created. This is regardless of whether the policyName parameter was provided or not.
         /// </summary>
         /// <param name="filePath">Path to the XML policy file to modify</param>
         ///
@@ -50,32 +51,42 @@ namespace WDACConfig
                 ?? throw new InvalidOperationException("Invalid XML structure, SiPolicy node not found");
 
             // Get the BasePolicyID node which is an immediate node under SiPolicy node
-            XmlNode CurrentBasePolicyIDNode = siPolicyNode.SelectSingleNode("ns:BasePolicyID", namespaceManager) ?? throw new InvalidOperationException($"BasePolicyID was not found in {filePath}");
+            XmlNode CurrentBasePolicyIDNode = siPolicyNode.SelectSingleNode("ns:BasePolicyID", namespaceManager)
+                ?? throw new InvalidOperationException($"BasePolicyID was not found in {filePath}");
 
             string CurrentBasePolicyID = CurrentBasePolicyIDNode.InnerText;
 
             // Get the PolicyID node which is an immediate node under SiPolicy node
-            XmlNode CurrentPolicyIDNode = siPolicyNode.SelectSingleNode("ns:PolicyID", namespaceManager) ?? throw new InvalidOperationException($"PolicyID was not found in {filePath}");
+            XmlNode CurrentPolicyIDNode = siPolicyNode.SelectSingleNode("ns:PolicyID", namespaceManager)
+                ?? throw new InvalidOperationException($"PolicyID was not found in {filePath}");
 
             string CurrentPolicyID = CurrentPolicyIDNode.InnerText;
 
             // Store the type of the policy in a variable
-            string PolicyType = siPolicyNode.Attributes?["PolicyType"]?.Value ?? throw new InvalidOperationException("Policy type attribute does not exist in the selected policy");
+            string PolicyType = siPolicyNode.Attributes?["PolicyType"]?.Value
+                ?? throw new InvalidOperationException("Policy type attribute does not exist in the selected policy");
 
             XmlNode? SettingsNode = siPolicyNode.SelectSingleNode("ns:Settings", namespaceManager);
-            XmlNodeList? SettingNodes = null;
-            string? CurrentPolicyName = null;
-
+            XmlNodeList? SettingNodes;
+            string? CurrentPolicyName;
 
             #region PolicyName Processing
 
-            // Check if Settings node exists
-            if (SettingsNode is not null)
+            // Check if Settings node exists, if not, create it
+            if (SettingsNode is null)
             {
-                SettingNodes = SettingsNode.SelectNodes("ns:Setting", namespaceManager);
+                SettingsNode = xmlDocument.CreateElement("Settings", "urn:schemas-microsoft-com:sipolicy");
+                _ = siPolicyNode.AppendChild(SettingsNode);
             }
 
-            // Logic to find the specific Setting node with ValueName="Name" and extract its string value which will give us the policy name
+            // Get the list of Setting nodes
+            SettingNodes = SettingsNode.SelectNodes("ns:Setting", namespaceManager);
+
+            // Find the specific Setting node with ValueName="Name" and extract its string value or create it if not found
+
+            // nameSettingNode that will be used to assign the policy name
+            XmlNode? nameSettingNode = null;
+
             if (SettingNodes is not null)
             {
                 foreach (XmlNode setting in SettingNodes)
@@ -83,24 +94,58 @@ namespace WDACConfig
                     // Check if the "ValueName" attribute is present and equals "Name"
                     if (string.Equals(setting.Attributes?["ValueName"]?.Value, "Name", StringComparison.OrdinalIgnoreCase))
                     {
-                        // Get the inner text of the <String> node under <Value>
-                        XmlNode? valueNode = setting.SelectSingleNode("ns:Value/ns:String", namespaceManager);
-                        if (valueNode is not null)
-                        {
-                            CurrentPolicyName = valueNode.InnerText;
-
-                            // If policyName parameter was provided to set the Policy Name, then set it here
-                            if (policyName is not null)
-                            {
-                                valueNode.InnerText = policyName;
-
-                                CurrentPolicyName = policyName;
-                            }
-
-                            break;
-                        }
+                        nameSettingNode = setting;
+                        break;
                     }
                 }
+            }
+
+            // If the Setting node with ValueName="Name" does not exist, create it
+            if (nameSettingNode is null)
+            {
+                nameSettingNode = xmlDocument.CreateElement("Setting", "urn:schemas-microsoft-com:sipolicy");
+
+                XmlAttribute providerAttr = xmlDocument.CreateAttribute("Provider");
+                providerAttr.Value = "PolicyInfo";
+                _ = nameSettingNode.Attributes!.Append(providerAttr);
+
+                XmlAttribute keyAttr = xmlDocument.CreateAttribute("Key");
+                keyAttr.Value = "Information";
+                _ = nameSettingNode.Attributes.Append(keyAttr);
+
+                XmlAttribute valueNameAttr = xmlDocument.CreateAttribute("ValueName");
+                valueNameAttr.Value = "Name";
+                _ = nameSettingNode.Attributes.Append(valueNameAttr);
+
+                // Append the new Setting node to Settings
+                _ = SettingsNode.AppendChild(nameSettingNode);
+            }
+
+            // Now check if the Value node with the inner String node exists, and create if not
+            XmlNode? valueNode = nameSettingNode.SelectSingleNode("ns:Value/ns:String", namespaceManager);
+
+            if (valueNode is null)
+            {
+                // Create Value node
+                XmlNode newValueNode = xmlDocument.CreateElement("Value", "urn:schemas-microsoft-com:sipolicy");
+                XmlNode newStringNode = xmlDocument.CreateElement("String", "urn:schemas-microsoft-com:sipolicy");
+
+                _ = newValueNode.AppendChild(newStringNode);
+                _ = nameSettingNode.AppendChild(newValueNode);
+
+                valueNode = newStringNode;
+            }
+
+            // Update the policy name or assign default value if not provided
+            if (!string.IsNullOrWhiteSpace(policyName))
+            {
+                valueNode.InnerText = policyName;
+                CurrentPolicyName = policyName;
+            }
+            else
+            {
+                // If policyName was not provided, retain the current name
+                CurrentPolicyName = valueNode.InnerText;
             }
 
             #endregion
@@ -132,7 +177,7 @@ namespace WDACConfig
 
             #region basePolicyID processing
 
-            if (basePolicyID is not null)
+            if (!string.IsNullOrWhiteSpace(basePolicyID))
             {
 
                 basePolicyID = basePolicyID.Trim('{', '}');
@@ -156,7 +201,7 @@ namespace WDACConfig
 
             #region basePolicyToSupplementPath processing
 
-            if (basePolicyToSupplementPath is not null)
+            if (!string.IsNullOrWhiteSpace(basePolicyToSupplementPath))
             {
 
                 XmlDocument xmlDocument2 = new();

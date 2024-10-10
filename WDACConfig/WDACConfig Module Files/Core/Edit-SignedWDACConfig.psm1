@@ -897,8 +897,6 @@ Function Edit-SignedWDACConfig {
     Using official Microsoft methods, Edits Signed App Control for Business policies deployed on the system
 
     All of the files the cmdlet creates and interacts with are stored in the following directory: C:\Program Files\WDACConfig\StagingArea\Edit-SignedWDACConfig
-.FUNCTIONALITY
-    Using official Microsoft methods, Edits Signed App Control for Business policies deployed on the system
 .PARAMETER AllowNewApps
     Rebootlessly install new apps/programs when Signed policy is already deployed, scan their directories for new Supplemental policy, Sign and deploy thew Supplemental policy.
 .PARAMETER MergeSupplementalPolicies

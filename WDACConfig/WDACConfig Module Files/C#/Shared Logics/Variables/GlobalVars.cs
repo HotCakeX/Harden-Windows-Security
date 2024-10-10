@@ -45,6 +45,9 @@ namespace WDACConfig
         // Storing the path to User Config JSON file in the WDACConfig folder in the Program Files
         public static readonly string UserConfigJson = Path.Combine(UserConfigDir, "UserConfigurations", "UserConfigurations.json");
 
+        // Storing the path to the StagingArea folder in the WDACConfig folder in the Program Files
+        public static readonly string StagingArea = Path.Combine(UserConfigDir, "StagingArea");
+
         public static bool VerbosePreference;
         public static bool DebugPreference;
 

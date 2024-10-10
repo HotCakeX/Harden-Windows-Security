@@ -1,9 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-  <!-- The following are the details for WDACConfig, a Self-Contained Trimmed MSIX Packaged App -->
+  <!-- The following are the details for AppControlManager, a Self-Contained Trimmed MSIX Packaged App -->
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFramework>net9.0-windows10.0.26100.0</TargetFramework>
-    <TargetPlatformMinVersion>10.0.22621.0</TargetPlatformMinVersion>
+    <TargetPlatformMinVersion>10.0.26100.0</TargetPlatformMinVersion>
     <RootNamespace>WDACConfig</RootNamespace>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <Platforms>x64;ARM64</Platforms>
@@ -13,10 +13,20 @@
     <UseWinUI>true</UseWinUI>
     <EnableMsixTooling>true</EnableMsixTooling>
     <Nullable>enable</Nullable>
-    <WindowsSdkPackageVersion>10.0.22621.38</WindowsSdkPackageVersion>
+    <WindowsSdkPackageVersion>10.0.26100.38</WindowsSdkPackageVersion>
+
+    <!--
+    By default .NET runtimes are contained in the MSIX. This line will also include the WindowsAppSDK in the MSIX file
+    so that the App will be installable on any system that neither has the .NET runtime nor the latest AppSDK
+    
+    Without this, we'd have to download the latest SDK and install it manually on the user's system, which will add the relevant packages
+    and satisfy the requirements of the MSIX instlaler.
+    https://learn.microsoft.com/en-us/windows/apps/windows-app-sdk/downloads
+    -->
+    <WindowsAppSDKSelfContained>true</WindowsAppSDKSelfContained>
+
   </PropertyGroup>
   <ItemGroup>
-    <None Remove="Pages\BlockRules.xaml" />
     <None Remove="Pages\ConfigurePolicyRuleOptions.xaml" />
     <None Remove="Pages\GetCIHashes.xaml" />
     <None Remove="Pages\GetSecurePolicySettings.xaml" />
@@ -25,6 +35,7 @@
     <None Remove="Pages\MicrosoftDocumentation.xaml" />
     <None Remove="Pages\Settings.xaml" />
     <None Remove="Pages\ViewCurrentPolicies.xaml" />
+    <None Remove="Resources\AppControlManagerSupplementalPolicy.xml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Assets\SplashScreen.scale-200.png" />
@@ -33,6 +44,9 @@
     <Content Include="Assets\Square44x44Logo.scale-200.png" />
     <Content Include="Assets\Square44x44Logo.targetsize-24_altform-unplated.png" />
     <Content Include="Assets\Wide310x150Logo.scale-200.png" />
+    <Content Include="Resources\AppControlManagerSupplementalPolicy.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Manifest Include="$(ApplicationManifest)" />
@@ -50,15 +64,13 @@
     <PackageReference Include="CommunityToolkit.WinUI.Controls.Primitives" Version="8.1.240916" />
     <PackageReference Include="CommunityToolkit.WinUI.Controls.SettingsControls" Version="8.1.240916" />
     <PackageReference Include="CommunityToolkit.WinUI.UI.Controls.DataGrid" Version="7.1.2" />
+    <PackageReference Include="Microsoft.PowerShell.SDK" Version="7.5.0-preview.5" />
     <PackageReference Include="Microsoft.Windows.CsWinRT" Version="2.1.5" />
     <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.26100.1742" />
     <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.6.240923002" />
     <PackageReference Include="System.Diagnostics.EventLog" Version="9.0.0-rc.2.24473.5" />
-    <PackageReference Include="System.Management" Version="9.0.0-rc.2.24473.5" />
     <PackageReference Include="System.Management.Automation" Version="7.5.0-preview.5" />
-    <PackageReference Include="System.Memory" Version="4.5.5" />
     <PackageReference Include="System.Security.Cryptography.Pkcs" Version="9.0.0-rc.2.24473.5" />
-    <PackageReference Include="System.Text.Json" Version="9.0.0-rc.2.24473.5" />
   </ItemGroup>
   <ItemGroup>
     <Page Update="Pages\MicrosoftDocumentation.xaml">
@@ -72,11 +84,6 @@
   </ItemGroup>
   <ItemGroup>
     <Page Update="Pages\Settings.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Page Update="Pages\BlockRules.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
@@ -98,9 +105,13 @@
     <PublishReadyToRun Condition="'$(Configuration)' == 'Debug'">False</PublishReadyToRun>
     <PublishReadyToRun Condition="'$(Configuration)' != 'Debug'">True</PublishReadyToRun>
 
-   <!-- <PublishTrimmed Condition="'$(Configuration)' == 'Debug'">True</PublishTrimmed> -->
-   <!-- <PublishTrimmed Condition="'$(Configuration)' != 'Debug'">True</PublishTrimmed> -->
-   <!-- Disabling trimming temporarily -->
+    <!-- <PublishTrimmed Condition="'$(Configuration)' == 'Debug'">True</PublishTrimmed> -->
+    <!-- <PublishTrimmed Condition="'$(Configuration)' != 'Debug'">True</PublishTrimmed> -->
+    <!-- Disabling trimming temporarily -->
+    <!--
+    There should be absolutely no trim warnings before this can be enabled
+    Otherwise there is no guarantee that the app will work as expected at all times
+    -->
     <PublishTrimmed>false</PublishTrimmed>
 
     <SupportedOSPlatformVersion>10.0.26100.0</SupportedOSPlatformVersion>
@@ -124,6 +135,8 @@
     <AppxBundlePlatforms>x64</AppxBundlePlatforms>
     <HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
     <EnforceCodeStyleInBuild>True</EnforceCodeStyleInBuild>
+    <AssemblyName>AppControlManager</AssemblyName>
+    <PublishAot>False</PublishAot>
 
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -139,8 +152,8 @@
     <CheckForOverflowUnderflow>True</CheckForOverflowUnderflow>
   </PropertyGroup>
 
-<!-- Exclude the following files and folders from compilation, build, search, solution explorer etc. -->
-<ItemGroup>
+  <!-- Exclude the following files and folders from compilation, build, search, solution explorer etc. -->
+  <ItemGroup>
     <Compile Remove="Signtool.exe" />
     <Content Remove="Signtool.exe" />
     <None Remove="Signtool.exe" />
@@ -153,25 +166,25 @@
     <Content Remove="MSIXOutput\**" />
     <None Remove="MSIXOutput\**" />
   </ItemGroup>
-<ItemGroup>
-  <Page Update="Pages\Logs.xaml">
-    <Generator>MSBuild:Compile</Generator>
-  </Page>
-</ItemGroup>
-<ItemGroup>
-  <Page Update="Pages\ConfigurePolicyRuleOptions.xaml">
-    <Generator>MSBuild:Compile</Generator>
-  </Page>
-</ItemGroup>
-<ItemGroup>
-  <Page Update="Pages\ViewCurrentPolicies.xaml">
-    <Generator>MSBuild:Compile</Generator>
-  </Page>
-</ItemGroup>
-<ItemGroup>
-  <Page Update="Pages\GetSecurePolicySettings.xaml">
-    <Generator>MSBuild:Compile</Generator>
-  </Page>
-</ItemGroup>
+  <ItemGroup>
+    <Page Update="Pages\Logs.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Pages\ConfigurePolicyRuleOptions.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Pages\ViewCurrentPolicies.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Pages\GetSecurePolicySettings.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
 
 </Project>

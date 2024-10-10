@@ -52,11 +52,11 @@
                     <controls:SettingsExpander.Items>
 
                         <!--
-                        
+
                         <controls:SettingsCard Header="A basic SettingsCard within an SettingsExpander">
                             <Button Content="Button" />
                         </controls:SettingsCard>
-                        
+
                         <controls:SettingsCard Description="SettingsCard within an Expander can be made clickable too!"
                                                Header="This item can be clicked"
                                                IsClickEnabled="True" />
@@ -160,14 +160,14 @@
                 </controls:SettingsExpander>
 
 
-                <!-- 
-                
+                <!--
+
                 <controls:SettingsCard Description="Another card to show grouping of cards"
                                        Header="Yet another SettingsCard"
                                        HeaderIcon="{ui:FontIcon Glyph=&#xE768;}">
                     <Button Content="Content" />
                 </controls:SettingsCard>
-                
+
                 -->
 
                 <!--  Example 'About' section  -->
@@ -175,7 +175,7 @@
                            Text="About" />
 
                 <controls:SettingsExpander Description="© 2024. All rights reserved."
-                                           Header="WDACConfig Application Control"
+                                           Header="AppControl Manager"
                                            HeaderIcon="{ui:BitmapIcon Source=ms-appx:///Assets/Square44x44Logo.altform-lightunplated_targetsize-256.png}">
                     <TextBlock win:IsTextSelectionEnabled="True"
                                Foreground="{ThemeResource TextFillColorSecondaryBrush}"

@@ -7,8 +7,6 @@ Function Get-CommonWDACConfig {
 .LINK
     https://github.com/HotCakeX/Harden-Windows-Security/wiki/Get-CommonWDACConfig
 .DESCRIPTION
-    Reads and gets the values from the User Config Json file,
-.FUNCTIONALITY
-    Reads and gets the values from the User Config Json file
+    Reads and gets the values from the User Config JSON file.
 #>
 }

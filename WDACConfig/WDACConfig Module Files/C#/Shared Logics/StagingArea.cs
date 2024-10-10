@@ -9,15 +9,13 @@ namespace WDACConfig
     {
         public static DirectoryInfo NewStagingArea(string cmdletName)
         {
-            if (string.IsNullOrEmpty(cmdletName))
+            if (string.IsNullOrWhiteSpace(cmdletName))
             {
-                throw new ArgumentException("CmdletName cannot be null or empty", nameof(cmdletName));
+                throw new ArgumentException("CmdletName cannot be null or whitespace", nameof(cmdletName));
             }
 
-            string userConfigDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), "WDACConfig");
-
             // Define a staging area for the cmdlet
-            string stagingArea = Path.Combine(userConfigDir, "StagingArea", cmdletName);
+            string stagingArea = Path.Combine(GlobalVars.StagingArea, cmdletName);
 
             // Delete it if it already exists with possible content from previous runs
             if (Directory.Exists(stagingArea))

@@ -1,6 +1,10 @@
+using CommunityToolkit.WinUI.Controls;
+using Microsoft.UI.Text;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Documents;
 using System;
 using System.Threading.Tasks;
+using static WDACConfig.BasePolicyCreator;
 
 namespace WDACConfig.Pages
 {
@@ -68,7 +72,8 @@ namespace WDACConfig.Pages
                         false, // Do not deploy, only create
                         requireEVSigners,
                         enableScriptEnforcement,
-                        testMode
+                        testMode,
+                        false
                     );
                 });
 
@@ -128,8 +133,10 @@ namespace WDACConfig.Pages
                         true, // Deploy it as well
                         requireEVSigners,
                         enableScriptEnforcement,
-                        testMode
+                        testMode,
+                        true
                     );
+
                 });
 
             }
@@ -204,7 +211,8 @@ namespace WDACConfig.Pages
                         false, // Do not deploy, only create
                         requireEVSigners,
                         enableScriptEnforcement,
-                        testMode
+                        testMode,
+                        false
                     );
                 });
 
@@ -263,8 +271,10 @@ namespace WDACConfig.Pages
                         true, // Deploy it as well
                         requireEVSigners,
                         enableScriptEnforcement,
-                        testMode
+                        testMode,
+                        true
                     );
+
                 });
             }
             finally
@@ -284,6 +294,208 @@ namespace WDACConfig.Pages
             else
             {
                 SignedAndReputableLogSizeInput.IsEnabled = false;
+            }
+        }
+
+        #endregion
+
+
+
+        #region For Microsoft Recommended Driver Block Rules
+
+
+        /// <summary>
+        /// Method to dynamically add a TextBlock with formatted content
+        /// </summary>
+        /// <returns></returns>
+        private async Task AddDriverBlockRulesInfo()
+        {
+            // Create a new TextBlock
+            TextBlock formattedTextBlock = new();
+
+            // Gather driver block list info asynchronously
+            DriverBlockListInfo? driverBlockListInfo = await Task.Run(() => BasePolicyCreator.DriversBlockListInfoGathering());
+
+            // Prepare the text to display
+            if (driverBlockListInfo is not null)
+            {
+                // Create the formatted content for version and last updated date
+                Span versionSpan = new()
+                {
+                    Inlines =
+            {
+                new Run { Text = "Version: ", FontWeight = FontWeights.Bold, Foreground = new Microsoft.UI.Xaml.Media.SolidColorBrush(Microsoft.UI.Colors.Violet) },
+                new Run { Text = $"{driverBlockListInfo.Version}\n", Foreground = new Microsoft.UI.Xaml.Media.SolidColorBrush(Microsoft.UI.Colors.Violet) }
+            }
+                };
+
+                Span lastUpdatedSpan = new()
+                {
+                    Inlines =
+            {
+                new Run { Text = "Last Updated: ", FontWeight = FontWeights.Bold, Foreground = new Microsoft.UI.Xaml.Media.SolidColorBrush(Microsoft.UI.Colors.HotPink) },
+                new Run { Text = $"{driverBlockListInfo.LastUpdated:MMMM dd, yyyy}\n", Foreground = new Microsoft.UI.Xaml.Media.SolidColorBrush(Microsoft.UI.Colors.HotPink) }
+            }
+                };
+
+                // Add content to the TextBlock
+                formattedTextBlock.Inlines.Add(versionSpan);
+                formattedTextBlock.Inlines.Add(lastUpdatedSpan);
+
+            }
+            else
+            {
+                // Handle the case when driver block list info is null
+                Run errorRun = new()
+                {
+                    Text = "Error retrieving driver block list information.",
+                    Foreground = new Microsoft.UI.Xaml.Media.SolidColorBrush(Microsoft.UI.Colors.Yellow)
+                };
+                formattedTextBlock.Inlines.Add(errorRun);
+            }
+
+            // Find the SettingsCard by its Header
+            foreach (var child in RecommendedDriverBlockRulesSettings.Items)
+            {
+                if (child is SettingsCard settingsCard && string.Equals(settingsCard.Header.ToString(), "Info", StringComparison.OrdinalIgnoreCase))
+                {
+                    // Insert the TextBlock into the SettingsCard's content area
+                    settingsCard.Content = formattedTextBlock;
+                }
+            }
+        }
+
+
+
+
+        // Event handler for creating SignedAndReputable policy
+        private async void RecommendedDriverBlockRulesCreate_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
+        {
+            try
+            {
+
+                // Disable the buttons
+                RecommendedDriverBlockRulesCreate.IsEnabled = false;
+                RecommendedDriverBlockRulesCreateAndDeploy.IsEnabled = false;
+
+                string stagingArea = StagingArea.NewStagingArea("BuildRecommendedDriverBlockRules").ToString();
+
+                // Run the background operation using captured values
+                await Task.Run(() =>
+                {
+                    BasePolicyCreator.GetDriversBlockRules(stagingArea);
+                });
+
+                // Dynamically add the formatted TextBlock after gathering block list info
+                // Can remove await and the info will populate after policy is created which is fine too
+                await AddDriverBlockRulesInfo();
+
+            }
+
+            finally
+            {
+
+                // Re-enable buttons
+                RecommendedDriverBlockRulesCreate.IsEnabled = true;
+                RecommendedDriverBlockRulesCreateAndDeploy.IsEnabled = true;
+            }
+        }
+
+
+        // Event handler for creating SignedAndReputable policy
+        private async void RecommendedDriverBlockRulesCreateAndDeploy_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
+        {
+            try
+            {
+
+                // Disable the buttons
+                RecommendedDriverBlockRulesCreate.IsEnabled = false;
+                RecommendedDriverBlockRulesCreateAndDeploy.IsEnabled = false;
+
+                string stagingArea = StagingArea.NewStagingArea("BuildRecommendedDriverBlockRules").ToString();
+
+                // Run the background operation using captured values
+                await Task.Run(() =>
+                {
+                    BasePolicyCreator.DeployDriversBlockRules(stagingArea);
+                });
+
+                // Dynamically add the formatted TextBlock after gathering block list info
+                // Can remove await and the info will populate after policy is created which is fine too
+                await AddDriverBlockRulesInfo();
+            }
+
+            finally
+            {
+
+                // Re-enable buttons
+                RecommendedDriverBlockRulesCreate.IsEnabled = true;
+                RecommendedDriverBlockRulesCreateAndDeploy.IsEnabled = true;
+            }
+        }
+
+        #endregion
+
+
+        #region For Microsoft Recommended User Mode Block Rules
+
+        // Event handler for creating SignedAndReputable policy
+        private async void RecommendedUserModeBlockRulesCreate_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
+        {
+            try
+            {
+
+                // Disable the buttons
+                RecommendedUserModeBlockRulesCreate.IsEnabled = false;
+                RecommendedUserModeBlockRulesCreateAndDeploy.IsEnabled = false;
+
+                string stagingArea = StagingArea.NewStagingArea("BuildRecommendedUserModeBlockRules").ToString();
+
+                // Run the background operation using captured values
+                await Task.Run(() =>
+                {
+                    BasePolicyCreator.GetBlockRules(stagingArea, false, false);
+                });
+
+            }
+
+            finally
+            {
+
+                // Re-enable buttons
+                RecommendedUserModeBlockRulesCreate.IsEnabled = true;
+                RecommendedUserModeBlockRulesCreateAndDeploy.IsEnabled = true;
+            }
+        }
+
+
+        // Event handler for creating SignedAndReputable policy
+        private async void RecommendedUserModeBlockRulesCreateAndDeploy_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
+        {
+            try
+            {
+
+                // Disable the buttons
+                RecommendedUserModeBlockRulesCreate.IsEnabled = false;
+                RecommendedUserModeBlockRulesCreateAndDeploy.IsEnabled = false;
+
+                string stagingArea = StagingArea.NewStagingArea("BuildRecommendedUserModeBlockRules").ToString();
+
+                // Run the background operation using captured values
+                await Task.Run(() =>
+                {
+                    BasePolicyCreator.GetBlockRules(stagingArea, true, true);
+
+                });
+
+            }
+
+            finally
+            {
+
+                // Re-enable buttons
+                RecommendedUserModeBlockRulesCreate.IsEnabled = true;
+                RecommendedUserModeBlockRulesCreateAndDeploy.IsEnabled = true;
             }
         }
 

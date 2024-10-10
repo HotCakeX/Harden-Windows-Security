@@ -1,11 +1,11 @@
 {
   "profiles": {
-    "WDACConfig (Package)": {
+    "AppControl Manager (Package)": {
       "commandName": "MsixPackage",
       "nativeDebugging": true,
       "remoteDebugEnabled": false
     },
-    "WDACConfig (Unpackaged)": {
+    "AppControl Manager (Unpackaged)": {
       "commandName": "Project"
     }
   }

@@ -27,13 +27,16 @@
 
             <TextBlock Name="PoliciesCountTextBlock" Text="Number of Policies: 0" Margin="10" VerticalAlignment="Top" HorizontalAlignment="Center" />
 
+            <Button x:Name="RemoveUnsignedPolicy" Content="Remove Unsigned Policy" Click="RemoveUnsignedPolicy_Click" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="10"/>
+
             <!-- Search Box for filtering policies -->
             <TextBox x:Name="SearchBox" Width="300" PlaceholderText="Search policies..." TextChanged="SearchBox_TextChanged" Margin="10" VerticalAlignment="Top" />
 
         </controls:WrapPanel>
 
         <ScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Auto" Margin="10,10,10,10">
-            <ListView Name="PoliciesListView" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+
+            <ListView Name="PoliciesListView" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" SelectionChanged="PoliciesListView_SelectionChanged">
 
                 <!-- Define ListView Headers -->
                 <ListView.Header>

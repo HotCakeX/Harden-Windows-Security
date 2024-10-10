@@ -15,7 +15,7 @@
             <Button x:Name="PickFileButton" Content="Browse for a file" Click="PickFile_Click"
             HorizontalAlignment="Center"
            ToolTipService.ToolTip="Click/Tap to choose a file from your device."/>
-           
+
             <!-- TextBlocks to display the returned hash values -->
             <TextBlock Text="SHA1 Page:"/>
             <TextBox x:Name="Sha1PageTextBox" IsReadOnly="True" MinWidth="300"/>

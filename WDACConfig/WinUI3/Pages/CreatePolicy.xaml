@@ -41,17 +41,20 @@
                     <win:RepositionThemeTransition IsStaggeringEnabled="False" />
                 </win:StackPanel.ChildrenTransitions>
 
+
+                <!-- Allow Microsoft -->
+
                 <controls:SettingsExpander x:Name="AllowMicrosoftSettings"
                            Description="This policy will allow any program and file that is signed by Microsoft certificates to be able to run and everything else will be blocked."
-                           Header="Make Allow Microsoft Policy"
+                           Header="Create Allow Microsoft Policy"
                            HeaderIcon="{ui:FontIcon Glyph=&#xE71D;}">
 
                     <controls:WrapPanel Orientation="Horizontal">
 
-                        <Button x:Name="AllowMicrosoftCreate" Content="Create" 
+                        <Button x:Name="AllowMicrosoftCreate" Content="Create"
             Style="{StaticResource AccentButtonStyle}" Margin="0,0,15,0" Click="AllowMicrosoftCreate_Click" />
 
-                        <Button x:Name="AllowMicrosoftCreateAndDeploy" Content="Create And Deploy" 
+                        <Button x:Name="AllowMicrosoftCreateAndDeploy" Content="Create And Deploy"
 Style="{StaticResource AccentButtonStyle}" Click="AllowMicrosoftCreateAndDeploy_Click" Margin="0,0,15,0" />
 
                     </controls:WrapPanel>
@@ -111,19 +114,19 @@ LargeChange="10" Minimum="2" Maximum="1000000" Margin="0,0,30,0" />
 
 
 
-
+                <!-- Signed and Reputable -->
 
                 <controls:SettingsExpander x:Name="SignedAndReputableSettings"
                            Description="This policy will allow any program and file that is signed by Microsoft certificates to be able to run. It will also use the Global Intelligence of the Microsoft's Intelligent Security Graph to automatically authorize reputable and signed files to run. Anything else will be blocked."
-                           Header="Make Signed And Reputable Policy"
+                           Header="Create Signed And Reputable Policy"
                            HeaderIcon="{ui:FontIcon Glyph=&#xE71D;}">
 
                     <controls:WrapPanel Orientation="Horizontal">
 
-                        <Button x:Name="SignedAndReputableCreate" Content="Create" 
+                        <Button x:Name="SignedAndReputableCreate" Content="Create"
             Style="{StaticResource AccentButtonStyle}" Margin="0,0,15,0" Click="SignedAndReputableCreate_Click" />
 
-                        <Button x:Name="SignedAndReputableCreateAndDeploy" Content="Create And Deploy" 
+                        <Button x:Name="SignedAndReputableCreateAndDeploy" Content="Create And Deploy"
 Style="{StaticResource AccentButtonStyle}" Click="SignedAndReputableCreateAndDeploy_Click" Margin="0,0,15,0" />
 
                     </controls:WrapPanel>
@@ -182,6 +185,59 @@ Style="{StaticResource AccentButtonStyle}" Click="SignedAndReputableCreateAndDep
                 </controls:SettingsExpander>
 
 
+                <!-- Microsoft Recommended Driver Block Rules -->
+
+                <controls:SettingsExpander x:Name="RecommendedDriverBlockRulesSettings"
+                           Description="This policy will create the Microsoft Recommended Driver Block Rules"
+                           Header="Create Microsoft Recommended Driver Block Rules"
+                           HeaderIcon="{ui:FontIcon Glyph=&#xE71D;}">
+
+                    <controls:WrapPanel Orientation="Horizontal">
+
+                        <Button x:Name="RecommendedDriverBlockRulesCreate" Content="Create"
+            Style="{StaticResource AccentButtonStyle}" Margin="0,0,15,0" Click="RecommendedDriverBlockRulesCreate_Click" />
+
+                        <Button x:Name="RecommendedDriverBlockRulesCreateAndDeploy" Content="Create And Deploy"
+Style="{StaticResource AccentButtonStyle}" Click="RecommendedDriverBlockRulesCreateAndDeploy_Click" Margin="0,0,15,0" />
+
+                    </controls:WrapPanel>
+
+
+                    <controls:SettingsExpander.Items>
+
+                        <controls:SettingsCard Description="Information about the latest Microsoft Recommended Drivers Block Rules"
+                               Header="Info">
+
+                        </controls:SettingsCard>
+
+
+                    </controls:SettingsExpander.Items>
+
+                </controls:SettingsExpander>
+
+
+
+
+
+                <!-- Microsoft Recommended User Mode Block Rules -->
+
+                <controls:SettingsCard x:Name="RecommendedUserModeBlockRulesSettings"
+                           Description="This policy will create the Microsoft Recommended User Mode Block Rules"
+                           Header="Create Microsoft Recommended User Mode Block Rules"
+                           HeaderIcon="{ui:FontIcon Glyph=&#xE71D;}">
+
+                    <controls:WrapPanel Orientation="Horizontal">
+
+                        <Button x:Name="RecommendedUserModeBlockRulesCreate" Content="Create"
+            Style="{StaticResource AccentButtonStyle}" Margin="0,0,15,0" Click="RecommendedUserModeBlockRulesCreate_Click" />
+
+                        <Button x:Name="RecommendedUserModeBlockRulesCreateAndDeploy" Content="Create And Deploy"
+Style="{StaticResource AccentButtonStyle}" Click="RecommendedUserModeBlockRulesCreateAndDeploy_Click" Margin="0,0,15,0" />
+
+                    </controls:WrapPanel>
+
+
+                </controls:SettingsCard>
 
 
             </StackPanel>

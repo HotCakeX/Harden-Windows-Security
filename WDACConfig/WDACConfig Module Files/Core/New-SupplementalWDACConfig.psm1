@@ -400,8 +400,6 @@ Function New-SupplementalWDACConfig {
     https://github.com/HotCakeX/Harden-Windows-Security/wiki/New-SupplementalWDACConfig
 .DESCRIPTION
     Using official Microsoft methods, configure and use App Control for Business
-.FUNCTIONALITY
-    Automate various tasks related to App Control for Business
 .PARAMETER Normal
     Make a Supplemental policy by scanning a directory, you can optionally use other parameters too to fine tune the scan process.
 .PARAMETER PathWildCards

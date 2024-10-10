@@ -1,5 +1,6 @@
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -8,9 +9,11 @@ namespace WDACConfig.Pages
 {
     public sealed partial class ViewCurrentPolicies : Page
     {
-
         // Store the original list of policies
         private List<WDACConfig.CiPolicyInfo> AllPolicies = [];
+
+        // Keep track of the currently selected policy
+        private WDACConfig.CiPolicyInfo? selectedPolicy;
 
         public ViewCurrentPolicies()
         {
@@ -19,6 +22,8 @@ namespace WDACConfig.Pages
             // Make sure navigating to/from this page maintains its state
             this.NavigationCacheMode = Microsoft.UI.Xaml.Navigation.NavigationCacheMode.Enabled;
 
+            // Initially disable the RemoveUnsignedPolicy button
+            RemoveUnsignedPolicy.IsEnabled = false;
         }
 
         // Event handler for the RetrievePoliciesButton click
@@ -71,6 +76,80 @@ namespace WDACConfig.Pages
 
             // Update the policies count text
             PoliciesCountTextBlock.Text = $"Number of Policies: {filteredPolicies.Count}";
+        }
+
+        // Event handler for when a policy is selected from the ListView
+        private void PoliciesListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            // Get the selected policy from the ListView
+            selectedPolicy = (WDACConfig.CiPolicyInfo)PoliciesListView.SelectedItem;
+
+            // Check if a policy was actually selected and if it's unsigned
+            if (selectedPolicy is not null && !selectedPolicy.IsSignedPolicy)
+            {
+                // Enable the RemoveUnsignedPolicy button for unsigned policies
+                RemoveUnsignedPolicy.IsEnabled = true;
+            }
+            else
+            {
+                // Disable the button if no unsigned policy is selected
+                RemoveUnsignedPolicy.IsEnabled = false;
+            }
+        }
+
+
+        // Event handler for the RemoveUnsignedPolicy button click
+        private async void RemoveUnsignedPolicy_Click(object sender, RoutedEventArgs e)
+        {
+            // Make sure we have a valid selected policy that is unsigned
+            if (selectedPolicy is not null && !selectedPolicy.IsSignedPolicy)
+            {
+
+                // Check if the selected policy has the FriendlyName "AppControlManagerSupplementalPolicy"
+                if (string.Equals(selectedPolicy.FriendlyName, "AppControlManagerSupplementalPolicy", StringComparison.OrdinalIgnoreCase))
+                {
+                    // Create and display a ContentDialog with Yes and No options
+                    ContentDialog dialog = new()
+                    {
+                        Title = "Confirm Policy Removal",
+                        Content = "The policy 'AppControlManagerSupplementalPolicy' must not be removed because you won't be able to relaunch the AppControl Manager again. Are you sure you still want to remove it?",
+                        PrimaryButtonText = "Yes",
+                        CloseButtonText = "No",
+                        XamlRoot = this.XamlRoot // Set XamlRoot to the current page's XamlRoot
+                    };
+
+                    // Show the dialog and wait for user response
+                    var result = await dialog.ShowAsync();
+
+                    // If the user did not select "Yes", return from the method
+                    if (result is not ContentDialogResult.Primary)
+                    {
+                        return;
+                    }
+                }
+
+
+                // Remove the selected unsigned policy using the CiToolHelper
+                await Task.Run(() => CiToolHelper.RemovePolicy(selectedPolicy.PolicyID!));
+
+                // Update the UI or log the action
+                Logger.Write($"Removed policy: {selectedPolicy.FriendlyName} with the PolicyID {selectedPolicy.PolicyID}");
+
+                // Remove the policy from the list and update the ListView
+                _ = AllPolicies.Remove(selectedPolicy);
+
+                // Reset ItemsSource to refresh the ListView
+                PoliciesListView.ItemsSource = null;
+
+                // Display the updated list of policies
+                PoliciesListView.ItemsSource = AllPolicies;
+
+                // Update the policies count text
+                PoliciesCountTextBlock.Text = $"Number of Policies: {AllPolicies.Count}";
+
+                // Disable the RemoveUnsignedPolicy button as the policy is no longer selected
+                RemoveUnsignedPolicy.IsEnabled = false;
+            }
         }
 
     }

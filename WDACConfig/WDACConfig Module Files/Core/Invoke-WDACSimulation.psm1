@@ -606,8 +606,6 @@ Function Invoke-WDACSimulation {
     https://github.com/HotCakeX/Harden-Windows-Security/wiki/Invoke-WDACSimulation
 .DESCRIPTION
     Simulates the deployment of the WDAC policy by analyzing a folder (recursively) or files and checking which of the detected files are allowed by a user selected policy xml file
-.FUNCTIONALITY
-    Simulates the deployment of the WDAC policy
 .PARAMETER FolderPath
     Provide path to a folders that you want WDAC simulation to run against
 

@@ -61,17 +61,17 @@
 
                     <controls:WrapPanel Orientation="Horizontal" HorizontalSpacing="15" VerticalSpacing="10">
 
-                        <Button x:Name="Add" Content="Add" 
+                        <Button x:Name="Add" Content="Add"
             Style="{StaticResource AccentButtonStyle}" />
 
-                        <Button x:Name="Remove" Content="Remove" 
+                        <Button x:Name="Remove" Content="Remove"
 Style="{StaticResource AccentButtonStyle}" />
 
-                        <Button x:Name="ResetSelections" Content="Reset Selections" 
+                        <Button x:Name="ResetSelections" Content="Reset Selections"
 Style="{StaticResource AccentButtonStyle}" />
 
                         <!-- Select All button to select all checkboxes -->
-                        <Button x:Name="SelectAll" Content="Select All" 
+                        <Button x:Name="SelectAll" Content="Select All"
 Style="{StaticResource AccentButtonStyle}" />
 
                     </controls:WrapPanel>
@@ -89,7 +89,7 @@ Style="{StaticResource AccentButtonStyle}" />
 
                     <controls:WrapPanel Orientation="Horizontal">
 
-                        <Button x:Name="SetPolicyTemplate" Content="Set" 
+                        <Button x:Name="SetPolicyTemplate" Content="Set"
 Style="{StaticResource AccentButtonStyle}" Margin="0,0,15,0" />
 
                         <ComboBox x:Name="PolicyTemplatesComboBox" SelectedIndex="0">

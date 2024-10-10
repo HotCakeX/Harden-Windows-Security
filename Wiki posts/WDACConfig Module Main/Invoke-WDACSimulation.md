@@ -42,7 +42,7 @@ This cmdlet allows you to simulate a WDAC (App Control for Business) policy depl
   * Hash
   * FilePath
 
-* The engine **supports** all of the [SpecificFileNameLevel](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/select-types-of-rules-to-create#table-3--specificfilenamelevel-options) options when validating the FilePublisher level.
+* The engine **supports** all of the [SpecificFileNameLevel](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/app-control-for-business/design/select-types-of-rules-to-create#table-3--specificfilenamelevel-options) options when validating the FilePublisher level.
 
   * FileDescription
   * InternalName

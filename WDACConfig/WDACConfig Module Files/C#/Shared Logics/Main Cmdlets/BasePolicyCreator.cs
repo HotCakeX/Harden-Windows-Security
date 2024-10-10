@@ -173,19 +173,23 @@ namespace WDACConfig
         /// </summary>
         public static void DriversBlockListInfoGathering()
         {
-            // The returned date is based on the local system's time-zone
-
-            // Set variables
-            string owner = "MicrosoftDocs";
-            string repo = "windows-itpro-docs";
-            string path = "windows/security/application-security/application-control/windows-defender-application-control/design/microsoft-recommended-driver-block-rules.md";
-            string apiUrl = $"https://api.github.com/repos/{owner}/{repo}/commits?path={path}";
-
-            using HttpClient httpClient = new();
-            httpClient.DefaultRequestHeaders.UserAgent.ParseAdd("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36");
 
             try
             {
+
+                // The returned date is based on the local system's time-zone
+
+                // Set variables
+                string owner = "MicrosoftDocs";
+                string repo = "windows-itpro-docs";
+                string path = "windows/security/application-security/application-control/app-control-for-business/design/microsoft-recommended-driver-block-rules.md";
+
+                string apiUrl = $"https://api.github.com/repos/{owner}/{repo}/commits?path={path}";
+
+                using HttpClient httpClient = new();
+                httpClient.DefaultRequestHeaders.UserAgent.ParseAdd("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36");
+
+
                 // Call GitHub API to get commit details
                 string response = httpClient.GetStringAsync(apiUrl).GetAwaiter().GetResult();
 
@@ -388,6 +392,7 @@ namespace WDACConfig
                 policyName = "AllowMicrosoft";
             }
 
+            // Path only used during staging area processing
             string tempPolicyPath = Path.Combine(StagingArea, $"{policyName}.xml");
 
             string tempPolicyCIPPath = Path.Combine(StagingArea, $"{policyName}.cip");
@@ -400,7 +405,6 @@ namespace WDACConfig
             Logger.Write("Copying the AllowMicrosoft.xml from Windows directory to the Staging Area");
 
             File.Copy(@"C:\Windows\schemas\CodeIntegrity\ExamplePolicies\AllowMicrosoft.xml", tempPolicyPath, true);
-
 
 
 
@@ -483,6 +487,7 @@ namespace WDACConfig
             // Fix the elements
             userModeBlockRulesXML = FixMissingElements(userModeBlockRulesXML);
 
+            // Path only used during staging area processing
             string tempPolicyPath = Path.Combine(StagingArea, $"{policyName}.xml");
 
             string tempPolicyCIPPath = Path.Combine(StagingArea, $"{policyName}.cip");
@@ -495,9 +500,6 @@ namespace WDACConfig
             CiRuleOptions.Set(filePath: tempPolicyPath, rulesToAdd: [CiRuleOptions.PolicyRuleOptions.EnabledUpdatePolicyNoReboot], rulesToRemove: [CiRuleOptions.PolicyRuleOptions.EnabledAuditMode]);
 
             Logger.Write("Assigning policy name and resetting policy ID");
-            _ = SetCiPolicyInfo.Set(tempPolicyPath, true, policyName, null, null);
-
-
             _ = SetCiPolicyInfo.Set(tempPolicyPath, true, policyName, null, null);
 
 
@@ -546,7 +548,6 @@ namespace WDACConfig
         public static void BuildSignedAndReputable(string StagingArea, bool IsAudit, ulong? LogSize, bool deploy, bool RequireEVSigners, bool EnableScriptEnforcement, bool TestMode)
         {
 
-
             string policyName;
 
             if (IsAudit)
@@ -560,6 +561,7 @@ namespace WDACConfig
                 policyName = "SignedAndReputable";
             }
 
+            // Path only used during staging area processing
             string tempPolicyPath = Path.Combine(StagingArea, $"{policyName}.xml");
 
             string tempPolicyCIPPath = Path.Combine(StagingArea, $"{policyName}.cip");

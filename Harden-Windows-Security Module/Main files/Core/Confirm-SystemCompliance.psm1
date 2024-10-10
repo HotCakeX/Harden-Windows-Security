@@ -278,8 +278,6 @@ function Confirm-SystemCompliance {
     https://github.com/HotCakeX/Harden-Windows-Security/wiki/Harden%E2%80%90Windows%E2%80%90Security%E2%80%90Module
 .DESCRIPTION
     Checks the compliance of a system with the Harden Windows Security script. Checks the applied Group policies, registry keys and PowerShell cmdlets used by the hardening script.
-.COMPONENT
-    Gpresult, Secedit, PowerShell, Registry
 .FUNCTIONALITY
     Uses Gpresult and Secedit to first export the effective Group policies and Security policies, then goes through them and checks them against the Harden Windows Security's guidelines.
 .EXAMPLE

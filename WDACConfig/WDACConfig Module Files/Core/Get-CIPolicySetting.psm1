@@ -24,7 +24,7 @@ Function Get-CIPolicySetting {
         Please use the following resources for more information
 
         https://learn.microsoft.com/en-us/powershell/module/configci/set-cipolicysetting
-        https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/understanding-wdac-policy-settings
+        https://learn.microsoft.com/en-us/windows/security/application-security/application-control/app-control-for-business/design/understanding-appcontrol-policy-settings
     .LINK
         https://github.com/HotCakeX/Harden-Windows-Security/wiki/Get-CIPolicySetting
     .INPUTS

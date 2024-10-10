@@ -7,7 +7,7 @@ namespace WDACConfig
     // Application Control event tags intelligence
     public class CILogIntel
     {
-        // Requested and Validated Signing Level Mappings: https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/operations/event-tag-explanations#requested-and-validated-signing-level
+        // Requested and Validated Signing Level Mappings: https://learn.microsoft.com/en-us/windows/security/application-security/application-control/app-control-for-business/operations/event-tag-explanations#requested-and-validated-signing-level
         public static readonly Dictionary<ushort, string> ReqValSigningLevels = new()
         {
             { 0 , "Signing level hasn't yet been checked"},
@@ -24,7 +24,7 @@ namespace WDACConfig
             { 14 , "Windows Trusted Computing Base signed"}
         };
 
-        // SignatureType Mappings: https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/operations/event-tag-explanations#signaturetype
+        // SignatureType Mappings: https://learn.microsoft.com/en-us/windows/security/application-security/application-control/app-control-for-business/operations/event-tag-explanations#signaturetype
         public static readonly Dictionary<ushort, string> SignatureTypeTable = new()
         {
             { 0,  "Unsigned or verification hasn't been attempted" },
@@ -37,7 +37,7 @@ namespace WDACConfig
             { 7 , "File was verified" }
         };
 
-        // VerificationError mappings: https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/operations/event-tag-explanations#verificationerror
+        // VerificationError mappings: https://learn.microsoft.com/en-us/windows/security/application-security/application-control/app-control-for-business/operations/event-tag-explanations#verificationerror
         public static readonly Dictionary<ushort, string> VerificationErrorTable = new()
         {
             { 0  ,   "Successfully verified signature."},

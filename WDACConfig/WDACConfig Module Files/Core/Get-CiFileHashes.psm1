@@ -14,8 +14,8 @@ Function Get-CiFileHashes {
     <#
 .SYNOPSIS
     Calculates the Authenticode hash and first page hash of the PEs with SHA1 and SHA256 algorithms.
-    The hashes are compliant wih the Windows Defender Application Control (WDAC) policy.
-    For more information please visit: https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/select-types-of-rules-to-create#more-information-about-hashes
+    The hashes are compliant with the App Control for Business policy.
+    For more information please visit: https://learn.microsoft.com/en-us/windows/security/application-security/application-control/app-control-for-business/design/select-types-of-rules-to-create#more-information-about-hashes
 .LINK
     https://github.com/HotCakeX/Harden-Windows-Security/wiki/Get-CiFileHashes
 .PARAMETER Path

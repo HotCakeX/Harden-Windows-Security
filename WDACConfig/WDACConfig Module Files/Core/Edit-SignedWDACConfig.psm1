@@ -890,17 +890,15 @@ Function Edit-SignedWDACConfig {
 
     <#
 .SYNOPSIS
-    Edits Signed WDAC policies deployed on the system (Windows Defender Application Control)
+    Edits Signed App Control for Business policies deployed on the system
 .LINK
     https://github.com/HotCakeX/Harden-Windows-Security/wiki/Edit-SignedWDACConfig
 .DESCRIPTION
-    Using official Microsoft methods, Edits Signed WDAC policies deployed on the system (Windows Defender Application Control)
+    Using official Microsoft methods, Edits Signed App Control for Business policies deployed on the system
 
     All of the files the cmdlet creates and interacts with are stored in the following directory: C:\Program Files\WDACConfig\StagingArea\Edit-SignedWDACConfig
-.COMPONENT
-    Windows Defender Application Control
 .FUNCTIONALITY
-    Using official Microsoft methods, Edits Signed WDAC policies deployed on the system (Windows Defender Application Control)
+    Using official Microsoft methods, Edits Signed App Control for Business policies deployed on the system
 .PARAMETER AllowNewApps
     Rebootlessly install new apps/programs when Signed policy is already deployed, scan their directories for new Supplemental policy, Sign and deploy thew Supplemental policy.
 .PARAMETER MergeSupplementalPolicies

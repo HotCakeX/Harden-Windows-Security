@@ -54,7 +54,7 @@
         <WebView2
             Grid.Row="1"
             x:Name="MicrosoftDocumentationWebView2"
-            Source="https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/wdac"
+            Source="https://learn.microsoft.com/en-us/windows/security/application-security/application-control/app-control-for-business/appcontrol"
             HorizontalAlignment="Stretch"
             VerticalAlignment="Stretch"            
             MinHeight="200"

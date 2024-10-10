@@ -27,8 +27,6 @@ Function Set-CommonWDACConfig {
     https://github.com/HotCakeX/Harden-Windows-Security/wiki/Set-CommonWDACConfig
 .DESCRIPTION
     Add/Change common values for parameters used by WDACConfig module so that you won't have to provide values for those repetitive parameters each time you need to use the WDACConfig module cmdlets.
-.COMPONENT
-    Windows Defender Application Control, WDACConfig module
 .FUNCTIONALITY
     Add/Change common values for parameters used by WDACConfig module so that you won't have to provide values for those repetitive parameters each time you need to use the WDACConfig module cmdlets.
 .PARAMETER SignedPolicyPath

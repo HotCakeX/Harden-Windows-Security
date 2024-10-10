@@ -268,12 +268,12 @@ ValidityPeriod = Years
     Skips the version check for the module
 .DESCRIPTION
     Builds a self-signed certificate for use with WDAC that meets all of the requirements for a WDAC policy signing certificate.
-    https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/deployment/create-code-signing-cert-for-wdac
+    https://learn.microsoft.com/en-us/windows/security/application-security/application-control/app-control-for-business/deployment/create-code-signing-cert-for-appcontrol
 .NOTES
     For Method1 INF creation notes:
 
     2.5.29.19 = {text}ca=0pathlength=0 -> adds basic constraints to the certificate request.
-    X500NameFlags = "CERT_NAME_STR_DISABLE_UTF8_DIR_STR_FLAG" -> For setting the encoding to printable string and disabling UTF-8 encoding, required for WDAC policy signing certificate - > https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/deployment/create-code-signing-cert-for-wdac
+    X500NameFlags = "CERT_NAME_STR_DISABLE_UTF8_DIR_STR_FLAG" -> For setting the encoding to printable string and disabling UTF-8 encoding, required for WDAC policy signing certificate - > https://learn.microsoft.com/en-us/windows/security/application-security/application-control/app-control-for-business/deployment/create-code-signing-cert-for-appcontrol
 
     For Method2 New-SelfSignedCertificate notes:
 

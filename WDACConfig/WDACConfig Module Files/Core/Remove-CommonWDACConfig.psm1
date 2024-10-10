@@ -24,8 +24,6 @@ Function Remove-CommonWDACConfig {
     https://github.com/HotCakeX/Harden-Windows-Security/wiki/Remove-CommonWDACConfig
 .DESCRIPTION
     Removes common values for parameters used by WDACConfig module from the User Configurations JSON file. If you don't use it with any parameters, then all User Configs will be deleted.
-.COMPONENT
-    Windows Defender Application Control, WDACConfig module
 .FUNCTIONALITY
     Removes common values for parameters used by WDACConfig module from the User Configurations JSON file. If you don't use it with any parameters, then all User Configs will be deleted.
 .PARAMETER SignedPolicyPath

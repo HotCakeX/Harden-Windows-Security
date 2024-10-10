@@ -15,7 +15,7 @@
     HelpInfoURI          = 'https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDACConfig'
     Description          = @'
 
-This is an advanced PowerShell module for WDAC (Windows Defender Application Control) and automates a lot of tasks.
+This is an advanced PowerShell module for Application Control Management in Windows and automates a lot of tasks.
 
 
 🟢 Please see the GitHub page for Full details and everything about the module: https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDACConfig

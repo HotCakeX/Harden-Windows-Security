@@ -1,6 +1,6 @@
 # Important Notes and Tips about WDAC policies
 
-* WDAC stands for Windows Defender Application Control
+* App Control for Business was formerly known as WDAC (Windows Defender Application Control)
 * It's used for Application and File whitelisting in Windows.
 
 <br>
@@ -21,7 +21,7 @@ That will also change/create the `<BasePolicyID>GUID</BasePolicyID>` element in 
 
 ### Verify Policy Rule options
 
-We have to make sure that the supplemental policy does not contain any policy rule options that only work with a base policy. [This chart shows which ones can be used in a supplemental policy.](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/select-types-of-rules-to-create)
+We have to make sure that the supplemental policy does not contain any policy rule options that only work with a base policy. [This chart shows which ones can be used in a supplemental policy.](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/app-control-for-business/design/select-types-of-rules-to-create)
 
 You can [use this PowerShell code](https://learn.microsoft.com/en-us/powershell/module/configci/set-ruleoption) to automatically make sure non-supplemental policy rule options don't exist in a supplemental policy XML file:
 
@@ -34,7 +34,7 @@ You can [use this PowerShell code](https://learn.microsoft.com/en-us/powershell/
 
 <br>
 
-A supplemental policy [can only have these policy rule options](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/select-types-of-rules-to-create):
+A supplemental policy [can only have these policy rule options](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/app-control-for-business/design/select-types-of-rules-to-create):
 
 * 5 Enabled:Inherit Default Policy
 * 6 Enabled:Unsigned System Integrity Policy (Default)
@@ -55,7 +55,7 @@ Deny rules are ignored in supplemental policies by the WDAC engine. Supplemental
 
 When the base policy has a deny rule for a file and we allow the same file in a supplemental policy, the file will still be blocked, because explicit deny rules have the highest priority.
 
-[More info](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/select-types-of-rules-to-create#file-rule-precedence-order)
+[More info](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/app-control-for-business/design/select-types-of-rules-to-create#file-rule-precedence-order)
 
 <br>
 
@@ -140,7 +140,7 @@ In order to specify whether a certificate/signer should be denied/allowed, the I
 </SigningScenarios>
 ```
 
-#### [Guidance on Creating WDAC Deny Policies](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/create-wdac-deny-policy)
+#### [Guidance on Creating WDAC Deny Policies](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/app-control-for-business/design/create-appcontrol-deny-policy)
 
 <br>
 
@@ -162,8 +162,8 @@ Get-CimInstance -ClassName Win32_DeviceGuard -Namespace root\Microsoft\Windows\D
 
 <image>
 
-* Windows Defender Application Control Policy (Kernel Mode)
-* Windows Defender Application Control User Mode Policy (User Mode)
+* App Control for Business Policy (Kernel Mode)
+* App Control for Business User Mode Policy (User Mode)
 
 <br>
 
@@ -173,7 +173,7 @@ Get-CimInstance -ClassName Win32_DeviceGuard -Namespace root\Microsoft\Windows\D
 
 ## Refreshing WDAC Policies
 
-### [Using the built-in CiTool](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/operations/citool-commands)
+### [Using the built-in CiTool](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/app-control-for-business/operations/citool-commands)
 
 ```powershell
 CITool --refresh
@@ -239,9 +239,9 @@ WDAC forces Allow-list architecture by nature, not deny-list architecture. An em
 
 ### How to Manually Consume the Microsoft Recommended Block Rules
 
-From [Microsoft recommended block rules](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/applications-that-can-bypass-wdac) document, copy the WDAC policy XML at the end (you might need to expand that section to view it), use a text editor like [VS Code](https://code.visualstudio.com/) to edit it as recommended:
+From [Microsoft recommended block rules](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/app-control-for-business/design/applications-that-can-bypass-appcontrol) document, copy the WDAC policy XML at the end (you might need to expand that section to view it), use a text editor like [VS Code](https://code.visualstudio.com/) to edit it as recommended:
 
-The blocklist policy includes "Allow all" rules for both kernel and user mode files that make it safe to deploy as a standalone WDAC policy or side-by-side any other policy by keeping its allow all rules in place. [Refer to this document about how multiple base policies work.](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/deploy-multiple-wdac-policies)
+The blocklist policy includes "Allow all" rules for both kernel and user mode files that make it safe to deploy as a standalone WDAC policy or side-by-side any other policy by keeping its allow all rules in place. [Refer to this document about how multiple base policies work.](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/app-control-for-business/design/deploy-multiple-appcontrol-policies)
 
 <br>
 
@@ -273,9 +273,9 @@ The policy must be in multiple policy format, which can be achieved by using the
 * Deploying Microsoft recommended block rules (Driver or user mode) alone, after removing the allow all rules from them, will cause boot failure, for obvious reasons.
 
 * How to check the version of the deployed Microsoft recommended ***driver*** block rules
-  - The version is mentioned in [Code Integrity operational event logs](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/operations/event-id-explanations) with an event ID of `3099` in the General tab.
+  - The version is mentioned in [Code Integrity operational event logs](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/app-control-for-business/operations/event-id-explanations) with an event ID of `3099` in the General tab.
 
-* We don't need to merge and use the Microsoft recommended driver block rules in a policy, because [it's already being enforced by default](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/microsoft-recommended-driver-block-rules#microsoft-vulnerable-driver-blocklist) and if we want to update it more regularly, we can do so [by following this section of the document.](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/microsoft-recommended-driver-block-rules#steps-to-download-and-apply-the-vulnerable-driver-blocklist-binary) Or by [Fast and Automatic Microsoft Recommended Driver Block Rules updates](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Fast-and-Automatic-Microsoft-Recommended-Driver-Block-Rules-updates).
+* We don't need to merge and use the Microsoft recommended driver block rules in a policy, because [it's already being enforced by default](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/app-control-for-business/design/microsoft-recommended-driver-block-rules#microsoft-vulnerable-driver-blocklist) and if we want to update it more regularly, we can do so [by following this section of the document.](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/app-control-for-business/design/microsoft-recommended-driver-block-rules#steps-to-download-and-apply-the-vulnerable-driver-blocklist-binary) Or by [Fast and Automatic Microsoft Recommended Driver Block Rules updates](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Fast-and-Automatic-Microsoft-Recommended-Driver-Block-Rules-updates).
 
 <br>
 
@@ -297,9 +297,9 @@ The policy must be in multiple policy format, which can be achieved by using the
 
 * Using [Signtool.exe](https://learn.microsoft.com/en-us/dotnet/framework/tools/signtool-exe) with `-fd certHash` will default to the algorithm used on the signing certificate. For example, if the certificate has `SHA512` hashing algorithm, the file that is being signed will use the same algorithm.
 
-* Sometimes [New-CIPolicy](https://learn.microsoft.com/en-us/powershell/module/configci/new-cipolicy) Cmdlet creates 2 file rules for each driver file, such as `.sys` files. One of them is stored in **Driver signing scenarios** section under SigningScenario with the value `131` and the other one is stored in **User mode signing scenarios** section under SigningScenario with the value `12`. [More info here](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/select-types-of-rules-to-create#why-does-scan-create-eight-hash-rules-for-certain-files)
+* Sometimes [New-CIPolicy](https://learn.microsoft.com/en-us/powershell/module/configci/new-cipolicy) Cmdlet creates 2 file rules for each driver file, such as `.sys` files. One of them is stored in **Driver signing scenarios** section under SigningScenario with the value `131` and the other one is stored in **User mode signing scenarios** section under SigningScenario with the value `12`. [More info here](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/app-control-for-business/design/select-types-of-rules-to-create#why-does-scan-create-eight-hash-rules-for-certain-files)
 
-* [File rule levels](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/select-types-of-rules-to-create#table-2-windows-defender-application-control-policy---file-rule-levels) and Cmdlets like [New-CiPolicy](https://learn.microsoft.com/en-us/powershell/module/configci/new-cipolicy) only create rules for files with supported extensions. The [table in this page](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/feature-availability) lists all of the support file extensions.
+* [File rule levels](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/app-control-for-business/design/select-types-of-rules-to-create#table-2-app-control-for-business-policy---file-rule-levels) and Cmdlets like [New-CiPolicy](https://learn.microsoft.com/en-us/powershell/module/configci/new-cipolicy) only create rules for files with supported extensions. The [table in this page](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/app-control-for-business/feature-availability) lists all of the support file extensions.
 
 <br>
 
@@ -349,7 +349,7 @@ Remove-CIPolicyRule -FilePath "DefaultWindows_Enforced.xml" -Id "ID_SIGNER_RT_FL
 
 ## How to Remove WDAC Policy Refresh Tool Certificates From Default Example Policies
 
-Starting with Windows 11 22H2, [CITool](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/operations/citool-commands) is available in Windows by default and Refresh tool is no longer needed, so use the commands below to remove the certificates that allow that tool to be executed, **their order of execution is important.**
+Starting with Windows 11 22H2, [CITool](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/app-control-for-business/operations/citool-commands) is available in Windows by default and Refresh tool is no longer needed, so use the commands below to remove the certificates that allow that tool to be executed, **their order of execution is important.**
 
 * [Remove-CIPolicyRule](https://learn.microsoft.com/en-us/powershell/module/configci/remove-cipolicyrule)
 * [Note](https://github.com/MicrosoftDocs/windows-powershell-docs/issues/3312)
@@ -404,7 +404,7 @@ This behavior is true for [Lightly managed](https://github.com/HotCakeX/Harden-W
 
 ## The .CIP Binary File Can Have Any Name or No Name at All
 
-Using [CiTool](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/operations/citool-commands) in Windows 11 build `22621` and above, `.CIP` binary files can be deployed with any name, even without a name, and lead to a successful WDAC policy deployment.
+Using [CiTool](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/app-control-for-business/operations/citool-commands) in Windows 11 build `22621` and above, `.CIP` binary files can be deployed with any name, even without a name, and lead to a successful WDAC policy deployment.
 
 <br>
 
@@ -481,7 +481,7 @@ When you use `-Audit` parameter of ConfigCI cmdlets such as [Get-SystemDriver](h
 1. AppLocker – MSI and Script event log
 2. CodeIntegrity - Operational
 
-[**Explained more in here**](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/operations/event-id-explanations)
+[**Explained more in here**](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/app-control-for-business/operations/event-id-explanations)
 
 <br>
 
@@ -536,7 +536,7 @@ In the signer below
 
 ## What Does HVCI option Set to Strict Mean?
 
-[HVCI](https://learn.microsoft.com/en-us/windows/security/hardware-security/enable-virtualization-based-protection-of-code-integrity) stands for [Hypervisor-protected Code Integrity](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/introduction-to-device-guard-virtualization-based-security-and-windows-defender-application-control) and it is a feature that uses virtualization-based security (VBS) to protect the Windows kernel from memory attacks. HVCI can be set to different options in a WDAC policy, such as Enabled, DebugMode, or Strict.
+[HVCI](https://learn.microsoft.com/en-us/windows/security/hardware-security/enable-virtualization-based-protection-of-code-integrity) stands for **Hypervisor-protected Code Integrity** and it is a feature that uses virtualization-based security (VBS) to protect the Windows kernel from memory attacks. HVCI can be set to different options in a WDAC policy, such as Enabled, DebugMode, or Strict.
 
 Setting [HVCI to Strict](https://learn.microsoft.com/en-us/powershell/module/configci/set-hvcioptions) in a WDAC policy provides the highest level of protection for kernel mode code integrity, as it enforces these additional restrictions:
 
@@ -589,7 +589,7 @@ It doesn't matter how long or short the IDs are in the policy XML file, such as 
 
 <br>
 
-## <img width="65" src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/arrow-pink.gif" alt="Continue Reading about BYOVD using Windows Defender Application Control"> [Continue reading about BYOVD protection with WDAC](#-continue-reading-about-byovd-protection-with-wdac)
+## <img width="65" src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/arrow-pink.gif" alt="Continue Reading about BYOVD using App Control for Business"> [Continue reading about BYOVD protection with App Control for Business](#-continue-reading-about-byovd-protection-with-wdac)
 
 #### [WDAC policy](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDAC-policy-for-BYOVD-Kernel-mode-only-protection) for BYOVD Kernel mode only protection
 

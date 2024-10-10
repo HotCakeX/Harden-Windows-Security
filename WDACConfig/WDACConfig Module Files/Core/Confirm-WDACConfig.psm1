@@ -84,7 +84,7 @@ Function Confirm-WDACConfig {
         if (!$ListActivePolicies -and !$VerifyWDACStatus -and !$CheckSmartAppControlStatus) {
 
             [System.Collections.Generic.List[WDACConfig.CiPolicyInfo]]$PoliciesDeployedResults = [WDACConfig.CiToolHelper]::GetPolicies($false, $true, $true)
-            Write-Host -Object "$($PoliciesDeployedResults.count) policies are deployed"
+            Write-ColorfulTextWDACConfig -Color Lavender -InputText "$($PoliciesDeployedResults.count) policies are deployed"
             $PoliciesDeployedResults
 
             $VerifyWDACStatus = $true
@@ -144,11 +144,9 @@ Function Confirm-WDACConfig {
 .LINK
     https://github.com/HotCakeX/Harden-Windows-Security/wiki/Confirm-WDACConfig
 .DESCRIPTION
-    Using official Microsoft methods, Show the status of WDAC (Windows Defender Application Control) on the system, list the current deployed policies and show details about each of them.
-.COMPONENT
-    Windows Defender Application Control, ConfigCI, CiTool
+    Using official Microsoft methods, Show the status of App Control for Business on the system, list the current deployed policies and show details about each of them.
 .FUNCTIONALITY
-    Using official Microsoft methods, Show the status of WDAC (Windows Defender Application Control) on the system, list the current deployed policies and show details about each of them.
+    Using official Microsoft methods, Show the status of App Control for Business on the system, list the current deployed policies and show details about each of them.
 .PARAMETER ListActivePolicies
     Lists the currently deployed policies and shows details about each of them
 .PARAMETER OnlySystemPolicies
@@ -158,7 +156,7 @@ Function Confirm-WDACConfig {
 .PARAMETER OnlySupplementalPolicies
     Shows only the Supplemental policies
 .PARAMETER VerifyWDACStatus
-    Shows the status of WDAC (Windows Defender Application Control) on the system
+    Shows the status of App Control for Business on the system
 .PARAMETER CheckSmartAppControlStatus
     Checks the status of Smart App Control and reports the results on the console
 .PARAMETER SkipVersionCheck

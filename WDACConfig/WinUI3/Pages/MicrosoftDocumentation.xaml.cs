@@ -47,7 +47,7 @@ namespace WDACConfig.Pages
         // Event handler for Home button
         private void HomeButton_Click(object sender, RoutedEventArgs e)
         {
-            MicrosoftDocumentationWebView2.Source = new Uri("https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/wdac");
+            MicrosoftDocumentationWebView2.Source = new Uri("https://learn.microsoft.com/en-us/windows/security/application-security/application-control/app-control-for-business/appcontrol");
         }
 
         // Update the state of navigation buttons when navigation is completed so that the Back/Forward buttons will be enabled only when they can be used

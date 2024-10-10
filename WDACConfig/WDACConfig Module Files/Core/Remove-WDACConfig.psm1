@@ -338,15 +338,13 @@ Function Remove-WDACConfig {
 
     <#
 .SYNOPSIS
-    Removes Signed and unsigned deployed WDAC policies (Windows Defender Application Control)
+    Removes Signed and unsigned deployed App Control for Business policies
 .LINK
     https://github.com/HotCakeX/Harden-Windows-Security/wiki/Remove-WDACConfig
 .DESCRIPTION
-    Using official Microsoft methods, Removes Signed and unsigned deployed WDAC policies (Windows Defender Application Control)
-.COMPONENT
-    Windows Defender Application Control
+    Using official Microsoft methods, Removes Signed and unsigned deployed App Control for Business policies
 .FUNCTIONALITY
-    Using official Microsoft methods, Removes Signed and unsigned deployed WDAC policies (Windows Defender Application Control)
+    Using official Microsoft methods, Removes Signed and unsigned deployed App Control for Business policies
 .PARAMETER PolicyNames
     Names of the deployed policies to be removed
     https://stackoverflow.com/questions/76143006/how-to-prevent-powershell-validateset-argument-completer-from-suggesting-the-sam/76143269

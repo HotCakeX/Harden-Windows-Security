@@ -425,9 +425,7 @@ Function New-KernelModeWDACConfig {
 .LINK
     https://github.com/HotCakeX/Harden-Windows-Security/wiki/New%E2%80%90KernelModeWDACConfig
 .DESCRIPTION
-    Using official Microsoft methods, configure and use Windows Defender Application Control
-.COMPONENT
-    Windows Defender Application Control
+    Using official Microsoft methods, configure and use App Control for Business
 .FUNCTIONALITY
     Creates Kernel only mode WDAC policy capable of protecting against BYOVD attacks category
 .PARAMETER Base

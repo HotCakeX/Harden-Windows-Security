@@ -177,7 +177,7 @@ Function New-WDACConfig {
 
     <#
 .SYNOPSIS
-    Automate a lot of tasks related to WDAC (Windows Defender Application Control)
+    Automate a lot of tasks related to App Control for Business
 .LINK
     https://github.com/HotCakeX/Harden-Windows-Security/wiki/New-WDACConfig
 .PARAMETER PolicyType

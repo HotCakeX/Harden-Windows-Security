@@ -407,15 +407,11 @@ Function New-DenyWDACConfig {
 
     <#
 .SYNOPSIS
-    Creates Deny base policies (Windows Defender Application Control)
+    Creates Deny App Control for Business base policies
 .LINK
     https://github.com/HotCakeX/Harden-Windows-Security/wiki/New-DenyWDACConfig
 .DESCRIPTION
-    Using official Microsoft methods to create Deny base policies (Windows Defender Application Control)
-.COMPONENT
-    Windows Defender Application Control
-.FUNCTIONALITY
-    Using official Microsoft methods, Removes Signed and unsigned deployed WDAC policies (Windows Defender Application Control)
+    Using official Microsoft methods to create Deny App Control for Business base policies
 .PARAMETER PolicyName
     It's used by the entire Cmdlet. It is the name of the base policy that will be created.
 .PARAMETER Normal

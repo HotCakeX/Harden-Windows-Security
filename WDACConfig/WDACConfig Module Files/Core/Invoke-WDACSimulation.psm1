@@ -600,15 +600,12 @@ Function Invoke-WDACSimulation {
 
     FilePath:       The name of the file gathered from its full path. (the actual long path of the file is not displayed in the console output, only in the CSV file)
     Source:         The source of the file's MatchCriteria, e.g., 'Signer' (For signed files only), 'Hash' (For signed and unsigned files), 'Unsigned' (For unsigned files only)
-    MatchCriteria:  The reason the file is allowed or not. For files authorized by FilePublisher level, it will show the specific file name level that the file is authorized by. (https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/select-types-of-rules-to-create#table-3--specificfilenamelevel-options)
+    MatchCriteria:  The reason the file is allowed or not. For files authorized by FilePublisher level, it will show the specific file name level that the file is authorized by. (https://learn.microsoft.com/en-us/windows/security/application-security/application-control/app-control-for-business/design/select-types-of-rules-to-create#table-3--specificfilenamelevel-options)
     IsAuthorized:   A boolean value that indicates whether the file is allowed or not.
 .LINK
     https://github.com/HotCakeX/Harden-Windows-Security/wiki/Invoke-WDACSimulation
 .DESCRIPTION
     Simulates the deployment of the WDAC policy by analyzing a folder (recursively) or files and checking which of the detected files are allowed by a user selected policy xml file
-.COMPONENT
-    Windows Defender Application Control
-    WDACConfig
 .FUNCTIONALITY
     Simulates the deployment of the WDAC policy
 .PARAMETER FolderPath

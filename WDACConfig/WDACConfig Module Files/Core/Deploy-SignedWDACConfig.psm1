@@ -262,15 +262,11 @@ Function Deploy-SignedWDACConfig {
 
     <#
 .SYNOPSIS
-    Signs and Deploys WDAC policies, accepts signed or unsigned policies and deploys them
+    Signs and Deploys App Control for Business policies, accepts signed or unsigned policies and deploys them
 .LINK
     https://github.com/HotCakeX/Harden-Windows-Security/wiki/Deploy-SignedWDACConfig
 .DESCRIPTION
-    Using official Microsoft methods, Signs and Deploys WDAC policies, accepts signed or unsigned policies and deploys them (Windows Defender Application Control)
-.COMPONENT
-    Windows Defender Application Control
-.FUNCTIONALITY
-    Using official Microsoft methods, Signs and Deploys WDAC policies, accepts signed or unsigned policies and deploys them (Windows Defender Application Control)
+    Using official Microsoft methods, Signs and Deploys App Control for Business policies, accepts signed or unsigned policies and deploys them
 .PARAMETER CertPath
     Path to the certificate .cer file
 .PARAMETER PolicyPaths

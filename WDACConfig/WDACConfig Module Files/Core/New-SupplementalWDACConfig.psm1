@@ -110,6 +110,8 @@ Function New-SupplementalWDACConfig {
             if ([WDACConfig.PolicyFileSigningStatusDetection]::Check($PolicyPath) -eq [WDACConfig.PolicyFileSigningStatusDetection+SigningStatus]::Signed) {
                 Throw 'You are using -Deploy parameter and the selected base policy is Signed. Please use Deploy-SignedWDACConfig to deploy it.'
             }
+            # Send $true to set it as valid if no errors were thrown before
+            $true
         }
 
         # Detecting if Confirm switch is used to bypass the confirmation prompts

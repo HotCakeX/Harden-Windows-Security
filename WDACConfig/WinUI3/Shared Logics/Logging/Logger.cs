@@ -18,7 +18,7 @@ namespace WDACConfig
             // Create the Logs directory if it doesn't exist, won't do anything if it exists
             _ = Directory.CreateDirectory(LogsDirectory);
 
-            // Check the size of the directory and clear it if it exceeds 100
+            // Check the size of the directory and clear it if it exceeds 100 MB
             // To ensure the logs directory doesn't get too big
             if (GetDirectorySize(LogsDirectory) > 100 * 1024 * 1024) // 100 MB in bytes
             {
@@ -43,14 +43,16 @@ namespace WDACConfig
                     // Captures and redirects them to the GUI's textbox, just like the regular Write-Verbose messages.
                     GlobalVars.Host?.UI.WriteVerboseLine(message);
                 }
+
+
+                // Write the message to the log file
+                using StreamWriter sw = File.AppendText(LogFileName);
+                sw.WriteLine($"{DateTime.Now}: {message}");
+
             }
             // Do not do anything if errors occur
-            // Since many methods write to the console asynchronously this can throw errors
+            // Since many methods write to the console or text file asynchronously or in parallel (thread jobs) in the PowerShell module mode, this can throw errors
             catch { }
-
-            // Write the message to the log file
-            using StreamWriter sw = File.AppendText(LogFileName);
-            sw.WriteLine($"{DateTime.Now}: {message}");
         }
 
         private static long GetDirectorySize(string directoryPath)

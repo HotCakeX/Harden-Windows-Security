@@ -18,7 +18,7 @@
     <!--
     By default .NET runtimes are contained in the MSIX. This line will also include the WindowsAppSDK in the MSIX file
     so that the App will be installable on any system that neither has the .NET runtime nor the latest AppSDK
-    
+
     Without this, we'd have to download the latest SDK and install it manually on the user's system, which will add the relevant packages
     and satisfy the requirements of the MSIX instlaler.
     https://learn.microsoft.com/en-us/windows/apps/windows-app-sdk/downloads

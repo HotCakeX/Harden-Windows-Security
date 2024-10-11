@@ -101,30 +101,45 @@ namespace WDACConfig.Pages
         // Event handler for the RemoveUnsignedPolicy button click
         private async void RemoveUnsignedPolicy_Click(object sender, RoutedEventArgs e)
         {
+
+            string AppControlPolicyName = "AppControlManagerSupplementalPolicy";
+
+
             // Make sure we have a valid selected policy that is unsigned
             if (selectedPolicy is not null && !selectedPolicy.IsSignedPolicy)
             {
 
                 // Check if the selected policy has the FriendlyName "AppControlManagerSupplementalPolicy"
-                if (string.Equals(selectedPolicy.FriendlyName, "AppControlManagerSupplementalPolicy", StringComparison.OrdinalIgnoreCase))
+                if (string.Equals(selectedPolicy.FriendlyName, AppControlPolicyName, StringComparison.OrdinalIgnoreCase))
                 {
-                    // Create and display a ContentDialog with Yes and No options
-                    ContentDialog dialog = new()
-                    {
-                        Title = "Confirm Policy Removal",
-                        Content = "The policy 'AppControlManagerSupplementalPolicy' must not be removed because you won't be able to relaunch the AppControl Manager again. Are you sure you still want to remove it?",
-                        PrimaryButtonText = "Yes",
-                        CloseButtonText = "No",
-                        XamlRoot = this.XamlRoot // Set XamlRoot to the current page's XamlRoot
-                    };
 
-                    // Show the dialog and wait for user response
-                    var result = await dialog.ShowAsync();
+                    // Get all the deployed base policies
+                    List<string?> CurrentlyDeployedPolicy = CiToolHelper.GetPolicies(false, true, false).Select(p => p.BasePolicyID).ToList();
 
-                    // If the user did not select "Yes", return from the method
-                    if (result is not ContentDialogResult.Primary)
+                    // Check if the base policies of the AppControlManagerSupplementalPolicy Supplemental policy is currently deployed on the system
+                    // And only then show the prompt, otherwise allow for its removal just like any other policy since it's a stray Supplemental policy
+                    if (CurrentlyDeployedPolicy.Contains(selectedPolicy.BasePolicyID))
                     {
-                        return;
+
+                        // Create and display a ContentDialog with Yes and No options
+                        ContentDialog dialog = new()
+                        {
+                            Title = "Confirm Policy Removal",
+                            Content = $"The policy '{AppControlPolicyName}' must not be removed because you won't be able to relaunch the AppControl Manager again. Are you sure you still want to remove it?",
+                            PrimaryButtonText = "Yes",
+                            CloseButtonText = "No",
+                            XamlRoot = this.XamlRoot // Set XamlRoot to the current page's XamlRoot
+                        };
+
+                        // Show the dialog and wait for user response
+                        var result = await dialog.ShowAsync();
+
+                        // If the user did not select "Yes", return from the method
+                        if (result is not ContentDialogResult.Primary)
+                        {
+                            return;
+                        }
+
                     }
                 }
 

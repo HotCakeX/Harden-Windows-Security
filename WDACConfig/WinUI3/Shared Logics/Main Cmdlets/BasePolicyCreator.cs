@@ -457,11 +457,8 @@ namespace WDACConfig
 
                 CiToolHelper.UpdatePolicy(tempPolicyCIPPath);
             }
-            else
-            {
-                File.Copy(tempPolicyPath, finalPolicyPath, true);
 
-            }
+            File.Copy(tempPolicyPath, finalPolicyPath, true);
 
 
         }
@@ -531,11 +528,6 @@ namespace WDACConfig
             string policyID = SetCiPolicyInfo.Set(tempPolicyPath, true, policyName, null, null);
 
 
-            if (deployAppControlSupplementalPolicy == true)
-            {
-                SupplementalForSelf.Deploy(StagingArea, policyID);
-            }
-
             string finalPolicyPath = Path.Combine(GlobalVars.UserConfigDir, $"{policyName}.xml");
 
             if (deploy)
@@ -564,10 +556,9 @@ namespace WDACConfig
                 CiToolHelper.UpdatePolicy(tempPolicyCIPPath);
 
             }
-            else
-            {
-                File.Copy(tempPolicyPath, finalPolicyPath, true);
-            }
+
+            File.Copy(tempPolicyPath, finalPolicyPath, true);
+
 
         }
 
@@ -647,11 +638,8 @@ TestMode: TestMode);
 
                 CiToolHelper.UpdatePolicy(tempPolicyCIPPath);
             }
-            else
-            {
-                File.Copy(tempPolicyPath, finalPolicyPath, true);
 
-            }
+            File.Copy(tempPolicyPath, finalPolicyPath, true);
 
 
         }

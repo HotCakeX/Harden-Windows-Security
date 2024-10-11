@@ -33,6 +33,8 @@ Function Edit-WDACConfig {
                 if (![WDACConfig.CheckPolicyDeploymentStatus]::IsDeployed($_)) {
                     throw 'The currently selected policy xml file is not deployed.'
                 }
+                # Send $true to set it as valid if no errors were thrown before
+                $true
             })]
         [Parameter(Mandatory = $false, ParameterSetName = 'AllowNewApps', ValueFromPipelineByPropertyName = $true)]
         [Parameter(Mandatory = $false, ParameterSetName = 'MergeSupplementalPolicies', ValueFromPipelineByPropertyName = $true)]
@@ -175,7 +177,7 @@ Function Edit-WDACConfig {
 
                 #Region Snap-Back-Guarantee
                 [WDACConfig.Logger]::Write('Creating Enforced Mode SnapBack guarantee')
-                [WDACConfig.SnapBackGuarantee]::New($EnforcedModeCIPPath.FullName)
+                [WDACConfig.SnapBackGuarantee]::Create($EnforcedModeCIPPath.FullName)
 
                 $CurrentStep++
                 Write-Progress -Id 10 -Activity 'Deploying the Audit mode policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)

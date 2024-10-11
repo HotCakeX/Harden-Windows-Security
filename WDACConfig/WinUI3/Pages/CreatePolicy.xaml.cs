@@ -25,6 +25,25 @@ namespace WDACConfig.Pages
 
         }
 
+        #region Methods so that only 1 Deploy button will be available at any time to prevent conflicts
+
+        private void DisableDeployButtons()
+        {
+            AllowMicrosoftCreateAndDeploy.IsEnabled = false;
+            SignedAndReputableCreateAndDeploy.IsEnabled = false;
+            RecommendedDriverBlockRulesCreateAndDeploy.IsEnabled = false;
+            RecommendedUserModeBlockRulesCreateAndDeploy.IsEnabled = false;
+        }
+
+        private void EnableDeployButtons()
+        {
+            AllowMicrosoftCreateAndDeploy.IsEnabled = true;
+            SignedAndReputableCreateAndDeploy.IsEnabled = true;
+            RecommendedDriverBlockRulesCreateAndDeploy.IsEnabled = true;
+            RecommendedUserModeBlockRulesCreateAndDeploy.IsEnabled = true;
+        }
+        #endregion
+
 
         #region For Allow Microsoft Policy
 
@@ -98,7 +117,7 @@ namespace WDACConfig.Pages
 
                 // Disable the buttons to prevent multiple clicks
                 AllowMicrosoftCreate.IsEnabled = false;
-                AllowMicrosoftCreateAndDeploy.IsEnabled = false;
+                DisableDeployButtons();
 
                 string stagingArea = StagingArea.NewStagingArea("BuildAllowMicrosoft").ToString();
 
@@ -145,7 +164,7 @@ namespace WDACConfig.Pages
 
                 // Re-enable the buttons once the work is done
                 AllowMicrosoftCreate.IsEnabled = true;
-                AllowMicrosoftCreateAndDeploy.IsEnabled = true;
+                EnableDeployButtons();
 
             }
         }
@@ -237,7 +256,7 @@ namespace WDACConfig.Pages
 
                 // Disable the buttons
                 SignedAndReputableCreate.IsEnabled = false;
-                SignedAndReputableCreateAndDeploy.IsEnabled = false;
+                DisableDeployButtons();
 
                 string stagingArea = StagingArea.NewStagingArea("BuildSignedAndReputable").ToString();
 
@@ -280,7 +299,7 @@ namespace WDACConfig.Pages
             finally
             {
                 SignedAndReputableCreate.IsEnabled = true;
-                SignedAndReputableCreateAndDeploy.IsEnabled = true;
+                EnableDeployButtons();
             }
         }
 
@@ -410,7 +429,7 @@ namespace WDACConfig.Pages
 
                 // Disable the buttons
                 RecommendedDriverBlockRulesCreate.IsEnabled = false;
-                RecommendedDriverBlockRulesCreateAndDeploy.IsEnabled = false;
+                DisableDeployButtons();
 
                 string stagingArea = StagingArea.NewStagingArea("BuildRecommendedDriverBlockRules").ToString();
 
@@ -430,7 +449,7 @@ namespace WDACConfig.Pages
 
                 // Re-enable buttons
                 RecommendedDriverBlockRulesCreate.IsEnabled = true;
-                RecommendedDriverBlockRulesCreateAndDeploy.IsEnabled = true;
+                EnableDeployButtons();
             }
         }
 
@@ -477,7 +496,7 @@ namespace WDACConfig.Pages
 
                 // Disable the buttons
                 RecommendedUserModeBlockRulesCreate.IsEnabled = false;
-                RecommendedUserModeBlockRulesCreateAndDeploy.IsEnabled = false;
+                DisableDeployButtons();
 
                 string stagingArea = StagingArea.NewStagingArea("BuildRecommendedUserModeBlockRules").ToString();
 
@@ -495,10 +514,11 @@ namespace WDACConfig.Pages
 
                 // Re-enable buttons
                 RecommendedUserModeBlockRulesCreate.IsEnabled = true;
-                RecommendedUserModeBlockRulesCreateAndDeploy.IsEnabled = true;
+                EnableDeployButtons();
             }
         }
 
         #endregion
+
     }
 }

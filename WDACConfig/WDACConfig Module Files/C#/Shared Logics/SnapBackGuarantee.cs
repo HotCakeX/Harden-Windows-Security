@@ -15,8 +15,13 @@ namespace WDACConfig
         /// </summary>
         /// <param name="path">The path to the EnforcedMode.cip file that will be used to revert the base policy to enforced mode in case of a reboot.</param>
         /// <exception cref="InvalidOperationException"></exception>
-        public static void New(string path)
+        public static void Create(string path)
         {
+
+            if (string.IsNullOrWhiteSpace(path))
+            {
+                throw new ArgumentNullException(nameof(path), "The path to the EnforcedMode.cip file cannot be null or whitespace.");
+            }
 
             Logger.Write("Creating the scheduled task for Snap Back Guarantee");
 

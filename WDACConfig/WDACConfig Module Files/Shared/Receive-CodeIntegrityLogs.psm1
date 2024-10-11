@@ -414,14 +414,17 @@ Function Receive-CodeIntegrityLogs {
                         }
                     }
 
-                    [WDACConfig.Logger]::Write("Receive-CodeIntegrityLogs: The number of unique publishers in the correlated events is $($Publishers.Count)")
+                    # This creates too much noise in the logs and verbose messages, either make it more useful or keep it commented
+                    # [WDACConfig.Logger]::Write("Receive-CodeIntegrityLogs: The number of unique publishers in the correlated events is $($Publishers.Count)")
+
                     $Log['Publishers'] = $Publishers
 
                     # Add a new property to detect whether this log is signed or not
                     # Primarily used by the BuildSignerAndHashObjects Method and for Evtx log sources
                     $Log['SignatureStatus'] = $Publishers.Count -ge 1 ? 'Signed' : 'Unsigned'
 
-                    [WDACConfig.Logger]::Write("Receive-CodeIntegrityLogs: The number of correlated events is $($CorrelatedLogs.Count)")
+                    # This creates too much noise in the logs and verbose messages, either make it more useful or keep it commented
+                    # [WDACConfig.Logger]::Write("Receive-CodeIntegrityLogs: The number of correlated events is $($CorrelatedLogs.Count)")
                     $Log['SignerInfo'] = $CorrelatedLogs
                 }
 

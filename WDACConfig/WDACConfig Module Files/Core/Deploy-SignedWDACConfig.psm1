@@ -200,6 +200,17 @@ Function Deploy-SignedWDACConfig {
                     # Prompt for confirmation before proceeding
                     if ($PSCmdlet.ShouldProcess('This PC', 'Deploying the signed policy')) {
 
+                        [System.Collections.Generic.List[WDACConfig.CiPolicyInfo]]$CurrentlyDeployedPolicies = [WDACConfig.CiToolHelper]::GetPolicies($false, $true, $true) | Where-Object -FilterScript { $_.IsSignedPolicy -eq $false }
+
+                        if ($null -ne $CurrentlyDeployedPolicies -and $CurrentlyDeployedPolicies.Count -gt 0) {
+
+                            if ($PolicyID.Trim('{', '}') -in $CurrentlyDeployedPolicies.PolicyID) {
+                                [WDACConfig.Logger]::Write("The policy with the ID '$PolicyID' is already deployed on the system in an unsigned form, removing it first before deploying the signed version. This prevents boot failure during the next reboot.")
+                                [WDACConfig.CiToolHelper]::RemovePolicy($PolicyID)
+                            }
+
+                        }
+
                         [WDACConfig.CiToolHelper]::UpdatePolicy($PolicyCIPPath)
 
                         Write-ColorfulTextWDACConfig -Color Lavender -InputText 'policy with the following details has been Signed and Deployed in Enforced Mode:'

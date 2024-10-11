@@ -21,7 +21,7 @@
                     SelectionChanged="NavigationView_SelectionChanged"
                     PaneTitle="Menu">
         <NavigationView.MenuItems>
-            <NavigationViewItem Content="Home" Icon="Home" ToolTipService.ToolTip="Home" Tag="Home"/>
+            <!--  <NavigationViewItem Content="Home" Icon="Home" ToolTipService.ToolTip="Home" Tag="Home"/> -->
             <NavigationViewItem Content="Create Policy" ToolTipService.ToolTip="Create Policy" Tag="CreatePolicy">
                 <!-- Some icons displayed in the WinUI 3 Gallery app aren't usable in the Icon property so have to be set using Glyph -->
                 <NavigationViewItem.Icon>
@@ -29,15 +29,15 @@
                 </NavigationViewItem.Icon>
 
                 <!--
-                
+
                 Example of sub-menus
-                
+
                 <NavigationViewItem.MenuItems>
                     <NavigationViewItem Content="Recommended Block Rules" Icon="Download" ToolTipService.ToolTip="Microsoft Recommended Block Rules" Tag="BlockRules"/>
                 </NavigationViewItem.MenuItems>
-                
+
                 -->
-                
+
             </NavigationViewItem>
             <NavigationViewItem Content="Get Code Integrity Hashes" ToolTipService.ToolTip="Get Code Integrity Hashes of files" Tag="GetCIHashes">
                 <NavigationViewItem.Icon>

@@ -296,6 +296,16 @@ Function AppControl {
             $SignTool = "$WorkingDir\bin\*\$CPUArch\signtool.exe"
         }
 
+
+        if ([System.String]::IsNullOrWhiteSpace($MSIXPath)) {
+
+            $MSIXPath = [System.IO.Path]::Combine($WorkingDir, 'AppControl.Manager_1.0.0.0_x64.msix')
+
+            Write-Verbose -Message 'Downloading the MSIX package from the GitHub releases' -Verbose
+            $null = Invoke-WebRequest -Uri 'https://github.com/HotCakeX/Harden-Windows-Security/releases/download/WDACConfigv0.4.6/AppControl.Manager_1.0.0.0_x64.msix' -OutFile $MSIXPath
+        }
+        
+
         # https://learn.microsoft.com/en-us/dotnet/framework/tools/signtool-exe
         Write-Verbose -Message 'Signing the MSIX package'
 

@@ -1,0 +1,53 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Source>J:\Cloned Repositories\Harden-Windows-Security\WDACConfig\IconFullSize.png</Source>
+    <SmallTileSource>J:\Cloned Repositories\Harden-Windows-Security\WDACConfig\IconFullSize.png</SmallTileSource>
+    <MediumTileSource>J:\Cloned Repositories\Harden-Windows-Security\WDACConfig\IconFullSize.png</MediumTileSource>
+    <WideTileSource>J:\Cloned Repositories\Harden-Windows-Security\WDACConfig\IconFullSize.png</WideTileSource>
+    <LargeTileSource>J:\Cloned Repositories\Harden-Windows-Security\WDACConfig\IconFullSize.png</LargeTileSource>
+    <AppIconSource>J:\Cloned Repositories\Harden-Windows-Security\WDACConfig\IconFullSize.png</AppIconSource>
+    <SplashScreenSource>J:\Cloned Repositories\Harden-Windows-Security\WDACConfig\IconFullSize.png</SplashScreenSource>
+    <BadgeLogoSource>J:\Cloned Repositories\Harden-Windows-Security\WDACConfig\IconFullSize.png</BadgeLogoSource>
+    <PackageLogoSource>J:\Cloned Repositories\Harden-Windows-Security\WDACConfig\IconFullSize.png</PackageLogoSource>
+    <UapAppxPackageBuildMode>SideloadOnly</UapAppxPackageBuildMode>
+    <AppxShowAllApps>False</AppxShowAllApps>
+    <AppxBuildConfigurationSelection>x64</AppxBuildConfigurationSelection>
+    <PackageOptionalProjectsInIdeBuilds>False</PackageOptionalProjectsInIdeBuilds>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Update="App.xaml">
+      <SubType>Designer</SubType>
+    </None>
+    <None Update="MainWindow.xaml">
+      <SubType>Designer</SubType>
+    </None>
+    <None Update="Package.appxmanifest">
+      <SubType>Designer</SubType>
+    </None>
+    <Page Update="Pages\Logs.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Pages\ConfigurePolicyRuleOptions.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Pages\ViewCurrentPolicies.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Pages\GetSecurePolicySettings.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Pages\MicrosoftDocumentation.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Pages\GitHubDocumentation.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Pages\Settings.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="Pages\GetCIHashes.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+  </ItemGroup>
+</Project>

@@ -20,9 +20,7 @@ Function New-PublisherLevelRules {
         [Parameter(Mandatory = $true)][System.IO.FileInfo]$XmlFilePath
     )
     Begin {
-        . "$([WDACConfig.GlobalVars]::ModuleRootPath)\CoreExt\PSDefaultParameterValues.ps1"
-
-        [WDACConfig.VerboseLogger]::Write("New-PublisherLevelRules: There are $($PublisherSigners.Count) Publisher Signers to be added to the XML file")
+        [WDACConfig.Logger]::Write("New-PublisherLevelRules: There are $($PublisherSigners.Count) Publisher Signers to be added to the XML file")
 
         # Load the XML file
         [System.Xml.XmlDocument]$Xml = Get-Content -Path $XmlFilePath

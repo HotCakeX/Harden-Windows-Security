@@ -18,8 +18,6 @@ Function Clear-CiPolicy_Semantic {
         [Parameter(Mandatory = $true)][System.IO.FileInfo]$Path
     )
     Begin {
-        . "$([WDACConfig.GlobalVars]::ModuleRootPath)\CoreExt\PSDefaultParameterValues.ps1"
-
         # Load the XML file
         [System.Xml.XmlDocument]$Xml = Get-Content -Path $Path
 

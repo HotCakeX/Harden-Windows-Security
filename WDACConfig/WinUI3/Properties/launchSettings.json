@@ -1,0 +1,12 @@
+{
+  "profiles": {
+    "AppControl Manager (Package)": {
+      "commandName": "MsixPackage",
+      "nativeDebugging": true,
+      "remoteDebugEnabled": false
+    },
+    "AppControl Manager (Unpackaged)": {
+      "commandName": "Project"
+    }
+  }
+}

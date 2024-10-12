@@ -41,8 +41,6 @@ Function Invoke-WDACSimulation {
         [Parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$SkipVersionCheck
     )
     Begin {
-        [System.Boolean]$Verbose = $PSBoundParameters.Verbose.IsPresent ? $true : $false
-        [System.Boolean]$Debug = $PSBoundParameters.Debug.IsPresent ? $true : $false
         # Only initialize the logger if this function wasn't called from another function, indicating the Verbose Preferences etc. were already set
         if ($(Get-PSCallStack).Count -le 2) {
             [WDACConfig.LoggerInitializer]::Initialize($VerbosePreference, $DebugPreference, $Host)
@@ -50,21 +48,13 @@ Function Invoke-WDACSimulation {
         else {
             [WDACConfig.LoggerInitializer]::Initialize($null, $null, $Host)
         }
-        . "$([WDACConfig.GlobalVars]::ModuleRootPath)\CoreExt\PSDefaultParameterValues.ps1"
 
-        Write-Verbose -Message 'Importing the required sub-modules'
-        Import-Module -Force -FullyQualifiedName @(
-            "$([WDACConfig.GlobalVars]::ModuleRootPath)\Shared\Update-Self.psm1",
-            "$([WDACConfig.GlobalVars]::ModuleRootPath)\WDACSimulation\Get-SignerInfo.psm1"
-        )
-
-        # if -SkipVersionCheck wasn't passed, run the updater
-        if (-NOT $SkipVersionCheck) { Update-Self -InvocationStatement $MyInvocation.Statement }
+        if (-NOT $SkipVersionCheck) { Update-WDACConfigPSModule -InvocationStatement $MyInvocation.Statement }
 
         # Validate the $ThreadsCount parameter
         if ($ThreadsCount -lt 1 -or $ThreadsCount -gt [System.Environment]::ProcessorCount) {
 
-            Write-Verbose -Message "The ThreadsCount parameter must be between 1 and $([System.Environment]::ProcessorCount), but you entered $ThreadsCount, setting it to $([System.Environment]::ProcessorCount)"
+            [WDACConfig.Logger]::Write("The ThreadsCount parameter must be between 1 and $([System.Environment]::ProcessorCount), but you entered $ThreadsCount, setting it to $([System.Environment]::ProcessorCount)")
             $ThreadsCount = [System.Environment]::ProcessorCount
         }
 
@@ -77,7 +67,7 @@ Function Invoke-WDACSimulation {
             Start-Transcript -IncludeInvocationHeader -LiteralPath (Join-Path -Path ([WDACConfig.GlobalVars]::UserConfigDir) -ChildPath "WDAC Simulation Log $(Get-Date -Format "MM-dd-yyyy 'at' HH-mm-ss").txt")
 
             # Create a new stopwatch object to measure the execution time
-            Write-Verbose -Message 'Starting the stopwatch...'
+            [WDACConfig.Logger]::Write('Starting the stopwatch...')
             [System.Diagnostics.Stopwatch]$StopWatch = [Diagnostics.Stopwatch]::StartNew()
             Function Stop-Log {
                 <#
@@ -92,11 +82,11 @@ Function Invoke-WDACSimulation {
                 [OutputType([System.Void])]
                 param()
 
-                Write-Verbose -Message 'Stopping the stopwatch'
+                [WDACConfig.Logger]::Write('Stopping the stopwatch')
                 $StopWatch.Stop()
-                Write-Verbose -Message "WDAC Simulation for $TotalSubSteps files completed in $($StopWatch.Elapsed.Hours) Hours - $($StopWatch.Elapsed.Minutes) Minutes - $($StopWatch.Elapsed.Seconds) Seconds - $($StopWatch.Elapsed.Milliseconds) Milliseconds - $($StopWatch.Elapsed.Microseconds) Microseconds - $($StopWatch.Elapsed.Nanoseconds) Nanoseconds" -Verbose
+                [WDACConfig.Logger]::Write("WDAC Simulation for $TotalSubSteps files completed in $($StopWatch.Elapsed.Hours) Hours - $($StopWatch.Elapsed.Minutes) Minutes - $($StopWatch.Elapsed.Seconds) Seconds - $($StopWatch.Elapsed.Milliseconds) Milliseconds - $($StopWatch.Elapsed.Microseconds) Microseconds - $($StopWatch.Elapsed.Nanoseconds) Nanoseconds")
 
-                Write-Verbose -Message 'Stopping the transcription'
+                [WDACConfig.Logger]::Write('Stopping the transcription')
                 Stop-Transcript
             }
         }
@@ -122,7 +112,7 @@ Function Invoke-WDACSimulation {
         # Using compiled regex for better performance
         $AllowAllRegex = [System.Text.RegularExpressions.Regex]::new('<Allow ID="ID_ALLOW_.*" FriendlyName=".*" FileName="\*".*/>', 'Compiled')
         if ($AllowAllRegex.IsMatch($XMLContent)) {
-            Write-Verbose -Message "The supplied XML file '$($XmlFilePath.Name)' contains a rule that allows all files."
+            [WDACConfig.Logger]::Write("The supplied XML file '$($XmlFilePath.Name)' contains a rule that allows all files.")
 
 
             [System.Void]$FinalSimulationResults.TryAdd([string]$CurrentFilePath, [WDACConfig.SimulationOutput]::New(
@@ -155,7 +145,7 @@ Function Invoke-WDACSimulation {
         #Endregion Making Sure No AllowAll Rule Exists
 
         # Get the signer information from the XML
-        [WDACConfig.Signer[]]$SignerInfo = Get-SignerInfo -XML ([System.Xml.XmlDocument]$XMLContent)
+        [WDACConfig.Signer[]]$SignerInfo = [WDACConfig.GetSignerInfo]::Get([System.Xml.XmlDocument]$XMLContent)
 
         # Extensions that are not supported by Authenticode. So if these files are not allowed by hash, they are not allowed at all
         $UnsignedExtensions = [System.Collections.Generic.HashSet[System.String]]::new(
@@ -165,7 +155,7 @@ Function Invoke-WDACSimulation {
         )
 
         #Region FilePath Rule Checking
-        Write-Verbose -Message 'Checking see if the XML policy has any FilePath rules'
+        [WDACConfig.Logger]::Write('Checking see if the XML policy has any FilePath rules')
         $FilePathRules = [System.Collections.Generic.HashSet[System.String]]@([WDACConfig.XmlFilePathExtractor]::GetFilePaths($XmlFilePath))
 
         [System.Boolean]$HasFilePathRules = $false
@@ -204,7 +194,7 @@ Function Invoke-WDACSimulation {
                 }
 
                 # Hash Sha256 values of all the file rules based on hash in the supplied xml policy file
-                Write-Verbose -Message 'Getting the Sha256 Hash values of all the file rules based on hash in the supplied xml policy file'
+                [WDACConfig.Logger]::Write('Getting the Sha256 Hash values of all the file rules based on hash in the supplied xml policy file')
 
                 $CurrentStep++
                 Write-Progress -Id 0 -Activity 'Getting the Sha256 Hash values from the XML file' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
@@ -212,7 +202,7 @@ Function Invoke-WDACSimulation {
                 $SHA256HashesFromXML = [System.Collections.Generic.HashSet[System.String]]@(([WDACConfig.GetFileRuleOutput]::Get([System.Xml.XmlDocument]$XMLContent)).HashValue)
 
                 # Get all of the file paths of the files that WDAC supports, from the user provided directory
-                Write-Verbose -Message 'Getting all of the file paths of the files that WDAC supports, from the user provided directory'
+                [WDACConfig.Logger]::Write('Getting all of the file paths of the files that WDAC supports, from the user provided directory')
 
                 $CurrentStep++
                 Write-Progress -Id 0 -Activity "Getting the supported files' paths" -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
@@ -222,7 +212,7 @@ Function Invoke-WDACSimulation {
                 if (!$CollectedFiles) { Throw 'There are no files in the selected directory that are supported by the WDAC engine.' }
 
                 # Loop through each file
-                Write-Verbose -Message 'Looping through each supported file'
+                [WDACConfig.Logger]::Write('Looping through each supported file')
 
                 $CurrentStep++
                 Write-Progress -Id 0 -Activity 'Looping through each supported file' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
@@ -242,10 +232,7 @@ Function Invoke-WDACSimulation {
                             $ErrorActionPreference = 'stop'
 
                             # only importing the functions that are required in this script block
-                            Import-Module -Force -FullyQualifiedName @(
-                                "$([WDACConfig.GlobalVars]::ModuleRootPath)\WDACSimulation\Compare-SignerAndCertificate.psm1",
-                                "$([WDACConfig.GlobalVars]::ModuleRootPath)\WDACSimulation\Get-CertificateDetails.psm1"
-                            )
+                            Import-Module -Force -FullyQualifiedName "$([WDACConfig.GlobalVars]::ModuleRootPath)\WDACSimulation\Compare-SignerAndCertificate.psm1"
 
                             [System.Drawing.Color]$CurrentColor = [System.Drawing.Color]::Violet
                             # Set the progress bar style to use violet color
@@ -258,7 +245,10 @@ Function Invoke-WDACSimulation {
                             foreach ($CurrentFilePath in $Array) {
 
                                 $CurrentSubStep++
-                                Write-Progress -Id ([runspace]::DefaultRunspace.Id) -Activity "Processing file $CurrentSubStep/$TotalSubSteps" -Status "$CurrentFilePath" -PercentComplete ($CurrentSubStep / $TotalSubSteps * 100)
+                                try {
+                                    Write-Progress -Id ([runspace]::DefaultRunspace.Id) -Activity "Processing file $CurrentSubStep/$TotalSubSteps" -Status "$CurrentFilePath" -PercentComplete ($CurrentSubStep / $TotalSubSteps * 100)
+                                }
+                                catch {}
 
                                 # Check see if the file's hash exists in the XML file regardless of whether it's signed or not
                                 # This is because WDAC policies sometimes have hash rules for signed files too
@@ -292,7 +282,7 @@ Function Invoke-WDACSimulation {
                                 }
 
                                 try {
-                                    [WDACConfig.AuthenticodePageHashes]$CurrentFileHashResult = [WDACConfig.AuthPageHash]::GetCiFileHashes($CurrentFilePath)
+                                    [WDACConfig.CodeIntegrityHashes]$CurrentFileHashResult = [WDACConfig.CiFileHash]::GetCiFileHashes($CurrentFilePath)
                                     [System.String]$CurrentFilePathHashSHA256 = $CurrentFileHashResult.SHA256Authenticode
                                     [System.String]$CurrentFilePathHashSHA1 = $CurrentFileHashResult.SHA1Authenticode
                                 }
@@ -367,7 +357,7 @@ Function Invoke-WDACSimulation {
                                 else {
 
                                     try {
-                                        [WDACConfig.AllCertificatesGrabber.AllFileSigners[]]$FileSignatureResults = [WDACConfig.AllCertificatesGrabber.WinTrust]::GetAllFileSigners($CurrentFilePath)
+                                        [WDACConfig.AllFileSigners[]]$FileSignatureResults = [WDACConfig.AllCertificatesGrabber]::GetAllFileSigners($CurrentFilePath)
 
                                         # If there is no result then check if the file is allowed by a security catalog
                                         if ($FileSignatureResults.Count -eq 0) {
@@ -378,7 +368,7 @@ Function Invoke-WDACSimulation {
 
                                             if (!$NoCatalogScanning -and $MatchedHashResult) {
 
-                                                [WDACConfig.AllCertificatesGrabber.AllFileSigners]$CatalogSignerDits = ([WDACConfig.AllCertificatesGrabber.WinTrust]::GetAllFileSigners($MatchedHashResult))[0]
+                                                [WDACConfig.AllFileSigners]$CatalogSignerDits = ([WDACConfig.AllCertificatesGrabber]::GetAllFileSigners($MatchedHashResult))[0]
 
                                                 # The file is authorized by a security catalog on the system
                                                 [System.Void]$FinalSimulationResults.TryAdd([string]$CurrentFilePath, [WDACConfig.SimulationOutput]::New(
@@ -427,7 +417,7 @@ Function Invoke-WDACSimulation {
                                             # Use the Compare-SignerAndCertificate function to process it
                                             $ComparisonResult = Compare-SignerAndCertificate -SimulationInput ([WDACConfig.SimulationInput]::New(
                                                     $CurrentFilePath, # Path of the signed file
-                                                (Get-CertificateDetails -CompleteSignatureResult $FileSignatureResults), # Get all of the details of all certificates of the signed file
+                                                    [WDACConfig.GetCertificateDetails]::Get($FileSignatureResults), # Get all of the details of all certificates of the signed file
                                                     $SignerInfo, # The entire Signer Info of the WDAC Policy file
                                                     $FileSignatureResults.Signer.SignerInfos.Certificate.EnhancedKeyUsageList.ObjectId # The EKU OIDs of the primary signer of the file, just like the output of the Get-AuthenticodeSignature cmdlet, the ones that WDAC policy uses for EKU-based authorization
                                                 ))
@@ -436,7 +426,7 @@ Function Invoke-WDACSimulation {
                                         }
                                     }
                                     # Handle the HashMismatch situations
-                                    catch [WDACConfig.AllCertificatesGrabber.ExceptionHashMismatchInCertificate] {
+                                    catch [WDACConfig.ExceptionHashMismatchInCertificate] {
 
                                         [System.Void]$FinalSimulationResults.TryAdd([string]$CurrentFilePath, [WDACConfig.SimulationOutput]::New(
                                     ([System.IO.Path]::GetFileName($CurrentFilePath)),
@@ -487,8 +477,11 @@ Function Invoke-WDACSimulation {
                             throw $_
                         }
                         finally {
-                            # Complete the nested progress bar whether there was an error or not
-                            Write-Progress -Id ([runspace]::DefaultRunspace.Id) -Activity 'All of the files have been processed.' -Completed
+                            try {
+                                # Complete the nested progress bar whether there was an error or not
+                                Write-Progress -Id ([runspace]::DefaultRunspace.Id) -Activity 'All of the files have been processed.' -Completed
+                            }
+                            catch {}
                         }
                     } -ThrottleLimit $ThreadsCount
                 }
@@ -513,8 +506,8 @@ Function Invoke-WDACSimulation {
                 # Get all of the blocked files
                 $BlockedRules = $FinalSimulationResults.Values.Where({ $_.IsAuthorized -eq $false })
 
-                Write-Verbose -Message "Allowed files: $($AllAllowedRules.count)"
-                Write-Verbose -Message "Blocked files: $($BlockedRules.count)"
+                [WDACConfig.Logger]::Write("Allowed files: $($AllAllowedRules.count)")
+                [WDACConfig.Logger]::Write("Blocked files: $($BlockedRules.count)")
 
                 # If the array of allowed files is not empty
                 if (-NOT ([System.String]::IsNullOrWhiteSpace($AllAllowedRules))) {
@@ -607,17 +600,12 @@ Function Invoke-WDACSimulation {
 
     FilePath:       The name of the file gathered from its full path. (the actual long path of the file is not displayed in the console output, only in the CSV file)
     Source:         The source of the file's MatchCriteria, e.g., 'Signer' (For signed files only), 'Hash' (For signed and unsigned files), 'Unsigned' (For unsigned files only)
-    MatchCriteria:  The reason the file is allowed or not. For files authorized by FilePublisher level, it will show the specific file name level that the file is authorized by. (https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/select-types-of-rules-to-create#table-3--specificfilenamelevel-options)
+    MatchCriteria:  The reason the file is allowed or not. For files authorized by FilePublisher level, it will show the specific file name level that the file is authorized by. (https://learn.microsoft.com/en-us/windows/security/application-security/application-control/app-control-for-business/design/select-types-of-rules-to-create#table-3--specificfilenamelevel-options)
     IsAuthorized:   A boolean value that indicates whether the file is allowed or not.
 .LINK
     https://github.com/HotCakeX/Harden-Windows-Security/wiki/Invoke-WDACSimulation
 .DESCRIPTION
     Simulates the deployment of the WDAC policy by analyzing a folder (recursively) or files and checking which of the detected files are allowed by a user selected policy xml file
-.COMPONENT
-    Windows Defender Application Control
-    WDACConfig
-.FUNCTIONALITY
-    Simulates the deployment of the WDAC policy
 .PARAMETER FolderPath
     Provide path to a folders that you want WDAC simulation to run against
 

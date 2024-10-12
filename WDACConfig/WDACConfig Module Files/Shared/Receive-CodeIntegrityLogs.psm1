@@ -65,8 +65,6 @@ Function Receive-CodeIntegrityLogs {
         [Parameter(Mandatory = $false)][System.IO.FileInfo[]]$EVTXFilePaths
     )
     Begin {
-        . "$([WDACConfig.GlobalVars]::ModuleRootPath)\CoreExt\PSDefaultParameterValues.ps1"
-
         Function Test-NotEmpty ($Data) {
             <#
             .SYNOPSIS
@@ -94,7 +92,7 @@ Function Receive-CodeIntegrityLogs {
             [WDACConfig.DriveLetterMapper+DriveMapping[]]$DriveLettersGlobalRootFix = [WDACConfig.DriveLetterMapper]::GetGlobalRootDrives()
         }
         catch {
-            [WDACConfig.VerboseLogger]::Write('Receive-CodeIntegrityLogs: Could not get the drive mappings from the system using the primary method, trying the alternative method now')
+            [WDACConfig.Logger]::Write('Receive-CodeIntegrityLogs: Could not get the drive mappings from the system using the primary method, trying the alternative method now')
 
             # Set the flag to true indicating the alternative method is being used
             $AlternativeDriveLetterFix = $true
@@ -111,7 +109,7 @@ Function Receive-CodeIntegrityLogs {
 
         if ($Category -in 'All', 'CodeIntegrity') {
             Try {
-                [WDACConfig.VerboseLogger]::Write('Receive-CodeIntegrityLogs: Collecting the Code Integrity Operational logs')
+                [WDACConfig.Logger]::Write('Receive-CodeIntegrityLogs: Collecting the Code Integrity Operational logs')
                 switch ($LogSource) {
                     'EVTXFiles' {
                         # Get all of the Code Integrity logs from the specified EVTX files
@@ -124,19 +122,19 @@ Function Receive-CodeIntegrityLogs {
                 }
             }
             catch {
-                [WDACConfig.VerboseLogger]::Write("Receive-CodeIntegrityLogs: Could not collect the Code Integrity Operational logs, the number of logs collected is $($CiRawEventLogs.Count)")
+                [WDACConfig.Logger]::Write("Receive-CodeIntegrityLogs: Could not collect the Code Integrity Operational logs, the number of logs collected is $($CiRawEventLogs.Count)")
             }
 
             [Microsoft.PowerShell.Commands.GroupInfo[]]$CiGroupedEvents = $CiRawEventLogs | Group-Object -Property ActivityId
-            [WDACConfig.VerboseLogger]::Write("Receive-CodeIntegrityLogs: Grouped the Code Integrity logs by ActivityId. The total number of groups is $($CiGroupedEvents.Count) and the total number of logs in the groups is $($CiGroupedEvents.Group.Count)")
+            [WDACConfig.Logger]::Write("Receive-CodeIntegrityLogs: Grouped the Code Integrity logs by ActivityId. The total number of groups is $($CiGroupedEvents.Count) and the total number of logs in the groups is $($CiGroupedEvents.Group.Count)")
         }
         else {
-            [WDACConfig.VerboseLogger]::Write('Receive-CodeIntegrityLogs: Skipping the collection of the Code Integrity logs')
+            [WDACConfig.Logger]::Write('Receive-CodeIntegrityLogs: Skipping the collection of the Code Integrity logs')
         }
 
         if ($Category -in 'All', 'AppLocker') {
             Try {
-                [WDACConfig.VerboseLogger]::Write('Receive-CodeIntegrityLogs: Collecting the AppLocker logs')
+                [WDACConfig.Logger]::Write('Receive-CodeIntegrityLogs: Collecting the AppLocker logs')
                 switch ($LogSource) {
                     'EVTXFiles' {
                         # Get all of the AppLocker logs from the specified EVTX files
@@ -149,14 +147,14 @@ Function Receive-CodeIntegrityLogs {
                 }
             }
             catch {
-                [WDACConfig.VerboseLogger]::Write("Receive-CodeIntegrityLogs: Could not collect the AppLocker logs, the number of logs collected is $($AppLockerRawEventLogs.Count)")
+                [WDACConfig.Logger]::Write("Receive-CodeIntegrityLogs: Could not collect the AppLocker logs, the number of logs collected is $($AppLockerRawEventLogs.Count)")
             }
 
             [Microsoft.PowerShell.Commands.GroupInfo[]]$AppLockerGroupedEvents = $AppLockerRawEventLogs | Group-Object -Property ActivityId
-            [WDACConfig.VerboseLogger]::Write("Receive-CodeIntegrityLogs: Grouped the AppLocker logs by ActivityId. The total number of groups is $($AppLockerGroupedEvents.Count) and the total number of logs in the groups is $($AppLockerGroupedEvents.Group.Count)")
+            [WDACConfig.Logger]::Write("Receive-CodeIntegrityLogs: Grouped the AppLocker logs by ActivityId. The total number of groups is $($AppLockerGroupedEvents.Count) and the total number of logs in the groups is $($AppLockerGroupedEvents.Group.Count)")
         }
         else {
-            [WDACConfig.VerboseLogger]::Write('Receive-CodeIntegrityLogs: Skipping the collection of the AppLocker logs')
+            [WDACConfig.Logger]::Write('Receive-CodeIntegrityLogs: Skipping the collection of the AppLocker logs')
         }
 
         # Add Code Integrity and AppLocker logs to a single array based on the selected category
@@ -237,7 +235,7 @@ Function Receive-CodeIntegrityLogs {
     Process {
 
         if ($EventPackageCollection.count -eq 0) {
-            [WDACConfig.VerboseLogger]::Write('Receive-CodeIntegrityLogs: No logs were collected')
+            [WDACConfig.Logger]::Write('Receive-CodeIntegrityLogs: No logs were collected')
             return
         }
 
@@ -259,9 +257,6 @@ Function Receive-CodeIntegrityLogs {
             $DriveLetterMappings = $using:DriveLetterMappings
             $LogSource = $using:LogSource
 
-            # Set the VerbosePreference to the parent scope's value
-            $VerbosePreference = $using:VerbosePreference
-
             # Loop over each event package in the collection
             foreach ($EventPackage in $_.GetEnumerator()) {
 
@@ -272,7 +267,7 @@ Function Receive-CodeIntegrityLogs {
                 $Xml = [System.Xml.XmlDocument]$Event.ToXml()
 
                 if ($null -eq $Xml.event.EventData.data) {
-                    [WDACConfig.VerboseLogger]::Write("Receive-CodeIntegrityLogs: Skipping Main event data for: $($Log['File Name'])")
+                    [WDACConfig.Logger]::Write("Receive-CodeIntegrityLogs: Skipping Main event data for: $($Log['File Name'])")
                     continue
                 }
 
@@ -356,11 +351,11 @@ Function Receive-CodeIntegrityLogs {
                             $Log.UserId = [System.String]($ObjSID.Translate([System.Security.Principal.NTAccount])).Value
                         }
                         Catch {
-                            [WDACConfig.VerboseLogger]::Write("Receive-CodeIntegrityLogs: Could not translate the SID $($Log.UserId) to a username for the Activity ID $($Log['ActivityId']) for the file $($Log['File Name'])")
+                            [WDACConfig.Logger]::Write("Receive-CodeIntegrityLogs: Could not translate the SID $($Log.UserId) to a username for the Activity ID $($Log['ActivityId']) for the file $($Log['File Name'])")
                         }
                     }
                     else {
-                        [WDACConfig.VerboseLogger]::Write("Receive-CodeIntegrityLogs: The UserId property is null for the Activity ID $($Log['ActivityId']) for the file $($Log['File Name'])")
+                        [WDACConfig.Logger]::Write("Receive-CodeIntegrityLogs: The UserId property is null for the Activity ID $($Log['ActivityId']) for the file $($Log['File Name'])")
                     }
                 }
 
@@ -381,7 +376,7 @@ Function Receive-CodeIntegrityLogs {
                         $XmlCorrelated = [System.Xml.XmlDocument]$CorrelatedEvent.ToXml()
 
                         if ($null -eq $XmlCorrelated.event.EventData.data) {
-                            [WDACConfig.VerboseLogger]::Write("Receive-CodeIntegrityLogs: Skipping Publisher check for: '$($Log['File Name'])' due to missing correlated event data")
+                            [WDACConfig.Logger]::Write("Receive-CodeIntegrityLogs: Skipping Publisher check for: '$($Log['File Name'])' due to missing correlated event data")
                             continue
                         }
 
@@ -419,14 +414,17 @@ Function Receive-CodeIntegrityLogs {
                         }
                     }
 
-                    Write-Debug -Message "Receive-CodeIntegrityLogs: The number of unique publishers in the correlated events is $($Publishers.Count)"
+                    # This creates too much noise in the logs and verbose messages, either make it more useful or keep it commented
+                    # [WDACConfig.Logger]::Write("Receive-CodeIntegrityLogs: The number of unique publishers in the correlated events is $($Publishers.Count)")
+
                     $Log['Publishers'] = $Publishers
 
                     # Add a new property to detect whether this log is signed or not
                     # Primarily used by the BuildSignerAndHashObjects Method and for Evtx log sources
                     $Log['SignatureStatus'] = $Publishers.Count -ge 1 ? 'Signed' : 'Unsigned'
 
-                    Write-Debug -Message "Receive-CodeIntegrityLogs: The number of correlated events is $($CorrelatedLogs.Count)"
+                    # This creates too much noise in the logs and verbose messages, either make it more useful or keep it commented
+                    # [WDACConfig.Logger]::Write("Receive-CodeIntegrityLogs: The number of correlated events is $($CorrelatedLogs.Count)")
                     $Log['SignerInfo'] = $CorrelatedLogs
                 }
 
@@ -510,16 +508,16 @@ Function Receive-CodeIntegrityLogs {
             'OnlyExisting' {
                 Switch ($Type) {
                     'Audit' {
-                        [WDACConfig.VerboseLogger]::Write("Receive-CodeIntegrityLogs: Returning $($Output.Existing.Audit.Values.Count) Audit Code Integrity logs for files on the disk.")
+                        [WDACConfig.Logger]::Write("Receive-CodeIntegrityLogs: Returning $($Output.Existing.Audit.Values.Count) Audit Code Integrity logs for files on the disk.")
                         Return $Output.Existing.Audit.Values
                     }
                     'Blocked' {
-                        [WDACConfig.VerboseLogger]::Write("Receive-CodeIntegrityLogs: Returning $($Output.Existing.Blocked.Values.Count) Blocked Code Integrity logs for files on the disk.")
+                        [WDACConfig.Logger]::Write("Receive-CodeIntegrityLogs: Returning $($Output.Existing.Blocked.Values.Count) Blocked Code Integrity logs for files on the disk.")
                         Return $Output.Existing.Blocked.Values
                     }
                     'All' {
                         $AllOutput = $Output.Existing.Blocked.Values + $Output.Existing.Audit.Values
-                        [WDACConfig.VerboseLogger]::Write("Receive-CodeIntegrityLogs: Returning $($AllOutput.Count) Code Integrity logs for files on the disk.")
+                        [WDACConfig.Logger]::Write("Receive-CodeIntegrityLogs: Returning $($AllOutput.Count) Code Integrity logs for files on the disk.")
                         Return $AllOutput
                     }
                 }
@@ -527,16 +525,16 @@ Function Receive-CodeIntegrityLogs {
             Default {
                 Switch ($Type) {
                     'Audit' {
-                        [WDACConfig.VerboseLogger]::Write("Receive-CodeIntegrityLogs: Returning $($Output.All.Audit.Values.Count) Audit Code Integrity logs.")
+                        [WDACConfig.Logger]::Write("Receive-CodeIntegrityLogs: Returning $($Output.All.Audit.Values.Count) Audit Code Integrity logs.")
                         Return $Output.All.Audit.Values
                     }
                     'Blocked' {
-                        [WDACConfig.VerboseLogger]::Write("Receive-CodeIntegrityLogs: Returning $($Output.All.Blocked.Values.Count) Blocked Code Integrity logs.")
+                        [WDACConfig.Logger]::Write("Receive-CodeIntegrityLogs: Returning $($Output.All.Blocked.Values.Count) Blocked Code Integrity logs.")
                         Return $Output.All.Blocked.Values
                     }
                     'All' {
                         $AllOutput = $Output.All.Audit.Values + $Output.All.Blocked.Values
-                        [WDACConfig.VerboseLogger]::Write("Receive-CodeIntegrityLogs: Returning $($AllOutput.Count) Code Integrity logs.")
+                        [WDACConfig.Logger]::Write("Receive-CodeIntegrityLogs: Returning $($AllOutput.Count) Code Integrity logs.")
                         Return $AllOutput
                     }
                 }

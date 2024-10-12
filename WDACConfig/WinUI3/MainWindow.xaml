@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Window
+    x:Class="WDACConfig.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:WDACConfig"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Title="AppControl Manager">
+
+    <!-- For the Mica background -->
+    <Window.SystemBackdrop>
+        <MicaBackdrop Kind="BaseAlt"/>
+    </Window.SystemBackdrop>
+
+    <!-- Doc: https://learn.microsoft.com/en-us/windows/apps/design/controls/navigationview -->
+    <NavigationView x:Name="MainNavigation"
+                    PaneDisplayMode="Left"
+                    IsTabStop="False"
+                    SelectionChanged="NavigationView_SelectionChanged"
+                    PaneTitle="Menu">
+        <NavigationView.MenuItems>
+            <!--  <NavigationViewItem Content="Home" Icon="Home" ToolTipService.ToolTip="Home" Tag="Home"/> -->
+            <NavigationViewItem Content="Create Policy" ToolTipService.ToolTip="Create Policy" Tag="CreatePolicy">
+                <!-- Some icons displayed in the WinUI 3 Gallery app aren't usable in the Icon property so have to be set using Glyph -->
+                <NavigationViewItem.Icon>
+                    <FontIcon Glyph="&#xE83D;" />
+                </NavigationViewItem.Icon>
+
+                <!--
+
+                Example of sub-menus
+
+                <NavigationViewItem.MenuItems>
+                    <NavigationViewItem Content="Recommended Block Rules" Icon="Download" ToolTipService.ToolTip="Microsoft Recommended Block Rules" Tag="BlockRules"/>
+                </NavigationViewItem.MenuItems>
+
+                -->
+
+            </NavigationViewItem>
+            <NavigationViewItem Content="Get Code Integrity Hashes" ToolTipService.ToolTip="Get Code Integrity Hashes of files" Tag="GetCIHashes">
+                <NavigationViewItem.Icon>
+                    <FontIcon Glyph="&#xE950;" />
+                </NavigationViewItem.Icon>
+            </NavigationViewItem>
+            <NavigationViewItem Content="Get Secure Policy Settings" ToolTipService.ToolTip="Get the secure policy settings among the deployed policies" Tag="GetSecurePolicySettings">
+                <NavigationViewItem.Icon>
+                    <FontIcon Glyph="&#xEEA3;" />
+                </NavigationViewItem.Icon>
+            </NavigationViewItem>
+
+            <NavigationViewItem Content="View Current Policies" Icon="Flag" ToolTipService.ToolTip="View currently deployed policies" Tag="ViewCurrentPolicies"/>
+
+            <NavigationViewItem Content="Configure Policy Rule Options" ToolTipService.ToolTip="Configure Policy Rule Options" Tag="ConfigurePolicyRuleOptions">
+                <NavigationViewItem.Icon>
+                    <FontIcon Glyph="&#xEEA3;" />
+                </NavigationViewItem.Icon>
+            </NavigationViewItem>
+
+            <NavigationViewItem Content="Logs" ToolTipService.ToolTip="View the application logs in real time" Tag="Logs">
+                <NavigationViewItem.Icon>
+                    <FontIcon Glyph="&#xF5A0;" />
+                </NavigationViewItem.Icon>
+            </NavigationViewItem>
+
+            <NavigationViewItemHeader Content="Documentation"/>
+            <NavigationViewItem Content="GitHub Documentation" Icon="Document" ToolTipService.ToolTip="Get online documentations from GitHub about how to use the application" Tag="GitHubDocumentation" />
+            <NavigationViewItem Content="Microsoft Documentation" Icon="Document" ToolTipService.ToolTip="Get online documentations from Microsoft about App Control for Business policies" Tag="MicrosoftDocumentation" />
+
+
+        </NavigationView.MenuItems>
+        <Frame x:Name="ContentFrame" />
+    </NavigationView>
+</Window>

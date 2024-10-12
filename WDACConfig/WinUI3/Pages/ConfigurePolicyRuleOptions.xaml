@@ -1,0 +1,113 @@
+<Page
+    x:Class="WDACConfig.Pages.ConfigurePolicyRuleOptions"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:WDACConfig.Pages"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:ui="using:CommunityToolkit.WinUI"
+    xmlns:win="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:controls="using:CommunityToolkit.WinUI.Controls"
+    mc:Ignorable="d">
+
+    <Page.Resources>
+        <!--  These styles can be referenced to create a consistent SettingsPage layout  -->
+
+        <!--  Spacing between cards  -->
+        <x:Double x:Key="SettingsCardSpacing">4</x:Double>
+
+        <!--  Style (inc. the correct spacing) of a section header  -->
+        <Style x:Key="SettingsSectionHeaderTextBlockStyle"
+               BasedOn="{StaticResource BodyStrongTextBlockStyle}"
+               TargetType="TextBlock">
+            <Style.Setters>
+                <Setter Property="Margin" Value="1,30,0,6" />
+            </Style.Setters>
+        </Style>
+    </Page.Resources>
+
+    <ScrollViewer Margin="15,30,15,15">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <StackPanel Orientation="Vertical" Margin="0,40,0,0" Grid.Row="0">
+
+                <!-- Button to trigger file picker -->
+                <Button Margin="0,0,0,20" x:Name="PickPolicyFileButton" Content="Browse for a policy XML file" Click="PickPolicyFileButton_Click"
+     HorizontalAlignment="Center"
+    ToolTipService.ToolTip="Click/Tap to choose a XML policy file from your device."/>
+
+
+                <TextBox x:Name="SelectedFilePath" Margin="30,0,30,0" PlaceholderText="Selected XML file path" />
+
+            </StackPanel>
+
+
+            <StackPanel HorizontalAlignment="Stretch"
+                        Spacing="{StaticResource SettingsCardSpacing}" Grid.Row="1" Margin="0,40,0,0">
+
+                <win:StackPanel.ChildrenTransitions>
+                    <win:EntranceThemeTransition FromVerticalOffset="50" />
+                    <win:RepositionThemeTransition IsStaggeringEnabled="False" />
+                </win:StackPanel.ChildrenTransitions>
+
+                <controls:SettingsExpander x:Name="PolicyRuleExpander"
+                           Description="Select policy rule options to add to or remove from the selected XML policy file"
+                           Header="Policy Rule Options"
+                           HeaderIcon="{ui:FontIcon Glyph=&#xE71D;}">
+
+                    <controls:WrapPanel Orientation="Horizontal" HorizontalSpacing="15" VerticalSpacing="10">
+
+                        <Button x:Name="Add" Content="Add"
+            Style="{StaticResource AccentButtonStyle}" />
+
+                        <Button x:Name="Remove" Content="Remove"
+Style="{StaticResource AccentButtonStyle}" />
+
+                        <Button x:Name="ResetSelections" Content="Reset Selections"
+Style="{StaticResource AccentButtonStyle}" />
+
+                        <!-- Select All button to select all checkboxes -->
+                        <Button x:Name="SelectAll" Content="Select All"
+Style="{StaticResource AccentButtonStyle}" />
+
+                    </controls:WrapPanel>
+
+                </controls:SettingsExpander>
+
+
+
+                <controls:SettingsCard x:Name="PolicyTemplate"
+                               Description="Select a template to apply to the selected policy file. Templates are predefined lists of policy rule options."
+                               Header="Policy Template"
+                               HeaderIcon="{ui:FontIcon Glyph=&#xE799;}">
+
+
+
+                    <controls:WrapPanel Orientation="Horizontal">
+
+                        <Button x:Name="SetPolicyTemplate" Content="Set"
+Style="{StaticResource AccentButtonStyle}" Margin="0,0,15,0" />
+
+                        <ComboBox x:Name="PolicyTemplatesComboBox" SelectedIndex="0">
+                            <ComboBoxItem>Base</ComboBoxItem>
+                            <ComboBoxItem>BaseISG</ComboBoxItem>
+                            <ComboBoxItem>BaseKernel</ComboBoxItem>
+                            <ComboBoxItem>Supplemental</ComboBoxItem>
+                        </ComboBox>
+
+                    </controls:WrapPanel>
+
+                </controls:SettingsCard>
+
+
+            </StackPanel>
+
+        </Grid>
+
+    </ScrollViewer>
+
+</Page>

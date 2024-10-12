@@ -10,7 +10,6 @@ Function Confirm-WDACConfig {
         [Parameter(Mandatory = $false, ParameterSetName = 'Check SmartAppControl Status')][System.Management.Automation.SwitchParameter]$CheckSmartAppControlStatus
     )
     DynamicParam {
-
         # Add the dynamic parameters to the param dictionary
         $ParamDictionary = [System.Management.Automation.RuntimeDefinedParameterDictionary]::new()
 
@@ -69,12 +68,7 @@ Function Confirm-WDACConfig {
         return $ParamDictionary
     }
     Begin {
-        [System.Boolean]$Verbose = $PSBoundParameters.Verbose.IsPresent ? $true : $false
         [WDACConfig.LoggerInitializer]::Initialize($VerbosePreference, $DebugPreference, $Host)
-        . "$([WDACConfig.GlobalVars]::ModuleRootPath)\CoreExt\PSDefaultParameterValues.ps1"
-
-        Write-Verbose -Message 'Importing the required sub-modules'
-        Import-Module -Force -FullyQualifiedName "$([WDACConfig.GlobalVars]::ModuleRootPath)\Shared\Update-Self.psm1"
 
         # Regular parameters are automatically bound to variables in the function scope
         # Dynamic parameters however, are only available in the parameter dictionary, which is why we have to access them using $PSBoundParameters
@@ -84,37 +78,15 @@ Function Confirm-WDACConfig {
         [System.Management.Automation.SwitchParameter]$OnlySystemPolicies = $($PSBoundParameters['OnlySystemPolicies'])
         [System.Management.Automation.SwitchParameter]$SkipVersionCheck = $($PSBoundParameters['SkipVersionCheck'])
 
-        # if -SkipVersionCheck wasn't passed, run the updater
-        if (-NOT $SkipVersionCheck) { Update-Self -InvocationStatement $MyInvocation.Statement }
-
-        # Script block to show only Base policies
-        [System.Management.Automation.ScriptBlock]$OnlyBasePoliciesBLOCK = {
-            [System.Object[]]$BasePolicies = foreach ($Item in (&'C:\Windows\System32\CiTool.exe' -lp -json | ConvertFrom-Json).Policies) {
-                if (($Item.IsSystemPolicy -eq $OnlySystemPolicies) -and ($Item.PolicyID -eq $Item.BasePolicyID)) {
-                    $Item.Version = [WDACConfig.CIPolicyVersion]::Measure($Item.Version)
-                    $Item
-                }
-            }
-
-            Write-ColorfulTextWDACConfig -Color Lavender -InputText "`nThere are currently $(($BasePolicies.count)) Base policies deployed"
-            $BasePolicies
-        }
-        # Script block to show only Supplemental policies
-        [System.Management.Automation.ScriptBlock]$OnlySupplementalPoliciesBLOCK = {
-            [System.Object[]]$SupplementalPolicies = foreach ($Item in (&'C:\Windows\System32\CiTool.exe' -lp -json | ConvertFrom-Json).Policies) {
-                if (($Item.IsSystemPolicy -eq $OnlySystemPolicies) -and ($Item.PolicyID -ne $Item.BasePolicyID)) {
-                    $Item.Version = [WDACConfig.CIPolicyVersion]::Measure($Item.Version)
-                    $Item
-                }
-            }
-
-            Write-ColorfulTextWDACConfig -Color Lavender -InputText "`nThere are currently $(($SupplementalPolicies.count)) Supplemental policies deployed`n"
-            $SupplementalPolicies
-        }
+        if (-NOT $SkipVersionCheck) { Update-WDACConfigPSModule -InvocationStatement $MyInvocation.Statement }
 
         # If no main parameter was passed, run all of them
         if (!$ListActivePolicies -and !$VerifyWDACStatus -and !$CheckSmartAppControlStatus) {
-            $ListActivePolicies = $true
+
+            [System.Collections.Generic.List[WDACConfig.CiPolicyInfo]]$PoliciesDeployedResults = [WDACConfig.CiToolHelper]::GetPolicies($false, $true, $true)
+            Write-ColorfulTextWDACConfig -Color Lavender -InputText "$($PoliciesDeployedResults.count) policies are deployed"
+            $PoliciesDeployedResults
+
             $VerifyWDACStatus = $true
             $CheckSmartAppControlStatus = $true
         }
@@ -122,19 +94,36 @@ Function Confirm-WDACConfig {
 
     process {
         if ($ListActivePolicies) {
-            if ($OnlyBasePolicies) { &$OnlyBasePoliciesBLOCK }
-            if ($OnlySupplementalPolicies) { &$OnlySupplementalPoliciesBLOCK }
-            if (!$OnlyBasePolicies -and !$OnlySupplementalPolicies) { &$OnlyBasePoliciesBLOCK; &$OnlySupplementalPoliciesBLOCK }
+            if ($OnlyBasePolicies) {
+                [System.Collections.Generic.List[WDACConfig.CiPolicyInfo]]$OnlyBasePoliciesResults = [WDACConfig.CiToolHelper]::GetPolicies($false, $true, $false)
+                Write-ColorfulTextWDACConfig -Color Lavender -InputText "$($OnlyBasePoliciesResults.count) base policies are deployed"
+                $OnlyBasePoliciesResults
+            }
+            elseif ($OnlySupplementalPolicies) {
+                [System.Collections.Generic.List[WDACConfig.CiPolicyInfo]]$OnlySupplementalPoliciesResults = [WDACConfig.CiToolHelper]::GetPolicies($false, $false, $true)
+                Write-ColorfulTextWDACConfig -Color Lavender -InputText "$($OnlySupplementalPoliciesResults.count) Supplemental policies are deployed"
+                $OnlySupplementalPoliciesResults
+            }
+            elseif ($OnlySystemPolicies) {
+                [System.Collections.Generic.List[WDACConfig.CiPolicyInfo]]$OnlySystemPoliciesResults = [WDACConfig.CiToolHelper]::GetPolicies($true, $false, $false)
+                Write-ColorfulTextWDACConfig -Color Lavender -InputText "$($OnlySystemPoliciesResults.count) System policies are deployed"
+                $OnlySystemPoliciesResults
+            }
+            else {
+                [System.Collections.Generic.List[WDACConfig.CiPolicyInfo]]$PoliciesDeployedResults = [WDACConfig.CiToolHelper]::GetPolicies($false, $true, $true)
+                Write-ColorfulTextWDACConfig -Color Lavender -InputText "$($PoliciesDeployedResults.count) policies are deployed"
+                $PoliciesDeployedResults
+            }
         }
 
         if ($VerifyWDACStatus) {
-            Write-Verbose -Message 'Checking the status of WDAC using Get-CimInstance'
-            Get-CimInstance -ClassName Win32_DeviceGuard -Namespace root\Microsoft\Windows\DeviceGuard | Select-Object -Property *codeintegrity* | Format-List
+            [WDACConfig.Logger]::Write('Checking the status of WDAC using Get-CimInstance')
+            [WDACConfig.DeviceGuardInfo]::GetDeviceGuardStatus()
             Write-ColorfulTextWDACConfig -Color Lavender -InputText "2 -> Enforced`n1 -> Audit mode`n0 -> Disabled/Not running`n"
         }
 
         if ($CheckSmartAppControlStatus) {
-            Write-Verbose -Message 'Checking the status of Smart App Control using Get-MpComputerStatus'
+            [WDACConfig.Logger]::Write('Checking the status of Smart App Control using Get-MpComputerStatus')
             Get-MpComputerStatus | Select-Object -Property SmartAppControlExpiration, SmartAppControlState
             if ((Get-MpComputerStatus).SmartAppControlState -eq 'Eval') {
                 Write-ColorfulTextWDACConfig -Color Pink -InputText "`nSmart App Control is in Evaluation mode."
@@ -155,11 +144,7 @@ Function Confirm-WDACConfig {
 .LINK
     https://github.com/HotCakeX/Harden-Windows-Security/wiki/Confirm-WDACConfig
 .DESCRIPTION
-    Using official Microsoft methods, Show the status of WDAC (Windows Defender Application Control) on the system, list the current deployed policies and show details about each of them.
-.COMPONENT
-    Windows Defender Application Control, ConfigCI, CiTool
-.FUNCTIONALITY
-    Using official Microsoft methods, Show the status of WDAC (Windows Defender Application Control) on the system, list the current deployed policies and show details about each of them.
+    Using official Microsoft methods, Show the status of App Control for Business on the system, list the current deployed policies and show details about each of them.
 .PARAMETER ListActivePolicies
     Lists the currently deployed policies and shows details about each of them
 .PARAMETER OnlySystemPolicies
@@ -169,7 +154,7 @@ Function Confirm-WDACConfig {
 .PARAMETER OnlySupplementalPolicies
     Shows only the Supplemental policies
 .PARAMETER VerifyWDACStatus
-    Shows the status of WDAC (Windows Defender Application Control) on the system
+    Shows the status of App Control for Business on the system
 .PARAMETER CheckSmartAppControlStatus
     Checks the status of Smart App Control and reports the results on the console
 .PARAMETER SkipVersionCheck

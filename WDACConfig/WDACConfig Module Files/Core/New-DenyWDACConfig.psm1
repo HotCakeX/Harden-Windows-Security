@@ -64,16 +64,8 @@ Function New-DenyWDACConfig {
         [Parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$SkipVersionCheck
     )
     Begin {
-        [System.Boolean]$Verbose = $PSBoundParameters.Verbose.IsPresent ? $true : $false
-        [System.Boolean]$Debug = $PSBoundParameters.Debug.IsPresent ? $true : $false
         [WDACConfig.LoggerInitializer]::Initialize($VerbosePreference, $DebugPreference, $Host)
-        . "$([WDACConfig.GlobalVars]::ModuleRootPath)\CoreExt\PSDefaultParameterValues.ps1"
-
-        Write-Verbose -Message 'Importing the required sub-modules'
-        Import-Module -Force -FullyQualifiedName "$([WDACConfig.GlobalVars]::ModuleRootPath)\Shared\Update-Self.psm1"
-
-        # if -SkipVersionCheck wasn't passed, run the updater
-        if (-NOT $SkipVersionCheck) { Update-Self -InvocationStatement $MyInvocation.Statement }
+        if (-NOT $SkipVersionCheck) { Update-WDACConfigPSModule -InvocationStatement $MyInvocation.Statement }
 
         if ([WDACConfig.GlobalVars]::ConfigCIBootstrap -eq $false) {
             Invoke-MockConfigCIBootstrap
@@ -116,7 +108,7 @@ Function New-DenyWDACConfig {
                 $CurrentStep++
                 Write-Progress -Id 22 -Activity 'Processing user selected Folders' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
-                Write-Verbose -Message 'Processing Program Folders From User input'
+                [WDACConfig.Logger]::Write('Processing Program Folders From User input')
                 for ($i = 0; $i -lt $ScanLocations.Count; $i++) {
 
                     # Creating a hash table to dynamically add parameters based on user input and pass them to New-Cipolicy cmdlet
@@ -135,7 +127,7 @@ Function New-DenyWDACConfig {
                     if ($NoScript) { $UserInputProgramFoldersPolicyMakerHashTable['NoScript'] = $true }
                     if (!$NoUserPEs) { $UserInputProgramFoldersPolicyMakerHashTable['UserPEs'] = $true }
 
-                    Write-Verbose -Message "Currently scanning and creating a deny policy for the folder: $($ScanLocations[$i])"
+                    [WDACConfig.Logger]::Write("Currently scanning and creating a deny policy for the folder: $($ScanLocations[$i])")
                     New-CIPolicy @UserInputProgramFoldersPolicyMakerHashTable
 
                     $PolicyXMLFilesArray += (Join-Path -Path $StagingArea -ChildPath "ProgramDir_ScanResults$($i).xml")
@@ -144,35 +136,33 @@ Function New-DenyWDACConfig {
                 Write-ColorfulTextWDACConfig -Color Pink -InputText 'The Deny policy with the following configuration is being created'
                 $UserInputProgramFoldersPolicyMakerHashTable
 
-                Write-Verbose -Message 'Adding the AllowAll default template policy path to the array of policy paths to merge'
+                [WDACConfig.Logger]::Write('Adding the AllowAll default template policy path to the array of policy paths to merge')
                 $PolicyXMLFilesArray += $AllowAllPolicyPath
 
                 $CurrentStep++
                 Write-Progress -Id 22 -Activity 'Merging the policies' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
-                Write-Verbose -Message 'Creating the final Deny base policy from the xml files in the paths array'
+                [WDACConfig.Logger]::Write('Creating the final Deny base policy from the xml files in the paths array')
                 $null = Merge-CIPolicy -PolicyPaths $PolicyXMLFilesArray -OutputFilePath $FinalDenyPolicyPath
 
                 $CurrentStep++
                 Write-Progress -Id 22 -Activity 'Creating the base policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
-                Write-Verbose -Message 'Assigning a name and resetting the policy ID'
-                $null = Set-CIPolicyIdInfo -FilePath $FinalDenyPolicyPath -ResetPolicyID -PolicyName $PolicyName
+                [WDACConfig.Logger]::Write('Assigning a name and resetting the policy ID')
+                $null = [WDACConfig.SetCiPolicyInfo]::Set($FinalDenyPolicyPath, $true, $PolicyName, $null, $null)
 
-                Write-Verbose -Message 'Setting the policy version to 1.0.0.0'
-                Set-CIPolicyVersion -FilePath $FinalDenyPolicyPath -Version '1.0.0.0'
+                [WDACConfig.SetCiPolicyInfo]::Set($FinalDenyPolicyPath, ([version]'1.0.0.0'))
 
-                Set-CiRuleOptions -FilePath $FinalDenyPolicyPath -Template Base
+                [WDACConfig.CiRuleOptions]::Set($FinalDenyPolicyPath, [WDACConfig.CiRuleOptions+PolicyTemplate]::Base, $null, $null, $null, $null, $null, $null, $null, $null, $null)
 
-                Write-Verbose -Message 'Converting the policy XML to .CIP'
+                [WDACConfig.Logger]::Write('Converting the policy XML to .CIP')
                 $null = ConvertFrom-CIPolicy -XmlFilePath $FinalDenyPolicyPath -BinaryFilePath $FinalDenyPolicyCIPPath
 
                 if ($Deploy) {
                     $CurrentStep++
                     Write-Progress -Id 22 -Activity 'Deploying the base policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
-                    Write-Verbose -Message 'Deploying the policy'
-                    $null = &'C:\Windows\System32\CiTool.exe' --update-policy $FinalDenyPolicyCIPPath -json
+                    [WDACConfig.CiToolHelper]::UpdatePolicy($FinalDenyPolicyCIPPath)
 
                     Write-ColorfulTextWDACConfig -Color Pink -InputText "A Deny Base policy with the name '$PolicyName' has been deployed."
                 }
@@ -189,7 +179,7 @@ Function New-DenyWDACConfig {
                 $CurrentStep++
                 Write-Progress -Id 23 -Activity 'Processing user selected Folders' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
-                Write-Verbose -Message 'Looping through each user-selected folder paths, scanning them, creating a temp policy file based on them'
+                [WDACConfig.Logger]::Write('Looping through each user-selected folder paths, scanning them, creating a temp policy file based on them')
                 powershell.exe -NoProfile -Command {
 
                     # Prep the environment as a workaround for the ConfigCI bug
@@ -228,29 +218,27 @@ Function New-DenyWDACConfig {
                 Write-Progress -Id 23 -Activity 'Merging the policies' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
                 # Merging AllowAll default policy with our Deny temp policy
-                Write-Verbose -Message 'Merging AllowAll default template policy with our Deny temp policy'
+                [WDACConfig.Logger]::Write('Merging AllowAll default template policy with our Deny temp policy')
                 $null = Merge-CIPolicy -PolicyPaths $AllowAllPolicyPath, $TempPolicyPath -OutputFilePath $FinalDenyPolicyPath
 
                 $CurrentStep++
                 Write-Progress -Id 23 -Activity 'Configuring the base policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
-                Write-Verbose -Message 'Assigning a name and resetting the policy ID'
-                $null = Set-CIPolicyIdInfo -FilePath $FinalDenyPolicyPath -ResetPolicyID -PolicyName $PolicyName
+                [WDACConfig.Logger]::Write('Assigning a name and resetting the policy ID')
+                $null = [WDACConfig.SetCiPolicyInfo]::Set($FinalDenyPolicyPath, $true, $PolicyName, $null, $null)
 
-                Write-Verbose -Message 'Setting the policy version to 1.0.0.0'
-                Set-CIPolicyVersion -FilePath $FinalDenyPolicyPath -Version '1.0.0.0'
+                [WDACConfig.SetCiPolicyInfo]::Set($FinalDenyPolicyPath, ([version]'1.0.0.0'))
 
-                Set-CiRuleOptions -FilePath $FinalDenyPolicyPath -Template Base
+                [WDACConfig.CiRuleOptions]::Set($FinalDenyPolicyPath, [WDACConfig.CiRuleOptions+PolicyTemplate]::Base, $null, $null, $null, $null, $null, $null, $null, $null, $null)
 
-                Write-Verbose -Message 'Converting the policy XML to .CIP'
+                [WDACConfig.Logger]::Write('Converting the policy XML to .CIP')
                 $null = ConvertFrom-CIPolicy -XmlFilePath $FinalDenyPolicyPath -BinaryFilePath $FinalDenyPolicyCIPPath
 
                 if ($Deploy) {
                     $CurrentStep++
                     Write-Progress -Id 23 -Activity 'Deploying the base policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
-                    Write-Verbose -Message 'Deploying the policy'
-                    $null = &'C:\Windows\System32\CiTool.exe' --update-policy $FinalDenyPolicyCIPPath -json
+                    [WDACConfig.CiToolHelper]::UpdatePolicy($FinalDenyPolicyCIPPath)
 
                     Write-ColorfulTextWDACConfig -Color Pink -InputText "A Deny Base policy with the name '$PolicyName' has been deployed."
                 }
@@ -277,7 +265,7 @@ Function New-DenyWDACConfig {
                     # Change the color for the list items to plum
                     $PSStyle.Formatting.FormatAccent = "$($PSStyle.Foreground.FromRGB(221,160,221))"
 
-                    Write-Verbose -Message 'Displaying the installed Appx packages based on the supplied name'
+                    [WDACConfig.Logger]::Write('Displaying the installed Appx packages based on the supplied name')
                     Get-AppxPackage -Name $PackageName | Select-Object -Property Name, Publisher, version, PackageFamilyName, PackageFullName, InstallLocation, Dependencies, SignatureKind, Status
 
                     # Prompt for confirmation before proceeding
@@ -286,7 +274,7 @@ Function New-DenyWDACConfig {
                         $CurrentStep++
                         Write-Progress -Id 24 -Activity 'Creating the base policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
-                        Write-Verbose -Message 'Creating a temporary Deny policy for the supplied Appx package name'
+                        [WDACConfig.Logger]::Write('Creating a temporary Deny policy for the supplied Appx package name')
                         powershell.exe -NoProfile -Command {
                             # Get all the packages based on the supplied name
                             [Microsoft.Windows.Appx.PackageManager.Commands.AppxPackage[]]$Package = Get-AppxPackage -Name $args[0]
@@ -303,26 +291,24 @@ Function New-DenyWDACConfig {
                         } -args $PackageName, $TempPolicyPath
 
                         # Merging AllowAll default policy with our Deny temp policy
-                        Write-Verbose -Message 'Merging AllowAll default template policy with our AppX Deny temp policy'
+                        [WDACConfig.Logger]::Write('Merging AllowAll default template policy with our AppX Deny temp policy')
                         $null = Merge-CIPolicy -PolicyPaths $AllowAllPolicyPath, $TempPolicyPath -OutputFilePath $FinalDenyPolicyPath
 
-                        Write-Verbose -Message 'Assigning a name and resetting the policy ID'
-                        $null = Set-CIPolicyIdInfo -FilePath $FinalDenyPolicyPath -ResetPolicyID -PolicyName $PolicyName
+                        [WDACConfig.Logger]::Write('Assigning a name and resetting the policy ID')
+                        $null = [WDACConfig.SetCiPolicyInfo]::Set($FinalDenyPolicyPath, $true, $PolicyName, $null, $null)
 
-                        Write-Verbose -Message 'Setting the policy version to 1.0.0.0'
-                        Set-CIPolicyVersion -FilePath $FinalDenyPolicyPath -Version '1.0.0.0'
+                        [WDACConfig.SetCiPolicyInfo]::Set($FinalDenyPolicyPath, ([version]'1.0.0.0'))
 
-                        Set-CiRuleOptions -FilePath $FinalDenyPolicyPath -Template Base
+                        [WDACConfig.CiRuleOptions]::Set($FinalDenyPolicyPath, [WDACConfig.CiRuleOptions+PolicyTemplate]::Base, $null, $null, $null, $null, $null, $null, $null, $null, $null)
 
-                        Write-Verbose -Message 'Converting the policy XML to .CIP'
+                        [WDACConfig.Logger]::Write('Converting the policy XML to .CIP')
                         $null = ConvertFrom-CIPolicy -XmlFilePath $FinalDenyPolicyPath -BinaryFilePath $FinalDenyPolicyCIPPath
 
                         if ($Deploy) {
                             $CurrentStep++
                             Write-Progress -Id 24 -Activity 'Deploying the base policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
-                            Write-Verbose -Message 'Deploying the policy'
-                            $null = &'C:\Windows\System32\CiTool.exe' --update-policy $FinalDenyPolicyCIPPath -json
+                            [WDACConfig.CiToolHelper]::UpdatePolicy($FinalDenyPolicyCIPPath)
 
                             Write-ColorfulTextWDACConfig -Color Pink -InputText "A Deny Base policy with the name '$PolicyName' has been deployed."
                         }
@@ -351,39 +337,37 @@ Function New-DenyWDACConfig {
                 Write-Progress -Id 29 -Activity 'Creating the wildcard deny policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
                 # Using Windows PowerShell to handle serialized data since PowerShell core throws an error
-                Write-Verbose -Message 'Creating the deny policy file'
+                [WDACConfig.Logger]::Write('Creating the deny policy file')
                 powershell.exe -NoProfile -Command {
                     $RulesWildCards = New-CIPolicyRule -Deny -FilePathRule $args[0]
                     New-CIPolicy -MultiplePolicyFormat -FilePath $args[1] -Rules $RulesWildCards
                 } -args $FolderPath, $TempPolicyPath
 
                 # Merging AllowAll default policy with our Deny temp policy
-                Write-Verbose -Message 'Merging AllowAll default template policy with our Wildcard Deny temp policy'
+                [WDACConfig.Logger]::Write('Merging AllowAll default template policy with our Wildcard Deny temp policy')
                 $null = Merge-CIPolicy -PolicyPaths $AllowAllPolicyPath, $TempPolicyPath -OutputFilePath $FinalDenyPolicyPath
 
                 $CurrentStep++
                 Write-Progress -Id 29 -Activity 'Configuring the wildcard deny policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
-                Write-Verbose -Message 'Assigning a name and resetting the policy ID'
-                $null = Set-CIPolicyIdInfo -FilePath $FinalDenyPolicyPath -ResetPolicyID -PolicyName $PolicyName
+                [WDACConfig.Logger]::Write('Assigning a name and resetting the policy ID')
+                $null = [WDACConfig.SetCiPolicyInfo]::Set($FinalDenyPolicyPath, $true, $PolicyName, $null, $null)
 
-                Write-Verbose -Message 'Setting the policy version to 1.0.0.0'
-                Set-CIPolicyVersion -FilePath $FinalDenyPolicyPath -Version '1.0.0.0'
+                [WDACConfig.SetCiPolicyInfo]::Set($FinalDenyPolicyPath, ([version]'1.0.0.0'))
 
-                Set-CiRuleOptions -FilePath $FinalDenyPolicyPath -Template Base
+                [WDACConfig.CiRuleOptions]::Set($FinalDenyPolicyPath, [WDACConfig.CiRuleOptions+PolicyTemplate]::Base, $null, $null, $null, $null, $null, $null, $null, $null, $null)
 
-                Write-Verbose -Message 'Converting the policy XML to .CIP'
+                [WDACConfig.Logger]::Write('Converting the policy XML to .CIP')
                 $null = ConvertFrom-CIPolicy -XmlFilePath $FinalDenyPolicyPath -BinaryFilePath $FinalDenyPolicyCIPPath
 
                 if ($Deploy) {
                     $CurrentStep++
                     Write-Progress -Id 29 -Activity 'Deploying the base policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
-                    Write-Verbose -Message 'Deploying the policy'
-                    $null = &'C:\Windows\System32\CiTool.exe' --update-policy $FinalDenyPolicyCIPPath -json
+                    [WDACConfig.CiToolHelper]::UpdatePolicy($FinalDenyPolicyCIPPath)
 
                     if ($EmbeddedVerboseOutput) {
-                        Write-Verbose -Message "A Deny Base policy with the name '$PolicyName' has been deployed."
+                        [WDACConfig.Logger]::Write("A Deny Base policy with the name '$PolicyName' has been deployed.")
                     }
                     else {
                         Write-ColorfulTextWDACConfig -Color Pink -InputText "A Deny Base policy with the name '$PolicyName' has been deployed."
@@ -412,10 +396,10 @@ Function New-DenyWDACConfig {
             }
 
             # Copy the final policy files to the user config directory
-            if (-NOT $NoCopy) {
+            if (!$NoCopy) {
                 Copy-Item -Path ($Deploy ? $FinalDenyPolicyPath : $FinalDenyPolicyPath, $FinalDenyPolicyCIPPath) -Destination ([WDACConfig.GlobalVars]::UserConfigDir) -Force
             }
-            if (-NOT $Debug) {
+            if (![WDACConfig.GlobalVars]::DebugPreference) {
                 Remove-Item -Path $StagingArea -Recurse -Force
             }
         }
@@ -423,15 +407,11 @@ Function New-DenyWDACConfig {
 
     <#
 .SYNOPSIS
-    Creates Deny base policies (Windows Defender Application Control)
+    Creates Deny App Control for Business base policies
 .LINK
     https://github.com/HotCakeX/Harden-Windows-Security/wiki/New-DenyWDACConfig
 .DESCRIPTION
-    Using official Microsoft methods to create Deny base policies (Windows Defender Application Control)
-.COMPONENT
-    Windows Defender Application Control, ConfigCI PowerShell module
-.FUNCTIONALITY
-    Using official Microsoft methods, Removes Signed and unsigned deployed WDAC policies (Windows Defender Application Control)
+    Using official Microsoft methods to create Deny App Control for Business base policies
 .PARAMETER PolicyName
     It's used by the entire Cmdlet. It is the name of the base policy that will be created.
 .PARAMETER Normal

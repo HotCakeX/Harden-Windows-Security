@@ -39,19 +39,12 @@ Function Deploy-SignedWDACConfig {
         [Parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$SkipVersionCheck
     )
     Begin {
-        [System.Boolean]$Verbose = $PSBoundParameters.Verbose.IsPresent ? $true : $false
-        [System.Boolean]$Debug = $PSBoundParameters.Debug.IsPresent ? $true : $false
         [WDACConfig.LoggerInitializer]::Initialize($VerbosePreference, $DebugPreference, $Host)
-        . "$([WDACConfig.GlobalVars]::ModuleRootPath)\CoreExt\PSDefaultParameterValues.ps1"
 
-        Write-Verbose -Message 'Importing the required sub-modules'
-        Import-Module -Force -FullyQualifiedName @(
-            "$([WDACConfig.GlobalVars]::ModuleRootPath)\Shared\Update-Self.psm1",
-            "$([WDACConfig.GlobalVars]::ModuleRootPath)\Shared\Get-SignTool.psm1"
-        )
+        [WDACConfig.Logger]::Write('Importing the required sub-modules')
+        Import-Module -Force -FullyQualifiedName @("$([WDACConfig.GlobalVars]::ModuleRootPath)\Shared\Get-SignTool.psm1")
 
-        # if -SkipVersionCheck wasn't passed, run the updater
-        if (-NOT $SkipVersionCheck) { Update-Self -InvocationStatement $MyInvocation.Statement }
+        if (-NOT $SkipVersionCheck) { Update-WDACConfigPSModule -InvocationStatement $MyInvocation.Statement }
 
         if ([WDACConfig.GlobalVars]::ConfigCIBootstrap -eq $false) {
             Invoke-MockConfigCIBootstrap
@@ -66,13 +59,13 @@ Function Deploy-SignedWDACConfig {
             [System.IO.FileInfo]$SignToolPathFinal = Get-SignTool -SignToolExePathInput $SignToolPath
         } # If it is null, then Get-SignTool will behave the same as if it was called without any arguments.
         else {
-            [System.IO.FileInfo]$SignToolPathFinal = Get-SignTool -SignToolExePathInput (Get-CommonWDACConfig -SignToolPath)
+            [System.IO.FileInfo]$SignToolPathFinal = Get-SignTool -SignToolExePathInput ([WDACConfig.UserConfiguration]::Get().SignToolCustomPath)
         }
 
         # If CertPath parameter wasn't provided by user, check if a valid value exists in user configs, if so, use it, otherwise throw an error
         if (!$CertPath ) {
-            if ([System.IO.File]::Exists((Get-CommonWDACConfig -CertPath))) {
-                [System.IO.FileInfo]$CertPath = Get-CommonWDACConfig -CertPath
+            if ([System.IO.File]::Exists(([WDACConfig.UserConfiguration]::Get().CertificatePath))) {
+                [System.IO.FileInfo]$CertPath = [WDACConfig.UserConfiguration]::Get().CertificatePath
             }
             else {
                 throw 'CertPath parameter cannot be empty and no valid user configuration was found for it. Use the Build-WDACCertificate cmdlet to create one.'
@@ -81,8 +74,8 @@ Function Deploy-SignedWDACConfig {
 
         # If CertCN was not provided by user, check if a valid value exists in user configs, if so, use it, otherwise throw an error
         if (!$CertCN) {
-            if ([WDACConfig.CertCNz]::new().GetValidValues() -contains (Get-CommonWDACConfig -CertCN)) {
-                [System.String]$CertCN = Get-CommonWDACConfig -CertCN
+            if ([WDACConfig.CertCNz]::new().GetValidValues() -contains ([WDACConfig.UserConfiguration]::Get().CertificateCommonName)) {
+                [System.String]$CertCN = [WDACConfig.UserConfiguration]::Get().CertificateCommonName
             }
             else {
                 throw 'CertCN parameter cannot be empty and no valid user configuration was found for it.'
@@ -113,68 +106,68 @@ Function Deploy-SignedWDACConfig {
                 $CurrentStep++
                 Write-Progress -Id 13 -Activity 'Gathering policy details' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
-                Write-Verbose -Message "Gathering policy details from: $PolicyPath"
+                [WDACConfig.Logger]::Write("Gathering policy details from: $PolicyPath")
                 $Xml = [System.Xml.XmlDocument](Get-Content -Path $PolicyPath)
                 [System.String]$PolicyType = $Xml.SiPolicy.PolicyType
                 [System.String]$PolicyID = $Xml.SiPolicy.PolicyID
                 [System.String]$PolicyName = ($Xml.SiPolicy.Settings.Setting | Where-Object -FilterScript { $_.provider -eq 'PolicyInfo' -and $_.valuename -eq 'Name' -and $_.key -eq 'Information' }).value.string
                 [System.String[]]$PolicyRuleOptions = $Xml.SiPolicy.Rules.Rule.Option
 
-                Write-Verbose -Message 'Checking if the policy type is Supplemental and if so, removing the -Supplemental parameter from the SignerRule command'
+                [WDACConfig.Logger]::Write('Checking if the policy type is Supplemental and if so, removing the -Supplemental parameter from the SignerRule command')
                 if ($PolicyType -eq 'Supplemental Policy') {
 
-                    Write-Verbose -Message 'Policy type is Supplemental'
+                    [WDACConfig.Logger]::Write('Policy type is Supplemental')
 
                     # Make sure -User is not added if the UMCI policy rule option doesn't exist in the policy, typically for Strict kernel mode policies
                     if ('Enabled:UMCI' -in $PolicyRuleOptions) {
                         Add-SignerRule -FilePath $PolicyPath -CertificatePath $CertPath -Update -User -Kernel
                     }
                     else {
-                        Write-Verbose -Message 'UMCI policy rule option does not exist in the policy, typically for Strict kernel mode policies'
+                        [WDACConfig.Logger]::Write('UMCI policy rule option does not exist in the policy, typically for Strict kernel mode policies')
                         Add-SignerRule -FilePath $PolicyPath -CertificatePath $CertPath -Update -Kernel
                     }
                 }
                 elseif ($PolicyType -eq 'Base Policy') {
 
-                    Write-Verbose -Message 'Policy type is Base'
+                    [WDACConfig.Logger]::Write('Policy type is Base')
 
                     # Make sure -User is not added if the UMCI policy rule option doesn't exist in the policy, typically for Strict kernel mode policies
                     if ('Enabled:UMCI' -in $PolicyRuleOptions) {
 
-                        Write-Verbose -Message 'Checking whether SignTool.exe is allowed to execute in the policy or not'
+                        [WDACConfig.Logger]::Write('Checking whether SignTool.exe is allowed to execute in the policy or not')
                         if (-NOT (Invoke-WDACSimulation -FilePath $SignToolPathFinal -XmlFilePath $PolicyPath -BooleanOutput -NoCatalogScanning -ThreadsCount 1 -SkipVersionCheck)) {
 
-                            Write-Verbose -Message 'The policy type is base policy and it applies to user mode files, yet the policy prevents SignTool.exe from executing. As a precautionary measure, scanning and including the SignTool.exe in the policy before deployment so you can modify/remove the signed policy later from the system.'
+                            [WDACConfig.Logger]::Write('The policy type is base policy and it applies to user mode files, yet the policy prevents SignTool.exe from executing. As a precautionary measure, scanning and including the SignTool.exe in the policy before deployment so you can modify/remove the signed policy later from the system.')
 
-                            Write-Verbose -Message 'Creating a temporary folder to store the symbolic link to the SignTool.exe'
+                            [WDACConfig.Logger]::Write('Creating a temporary folder to store the symbolic link to the SignTool.exe')
                             [System.IO.DirectoryInfo]$SymLinksStorage = New-Item -Path (Join-Path -Path $StagingArea -ChildPath 'SymLinkStorage') -ItemType Directory -Force
 
-                            Write-Verbose -Message 'Creating symbolic link to the SignTool.exe'
+                            [WDACConfig.Logger]::Write('Creating symbolic link to the SignTool.exe')
                             $null = New-Item -ItemType SymbolicLink -Path "$SymLinksStorage\SignTool.exe" -Target $SignToolPathFinal -Force
 
-                            Write-Verbose -Message 'Scanning the SignTool.exe and generating the SignTool.xml policy'
+                            [WDACConfig.Logger]::Write('Scanning the SignTool.exe and generating the SignTool.xml policy')
                             New-CIPolicy -ScanPath $SymLinksStorage -Level FilePublisher -Fallback None -UserPEs -UserWriteablePaths -MultiplePolicyFormat -AllowFileNameFallbacks -FilePath "$SymLinksStorage\SignTool.xml" -PathToCatroot 'C:\Program Files\Windows Defender\Offline'
 
                             [System.IO.FileInfo]$AugmentedPolicyPath = Join-Path -Path $SymLinksStorage -ChildPath $PolicyPath.Name
 
-                            Write-Verbose -Message 'Merging the SignTool.xml policy with the policy being signed'
+                            [WDACConfig.Logger]::Write('Merging the SignTool.xml policy with the policy being signed')
                             # First policy in the array should always be the main one so that its settings will be used in the merged policy
                             $null = Merge-CIPolicy -PolicyPaths $PolicyPath, "$SymLinksStorage\SignTool.xml" -OutputFilePath $AugmentedPolicyPath
 
-                            Write-Verbose -Message 'Making sure policy rule options stay the same after merging the policies'
+                            [WDACConfig.Logger]::Write('Making sure policy rule options stay the same after merging the policies')
                             [WDACConfig.CiPolicyUtility]::CopyCiRules($PolicyPath, $AugmentedPolicyPath)
 
-                            Write-Verbose -Message 'Replacing the new policy with the old one'
+                            [WDACConfig.Logger]::Write('Replacing the new policy with the old one')
                             Move-Item -Path $AugmentedPolicyPath -Destination $PolicyPath -Force
                         }
                         else {
-                            Write-Verbose -Message 'The base policy allows SignTool.exe to execute, no need to scan and include it in the policy'
+                            [WDACConfig.Logger]::Write('The base policy allows SignTool.exe to execute, no need to scan and include it in the policy')
                         }
 
                         Add-SignerRule -FilePath $PolicyPath -CertificatePath $CertPath -Update -User -Kernel -Supplemental
                     }
                     else {
-                        Write-Verbose -Message 'UMCI policy rule option does not exist in the policy, typically for Strict kernel mode policies'
+                        [WDACConfig.Logger]::Write('UMCI policy rule option does not exist in the policy, typically for Strict kernel mode policies')
                         Add-SignerRule -FilePath $PolicyPath -CertificatePath $CertPath -Update -Kernel -Supplemental
                     }
                 }
@@ -185,18 +178,18 @@ Function Deploy-SignedWDACConfig {
                 $CurrentStep++
                 Write-Progress -Id 13 -Activity 'Creating CIP file' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
-                Set-CiRuleOptions -FilePath $PolicyPath -RulesToRemove 'Enabled:Unsigned System Integrity Policy'
+                [WDACConfig.CiRuleOptions]::Set($PolicyPath, $null, $null, [WDACConfig.CiRuleOptions+PolicyRuleOptions]::EnabledUnsignedSystemIntegrityPolicy, $null, $null, $null, $null, $null, $null, $null)
 
                 [system.io.FileInfo]$PolicyCIPPath = Join-Path -Path $StagingArea -ChildPath "$PolicyID.cip"
 
-                Write-Verbose -Message 'Converting the policy to .CIP file'
+                [WDACConfig.Logger]::Write('Converting the policy to .CIP file')
                 $null = ConvertFrom-CIPolicy -XmlFilePath $PolicyPath -BinaryFilePath $PolicyCIPPath
 
                 $CurrentStep++
                 Write-Progress -Id 13 -Activity 'Signing the policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
-                [WDACConfig.CodeIntegritySigner]::InvokeCiSigning($PolicyCIPPath, $SignToolPathFinal, $CertCN)
+                [WDACConfig.SignToolHelper]::Sign($PolicyCIPPath, $SignToolPathFinal, $CertCN)
 
-                Write-Verbose -Message 'Renaming the .p7 file to .cip'
+                [WDACConfig.Logger]::Write('Renaming the .p7 file to .cip')
                 Move-Item -LiteralPath "$StagingArea\$PolicyID.cip.p7" -Destination $PolicyCIPPath -Force
 
                 if ($Deploy) {
@@ -207,8 +200,18 @@ Function Deploy-SignedWDACConfig {
                     # Prompt for confirmation before proceeding
                     if ($PSCmdlet.ShouldProcess('This PC', 'Deploying the signed policy')) {
 
-                        Write-Verbose -Message 'Deploying the policy'
-                        $null = &'C:\Windows\System32\CiTool.exe' --update-policy $PolicyCIPPath -json
+                        [System.Collections.Generic.List[WDACConfig.CiPolicyInfo]]$CurrentlyDeployedPolicies = [WDACConfig.CiToolHelper]::GetPolicies($false, $true, $true) | Where-Object -FilterScript { $_.IsSignedPolicy -eq $false }
+
+                        if ($null -ne $CurrentlyDeployedPolicies -and $CurrentlyDeployedPolicies.Count -gt 0) {
+
+                            if ($PolicyID.Trim('{', '}') -in $CurrentlyDeployedPolicies.PolicyID) {
+                                [WDACConfig.Logger]::Write("The policy with the ID '$PolicyID' is already deployed on the system in an unsigned form, removing it first before deploying the signed version. This prevents boot failure during the next reboot.")
+                                [WDACConfig.CiToolHelper]::RemovePolicy($PolicyID)
+                            }
+
+                        }
+
+                        [WDACConfig.CiToolHelper]::UpdatePolicy($PolicyCIPPath)
 
                         Write-ColorfulTextWDACConfig -Color Lavender -InputText 'policy with the following details has been Signed and Deployed in Enforced Mode:'
                         Write-ColorfulTextWDACConfig -Color MintGreen -InputText "PolicyName = $PolicyName"
@@ -217,30 +220,30 @@ Function Deploy-SignedWDACConfig {
                         #Region Detecting Strict Kernel mode policy and removing it from User Configs
                         if ('Enabled:UMCI' -notin $PolicyRuleOptions) {
 
-                            [System.String]$StrictKernelPolicyGUID = Get-CommonWDACConfig -StrictKernelPolicyGUID
-                            [System.String]$StrictKernelNoFlightRootsPolicyGUID = Get-CommonWDACConfig -StrictKernelNoFlightRootsPolicyGUID
+                            [System.String]$StrictKernelPolicyGUID = [WDACConfig.UserConfiguration]::Get().StrictKernelPolicyGUID
+                            [System.String]$StrictKernelNoFlightRootsPolicyGUID = [WDACConfig.UserConfiguration]::Get().StrictKernelNoFlightRootsPolicyGUID
 
                             if (($PolicyName -like '*Strict Kernel mode policy Enforced*')) {
 
-                                Write-Verbose -Message 'The deployed policy is Strict Kernel mode'
+                                [WDACConfig.Logger]::Write('The deployed policy is Strict Kernel mode')
 
                                 if ($StrictKernelPolicyGUID) {
                                     if ($($PolicyID.TrimStart('{').TrimEnd('}')) -eq $StrictKernelPolicyGUID) {
 
-                                        Write-Verbose -Message 'Removing the GUID of the deployed Strict Kernel mode policy from the User Configs'
-                                        $null = Remove-CommonWDACConfig -StrictKernelPolicyGUID
+                                        [WDACConfig.Logger]::Write('Removing the GUID of the deployed Strict Kernel mode policy from the User Configs')
+                                        [WDACConfig.UserConfiguration]::Remove($false, $false, $false, $false, $false, $true, $false, $false, $false)
                                     }
                                 }
                             }
                             elseif (($PolicyName -like '*Strict Kernel No Flights mode policy Enforced*')) {
 
-                                Write-Verbose -Message 'The deployed policy is Strict Kernel No Flights mode'
+                                [WDACConfig.Logger]::Write('The deployed policy is Strict Kernel No Flights mode')
 
                                 if ($StrictKernelNoFlightRootsPolicyGUID) {
                                     if ($($PolicyID.TrimStart('{').TrimEnd('}')) -eq $StrictKernelNoFlightRootsPolicyGUID) {
 
-                                        Write-Verbose -Message 'Removing the GUID of the deployed Strict Kernel No Flights mode policy from the User Configs'
-                                        $null = Remove-CommonWDACConfig -StrictKernelNoFlightRootsPolicyGUID
+                                        [WDACConfig.Logger]::Write('Removing the GUID of the deployed Strict Kernel No Flights mode policy from the User Configs')
+                                        [WDACConfig.UserConfiguration]::Remove($false, $false, $false, $false, $false, $false, $true, $false, $false)
                                     }
                                 }
                             }
@@ -262,7 +265,7 @@ Function Deploy-SignedWDACConfig {
             throw $_
         }
         Finally {
-            if (-NOT $Debug) {
+            if (![WDACConfig.GlobalVars]::DebugPreference) {
                 Remove-Item -Path $StagingArea -Recurse -Force
             }
         }
@@ -270,15 +273,11 @@ Function Deploy-SignedWDACConfig {
 
     <#
 .SYNOPSIS
-    Signs and Deploys WDAC policies, accepts signed or unsigned policies and deploys them
+    Signs and Deploys App Control for Business policies, accepts signed or unsigned policies and deploys them
 .LINK
     https://github.com/HotCakeX/Harden-Windows-Security/wiki/Deploy-SignedWDACConfig
 .DESCRIPTION
-    Using official Microsoft methods, Signs and Deploys WDAC policies, accepts signed or unsigned policies and deploys them (Windows Defender Application Control)
-.COMPONENT
-    Windows Defender Application Control, ConfigCI PowerShell module
-.FUNCTIONALITY
-    Using official Microsoft methods, Signs and Deploys WDAC policies, accepts signed or unsigned policies and deploys them (Windows Defender Application Control)
+    Using official Microsoft methods, Signs and Deploys App Control for Business policies, accepts signed or unsigned policies and deploys them
 .PARAMETER CertPath
     Path to the certificate .cer file
 .PARAMETER PolicyPaths

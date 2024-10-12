@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Page
+    x:Class="WDACConfig.Pages.Logs"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:WDACConfig.Pages"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:ui="using:CommunityToolkit.WinUI"
+    xmlns:controls="using:CommunityToolkit.WinUI.Controls"
+    mc:Ignorable="d">
+
+    <Grid Margin="30,30,30,30">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <controls:WrapPanel Orientation="Horizontal" Grid.Row="0" Margin="10" HorizontalSpacing="10" VerticalSpacing="10">
+            <!-- ComboBox for selecting log files -->
+            <ComboBox x:Name="LogFileComboBox"
+              SelectionChanged="LogFileComboBox_SelectionChanged"
+              FontSize="16" />
+
+            <!-- Button to refresh the logs -->
+            <Button x:Name="RefreshButton"
+            Content="Refresh Logs"
+            Click="RefreshButton_Click"
+            FontSize="16"
+            Style="{StaticResource AccentButtonStyle}" />
+
+            <!-- Search TextBox -->
+            <TextBox x:Name="SearchTextBox"
+             PlaceholderText="Search in the logs..."
+             FontSize="16" MinWidth="300" />
+
+
+            <!-- Color Picker for Log Text Color -->
+            <controls:ColorPickerButton x:Name="TextColorPicker"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Top"
+                                SelectedColor="CornflowerBlue"
+                                Content="Log Text Color"
+                                Margin="5,0" />
+
+            <!-- Color Picker for Highlight Color -->
+            <controls:ColorPickerButton x:Name="HighlightColorPicker"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Top"
+                                SelectedColor="Yellow"
+                                Content="Highlight Color"
+                                Margin="5,0" />
+        </controls:WrapPanel>
+
+
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+            <!-- TextBox to display log content -->
+            <TextBlock x:Name="LogContentTextBox"
+                       FontFamily="Arial"
+                       FontSize="18"
+                       TextWrapping="Wrap"
+                       Foreground="CornflowerBlue"
+                       IsTextSelectionEnabled="True" />
+        </ScrollViewer>
+    </Grid>
+</Page>

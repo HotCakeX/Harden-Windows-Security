@@ -1,0 +1,101 @@
+<Page
+    x:Class="WDACConfig.Pages.ViewCurrentPolicies"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:WDACConfig.Pages"
+    xmlns:wdac="using:WDACConfig"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:ui="using:CommunityToolkit.WinUI"
+    xmlns:win="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:controls="using:CommunityToolkit.WinUI.Controls"
+    mc:Ignorable="d">
+
+    <Grid Margin="15,40,15,15">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <controls:WrapPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Center">
+
+            <CheckBox x:Name="IncludeSystemPolicies" Content="System Policies" Margin="12,0,0,0" />
+            <CheckBox x:Name="IncludeBasePolicies" Content="Base Policies" Margin="12,0,0,0" IsChecked="True" />
+            <CheckBox x:Name="IncludeSupplementalPolicies" Content="Supplemental Policies" Margin="12,0,0,0" IsChecked="True" />
+
+            <Button Name="RetrievePoliciesButton" Content="Retrieve Policies" Click="RetrievePoliciesButton_Click" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="10"/>
+
+            <TextBlock Name="PoliciesCountTextBlock" Text="Number of Policies: 0" Margin="10" VerticalAlignment="Top" HorizontalAlignment="Center" />
+
+            <Button x:Name="RemoveUnsignedPolicy" Content="Remove Unsigned Policy" Click="RemoveUnsignedPolicy_Click" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="10"/>
+
+            <!-- Search Box for filtering policies -->
+            <TextBox x:Name="SearchBox" Width="300" PlaceholderText="Search policies..." TextChanged="SearchBox_TextChanged" Margin="10" VerticalAlignment="Top" />
+
+        </controls:WrapPanel>
+
+        <ScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Auto" Margin="10,10,10,10">
+
+            <ListView Name="PoliciesListView" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" SelectionChanged="PoliciesListView_SelectionChanged">
+
+                <!-- Define ListView Headers -->
+                <ListView.Header>
+                    <Grid Padding="16,12" ColumnSpacing="16">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="280" />
+                            <ColumnDefinition Width="420" />
+                            <ColumnDefinition Width="75" />
+                            <ColumnDefinition Width="95" />
+                            <ColumnDefinition Width="95" />
+                            <ColumnDefinition Width="60" />
+                            <ColumnDefinition Width="60" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock Foreground="{ThemeResource TextFillColorSecondaryBrush}" Text="Policy ID" />
+                        <TextBlock Grid.Column="1" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Text="Friendly Name" />
+                        <TextBlock Grid.Column="2" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Text="Version" />
+                        <TextBlock Grid.Column="3" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Text="System Policy" />
+                        <TextBlock Grid.Column="4" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Text="Signed Policy" />
+                        <TextBlock Grid.Column="5" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Text="On Disk" />
+                        <TextBlock Grid.Column="6" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Text="Enforced" />
+                        <TextBlock Grid.Column="7" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Text="PolicyOptions" />
+                    </Grid>
+                </ListView.Header>
+
+                <!-- Define ListView Item Template -->
+                <ListView.ItemTemplate>
+                    <DataTemplate x:DataType="wdac:CiPolicyInfo">
+                        <Grid ColumnSpacing="16">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="280" />
+                                <ColumnDefinition Width="420" />
+                                <ColumnDefinition Width="75" />
+                                <ColumnDefinition Width="95" />
+                                <ColumnDefinition Width="95" />
+                                <ColumnDefinition Width="60" />
+                                <ColumnDefinition Width="60" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+
+                            <TextBlock Text="{x:Bind PolicyID}" />
+                            <TextBlock Grid.Column="1" Text="{x:Bind FriendlyName}" />
+                            <TextBlock Grid.Column="2" Text="{x:Bind VersionString}" />
+                            <TextBlock Grid.Column="3" Text="{x:Bind IsSystemPolicy}" />
+                            <TextBlock Grid.Column="4" Text="{x:Bind IsSignedPolicy}" />
+                            <TextBlock Grid.Column="5" Text="{x:Bind IsOnDisk}" />
+                            <TextBlock Grid.Column="6" Text="{x:Bind IsEnforced}" />
+                            <TextBlock Grid.Column="7" Text="{x:Bind PolicyOptionsDisplay}" />
+                        </Grid>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+
+                <ListView.ItemContainerStyle>
+                    <Style BasedOn="{StaticResource DefaultListViewItemStyle}" TargetType="ListViewItem">
+                        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                    </Style>
+                </ListView.ItemContainerStyle>
+            </ListView>
+        </ScrollViewer>
+    </Grid>
+</Page>

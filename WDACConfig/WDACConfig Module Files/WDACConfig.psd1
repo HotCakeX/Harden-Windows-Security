@@ -2,7 +2,7 @@
     # https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_module_manifests
 
     RootModule           = 'WDACConfig.psm1'
-    ModuleVersion        = '0.4.5'
+    ModuleVersion        = '0.4.6'
     CompatiblePSEditions = @('Core')
     GUID                 = '79920947-efb5-48c1-a567-5b02ebe74793'
     Author               = 'HotCakeX'
@@ -15,7 +15,7 @@
     HelpInfoURI          = 'https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDACConfig'
     Description          = @'
 
-This is an advanced PowerShell module for WDAC (Windows Defender Application Control) and automates a lot of tasks.
+This is an advanced PowerShell module for App Control Management in Windows and automates a lot of tasks.
 
 
 🟢 Please see the GitHub page for Full details and everything about the module: https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDACConfig
@@ -59,8 +59,6 @@ This is an advanced PowerShell module for WDAC (Windows Defender Application Con
 
 ✔️ Get-CiFileHashes: https://github.com/HotCakeX/Harden-Windows-Security/wiki/Get-CiFileHashes
 
-✔️ Set-CiRuleOptions: https://github.com/HotCakeX/Harden-Windows-Security/wiki/Set-CiRuleOptions
-
 ✔️ Get-CIPolicySetting: https://github.com/HotCakeX/Harden-Windows-Security/wiki/Get-CIPolicySetting
 
 '@
@@ -83,7 +81,6 @@ This is an advanced PowerShell module for WDAC (Windows Defender Application Con
         'Core\Test-CiPolicy.psm1',
         'Core\ConvertTo-WDACPolicy.psm1',
         'Core\Get-CiFileHashes.psm1',
-        'Core\Set-CiRuleOptions.psm1',
         'Core\Get-CIPolicySetting.psm1')
 
     FunctionsToExport    = @('New-WDACConfig',
@@ -104,10 +101,9 @@ This is an advanced PowerShell module for WDAC (Windows Defender Application Con
         'Test-CiPolicy',
         'ConvertTo-WDACPolicy',
         'Get-CiFileHashes',
-        'Set-CiRuleOptions',
-        'Get-CIPolicySetting')
+        'Get-CIPolicySetting',
+        'Update-WDACConfigPSModule')
 
-    # Private data to pass to the module specified in RootModule/ModuleToProcess. This may also contain a PSData hashtable with additional module metadata used by PowerShell.
     PrivateData          = @{
         PSData = @{
             Tags         = @('WDAC', 'Windows-Defender-Application-Control', 'Windows', 'Security', 'Microsoft', 'Application-Control', 'App-Control-for-Business', 'Application-Whitelisting', 'BYOVD')

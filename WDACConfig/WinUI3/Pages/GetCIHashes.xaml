@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Page
+    x:Class="WDACConfig.Pages.GetCIHashes"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:WDACConfig.Pages"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <Grid Margin="15,30,15,15">
+        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="10" Margin="15,0,15,0">
+
+            <!-- Button to trigger file picker -->
+            <Button x:Name="PickFileButton" Content="Browse for a file" Click="PickFile_Click"
+            HorizontalAlignment="Center"
+           ToolTipService.ToolTip="Click/Tap to choose a file from your device."/>
+
+            <!-- TextBlocks to display the returned hash values -->
+            <TextBlock Text="SHA1 Page:"/>
+            <TextBox x:Name="Sha1PageTextBox" IsReadOnly="True" MinWidth="300"/>
+
+            <TextBlock Text="SHA256 Page:"/>
+            <TextBox x:Name="Sha256PageTextBox" IsReadOnly="True" MinWidth="300"/>
+
+            <TextBlock Text="SHA1 Authenticode:"/>
+            <TextBox x:Name="Sha1AuthenticodeTextBox" IsReadOnly="True" MinWidth="300"/>
+
+            <TextBlock Text="SHA256 Authenticode:"/>
+            <TextBox x:Name="Sha256AuthenticodeTextBox" IsReadOnly="True" MinWidth="300"/>
+        </StackPanel>
+    </Grid>
+</Page>

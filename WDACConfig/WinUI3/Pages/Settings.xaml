@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Page
+    x:Class="WDACConfig.Pages.Settings"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:WDACConfig.Pages"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:ui="using:CommunityToolkit.WinUI"
+    xmlns:win="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:controls="using:CommunityToolkit.WinUI.Controls"
+    mc:Ignorable="d">
+
+    <Page.Resources>
+        <!--  These styles can be referenced to create a consistent SettingsPage layout  -->
+
+        <!--  Spacing between cards  -->
+        <x:Double x:Key="SettingsCardSpacing">4</x:Double>
+
+        <!--  Style (inc. the correct spacing) of a section header  -->
+        <Style x:Key="SettingsSectionHeaderTextBlockStyle"
+               BasedOn="{StaticResource BodyStrongTextBlockStyle}"
+               TargetType="TextBlock">
+            <Style.Setters>
+                <Setter Property="Margin" Value="1,30,0,6" />
+            </Style.Setters>
+        </Style>
+    </Page.Resources>
+
+
+    <ScrollViewer>
+        <Grid Margin="20">
+            <StackPanel HorizontalAlignment="Stretch"
+                        Spacing="{StaticResource SettingsCardSpacing}">
+
+                <win:StackPanel.ChildrenTransitions>
+                    <win:EntranceThemeTransition FromVerticalOffset="50" />
+                    <win:RepositionThemeTransition IsStaggeringEnabled="False" />
+                </win:StackPanel.ChildrenTransitions>
+
+
+                <TextBlock Style="{StaticResource SettingsSectionHeaderTextBlockStyle}"
+                           Text="User Configurations" />
+
+
+                <controls:SettingsExpander Description="The following are the contents of the User Configurations JSON file"
+                                           Header="User Configs"
+                                           HeaderIcon="{ui:FontIcon Glyph=&#xE71D;}">
+                    <Button Content="Get Configuration"  Click="GetConfigurationButton_Click"
+                            Style="{StaticResource AccentButtonStyle}" />
+
+                    <controls:SettingsExpander.Items>
+
+                        <!--
+
+                        <controls:SettingsCard Header="A basic SettingsCard within an SettingsExpander">
+                            <Button Content="Button" />
+                        </controls:SettingsCard>
+
+                        <controls:SettingsCard Description="SettingsCard within an Expander can be made clickable too!"
+                                               Header="This item can be clicked"
+                                               IsClickEnabled="True" />
+-->
+
+                        <controls:SettingsCard ContentAlignment="Left">
+
+
+                            <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+
+                                <!-- Signed Policy Path -->
+                                <controls:WrapPanel Orientation="Horizontal" Margin="0,0,0,10">
+                                    <TextBox Header="Signed Policy Path:" x:Name="SignedPolicyPathTextBox" MinWidth="300" Margin="0,0,10,0" VerticalAlignment="Center"/>
+                                    <CommandBar Background="Transparent" IsOpen="False" DefaultLabelPosition="Right" VerticalAlignment="Center" Margin="0,25,0,0">
+                                        <AppBarButton Icon="Save" Label="Save" Click="EditButton_Click" Tag="SignedPolicyPath"/>
+                                        <AppBarButton Icon="Clear" Label="Clear" Click="ClearButton_Click" Tag="SignedPolicyPath"/>
+                                        <AppBarButton Icon="Folder" Label="Browse" Click="BrowseButton_Click" Tag="SignedPolicyPath"/>
+                                    </CommandBar>
+                                </controls:WrapPanel>
+
+                                <!-- Unsigned Policy Path -->
+                                <controls:WrapPanel Orientation="Horizontal" Margin="0,0,0,10">
+                                    <TextBox Header="Unsigned Policy Path:" x:Name="UnsignedPolicyPathTextBox" MinWidth="300" Margin="0,0,10,0" VerticalAlignment="Center"/>
+                                    <CommandBar Background="Transparent" IsOpen="False" DefaultLabelPosition="Right" VerticalAlignment="Center" Margin="0,25,0,0">
+                                        <AppBarButton Icon="Save" Label="Save" Click="EditButton_Click" Tag="UnsignedPolicyPath"/>
+                                        <AppBarButton Icon="Clear" Label="Clear" Click="ClearButton_Click" Tag="UnsignedPolicyPath"/>
+                                        <AppBarButton Icon="Folder" Label="Browse" Click="BrowseButton_Click" Tag="UnsignedPolicyPath"/>
+                                    </CommandBar>
+                                </controls:WrapPanel>
+
+                                <!-- Sign Tool Custom Path -->
+                                <controls:WrapPanel Orientation="Horizontal" Margin="0,0,0,10">
+                                    <TextBox Header="Sign Tool Custom Path:" x:Name="SignToolCustomPathTextBox" MinWidth="300" Margin="0,0,10,0" VerticalAlignment="Center"/>
+                                    <CommandBar Background="Transparent" IsOpen="False" DefaultLabelPosition="Right" VerticalAlignment="Center" Margin="0,25,0,0">
+                                        <AppBarButton Icon="Save" Label="Save" Click="EditButton_Click" Tag="SignToolCustomPath"/>
+                                        <AppBarButton Icon="Clear" Label="Clear" Click="ClearButton_Click" Tag="SignToolCustomPath"/>
+                                        <AppBarButton Icon="Folder" Label="Browse" Click="BrowseButton_Click" Tag="SignToolCustomPath"/>
+                                    </CommandBar>
+                                </controls:WrapPanel>
+
+                                <!-- Certificate Common Name -->
+                                <controls:WrapPanel Orientation="Horizontal" Margin="0,0,0,10">
+                                    <TextBox Header="Certificate Common Name:" x:Name="CertificateCommonNameTextBox" MinWidth="300" Margin="0,0,10,0" VerticalAlignment="Center"/>
+                                    <CommandBar Background="Transparent" IsOpen="False" DefaultLabelPosition="Right" VerticalAlignment="Center" Margin="0,25,0,0">
+                                        <AppBarButton Icon="Save" Label="Save" Click="EditButton_Click" Tag="CertificateCommonName"/>
+                                        <AppBarButton Icon="Clear" Label="Clear" Click="ClearButton_Click" Tag="CertificateCommonName"/>
+                                    </CommandBar>
+                                </controls:WrapPanel>
+
+                                <!-- Certificate Path -->
+                                <controls:WrapPanel Orientation="Horizontal" Margin="0,0,0,10">
+                                    <TextBox Header="Certificate Path:" x:Name="CertificatePathTextBox" MinWidth="300" Margin="0,0,10,0" VerticalAlignment="Center"/>
+                                    <CommandBar Background="Transparent" IsOpen="False" DefaultLabelPosition="Right" VerticalAlignment="Center" Margin="0,25,0,0">
+                                        <AppBarButton Icon="Save" Label="Save" Click="EditButton_Click" Tag="CertificatePath"/>
+                                        <AppBarButton Icon="Clear" Label="Clear" Click="ClearButton_Click" Tag="CertificatePath"/>
+                                        <AppBarButton Icon="Folder" Label="Browse" Click="BrowseButton_Click" Tag="CertificatePath"/>
+                                    </CommandBar>
+                                </controls:WrapPanel>
+
+                                <!-- Strict Kernel Policy GUID -->
+                                <controls:WrapPanel Orientation="Horizontal" Margin="0,0,0,10">
+                                    <TextBox Header="Strict Kernel Policy GUID:" x:Name="StrictKernelPolicyGUIDTextBox" MinWidth="300" Margin="0,0,10,0" VerticalAlignment="Center"/>
+                                    <CommandBar Background="Transparent" IsOpen="False" DefaultLabelPosition="Right" VerticalAlignment="Center" Margin="0,25,0,0">
+                                        <AppBarButton Icon="Save" Label="Save" Click="EditButton_Click" Tag="StrictKernelPolicyGUID"/>
+                                        <AppBarButton Icon="Clear" Label="Clear" Click="ClearButton_Click" Tag="StrictKernelPolicyGUID"/>
+                                    </CommandBar>
+                                </controls:WrapPanel>
+
+                                <!-- Strict Kernel No Flight Roots Policy GUID -->
+                                <controls:WrapPanel Orientation="Horizontal" Margin="0,0,0,10">
+                                    <TextBox Header="Strict Kernel No Flight Roots Policy GUID:" x:Name="StrictKernelNoFlightRootsPolicyGUIDTextBox" MinWidth="300" Margin="0,0,10,0" VerticalAlignment="Center"/>
+                                    <CommandBar Background="Transparent" IsOpen="False" DefaultLabelPosition="Right" VerticalAlignment="Center" Margin="0,25,0,0">
+                                        <AppBarButton Icon="Save" Label="Save" Click="EditButton_Click" Tag="StrictKernelNoFlightRootsPolicyGUID"/>
+                                        <AppBarButton Icon="Clear" Label="Clear" Click="ClearButton_Click" Tag="StrictKernelNoFlightRootsPolicyGUID"/>
+                                    </CommandBar>
+                                </controls:WrapPanel>
+
+                                <!-- Strict Kernel Mode Policy Time of Deployment -->
+                                <controls:WrapPanel Orientation="Horizontal" Margin="0,0,0,10">
+                                    <TextBox Header="Strict Kernel Mode Policy Time of Deployment (YYYY-MM-DD):" x:Name="StrictKernelModePolicyTimeTextBox" MinWidth="300" Margin="0,0,10,0" VerticalAlignment="Center"/>
+                                    <CommandBar Background="Transparent" IsOpen="False" DefaultLabelPosition="Right" VerticalAlignment="Center" Margin="0,25,0,0">
+                                        <AppBarButton Icon="Save" Label="Save" Click="EditButton_Click" Tag="StrictKernelModePolicyTime"/>
+                                        <AppBarButton Icon="Clear" Label="Clear" Click="ClearButton_Click" Tag="StrictKernelModePolicyTime"/>
+                                    </CommandBar>
+                                </controls:WrapPanel>
+
+                                <!-- Last Update Check -->
+                                <controls:WrapPanel Orientation="Horizontal" Margin="0,0,0,10">
+                                    <TextBox Header="Last Update Check (YYYY-MM-DD):" x:Name="LastUpdateCheckTextBox" MinWidth="300" Margin="0,0,10,0" VerticalAlignment="Center"/>
+                                    <CommandBar Background="Transparent" IsOpen="False" DefaultLabelPosition="Right" VerticalAlignment="Center" Margin="0,25,0,0">
+                                        <AppBarButton Icon="Save" Label="Save" Click="EditButton_Click" Tag="LastUpdateCheck"/>
+                                        <AppBarButton Icon="Clear" Label="Clear" Click="ClearButton_Click" Tag="LastUpdateCheck"/>
+                                    </CommandBar>
+                                </controls:WrapPanel>
+
+
+                            </StackPanel>
+
+                        </controls:SettingsCard>
+                    </controls:SettingsExpander.Items>
+                </controls:SettingsExpander>
+
+
+                <!--
+
+                <controls:SettingsCard Description="Another card to show grouping of cards"
+                                       Header="Yet another SettingsCard"
+                                       HeaderIcon="{ui:FontIcon Glyph=&#xE768;}">
+                    <Button Content="Content" />
+                </controls:SettingsCard>
+
+                -->
+
+                <!--  Example 'About' section  -->
+                <TextBlock Style="{StaticResource SettingsSectionHeaderTextBlockStyle}"
+                           Text="About" />
+
+                <controls:SettingsExpander Description="© 2024. All rights reserved."
+                                           Header="AppControl Manager"
+                                           HeaderIcon="{ui:BitmapIcon Source=ms-appx:///Assets/Square44x44Logo.altform-lightunplated_targetsize-256.png}">
+                    <TextBlock win:IsTextSelectionEnabled="True"
+                               Foreground="{ThemeResource TextFillColorSecondaryBrush}"
+                               Text="Version 1.0.0.0" />
+                    <controls:SettingsExpander.Items>
+                        <controls:SettingsCard HorizontalContentAlignment="Left"
+                                               ContentAlignment="Left">
+                            <StackPanel Margin="-12,0,0,0"
+                                        Orientation="Vertical">
+                                <HyperlinkButton Content="GitHub repository" NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security" />
+                                <HyperlinkButton Content="WDACConfig page" NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDACConfig" />
+                                <HyperlinkButton Content="SpyNetGirl website" NavigateUri="https://spynetgirl.github.io/" />
+                                <HyperlinkButton Content="YouTube Channel" NavigateUri="https://www.youtube.com/@hotcakex" />
+                            </StackPanel>
+                        </controls:SettingsCard>
+                    </controls:SettingsExpander.Items>
+                </controls:SettingsExpander>
+                <HyperlinkButton Margin="0,8,0,0"
+                                 Content="Send feedback" NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/issues/new/choose" />
+            </StackPanel>
+        </Grid>
+    </ScrollViewer>
+</Page>

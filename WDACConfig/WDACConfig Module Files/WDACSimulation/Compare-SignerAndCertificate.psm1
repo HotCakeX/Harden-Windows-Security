@@ -15,9 +15,6 @@ Function Compare-SignerAndCertificate {
         [Parameter(Mandatory = $true)][WDACConfig.SimulationInput]$SimulationInput
     )
     Begin {
-        [System.Boolean]$Verbose = $PSBoundParameters.Verbose.IsPresent ? $true : $false
-        . "$([WDACConfig.GlobalVars]::ModuleRootPath)\CoreExt\PSDefaultParameterValues.ps1"
-
         # Get the extended file attributes
         [WDACConfig.ExFileInfo]$ExtendedFileInfo = [WDACConfig.ExFileInfo]::GetExtendedFileInfo($SimulationInput.FilePath)
     }
@@ -32,13 +29,13 @@ Function Compare-SignerAndCertificate {
                 continue
             }
 
-            # Write-Debug -Message "Checking the signer: $($Signer.Name)"
+            [WDACConfig.Logger]::Write("Checking the signer: $($Signer.Name)")
 
             # If the signer has any EKUs, try to match it with the file's EKU OIDs
             if ($Signer.HasEKU) {
 
-                Write-Debug -Message 'The signer has EKUs'
-                # Write-Debug -Message "The current file has $($SimulationInput.EKUOIDs.Count) EKUs"
+                [WDACConfig.Logger]::Write('The signer has EKUs')
+                [WDACConfig.Logger]::Write("The current file has $($SimulationInput.EKUOIDs.Count) EKUs")
 
                 # Check if any of the Signer's OIDs match any of the file's certificates' OIDs (which are basically Leaf certificates' EKU OIDs)
                 # This is used for all levels, not just WHQL levels
@@ -53,12 +50,12 @@ Function Compare-SignerAndCertificate {
                 # If both the file and signer had EKUs and they match
                 if ($EKUsMatch) {
 
-                    Write-Debug -Message "The EKUs of the signer matched with the file's EKUs"
+                    [WDACConfig.Logger]::Write("The EKUs of the signer matched with the file's EKUs")
 
                     # If the signer and file have matching EKUs and the signer is WHQL then start checking for OemID
                     if ($Signer.IsWHQL) {
 
-                        Write-Debug -Message 'The signer is WHQL'
+                        [WDACConfig.Logger]::Write('The signer is WHQL')
 
                         # At this point the file is definitely WHQL-Signed
 
@@ -120,7 +117,7 @@ Function Compare-SignerAndCertificate {
 
                                     [System.Collections.Hashtable[]]$CandidateFileAttrib = foreach ($Attrib in $signer.FileAttrib.GetEnumerator()) {
 
-                                        if ($ExtendedFileInfo.Version -ge $Attrib.Value.MinimumFileVersion) {
+                                        if ($ExtendedFileInfo.Version -ge [System.Version]::New($Attrib.Value.MinimumFileVersion)) {
                                             $Attrib.Value
                                         }
                                     }
@@ -133,7 +130,7 @@ Function Compare-SignerAndCertificate {
 
                                                 if (($null -ne $ExtendedFileInfo.$KeyItem) -and ($ExtendedFileInfo.$KeyItem -eq $FileAttrib.$KeyItem)) {
 
-                                                    [WDACConfig.VerboseLogger]::Write("The SpecificFileNameLevel is $KeyItem")
+                                                    [WDACConfig.Logger]::Write("The SpecificFileNameLevel is $KeyItem")
 
                                                     # If there was a match then assign the $KeyItem which is the name of the SpecificFileNameLevel option to the $CurrentFileInfo.SpecificFileNameLevelMatchCriteria
 
@@ -255,7 +252,7 @@ Function Compare-SignerAndCertificate {
 
                 }
                 else {
-                    Write-Debug -Message "The signer had EKUs but they didn't match with the file's EKUs"
+                    [WDACConfig.Logger]::Write("The signer had EKUs but they didn't match with the file's EKUs")
                     # If the signer has EKU but it didn't match with the file's EKU then skip the current signer
                     # as it shouldn't be used for any other levels
                     Continue
@@ -283,7 +280,7 @@ Function Compare-SignerAndCertificate {
 
                             [System.Collections.Hashtable[]]$CandidateFileAttrib = foreach ($Attrib in $signer.FileAttrib.GetEnumerator()) {
 
-                                if ($ExtendedFileInfo.Version -ge $Attrib.Value.MinimumFileVersion) {
+                                if ($ExtendedFileInfo.Version -ge [System.Version]::New($Attrib.Value.MinimumFileVersion)) {
                                     $Attrib.Value
                                 }
                             }
@@ -322,7 +319,7 @@ Function Compare-SignerAndCertificate {
 
                                         if (($null -ne $ExtendedFileInfo.$KeyItem) -and ($ExtendedFileInfo.$KeyItem -eq $FileAttrib.$KeyItem)) {
 
-                                            [WDACConfig.VerboseLogger]::Write("The SpecificFileNameLevel is $KeyItem")
+                                            [WDACConfig.Logger]::Write("The SpecificFileNameLevel is $KeyItem")
 
                                             # If there was a match then assign the $KeyItem which is the name of the SpecificFileNameLevel option to the $CurrentFileInfo.SpecificFileNameLevelMatchCriteria
                                             # And break out of the loop by validating the signer as suitable for FilePublisher level
@@ -460,7 +457,7 @@ Function Compare-SignerAndCertificate {
                         # Get all of the File Attributes associated with the signer and check if the file's version is greater than or equal to the minimum version in them
                         [System.Collections.Hashtable[]]$CandidateFileAttrib = foreach ($Attrib in $signer.FileAttrib.GetEnumerator()) {
 
-                            if ($ExtendedFileInfo.Version -ge $Attrib.Value.MinimumFileVersion) {
+                            if ($ExtendedFileInfo.Version -ge [System.Version]::New($Attrib.Value.MinimumFileVersion)) {
                                 $Attrib.Value
                             }
                         }
@@ -498,7 +495,7 @@ Function Compare-SignerAndCertificate {
 
                                     if (($null -ne $ExtendedFileInfo.$KeyItem) -and ($ExtendedFileInfo.$KeyItem -eq $FileAttrib.$KeyItem)) {
 
-                                        [WDACConfig.VerboseLogger]::Write("The SpecificFileNameLevel is $KeyItem")
+                                        [WDACConfig.Logger]::Write("The SpecificFileNameLevel is $KeyItem")
 
                                         # If there was a match then assign the $KeyItem which is the name of the SpecificFileNameLevel option to the $CurrentFileInfo.SpecificFileNameLevelMatchCriteria
                                         # And break out of the loop by validating the signer as suitable for FilePublisher level

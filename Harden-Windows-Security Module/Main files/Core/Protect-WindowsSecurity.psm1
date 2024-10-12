@@ -507,12 +507,11 @@ Function Protect-WindowsSecurity {
     UAC_NoFastSwitching -> Hide entry points for fast user switching
     UAC_OnlyElevateSigned -> Only elevate signed and validated executables
     WindowsNetworking_BlockNTLM -> Will block NTLM completely
+    Miscellaneous_WindowsProtectedPrint -> Enables Windows Protected Print Mode
     CountryIPBlocking_OFAC -> Include the IP ranges of OFAC Sanctioned Countries in the firewall block rules
 
     Each of the switch parameters above will be dynamically generated based on the categories you choose.
     For example, if you choose to run the Microsoft Security Baselines category, the SecBaselines_NoOverrides switch parameter will be generated and you can use it to apply the Microsoft Security Baselines without the optional overrides.
-.COMPONENT
-    PowerShell
 .FUNCTIONALITY
     Applies the hardening measures described in the GitHub readme.
 .PARAMETER GUI

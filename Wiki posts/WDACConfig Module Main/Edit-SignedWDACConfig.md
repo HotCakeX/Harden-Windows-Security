@@ -27,7 +27,7 @@ Edit-SignedWDACConfig
 
 ## Description
 
-While a Signed Windows Defender Application Control (WDAC) policy is already deployed on the system, rebootlessly turns on Audit mode in it, which will allow you to install a new app that was otherwise getting blocked.
+While a Signed App Control for Business policy is already deployed on the system, rebootlessly turns on Audit mode in it, which will allow you to install a new app that was otherwise getting blocked.
 
 After installation, you will be able to browse for the path(s) of the installed app(s) for scanning, which is optional.
 
@@ -574,7 +574,7 @@ Press TAB to open the file picker GUI and browse for SignTool.exe
 
 ### -RequireEVSigners
 
-Indicates that the created/deployed policy will have [Require EV Signers](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/wdac-wizard-create-base-policy#advanced-policy-rules-description) policy rule option.
+Indicates that the created/deployed policy will have [Require EV Signers](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/app-control-for-business/design/appcontrol-wizard-create-base-policy#advanced-policy-rules-description) policy rule option.
 
 * In addition to being WHQL signed, this rule requires that drivers must have been submitted by a partner that has an Extended Verification (EV) certificate. All Windows 10 and later, or Windows 11 drivers will meet this requirement.
 

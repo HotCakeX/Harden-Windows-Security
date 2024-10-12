@@ -75,13 +75,7 @@ Function New-SupplementalWDACConfig {
         [Parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$SkipVersionCheck
     )
     Begin {
-        [System.Boolean]$Verbose = $PSBoundParameters.Verbose.IsPresent ? $true : $false
-        [System.Boolean]$Debug = $PSBoundParameters.Debug.IsPresent ? $true : $false
         [WDACConfig.LoggerInitializer]::Initialize($VerbosePreference, $DebugPreference, $Host)
-        . "$([WDACConfig.GlobalVars]::ModuleRootPath)\CoreExt\PSDefaultParameterValues.ps1"
-
-        Write-Verbose -Message 'Importing the required sub-modules'
-        Import-Module -Force -FullyQualifiedName "$([WDACConfig.GlobalVars]::ModuleRootPath)\Shared\Update-Self.psm1"
 
         if ($PSBoundParameters['Certificates']) {
             Import-Module -Force -FullyQualifiedName @(
@@ -90,8 +84,7 @@ Function New-SupplementalWDACConfig {
             )
         }
 
-        # if -SkipVersionCheck wasn't passed, run the updater
-        if (-NOT $SkipVersionCheck) { Update-Self -InvocationStatement $MyInvocation.Statement }
+        if (-NOT $SkipVersionCheck) { Update-WDACConfigPSModule -InvocationStatement $MyInvocation.Statement }
 
         if ([WDACConfig.GlobalVars]::ConfigCIBootstrap -eq $false) {
             Invoke-MockConfigCIBootstrap
@@ -103,8 +96,8 @@ Function New-SupplementalWDACConfig {
         #Region User-Configurations-Processing-Validation
         # If PolicyPath was not provided by user, check if a valid value exists in user configs, if so, use it, otherwise throw an error
         if (!$PolicyPath) {
-            if ([System.IO.File]::Exists((Get-CommonWDACConfig -UnsignedPolicyPath))) {
-                $PolicyPath = Get-CommonWDACConfig -UnsignedPolicyPath
+            if ([System.IO.File]::Exists(([WDACConfig.UserConfiguration]::Get().UnsignedPolicyPath))) {
+                $PolicyPath = [WDACConfig.UserConfiguration]::Get().UnsignedPolicyPath
             }
             else {
                 throw 'PolicyPath parameter cannot be empty and no valid user configuration was found for UnsignedPolicyPath.'
@@ -114,12 +107,11 @@ Function New-SupplementalWDACConfig {
 
         # Ensure when user selects the -Deploy parameter, the base policy is not signed
         if ($Deploy) {
-            $XmlTest = [System.Xml.XmlDocument](Get-Content -Path $PolicyPath)
-            $RedFlag1 = $XmlTest.SiPolicy.SupplementalPolicySigners.SupplementalPolicySigner.SignerId
-            $RedFlag2 = $XmlTest.SiPolicy.UpdatePolicySigners.UpdatePolicySigner.SignerId
-            if ($RedFlag1 -or $RedFlag2) {
+            if ([WDACConfig.PolicyFileSigningStatusDetection]::Check($PolicyPath) -eq [WDACConfig.PolicyFileSigningStatusDetection+SigningStatus]::Signed) {
                 Throw 'You are using -Deploy parameter and the selected base policy is Signed. Please use Deploy-SignedWDACConfig to deploy it.'
             }
+            # Send $true to set it as valid if no errors were thrown before
+            $true
         }
 
         # Detecting if Confirm switch is used to bypass the confirmation prompts
@@ -148,7 +140,7 @@ Function New-SupplementalWDACConfig {
                 $CurrentStep++
                 Write-Progress -Id 19 -Activity 'Processing user selected folders' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
-                Write-Verbose -Message 'Processing Program Folder From User input'
+                [WDACConfig.Logger]::Write('Processing Program Folder From User input')
                 # Creating a hash table to dynamically add parameters based on user input and pass them to New-Cipolicy cmdlet
                 [System.Collections.Hashtable]$PolicyMakerHashTable = @{
                     FilePath               = $FinalSupplementalPath
@@ -174,23 +166,21 @@ Function New-SupplementalWDACConfig {
                 $CurrentStep++
                 Write-Progress -Id 19 -Activity 'Configuring the Supplemental policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
-                Write-Verbose -Message 'Changing the policy type from base to Supplemental, assigning its name and resetting its policy ID'
-                $null = Set-CIPolicyIdInfo -FilePath $FinalSupplementalPath -ResetPolicyID -BasePolicyToSupplementPath $PolicyPath -PolicyName "$SuppPolicyName - $(Get-Date -Format 'MM-dd-yyyy')"
+                [WDACConfig.Logger]::Write('Changing the policy type from base to Supplemental, assigning its name and resetting its policy ID')
+                $null = [WDACConfig.SetCiPolicyInfo]::Set($FinalSupplementalPath, $true, "$SuppPolicyName - $(Get-Date -Format 'MM-dd-yyyy')", $null, $PolicyPath)
 
-                Write-Verbose -Message 'Setting the Supplemental policy version to 1.0.0.0'
-                Set-CIPolicyVersion -FilePath $FinalSupplementalPath -Version '1.0.0.0'
+                [WDACConfig.SetCiPolicyInfo]::Set($FinalSupplementalPath, ([version]'1.0.0.0'))
 
-                Set-CiRuleOptions -FilePath $FinalSupplementalPath -Template Supplemental
+                [WDACConfig.CiRuleOptions]::Set($FinalSupplementalPath, [WDACConfig.CiRuleOptions+PolicyTemplate]::Supplemental, $null, $null, $null, $null, $null, $null, $null, $null, $null)
 
-                Write-Verbose -Message 'Converting the Supplemental policy XML file to a CIP file'
+                [WDACConfig.Logger]::Write('Converting the Supplemental policy XML file to a CIP file')
                 $null = ConvertFrom-CIPolicy -XmlFilePath $FinalSupplementalPath -BinaryFilePath $FinalSupplementalCIPPath
 
                 if ($Deploy) {
                     $CurrentStep++
                     Write-Progress -Id 19 -Activity 'Deploying the Supplemental policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
-                    Write-Verbose -Message 'Deploying the Supplemental policy'
-                    $null = &'C:\Windows\System32\CiTool.exe' --update-policy $FinalSupplementalCIPPath -json
+                    [WDACConfig.CiToolHelper]::UpdatePolicy($FinalSupplementalCIPPath)
                     Write-ColorfulTextWDACConfig -Color Pink -InputText "A Supplemental policy with the name '$SuppPolicyName' has been deployed."
                 }
                 Write-Progress -Id 19 -Activity 'Complete.' -Completed
@@ -206,29 +196,27 @@ Function New-SupplementalWDACConfig {
                 Write-Progress -Id 20 -Activity 'Creating the Supplemental policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
                 # Using Windows PowerShell to handle serialized data since PowerShell core throws an error
-                Write-Verbose -Message 'Creating the Supplemental policy file'
+                [WDACConfig.Logger]::Write('Creating the Supplemental policy file')
                 powershell.exe -NoProfile -Command {
                     $RulesWildCards = New-CIPolicyRule -FilePathRule $args[0]
                     New-CIPolicy -MultiplePolicyFormat -FilePath "$($args[2])\SupplementalPolicy $($args[1]).xml" -Rules $RulesWildCards
                 } -args $FolderPath, $SuppPolicyName, $StagingArea
 
-                Write-Verbose -Message 'Changing the policy type from base to Supplemental, assigning its name and resetting its policy ID'
-                $null = Set-CIPolicyIdInfo -FilePath $FinalSupplementalPath -ResetPolicyID -BasePolicyToSupplementPath $PolicyPath -PolicyName "$SuppPolicyName - $(Get-Date -Format 'MM-dd-yyyy')"
+                [WDACConfig.Logger]::Write('Changing the policy type from base to Supplemental, assigning its name and resetting its policy ID')
+                $null = [WDACConfig.SetCiPolicyInfo]::Set($FinalSupplementalPath, $true, "$SuppPolicyName - $(Get-Date -Format 'MM-dd-yyyy')", $null, $PolicyPath)
 
-                Write-Verbose -Message 'Setting the Supplemental policy version to 1.0.0.0'
-                Set-CIPolicyVersion -FilePath $FinalSupplementalPath -Version '1.0.0.0'
+                [WDACConfig.SetCiPolicyInfo]::Set($FinalSupplementalPath, ([version]'1.0.0.0'))
 
-                Set-CiRuleOptions -FilePath $FinalSupplementalPath -Template Supplemental
+                [WDACConfig.CiRuleOptions]::Set($FinalSupplementalPath, [WDACConfig.CiRuleOptions+PolicyTemplate]::Supplemental, $null, $null, $null, $null, $null, $null, $null, $null, $null)
 
-                Write-Verbose -Message 'Converting the Supplemental policy XML file to a CIP file'
+                [WDACConfig.Logger]::Write('Converting the Supplemental policy XML file to a CIP file')
                 $null = ConvertFrom-CIPolicy -XmlFilePath $FinalSupplementalPath -BinaryFilePath $FinalSupplementalCIPPath
 
                 if ($Deploy) {
                     $CurrentStep++
                     Write-Progress -Id 20 -Activity 'Deploying the Supplemental policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
-                    Write-Verbose -Message 'Deploying the Supplemental policy'
-                    $null = &'C:\Windows\System32\CiTool.exe' --update-policy $FinalSupplementalCIPPath -json
+                    [WDACConfig.CiToolHelper]::UpdatePolicy($FinalSupplementalCIPPath)
                     Write-ColorfulTextWDACConfig -Color Pink -InputText "A Supplemental policy with the name '$SuppPolicyName' has been deployed."
                 }
                 Write-Progress -Id 20 -Activity 'Complete.' -Completed
@@ -252,7 +240,7 @@ Function New-SupplementalWDACConfig {
                     # Change the color for the list items to plum
                     $PSStyle.Formatting.FormatAccent = "$($PSStyle.Foreground.FromRGB(221,160,221))"
 
-                    Write-Verbose -Message 'Displaying the installed Appx packages based on the supplied name'
+                    [WDACConfig.Logger]::Write('Displaying the installed Appx packages based on the supplied name')
                     Get-AppxPackage -Name $PackageName | Select-Object -Property Name, Publisher, version, PackageFamilyName, PackageFullName, InstallLocation, Dependencies, SignatureKind, Status
 
                     # Prompt for confirmation before proceeding
@@ -261,7 +249,7 @@ Function New-SupplementalWDACConfig {
                         $CurrentStep++
                         Write-Progress -Id 21 -Activity 'Creating the Supplemental policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
-                        Write-Verbose -Message 'Creating a policy for the supplied Appx package name and its dependencies (if any)'
+                        [WDACConfig.Logger]::Write('Creating a policy for the supplied Appx package name and its dependencies (if any)')
                         powershell.exe -NoProfile -Command {
                             # Get all the packages based on the supplied name
                             [Microsoft.Windows.Appx.PackageManager.Commands.AppxPackage[]]$Package = Get-AppxPackage -Name $args[0]
@@ -287,23 +275,21 @@ Function New-SupplementalWDACConfig {
                             New-CIPolicy -MultiplePolicyFormat -FilePath "$($args[2])\SupplementalPolicy $($args[1]).xml" -Rules $Rules
                         } -args $PackageName, $SuppPolicyName, $StagingArea
 
-                        Write-Verbose -Message 'Converting the policy type from base to Supplemental, assigning its name and resetting its policy ID'
-                        $null = Set-CIPolicyIdInfo -FilePath $FinalSupplementalPath -ResetPolicyID -BasePolicyToSupplementPath $PolicyPath -PolicyName "$SuppPolicyName - $(Get-Date -Format 'MM-dd-yyyy')"
+                        [WDACConfig.Logger]::Write('Converting the policy type from base to Supplemental, assigning its name and resetting its policy ID')
+                        $null = [WDACConfig.SetCiPolicyInfo]::Set($FinalSupplementalPath, $true, "$SuppPolicyName - $(Get-Date -Format 'MM-dd-yyyy')", $null, $PolicyPath)
 
-                        Write-Verbose -Message 'Setting the Supplemental policy version to 1.0.0.0'
-                        Set-CIPolicyVersion -FilePath $FinalSupplementalPath -Version '1.0.0.0'
+                        [WDACConfig.SetCiPolicyInfo]::Set($FinalSupplementalPath, ([version]'1.0.0.0'))
 
-                        Set-CiRuleOptions -FilePath $FinalSupplementalPath -Template Supplemental
+                        [WDACConfig.CiRuleOptions]::Set($FinalSupplementalPath, [WDACConfig.CiRuleOptions+PolicyTemplate]::Supplemental, $null, $null, $null, $null, $null, $null, $null, $null, $null)
 
-                        Write-Verbose -Message 'Converting the Supplemental policy XML file to a CIP file'
+                        [WDACConfig.Logger]::Write('Converting the Supplemental policy XML file to a CIP file')
                         $null = ConvertFrom-CIPolicy -XmlFilePath $FinalSupplementalPath -BinaryFilePath $FinalSupplementalCIPPath
 
                         if ($Deploy) {
                             $CurrentStep++
                             Write-Progress -Id 21 -Activity 'Deploying the Supplemental policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
-                            Write-Verbose -Message 'Deploying the Supplemental policy'
-                            $null = &'C:\Windows\System32\CiTool.exe' --update-policy $FinalSupplementalCIPPath -json
+                            [WDACConfig.CiToolHelper]::UpdatePolicy($FinalSupplementalCIPPath)
                             Write-ColorfulTextWDACConfig -Color Pink -InputText "A Supplemental policy with the name '$SuppPolicyName' has been deployed."
                         }
                     }
@@ -329,10 +315,10 @@ Function New-SupplementalWDACConfig {
                 $CurrentStep++
                 Write-Progress -Id 33 -Activity 'Preparing the policy template' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
-                Write-Verbose -Message 'Copying the template policy to the staging area'
+                [WDACConfig.Logger]::Write('Copying the template policy to the staging area')
                 Copy-Item -LiteralPath 'C:\Windows\schemas\CodeIntegrity\ExamplePolicies\AllowAll.xml' -Destination $FinalSupplementalPath -Force
 
-                Write-Verbose -Message 'Emptying the policy file in preparation for the new data insertion'
+                [WDACConfig.Logger]::Write('Emptying the policy file in preparation for the new data insertion')
                 Clear-CiPolicy_Semantic -Path $FinalSupplementalPath
 
                 $CurrentStep++
@@ -364,23 +350,21 @@ Function New-SupplementalWDACConfig {
                 $CurrentStep++
                 Write-Progress -Id 33 -Activity 'Finalizing the Supplemental policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
-                Write-Verbose -Message 'Converting the policy type from base to Supplemental, assigning its name and resetting its policy ID'
-                $null = Set-CIPolicyIdInfo -FilePath $FinalSupplementalPath -ResetPolicyID -BasePolicyToSupplementPath $PolicyPath -PolicyName "$SuppPolicyName - $(Get-Date -Format 'MM-dd-yyyy')"
+                [WDACConfig.Logger]::Write('Converting the policy type from base to Supplemental, assigning its name and resetting its policy ID')
+                $null = [WDACConfig.SetCiPolicyInfo]::Set($FinalSupplementalPath, $true, "$SuppPolicyName - $(Get-Date -Format 'MM-dd-yyyy')", $null, $PolicyPath)
 
-                Write-Verbose -Message 'Setting the Supplemental policy version to 1.0.0.0'
-                Set-CIPolicyVersion -FilePath $FinalSupplementalPath -Version '1.0.0.0'
+                [WDACConfig.SetCiPolicyInfo]::Set($FinalSupplementalPath, ([version]'1.0.0.0'))
 
-                Set-CiRuleOptions -FilePath $FinalSupplementalPath -Template Supplemental
+                [WDACConfig.CiRuleOptions]::Set($FinalSupplementalPath, [WDACConfig.CiRuleOptions+PolicyTemplate]::Supplemental, $null, $null, $null, $null, $null, $null, $null, $null, $null)
 
-                Write-Verbose -Message 'Converting the Supplemental policy XML file to a CIP file'
+                [WDACConfig.Logger]::Write('Converting the Supplemental policy XML file to a CIP file')
                 $null = ConvertFrom-CIPolicy -XmlFilePath $FinalSupplementalPath -BinaryFilePath $FinalSupplementalCIPPath
 
                 if ($Deploy) {
                     $CurrentStep++
                     Write-Progress -Id 33 -Activity 'Deploying the Supplemental policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
-                    Write-Verbose -Message 'Deploying the Supplemental policy'
-                    $null = &'C:\Windows\System32\CiTool.exe' --update-policy $FinalSupplementalCIPPath -json
+                    [WDACConfig.CiToolHelper]::UpdatePolicy($FinalSupplementalCIPPath)
                     Write-ColorfulTextWDACConfig -Color Pink -InputText "A Supplemental policy with the name '$SuppPolicyName' has been deployed."
                 }
 
@@ -401,10 +385,10 @@ Function New-SupplementalWDACConfig {
             }
 
             # Copy the final files to the user config directory
-            if (-NOT $NoCopy) {
+            if (!$NoCopy) {
                 Copy-Item -Path ($Deploy ? $FinalSupplementalPath : $FinalSupplementalPath, $FinalSupplementalCIPPath) -Destination ([WDACConfig.GlobalVars]::UserConfigDir) -Force
             }
-            if (-NOT $Debug) {
+            if (![WDACConfig.GlobalVars]::DebugPreference) {
                 Remove-Item -Path $StagingArea -Recurse -Force
             }
         }
@@ -417,11 +401,7 @@ Function New-SupplementalWDACConfig {
 .LINK
     https://github.com/HotCakeX/Harden-Windows-Security/wiki/New-SupplementalWDACConfig
 .DESCRIPTION
-    Using official Microsoft methods, configure and use Windows Defender Application Control
-.COMPONENT
-    Windows Defender Application Control, ConfigCI PowerShell module
-.FUNCTIONALITY
-    Automate various tasks related to Windows Defender Application Control (WDAC)
+    Using official Microsoft methods, configure and use App Control for Business
 .PARAMETER Normal
     Make a Supplemental policy by scanning a directory, you can optionally use other parameters too to fine tune the scan process.
 .PARAMETER PathWildCards

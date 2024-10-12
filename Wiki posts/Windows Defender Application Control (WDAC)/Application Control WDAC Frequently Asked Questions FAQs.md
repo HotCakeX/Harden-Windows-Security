@@ -86,7 +86,7 @@ There is no limit on how many Application Control (WDAC) policies you can deploy
 
 <br>
 
-ISG stands for [The Intelligent Security Graph](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/design/use-wdac-with-intelligent-security-graph). It's a very powerful AI-based system that processes Trillions of signals from all kinds of data sources every day. You can utilize it as the arbiter in WDAC policies so it can help you allow trusted apps and block unknown or malicious apps automatically.
+ISG stands for [The Intelligent Security Graph](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/app-control-for-business/design/use-appcontrol-with-intelligent-security-graph). It's a very powerful AI-based system that processes Trillions of signals from all kinds of data sources every day. You can utilize it as the arbiter in WDAC policies so it can help you allow trusted apps and block unknown or malicious apps automatically.
 
 <br>
 
@@ -96,7 +96,7 @@ ISG stands for [The Intelligent Security Graph](https://learn.microsoft.com/en-u
 
 <br>
 
-Smart App Control is an automated AI-based Application Control mechanism that uses the same underlying components as WDAC (Windows Defender Application Control). It can be used in all Windows editions and provides great level of security by default for all systems it's enabled on.
+Smart App Control is an automated AI-based Application Control mechanism that uses the same underlying components as App Control for Business. It can be used in all Windows editions and provides great level of security by default for all systems it's enabled on.
 
 <br>
 

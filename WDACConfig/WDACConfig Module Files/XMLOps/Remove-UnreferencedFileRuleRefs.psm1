@@ -15,8 +15,6 @@ function Remove-UnreferencedFileRuleRefs {
         [Parameter(Mandatory = $true)][System.IO.FileInfo]$XmlFilePath
     )
     Begin {
-        . "$([WDACConfig.GlobalVars]::ModuleRootPath)\CoreExt\PSDefaultParameterValues.ps1"
-
         [System.Xml.XmlDocument]$XmlContent = Get-Content $XmlFilePath
     }
     Process {

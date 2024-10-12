@@ -28,15 +28,8 @@ Function Build-WDACCertificate {
         [System.Management.Automation.SwitchParameter]$SkipVersionCheck
     )
     Begin {
-        [System.Boolean]$Verbose = $PSBoundParameters.Verbose.IsPresent ? $true : $false
         [WDACConfig.LoggerInitializer]::Initialize($VerbosePreference, $DebugPreference, $Host)
-        . "$([WDACConfig.GlobalVars]::ModuleRootPath)\CoreExt\PSDefaultParameterValues.ps1"
-
-        Write-Verbose -Message 'Importing the required sub-modules'
-        Import-Module -Force -FullyQualifiedName "$([WDACConfig.GlobalVars]::ModuleRootPath)\Shared\Update-Self.psm1"
-
-        # if -SkipVersionCheck wasn't passed, run the updater
-        if (-NOT $SkipVersionCheck) { Update-Self -InvocationStatement $MyInvocation.Statement }
+        if (-NOT $SkipVersionCheck) { Update-WDACConfigPSModule -InvocationStatement $MyInvocation.Statement }
 
         # Define a staging area for Build-WDACCertificate cmdlet
         [System.IO.DirectoryInfo]$StagingArea = Join-Path -Path ([WDACConfig.GlobalVars]::UserConfigDir) -ChildPath 'StagingArea' -AdditionalChildPath 'Build-WDACCertificate'
@@ -62,7 +55,7 @@ Function Build-WDACCertificate {
 
         if (!$Password) {
 
-            Write-Verbose -Message 'Prompting the user to enter a password for the certificate because it was not passed as a parameter.'
+            [WDACConfig.Logger]::Write('Prompting the user to enter a password for the certificate because it was not passed as a parameter.')
 
             do {
                 [System.Security.SecureString]$Password1 = $(Write-ColorfulTextWDACConfig -Color Lavender -InputText 'Enter a password for the certificate (at least 5 characters)'; Read-Host -AsSecureString)
@@ -83,7 +76,7 @@ Function Build-WDACCertificate {
             until ( $TheyMatch -and ($Password1.Length -ge 5) -and ($Password2.Length -ge 5) )
         }
 
-        Write-Verbose -Message 'Checking if a certificate with the same common name already exists.'
+        [WDACConfig.Logger]::Write('Checking if a certificate with the same common name already exists.')
         [System.Security.Cryptography.X509Certificates.X509Certificate2[]]$DuplicateCerts = foreach ($Item in (Get-ChildItem -Path 'Cert:\CurrentUser\My' -CodeSigningCert)) {
             if ($Item.Subject -ieq "CN=$CommonName") {
                 $Item
@@ -109,7 +102,7 @@ Function Build-WDACCertificate {
 
             if ($BuildingMethod -ieq 'Method1') {
 
-                Write-Verbose -Message 'Building the certificate using Method1.'
+                [WDACConfig.Logger]::Write('Building the certificate using Method1.')
 
                 [System.String]$Inf = @"
 [Version]
@@ -183,7 +176,7 @@ ValidityPeriod = Years
 
             elseif ($BuildingMethod -eq 'Method2') {
 
-                Write-Verbose -Message 'Building the certificate using Method2.'
+                [WDACConfig.Logger]::Write('Building the certificate using Method2.')
 
                 # Create a hashtable of parameter names and values
                 [System.Collections.Hashtable]$Params = @{
@@ -209,7 +202,7 @@ ValidityPeriod = Years
                 [System.String]$NewCertificateThumbprint = $NewCertificate.Thumbprint
             }
 
-            Write-Verbose -Message 'Finding the certificate that was just created by its thumbprint'
+            [WDACConfig.Logger]::Write('Finding the certificate that was just created by its thumbprint')
             [System.Security.Cryptography.X509Certificates.X509Certificate2]$TheCert = foreach ($Cert in (Get-ChildItem -Path 'Cert:\CurrentUser\My' -CodeSigningCert)) {
                 if ($Cert.Thumbprint -eq $NewCertificateThumbprint) {
                     $Cert
@@ -218,23 +211,23 @@ ValidityPeriod = Years
 
             [System.IO.FileInfo]$CertificateOutputPath = Join-Path -Path ([WDACConfig.GlobalVars]::UserConfigDir) -ChildPath "$FileName.cer"
 
-            Write-Verbose -Message "Exporting the certificate (public key only) to $FileName.cer"
+            [WDACConfig.Logger]::Write("Exporting the certificate (public key only) to $FileName.cer")
             $null = Export-Certificate -Cert $TheCert -FilePath $CertificateOutputPath -Type 'CERT' -Force
 
-            Write-Verbose -Message "Exporting the certificate (public and private keys) to $FileName.pfx"
+            [WDACConfig.Logger]::Write("Exporting the certificate (public and private keys) to $FileName.pfx")
             $null = Export-PfxCertificate -Cert $TheCert -CryptoAlgorithmOption 'AES256_SHA256' -Password $Password -ChainOption 'BuildChain' -FilePath (Join-Path -Path ([WDACConfig.GlobalVars]::UserConfigDir) -ChildPath "$FileName.pfx") -Force
 
-            Write-Verbose -Message 'Removing the certificate from the certificate store'
+            [WDACConfig.Logger]::Write('Removing the certificate from the certificate store')
             $TheCert | Remove-Item -Force
 
-            Write-Verbose -Message 'Importing the certificate to the certificate store again, this time with the private key protected by VSM (Virtual Secure Mode - Virtualization Based Security)'
+            [WDACConfig.Logger]::Write('Importing the certificate to the certificate store again, this time with the private key protected by VSM (Virtual Secure Mode - Virtualization Based Security)')
             $null = Import-PfxCertificate -ProtectPrivateKey 'VSM' -FilePath (Join-Path -Path ([WDACConfig.GlobalVars]::UserConfigDir) -ChildPath "$FileName.pfx") -CertStoreLocation 'Cert:\CurrentUser\My' -Password $Password
 
-            Write-Verbose -Message 'Saving the common name of the certificate to the User configurations'
-            $null = Set-CommonWDACConfig -CertCN $CommonName
+            [WDACConfig.Logger]::Write('Saving the common name of the certificate to the User configurations')
+            $null = [WDACConfig.UserConfiguration]::Set($null, $null, $null, $CommonName, $null, $null, $null, $null , $null)
 
-            Write-Verbose -Message 'Saving the path of the .cer file of the certificate to the User configurations'
-            $null = Set-CommonWDACConfig -CertPath $CertificateOutputPath
+            [WDACConfig.Logger]::Write('Saving the path of the .cer file of the certificate to the User configurations')
+            $null = [WDACConfig.UserConfiguration]::Set($null, $null, $null, $null, $CertificateOutputPath, $null, $null, $null , $null)
         }
         catch {
             throw $_
@@ -275,12 +268,12 @@ ValidityPeriod = Years
     Skips the version check for the module
 .DESCRIPTION
     Builds a self-signed certificate for use with WDAC that meets all of the requirements for a WDAC policy signing certificate.
-    https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/deployment/create-code-signing-cert-for-wdac
+    https://learn.microsoft.com/en-us/windows/security/application-security/application-control/app-control-for-business/deployment/create-code-signing-cert-for-appcontrol
 .NOTES
     For Method1 INF creation notes:
 
     2.5.29.19 = {text}ca=0pathlength=0 -> adds basic constraints to the certificate request.
-    X500NameFlags = "CERT_NAME_STR_DISABLE_UTF8_DIR_STR_FLAG" -> For setting the encoding to printable string and disabling UTF-8 encoding, required for WDAC policy signing certificate - > https://learn.microsoft.com/en-us/windows/security/application-security/application-control/windows-defender-application-control/deployment/create-code-signing-cert-for-wdac
+    X500NameFlags = "CERT_NAME_STR_DISABLE_UTF8_DIR_STR_FLAG" -> For setting the encoding to printable string and disabling UTF-8 encoding, required for WDAC policy signing certificate - > https://learn.microsoft.com/en-us/windows/security/application-security/application-control/app-control-for-business/deployment/create-code-signing-cert-for-appcontrol
 
     For Method2 New-SelfSignedCertificate notes:
 

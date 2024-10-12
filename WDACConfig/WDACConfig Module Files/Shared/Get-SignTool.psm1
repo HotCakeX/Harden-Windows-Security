@@ -18,8 +18,6 @@ Function Get-SignTool {
         [parameter(Mandatory = $false)][System.IO.FileInfo]$SignToolExePathInput
     )
     Begin {
-        . "$([WDACConfig.GlobalVars]::ModuleRootPath)\CoreExt\PSDefaultParameterValues.ps1"
-
         [System.IO.DirectoryInfo]$StagingArea = [WDACConfig.StagingArea]::NewStagingArea('Get-SignTool')
     }
 
@@ -30,7 +28,7 @@ Function Get-SignTool {
             # If Sign tool path wasn't provided by parameter, try to detect it automatically
             if (!$SignToolExePathInput) {
 
-                [WDACConfig.VerboseLogger]::Write('SignTool.exe path was not provided by parameter, trying to detect it automatically')
+                [WDACConfig.Logger]::Write('SignTool.exe path was not provided by parameter, trying to detect it automatically')
 
                 try {
                     if ($Env:PROCESSOR_ARCHITECTURE -eq 'AMD64') {
@@ -57,24 +55,24 @@ Function Get-SignTool {
                     if ($PSCmdlet.ShouldContinue('Would you like to try to download it from the official Microsoft server? It will be saved in the WDACConfig directory in Program Files.', 'SignTool.exe path was not provided, it could not be automatically detected on the system, nor could it be found in the common WDAC user configurations.')) {
 
                         if (-NOT (Get-PackageSource | Where-Object -FilterScript { $_.Name -ieq 'nuget.org' })) {
-                            [WDACConfig.VerboseLogger]::Write('Registering the nuget.org package source because it was not found in the system.')
+                            [WDACConfig.Logger]::Write('Registering the nuget.org package source because it was not found in the system.')
                             $null = Register-PackageSource -Name 'nuget.org' -ProviderName 'NuGet' -Location 'https://api.nuget.org/v3/index.json'
                         }
 
-                        [WDACConfig.VerboseLogger]::Write('Finding the latest version of the Microsoft.Windows.SDK.BuildTools package from NuGet')
+                        [WDACConfig.Logger]::Write('Finding the latest version of the Microsoft.Windows.SDK.BuildTools package from NuGet')
 
                         # Use a script block to convert the Version property to a semantic version object for proper sorting based on the version number
                         [Microsoft.PackageManagement.Packaging.SoftwareIdentity[]]$Package = Find-Package -Name 'Microsoft.Windows.SDK.BuildTools' -Source 'nuget.org' -AllVersions -Force -MinimumVersion '10.0.22621.3233'
 
                         [Microsoft.PackageManagement.Packaging.SoftwareIdentity]$Package = $Package | Sort-Object -Property { [System.Version]$_.Version } -Descending | Select-Object -First 1
 
-                        [WDACConfig.VerboseLogger]::Write('Downloading SignTool.exe from NuGet...')
+                        [WDACConfig.Logger]::Write('Downloading SignTool.exe from NuGet...')
                         $null = Save-Package -InputObject $Package -Path $StagingArea -Force
 
-                        [WDACConfig.VerboseLogger]::Write('Extracting the nupkg')
+                        [WDACConfig.Logger]::Write('Extracting the nupkg')
                         Expand-Archive -Path "$StagingArea\*.nupkg" -DestinationPath $StagingArea -Force
 
-                        [WDACConfig.VerboseLogger]::Write('Detecting the CPU Arch')
+                        [WDACConfig.Logger]::Write('Detecting the CPU Arch')
                         switch ($Env:PROCESSOR_ARCHITECTURE) {
                             'AMD64' { [System.String]$CPUArch = 'x64' }
                             'ARM64' { [System.String]$CPUArch = 'arm64' }
@@ -93,7 +91,7 @@ Function Get-SignTool {
             }
             # If Sign tool path was provided by parameter, use it
             else {
-                [WDACConfig.VerboseLogger]::Write('SignTool.exe path was provided by parameter')
+                [WDACConfig.Logger]::Write('SignTool.exe path was provided by parameter')
                 $SignToolExePathOutput = $SignToolExePathInput
             }
 
@@ -103,7 +101,7 @@ Function Get-SignTool {
             # At this point the SignTool.exe path was either provided by user, was found in the user configs, was detected automatically or was downloaded from NuGet
             try {
                 # Validate the SignTool executable
-                [WDACConfig.VerboseLogger]::Write("Validating the SignTool executable: $SignToolExePathOutput")
+                [WDACConfig.Logger]::Write("Validating the SignTool executable: $SignToolExePathOutput")
                 # Setting the minimum version of SignTool that is allowed to be executed
                 [System.Version]$WindowsSdkVersion = '10.0.22621.2428'
                 [System.Boolean]$GreenFlag1 = (((Get-Item -Path $SignToolExePathOutput).VersionInfo).ProductVersionRaw -ge $WindowsSdkVersion)
@@ -124,10 +122,10 @@ Function Get-SignTool {
                 Throw [System.Security.VerificationException] 'The SignTool executable was found but could not be verified. Please download the latest Windows SDK to get the newest SignTool executable. Official download link: http://aka.ms/WinSDK'
             }
             else {
-                [WDACConfig.VerboseLogger]::Write('SignTool executable was found and verified successfully.')
+                [WDACConfig.Logger]::Write('SignTool executable was found and verified successfully.')
 
-                [WDACConfig.VerboseLogger]::Write('Setting the SignTool path in the common WDAC user configurations')
-                $null = Set-CommonWDACConfig -SignToolPath $SignToolExePathOutput
+                [WDACConfig.Logger]::Write('Setting the SignTool path in the common WDAC user configurations')
+                $null = [WDACConfig.UserConfiguration]::Set($null, $null, $SignToolExePathOutput, $null, $null, $null, $null, $null , $null)
 
                 return $SignToolExePathOutput
             }

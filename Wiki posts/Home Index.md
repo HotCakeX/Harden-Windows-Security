@@ -28,6 +28,10 @@
 
 <br>
 
+## [AppControl Manager](https://github.com/HotCakeX/Harden-Windows-Security/wiki/AppControl-Manager)
+
+<br>
+
 ## <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/wings/purplewings.gif" width="50"> [Harden‐Windows‐Security‐Module](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Harden%E2%80%90Windows%E2%80%90Security%E2%80%90Module)
 
 <br>

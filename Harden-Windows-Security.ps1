@@ -188,7 +188,7 @@ Function AppControl {
         # Make sure this function is running as Administrator
         if (!([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
             Write-Warning -Message 'Please run this function as an Administrator'
-            Exit
+            break
         }
 
         Write-Verbose -Message 'Creating the working directory in the TEMP directory'

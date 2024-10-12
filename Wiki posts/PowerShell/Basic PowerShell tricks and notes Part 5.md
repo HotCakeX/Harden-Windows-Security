@@ -244,3 +244,60 @@ $Assemblies | ForEach-Object {Add-Type -Path $_}
 * [ToastContentBuilder Class](https://learn.microsoft.com/en-us/dotnet/api/microsoft.toolkit.uwp.notifications.toastcontentbuilder)
 
 <br>
+
+## Don't Use 'New' as the Name of a C# Method That You Want To Call In PowerShell
+
+In PowerShell, `New` is reserved for constructors, and constructors have specific handling. When you call a method such as `[NameSpace.Class]::New($SomeArgument)` in PowerShell, it's looking for a constructor with the given argument, not a static method named `New`, so that will fail and throw an error.
+
+This is not a problem if you want to use the C# method called `New` in C# itself and not import it via `Add-Type` in PowerShell.
+
+<br>
+
+## Do Not Use $null in PowerShell To Pass An Argument To A C# Method That Accepts Nullable String
+
+Let's say you have a C# method that accepts a nullable string
+
+```csharp
+using System;
+#nullable enable
+public class MyClass
+{
+    public static void MethodName(string? Path)
+    {
+        if (Path is not null)
+        {
+            Console.WriteLine("Path is not null");
+        }
+        else
+        {
+            Console.WriteLine("Path is null");
+        }
+    }
+}
+```
+
+In C# itself, you can call that method normally and pass null to it when calling it
+
+```csharp
+MyClass.MethodName(null)
+```
+
+And you will see `Path is null` on the console.
+
+However, in PowerShell, if you used `Add-Type` to import that method and called it like this
+
+```powershell
+[MyClass]MethodName($null)
+```
+
+You will see `Path is not null` on the console.
+
+The reason is that powerShell converts `$null` to an empty string `""` and not the true `null`. So the C# method will get `""` and since it's an empty string and not an actual null, it will fail the null check.
+
+In this situation you have at least 2 options:
+
+1. In PowerShell, instead of passing `$null`, use `[NullString]::Value`: `[MyClass]::MethodName([NullString]::Value)`.
+
+2. In C#, instead of checking for null, check for `IsNullOrEmpty` or `IsNullOrWhiteSpace`.
+
+<br>

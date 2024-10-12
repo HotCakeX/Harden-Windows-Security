@@ -50,7 +50,7 @@ When the nested VM is running, the system sees the disk as plain text, not encry
 
 BitLocker is not easy to brute force if the right algorithms are configured (XTS-AES-256) so they would not want to go that direction in most cases.
 
-### What if You Deploy a Signed WDAC Policy on the Host VM?
+### What if You Deploy a Signed App Control Policy on the Host VM?
 
 You could, but what would prevent the threat actor from disabling it on the host? The host is controlled by the threat actor in this scenario and not having the private keys of the deployed signed policy won't matter.
 

@@ -19,7 +19,7 @@ The cmdlet outputs an ordered hashtable. The keys are the hash algorithm names a
 For more information please visit [this page](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/app-control-for-business/design/select-types-of-rules-to-create#more-information-about-hashes)
 
 > [!NOTE]\
->  If the file is non-conformant, the function will calculate the flat hash of the file using the specified hash algorithm and return them as the Authenticode hashes. This is compliant with how the WDAC engine in Windows works.
+>  If the file is non-conformant, the function will calculate the flat hash of the file using the specified hash algorithm and return them as the Authenticode hashes. This is compliant with how the App Control engine in Windows works.
 
 ## Parameters
 

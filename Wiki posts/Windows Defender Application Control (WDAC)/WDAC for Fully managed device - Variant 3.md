@@ -51,7 +51,7 @@ New-WDACConfig -PolicyType AllowMicrosoft
 Now what we have the policy xml file for the Allow Microsoft base policy, we need to sign and deploy it.
 
 ```powershell
-Deploy-SignedWDACConfig -CertPath "C:\Certificate.cer" -PolicyPaths "C:\AllowMicrosoftPlusBlockRules.xml" -CertCN "WDAC Certificate" -Deploy
+Deploy-SignedWDACConfig -CertPath "C:\Certificate.cer" -PolicyPaths "C:\AllowMicrosoftPlusBlockRules.xml" -CertCN "App Control Certificate" -Deploy
 ```
 
 * [Cmdlet info](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Deploy-SignedWDACConfig)
@@ -120,7 +120,7 @@ You can create a Supplemental policy for more than 1 app at a time by browsing f
 ### Based on App’s Install Directory and Other Signals
 
 ```powershell
-Edit-SignedWDACConfig -AllowNewApps -CertPath "C:\Certificate.cer" -SuppPolicyName "App's Name" -PolicyPath "C:\AllowMicrosoftPlusBlockRules.xml" -CertCN "WDAC Certificate"
+Edit-SignedWDACConfig -AllowNewApps -CertPath "C:\Certificate.cer" -SuppPolicyName "App's Name" -PolicyPath "C:\AllowMicrosoftPlusBlockRules.xml" -CertCN "App Control Certificate"
 ```
 
 * [Parameter info](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Edit-SignedWDACConfig#edit-signedwdacconfig--allownewapps)

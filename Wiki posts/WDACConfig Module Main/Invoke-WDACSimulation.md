@@ -2,7 +2,7 @@
 
 ![image](https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Wiki%20APNGs/Invoke-WDACSimulation/Invoke-WDACSimulation.apng)
 
-<a href="https://www.youtube.com/watch?v=A0bKDaeYomg"><img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/PNG%20and%20JPG/Simulating%20Application%20Control%20(WDAC)%20Policies%20Using%20The%20WDACConfig%20Module%20-%20low%20res.png" Alt="Simulating Application Control (WDAC) Deployment in Windows"></a>
+<a href="https://www.youtube.com/watch?v=A0bKDaeYomg"><img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/PNG%20and%20JPG/Simulating%20Application%20Control%20(WDAC)%20Policies%20Using%20The%20WDACConfig%20Module%20-%20low%20res.png" Alt="Simulating Application Control Deployment in Windows"></a>
 
 ## Syntax
 
@@ -22,13 +22,13 @@ Invoke-WDACSimulation
 
 ## Description
 
-This cmdlet allows you to simulate a WDAC (App Control for Business) policy deployment. Simply select folders or files and a policy XML file, it will show you whether the selected files would be allowed or blocked by your WDAC policy if it was actually deployed on a system and those files were run.
+This cmdlet allows you to simulate an App Control for Business policy deployment. Simply select folders or files and a policy XML file, it will show you whether the selected files would be allowed or blocked by your App Control policy if it was actually deployed on a system and those files were run.
 
 <br>
 
 ## Supported Levels and SpecificFileNameLevel Options
 
-* The WDAC Simulation engine **supports** the following [levels](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDAC-Rule-Levels-Comparison-and-Guide):
+* The App Control Simulation engine **supports** the following [levels](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDAC-Rule-Levels-Comparison-and-Guide):
 
   * WHQLFilePublisher
   * WHQLPublisher
@@ -65,11 +65,11 @@ This cmdlet allows you to simulate a WDAC (App Control for Business) policy depl
 
 ## Some Use Cases
 
-* Have a WDAC policy and you want to test whether all of the files of a program will be allowed by the policy without running the program first? Use this WDAC simulation to find out.
+* Have an App Control policy and you want to test whether all of the files of a program will be allowed by the policy without running the program first? Use this App Control simulation to find out.
 
-* Employ this simulation method to discover files that are not explicitly specified in the WDAC policy but are still authorized to run by it.
+* Employ this simulation method to discover files that are not explicitly specified in the App Control policy but are still authorized to run by it.
 
-* Identify files that have hash mismatch and will not be permitted by WDAC engine using signature. These files are typically found in [*questionable* software](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDAC-Notes#allowing-questionable-software-in-a-wdac-policy) because they are tampered with.
+* Identify files that have hash mismatch and will not be permitted by App Control engine using signature. These files are typically found in [*questionable* software](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDAC-Notes#allowing-questionable-software-in-a-wdac-policy) because they are tampered with.
 
 * And many more.
 
@@ -113,7 +113,7 @@ Path to folders. Supports argument tab completion, select the parameter then pre
 
 ### -FilePath
 
-Provide path to files that you want WDAC simulation to run against
+Provide path to files that you want App Control simulation to run against
 
 <div align='center'>
 
@@ -169,7 +169,7 @@ It is saved in the WDACConfig folder in `C:\Program Files\WDACConfig`
 
 ### -Log
 
-Use this switch to start a transcript of the WDAC simulation and log everything displayed on the screen.
+Use this switch to start a transcript of the App Control simulation and log everything displayed on the screen.
 
 The log file is saved in the WDACConfig folder in `C:\Program Files\WDACConfig`
 
@@ -226,7 +226,7 @@ Bypass the scanning of the security catalogs on the system. It can make the scan
 
 ### -ThreadsCount
 
-The number of the concurrent/parallel tasks to use when performing WDAC Simulation.
+The number of the concurrent/parallel tasks to use when performing App Control Simulation.
 
 * Max is the number of your system's CPU cores.
 * Min is 1.

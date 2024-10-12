@@ -13,7 +13,7 @@ Test-CiPolicy
 
 ## Description
 
-Tests a Code Integrity (WDAC) Policy XML file against the Schema file located at:
+Tests a Code Integrity (App Control) Policy XML file against the Schema file located at:
 
 ```powershell
 $Env:SystemDrive\Windows\schemas\CodeIntegrity\cipolicy.xsd

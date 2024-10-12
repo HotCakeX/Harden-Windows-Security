@@ -2,7 +2,7 @@
 
 ## Introduction
 
-This article explores some of the technical details of how to deploy a WDAC (Application Control) policy that uses Script Enforcement and forces PowerShell to run in Constrained Language Mode. It expands aspects of this topic that are not covered enough in the official docs.
+This article explores some of the technical details of how to deploy an App Control policy that uses Script Enforcement and forces PowerShell to run in Constrained Language Mode. It expands aspects of this topic that are not covered enough in the official docs.
 
 > [!Tip]\
 > Check out these 2 documents from Microsoft for more info and basics:
@@ -38,13 +38,13 @@ For instance, if you generated a Code Signing certificate from Windows Server Ac
 
 ## Base Policy Requirements
 
-The WDAC (Application Control) base policy you're going to deploy must have `0 Enabled:UMCI` and it must not have the `11 Disabled:Script Enforcement` [rule options](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/app-control-for-business/design/select-types-of-rules-to-create#table-1-app-control-for-business-policy---policy-rule-options).
+The App Control base policy you're going to deploy must have `0 Enabled:UMCI` and it must not have the `11 Disabled:Script Enforcement` [rule options](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/app-control-for-business/design/select-types-of-rules-to-create#table-1-app-control-for-business-policy---policy-rule-options).
 
 <br>
 
 ## How to Create a Supplemental Policy to Allow the Certificate(s)
 
-The root certificate's details must be added as a Signer rule in a WDAC policy in the User-Mode Signing Scenario.
+The root certificate's details must be added as a Signer rule in an App Control policy in the User-Mode Signing Scenario.
 
 Adding the Certificate's Signer rule to the Kernel-mode Signing Scenario does not allow the modules signed by that certificate to run, which is expected.
 
@@ -104,7 +104,7 @@ As you can see, we need the TBS Hash value of the root certificate.
 
 ### Use the WDACConfig Module to Automatically Allow Certificates
 
-You can use the WDACConfig module to create a supplemental policy that allows the certificates you select to be allowed by WDAC. To do that, you can use the following command:
+You can use the WDACConfig module to create a supplemental policy that allows the certificates you select to be allowed by App Control. To do that, you can use the following command:
 
 ```powershell
 New-SupplementalWDACConfig -Certificates -CertificatePaths "certificate.cer" -SuppPolicyName '<Certificate Name>' -PolicyPath "<Path to Base policy XML file>"
@@ -126,7 +126,7 @@ certutil.exe –v <Path To .cer file>
 
 ## PowerShell Engine Behavior
 
-When a WDAC policy with script enforcement is deployed and you try to import an unauthorized module, you might see different errors. For instance, you might see an error about classes not being allowed or other reasons for a module not being able to load, but in essence, the PowerShell engine is trying to load the module in Constrained Language Mode and the module is failing to meet the requirements, most likely because:
+When an App Control policy with script enforcement is deployed and you try to import an unauthorized module, you might see different errors. For instance, you might see an error about classes not being allowed or other reasons for a module not being able to load, but in essence, the PowerShell engine is trying to load the module in Constrained Language Mode and the module is failing to meet the requirements, most likely because:
 
 * The module you're trying to load is not signed
 * The module you're trying to load is signed but the certificate's root is not trusted by the system

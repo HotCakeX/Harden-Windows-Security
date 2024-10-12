@@ -15,7 +15,7 @@ New-KernelModeWDACConfig
 
 ## Description
 
-This cmdlet generates a Kernel-mode WDAC policy derived from the Default Windows template policy. [You can learn more about that procedure in here.](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDAC-policy-for-BYOVD-Kernel-mode-only-protection)
+This cmdlet generates a Kernel-mode App Control policy derived from the Default Windows template policy. [You can learn more about that procedure in here.](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDAC-policy-for-BYOVD-Kernel-mode-only-protection)
 
 Initially, you need to use the `-Mode Prep` parameter to deploy the base policy in Audit mode, then restart your system. After restarting, event logs are produced for Kernel-mode drivers that are running but would otherwise be blocked if the policy was not deployed in Audit mode.
 
@@ -37,9 +37,9 @@ Subsequently, you need to use the `-Mode AuditAndEnforce` parameter to generate 
 
 Specifies the mode of operation. The acceptable values for this parameter are: `Prep` and `AuditAndEnforce`.
 
-* Prep: Deploys the Strict Kernel-mode WDAC policy in Audit mode, preparing the system for an Audit.
+* Prep: Deploys the Strict Kernel-mode App Control policy in Audit mode, preparing the system for an Audit.
 
-* AuditAndEnforce: Audits the system using event logs for any blocked drivers, generates the final Strict Kernel-mode WDAC policy.
+* AuditAndEnforce: Audits the system using event logs for any blocked drivers, generates the final Strict Kernel-mode App Control policy.
 
 <div align='center'>
 
@@ -97,7 +97,7 @@ The base policy to be used. The acceptable values for this parameter are: `Defau
 
 
 > [!NOTE]\
-> The **NoFlightRoots** value signifies that the Strict Kernel-mode WDAC policy will not be deployed with flight root certificates, disallowing you to use insider builds of the OS in the Dev and Canary channels. Insider builds in the Beta and Release Preview channels are signed with production root certificates and will not be affected.
+> The **NoFlightRoots** value signifies that the Strict Kernel-mode App Control policy will not be deployed with flight root certificates, disallowing you to use insider builds of the OS in the Dev and Canary channels. Insider builds in the Beta and Release Preview channels are signed with production root certificates and will not be affected.
 
 <div align='center'>
 

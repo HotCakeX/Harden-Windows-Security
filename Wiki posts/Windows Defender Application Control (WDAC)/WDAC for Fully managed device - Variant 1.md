@@ -9,7 +9,7 @@
 </div>
 
 > [!NOTE]\
-> This variant helps you create and deploy a WDAC policy for fully managed device ***using only Event Viewer audit logs.***
+> This variant helps you create and deploy an App Control policy for fully managed device ***using only Event Viewer audit logs.***
 >
 > This scenario includes using explicit Allow rules for files and certificates/signers, anything not allowed by the policies we are going to make are automatically denied/blocked.
 
@@ -71,7 +71,7 @@ Depending on whichever of the option you choose, it deploys the base policy in a
 
 ## Generate Audit Event Logs on the System
 
-Install all of the programs that you want to allow in the WDAC policy, on the VM. These are the programs that you want to allow to run and be installed on the target system once you've deployed the WDAC policy.
+Install all of the programs that you want to allow in the App Control policy, on the VM. These are the programs that you want to allow to run and be installed on the target system once you've deployed the App Control policy.
 
 * Installing or running 3rd party non-Microsoft programs, while ***Allow Microsoft*** policy in Audit mode is deployed on the VM, generates event logs for each of the programs and their files.
 

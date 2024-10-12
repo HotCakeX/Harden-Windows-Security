@@ -38,9 +38,9 @@ Each cluster of digits in an OID is termed an arc. The arcs are separated by dot
 
 <br>
 
-## EKUs in WDAC Policies
+## EKUs in App Control Policies
 
-EKUs are employed in WDAC policies to indicate the functions for which a certificate can be employed. Consider EKUs as a whitelist of permitted functions. If a certificate does not encompass any of the EKUs indicated in the WDAC policy, it will be discarded. They can be employed to confine the range of a certificate to a specific function.
+EKUs are employed in App Control policies to indicate the functions for which a certificate can be employed. Consider EKUs as a whitelist of permitted functions. If a certificate does not encompass any of the EKUs indicated in the App Control policy, it will be discarded. They can be employed to confine the range of a certificate to a specific function.
 
 For instance, if a certificate is issued to an individual or an organization solely for code signing functions, it cannot be employed for high-value operations such as Early Launch AntiMalware (ELAM) driver signing. To have the capacity to sign ELAM drivers, the certificate must encompass the ELAM EKU which is only attained by fulfilling specific requirements [demonstrated by Microsoft](https://learn.microsoft.com/en-us/windows-hardware/drivers/install/elam-driver-requirements).
 
@@ -48,7 +48,7 @@ We can readily verify this in the subsequent example. Let's assume you have depl
 
 <br>
 
-<img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/PNG%20and%20JPG/Wiki%20About%20EKUs/1.png" alt="OBS Certificate in WDAC policy supplemental" />
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/PNG%20and%20JPG/Wiki%20About%20EKUs/1.png" alt="OBS Certificate in App Control policy supplemental" />
 
 <br>
 
@@ -68,13 +68,13 @@ If we append an EKU that is not supported by this certificate, such as ELAM, to 
 
 <br>
 
-<img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/PNG%20and%20JPG/Wiki%20About%20EKUs/3.png" alt="Adding fake EKU to the OBS Signer rule in a WDAC supplemental policy" />
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/PNG%20and%20JPG/Wiki%20About%20EKUs/3.png" alt="Adding fake EKU to the OBS Signer rule in a App Control supplemental policy" />
 
 <br>
 
 <br>
 
-<img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/PNG%20and%20JPG/Wiki%20About%20EKUs/4.png" alt="ELAM EKU in WDAC supplemental policy" />
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/PNG%20and%20JPG/Wiki%20About%20EKUs/4.png" alt="ELAM EKU in App Control supplemental policy" />
 
 <br>
 
@@ -106,9 +106,9 @@ If you know the OID or the friendly name of an EKU, you can readily obtain the o
 
 <br>
 
-## How to Convert an OID to Hexadecimal Format for WDAC Policies
+## How to Convert an OID to Hexadecimal Format for App Control Policies
 
-In a WDAC Policy XML file, each EKU must be defined in the `EKUs` node. For each EKU, there are 3 available attributes, 2 of which are mandatory and 1 is optional. The mandatory attributes are `ID` and `Value`, and the optional attribute is `FriendlyName`.
+In an App Control Policy XML file, each EKU must be defined in the `EKUs` node. For each EKU, there are 3 available attributes, 2 of which are mandatory and 1 is optional. The mandatory attributes are `ID` and `Value`, and the optional attribute is `FriendlyName`.
 
 * The `ID` attribute is a unique identifier for the EKU and should begin with `ID_EKU_`.
 * The `Value` attribute is the hexadecimal representation of the OID of the EKU.
@@ -182,7 +182,7 @@ Function Convert-OIDToHex {
 
 <br>
 
-## How to Convert the Hexadecimal Format to an OID for WDAC Policies
+## How to Convert the Hexadecimal Format to an OID for App Control Policies
 
 The following PowerShell function does the exact opposite of the previous function. It converts the hexadecimal representation of an OID to the OID itself.
 
@@ -202,7 +202,7 @@ Function Convert-HexToOID {
 .SYNOPSIS
   Converts a hexadecimal string to an OID
 .DESCRIPTION
-  Used for converting hexadecimal values found in the EKU sections of the WDAC policies to their respective OIDs.
+  Used for converting hexadecimal values found in the EKU sections of the App Control policies to their respective OIDs.
 .PARAMETER Hex
   The hexadecimal string to convert to an OID
 .EXAMPLE
@@ -259,7 +259,7 @@ Function Convert-HexToOID {
 
 <br>
 
-## Common EKUs in WDAC Policies
+## Common EKUs in App Control Policies
 
 ```xml
 <EKU ID="ID_EKU_WINDOWS" FriendlyName="Windows System Component Verification - 1.3.6.1.4.1.311.10.3.6" Value="010A2B0601040182370A0306" />
@@ -295,9 +295,9 @@ Function Convert-HexToOID {
 
 <br>
 
-## How EKUs Are Used by the WDAC Engine for Validation
+## How EKUs Are Used by the App Control Engine for Validation
 
-Regarding the incorporation of EKUs in file validation, WDAC verifies that the file's leaf certificate (File's signer) possesses identical EKUs as the signer element's EKUs. Regardless of whether the Signer's CertRoot (TBS value) and name (CN of the certificate) match with file's root, intermediate or leaf certificates, the EKUs only need to match with the leaf certificate.
+Regarding the incorporation of EKUs in file validation, App Control verifies that the file's leaf certificate (File's signer) possesses identical EKUs as the signer element's EKUs. Regardless of whether the Signer's CertRoot (TBS value) and name (CN of the certificate) match with file's root, intermediate or leaf certificates, the EKUs only need to match with the leaf certificate.
 
 For example, in the Default Windows template policy, the `Kernel32.dll` is authorized by the following signer:
 
@@ -354,7 +354,7 @@ In every Signer, the `CertEKU` node should only be placed directly after `CertRo
 
 ## Continue Reading
 
-* [WDAC Policy for BYOVD Kernel Mode Only Protection](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDAC-policy-for-BYOVD-Kernel-mode-only-protection)
+* [App Control Policy for BYOVD Kernel Mode Only Protection](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDAC-policy-for-BYOVD-Kernel-mode-only-protection)
 * [WDAC Notes](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDAC-Notes)
 * [WDACConfig Module](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDACConfig)
 

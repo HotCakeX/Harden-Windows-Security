@@ -24,7 +24,7 @@ New-WDACConfig
 
 ## Description
 
-Use this parameter to create a new WDAC (Application Control) **base policy** with different policy types and configurations.
+Use this parameter to create a new App Control **base policy** with different policy types and configurations.
 
 > [!NOTE]\
 > If the selected policy type is `DefaultWindows` and the detected PowerShell is not installed through Microsoft Store, the module will scan the PowerShell files and add them to the `DefaultWindows` base policy as allowed files so you will be able to continue using the module after deploying the policy.

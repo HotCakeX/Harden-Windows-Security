@@ -179,7 +179,7 @@ There are [guides](https://learn.microsoft.com/en-us/windows-hardware/manufactur
 
 1. Your host has Secure boot enabled
 
-2. You use Signed WDAC policies
+2. You use Signed App Control policies
 
 3. Your VM wasn't [SysPrepped](https://learn.microsoft.com/en-us/windows-hardware/manufacture/desktop/sysprep--generalize--a-windows-installation) before natively booting it on physical machine
 

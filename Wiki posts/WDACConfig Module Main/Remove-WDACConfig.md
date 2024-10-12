@@ -20,7 +20,7 @@ Remove-WDACConfig
 
 ## Description
 
-Uses [the official procedure](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/app-control-for-business/deployment/disable-appcontrol-policies) to Re-Deploy the Signed base WDAC policies with ***Enabled:Unsigned System Integrity Policy*** rule option.
+Uses [the official procedure](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/app-control-for-business/deployment/disable-appcontrol-policies) to Re-Deploy the Signed base App Control policies with ***Enabled:Unsigned System Integrity Policy*** rule option.
 
 ## Parameters
 
@@ -124,7 +124,7 @@ Remove-WDACConfig
 
 ## Description
 
-Removes Unsigned deployed WDAC policies as well as [Signed deployed Supplemental WDAC policies](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDAC-Notes#removing-supplemental-policies)
+Removes Unsigned deployed App Control policies as well as [Signed deployed Supplemental App Control policies](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDAC-Notes#removing-supplemental-policies)
 
 > [!NOTE]\
 >  When using `-PolicyNames` parameter, if multiple policies with the exact same name are deployed, when you press TAB, you will only see 1 of them, if you select it, all of the policies with that name will be removed. If that's not desired, consider using `-PolicyIDs` parameter instead.

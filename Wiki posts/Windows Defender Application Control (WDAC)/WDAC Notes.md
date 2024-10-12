@@ -9,11 +9,11 @@
 
 <br>
 
-## Supplemental WDAC Policy Considerations
+## Supplemental App Control Policy Considerations
 
 ### Verify Policy type
 
-We have to make sure the WDAC policy that we are going to use as a supplemental policy has `PolicyType="Supplemental Policy"` in the `SiPolicy` element of the XML file. If it doesn't, then [we have to use this command](https://learn.microsoft.com/en-us/powershell/module/configci/set-cipolicyidinfo?view=windowsserver2022-ps#example-3-specify-the-base-policy-id-of-a-supplemental-policy) to change it from base policy to supplemental policy of our base policy.
+We have to make sure the App Control policy that we are going to use as a supplemental policy has `PolicyType="Supplemental Policy"` in the `SiPolicy` element of the XML file. If it doesn't, then [we have to use this command](https://learn.microsoft.com/en-us/powershell/module/configci/set-cipolicyidinfo?view=windowsserver2022-ps#example-3-specify-the-base-policy-id-of-a-supplemental-policy) to change it from base policy to supplemental policy of our base policy.
 
 That will also change/create the `<BasePolicyID>GUID</BasePolicyID>` element in the supplemental policy XML file. The GUID will be the `PolicyID` of the base policy specified in the command.
 
@@ -47,7 +47,7 @@ A supplemental policy [can only have these policy rule options](https://learn.mi
 
 ### Deny Rules in Supplemental Policy Are Invalid
 
-Deny rules are ignored in supplemental policies by the WDAC engine. Supplemental policies are only meant to expand what the base policy trusts, that's why only allow rules are supported in supplemental policies, and that's also the reason why we don't need to merge Microsoft recommended block rules or driver block rules with a supplemental policy.
+Deny rules are ignored in supplemental policies by the App Control engine. Supplemental policies are only meant to expand what the base policy trusts, that's why only allow rules are supported in supplemental policies, and that's also the reason why we don't need to merge Microsoft recommended block rules or driver block rules with a supplemental policy.
 
 <br>
 
@@ -124,7 +124,7 @@ Denied certificates/signers are first mentioned in `<SiPolicy` => `<Signers>` wi
 </Signer>
 ```
 
-Unlike file rules, this first part doesn't specify whether the certificate/signer must be allowed or blocked by the WDAC policy.
+Unlike file rules, this first part doesn't specify whether the certificate/signer must be allowed or blocked by the App Control policy.
 
 In order to specify whether a certificate/signer should be denied/allowed, the ID of each signer must be specified in the second part of the XML policy file in `<DeniedSigners>` element:
 
@@ -140,7 +140,7 @@ In order to specify whether a certificate/signer should be denied/allowed, the I
 </SigningScenarios>
 ```
 
-#### [Guidance on Creating WDAC Deny Policies](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/app-control-for-business/design/create-appcontrol-deny-policy)
+#### [Guidance on Creating App Control Deny Policies](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/app-control-for-business/design/create-appcontrol-deny-policy)
 
 <br>
 
@@ -171,7 +171,7 @@ Get-CimInstance -ClassName Win32_DeviceGuard -Namespace root\Microsoft\Windows\D
 
 <br>
 
-## Refreshing WDAC Policies
+## Refreshing App Control Policies
 
 ### [Using the built-in CiTool](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/app-control-for-business/operations/citool-commands)
 
@@ -191,7 +191,7 @@ CITool --refresh
 
 <br>
 
-## About `<SigningScenarios>` Node in the WDAC Policy XML
+## About `<SigningScenarios>` Node in the App Control Policy XML
 
 It consists of 2 elements:
 
@@ -225,9 +225,9 @@ And this one contains the Certificates/Signers of the User-mode binaries
 
 <br>
 
-## WDAC Forces Allow-list Architecture by Nature
+## App Control Forces Allow-list Architecture by Nature
 
-WDAC forces Allow-list architecture by nature, not deny-list architecture. An empty deployed policy allows nothing to run and leads to system failure. This is why Microsoft recommended blocklists include 2 Allow All rules with the Deny rules, that changes the WDAC policy's nature from being an Allow-list to being a Deny-list.
+App Control forces Allow-list architecture by nature, not deny-list architecture. An empty deployed policy allows nothing to run and leads to system failure. This is why Microsoft recommended blocklists include 2 Allow All rules with the Deny rules, that changes the App Control policy's nature from being an Allow-list to being a Deny-list.
 
 <br>
 
@@ -239,9 +239,9 @@ WDAC forces Allow-list architecture by nature, not deny-list architecture. An em
 
 ### How to Manually Consume the Microsoft Recommended Block Rules
 
-From [Microsoft recommended block rules](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/app-control-for-business/design/applications-that-can-bypass-appcontrol) document, copy the WDAC policy XML at the end (you might need to expand that section to view it), use a text editor like [VS Code](https://code.visualstudio.com/) to edit it as recommended:
+From [Microsoft recommended block rules](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/app-control-for-business/design/applications-that-can-bypass-appcontrol) document, copy the App Control policy XML at the end (you might need to expand that section to view it), use a text editor like [VS Code](https://code.visualstudio.com/) to edit it as recommended:
 
-The blocklist policy includes "Allow all" rules for both kernel and user mode files that make it safe to deploy as a standalone WDAC policy or side-by-side any other policy by keeping its allow all rules in place. [Refer to this document about how multiple base policies work.](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/app-control-for-business/design/deploy-multiple-appcontrol-policies)
+The blocklist policy includes "Allow all" rules for both kernel and user mode files that make it safe to deploy as a standalone App Control policy or side-by-side any other policy by keeping its allow all rules in place. [Refer to this document about how multiple base policies work.](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/app-control-for-business/design/deploy-multiple-appcontrol-policies)
 
 <br>
 
@@ -279,7 +279,7 @@ The policy must be in multiple policy format, which can be achieved by using the
 
 <br>
 
-> [Citation:](https://github.com/MicrosoftDocs/WDAC-Toolkit/discussions/217#discussioncomment-5104749) If you only manage Windows 11 22H2 systems (and above), then you don't need the recommended driver block rules in your WDAC policy. Otherwise, you should have the driver block rules in your policy. In either scenario, you should have the recommended user mode rules.
+> [Citation:](https://github.com/MicrosoftDocs/WDAC-Toolkit/discussions/217#discussioncomment-5104749) If you only manage Windows 11 22H2 systems (and above), then you don't need the recommended driver block rules in your App Control policy. Otherwise, you should have the driver block rules in your policy. In either scenario, you should have the recommended user mode rules.
 
 <br>
 
@@ -293,7 +293,7 @@ The policy must be in multiple policy format, which can be achieved by using the
 
 ## Miscellaneous
 
-* [Set the hypervisor Code Integrity option for the WDAC policy XML file to **Strict**](https://learn.microsoft.com/en-us/powershell/module/configci/set-hvcioptions) only after using `Add-SignerRule` cmdlet, because after running `Add-SignerRule` cmdlet, the `<HvciOptions>` resets to `0`.
+* [Set the hypervisor Code Integrity option for the App Control policy XML file to **Strict**](https://learn.microsoft.com/en-us/powershell/module/configci/set-hvcioptions) only after using `Add-SignerRule` cmdlet, because after running `Add-SignerRule` cmdlet, the `<HvciOptions>` resets to `0`.
 
 * Using [Signtool.exe](https://learn.microsoft.com/en-us/dotnet/framework/tools/signtool-exe) with `-fd certHash` will default to the algorithm used on the signing certificate. For example, if the certificate has `SHA512` hashing algorithm, the file that is being signed will use the same algorithm.
 
@@ -347,7 +347,7 @@ Remove-CIPolicyRule -FilePath "DefaultWindows_Enforced.xml" -Id "ID_SIGNER_RT_FL
 
 <br>
 
-## How to Remove WDAC Policy Refresh Tool Certificates From Default Example Policies
+## How to Remove App Control Policy Refresh Tool Certificates From Default Example Policies
 
 Starting with Windows 11 22H2, [CITool](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/app-control-for-business/operations/citool-commands) is available in Windows by default and Refresh tool is no longer needed, so use the commands below to remove the certificates that allow that tool to be executed, **their order of execution is important.**
 
@@ -365,9 +365,9 @@ Remove-CIPolicyRule -FilePath "DefaultWindows_Enforced.xml" -Id "ID_FILEATTRIB_R
 
 <br>
 
-## Allowing Questionable Software in a WDAC Policy
+## Allowing Questionable Software in an App Control Policy
 
-Questionable software such as pirated software are **never** recommended to be allowed in the WDAC policy because they are tampered with. Pirated software can have signed files too, but they are modified and as a result there is a mismatch between the file hash and the hash of the file saved in their digital signature. When such a mismatch exists for signed files, [Authenticode](https://learn.microsoft.com/en-us/windows-hardware/drivers/install/authenticode) reports the mismatch, and the file can't be allowed in a WDAC policy.
+Questionable software such as pirated software are **never** recommended to be allowed in the App Control policy because they are tampered with. Pirated software can have signed files too, but they are modified and as a result there is a mismatch between the file hash and the hash of the file saved in their digital signature. When such a mismatch exists for signed files, [Authenticode](https://learn.microsoft.com/en-us/windows-hardware/drivers/install/authenticode) reports the mismatch, and the file can't be allowed in an App Control policy.
 
 If you want to go through many files and see which ones have a mismatch between their file hash and signature hash, you can use the following [PowerShell](https://github.com/PowerShell/PowerShell/releases) command, it searches through a folder and all of its sub-folders quickly.
 
@@ -388,13 +388,13 @@ Foreach ($File in (Get-ChildItem -Path 'Path\To\a\Folder' -File -Recurse)) {
 
 <br>
 
-## Performing System Reset While Signed WDAC Policy Is Deployed
+## Performing System Reset While Signed App Control Policy Is Deployed
 
-If you've deployed a Signed WDAC policy on a system and then decide to reset it, either using local install or cloud download, it will fail during the reset process. You must remove the signed WDAC policy prior to performing the reset.
+If you've deployed a Signed App Control policy on a system and then decide to reset it, either using local install or cloud download, it will fail during the reset process. You must remove the signed App Control policy prior to performing the reset.
 
-Unsigned WDAC policies don't have this behavior. Since they are neither cryptographically signed nor tamper-proof, they will be removed during the reset process and after reset the system will not have the WDAC policy.
+Unsigned App Control policies don't have this behavior. Since they are neither cryptographically signed nor tamper-proof, they will be removed during the reset process and after reset the system will not have the App Control policy.
 
-This behavior is true for [Lightly managed](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDAC-for-Lightly-Managed-Devices), [Allow Microsoft](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDAC-policy-for-Fully-managed-device---Variant-3) and [Default Windows](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDAC-policy-for-Fully-managed-device---Variant-4) WDAC policy types.
+This behavior is true for [Lightly managed](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDAC-for-Lightly-Managed-Devices), [Allow Microsoft](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDAC-policy-for-Fully-managed-device---Variant-3) and [Default Windows](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDAC-policy-for-Fully-managed-device---Variant-4) App Control policy types.
 
 <br>
 
@@ -404,7 +404,7 @@ This behavior is true for [Lightly managed](https://github.com/HotCakeX/Harden-W
 
 ## The .CIP Binary File Can Have Any Name or No Name at All
 
-Using [CiTool](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/app-control-for-business/operations/citool-commands) in Windows 11 build `22621` and above, `.CIP` binary files can be deployed with any name, even without a name, and lead to a successful WDAC policy deployment.
+Using [CiTool](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/app-control-for-business/operations/citool-commands) in Windows 11 build `22621` and above, `.CIP` binary files can be deployed with any name, even without a name, and lead to a successful App Control policy deployment.
 
 <br>
 
@@ -436,9 +436,9 @@ If a base policy has rule option number 8, **Required:EV Signers**, it will requ
 
 When we remove the `SigningScenario Value="12"` completely which is responsible for User Mode code integrity in the xml policy and also remove any signers that belong to User mode section, such as those that have `_user` in their ID, the [Merge-CIPolicy](https://learn.microsoft.com/en-us/powershell/module/configci/merge-cipolicy) cmdlet automatically removes EKUs that belong to the policy rule options mentioned above during a merge.
 
-Removing the User mode signers, rules and `Enabled:UMCI` rule option allows us to create a Kernel-only WDAC policy that doesn't touch User mode binaries/drivers.
+Removing the User mode signers, rules and `Enabled:UMCI` rule option allows us to create a Kernel-only App Control policy that doesn't touch User mode binaries/drivers.
 
-For a Kernel-mode only WDAC policy, only the following EKUs are necessary
+For a Kernel-mode only App Control policy, only the following EKUs are necessary
 
 ```xml
 <EKUs>
@@ -536,16 +536,16 @@ In the signer below
 
 ## What Does HVCI option Set to Strict Mean?
 
-[HVCI](https://learn.microsoft.com/en-us/windows/security/hardware-security/enable-virtualization-based-protection-of-code-integrity) stands for **Hypervisor-protected Code Integrity** and it is a feature that uses virtualization-based security (VBS) to protect the Windows kernel from memory attacks. HVCI can be set to different options in a WDAC policy, such as Enabled, DebugMode, or Strict.
+[HVCI](https://learn.microsoft.com/en-us/windows/security/hardware-security/enable-virtualization-based-protection-of-code-integrity) stands for **Hypervisor-protected Code Integrity** and it is a feature that uses virtualization-based security (VBS) to protect the Windows kernel from memory attacks. HVCI can be set to different options in an App Control policy, such as Enabled, DebugMode, or Strict.
 
-Setting [HVCI to Strict](https://learn.microsoft.com/en-us/powershell/module/configci/set-hvcioptions) in a WDAC policy provides the highest level of protection for kernel mode code integrity, as it enforces these additional restrictions:
+Setting [HVCI to Strict](https://learn.microsoft.com/en-us/powershell/module/configci/set-hvcioptions) in an WDApp ControlAC policy provides the highest level of protection for kernel mode code integrity, as it enforces these additional restrictions:
 
-* It prevents unsigned drivers from loading, even if they are allowed by the WDAC policy.
-It prevents drivers that are not compatible with HVCI from loading, even if they are signed and allowed by the WDAC policy.
+* It prevents unsigned drivers from loading, even if they are allowed by the App Control policy.
+It prevents drivers that are not compatible with HVCI from loading, even if they are signed and allowed by the App Control policy.
 
-* It prevents drivers that have been tampered with or modified from loading, even if they are signed and allowed by the WDAC policy.
+* It prevents drivers that have been tampered with or modified from loading, even if they are signed and allowed by the App Control policy.
 
-* Setting HVCI to Strict in a WDAC policy can help prevent malware or attackers from exploiting vulnerabilities in kernel mode drivers or bypassing the WDAC policy enforcement.
+* Setting HVCI to Strict in an App Control policy can help prevent malware or attackers from exploiting vulnerabilities in kernel mode drivers or bypassing the App Control policy enforcement.
 
 <br>
 
@@ -561,7 +561,7 @@ It prevents drivers that are not compatible with HVCI from loading, even if they
 
 * A file can have only one leaf certificate at the beginning of the chain. The leaf certificate is the one that belongs to the file itself and contains its public key and other information. Having more than one leaf certificate would imply that there are multiple files with different identities and keys, which is not possible.
 
-* Leaf, intermediate and root are the only types of certificates a file can have in a certificate chain. There are other types of certificates that are not part of a chain, such as self-signed certificates or wildcard certificates, but they are not relevant to WDAC policies.
+* Leaf, intermediate and root are the only types of certificates a file can have in a certificate chain. There are other types of certificates that are not part of a chain, such as self-signed certificates or wildcard certificates, but they are not relevant to App Control policies.
 
 <br>
 
@@ -591,6 +591,6 @@ It doesn't matter how long or short the IDs are in the policy XML file, such as 
 
 ## <img width="65" src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/arrow-pink.gif" alt="Continue Reading about BYOVD using App Control for Business"> [Continue reading about BYOVD protection with App Control for Business](#-continue-reading-about-byovd-protection-with-wdac)
 
-#### [WDAC policy](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDAC-policy-for-BYOVD-Kernel-mode-only-protection) for BYOVD Kernel mode only protection
+#### [App Control policy](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDAC-policy-for-BYOVD-Kernel-mode-only-protection) for BYOVD Kernel mode only protection
 
 <br>

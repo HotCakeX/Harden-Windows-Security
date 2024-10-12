@@ -14,7 +14,7 @@ Assert-WDACConfigIntegrity
 
 ## Description
 
-This cmdlet scans all of the relevant files in the WDACConfig module's folder and computes their SHA2/SHA3-512 hashes.
+This cmdlet scans all of the relevant files in the WDACConfig module's folder and computes their SHA2-512 hashes.
 
 Then it downloads the [cloud CSV file](https://github.com/HotCakeX/Harden-Windows-Security/blob/main/WDACConfig/Utilities/Hashes.csv) from the GitHub repository and compares the hashes of the local files with the ones in the cloud.
 

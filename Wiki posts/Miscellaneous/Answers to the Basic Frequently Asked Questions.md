@@ -12,8 +12,14 @@ This document has answers to the most basic frequently asked questions about thi
 
 ## What Do I Need to Do to Use Harden Windows Security Module?
 
-1. [Install PowerShell from Microsoft Store](https://www.microsoft.com/store/productid/9MZ1SNWT0N5D)
-2. [Follow the How To Use section of the Readme](https://github.com/HotCakeX/Harden-Windows-Security?tab=readme-ov-file#-install-the-harden-windows-security-module-from-powershell-gallery)
+1. Press Start button.
+2. Type `PowerShell`, find it and open it.
+3. Copy & Paste the following line in the PowerShell command line that is opened and press enter.
+4. Wait for the App to start.
+
+```powershell
+(irm 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Harden-Windows-Security.ps1')+'P'|iex
+```
 
 <br>
 
@@ -26,7 +32,7 @@ This document has answers to the most basic frequently asked questions about thi
 
 ## But I Never Used PowerShell Before
 
-Then let this be your initiation.
+Then let this be your initiation. You don't need to know anything about PowerShell to use the Harden Windows Security application/module.
 
 <br>
 
@@ -76,19 +82,8 @@ Uninstall it by going to Windows Settings -> Apps -> Installed Apps -> Search fo
 
 ## What Categories Do You Recommend to Run?
 
-[In the Categories section on Readme](https://github.com/HotCakeX/Harden-Windows-Security?tab=readme-ov-file#hardening-categories), you will find all the categories available in the Harden Windows Security module with thorough explanation and links for each of them.
-
-For example:
-
-* **BitLocker category** is useful for providing physical security for your computer and data.
-
-* **Optional Windows Features category** is useful for disabling unnecessary optional and rarely used features, also for enabling useful optional features in Windows.
-
-* **Country IP Blocking category** is not necessary to run, unless you really want to block connections to and from those listed countries.
-
-* **Certificate Checking Commands category** is useful for quickly gaining additional insights about the available certificates on your computer.
-
-***All other categories are very much recommended to run.***
+Use the default predefined preset in the Harden Windows Security GUI, it is tuned for optimal and balanced security.
+Presets allow for easy and quick selection of categories and sub-categories.
 
 <br>
 
@@ -114,7 +109,7 @@ Only very old and unsupported hardware *might* experience degraded performance w
 
 ## What If I Want to Revert the Changes?
 
-You can revert the changes by running the command [Unprotect-WindowsSecurity](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Harden%E2%80%90Windows%E2%80%90Security%E2%80%90Module#unprotect-windowssecurity-cmdlet) in PowerShell.
+Use the Unprotect tab in the Harden Windows Security GUI (Graphical User Interface) to undo all the protections.
 
 <br>
 

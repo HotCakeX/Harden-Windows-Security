@@ -10,23 +10,23 @@ Application Control policies are based on whitelisting strategy, meaning everyth
 
 <br>
 
-## How Does WDAC In The OS Compare To 3rd Party Solutions?
+## How Does App Control In The OS Compare To 3rd Party Solutions?
 
-<img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/WDAC%20FAQ/How%20Does%20WDAC%20In%20The%20OS%20Compare%20To%203rd%20Party%20Solutions.png" alt="How Does WDAC In The OS Compare To 3rd Party Solutions">
-
-<br>
-
-WDAC which is built deep inside of the OS kernel doesn’t need any “agents” to be installed, that means it can’t be killed using techniques used against 3rd party solutions, it also doesn’t increase the attack surface of the system. It’s native and exceedingly fast which makes it transparent to the user.
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/WDAC%20FAQ/How%20Does%20WDAC%20In%20The%20OS%20Compare%20To%203rd%20Party%20Solutions.png" alt="How Does App Control In The OS Compare To 3rd Party Solutions">
 
 <br>
 
-## Can I Use Microsoft Defender For Endpoint (MDE) To Collect WDAC Logs?
-
-<img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/WDAC%20FAQ/Can%20I%20Use%20Microsoft%20Defender%20For%20Endpoint%20(MDE)%20To%20Collect%20WDAC%20Logs.png" alt="Can I Use Microsoft Defender For Endpoint (MDE) To Collect WDAC Logs">
+App Control which is built deep inside of the OS kernel doesn’t need any “agents” to be installed, that means it can’t be killed using techniques used against 3rd party solutions, it also doesn’t increase the attack surface of the system. It’s native and exceedingly fast which makes it transparent to the user.
 
 <br>
 
-Yes. [MDE Should definitely be used](https://github.com/HotCakeX/Harden-Windows-Security/wiki/How-to-Use-Microsoft-Defender-for-Endpoint-Advanced-Hunting-With-WDAC-App-Control) to manage your endpoints and collect Code Integrity logs used to create WDAC policies. They provide very detailed CI info at scale for your entire fleet of machines. Then Intune can be used for at scale deployment of the policies after creation.
+## Can I Use Microsoft Defender For Endpoint (MDE) To Collect App Control Logs?
+
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/WDAC%20FAQ/Can%20I%20Use%20Microsoft%20Defender%20For%20Endpoint%20(MDE)%20To%20Collect%20WDAC%20Logs.png" alt="Can I Use Microsoft Defender For Endpoint (MDE) To Collect App Control Logs">
+
+<br>
+
+Yes. [MDE Should definitely be used](https://github.com/HotCakeX/Harden-Windows-Security/wiki/How-to-Use-Microsoft-Defender-for-Endpoint-Advanced-Hunting-With-WDAC-App-Control) to manage your endpoints and collect Code Integrity logs used to create App Control policies. They provide very detailed CI info at scale for your entire fleet of machines. Then Intune can be used for at scale deployment of the policies after creation.
 
 <br>
 
@@ -40,19 +40,19 @@ No, Supplemental policies are only used to expand a base policy by allowing more
 
 <br>
 
-## How Can I Make My WDAC Policy Tamper Proof?
+## How Can I Make My App Control Policy Tamper Proof?
 
-<img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/WDAC%20FAQ/How%20Can%20I%20Make%20My%20WDAC%20Policy%20Tamper%20Proof.png" alt="How Can I Make My WDAC Policy Tamper Proof">
-
-<br>
-
-If you cryptographically sign and deploy your WDAC policy, it will be tamper-proof and even the system administrator won't be able to remove it without the certificate's private keys 🔑.
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/WDAC%20FAQ/How%20Can%20I%20Make%20My%20WDAC%20Policy%20Tamper%20Proof.png" alt="How Can I Make My App Control Policy Tamper Proof">
 
 <br>
 
-## How Do Enterprises And Businesses Use Application Control (WDAC)?
+If you cryptographically sign and deploy your App Control policy, it will be tamper-proof and even the system administrator won't be able to remove it without the certificate's private keys 🔑.
 
-<img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/WDAC%20FAQ/How%20Do%20Enterprises%20And%20Businesses%20Use%20Application%20Control%20(WDAC).png" alt="How Do Enterprises And Businesses Use Application Control (WDAC)">
+<br>
+
+## How Do Enterprises And Businesses Use App Control?
+
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/WDAC%20FAQ/How%20Do%20Enterprises%20And%20Businesses%20Use%20Application%20Control%20(WDAC).png" alt="How Do Enterprises And Businesses Use App Control">
 
 <br>
 
@@ -60,19 +60,19 @@ Businesses and Enterprises have a variety of options. They can set Intune as Man
 
 <br>
 
-## How Many WDAC Policies Can Be Deployed On a System?
+## How Many App Control Policies Can Be Deployed On a System?
 
 <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/WDAC%20FAQ/How%20Many%20WDAC%20Policies%20Can%20be%20deployed%20on%20a%20sytem.png" alt="How Many WDAC Policies Can Be Deployed On a System">
 
 <br>
 
-There is no limit on how many Application Control (WDAC) policies you can deploy on a system.
+There is no limit on how many App Control policies you can deploy on a system.
 
 <br>
 
-## What Are The Tools I Need To Get Started With Application Control (WDAC) Policies?
+## What Are The Tools I Need To Get Started With App Control Policies?
 
-<img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/WDAC%20FAQ/What%20Are%20The%20Tools%20I%20Need%20To%20Get%20Started%20With%20Application%20Control%20(WDAC)%20Policies.png" alt="What Are The Tools I Need To Get Started With Application Control (WDAC) Policies">
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/WDAC%20FAQ/What%20Are%20The%20Tools%20I%20Need%20To%20Get%20Started%20With%20Application%20Control%20(WDAC)%20Policies.png" alt="What Are The Tools I Need To Get Started With App Control Policies">
 
 <br>
 
@@ -80,13 +80,13 @@ There is no limit on how many Application Control (WDAC) policies you can deploy
 
 <br>
 
-## What Is ISG And How Can I Use It In An Application Control (WDAC) Policy?
+## What Is ISG And How Can I Use It In An App Control Policy?
 
-<img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/WDAC%20FAQ/What%20Is%20ISG%20And%20How%20Can%20I%20Use%20It%20In%20An%20Application%20Control%20(WDAC)%20Policy.png" alt="What Is ISG And How Can I Use It In An Application Control (WDAC) Policy">
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/WDAC%20FAQ/What%20Is%20ISG%20And%20How%20Can%20I%20Use%20It%20In%20An%20Application%20Control%20(WDAC)%20Policy.png" alt="What Is ISG And How Can I Use It In An App Control Policy">
 
 <br>
 
-ISG stands for [The Intelligent Security Graph](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/app-control-for-business/design/use-appcontrol-with-intelligent-security-graph). It's a very powerful AI-based system that processes Trillions of signals from all kinds of data sources every day. You can utilize it as the arbiter in WDAC policies so it can help you allow trusted apps and block unknown or malicious apps automatically.
+ISG stands for [The Intelligent Security Graph](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/app-control-for-business/design/use-appcontrol-with-intelligent-security-graph). It's a very powerful AI-based system that processes Trillions of signals from all kinds of data sources every day. You can utilize it as the arbiter in App Control policies so it can help you allow trusted apps and block unknown or malicious apps automatically.
 
 <br>
 

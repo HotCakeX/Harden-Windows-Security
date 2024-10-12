@@ -16,7 +16,7 @@ Confirm-WDACConfig
 
 ## Description
 
-Lists the deployed Base and Supplemental WDAC Policies using [CITool](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/app-control-for-business/operations/citool-commands) and displays their counts and details.
+Lists the deployed Base and Supplemental App Control Policies using [CITool](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/app-control-for-business/operations/citool-commands) and displays their counts and details.
 
 ## Parameters
 

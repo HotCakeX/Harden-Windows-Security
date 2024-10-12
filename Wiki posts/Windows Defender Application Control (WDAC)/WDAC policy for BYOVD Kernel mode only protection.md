@@ -19,10 +19,10 @@ People who seek to obtain code signing certificates, even for Extended Validatio
 <br>
 
 <p align="center">
-<b>YOUTUBE VIDEO: How to easily protect against BYOVD attack scenarios with WDAC policy in Windows</b><br><br>
+<b>YOUTUBE VIDEO: How to easily protect against BYOVD attack scenarios with App Control policy in Windows</b><br><br>
   <a href="https://www.youtube.com/watch?v=SQCo9l2P7uw">
     <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/YouTubeLogoBYOVD.png" width="700"
-         alt="YOUTUBE VIDEO: How to easily protect against BYOVD attack scenarios with WDAC policy in Windows - Windows Defender">
+         alt="YOUTUBE VIDEO: How to easily protect against BYOVD attack scenarios with App Control policy in Windows - Windows Defender">
   </a>
   </p>
 
@@ -66,9 +66,9 @@ Sometimes the issuing CA also needs you to send in your driver's license and a p
 
 We need to establish a Zero-Trust situation by eliminating the default trust to any signed driver and explicitly authorizing each driver that seeks to access the kernel.
 
-Numerous applications incorporate drivers that interact with the Kernel. Ordinarily, they are unnoticeable, but if you deploy the WDAC policy that we are going to create, in Audit mode, you will be able to observe event logs generated for each of the kernel-mode drivers.
+Numerous applications incorporate drivers that interact with the Kernel. Ordinarily, they are unnoticeable, but if you deploy the App Control policy that we are going to create, in Audit mode, you will be able to observe event logs generated for each of the kernel-mode drivers.
 
-By creating a strict kernel mode WDAC policy, you will have a powerful security feature at your fingertips.
+By creating a strict kernel mode App Control policy, you will have a powerful security feature at your fingertips.
 
 This approach is the kind of future-leading technology you need. You can't afford waiting for analysis to predict malicious behavior or wait for malware to be found and cataloged before something is done about it.
 
@@ -78,13 +78,13 @@ This approach is the kind of future-leading technology you need. You can't affor
 
 <br>
 
-## How to make a strict Kernel mode WDAC policy
+## How to make a strict Kernel mode App Control policy
 
 We take the Default Windows example policy from `C:\Windows\schemas\CodeIntegrity\ExamplePolicies` and remove the following items from it:
 
 ### From the EKUs section
 
-* `ID_EKU_WHQL` which is for [WHQL (Windows Hardware Quality Labs)](https://learn.microsoft.com/en-us/windows-hardware/drivers/install/whql-release-signature), it allows 3rd party drivers that have WHQL certification to run, but since we are making a strict Kernel-mode WDAC policy, we want to handpick which Kernel mode drivers get to run on the system.
+* `ID_EKU_WHQL` which is for [WHQL (Windows Hardware Quality Labs)](https://learn.microsoft.com/en-us/windows-hardware/drivers/install/whql-release-signature), it allows 3rd party drivers that have WHQL certification to run, but since we are making a strict Kernel-mode App Control policy, we want to handpick which Kernel mode drivers get to run on the system.
 
 * `"ID_EKU_RT_EXT"` belongs to Windows Runtime, Usermode only.
 
@@ -100,7 +100,7 @@ We take the Default Windows example policy from `C:\Windows\schemas\CodeIntegrit
 
   * The FriendlyName attribute of the EKU is a human-readable name that describes the purpose of the certificate. The FriendlyName also includes the Object Identifier (OID) of the certificate, which is a numeric code that identifies who issued the certificate and what it is for. The OID follows a hierarchical structure, where each dot-separated number represents a level of authority or category.
 
-  * The Value attribute of the EKU, `010a2b0601040182374c0b01` is a hexadecimal representation of the OID, which is used by WDAC to validate the certificate. The Value must match the OID exactly, otherwise WDAC will not trust the certificate. It corresponds to the AntiMalware EKU certificate, which has an OID of `1.3.6.1.4.1.311.76.11.1`.
+  * The Value attribute of the EKU, `010a2b0601040182374c0b01` is a hexadecimal representation of the OID, which is used by App Control to validate the certificate. The Value must match the OID exactly, otherwise App Control will not trust the certificate. It corresponds to the AntiMalware EKU certificate, which has an OID of `1.3.6.1.4.1.311.76.11.1`.
 
   * This certificate is used to verify files that are signed by an antimalware vendor whose product is using Protected Process Light (PPL). The AntiMalware EKU does not apply to kernel mode drivers, only to user mode processes that are signed by an antimalware vendor.
 
@@ -116,7 +116,7 @@ We take the Default Windows example policy from `C:\Windows\schemas\CodeIntegrit
 
 <br>
 
-For our strict Kernel-mode-only WDAC policy, only the following EKUs are necessary
+For our strict Kernel-mode-only App Control policy, only the following EKUs are necessary
 
 ```xml
 <EKUs>
@@ -306,15 +306,15 @@ Remove this item which is for Windows Store EKU
 
 ## How to Use and Automate This Entire Process
 
-**Use the [WDACConfig module](https://github.com/HotCakeX/Harden-Windows-Security/wiki/New%E2%80%90KernelModeWDACConfig)** to automatically Audit and deploy the Strict Kernel-mode WDAC policies.
+**Use the [WDACConfig module](https://github.com/HotCakeX/Harden-Windows-Security/wiki/New%E2%80%90KernelModeWDACConfig)** to automatically Audit and deploy the Strict Kernel-mode App Control policies.
 
 As mentioned earlier, this policy only enforces and applies to Kernel-mode drivers, so your non-Kernel mode files are unaffected. Keep in mind that Kernel-mode does not mean programs that require Administrator privileges, those 2 categories are completely different. Also, not all drivers are Kernel mode, [**there are user-mode drivers too.**](https://learn.microsoft.com/en-us/windows-hardware/drivers/gettingstarted/user-mode-and-kernel-mode)
 
-This strict Kernel mode policy can be perfectly deployed side by side any other WDAC policy.
+This strict Kernel mode policy can be perfectly deployed side by side any other App Control policy.
 
 For instance, since HVCI is turned on by default on my system, the [Microsoft Recommended driver block rules](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/app-control-for-business/design/microsoft-recommended-driver-block-rules) is automatically deployed and it's only Kernel mode. It has 2 allow all rules, making it primarily a block-list policy.
 
-Then I deploy Strict Kernel-mode WDAC policy, which also only applies to Kernel-mode drivers. It doesn't have allow all rules of course, instead it allows Windows components that are required for Windows to function properly to run and then will let you hand pick any 3rd party Kernel-mode drivers and easily allow them in your policy.
+Then I deploy Strict Kernel-mode App Control policy, which also only applies to Kernel-mode drivers. It doesn't have allow all rules of course, instead it allows Windows components that are required for Windows to function properly to run and then will let you hand pick any 3rd party Kernel-mode drivers and easily allow them in your policy.
 
 Now the Allow all rules that exist in the first policy are neutralized. [Only applications allowed by both policies run without generating block events.](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/app-control-for-business/design/deploy-multiple-appcontrol-policies), so since the same allow all rules do not exist in our Strict Kernel-mode base policy, they no longer apply.
 
@@ -326,9 +326,9 @@ Now the Allow all rules that exist in the first policy are neutralized. [Only ap
 
 ## What About User-mode Binaries?
 
-So far, we've only been doing Kernel-mode administration. We can use User-mode WDAC policies as well.
+So far, we've only been doing Kernel-mode administration. We can use User-mode App Control policies as well.
 
-After using those 2 Kernel-mode policies, I deploy a 3rd policy which is going to authorize and validate User-mode binaries too. I choose the [Lightly managed WDAC policy](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDAC-for-Lightly-Managed-Devices) that utilizes [ISG (Intelligent Security Graph)](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/app-control-for-business/design/use-appcontrol-with-intelligent-security-graph). This policy applies to both Kernel and User modes, but since we already know the logic and learned that only applications allowed by all base policies are allowed to run, we're confident that our Strict Kernel-mode base policy is the only one in charge of authorizing and validating Kernel-mode files/drivers. Our User-mode WDAC policy that utilizes ISG validates User-mode binaries only.
+After using those 2 Kernel-mode policies, I deploy a 3rd policy which is going to authorize and validate User-mode binaries too. I choose the [Lightly managed App Control policy](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDAC-for-Lightly-Managed-Devices) that utilizes [ISG (Intelligent Security Graph)](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/app-control-for-business/design/use-appcontrol-with-intelligent-security-graph). This policy applies to both Kernel and User modes, but since we already know the logic and learned that only applications allowed by all base policies are allowed to run, we're confident that our Strict Kernel-mode base policy is the only one in charge of authorizing and validating Kernel-mode files/drivers. Our User-mode App Control policy that utilizes ISG validates User-mode binaries only.
 
 <br>
 
@@ -363,8 +363,8 @@ Anti-malware or antivirus vendors need to sign enforceable and binding legal agr
 
 <br>
 
-## <img width="65" src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/arrow-pink.gif" alt="Gif indicating Continue reading about important WDAC notes"> [Continue reading about important WDAC notes](#-continue-reading-about-important-wdac-notes)
+## <img width="65" src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/arrow-pink.gif" alt="Gif indicating Continue reading about important App Control notes"> [Continue reading about important App Control notes](#-continue-reading-about-important-wdac-notes)
 
-#### [Important Notes and Tips](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDAC-Notes) about WDAC policies
+#### [Important Notes and Tips](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDAC-Notes) about App Control policies
 
 <br>

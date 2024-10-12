@@ -20,6 +20,8 @@ Harden Windows Security also excels in rigorous compliance verification and secu
 
 Furthermore, this module is invaluable for security researchers and penetration testers seeking to assess and improve their system's security posture. It is compatible with any system locale and language, ensuring broad usability.
 
+<br>
+
 ## Comprehensive Logging Capabilities
 
 Harden Windows Security includes detailed logging features that track every part of its operations. These logs are helpful for reviewing what actions were taken, making it easier to audit and troubleshoot. You can choose where these logs are saved:
@@ -31,6 +33,8 @@ Harden Windows Security includes detailed logging features that track every part
 * Console Output: Display logs in the console for real-time updates.
 
 These logging options ensure that all actions taken by Harden Windows Security are recorded, giving you clear visibility into your security processes. Whether you’re conducting security checks, responding to issues, or just keeping an eye on things, these logs provide valuable information.
+
+<br>
 
 ## Automatic Updates
 
@@ -317,7 +321,7 @@ The path to the 'Microsoft 365 Apps for Enterprise zip'. Make sure it's in the z
 | WindowsNetworking_BlockNTLM | Blocks NTLM Completely | WindowsNetworking |
 | Miscellaneous_WindowsProtectedPrint | Enables Windows Protected Print Mode | MiscellaneousConfigurations |
 | CountryIPBlocking_OFAC | Include the IP ranges of OFAC Sanctioned Countries in the firewall block rules | CountryIPBlocking |
-| DangerousScriptHostsBlocking | Deploys the Dangerous Script Hosts Blocking WDAC Policy | DownloadsDefenseMeasures |
+| DangerousScriptHostsBlocking | Deploys the Dangerous Script Hosts Blocking App Control Policy | DownloadsDefenseMeasures |
 
 <br>
 
@@ -541,7 +545,7 @@ Indicates that the cmdlet will only remove Process Mitigations (Exploit Protecti
 
 ### -WDACPoliciesToRemove
 
-Select the [WDAC Policy](https://github.com/HotCakeX/Harden-Windows-Security?tab=readme-ov-file#downloads-defense-measures-) names to remove.
+Select the [App Control Policy](https://github.com/HotCakeX/Harden-Windows-Security?tab=readme-ov-file#downloads-defense-measures-) names to remove.
 
 <div align='center'>
 

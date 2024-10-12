@@ -1,7 +1,7 @@
 # Create and Deploy Signed Application Control (WDAC) Policies
 
 > [!IMPORTANT]\
-> [WDACConfig module](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Build-WDACCertificate) can easily and quickly generate a Code Signing certificate to be used for signing Application Control (WDAC) policies.
+> [WDACConfig module](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Build-WDACCertificate) can easily and quickly generate a Code Signing certificate to be used for signing App Control policies.
 >
 > This guide is only for those who want to learn how to setup a Windows Server with Active Directory and Certification Authority roles and create their own CA.
 
@@ -11,12 +11,12 @@
 
 * The [**only** way for this security feature](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/app-control-for-business/deployment/disable-appcontrol-policies#removing-app-control-policies) to be turned off, modified, updated or disabled will be to have access to the certificate's private keys used to sign it.
 
-* [Refer to Microsoft's website](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/app-control-for-business/design/appcontrol-design-guide) or [my other wiki posts](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Introduction) If you want to learn about WDAC itself and how to create a customized WDAC policy for your own environment.
+* [Refer to Microsoft's website](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/app-control-for-business/design/appcontrol-design-guide) or [my other wiki posts](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Introduction) If you want to learn about App Control itself and how to create a customized App Control policy for your own environment.
 
-* Always test and deploy your WDAC policy in Audit mode first to make sure it works correctly, before deploying the Signed version of it.
+* Always test and deploy your App Control policy in Audit mode first to make sure it works correctly, before deploying the Signed version of it.
     - The [WDACConfig](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDACConfig) module has an optional parameter called `-TestMode` that will deploy the policies with ***Boot Audit on Failure*** and ***Advanced Boot Options Menu*** policy rule options.
 
-* Keep the xml file(s) of the deployed base policy(s) in a safe place, they are needed if you decide to disable or modify the signed deployed WDAC policy later on.
+* Keep the xml file(s) of the deployed base policy(s) in a safe place, they are needed if you decide to disable or modify the signed deployed App Control policy later on.
 
 <br>
 
@@ -37,12 +37,12 @@
 ## TL;DR (Short version)
 
 1. Install the latest Windows Server, Install AD/DS and AD/CS roles on it. (≈15 mins depending on hardware and if downloaded ISO or VHDX)
-2. Use the Enterprise CA's code signing template to create a customized certificate template for WDAC Signing (≈5 minutes)
-3. Generate the certificate and use it to sign the WDAC Policy (≈3 minutes)
+2. Use the Enterprise CA's code signing template to create a customized certificate template for App Control Signing (≈5 minutes)
+3. Generate the certificate and use it to sign the App Control Policy (≈3 minutes)
 
-That's essentially everything we have to do. So, if you are already familiar with the concepts, you can go straight to the bottom of this page and use the resources section to refer to Microsoft guides to create and deploy the Signed WDAC policy.
+That's essentially everything we have to do. So, if you are already familiar with the concepts, you can go straight to the bottom of this page and use the resources section to refer to Microsoft guides to create and deploy the Signed App Control policy.
 
-But if you aren't familiar, keep reading as I've thoroughly explained every step to set up Windows Server, generate signing certificate and sign the WDAC policy. It takes about 20 minutes for me (as you can see in the video) and depending on the hardware, it can even take less time.
+But if you aren't familiar, keep reading as I've thoroughly explained every step to set up Windows Server, generate signing certificate and sign the App Control policy. It takes about 20 minutes for me (as you can see in the video) and depending on the hardware, it can even take less time.
 
 <br>
 
@@ -196,7 +196,7 @@ certutil -getreg ca\ValidityPeriodUnits
 ## Follow the official guide to create certificate template and generate the signing certificate
 
 Now open Certification Authority, you can do so by searching for it in Windows search or from Server Manager => Tools.
-Once you open it, you can follow [the guide from Microsoft](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/app-control-for-business/deployment/create-code-signing-cert-for-appcontrol) to create the certificate template for WDAC policy signing and then request and create a certificate.
+Once you open it, you can follow [the guide from Microsoft](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/app-control-for-business/deployment/create-code-signing-cert-for-appcontrol) to create the certificate template for App Control policy signing and then request and create a certificate.
 
 <br>
 
@@ -213,7 +213,7 @@ That's why our Hyper-V VM Server needs at least one Virtual Network Adapter.
 
 The [guide suggests](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/app-control-for-business/deployment/create-code-signing-cert-for-appcontrol) using a client computer to request and create the certificate but since we are going to use the certificate for non-domain-joined computers and don't need to use the Active Directory, we can perform all of the steps on the same Windows Server VM.
 
-These are some optional ***deviations*** from the [official guide](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/app-control-for-business/deployment/create-code-signing-cert-for-appcontrol) that **result in creating a successful and more secure certificate** for our WDAC policy signing:
+These are some optional ***deviations*** from the [official guide](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/app-control-for-business/deployment/create-code-signing-cert-for-appcontrol) that **result in creating a successful and more secure certificate** for our App Control policy signing:
 
 * On the Compatibility tab, you can select Windows Server 2016 from the Certification Authority list and select Windows 10 / Windows Server 2016 from the Certificate recipient list.
 
@@ -276,23 +276,23 @@ To request the certificate and enroll it, you can follow <a href="https://learn.
 
 <br>
 
-## Create a Signed WDAC policy
+## Create a Signed App Control policy
 
 Once we have the certificate in the User Certificates store of either the Windows Server or a client machine, Right-click on it => All tasks => Export. Export the **Private key** and export all the Extended Properties, set a password for the certificate and set Encryption to `AES256-SHA256`. Select a location to export and it will create a `.pfx` file.
 
-You also need to export the certificate **without private key**, in `DER encoded binary X.509` format which will create a `.cer` certificate file. We need this certificate to sign the WDAC policy.
+You also need to export the certificate **without private key**, in `DER encoded binary X.509` format which will create a `.cer` certificate file. We need this certificate to sign the App Control policy.
 
-It is important to keep these 2 files, specially `.pfx` that contains the private key, in a safe place, such as [Azure Key Vault Managed HSM](https://learn.microsoft.com/en-us/azure/key-vault/managed-hsm/overview) or [OneDrive Personal Vault](https://support.microsoft.com/en-us/office/protect-your-onedrive-files-in-personal-vault-6540ef37-e9bf-4121-a773-56f98dce78c4), so that if you delete all the VMs you created, you will be able to continue using the same certificate to sign further WDAC policies and supplemental policies, at least for the next 22 years, before it needs a renewal. As you can see, all of that setup must be done just once ***every few decades.***
+It is important to keep these 2 files, specially `.pfx` that contains the private key, in a safe place, such as [Azure Key Vault Managed HSM](https://learn.microsoft.com/en-us/azure/key-vault/managed-hsm/overview) or [OneDrive Personal Vault](https://support.microsoft.com/en-us/office/protect-your-onedrive-files-in-personal-vault-6540ef37-e9bf-4121-a773-56f98dce78c4), so that if you delete all the VMs you created, you will be able to continue using the same certificate to sign further App Control policies and supplemental policies, at least for the next 22 years, before it needs a renewal. As you can see, all of that setup must be done just once ***every few decades.***
 
-The [Personal Information Exchange (.pfx)](https://learn.microsoft.com/en-us/windows-hardware/drivers/install/personal-information-exchange---pfx--files) file has great importance because it contains the Public key and **Private key** of the certificate so anyone who has access to this file [can disable](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/app-control-for-business/deployment/disable-appcontrol-policies#removing-app-control-policies) the deployed Signed WDAC policy. It should never be shared with anyone outside your circle of trust. It is a password-protected file by nature.
-
-<br>
-
-## Use [WDACConfig module](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Deploy-SignedWDACConfig) to sign and deploy WDAC policies
+The [Personal Information Exchange (.pfx)](https://learn.microsoft.com/en-us/windows-hardware/drivers/install/personal-information-exchange---pfx--files) file has great importance because it contains the Public key and **Private key** of the certificate so anyone who has access to this file [can disable](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/app-control-for-business/deployment/disable-appcontrol-policies#removing-app-control-policies) the deployed Signed App Control policy. It should never be shared with anyone outside your circle of trust. It is a password-protected file by nature.
 
 <br>
 
-WDACConfig module with the `Deploy-SignedWDACConfig` [cmdlet](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Deploy-SignedWDACConfig) can automate the entire process of signing and deploying a signed WDAC policy.
+## Use [WDACConfig module](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Deploy-SignedWDACConfig) to sign and deploy App Control policies
+
+<br>
+
+WDACConfig module with the `Deploy-SignedWDACConfig` [cmdlet](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Deploy-SignedWDACConfig) can automate the entire process of signing and deploying a signed App Control policy.
 
 ```powershell
 Deploy-SignedWDACConfig -CertPath <String> -PolicyPaths <String[]> -CertCN <String>
@@ -324,19 +324,19 @@ Run it and only select `Windows SDK Signing Tools for Desktop Apps` to install. 
 
 ### Activation Process
 
-After the signed Application Control (WDAC) policy binary `.cip` is copied to the `EFI` partition as part of the deployment process, and system is restarted once, we can see in System Information that Application Control User-Mode is being enforced and when you try to install an application not permitted by the deployed policy, it will be successfully blocked.
+After the signed App Control policy binary `.cip` is copied to the `EFI` partition as part of the deployment process, and system is restarted once, we can see in System Information that Application Control User-Mode is being enforced and when you try to install an application not permitted by the deployed policy, it will be successfully blocked.
 
-At this point, since we are using UEFI Secure Boot, the **Anti Tampering** protection of the **Signed policy** kicks in and starts protecting WDAC policy against any tampering. We need to reboot the system one more time, [to verify everything](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/app-control-for-business/deployment/use-signed-policies-to-protect-appcontrol-against-tampering#verify-and-deploy-the-signed-policy) and make sure there is no boot failure.
+At this point, since we are using UEFI Secure Boot, the **Anti Tampering** protection of the **Signed policy** kicks in and starts protecting App Control policy against any tampering. We need to reboot the system one more time, [to verify everything](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/app-control-for-business/deployment/use-signed-policies-to-protect-appcontrol-against-tampering#verify-and-deploy-the-signed-policy) and make sure there is no boot failure.
 
-Deploying a Signed WDAC policy **without restarting** is the same as deploying Unsigned policies, because the Signed policy can be easily removed just like an Unsigned policy. So always make sure you restart at least once after deploying a Signed WDAC policy.
+Deploying a Signed App Control policy **without restarting** is the same as deploying Unsigned policies, because the Signed policy can be easily removed just like an Unsigned policy. So always make sure you restart at least once after deploying a Signed App Control policy.
 
 <br>
 
-### If Someone forcefully deletes the deployed WDAC policy file
+### If Someone forcefully deletes the deployed App Control policy file
 
-* Deleting the `.cip` policy file from `C:\Windows\System32\CodeIntegrity\CiPolicies\Active` and then restarting the system multiple times won't have any effect at all on the status of WDAC. It will continue to work, and enforcement status will be shown in System Information. **This is how it protects itself against rogue administrators.**
+* Deleting the `.cip` policy file from `C:\Windows\System32\CodeIntegrity\CiPolicies\Active` and then restarting the system multiple times won't have any effect at all on the status of App Control. It will continue to work, and enforcement status will be shown in System Information. **This is how it protects itself against rogue administrators.**
 
-* Deleting the `.cip` policy file from the `EFI` partition located at `\EFI\Microsoft\Boot\CIPolicies\Active` and restarting the device will result in a boot failure. Before system restart, nothing happens and it will remain active. This is another self-protection method of a Signed WDAC policy. To recover from this state, the person will need to disable Secure Boot in the UEFI firmware settings. There are only 3 scenarios at this point:
+* Deleting the `.cip` policy file from the `EFI` partition located at `\EFI\Microsoft\Boot\CIPolicies\Active` and restarting the device will result in a boot failure. Before system restart, nothing happens and it will remain active. This is another self-protection method of a Signed App Control policy. To recover from this state, the person will need to disable Secure Boot in the UEFI firmware settings. There are only 3 scenarios at this point:
 
     1. If, as suggested in the [Security Recommendations](https://github.com/HotCakeX/Harden-Windows-Security#security-recommendations), you set a strong password for the UEFI firmware of your hardware, they can't access the firmware. This security measure [alongside the rest of the Windows built-in security features](https://github.com/HotCakeX/Harden-Windows-Security) such as BitLocker device encryption will provide the **Ultimate protection for a Windows device against any threats and any person, no matter physical, real-life or Internet threats.**
 
@@ -344,9 +344,9 @@ Deploying a Signed WDAC policy **without restarting** is the same as deploying U
 
     3. Since steps 1 and 2 are impossible to bypass for a rouge person, there will be only one option left. To completely recycle the physical device, get rid of the inaccessible hardware such as SSD and then sell the remaining hardware parts. Either way, **your data remains secure and inaccessible to any unauthorized person(s) at all times.**
 
-<details><summary>Screenshot of a message after forcefully deleting a Signed WDAC policy from the EFI partition</summary>
+<details><summary>Screenshot of a message after forcefully deleting a Signed App Control policy from the EFI partition</summary>
 
-<img src="https://user-images.githubusercontent.com/118815227/219513251-3722745f-1aa5-4b5c-b4b0-e1a928b786a1.png" alt="Screenshot of a message after forcefully deleting a Signed WDAC policy from the EFI partition">
+<img src="https://user-images.githubusercontent.com/118815227/219513251-3722745f-1aa5-4b5c-b4b0-e1a928b786a1.png" alt="Screenshot of a message after forcefully deleting a Signed App Control policy from the EFI partition">
 
 </details>
 
@@ -354,13 +354,13 @@ Deploying a Signed WDAC policy **without restarting** is the same as deploying U
 
 ### What Happens When We Turn On Smart App Control
 
-Smart App Control works side-by-side any signed or unsigned Application Control policy (WDAC) because it is itself a special type of WDAC policy. It will be in enforced mode and continue to do its job.
+Smart App Control works side-by-side any signed or unsigned App Control policy because it is itself a special type of App Control policy. It will be in enforced mode and continue to do its job.
 
 <br>
 
 ### Dual boot OS configurations
 
-When you deploy a **Signed** WDAC policy on a system that uses Secure Boot, it will be enforced on all of the OSes that boot on the physical machine, because the policy resides on the EFI partition and is not tied to any specific OS. That means if you perform a clean install of a second Windows OS or natively boot a VHDX (Hyper-V VM), the policy will apply to them as well.
+When you deploy a **Signed** App Control policy on a system that uses Secure Boot, it will be enforced on all of the OSes that boot on the physical machine, because the policy resides on the EFI partition and is not tied to any specific OS. That means if you perform a clean install of a second Windows OS or natively boot a VHDX (Hyper-V VM), the policy will apply to them as well.
 
 <br>
 
@@ -387,7 +387,7 @@ assign letter=z
 
 <br>
 
-The `EFI` partition will be available in This PC with letter `Z`, but you can't access it without modifying permissions. There is however an easier way to access it and manually copy the Signed WDAC policy binary to it. Open Task Manager as admin, select `Run New Task`, select `Browse` and now you can access drive `Z` (`EFI` partition) and copy the Signed `.cip` file in `Z:\EFI\Microsoft\Boot\CIPolicies\Active`.
+The `EFI` partition will be available in This PC with letter `Z`, but you can't access it without modifying permissions. There is however an easier way to access it and manually copy the Signed App Control policy binary to it. Open Task Manager as admin, select `Run New Task`, select `Browse` and now you can access drive `Z` (`EFI` partition) and copy the Signed `.cip` file in `Z:\EFI\Microsoft\Boot\CIPolicies\Active`.
 
 <br>
 

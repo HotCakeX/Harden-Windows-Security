@@ -1,6 +1,6 @@
 # WDAC Rule Levels Comparison and Guide
 
-This document lists all of the levels of WDAC rules. **From Top to bottom, from the most secure to the least secure**, the levels are:
+This document lists all of the levels of App Control rules. **From Top to bottom, from the most secure to the least secure**, the levels are:
 
 ## <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/Neon%20numbers%20and%20letters/number0.gif" width="40" alt="Neon number"> Hash
 
@@ -155,9 +155,9 @@ This document lists all of the levels of WDAC rules. **From Top to bottom, from 
 
 ## <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/Neon%20numbers%20and%20letters/symbolexclamation.gif" width="40" alt="Neon number"> About SpecificFileNameLevel Options
 
-WDAC creates file rules based on file attributes when you scan a folder using a level such as `FilePublisher`. Each file rule has a `MinimumVersion` and **only** one of the six `SpecificFileNameLevels`.
+App Control creates file rules based on file attributes when you scan a folder using a level such as `FilePublisher`. Each file rule has a `MinimumVersion` and **only** one of the six `SpecificFileNameLevels`.
 
-For instance, suppose a folder has 10 signed files with identical signatures and product names (or File Descriptions etc.). In that case, WDAC creates a single file rule with the product name (or File Description etc.) and the lowest version of the 10 files. This file rule is sufficient to allow all 10 files.
+For instance, suppose a folder has 10 signed files with identical signatures and product names (or File Descriptions etc.). In that case, App Control creates a single file rule with the product name (or File Description etc.) and the lowest version of the 10 files. This file rule is sufficient to allow all 10 files.
 
 The `MinimumVersion` is the smallest version among the files with the same signature and SpecificFileNameLevel in the folder.
 

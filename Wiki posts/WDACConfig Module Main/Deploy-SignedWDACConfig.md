@@ -1,7 +1,7 @@
 # Deploy-SignedWDACConfig available parameters
 
 <div align="center">
-<a href="https://www.youtube.com/watch?v=nZ5c9ceaEwA"><img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/PNG%20and%20JPG/Thumbnails%20with%20YouTube%20play%20logo/YouTube%20Thumbnal%20-%20deploy%20Signed%20WDAC%20policies.png" alt="How to sign and deploy signed WDAC policeis" width="550"></a></div>
+<a href="https://www.youtube.com/watch?v=nZ5c9ceaEwA"><img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/PNG%20and%20JPG/Thumbnails%20with%20YouTube%20play%20logo/YouTube%20Thumbnal%20-%20deploy%20Signed%20WDAC%20policies.png" alt="How to sign and deploy signed App Control policies" width="550"></a></div>
 
 <br>
 

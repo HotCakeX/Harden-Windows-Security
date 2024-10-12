@@ -12,7 +12,7 @@
 
 ```mermaid
 flowchart TD
-    A(Deploy WDAC base policy with ISG) -->B(Start using your apps)
+    A(Deploy App Control base policy with ISG) -->B(Start using your apps)
     B --> C(Did your app run without problem?)
     C -->|Yes| D[Awesome]
     C -->|No| E[Create a Supplemental policy for it]
@@ -52,20 +52,20 @@ New-WDACConfig -PolicyType SignedAndReputable
 * [Parameter info](https://github.com/HotCakeX/Harden-Windows-Security/wiki/New-WDACConfig)
 
 ```powershell
-Deploy-SignedWDACConfig -CertPath "C:\Certificate.cer" -PolicyPaths "C:\Users\HotCakeX\SignedAndReputable.xml" -CertCN "WDAC Certificate" -Deploy
+Deploy-SignedWDACConfig -CertPath "C:\Certificate.cer" -PolicyPaths "C:\Users\HotCakeX\SignedAndReputable.xml" -CertCN "App Control Certificate" -Deploy
 ```
 
 * [Cmdlet info](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Deploy-SignedWDACConfig)
 
 <br>
 
-* The module creates ***SignedAndReputable WDAC base Policy*** based on [AllowMicrosoft policy template](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/app-control-for-business/design/example-appcontrol-base-policies) with ***ISG*** related [rule options](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/app-control-for-business/design/select-types-of-rules-to-create#table-1-app-control-for-business-policy---policy-rule-options).
+* The module creates ***SignedAndReputable App Control base Policy*** based on [AllowMicrosoft policy template](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/app-control-for-business/design/example-appcontrol-base-policies) with ***ISG*** related [rule options](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/app-control-for-business/design/select-types-of-rules-to-create#table-1-app-control-for-business-policy---policy-rule-options).
 
 * The module also automatically starts the [Application Identity](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/app-control-for-business/applocker/configure-the-application-identity-service) (`AppIDSvc`) service required for [ISG Authorization](https://learn.microsoft.com/en-us/windows/security/application-security/application-control/app-control-for-business/design/use-appcontrol-with-intelligent-security-graph#enable-the-necessary-services-to-allow-wdac-to-use-the-isg-correctly-on-the-client) and sets its startup mode to Automatic. It's a protected service so can't be disabled or modified using Services snap-in.
 
 * ISG Authorization requires active Internet connection to communicate with the global ISG network.
 
-* Recommended to perform a reboot regardless of whether you are deploying signed or unsigned version of the "SignedAndReputable" WDAC base policy.
+* Recommended to perform a reboot regardless of whether you are deploying signed or unsigned version of the "SignedAndReputable" App Control base policy.
 
 <br>
 
@@ -141,7 +141,7 @@ Edit-WDACConfig -AllowNewApps -SuppPolicyName "App's Name" -PolicyPath "C:\Signe
 ### Based on App’s Install Directory and Other Signals - Signed Version
 
 ```powershell
-Edit-SignedWDACConfig -AllowNewApps -CertPath "C:\Certificate.cer" -SuppPolicyName "App's Name" -PolicyPath "C:\SignedAndReputable.xml" -CertCN "WDAC Certificate"
+Edit-SignedWDACConfig -AllowNewApps -CertPath "C:\Certificate.cer" -SuppPolicyName "App's Name" -PolicyPath "C:\SignedAndReputable.xml" -CertCN "App Control Certificate"
 ```
 
 * [Parameter info](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Edit-SignedWDACConfig#edit-signedwdacconfig--allownewapps)
@@ -154,7 +154,7 @@ Edit-SignedWDACConfig -AllowNewApps -CertPath "C:\Certificate.cer" -SuppPolicyNa
 
 ## Security Considerations
 
-One of the differences between using **ISG in a WDAC policy** vs using **Smart App Control** (which also use ISG) is that WDAC policy + ISG rule option passes along reputation from app installers to the binaries they write to disk, it can over-authorize files in some cases. For example, if the installer launches the app upon completion, any files the app writes during that first run will also be allowed.
+One of the differences between using **ISG in an App Control policy** vs using **Smart App Control** (which also use ISG) is that App Control policy + ISG rule option passes along reputation from app installers to the binaries they write to disk, it can over-authorize files in some cases. For example, if the installer launches the app upon completion, any files the app writes during that first run will also be allowed.
 
 Smart App Control however doesn't do this, it will trust the installer file itself if it's trustworthy and subsequently checks the trustworthiness of any binaries the installer tries to use and write to the disk, if any of those binaries or components can't be verified or are malicious, they get blocked.
 

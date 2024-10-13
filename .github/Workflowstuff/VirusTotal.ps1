@@ -1,97 +1,82 @@
-if ( Get-Module -ListAvailable 'VirusTotalAnalyzer') {
+# Import the VirusTotalAnalyzer module
+if (Get-Module -ListAvailable 'VirusTotalAnalyzer') {
     Import-Module VirusTotalAnalyzer -Force
-}
-else {
+} else {
     Install-Module -Name VirusTotalAnalyzer -AllowClobber -Force -Scope CurrentUser
     Import-Module VirusTotalAnalyzer -Force
 }
 
+# VirusTotal API Key
 $VTApi = $env:VTAPIsecret
 
-# Submit
-$Output = New-VirusScan -ApiKey $VTApi -File '.\Harden-Windows-Security Module\Main files\Resources\Security-Baselines-X.zip'
+# Submit the ZIP of the repository to VirusTotal
+$repoZip = ".\repository.zip"
+$Output = New-VirusScan -ApiKey $VTApi -File $repoZip
 
-# Wait
+# Wait for the result of the repository ZIP scan
 Do {
     $OutputScan = Get-VirusReport -ApiKey $VTApi -AnalysisId $Output.data.id
     if ($OutputScan.data.attributes.status -eq 'queued') {
         Write-Host "Waiting... $($OutputScan.data.attributes.status)" -ForegroundColor Gray
         Start-Sleep 10
     }
-}
-until($OutputScan.data.attributes.status -eq 'completed')
+} until ($OutputScan.data.attributes.status -eq 'completed')
 
-# Result
-Write-Host 'Analyze completed' -ForegroundColor DarkMagenta
+# Print results for the repository ZIP
+Write-Host 'Repository ZIP analysis completed' -ForegroundColor DarkMagenta
 if ($OutputScan.data.attributes.stats.suspicious -gt 0 -or $OutputScan.data.attributes.stats.malicious -gt 0) {
     Write-Host ("sha256: {0}`nUndetected: {1}`nSuspicious: {2}`nMalicious: {3}`nURL: {4}" -f `
-            $OutputScan.meta.file_info.sha256, `
-            $OutputScan.data.attributes.stats.undetected, `
-            $OutputScan.data.attributes.stats.suspicious, `
-            $OutputScan.data.attributes.stats.malicious,
+        $OutputScan.meta.file_info.sha256, 
+        $OutputScan.data.attributes.stats.undetected,
+        $OutputScan.data.attributes.stats.suspicious,
+        $OutputScan.data.attributes.stats.malicious,
         "https://www.virustotal.com/gui/file/$($OutputScan.meta.file_info.sha256)"
     ) -ForegroundColor Red
-
-}
-else {
+} else {
     Write-Host ("sha256: {0}`nUndetected: {1}`nSuspicious: {2}`nMalicious: {3}`nURL: {4}" -f `
-            $OutputScan.meta.file_info.sha256, `
-            $OutputScan.data.attributes.stats.undetected, `
-            $OutputScan.data.attributes.stats.suspicious, `
-            $OutputScan.data.attributes.stats.malicious,
+        $OutputScan.meta.file_info.sha256, 
+        $OutputScan.data.attributes.stats.undetected,
+        $OutputScan.data.attributes.stats.suspicious,
+        $OutputScan.data.attributes.stats.malicious,
         "https://www.virustotal.com/gui/file/$($OutputScan.meta.file_info.sha256)"
     ) -ForegroundColor Green
-
 }
 
-$SecurityBaselinesXvar = "https://www.virustotal.com/gui/file/$($OutputScan.meta.file_info.sha256)"
+# Submit each release file in the release_assets folder
+$releaseFiles = Get-ChildItem -Path './release_assets' -File
 
-# Submit
-$Output = New-VirusScan -ApiKey $VTApi -File '.\Harden-Windows-Security Module\Main files\Resources\EventViewerCustomViews.zip'
+foreach ($file in $releaseFiles) {
+    # Submit each file to VirusTotal
+    $Output = New-VirusScan -ApiKey $VTApi -File $file.FullName
 
-# Wait
-Do {
-    $OutputScan = Get-VirusReport -ApiKey $VTApi -AnalysisId $Output.data.id
-    if ($OutputScan.data.attributes.status -eq 'queued') {
-        Write-Host "Waiting... $($OutputScan.data.attributes.status)" -ForegroundColor Gray
-        Start-Sleep 10
+    # Wait for the result of each file scan
+    Do {
+        $OutputScan = Get-VirusReport -ApiKey $VTApi -AnalysisId $Output.data.id
+        if ($OutputScan.data.attributes.status -eq 'queued') {
+            Write-Host "Waiting... $($OutputScan.data.attributes.status)" -ForegroundColor Gray
+            Start-Sleep 10
+        }
+    } until ($OutputScan.data.attributes.status -eq 'completed')
+
+    # Print results for each release file
+    Write-Host 'Analyze completed' -ForegroundColor DarkMagenta
+    if ($OutputScan.data.attributes.stats.suspicious -gt 0 -or $OutputScan.data.attributes.stats.malicious -gt 0) {
+        Write-Host ("File: {0}`nsha256: {1}`nUndetected: {2}`nSuspicious: {3}`nMalicious: {4}`nURL: {5}" -f `
+            $file.Name,
+            $OutputScan.meta.file_info.sha256, 
+            $OutputScan.data.attributes.stats.undetected,
+            $OutputScan.data.attributes.stats.suspicious,
+            $OutputScan.data.attributes.stats.malicious,
+            "https://www.virustotal.com/gui/file/$($OutputScan.meta.file_info.sha256)"
+        ) -ForegroundColor Red
+    } else {
+        Write-Host ("File: {0}`nsha256: {1}`nUndetected: {2}`nSuspicious: {3}`nMalicious: {4}`nURL: {5}" -f `
+            $file.Name,
+            $OutputScan.meta.file_info.sha256, 
+            $OutputScan.data.attributes.stats.undetected,
+            $OutputScan.data.attributes.stats.suspicious,
+            $OutputScan.data.attributes.stats.malicious,
+            "https://www.virustotal.com/gui/file/$($OutputScan.meta.file_info.sha256)"
+        ) -ForegroundColor Green
     }
 }
-until($OutputScan.data.attributes.status -eq 'completed')
-
-# Result
-Write-Host 'Analyze completed' -ForegroundColor DarkMagenta
-if ($OutputScan.data.attributes.stats.suspicious -gt 0 -or $OutputScan.data.attributes.stats.malicious -gt 0) {
-    Write-Host ("sha256: {0}`nUndetected: {1}`nSuspicious: {2}`nMalicious: {3}`nURL: {4}" -f `
-            $OutputScan.meta.file_info.sha256, `
-            $OutputScan.data.attributes.stats.undetected, `
-            $OutputScan.data.attributes.stats.suspicious, `
-            $OutputScan.data.attributes.stats.malicious,
-        "https://www.virustotal.com/gui/file/$($OutputScan.meta.file_info.sha256)"
-    ) -ForegroundColor Red
-}
-else {
-    Write-Host ("sha256: {0}`nUndetected: {1}`nSuspicious: {2}`nMalicious: {3}`nURL: {4}" -f `
-            $OutputScan.meta.file_info.sha256, `
-            $OutputScan.data.attributes.stats.undetected, `
-            $OutputScan.data.attributes.stats.suspicious, `
-            $OutputScan.data.attributes.stats.malicious,
-        "https://www.virustotal.com/gui/file/$($OutputScan.meta.file_info.sha256)"
-    ) -ForegroundColor Green
-}
-
-$EventViewerCustomViewsvar = "https://www.virustotal.com/gui/file/$($OutputScan.meta.file_info.sha256)"
-
-$SecurityBaselinesXVT = "<a href='$SecurityBaselinesXvar'>Virus Total scan results of Security-Baselines-X.zip</a>"
-$EventViewerCustomViewsVT = "<a href='$($EventViewerCustomViewsvar)'>Virus Total scan results of EventViewerCustomViews.zip</a>"
-$readme = Get-Content -Raw -Path 'README.md'
-$readme = $readme -replace '(?s)(?<=<!-- Security-Baselines-X-VT:START -->).*(?=<!-- Security-Baselines-X-VT:END -->)', $SecurityBaselinesXVT
-$readme = $readme -replace '(?s)(?<=<!-- EventViewer-CustomViews-VT:START -->).*(?=<!-- EventViewer-CustomViews-VT:END -->)', $EventViewerCustomViewsVT
-Set-Content -Path 'README.md' -Value $readme.TrimEnd() -Force
-
-# Committing the changes back to the repository
-git config --global user.email 'spynetgirl@outlook.com'
-git config --global user.name 'HotCakeX'
-git add 'README.md'
-git commit -m 'Updating VT Scan Results'
-git push

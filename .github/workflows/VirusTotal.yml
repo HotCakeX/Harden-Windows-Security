@@ -1,23 +1,53 @@
 name: Virus Total
 on:
-  push:
-    paths:
-      - Harden-Windows-Security Module/Main files/Resources/**
-    # To filter by branches
-    branches:
-      - main
   workflow_dispatch:
 
 jobs:
-  build:
-    name: Run Script
+  run-script:
+    name: Run VirusTotal Analysis
     runs-on: windows-latest
     steps:
+      # Step to check out the repository
       - uses: actions/checkout@v4
-      - name: Script
-        env:
-          VTAPIsecret: ${{ secrets.VTAPI }}
+      
+      # Step to create ZIP of the repository
+      - name: Create Repository Zip
         shell: pwsh
         run: |
+          Compress-Archive -Path '*' -DestinationPath 'repository.zip'
+          Write-Host "Repository ZIP created."
 
-            ./.github/Workflowstuff/VirusTotal
+      # Step to fetch the latest release and download attached files to a separate folder
+      - name: Fetch Latest Release Files
+        id: get_release_files
+        shell: pwsh
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # GitHub API access token
+        run: |
+          New-Item -Path './release_assets' -ItemType Directory  # Create folder for release assets
+          
+          # Get latest release information from GitHub API
+          $release = Invoke-RestMethod -Uri "https://api.github.com/repos/${{ github.repository }}/releases/latest" -Headers @{Authorization = "token $env:GITHUB_TOKEN"} -UseBasicParsing
+          
+          # Download assets if they exist
+          if ($release.assets.Count -gt 0) {
+            foreach ($asset in $release.assets) {
+              $assetUrl = $asset.browser_download_url
+              $assetName = $asset.name
+              
+              # Download each asset into the release_assets folder
+              Invoke-WebRequest -Uri $assetUrl -OutFile "./release_assets/$assetName"
+              Write-Host "Downloaded: $assetName"
+            }
+          } else {
+            Write-Host "No assets found in the latest release."
+          }
+
+      # Run the VirusTotal PowerShell script to upload all files
+      - name: Run VirusTotal Script
+        env:
+          VTAPIsecret: ${{ secrets.VTAPI }}  # VirusTotal API key
+        shell: pwsh
+        run: |
+          # Path to VirusTotal script (make sure the script is stored in the repository)
+          ./.github/Workflowstuff/VirusTotal.ps1

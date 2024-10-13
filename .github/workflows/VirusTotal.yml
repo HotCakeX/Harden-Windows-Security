@@ -49,5 +49,5 @@ jobs:
           VTAPIsecret: ${{ secrets.VTAPI }}  # VirusTotal API key
         shell: pwsh
         run: |
-          # Path to VirusTotal script (make sure the script is stored in the repository)
+          # Path to VirusTotal script
           ./.github/Workflowstuff/VirusTotal.ps1

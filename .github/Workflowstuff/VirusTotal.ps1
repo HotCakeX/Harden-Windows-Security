@@ -8,7 +8,7 @@ function Upload-FileToVirusTotal {
     )
 
     [System.IO.FileInfo]$FileToUpload = Get-Item -Path $FilePath
-   
+
     # Check if file size is greater than 20MB (20 * 1024 * 1024 bytes)
     if ($FileToUpload.Length -gt (20 * 1024 * 1024)) {
         Write-Host 'File is larger than 20MB. Using big file upload URL.' -ForegroundColor Cyan

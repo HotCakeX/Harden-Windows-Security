@@ -46,7 +46,7 @@ jobs:
       # Run the VirusTotal PowerShell script to upload all files
       - name: Run VirusTotal Script
         env:
-          VTAPIsecret: ${{ secrets.VTAPI }}  # VirusTotal API key
+          VTAPIsecret: ${{ secrets.VTNEWAPI }}  # VirusTotal API key
         shell: pwsh
         run: |
           # Path to VirusTotal script

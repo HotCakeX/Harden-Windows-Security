@@ -11,13 +11,15 @@ function Upload-FileToVirusTotal {
     $Headers.Add('x-apikey', $ApiKey)
     $Headers.Add('content-type', 'multipart/form-data')
 
+    [System.IO.FileInfo]$FileToUpload = Get-Item -Path $FilePath -Force
+
     # Prepare the file for upload
     [System.Collections.Hashtable]$Form = @{
-        file = Get-Item -Path $FilePath
+        file = $FileToUpload
     }
 
     # Check if file size is greater than 20MB (20 * 1024 * 1024 bytes)
-    if ($FileItem.Length -gt (20 * 1024 * 1024)) {
+    if ($FileToUpload.Length -gt (20 * 1024 * 1024)) {
         Write-Host 'File is larger than 20MB. Using big file upload URL.' -ForegroundColor Cyan
 
         # https://docs.virustotal.com/reference/files-upload-url
@@ -41,12 +43,13 @@ function Upload-FileToVirusTotal {
         $Response = Invoke-WebRequest -Uri $UploadUrl -Method Post -Headers $Headers -Form $Form
         $Json = $Response.Content | ConvertFrom-Json
 
+        Write-Host 'Upload completed.' -ForegroundColor Yellow
+
         # Return the analysis ID and URL
         return [PSCustomObject]@{
             ID  = $Json.data.id
             URL = $Json.data.links.self
         }
-        Write-Host 'Upload completed.' -ForegroundColor Yellow
     }
     catch {
         Write-Host "Error uploading file: $_" -ForegroundColor Red
@@ -58,7 +61,8 @@ function Upload-FileToVirusTotal {
 function Get-VirusTotalReport {
     param (
         [System.String]$FilePath,
-        [System.String]$ApiKey
+        [System.String]$ApiKey,
+        [System.String]$Comments
     )
 
     # Set headers for the report request
@@ -75,16 +79,18 @@ function Get-VirusTotalReport {
         $JsonResponse = $Response.Content | ConvertFrom-Json
 
         if ($JsonResponse.data.attributes.status -eq 'queued') {
-            Write-Host "Waiting 10 more seconds. Status: $($JsonResponse.data.attributes.status)" -ForegroundColor Blue
-            Start-Sleep 10
+            Write-Host "Status: $($JsonResponse.data.attributes.status). Waiting 10 more seconds..." -ForegroundColor Blue
+            Start-Sleep -Seconds 10
         }
     }
     until ($JsonResponse.data.attributes.status -eq 'completed')
 
     Write-Host "Status is now: $($JsonResponse.data.attributes.status)" -ForegroundColor Blue
 
+    [System.String]$FileURLOnVirusTotal = "https://www.virustotal.com/gui/file/$($JsonResponse.meta.file_info.sha256)"
+
     # Display detailed report
-    Write-Host -Object "Results URL: https://www.virustotal.com/gui/file/$($JsonResponse.meta.file_info.sha256)" -ForegroundColor Magenta
+    Write-Host -Object "Results URL: $FileURLOnVirusTotal" -ForegroundColor Magenta
 
     [System.Int32]$Undetected = $JsonResponse.data.attributes.stats.undetected
     [System.Int32]$Suspicious = $JsonResponse.data.attributes.stats.suspicious
@@ -100,6 +106,28 @@ function Get-VirusTotalReport {
     #  $JsonResponse.data.attributes.status | Format-List *
     #  $JsonResponse.data.attributes.results | Format-List *
     #  $JsonResponse.data.attributes.results.Microsoft | Format-List *
+
+    # Add comment to the file
+    [System.String]$CommentsSubmitURL = "https://www.virustotal.com/api/v3/files/$($JsonResponse.meta.file_info.sha256)/comments"
+    [System.Collections.Hashtable]$CommentsSubmitHeaders = @{}
+    $CommentsSubmitHeaders.Add('accept', 'application/json')
+    $CommentsSubmitHeaders.Add('x-apikey', $ApiKey)
+    $CommentsSubmitHeaders.Add('content-type', 'application/json')
+    $CommentsSubmitResponse = Invoke-WebRequest -Uri $CommentsSubmitURL -Method POST -Headers $CommentsSubmitHeaders -ContentType 'application/json' -Body "{`"data`":{`"type`":`"comment`",`"attributes`":{`"text`":`"$Comments`"}}}"
+    if ($CommentsSubmitResponse.StatusCode -ne '200') {
+        Write-Host "Error submitting comment. Status Code: $($CommentsSubmitResponse.StatusCode)`n Error: $($CommentsSubmitResponse.Content)" -ForegroundColor Red
+    }
+
+    # Add 'harmless' verdict/vote to the file
+    [System.String]$VoteURL = "https://www.virustotal.com/api/v3/files/$($JsonResponse.meta.file_info.sha256)/votes"
+    [System.Collections.Hashtable]$VoteHeaders = @{}
+    $VoteHeaders.Add('accept', 'application/json')
+    $VoteHeaders.Add('x-apikey', '9d1701a03cb1836dcc4378a168d48c0f210b17203683822183586845e00686fd')
+    $VoteHeaders.Add('content-type', 'application/json')
+    $VoteResponse = Invoke-WebRequest -Uri $VoteURL -Method POST -Headers $VoteHeaders -ContentType 'application/json' -Body '{"data":{"type":"vote","attributes":{"verdict":"harmless"}}}'
+    if ($VoteResponse.StatusCode -ne '200') {
+        Write-Host "Error submitting vote. Status Code: $($VoteResponse.StatusCode)`n Error: $($VoteResponse.Content)" -ForegroundColor Red
+    }
 }
 
 # VirusTotal API Key
@@ -108,12 +136,12 @@ $VTApi = $env:VTAPIsecret
 # Submit the ZIP of the repository to VirusTotal
 $RepoZip = '.\repository.zip'
 
-Get-VirusTotalReport -FilePath $RepoZip -ApiKey $VTApi
+Get-VirusTotalReport -FilePath $RepoZip -ApiKey $VTApi -Comments "Harden Windows Security GitHub Repository Upload at $(Get-Date -Format 'yyyy-MM-dd_HH-mm-ss'). #HotCakeX #Security #Windows"
 
 # Submit each release file in the release_assets folder
-$ReleaseFiles = Get-ChildItem -Path './release_assets' -File
+$ReleaseFiles = Get-ChildItem -Path '.\release_assets' -File -Force
 
-foreach ($file in $ReleaseFiles) {
+foreach ($File in $ReleaseFiles) {
     # Submit each file to VirusTotal
-    Get-VirusTotalReport -FilePath $file.FullName -ApiKey $VTApi
+    Get-VirusTotalReport -FilePath $File.FullName -ApiKey $VTApi -Comments "Harden Windows Security GitHub Release File Upload named $($File.Name) at $(Get-Date -Format 'yyyy-MM-dd_HH-mm-ss'). #HotCakeX #Security #Windows"
 }

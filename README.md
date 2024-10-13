@@ -1539,7 +1539,7 @@ This repository uses the simplest possible, yet effective, methods that make it 
 <!-- <a href="">  </a> -->
 <!-- Security-Baselines-X-VT:END -->
 
-[![PSScriptAnalyzer](https://github.com/HotCakeX/Harden-Windows-Security/actions/workflows/powershell.yml/badge.svg)](https://github.com/HotCakeX/Harden-Windows-Security/actions/workflows/powershell.yml)
+[![PSScriptAnalyzer](https://github.com/HotCakeX/Harden-Windows-Security/actions/workflows/powershell.yml/badge.svg)](https://github.com/HotCakeX/Harden-Windows-Security/actions/workflows/powershell.yml) [![Repository And Package Scan on Virus Total](https://github.com/HotCakeX/Harden-Windows-Security/actions/workflows/VirusTotal.yml/badge.svg)](https://github.com/HotCakeX/Harden-Windows-Security/actions/workflows/VirusTotal.yml)
 
 <p align="right"><a href="#readme-top">💡 (back to top)</a></p>
 

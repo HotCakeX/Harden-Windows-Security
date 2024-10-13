@@ -1,6 +1,7 @@
-name: Virus Total
+name: Repository And Package Scan on Virus Total
 on:
   workflow_dispatch:
+  release:  # to trigger on releases
 
 jobs:
   run-script:
@@ -11,7 +12,7 @@ jobs:
       - uses: actions/checkout@v4
 
       # Step to create ZIP of the repository
-      - name: Create Repository Zip
+      - name: Create a zip file of the entire repository
         shell: pwsh
         run: |
           Compress-Archive -Path '*' -DestinationPath 'Harden-Windows-Security-Repository.zip'
@@ -24,7 +25,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # GitHub API access token
         run: |
-          New-Item -Path './release_assets' -ItemType Directory  # Create folder for release assets
+          $null = New-Item -Path './release_assets' -ItemType Directory  # Create folder for release assets
 
           # Get latest release information from GitHub API
           $release = Invoke-RestMethod -Uri "https://api.github.com/repos/${{ github.repository }}/releases/latest" -Headers @{Authorization = "token $env:GITHUB_TOKEN"} -UseBasicParsing

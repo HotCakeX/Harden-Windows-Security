@@ -1,3 +1,5 @@
+$ErrorActionPreference = 'Stop'
+
 # Function to upload file to VirusTotal
 function Upload-FileToVirusTotal {
     param (
@@ -104,26 +106,41 @@ function Get-VirusTotalReport {
     #  $JsonResponse.data.attributes.results | Format-List *
     #  $JsonResponse.data.attributes.results.Microsoft | Format-List *
 
-    # Add comment to the file
-    [System.String]$CommentsSubmitURL = "https://www.virustotal.com/api/v3/files/$($JsonResponse.meta.file_info.sha256)/comments"
-    [System.Collections.Hashtable]$CommentsSubmitHeaders = @{}
-    $CommentsSubmitHeaders.Add('accept', 'application/json')
-    $CommentsSubmitHeaders.Add('x-apikey', $ApiKey)
-    $CommentsSubmitHeaders.Add('content-type', 'application/json')
-    $CommentsSubmitResponse = Invoke-WebRequest -Uri $CommentsSubmitURL -Method POST -Headers $CommentsSubmitHeaders -ContentType 'application/json' -Body "{`"data`":{`"type`":`"comment`",`"attributes`":{`"text`":`"$Comments`"}}}"
-    if ($CommentsSubmitResponse.StatusCode -ne '200') {
-        Write-Host "Error submitting comment. Status Code: $($CommentsSubmitResponse.StatusCode)`n Error: $($CommentsSubmitResponse.Content)" -ForegroundColor Red
+
+    # If comments or votes exist, we see error which can be safely ignored
+    try {
+        # Add comment to the file
+        [System.String]$CommentsSubmitURL = "https://www.virustotal.com/api/v3/files/$($JsonResponse.meta.file_info.sha256)/comments"
+        [System.Collections.Hashtable]$CommentsSubmitHeaders = @{}
+        $CommentsSubmitHeaders.Add('accept', 'application/json')
+        $CommentsSubmitHeaders.Add('x-apikey', $ApiKey)
+        $CommentsSubmitHeaders.Add('content-type', 'application/json')
+        $CommentsSubmitResponse = Invoke-WebRequest -Uri $CommentsSubmitURL -Method POST -Headers $CommentsSubmitHeaders -ContentType 'application/json' -Body "{`"data`":{`"type`":`"comment`",`"attributes`":{`"text`":`"$Comments`"}}}"
+        if ($CommentsSubmitResponse.StatusCode -ne '200') {
+            Write-Host "Error submitting comment. Status Code: $($CommentsSubmitResponse.StatusCode)`n Error: $($CommentsSubmitResponse.Content)" -ForegroundColor Red
+        }
     }
 
-    # Add 'harmless' verdict/vote to the file
-    [System.String]$VoteURL = "https://www.virustotal.com/api/v3/files/$($JsonResponse.meta.file_info.sha256)/votes"
-    [System.Collections.Hashtable]$VoteHeaders = @{}
-    $VoteHeaders.Add('accept', 'application/json')
-    $VoteHeaders.Add('x-apikey', $ApiKey)
-    $VoteHeaders.Add('content-type', 'application/json')
-    $VoteResponse = Invoke-WebRequest -Uri $VoteURL -Method POST -Headers $VoteHeaders -ContentType 'application/json' -Body '{"data":{"type":"vote","attributes":{"verdict":"harmless"}}}'
-    if ($VoteResponse.StatusCode -ne '200') {
-        Write-Host "Error submitting vote. Status Code: $($VoteResponse.StatusCode)`n Error: $($VoteResponse.Content)" -ForegroundColor Red
+    catch {
+        Write-Host "Error submitting comment: $_" -ForegroundColor Red
+    }
+
+
+    try {
+
+        # Add 'harmless' verdict/vote to the file
+        [System.String]$VoteURL = "https://www.virustotal.com/api/v3/files/$($JsonResponse.meta.file_info.sha256)/votes"
+        [System.Collections.Hashtable]$VoteHeaders = @{}
+        $VoteHeaders.Add('accept', 'application/json')
+        $VoteHeaders.Add('x-apikey', $ApiKey)
+        $VoteHeaders.Add('content-type', 'application/json')
+        $VoteResponse = Invoke-WebRequest -Uri $VoteURL -Method POST -Headers $VoteHeaders -ContentType 'application/json' -Body '{"data":{"type":"vote","attributes":{"verdict":"harmless"}}}'
+        if ($VoteResponse.StatusCode -ne '200') {
+            Write-Host "Error submitting vote. Status Code: $($VoteResponse.StatusCode)`n Error: $($VoteResponse.Content)" -ForegroundColor Red
+        }
+    }
+    catch {
+        Write-Host "Error submitting vote: $_" -ForegroundColor Red
     }
 }
 

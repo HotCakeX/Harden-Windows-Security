@@ -1513,21 +1513,22 @@ This repository uses the simplest possible, yet effective, methods that make it 
 - Commits are verified either with my GPG key or SSH key and [Vigilant mode](https://docs.github.com/en/authentication/managing-commit-signature-verification/displaying-verification-statuses-for-all-of-your-commits) is turned on in my GitHub account.
 
 - You can fork this repository, verify it until that point in time, then verify any subsequent changes/updates I push to this repository, **at your own pace** (using `Sync fork` and `Compare` options on your fork), and if you are happy with the changes, allow it to be merged with your own copy/fork on your GitHub account.
+
 - You can [learn PowerShell which is super easy](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Basic-PowerShell-tricks-and-notes), multiplatform, and useful for the future, Microsoft Learn website teaches you everything, then you will understand everything in the module is safe, or you can ask someone that you trust and knows PowerShell to verify the module for you.
 
 - All codes are properly commented for easy and quick understanding.
 
-- #### The module uses the following files, all of them are in clear text, easily readable or verifiable:
+- #### Explanations for some of the files used by the Harden Windows Security module, ask about any other file(s) if you have questions, they are all in clear text.
 
-    - [Registry.csv](https://github.com/HotCakeX/Harden-Windows-Security/blob/main/Harden-Windows-Security%20Module/Main%20files/Resources/Registry.csv) includes registry data used by the `Protect-WindowsSecurity` cmdlet.
+    - [Registry.csv](https://github.com/HotCakeX/Harden-Windows-Security/blob/main/Harden-Windows-Security%20Module/Main%20files/Resources/Registry.csv) includes some of the security measures' registry data.
 
-    - [ProcessMitigations.csv](https://github.com/HotCakeX/Harden-Windows-Security/blob/main/Harden-Windows-Security%20Module/Main%20files/Resources/ProcessMitigations.csv) includes the process mitigations data used by all of the Harden Windows Security Module's cmdlets.
+    - [ProcessMitigations.csv](https://github.com/HotCakeX/Harden-Windows-Security/blob/main/Harden-Windows-Security%20Module/Main%20files/Resources/ProcessMitigations.csv) includes the process mitigations data.
 
-    - [Default Security Policy.inf](https://github.com/HotCakeX/Harden-Windows-Security/blob/main/Harden-Windows-Security%20Module/Main%20files/Resources/Default%20Security%20Policy.inf) contains security policy data used by the `Unprotect-WindowsSecurity` cmdlet.
+    - [Default Security Policy.inf](https://github.com/HotCakeX/Harden-Windows-Security/blob/main/Harden-Windows-Security%20Module/Main%20files/Resources/Default%20Security%20Policy.inf) contains security policy data used during unprotect actions to restore defaults.
 
-    - [Registry resources.csv](https://github.com/HotCakeX/Harden-Windows-Security/blob/main/Harden-Windows-Security%20Module/Main%20files/Resources/Registry%20resources.csv) Includes the data used by the `Confirm-SystemCompliance` cmdlet.
+    - [Registry resources.csv](https://github.com/HotCakeX/Harden-Windows-Security/blob/main/Harden-Windows-Security%20Module/Main%20files/Resources/Registry%20resources.csv) Includes the data used for compliance checking.
 
-    - [Harden-Windows-Security.ps1](https://github.com/HotCakeX/Harden-Windows-Security/blob/main/Harden-Windows-Security.ps1) is the bootstrapper for the Harden Windows Security module.
+    - [Harden-Windows-Security.ps1](https://github.com/HotCakeX/Harden-Windows-Security/blob/main/Harden-Windows-Security.ps1) is the boot-strapper for the Harden Windows Security module.
 
 - [How Are Group Policies Used by the Harden Windows Security Module?](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Group-Policy#how-are-group-policies-used-by-the-harden-windows-security-module)
 - [How are Group Policies for this module created and maintained?](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Group-Policy#how-are-group-policies-for-the-module-created-and-maintained)
@@ -1538,6 +1539,9 @@ This repository uses the simplest possible, yet effective, methods that make it 
 <!-- Security-Baselines-X-VT:START -->
 <!-- <a href="">  </a> -->
 <!-- Security-Baselines-X-VT:END -->
+
+> [!TIP]\
+> All files in this repository, including packages like MSIX files attached to releases, are zipped and automatically submitted to VirusTotal for scanning through a [GitHub Action](https://github.com/HotCakeX/Harden-Windows-Security/actions/workflows/VirusTotal.yml). Find the history of the uploaded files in [my Virus Total profile](https://www.virustotal.com/gui/user/SpyNetGirl).
 
 [![PSScriptAnalyzer](https://github.com/HotCakeX/Harden-Windows-Security/actions/workflows/powershell.yml/badge.svg)](https://github.com/HotCakeX/Harden-Windows-Security/actions/workflows/powershell.yml) [![Repository And Package Scan on Virus Total](https://github.com/HotCakeX/Harden-Windows-Security/actions/workflows/VirusTotal.yml/badge.svg)](https://github.com/HotCakeX/Harden-Windows-Security/actions/workflows/VirusTotal.yml)
 

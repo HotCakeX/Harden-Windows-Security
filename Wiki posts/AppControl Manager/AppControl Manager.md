@@ -21,6 +21,10 @@ Use the following PowerShell [command](https://github.com/HotCakeX/Harden-Window
 
 <br>
 
+You can find the MSIX file in the [GitHub releases](https://github.com/HotCakeX/Harden-Windows-Security/releases) section.
+
+<br>
+
 ## Preview of the App
 
 <img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/Gifs/AppControlManager.gif" alt="AppControl Manager preview"/>
@@ -42,3 +46,24 @@ Use the following PowerShell [command](https://github.com/HotCakeX/Harden-Window
 * 0 Windows Registry changes.
 * 100% clean uninstallation.
 * 100% open-source and free to use.
+
+<br>
+
+## Features Implemented So Far
+
+
+* Creating, configuring and deploying AllowMicrosoft policy
+* Creating, configuring and deploying SignedAndReputable policy (based on ISG)
+* Creating and deploying Microsoft recommended driver block rules
+* Creating and deploying Microsoft recommended user-mode block rules
+* Checking for secure policy settings on the system
+* Getting the Code Integrity hashes of the files (Authenticode hash and Page hash)
+* Adding/Changing/Removing User Configurations
+* Configure policy rule options
+* View deployed policies on the system (with filtering search)
+* Remove unsigned policies from the system
+* Quick access to App Control resources and documentations right within the app
+
+More features will come very quickly in the near future.
+
+<br>

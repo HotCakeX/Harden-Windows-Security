@@ -4,6 +4,8 @@ function Upload-FileToVirusTotal {
         [System.String]$FilePath,
         [System.String]$ApiKey
     )
+
+    [System.IO.FileInfo]$FileToUpload = Get-Item -Path $FilePath
    
     # Check if file size is greater than 20MB (20 * 1024 * 1024 bytes)
     if ($FileToUpload.Length -gt (20 * 1024 * 1024)) {

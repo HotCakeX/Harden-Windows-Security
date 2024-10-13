@@ -14,7 +14,7 @@ jobs:
       - name: Create Repository Zip
         shell: pwsh
         run: |
-          Compress-Archive -Path '*' -DestinationPath 'repository.zip'
+          Compress-Archive -Path '*' -DestinationPath 'Harden-Windows-Security-Repository.zip'
           Write-Host "Repository ZIP created."
 
       # Step to fetch the latest release and download attached files to a separate folder

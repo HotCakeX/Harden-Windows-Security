@@ -4,20 +4,7 @@ function Upload-FileToVirusTotal {
         [System.String]$FilePath,
         [System.String]$ApiKey
     )
-
-    # Headers for the VirusTotal API request
-    [System.Collections.Hashtable]$Headers = @{}
-    $Headers.Add('accept', 'application/json')
-    $Headers.Add('x-apikey', $ApiKey)
-    $Headers.Add('content-type', 'multipart/form-data')
-
-    [System.IO.FileInfo]$FileToUpload = Get-Item -Path $FilePath -Force
-
-    # Prepare the file for upload
-    [System.Collections.Hashtable]$Form = @{
-        file = $FileToUpload
-    }
-
+   
     # Check if file size is greater than 20MB (20 * 1024 * 1024 bytes)
     if ($FileToUpload.Length -gt (20 * 1024 * 1024)) {
         Write-Host 'File is larger than 20MB. Using big file upload URL.' -ForegroundColor Cyan
@@ -40,8 +27,16 @@ function Upload-FileToVirusTotal {
     try {
 
         Write-Host "Uploading file to VirusTotal: $FilePath" -ForegroundColor Yellow
-        $Response = Invoke-WebRequest -Uri $UploadUrl -Method Post -Headers $Headers -Form $Form
-        $Json = $Response.Content | ConvertFrom-Json
+
+        # cURL handles multipart uploads nicely
+        $Response = curl --request POST `
+            --url $UploadUrl `
+            --header 'accept: application/json' `
+            --header 'content-type: multipart/form-data' `
+            --header "x-apikey: $ApiKey" `
+            --form file="@$FilePath"
+
+        $Json = $Response | ConvertFrom-Json
 
         Write-Host 'Upload completed.' -ForegroundColor Yellow
 
@@ -134,14 +129,14 @@ function Get-VirusTotalReport {
 $VTApi = $env:VTAPIsecret
 
 # Submit the ZIP of the repository to VirusTotal
-$RepoZip = '.\repository.zip'
+$RepoZip = '.\Harden-Windows-Security-Repository.zip'
 
-Get-VirusTotalReport -FilePath $RepoZip -ApiKey $VTApi -Comments "Harden Windows Security GitHub Repository Upload at $(Get-Date -Format 'yyyy-MM-dd_HH-mm-ss'). #HotCakeX #Security #Windows"
+Get-VirusTotalReport -FilePath $RepoZip -ApiKey $VTApi -Comments "Harden Windows Security GitHub Repository Upload at $(Get-Date -Format 'yyyy-MM-dd_HH-mm-ss'). #HotCakeX #Security #Windows #SpyNetGirl"
 
 # Submit each release file in the release_assets folder
 $ReleaseFiles = Get-ChildItem -Path '.\release_assets' -File -Force
 
 foreach ($File in $ReleaseFiles) {
     # Submit each file to VirusTotal
-    Get-VirusTotalReport -FilePath $File.FullName -ApiKey $VTApi -Comments "Harden Windows Security GitHub Release File Upload named $($File.Name) at $(Get-Date -Format 'yyyy-MM-dd_HH-mm-ss'). #HotCakeX #Security #Windows"
+    Get-VirusTotalReport -FilePath $File.FullName -ApiKey $VTApi -Comments "Harden Windows Security GitHub Release File Upload named $($File.Name) at $(Get-Date -Format 'yyyy-MM-dd_HH-mm-ss'). #HotCakeX #Security #Windows #SpyNetGirl"
 }

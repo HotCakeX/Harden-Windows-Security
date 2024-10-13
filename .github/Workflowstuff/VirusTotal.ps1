@@ -5,7 +5,6 @@ function Upload-FileToVirusTotal {
         [System.String]$ApiKey
     )
 
-
     # Headers for the VirusTotal API request
     [System.Collections.Hashtable]$Headers = @{}
     $Headers.Add('accept', 'application/json')
@@ -14,31 +13,43 @@ function Upload-FileToVirusTotal {
 
     # Prepare the file for upload
     [System.Collections.Hashtable]$Form = @{
-        file = Get-Item $FilePath
+        file = Get-Item -Path $FilePath
     }
 
     # Check if file size is greater than 20MB (20 * 1024 * 1024 bytes)
     if ($FileItem.Length -gt (20 * 1024 * 1024)) {
         Write-Host 'File is larger than 20MB. Using big file upload URL.' -ForegroundColor Cyan
-        $UploadUrl = 'https://www.virustotal.com/api/v3/files/upload_url'
+
+        # https://docs.virustotal.com/reference/files-upload-url
+
+        [System.Collections.Hashtable]$BigFileUploadHeaders = @{}
+        $BigFileUploadHeaders.Add('accept', 'application/json')
+        $BigFileUploadHeaders.Add('x-apikey', $ApiKey)
+        $BigFileUploadResponse = Invoke-WebRequest -Uri 'https://www.virustotal.com/api/v3/files/upload_url' -Method GET -Headers $BigFileUploadHeaders
+
+        $BigFileUploadResponseJSON = $BigFileUploadResponse.Content | ConvertFrom-Json
+        [System.String]$UploadUrl = $BigFileUploadResponseJSON.data
     }
     else {
-        $UploadUrl = 'https://www.virustotal.com/api/v3/files'
+        [System.String]$UploadUrl = 'https://www.virustotal.com/api/v3/files'
     }
 
     # Upload the file to VirusTotal
     try {
+
+        Write-Host "Uploading file to VirusTotal: $FilePath" -ForegroundColor Yellow
         $Response = Invoke-WebRequest -Uri $UploadUrl -Method Post -Headers $Headers -Form $Form
         $Json = $Response.Content | ConvertFrom-Json
 
         # Return the analysis ID and URL
         return [PSCustomObject]@{
-            ID  = $Json.data.id 
+            ID  = $Json.data.id
             URL = $Json.data.links.self
         }
+        Write-Host 'Upload completed.' -ForegroundColor Yellow
     }
     catch {
-        Write-Host "Error uploading file: $_"
+        Write-Host "Error uploading file: $_" -ForegroundColor Red
         exit 1
     }
 }
@@ -64,13 +75,13 @@ function Get-VirusTotalReport {
         $JsonResponse = $Response.Content | ConvertFrom-Json
 
         if ($JsonResponse.data.attributes.status -eq 'queued') {
-            Write-Host "Waiting 10 more seconds. Status: $($JsonResponse.data.attributes.status)"
+            Write-Host "Waiting 10 more seconds. Status: $($JsonResponse.data.attributes.status)" -ForegroundColor Blue
             Start-Sleep 10
         }
     }
     until ($JsonResponse.data.attributes.status -eq 'completed')
 
-    Write-Host "Status is now: $($JsonResponse.data.attributes.status)"
+    Write-Host "Status is now: $($JsonResponse.data.attributes.status)" -ForegroundColor Blue
 
     # Display detailed report
     Write-Host -Object "Results URL: https://www.virustotal.com/gui/file/$($JsonResponse.meta.file_info.sha256)" -ForegroundColor Magenta
@@ -89,21 +100,20 @@ function Get-VirusTotalReport {
     #  $JsonResponse.data.attributes.status | Format-List *
     #  $JsonResponse.data.attributes.results | Format-List *
     #  $JsonResponse.data.attributes.results.Microsoft | Format-List *
-
 }
 
 # VirusTotal API Key
 $VTApi = $env:VTAPIsecret
 
 # Submit the ZIP of the repository to VirusTotal
-$repoZip = '.\repository.zip'
+$RepoZip = '.\repository.zip'
 
-Get-VirusTotalReport -FilePath $repoZip -ApiKey $VTApi
+Get-VirusTotalReport -FilePath $RepoZip -ApiKey $VTApi
 
 # Submit each release file in the release_assets folder
-$releaseFiles = Get-ChildItem -Path './release_assets' -File
+$ReleaseFiles = Get-ChildItem -Path './release_assets' -File
 
-foreach ($file in $releaseFiles) {
+foreach ($file in $ReleaseFiles) {
     # Submit each file to VirusTotal
-    Get-VirusTotalReport -FilePath $file.FullName -ApiKey $VTApi   
+    Get-VirusTotalReport -FilePath $file.FullName -ApiKey $VTApi
 }

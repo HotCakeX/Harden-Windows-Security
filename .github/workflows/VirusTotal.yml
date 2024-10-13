@@ -9,7 +9,7 @@ jobs:
     steps:
       # Step to check out the repository
       - uses: actions/checkout@v4
-      
+
       # Step to create ZIP of the repository
       - name: Create Repository Zip
         shell: pwsh
@@ -25,16 +25,16 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # GitHub API access token
         run: |
           New-Item -Path './release_assets' -ItemType Directory  # Create folder for release assets
-          
+
           # Get latest release information from GitHub API
           $release = Invoke-RestMethod -Uri "https://api.github.com/repos/${{ github.repository }}/releases/latest" -Headers @{Authorization = "token $env:GITHUB_TOKEN"} -UseBasicParsing
-          
+
           # Download assets if they exist
           if ($release.assets.Count -gt 0) {
             foreach ($asset in $release.assets) {
               $assetUrl = $asset.browser_download_url
               $assetName = $asset.name
-              
+
               # Download each asset into the release_assets folder
               Invoke-WebRequest -Uri $assetUrl -OutFile "./release_assets/$assetName"
               Write-Host "Downloaded: $assetName"

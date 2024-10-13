@@ -122,7 +122,7 @@ function Get-VirusTotalReport {
     [System.String]$VoteURL = "https://www.virustotal.com/api/v3/files/$($JsonResponse.meta.file_info.sha256)/votes"
     [System.Collections.Hashtable]$VoteHeaders = @{}
     $VoteHeaders.Add('accept', 'application/json')
-    $VoteHeaders.Add('x-apikey', '9d1701a03cb1836dcc4378a168d48c0f210b17203683822183586845e00686fd')
+    $VoteHeaders.Add('x-apikey', $ApiKey)
     $VoteHeaders.Add('content-type', 'application/json')
     $VoteResponse = Invoke-WebRequest -Uri $VoteURL -Method POST -Headers $VoteHeaders -ContentType 'application/json' -Body '{"data":{"type":"vote","attributes":{"verdict":"harmless"}}}'
     if ($VoteResponse.StatusCode -ne '200') {

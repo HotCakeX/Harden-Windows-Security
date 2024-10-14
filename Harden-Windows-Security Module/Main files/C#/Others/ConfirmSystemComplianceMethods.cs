@@ -23,9 +23,19 @@ namespace HardenWindowsSecurity
         /// </summary>
         /// <param name="methodNames"></param>
         /// <exception cref="Exception"></exception>
-        public static void OrchestrateComplianceChecks(params string[] methodNames)
+        internal static void OrchestrateComplianceChecks(params string[] methodNames)
         {
-            // call the method to get the security group policies to be exported to a file
+
+            string scriptToStartLanmanWorkstationService = """
+sc.exe config LanmanWorkstation start=auto
+sc.exe start LanmanWorkstation
+""";
+
+            // The "LanmanWorkstation" with the display name of "Workstation" is necessary to be running for at least one category to perform successfully, which is the Miscellaneous Category
+            _ = PowerShellExecutor.ExecuteScript(scriptToStartLanmanWorkstationService);
+
+
+            // Call the method to get the security group policies to be exported to a file
             HardenWindowsSecurity.ConfirmSystemComplianceMethods.ExportSecurityPolicy();
 
             // Storing the output of the ini file parsing function
@@ -92,7 +102,7 @@ namespace HardenWindowsSecurity
         /// <param name="methodNames">These are the parameter names from the official category names
         /// if no input is supplied for this parameter, all categories will run</param>
         /// <returns>Returns the Task object</returns>
-        public static async Task RunComplianceMethodsInParallelAsync(params string[] methodNames)
+        private static async Task RunComplianceMethodsInParallelAsync(params string[] methodNames)
         {
             // Define a list to store the methods to run
             List<Func<Task>> methodsToRun;
@@ -127,7 +137,7 @@ namespace HardenWindowsSecurity
         /// Performs all of the tasks for the Attack Surface Reduction Rules category during system compliance checking
         /// </summary>
         /// <returns></returns>
-        public static Task VerifyAttackSurfaceReductionRules()
+        private static Task VerifyAttackSurfaceReductionRules()
         {
 
             return Task.Run(() =>
@@ -258,7 +268,7 @@ namespace HardenWindowsSecurity
         /// <summary>
         /// Performs all of the tasks for the Windows Update Configurations category during system compliance checking
         /// </summary>
-        public static Task VerifyWindowsUpdateConfigurations()
+        private static Task VerifyWindowsUpdateConfigurations()
         {
 
             return Task.Run(() =>
@@ -340,7 +350,7 @@ namespace HardenWindowsSecurity
         /// <summary>
         /// Performs all of the tasks for the Non-Admin Commands category during system compliance checking
         /// </summary>
-        public static Task VerifyNonAdminCommands()
+        private static Task VerifyNonAdminCommands()
         {
 
             return Task.Run(() =>
@@ -371,7 +381,7 @@ namespace HardenWindowsSecurity
         /// <summary>
         /// Performs all of the tasks for the Edge Browser Configurations category during system compliance checking
         /// </summary>
-        public static Task VerifyEdgeBrowserConfigurations()
+        private static Task VerifyEdgeBrowserConfigurations()
         {
             return Task.Run(() =>
             {
@@ -401,7 +411,7 @@ namespace HardenWindowsSecurity
         /// <summary>
         /// Performs all of the tasks for the Device Guard category during system compliance checking
         /// </summary>
-        public static Task VerifyDeviceGuard()
+        private static Task VerifyDeviceGuard()
         {
 
             return Task.Run(() =>
@@ -525,7 +535,7 @@ namespace HardenWindowsSecurity
         /// <summary>
         /// Performs all of the tasks for the BitLocker Settings category during system compliance checking
         /// </summary>
-        public static Task VerifyBitLockerSettings()
+        private static Task VerifyBitLockerSettings()
         {
             return Task.Run(() =>
             {
@@ -769,7 +779,7 @@ namespace HardenWindowsSecurity
         /// <summary>
         /// Performs all of the tasks for the Miscellaneous Configurations category during system compliance checking
         /// </summary>
-        public static Task VerifyMiscellaneousConfigurations()
+        private static Task VerifyMiscellaneousConfigurations()
         {
 
             return Task.Run(() =>
@@ -941,7 +951,7 @@ namespace HardenWindowsSecurity
         /// <summary>
         /// Performs all of the tasks for the Windows Networking category during system compliance checking
         /// </summary>
-        public static Task VerifyWindowsNetworking()
+        private static Task VerifyWindowsNetworking()
         {
 
             return Task.Run(() =>
@@ -986,7 +996,7 @@ namespace HardenWindowsSecurity
         /// <summary>
         /// Performs all of the tasks for the Lock Screen category during system compliance checking
         /// </summary>
-        public static Task VerifyLockScreen()
+        private static Task VerifyLockScreen()
         {
 
             return Task.Run(() =>
@@ -1024,7 +1034,7 @@ namespace HardenWindowsSecurity
         /// <summary>
         /// Performs all of the tasks for the User Account Control category during system compliance checking
         /// </summary>
-        public static Task VerifyUserAccountControl()
+        private static Task VerifyUserAccountControl()
         {
 
             return Task.Run(() =>
@@ -1062,7 +1072,7 @@ namespace HardenWindowsSecurity
         /// <summary>
         /// Performs all of the tasks for the Optional Windows Features category during system compliance checking
         /// </summary>
-        public static Task VerifyOptionalWindowsFeatures()
+        private static Task VerifyOptionalWindowsFeatures()
         {
             return Task.Run(() =>
             {
@@ -1230,7 +1240,7 @@ namespace HardenWindowsSecurity
         /// <summary>
         /// Performs all of the tasks for the TLS Security category during system compliance checking
         /// </summary>
-        public static Task VerifyTLSSecurity()
+        private static Task VerifyTLSSecurity()
         {
 
             return Task.Run(() =>
@@ -1295,7 +1305,7 @@ namespace HardenWindowsSecurity
         /// <summary>
         /// Performs all of the tasks for the Windows Firewall category during system compliance checking
         /// </summary>
-        public static Task VerifyWindowsFirewall()
+        private static Task VerifyWindowsFirewall()
         {
             return Task.Run(() =>
             {
@@ -1640,7 +1650,7 @@ namespace HardenWindowsSecurity
         /// <summary>
         /// Performs all of the tasks for the Microsoft Defender category during system compliance checking
         /// </summary>
-        public static Task VerifyMicrosoftDefender()
+        private static Task VerifyMicrosoftDefender()
         {
 
             return Task.Run(() =>

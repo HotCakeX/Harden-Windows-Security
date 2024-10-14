@@ -101,7 +101,7 @@ namespace HardenWindowsSecurity
             if (methodNames == null || methodNames.Length == 0)
             {
                 // Get all methods from the dictionary
-                methodsToRun = methodDictionary.Values.ToList();
+                methodsToRun = [.. methodDictionary.Values];
             }
             else
             {
@@ -953,22 +953,6 @@ namespace HardenWindowsSecurity
                 // Defining the category name
                 string CatName = "WindowsNetworking";
 
-                // Check network location of all connections to see if they are public
-                bool individualItemResult = HardenWindowsSecurity.NetConnectionProfiles.Get().All(profile =>
-                {
-                    // Ensure the property exists and is not null before comparing
-                    return profile["NetworkCategory"] != null && (uint)profile["NetworkCategory"] == 0;
-                });
-                nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
-                {
-                    FriendlyName = "Network Location of all connections set to Public",
-                    Compliant = individualItemResult,
-                    Value = individualItemResult ? "True" : "False",
-                    Name = "Network Location of all connections set to Public",
-                    Category = CatName,
-                    Method = "CIM"
-                });
-
                 // Process items in Registry resources.csv file with "Group Policy" origin and add them to the $NestedObjectArray array
                 foreach (var Result in (HardenWindowsSecurity.CategoryProcessing.ProcessCategory(CatName, "Group Policy")))
                 {
@@ -1321,6 +1305,24 @@ namespace HardenWindowsSecurity
 
                 // Defining the category name
                 string CatName = "WindowsFirewall";
+
+
+                // Check network location of all connections to see if they are public
+                bool individualItemResult = HardenWindowsSecurity.NetConnectionProfiles.Get().All(profile =>
+                {
+                    // Ensure the property exists and is not null before comparing
+                    return profile["NetworkCategory"] != null && (uint)profile["NetworkCategory"] == 0;
+                });
+                nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
+                {
+                    FriendlyName = "Network Location of all connections set to Public",
+                    Compliant = individualItemResult,
+                    Value = individualItemResult ? "True" : "False",
+                    Name = "Network Location of all connections set to Public",
+                    Category = CatName,
+                    Method = "CIM"
+                });
+
 
                 // Use the GetFirewallRules method and check the Enabled status of each rule
                 List<ManagementObject> firewallRuleGroupResultEnabledArray = HardenWindowsSecurity.FirewallHelper.GetFirewallRules("""@%SystemRoot%\system32\firewallapi.dll,-37302""", 1);

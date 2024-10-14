@@ -22,9 +22,9 @@ namespace HardenWindowsSecurity
             "LockScreen", // 14
             "UserAccountControl", // 6
             "DeviceGuard", // 9
-            "WindowsFirewall", // 19
+            "WindowsFirewall", // 20
             "OptionalWindowsFeatures", // 14
-            "WindowsNetworking", // 18
+            "WindowsNetworking", // 17
             "MiscellaneousConfigurations", // 17
             "WindowsUpdateConfigurations", // 15
             "EdgeBrowserConfigurations", // 14

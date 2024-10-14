@@ -144,7 +144,7 @@ namespace HardenWindowsSecurity
             fields.Add(currentField.ToString().Trim('"'));
 
             // Convert list of fields to array and return
-            return fields.ToArray();
+            return [.. fields];
         }
 
 

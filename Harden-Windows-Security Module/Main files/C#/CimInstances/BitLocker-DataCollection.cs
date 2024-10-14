@@ -426,7 +426,7 @@ namespace HardenWindowsSecurity
                 }
             }
 
-            return driveLetters.ToArray();
+            return [.. driveLetters];
         }
 
 

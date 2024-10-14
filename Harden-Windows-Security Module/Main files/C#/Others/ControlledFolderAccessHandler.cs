@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Management;
 using System.Reflection;
 
@@ -142,7 +141,7 @@ namespace HardenWindowsSecurity
                 #endregion
 
                 // Convert the HashSet to a string array
-                string[] CFAExclusionsToBeAddedArray = CFAExclusionsToBeAdded.ToArray();
+                string[] CFAExclusionsToBeAddedArray = [.. CFAExclusionsToBeAdded];
 
                 // Adding powercfg.exe so Controlled Folder Access won't complain about it in BitLocker category when setting hibernate file size to full
                 if (CFAExclusionsToBeAddedArray.Length > 0)

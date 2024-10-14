@@ -98,7 +98,7 @@ namespace HardenWindowsSecurity
 
             // Add the last field to the list
             fields.Add(currentField.ToString().Trim('"'));
-            return fields.ToArray();
+            return [.. fields];
         }
     }
 }

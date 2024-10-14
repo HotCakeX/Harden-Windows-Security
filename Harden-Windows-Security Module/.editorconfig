@@ -272,3 +272,9 @@ dotnet_diagnostic.IDE0110.severity = error
 
 # CA2101: Specify marshaling for P/Invoke string arguments
 dotnet_diagnostic.CA2101.severity = error
+
+# IL2026: Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code
+dotnet_diagnostic.IL2026.severity = error
+
+# IDE0305: Simplify collection initialization
+dotnet_diagnostic.IDE0305.severity = error

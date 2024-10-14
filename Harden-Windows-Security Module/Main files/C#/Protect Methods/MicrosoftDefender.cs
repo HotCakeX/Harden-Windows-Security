@@ -42,7 +42,7 @@ namespace HardenWindowsSecurity
             HardenWindowsSecurity.ConfigDefenderHelper.ManageMpPreference<bool>("EnableEcsConfiguration", true, true);
 
             HardenWindowsSecurity.Logger.LogMessage("Adding OneDrive folders of all the user accounts (personal and work accounts) to the Controlled Folder Access for Ransomware Protection", LogTypeIntel.Information);
-            string[] OneDrivePaths = HardenWindowsSecurity.GetOneDriveDirectories.Get().ToArray();
+            string[] OneDrivePaths = [.. HardenWindowsSecurity.GetOneDriveDirectories.Get()];
             HardenWindowsSecurity.ConfigDefenderHelper.ManageMpPreference<string[]>("ControlledFolderAccessProtectedFolders", OneDrivePaths, true);
 
             HardenWindowsSecurity.Logger.LogMessage("Enabling Mandatory ASLR Exploit Protection system-wide", LogTypeIntel.Information);

@@ -173,7 +173,7 @@ namespace HardenWindowsSecurity
                     }
 
                     // Convert the list back to an array
-                    GlobalVars.CFABackup = CFABackupLocal.ToArray();
+                    GlobalVars.CFABackup = [.. CFABackupLocal];
                 }
 
 

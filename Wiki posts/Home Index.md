@@ -1,5 +1,15 @@
 <div align="center">
-<img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/SVG/Welcome%20to%20the%20wiki%202.svg" width="450">
+
+<!-- 
+
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/SVG/Welcome%20to%20the%20wiki%202.svg" width="450" alt="Welcome to Harden Windows Security Wiki">
+
+<br>
+
+-->
+
+<img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/Gifs/Harden%20Windows%20Security%20October%20Edition.gif" alt="Welcome to Harden Windows Security Wiki gif">
+
 </div>
 
 # [Harden Windows Security GitHub Wiki content](https://github.com/HotCakeX/Harden-Windows-Security/wiki)

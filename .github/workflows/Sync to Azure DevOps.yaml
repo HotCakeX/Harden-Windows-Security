@@ -32,7 +32,5 @@ jobs:
         git config --global credential.helper store
         echo "https://SpyNetGirl:${AZURE_DEVOPS_PAT}@dev.azure.com" > ~/.git-credentials
 
-        git fetch --unshallow
-
         # Pushing only the main branch to Azure DevOps
         git push azure main --force

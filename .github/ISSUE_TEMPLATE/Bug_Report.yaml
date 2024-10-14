@@ -17,6 +17,7 @@ body:
       options:
         - Harden Windows Security Module
         - WDACConfig Module
+        - AppControl Manager app
     validations:
       required: true
   - type: checkboxes

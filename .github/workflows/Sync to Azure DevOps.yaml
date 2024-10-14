@@ -2,6 +2,8 @@ name: Sync to Azure DevOps
 
 on:
   workflow_dispatch:
+  push:
+    branches: [ "main" ]
 
 jobs:
   sync:
@@ -11,7 +13,7 @@ jobs:
     - name: Checkout GitHub repo
       uses: actions/checkout@v4
       with:
-        fetch-depth: 0
+        fetch-depth: 0 # This is necessary
 
     - name: Set up Git configuration
       run: |
@@ -33,4 +35,5 @@ jobs:
         echo "https://SpyNetGirl:${AZURE_DEVOPS_PAT}@dev.azure.com" > ~/.git-credentials
 
         # Pushing only the main branch to Azure DevOps
+        # The 2 repositories will be completely identical and any discrepancy is taken care of by force push
         git push azure main --force

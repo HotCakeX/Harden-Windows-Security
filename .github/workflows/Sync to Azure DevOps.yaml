@@ -10,6 +10,8 @@ jobs:
     steps:
     - name: Checkout GitHub repo
       uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
 
     - name: Set up Git configuration
       run: |
@@ -29,6 +31,8 @@ jobs:
         # Authenticating with Azure DevOps using PAT
         git config --global credential.helper store
         echo "https://SpyNetGirl:${AZURE_DEVOPS_PAT}@dev.azure.com" > ~/.git-credentials
+
+        git fetch --unshallow
 
         # Pushing only the main branch to Azure DevOps
         git push azure main --force

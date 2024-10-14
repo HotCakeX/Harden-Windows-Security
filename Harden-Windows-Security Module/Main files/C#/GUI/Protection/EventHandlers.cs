@@ -378,22 +378,9 @@ namespace HardenWindowsSecurity
                         try
                         {
 
-                            #region Display a Welcome message
-                            string nameToDisplay = string.Empty;
+                            #region Display a Welcome message                      
 
-                            string UserValue = string.Empty;
-
-                            System.Security.Principal.WindowsIdentity CurrentUserResult = System.Security.Principal.WindowsIdentity.GetCurrent();
-                            System.Security.Principal.SecurityIdentifier? User = CurrentUserResult.User;
-
-                            if (User != null)
-                            {
-                                UserValue = User.Value.ToString();
-                            }
-
-                            HardenWindowsSecurity.LocalUser? CurrentLocalUser = HardenWindowsSecurity.LocalUserRetriever.Get().FirstOrDefault(Lu => Lu.SID == UserValue);
-
-                            nameToDisplay = (!string.IsNullOrWhiteSpace(CurrentLocalUser!.FullName)) ? CurrentLocalUser.FullName : !string.IsNullOrWhiteSpace(CurrentLocalUser.Name) ? CurrentLocalUser.Name : "Unknown User";
+                            string nameToDisplay = (!string.IsNullOrWhiteSpace(GlobalVars.userFullName)) ? GlobalVars.userFullName : GlobalVars.userName;
 
                             HardenWindowsSecurity.Logger.LogMessage(HardenWindowsSecurity.UserPrivCheck.IsAdmin() ? $"Hello {nameToDisplay}, Running as Administrator" : $"Hello {nameToDisplay}, Running as Non-Administrator, some categories are disabled", LogTypeIntel.Information);
                             #endregion

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Management.Automation.Host;
 
 #nullable enable
@@ -121,11 +122,24 @@ namespace HardenWindowsSecurity
         // To store the System MDM parsed JSON output
         internal static System.Collections.Hashtable? MDM_Policy_Result01_System02;
 
+        internal static string userName;
+        internal static string userSID;
+        internal static string? userFullName;
 
         static GlobalVars()
         {
             // Save the valid values of the Protect-WindowsSecurity categories to a variable since the process can be time consuming and shouldn't happen every time the categories are fetched
             HardenWindowsSecurity.GlobalVars.HardeningCategorieX = HardenWindowsSecurity.ProtectionCategoriex.GetValidValues();
+
+            // Save the username in the class variable
+            System.Security.Principal.WindowsIdentity CurrentUserResult = System.Security.Principal.WindowsIdentity.GetCurrent();
+            userSID = CurrentUserResult!.User!.Value.ToString();
+
+            HardenWindowsSecurity.LocalUser CurrentLocalUser = LocalUserRetriever.Get()
+.First(Lu => string.Equals(Lu.SID, userSID, StringComparison.OrdinalIgnoreCase));
+
+            userName = CurrentLocalUser.Name ?? throw new UnauthorizedAccessException("UserName could not be detected.");
+            userFullName = CurrentLocalUser.FullName;
         }
 
     }

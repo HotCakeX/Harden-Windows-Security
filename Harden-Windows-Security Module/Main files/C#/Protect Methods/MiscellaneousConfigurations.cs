@@ -76,6 +76,8 @@ namespace HardenWindowsSecurity
             {
                 System.IO.File.Copy(File, Path.Combine(systemDrive, "ProgramData", "Microsoft", "Event Viewer", "Views", "Hardening Script", System.IO.Path.GetFileName(File)), true);
             }
+
+            SSHConfigurations.SecureMACs();
         }
     }
 }

@@ -944,6 +944,20 @@ sc.exe start LanmanWorkstation
                 {
                     _ = HardenWindowsSecurity.GlobalVars.FinalMegaObject.TryAdd(CatName, nestedObjectArray);
                 }
+
+
+                bool testSecureMacsResult = SSHConfigurations.TestSecureMACs();
+
+                nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
+                {
+                    FriendlyName = "SSH Secure MACs",
+                    Compliant = testSecureMacsResult,
+                    Value = testSecureMacsResult ? "True" : "False",
+                    Name = "SSH Secure MACs",
+                    Category = CatName ?? string.Empty, // just to suppress the warning
+                    Method = "CIM"
+                });
+
             });
         }
 

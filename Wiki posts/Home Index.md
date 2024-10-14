@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/Gifs/Harden%20Windows%20Security%20October%20Edition.gif" alt="Welcome to Harden Windows Security Wiki gif">
+<a href="https://github.com/HotCakeX/Harden-Windows-Security/wiki"> <img src="https://raw.githubusercontent.com/HotCakeX/.github/refs/heads/main/Pictures/Gifs/Harden%20Windows%20Security%20October%20Edition.gif" alt="Welcome to Harden Windows Security Wiki gif"> </a>
 
 </div>
 

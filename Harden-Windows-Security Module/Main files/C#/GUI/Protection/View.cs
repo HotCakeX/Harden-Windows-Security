@@ -27,7 +27,7 @@ namespace HardenWindowsSecurity
                 }
 
                 // Defining the path to the XAML XML file
-                if (HardenWindowsSecurity.GlobalVars.path == null)
+                if (HardenWindowsSecurity.GlobalVars.path is null)
                 {
                     throw new InvalidOperationException("GlobalVars.path cannot be null.");
                 }

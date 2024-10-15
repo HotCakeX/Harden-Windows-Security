@@ -27,7 +27,7 @@ namespace HardenWindowsSecurity
                 }
 
                 // Defining the path to the XAML XML file
-                if (HardenWindowsSecurity.GlobalVars.path == null)
+                if (HardenWindowsSecurity.GlobalVars.path is null)
                 {
                     throw new InvalidOperationException("GlobalVars.path cannot be null.");
                 }
@@ -429,7 +429,7 @@ Start-Process -FilePath GPUpdate.exe -ArgumentList '/force' -NoNewWindow
                                 // Non-OS Drives tab
                                 case 1:
                                     {
-                                        if (NonOSDrivesLetter == null)
+                                        if (NonOSDrivesLetter is null)
                                         {
                                             Logger.LogMessage("No Non-OS Drive selected", LogTypeIntel.ErrorInteractionRequired);
                                             break;
@@ -470,7 +470,7 @@ Start-Process -FilePath GPUpdate.exe -ArgumentList '/force' -NoNewWindow
                                         }
 
 
-                                        if (RemovableDrivesTabDriveSelection == null)
+                                        if (RemovableDrivesTabDriveSelection is null)
                                         {
                                             Logger.LogMessage("No Removable Drive selected", LogTypeIntel.ErrorInteractionRequired);
                                             break;

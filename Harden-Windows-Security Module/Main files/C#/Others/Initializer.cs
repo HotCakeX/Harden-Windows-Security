@@ -32,10 +32,10 @@ namespace HardenWindowsSecurity
 
                 using (RegistryKey? key = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows NT\CurrentVersion"))
                 {
-                    if (key != null)
+                    if (key is not null)
                     {
                         object? ubrValue = key.GetValue("UBR");
-                        if (ubrValue != null && int.TryParse(ubrValue.ToString(), out int ubr))
+                        if (ubrValue is not null && int.TryParse(ubrValue.ToString(), out int ubr))
                         {
                             HardenWindowsSecurity.GlobalVars.UBR = ubr;
                         }

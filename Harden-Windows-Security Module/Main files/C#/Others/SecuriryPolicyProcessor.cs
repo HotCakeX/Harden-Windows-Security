@@ -20,11 +20,11 @@ namespace HardenWindowsSecurity
 
             // Filter the CSV data to only get the records that match the input category
             var csvRecords = HardenWindowsSecurity.GlobalVars.SecurityPolicyRecords?
-                .Where(record => record.Category != null && record.Category.Equals(category, StringComparison.OrdinalIgnoreCase))
+                .Where(record => record.Category is not null && record.Category.Equals(category, StringComparison.OrdinalIgnoreCase))
                 .ToList();
 
             // Ensure csvRecords is not null before iterating
-            if (csvRecords != null)
+            if (csvRecords is not null)
             {
                 // Loop over each filtered CSV data
                 foreach (var record in csvRecords)
@@ -39,11 +39,11 @@ namespace HardenWindowsSecurity
                     string? actualValue = null;
 
                     // Ensure SystemSecurityPoliciesIniObject is not null and check for section
-                    if (HardenWindowsSecurity.GlobalVars.SystemSecurityPoliciesIniObject != null &&
-                        section != null && // Check if section is not null
+                    if (HardenWindowsSecurity.GlobalVars.SystemSecurityPoliciesIniObject is not null &&
+                        section is not null && // Check if section is not null
                         HardenWindowsSecurity.GlobalVars.SystemSecurityPoliciesIniObject.TryGetValue(section, out var sectionDict) &&
-                        sectionDict != null &&
-                        path != null && // Check if path is not null
+                        sectionDict is not null &&
+                        path is not null && // Check if path is not null
                         sectionDict.TryGetValue(path, out string? value))
                     {
                         actualValue = value;

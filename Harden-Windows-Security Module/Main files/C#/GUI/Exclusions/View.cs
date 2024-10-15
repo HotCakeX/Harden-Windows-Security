@@ -26,7 +26,7 @@ namespace HardenWindowsSecurity
                 }
 
                 // Defining the path to the XAML XML file
-                if (HardenWindowsSecurity.GlobalVars.path == null)
+                if (HardenWindowsSecurity.GlobalVars.path is null)
                 {
                     throw new InvalidOperationException("GlobalVars.path cannot be null.");
                 }
@@ -202,7 +202,7 @@ namespace HardenWindowsSecurity
                             {
 
                                 // If user selected file paths
-                                if (GUIExclusions.selectedFiles != null)
+                                if (GUIExclusions.selectedFiles is not null)
                                 {
 
                                     #region Getting the current exclusion lists
@@ -217,7 +217,7 @@ namespace HardenWindowsSecurity
                                     string[] ExclusionPathArray = HardenWindowsSecurity.PropertyHelper.GetPropertyValue(HardenWindowsSecurity.GlobalVars.MDAVPreferencesCurrent, "ExclusionPath");
 
                                     // Check if the result is not null, then convert to List<string>, or initialize an empty list if null
-                                    List<string> ExclusionPathList = ExclusionPathArray != null
+                                    List<string> ExclusionPathList = ExclusionPathArray is not null
                                         ? new List<string>(ExclusionPathArray)
                                         : [];
 
@@ -226,7 +226,7 @@ namespace HardenWindowsSecurity
                                     string[] ControlledFolderAccessAllowedApplicationsArray = HardenWindowsSecurity.PropertyHelper.GetPropertyValue(HardenWindowsSecurity.GlobalVars.MDAVPreferencesCurrent, "ControlledFolderAccessAllowedApplications");
 
                                     // Check if the result is not null, then convert to List<string>, or initialize an empty list if null
-                                    List<string> ControlledFolderAccessAllowedApplicationsList = ControlledFolderAccessAllowedApplicationsArray != null
+                                    List<string> ControlledFolderAccessAllowedApplicationsList = ControlledFolderAccessAllowedApplicationsArray is not null
                                         ? new List<string>(ControlledFolderAccessAllowedApplicationsArray)
                                         : [];
 
@@ -236,7 +236,7 @@ namespace HardenWindowsSecurity
 
                                     // Check if the result is not null, then convert to List<string>, or initialize an empty list if null
                                     // Makes it easier to check items in it later
-                                    List<string> attackSurfaceReductionOnlyExclusionsList = attackSurfaceReductionOnlyExclusionsArray != null
+                                    List<string> attackSurfaceReductionOnlyExclusionsList = attackSurfaceReductionOnlyExclusionsArray is not null
                                         ? new List<string>(attackSurfaceReductionOnlyExclusionsArray)
                                         : [];
                                     #endregion

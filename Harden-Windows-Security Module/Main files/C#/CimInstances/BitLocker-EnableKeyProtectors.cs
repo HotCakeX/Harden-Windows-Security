@@ -33,12 +33,12 @@ namespace HardenWindowsSecurity
             #region Output handling
             uint? KeyProtectorEnablementResultCode = null;
 
-            if (KeyProtectorEnablementResult != null)
+            if (KeyProtectorEnablementResult is not null)
             {
                 KeyProtectorEnablementResultCode = Convert.ToUInt32(KeyProtectorEnablementResult["ReturnValue"], CultureInfo.InvariantCulture);
             }
 
-            if (KeyProtectorEnablementResultCode != null && KeyProtectorEnablementResultCode == 0)
+            if (KeyProtectorEnablementResultCode is not null && KeyProtectorEnablementResultCode == 0)
             {
                 Logger.LogMessage($"Successfully enabled the key protectors of the drive {DriveLetter}.", LogTypeIntel.Information);
             }

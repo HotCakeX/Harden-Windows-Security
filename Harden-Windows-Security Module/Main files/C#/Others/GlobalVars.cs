@@ -122,6 +122,7 @@ namespace HardenWindowsSecurity
         // To store the System MDM parsed JSON output
         internal static System.Collections.Hashtable? MDM_Policy_Result01_System02;
 
+
         internal static string userName;
         internal static string userSID;
         internal static string? userFullName;

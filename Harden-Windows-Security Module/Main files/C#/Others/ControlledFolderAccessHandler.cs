@@ -172,7 +172,7 @@ namespace HardenWindowsSecurity
 
                 // restoring the original Controlled folder access allow list - if user already had added PowerShell executables to the list
                 // they will be restored as well, so user customization will remain intact
-                if (HardenWindowsSecurity.GlobalVars.CFABackup != null && HardenWindowsSecurity.GlobalVars.CFABackup.Length > 0)
+                if (HardenWindowsSecurity.GlobalVars.CFABackup is not null && HardenWindowsSecurity.GlobalVars.CFABackup.Length > 0)
                 {
                     HardenWindowsSecurity.Logger.LogMessage("Restoring the original Controlled Folder Access allowed apps list", LogTypeIntel.Information);
                     HardenWindowsSecurity.ControlledFolderAccessHandler.Set(applications: HardenWindowsSecurity.GlobalVars.CFABackup);

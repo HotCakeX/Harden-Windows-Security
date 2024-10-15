@@ -80,7 +80,7 @@ Remove-WindowsCapability -Online
             // To store the value of the property of the _FeaturesCheckResults
             string? propertyValue = string.Empty;
 
-            if (propertyInfo != null)
+            if (propertyInfo is not null)
             {
                 propertyValue = propertyInfo.GetValue(_FeaturesCheckResults)?.ToString();
             }

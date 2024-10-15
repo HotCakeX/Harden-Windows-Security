@@ -36,7 +36,7 @@ namespace HardenWindowsSecurity
                 var value = hashtable[key];
 
                 // If the value is not null and is of the expected type
-                if (value != null && value is T t)
+                if (value is not null && value is T t)
                 {
                     bool isMatch = false;
 

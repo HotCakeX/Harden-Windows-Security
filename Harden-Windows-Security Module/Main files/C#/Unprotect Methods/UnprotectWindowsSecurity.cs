@@ -192,7 +192,7 @@ Start-Process -FilePath GPUpdate.exe -ArgumentList '/force' -NoNewWindow
             _ = HardenWindowsSecurity.PowerShellExecutor.ExecuteScript(command);
 
 
-            if (HardenWindowsSecurity.GlobalVars.ProcessMitigations == null)
+            if (HardenWindowsSecurity.GlobalVars.ProcessMitigations is null)
             {
                 throw new InvalidOperationException("GlobalVars.ProcessMitigations is null.");
             }
@@ -219,7 +219,7 @@ Start-Process -FilePath GPUpdate.exe -ArgumentList '/force' -NoNewWindow
             // Loop through each group and remove corresponding registry keys
             foreach (var group in groupedMitigations)
             {
-                if (allAvailableMitigations != null)
+                if (allAvailableMitigations is not null)
                 {
                     if (allAvailableMitigations.Contains(group.Key!))
                     {

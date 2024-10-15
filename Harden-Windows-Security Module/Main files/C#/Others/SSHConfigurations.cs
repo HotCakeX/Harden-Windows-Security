@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace HardenWindowsSecurity
 {
-    internal class SSHConfigurations
+    internal sealed class SSHConfigurations
     {
 
         private readonly static string SSHClientUserConfigDirectory = Path.Combine(Environment.GetEnvironmentVariable("SystemDrive")!, "Users", GlobalVars.userName, ".ssh");

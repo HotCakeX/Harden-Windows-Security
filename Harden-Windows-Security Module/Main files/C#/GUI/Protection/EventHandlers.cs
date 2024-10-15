@@ -23,72 +23,72 @@ namespace HardenWindowsSecurity
             // null checks to make sure the elements are available to the AddEventHandlers method
             // LoadXaml method doesn't need the checks because these values are initialized in that method
 
-            if (GUIProtectWinSecurity.View == null)
+            if (GUIProtectWinSecurity.View is null)
             {
                 throw new InvalidOperationException("AddEventHandlers Method: Window object is empty!");
             }
 
-            if (GUIProtectWinSecurity.categories == null)
+            if (GUIProtectWinSecurity.categories is null)
             {
                 throw new InvalidOperationException("AddEventHandlers Method: categories object is empty!");
             }
 
-            if (GUIProtectWinSecurity.selectAllCategories == null)
+            if (GUIProtectWinSecurity.selectAllCategories is null)
             {
                 throw new InvalidOperationException("AddEventHandlers Method: selectAllCategories object is empty!");
             }
 
-            if (GUIProtectWinSecurity.subCategories == null)
+            if (GUIProtectWinSecurity.subCategories is null)
             {
                 throw new InvalidOperationException("AddEventHandlers Method: subCategories object is empty!");
             }
 
-            if (GUIProtectWinSecurity.selectAllSubCategories == null)
+            if (GUIProtectWinSecurity.selectAllSubCategories is null)
             {
                 throw new InvalidOperationException("AddEventHandlers Method: selectAllSubCategories object is empty!");
             }
 
-            if (GUIProtectWinSecurity.microsoft365AppsSecurityBaselineZipTextBox == null)
+            if (GUIProtectWinSecurity.microsoft365AppsSecurityBaselineZipTextBox is null)
             {
                 throw new InvalidOperationException("AddEventHandlers Method: microsoft365AppsSecurityBaselineZipTextBox object is empty!");
             }
 
-            if (GUIProtectWinSecurity.lgpoZipButton == null)
+            if (GUIProtectWinSecurity.lgpoZipButton is null)
             {
                 throw new InvalidOperationException("AddEventHandlers Method: lgpoZipButton object is empty!");
             }
 
-            if (GUIProtectWinSecurity.lgpoZipTextBox == null)
+            if (GUIProtectWinSecurity.lgpoZipTextBox is null)
             {
                 throw new InvalidOperationException("AddEventHandlers Method: lgpoZipTextBox object is empty!");
             }
 
-            if (GUIProtectWinSecurity.txtFilePath == null)
+            if (GUIProtectWinSecurity.txtFilePath is null)
             {
                 throw new InvalidOperationException("AddEventHandlers Method: txtFilePath object is empty!");
             }
 
-            if (GUIProtectWinSecurity.enableOfflineMode == null)
+            if (GUIProtectWinSecurity.enableOfflineMode is null)
             {
                 throw new InvalidOperationException("AddEventHandlers Method: enableOfflineMode object is empty!");
             }
 
-            if (GUIProtectWinSecurity.microsoftSecurityBaselineZipButton == null)
+            if (GUIProtectWinSecurity.microsoftSecurityBaselineZipButton is null)
             {
                 throw new InvalidOperationException("AddEventHandlers Method: microsoftSecurityBaselineZipButton object is empty!");
             }
 
-            if (GUIProtectWinSecurity.microsoftSecurityBaselineZipTextBox == null)
+            if (GUIProtectWinSecurity.microsoftSecurityBaselineZipTextBox is null)
             {
                 throw new InvalidOperationException("AddEventHandlers Method: microsoftSecurityBaselineZipTextBox object is empty!");
             }
 
-            if (GUIProtectWinSecurity.microsoft365AppsSecurityBaselineZipButton == null)
+            if (GUIProtectWinSecurity.microsoft365AppsSecurityBaselineZipButton is null)
             {
                 throw new InvalidOperationException("AddEventHandlers Method: microsoft365AppsSecurityBaselineZipButton object is empty!");
             }
 
-            if (GUIProtectWinSecurity.ExecuteButton == null)
+            if (GUIProtectWinSecurity.ExecuteButton is null)
             {
                 throw new InvalidOperationException("AddEventHandlers Method: ExecuteButton object is empty!");
             }
@@ -110,7 +110,7 @@ namespace HardenWindowsSecurity
             GUIProtectWinSecurity.selectAllCategories.Checked += (sender, e) =>
             {
 
-                if (HardenWindowsSecurity.GlobalVars.HardeningCategorieX == null)
+                if (HardenWindowsSecurity.GlobalVars.HardeningCategorieX is null)
                 {
                     throw new System.ArgumentNullException("GlobalVars.HardeningCategorieX cannot be null.");
                 }
@@ -378,7 +378,7 @@ namespace HardenWindowsSecurity
                         try
                         {
 
-                            #region Display a Welcome message                      
+                            #region Display a Welcome message
 
                             string nameToDisplay = (!string.IsNullOrWhiteSpace(GlobalVars.userFullName)) ? GlobalVars.userFullName : GlobalVars.userName;
 

@@ -24,12 +24,12 @@ namespace HardenWindowsSecurity
             {
                 // Find the key in a case-insensitive manner
                 var key = dictionary.Keys.FirstOrDefault(k => string.Equals(k, propertyName, StringComparison.OrdinalIgnoreCase));
-                if (key != null)
+                if (key is not null)
                 {
                     var value = dictionary[key];
 
                     // Check if the value is null, empty, or whitespace
-                    if (value != null && !(value is string str && string.IsNullOrWhiteSpace(str)))
+                    if (value is not null && !(value is string str && string.IsNullOrWhiteSpace(str)))
                     {
                         return value;
                     }

@@ -13,7 +13,7 @@ namespace HardenWindowsSecurity
         public static void Invoke()
         {
 
-            if (HardenWindowsSecurity.GlobalVars.Microsoft365SecurityBaselinePath == null)
+            if (HardenWindowsSecurity.GlobalVars.Microsoft365SecurityBaselinePath is null)
             {
                 throw new InvalidOperationException("The path to the Microsoft 365 Apps Security Baseline has not been set.");
             }

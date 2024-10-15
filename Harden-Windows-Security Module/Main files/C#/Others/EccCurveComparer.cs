@@ -54,7 +54,7 @@ namespace HardenWindowsSecurity
                 foreach (var result in results)
                 {
                     // Make sure the result is not null
-                    if (result != null)
+                    if (result is not null)
                     {
                         // Split the result string into an array of substrings based on specified delimiters
                         // new[] { ' ', '\r', '\n' } - An array of characters to use as delimiters: space, carriage return, and newline

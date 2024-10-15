@@ -22,7 +22,7 @@ namespace HardenWindowsSecurity
             var group = GroupPrincipal.FindByIdentity(ctx, IdentityType.Sid, groupSecurityId.Value);
 
             // Check if the group exists
-            if (group != null)
+            if (group is not null)
             {
                 // Check if the user is already a member of the group
                 bool isUserInGroup = false;

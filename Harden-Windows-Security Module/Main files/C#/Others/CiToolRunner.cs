@@ -259,7 +259,7 @@ namespace HardenWindowsSecurity
                         var str = item.GetString();
 
                         // Add the string to the options list if it is not null.
-                        if (str != null)
+                        if (str is not null)
                         {
                             options.Add(str);
                         }
@@ -275,7 +275,7 @@ namespace HardenWindowsSecurity
                     var str = value.GetString();
 
                     // Return a list containing the single string if it is not null.
-                    if (str != null)
+                    if (str is not null)
                     {
                         return [str];
                     }

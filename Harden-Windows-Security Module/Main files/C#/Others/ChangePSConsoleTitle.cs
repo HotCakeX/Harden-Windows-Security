@@ -11,7 +11,7 @@ namespace HardenWindowsSecurity
         /// <param name="Title">The string to set as the title of the PowerShell Console</param>
         public static void Set(string Title)
         {
-            if (GlobalVars.Host != null)
+            if (GlobalVars.Host is not null)
             {
                 try
                 {

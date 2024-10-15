@@ -12,7 +12,7 @@ namespace HardenWindowsSecurity
         public static void Apply()
         {
 
-            if (GlobalVars.ProcessMitigations == null)
+            if (GlobalVars.ProcessMitigations is null)
             {
                 throw new InvalidOperationException("No process mitigations found in the global variable.");
             }

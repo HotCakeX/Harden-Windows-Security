@@ -70,7 +70,7 @@ namespace HardenWindowsSecurity
                     string state = ConvertStateToString((UInt32)obj["InstallState"]);
 
                     // If the name is not null, add it to the dictionary
-                    if (name != null)
+                    if (name is not null)
                     {
                         states[name] = state;
                     }
@@ -101,7 +101,7 @@ return ((Get-WindowsCapability -Online | Where-Object -FilterScript { $_.Name -l
             // Execute the script and return the output - true means the PowerShell script will return string output and won't write the normal output to the console or GUI
             string? output = HardenWindowsSecurity.PowerShellExecutor.ExecuteScript(script, true);
 
-            if (output == null)
+            if (output is null)
             {
                 HardenWindowsSecurity.Logger.LogMessage($"The output of the {capabilityName} state check was null", LogTypeIntel.Information);
                 return "Unknown";

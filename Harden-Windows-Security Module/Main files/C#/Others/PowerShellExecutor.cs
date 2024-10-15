@@ -37,7 +37,7 @@ namespace HardenWindowsSecurity
                 outputCollection = [];
                 outputCollection.DataAdded += (sender, args) =>
                 {
-                    if (sender != null)
+                    if (sender is not null)
                     {
                         var outputStream = (PSDataCollection<PSObject>)sender;
                         var output = outputStream[args.Index]?.ToString();
@@ -49,7 +49,7 @@ namespace HardenWindowsSecurity
             // Handle verbose output
             psInstance.Streams.Verbose.DataAdded += (sender, args) =>
             {
-                if (sender != null)
+                if (sender is not null)
                 {
                     var verboseStream = (PSDataCollection<VerboseRecord>)sender;
                     HardenWindowsSecurity.Logger.LogMessage($"Verbose: {verboseStream[args.Index].Message}", LogTypeIntel.Information);
@@ -59,7 +59,7 @@ namespace HardenWindowsSecurity
             // Handle warning output
             psInstance.Streams.Warning.DataAdded += (sender, args) =>
             {
-                if (sender != null)
+                if (sender is not null)
                 {
                     var warningStream = (PSDataCollection<WarningRecord>)sender;
                     HardenWindowsSecurity.Logger.LogMessage($"Warning: {warningStream[args.Index].Message}", LogTypeIntel.Warning);
@@ -69,7 +69,7 @@ namespace HardenWindowsSecurity
             // Handle error output and throw exception
             psInstance.Streams.Error.DataAdded += (sender, args) =>
             {
-                if (sender != null)
+                if (sender is not null)
                 {
                     // Get the error details
                     var errorStream = (PSDataCollection<ErrorRecord>)sender;
@@ -102,7 +102,7 @@ namespace HardenWindowsSecurity
                 // Handle progress updates
                 psInstance.Streams.Progress.DataAdded += (sender, args) =>
                 {
-                    if (sender != null)
+                    if (sender is not null)
                     {
                         var progressStream = (PSDataCollection<ProgressRecord>)sender;
                         var progress = progressStream[args.Index];

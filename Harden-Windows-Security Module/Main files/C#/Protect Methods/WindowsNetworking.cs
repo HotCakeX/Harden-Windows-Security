@@ -12,7 +12,7 @@ namespace HardenWindowsSecurity
         /// <exception cref="System.ArgumentNullException"></exception>
         public static void Invoke()
         {
-            if (HardenWindowsSecurity.GlobalVars.path == null)
+            if (HardenWindowsSecurity.GlobalVars.path is null)
             {
                 throw new System.ArgumentNullException("GlobalVars.path cannot be null.");
             }

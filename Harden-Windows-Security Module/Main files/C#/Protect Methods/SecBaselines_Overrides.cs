@@ -15,12 +15,12 @@ namespace HardenWindowsSecurity
         /// <exception cref="Exception"></exception>
         public static void SecBaselines_Overrides()
         {
-            if (HardenWindowsSecurity.GlobalVars.MicrosoftSecurityBaselinePath == null)
+            if (HardenWindowsSecurity.GlobalVars.MicrosoftSecurityBaselinePath is null)
             {
                 throw new InvalidOperationException("The path to the Microsoft Security Baselines has not been set.");
             }
 
-            if (HardenWindowsSecurity.GlobalVars.path == null)
+            if (HardenWindowsSecurity.GlobalVars.path is null)
             {
                 throw new System.ArgumentNullException("GlobalVars.path cannot be null.");
             }

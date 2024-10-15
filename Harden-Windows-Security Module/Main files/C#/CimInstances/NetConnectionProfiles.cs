@@ -73,7 +73,7 @@ namespace HardenWindowsSecurity
                 scope.Connect();
 
                 // Process interface indices
-                if (interfaceIndices != null)
+                if (interfaceIndices is not null)
                 {
                     foreach (int index in interfaceIndices)
                     {
@@ -83,7 +83,7 @@ namespace HardenWindowsSecurity
                 }
 
                 // Process interface aliases
-                if (interfaceAliases != null)
+                if (interfaceAliases is not null)
                 {
                     foreach (string alias in interfaceAliases)
                     {

@@ -15,7 +15,7 @@ namespace HardenWindowsSecurity
         public static void Invoke()
         {
 
-            if (HardenWindowsSecurity.GlobalVars.path == null)
+            if (HardenWindowsSecurity.GlobalVars.path is null)
             {
                 throw new System.ArgumentNullException("GlobalVars.path cannot be null.");
             }
@@ -56,7 +56,7 @@ namespace HardenWindowsSecurity
 
             List<FileInfo>? gitHubDesktopFiles = HardenWindowsSecurity.GitHubDesktopFinder.Find();
 
-            if (gitHubDesktopFiles != null)
+            if (gitHubDesktopFiles is not null)
             {
                 IEnumerable<string> gitHubDesktopExes = gitHubDesktopFiles.Select(x => x.Name);
                 HardenWindowsSecurity.ForceRelocateImagesForFiles.SetProcessMitigationForFiles(gitHubDesktopExes.ToArray());
@@ -67,7 +67,7 @@ namespace HardenWindowsSecurity
 
             List<FileInfo>? gitExesFiles = HardenWindowsSecurity.GitExesFinder.Find();
 
-            if (gitExesFiles != null)
+            if (gitExesFiles is not null)
             {
                 IEnumerable<string> gitExes = gitExesFiles.Select(x => x.Name);
                 HardenWindowsSecurity.ForceRelocateImagesForFiles.SetProcessMitigationForFiles(gitExes.ToArray());

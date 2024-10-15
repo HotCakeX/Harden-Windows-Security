@@ -93,7 +93,7 @@ namespace HardenWindowsSecurity
                 void ApplyFilters(string filterText, bool includeCompliant, bool includeNonCompliant)
                 {
                     // Make sure the collection has data and is not null
-                    if (_SecOpsCollectionView != null)
+                    if (_SecOpsCollectionView is not null)
                     {
                         // Apply a filter to the collection view based on the filter text and toggle buttons
                         _SecOpsCollectionView.Filter = memberObj =>
@@ -131,7 +131,7 @@ namespace HardenWindowsSecurity
                 _SecOpsCollectionView = System.Windows.Data.CollectionViewSource.GetDefaultView(__SecOpses);
 
                 // Set the ItemSource of the DataGrid in the Confirm view to the collection view
-                if (HardenWindowsSecurity.GUIConfirmSystemCompliance.SecOpsDataGrid != null)
+                if (HardenWindowsSecurity.GUIConfirmSystemCompliance.SecOpsDataGrid is not null)
                 {
                     // Bind the DataGrid to the collection view
                     HardenWindowsSecurity.GUIConfirmSystemCompliance.SecOpsDataGrid.ItemsSource = _SecOpsCollectionView;
@@ -235,7 +235,7 @@ namespace HardenWindowsSecurity
 
                                 var TotalCountTextBlock = (System.Windows.Controls.TextBlock)GUIConfirmSystemCompliance.View.FindName("TotalCountTextBlock");
 
-                                if (TotalCountTextBlock != null)
+                                if (TotalCountTextBlock is not null)
                                 {
                                     // Update the text of the TextBlock to show the total count
                                     TotalCountTextBlock.Text = "Loading...";
@@ -257,7 +257,7 @@ namespace HardenWindowsSecurity
                                 GUIMain.app.Dispatcher.Invoke(() =>
                                 {
 
-                                    if (ComplianceCategoriesSelectionComboBox.SelectedItem != null)
+                                    if (ComplianceCategoriesSelectionComboBox.SelectedItem is not null)
                                     {
                                         // Get the currently selected value in the Compliance Checking category ComboBox if it exists
                                         var SelectedComplianceCategories = ComplianceCategoriesSelectionComboBox.SelectedItem;
@@ -269,7 +269,7 @@ namespace HardenWindowsSecurity
                                 });
 
                                 // if user selected a category for compliance checking
-                                if (SelectedCategory != null && !string.IsNullOrEmpty(SelectedCategory))
+                                if (SelectedCategory is not null && !string.IsNullOrEmpty(SelectedCategory))
                                 {
                                     // Perform the compliance check using the selected compliance category
                                     HardenWindowsSecurity.InvokeConfirmation.Invoke([SelectedCategory]);
@@ -352,7 +352,7 @@ namespace HardenWindowsSecurity
 
                 // Find the TextBlock used to display the total count
                 System.Windows.Controls.TextBlock TotalCountTextBlock = (System.Windows.Controls.TextBlock)GUIConfirmSystemCompliance.View.FindName("TotalCountTextBlock");
-                if (TotalCountTextBlock != null)
+                if (TotalCountTextBlock is not null)
                 {
                     // Update the text of the TextBlock to show the total count
                     TotalCountTextBlock.Text = $"{totalCount} Total Verifiable Security Checks";
@@ -372,13 +372,13 @@ namespace HardenWindowsSecurity
                 var CompliantItemsTextBlock = (System.Windows.Controls.TextBlock)GUIConfirmSystemCompliance.View.FindName("CompliantItemsTextBlock");
                 var NonCompliantItemsTextBlock = (System.Windows.Controls.TextBlock)GUIConfirmSystemCompliance.View.FindName("NonCompliantItemsTextBlock");
 
-                if (CompliantItemsTextBlock != null)
+                if (CompliantItemsTextBlock is not null)
                 {
                     // Set the text block's text
                     CompliantItemsTextBlock.Text = $"{CompliantItemsCount} Compliant Items";
                 }
 
-                if (NonCompliantItemsTextBlock != null)
+                if (NonCompliantItemsTextBlock is not null)
                 {
                     // Set the text block's text
                     NonCompliantItemsTextBlock.Text = $"{NonCompliantItemsCount} Non-Compliant Items";
@@ -401,7 +401,7 @@ namespace HardenWindowsSecurity
                 __SecOpses.Clear();
 
                 // Retrieve data from GlobalVars.FinalMegaObject and populate the security options collection
-                if (HardenWindowsSecurity.GlobalVars.FinalMegaObject != null)
+                if (HardenWindowsSecurity.GlobalVars.FinalMegaObject is not null)
                 {
                     foreach (KeyValuePair<string, List<IndividualResult>> kvp in HardenWindowsSecurity.GlobalVars.FinalMegaObject)
                     {

@@ -200,7 +200,7 @@ namespace HardenWindowsSecurity
 
             if (ToAdd)
             {
-                if (ListDownloadURL == null)
+                if (ListDownloadURL is null)
                 {
                     throw new InvalidOperationException("ListDownloadURL cannot be null when creating Firewall rules.");
                 }

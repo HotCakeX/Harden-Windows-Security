@@ -97,7 +97,7 @@ namespace HardenWindowsSecurity
                 // Get the first instance of the TPM.
                 ManagementObject? tpmObject = tpmObjects.OfType<ManagementObject>().FirstOrDefault();
 
-                if (tpmObject == null)
+                if (tpmObject is null)
                 {
                     result.ErrorMessage = "TPM instance not found";
                     return result;

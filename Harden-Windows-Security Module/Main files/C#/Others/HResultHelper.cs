@@ -5,7 +5,7 @@ using System.Runtime.InteropServices;
 
 namespace HardenWindowsSecurity
 {
-    internal class HResultHelper
+    internal static class HResultHelper
     {
         /// <summary>
         /// Converts the given HRESULT to a corresponding .NET Exception and writes the full error message to the console.
@@ -25,7 +25,7 @@ namespace HardenWindowsSecurity
             Exception? exception = Marshal.GetExceptionForHR(signedHresult);
 
             // If an exception is found, log the message. If not, indicate no specific exception exists for the HRESULT
-            if (exception != null)
+            if (exception is not null)
             {
                 Logger.LogMessage($"{exception.Message}", LogTypeIntel.ErrorInteractionRequired);
             }

@@ -65,12 +65,12 @@ namespace HardenWindowsSecurity
 
             // If there is no GUI Window, or there was a GUI window but it was closed by the user
             // then use Console for writing logs
-            if (HardenWindowsSecurity.GUILogs.View == null || HardenWindowsSecurity.GUILogs.View.Dispatcher.HasShutdownStarted)
+            if (HardenWindowsSecurity.GUILogs.View is null || HardenWindowsSecurity.GUILogs.View.Dispatcher.HasShutdownStarted)
             {
                 // See if the host is available, meaning PowerShell host is available
                 // And also VerbosePreference is not null, in case the methods are running manually by using the Harden Windows Security methods directly in PowerShell like as a library
                 // Because then the Verbose Preference is not set in the Initialize method since the module is only imported.
-                if (HardenWindowsSecurity.GlobalVars.Host != null && GlobalVars.VerbosePreference != null)
+                if (HardenWindowsSecurity.GlobalVars.Host is not null && GlobalVars.VerbosePreference is not null)
                 {
                     // Write the message as verbose text on PowerShell console
                     WriteVerbose(CurrentText);
@@ -90,7 +90,7 @@ namespace HardenWindowsSecurity
                 {
 
                     #region Writing to the Log file if user enabled logging
-                    if (GUIProtectWinSecurity.log != null && GUIProtectWinSecurity.log.IsChecked == true)
+                    if (GUIProtectWinSecurity.log is not null && GUIProtectWinSecurity.log.IsChecked == true)
                     {
                         // only write the header to the log file if it hasn't already been written to it
                         if (!HardenWindowsSecurity.GlobalVars.LogHeaderHasBeenWritten)
@@ -134,7 +134,7 @@ Machine: {Environment.MachineName}
 
                     #region Writing to the Event Logs
                     // Write the same message to the event logs if event log write is enabled
-                    if (GUIProtectWinSecurity.EventLogging != null && GUIProtectWinSecurity.EventLogging.IsChecked == true)
+                    if (GUIProtectWinSecurity.EventLogging is not null && GUIProtectWinSecurity.EventLogging.IsChecked == true)
                     {
                         switch (LogType)
                         {
@@ -188,7 +188,7 @@ Machine: {Environment.MachineName}
         private static void LogToFile(string Text)
         {
             //  if the log file path is not empty
-            if (GUIProtectWinSecurity.txtFilePath != null && !string.IsNullOrEmpty(GUIProtectWinSecurity.txtFilePath.Text))
+            if (GUIProtectWinSecurity.txtFilePath is not null && !string.IsNullOrEmpty(GUIProtectWinSecurity.txtFilePath.Text))
             {
 
                 // trim any white spaces, single or double quotes in case the user entered the path with quotes around it
@@ -219,7 +219,7 @@ Machine: {Environment.MachineName}
         /// <param name="message"></param>
         private static void WriteVerbose(string message)
         {
-            if (HardenWindowsSecurity.GlobalVars.Host != null)
+            if (HardenWindowsSecurity.GlobalVars.Host is not null)
             {
                 try
                 {

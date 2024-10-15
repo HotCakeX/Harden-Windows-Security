@@ -58,7 +58,7 @@ namespace HardenWindowsSecurity
             }
 
             // Check if the command can execute
-            public bool CanExecute(object parameter) => _canExecute == null || _canExecute(parameter);
+            public bool CanExecute(object parameter) => _canExecute is null || _canExecute(parameter);
 
             // Execute the command
             public void Execute(object parameter) => _execute(parameter);
@@ -201,7 +201,7 @@ namespace HardenWindowsSecurity
         {
 
             // Defining the path to the XAML XML file
-            if (HardenWindowsSecurity.GlobalVars.path == null)
+            if (HardenWindowsSecurity.GlobalVars.path is null)
             {
                 throw new System.ArgumentNullException("GlobalVars.path cannot be null.");
             }

@@ -211,12 +211,12 @@ namespace HardenWindowsSecurity
                 #region Output handling
                 uint? PrepareVolumeResultCode = null;
 
-                if (PrepareVolumeMethodInvocationResult != null)
+                if (PrepareVolumeMethodInvocationResult is not null)
                 {
                     PrepareVolumeResultCode = Convert.ToUInt32(PrepareVolumeMethodInvocationResult["ReturnValue"], CultureInfo.InvariantCulture);
                 }
 
-                if (PrepareVolumeResultCode != null && PrepareVolumeResultCode == 0)
+                if (PrepareVolumeResultCode is not null && PrepareVolumeResultCode == 0)
                 {
                     Logger.LogMessage($"Successfully prepared the drive {DriveLetter} for encryption.", LogTypeIntel.Information);
                 }
@@ -294,12 +294,12 @@ namespace HardenWindowsSecurity
                 #region Output handling
                 uint? EncryptResultCode = null;
 
-                if (EncryptMethodInvocationResult != null)
+                if (EncryptMethodInvocationResult is not null)
                 {
                     EncryptResultCode = Convert.ToUInt32(EncryptMethodInvocationResult["ReturnValue"], CultureInfo.InvariantCulture);
                 }
 
-                if (EncryptResultCode != null && EncryptResultCode == 0)
+                if (EncryptResultCode is not null && EncryptResultCode == 0)
                 {
                     Logger.LogMessage($"Successfully Encrypted the drive {DriveLetter}.", LogTypeIntel.Information);
                 }
@@ -490,12 +490,12 @@ namespace HardenWindowsSecurity
                 #region Output handling
                 uint? PrepareVolumeResultCode = null;
 
-                if (PrepareVolumeMethodInvocationResult != null)
+                if (PrepareVolumeMethodInvocationResult is not null)
                 {
                     PrepareVolumeResultCode = Convert.ToUInt32(PrepareVolumeMethodInvocationResult["ReturnValue"], CultureInfo.InvariantCulture);
                 }
 
-                if (PrepareVolumeResultCode != null && PrepareVolumeResultCode == 0)
+                if (PrepareVolumeResultCode is not null && PrepareVolumeResultCode == 0)
                 {
                     Logger.LogMessage($"Successfully prepared the drive {DriveLetter} for encryption.", LogTypeIntel.Information);
                 }
@@ -548,12 +548,12 @@ namespace HardenWindowsSecurity
                 #region Output handling
                 uint? EncryptResultCode = null;
 
-                if (EncryptMethodInvocationResult != null)
+                if (EncryptMethodInvocationResult is not null)
                 {
                     EncryptResultCode = Convert.ToUInt32(EncryptMethodInvocationResult["ReturnValue"], CultureInfo.InvariantCulture);
                 }
 
-                if (EncryptResultCode != null && EncryptResultCode == 0)
+                if (EncryptResultCode is not null && EncryptResultCode == 0)
                 {
                     Logger.LogMessage($"Successfully Encrypted the drive {DriveLetter}.", LogTypeIntel.Information);
                 }
@@ -624,12 +624,12 @@ namespace HardenWindowsSecurity
             #region Output handling
             uint? PrepareVolumeResultCode = null;
 
-            if (PrepareVolumeMethodInvocationResult != null)
+            if (PrepareVolumeMethodInvocationResult is not null)
             {
                 PrepareVolumeResultCode = Convert.ToUInt32(PrepareVolumeMethodInvocationResult["ReturnValue"], CultureInfo.InvariantCulture);
             }
 
-            if (PrepareVolumeResultCode != null && PrepareVolumeResultCode == 0)
+            if (PrepareVolumeResultCode is not null && PrepareVolumeResultCode == 0)
             {
                 Logger.LogMessage($"Successfully prepared the drive {DriveLetter} for encryption.", LogTypeIntel.Information);
             }
@@ -686,12 +686,12 @@ namespace HardenWindowsSecurity
             #region Output handling
             uint? EncryptResultCode = null;
 
-            if (EncryptMethodInvocationResult != null)
+            if (EncryptMethodInvocationResult is not null)
             {
                 EncryptResultCode = Convert.ToUInt32(EncryptMethodInvocationResult["ReturnValue"], CultureInfo.InvariantCulture);
             }
 
-            if (EncryptResultCode != null && EncryptResultCode == 0)
+            if (EncryptResultCode is not null && EncryptResultCode == 0)
             {
                 Logger.LogMessage($"Successfully Encrypted the drive {DriveLetter}.", LogTypeIntel.Information);
             }

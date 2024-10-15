@@ -19,7 +19,7 @@ namespace HardenWindowsSecurity
             // Check if there is already an instance with the FriendlyName
             var existingItem = nestedObjectArray.FirstOrDefault(item => string.Equals(item.FriendlyName, result.FriendlyName, StringComparison.OrdinalIgnoreCase));
 
-            if (existingItem != null)
+            if (existingItem is not null)
             {
                 // Check the Compliant status of the existing item in the results list
                 // If the item already exists and is Non-compliant

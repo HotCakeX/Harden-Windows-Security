@@ -7,7 +7,7 @@ namespace HardenWindowsSecurity
         public static void WindowsNetworking_BlockNTLM()
         {
 
-            if (HardenWindowsSecurity.GlobalVars.path == null)
+            if (HardenWindowsSecurity.GlobalVars.path is null)
             {
                 throw new System.ArgumentNullException("GlobalVars.path cannot be null.");
             }

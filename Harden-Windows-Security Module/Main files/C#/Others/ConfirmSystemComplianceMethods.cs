@@ -92,8 +92,6 @@ sc.exe start LanmanWorkstation
         { "MicrosoftDefender", VerifyMicrosoftDefender }
     };
 
-        // Warn + Block array - meaning either states are acceptable
-        private static readonly string[] MultipleAcceptableStates = ["6", "1"];
 
         // Task status codes: https://learn.microsoft.com/en-us/dotnet/api/system.threading.tasks.taskstatus
         /// <summary>
@@ -108,7 +106,7 @@ sc.exe start LanmanWorkstation
             List<Func<Task>> methodsToRun;
 
             // if the methodNames parameter wasn't specified
-            if (methodNames == null || methodNames.Length == 0)
+            if (methodNames is null || methodNames.Length == 0)
             {
                 // Get all methods from the dictionary
                 methodsToRun = [.. methodDictionary.Values];
@@ -147,11 +145,14 @@ sc.exe start LanmanWorkstation
 
                 string CatName = "AttackSurfaceReductionRules";
 
+                // Warn + Block array - meaning either states are acceptable
+                string[] MultipleAcceptableStates = ["6", "1"];
+
                 // variables to store the ASR rules IDs and their corresponding actions
                 object idsObj;
                 object actionsObj;
 
-                if (HardenWindowsSecurity.GlobalVars.MDAVPreferencesCurrent == null)
+                if (HardenWindowsSecurity.GlobalVars.MDAVPreferencesCurrent is null)
                 {
                     throw new ArgumentNullException(nameof(HardenWindowsSecurity.GlobalVars.MDAVPreferencesCurrent), "MDAVPreferencesCurrent cannot be null.");
                 }
@@ -162,42 +163,17 @@ sc.exe start LanmanWorkstation
                 }
 
                 // Individual ASR rules verification
-                string[]? ids = ConvertToStringArray(idsObj);
-                string[]? actions = ConvertToStringArray(actionsObj);
+                string[]? ids = HelperMethods.ConvertToStringArray(idsObj);
+                string[]? actions = HelperMethods.ConvertToStringArray(actionsObj);
 
                 // If $Ids variable is not empty, convert them to lower case because some IDs can be in upper case and result in inaccurate comparison
-                if (ids != null)
+                if (ids is not null)
                 {
                     ids = ids.Select(id => id.ToLowerInvariant()).ToArray();
                 }
 
-                // Updated Dictionary with OrdinalIgnoreCase comparer
-                Dictionary<string, string> ASRTable = new(StringComparer.OrdinalIgnoreCase)
-                {
-                // HashTable to store the descriptions for each ID
-                { "26190899-1602-49e8-8b27-eb1d0a1ce869", "Block Office communication application from creating child processes" },
-                { "d1e49aac-8f56-4280-b9ba-993a6d77406c", "Block process creations originating from PSExec and WMI commands" },
-                { "b2b3f03d-6a65-4f7b-a9c7-1c7ef74a9ba4", "Block untrusted and unsigned processes that run from USB" },
-                { "92e97fa1-2edf-4476-bdd6-9dd0b4dddc7b", "Block Win32 API calls from Office macros" },
-                { "7674ba52-37eb-4a4f-a9a1-f0f9a1619a2c", "Block Adobe Reader from creating child processes" },
-                { "3b576869-a4ec-4529-8536-b80a7769e899", "Block Office applications from creating executable content" },
-                { "d4f940ab-401b-4efc-aadc-ad5f3c50688a", "Block all Office applications from creating child processes" },
-                { "9e6c4e1f-7d60-472f-ba1a-a39ef669e4b2", "Block credential stealing from the Windows local security authority subsystem (lsass.exe)" },
-                { "be9ba2d9-53ea-4cdc-84e5-9b1eeee46550", "Block executable content from email client and webmail" },
-                { "01443614-cd74-433a-b99e-2ecdc07bfc25", "Block executable files from running unless they meet a prevalence; age or trusted list criterion" },
-                { "5beb7efe-fd9a-4556-801d-275e5ffc04cc", "Block execution of potentially obfuscated scripts" },
-                { "e6db77e5-3df2-4cf1-b95a-636979351e5b", "Block persistence through WMI event subscription" },
-                { "75668c1f-73b5-4cf0-bb93-3ecf5cb7cc84", "Block Office applications from injecting code into other processes" },
-                { "56a863a9-875e-4185-98a7-b882c64b5ce5", "Block abuse of exploited vulnerable signed drivers" },
-                { "c1db55ab-c21a-4637-bb3f-a12568109d35", "Use advanced protection against ransomware" },
-                { "d3e037e1-3eb8-44c8-a917-57927947596d", "Block JavaScript or VBScript from launching downloaded executable content" },
-                { "33ddedf1-c6e0-47cb-833e-de6133960387", "Block rebooting machine in Safe Mode" },
-                { "c0033c00-d16d-4114-a5a0-dc9b3a7d2ceb", "Block use of copied or impersonated system tools" },
-                { "a8f5898e-1dc8-49a9-9878-85004b8a61e6", "Block Webshell creation for Servers" }
-                };
-
                 // Loop over each item in the HashTable
-                foreach (var kvp in ASRTable)
+                foreach (var kvp in AttackSurfaceReductionIntel.ASRTable)
                 {
                     // Assign each key/value to local variables
                     string name = kvp.Key.ToLowerInvariant();
@@ -207,10 +183,10 @@ sc.exe start LanmanWorkstation
                     string action = "0";
 
                     // Check if the $Ids array is not empty and current ID is present in the $Ids array
-                    if (ids != null && ids.Contains(name, StringComparer.OrdinalIgnoreCase))
+                    if (ids is not null && ids.Contains(name, StringComparer.OrdinalIgnoreCase))
                     {
                         // If yes, check if the $Actions array is not empty
-                        if (actions != null)
+                        if (actions is not null)
                         {
                             // If yes, use the index of the ID in the array to access the action value
                             action = actions[Array.FindIndex(ids, id => id.Equals(name, StringComparison.OrdinalIgnoreCase))];
@@ -239,7 +215,7 @@ sc.exe start LanmanWorkstation
                     });
                 }
 
-                if (HardenWindowsSecurity.GlobalVars.FinalMegaObject == null)
+                if (HardenWindowsSecurity.GlobalVars.FinalMegaObject is null)
                 {
                     throw new ArgumentNullException(nameof(HardenWindowsSecurity.GlobalVars.FinalMegaObject), "FinalMegaObject cannot be null.");
                 }
@@ -248,20 +224,6 @@ sc.exe start LanmanWorkstation
                     _ = HardenWindowsSecurity.GlobalVars.FinalMegaObject.TryAdd(CatName, nestedObjectArray);
                 };
             });
-        }
-
-        // Helper function to convert object to string array
-        private static string[]? ConvertToStringArray(object input)
-        {
-            if (input is string[] stringArray)
-            {
-                return stringArray;
-            }
-            if (input is byte[] byteArray)
-            {
-                return byteArray.Select(b => b.ToString(CultureInfo.InvariantCulture)).ToArray();
-            }
-            return null;
         }
 
 
@@ -336,7 +298,7 @@ sc.exe start LanmanWorkstation
                     HardenWindowsSecurity.ConditionalResultAdd.Add(nestedObjectArray, Result);
                 }
 
-                if (HardenWindowsSecurity.GlobalVars.FinalMegaObject == null)
+                if (HardenWindowsSecurity.GlobalVars.FinalMegaObject is null)
                 {
                     throw new ArgumentNullException(nameof(HardenWindowsSecurity.GlobalVars.FinalMegaObject), "FinalMegaObject cannot be null.");
                 }
@@ -367,7 +329,7 @@ sc.exe start LanmanWorkstation
                     HardenWindowsSecurity.ConditionalResultAdd.Add(nestedObjectArray, Result);
                 }
 
-                if (HardenWindowsSecurity.GlobalVars.FinalMegaObject == null)
+                if (HardenWindowsSecurity.GlobalVars.FinalMegaObject is null)
                 {
                     throw new ArgumentNullException(nameof(HardenWindowsSecurity.GlobalVars.FinalMegaObject), "FinalMegaObject cannot be null.");
                 }
@@ -397,7 +359,7 @@ sc.exe start LanmanWorkstation
                     HardenWindowsSecurity.ConditionalResultAdd.Add(nestedObjectArray, Result);
                 }
 
-                if (HardenWindowsSecurity.GlobalVars.FinalMegaObject == null)
+                if (HardenWindowsSecurity.GlobalVars.FinalMegaObject is null)
                 {
                     throw new ArgumentNullException(nameof(HardenWindowsSecurity.GlobalVars.FinalMegaObject), "FinalMegaObject cannot be null.");
                 }
@@ -445,12 +407,12 @@ sc.exe start LanmanWorkstation
                 nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
                     FriendlyName = "Require Platform Security Features",
-                    Compliant = RequirePlatformSecurityFeatures != null &&
+                    Compliant = RequirePlatformSecurityFeatures is not null &&
                                 (RequirePlatformSecurityFeatures.Equals("1", StringComparison.OrdinalIgnoreCase) ||
                                  RequirePlatformSecurityFeatures.Equals("3", StringComparison.OrdinalIgnoreCase)),
-                    Value = (RequirePlatformSecurityFeatures != null && RequirePlatformSecurityFeatures.Equals("1", StringComparison.OrdinalIgnoreCase)) ?
+                    Value = (RequirePlatformSecurityFeatures is not null && RequirePlatformSecurityFeatures.Equals("1", StringComparison.OrdinalIgnoreCase)) ?
                             "VBS with Secure Boot" :
-                            (RequirePlatformSecurityFeatures != null && RequirePlatformSecurityFeatures.Equals("3", StringComparison.OrdinalIgnoreCase)) ?
+                            (RequirePlatformSecurityFeatures is not null && RequirePlatformSecurityFeatures.Equals("3", StringComparison.OrdinalIgnoreCase)) ?
                             "VBS with Secure Boot and direct memory access (DMA) Protection" :
                             "False",
                     Name = "RequirePlatformSecurityFeatures",
@@ -521,7 +483,7 @@ sc.exe start LanmanWorkstation
                     HardenWindowsSecurity.ConditionalResultAdd.Add(nestedObjectArray, Result);
                 }
 
-                if (HardenWindowsSecurity.GlobalVars.FinalMegaObject == null)
+                if (HardenWindowsSecurity.GlobalVars.FinalMegaObject is null)
                 {
                     throw new ArgumentNullException(nameof(HardenWindowsSecurity.GlobalVars.FinalMegaObject), "FinalMegaObject cannot be null.");
                 }
@@ -596,12 +558,12 @@ sc.exe start LanmanWorkstation
                 // Only perform the check if the system is not a virtual machine
                 var isVirtualMachine = PropertyHelper.GetPropertyValue(GlobalVars.MDAVConfigCurrent, "IsVirtualMachine");
 
-                if (isVirtualMachine != null && !(bool)isVirtualMachine)
+                if (isVirtualMachine is not null && !(bool)isVirtualMachine)
                 {
                     bool IndividualItemResult = false;
 
                     object? hiberFileType = Registry.GetValue(@"HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Power", "HiberFileType", null);
-                    if (hiberFileType != null && (int)hiberFileType == 2)
+                    if (hiberFileType is not null && (int)hiberFileType == 2)
                     {
                         IndividualItemResult = true;
                     }
@@ -765,7 +727,7 @@ sc.exe start LanmanWorkstation
                     HardenWindowsSecurity.ConditionalResultAdd.Add(nestedObjectArray, Result);
                 }
 
-                if (HardenWindowsSecurity.GlobalVars.FinalMegaObject == null)
+                if (HardenWindowsSecurity.GlobalVars.FinalMegaObject is null)
                 {
                     throw new ArgumentNullException(nameof(HardenWindowsSecurity.GlobalVars.FinalMegaObject), "FinalMegaObject cannot be null.");
                 }
@@ -799,7 +761,7 @@ sc.exe start LanmanWorkstation
 
                 // Retrieve the list of local users and filter them based on the enabled status
                 var usersNotInHyperVGroup = HardenWindowsSecurity.LocalUserRetriever.Get()
-                    ?.Where(user => user.Enabled && user.GroupsSIDs != null && !user.GroupsSIDs.Contains(hyperVAdminGroupSID, StringComparer.OrdinalIgnoreCase))
+                    ?.Where(user => user.Enabled && user.GroupsSIDs is not null && !user.GroupsSIDs.Contains(hyperVAdminGroupSID, StringComparer.OrdinalIgnoreCase))
                     .ToList();
 
                 // Determine compliance based on the filtered list to see if the list has any elements
@@ -860,7 +822,7 @@ sc.exe start LanmanWorkstation
                     string? headers = reader.ReadLine();
 
                     // Check if the headers are not null
-                    if (headers != null)
+                    if (headers is not null)
                     {
                         // Get the index of the "Inclusion Setting" column
                         var headerColumns = headers.Split(',');
@@ -869,7 +831,7 @@ sc.exe start LanmanWorkstation
 
                         // Read subsequent lines to get the values
                         string? values;
-                        while ((values = reader.ReadLine()) != null)
+                        while ((values = reader.ReadLine()) is not null)
                         {
                             var valueColumns = values.Split(',');
                             if (inclusionSettingIndex != -1 && inclusionSettingIndex < valueColumns.Length)
@@ -902,7 +864,7 @@ sc.exe start LanmanWorkstation
 
 
                 // Get the control from MDM CIM
-                if (HardenWindowsSecurity.GlobalVars.MDM_Policy_Result01_System02 == null)
+                if (HardenWindowsSecurity.GlobalVars.MDM_Policy_Result01_System02 is null)
                 {
                     // Handle the case where the global variable is null
                     throw new InvalidOperationException("MDM_Policy_Result01_System02 is null.");
@@ -932,11 +894,11 @@ sc.exe start LanmanWorkstation
                     HardenWindowsSecurity.ConditionalResultAdd.Add(nestedObjectArray, Result);
                 }
 
-                if (HardenWindowsSecurity.GlobalVars.FinalMegaObject == null)
+                if (HardenWindowsSecurity.GlobalVars.FinalMegaObject is null)
                 {
                     throw new ArgumentNullException(nameof(HardenWindowsSecurity.GlobalVars.FinalMegaObject), "FinalMegaObject cannot be null.");
                 }
-                else if (CatName == null)
+                else if (CatName is null)
                 {
                     throw new ArgumentNullException(nameof(CatName), "CatName cannot be null.");
                 }
@@ -995,7 +957,7 @@ sc.exe start LanmanWorkstation
                     HardenWindowsSecurity.ConditionalResultAdd.Add(nestedObjectArray, Result);
                 }
 
-                if (HardenWindowsSecurity.GlobalVars.FinalMegaObject == null)
+                if (HardenWindowsSecurity.GlobalVars.FinalMegaObject is null)
                 {
                     throw new ArgumentNullException(nameof(HardenWindowsSecurity.GlobalVars.FinalMegaObject), "FinalMegaObject cannot be null.");
                 }
@@ -1033,7 +995,7 @@ sc.exe start LanmanWorkstation
                     HardenWindowsSecurity.ConditionalResultAdd.Add(nestedObjectArray, Result);
                 }
 
-                if (HardenWindowsSecurity.GlobalVars.FinalMegaObject == null)
+                if (HardenWindowsSecurity.GlobalVars.FinalMegaObject is null)
                 {
                     throw new ArgumentNullException(nameof(HardenWindowsSecurity.GlobalVars.FinalMegaObject), "FinalMegaObject cannot be null.");
                 }
@@ -1071,7 +1033,7 @@ sc.exe start LanmanWorkstation
                     HardenWindowsSecurity.ConditionalResultAdd.Add(nestedObjectArray, Result);
                 }
 
-                if (HardenWindowsSecurity.GlobalVars.FinalMegaObject == null)
+                if (HardenWindowsSecurity.GlobalVars.FinalMegaObject is null)
                 {
                     throw new ArgumentNullException(nameof(HardenWindowsSecurity.GlobalVars.FinalMegaObject), "FinalMegaObject cannot be null.");
                 }
@@ -1240,7 +1202,7 @@ sc.exe start LanmanWorkstation
                     Method = "DISM"
                 });
 
-                if (HardenWindowsSecurity.GlobalVars.FinalMegaObject == null)
+                if (HardenWindowsSecurity.GlobalVars.FinalMegaObject is null)
                 {
                     throw new ArgumentNullException(nameof(HardenWindowsSecurity.GlobalVars.FinalMegaObject), "FinalMegaObject cannot be null.");
                 }
@@ -1304,7 +1266,7 @@ sc.exe start LanmanWorkstation
                     HardenWindowsSecurity.ConditionalResultAdd.Add(nestedObjectArray, Result);
                 }
 
-                if (HardenWindowsSecurity.GlobalVars.FinalMegaObject == null)
+                if (HardenWindowsSecurity.GlobalVars.FinalMegaObject is null)
                 {
                     throw new ArgumentNullException(nameof(HardenWindowsSecurity.GlobalVars.FinalMegaObject), "FinalMegaObject cannot be null.");
                 }
@@ -1335,7 +1297,7 @@ sc.exe start LanmanWorkstation
                 bool individualItemResult = HardenWindowsSecurity.NetConnectionProfiles.Get().All(profile =>
                 {
                     // Ensure the property exists and is not null before comparing
-                    return profile["NetworkCategory"] != null && (uint)profile["NetworkCategory"] == 0;
+                    return profile["NetworkCategory"] is not null && (uint)profile["NetworkCategory"] == 0;
                 });
                 nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
                 {
@@ -1377,7 +1339,7 @@ sc.exe start LanmanWorkstation
 
 
                 // Get the control from MDM CIM
-                if (HardenWindowsSecurity.GlobalVars.MDM_Firewall_PublicProfile02 == null)
+                if (HardenWindowsSecurity.GlobalVars.MDM_Firewall_PublicProfile02 is null)
                 {
                     // Handle the case where the global variable is null
                     throw new InvalidOperationException("MDM_Firewall_PublicProfile02 is null.");
@@ -1452,7 +1414,7 @@ sc.exe start LanmanWorkstation
 
 
                 // Get the control from MDM CIM
-                if (HardenWindowsSecurity.GlobalVars.MDM_Firewall_PrivateProfile02 == null)
+                if (HardenWindowsSecurity.GlobalVars.MDM_Firewall_PrivateProfile02 is null)
                 {
                     // Handle the case where the global variable is null
                     throw new InvalidOperationException("MDM_Firewall_PrivateProfile02 is null.");
@@ -1527,7 +1489,7 @@ sc.exe start LanmanWorkstation
 
 
                 // Get the control from MDM CIM
-                if (HardenWindowsSecurity.GlobalVars.MDM_Firewall_DomainProfile02 == null)
+                if (HardenWindowsSecurity.GlobalVars.MDM_Firewall_DomainProfile02 is null)
                 {
                     // Handle the case where the global variable is null
                     throw new InvalidOperationException("MDM_Firewall_DomainProfile02 is null.");
@@ -1649,7 +1611,7 @@ sc.exe start LanmanWorkstation
                     HardenWindowsSecurity.ConditionalResultAdd.Add(nestedObjectArray, Result);
                 }
 
-                if (HardenWindowsSecurity.GlobalVars.FinalMegaObject == null)
+                if (HardenWindowsSecurity.GlobalVars.FinalMegaObject is null)
                 {
                     throw new ArgumentNullException(nameof(HardenWindowsSecurity.GlobalVars.FinalMegaObject), "FinalMegaObject cannot be null.");
                 }
@@ -1762,7 +1724,7 @@ sc.exe start LanmanWorkstation
                         }
 
                         // Check if results are not null or empty
-                        if (results != null && results.Count > 0)
+                        if (results is not null && results.Count > 0)
                         {
                             // initialize a variable to store the ForceRelocateImages value
                             string? ForceRelocateImages = null;
@@ -1771,7 +1733,7 @@ sc.exe start LanmanWorkstation
                             ForceRelocateImages = results[0].ToString();
 
                             // Check if the value is not null
-                            if (ForceRelocateImages != null)
+                            if (ForceRelocateImages is not null)
                             {
                                 // Determine compliance based on the value
                                 bool compliant = string.Equals(ForceRelocateImages, "ON", StringComparison.OrdinalIgnoreCase);
@@ -1863,7 +1825,7 @@ sc.exe start LanmanWorkstation
 
                 // Only keep the enabled mitigations in the CSV, then group the data by ProgramName
                 var GroupedMitigations = ProcessMitigations
-                    .Where(x => x.Action != null && x.Action.Equals("Enable", StringComparison.OrdinalIgnoreCase))
+                    .Where(x => x.Action is not null && x.Action.Equals("Enable", StringComparison.OrdinalIgnoreCase))
                     // case insensitive grouping is necessary so that for e.g., lsass.exe and LSASS.exe will be out in the same group
                     .GroupBy(x => x.ProgramName, StringComparer.OrdinalIgnoreCase)
                     .Select(g => new { ProgramName = g.Key, Mitigations = g.Select(x => x.Mitigation).ToArray() })
@@ -1876,7 +1838,7 @@ sc.exe start LanmanWorkstation
                 foreach (var item in GroupedMitigations)
                 {
                     // Ensure the ProgramName is not null
-                    if (item.ProgramName != null && item.Mitigations != null)
+                    if (item.ProgramName is not null && item.Mitigations is not null)
                     {
                         TargetMitigations[item.ProgramName] = item.Mitigations!; // Suppressing the warning
                     }
@@ -2010,7 +1972,7 @@ sc.exe start LanmanWorkstation
 
 
                 // Get the value and convert it to unsigned int16
-                if (PropertyHelper.GetPropertyValue(GlobalVars.MDAVPreferencesCurrent, "PlatformUpdatesChannel") == null)
+                if (PropertyHelper.GetPropertyValue(GlobalVars.MDAVPreferencesCurrent, "PlatformUpdatesChannel") is null)
                 {
                     throw new ArgumentNullException(nameof(HardenWindowsSecurity.GlobalVars.MDAVPreferencesCurrent.PlatformUpdatesChannel), "PlatformUpdatesChannel cannot be null.");
                 }
@@ -2158,7 +2120,7 @@ sc.exe start LanmanWorkstation
                 string BruteForceProtectionAggressivenessResult = Convert.ToString(HardenWindowsSecurity.PropertyHelper.GetPropertyValue(HardenWindowsSecurity.GlobalVars.MDAVPreferencesCurrent, "BruteForceProtectionAggressiveness") ?? string.Empty);
 
                 // Check if the value is not null
-                if (BruteForceProtectionAggressivenessResult != null)
+                if (BruteForceProtectionAggressivenessResult is not null)
                 {
                     // Check if the value is 1 or 2, both are compliant
                     if (
@@ -2207,7 +2169,7 @@ sc.exe start LanmanWorkstation
                 string BruteForceProtectionMaxBlockTimeResult = Convert.ToString(HardenWindowsSecurity.PropertyHelper.GetPropertyValue(HardenWindowsSecurity.GlobalVars.MDAVPreferencesCurrent, "BruteForceProtectionMaxBlockTime") ?? string.Empty);
 
                 // Check if the value is not null
-                if (BruteForceProtectionMaxBlockTimeResult != null)
+                if (BruteForceProtectionMaxBlockTimeResult is not null)
                 {
                     // Check if the value is 0 or 4294967295, both are compliant
                     if (
@@ -2269,7 +2231,7 @@ sc.exe start LanmanWorkstation
                 string RemoteEncryptionProtectionMaxBlockTimeResult = Convert.ToString(HardenWindowsSecurity.PropertyHelper.GetPropertyValue(HardenWindowsSecurity.GlobalVars.MDAVPreferencesCurrent, "RemoteEncryptionProtectionMaxBlockTime") ?? string.Empty);
 
                 // Check if the value is not null
-                if (RemoteEncryptionProtectionMaxBlockTimeResult != null)
+                if (RemoteEncryptionProtectionMaxBlockTimeResult is not null)
                 {
                     // Check if the value is 0 or 4294967295, both are compliant
                     if (
@@ -2566,7 +2528,7 @@ sc.exe start LanmanWorkstation
 
 
                 // Get the control from MDM CIM
-                if (HardenWindowsSecurity.GlobalVars.MDM_Policy_Result01_System02 == null)
+                if (HardenWindowsSecurity.GlobalVars.MDM_Policy_Result01_System02 is null)
                 {
                     // Handle the case where the global variable is null
                     throw new InvalidOperationException("MDM_Policy_Result01_System02 is null.");
@@ -2604,7 +2566,7 @@ sc.exe start LanmanWorkstation
                     HardenWindowsSecurity.ConditionalResultAdd.Add(nestedObjectArray, Result);
                 }
 
-                if (HardenWindowsSecurity.GlobalVars.FinalMegaObject == null)
+                if (HardenWindowsSecurity.GlobalVars.FinalMegaObject is null)
                 {
                     throw new ArgumentNullException(nameof(HardenWindowsSecurity.GlobalVars.FinalMegaObject), "FinalMegaObject cannot be null.");
                 }

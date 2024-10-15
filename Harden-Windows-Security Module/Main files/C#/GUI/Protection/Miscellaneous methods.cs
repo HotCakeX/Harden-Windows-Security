@@ -58,7 +58,7 @@ namespace HardenWindowsSecurity
                 }
             }
 
-            if (HardenWindowsSecurity.GlobalVars.HardeningCategorieX == null)
+            if (HardenWindowsSecurity.GlobalVars.HardeningCategorieX is null)
             {
                 throw new System.ArgumentNullException("GlobalVars.HardeningCategorieX cannot be null.");
             }

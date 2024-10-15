@@ -2,7 +2,7 @@
 
 namespace HardenWindowsSecurity
 {
-    public partial class GUIUnprotect
+    public static class GUIUnprotect
     {
         internal static System.Windows.Controls.UserControl? View;
 
@@ -10,6 +10,6 @@ namespace HardenWindowsSecurity
 
         internal static byte UnprotectCategoriesComboBoxSelection;
 
-        internal static byte WDACPoliciesComboBoxSelection;
+        internal static byte AppControlPoliciesComboBoxSelection;
     }
 }

@@ -5,7 +5,7 @@ using System.Threading;
 
 namespace HardenWindowsSecurity
 {
-    public class GUIBootStrapper
+    public static class GUIBootStrapper
     {
         /// <summary>
         /// Starts and takes control of the entire GUI bootstrapping, startup and exit workflows

@@ -63,7 +63,7 @@ namespace HardenWindowsSecurity
 
 
         /// <summary>
-        /// Gets a list of WDAC policies on the system with filtering
+        /// Gets a list of AppControl policies on the system with filtering
         /// </summary>
         /// <param name="SystemPolicies">Will include System policies in the output</param>
         /// <param name="BasePolicies">Will include Base policies in the output</param>
@@ -150,7 +150,7 @@ namespace HardenWindowsSecurity
 
 
         /// <summary>
-        /// Removes a deployed WDAC policy from the system
+        /// Removes a deployed AppControl policy from the system
         /// </summary>
         /// <param name="policyId">the GUID which is the policy ID of the policy to be removed, with the curly brackets {} wrapped with double quotes "" </param>
         /// <exception cref="ArgumentException"></exception>
@@ -168,7 +168,7 @@ namespace HardenWindowsSecurity
             ProcessStartInfo processStartInfo = new()
             {
                 FileName = ciToolPath,
-                Arguments = $"--remove-policy \"{{{policyId}}}\" -json",   // Arguments to remove a WDAC policy
+                Arguments = $"--remove-policy \"{{{policyId}}}\" -json",   // Arguments to remove a AppControl policy
                 RedirectStandardOutput = true, // Capture the standard output
                 UseShellExecute = false,   // Do not use the OS shell to start the process
                 CreateNoWindow = true      // Run the process without creating a window

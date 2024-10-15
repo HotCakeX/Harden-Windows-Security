@@ -109,7 +109,7 @@
                                             </Grid.RowDefinitions>
                                             <CheckBox Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="1" Content="Select All" VerticalContentAlignment="Center" Margin="7,0,0,2" Padding="10,10,40,10" x:Name="SelectAllCategories" Template="{StaticResource CustomCheckBoxTemplate}"/>
                                             <!-- ListViews for Categories -->
-                                            <ListView x:Name="Categories" BorderThickness="0" ToolTip="Select the hardening categories to run" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="1" VirtualizingPanel.ScrollUnit="Pixel">
+                                            <ListView x:Name="Categories" BorderThickness="0" ToolTip="Select the hardening categories to run" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="1" VirtualizingPanel.ScrollUnit="Pixel" ScrollViewer.PanningMode="Both">
                                                 <!-- Background color for the ListView -->
                                                 <ListView.Background>
                                                     <SolidColorBrush Color="transparent"/>
@@ -180,7 +180,7 @@
                                             </Grid.RowDefinitions>
                                             <CheckBox Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="1" Content="Select All" VerticalContentAlignment="Center" Margin="6,0,0,2" x:Name="SelectAllSubCategories" Template="{StaticResource CustomCheckBoxTemplate}"/>
                                             <!-- ListViews for Sub-Categories -->
-                                            <ListView x:Name="SubCategories" BorderThickness="0" ToolTip="Select sub-categories" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="1" VirtualizingPanel.ScrollUnit="Pixel">
+                                            <ListView x:Name="SubCategories" BorderThickness="0" ToolTip="Select sub-categories" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="1" VirtualizingPanel.ScrollUnit="Pixel" ScrollViewer.PanningMode="Both">
                                                 <ListView.Background>
                                                     <SolidColorBrush Color="transparent"/>
                                                 </ListView.Background>

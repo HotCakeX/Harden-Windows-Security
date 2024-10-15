@@ -2,7 +2,7 @@
 
 namespace HardenWindowsSecurity
 {
-    public partial class GUIConfirmSystemCompliance
+    public static class GUIConfirmSystemCompliance
     {
         internal static System.Windows.Controls.DataGrid? SecOpsDataGrid;
 

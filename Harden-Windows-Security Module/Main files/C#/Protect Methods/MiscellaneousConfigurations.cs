@@ -6,7 +6,7 @@ using System.IO;
 
 namespace HardenWindowsSecurity
 {
-    public partial class MiscellaneousConfigurations
+    public static partial class MiscellaneousConfigurations
     {
         public static void Invoke()
         {

@@ -5,7 +5,7 @@ using System.IO;
 
 namespace HardenWindowsSecurity
 {
-    public class Microsoft365AppsSecurityBaselines
+    public static class Microsoft365AppsSecurityBaselines
     {
         /// <summary>
         /// Runs the Microsoft 365 Apps Security Baseline category

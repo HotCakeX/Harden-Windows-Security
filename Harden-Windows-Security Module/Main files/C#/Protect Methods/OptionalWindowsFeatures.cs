@@ -4,7 +4,7 @@ using System;
 
 namespace HardenWindowsSecurity
 {
-    public class OptionalWindowsFeatures
+    public static class OptionalWindowsFeatures
     {
         // Declare the _FeaturesCheckResults as a private static field
         private static HardenWindowsSecurity.WindowsFeatureChecker.FeatureStatus? _FeaturesCheckResults;

@@ -2,7 +2,7 @@
 
 namespace HardenWindowsSecurity
 {
-    public partial class GUILogs
+    public static class GUILogs
     {
         internal static System.Windows.Controls.UserControl? View;
 

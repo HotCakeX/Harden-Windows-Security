@@ -353,8 +353,8 @@ Function Protect-WindowsSecurity {
         [HardenWindowsSecurity.ChangePSConsoleTitle]::Set('❤️‍🔥Harden Windows Security❤️‍🔥')
 
         if ([HardenWindowsSecurity.UserPrivCheck]::IsAdmin()) {
-            [HardenWindowsSecurity.ControlledFolderAccessHandler]::Start()
             [HardenWindowsSecurity.Miscellaneous]::RequirementsCheck()
+            [HardenWindowsSecurity.ControlledFolderAccessHandler]::Start()            
         }
         try {
             # Detecting whether GUI parameter is present or not

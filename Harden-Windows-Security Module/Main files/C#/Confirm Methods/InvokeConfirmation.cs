@@ -7,7 +7,7 @@ using System.Threading;
 
 namespace HardenWindowsSecurity
 {
-    public class InvokeConfirmation
+    public static class InvokeConfirmation
     {
         /// <summary>
         /// This method will perform the system compliance checking and verification

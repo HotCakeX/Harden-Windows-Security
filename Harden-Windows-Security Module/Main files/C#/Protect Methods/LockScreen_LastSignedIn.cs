@@ -2,7 +2,7 @@
 
 namespace HardenWindowsSecurity
 {
-    public partial class LockScreen
+    public static partial class LockScreen
     {
 
         public static void LockScreen_LastSignedIn()

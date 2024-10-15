@@ -13,7 +13,7 @@
             <!-- Execute Button Row -->
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        <ListView x:Name="ASRRuleSet1" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="1" ItemContainerStyle="{StaticResource CustomListViewItemStyle}" BorderThickness="0" Margin="0,40,0,0">
+        <ListView x:Name="ASRRuleSet1" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="1" ItemContainerStyle="{StaticResource CustomListViewItemStyle}" BorderThickness="0" Margin="0,40,0,0" ScrollViewer.PanningMode="Both">
             <ListView.Background>
                 <SolidColorBrush Color="Transparent"/>
             </ListView.Background>
@@ -158,7 +158,7 @@
                 </StackPanel>
             </ListViewItem>
         </ListView>
-        <ListView x:Name="ASRRuleSet2" Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="1" ItemContainerStyle="{StaticResource CustomListViewItemStyle}" BorderThickness="0" Margin="0,40,0,0">
+        <ListView x:Name="ASRRuleSet2" Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="1" ItemContainerStyle="{StaticResource CustomListViewItemStyle}" BorderThickness="0" Margin="0,40,0,0" ScrollViewer.PanningMode="Both">
             <ListView.Background>
                 <SolidColorBrush Color="Transparent"/>
             </ListView.Background>

@@ -2,7 +2,7 @@
 
 namespace HardenWindowsSecurity
 {
-    public partial class UserAccountControl
+    public static partial class UserAccountControl
     {
         /// <summary>
         /// Applies the Only Elevate Signed apps optional sub-category policy

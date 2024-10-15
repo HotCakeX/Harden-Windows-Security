@@ -5,7 +5,7 @@ using System;
 
 namespace HardenWindowsSecurity
 {
-    public class TLSSecurity
+    public static class TLSSecurity
     {
         public static void Invoke()
         {

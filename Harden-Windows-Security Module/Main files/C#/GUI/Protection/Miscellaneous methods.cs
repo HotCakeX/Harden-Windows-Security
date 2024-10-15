@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace HardenWindowsSecurity
 {
-    public partial class GUIProtectWinSecurity
+    public static partial class GUIProtectWinSecurity
     {
 
         /// <summary>

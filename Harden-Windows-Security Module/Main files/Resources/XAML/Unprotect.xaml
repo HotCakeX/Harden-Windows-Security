@@ -29,22 +29,22 @@ Style="{StaticResource ModernComboBoxStyle}"
 ItemContainerStyle="{StaticResource ModernComboBoxItemStyle}"
                   SelectedIndex="3">
                 <ComboBoxItem Content="Only Remove The Process Mitigations" />
-                <ComboBoxItem Content="Only Remove The WDAC Policies" />
+                <ComboBoxItem Content="Only Remove The App Control Policies" />
                 <ComboBoxItem Content="Only Remove The Country IP Blocking Firewall Rules" />
                 <ComboBoxItem Content="Remove All Protections" />
             </ComboBox>
         </StackPanel>
         <StackPanel Orientation="Vertical" Margin="0,50,0,50" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="1">
-            <Label Content="Select WDAC Policies to Remove" Style="{StaticResource ModernLabelStyle}"
+            <Label Content="Select App Control Policies to Remove" Style="{StaticResource ModernLabelStyle}"
      VerticalAlignment="Top"  Margin="0,0,10,15"/>
-            <ComboBox x:Name="WDACPolicies"
+            <ComboBox x:Name="AppControlPolicies"
 Width="280" VerticalAlignment="Bottom"
 Style="{StaticResource ModernComboBoxStyle}"
 ItemContainerStyle="{StaticResource ModernComboBoxItemStyle}"
                   SelectedIndex="2">
                 <ComboBoxItem Content="Downloads Defense Measures" />
                 <ComboBoxItem Content="Dangerous Script Hosts Blocking" />
-                <ComboBoxItem Content="All WDAC Policies" />
+                <ComboBoxItem Content="All App Control Policies" />
             </ComboBox>
         </StackPanel>
         <!-- Grid containing the Execute Button -->

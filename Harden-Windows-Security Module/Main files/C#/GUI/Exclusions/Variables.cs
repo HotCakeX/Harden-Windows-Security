@@ -2,7 +2,7 @@
 
 namespace HardenWindowsSecurity
 {
-    public partial class GUIExclusions
+    public static class GUIExclusions
     {
         internal static System.Windows.Controls.UserControl? View;
 

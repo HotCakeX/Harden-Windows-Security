@@ -4,7 +4,7 @@ using System;
 
 namespace HardenWindowsSecurity
 {
-    public partial class WindowsNetworking
+    public static partial class WindowsNetworking
     {
         /// <summary>
         ///  Runs the Windows Networking Hardening category

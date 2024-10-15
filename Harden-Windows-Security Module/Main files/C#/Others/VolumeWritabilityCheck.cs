@@ -6,7 +6,7 @@ using System.IO;
 
 namespace HardenWindowsSecurity
 {
-    internal sealed partial class VolumeWritabilityCheck
+    internal static partial class VolumeWritabilityCheck
     {
         /// <summary>
         /// Gets a list of BitLockerVolumes and returns only those that are writable

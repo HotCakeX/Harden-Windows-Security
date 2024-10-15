@@ -9,7 +9,7 @@ using System.Runtime.InteropServices;
 namespace HardenWindowsSecurity
 {
     // Class that contains the results of TPM status checks
-    public class TpmResult
+    public sealed class TpmResult
     {
         public bool IsEnabled { get; set; }
         public bool IsActivated { get; set; }

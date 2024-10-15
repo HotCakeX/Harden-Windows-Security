@@ -2,7 +2,7 @@
 
 namespace HardenWindowsSecurity
 {
-    public class AttackSurfaceReductionRules
+    public static class AttackSurfaceReductionRules
     {
         public static void Invoke()
         {

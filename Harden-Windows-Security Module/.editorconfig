@@ -323,3 +323,24 @@ dotnet_diagnostic.CA5397.severity = error
 
 # CA5394: Do not use insecure randomness
 dotnet_diagnostic.CA5394.severity = error
+
+# CA2207: Initialize value type static fields inline
+dotnet_diagnostic.CA2207.severity = error
+
+# CA2219: Do not raise exceptions in finally clauses
+dotnet_diagnostic.CA2219.severity = error
+
+# CA2259: 'ThreadStatic' only affects static fields
+dotnet_diagnostic.CA2259.severity = error
+
+# CA5371: Use XmlReader for 'XmlSchema.Read()'
+dotnet_diagnostic.CA5371.severity = error
+
+# CA5364: Do Not Use Deprecated Security Protocols
+dotnet_diagnostic.CA5364.severity = error
+
+# CA1839: Use 'Environment.ProcessPath'
+dotnet_diagnostic.CA1839.severity = error
+
+# CA2265: Do not compare Span<T> to 'null' or 'default'
+dotnet_diagnostic.CA2265.severity = error

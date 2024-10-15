@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 namespace HardenWindowsSecurity
 {
-    public partial class GUIProtectWinSecurity
+    public static partial class GUIProtectWinSecurity
     {
         // During offline mode, this is the path that the button for MicrosoftSecurityBaselineZipPath assigns
         internal static string MicrosoftSecurityBaselineZipPath = string.Empty;

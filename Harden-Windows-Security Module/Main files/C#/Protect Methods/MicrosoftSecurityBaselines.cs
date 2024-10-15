@@ -5,7 +5,7 @@ using System.IO;
 
 namespace HardenWindowsSecurity
 {
-    public partial class MicrosoftSecurityBaselines
+    public static partial class MicrosoftSecurityBaselines
     {
         /// <summary>
         /// Runs the Microsoft Security Baseline category

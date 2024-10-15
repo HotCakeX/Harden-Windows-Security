@@ -4,7 +4,7 @@ using System;
 
 namespace HardenWindowsSecurity
 {
-    public partial class NonAdminCommands
+    public static partial class NonAdminCommands
     {
         public static void Invoke()
         {

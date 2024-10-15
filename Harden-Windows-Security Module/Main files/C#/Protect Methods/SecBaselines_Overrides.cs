@@ -7,7 +7,7 @@ using System.Threading;
 
 namespace HardenWindowsSecurity
 {
-    public partial class MicrosoftSecurityBaselines
+    public static partial class MicrosoftSecurityBaselines
     {
         /// <summary>
         /// Applies the optional overrides for the Microsoft Security Baselines

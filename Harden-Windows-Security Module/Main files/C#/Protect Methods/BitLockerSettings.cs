@@ -5,7 +5,7 @@ using System;
 
 namespace HardenWindowsSecurity
 {
-    public class BitLockerSettings
+    public static class BitLockerSettings
     {
         // Applies all Bitlocker settings hardening category
         public static void Invoke()

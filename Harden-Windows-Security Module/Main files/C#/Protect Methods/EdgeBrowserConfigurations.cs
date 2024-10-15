@@ -4,7 +4,7 @@ using System;
 
 namespace HardenWindowsSecurity
 {
-    public class EdgeBrowserConfigurations
+    public static class EdgeBrowserConfigurations
     {
         public static void Invoke()
         {

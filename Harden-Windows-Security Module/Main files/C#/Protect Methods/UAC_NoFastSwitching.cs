@@ -2,7 +2,7 @@
 
 namespace HardenWindowsSecurity
 {
-    public partial class UserAccountControl
+    public static partial class UserAccountControl
     {
         /// <summary>
         /// Applies the No Fast User Switching optional sub-category policy

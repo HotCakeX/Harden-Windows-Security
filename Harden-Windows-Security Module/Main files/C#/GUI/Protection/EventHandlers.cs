@@ -12,7 +12,7 @@ namespace HardenWindowsSecurity
     /// <summary>
     /// A class to store all of the data that is related to the GUI and its operations
     /// </summary>
-    public partial class GUIProtectWinSecurity
+    public static partial class GUIProtectWinSecurity
     {
 
         // The method that defines all of the event handlers for the UI elements

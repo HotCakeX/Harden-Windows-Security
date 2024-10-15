@@ -2,7 +2,7 @@
 
 namespace HardenWindowsSecurity
 {
-    public partial class MicrosoftDefender
+    public static partial class MicrosoftDefender
     {
         public static void MSFTDefender_BetaChannels()
         {

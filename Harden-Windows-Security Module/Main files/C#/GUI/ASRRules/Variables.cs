@@ -2,7 +2,7 @@
 
 namespace HardenWindowsSecurity
 {
-    public partial class GUIASRRules
+    public static class GUIASRRules
     {
         internal static System.Windows.Controls.UserControl? View;
 

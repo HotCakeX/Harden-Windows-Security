@@ -2,7 +2,7 @@
 
 namespace HardenWindowsSecurity
 {
-    public partial class CountryIPBlocking
+    public static partial class CountryIPBlocking
     {
         public static void Invoke()
         {

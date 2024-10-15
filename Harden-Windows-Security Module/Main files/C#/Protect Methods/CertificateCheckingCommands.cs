@@ -7,7 +7,7 @@ using System.Net.Http;
 
 namespace HardenWindowsSecurity
 {
-    public class CertificateCheckingCommands
+    public static class CertificateCheckingCommands
     {
         public static void Invoke()
         {

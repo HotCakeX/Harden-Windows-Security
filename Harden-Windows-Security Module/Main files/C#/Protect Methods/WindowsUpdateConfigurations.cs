@@ -2,7 +2,7 @@
 
 namespace HardenWindowsSecurity
 {
-    public class WindowsUpdateConfigurations
+    public static class WindowsUpdateConfigurations
     {
         public static void Invoke()
         {

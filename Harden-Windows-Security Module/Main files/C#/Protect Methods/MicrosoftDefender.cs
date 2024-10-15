@@ -7,7 +7,7 @@ using System.Linq;
 
 namespace HardenWindowsSecurity
 {
-    public partial class MicrosoftDefender
+    public static partial class MicrosoftDefender
     {
         /// <summary>
         /// Runs the Microsoft Defender category

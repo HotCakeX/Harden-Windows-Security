@@ -8,7 +8,7 @@ using System.Management;
 
 namespace HardenWindowsSecurity
 {
-    public class WindowsFirewall
+    public static class WindowsFirewall
     {
         /// <summary>
         /// Runs the Windows Firewall hardening category

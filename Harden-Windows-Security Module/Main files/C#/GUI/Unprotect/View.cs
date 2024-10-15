@@ -76,11 +76,45 @@ namespace HardenWindowsSecurity
 
                 RefreshIconImage.Source = RefreshIconBitmapImage;
 
+
+                if (GUIUnprotect.ParentGrid.FindName("AppControlPolicies") is not System.Windows.Controls.ComboBox AppControlPoliciesComboBox)
+                {
+                    throw new InvalidOperationException("AppControlPoliciesComboBox is null");
+                }
+
+                if (GUIUnprotect.ParentGrid.FindName("UnprotectCategories") is not System.Windows.Controls.ComboBox UnprotectCategoriesComboBox)
+                {
+                    throw new InvalidOperationException("UnprotectCategoriesComboBox is null");
+                }
+
                 #endregion
 
 
                 // Register the ExecuteButton as an element that will be enabled/disabled based on current activity
                 HardenWindowsSecurity.ActivityTracker.RegisterUIElement(ExecuteButton);
+
+                // Initially set the App Control Policies ComboBox to disabled
+                AppControlPoliciesComboBox.IsEnabled = false;
+
+
+                // Event handler to disable the App Control ComboBox based on the value of the UnprotectCategories ComboBox
+                UnprotectCategoriesComboBox.SelectionChanged += (s, e) =>
+                {
+                    // Check if the selected index is 1 (Only Remove The AppControl Policies)
+                    if (UnprotectCategoriesComboBox.SelectedIndex == 1)
+                    {
+                        // Enable the AppControlPolicies ComboBox
+                        AppControlPoliciesComboBox.IsEnabled = true;
+                    }
+                    else
+                    {
+                        // Disable the AppControlPolicies ComboBox
+                        AppControlPoliciesComboBox.IsEnabled = false;
+                    }
+                };
+
+
+
 
                 // Set up the Click event handler for the ExecuteButton button
                 ExecuteButton.Click += async (sender, e) =>
@@ -98,20 +132,9 @@ namespace HardenWindowsSecurity
                         // Disable the ExecuteButton button while processing
                         System.Windows.Application.Current.Dispatcher.Invoke(() =>
                         {
-
-                            if (GUIUnprotect.ParentGrid.FindName("WDACPolicies") is not System.Windows.Controls.ComboBox WDACPoliciesComboBox)
-                            {
-                                throw new InvalidOperationException("WDACPoliciesComboBox is null");
-                            }
-
-                            if (GUIUnprotect.ParentGrid.FindName("UnprotectCategories") is not System.Windows.Controls.ComboBox UnprotectCategoriesComboBox)
-                            {
-                                throw new InvalidOperationException("UnprotectCategoriesComboBox is null");
-                            }
-
                             // Store the values of the combo boxes in View variables since they need to be acquired through the Application dispatcher since they belong to the UI thread
                             GUIUnprotect.UnprotectCategoriesComboBoxSelection = (byte)UnprotectCategoriesComboBox.SelectedIndex;
-                            GUIUnprotect.WDACPoliciesComboBoxSelection = (byte)WDACPoliciesComboBox.SelectedIndex;
+                            GUIUnprotect.AppControlPoliciesComboBoxSelection = (byte)AppControlPoliciesComboBox.SelectedIndex;
 
                         });
 
@@ -140,29 +163,29 @@ namespace HardenWindowsSecurity
                                         HardenWindowsSecurity.UnprotectWindowsSecurity.RemoveExploitMitigations();
                                         break;
                                     }
-                                // Only Remove The WDAC Policies
+                                // Only Remove The AppControl Policies
                                 case 1:
                                     {
                                         // Downloads Defense Measures
-                                        if (GUIUnprotect.WDACPoliciesComboBoxSelection == 0)
+                                        if (GUIUnprotect.AppControlPoliciesComboBoxSelection == 0)
                                         {
-                                            NotificationMessage = "Downloads Defense Measures WDAC Policy";
+                                            NotificationMessage = "Downloads Defense Measures AppControl Policy";
 
-                                            HardenWindowsSecurity.UnprotectWindowsSecurity.RemoveWDACPolicies(true, false);
+                                            HardenWindowsSecurity.UnprotectWindowsSecurity.RemoveAppControlPolicies(true, false);
                                         }
                                         // Dangerous Script Hosts Blocking
-                                        else if (GUIUnprotect.WDACPoliciesComboBoxSelection == 1)
+                                        else if (GUIUnprotect.AppControlPoliciesComboBoxSelection == 1)
                                         {
-                                            NotificationMessage = "Dangerous Script Hosts Blocking WDAC Policy";
+                                            NotificationMessage = "Dangerous Script Hosts Blocking AppControl Policy";
 
-                                            HardenWindowsSecurity.UnprotectWindowsSecurity.RemoveWDACPolicies(false, true);
+                                            HardenWindowsSecurity.UnprotectWindowsSecurity.RemoveAppControlPolicies(false, true);
                                         }
-                                        // All WDAC Policies
+                                        // All AppControl Policies
                                         else
                                         {
-                                            NotificationMessage = "WDAC Policies";
+                                            NotificationMessage = "AppControl Policies";
 
-                                            HardenWindowsSecurity.UnprotectWindowsSecurity.RemoveWDACPolicies(true, true);
+                                            HardenWindowsSecurity.UnprotectWindowsSecurity.RemoveAppControlPolicies(true, true);
                                         }
 
                                         break;
@@ -180,7 +203,7 @@ namespace HardenWindowsSecurity
                                     {
                                         NotificationMessage = "Entire Applied Protections";
 
-                                        HardenWindowsSecurity.UnprotectWindowsSecurity.RemoveWDACPolicies(true, true);
+                                        HardenWindowsSecurity.UnprotectWindowsSecurity.RemoveAppControlPolicies(true, true);
                                         HardenWindowsSecurity.UnprotectWindowsSecurity.Unprotect();
                                         HardenWindowsSecurity.UnprotectWindowsSecurity.RemoveExploitMitigations();
 

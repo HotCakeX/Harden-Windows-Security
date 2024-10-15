@@ -4,7 +4,7 @@
 
 namespace HardenWindowsSecurity
 {
-    public class IndividualResult
+    public sealed class IndividualResult
     {
         public string? FriendlyName { get; set; }
         public bool Compliant { get; set; }

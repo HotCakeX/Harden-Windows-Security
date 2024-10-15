@@ -2,7 +2,7 @@
 
 namespace HardenWindowsSecurity
 {
-    public partial class UserAccountControl
+    public static partial class UserAccountControl
     {
         /// <summary>
         /// Runs the User Account Control (UAC) hardening category

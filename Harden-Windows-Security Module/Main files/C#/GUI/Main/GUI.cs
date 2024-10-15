@@ -385,16 +385,6 @@ End time: {DateTime.Now}
 
             */
 
-            // event handler to make the GUI window draggable wherever it's empty
-            GUIMain.mainGUIWindow.MouseDown += (sender, e) =>
-            {
-                // Only allow dragging the window when the left mouse button (also includes touch) is clicked
-                if (e.ChangedButton == MouseButton.Left)
-                {
-                    GUIMain.mainGUIWindow.DragMove();
-                }
-            };
-
             #endregion
 
             #region parent border of the Main GUI

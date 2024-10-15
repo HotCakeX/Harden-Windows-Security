@@ -33,3 +33,6 @@ Encryptable
 Dedup
 Awaiter
 Webshell
+openssh
+hmac
+Uefi

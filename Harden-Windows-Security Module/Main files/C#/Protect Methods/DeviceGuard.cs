@@ -3,7 +3,7 @@
 
 namespace HardenWindowsSecurity
 {
-    public class DeviceGuard
+    public static class DeviceGuard
     {
 
         /// <summary>

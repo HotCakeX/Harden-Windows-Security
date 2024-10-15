@@ -4,7 +4,7 @@ using System.IO;
 
 namespace HardenWindowsSecurity
 {
-    public partial class DownloadsDefenseMeasures
+    public static partial class DownloadsDefenseMeasures
     {
         public static void DangerousScriptHostsBlocking()
         {

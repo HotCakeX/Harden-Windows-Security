@@ -65,12 +65,12 @@ namespace HardenWindowsSecurity
 
             // If there is no GUI Window, or there was a GUI window but it was closed by the user
             // then use Console for writing logs
-            if (HardenWindowsSecurity.GUILogs.View is null || HardenWindowsSecurity.GUILogs.View.Dispatcher.HasShutdownStarted)
+            if (GUILogs.View is null || GUILogs.View.Dispatcher.HasShutdownStarted)
             {
                 // See if the host is available, meaning PowerShell host is available
                 // And also VerbosePreference is not null, in case the methods are running manually by using the Harden Windows Security methods directly in PowerShell like as a library
                 // Because then the Verbose Preference is not set in the Initialize method since the module is only imported.
-                if (HardenWindowsSecurity.GlobalVars.Host is not null && GlobalVars.VerbosePreference is not null)
+                if (GlobalVars.Host is not null && GlobalVars.VerbosePreference is not null)
                 {
                     // Write the message as verbose text on PowerShell console
                     WriteVerbose(CurrentText);
@@ -86,17 +86,17 @@ namespace HardenWindowsSecurity
             {
 
                 // Invoke the Dispatcher to update and Query the GUI elements
-                HardenWindowsSecurity.GUILogs.View.Dispatcher.Invoke(callback: new Action(() =>
+                GUILogs.View.Dispatcher.Invoke(callback: new Action(() =>
                 {
 
                     #region Writing to the Log file if user enabled logging
                     if (GUIProtectWinSecurity.log is not null && GUIProtectWinSecurity.log.IsChecked == true)
                     {
                         // only write the header to the log file if it hasn't already been written to it
-                        if (!HardenWindowsSecurity.GlobalVars.LogHeaderHasBeenWritten)
+                        if (!GlobalVars.LogHeaderHasBeenWritten)
                         {
 
-                            HardenWindowsSecurity.Logger.LogToFile($"""
+                            Logger.LogToFile($"""
 **********************
 Harden Windows Security operation log start
 Start time: {DateTime.Now}
@@ -107,19 +107,19 @@ Machine: {Environment.MachineName}
 
                             // set the flag to true so that the log file header will only be written once to the file per session
                             // it is reset back to false in the Initialize() method
-                            HardenWindowsSecurity.GlobalVars.LogHeaderHasBeenWritten = true;
+                            GlobalVars.LogHeaderHasBeenWritten = true;
                         }
                     }
                     #endregion
 
                     #region Writing to the GUI's Logger
                     // Update the TextBlock with the new log message, making sure each log is written to a new line
-                    HardenWindowsSecurity.GUILogs.MainLoggerTextBox!.Text += CurrentText + "\n";
+                    GUILogs.MainLoggerTextBox!.Text += CurrentText + "\n";
 
                     // scroll down the scroller if Auto-scrolling is enabled
                     if (GUILogs.AutoScroll)
                     {
-                        HardenWindowsSecurity.GUILogs.scrollerForOutputTextBox!.ScrollToBottom();
+                        GUILogs.scrollerForOutputTextBox!.ScrollToBottom();
                     }
                     #endregion
 
@@ -219,14 +219,14 @@ Machine: {Environment.MachineName}
         /// <param name="message"></param>
         private static void WriteVerbose(string message)
         {
-            if (HardenWindowsSecurity.GlobalVars.Host is not null)
+            if (GlobalVars.Host is not null)
             {
                 try
                 {
-                    if (string.Equals(HardenWindowsSecurity.GlobalVars.VerbosePreference, "Continue", StringComparison.OrdinalIgnoreCase) ||
-                        string.Equals(HardenWindowsSecurity.GlobalVars.VerbosePreference, "Inquire", StringComparison.OrdinalIgnoreCase))
+                    if (string.Equals(GlobalVars.VerbosePreference, "Continue", StringComparison.OrdinalIgnoreCase) ||
+                        string.Equals(GlobalVars.VerbosePreference, "Inquire", StringComparison.OrdinalIgnoreCase))
                     {
-                        HardenWindowsSecurity.GlobalVars.Host.UI!.WriteVerboseLine(message);
+                        GlobalVars.Host.UI!.WriteVerboseLine(message);
                     }
                 }
                 // Do not do anything if errors occur

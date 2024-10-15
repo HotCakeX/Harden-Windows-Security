@@ -4,7 +4,9 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Markup;
+using System.Windows.Media.Imaging;
 
 #nullable enable
 
@@ -48,21 +50,21 @@ namespace HardenWindowsSecurity
                 string xamlContent = File.ReadAllText(xamlPath);
 
                 // Parse the XAML content to create a UserControl
-                HardenWindowsSecurity.GUIASRRules.View = (System.Windows.Controls.UserControl)XamlReader.Parse(xamlContent);
+                HardenWindowsSecurity.GUIASRRules.View = (UserControl)XamlReader.Parse(xamlContent);
 
                 // Set the DataContext for the ASRRules view
                 GUIASRRules.View.DataContext = new ASRRulesVM();
 
                 // Find the Parent Grid
-                HardenWindowsSecurity.GUIASRRules.ParentGrid = (System.Windows.Controls.Grid)HardenWindowsSecurity.GUIASRRules.View.FindName("ParentGrid");
+                HardenWindowsSecurity.GUIASRRules.ParentGrid = (Grid)HardenWindowsSecurity.GUIASRRules.View.FindName("ParentGrid");
 
                 #region finding elements
 
                 // Finding the Execute Button Grid
-                System.Windows.Controls.Grid? ExecuteButtonGrid = GUIASRRules.ParentGrid.FindName("ExecuteButtonGrid") as System.Windows.Controls.Grid ?? throw new InvalidOperationException("ExecuteButtonGrid is null in the ASRRules View");
+                Grid? ExecuteButtonGrid = GUIASRRules.ParentGrid.FindName("ExecuteButtonGrid") as Grid ?? throw new InvalidOperationException("ExecuteButtonGrid is null in the ASRRules View");
 
                 // Finding the Execute Button
-                if (ExecuteButtonGrid.FindName("ExecuteButton") is not System.Windows.Controls.Primitives.ToggleButton ExecuteButton)
+                if (ExecuteButtonGrid.FindName("ExecuteButton") is not ToggleButton ExecuteButton)
                 {
                     throw new InvalidOperationException("Couldn't find the ExecuteButton in ASRRules view");
                 }
@@ -71,17 +73,17 @@ namespace HardenWindowsSecurity
                 _ = ExecuteButton.ApplyTemplate();
 
                 // Access the image within the Execute Button's template
-                if (ExecuteButton.Template.FindName("RefreshIconImage", ExecuteButton) is not System.Windows.Controls.Image RefreshIconImage)
+                if (ExecuteButton.Template.FindName("RefreshIconImage", ExecuteButton) is not Image RefreshIconImage)
                 {
                     throw new InvalidOperationException("RefreshIconImage could not be found in the ASRRules view");
                 }
 
                 // Update the image source for the Refresh button
                 // Load the Refresh icon image into memory and set it as the source
-                var RefreshIconBitmapImage = new System.Windows.Media.Imaging.BitmapImage();
+                var RefreshIconBitmapImage = new BitmapImage();
                 RefreshIconBitmapImage.BeginInit();
                 RefreshIconBitmapImage.UriSource = new System.Uri(System.IO.Path.Combine(HardenWindowsSecurity.GlobalVars.path!, "Resources", "Media", "ExecuteButton.png"));
-                RefreshIconBitmapImage.CacheOption = System.Windows.Media.Imaging.BitmapCacheOption.OnLoad; // Load the image data into memory
+                RefreshIconBitmapImage.CacheOption = BitmapCacheOption.OnLoad; // Load the image data into memory
                 RefreshIconBitmapImage.EndInit();
 
                 RefreshIconImage.Source = RefreshIconBitmapImage;
@@ -100,7 +102,7 @@ namespace HardenWindowsSecurity
                 // Method to process ListView items
                 void ProcessListViewItems(System.Windows.Controls.ListView listView)
                 {
-                    foreach (System.Windows.Controls.ListViewItem item in listView.Items.Cast<System.Windows.Controls.ListViewItem>())
+                    foreach (ListViewItem item in listView.Items.Cast<ListViewItem>())
                     {
                         // Find the StackPanel inside the ListViewItem
                         if (item.Content is StackPanel stackPanel)
@@ -109,7 +111,7 @@ namespace HardenWindowsSecurity
                             // System.Windows.Controls.Label label = stackPanel.Children.OfType<System.Windows.Controls.Label>().FirstOrDefault();
 
                             // Find the ComboBox inside the StackPanel
-                            System.Windows.Controls.ComboBox? comboBox = stackPanel.Children.OfType<System.Windows.Controls.ComboBox>().FirstOrDefault();
+                            ComboBox? comboBox = stackPanel.Children.OfType<ComboBox>().FirstOrDefault();
 
                             // To make sure the ComboBox's selected index is not -1 indicating it's empty
                             if (comboBox is not null && comboBox.SelectedIndex is not -1)
@@ -300,16 +302,16 @@ namespace HardenWindowsSecurity
                             }
 
                             // Combine the items of both ListViews
-                            IEnumerable<ListViewItem> combinedItems = ASRRuleSet1.Items.Cast<System.Windows.Controls.ListViewItem>()
-                                               .Concat(ASRRuleSet2.Items.Cast<System.Windows.Controls.ListViewItem>());
+                            IEnumerable<ListViewItem> combinedItems = ASRRuleSet1.Items.Cast<ListViewItem>()
+                                               .Concat(ASRRuleSet2.Items.Cast<ListViewItem>());
 
-                            foreach (System.Windows.Controls.ListViewItem item in combinedItems)
+                            foreach (ListViewItem item in combinedItems)
                             {
                                 // Find the StackPanel inside the ListViewItem
                                 if (item.Content is StackPanel stackPanel)
                                 {
                                     // Find the ComboBox inside the StackPanel
-                                    System.Windows.Controls.ComboBox? comboBox = stackPanel.Children.OfType<System.Windows.Controls.ComboBox>().FirstOrDefault();
+                                    ComboBox? comboBox = stackPanel.Children.OfType<ComboBox>().FirstOrDefault();
 
                                     if (comboBox is not null)
                                     {

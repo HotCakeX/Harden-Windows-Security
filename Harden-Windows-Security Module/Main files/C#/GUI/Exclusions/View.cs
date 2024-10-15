@@ -2,7 +2,10 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Markup;
+using System.Windows.Media.Imaging;
 
 #nullable enable
 
@@ -46,37 +49,37 @@ namespace HardenWindowsSecurity
                 string xamlContent = File.ReadAllText(xamlPath);
 
                 // Parse the XAML content to create a UserControl
-                HardenWindowsSecurity.GUIExclusions.View = (System.Windows.Controls.UserControl)XamlReader.Parse(xamlContent);
+                HardenWindowsSecurity.GUIExclusions.View = (UserControl)XamlReader.Parse(xamlContent);
 
                 // Set the DataContext for the Exclusions view
                 GUIExclusions.View.DataContext = new ExclusionsVM();
 
                 // Find the Parent Grid
-                HardenWindowsSecurity.GUIExclusions.ParentGrid = (System.Windows.Controls.Grid)HardenWindowsSecurity.GUIExclusions.View.FindName("ParentGrid");
+                HardenWindowsSecurity.GUIExclusions.ParentGrid = (Grid)HardenWindowsSecurity.GUIExclusions.View.FindName("ParentGrid");
 
                 #region finding Execute button related elements
 
                 // Finding the Execute Button Grid
-                System.Windows.Controls.Grid? ExecuteButtonGrid = GUIExclusions.ParentGrid.FindName("ExecuteButtonGrid") as System.Windows.Controls.Grid ?? throw new InvalidOperationException("ExecuteButtonGrid is null in the Exclusions View");
+                Grid? ExecuteButtonGrid = GUIExclusions.ParentGrid.FindName("ExecuteButtonGrid") as Grid ?? throw new InvalidOperationException("ExecuteButtonGrid is null in the Exclusions View");
 
                 // Finding the Execute Button
-                System.Windows.Controls.Primitives.ToggleButton? ExecuteButton = ExecuteButtonGrid.FindName("ExecuteButton") as System.Windows.Controls.Primitives.ToggleButton ?? throw new InvalidOperationException("Couldn't find the ExecuteButton in Exclusions view");
+                ToggleButton? ExecuteButton = ExecuteButtonGrid.FindName("ExecuteButton") as ToggleButton ?? throw new InvalidOperationException("Couldn't find the ExecuteButton in Exclusions view");
 
                 // Apply the template to make sure it's available
                 _ = ExecuteButton.ApplyTemplate();
 
                 // Access the image within the Execute Button's template
-                if (ExecuteButton.Template.FindName("RefreshIconImage", ExecuteButton) is not System.Windows.Controls.Image RefreshIconImage)
+                if (ExecuteButton.Template.FindName("RefreshIconImage", ExecuteButton) is not Image RefreshIconImage)
                 {
                     throw new InvalidOperationException("RefreshIconImage could not be found in the Exclusions view");
                 }
 
                 // Update the image source for the Refresh button
                 // Load the Refresh icon image into memory and set it as the source
-                var RefreshIconBitmapImage = new System.Windows.Media.Imaging.BitmapImage();
+                var RefreshIconBitmapImage = new BitmapImage();
                 RefreshIconBitmapImage.BeginInit();
                 RefreshIconBitmapImage.UriSource = new System.Uri(System.IO.Path.Combine(HardenWindowsSecurity.GlobalVars.path!, "Resources", "Media", "ExecuteButton.png"));
-                RefreshIconBitmapImage.CacheOption = System.Windows.Media.Imaging.BitmapCacheOption.OnLoad; // Load the image data into memory
+                RefreshIconBitmapImage.CacheOption = BitmapCacheOption.OnLoad; // Load the image data into memory
                 RefreshIconBitmapImage.EndInit();
 
                 RefreshIconImage.Source = RefreshIconBitmapImage;
@@ -86,22 +89,22 @@ namespace HardenWindowsSecurity
 
                 #region Finding other elements
 
-                System.Windows.Controls.Primitives.ToggleButton? MicrosoftDefenderToggleButton = GUIExclusions.ParentGrid.FindName("MicrosoftDefenderToggleButton") as System.Windows.Controls.Primitives.ToggleButton;
-                System.Windows.Controls.Primitives.ToggleButton? ControlledFolderAccessToggleButton = GUIExclusions.ParentGrid.FindName("ControlledFolderAccessToggleButton") as System.Windows.Controls.Primitives.ToggleButton;
-                System.Windows.Controls.Primitives.ToggleButton? AttackSurfaceReductionRulesToggleButton = GUIExclusions.ParentGrid.FindName("AttackSurfaceReductionRulesToggleButton") as System.Windows.Controls.Primitives.ToggleButton;
+                ToggleButton? MicrosoftDefenderToggleButton = GUIExclusions.ParentGrid.FindName("MicrosoftDefenderToggleButton") as ToggleButton;
+                ToggleButton? ControlledFolderAccessToggleButton = GUIExclusions.ParentGrid.FindName("ControlledFolderAccessToggleButton") as ToggleButton;
+                ToggleButton? AttackSurfaceReductionRulesToggleButton = GUIExclusions.ParentGrid.FindName("AttackSurfaceReductionRulesToggleButton") as ToggleButton;
 
-                System.Windows.Controls.TextBox? SelectedFilePaths = GUIExclusions.ParentGrid.FindName("SelectedFilePaths") as System.Windows.Controls.TextBox ?? throw new InvalidOperationException("Couldn't find SelectedFilePaths in the Exclusions view.");
+                TextBox? SelectedFilePaths = GUIExclusions.ParentGrid.FindName("SelectedFilePaths") as TextBox ?? throw new InvalidOperationException("Couldn't find SelectedFilePaths in the Exclusions view.");
 
-                System.Windows.Controls.Button? BrowseForFilesButton = GUIExclusions.ParentGrid.FindName("BrowseForFilesButton") as System.Windows.Controls.Button ?? throw new InvalidOperationException("Couldn't find BrowseForFilesButton in the Exclusions view.");
+                Button? BrowseForFilesButton = GUIExclusions.ParentGrid.FindName("BrowseForFilesButton") as Button ?? throw new InvalidOperationException("Couldn't find BrowseForFilesButton in the Exclusions view.");
 
                 // Finding the button's image to assign an icon to it
-                System.Windows.Controls.Image? BrowseButtonIcon = GUIExclusions.ParentGrid.FindName("BrowseButtonIcon") as System.Windows.Controls.Image ?? throw new InvalidOperationException("Couldn't find BrowseButtonIcon in the Exclusions view.");
+                Image? BrowseButtonIcon = GUIExclusions.ParentGrid.FindName("BrowseButtonIcon") as Image ?? throw new InvalidOperationException("Couldn't find BrowseButtonIcon in the Exclusions view.");
 
                 // BrowseButtonIconImage
-                var BrowseButtonIconImage = new System.Windows.Media.Imaging.BitmapImage();
+                var BrowseButtonIconImage = new BitmapImage();
                 BrowseButtonIconImage.BeginInit();
                 BrowseButtonIconImage.UriSource = new Uri(System.IO.Path.Combine(HardenWindowsSecurity.GlobalVars.path, "Resources", "Media", "BrowseButtonIconBlack.png"));
-                BrowseButtonIconImage.CacheOption = System.Windows.Media.Imaging.BitmapCacheOption.OnLoad; // Load the image data into memory
+                BrowseButtonIconImage.CacheOption = BitmapCacheOption.OnLoad; // Load the image data into memory
                 BrowseButtonIconImage.EndInit();
                 BrowseButtonIcon.Source = BrowseButtonIconImage;
 

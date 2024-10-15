@@ -36,17 +36,17 @@ namespace HardenWindowsSecurity
                     {
                         foreach (ErrorRecord error in powerShell.Streams.Error)
                         {
-                            HardenWindowsSecurity.Logger.LogMessage($"Error: {error.Exception.Message}", LogTypeIntel.Error);
+                            Logger.LogMessage($"Error: {error.Exception.Message}", LogTypeIntel.Error);
                         }
                     }
                     else
                     {
-                        HardenWindowsSecurity.Logger.LogMessage($"Excluding {item} from mandatory ASLR.", LogTypeIntel.Information);
+                        Logger.LogMessage($"Excluding {item} from mandatory ASLR.", LogTypeIntel.Information);
                     }
                 }
                 catch (Exception ex)
                 {
-                    HardenWindowsSecurity.Logger.LogMessage($"An exception occurred: {ex.Message}", LogTypeIntel.Error);
+                    Logger.LogMessage($"An exception occurred: {ex.Message}", LogTypeIntel.Error);
                 }
             }
         }

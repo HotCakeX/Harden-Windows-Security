@@ -59,7 +59,7 @@ namespace HardenWindowsSecurity
                 if (values.Length == 5)
                 {
                     // Add a new ProcessMitigationsRecords to the list
-                    HardenWindowsSecurity.GlobalVars.ProcessMitigations!.Add(new ProcessMitigationsRecords
+                    GlobalVars.ProcessMitigations!.Add(new ProcessMitigationsRecords
                     {
                         ProgramName = values[0],
                         Mitigation = values[1],

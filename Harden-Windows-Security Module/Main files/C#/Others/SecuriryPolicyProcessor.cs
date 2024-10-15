@@ -13,13 +13,13 @@ namespace HardenWindowsSecurity
         /// </summary>
         /// <param name="category">The category to filter the CSV file content by</param>
         /// <returns></returns>
-        public static List<HardenWindowsSecurity.IndividualResult> CheckPolicyCompliance(string category)
+        public static List<IndividualResult> CheckPolicyCompliance(string category)
         {
             // Create a list of IndividualResult objects
-            List<HardenWindowsSecurity.IndividualResult> nestedObjectArray = [];
+            List<IndividualResult> nestedObjectArray = [];
 
             // Filter the CSV data to only get the records that match the input category
-            var csvRecords = HardenWindowsSecurity.GlobalVars.SecurityPolicyRecords?
+            var csvRecords = GlobalVars.SecurityPolicyRecords?
                 .Where(record => record.Category is not null && record.Category.Equals(category, StringComparison.OrdinalIgnoreCase))
                 .ToList();
 
@@ -39,9 +39,9 @@ namespace HardenWindowsSecurity
                     string? actualValue = null;
 
                     // Ensure SystemSecurityPoliciesIniObject is not null and check for section
-                    if (HardenWindowsSecurity.GlobalVars.SystemSecurityPoliciesIniObject is not null &&
+                    if (GlobalVars.SystemSecurityPoliciesIniObject is not null &&
                         section is not null && // Check if section is not null
-                        HardenWindowsSecurity.GlobalVars.SystemSecurityPoliciesIniObject.TryGetValue(section, out var sectionDict) &&
+                        GlobalVars.SystemSecurityPoliciesIniObject.TryGetValue(section, out var sectionDict) &&
                         sectionDict is not null &&
                         path is not null && // Check if path is not null
                         sectionDict.TryGetValue(path, out string? value))
@@ -50,7 +50,7 @@ namespace HardenWindowsSecurity
                         complianceResult = actualValue == expectedValue;
                     }
 
-                    nestedObjectArray.Add(new HardenWindowsSecurity.IndividualResult
+                    nestedObjectArray.Add(new IndividualResult
                     {
                         FriendlyName = name,
                         Compliant = complianceResult,

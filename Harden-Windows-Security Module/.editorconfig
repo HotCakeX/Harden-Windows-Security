@@ -31,7 +31,7 @@ dotnet_diagnostic.CA1309.severity = error
 dotnet_diagnostic.CA1311.severity = error
 
 # CA1416: Validate platform compatibility
-dotnet_diagnostic.CA1416.severity = error
+dotnet_diagnostic.CA1416.severity = silent
 
 # CA5384: Do Not Use Digital Signature Algorithm (DSA)
 dotnet_diagnostic.CA5384.severity = error

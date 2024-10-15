@@ -420,7 +420,7 @@ namespace HardenWindowsSecurity
             }
             catch (Exception)
             {
-                //   HardenWindowsSecurity.Logger.LogMessage($"Error comparing registry values: {ex.Message}");
+                //   Logger.LogMessage($"Error comparing registry values: {ex.Message}");
                 return false;
             }
             return false;

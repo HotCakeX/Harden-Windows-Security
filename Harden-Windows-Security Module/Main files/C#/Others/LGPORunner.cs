@@ -49,12 +49,12 @@ namespace HardenWindowsSecurity
                 // Capture and output the process result
                 string output = process!.StandardOutput.ReadToEnd();
                 process.WaitForExit();
-                HardenWindowsSecurity.Logger.LogMessage(output, LogTypeIntel.Information);
+                Logger.LogMessage(output, LogTypeIntel.Information);
 
             }
             catch (Exception ex)
             {
-                HardenWindowsSecurity.Logger.LogMessage($"An error occurred: {ex.Message}", LogTypeIntel.Error);
+                Logger.LogMessage($"An error occurred: {ex.Message}", LogTypeIntel.Error);
             }
         }
     }

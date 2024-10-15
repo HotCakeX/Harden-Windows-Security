@@ -77,8 +77,8 @@ namespace HardenWindowsSecurity
                     return true;
                     //   foreach (ManagementObject tpm in queryCollection)
                     //    {
-                    //     HardenWindowsSecurity.Logger.LogMessage("TPM is present on this system.");
-                    //     HardenWindowsSecurity.Logger.LogMessage("TPM Version: " + tpm["SpecVersion"]);
+                    //     Logger.LogMessage("TPM is present on this system.");
+                    //     Logger.LogMessage("TPM Version: " + tpm["SpecVersion"]);
                     //    }
                 }
             }
@@ -98,7 +98,7 @@ namespace HardenWindowsSecurity
         public static string[] GetValidValues()
         {
             // if running under unelevated context then only return the NonAdminCommands category
-            if (!HardenWindowsSecurity.UserPrivCheck.IsAdmin()) return ["NonAdminCommands"];
+            if (!UserPrivCheck.IsAdmin()) return ["NonAdminCommands"];
 
             HashSet<string> categoriex =
         [

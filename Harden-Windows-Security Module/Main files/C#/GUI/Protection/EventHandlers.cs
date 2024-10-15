@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Windows.Controls;
 using static HardenWindowsSecurity.NewToastNotification;
 
 #nullable enable
@@ -99,8 +100,8 @@ namespace HardenWindowsSecurity
             // Add Checked and Unchecked event handlers to category checkboxes
             foreach (var item in GUIProtectWinSecurity.categories.Items)
             {
-                System.Windows.Controls.ListViewItem categoryItem = (System.Windows.Controls.ListViewItem)item;
-                System.Windows.Controls.CheckBox checkBox = (System.Windows.Controls.CheckBox)categoryItem.Content;
+                ListViewItem categoryItem = (ListViewItem)item;
+                CheckBox checkBox = (CheckBox)categoryItem.Content;
                 checkBox.DataContext = categoryItem;
                 checkBox.Checked += (sender, e) => UpdateSubCategories();
                 checkBox.Unchecked += (sender, e) => UpdateSubCategories();
@@ -116,10 +117,10 @@ namespace HardenWindowsSecurity
                 }
                 foreach (var item in GUIProtectWinSecurity.categories.Items)
                 {
-                    System.Windows.Controls.ListViewItem categoryItem = (System.Windows.Controls.ListViewItem)item;
-                    if (HardenWindowsSecurity.GlobalVars.HardeningCategorieX.Contains(((System.Windows.Controls.CheckBox)categoryItem.Content).Name))
+                    ListViewItem categoryItem = (ListViewItem)item;
+                    if (HardenWindowsSecurity.GlobalVars.HardeningCategorieX.Contains(((CheckBox)categoryItem.Content).Name))
                     {
-                        ((System.Windows.Controls.CheckBox)categoryItem.Content).IsChecked = true;
+                        ((CheckBox)categoryItem.Content).IsChecked = true;
                     }
                 }
             };
@@ -129,7 +130,7 @@ namespace HardenWindowsSecurity
             {
                 foreach (var item in GUIProtectWinSecurity.categories.Items)
                 {
-                    ((System.Windows.Controls.CheckBox)((System.Windows.Controls.ListViewItem)item).Content).IsChecked = false;
+                    ((CheckBox)((ListViewItem)item).Content).IsChecked = false;
                 }
             };
 
@@ -139,10 +140,10 @@ namespace HardenWindowsSecurity
 
                 foreach (var item in GUIProtectWinSecurity.subCategories.Items)
                 {
-                    System.Windows.Controls.ListViewItem subCategoryItem = (System.Windows.Controls.ListViewItem)item;
+                    ListViewItem subCategoryItem = (ListViewItem)item;
                     if (subCategoryItem.IsEnabled)
                     {
-                        ((System.Windows.Controls.CheckBox)subCategoryItem.Content).IsChecked = true;
+                        ((CheckBox)subCategoryItem.Content).IsChecked = true;
                     }
                 }
             };
@@ -153,7 +154,7 @@ namespace HardenWindowsSecurity
 
                 foreach (var item in GUIProtectWinSecurity.subCategories.Items)
                 {
-                    ((System.Windows.Controls.CheckBox)((System.Windows.Controls.ListViewItem)item).Content).IsChecked = false;
+                    ((CheckBox)((ListViewItem)item).Content).IsChecked = false;
                 }
             };
 
@@ -328,10 +329,10 @@ namespace HardenWindowsSecurity
                                     foreach (var item in GUIProtectWinSecurity.categories.Items)
                                     {
                                         // Get the category item list view item
-                                        System.Windows.Controls.ListViewItem categoryItem = (System.Windows.Controls.ListViewItem)item;
+                                        ListViewItem categoryItem = (ListViewItem)item;
 
                                         // get the name of the list view item as string
-                                        string categoryItemName = ((System.Windows.Controls.CheckBox)categoryItem.Content).Name.ToString();
+                                        string categoryItemName = ((CheckBox)categoryItem.Content).Name.ToString();
 
                                         // if the category is authorized to be available
                                         if (HardenWindowsSecurity.GlobalVars.HardeningCategorieX!.Contains(categoryItemName))
@@ -339,7 +340,7 @@ namespace HardenWindowsSecurity
                                             // If the name of the current checkbox list view item in the loop is the same as the category name in the outer loop, then set the category on the GUI to checked
                                             if (string.Equals(categoryItemName, category, StringComparison.OrdinalIgnoreCase))
                                             {
-                                                ((System.Windows.Controls.CheckBox)categoryItem.Content).IsChecked = true;
+                                                ((CheckBox)categoryItem.Content).IsChecked = true;
                                             }
 
                                         }
@@ -353,15 +354,15 @@ namespace HardenWindowsSecurity
                                     foreach (var item in GUIProtectWinSecurity.subCategories.Items)
                                     {
                                         // Get the sub-category item list view item
-                                        System.Windows.Controls.ListViewItem SubCategoryItem = (System.Windows.Controls.ListViewItem)item;
+                                        ListViewItem SubCategoryItem = (ListViewItem)item;
 
                                         // get the name of the list view item as string
-                                        string SubcategoryItemName = ((System.Windows.Controls.CheckBox)SubCategoryItem.Content).Name.ToString();
+                                        string SubcategoryItemName = ((CheckBox)SubCategoryItem.Content).Name.ToString();
 
                                         // If the name of the current checkbox list view item in the loop is the same as the sub-category name in the outer loop, then set the sub-category on the GUI to checked
                                         if (string.Equals(SubcategoryItemName, subcategory, StringComparison.OrdinalIgnoreCase))
                                         {
-                                            ((System.Windows.Controls.CheckBox)SubCategoryItem.Content).IsChecked = true;
+                                            ((CheckBox)SubCategoryItem.Content).IsChecked = true;
                                         }
 
                                     }

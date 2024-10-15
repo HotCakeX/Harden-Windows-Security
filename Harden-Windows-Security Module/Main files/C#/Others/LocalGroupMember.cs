@@ -42,18 +42,18 @@ namespace HardenWindowsSecurity
                     group.Save();
 
                     // Inform the user that the member was successfully added to the group
-                    HardenWindowsSecurity.Logger.LogMessage($"A user with the SID {userSid} has been successfully added to the group with the SID {groupSid}.", LogTypeIntel.Information);
+                    Logger.LogMessage($"A user with the SID {userSid} has been successfully added to the group with the SID {groupSid}.", LogTypeIntel.Information);
                 }
                 else
                 {
                     // Inform the user that the account is already in the group
-                    HardenWindowsSecurity.Logger.LogMessage($"The User with the SID {userSid} is already a member of the group with the SID {groupSid}.", LogTypeIntel.Information);
+                    Logger.LogMessage($"The User with the SID {userSid} is already a member of the group with the SID {groupSid}.", LogTypeIntel.Information);
                 }
             }
             else
             {
                 // Inform the user if the group was not found
-                HardenWindowsSecurity.Logger.LogMessage($"A group with the SID {groupSid} was not found.", LogTypeIntel.Error);
+                Logger.LogMessage($"A group with the SID {groupSid} was not found.", LogTypeIntel.Error);
             }
         }
     }

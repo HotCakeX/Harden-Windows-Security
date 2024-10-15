@@ -48,13 +48,13 @@ namespace HardenWindowsSecurity
         /// $ResultsList | Out-GridView -Title "$($ResultsList.Count)"
         /// Above is the PowerShell equivalent of the method below
         /// It gets the results of all of the MDM related CimInstances and processes them into a list of MDMClassProcessor objects
-        public static List<HardenWindowsSecurity.MDMClassProcessor> Process()
+        public static List<MDMClassProcessor> Process()
         {
             // Get the results of all of the Intune policies from the system
-            var output = HardenWindowsSecurity.MDM.Get();
+            var output = MDM.Get();
 
             // Create a list to store the processed results and return at the end
-            List<HardenWindowsSecurity.MDMClassProcessor> resultsList = [];
+            List<MDMClassProcessor> resultsList = [];
 
             // Loop over each data
             foreach (var cimInstanceResult in output)
@@ -74,7 +74,7 @@ namespace HardenWindowsSecurity
                             }
 
                             // Add the data to the list
-                            resultsList.Add(new HardenWindowsSecurity.MDMClassProcessor(
+                            resultsList.Add(new MDMClassProcessor(
                                 keyValuePair.Key,
                                 keyValuePair.Value?.ToString() ?? string.Empty,
                                 cimInstanceResult.Key
@@ -84,7 +84,7 @@ namespace HardenWindowsSecurity
                 }
                 catch (Exception ex)
                 {
-                    HardenWindowsSecurity.Logger.LogMessage(ex.Message, LogTypeIntel.Error);
+                    Logger.LogMessage(ex.Message, LogTypeIntel.Error);
                 }
             }
 

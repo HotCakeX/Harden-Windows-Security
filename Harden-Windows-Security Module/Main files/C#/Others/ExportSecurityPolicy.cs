@@ -13,7 +13,7 @@ namespace HardenWindowsSecurity
         public static void ExportSecurityPolicy()
         {
             // Assuming securityPolicyInfPath is defined in your environment
-            string securityPolicyInfPath = HardenWindowsSecurity.GlobalVars.securityPolicyInfPath;
+            string securityPolicyInfPath = GlobalVars.securityPolicyInfPath;
             string? systemDrive = Environment.GetEnvironmentVariable("SystemDrive") ?? throw new InvalidOperationException("SystemDrive environment variable is not set.");
 
             // Create the process start info
@@ -38,7 +38,7 @@ namespace HardenWindowsSecurity
 
             if (!string.IsNullOrEmpty(error))
             {
-                HardenWindowsSecurity.Logger.LogMessage("Error: " + error, LogTypeIntel.Error);
+                Logger.LogMessage("Error: " + error, LogTypeIntel.Error);
             }
         }
     }

@@ -10,13 +10,13 @@ namespace HardenWindowsSecurity
         /// <summary>
         /// Get the current culture information just like PowerShell's Get-Culture cmdlet
         /// </summary>
-        public static HardenWindowsSecurity.CultureInfoProperties Get()
+        public static CultureInfoProperties Get()
         {
             // Get the current culture information
             CultureInfo cultureInfo = CultureInfo.CurrentCulture;
 
             // Create a new CultureInfoProperties object and populate it with the current culture information
-            HardenWindowsSecurity.CultureInfoProperties cultureProperties = new()
+            CultureInfoProperties cultureProperties = new()
             {
                 Parent = cultureInfo.Parent.Name,
                 LCID = cultureInfo.LCID,

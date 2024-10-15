@@ -1,3 +1,5 @@
+using System.Windows.Media.Imaging;
+
 #nullable enable
 
 namespace HardenWindowsSecurity
@@ -76,12 +78,12 @@ namespace HardenWindowsSecurity
         }
 
         // Private method to load an image from the specified file name
-        static private System.Windows.Media.Imaging.BitmapImage LoadImage(string fileName)
+        static private BitmapImage LoadImage(string fileName)
         {
             // Construct the full path to the image file
             string imagePath = System.IO.Path.Combine(GlobalVars.path!, "Resources", "Media", fileName);
             // Return the loaded image as a BitmapImage
-            return new System.Windows.Media.Imaging.BitmapImage(new System.Uri(imagePath, System.UriKind.Absolute));
+            return new BitmapImage(new System.Uri(imagePath, System.UriKind.Absolute));
         }
     }
 }

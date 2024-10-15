@@ -354,7 +354,7 @@ Function Protect-WindowsSecurity {
 
         if ([HardenWindowsSecurity.UserPrivCheck]::IsAdmin()) {
             [HardenWindowsSecurity.Miscellaneous]::RequirementsCheck()
-            [HardenWindowsSecurity.ControlledFolderAccessHandler]::Start()            
+            [HardenWindowsSecurity.ControlledFolderAccessHandler]::Start()
         }
         try {
             # Detecting whether GUI parameter is present or not

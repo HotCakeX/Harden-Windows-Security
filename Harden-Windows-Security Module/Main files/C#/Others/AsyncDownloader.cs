@@ -14,14 +14,14 @@ namespace HardenWindowsSecurity
         private static readonly HttpClient _httpClient = new();
 
         // Directory paths
-        private static readonly string LGPODirPath = Path.Combine(HardenWindowsSecurity.GlobalVars.WorkingDir, "LGPO_30");
-        private static readonly string MicrosoftSecurityBaselineDirPath = Path.Combine(HardenWindowsSecurity.GlobalVars.WorkingDir, "MicrosoftSecurityBaseline");
-        private static readonly string Microsoft365SecurityBaselineDirPath = Path.Combine(HardenWindowsSecurity.GlobalVars.WorkingDir, "Microsoft365SecurityBaseline");
+        private static readonly string LGPODirPath = Path.Combine(GlobalVars.WorkingDir, "LGPO_30");
+        private static readonly string MicrosoftSecurityBaselineDirPath = Path.Combine(GlobalVars.WorkingDir, "MicrosoftSecurityBaseline");
+        private static readonly string Microsoft365SecurityBaselineDirPath = Path.Combine(GlobalVars.WorkingDir, "Microsoft365SecurityBaseline");
 
         // Zip File Paths
-        private static readonly string LGPOZipFilePath = Path.Combine(HardenWindowsSecurity.GlobalVars.WorkingDir, "LGPO.zip");
-        private static readonly string MicrosoftSecurityBaselineZipFilePath = Path.Combine(HardenWindowsSecurity.GlobalVars.WorkingDir, "MicrosoftSecurityBaseline.zip");
-        private static readonly string Microsoft365SecurityBaselineZipFilePath = Path.Combine(HardenWindowsSecurity.GlobalVars.WorkingDir, "Microsoft365SecurityBaseline.zip");
+        private static readonly string LGPOZipFilePath = Path.Combine(GlobalVars.WorkingDir, "LGPO.zip");
+        private static readonly string MicrosoftSecurityBaselineZipFilePath = Path.Combine(GlobalVars.WorkingDir, "MicrosoftSecurityBaseline.zip");
+        private static readonly string Microsoft365SecurityBaselineZipFilePath = Path.Combine(GlobalVars.WorkingDir, "Microsoft365SecurityBaseline.zip");
 
         // Dictionary to map URLs to their local file paths
         private static readonly Dictionary<string, string> fileDictionary = new()
@@ -50,9 +50,9 @@ namespace HardenWindowsSecurity
         private static async Task StartFileDownloadAsync(bool OnlyLGPO)
         {
             // Check if the working directory exists; throw an exception if it does not
-            if (!Directory.Exists(HardenWindowsSecurity.GlobalVars.WorkingDir))
+            if (!Directory.Exists(GlobalVars.WorkingDir))
             {
-                throw new DirectoryNotFoundException($"The directory '{HardenWindowsSecurity.GlobalVars.WorkingDir}' does not exist.");
+                throw new DirectoryNotFoundException($"The directory '{GlobalVars.WorkingDir}' does not exist.");
             }
 
             List<Task> tasks = [];
@@ -71,7 +71,7 @@ namespace HardenWindowsSecurity
 
                 string url = kvp.Key;
                 string fileName = kvp.Value;
-                string filePath = Path.Combine(HardenWindowsSecurity.GlobalVars.WorkingDir, fileName);
+                string filePath = Path.Combine(GlobalVars.WorkingDir, fileName);
                 tasks.Add(DownloadFileAsync(url, filePath));
             }
 
@@ -170,7 +170,7 @@ namespace HardenWindowsSecurity
 
 
             // Only download if offline is not used or OnlyLGPO is true meaning LGPO must be downloaded from the MSFT servers
-            if (!HardenWindowsSecurity.GlobalVars.Offline || OnlyLGPO)
+            if (!GlobalVars.Offline || OnlyLGPO)
             {
                 if (OnlyLGPO)
                 {
@@ -178,7 +178,7 @@ namespace HardenWindowsSecurity
                 }
 
                 // Start the download process asynchronously
-                Task DownloadsTask = HardenWindowsSecurity.AsyncDownloader.StartFileDownloadAsync(OnlyLGPO);
+                Task DownloadsTask = AsyncDownloader.StartFileDownloadAsync(OnlyLGPO);
 
                 while (!DownloadsTask.IsCompleted)
                 {
@@ -201,7 +201,7 @@ namespace HardenWindowsSecurity
             if (!OnlyLGPO)
             {
 
-                if (HardenWindowsSecurity.GlobalVars.Offline)
+                if (GlobalVars.Offline)
                 {
                     Logger.LogMessage("Offline Mode; Copying the Microsoft Security Baselines, Microsoft 365 Apps for Enterprise Security Baselines and LGPO files from the user provided paths to the working directory", LogTypeIntel.Information);
 
@@ -246,21 +246,21 @@ namespace HardenWindowsSecurity
 
 
             // Extract LGPO.zip
-            System.IO.Compression.ZipFile.ExtractToDirectory(LGPOZipFilePath, HardenWindowsSecurity.GlobalVars.WorkingDir);
+            System.IO.Compression.ZipFile.ExtractToDirectory(LGPOZipFilePath, GlobalVars.WorkingDir);
 
             if (!OnlyLGPO)
             {
 
                 // capturing the Microsoft Security Baselines extracted path in a variable using GetSubDirectoryName method and storing it in a variable so that we won't need to change anything in the code other than the download link when they are updated
-                HardenWindowsSecurity.GlobalVars.MicrosoftSecurityBaselinePath = GetSubDirectoryName(basePath: MicrosoftSecurityBaselineDirPath);
+                GlobalVars.MicrosoftSecurityBaselinePath = GetSubDirectoryName(basePath: MicrosoftSecurityBaselineDirPath);
 
                 // capturing the Microsoft 365 Security Baselines extracted path in a variable using GetSubDirectoryName method and storing it in a variable so that we won't need to change anything in the code other than the download link when they are updated
-                HardenWindowsSecurity.GlobalVars.Microsoft365SecurityBaselinePath = GetSubDirectoryName(basePath: Microsoft365SecurityBaselineDirPath);
+                GlobalVars.Microsoft365SecurityBaselinePath = GetSubDirectoryName(basePath: Microsoft365SecurityBaselineDirPath);
 
             }
 
             // Storing the LGPO.exe path in a variable
-            HardenWindowsSecurity.GlobalVars.LGPOExe = Path.Combine(LGPODirPath, "LGPO.exe");
+            GlobalVars.LGPOExe = Path.Combine(LGPODirPath, "LGPO.exe");
 
             if (!OnlyLGPO)
             {
@@ -271,10 +271,10 @@ namespace HardenWindowsSecurity
                 }
 
                 // Copying LGPO.exe from its folder to Microsoft Security Baseline folder in order to get it ready to be used by PowerShell script
-                System.IO.File.Copy(HardenWindowsSecurity.GlobalVars.LGPOExe, Path.Combine(HardenWindowsSecurity.GlobalVars.MicrosoftSecurityBaselinePath, "Scripts", "Tools", "LGPO.exe"), true);
+                System.IO.File.Copy(GlobalVars.LGPOExe, Path.Combine(GlobalVars.MicrosoftSecurityBaselinePath, "Scripts", "Tools", "LGPO.exe"), true);
 
                 // Copying LGPO.exe from its folder to Microsoft Office 365 Apps for Enterprise Security Baseline folder in order to get it ready to be used by PowerShell script
-                System.IO.File.Copy(HardenWindowsSecurity.GlobalVars.LGPOExe, Path.Combine(HardenWindowsSecurity.GlobalVars.Microsoft365SecurityBaselinePath, "Scripts", "Tools", "LGPO.exe"), true);
+                System.IO.File.Copy(GlobalVars.LGPOExe, Path.Combine(GlobalVars.Microsoft365SecurityBaselinePath, "Scripts", "Tools", "LGPO.exe"), true);
 
             }
         }

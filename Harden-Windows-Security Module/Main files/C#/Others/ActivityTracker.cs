@@ -74,7 +74,7 @@ namespace HardenWindowsSecurity
                     if (_isActive)
                     {
                         // Ensure that the update to the UI element happens on the UI thread.
-                        HardenWindowsSecurity.GUIMain.app!.Dispatcher.Invoke(() =>
+                        GUIMain.app!.Dispatcher.Invoke(() =>
                         {
                             element.IsEnabled = false; // Disable the element if the application is active.
                         });
@@ -108,7 +108,7 @@ namespace HardenWindowsSecurity
             foreach (var element in _uiElements)
             {
                 // Ensure that the update to each UI element happens on the UI thread.
-                HardenWindowsSecurity.GUIMain.app!.Dispatcher.Invoke(() =>
+                GUIMain.app!.Dispatcher.Invoke(() =>
                 {
                     // Set the IsEnabled property of the element based on the current activity status.
                     // If the application is active (_isActive is true), disable the element (IsEnabled = false).
@@ -125,7 +125,7 @@ namespace HardenWindowsSecurity
         private static void UpdateMainProgressBarVisibility()
         {
             // Ensure that the update to the progress bar's visibility happens on the UI thread.
-            HardenWindowsSecurity.GUIMain.app!.Dispatcher.Invoke(() =>
+            GUIMain.app!.Dispatcher.Invoke(() =>
             {
                 // Set the Visibility property of the main progress bar based on the current activity status.
                 // If the application is active (_isActive is true), set Visibility to Visible.

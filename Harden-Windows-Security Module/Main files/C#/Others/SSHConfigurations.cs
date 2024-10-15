@@ -18,7 +18,7 @@ namespace HardenWindowsSecurity
         internal static void SecureMACs()
         {
 
-            HardenWindowsSecurity.Logger.LogMessage("Checking for SSH client user configuration", LogTypeIntel.Information);
+            Logger.LogMessage("Checking for SSH client user configuration", LogTypeIntel.Information);
 
             // Ensure the SSH client directory exists
             if (!Directory.Exists(SSHClientUserConfigDirectory))
@@ -31,7 +31,7 @@ namespace HardenWindowsSecurity
             {
                 // If the file does not exist, create it with the required content
                 File.WriteAllText(SSHClientUserConfigFile, sshConfigContent);
-                HardenWindowsSecurity.Logger.LogMessage($"SSH client configuration file created with content: {sshConfigContent} because it didn't exist.", LogTypeIntel.Information);
+                Logger.LogMessage($"SSH client configuration file created with content: {sshConfigContent} because it didn't exist.", LogTypeIntel.Information);
             }
             else
             {
@@ -48,7 +48,7 @@ namespace HardenWindowsSecurity
                         // If a line starts with "MACs ", replace it with the new one
                         configLines[i] = sshConfigContent;
                         lineExists = true;
-                        HardenWindowsSecurity.Logger.LogMessage("Existing 'MACs' configuration found and replaced.", LogTypeIntel.Information);
+                        Logger.LogMessage("Existing 'MACs' configuration found and replaced.", LogTypeIntel.Information);
                         break;
                     }
                 }
@@ -57,7 +57,7 @@ namespace HardenWindowsSecurity
                 {
                     // If no line starts with "MACs ", append the new line to the file
                     configLines.Add(sshConfigContent);
-                    HardenWindowsSecurity.Logger.LogMessage("MACs configuration not found, added new configuration.", LogTypeIntel.Information);
+                    Logger.LogMessage("MACs configuration not found, added new configuration.", LogTypeIntel.Information);
                 }
 
                 // Writing the modified content back to the file
@@ -72,7 +72,7 @@ namespace HardenWindowsSecurity
         /// <returns>Returns bool</returns>
         internal static bool TestSecureMACs()
         {
-            HardenWindowsSecurity.Logger.LogMessage("Checking for secure MACs in SSH client user configuration", LogTypeIntel.Information);
+            Logger.LogMessage("Checking for secure MACs in SSH client user configuration", LogTypeIntel.Information);
 
             // Check if the user configurations directory exists in user directory
             if (Directory.Exists(SSHClientUserConfigDirectory))
@@ -90,13 +90,13 @@ namespace HardenWindowsSecurity
                         {
                             if (string.Equals(configLines[i], sshConfigContent, StringComparison.OrdinalIgnoreCase))
                             {
-                                HardenWindowsSecurity.Logger.LogMessage("Existing MACs configuration found in the user directory and matches the secure configurations.", LogTypeIntel.Information);
+                                Logger.LogMessage("Existing MACs configuration found in the user directory and matches the secure configurations.", LogTypeIntel.Information);
                                 return true;
                             }
                             else
                             {
                                 // Log when the MACs value does not match the secure configuration
-                                HardenWindowsSecurity.Logger.LogMessage($"MACs configuration in the user directory is different: {configLines[i]}", LogTypeIntel.Information);
+                                Logger.LogMessage($"MACs configuration in the user directory is different: {configLines[i]}", LogTypeIntel.Information);
                                 return false;
                             }
                         }
@@ -105,7 +105,7 @@ namespace HardenWindowsSecurity
             }
 
 
-            HardenWindowsSecurity.Logger.LogMessage("Checking for secure MACs in SSH client system-wide configuration", LogTypeIntel.Information);
+            Logger.LogMessage("Checking for secure MACs in SSH client system-wide configuration", LogTypeIntel.Information);
 
             // Check for secure MACs in the system-wide SSH configuration in %programdata%\ssh\ssh_config
             string programDataSSHConfigFile = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData), "ssh", "ssh_config");
@@ -123,13 +123,13 @@ namespace HardenWindowsSecurity
                     {
                         if (string.Equals(configLines[i], sshConfigContent, StringComparison.OrdinalIgnoreCase))
                         {
-                            HardenWindowsSecurity.Logger.LogMessage("Existing MACs configuration found in the system-wide configuration and matches the secure configurations.", LogTypeIntel.Information);
+                            Logger.LogMessage("Existing MACs configuration found in the system-wide configuration and matches the secure configurations.", LogTypeIntel.Information);
                             return true;
                         }
                         else
                         {
                             // Log when the MACs value does not match the secure configuration
-                            HardenWindowsSecurity.Logger.LogMessage($"MACs configuration in the system-wide configuration is different: {configLines[i]}", LogTypeIntel.Information);
+                            Logger.LogMessage($"MACs configuration in the system-wide configuration is different: {configLines[i]}", LogTypeIntel.Information);
                             return false;
                         }
                     }
@@ -137,7 +137,7 @@ namespace HardenWindowsSecurity
             }
 
             // Log when returning false (no matching or secure MACs found)
-            HardenWindowsSecurity.Logger.LogMessage("No secure MACs configuration found in both user and system-wide configurations.", LogTypeIntel.Information);
+            Logger.LogMessage("No secure MACs configuration found in both user and system-wide configurations.", LogTypeIntel.Information);
             return false;
         }
     }

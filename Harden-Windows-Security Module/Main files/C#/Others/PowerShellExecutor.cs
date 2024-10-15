@@ -41,7 +41,7 @@ namespace HardenWindowsSecurity
                     {
                         var outputStream = (PSDataCollection<PSObject>)sender;
                         var output = outputStream[args.Index]?.ToString();
-                        HardenWindowsSecurity.Logger.LogMessage($"Output: {output}", LogTypeIntel.Information);
+                        Logger.LogMessage($"Output: {output}", LogTypeIntel.Information);
                     }
                 };
             }
@@ -52,7 +52,7 @@ namespace HardenWindowsSecurity
                 if (sender is not null)
                 {
                     var verboseStream = (PSDataCollection<VerboseRecord>)sender;
-                    HardenWindowsSecurity.Logger.LogMessage($"Verbose: {verboseStream[args.Index].Message}", LogTypeIntel.Information);
+                    Logger.LogMessage($"Verbose: {verboseStream[args.Index].Message}", LogTypeIntel.Information);
                 }
             };
 
@@ -62,7 +62,7 @@ namespace HardenWindowsSecurity
                 if (sender is not null)
                 {
                     var warningStream = (PSDataCollection<WarningRecord>)sender;
-                    HardenWindowsSecurity.Logger.LogMessage($"Warning: {warningStream[args.Index].Message}", LogTypeIntel.Warning);
+                    Logger.LogMessage($"Warning: {warningStream[args.Index].Message}", LogTypeIntel.Warning);
                 }
             };
 
@@ -85,7 +85,7 @@ namespace HardenWindowsSecurity
                     // The error stream contains terminating and non terminating errors
                     if (!NonTerminatingErrors)
                     {
-                        HardenWindowsSecurity.Logger.LogMessage(errorMessage, LogTypeIntel.Error);
+                        Logger.LogMessage(errorMessage, LogTypeIntel.Error);
 
                         // Throw an exception with the error details
                         throw new InvalidOperationException($"PowerShell script execution failed: {errorMessage}");
@@ -93,7 +93,7 @@ namespace HardenWindowsSecurity
                     else
                     {
                         // Only log the error in a non-terminating way
-                        HardenWindowsSecurity.Logger.LogMessage(errorMessage, LogTypeIntel.Warning);
+                        Logger.LogMessage(errorMessage, LogTypeIntel.Warning);
                     }
                 }
             };
@@ -106,7 +106,7 @@ namespace HardenWindowsSecurity
                     {
                         var progressStream = (PSDataCollection<ProgressRecord>)sender;
                         var progress = progressStream[args.Index];
-                        HardenWindowsSecurity.Logger.LogMessage($"Progress: {progress.StatusDescription} - {progress.PercentComplete}% complete", LogTypeIntel.Information);
+                        Logger.LogMessage($"Progress: {progress.StatusDescription} - {progress.PercentComplete}% complete", LogTypeIntel.Information);
                     }
                 };
             */

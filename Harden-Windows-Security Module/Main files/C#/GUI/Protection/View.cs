@@ -3,7 +3,10 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Markup;
+using System.Windows.Media.Imaging;
 
 #nullable disable
 
@@ -27,7 +30,7 @@ namespace HardenWindowsSecurity
                 }
 
                 // Defining the path to the XAML XML file
-                if (HardenWindowsSecurity.GlobalVars.path == null)
+                if (HardenWindowsSecurity.GlobalVars.path is null)
                 {
                     throw new InvalidOperationException("GlobalVars.path cannot be null.");
                 }
@@ -39,14 +42,14 @@ namespace HardenWindowsSecurity
                 string xamlContent = File.ReadAllText(xamlPath);
 
                 // Parse the XAML content to create a UserControl
-                GUIProtectWinSecurity.View = (System.Windows.Controls.UserControl)XamlReader.Parse(xamlContent);
+                GUIProtectWinSecurity.View = (UserControl)XamlReader.Parse(xamlContent);
 
                 // Set the DataContext for Protect view
                 GUIProtectWinSecurity.View.DataContext = new ProtectVM();
 
-                GUIProtectWinSecurity.parentGrid = (System.Windows.Controls.Grid)GUIProtectWinSecurity.View.FindName("ParentGrid");
-                GUIProtectWinSecurity.mainTabControlToggle = (System.Windows.Controls.Primitives.ToggleButton)GUIProtectWinSecurity.parentGrid.FindName("MainTabControlToggle");
-                GUIProtectWinSecurity.mainContentControl = (System.Windows.Controls.ContentControl)GUIProtectWinSecurity.mainTabControlToggle.FindName("MainContentControl");
+                GUIProtectWinSecurity.parentGrid = (Grid)GUIProtectWinSecurity.View.FindName("ParentGrid");
+                GUIProtectWinSecurity.mainTabControlToggle = (ToggleButton)GUIProtectWinSecurity.parentGrid.FindName("MainTabControlToggle");
+                GUIProtectWinSecurity.mainContentControl = (ContentControl)GUIProtectWinSecurity.mainTabControlToggle.FindName("MainContentControl");
 
 
                 // Due to using ToggleButton as Tab Control element, this is now considered the parent of all inner elements
@@ -61,49 +64,49 @@ namespace HardenWindowsSecurity
                 // $MainContentControlStyle.FindName('PathIcon1').Source
 
                 // PathIcon1
-                System.Windows.Media.Imaging.BitmapImage PathIcon1Image = new();
+                BitmapImage PathIcon1Image = new();
                 PathIcon1Image.BeginInit();
                 PathIcon1Image.UriSource = new Uri(System.IO.Path.Combine(HardenWindowsSecurity.GlobalVars.path, "Resources", "Media", "path.png"));
-                PathIcon1Image.CacheOption = System.Windows.Media.Imaging.BitmapCacheOption.OnLoad; // Load the image data into memory
+                PathIcon1Image.CacheOption = BitmapCacheOption.OnLoad; // Load the image data into memory
                 PathIcon1Image.EndInit();
-                ((System.Windows.Controls.Image)((System.Windows.Markup.INameScope)GUIProtectWinSecurity.mainContentControlStyle).FindName("PathIcon1")).Source = PathIcon1Image;
+                ((Image)((System.Windows.Markup.INameScope)GUIProtectWinSecurity.mainContentControlStyle).FindName("PathIcon1")).Source = PathIcon1Image;
 
                 // PathIcon2
-                var PathIcon2Image = new System.Windows.Media.Imaging.BitmapImage();
+                var PathIcon2Image = new BitmapImage();
                 PathIcon2Image.BeginInit();
                 PathIcon2Image.UriSource = new Uri(System.IO.Path.Combine(HardenWindowsSecurity.GlobalVars.path, "Resources", "Media", "path.png"));
-                PathIcon2Image.CacheOption = System.Windows.Media.Imaging.BitmapCacheOption.OnLoad; // Load the image data into memory
+                PathIcon2Image.CacheOption = BitmapCacheOption.OnLoad; // Load the image data into memory
                 PathIcon2Image.EndInit();
-                ((System.Windows.Controls.Image)((System.Windows.Markup.INameScope)GUIProtectWinSecurity.mainContentControlStyle).FindName("PathIcon2")).Source = PathIcon2Image;
+                ((Image)((System.Windows.Markup.INameScope)GUIProtectWinSecurity.mainContentControlStyle).FindName("PathIcon2")).Source = PathIcon2Image;
 
                 // PathIcon3
-                var PathIcon3Image = new System.Windows.Media.Imaging.BitmapImage();
+                var PathIcon3Image = new BitmapImage();
                 PathIcon3Image.BeginInit();
                 PathIcon3Image.UriSource = new Uri(System.IO.Path.Combine(HardenWindowsSecurity.GlobalVars.path, "Resources", "Media", "path.png"));
-                PathIcon3Image.CacheOption = System.Windows.Media.Imaging.BitmapCacheOption.OnLoad; // Load the image data into memory
+                PathIcon3Image.CacheOption = BitmapCacheOption.OnLoad; // Load the image data into memory
                 PathIcon3Image.EndInit();
-                ((System.Windows.Controls.Image)((System.Windows.Markup.INameScope)GUIProtectWinSecurity.mainContentControlStyle).FindName("PathIcon3")).Source = PathIcon3Image;
+                ((Image)((System.Windows.Markup.INameScope)GUIProtectWinSecurity.mainContentControlStyle).FindName("PathIcon3")).Source = PathIcon3Image;
 
                 // LogButtonIcon
-                var LogButtonIconImage = new System.Windows.Media.Imaging.BitmapImage();
+                var LogButtonIconImage = new BitmapImage();
                 LogButtonIconImage.BeginInit();
                 LogButtonIconImage.UriSource = new Uri(System.IO.Path.Combine(HardenWindowsSecurity.GlobalVars.path, "Resources", "Media", "log.png"));
-                LogButtonIconImage.CacheOption = System.Windows.Media.Imaging.BitmapCacheOption.OnLoad; // Load the image data into memory
+                LogButtonIconImage.CacheOption = BitmapCacheOption.OnLoad; // Load the image data into memory
                 LogButtonIconImage.EndInit();
-                ((System.Windows.Controls.Image)((System.Windows.Markup.INameScope)GUIProtectWinSecurity.mainContentControlStyle).FindName("LogButtonIcon")).Source = LogButtonIconImage;
+                ((Image)((System.Windows.Markup.INameScope)GUIProtectWinSecurity.mainContentControlStyle).FindName("LogButtonIcon")).Source = LogButtonIconImage;
 
                 #region Combobox
-                GUIProtectWinSecurity.ProtectionPresetComboBox = GUIProtectWinSecurity.parentGrid.FindName("ProtectionPresetComboBox") as System.Windows.Controls.ComboBox;
+                GUIProtectWinSecurity.ProtectionPresetComboBox = GUIProtectWinSecurity.parentGrid.FindName("ProtectionPresetComboBox") as ComboBox;
 
 
                 // Attach the event handler using a lambda expression
                 GUIProtectWinSecurity.ProtectionPresetComboBox.SelectionChanged += (sender, args) =>
                 {
                     // Cast the sender back to a ComboBox
-                    if (sender is System.Windows.Controls.ComboBox comboBox)
+                    if (sender is ComboBox comboBox)
                     {
                         // Get the selected item as a ComboBoxItem
-                        if (comboBox.SelectedItem is System.Windows.Controls.ComboBoxItem selectedItem)
+                        if (comboBox.SelectedItem is ComboBoxItem selectedItem)
                         {
                             // Assign the selected content to the SelectedProtectionPreset property
                             GUIProtectWinSecurity.SelectedProtectionPreset = selectedItem.Content.ToString();
@@ -111,13 +114,13 @@ namespace HardenWindowsSecurity
                             // Uncheck all categories first
                             foreach (var item in GUIProtectWinSecurity.categories.Items)
                             {
-                                ((System.Windows.Controls.CheckBox)((System.Windows.Controls.ListViewItem)item).Content).IsChecked = false;
+                                ((CheckBox)((ListViewItem)item).Content).IsChecked = false;
                             }
 
                             // Uncheck all sub-categories first
                             foreach (var item in GUIProtectWinSecurity.subCategories.Items)
                             {
-                                ((System.Windows.Controls.CheckBox)((System.Windows.Controls.ListViewItem)item).Content).IsChecked = false;
+                                ((CheckBox)((ListViewItem)item).Content).IsChecked = false;
                             }
 
                             // Check the categories and sub-categories based on the preset configurations
@@ -145,10 +148,10 @@ namespace HardenWindowsSecurity
                                                      foreach (var item in GUIProtectWinSecurity.categories.Items)
                                                      {
                                                          // Get the category item list view item
-                                                         System.Windows.Controls.ListViewItem categoryItem = (System.Windows.Controls.ListViewItem)item;
+                                                         ListViewItem categoryItem = (ListViewItem)item;
 
                                                          // get the name of the list view item as string
-                                                         string categoryItemName = ((System.Windows.Controls.CheckBox)categoryItem.Content).Name.ToString();
+                                                         string categoryItemName = ((CheckBox)categoryItem.Content).Name.ToString();
 
                                                          // if the category is authorized to be available
                                                          if (HardenWindowsSecurity.GlobalVars.HardeningCategorieX.Contains(categoryItemName))
@@ -156,7 +159,7 @@ namespace HardenWindowsSecurity
                                                              // If the name of the current checkbox list view item in the loop is the same as the category name in the outer loop, then set the category on the GUI to checked
                                                              if (string.Equals(categoryItemName, category, StringComparison.OrdinalIgnoreCase))
                                                              {
-                                                                 ((System.Windows.Controls.CheckBox)categoryItem.Content).IsChecked = true;
+                                                                 ((CheckBox)categoryItem.Content).IsChecked = true;
                                                              }
 
                                                          }
@@ -170,15 +173,15 @@ namespace HardenWindowsSecurity
                                                      foreach (var item in GUIProtectWinSecurity.subCategories.Items)
                                                      {
                                                          // Get the sub-category item list view item
-                                                         System.Windows.Controls.ListViewItem SubCategoryItem = (System.Windows.Controls.ListViewItem)item;
+                                                         ListViewItem SubCategoryItem = (ListViewItem)item;
 
                                                          // get the name of the list view item as string
-                                                         string SubcategoryItemName = ((System.Windows.Controls.CheckBox)SubCategoryItem.Content).Name.ToString();
+                                                         string SubcategoryItemName = ((CheckBox)SubCategoryItem.Content).Name.ToString();
 
                                                          // If the name of the current checkbox list view item in the loop is the same as the sub-category name in the outer loop, then set the sub-category on the GUI to checked
                                                          if (string.Equals(SubcategoryItemName, subcategory, StringComparison.OrdinalIgnoreCase))
                                                          {
-                                                             ((System.Windows.Controls.CheckBox)SubCategoryItem.Content).IsChecked = true;
+                                                             ((CheckBox)SubCategoryItem.Content).IsChecked = true;
                                                          }
 
                                                      }
@@ -217,10 +220,10 @@ namespace HardenWindowsSecurity
                                                     foreach (var item in GUIProtectWinSecurity.categories.Items)
                                                     {
                                                         // Get the category item list view item
-                                                        System.Windows.Controls.ListViewItem categoryItem = (System.Windows.Controls.ListViewItem)item;
+                                                        ListViewItem categoryItem = (ListViewItem)item;
 
                                                         // get the name of the list view item as string
-                                                        string categoryItemName = ((System.Windows.Controls.CheckBox)categoryItem.Content).Name.ToString();
+                                                        string categoryItemName = ((CheckBox)categoryItem.Content).Name.ToString();
 
                                                         // if the category is authorized to be available
                                                         if (HardenWindowsSecurity.GlobalVars.HardeningCategorieX.Contains(categoryItemName))
@@ -228,7 +231,7 @@ namespace HardenWindowsSecurity
                                                             // If the name of the current checkbox list view item in the loop is the same as the category name in the outer loop, then set the category on the GUI to checked
                                                             if (string.Equals(categoryItemName, category, StringComparison.OrdinalIgnoreCase))
                                                             {
-                                                                ((System.Windows.Controls.CheckBox)categoryItem.Content).IsChecked = true;
+                                                                ((CheckBox)categoryItem.Content).IsChecked = true;
                                                             }
 
                                                         }
@@ -242,15 +245,15 @@ namespace HardenWindowsSecurity
                                                     foreach (var item in GUIProtectWinSecurity.subCategories.Items)
                                                     {
                                                         // Get the sub-category item list view item
-                                                        System.Windows.Controls.ListViewItem SubCategoryItem = (System.Windows.Controls.ListViewItem)item;
+                                                        ListViewItem SubCategoryItem = (ListViewItem)item;
 
                                                         // get the name of the list view item as string
-                                                        string SubcategoryItemName = ((System.Windows.Controls.CheckBox)SubCategoryItem.Content).Name.ToString();
+                                                        string SubcategoryItemName = ((CheckBox)SubCategoryItem.Content).Name.ToString();
 
                                                         // If the name of the current checkbox list view item in the loop is the same as the sub-category name in the outer loop, then set the sub-category on the GUI to checked
                                                         if (string.Equals(SubcategoryItemName, subcategory, StringComparison.OrdinalIgnoreCase))
                                                         {
-                                                            ((System.Windows.Controls.CheckBox)SubCategoryItem.Content).IsChecked = true;
+                                                            ((CheckBox)SubCategoryItem.Content).IsChecked = true;
                                                         }
 
                                                     }
@@ -286,10 +289,10 @@ namespace HardenWindowsSecurity
                                                 foreach (var item in GUIProtectWinSecurity.categories.Items)
                                                 {
                                                     // Get the category item list view item
-                                                    System.Windows.Controls.ListViewItem categoryItem = (System.Windows.Controls.ListViewItem)item;
+                                                    ListViewItem categoryItem = (ListViewItem)item;
 
                                                     // get the name of the list view item as string
-                                                    string categoryItemName = ((System.Windows.Controls.CheckBox)categoryItem.Content).Name.ToString();
+                                                    string categoryItemName = ((CheckBox)categoryItem.Content).Name.ToString();
 
                                                     // if the category is authorized to be available
                                                     if (HardenWindowsSecurity.GlobalVars.HardeningCategorieX.Contains(categoryItemName))
@@ -297,7 +300,7 @@ namespace HardenWindowsSecurity
                                                         // If the name of the current checkbox list view item in the loop is the same as the category name in the outer loop, then set the category on the GUI to checked
                                                         if (string.Equals(categoryItemName, category, StringComparison.OrdinalIgnoreCase))
                                                         {
-                                                            ((System.Windows.Controls.CheckBox)categoryItem.Content).IsChecked = true;
+                                                            ((CheckBox)categoryItem.Content).IsChecked = true;
                                                         }
 
                                                     }
@@ -311,15 +314,15 @@ namespace HardenWindowsSecurity
                                                 foreach (var item in GUIProtectWinSecurity.subCategories.Items)
                                                 {
                                                     // Get the sub-category item list view item
-                                                    System.Windows.Controls.ListViewItem SubCategoryItem = (System.Windows.Controls.ListViewItem)item;
+                                                    ListViewItem SubCategoryItem = (ListViewItem)item;
 
                                                     // get the name of the list view item as string
-                                                    string SubcategoryItemName = ((System.Windows.Controls.CheckBox)SubCategoryItem.Content).Name.ToString();
+                                                    string SubcategoryItemName = ((CheckBox)SubCategoryItem.Content).Name.ToString();
 
                                                     // If the name of the current checkbox list view item in the loop is the same as the sub-category name in the outer loop, then set the sub-category on the GUI to checked
                                                     if (string.Equals(SubcategoryItemName, subcategory, StringComparison.OrdinalIgnoreCase))
                                                     {
-                                                        ((System.Windows.Controls.CheckBox)SubCategoryItem.Content).IsChecked = true;
+                                                        ((CheckBox)SubCategoryItem.Content).IsChecked = true;
                                                     }
 
                                                 }
@@ -346,23 +349,23 @@ namespace HardenWindowsSecurity
                 #endregion
 
                 // Access the grid containing the Execute Button
-                GUIProtectWinSecurity.ExecuteButtonGrid = GUIProtectWinSecurity.parentGrid.FindName("ExecuteButtonGrid") as System.Windows.Controls.Grid;
+                GUIProtectWinSecurity.ExecuteButtonGrid = GUIProtectWinSecurity.parentGrid.FindName("ExecuteButtonGrid") as Grid;
 
                 // Access the Execute Button
-                GUIProtectWinSecurity.ExecuteButton = (System.Windows.Controls.Primitives.ToggleButton)GUIProtectWinSecurity.ExecuteButtonGrid!.FindName("Execute");
+                GUIProtectWinSecurity.ExecuteButton = (ToggleButton)GUIProtectWinSecurity.ExecuteButtonGrid!.FindName("Execute");
 
                 // Apply the template to make sure it's available
                 _ = GUIProtectWinSecurity.ExecuteButton.ApplyTemplate();
 
                 // Access the image within the Execute Button's template
-                GUIProtectWinSecurity.ExecuteButtonImage = GUIProtectWinSecurity.ExecuteButton.Template.FindName("ExecuteIconImage", GUIProtectWinSecurity.ExecuteButton) as System.Windows.Controls.Image;
+                GUIProtectWinSecurity.ExecuteButtonImage = GUIProtectWinSecurity.ExecuteButton.Template.FindName("ExecuteIconImage", GUIProtectWinSecurity.ExecuteButton) as Image;
 
                 // Update the image source for the execute button
                 // Load the Execute button image into memory and set it as the source
-                var ExecuteButtonBitmapImage = new System.Windows.Media.Imaging.BitmapImage();
+                var ExecuteButtonBitmapImage = new BitmapImage();
                 ExecuteButtonBitmapImage.BeginInit();
                 ExecuteButtonBitmapImage.UriSource = new Uri(System.IO.Path.Combine(HardenWindowsSecurity.GlobalVars.path!, "Resources", "Media", "ExecuteButton.png"));
-                ExecuteButtonBitmapImage.CacheOption = System.Windows.Media.Imaging.BitmapCacheOption.OnLoad; // Load the image data into memory
+                ExecuteButtonBitmapImage.CacheOption = BitmapCacheOption.OnLoad; // Load the image data into memory
                 ExecuteButtonBitmapImage.EndInit();
 
                 GUIProtectWinSecurity.ExecuteButtonImage!.Source = ExecuteButtonBitmapImage;
@@ -370,24 +373,24 @@ namespace HardenWindowsSecurity
 
                 GUIProtectWinSecurity.categories = (System.Windows.Controls.ListView)((System.Windows.Markup.INameScope)GUIProtectWinSecurity.mainContentControlStyle).FindName("Categories");
                 GUIProtectWinSecurity.subCategories = (System.Windows.Controls.ListView)((System.Windows.Markup.INameScope)GUIProtectWinSecurity.mainContentControlStyle).FindName("SubCategories");
-                GUIProtectWinSecurity.selectAllCategories = (System.Windows.Controls.CheckBox)((System.Windows.Markup.INameScope)GUIProtectWinSecurity.mainContentControlStyle).FindName("SelectAllCategories");
-                GUIProtectWinSecurity.selectAllSubCategories = (System.Windows.Controls.CheckBox)((System.Windows.Markup.INameScope)GUIProtectWinSecurity.mainContentControlStyle).FindName("SelectAllSubCategories");
+                GUIProtectWinSecurity.selectAllCategories = (CheckBox)((System.Windows.Markup.INameScope)GUIProtectWinSecurity.mainContentControlStyle).FindName("SelectAllCategories");
+                GUIProtectWinSecurity.selectAllSubCategories = (CheckBox)((System.Windows.Markup.INameScope)GUIProtectWinSecurity.mainContentControlStyle).FindName("SelectAllSubCategories");
 
                 // New initialization for Log related elements
-                GUIProtectWinSecurity.txtFilePath = (System.Windows.Controls.TextBox)((System.Windows.Markup.INameScope)GUIProtectWinSecurity.mainContentControlStyle).FindName("txtFilePath");
-                GUIProtectWinSecurity.logPath = (System.Windows.Controls.Button)((System.Windows.Markup.INameScope)GUIProtectWinSecurity.mainContentControlStyle).FindName("LogPath");
-                GUIProtectWinSecurity.log = (System.Windows.Controls.Primitives.ToggleButton)((System.Windows.Markup.INameScope)GUIProtectWinSecurity.mainContentControlStyle).FindName("Log");
-                GUIProtectWinSecurity.EventLogging = (System.Windows.Controls.Primitives.ToggleButton)((System.Windows.Markup.INameScope)GUIProtectWinSecurity.mainContentControlStyle).FindName("EventLogging");
+                GUIProtectWinSecurity.txtFilePath = (TextBox)((System.Windows.Markup.INameScope)GUIProtectWinSecurity.mainContentControlStyle).FindName("txtFilePath");
+                GUIProtectWinSecurity.logPath = (Button)((System.Windows.Markup.INameScope)GUIProtectWinSecurity.mainContentControlStyle).FindName("LogPath");
+                GUIProtectWinSecurity.log = (ToggleButton)((System.Windows.Markup.INameScope)GUIProtectWinSecurity.mainContentControlStyle).FindName("Log");
+                GUIProtectWinSecurity.EventLogging = (ToggleButton)((System.Windows.Markup.INameScope)GUIProtectWinSecurity.mainContentControlStyle).FindName("EventLogging");
 
                 // initializations for Offline-Mode related elements
-                GUIProtectWinSecurity.grid2 = (System.Windows.Controls.Grid)((System.Windows.Markup.INameScope)GUIProtectWinSecurity.mainContentControlStyle).FindName("Grid2");
-                GUIProtectWinSecurity.enableOfflineMode = (System.Windows.Controls.Primitives.ToggleButton)((System.Windows.Markup.INameScope)GUIProtectWinSecurity.mainContentControlStyle).FindName("EnableOfflineMode");
-                GUIProtectWinSecurity.microsoftSecurityBaselineZipButton = (System.Windows.Controls.Button)((System.Windows.Markup.INameScope)GUIProtectWinSecurity.mainContentControlStyle).FindName("MicrosoftSecurityBaselineZipButton");
-                GUIProtectWinSecurity.microsoftSecurityBaselineZipTextBox = (System.Windows.Controls.TextBox)((System.Windows.Markup.INameScope)GUIProtectWinSecurity.mainContentControlStyle).FindName("MicrosoftSecurityBaselineZipTextBox");
-                GUIProtectWinSecurity.microsoft365AppsSecurityBaselineZipButton = (System.Windows.Controls.Button)((System.Windows.Markup.INameScope)GUIProtectWinSecurity.mainContentControlStyle).FindName("Microsoft365AppsSecurityBaselineZipButton");
-                GUIProtectWinSecurity.microsoft365AppsSecurityBaselineZipTextBox = (System.Windows.Controls.TextBox)((System.Windows.Markup.INameScope)GUIProtectWinSecurity.mainContentControlStyle).FindName("Microsoft365AppsSecurityBaselineZipTextBox");
-                GUIProtectWinSecurity.lgpoZipButton = (System.Windows.Controls.Button)((System.Windows.Markup.INameScope)GUIProtectWinSecurity.mainContentControlStyle).FindName("LGPOZipButton");
-                GUIProtectWinSecurity.lgpoZipTextBox = (System.Windows.Controls.TextBox)((System.Windows.Markup.INameScope)GUIProtectWinSecurity.mainContentControlStyle).FindName("LGPOZipTextBox");
+                GUIProtectWinSecurity.grid2 = (Grid)((System.Windows.Markup.INameScope)GUIProtectWinSecurity.mainContentControlStyle).FindName("Grid2");
+                GUIProtectWinSecurity.enableOfflineMode = (ToggleButton)((System.Windows.Markup.INameScope)GUIProtectWinSecurity.mainContentControlStyle).FindName("EnableOfflineMode");
+                GUIProtectWinSecurity.microsoftSecurityBaselineZipButton = (Button)((System.Windows.Markup.INameScope)GUIProtectWinSecurity.mainContentControlStyle).FindName("MicrosoftSecurityBaselineZipButton");
+                GUIProtectWinSecurity.microsoftSecurityBaselineZipTextBox = (TextBox)((System.Windows.Markup.INameScope)GUIProtectWinSecurity.mainContentControlStyle).FindName("MicrosoftSecurityBaselineZipTextBox");
+                GUIProtectWinSecurity.microsoft365AppsSecurityBaselineZipButton = (Button)((System.Windows.Markup.INameScope)GUIProtectWinSecurity.mainContentControlStyle).FindName("Microsoft365AppsSecurityBaselineZipButton");
+                GUIProtectWinSecurity.microsoft365AppsSecurityBaselineZipTextBox = (TextBox)((System.Windows.Markup.INameScope)GUIProtectWinSecurity.mainContentControlStyle).FindName("Microsoft365AppsSecurityBaselineZipTextBox");
+                GUIProtectWinSecurity.lgpoZipButton = (Button)((System.Windows.Markup.INameScope)GUIProtectWinSecurity.mainContentControlStyle).FindName("LGPOZipButton");
+                GUIProtectWinSecurity.lgpoZipTextBox = (TextBox)((System.Windows.Markup.INameScope)GUIProtectWinSecurity.mainContentControlStyle).FindName("LGPOZipTextBox");
 
                 // Initially set the text area for the selected LogPath to disabled
                 GUIProtectWinSecurity.txtFilePath.IsEnabled = false;
@@ -464,7 +467,7 @@ namespace HardenWindowsSecurity
                     GUIProtectWinSecurity.grid2.RowDefinitions.Add(offlineModeUnavailableRow);
 
                     // Create a new text box
-                    System.Windows.Controls.TextBox offlineModeUnavailableNoticeBox = new()
+                    TextBox offlineModeUnavailableNoticeBox = new()
                     {
                         HorizontalAlignment = System.Windows.HorizontalAlignment.Stretch,
                         VerticalAlignment = System.Windows.VerticalAlignment.Stretch,
@@ -477,8 +480,8 @@ namespace HardenWindowsSecurity
                         Margin = new System.Windows.Thickness(10, 20, 10, 0),
                         ToolTip = "To enable offline mode, use: Protect-WindowsSecurity -GUI -Offline"
                     };
-                    offlineModeUnavailableNoticeBox.SetValue(System.Windows.Controls.Grid.ColumnSpanProperty, 2);
-                    offlineModeUnavailableNoticeBox.SetValue(System.Windows.Controls.Grid.RowProperty, 4);
+                    offlineModeUnavailableNoticeBox.SetValue(Grid.ColumnSpanProperty, 2);
+                    offlineModeUnavailableNoticeBox.SetValue(Grid.RowProperty, 4);
 
                     // Create a gradient brush for the text color
                     System.Windows.Media.LinearGradientBrush gradientBrush = new();

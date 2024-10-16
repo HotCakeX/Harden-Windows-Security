@@ -30,12 +30,12 @@ namespace HardenWindowsSecurity
             #region Output handling
             uint? IsAutoUnlockEnabledResultCode = null;
 
-            if (IsAutoUnlockEnabledResult != null)
+            if (IsAutoUnlockEnabledResult is not null)
             {
                 IsAutoUnlockEnabledResultCode = Convert.ToUInt32(IsAutoUnlockEnabledResult["ReturnValue"], CultureInfo.InvariantCulture);
             }
 
-            if (IsAutoUnlockEnabledResultCode != null && IsAutoUnlockEnabledResultCode == 0)
+            if (IsAutoUnlockEnabledResultCode is not null && IsAutoUnlockEnabledResultCode == 0)
             {
                 Logger.LogMessage($"Successfully queried the Auto-unlock status of the drive {DriveLetter}.", LogTypeIntel.Information);
             }
@@ -64,12 +64,12 @@ namespace HardenWindowsSecurity
                 #region Output handling
                 uint? MethodInvocationResultCode = null;
 
-                if (ProtectKeyWithExternalKeyMethodInvocationResult != null)
+                if (ProtectKeyWithExternalKeyMethodInvocationResult is not null)
                 {
                     MethodInvocationResultCode = Convert.ToUInt32(ProtectKeyWithExternalKeyMethodInvocationResult["ReturnValue"], CultureInfo.InvariantCulture);
                 }
 
-                if (MethodInvocationResultCode != null && MethodInvocationResultCode == 0)
+                if (MethodInvocationResultCode is not null && MethodInvocationResultCode == 0)
                 {
                     Logger.LogMessage("The ExternalKey key protector was successfully added.", LogTypeIntel.Information);
                     // Will move forward to the next step
@@ -94,12 +94,12 @@ namespace HardenWindowsSecurity
                 #region Output handling
                 uint? EnableAutoUnlockMethodInvocationResultCode = null;
 
-                if (EnableAutoUnlockMethodInvocationResult != null)
+                if (EnableAutoUnlockMethodInvocationResult is not null)
                 {
                     EnableAutoUnlockMethodInvocationResultCode = Convert.ToUInt32(EnableAutoUnlockMethodInvocationResult["ReturnValue"], CultureInfo.InvariantCulture);
                 }
 
-                if (EnableAutoUnlockMethodInvocationResultCode != null && EnableAutoUnlockMethodInvocationResultCode == 0)
+                if (EnableAutoUnlockMethodInvocationResultCode is not null && EnableAutoUnlockMethodInvocationResultCode == 0)
                 {
                     Logger.LogMessage($"Auto-Unlock has been successfully enabled for the drive: {DriveLetter}", LogTypeIntel.Information);
                 }

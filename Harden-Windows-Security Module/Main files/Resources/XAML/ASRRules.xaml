@@ -13,7 +13,7 @@
             <!-- Execute Button Row -->
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        <ListView x:Name="ASRRuleSet1" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="1" ItemContainerStyle="{StaticResource CustomListViewItemStyle}" BorderThickness="0" Margin="0,40,0,0">
+        <ListView x:Name="ASRRuleSet1" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="1" ItemContainerStyle="{StaticResource CustomListViewItemStyle}" BorderThickness="0" Margin="0,40,0,0" ScrollViewer.PanningMode="Both">
             <ListView.Background>
                 <SolidColorBrush Color="Transparent"/>
             </ListView.Background>
@@ -23,8 +23,7 @@
                     <ComboBox x:Name="BlockAbuseOfExploitedVulnerableSignedDrivers"
                         Width="90" Margin="10,0,0,0"
                         Style="{StaticResource ModernComboBoxStyle}"
-                        ItemContainerStyle="{StaticResource ModernComboBoxItemStyle}"
-                        SelectedIndex="1">
+                        ItemContainerStyle="{StaticResource ModernComboBoxItemStyle}">
                         <ComboBoxItem Content="Disable" />
                         <ComboBoxItem Content="Block" />
                         <ComboBoxItem Content="Audit" />
@@ -38,8 +37,7 @@
                     <ComboBox x:Name="BlockAdobeReaderFromCreatingChildProcesses"
              Width="90" Margin="10,0,0,0"
              Style="{StaticResource ModernComboBoxStyle}"
-             ItemContainerStyle="{StaticResource ModernComboBoxItemStyle}"
-             SelectedIndex="1">
+             ItemContainerStyle="{StaticResource ModernComboBoxItemStyle}">
                         <ComboBoxItem Content="Disable" />
                         <ComboBoxItem Content="Block" />
                         <ComboBoxItem Content="Audit" />
@@ -53,8 +51,7 @@
                     <ComboBox x:Name="BlockAllOfficeApplicationsFromCreatingChildProcesses"
              Width="90" Margin="10,0,0,0"
              Style="{StaticResource ModernComboBoxStyle}"
-             ItemContainerStyle="{StaticResource ModernComboBoxItemStyle}"
-             SelectedIndex="1">
+             ItemContainerStyle="{StaticResource ModernComboBoxItemStyle}">
                         <ComboBoxItem Content="Disable" />
                         <ComboBoxItem Content="Block" />
                         <ComboBoxItem Content="Audit" />
@@ -68,8 +65,7 @@
                     <ComboBox x:Name="BlockCredentialStealingFromTheWindowsLocalSecurityAuthoritySubsystem"
              Width="90" Margin="10,0,0,0"
              Style="{StaticResource ModernComboBoxStyle}"
-             ItemContainerStyle="{StaticResource ModernComboBoxItemStyle}"
-             SelectedIndex="1">
+             ItemContainerStyle="{StaticResource ModernComboBoxItemStyle}">
                         <ComboBoxItem Content="Disable" />
                         <ComboBoxItem Content="Block" />
                         <ComboBoxItem Content="Audit" />
@@ -83,8 +79,7 @@
                     <ComboBox x:Name="BlockExecutableContentFromEmailClientAndWebmail"
              Width="90" Margin="10,0,0,0"
              Style="{StaticResource ModernComboBoxStyle}"
-             ItemContainerStyle="{StaticResource ModernComboBoxItemStyle}"
-             SelectedIndex="1">
+             ItemContainerStyle="{StaticResource ModernComboBoxItemStyle}">
                         <ComboBoxItem Content="Disable" />
                         <ComboBoxItem Content="Block" />
                         <ComboBoxItem Content="Audit" />
@@ -98,8 +93,7 @@
                     <ComboBox x:Name="BlockExecutableFilesFromRunningUnlessTheyMeetAPrevalenceAgeOrTrustedListCriterion"
              Width="90" Margin="10,0,0,0"
              Style="{StaticResource ModernComboBoxStyle}"
-             ItemContainerStyle="{StaticResource ModernComboBoxItemStyle}"
-             SelectedIndex="1">
+             ItemContainerStyle="{StaticResource ModernComboBoxItemStyle}">
                         <ComboBoxItem Content="Disable" />
                         <ComboBoxItem Content="Block" />
                         <ComboBoxItem Content="Audit" />
@@ -113,8 +107,7 @@
                     <ComboBox x:Name="BlockExecutionOfPotentiallyObfuscatedScripts"
              Width="90" Margin="10,0,0,0"
              Style="{StaticResource ModernComboBoxStyle}"
-             ItemContainerStyle="{StaticResource ModernComboBoxItemStyle}"
-             SelectedIndex="1">
+             ItemContainerStyle="{StaticResource ModernComboBoxItemStyle}">
                         <ComboBoxItem Content="Disable" />
                         <ComboBoxItem Content="Block" />
                         <ComboBoxItem Content="Audit" />
@@ -128,8 +121,7 @@
                     <ComboBox x:Name="BlockJavaScriptOrVBScriptFromLaunchingDownloadedExecutableContent"
              Width="90" Margin="10,0,0,0"
              Style="{StaticResource ModernComboBoxStyle}"
-             ItemContainerStyle="{StaticResource ModernComboBoxItemStyle}"
-             SelectedIndex="1">
+             ItemContainerStyle="{StaticResource ModernComboBoxItemStyle}">
                         <ComboBoxItem Content="Disable" />
                         <ComboBoxItem Content="Block" />
                         <ComboBoxItem Content="Audit" />
@@ -143,8 +135,7 @@
                     <ComboBox x:Name="BlockOfficeApplicationsFromCreatingExecutableContent"
              Width="90" Margin="10,0,0,0"
              Style="{StaticResource ModernComboBoxStyle}"
-             ItemContainerStyle="{StaticResource ModernComboBoxItemStyle}"
-             SelectedIndex="1">
+             ItemContainerStyle="{StaticResource ModernComboBoxItemStyle}">
                         <ComboBoxItem Content="Disable" />
                         <ComboBoxItem Content="Block" />
                         <ComboBoxItem Content="Audit" />
@@ -158,8 +149,7 @@
                     <ComboBox x:Name="BlockOfficeApplicationsFromInjectingCodeIntoOtherProcesses"
              Width="90" Margin="10,0,0,0"
              Style="{StaticResource ModernComboBoxStyle}"
-             ItemContainerStyle="{StaticResource ModernComboBoxItemStyle}"
-             SelectedIndex="1">
+             ItemContainerStyle="{StaticResource ModernComboBoxItemStyle}">
                         <ComboBoxItem Content="Disable" />
                         <ComboBoxItem Content="Block" />
                         <ComboBoxItem Content="Audit" />
@@ -168,7 +158,7 @@
                 </StackPanel>
             </ListViewItem>
         </ListView>
-        <ListView x:Name="ASRRuleSet2" Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="1" ItemContainerStyle="{StaticResource CustomListViewItemStyle}" BorderThickness="0" Margin="0,40,0,0">
+        <ListView x:Name="ASRRuleSet2" Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="1" ItemContainerStyle="{StaticResource CustomListViewItemStyle}" BorderThickness="0" Margin="0,40,0,0" ScrollViewer.PanningMode="Both">
             <ListView.Background>
                 <SolidColorBrush Color="Transparent"/>
             </ListView.Background>
@@ -178,8 +168,7 @@
                     <ComboBox x:Name="BlockOfficeCommunicationApplicationFromCreatingChildProcesses"
                  Width="90" Margin="10,0,0,0"
                  Style="{StaticResource ModernComboBoxStyle}"
-                 ItemContainerStyle="{StaticResource ModernComboBoxItemStyle}"
-                 SelectedIndex="1">
+                 ItemContainerStyle="{StaticResource ModernComboBoxItemStyle}">
                         <ComboBoxItem Content="Disable" />
                         <ComboBoxItem Content="Block" />
                         <ComboBoxItem Content="Audit" />
@@ -193,8 +182,7 @@
                     <ComboBox x:Name="BlockPersistenceThroughWMIEventSubscription"
       Width="90" Margin="10,0,0,0"
       Style="{StaticResource ModernComboBoxStyle}"
-      ItemContainerStyle="{StaticResource ModernComboBoxItemStyle}"
-      SelectedIndex="1">
+      ItemContainerStyle="{StaticResource ModernComboBoxItemStyle}">
                         <ComboBoxItem Content="Disable" />
                         <ComboBoxItem Content="Block" />
                         <ComboBoxItem Content="Audit" />
@@ -208,8 +196,7 @@
                     <ComboBox x:Name="BlockProcessCreationsOriginatingFromPSExecAndWMICommands"
              Width="90" Margin="10,0,0,0"
              Style="{StaticResource ModernComboBoxStyle}"
-             ItemContainerStyle="{StaticResource ModernComboBoxItemStyle}"
-             SelectedIndex="1">
+             ItemContainerStyle="{StaticResource ModernComboBoxItemStyle}">
                         <ComboBoxItem Content="Disable" />
                         <ComboBoxItem Content="Block" />
                         <ComboBoxItem Content="Audit" />
@@ -223,8 +210,7 @@
                     <ComboBox x:Name="BlockRebootingMachineInSafeMode"
              Width="90" Margin="10,0,0,0"
              Style="{StaticResource ModernComboBoxStyle}"
-             ItemContainerStyle="{StaticResource ModernComboBoxItemStyle}"
-             SelectedIndex="1">
+             ItemContainerStyle="{StaticResource ModernComboBoxItemStyle}">
                         <ComboBoxItem Content="Disable" />
                         <ComboBoxItem Content="Block" />
                         <ComboBoxItem Content="Audit" />
@@ -238,8 +224,7 @@
                     <ComboBox x:Name="BlockUntrustedAndUnsignedProcessesThatRunFromUSB"
              Width="90" Margin="10,0,0,0"
              Style="{StaticResource ModernComboBoxStyle}"
-             ItemContainerStyle="{StaticResource ModernComboBoxItemStyle}"
-             SelectedIndex="1">
+             ItemContainerStyle="{StaticResource ModernComboBoxItemStyle}">
                         <ComboBoxItem Content="Disable" />
                         <ComboBoxItem Content="Block" />
                         <ComboBoxItem Content="Audit" />
@@ -253,8 +238,7 @@
                     <ComboBox x:Name="BlockUseOfCopiedOrImpersonatedSystemTools"
              Width="90" Margin="10,0,0,0"
              Style="{StaticResource ModernComboBoxStyle}"
-             ItemContainerStyle="{StaticResource ModernComboBoxItemStyle}"
-             SelectedIndex="1">
+             ItemContainerStyle="{StaticResource ModernComboBoxItemStyle}">
                         <ComboBoxItem Content="Disable" />
                         <ComboBoxItem Content="Block" />
                         <ComboBoxItem Content="Audit" />
@@ -268,8 +252,7 @@
                     <ComboBox x:Name="BlockWebshellCreationForServers"
              Width="90" Margin="10,0,0,0"
              Style="{StaticResource ModernComboBoxStyle}"
-             ItemContainerStyle="{StaticResource ModernComboBoxItemStyle}"
-             SelectedIndex="1">
+             ItemContainerStyle="{StaticResource ModernComboBoxItemStyle}">
                         <ComboBoxItem Content="Disable" />
                         <ComboBoxItem Content="Block" />
                         <ComboBoxItem Content="Audit" />
@@ -283,8 +266,7 @@
                     <ComboBox x:Name="BlockWin32APICallsFromOfficeMacros"
              Width="90" Margin="10,0,0,0"
              Style="{StaticResource ModernComboBoxStyle}"
-             ItemContainerStyle="{StaticResource ModernComboBoxItemStyle}"
-             SelectedIndex="1">
+             ItemContainerStyle="{StaticResource ModernComboBoxItemStyle}">
                         <ComboBoxItem Content="Disable" />
                         <ComboBoxItem Content="Block" />
                         <ComboBoxItem Content="Audit" />
@@ -298,8 +280,7 @@
                     <ComboBox x:Name="UseAdvancedProtectionAgainstRansomware"
              Width="90" Margin="10,0,0,0"
              Style="{StaticResource ModernComboBoxStyle}"
-             ItemContainerStyle="{StaticResource ModernComboBoxItemStyle}"
-             SelectedIndex="1">
+             ItemContainerStyle="{StaticResource ModernComboBoxItemStyle}">
                         <ComboBoxItem Content="Disable" />
                         <ComboBoxItem Content="Block" />
                         <ComboBoxItem Content="Audit" />
@@ -308,8 +289,15 @@
                 </StackPanel>
             </ListViewItem>
         </ListView>
+
+        <Button x:Name="RetrieveASRStatus" Style="{StaticResource CustomButtonStyle2}" Margin="12,0,5,0" Grid.Row="1" Grid.ColumnSpan="1" Grid.Column="1" ToolTipService.InitialShowDelay="1000" ToolTip="Using this button will retrieve the latest effective status of each Attack Surface Reduction rule on the system and will populate the combo boxes for you.">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <TextBlock Text="Retrieve ASR Status" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="8,0,8,0" FontWeight="Normal"/>
+            </StackPanel>
+        </Button>
+
         <!-- Grid containing the Execute Button -->
-        <Grid x:Name="ExecuteButtonGrid" Height="150" Grid.Row="1" Grid.ColumnSpan="2" Margin="0,0,0,0">
+        <Grid x:Name="ExecuteButtonGrid" Height="150" Grid.Row="1" Grid.ColumnSpan="1" Grid.Column="0" Margin="0,0,0,0">
             <!-- First Ellipse (Forward1) - Represents the outermost expanding ellipse when the button is clicked -->
             <!-- Initial height and Width of the Ellipse -->
             <Ellipse x:Name="EclipseForward1"

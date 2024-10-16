@@ -353,8 +353,8 @@ Function Protect-WindowsSecurity {
         [HardenWindowsSecurity.ChangePSConsoleTitle]::Set('❤️‍🔥Harden Windows Security❤️‍🔥')
 
         if ([HardenWindowsSecurity.UserPrivCheck]::IsAdmin()) {
-            [HardenWindowsSecurity.ControlledFolderAccessHandler]::Start()
             [HardenWindowsSecurity.Miscellaneous]::RequirementsCheck()
+            [HardenWindowsSecurity.ControlledFolderAccessHandler]::Start()
         }
         try {
             # Detecting whether GUI parameter is present or not
@@ -515,7 +515,7 @@ Function Protect-WindowsSecurity {
 .FUNCTIONALITY
     Applies the hardening measures described in the GitHub readme.
 .PARAMETER GUI
-    Activates the GUI mode. The cmdlet will display a GUI window where you can select the categories to apply.
+    Activates the GUI mode. The cmdlet will display a GUI window where you can use the complete set of Harden Windows Security module's features.
 .PARAMETER Categories
     The hardening categories to implement. Use this to selectively apply certain categories.
     Use this parameter when executing the Protect-WindowsSecurity in silent/headless mode to automatically apply any categories you desire without user intervention.

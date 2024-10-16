@@ -39,7 +39,7 @@ namespace HardenWindowsSecurity
             var header = reader.ReadLine();
 
             // Return if the header is null
-            if (header == null) return;
+            if (header is null) return;
 
             // Read the rest of the file line by line
             while (!reader.EndOfStream)
@@ -47,7 +47,7 @@ namespace HardenWindowsSecurity
                 var line = reader.ReadLine();
 
                 // Skip if the line is null
-                if (line == null) continue;
+                if (line is null) continue;
 
                 // Split the line by commas to get the values, that's the CSV's delimiter
                 var values = line.Split(',');

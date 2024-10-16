@@ -384,7 +384,7 @@ Function Invoke-DownloadsDefenseMeasures {
     :DownloadsDefenseMeasuresLabel switch ($RunUnattended ? 'Yes' : (Select-Option -Options 'Yes', 'No', 'Exit' -Message "`nRun Downloads Defense Measures category ?")) {
         'Yes' {
             [HardenWindowsSecurity.DownloadsDefenseMeasures]::Invoke()
-            :DangerousScriptHostsBlockingLabel switch ($RunUnattended ? ($DangerousScriptHostsBlocking ? 'Yes' : 'No') : (Select-Option -SubCategory -Options 'Yes', 'No' -Message 'Deploy the Dangerous Script Hosts Blocking WDAC Policy?')) {
+            :DangerousScriptHostsBlockingLabel switch ($RunUnattended ? ($DangerousScriptHostsBlocking ? 'Yes' : 'No') : (Select-Option -SubCategory -Options 'Yes', 'No' -Message 'Deploy the Dangerous Script Hosts Blocking AppControl Policy?')) {
                 'Yes' {
                     [HardenWindowsSecurity.DownloadsDefenseMeasures]::DangerousScriptHostsBlocking()
                 } 'No' { break DangerousScriptHostsBlockingLabel }

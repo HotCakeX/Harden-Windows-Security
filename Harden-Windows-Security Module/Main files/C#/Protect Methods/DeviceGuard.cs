@@ -3,7 +3,7 @@
 
 namespace HardenWindowsSecurity
 {
-    public class DeviceGuard
+    public static class DeviceGuard
     {
 
         /// <summary>
@@ -13,7 +13,7 @@ namespace HardenWindowsSecurity
         public static void Invoke()
         {
 
-            if (HardenWindowsSecurity.GlobalVars.path == null)
+            if (HardenWindowsSecurity.GlobalVars.path is null)
             {
                 throw new System.ArgumentNullException("GlobalVars.path cannot be null.");
             }

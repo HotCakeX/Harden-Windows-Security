@@ -1,10 +1,8 @@
-using System;
-
 #nullable enable
 
 namespace HardenWindowsSecurity
 {
-    public partial class DownloadsDefenseMeasures
+    public static partial class DownloadsDefenseMeasures
     {
         public static void Invoke()
         {
@@ -12,20 +10,6 @@ namespace HardenWindowsSecurity
             ChangePSConsoleTitle.Set("🎇 Downloads Defense Measures");
 
             HardenWindowsSecurity.Logger.LogMessage("Running the Downloads Defense Measures category", LogTypeIntel.Information);
-
-            string UserValue;
-
-            System.Security.Principal.WindowsIdentity CurrentUserResult = System.Security.Principal.WindowsIdentity.GetCurrent();
-            System.Security.Principal.SecurityIdentifier? User = CurrentUserResult.User;
-
-            if (User != null)
-            {
-                UserValue = User.Value.ToString();
-            }
-            else
-            {
-                throw new InvalidOperationException("Failed to get the current user.");
-            }
 
             // PowerShell script with embedded {UserValue} directly in the string using @""
             string script = $@"
@@ -80,10 +64,10 @@ if (($null -eq $CurrentBasePolicyNames) -or (-NOT ($CurrentBasePolicyNames.Conta
     Write-Verbose -Message ""The Downloads folder path on system is $DownloadsPathSystem""
 
     # Checking if the Edge preferences file exists
-    if ([System.IO.File]::Exists(""$env:SystemDrive\Users\{UserValue}\AppData\Local\Microsoft\Edge\User Data\Default\Preferences"")) {{
+    if ([System.IO.File]::Exists(""$env:SystemDrive\Users\{GlobalVars.userName}\AppData\Local\Microsoft\Edge\User Data\Default\Preferences"")) {{
 
         Write-Verbose -Message 'Detecting the Downloads path in Edge'
-        [PSCustomObject]$CurrentUserEdgePreference = ConvertFrom-Json -InputObject (Get-Content -Raw -Path ""$env:SystemDrive\Users\{UserValue}\AppData\Local\Microsoft\Edge\User Data\Default\Preferences"")
+        [PSCustomObject]$CurrentUserEdgePreference = ConvertFrom-Json -InputObject (Get-Content -Raw -Path ""$env:SystemDrive\Users\{GlobalVars.userName}\AppData\Local\Microsoft\Edge\User Data\Default\Preferences"")
         [System.IO.FileInfo]$DownloadsPathEdge = $CurrentUserEdgePreference.savefile.default_directory
 
         # Ensure there is an Edge browser profile and it was initialized

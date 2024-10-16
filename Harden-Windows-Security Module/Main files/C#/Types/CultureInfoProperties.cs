@@ -3,7 +3,7 @@
 namespace HardenWindowsSecurity
 {
     // a class to hold the properties of the current culture
-    public class CultureInfoProperties
+    public sealed class CultureInfoProperties
     {
         public string? Parent { get; set; }
         public int LCID { get; set; }

@@ -9,7 +9,7 @@ using System.Runtime.InteropServices;
 namespace HardenWindowsSecurity
 {
     // Class that contains the results of TPM status checks
-    public class TpmResult
+    public sealed class TpmResult
     {
         public bool IsEnabled { get; set; }
         public bool IsActivated { get; set; }
@@ -97,7 +97,7 @@ namespace HardenWindowsSecurity
                 // Get the first instance of the TPM.
                 ManagementObject? tpmObject = tpmObjects.OfType<ManagementObject>().FirstOrDefault();
 
-                if (tpmObject == null)
+                if (tpmObject is null)
                 {
                     result.ErrorMessage = "TPM instance not found";
                     return result;

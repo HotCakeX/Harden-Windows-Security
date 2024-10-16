@@ -519,7 +519,7 @@ Unprotect-WindowsSecurity
 
 You can use this cmdlet to remove all of the applied hardening measures, with the following exceptions:
 
-* [Bitlocker](https://github.com/HotCakeX/Harden-Windows-Security?tab=readme-ov-file#bitlocker-settings) Encrypted drives are not decrypted when you invoke this cmdlet.
+* [Bitlocker](https://github.com/HotCakeX/Harden-Windows-Security?tab=readme-ov-file#bitlocker-settings) Encrypted drives are not decrypted when you invoke this cmdlet. **Use the GUI experience to decrypt the BitLocker encrypted drives.**
 
 * Security features related to [Device Guard](https://github.com/HotCakeX/Harden-Windows-Security?tab=readme-ov-file#device-guard) that are activated by UEFI Lock remain enabled even after you execute this cmdlet.
 

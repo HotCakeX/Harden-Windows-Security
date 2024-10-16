@@ -1,19 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-#nullable enable
+﻿#nullable enable
 
 namespace HardenWindowsSecurity
 {
-    public partial class MiscellaneousConfigurations
+    public static partial class MiscellaneousConfigurations
     {
-
         public static void MiscellaneousConfigurations_WindowsProtectedPrint()
         {
-            if (HardenWindowsSecurity.GlobalVars.path == null)
+            if (HardenWindowsSecurity.GlobalVars.path is null)
             {
                 throw new System.ArgumentNullException("GlobalVars.path cannot be null.");
             }
@@ -23,6 +16,5 @@ namespace HardenWindowsSecurity
             HardenWindowsSecurity.LGPORunner.RunLGPOCommand(System.IO.Path.Combine(HardenWindowsSecurity.GlobalVars.path, "Resources", "Security-Baselines-X", "Miscellaneous Policies", "Windows Protected Print", "registry.pol"), LGPORunner.FileType.POL);
 
         }
-
     }
 }

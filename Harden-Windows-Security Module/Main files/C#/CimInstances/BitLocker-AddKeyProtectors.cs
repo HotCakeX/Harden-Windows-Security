@@ -59,7 +59,7 @@ namespace HardenWindowsSecurity
             string[] KeyProtectorIDs = (string[])keyProtectorResult["VolumeKeyProtectorID"];
 
             // Check if there is at least 1 key protector
-            if (KeyProtectorIDs != null && KeyProtectorIDs.Length >= 1)
+            if (KeyProtectorIDs is not null && KeyProtectorIDs.Length >= 1)
             {
                 // Loop over all of the key protectors of the specified type and remove all of them
                 foreach (string KeyProtectorID in KeyProtectorIDs)
@@ -77,12 +77,12 @@ namespace HardenWindowsSecurity
                     #region Output handling
                     uint? deletionResultCode = null;
 
-                    if (deletionResult != null)
+                    if (deletionResult is not null)
                     {
                         deletionResultCode = Convert.ToUInt32(deletionResult["ReturnValue"], CultureInfo.InvariantCulture);
                     }
 
-                    if (deletionResultCode != null && deletionResultCode == 0)
+                    if (deletionResultCode is not null && deletionResultCode == 0)
                     {
                         Logger.LogMessage($"Successfully removed a key protector of type {keyProtectorType}", LogTypeIntel.Information);
                     }
@@ -134,12 +134,12 @@ namespace HardenWindowsSecurity
             #region Output handling
             uint? MethodInvocationResultCode = null;
 
-            if (MethodInvocationResult != null)
+            if (MethodInvocationResult is not null)
             {
                 MethodInvocationResultCode = Convert.ToUInt32(MethodInvocationResult["ReturnValue"], CultureInfo.InvariantCulture);
             }
 
-            if (MethodInvocationResultCode != null && MethodInvocationResultCode == 0)
+            if (MethodInvocationResultCode is not null && MethodInvocationResultCode == 0)
             {
                 Logger.LogMessage("Successfully added the Recovery Password key protector.", LogTypeIntel.Information);
             }
@@ -183,12 +183,12 @@ namespace HardenWindowsSecurity
             #region Output handling
             uint? MethodInvocationResultCode = null;
 
-            if (MethodInvocationResult != null)
+            if (MethodInvocationResult is not null)
             {
                 MethodInvocationResultCode = Convert.ToUInt32(MethodInvocationResult["ReturnValue"], CultureInfo.InvariantCulture);
             }
 
-            if (MethodInvocationResultCode != null && MethodInvocationResultCode == 0)
+            if (MethodInvocationResultCode is not null && MethodInvocationResultCode == 0)
             {
                 Logger.LogMessage("Successfully added Password key protector (aka Passphrase).", LogTypeIntel.Information);
             }
@@ -228,12 +228,12 @@ namespace HardenWindowsSecurity
             #region Output handling
             uint? MethodInvocationResultCode = null;
 
-            if (MethodInvocationResult != null)
+            if (MethodInvocationResult is not null)
             {
                 MethodInvocationResultCode = Convert.ToUInt32(MethodInvocationResult["ReturnValue"], CultureInfo.InvariantCulture);
             }
 
-            if (MethodInvocationResultCode != null && MethodInvocationResultCode == 0)
+            if (MethodInvocationResultCode is not null && MethodInvocationResultCode == 0)
             {
                 Logger.LogMessage("Successfully added the TPM key protector.", LogTypeIntel.Information);
             }
@@ -287,12 +287,12 @@ namespace HardenWindowsSecurity
             #region Output handling
             uint? MethodInvocationResultCode = null;
 
-            if (MethodInvocationResult != null)
+            if (MethodInvocationResult is not null)
             {
                 MethodInvocationResultCode = Convert.ToUInt32(MethodInvocationResult["ReturnValue"], CultureInfo.InvariantCulture);
             }
 
-            if (MethodInvocationResultCode != null && MethodInvocationResultCode == 0)
+            if (MethodInvocationResultCode is not null && MethodInvocationResultCode == 0)
             {
                 Logger.LogMessage("Successfully added the TpmAndPin key protector.", LogTypeIntel.Information);
             }
@@ -347,12 +347,12 @@ namespace HardenWindowsSecurity
             #region Output handling
             uint? MethodInvocationResultCode = null;
 
-            if (ProtectKeyWithTPMAndStartupKeyMethodInvocationResult != null)
+            if (ProtectKeyWithTPMAndStartupKeyMethodInvocationResult is not null)
             {
                 MethodInvocationResultCode = Convert.ToUInt32(ProtectKeyWithTPMAndStartupKeyMethodInvocationResult["ReturnValue"], CultureInfo.InvariantCulture);
             }
 
-            if (MethodInvocationResultCode != null && MethodInvocationResultCode == 0)
+            if (MethodInvocationResultCode is not null && MethodInvocationResultCode == 0)
             {
                 Logger.LogMessage("The TpmAndStartupKey key protector was successfully added. Backing up the Startup key in the next step.", LogTypeIntel.Information);
             }
@@ -376,12 +376,12 @@ namespace HardenWindowsSecurity
             #region Output handling
             uint? MethodInvocationResultCode2 = null;
 
-            if (SaveExternalKeyToFileMethodInvocationResult != null)
+            if (SaveExternalKeyToFileMethodInvocationResult is not null)
             {
                 MethodInvocationResultCode2 = Convert.ToUInt32(SaveExternalKeyToFileMethodInvocationResult["ReturnValue"], CultureInfo.InvariantCulture);
             }
 
-            if (MethodInvocationResultCode2 != null && MethodInvocationResultCode2 == 0)
+            if (MethodInvocationResultCode2 is not null && MethodInvocationResultCode2 == 0)
             {
                 Logger.LogMessage($"Successfully backed up the Startup key to {StartupKeyPath}", LogTypeIntel.Information);
 
@@ -441,12 +441,12 @@ namespace HardenWindowsSecurity
             #region Output handling
             uint? MethodInvocationResultCode = null;
 
-            if (ProtectKeyWithTPMAndPinAndStartupKeyMethodInvocationResult != null)
+            if (ProtectKeyWithTPMAndPinAndStartupKeyMethodInvocationResult is not null)
             {
                 MethodInvocationResultCode = Convert.ToUInt32(ProtectKeyWithTPMAndPinAndStartupKeyMethodInvocationResult["ReturnValue"], CultureInfo.InvariantCulture);
             }
 
-            if (MethodInvocationResultCode != null && MethodInvocationResultCode == 0)
+            if (MethodInvocationResultCode is not null && MethodInvocationResultCode == 0)
             {
                 Logger.LogMessage("The TpmAndPinAndStartupKey key protector was successfully added. Will backup the startup key in the next step.", LogTypeIntel.Information);
             }
@@ -469,12 +469,12 @@ namespace HardenWindowsSecurity
             #region Output handling
             uint? MethodInvocationResultCode2 = null;
 
-            if (SaveExternalKeyToFileMethodInvocationResult != null)
+            if (SaveExternalKeyToFileMethodInvocationResult is not null)
             {
                 MethodInvocationResultCode2 = Convert.ToUInt32(SaveExternalKeyToFileMethodInvocationResult["ReturnValue"], CultureInfo.InvariantCulture);
             }
 
-            if (MethodInvocationResultCode2 != null && MethodInvocationResultCode2 == 0)
+            if (MethodInvocationResultCode2 is not null && MethodInvocationResultCode2 == 0)
             {
                 Logger.LogMessage($"Successfully backed up the startup key to {StartupKeyPath}", LogTypeIntel.Information);
 
@@ -533,12 +533,12 @@ namespace HardenWindowsSecurity
             #region Output handling
             uint? MethodInvocationResultCode = null;
 
-            if (ProtectKeyWithExternalKeyMethodInvocationResult != null)
+            if (ProtectKeyWithExternalKeyMethodInvocationResult is not null)
             {
                 MethodInvocationResultCode = Convert.ToUInt32(ProtectKeyWithExternalKeyMethodInvocationResult["ReturnValue"], CultureInfo.InvariantCulture);
             }
 
-            if (MethodInvocationResultCode != null && MethodInvocationResultCode == 0)
+            if (MethodInvocationResultCode is not null && MethodInvocationResultCode == 0)
             {
                 Logger.LogMessage("The StartupKey key protector was successfully added. Will back up it in the next step.", LogTypeIntel.Information);
                 // Will move forward to the next step
@@ -562,12 +562,12 @@ namespace HardenWindowsSecurity
             #region Output handling
             uint? MethodInvocationResultCode2 = null;
 
-            if (SaveExternalKeyToFileMethodInvocationResult != null)
+            if (SaveExternalKeyToFileMethodInvocationResult is not null)
             {
                 MethodInvocationResultCode2 = Convert.ToUInt32(SaveExternalKeyToFileMethodInvocationResult["ReturnValue"], CultureInfo.InvariantCulture);
             }
 
-            if (MethodInvocationResultCode2 != null && MethodInvocationResultCode2 == 0)
+            if (MethodInvocationResultCode2 is not null && MethodInvocationResultCode2 == 0)
             {
                 Logger.LogMessage($"Successfully backed up the Startup key to {StartupKeyPath}", LogTypeIntel.Information);
             }
@@ -631,12 +631,12 @@ namespace HardenWindowsSecurity
             #region Output handling
             uint? MethodInvocationResultCode = null;
 
-            if (MethodInvocationResult != null)
+            if (MethodInvocationResult is not null)
             {
                 MethodInvocationResultCode = Convert.ToUInt32(MethodInvocationResult["ReturnValue"], CultureInfo.InvariantCulture);
             }
 
-            if (MethodInvocationResultCode != null && MethodInvocationResultCode == 0)
+            if (MethodInvocationResultCode is not null && MethodInvocationResultCode == 0)
             {
                 Logger.LogMessage("Successfully added the SID key protector.", LogTypeIntel.Information);
             }

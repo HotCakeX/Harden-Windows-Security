@@ -5,7 +5,7 @@ using System.IO;
 
 namespace HardenWindowsSecurity
 {
-    public class SYSTEMScheduledTasks
+    public static class SYSTEMScheduledTasks
     {
         public static void Invoke()
         {

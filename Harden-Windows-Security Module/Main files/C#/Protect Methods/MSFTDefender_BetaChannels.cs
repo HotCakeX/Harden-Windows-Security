@@ -2,11 +2,11 @@
 
 namespace HardenWindowsSecurity
 {
-    public partial class MicrosoftDefender
+    public static partial class MicrosoftDefender
     {
         public static void MSFTDefender_BetaChannels()
         {
-            if (HardenWindowsSecurity.GlobalVars.path == null)
+            if (HardenWindowsSecurity.GlobalVars.path is null)
             {
                 throw new System.ArgumentNullException("GlobalVars.path cannot be null.");
             }

@@ -1,5 +1,4 @@
 # This file is for launching Harden-Windows-Security module in VS Code so that it can attach its debugger to the process
-
 $script:ErrorActionPreference = 'Stop'
 
 # Get the current folder of this script file

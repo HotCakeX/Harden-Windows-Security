@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Windows.Controls;
 using static HardenWindowsSecurity.NewToastNotification;
 
 #nullable enable
@@ -12,7 +13,7 @@ namespace HardenWindowsSecurity
     /// <summary>
     /// A class to store all of the data that is related to the GUI and its operations
     /// </summary>
-    public partial class GUIProtectWinSecurity
+    public static partial class GUIProtectWinSecurity
     {
 
         // The method that defines all of the event handlers for the UI elements
@@ -23,72 +24,72 @@ namespace HardenWindowsSecurity
             // null checks to make sure the elements are available to the AddEventHandlers method
             // LoadXaml method doesn't need the checks because these values are initialized in that method
 
-            if (GUIProtectWinSecurity.View == null)
+            if (GUIProtectWinSecurity.View is null)
             {
                 throw new InvalidOperationException("AddEventHandlers Method: Window object is empty!");
             }
 
-            if (GUIProtectWinSecurity.categories == null)
+            if (GUIProtectWinSecurity.categories is null)
             {
                 throw new InvalidOperationException("AddEventHandlers Method: categories object is empty!");
             }
 
-            if (GUIProtectWinSecurity.selectAllCategories == null)
+            if (GUIProtectWinSecurity.selectAllCategories is null)
             {
                 throw new InvalidOperationException("AddEventHandlers Method: selectAllCategories object is empty!");
             }
 
-            if (GUIProtectWinSecurity.subCategories == null)
+            if (GUIProtectWinSecurity.subCategories is null)
             {
                 throw new InvalidOperationException("AddEventHandlers Method: subCategories object is empty!");
             }
 
-            if (GUIProtectWinSecurity.selectAllSubCategories == null)
+            if (GUIProtectWinSecurity.selectAllSubCategories is null)
             {
                 throw new InvalidOperationException("AddEventHandlers Method: selectAllSubCategories object is empty!");
             }
 
-            if (GUIProtectWinSecurity.microsoft365AppsSecurityBaselineZipTextBox == null)
+            if (GUIProtectWinSecurity.microsoft365AppsSecurityBaselineZipTextBox is null)
             {
                 throw new InvalidOperationException("AddEventHandlers Method: microsoft365AppsSecurityBaselineZipTextBox object is empty!");
             }
 
-            if (GUIProtectWinSecurity.lgpoZipButton == null)
+            if (GUIProtectWinSecurity.lgpoZipButton is null)
             {
                 throw new InvalidOperationException("AddEventHandlers Method: lgpoZipButton object is empty!");
             }
 
-            if (GUIProtectWinSecurity.lgpoZipTextBox == null)
+            if (GUIProtectWinSecurity.lgpoZipTextBox is null)
             {
                 throw new InvalidOperationException("AddEventHandlers Method: lgpoZipTextBox object is empty!");
             }
 
-            if (GUIProtectWinSecurity.txtFilePath == null)
+            if (GUIProtectWinSecurity.txtFilePath is null)
             {
                 throw new InvalidOperationException("AddEventHandlers Method: txtFilePath object is empty!");
             }
 
-            if (GUIProtectWinSecurity.enableOfflineMode == null)
+            if (GUIProtectWinSecurity.enableOfflineMode is null)
             {
                 throw new InvalidOperationException("AddEventHandlers Method: enableOfflineMode object is empty!");
             }
 
-            if (GUIProtectWinSecurity.microsoftSecurityBaselineZipButton == null)
+            if (GUIProtectWinSecurity.microsoftSecurityBaselineZipButton is null)
             {
                 throw new InvalidOperationException("AddEventHandlers Method: microsoftSecurityBaselineZipButton object is empty!");
             }
 
-            if (GUIProtectWinSecurity.microsoftSecurityBaselineZipTextBox == null)
+            if (GUIProtectWinSecurity.microsoftSecurityBaselineZipTextBox is null)
             {
                 throw new InvalidOperationException("AddEventHandlers Method: microsoftSecurityBaselineZipTextBox object is empty!");
             }
 
-            if (GUIProtectWinSecurity.microsoft365AppsSecurityBaselineZipButton == null)
+            if (GUIProtectWinSecurity.microsoft365AppsSecurityBaselineZipButton is null)
             {
                 throw new InvalidOperationException("AddEventHandlers Method: microsoft365AppsSecurityBaselineZipButton object is empty!");
             }
 
-            if (GUIProtectWinSecurity.ExecuteButton == null)
+            if (GUIProtectWinSecurity.ExecuteButton is null)
             {
                 throw new InvalidOperationException("AddEventHandlers Method: ExecuteButton object is empty!");
             }
@@ -99,8 +100,8 @@ namespace HardenWindowsSecurity
             // Add Checked and Unchecked event handlers to category checkboxes
             foreach (var item in GUIProtectWinSecurity.categories.Items)
             {
-                System.Windows.Controls.ListViewItem categoryItem = (System.Windows.Controls.ListViewItem)item;
-                System.Windows.Controls.CheckBox checkBox = (System.Windows.Controls.CheckBox)categoryItem.Content;
+                ListViewItem categoryItem = (ListViewItem)item;
+                CheckBox checkBox = (CheckBox)categoryItem.Content;
                 checkBox.DataContext = categoryItem;
                 checkBox.Checked += (sender, e) => UpdateSubCategories();
                 checkBox.Unchecked += (sender, e) => UpdateSubCategories();
@@ -110,16 +111,16 @@ namespace HardenWindowsSecurity
             GUIProtectWinSecurity.selectAllCategories.Checked += (sender, e) =>
             {
 
-                if (HardenWindowsSecurity.GlobalVars.HardeningCategorieX == null)
+                if (HardenWindowsSecurity.GlobalVars.HardeningCategorieX is null)
                 {
                     throw new System.ArgumentNullException("GlobalVars.HardeningCategorieX cannot be null.");
                 }
                 foreach (var item in GUIProtectWinSecurity.categories.Items)
                 {
-                    System.Windows.Controls.ListViewItem categoryItem = (System.Windows.Controls.ListViewItem)item;
-                    if (HardenWindowsSecurity.GlobalVars.HardeningCategorieX.Contains(((System.Windows.Controls.CheckBox)categoryItem.Content).Name))
+                    ListViewItem categoryItem = (ListViewItem)item;
+                    if (HardenWindowsSecurity.GlobalVars.HardeningCategorieX.Contains(((CheckBox)categoryItem.Content).Name))
                     {
-                        ((System.Windows.Controls.CheckBox)categoryItem.Content).IsChecked = true;
+                        ((CheckBox)categoryItem.Content).IsChecked = true;
                     }
                 }
             };
@@ -129,7 +130,7 @@ namespace HardenWindowsSecurity
             {
                 foreach (var item in GUIProtectWinSecurity.categories.Items)
                 {
-                    ((System.Windows.Controls.CheckBox)((System.Windows.Controls.ListViewItem)item).Content).IsChecked = false;
+                    ((CheckBox)((ListViewItem)item).Content).IsChecked = false;
                 }
             };
 
@@ -139,10 +140,10 @@ namespace HardenWindowsSecurity
 
                 foreach (var item in GUIProtectWinSecurity.subCategories.Items)
                 {
-                    System.Windows.Controls.ListViewItem subCategoryItem = (System.Windows.Controls.ListViewItem)item;
+                    ListViewItem subCategoryItem = (ListViewItem)item;
                     if (subCategoryItem.IsEnabled)
                     {
-                        ((System.Windows.Controls.CheckBox)subCategoryItem.Content).IsChecked = true;
+                        ((CheckBox)subCategoryItem.Content).IsChecked = true;
                     }
                 }
             };
@@ -153,7 +154,7 @@ namespace HardenWindowsSecurity
 
                 foreach (var item in GUIProtectWinSecurity.subCategories.Items)
                 {
-                    ((System.Windows.Controls.CheckBox)((System.Windows.Controls.ListViewItem)item).Content).IsChecked = false;
+                    ((CheckBox)((ListViewItem)item).Content).IsChecked = false;
                 }
             };
 
@@ -328,10 +329,10 @@ namespace HardenWindowsSecurity
                                     foreach (var item in GUIProtectWinSecurity.categories.Items)
                                     {
                                         // Get the category item list view item
-                                        System.Windows.Controls.ListViewItem categoryItem = (System.Windows.Controls.ListViewItem)item;
+                                        ListViewItem categoryItem = (ListViewItem)item;
 
                                         // get the name of the list view item as string
-                                        string categoryItemName = ((System.Windows.Controls.CheckBox)categoryItem.Content).Name.ToString();
+                                        string categoryItemName = ((CheckBox)categoryItem.Content).Name.ToString();
 
                                         // if the category is authorized to be available
                                         if (HardenWindowsSecurity.GlobalVars.HardeningCategorieX!.Contains(categoryItemName))
@@ -339,7 +340,7 @@ namespace HardenWindowsSecurity
                                             // If the name of the current checkbox list view item in the loop is the same as the category name in the outer loop, then set the category on the GUI to checked
                                             if (string.Equals(categoryItemName, category, StringComparison.OrdinalIgnoreCase))
                                             {
-                                                ((System.Windows.Controls.CheckBox)categoryItem.Content).IsChecked = true;
+                                                ((CheckBox)categoryItem.Content).IsChecked = true;
                                             }
 
                                         }
@@ -353,15 +354,15 @@ namespace HardenWindowsSecurity
                                     foreach (var item in GUIProtectWinSecurity.subCategories.Items)
                                     {
                                         // Get the sub-category item list view item
-                                        System.Windows.Controls.ListViewItem SubCategoryItem = (System.Windows.Controls.ListViewItem)item;
+                                        ListViewItem SubCategoryItem = (ListViewItem)item;
 
                                         // get the name of the list view item as string
-                                        string SubcategoryItemName = ((System.Windows.Controls.CheckBox)SubCategoryItem.Content).Name.ToString();
+                                        string SubcategoryItemName = ((CheckBox)SubCategoryItem.Content).Name.ToString();
 
                                         // If the name of the current checkbox list view item in the loop is the same as the sub-category name in the outer loop, then set the sub-category on the GUI to checked
                                         if (string.Equals(SubcategoryItemName, subcategory, StringComparison.OrdinalIgnoreCase))
                                         {
-                                            ((System.Windows.Controls.CheckBox)SubCategoryItem.Content).IsChecked = true;
+                                            ((CheckBox)SubCategoryItem.Content).IsChecked = true;
                                         }
 
                                     }
@@ -379,21 +380,8 @@ namespace HardenWindowsSecurity
                         {
 
                             #region Display a Welcome message
-                            string nameToDisplay = string.Empty;
 
-                            string UserValue = string.Empty;
-
-                            System.Security.Principal.WindowsIdentity CurrentUserResult = System.Security.Principal.WindowsIdentity.GetCurrent();
-                            System.Security.Principal.SecurityIdentifier? User = CurrentUserResult.User;
-
-                            if (User != null)
-                            {
-                                UserValue = User.Value.ToString();
-                            }
-
-                            HardenWindowsSecurity.LocalUser? CurrentLocalUser = HardenWindowsSecurity.LocalUserRetriever.Get().FirstOrDefault(Lu => Lu.SID == UserValue);
-
-                            nameToDisplay = (!string.IsNullOrWhiteSpace(CurrentLocalUser!.FullName)) ? CurrentLocalUser.FullName : !string.IsNullOrWhiteSpace(CurrentLocalUser.Name) ? CurrentLocalUser.Name : "Unknown User";
+                            string nameToDisplay = (!string.IsNullOrWhiteSpace(GlobalVars.userFullName)) ? GlobalVars.userFullName : GlobalVars.userName;
 
                             HardenWindowsSecurity.Logger.LogMessage(HardenWindowsSecurity.UserPrivCheck.IsAdmin() ? $"Hello {nameToDisplay}, Running as Administrator" : $"Hello {nameToDisplay}, Running as Non-Administrator, some categories are disabled", LogTypeIntel.Information);
                             #endregion

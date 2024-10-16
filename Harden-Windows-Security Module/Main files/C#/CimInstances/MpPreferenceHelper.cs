@@ -31,7 +31,7 @@ namespace HardenWindowsSecurity
                 {
                     var result = results.Cast<ManagementBaseObject>().FirstOrDefault();
 
-                    if (result != null)
+                    if (result is not null)
                     {
 
                         return ConvertToDynamic(result);

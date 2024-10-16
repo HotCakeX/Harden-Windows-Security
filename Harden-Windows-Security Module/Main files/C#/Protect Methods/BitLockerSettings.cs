@@ -5,12 +5,12 @@ using System;
 
 namespace HardenWindowsSecurity
 {
-    public class BitLockerSettings
+    public static class BitLockerSettings
     {
         // Applies all Bitlocker settings hardening category
         public static void Invoke()
         {
-            if (HardenWindowsSecurity.GlobalVars.path == null)
+            if (HardenWindowsSecurity.GlobalVars.path is null)
             {
                 throw new System.ArgumentNullException("GlobalVars.path cannot be null.");
             }
@@ -51,11 +51,11 @@ namespace HardenWindowsSecurity
 
             // Only attempt to set Hibernate file size to full if the OS drive is BitLocker encrypted
             // And system is not virtual machine
-            if (isVirtualMachine != null && !(bool)isVirtualMachine && volumeInfo.ProtectionStatus is BitLocker.ProtectionStatus.Protected)
+            if (isVirtualMachine is not null && !(bool)isVirtualMachine && volumeInfo.ProtectionStatus is BitLocker.ProtectionStatus.Protected)
             {
 
                 object? hiberFileType = Registry.GetValue(@"HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Power", "HiberFileType", null);
-                if (hiberFileType != null && (int)hiberFileType == 2)
+                if (hiberFileType is not null && (int)hiberFileType == 2)
                 {
                     Logger.LogMessage("OS Drive is BitLocker encrypted and Hibernate file size is already set to full.", LogTypeIntel.Information);
                 }

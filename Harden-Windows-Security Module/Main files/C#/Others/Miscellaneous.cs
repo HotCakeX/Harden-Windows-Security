@@ -30,13 +30,13 @@ namespace HardenWindowsSecurity
         {
 
             // Check if the user has Administrator privileges before performing the following system requirement checks
-            if (HardenWindowsSecurity.UserPrivCheck.IsAdmin())
+            if (UserPrivCheck.IsAdmin())
             {
 
                 // Check if the system is running UEFI firmware
-                var firmwareType = HardenWindowsSecurity.FirmwareChecker.CheckFirmwareType();
+                var firmwareType = FirmwareChecker.CheckFirmwareType();
 
-                if (firmwareType != HardenWindowsSecurity.FirmwareChecker.FirmwareType.FirmwareTypeUefi)
+                if (firmwareType != FirmwareChecker.FirmwareType.FirmwareTypeUefi)
                 {
                     throw new InvalidOperationException("Non-UEFI systems are not supported.");
                 }
@@ -52,7 +52,7 @@ namespace HardenWindowsSecurity
                     // Check if the result is null before trying to access it.
                     // Ensure the first result is a boolean and cast it properly.
                     // Verify if isSecureBootEnabled is true.
-                    if (results.Count == 0 || results[0] == null || results[0].BaseObject is not bool isSecureBootEnabled || !isSecureBootEnabled)
+                    if (results.Count == 0 || results[0] is null || results[0].BaseObject is not bool isSecureBootEnabled || !isSecureBootEnabled)
                     {
                         throw new InvalidOperationException("Secure Boot is not enabled. Please enable it in your UEFI settings and try again.");
                     }
@@ -70,46 +70,46 @@ namespace HardenWindowsSecurity
                         // Home edition and Home edition single-language SKUs
                         if (string.Equals(sku, "100", StringComparison.OrdinalIgnoreCase) || string.Equals(sku, "101", StringComparison.OrdinalIgnoreCase))
                         {
-                            HardenWindowsSecurity.Logger.LogMessage("The Windows Home edition has been detected, some categories are unavailable and the remaining categories are applied in a best effort fashion.", LogTypeIntel.Warning);
+                            Logger.LogMessage("The Windows Home edition has been detected, some categories are unavailable and the remaining categories are applied in a best effort fashion.", LogTypeIntel.Warning);
                         }
                     }
                 }
                 catch (Exception ex)
                 {
-                    HardenWindowsSecurity.Logger.LogMessage($"An error occurred: {ex.Message}", LogTypeIntel.Error);
+                    Logger.LogMessage($"An error occurred: {ex.Message}", LogTypeIntel.Error);
                 }
 
-                HardenWindowsSecurity.Logger.LogMessage("Checking if TPM is available and enabled...", LogTypeIntel.Information);
+                Logger.LogMessage("Checking if TPM is available and enabled...", LogTypeIntel.Information);
 
-                var tpmStatus = HardenWindowsSecurity.TpmStatus.Get();
+                var tpmStatus = TpmStatus.Get();
 
                 if (!tpmStatus.IsActivated || !tpmStatus.IsEnabled)
                 {
-                    HardenWindowsSecurity.Logger.LogMessage($"TPM is not activated or enabled on this system. BitLockerSettings category will be unavailable - {tpmStatus.ErrorMessage}", LogTypeIntel.Warning);
+                    Logger.LogMessage($"TPM is not activated or enabled on this system. BitLockerSettings category will be unavailable - {tpmStatus.ErrorMessage}", LogTypeIntel.Warning);
                 }
 
-                if (HardenWindowsSecurity.GlobalVars.MDAVConfigCurrent == null)
+                if (GlobalVars.MDAVConfigCurrent is null)
                 {
                     throw new InvalidOperationException("MDAVConfigCurrent is null.");
                 }
 
 
                 var AMServiceEnabled = PropertyHelper.GetPropertyValue(GlobalVars.MDAVConfigCurrent, "AMServiceEnabled");
-                if (AMServiceEnabled != null && !(bool)AMServiceEnabled)
+                if (AMServiceEnabled is not null && !(bool)AMServiceEnabled)
                 {
                     throw new InvalidOperationException("Microsoft Defender Anti Malware service is not enabled, please enable it and then try again.");
                 }
 
 
                 var AntispywareEnabled = PropertyHelper.GetPropertyValue(GlobalVars.MDAVConfigCurrent, "AntispywareEnabled");
-                if (AntispywareEnabled != null && !(bool)AntispywareEnabled)
+                if (AntispywareEnabled is not null && !(bool)AntispywareEnabled)
                 {
                     throw new InvalidOperationException("Microsoft Defender Anti Spyware is not enabled, please enable it and then try again.");
                 }
 
 
                 var AntivirusEnabled = PropertyHelper.GetPropertyValue(GlobalVars.MDAVConfigCurrent, "AntivirusEnabled");
-                if (AntivirusEnabled != null && !(bool)AntivirusEnabled)
+                if (AntivirusEnabled is not null && !(bool)AntivirusEnabled)
                 {
                     throw new InvalidOperationException("Microsoft Defender Anti Virus is not enabled, please enable it and then try again.");
                 }

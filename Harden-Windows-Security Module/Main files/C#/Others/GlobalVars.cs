@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Management.Automation.Host;
 
 #nullable enable
@@ -68,16 +69,16 @@ namespace HardenWindowsSecurity
         public static bool UseNewNotificationsExp = true;
 
         // To store the registry data CSV parse output - Registry.csv
-        internal static List<HardenWindowsSecurity.HardeningRegistryKeys.CsvRecord>? RegistryCSVItems;
+        internal static List<HardeningRegistryKeys.CsvRecord>? RegistryCSVItems;
 
         // To store the Process mitigations CSV parse output used by all cmdlets - ProcessMitigations.csv
-        internal static List<HardenWindowsSecurity.ProcessMitigationsParser.ProcessMitigationsRecords>? ProcessMitigations;
+        internal static List<ProcessMitigationsParser.ProcessMitigationsRecords>? ProcessMitigations;
 
         // a global variable to save the output of the [HardenWindowsSecurity.ProtectionCategoriex]::New().GetValidValues() in
         public static string[]? HardeningCategorieX;
 
         // the explicit path to save the security_policy.inf file
-        internal static string securityPolicyInfPath = Path.Combine(HardenWindowsSecurity.GlobalVars.WorkingDir, "security_policy.inf");
+        internal static string securityPolicyInfPath = Path.Combine(GlobalVars.WorkingDir, "security_policy.inf");
 
         // Backup of the current Controlled Folder Access List
         // Used to be restored at the end of the operation
@@ -92,19 +93,19 @@ namespace HardenWindowsSecurity
         public static string? VerbosePreference;
 
         // An object to store the final results of Confirm-SystemCompliance cmdlet
-        public static System.Collections.Concurrent.ConcurrentDictionary<System.String, System.Collections.Generic.List<HardenWindowsSecurity.IndividualResult>>? FinalMegaObject;
+        public static System.Collections.Concurrent.ConcurrentDictionary<System.String, System.Collections.Generic.List<IndividualResult>>? FinalMegaObject;
 
         // Storing the output of the ini file parsing function
         internal static Dictionary<string, Dictionary<string, string>>? SystemSecurityPoliciesIniObject;
 
         // a variable to store the security policies CSV file parse output
-        internal static List<HardenWindowsSecurity.SecurityPolicyRecord>? SecurityPolicyRecords;
+        internal static List<SecurityPolicyRecord>? SecurityPolicyRecords;
 
         // the explicit path to save the CurrentlyAppliedMitigations.xml file
-        internal static string CurrentlyAppliedMitigations = Path.Combine(HardenWindowsSecurity.GlobalVars.WorkingDir, "CurrentlyAppliedMitigations.xml");
+        internal static string CurrentlyAppliedMitigations = Path.Combine(GlobalVars.WorkingDir, "CurrentlyAppliedMitigations.xml");
 
         // variable that contains the results of all of the related MDM CimInstances that can be interacted with using Administrator privilege
-        internal static List<HardenWindowsSecurity.MDMClassProcessor>? MDMResults;
+        internal static List<MDMClassProcessor>? MDMResults;
 
         // To store the Firewall Domain MDM profile parsed JSON output
         internal static System.Collections.Hashtable? MDM_Firewall_DomainProfile02;
@@ -122,10 +123,24 @@ namespace HardenWindowsSecurity
         internal static System.Collections.Hashtable? MDM_Policy_Result01_System02;
 
 
+        internal static string userName;
+        internal static string userSID;
+        internal static string? userFullName;
+
         static GlobalVars()
         {
             // Save the valid values of the Protect-WindowsSecurity categories to a variable since the process can be time consuming and shouldn't happen every time the categories are fetched
-            HardenWindowsSecurity.GlobalVars.HardeningCategorieX = HardenWindowsSecurity.ProtectionCategoriex.GetValidValues();
+            GlobalVars.HardeningCategorieX = ProtectionCategoriex.GetValidValues();
+
+            // Save the username in the class variable
+            System.Security.Principal.WindowsIdentity CurrentUserResult = System.Security.Principal.WindowsIdentity.GetCurrent();
+            userSID = CurrentUserResult!.User!.Value.ToString();
+
+            LocalUser CurrentLocalUser = LocalUserRetriever.Get()
+.First(Lu => string.Equals(Lu.SID, userSID, StringComparison.OrdinalIgnoreCase));
+
+            userName = CurrentLocalUser.Name ?? throw new UnauthorizedAccessException("UserName could not be detected.");
+            userFullName = CurrentLocalUser.FullName;
         }
 
     }

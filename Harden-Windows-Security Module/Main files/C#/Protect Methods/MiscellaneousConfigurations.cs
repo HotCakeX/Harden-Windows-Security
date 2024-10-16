@@ -6,15 +6,15 @@ using System.IO;
 
 namespace HardenWindowsSecurity
 {
-    public partial class MiscellaneousConfigurations
+    public static partial class MiscellaneousConfigurations
     {
         public static void Invoke()
         {
-            if (HardenWindowsSecurity.GlobalVars.path == null)
+            if (HardenWindowsSecurity.GlobalVars.path is null)
             {
                 throw new System.ArgumentNullException("GlobalVars.path cannot be null.");
             }
-            if (HardenWindowsSecurity.GlobalVars.RegistryCSVItems == null)
+            if (HardenWindowsSecurity.GlobalVars.RegistryCSVItems is null)
             {
                 throw new System.ArgumentNullException("GlobalVars.RegistryCSVItems cannot be null.");
             }
@@ -43,7 +43,7 @@ namespace HardenWindowsSecurity
             foreach (HardenWindowsSecurity.LocalUser user in AllLocalUsers)
             {
                 // If the user has SID and the user is enabled
-                if (user.SID != null && user.Enabled)
+                if (user.SID is not null && user.Enabled)
                 {
                     HardenWindowsSecurity.LocalGroupMember.Add(user.SID, "S-1-5-32-578");
                 }
@@ -76,6 +76,8 @@ namespace HardenWindowsSecurity
             {
                 System.IO.File.Copy(File, Path.Combine(systemDrive, "ProgramData", "Microsoft", "Event Viewer", "Views", "Hardening Script", System.IO.Path.GetFileName(File)), true);
             }
+
+            SSHConfigurations.SecureMACs();
         }
     }
 }

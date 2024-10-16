@@ -5,7 +5,7 @@ using System.Threading;
 
 namespace HardenWindowsSecurity
 {
-    public class GUIBootStrapper
+    public static class GUIBootStrapper
     {
         /// <summary>
         /// Starts and takes control of the entire GUI bootstrapping, startup and exit workflows
@@ -20,20 +20,20 @@ namespace HardenWindowsSecurity
                 try
                 {
                     // Initialize and run the WPF GUI
-                    HardenWindowsSecurity.GUIMain.LoadMainXaml();
-                    _ = HardenWindowsSecurity.GUIMain.app!.Run(HardenWindowsSecurity.GUIMain.mainGUIWindow);
+                    GUIMain.LoadMainXaml();
+                    _ = GUIMain.app!.Run(GUIMain.mainGUIWindow);
                 }
                 catch (Exception ex)
                 {
                     // Log or handle the exception appropriately
-                    HardenWindowsSecurity.Logger.LogMessage($"An error occurred: {ex.Message}", LogTypeIntel.Error);
+                    Logger.LogMessage($"An error occurred: {ex.Message}", LogTypeIntel.Error);
                     throw;
                 }
                 finally
                 {
                     // Ensure proper cleanup
-                    HardenWindowsSecurity.ControlledFolderAccessHandler.Reset();
-                    HardenWindowsSecurity.Miscellaneous.CleanUp();
+                    ControlledFolderAccessHandler.Reset();
+                    Miscellaneous.CleanUp();
                 }
             });
 

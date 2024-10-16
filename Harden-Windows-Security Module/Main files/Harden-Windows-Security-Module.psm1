@@ -95,7 +95,7 @@ $ToastNotificationDLLs.Add([System.IO.Path]::Combine($PSScriptRoot, 'DLLs', 'Toa
 $ToastNotificationDLLs.Add([System.IO.Path]::Combine($PSScriptRoot, 'DLLs', 'Toast Notifications', 'WinRT.Runtime.dll'))
 
 # Load all of the C# codes
-# for some reason it tries to use another version of the dll unless i define its path explicitly like this
+# for some reason it tries to use another version of the WindowsBase.dll unless i define its path explicitly like this
 Add-Type -Path ([System.IO.Directory]::GetFiles("$PSScriptRoot\C#", '*.*', [System.IO.SearchOption]::AllDirectories)) -ReferencedAssemblies @((Get-Content -Path "$PSScriptRoot\.NETAssembliesToLoad.txt") + "$($PSHOME)\WindowsBase.dll" + $ToastNotificationDLLs) -CompilerOptions '/nowarn:1701'
 
 try {

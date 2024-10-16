@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Linq;
+using System.Windows.Controls;
 
 #nullable enable
 
 namespace HardenWindowsSecurity
 {
-    public partial class GUIProtectWinSecurity
+    public static partial class GUIProtectWinSecurity
     {
 
         /// <summary>
@@ -16,19 +17,19 @@ namespace HardenWindowsSecurity
             // Disable all sub-category items first
             foreach (var item in GUIProtectWinSecurity.subCategories!.Items)
             {
-                ((System.Windows.Controls.ListViewItem)item).IsEnabled = false;
+                ((ListViewItem)item).IsEnabled = false;
             }
 
             // Get all checked categories
             var checkedCategories = GUIProtectWinSecurity.categories!.Items
-                .Cast<System.Windows.Controls.ListViewItem>()
-                .Where(item => ((System.Windows.Controls.CheckBox)item.Content).IsChecked == true)
+                .Cast<ListViewItem>()
+                .Where(item => ((CheckBox)item.Content).IsChecked == true)
                 .ToList();
 
             // Enable the corresponding sub-category items
             foreach (var categoryItem in checkedCategories)
             {
-                string categoryContent = ((System.Windows.Controls.CheckBox)categoryItem.Content).Name;
+                string categoryContent = ((CheckBox)categoryItem.Content).Name;
                 if (GUIProtectWinSecurity.correlation.Contains(categoryContent))
                 {
                     if (GUIProtectWinSecurity.correlation[categoryContent] is string[] subCategoryNames)
@@ -37,8 +38,8 @@ namespace HardenWindowsSecurity
                         {
                             foreach (var item in GUIProtectWinSecurity.subCategories.Items)
                             {
-                                System.Windows.Controls.ListViewItem subCategoryItem = (System.Windows.Controls.ListViewItem)item;
-                                if (((System.Windows.Controls.CheckBox)subCategoryItem.Content).Name == subCategoryName)
+                                ListViewItem subCategoryItem = (ListViewItem)item;
+                                if (((CheckBox)subCategoryItem.Content).Name == subCategoryName)
                                 {
                                     subCategoryItem.IsEnabled = true;
                                 }
@@ -51,14 +52,14 @@ namespace HardenWindowsSecurity
             // Uncheck sub-category items whose category is not selected
             foreach (var item in GUIProtectWinSecurity.subCategories.Items)
             {
-                System.Windows.Controls.ListViewItem subCategoryItem = (System.Windows.Controls.ListViewItem)item;
+                ListViewItem subCategoryItem = (ListViewItem)item;
                 if (!subCategoryItem.IsEnabled)
                 {
-                    ((System.Windows.Controls.CheckBox)subCategoryItem.Content).IsChecked = false;
+                    ((CheckBox)subCategoryItem.Content).IsChecked = false;
                 }
             }
 
-            if (HardenWindowsSecurity.GlobalVars.HardeningCategorieX == null)
+            if (HardenWindowsSecurity.GlobalVars.HardeningCategorieX is null)
             {
                 throw new System.ArgumentNullException("GlobalVars.HardeningCategorieX cannot be null.");
             }
@@ -66,8 +67,8 @@ namespace HardenWindowsSecurity
             // Disable categories that are not valid for the current session
             foreach (var item in GUIProtectWinSecurity.categories.Items)
             {
-                System.Windows.Controls.ListViewItem categoryItem = (System.Windows.Controls.ListViewItem)item;
-                if (!HardenWindowsSecurity.GlobalVars.HardeningCategorieX.Contains(((System.Windows.Controls.CheckBox)categoryItem.Content).Name))
+                ListViewItem categoryItem = (ListViewItem)item;
+                if (!HardenWindowsSecurity.GlobalVars.HardeningCategorieX.Contains(((CheckBox)categoryItem.Content).Name))
                 {
                     categoryItem.IsEnabled = false;
                 }
@@ -105,9 +106,9 @@ namespace HardenWindowsSecurity
             // Get the Categories status and add them to the variables
             foreach (System.Windows.Controls.ListBoxItem categoryItem in categoriesItems)
             {
-                if ((bool)((System.Windows.Controls.CheckBox)categoryItem.Content).IsChecked)
+                if ((bool)((CheckBox)categoryItem.Content).IsChecked)
                 {
-                    string categoryName = ((System.Windows.Controls.CheckBox)categoryItem.Content).Name;
+                    string categoryName = ((CheckBox)categoryItem.Content).Name;
                     HardenWindowsSecurity.GUIProtectWinSecurity.SelectedCategories.Enqueue(categoryName);
                 }
             }
@@ -115,9 +116,9 @@ namespace HardenWindowsSecurity
             // Get the Sub-Categories status and add them to the variables
             foreach (System.Windows.Controls.ListBoxItem subCategoryItem in subCategoriesItems)
             {
-                if ((bool)((System.Windows.Controls.CheckBox)subCategoryItem.Content).IsChecked)
+                if ((bool)((CheckBox)subCategoryItem.Content).IsChecked)
                 {
-                    string subCategoryName = ((System.Windows.Controls.CheckBox)subCategoryItem.Content).Name;
+                    string subCategoryName = ((CheckBox)subCategoryItem.Content).Name;
                     HardenWindowsSecurity.GUIProtectWinSecurity.SelectedSubCategories.Enqueue(subCategoryName);
                 }
             }

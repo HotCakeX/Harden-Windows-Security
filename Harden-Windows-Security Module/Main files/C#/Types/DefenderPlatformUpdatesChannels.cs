@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace HardenWindowsSecurity
 {
-    public class DefenderPlatformUpdatesChannels
+    public static class DefenderPlatformUpdatesChannels
     {
         public static readonly Dictionary<ushort, string> Channels = new()
     {

@@ -284,12 +284,12 @@ namespace HardenWindowsSecurity
                 try
                 {
                     // Cleanup (Release the COM objects)
-                    if (rootFolder != null)
+                    if (rootFolder is not null)
                     {
                         Marshal.ReleaseComObject(rootFolder);
                     }
 
-                    if (scheduleObject != null)
+                    if (scheduleObject is not null)
                     {
                         Marshal.ReleaseComObject(scheduleObject);
                     }

@@ -177,7 +177,7 @@ namespace HardenWindowsSecurity
             ManagementBaseObject? volume = GetCimInstance("Root\\CIMV2\\Security\\MicrosoftVolumeEncryption", "Win32_EncryptableVolume", $"DriveLetter = '{targetVolume}'");
 
             // Make sure there is data
-            if (volume != null)
+            if (volume is not null)
             {
                 // Set the MountPoint property of the final object to the drive letter
                 newInstance.MountPoint = volume["DriveLetter"]?.ToString();
@@ -200,7 +200,7 @@ namespace HardenWindowsSecurity
                 {
                     // Try to use the GetLockStatus method to get the CurrentLockStatus
                     ManagementBaseObject currentLockStatus = InvokeCimMethod(volume, "GetLockStatus", null);
-                    if (currentLockStatus != null && Convert.ToUInt32(currentLockStatus["ReturnValue"], CultureInfo.InvariantCulture) == 0)
+                    if (currentLockStatus is not null && Convert.ToUInt32(currentLockStatus["ReturnValue"], CultureInfo.InvariantCulture) == 0)
                     {
                         // Set the LockStatus property if it exists
                         newInstance.LockStatus = (LockStatus)Convert.ToUInt32(currentLockStatus["LockStatus"], CultureInfo.InvariantCulture);
@@ -211,7 +211,7 @@ namespace HardenWindowsSecurity
                 try
                 {
                     ManagementBaseObject currentVolConversionStatus = InvokeCimMethod(volume, "GetConversionStatus", null);
-                    if (currentVolConversionStatus != null && Convert.ToUInt32(currentVolConversionStatus["ReturnValue"], CultureInfo.InvariantCulture) == 0)
+                    if (currentVolConversionStatus is not null && Convert.ToUInt32(currentVolConversionStatus["ReturnValue"], CultureInfo.InvariantCulture) == 0)
                     {
                         newInstance.EncryptionPercentage = currentVolConversionStatus["EncryptionPercentage"]?.ToString();
                         newInstance.WipePercentage = currentVolConversionStatus["WipingPercentage"]?.ToString();
@@ -225,7 +225,7 @@ namespace HardenWindowsSecurity
                 {
                     // Try to use the GetEncryptionMethod method to get the EncryptionMethod and EncryptionMethodFlags properties
                     var currentEncryptionMethod = InvokeCimMethod(volume, "GetEncryptionMethod", null);
-                    if (currentEncryptionMethod != null && Convert.ToUInt32(currentEncryptionMethod["ReturnValue"], CultureInfo.InvariantCulture) == 0)
+                    if (currentEncryptionMethod is not null && Convert.ToUInt32(currentEncryptionMethod["ReturnValue"], CultureInfo.InvariantCulture) == 0)
                     {
                         uint EncryptionMethodNum = Convert.ToUInt32(currentEncryptionMethod["EncryptionMethod"], CultureInfo.InvariantCulture);
 
@@ -241,7 +241,7 @@ namespace HardenWindowsSecurity
                 {
                     // Use the GetVersion method
                     ManagementBaseObject currentVolVersion = InvokeCimMethod(volume, "GetVersion", null);
-                    if (currentVolVersion != null && Convert.ToUInt32(currentVolVersion["ReturnValue"], CultureInfo.InvariantCulture) == 0)
+                    if (currentVolVersion is not null && Convert.ToUInt32(currentVolVersion["ReturnValue"], CultureInfo.InvariantCulture) == 0)
                     {
                         newInstance.MetadataVersion = Convert.ToUInt32(currentVolVersion["Version"], CultureInfo.InvariantCulture);
                     }
@@ -254,7 +254,7 @@ namespace HardenWindowsSecurity
                     ManagementBaseObject keyProtectors = InvokeCimMethod(volume, "GetKeyProtectors", null);
 
                     // If there are any key protectors
-                    if (keyProtectors != null)
+                    if (keyProtectors is not null)
                     {
                         // Create a new list of KeyProtector objects to store the results of processing each key protector in the loop below
                         newInstance.KeyProtector = [];
@@ -274,7 +274,7 @@ namespace HardenWindowsSecurity
                             {
                                 // Use the GetKeyProtectorType method
                                 ManagementBaseObject keyProtectorTypeResult = InvokeCimMethod(volume, "GetKeyProtectorType", new Dictionary<string, object> { { "VolumeKeyProtectorID", keyProtectorID } });
-                                if (keyProtectorTypeResult != null)
+                                if (keyProtectorTypeResult is not null)
                                 {
                                     uint keyProtectorType = Convert.ToUInt32(keyProtectorTypeResult["KeyProtectorType"], CultureInfo.InvariantCulture);
                                     // Cast the uint value to the KeyProtectorType enum
@@ -284,7 +284,7 @@ namespace HardenWindowsSecurity
                                     if (keyProtectorType == 3)
                                     {
                                         ManagementBaseObject numericalPassword = InvokeCimMethod(volume, "GetKeyProtectorNumericalPassword", new Dictionary<string, object> { { "VolumeKeyProtectorID", keyProtectorID } });
-                                        if (numericalPassword != null && Convert.ToUInt32(numericalPassword["ReturnValue"], CultureInfo.InvariantCulture) == 0)
+                                        if (numericalPassword is not null && Convert.ToUInt32(numericalPassword["ReturnValue"], CultureInfo.InvariantCulture) == 0)
                                         {
                                             recoveryPassword = numericalPassword["NumericalPassword"]?.ToString();
                                         }
@@ -294,7 +294,7 @@ namespace HardenWindowsSecurity
                                     if (keyProtectorType == 2)
                                     {
                                         ManagementBaseObject autoUnlockEnabledResult = InvokeCimMethod(volume, "IsAutoUnlockEnabled", null);
-                                        if (autoUnlockEnabledResult != null && Convert.ToUInt32(autoUnlockEnabledResult["ReturnValue"], CultureInfo.InvariantCulture) == 0)
+                                        if (autoUnlockEnabledResult is not null && Convert.ToUInt32(autoUnlockEnabledResult["ReturnValue"], CultureInfo.InvariantCulture) == 0)
                                         {
                                             bool isAutoUnlockEnabled = Convert.ToBoolean(autoUnlockEnabledResult["IsAutoUnlockEnabled"], CultureInfo.InvariantCulture);
                                             string? volumeKeyProtectorID = autoUnlockEnabledResult["VolumeKeyProtectorID"]?.ToString();
@@ -306,7 +306,7 @@ namespace HardenWindowsSecurity
                                         }
 
                                         ManagementBaseObject keyProtectorFileNameResult = InvokeCimMethod(volume, "GetExternalKeyFileName", new Dictionary<string, object> { { "VolumeKeyProtectorID", keyProtectorID } });
-                                        if (keyProtectorFileNameResult != null && Convert.ToUInt32(keyProtectorFileNameResult["ReturnValue"], CultureInfo.InvariantCulture) == 0)
+                                        if (keyProtectorFileNameResult is not null && Convert.ToUInt32(keyProtectorFileNameResult["ReturnValue"], CultureInfo.InvariantCulture) == 0)
                                         {
                                             keyProtectorFileName = keyProtectorFileNameResult["FileName"]?.ToString();
                                         }
@@ -316,7 +316,7 @@ namespace HardenWindowsSecurity
                                     if (keyProtectorType is 7 or 9)
                                     {
                                         ManagementBaseObject keyProtectorCertificateResult = InvokeCimMethod(volume, "GetKeyProtectorCertificate", new Dictionary<string, object> { { "VolumeKeyProtectorID", keyProtectorID } });
-                                        if (keyProtectorCertificateResult != null && Convert.ToUInt32(keyProtectorCertificateResult["ReturnValue"], CultureInfo.InvariantCulture) == 0)
+                                        if (keyProtectorCertificateResult is not null && Convert.ToUInt32(keyProtectorCertificateResult["ReturnValue"], CultureInfo.InvariantCulture) == 0)
                                         {
                                             keyProtectorThumbprint = keyProtectorCertificateResult["CertThumbprint"]?.ToString();
                                             keyProtectorCertificateType = keyProtectorCertificateResult["CertType"]?.ToString();
@@ -345,7 +345,7 @@ namespace HardenWindowsSecurity
 
             // Get volume information using the MSFT_Volume class
             ManagementBaseObject? currentStorage = GetCimInstance("Root\\Microsoft\\Windows\\Storage", "MSFT_Volume", $"DriveLetter = '{targetVolumeVer2}'");
-            if (currentStorage != null)
+            if (currentStorage is not null)
             {
                 try
                 {
@@ -397,7 +397,7 @@ namespace HardenWindowsSecurity
             using ManagementClass managementClass = new(instance.ClassPath);
 
             ManagementBaseObject inParams = managementClass.GetMethodParameters(methodName);
-            if (parameters != null)
+            if (parameters is not null)
             {
                 foreach (KeyValuePair<string, object> param in parameters)
                 {
@@ -419,14 +419,14 @@ namespace HardenWindowsSecurity
                 // Iterate through the properties of the storage object
                 foreach (PropertyData property in storage.Properties)
                 {
-                    if (string.Equals(property.Name, "DriveLetter", StringComparison.OrdinalIgnoreCase) && property.Value != null)
+                    if (string.Equals(property.Name, "DriveLetter", StringComparison.OrdinalIgnoreCase) && property.Value is not null)
                     {
                         driveLetters.Add(property.Value?.ToString() ?? string.Empty);
                     }
                 }
             }
 
-            return driveLetters.ToArray();
+            return [.. driveLetters];
         }
 
 

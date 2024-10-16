@@ -58,7 +58,7 @@ namespace HardenWindowsSecurity
             }
 
             // Check if the command can execute
-            public bool CanExecute(object parameter) => _canExecute == null || _canExecute(parameter);
+            public bool CanExecute(object parameter) => _canExecute is null || _canExecute(parameter);
 
             // Execute the command
             public void Execute(object parameter) => _execute(parameter);
@@ -201,7 +201,7 @@ namespace HardenWindowsSecurity
         {
 
             // Defining the path to the XAML XML file
-            if (HardenWindowsSecurity.GlobalVars.path == null)
+            if (HardenWindowsSecurity.GlobalVars.path is null)
             {
                 throw new System.ArgumentNullException("GlobalVars.path cannot be null.");
             }
@@ -374,26 +374,16 @@ End time: {DateTime.Now}
                System.Windows.MessageBox.Show(messageBoxText: "Welcome to the application!", caption: "Startup", button: MessageBoxButton.OK, icon: MessageBoxImage.Information);
            };
 
-            GUIMain.app!.Resources["GlobalStyle"] = new Style(typeof(System.Windows.Controls.Button))
+            GUIMain.app!.Resources["GlobalStyle"] = new Style(typeof(Button))
             {
                 Setters =
                 {
-                    new Setter(System.Windows.Controls.Button.BackgroundProperty, System.Windows.Media.Brushes.LightBlue),
-                    new Setter(System.Windows.Controls.Button.ForegroundProperty, System.Windows.Media.Brushes.DarkBlue)
+                    new Setter(Button.BackgroundProperty, System.Windows.Media.Brushes.LightBlue),
+                    new Setter(Button.ForegroundProperty, System.Windows.Media.Brushes.DarkBlue)
                 }
             };
 
             */
-
-            // event handler to make the GUI window draggable wherever it's empty
-            GUIMain.mainGUIWindow.MouseDown += (sender, e) =>
-            {
-                // Only allow dragging the window when the left mouse button (also includes touch) is clicked
-                if (e.ChangedButton == MouseButton.Left)
-                {
-                    GUIMain.mainGUIWindow.DragMove();
-                }
-            };
 
             #endregion
 
@@ -406,10 +396,10 @@ End time: {DateTime.Now}
 
             // Set the ImageSource property to the desired image path
             // Load the background image into memory and set it as the ImageSource for the ImageBrush
-            var BackgroundBitmapImage = new System.Windows.Media.Imaging.BitmapImage();
+            var BackgroundBitmapImage = new BitmapImage();
             BackgroundBitmapImage.BeginInit();
             BackgroundBitmapImage.UriSource = new Uri(System.IO.Path.Combine(HardenWindowsSecurity.GlobalVars.path!, "Resources", "Media", "background.jpg"));
-            BackgroundBitmapImage.CacheOption = System.Windows.Media.Imaging.BitmapCacheOption.OnLoad; // Load the image data into memory
+            BackgroundBitmapImage.CacheOption = BitmapCacheOption.OnLoad; // Load the image data into memory
             BackgroundBitmapImage.EndInit();
 
             imageBrush.ImageSource = BackgroundBitmapImage;
@@ -440,13 +430,13 @@ End time: {DateTime.Now}
             #endregion
 
             // Finding the sidebar Grid
-            HardenWindowsSecurity.GUIMain.SidebarGrid = GUIMain.mainGUIWindow.FindName("SidebarGrid") as System.Windows.Controls.Grid;
+            HardenWindowsSecurity.GUIMain.SidebarGrid = GUIMain.mainGUIWindow.FindName("SidebarGrid") as Grid;
 
             // Finding the progress bar
             GUIMain.mainProgressBar = (System.Windows.Controls.ProgressBar)GUIMain.mainGUIWindow.FindName("MainProgressBar");
 
             // Finding the button responsible for changing the background image by browsing for image file
-            System.Windows.Controls.Button BackgroundChangeButton = (System.Windows.Controls.Button)GUIMain.mainGUIWindow.FindName("BackgroundChangeButton");
+            Button BackgroundChangeButton = (Button)GUIMain.mainGUIWindow.FindName("BackgroundChangeButton");
 
             // event handler for button to open file picker to browse for image files
             BackgroundChangeButton.Click += (sender, e) =>
@@ -487,72 +477,72 @@ End time: {DateTime.Now}
 
             #region sidebar menu assignments
             // Protect button icon
-            System.Windows.Controls.Grid ProtectButtonGrid = SidebarGrid.FindName("ProtectButtonGrid") as System.Windows.Controls.Grid;
-            System.Windows.Controls.Image ProtectButtonIcon = ProtectButtonGrid.FindName("ProtectButtonIcon") as System.Windows.Controls.Image;
-            var ProtectButtonImage = new System.Windows.Media.Imaging.BitmapImage();
+            Grid ProtectButtonGrid = SidebarGrid.FindName("ProtectButtonGrid") as Grid;
+            Image ProtectButtonIcon = ProtectButtonGrid.FindName("ProtectButtonIcon") as Image;
+            var ProtectButtonImage = new BitmapImage();
             ProtectButtonImage.BeginInit();
             ProtectButtonImage.UriSource = new Uri(System.IO.Path.Combine(HardenWindowsSecurity.GlobalVars.path, "Resources", "Media", "ProtectMenuButton.png"));
-            ProtectButtonImage.CacheOption = System.Windows.Media.Imaging.BitmapCacheOption.OnLoad; // Load the image data into memory
+            ProtectButtonImage.CacheOption = BitmapCacheOption.OnLoad; // Load the image data into memory
             ProtectButtonImage.EndInit();
             ProtectButtonIcon.Source = ProtectButtonImage;
 
             // Confirm button icon
-            System.Windows.Controls.Grid ConfirmButtonGrid = SidebarGrid.FindName("ConfirmButtonGrid") as System.Windows.Controls.Grid;
-            System.Windows.Controls.Image ConfirmButtonIcon = ConfirmButtonGrid.FindName("ConfirmButtonIcon") as System.Windows.Controls.Image;
-            var ConfirmButtonImage = new System.Windows.Media.Imaging.BitmapImage();
+            Grid ConfirmButtonGrid = SidebarGrid.FindName("ConfirmButtonGrid") as Grid;
+            Image ConfirmButtonIcon = ConfirmButtonGrid.FindName("ConfirmButtonIcon") as Image;
+            var ConfirmButtonImage = new BitmapImage();
             ConfirmButtonImage.BeginInit();
             ConfirmButtonImage.UriSource = new Uri(System.IO.Path.Combine(HardenWindowsSecurity.GlobalVars.path, "Resources", "Media", "ConfirmMenuButton.png"));
-            ConfirmButtonImage.CacheOption = System.Windows.Media.Imaging.BitmapCacheOption.OnLoad; // Load the image data into memory
+            ConfirmButtonImage.CacheOption = BitmapCacheOption.OnLoad; // Load the image data into memory
             ConfirmButtonImage.EndInit();
             ConfirmButtonIcon.Source = ConfirmButtonImage;
 
             // ASRRules button icon
-            System.Windows.Controls.Grid ASRRulesButtonGrid = SidebarGrid.FindName("ASRRulesButtonGrid") as System.Windows.Controls.Grid;
-            System.Windows.Controls.Image ASRRulesButtonIcon = ASRRulesButtonGrid.FindName("ASRRulesButtonIcon") as System.Windows.Controls.Image;
-            var ASRRulesButtonImage = new System.Windows.Media.Imaging.BitmapImage();
+            Grid ASRRulesButtonGrid = SidebarGrid.FindName("ASRRulesButtonGrid") as Grid;
+            Image ASRRulesButtonIcon = ASRRulesButtonGrid.FindName("ASRRulesButtonIcon") as Image;
+            var ASRRulesButtonImage = new BitmapImage();
             ASRRulesButtonImage.BeginInit();
             ASRRulesButtonImage.UriSource = new Uri(System.IO.Path.Combine(HardenWindowsSecurity.GlobalVars.path, "Resources", "Media", "ASRRulesMenuButton.png"));
-            ASRRulesButtonImage.CacheOption = System.Windows.Media.Imaging.BitmapCacheOption.OnLoad; // Load the image data into memory
+            ASRRulesButtonImage.CacheOption = BitmapCacheOption.OnLoad; // Load the image data into memory
             ASRRulesButtonImage.EndInit();
             ASRRulesButtonIcon.Source = ASRRulesButtonImage;
 
             // Unprotect button icon
-            System.Windows.Controls.Grid UnprotectButtonGrid = SidebarGrid.FindName("UnprotectButtonGrid") as System.Windows.Controls.Grid;
-            System.Windows.Controls.Image UnprotectButtonIcon = UnprotectButtonGrid.FindName("UnprotectButtonIcon") as System.Windows.Controls.Image;
-            var UnprotectButtonImage = new System.Windows.Media.Imaging.BitmapImage();
+            Grid UnprotectButtonGrid = SidebarGrid.FindName("UnprotectButtonGrid") as Grid;
+            Image UnprotectButtonIcon = UnprotectButtonGrid.FindName("UnprotectButtonIcon") as Image;
+            var UnprotectButtonImage = new BitmapImage();
             UnprotectButtonImage.BeginInit();
             UnprotectButtonImage.UriSource = new Uri(System.IO.Path.Combine(HardenWindowsSecurity.GlobalVars.path, "Resources", "Media", "UnprotectButton.png"));
-            UnprotectButtonImage.CacheOption = System.Windows.Media.Imaging.BitmapCacheOption.OnLoad; // Load the image data into memory
+            UnprotectButtonImage.CacheOption = BitmapCacheOption.OnLoad; // Load the image data into memory
             UnprotectButtonImage.EndInit();
             UnprotectButtonIcon.Source = UnprotectButtonImage;
 
             // Exclusions button icon
-            System.Windows.Controls.Grid ExclusionsButtonGridButtonGrid = SidebarGrid.FindName("ExclusionsButtonGrid") as System.Windows.Controls.Grid;
-            System.Windows.Controls.Image ExclusionsButtonIcon = ExclusionsButtonGridButtonGrid.FindName("ExclusionsButtonIcon") as System.Windows.Controls.Image;
-            var ExclusionsButtonImage = new System.Windows.Media.Imaging.BitmapImage();
+            Grid ExclusionsButtonGridButtonGrid = SidebarGrid.FindName("ExclusionsButtonGrid") as Grid;
+            Image ExclusionsButtonIcon = ExclusionsButtonGridButtonGrid.FindName("ExclusionsButtonIcon") as Image;
+            var ExclusionsButtonImage = new BitmapImage();
             ExclusionsButtonImage.BeginInit();
             ExclusionsButtonImage.UriSource = new Uri(System.IO.Path.Combine(HardenWindowsSecurity.GlobalVars.path, "Resources", "Media", "ExclusionMenuButton.png"));
-            ExclusionsButtonImage.CacheOption = System.Windows.Media.Imaging.BitmapCacheOption.OnLoad; // Load the image data into memory
+            ExclusionsButtonImage.CacheOption = BitmapCacheOption.OnLoad; // Load the image data into memory
             ExclusionsButtonImage.EndInit();
             ExclusionsButtonIcon.Source = ExclusionsButtonImage;
 
             // BitLocker button icon
-            System.Windows.Controls.Grid BitLockerButtonGridButtonGrid = SidebarGrid.FindName("BitLockerButtonGrid") as System.Windows.Controls.Grid;
-            System.Windows.Controls.Image BitLockerButtonIcon = BitLockerButtonGridButtonGrid.FindName("BitLockerButtonIcon") as System.Windows.Controls.Image;
-            var BitLockerButtonImage = new System.Windows.Media.Imaging.BitmapImage();
+            Grid BitLockerButtonGridButtonGrid = SidebarGrid.FindName("BitLockerButtonGrid") as Grid;
+            Image BitLockerButtonIcon = BitLockerButtonGridButtonGrid.FindName("BitLockerButtonIcon") as Image;
+            var BitLockerButtonImage = new BitmapImage();
             BitLockerButtonImage.BeginInit();
             BitLockerButtonImage.UriSource = new Uri(System.IO.Path.Combine(HardenWindowsSecurity.GlobalVars.path, "Resources", "Media", "BitLockerMenuButton.png"));
-            BitLockerButtonImage.CacheOption = System.Windows.Media.Imaging.BitmapCacheOption.OnLoad; // Load the image data into memory
+            BitLockerButtonImage.CacheOption = BitmapCacheOption.OnLoad; // Load the image data into memory
             BitLockerButtonImage.EndInit();
             BitLockerButtonIcon.Source = BitLockerButtonImage;
 
             // Logs button icon
-            System.Windows.Controls.Grid LogsButtonGrid = SidebarGrid.FindName("LogsButtonGrid") as System.Windows.Controls.Grid;
-            System.Windows.Controls.Image LogsButtonIcon = LogsButtonGrid.FindName("LogsButtonIcon") as System.Windows.Controls.Image;
-            var LogsButtonImage = new System.Windows.Media.Imaging.BitmapImage();
+            Grid LogsButtonGrid = SidebarGrid.FindName("LogsButtonGrid") as Grid;
+            Image LogsButtonIcon = LogsButtonGrid.FindName("LogsButtonIcon") as Image;
+            var LogsButtonImage = new BitmapImage();
             LogsButtonImage.BeginInit();
             LogsButtonImage.UriSource = new Uri(System.IO.Path.Combine(HardenWindowsSecurity.GlobalVars.path, "Resources", "Media", "LogsMenuButton.png"));
-            LogsButtonImage.CacheOption = System.Windows.Media.Imaging.BitmapCacheOption.OnLoad; // Load the image data into memory
+            LogsButtonImage.CacheOption = BitmapCacheOption.OnLoad; // Load the image data into memory
             LogsButtonImage.EndInit();
             LogsButtonIcon.Source = LogsButtonImage;
             #endregion

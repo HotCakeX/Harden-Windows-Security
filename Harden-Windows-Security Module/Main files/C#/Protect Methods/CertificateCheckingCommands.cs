@@ -7,11 +7,11 @@ using System.Net.Http;
 
 namespace HardenWindowsSecurity
 {
-    public class CertificateCheckingCommands
+    public static class CertificateCheckingCommands
     {
         public static void Invoke()
         {
-            if (HardenWindowsSecurity.GlobalVars.WorkingDir == null || !Directory.Exists(HardenWindowsSecurity.GlobalVars.WorkingDir))
+            if (HardenWindowsSecurity.GlobalVars.WorkingDir is null || !Directory.Exists(HardenWindowsSecurity.GlobalVars.WorkingDir))
             {
                 throw new ArgumentNullException(nameof(HardenWindowsSecurity.GlobalVars.WorkingDir), "The working directory variable is either null or the directory doesn't exist.");
             }

@@ -62,7 +62,7 @@ namespace HardenWindowsSecurity
             catch (Exception ex)
             {
                 // If an unexpected error occurs, handle it as necessary (e.g., log it)
-                HardenWindowsSecurity.Logger.LogMessage($"An error occurred: {ex.Message}", LogTypeIntel.Error);
+                Logger.LogMessage($"An error occurred: {ex.Message}", LogTypeIntel.Error);
             }
 
             // Return the list of OneDrive directories found

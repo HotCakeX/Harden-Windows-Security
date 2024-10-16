@@ -29,7 +29,7 @@ namespace HardenWindowsSecurity
                 {
                     var result = results.Cast<ManagementBaseObject>().FirstOrDefault();
 
-                    if (result != null)
+                    if (result is not null)
                     {
 
                         return ConvertToDynamic(result);
@@ -111,7 +111,7 @@ namespace HardenWindowsSecurity
                 // Get the available methods for the class
                 var methodParams = mpPreferenceClass.GetMethodParameters(MethodName);
 
-                if (preferenceValue == null)
+                if (preferenceValue is null)
                 {
                     throw new ArgumentNullException(nameof(preferenceValue));
                 }

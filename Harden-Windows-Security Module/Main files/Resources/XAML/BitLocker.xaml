@@ -92,470 +92,476 @@
         </Style>
         <!-- END TAB CONTROL STYLES -->
     </UserControl.Resources>
-    <Grid x:Name="ParentGrid">
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*" />
-        </Grid.ColumnDefinitions>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="*" />
-            <RowDefinition Height="Auto" />
-        </Grid.RowDefinitions>
-        <TabControl x:Name="TabControl" Style="{DynamicResource TabControlStyle}" Grid.Row="0" Grid.ColumnSpan="2" Padding="30,30,30,0" VerticalAlignment="Top"
+
+    <ScrollViewer ScrollViewer.PanningMode="Both" VerticalScrollBarVisibility="Auto">
+
+        <Grid x:Name="ParentGrid">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <TabControl x:Name="TabControl" Style="{DynamicResource TabControlStyle}" Grid.Row="0" Grid.ColumnSpan="2" Padding="30,30,30,0" VerticalAlignment="Top"
                 HorizontalAlignment="Center" >
-            <TabItem Header="Operation System Drive" Style="{DynamicResource TabItemStyle}">
-                <Grid x:Name="OSDriveGrid">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="*" />
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                    </Grid.RowDefinitions>
-                    <TextBlock Grid.ColumnSpan="2" Grid.Row="0" Text="The Normal Security Level employs TPM with a Startup PIN. The Enhanced Security Level adds an extra layer by combining TPM, Startup PIN, and a Startup Security Key. For the Enhanced Level, you will need to select a removable drive where the Startup Security Key will be stored. This provides robust multifactor authentication for your entire device. The removable drive, along with the TPM and PIN, will be required to successfully boot the device. Both security levels also utilize a Recovery Password."
+                <TabItem Header="Operation System Drive" Style="{DynamicResource TabItemStyle}">
+                    <Grid x:Name="OSDriveGrid">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <TextBlock Grid.ColumnSpan="2" Grid.Row="0" Text="The Normal Security Level employs TPM with a Startup PIN. The Enhanced Security Level adds an extra layer by combining TPM, Startup PIN, and a Startup Security Key. For the Enhanced Level, you will need to select a removable drive where the Startup Security Key will be stored. This provides robust multifactor authentication for your entire device. The removable drive, along with the TPM and PIN, will be required to successfully boot the device. Both security levels also utilize a Recovery Password."
                                    Foreground="Black"
                                    FontSize="14"
                                    FontWeight="Normal"
                                    VerticalAlignment="Center"
                                    HorizontalAlignment="Center" Margin="0,0,0,25" TextWrapping="Wrap"/>
-                    <StackPanel x:Name="BitLockerSecuriyLevelStackPanel" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Row="1" Grid.ColumnSpan="2" Margin="0,0,0,25">
-                        <Label Content="Select the Desired Security Level" Style="{StaticResource ModernLabelStyle}" />
-                        <ComboBox x:Name="BitLockerSecurityLevelComboBox"
+                        <StackPanel x:Name="BitLockerSecuriyLevelStackPanel" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Row="1" Grid.ColumnSpan="2" Margin="0,0,0,25">
+                            <Label Content="Select the Desired Security Level" Style="{StaticResource ModernLabelStyle}" />
+                            <ComboBox x:Name="BitLockerSecurityLevelComboBox"
 Width="110" Margin="10,0,0,0" FontWeight="Normal"
 Style="{StaticResource ModernComboBoxStyle}"
 ItemContainerStyle="{StaticResource ModernComboBoxItemStyle}"
 SelectedIndex="0">
-                            <ComboBoxItem Content="Normal" />
-                            <ComboBoxItem Content="Enhanced" />
-                        </ComboBox>
-                    </StackPanel>
-                    <StackPanel x:Name="PIN1StackPanel" Orientation="Vertical" Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="1" Margin="0,0,10,25">
-                        <Label FontWeight="Normal" Content="Enter a PIN" Margin="0,0,0,3" HorizontalContentAlignment="Center"/>
-                        <PasswordBox x:Name="PIN1" Style="{StaticResource CustomPasswordBoxStyle}"/>
-                    </StackPanel>
-                    <StackPanel x:Name="PIN2StackPanel" Orientation="Vertical" Grid.Column="1" Grid.Row="2" Grid.ColumnSpan="1" Margin="10,0,0,25">
-                        <Label FontWeight="Normal" Content="Enter the same PIN again for confirmation" HorizontalAlignment="Center" Margin="0,0,0,3"/>
-                        <PasswordBox x:Name="PIN2" Style="{StaticResource CustomPasswordBoxStyle}"/>
-                    </StackPanel>
-                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Row="3" Grid.ColumnSpan="2" >
-                        <TextBlock x:Name="TextBlockStartupKeySelection" HorizontalAlignment="Center" FontWeight="Normal" VerticalAlignment="Center" Text="Select a Removable Drive To Store Startup Key" Foreground="Black" FontSize="16" Margin="5,0,5,0" />
-                        <Button x:Name="RefreshRemovableDrivesInOSDriveSection" Style="{StaticResource CustomButtonStyle2}" Margin="5,0,5,0">
-                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
-                                <Image x:Name="RefreshButtonIcon1" Width="40" Height="30"/>
-                                <TextBlock Text="Refresh" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,0,8,0" FontWeight="Normal"/>
-                            </StackPanel>
-                        </Button>
-                        <ComboBox x:Name="RemovableDrivesComboBox"
+                                <ComboBoxItem Content="Normal" />
+                                <ComboBoxItem Content="Enhanced" />
+                            </ComboBox>
+                        </StackPanel>
+                        <StackPanel x:Name="PIN1StackPanel" Orientation="Vertical" Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="1" Margin="0,0,10,25">
+                            <Label FontWeight="Normal" Content="Enter a PIN" Margin="0,0,0,3" HorizontalContentAlignment="Center"/>
+                            <PasswordBox x:Name="PIN1" Style="{StaticResource CustomPasswordBoxStyle}"/>
+                        </StackPanel>
+                        <StackPanel x:Name="PIN2StackPanel" Orientation="Vertical" Grid.Column="1" Grid.Row="2" Grid.ColumnSpan="1" Margin="10,0,0,25">
+                            <Label FontWeight="Normal" Content="Enter the same PIN again for confirmation" HorizontalAlignment="Center" Margin="0,0,0,3"/>
+                            <PasswordBox x:Name="PIN2" Style="{StaticResource CustomPasswordBoxStyle}"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Row="3" Grid.ColumnSpan="2" >
+                            <TextBlock x:Name="TextBlockStartupKeySelection" HorizontalAlignment="Center" FontWeight="Normal" VerticalAlignment="Center" Text="Select a Removable Drive To Store Startup Key" Foreground="Black" FontSize="16" Margin="5,0,5,0" />
+                            <Button x:Name="RefreshRemovableDrivesInOSDriveSection" Style="{StaticResource CustomButtonStyle2}" Margin="5,0,5,0">
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                    <Image x:Name="RefreshButtonIcon1" Width="40" Height="30"/>
+                                    <TextBlock Text="Refresh" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,0,8,0" FontWeight="Normal"/>
+                                </StackPanel>
+                            </Button>
+                            <ComboBox x:Name="RemovableDrivesComboBox"
 Width="110" Margin="10,0,0,0" FontWeight="Normal"
 Style="{StaticResource ModernComboBoxStyle}"
 ItemContainerStyle="{StaticResource ModernComboBoxItemStyle}"
 SelectedIndex="0"></ComboBox>
-                    </StackPanel>
-                </Grid>
-            </TabItem>
-            <TabItem Header="Non-OS Drives" Style="{DynamicResource TabItemStyle}">
-                <Grid x:Name="NonOSDrivesGrid">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="*" />
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="*" />
-                        <RowDefinition Height="*" />
-                    </Grid.RowDefinitions>
-                    <TextBlock Grid.Row="0" Grid.ColumnSpan="2" Text="All non-operating system drives will be encrypted using a Recovery Password and an auto-unlock mechanism linked to the operating system drive. This ensures that, as long as the operating system drive is encrypted and unlocked, the other drives will automatically unlock as well."
+                        </StackPanel>
+                    </Grid>
+                </TabItem>
+                <TabItem Header="Non-OS Drives" Style="{DynamicResource TabItemStyle}">
+                    <Grid x:Name="NonOSDrivesGrid">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+                        <TextBlock Grid.Row="0" Grid.ColumnSpan="2" Text="All non-operating system drives will be encrypted using a Recovery Password and an auto-unlock mechanism linked to the operating system drive. This ensures that, as long as the operating system drive is encrypted and unlocked, the other drives will automatically unlock as well."
                    Foreground="Black"
 FontSize="14" FontWeight="Normal"
 VerticalAlignment="Center"
 HorizontalAlignment="Center" Margin="0,0,0,25" TextWrapping="Wrap"/>
-                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Row="1" Grid.ColumnSpan="2" >
-                        <TextBlock x:Name="TextBlockdCategories" HorizontalAlignment="Center" VerticalAlignment="Center" Text="Select Non-OS Drives" Foreground="Black" FontSize="16" FontWeight="Normal" Margin="5,0,5,0" />
-                        <Button x:Name="RefreshNonOSDrives" Style="{StaticResource CustomButtonStyle2}" Margin="5,0,5,0">
-                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
-                                <Image x:Name="RefreshButtonIcon2" Width="40" Height="30"/>
-                                <TextBlock Text="Refresh" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,0,8,0" FontWeight="Normal"/>
-                            </StackPanel>
-                        </Button>
-                        <ComboBox x:Name="NonOSDrivesComboBox"
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Row="1" Grid.ColumnSpan="2" >
+                            <TextBlock x:Name="TextBlockdCategories" HorizontalAlignment="Center" VerticalAlignment="Center" Text="Select Non-OS Drives" Foreground="Black" FontSize="16" FontWeight="Normal" Margin="5,0,5,0" />
+                            <Button x:Name="RefreshNonOSDrives" Style="{StaticResource CustomButtonStyle2}" Margin="5,0,5,0">
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                    <Image x:Name="RefreshButtonIcon2" Width="40" Height="30"/>
+                                    <TextBlock Text="Refresh" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,0,8,0" FontWeight="Normal"/>
+                                </StackPanel>
+                            </Button>
+                            <ComboBox x:Name="NonOSDrivesComboBox"
 Width="110" Margin="10,0,0,0" FontWeight="Normal"
 Style="{StaticResource ModernComboBoxStyle}"
 ItemContainerStyle="{StaticResource ModernComboBoxItemStyle}"
 SelectedIndex="0"></ComboBox>
-                    </StackPanel>
-                </Grid>
-            </TabItem>
-            <TabItem Header="Removable Drives" Style="{DynamicResource TabItemStyle}">
-                <Grid x:Name="RemovableDrivesGrid">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="*" />
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="*" />
-                        <RowDefinition Height="*" />
-                        <RowDefinition Height="*" />
-                    </Grid.RowDefinitions>
-                    <TextBlock Grid.Row="0" Grid.ColumnSpan="2" Text="The removable drives will be encrypted using a Recovery Password and a Password key protector, which you can configure below. Please ensure that you securely back up your recovery keys in the Backup section and store them somewhere safe such as OneDrive's Personal Vault that requires additional authentication for access."
+                        </StackPanel>
+                    </Grid>
+                </TabItem>
+                <TabItem Header="Removable Drives" Style="{DynamicResource TabItemStyle}">
+                    <Grid x:Name="RemovableDrivesGrid">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+                        <TextBlock Grid.Row="0" Grid.ColumnSpan="2" Text="The removable drives will be encrypted using a Recovery Password and a Password key protector, which you can configure below. Please ensure that you securely back up your recovery keys in the Backup section and store them somewhere safe such as OneDrive's Personal Vault that requires additional authentication for access."
                                       Foreground="Black"
 FontSize="14" FontWeight="Normal"
 VerticalAlignment="Center"
 HorizontalAlignment="Center" Margin="0,0,0,25" TextWrapping="Wrap"/>
-                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Row="1" Grid.ColumnSpan="2" >
-                        <TextBlock x:Name="TextBlockCategoridfdes" HorizontalAlignment="Center" VerticalAlignment="Center" Text="Select Removable Drives" Foreground="Black" FontSize="16" Margin="5,0,5,0" FontWeight="Normal" />
-                        <Button x:Name="RefreshRemovableDrivesForRemovableDrivesSection" Style="{StaticResource CustomButtonStyle2}"  Margin="5,0,5,0">
-                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
-                                <Image x:Name="RefreshButtonIcon3" Width="40" Height="30"/>
-                                <TextBlock Text="Refresh" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,0,8,0" FontWeight="Normal"/>
-                            </StackPanel>
-                        </Button>
-                        <ComboBox x:Name="RemovableDrivesInRemovableDrivesGridComboBox"
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Row="1" Grid.ColumnSpan="2" >
+                            <TextBlock x:Name="TextBlockCategoridfdes" HorizontalAlignment="Center" VerticalAlignment="Center" Text="Select Removable Drives" Foreground="Black" FontSize="16" Margin="5,0,5,0" FontWeight="Normal" />
+                            <Button x:Name="RefreshRemovableDrivesForRemovableDrivesSection" Style="{StaticResource CustomButtonStyle2}"  Margin="5,0,5,0">
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                    <Image x:Name="RefreshButtonIcon3" Width="40" Height="30"/>
+                                    <TextBlock Text="Refresh" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,0,8,0" FontWeight="Normal"/>
+                                </StackPanel>
+                            </Button>
+                            <ComboBox x:Name="RemovableDrivesInRemovableDrivesGridComboBox"
 Width="110" Margin="10,0,0,0" FontWeight="Normal"
 Style="{StaticResource ModernComboBoxStyle}"
 ItemContainerStyle="{StaticResource ModernComboBoxItemStyle}" SelectedIndex="0"></ComboBox>
-                    </StackPanel>
-                    <StackPanel x:Name="Password1StackPanel" Orientation="Vertical" Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="1" Margin="0,0,10,25">
-                        <Label FontWeight="Normal" Content="Enter a Password" Margin="0,0,0,3" HorizontalContentAlignment="Center"/>
-                        <PasswordBox x:Name="Password1" Style="{StaticResource CustomPasswordBoxStyle}"/>
-                    </StackPanel>
-                    <StackPanel x:Name="Password2StackPanel" Orientation="Vertical" Grid.Column="1" Grid.Row="2" Grid.ColumnSpan="1" Margin="10,0,0,25">
-                        <Label FontWeight="Normal" Content="Enter the same Password again for confirmation" HorizontalAlignment="Center" Margin="0,0,0,3"/>
-                        <PasswordBox x:Name="Password2" Style="{StaticResource CustomPasswordBoxStyle}"/>
-                    </StackPanel>
-                </Grid>
-            </TabItem>
-            <TabItem Header="Backup" Style="{DynamicResource TabItemStyle}">
-                <Grid x:Name="BackupGrid">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" />
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="*" />
-                        <RowDefinition Height="*" />
-                        <RowDefinition Height="*" />
-                    </Grid.RowDefinitions>
-                    <TextBlock Grid.Row="0" Text="View and backup your recovery passwords in here."
+                        </StackPanel>
+                        <StackPanel x:Name="Password1StackPanel" Orientation="Vertical" Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="1" Margin="0,0,10,25">
+                            <Label FontWeight="Normal" Content="Enter a Password" Margin="0,0,0,3" HorizontalContentAlignment="Center"/>
+                            <PasswordBox x:Name="Password1" Style="{StaticResource CustomPasswordBoxStyle}"/>
+                        </StackPanel>
+                        <StackPanel x:Name="Password2StackPanel" Orientation="Vertical" Grid.Column="1" Grid.Row="2" Grid.ColumnSpan="1" Margin="10,0,0,25">
+                            <Label FontWeight="Normal" Content="Enter the same Password again for confirmation" HorizontalAlignment="Center" Margin="0,0,0,3"/>
+                            <PasswordBox x:Name="Password2" Style="{StaticResource CustomPasswordBoxStyle}"/>
+                        </StackPanel>
+                    </Grid>
+                </TabItem>
+                <TabItem Header="Backup" Style="{DynamicResource TabItemStyle}">
+                    <Grid x:Name="BackupGrid">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+                        <TextBlock Grid.Row="0" Text="View and backup your recovery passwords in here."
                         Foreground="Black" FontSize="14" FontWeight="Normal" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,0,0,25" TextWrapping="Wrap"/>
-                    <StackPanel x:Name="BackupStackPanel" HorizontalAlignment="Center" VerticalAlignment="Top" Orientation="Horizontal" Grid.Row="1" Margin="0,0,10,25">
-                        <Button x:Name="BackupButton" Style="{StaticResource CustomButtonStyle2}" Grid.Row="1" Margin="5,0,5,0">
-                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
-                                <Image x:Name="BackupButtonIcon" Width="40" Height="30"/>
-                                <TextBlock Text="Backup To File" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,0,8,0" FontWeight="Normal"/>
-                            </StackPanel>
-                        </Button>
-                        <Button x:Name="RefreshButtonForBackup" Style="{StaticResource CustomButtonStyle2}" Grid.Row="1" Margin="5,0,5,0">
-                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
-                                <Image x:Name="RefreshButtonForBackupIcon" Width="40" Height="30"/>
-                                <TextBlock Text="Refresh" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,0,8,0" FontWeight="Normal"/>
-                            </StackPanel>
-                        </Button>
-                    </StackPanel>
-                    <DataGrid Grid.Row="2" RowStyle="{DynamicResource ConfirmationDataGridStyleOfRow}" ColumnHeaderStyle="{DynamicResource DataGridColumnHeaderStyle1}" CellStyle="{DynamicResource DataGridCellStyle1}" x:Name="RecoveryKeysDataGrid" Style="{DynamicResource ConfirmationDataGridStyle}">
-                        <!-- DataGrid Columns Definitions -->
-                        <DataGrid.Columns>
-                            <DataGridTextColumn Header="Drive" Binding="{Binding DriveLetter}" IsReadOnly="True" Width="*" />
-                            <DataGridTextColumn Header="Key ID" Binding="{Binding KeyID}" IsReadOnly="True" Width="5*" />
-                            <DataGridTextColumn Header="Recovery Key" Binding="{Binding RecoveryKey}" IsReadOnly="True" Width="6*" />
-                            <DataGridTextColumn Header="Size GB" Binding="{Binding SizeGB}" IsReadOnly="True" Width="*" />
-                        </DataGrid.Columns>
-                    </DataGrid>
-                </Grid>
-            </TabItem>
-        </TabControl>
-        <!-- Grid containing the Execute Button -->
-        <Grid x:Name="ExecuteButtonGrid" Height="150" Grid.Row="1" Grid.ColumnSpan="2" Margin="0,0,0,0">
-            <!-- First Ellipse (Forward1) - Represents the outermost expanding ellipse when the button is clicked -->
-            <!-- Initial height and Width of the Ellipse -->
-            <Ellipse x:Name="EclipseForward1"
+                        <StackPanel x:Name="BackupStackPanel" HorizontalAlignment="Center" VerticalAlignment="Top" Orientation="Horizontal" Grid.Row="1" Margin="0,0,10,25">
+                            <Button x:Name="BackupButton" Style="{StaticResource CustomButtonStyle2}" Grid.Row="1" Margin="5,0,5,0">
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                    <Image x:Name="BackupButtonIcon" Width="40" Height="30"/>
+                                    <TextBlock Text="Backup To File" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,0,8,0" FontWeight="Normal"/>
+                                </StackPanel>
+                            </Button>
+                            <Button x:Name="RefreshButtonForBackup" Style="{StaticResource CustomButtonStyle2}" Grid.Row="1" Margin="5,0,5,0">
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                    <Image x:Name="RefreshButtonForBackupIcon" Width="40" Height="30"/>
+                                    <TextBlock Text="Refresh" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,0,8,0" FontWeight="Normal"/>
+                                </StackPanel>
+                            </Button>
+                        </StackPanel>
+                        <DataGrid Grid.Row="2" RowStyle="{DynamicResource ConfirmationDataGridStyleOfRow}" ColumnHeaderStyle="{DynamicResource DataGridColumnHeaderStyle1}" CellStyle="{DynamicResource DataGridCellStyle1}" x:Name="RecoveryKeysDataGrid" Style="{DynamicResource ConfirmationDataGridStyle}">
+                            <!-- DataGrid Columns Definitions -->
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Drive" Binding="{Binding DriveLetter}" IsReadOnly="True" Width="*" />
+                                <DataGridTextColumn Header="Key ID" Binding="{Binding KeyID}" IsReadOnly="True" Width="5*" />
+                                <DataGridTextColumn Header="Recovery Key" Binding="{Binding RecoveryKey}" IsReadOnly="True" Width="6*" />
+                                <DataGridTextColumn Header="Size GB" Binding="{Binding SizeGB}" IsReadOnly="True" Width="*" />
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </Grid>
+                </TabItem>
+            </TabControl>
+            <!-- Grid containing the Execute Button -->
+            <Grid x:Name="ExecuteButtonGrid" Height="150" Grid.Row="1" Grid.ColumnSpan="2" Margin="0,0,0,0">
+                <!-- First Ellipse (Forward1) - Represents the outermost expanding ellipse when the button is clicked -->
+                <!-- Initial height and Width of the Ellipse -->
+                <Ellipse x:Name="EclipseForward1"
                 Height="50"
                 Width="50"
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center">
-                <!-- Ellipse Fill with a gradient from #ED4264 to #cbad6d -->
-                <Ellipse.Fill>
-                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                        <GradientStop Color="#ED4264" Offset="0.0" />
-                        <GradientStop Color="#cbad6d" Offset="1.0" />
-                    </LinearGradientBrush>
-                </Ellipse.Fill>
-            </Ellipse>
-            <!-- Second Ellipse (Forward2) - Another expanding ellipse, but starts later than Forward1 -->
-            <Ellipse x:Name="EclipseForward2"
+                    <!-- Ellipse Fill with a gradient from #ED4264 to #cbad6d -->
+                    <Ellipse.Fill>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                            <GradientStop Color="#ED4264" Offset="0.0" />
+                            <GradientStop Color="#cbad6d" Offset="1.0" />
+                        </LinearGradientBrush>
+                    </Ellipse.Fill>
+                </Ellipse>
+                <!-- Second Ellipse (Forward2) - Another expanding ellipse, but starts later than Forward1 -->
+                <Ellipse x:Name="EclipseForward2"
 Height="50"
 Width="50"
 HorizontalAlignment="Center"
 VerticalAlignment="Center">
-                <Ellipse.Fill>
-                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                        <GradientStop Color="#ED4264" Offset="0.0" />
-                        <GradientStop Color="#cbad6d" Offset="1.0" />
-                    </LinearGradientBrush>
-                </Ellipse.Fill>
-            </Ellipse>
-            <!-- Third Ellipse (Forward3) - Another expanding ellipse, starts even later -->
-            <Ellipse x:Name="EclipseForward3"
+                    <Ellipse.Fill>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                            <GradientStop Color="#ED4264" Offset="0.0" />
+                            <GradientStop Color="#cbad6d" Offset="1.0" />
+                        </LinearGradientBrush>
+                    </Ellipse.Fill>
+                </Ellipse>
+                <!-- Third Ellipse (Forward3) - Another expanding ellipse, starts even later -->
+                <Ellipse x:Name="EclipseForward3"
 Height="50"
 Width="50"
 HorizontalAlignment="Center"
 VerticalAlignment="Center">
-                <Ellipse.Fill>
-                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                        <GradientStop Color="#ED4264" Offset="0.0" />
-                        <GradientStop Color="#cbad6d" Offset="1.0" />
-                    </LinearGradientBrush>
-                </Ellipse.Fill>
-            </Ellipse>
-            <!-- First Ellipse (Backward1) - Represents the outermost contracting ellipse when the button is unchecked -->
-            <Ellipse x:Name="EclipseBackward1"
+                    <Ellipse.Fill>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                            <GradientStop Color="#ED4264" Offset="0.0" />
+                            <GradientStop Color="#cbad6d" Offset="1.0" />
+                        </LinearGradientBrush>
+                    </Ellipse.Fill>
+                </Ellipse>
+                <!-- First Ellipse (Backward1) - Represents the outermost contracting ellipse when the button is unchecked -->
+                <Ellipse x:Name="EclipseBackward1"
 Height="50"
 Width="50"
 HorizontalAlignment="Center"
 VerticalAlignment="Center">
-                <!-- Ellipse Fill with a gradient from #ef32d9 to #89fffd -->
-                <Ellipse.Fill>
-                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                        <GradientStop Color="#ef32d9" Offset="0.0" />
-                        <GradientStop Color="#89fffd" Offset="1.0" />
-                    </LinearGradientBrush>
-                </Ellipse.Fill>
-            </Ellipse>
-            <!-- Second Ellipse (Backward2) - Another contracting ellipse, starts later than Backward1 -->
-            <Ellipse x:Name="EclipseBackward2"
+                    <!-- Ellipse Fill with a gradient from #ef32d9 to #89fffd -->
+                    <Ellipse.Fill>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                            <GradientStop Color="#ef32d9" Offset="0.0" />
+                            <GradientStop Color="#89fffd" Offset="1.0" />
+                        </LinearGradientBrush>
+                    </Ellipse.Fill>
+                </Ellipse>
+                <!-- Second Ellipse (Backward2) - Another contracting ellipse, starts later than Backward1 -->
+                <Ellipse x:Name="EclipseBackward2"
 Height="50"
 Width="50"
 HorizontalAlignment="Center"
 VerticalAlignment="Center">
-                <Ellipse.Fill>
-                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                        <GradientStop Color="#ef32d9" Offset="0.0" />
-                        <GradientStop Color="#89fffd" Offset="1.0" />
-                    </LinearGradientBrush>
-                </Ellipse.Fill>
-            </Ellipse>
-            <!-- Third Ellipse (Backward3) - Another contracting ellipse, starts even later -->
-            <Ellipse x:Name="EclipseBackward3"
+                    <Ellipse.Fill>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                            <GradientStop Color="#ef32d9" Offset="0.0" />
+                            <GradientStop Color="#89fffd" Offset="1.0" />
+                        </LinearGradientBrush>
+                    </Ellipse.Fill>
+                </Ellipse>
+                <!-- Third Ellipse (Backward3) - Another contracting ellipse, starts even later -->
+                <Ellipse x:Name="EclipseBackward3"
 Height="50"
 Width="50"
 HorizontalAlignment="Center"
 VerticalAlignment="Center">
-                <Ellipse.Fill>
-                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                        <GradientStop Color="#ef32d9" Offset="0.0" />
-                        <GradientStop Color="#89fffd" Offset="1.0" />
-                    </LinearGradientBrush>
-                </Ellipse.Fill>
-            </Ellipse>
-            <!-- Execute Toggle Button - The main button in the center -->
-            <ToggleButton x:Name="ExecuteButton"
+                    <Ellipse.Fill>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                            <GradientStop Color="#ef32d9" Offset="0.0" />
+                            <GradientStop Color="#89fffd" Offset="1.0" />
+                        </LinearGradientBrush>
+                    </Ellipse.Fill>
+                </Ellipse>
+                <!-- Execute Toggle Button - The main button in the center -->
+                <ToggleButton x:Name="ExecuteButton"
      Height="55"
      Width="55"
      HorizontalAlignment="Center"
      VerticalAlignment="Center" >
-                <ToggleButton.Template>
-                    <ControlTemplate TargetType="ToggleButton">
-                        <!-- Border around the button with rounded corners -->
-                        <Border x:Name="border"
+                    <ToggleButton.Template>
+                        <ControlTemplate TargetType="ToggleButton">
+                            <!-- Border around the button with rounded corners -->
+                            <Border x:Name="border"
            Background="Transparent"
            CornerRadius="30">
-                            <Grid x:Name="ExecuteButtonIconImageGrid">
-                                <!-- Button icon image centered inside the button -->
-                                <Image x:Name="ExecuteIconImage" Source="icon.png"
+                                <Grid x:Name="ExecuteButtonIconImageGrid">
+                                    <!-- Button icon image centered inside the button -->
+                                    <Image x:Name="ExecuteIconImage" Source="icon.png"
                   Stretch="None" HorizontalAlignment="Center" VerticalAlignment="Center" />
-                            </Grid>
-                        </Border>
-                        <!-- Triggers for visual states (hover, checked) -->
-                        <ControlTemplate.Triggers>
-                            <!-- Mouse hover trigger -->
-                            <Trigger Property="IsMouseOver" Value="True">
-                                <Setter Property="Background" TargetName="border">
-                                    <Setter.Value>
-                                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                                            <GradientStop Color="#ED4264" Offset="0.0" />
-                                            <GradientStop Color="#cbad6d" Offset="1.0" />
-                                        </LinearGradientBrush>
-                                    </Setter.Value>
-                                </Setter>
-                            </Trigger>
-                            <!-- Button checked trigger -->
-                            <Trigger Property="IsChecked" Value="True">
-                                <Setter Property="Background" TargetName="border">
-                                    <Setter.Value>
-                                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                                            <GradientStop Color="#ED4264" Offset="0.0" />
-                                            <GradientStop Color="#cbad6d" Offset="1.0" />
-                                        </LinearGradientBrush>
-                                    </Setter.Value>
-                                </Setter>
-                            </Trigger>
-                            <!-- MultiTrigger: Hovering while the button is unchecked -->
-                            <MultiTrigger>
-                                <MultiTrigger.Conditions>
-                                    <Condition Property="IsMouseOver" Value="True" />
-                                    <Condition Property="IsChecked" Value="False" />
-                                </MultiTrigger.Conditions>
-                                <Setter Property="Background" TargetName="border">
-                                    <Setter.Value>
-                                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                                            <GradientStop Color="#ef32d9" Offset="0.0" />
-                                            <GradientStop Color="#89fffd" Offset="1.0" />
-                                        </LinearGradientBrush>
-                                    </Setter.Value>
-                                </Setter>
-                            </MultiTrigger>
-                        </ControlTemplate.Triggers>
-                    </ControlTemplate>
-                </ToggleButton.Template>
-                <!-- Triggers for button actions (Checked, Unchecked) -->
-                <ToggleButton.Triggers>
-                    <!-- When the button is checked (clicked) -->
-                    <EventTrigger RoutedEvent="ToggleButton.Checked">
-                        <EventTrigger.Actions>
-                            <!-- Start the forward expanding animations -->
-                            <BeginStoryboard x:Name="Ellipse_Activated">
-                                <Storyboard>
-                                    <!-- Forward1 Animation (Expanding and fading out) -->
-                                    <DoubleAnimation BeginTime="00:00:00"
+                                </Grid>
+                            </Border>
+                            <!-- Triggers for visual states (hover, checked) -->
+                            <ControlTemplate.Triggers>
+                                <!-- Mouse hover trigger -->
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Background" TargetName="border">
+                                        <Setter.Value>
+                                            <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                                <GradientStop Color="#ED4264" Offset="0.0" />
+                                                <GradientStop Color="#cbad6d" Offset="1.0" />
+                                            </LinearGradientBrush>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Trigger>
+                                <!-- Button checked trigger -->
+                                <Trigger Property="IsChecked" Value="True">
+                                    <Setter Property="Background" TargetName="border">
+                                        <Setter.Value>
+                                            <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                                <GradientStop Color="#ED4264" Offset="0.0" />
+                                                <GradientStop Color="#cbad6d" Offset="1.0" />
+                                            </LinearGradientBrush>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Trigger>
+                                <!-- MultiTrigger: Hovering while the button is unchecked -->
+                                <MultiTrigger>
+                                    <MultiTrigger.Conditions>
+                                        <Condition Property="IsMouseOver" Value="True" />
+                                        <Condition Property="IsChecked" Value="False" />
+                                    </MultiTrigger.Conditions>
+                                    <Setter Property="Background" TargetName="border">
+                                        <Setter.Value>
+                                            <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                                <GradientStop Color="#ef32d9" Offset="0.0" />
+                                                <GradientStop Color="#89fffd" Offset="1.0" />
+                                            </LinearGradientBrush>
+                                        </Setter.Value>
+                                    </Setter>
+                                </MultiTrigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </ToggleButton.Template>
+                    <!-- Triggers for button actions (Checked, Unchecked) -->
+                    <ToggleButton.Triggers>
+                        <!-- When the button is checked (clicked) -->
+                        <EventTrigger RoutedEvent="ToggleButton.Checked">
+                            <EventTrigger.Actions>
+                                <!-- Start the forward expanding animations -->
+                                <BeginStoryboard x:Name="Ellipse_Activated">
+                                    <Storyboard>
+                                        <!-- Forward1 Animation (Expanding and fading out) -->
+                                        <DoubleAnimation BeginTime="00:00:00"
                                 Duration="00:00:01.5"
                                 From="50"
                                 To="150"
                                 Storyboard.TargetProperty="(Ellipse.Width)"
                                 Storyboard.TargetName="EclipseForward1"
                                 RepeatBehavior="Forever" />
-                                    <DoubleAnimation BeginTime="00:00:00"
+                                        <DoubleAnimation BeginTime="00:00:00"
                                 Duration="00:00:01.5"
                                 From="50"
                                 To="150"
                                 Storyboard.TargetProperty="(Ellipse.Height)"
                                 Storyboard.TargetName="EclipseForward1"
                                 RepeatBehavior="Forever" />
-                                    <DoubleAnimation Storyboard.TargetProperty="Opacity"
+                                        <DoubleAnimation Storyboard.TargetProperty="Opacity"
                                 Storyboard.TargetName="EclipseForward1"
                                 From="1.0"
                                 To="0.0"
                                 BeginTime="00:00:00"
                                 Duration="00:00:01.5"
                                 RepeatBehavior="Forever" />
-                                    <!-- Forward2 Animation (Starts 1 second later) -->
-                                    <DoubleAnimation BeginTime="00:00:00.5"
+                                        <!-- Forward2 Animation (Starts 1 second later) -->
+                                        <DoubleAnimation BeginTime="00:00:00.5"
                                 Duration="00:00:01.5"
                                 From="50"
                                 To="150"
                                 Storyboard.TargetProperty="(Ellipse.Width)"
                                 Storyboard.TargetName="EclipseForward2"
                                 RepeatBehavior="Forever" />
-                                    <DoubleAnimation BeginTime="00:00:00.5"
+                                        <DoubleAnimation BeginTime="00:00:00.5"
                                 Duration="00:00:01.5"
                                 From="50"
                                 To="150"
                                 Storyboard.TargetProperty="(Ellipse.Height)"
                                 Storyboard.TargetName="EclipseForward2"
                                 RepeatBehavior="Forever" />
-                                    <DoubleAnimation Storyboard.TargetProperty="Opacity"
+                                        <DoubleAnimation Storyboard.TargetProperty="Opacity"
                                 Storyboard.TargetName="EclipseForward2"
                                 From="1.0"
                                 To="0.0"
                                 BeginTime="00:00:00.5"
                                 Duration="00:00:01.5"
                                 RepeatBehavior="Forever" />
-                                    <!-- Forward3 Animation (Starts 2 seconds later) -->
-                                    <DoubleAnimation BeginTime="00:00:01"
+                                        <!-- Forward3 Animation (Starts 2 seconds later) -->
+                                        <DoubleAnimation BeginTime="00:00:01"
                                 Duration="00:00:01.5"
                                 From="50"
                                 To="150"
                                 Storyboard.TargetProperty="(Ellipse.Width)"
                                 Storyboard.TargetName="EclipseForward3"
                                 RepeatBehavior="Forever" />
-                                    <DoubleAnimation BeginTime="00:00:01"
+                                        <DoubleAnimation BeginTime="00:00:01"
                                 Duration="00:00:01.5"
                                 From="50"
                                 To="150"
                                 Storyboard.TargetProperty="(Ellipse.Height)"
                                 Storyboard.TargetName="EclipseForward3"
                                 RepeatBehavior="Forever" />
-                                    <DoubleAnimation Storyboard.TargetProperty="Opacity"
+                                        <DoubleAnimation Storyboard.TargetProperty="Opacity"
                                 Storyboard.TargetName="EclipseForward3"
                                 From="1.0"
                                 To="0.0"
                                 BeginTime="00:00:01"
                                 Duration="00:00:01.5"
                                 RepeatBehavior="Forever" />
-                                </Storyboard>
-                            </BeginStoryboard>
-                        </EventTrigger.Actions>
-                    </EventTrigger>
-                    <!-- When the button is unchecked -->
-                    <EventTrigger RoutedEvent="ToggleButton.Unchecked">
-                        <EventTrigger.Actions>
-                            <!-- Stop the forward animation -->
-                            <RemoveStoryboard BeginStoryboardName="Ellipse_Activated" />
-                            <!-- Start the backward contracting animations -->
-                            <BeginStoryboard x:Name="Ellipse_Deactivated">
-                                <Storyboard>
-                                    <!-- Backward1 Animation (Contracting and fading in) -->
-                                    <DoubleAnimation BeginTime="00:00:00"
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </EventTrigger.Actions>
+                        </EventTrigger>
+                        <!-- When the button is unchecked -->
+                        <EventTrigger RoutedEvent="ToggleButton.Unchecked">
+                            <EventTrigger.Actions>
+                                <!-- Stop the forward animation -->
+                                <RemoveStoryboard BeginStoryboardName="Ellipse_Activated" />
+                                <!-- Start the backward contracting animations -->
+                                <BeginStoryboard x:Name="Ellipse_Deactivated">
+                                    <Storyboard>
+                                        <!-- Backward1 Animation (Contracting and fading in) -->
+                                        <DoubleAnimation BeginTime="00:00:00"
                                 Duration="00:00:01.5"
                                 From="150"
                                 To="50"
                                 Storyboard.TargetProperty="(Ellipse.Width)"
                                 Storyboard.TargetName="EclipseBackward1" />
-                                    <DoubleAnimation BeginTime="00:00:00"
+                                        <DoubleAnimation BeginTime="00:00:00"
                                 Duration="00:00:01.5"
                                 From="150"
                                 To="50"
                                 Storyboard.TargetProperty="(Ellipse.Height)"
                                 Storyboard.TargetName="EclipseBackward1" />
-                                    <DoubleAnimation Storyboard.TargetProperty="Opacity"
+                                        <DoubleAnimation Storyboard.TargetProperty="Opacity"
                                 Storyboard.TargetName="EclipseBackward1"
                                 From="0.0"
                                 To="1.0"
                                 BeginTime="00:00:00"
                                 Duration="00:00:01.5" />
-                                    <!-- Backward2 Animation (Starts 1 second later) -->
-                                    <DoubleAnimation BeginTime="00:00:00"
+                                        <!-- Backward2 Animation (Starts 1 second later) -->
+                                        <DoubleAnimation BeginTime="00:00:00"
                                 Duration="00:00:01"
                                 From="125"
                                 To="50"
                                 Storyboard.TargetProperty="(Ellipse.Width)"
                                 Storyboard.TargetName="EclipseBackward2" />
-                                    <DoubleAnimation BeginTime="00:00:00"
+                                        <DoubleAnimation BeginTime="00:00:00"
                                 Duration="00:00:01"
                                 From="125"
                                 To="50"
                                 Storyboard.TargetProperty="(Ellipse.Height)"
                                 Storyboard.TargetName="EclipseBackward2" />
-                                    <DoubleAnimation Storyboard.TargetProperty="Opacity"
+                                        <DoubleAnimation Storyboard.TargetProperty="Opacity"
                                 Storyboard.TargetName="EclipseBackward2"
                                 From="0.0"
                                 To="1.0"
                                 BeginTime="00:00:00"
                                 Duration="00:00:01" />
-                                    <!-- Backward3 Animation (Starts 2 seconds later) -->
-                                    <DoubleAnimation BeginTime="00:00:00"
+                                        <!-- Backward3 Animation (Starts 2 seconds later) -->
+                                        <DoubleAnimation BeginTime="00:00:00"
                                 Duration="00:00:00.5"
                                 From="100"
                                 To="50"
                                 Storyboard.TargetProperty="(Ellipse.Width)"
                                 Storyboard.TargetName="EclipseBackward3" />
-                                    <DoubleAnimation BeginTime="00:00:00"
+                                        <DoubleAnimation BeginTime="00:00:00"
                                 Duration="00:00:00.5"
                                 From="100"
                                 To="50"
                                 Storyboard.TargetProperty="(Ellipse.Height)"
                                 Storyboard.TargetName="EclipseBackward3" />
-                                    <DoubleAnimation Storyboard.TargetProperty="Opacity"
+                                        <DoubleAnimation Storyboard.TargetProperty="Opacity"
                                 Storyboard.TargetName="EclipseBackward3"
                                 From="0.0"
                                 To="1.0"
                                 BeginTime="00:00:00"
                                 Duration="00:00:00.5" />
-                                </Storyboard>
-                            </BeginStoryboard>
-                        </EventTrigger.Actions>
-                    </EventTrigger>
-                </ToggleButton.Triggers>
-            </ToggleButton>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </EventTrigger.Actions>
+                        </EventTrigger>
+                    </ToggleButton.Triggers>
+                </ToggleButton>
+            </Grid>
+            <!--End of Refresh Button Grid-->
         </Grid>
-        <!--End of Refresh Button Grid-->
-    </Grid>
+
+    </ScrollViewer>
+
 </UserControl>

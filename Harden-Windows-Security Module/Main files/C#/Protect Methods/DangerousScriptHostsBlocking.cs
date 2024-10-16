@@ -4,11 +4,11 @@ using System.IO;
 
 namespace HardenWindowsSecurity
 {
-    public partial class DownloadsDefenseMeasures
+    public static partial class DownloadsDefenseMeasures
     {
         public static void DangerousScriptHostsBlocking()
         {
-            if (HardenWindowsSecurity.GlobalVars.path == null)
+            if (HardenWindowsSecurity.GlobalVars.path is null)
             {
                 throw new System.ArgumentNullException("GlobalVars.path cannot be null.");
             }

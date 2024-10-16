@@ -2,344 +2,377 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" Style="{StaticResource Page_Style}">
-    <Grid x:Name="ParentGrid">
-        <!-- Define the rows for the Grid -->
-        <Grid.RowDefinitions>
-            <!-- Top row for text -->
-            <RowDefinition Height="Auto" />
-            <!-- Middle row for three buttons -->
-            <RowDefinition Height="Auto" />
-            <!-- Bottom row for the execute button -->
-            <RowDefinition Height="*" />
-        </Grid.RowDefinitions>
-        <!-- Define the columns for the middle row -->
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*" />
-            <ColumnDefinition Width="*" />
-        </Grid.ColumnDefinitions>
-        <!-- Top row content (Text) -->
-        <TextBox Style="{StaticResource TextBoxStyle05}"
+
+    <ScrollViewer ScrollViewer.PanningMode="Both" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
+
+        <Grid x:Name="ParentGrid">
+            <!-- Define the rows for the Grid -->
+            <Grid.RowDefinitions>
+
+                <RowDefinition Height="Auto" />
+
+                <RowDefinition Height="Auto" />
+
+                <RowDefinition Height="150" />
+
+                <RowDefinition Height="Auto" />
+
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <!-- Define the columns for the middle row -->
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <!-- Top row content (Text) -->
+            <TextBox Style="{StaticResource TextBoxStyle05}"
                  Grid.Row="0" Grid.ColumnSpan="2" Text="Be cautious when using this tab; it will remove the protections you have applied to the system." HorizontalAlignment="Center" VerticalAlignment="Center" IsReadOnly="True" Cursor="Arrow" Margin="10"/>
-        <StackPanel Orientation="Vertical" Margin="0,50,0,50" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="1">
-            <Label Content="Select Categories to Remove" Style="{StaticResource ModernLabelStyle}"
+            <StackPanel Orientation="Vertical" Margin="0,20,0,20" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="1">
+                <Label Content="Select Categories to Remove" Style="{StaticResource ModernLabelStyle}"
                  VerticalAlignment="Top"  Margin="0,0,10,15"/>
-            <ComboBox x:Name="UnprotectCategories"
+                <ComboBox x:Name="UnprotectCategories"
 Width="330" VerticalAlignment="Bottom"
 Style="{StaticResource ModernComboBoxStyle}"
 ItemContainerStyle="{StaticResource ModernComboBoxItemStyle}"
                   SelectedIndex="3">
-                <ComboBoxItem Content="Only Remove The Process Mitigations" />
-                <ComboBoxItem Content="Only Remove The WDAC Policies" />
-                <ComboBoxItem Content="Only Remove The Country IP Blocking Firewall Rules" />
-                <ComboBoxItem Content="Remove All Protections" />
-            </ComboBox>
-        </StackPanel>
-        <StackPanel Orientation="Vertical" Margin="0,50,0,50" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="1">
-            <Label Content="Select WDAC Policies to Remove" Style="{StaticResource ModernLabelStyle}"
+                    <ComboBoxItem Content="Only Remove The Process Mitigations" />
+                    <ComboBoxItem Content="Only Remove The App Control Policies" />
+                    <ComboBoxItem Content="Only Remove The Country IP Blocking Firewall Rules" />
+                    <ComboBoxItem Content="Remove All Protections" />
+                </ComboBox>
+            </StackPanel>
+            <StackPanel Orientation="Vertical" Margin="0,10,0,10" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="1">
+                <Label Content="Select App Control Policies to Remove" Style="{StaticResource ModernLabelStyle}"
      VerticalAlignment="Top"  Margin="0,0,10,15"/>
-            <ComboBox x:Name="WDACPolicies"
+                <ComboBox x:Name="AppControlPolicies"
 Width="280" VerticalAlignment="Bottom"
 Style="{StaticResource ModernComboBoxStyle}"
 ItemContainerStyle="{StaticResource ModernComboBoxItemStyle}"
                   SelectedIndex="2">
-                <ComboBoxItem Content="Downloads Defense Measures" />
-                <ComboBoxItem Content="Dangerous Script Hosts Blocking" />
-                <ComboBoxItem Content="All WDAC Policies" />
-            </ComboBox>
-        </StackPanel>
-        <!-- Grid containing the Execute Button -->
-        <Grid x:Name="ExecuteButtonGrid" Height="150" Grid.Row="2" Grid.ColumnSpan="2" Margin="0,0,0,0">
-            <!-- First Ellipse (Forward1) - Represents the outermost expanding ellipse when the button is clicked -->
-            <!-- Initial height and Width of the Ellipse -->
-            <Ellipse x:Name="EclipseForward1"
+                    <ComboBoxItem Content="Downloads Defense Measures" />
+                    <ComboBoxItem Content="Dangerous Script Hosts Blocking" />
+                    <ComboBoxItem Content="All App Control Policies" />
+                </ComboBox>
+            </StackPanel>
+
+            <!-- Grid containing the Execute Button -->
+            <Grid x:Name="ExecuteButtonGrid" Height="150" Grid.Row="2" Grid.ColumnSpan="2" Margin="0,0,0,0">
+                <!-- First Ellipse (Forward1) - Represents the outermost expanding ellipse when the button is clicked -->
+                <!-- Initial height and Width of the Ellipse -->
+                <Ellipse x:Name="EclipseForward1"
                 Height="50"
                 Width="50"
                 HorizontalAlignment="Center"
                 VerticalAlignment="Center">
-                <!-- Ellipse Fill with a gradient from #ED4264 to #cbad6d -->
-                <Ellipse.Fill>
-                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                        <GradientStop Color="#ED4264" Offset="0.0" />
-                        <GradientStop Color="#cbad6d" Offset="1.0" />
-                    </LinearGradientBrush>
-                </Ellipse.Fill>
-            </Ellipse>
-            <!-- Second Ellipse (Forward2) - Another expanding ellipse, but starts later than Forward1 -->
-            <Ellipse x:Name="EclipseForward2"
+                    <!-- Ellipse Fill with a gradient from #ED4264 to #cbad6d -->
+                    <Ellipse.Fill>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                            <GradientStop Color="#ED4264" Offset="0.0" />
+                            <GradientStop Color="#cbad6d" Offset="1.0" />
+                        </LinearGradientBrush>
+                    </Ellipse.Fill>
+                </Ellipse>
+                <!-- Second Ellipse (Forward2) - Another expanding ellipse, but starts later than Forward1 -->
+                <Ellipse x:Name="EclipseForward2"
 Height="50"
 Width="50"
 HorizontalAlignment="Center"
 VerticalAlignment="Center">
-                <Ellipse.Fill>
-                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                        <GradientStop Color="#ED4264" Offset="0.0" />
-                        <GradientStop Color="#cbad6d" Offset="1.0" />
-                    </LinearGradientBrush>
-                </Ellipse.Fill>
-            </Ellipse>
-            <!-- Third Ellipse (Forward3) - Another expanding ellipse, starts even later -->
-            <Ellipse x:Name="EclipseForward3"
+                    <Ellipse.Fill>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                            <GradientStop Color="#ED4264" Offset="0.0" />
+                            <GradientStop Color="#cbad6d" Offset="1.0" />
+                        </LinearGradientBrush>
+                    </Ellipse.Fill>
+                </Ellipse>
+                <!-- Third Ellipse (Forward3) - Another expanding ellipse, starts even later -->
+                <Ellipse x:Name="EclipseForward3"
 Height="50"
 Width="50"
 HorizontalAlignment="Center"
 VerticalAlignment="Center">
-                <Ellipse.Fill>
-                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                        <GradientStop Color="#ED4264" Offset="0.0" />
-                        <GradientStop Color="#cbad6d" Offset="1.0" />
-                    </LinearGradientBrush>
-                </Ellipse.Fill>
-            </Ellipse>
-            <!-- First Ellipse (Backward1) - Represents the outermost contracting ellipse when the button is unchecked -->
-            <Ellipse x:Name="EclipseBackward1"
+                    <Ellipse.Fill>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                            <GradientStop Color="#ED4264" Offset="0.0" />
+                            <GradientStop Color="#cbad6d" Offset="1.0" />
+                        </LinearGradientBrush>
+                    </Ellipse.Fill>
+                </Ellipse>
+                <!-- First Ellipse (Backward1) - Represents the outermost contracting ellipse when the button is unchecked -->
+                <Ellipse x:Name="EclipseBackward1"
 Height="50"
 Width="50"
 HorizontalAlignment="Center"
 VerticalAlignment="Center">
-                <!-- Ellipse Fill with a gradient from #ef32d9 to #89fffd -->
-                <Ellipse.Fill>
-                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                        <GradientStop Color="#ef32d9" Offset="0.0" />
-                        <GradientStop Color="#89fffd" Offset="1.0" />
-                    </LinearGradientBrush>
-                </Ellipse.Fill>
-            </Ellipse>
-            <!-- Second Ellipse (Backward2) - Another contracting ellipse, starts later than Backward1 -->
-            <Ellipse x:Name="EclipseBackward2"
+                    <!-- Ellipse Fill with a gradient from #ef32d9 to #89fffd -->
+                    <Ellipse.Fill>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                            <GradientStop Color="#ef32d9" Offset="0.0" />
+                            <GradientStop Color="#89fffd" Offset="1.0" />
+                        </LinearGradientBrush>
+                    </Ellipse.Fill>
+                </Ellipse>
+                <!-- Second Ellipse (Backward2) - Another contracting ellipse, starts later than Backward1 -->
+                <Ellipse x:Name="EclipseBackward2"
 Height="50"
 Width="50"
 HorizontalAlignment="Center"
 VerticalAlignment="Center">
-                <Ellipse.Fill>
-                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                        <GradientStop Color="#ef32d9" Offset="0.0" />
-                        <GradientStop Color="#89fffd" Offset="1.0" />
-                    </LinearGradientBrush>
-                </Ellipse.Fill>
-            </Ellipse>
-            <!-- Third Ellipse (Backward3) - Another contracting ellipse, starts even later -->
-            <Ellipse x:Name="EclipseBackward3"
+                    <Ellipse.Fill>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                            <GradientStop Color="#ef32d9" Offset="0.0" />
+                            <GradientStop Color="#89fffd" Offset="1.0" />
+                        </LinearGradientBrush>
+                    </Ellipse.Fill>
+                </Ellipse>
+                <!-- Third Ellipse (Backward3) - Another contracting ellipse, starts even later -->
+                <Ellipse x:Name="EclipseBackward3"
 Height="50"
 Width="50"
 HorizontalAlignment="Center"
 VerticalAlignment="Center">
-                <Ellipse.Fill>
-                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                        <GradientStop Color="#ef32d9" Offset="0.0" />
-                        <GradientStop Color="#89fffd" Offset="1.0" />
-                    </LinearGradientBrush>
-                </Ellipse.Fill>
-            </Ellipse>
-            <!-- Refresh Toggle Button - The main button in the center -->
-            <ToggleButton x:Name="ExecuteButton"
+                    <Ellipse.Fill>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                            <GradientStop Color="#ef32d9" Offset="0.0" />
+                            <GradientStop Color="#89fffd" Offset="1.0" />
+                        </LinearGradientBrush>
+                    </Ellipse.Fill>
+                </Ellipse>
+                <!-- Refresh Toggle Button - The main button in the center -->
+                <ToggleButton x:Name="ExecuteButton"
      Height="55"
      Width="55"
      HorizontalAlignment="Center"
      VerticalAlignment="Center" >
-                <ToggleButton.Template>
-                    <ControlTemplate TargetType="ToggleButton">
-                        <!-- Border around the button with rounded corners -->
-                        <Border x:Name="border"
+                    <ToggleButton.Template>
+                        <ControlTemplate TargetType="ToggleButton">
+                            <!-- Border around the button with rounded corners -->
+                            <Border x:Name="border"
            Background="Transparent"
            CornerRadius="30">
-                            <Grid x:Name="RefreshButtonIconImageGrid">
-                                <!-- Button icon image centered inside the button -->
-                                <Image x:Name="RefreshIconImage" Source="icon.png"
+                                <Grid x:Name="RefreshButtonIconImageGrid">
+                                    <!-- Button icon image centered inside the button -->
+                                    <Image x:Name="RefreshIconImage" Source="icon.png"
                   Stretch="None" HorizontalAlignment="Center" VerticalAlignment="Center" />
-                            </Grid>
-                        </Border>
-                        <!-- Triggers for visual states (hover, checked) -->
-                        <ControlTemplate.Triggers>
-                            <!-- Mouse hover trigger -->
-                            <Trigger Property="IsMouseOver" Value="True">
-                                <Setter Property="Background" TargetName="border">
-                                    <Setter.Value>
-                                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                                            <GradientStop Color="#ED4264" Offset="0.0" />
-                                            <GradientStop Color="#cbad6d" Offset="1.0" />
-                                        </LinearGradientBrush>
-                                    </Setter.Value>
-                                </Setter>
-                            </Trigger>
-                            <!-- Button checked trigger -->
-                            <Trigger Property="IsChecked" Value="True">
-                                <Setter Property="Background" TargetName="border">
-                                    <Setter.Value>
-                                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                                            <GradientStop Color="#ED4264" Offset="0.0" />
-                                            <GradientStop Color="#cbad6d" Offset="1.0" />
-                                        </LinearGradientBrush>
-                                    </Setter.Value>
-                                </Setter>
-                            </Trigger>
-                            <!-- MultiTrigger: Hovering while the button is unchecked -->
-                            <MultiTrigger>
-                                <MultiTrigger.Conditions>
-                                    <Condition Property="IsMouseOver" Value="True" />
-                                    <Condition Property="IsChecked" Value="False" />
-                                </MultiTrigger.Conditions>
-                                <Setter Property="Background" TargetName="border">
-                                    <Setter.Value>
-                                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
-                                            <GradientStop Color="#ef32d9" Offset="0.0" />
-                                            <GradientStop Color="#89fffd" Offset="1.0" />
-                                        </LinearGradientBrush>
-                                    </Setter.Value>
-                                </Setter>
-                            </MultiTrigger>
-                        </ControlTemplate.Triggers>
-                    </ControlTemplate>
-                </ToggleButton.Template>
-                <!-- Triggers for button actions (Checked, Unchecked) -->
-                <ToggleButton.Triggers>
-                    <!-- When the button is checked (clicked) -->
-                    <EventTrigger RoutedEvent="ToggleButton.Checked">
-                        <EventTrigger.Actions>
-                            <!-- Start the forward expanding animations -->
-                            <BeginStoryboard x:Name="Ellipse_Activated">
-                                <Storyboard>
-                                    <!-- Forward1 Animation (Expanding and fading out) -->
-                                    <DoubleAnimation BeginTime="00:00:00"
+                                </Grid>
+                            </Border>
+                            <!-- Triggers for visual states (hover, checked) -->
+                            <ControlTemplate.Triggers>
+                                <!-- Mouse hover trigger -->
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Background" TargetName="border">
+                                        <Setter.Value>
+                                            <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                                <GradientStop Color="#ED4264" Offset="0.0" />
+                                                <GradientStop Color="#cbad6d" Offset="1.0" />
+                                            </LinearGradientBrush>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Trigger>
+                                <!-- Button checked trigger -->
+                                <Trigger Property="IsChecked" Value="True">
+                                    <Setter Property="Background" TargetName="border">
+                                        <Setter.Value>
+                                            <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                                <GradientStop Color="#ED4264" Offset="0.0" />
+                                                <GradientStop Color="#cbad6d" Offset="1.0" />
+                                            </LinearGradientBrush>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Trigger>
+                                <!-- MultiTrigger: Hovering while the button is unchecked -->
+                                <MultiTrigger>
+                                    <MultiTrigger.Conditions>
+                                        <Condition Property="IsMouseOver" Value="True" />
+                                        <Condition Property="IsChecked" Value="False" />
+                                    </MultiTrigger.Conditions>
+                                    <Setter Property="Background" TargetName="border">
+                                        <Setter.Value>
+                                            <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                                <GradientStop Color="#ef32d9" Offset="0.0" />
+                                                <GradientStop Color="#89fffd" Offset="1.0" />
+                                            </LinearGradientBrush>
+                                        </Setter.Value>
+                                    </Setter>
+                                </MultiTrigger>
+                            </ControlTemplate.Triggers>
+                        </ControlTemplate>
+                    </ToggleButton.Template>
+                    <!-- Triggers for button actions (Checked, Unchecked) -->
+                    <ToggleButton.Triggers>
+                        <!-- When the button is checked (clicked) -->
+                        <EventTrigger RoutedEvent="ToggleButton.Checked">
+                            <EventTrigger.Actions>
+                                <!-- Start the forward expanding animations -->
+                                <BeginStoryboard x:Name="Ellipse_Activated">
+                                    <Storyboard>
+                                        <!-- Forward1 Animation (Expanding and fading out) -->
+                                        <DoubleAnimation BeginTime="00:00:00"
                                 Duration="00:00:01.5"
                                 From="50"
                                 To="150"
                                 Storyboard.TargetProperty="(Ellipse.Width)"
                                 Storyboard.TargetName="EclipseForward1"
                                 RepeatBehavior="Forever" />
-                                    <DoubleAnimation BeginTime="00:00:00"
+                                        <DoubleAnimation BeginTime="00:00:00"
                                 Duration="00:00:01.5"
                                 From="50"
                                 To="150"
                                 Storyboard.TargetProperty="(Ellipse.Height)"
                                 Storyboard.TargetName="EclipseForward1"
                                 RepeatBehavior="Forever" />
-                                    <DoubleAnimation Storyboard.TargetProperty="Opacity"
+                                        <DoubleAnimation Storyboard.TargetProperty="Opacity"
                                 Storyboard.TargetName="EclipseForward1"
                                 From="1.0"
                                 To="0.0"
                                 BeginTime="00:00:00"
                                 Duration="00:00:01.5"
                                 RepeatBehavior="Forever" />
-                                    <!-- Forward2 Animation (Starts 1 second later) -->
-                                    <DoubleAnimation BeginTime="00:00:00.5"
+                                        <!-- Forward2 Animation (Starts 1 second later) -->
+                                        <DoubleAnimation BeginTime="00:00:00.5"
                                 Duration="00:00:01.5"
                                 From="50"
                                 To="150"
                                 Storyboard.TargetProperty="(Ellipse.Width)"
                                 Storyboard.TargetName="EclipseForward2"
                                 RepeatBehavior="Forever" />
-                                    <DoubleAnimation BeginTime="00:00:00.5"
+                                        <DoubleAnimation BeginTime="00:00:00.5"
                                 Duration="00:00:01.5"
                                 From="50"
                                 To="150"
                                 Storyboard.TargetProperty="(Ellipse.Height)"
                                 Storyboard.TargetName="EclipseForward2"
                                 RepeatBehavior="Forever" />
-                                    <DoubleAnimation Storyboard.TargetProperty="Opacity"
+                                        <DoubleAnimation Storyboard.TargetProperty="Opacity"
                                 Storyboard.TargetName="EclipseForward2"
                                 From="1.0"
                                 To="0.0"
                                 BeginTime="00:00:00.5"
                                 Duration="00:00:01.5"
                                 RepeatBehavior="Forever" />
-                                    <!-- Forward3 Animation (Starts 2 seconds later) -->
-                                    <DoubleAnimation BeginTime="00:00:01"
+                                        <!-- Forward3 Animation (Starts 2 seconds later) -->
+                                        <DoubleAnimation BeginTime="00:00:01"
                                 Duration="00:00:01.5"
                                 From="50"
                                 To="150"
                                 Storyboard.TargetProperty="(Ellipse.Width)"
                                 Storyboard.TargetName="EclipseForward3"
                                 RepeatBehavior="Forever" />
-                                    <DoubleAnimation BeginTime="00:00:01"
+                                        <DoubleAnimation BeginTime="00:00:01"
                                 Duration="00:00:01.5"
                                 From="50"
                                 To="150"
                                 Storyboard.TargetProperty="(Ellipse.Height)"
                                 Storyboard.TargetName="EclipseForward3"
                                 RepeatBehavior="Forever" />
-                                    <DoubleAnimation Storyboard.TargetProperty="Opacity"
+                                        <DoubleAnimation Storyboard.TargetProperty="Opacity"
                                 Storyboard.TargetName="EclipseForward3"
                                 From="1.0"
                                 To="0.0"
                                 BeginTime="00:00:01"
                                 Duration="00:00:01.5"
                                 RepeatBehavior="Forever" />
-                                </Storyboard>
-                            </BeginStoryboard>
-                        </EventTrigger.Actions>
-                    </EventTrigger>
-                    <!-- When the button is unchecked -->
-                    <EventTrigger RoutedEvent="ToggleButton.Unchecked">
-                        <EventTrigger.Actions>
-                            <!-- Stop the forward animation -->
-                            <RemoveStoryboard BeginStoryboardName="Ellipse_Activated" />
-                            <!-- Start the backward contracting animations -->
-                            <BeginStoryboard x:Name="Ellipse_Deactivated">
-                                <Storyboard>
-                                    <!-- Backward1 Animation (Contracting and fading in) -->
-                                    <DoubleAnimation BeginTime="00:00:00"
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </EventTrigger.Actions>
+                        </EventTrigger>
+                        <!-- When the button is unchecked -->
+                        <EventTrigger RoutedEvent="ToggleButton.Unchecked">
+                            <EventTrigger.Actions>
+                                <!-- Stop the forward animation -->
+                                <RemoveStoryboard BeginStoryboardName="Ellipse_Activated" />
+                                <!-- Start the backward contracting animations -->
+                                <BeginStoryboard x:Name="Ellipse_Deactivated">
+                                    <Storyboard>
+                                        <!-- Backward1 Animation (Contracting and fading in) -->
+                                        <DoubleAnimation BeginTime="00:00:00"
                                 Duration="00:00:01.5"
                                 From="150"
                                 To="50"
                                 Storyboard.TargetProperty="(Ellipse.Width)"
                                 Storyboard.TargetName="EclipseBackward1" />
-                                    <DoubleAnimation BeginTime="00:00:00"
+                                        <DoubleAnimation BeginTime="00:00:00"
                                 Duration="00:00:01.5"
                                 From="150"
                                 To="50"
                                 Storyboard.TargetProperty="(Ellipse.Height)"
                                 Storyboard.TargetName="EclipseBackward1" />
-                                    <DoubleAnimation Storyboard.TargetProperty="Opacity"
+                                        <DoubleAnimation Storyboard.TargetProperty="Opacity"
                                 Storyboard.TargetName="EclipseBackward1"
                                 From="0.0"
                                 To="1.0"
                                 BeginTime="00:00:00"
                                 Duration="00:00:01.5" />
-                                    <!-- Backward2 Animation (Starts 1 second later) -->
-                                    <DoubleAnimation BeginTime="00:00:00"
+                                        <!-- Backward2 Animation (Starts 1 second later) -->
+                                        <DoubleAnimation BeginTime="00:00:00"
                                 Duration="00:00:01"
                                 From="125"
                                 To="50"
                                 Storyboard.TargetProperty="(Ellipse.Width)"
                                 Storyboard.TargetName="EclipseBackward2" />
-                                    <DoubleAnimation BeginTime="00:00:00"
+                                        <DoubleAnimation BeginTime="00:00:00"
                                 Duration="00:00:01"
                                 From="125"
                                 To="50"
                                 Storyboard.TargetProperty="(Ellipse.Height)"
                                 Storyboard.TargetName="EclipseBackward2" />
-                                    <DoubleAnimation Storyboard.TargetProperty="Opacity"
+                                        <DoubleAnimation Storyboard.TargetProperty="Opacity"
                                 Storyboard.TargetName="EclipseBackward2"
                                 From="0.0"
                                 To="1.0"
                                 BeginTime="00:00:00"
                                 Duration="00:00:01" />
-                                    <!-- Backward3 Animation (Starts 2 seconds later) -->
-                                    <DoubleAnimation BeginTime="00:00:00"
+                                        <!-- Backward3 Animation (Starts 2 seconds later) -->
+                                        <DoubleAnimation BeginTime="00:00:00"
                                 Duration="00:00:00.5"
                                 From="100"
                                 To="50"
                                 Storyboard.TargetProperty="(Ellipse.Width)"
                                 Storyboard.TargetName="EclipseBackward3" />
-                                    <DoubleAnimation BeginTime="00:00:00"
+                                        <DoubleAnimation BeginTime="00:00:00"
                                 Duration="00:00:00.5"
                                 From="100"
                                 To="50"
                                 Storyboard.TargetProperty="(Ellipse.Height)"
                                 Storyboard.TargetName="EclipseBackward3" />
-                                    <DoubleAnimation Storyboard.TargetProperty="Opacity"
+                                        <DoubleAnimation Storyboard.TargetProperty="Opacity"
                                 Storyboard.TargetName="EclipseBackward3"
                                 From="0.0"
                                 To="1.0"
                                 BeginTime="00:00:00"
                                 Duration="00:00:00.5" />
-                                </Storyboard>
-                            </BeginStoryboard>
-                        </EventTrigger.Actions>
-                    </EventTrigger>
-                </ToggleButton.Triggers>
-            </ToggleButton>
+                                    </Storyboard>
+                                </BeginStoryboard>
+                            </EventTrigger.Actions>
+                        </EventTrigger>
+                    </ToggleButton.Triggers>
+                </ToggleButton>
+            </Grid>
+            <!--End of Refresh Button Grid-->
+
+
+            <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center" Grid.Row="3" Grid.ColumnSpan="2" >
+                <TextBlock x:Name="TextBlockdCategories" HorizontalAlignment="Center" VerticalAlignment="Center" Text="Select a Drive to Decrypt" Foreground="Black" FontSize="16" FontWeight="Normal" Margin="5,0,5,0" />
+                <Button x:Name="RefreshDrivesForSelection" Style="{StaticResource CustomButtonStyle2}" Margin="5,0,5,0">
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <Image x:Name="RefreshDrivesForSelectionButtonIcon" Width="40" Height="30"/>
+                        <TextBlock Text="Refresh" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,0,8,0" FontWeight="Normal"/>
+                    </StackPanel>
+                </Button>
+                <ComboBox x:Name="ListOfDrivesComboBox"
+Width="110" Margin="10,0,0,0" FontWeight="Normal"
+Style="{StaticResource ModernComboBoxStyle}"
+ItemContainerStyle="{StaticResource ModernComboBoxItemStyle}"
+SelectedIndex="0"></ComboBox>
+            </StackPanel>
+
+
+            <Button x:Name="DecryptButton" Style="{StaticResource CustomButtonStyle2}" Margin="5,15,5,30" Grid.Row="4" Grid.ColumnSpan="2">
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <TextBlock Text="Decrypt the Selected Drive" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="8,0,8,0" FontWeight="Normal"/>
+                </StackPanel>
+            </Button>
+
         </Grid>
-        <!--End of Refresh Button Grid-->
-    </Grid>
+    </ScrollViewer>
 </UserControl>

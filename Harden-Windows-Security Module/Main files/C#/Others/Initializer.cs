@@ -20,7 +20,7 @@ namespace HardenWindowsSecurity
         public static void Initialize(string VerbosePreference = "SilentlyContinue", bool IsConfirmationDuringRunTime = false)
         {
 
-            HardenWindowsSecurity.GlobalVars.LogHeaderHasBeenWritten = false;
+            GlobalVars.LogHeaderHasBeenWritten = false;
 
             // Set the default culture to InvariantCulture globally
             CultureInfo.DefaultThreadCurrentCulture = CultureInfo.InvariantCulture;
@@ -32,12 +32,12 @@ namespace HardenWindowsSecurity
 
                 using (RegistryKey? key = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows NT\CurrentVersion"))
                 {
-                    if (key != null)
+                    if (key is not null)
                     {
                         object? ubrValue = key.GetValue("UBR");
-                        if (ubrValue != null && int.TryParse(ubrValue.ToString(), out int ubr))
+                        if (ubrValue is not null && int.TryParse(ubrValue.ToString(), out int ubr))
                         {
-                            HardenWindowsSecurity.GlobalVars.UBR = ubr;
+                            GlobalVars.UBR = ubr;
                         }
                         else
                         {
@@ -51,66 +51,66 @@ namespace HardenWindowsSecurity
                 }
 
                 // Concatenate OSBuildNumber and UBR to form the final string
-                HardenWindowsSecurity.GlobalVars.FullOSBuild = $"{HardenWindowsSecurity.GlobalVars.OSBuildNumber}.{HardenWindowsSecurity.GlobalVars.UBR}";
+                GlobalVars.FullOSBuild = $"{GlobalVars.OSBuildNumber}.{GlobalVars.UBR}";
 
                 // If the working directory exists, delete it
-                if (Directory.Exists(HardenWindowsSecurity.GlobalVars.WorkingDir))
+                if (Directory.Exists(GlobalVars.WorkingDir))
                 {
-                    Directory.Delete(HardenWindowsSecurity.GlobalVars.WorkingDir, true);
+                    Directory.Delete(GlobalVars.WorkingDir, true);
                 }
 
                 // Create the working directory
-                _ = Directory.CreateDirectory(HardenWindowsSecurity.GlobalVars.WorkingDir);
+                _ = Directory.CreateDirectory(GlobalVars.WorkingDir);
 
-                // Initialize the RegistryCSVItems list so that the HardenWindowsSecurity.HardeningRegistryKeys.ReadCsv() method can write to it
-                HardenWindowsSecurity.GlobalVars.RegistryCSVItems = [];
+                // Initialize the RegistryCSVItems list so that the HardeningRegistryKeys.ReadCsv() method can write to it
+                GlobalVars.RegistryCSVItems = [];
 
-                // Parse the Registry.csv and save it to the global HardenWindowsSecurity.GlobalVars.RegistryCSVItems list
-                HardenWindowsSecurity.HardeningRegistryKeys.ReadCsv();
+                // Parse the Registry.csv and save it to the global GlobalVars.RegistryCSVItems list
+                HardeningRegistryKeys.ReadCsv();
 
-                // Initialize the ProcessMitigations list so that the HardenWindowsSecurity.ProcessMitigationsParser.ReadCsv() method can write to it
-                HardenWindowsSecurity.GlobalVars.ProcessMitigations = [];
+                // Initialize the ProcessMitigations list so that the ProcessMitigationsParser.ReadCsv() method can write to it
+                GlobalVars.ProcessMitigations = [];
 
-                // Parse the ProcessMitigations.csv and save it to the global HardenWindowsSecurity.GlobalVars.ProcessMitigations list
-                HardenWindowsSecurity.ProcessMitigationsParser.ReadCsv();
+                // Parse the ProcessMitigations.csv and save it to the global GlobalVars.ProcessMitigations list
+                ProcessMitigationsParser.ReadCsv();
 
                 // Convert the FullOSBuild and RequiredBuild strings to decimals so that we can compare them
-                if (!TryParseBuildVersion(HardenWindowsSecurity.GlobalVars.FullOSBuild, out decimal fullOSBuild))
+                if (!TryParseBuildVersion(GlobalVars.FullOSBuild, out decimal fullOSBuild))
                 {
                     throw new FormatException("The OS build version strings are not in a correct format.");
                 }
 
                 // Make sure the current OS build is equal or greater than the required build number
-                if (!(fullOSBuild >= HardenWindowsSecurity.GlobalVars.Requiredbuild))
+                if (!(fullOSBuild >= GlobalVars.Requiredbuild))
                 {
-                    throw new PlatformNotSupportedException($"You are not using the latest build of the Windows OS. A minimum build of {HardenWindowsSecurity.GlobalVars.Requiredbuild} is required but your OS build is {fullOSBuild}\nPlease go to Windows Update to install the updates and then try again.");
+                    throw new PlatformNotSupportedException($"You are not using the latest build of the Windows OS. A minimum build of {GlobalVars.Requiredbuild} is required but your OS build is {fullOSBuild}\nPlease go to Windows Update to install the updates and then try again.");
                 }
 
             }
 
-            // Get the MSFT_MpPreference WMI results and save them to the global variable HardenWindowsSecurity.GlobalVars.MDAVPreferencesCurrent
-            HardenWindowsSecurity.GlobalVars.MDAVPreferencesCurrent = HardenWindowsSecurity.MpPreferenceHelper.GetMpPreference();
+            // Get the MSFT_MpPreference WMI results and save them to the global variable GlobalVars.MDAVPreferencesCurrent
+            GlobalVars.MDAVPreferencesCurrent = MpPreferenceHelper.GetMpPreference();
 
-            // Get the MSFT_MpComputerStatus and save them to the global variable HardenWindowsSecurity.GlobalVars.MDAVConfigCurrent
-            HardenWindowsSecurity.GlobalVars.MDAVConfigCurrent = HardenWindowsSecurity.ConfigDefenderHelper.GetMpComputerStatus();
+            // Get the MSFT_MpComputerStatus and save them to the global variable GlobalVars.MDAVConfigCurrent
+            GlobalVars.MDAVConfigCurrent = ConfigDefenderHelper.GetMpComputerStatus();
 
             // Total number of Compliant values
-            HardenWindowsSecurity.GlobalVars.TotalNumberOfTrueCompliantValues = 252;
+            GlobalVars.TotalNumberOfTrueCompliantValues = 253;
 
             // Getting the $VerbosePreference from the calling cmdlet and saving it in the global variable
-            HardenWindowsSecurity.GlobalVars.VerbosePreference = VerbosePreference;
+            GlobalVars.VerbosePreference = VerbosePreference;
 
             // Create an empty ConcurrentDictionary to store the final results of the cmdlets
-            HardenWindowsSecurity.GlobalVars.FinalMegaObject = new System.Collections.Concurrent.ConcurrentDictionary<System.String, System.Collections.Generic.List<HardenWindowsSecurity.IndividualResult>>();
+            GlobalVars.FinalMegaObject = new System.Collections.Concurrent.ConcurrentDictionary<System.String, System.Collections.Generic.List<IndividualResult>>();
 
             // Create an empty dictionary to store the System Security Policies from the security_policy.inf file
-            HardenWindowsSecurity.GlobalVars.SystemSecurityPoliciesIniObject = [];
+            GlobalVars.SystemSecurityPoliciesIniObject = [];
 
             // Make sure Admin privileges exist before running this method
-            if (HardenWindowsSecurity.UserPrivCheck.IsAdmin())
+            if (UserPrivCheck.IsAdmin())
             {
                 // Process the MDM related CimInstances and store them in a global variable
-                HardenWindowsSecurity.GlobalVars.MDMResults = HardenWindowsSecurity.MDMClassProcessor.Process();
+                GlobalVars.MDMResults = MDMClassProcessor.Process();
             }
         }
 

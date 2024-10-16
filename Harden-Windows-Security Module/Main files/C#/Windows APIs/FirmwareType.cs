@@ -4,7 +4,7 @@ using System.Runtime.InteropServices;
 
 namespace HardenWindowsSecurity
 {
-    internal class FirmwareChecker
+    internal static class FirmwareChecker
     {
         // https://learn.microsoft.com/en-us/windows/win32/api/winbase/nf-winbase-getfirmwaretype
         [DllImport(dllName: "kernel32.dll", SetLastError = true)]

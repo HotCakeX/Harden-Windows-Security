@@ -70,7 +70,7 @@ namespace HardenWindowsSecurity
                     string state = ConvertStateToString((UInt32)obj["InstallState"]);
 
                     // If the name is not null, add it to the dictionary
-                    if (name != null)
+                    if (name is not null)
                     {
                         states[name] = state;
                     }
@@ -99,11 +99,11 @@ return ((Get-WindowsCapability -Online | Where-Object -FilterScript { $_.Name -l
             string script = scriptTemplate.Replace("{CompatibilityName}", capabilityName, StringComparison.OrdinalIgnoreCase);
 
             // Execute the script and return the output - true means the PowerShell script will return string output and won't write the normal output to the console or GUI
-            string? output = HardenWindowsSecurity.PowerShellExecutor.ExecuteScript(script, true);
+            string? output = PowerShellExecutor.ExecuteScript(script, true);
 
-            if (output == null)
+            if (output is null)
             {
-                HardenWindowsSecurity.Logger.LogMessage($"The output of the {capabilityName} state check was null", LogTypeIntel.Information);
+                Logger.LogMessage($"The output of the {capabilityName} state check was null", LogTypeIntel.Information);
                 return "Unknown";
             }
 
@@ -122,7 +122,7 @@ return ((Get-WindowsCapability -Online | Where-Object -FilterScript { $_.Name -l
                 return "Staged";
             }
 
-            HardenWindowsSecurity.Logger.LogMessage($"The output of the {capabilityName} state check is {output}", LogTypeIntel.Information);
+            Logger.LogMessage($"The output of the {capabilityName} state check is {output}", LogTypeIntel.Information);
 
             return "Unknown";
         }
@@ -155,21 +155,21 @@ return ((Get-WindowsCapability -Online | Where-Object -FilterScript { $_.Name -l
             // The logic to handle such cases exist in other methods that call this method, but the error must not be terminating
             if (process.ExitCode == 87)
             {
-                //    HardenWindowsSecurity.Logger.LogMessage($"Error details: {error}");
-                //    HardenWindowsSecurity.Logger.LogMessage($"DISM command output: {output}");
+                //    Logger.LogMessage($"Error details: {error}");
+                //    Logger.LogMessage($"DISM command output: {output}");
                 return string.Empty;
             }
             // https://learn.microsoft.com/en-us/windows/win32/debug/system-error-codes--1700-3999-
             else if (process.ExitCode == 3010)
             {
-                HardenWindowsSecurity.Logger.LogMessage($"Reboot required to finish the feature/capability installation/uninstallation.", LogTypeIntel.Information);
+                Logger.LogMessage($"Reboot required to finish the feature/capability installation/uninstallation.", LogTypeIntel.Information);
                 return string.Empty;
             }
             else if (process.ExitCode != 0)
             {
                 // Print or log error and output details for other error codes
-                HardenWindowsSecurity.Logger.LogMessage($"DISM command failed with exit code {process.ExitCode}. Error details: {error}", LogTypeIntel.Error);
-                HardenWindowsSecurity.Logger.LogMessage($"DISM command output: {output}", LogTypeIntel.Error);
+                Logger.LogMessage($"DISM command failed with exit code {process.ExitCode}. Error details: {error}", LogTypeIntel.Error);
+                Logger.LogMessage($"DISM command output: {output}", LogTypeIntel.Error);
 
                 throw new InvalidOperationException($"DISM command failed with exit code {process.ExitCode}. Error details: {error}");
             }

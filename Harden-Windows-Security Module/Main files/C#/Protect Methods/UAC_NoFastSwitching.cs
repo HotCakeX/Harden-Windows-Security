@@ -2,7 +2,7 @@
 
 namespace HardenWindowsSecurity
 {
-    public partial class UserAccountControl
+    public static partial class UserAccountControl
     {
         /// <summary>
         /// Applies the No Fast User Switching optional sub-category policy
@@ -10,7 +10,7 @@ namespace HardenWindowsSecurity
         /// <exception cref="System.ArgumentNullException"></exception>
         public static void UAC_NoFastSwitching()
         {
-            if (HardenWindowsSecurity.GlobalVars.path == null)
+            if (HardenWindowsSecurity.GlobalVars.path is null)
             {
                 throw new System.ArgumentNullException("GlobalVars.path cannot be null.");
             }

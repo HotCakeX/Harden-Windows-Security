@@ -14,7 +14,7 @@ namespace HardenWindowsSecurity
         /// The comparison takes into account the exact position of the curves as well.
         /// </summary>
         /// <returns></returns>
-        public static HardenWindowsSecurity.EccCurveComparisonResult GetEccCurveComparison()
+        public static EccCurveComparisonResult GetEccCurveComparison()
         {
             // Get current ECC curves from PowerShell and store them in a list
             List<string> currentEccCurves = GetCurrentEccCurves();
@@ -26,7 +26,7 @@ namespace HardenWindowsSecurity
             bool areCurvesCompliant = currentEccCurves.SequenceEqual(compliantEccCurves, StringComparer.OrdinalIgnoreCase);
 
             // Create and return the result object
-            return new HardenWindowsSecurity.EccCurveComparisonResult
+            return new EccCurveComparisonResult
             {
                 AreCurvesCompliant = areCurvesCompliant,
                 CurrentEccCurves = currentEccCurves
@@ -54,7 +54,7 @@ namespace HardenWindowsSecurity
                 foreach (var result in results)
                 {
                     // Make sure the result is not null
-                    if (result != null)
+                    if (result is not null)
                     {
                         // Split the result string into an array of substrings based on specified delimiters
                         // new[] { ' ', '\r', '\n' } - An array of characters to use as delimiters: space, carriage return, and newline

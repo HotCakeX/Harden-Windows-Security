@@ -112,7 +112,7 @@ namespace HardenWindowsSecurity
             }
             else if (action.Equals("Delete", StringComparison.OrdinalIgnoreCase))
             {
-                if (subKey.GetValue(key) != null)
+                if (subKey.GetValue(key) is not null)
                 {
                     subKey.DeleteValue(key, true);
                 }

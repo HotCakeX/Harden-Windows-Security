@@ -5,7 +5,7 @@ using System.IO;
 
 namespace HardenWindowsSecurity
 {
-    public class Microsoft365AppsSecurityBaselines
+    public static class Microsoft365AppsSecurityBaselines
     {
         /// <summary>
         /// Runs the Microsoft 365 Apps Security Baseline category
@@ -13,7 +13,7 @@ namespace HardenWindowsSecurity
         public static void Invoke()
         {
 
-            if (HardenWindowsSecurity.GlobalVars.Microsoft365SecurityBaselinePath == null)
+            if (HardenWindowsSecurity.GlobalVars.Microsoft365SecurityBaselinePath is null)
             {
                 throw new InvalidOperationException("The path to the Microsoft 365 Apps Security Baseline has not been set.");
             }

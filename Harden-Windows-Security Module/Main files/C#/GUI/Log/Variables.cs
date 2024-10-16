@@ -1,16 +1,18 @@
-﻿#nullable enable
+﻿using System.Windows.Controls;
+
+#nullable enable
 
 namespace HardenWindowsSecurity
 {
-    public partial class GUILogs
+    public static class GUILogs
     {
-        internal static System.Windows.Controls.UserControl? View;
+        internal static UserControl? View;
 
-        internal static System.Windows.Controls.Grid? ParentGrid;
+        internal static Grid? ParentGrid;
 
-        internal static System.Windows.Controls.TextBox? MainLoggerTextBox;
+        internal static TextBox? MainLoggerTextBox;
 
-        internal static System.Windows.Controls.ScrollViewer? scrollerForOutputTextBox;
+        internal static ScrollViewer? scrollerForOutputTextBox;
 
         // The Logger class refers to this variable before scrolling down the ScrollViewer
         // Setting this to true initially because the toggle button is set to "Checked" when the GUI logger view is loaded but that is visual only and does not trigger the Checked event that would set this variable to true.

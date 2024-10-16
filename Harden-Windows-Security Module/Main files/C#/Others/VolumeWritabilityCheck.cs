@@ -6,7 +6,7 @@ using System.IO;
 
 namespace HardenWindowsSecurity
 {
-    internal partial class VolumeWritabilityCheck
+    internal static partial class VolumeWritabilityCheck
     {
         /// <summary>
         /// Gets a list of BitLockerVolumes and returns only those that are writable
@@ -16,7 +16,7 @@ namespace HardenWindowsSecurity
         public static List<BitLocker.BitLockerVolume>? GetWritableVolumes(List<BitLocker.BitLockerVolume>? Volumes)
         {
 
-            if (Volumes == null)
+            if (Volumes is null)
             {
                 return null;
             }
@@ -28,7 +28,7 @@ namespace HardenWindowsSecurity
             foreach (var Volume in Volumes)
             {
 
-                if (Volume.MountPoint == null)
+                if (Volume.MountPoint is null)
                 {
                     Logger.LogMessage($"A volume with the size {Volume.CapacityGB} has null mount point.", LogTypeIntel.Warning);
                     continue;

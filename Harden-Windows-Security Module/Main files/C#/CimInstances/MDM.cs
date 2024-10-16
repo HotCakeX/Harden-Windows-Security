@@ -138,7 +138,7 @@ namespace HardenWindowsSecurity
             {
                 string? line; // Explicitly declare line as nullable
                 bool isFirstLine = true;
-                while ((line = await reader.ReadLineAsync()) != null)
+                while ((line = await reader.ReadLineAsync()) is not null)
                 {
                     if (isFirstLine)
                     {
@@ -168,7 +168,7 @@ namespace HardenWindowsSecurity
 
 
         // Class to represent a record in the CSV file
-        private class MdmRecord
+        private sealed class MdmRecord
         {
             public string? Namespace { get; set; }
             public string? Class { get; set; }

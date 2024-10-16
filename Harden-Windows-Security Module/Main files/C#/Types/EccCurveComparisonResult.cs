@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace HardenWindowsSecurity
 {
-    public class EccCurveComparisonResult
+    public sealed class EccCurveComparisonResult
     {
         public bool AreCurvesCompliant { get; set; }
         public List<string>? CurrentEccCurves { get; set; }

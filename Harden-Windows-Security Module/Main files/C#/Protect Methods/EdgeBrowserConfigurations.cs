@@ -4,15 +4,15 @@ using System;
 
 namespace HardenWindowsSecurity
 {
-    public class EdgeBrowserConfigurations
+    public static class EdgeBrowserConfigurations
     {
         public static void Invoke()
         {
-            if (HardenWindowsSecurity.GlobalVars.path == null)
+            if (HardenWindowsSecurity.GlobalVars.path is null)
             {
                 throw new System.ArgumentNullException("GlobalVars.path cannot be null.");
             }
-            if (HardenWindowsSecurity.GlobalVars.RegistryCSVItems == null)
+            if (HardenWindowsSecurity.GlobalVars.RegistryCSVItems is null)
             {
                 throw new System.ArgumentNullException("GlobalVars.RegistryCSVItems cannot be null.");
             }

@@ -7,7 +7,7 @@ using System.Linq;
 
 namespace HardenWindowsSecurity
 {
-    public partial class MicrosoftDefender
+    public static partial class MicrosoftDefender
     {
         /// <summary>
         /// Runs the Microsoft Defender category
@@ -15,7 +15,7 @@ namespace HardenWindowsSecurity
         public static void Invoke()
         {
 
-            if (HardenWindowsSecurity.GlobalVars.path == null)
+            if (HardenWindowsSecurity.GlobalVars.path is null)
             {
                 throw new System.ArgumentNullException("GlobalVars.path cannot be null.");
             }
@@ -42,7 +42,7 @@ namespace HardenWindowsSecurity
             HardenWindowsSecurity.ConfigDefenderHelper.ManageMpPreference<bool>("EnableEcsConfiguration", true, true);
 
             HardenWindowsSecurity.Logger.LogMessage("Adding OneDrive folders of all the user accounts (personal and work accounts) to the Controlled Folder Access for Ransomware Protection", LogTypeIntel.Information);
-            string[] OneDrivePaths = HardenWindowsSecurity.GetOneDriveDirectories.Get().ToArray();
+            string[] OneDrivePaths = [.. HardenWindowsSecurity.GetOneDriveDirectories.Get()];
             HardenWindowsSecurity.ConfigDefenderHelper.ManageMpPreference<string[]>("ControlledFolderAccessProtectedFolders", OneDrivePaths, true);
 
             HardenWindowsSecurity.Logger.LogMessage("Enabling Mandatory ASLR Exploit Protection system-wide", LogTypeIntel.Information);
@@ -56,7 +56,7 @@ namespace HardenWindowsSecurity
 
             List<FileInfo>? gitHubDesktopFiles = HardenWindowsSecurity.GitHubDesktopFinder.Find();
 
-            if (gitHubDesktopFiles != null)
+            if (gitHubDesktopFiles is not null)
             {
                 IEnumerable<string> gitHubDesktopExes = gitHubDesktopFiles.Select(x => x.Name);
                 HardenWindowsSecurity.ForceRelocateImagesForFiles.SetProcessMitigationForFiles(gitHubDesktopExes.ToArray());
@@ -67,7 +67,7 @@ namespace HardenWindowsSecurity
 
             List<FileInfo>? gitExesFiles = HardenWindowsSecurity.GitExesFinder.Find();
 
-            if (gitExesFiles != null)
+            if (gitExesFiles is not null)
             {
                 IEnumerable<string> gitExes = gitExesFiles.Select(x => x.Name);
                 HardenWindowsSecurity.ForceRelocateImagesForFiles.SetProcessMitigationForFiles(gitExes.ToArray());

@@ -31,7 +31,7 @@ dotnet_diagnostic.CA1309.severity = error
 dotnet_diagnostic.CA1311.severity = error
 
 # CA1416: Validate platform compatibility
-dotnet_diagnostic.CA1416.severity = error
+dotnet_diagnostic.CA1416.severity = silent
 
 # CA5384: Do Not Use Digital Signature Algorithm (DSA)
 dotnet_diagnostic.CA5384.severity = error
@@ -272,3 +272,75 @@ dotnet_diagnostic.IDE0110.severity = error
 
 # CA2101: Specify marshaling for P/Invoke string arguments
 dotnet_diagnostic.CA2101.severity = error
+
+# IL2026: Members annotated with 'RequiresUnreferencedCodeAttribute' require dynamic access otherwise can break functionality when trimming application code
+dotnet_diagnostic.IL2026.severity = error
+
+# IDE0305: Simplify collection initialization
+dotnet_diagnostic.IDE0305.severity = error
+
+# IDE0004: Remove Unnecessary Cast
+dotnet_diagnostic.IDE0004.severity = error
+
+# IDE0017: Simplify object initialization
+dotnet_diagnostic.IDE0017.severity = error
+
+# IDE0060: Remove unused parameter
+dotnet_diagnostic.IDE0060.severity = error
+
+# IDE0044: Add readonly modifier
+dotnet_diagnostic.IDE0044.severity = error
+
+# IDE0063: Use simple 'using' statement
+dotnet_diagnostic.IDE0063.severity = error
+
+# CA1001: Types that own disposable fields should be disposable
+dotnet_diagnostic.CA1001.severity = error
+
+# CA1831: Use AsSpan or AsMemory instead of Range-based indexers when appropriate
+dotnet_diagnostic.CA1831.severity = error
+
+# CA5382: Use Secure Cookies In ASP.NET Core
+dotnet_diagnostic.CA5382.severity = error
+
+# CA1063: Implement IDisposable Correctly
+dotnet_diagnostic.CA1063.severity = error
+
+# CA1852: Seal internal types
+dotnet_diagnostic.CA1852.severity = error
+
+# CA2011: Avoid infinite recursion
+dotnet_diagnostic.CA2011.severity = error
+
+# CA2015: Do not define finalizers for types derived from MemoryManager<T>
+dotnet_diagnostic.CA2015.severity = error
+
+# CA2017: Parameter count mismatch
+dotnet_diagnostic.CA2017.severity = error
+
+# CA5397: Do not use deprecated SslProtocols values
+dotnet_diagnostic.CA5397.severity = error
+
+# CA5394: Do not use insecure randomness
+dotnet_diagnostic.CA5394.severity = error
+
+# CA2207: Initialize value type static fields inline
+dotnet_diagnostic.CA2207.severity = error
+
+# CA2219: Do not raise exceptions in finally clauses
+dotnet_diagnostic.CA2219.severity = error
+
+# CA2259: 'ThreadStatic' only affects static fields
+dotnet_diagnostic.CA2259.severity = error
+
+# CA5371: Use XmlReader for 'XmlSchema.Read()'
+dotnet_diagnostic.CA5371.severity = error
+
+# CA5364: Do Not Use Deprecated Security Protocols
+dotnet_diagnostic.CA5364.severity = error
+
+# CA1839: Use 'Environment.ProcessPath'
+dotnet_diagnostic.CA1839.severity = error
+
+# CA2265: Do not compare Span<T> to 'null' or 'default'
+dotnet_diagnostic.CA2265.severity = error

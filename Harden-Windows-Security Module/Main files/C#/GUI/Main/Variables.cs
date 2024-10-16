@@ -1,4 +1,6 @@
-﻿#nullable enable
+﻿using System.Windows.Controls;
+
+#nullable enable
 
 namespace HardenWindowsSecurity
 {
@@ -14,7 +16,7 @@ namespace HardenWindowsSecurity
         public static System.Windows.Application? app;
 
         // Sidebar menu Grid in the main Window
-        public static System.Windows.Controls.Grid? SidebarGrid;
+        public static Grid? SidebarGrid;
 
         // The main progress bar for the entire GUI
         public static System.Windows.Controls.ProgressBar? mainProgressBar;

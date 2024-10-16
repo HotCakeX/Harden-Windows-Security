@@ -2,7 +2,7 @@
 
 namespace HardenWindowsSecurity
 {
-    public partial class MicrosoftDefender
+    public static partial class MicrosoftDefender
     {
         /// <summary>
         /// Turns on Smart App Control

@@ -37,11 +37,11 @@ namespace HardenWindowsSecurity
                 outputCollection = [];
                 outputCollection.DataAdded += (sender, args) =>
                 {
-                    if (sender != null)
+                    if (sender is not null)
                     {
                         var outputStream = (PSDataCollection<PSObject>)sender;
                         var output = outputStream[args.Index]?.ToString();
-                        HardenWindowsSecurity.Logger.LogMessage($"Output: {output}", LogTypeIntel.Information);
+                        Logger.LogMessage($"Output: {output}", LogTypeIntel.Information);
                     }
                 };
             }
@@ -49,27 +49,27 @@ namespace HardenWindowsSecurity
             // Handle verbose output
             psInstance.Streams.Verbose.DataAdded += (sender, args) =>
             {
-                if (sender != null)
+                if (sender is not null)
                 {
                     var verboseStream = (PSDataCollection<VerboseRecord>)sender;
-                    HardenWindowsSecurity.Logger.LogMessage($"Verbose: {verboseStream[args.Index].Message}", LogTypeIntel.Information);
+                    Logger.LogMessage($"Verbose: {verboseStream[args.Index].Message}", LogTypeIntel.Information);
                 }
             };
 
             // Handle warning output
             psInstance.Streams.Warning.DataAdded += (sender, args) =>
             {
-                if (sender != null)
+                if (sender is not null)
                 {
                     var warningStream = (PSDataCollection<WarningRecord>)sender;
-                    HardenWindowsSecurity.Logger.LogMessage($"Warning: {warningStream[args.Index].Message}", LogTypeIntel.Warning);
+                    Logger.LogMessage($"Warning: {warningStream[args.Index].Message}", LogTypeIntel.Warning);
                 }
             };
 
             // Handle error output and throw exception
             psInstance.Streams.Error.DataAdded += (sender, args) =>
             {
-                if (sender != null)
+                if (sender is not null)
                 {
                     // Get the error details
                     var errorStream = (PSDataCollection<ErrorRecord>)sender;
@@ -85,7 +85,7 @@ namespace HardenWindowsSecurity
                     // The error stream contains terminating and non terminating errors
                     if (!NonTerminatingErrors)
                     {
-                        HardenWindowsSecurity.Logger.LogMessage(errorMessage, LogTypeIntel.Error);
+                        Logger.LogMessage(errorMessage, LogTypeIntel.Error);
 
                         // Throw an exception with the error details
                         throw new InvalidOperationException($"PowerShell script execution failed: {errorMessage}");
@@ -93,7 +93,7 @@ namespace HardenWindowsSecurity
                     else
                     {
                         // Only log the error in a non-terminating way
-                        HardenWindowsSecurity.Logger.LogMessage(errorMessage, LogTypeIntel.Warning);
+                        Logger.LogMessage(errorMessage, LogTypeIntel.Warning);
                     }
                 }
             };
@@ -102,11 +102,11 @@ namespace HardenWindowsSecurity
                 // Handle progress updates
                 psInstance.Streams.Progress.DataAdded += (sender, args) =>
                 {
-                    if (sender != null)
+                    if (sender is not null)
                     {
                         var progressStream = (PSDataCollection<ProgressRecord>)sender;
                         var progress = progressStream[args.Index];
-                        HardenWindowsSecurity.Logger.LogMessage($"Progress: {progress.StatusDescription} - {progress.PercentComplete}% complete", LogTypeIntel.Information);
+                        Logger.LogMessage($"Progress: {progress.StatusDescription} - {progress.PercentComplete}% complete", LogTypeIntel.Information);
                     }
                 };
             */

@@ -14,12 +14,12 @@ namespace HardenWindowsSecurity
         /// </summary>
         /// <param name="nestedObjectArray">A reference to the NestedObjectsArray List from the parent method so we can conditionally modify it</param>
         /// <param name="result">The current item that must be conditionally added to the List</param>
-        public static void Add(List<HardenWindowsSecurity.IndividualResult> nestedObjectArray, HardenWindowsSecurity.IndividualResult result)
+        public static void Add(List<IndividualResult> nestedObjectArray, IndividualResult result)
         {
             // Check if there is already an instance with the FriendlyName
             var existingItem = nestedObjectArray.FirstOrDefault(item => string.Equals(item.FriendlyName, result.FriendlyName, StringComparison.OrdinalIgnoreCase));
 
-            if (existingItem != null)
+            if (existingItem is not null)
             {
                 // Check the Compliant status of the existing item in the results list
                 // If the item already exists and is Non-compliant
@@ -32,12 +32,12 @@ namespace HardenWindowsSecurity
                         _ = nestedObjectArray.Remove(existingItem);
                         // Add the current item with Compliant status "True"
                         nestedObjectArray.Add(result);
-                        HardenWindowsSecurity.Logger.LogMessage($"Item with Name '{existingItem.Name}' and FriendlyName '{existingItem.FriendlyName}' replaced with a compliant item.", LogTypeIntel.Information);
+                        Logger.LogMessage($"Item with Name '{existingItem.Name}' and FriendlyName '{existingItem.FriendlyName}' replaced with a compliant item.", LogTypeIntel.Information);
                     }
                     else
                     {
                         // Write a descriptive and detailed message to the console
-                        HardenWindowsSecurity.Logger.LogMessage($"Item not added: An item with Name '{existingItem.Name}' and FriendlyName '{existingItem.FriendlyName}' already exists with Compliant status '{existingItem.Compliant}' and Value '{existingItem.Value}'.", LogTypeIntel.Information);
+                        Logger.LogMessage($"Item not added: An item with Name '{existingItem.Name}' and FriendlyName '{existingItem.FriendlyName}' already exists with Compliant status '{existingItem.Compliant}' and Value '{existingItem.Value}'.", LogTypeIntel.Information);
                     }
                 }
                 //    else

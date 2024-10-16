@@ -17,7 +17,7 @@ namespace HardenWindowsSecurity
     public class CategoryProcessing
     {
         // to store the structure of the Registry resources CSV data
-        private class CsvRecord
+        private sealed class CsvRecord
         {
             public string? Origin { get; set; }
             public string? Category { get; set; }
@@ -37,7 +37,7 @@ namespace HardenWindowsSecurity
             // Create a list to store the records
             List<CsvRecord> records = [];
 
-            if (GlobalVars.path == null)
+            if (GlobalVars.path is null)
             {
                 throw new ArgumentNullException("The path to the CSV file is not set.");
             }
@@ -52,14 +52,14 @@ namespace HardenWindowsSecurity
                 string? header = reader.ReadLine();
 
                 // Return an empty list if the header is null
-                if (header == null) return records;
+                if (header is null) return records;
 
                 // Read the rest of the file line by line
                 while (!reader.EndOfStream)
                 {
                     string? line = reader.ReadLine();
 
-                    if (line == null) continue;
+                    if (line is null) continue;
 
                     string[] fields = ParseCsvLine(line);
 
@@ -144,7 +144,7 @@ namespace HardenWindowsSecurity
             fields.Add(currentField.ToString().Trim('"'));
 
             // Convert list of fields to array and return
-            return fields.ToArray();
+            return [.. fields];
         }
 
 
@@ -172,15 +172,15 @@ namespace HardenWindowsSecurity
                 string? regValueStr = null;
 
                 // If the type defined in the CSV is HKLM
-                if (item.Hive != null && item.Hive.Equals("HKEY_LOCAL_MACHINE", StringComparison.OrdinalIgnoreCase))
+                if (item.Hive is not null && item.Hive.Equals("HKEY_LOCAL_MACHINE", StringComparison.OrdinalIgnoreCase))
                 {
                     // Open the registry key in HKEY_LOCAL_MACHINE
-                    if (item.Key != null)
+                    if (item.Key is not null)
                     {
                         // Open the registry key in HKEY_LOCAL_MACHINE
                         using var key = Registry.LocalMachine.OpenSubKey(item.Key);
 
-                        if (key != null)
+                        if (key is not null)
                         {
                             // Get the registry value
                             var regValue = key.GetValue(item.Name);
@@ -210,12 +210,12 @@ namespace HardenWindowsSecurity
                             }
 
                             // Parse the expected values based on their type in the CSV file
-                            var parsedValues = item.Type != null
+                            var parsedValues = item.Type is not null
                                 ? item.Value?.Select(v => ParseRegistryValue(type: item.Type, value: v)).ToList() ?? []
                                 : [];
 
                             // Check if the registry value matches any of the expected values
-                            if (regValue != null && item.Type != null)
+                            if (regValue is not null && item.Type is not null)
                             {
                                 // Convert regValueStr to uint if applicable
                                 uint? regValueUInt = null;
@@ -247,12 +247,12 @@ namespace HardenWindowsSecurity
                 // If the type defined in the CSV is HKCU
                 else if (item.Hive?.Equals("HKEY_CURRENT_USER", StringComparison.OrdinalIgnoreCase) == true)
                 {
-                    if (item.Key != null)
+                    if (item.Key is not null)
                     {
                         // Open the registry key in HKEY_CURRENT_USER
                         using var key = Registry.CurrentUser.OpenSubKey(item.Key);
 
-                        if (key != null)
+                        if (key is not null)
                         {
                             // Get the registry value
                             var regValue = key.GetValue(item.Name);
@@ -278,12 +278,12 @@ namespace HardenWindowsSecurity
                             }
 
                             // Parse the expected values based on their type in the CSV file
-                            var parsedValues = item.Type != null
+                            var parsedValues = item.Type is not null
                                 ? item.Value?.Select(v => ParseRegistryValue(type: item.Type, value: v)).ToList() ?? []
                                 : [];
 
                             // Check if the registry value matches any of the expected values
-                            if (regValue != null && item.Type != null)
+                            if (regValue is not null && item.Type is not null)
                             {
                                 // Convert regValueStr to uint if applicable
                                 uint? regValueUInt = null;
@@ -420,7 +420,7 @@ namespace HardenWindowsSecurity
             }
             catch (Exception)
             {
-                //   HardenWindowsSecurity.Logger.LogMessage($"Error comparing registry values: {ex.Message}");
+                //   Logger.LogMessage($"Error comparing registry values: {ex.Message}");
                 return false;
             }
             return false;

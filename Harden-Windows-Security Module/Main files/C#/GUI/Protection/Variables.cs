@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 
 #nullable enable
 
 namespace HardenWindowsSecurity
 {
-    public partial class GUIProtectWinSecurity
+    public static partial class GUIProtectWinSecurity
     {
         // During offline mode, this is the path that the button for MicrosoftSecurityBaselineZipPath assigns
         internal static string MicrosoftSecurityBaselineZipPath = string.Empty;
@@ -28,11 +30,11 @@ namespace HardenWindowsSecurity
         internal static bool StartFileDownloadHasRun;
 
         // View for the ProtectWindowsSecurity
-        internal static System.Windows.Controls.UserControl? View;
+        internal static UserControl? View;
 
-        internal static System.Windows.Controls.Grid? parentGrid;
-        internal static System.Windows.Controls.Primitives.ToggleButton? mainTabControlToggle;
-        internal static System.Windows.Controls.ContentControl? mainContentControl;
+        internal static Grid? parentGrid;
+        internal static ToggleButton? mainTabControlToggle;
+        internal static ContentControl? mainContentControl;
         internal static System.Windows.Style? mainContentControlStyle;
 
         // Defining the correlation between Categories and which Sub-Categories they activate
@@ -50,35 +52,35 @@ namespace HardenWindowsSecurity
 
         internal static System.Windows.Controls.ListView? categories;
         internal static System.Windows.Controls.ListView? subCategories;
-        internal static System.Windows.Controls.CheckBox? selectAllCategories;
-        internal static System.Windows.Controls.CheckBox? selectAllSubCategories;
+        internal static CheckBox? selectAllCategories;
+        internal static CheckBox? selectAllSubCategories;
 
         // fields for Log related elements
-        internal static System.Windows.Controls.TextBox? txtFilePath;
-        internal static System.Windows.Controls.Button? logPath;
-        internal static System.Windows.Controls.Primitives.ToggleButton? log;
-        internal static System.Windows.Controls.Primitives.ToggleButton? EventLogging;
+        internal static TextBox? txtFilePath;
+        internal static Button? logPath;
+        internal static ToggleButton? log;
+        internal static ToggleButton? EventLogging;
 
         // fields for Offline-Mode related elements
-        internal static System.Windows.Controls.Grid? grid2;
-        internal static System.Windows.Controls.Primitives.ToggleButton? enableOfflineMode;
-        internal static System.Windows.Controls.Button? microsoftSecurityBaselineZipButton;
-        internal static System.Windows.Controls.TextBox? microsoftSecurityBaselineZipTextBox;
-        internal static System.Windows.Controls.Button? microsoft365AppsSecurityBaselineZipButton;
-        internal static System.Windows.Controls.TextBox? microsoft365AppsSecurityBaselineZipTextBox;
-        internal static System.Windows.Controls.Button? lgpoZipButton;
-        internal static System.Windows.Controls.TextBox? lgpoZipTextBox;
+        internal static Grid? grid2;
+        internal static ToggleButton? enableOfflineMode;
+        internal static Button? microsoftSecurityBaselineZipButton;
+        internal static TextBox? microsoftSecurityBaselineZipTextBox;
+        internal static Button? microsoft365AppsSecurityBaselineZipButton;
+        internal static TextBox? microsoft365AppsSecurityBaselineZipTextBox;
+        internal static Button? lgpoZipButton;
+        internal static TextBox? lgpoZipTextBox;
 
         // Execute button variables
-        internal static System.Windows.Controls.Primitives.ToggleButton? ExecuteButton;
-        internal static System.Windows.Controls.Grid? ExecuteButtonGrid;
-        internal static System.Windows.Controls.Image? ExecuteButtonImage;
+        internal static ToggleButton? ExecuteButton;
+        internal static Grid? ExecuteButtonGrid;
+        internal static Image? ExecuteButtonImage;
 
 
         // Flag to run the event for view load only once to prevent file download multiple times when switching between views etc.
         internal static bool LoadEventHasBeenTriggered;
 
-        internal static System.Windows.Controls.ComboBox? ProtectionPresetComboBox;
+        internal static ComboBox? ProtectionPresetComboBox;
 
         internal static string? SelectedProtectionPreset;
 

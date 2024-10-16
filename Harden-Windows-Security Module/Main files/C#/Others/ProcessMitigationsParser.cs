@@ -25,7 +25,7 @@ namespace HardenWindowsSecurity
             // Initializing the path variable for the CSV file
             string path;
 
-            if (GlobalVars.path != null)
+            if (GlobalVars.path is not null)
             {
                 // Define the path to the CSV file
                 path = Path.Combine(GlobalVars.path, "Resources", "ProcessMitigations.csv");
@@ -42,7 +42,7 @@ namespace HardenWindowsSecurity
             var header = reader.ReadLine();
 
             // Return if the header is null
-            if (header == null) return;
+            if (header is null) return;
 
             // Read the rest of the file line by line
             while (!reader.EndOfStream)
@@ -50,7 +50,7 @@ namespace HardenWindowsSecurity
                 var line = reader.ReadLine();
 
                 // Skip if the line is null
-                if (line == null) continue;
+                if (line is null) continue;
 
                 // Split the line by commas to get the values, that's the CSV's delimiter
                 var values = line.Split(',');
@@ -59,7 +59,7 @@ namespace HardenWindowsSecurity
                 if (values.Length == 5)
                 {
                     // Add a new ProcessMitigationsRecords to the list
-                    HardenWindowsSecurity.GlobalVars.ProcessMitigations!.Add(new ProcessMitigationsRecords
+                    GlobalVars.ProcessMitigations!.Add(new ProcessMitigationsRecords
                     {
                         ProgramName = values[0],
                         Mitigation = values[1],

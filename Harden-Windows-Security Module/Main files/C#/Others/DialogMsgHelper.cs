@@ -6,7 +6,7 @@ using System.Windows.Controls;
 
 namespace HardenWindowsSecurity
 {
-    internal class DialogMsgHelper
+    internal static class DialogMsgHelper
     {
 
         /// <summary>

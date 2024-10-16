@@ -9,7 +9,7 @@ using System.Linq;
 
 namespace HardenWindowsSecurity
 {
-    public class UnprotectWindowsSecurity
+    public static class UnprotectWindowsSecurity
     {
         /// <summary>
         /// Performs the main tasks for removing protections from Windows that were applied during the protection phase
@@ -192,7 +192,7 @@ Start-Process -FilePath GPUpdate.exe -ArgumentList '/force' -NoNewWindow
             _ = HardenWindowsSecurity.PowerShellExecutor.ExecuteScript(command);
 
 
-            if (HardenWindowsSecurity.GlobalVars.ProcessMitigations == null)
+            if (HardenWindowsSecurity.GlobalVars.ProcessMitigations is null)
             {
                 throw new InvalidOperationException("GlobalVars.ProcessMitigations is null.");
             }
@@ -219,7 +219,7 @@ Start-Process -FilePath GPUpdate.exe -ArgumentList '/force' -NoNewWindow
             // Loop through each group and remove corresponding registry keys
             foreach (var group in groupedMitigations)
             {
-                if (allAvailableMitigations != null)
+                if (allAvailableMitigations is not null)
                 {
                     if (allAvailableMitigations.Contains(group.Key!))
                     {
@@ -239,7 +239,7 @@ Start-Process -FilePath GPUpdate.exe -ArgumentList '/force' -NoNewWindow
         /// </summary>
         /// <param name="DownloadsDefenseMeasures"></param>
         /// <param name="DangerousScriptHostsBlocking"></param>
-        public static void RemoveWDACPolicies(bool DownloadsDefenseMeasures, bool DangerousScriptHostsBlocking)
+        public static void RemoveAppControlPolicies(bool DownloadsDefenseMeasures, bool DangerousScriptHostsBlocking)
         {
             // Run the CiTool and retrieve a list of base policies
             List<CiPolicyInfo> policies = CiToolRunner.RunCiTool(CiToolRunner.GetOptions(), SystemPolicies: false, BasePolicies: true, SupplementalPolicies: false);
@@ -253,7 +253,7 @@ Start-Process -FilePath GPUpdate.exe -ArgumentList '/force' -NoNewWindow
                     if (string.Equals(item.FriendlyName, "Downloads-Defense-Measures", StringComparison.OrdinalIgnoreCase))
                     {
 
-                        HardenWindowsSecurity.Logger.LogMessage("Removing the Downloads-Defense-Measures WDAC policy", LogTypeIntel.Information);
+                        HardenWindowsSecurity.Logger.LogMessage("Removing the Downloads-Defense-Measures AppControl policy", LogTypeIntel.Information);
 
                         // remove the policy
                         HardenWindowsSecurity.CiToolRunner.RemovePolicy(item.PolicyID!);
@@ -269,7 +269,7 @@ Start-Process -FilePath GPUpdate.exe -ArgumentList '/force' -NoNewWindow
                     // find the policy with the right name
                     if (string.Equals(item.FriendlyName, "Dangerous-Script-Hosts-Blocking", StringComparison.OrdinalIgnoreCase))
                     {
-                        HardenWindowsSecurity.Logger.LogMessage("Removing the Dangerous-Script-Hosts-Blocking WDAC policy", LogTypeIntel.Information);
+                        HardenWindowsSecurity.Logger.LogMessage("Removing the Dangerous-Script-Hosts-Blocking AppControl policy", LogTypeIntel.Information);
 
                         // remove the policy
                         HardenWindowsSecurity.CiToolRunner.RemovePolicy(item.PolicyID!);

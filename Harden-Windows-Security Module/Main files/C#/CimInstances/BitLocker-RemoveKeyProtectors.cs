@@ -38,7 +38,7 @@ namespace HardenWindowsSecurity
             KeyProtector? DetectedKeyProtector = VolumeExtendedInfo?.KeyProtector?.Where(KeyProtector => KeyProtector.KeyProtectorID == KeyProtectorID).FirstOrDefault();
 
 
-            if (DetectedKeyProtector == null)
+            if (DetectedKeyProtector is null)
             {
                 Logger.LogMessage($"Key protector with the ID {KeyProtectorID} not found on the volume {DriveLetter}", LogTypeIntel.Warning);
                 return;

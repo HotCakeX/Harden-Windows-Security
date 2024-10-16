@@ -12,7 +12,7 @@ namespace HardenWindowsSecurity
         public static void Apply()
         {
 
-            if (GlobalVars.ProcessMitigations == null)
+            if (GlobalVars.ProcessMitigations is null)
             {
                 throw new InvalidOperationException("No process mitigations found in the global variable.");
             }
@@ -31,7 +31,7 @@ namespace HardenWindowsSecurity
             using var ps = PowerShell.Create();
 
             // Loop through each group to remove the mitigations, this way we apply clean set of mitigations in the next step
-            HardenWindowsSecurity.Logger.LogMessage("Removing the existing process mitigations", LogTypeIntel.Information);
+            Logger.LogMessage("Removing the existing process mitigations", LogTypeIntel.Information);
             foreach (var group in groupedMitigations)
             {
                 string? fileName = System.IO.Path.GetFileName(group.Key);
@@ -46,20 +46,20 @@ namespace HardenWindowsSecurity
                     }
                     catch (Exception ex)
                     {
-                        HardenWindowsSecurity.Logger.LogMessage($"Failed to remove {fileName}, it's probably protected by the system. {ex.Message}", LogTypeIntel.Error);
+                        Logger.LogMessage($"Failed to remove {fileName}, it's probably protected by the system. {ex.Message}", LogTypeIntel.Error);
                     }
                 }
             }
 
             // Adding the process mitigations
-            HardenWindowsSecurity.Logger.LogMessage("Adding the process mitigations", LogTypeIntel.Information);
+            Logger.LogMessage("Adding the process mitigations", LogTypeIntel.Information);
             foreach (var group in groupedMitigations)
             {
                 // Clear previous commands
                 ps.Commands.Clear();
 
                 var programName = group.Key;
-                HardenWindowsSecurity.Logger.LogMessage($"Adding process mitigations for {programName}", LogTypeIntel.Information);
+                Logger.LogMessage($"Adding process mitigations for {programName}", LogTypeIntel.Information);
 
                 var enableMitigations = group.Where(g => string.Equals(g.Action, "Enable", StringComparison.OrdinalIgnoreCase))
                                              .Select(g => g.Mitigation)
@@ -94,7 +94,7 @@ namespace HardenWindowsSecurity
                     var errors = ps.Streams.Error.ReadAll();
                     foreach (var error in errors)
                     {
-                        HardenWindowsSecurity.Logger.LogMessage($"Error: {error}", LogTypeIntel.Error);
+                        Logger.LogMessage($"Error: {error}", LogTypeIntel.Error);
                     }
                 }
             }

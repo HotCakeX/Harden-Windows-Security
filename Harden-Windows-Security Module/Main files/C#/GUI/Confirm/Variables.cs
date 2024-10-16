@@ -1,11 +1,13 @@
-﻿#nullable enable
+﻿using System.Windows.Controls;
+
+#nullable enable
 
 namespace HardenWindowsSecurity
 {
-    public partial class GUIConfirmSystemCompliance
+    public static class GUIConfirmSystemCompliance
     {
-        internal static System.Windows.Controls.DataGrid? SecOpsDataGrid;
+        internal static DataGrid? SecOpsDataGrid;
 
-        internal static System.Windows.Controls.UserControl? View;
+        internal static UserControl? View;
     }
 }

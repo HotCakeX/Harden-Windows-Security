@@ -1,55 +1,57 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using static HardenWindowsSecurity.BitLocker;
 
 #nullable enable
 
 namespace HardenWindowsSecurity
 {
-    public partial class GUIBitLocker
+    public static class GUIBitLocker
     {
-        internal static System.Windows.Controls.UserControl? View;
+        internal static UserControl? View;
 
-        internal static System.Windows.Controls.Grid? ParentGrid;
+        internal static Grid? ParentGrid;
 
-        internal static System.Windows.Controls.TabControl? TabControl;
+        internal static TabControl? TabControl;
 
-        internal static System.Windows.Controls.Primitives.ToggleButton? ExecuteButton;
+        internal static ToggleButton? ExecuteButton;
 
-        internal static System.Windows.Controls.PasswordBox? PIN1;
+        internal static PasswordBox? PIN1;
 
-        internal static System.Windows.Controls.PasswordBox? PIN2;
+        internal static PasswordBox? PIN2;
 
-        internal static System.Windows.Controls.Button? RefreshRemovableDrivesInOSDriveSection;
+        internal static Button? RefreshRemovableDrivesInOSDriveSection;
 
-        internal static System.Windows.Controls.ComboBox? RemovableDrivesComboBox;
+        internal static ComboBox? RemovableDrivesComboBox;
 
-        internal static System.Windows.Controls.Button? RefreshNonOSDrives;
+        internal static Button? RefreshNonOSDrives;
 
-        internal static System.Windows.Controls.Button? RefreshRemovableDrivesForRemovableDrivesSection;
+        internal static Button? RefreshRemovableDrivesForRemovableDrivesSection;
 
         internal static List<BitLocker.BitLockerVolume>? NonOSDrivesList;
 
         internal static List<BitLocker.BitLockerVolume>? RemovableDrivesList;
 
-        internal static System.Windows.Controls.ComboBox? BitLockerSecurityLevelComboBox;
+        internal static ComboBox? BitLockerSecurityLevelComboBox;
 
-        internal static System.Windows.Controls.TextBlock? TextBlockStartupKeySelection;
+        internal static TextBlock? TextBlockStartupKeySelection;
 
-        internal static System.Windows.Controls.ComboBox? NonOSDrivesComboBox;
+        internal static ComboBox? NonOSDrivesComboBox;
 
-        internal static System.Windows.Controls.ComboBox? RemovableDrivesInRemovableDrivesGridComboBox;
+        internal static ComboBox? RemovableDrivesInRemovableDrivesGridComboBox;
 
-        internal static System.Windows.Controls.PasswordBox? Password1;
+        internal static PasswordBox? Password1;
 
-        internal static System.Windows.Controls.PasswordBox? Password2;
+        internal static PasswordBox? Password2;
 
-        internal static System.Windows.Controls.DataGrid? RecoveryKeysDataGrid;
+        internal static DataGrid? RecoveryKeysDataGrid;
 
-        internal static System.Windows.Controls.Button? BackupButton;
+        internal static Button? BackupButton;
 
-        internal static System.Windows.Controls.Button? RefreshButtonForBackup;
+        internal static Button? RefreshButtonForBackup;
 
 
         public class BitLockerVolumeViewModel

@@ -32,7 +32,7 @@ namespace HardenWindowsSecurity
             string? header = reader.ReadLine();
 
             // Return if the header is null
-            if (header == null) return securityPolicyRecordsOutput;
+            if (header is null) return securityPolicyRecordsOutput;
 
             // Read the rest of the file line by line
             while (!reader.EndOfStream)
@@ -40,7 +40,7 @@ namespace HardenWindowsSecurity
                 string? line = reader.ReadLine();
 
                 // Skip null lines
-                if (line == null) continue;
+                if (line is null) continue;
 
                 // Parse the CSV line into fields
                 string[] fields = ParseCsvLine(line);
@@ -98,7 +98,7 @@ namespace HardenWindowsSecurity
 
             // Add the last field to the list
             fields.Add(currentField.ToString().Trim('"'));
-            return fields.ToArray();
+            return [.. fields];
         }
     }
 }

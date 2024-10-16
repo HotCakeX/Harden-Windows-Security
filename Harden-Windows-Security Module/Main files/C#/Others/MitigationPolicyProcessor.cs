@@ -22,11 +22,11 @@ namespace HardenWindowsSecurity
             XmlNodeList? appConfigNodes = xmlDoc.SelectNodes("//MitigationPolicy/AppConfig");
 
             // Loop through each AppConfig element in the XML document
-            if (appConfigNodes != null)
+            if (appConfigNodes is not null)
             {
                 foreach (XmlNode? appNode in appConfigNodes)
                 {
-                    if (appNode?.Attributes != null)
+                    if (appNode?.Attributes is not null)
                     {
                         // Get the executable name of the app
                         string? executableName = appNode.Attributes["Executable"]?.Value;
@@ -39,17 +39,17 @@ namespace HardenWindowsSecurity
                             // Loop through each child element of the app element
                             foreach (XmlNode? childNode in appNode.ChildNodes)
                             {
-                                if (childNode != null)
+                                if (childNode is not null)
                                 {
                                     // Get the name of the mitigation
                                     string mitigationName = childNode.Name;
 
                                     // Loop through each attribute of the child element
-                                    if (childNode.Attributes != null)
+                                    if (childNode.Attributes is not null)
                                     {
                                         foreach (XmlAttribute? attribute in childNode.Attributes)
                                         {
-                                            if (attribute != null)
+                                            if (attribute is not null)
                                             {
                                                 // Get the name and value of the attribute
                                                 string attributeName = attribute.Name;

@@ -22,10 +22,10 @@ namespace HardenWindowsSecurity
             "LockScreen", // 14
             "UserAccountControl", // 6
             "DeviceGuard", // 9
-            "WindowsFirewall", // 19
+            "WindowsFirewall", // 20
             "OptionalWindowsFeatures", // 14
-            "WindowsNetworking", // 18
-            "MiscellaneousConfigurations", // 17
+            "WindowsNetworking", // 17
+            "MiscellaneousConfigurations", // 18
             "WindowsUpdateConfigurations", // 15
             "EdgeBrowserConfigurations", // 14
             "NonAdminCommands" // 9
@@ -77,8 +77,8 @@ namespace HardenWindowsSecurity
                     return true;
                     //   foreach (ManagementObject tpm in queryCollection)
                     //    {
-                    //     HardenWindowsSecurity.Logger.LogMessage("TPM is present on this system.");
-                    //     HardenWindowsSecurity.Logger.LogMessage("TPM Version: " + tpm["SpecVersion"]);
+                    //     Logger.LogMessage("TPM is present on this system.");
+                    //     Logger.LogMessage("TPM Version: " + tpm["SpecVersion"]);
                     //    }
                 }
             }
@@ -98,7 +98,7 @@ namespace HardenWindowsSecurity
         public static string[] GetValidValues()
         {
             // if running under unelevated context then only return the NonAdminCommands category
-            if (!HardenWindowsSecurity.UserPrivCheck.IsAdmin()) return ["NonAdminCommands"];
+            if (!UserPrivCheck.IsAdmin()) return ["NonAdminCommands"];
 
             HashSet<string> categoriex =
         [

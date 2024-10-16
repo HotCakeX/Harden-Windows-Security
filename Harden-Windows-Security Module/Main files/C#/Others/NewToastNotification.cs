@@ -22,7 +22,7 @@ namespace HardenWindowsSecurity
 
         /// <summary>
         /// Displays modern toast notification on Windows
-        /// The caller must check for HardenWindowsSecurity.GlobalVars.UseNewNotificationsExp and if it's true then use this method
+        /// The caller must check for GlobalVars.UseNewNotificationsExp and if it's true then use this method
         /// So that it will only display the notifications if the required DLLs have been loaded in the PowerShell session via Add-Type
         /// That is different than the DLLs being made available to the Add-Type during C# code compilation
         /// </summary>
@@ -34,7 +34,7 @@ namespace HardenWindowsSecurity
             {
 
                 // Notifications Icon Override for all of the toast notification styles
-                string LogoOverride = Path.Combine(HardenWindowsSecurity.GlobalVars.path!, "Resources", "Media", "NotificationIconOverride.png");
+                string LogoOverride = Path.Combine(GlobalVars.path!, "Resources", "Media", "NotificationIconOverride.png");
 
                 // Detect the notification type so we can create the proper notification to be displayed
                 switch (Type)
@@ -44,9 +44,9 @@ namespace HardenWindowsSecurity
                     case ToastNotificationType.EndOfProtection:
                         {
                             // Combine paths
-                            // string Hero = Path.Combine(HardenWindowsSecurity.GlobalVars.path!, "Resources", "Media", "Microsoft Defender.png");
-                            // string DismissButtonImage = Path.Combine(HardenWindowsSecurity.GlobalVars.path!, "Resources", "Media", "notification (1).png");
-                            string Inline = Path.Combine(HardenWindowsSecurity.GlobalVars.path!, "Resources", "Media", "ProtectToastNotificationImage.png");
+                            // string Hero = Path.Combine(GlobalVars.path!, "Resources", "Media", "Microsoft Defender.png");
+                            // string DismissButtonImage = Path.Combine(GlobalVars.path!, "Resources", "Media", "notification (1).png");
+                            string Inline = Path.Combine(GlobalVars.path!, "Resources", "Media", "ProtectToastNotificationImage.png");
 
                             new Microsoft.Toolkit.Uwp.Notifications.ToastContentBuilder()
 
@@ -54,7 +54,7 @@ namespace HardenWindowsSecurity
 
                             .AddText("Protection Completed.")
 
-                            .AddText($"Successfully applied {HardenWindowsSecurity.GUIProtectWinSecurity.SelectedCategories.Count} categories")
+                            .AddText($"Successfully applied {GUIProtectWinSecurity.SelectedCategories.Count} categories")
 
                             .AddText("Your computer is now more secure 👏")
 
@@ -107,7 +107,7 @@ namespace HardenWindowsSecurity
                         {
 
                             // Combine paths
-                            string Inline = Path.Combine(HardenWindowsSecurity.GlobalVars.path!, "Resources", "Media", "ConfirmToastNotificationImage.png");
+                            string Inline = Path.Combine(GlobalVars.path!, "Resources", "Media", "ConfirmToastNotificationImage.png");
 
                             new Microsoft.Toolkit.Uwp.Notifications.ToastContentBuilder()
 
@@ -137,8 +137,8 @@ namespace HardenWindowsSecurity
                         {
 
                             // Combine paths
-                            string Hero = Path.Combine(HardenWindowsSecurity.GlobalVars.path!, "Resources", "Media", "Attack Surface Reduction Notification Hero Image.png");
-                            string Inline = Path.Combine(HardenWindowsSecurity.GlobalVars.path!, "Resources", "Media", "ASRRulesToastNotificationImage.png");
+                            string Hero = Path.Combine(GlobalVars.path!, "Resources", "Media", "Attack Surface Reduction Notification Hero Image.png");
+                            string Inline = Path.Combine(GlobalVars.path!, "Resources", "Media", "ASRRulesToastNotificationImage.png");
 
                             new Microsoft.Toolkit.Uwp.Notifications.ToastContentBuilder()
 
@@ -167,7 +167,7 @@ namespace HardenWindowsSecurity
                     case ToastNotificationType.EndOfUnprotection:
                         {
                             // Combine paths
-                            string Inline = Path.Combine(HardenWindowsSecurity.GlobalVars.path!, "Resources", "Media", "UnprotectToastNotificationImage.png");
+                            string Inline = Path.Combine(GlobalVars.path!, "Resources", "Media", "UnprotectToastNotificationImage.png");
 
                             new Microsoft.Toolkit.Uwp.Notifications.ToastContentBuilder()
 
@@ -192,7 +192,7 @@ namespace HardenWindowsSecurity
                     case ToastNotificationType.EndOfExclusions:
                         {
                             // Combine paths
-                            string Inline = Path.Combine(HardenWindowsSecurity.GlobalVars.path!, "Resources", "Media", "UnprotectToastNotificationImage.png");
+                            string Inline = Path.Combine(GlobalVars.path!, "Resources", "Media", "UnprotectToastNotificationImage.png");
 
                             new Microsoft.Toolkit.Uwp.Notifications.ToastContentBuilder()
 
@@ -217,7 +217,7 @@ namespace HardenWindowsSecurity
                     case ToastNotificationType.EndOfBitLocker:
                         {
                             // Combine paths
-                            string Inline = Path.Combine(HardenWindowsSecurity.GlobalVars.path!, "Resources", "Media", "BitLockerToastNotificationImage.png");
+                            string Inline = Path.Combine(GlobalVars.path!, "Resources", "Media", "BitLockerToastNotificationImage.png");
 
                             new Microsoft.Toolkit.Uwp.Notifications.ToastContentBuilder()
 

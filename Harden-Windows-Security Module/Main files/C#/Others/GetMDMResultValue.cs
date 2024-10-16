@@ -18,19 +18,19 @@ namespace HardenWindowsSecurity
             try
             {
                 // Ensure the list is not null
-                if (GlobalVars.MDMResults == null)
+                if (GlobalVars.MDMResults is null)
                 {
                     return false;
                 }
 
                 // Query the list
                 var result = GlobalVars.MDMResults
-                    .Where(element => element != null && element.Name == propertyName)
+                    .Where(element => element is not null && element.Name == propertyName)
                     .Select(element => element.Value)
                     .FirstOrDefault();
 
                 // Perform the comparison
-                if (result != null && result.Equals(comparisonValue, StringComparison.OrdinalIgnoreCase))
+                if (result is not null && result.Equals(comparisonValue, StringComparison.OrdinalIgnoreCase))
                 {
                     return true;
                 }

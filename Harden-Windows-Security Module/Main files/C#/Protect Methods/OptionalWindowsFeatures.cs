@@ -4,7 +4,7 @@ using System;
 
 namespace HardenWindowsSecurity
 {
-    public class OptionalWindowsFeatures
+    public static class OptionalWindowsFeatures
     {
         // Declare the _FeaturesCheckResults as a private static field
         private static HardenWindowsSecurity.WindowsFeatureChecker.FeatureStatus? _FeaturesCheckResults;
@@ -80,7 +80,7 @@ Remove-WindowsCapability -Online
             // To store the value of the property of the _FeaturesCheckResults
             string? propertyValue = string.Empty;
 
-            if (propertyInfo != null)
+            if (propertyInfo is not null)
             {
                 propertyValue = propertyInfo.GetValue(_FeaturesCheckResults)?.ToString();
             }

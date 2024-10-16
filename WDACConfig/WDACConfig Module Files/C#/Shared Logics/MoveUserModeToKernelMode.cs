@@ -38,7 +38,7 @@ namespace WDACConfig
                 XmlNode? signingScenario131 = null;
 
                 // If there is no SigningScenarios block in the XML then exit the method
-                if (signingScenarios == null)
+                if (signingScenarios is null)
                 {
                     return;
                 }
@@ -59,13 +59,13 @@ namespace WDACConfig
                 }
 
                 // If both SigningScenario nodes were found
-                if (signingScenario12 != null && signingScenario131 != null)
+                if (signingScenario12 is not null && signingScenario131 is not null)
                 {
                     // Get AllowedSigners from SigningScenario with Value 12
                     XmlNode? allowedSigners12 = signingScenario12.SelectSingleNode("./sip:ProductSigners/sip:AllowedSigners", nsManager);
 
                     // If AllowedSigners node exists in SigningScenario 12 and has child nodes
-                    if (allowedSigners12 != null && allowedSigners12.HasChildNodes)
+                    if (allowedSigners12 is not null && allowedSigners12.HasChildNodes)
                     {
                         // Loop through each child node of AllowedSigners in SigningScenario 12
                         foreach (XmlNode allowedSignerNode in allowedSigners12.ChildNodes)
@@ -96,7 +96,7 @@ namespace WDACConfig
                                 XmlNode? allowedSigners131 = signingScenario131.SelectSingleNode("./sip:ProductSigners/sip:AllowedSigners", nsManager);
 
                                 // If the AllowedSigners node exists in SigningScenario 131
-                                if (allowedSigners131 != null)
+                                if (allowedSigners131 is not null)
                                 {
                                     // Append the new AllowedSigner node to the AllowedSigners node in SigningScenario 131
                                     _ = allowedSigners131.AppendChild(newAllowedSigner);

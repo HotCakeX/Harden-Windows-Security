@@ -7,7 +7,7 @@ using System.Xml;
 namespace WDACConfig
 {
 
-    public class CheckPolicyDeploymentStatus
+    public static class CheckPolicyDeploymentStatus
     {
 
         /// <summary>
@@ -25,7 +25,7 @@ namespace WDACConfig
             var policies = CiToolHelper.GetPolicies(false, true, true);
 
             // Loop through each policy and add its ID to the HashSet
-            foreach (WDACConfig.CiPolicyInfo item in policies)
+            foreach (CiPolicyInfo item in policies)
             {
                 _ = currentPolicyIDs.Add(item.PolicyID!);
             }

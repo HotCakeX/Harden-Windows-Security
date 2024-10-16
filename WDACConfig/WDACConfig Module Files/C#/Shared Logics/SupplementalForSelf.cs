@@ -9,7 +9,7 @@ using System.Xml;
 namespace WDACConfig
 {
 
-    internal class SupplementalForSelf
+    internal static class SupplementalForSelf
     {
         /// <summary>
         /// Deploys the Supplemental Policy that allows the Application to be allowed to run after deployment

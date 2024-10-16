@@ -3,7 +3,7 @@
 
 namespace WDACConfig
 {
-    public class HashCreator(string authenticodeSHA256, string authenticodeSHA1, string fileName, int siSigningScenario)
+    public sealed class HashCreator(string authenticodeSHA256, string authenticodeSHA1, string fileName, int siSigningScenario)
     {
         public string AuthenticodeSHA256 { get; set; } = authenticodeSHA256;
         public string AuthenticodeSHA1 { get; set; } = authenticodeSHA1;

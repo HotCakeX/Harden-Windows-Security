@@ -49,20 +49,20 @@ namespace WDACConfig
         public static FileBasedInfoPackage BuildSignerAndHashObjects(Hashtable[] data, string incomingDataType = "MDEAH", string level = "Auto", bool publisherToHash = false)
         {
             // An array to store the Signers created with FilePublisher Level
-            List<WDACConfig.FilePublisherSignerCreator> filePublisherSigners = [];
+            List<FilePublisherSignerCreator> filePublisherSigners = [];
 
             // An array to store the Signers created with Publisher Level
-            List<WDACConfig.PublisherSignerCreator> publisherSigners = [];
+            List<PublisherSignerCreator> publisherSigners = [];
 
             // An array to store the FileAttributes created using Hash Level
-            List<WDACConfig.HashCreator> completeHashes = [];
+            List<HashCreator> completeHashes = [];
 
             // Lists to separate data
             List<Hashtable> signedFilePublisherData = [];
             List<Hashtable> signedPublisherData = [];
             List<Hashtable> unsignedData = [];
 
-            WDACConfig.Logger.Write("BuildSignerAndHashObjects: Starting the data separation process.");
+            Logger.Write("BuildSignerAndHashObjects: Starting the data separation process.");
 
             // Data separation based on the level
             switch (level.ToLowerInvariant())
@@ -70,13 +70,13 @@ namespace WDACConfig
                 // If Hash level is used then add everything to the Unsigned data so Hash rules will be created for them
                 case "hash":
 
-                    WDACConfig.Logger.Write("BuildSignerAndHashObjects: Using only Hash level.");
+                    Logger.Write("BuildSignerAndHashObjects: Using only Hash level.");
 
-                    foreach (var item in data)
+                    foreach (Hashtable item in data)
                     {
-                        if (item == null)
+                        if (item is null)
                         {
-                            WDACConfig.Logger.Write("BuildSignerAndHashObjects: Found a null item in data.");
+                            Logger.Write("BuildSignerAndHashObjects: Found a null item in data.");
                         }
                         else
                         {
@@ -88,19 +88,15 @@ namespace WDACConfig
                 //  If Publisher level is used then add all Signed data to the SignedPublisherData list and Unsigned data to the Hash list
                 case "publisher":
 
-                    WDACConfig.Logger.Write("BuildSignerAndHashObjects: Using Publisher -> Hash levels.");
+                    Logger.Write("BuildSignerAndHashObjects: Using Publisher -> Hash levels.");
 
-                    foreach (var item in data)
+                    foreach (Hashtable item in data)
                     {
-                        if (item == null)
+                        if (item is null)
                         {
-                            WDACConfig.Logger.Write("BuildSignerAndHashObjects: Found a null item in data.");
+                            Logger.Write("BuildSignerAndHashObjects: Found a null item in data.");
                         }
-                        else if (
-                            item.ContainsKey("SignatureStatus") &&
-                                 item["SignatureStatus"] != null &&
-                                 string.Equals(item["SignatureStatus"]?.ToString(), "Signed", StringComparison.OrdinalIgnoreCase) &&
-                                 !publisherToHash)
+                        else if (string.Equals(item["SignatureStatus"]?.ToString(), "Signed", StringComparison.OrdinalIgnoreCase) && !publisherToHash)
                         {
                             signedPublisherData.Add(item);
                         }
@@ -114,29 +110,26 @@ namespace WDACConfig
                 // Detect and separate FilePublisher, Publisher and Hash (Unsigned) data if the level is Auto or FilePublisher
                 default:
 
-                    WDACConfig.Logger.Write("BuildSignerAndHashObjects: Using FilePublisher -> Publisher -> Hash levels.");
+                    Logger.Write("BuildSignerAndHashObjects: Using FilePublisher -> Publisher -> Hash levels.");
 
                     // Loop over each data
-                    foreach (var item in data)
+                    foreach (Hashtable item in data)
                     {
-                        if (item == null)
+                        if (item is null)
                         {
-                            WDACConfig.Logger.Write("BuildSignerAndHashObjects: Found a null item in data.");
+                            Logger.Write("BuildSignerAndHashObjects: Found a null item in data.");
                         }
                         // If the file's version is empty or it has no file attribute, then add it to the Publishers array
                         // because FilePublisher rule cannot be created for it
-                        else if (
-                            item.ContainsKey("SignatureStatus") &&
-                                 item["SignatureStatus"] != null &&
-                            string.Equals(item["SignatureStatus"]?.ToString(), "Signed", StringComparison.OrdinalIgnoreCase))
+                        else if (string.Equals(item["SignatureStatus"]?.ToString(), "Signed", StringComparison.OrdinalIgnoreCase))
                         {
                             // Safely get values from the item and check for null or whitespace
-                            bool hasNoFileAttributes = string.IsNullOrWhiteSpace(item.ContainsKey("OriginalFileName") ? item["OriginalFileName"]?.ToString() : null) &&
-                                                        string.IsNullOrWhiteSpace(item.ContainsKey("InternalName") ? item["InternalName"]?.ToString() : null) &&
-                                                        string.IsNullOrWhiteSpace(item.ContainsKey("FileDescription") ? item["FileDescription"]?.ToString() : null) &&
-                                                        string.IsNullOrWhiteSpace(item.ContainsKey("ProductName") ? item["ProductName"]?.ToString() : null);
+                            bool hasNoFileAttributes = string.IsNullOrWhiteSpace(item["OriginalFileName"]?.ToString()) &&
+                                                        string.IsNullOrWhiteSpace(item["InternalName"]?.ToString()) &&
+                                                        string.IsNullOrWhiteSpace(item["FileDescription"]?.ToString()) &&
+                                                        string.IsNullOrWhiteSpace(item["ProductName"]?.ToString());
 
-                            bool hasNoFileVersion = string.IsNullOrWhiteSpace(item.ContainsKey("FileVersion") ? item["FileVersion"]?.ToString() : null);
+                            bool hasNoFileVersion = string.IsNullOrWhiteSpace(item["FileVersion"]?.ToString());
 
                             if (hasNoFileAttributes || hasNoFileVersion)
                             {
@@ -147,7 +140,7 @@ namespace WDACConfig
                                 }
                                 else
                                 {
-                                    WDACConfig.Logger.Write($"BuildSignerAndHashObjects: Passing Publisher rule to the hash array for the file: {(string.Equals(incomingDataType, "MDEAH", StringComparison.OrdinalIgnoreCase) ? item["FileName"] : item["File Name"])}");
+                                    Logger.Write($"BuildSignerAndHashObjects: Passing Publisher rule to the hash array for the file: {(string.Equals(incomingDataType, "MDEAH", StringComparison.OrdinalIgnoreCase) ? item["FileName"] : item["File Name"])}");
                                     // Add the current signed data to Unsigned data array so that Hash rules will be created for it instead
                                     unsignedData.Add(item);
                                 }
@@ -165,16 +158,16 @@ namespace WDACConfig
                     break;
             }
 
-            WDACConfig.Logger.Write($"BuildSignerAndHashObjects: {signedFilePublisherData.Count} FilePublisher Rules.");
-            WDACConfig.Logger.Write($"BuildSignerAndHashObjects: {signedPublisherData.Count} Publisher Rules.");
-            WDACConfig.Logger.Write($"BuildSignerAndHashObjects: {unsignedData.Count} Hash Rules.");
+            Logger.Write($"BuildSignerAndHashObjects: {signedFilePublisherData.Count} FilePublisher Rules.");
+            Logger.Write($"BuildSignerAndHashObjects: {signedPublisherData.Count} Publisher Rules.");
+            Logger.Write($"BuildSignerAndHashObjects: {unsignedData.Count} Hash Rules.");
 
-            WDACConfig.Logger.Write("BuildSignerAndHashObjects: Processing FilePublisher data.");
+            Logger.Write("BuildSignerAndHashObjects: Processing FilePublisher data.");
 
-            foreach (var signedData in signedFilePublisherData)
+            foreach (Hashtable signedData in signedFilePublisherData)
             {
                 // Create a new FilePublisherSignerCreator object
-                WDACConfig.FilePublisherSignerCreator currentFilePublisherSigner = new();
+                FilePublisherSignerCreator currentFilePublisherSigner = new();
 
                 // Get the certificate details of the current event data based on the incoming type, they can be stored under different names.
                 // Safely casting the objects to a HashTable, returning null if the cast fails instead of throwing an exception.
@@ -182,9 +175,9 @@ namespace WDACConfig
                     ? (signedData["CorrelatedEventsData"] as Hashtable)?.Values
                     : (signedData["SignerInfo"] as Hashtable)?.Values;
 
-                if (correlatedEventsDataValues == null)
+                if (correlatedEventsDataValues is null)
                 {
-                    WDACConfig.Logger.Write("BuildSignerAndHashObjects: correlatedEventsDataValues is null.");
+                    Logger.Write("BuildSignerAndHashObjects: correlatedEventsDataValues is null.");
                 }
                 else
                 {
@@ -198,17 +191,17 @@ namespace WDACConfig
                         // For those files, the FilePublisher rule will be created with the file's leaf Certificate details only (Publisher certificate)
 
                         // Safely access dictionary values and handle nulls
-                        string? issuerTBSHash = corDataValue.ContainsKey("IssuerTBSHash") ? corDataValue["IssuerTBSHash"]?.ToString() : null;
-                        string? publisherTBSHash = corDataValue.ContainsKey("PublisherTBSHash") ? corDataValue["PublisherTBSHash"]?.ToString() : null;
+                        string? issuerTBSHash = corDataValue["IssuerTBSHash"]?.ToString();
+                        string? publisherTBSHash = corDataValue["PublisherTBSHash"]?.ToString();
 
                         // currentCorData to store the current SignerInfo/Correlated
                         CertificateDetailsCreator? currentCorData;
                         // Perform the check with null-safe values
                         if (string.IsNullOrWhiteSpace(issuerTBSHash) && !string.IsNullOrWhiteSpace(publisherTBSHash))
                         {
-                            WDACConfig.Logger.Write($"BuildSignerAndHashObjects: Intermediate Certificate TBS hash is empty for the file: {(string.Equals(incomingDataType, "MDEAH", StringComparison.OrdinalIgnoreCase) ? signedData["FileName"] : signedData["File Name"])}, using the leaf certificate TBS hash instead");
+                            Logger.Write($"BuildSignerAndHashObjects: Intermediate Certificate TBS hash is empty for the file: {(string.Equals(incomingDataType, "MDEAH", StringComparison.OrdinalIgnoreCase) ? signedData["FileName"] : signedData["File Name"])}, using the leaf certificate TBS hash instead");
 
-                            currentCorData = new WDACConfig.CertificateDetailsCreator(
+                            currentCorData = new CertificateDetailsCreator(
                                 corDataValue["PublisherTBSHash"]!.ToString()!,
                                 corDataValue["PublisherName"]!.ToString()!,
                                 corDataValue["PublisherTBSHash"]!.ToString()!,
@@ -218,7 +211,7 @@ namespace WDACConfig
                         }
                         else
                         {
-                            currentCorData = new WDACConfig.CertificateDetailsCreator(
+                            currentCorData = new CertificateDetailsCreator(
                                 corDataValue["IssuerTBSHash"]!.ToString()!,
                                 corDataValue["IssuerName"]!.ToString()!,
                                 corDataValue["PublisherTBSHash"]!.ToString()!,
@@ -232,26 +225,26 @@ namespace WDACConfig
                     }
                 }
 
-                #region Initialize properties with null-safe checks
-                string? fileVersionString = signedData.ContainsKey("FileVersion") ? signedData["FileVersion"]?.ToString() : null;
-                string? fileDescription = signedData.ContainsKey("FileDescription") ? signedData["FileDescription"]?.ToString() : null;
-                string? internalName = signedData.ContainsKey("InternalName") ? signedData["InternalName"]?.ToString() : null;
-                string? originalFileName = signedData.ContainsKey("OriginalFileName") ? signedData["OriginalFileName"]?.ToString() : null;
-                string? productName = signedData.ContainsKey("ProductName") ? signedData["ProductName"]?.ToString() : null;
+                #region Initialize properties
+                string? fileVersionString = signedData["FileVersion"]?.ToString();
+                string? fileDescription = signedData["FileDescription"]?.ToString();
+                string? internalName = signedData["InternalName"]?.ToString();
+                string? originalFileName = signedData["OriginalFileName"]?.ToString();
+                string? productName = signedData["ProductName"]?.ToString();
                 string? fileName = string.Equals(incomingDataType, "MDEAH", StringComparison.OrdinalIgnoreCase)
-                    ? (signedData.ContainsKey("FileName") ? signedData["FileName"]?.ToString() : null)
-                    : (signedData.ContainsKey("File Name") ? signedData["File Name"]?.ToString() : null);
+                    ? (signedData["FileName"]?.ToString())
+                    : (signedData["File Name"]?.ToString());
 
                 string? sha256 = string.Equals(incomingDataType, "MDEAH", StringComparison.OrdinalIgnoreCase)
-                    ? (signedData.ContainsKey("SHA256") ? signedData["SHA256"]?.ToString() : null)
-                    : (signedData.ContainsKey("SHA256 Hash") ? signedData["SHA256 Hash"]?.ToString() : null);
+                    ? (signedData["SHA256"]?.ToString())
+                    : (signedData["SHA256 Hash"]?.ToString());
 
                 string? sha1 = string.Equals(incomingDataType, "MDEAH", StringComparison.OrdinalIgnoreCase)
-                    ? (signedData.ContainsKey("SHA1") ? signedData["SHA1"]?.ToString() : null)
-                    : (signedData.ContainsKey("SHA1 Hash") ? signedData["SHA1 Hash"]?.ToString() : null);
+                    ? (signedData["SHA1"]?.ToString())
+                    : (signedData["SHA1 Hash"]?.ToString());
                 _ = string.Equals(incomingDataType, "MDEAH", StringComparison.OrdinalIgnoreCase)
-                    ? (signedData.ContainsKey("SiSigningScenario") ? signedData["SiSigningScenario"]?.ToString() : null)
-                    : (signedData.ContainsKey("SI Signing Scenario") ? signedData["SI Signing Scenario"]?.ToString() : null);
+                    ? (signedData["SiSigningScenario"]?.ToString())
+                    : (signedData["SI Signing Scenario"]?.ToString());
 
                 // Assign properties, handle null or missing values
                 currentFilePublisherSigner.FileVersion = !string.IsNullOrWhiteSpace(fileVersionString)
@@ -272,33 +265,33 @@ namespace WDACConfig
                 // Check if necessary details are not empty
                 if (string.IsNullOrWhiteSpace(currentFilePublisherSigner.AuthenticodeSHA256))
                 {
-                    WDACConfig.Logger.Write($"SHA256 is empty for the file: {(string.Equals(incomingDataType, "MDEAH", StringComparison.OrdinalIgnoreCase) ? signedData["FileName"] : signedData["File Name"])}");
+                    Logger.Write($"SHA256 is empty for the file: {(string.Equals(incomingDataType, "MDEAH", StringComparison.OrdinalIgnoreCase) ? signedData["FileName"] : signedData["File Name"])}");
                 }
 
                 if (string.IsNullOrWhiteSpace(currentFilePublisherSigner.AuthenticodeSHA1))
                 {
-                    WDACConfig.Logger.Write($"SHA1 is empty for the file: {(string.Equals(incomingDataType, "MDEAH", StringComparison.OrdinalIgnoreCase) ? signedData["FileName"] : signedData["File Name"])}");
+                    Logger.Write($"SHA1 is empty for the file: {(string.Equals(incomingDataType, "MDEAH", StringComparison.OrdinalIgnoreCase) ? signedData["FileName"] : signedData["File Name"])}");
                 }
 
                 // Add the completed FilePublisherSigner to the list
                 filePublisherSigners.Add(currentFilePublisherSigner);
             }
 
-            WDACConfig.Logger.Write("BuildSignerAndHashObjects: Processing Publisher data.");
+            Logger.Write("BuildSignerAndHashObjects: Processing Publisher data.");
 
-            foreach (var signedData in signedPublisherData)
+            foreach (Hashtable signedData in signedPublisherData)
             {
                 // Create a new PublisherSignerCreator object
-                WDACConfig.PublisherSignerCreator currentPublisherSigner = new();
+                PublisherSignerCreator currentPublisherSigner = new();
 
                 // Get the certificate details of the current event data based on the incoming type, they can be stored under different names
                 ICollection? correlatedEventsDataValues = string.Equals(incomingDataType, "MDEAH", StringComparison.OrdinalIgnoreCase)
                     ? (signedData?["CorrelatedEventsData"] as Hashtable)?.Values
                     : (signedData?["SignerInfo"] as Hashtable)?.Values;
 
-                if (correlatedEventsDataValues == null)
+                if (correlatedEventsDataValues is null)
                 {
-                    WDACConfig.Logger.Write("BuildSignerAndHashObjects: correlatedEventsDataValues is null.");
+                    Logger.Write("BuildSignerAndHashObjects: correlatedEventsDataValues is null.");
                 }
                 else
                 {
@@ -307,19 +300,19 @@ namespace WDACConfig
                     {
 
                         // Safely access dictionary values and handle nulls
-                        string? issuerTBSHash = corDataValue.ContainsKey("IssuerTBSHash") ? corDataValue["IssuerTBSHash"]?.ToString() : null;
-                        string? issuerName = corDataValue.ContainsKey("IssuerName") ? corDataValue["IssuerName"]?.ToString() : null;
-                        string? publisherTBSHash = corDataValue.ContainsKey("PublisherTBSHash") ? corDataValue["PublisherTBSHash"]?.ToString() : null;
-                        string? publisherName = corDataValue.ContainsKey("PublisherName") ? corDataValue["PublisherName"]?.ToString() : null;
+                        string? issuerTBSHash = corDataValue["IssuerTBSHash"]?.ToString();
+                        string? issuerName = corDataValue["IssuerName"]?.ToString();
+                        string? publisherTBSHash = corDataValue["PublisherTBSHash"]?.ToString();
+                        string? publisherName = corDataValue["PublisherName"]?.ToString();
 
                         CertificateDetailsCreator? currentCorData;
                         // Perform the check with null-safe values
                         if (string.IsNullOrWhiteSpace(issuerTBSHash) && !string.IsNullOrWhiteSpace(publisherTBSHash))
                         {
-                            WDACConfig.Logger.Write($"BuildSignerAndHashObjects: Intermediate Certificate TBS hash is empty for the file: {(string.Equals(incomingDataType, "MDEAH", StringComparison.OrdinalIgnoreCase) ? signedData!["FileName"] : signedData!["File Name"])}, using the leaf certificate TBS hash instead");
+                            Logger.Write($"BuildSignerAndHashObjects: Intermediate Certificate TBS hash is empty for the file: {(string.Equals(incomingDataType, "MDEAH", StringComparison.OrdinalIgnoreCase) ? signedData!["FileName"] : signedData!["File Name"])}, using the leaf certificate TBS hash instead");
 
                             // Create a new CertificateDetailsCreator object with the safely retrieved and used values
-                            currentCorData = new WDACConfig.CertificateDetailsCreator(
+                            currentCorData = new CertificateDetailsCreator(
                                 publisherTBSHash,
                                 publisherName!,
                                 publisherTBSHash,
@@ -329,7 +322,7 @@ namespace WDACConfig
                         else
                         {
                             // Create a new CertificateDetailsCreator object with the safely retrieved and used values
-                            currentCorData = new WDACConfig.CertificateDetailsCreator(
+                            currentCorData = new CertificateDetailsCreator(
                                 issuerTBSHash!,
                                 issuerName!,
                                 publisherTBSHash!,
@@ -354,27 +347,27 @@ namespace WDACConfig
                 publisherSigners.Add(currentPublisherSigner);
             }
 
-            WDACConfig.Logger.Write("BuildSignerAndHashObjects: Processing Unsigned Hash data.");
+            Logger.Write("BuildSignerAndHashObjects: Processing Unsigned Hash data.");
 
-            foreach (var hashData in unsignedData)
+            foreach (Hashtable hashData in unsignedData)
             {
-                if (hashData == null)
+                if (hashData is null)
                 {
-                    WDACConfig.Logger.Write("BuildSignerAndHashObjects: Found a null hashData item.");
+                    Logger.Write("BuildSignerAndHashObjects: Found a null hashData item.");
                     continue;
                 }
 
                 string? sha256 = string.Equals(incomingDataType, "MDEAH", StringComparison.OrdinalIgnoreCase)
-                    ? (hashData.ContainsKey("SHA256") ? hashData["SHA256"]?.ToString() : null)
-                    : (hashData.ContainsKey("SHA256 Hash") ? hashData["SHA256 Hash"]?.ToString() : null);
+                    ? (hashData["SHA256"]?.ToString())
+                    : (hashData["SHA256 Hash"]?.ToString());
 
                 string? sha1 = string.Equals(incomingDataType, "MDEAH", StringComparison.OrdinalIgnoreCase)
-                    ? (hashData.ContainsKey("SHA1") ? hashData["SHA1"]?.ToString() : null)
-                    : (hashData.ContainsKey("SHA1 Hash") ? hashData["SHA1 Hash"]?.ToString() : null);
+                    ? (hashData["SHA1"]?.ToString())
+                    : (hashData["SHA1 Hash"]?.ToString());
 
                 string? fileName = string.Equals(incomingDataType, "MDEAH", StringComparison.OrdinalIgnoreCase)
-                    ? (hashData.ContainsKey("FileName") ? hashData["FileName"]?.ToString() : null)
-                    : (hashData.ContainsKey("File Name") ? hashData["File Name"]?.ToString() : null);
+                    ? (hashData["FileName"]?.ToString())
+                    : (hashData["File Name"]?.ToString());
 
                 int siSigningScenario = string.Equals(incomingDataType, "MDEAH", StringComparison.OrdinalIgnoreCase)
                     ? (hashData.ContainsKey("SiSigningScenario") ? int.Parse(hashData["SiSigningScenario"]?.ToString()!, CultureInfo.InvariantCulture) : 1)
@@ -382,11 +375,11 @@ namespace WDACConfig
 
                 if (string.IsNullOrWhiteSpace(sha256) || string.IsNullOrWhiteSpace(sha1) || string.IsNullOrWhiteSpace(fileName))
                 {
-                    WDACConfig.Logger.Write("BuildSignerAndHashObjects: One or more necessary properties are null or empty in hashData.");
+                    Logger.Write("BuildSignerAndHashObjects: One or more necessary properties are null or empty in hashData.");
                     continue;
                 }
 
-                completeHashes.Add(new WDACConfig.HashCreator(
+                completeHashes.Add(new HashCreator(
                     sha256,
                     sha1,
                     fileName,
@@ -394,7 +387,7 @@ namespace WDACConfig
                 ));
             }
 
-            WDACConfig.Logger.Write("BuildSignerAndHashObjects: Completed the process.");
+            Logger.Write("BuildSignerAndHashObjects: Completed the process.");
 
             return new FileBasedInfoPackage(filePublisherSigners, publisherSigners, completeHashes);
         }

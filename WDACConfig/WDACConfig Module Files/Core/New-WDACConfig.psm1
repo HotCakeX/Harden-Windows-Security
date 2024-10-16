@@ -90,7 +90,7 @@ Function New-WDACConfig {
             $CurrentStep++
             Write-Progress -Id 7 -Activity 'Getting the recommended block rules' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
-            [WDACConfig.BasePolicyCreator]::GetBlockRules($StagingArea, $Deploy, $false)
+            [WDACConfig.BasePolicyCreator]::GetBlockRules($StagingArea, $Deploy)
 
             [System.IO.FileInfo]$FinalPolicyPath = Join-Path -Path $StagingArea -ChildPath "$Name.xml"
 
@@ -149,7 +149,7 @@ Function New-WDACConfig {
                         'SignedAndReputable' { [WDACConfig.BasePolicyCreator]::BuildSignedAndReputable($StagingArea, $Audit, $LogSize, $Deploy, $RequireEVSigners, $EnableScriptEnforcement, $TestMode, $false) ; break }
                     }
                 }
-                'GetUserModeBlockRules' { [WDACConfig.BasePolicyCreator]::GetBlockRules($StagingArea, $Deploy, $false) ; break }
+                'GetUserModeBlockRules' { [WDACConfig.BasePolicyCreator]::GetBlockRules($StagingArea, $Deploy) ; break }
                 'GetDriverBlockRules' {
                     if ($AutoUpdate) {
                         [WDACConfig.BasePolicyCreator]::SetAutoUpdateDriverBlockRules(); break

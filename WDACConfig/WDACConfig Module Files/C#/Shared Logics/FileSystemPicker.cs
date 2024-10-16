@@ -5,9 +5,8 @@ using System.Runtime.InteropServices;
 
 namespace WDACConfig
 {
-    public class FileSystemPicker
+    public static class FileSystemPicker
     {
-
 
         /// <summary>
         /// Usage example

@@ -8,7 +8,7 @@ using System.Text;
 
 namespace WDACConfig
 {
-    public class CryptoAPI
+    public static class CryptoAPI
     {
         // Importing function from crypt32.dll to access certificate information
         // https://learn.microsoft.com/en-us/windows/win32/api/wincrypt/nf-wincrypt-certgetnamestringa

@@ -7,9 +7,14 @@ using System.Globalization;
 namespace WDACConfig
 {
     // Prepares the environment. It also runs commands that would otherwise run in the default constructor for the GlobalVars Class
-    public class Initializer
+    public static class Initializer
     {
+        /// <summary>
         /// These are the codes that were present in the GlobalVar class's default constructor but defining them as a separate method allows any errors thrown in them to be properly displayed in PowerShell instead of showing an error occurred in the default constructor of a class
+        /// </summary>
+        /// <exception cref="InvalidOperationException"></exception>
+        /// <exception cref="FormatException"></exception>
+        /// <exception cref="PlatformNotSupportedException"></exception>
         public static void Initialize()
         {
             using (RegistryKey key = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows NT\CurrentVersion") ?? throw new InvalidOperationException("Could not get the current Windows version from the registry"))

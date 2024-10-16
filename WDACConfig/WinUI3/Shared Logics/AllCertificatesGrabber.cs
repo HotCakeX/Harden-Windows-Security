@@ -14,12 +14,12 @@ namespace WDACConfig
 {
 
     // a class to throw a custom exception when the certificate has HashMismatch
-    public class ExceptionHashMismatchInCertificate(string message, string functionName) : Exception($"{functionName}: {message}")
+    public sealed class ExceptionHashMismatchInCertificate(string message, string functionName) : Exception($"{functionName}: {message}")
     {
     }
 
     // Represents a signed CMS and its certificate chain
-    public class AllFileSigners(SignedCms signerCertificate, X509Chain certificateChain)
+    public sealed class AllFileSigners(SignedCms signerCertificate, X509Chain certificateChain)
     {
         public SignedCms Signer { get; } = signerCertificate;
         public X509Chain Chain { get; } = certificateChain;

@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace WDACConfig
 {
-    public class FileDirectoryPathComparer
+    public static class FileDirectoryPathComparer
     {
         /// <summary>
         /// Method that takes 2 arrays, one containing file paths and the other containing folder paths.

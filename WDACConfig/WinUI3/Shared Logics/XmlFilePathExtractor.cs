@@ -6,7 +6,7 @@ using System.Xml;
 
 namespace WDACConfig
 {
-    public class XmlFilePathExtractor
+    public static class XmlFilePathExtractor
     {
         public static HashSet<string> GetFilePaths(string xmlFilePath)
         {

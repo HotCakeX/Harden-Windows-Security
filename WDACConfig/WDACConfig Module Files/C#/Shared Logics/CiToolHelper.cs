@@ -11,7 +11,7 @@ using System.Text.Json;
 namespace WDACConfig
 {
     // Class to represent a policy with various attributes
-    public class CiPolicyInfo
+    public sealed class CiPolicyInfo
     {
         public string? PolicyID { get; set; }           // Unique identifier for the policy
         public string? BasePolicyID { get; set; }       // Identifier for the base policy
@@ -71,7 +71,7 @@ namespace WDACConfig
             catch (Exception ex)
             {
                 // Handle errors by printing an error message and returning a default version of 0.0.0.0
-                WDACConfig.Logger.Write($"Error converting number to version: {ex.Message}");
+                Logger.Write($"Error converting number to version: {ex.Message}");
                 return new Version(0, 0, 0, 0);
             }
         }
@@ -205,7 +205,7 @@ namespace WDACConfig
 
             if (process.ExitCode != 0)
             {
-                throw new InvalidOperationException($"Command execution failed with error code {process.ExitCode}");
+                throw new InvalidOperationException($"Command execution failed with error code {process.ExitCode}. Output: {jsonOutput}");
             }
         }
 
@@ -256,7 +256,7 @@ namespace WDACConfig
 
             if (process.ExitCode != 0)
             {
-                throw new InvalidOperationException($"Command execution failed with error code {process.ExitCode}");
+                throw new InvalidOperationException($"Command execution failed with error code {process.ExitCode}. Output: {jsonOutput}");
             }
         }
 
@@ -291,7 +291,7 @@ namespace WDACConfig
 
             if (process.ExitCode != 0)
             {
-                throw new InvalidOperationException($"Command execution failed with error code {process.ExitCode}");
+                throw new InvalidOperationException($"Command execution failed with error code {process.ExitCode}. Output: {jsonOutput}");
             }
         }
 

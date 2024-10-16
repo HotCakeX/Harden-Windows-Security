@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace WDACConfig
 {
-    public class PolicyMerger
+    public static class PolicyMerger
     {
         /// <summary>
         /// Merges multiple policies into a single policy using the PowerShell cmdlet of the ConfigCI module

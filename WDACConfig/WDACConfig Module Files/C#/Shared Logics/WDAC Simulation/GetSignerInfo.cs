@@ -6,7 +6,7 @@ using System.Xml;
 
 namespace WDACConfig
 {
-    public class GetSignerInfo
+    public static class GetSignerInfo
     {
         /// <summary>
         /// Takes an XML policy content as input and returns an array of Signer objects
@@ -385,9 +385,9 @@ namespace WDACConfig
                             certRoot: certRootValue!,
                             certPublisher: certPublisher,
                             certIssuer: certIssuer,
-                            certEKU: CertEKUs.ToArray(),
+                            certEKU: [.. CertEKUs],
                             certOemID: CertOemID,
-                            fileAttribRef: ruleIds.ToArray(),
+                            fileAttribRef: [.. ruleIds],
                             fileAttrib: SignerFileAttributesProperty,
                             signerScope: signerScope,
                             isWHQL: IsWHQL,

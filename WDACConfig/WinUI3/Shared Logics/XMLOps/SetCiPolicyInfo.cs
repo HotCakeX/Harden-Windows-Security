@@ -5,7 +5,7 @@ using System.Xml;
 
 namespace WDACConfig
 {
-    public class SetCiPolicyInfo
+    public static class SetCiPolicyInfo
     {
         /// <summary>
         /// Configures a XML Code Integrity policy by modifying its details.

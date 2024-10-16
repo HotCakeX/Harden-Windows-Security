@@ -278,6 +278,9 @@ Function Compare-SignerAndCertificate {
                         # Check if the matched signer has FileAttrib indicating that it was generated either with FilePublisher or SignedVersion level
                         if ($Signer.FileAttrib) {
 
+                            # Loop over each <FileAttrib> in the <FileRules> nodes, only those that belong to the Signer
+                            # Which we retrieved based on the <FileAttribRef> elements under the Signer
+                            # And only keep those <FileAttrib> where the current file being examined has an equal or higher version than the version in those <FileAttrib> elements
                             [System.Collections.Hashtable[]]$CandidateFileAttrib = foreach ($Attrib in $signer.FileAttrib.GetEnumerator()) {
 
                                 if ($ExtendedFileInfo.Version -ge [System.Version]::New($Attrib.Value.MinimumFileVersion)) {

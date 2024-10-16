@@ -5,7 +5,7 @@ using System.Management.Automation;
 namespace WDACConfig
 {
     // Argument tab auto-completion and ValidateSet for Levels and Fallbacks parameters in the entire module
-    public class ScanLevelz : IValidateSetValuesGenerator
+    public sealed class ScanLevelz : IValidateSetValuesGenerator
     {
         public string[] GetValidValues()
         {

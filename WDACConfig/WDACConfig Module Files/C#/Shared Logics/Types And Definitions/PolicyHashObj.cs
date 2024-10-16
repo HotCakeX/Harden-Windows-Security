@@ -5,7 +5,7 @@ using System;
 // Used by WDAC Simulations
 namespace WDACConfig
 {
-    public class PolicyHashObj(string hashvalue, string hashtype, string filepathforhash)
+    public sealed class PolicyHashObj(string hashvalue, string hashtype, string filepathforhash)
     {
         // Adding public getters and setters for the properties
         public string HashValue { get; set; } = hashvalue;

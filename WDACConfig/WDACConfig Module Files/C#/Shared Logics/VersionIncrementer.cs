@@ -4,7 +4,7 @@ using System;
 
 namespace WDACConfig
 {
-    public class VersionIncrementer
+    public static class VersionIncrementer
     {
         public static Version AddVersion(Version version)
         // This can recursively increment an input version by one, and is aware of the max limit

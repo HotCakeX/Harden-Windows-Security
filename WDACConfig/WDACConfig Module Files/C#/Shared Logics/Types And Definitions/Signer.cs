@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace WDACConfig
 {
-    public class Signer(string id, string name, string certRoot, string? certPublisher, string? certIssuer,
+    public sealed class Signer(string id, string name, string certRoot, string? certPublisher, string? certIssuer,
                   string[]? certEKU, string? certOemID, string[]? fileAttribRef,
                   Dictionary<string, Dictionary<string, string>>? fileAttrib,
                   string signerScope, bool isWHQL, bool isAllowed, bool hasEKU)

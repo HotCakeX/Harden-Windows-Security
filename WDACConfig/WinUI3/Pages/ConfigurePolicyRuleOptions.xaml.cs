@@ -3,7 +3,6 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using static WDACConfig.CiRuleOptions;
 
 namespace WDACConfig.Pages
@@ -20,7 +19,7 @@ namespace WDACConfig.Pages
             this.NavigationCacheMode = Microsoft.UI.Xaml.Navigation.NavigationCacheMode.Enabled;
 
             // Initialize the keys property with dictionary keys
-            PolicyRuleOptionsKeys = WDACConfig.CiRuleOptions.PolicyRuleOptionsActual.Keys.ToList();
+            PolicyRuleOptionsKeys = [.. WDACConfig.CiRuleOptions.PolicyRuleOptionsActual.Keys];
 
             // Call the method to generate SettingsCards dynamically
             GenerateSettingsCards();
@@ -187,7 +186,7 @@ namespace WDACConfig.Pages
                 }
             }
 
-            return selectedRules.ToArray();
+            return [.. selectedRules];
         }
 
 

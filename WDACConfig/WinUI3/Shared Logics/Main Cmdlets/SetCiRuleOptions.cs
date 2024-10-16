@@ -7,7 +7,7 @@ using System.Xml;
 
 namespace WDACConfig
 {
-    public class CiRuleOptions
+    public static class CiRuleOptions
     {
 
         public enum PolicyTemplate
@@ -156,6 +156,39 @@ namespace WDACConfig
         private readonly static HashSet<int> ScriptEnforcementRules = [(int)PolicyRuleOptions.DisabledScriptEnforcement];
         private readonly static HashSet<int> TestModeRules = [(int)PolicyRuleOptions.EnabledAdvancedBootOptionsMenu, (int)PolicyRuleOptions.EnabledBootAuditOnFailure];
         #endregion
+
+
+
+        /* 
+           #region Policy Rule Options
+           // Fetches the latest policy rule options from the Schema file that exists on the system
+
+           // Load the CI Schema content
+           XmlDocument schemaData = new();
+           schemaData.Load(Path.Combine(WDACConfig.GlobalVars.CISchemaPath));
+
+           // Create a namespace manager to handle namespaces
+           XmlNamespaceManager nsManager = new(schemaData.NameTable);
+           nsManager.AddNamespace("xs", "http://www.w3.org/2001/XMLSchema");
+
+           // Define the XPath query to fetch enumeration values
+           string xpathQuery = "//xs:simpleType[@name='OptionType']/xs:restriction/xs:enumeration/@value";
+
+           // Create a new HashSet to store the valid policy rule options
+           HashSet<string> validOptions = new(StringComparer.OrdinalIgnoreCase);
+
+           // Fetch enumeration values from the schema
+           XmlNodeList? optionNodes = schemaData.SelectNodes(xpathQuery, nsManager) ?? throw new InvalidOperationException("No valid options found in the Code Integrity Schema.");
+
+           foreach (XmlNode node in optionNodes)
+           {
+               if (node.Value != null)
+               {
+                   _ = validOptions.Add(node.Value);
+               }
+           }
+           #endregion
+           */
 
 
         /// <summary>
@@ -410,10 +443,7 @@ namespace WDACConfig
 
             // Always remove any existing rule options initially. The calculations determining which
             // Rules must be included in the policy are all made in this method.
-            if (RulesNode is not null)
-            {
-                RulesNode.RemoveAll();
-            }
+            RulesNode?.RemoveAll();
 
 
             // Convert the HashSet to a List and sort it

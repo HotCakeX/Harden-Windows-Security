@@ -6,7 +6,7 @@ using System.Management;
 
 namespace WDACConfig
 {
-    public class SnapBackGuarantee
+    public static class SnapBackGuarantee
     {
 
         /// <summary>

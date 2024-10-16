@@ -5,7 +5,7 @@
 namespace WDACConfig
 {
 
-    public class SecurePolicySetting(object? Value, WDACConfig.WLDP_SECURE_SETTING_VALUE_TYPE ValueType, uint ValueSize, bool Status, int StatusCode)
+    public sealed class SecurePolicySetting(object? Value, WDACConfig.WLDP_SECURE_SETTING_VALUE_TYPE ValueType, uint ValueSize, bool Status, int StatusCode)
     {
         public object? Value { get; set; } = Value;
         public WDACConfig.WLDP_SECURE_SETTING_VALUE_TYPE ValueType { get; set; } = ValueType;
@@ -14,7 +14,7 @@ namespace WDACConfig
         public int StatusCode { get; set; } = StatusCode;
     }
 
-    public class GetCIPolicySetting
+    public static class GetCIPolicySetting
     {
 
         public static SecurePolicySetting Invoke(string provider, string key, string valueName)

@@ -36,7 +36,101 @@ After the Audit is activated, running this PowerShell code will generate an outp
 
 For example, if you visit a website or access a server that is hosted in one of the countries you blocked, or a connection was made from one of those countries to your device, it will generate an event log that will be visible to you once you run this code.
 
-#### [➡️ Link to the `Get-BlockedPackets` Function](https://github.com/HotCakeX/Harden-Windows-Security/blob/main/Extras/Get-BlockedPackets.ps1)
+```powershell
+#Requires -RunAsAdministrator
+#Requires -Version 7.4
+Function Get-BlockedPackets {
+    Begin {
+        [System.Diagnostics.Eventing.Reader.EventLogRecord[]]$Events = Get-WinEvent -FilterHashtable @{LogName = 'Security'; ID = 5152 }
+        [System.Object[]]$Outputs = @()
+
+        # Create an empty hashtable to store the firewall rule names and display names
+        [System.Collections.Hashtable]$FirewallGroupPolicy = @{}
+
+        # Loop through each firewall rule from the local policy store (for Firewall rules that are stored in Group Policy)
+        foreach ($Rule in Get-NetFirewallRule -PolicyStore localhost) {
+            # Add a new entry to the hashtable with the rule name as the key and the display name as the value
+            $FirewallGroupPolicy[$Rule.name] = $Rule.DisplayName
+        }
+
+        # Loop through each local firewall rule (for Firewall rules that are defined locally in Windows Defender Firewall with Advanced Security)
+        foreach ($Rule in Get-NetFirewallRule) {
+            # Add a new entry to the hashtable with the rule name as the key and the display name as the value
+            $FirewallGroupPolicy[$Rule.name] = $Rule.DisplayName
+        }
+
+        # Create a hashtable of partition numbers and their associated drive letters
+        [System.Collections.Generic.Dictionary[string, string]]$DriveLetterMappings = @{}
+
+        # Get all partitions and filter out the ones that don't have a drive letter and then add them to the hashtable with the partition number as the key and the drive letter as the value
+        foreach ($Drive in (Get-Partition | Where-Object -FilterScript { $_.DriveLetter })) {
+            $DriveLetterMappings[$Drive.PartitionNumber] = $Drive.DriveLetter
+        }
+
+        # Define the regex pattern for the device path
+        [string]$Pattern = '\\Device\\HarddiskVolume(\d+)\\(.*)$'
+    }
+    Process {
+
+        # Loop through each event in the $Events array
+        foreach ($Event in $Events) {
+
+            # Convert the event to an XML document
+            $Xml = [System.Xml.XmlDocument]$Event.ToXml()
+
+            # Pipe the data elements of the event to the next command
+            $Xml.event.eventdata.data |
+
+            # For each data element, do the following
+            ForEach-Object -Begin {
+                [System.Collections.Hashtable]$Hash = @{ TimeCreated = [System.DateTime]$Xml.Event.System.TimeCreated.SystemTime }
+            } -Process {
+                # Add the name and text of the data element as another key-value pair to the hashtable
+                $Hash[$_.name] = $_.'#text'
+            } -End {
+                # Convert the hashtable to a custom object and pipe it to the next command
+                [pscustomobject]$Hash
+            } |
+            # Filter out the objects that have a filter origin property matching any of the specified strings
+            Where-Object -Property FilterOrigin -NotMatch 'Stealth|Unknown|Query User Default|WSH Default' | ForEach-Object -Process {
+
+                # If the filter origin is in the hashtable keys
+                if ($_.FilterOrigin -in $FirewallGroupPolicy.Keys) {
+                    # Replace the filter origin with the display name of the firewall rule from the hashtable
+                    $_.FilterOrigin = $FirewallGroupPolicy[$_.FilterOrigin]
+                }
+
+                # Create a hashtable with the protocol numbers and names
+                [System.String]$ProtocolName = @{ 6 = 'TCP'; 17 = 'UDP' }[[System.Int32]$_.Protocol]
+
+                # If the protocol number is not in the hashtable, keep it as it is, otherwise replace it with the protocol name
+                $_.Protocol = if (-not $ProtocolName) { $_.Protocol } else { $ProtocolName }
+
+                # If the direction is equal to '%%14592', set it to 'Outbound', otherwise set it to 'Inbound'
+                $_.Direction = $_.Direction -eq '%%14592' ? 'Outbound' : 'Inbound'
+
+                # If the application matches the pattern, replace the device path with the drive letter
+                if ($_.Application -match $Pattern) {
+                    [System.Int64]$HardDiskVolumeNumber = $Matches[1]
+                    [System.String]$RemainingPath = $Matches[2]
+                    [PSCustomObject]$GetLetter = $DriveLetterMappings[$HardDiskVolumeNumber]
+                    [System.IO.FileInfo]$UsablePath = [System.IO.Path]::Combine("$GetLetter`:", $RemainingPath)
+                    $_.Application = $_.Application -replace $Pattern, $UsablePath
+                }
+
+                # Add the modified object to the $Outputs array
+                $Outputs += $_ | Select-Object -Property Application, SourcePort, Protocol, SourceAddress, DestPort, TimeCreated, Direction, DestAddress, ProcessId , FilterOrigin
+            }
+        }
+    }
+    End {
+        Return $Outputs
+    }
+}
+Get-BlockedPackets
+```
+
+<br>
 
 * [Audit Filtering Platform Packet Drop](https://learn.microsoft.com/en-us/windows/security/threat-protection/auditing/audit-filtering-platform-packet-drop)
 * [Filter origin audit log improvements](https://learn.microsoft.com/en-us/windows/security/threat-protection/windows-firewall/filter-origin-documentation)
@@ -44,17 +138,9 @@ For example, if you visit a website or access a server that is hosted in one of 
 
 <br>
 
-## How to Get Event Logs in Real Time in PowerShell
+## How to Get Event Logs from the Miscellaneous Category in PowerShell
 
 This code assumes you've already used the [Harden Windows Security Module](https://github.com/HotCakeX/Harden-Windows-Security?tab=readme-ov-file#miscellaneous-configurations) and the event logs custom views exist on your machine.
-
-In this example, any logs generated for Exploit Protection is displayed in real time on PowerShell console. You can modify and improve the displayed output more according to your needs.
-
-#### [➡️ Link to the `Get-EventData` Function](https://github.com/HotCakeX/Harden-Windows-Security/blob/main/Extras/Get-EventData.ps1)
-
-<br>
-
-If you don't want the real time mode and just want to get the logs one time, you can use the following code
 
 ```powershell
 # Load the XML content from a file or a string

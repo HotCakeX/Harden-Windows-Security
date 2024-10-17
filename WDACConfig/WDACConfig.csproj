@@ -47,12 +47,8 @@
     <PackageReference Include="System.Management.Automation" Version="7.5.0-preview.5" />
   </ItemGroup>
 
-  <!-- Exclude this folder since it belongs to another solution and project. Also Hides it in the solution explorer and search results. -->
+  <!-- Exclude this folder, hides it in the solution explorer and search results. -->
   <ItemGroup>
-    <Compile Remove="WinUI3\**" />
-    <Content Remove="WinUI3\**" />
-    <None Remove="WinUI3\**" />
-
     <Compile Remove="WDACConfig.code-workspace" />
     <Content Remove="WDACConfig.code-workspace" />
     <None Remove="WDACConfig.code-workspace" />

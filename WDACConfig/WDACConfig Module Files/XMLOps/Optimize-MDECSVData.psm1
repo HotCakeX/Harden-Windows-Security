@@ -16,7 +16,6 @@ Function Optimize-MDECSVData {
             System.Collections.Hashtable[]
         #>
     [CmdletBinding()]
-    [OutputType([System.Collections.Hashtable[]])]
     Param (
         [Parameter(Mandatory = $true)][System.IO.FileInfo[]]$CSVPaths,
         [Parameter(Mandatory = $true)][System.IO.DirectoryInfo]$StagingArea

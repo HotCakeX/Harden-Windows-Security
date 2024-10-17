@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Page
+    x:Class="WDACConfig.Pages.Simulation"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:WDACConfig.Pages"
+    xmlns:localbase="using:WDACConfig"
+    xmlns:wdac="using:WDACConfig"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:ui="using:CommunityToolkit.WinUI"
+    xmlns:controls="using:CommunityToolkit.WinUI.Controls"
+    xmlns:tk7controls="using:CommunityToolkit.WinUI.UI.Controls"
+    mc:Ignorable="d">
+
+    <Grid Margin="20,30,20,20" TabFocusNavigation="Cycle">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Grid.Resources>
+            <Style x:Key="GridCardStyle" TargetType="Border">
+                <Style.Setters>
+                    <Setter Property="Background" Value="{ThemeResource CardBackgroundFillColorDefaultBrush}" />
+                    <Setter Property="BorderThickness" Value="1" />
+                    <Setter Property="BorderBrush" Value="{ThemeResource CardStrokeColorDefaultBrush}" />
+                    <Setter Property="CornerRadius" Value="{StaticResource OverlayCornerRadius}" />
+                </Style.Setters>
+            </Style>
+        </Grid.Resources>
+
+        <TextBlock Text="Application Control Policy Simulation" Style="{StaticResource TitleTextBlockStyle}" Margin="15" Grid.Row="0"/>
+
+        <Border
+            Grid.Row="1"
+            Margin="0,0,0,30"
+            Style="{StaticResource GridCardStyle}" Padding="10">
+
+            <controls:WrapPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalSpacing="15" VerticalSpacing="15">
+                <!-- Begin Simulation Button -->
+                <Button x:Name="BeginSimulationButton" ToolTipService.ToolTip="Start the Simulation using the selected configurations" Style="{StaticResource AccentButtonStyle}" Click="BeginSimulationButton_Click">
+                    <StackPanel Orientation="Horizontal">
+                        <SymbolIcon Symbol="Play" />
+                        <TextBlock Text="Begin Simulation" Margin="5,0,0,0"/>
+                    </StackPanel>
+                </Button>
+
+                <!-- Select XML File Button and TextBox for File Path -->
+                <Button Click="SelectXmlFileButton_Click" ToolTipService.ToolTip="Browse for the App Control policy XML file">
+                    <StackPanel Orientation="Horizontal">
+                        <FontIcon Glyph="&#xEC50;" />
+                        <TextBlock Text="Select XML File" Margin="5,0,0,0"/>
+                    </StackPanel>
+                </Button>
+                <TextBox x:Name="XmlFilePathTextBox" IsReadOnly="True" PlaceholderText="XML File Path..." VerticalAlignment="Center" MaxWidth="300" />
+
+                <!-- Select Files Button -->
+                <Button Click="SelectFilesButton_Click" ToolTipService.ToolTip="Browse for files to include in the simulation">
+                    <StackPanel Orientation="Horizontal">
+                        <FontIcon Glyph="&#xEC50;" />
+                        <TextBlock Text="Select Files" Margin="5,0,0,0"/>
+                    </StackPanel>
+                </Button>
+
+                <!-- Select Folders Button -->
+                <Button Click="SelectFoldersButton_Click" ToolTipService.ToolTip="Browse for a folder to include in the simulation">
+                    <StackPanel Orientation="Horizontal">
+                        <FontIcon Glyph="&#xED25;" />
+                        <TextBlock Text="Select Folders" Margin="5,0,0,0"/>
+                    </StackPanel>
+                </Button>
+
+                <!-- Cat Root Paths Button -->
+                <Button Click="CatRootPathsButton_Click" ToolTipService.ToolTip="Provide path(s) to directories where security catalog .cat files are located. If not provided, the default path is C:\Windows\System32\CatRoot">
+                    <StackPanel Orientation="Horizontal">
+                        <FontIcon Glyph="&#xED25;" />
+                        <TextBlock Text="Cat Root Paths" Margin="5,0,0,0"/>
+                    </StackPanel>
+                </Button>
+
+                <!-- Toggle Button for No Cat Root Scanning -->
+                <ToggleButton x:Name="NoCatRootScanningToggle" ToolTipService.ToolTip="Will not scan the security catalogs on the system">
+                    <StackPanel Orientation="Horizontal">
+                        <FontIcon Glyph="&#xEB95;" />
+                        <TextBlock Text="No Cat Root Scanning" Margin="5,0,0,0"/>
+                    </StackPanel>
+                </ToggleButton>
+
+                <!-- Toggle Button for CSV Output -->
+                <ToggleButton x:Name="CSVOutputToggle" ToolTipService.ToolTip="Exports the output to a CSV file in the WDACConfig directory in the Program Files directory at the end of the simulation job.">
+                    <StackPanel Orientation="Horizontal">
+                        <FontIcon Glyph="&#xE9F9;" />
+                        <TextBlock Text="Save output to CSV" Margin="5,0,0,0"/>
+                    </StackPanel>
+                </ToggleButton>
+
+                <!-- Scalability Button with RadialGauge Flyout -->
+                <Button x:Name="ScalabilityButton" Content="Scalability" ToolTipService.ToolTip="The number of the concurrent/parallel tasks to use when performing App Control Simulation. By default it uses 2 parallel tasks.">
+                    <Button.Flyout>
+                        <Flyout>
+                            <StackPanel>
+                                <controls:RadialGauge x:Name="ScalabilityRadialGauge"
+                                      StepSize="1"
+                                      TickSpacing="2"
+                                      ScaleWidth="12"
+                                      NeedleWidth="5"
+                                      NeedleLength="80"
+                                      TickLength="8"
+                                      TickWidth="0"
+                                      ScalePadding="0"
+                                      TickPadding="24"
+                                      Width="200"
+                                      Maximum="120"
+                                      Minimum="2"
+                                      ValueChanged="ScalabilityRadialGauge_ValueChanged"
+                                      ValueStringFormat="N0"/>
+                            </StackPanel>
+                        </Flyout>
+                    </Button.Flyout>
+                </Button>
+
+                <!-- Clear Data Button -->
+                <Button Click="ClearDataButton_Click" ToolTipService.ToolTip="Clears all of the displayed data">
+                    <StackPanel Orientation="Horizontal">
+                        <SymbolIcon Symbol="Delete" />
+                        <TextBlock Text="Clear Data" Margin="5,0,0,0"/>
+                    </StackPanel>
+                </Button>
+
+                <ProgressBar x:Name="SimulationProgressBar" Width="200" Value="0" ToolTipService.ToolTip="The Simulation progress" />
+
+                <TextBox PlaceholderText="Total count of the files"
+                         x:Name="TotalCountOfTheFilesTextBox"
+                         IsReadOnly="True"
+                         VerticalAlignment="Center"
+                         VerticalContentAlignment="Center" ToolTipService.ToolTip="The total number of the files that participated in the last Simulation job"/>
+
+                <TextBox x:Name="SearchBox" Width="300" PlaceholderText="Search data..." TextChanged="SearchBox_TextChanged" Margin="10" VerticalAlignment="Center" VerticalContentAlignment="Center" ToolTipService.ToolTip="Search the data, not all fields are included. To perform search in all fields such as hashes, export the results to CSV and then use VS Code." />
+
+            </controls:WrapPanel>
+        </Border>
+
+        <!-- DataGrid for Simulation Outputs -->
+        <Border Grid.Row="2" Style="{StaticResource GridCardStyle}" Margin="0,0,0,25" Padding="5">
+            <tk7controls:DataGrid
+                x:Name="SimulationDataGrid"
+                ItemsSource="{x:Bind SimulationOutputs, Mode=OneWay}"
+                AllowDrop="False"
+                AreRowDetailsFrozen="True"
+                AutoGenerateColumns="False"
+                CanDrag="False"
+                HeadersVisibility="Column"
+                IsReadOnly="True"
+                IsTabStop="True"
+                RowDetailsVisibilityMode="Collapsed"
+                SelectionMode="Single"
+                TabIndex="2"
+                ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                ScrollViewer.VerticalScrollBarVisibility="Auto"
+                ScrollViewer.VerticalScrollMode="Auto"
+                ScrollViewer.HorizontalScrollMode="Auto"
+                Sorting="SimulationDataGrid_Sorting"
+                CanUserSortColumns="True">
+                <tk7controls:DataGrid.Columns>
+                    <tk7controls:DataGridTextColumn Header="Path" Binding="{Binding Path}" Width="Auto"/>
+                    <tk7controls:DataGridTextColumn Header="Source" Binding="{Binding Source}" Width="Auto"/>
+                    <tk7controls:DataGridTextColumn Header="Is Authorized" Binding="{Binding IsAuthorized}" Tag="IsAuthorized" Width="Auto"/>
+                    <tk7controls:DataGridTextColumn Header="Match Criteria" Binding="{Binding MatchCriteria}" Width="Auto"/>
+                    <tk7controls:DataGridTextColumn Header="Specific File Name Criteria" Binding="{Binding SpecificFileNameLevelMatchCriteria}" Width="Auto"/>
+                    <tk7controls:DataGridTextColumn Header="Signer ID" Binding="{Binding SignerID}" Width="Auto"/>
+                    <tk7controls:DataGridTextColumn Header="Signer Name" Binding="{Binding SignerName}" Width="Auto"/>
+                    <tk7controls:DataGridTextColumn Header="Signer Cert Root" Binding="{Binding SignerCertRoot}" Width="Auto"/>
+                    <tk7controls:DataGridTextColumn Header="Signer Cert Publisher" Binding="{Binding SignerCertPublisher}" Width="Auto"/>
+                    <tk7controls:DataGridTextColumn Header="Signer Scope" Binding="{Binding SignerScope}" Width="Auto"/>
+                    <tk7controls:DataGridTextColumn Header="Cert Subject CN" Binding="{Binding CertSubjectCN}" Width="Auto"/>
+                    <tk7controls:DataGridTextColumn Header="Cert Issuer CN" Binding="{Binding CertIssuerCN}" Width="Auto"/>
+                    <tk7controls:DataGridTextColumn Header="Cert Not After" Binding="{Binding CertNotAfter}" Width="Auto"/>
+                    <tk7controls:DataGridTextColumn Header="Cert TBS Value" Binding="{Binding CertTBSValue}" Width="Auto"/>
+                    <tk7controls:DataGridTextColumn Header="File Path" Binding="{Binding FilePath}" Width="Auto"/>
+                </tk7controls:DataGrid.Columns>
+            </tk7controls:DataGrid>
+        </Border>
+    </Grid>
+</Page>

@@ -15,7 +15,6 @@ Function Get-KernelModeDriversAudit {
         When Get-SystemDriver -UserPEs is used, Dlls and .exe files are included as well
     #>
     [CmdletBinding()]
-    [OutputType([System.Void])]
     param(
         [Parameter(Mandatory = $true)][System.IO.DirectoryInfo]$SavePath
     )

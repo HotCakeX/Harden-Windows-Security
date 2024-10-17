@@ -3,14 +3,13 @@ Function Edit-SignedWDACConfig {
         DefaultParameterSetName = 'AllowNewApps',
         PositionalBinding = $false
     )]
-    [OutputType([System.String])]
     Param(
         [Alias('A')]
-        [Parameter(Mandatory = $false, ParameterSetName = 'AllowNewApps')][System.Management.Automation.SwitchParameter]$AllowNewApps,
+        [Parameter(Mandatory = $false, ParameterSetName = 'AllowNewApps')][switch]$AllowNewApps,
         [Alias('M')]
-        [Parameter(Mandatory = $false, ParameterSetName = 'MergeSupplementalPolicies')][System.Management.Automation.SwitchParameter]$MergeSupplementalPolicies,
+        [Parameter(Mandatory = $false, ParameterSetName = 'MergeSupplementalPolicies')][switch]$MergeSupplementalPolicies,
         [Alias('U')]
-        [Parameter(Mandatory = $false, ParameterSetName = 'UpdateBasePolicy')][System.Management.Automation.SwitchParameter]$UpdateBasePolicy,
+        [Parameter(Mandatory = $false, ParameterSetName = 'UpdateBasePolicy')][switch]$UpdateBasePolicy,
 
         [ValidateCount(1, 232)]
         [ValidatePattern('^[a-zA-Z0-9 \-]+$', ErrorMessage = 'The policy name can only contain alphanumeric, space and dash (-) characters.')]
@@ -23,7 +22,7 @@ Function Edit-SignedWDACConfig {
         [Parameter(Mandatory = $true, ParameterSetName = 'MergeSupplementalPolicies', ValueFromPipelineByPropertyName = $true)]
         [System.IO.FileInfo[]]$SuppPolicyPaths,
 
-        [Parameter(Mandatory = $false, ParameterSetName = 'AllowNewApps')][System.Management.Automation.SwitchParameter]$BoostedSecurity,
+        [Parameter(Mandatory = $false, ParameterSetName = 'AllowNewApps')][switch]$BoostedSecurity,
 
         [ArgumentCompleter([WDACConfig.ArgCompleter.XmlFilePathsPicker])]
         [ValidateScript({
@@ -41,7 +40,7 @@ Function Edit-SignedWDACConfig {
         [System.IO.FileInfo]$PolicyPath,
 
         [Parameter(Mandatory = $false, ParameterSetName = 'MergeSupplementalPolicies')]
-        [System.Management.Automation.SwitchParameter]$KeepOldSupplementalPolicies,
+        [switch]$KeepOldSupplementalPolicies,
 
         [ArgumentCompleter({
                 foreach ($Item in [WDACConfig.BasePolicyNamez]::New().GetValidValues()) {
@@ -77,10 +76,10 @@ Function Edit-SignedWDACConfig {
         [System.UInt64]$LogSize,
 
         [parameter(Mandatory = $false, ParameterSetName = 'AllowNewApps')]
-        [System.Management.Automation.SwitchParameter]$NoScript,
+        [switch]$NoScript,
 
         [parameter(Mandatory = $false, ParameterSetName = 'AllowNewApps')]
-        [System.Management.Automation.SwitchParameter]$NoUserPEs,
+        [switch]$NoUserPEs,
 
         [ValidateSet('OriginalFileName', 'InternalName', 'FileDescription', 'ProductName', 'PackageFamilyName', 'FilePath')]
         [parameter(Mandatory = $false, ParameterSetName = 'AllowNewApps')]
@@ -99,10 +98,10 @@ Function Edit-SignedWDACConfig {
         [System.IO.FileInfo]$SignToolPath,
 
         [Parameter(Mandatory = $false, ParameterSetName = 'UpdateBasePolicy')]
-        [System.Management.Automation.SwitchParameter]$RequireEVSigners,
+        [switch]$RequireEVSigners,
 
         [Parameter(Mandatory = $false)]
-        [System.Management.Automation.SwitchParameter]$SkipVersionCheck
+        [switch]$SkipVersionCheck
     )
     Begin {
         [WDACConfig.LoggerInitializer]::Initialize($VerbosePreference, $DebugPreference, $Host)
@@ -456,7 +455,7 @@ Function Edit-SignedWDACConfig {
                         Copy-Item -LiteralPath 'C:\Windows\schemas\CodeIntegrity\ExamplePolicies\AllowAll.xml' -Destination $KernelProtectedPolicyPath -Force
 
                         [WDACConfig.Logger]::Write('Emptying the policy file in preparation for the new data insertion')
-                        Clear-CiPolicy_Semantic -Path $KernelProtectedPolicyPath
+                        [WDACConfig.ClearCiPolicySemantic]::Clear($KernelProtectedPolicyPath)
 
                         # Find the kernel protected files that have PFN property
                         $KernelProtectedFileLogsWithPFN = foreach ($Item in $KernelProtectedFileLogs) {
@@ -465,7 +464,7 @@ Function Edit-SignedWDACConfig {
                             }
                         }
 
-                        New-PFNLevelRules -PackageFamilyNames $KernelProtectedFileLogsWithPFN.PackageFamilyName -XmlFilePath $KernelProtectedPolicyPath
+                        [WDACConfig.NewPFNLevelRules]::Create($KernelProtectedPolicyPath, $KernelProtectedFileLogsWithPFN.PackageFamilyName)
 
                         # Add the Kernel protected files policy to the list of policies to merge
                         [System.Void]$PolicyXMLFilesArray.TryAdd('Kernel Protected files policy', $KernelProtectedPolicyPath)
@@ -485,33 +484,23 @@ Function Edit-SignedWDACConfig {
                     Copy-Item -LiteralPath 'C:\Windows\schemas\CodeIntegrity\ExamplePolicies\AllowAll.xml' -Destination $WDACPolicyPathTEMP -Force
 
                     [WDACConfig.Logger]::Write('Emptying the policy file in preparation for the new data insertion')
-                    Clear-CiPolicy_Semantic -Path $WDACPolicyPathTEMP
+                    [WDACConfig.ClearCiPolicySemantic]::Clear($WDACPolicyPathTEMP)
 
                     [WDACConfig.Logger]::Write('Building the Signer and Hash objects from the selected logs')
                     [WDACConfig.FileBasedInfoPackage]$DataToUseForBuilding = [WDACConfig.SignerAndHashBuilder]::BuildSignerAndHashObjects((ConvertTo-HashtableArray $SelectedLogs), 'EVTX', ($Level -eq 'FilePublisher' ? 'FilePublisher' :  $Level -eq 'Publisher' ? 'Publisher' : $Level -eq 'Hash' ? 'Hash' : 'Auto'), $BoostedSecurity ? $true : $false)
 
-                    if ($Null -ne $DataToUseForBuilding.FilePublisherSigners -and $DataToUseForBuilding.FilePublisherSigners.Count -gt 0) {
-                        [WDACConfig.Logger]::Write('Creating File Publisher Level rules')
-                        New-FilePublisherLevelRules -FilePublisherSigners $DataToUseForBuilding.FilePublisherSigners -XmlFilePath $WDACPolicyPathTEMP
-                    }
-                    if ($Null -ne $DataToUseForBuilding.PublisherSigners -and $DataToUseForBuilding.PublisherSigners.Count -gt 0) {
-                        [WDACConfig.Logger]::Write('Creating Publisher Level rules')
-                        New-PublisherLevelRules -PublisherSigners $DataToUseForBuilding.PublisherSigners -XmlFilePath $WDACPolicyPathTEMP
-                    }
-                    if ($Null -ne $DataToUseForBuilding.CompleteHashes -and $DataToUseForBuilding.CompleteHashes.Count -gt 0) {
-                        [WDACConfig.Logger]::Write('Creating Hash Level rules')
-                        New-HashLevelRules -Hashes $DataToUseForBuilding.CompleteHashes -XmlFilePath $WDACPolicyPathTEMP
-                    }
+                    [WDACConfig.NewFilePublisherLevelRules]::Create($WDACPolicyPathTEMP, $DataToUseForBuilding.FilePublisherSigners)
+                    [WDACConfig.NewPublisherLevelRules]::Create($WDACPolicyPathTEMP, $DataToUseForBuilding.PublisherSigners)
+                    [WDACConfig.NewHashLevelRules]::Create($WDACPolicyPathTEMP, $DataToUseForBuilding.CompleteHashes)
 
                     # MERGERS
                     [WDACConfig.Logger]::Write('Merging the Hash Level rules')
-                    Remove-AllowElements_Semantic -Path $WDACPolicyPathTEMP
+                    [WDACConfig.RemoveAllowElementsSemantic]::Remove($WDACPolicyPathTEMP)
                     [WDACConfig.CloseEmptyXmlNodesSemantic]::Close($WDACPolicyPathTEMP)
 
                     [WDACConfig.Logger]::Write('Merging the Signer Level rules')
                     Remove-DuplicateFileAttrib_Semantic -XmlFilePath $WDACPolicyPathTEMP
 
-                    # 2 passes are necessary
                     Merge-Signers_Semantic -XmlFilePath $WDACPolicyPathTEMP
                     Merge-Signers_Semantic -XmlFilePath $WDACPolicyPathTEMP
 
@@ -648,7 +637,7 @@ Function Edit-SignedWDACConfig {
                 #Endregion Input-policy-verification
 
                 [WDACConfig.Logger]::Write('Backing up any possible Macros in the Supplemental policies')
-                $MacrosBackup = Checkpoint-Macros -XmlFilePathIn $SuppPolicyPaths -Backup
+                $MacrosBackup = [WDACConfig.Macros]::Backup($SuppPolicyPaths)
 
                 $CurrentStep++
                 Write-Progress -Id 16 -Activity 'Merging the policies' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
@@ -688,10 +677,7 @@ Function Edit-SignedWDACConfig {
                 # Defining paths for the final Supplemental policy CIP
                 [System.IO.FileInfo]$FinalSupplementalCIPPath = Join-Path -Path $StagingArea -ChildPath "$SuppPolicyID.cip"
 
-                if ($null -ne $MacrosBackup) {
-                    [WDACConfig.Logger]::Write('Restoring the Macros in the Supplemental policies')
-                    Checkpoint-Macros -XmlFilePathOut $FinalSupplementalPath -Restore -MacrosBackup $MacrosBackup
-                }
+                [WDACConfig.Macros]::Restore($FinalSupplementalPath, $MacrosBackup)
 
                 [WDACConfig.Logger]::Write('Converting the Supplemental policy to a CIP file')
                 $null = ConvertFrom-CIPolicy -XmlFilePath $FinalSupplementalPath -BinaryFilePath $FinalSupplementalCIPPath
@@ -903,7 +889,7 @@ Function Edit-SignedWDACConfig {
 .PARAMETER UpdateBasePolicy
     It can rebootlessly change the type of the deployed signed base policy. It can update the recommended block rules and/or change policy rule options in the deployed base policy.
 .PARAMETER SkipVersionCheck
-    Can be used with any parameter to bypass the online version check - only to be used in rare cases
+    Can be used with any parameter to bypass the online version check
     It is used by the entire Cmdlet.
 .PARAMETER LogSize
     The log size to set for Code Integrity/Operational event logs
@@ -946,8 +932,6 @@ Function Edit-SignedWDACConfig {
     The path of the SignTool.exe file
 .PARAMETER RequireEVSigners
     If specified, the cmdlet will add the EV Signers rule option to the base policy
-.PARAMETER Verbose
-    If specified, the cmdlet will show verbose output
 .PARAMETER Debug
     If specified, the cmdlet will keep some files used during operations instead of deleting them
 .INPUTS

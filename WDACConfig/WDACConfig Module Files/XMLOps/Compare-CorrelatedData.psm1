@@ -30,7 +30,6 @@ Function Compare-CorrelatedData {
         System.Collections.Hashtable
         #>
     [CmdletBinding()]
-    [OutputType([System.Collections.Hashtable])]
     Param (
         [Parameter(Mandatory = $true)][System.Collections.Hashtable[]]$OptimizedCSVData,
         [Parameter(Mandatory = $true)][System.IO.DirectoryInfo]$StagingArea,

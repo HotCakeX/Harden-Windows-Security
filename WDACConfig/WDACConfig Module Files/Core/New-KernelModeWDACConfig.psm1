@@ -2,20 +2,19 @@ Function New-KernelModeWDACConfig {
     [CmdletBinding(
         PositionalBinding = $false
     )]
-    [OutputType([System.String])]
     Param(
         [ValidateSet('Prep', 'AuditAndEnforce')]
         [Parameter(Mandatory = $true)]
         [System.String]$Mode,
 
-        [Parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$Deploy,
-        [Parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$EVSigners,
+        [Parameter(Mandatory = $false)][switch]$Deploy,
+        [Parameter(Mandatory = $false)][switch]$EVSigners,
 
         [ValidateSet('Default', 'NoFlightRoots')]
         [Parameter(Mandatory = $false)]
         [System.String]$Base = 'Default',
 
-        [Parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$SkipVersionCheck
+        [Parameter(Mandatory = $false)][switch]$SkipVersionCheck
     )
     Begin {
         [WDACConfig.LoggerInitializer]::Initialize($VerbosePreference, $DebugPreference, $Host)
@@ -53,8 +52,8 @@ Function New-KernelModeWDACConfig {
             #>
             [CmdletBinding()]
             param (
-                [Parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$Normal,
-                [Parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$NoFlights
+                [Parameter(Mandatory = $false)][switch]$Normal,
+                [Parameter(Mandatory = $false)][switch]$NoFlights
             )
             begin {
                 [WDACConfig.Logger]::Write('Executing the Build-PrepModeStrictKernelPolicy helper function')
@@ -366,17 +365,10 @@ Function New-KernelModeWDACConfig {
 
                             # Deploy the policy if Deploy parameter is used
                             if ($Deploy) {
+                                [WDACConfig.Logger]::Write('Making sure the current Windows build can work with the NoFlightRoots Strict WDAC Policy')
 
-                                if ([System.IO.File]::Exists('C:\Windows\System32\ntoskrnl.exe')) {
-
-                                    [WDACConfig.Logger]::Write('Making sure the current Windows build can work with the NoFlightRoots Strict WDAC Policy')
-
-                                    if (-NOT (Invoke-WDACSimulation -FilePath 'C:\Windows\System32\ntoskrnl.exe' -XmlFilePath $FinalEnforcedPolicyPath -BooleanOutput -NoCatalogScanning -ThreadsCount 1 -SkipVersionCheck)) {
-                                        Throw 'The current Windows build cannot work with the NoFlightRoots Strict Kernel-mode Policy, please change the base to Default instead.'
-                                    }
-                                }
-                                else {
-                                    [WDACConfig.Logger]::Write("'C:\Windows\System32\ntoskrnl.exe' could not be found.")
+                                if (!([WDACConfig.InvokeWDACSimulation]::Invoke('C:\Windows\System32\ntoskrnl.exe', $FinalEnforcedPolicyPath, $true))) {
+                                    Throw 'The current Windows build cannot work with the NoFlightRoots Strict Kernel-mode Policy, please change the base to Default instead.'
                                 }
 
                                 $CurrentStep++
@@ -440,7 +432,7 @@ Function New-KernelModeWDACConfig {
 .PARAMETER Deploy
     Deploys the selected policy type instead of just creating it
 .PARAMETER SkipVersionCheck
-    Can be used with any parameter to bypass the online version check - only to be used in rare cases
+    Can be used with any parameter to bypass the online version check
 .INPUTS
     System.Management.Automation.SwitchParameter
 .OUTPUTS

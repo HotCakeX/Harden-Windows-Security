@@ -227,13 +227,15 @@ This command gets the information about all installed provisioning packages on y
 Get-ProvisioningPackage -AllInstalledPackages
 ```
 
-[Configuration service providers for IT pros](https://learn.microsoft.com/en-us/windows/configuration/provisioning-packages/how-it-pros-can-use-configuration-service-providers)
+<br>
 
-[Settings changed when you uninstall a provisioning package](https://learn.microsoft.com/en-us/windows/configuration/provisioning-packages/provisioning-uninstall-package)
+* [Configuration service providers for IT pros](https://learn.microsoft.com/en-us/windows/configuration/provisioning-packages/how-it-pros-can-use-configuration-service-providers)
 
-[Why Intune and CSPs are the future of Windows management instead of Group Policy](https://learn.microsoft.com/en-us/mem/intune/configuration/group-policy-analytics)
+* [Settings changed when you uninstall a provisioning package](https://learn.microsoft.com/en-us/windows/configuration/provisioning-packages/provisioning-uninstall-package)
 
-[Link to Microsoft Employee's comment](https://www.reddit.com/r/Intune/comments/pc4btv/comment/hai3o3s/?utm_source=share&utm_medium=web2x&context=3)
+* [Why Intune and CSPs are the future of Windows management instead of Group Policy](https://learn.microsoft.com/en-us/mem/intune/configuration/group-policy-analytics)
+
+<br>
 
 Download Windows Configuration Designer from [Microsoft Store](https://apps.microsoft.com/store/detail/windows-configuration-designer/9NBLGGH4TX22) or from [Windows ADK](https://learn.microsoft.com/en-us/windows-hardware/get-started/adk-install) or from [Windows insiders ADK](https://www.microsoft.com/en-us/software-download/windowsinsiderpreviewADK), to easily [create provisioning packages](https://learn.microsoft.com/en-us/windows/configuration/provisioning-packages/provisioning-create-package) for your device(s)
 
@@ -252,5 +254,115 @@ gpresult /scope user /v
 We can manually backup and restore Group Policy settings by copying this folder and all of its content:
 
 `C:\Windows\System32\GroupPolicy`
+
+<br>
+
+### How to Get All CIM Namespaces, Their Methods and Properties in PowerShell
+
+```powershell
+# Defining the custom class for CIM instance classes
+class CimClassInfo {
+    [System.String]$ClassName
+    [System.Collections.Generic.List[System.String]]$Methods
+    [System.Collections.Generic.List[System.String]]$Properties
+
+    CimClassInfo([System.String]$ClassName) {
+        $this.ClassName = $ClassName
+        $this.Methods = [System.Collections.Generic.List[System.String]]::new()
+        $this.Properties = [System.Collections.Generic.List[System.String]]::new()
+    }
+}
+
+# Defining the custom class for namespaces
+class NamespaceInfo {
+    [System.String]$NamespaceName
+    [System.Collections.Generic.List[CimClassInfo]]$Classes
+
+    NamespaceInfo([System.String]$NamespaceName) {
+        $this.NamespaceName = $NamespaceName
+        $this.Classes = [System.Collections.Generic.List[CimClassInfo]]::new()
+    }
+}
+
+function Get-NamespaceInfo {
+    [OutputType([System.Collections.Generic.List[NamespaceInfo]])]
+    param (
+        [System.String]$RootNamespace = 'root',
+        [System.String]$OutputFile = $null
+    )
+
+    # Initialize a list to hold NamespaceInfo objects
+    $NamespaceInfos = [System.Collections.Generic.List[NamespaceInfo]]::new()
+
+    # Initialize a list to hold namespaces
+    $Namespaces = [System.Collections.Generic.List[System.String]]::new()
+    $Namespaces.Add($RootNamespace)
+
+    # Initialize an index to track the current namespace
+    $Index = 0
+
+    # Loop through namespaces
+    while ($Index -lt $Namespaces.Count) {
+        # Get the current namespace
+        $CurrentNamespace = $Namespaces[$Index]
+
+        # Create a new NamespaceInfo object
+        $NamespaceInfo = [NamespaceInfo]::new($CurrentNamespace)
+
+        # Get child namespaces of the current namespace
+        $ChildNamespaces = Get-CimInstance -Namespace $CurrentNamespace -ClassName __Namespace
+
+        # Add child namespaces to the list
+        foreach ($ChildNamespace in $ChildNamespaces.Name) {
+            $Namespaces.Add("$CurrentNamespace\$ChildNamespace")
+        }
+
+        # Get classes in the current namespace
+        $Classes = Get-CimClass -Namespace $CurrentNamespace
+
+        # Add classes to the NamespaceInfo object
+        foreach ($Class in $Classes) {
+            # Create a new CimClassInfo object
+            $CimClassInfo = [CimClassInfo]::new($Class.CimClassName)
+
+            # Get methods of the class
+            $Methods = ($Class.CimClassMethods).Name
+
+            # Add methods to the CimClassInfo object
+            foreach ($Method in $Methods) {
+                $CimClassInfo.Methods.Add($Method)
+            }
+
+            # Get properties of the class
+            $Properties = ($Class.CimClassProperties).Name
+
+            # Add properties to the CimClassInfo object
+            foreach ($Property in $Properties) {
+                $CimClassInfo.Properties.Add($Property)
+            }
+
+            # Add the CimClassInfo object to the NamespaceInfo object
+            $NamespaceInfo.Classes.Add($CimClassInfo)
+        }
+
+        # Add the NamespaceInfo object to the list
+        $NamespaceInfos.Add($NamespaceInfo)
+
+        # Move to the next namespace
+        $Index++
+    }
+
+    # Export to JSON too if OutputFile is specified
+    if ($OutputFile) {
+        $NamespaceInfos | ConvertTo-Json -Depth 100 | Out-File -FilePath $OutputFile
+    }
+
+    return $NamespaceInfos
+}
+
+$NamespaceInfo = Get-NamespaceInfo -RootNamespace 'root' -OutputFile 'NamespaceInfo.json'
+$NamespaceInfo
+
+```
 
 <br>

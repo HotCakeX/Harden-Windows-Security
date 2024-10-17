@@ -5,16 +5,11 @@ Function New-DenyWDACConfig {
         SupportsShouldProcess = $true,
         ConfirmImpact = 'High'
     )]
-    [OutputType([System.String])]
     Param(
-        [Alias('N')]
-        [Parameter(Mandatory = $false, ParameterSetName = 'Normal')][System.Management.Automation.SwitchParameter]$Normal,
-        [Alias('D')]
-        [Parameter(Mandatory = $false, ParameterSetName = 'Drivers')][System.Management.Automation.SwitchParameter]$Drivers,
-        [Alias('P')]
-        [parameter(mandatory = $false, ParameterSetName = 'Installed AppXPackages')][System.Management.Automation.SwitchParameter]$InstalledAppXPackages,
-        [Alias('W')]
-        [Parameter(Mandatory = $false, ParameterSetName = 'Folder Path With WildCards')][System.Management.Automation.SwitchParameter]$PathWildCards,
+        [Alias('N')][Parameter(Mandatory = $false, ParameterSetName = 'Normal')][switch]$Normal,
+        [Alias('D')][Parameter(Mandatory = $false, ParameterSetName = 'Drivers')][switch]$Drivers,
+        [Alias('P')][parameter(mandatory = $false, ParameterSetName = 'Installed AppXPackages')][switch]$InstalledAppXPackages,
+        [Alias('W')][Parameter(Mandatory = $false, ParameterSetName = 'Folder Path With WildCards')][switch]$PathWildCards,
 
         [parameter(Mandatory = $true, ParameterSetName = 'Installed AppXPackages', ValueFromPipelineByPropertyName = $true)]
         [System.String]$PackageName,
@@ -35,8 +30,7 @@ Function New-DenyWDACConfig {
         [Parameter(Mandatory = $false, ParameterSetName = 'Drivers')]
         [System.IO.DirectoryInfo[]]$ScanLocations,
 
-        [Parameter(Mandatory = $false)]
-        [System.Management.Automation.SwitchParameter]$Deploy,
+        [Parameter(Mandatory = $false)][switch]$Deploy,
 
         [ArgumentCompleter({ [WDACConfig.ScanLevelz]::New().GetValidValues() })]
         [Parameter(Mandatory = $false, ParameterSetName = 'Normal')]
@@ -50,18 +44,15 @@ Function New-DenyWDACConfig {
         [Parameter(Mandatory = $false, ParameterSetName = 'Normal')]
         [System.String]$SpecificFileNameLevel,
 
-        [Parameter(Mandatory = $false, ParameterSetName = 'Normal')]
-        [System.Management.Automation.SwitchParameter]$NoUserPEs,
+        [Parameter(Mandatory = $false, ParameterSetName = 'Normal')][switch]$NoUserPEs,
 
-        [Parameter(Mandatory = $false, ParameterSetName = 'Normal')]
-        [System.Management.Automation.SwitchParameter]$NoScript,
+        [Parameter(Mandatory = $false, ParameterSetName = 'Normal')][switch]$NoScript,
 
-        [Parameter(Mandatory = $false, ParameterSetName = 'Installed AppXPackages')]
-        [System.Management.Automation.SwitchParameter]$Force,
+        [Parameter(Mandatory = $false, ParameterSetName = 'Installed AppXPackages')][switch]$Force,
 
-        [Parameter(Mandatory = $false, ParameterSetName = 'Folder Path With WildCards')][System.Management.Automation.SwitchParameter]$EmbeddedVerboseOutput,
+        [Parameter(Mandatory = $false, ParameterSetName = 'Folder Path With WildCards')][switch]$EmbeddedVerboseOutput,
 
-        [Parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$SkipVersionCheck
+        [Parameter(Mandatory = $false)][switch]$SkipVersionCheck
     )
     Begin {
         [WDACConfig.LoggerInitializer]::Initialize($VerbosePreference, $DebugPreference, $Host)
@@ -433,7 +424,7 @@ Function New-DenyWDACConfig {
 .PARAMETER Force
     It's used by the entire Cmdlet. Indicates that the confirmation prompts will be bypassed.
 .PARAMETER SkipVersionCheck
-    Can be used with any parameter to bypass the online version check - only to be used in rare cases
+    Can be used with any parameter to bypass the online version check
     It's used by the entire Cmdlet.
 .PARAMETER PackageName
     The name of the Appx package to create a Deny base policy for.
@@ -445,8 +436,6 @@ Function New-DenyWDACConfig {
     Indicates that the selected folder will not be scanned for user PE files.
 .PARAMETER NoScript
     Indicates that the selected folder will not be scanned for script files.
-.PARAMETER Verbose
-    Indicates that the cmdlet will display detailed information about the operation.
 .PARAMETER PathWildCards
     Creates a Deny standalone base policy for a folder using wildcards. The base policy created by this parameter can be deployed side by side any other base/supplemental policy.
 .PARAMETER FolderPath

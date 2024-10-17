@@ -11,7 +11,6 @@ Function Test-KernelProtectedFiles {
         PSCustomObject[]
     #>
     [CmdletBinding()]
-    [OutputType([PSCustomObject[]])]
     Param(
         [Parameter(Mandatory = $true)][PSCustomObject[]]$Logs
     )

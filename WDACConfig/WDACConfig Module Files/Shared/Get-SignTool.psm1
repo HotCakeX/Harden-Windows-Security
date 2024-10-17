@@ -13,7 +13,6 @@ Function Get-SignTool {
         System.IO.FileInfo
     #>
     [CmdletBinding()]
-    [OutputType([System.IO.FileInfo])]
     param(
         [parameter(Mandatory = $false)][System.IO.FileInfo]$SignToolExePathInput
     )

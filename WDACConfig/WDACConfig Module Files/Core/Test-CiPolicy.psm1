@@ -1,6 +1,5 @@
 Function Test-CiPolicy {
     [CmdletBinding()]
-    [OutputType([System.Boolean], [System.Security.Cryptography.X509Certificates.X509Certificate2[]])]
     param(
         [ArgumentCompleter([WDACConfig.ArgCompleter.XmlFilePathsPicker])]
         [Parameter(Mandatory = $true, ValueFromPipeline = $true, ParameterSetName = 'XML File')]

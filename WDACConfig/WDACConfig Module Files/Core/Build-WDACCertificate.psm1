@@ -1,6 +1,5 @@
 Function Build-WDACCertificate {
     [CmdletBinding()]
-    [OutputType([System.String])]
     param (
         [ValidatePattern('^[a-zA-Z0-9 ]+$', ErrorMessage = 'Only use alphanumeric and space characters.')]
         [Parameter(Mandatory = $false)]
@@ -21,11 +20,9 @@ Function Build-WDACCertificate {
             }, ErrorMessage = 'The password must be at least 5 characters long.')]
         [System.Security.SecureString]$Password,
 
-        [Parameter(Mandatory = $false)]
-        [System.Management.Automation.SwitchParameter]$Force,
+        [Parameter(Mandatory = $false)][switch]$Force,
 
-        [Parameter(Mandatory = $false)]
-        [System.Management.Automation.SwitchParameter]$SkipVersionCheck
+        [Parameter(Mandatory = $false)][switch]$SkipVersionCheck
     )
     Begin {
         [WDACConfig.LoggerInitializer]::Initialize($VerbosePreference, $DebugPreference, $Host)

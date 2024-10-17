@@ -208,7 +208,7 @@ Function ConvertTo-WDACPolicy {
         $KernelModeOnly_AttributesCollection.Add($KernelModeOnly_AliasAttrib)
 
         # Create a dynamic parameter object with the attributes already assigned: Name, Type, and Attributes Collection
-        [System.Management.Automation.RuntimeDefinedParameter]$KernelModeOnly = New-Object -TypeName System.Management.Automation.RuntimeDefinedParameter('KernelModeOnly', [System.Management.Automation.SwitchParameter], $KernelModeOnly_AttributesCollection)
+        [System.Management.Automation.RuntimeDefinedParameter]$KernelModeOnly = New-Object -TypeName System.Management.Automation.RuntimeDefinedParameter('KernelModeOnly', [switch], $KernelModeOnly_AttributesCollection)
 
         # Add the dynamic parameter object to the dictionary
         $ParamDictionary.Add('KernelModeOnly', $KernelModeOnly)
@@ -256,7 +256,7 @@ Function ConvertTo-WDACPolicy {
         $Deploy_AttributesCollection.Add($Deploy_AliasAttrib)
 
         # Create a dynamic parameter object with the attributes already assigned: Name, Type, and Attributes Collection
-        [System.Management.Automation.RuntimeDefinedParameter]$Deploy = New-Object -TypeName System.Management.Automation.RuntimeDefinedParameter('Deploy', [System.Management.Automation.SwitchParameter], $Deploy_AttributesCollection)
+        [System.Management.Automation.RuntimeDefinedParameter]$Deploy = New-Object -TypeName System.Management.Automation.RuntimeDefinedParameter('Deploy', [switch], $Deploy_AttributesCollection)
 
         # Add the dynamic parameter object to the dictionary
         $ParamDictionary.Add('Deploy', $Deploy)
@@ -277,7 +277,7 @@ Function ConvertTo-WDACPolicy {
         $ExtremeVisibility_AttributesCollection.Add($ExtremeVisibility_AliasAttrib)
 
         # Create a dynamic parameter object with the attributes already assigned: Name, Type, and Attributes Collection
-        [System.Management.Automation.RuntimeDefinedParameter]$ExtremeVisibility = New-Object -TypeName System.Management.Automation.RuntimeDefinedParameter('ExtremeVisibility', [System.Management.Automation.SwitchParameter], $ExtremeVisibility_AttributesCollection)
+        [System.Management.Automation.RuntimeDefinedParameter]$ExtremeVisibility = New-Object -TypeName System.Management.Automation.RuntimeDefinedParameter('ExtremeVisibility', [switch], $ExtremeVisibility_AttributesCollection)
 
         # Add the dynamic parameter object to the dictionary
         $ParamDictionary.Add('ExtremeVisibility', $ExtremeVisibility)
@@ -295,7 +295,7 @@ Function ConvertTo-WDACPolicy {
         $SkipVersionCheck_AttributesCollection.Add($SkipVersionCheck_MandatoryAttrib)
 
         # Create a dynamic parameter object with the attributes already assigned: Name, Type, and Attributes Collection
-        [System.Management.Automation.RuntimeDefinedParameter]$SkipVersionCheck = New-Object -TypeName System.Management.Automation.RuntimeDefinedParameter('SkipVersionCheck', [System.Management.Automation.SwitchParameter], $SkipVersionCheck_AttributesCollection)
+        [System.Management.Automation.RuntimeDefinedParameter]$SkipVersionCheck = New-Object -TypeName System.Management.Automation.RuntimeDefinedParameter('SkipVersionCheck', [switch], $SkipVersionCheck_AttributesCollection)
 
         # Add the dynamic parameter object to the dictionary
         $ParamDictionary.Add('SkipVersionCheck', $SkipVersionCheck)
@@ -438,7 +438,7 @@ Function ConvertTo-WDACPolicy {
                         Copy-Item -LiteralPath 'C:\Windows\schemas\CodeIntegrity\ExamplePolicies\AllowAll.xml' -Destination $WDACPolicyKernelProtectedPath -Force
 
                         [WDACConfig.Logger]::Write('Emptying the policy file in preparation for the new data insertion')
-                        Clear-CiPolicy_Semantic -Path $WDACPolicyKernelProtectedPath
+                        [WDACConfig.ClearCiPolicySemantic]::Clear($WDACPolicyKernelProtectedPath)
 
                         # Find the kernel protected files that have PFN property
                         $KernelProtectedFileLogsWithPFN = foreach ($Log in $KernelProtectedFileLogs) {
@@ -447,7 +447,7 @@ Function ConvertTo-WDACPolicy {
                             }
                         }
 
-                        New-PFNLevelRules -PackageFamilyNames $KernelProtectedFileLogsWithPFN.PackageFamilyName -XmlFilePath $WDACPolicyKernelProtectedPath
+                        [WDACConfig.NewPFNLevelRules]::Create($WDACPolicyKernelProtectedPath, $KernelProtectedFileLogsWithPFN.PackageFamilyName)
 
                         # Add the Kernel protected files policy to the list of policies to merge
                         $PolicyFilesToMerge.Add($WDACPolicyKernelProtectedPath)
@@ -470,7 +470,7 @@ Function ConvertTo-WDACPolicy {
                     Copy-Item -LiteralPath 'C:\Windows\schemas\CodeIntegrity\ExamplePolicies\AllowAll.xml' -Destination $WDACPolicyPathTEMP -Force
 
                     [WDACConfig.Logger]::Write('Emptying the policy file in preparation for the new data insertion')
-                    Clear-CiPolicy_Semantic -Path $WDACPolicyPathTEMP
+                    [WDACConfig.ClearCiPolicySemantic]::Clear($WDACPolicyPathTEMP)
 
                     $CurrentStep++
                     Write-Progress -Id 30 -Activity 'Building Signers and file rule' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
@@ -478,18 +478,9 @@ Function ConvertTo-WDACPolicy {
                     [WDACConfig.Logger]::Write('Building the Signer and Hash objects from the selected logs')
                     [WDACConfig.FileBasedInfoPackage]$DataToUseForBuilding = [WDACConfig.SignerAndHashBuilder]::BuildSignerAndHashObjects((ConvertTo-HashtableArray $SelectedLogs), 'EVTX', $Level, $false)
 
-                    if ($Null -ne $DataToUseForBuilding.FilePublisherSigners -and $DataToUseForBuilding.FilePublisherSigners.Count -gt 0) {
-                        [WDACConfig.Logger]::Write('Creating File Publisher Level rules')
-                        New-FilePublisherLevelRules -FilePublisherSigners $DataToUseForBuilding.FilePublisherSigners -XmlFilePath $WDACPolicyPathTEMP
-                    }
-                    if ($Null -ne $DataToUseForBuilding.PublisherSigners -and $DataToUseForBuilding.PublisherSigners.Count -gt 0) {
-                        [WDACConfig.Logger]::Write('Creating Publisher Level rules')
-                        New-PublisherLevelRules -PublisherSigners $DataToUseForBuilding.PublisherSigners -XmlFilePath $WDACPolicyPathTEMP
-                    }
-                    if ($Null -ne $DataToUseForBuilding.CompleteHashes -and $DataToUseForBuilding.CompleteHashes.Count -gt 0) {
-                        [WDACConfig.Logger]::Write('Creating Hash Level rules')
-                        New-HashLevelRules -Hashes $DataToUseForBuilding.CompleteHashes -XmlFilePath $WDACPolicyPathTEMP
-                    }
+                    [WDACConfig.NewFilePublisherLevelRules]::Create($WDACPolicyPathTEMP, $DataToUseForBuilding.FilePublisherSigners)
+                    [WDACConfig.NewPublisherLevelRules]::Create($WDACPolicyPathTEMP, $DataToUseForBuilding.PublisherSigners)
+                    [WDACConfig.NewHashLevelRules]::Create($WDACPolicyPathTEMP, $DataToUseForBuilding.CompleteHashes)
 
                     # MERGERS
 
@@ -497,7 +488,7 @@ Function ConvertTo-WDACPolicy {
                     Write-Progress -Id 30 -Activity 'Performing merge operations' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
                     [WDACConfig.Logger]::Write('Merging the Hash Level rules')
-                    Remove-AllowElements_Semantic -Path $WDACPolicyPathTEMP
+                    [WDACConfig.RemoveAllowElementsSemantic]::Remove($WDACPolicyPathTEMP)
                     [WDACConfig.CloseEmptyXmlNodesSemantic]::Close($WDACPolicyPathTEMP)
 
                     $CurrentStep++
@@ -506,7 +497,6 @@ Function ConvertTo-WDACPolicy {
                     [WDACConfig.Logger]::Write('Merging the Signer Level rules')
                     Remove-DuplicateFileAttrib_Semantic -XmlFilePath $WDACPolicyPathTEMP
 
-                    # 2 passes are necessary
                     Merge-Signers_Semantic -XmlFilePath $WDACPolicyPathTEMP
                     Merge-Signers_Semantic -XmlFilePath $WDACPolicyPathTEMP
 
@@ -561,7 +551,7 @@ Function ConvertTo-WDACPolicy {
                         { $null -ne $PolicyToAddLogsTo } {
                             [WDACConfig.Logger]::Write('ConvertTo-WDACPolicy: Adding the logs to the policy that user selected')
 
-                            $MacrosBackup = Checkpoint-Macros -XmlFilePathIn $PolicyToAddLogsTo -Backup
+                            $MacrosBackup = [WDACConfig.Macros]::Backup($PolicyToAddLogsTo)
 
                             # Objectify the user input policy file to extract its policy ID
                             $InputXMLObj = [System.Xml.XmlDocument](Get-Content -Path $PolicyToAddLogsTo)
@@ -574,11 +564,7 @@ Function ConvertTo-WDACPolicy {
                             $null = Merge-CIPolicy -PolicyPaths $PolicyToAddLogsTo, $WDACPolicyPath -OutputFilePath $PolicyToAddLogsTo
 
                             [WDACConfig.UpdateHvciOptions]::Update($PolicyToAddLogsTo)
-
-                            if ($null -ne $MacrosBackup) {
-                                [WDACConfig.Logger]::Write('Restoring the Macros in the policy')
-                                Checkpoint-Macros -XmlFilePathOut $PolicyToAddLogsTo -Restore -MacrosBackup $MacrosBackup
-                            }
+                            [WDACConfig.Macros]::Restore($PolicyToAddLogsTo, $MacrosBackup)
 
                             if ($Deploy) {
                                 $null = ConvertFrom-CIPolicy -XmlFilePath $PolicyToAddLogsTo -BinaryFilePath (Join-Path -Path $StagingArea -ChildPath "$($InputXMLObj.SiPolicy.PolicyID).cip")
@@ -594,13 +580,6 @@ Function ConvertTo-WDACPolicy {
 
                     # Define the policy name if it wasn't provided by the user
                     [System.String]$SuppPolicyName = $PSBoundParameters['SuppPolicyName'] ?? "Supplemental Policy from MDE Advanced Hunting - $CurrentDate"
-
-                    <#
-                    ALL OF THE FUNCTIONS THAT PERFORM DATA MERGING ARE CREATED TO HANDLE MDE ADVANCED HUNTING DATA ONLY
-                    SO NO DENIED SIGNERS OR DENY RULES WHATSOEVER
-                    FOR MERGING WITH OTHER POLICIES, MERGE-CIPOLICY CMDLET SHOULD BE USED
-                    AT LEAST UNTIL THE NECESSARY FUNCTIONALITY IS ADDED TO THE MERGER FUNCTIONS
-                    #>
 
                     # The total number of the main steps for the progress bar to render
                     [System.UInt16]$TotalSteps = 9
@@ -676,7 +655,7 @@ Function ConvertTo-WDACPolicy {
                     Copy-Item -LiteralPath 'C:\Windows\schemas\CodeIntegrity\ExamplePolicies\AllowAll.xml' -Destination $OutputPolicyPathMDEAH -Force
 
                     [WDACConfig.Logger]::Write('Emptying the policy file in preparation for the new data insertion')
-                    Clear-CiPolicy_Semantic -Path $OutputPolicyPathMDEAH
+                    [WDACConfig.ClearCiPolicySemantic]::Clear($OutputPolicyPathMDEAH)
 
                     $CurrentStep++
                     Write-Progress -Id 31 -Activity 'Building the Signer and Hash objects from the selected MDE AH logs' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
@@ -687,18 +666,9 @@ Function ConvertTo-WDACPolicy {
                     $CurrentStep++
                     Write-Progress -Id 31 -Activity 'Creating rules for different levels' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
-                    if ($Null -ne $DataToUseForBuilding.FilePublisherSigners -and $DataToUseForBuilding.FilePublisherSigners.Count -gt 0) {
-                        [WDACConfig.Logger]::Write('Creating File Publisher Level rules')
-                        New-FilePublisherLevelRules -FilePublisherSigners $DataToUseForBuilding.FilePublisherSigners -XmlFilePath $OutputPolicyPathMDEAH
-                    }
-                    if ($Null -ne $DataToUseForBuilding.PublisherSigners -and $DataToUseForBuilding.PublisherSigners.Count -gt 0) {
-                        [WDACConfig.Logger]::Write('Creating Publisher Level rules')
-                        New-PublisherLevelRules -PublisherSigners $DataToUseForBuilding.PublisherSigners -XmlFilePath $OutputPolicyPathMDEAH
-                    }
-                    if ($Null -ne $DataToUseForBuilding.CompleteHashes -and $DataToUseForBuilding.CompleteHashes.Count -gt 0) {
-                        [WDACConfig.Logger]::Write('Creating Hash Level rules')
-                        New-HashLevelRules -Hashes $DataToUseForBuilding.CompleteHashes -XmlFilePath $OutputPolicyPathMDEAH
-                    }
+                    [WDACConfig.NewFilePublisherLevelRules]::Create($OutputPolicyPathMDEAH, $DataToUseForBuilding.FilePublisherSigners)
+                    [WDACConfig.NewPublisherLevelRules]::Create($OutputPolicyPathMDEAH, $DataToUseForBuilding.PublisherSigners)
+                    [WDACConfig.NewHashLevelRules]::Create($OutputPolicyPathMDEAH, $DataToUseForBuilding.CompleteHashes)
 
                     # MERGERS
 
@@ -706,7 +676,7 @@ Function ConvertTo-WDACPolicy {
                     Write-Progress -Id 31 -Activity 'Merging the Hash Level rules' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
                     [WDACConfig.Logger]::Write('Merging the Hash Level rules')
-                    Remove-AllowElements_Semantic -Path $OutputPolicyPathMDEAH
+                    [WDACConfig.RemoveAllowElementsSemantic]::Remove($OutputPolicyPathMDEAH)
                     [WDACConfig.CloseEmptyXmlNodesSemantic]::Close($OutputPolicyPathMDEAH)
 
                     # Remove-UnreferencedFileRuleRefs -xmlFilePath $OutputPolicyPathMDEAH
@@ -720,19 +690,6 @@ Function ConvertTo-WDACPolicy {
                     $CurrentStep++
                     Write-Progress -Id 31 -Activity 'Finishing up the merge operation' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
-                    <#
-                        Improvement suggestion for the Merge-Signers_Semantic function
-                        When an orphan CiSigner is found, it is currently being removed from the <CiSigners> node
-
-                        Suggestion:
-                        Implement an extra check to go through all User-Mode Signers and make sure they each have a corresponding CiSigner
-                        They already get a CiSigner automatically during build operations, but this check is just extra in case the policy was intentionally modified by the user!
-
-                        Use Case:
-                        User intentionally modifies one of the IDs of the CiSigners, but forgets to update the corresponding User-Mode Signer ID, AllowedSigner ID and more.
-                    #>
-
-                    # 2 passes are necessary
                     Merge-Signers_Semantic -XmlFilePath $OutputPolicyPathMDEAH
                     Merge-Signers_Semantic -XmlFilePath $OutputPolicyPathMDEAH
 
@@ -784,7 +741,7 @@ Function ConvertTo-WDACPolicy {
                         { $null -ne $PolicyToAddLogsTo } {
                             [WDACConfig.Logger]::Write('ConvertTo-WDACPolicy: Adding the logs to the policy that user selected')
 
-                            $MacrosBackup = Checkpoint-Macros -XmlFilePathIn $PolicyToAddLogsTo -Backup
+                            $MacrosBackup = [WDACConfig.Macros]::Backup($PolicyToAddLogsTo)
 
                             # Objectify the user input policy file to extract its policy ID
                             $InputXMLObj = [System.Xml.XmlDocument](Get-Content -Path $PolicyToAddLogsTo)
@@ -797,11 +754,7 @@ Function ConvertTo-WDACPolicy {
                             $null = Merge-CIPolicy -PolicyPaths $PolicyToAddLogsTo, $OutputPolicyPathMDEAH -OutputFilePath $PolicyToAddLogsTo
 
                             [WDACConfig.UpdateHvciOptions]::Update($PolicyToAddLogsTo)
-
-                            if ($null -ne $MacrosBackup) {
-                                [WDACConfig.Logger]::Write('Restoring the Macros in the policy')
-                                Checkpoint-Macros -XmlFilePathOut $PolicyToAddLogsTo -Restore -MacrosBackup $MacrosBackup
-                            }
+                            [WDACConfig.Macros]::Restore($PolicyToAddLogsTo, $MacrosBackup)
 
                             if ($Deploy) {
                                 $null = ConvertFrom-CIPolicy -XmlFilePath $PolicyToAddLogsTo -BinaryFilePath (Join-Path -Path $StagingArea -ChildPath "$($InputXMLObj.SiPolicy.PolicyID).cip")
@@ -882,7 +835,7 @@ Function ConvertTo-WDACPolicy {
                     Copy-Item -LiteralPath 'C:\Windows\schemas\CodeIntegrity\ExamplePolicies\AllowAll.xml' -Destination $OutputPolicyPathEVTX -Force
 
                     [WDACConfig.Logger]::Write('Emptying the policy file in preparation for the new data insertion')
-                    Clear-CiPolicy_Semantic -Path $OutputPolicyPathEVTX
+                    [WDACConfig.ClearCiPolicySemantic]::Clear($OutputPolicyPathEVTX)
 
                     $CurrentStep++
                     Write-Progress -Id 32 -Activity 'Building Signers and file rule' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
@@ -890,18 +843,9 @@ Function ConvertTo-WDACPolicy {
                     [WDACConfig.Logger]::Write('Building the Signer and Hash objects from the selected Evtx logs')
                     [WDACConfig.FileBasedInfoPackage]$DataToUseForBuilding = [WDACConfig.SignerAndHashBuilder]::BuildSignerAndHashObjects((ConvertTo-HashtableArray $SelectedLogs), 'EVTX', $Level, $false)
 
-                    if ($Null -ne $DataToUseForBuilding.FilePublisherSigners -and $DataToUseForBuilding.FilePublisherSigners.Count -gt 0) {
-                        [WDACConfig.Logger]::Write('Creating File Publisher Level rules')
-                        New-FilePublisherLevelRules -FilePublisherSigners $DataToUseForBuilding.FilePublisherSigners -XmlFilePath $OutputPolicyPathEVTX
-                    }
-                    if ($Null -ne $DataToUseForBuilding.PublisherSigners -and $DataToUseForBuilding.PublisherSigners.Count -gt 0) {
-                        [WDACConfig.Logger]::Write('Creating Publisher Level rules')
-                        New-PublisherLevelRules -PublisherSigners $DataToUseForBuilding.PublisherSigners -XmlFilePath $OutputPolicyPathEVTX
-                    }
-                    if ($Null -ne $DataToUseForBuilding.CompleteHashes -and $DataToUseForBuilding.CompleteHashes.Count -gt 0) {
-                        [WDACConfig.Logger]::Write('Creating Hash Level rules')
-                        New-HashLevelRules -Hashes $DataToUseForBuilding.CompleteHashes -XmlFilePath $OutputPolicyPathEVTX
-                    }
+                    [WDACConfig.NewFilePublisherLevelRules]::Create($OutputPolicyPathEVTX, $DataToUseForBuilding.FilePublisherSigners)
+                    [WDACConfig.NewPublisherLevelRules]::Create($OutputPolicyPathEVTX, $DataToUseForBuilding.PublisherSigners)
+                    [WDACConfig.NewHashLevelRules]::Create($OutputPolicyPathEVTX, $DataToUseForBuilding.CompleteHashes)
 
                     # MERGERS
 
@@ -909,10 +853,8 @@ Function ConvertTo-WDACPolicy {
                     Write-Progress -Id 32 -Activity 'Performing merge operations' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
                     [WDACConfig.Logger]::Write('Merging the Hash Level rules')
-                    Remove-AllowElements_Semantic -Path $OutputPolicyPathEVTX
+                    [WDACConfig.RemoveAllowElementsSemantic]::Remove($OutputPolicyPathEVTX)
                     [WDACConfig.CloseEmptyXmlNodesSemantic]::Close($OutputPolicyPathEVTX)
-
-                    # Remove-UnreferencedFileRuleRefs -xmlFilePath $OutputPolicyPathEVTX
 
                     $CurrentStep++
                     Write-Progress -Id 32 -Activity 'Making sure there are no duplicates' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
@@ -920,7 +862,6 @@ Function ConvertTo-WDACPolicy {
                     [WDACConfig.Logger]::Write('Merging the Signer Level rules')
                     Remove-DuplicateFileAttrib_Semantic -XmlFilePath $OutputPolicyPathEVTX
 
-                    # 2 passes are necessary
                     Merge-Signers_Semantic -XmlFilePath $OutputPolicyPathEVTX
                     Merge-Signers_Semantic -XmlFilePath $OutputPolicyPathEVTX
 
@@ -976,7 +917,7 @@ Function ConvertTo-WDACPolicy {
                         { $null -ne $PolicyToAddLogsTo } {
                             [WDACConfig.Logger]::Write('ConvertTo-WDACPolicy: Adding the logs to the policy that user selected')
 
-                            $MacrosBackup = Checkpoint-Macros -XmlFilePathIn $PolicyToAddLogsTo -Backup
+                            $MacrosBackup = [WDACConfig.Macros]::Backup($PolicyToAddLogsTo)
 
                             # Objectify the user input policy file to extract its policy ID
                             $InputXMLObj = [System.Xml.XmlDocument](Get-Content -Path $PolicyToAddLogsTo)
@@ -989,11 +930,7 @@ Function ConvertTo-WDACPolicy {
                             $null = Merge-CIPolicy -PolicyPaths $PolicyToAddLogsTo, $OutputPolicyPathEVTX -OutputFilePath $PolicyToAddLogsTo
 
                             [WDACConfig.UpdateHvciOptions]::Update($PolicyToAddLogsTo)
-
-                            if ($null -ne $MacrosBackup) {
-                                [WDACConfig.Logger]::Write('Restoring the Macros in the policy')
-                                Checkpoint-Macros -XmlFilePathOut $PolicyToAddLogsTo -Restore -MacrosBackup $MacrosBackup
-                            }
+                            [WDACConfig.Macros]::Restore($PolicyToAddLogsTo, $MacrosBackup)
 
                             if ($Deploy) {
                                 $null = ConvertFrom-CIPolicy -XmlFilePath $PolicyToAddLogsTo -BinaryFilePath (Join-Path -Path $StagingArea -ChildPath "$($InputXMLObj.SiPolicy.PolicyID).cip")

@@ -1,0 +1,74 @@
+name: Build AppControl Manager MSIX Package
+
+permissions:
+  id-token: write
+  contents: read
+  attestations: write
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+
+      - name: Check out the repository code
+        uses: actions/checkout@v4
+
+      - name: Setting up and downloading Winget
+        shell: pwsh
+        run: |
+          # Set up URLs and retrieve Winget latest release information
+          [string]$WingetRepoURL = 'https://api.github.com/repos/microsoft/winget-cli/releases'
+          $WingetReleases = Invoke-RestMethod -Uri $WingetRepoURL
+          $LatestRelease = $WingetReleases | Select-Object -First 1
+          [string]$WingetURL2 = $LatestRelease.assets.browser_download_url | Where-Object { $_.EndsWith('.msixbundle') } | Select-Object -First 1
+          [string]$WingetLicense = $LatestRelease.assets.browser_download_url | Where-Object { $_.EndsWith('License1.xml') } | Select-Object -First 1
+          [hashtable]$Downloads = @{
+              'VCLibs.appx'            = 'https://aka.ms/Microsoft.VCLibs.x64.14.00.Desktop.appx'
+              'Microsoft.UI.Xaml.appx' = 'https://github.com/microsoft/microsoft-ui-xaml/releases/download/v2.8.6/Microsoft.UI.Xaml.2.8.x64.appx'
+              'Winget.msixbundle'      = 'https://aka.ms/getwinget'
+              'License1.xml'           = $WingetLicense
+          }
+          $Downloads.GetEnumerator() | ForEach-Object -Parallel {
+              $FileName = $_.Key
+              $URL = $_.Value
+              Invoke-RestMethod -Uri $URL -OutFile $FileName
+          }
+          Add-AppxProvisionedPackage -Online -PackagePath 'Winget.msixbundle' -DependencyPackagePath 'Microsoft.UI.Xaml.appx', 'VCLibs.appx' -LicensePath 'License1.xml'
+
+      - name: Finishing setting up Winget
+        shell: powershell
+        run: |
+          Add-AppPackage -Path 'Winget.msixbundle' -DependencyPath 'Microsoft.UI.Xaml.appx', 'VCLibs.appx' -ForceTargetApplicationShutdown -ForceUpdateFromAnyVersion
+          # Add-AppPackage on Windows Server throws error so we use Windows PowerShell for this section.
+
+      - name: Installing the necessary programs
+        run: |
+          winget install --id Microsoft.DotNet.SDK.Preview --exact --accept-package-agreements --accept-source-agreements --uninstall-previous --force
+          winget install --id Microsoft.VisualStudio.2022.BuildTools --exact --accept-package-agreements --accept-source-agreements --uninstall-previous --force
+          winget install --id Microsoft.WindowsSDK.10.0.26100 --exact --accept-package-agreements --accept-source-agreements --uninstall-previous --force
+          winget install --id Microsoft.AppInstaller --exact --accept-package-agreements --accept-source-agreements --uninstall-previous --force
+          winget install --id Microsoft.VCRedist.2015+.x64 --exact --accept-package-agreements --accept-source-agreements --uninstall-previous --force
+
+      - name: Building the AppControl Manager
+        run: dotnet build "AppControl Manager/AppControl Manager.sln" --configuration Release --verbosity minimal
+
+      - name: Generating the MSIX Package
+        run: dotnet msbuild "AppControl Manager/AppControl Manager.sln" /p:Configuration=Release /p:AppxPackageDir="MSIXOutput\" /p:GenerateAppxPackageOnBuild=true
+
+      - name: Capturing the Generated MSIX file Path
+        shell: pwsh
+        run: |
+          [string]$MSIXPath = (Get-ChildItem -Path '.\AppControl Manager\MSIXOutput\AppControl Manage*\AppControl Manager*.msix').FullName
+          
+          if ([string]::IsNullOrWhiteSpace($MSIXPath)) { throw "Couldn't find the generated MSIX package" }
+
+          # Write the MSIXPath to GITHUB_ENV to set it as an environment variable for the entire workflow
+          Add-Content -Path $env:GITHUB_ENV -Value "MSIX_PATH=$MSIXPath"
+
+      - name: Generate Artifact Attestation
+        uses: actions/attest-build-provenance@v1
+        with:
+          subject-path: ${{ env.MSIX_PATH }}

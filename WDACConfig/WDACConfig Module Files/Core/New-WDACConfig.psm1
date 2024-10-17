@@ -3,32 +3,22 @@ Function New-WDACConfig {
         DefaultParameterSetName = 'All',
         PositionalBinding = $false
     )]
-    [OutputType([System.String])]
     Param(
         [Alias('Type')]
         [ValidateSet('DefaultWindows', 'AllowMicrosoft', 'SignedAndReputable')]
         [Parameter(Mandatory = $false, ParameterSetName = 'PolicyType')][System.String]$PolicyType,
 
-        [Parameter(Mandatory = $false, ParameterSetName = 'GetUserModeBlockRules')][System.Management.Automation.SwitchParameter]$GetUserModeBlockRules,
-        [Parameter(Mandatory = $false, ParameterSetName = 'GetDriverBlockRules')][System.Management.Automation.SwitchParameter]$GetDriverBlockRules,
+        [Parameter(Mandatory = $false, ParameterSetName = 'GetUserModeBlockRules')][switch]$GetUserModeBlockRules,
+        [Parameter(Mandatory = $false, ParameterSetName = 'GetDriverBlockRules')][switch]$GetDriverBlockRules,
 
-        [Parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$Deploy,
+        [Parameter(Mandatory = $false)][switch]$Deploy,
 
-        [Parameter(Mandatory = $false, ParameterSetName = 'GetDriverBlockRules')][System.Management.Automation.SwitchParameter]$AutoUpdate,
-
-        [Parameter(Mandatory = $false, ParameterSetName = 'PolicyType')]
-        [System.Management.Automation.SwitchParameter]$Audit,
-
-        [Parameter(Mandatory = $false, ParameterSetName = 'PolicyType')]
-        [System.Management.Automation.SwitchParameter]$TestMode,
-
-        [Parameter(Mandatory = $false, ParameterSetName = 'PolicyType')]
-        [System.Management.Automation.SwitchParameter]$RequireEVSigners,
-
-        [Parameter(Mandatory = $false, ParameterSetName = 'PolicyType')]
-        [System.Management.Automation.SwitchParameter]$EnableScriptEnforcement,
-
-        [Parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$SkipVersionCheck
+        [Parameter(Mandatory = $false, ParameterSetName = 'GetDriverBlockRules')][switch]$AutoUpdate,
+        [Parameter(Mandatory = $false, ParameterSetName = 'PolicyType')][switch]$Audit,
+        [Parameter(Mandatory = $false, ParameterSetName = 'PolicyType')][switch]$TestMode,
+        [Parameter(Mandatory = $false, ParameterSetName = 'PolicyType')][switch]$RequireEVSigners,
+        [Parameter(Mandatory = $false, ParameterSetName = 'PolicyType')][switch]$EnableScriptEnforcement,
+        [Parameter(Mandatory = $false)][switch]$SkipVersionCheck
     )
     DynamicParam {
 
@@ -204,9 +194,7 @@ Function New-WDACConfig {
 .PARAMETER Audit
     Indicates that the created/deployed policy will have Enabled:Audit Mode policy rule option and will generate audit logs instead of blocking files.
 .PARAMETER SkipVersionCheck
-    Can be used with any parameter to bypass the online version check - only to be used in rare cases
-.PARAMETER Verbose
-    Displays detailed information about the operation performed by the command
+    Can be used with any parameter to bypass the online version check
 .INPUTS
     System.UInt64
     System.String

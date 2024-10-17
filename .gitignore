@@ -4,8 +4,8 @@ Harden-Windows-Security Module/bin/
 WDACConfig/obj/
 WDACConfig/.vs/
 WDACConfig/bin/
-WDACConfig/WinUI3/.vs/
-WDACConfig/WinUI3/bin/
-WDACConfig/WinUI3/obj/
-WDACConfig/WinUI3/Generated Files/
-WDACConfig/WinUI3/signtool.exe
+AppControl Manager/.vs/
+AppControl Manager/bin/
+AppControl Manager/obj/
+AppControl Manager/Generated Files/
+AppControl Manager/signtool.exe

@@ -3,17 +3,16 @@ Function Remove-CommonWDACConfig {
         PositionalBinding = $false,
         ConfirmImpact = 'High'
     )]
-    [OutputType([System.String])]
     Param(
-        [parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$CertCN,
-        [parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$CertPath,
-        [parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$SignToolPath,
-        [parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$UnsignedPolicyPath,
-        [parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$SignedPolicyPath,
-        [parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$StrictKernelPolicyGUID,
-        [parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$StrictKernelNoFlightRootsPolicyGUID,
-        [parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$StrictKernelModePolicyTimeOfDeployment,
-        [Parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$Force
+        [parameter(Mandatory = $false)][switch]$CertCN,
+        [parameter(Mandatory = $false)][switch]$CertPath,
+        [parameter(Mandatory = $false)][switch]$SignToolPath,
+        [parameter(Mandatory = $false)][switch]$UnsignedPolicyPath,
+        [parameter(Mandatory = $false)][switch]$SignedPolicyPath,
+        [parameter(Mandatory = $false)][switch]$StrictKernelPolicyGUID,
+        [parameter(Mandatory = $false)][switch]$StrictKernelNoFlightRootsPolicyGUID,
+        [parameter(Mandatory = $false)][switch]$StrictKernelModePolicyTimeOfDeployment,
+        [Parameter(Mandatory = $false)][switch]$Force
     )
     [WDACConfig.LoggerInitializer]::Initialize($VerbosePreference, $DebugPreference, $Host)
     [WDACConfig.UserConfiguration]::Remove($SignedPolicyPath, $UnsignedPolicyPath, $SignToolPath, $CertCN, $CertPath, $StrictKernelPolicyGUID, $StrictKernelNoFlightRootsPolicyGUID, $LastUpdateCheck, $StrictKernelModePolicyTimeOfDeployment)

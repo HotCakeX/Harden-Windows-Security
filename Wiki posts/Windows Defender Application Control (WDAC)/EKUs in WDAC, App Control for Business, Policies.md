@@ -270,6 +270,7 @@ Function Convert-HexToOID {
 <EKU ID="ID_EKU_STORE" FriendlyName="Windows Store - 1.3.6.1.4.1.311.76.3.1" Value="010a2b0601040182374c0301" />
 <EKU ID="ID_EKU_DCODEGEN" FriendlyName="Dynamic Code Generation - 1.3.6.1.4.1.311.76.5.1" Value="010A2B0601040182374C0501" />
 <EKU ID="ID_EKU_AM" FriendlyName="AntiMalware - 1.3.6.1.4.1.311.76.11.1" Value="010a2b0601040182374c0b01" />
+<EKU ID="ID_EKU_IUM" FriendlyName="Isolated User Mode - 1.3.6.1.4.1.311.10.3.37" Value="010A2B0601040182370A0325" />
 ```
 
 <br>

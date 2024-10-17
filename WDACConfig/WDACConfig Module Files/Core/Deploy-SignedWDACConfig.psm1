@@ -4,14 +4,13 @@ Function Deploy-SignedWDACConfig {
         PositionalBinding = $false,
         ConfirmImpact = 'High'
     )]
-    [OutputType([System.String])]
     Param(
         [ArgumentCompleter([WDACConfig.ArgCompleter.XmlFileMultiSelectPicker])]
         [ValidateScript({ [WDACConfig.CiPolicyTest]::TestCiPolicy($_, $null) })]
         [parameter(Mandatory = $true, ValueFromPipelineByPropertyName = $true, ValueFromPipeline = $true)]
         [System.IO.FileInfo[]]$PolicyPaths,
 
-        [Parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$Deploy,
+        [Parameter(Mandatory = $false)][switch]$Deploy,
 
         [ArgumentCompleter([WDACConfig.ArgCompleter.SingleCerFilePicker])]
         [ValidatePattern('\.cer$')]
@@ -34,9 +33,9 @@ Function Deploy-SignedWDACConfig {
         [System.IO.FileInfo]$SignToolPath,
 
         [Parameter(Mandatory = $false)]
-        [System.Management.Automation.SwitchParameter]$Force,
+        [switch]$Force,
 
-        [Parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$SkipVersionCheck
+        [Parameter(Mandatory = $false)][switch]$SkipVersionCheck
     )
     Begin {
         [WDACConfig.LoggerInitializer]::Initialize($VerbosePreference, $DebugPreference, $Host)
@@ -116,6 +115,10 @@ Function Deploy-SignedWDACConfig {
                 [WDACConfig.Logger]::Write('Checking if the policy type is Supplemental and if so, removing the -Supplemental parameter from the SignerRule command')
                 if ($PolicyType -eq 'Supplemental Policy') {
 
+                    # Add-SignerRule does not retain the Macros in the <Macros> node
+                    [WDACConfig.Logger]::Write('Backing up any possible Macros in the Supplemental policy')
+                    $MacrosBackup = [WDACConfig.Macros]::Backup($PolicyPath)
+
                     [WDACConfig.Logger]::Write('Policy type is Supplemental')
 
                     # Make sure -User is not added if the UMCI policy rule option doesn't exist in the policy, typically for Strict kernel mode policies
@@ -126,6 +129,9 @@ Function Deploy-SignedWDACConfig {
                         [WDACConfig.Logger]::Write('UMCI policy rule option does not exist in the policy, typically for Strict kernel mode policies')
                         Add-SignerRule -FilePath $PolicyPath -CertificatePath $CertPath -Update -Kernel
                     }
+
+                    [WDACConfig.Macros]::Restore($PolicyPath, $MacrosBackup)
+
                 }
                 elseif ($PolicyType -eq 'Base Policy') {
 
@@ -135,7 +141,7 @@ Function Deploy-SignedWDACConfig {
                     if ('Enabled:UMCI' -in $PolicyRuleOptions) {
 
                         [WDACConfig.Logger]::Write('Checking whether SignTool.exe is allowed to execute in the policy or not')
-                        if (-NOT (Invoke-WDACSimulation -FilePath $SignToolPathFinal -XmlFilePath $PolicyPath -BooleanOutput -NoCatalogScanning -ThreadsCount 1 -SkipVersionCheck)) {
+                        if (!([WDACConfig.InvokeWDACSimulation]::Invoke($SignToolPathFinal, $PolicyPath, $true))) {
 
                             [WDACConfig.Logger]::Write('The policy type is base policy and it applies to user mode files, yet the policy prevents SignTool.exe from executing. As a precautionary measure, scanning and including the SignTool.exe in the policy before deployment so you can modify/remove the signed policy later from the system.')
 
@@ -291,7 +297,7 @@ Function Deploy-SignedWDACConfig {
 .PARAMETER Force
     Indicates that the cmdlet will bypass the confirmation prompts
 .PARAMETER SkipVersionCheck
-    Can be used with any parameter to bypass the online version check - only to be used in rare cases
+    Can be used with any parameter to bypass the online version check
 .INPUTS
     System.String
     System.String[]

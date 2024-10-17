@@ -385,7 +385,7 @@ Accept wildcard characters: False
 ```
 
 ### -SkipVersionCheck
-Can be used with any parameter to bypass the online version check - only to be used in rare cases
+Can be used with any parameter to bypass the online version check
 
 ```yaml
 Type: SwitchParameter

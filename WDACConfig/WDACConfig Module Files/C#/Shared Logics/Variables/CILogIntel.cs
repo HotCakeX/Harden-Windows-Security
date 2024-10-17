@@ -5,14 +5,14 @@ using System.Collections.Generic;
 namespace WDACConfig
 {
     // Application Control event tags intelligence
-    public class CILogIntel
+    public static class CILogIntel
     {
         // Requested and Validated Signing Level Mappings: https://learn.microsoft.com/en-us/windows/security/application-security/application-control/app-control-for-business/operations/event-tag-explanations#requested-and-validated-signing-level
         public static readonly Dictionary<ushort, string> ReqValSigningLevels = new()
         {
             { 0 , "Signing level hasn't yet been checked"},
             { 1 , "File is unsigned or has no signature that passes the active policies"},
-            { 2 , "Trusted by Windows Defender Application Control policy"},
+            { 2 , "Trusted by App Control for Business policy"},
             { 3 , "Developer signed code"},
             { 4 , "Authenticode signed"},
             { 5 , "Microsoft Store signed app PPL (Protected Process Light)"},
@@ -61,7 +61,7 @@ namespace WDACConfig
             { 18 ,   "Custom signing level not met; returned if signature fails to match CISigners in UMCI."},
             { 19 ,   "Binary is revoked based on its file hash."},
             { 20 ,   "SHA1 cert hash's timestamp is missing or after valid cutoff as defined by Weak Crypto Policy."},
-            { 21 ,   "Failed to pass Windows Defender Application Control policy."},
+            { 21 ,   "Failed to pass App Control for Business policy."},
             { 22 ,   "Not Isolated User Mode (IUM) signed; indicates an attempt to load a standard Windows binary into a virtualization-based security (VBS) trustlet."},
             { 23 ,   "Invalid image hash. This error can indicate file corruption or a problem with the file's signature. Signatures using elliptic curve cryptography (ECC), such as ECDSA, return this VerificationError."},
             { 24 ,   "Flight root not allowed; indicates trying to run flight-signed code on production OS."},

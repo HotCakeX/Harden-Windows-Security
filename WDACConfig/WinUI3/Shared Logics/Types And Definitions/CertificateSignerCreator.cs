@@ -2,7 +2,7 @@
 
 namespace WDACConfig
 {
-    public class CertificateSignerCreator(string tbs, string signerName, int siSigningScenario)
+    public sealed class CertificateSignerCreator(string tbs, string signerName, int siSigningScenario)
     {
         public string TBS { get; set; } = tbs;
         public string SignerName { get; set; } = signerName;

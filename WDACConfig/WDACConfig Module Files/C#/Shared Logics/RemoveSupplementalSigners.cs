@@ -6,7 +6,7 @@ using System.Xml;
 
 namespace WDACConfig
 {
-    public class CiPolicyHandler
+    public static class CiPolicyHandler
     {
         /// <summary>
         /// Removes the entire SupplementalPolicySigners block

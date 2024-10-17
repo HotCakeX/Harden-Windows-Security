@@ -6,7 +6,7 @@ using System.Xml;
 
 namespace WDACConfig
 {
-    public class PolicyFileSigningStatusDetection
+    public static class PolicyFileSigningStatusDetection
     {
 
         public enum SigningStatus

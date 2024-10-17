@@ -11,7 +11,7 @@ using System.Text;
 namespace WDACConfig
 {
     // This class defines Hash entries for each file in the WDACConfig PowerShell module based on the cloud CSV
-    public class WDACConfigHashEntry(string? relativePath, string? fileName, string? fileHash, string? fileHashSHA3_512)
+    public sealed class WDACConfigHashEntry(string? relativePath, string? fileName, string? fileHash, string? fileHashSHA3_512)
     {
         public string? RelativePath { get; set; } = relativePath;
         public string? FileName { get; set; } = fileName;
@@ -20,7 +20,7 @@ namespace WDACConfig
     }
 
 
-    public class AssertWDACConfigIntegrity
+    public static class AssertWDACConfigIntegrity
     {
         /// <summary>
         /// Hashes all of the files in the WDACConfig, download the cloud hashes, compares them with each other and report back hash mismatches
@@ -34,9 +34,6 @@ namespace WDACConfig
             string OutputFileName = "Hashes.csv";
             string url = "https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/WDACConfig/Utilities/Hashes.csv";
 
-            // Parse the CSV content
-            List<WDACConfigHashEntry> ParsedCSVList = [];
-
             // Hash details of the current PowerShell files
             List<WDACConfigHashEntry> CurrentFileHashes = [];
 
@@ -46,7 +43,7 @@ namespace WDACConfig
             string csvData = client.GetStringAsync(url).Result;
 
             // Parse the CSV content
-            ParsedCSVList = ParseCSV(csvData);
+            List<WDACConfigHashEntry> ParsedCSVList = ParseCSV(csvData);
 
             // Get all of the files in the PowerShell module directory
             List<FileInfo> files = WDACConfig.FileUtility.GetFilesFast([new DirectoryInfo(WDACConfig.GlobalVars.ModuleRootPath!)], null, ["*"]);
@@ -171,24 +168,22 @@ namespace WDACConfig
         private static void ExportToCsv(string outputPath, List<WDACConfigHashEntry> entries)
         {
             // Ensure we create a new file or overwrite an existing one
-            using (StreamWriter writer = new(outputPath, false, Encoding.UTF8))
-            {
-                // Write the CSV header
-                writer.WriteLine("""
+            using StreamWriter writer = new(outputPath, false, Encoding.UTF8);
+            // Write the CSV header
+            writer.WriteLine("""
 "RelativePath","FileName","FileHash","FileHashSHA3_512"
 """);
 
-                // Write each entry in the list
-                foreach (var entry in entries)
-                {
-                    string relativePath = EscapeCsv(entry.RelativePath);
-                    string fileName = EscapeCsv(entry.FileName);
-                    string fileHash = EscapeCsv(entry.FileHash);
-                    string fileHashSHA3_512 = EscapeCsv(entry.FileHashSHA3_512);
+            // Write each entry in the list
+            foreach (var entry in entries)
+            {
+                string relativePath = EscapeCsv(entry.RelativePath);
+                string fileName = EscapeCsv(entry.FileName);
+                string fileHash = EscapeCsv(entry.FileHash);
+                string fileHashSHA3_512 = EscapeCsv(entry.FileHashSHA3_512);
 
-                    // Write the CSV row
-                    writer.WriteLine($"{relativePath},{fileName},{fileHash},{fileHashSHA3_512}");
-                }
+                // Write the CSV row
+                writer.WriteLine($"{relativePath},{fileName},{fileHash},{fileHashSHA3_512}");
             }
         }
 

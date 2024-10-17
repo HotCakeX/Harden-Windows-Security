@@ -285,12 +285,6 @@ dotnet_diagnostic.IDE0004.severity = error
 # IDE0017: Simplify object initialization
 dotnet_diagnostic.IDE0017.severity = error
 
-# IDE0060: Remove unused parameter
-dotnet_diagnostic.IDE0060.severity = error
-
-# IDE0044: Add readonly modifier
-dotnet_diagnostic.IDE0044.severity = error
-
 # IDE0063: Use simple 'using' statement
 dotnet_diagnostic.IDE0063.severity = error
 
@@ -344,3 +338,6 @@ dotnet_diagnostic.CA1839.severity = error
 
 # CA2265: Do not compare Span<T> to 'null' or 'default'
 dotnet_diagnostic.CA2265.severity = error
+
+# CA1507: Use nameof to express symbol names
+dotnet_diagnostic.CA1507.severity = error

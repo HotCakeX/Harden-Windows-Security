@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 
 namespace WDACConfig
 {
-    public class ExFileInfo
+    public sealed class ExFileInfo
     {
         // Constants used for encoding fallback and error handling
         private const string UnicodeFallbackCode = "04B0";

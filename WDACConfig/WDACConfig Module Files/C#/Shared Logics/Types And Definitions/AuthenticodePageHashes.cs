@@ -2,7 +2,7 @@
 
 namespace WDACConfig
 {
-    public class CodeIntegrityHashes(string? sha1Page, string? sha256Page, string? sha1Authenticode, string? sha256Authenticode)
+    public sealed class CodeIntegrityHashes(string? sha1Page, string? sha256Page, string? sha1Authenticode, string? sha256Authenticode)
     {
         public string? SHA1Page { get; set; } = sha1Page;
         public string? SHA256Page { get; set; } = sha256Page;

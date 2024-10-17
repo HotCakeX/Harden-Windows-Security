@@ -13,7 +13,7 @@ using System.Xml;
 
 namespace WDACConfig
 {
-    public class BasePolicyCreator
+    public static class BasePolicyCreator
     {
         /// <summary>
         /// Creates scheduled task that keeps the Microsoft recommended driver block rules up to date on the system
@@ -168,7 +168,7 @@ namespace WDACConfig
 
         }
 
-        public class DriverBlockListInfo
+        public sealed class DriverBlockListInfo
         {
             public string? Version { get; set; }
             public DateTime LastUpdated { get; set; }
@@ -272,7 +272,7 @@ namespace WDACConfig
 
             // Initialize the final destination of the SiPolicy file
             string SiPolicyFinalDestination;
-            if (systemDrive != null)
+            if (systemDrive is not null)
             {
                 // Construct the final destination of the SiPolicy file
                 SiPolicyFinalDestination = System.IO.Path.Combine(systemDrive, "Windows", "System32", "CodeIntegrity", "SiPolicy.p7b");
@@ -296,7 +296,7 @@ namespace WDACConfig
             // Get the path of the SiPolicy file
             string[] SiPolicyPaths = System.IO.Directory.GetFiles(ZipExtractionDir, "SiPolicy_Enforced.p7b", System.IO.SearchOption.AllDirectories);
 
-            // Make sure to get only one file is there is more than one (which is unexpected)
+            // Make sure to get only one file if there is more than one (which is unexpected)
             string SiPolicyPath = SiPolicyPaths[0];
 
             // If the SiPolicy file already exists, delete it
@@ -308,12 +308,10 @@ namespace WDACConfig
             // Move the SiPolicy file to the final destination, renaming it in the process
             File.Move(SiPolicyPath, SiPolicyFinalDestination);
 
-
             Logger.Write("Refreshing the system WDAC policies");
             CiToolHelper.RefreshPolicy();
 
             Logger.Write("SiPolicy.p7b has been deployed and policies refreshed.");
-
 
             Logger.Write("Displaying extra info about the Microsoft recommended Drivers block list");
             _ = DriversBlockListInfoGathering();
@@ -410,21 +408,19 @@ namespace WDACConfig
                 policyName = "AllowMicrosoft";
             }
 
-            // Path only used during staging area processing
+            // Paths only used during staging area processing
             string tempPolicyPath = Path.Combine(StagingArea, $"{policyName}.xml");
-
             string tempPolicyCIPPath = Path.Combine(StagingArea, $"{policyName}.cip");
 
+            // Final Policy Path
             string finalPolicyPath = Path.Combine(GlobalVars.UserConfigDir, $"{policyName}.xml");
 
-            GetBlockRules(StagingArea, deploy, false);
-
+            // Get/Deploy the block rules
+            GetBlockRules(StagingArea, deploy);
 
             Logger.Write("Copying the AllowMicrosoft.xml from Windows directory to the Staging Area");
 
             File.Copy(@"C:\Windows\schemas\CodeIntegrity\ExamplePolicies\AllowMicrosoft.xml", tempPolicyPath, true);
-
-
 
             Logger.Write("Resetting the policy ID and assigning policy name");
 
@@ -450,7 +446,6 @@ namespace WDACConfig
 
             if (deploy)
             {
-
                 Logger.Write("Converting the policy file to .CIP binary");
 
                 PolicyToCIPConverter.Convert(tempPolicyPath, tempPolicyCIPPath);
@@ -459,7 +454,6 @@ namespace WDACConfig
             }
 
             File.Copy(tempPolicyPath, finalPolicyPath, true);
-
 
         }
 
@@ -470,7 +464,7 @@ namespace WDACConfig
         /// It generates a XML file compliant with CI Policies Schema.
         /// </summary>
         /// <param name="StagingArea"></param>
-        public static void GetBlockRules(string StagingArea, bool deploy, bool? deployAppControlSupplementalPolicy)
+        public static void GetBlockRules(string StagingArea, bool deploy)
         {
 
             string policyName = "Microsoft Windows Recommended User Mode BlockList";
@@ -510,23 +504,19 @@ namespace WDACConfig
             // Fix the elements
             userModeBlockRulesXML = FixMissingElements(userModeBlockRulesXML);
 
-            // Path only used during staging area processing
+            // Paths only used during staging area processing
             string tempPolicyPath = Path.Combine(StagingArea, $"{policyName}.xml");
-
             string tempPolicyCIPPath = Path.Combine(StagingArea, $"{policyName}.cip");
-
 
             // Save the XML content to a file
             userModeBlockRulesXML.Save(tempPolicyPath);
-
 
             CiRuleOptions.Set(filePath: tempPolicyPath, rulesToAdd: [CiRuleOptions.PolicyRuleOptions.EnabledUpdatePolicyNoReboot, CiRuleOptions.PolicyRuleOptions.DisabledScriptEnforcement], rulesToRemove: [CiRuleOptions.PolicyRuleOptions.EnabledAuditMode, CiRuleOptions.PolicyRuleOptions.EnabledAdvancedBootOptionsMenu]);
 
             Logger.Write("Assigning policy name and resetting policy ID");
 
             // Get the policyID of the policy being created
-            string policyID = SetCiPolicyInfo.Set(tempPolicyPath, true, policyName, null, null);
-
+            _ = SetCiPolicyInfo.Set(tempPolicyPath, true, policyName, null, null);
 
             string finalPolicyPath = Path.Combine(GlobalVars.UserConfigDir, $"{policyName}.xml");
 
@@ -535,37 +525,41 @@ namespace WDACConfig
 
                 Logger.Write($"Checking if the {policyName} policy is already deployed");
 
-
+                // Getting the list of the deployed base policies whose names match the policyName
                 List<CiPolicyInfo> CurrentlyDeployedBlockRules = CiToolHelper.GetPolicies(false, true, false).Where(policy => string.Equals(policy.FriendlyName, policyName, StringComparison.OrdinalIgnoreCase)).ToList();
 
+                // If any policy was found
                 if (CurrentlyDeployedBlockRules.Count > 0)
                 {
+                    // Get the ID of the policy
                     string CurrentlyDeployedBlockRulesGUID = CurrentlyDeployedBlockRules.First().PolicyID!;
 
                     Logger.Write($"{policyName} policy is already deployed, updating it using the same GUID which is {CurrentlyDeployedBlockRulesGUID}.");
-                    PolicyEditor.EditGuids(CurrentlyDeployedBlockRulesGUID, new FileInfo(tempPolicyPath));
 
+                    // Swap the policyID in the current policy XML file with the one from the deployed policy
+                    PolicyEditor.EditGuids(CurrentlyDeployedBlockRulesGUID, new FileInfo(tempPolicyPath));
                 }
                 else
                 {
                     Logger.Write($"{policyName} policy is not deployed, deploying it now.");
                 }
 
+                // Convert it to CIP
                 PolicyToCIPConverter.Convert(tempPolicyPath, tempPolicyCIPPath);
 
+                // Deploy the CIP file
                 CiToolHelper.UpdatePolicy(tempPolicyCIPPath);
 
             }
 
             File.Copy(tempPolicyPath, finalPolicyPath, true);
 
-
         }
 
 
 
         /// <summary>
-        /// Creates SignedAndReputable WDAC policy which is based on AllowMicrosoft template policy.
+        /// Creates SignedAndReputable App Control policy which is based on AllowMicrosoft template policy.
         /// It uses ISG to authorize files with good reputation.
         /// </summary>
         /// <param name="StagingArea"></param>
@@ -591,15 +585,15 @@ namespace WDACConfig
                 policyName = "SignedAndReputable";
             }
 
-            // Path only used during staging area processing
+            // Paths only used during staging area processing
             string tempPolicyPath = Path.Combine(StagingArea, $"{policyName}.xml");
-
             string tempPolicyCIPPath = Path.Combine(StagingArea, $"{policyName}.cip");
 
+            // Final policy XML path
             string finalPolicyPath = Path.Combine(GlobalVars.UserConfigDir, $"{policyName}.xml");
 
-            GetBlockRules(StagingArea, deploy, false);
-
+            // Get/Deploy the block rules
+            GetBlockRules(StagingArea, deploy);
 
             Logger.Write("Copying the AllowMicrosoft.xml from Windows directory to the Staging Area");
 
@@ -613,7 +607,6 @@ EnableAuditMode: IsAudit,
 RequireEVSigners: RequireEVSigners,
 ScriptEnforcement: EnableScriptEnforcement,
 TestMode: TestMode);
-
 
 
             Logger.Write("Resetting the policy ID and assigning policy name");
@@ -631,6 +624,7 @@ TestMode: TestMode);
 
             if (deploy)
             {
+                ConfigureISGServices.Configure();
 
                 Logger.Write("Converting the policy file to .CIP binary");
 
@@ -640,7 +634,6 @@ TestMode: TestMode);
             }
 
             File.Copy(tempPolicyPath, finalPolicyPath, true);
-
 
         }
 

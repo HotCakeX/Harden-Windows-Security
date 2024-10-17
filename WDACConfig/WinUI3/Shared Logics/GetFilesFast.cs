@@ -6,7 +6,7 @@ using System.IO;
 
 namespace WDACConfig
 {
-    public class FileUtility
+    public static class FileUtility
     {
         /// <summary>
         /// A flexible and fast method that can accept directory paths and file paths as input and return a list of FileInfo objects that are compliant with the WDAC policy.

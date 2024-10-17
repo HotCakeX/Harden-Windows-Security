@@ -6,7 +6,7 @@ using System.Security.Cryptography.X509Certificates;
 
 namespace WDACConfig
 {
-    public class GetCertificateDetails
+    public static class GetCertificateDetails
     {
         /// <summary>
         /// A method to detect Root, Intermediate and Leaf certificates
@@ -84,7 +84,7 @@ namespace WDACConfig
                             currentChain, // The entire current chain of the certificate
                             currentSignedCms, // The entire current SignedCms object
                             rootCertificate,
-                            intermediateCertificates.ToArray(),
+                            [.. intermediateCertificates],
                             leafCertificate
                         ));
 

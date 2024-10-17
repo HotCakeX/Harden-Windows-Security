@@ -5,7 +5,7 @@ using System.Management.Automation.Host;
 
 namespace WDACConfig
 {
-    public class LoggerInitializer
+    public static class LoggerInitializer
     {
         /// <summary>
         /// Gets the VerbosePreference, DebugPreference, and Host from the PowerShell session, each main cmdlet of the WDACConfig module

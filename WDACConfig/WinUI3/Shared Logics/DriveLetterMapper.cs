@@ -89,7 +89,7 @@ namespace WDACConfig
                 // Get the mount point for the volume
                 _ = GetVolumePathNamesForVolumeNameW(volume, sbMountPoint, max, ref lpcchReturnLength);
                 // Get the device path for the volume
-                uint returnLength = QueryDosDevice(volume.Substring(4, volume.Length - 5), sbPathName, (int)max);
+                uint returnLength = QueryDosDevice(volume[4..^1], sbPathName, (int)max);
 
                 // Check if the device path is found
                 if (returnLength > 0)

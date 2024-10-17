@@ -24,7 +24,7 @@ namespace WDACConfig
             if (!string.IsNullOrEmpty(xmlFilePath))
             {
                 // Get the Code Integrity Schema file path
-                string schemaPath = WDACConfig.GlobalVars.CISchemaPath;
+                string schemaPath = GlobalVars.CISchemaPath;
 
                 // Make sure the schema file exists
                 if (!File.Exists(schemaPath))

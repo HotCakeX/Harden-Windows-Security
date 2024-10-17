@@ -16,7 +16,7 @@ namespace WDACConfig
         /// <param name="logSize">Size of the Code Integrity Operational Event Log</param>
         public static void SetLogSize(ulong logSize = 0)
         {
-            WDACConfig.Logger.Write("Set-SetLogSize method started...");
+            Logger.Write("Set-SetLogSize method started...");
 
             string logName = "Microsoft-Windows-CodeIntegrity/Operational";
 
@@ -32,7 +32,7 @@ namespace WDACConfig
                 {
                     if (currentLogMaxSize <= 10 * 1024 * 1024)
                     {
-                        WDACConfig.Logger.Write("Increasing the Code Integrity log size by 1MB because its current free space is less than 1MB.");
+                        Logger.Write("Increasing the Code Integrity log size by 1MB because its current free space is less than 1MB.");
                         logConfig.MaximumSizeInBytes = currentLogMaxSize + 1 * 1024 * 1024;
                         logConfig.IsEnabled = true;
                         logConfig.SaveChanges();
@@ -45,14 +45,14 @@ namespace WDACConfig
                 // To prevent from disabling the log or setting it to a very small size that is lower than its default size
                 if (logSize > 1100 * 1024)
                 {
-                    WDACConfig.Logger.Write($"Setting Code Integrity log size to {logSize}.");
+                    Logger.Write($"Setting Code Integrity log size to {logSize}.");
                     logConfig.MaximumSizeInBytes = (long)logSize;
                     logConfig.IsEnabled = true;
                     logConfig.SaveChanges();
                 }
                 else
                 {
-                    WDACConfig.Logger.Write("Provided log size is less than or equal to 1100 KB. No changes made.");
+                    Logger.Write("Provided log size is less than or equal to 1100 KB. No changes made.");
                 }
             }
         }

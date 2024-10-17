@@ -12,8 +12,9 @@
     <PackageLogoSource>J:\Cloned Repositories\Harden-Windows-Security\WDACConfig\IconFullSize.png</PackageLogoSource>
     <UapAppxPackageBuildMode>SideloadOnly</UapAppxPackageBuildMode>
     <AppxShowAllApps>False</AppxShowAllApps>
-    <AppxBuildConfigurationSelection>x64</AppxBuildConfigurationSelection>
+    <AppxBuildConfigurationSelection>x64|arm64</AppxBuildConfigurationSelection>
     <PackageOptionalProjectsInIdeBuilds>False</PackageOptionalProjectsInIdeBuilds>
+    <_LastSelectedProfileId>J:\Cloned Repositories\Harden-Windows-Security\WDACConfig\WinUI3\Properties\PublishProfiles\win-x64.pubxml</_LastSelectedProfileId>
   </PropertyGroup>
   <ItemGroup>
     <None Update="App.xaml">

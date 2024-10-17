@@ -6,13 +6,13 @@ using System.Management;
 namespace WDACConfig
 {
 
-    public class DeviceGuardStatus
+    public sealed class DeviceGuardStatus
     {
         public uint? UsermodeCodeIntegrityPolicyEnforcementStatus { get; set; }
         public uint? CodeIntegrityPolicyEnforcementStatus { get; set; }
     }
 
-    public class DeviceGuardInfo
+    public static class DeviceGuardInfo
     {
         /// <summary>
         /// Get the Device Guard status information from the Win32_DeviceGuard WMI class

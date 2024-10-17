@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 
+#nullable enable
+
 namespace WDACConfig
 {
     // This class contains all of the WinTrust related functions and codes
-    internal partial class WinTrust
+    internal static partial class WinTrust
     {
         #region necessary logics for Authenticode and First Page hash calculation
 

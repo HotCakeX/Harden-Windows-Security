@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace WDACConfig
 {
-    public class FilePublisherSignerCreator
+    public sealed class FilePublisherSignerCreator
     {
         public List<CertificateDetailsCreator> CertificateDetails { get; set; }
         public Version? FileVersion { get; set; }

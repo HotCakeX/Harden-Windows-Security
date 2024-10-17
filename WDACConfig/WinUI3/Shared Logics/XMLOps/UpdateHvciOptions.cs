@@ -5,7 +5,7 @@ using System.Xml;
 
 namespace WDACConfig
 {
-    public class UpdateHvciOptions
+    public static class UpdateHvciOptions
     {
         /// <summary>
         /// Sets the HVCI option to Strict or (2) in a policy XML file

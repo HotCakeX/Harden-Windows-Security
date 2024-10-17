@@ -13,7 +13,7 @@ namespace WDACConfig
         Leaf = 2
     }
 
-    public class ChainElement(string subjectcn, string issuercn, DateTime notafter, string tbsvalue, X509Certificate2 certificate, CertificateType type)
+    public sealed class ChainElement(string subjectcn, string issuercn, DateTime notafter, string tbsvalue, X509Certificate2 certificate, CertificateType type)
     {
         public string SubjectCN { get; set; } = subjectcn;
         public string IssuerCN { get; set; } = issuercn;

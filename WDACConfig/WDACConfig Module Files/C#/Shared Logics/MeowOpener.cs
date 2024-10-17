@@ -46,12 +46,14 @@ namespace WDACConfig
         // A public static method that returns a HashSet of strings.
         public static HashSet<string> GetHashes(string SecurityCatalogFilePath)
         {
-            HashSet<string> OutputHashSet = []; // Initializes a new HashSet to store the hashes.
+            // Initializes a new HashSet to store the hashes.
+            HashSet<string> OutputHashSet = [];
 
             // Creates a new XmlDocument instance.
             XmlDocument PurrfectCatalogXMLDoc = new()
             {
-                XmlResolver = null // Disables the XML resolver for security reasons.
+                // Disables the XML resolver for security reasons.
+                XmlResolver = null
             };
 
             IntPtr MainCryptProviderHandle = IntPtr.Zero; // Initializes the handle to zero.
@@ -63,28 +65,36 @@ namespace WDACConfig
                 // Attempts to acquire a cryptographic context.
                 if (!CryptAcquireContext(out MainCryptProviderHandle, string.Empty, string.Empty, 1, 4026531840))
                 {
-                    // If the context is not acquired, the error can be captured (commented out).
-                    // int lastWin32Error = Marshal.GetLastWin32Error();
+                    // If the context is not acquired, capture the error code.
+                    int lastWin32Error = Marshal.GetLastWin32Error();
+                    Logger.Write($"CryptAcquireContext failed with error code: {lastWin32Error}");
                 }
 
                 // Opens the catalog file and gets a handle to the catalog context.
                 MeowLogHandle = WinTrust.CryptCATOpen(SecurityCatalogFilePath, 0, MainCryptProviderHandle, 0, 0);
+
                 if (MeowLogHandle == IntPtr.Zero)
                 {
-                    // If the handle is not obtained, the error can be captured (commented out).
-                    // int lastWin32Error = Marshal.GetLastWin32Error();
+                    // If the handle is not obtained, capture the error code.
+                    int lastWin32Error = Marshal.GetLastWin32Error();
+                    Logger.Write($"CryptCATOpen failed with error code: {lastWin32Error}");
                 }
+
 
                 // Creates an XML element to represent the catalog file.
                 XmlElement catalogElement = PurrfectCatalogXMLDoc.CreateElement("MeowFile");
-                _ = PurrfectCatalogXMLDoc.AppendChild(catalogElement); // Appends the element to the XML document.
+
+                // Appends the element to the XML document.
+                _ = PurrfectCatalogXMLDoc.AppendChild(catalogElement);
 
                 // Iterates through the catalog members.
                 while ((KittyPointer = WinTrust.CryptCATEnumerateMember(MeowLogHandle, KittyPointer)) != IntPtr.Zero)
                 {
                     // Converts the pointer to a structure.
                     MeowMemberCrypt member = Marshal.PtrToStructure<MeowMemberCrypt>(KittyPointer);
-                    _ = OutputHashSet.Add(member.Hashes); // Adds the hashes to the HashSet.
+
+                    // Adds the hashes to the HashSet.
+                    _ = OutputHashSet.Add(member.Hashes);
                 }
             }
             finally
@@ -96,7 +106,9 @@ namespace WDACConfig
                 if (MeowLogHandle != IntPtr.Zero)
                     _ = WinTrust.CryptCATClose(MeowLogHandle);
             }
-            return OutputHashSet; // Returns the HashSet containing the hashes.
+
+            // Returns the HashSet containing the hashes.
+            return OutputHashSet;
         }
     }
 }

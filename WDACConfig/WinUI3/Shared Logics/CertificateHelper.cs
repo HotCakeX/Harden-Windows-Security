@@ -8,11 +8,11 @@ using System.Security.Cryptography.X509Certificates;
 namespace WDACConfig
 {
     // A class to throw a custom exception when the certificate collection cannot be obtained during WDAC Simulation
-    public class ExceptionFailedToGetCertificateCollection(string message, string functionName) : Exception($"{functionName}: {message}")
+    public sealed class ExceptionFailedToGetCertificateCollection(string message, string functionName) : Exception($"{functionName}: {message}")
     {
     }
 
-    public class CertificateHelper
+    public static class CertificateHelper
     {
         public static string GetTBSCertificate(X509Certificate2 cert)
         // Calculates the TBS value of a certificate

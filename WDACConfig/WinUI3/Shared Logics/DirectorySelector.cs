@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 
 #nullable enable
 
@@ -35,11 +34,11 @@ namespace WDACConfig
             } while (true);
 
             // return null if no directories were selected or the array of selected directories if there are any
-            return programsPaths.Count > 0 ? programsPaths.ToArray() : null;
+            return programsPaths.Count > 0 ? [.. programsPaths] : null;
         }
 
         // Comparer for DirectoryInfo to ensure uniqueness and do it in a case-insensitive way
-        private class DirectoryInfoComparer : IEqualityComparer<DirectoryInfo>
+        private sealed class DirectoryInfoComparer : IEqualityComparer<DirectoryInfo>
         {
             public bool Equals(DirectoryInfo? x, DirectoryInfo? y)
             {

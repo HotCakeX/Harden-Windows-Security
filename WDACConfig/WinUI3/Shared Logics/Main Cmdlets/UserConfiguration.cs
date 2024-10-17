@@ -22,7 +22,7 @@ namespace WDACConfig
     // Represents an instance of the User configurations JSON settings file
     // Maintains the order of the properties when writing to the JSON file
     // Includes the methods for interacting with user configurations JSON file
-    public partial class UserConfiguration(
+    public sealed partial class UserConfiguration(
             string? signedPolicyPath,
             string? unsignedPolicyPath,
             string? signToolCustomPath,
@@ -237,17 +237,17 @@ namespace WDACConfig
             var root = doc.RootElement;
 
             return new UserConfiguration(
-                TryGetStringProperty(root, "SignedPolicyPath"),
-                TryGetStringProperty(root, "UnsignedPolicyPath"),
-                TryGetStringProperty(root, "SignToolCustomPath"),
-                TryGetStringProperty(root, "CertificateCommonName"),
-                TryGetStringProperty(root, "CertificatePath"),
+                TryGetStringProperty(root, nameof(SignedPolicyPath)),
+                TryGetStringProperty(root, nameof(UnsignedPolicyPath)),
+                TryGetStringProperty(root, nameof(SignToolCustomPath)),
+                TryGetStringProperty(root, nameof(CertificateCommonName)),
+                TryGetStringProperty(root, nameof(CertificatePath)),
 
-                TryGetGuidProperty(root, "StrictKernelPolicyGUID"),
-                TryGetGuidProperty(root, "StrictKernelNoFlightRootsPolicyGUID"),
+                TryGetGuidProperty(root, nameof(StrictKernelPolicyGUID)),
+                TryGetGuidProperty(root, nameof(StrictKernelNoFlightRootsPolicyGUID)),
 
-                TryGetDateTimeProperty(root, "LastUpdateCheck"),
-                TryGetDateTimeProperty(root, "StrictKernelModePolicyTimeOfDeployment")
+                TryGetDateTimeProperty(root, nameof(LastUpdateCheck)),
+                TryGetDateTimeProperty(root, nameof(StrictKernelModePolicyTimeOfDeployment))
             );
 
             static string? TryGetStringProperty(JsonElement root, string propertyName)

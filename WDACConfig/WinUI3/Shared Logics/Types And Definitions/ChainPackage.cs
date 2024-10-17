@@ -5,7 +5,7 @@ using System.Security.Cryptography.X509Certificates;
 
 namespace WDACConfig
 {
-    public class ChainPackage(X509Chain certificatechain, SignedCms signedcms, ChainElement rootcertificate,
+    public sealed class ChainPackage(X509Chain certificatechain, SignedCms signedcms, ChainElement rootcertificate,
      ChainElement[]? intermediatecertificates,
       ChainElement? leafcertificate)
     {

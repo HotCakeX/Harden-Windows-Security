@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace WDACConfig
 {
-    public class PublisherSignerCreator
+    public sealed class PublisherSignerCreator
     {
         public List<CertificateDetailsCreator> CertificateDetails { get; set; }
         public string? FileName { get; set; }

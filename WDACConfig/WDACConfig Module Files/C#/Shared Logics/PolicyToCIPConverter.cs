@@ -1,6 +1,6 @@
 ﻿namespace WDACConfig
 {
-    public class PolicyToCIPConverter
+    public static class PolicyToCIPConverter
     {
         /// <summary>
         /// Converts a XML policy file to CIP binary file using the ConvertFrom-CIPolicy PowerShell cmdlet of the ConfigCI module

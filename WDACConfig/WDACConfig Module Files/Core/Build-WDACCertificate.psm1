@@ -220,8 +220,14 @@ ValidityPeriod = Years
             [WDACConfig.Logger]::Write('Removing the certificate from the certificate store')
             $TheCert | Remove-Item -Force
 
-            [WDACConfig.Logger]::Write('Importing the certificate to the certificate store again, this time with the private key protected by VSM (Virtual Secure Mode - Virtualization Based Security)')
-            $null = Import-PfxCertificate -ProtectPrivateKey 'VSM' -FilePath (Join-Path -Path ([WDACConfig.GlobalVars]::UserConfigDir) -ChildPath "$FileName.pfx") -CertStoreLocation 'Cert:\CurrentUser\My' -Password $Password
+            try {
+                [WDACConfig.Logger]::Write('Importing the certificate to the certificate store again, this time with the private key protected by VSM (Virtual Secure Mode - Virtualization Based Security)')
+                $null = Import-PfxCertificate -ProtectPrivateKey 'VSM' -FilePath (Join-Path -Path ([WDACConfig.GlobalVars]::UserConfigDir) -ChildPath "$FileName.pfx") -CertStoreLocation 'Cert:\CurrentUser\My' -Password $Password
+            }
+            catch {
+                [WDACConfig.Logger]::Write('Importing the certificate to the certificate store again (VSM could not be be used due to lack of hardware virtualization support)')
+                $null = Import-PfxCertificate -FilePath (Join-Path -Path ([WDACConfig.GlobalVars]::UserConfigDir) -ChildPath "$FileName.pfx") -CertStoreLocation 'Cert:\CurrentUser\My' -Password $Password
+            }
 
             [WDACConfig.Logger]::Write('Saving the common name of the certificate to the User configurations')
             $null = [WDACConfig.UserConfiguration]::Set($null, $null, $null, $CommonName, $null, $null, $null, $null , $null)

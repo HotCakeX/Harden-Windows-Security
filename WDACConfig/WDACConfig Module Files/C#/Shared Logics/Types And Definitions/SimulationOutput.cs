@@ -4,7 +4,7 @@
 namespace WDACConfig
 {
     // This class holds the details of the current file in the WDAC Simulation comparer
-    public class SimulationOutput(
+    public sealed class SimulationOutput(
         string path,
         string source,
         bool isAuthorized,

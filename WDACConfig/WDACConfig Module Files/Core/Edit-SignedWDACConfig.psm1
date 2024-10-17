@@ -767,10 +767,7 @@ Function Edit-SignedWDACConfig {
 
                         [WDACConfig.CiRuleOptions]::Set($BasePolicyPath, [WDACConfig.CiRuleOptions+PolicyTemplate]::BaseISG, $null, $null, $null, $null, $null, $RequireEVSigners, $null, $null, $null)
 
-                        # Configure required services for ISG authorization
-                        [WDACConfig.Logger]::Write('Configuring required services for ISG authorization')
-                        Start-Process -FilePath 'C:\Windows\System32\appidtel.exe' -ArgumentList 'start' -NoNewWindow
-                        Start-Process -FilePath 'C:\Windows\System32\sc.exe' -ArgumentList 'config', 'appidsvc', 'start= auto' -NoNewWindow
+                        [WDACConfig.ConfigureISGServices]::Configure()
                     }
                     'DefaultWindows' {
                         $Name = 'DefaultWindows'

@@ -6,7 +6,7 @@ using System.Management.Automation;
 
 namespace WDACConfig
 {
-    public class PowerShellExecutor
+    public static class PowerShellExecutor
     {
         /// <summary>
         /// Runs a PowerShell script and displays verbose and normal output in real-time.
@@ -37,7 +37,7 @@ namespace WDACConfig
                 outputCollection = [];
                 outputCollection.DataAdded += (sender, args) =>
                 {
-                    if (sender != null)
+                    if (sender is not null)
                     {
                         var outputStream = (PSDataCollection<PSObject>)sender;
                         var output = outputStream[args.Index]?.ToString();
@@ -49,7 +49,7 @@ namespace WDACConfig
             // Handle verbose output
             psInstance.Streams.Verbose.DataAdded += (sender, args) =>
             {
-                if (sender != null)
+                if (sender is not null)
                 {
                     var verboseStream = (PSDataCollection<VerboseRecord>)sender;
                     Logger.Write($"Verbose: {verboseStream[args.Index].Message}");
@@ -59,7 +59,7 @@ namespace WDACConfig
             // Handle warning output
             psInstance.Streams.Warning.DataAdded += (sender, args) =>
             {
-                if (sender != null)
+                if (sender is not null)
                 {
                     var warningStream = (PSDataCollection<WarningRecord>)sender;
                     Logger.Write($"Warning: {warningStream[args.Index].Message}");
@@ -69,7 +69,7 @@ namespace WDACConfig
             // Handle error output and throw exception
             psInstance.Streams.Error.DataAdded += (sender, args) =>
             {
-                if (sender != null)
+                if (sender is not null)
                 {
                     // Get the error details
                     var errorStream = (PSDataCollection<ErrorRecord>)sender;

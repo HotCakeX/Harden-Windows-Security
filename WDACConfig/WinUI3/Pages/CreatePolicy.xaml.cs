@@ -473,7 +473,7 @@ namespace WDACConfig.Pages
                 // Run the background operation using captured values
                 await Task.Run(() =>
                 {
-                    BasePolicyCreator.GetBlockRules(stagingArea, false, false);
+                    BasePolicyCreator.GetBlockRules(stagingArea, false);
                 });
 
             }
@@ -503,7 +503,7 @@ namespace WDACConfig.Pages
                 // Run the background operation using captured values
                 await Task.Run(() =>
                 {
-                    BasePolicyCreator.GetBlockRules(stagingArea, true, true);
+                    BasePolicyCreator.GetBlockRules(stagingArea, true);
 
                 });
 

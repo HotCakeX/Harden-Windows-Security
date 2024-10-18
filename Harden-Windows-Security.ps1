@@ -1,6 +1,4 @@
 #Requires -Version 5.1
-
-#Region Harden Windows Security Module
 Function P {
     [CmdletBinding()]
     param([switch]$G)
@@ -154,10 +152,6 @@ Function P {
         }
     }
 }
-
-#Endregion
-
-#Region AppControl Manager app
 Function AppControl {
     <#
     .DESCRIPTION
@@ -175,7 +169,7 @@ Function AppControl {
         Optional. The path to the Microsoft's Signtool.exe
         If not provided, the function automatically downloads the latest SignTool.exe from the Microsoft website in Nuget and will use it for the signing operations.
     .LINK
-        https://github.com/HotCakeX/Harden-Windows-Security
+        https://github.com/HotCakeX/Harden-Windows-Security/wiki/AppControl-Manager
     #>
     [CmdletBinding()]
     param (
@@ -183,12 +177,34 @@ Function AppControl {
         [Parameter(Mandatory = $False)][System.String]$SignTool
     )
     Begin {
-        $script:ErrorActionPreference = 'Stop'
+        $ErrorActionPreference = 'Stop'
 
-        # Make sure this function is running as Administrator
         if (!([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
             Write-Warning -Message 'Please run this function as an Administrator'
             break
+        }
+        # Used to generate a SecureString, adding the class only if it hasn't already been added to the session
+        if (!([System.Management.Automation.PSTypeName]'SecureStringGenerator').Type) {
+            Add-Type -TypeDefinition @'
+using System;
+using System.Security;
+public class SecureStringGenerator
+{
+    private static readonly char[] allowedChars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789".ToCharArray();
+    private static readonly Random random = new Random();
+    public static SecureString GenerateSecureString(int length)
+    {
+        SecureString secureString = new SecureString();
+        for (int i = 0; i < length; i++)
+        {
+            char randomChar = allowedChars[random.Next(allowedChars.Length)];
+            secureString.AppendChar(randomChar);
+        }
+        secureString.MakeReadOnly();
+        return secureString;
+    }
+}
+'@ -Language CSharp
         }
 
         Write-Verbose -Message 'Creating the working directory in the TEMP directory'
@@ -196,8 +212,7 @@ Function AppControl {
         [System.String]$WorkingDir = [System.IO.Path]::Combine([System.IO.Path]::GetTempPath(), $CommonName)
         [System.String]$CertificateOutputPath = [System.IO.Path]::Combine($WorkingDir, "$CommonName.cer")
         [System.String]$PFXCertificateOutputPath = [System.IO.Path]::Combine($WorkingDir, "$CommonName.pfx")
-        [System.String]$Pass = '123'
-        [System.Security.SecureString]$PassSS = ConvertTo-SecureString $Pass -AsPlainText -Force
+        [System.Security.SecureString]$PassWord = [SecureStringGenerator]::GenerateSecureString(10)
         [System.String]$HashingAlgorithm = 'Sha512'
 
         if ([System.IO.Directory]::Exists($WorkingDir)) {
@@ -218,7 +233,6 @@ Function AppControl {
     }
     process {
         Write-Verbose -Message 'Building the certificate'
-        # Create a hashtable of parameter names and values
         [System.Collections.Hashtable]$Params = @{
             Subject           = "CN=$CommonName"
             FriendlyName      = $CommonName
@@ -234,7 +248,6 @@ Function AppControl {
             NotAfter          = [System.DateTime](Get-Date).AddYears(100)
             TextExtension     = @('2.5.29.19={text}CA:FALSE', '2.5.29.37={text}1.3.6.1.5.5.7.3.3', '1.3.6.1.4.1.311.21.10={text}oid=1.3.6.1.5.5.7.3.3')
         }
-
         [System.Security.Cryptography.X509Certificates.X509Certificate2]$NewCertificate = New-SelfSignedCertificate @params
 
         # Save the thumbprint of the certificate to a variable
@@ -251,18 +264,18 @@ Function AppControl {
         $null = Export-Certificate -Cert $TheCert -FilePath $CertificateOutputPath -Type 'CERT' -Force
 
         Write-Verbose -Message 'Exporting the certificate (public and private keys)'
-        $null = Export-PfxCertificate -Cert $TheCert -CryptoAlgorithmOption 'AES256_SHA256' -Password $PassSS -ChainOption 'BuildChain' -FilePath $PFXCertificateOutputPath -Force
+        $null = Export-PfxCertificate -Cert $TheCert -CryptoAlgorithmOption 'AES256_SHA256' -Password $PassWord -ChainOption 'BuildChain' -FilePath $PFXCertificateOutputPath -Force
 
         Write-Verbose -Message "Removing the certificate from the 'Current User/Personal' store"
         $TheCert | Remove-Item -Force
 
         try {
             Write-Verbose -Message "Importing the certificate to the 'Local Machine/Trusted Root Certification Authorities' store with the private key protected by VSM (Virtual Secure Mode - Virtualization Based Security)"
-            $null = Import-PfxCertificate -ProtectPrivateKey 'VSM' -FilePath $PFXCertificateOutputPath -CertStoreLocation 'Cert:\LocalMachine\Root' -Password $PassSS
+            $null = Import-PfxCertificate -ProtectPrivateKey 'VSM' -FilePath $PFXCertificateOutputPath -CertStoreLocation 'Cert:\LocalMachine\Root' -Password $PassWord
         }
         catch {
             Write-Verbose -Message "Importing the certificate to the 'Local Machine/Trusted Root Certification Authorities' store with the private key without VSM protection since it's most likely not available on the system. Happens usually in VMs with not nested-virtualization feature enabled."
-            $null = Import-PfxCertificate -FilePath $PFXCertificateOutputPath -CertStoreLocation 'Cert:\LocalMachine\Root' -Password $PassSS
+            $null = Import-PfxCertificate -FilePath $PFXCertificateOutputPath -CertStoreLocation 'Cert:\LocalMachine\Root' -Password $PassWord
         }
 
         if ([System.String]::IsNullOrWhiteSpace($SignTool)) {
@@ -276,7 +289,7 @@ Function AppControl {
             Write-Verbose -Message 'Finding the latest version of the Microsoft.Windows.SDK.BuildTools package from NuGet'
 
             # Minimum is simply used to limit the number of the fetched packages
-            [Microsoft.PackageManagement.Packaging.SoftwareIdentity[]]$Package = Find-Package -Name 'Microsoft.Windows.SDK.BuildTools' -Source 'nuget.org' -AllVersions -Force -MinimumVersion '10.0.22621.3233'
+            [Microsoft.PackageManagement.Packaging.SoftwareIdentity[]]$Package = Find-Package -Name 'Microsoft.Windows.SDK.BuildTools' -Source 'nuget.org' -AllVersions -Force -MinimumVersion '10.0.26100.1'
             [Microsoft.PackageManagement.Packaging.SoftwareIdentity]$Package = $Package | Sort-Object -Property { [System.Version]$_.Version } -Descending | Select-Object -First 1
 
             Write-Verbose -Message 'Downloading SignTool.exe from NuGet...'
@@ -296,7 +309,6 @@ Function AppControl {
             $SignTool = "$WorkingDir\bin\*\$CPUArch\signtool.exe"
         }
 
-
         if ([System.String]::IsNullOrWhiteSpace($MSIXPath)) {
 
             $MSIXPath = [System.IO.Path]::Combine($WorkingDir, 'AppControl.Manager_1.0.0.0_x64.msix')
@@ -305,17 +317,17 @@ Function AppControl {
             $null = Invoke-WebRequest -Uri 'https://github.com/HotCakeX/Harden-Windows-Security/releases/download/WDACConfigv0.4.6/AppControl.Manager_1.0.0.0_x64.msix' -OutFile $MSIXPath
         }
 
-
         # https://learn.microsoft.com/en-us/dotnet/framework/tools/signtool-exe
-        Write-Verbose -Message 'Signing the MSIX package'
+        Write-Verbose -Message 'Signing the App Control Manager MSIX package'
 
+        # In this step the SignTool detects the cert to use based on Common name + ThumbPrint + Hash Algo + Store Type + Store Name
         if ($VerbosePreference -eq 'Continue') {
             # Displays full debug logs if -Verbose is used or Verbose preference of the session is set to Continue
-            . $SignTool sign /debug /n $CommonName /fd $HashingAlgorithm /f $PFXCertificateOutputPath /p $Pass $MSIXPath
+            . $SignTool sign /debug /n $CommonName /fd $HashingAlgorithm /sm /s 'Root' /sha1 $NewCertificateThumbprint $MSIXPath
         }
         else {
             # Displays no output if the command runs successfully, and displays minimal output if the command fails.
-            . $SignTool sign /q /n $CommonName /fd $HashingAlgorithm /f $PFXCertificateOutputPath /p $Pass $MSIXPath
+            . $SignTool sign /q /n $CommonName /fd $HashingAlgorithm /sm /s 'Root' /sha1 $NewCertificateThumbprint $MSIXPath
         }
 
         Write-Verbose -Message 'Checking for existence of the application in unpacked format'
@@ -381,8 +393,5 @@ Function AppControl {
             }
         }
         catch {}
-
     }
 }
-
-#Endregion

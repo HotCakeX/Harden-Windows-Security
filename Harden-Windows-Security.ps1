@@ -188,7 +188,7 @@ Function AppControl {
             Add-Type -TypeDefinition @'
 using System;
 using System.Security;
-public class SecureStringGenerator
+public static class SecureStringGenerator
 {
     private static readonly char[] allowedChars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789".ToCharArray();
     private static readonly Random random = new Random();

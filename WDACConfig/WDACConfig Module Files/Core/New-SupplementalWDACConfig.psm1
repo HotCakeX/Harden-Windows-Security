@@ -5,16 +5,11 @@ Function New-SupplementalWDACConfig {
         SupportsShouldProcess = $true,
         ConfirmImpact = 'High'
     )]
-    [OutputType([System.String])]
     Param(
-        [Alias('N')]
-        [Parameter(Mandatory = $false, ParameterSetName = 'Normal')][System.Management.Automation.SwitchParameter]$Normal,
-        [Alias('W')]
-        [Parameter(Mandatory = $false, ParameterSetName = 'Folder Path With WildCards')][System.Management.Automation.SwitchParameter]$PathWildCards,
-        [Alias('P')]
-        [parameter(mandatory = $false, ParameterSetName = 'Installed AppXPackages')][System.Management.Automation.SwitchParameter]$InstalledAppXPackages,
-        [Alias('C')]
-        [Parameter(Mandatory = $false, ParameterSetName = 'Certificate')][System.Management.Automation.SwitchParameter]$Certificates,
+        [Alias('N')][Parameter(Mandatory = $false, ParameterSetName = 'Normal')][switch]$Normal,
+        [Alias('W')][Parameter(Mandatory = $false, ParameterSetName = 'Folder Path With WildCards')][switch]$PathWildCards,
+        [Alias('P')][parameter(mandatory = $false, ParameterSetName = 'Installed AppXPackages')][switch]$InstalledAppXPackages,
+        [Alias('C')][Parameter(Mandatory = $false, ParameterSetName = 'Certificate')][switch]$Certificates,
 
         [parameter(Mandatory = $true, ParameterSetName = 'Installed AppXPackages', ValueFromPipelineByPropertyName = $true)]
         [System.String]$PackageName,
@@ -44,18 +39,15 @@ Function New-SupplementalWDACConfig {
         [parameter(Mandatory = $false, ValueFromPipelineByPropertyName = $true)]
         [System.IO.FileInfo]$PolicyPath,
 
-        [parameter(Mandatory = $false)]
-        [System.Management.Automation.SwitchParameter]$Deploy,
+        [parameter(Mandatory = $false)][switch]$Deploy,
 
         [ValidateSet('OriginalFileName', 'InternalName', 'FileDescription', 'ProductName', 'PackageFamilyName', 'FilePath')]
         [Parameter(Mandatory = $false, ParameterSetName = 'Normal')]
         [System.String]$SpecificFileNameLevel,
 
-        [Parameter(Mandatory = $false, ParameterSetName = 'Normal')]
-        [System.Management.Automation.SwitchParameter]$NoUserPEs,
+        [Parameter(Mandatory = $false, ParameterSetName = 'Normal')][switch]$NoUserPEs,
 
-        [Parameter(Mandatory = $false, ParameterSetName = 'Normal')]
-        [System.Management.Automation.SwitchParameter]$NoScript,
+        [Parameter(Mandatory = $false, ParameterSetName = 'Normal')][switch]$NoScript,
 
         [ArgumentCompleter({ [WDACConfig.ScanLevelz]::New().GetValidValues() })]
         [parameter(Mandatory = $false, ParameterSetName = 'Normal')]
@@ -66,24 +58,16 @@ Function New-SupplementalWDACConfig {
         [System.String[]]$Fallbacks = ('FilePublisher', 'Hash'),
 
         [Parameter(Mandatory = $false, ParameterSetName = 'Installed AppXPackages')]
-        [System.Management.Automation.SwitchParameter]$Force,
+        [switch]$Force,
 
         [ValidateSet('UserMode', 'KernelMode')]
         [parameter(Mandatory = $false, ParameterSetName = 'Certificate')]
         [System.String]$SigningScenario = 'UserMode',
 
-        [Parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$SkipVersionCheck
+        [Parameter(Mandatory = $false)][switch]$SkipVersionCheck
     )
     Begin {
         [WDACConfig.LoggerInitializer]::Initialize($VerbosePreference, $DebugPreference, $Host)
-
-        if ($PSBoundParameters['Certificates']) {
-            Import-Module -Force -FullyQualifiedName @(
-                "$([WDACConfig.GlobalVars]::ModuleRootPath)\XMLOps\New-CertificateSignerRules.psm1",
-                "$([WDACConfig.GlobalVars]::ModuleRootPath)\XMLOps\Clear-CiPolicy_Semantic.psm1"
-            )
-        }
-
         if (-NOT $SkipVersionCheck) { Update-WDACConfigPSModule -InvocationStatement $MyInvocation.Statement }
 
         if ([WDACConfig.GlobalVars]::ConfigCIBootstrap -eq $false) {
@@ -319,7 +303,7 @@ Function New-SupplementalWDACConfig {
                 Copy-Item -LiteralPath 'C:\Windows\schemas\CodeIntegrity\ExamplePolicies\AllowAll.xml' -Destination $FinalSupplementalPath -Force
 
                 [WDACConfig.Logger]::Write('Emptying the policy file in preparation for the new data insertion')
-                Clear-CiPolicy_Semantic -Path $FinalSupplementalPath
+                [WDACConfig.ClearCiPolicySemantic]::Clear($FinalSupplementalPath)
 
                 $CurrentStep++
                 Write-Progress -Id 33 -Activity 'Extracting details from the selected certificate files' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
@@ -343,8 +327,8 @@ Function New-SupplementalWDACConfig {
                 $CurrentStep++
                 Write-Progress -Id 33 -Activity 'Generating signer rules' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
-                if ($null -ne $OutputSignerData) {
-                    New-CertificateSignerRules -SignerData $OutputSignerData -XmlFilePath $FinalSupplementalPath
+                if ($null -ne $OutputSignerData -and $OutputSignerData.count -gt 0) {
+                    [WDACConfig.NewCertificateSignerRules]::Create($FinalSupplementalPath, $OutputSignerData)
                 }
 
                 $CurrentStep++
@@ -448,9 +432,7 @@ Function New-SupplementalWDACConfig {
 .PARAMETER Force
     It's used by the entire Cmdlet. Indicates that the confirmation prompts will be bypassed.
 .PARAMETER SkipVersionCheck
-    Can be used with any parameter to bypass the online version check - only to be used in rare cases
-.PARAMETER Verbose
-    It's used by the entire Cmdlet. Indicates that the verbose messages will be displayed.
+    Can be used with any parameter to bypass the online version check
 .INPUTS
     System.String[]
     System.String

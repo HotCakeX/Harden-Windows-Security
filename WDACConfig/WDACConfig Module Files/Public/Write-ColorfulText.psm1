@@ -6,26 +6,16 @@ Function Write-ColorfulTextWDACConfig {
         Color of the text to be written using custom RGB values
     .PARAMETER InputText
         Text to be written
-    .INPUTS
-        System.String
-    .OUTPUTS
-        System.String
     #>
     [CmdletBinding()]
-    [OutputType([System.String])]
     [Alias('WCT')]
-
     param (
-        [Parameter(Mandatory = $True)]
-        [Alias('C')]
+        [Parameter(Mandatory = $True)][Alias('C')]
         [ValidateSet('Fuchsia', 'Orange', 'NeonGreen', 'MintGreen', 'PinkBoldBlink', 'PinkBold', 'Rainbow' , 'Gold', 'TeaGreen', 'Lavender', 'PinkNoNewLine', 'VioletNoNewLine', 'Violet', 'Pink', 'HotPink')]
         [System.String]$Color,
 
-        [parameter(Mandatory = $True)]
-        [Alias('I')]
-        [System.String]$InputText
+        [parameter(Mandatory = $True)][Alias('I')][System.String]$InputText
     )
-
     switch ($Color) {
         'Fuchsia' { Write-Host "$($PSStyle.Foreground.FromRGB(236,68,155))$InputText$($PSStyle.Reset)"; break }
         'Orange' { Write-Host "$($PSStyle.Foreground.FromRGB(255,165,0))$InputText$($PSStyle.Reset)"; break }

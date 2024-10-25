@@ -20,6 +20,7 @@ System.Diagnostics.Process
 System.Diagnostics.EventLog
 System.Security.Cryptography
 System.Management.Automation
+System.Collections.Concurrent
 System.IO.Compression.zipfile
 System.Collections.NonGeneric
 System.Text.RegularExpressions

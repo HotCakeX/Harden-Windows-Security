@@ -180,7 +180,7 @@
         <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
           <maml:name>SkipVersionCheck</maml:name>
           <maml:description>
-            <maml:para>Can be used with any parameter to bypass the online version check - only to be used in rare cases</maml:para>
+            <maml:para>Can be used with any parameter to bypass the online version check</maml:para>
           </maml:description>
           <dev:type>
             <maml:name>SwitchParameter</maml:name>
@@ -362,7 +362,7 @@
         <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
           <maml:name>SkipVersionCheck</maml:name>
           <maml:description>
-            <maml:para>Can be used with any parameter to bypass the online version check - only to be used in rare cases</maml:para>
+            <maml:para>Can be used with any parameter to bypass the online version check</maml:para>
           </maml:description>
           <dev:type>
             <maml:name>SwitchParameter</maml:name>
@@ -544,7 +544,7 @@
         <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
           <maml:name>SkipVersionCheck</maml:name>
           <maml:description>
-            <maml:para>Can be used with any parameter to bypass the online version check - only to be used in rare cases</maml:para>
+            <maml:para>Can be used with any parameter to bypass the online version check</maml:para>
           </maml:description>
           <dev:type>
             <maml:name>SwitchParameter</maml:name>
@@ -753,7 +753,7 @@
       <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
         <maml:name>SkipVersionCheck</maml:name>
         <maml:description>
-          <maml:para>Can be used with any parameter to bypass the online version check - only to be used in rare cases</maml:para>
+          <maml:para>Can be used with any parameter to bypass the online version check</maml:para>
         </maml:description>
         <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
         <dev:type>

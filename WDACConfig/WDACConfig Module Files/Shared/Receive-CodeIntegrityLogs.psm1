@@ -38,7 +38,6 @@ Function Receive-CodeIntegrityLogs {
         out because they are not used anymore by the module.
     #>
     [CmdletBinding()]
-    [OutputType([System.Collections.Hashtable])]
     param(
         [Parameter(Mandatory = $false)]
         [System.DateTime]$Date,

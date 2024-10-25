@@ -22,7 +22,6 @@ Function Get-KernelModeDrivers {
         System.String[]
      #>
     [CmdletBinding()]
-    [OutputType([System.String[]])]
     Param (
         [ValidateScript({ [System.IO.Directory]::Exists($_) })]
         [Parameter(Mandatory = $False)][System.IO.DirectoryInfo[]]$Directory,
@@ -63,7 +62,6 @@ Function Get-KernelModeDrivers {
              .SYNOPSIS
                 Gets the kernel drivers from a directory or file
              #>
-            [OutputType([System.String[]], [System.Boolean])]
             param (
                 [Parameter(Mandatory = $False)]
                 [System.IO.DirectoryInfo]$Directory,

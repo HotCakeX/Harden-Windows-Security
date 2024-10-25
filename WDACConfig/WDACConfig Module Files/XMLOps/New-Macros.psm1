@@ -13,7 +13,6 @@ Function New-Macros {
         System.Void
     #>
     [CmdletBinding()]
-    [OutputType([System.Void])]
     Param (
         [Parameter(Mandatory = $true)][System.IO.FileInfo]$XmlFilePath,
         [Parameter(Mandatory = $true)][System.Collections.Hashtable]$InputObject

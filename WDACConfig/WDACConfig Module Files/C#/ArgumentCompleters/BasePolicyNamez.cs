@@ -1,11 +1,11 @@
-using System;
 using System.Collections.Generic;
+using System.Management.Automation;
 
 #nullable enable
 
 namespace WDACConfig
 {
-    public class BasePolicyNamez : IValidateSetValuesGenerator
+    public sealed class BasePolicyNamez : IValidateSetValuesGenerator
     {
         // Argument tab auto-completion and ValidateSet for Non-System Policy names
         public string[] GetValidValues()
@@ -22,11 +22,11 @@ namespace WDACConfig
                         BasePolicyNames.Add(policy.FriendlyName);
                     }
                 }
-                return BasePolicyNames.ToArray();
+                return [.. BasePolicyNames];
             }
             else
             {
-                return Array.Empty<string>();
+                return [];
             }
         }
     }

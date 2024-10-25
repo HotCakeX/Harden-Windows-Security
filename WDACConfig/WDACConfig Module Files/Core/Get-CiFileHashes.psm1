@@ -1,12 +1,11 @@
 Function Get-CiFileHashes {
     [CmdletBinding()]
-    [OutputType([WDACConfig.CodeIntegrityHashes])]
     param (
         [ArgumentCompleter([WDACConfig.ArgCompleter.AnyFilePathsPicker])]
-        [Parameter(Mandatory = $true, Position = 0, ValueFromPipeline = $true, ValueFromPipelineByPropertyName = $true)]
+        [Parameter(Mandatory = $true, ValueFromPipeline = $true, ValueFromPipelineByPropertyName = $true)]
         [System.IO.FileInfo]$FilePath,
 
-        [Parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$SkipVersionCheck
+        [Parameter(Mandatory = $false)][switch]$SkipVersionCheck
     )
     [WDACConfig.LoggerInitializer]::Initialize($VerbosePreference, $DebugPreference, $Host)
     if (!$SkipVersionCheck) { Update-WDACConfigPSModule -InvocationStatement $MyInvocation.Statement }
@@ -21,7 +20,7 @@ Function Get-CiFileHashes {
 .PARAMETER Path
     The path to the file for which the hashes are to be calculated.
 .PARAMETER SkipVersionCheck
-    Can be used with any parameter to bypass the online version check - only to be used in rare cases
+    Can be used with any parameter to bypass the online version check
 .INPUTS
     System.IO.FileInfo
 .OUTPUTS

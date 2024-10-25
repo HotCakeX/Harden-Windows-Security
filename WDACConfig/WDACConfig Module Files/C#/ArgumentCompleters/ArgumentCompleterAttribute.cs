@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using System.Management.Automation;
 using System.Management.Automation.Language;
 using System.Windows.Forms;
@@ -17,7 +16,7 @@ namespace WDACConfig.ArgCompleter
     /// <summary>
     /// Opens File picker GUI so that user can select any files
     /// </summary>
-    public class AnyFilePathsPicker : IArgumentCompleter
+    public sealed class AnyFilePathsPicker : IArgumentCompleter
     {
         // Method to complete the argument with file path selection
         public IEnumerable<CompletionResult> CompleteArgument(
@@ -53,7 +52,7 @@ namespace WDACConfig.ArgCompleter
 
     // Attribute to use AnyFilePathsPicker as an argument completer
     [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field)]
-    public class AnyFilePathsPickerAttribute : ArgumentCompleterAttribute, IArgumentCompleterFactory
+    public sealed class AnyFilePathsPickerAttribute : ArgumentCompleterAttribute, IArgumentCompleterFactory
     {
         // Constructor initializing the base class with AnyFilePathsPicker
         public AnyFilePathsPickerAttribute() : base(typeof(AnyFilePathsPicker)) { }
@@ -68,7 +67,7 @@ namespace WDACConfig.ArgCompleter
     /// <summary>
     /// Opens File picker GUI so that user can select a .xml file
     /// </summary>
-    public class XmlFilePathsPicker : IArgumentCompleter
+    public sealed class XmlFilePathsPicker : IArgumentCompleter
     {
         // Directory to initialize the file dialog
         private readonly string initialDirectory = WDACConfig.GlobalVars.UserConfigDir;
@@ -114,7 +113,7 @@ namespace WDACConfig.ArgCompleter
 
     // Attribute to use XmlFilePathsPicker as an argument completer
     [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field)]
-    public class XmlFilePathsPickerAttribute : ArgumentCompleterAttribute, IArgumentCompleterFactory
+    public sealed class XmlFilePathsPickerAttribute : ArgumentCompleterAttribute, IArgumentCompleterFactory
     {
         // Constructor initializing the base class with XmlFilePathsPicker
         public XmlFilePathsPickerAttribute() : base(typeof(XmlFilePathsPicker)) { }
@@ -129,7 +128,7 @@ namespace WDACConfig.ArgCompleter
     /// <summary>
     /// Opens Folder picker GUI so that user can select folders to be processed
     /// </summary>
-    public class FolderPicker : IArgumentCompleter
+    public sealed class FolderPicker : IArgumentCompleter
     {
         // Method to complete the argument with folder path selection
         public IEnumerable<CompletionResult> CompleteArgument(
@@ -165,7 +164,7 @@ namespace WDACConfig.ArgCompleter
 
     // Attribute to use FolderPicker as an argument completer
     [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field)]
-    public class FolderPickerAttribute : ArgumentCompleterAttribute, IArgumentCompleterFactory
+    public sealed class FolderPickerAttribute : ArgumentCompleterAttribute, IArgumentCompleterFactory
     {
         // Constructor initializing the base class with FolderPicker
         public FolderPickerAttribute() : base(typeof(FolderPicker)) { }
@@ -180,7 +179,7 @@ namespace WDACConfig.ArgCompleter
     /// <summary>
     /// Opens File picker GUI so that user can select multiple .xml files
     /// </summary>
-    public class XmlFileMultiSelectPicker : IArgumentCompleter
+    public sealed class XmlFileMultiSelectPicker : IArgumentCompleter
     {
         // Directory to initialize the file dialog
         private readonly string initialDirectory = WDACConfig.GlobalVars.UserConfigDir;
@@ -228,7 +227,7 @@ namespace WDACConfig.ArgCompleter
 
     // Attribute to use XmlFileMultiSelectPicker as an argument completer
     [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field)]
-    public class XmlFileMultiSelectPickerAttribute : ArgumentCompleterAttribute, IArgumentCompleterFactory
+    public sealed class XmlFileMultiSelectPickerAttribute : ArgumentCompleterAttribute, IArgumentCompleterFactory
     {
         // Constructor initializing the base class with XmlFileMultiSelectPicker
         public XmlFileMultiSelectPickerAttribute() : base(typeof(XmlFileMultiSelectPicker)) { }
@@ -243,7 +242,7 @@ namespace WDACConfig.ArgCompleter
     /// <summary>
     /// Opens File picker GUI so that user can select multiple files
     /// </summary>
-    public class MultipleAnyFilePathsPicker : IArgumentCompleter
+    public sealed class MultipleAnyFilePathsPicker : IArgumentCompleter
     {
         // Method to complete the argument with multiple file path selection
         public IEnumerable<CompletionResult> CompleteArgument(
@@ -284,7 +283,7 @@ namespace WDACConfig.ArgCompleter
 
     // Attribute to use MultipleAnyFilePathsPicker as an argument completer
     [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field)]
-    public class MultipleAnyFilePathsPickerAttribute : ArgumentCompleterAttribute, IArgumentCompleterFactory
+    public sealed class MultipleAnyFilePathsPickerAttribute : ArgumentCompleterAttribute, IArgumentCompleterFactory
     {
         // Constructor initializing the base class with MultipleAnyFilePathsPicker
         public MultipleAnyFilePathsPickerAttribute() : base(typeof(MultipleAnyFilePathsPicker)) { }
@@ -299,7 +298,7 @@ namespace WDACConfig.ArgCompleter
     /// <summary>
     /// Opens File picker GUI so that user can select an .exe file
     /// </summary>
-    public class ExeFilePathsPicker : IArgumentCompleter
+    public sealed class ExeFilePathsPicker : IArgumentCompleter
     {
         // Directory to initialize the file dialog
         private readonly string initialDirectory = WDACConfig.GlobalVars.UserConfigDir;
@@ -345,7 +344,7 @@ namespace WDACConfig.ArgCompleter
 
     // Attribute to use ExeFilePathsPicker as an argument completer
     [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field)]
-    public class ExeFilePathsPickerAttribute : ArgumentCompleterAttribute, IArgumentCompleterFactory
+    public sealed class ExeFilePathsPickerAttribute : ArgumentCompleterAttribute, IArgumentCompleterFactory
     {
         // Constructor initializing the base class with ExeFilePathsPicker
         public ExeFilePathsPickerAttribute() : base(typeof(ExeFilePathsPicker)) { }
@@ -360,7 +359,7 @@ namespace WDACConfig.ArgCompleter
     /// <summary>
     /// Opens File picker GUI so that user can select a single .cer file
     /// </summary>
-    public class SingleCerFilePicker : IArgumentCompleter
+    public sealed class SingleCerFilePicker : IArgumentCompleter
     {
         // Directory to initialize the file dialog
         private readonly string initialDirectory = WDACConfig.GlobalVars.UserConfigDir;
@@ -408,7 +407,7 @@ namespace WDACConfig.ArgCompleter
 
     // Attribute to use SingleCerFilePicker as an argument completer
     [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field)]
-    public class SingleCerFilePickerAttribute : ArgumentCompleterAttribute, IArgumentCompleterFactory
+    public sealed class SingleCerFilePickerAttribute : ArgumentCompleterAttribute, IArgumentCompleterFactory
     {
         // Constructor initializing the base class with SingleCerFilePicker
         public SingleCerFilePickerAttribute() : base(typeof(SingleCerFilePicker)) { }
@@ -423,7 +422,7 @@ namespace WDACConfig.ArgCompleter
     /// <summary>
     /// Opens File picker GUI so that user can select multiple .cer files
     /// </summary>
-    public class MultipleCerFilePicker : IArgumentCompleter
+    public sealed class MultipleCerFilePicker : IArgumentCompleter
     {
         // Directory to initialize the file dialog
         private readonly string initialDirectory = WDACConfig.GlobalVars.UserConfigDir;
@@ -471,7 +470,7 @@ namespace WDACConfig.ArgCompleter
 
     // Attribute to use MultipleCerFilePicker as an argument completer
     [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field)]
-    public class MultipleCerFilePickerAttribute : ArgumentCompleterAttribute, IArgumentCompleterFactory
+    public sealed class MultipleCerFilePickerAttribute : ArgumentCompleterAttribute, IArgumentCompleterFactory
     {
         // Constructor initializing the base class with MultipleCerFilePicker
         public MultipleCerFilePickerAttribute() : base(typeof(MultipleCerFilePicker)) { }
@@ -486,7 +485,7 @@ namespace WDACConfig.ArgCompleter
     /// <summary>
     /// Opens Folder picker GUI so that user can select a folder, and returns the selected path with quotes and a wildcard character at the end
     /// </summary>
-    public class FolderPickerWithWildcard : IArgumentCompleter
+    public sealed class FolderPickerWithWildcard : IArgumentCompleter
     {
         // Method to complete the argument with folder path selection, adding a wildcard character
         public IEnumerable<CompletionResult> CompleteArgument(
@@ -522,7 +521,7 @@ namespace WDACConfig.ArgCompleter
 
     // Attribute to use FolderPickerWithWildcard as an argument completer
     [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field)]
-    public class FolderPickerWithWildcardAttribute : ArgumentCompleterAttribute, IArgumentCompleterFactory
+    public sealed class FolderPickerWithWildcardAttribute : ArgumentCompleterAttribute, IArgumentCompleterFactory
     {
         // Constructor initializing the base class with FolderPickerWithWildcard
         public FolderPickerWithWildcardAttribute() : base(typeof(FolderPickerWithWildcard)) { }
@@ -531,54 +530,6 @@ namespace WDACConfig.ArgCompleter
         public IArgumentCompleter Create()
         {
             return new FolderPickerWithWildcard();
-        }
-    }
-
-    /// <summary>
-    /// This argument completer suggests rule options that are not already selected on the command line by *any* other parameter
-    /// It currently doesn't make a distinction between the RulesToAdd/RulesToRemove parameters and other parameters.
-    /// </summary>
-    public class RuleOptionsPicker : IArgumentCompleter
-    {
-        // Method to complete the argument with rule options that are not already selected
-        public IEnumerable<CompletionResult> CompleteArgument(
-            string commandName,
-            string parameterName,
-            string wordToComplete,
-            CommandAst commandAst,
-            IDictionary fakeBoundParameters)
-        {
-            // Find all string constants in the AST
-            var existingValues = commandAst.FindAll(
-                ast => ast is StringConstantExpressionAst,
-                false
-            ).OfType<StringConstantExpressionAst>()
-            .Select(ast => ast.Value)
-            .ToHashSet(StringComparer.OrdinalIgnoreCase);
-
-            // Get all valid rule options
-            var validOptions = new WDACConfig.RuleOptionsx().GetValidValues();
-
-            // Filter out the options that are already selected
-            var suggestions = validOptions
-                .Where(option => !existingValues.Contains(option, StringComparer.OrdinalIgnoreCase))
-                .Select(option => new CompletionResult($"'{option}'"));
-
-            return suggestions;
-        }
-    }
-
-    // Attribute to use RuleOptionsPicker as an argument completer
-    [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field)]
-    public class RuleOptionsPickerAttribute : ArgumentCompleterAttribute, IArgumentCompleterFactory
-    {
-        // Constructor initializing the base class with RuleOptionsPicker
-        public RuleOptionsPickerAttribute() : base(typeof(RuleOptionsPicker)) { }
-
-        // Create method to return an instance of RuleOptionsPicker
-        public IArgumentCompleter Create()
-        {
-            return new RuleOptionsPicker();
         }
     }
 

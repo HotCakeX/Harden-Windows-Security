@@ -1,6 +1,5 @@
 Function Set-CommonWDACConfig {
     [CmdletBinding()]
-    [OutputType([System.Object[]])]
     Param(
         [parameter(Mandatory = $false)][System.String]$CertCN,
 

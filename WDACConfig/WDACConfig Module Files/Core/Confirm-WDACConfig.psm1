@@ -1,13 +1,9 @@
 Function Confirm-WDACConfig {
     [CmdletBinding(DefaultParameterSetName = 'List Active Policies')]
-    [OutputType([System.String], [System.Object])]
     Param(
-        [Alias('L')]
-        [Parameter(Mandatory = $false, ParameterSetName = 'List Active Policies')][System.Management.Automation.SwitchParameter]$ListActivePolicies,
-        [Alias('V')]
-        [Parameter(Mandatory = $false, ParameterSetName = 'Verify WDAC Status')][System.Management.Automation.SwitchParameter]$VerifyWDACStatus,
-        [Alias('S')]
-        [Parameter(Mandatory = $false, ParameterSetName = 'Check SmartAppControl Status')][System.Management.Automation.SwitchParameter]$CheckSmartAppControlStatus
+        [Alias('L')][Parameter(Mandatory = $false, ParameterSetName = 'List Active Policies')][switch]$ListActivePolicies,
+        [Alias('V')][Parameter(Mandatory = $false, ParameterSetName = 'Verify WDAC Status')][switch]$VerifyWDACStatus,
+        [Alias('S')][Parameter(Mandatory = $false, ParameterSetName = 'Check SmartAppControl Status')][switch]$CheckSmartAppControlStatus
     )
     DynamicParam {
         # Add the dynamic parameters to the param dictionary
@@ -23,7 +19,7 @@ Function Confirm-WDACConfig {
             }
             $ParamDictionary.Add('OnlyBasePolicies', [System.Management.Automation.RuntimeDefinedParameter]::new(
                     'OnlyBasePolicies',
-                    [System.Management.Automation.SwitchParameter],
+                    [switch],
                     [System.Management.Automation.ParameterAttribute[]]@($OnlyBasePoliciesDynamicParameter)
                 ))
 
@@ -35,7 +31,7 @@ Function Confirm-WDACConfig {
             }
             $ParamDictionary.Add('OnlySupplementalPolicies', [System.Management.Automation.RuntimeDefinedParameter]::new(
                     'OnlySupplementalPolicies',
-                    [System.Management.Automation.SwitchParameter],
+                    [switch],
                     [System.Management.Automation.ParameterAttribute[]]@($OnlySupplementalPoliciesDynamicParameter)
                 ))
 
@@ -47,7 +43,7 @@ Function Confirm-WDACConfig {
             }
             $ParamDictionary.Add('OnlySystemPolicies', [System.Management.Automation.RuntimeDefinedParameter]::new(
                     'OnlySystemPolicies',
-                    [System.Management.Automation.SwitchParameter],
+                    [switch],
                     [System.Management.Automation.ParameterAttribute[]]@($OnlySystemPoliciesDynamicParameter)
                 ))
         }
@@ -61,7 +57,7 @@ Function Confirm-WDACConfig {
         }
         $ParamDictionary.Add('SkipVersionCheck', [System.Management.Automation.RuntimeDefinedParameter]::new(
                 'SkipVersionCheck',
-                [System.Management.Automation.SwitchParameter],
+                [switch],
                 [System.Management.Automation.ParameterAttribute[]]@($SkipVersionCheckDynamicParameter)
             ))
 
@@ -73,10 +69,10 @@ Function Confirm-WDACConfig {
         # Regular parameters are automatically bound to variables in the function scope
         # Dynamic parameters however, are only available in the parameter dictionary, which is why we have to access them using $PSBoundParameters
         # or assign them manually to another variable in the function's scope
-        [System.Management.Automation.SwitchParameter]$OnlyBasePolicies = $($PSBoundParameters['OnlyBasePolicies'])
-        [System.Management.Automation.SwitchParameter]$OnlySupplementalPolicies = $($PSBoundParameters['OnlySupplementalPolicies'])
-        [System.Management.Automation.SwitchParameter]$OnlySystemPolicies = $($PSBoundParameters['OnlySystemPolicies'])
-        [System.Management.Automation.SwitchParameter]$SkipVersionCheck = $($PSBoundParameters['SkipVersionCheck'])
+        [switch]$OnlyBasePolicies = $($PSBoundParameters['OnlyBasePolicies'])
+        [switch]$OnlySupplementalPolicies = $($PSBoundParameters['OnlySupplementalPolicies'])
+        [switch]$OnlySystemPolicies = $($PSBoundParameters['OnlySystemPolicies'])
+        [switch]$SkipVersionCheck = $($PSBoundParameters['SkipVersionCheck'])
 
         if (-NOT $SkipVersionCheck) { Update-WDACConfigPSModule -InvocationStatement $MyInvocation.Statement }
 
@@ -158,7 +154,7 @@ Function Confirm-WDACConfig {
 .PARAMETER CheckSmartAppControlStatus
     Checks the status of Smart App Control and reports the results on the console
 .PARAMETER SkipVersionCheck
-    Can be used with any parameter to bypass the online version check - only to be used in rare cases
+    Can be used with any parameter to bypass the online version check
 .EXAMPLE
     Confirm-WDACConfig -ListActivePolicies -OnlyBasePolicies
 .EXAMPLE

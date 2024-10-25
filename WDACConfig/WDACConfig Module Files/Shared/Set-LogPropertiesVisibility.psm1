@@ -13,7 +13,6 @@ Function Set-LogPropertiesVisibility {
         System.Void
     #>
     [CmdletBinding()]
-    [OutputType([System.Void])]
     Param (
         [ValidateSet('Evtx/Local', 'MDEAH')]
         [Parameter(Mandatory = $true)][System.String]$LogType,

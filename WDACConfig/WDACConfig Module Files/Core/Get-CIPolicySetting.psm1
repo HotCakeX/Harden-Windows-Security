@@ -1,11 +1,10 @@
 Function Get-CIPolicySetting {
     [CmdletBinding()]
-    [OutputType([PSCustomObject])]
     Param(
         [Parameter(Mandatory = $true)][System.String]$Provider,
         [Parameter(Mandatory = $true)][System.String]$Key,
         [Parameter(Mandatory = $true)][System.String]$ValueName,
-        [Parameter(Mandatory = $false)][System.Management.Automation.SwitchParameter]$SkipVersionCheck
+        [Parameter(Mandatory = $false)][switch]$SkipVersionCheck
     )
     [WDACConfig.LoggerInitializer]::Initialize($VerbosePreference, $DebugPreference, $Host)
     if (-NOT $SkipVersionCheck) { Update-WDACConfigPSModule -InvocationStatement $MyInvocation.Statement }

@@ -5,12 +5,9 @@ Function Remove-WDACConfig {
         PositionalBinding = $False,
         ConfirmImpact = 'High'
     )]
-    [OutputType([System.String])]
     Param(
-        [Alias('S')]
-        [Parameter(Mandatory = $False, ParameterSetName = 'Signed Base')][System.Management.Automation.SwitchParameter]$SignedBase,
-        [Alias('U')]
-        [Parameter(Mandatory = $False, ParameterSetName = 'Unsigned Or Supplemental')][System.Management.Automation.SwitchParameter]$UnsignedOrSupplemental,
+        [Alias('S')][Parameter(Mandatory = $False, ParameterSetName = 'Signed Base')][switch]$SignedBase,
+        [Alias('U')][Parameter(Mandatory = $False, ParameterSetName = 'Unsigned Or Supplemental')][switch]$UnsignedOrSupplemental,
 
         [ArgumentCompleter([WDACConfig.ArgCompleter.XmlFileMultiSelectPicker])]
         [ValidateScript({
@@ -138,9 +135,9 @@ Function Remove-WDACConfig {
         [parameter(Mandatory = $False, ParameterSetName = 'Signed Base', ValueFromPipelineByPropertyName = $true)]
         [System.IO.FileInfo]$SignToolPath,
 
-        [Parameter(Mandatory = $False)][System.Management.Automation.SwitchParameter]$Force,
+        [Parameter(Mandatory = $False)][switch]$Force,
 
-        [Parameter(Mandatory = $False)][System.Management.Automation.SwitchParameter]$SkipVersionCheck
+        [Parameter(Mandatory = $False)][switch]$SkipVersionCheck
     )
     Begin {
         [WDACConfig.LoggerInitializer]::Initialize($VerbosePreference, $DebugPreference, $Host)
@@ -364,9 +361,7 @@ Function Remove-WDACConfig {
 .PARAMETER Force
     Bypasses the confirmation prompt
 .PARAMETER SkipVersionCheck
-    Can be used with any parameter to bypass the online version check - only to be used in rare cases
-.PARAMETER Verbose
-    Shows verbose output
+    Can be used with any parameter to bypass the online version check
 .INPUTS
     System.String
     System.String[]

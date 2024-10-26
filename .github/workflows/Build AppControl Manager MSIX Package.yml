@@ -79,7 +79,6 @@ jobs:
           path: ./AppControl Manager/
           upload-release-assets: false
           upload-artifact: true
-          output-file: ./
           artifact-name: AppControlManagerSBOM.spdx
 
       - name: Generate SBOM attestation

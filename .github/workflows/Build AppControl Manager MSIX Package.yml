@@ -2,7 +2,8 @@ name: Build AppControl Manager MSIX Package
 
 permissions:
   id-token: write
-  contents: read
+  actions: read
+  contents: write
   attestations: write
 
 on:

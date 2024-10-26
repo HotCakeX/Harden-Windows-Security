@@ -62,7 +62,7 @@ jobs:
         shell: pwsh
         run: |
           [string]$MSIXPath = (Get-ChildItem -Path '.\AppControl Manager\MSIXOutput\AppControl Manage*\AppControl Manager*.msix').FullName
-          
+
           if ([string]::IsNullOrWhiteSpace($MSIXPath)) { throw "Couldn't find the generated MSIX package" }
 
           # Write the MSIXPath to GITHUB_ENV to set it as an environment variable for the entire workflow
@@ -74,11 +74,12 @@ jobs:
           subject-path: ${{ env.MSIX_PATH }}
 
       - name: Generate SBOM
-      - uses: anchore/sbom-action@v0
+        uses: anchore/sbom-action@v0
         with:
           path: ./AppControl Manager/
           upload-release-assets: false
           upload-artifact: true
+          output-file: ./
           artifact-name: AppControlManagerSBOM.spdx
 
       - name: Generate SBOM attestation

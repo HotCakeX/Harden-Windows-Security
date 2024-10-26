@@ -73,18 +73,18 @@ jobs:
         with:
           subject-path: ${{ env.MSIX_PATH }}
 
-      - name: Generate SBOM
+      - name: Generating SBOM
         uses: anchore/sbom-action@v0
         with:
-          path: ./AppControl Manager/
+          dependency-snapshot: true
           upload-release-assets: false
           upload-artifact: true
-          output-file: ./AppControlManagerSBOM.spdx
-          artifact-name: AppControlManagerSBOM.spdx
+          output-file: ./HardenWindowsSecurityRepoSBOM.spdx
+          artifact-name: HardenWindowsSecurityRepoSBOM.spdx
 
-      - name: Generate SBOM attestation
+      - name: Generating SBOM attestation
         uses: actions/attest-sbom@v1
         with:
           subject-path: ${{ env.MSIX_PATH }}
-          sbom-path: ./AppControlManagerSBOM.spdx
+          sbom-path: ./HardenWindowsSecurityRepoSBOM.spdx
           show-summary: true

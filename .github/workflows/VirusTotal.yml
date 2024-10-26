@@ -2,6 +2,9 @@ name: Repository And Package Scan on Virus Total
 on:
   workflow_dispatch:
   release:  # to trigger on releases
+  pull_request:
+    types:
+      - closed # When a pull request is closed. Merging also results in closing the pull request.
 
 jobs:
   run-script:

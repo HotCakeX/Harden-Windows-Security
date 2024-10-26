@@ -1,7 +1,7 @@
 $ErrorActionPreference = 'Stop'
 
 # Function to upload file to VirusTotal
-function Upload-FileToVirusTotal {
+function Invoke-VTFileUpload {
     param (
         [System.String]$FilePath,
         [System.String]$ApiKey
@@ -70,7 +70,7 @@ function Get-VirusTotalReport {
     $Headers.Add('x-apikey', $ApiKey)
 
     # Upload the file to virus total
-    $AnalysisData = Upload-FileToVirusTotal -filePath $FilePath -apiKey $ApiKey
+    $AnalysisData = Invoke-VTFileUpload -filePath $FilePath -apiKey $ApiKey
 
     # Fetch the report from VirusTotal
     do {

@@ -68,7 +68,7 @@ jobs:
           # Write the MSIXPath to GITHUB_ENV to set it as an environment variable for the entire workflow
           Add-Content -Path $env:GITHUB_ENV -Value "MSIX_PATH=$MSIXPath"
 
-      - name: Generate Artifact Attestation
+      - name: Generating Artifact Attestation
         uses: actions/attest-build-provenance@v1
         with:
           subject-path: ${{ env.MSIX_PATH }}

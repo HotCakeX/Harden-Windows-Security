@@ -107,10 +107,21 @@
                 </NavigationViewItem>
 
                 <NavigationViewItemHeader Content="Documentation"/>
+
                 <NavigationViewItem Content="GitHub Documentation" Icon="Document" ToolTipService.ToolTip="Get online documentations from GitHub about how to use the application" Tag="GitHubDocumentation" />
                 <NavigationViewItem Content="Microsoft Documentation" Icon="Document" ToolTipService.ToolTip="Get online documentations from Microsoft about App Control for Business policies" Tag="MicrosoftDocumentation" />
 
             </NavigationView.MenuItems>
+
+            <NavigationView.FooterMenuItems>
+                <NavigationViewItem Content="Update" ToolTipService.ToolTip="Check for updates" Tag="Update">
+                    <NavigationViewItem.Icon>
+                        <FontIcon Glyph="&#xEB52;" />
+                    </NavigationViewItem.Icon>
+                </NavigationViewItem>
+
+            </NavigationView.FooterMenuItems>
+
             <Frame x:Name="ContentFrame" />
         </NavigationView>
     </Grid>

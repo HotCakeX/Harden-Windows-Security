@@ -64,6 +64,9 @@ namespace WDACConfig
                     case "Simulation":
                         _ = ContentFrame.Navigate(typeof(Pages.Simulation));
                         break;
+                    case "Update":
+                        _ = ContentFrame.Navigate(typeof(Pages.Update));
+                        break;
                     default:
                         break;
                 }

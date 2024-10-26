@@ -28,4 +28,5 @@ System.Runtime.InteropServices
 System.Windows.Forms.Primitives
 System.ComponentModel.Primitives
 System.Security.Cryptography.Pkcs
+System.Diagnostics.FileVersionInfo
 System.Security.Cryptography.X509Certificates

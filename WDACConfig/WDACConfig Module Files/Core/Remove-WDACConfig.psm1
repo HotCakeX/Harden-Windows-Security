@@ -142,9 +142,6 @@ Function Remove-WDACConfig {
     Begin {
         [WDACConfig.LoggerInitializer]::Initialize($VerbosePreference, $DebugPreference, $Host)
 
-        [WDACConfig.Logger]::Write('Importing the required sub-modules')
-        Import-Module -Force -FullyQualifiedName @("$([WDACConfig.GlobalVars]::ModuleRootPath)\Shared\Get-SignTool.psm1")
-
         if (-NOT $SkipVersionCheck) { Update-WDACConfigPSModule -InvocationStatement $MyInvocation.Statement }
 
         [System.IO.DirectoryInfo]$StagingArea = [WDACConfig.StagingArea]::NewStagingArea('Remove-WDACConfig')
@@ -155,12 +152,7 @@ Function Remove-WDACConfig {
         if ($PSCmdlet.ParameterSetName -eq 'Signed Base') {
 
             # Get SignToolPath from user parameter or user config file or auto-detect it
-            if ($SignToolPath) {
-                [System.IO.FileInfo]$SignToolPathFinal = Get-SignTool -SignToolExePathInput $SignToolPath
-            } # If it is null, then Get-SignTool will behave the same as if it was called without any arguments.
-            else {
-                [System.IO.FileInfo]$SignToolPathFinal = Get-SignTool -SignToolExePathInput ([WDACConfig.UserConfiguration]::Get().SignToolCustomPath)
-            }
+            [System.IO.FileInfo]$SignToolPathFinal = [WDACConfig.SignToolHelper]::GetSignToolPath($SignToolPath ?? ([WDACConfig.UserConfiguration]::Get().SignToolCustomPath))
 
             # If CertCN was not provided by user, check if a valid value exists in user configs, if so, use it, otherwise throw an error
             if (!$CertCN) {

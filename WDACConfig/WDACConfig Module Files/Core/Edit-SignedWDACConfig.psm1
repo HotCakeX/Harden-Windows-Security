@@ -108,7 +108,6 @@ Function Edit-SignedWDACConfig {
 
         [WDACConfig.Logger]::Write('Importing the required sub-modules')
         Import-Module -Force -FullyQualifiedName @(
-            "$([WDACConfig.GlobalVars]::ModuleRootPath)\Shared\Get-SignTool.psm1",
             "$([WDACConfig.GlobalVars]::ModuleRootPath)\Shared\Receive-CodeIntegrityLogs.psm1",
             "$([WDACConfig.GlobalVars]::ModuleRootPath)\Shared\Set-LogPropertiesVisibility.psm1",
             "$([WDACConfig.GlobalVars]::ModuleRootPath)\Shared\Select-LogProperties.psm1",
@@ -128,12 +127,7 @@ Function Edit-SignedWDACConfig {
 
         #Region User-Configurations-Processing-Validation
         # Get SignToolPath from user parameter or user config file or auto-detect it
-        if ($SignToolPath) {
-            [System.IO.FileInfo]$SignToolPathFinal = Get-SignTool -SignToolExePathInput $SignToolPath
-        } # If it is null, then Get-SignTool will behave the same as if it was called without any arguments.
-        else {
-            [System.IO.FileInfo]$SignToolPathFinal = Get-SignTool -SignToolExePathInput ([WDACConfig.UserConfiguration]::Get().SignToolCustomPath)
-        }
+        [System.IO.FileInfo]$SignToolPathFinal = [WDACConfig.SignToolHelper]::GetSignToolPath($SignToolPath ?? ([WDACConfig.UserConfiguration]::Get().SignToolCustomPath))
 
         # If CertPath parameter wasn't provided by user, check if a valid value exists in user configs, if so, use it, otherwise throw an error
         if (!$CertPath ) {

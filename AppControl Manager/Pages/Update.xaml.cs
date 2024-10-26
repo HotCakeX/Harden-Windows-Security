@@ -41,6 +41,7 @@ namespace WDACConfig.Pages
 
                      // Run the PowerShell script to check for updates and save the output code
                      psOutput = PowerShellExecutor.ExecuteScript($"""
+$VerbosePreference = 'Continue';
 (irm 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/Harden-Windows-Security.ps1')+'AppControl -CheckForUpdate {currentAppVersion}'|iex
 """, true);
                  });

@@ -175,9 +175,8 @@ Function AppControl {
     #>
     [CmdletBinding()]
     param (
-        [ValidatePattern('_(\d+\.\d+\.\d+\.\d+)_(x64|arm64)\.msix$')][ValidateScript({ Test-Path -LiteralPath $_ -PathType Leaf })]
         [Parameter(Mandatory = $false)][System.String]$MSIXPath,
-        [ValidateScript({ Test-Path -LiteralPath $_ -PathType Leaf })][Parameter(Mandatory = $False)][System.String]$SignTool,
+        [Parameter(Mandatory = $False)][System.String]$SignTool,
         [Parameter(Mandatory = $False)][System.Version]$CheckForUpdate
     )
     $ErrorActionPreference = 'Stop'
@@ -197,6 +196,13 @@ Function AppControl {
     if (!([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
         Write-Warning -Message 'Please run this function as an Administrator'
         return
+    }
+
+    Write-Verbose -Message 'Detecting the CPU Arch'
+    switch ($Env:PROCESSOR_ARCHITECTURE) {
+        'AMD64' { [System.String]$CPUArch = 'x64'; break }
+        'ARM64' { [System.String]$CPUArch = 'arm64'; break }
+        default { Throw [System.PlatformNotSupportedException] 'Only AMD64 and ARM64 architectures are supported.' }
     }
 
     # Used to generate a SecureString, adding the class only if it hasn't already been added to the session - Better version of the random number generator would require PowerShell core/.NET
@@ -321,15 +327,8 @@ public static class SecureStringGenerator
             Write-Verbose -Message 'Extracting the nupkg'
             Expand-Archive -Path "$WorkingDir\*.nupkg" -DestinationPath $WorkingDir -Force
 
-            Write-Verbose -Message 'Detecting the CPU Arch'
-            switch ($Env:PROCESSOR_ARCHITECTURE) {
-                'AMD64' { [System.String]$CPUArch = 'x64'; break }
-                'ARM64' { [System.String]$CPUArch = 'arm64'; break }
-                default { Throw [System.PlatformNotSupportedException] 'Only AMD64 and ARM64 architectures are supported.' }
-            }
-
             Write-Verbose -Message 'Finding the Signtool.exe path in the extracted directory'
-            $SignTool = "$WorkingDir\bin\*\$CPUArch\signtool.exe"
+            $SignTool = (Get-Item -Path "$WorkingDir\bin\*\$CPUArch\signtool.exe").FullName
         }
 
         # Download the MSIX package if user did not provide the path to it
@@ -347,7 +346,7 @@ public static class SecureStringGenerator
                 $InstallingAppArchitecture = $RegexMatch.Groups['Architecture'].Value
             }
             else {
-                throw 'Could not get the version of the installing app'
+                throw 'Could not get the version of the installing app from the MSIX download URL.'
             }
         }
         else {
@@ -359,7 +358,7 @@ public static class SecureStringGenerator
                 $InstallingAppArchitecture = $RegexMatch.Groups['Architecture'].Value
             }
             else {
-                throw 'Could not get the version of the installing app'
+                throw 'Could not get the version of the installing app from the -MSIX parameter value that you provided.'
             }
         }
 

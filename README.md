@@ -1508,19 +1508,19 @@ You don't need Admin privileges to run this category, because no system-wide cha
 
 ### How can you 100% trust this repository and know that nothing shady is going on?
 
-This repository uses the simplest possible, yet effective, methods that make it very easy to verify:
+This repository uses effective methods that make it easy to verify:
 
 - Change log history is present on GitHub. *(Despite some of my awkward documentation typos)*
 
-- You can open the files in [**Visual Studio Code**](https://code.visualstudio.com/) / [**Visual Studio Code Web**](https://vscode.dev/) / [**GitHub CodeSpace**](https://github.com/codespaces/new?skip_quickstart=true&machine=standardLinux32gb&repo=569233100&ref=main&geo=EuropeWest), and view the module files in a nice easy to read environment, it's well formatted and indented.
+- [Artifact attestations](https://docs.github.com/en/actions/security-for-github-actions/using-artifact-attestations/using-artifact-attestations-to-establish-provenance-for-builds) are used to establish provenance for builds. It [guarantees](https://github.com/HotCakeX/Harden-Windows-Security/attestations) that the package(s) you download from this repository are 100% created from the source code that exist in this repository.
+
+- [SBOMs](https://docs.github.com/en/code-security/supply-chain-security/understanding-your-software-supply-chain/exporting-a-software-bill-of-materials-for-your-repository) (Software Bill of Materials) are generated for the entire repository to comply with data protection standards and providing transparency.
+
+- You can open the files in [**Visual Studio Code**](https://code.visualstudio.com/) / [**Visual Studio Code Web**](https://vscode.dev/) / [**GitHub CodeSpace**](https://github.com/codespaces/new?skip_quickstart=true&machine=standardLinux32gb&repo=569233100&ref=main&geo=EuropeWest), and view them in a nice and easy to read environment, they are well formatted, commented and indented.
 
 - Commits are verified either with my GPG key or SSH key and [Vigilant mode](https://docs.github.com/en/authentication/managing-commit-signature-verification/displaying-verification-statuses-for-all-of-your-commits) is turned on in my GitHub account.
 
 - You can fork this repository, verify it until that point in time, then verify any subsequent changes/updates I push to this repository, **at your own pace** (using `Sync fork` and `Compare` options on your fork), and if you are happy with the changes, allow it to be merged with your own copy/fork on your GitHub account.
-
-- You can [learn PowerShell which is super easy](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Basic-PowerShell-tricks-and-notes), multiplatform, and useful for the future, Microsoft Learn website teaches you everything, then you will understand everything in the module is safe, or you can ask someone that you trust and knows PowerShell to verify the module for you.
-
-- All codes are properly commented for easy and quick understanding.
 
 - #### Explanations for some of the files used by the Harden Windows Security module, ask about any other file(s) if you have questions, they are all in clear text.
 
@@ -1545,13 +1545,14 @@ This repository uses the simplest possible, yet effective, methods that make it 
 <!-- Security-Baselines-X-VT:END -->
 
 > [!TIP]\
-> All files in this repository, including packages like MSIX files attached to releases, are zipped and automatically submitted to VirusTotal for scanning through a [GitHub Action](https://github.com/HotCakeX/Harden-Windows-Security/actions/workflows/VirusTotal.yml). Find the history of the uploaded files in [my Virus Total profile](https://www.virustotal.com/gui/user/SpyNetGirl).
+> All files in this repository are zipped and automatically submitted to VirusTotal for scanning. Any available packages in the last release is also directly uploaded for scanning. It is done through a [GitHub Action](https://github.com/HotCakeX/Harden-Windows-Security/actions/workflows/VirusTotal.yml) that is triggered every time a release is made or a PR is merged. Find the history of the uploaded files in [my Virus Total profile](https://www.virustotal.com/gui/user/SpyNetGirl).
 
 * [![PSScriptAnalyzer](https://github.com/HotCakeX/Harden-Windows-Security/actions/workflows/powershell.yml/badge.svg)](https://github.com/HotCakeX/Harden-Windows-Security/actions/workflows/powershell.yml)
 * [![Repository And Package Scan on Virus Total](https://github.com/HotCakeX/Harden-Windows-Security/actions/workflows/VirusTotal.yml/badge.svg)](https://github.com/HotCakeX/Harden-Windows-Security/actions/workflows/VirusTotal.yml)
 * [![CodeQL Advanced](https://github.com/HotCakeX/Harden-Windows-Security/actions/workflows/codeql.yml/badge.svg)](https://github.com/HotCakeX/Harden-Windows-Security/actions/workflows/codeql.yml)
 * [![Sync to Azure DevOps](https://github.com/HotCakeX/Harden-Windows-Security/actions/workflows/Sync%20to%20Azure%20DevOps.yaml/badge.svg)](https://github.com/HotCakeX/Harden-Windows-Security/actions/workflows/Sync%20to%20Azure%20DevOps.yaml)
 * [![Build AppControl Manager MSIX Package](https://github.com/HotCakeX/Harden-Windows-Security/actions/workflows/Build%20AppControl%20Manager%20MSIX%20Package.yml/badge.svg)](https://github.com/HotCakeX/Harden-Windows-Security/actions/workflows/Build%20AppControl%20Manager%20MSIX%20Package.yml)
+* [![Dependabot Updates](https://github.com/HotCakeX/Harden-Windows-Security/actions/workflows/dependabot/dependabot-updates/badge.svg)](https://github.com/HotCakeX/Harden-Windows-Security/actions/workflows/dependabot/dependabot-updates)
 
 <p align="right"><a href="#readme-top">💡 (back to top)</a></p>
 

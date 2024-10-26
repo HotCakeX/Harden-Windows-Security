@@ -79,11 +79,12 @@ jobs:
           path: ./AppControl Manager/
           upload-release-assets: false
           upload-artifact: true
+          output-file: ./AppControl Manager/
           artifact-name: AppControlManagerSBOM.spdx
 
       - name: Generate SBOM attestation
         uses: actions/attest-sbom@v1
         with:
           subject-path: ${{ env.MSIX_PATH }}
-          sbom-path: AppControlManagerSBOM.spdx
+          sbom-path: ./AppControl Manager/AppControlManagerSBOM.spdx
           show-summary: true

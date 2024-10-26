@@ -418,7 +418,7 @@ public static class SecureStringGenerator
         Write-Verbose -Message 'Getting the list of Attack Surface Reduction Rules exclusions'
         [System.Collections.Generic.List[System.String]]$CurrentASRExclusions = (Get-MpPreference).AttackSurfaceReductionOnlyExclusions
 
-        [System.String]$InstallingAppLocationToAdd = 'C:\Program Files\WindowsApps\AppControlManager_' + $InstallingAppVersion + '_' + $InstallingAppArchitecture + '__sadt7br7jpt02'
+        [System.String]$InstallingAppLocationToAdd = 'C:\Program Files\WindowsApps\AppControlManager_' + $InstallingAppVersion + '_' + $InstallingAppArchitecture + '__sadt7br7jpt02\'
         [System.Collections.Generic.List[System.String]]$ExesAndDllsToAddToASR = @()
 
         $ExesAndDllsToAddToASR.Add($InstallingAppLocationToAdd + 'AppControlManager.exe')
@@ -438,7 +438,7 @@ public static class SecureStringGenerator
             # Remove ASR rule exclusions that belong to the previous app version if it existed
             if (![string]::IsNullOrWhiteSpace($InstalledAppVersionBefore) -and ![string]::IsNullOrWhiteSpace($InstalledAppArchitectureBefore)) {
 
-                [System.String]$InstalledAppLocationToRemove = 'C:\Program Files\WindowsApps\AppControlManager_' + $InstalledAppVersionBefore + '_' + $InstalledAppArchitectureBefore + '__sadt7br7jpt02'
+                [System.String]$InstalledAppLocationToRemove = 'C:\Program Files\WindowsApps\AppControlManager_' + $InstalledAppVersionBefore + '_' + $InstalledAppArchitectureBefore + '__sadt7br7jpt02\'
                 [System.Collections.Generic.List[System.String]]$ExesAndDllsToRemoveFromASR = @()
 
                 $ExesAndDllsToRemoveFromASR.Add($InstalledAppLocationToRemove + 'AppControlManager.exe')

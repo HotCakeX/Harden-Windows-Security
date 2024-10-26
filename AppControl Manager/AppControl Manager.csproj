@@ -36,6 +36,7 @@
     <None Remove="Pages\Simulation.xaml" />
     <None Remove="Pages\SystemInformation\CodeIntegrityInfo.xaml" />
     <None Remove="Pages\SystemInformation\SystemInformation.xaml" />
+    <None Remove="Pages\Update.xaml" />
     <None Remove="Pages\ViewCurrentPolicies.xaml" />
     <None Remove="Resources\AppControlManagerSupplementalPolicy.xml" />
   </ItemGroup>
@@ -153,13 +154,18 @@
 
   <!-- Exclude the following files and folders from compilation, build, search, solution explorer etc. -->
   <ItemGroup>
-    <Compile Remove="Signtool.exe" />
-    <Content Remove="Signtool.exe" />
-    <None Remove="Signtool.exe" />
+    <Compile Remove="version.txt" />
+    <Content Remove="version.txt" />
+    <None Remove="version.txt" />
 
     <Compile Remove="MSIXOutput\**" />
     <Content Remove="MSIXOutput\**" />
     <None Remove="MSIXOutput\**" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Pages\Update.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Page Update="Pages\SystemInformation\CodeIntegrityInfo.xaml">

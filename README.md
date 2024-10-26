@@ -1514,7 +1514,7 @@ This repository uses effective methods that make it easy to verify:
 
 - [Artifact attestations](https://docs.github.com/en/actions/security-for-github-actions/using-artifact-attestations/using-artifact-attestations-to-establish-provenance-for-builds) are used to establish provenance for builds. It [guarantees](https://github.com/HotCakeX/Harden-Windows-Security/attestations) that the package(s) you download from this repository are 100% created from the source code that exist in this repository.
 
-- [SBOMs](https://docs.github.com/en/code-security/supply-chain-security/understanding-your-software-supply-chain/exporting-a-software-bill-of-materials-for-your-repository) (Software Bill of Materials) are generated for the entire repository to comply with data protection standards and providing transparency.
+- [SBOMs](https://docs.github.com/en/code-security/supply-chain-security/understanding-your-software-supply-chain/exporting-a-software-bill-of-materials-for-your-repository) (Software Bill of Materials) are generated for the entire repository to comply with data protection standards and providing transparency. Together with attestation they provide [SLSA L2 security level](https://slsa.dev/spec/v1.0/levels) for the build process. In the future, the workflows will be upgraded to comply with SLSA L3 level.
 
 - You can open the files in [**Visual Studio Code**](https://code.visualstudio.com/) / [**Visual Studio Code Web**](https://vscode.dev/) / [**GitHub CodeSpace**](https://github.com/codespaces/new?skip_quickstart=true&machine=standardLinux32gb&repo=569233100&ref=main&geo=EuropeWest), and view them in a nice and easy to read environment, they are well formatted, commented and indented.
 

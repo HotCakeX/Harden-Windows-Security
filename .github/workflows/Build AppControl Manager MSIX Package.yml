@@ -63,11 +63,13 @@ jobs:
         shell: pwsh
         run: |
           [string]$MSIXPath = (Get-ChildItem -Path '.\AppControl Manager\MSIXOutput\AppControl Manage*\AppControl Manager*.msix').FullName
+          [string]$MSIXName = (Get-ChildItem -Path '.\AppControl Manager\MSIXOutput\AppControl Manage*\AppControl Manager*.msix').Name
 
           if ([string]::IsNullOrWhiteSpace($MSIXPath)) { throw "Couldn't find the generated MSIX package" }
 
-          # Write the MSIXPath to GITHUB_ENV to set it as an environment variable for the entire workflow
+          # Write the MSIXPath and MSIXName to GITHUB_ENV to set it as an environment variable for the entire workflow
           Add-Content -Path $env:GITHUB_ENV -Value "MSIX_PATH=$MSIXPath"
+          Add-Content -Path $env:GITHUB_ENV -Value "MSIX_NAME=$MSIXName"
 
       - name: Generating Artifact Attestation
         uses: actions/attest-build-provenance@v1
@@ -93,17 +95,43 @@ jobs:
       - name: Finding the Latest Draft Release
         id: find_draft_release
         run: |
-          DRAFT_RELEASE_ID=$(gh release list --json id,draft -q ".[?draft==true][0].id")
-          if [[ -z "$DRAFT_RELEASE_ID" ]]; then
-            echo "No draft release found"
-            exit 1
-          fi
-          echo "DRAFT_RELEASE_ID=$DRAFT_RELEASE_ID" >> $GITHUB_ENV
+          # Find the latest draft release via GitHub REST API
+          $Response = Invoke-RestMethod -Uri "https://api.github.com/repos/${{ github.repository }}/releases" -Headers @{ Authorization = "token ${{ secrets.GITHUB_TOKEN }}" }
+          $DraftRelease = $Response | Where-Object -FilterScript { $_.draft -eq $true } | Select-Object -First 1
 
-      - name: Uploading the MSIX Package to Draft Release
-        run: |
-          gh release upload ${{ env.DRAFT_RELEASE_ID }} "${{ env.MSIX_PATH }}" --clobber
+          if (!$DraftRelease) {
+            throw "No draft release found"
+          }
+          $DRAFT_RELEASE_ID = $DraftRelease.id
+          Write-Output -InputObject "DRAFT_RELEASE_ID=$DRAFT_RELEASE_ID" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Force
+          Write-host -Object "GitHub Draft ID: $DRAFT_RELEASE_ID"
+        shell: pwsh
 
-      - name: Uploading the SBOM to Draft Release
+      - name: Uploading the MSIX Package to the Draft Release
         run: |
-          gh release upload ${{ env.DRAFT_RELEASE_ID }} HardenWindowsSecurityRepoSBOM.spdx --clobber
+          $DraftReleaseId = $env:DRAFT_RELEASE_ID
+          $FilePath = "${{ env.MSIX_PATH }}"
+          $FileName = "${{ env.MSIX_NAME }}"
+          $uploadUrl = "https://uploads.github.com/repos/${{ github.repository }}/releases/$DraftReleaseId/assets?name=$FileName"
+
+          # Upload the package to the draft release
+          $Response = Invoke-RestMethod -Uri $uploadUrl -Method Put -InFile $FilePath -Headers @{
+            "Authorization" = "token ${{ secrets.GITHUB_TOKEN }}"
+            "Content-Type" = "application/octet-stream"
+          }
+          Write-Host -Object "Uploaded package to draft release: $Response.name"  
+        shell: pwsh  
+
+      - name: Uploading the SBOM file to the Draft Release
+        run: |
+          $DraftReleaseId = $env:DRAFT_RELEASE_ID
+          $FilePath = "HardenWindowsSecurityRepoSBOM.spdx"
+          $FileName = "HardenWindowsSecurityRepoSBOM.spdx"
+          $uploadUrl = "https://uploads.github.com/repos/${{ github.repository }}/releases/$DraftReleaseId/assets?name=$FileName"
+
+          $Response = Invoke-RestMethod -Uri $uploadUrl -Method Put -InFile $FilePath -Headers @{
+            "Authorization" = "token ${{ secrets.GITHUB_TOKEN }}"
+            "Content-Type" = "application/octet-stream"
+          }
+          Write-Host -Object "Uploaded the SBOM file to the draft release: $Response.name"  
+        shell: pwsh

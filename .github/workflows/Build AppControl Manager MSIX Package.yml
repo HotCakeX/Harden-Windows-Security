@@ -89,3 +89,21 @@ jobs:
           subject-path: ${{ env.MSIX_PATH }}
           sbom-path: ./HardenWindowsSecurityRepoSBOM.spdx
           show-summary: true
+
+      - name: Finding the Latest Draft Release
+        id: find_draft_release
+        run: |
+          DRAFT_RELEASE_ID=$(gh release list --json id,draft -q ".[?draft==true][0].id")
+          if [[ -z "$DRAFT_RELEASE_ID" ]]; then
+            echo "No draft release found"
+            exit 1
+          fi
+          echo "DRAFT_RELEASE_ID=$DRAFT_RELEASE_ID" >> $GITHUB_ENV
+
+      - name: Uploading the MSIX Package to Draft Release
+        run: |
+          gh release upload ${{ env.DRAFT_RELEASE_ID }} "${{ env.MSIX_PATH }}" --clobber
+
+      - name: Uploading the SBOM to Draft Release
+        run: |
+          gh release upload ${{ env.DRAFT_RELEASE_ID }} HardenWindowsSecurityRepoSBOM.spdx --clobber

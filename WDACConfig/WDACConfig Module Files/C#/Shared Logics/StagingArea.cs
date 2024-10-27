@@ -7,6 +7,12 @@ namespace WDACConfig
 {
     public static class StagingArea
     {
+        /// <summary>
+        /// Creating a directory as a staging area for a job and returns the path to that directory
+        /// </summary>
+        /// <param name="cmdletName"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentException"></exception>
         public static DirectoryInfo NewStagingArea(string cmdletName)
         {
             if (string.IsNullOrWhiteSpace(cmdletName))

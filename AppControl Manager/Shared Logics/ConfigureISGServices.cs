@@ -1,6 +1,6 @@
 ﻿namespace WDACConfig
 {
-    internal static class ConfigureISGServices
+    public static class ConfigureISGServices
     {
         /// <summary>
         /// Starts the AppIdTel and sets the appidsvc service to auto start

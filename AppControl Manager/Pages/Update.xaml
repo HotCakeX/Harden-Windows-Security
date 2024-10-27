@@ -63,16 +63,12 @@
 
                     <controls:WrapPanel Orientation="Horizontal">
 
+                        <ProgressRing Visibility="Collapsed" x:Name="DownloadProgressRingForMSIXFile" Width="60" Height="60" Margin="5,5,15,5" Value="0" IsIndeterminate="False" Minimum="0" Maximum="100"/>
+
                         <Button x:Name="CheckForUpdateButton" Content="Check for update"
             Style="{StaticResource AccentButtonStyle}" Margin="0,0,15,0"
-                                Click="CheckForUpdateButton_Click"
-                                PointerEntered="CheckForUpdateButton_PointerEntered"
-                                PointerExited="CheckForUpdateButton_PointerExited"
-                                PointerPressed="CheckForUpdateButton_PointerPressed"/>
-
-                        <TeachingTip x:Name="CheckForUpdateButtonTeachingTip"
-    Target="{x:Bind CheckForUpdateButton}"
-    Subtitle="Will download and install the latest version from the GitHub repository. The time it takes depends on your network connection. Approxmitate download size is 140 MB." />
+                                Click="CheckForUpdateButton_Click"                               
+                                ToolTipService.ToolTip="Will download and install the latest version from the GitHub repository. The time it takes depends on your network connection. Approxmitate download size is 140 MB."/>
 
                     </controls:WrapPanel>
 

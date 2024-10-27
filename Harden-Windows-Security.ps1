@@ -168,36 +168,19 @@ Function AppControl {
     .PARAMETER SignTool
         Optional. The path to the Microsoft's Signtool.exe
         If not provided, the function automatically downloads the latest SignTool.exe from the Microsoft website in Nuget and will use it for the signing operations.
-    .PARAMETER CheckForUpdate
-        Used internally by the AppControl Manager app when you use the 'Check for update' button.
     .LINK
         https://github.com/HotCakeX/Harden-Windows-Security/wiki/AppControl-Manager
     #>
     [CmdletBinding()]
     param (
         [Parameter(Mandatory = $false)][System.String]$MSIXPath,
-        [Parameter(Mandatory = $False)][System.String]$SignTool,
-        [Parameter(Mandatory = $False)][System.Version]$CheckForUpdate
+        [Parameter(Mandatory = $False)][System.String]$SignTool
     )
     $ErrorActionPreference = 'Stop'
-    # If calling this function internally to check for update
-    if ($null -ne $CheckForUpdate) {
-        Write-Verbose -Message 'Checking for AppControl Manager update'
-        [System.Version]$OnlineVersion = Invoke-RestMethod -Uri 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/refs/heads/main/AppControl%20Manager/version.txt'
-        if ($CheckForUpdate -lt $OnlineVersion) {
-            Write-Verbose -Message "Updating the AppControl Manger because the current version '$CheckForUpdate' is less than the online version '$OnlineVersion'"
-        }
-        else {
-            Write-Verbose -Message 'The AppControl Manager is up to date. Returning.'
-            return '420' # Consumed by the AppControl Manager internally
-        }
-    }
-
     if (!([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
         Write-Warning -Message 'Please run this function as an Administrator'
         return
     }
-
     Write-Verbose -Message 'Detecting the CPU Arch'
     switch ($Env:PROCESSOR_ARCHITECTURE) {
         'AMD64' { [System.String]$CPUArch = 'x64'; break }
@@ -228,8 +211,6 @@ public static class SecureStringGenerator
 }
 '@ -Language CSharp
     }
-
-    Write-Verbose -Message 'Creating the working directory in the TEMP directory'
     [System.String]$CommonName = 'SelfSignedCertForAppControlManager'
     [System.String]$WorkingDir = [System.IO.Path]::Combine([System.IO.Path]::GetTempPath(), $CommonName)
     [System.String]$CertificateOutputPath = [System.IO.Path]::Combine($WorkingDir, "$CommonName.cer")
@@ -240,10 +221,10 @@ public static class SecureStringGenerator
     # Pattern for AppControl Manager version and architecture extraction from file path and download link URL
     [regex]$RegexPattern = '_(?<Version>\d+\.\d+\.\d+\.\d+)_(?<Architecture>x64|arm64)\.msix$'
 
-    #StartMSIXPackageDownloadURLVariable
-    $MSIXPackageDownloadURL = 'https://github.com/HotCakeX/Harden-Windows-Security/releases/download/WDACConfigv0.4.6/AppControl.Manager_1.0.0.0_x64.msix'
-    #EndMSIXPackageDownloadURLVariable
+    # Download link for the latest version of AppControl manger is retrieved from this text file
+    [System.String]$MSIXPackageDownloadURL = Invoke-RestMethod -Uri 'https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/refs/heads/main/AppControl%20Manager/DownloadURL.txt'
 
+    Write-Verbose -Message 'Creating the working directory in the TEMP directory'
     if ([System.IO.Directory]::Exists($WorkingDir)) {
         [System.IO.Directory]::Delete($WorkingDir, $true)
     }
@@ -284,9 +265,7 @@ public static class SecureStringGenerator
 
         Write-Verbose -Message 'Finding the certificate that was just created by its thumbprint'
         [System.Security.Cryptography.X509Certificates.X509Certificate2]$TheCert = foreach ($Cert in (Get-ChildItem -Path 'Cert:\CurrentUser\My' -CodeSigningCert)) {
-            if ($Cert.Thumbprint -eq $NewCertificateThumbprint) {
-                $Cert
-            }
+            if ($Cert.Thumbprint -eq $NewCertificateThumbprint) { $Cert }
         }
 
         Write-Verbose -Message 'Exporting the certificate (public key only)'
@@ -328,12 +307,12 @@ public static class SecureStringGenerator
             Expand-Archive -Path "$WorkingDir\*.nupkg" -DestinationPath $WorkingDir -Force
 
             Write-Verbose -Message 'Finding the Signtool.exe path in the extracted directory'
-            $SignTool = (Get-Item -Path "$WorkingDir\bin\*\$CPUArch\signtool.exe").FullName
+            [System.String]$SignTool = (Get-Item -Path "$WorkingDir\bin\*\$CPUArch\signtool.exe").FullName
         }
 
         # Download the MSIX package if user did not provide the path to it
         if ([System.String]::IsNullOrWhiteSpace($MSIXPath)) {
-            $MSIXPath = [System.IO.Path]::Combine($WorkingDir, 'AppControl.Manager.msix')
+            [System.String]$MSIXPath = [System.IO.Path]::Combine($WorkingDir, 'AppControl.Manager.msix')
 
             Write-Verbose -Message 'Downloading the MSIX package from the GitHub releases' -Verbose
             $null = Invoke-WebRequest -Uri $MSIXPackageDownloadURL -OutFile $MSIXPath
@@ -352,7 +331,6 @@ public static class SecureStringGenerator
         else {
             # Get the version and architecture of the installing MSIX package app from the User provided file path
             $RegexMatch = $RegexPattern.Match($MSIXPath)
-
             if ($RegexMatch.Success) {
                 $InstallingAppVersion = $RegexMatch.Groups['Version'].Value
                 $InstallingAppArchitecture = $RegexMatch.Groups['Architecture'].Value
@@ -361,10 +339,6 @@ public static class SecureStringGenerator
                 throw 'Could not get the version of the installing app from the -MSIX parameter value that you provided.'
             }
         }
-
-        Write-Verbose -Message "Installing AppControl Manager version '$InstallingAppVersion' with architecture '$InstallingAppArchitecture'"
-
-        # https://learn.microsoft.com/en-us/dotnet/framework/tools/signtool-exe
         Write-Verbose -Message 'Signing the App Control Manager MSIX package'
 
         # In this step the SignTool detects the cert to use based on Common name + ThumbPrint + Hash Algo + Store Type + Store Name
@@ -376,7 +350,6 @@ public static class SecureStringGenerator
             # Displays no output if the command runs successfully, and displays minimal output if the command fails.
             $null = . $SignTool sign /q /n $CommonName /fd $HashingAlgorithm /sm /s 'Root' /sha1 $NewCertificateThumbprint $MSIXPath
         }
-
         if ($LASTEXITCODE -ne 0) {
             throw "SignTool Failed. Exit Code: $LASTEXITCODE"
         }
@@ -395,16 +368,15 @@ public static class SecureStringGenerator
             # Get the details of the currently installed app before attempting to install the new one
             [System.String]$InstalledAppVersionBefore = $PossibleExistingApp.Version
             [System.String]$InstalledAppArchitectureBefore = $PossibleExistingApp.Architecture
+            Write-Verbose -Message "The AppControl Manager app is already installed with version '$InstalledAppVersionBefore' and architecture '$InstalledAppArchitectureBefore'"
         }
 
-        Write-Verbose -Message 'Installing the MSIX Package'
+        Write-Verbose -Message "Installing AppControl Manager MSIX Package version '$InstallingAppVersion' with architecture '$InstallingAppArchitecture'"
         Add-AppPackage -Path $MSIXPath -ForceUpdateFromAnyVersion -DeferRegistrationWhenPackagesAreInUse # -ForceTargetApplicationShutdown will shutdown the application if its open.
 
         Write-Verbose -Message "Finding the certificate that was just created by its thumbprint again from the 'Local Machine/Trusted Root Certification Authorities' store"
         [System.Security.Cryptography.X509Certificates.X509Certificate2]$TheCert2 = foreach ($Cert2 in (Get-ChildItem -Path 'Cert:\LocalMachine\Root' -CodeSigningCert)) {
-            if ($Cert.Thumbprint -eq $NewCertificateThumbprint) {
-                $Cert2
-            }
+            if ($Cert.Thumbprint -eq $NewCertificateThumbprint) { $Cert2 }
         }
 
         Write-Verbose -Message 'Removing the certificate that has private + public keys'
@@ -413,64 +385,34 @@ public static class SecureStringGenerator
         Write-Verbose -Message "Adding the certificate to the 'Local Machine/Trusted Root Certification Authorities' store with public key only. This safely stores the certificate on your device, ensuring its private key does not exist so cannot be used to sign anything else."
         $null = Import-Certificate -FilePath $CertificateOutputPath -CertStoreLocation 'Cert:\LocalMachine\Root'
 
-        #region ASR rules handling
-        Write-Verbose -Message 'Getting the list of Attack Surface Reduction Rules exclusions'
-        [System.Collections.Generic.List[System.String]]$CurrentASRExclusions = (Get-MpPreference).AttackSurfaceReductionOnlyExclusions
-
         [System.String]$InstallingAppLocationToAdd = 'C:\Program Files\WindowsApps\AppControlManager_' + $InstallingAppVersion + '_' + $InstallingAppArchitecture + '__sadt7br7jpt02\'
-        [System.Collections.Generic.List[System.String]]$ExesAndDllsToAddToASR = @()
-
-        $ExesAndDllsToAddToASR.Add($InstallingAppLocationToAdd + 'AppControlManager.exe')
-        $ExesAndDllsToAddToASR.Add($InstallingAppLocationToAdd + 'AppControlManager.dll')
-
-        foreach ($ItemToAddToASR in $ExesAndDllsToAddToASR) {
-            # If the ASR Rules exclusions list is either empty or it doesn't contain the AppControl Manager files, then add them
-            if ($null -eq $CurrentASRExclusions -or !$CurrentASRExclusions.Contains($ItemToAddToASR)) {
-                Write-Verbose -Message "Adding $ItemToAddToASR To the ASR Rules exclusions because it didn't exist there."
-                Add-MpPreference -AttackSurfaceReductionOnlyExclusions $ItemToAddToASR
-            }
-        }
+        Write-Verbose -Message "Adding the new app install's files To the ASR Rules exclusions."
+        # The cmdlet won't add duplicates
+        Add-MpPreference -AttackSurfaceReductionOnlyExclusions (($InstallingAppLocationToAdd + 'AppControlManager.exe'), ($InstallingAppLocationToAdd + 'AppControlManager.dll'))
 
         # If the app version being installed is not the same as the app version currently installed
         if ($InstallingAppVersion -ne $InstalledAppVersionBefore) {
-
-            # Remove ASR rule exclusions that belong to the previous app version if it existed
             if (![string]::IsNullOrWhiteSpace($InstalledAppVersionBefore) -and ![string]::IsNullOrWhiteSpace($InstalledAppArchitectureBefore)) {
-
+                Write-Verbose -Message 'Removing ASR Rules exclusions that belong to the previous app version.'
+                # No check is needed since the Remove-MpPreference accepts any string and only removes them if they exist
                 [System.String]$InstalledAppLocationToRemove = 'C:\Program Files\WindowsApps\AppControlManager_' + $InstalledAppVersionBefore + '_' + $InstalledAppArchitectureBefore + '__sadt7br7jpt02\'
-                [System.Collections.Generic.List[System.String]]$ExesAndDllsToRemoveFromASR = @()
-
-                $ExesAndDllsToRemoveFromASR.Add($InstalledAppLocationToRemove + 'AppControlManager.exe')
-                $ExesAndDllsToRemoveFromASR.Add($InstalledAppLocationToRemove + 'AppControlManager.dll')
-
-                foreach ($ItemToRemoveFromASR in $ExesAndDllsToRemoveFromASR) {
-
-                    if ($null -eq $CurrentASRExclusions -or !$CurrentASRExclusions.Contains($ItemToRemoveFromASR)) {
-                        Write-Verbose -Message "Removing $ItemToRemoveFromASR from the ASR Rules exclusions because it belongs to the previous app version."
-                        Remove-MpPreference -AttackSurfaceReductionOnlyExclusions $ItemToRemoveFromASR
-                    }
-                }
+                Remove-MpPreference -AttackSurfaceReductionOnlyExclusions (($InstalledAppLocationToRemove + 'AppControlManager.exe'), ($InstalledAppLocationToRemove + 'AppControlManager.dll'))
             }
         }
-        #endregion
+        else {
+            Write-Verbose -Message 'Current and new AppControl Manager versions are the same, skipping removing previous ASR rules exclusions.'
+        }
 
         try {
             $ValidateAdminCodeSignaturesRegPath = 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System'
             $ValidateAdminCodeSignaturesRegName = 'ValidateAdminCodeSignatures'
-
             $ValidateAdminCodeSignaturesRegValue = Get-ItemProperty -Path $ValidateAdminCodeSignaturesRegPath -Name $ValidateAdminCodeSignaturesRegName -ErrorAction SilentlyContinue
-
             # This will cause the "A referral was returned from the server." error to show up when AppControl Manager tries to start.
             if ($ValidateAdminCodeSignaturesRegValue.$ValidateAdminCodeSignaturesRegName -eq 1) {
                 Write-Warning -Message "A policy named 'Only elevate executables that are signed and validated' is conflicting with the AppControl Manager app and won't let it start because it's self-signed with your on-device keys. Please disable the policy. It can be found in Group Policy Editor -> Computer Configuration -> Windows Settings -> Security Settings -> Local Policies -> Security Options -> 'User Account Control: Only elevate executable files that are signed and validated'"
             }
         }
         catch {}
-
-        # The code is consumed by the AppControl Manager internally
-        if ($null -ne $CheckForUpdate) {
-            return '8200'
-        }
     }
     finally {
         Write-Verbose -Message 'Cleaning up the working directory in the TEMP directory'

@@ -28,7 +28,7 @@ namespace HardenWindowsSecurity
             if (HasErrorsOccurred) { return; }
 
 
-            if (VolumeInfoExtended.ConversionStatus is BitLocker.ConversionStatus.FullyDecrypted)
+            if (VolumeInfoExtended.ConversionStatus is ConversionStatus.FullyDecrypted)
             {
                 Logger.LogMessage($"The drive {DriveLetter} is already decrypted", LogTypeIntel.InformationInteractionRequired);
                 return;

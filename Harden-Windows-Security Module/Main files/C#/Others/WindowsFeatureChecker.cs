@@ -9,7 +9,7 @@ namespace HardenWindowsSecurity
 {
     public static class WindowsFeatureChecker
     {
-        public class FeatureStatus
+        public sealed class FeatureStatus
         {
             public string? PowerShellv2 { get; set; }
             public string? PowerShellv2Engine { get; set; }
@@ -58,10 +58,10 @@ namespace HardenWindowsSecurity
             var states = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
 
             // Create a ManagementObjectSearcher to query Win32_OptionalFeature
-            using (var searcher = new ManagementObjectSearcher("SELECT * FROM Win32_OptionalFeature"))
+            using (ManagementObjectSearcher searcher = new("SELECT * FROM Win32_OptionalFeature"))
             {
                 // Iterate through each object returned by the query
-                foreach (var obj in searcher.Get())
+                foreach (ManagementBaseObject obj in searcher.Get())
                 {
                     // Retrieve the name of the feature
                     string? name = obj["Name"]?.ToString();

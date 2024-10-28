@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace HardenWindowsSecurity
 {
-    public class SecurityPolicyChecker
+    public static class SecurityPolicyChecker
     {
         /// <summary>
         /// The method is used to verify the compliance of security group policies on the system against the predefined values in the SecurityPoliciesVerification.csv
@@ -19,7 +19,7 @@ namespace HardenWindowsSecurity
             List<IndividualResult> nestedObjectArray = [];
 
             // Filter the CSV data to only get the records that match the input category
-            var csvRecords = GlobalVars.SecurityPolicyRecords?
+            List<SecurityPolicyRecord>? csvRecords = GlobalVars.SecurityPolicyRecords?
                 .Where(record => record.Category is not null && record.Category.Equals(category, StringComparison.OrdinalIgnoreCase))
                 .ToList();
 
@@ -27,7 +27,7 @@ namespace HardenWindowsSecurity
             if (csvRecords is not null)
             {
                 // Loop over each filtered CSV data
-                foreach (var record in csvRecords)
+                foreach (SecurityPolicyRecord record in csvRecords)
                 {
                     string? section = record.Section;
                     string? path = record.Path;

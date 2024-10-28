@@ -20,7 +20,7 @@ namespace HardenWindowsSecurity
         {
 
             // Method to handle the ASRRules view, including loading
-            private void ASRRules(object obj)
+            private void ASRRulesView(object obj)
             {
                 // Check if the view is already cached
                 if (_viewCache.TryGetValue("ASRRulesView", out var cachedView))
@@ -30,33 +30,33 @@ namespace HardenWindowsSecurity
                 }
 
                 // Defining the path to the XAML XML file
-                if (HardenWindowsSecurity.GlobalVars.path is null)
+                if (GlobalVars.path is null)
                 {
                     throw new InvalidOperationException("GlobalVars.path cannot be null.");
                 }
 
                 // if Admin privileges are not available, return and do not proceed any further
                 // Will prevent the page from being loaded since the CurrentView won't be set/changed
-                if (!HardenWindowsSecurity.UserPrivCheck.IsAdmin())
+                if (!UserPrivCheck.IsAdmin())
                 {
                     Logger.LogMessage("ASR Rules page can only be used when running the Harden Windows Security Application with Administrator privileges", LogTypeIntel.ErrorInteractionRequired);
                     return;
                 }
 
                 // Construct the file path for the ASRRules view XAML
-                string xamlPath = System.IO.Path.Combine(HardenWindowsSecurity.GlobalVars.path, "Resources", "XAML", "ASRRules.xaml");
+                string xamlPath = Path.Combine(GlobalVars.path, "Resources", "XAML", "ASRRules.xaml");
 
                 // Read the XAML content from the file
                 string xamlContent = File.ReadAllText(xamlPath);
 
                 // Parse the XAML content to create a UserControl
-                HardenWindowsSecurity.GUIASRRules.View = (UserControl)XamlReader.Parse(xamlContent);
+                GUIASRRules.View = (UserControl)XamlReader.Parse(xamlContent);
 
                 // Set the DataContext for the ASRRules view
                 GUIASRRules.View.DataContext = new ASRRulesVM();
 
                 // Find the Parent Grid
-                HardenWindowsSecurity.GUIASRRules.ParentGrid = (Grid)HardenWindowsSecurity.GUIASRRules.View.FindName("ParentGrid");
+                GUIASRRules.ParentGrid = (Grid)GUIASRRules.View.FindName("ParentGrid");
 
                 #region finding elements
 
@@ -80,9 +80,9 @@ namespace HardenWindowsSecurity
 
                 // Update the image source for the Refresh button
                 // Load the Refresh icon image into memory and set it as the source
-                var RefreshIconBitmapImage = new BitmapImage();
+                BitmapImage RefreshIconBitmapImage = new();
                 RefreshIconBitmapImage.BeginInit();
-                RefreshIconBitmapImage.UriSource = new System.Uri(System.IO.Path.Combine(HardenWindowsSecurity.GlobalVars.path!, "Resources", "Media", "ExecuteButton.png"));
+                RefreshIconBitmapImage.UriSource = new Uri(Path.Combine(GlobalVars.path!, "Resources", "Media", "ExecuteButton.png"));
                 RefreshIconBitmapImage.CacheOption = BitmapCacheOption.OnLoad; // Load the image data into memory
                 RefreshIconBitmapImage.EndInit();
 
@@ -94,13 +94,13 @@ namespace HardenWindowsSecurity
 
 
                 // Register button to be disabled/enabled based on global activity
-                HardenWindowsSecurity.ActivityTracker.RegisterUIElement(RetrieveASRStatusButton);
+                ActivityTracker.RegisterUIElement(RetrieveASRStatusButton);
 
                 // Create a dictionary to store the ComboBox Names as keys and their corresponding SelectedIndex as Values so that we will loop over this dictionary instead of access UI elements and won't need to use UI Dispatcher
                 Dictionary<string, byte> comboBoxDictionary = [];
 
                 // Method to process ListView items
-                void ProcessListViewItems(System.Windows.Controls.ListView listView)
+                void ProcessListViewItems(ListView listView)
                 {
                     foreach (ListViewItem item in listView.Items.Cast<ListViewItem>())
                     {
@@ -108,7 +108,7 @@ namespace HardenWindowsSecurity
                         if (item.Content is StackPanel stackPanel)
                         {
                             // Find the Label inside the StackPanel
-                            // System.Windows.Controls.Label label = stackPanel.Children.OfType<System.Windows.Controls.Label>().FirstOrDefault();
+                            // Label label = stackPanel.Children.OfType<Label>().FirstOrDefault();
 
                             // Find the ComboBox inside the StackPanel
                             ComboBox? comboBox = stackPanel.Children.OfType<ComboBox>().FirstOrDefault();
@@ -127,9 +127,9 @@ namespace HardenWindowsSecurity
                 string GetASRRuleConfig(string ASRRuleName, byte ComboBoxIndex)
                 {
 
-                    if (HardenWindowsSecurity.GlobalVars.path is null)
+                    if (GlobalVars.path is null)
                     {
-                        throw new InvalidOperationException("HardenWindowsSecurity.GlobalVars.path is null.");
+                        throw new InvalidOperationException("GlobalVars.path is null.");
                     }
 
                     if (AttackSurfaceReductionIntel.ASRRulesCorrelation is null)
@@ -146,25 +146,25 @@ namespace HardenWindowsSecurity
                         case 0:
                             {
                                 // Disable
-                                FilePath = System.IO.Path.Combine(HardenWindowsSecurity.GlobalVars.path, "Resources", "Individual ASR Rule Configs", AttackSurfaceReductionIntel.ASRRulesCorrelation.GetValueOrDefault(ASRRuleName)!, "Disabled.pol");
+                                FilePath = Path.Combine(GlobalVars.path, "Resources", "Individual ASR Rule Configs", AttackSurfaceReductionIntel.ASRRulesCorrelation.GetValueOrDefault(ASRRuleName)!, "Disabled.pol");
                                 break;
                             }
                         case 1:
                             {
                                 // Block
-                                FilePath = System.IO.Path.Combine(HardenWindowsSecurity.GlobalVars.path, "Resources", "Individual ASR Rule Configs", AttackSurfaceReductionIntel.ASRRulesCorrelation.GetValueOrDefault(ASRRuleName)!, "Block.pol");
+                                FilePath = Path.Combine(GlobalVars.path, "Resources", "Individual ASR Rule Configs", AttackSurfaceReductionIntel.ASRRulesCorrelation.GetValueOrDefault(ASRRuleName)!, "Block.pol");
                                 break;
                             }
                         case 2:
                             {
                                 // Audit
-                                FilePath = System.IO.Path.Combine(HardenWindowsSecurity.GlobalVars.path, "Resources", "Individual ASR Rule Configs", AttackSurfaceReductionIntel.ASRRulesCorrelation.GetValueOrDefault(ASRRuleName)!, "Audit.pol");
+                                FilePath = Path.Combine(GlobalVars.path, "Resources", "Individual ASR Rule Configs", AttackSurfaceReductionIntel.ASRRulesCorrelation.GetValueOrDefault(ASRRuleName)!, "Audit.pol");
                                 break;
                             }
                         case 3:
                             {
                                 // Warn
-                                FilePath = System.IO.Path.Combine(HardenWindowsSecurity.GlobalVars.path, "Resources", "Individual ASR Rule Configs", AttackSurfaceReductionIntel.ASRRulesCorrelation.GetValueOrDefault(ASRRuleName)!, "Warn.pol");
+                                FilePath = Path.Combine(GlobalVars.path, "Resources", "Individual ASR Rule Configs", AttackSurfaceReductionIntel.ASRRulesCorrelation.GetValueOrDefault(ASRRuleName)!, "Warn.pol");
                                 break;
                             }
                         default:
@@ -176,23 +176,23 @@ namespace HardenWindowsSecurity
 
 
                 // Register the ExecuteButton as an element that will be enabled/disabled based on current activity
-                HardenWindowsSecurity.ActivityTracker.RegisterUIElement(ExecuteButton);
+                ActivityTracker.RegisterUIElement(ExecuteButton);
 
 
                 // Set up the Click event handler for the ExecuteButton button
                 ExecuteButton.Click += async (sender, e) =>
                 {
                     // Only continue if there is no activity other places
-                    if (!HardenWindowsSecurity.ActivityTracker.IsActive)
+                    if (!ActivityTracker.IsActive)
                     {
                         // mark as activity started
-                        HardenWindowsSecurity.ActivityTracker.IsActive = true;
+                        ActivityTracker.IsActive = true;
 
                         // Set text blocks to empty while new data is being generated
                         System.Windows.Application.Current.Dispatcher.Invoke(() =>
                         {
                             // Get the ListViews
-                            if (GUIASRRules.ParentGrid.FindName("ASRRuleSet1") is not System.Windows.Controls.ListView ASRRuleSet1 || GUIASRRules.ParentGrid.FindName("ASRRuleSet2") is not System.Windows.Controls.ListView ASRRuleSet2)
+                            if (GUIASRRules.ParentGrid.FindName("ASRRuleSet1") is not ListView ASRRuleSet1 || GUIASRRules.ParentGrid.FindName("ASRRuleSet2") is not ListView ASRRuleSet2)
                             {
                                 throw new InvalidOperationException("One of the ListViews in the ASRRules view XAML is empty.");
                             }
@@ -210,7 +210,7 @@ namespace HardenWindowsSecurity
                         {
 
                             // if LGPO doesn't already exist in the working directory, then download it
-                            if (!System.IO.Path.Exists(GlobalVars.LGPOExe))
+                            if (!Path.Exists(GlobalVars.LGPOExe))
                             {
                                 Logger.LogMessage("LGPO.exe doesn't exist, downloading it.", LogTypeIntel.Information);
                                 AsyncDownloader.PrepDownloadedFiles(GlobalVars.LGPOExe, null, null, true);
@@ -260,7 +260,7 @@ namespace HardenWindowsSecurity
 
                                 Logger.LogMessage($"Setting ASR rule named {ComboBox.Key} to the value of {stringComboBoxAction}", LogTypeIntel.Information);
 
-                                HardenWindowsSecurity.LGPORunner.RunLGPOCommand(ASRRuleActionBasedPath, LGPORunner.FileType.POL);
+                                LGPORunner.RunLGPOCommand(ASRRuleActionBasedPath, LGPORunner.FileType.POL);
                             }
 
                         });
@@ -272,10 +272,10 @@ namespace HardenWindowsSecurity
                         });
 
                         // mark as activity completed
-                        HardenWindowsSecurity.ActivityTracker.IsActive = false;
+                        ActivityTracker.IsActive = false;
 
                         // Display notification at the end
-                        NewToastNotification.Show(NewToastNotification.ToastNotificationType.EndOfASRRules, null, null, null, null);
+                        ToastNotification.Show(ToastNotification.Type.EndOfASRRules, null, null, null, null);
                     }
                 };
 
@@ -284,10 +284,10 @@ namespace HardenWindowsSecurity
                 RetrieveASRStatusButton.Click += async (sender, e) =>
                 {
                     // Only continue if there is no activity other places
-                    if (!HardenWindowsSecurity.ActivityTracker.IsActive)
+                    if (!ActivityTracker.IsActive)
                     {
                         // mark as activity started
-                        HardenWindowsSecurity.ActivityTracker.IsActive = true;
+                        ActivityTracker.IsActive = true;
 
                         // Dictionary of ComboBoxes, key is ComboBox name and value is ComboBox element itself
                         Dictionary<string, ComboBox> ComboBoxList = [];
@@ -295,8 +295,8 @@ namespace HardenWindowsSecurity
                         System.Windows.Application.Current.Dispatcher.Invoke(() =>
                         {
                             // Get the ListViews
-                            if (GUIASRRules.ParentGrid.FindName("ASRRuleSet1") is not System.Windows.Controls.ListView ASRRuleSet1 ||
-                                GUIASRRules.ParentGrid.FindName("ASRRuleSet2") is not System.Windows.Controls.ListView ASRRuleSet2)
+                            if (GUIASRRules.ParentGrid.FindName("ASRRuleSet1") is not ListView ASRRuleSet1 ||
+                                GUIASRRules.ParentGrid.FindName("ASRRuleSet2") is not ListView ASRRuleSet2)
                             {
                                 throw new InvalidOperationException("One of the ListViews in the ASRRules view XAML is empty.");
                             }
@@ -326,9 +326,9 @@ namespace HardenWindowsSecurity
                         await System.Threading.Tasks.Task.Run(() =>
                         {
 
-                            // Get the MSFT_MpPreference WMI results and save them to the global variable HardenWindowsSecurity.GlobalVars.MDAVPreferencesCurrent
+                            // Get the MSFT_MpPreference WMI results and save them to the global variable GlobalVars.MDAVPreferencesCurrent
                             // Necessary in order to get up to date results
-                            HardenWindowsSecurity.GlobalVars.MDAVPreferencesCurrent = HardenWindowsSecurity.MpPreferenceHelper.GetMpPreference();
+                            GlobalVars.MDAVPreferencesCurrent = MpPreferenceHelper.GetMpPreference();
 
 
                             // variables to store the ASR rules IDs and their corresponding actions
@@ -349,7 +349,7 @@ namespace HardenWindowsSecurity
                             }
 
                             // Loop over each item in the HashTable
-                            foreach (var kvp in AttackSurfaceReductionIntel.ASRTable)
+                            foreach (KeyValuePair<string, string> kvp in AttackSurfaceReductionIntel.ASRTable)
                             {
                                 // Assign each key/value to local variables
                                 string name = kvp.Key.ToLowerInvariant();
@@ -396,7 +396,7 @@ namespace HardenWindowsSecurity
 
 
                         // mark as activity completed
-                        HardenWindowsSecurity.ActivityTracker.IsActive = false;
+                        ActivityTracker.IsActive = false;
 
                     }
                 };
@@ -404,10 +404,10 @@ namespace HardenWindowsSecurity
 
 
                 // Cache the view before setting it as the CurrentView
-                _viewCache["ASRRulesView"] = HardenWindowsSecurity.GUIASRRules.View;
+                _viewCache["ASRRulesView"] = GUIASRRules.View;
 
                 // Set the CurrentView to the ASRRules view
-                CurrentView = HardenWindowsSecurity.GUIASRRules.View;
+                CurrentView = GUIASRRules.View;
             }
         }
     }

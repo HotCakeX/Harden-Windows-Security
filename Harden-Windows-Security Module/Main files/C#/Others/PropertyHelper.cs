@@ -23,7 +23,7 @@ namespace HardenWindowsSecurity
             if (obj is IDictionary<string, object> dictionary)
             {
                 // Find the key in a case-insensitive manner
-                var key = dictionary.Keys.FirstOrDefault(k => string.Equals(k, propertyName, StringComparison.OrdinalIgnoreCase));
+                string? key = dictionary.Keys.FirstOrDefault(k => string.Equals(k, propertyName, StringComparison.OrdinalIgnoreCase));
                 if (key is not null)
                 {
                     var value = dictionary[key];

@@ -5,7 +5,7 @@ using System.Diagnostics;
 
 namespace HardenWindowsSecurity
 {
-    public class LGPORunner
+    public static class LGPORunner
     {
         // Enum to specify the file type
         public enum FileType

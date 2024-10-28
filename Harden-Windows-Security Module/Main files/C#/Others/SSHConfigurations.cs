@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
@@ -36,7 +37,7 @@ namespace HardenWindowsSecurity
             else
             {
                 // If the file exists, read all lines into a list
-                var configLines = File.ReadAllLines(SSHClientUserConfigFile).ToList();
+                List<string> configLines = [.. File.ReadAllLines(SSHClientUserConfigFile)];
 
                 // Check if any line starts with "MACs "
                 bool lineExists = false;
@@ -81,7 +82,7 @@ namespace HardenWindowsSecurity
                 if (File.Exists(SSHClientUserConfigFile))
                 {
                     // Read all lines into a list
-                    var configLines = File.ReadAllLines(SSHClientUserConfigFile).ToList();
+                    List<string> configLines = [.. File.ReadAllLines(SSHClientUserConfigFile)];
 
                     // Check if any line starts with "MACs "
                     for (int i = 0; i < configLines.Count; i++)

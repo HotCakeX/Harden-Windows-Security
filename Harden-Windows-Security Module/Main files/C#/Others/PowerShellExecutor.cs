@@ -6,7 +6,7 @@ using System.Management.Automation;
 
 namespace HardenWindowsSecurity
 {
-    public class PowerShellExecutor
+    public static class PowerShellExecutor
     {
         /// <summary>
         /// Runs a PowerShell script and displays verbose and normal output in real-time.

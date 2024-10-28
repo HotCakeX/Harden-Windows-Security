@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Media.Imaging;
-using static HardenWindowsSecurity.NewToastNotification;
 
 #nullable disable
 
@@ -28,7 +28,7 @@ namespace HardenWindowsSecurity
             private System.Collections.ObjectModel.ObservableCollection<SecOp> __SecOpses;
 
             // Method to handle the "Confirm" view, including loading and modifying it
-            private void Confirm(object obj)
+            private void ConfirmView(object obj)
             {
                 // Check if the Confirm view is already cached
                 if (_viewCache.TryGetValue("ConfirmView", out var cachedView))
@@ -37,7 +37,7 @@ namespace HardenWindowsSecurity
                     CurrentView = cachedView;
 
                     // Only update the UI if work is not being done (i.e. the confirmation job is not already active)
-                    if (!HardenWindowsSecurity.ActivityTracker.IsActive)
+                    if (!ActivityTracker.IsActive)
                     {
                         // Update the UI every time the user switches to Confirm tab but do not display toast notification when it happens because it won't make sense
                         UpdateTotalCount(false);
@@ -48,17 +48,17 @@ namespace HardenWindowsSecurity
 
                 // if Admin privileges are not available, return and do not proceed any further
                 // Will prevent the page from being loaded since the CurrentView won't be set/changed
-                if (!HardenWindowsSecurity.UserPrivCheck.IsAdmin())
+                if (!UserPrivCheck.IsAdmin())
                 {
                     Logger.LogMessage("Confirmation page can only be used when running the Harden Windows Security Application with Administrator privileges", LogTypeIntel.ErrorInteractionRequired);
                     return;
                 }
 
                 // Construct the full file path to the Confirm view XAML file
-                string xamlPath = System.IO.Path.Combine(HardenWindowsSecurity.GlobalVars.path, "Resources", "XAML", "Confirm.xaml");
+                string xamlPath = Path.Combine(GlobalVars.path, "Resources", "XAML", "Confirm.xaml");
 
                 // Read the XAML content from the file
-                string xamlContent = System.IO.File.ReadAllText(xamlPath);
+                string xamlContent = File.ReadAllText(xamlPath);
 
                 // Parse the XAML content to create a UserControl object
                 GUIConfirmSystemCompliance.View = (UserControl)System.Windows.Markup.XamlReader.Parse(xamlContent);
@@ -67,7 +67,7 @@ namespace HardenWindowsSecurity
                 GUIConfirmSystemCompliance.View.DataContext = new ConfirmVM();
 
                 // Find the SecOpsDataGrid
-                HardenWindowsSecurity.GUIConfirmSystemCompliance.SecOpsDataGrid = (DataGrid)GUIConfirmSystemCompliance.View.FindName("SecOpsDataGrid");
+                GUIConfirmSystemCompliance.SecOpsDataGrid = (DataGrid)GUIConfirmSystemCompliance.View.FindName("SecOpsDataGrid");
 
                 TextBlock TotalCurrentlyDisplayedSecOpsTextBlock = (TextBlock)GUIConfirmSystemCompliance.View.FindName("TotalCurrentlyDisplayedSecOps");
 
@@ -134,14 +134,14 @@ namespace HardenWindowsSecurity
                 _SecOpsCollectionView = System.Windows.Data.CollectionViewSource.GetDefaultView(__SecOpses);
 
                 // Set the ItemSource of the DataGrid in the Confirm view to the collection view
-                if (HardenWindowsSecurity.GUIConfirmSystemCompliance.SecOpsDataGrid is not null)
+                if (GUIConfirmSystemCompliance.SecOpsDataGrid is not null)
                 {
                     // Bind the DataGrid to the collection view
-                    HardenWindowsSecurity.GUIConfirmSystemCompliance.SecOpsDataGrid.ItemsSource = _SecOpsCollectionView;
+                    GUIConfirmSystemCompliance.SecOpsDataGrid.ItemsSource = _SecOpsCollectionView;
                 }
 
                 // Finding the textboxFilter element
-                var textBoxFilter = (TextBox)GUIConfirmSystemCompliance.View.FindName("textBoxFilter");
+                TextBox textBoxFilter = GUIConfirmSystemCompliance.View.FindName("textBoxFilter") as TextBox;
 
                 #region event handlers for data filtration
                 // Attach event handlers to the text box filter and toggle buttons
@@ -171,9 +171,9 @@ namespace HardenWindowsSecurity
 
                 // Update the image source for the Refresh button
                 // Load the Refresh icon image into memory and set it as the source
-                var RefreshIconBitmapImage = new BitmapImage();
+                BitmapImage RefreshIconBitmapImage = new();
                 RefreshIconBitmapImage.BeginInit();
-                RefreshIconBitmapImage.UriSource = new System.Uri(System.IO.Path.Combine(HardenWindowsSecurity.GlobalVars.path!, "Resources", "Media", "ExecuteButton.png"));
+                RefreshIconBitmapImage.UriSource = new Uri(Path.Combine(GlobalVars.path!, "Resources", "Media", "ExecuteButton.png"));
                 RefreshIconBitmapImage.CacheOption = BitmapCacheOption.OnLoad; // Load the image data into memory
                 RefreshIconBitmapImage.EndInit();
 
@@ -188,7 +188,7 @@ namespace HardenWindowsSecurity
                 ComboBox ComplianceCategoriesSelectionComboBox = GUIConfirmSystemCompliance.View.FindName("ComplianceCategoriesSelectionComboBox") as ComboBox;
 
                 // Create an instance of the class
-                var cats = new ComplianceCategoriex();
+                ComplianceCategoriex cats = new();
 
                 // Get the valid compliance checking categories
                 string[] catsStrings = cats.GetValidValues();
@@ -207,7 +207,7 @@ namespace HardenWindowsSecurity
 
 
                 // Register the RefreshButton as an element that will be enabled/disabled based on current activity
-                HardenWindowsSecurity.ActivityTracker.RegisterUIElement(RefreshButton);
+                ActivityTracker.RegisterUIElement(RefreshButton);
 
 
                 // Set up the Click event handler for the Refresh button
@@ -215,10 +215,10 @@ namespace HardenWindowsSecurity
                 {
 
                     // Only continue if there is no activity other places
-                    if (!HardenWindowsSecurity.ActivityTracker.IsActive)
+                    if (!ActivityTracker.IsActive)
                     {
                         // mark as activity started
-                        HardenWindowsSecurity.ActivityTracker.IsActive = true;
+                        ActivityTracker.IsActive = true;
 
                         // Clear the current security options before starting data generation
                         __SecOpses.Clear();
@@ -229,14 +229,14 @@ namespace HardenWindowsSecurity
                         System.Windows.Application.Current.Dispatcher.Invoke(() =>
                             {
                                 // Finding the elements
-                                var CompliantItemsTextBlock = (TextBlock)GUIConfirmSystemCompliance.View.FindName("CompliantItemsTextBlock");
-                                var NonCompliantItemsTextBlock = (TextBlock)GUIConfirmSystemCompliance.View.FindName("NonCompliantItemsTextBlock");
+                                TextBlock CompliantItemsTextBlock = (TextBlock)GUIConfirmSystemCompliance.View.FindName("CompliantItemsTextBlock");
+                                TextBlock NonCompliantItemsTextBlock = (TextBlock)GUIConfirmSystemCompliance.View.FindName("NonCompliantItemsTextBlock");
 
                                 // Setting these texts the same as the text in the XAML for these text blocks so that every time Refresh button is pressed, they lose their numbers until the new data is generated and new counts are calculated
                                 CompliantItemsTextBlock.Text = "Compliant Items";
                                 NonCompliantItemsTextBlock.Text = "Non-Compliant Items";
 
-                                var TotalCountTextBlock = (TextBlock)GUIConfirmSystemCompliance.View.FindName("TotalCountTextBlock");
+                                TextBlock TotalCountTextBlock = (TextBlock)GUIConfirmSystemCompliance.View.FindName("TotalCountTextBlock");
 
                                 if (TotalCountTextBlock is not null)
                                 {
@@ -251,7 +251,7 @@ namespace HardenWindowsSecurity
                         await System.Threading.Tasks.Task.Run(() =>
                             {
                                 // Get fresh data for compliance checking
-                                HardenWindowsSecurity.Initializer.Initialize(null, true);
+                                Initializer.Initialize(null, true);
 
                                 // initialize the variable to null
                                 string SelectedCategory = string.Empty;
@@ -275,12 +275,12 @@ namespace HardenWindowsSecurity
                                 if (SelectedCategory is not null && !string.IsNullOrEmpty(SelectedCategory))
                                 {
                                     // Perform the compliance check using the selected compliance category
-                                    HardenWindowsSecurity.InvokeConfirmation.Invoke([SelectedCategory]);
+                                    InvokeConfirmation.Invoke([SelectedCategory]);
                                 }
                                 else
                                 {
                                     // Perform the compliance check for all categories
-                                    HardenWindowsSecurity.InvokeConfirmation.Invoke(null);
+                                    InvokeConfirmation.Invoke(null);
                                 }
                             });
 
@@ -294,7 +294,7 @@ namespace HardenWindowsSecurity
                             });
 
                         // mark as activity completed
-                        HardenWindowsSecurity.ActivityTracker.IsActive = false;
+                        ActivityTracker.IsActive = false;
                     }
                 };
 
@@ -351,7 +351,7 @@ namespace HardenWindowsSecurity
             {
 
                 // calculates the total number of all security options across all lists, so all the items in each category that exist in the values of the main dictionary object
-                int totalCount = HardenWindowsSecurity.GlobalVars.FinalMegaObject?.Values.Sum(list => list.Count) ?? 0;
+                int totalCount = GlobalVars.FinalMegaObject?.Values.Sum(list => list.Count) ?? 0;
 
                 // Find the TextBlock used to display the total count
                 TextBlock TotalCountTextBlock = (TextBlock)GUIConfirmSystemCompliance.View.FindName("TotalCountTextBlock");
@@ -372,8 +372,8 @@ namespace HardenWindowsSecurity
                     .Count(item => !item.Compliant).ToString(CultureInfo.InvariantCulture);
 
                 // Find the text blocks that display counts of true/false items
-                var CompliantItemsTextBlock = (TextBlock)GUIConfirmSystemCompliance.View.FindName("CompliantItemsTextBlock");
-                var NonCompliantItemsTextBlock = (TextBlock)GUIConfirmSystemCompliance.View.FindName("NonCompliantItemsTextBlock");
+                TextBlock CompliantItemsTextBlock = (TextBlock)GUIConfirmSystemCompliance.View.FindName("CompliantItemsTextBlock");
+                TextBlock NonCompliantItemsTextBlock = (TextBlock)GUIConfirmSystemCompliance.View.FindName("NonCompliantItemsTextBlock");
 
                 if (CompliantItemsTextBlock is not null)
                 {
@@ -388,9 +388,9 @@ namespace HardenWindowsSecurity
                 }
 
                 // Display a notification if it's allowed to do so, and ShowNotification is set to true
-                if (HardenWindowsSecurity.GlobalVars.UseNewNotificationsExp && ShowNotification)
+                if (GlobalVars.UseNewNotificationsExp && ShowNotification)
                 {
-                    HardenWindowsSecurity.NewToastNotification.Show(ToastNotificationType.EndOfConfirmation, CompliantItemsCount, NonCompliantItemsCount, null, null);
+                    ToastNotification.Show(ToastNotification.Type.EndOfConfirmation, CompliantItemsCount, NonCompliantItemsCount, null, null);
                 }
             }
 
@@ -404,9 +404,9 @@ namespace HardenWindowsSecurity
                 __SecOpses.Clear();
 
                 // Retrieve data from GlobalVars.FinalMegaObject and populate the security options collection
-                if (HardenWindowsSecurity.GlobalVars.FinalMegaObject is not null)
+                if (GlobalVars.FinalMegaObject is not null)
                 {
-                    foreach (KeyValuePair<string, List<IndividualResult>> kvp in HardenWindowsSecurity.GlobalVars.FinalMegaObject)
+                    foreach (KeyValuePair<string, List<IndividualResult>> kvp in GlobalVars.FinalMegaObject)
                     {
                         string category = kvp.Key; // Get the category of results
                         List<IndividualResult> results = kvp.Value; // Get the results for the category

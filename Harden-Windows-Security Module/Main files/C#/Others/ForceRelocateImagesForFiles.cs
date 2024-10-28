@@ -6,7 +6,7 @@ using System.Management.Automation;
 
 namespace HardenWindowsSecurity
 {
-    public class ForceRelocateImagesForFiles
+    public static class ForceRelocateImagesForFiles
     {
 
         /// <summary>

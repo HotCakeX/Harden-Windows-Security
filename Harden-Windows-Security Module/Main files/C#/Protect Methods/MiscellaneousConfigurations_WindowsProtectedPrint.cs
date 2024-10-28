@@ -1,4 +1,7 @@
-﻿#nullable enable
+﻿using System;
+using System.IO;
+
+#nullable enable
 
 namespace HardenWindowsSecurity
 {
@@ -6,14 +9,14 @@ namespace HardenWindowsSecurity
     {
         public static void MiscellaneousConfigurations_WindowsProtectedPrint()
         {
-            if (HardenWindowsSecurity.GlobalVars.path is null)
+            if (GlobalVars.path is null)
             {
-                throw new System.ArgumentNullException("GlobalVars.path cannot be null.");
+                throw new ArgumentNullException("GlobalVars.path cannot be null.");
             }
 
-            HardenWindowsSecurity.Logger.LogMessage("Enabling Windows Protected Print", LogTypeIntel.Information);
+            Logger.LogMessage("Enabling Windows Protected Print", LogTypeIntel.Information);
 
-            HardenWindowsSecurity.LGPORunner.RunLGPOCommand(System.IO.Path.Combine(HardenWindowsSecurity.GlobalVars.path, "Resources", "Security-Baselines-X", "Miscellaneous Policies", "Windows Protected Print", "registry.pol"), LGPORunner.FileType.POL);
+            LGPORunner.RunLGPOCommand(Path.Combine(GlobalVars.path, "Resources", "Security-Baselines-X", "Miscellaneous Policies", "Windows Protected Print", "registry.pol"), LGPORunner.FileType.POL);
 
         }
     }

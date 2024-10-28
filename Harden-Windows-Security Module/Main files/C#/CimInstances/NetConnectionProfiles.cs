@@ -7,7 +7,7 @@ using System.Management;
 
 namespace HardenWindowsSecurity
 {
-    public class NetConnectionProfiles
+    public static class NetConnectionProfiles
     {
         /// <summary>
         /// This method outputs a list of all network connection profiles.
@@ -46,7 +46,7 @@ namespace HardenWindowsSecurity
             }
             catch (Exception e)
             {
-                HardenWindowsSecurity.Logger.LogMessage($"An error occurred: {e.Message}", LogTypeIntel.Error);
+                Logger.LogMessage($"An error occurred: {e.Message}", LogTypeIntel.Error);
             }
 
             // Return the list of profiles
@@ -96,7 +96,7 @@ namespace HardenWindowsSecurity
             }
             catch (Exception e)
             {
-                HardenWindowsSecurity.Logger.LogMessage($"An error occurred: {e.Message}", LogTypeIntel.Error);
+                Logger.LogMessage($"An error occurred: {e.Message}", LogTypeIntel.Error);
                 return false;
             }
         }

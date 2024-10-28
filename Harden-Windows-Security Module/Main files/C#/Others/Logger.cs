@@ -195,7 +195,7 @@ Machine: {Environment.MachineName}
                 GUIProtectWinSecurity.txtFilePath!.Text = GUIProtectWinSecurity.txtFilePath.Text.Trim(' ', '\'', '\"'); ;
 
                 // Ensure the path is absolute
-                GUIProtectWinSecurity.txtFilePath.Text = System.IO.Path.GetFullPath(GUIProtectWinSecurity.txtFilePath.Text);
+                GUIProtectWinSecurity.txtFilePath.Text = Path.GetFullPath(GUIProtectWinSecurity.txtFilePath.Text);
 
                 // Append log entries to the file
                 try

@@ -15,23 +15,23 @@ namespace HardenWindowsSecurity
         /// <param name="Categories"></param>
         public static void Invoke(string[] Categories)
         {
-            HardenWindowsSecurity.Logger.LogMessage("Collecting Intune applied policy details from the System", LogTypeIntel.Information);
+            Logger.LogMessage("Collecting Intune applied policy details from the System", LogTypeIntel.Information);
 
-            HardenWindowsSecurity.Logger.LogMessage("Controlled Folder Access Handling", LogTypeIntel.Information);
-            HardenWindowsSecurity.ControlledFolderAccessHandler.Start();
+            Logger.LogMessage("Controlled Folder Access Handling", LogTypeIntel.Information);
+            ControlledFolderAccessHandler.Start();
 
             // Give the Defender internals time to process the updated exclusions list
             Thread.Sleep(5000);
 
-            HardenWindowsSecurity.Logger.LogMessage("Collecting any possible Intune/MDM policies", LogTypeIntel.Information);
-            HardenWindowsSecurity.SYSTEMScheduledTasks.Invoke();
+            Logger.LogMessage("Collecting any possible Intune/MDM policies", LogTypeIntel.Information);
+            SYSTEMScheduledTasks.Invoke();
 
             // Collect the JSON File Paths
-            string MDM_Firewall_DomainProfile02_Path = System.IO.Path.Combine(HardenWindowsSecurity.GlobalVars.WorkingDir, "MDM_Firewall_DomainProfile02.json");
-            string MDM_Firewall_PrivateProfile02_Path = System.IO.Path.Combine(HardenWindowsSecurity.GlobalVars.WorkingDir, "MDM_Firewall_PrivateProfile02.json");
-            string MDM_Firewall_PublicProfile02_Path = System.IO.Path.Combine(HardenWindowsSecurity.GlobalVars.WorkingDir, "MDM_Firewall_PublicProfile02.json");
-            string MDM_Policy_Result01_Update02_Path = System.IO.Path.Combine(HardenWindowsSecurity.GlobalVars.WorkingDir, "MDM_Policy_Result01_Update02.json");
-            string MDM_Policy_Result01_System02_Path = System.IO.Path.Combine(HardenWindowsSecurity.GlobalVars.WorkingDir, "MDM_Policy_Result01_System02.json");
+            string MDM_Firewall_DomainProfile02_Path = Path.Combine(GlobalVars.WorkingDir, "MDM_Firewall_DomainProfile02.json");
+            string MDM_Firewall_PrivateProfile02_Path = Path.Combine(GlobalVars.WorkingDir, "MDM_Firewall_PrivateProfile02.json");
+            string MDM_Firewall_PublicProfile02_Path = Path.Combine(GlobalVars.WorkingDir, "MDM_Firewall_PublicProfile02.json");
+            string MDM_Policy_Result01_Update02_Path = Path.Combine(GlobalVars.WorkingDir, "MDM_Policy_Result01_Update02.json");
+            string MDM_Policy_Result01_System02_Path = Path.Combine(GlobalVars.WorkingDir, "MDM_Policy_Result01_System02.json");
 
 
             // Wait until all files are created, this is necessary because sometimes it takes a second or two for the scheduled task to create the files
@@ -59,7 +59,7 @@ namespace HardenWindowsSecurity
                 }
 
                 // Check if the timeout has been exceeded
-                if (stopwatch.ElapsedMilliseconds > 10000) // 10 seconds in milliseconds
+                if (stopwatch.ElapsedMilliseconds > 30000) // 30 seconds in milliseconds
                 {
                     throw new TimeoutException("Timeout exceeded while waiting for the MDM policy files to be created.");
                 }
@@ -69,14 +69,14 @@ namespace HardenWindowsSecurity
             }
 
             // Parse the JSON Files and store the results in global variables
-            HardenWindowsSecurity.GlobalVars.MDM_Firewall_DomainProfile02 = HardenWindowsSecurity.JsonToHashtable.ProcessJsonFile(MDM_Firewall_DomainProfile02_Path);
-            HardenWindowsSecurity.GlobalVars.MDM_Firewall_PrivateProfile02 = HardenWindowsSecurity.JsonToHashtable.ProcessJsonFile(MDM_Firewall_PrivateProfile02_Path);
-            HardenWindowsSecurity.GlobalVars.MDM_Firewall_PublicProfile02 = HardenWindowsSecurity.JsonToHashtable.ProcessJsonFile(MDM_Firewall_PublicProfile02_Path);
-            HardenWindowsSecurity.GlobalVars.MDM_Policy_Result01_Update02 = HardenWindowsSecurity.JsonToHashtable.ProcessJsonFile(MDM_Policy_Result01_Update02_Path);
-            HardenWindowsSecurity.GlobalVars.MDM_Policy_Result01_System02 = HardenWindowsSecurity.JsonToHashtable.ProcessJsonFile(MDM_Policy_Result01_System02_Path);
+            GlobalVars.MDM_Firewall_DomainProfile02 = JsonToHashtable.ProcessJsonFile(MDM_Firewall_DomainProfile02_Path);
+            GlobalVars.MDM_Firewall_PrivateProfile02 = JsonToHashtable.ProcessJsonFile(MDM_Firewall_PrivateProfile02_Path);
+            GlobalVars.MDM_Firewall_PublicProfile02 = JsonToHashtable.ProcessJsonFile(MDM_Firewall_PublicProfile02_Path);
+            GlobalVars.MDM_Policy_Result01_Update02 = JsonToHashtable.ProcessJsonFile(MDM_Policy_Result01_Update02_Path);
+            GlobalVars.MDM_Policy_Result01_System02 = JsonToHashtable.ProcessJsonFile(MDM_Policy_Result01_System02_Path);
 
-            HardenWindowsSecurity.Logger.LogMessage("Verifying the security settings", LogTypeIntel.Information);
-            HardenWindowsSecurity.ConfirmSystemComplianceMethods.OrchestrateComplianceChecks(Categories);
+            Logger.LogMessage("Verifying the security settings", LogTypeIntel.Information);
+            ConfirmSystemComplianceMethods.OrchestrateComplianceChecks(Categories);
 
         }
     }

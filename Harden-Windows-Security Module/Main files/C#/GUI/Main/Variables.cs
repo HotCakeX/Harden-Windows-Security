@@ -1,4 +1,6 @@
-﻿using System.Windows.Controls;
+﻿using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Media;
 
 #nullable enable
 
@@ -10,21 +12,21 @@ namespace HardenWindowsSecurity
         public static string? xamlPath;
 
         // Main window instance
-        public static System.Windows.Window? mainGUIWindow;
+        public static Window? mainGUIWindow;
 
         // Application instance
-        public static System.Windows.Application? app;
+        public static Application? app;
 
         // Sidebar menu Grid in the main Window
         public static Grid? SidebarGrid;
 
         // The main progress bar for the entire GUI
-        public static System.Windows.Controls.ProgressBar? mainProgressBar;
+        public static ProgressBar? mainProgressBar;
 
         // The Inner border of the entire GUI
-        public static System.Windows.Media.RadialGradientBrush? InnerBorderBackground;
+        public static RadialGradientBrush? InnerBorderBackground;
 
         // The slider at the bottom left that controls the background image opacity
-        public static System.Windows.Controls.Slider? BackgroundSlider;
+        public static Slider? BackgroundSlider;
     }
 }

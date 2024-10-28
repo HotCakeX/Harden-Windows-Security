@@ -18,7 +18,7 @@ namespace HardenWindowsSecurity
         {
 
             #region
-            HardenWindowsSecurity.Logger.LogMessage("Removing all of the group policies from the system.", LogTypeIntel.Information);
+            Logger.LogMessage("Removing all of the group policies from the system.", LogTypeIntel.Information);
 
             string GroupPolicyDirectoryLocation = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.System), "GroupPolicy");
 
@@ -30,11 +30,11 @@ namespace HardenWindowsSecurity
 
 
             #region registry keys
-            HardenWindowsSecurity.Logger.LogMessage("Deleting all the registry keys created during protection.", LogTypeIntel.Information);
+            Logger.LogMessage("Deleting all the registry keys created during protection.", LogTypeIntel.Information);
 
-            foreach (var Item in HardenWindowsSecurity.GlobalVars.RegistryCSVItems!)
+            foreach (HardeningRegistryKeys.CsvRecord Item in GlobalVars.RegistryCSVItems!)
             {
-                HardenWindowsSecurity.RegistryEditor.EditRegistry(Item.Path!, Item.Key!, Item.Value!, Item.Type!, "Delete");
+                RegistryEditor.EditRegistry(Item.Path, Item.Key, Item.Value, Item.Type, "Delete");
             }
 
             // To completely remove the Edge policy since only its sub-keys are removed by the command above
@@ -45,25 +45,25 @@ namespace HardenWindowsSecurity
             }
 
             // Set a tattooed Group policy for SvcHost.exe process mitigations back to disabled state
-            HardenWindowsSecurity.RegistryEditor.EditRegistry(@"HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\SCMConfig", "EnableSvchostMitigationPolicy", "0", "DWORD", "AddOrModify");
+            RegistryEditor.EditRegistry(@"HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\SCMConfig", "EnableSvchostMitigationPolicy", "0", "DWORD", "AddOrModify");
 
             #endregion
 
 
             #region Advanced Microsoft Defender features
-            HardenWindowsSecurity.Logger.LogMessage("Reverting the advanced protections in the Microsoft Defender.", LogTypeIntel.Information);
-            HardenWindowsSecurity.ConfigDefenderHelper.ManageMpPreference<bool>("AllowSwitchToAsyncInspection", false, true);
-            HardenWindowsSecurity.ConfigDefenderHelper.ManageMpPreference<bool>("DisableRestorePoint", true, true);
-            HardenWindowsSecurity.ConfigDefenderHelper.ManageMpPreference<bool>("EnableConvertWarnToBlock", false, true);
-            HardenWindowsSecurity.ConfigDefenderHelper.ManageMpPreference<bool>("BruteForceProtectionLocalNetworkBlocking", false, true);
-            HardenWindowsSecurity.ConfigDefenderHelper.ManageMpPreference<bool>("EnableEcsConfiguration", false, true);
-            HardenWindowsSecurity.ConfigDefenderHelper.ManageMpPreference<string>("EngineUpdatesChannel", "0", true);
-            HardenWindowsSecurity.ConfigDefenderHelper.ManageMpPreference<string>("PlatformUpdatesChannel", "0", true);
+            Logger.LogMessage("Reverting the advanced protections in the Microsoft Defender.", LogTypeIntel.Information);
+            ConfigDefenderHelper.ManageMpPreference("AllowSwitchToAsyncInspection", false, true);
+            ConfigDefenderHelper.ManageMpPreference("DisableRestorePoint", true, true);
+            ConfigDefenderHelper.ManageMpPreference("EnableConvertWarnToBlock", false, true);
+            ConfigDefenderHelper.ManageMpPreference("BruteForceProtectionLocalNetworkBlocking", false, true);
+            ConfigDefenderHelper.ManageMpPreference("EnableEcsConfiguration", false, true);
+            ConfigDefenderHelper.ManageMpPreference("EngineUpdatesChannel", "0", true);
+            ConfigDefenderHelper.ManageMpPreference("PlatformUpdatesChannel", "0", true);
             #endregion
 
 
             #region Group Policies
-            HardenWindowsSecurity.Logger.LogMessage("Restoring the default Security group policies", LogTypeIntel.Information);
+            Logger.LogMessage("Restoring the default Security group policies", LogTypeIntel.Information);
 
             // if LGPO doesn't already exist in the working directory, then download it
             // No ActivityTracker is implemented in here because this file download only happens
@@ -80,7 +80,7 @@ namespace HardenWindowsSecurity
             }
 
             // Apply the default security policy on the system
-            HardenWindowsSecurity.LGPORunner.RunLGPOCommand(Path.Combine(GlobalVars.path!, "Resources", "Default Security Policy.inf"), LGPORunner.FileType.INF, Path.Combine(GlobalVars.WorkingDir, "LGPO_30", "LGPO.exe"));
+            LGPORunner.RunLGPOCommand(Path.Combine(GlobalVars.path!, "Resources", "Default Security Policy.inf"), LGPORunner.FileType.INF, Path.Combine(GlobalVars.WorkingDir, "LGPO_30", "LGPO.exe"));
             #endregion
 
 
@@ -88,10 +88,10 @@ namespace HardenWindowsSecurity
 
             bool XblGameSaveTaskResult;
 
-            var XblGameSaveTaskResultObject = HardenWindowsSecurity.TaskSchedulerHelper.Get(
+            var XblGameSaveTaskResultObject = TaskSchedulerHelper.Get(
                 "XblGameSaveTask",
                 @"\Microsoft\XblGameSave\",
-                HardenWindowsSecurity.TaskSchedulerHelper.OutputType.Boolean
+                TaskSchedulerHelper.OutputType.Boolean
             );
 
             // Convert to boolean
@@ -100,24 +100,24 @@ namespace HardenWindowsSecurity
             if (XblGameSaveTaskResult)
             {
 
-                HardenWindowsSecurity.Logger.LogMessage("Re-enables the XblGameSave Standby Task that gets disabled by Microsoft Security Baselines", LogTypeIntel.Information);
-                _ = HardenWindowsSecurity.PowerShellExecutor.ExecuteScript(@"SCHTASKS.EXE /Change /TN \Microsoft\XblGameSave\XblGameSaveTask /Enable");
+                Logger.LogMessage("Re-enables the XblGameSave Standby Task that gets disabled by Microsoft Security Baselines", LogTypeIntel.Information);
+                _ = PowerShellExecutor.ExecuteScript(@"SCHTASKS.EXE /Change /TN \Microsoft\XblGameSave\XblGameSaveTask /Enable");
             }
             else
             {
-                HardenWindowsSecurity.Logger.LogMessage("XblGameSave scheduled task couldn't be found in the task scheduler.", LogTypeIntel.Information);
+                Logger.LogMessage("XblGameSave scheduled task couldn't be found in the task scheduler.", LogTypeIntel.Information);
             }
             #endregion
 
 
             #region DEP
-            HardenWindowsSecurity.Logger.LogMessage("Setting Data Execution Prevention (DEP) back to its default value", LogTypeIntel.Information);
-            _ = HardenWindowsSecurity.PowerShellExecutor.ExecuteScript(@"Set-BcdElement -Element 'nx' -Type 'Integer' -Value '0'");
+            Logger.LogMessage("Setting Data Execution Prevention (DEP) back to its default value", LogTypeIntel.Information);
+            _ = PowerShellExecutor.ExecuteScript(@"Set-BcdElement -Element 'nx' -Type 'Integer' -Value '0'");
             #endregion
 
 
             #region Fast MSFT Driver Block list task
-            HardenWindowsSecurity.Logger.LogMessage("Removing the scheduled task that keeps the Microsoft recommended driver block rules updated", LogTypeIntel.Information);
+            Logger.LogMessage("Removing the scheduled task that keeps the Microsoft recommended driver block rules updated", LogTypeIntel.Information);
 
             // Deleting the MSFT Driver Block list update Scheduled task if it exists
             _ = TaskSchedulerHelper.Delete("MSFT Driver Block list update", @"\MSFT Driver Block list update\", "MSFT Driver Block list update");
@@ -142,7 +142,7 @@ namespace HardenWindowsSecurity
 
             #region Firewall
 
-            _ = HardenWindowsSecurity.PowerShellExecutor.ExecuteScript("""
+            _ = PowerShellExecutor.ExecuteScript("""
 # Enables Multicast DNS (mDNS) UDP-in Firewall Rules for all 3 Firewall profiles
 foreach ($FirewallRule in Get-NetFirewallRule) {
     if ($FirewallRule.RuleGroup -eq '@%SystemRoot%\system32\firewallapi.dll,-37302' -and $FirewallRule.Direction -eq 'inbound') {
@@ -165,14 +165,14 @@ foreach ($FirewallRule in Get-NetFirewallRule) {
         /// </summary>
         public static void RemoveCountryIPBlockingFirewallRules()
         {
-            HardenWindowsSecurity.Logger.LogMessage("Removing the country IP blocking firewall rules only", LogTypeIntel.Information);
+            Logger.LogMessage("Removing the country IP blocking firewall rules only", LogTypeIntel.Information);
 
             FirewallHelper.BlockIPAddressListsInGroupPolicy("OFAC Sanctioned Countries IP range blocking", null, false);
 
             FirewallHelper.BlockIPAddressListsInGroupPolicy("State Sponsors of Terrorism IP range blocking", null, false);
 
             // Refresh the group policies to apply the changes instantly
-            _ = HardenWindowsSecurity.PowerShellExecutor.ExecuteScript("""
+            _ = PowerShellExecutor.ExecuteScript("""
 Start-Process -FilePath GPUpdate.exe -ArgumentList '/force' -NoNewWindow
 """);
         }
@@ -184,15 +184,15 @@ Start-Process -FilePath GPUpdate.exe -ArgumentList '/force' -NoNewWindow
         /// <exception cref="Exception"></exception>
         public static void RemoveExploitMitigations()
         {
-            HardenWindowsSecurity.Logger.LogMessage("Removing the Process Mitigations / Exploit Protection settings", LogTypeIntel.Information);
+            Logger.LogMessage("Removing the Process Mitigations / Exploit Protection settings", LogTypeIntel.Information);
 
             // Disable Mandatory ASLR
             // Define the PowerShell command to execute
             string command = "Set-ProcessMitigation -System -Disable ForceRelocateImages";
-            _ = HardenWindowsSecurity.PowerShellExecutor.ExecuteScript(command);
+            _ = PowerShellExecutor.ExecuteScript(command);
 
 
-            if (HardenWindowsSecurity.GlobalVars.ProcessMitigations is null)
+            if (GlobalVars.ProcessMitigations is null)
             {
                 throw new InvalidOperationException("GlobalVars.ProcessMitigations is null.");
             }
@@ -201,12 +201,12 @@ Start-Process -FilePath GPUpdate.exe -ArgumentList '/force' -NoNewWindow
             // It is important for any executable whose name is mentioned as a key in "Computer\HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options" by default in a clean Windows installation, to have the RemovalAllowed property of ALL OF ITS MITIGATIONS defined in the Process Mitigations CSV file set to False
             // So regardless of whether mitigations were added by the module, only remove mitigations for processes whose names do not exist in that registry location by default, this will prevent from removing any possible built-in default mitigations
             // The following removals only affect the registry keys, they do not alter the mitigations defined in Microsoft Defender GUI
-            List<HardenWindowsSecurity.ProcessMitigationsParser.ProcessMitigationsRecords> processMitigations = HardenWindowsSecurity.GlobalVars.ProcessMitigations
+            List<ProcessMitigationsParser.ProcessMitigationsRecords> processMitigations = GlobalVars.ProcessMitigations
                 .Where(mitigation => mitigation.RemovalAllowed)
                 .ToList();
 
             // Group the filtered mitigations by ProgramName
-            List<IGrouping<string?, HardenWindowsSecurity.ProcessMitigationsParser.ProcessMitigationsRecords>>? groupedMitigations = processMitigations
+            List<IGrouping<string?, ProcessMitigationsParser.ProcessMitigationsRecords>>? groupedMitigations = processMitigations
                 .GroupBy(mitigation => mitigation.ProgramName)
                 .ToList();
 
@@ -253,10 +253,10 @@ Start-Process -FilePath GPUpdate.exe -ArgumentList '/force' -NoNewWindow
                     if (string.Equals(item.FriendlyName, "Downloads-Defense-Measures", StringComparison.OrdinalIgnoreCase))
                     {
 
-                        HardenWindowsSecurity.Logger.LogMessage("Removing the Downloads-Defense-Measures AppControl policy", LogTypeIntel.Information);
+                        Logger.LogMessage("Removing the Downloads-Defense-Measures AppControl policy", LogTypeIntel.Information);
 
                         // remove the policy
-                        HardenWindowsSecurity.CiToolRunner.RemovePolicy(item.PolicyID!);
+                        CiToolRunner.RemovePolicy(item.PolicyID!);
                     }
                 }
             }
@@ -269,10 +269,10 @@ Start-Process -FilePath GPUpdate.exe -ArgumentList '/force' -NoNewWindow
                     // find the policy with the right name
                     if (string.Equals(item.FriendlyName, "Dangerous-Script-Hosts-Blocking", StringComparison.OrdinalIgnoreCase))
                     {
-                        HardenWindowsSecurity.Logger.LogMessage("Removing the Dangerous-Script-Hosts-Blocking AppControl policy", LogTypeIntel.Information);
+                        Logger.LogMessage("Removing the Dangerous-Script-Hosts-Blocking AppControl policy", LogTypeIntel.Information);
 
                         // remove the policy
-                        HardenWindowsSecurity.CiToolRunner.RemovePolicy(item.PolicyID!);
+                        CiToolRunner.RemovePolicy(item.PolicyID!);
                     }
                 }
             }

@@ -19,7 +19,7 @@ namespace HardenWindowsSecurity
         {
 
             // Method to handle the Exclusions view, including loading
-            private void Exclusions(object obj)
+            private void ExclusionsView(object obj)
             {
                 // Check if the view is already cached
                 if (_viewCache.TryGetValue("ExclusionsView", out var cachedView))
@@ -29,33 +29,33 @@ namespace HardenWindowsSecurity
                 }
 
                 // Defining the path to the XAML XML file
-                if (HardenWindowsSecurity.GlobalVars.path is null)
+                if (GlobalVars.path is null)
                 {
                     throw new InvalidOperationException("GlobalVars.path cannot be null.");
                 }
 
                 // if Admin privileges are not available, return and do not proceed any further
                 // Will prevent the page from being loaded since the CurrentView won't be set/changed
-                if (!HardenWindowsSecurity.UserPrivCheck.IsAdmin())
+                if (!UserPrivCheck.IsAdmin())
                 {
                     Logger.LogMessage("Exclusions page can only be used when running the Harden Windows Security Application with Administrator privileges", LogTypeIntel.ErrorInteractionRequired);
                     return;
                 }
 
                 // Construct the file path for the Exclusions view XAML
-                string xamlPath = System.IO.Path.Combine(HardenWindowsSecurity.GlobalVars.path, "Resources", "XAML", "Exclusions.xaml");
+                string xamlPath = Path.Combine(GlobalVars.path, "Resources", "XAML", "Exclusions.xaml");
 
                 // Read the XAML content from the file
                 string xamlContent = File.ReadAllText(xamlPath);
 
                 // Parse the XAML content to create a UserControl
-                HardenWindowsSecurity.GUIExclusions.View = (UserControl)XamlReader.Parse(xamlContent);
+                GUIExclusions.View = (UserControl)XamlReader.Parse(xamlContent);
 
                 // Set the DataContext for the Exclusions view
                 GUIExclusions.View.DataContext = new ExclusionsVM();
 
                 // Find the Parent Grid
-                HardenWindowsSecurity.GUIExclusions.ParentGrid = (Grid)HardenWindowsSecurity.GUIExclusions.View.FindName("ParentGrid");
+                GUIExclusions.ParentGrid = (Grid)GUIExclusions.View.FindName("ParentGrid");
 
                 #region finding Execute button related elements
 
@@ -76,9 +76,9 @@ namespace HardenWindowsSecurity
 
                 // Update the image source for the Refresh button
                 // Load the Refresh icon image into memory and set it as the source
-                var RefreshIconBitmapImage = new BitmapImage();
+                BitmapImage RefreshIconBitmapImage = new();
                 RefreshIconBitmapImage.BeginInit();
-                RefreshIconBitmapImage.UriSource = new System.Uri(System.IO.Path.Combine(HardenWindowsSecurity.GlobalVars.path!, "Resources", "Media", "ExecuteButton.png"));
+                RefreshIconBitmapImage.UriSource = new Uri(Path.Combine(GlobalVars.path!, "Resources", "Media", "ExecuteButton.png"));
                 RefreshIconBitmapImage.CacheOption = BitmapCacheOption.OnLoad; // Load the image data into memory
                 RefreshIconBitmapImage.EndInit();
 
@@ -101,9 +101,9 @@ namespace HardenWindowsSecurity
                 Image? BrowseButtonIcon = GUIExclusions.ParentGrid.FindName("BrowseButtonIcon") as Image ?? throw new InvalidOperationException("Couldn't find BrowseButtonIcon in the Exclusions view.");
 
                 // BrowseButtonIconImage
-                var BrowseButtonIconImage = new BitmapImage();
+                BitmapImage BrowseButtonIconImage = new();
                 BrowseButtonIconImage.BeginInit();
-                BrowseButtonIconImage.UriSource = new Uri(System.IO.Path.Combine(HardenWindowsSecurity.GlobalVars.path, "Resources", "Media", "BrowseButtonIconBlack.png"));
+                BrowseButtonIconImage.UriSource = new Uri(Path.Combine(GlobalVars.path, "Resources", "Media", "BrowseButtonIconBlack.png"));
                 BrowseButtonIconImage.CacheOption = BitmapCacheOption.OnLoad; // Load the image data into memory
                 BrowseButtonIconImage.EndInit();
                 BrowseButtonIcon.Source = BrowseButtonIconImage;
@@ -144,7 +144,7 @@ namespace HardenWindowsSecurity
                         {
                             SelectedFilePaths.Text += file + Environment.NewLine;
 
-                            HardenWindowsSecurity.Logger.LogMessage($"Selected file path: {file}", LogTypeIntel.Information);
+                            Logger.LogMessage($"Selected file path: {file}", LogTypeIntel.Information);
                         }
                     }
 
@@ -152,11 +152,11 @@ namespace HardenWindowsSecurity
 
 
                 // Register the ExecuteButton as an element that will be enabled/disabled based on current activity
-                HardenWindowsSecurity.ActivityTracker.RegisterUIElement(ExecuteButton);
-                HardenWindowsSecurity.ActivityTracker.RegisterUIElement(BrowseForFilesButton);
-                HardenWindowsSecurity.ActivityTracker.RegisterUIElement(BrowseForFilesButton);
-                HardenWindowsSecurity.ActivityTracker.RegisterUIElement(BrowseForFilesButton);
-                HardenWindowsSecurity.ActivityTracker.RegisterUIElement(BrowseForFilesButton);
+                ActivityTracker.RegisterUIElement(ExecuteButton);
+                ActivityTracker.RegisterUIElement(BrowseForFilesButton);
+                ActivityTracker.RegisterUIElement(BrowseForFilesButton);
+                ActivityTracker.RegisterUIElement(BrowseForFilesButton);
+                ActivityTracker.RegisterUIElement(BrowseForFilesButton);
 
                 // Add the path to the Controlled folder access backup list of the Harden Windows Security
                 // Only if it's not already in here
@@ -167,7 +167,7 @@ namespace HardenWindowsSecurity
                     GlobalVars.CFABackup ??= [];
 
                     // Convert GlobalVars.CFABackup to a List for easier manipulation
-                    var CFABackupLocal = new List<string>(GlobalVars.CFABackup!);
+                    List<string> CFABackupLocal = new(GlobalVars.CFABackup!);
 
                     // Check if the item is not already in the list
                     if (!CFABackupLocal.Contains(itemToAdd))
@@ -185,10 +185,10 @@ namespace HardenWindowsSecurity
                 ExecuteButton.Click += async (sender, e) =>
                     {
                         // Only continue if there is no activity other places
-                        if (!HardenWindowsSecurity.ActivityTracker.IsActive)
+                        if (!ActivityTracker.IsActive)
                         {
                             // mark as activity started
-                            HardenWindowsSecurity.ActivityTracker.IsActive = true;
+                            ActivityTracker.IsActive = true;
 
                             // Get the status of the toggle buttons using dispatcher and update the bool variables accordingly
                             // This way, we won't need to run the actual job in the dispatcher thread
@@ -212,12 +212,12 @@ namespace HardenWindowsSecurity
 
                                     // These already run in the Initialize() method but we need them up to date after user adds files to the exclusions and then presses the execute button again
 
-                                    // Get the MSFT_MpPreference WMI results and save them to the global variable HardenWindowsSecurity.GlobalVars.MDAVPreferencesCurrent
-                                    HardenWindowsSecurity.GlobalVars.MDAVPreferencesCurrent = HardenWindowsSecurity.MpPreferenceHelper.GetMpPreference();
+                                    // Get the MSFT_MpPreference WMI results and save them to the global variable GlobalVars.MDAVPreferencesCurrent
+                                    GlobalVars.MDAVPreferencesCurrent = MpPreferenceHelper.GetMpPreference();
 
 
                                     // Attempt to retrieve the property value as string[]
-                                    string[] ExclusionPathArray = HardenWindowsSecurity.PropertyHelper.GetPropertyValue(HardenWindowsSecurity.GlobalVars.MDAVPreferencesCurrent, "ExclusionPath");
+                                    string[] ExclusionPathArray = PropertyHelper.GetPropertyValue(GlobalVars.MDAVPreferencesCurrent, "ExclusionPath");
 
                                     // Check if the result is not null, then convert to List<string>, or initialize an empty list if null
                                     List<string> ExclusionPathList = ExclusionPathArray is not null
@@ -226,7 +226,7 @@ namespace HardenWindowsSecurity
 
 
                                     // Attempt to retrieve the property value as string[]
-                                    string[] ControlledFolderAccessAllowedApplicationsArray = HardenWindowsSecurity.PropertyHelper.GetPropertyValue(HardenWindowsSecurity.GlobalVars.MDAVPreferencesCurrent, "ControlledFolderAccessAllowedApplications");
+                                    string[] ControlledFolderAccessAllowedApplicationsArray = PropertyHelper.GetPropertyValue(GlobalVars.MDAVPreferencesCurrent, "ControlledFolderAccessAllowedApplications");
 
                                     // Check if the result is not null, then convert to List<string>, or initialize an empty list if null
                                     List<string> ControlledFolderAccessAllowedApplicationsList = ControlledFolderAccessAllowedApplicationsArray is not null
@@ -235,7 +235,7 @@ namespace HardenWindowsSecurity
 
 
                                     // Attempt to retrieve the property value as string[]
-                                    string[] attackSurfaceReductionOnlyExclusionsArray = HardenWindowsSecurity.PropertyHelper.GetPropertyValue(HardenWindowsSecurity.GlobalVars.MDAVPreferencesCurrent, "AttackSurfaceReductionOnlyExclusions");
+                                    string[] attackSurfaceReductionOnlyExclusionsArray = PropertyHelper.GetPropertyValue(GlobalVars.MDAVPreferencesCurrent, "AttackSurfaceReductionOnlyExclusions");
 
                                     // Check if the result is not null, then convert to List<string>, or initialize an empty list if null
                                     // Makes it easier to check items in it later
@@ -258,7 +258,7 @@ namespace HardenWindowsSecurity
                                                 Logger.LogMessage($"Adding {path} to the Microsoft Defender exclusions list", LogTypeIntel.Information);
 
                                                 // ADD the program path to the Microsoft Defender's main Exclusions
-                                                HardenWindowsSecurity.ConfigDefenderHelper.ManageMpPreference<string[]>("ExclusionPath", [path], false);
+                                                ConfigDefenderHelper.ManageMpPreference<string[]>("ExclusionPath", [path], false);
                                             }
                                             else
                                             {
@@ -276,7 +276,7 @@ namespace HardenWindowsSecurity
                                                 Logger.LogMessage($"Adding {path} to the Controlled Folder Access Allowed Applications", LogTypeIntel.Information);
 
                                                 // ADD the program path to the Controlled Folder Access Exclusions
-                                                HardenWindowsSecurity.ConfigDefenderHelper.ManageMpPreference<string[]>("ControlledFolderAccessAllowedApplications", [path], false);
+                                                ConfigDefenderHelper.ManageMpPreference<string[]>("ControlledFolderAccessAllowedApplications", [path], false);
 
                                                 // ADD the same path for CFA to the CFA backup that the program uses by default so that during the restore, the user change will be included and not left out
                                                 AddItemToBackup(path);
@@ -296,7 +296,7 @@ namespace HardenWindowsSecurity
                                                 Logger.LogMessage($"Adding {path} to the Attack Surface Reduction Rules exclusions list", LogTypeIntel.Information);
 
                                                 // ADD the program path to the Attack Surface Exclusions
-                                                HardenWindowsSecurity.ConfigDefenderHelper.ManageMpPreference<string[]>("AttackSurfaceReductionOnlyExclusions", [path], false);
+                                                ConfigDefenderHelper.ManageMpPreference<string[]>("AttackSurfaceReductionOnlyExclusions", [path], false);
                                             }
                                             else
                                             {
@@ -307,7 +307,7 @@ namespace HardenWindowsSecurity
                                     }
 
                                     // Display notification at the end if files were selected
-                                    NewToastNotification.Show(NewToastNotification.ToastNotificationType.EndOfExclusions, null, null, null, null);
+                                    ToastNotification.Show(ToastNotification.Type.EndOfExclusions, null, null, null, null);
 
                                 }
                                 else
@@ -325,15 +325,15 @@ namespace HardenWindowsSecurity
                             });
 
                             // mark as activity completed
-                            HardenWindowsSecurity.ActivityTracker.IsActive = false;
+                            ActivityTracker.IsActive = false;
                         }
                     };
 
                 // Cache the view before setting it as the CurrentView
-                _viewCache["ExclusionsView"] = HardenWindowsSecurity.GUIExclusions.View;
+                _viewCache["ExclusionsView"] = GUIExclusions.View;
 
                 // Set the CurrentView to the Exclusions view
-                CurrentView = HardenWindowsSecurity.GUIExclusions.View;
+                CurrentView = GUIExclusions.View;
             }
         }
     }

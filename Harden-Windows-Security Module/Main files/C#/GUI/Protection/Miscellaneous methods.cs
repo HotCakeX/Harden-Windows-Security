@@ -59,16 +59,16 @@ namespace HardenWindowsSecurity
                 }
             }
 
-            if (HardenWindowsSecurity.GlobalVars.HardeningCategorieX is null)
+            if (GlobalVars.HardeningCategorieX is null)
             {
-                throw new System.ArgumentNullException("GlobalVars.HardeningCategorieX cannot be null.");
+                throw new ArgumentNullException("GlobalVars.HardeningCategorieX cannot be null.");
             }
 
             // Disable categories that are not valid for the current session
             foreach (var item in GUIProtectWinSecurity.categories.Items)
             {
                 ListViewItem categoryItem = (ListViewItem)item;
-                if (!HardenWindowsSecurity.GlobalVars.HardeningCategorieX.Contains(((CheckBox)categoryItem.Content).Name))
+                if (!GlobalVars.HardeningCategorieX.Contains(((CheckBox)categoryItem.Content).Name))
                 {
                     categoryItem.IsEnabled = false;
                 }
@@ -96,30 +96,30 @@ namespace HardenWindowsSecurity
 #nullable disable
 
             // Clear the categories and sub-categories lists from the saved variables
-            HardenWindowsSecurity.GUIProtectWinSecurity.SelectedCategories = new System.Collections.Concurrent.ConcurrentQueue<string>();
-            HardenWindowsSecurity.GUIProtectWinSecurity.SelectedSubCategories = new System.Collections.Concurrent.ConcurrentQueue<string>();
+            GUIProtectWinSecurity.SelectedCategories = new System.Collections.Concurrent.ConcurrentQueue<string>();
+            GUIProtectWinSecurity.SelectedSubCategories = new System.Collections.Concurrent.ConcurrentQueue<string>();
 
             // Gather the selected categories and sub-categories and store them in the GlobalVars hashtable
-            System.Collections.IEnumerable categoriesItems = HardenWindowsSecurity.GUIProtectWinSecurity.categories!.Items;
-            System.Collections.IEnumerable subCategoriesItems = HardenWindowsSecurity.GUIProtectWinSecurity.subCategories!.Items;
+            System.Collections.IEnumerable categoriesItems = GUIProtectWinSecurity.categories!.Items;
+            System.Collections.IEnumerable subCategoriesItems = GUIProtectWinSecurity.subCategories!.Items;
 
             // Get the Categories status and add them to the variables
-            foreach (System.Windows.Controls.ListBoxItem categoryItem in categoriesItems)
+            foreach (ListBoxItem categoryItem in categoriesItems)
             {
                 if ((bool)((CheckBox)categoryItem.Content).IsChecked)
                 {
                     string categoryName = ((CheckBox)categoryItem.Content).Name;
-                    HardenWindowsSecurity.GUIProtectWinSecurity.SelectedCategories.Enqueue(categoryName);
+                    GUIProtectWinSecurity.SelectedCategories.Enqueue(categoryName);
                 }
             }
 
             // Get the Sub-Categories status and add them to the variables
-            foreach (System.Windows.Controls.ListBoxItem subCategoryItem in subCategoriesItems)
+            foreach (ListBoxItem subCategoryItem in subCategoriesItems)
             {
                 if ((bool)((CheckBox)subCategoryItem.Content).IsChecked)
                 {
                     string subCategoryName = ((CheckBox)subCategoryItem.Content).Name;
-                    HardenWindowsSecurity.GUIProtectWinSecurity.SelectedSubCategories.Enqueue(subCategoryName);
+                    GUIProtectWinSecurity.SelectedSubCategories.Enqueue(subCategoryName);
                 }
             }
 

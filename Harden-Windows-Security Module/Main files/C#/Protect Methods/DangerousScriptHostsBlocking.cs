@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 
 #nullable enable
@@ -8,15 +9,15 @@ namespace HardenWindowsSecurity
     {
         public static void DangerousScriptHostsBlocking()
         {
-            if (HardenWindowsSecurity.GlobalVars.path is null)
+            if (GlobalVars.path is null)
             {
-                throw new System.ArgumentNullException("GlobalVars.path cannot be null.");
+                throw new ArgumentNullException("GlobalVars.path cannot be null.");
             }
 
-            HardenWindowsSecurity.Logger.LogMessage("Running the Dangerous Script Hosts Blocking section", LogTypeIntel.Information);
+            Logger.LogMessage("Running the Dangerous Script Hosts Blocking section", LogTypeIntel.Information);
 
-            string CIPPath = Path.Combine(HardenWindowsSecurity.GlobalVars.WorkingDir, "Dangerous-Script-Hosts-Blocking.cip");
-            string XMLPath = Path.Combine(HardenWindowsSecurity.GlobalVars.path, "Resources", "Dangerous-Script-Hosts-Blocking.xml");
+            string CIPPath = Path.Combine(GlobalVars.WorkingDir, "Dangerous-Script-Hosts-Blocking.cip");
+            string XMLPath = Path.Combine(GlobalVars.path, "Resources", "Dangerous-Script-Hosts-Blocking.xml");
 
             // Use string interpolation without the @ symbol for multiline
             string script = $@"
@@ -34,7 +35,7 @@ namespace HardenWindowsSecurity
                 }}
             ";
 
-            _ = HardenWindowsSecurity.PowerShellExecutor.ExecuteScript(script);
+            _ = PowerShellExecutor.ExecuteScript(script);
         }
     }
 }

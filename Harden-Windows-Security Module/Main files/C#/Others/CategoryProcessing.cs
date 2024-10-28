@@ -14,20 +14,20 @@ namespace HardenWindowsSecurity
 {
     // Registry keys are case-insensitive
     // https://learn.microsoft.com/en-us/windows/win32/sysinfo/structure-of-the-registry
-    public class CategoryProcessing
+    public static class CategoryProcessing
     {
         // to store the structure of the Registry resources CSV data
         private sealed class CsvRecord
         {
-            public string? Origin { get; set; }
-            public string? Category { get; set; }
-            public string? Hive { get; set; }
-            public string? Key { get; set; }
-            public string? Name { get; set; }
-            public string? FriendlyName { get; set; }
-            public string? Type { get; set; }
-            public List<string>? Value { get; set; }
-            public bool ValueIsList { get; set; }
+            public required string Origin { get; set; }
+            public required string Category { get; set; }
+            public required string Hive { get; set; }
+            public required string Key { get; set; }
+            public required string Name { get; set; }
+            public required string FriendlyName { get; set; }
+            public required string Type { get; set; }
+            public required List<string> Value { get; set; }
+            public required bool ValueIsList { get; set; }
             public string? CSPLink { get; set; }
         }
 
@@ -165,7 +165,7 @@ namespace HardenWindowsSecurity
             );
 
             // Process each filtered item
-            foreach (var item in filteredItems)
+            foreach (CsvRecord item in filteredItems)
             {
                 // Initialize variables
                 bool valueMatches = false;
@@ -178,7 +178,7 @@ namespace HardenWindowsSecurity
                     if (item.Key is not null)
                     {
                         // Open the registry key in HKEY_LOCAL_MACHINE
-                        using var key = Registry.LocalMachine.OpenSubKey(item.Key);
+                        using RegistryKey? key = Registry.LocalMachine.OpenSubKey(item.Key);
 
                         if (key is not null)
                         {
@@ -250,7 +250,7 @@ namespace HardenWindowsSecurity
                     if (item.Key is not null)
                     {
                         // Open the registry key in HKEY_CURRENT_USER
-                        using var key = Registry.CurrentUser.OpenSubKey(item.Key);
+                        using RegistryKey? key = Registry.CurrentUser.OpenSubKey(item.Key);
 
                         if (key is not null)
                         {

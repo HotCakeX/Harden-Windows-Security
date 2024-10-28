@@ -5,7 +5,7 @@ using System.Diagnostics;
 
 namespace HardenWindowsSecurity
 {
-    public class RunCommandLineCommands
+    public static class RunCommandLineCommands
     {
         public static void Run(string command, string arguments)
         {

@@ -8,7 +8,7 @@ using System.Management.Automation;
 
 namespace HardenWindowsSecurity
 {
-    public class ComplianceCategoriex : IValidateSetValuesGenerator
+    public sealed class ComplianceCategoriex : IValidateSetValuesGenerator
     {
         // Categories for Confirmation / Compliance Checks
         public string[] GetValidValues()

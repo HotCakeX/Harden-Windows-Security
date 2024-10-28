@@ -1,3 +1,6 @@
+using System;
+using System.IO;
+
 #nullable enable
 
 namespace HardenWindowsSecurity
@@ -6,16 +9,16 @@ namespace HardenWindowsSecurity
     {
         public static void Invoke()
         {
-            if (HardenWindowsSecurity.GlobalVars.path is null)
+            if (GlobalVars.path is null)
             {
-                throw new System.ArgumentNullException("GlobalVars.path cannot be null.");
+                throw new ArgumentNullException("GlobalVars.path cannot be null.");
             }
 
             ChangePSConsoleTitle.Set("🪷 ASR Rules");
 
-            HardenWindowsSecurity.Logger.LogMessage("Running the Attack Surface Reduction Rules category", LogTypeIntel.Information);
+            Logger.LogMessage("Running the Attack Surface Reduction Rules category", LogTypeIntel.Information);
 
-            HardenWindowsSecurity.LGPORunner.RunLGPOCommand(System.IO.Path.Combine(HardenWindowsSecurity.GlobalVars.path, "Resources", "Security-Baselines-X", "Attack Surface Reduction Rules Policies", "registry.pol"), LGPORunner.FileType.POL);
+            LGPORunner.RunLGPOCommand(Path.Combine(GlobalVars.path, "Resources", "Security-Baselines-X", "Attack Surface Reduction Rules Policies", "registry.pol"), LGPORunner.FileType.POL);
         }
     }
 }

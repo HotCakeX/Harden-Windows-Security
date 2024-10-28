@@ -224,7 +224,7 @@ namespace HardenWindowsSecurity
                 try
                 {
                     // Try to use the GetEncryptionMethod method to get the EncryptionMethod and EncryptionMethodFlags properties
-                    var currentEncryptionMethod = InvokeCimMethod(volume, "GetEncryptionMethod", null);
+                    ManagementBaseObject? currentEncryptionMethod = InvokeCimMethod(volume, "GetEncryptionMethod", null);
                     if (currentEncryptionMethod is not null && Convert.ToUInt32(currentEncryptionMethod["ReturnValue"], CultureInfo.InvariantCulture) == 0)
                     {
                         uint EncryptionMethodNum = Convert.ToUInt32(currentEncryptionMethod["EncryptionMethod"], CultureInfo.InvariantCulture);

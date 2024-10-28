@@ -96,7 +96,7 @@ namespace HardenWindowsSecurity
             Dictionary<string, HashSet<string>> revisedProcessMitigations = [];
 
             // Loop over the keys and values of the original dictionary
-            foreach (var kvp in processMitigations)
+            foreach (KeyValuePair<string, HashSet<string>> kvp in processMitigations)
             {
                 // Get the value set for the current key
                 HashSet<string> valueSet = kvp.Value;

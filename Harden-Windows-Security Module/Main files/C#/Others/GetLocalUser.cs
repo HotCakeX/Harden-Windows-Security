@@ -9,7 +9,7 @@ using System.Runtime.InteropServices;
 namespace HardenWindowsSecurity
 {
     // Class to represent a local user account
-    public class LocalUser
+    public sealed class LocalUser
     {
         public string? AccountExpires { get; set; }
         public string? Description { get; set; }
@@ -33,7 +33,7 @@ namespace HardenWindowsSecurity
     /// It doesn't contain some properties such as PrincipalSource
     /// It doesn't contain additional properties about each user account such as their group memberships
     /// </summary>
-    public class LocalUserRetriever
+    public static class LocalUserRetriever
     {
         // https://learn.microsoft.com/en-us/windows/win32/api/sddl/nf-sddl-convertsidtostringsida
         [DllImport("advapi32.dll", CharSet = CharSet.Auto, SetLastError = true)]
@@ -62,7 +62,7 @@ namespace HardenWindowsSecurity
                 using PrincipalSearcher searcher = new(userPrincipal);
 
                 // Iterate over the search results
-                foreach (var result in searcher.FindAll())
+                foreach (Principal result in searcher.FindAll())
                 {
                     // Cast the result to a UserPrincipal object
                     if (result is UserPrincipal user)
@@ -100,7 +100,7 @@ namespace HardenWindowsSecurity
             List<string> groupNames = [];
 
             // Iterate over the groups the user is a member of
-            foreach (var group in user.GetGroups())
+            foreach (Principal group in user.GetGroups())
             {
                 // Add group name to the list
                 groupNames.Add(group.Name);
@@ -115,7 +115,7 @@ namespace HardenWindowsSecurity
             List<string> groupSIDs = [];
 
             // Iterate over the groups the user is a member of
-            foreach (var group in user.GetGroups())
+            foreach (Principal group in user.GetGroups())
             {
                 // Add group SID to the list
                 groupSIDs.Add(group.Sid.ToString());

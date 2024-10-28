@@ -24,17 +24,17 @@ namespace HardenWindowsSecurity
             }
 
             // Get all directories under the base path that contain "resources\app\git"
-            var directories = Directory.GetDirectories(basePath, "*", SearchOption.AllDirectories)
+            IEnumerable<string> directories = Directory.GetDirectories(basePath, "*", SearchOption.AllDirectories)
                                        .Where(d => d.Contains(@"resources\app\git", StringComparison.OrdinalIgnoreCase));
 
             // Initialize a list to store the found FileInfo objects
             List<FileInfo> fileList = [];
 
             // Iterate through each directory
-            foreach (var dir in directories)
+            foreach (string dir in directories)
             {
                 // Get all .exe files in the current directory
-                var files = Directory.GetFiles(dir, "*.exe", SearchOption.TopDirectoryOnly);
+                string[] files = Directory.GetFiles(dir, "*.exe", SearchOption.TopDirectoryOnly);
                 // Add each FileInfo object to the list
                 fileList.AddRange(files.Select(file => new FileInfo(file)));
             }

@@ -9,10 +9,10 @@ namespace HardenWindowsSecurity
     {
         public static void MSFTDefender_ScheduledTask()
         {
-            HardenWindowsSecurity.Logger.LogMessage("Creating scheduled task for fast weekly Microsoft recommended driver block list update", LogTypeIntel.Information);
+            Logger.LogMessage("Creating scheduled task for fast weekly Microsoft recommended driver block list update", LogTypeIntel.Information);
 
             // Initialize ManagementScope to interact with Task Scheduler's WMI namespace
-            var scope = new ManagementScope(@"root\Microsoft\Windows\TaskScheduler");
+            ManagementScope scope = new(@"root\Microsoft\Windows\TaskScheduler");
             // Establish connection to the WMI namespace
             scope.Connect();
 

@@ -1,5 +1,6 @@
 using Microsoft.Win32;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
@@ -121,7 +122,7 @@ sc.exe start LanmanWorkstation
             }
 
             // Run all selected methods in parallel
-            var tasks = methodsToRun.Select(method => method());
+            IEnumerable<Task> tasks = methodsToRun.Select(method => method());
             await Task.WhenAll(tasks);
         }
 
@@ -173,7 +174,7 @@ sc.exe start LanmanWorkstation
                 }
 
                 // Loop over each item in the HashTable
-                foreach (var kvp in AttackSurfaceReductionIntel.ASRTable)
+                foreach (KeyValuePair<string, string> kvp in AttackSurfaceReductionIntel.ASRTable)
                 {
                     // Assign each key/value to local variables
                     string name = kvp.Key.ToLowerInvariant();
@@ -241,11 +242,11 @@ sc.exe start LanmanWorkstation
                 string CatName = "WindowsUpdateConfigurations";
 
                 // Get the control from MDM CIM
-                var mdmPolicy = GlobalVars.MDM_Policy_Result01_Update02
+                Hashtable mdmPolicy = GlobalVars.MDM_Policy_Result01_Update02
                 ?? throw new InvalidOperationException("MDM_Policy_Result01_Update02 is null");
 
                 HashtableCheckerResult MDM_Policy_Result01_Update02_AllowAutoWindowsUpdateDownloadOverMeteredNetwork =
-                    HashtableChecker.CheckValue<string>(mdmPolicy, "AllowAutoWindowsUpdateDownloadOverMeteredNetwork", "1");
+                    HashtableChecker.CheckValue(mdmPolicy, "AllowAutoWindowsUpdateDownloadOverMeteredNetwork", "1");
 
                 nestedObjectArray.Add(new IndividualResult
                 {
@@ -259,7 +260,7 @@ sc.exe start LanmanWorkstation
 
 
                 // Get the control from MDM CIM
-                HashtableCheckerResult MDM_Policy_Result01_Update02_AllowAutoUpdate = HashtableChecker.CheckValue<string>(GlobalVars.MDM_Policy_Result01_Update02, "AllowAutoUpdate", "1");
+                HashtableCheckerResult MDM_Policy_Result01_Update02_AllowAutoUpdate = HashtableChecker.CheckValue(GlobalVars.MDM_Policy_Result01_Update02, "AllowAutoUpdate", "1");
 
                 nestedObjectArray.Add(new IndividualResult
                 {
@@ -273,7 +274,7 @@ sc.exe start LanmanWorkstation
 
 
                 // Get the control from MDM CIM
-                HashtableCheckerResult MDM_Policy_Result01_Update02_AllowMUUpdateService = HashtableChecker.CheckValue<string>(GlobalVars.MDM_Policy_Result01_Update02, "AllowMUUpdateService", "1");
+                HashtableCheckerResult MDM_Policy_Result01_Update02_AllowMUUpdateService = HashtableChecker.CheckValue(GlobalVars.MDM_Policy_Result01_Update02, "AllowMUUpdateService", "1");
 
                 nestedObjectArray.Add(new IndividualResult
                 {
@@ -287,13 +288,13 @@ sc.exe start LanmanWorkstation
 
 
                 // Process items in Registry resources.csv file with "Group Policy" origin and add them to the nestedObjectArray array
-                foreach (var Result in (CategoryProcessing.ProcessCategory(CatName, "Group Policy")))
+                foreach (IndividualResult Result in (CategoryProcessing.ProcessCategory(CatName, "Group Policy")))
                 {
                     ConditionalResultAdd.Add(nestedObjectArray, Result);
                 }
 
                 // Process items in Registry resources.csv file with "Registry Keys" origin and add them to the nestedObjectArray array
-                foreach (var Result in (CategoryProcessing.ProcessCategory(CatName, "Registry Keys")))
+                foreach (IndividualResult Result in (CategoryProcessing.ProcessCategory(CatName, "Registry Keys")))
                 {
                     ConditionalResultAdd.Add(nestedObjectArray, Result);
                 }
@@ -324,7 +325,7 @@ sc.exe start LanmanWorkstation
                 string CatName = "NonAdminCommands";
 
                 // Process items in Registry resources.csv file with "Registry Keys" origin and add them to the nestedObjectArray array
-                foreach (var Result in (CategoryProcessing.ProcessCategory(CatName, "Registry Keys")))
+                foreach (IndividualResult Result in (CategoryProcessing.ProcessCategory(CatName, "Registry Keys")))
                 {
                     ConditionalResultAdd.Add(nestedObjectArray, Result);
                 }
@@ -354,7 +355,7 @@ sc.exe start LanmanWorkstation
                 string CatName = "EdgeBrowserConfigurations";
 
                 // Process items in Registry resources.csv file with "Registry Keys" origin and add them to the nestedObjectArray array
-                foreach (var Result in (CategoryProcessing.ProcessCategory(CatName, "Registry Keys")))
+                foreach (IndividualResult Result in (CategoryProcessing.ProcessCategory(CatName, "Registry Keys")))
                 {
                     ConditionalResultAdd.Add(nestedObjectArray, Result);
                 }
@@ -478,7 +479,7 @@ sc.exe start LanmanWorkstation
                 });
 
                 // Process items in Registry resources.csv file with "Registry Keys" origin and add them to the nestedObjectArray array
-                foreach (var Result in (CategoryProcessing.ProcessCategory(CatName, "Group Policy")))
+                foreach (IndividualResult Result in (CategoryProcessing.ProcessCategory(CatName, "Group Policy")))
                 {
                     ConditionalResultAdd.Add(nestedObjectArray, Result);
                 }
@@ -556,7 +557,7 @@ sc.exe start LanmanWorkstation
 
                 // To detect if Hibernate is enabled and set to full
                 // Only perform the check if the system is not a virtual machine
-                var isVirtualMachine = PropertyHelper.GetPropertyValue(GlobalVars.MDAVConfigCurrent, "IsVirtualMachine");
+                dynamic? isVirtualMachine = PropertyHelper.GetPropertyValue(GlobalVars.MDAVConfigCurrent, "IsVirtualMachine");
 
                 if (isVirtualMachine is not null && !(bool)isVirtualMachine)
                 {
@@ -587,7 +588,7 @@ sc.exe start LanmanWorkstation
                 // OS Drive encryption verifications
                 // Check if BitLocker is on for the OS Drive
                 // The ProtectionStatus remains off while the drive is encrypting or decrypting
-                var volumeInfo = BitLocker.GetEncryptedVolumeInfo(Environment.GetEnvironmentVariable("SystemDrive") ?? "C:\\");
+                BitLocker.BitLockerVolume volumeInfo = BitLocker.GetEncryptedVolumeInfo(Environment.GetEnvironmentVariable("SystemDrive") ?? "C:\\");
 
                 if (volumeInfo.ProtectionStatus is BitLocker.ProtectionStatus.Protected)
                 {
@@ -669,7 +670,7 @@ sc.exe start LanmanWorkstation
                 if (NonRemovableNonOSDrives.Count != 0)
                 {
                     // Loop through each non-OS volume and verify their encryption
-                    foreach (var BitLockerDrive in NonRemovableNonOSDrives.OrderBy(d => d.MountPoint))
+                    foreach (BitLocker.BitLockerVolume BitLockerDrive in NonRemovableNonOSDrives.OrderBy(d => d.MountPoint))
                     {
                         // If status is unknown, that means the non-OS volume is encrypted and locked, if it's on then it's on
                         if (BitLockerDrive.ProtectionStatus is BitLocker.ProtectionStatus.Protected or BitLocker.ProtectionStatus.Unknown)
@@ -722,7 +723,7 @@ sc.exe start LanmanWorkstation
 
 
                 // Process items in Registry resources.csv file with "Registry Keys" origin and add them to the nestedObjectArray array
-                foreach (var Result in (CategoryProcessing.ProcessCategory(CatName, "Group Policy")))
+                foreach (IndividualResult Result in (CategoryProcessing.ProcessCategory(CatName, "Group Policy")))
                 {
                     ConditionalResultAdd.Add(nestedObjectArray, Result);
                 }
@@ -760,7 +761,7 @@ sc.exe start LanmanWorkstation
                 string hyperVAdminGroupSID = "S-1-5-32-578";
 
                 // Retrieve the list of local users and filter them based on the enabled status
-                var usersNotInHyperVGroup = LocalUserRetriever.Get()
+                List<LocalUser>? usersNotInHyperVGroup = LocalUserRetriever.Get()
                     ?.Where(user => user.Enabled && user.GroupsSIDs is not null && !user.GroupsSIDs.Contains(hyperVAdminGroupSID, StringComparer.OrdinalIgnoreCase))
                     .ToList();
 
@@ -787,7 +788,7 @@ sc.exe start LanmanWorkstation
                 if (string.Equals(currentCulture, "en-US", StringComparison.OrdinalIgnoreCase))
                 {
                     // Start a new process to run the auditpol command
-                    var process = new Process
+                    Process process = new()
                     {
                         StartInfo = new ProcessStartInfo
                         {
@@ -802,7 +803,7 @@ sc.exe start LanmanWorkstation
                     _ = process.Start();
 
                     // Read the output from the process
-                    var output = process.StandardOutput.ReadToEnd();
+                    string output = process.StandardOutput.ReadToEnd();
                     process.WaitForExit();
 
                     // Check if the output is empty
@@ -813,7 +814,7 @@ sc.exe start LanmanWorkstation
                     }
 
                     // Convert the CSV output to a dictionary
-                    using var reader = new StringReader(output);
+                    using StringReader reader = new(output);
 
                     // Initialize the inclusion setting
                     string? inclusionSetting = null;
@@ -825,7 +826,7 @@ sc.exe start LanmanWorkstation
                     if (headers is not null)
                     {
                         // Get the index of the "Inclusion Setting" column
-                        var headerColumns = headers.Split(',');
+                        string[] headerColumns = headers.Split(',');
 
                         int inclusionSettingIndex = Array.IndexOf(headerColumns, "Inclusion Setting");
 
@@ -833,7 +834,7 @@ sc.exe start LanmanWorkstation
                         string? values;
                         while ((values = reader.ReadLine()) is not null)
                         {
-                            var valueColumns = values.Split(',');
+                            string[] valueColumns = values.Split(',');
                             if (inclusionSettingIndex != -1 && inclusionSettingIndex < valueColumns.Length)
                             {
                                 inclusionSetting = valueColumns[inclusionSettingIndex].Trim();
@@ -869,7 +870,7 @@ sc.exe start LanmanWorkstation
                     // Handle the case where the global variable is null
                     throw new InvalidOperationException("MDM_Policy_Result01_System02 is null.");
                 }
-                HashtableCheckerResult MDM_Policy_Result01_System02_AllowLocation = HashtableChecker.CheckValue<string>(GlobalVars.MDM_Policy_Result01_System02, "AllowLocation", "0");
+                HashtableCheckerResult MDM_Policy_Result01_System02_AllowLocation = HashtableChecker.CheckValue(GlobalVars.MDM_Policy_Result01_System02, "AllowLocation", "0");
 
                 nestedObjectArray.Add(new IndividualResult
                 {
@@ -883,13 +884,13 @@ sc.exe start LanmanWorkstation
 
 
                 // Process items in Registry resources.csv file with "Group Policy" origin and add them to the $NestedObjectArray array
-                foreach (var Result in (CategoryProcessing.ProcessCategory(CatName ?? string.Empty, "Group Policy")))
+                foreach (IndividualResult Result in (CategoryProcessing.ProcessCategory(CatName ?? string.Empty, "Group Policy")))
                 {
                     ConditionalResultAdd.Add(nestedObjectArray, Result);
                 }
 
                 // Process items in Registry resources.csv file with "Registry Keys" origin and add them to the nestedObjectArray array
-                foreach (var Result in (CategoryProcessing.ProcessCategory(CatName ?? string.Empty, "Registry Keys")))
+                foreach (IndividualResult Result in (CategoryProcessing.ProcessCategory(CatName ?? string.Empty, "Registry Keys")))
                 {
                     ConditionalResultAdd.Add(nestedObjectArray, Result);
                 }
@@ -940,19 +941,19 @@ sc.exe start LanmanWorkstation
                 string CatName = "WindowsNetworking";
 
                 // Process items in Registry resources.csv file with "Group Policy" origin and add them to the $NestedObjectArray array
-                foreach (var Result in (CategoryProcessing.ProcessCategory(CatName, "Group Policy")))
+                foreach (IndividualResult Result in (CategoryProcessing.ProcessCategory(CatName, "Group Policy")))
                 {
                     ConditionalResultAdd.Add(nestedObjectArray, Result);
                 }
 
                 // Process items in Registry resources.csv file with "Registry Keys" origin and add them to the nestedObjectArray array
-                foreach (var Result in (CategoryProcessing.ProcessCategory(CatName, "Registry Keys")))
+                foreach (IndividualResult Result in (CategoryProcessing.ProcessCategory(CatName, "Registry Keys")))
                 {
                     ConditionalResultAdd.Add(nestedObjectArray, Result);
                 }
 
                 // Process the Security Policies for the current category that reside in the "SecurityPoliciesVerification.csv" file
-                foreach (var Result in (SecurityPolicyChecker.CheckPolicyCompliance(CatName)))
+                foreach (IndividualResult Result in (SecurityPolicyChecker.CheckPolicyCompliance(CatName)))
                 {
                     ConditionalResultAdd.Add(nestedObjectArray, Result);
                 }
@@ -984,13 +985,13 @@ sc.exe start LanmanWorkstation
                 string CatName = "LockScreen";
 
                 // Process items in Registry resources.csv file with "Group Policy" origin and add them to the $NestedObjectArray array
-                foreach (var Result in (CategoryProcessing.ProcessCategory(CatName, "Group Policy")))
+                foreach (IndividualResult Result in (CategoryProcessing.ProcessCategory(CatName, "Group Policy")))
                 {
                     ConditionalResultAdd.Add(nestedObjectArray, Result);
                 }
 
                 // Process the Security Policies for the current category that reside in the "SecurityPoliciesVerification.csv" file
-                foreach (var Result in (SecurityPolicyChecker.CheckPolicyCompliance(CatName)))
+                foreach (IndividualResult Result in (SecurityPolicyChecker.CheckPolicyCompliance(CatName)))
                 {
                     ConditionalResultAdd.Add(nestedObjectArray, Result);
                 }
@@ -1022,13 +1023,13 @@ sc.exe start LanmanWorkstation
                 string CatName = "UserAccountControl";
 
                 // Process items in Registry resources.csv file with "Group Policy" origin and add them to the $NestedObjectArray array
-                foreach (var Result in (CategoryProcessing.ProcessCategory(CatName, "Group Policy")))
+                foreach (IndividualResult Result in (CategoryProcessing.ProcessCategory(CatName, "Group Policy")))
                 {
                     ConditionalResultAdd.Add(nestedObjectArray, Result);
                 }
 
                 // Process the Security Policies for the current category that reside in the "SecurityPoliciesVerification.csv" file
-                foreach (var Result in (SecurityPolicyChecker.CheckPolicyCompliance(CatName)))
+                foreach (IndividualResult Result in (SecurityPolicyChecker.CheckPolicyCompliance(CatName)))
                 {
                     ConditionalResultAdd.Add(nestedObjectArray, Result);
                 }
@@ -1255,13 +1256,13 @@ sc.exe start LanmanWorkstation
                 });
 
                 // Process items in Registry resources.csv file with "Group Policy" origin and add them to the $NestedObjectArray array
-                foreach (var Result in (CategoryProcessing.ProcessCategory(CatName, "Group Policy")))
+                foreach (IndividualResult Result in (CategoryProcessing.ProcessCategory(CatName, "Group Policy")))
                 {
                     ConditionalResultAdd.Add(nestedObjectArray, Result);
                 }
 
                 // Process items in Registry resources.csv file with "Registry Keys" origin and add them to the nestedObjectArray array
-                foreach (var Result in (CategoryProcessing.ProcessCategory(CatName, "Registry Keys")))
+                foreach (IndividualResult Result in (CategoryProcessing.ProcessCategory(CatName, "Registry Keys")))
                 {
                     ConditionalResultAdd.Add(nestedObjectArray, Result);
                 }
@@ -1317,7 +1318,7 @@ sc.exe start LanmanWorkstation
                 bool firewallRuleGroupResultEnabledStatus = true;
 
                 // Loop through each rule and check if it's enabled
-                foreach (var rule in firewallRuleGroupResultEnabledArray)
+                foreach (ManagementObject rule in firewallRuleGroupResultEnabledArray)
                 {
                     if (string.Equals(rule["Enabled"]?.ToString(), "1", StringComparison.OrdinalIgnoreCase))
                     {
@@ -1344,7 +1345,7 @@ sc.exe start LanmanWorkstation
                     // Handle the case where the global variable is null
                     throw new InvalidOperationException("MDM_Firewall_PublicProfile02 is null.");
                 }
-                HashtableCheckerResult MDM_Firewall_PublicProfile02_EnableFirewall = HashtableChecker.CheckValue<string>(GlobalVars.MDM_Firewall_PublicProfile02, "EnableFirewall", "true");
+                HashtableCheckerResult MDM_Firewall_PublicProfile02_EnableFirewall = HashtableChecker.CheckValue(GlobalVars.MDM_Firewall_PublicProfile02, "EnableFirewall", "true");
 
                 nestedObjectArray.Add(new IndividualResult
                 {
@@ -1358,7 +1359,7 @@ sc.exe start LanmanWorkstation
 
 
                 // Get the control from MDM CIM
-                HashtableCheckerResult MDM_Firewall_PublicProfile02_DisableInboundNotifications = HashtableChecker.CheckValue<string>(GlobalVars.MDM_Firewall_PublicProfile02, "DisableInboundNotifications", "false");
+                HashtableCheckerResult MDM_Firewall_PublicProfile02_DisableInboundNotifications = HashtableChecker.CheckValue(GlobalVars.MDM_Firewall_PublicProfile02, "DisableInboundNotifications", "false");
 
                 nestedObjectArray.Add(new IndividualResult
                 {
@@ -1372,7 +1373,7 @@ sc.exe start LanmanWorkstation
 
 
                 // Get the control from MDM CIM
-                HashtableCheckerResult MDM_Firewall_PublicProfile02_LogMaxFileSize = HashtableChecker.CheckValue<string>(GlobalVars.MDM_Firewall_PublicProfile02, "LogMaxFileSize", "32767");
+                HashtableCheckerResult MDM_Firewall_PublicProfile02_LogMaxFileSize = HashtableChecker.CheckValue(GlobalVars.MDM_Firewall_PublicProfile02, "LogMaxFileSize", "32767");
 
                 nestedObjectArray.Add(new IndividualResult
                 {
@@ -1386,7 +1387,7 @@ sc.exe start LanmanWorkstation
 
 
                 // Get the control from MDM CIM
-                HashtableCheckerResult MDM_Firewall_PublicProfile02_EnableLogDroppedPackets = HashtableChecker.CheckValue<string>(GlobalVars.MDM_Firewall_PublicProfile02, "EnableLogDroppedPackets", "true");
+                HashtableCheckerResult MDM_Firewall_PublicProfile02_EnableLogDroppedPackets = HashtableChecker.CheckValue(GlobalVars.MDM_Firewall_PublicProfile02, "EnableLogDroppedPackets", "true");
 
                 nestedObjectArray.Add(new IndividualResult
                 {
@@ -1400,7 +1401,7 @@ sc.exe start LanmanWorkstation
 
 
                 // Get the control from MDM CIM
-                HashtableCheckerResult MDM_Firewall_PublicProfile02_LogFilePath = HashtableChecker.CheckValue<string>(GlobalVars.MDM_Firewall_PublicProfile02, "LogFilePath", @"%systemroot%\system32\LogFiles\Firewall\Publicfirewall.log");
+                HashtableCheckerResult MDM_Firewall_PublicProfile02_LogFilePath = HashtableChecker.CheckValue(GlobalVars.MDM_Firewall_PublicProfile02, "LogFilePath", @"%systemroot%\system32\LogFiles\Firewall\Publicfirewall.log");
 
                 nestedObjectArray.Add(new IndividualResult
                 {
@@ -1419,7 +1420,7 @@ sc.exe start LanmanWorkstation
                     // Handle the case where the global variable is null
                     throw new InvalidOperationException("MDM_Firewall_PrivateProfile02 is null.");
                 }
-                HashtableCheckerResult MDM_Firewall_PrivateProfile02_EnableFirewall = HashtableChecker.CheckValue<string>(GlobalVars.MDM_Firewall_PrivateProfile02, "EnableFirewall", "true");
+                HashtableCheckerResult MDM_Firewall_PrivateProfile02_EnableFirewall = HashtableChecker.CheckValue(GlobalVars.MDM_Firewall_PrivateProfile02, "EnableFirewall", "true");
 
                 nestedObjectArray.Add(new IndividualResult
                 {
@@ -1433,7 +1434,7 @@ sc.exe start LanmanWorkstation
 
 
                 // Get the control from MDM CIM
-                HashtableCheckerResult MDM_Firewall_PrivateProfile02_DisableInboundNotifications = HashtableChecker.CheckValue<string>(GlobalVars.MDM_Firewall_PrivateProfile02, "DisableInboundNotifications", "false");
+                HashtableCheckerResult MDM_Firewall_PrivateProfile02_DisableInboundNotifications = HashtableChecker.CheckValue(GlobalVars.MDM_Firewall_PrivateProfile02, "DisableInboundNotifications", "false");
 
                 nestedObjectArray.Add(new IndividualResult
                 {
@@ -1447,7 +1448,7 @@ sc.exe start LanmanWorkstation
 
 
                 // Get the control from MDM CIM
-                HashtableCheckerResult MDM_Firewall_PrivateProfile02_LogMaxFileSize = HashtableChecker.CheckValue<string>(GlobalVars.MDM_Firewall_PrivateProfile02, "LogMaxFileSize", "32767");
+                HashtableCheckerResult MDM_Firewall_PrivateProfile02_LogMaxFileSize = HashtableChecker.CheckValue(GlobalVars.MDM_Firewall_PrivateProfile02, "LogMaxFileSize", "32767");
 
                 nestedObjectArray.Add(new IndividualResult
                 {
@@ -1461,7 +1462,7 @@ sc.exe start LanmanWorkstation
 
 
                 // Get the control from MDM CIM
-                HashtableCheckerResult MDM_Firewall_PrivateProfile02_EnableLogDroppedPackets = HashtableChecker.CheckValue<string>(GlobalVars.MDM_Firewall_PrivateProfile02, "EnableLogDroppedPackets", "true");
+                HashtableCheckerResult MDM_Firewall_PrivateProfile02_EnableLogDroppedPackets = HashtableChecker.CheckValue(GlobalVars.MDM_Firewall_PrivateProfile02, "EnableLogDroppedPackets", "true");
 
                 nestedObjectArray.Add(new IndividualResult
                 {
@@ -1475,7 +1476,7 @@ sc.exe start LanmanWorkstation
 
 
                 // Get the control from MDM CIM
-                HashtableCheckerResult MDM_Firewall_PrivateProfile02_LogFilePath = HashtableChecker.CheckValue<string>(GlobalVars.MDM_Firewall_PrivateProfile02, "LogFilePath", @"%systemroot%\system32\LogFiles\Firewall\Privatefirewall.log");
+                HashtableCheckerResult MDM_Firewall_PrivateProfile02_LogFilePath = HashtableChecker.CheckValue(GlobalVars.MDM_Firewall_PrivateProfile02, "LogFilePath", @"%systemroot%\system32\LogFiles\Firewall\Privatefirewall.log");
 
                 nestedObjectArray.Add(new IndividualResult
                 {
@@ -1494,7 +1495,7 @@ sc.exe start LanmanWorkstation
                     // Handle the case where the global variable is null
                     throw new InvalidOperationException("MDM_Firewall_DomainProfile02 is null.");
                 }
-                HashtableCheckerResult MDM_Firewall_DomainProfile02_EnableFirewall = HashtableChecker.CheckValue<string>(GlobalVars.MDM_Firewall_DomainProfile02, "EnableFirewall", "true");
+                HashtableCheckerResult MDM_Firewall_DomainProfile02_EnableFirewall = HashtableChecker.CheckValue(GlobalVars.MDM_Firewall_DomainProfile02, "EnableFirewall", "true");
 
                 nestedObjectArray.Add(new IndividualResult
                 {
@@ -1508,7 +1509,7 @@ sc.exe start LanmanWorkstation
 
 
                 // Get the control from MDM CIM
-                HashtableCheckerResult MDM_Firewall_DomainProfile02_DefaultOutboundAction = HashtableChecker.CheckValue<string>(GlobalVars.MDM_Firewall_DomainProfile02, "DefaultOutboundAction", "1");
+                HashtableCheckerResult MDM_Firewall_DomainProfile02_DefaultOutboundAction = HashtableChecker.CheckValue(GlobalVars.MDM_Firewall_DomainProfile02, "DefaultOutboundAction", "1");
 
                 nestedObjectArray.Add(new IndividualResult
                 {
@@ -1522,7 +1523,7 @@ sc.exe start LanmanWorkstation
 
 
                 // Get the control from MDM CIM
-                HashtableCheckerResult MDM_Firewall_DomainProfile02_DefaultInboundAction = HashtableChecker.CheckValue<string>(GlobalVars.MDM_Firewall_DomainProfile02, "DefaultInboundAction", "1");
+                HashtableCheckerResult MDM_Firewall_DomainProfile02_DefaultInboundAction = HashtableChecker.CheckValue(GlobalVars.MDM_Firewall_DomainProfile02, "DefaultInboundAction", "1");
 
                 nestedObjectArray.Add(new IndividualResult
                 {
@@ -1536,7 +1537,7 @@ sc.exe start LanmanWorkstation
 
 
                 // Get the control from MDM CIM
-                HashtableCheckerResult MDM_Firewall_DomainProfile02_Shielded = HashtableChecker.CheckValue<string>(GlobalVars.MDM_Firewall_DomainProfile02, "Shielded", "true");
+                HashtableCheckerResult MDM_Firewall_DomainProfile02_Shielded = HashtableChecker.CheckValue(GlobalVars.MDM_Firewall_DomainProfile02, "Shielded", "true");
 
                 nestedObjectArray.Add(new IndividualResult
                 {
@@ -1550,7 +1551,7 @@ sc.exe start LanmanWorkstation
 
 
                 // Get the control from MDM CIM
-                HashtableCheckerResult MDM_Firewall_DomainProfile02_LogFilePath = HashtableChecker.CheckValue<string>(GlobalVars.MDM_Firewall_DomainProfile02, "LogFilePath", @"%systemroot%\system32\LogFiles\Firewall\Domainfirewall.log");
+                HashtableCheckerResult MDM_Firewall_DomainProfile02_LogFilePath = HashtableChecker.CheckValue(GlobalVars.MDM_Firewall_DomainProfile02, "LogFilePath", @"%systemroot%\system32\LogFiles\Firewall\Domainfirewall.log");
 
                 nestedObjectArray.Add(new IndividualResult
                 {
@@ -1564,7 +1565,7 @@ sc.exe start LanmanWorkstation
 
 
                 // Get the control from MDM CIM
-                HashtableCheckerResult MDM_Firewall_DomainProfile02_LogMaxFileSize = HashtableChecker.CheckValue<string>(GlobalVars.MDM_Firewall_DomainProfile02, "LogMaxFileSize", "32767");
+                HashtableCheckerResult MDM_Firewall_DomainProfile02_LogMaxFileSize = HashtableChecker.CheckValue(GlobalVars.MDM_Firewall_DomainProfile02, "LogMaxFileSize", "32767");
 
                 nestedObjectArray.Add(new IndividualResult
                 {
@@ -1578,7 +1579,7 @@ sc.exe start LanmanWorkstation
 
 
                 // Get the control from MDM CIM
-                HashtableCheckerResult MDM_Firewall_DomainProfile02_EnableLogDroppedPackets = HashtableChecker.CheckValue<string>(GlobalVars.MDM_Firewall_DomainProfile02, "EnableLogDroppedPackets", "true");
+                HashtableCheckerResult MDM_Firewall_DomainProfile02_EnableLogDroppedPackets = HashtableChecker.CheckValue(GlobalVars.MDM_Firewall_DomainProfile02, "EnableLogDroppedPackets", "true");
 
                 nestedObjectArray.Add(new IndividualResult
                 {
@@ -1592,7 +1593,7 @@ sc.exe start LanmanWorkstation
 
 
                 // Get the control from MDM CIM
-                HashtableCheckerResult MDM_Firewall_DomainProfile02_EnableLogSuccessConnections = HashtableChecker.CheckValue<string>(GlobalVars.MDM_Firewall_DomainProfile02, "EnableLogSuccessConnections", "true");
+                HashtableCheckerResult MDM_Firewall_DomainProfile02_EnableLogSuccessConnections = HashtableChecker.CheckValue(GlobalVars.MDM_Firewall_DomainProfile02, "EnableLogSuccessConnections", "true");
 
                 nestedObjectArray.Add(new IndividualResult
                 {
@@ -1606,7 +1607,7 @@ sc.exe start LanmanWorkstation
 
 
                 // Process items in Registry resources.csv file with "Group Policy" origin and add them to the $NestedObjectArray array
-                foreach (var Result in (CategoryProcessing.ProcessCategory(CatName, "Group Policy")))
+                foreach (IndividualResult Result in (CategoryProcessing.ProcessCategory(CatName, "Group Policy")))
                 {
                     ConditionalResultAdd.Add(nestedObjectArray, Result);
                 }
@@ -1651,12 +1652,12 @@ sc.exe start LanmanWorkstation
                     try
                     {
                         // Invoke the command and get the results
-                        var results = ps.Invoke();
+                        Collection<PSObject> results = ps.Invoke();
 
                         if (ps.Streams.Error.Count > 0)
                         {
                             // Handle errors
-                            foreach (var error in ps.Streams.Error)
+                            foreach (ErrorRecord error in ps.Streams.Error)
                             {
                                 Logger.LogMessage($"Error: {error}", LogTypeIntel.Error);
                             }
@@ -1711,13 +1712,13 @@ sc.exe start LanmanWorkstation
                         _ = ps.AddScript(script);
 
                         // Invoke the command and get the results
-                        var results = ps.Invoke();
+                        Collection<PSObject> results = ps.Invoke();
 
                         // Check if there are any errors
                         if (ps.Streams.Error.Count > 0)
                         {
                             // Handle errors
-                            foreach (var error in ps.Streams.Error)
+                            foreach (ErrorRecord error in ps.Streams.Error)
                             {
                                 Logger.LogMessage($"Error: {error}", LogTypeIntel.Error);
                             }
@@ -1795,7 +1796,7 @@ sc.exe start LanmanWorkstation
                         if (ps.Streams.Error.Count > 0)
                         {
                             // Handle errors
-                            foreach (var error in ps.Streams.Error)
+                            foreach (ErrorRecord error in ps.Streams.Error)
                             {
                                 Logger.LogMessage($"Error: {error}", LogTypeIntel.Error);
                             }
@@ -1846,7 +1847,7 @@ sc.exe start LanmanWorkstation
 
                 // Comparison
                 // Compare the values of the two HashTables if the keys match
-                foreach (var targetMitigationItem in TargetMitigations)
+                foreach (KeyValuePair<string, string[]> targetMitigationItem in TargetMitigations)
                 {
 
                     // Increment the total number of the verifiable compliant values for each process that has a mitigation applied to it in the CSV file
@@ -1950,7 +1951,7 @@ sc.exe start LanmanWorkstation
                 bool DriverBlockListScheduledTaskResult = false;
 
                 // Initialize the variable at the time of declaration
-                var DriverBlockListScheduledTaskResultObject = TaskSchedulerHelper.Get(
+                object DriverBlockListScheduledTaskResultObject = TaskSchedulerHelper.Get(
                     "MSFT Driver Block list update",
                     "\\MSFT Driver Block list update\\",
                     TaskSchedulerHelper.OutputType.Boolean
@@ -2533,7 +2534,7 @@ sc.exe start LanmanWorkstation
                     // Handle the case where the global variable is null
                     throw new InvalidOperationException("MDM_Policy_Result01_System02 is null.");
                 }
-                HashtableCheckerResult MDM_Policy_Result01_System02_AllowTelemetry = HashtableChecker.CheckValue<string>(GlobalVars.MDM_Policy_Result01_System02, "AllowTelemetry", "3");
+                HashtableCheckerResult MDM_Policy_Result01_System02_AllowTelemetry = HashtableChecker.CheckValue(GlobalVars.MDM_Policy_Result01_System02, "AllowTelemetry", "3");
 
                 nestedObjectArray.Add(new IndividualResult
                 {
@@ -2547,7 +2548,7 @@ sc.exe start LanmanWorkstation
 
 
                 // Get the control from MDM CIM
-                HashtableCheckerResult MDM_Policy_Result01_System02_ConfigureTelemetryOptInSettingsUx = HashtableChecker.CheckValue<string>(GlobalVars.MDM_Policy_Result01_System02, "ConfigureTelemetryOptInSettingsUx", "1");
+                HashtableCheckerResult MDM_Policy_Result01_System02_ConfigureTelemetryOptInSettingsUx = HashtableChecker.CheckValue(GlobalVars.MDM_Policy_Result01_System02, "ConfigureTelemetryOptInSettingsUx", "1");
 
                 nestedObjectArray.Add(new IndividualResult
                 {
@@ -2561,7 +2562,7 @@ sc.exe start LanmanWorkstation
 
 
                 // Process items in Registry resources.csv file with "Group Policy" origin and add them to the $NestedObjectArray array
-                foreach (var Result in (CategoryProcessing.ProcessCategory(CatName, "Group Policy")))
+                foreach (IndividualResult Result in (CategoryProcessing.ProcessCategory(CatName, "Group Policy")))
                 {
                     ConditionalResultAdd.Add(nestedObjectArray, Result);
                 }

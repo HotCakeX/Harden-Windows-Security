@@ -5,12 +5,12 @@ using System.Security.Principal;
 
 namespace HardenWindowsSecurity
 {
-    public class LocalGroupMember
+    public static class LocalGroupMember
     {
         public static void Add(string userSid, string groupSid)
         {
             // Convert the group SID to a SecurityIdentifier object
-            var groupSecurityId = new SecurityIdentifier(groupSid);
+            SecurityIdentifier groupSecurityId = new(groupSid);
 
             // Convert the user SID to a SecurityIdentifier object
             _ = new SecurityIdentifier(userSid);
@@ -19,7 +19,7 @@ namespace HardenWindowsSecurity
             using var ctx = new PrincipalContext(ContextType.Machine);
 
             // Find the group using its SID
-            var group = GroupPrincipal.FindByIdentity(ctx, IdentityType.Sid, groupSecurityId.Value);
+            GroupPrincipal group = GroupPrincipal.FindByIdentity(ctx, IdentityType.Sid, groupSecurityId.Value);
 
             // Check if the group exists
             if (group is not null)

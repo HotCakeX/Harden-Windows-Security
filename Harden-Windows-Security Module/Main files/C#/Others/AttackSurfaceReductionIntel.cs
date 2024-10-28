@@ -35,7 +35,7 @@ namespace HardenWindowsSecurity
 
         // Correlation between the ComboBox Names in the XAML and the GUID of the ASR Rule they belong to
         // Can't use GUIDs directly in the XAML because they are not valid as XAML element names
-        internal readonly static System.Collections.Generic.Dictionary<string, string> ASRRulesCorrelation = new(StringComparer.OrdinalIgnoreCase)
+        internal readonly static Dictionary<string, string> ASRRulesCorrelation = new(StringComparer.OrdinalIgnoreCase)
         {
             {"BlockAbuseOfExploitedVulnerableSignedDrivers" , "56a863a9-875e-4185-98a7-b882c64b5ce5"},
             {"BlockAdobeReaderFromCreatingChildProcesses" , "7674ba52-37eb-4a4f-a9a1-f0f9a1619a2c"},
@@ -61,7 +61,7 @@ namespace HardenWindowsSecurity
 
 
         // The reverse form is required for faster processing instead of recreating it
-        internal readonly static System.Collections.Generic.Dictionary<string, string> ReversedASRRulesCorrelation = new(StringComparer.OrdinalIgnoreCase)
+        internal readonly static Dictionary<string, string> ReversedASRRulesCorrelation = new(StringComparer.OrdinalIgnoreCase)
         {
             {"56a863a9-875e-4185-98a7-b882c64b5ce5", "BlockAbuseOfExploitedVulnerableSignedDrivers"},
             {"7674ba52-37eb-4a4f-a9a1-f0f9a1619a2c", "BlockAdobeReaderFromCreatingChildProcesses"},

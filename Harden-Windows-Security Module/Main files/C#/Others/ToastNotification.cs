@@ -6,11 +6,11 @@ using System.IO;
 
 namespace HardenWindowsSecurity
 {
-    public class NewToastNotification
+    public static class ToastNotification
     {
 
         // These are the different type of notification types/presets that can be displayed
-        public enum ToastNotificationType
+        public enum Type
         {
             EndOfProtection,
             EndOfConfirmation,
@@ -27,7 +27,7 @@ namespace HardenWindowsSecurity
         /// That is different than the DLLs being made available to the Add-Type during C# code compilation
         /// </summary>
         /// <param name="Type">The type of the toast notification to use</param>
-        public static void Show(ToastNotificationType Type, string? TotalCompliantValues, string? TotalNonCompliantValues, string? UnprotectCategory, string? BitLockerEncryptionTab)
+        public static void Show(Type Type, string? TotalCompliantValues, string? TotalNonCompliantValues, string? UnprotectCategory, string? BitLockerEncryptionTab)
         {
 
             try
@@ -41,14 +41,14 @@ namespace HardenWindowsSecurity
                 {
 
                     // Notification to show at the end of applying the hardening measures
-                    case ToastNotificationType.EndOfProtection:
+                    case Type.EndOfProtection:
                         {
                             // Combine paths
                             // string Hero = Path.Combine(GlobalVars.path!, "Resources", "Media", "Microsoft Defender.png");
                             // string DismissButtonImage = Path.Combine(GlobalVars.path!, "Resources", "Media", "notification (1).png");
                             string Inline = Path.Combine(GlobalVars.path!, "Resources", "Media", "ProtectToastNotificationImage.png");
 
-                            new Microsoft.Toolkit.Uwp.Notifications.ToastContentBuilder()
+                            new ToastContentBuilder()
 
                             .AddAppLogoOverride(new Uri($"file:///{LogoOverride}"), ToastGenericAppLogoCrop.Circle)
 
@@ -103,13 +103,13 @@ namespace HardenWindowsSecurity
                         }
 
                     // Notification to show for End of compliance checking/Confirmation
-                    case ToastNotificationType.EndOfConfirmation:
+                    case Type.EndOfConfirmation:
                         {
 
                             // Combine paths
                             string Inline = Path.Combine(GlobalVars.path!, "Resources", "Media", "ConfirmToastNotificationImage.png");
 
-                            new Microsoft.Toolkit.Uwp.Notifications.ToastContentBuilder()
+                            new ToastContentBuilder()
 
                             .AddAppLogoOverride(new Uri($"file:///{LogoOverride}"), ToastGenericAppLogoCrop.Circle)
 
@@ -133,14 +133,14 @@ namespace HardenWindowsSecurity
 
                             break;
                         }
-                    case ToastNotificationType.EndOfASRRules:
+                    case Type.EndOfASRRules:
                         {
 
                             // Combine paths
                             string Hero = Path.Combine(GlobalVars.path!, "Resources", "Media", "Attack Surface Reduction Notification Hero Image.png");
                             string Inline = Path.Combine(GlobalVars.path!, "Resources", "Media", "ASRRulesToastNotificationImage.png");
 
-                            new Microsoft.Toolkit.Uwp.Notifications.ToastContentBuilder()
+                            new ToastContentBuilder()
 
                             .AddAppLogoOverride(new Uri($"file:///{LogoOverride}"), ToastGenericAppLogoCrop.Circle)
 
@@ -164,12 +164,12 @@ namespace HardenWindowsSecurity
 
                             break;
                         }
-                    case ToastNotificationType.EndOfUnprotection:
+                    case Type.EndOfUnprotection:
                         {
                             // Combine paths
                             string Inline = Path.Combine(GlobalVars.path!, "Resources", "Media", "UnprotectToastNotificationImage.png");
 
-                            new Microsoft.Toolkit.Uwp.Notifications.ToastContentBuilder()
+                            new ToastContentBuilder()
 
                             .AddAppLogoOverride(new Uri($"file:///{LogoOverride}"), ToastGenericAppLogoCrop.Circle)
 
@@ -189,12 +189,12 @@ namespace HardenWindowsSecurity
 
                             break;
                         }
-                    case ToastNotificationType.EndOfExclusions:
+                    case Type.EndOfExclusions:
                         {
                             // Combine paths
                             string Inline = Path.Combine(GlobalVars.path!, "Resources", "Media", "UnprotectToastNotificationImage.png");
 
-                            new Microsoft.Toolkit.Uwp.Notifications.ToastContentBuilder()
+                            new ToastContentBuilder()
 
                             .AddAppLogoOverride(new Uri($"file:///{LogoOverride}"), ToastGenericAppLogoCrop.Circle)
 
@@ -214,12 +214,12 @@ namespace HardenWindowsSecurity
 
                             break;
                         }
-                    case ToastNotificationType.EndOfBitLocker:
+                    case Type.EndOfBitLocker:
                         {
                             // Combine paths
                             string Inline = Path.Combine(GlobalVars.path!, "Resources", "Media", "BitLockerToastNotificationImage.png");
 
-                            new Microsoft.Toolkit.Uwp.Notifications.ToastContentBuilder()
+                            new ToastContentBuilder()
 
                             .AddAppLogoOverride(new Uri($"file:///{LogoOverride}"), ToastGenericAppLogoCrop.Circle)
 

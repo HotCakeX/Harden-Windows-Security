@@ -6,10 +6,10 @@ using System.IO;
 
 namespace HardenWindowsSecurity
 {
-    public class ProcessMitigationsParser
+    public static class ProcessMitigationsParser
     {
         // Define a public class to store the structure of the new CSV data
-        public class ProcessMitigationsRecords
+        public sealed class ProcessMitigationsRecords
         {
             public string? ProgramName { get; set; }    // Column for program name
             public string? Mitigation { get; set; }     // Column for mitigation
@@ -39,7 +39,7 @@ namespace HardenWindowsSecurity
             using StreamReader reader = new(path);
 
             // Read the header line
-            var header = reader.ReadLine();
+            string? header = reader.ReadLine();
 
             // Return if the header is null
             if (header is null) return;
@@ -47,13 +47,13 @@ namespace HardenWindowsSecurity
             // Read the rest of the file line by line
             while (!reader.EndOfStream)
             {
-                var line = reader.ReadLine();
+                string? line = reader.ReadLine();
 
                 // Skip if the line is null
                 if (line is null) continue;
 
                 // Split the line by commas to get the values, that's the CSV's delimiter
-                var values = line.Split(',');
+                string[] values = line.Split(',');
 
                 // Check if the number of values is 5
                 if (values.Length == 5)

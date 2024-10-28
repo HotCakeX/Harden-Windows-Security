@@ -9,7 +9,7 @@ using System.Text.Json;
 
 namespace HardenWindowsSecurity
 {
-    public class CiToolRunner
+    public static class CiToolRunner
     {
         /// <summary>
         /// Converts a 64-bit unsigned integer into a version type, used for converting the numbers from CiTool.exe output to proper versions.
@@ -73,7 +73,7 @@ namespace HardenWindowsSecurity
         public static List<CiPolicyInfo> RunCiTool(JsonSerializerOptions options, bool SystemPolicies = false, bool BasePolicies = false, bool SupplementalPolicies = false)
         {
             // Create an empty list of Policy objects to return at the end
-            var policies = new List<CiPolicyInfo>();
+            List<CiPolicyInfo> policies = [];
 
             // Combine the path to CiTool.exe using the system's special folder path
             string ciToolPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.System), "CiTool.exe");
@@ -250,13 +250,13 @@ namespace HardenWindowsSecurity
                 if (value.ValueKind == JsonValueKind.Array)
                 {
                     // Initialize a new list to hold the policy options.
-                    var options = new List<string>();
+                    List<string> options = [];
 
                     // Iterate through each item in the array.
-                    foreach (var item in value.EnumerateArray())
+                    foreach (JsonElement item in value.EnumerateArray())
                     {
                         // Get the string representation of the item.
-                        var str = item.GetString();
+                        string? str = item.GetString();
 
                         // Add the string to the options list if it is not null.
                         if (str is not null)
@@ -272,7 +272,7 @@ namespace HardenWindowsSecurity
                 else if (value.ValueKind == JsonValueKind.String)
                 {
                     // Get the string representation of the single value.
-                    var str = value.GetString();
+                    string? str = value.GetString();
 
                     // Return a list containing the single string if it is not null.
                     if (str is not null)

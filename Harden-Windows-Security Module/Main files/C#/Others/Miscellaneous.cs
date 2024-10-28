@@ -8,7 +8,7 @@ using System.Management.Automation;
 
 namespace HardenWindowsSecurity
 {
-    public class Miscellaneous
+    public static class Miscellaneous
     {
         // Clean up the working directory at the end of each cmdlet
         public static void CleanUp()
@@ -61,11 +61,11 @@ namespace HardenWindowsSecurity
                 try
                 {
                     // Query the Win32_OperatingSystem class
-                    using var searcher = new ManagementObjectSearcher("SELECT OperatingSystemSKU FROM Win32_OperatingSystem");
+                    using ManagementObjectSearcher searcher = new("SELECT OperatingSystemSKU FROM Win32_OperatingSystem");
 
                     foreach (ManagementObject os in searcher.Get().Cast<ManagementObject>())
                     {
-                        var sku = os["OperatingSystemSKU"]?.ToString();
+                        string? sku = os["OperatingSystemSKU"]?.ToString();
 
                         // Home edition and Home edition single-language SKUs
                         if (string.Equals(sku, "100", StringComparison.OrdinalIgnoreCase) || string.Equals(sku, "101", StringComparison.OrdinalIgnoreCase))

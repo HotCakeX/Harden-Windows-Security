@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Management;
-using System.Reflection;
 
 #nullable enable
 
@@ -13,10 +12,11 @@ namespace HardenWindowsSecurity
     /// Class to handle Controlled Folder Access allowed applications
     /// Mostly for adding some system executables or Pwh.exe to the list during the module's operation
     /// </summary>
-    public class ControlledFolderAccessHandler
+    public static class ControlledFolderAccessHandler
     {
         // To track if the Reset() method has been run
         private static bool HasResetHappenedBefore;
+
         // To track if the Start() method has been run
         private static bool HasBackupHappenedBefore;
 
@@ -44,7 +44,7 @@ namespace HardenWindowsSecurity
         /// <param name="applications"></param>
         private static void Add(string[] applications)
         {
-            using var managementClass = new ManagementClass(@"root\Microsoft\Windows\Defender", "MSFT_MpPreference", null);
+            using ManagementClass managementClass = new(@"root\Microsoft\Windows\Defender", "MSFT_MpPreference", null);
 
             ManagementBaseObject inParams = managementClass.GetMethodParameters("Add");
             inParams["ControlledFolderAccessAllowedApplications"] = applications;
@@ -59,7 +59,7 @@ namespace HardenWindowsSecurity
         /// <param name="applications"></param>
         private static void Remove(string[] applications)
         {
-            using var managementClass = new ManagementClass(@"root\Microsoft\Windows\Defender", "MSFT_MpPreference", null);
+            using ManagementClass managementClass = new(@"root\Microsoft\Windows\Defender", "MSFT_MpPreference", null);
 
             ManagementBaseObject inParams = managementClass.GetMethodParameters("Remove");
             inParams["ControlledFolderAccessAllowedApplications"] = applications;
@@ -97,6 +97,7 @@ namespace HardenWindowsSecurity
                 #region powercfg.exe executable
                 // Get the powercfg.exe path
                 string? systemDrive = Environment.GetEnvironmentVariable("SystemDrive");
+
                 if (string.IsNullOrEmpty(systemDrive))
                 {
                     throw new InvalidOperationException("SystemDrive environment variable is not set.");
@@ -111,21 +112,7 @@ namespace HardenWindowsSecurity
                 #region PowerShell and/or standalone executable
                 // If Harden Windows Security App is being executed using compiled binary, or in the context of PowerShell as a module, then this part will take care of CFA exclusion
 
-                // Get the path of the currently executing assembly
-                string? executablePath = Assembly.GetExecutingAssembly()?.Location;
-
-                if (!string.IsNullOrWhiteSpace(executablePath))
-                {
-                    Logger.LogMessage("Executable Path temporarily being added to the Controlled Folder Access Exclusions: " + executablePath, LogTypeIntel.Information);
-
-                    // Ensure the file has a .exe extension
-                    if (Path.GetExtension(executablePath).Equals(".exe", StringComparison.OrdinalIgnoreCase))
-                    {
-                        _ = CFAExclusionsToBeAdded.Add(executablePath);
-                    }
-                }
-
-                // Get the path of the current process executable
+                // Get the path of the current process executable (.exe)
                 string? executablePathExe = Process.GetCurrentProcess()?.MainModule?.FileName;
 
                 if (!string.IsNullOrWhiteSpace(executablePathExe))

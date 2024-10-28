@@ -63,7 +63,7 @@ namespace HardenWindowsSecurity
             if (HasErrorsOccurred) { return; }
 
             // If the drive is fully encrypted, check its key protectors
-            if (VolumeInfoExtended.ConversionStatus is BitLocker.ConversionStatus.FullyEncrypted)
+            if (VolumeInfoExtended.ConversionStatus is ConversionStatus.FullyEncrypted)
             {
                 Logger.LogMessage($"The OS drive is fully encrypted, will check if it conforms to the selected {OSEncryptionType} level.", LogTypeIntel.Information);
 
@@ -74,7 +74,7 @@ namespace HardenWindowsSecurity
 
 
                 // Get the key protectors of the OS Drive after making sure it is fully encrypted
-                List<BitLocker.KeyProtectorType?> KeyProtectors = VolumeInfoExtended.KeyProtector!
+                List<KeyProtectorType?> KeyProtectors = VolumeInfoExtended.KeyProtector!
                 .Select(kp => kp.KeyProtectorType).ToList();
 
                 if (KeyProtectors is null || KeyProtectors.Count == 0)
@@ -85,7 +85,7 @@ namespace HardenWindowsSecurity
                 }
 
                 // If Normal security level was selected
-                if (OSEncryptionType is BitLocker.OSEncryptionType.Normal)
+                if (OSEncryptionType is OSEncryptionType.Normal)
                 {
                     // If all the required key protectors for Normal security level are present, then return from the method
                     if (KeyProtectors.Contains(BitLocker.KeyProtectorType.RecoveryPassword) && KeyProtectors.Contains(BitLocker.KeyProtectorType.TpmPin))
@@ -188,7 +188,7 @@ namespace HardenWindowsSecurity
             }
 
             // Continue with full encryption if the drive is fully decrypted
-            else if (VolumeInfoExtended.ConversionStatus is BitLocker.ConversionStatus.FullyDecrypted)
+            else if (VolumeInfoExtended.ConversionStatus is ConversionStatus.FullyDecrypted)
             {
 
                 // Prepare the method with arguments
@@ -348,7 +348,7 @@ namespace HardenWindowsSecurity
 
 
             // Make sure the OS Drive is encrypted first, or else we would add recovery password key protector and then get error about the same problem during auto-unlock key protector enablement
-            BitLockerVolume OSDriveVolumeInfo = HardenWindowsSecurity.BitLocker.GetEncryptedVolumeInfo(Environment.GetEnvironmentVariable("SystemDrive") ?? "C:\\");
+            BitLockerVolume OSDriveVolumeInfo = BitLocker.GetEncryptedVolumeInfo(Environment.GetEnvironmentVariable("SystemDrive") ?? "C:\\");
             if (OSDriveVolumeInfo.ProtectionStatus is not BitLocker.ProtectionStatus.Protected)
             {
                 Logger.LogMessage($"Operation System drive must be encrypted first before encrypting Non-OS drives.", LogTypeIntel.ErrorInteractionRequired);
@@ -357,7 +357,7 @@ namespace HardenWindowsSecurity
             }
 
             // If the drive is already fully encrypted, check its key protectors
-            if (VolumeInfoExtended.ConversionStatus is BitLocker.ConversionStatus.FullyEncrypted)
+            if (VolumeInfoExtended.ConversionStatus is ConversionStatus.FullyEncrypted)
             {
 
                 Logger.LogMessage($"The drive {DriveLetter} is fully encrypted, will check its key protectors.", LogTypeIntel.Information);
@@ -369,7 +369,7 @@ namespace HardenWindowsSecurity
                 }
 
                 // Get the key protectors of the Drive after making sure it is fully encrypted
-                List<BitLocker.KeyProtectorType?> KeyProtectors = VolumeInfoExtended.KeyProtector!
+                List<KeyProtectorType?> KeyProtectors = VolumeInfoExtended.KeyProtector!
                 .Select(kp => kp.KeyProtectorType).ToList();
 
                 if (KeyProtectors is null || KeyProtectors.Count == 0)
@@ -385,7 +385,7 @@ namespace HardenWindowsSecurity
 
                     #region
                     // Delete any possible old leftover ExternalKey key protectors
-                    List<BitLocker.KeyProtector> ExternalKeys = VolumeInfoExtended.KeyProtector!.Where(kp => kp.KeyProtectorType is KeyProtectorType.ExternalKey).ToList();
+                    List<KeyProtector> ExternalKeys = VolumeInfoExtended.KeyProtector!.Where(kp => kp.KeyProtectorType is KeyProtectorType.ExternalKey).ToList();
 
                     // This step ensures any leftover or unbound external key key protectors will be removed and a working one will be added
                     // If the current one is working and bound, it won't be removed and will be gracefully skipped over.
@@ -430,7 +430,7 @@ namespace HardenWindowsSecurity
                     #region
                     // Check for presence of multiple recovery password key protectors
 
-                    List<BitLocker.KeyProtector> PasswordProtectors = VolumeInfoExtended.KeyProtector!.Where(kp => kp.KeyProtectorType is KeyProtectorType.RecoveryPassword).ToList();
+                    List<KeyProtector> PasswordProtectors = VolumeInfoExtended.KeyProtector!.Where(kp => kp.KeyProtectorType is KeyProtectorType.RecoveryPassword).ToList();
 
                     if (PasswordProtectors.Count > 1)
                     {
@@ -468,7 +468,7 @@ namespace HardenWindowsSecurity
             }
 
             // If the drive is fully decrypted, begin full drive encryption
-            else if (VolumeInfoExtended.ConversionStatus is BitLocker.ConversionStatus.FullyDecrypted)
+            else if (VolumeInfoExtended.ConversionStatus is ConversionStatus.FullyDecrypted)
             {
 
                 // Prepare the method with arguments

@@ -27,15 +27,15 @@ namespace HardenWindowsSecurity
             // Prepare the environment and variables
             Initializer.Initialize();
 
-            if (HardenWindowsSecurity.UserPrivCheck.IsAdmin())
+            if (UserPrivCheck.IsAdmin())
             {
-                HardenWindowsSecurity.ControlledFolderAccessHandler.Start();
-                HardenWindowsSecurity.Miscellaneous.RequirementsCheck();
+                ControlledFolderAccessHandler.Start();
+                Miscellaneous.RequirementsCheck();
             }
             #endregion
 
             // Launch the GUI
-            HardenWindowsSecurity.GUIBootStrapper.Boot();
+            GUIHandOff.Boot();
 
         }
     }

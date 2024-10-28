@@ -6,7 +6,7 @@ using System.Text.Json;
 
 namespace HardenWindowsSecurity
 {
-    public class JsonToHashtable
+    public static class JsonToHashtable
     {
         // Using HashTable since they don't throw error for non-existing keys
         // This method acts like ConvertFrom-Json -AsHashTable in PowerShell

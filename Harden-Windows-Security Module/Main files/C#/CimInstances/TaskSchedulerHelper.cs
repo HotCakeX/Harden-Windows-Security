@@ -8,7 +8,7 @@ using System.Runtime.InteropServices;
 
 namespace HardenWindowsSecurity
 {
-    public class TaskSchedulerHelper
+    public static class TaskSchedulerHelper
     {
 
         // Enums for ScheduledTask
@@ -139,7 +139,7 @@ namespace HardenWindowsSecurity
             catch (ManagementException e)
             {
                 // Handle any ManagementException that may occur during the WMI query execution
-                HardenWindowsSecurity.Logger.LogMessage($"An error occurred while querying for WMI data: {e.Message}", LogTypeIntel.Error);
+                Logger.LogMessage($"An error occurred while querying for WMI data: {e.Message}", LogTypeIntel.Error);
 
                 // Depending on the outputType parameter, return either false or an empty list
                 if (outputType == OutputType.Boolean)
@@ -193,7 +193,7 @@ namespace HardenWindowsSecurity
                 // If no tasks were found, return false
                 if (results.Count == 0)
                 {
-                    HardenWindowsSecurity.Logger.LogMessage($"No tasks found in Task Scheduler.", LogTypeIntel.Warning);
+                    Logger.LogMessage($"No tasks found in Task Scheduler.", LogTypeIntel.Warning);
                     return false;
                 }
 
@@ -212,14 +212,14 @@ namespace HardenWindowsSecurity
                             // Call DeleteInstance to delete the task
                             obj.Delete();
 
-                            HardenWindowsSecurity.Logger.LogMessage($"Task '{taskName}' with path '{taskPath}' was deleted successfully.", LogTypeIntel.Information);
+                            Logger.LogMessage($"Task '{taskName}' with path '{taskPath}' was deleted successfully.", LogTypeIntel.Information);
 
                             // Return true indicating the task was deleted
                             return true;
                         }
                         catch (ManagementException ex)
                         {
-                            HardenWindowsSecurity.Logger.LogMessage($"Failed to delete task '{taskName}' with path '{taskPath}': {ex.Message}", LogTypeIntel.Error);
+                            Logger.LogMessage($"Failed to delete task '{taskName}' with path '{taskPath}': {ex.Message}", LogTypeIntel.Error);
 
                             // Return false indicating failure to delete the task
                             return false;
@@ -227,13 +227,13 @@ namespace HardenWindowsSecurity
                     }
                 }
 
-                HardenWindowsSecurity.Logger.LogMessage($"No task found with the name '{taskName}' and path '{taskPath}'.", LogTypeIntel.Information);
+                Logger.LogMessage($"No task found with the name '{taskName}' and path '{taskPath}'.", LogTypeIntel.Information);
                 return false; // Task not found
             }
             catch (ManagementException e)
             {
                 // for any ManagementException that may occur during the WMI query execution
-                HardenWindowsSecurity.Logger.LogMessage($"An error occurred while querying for WMI data: {e.Message}", LogTypeIntel.Error);
+                Logger.LogMessage($"An error occurred while querying for WMI data: {e.Message}", LogTypeIntel.Error);
 
                 // Return false indicating no task was deleted (error occurred)
                 return false;

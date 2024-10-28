@@ -1,5 +1,6 @@
 using Microsoft.Win32;
 using System;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Management.Automation;
 
@@ -18,21 +19,21 @@ namespace HardenWindowsSecurity
             }
 
             // Group the data by ProgramName
-            var groupedMitigations = GlobalVars.ProcessMitigations
+            IGrouping<string?, ProcessMitigationsParser.ProcessMitigationsRecords>[] groupedMitigations = GlobalVars.ProcessMitigations
                 .GroupBy(pm => pm.ProgramName)
                 .ToArray();
 
             // Get the current process mitigations from the registry
-            var allAvailableMitigations = (Registry.LocalMachine
+            string[] allAvailableMitigations = (Registry.LocalMachine
                 .OpenSubKey(@"SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options")
                 ?.GetSubKeyNames()) ?? throw new InvalidOperationException("Failed to read registry keys.");
 
             // Create a PowerShell instance
-            using var ps = PowerShell.Create();
+            using PowerShell ps = PowerShell.Create();
 
             // Loop through each group to remove the mitigations, this way we apply clean set of mitigations in the next step
             Logger.LogMessage("Removing the existing process mitigations", LogTypeIntel.Information);
-            foreach (var group in groupedMitigations)
+            foreach (IGrouping<string?, ProcessMitigationsParser.ProcessMitigationsRecords> group in groupedMitigations)
             {
                 string? fileName = System.IO.Path.GetFileName(group.Key);
 
@@ -53,24 +54,24 @@ namespace HardenWindowsSecurity
 
             // Adding the process mitigations
             Logger.LogMessage("Adding the process mitigations", LogTypeIntel.Information);
-            foreach (var group in groupedMitigations)
+            foreach (IGrouping<string?, ProcessMitigationsParser.ProcessMitigationsRecords> group in groupedMitigations)
             {
                 // Clear previous commands
                 ps.Commands.Clear();
 
-                var programName = group.Key;
+                string? programName = group.Key;
                 Logger.LogMessage($"Adding process mitigations for {programName}", LogTypeIntel.Information);
 
-                var enableMitigations = group.Where(g => string.Equals(g.Action, "Enable", StringComparison.OrdinalIgnoreCase))
+                string?[] enableMitigations = group.Where(g => string.Equals(g.Action, "Enable", StringComparison.OrdinalIgnoreCase))
                                              .Select(g => g.Mitigation)
                                              .ToArray();
 
-                var disableMitigations = group.Where(g => string.Equals(g.Action, "Disable", StringComparison.OrdinalIgnoreCase))
+                string?[] disableMitigations = group.Where(g => string.Equals(g.Action, "Disable", StringComparison.OrdinalIgnoreCase))
                                               .Select(g => g.Mitigation)
                                               .ToArray();
 
                 // Create the command and add parameters
-                var command = new PSCommand();
+                PSCommand command = new();
                 _ = command.AddCommand("Set-ProcessMitigation");
                 _ = command.AddParameter("Name", programName);
 
@@ -91,8 +92,8 @@ namespace HardenWindowsSecurity
                 // Check for errors
                 if (ps.HadErrors)
                 {
-                    var errors = ps.Streams.Error.ReadAll();
-                    foreach (var error in errors)
+                    Collection<ErrorRecord> errors = ps.Streams.Error.ReadAll();
+                    foreach (ErrorRecord error in errors)
                     {
                         Logger.LogMessage($"Error: {error}", LogTypeIntel.Error);
                     }

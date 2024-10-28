@@ -63,17 +63,17 @@ namespace HardenWindowsSecurity
             // catch exceptions specific to WMI
             catch (ManagementException mex)
             {
-                HardenWindowsSecurity.Logger.LogMessage($"WMI ManagementException: {mex.Message}", LogTypeIntel.Error);
+                Logger.LogMessage($"WMI ManagementException: {mex.Message}", LogTypeIntel.Error);
             }
             // Catch block for unauthorized access exceptions
             catch (UnauthorizedAccessException uex)
             {
-                HardenWindowsSecurity.Logger.LogMessage($"UnauthorizedAccessException: {uex.Message}", LogTypeIntel.Error);
+                Logger.LogMessage($"UnauthorizedAccessException: {uex.Message}", LogTypeIntel.Error);
             }
             // General catch block for any other exceptions
             catch (Exception ex)
             {
-                HardenWindowsSecurity.Logger.LogMessage($"An error occurred: {ex.Message}", LogTypeIntel.Error);
+                Logger.LogMessage($"An error occurred: {ex.Message}", LogTypeIntel.Error);
             }
 
             return results;
@@ -254,10 +254,10 @@ namespace HardenWindowsSecurity
                 options.SetCustomOption("PolicyStore", policyStore, mustComply: true);
 
                 // Check for existing rules with the same name and delete them
-                var existingRules = cimSession.EnumerateInstances("root/StandardCimv2", "MSFT_NetFirewallRule", options)
+                IEnumerable<CimInstance> existingRules = cimSession.EnumerateInstances("root/StandardCimv2", "MSFT_NetFirewallRule", options)
                                               .Where(instance => instance.CimInstanceProperties["ElementName"].Value.ToString() == ruleName);
 
-                foreach (var rule in existingRules)
+                foreach (CimInstance rule in existingRules)
                 {
                     cimSession.DeleteInstance("root/StandardCimv2", rule, options);
                     Logger.LogMessage($"Deleted existing firewall rule: {ruleName}", LogTypeIntel.Information);

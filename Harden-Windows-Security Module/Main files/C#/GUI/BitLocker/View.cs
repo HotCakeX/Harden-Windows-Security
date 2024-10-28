@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
+using System.Windows.Input;
 using System.Windows.Markup;
 using System.Windows.Media.Imaging;
 
@@ -232,6 +234,32 @@ namespace HardenWindowsSecurity
                 BackupButtonIconBitmapImage.CacheOption = BitmapCacheOption.OnLoad; // Load the image data into memory
                 BackupButtonIconBitmapImage.EndInit();
                 BackupButtonIcon.Source = BackupButtonIconBitmapImage;
+
+                #region Make the scrolling using mouse wheel or trackpad work on DataGrid
+                // The DataGrid needs to hand over the scrolling event to the main ScrollViewer element
+
+                // Find the ScrollViewer element
+                ScrollViewer MainScrollViewer = GUIBitLocker.ParentGrid.FindName("MainScrollViewer") as ScrollViewer ?? throw new InvalidOperationException("No scrollbar founds");
+
+                // Handle the PreviewMouseWheel event of the DataGrid by handing it off to the main ScrollViewer
+                GUIBitLocker.RecoveryKeysDataGrid.PreviewMouseWheel += (object sender, MouseWheelEventArgs e) =>
+                {
+                    if (!e.Handled)
+                    {
+                        e.Handled = true;
+
+                        MouseWheelEventArgs eventArg = new(e.MouseDevice, e.Timestamp, e.Delta)
+                        {
+                            RoutedEvent = UIElement.MouseWheelEvent,
+                            Source = sender
+                        };
+
+                        MainScrollViewer.RaiseEvent(eventArg);
+                    }
+                };
+
+                #endregion
+
 
                 // Event handler to refresh the recovery key info in the DataGrid
                 GUIBitLocker.RefreshButtonForBackup.Click += async (sender, e) =>

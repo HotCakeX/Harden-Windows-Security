@@ -93,7 +93,7 @@
         <!-- END TAB CONTROL STYLES -->
     </UserControl.Resources>
 
-    <ScrollViewer ScrollViewer.PanningMode="Both" VerticalScrollBarVisibility="Auto">
+    <ScrollViewer x:Name="MainScrollViewer" ScrollViewer.PanningMode="Both" VerticalScrollBarVisibility="Auto">
 
         <Grid x:Name="ParentGrid">
             <Grid.ColumnDefinitions>
@@ -234,8 +234,8 @@ ItemContainerStyle="{StaticResource ModernComboBoxItemStyle}" SelectedIndex="0">
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
-                            <RowDefinition Height="*" />
-                            <RowDefinition Height="*" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
                             <RowDefinition Height="*" />
                         </Grid.RowDefinitions>
                         <TextBlock Grid.Row="0" Text="View and backup your recovery passwords in here."

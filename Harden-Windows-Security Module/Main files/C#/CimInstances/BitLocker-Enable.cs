@@ -434,7 +434,7 @@ namespace HardenWindowsSecurity
 
                     if (PasswordProtectors.Count > 1)
                     {
-                        Logger.LogMessage($"drive {DriveLetter} has {PasswordProtectors} recovery password key protectors. Usually only one is enough.", LogTypeIntel.Information);
+                        Logger.LogMessage($"drive {DriveLetter} has {PasswordProtectors.Count} recovery password key protectors. Usually only one is enough.", LogTypeIntel.Information);
                     }
                     #endregion
 

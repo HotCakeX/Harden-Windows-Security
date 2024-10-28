@@ -5,7 +5,7 @@ using System.IO;
 
 namespace HardenWindowsSecurity
 {
-    public class Program
+    public static class Program
     {
         /// <summary>
         /// You can use this method when working on the module in Visual Studio

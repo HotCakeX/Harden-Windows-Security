@@ -68,10 +68,6 @@ sc.exe start LanmanWorkstation
                 // this should automatically throw ?
                 // MethodsTaskOutput.GetAwaiter().GetResult()
             }
-            else if (MethodsTaskOutput.IsCompletedSuccessfully)
-            {
-                // Logger.LogMessage("successful", LogTypeIntel.Information);
-            }
         }
 
         // Defining delegates for the methods
@@ -529,15 +525,9 @@ sc.exe start LanmanWorkstation
                 object? regValue = Registry.GetValue(@"HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\FVE", "DisableExternalDMAUnderLock", 0);
 
                 // Explicitly check if regValue is null before casting
-                if (regValue is int intValue)
-                {
-                    BitlockerDMAProtectionStatus = intValue;
-                }
-                else
-                {
-                    // regValue should not be null due to the default value set in GetValue method
-                    BitlockerDMAProtectionStatus = 0;
-                }
+                // regValue should not be null due to the default value set in GetValue method
+                BitlockerDMAProtectionStatus = regValue is int intValue ? intValue : 0;
+
 
                 // Bitlocker DMA counter measure status
                 // Returns true if only either Kernel DMA protection is on and Bitlocker DMA protection if off
@@ -788,7 +778,7 @@ sc.exe start LanmanWorkstation
                 if (string.Equals(currentCulture, "en-US", StringComparison.OrdinalIgnoreCase))
                 {
                     // Start a new process to run the auditpol command
-                    Process process = new()
+                    using Process process = new()
                     {
                         StartInfo = new ProcessStartInfo
                         {
@@ -1791,7 +1781,7 @@ sc.exe start LanmanWorkstation
 
                     try
                     {
-                        Collection<PSObject> results = ps.Invoke();
+                        _ = ps.Invoke();
 
                         if (ps.Streams.Error.Count > 0)
                         {

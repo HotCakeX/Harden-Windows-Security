@@ -177,8 +177,8 @@ namespace HardenWindowsSecurity
             // Start the process and capture the output
             using Process? process = Process.Start(processStartInfo) ?? throw new InvalidOperationException("There was a problem running the CiTool.exe in the RunCiTool method.");
 
-            // Read all output as a string
-            string jsonOutput = process.StandardOutput.ReadToEnd();
+            // Don't need the output if successful
+            _ = process.StandardOutput.ReadToEnd();
 
             // Wait for the process to complete
             process.WaitForExit();

@@ -103,165 +103,99 @@ namespace HardenWindowsSecurity
                 // Attach the event handler using a lambda expression
                 GUIProtectWinSecurity.ProtectionPresetComboBox.SelectionChanged += (sender, args) =>
                 {
-                    // Cast the sender back to a ComboBox
-                    if (sender is ComboBox comboBox)
+                    // Cast the sender back to a ComboBox and get the selected item as a ComboBoxItem
+                    if (sender is ComboBox comboBox && comboBox.SelectedItem is ComboBoxItem selectedItem)
                     {
-                        // Get the selected item as a ComboBoxItem
-                        if (comboBox.SelectedItem is ComboBoxItem selectedItem)
+                        // Assign the selected content to the SelectedProtectionPreset property
+                        GUIProtectWinSecurity.SelectedProtectionPreset = selectedItem.Content.ToString();
+
+                        // Uncheck all categories first
+                        foreach (ListViewItem item in GUIProtectWinSecurity.categories.Items)
                         {
-                            // Assign the selected content to the SelectedProtectionPreset property
-                            GUIProtectWinSecurity.SelectedProtectionPreset = selectedItem.Content.ToString();
+                            ((CheckBox)item.Content).IsChecked = false;
+                        }
 
-                            // Uncheck all categories first
-                            foreach (ListViewItem item in GUIProtectWinSecurity.categories.Items)
-                            {
-                                ((CheckBox)item.Content).IsChecked = false;
-                            }
+                        // Uncheck all sub-categories first
+                        foreach (ListViewItem item in GUIProtectWinSecurity.subCategories.Items)
+                        {
+                            ((CheckBox)item.Content).IsChecked = false;
+                        }
 
-                            // Uncheck all sub-categories first
-                            foreach (ListViewItem item in GUIProtectWinSecurity.subCategories.Items)
-                            {
-                                ((CheckBox)item.Content).IsChecked = false;
-                            }
+                        // Check the categories and sub-categories based on the preset configurations
+                        switch (GUIProtectWinSecurity.SelectedProtectionPreset?.ToLowerInvariant())
+                        {
+                            case "preset: basic":
+                                {
+                                    GUIMain.app.Dispatcher.Invoke(() =>
+                                     {
 
-                            // Check the categories and sub-categories based on the preset configurations
-                            switch (GUIProtectWinSecurity.SelectedProtectionPreset?.ToLowerInvariant())
-                            {
-                                case "preset: basic":
-                                    {
-                                        GUIMain.app.Dispatcher.Invoke(() =>
+                                         string presetName = "preset: basic";
+
+                                         // Check if the preset exists in the dictionary
+                                         if (GUIProtectWinSecurity.PresetsIntel.TryGetValue(presetName, out var categoriesAndSubcategories))
                                          {
+                                             // Access the categories and subcategories
+                                             List<string> categories = categoriesAndSubcategories["Categories"];
+                                             List<string> subcategories = categoriesAndSubcategories["SubCategories"];
 
-                                             string presetName = "preset: basic";
-
-                                             // Check if the preset exists in the dictionary
-                                             if (GUIProtectWinSecurity.PresetsIntel.TryGetValue(presetName, out var categoriesAndSubcategories))
+                                             // Loop over each category in the dictionary
+                                             foreach (string category in categories)
                                              {
-                                                 // Access the categories and subcategories
-                                                 List<string> categories = categoriesAndSubcategories["Categories"];
-                                                 List<string> subcategories = categoriesAndSubcategories["SubCategories"];
 
-                                                 // Loop over each category in the dictionary
-                                                 foreach (string category in categories)
+                                                 // Loop over each category in the GUI
+                                                 foreach (ListViewItem categoryItem in GUIProtectWinSecurity.categories.Items)
                                                  {
+                                                     // get the name of the list view item as string
+                                                     string categoryItemName = ((CheckBox)categoryItem.Content).Name.ToString();
 
-                                                     // Loop over each category in the GUI
-                                                     foreach (ListViewItem categoryItem in GUIProtectWinSecurity.categories.Items)
+                                                     // if the category is authorized to be available
+                                                     if (GlobalVars.HardeningCategorieX.Contains(categoryItemName))
                                                      {
-                                                         // get the name of the list view item as string
-                                                         string categoryItemName = ((CheckBox)categoryItem.Content).Name.ToString();
-
-                                                         // if the category is authorized to be available
-                                                         if (GlobalVars.HardeningCategorieX.Contains(categoryItemName))
+                                                         // If the name of the current checkbox list view item in the loop is the same as the category name in the outer loop, then set the category on the GUI to checked
+                                                         if (string.Equals(categoryItemName, category, StringComparison.OrdinalIgnoreCase))
                                                          {
-                                                             // If the name of the current checkbox list view item in the loop is the same as the category name in the outer loop, then set the category on the GUI to checked
-                                                             if (string.Equals(categoryItemName, category, StringComparison.OrdinalIgnoreCase))
-                                                             {
-                                                                 ((CheckBox)categoryItem.Content).IsChecked = true;
-                                                             }
-
-                                                         }
-                                                     }
-                                                 }
-
-                                                 foreach (string subcategory in subcategories)
-                                                 {
-
-                                                     // Loop over each sub-category in the GUI
-                                                     foreach (ListViewItem SubCategoryItem in GUIProtectWinSecurity.subCategories.Items)
-                                                     {
-                                                         // get the name of the list view item as string
-                                                         string SubcategoryItemName = ((CheckBox)SubCategoryItem.Content).Name.ToString();
-
-                                                         // If the name of the current checkbox list view item in the loop is the same as the sub-category name in the outer loop, then set the sub-category on the GUI to checked
-                                                         if (string.Equals(SubcategoryItemName, subcategory, StringComparison.OrdinalIgnoreCase))
-                                                         {
-                                                             ((CheckBox)SubCategoryItem.Content).IsChecked = true;
+                                                             ((CheckBox)categoryItem.Content).IsChecked = true;
                                                          }
 
                                                      }
-
-
                                                  }
                                              }
-                                             else
+
+                                             foreach (string subcategory in subcategories)
                                              {
-                                                 Logger.LogMessage($"Preset '{presetName}' not found.", LogTypeIntel.Error);
+
+                                                 // Loop over each sub-category in the GUI
+                                                 foreach (ListViewItem SubCategoryItem in GUIProtectWinSecurity.subCategories.Items)
+                                                 {
+                                                     // get the name of the list view item as string
+                                                     string SubcategoryItemName = ((CheckBox)SubCategoryItem.Content).Name.ToString();
+
+                                                     // If the name of the current checkbox list view item in the loop is the same as the sub-category name in the outer loop, then set the sub-category on the GUI to checked
+                                                     if (string.Equals(SubcategoryItemName, subcategory, StringComparison.OrdinalIgnoreCase))
+                                                     {
+                                                         ((CheckBox)SubCategoryItem.Content).IsChecked = true;
+                                                     }
+
+                                                 }
+
+
                                              }
+                                         }
+                                         else
+                                         {
+                                             Logger.LogMessage($"Preset '{presetName}' not found.", LogTypeIntel.Error);
+                                         }
 
 
-                                         });
-                                        break;
-                                    }
-                                case "preset: recommended":
-                                    {
-                                        GUIMain.app.Dispatcher.Invoke(() =>
-                                        {
-
-                                            string presetName = "preset: recommended";
-
-                                            // Check if the preset exists in the dictionary
-                                            if (GUIProtectWinSecurity.PresetsIntel.TryGetValue(presetName, out var categoriesAndSubcategories))
-                                            {
-                                                // Access the categories and subcategories
-                                                List<string> categories = categoriesAndSubcategories["Categories"];
-                                                List<string> subcategories = categoriesAndSubcategories["SubCategories"];
-
-                                                // Loop over each category in the dictionary
-                                                foreach (string category in categories)
-                                                {
-
-                                                    // Loop over each category in the GUI
-                                                    foreach (ListViewItem categoryItem in GUIProtectWinSecurity.categories.Items)
-                                                    {
-                                                        // get the name of the list view item as string
-                                                        string categoryItemName = ((CheckBox)categoryItem.Content).Name.ToString();
-
-                                                        // if the category is authorized to be available
-                                                        if (GlobalVars.HardeningCategorieX.Contains(categoryItemName))
-                                                        {
-                                                            // If the name of the current checkbox list view item in the loop is the same as the category name in the outer loop, then set the category on the GUI to checked
-                                                            if (string.Equals(categoryItemName, category, StringComparison.OrdinalIgnoreCase))
-                                                            {
-                                                                ((CheckBox)categoryItem.Content).IsChecked = true;
-                                                            }
-
-                                                        }
-                                                    }
-                                                }
-
-                                                foreach (string subcategory in subcategories)
-                                                {
-
-                                                    // Loop over each sub-category in the GUI
-                                                    foreach (ListViewItem SubCategoryItem in GUIProtectWinSecurity.subCategories.Items)
-                                                    {
-                                                        // get the name of the list view item as string
-                                                        string SubcategoryItemName = ((CheckBox)SubCategoryItem.Content).Name.ToString();
-
-                                                        // If the name of the current checkbox list view item in the loop is the same as the sub-category name in the outer loop, then set the sub-category on the GUI to checked
-                                                        if (string.Equals(SubcategoryItemName, subcategory, StringComparison.OrdinalIgnoreCase))
-                                                        {
-                                                            ((CheckBox)SubCategoryItem.Content).IsChecked = true;
-                                                        }
-
-                                                    }
-
-
-                                                }
-                                            }
-                                            else
-                                            {
-                                                Logger.LogMessage($"Preset '{presetName}' not found.", LogTypeIntel.Error);
-                                            }
-
-                                        });
-                                        break;
-                                    }
-                                case "preset: complete":
+                                     });
+                                    break;
+                                }
+                            case "preset: recommended":
+                                {
+                                    GUIMain.app.Dispatcher.Invoke(() =>
                                     {
 
-                                        string presetName = "preset: complete";
+                                        string presetName = "preset: recommended";
 
                                         // Check if the preset exists in the dictionary
                                         if (GUIProtectWinSecurity.PresetsIntel.TryGetValue(presetName, out var categoriesAndSubcategories))
@@ -317,15 +251,75 @@ namespace HardenWindowsSecurity
                                         {
                                             Logger.LogMessage($"Preset '{presetName}' not found.", LogTypeIntel.Error);
                                         }
-                                        break;
-                                    }
 
-                                default:
+                                    });
                                     break;
-                            }
+                                }
+                            case "preset: complete":
+                                {
 
+                                    string presetName = "preset: complete";
 
+                                    // Check if the preset exists in the dictionary
+                                    if (GUIProtectWinSecurity.PresetsIntel.TryGetValue(presetName, out var categoriesAndSubcategories))
+                                    {
+                                        // Access the categories and subcategories
+                                        List<string> categories = categoriesAndSubcategories["Categories"];
+                                        List<string> subcategories = categoriesAndSubcategories["SubCategories"];
+
+                                        // Loop over each category in the dictionary
+                                        foreach (string category in categories)
+                                        {
+
+                                            // Loop over each category in the GUI
+                                            foreach (ListViewItem categoryItem in GUIProtectWinSecurity.categories.Items)
+                                            {
+                                                // get the name of the list view item as string
+                                                string categoryItemName = ((CheckBox)categoryItem.Content).Name.ToString();
+
+                                                // if the category is authorized to be available
+                                                if (GlobalVars.HardeningCategorieX.Contains(categoryItemName))
+                                                {
+                                                    // If the name of the current checkbox list view item in the loop is the same as the category name in the outer loop, then set the category on the GUI to checked
+                                                    if (string.Equals(categoryItemName, category, StringComparison.OrdinalIgnoreCase))
+                                                    {
+                                                        ((CheckBox)categoryItem.Content).IsChecked = true;
+                                                    }
+
+                                                }
+                                            }
+                                        }
+
+                                        foreach (string subcategory in subcategories)
+                                        {
+
+                                            // Loop over each sub-category in the GUI
+                                            foreach (ListViewItem SubCategoryItem in GUIProtectWinSecurity.subCategories.Items)
+                                            {
+                                                // get the name of the list view item as string
+                                                string SubcategoryItemName = ((CheckBox)SubCategoryItem.Content).Name.ToString();
+
+                                                // If the name of the current checkbox list view item in the loop is the same as the sub-category name in the outer loop, then set the sub-category on the GUI to checked
+                                                if (string.Equals(SubcategoryItemName, subcategory, StringComparison.OrdinalIgnoreCase))
+                                                {
+                                                    ((CheckBox)SubCategoryItem.Content).IsChecked = true;
+                                                }
+
+                                            }
+
+                                        }
+                                    }
+                                    else
+                                    {
+                                        Logger.LogMessage($"Preset '{presetName}' not found.", LogTypeIntel.Error);
+                                    }
+                                    break;
+                                }
+
+                            default:
+                                break;
                         }
+
                     }
                 };
 

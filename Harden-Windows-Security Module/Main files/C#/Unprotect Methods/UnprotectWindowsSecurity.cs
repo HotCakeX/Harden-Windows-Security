@@ -219,17 +219,14 @@ Start-Process -FilePath GPUpdate.exe -ArgumentList '/force' -NoNewWindow
             // Loop through each group and remove corresponding registry keys
             foreach (var group in groupedMitigations)
             {
-                if (allAvailableMitigations is not null)
+                if (allAvailableMitigations is not null && allAvailableMitigations.Contains(group.Key!))
                 {
-                    if (allAvailableMitigations.Contains(group.Key!))
-                    {
-                        Registry.LocalMachine.DeleteSubKeyTree(
-                            $@"SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\{group.Key}",
+                    Registry.LocalMachine.DeleteSubKeyTree(
+                        $@"SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\{group.Key}",
 
-                            // do not to throw an exception if the specified subkey does not exist. Instead, simply proceed without raising an error.
-                            throwOnMissingSubKey: false
-                        );
-                    }
+                        // do not to throw an exception if the specified subkey does not exist. Instead, simply proceed without raising an error.
+                        throwOnMissingSubKey: false
+                    );
                 }
             }
         }

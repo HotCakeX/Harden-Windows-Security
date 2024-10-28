@@ -126,9 +126,9 @@ namespace HardenWindowsSecurity
         internal static Hashtable? MDM_Policy_Result01_System02;
 
 
-        internal static string userName;
-        internal static string userSID;
-        internal static string? userFullName;
+        internal readonly static string userName;
+        internal readonly static string userSID;
+        internal readonly static string? userFullName;
 
         static GlobalVars()
         {

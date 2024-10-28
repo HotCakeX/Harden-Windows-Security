@@ -35,7 +35,7 @@ namespace HardenWindowsSecurity
     }
 
     // # This class is the orchestrator of the hardening categories deciding which one of them is allowed to run
-    public class ProtectionCategoriex
+    public static class ProtectionCategoriex
     {
         // a method to detect Windows edition SKU number
         private static bool IsWindowsHome()

@@ -53,7 +53,7 @@ namespace HardenWindowsSecurity
         internal static Button? RefreshButtonForBackup;
 
 
-        public class BitLockerVolumeViewModel
+        public sealed class BitLockerVolumeViewModel
         {
             public string? DriveLetter { get; set; }  // MountPoint in BitLockerVolume type
             public string? KeyID { get; set; }        // KeyProtectorID in KeyProtector type

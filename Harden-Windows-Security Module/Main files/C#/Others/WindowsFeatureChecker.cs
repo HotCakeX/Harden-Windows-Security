@@ -200,20 +200,9 @@ return ((Get-WindowsCapability -Online | Where-Object -FilterScript { $_.Name -l
         /// <param name="enable">true means enable, false means disable</param>
         public static void SetWindowsFeature(string featureName, bool enable)
         {
-
-            string arguments;
-
             // Determine the command based on whether we are enabling or disabling the feature
-            if (enable)
-            {
-                // Construct the arguments for the DISM command
-                arguments = $"/Online /Enable-Feature /FeatureName:{featureName} /All /NoRestart";
-            }
-            else
-            {
-                // Construct the arguments for the DISM command
-                arguments = $"/Online /Disable-Feature /FeatureName:{featureName} /NoRestart";
-            }
+            // And construct the arguments for the DISM command
+            string arguments = enable ? $"/Online /Enable-Feature /FeatureName:{featureName} /All /NoRestart" : $"/Online /Disable-Feature /FeatureName:{featureName} /NoRestart";
 
             // Run the DISM command using the helper method
             _ = RunDismCommand(arguments);

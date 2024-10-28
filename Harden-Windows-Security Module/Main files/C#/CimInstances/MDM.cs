@@ -11,10 +11,15 @@ using System.Threading.Tasks;
 /// https://learn.microsoft.com/en-us/windows/win32/wmisdk/common-information-model
 namespace HardenWindowsSecurity
 {
-    // Class that deals with MDM/CSPs/Intune
+    /// <summary>
+    /// Class that deals with MDM/CSPs/Intune
+    /// </summary>
     public static class MDM
     {
-        // Gets the results of all of the Intune policies from the system
+        /// <summary>
+        /// Gets the results of all of the Intune policies from the system
+        /// </summary>
+        /// <returns></returns>
         public static Dictionary<string, List<Dictionary<string, object>>> Get()
         {
             // Running the asynchronous method synchronously and returning the result
@@ -73,7 +78,7 @@ namespace HardenWindowsSecurity
                             ObjectQuery query = new("SELECT * FROM " + classQuery);
 
                             // Create management object searcher for the query
-                            ManagementObjectSearcher searcher = new(scope, query);
+                            using ManagementObjectSearcher searcher = new(scope, query);
 
                             try
                             {

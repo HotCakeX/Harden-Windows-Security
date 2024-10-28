@@ -408,10 +408,8 @@ namespace HardenWindowsSecurity
                 {
                     foreach (KeyValuePair<string, List<IndividualResult>> kvp in GlobalVars.FinalMegaObject)
                     {
-                        string category = kvp.Key; // Get the category of results
-                        List<IndividualResult> results = kvp.Value; // Get the results for the category
-
-                        foreach (IndividualResult result in results)
+                        // Loop over the results for the category
+                        foreach (IndividualResult result in kvp.Value)
                         {
                             // Add each result as a new SecOp object to the collection
                             __SecOpses.Add(new SecOp

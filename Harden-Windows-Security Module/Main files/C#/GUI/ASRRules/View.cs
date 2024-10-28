@@ -351,9 +351,8 @@ namespace HardenWindowsSecurity
                             // Loop over each item in the HashTable
                             foreach (KeyValuePair<string, string> kvp in AttackSurfaceReductionIntel.ASRTable)
                             {
-                                // Assign each key/value to local variables
+                                // Assign the key to a local variable
                                 string name = kvp.Key.ToLowerInvariant();
-                                string friendlyName = kvp.Value;
 
                                 // Default action is set to 0, the ComboBox will show "Disabled"
                                 string action = "0";

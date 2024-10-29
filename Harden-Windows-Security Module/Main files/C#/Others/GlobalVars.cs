@@ -139,11 +139,35 @@ namespace HardenWindowsSecurity
             WindowsIdentity CurrentUserResult = WindowsIdentity.GetCurrent();
             userSID = CurrentUserResult.User!.Value.ToString();
 
-            LocalUser CurrentLocalUser = LocalUserRetriever.Get()
-.First(Lu => string.Equals(Lu.SID, userSID, StringComparison.OrdinalIgnoreCase));
+            // The LocalUserRetriever.Get() method doesn't return SYSTEM so we have to handle it separately
+            // In case the Harden Windows Security is running as SYSTEM
+            if (CurrentUserResult.IsSystem)
+            {
+                userName = "SYSTEM";
+                userFullName = "SYSTEM";
+            }
 
-            userName = CurrentLocalUser.Name ?? throw new UnauthorizedAccessException("UserName could not be detected.");
-            userFullName = CurrentLocalUser.FullName;
+            else
+            {
+
+                try
+                {
+
+                    LocalUser CurrentLocalUser = LocalUserRetriever.Get()
+        .First(Lu => string.Equals(Lu.SID, userSID, StringComparison.OrdinalIgnoreCase));
+
+                    userName = CurrentLocalUser.Name!;
+                    userFullName = CurrentLocalUser.FullName;
+
+                }
+                // We don't fail it if username or full name can't be detected
+                // Any parts of the Harden Windows Security relying on their values must gracefully handle empty or inaccurate values.
+                catch
+                {
+                    userName = string.Empty;
+                    Logger.LogMessage($"Could not find UserName or FullName of the current user with the SID {userSID}", LogTypeIntel.Warning);
+                }
+            }
         }
 
     }

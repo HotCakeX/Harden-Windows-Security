@@ -382,7 +382,7 @@ namespace HardenWindowsSecurity
 
                             string nameToDisplay = (!string.IsNullOrWhiteSpace(GlobalVars.userFullName)) ? GlobalVars.userFullName : GlobalVars.userName;
 
-                            Logger.LogMessage(UserPrivCheck.IsAdmin() ? $"Hello {nameToDisplay}, Running as Administrator" : $"Hello {nameToDisplay}, Running as Non-Administrator, some categories are disabled", LogTypeIntel.Information);
+                            Logger.LogMessage(UserPrivCheck.IsAdmin() ? $"Hello {nameToDisplay}, you have Administrator privileges" : $"Hello {nameToDisplay}, you don't have Administrator privileges, some categories are disabled", LogTypeIntel.Information);
                             #endregion
 
                             // Use Dispatcher.Invoke to update the UI thread

@@ -56,7 +56,18 @@ namespace HardenWindowsSecurity
             }
 
             Logger.LogMessage("Applying the TLS Security Group Policies", LogTypeIntel.Information);
-            LGPORunner.RunLGPOCommand(Path.Combine(GlobalVars.path, "Resources", "Security-Baselines-X", "TLS Security", "registry.pol"), LGPORunner.FileType.POL);
+
+            // If BattleNet client is installed, use the policy that has the necessary, albeit insecure, cipher suite (TLS_RSA_WITH_AES_256_CBC_SHA) so that the client will be able to connect to the servers
+            if (File.Exists(@"C:\Program Files (x86)\Battle.net\Battle.net.exe") || File.Exists(@"C:\Program Files (x86)\Battle.net\Battle.net Launcher.exe"))
+            {
+                Logger.LogMessage("BattleNet client detected, will add the necessary cipher suite 'TLS_RSA_WITH_AES_256_CBC_SHA'", LogTypeIntel.Information);
+
+                LGPORunner.RunLGPOCommand(Path.Combine(GlobalVars.path, "Resources", "Security-Baselines-X", "TLS Security", "For BattleNetClient", "registry.pol"), LGPORunner.FileType.POL);
+            }
+            else
+            {
+                LGPORunner.RunLGPOCommand(Path.Combine(GlobalVars.path, "Resources", "Security-Baselines-X", "TLS Security", "registry.pol"), LGPORunner.FileType.POL);
+            }
         }
     }
 }

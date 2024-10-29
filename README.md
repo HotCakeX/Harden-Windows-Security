@@ -783,7 +783,7 @@ Changes made by this category only affect things that use [Schannel SSP](https:/
 If you want to read more: [Demystifying Schannel](https://techcommunity.microsoft.com/t5/core-infrastructure-and-security/demystifying-schannel/ba-p/259233)
 
 > [!NOTE]\
-> The only [known](https://github.com/HotCakeX/Harden-Windows-Security/issues/38) program incompatible with this category is Battle.net game client.
+> This category checks whether Battle.net client is installed on the system and if it is then includes  `TLS_RSA_WITH_AES_256_CBC_SHA` as an additional cipher suite in the policy due to [a known issue](https://github.com/HotCakeX/Harden-Windows-Security/issues/38). The way Battle.net client is detected is by checking the presence of `Battle.net.exe` or `Battle.net Launcher.exe` in `C:\Program Files (x86)\Battle.net\` folder.
 
 <br>
 

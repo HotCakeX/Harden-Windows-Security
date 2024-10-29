@@ -246,7 +246,7 @@ namespace HardenWindowsSecurity
             }
             catch (Exception ex)
             {
-                Logger.LogMessage($"Failed to display toast notification: {ex}", LogTypeIntel.Warning);
+                Logger.LogMessage($"Failed to display toast notification: {ex}", LogTypeIntel.Information);
             }
 
         }

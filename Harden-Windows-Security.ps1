@@ -20,7 +20,7 @@ Function P {
             [System.String]$MicrosoftUIXamlDownloadLink = 'https://github.com/microsoft/microsoft-ui-xaml/releases/download/v2.8.6/Microsoft.UI.Xaml.2.8.x64.appx'
         }
 
-        $UserSID = [System.Security.Principal.WindowsIdentity]::GetCurrent().User.Value
+        [System.String]$UserSID = [System.Security.Principal.WindowsIdentity]::GetCurrent().User.Value
         $User = Get-LocalUser | Where-Object -FilterScript { $_.SID -eq $UserSID }
 
         Function Install-StoreSource {
@@ -67,16 +67,12 @@ Function P {
                             Invoke-WebRequest -Uri 'https://aka.ms/Microsoft.VCLibs.x64.14.00.Desktop.appx' -OutFile 'Microsoft.VCLibs.x64.14.00.Desktop.appx'
                             Invoke-WebRequest -Uri $MicrosoftUIXamlDownloadLink -OutFile $MicrosoftUIXamlDownloadedFileName
 
-                            Add-AppxPackage -Path 'Microsoft.VCLibs.x64.14.00.Desktop.appx'
-                            Add-AppxPackage -Path $MicrosoftUIXamlDownloadedFileName
-                            Add-AppxPackage -Path 'Microsoft.DesktopAppInstaller_8wekyb3d8bbwe.msixbundle'
+                            Add-AppxPackage -Path 'Microsoft.DesktopAppInstaller_8wekyb3d8bbwe.msixbundle' -DependencyPath 'Microsoft.VCLibs.x64.14.00.Desktop.appx', $MicrosoftUIXamlDownloadedFileName
                         }
                         finally {
-                            try {
+                            try {                                
+                                Remove-Item -Path 'Microsoft.DesktopAppInstaller_8wekyb3d8bbwe.msixbundle', 'Microsoft.VCLibs.x64.14.00.Desktop.appx', $MicrosoftUIXamlDownloadedFileName -Force
                                 Pop-Location
-                                Remove-Item -Path 'Microsoft.DesktopAppInstaller_8wekyb3d8bbwe.msixbundle' -Force
-                                Remove-Item -Path 'Microsoft.VCLibs.x64.14.00.Desktop.appx' -Force
-                                Remove-Item -Path $MicrosoftUIXamlDownloadedFileName -Force
                             }
                             catch {}
                         }
@@ -319,7 +315,6 @@ public static class SecureStringGenerator
 
             # Get the version and architecture of the installing MSIX package app from the download URL
             $RegexMatch = $RegexPattern.Match($MSIXPackageDownloadURL)
-
             if ($RegexMatch.Success) {
                 $InstallingAppVersion = $RegexMatch.Groups['Version'].Value
                 $InstallingAppArchitecture = $RegexMatch.Groups['Architecture'].Value

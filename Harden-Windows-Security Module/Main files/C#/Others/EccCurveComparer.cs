@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Management.Automation;
 
@@ -48,10 +49,10 @@ namespace HardenWindowsSecurity
                 _ = powerShell.AddCommand("Get-TlsEccCurve");
 
                 // Execute the command and get the result
-                var results = powerShell.Invoke();
+                Collection<PSObject?> results = powerShell.Invoke();
 
                 // Extract the ECC curves from the results
-                foreach (var result in results)
+                foreach (PSObject? result in results)
                 {
                     // Make sure the result is not null
                     if (result is not null)
@@ -59,7 +60,7 @@ namespace HardenWindowsSecurity
                         // Split the result string into an array of substrings based on specified delimiters
                         // new[] { ' ', '\r', '\n' } - An array of characters to use as delimiters: space, carriage return, and newline
                         // StringSplitOptions.RemoveEmptyEntries - An option to remove empty entries from the result array
-                        var curves = result.ToString().Split(separator, StringSplitOptions.RemoveEmptyEntries);
+                        string[] curves = result.ToString().Split(separator, StringSplitOptions.RemoveEmptyEntries);
                         currentEccCurvesToOutput.AddRange(curves);
                     }
                 }

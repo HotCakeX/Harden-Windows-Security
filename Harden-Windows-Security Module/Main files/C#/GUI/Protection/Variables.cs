@@ -50,8 +50,8 @@ namespace HardenWindowsSecurity
                 { "DownloadsDefenseMeasures", new string[] { "DangerousScriptHostsBlocking" } }
             };
 
-        internal static System.Windows.Controls.ListView? categories;
-        internal static System.Windows.Controls.ListView? subCategories;
+        internal static ListView? categories;
+        internal static ListView? subCategories;
         internal static CheckBox? selectAllCategories;
         internal static CheckBox? selectAllSubCategories;
 
@@ -85,24 +85,24 @@ namespace HardenWindowsSecurity
         internal static string? SelectedProtectionPreset;
 
         // Defining the presets configurations for the protection
-        internal static System.Collections.Generic.Dictionary<string, System.Collections.Generic.Dictionary<string, List<string>>> PresetsIntel = new(StringComparer.OrdinalIgnoreCase)
+        internal static Dictionary<string, Dictionary<string, List<string>>> PresetsIntel = new(StringComparer.OrdinalIgnoreCase)
         {
             {
-            "preset: basic", new System.Collections.Generic.Dictionary<string, List<string>>
+            "preset: basic", new Dictionary<string, List<string>>
         {
             { "Categories", new List<string> { "MicrosoftSecurityBaselines", "Microsoft365AppsSecurityBaselines", "MicrosoftDefender", "DeviceGuard", "OptionalWindowsFeatures" } },
             { "SubCategories", new List<string> {} }
         }
         },
         {
-        "preset: recommended", new System.Collections.Generic.Dictionary<string, List<string>>
+        "preset: recommended", new Dictionary<string, List<string>>
         {
             { "Categories", new List<string> { "MicrosoftSecurityBaselines", "Microsoft365AppsSecurityBaselines", "MicrosoftDefender", "AttackSurfaceReductionRules", "BitLockerSettings", "DeviceGuard", "TLSSecurity", "LockScreen", "UserAccountControl", "WindowsFirewall", "OptionalWindowsFeatures", "WindowsNetworking", "MiscellaneousConfigurations", "WindowsUpdateConfigurations", "EdgeBrowserConfigurations", "DownloadsDefenseMeasures", "NonAdminCommands" } },
             { "SubCategories", new List<string> { "WindowsNetworking_BlockNTLM", "DangerousScriptHostsBlocking" } }
         }
         },
         {
-       "preset: complete", new System.Collections.Generic.Dictionary<string, List<string>>
+       "preset: complete", new Dictionary<string, List<string>>
         {
             { "Categories", new List<string> { "MicrosoftSecurityBaselines", "Microsoft365AppsSecurityBaselines", "MicrosoftDefender", "AttackSurfaceReductionRules", "BitLockerSettings", "DeviceGuard", "TLSSecurity", "LockScreen", "UserAccountControl", "WindowsFirewall", "OptionalWindowsFeatures", "WindowsNetworking", "MiscellaneousConfigurations", "WindowsUpdateConfigurations", "EdgeBrowserConfigurations", "CountryIPBlocking", "DownloadsDefenseMeasures", "NonAdminCommands" } },
             { "SubCategories", new List<string> { "MSFTDefender_SAC", "UAC_OnlyElevateSigned", "WindowsNetworking_BlockNTLM", "Miscellaneous_WindowsProtectedPrint", "CountryIPBlocking_OFAC", "DangerousScriptHostsBlocking" } }

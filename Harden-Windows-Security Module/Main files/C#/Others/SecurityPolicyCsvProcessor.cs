@@ -8,7 +8,7 @@ using System.Text;
 namespace HardenWindowsSecurity
 {
     // Represents a record in the security policy
-    public class SecurityPolicyRecord
+    public sealed class SecurityPolicyRecord
     {
         public string? Category { get; set; }
         public string? Section { get; set; }
@@ -18,12 +18,12 @@ namespace HardenWindowsSecurity
     }
 
     // Processes the CSV file "SecurityPoliciesVerification.csv" containing security policy records
-    public class SecurityPolicyCsvProcessor
+    public static class SecurityPolicyCsvProcessor
     {
         // Reads and processes the CSV file, returning a list of SecurityPolicyRecord objects
         public static List<SecurityPolicyRecord> ProcessSecurityPolicyCsvFile(string csvFilePath)
         {
-            var securityPolicyRecordsOutput = new List<SecurityPolicyRecord>();
+            List<SecurityPolicyRecord> securityPolicyRecordsOutput = [];
 
             // Open the CSV file for reading
             using StreamReader reader = new(csvFilePath);

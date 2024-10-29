@@ -45,14 +45,14 @@ namespace HardenWindowsSecurity
             }
 
 
-            if (DetectedKeyProtector.KeyProtectorType is BitLocker.KeyProtectorType.TpmNetworkKey)
+            if (DetectedKeyProtector.KeyProtectorType is KeyProtectorType.TpmNetworkKey)
             {
                 Logger.LogMessage($"The detected Key Protector type is TpmNetworkKey, it must be disabled and removed using group policies.", LogTypeIntel.Warning);
                 return;
             }
 
 
-            if (DetectedKeyProtector.KeyProtectorType is BitLocker.KeyProtectorType.PublicKey)
+            if (DetectedKeyProtector.KeyProtectorType is KeyProtectorType.PublicKey)
             {
                 Logger.LogMessage($"Removal of PublicKey type key protector not supported yet.", LogTypeIntel.Warning);
                 return;

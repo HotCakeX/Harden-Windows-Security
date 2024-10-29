@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace HardenWindowsSecurity
 {
-    public class GetMDMResultValue
+    public static class GetMDMResultValue
     {
         /// <summary>
         /// Get the value of a specific MDM result in a resilient way so if the property or value don't exist then return false instead of throwing errors
@@ -24,7 +24,7 @@ namespace HardenWindowsSecurity
                 }
 
                 // Query the list
-                var result = GlobalVars.MDMResults
+                string? result = GlobalVars.MDMResults
                     .Where(element => element is not null && element.Name == propertyName)
                     .Select(element => element.Value)
                     .FirstOrDefault();

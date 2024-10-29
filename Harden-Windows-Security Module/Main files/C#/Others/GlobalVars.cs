@@ -1,8 +1,11 @@
 using System;
+using System.Collections;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Management.Automation.Host;
+using System.Security.Principal;
 
 #nullable enable
 
@@ -78,7 +81,7 @@ namespace HardenWindowsSecurity
         public static string[]? HardeningCategorieX;
 
         // the explicit path to save the security_policy.inf file
-        internal static string securityPolicyInfPath = Path.Combine(GlobalVars.WorkingDir, "security_policy.inf");
+        internal static string securityPolicyInfPath = Path.Combine(WorkingDir, "security_policy.inf");
 
         // Backup of the current Controlled Folder Access List
         // Used to be restored at the end of the operation
@@ -93,7 +96,7 @@ namespace HardenWindowsSecurity
         public static string? VerbosePreference;
 
         // An object to store the final results of Confirm-SystemCompliance cmdlet
-        public static System.Collections.Concurrent.ConcurrentDictionary<System.String, System.Collections.Generic.List<IndividualResult>>? FinalMegaObject;
+        public static ConcurrentDictionary<String, List<IndividualResult>>? FinalMegaObject;
 
         // Storing the output of the ini file parsing function
         internal static Dictionary<string, Dictionary<string, string>>? SystemSecurityPoliciesIniObject;
@@ -102,45 +105,69 @@ namespace HardenWindowsSecurity
         internal static List<SecurityPolicyRecord>? SecurityPolicyRecords;
 
         // the explicit path to save the CurrentlyAppliedMitigations.xml file
-        internal static string CurrentlyAppliedMitigations = Path.Combine(GlobalVars.WorkingDir, "CurrentlyAppliedMitigations.xml");
+        internal static string CurrentlyAppliedMitigations = Path.Combine(WorkingDir, "CurrentlyAppliedMitigations.xml");
 
         // variable that contains the results of all of the related MDM CimInstances that can be interacted with using Administrator privilege
         internal static List<MDMClassProcessor>? MDMResults;
 
         // To store the Firewall Domain MDM profile parsed JSON output
-        internal static System.Collections.Hashtable? MDM_Firewall_DomainProfile02;
+        internal static Hashtable? MDM_Firewall_DomainProfile02;
 
         // To store the Firewall Private MDM profile parsed JSON output
-        internal static System.Collections.Hashtable? MDM_Firewall_PrivateProfile02;
+        internal static Hashtable? MDM_Firewall_PrivateProfile02;
 
         // To store the Firewall Public MDM profile parsed JSON output
-        internal static System.Collections.Hashtable? MDM_Firewall_PublicProfile02;
+        internal static Hashtable? MDM_Firewall_PublicProfile02;
 
         // To store the Windows Update MDM parsed JSON output
-        internal static System.Collections.Hashtable? MDM_Policy_Result01_Update02;
+        internal static Hashtable? MDM_Policy_Result01_Update02;
 
         // To store the System MDM parsed JSON output
-        internal static System.Collections.Hashtable? MDM_Policy_Result01_System02;
+        internal static Hashtable? MDM_Policy_Result01_System02;
 
 
-        internal static string userName;
-        internal static string userSID;
-        internal static string? userFullName;
+        internal readonly static string userName;
+        internal readonly static string userSID;
+        internal readonly static string? userFullName;
 
         static GlobalVars()
         {
             // Save the valid values of the Protect-WindowsSecurity categories to a variable since the process can be time consuming and shouldn't happen every time the categories are fetched
-            GlobalVars.HardeningCategorieX = ProtectionCategoriex.GetValidValues();
+            HardeningCategorieX = ProtectionCategoriex.GetValidValues();
 
             // Save the username in the class variable
-            System.Security.Principal.WindowsIdentity CurrentUserResult = System.Security.Principal.WindowsIdentity.GetCurrent();
-            userSID = CurrentUserResult!.User!.Value.ToString();
+            WindowsIdentity CurrentUserResult = WindowsIdentity.GetCurrent();
+            userSID = CurrentUserResult.User!.Value.ToString();
 
-            LocalUser CurrentLocalUser = LocalUserRetriever.Get()
-.First(Lu => string.Equals(Lu.SID, userSID, StringComparison.OrdinalIgnoreCase));
+            // The LocalUserRetriever.Get() method doesn't return SYSTEM so we have to handle it separately
+            // In case the Harden Windows Security is running as SYSTEM
+            if (CurrentUserResult.IsSystem)
+            {
+                userName = "SYSTEM";
+                userFullName = "SYSTEM";
+            }
 
-            userName = CurrentLocalUser.Name ?? throw new UnauthorizedAccessException("UserName could not be detected.");
-            userFullName = CurrentLocalUser.FullName;
+            else
+            {
+
+                try
+                {
+
+                    LocalUser CurrentLocalUser = LocalUserRetriever.Get()
+        .First(Lu => string.Equals(Lu.SID, userSID, StringComparison.OrdinalIgnoreCase));
+
+                    userName = CurrentLocalUser.Name!;
+                    userFullName = CurrentLocalUser.FullName;
+
+                }
+                // We don't fail it if username or full name can't be detected
+                // Any parts of the Harden Windows Security relying on their values must gracefully handle empty or inaccurate values.
+                catch
+                {
+                    userName = string.Empty;
+                    Logger.LogMessage($"Could not find UserName or FullName of the current user with the SID {userSID}", LogTypeIntel.Warning);
+                }
+            }
         }
 
     }

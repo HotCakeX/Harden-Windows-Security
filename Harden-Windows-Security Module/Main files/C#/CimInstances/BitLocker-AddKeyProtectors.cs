@@ -394,7 +394,7 @@ namespace HardenWindowsSecurity
             {
                 // If the key wasn't saved successfully, remove the protector as a safety measure
 
-                var deleteKeyProtectorArgs = VolumeInfo.GetMethodParameters("DeleteKeyProtector");
+                ManagementBaseObject deleteKeyProtectorArgs = VolumeInfo.GetMethodParameters("DeleteKeyProtector");
                 deleteKeyProtectorArgs["VolumeKeyProtectorID"] = ProtectKeyWithTPMAndStartupKeyMethodInvocationResult["VolumeKeyProtectorID"];
                 _ = VolumeInfo.InvokeMethod("DeleteKeyProtector", deleteKeyProtectorArgs, null);
 
@@ -619,7 +619,7 @@ namespace HardenWindowsSecurity
             SecurityIdentifier SIDResult = new(SID);
 
             // Prepare the method with arguments
-            var protectWithSidArgs = VolumeInfo.GetMethodParameters("ProtectKeyWithAdSid");
+            ManagementBaseObject protectWithSidArgs = VolumeInfo.GetMethodParameters("ProtectKeyWithAdSid");
             protectWithSidArgs["FriendlyName"] = null;
             protectWithSidArgs["SidString"] = SIDResult.Value;
             protectWithSidArgs["Flags"] = flags;

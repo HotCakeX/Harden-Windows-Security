@@ -1,6 +1,7 @@
 using System;
 using System.Diagnostics;
 using System.Globalization;
+using System.IO;
 using System.Threading;
 
 #nullable enable
@@ -15,31 +16,31 @@ namespace HardenWindowsSecurity
         /// <exception cref="Exception"></exception>
         public static void SecBaselines_Overrides()
         {
-            if (HardenWindowsSecurity.GlobalVars.MicrosoftSecurityBaselinePath is null)
+            if (GlobalVars.MicrosoftSecurityBaselinePath is null)
             {
                 throw new InvalidOperationException("The path to the Microsoft Security Baselines has not been set.");
             }
 
-            if (HardenWindowsSecurity.GlobalVars.path is null)
+            if (GlobalVars.path is null)
             {
-                throw new System.ArgumentNullException("GlobalVars.path cannot be null.");
+                throw new ArgumentNullException("GlobalVars.path cannot be null.");
             }
 
             // Sleep for 1 second (1000 milliseconds)
             Thread.Sleep(1000);
 
-            HardenWindowsSecurity.Logger.LogMessage("Applying the optional overrides", LogTypeIntel.Information);
+            Logger.LogMessage("Applying the optional overrides", LogTypeIntel.Information);
 
-            HardenWindowsSecurity.LGPORunner.RunLGPOCommand(System.IO.Path.Combine(HardenWindowsSecurity.GlobalVars.path, "Resources", "Security-Baselines-X", "Overrides for Microsoft Security Baseline", "registry.pol"), LGPORunner.FileType.POL);
-            HardenWindowsSecurity.LGPORunner.RunLGPOCommand(System.IO.Path.Combine(HardenWindowsSecurity.GlobalVars.path, "Resources", "Security-Baselines-X", "Overrides for Microsoft Security Baseline", "GptTmpl.inf"), LGPORunner.FileType.INF);
+            LGPORunner.RunLGPOCommand(Path.Combine(GlobalVars.path, "Resources", "Security-Baselines-X", "Overrides for Microsoft Security Baseline", "registry.pol"), LGPORunner.FileType.POL);
+            LGPORunner.RunLGPOCommand(Path.Combine(GlobalVars.path, "Resources", "Security-Baselines-X", "Overrides for Microsoft Security Baseline", "GptTmpl.inf"), LGPORunner.FileType.INF);
 
             #region Xbox Game Save Scheduled task re-enablement
             bool XblGameSaveTaskResult;
 
-            var XblGameSaveTaskResultObject = HardenWindowsSecurity.TaskSchedulerHelper.Get(
+            var XblGameSaveTaskResultObject = TaskSchedulerHelper.Get(
                 "XblGameSaveTask",
                 @"\Microsoft\XblGameSave\",
-                HardenWindowsSecurity.TaskSchedulerHelper.OutputType.Boolean
+                TaskSchedulerHelper.OutputType.Boolean
             );
 
             // Convert to boolean
@@ -49,7 +50,7 @@ namespace HardenWindowsSecurity
             if (XblGameSaveTaskResult)
             {
 
-                HardenWindowsSecurity.Logger.LogMessage("Re-enabling the XblGameSave Standby Task that gets disabled by Microsoft Security Baselines", LogTypeIntel.Information);
+                Logger.LogMessage("Re-enabling the XblGameSave Standby Task that gets disabled by Microsoft Security Baselines", LogTypeIntel.Information);
 
                 // Create a new process
                 using Process process = new();
@@ -78,12 +79,12 @@ namespace HardenWindowsSecurity
                     throw new InvalidOperationException($"Process failed with exit code {process.ExitCode}: {error}");
                 }
 
-                HardenWindowsSecurity.Logger.LogMessage(output, LogTypeIntel.Information);
+                Logger.LogMessage(output, LogTypeIntel.Information);
 
             }
             else
             {
-                HardenWindowsSecurity.Logger.LogMessage("XblGameSave scheduled task couldn't be found in the task scheduler.", LogTypeIntel.Information);
+                Logger.LogMessage("XblGameSave scheduled task couldn't be found in the task scheduler.", LogTypeIntel.Information);
             }
             #endregion
         }

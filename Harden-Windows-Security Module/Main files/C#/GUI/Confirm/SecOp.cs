@@ -1,3 +1,7 @@
+using System;
+using System.ComponentModel;
+using System.IO;
+using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
 #nullable enable
@@ -6,7 +10,7 @@ namespace HardenWindowsSecurity
 {
 
     // Define the SecOp class, representing an individual security option in the data grid
-    public class SecOp : System.ComponentModel.INotifyPropertyChanged
+    public class SecOp : INotifyPropertyChanged
     {
         // Private fields to hold property values
 
@@ -14,16 +18,16 @@ namespace HardenWindowsSecurity
         private bool _Compliant;
 
         // Stores the security option's character image
-        private System.Windows.Media.ImageSource? _characterImage;
+        private ImageSource? _characterImage;
 
         // Stores the background color for the security option
-        private System.Windows.Media.Brush? _bgColor;
+        private Brush? _bgColor;
 
         // Event to notify listeners when a property value changes
-        public event System.ComponentModel.PropertyChangedEventHandler? PropertyChanged;
+        public event PropertyChangedEventHandler? PropertyChanged;
 
         // Public property to get or set the security option's character image
-        public System.Windows.Media.ImageSource? CharacterImage
+        public ImageSource? CharacterImage
         {
             get => _characterImage;
             set
@@ -36,7 +40,7 @@ namespace HardenWindowsSecurity
         }
 
         // Public property to get or set the background color
-        public System.Windows.Media.Brush? BgColor
+        public Brush? BgColor
         {
             get => _bgColor;
             set
@@ -74,16 +78,16 @@ namespace HardenWindowsSecurity
         // Method to notify listeners that a property value has changed
         protected void OnPropertyChanged(string propertyName)
         {
-            PropertyChanged?.Invoke(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
         // Private method to load an image from the specified file name
         static private BitmapImage LoadImage(string fileName)
         {
             // Construct the full path to the image file
-            string imagePath = System.IO.Path.Combine(GlobalVars.path!, "Resources", "Media", fileName);
+            string imagePath = Path.Combine(GlobalVars.path!, "Resources", "Media", fileName);
             // Return the loaded image as a BitmapImage
-            return new BitmapImage(new System.Uri(imagePath, System.UriKind.Absolute));
+            return new BitmapImage(new Uri(imagePath, UriKind.Absolute));
         }
     }
 }

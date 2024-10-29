@@ -9,7 +9,7 @@ namespace HardenWindowsSecurity
 
             ChangePSConsoleTitle.Set("🎇 Downloads Defense Measures");
 
-            HardenWindowsSecurity.Logger.LogMessage("Running the Downloads Defense Measures category", LogTypeIntel.Information);
+            Logger.LogMessage("Running the Downloads Defense Measures category", LogTypeIntel.Information);
 
             // PowerShell script with embedded {UserValue} directly in the string using @""
             string script = $@"
@@ -91,7 +91,7 @@ else {{
 }}
 ";
 
-            _ = HardenWindowsSecurity.PowerShellExecutor.ExecuteScript(script);
+            _ = PowerShellExecutor.ExecuteScript(script);
         }
     }
 }

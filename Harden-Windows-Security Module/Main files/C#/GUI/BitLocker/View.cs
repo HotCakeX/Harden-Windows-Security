@@ -2,8 +2,11 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
+using System.Windows.Input;
 using System.Windows.Markup;
 using System.Windows.Media.Imaging;
 
@@ -19,7 +22,7 @@ namespace HardenWindowsSecurity
         {
 
             // Method to handle the Logs view, including loading
-            private void BitLocker(object obj)
+            private void BitLockerView(object obj)
             {
                 // Check if the view is already cached
                 if (_viewCache.TryGetValue("BitLockerView", out var cachedView))
@@ -29,33 +32,33 @@ namespace HardenWindowsSecurity
                 }
 
                 // Defining the path to the XAML XML file
-                if (HardenWindowsSecurity.GlobalVars.path is null)
+                if (GlobalVars.path is null)
                 {
                     throw new InvalidOperationException("GlobalVars.path cannot be null.");
                 }
 
                 // if Admin privileges are not available, return and do not proceed any further
                 // Will prevent the page from being loaded since the CurrentView won't be set/changed
-                if (!HardenWindowsSecurity.UserPrivCheck.IsAdmin())
+                if (!UserPrivCheck.IsAdmin())
                 {
                     Logger.LogMessage("BitLocker page can only be used when running the Harden Windows Security Application with Administrator privileges", LogTypeIntel.ErrorInteractionRequired);
                     return;
                 }
 
                 // Construct the file path for the Logs view XAML
-                string xamlPath = System.IO.Path.Combine(HardenWindowsSecurity.GlobalVars.path, "Resources", "XAML", "BitLocker.xaml");
+                string xamlPath = Path.Combine(GlobalVars.path, "Resources", "XAML", "BitLocker.xaml");
 
                 // Read the XAML content from the file
                 string xamlContent = File.ReadAllText(xamlPath);
 
                 // Parse the XAML content to create a UserControl
-                HardenWindowsSecurity.GUIBitLocker.View = (UserControl)XamlReader.Parse(xamlContent);
+                GUIBitLocker.View = (UserControl)XamlReader.Parse(xamlContent);
 
                 // Set the DataContext for the BitLocker view
                 GUIBitLocker.View.DataContext = new BitLockerVM();
 
                 // Find the Parent Grid
-                HardenWindowsSecurity.GUIBitLocker.ParentGrid = (Grid)HardenWindowsSecurity.GUIBitLocker.View.FindName("ParentGrid");
+                GUIBitLocker.ParentGrid = (Grid)GUIBitLocker.View.FindName("ParentGrid");
 
                 GUIBitLocker.TabControl = GUIBitLocker.ParentGrid.FindName("TabControl") as TabControl ?? throw new InvalidOperationException("TabControl could not be found");
 
@@ -69,9 +72,9 @@ namespace HardenWindowsSecurity
 
                 // Update the image source for the Execute button
                 // Load the Execute icon image into memory and set it as the source
-                var ExecuteIconBitmapImage = new BitmapImage();
+                BitmapImage ExecuteIconBitmapImage = new();
                 ExecuteIconBitmapImage.BeginInit();
-                ExecuteIconBitmapImage.UriSource = new System.Uri(System.IO.Path.Combine(HardenWindowsSecurity.GlobalVars.path!, "Resources", "Media", "ExecuteButton.png"));
+                ExecuteIconBitmapImage.UriSource = new Uri(Path.Combine(GlobalVars.path!, "Resources", "Media", "ExecuteButton.png"));
                 ExecuteIconBitmapImage.CacheOption = BitmapCacheOption.OnLoad; // Load the image data into memory
                 ExecuteIconBitmapImage.EndInit();
                 ExecuteIconImage.Source = ExecuteIconBitmapImage;
@@ -100,11 +103,11 @@ namespace HardenWindowsSecurity
                 // Event handler for when the refresh button is pressed
                 GUIBitLocker.RefreshRemovableDrivesInOSDriveSection.Click += async (sender, e) =>
                 {
-                    await System.Threading.Tasks.Task.Run(() =>
+                    await Task.Run(() =>
                     {
 
                         // Get the Removable drives list
-                        List<BitLocker.BitLockerVolume>? UndeterminedRemovableDrivesList = HardenWindowsSecurity.BitLocker.GetAllEncryptedVolumeInfo(false, true);
+                        List<BitLocker.BitLockerVolume>? UndeterminedRemovableDrivesList = BitLocker.GetAllEncryptedVolumeInfo(false, true);
                         // Only get the writable removable drives
                         GUIBitLocker.RemovableDrivesList = VolumeWritabilityCheck.GetWritableVolumes(UndeterminedRemovableDrivesList);
 
@@ -171,10 +174,10 @@ namespace HardenWindowsSecurity
                 // Event handler for when the refresh button is pressed
                 GUIBitLocker.RefreshNonOSDrives.Click += async (sender, e) =>
                 {
-                    await System.Threading.Tasks.Task.Run(() =>
+                    await Task.Run(() =>
                     {
                         // Get the Non-OS drives list
-                        GUIBitLocker.NonOSDrivesList = HardenWindowsSecurity.BitLocker.GetAllEncryptedVolumeInfo(true, false);
+                        GUIBitLocker.NonOSDrivesList = BitLocker.GetAllEncryptedVolumeInfo(true, false);
 
                         // Update the ComboBox with the Non-OS drives using Application's Dispatcher
                         GUIMain.app!.Dispatcher.Invoke(() =>
@@ -198,10 +201,10 @@ namespace HardenWindowsSecurity
                 // Event handler for when the refresh button is pressed
                 GUIBitLocker.RefreshRemovableDrivesForRemovableDrivesSection.Click += async (sender, e) =>
                 {
-                    await System.Threading.Tasks.Task.Run(() =>
+                    await Task.Run(() =>
                     {
                         // Get the Removable drives list
-                        List<BitLocker.BitLockerVolume>? UndeterminedRemovableDrivesList = HardenWindowsSecurity.BitLocker.GetAllEncryptedVolumeInfo(false, true);
+                        List<BitLocker.BitLockerVolume>? UndeterminedRemovableDrivesList = BitLocker.GetAllEncryptedVolumeInfo(false, true);
                         // Only get the writable removable drives
                         GUIBitLocker.RemovableDrivesList = VolumeWritabilityCheck.GetWritableVolumes(UndeterminedRemovableDrivesList);
 
@@ -227,16 +230,42 @@ namespace HardenWindowsSecurity
                 // Add image to the BackupButtonIcon
                 BitmapImage BackupButtonIconBitmapImage = new();
                 BackupButtonIconBitmapImage.BeginInit();
-                BackupButtonIconBitmapImage.UriSource = new System.Uri(System.IO.Path.Combine(HardenWindowsSecurity.GlobalVars.path!, "Resources", "Media", "ExportIconBlack.png"));
+                BackupButtonIconBitmapImage.UriSource = new Uri(Path.Combine(GlobalVars.path!, "Resources", "Media", "ExportIconBlack.png"));
                 BackupButtonIconBitmapImage.CacheOption = BitmapCacheOption.OnLoad; // Load the image data into memory
                 BackupButtonIconBitmapImage.EndInit();
                 BackupButtonIcon.Source = BackupButtonIconBitmapImage;
+
+                #region Make the scrolling using mouse wheel or trackpad work on DataGrid
+                // The DataGrid needs to hand over the scrolling event to the main ScrollViewer element
+
+                // Find the ScrollViewer element
+                ScrollViewer MainScrollViewer = GUIBitLocker.ParentGrid.FindName("MainScrollViewer") as ScrollViewer ?? throw new InvalidOperationException("No scrollbar founds");
+
+                // Handle the PreviewMouseWheel event of the DataGrid by handing it off to the main ScrollViewer
+                GUIBitLocker.RecoveryKeysDataGrid.PreviewMouseWheel += (object sender, MouseWheelEventArgs e) =>
+                {
+                    if (!e.Handled)
+                    {
+                        e.Handled = true;
+
+                        MouseWheelEventArgs eventArg = new(e.MouseDevice, e.Timestamp, e.Delta)
+                        {
+                            RoutedEvent = UIElement.MouseWheelEvent,
+                            Source = sender
+                        };
+
+                        MainScrollViewer.RaiseEvent(eventArg);
+                    }
+                };
+
+                #endregion
+
 
                 // Event handler to refresh the recovery key info in the DataGrid
                 GUIBitLocker.RefreshButtonForBackup.Click += async (sender, e) =>
                 {
                     // Perform the main tasks on another thread to avoid freezing the GUI
-                    await System.Threading.Tasks.Task.Run(() =>
+                    await Task.Run(() =>
                     {
                         GUIBitLocker.CreateBitLockerVolumeViewModel(false);
                     });
@@ -246,7 +275,7 @@ namespace HardenWindowsSecurity
                 GUIBitLocker.BackupButton.Click += async (sender, e) =>
                 {
                     // Perform the main tasks on another thread to avoid freezing the GUI
-                    await System.Threading.Tasks.Task.Run(() =>
+                    await Task.Run(() =>
                     {
                         GUIBitLocker.CreateBitLockerVolumeViewModel(true);
                     });
@@ -256,9 +285,9 @@ namespace HardenWindowsSecurity
                 #endregion
 
                 // Add the same Refresh image to multiple sources
-                var RefreshButtonIcon1BitmapImage = new BitmapImage();
+                BitmapImage RefreshButtonIcon1BitmapImage = new();
                 RefreshButtonIcon1BitmapImage.BeginInit();
-                RefreshButtonIcon1BitmapImage.UriSource = new System.Uri(System.IO.Path.Combine(HardenWindowsSecurity.GlobalVars.path!, "Resources", "Media", "RefreshButtonIcon.png"));
+                RefreshButtonIcon1BitmapImage.UriSource = new Uri(Path.Combine(GlobalVars.path!, "Resources", "Media", "RefreshButtonIcon.png"));
                 RefreshButtonIcon1BitmapImage.CacheOption = BitmapCacheOption.OnLoad; // Load the image data into memory
                 RefreshButtonIcon1BitmapImage.EndInit();
                 RefreshButtonIcon1.Source = RefreshButtonIcon1BitmapImage;
@@ -267,21 +296,21 @@ namespace HardenWindowsSecurity
                 RefreshButtonForBackupIcon.Source = RefreshButtonIcon1BitmapImage;
 
                 // Register the ExecuteButton and TabControl that will be enabled/disabled based on current activity
-                HardenWindowsSecurity.ActivityTracker.RegisterUIElement(GUIBitLocker.ExecuteButton);
-                HardenWindowsSecurity.ActivityTracker.RegisterUIElement(GUIBitLocker.TabControl);
+                ActivityTracker.RegisterUIElement(GUIBitLocker.ExecuteButton);
+                ActivityTracker.RegisterUIElement(GUIBitLocker.TabControl);
 
                 // Event handler for the Execute Button
                 GUIBitLocker.ExecuteButton.Click += async (sender, e) =>
                 {
 
                     // Only continue if there is no activity other places
-                    if (!HardenWindowsSecurity.ActivityTracker.IsActive)
+                    if (!ActivityTracker.IsActive)
                     {
                         // mark as activity started
-                        HardenWindowsSecurity.ActivityTracker.IsActive = true;
+                        ActivityTracker.IsActive = true;
 
                         // Reset this flag to false indicating no errors Occurred so far
-                        HardenWindowsSecurity.BitLocker.HasErrorsOccurred = false;
+                        BitLocker.HasErrorsOccurred = false;
 
                         #region Local variables initialization to store the currently active UI element values
 
@@ -344,15 +373,15 @@ namespace HardenWindowsSecurity
 
 
                         // Perform the main tasks on another thread to avoid freezing the GUI
-                        await System.Threading.Tasks.Task.Run(() =>
+                        await Task.Run(() =>
                         {
 
                             #region Group Policy handling
-                            if (!HardenWindowsSecurity.BitLocker.PoliciesApplied)
+                            if (!BitLocker.PoliciesApplied)
                             {
 
                                 // if LGPO doesn't already exist in the working directory, then download it
-                                if (!System.IO.Path.Exists(GlobalVars.LGPOExe))
+                                if (!Path.Exists(GlobalVars.LGPOExe))
                                 {
                                     Logger.LogMessage("LGPO.exe doesn't exist, downloading it.", LogTypeIntel.Information);
                                     AsyncDownloader.PrepDownloadedFiles(GlobalVars.LGPOExe, null, null, true);
@@ -363,14 +392,14 @@ namespace HardenWindowsSecurity
                                 }
 
                                 // Apply the BitLocker group policies
-                                HardenWindowsSecurity.BitLockerSettings.Invoke();
+                                BitLockerSettings.Invoke();
 
                                 // Refresh the group policies to apply the changes instantly
-                                _ = HardenWindowsSecurity.PowerShellExecutor.ExecuteScript("""
+                                _ = PowerShellExecutor.ExecuteScript("""
 Start-Process -FilePath GPUpdate.exe -ArgumentList '/force' -NoNewWindow
 """);
                                 // Set the flag to true so this section won't happen again
-                                HardenWindowsSecurity.BitLocker.PoliciesApplied = true;
+                                BitLocker.PoliciesApplied = true;
                             }
                             else
                             {
@@ -405,25 +434,31 @@ Start-Process -FilePath GPUpdate.exe -ArgumentList '/force' -NoNewWindow
                                         // Get the system directory path
                                         string systemDirectory = Environment.SystemDirectory;
                                         // Extract the drive letter
-                                        string systemDrive = System.IO.Path.GetPathRoot(systemDirectory) ?? throw new InvalidOperationException("System/OS drive letter could not be found");
+                                        string systemDrive = Path.GetPathRoot(systemDirectory) ?? throw new InvalidOperationException("System/OS drive letter could not be found");
 
                                         string TrimmedSystemDrive = systemDrive.TrimEnd('\\');
 
                                         // Determine the security level of the OS encryption
                                         if (string.Equals(SecurityLevel, "Normal", StringComparison.OrdinalIgnoreCase))
                                         {
-                                            HardenWindowsSecurity.BitLocker.Enable(TrimmedSystemDrive, HardenWindowsSecurity.BitLocker.OSEncryptionType.Normal, PIN1, null, true);
+                                            BitLocker.Enable(TrimmedSystemDrive, BitLocker.OSEncryptionType.Normal, PIN1, null, true);
                                         }
                                         else
                                         {
-                                            HardenWindowsSecurity.BitLocker.Enable(TrimmedSystemDrive, HardenWindowsSecurity.BitLocker.OSEncryptionType.Enhanced, PIN1, RemovableDriveLetter, true);
+                                            if (string.IsNullOrWhiteSpace(RemovableDriveLetter))
+                                            {
+                                                Logger.LogMessage("No Removable Drive selected for the Enhanced security level.", LogTypeIntel.ErrorInteractionRequired);
+                                                break;
+                                            }
+
+                                            BitLocker.Enable(TrimmedSystemDrive, BitLocker.OSEncryptionType.Enhanced, PIN1, RemovableDriveLetter, true);
                                         }
 
 
-                                        if (!HardenWindowsSecurity.BitLocker.HasErrorsOccurred)
+                                        if (!BitLocker.HasErrorsOccurred)
                                         {
                                             // Display notification at the end if no errors occurred
-                                            NewToastNotification.Show(NewToastNotification.ToastNotificationType.EndOfBitLocker, null, null, null, "Operation System Drive");
+                                            ToastNotification.Show(ToastNotification.Type.EndOfBitLocker, null, null, null, "Operation System Drive");
                                         }
 
                                         break;
@@ -439,13 +474,13 @@ Start-Process -FilePath GPUpdate.exe -ArgumentList '/force' -NoNewWindow
 
                                         Logger.LogMessage($"Executing BitLocker Ops for the Non-OS Drives on drive {NonOSDrivesLetter} .", LogTypeIntel.Information);
 
-                                        HardenWindowsSecurity.BitLocker.Enable(NonOSDrivesLetter, true);
+                                        BitLocker.Enable(NonOSDrivesLetter, true);
 
 
-                                        if (!HardenWindowsSecurity.BitLocker.HasErrorsOccurred)
+                                        if (!BitLocker.HasErrorsOccurred)
                                         {
                                             // Display notification at the end if no errors occurred
-                                            NewToastNotification.Show(NewToastNotification.ToastNotificationType.EndOfBitLocker, null, null, null, "Non-OS Drive");
+                                            ToastNotification.Show(ToastNotification.Type.EndOfBitLocker, null, null, null, "Non-OS Drive");
                                         }
 
                                         break;
@@ -478,13 +513,13 @@ Start-Process -FilePath GPUpdate.exe -ArgumentList '/force' -NoNewWindow
                                             break;
                                         }
 
-                                        HardenWindowsSecurity.BitLocker.Enable(RemovableDrivesTabDriveSelection, Password1, true);
+                                        BitLocker.Enable(RemovableDrivesTabDriveSelection, Password1, true);
 
 
-                                        if (!HardenWindowsSecurity.BitLocker.HasErrorsOccurred)
+                                        if (!BitLocker.HasErrorsOccurred)
                                         {
                                             // Display notification at the end if no errors occurred
-                                            NewToastNotification.Show(NewToastNotification.ToastNotificationType.EndOfBitLocker, null, null, null, "Removable Drive");
+                                            ToastNotification.Show(ToastNotification.Type.EndOfBitLocker, null, null, null, "Removable Drive");
                                         }
 
                                         break;
@@ -503,16 +538,16 @@ Start-Process -FilePath GPUpdate.exe -ArgumentList '/force' -NoNewWindow
                         });
 
                         // mark as activity completed
-                        HardenWindowsSecurity.ActivityTracker.IsActive = false;
+                        ActivityTracker.IsActive = false;
                     }
 
                 };
 
                 // Cache the view before setting it as the CurrentView
-                _viewCache["BitLockerView"] = HardenWindowsSecurity.GUIBitLocker.View;
+                _viewCache["BitLockerView"] = GUIBitLocker.View;
 
                 // Set the CurrentView to the Protect view
-                CurrentView = HardenWindowsSecurity.GUIBitLocker.View;
+                CurrentView = GUIBitLocker.View;
             }
         }
     }

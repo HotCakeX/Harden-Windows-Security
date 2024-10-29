@@ -9,7 +9,7 @@ namespace HardenWindowsSecurity
 {
     public static class WindowsFeatureChecker
     {
-        public class FeatureStatus
+        public sealed class FeatureStatus
         {
             public string? PowerShellv2 { get; set; }
             public string? PowerShellv2Engine { get; set; }
@@ -58,10 +58,10 @@ namespace HardenWindowsSecurity
             var states = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
 
             // Create a ManagementObjectSearcher to query Win32_OptionalFeature
-            using (var searcher = new ManagementObjectSearcher("SELECT * FROM Win32_OptionalFeature"))
+            using (ManagementObjectSearcher searcher = new("SELECT * FROM Win32_OptionalFeature"))
             {
                 // Iterate through each object returned by the query
-                foreach (var obj in searcher.Get())
+                foreach (ManagementBaseObject obj in searcher.Get())
                 {
                     // Retrieve the name of the feature
                     string? name = obj["Name"]?.ToString();
@@ -200,20 +200,9 @@ return ((Get-WindowsCapability -Online | Where-Object -FilterScript { $_.Name -l
         /// <param name="enable">true means enable, false means disable</param>
         public static void SetWindowsFeature(string featureName, bool enable)
         {
-
-            string arguments;
-
             // Determine the command based on whether we are enabling or disabling the feature
-            if (enable)
-            {
-                // Construct the arguments for the DISM command
-                arguments = $"/Online /Enable-Feature /FeatureName:{featureName} /All /NoRestart";
-            }
-            else
-            {
-                // Construct the arguments for the DISM command
-                arguments = $"/Online /Disable-Feature /FeatureName:{featureName} /NoRestart";
-            }
+            // And construct the arguments for the DISM command
+            string arguments = enable ? $"/Online /Enable-Feature /FeatureName:{featureName} /All /NoRestart" : $"/Online /Disable-Feature /FeatureName:{featureName} /NoRestart";
 
             // Run the DISM command using the helper method
             _ = RunDismCommand(arguments);

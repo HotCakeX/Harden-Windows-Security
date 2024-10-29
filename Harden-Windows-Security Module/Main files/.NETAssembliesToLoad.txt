@@ -1,7 +1,6 @@
 System
 System.IO
 System.Xml
-System.Net
 System.Data
 WindowsBase
 System.Xaml
@@ -9,7 +8,6 @@ System.Linq
 System.Memory
 System.Console
 System.Windows
-System.CodeDom
 System.Runtime
 System.Net.Http
 System.Xml.Linq
@@ -30,11 +28,9 @@ System.Threading.Tasks
 System.Linq.Expressions
 System.Threading.Thread
 System.Xml.ReaderWriter
-WindowsFormsIntegration
 System.DirectoryServices
 Microsoft.Win32.Registry
 System.Security.Principal
-System.Reflection.Metadata
 System.Diagnostics.Process
 Microsoft.Win32.Primitives
 System.Diagnostics.EventLog

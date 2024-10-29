@@ -1,12 +1,11 @@
 using System;
-using System.Collections.ObjectModel;
 using System.Management.Automation;
 
 #nullable enable
 
 namespace HardenWindowsSecurity
 {
-    public class ForceRelocateImagesForFiles
+    public static class ForceRelocateImagesForFiles
     {
 
         /// <summary>
@@ -29,7 +28,7 @@ namespace HardenWindowsSecurity
                 // Execute the command and get the result
                 try
                 {
-                    Collection<PSObject> results = powerShell.Invoke();
+                    _ = powerShell.Invoke();
 
                     // Check for errors
                     if (powerShell.Streams.Error.Count > 0)

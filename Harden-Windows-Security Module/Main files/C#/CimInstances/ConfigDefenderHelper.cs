@@ -27,7 +27,7 @@ namespace HardenWindowsSecurity
                 // Make sure the results isn't empty
                 if (results.Count > 0)
                 {
-                    var result = results.Cast<ManagementBaseObject>().FirstOrDefault();
+                    ManagementBaseObject? result = results.Cast<ManagementBaseObject>().FirstOrDefault();
 
                     if (result is not null)
                     {
@@ -41,13 +41,13 @@ namespace HardenWindowsSecurity
                 }
                 else
                 {
-                    throw new HardenWindowsSecurity.PowerShellExecutionException("WMI query for 'MSFT_MpComputerStatus' failed");
+                    throw new PowerShellExecutionException("WMI query for 'MSFT_MpComputerStatus' failed");
                 }
             }
             catch (ManagementException ex)
             {
                 string errorMessage = $"WMI query for 'MSFT_MpComputerStatus' failed: {ex.Message}";
-                throw new HardenWindowsSecurity.PowerShellExecutionException(errorMessage, ex);
+                throw new PowerShellExecutionException(errorMessage, ex);
             }
         }
 
@@ -56,9 +56,10 @@ namespace HardenWindowsSecurity
         {
             // Creating a dynamic object to store the properties of the ManagementBaseObject
             dynamic expandoObject = new ExpandoObject();
-            var dictionary = (IDictionary<string, object>)expandoObject;
 
-            foreach (var property in managementObject.Properties)
+            IDictionary<string, object> dictionary = expandoObject;
+
+            foreach (PropertyData property in managementObject.Properties)
             {
                 if (property.Type == CimType.DateTime && property.Value is string dmtfTime)
                 {
@@ -102,14 +103,14 @@ namespace HardenWindowsSecurity
             try
             {
                 // Connect to the WMI namespace
-                var scope = new ManagementScope(@"\\.\ROOT\Microsoft\Windows\Defender");
+                ManagementScope scope = new(@"\\.\ROOT\Microsoft\Windows\Defender");
                 scope.Connect();
 
                 // Create an instance of the MSFT_MpPreference class
-                using var mpPreferenceClass = new ManagementClass(scope, new ManagementPath("MSFT_MpPreference"), null);
+                using ManagementClass mpPreferenceClass = new(scope, new ManagementPath("MSFT_MpPreference"), null);
 
                 // Get the available methods for the class
-                var methodParams = mpPreferenceClass.GetMethodParameters(MethodName);
+                ManagementBaseObject methodParams = mpPreferenceClass.GetMethodParameters(MethodName);
 
                 if (preferenceValue is null)
                 {
@@ -157,11 +158,11 @@ namespace HardenWindowsSecurity
                 // Invoke the method to apply the settings
                 _ = mpPreferenceClass.InvokeMethod(MethodName, methodParams, null);
 
-                HardenWindowsSecurity.Logger.LogMessage($"{preferenceName} set to {preferenceValue} (Type: {typeof(T).Name}) successfully.", LogTypeIntel.Information);
+                Logger.LogMessage($"{preferenceName} set to {preferenceValue} (Type: {typeof(T).Name}) successfully.", LogTypeIntel.Information);
             }
             catch (Exception ex)
             {
-                HardenWindowsSecurity.Logger.LogMessage($"Error setting {preferenceName}: {ex.Message}- You might need to update your OS first.", LogTypeIntel.Warning);
+                Logger.LogMessage($"Error setting {preferenceName}: {ex.Message}- You might need to update your OS first.", LogTypeIntel.Warning);
             }
         }
     }

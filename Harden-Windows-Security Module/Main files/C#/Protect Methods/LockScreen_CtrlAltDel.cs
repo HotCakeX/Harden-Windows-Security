@@ -1,3 +1,6 @@
+using System;
+using System.IO;
+
 #nullable enable
 
 namespace HardenWindowsSecurity
@@ -6,13 +9,13 @@ namespace HardenWindowsSecurity
     {
         public static void LockScreen_CtrlAltDel()
         {
-            if (HardenWindowsSecurity.GlobalVars.path is null)
+            if (GlobalVars.path is null)
             {
-                throw new System.ArgumentNullException("GlobalVars.path cannot be null.");
+                throw new ArgumentNullException("GlobalVars.path cannot be null.");
             }
 
-            HardenWindowsSecurity.Logger.LogMessage("Applying the Enable CTRL + ALT + DEL policy", LogTypeIntel.Information);
-            HardenWindowsSecurity.LGPORunner.RunLGPOCommand(System.IO.Path.Combine(HardenWindowsSecurity.GlobalVars.path, "Resources", "Security-Baselines-X", "Lock Screen Policies", "Enable CTRL + ALT + DEL", "GptTmpl.inf"), LGPORunner.FileType.INF);
+            Logger.LogMessage("Applying the Enable CTRL + ALT + DEL policy", LogTypeIntel.Information);
+            LGPORunner.RunLGPOCommand(Path.Combine(GlobalVars.path, "Resources", "Security-Baselines-X", "Lock Screen Policies", "Enable CTRL + ALT + DEL", "GptTmpl.inf"), LGPORunner.FileType.INF);
         }
     }
 }

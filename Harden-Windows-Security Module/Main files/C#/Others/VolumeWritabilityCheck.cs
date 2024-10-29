@@ -25,7 +25,7 @@ namespace HardenWindowsSecurity
             List<BitLocker.BitLockerVolume>? availableWritableVolumes = [];
 
             // Iterate over each volume
-            foreach (var Volume in Volumes)
+            foreach (BitLocker.BitLockerVolume Volume in Volumes)
             {
 
                 if (Volume.MountPoint is null)

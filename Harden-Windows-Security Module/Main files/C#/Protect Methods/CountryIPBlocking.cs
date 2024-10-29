@@ -9,7 +9,7 @@ namespace HardenWindowsSecurity
 
             ChangePSConsoleTitle.Set("🧾 Country IPs");
 
-            HardenWindowsSecurity.Logger.LogMessage("Blocking IP ranges of countries in State Sponsors of Terrorism list", LogTypeIntel.Information);
+            Logger.LogMessage("Blocking IP ranges of countries in State Sponsors of Terrorism list", LogTypeIntel.Information);
 
             FirewallHelper.BlockIPAddressListsInGroupPolicy(
                 "State Sponsors of Terrorism IP range blocking",

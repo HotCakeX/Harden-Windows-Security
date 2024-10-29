@@ -1,5 +1,6 @@
 using Microsoft.Win32;
 using System;
+using System.IO;
 
 #nullable enable
 
@@ -9,14 +10,14 @@ namespace HardenWindowsSecurity
     {
         public static void Invoke()
         {
-            if (HardenWindowsSecurity.GlobalVars.path is null)
+            if (GlobalVars.path is null)
             {
-                throw new System.ArgumentNullException("GlobalVars.path cannot be null.");
+                throw new ArgumentNullException("GlobalVars.path cannot be null.");
             }
 
             ChangePSConsoleTitle.Set("🛡️ TLS");
 
-            HardenWindowsSecurity.Logger.LogMessage("Running the TLS Security category", LogTypeIntel.Information);
+            Logger.LogMessage("Running the TLS Security category", LogTypeIntel.Information);
 
             // Creating these registry keys that have forward slashes in them
             // Values are added to them in the next step using registry.csv file
@@ -33,7 +34,7 @@ namespace HardenWindowsSecurity
             "Triple DES 168"   // 3DES 168-bit (Triple DES 168)
             ];
 
-            foreach (var cipherKey in cipherKeys)
+            foreach (string cipherKey in cipherKeys)
             {
                 using RegistryKey baseKey = RegistryKey.OpenBaseKey(RegistryHive.LocalMachine, RegistryView.Registry64);
 
@@ -44,21 +45,29 @@ namespace HardenWindowsSecurity
             }
 
 
+            Logger.LogMessage("Applying the TLS Security registry settings", LogTypeIntel.Information);
 
-
-            HardenWindowsSecurity.Logger.LogMessage("Applying the TLS Security registry settings", LogTypeIntel.Information);
-
-            foreach (var Item in HardenWindowsSecurity.GlobalVars.RegistryCSVItems!)
+            foreach (HardeningRegistryKeys.CsvRecord Item in GlobalVars.RegistryCSVItems!)
             {
                 if (string.Equals(Item.Category, "TLS", StringComparison.OrdinalIgnoreCase))
                 {
-                    HardenWindowsSecurity.RegistryEditor.EditRegistry(Item.Path!, Item.Key!, Item.Value!, Item.Type!, Item.Action!);
+                    RegistryEditor.EditRegistry(Item.Path, Item.Key, Item.Value, Item.Type, Item.Action);
                 }
             }
 
-            HardenWindowsSecurity.Logger.LogMessage("Applying the TLS Security Group Policies", LogTypeIntel.Information);
-            HardenWindowsSecurity.LGPORunner.RunLGPOCommand(System.IO.Path.Combine(HardenWindowsSecurity.GlobalVars.path, "Resources", "Security-Baselines-X", "TLS Security", "registry.pol"), LGPORunner.FileType.POL);
+            Logger.LogMessage("Applying the TLS Security Group Policies", LogTypeIntel.Information);
 
+            // If BattleNet client is installed, use the policy that has the necessary, albeit insecure, cipher suite (TLS_RSA_WITH_AES_256_CBC_SHA) so that the client will be able to connect to the servers
+            if (File.Exists(@"C:\Program Files (x86)\Battle.net\Battle.net.exe") || File.Exists(@"C:\Program Files (x86)\Battle.net\Battle.net Launcher.exe"))
+            {
+                Logger.LogMessage("BattleNet client detected, will add the necessary cipher suite 'TLS_RSA_WITH_AES_256_CBC_SHA'", LogTypeIntel.Information);
+
+                LGPORunner.RunLGPOCommand(Path.Combine(GlobalVars.path, "Resources", "Security-Baselines-X", "TLS Security", "For BattleNetClient", "registry.pol"), LGPORunner.FileType.POL);
+            }
+            else
+            {
+                LGPORunner.RunLGPOCommand(Path.Combine(GlobalVars.path, "Resources", "Security-Baselines-X", "TLS Security", "registry.pol"), LGPORunner.FileType.POL);
+            }
         }
     }
 }

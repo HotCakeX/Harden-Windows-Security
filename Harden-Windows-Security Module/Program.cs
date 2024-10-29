@@ -5,7 +5,7 @@ using System.IO;
 
 namespace HardenWindowsSecurity
 {
-    public class Program
+    public static class Program
     {
         /// <summary>
         /// You can use this method when working on the module in Visual Studio
@@ -27,15 +27,15 @@ namespace HardenWindowsSecurity
             // Prepare the environment and variables
             Initializer.Initialize();
 
-            if (HardenWindowsSecurity.UserPrivCheck.IsAdmin())
+            if (UserPrivCheck.IsAdmin())
             {
-                HardenWindowsSecurity.ControlledFolderAccessHandler.Start();
-                HardenWindowsSecurity.Miscellaneous.RequirementsCheck();
+                ControlledFolderAccessHandler.Start();
+                Miscellaneous.RequirementsCheck();
             }
             #endregion
 
             // Launch the GUI
-            HardenWindowsSecurity.GUIBootStrapper.Boot();
+            GUIHandOff.Boot();
 
         }
     }

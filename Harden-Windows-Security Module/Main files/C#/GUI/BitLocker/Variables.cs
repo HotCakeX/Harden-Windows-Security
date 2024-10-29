@@ -3,7 +3,6 @@ using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
-using static HardenWindowsSecurity.BitLocker;
 
 #nullable enable
 
@@ -54,7 +53,7 @@ namespace HardenWindowsSecurity
         internal static Button? RefreshButtonForBackup;
 
 
-        public class BitLockerVolumeViewModel
+        public sealed class BitLockerVolumeViewModel
         {
             public string? DriveLetter { get; set; }  // MountPoint in BitLockerVolume type
             public string? KeyID { get; set; }        // KeyProtectorID in KeyProtector type
@@ -72,7 +71,7 @@ namespace HardenWindowsSecurity
         {
 
             // Get all of the BitLocker volumes
-            List<HardenWindowsSecurity.BitLocker.BitLockerVolume> AllBitLockerVolumes = HardenWindowsSecurity.BitLocker.GetAllEncryptedVolumeInfo(false, false);
+            List<BitLocker.BitLockerVolume> AllBitLockerVolumes = BitLocker.GetAllEncryptedVolumeInfo(false, false);
 
             // List of BitLockerVolumeViewModel objects
             List<BitLockerVolumeViewModel> viewModelList = [];
@@ -80,11 +79,11 @@ namespace HardenWindowsSecurity
 
             if (AllBitLockerVolumes is not null)
             {
-                foreach (HardenWindowsSecurity.BitLocker.BitLockerVolume Volume in AllBitLockerVolumes)
+                foreach (BitLocker.BitLockerVolume Volume in AllBitLockerVolumes)
                 {
                     if (Volume.KeyProtector is not null)
                     {
-                        foreach (HardenWindowsSecurity.BitLocker.KeyProtector KeyProtector in Volume.KeyProtector)
+                        foreach (BitLocker.KeyProtector KeyProtector in Volume.KeyProtector)
                         {
                             if (KeyProtector.KeyProtectorType is not null)
                             {
@@ -119,7 +118,7 @@ namespace HardenWindowsSecurity
             if (ExportToFile)
             {
                 // Show the save file dialog to let the user pick the save location
-                var saveFileDialog = new Microsoft.Win32.SaveFileDialog
+                Microsoft.Win32.SaveFileDialog saveFileDialog = new()
                 {
                     FileName = "BitLockerVolumesBackup", // Default file name
                     DefaultExt = ".txt",           // Default file extension
@@ -136,13 +135,13 @@ namespace HardenWindowsSecurity
 
 
                     // Create and write the headers to the text file
-                    using (var writer = new StreamWriter(filePath))
+                    using (StreamWriter writer = new(filePath))
                     {
                         // Write headers
                         writer.WriteLine("DriveLetter | KeyID | RecoveryKey | Size (GB)");
 
                         // Write each BitLockerVolumeViewModel's data into the file
-                        foreach (var volume in viewModelList!)
+                        foreach (BitLockerVolumeViewModel volume in viewModelList!)
                         {
                             writer.WriteLine($"{volume.DriveLetter} | {volume.KeyID} | {volume.RecoveryKey} | {volume.SizeGB} GB");
                         }

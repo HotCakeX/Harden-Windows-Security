@@ -7,7 +7,7 @@ using System.Collections.Generic;
 namespace HardenWindowsSecurity
 {
     // Class to hold the result of the HashTable check
-    public class HashtableCheckerResult
+    public sealed class HashtableCheckerResult
     {
         public bool IsMatch { get; set; } // Indicates if the value matches
         public string? Value { get; set; } // The value from the HashTable if found

@@ -362,7 +362,7 @@ Function Protect-WindowsSecurity {
                 # For PowerShell debugging, loading and running the GUI here, instead of the Boot() method, will display the errors on the PS console properly
                 [HardenWindowsSecurity.GUIMain]::LoadMainXaml()
                 [System.Void] [HardenWindowsSecurity.GUIMain]::app.Run([HardenWindowsSecurity.GUIMain]::mainGUIWindow)
-                # [HardenWindowsSecurity.GUIBootStrapper]::Boot()
+                # [HardenWindowsSecurity.GUIHandOff]::Boot()
             }
         }
         catch {

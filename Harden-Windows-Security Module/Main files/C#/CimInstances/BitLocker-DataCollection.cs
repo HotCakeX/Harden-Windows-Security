@@ -21,7 +21,7 @@ namespace HardenWindowsSecurity
     {
 
         // Class that stores the information about each key protector
-        public class KeyProtector
+        public sealed class KeyProtector
         {
             public KeyProtectorType? KeyProtectorType { get; set; }
             public string? KeyProtectorID { get; set; }
@@ -33,7 +33,7 @@ namespace HardenWindowsSecurity
         }
 
         // class that stores the information about BitLocker protected volumes
-        public class BitLockerVolume
+        public sealed class BitLockerVolume
         {
             public string? MountPoint { get; set; }
             public EncryptionMethod? EncryptionMethod { get; set; }
@@ -224,7 +224,7 @@ namespace HardenWindowsSecurity
                 try
                 {
                     // Try to use the GetEncryptionMethod method to get the EncryptionMethod and EncryptionMethodFlags properties
-                    var currentEncryptionMethod = InvokeCimMethod(volume, "GetEncryptionMethod", null);
+                    ManagementBaseObject? currentEncryptionMethod = InvokeCimMethod(volume, "GetEncryptionMethod", null);
                     if (currentEncryptionMethod is not null && Convert.ToUInt32(currentEncryptionMethod["ReturnValue"], CultureInfo.InvariantCulture) == 0)
                     {
                         uint EncryptionMethodNum = Convert.ToUInt32(currentEncryptionMethod["EncryptionMethod"], CultureInfo.InvariantCulture);
@@ -470,21 +470,15 @@ namespace HardenWindowsSecurity
                 BitLockerVolume volume = GetEncryptedVolumeInfo(driveLetter + ":");
 
                 // If only Non-OS Drives are requested, skip any other drive types
-                if (OnlyNonOSDrives)
+                if (OnlyNonOSDrives && volume.VolumeType is not VolumeType.FixedDisk)
                 {
-                    if (volume.VolumeType is not VolumeType.FixedDisk)
-                    {
-                        continue;
-                    }
+                    continue;
                 }
 
                 // If only Removable Drives are requested, skip any other drive types
-                if (OnlyRemovableDrives)
+                if (OnlyRemovableDrives && volume.VolumeType is not VolumeType.Removable)
                 {
-                    if (volume.VolumeType is not VolumeType.Removable)
-                    {
-                        continue;
-                    }
+                    continue;
                 }
 
                 volumes.Add(volume);

@@ -1,4 +1,6 @@
-﻿
+﻿using System;
+using System.IO;
+
 #nullable enable
 
 namespace HardenWindowsSecurity
@@ -9,20 +11,20 @@ namespace HardenWindowsSecurity
         /// <summary>
         /// Applies the Device Guard category policies
         /// </summary>
-        /// <exception cref="System.ArgumentNullException"></exception>
+        /// <exception cref="ArgumentNullException"></exception>
         public static void Invoke()
         {
 
-            if (HardenWindowsSecurity.GlobalVars.path is null)
+            if (GlobalVars.path is null)
             {
-                throw new System.ArgumentNullException("GlobalVars.path cannot be null.");
+                throw new ArgumentNullException("GlobalVars.path cannot be null.");
             }
 
             ChangePSConsoleTitle.Set("🖥️ Device Guard");
 
-            HardenWindowsSecurity.Logger.LogMessage("Running the Device Guard category", LogTypeIntel.Information);
+            Logger.LogMessage("Running the Device Guard category", LogTypeIntel.Information);
 
-            HardenWindowsSecurity.LGPORunner.RunLGPOCommand(System.IO.Path.Combine(HardenWindowsSecurity.GlobalVars.path, "Resources", "Security-Baselines-X", "Device Guard Policies", "registry.pol"), LGPORunner.FileType.POL);
+            LGPORunner.RunLGPOCommand(Path.Combine(GlobalVars.path, "Resources", "Security-Baselines-X", "Device Guard Policies", "registry.pol"), LGPORunner.FileType.POL);
 
         }
     }

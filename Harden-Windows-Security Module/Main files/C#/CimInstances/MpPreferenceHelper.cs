@@ -29,7 +29,7 @@ namespace HardenWindowsSecurity
                 // Return the first result if there are any
                 if (results.Count > 0)
                 {
-                    var result = results.Cast<ManagementBaseObject>().FirstOrDefault();
+                    ManagementBaseObject? result = results.Cast<ManagementBaseObject>().FirstOrDefault();
 
                     if (result is not null)
                     {
@@ -49,7 +49,7 @@ namespace HardenWindowsSecurity
             catch (ManagementException ex)
             {
                 string errorMessage = $"WMI query for 'MSFT_MpPreference' failed: {ex.Message}";
-                throw new HardenWindowsSecurity.PowerShellExecutionException(errorMessage, ex);
+                throw new PowerShellExecutionException(errorMessage, ex);
             }
         }
 
@@ -58,14 +58,15 @@ namespace HardenWindowsSecurity
         {
             // Creating a dynamic object to store the properties of the ManagementBaseObject
             dynamic expandoObject = new ExpandoObject();
-            var dictionary = (IDictionary<string, object>)expandoObject;
+
+            IDictionary<string, object> dictionary = expandoObject;
 
             // Iterating through the properties of the ManagementBaseObject and adding them to the dynamic object
-            foreach (var property in managementObject.Properties)
+            foreach (PropertyData property in managementObject.Properties)
             {
                 // Check if the value of the property is in DMTF datetime format
                 // Properties such as SignatureScheduleTime use that format
-                if (property.Type == CimType.DateTime && property.Value is string dmtfTime)
+                if (property.Type is CimType.DateTime && property.Value is string dmtfTime)
                 {
                     // Convert DMTF datetime format to TimeSpan
                     dictionary[property.Name] = ConvertDmtfToTimeSpan(dmtfTime);

@@ -2,7 +2,7 @@
 
 namespace HardenWindowsSecurity
 {
-    public class ChangePSConsoleTitle
+    public static class ChangePSConsoleTitle
     {
         /// <summary>
         /// Attempts to set the title of the PowerShell console if it exists

@@ -19,7 +19,7 @@ namespace HardenWindowsSecurity
         {
 
             // Method to handle the Logs view, including loading
-            private void Logs(object obj)
+            private void LogsView(object obj)
             {
 
                 // Check if the view is already cached
@@ -30,48 +30,48 @@ namespace HardenWindowsSecurity
                 }
 
                 // Defining the path to the XAML XML file
-                if (HardenWindowsSecurity.GlobalVars.path is null)
+                if (GlobalVars.path is null)
                 {
                     throw new InvalidOperationException("GlobalVars.path cannot be null.");
                 }
 
                 // Construct the file path for the Logs view XAML
-                string xamlPath = System.IO.Path.Combine(HardenWindowsSecurity.GlobalVars.path, "Resources", "XAML", "Logs.xaml");
+                string xamlPath = Path.Combine(GlobalVars.path, "Resources", "XAML", "Logs.xaml");
 
                 // Read the XAML content from the file
                 string xamlContent = File.ReadAllText(xamlPath);
 
                 // Parse the XAML content to create a UserControl
-                HardenWindowsSecurity.GUILogs.View = (UserControl)XamlReader.Parse(xamlContent);
+                GUILogs.View = (UserControl)XamlReader.Parse(xamlContent);
 
                 // Set the DataContext for Logs view
-                HardenWindowsSecurity.GUILogs.View.DataContext = new LogsVM();
+                GUILogs.View.DataContext = new LogsVM();
 
                 // Find the Parent Grid
-                HardenWindowsSecurity.GUILogs.ParentGrid = (Grid)HardenWindowsSecurity.GUILogs.View.FindName("ParentGrid");
+                GUILogs.ParentGrid = (Grid)GUILogs.View.FindName("ParentGrid");
 
-                ToggleButton AutoScrollToggleButton = HardenWindowsSecurity.GUILogs.ParentGrid.FindName("AutoScrollToggleButton") as ToggleButton ?? throw new InvalidOperationException("AutoScrollToggleButton is null.");
-                Button ExportLogsButton = HardenWindowsSecurity.GUILogs.ParentGrid.FindName("ExportLogsButton") as Button ?? throw new InvalidOperationException("ExportLogsButton is null.");
-                HardenWindowsSecurity.GUILogs.MainLoggerTextBox = HardenWindowsSecurity.GUILogs.ParentGrid.FindName("MainLoggerTextBox") as TextBox ?? throw new InvalidOperationException("MainLoggerTextBox is null.");
-                HardenWindowsSecurity.GUILogs.scrollerForOutputTextBox = HardenWindowsSecurity.GUILogs.ParentGrid.FindName("ScrollerForOutputTextBox") as ScrollViewer ?? throw new InvalidOperationException("ScrollerForOutputTextBox is null.");
+                ToggleButton AutoScrollToggleButton = GUILogs.ParentGrid.FindName("AutoScrollToggleButton") as ToggleButton ?? throw new InvalidOperationException("AutoScrollToggleButton is null.");
+                Button ExportLogsButton = GUILogs.ParentGrid.FindName("ExportLogsButton") as Button ?? throw new InvalidOperationException("ExportLogsButton is null.");
+                GUILogs.MainLoggerTextBox = GUILogs.ParentGrid.FindName("MainLoggerTextBox") as TextBox ?? throw new InvalidOperationException("MainLoggerTextBox is null.");
+                GUILogs.scrollerForOutputTextBox = GUILogs.ParentGrid.FindName("ScrollerForOutputTextBox") as ScrollViewer ?? throw new InvalidOperationException("ScrollerForOutputTextBox is null.");
                 Image ExportLogsIcon = GUILogs.ParentGrid.FindName("ExportLogsIcon") as Image ?? throw new InvalidOperationException("ExportLogsIcon is null.");
-                Button ClearLogsButton = HardenWindowsSecurity.GUILogs.ParentGrid.FindName("ClearLogsButton") as Button ?? throw new InvalidOperationException("ClearLogsButton is null.");
+                Button ClearLogsButton = GUILogs.ParentGrid.FindName("ClearLogsButton") as Button ?? throw new InvalidOperationException("ClearLogsButton is null.");
                 Image ClearLogsIcon = GUILogs.ParentGrid.FindName("ClearLogsIcon") as Image ?? throw new InvalidOperationException("ClearLogsIcon is null.");
 
 
                 // Add image to the ExportLogsIcon
-                var ExportLogsIconBitmapImage = new BitmapImage();
+                BitmapImage ExportLogsIconBitmapImage = new();
                 ExportLogsIconBitmapImage.BeginInit();
-                ExportLogsIconBitmapImage.UriSource = new System.Uri(System.IO.Path.Combine(HardenWindowsSecurity.GlobalVars.path!, "Resources", "Media", "ExportIconBlack.png"));
+                ExportLogsIconBitmapImage.UriSource = new Uri(Path.Combine(GlobalVars.path!, "Resources", "Media", "ExportIconBlack.png"));
                 ExportLogsIconBitmapImage.CacheOption = BitmapCacheOption.OnLoad; // Load the image data into memory
                 ExportLogsIconBitmapImage.EndInit();
                 ExportLogsIcon.Source = ExportLogsIconBitmapImage;
 
 
                 // Add image to the ClearLogsIcon
-                var ClearLogsIconBitmapImage = new BitmapImage();
+                BitmapImage ClearLogsIconBitmapImage = new();
                 ClearLogsIconBitmapImage.BeginInit();
-                ClearLogsIconBitmapImage.UriSource = new System.Uri(System.IO.Path.Combine(HardenWindowsSecurity.GlobalVars.path!, "Resources", "Media", "ClearLogsIcon.png"));
+                ClearLogsIconBitmapImage.UriSource = new Uri(Path.Combine(GlobalVars.path!, "Resources", "Media", "ClearLogsIcon.png"));
                 ClearLogsIconBitmapImage.CacheOption = BitmapCacheOption.OnLoad; // Load the image data into memory
                 ClearLogsIconBitmapImage.EndInit();
                 ClearLogsIcon.Source = ClearLogsIconBitmapImage;
@@ -128,10 +128,10 @@ namespace HardenWindowsSecurity
 
 
                 // Cache the view before setting it as the CurrentView
-                _viewCache["LogsView"] = HardenWindowsSecurity.GUILogs.View;
+                _viewCache["LogsView"] = GUILogs.View;
 
                 // Set the CurrentView to the Protect view
-                CurrentView = HardenWindowsSecurity.GUILogs.View;
+                CurrentView = GUILogs.View;
             }
         }
     }

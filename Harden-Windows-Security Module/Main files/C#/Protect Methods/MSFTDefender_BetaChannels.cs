@@ -1,3 +1,5 @@
+using System;
+
 #nullable enable
 
 namespace HardenWindowsSecurity
@@ -6,16 +8,16 @@ namespace HardenWindowsSecurity
     {
         public static void MSFTDefender_BetaChannels()
         {
-            if (HardenWindowsSecurity.GlobalVars.path is null)
+            if (GlobalVars.path is null)
             {
-                throw new System.ArgumentNullException("GlobalVars.path cannot be null.");
+                throw new ArgumentNullException("GlobalVars.path cannot be null.");
             }
 
-            HardenWindowsSecurity.Logger.LogMessage("Setting Microsoft Defender engine and platform update channel to beta", LogTypeIntel.Information);
+            Logger.LogMessage("Setting Microsoft Defender engine and platform update channel to beta", LogTypeIntel.Information);
 
-            HardenWindowsSecurity.ConfigDefenderHelper.ManageMpPreference<string>("EngineUpdatesChannel", "2", true);
+            ConfigDefenderHelper.ManageMpPreference("EngineUpdatesChannel", "2", true);
 
-            HardenWindowsSecurity.ConfigDefenderHelper.ManageMpPreference<string>("PlatformUpdatesChannel", "2", true);
+            ConfigDefenderHelper.ManageMpPreference("PlatformUpdatesChannel", "2", true);
 
         }
     }

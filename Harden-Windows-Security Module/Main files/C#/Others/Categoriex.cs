@@ -8,7 +8,7 @@ using System.Management.Automation;
 
 namespace HardenWindowsSecurity
 {
-    public class ComplianceCategoriex : IValidateSetValuesGenerator
+    public sealed class ComplianceCategoriex : IValidateSetValuesGenerator
     {
         // Categories for Confirmation / Compliance Checks
         public string[] GetValidValues()
@@ -35,7 +35,7 @@ namespace HardenWindowsSecurity
     }
 
     // # This class is the orchestrator of the hardening categories deciding which one of them is allowed to run
-    public class ProtectionCategoriex
+    public static class ProtectionCategoriex
     {
         // a method to detect Windows edition SKU number
         private static bool IsWindowsHome()

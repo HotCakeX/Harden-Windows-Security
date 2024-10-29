@@ -7,7 +7,7 @@ using System.Text.RegularExpressions;
 
 namespace HardenWindowsSecurity
 {
-    public class IniFileConverter
+    public static class IniFileConverter
     {
         /// <summary>
         /// A helper method to parse the ini file from the output of the "Secedit /export /cfg .\security_policy.inf"
@@ -23,7 +23,7 @@ namespace HardenWindowsSecurity
             foreach (string line in lines)
             {
                 // Match section headers
-                var sectionMatch = Regex.Match(line, @"^\[(.+)\]$");
+                Match sectionMatch = Regex.Match(line, @"^\[(.+)\]$");
                 if (sectionMatch.Success)
                 {
                     sectionName = sectionMatch.Groups[1].Value;
@@ -32,7 +32,7 @@ namespace HardenWindowsSecurity
                 }
 
                 // Match key-value pairs
-                var keyValueMatch = Regex.Match(line, @"^(.+?)\s*=\s*(.*)$");
+                Match keyValueMatch = Regex.Match(line, @"^(.+?)\s*=\s*(.*)$");
                 if (keyValueMatch.Success)
                 {
                     string keyName = keyValueMatch.Groups[1].Value;

@@ -7,7 +7,7 @@ using System.Linq;
 
 namespace HardenWindowsSecurity
 {
-    public class GetOneDriveDirectories
+    public static class GetOneDriveDirectories
     {
 
         /// <summary>
@@ -34,14 +34,14 @@ namespace HardenWindowsSecurity
             try
             {
                 // Enumerate all top-level directories under the Users directory
-                var userDirectories = Directory.EnumerateDirectories(usersPath);
+                IEnumerable<string> userDirectories = Directory.EnumerateDirectories(usersPath);
 
-                foreach (var userDirectory in userDirectories)
+                foreach (string userDirectory in userDirectories)
                 {
                     try
                     {
                         // Enumerate directories within each user directory that start with "OneDrive"
-                        var directories = Directory.EnumerateDirectories(userDirectory, "OneDrive*", SearchOption.TopDirectoryOnly)
+                        IEnumerable<string> directories = Directory.EnumerateDirectories(userDirectory, "OneDrive*", SearchOption.TopDirectoryOnly)
                                                    .Where(dir => dir.StartsWith(Path.Combine(userDirectory, "OneDrive"), StringComparison.OrdinalIgnoreCase));
 
                         // Add each found directory to the list

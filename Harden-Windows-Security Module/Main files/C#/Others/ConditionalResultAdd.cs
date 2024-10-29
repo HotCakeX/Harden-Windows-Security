@@ -17,7 +17,7 @@ namespace HardenWindowsSecurity
         public static void Add(List<IndividualResult> nestedObjectArray, IndividualResult result)
         {
             // Check if there is already an instance with the FriendlyName
-            var existingItem = nestedObjectArray.FirstOrDefault(item => string.Equals(item.FriendlyName, result.FriendlyName, StringComparison.OrdinalIgnoreCase));
+            IndividualResult? existingItem = nestedObjectArray.FirstOrDefault(item => string.Equals(item.FriendlyName, result.FriendlyName, StringComparison.OrdinalIgnoreCase));
 
             if (existingItem is not null)
             {

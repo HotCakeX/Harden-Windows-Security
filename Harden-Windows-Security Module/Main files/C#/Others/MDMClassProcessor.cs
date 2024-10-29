@@ -7,47 +7,10 @@ namespace HardenWindowsSecurity
 {
     public partial class MDMClassProcessor
     {
-        /// [System.Collections.Generic.Dictionary[string, [System.Collections.Generic.List[System.Collections.Generic.Dictionary[string, object]]]]]$Output = [HardenWindowsSecurity.MDM]::Get()
-        /// class Result {
-        ///     [string]$Name
-        ///     [string]$Value
-        ///     [string]$CimInstance
-        ///
-        ///     Result([string]$Name, [string]$Value, [string]$CimInstance) {
-        ///         $this.Name = $Name
-        ///         $this.Value = $Value
-        ///         $this.CimInstance = $CimInstance
-        ///     }
-        /// }
-        ///
-        /// $ResultsList = [System.Collections.Generic.List[Result]]::new()
-        ///
-        /// foreach ($CimInstanceResult in $Output.GetEnumerator()) {
-        ///
-        ///     try {
-        ///         # 2 GetEnumerator is necessary otherwise there won't be expected results
-        ///         foreach ($Key in $CimInstanceResult.Value.GetEnumerator().GetEnumerator()) {
-        ///
-        ///             # Precise type of the $Key variable at this point is this
-        ///             [System.Collections.Generic.KeyValuePair`2[[System.String], [System.Object]]]$Key = $Key
-        ///
-        ///             if ($Key.key -in ('Class', 'InstanceID', 'ParentID')) {
-        ///                 continue
-        ///             }
-        ///             $ResultsList.Add([Result]::New(
-        ///                     $Key.Key,
-        ///                     $Key.Value,
-        ///                     $CimInstanceResult.Key
-        ///                 ))
-        ///         }
-        ///     }
-        ///     catch {
-        ///         Write-Host $_.Exception.Message
-        ///     }
-        /// }
-        /// $ResultsList | Out-GridView -Title "$($ResultsList.Count)"
-        /// Above is the PowerShell equivalent of the method below
+        /// <summary>
         /// It gets the results of all of the MDM related CimInstances and processes them into a list of MDMClassProcessor objects
+        /// </summary>
+        /// <returns></returns>
         public static List<MDMClassProcessor> Process()
         {
             // Get the results of all of the Intune policies from the system

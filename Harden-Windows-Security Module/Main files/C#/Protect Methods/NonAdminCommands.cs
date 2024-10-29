@@ -8,24 +8,23 @@ namespace HardenWindowsSecurity
     {
         public static void Invoke()
         {
-            if (HardenWindowsSecurity.GlobalVars.path is null)
+            if (GlobalVars.path is null)
             {
-                throw new System.ArgumentNullException("GlobalVars.path cannot be null.");
+                throw new ArgumentNullException("GlobalVars.path cannot be null.");
             }
 
             ChangePSConsoleTitle.Set("🏷️ Non-Admins");
 
-            HardenWindowsSecurity.Logger.LogMessage("Running the Non-Admin category", LogTypeIntel.Information);
-            HardenWindowsSecurity.Logger.LogMessage("Applying the Non-Admin registry settings", LogTypeIntel.Information);
-#nullable disable
-            foreach (var Item in (HardenWindowsSecurity.GlobalVars.RegistryCSVItems))
+            Logger.LogMessage("Running the Non-Admin category", LogTypeIntel.Information);
+            Logger.LogMessage("Applying the Non-Admin registry settings", LogTypeIntel.Information);
+
+            foreach (HardeningRegistryKeys.CsvRecord Item in GlobalVars.RegistryCSVItems!)
             {
                 if (string.Equals(Item.Category, "NonAdmin", StringComparison.OrdinalIgnoreCase))
                 {
-                    HardenWindowsSecurity.RegistryEditor.EditRegistry(Item.Path, Item.Key, Item.Value, Item.Type, Item.Action);
+                    RegistryEditor.EditRegistry(Item.Path, Item.Key, Item.Value, Item.Type, Item.Action);
                 }
             }
-#nullable enable
 
         }
     }

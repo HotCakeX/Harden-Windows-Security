@@ -5,7 +5,7 @@ using System;
 namespace HardenWindowsSecurity
 {
     // Custom exception class for PowerShell execution errors
-    public class PowerShellExecutionException : Exception
+    public sealed class PowerShellExecutionException : Exception
     {
         public PowerShellExecutionException(string message) : base(message)
         {

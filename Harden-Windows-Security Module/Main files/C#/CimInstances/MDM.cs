@@ -11,10 +11,15 @@ using System.Threading.Tasks;
 /// https://learn.microsoft.com/en-us/windows/win32/wmisdk/common-information-model
 namespace HardenWindowsSecurity
 {
-    // Class that deals with MDM/CSPs/Intune
-    public class MDM
+    /// <summary>
+    /// Class that deals with MDM/CSPs/Intune
+    /// </summary>
+    public static class MDM
     {
-        // Gets the results of all of the Intune policies from the system
+        /// <summary>
+        /// Gets the results of all of the Intune policies from the system
+        /// </summary>
+        /// <returns></returns>
         public static Dictionary<string, List<Dictionary<string, object>>> Get()
         {
             // Running the asynchronous method synchronously and returning the result
@@ -25,7 +30,7 @@ namespace HardenWindowsSecurity
         private static async Task<Dictionary<string, List<Dictionary<string, object>>>> GetAsync()
         {
             // Set the location of the CSV file containing the MDM list
-            string path = HardenWindowsSecurity.GlobalVars.path ?? throw new InvalidOperationException("GlobalVars.path is null");
+            string path = GlobalVars.path ?? throw new InvalidOperationException("GlobalVars.path is null");
             string csvFilePath = Path.Combine(path, "Resources", "MDMResultClasses.csv");
 
             // Create a dictionary where keys are the class names and values are lists of dictionaries
@@ -34,20 +39,20 @@ namespace HardenWindowsSecurity
             try
             {
                 // Read class names and namespaces from CSV file asynchronously
-                var records = await ReadCsvFileAsync(csvFilePath);
+                List<MdmRecord> records = await ReadCsvFileAsync(csvFilePath);
 
                 // Create a list of tasks for querying each class
                 List<Task> tasks = [];
 
                 // Iterate through records
-                foreach (var record in records)
+                foreach (MdmRecord record in records)
                 {
                     // Process only authorized records
                     if (record.Authorized?.Equals("TRUE", StringComparison.OrdinalIgnoreCase) == true)
                     {
 
                         // Debugging output
-                        // HardenWindowsSecurity.Logger.LogMessage($"Namespace: {record.Namespace}, Class: {record.Class}");
+                        // Logger.LogMessage($"Namespace: {record.Namespace}, Class: {record.Class}");
 
                         // Add a new task for each class query
                         tasks.Add(Task.Run(() =>
@@ -65,7 +70,7 @@ namespace HardenWindowsSecurity
                             catch (ManagementException e)
                             {
                                 // Write verbose error message if connection fails
-                                HardenWindowsSecurity.Logger.LogMessage($"Error connecting to namespace {record.Namespace}: {e.Message}", LogTypeIntel.Error);
+                                Logger.LogMessage($"Error connecting to namespace {record.Namespace}: {e.Message}", LogTypeIntel.Error);
                             }
 
                             // Create object query for the current class
@@ -73,7 +78,7 @@ namespace HardenWindowsSecurity
                             ObjectQuery query = new("SELECT * FROM " + classQuery);
 
                             // Create management object searcher for the query
-                            ManagementObjectSearcher searcher = new(scope, query);
+                            using ManagementObjectSearcher searcher = new(scope, query);
 
                             try
                             {
@@ -97,7 +102,7 @@ namespace HardenWindowsSecurity
                             catch (ManagementException e)
                             {
                                 // Write verbose error message if query fails
-                                HardenWindowsSecurity.Logger.LogMessage($"Error querying {record.Class}: {e.Message}", LogTypeIntel.Error);
+                                Logger.LogMessage($"Error querying {record.Class}: {e.Message}", LogTypeIntel.Error);
                             }
 
                             // Add class results to main results dictionary in a thread-safe manner
@@ -132,9 +137,9 @@ namespace HardenWindowsSecurity
         // Helper method to read CSV file asynchronously
         private static async Task<List<MdmRecord>> ReadCsvFileAsync(string filePath)
         {
-            var records = new List<MdmRecord>();
+            List<MdmRecord> records = [];
 
-            using (var reader = new StreamReader(filePath))
+            using (StreamReader reader = new(filePath))
             {
                 string? line; // Explicitly declare line as nullable
                 bool isFirstLine = true;
@@ -146,10 +151,12 @@ namespace HardenWindowsSecurity
                         continue; // Skip the header line
                     }
 
-                    if (line is null) // This check is redundant but shows explicit handling
+                    // This check is redundant but shows explicit handling
+                    if (line is null)
                         continue;
 
-                    var values = line.Split(',');
+                    string[] values = line.Split(',');
+
                     // because of using "Comment" column in the CSV file optionally for certain MDM CIMs
                     if (values.Length >= 3)
                     {

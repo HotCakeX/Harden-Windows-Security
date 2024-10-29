@@ -8,7 +8,7 @@ using System.IO;
 namespace HardenWindowsSecurity
 {
     // prepares the environment. It also runs commands that would otherwise run in the default constructors of each method
-    public class Initializer
+    public static class Initializer
     {
         /// <summary>
         /// This method runs at the beginning of each cmdlet

@@ -19,7 +19,7 @@ namespace HardenWindowsSecurity
         {
 
             // Method to handle the Unprotect view, including loading
-            private void Unprotect(object obj)
+            private void UnprotectView(object obj)
             {
                 // Check if the view is already cached
                 if (_viewCache.TryGetValue("UnprotectView", out var cachedView))
@@ -123,7 +123,7 @@ namespace HardenWindowsSecurity
                     await System.Threading.Tasks.Task.Run(() =>
                     {
                         // Get the drives list
-                        List<BitLocker.BitLockerVolume> allDrivesList = HardenWindowsSecurity.BitLocker.GetAllEncryptedVolumeInfo(false, false);
+                        List<BitLocker.BitLockerVolume> allDrivesList = BitLocker.GetAllEncryptedVolumeInfo(false, false);
 
                         // Update the ComboBox with the drives using Application's Dispatcher
                         GUIMain.app!.Dispatcher.Invoke(() =>
@@ -145,7 +145,7 @@ namespace HardenWindowsSecurity
                         ActivityTracker.IsActive = true;
 
                         // Reset this flag to false indicating no errors Occurred so far
-                        HardenWindowsSecurity.BitLocker.HasErrorsOccurred = false;
+                        BitLocker.HasErrorsOccurred = false;
 
                         // Variable to store the selected drive letter from the ComboBox
                         string? SelectedDriveFromComboBox = null;
@@ -166,13 +166,13 @@ namespace HardenWindowsSecurity
                             }
                             else
                             {
-                                HardenWindowsSecurity.BitLocker.Disable(SelectedDriveFromComboBox);
+                                BitLocker.Disable(SelectedDriveFromComboBox);
                             }
                         }); // End of Async Thread
 
 
                         // mark as activity completed
-                        HardenWindowsSecurity.ActivityTracker.IsActive = false;
+                        ActivityTracker.IsActive = false;
                     }
 
                 };
@@ -202,14 +202,14 @@ namespace HardenWindowsSecurity
                 ExecuteButton.Click += async (sender, e) =>
                 {
                     // Only continue if there is no activity other places
-                    if (!HardenWindowsSecurity.ActivityTracker.IsActive)
+                    if (!ActivityTracker.IsActive)
                     {
                         // This will be filled in the switch statement based on the selected category
                         // And used to send to the Notification method to be used on the toast notification
                         string NotificationMessage = string.Empty;
 
                         // mark as activity started
-                        HardenWindowsSecurity.ActivityTracker.IsActive = true;
+                        ActivityTracker.IsActive = true;
 
                         // Disable the ExecuteButton button while processing
                         System.Windows.Application.Current.Dispatcher.Invoke(() =>
@@ -242,7 +242,7 @@ namespace HardenWindowsSecurity
                                     {
                                         NotificationMessage = "Process Mitigations";
 
-                                        HardenWindowsSecurity.UnprotectWindowsSecurity.RemoveExploitMitigations();
+                                        UnprotectWindowsSecurity.RemoveExploitMitigations();
                                         break;
                                     }
                                 // Only Remove The AppControl Policies
@@ -253,21 +253,21 @@ namespace HardenWindowsSecurity
                                         {
                                             NotificationMessage = "Downloads Defense Measures AppControl Policy";
 
-                                            HardenWindowsSecurity.UnprotectWindowsSecurity.RemoveAppControlPolicies(true, false);
+                                            UnprotectWindowsSecurity.RemoveAppControlPolicies(true, false);
                                         }
                                         // Dangerous Script Hosts Blocking
                                         else if (GUIUnprotect.AppControlPoliciesComboBoxSelection == 1)
                                         {
                                             NotificationMessage = "Dangerous Script Hosts Blocking AppControl Policy";
 
-                                            HardenWindowsSecurity.UnprotectWindowsSecurity.RemoveAppControlPolicies(false, true);
+                                            UnprotectWindowsSecurity.RemoveAppControlPolicies(false, true);
                                         }
                                         // All AppControl Policies
                                         else
                                         {
                                             NotificationMessage = "AppControl Policies";
 
-                                            HardenWindowsSecurity.UnprotectWindowsSecurity.RemoveAppControlPolicies(true, true);
+                                            UnprotectWindowsSecurity.RemoveAppControlPolicies(true, true);
                                         }
 
                                         break;
@@ -277,7 +277,7 @@ namespace HardenWindowsSecurity
                                     {
                                         NotificationMessage = "Country IP Blocking Firewall Rules";
 
-                                        HardenWindowsSecurity.UnprotectWindowsSecurity.RemoveCountryIPBlockingFirewallRules();
+                                        UnprotectWindowsSecurity.RemoveCountryIPBlockingFirewallRules();
                                         break;
                                     }
                                 // Remove All Protections
@@ -285,9 +285,9 @@ namespace HardenWindowsSecurity
                                     {
                                         NotificationMessage = "Entire Applied Protections";
 
-                                        HardenWindowsSecurity.UnprotectWindowsSecurity.RemoveAppControlPolicies(true, true);
-                                        HardenWindowsSecurity.UnprotectWindowsSecurity.Unprotect();
-                                        HardenWindowsSecurity.UnprotectWindowsSecurity.RemoveExploitMitigations();
+                                        UnprotectWindowsSecurity.RemoveAppControlPolicies(true, true);
+                                        UnprotectWindowsSecurity.Unprotect();
+                                        UnprotectWindowsSecurity.RemoveExploitMitigations();
 
                                         break;
                                     }
@@ -305,18 +305,18 @@ namespace HardenWindowsSecurity
                         });
 
                         // mark as activity completed
-                        HardenWindowsSecurity.ActivityTracker.IsActive = false;
+                        ActivityTracker.IsActive = false;
 
                         // Display notification at the end
-                        NewToastNotification.Show(NewToastNotification.ToastNotificationType.EndOfUnprotection, null, null, NotificationMessage, null);
+                        ToastNotification.Show(ToastNotification.Type.EndOfUnprotection, null, null, NotificationMessage, null);
                     }
                 };
 
                 // Cache the view before setting it as the CurrentView
-                _viewCache["UnprotectView"] = HardenWindowsSecurity.GUIUnprotect.View;
+                _viewCache["UnprotectView"] = GUIUnprotect.View;
 
                 // Set the CurrentView to the Protect view
-                CurrentView = HardenWindowsSecurity.GUIUnprotect.View;
+                CurrentView = GUIUnprotect.View;
             }
         }
     }

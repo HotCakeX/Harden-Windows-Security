@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace HardenWindowsSecurity
 {
-    public class AsyncDownloader
+    public static class AsyncDownloader
     {
         // HttpClient instance to be used and re-used for downloading files
         private static readonly HttpClient _httpClient = new();

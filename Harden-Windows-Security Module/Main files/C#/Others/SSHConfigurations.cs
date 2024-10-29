@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
@@ -36,7 +37,7 @@ namespace HardenWindowsSecurity
             else
             {
                 // If the file exists, read all lines into a list
-                var configLines = File.ReadAllLines(SSHClientUserConfigFile).ToList();
+                List<string> configLines = [.. File.ReadAllLines(SSHClientUserConfigFile)];
 
                 // Check if any line starts with "MACs "
                 bool lineExists = false;
@@ -75,30 +76,27 @@ namespace HardenWindowsSecurity
             Logger.LogMessage("Checking for secure MACs in SSH client user configuration", LogTypeIntel.Information);
 
             // Check if the user configurations directory exists in user directory
-            if (Directory.Exists(SSHClientUserConfigDirectory))
+            // Check if the configuration file exists
+            if (Directory.Exists(SSHClientUserConfigDirectory) && File.Exists(SSHClientUserConfigFile))
             {
-                // Check if the configuration file exists
-                if (File.Exists(SSHClientUserConfigFile))
-                {
-                    // Read all lines into a list
-                    var configLines = File.ReadAllLines(SSHClientUserConfigFile).ToList();
+                // Read all lines into a list
+                List<string> configLines = [.. File.ReadAllLines(SSHClientUserConfigFile)];
 
-                    // Check if any line starts with "MACs "
-                    for (int i = 0; i < configLines.Count; i++)
+                // Check if any line starts with "MACs "
+                for (int i = 0; i < configLines.Count; i++)
+                {
+                    if (configLines[i].StartsWith("MACs ", StringComparison.OrdinalIgnoreCase))
                     {
-                        if (configLines[i].StartsWith("MACs ", StringComparison.OrdinalIgnoreCase))
+                        if (string.Equals(configLines[i], sshConfigContent, StringComparison.OrdinalIgnoreCase))
                         {
-                            if (string.Equals(configLines[i], sshConfigContent, StringComparison.OrdinalIgnoreCase))
-                            {
-                                Logger.LogMessage("Existing MACs configuration found in the user directory and matches the secure configurations.", LogTypeIntel.Information);
-                                return true;
-                            }
-                            else
-                            {
-                                // Log when the MACs value does not match the secure configuration
-                                Logger.LogMessage($"MACs configuration in the user directory is different: {configLines[i]}", LogTypeIntel.Information);
-                                return false;
-                            }
+                            Logger.LogMessage("Existing MACs configuration found in the user directory and matches the secure configurations.", LogTypeIntel.Information);
+                            return true;
+                        }
+                        else
+                        {
+                            // Log when the MACs value does not match the secure configuration
+                            Logger.LogMessage($"MACs configuration in the user directory is different: {configLines[i]}", LogTypeIntel.Information);
+                            return false;
                         }
                     }
                 }

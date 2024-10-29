@@ -6,18 +6,18 @@ using System.IO;
 
 namespace HardenWindowsSecurity
 {
-    public class HardeningRegistryKeys
+    public static class HardeningRegistryKeys
     {
         // Define a public class to store the structure of the new CSV data
-        public class CsvRecord
+        public sealed class CsvRecord
         {
-            public string? Category { get; set; }       // Column for category
-            public string? Path { get; set; }           // Column for registry path
-            public string? Key { get; set; }            // Column for registry key
-            public string? Value { get; set; }          // Column for the expected value
-            public string? Type { get; set; }           // Column for the type of the registry value
-            public string? Action { get; set; }         // Column for the action to be taken
-            public string? Comment { get; set; }        // Column for comments
+            public required string Category { get; set; }       // Column for category
+            public required string Path { get; set; }           // Column for registry path
+            public required string Key { get; set; }            // Column for registry key
+            public required string Value { get; set; }          // Column for the expected value
+            public required string Type { get; set; }           // Column for the type of the registry value
+            public required string Action { get; set; }         // Column for the action to be taken
+            public string? Comment { get; set; }                // Column for comments
         }
 
         // Define a public method to parse the CSV file and save the records to RegistryCSVItems
@@ -36,21 +36,27 @@ namespace HardenWindowsSecurity
             using StreamReader reader = new(path);
 
             // Read the header line
-            var header = reader.ReadLine();
+            string? header = reader.ReadLine();
 
             // Return if the header is null
-            if (header is null) return;
+            if (header is null)
+            {
+                return;
+            };
 
             // Read the rest of the file line by line
             while (!reader.EndOfStream)
             {
-                var line = reader.ReadLine();
+                string? line = reader.ReadLine();
 
                 // Skip if the line is null
-                if (line is null) continue;
+                if (line is null)
+                {
+                    continue;
+                }
 
                 // Split the line by commas to get the values, that's the CSV's delimiter
-                var values = line.Split(',');
+                string[] values = line.Split(',');
 
                 // Check if the number of values is 7
                 if (values.Length == 7)

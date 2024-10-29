@@ -254,15 +254,17 @@ ItemContainerStyle="{StaticResource ModernComboBoxItemStyle}" SelectedIndex="0">
                                 </StackPanel>
                             </Button>
                         </StackPanel>
-                        <DataGrid Grid.Row="2" RowStyle="{DynamicResource ConfirmationDataGridStyleOfRow}" ColumnHeaderStyle="{DynamicResource DataGridColumnHeaderStyle1}" CellStyle="{DynamicResource DataGridCellStyle1}" x:Name="RecoveryKeysDataGrid" Style="{DynamicResource ConfirmationDataGridStyle}">
-                            <!-- DataGrid Columns Definitions -->
-                            <DataGrid.Columns>
-                                <DataGridTextColumn Header="Drive" Binding="{Binding DriveLetter}" IsReadOnly="True" Width="*" />
-                                <DataGridTextColumn Header="Key ID" Binding="{Binding KeyID}" IsReadOnly="True" Width="5*" />
-                                <DataGridTextColumn Header="Recovery Key" Binding="{Binding RecoveryKey}" IsReadOnly="True" Width="6*" />
-                                <DataGridTextColumn Header="Size GB" Binding="{Binding SizeGB}" IsReadOnly="True" Width="*" />
-                            </DataGrid.Columns>
-                        </DataGrid>
+                        <Border Margin="15,0,15,0" Grid.Row="2">
+                            <DataGrid RowStyle="{DynamicResource ConfirmationDataGridStyleOfRow}" ColumnHeaderStyle="{DynamicResource DataGridColumnHeaderStyle1}" CellStyle="{DynamicResource DataGridCellStyle1}" x:Name="RecoveryKeysDataGrid" Style="{DynamicResource ConfirmationDataGridStyle}">
+                                <!-- DataGrid Columns Definitions -->
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Header="Drive" Binding="{Binding DriveLetter}" IsReadOnly="True" Width="*" />
+                                    <DataGridTextColumn Header="Key ID" Binding="{Binding KeyID}" IsReadOnly="True" Width="5*" />
+                                    <DataGridTextColumn Header="Recovery Key" Binding="{Binding RecoveryKey}" IsReadOnly="True" Width="6*" />
+                                    <DataGridTextColumn Header="Size GB" Binding="{Binding SizeGB}" IsReadOnly="True" Width="*" />
+                                </DataGrid.Columns>
+                            </DataGrid>
+                        </Border>
                     </Grid>
                 </TabItem>
             </TabControl>

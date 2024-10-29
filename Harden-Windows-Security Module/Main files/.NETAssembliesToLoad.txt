@@ -1,7 +1,6 @@
 System
 System.IO
 System.Xml
-System.Net
 System.Data
 WindowsBase
 System.Xaml

@@ -34,6 +34,12 @@ namespace HardenWindowsSecurity
                 return;
             }
 
+            if (VolumeInfoExtended.ConversionStatus is ConversionStatus.DecryptionInProgress)
+            {
+                Logger.LogMessage($"The drive {DriveLetter} is being decrypted, please wait.", LogTypeIntel.InformationInteractionRequired);
+                return;
+            }
+
 
             if (VolumeInfoExtended.VolumeType is VolumeType.OperationSystem)
             {

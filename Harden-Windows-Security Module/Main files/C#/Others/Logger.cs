@@ -157,7 +157,6 @@ Machine: {Environment.MachineName}
                                 {
                                     WriteEventLog(CurrentText, EventLogEntryType.Warning);
                                     break;
-
                                 }
                             case LogTypeIntel.Error:
                                 {
@@ -253,13 +252,11 @@ Machine: {Environment.MachineName}
             if (!EventLog.SourceExists(eventLogSource))
             {
                 EventLog.CreateEventSource(eventLogSource, eventLogName);
-                // Console.WriteLine($"Event source '{eventLogSource}' created.");
             }
 
             // Write the event log entry
             EventLog.WriteEntry(eventLogSource, message, entryType, eventId, category);
 
-            // Console.WriteLine("Event log entry written successfully.");
         }
     }
 }

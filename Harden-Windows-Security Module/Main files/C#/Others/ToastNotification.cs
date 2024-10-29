@@ -244,9 +244,9 @@ namespace HardenWindowsSecurity
                         break;
                 }
             }
-            catch (Exception ex)
+            catch
             {
-                Logger.LogMessage($"Failed to display toast notification: {ex}", LogTypeIntel.Information);
+                // Suppress the errors as they are unimportant and there is no need to pollute the logs if user has certain configurations that doesn't allow toast notifications from PowerShell to be generated
             }
 
         }

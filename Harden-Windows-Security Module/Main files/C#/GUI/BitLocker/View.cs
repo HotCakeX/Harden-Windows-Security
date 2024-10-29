@@ -445,6 +445,12 @@ Start-Process -FilePath GPUpdate.exe -ArgumentList '/force' -NoNewWindow
                                         }
                                         else
                                         {
+                                            if (string.IsNullOrWhiteSpace(RemovableDriveLetter))
+                                            {
+                                                Logger.LogMessage("No Removable Drive selected for the Enhanced security level.", LogTypeIntel.ErrorInteractionRequired);
+                                                break;
+                                            }
+
                                             BitLocker.Enable(TrimmedSystemDrive, BitLocker.OSEncryptionType.Enhanced, PIN1, RemovableDriveLetter, true);
                                         }
 

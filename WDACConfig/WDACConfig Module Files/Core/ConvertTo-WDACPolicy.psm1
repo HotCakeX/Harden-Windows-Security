@@ -497,8 +497,7 @@ Function ConvertTo-WDACPolicy {
                     [WDACConfig.Logger]::Write('Merging the Signer Level rules')
                     Remove-DuplicateFileAttrib_Semantic -XmlFilePath $WDACPolicyPathTEMP
 
-                    Merge-Signers_Semantic -XmlFilePath $WDACPolicyPathTEMP
-                    Merge-Signers_Semantic -XmlFilePath $WDACPolicyPathTEMP
+                    [WDACConfig.MergeSignersSemantic]::Merge($WDACPolicyPathTEMP)
 
                     # This function runs twice, once for signed data and once for unsigned data
                     [WDACConfig.CloseEmptyXmlNodesSemantic]::Close($WDACPolicyPathTEMP)
@@ -690,8 +689,7 @@ Function ConvertTo-WDACPolicy {
                     $CurrentStep++
                     Write-Progress -Id 31 -Activity 'Finishing up the merge operation' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
-                    Merge-Signers_Semantic -XmlFilePath $OutputPolicyPathMDEAH
-                    Merge-Signers_Semantic -XmlFilePath $OutputPolicyPathMDEAH
+                    [WDACConfig.MergeSignersSemantic]::Merge($OutputPolicyPathMDEAH)
 
                     # This function runs twice, once for signed data and once for unsigned data
                     [WDACConfig.CloseEmptyXmlNodesSemantic]::Close($OutputPolicyPathMDEAH)
@@ -862,8 +860,7 @@ Function ConvertTo-WDACPolicy {
                     [WDACConfig.Logger]::Write('Merging the Signer Level rules')
                     Remove-DuplicateFileAttrib_Semantic -XmlFilePath $OutputPolicyPathEVTX
 
-                    Merge-Signers_Semantic -XmlFilePath $OutputPolicyPathEVTX
-                    Merge-Signers_Semantic -XmlFilePath $OutputPolicyPathEVTX
+                    [WDACConfig.MergeSignersSemantic]::Merge($OutputPolicyPathEVTX)
 
                     # This function runs twice, once for signed data and once for unsigned data
                     [WDACConfig.CloseEmptyXmlNodesSemantic]::Close($OutputPolicyPathEVTX)

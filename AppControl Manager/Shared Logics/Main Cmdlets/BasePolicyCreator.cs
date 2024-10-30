@@ -8,6 +8,7 @@ using System.Net.Http;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 using System.Xml;
+using System.IO.Compression;
 
 #nullable enable
 
@@ -259,10 +260,10 @@ namespace WDACConfig
         public static void DeployDriversBlockRules(string StagingArea)
         {
             // The location where the downloaded zip file will be saved
-            string DownloadSaveLocation = System.IO.Path.Combine(StagingArea, "VulnerableDriverBlockList.zip");
+            string DownloadSaveLocation = Path.Combine(StagingArea, "VulnerableDriverBlockList.zip");
 
             // The location where the zip file will be extracted
-            string ZipExtractionDir = System.IO.Path.Combine(StagingArea, "VulnerableDriverBlockList");
+            string ZipExtractionDir = Path.Combine(StagingArea, "VulnerableDriverBlockList");
 
             // The link to download the zip file
             string DriversBlockListZipDownloadLink = "https://aka.ms/VulnerableDriverBlockList";
@@ -275,7 +276,7 @@ namespace WDACConfig
             if (systemDrive is not null)
             {
                 // Construct the final destination of the SiPolicy file
-                SiPolicyFinalDestination = System.IO.Path.Combine(systemDrive, "Windows", "System32", "CodeIntegrity", "SiPolicy.p7b");
+                SiPolicyFinalDestination = Path.Combine(systemDrive, "Windows", "System32", "CodeIntegrity", "SiPolicy.p7b");
             }
             else
             {
@@ -291,10 +292,10 @@ namespace WDACConfig
             }
 
             // Extract the contents of the zip file, overwriting any existing files
-            System.IO.Compression.ZipFile.ExtractToDirectory(DownloadSaveLocation, ZipExtractionDir, true);
+            ZipFile.ExtractToDirectory(DownloadSaveLocation, ZipExtractionDir, true);
 
             // Get the path of the SiPolicy file
-            string[] SiPolicyPaths = System.IO.Directory.GetFiles(ZipExtractionDir, "SiPolicy_Enforced.p7b", System.IO.SearchOption.AllDirectories);
+            string[] SiPolicyPaths = Directory.GetFiles(ZipExtractionDir, "SiPolicy_Enforced.p7b", SearchOption.AllDirectories);
 
             // Make sure to get only one file if there is more than one (which is unexpected)
             string SiPolicyPath = SiPolicyPaths[0];

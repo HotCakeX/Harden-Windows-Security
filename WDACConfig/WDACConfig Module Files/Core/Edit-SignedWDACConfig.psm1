@@ -495,8 +495,7 @@ Function Edit-SignedWDACConfig {
                     [WDACConfig.Logger]::Write('Merging the Signer Level rules')
                     Remove-DuplicateFileAttrib_Semantic -XmlFilePath $WDACPolicyPathTEMP
 
-                    Merge-Signers_Semantic -XmlFilePath $WDACPolicyPathTEMP
-                    Merge-Signers_Semantic -XmlFilePath $WDACPolicyPathTEMP
+                    [WDACConfig.MergeSignersSemantic]::Merge($WDACPolicyPathTEMP)
 
                     # This function runs twice, once for signed data and once for unsigned data
                     [WDACConfig.CloseEmptyXmlNodesSemantic]::Close($WDACPolicyPathTEMP)

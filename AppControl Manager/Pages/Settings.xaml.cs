@@ -24,6 +24,9 @@ namespace WDACConfig.Pages
 
             // Set the version in the settings card to the current app version
             VersionTextBlock.Text = $"Version {currentAppVersion}";
+
+            // Set the year for the copyright section
+            CopyRightSettingsExpander.Description = $"© {DateTime.Now.Year}. All rights reserved.";
         }
 
         // When the button to get the user configurations on the settings card is pressed

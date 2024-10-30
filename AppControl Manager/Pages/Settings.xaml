@@ -129,7 +129,7 @@
                 <!--  'About' section  -->
                 <TextBlock Style="{StaticResource SettingsSectionHeaderTextBlockStyle}"
                            Text="About" />
-                <controls:SettingsExpander Description="© 2024. All rights reserved."
+                <controls:SettingsExpander x:Name="CopyRightSettingsExpander"
                                            Header="AppControl Manager"
                                            HeaderIcon="{ui:BitmapIcon Source=ms-appx:///Assets/Square44x44Logo.altform-lightunplated_targetsize-256.png}">
                     <TextBlock x:Name="VersionTextBlock" win:IsTextSelectionEnabled="True"
@@ -140,7 +140,7 @@
                             <StackPanel Margin="-12,0,0,0"
                                         Orientation="Vertical">
                                 <HyperlinkButton Content="GitHub repository" NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security" />
-                                <HyperlinkButton Content="WDACConfig page" NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDACConfig" />
+                                <HyperlinkButton Content="AppControl Manager Documentation" NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/wiki/AppControl-Manager" />
                                 <HyperlinkButton Content="SpyNetGirl website" NavigateUri="https://spynetgirl.github.io/" />
                                 <HyperlinkButton Content="YouTube Channel" NavigateUri="https://www.youtube.com/@hotcakex" />
                             </StackPanel>

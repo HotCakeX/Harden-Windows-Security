@@ -1,6 +1,7 @@
 using Microsoft.UI.Xaml.Controls;
 using System;
 using System.Globalization;
+using Windows.ApplicationModel;
 
 #nullable enable
 
@@ -14,6 +15,15 @@ namespace WDACConfig.Pages
 
             // Make sure navigating to/from this page maintains its state
             this.NavigationCacheMode = Microsoft.UI.Xaml.Navigation.NavigationCacheMode.Enabled;
+
+            // Get the current app's version
+            PackageVersion packageVersion = Package.Current.Id.Version;
+
+            // Convert it to a normal Version object
+            Version currentAppVersion = new(packageVersion.Major, packageVersion.Minor, packageVersion.Build, packageVersion.Revision);
+
+            // Set the version in the settings card to the current app version
+            VersionTextBlock.Text = $"Version {currentAppVersion}";
         }
 
         // When the button to get the user configurations on the settings card is pressed

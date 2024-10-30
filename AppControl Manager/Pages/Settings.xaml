@@ -132,9 +132,8 @@
                 <controls:SettingsExpander Description="© 2024. All rights reserved."
                                            Header="AppControl Manager"
                                            HeaderIcon="{ui:BitmapIcon Source=ms-appx:///Assets/Square44x44Logo.altform-lightunplated_targetsize-256.png}">
-                    <TextBlock win:IsTextSelectionEnabled="True"
-                               Foreground="{ThemeResource TextFillColorSecondaryBrush}"
-                               Text="Version 1.1.0.0" />
+                    <TextBlock x:Name="VersionTextBlock" win:IsTextSelectionEnabled="True"
+                               Foreground="{ThemeResource TextFillColorSecondaryBrush}" />
                     <controls:SettingsExpander.Items>
                         <controls:SettingsCard HorizontalContentAlignment="Left"
                                                ContentAlignment="Left">

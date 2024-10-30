@@ -5,10 +5,10 @@
 namespace WDACConfig
 {
 
-    public sealed class SecurePolicySetting(object? Value, WDACConfig.WLDP_SECURE_SETTING_VALUE_TYPE ValueType, uint ValueSize, bool Status, int StatusCode)
+    public sealed class SecurePolicySetting(object? Value, WLDP_SECURE_SETTING_VALUE_TYPE ValueType, uint ValueSize, bool Status, int StatusCode)
     {
         public object? Value { get; set; } = Value;
-        public WDACConfig.WLDP_SECURE_SETTING_VALUE_TYPE ValueType { get; set; } = ValueType;
+        public WLDP_SECURE_SETTING_VALUE_TYPE ValueType { get; set; } = ValueType;
         public uint ValueSize { get; set; } = ValueSize;
         public bool Status { get; set; } = Status;
         public int StatusCode { get; set; } = StatusCode;
@@ -21,9 +21,9 @@ namespace WDACConfig
         {
 
             // Create UNICODE_STRING structures
-            var ProviderUS = WDACConfig.WldpQuerySecurityPolicyWrapper.InitUnicodeString(provider);
-            var KeyUS = WDACConfig.WldpQuerySecurityPolicyWrapper.InitUnicodeString(key);
-            var ValueNameUS = WDACConfig.WldpQuerySecurityPolicyWrapper.InitUnicodeString(valueName);
+            var ProviderUS = WldpQuerySecurityPolicyWrapper.InitUnicodeString(provider);
+            var KeyUS = WldpQuerySecurityPolicyWrapper.InitUnicodeString(key);
+            var ValueNameUS = WldpQuerySecurityPolicyWrapper.InitUnicodeString(valueName);
 
             // Prepare output variables
             uint ValueSize = 1024;  // Changed to uint to match the P/Invoke declaration
@@ -33,7 +33,7 @@ namespace WDACConfig
                 ref ProviderUS,
                 ref KeyUS,
                 ref ValueNameUS,
-                out WDACConfig.WLDP_SECURE_SETTING_VALUE_TYPE ValueType,
+                out WLDP_SECURE_SETTING_VALUE_TYPE ValueType,
                 Value,
                 ref ValueSize
             );
@@ -44,18 +44,18 @@ namespace WDACConfig
             {
                 switch (ValueType)
                 {
-                    case WDACConfig.WLDP_SECURE_SETTING_VALUE_TYPE.WldpBoolean:
+                    case WLDP_SECURE_SETTING_VALUE_TYPE.WldpBoolean:
                         decodedValue = Marshal.ReadByte(Value) != 0;
                         break;
-                    case WDACConfig.WLDP_SECURE_SETTING_VALUE_TYPE.WldpString:
+                    case WLDP_SECURE_SETTING_VALUE_TYPE.WldpString:
                         decodedValue = Marshal.PtrToStringUni(Value);
                         break;
-                    case WDACConfig.WLDP_SECURE_SETTING_VALUE_TYPE.WldpInteger:
+                    case WLDP_SECURE_SETTING_VALUE_TYPE.WldpInteger:
                         decodedValue = Marshal.ReadInt32(Value);
                         break;
-                    case WDACConfig.WLDP_SECURE_SETTING_VALUE_TYPE.WldpNone:
+                    case WLDP_SECURE_SETTING_VALUE_TYPE.WldpNone:
                         break;
-                    case WDACConfig.WLDP_SECURE_SETTING_VALUE_TYPE.WldpFlag:
+                    case WLDP_SECURE_SETTING_VALUE_TYPE.WldpFlag:
                         break;
                     default:
                         break;

@@ -42,7 +42,7 @@ namespace WDACConfig
         /// Invoked when the application is launched.
         /// </summary>
         /// <param name="args">Details about the launch request and process.</param>
-        protected override void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
+        protected override void OnLaunched(LaunchActivatedEventArgs args)
         {
             m_window = new MainWindow();
             m_window.Closed += Window_Closed;  // Assign event handler for the window closed event
@@ -76,7 +76,7 @@ namespace WDACConfig
         /// <summary>
         /// Event handler for when the window is closed.
         /// </summary>
-        private void Window_Closed(object sender, Microsoft.UI.Xaml.WindowEventArgs e)
+        private void Window_Closed(object sender, WindowEventArgs e)
         {
             // Clean up the staging area
             if (Directory.Exists(GlobalVars.StagingArea))

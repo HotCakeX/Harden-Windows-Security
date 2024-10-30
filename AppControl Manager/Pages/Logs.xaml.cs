@@ -42,7 +42,7 @@ namespace WDACConfig.Pages
         }
 
         // Handler for when the log text color picker changes
-        private void TextColorPicker_ColorChanged(Microsoft.UI.Xaml.Controls.ColorPicker sender, Microsoft.UI.Xaml.Controls.ColorChangedEventArgs args)
+        private void TextColorPicker_ColorChanged(ColorPicker sender, ColorChangedEventArgs args)
         {
             // Change the log text color based on user selection
             logTextBrush = new SolidColorBrush(args.NewColor);
@@ -52,7 +52,7 @@ namespace WDACConfig.Pages
         }
 
         // Handler for when the highlight color picker changes
-        private void HighlightColorPicker_ColorChanged(Microsoft.UI.Xaml.Controls.ColorPicker sender, Microsoft.UI.Xaml.Controls.ColorChangedEventArgs args)
+        private void HighlightColorPicker_ColorChanged(ColorPicker sender, ColorChangedEventArgs args)
         {
             // Change the highlight text color based on user selection
             highlightTextBrush = new SolidColorBrush(args.NewColor);

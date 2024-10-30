@@ -27,8 +27,8 @@ namespace WDACConfig
                     // Make sure it uses RSA algorithm (Because ECDSA is not supported for signing WDAC policies)
                     if (string.Equals(cert.PublicKey.Oid.FriendlyName, "RSA", StringComparison.OrdinalIgnoreCase))
                     {
-                        // Get its Subject Common Name (CN) using the GetNameString method from WDACConfig.CryptoAPI
-                        string cn = WDACConfig.CryptoAPI.GetNameString(cert.Handle, WDACConfig.CryptoAPI.CERT_NAME_SIMPLE_DISPLAY_TYPE, null, false);
+                        // Get its Subject Common Name (CN) using the GetNameString method from CryptoAPI
+                        string cn = CryptoAPI.GetNameString(cert.Handle, CryptoAPI.CERT_NAME_SIMPLE_DISPLAY_TYPE, null, false);
 
                         // Add the CN to the output set and warn if there is already CN with the same name in the HashSet
                         if (!output.Add(cn))

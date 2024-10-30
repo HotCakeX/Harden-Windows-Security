@@ -425,7 +425,7 @@ namespace WDACConfig
             Logger.Write("Resetting the policy ID and assigning policy name");
 
             // Get the policy ID of the policy being created
-            string policyID = WDACConfig.SetCiPolicyInfo.Set(tempPolicyPath, true, $"{policyName} - {DateTime.Now.ToString("MM-dd-yyyy", CultureInfo.InvariantCulture)}", null, null);
+            string policyID = SetCiPolicyInfo.Set(tempPolicyPath, true, $"{policyName} - {DateTime.Now.ToString("MM-dd-yyyy", CultureInfo.InvariantCulture)}", null, null);
 
             if (deployAppControlSupplementalPolicy == true)
             {

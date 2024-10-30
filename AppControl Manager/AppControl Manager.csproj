@@ -1,9 +1,19 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-  <!-- The following are the details for AppControlManager, a Self-Contained Trimmed MSIX Packaged App -->
+  <!-- The following are the details for AppControlManager, a Self-Contained MSIX Packaged App -->
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFramework>net9.0-windows10.0.26100.0</TargetFramework>
     <TargetPlatformMinVersion>10.0.26100.0</TargetPlatformMinVersion>
+
+    <!-- https://learn.microsoft.com/en-us/dotnet/fundamentals/apicompat/package-validation/overview -->
+    <EnablePackageValidation>true</EnablePackageValidation>
+    <EnableStrictModeForBaselineValidation>true</EnableStrictModeForBaselineValidation>
+    <EnableStrictModeForCompatibleFrameworksInPackage>true</EnableStrictModeForCompatibleFrameworksInPackage>
+    <EnableStrictModeForCompatibleTfms>true</EnableStrictModeForCompatibleTfms>
+
+    <!-- https://learn.microsoft.com/en-us/dotnet/core/project-sdk/msbuild-props#invariantglobalization -->
+    <InvariantGlobalization>true</InvariantGlobalization>
+
     <RootNamespace>WDACConfig</RootNamespace>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <Platforms>x64</Platforms>
@@ -31,7 +41,10 @@
     <!-- Disabling trimming temporarily -->
     <!-- There should be absolutely no trim warnings before this can be enabled
     Otherwise there is no guarantee that the app will work as expected at all times -->
+    <!-- https://learn.microsoft.com/en-us/dotnet/core/deploying/trimming/trimming-options -->
     <PublishTrimmed>false</PublishTrimmed>
+    <!-- <TrimMode>partial</TrimMode> -->
+    <!-- <SuppressTrimAnalysisWarnings>false</SuppressTrimAnalysisWarnings> -->
 
     <SupportedOSPlatformVersion>10.0.26100.0</SupportedOSPlatformVersion>
     <ImplicitUsings>disable</ImplicitUsings>

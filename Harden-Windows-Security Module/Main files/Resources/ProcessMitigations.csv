@@ -142,3 +142,15 @@ rundll32.exe,BlockLowLabelImageLoads,Enable,True,Prevent loading of files that a
 SMSS.exe,BlockRemoteImageLoads,Enable,True,Protecting PPL process to prevent loading of DLLs from network locations such as SMB - WebDAV - etc. - It's called Session Manager SubSystem
 Wininit.exe,BlockRemoteImageLoads,Enable,True,Protecting PPL process to prevent loading of DLLs from network locations such as SMB - WebDAV - etc. - It stands for Windows Initialization and is a process that is responsible for starting and terminating system services and processes during startup and shutdown
 NisSrv.exe,MicrosoftSignedOnly,Enable,True,Protecting PPL process to prevent loading Non-Microsoft signed code into the process - This is a component of Microsoft Defender called Network Inspection Service
+AppControlManager.exe,StrictHandle,Enable,True,AppControl Manager hardening
+AppControlManager.exe,DisableExtensionPoints,Enable,True,AppControl Manager hardening
+AppControlManager.exe,DisableNonSystemFonts,Enable,True,AppControl Manager hardening
+AppControlManager.exe,BlockRemoteImageLoads,Enable,True,AppControl Manager hardening
+AppControlManager.exe,BlockLowLabelImageLoads,Enable,True,AppControl Manager hardening
+AppControlManager.exe,EnableExportAddressFilter,Enable,True,AppControl Manager hardening
+AppControlManager.exe,EnableExportAddressFilterPlus,Enable,True,AppControl Manager hardening
+AppControlManager.exe,EnableImportAddressFilter,Enable,True,AppControl Manager hardening
+AppControlManager.exe,EnableRopStackPivot,Enable,True,AppControl Manager hardening
+AppControlManager.exe,EnableRopCallerCheck,Enable,True,AppControl Manager hardening
+AppControlManager.exe,UserShadowStack,Enable,True,AppControl Manager hardening
+AppControlManager.exe,UserShadowStackStrictMode,Enable,True,AppControl Manager hardening

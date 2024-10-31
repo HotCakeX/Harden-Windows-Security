@@ -1025,7 +1025,7 @@ NistP384
 
     - [PowerShell ISE](https://learn.microsoft.com/en-us/powershell/scripting/windows-powershell/ise/introducing-the-windows-powershell-ise): Old PowerShell environment that doesn't support versions above 5.1. Highly recommended to use [Visual Studio Code](https://apps.microsoft.com/detail/visual-studio-code/XP9KHM4BK9FZ7Q) for PowerShell usage and [learning](https://github.com/HotCakeX/Harden-Windows-Security/wiki#-powershell). You can even replicate the [ISE experience in Visual Studio Code](https://learn.microsoft.com/en-us/powershell/scripting/dev-cross-plat/vscode/how-to-replicate-the-ise-experience-in-vscode). You can access [Visual Studio Code online in your browser](https://vscode.dev/) without the need to install anything.
 
-    - Steps Recorder: it's [deprecated](https://prod.support.services.microsoft.com/en-us/windows/steps-recorder-deprecation-a64888d7-8482-4965-8ce3-25fb004e975f).
+    - Steps Recorder: it's [deprecated](https://support.microsoft.com/en-us/windows/steps-recorder-deprecation-a64888d7-8482-4965-8ce3-25fb004e975f).
 
 <br>
 

@@ -19,7 +19,7 @@ namespace WDACConfig
         public const string MSFTRecommendedDriverBlockRulesURL = "https://raw.githubusercontent.com/MicrosoftDocs/windows-itpro-docs/refs/heads/public/windows/security/application-security/application-control/app-control-for-business/design/microsoft-recommended-driver-block-rules.md";
 
         // Minimum required OS build number
-        public const decimal Requiredbuild = 26100.2033M;
+        public const decimal Requiredbuild = 22621.4169M;
 
         // Current OS build version
         public static decimal OSBuildNumber = Environment.OSVersion.Version.Build;

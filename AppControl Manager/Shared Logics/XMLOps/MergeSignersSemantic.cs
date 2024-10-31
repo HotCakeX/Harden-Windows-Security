@@ -326,7 +326,7 @@ namespace WDACConfig
                 // Set the ID attribute of the Signer node to the unique ID
                 ((XmlElement)item.Signer).SetAttribute("ID", uniqueID);
 
-                // Set the SignerId attribute of the AllowedSigner node to the unique ID
+                // Set the SignerId attribute of the AllowedSigner node to the unique ID               
                 ((XmlElement)item.AllowedSigner).SetAttribute("SignerId", uniqueID);
 
                 // Set the SignerId attribute of the CiSigner node to the unique ID
@@ -367,7 +367,7 @@ namespace WDACConfig
                 // Set the ID attribute of the Signer node to the unique ID
                 ((XmlElement)item.Signer).SetAttribute("ID", uniqueID);
 
-                // Set the SignerId attribute of the AllowedSigner node to the unique ID
+                // Set the SignerId attribute of the AllowedSigner node to the unique ID               
                 ((XmlElement)item.AllowedSigner).SetAttribute("SignerId", uniqueID);
 
             }
@@ -384,7 +384,7 @@ namespace WDACConfig
                 // Set the ID attribute of the Signer node to the unique ID
                 ((XmlElement)item.Signer).SetAttribute("ID", uniqueID);
 
-                // Set the SignerId attribute of the AllowedSigner node to the unique ID
+                // Set the SignerId attribute of the AllowedSigner node to the unique ID                
                 ((XmlElement)item.AllowedSigner).SetAttribute("SignerId", uniqueID);
 
             }
@@ -437,7 +437,7 @@ namespace WDACConfig
                 // Add the <Signer> element to the <Signers> node
                 _ = codeIntegrityPolicy.SignersNode.AppendChild(item.Signer);
 
-                // Add the <AllowedSigner> nodes to the <AllowedSigners> node
+                // Add the <AllowedSigner> nodes to the <AllowedSigners> node                
                 _ = allowedSigners12?.AppendChild(item.AllowedSigner);
 
                 // Add the <CiSigner> element to the <CiSigners> node

@@ -2,7 +2,7 @@
     # https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_module_manifests
 
     RootModule           = 'WDACConfig.psm1'
-    ModuleVersion        = '0.4.7'
+    ModuleVersion        = '0.4.8'
     CompatiblePSEditions = @('Core')
     GUID                 = '79920947-efb5-48c1-a567-5b02ebe74793'
     Author               = 'HotCakeX'

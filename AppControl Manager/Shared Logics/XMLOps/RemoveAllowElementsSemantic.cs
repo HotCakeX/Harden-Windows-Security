@@ -5,7 +5,7 @@ using System.Xml;
 
 namespace WDACConfig
 {
-    public static class RemoveAllowElementsSemantic
+    internal static class RemoveAllowElementsSemantic
     {
 
         /// <summary>
@@ -20,7 +20,7 @@ namespace WDACConfig
         ///
         /// </summary>
         /// <param name="xmlFilePath"></param>
-        public static void Remove(string xmlFilePath)
+        internal static void Remove(string xmlFilePath)
         {
 
             // Instantiate the policy

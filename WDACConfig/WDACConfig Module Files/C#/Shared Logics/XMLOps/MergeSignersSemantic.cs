@@ -67,7 +67,7 @@ namespace WDACConfig
 
 
 
-    public static class MergeSignersSemantic
+    internal static class MergeSignersSemantic
     {
         /// <summary>
         /// Merges the FilePublisher and Publisher Signers in an XML file based on their TBS, Name, and CertPublisher values
@@ -84,7 +84,7 @@ namespace WDACConfig
         ///
         /// </summary>
         /// <param name="xmlFilePath"></param>
-        public static void Merge(string xmlFilePath)
+        internal static void Merge(string xmlFilePath)
         {
 
             // Instantiate the policy

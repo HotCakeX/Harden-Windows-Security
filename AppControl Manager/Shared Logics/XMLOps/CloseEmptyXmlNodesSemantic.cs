@@ -5,7 +5,7 @@ using System.Xml;
 
 namespace WDACConfig
 {
-    public static class CloseEmptyXmlNodesSemantic
+    internal static class CloseEmptyXmlNodesSemantic
     {
 
         /// <summary>
@@ -41,7 +41,7 @@ namespace WDACConfig
 
           */
 
-        public static void Close(string xmlFilePath)
+        internal static void Close(string xmlFilePath)
         {
             // Define the base node names that should not be removed even if empty
             string[] baseNodeNames = [ "SiPolicy", "Rules", "EKUs", "FileRules", "Signers", "SigningScenarios",

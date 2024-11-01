@@ -376,7 +376,7 @@ Function ConvertTo-WDACPolicy {
                     $PolicyFilesToMerge = New-Object -TypeName System.Collections.Generic.List[System.IO.FileInfo]
 
                     # The total number of the main steps for the progress bar to render
-                    [System.UInt16]$TotalSteps = 6
+                    [System.UInt16]$TotalSteps = 4
                     [System.UInt16]$CurrentStep = 0
 
                     $CurrentStep++
@@ -478,29 +478,7 @@ Function ConvertTo-WDACPolicy {
                     [WDACConfig.Logger]::Write('Building the Signer and Hash objects from the selected logs')
                     [WDACConfig.FileBasedInfoPackage]$DataToUseForBuilding = [WDACConfig.SignerAndHashBuilder]::BuildSignerAndHashObjects((ConvertTo-HashtableArray $SelectedLogs), 'EVTX', $Level, $false)
 
-                    [WDACConfig.NewFilePublisherLevelRules]::Create($WDACPolicyPathTEMP, $DataToUseForBuilding.FilePublisherSigners)
-                    [WDACConfig.NewPublisherLevelRules]::Create($WDACPolicyPathTEMP, $DataToUseForBuilding.PublisherSigners)
-                    [WDACConfig.NewHashLevelRules]::Create($WDACPolicyPathTEMP, $DataToUseForBuilding.CompleteHashes)
-
-                    # MERGERS
-
-                    $CurrentStep++
-                    Write-Progress -Id 30 -Activity 'Performing merge operations' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
-
-                    [WDACConfig.Logger]::Write('Merging the Hash Level rules')
-                    [WDACConfig.RemoveAllowElementsSemantic]::Remove($WDACPolicyPathTEMP)
-                    [WDACConfig.CloseEmptyXmlNodesSemantic]::Close($WDACPolicyPathTEMP)
-
-                    $CurrentStep++
-                    Write-Progress -Id 30 -Activity 'Making sure there are no duplicates' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
-
-                    [WDACConfig.Logger]::Write('Merging the Signer Level rules')
-                    Remove-DuplicateFileAttrib_Semantic -XmlFilePath $WDACPolicyPathTEMP
-
-                    [WDACConfig.MergeSignersSemantic]::Merge($WDACPolicyPathTEMP)
-
-                    # This function runs twice, once for signed data and once for unsigned data
-                    [WDACConfig.CloseEmptyXmlNodesSemantic]::Close($WDACPolicyPathTEMP)
+                    [WDACConfig.XMLOps]::Initiate($DataToUseForBuilding, $WDACPolicyPathTEMP)                                        
 
                     $PolicyFilesToMerge.Add($WDACPolicyPathTEMP)
 
@@ -581,7 +559,7 @@ Function ConvertTo-WDACPolicy {
                     [System.String]$SuppPolicyName = $PSBoundParameters['SuppPolicyName'] ?? "Supplemental Policy from MDE Advanced Hunting - $CurrentDate"
 
                     # The total number of the main steps for the progress bar to render
-                    [System.UInt16]$TotalSteps = 9
+                    [System.UInt16]$TotalSteps = 5
                     [System.UInt16]$CurrentStep = 0
 
                     $CurrentStep++
@@ -654,7 +632,7 @@ Function ConvertTo-WDACPolicy {
                     Copy-Item -LiteralPath 'C:\Windows\schemas\CodeIntegrity\ExamplePolicies\AllowAll.xml' -Destination $OutputPolicyPathMDEAH -Force
 
                     [WDACConfig.Logger]::Write('Emptying the policy file in preparation for the new data insertion')
-                    [WDACConfig.ClearCiPolicySemantic]::Clear($OutputPolicyPathMDEAH)
+                    [WDACConfig.ClearCiPolicySemantic]::Clear($OutputPolicyPathMDEAH)                   
 
                     $CurrentStep++
                     Write-Progress -Id 31 -Activity 'Building the Signer and Hash objects from the selected MDE AH logs' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
@@ -662,37 +640,7 @@ Function ConvertTo-WDACPolicy {
                     [WDACConfig.Logger]::Write('Building the Signer and Hash objects from the selected MDE AH logs')
                     [WDACConfig.FileBasedInfoPackage]$DataToUseForBuilding = [WDACConfig.SignerAndHashBuilder]::BuildSignerAndHashObjects((ConvertTo-HashtableArray $SelectMDEAHLogs), 'MDEAH', $Level, $false)
 
-                    $CurrentStep++
-                    Write-Progress -Id 31 -Activity 'Creating rules for different levels' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
-
-                    [WDACConfig.NewFilePublisherLevelRules]::Create($OutputPolicyPathMDEAH, $DataToUseForBuilding.FilePublisherSigners)
-                    [WDACConfig.NewPublisherLevelRules]::Create($OutputPolicyPathMDEAH, $DataToUseForBuilding.PublisherSigners)
-                    [WDACConfig.NewHashLevelRules]::Create($OutputPolicyPathMDEAH, $DataToUseForBuilding.CompleteHashes)
-
-                    # MERGERS
-
-                    $CurrentStep++
-                    Write-Progress -Id 31 -Activity 'Merging the Hash Level rules' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
-
-                    [WDACConfig.Logger]::Write('Merging the Hash Level rules')
-                    [WDACConfig.RemoveAllowElementsSemantic]::Remove($OutputPolicyPathMDEAH)
-                    [WDACConfig.CloseEmptyXmlNodesSemantic]::Close($OutputPolicyPathMDEAH)
-
-                    # Remove-UnreferencedFileRuleRefs -xmlFilePath $OutputPolicyPathMDEAH
-
-                    $CurrentStep++
-                    Write-Progress -Id 31 -Activity 'Merging the Signer Level rules' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
-
-                    [WDACConfig.Logger]::Write('Merging the Signer Level rules')
-                    Remove-DuplicateFileAttrib_Semantic -XmlFilePath $OutputPolicyPathMDEAH
-
-                    $CurrentStep++
-                    Write-Progress -Id 31 -Activity 'Finishing up the merge operation' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
-
-                    [WDACConfig.MergeSignersSemantic]::Merge($OutputPolicyPathMDEAH)
-
-                    # This function runs twice, once for signed data and once for unsigned data
-                    [WDACConfig.CloseEmptyXmlNodesSemantic]::Close($OutputPolicyPathMDEAH)
+                    [WDACConfig.XMLOps]::Initiate($DataToUseForBuilding, $OutputPolicyPathMDEAH)
 
                     #Region Base To Supplemental Policy Association and Deployment
                     Switch ($True) {
@@ -775,7 +723,7 @@ Function ConvertTo-WDACPolicy {
                     [System.String]$SuppPolicyName = $PSBoundParameters['SuppPolicyName'] ?? "Supplemental Policy from Evtx files - $CurrentDate"
 
                     # The total number of the main steps for the progress bar to render
-                    [System.UInt16]$TotalSteps = 6
+                    [System.UInt16]$TotalSteps = 4
                     [System.UInt16]$CurrentStep = 0
 
                     $CurrentStep++
@@ -841,29 +789,7 @@ Function ConvertTo-WDACPolicy {
                     [WDACConfig.Logger]::Write('Building the Signer and Hash objects from the selected Evtx logs')
                     [WDACConfig.FileBasedInfoPackage]$DataToUseForBuilding = [WDACConfig.SignerAndHashBuilder]::BuildSignerAndHashObjects((ConvertTo-HashtableArray $SelectedLogs), 'EVTX', $Level, $false)
 
-                    [WDACConfig.NewFilePublisherLevelRules]::Create($OutputPolicyPathEVTX, $DataToUseForBuilding.FilePublisherSigners)
-                    [WDACConfig.NewPublisherLevelRules]::Create($OutputPolicyPathEVTX, $DataToUseForBuilding.PublisherSigners)
-                    [WDACConfig.NewHashLevelRules]::Create($OutputPolicyPathEVTX, $DataToUseForBuilding.CompleteHashes)
-
-                    # MERGERS
-
-                    $CurrentStep++
-                    Write-Progress -Id 32 -Activity 'Performing merge operations' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
-
-                    [WDACConfig.Logger]::Write('Merging the Hash Level rules')
-                    [WDACConfig.RemoveAllowElementsSemantic]::Remove($OutputPolicyPathEVTX)
-                    [WDACConfig.CloseEmptyXmlNodesSemantic]::Close($OutputPolicyPathEVTX)
-
-                    $CurrentStep++
-                    Write-Progress -Id 32 -Activity 'Making sure there are no duplicates' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
-
-                    [WDACConfig.Logger]::Write('Merging the Signer Level rules')
-                    Remove-DuplicateFileAttrib_Semantic -XmlFilePath $OutputPolicyPathEVTX
-
-                    [WDACConfig.MergeSignersSemantic]::Merge($OutputPolicyPathEVTX)
-
-                    # This function runs twice, once for signed data and once for unsigned data
-                    [WDACConfig.CloseEmptyXmlNodesSemantic]::Close($OutputPolicyPathEVTX)
+                    [WDACConfig.XMLOps]::Initiate($DataToUseForBuilding, $OutputPolicyPathEVTX)   
 
                     #Region Base To Supplemental Policy Association and Deployment
 

@@ -6,7 +6,7 @@ using System.Xml;
 
 namespace WDACConfig
 {
-    public static class NewPublisherLevelRules
+    internal static class NewPublisherLevelRules
     {
 
         /// <summary>
@@ -16,7 +16,7 @@ namespace WDACConfig
         /// <param name="xmlFilePath">The path to the XML file to be modified</param>
         /// <param name="publisherSigners">The PublisherSigners to be used for creating the rules, they are the output of the BuildSignerAndHashObjects Method</param>
         /// <exception cref="InvalidOperationException"></exception>
-        public static void Create(string xmlFilePath, List<PublisherSignerCreator> publisherSigners)
+        internal static void Create(string xmlFilePath, List<PublisherSignerCreator> publisherSigners)
         {
 
             if (publisherSigners is null || publisherSigners.Count == 0)

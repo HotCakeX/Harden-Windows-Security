@@ -483,22 +483,7 @@ Function Edit-SignedWDACConfig {
                     [WDACConfig.Logger]::Write('Building the Signer and Hash objects from the selected logs')
                     [WDACConfig.FileBasedInfoPackage]$DataToUseForBuilding = [WDACConfig.SignerAndHashBuilder]::BuildSignerAndHashObjects((ConvertTo-HashtableArray $SelectedLogs), 'EVTX', ($Level -eq 'FilePublisher' ? 'FilePublisher' :  $Level -eq 'Publisher' ? 'Publisher' : $Level -eq 'Hash' ? 'Hash' : 'Auto'), $BoostedSecurity ? $true : $false)
 
-                    [WDACConfig.NewFilePublisherLevelRules]::Create($WDACPolicyPathTEMP, $DataToUseForBuilding.FilePublisherSigners)
-                    [WDACConfig.NewPublisherLevelRules]::Create($WDACPolicyPathTEMP, $DataToUseForBuilding.PublisherSigners)
-                    [WDACConfig.NewHashLevelRules]::Create($WDACPolicyPathTEMP, $DataToUseForBuilding.CompleteHashes)
-
-                    # MERGERS
-                    [WDACConfig.Logger]::Write('Merging the Hash Level rules')
-                    [WDACConfig.RemoveAllowElementsSemantic]::Remove($WDACPolicyPathTEMP)
-                    [WDACConfig.CloseEmptyXmlNodesSemantic]::Close($WDACPolicyPathTEMP)
-
-                    [WDACConfig.Logger]::Write('Merging the Signer Level rules')
-                    Remove-DuplicateFileAttrib_Semantic -XmlFilePath $WDACPolicyPathTEMP
-
-                    [WDACConfig.MergeSignersSemantic]::Merge($WDACPolicyPathTEMP)
-
-                    # This function runs twice, once for signed data and once for unsigned data
-                    [WDACConfig.CloseEmptyXmlNodesSemantic]::Close($WDACPolicyPathTEMP)
+                    [WDACConfig.XMLOps]::Initiate($DataToUseForBuilding, $WDACPolicyPathTEMP)
 
                     # Add the policy XML file to the array that holds policy XML files
                     [System.Void]$PolicyXMLFilesArray.TryAdd('Temp WDAC Policy', $WDACPolicyPathTEMP)

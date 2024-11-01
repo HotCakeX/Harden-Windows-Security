@@ -5,11 +5,13 @@ using System;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
+using Windows.ApplicationModel;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
 
 // Useful info regarding App Lifecycle events: https://learn.microsoft.com/en-us/windows/apps/windows-app-sdk/applifecycle/applifecycle
+
 
 namespace WDACConfig
 {
@@ -21,6 +23,13 @@ namespace WDACConfig
         // Semaphore to ensure only one error dialog is shown at a time
         // Exceptions will stack up and wait in line to be shown to the user
         private static readonly SemaphoreSlim _dialogSemaphore = new(1, 1);
+
+        // Get the current app's version
+        private static readonly PackageVersion packageVersion = Package.Current.Id.Version;
+
+        // Convert it to a normal Version object
+        internal static readonly Version currentAppVersion = new(packageVersion.Major, packageVersion.Minor, packageVersion.Build, packageVersion.Revision);
+
 
         /// <summary>
         /// Initializes the singleton application object. This is the first line of authored code
@@ -47,6 +56,9 @@ namespace WDACConfig
             m_window = new MainWindow();
             m_window.Closed += Window_Closed;  // Assign event handler for the window closed event
             m_window.Activate();
+
+            // Check for updates
+            _ = UpdateCheck();
         }
 
         private Window? m_window;
@@ -118,6 +130,34 @@ namespace WDACConfig
                     _ = _dialogSemaphore.Release();
                 }
             }
+        }
+
+
+        /// <summary>
+        /// If AutoUpdateCheck is enabled in the user configurations, checks for updates on startup and displays a dot on the Update page in the navigation
+        /// If a new version is available.
+        /// </summary>
+        /// <returns></returns>
+        private static async Task UpdateCheck()
+        {
+
+            await Task.Run(() =>
+            {
+
+                // If the AutoUpdate is true indicating check for update must happen on app startup
+                if (UserConfiguration.Get().AutoUpdateCheck == true)
+                {
+                    // Check for update 
+                    UpdateCheckResponse updateCheckResult = AppUpdate.Check();
+
+                    if (updateCheckResult.IsNewVersionAvailable)
+                    {
+                        // Set the text for the button in the update page
+                        GlobalVars.updateButtonTextOnTheUpdatePage = $"Install version {updateCheckResult.OnlineVersion}";
+                    }
+                }
+            });
+
         }
     }
 }

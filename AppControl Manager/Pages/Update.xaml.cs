@@ -1,9 +1,9 @@
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Navigation;
 using System;
 using System.IO;
 using System.Net.Http;
 using System.Threading.Tasks;
-using Windows.ApplicationModel;
 
 #pragma warning disable IDE0063 // Do not simplify using statements, keep them scoped for proper disposal otherwise files will be in use until the method is exited
 
@@ -12,18 +12,14 @@ namespace WDACConfig.Pages
 
     public sealed partial class Update : Page
     {
+
         public Update()
         {
             this.InitializeComponent();
 
-            this.NavigationCacheMode = Microsoft.UI.Xaml.Navigation.NavigationCacheMode.Enabled;
+            // Cache the page in the memory so that when the user navigates back to this page, it does not go through the entire initialization process again, which improves performance.
+            this.NavigationCacheMode = NavigationCacheMode.Enabled;
         }
-
-        // The link to the file that contains the download link for the latest version of the AppControl Manager
-        private const string downloadLinkURL = "https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/refs/heads/main/AppControl%20Manager/DownloadURL.txt";
-
-        // The link to the file that contains the version number of the latest available version of the AppControl Manager
-        private const string versionLinkURL = "https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/refs/heads/main/AppControl%20Manager/version.txt";
 
 
         private async void CheckForUpdateButton_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
@@ -38,26 +34,13 @@ namespace WDACConfig.Pages
                 UpdateStatusInfoBar.Message = "Checking for update";
                 UpdateStatusInfoBar.Severity = InfoBarSeverity.Informational;
 
-                // Get the current app's version
-                PackageVersion packageVersion = Package.Current.Id.Version;
+                // Check for update asynchronously
+                UpdateCheckResponse updateCheckResult = await Task.Run(() => AppUpdate.Check());
 
-                // Convert it to a normal Version object
-                Version currentAppVersion = new(packageVersion.Major, packageVersion.Minor, packageVersion.Build, packageVersion.Revision);
-
-                string versionsResponse;
-
-                using (HttpClient client = new())
-                {
-                    versionsResponse = await client.GetStringAsync(versionLinkURL);
-                }
-
-                // To store the online version
-                Version onlineAvailableVersion = new(versionsResponse);
-
-                if (onlineAvailableVersion > currentAppVersion)
+                if (updateCheckResult.IsNewVersionAvailable)
                 {
 
-                    string msg1 = $"The current version is {currentAppVersion} while the online version is {onlineAvailableVersion}, updating the application...";
+                    string msg1 = $"The current version is {App.currentAppVersion} while the online version is {updateCheckResult.OnlineVersion}, updating the application...";
                     Logger.Write(msg1);
                     UpdateStatusInfoBar.Message = msg1;
 
@@ -66,7 +49,7 @@ namespace WDACConfig.Pages
                     using (HttpClient client = new())
                     {
                         // Store the download link to the latest available version
-                        onlineDownloadURL = await client.GetStringAsync(downloadLinkURL);
+                        onlineDownloadURL = await client.GetStringAsync(GlobalVars.AppUpdateDownloadLinkURL);
                     }
 
                     string stagingArea = StagingArea.NewStagingArea("AppUpdate").ToString();
@@ -374,6 +357,32 @@ finally {
 
                 DownloadProgressRingForMSIXFile.Visibility = Microsoft.UI.Xaml.Visibility.Collapsed;
             }
+        }
+
+
+        // Event handler for the Auto Update Check Toggle Button to modify the User Configurations file
+        private void AutoUpdateCheckToggle_Toggled(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
+        {
+            _ = UserConfiguration.Set(AutoUpdateCheck: AutoUpdateCheckToggle.IsOn);
+        }
+
+
+        /// <summary>
+        /// Override OnNavigatedTo to update the toggle button when the page is navigated to.
+        /// The method is called whenever the page becomes the active page in the navigation stack but the Update() constructor is not called again.
+        /// Changes the in-memory (cached) instance of the page
+        /// </summary>
+        /// <param name="e"></param>
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            // Call the base class implementation first
+            base.OnNavigatedTo(e);
+
+            // Set the toggle for Auto Update Check based on the User Configurations
+            AutoUpdateCheckToggle.IsOn = (UserConfiguration.Get().AutoUpdateCheck == true);
+
+            // Grab the latest text for the CheckForUpdateButton button
+            CheckForUpdateButton.Content = GlobalVars.updateButtonTextOnTheUpdatePage;
         }
     }
 }

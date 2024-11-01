@@ -31,7 +31,8 @@ namespace WDACConfig
             Guid? strictKernelPolicyGUID,
             Guid? strictKernelNoFlightRootsPolicyGUID,
             DateTime? lastUpdateCheck,
-            DateTime? strictKernelModePolicyTimeOfDeployment
+            DateTime? strictKernelModePolicyTimeOfDeployment,
+            bool? autoUpdateCheck
         )
     {
         [JsonPropertyOrder(1)]
@@ -61,7 +62,8 @@ namespace WDACConfig
         [JsonPropertyOrder(9)]
         public DateTime? StrictKernelModePolicyTimeOfDeployment { get; set; } = strictKernelModePolicyTimeOfDeployment;
 
-
+        [JsonPropertyOrder(10)]
+        public bool? AutoUpdateCheck { get; set; } = autoUpdateCheck;
 
         // Used by the static methods, when trimming is not enabled
         private static readonly JsonSerializerOptions JsonOptions = new() { WriteIndented = true };
@@ -81,6 +83,7 @@ namespace WDACConfig
         /// <param name="StrictKernelNoFlightRootsPolicyGUID"></param>
         /// <param name="LastUpdateCheck"></param>
         /// <param name="StrictKernelModePolicyTimeOfDeployment"></param>
+        /// <param name="AutoUpdateCheck"></param>
         /// <returns></returns>
         /// <exception cref="InvalidOperationException"></exception>
         public static UserConfiguration Set(
@@ -92,7 +95,8 @@ namespace WDACConfig
             Guid? StrictKernelPolicyGUID = null,
             Guid? StrictKernelNoFlightRootsPolicyGUID = null,
             DateTime? LastUpdateCheck = null,
-            DateTime? StrictKernelModePolicyTimeOfDeployment = null
+            DateTime? StrictKernelModePolicyTimeOfDeployment = null,
+            bool? AutoUpdateCheck = null
             )
         {
             // Validate certificateCommonName
@@ -126,7 +130,6 @@ namespace WDACConfig
             }
 
 
-
             Logger.Write("Trying to parse and read the current user configurations file");
             UserConfiguration UserConfiguration = ReadUserConfiguration();
 
@@ -140,6 +143,7 @@ namespace WDACConfig
             if (StrictKernelNoFlightRootsPolicyGUID.HasValue) UserConfiguration.StrictKernelNoFlightRootsPolicyGUID = StrictKernelNoFlightRootsPolicyGUID;
             if (LastUpdateCheck.HasValue) UserConfiguration.LastUpdateCheck = LastUpdateCheck;
             if (StrictKernelModePolicyTimeOfDeployment.HasValue) UserConfiguration.StrictKernelModePolicyTimeOfDeployment = StrictKernelModePolicyTimeOfDeployment;
+            if (AutoUpdateCheck.HasValue) UserConfiguration.AutoUpdateCheck = AutoUpdateCheck;
 
             // Write the updated properties back to the JSON file
             WriteUserConfiguration(UserConfiguration);
@@ -148,8 +152,10 @@ namespace WDACConfig
         }
 
 
-
-
+        /// <summary>
+        /// Gets the current user configuration settings from the JSON file and return them
+        /// </summary>
+        /// <returns></returns>
         public static UserConfiguration Get()
         {
             // Read the current configuration
@@ -158,8 +164,19 @@ namespace WDACConfig
         }
 
 
-
-
+        /// <summary>
+        /// Removes the user configurations from the JSON file one by one using the provided parameters
+        /// </summary>
+        /// <param name="SignedPolicyPath"></param>
+        /// <param name="UnsignedPolicyPath"></param>
+        /// <param name="SignToolCustomPath"></param>
+        /// <param name="CertificateCommonName"></param>
+        /// <param name="CertificatePath"></param>
+        /// <param name="StrictKernelPolicyGUID"></param>
+        /// <param name="StrictKernelNoFlightRootsPolicyGUID"></param>
+        /// <param name="LastUpdateCheck"></param>
+        /// <param name="StrictKernelModePolicyTimeOfDeployment"></param>
+        /// <param name="AutoUpdateCheck"></param>
         public static void Remove(
         bool SignedPolicyPath = false,
         bool UnsignedPolicyPath = false,
@@ -169,7 +186,8 @@ namespace WDACConfig
         bool StrictKernelPolicyGUID = false,
         bool StrictKernelNoFlightRootsPolicyGUID = false,
         bool LastUpdateCheck = false,
-        bool StrictKernelModePolicyTimeOfDeployment = false
+        bool StrictKernelModePolicyTimeOfDeployment = false,
+        bool AutoUpdateCheck = false
         )
         {
             // Read the current configuration
@@ -185,6 +203,7 @@ namespace WDACConfig
             if (StrictKernelNoFlightRootsPolicyGUID) currentConfig.StrictKernelNoFlightRootsPolicyGUID = null;
             if (LastUpdateCheck) currentConfig.LastUpdateCheck = null;
             if (StrictKernelModePolicyTimeOfDeployment) currentConfig.StrictKernelModePolicyTimeOfDeployment = null;
+            if (AutoUpdateCheck) currentConfig.AutoUpdateCheck = null;
 
             // Write the updated configuration back to the JSON file
             WriteUserConfiguration(currentConfig);
@@ -192,12 +211,10 @@ namespace WDACConfig
             Logger.Write("The specified properties have been removed and set to null in the UserConfigurations.json file.");
         }
 
-
         private static UserConfiguration ReadUserConfiguration()
         {
             try
             {
-
                 // Create the WDACConfig folder in Program Files if it doesn't exist
                 if (!Directory.Exists(GlobalVars.UserConfigDir))
                 {
@@ -223,14 +240,18 @@ namespace WDACConfig
                 Logger.Write($"Error reading or parsing the user configuration file: {ex.Message} A new configuration with default values will be created.");
 
                 // Create a new configuration with default values and write it to the file
-                UserConfiguration defaultConfig = new(null, null, null, null, null, null, null, null, null);
+                UserConfiguration defaultConfig = new(null, null, null, null, null, null, null, null, null, null);
                 WriteUserConfiguration(defaultConfig);
 
                 return defaultConfig;
             }
         }
 
-
+        /// <summary>
+        /// Parses the JSON string and returns a UserConfiguration object
+        /// </summary>
+        /// <param name="json"></param>
+        /// <returns></returns>
         private static UserConfiguration ParseJson(string json)
         {
             using JsonDocument doc = JsonDocument.Parse(json);
@@ -242,12 +263,11 @@ namespace WDACConfig
                 TryGetStringProperty(root, nameof(SignToolCustomPath)),
                 TryGetStringProperty(root, nameof(CertificateCommonName)),
                 TryGetStringProperty(root, nameof(CertificatePath)),
-
                 TryGetGuidProperty(root, nameof(StrictKernelPolicyGUID)),
                 TryGetGuidProperty(root, nameof(StrictKernelNoFlightRootsPolicyGUID)),
-
                 TryGetDateTimeProperty(root, nameof(LastUpdateCheck)),
-                TryGetDateTimeProperty(root, nameof(StrictKernelModePolicyTimeOfDeployment))
+                TryGetDateTimeProperty(root, nameof(StrictKernelModePolicyTimeOfDeployment)),
+                TryGetBoolProperty(root, nameof(AutoUpdateCheck))
             );
 
             static string? TryGetStringProperty(JsonElement root, string propertyName)
@@ -286,6 +306,17 @@ namespace WDACConfig
                 }
             }
 
+            static bool? TryGetBoolProperty(JsonElement root, string propertyName)
+            {
+                try
+                {
+                    return root.TryGetProperty(propertyName, out var propertyValue) ? propertyValue.GetBoolean() : null;
+                }
+                catch
+                {
+                    return null;
+                }
+            }
         }
 
         private static void WriteUserConfiguration(UserConfiguration userConfiguration)
@@ -301,8 +332,10 @@ namespace WDACConfig
                 StrictKernelPolicyGUID = userConfiguration.StrictKernelPolicyGUID?.ToString(),
                 StrictKernelNoFlightRootsPolicyGUID = userConfiguration.StrictKernelNoFlightRootsPolicyGUID?.ToString(),
                 LastUpdateCheck = userConfiguration.LastUpdateCheck?.ToString("o"),
-                StrictKernelModePolicyTimeOfDeployment = userConfiguration.StrictKernelModePolicyTimeOfDeployment?.ToString("o")
+                StrictKernelModePolicyTimeOfDeployment = userConfiguration.StrictKernelModePolicyTimeOfDeployment?.ToString("o"),
+                AutoUpdateCheck = userConfiguration.AutoUpdateCheck
             };
+
 
             // Serialize the object to JSON using the new context
             // Trimming enabled
@@ -317,6 +350,5 @@ namespace WDACConfig
             File.WriteAllText(GlobalVars.UserConfigJson, jsonString);
             Logger.Write("The UserConfigurations.json file has been updated successfully.");
         }
-
     }
 }

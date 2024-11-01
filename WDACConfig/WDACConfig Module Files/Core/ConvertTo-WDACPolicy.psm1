@@ -473,12 +473,12 @@ Function ConvertTo-WDACPolicy {
                     [WDACConfig.ClearCiPolicySemantic]::Clear($WDACPolicyPathTEMP)
 
                     $CurrentStep++
-                    Write-Progress -Id 30 -Activity 'Building Signers and file rule' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
+                    Write-Progress -Id 30 -Activity 'Building the Signer and file rule' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
                     [WDACConfig.Logger]::Write('Building the Signer and Hash objects from the selected logs')
                     [WDACConfig.FileBasedInfoPackage]$DataToUseForBuilding = [WDACConfig.SignerAndHashBuilder]::BuildSignerAndHashObjects((ConvertTo-HashtableArray $SelectedLogs), 'EVTX', $Level, $false)
 
-                    [WDACConfig.XMLOps]::Initiate($DataToUseForBuilding, $WDACPolicyPathTEMP)                                        
+                    [WDACConfig.XMLOps]::Initiate($DataToUseForBuilding, $WDACPolicyPathTEMP)
 
                     $PolicyFilesToMerge.Add($WDACPolicyPathTEMP)
 
@@ -632,7 +632,7 @@ Function ConvertTo-WDACPolicy {
                     Copy-Item -LiteralPath 'C:\Windows\schemas\CodeIntegrity\ExamplePolicies\AllowAll.xml' -Destination $OutputPolicyPathMDEAH -Force
 
                     [WDACConfig.Logger]::Write('Emptying the policy file in preparation for the new data insertion')
-                    [WDACConfig.ClearCiPolicySemantic]::Clear($OutputPolicyPathMDEAH)                   
+                    [WDACConfig.ClearCiPolicySemantic]::Clear($OutputPolicyPathMDEAH)
 
                     $CurrentStep++
                     Write-Progress -Id 31 -Activity 'Building the Signer and Hash objects from the selected MDE AH logs' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
@@ -784,12 +784,12 @@ Function ConvertTo-WDACPolicy {
                     [WDACConfig.ClearCiPolicySemantic]::Clear($OutputPolicyPathEVTX)
 
                     $CurrentStep++
-                    Write-Progress -Id 32 -Activity 'Building Signers and file rule' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
+                    Write-Progress -Id 32 -Activity 'Building the Signer and file rule' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
                     [WDACConfig.Logger]::Write('Building the Signer and Hash objects from the selected Evtx logs')
                     [WDACConfig.FileBasedInfoPackage]$DataToUseForBuilding = [WDACConfig.SignerAndHashBuilder]::BuildSignerAndHashObjects((ConvertTo-HashtableArray $SelectedLogs), 'EVTX', $Level, $false)
 
-                    [WDACConfig.XMLOps]::Initiate($DataToUseForBuilding, $OutputPolicyPathEVTX)   
+                    [WDACConfig.XMLOps]::Initiate($DataToUseForBuilding, $OutputPolicyPathEVTX)
 
                     #Region Base To Supplemental Policy Association and Deployment
 

@@ -70,7 +70,7 @@ Function P {
                             Add-AppxPackage -Path 'Microsoft.DesktopAppInstaller_8wekyb3d8bbwe.msixbundle' -DependencyPath 'Microsoft.VCLibs.x64.14.00.Desktop.appx', $MicrosoftUIXamlDownloadedFileName
                         }
                         finally {
-                            try {                                
+                            try {
                                 Remove-Item -Path 'Microsoft.DesktopAppInstaller_8wekyb3d8bbwe.msixbundle', 'Microsoft.VCLibs.x64.14.00.Desktop.appx', $MicrosoftUIXamlDownloadedFileName -Force
                                 Pop-Location
                             }

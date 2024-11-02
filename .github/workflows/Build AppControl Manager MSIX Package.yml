@@ -4,6 +4,7 @@ permissions:
   id-token: write
   actions: read
   contents: write
+  pull-requests: write
   attestations: write
 
 on:
@@ -13,7 +14,6 @@ jobs:
   build:
     runs-on: windows-latest
     steps:
-
       - name: Check out the repository code
         uses: actions/checkout@v4
 
@@ -94,6 +94,7 @@ jobs:
 
       - name: Finding the Latest Draft Release
         id: find_draft_release
+        shell: pwsh
         run: |
           # Find the latest draft release via GitHub REST API
           $Response = Invoke-RestMethod -Uri "https://api.github.com/repos/${{ github.repository }}/releases" -Headers @{ Authorization = "token ${{ secrets.GITHUB_TOKEN }}" }
@@ -102,12 +103,20 @@ jobs:
           if (!$DraftRelease) {
             throw "No draft release found"
           }
+
+          # Capture the draft release ID and tag
           $DRAFT_RELEASE_ID = $DraftRelease.id
+          $DRAFT_RELEASE_TAG = $DraftRelease.tag_name
+          
+          # Save both the release ID and tag to environment variables for later steps
           Write-Output -InputObject "DRAFT_RELEASE_ID=$DRAFT_RELEASE_ID" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Force
-          Write-host -Object "GitHub Draft ID: $DRAFT_RELEASE_ID"
-        shell: pwsh
+          Write-Output -InputObject "DRAFT_RELEASE_TAG=$DRAFT_RELEASE_TAG" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Force
+          
+          Write-Host -Object "GitHub Draft ID: $DRAFT_RELEASE_ID"
+          Write-Host -Object "GitHub Draft Tag: $DRAFT_RELEASE_TAG"
 
       - name: Uploading the MSIX Package to the Draft Release
+        shell: pwsh
         run: |
           $DraftReleaseId = $env:DRAFT_RELEASE_ID
           $FilePath = "${{ env.MSIX_PATH }}"
@@ -120,9 +129,9 @@ jobs:
             "Content-Type" = "application/octet-stream"
           }
           Write-Host -Object "Uploaded package to draft release: $Response.name"
-        shell: pwsh
 
       - name: Uploading the SBOM file to the Draft Release
+        shell: pwsh
         run: |
           $DraftReleaseId = $env:DRAFT_RELEASE_ID
           $FilePath = "HardenWindowsSecurityRepoSBOM.spdx"
@@ -134,4 +143,38 @@ jobs:
             "Content-Type" = "application/octet-stream"
           }
           Write-Host -Object "Uploaded the SBOM file to the draft release: $Response.name"
+
+      - name: Updating The MSIX Download Link and Creating Pull Request
         shell: pwsh
+        run: |
+          # Construct the download URL using the draft release tag and MSIX file name
+          [string]$DownloadURL = "https://github.com/${{ github.repository }}/releases/download/${{ env.DRAFT_RELEASE_TAG }}/${{ env.MSIX_NAME }}"
+          
+          # Path to the file that will be updated
+          [string]$FilePath = ".\AppControl Manager\DownloadURL.txt"
+
+          # Update the file content with the new URL
+          Set-Content -Path $FilePath -Value $DownloadURL
+          Write-Host "Updated DownloadURL.txt with download URL: $DownloadURL"
+          
+          # Configure Git for committing changes
+          git config --global user.email 'spynetgirl@outlook.com'
+          git config --global user.name 'HotCakeX'
+
+          # Create a new branch for the pull request
+          [string]$NewBranch = "update-download-url-$(Get-Random)"
+          git checkout -b $NewBranch
+
+          # Stage and commit the change
+          git add $FilePath
+          git commit -m "Update DownloadURL.txt with MSIX download link"
+          
+          # Manual review of the PR for now
+          # git push -u origin $NewBranch
+
+          # Create the pull request with a label and assignee
+          gh pr create --title "AppControl Manager download link update" `
+                       --body "This PR updates DownloadURL.txt with the latest MSIX download link for version ${{ env.MSIX_NAME }}." `
+                       --base main `
+                       --label "Automated 🤖" `
+                       --assignee HotCakeX

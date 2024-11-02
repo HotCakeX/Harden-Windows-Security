@@ -107,11 +107,11 @@ jobs:
           # Capture the draft release ID and tag
           $DRAFT_RELEASE_ID = $DraftRelease.id
           $DRAFT_RELEASE_TAG = $DraftRelease.tag_name
-          
+
           # Save both the release ID and tag to environment variables for later steps
           Write-Output -InputObject "DRAFT_RELEASE_ID=$DRAFT_RELEASE_ID" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Force
           Write-Output -InputObject "DRAFT_RELEASE_TAG=$DRAFT_RELEASE_TAG" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Force
-          
+
           Write-Host -Object "GitHub Draft ID: $DRAFT_RELEASE_ID"
           Write-Host -Object "GitHub Draft Tag: $DRAFT_RELEASE_TAG"
 
@@ -149,26 +149,26 @@ jobs:
         run: |
           # Construct the download URL using the draft release tag and MSIX file name
           [string]$DownloadURL = "https://github.com/${{ github.repository }}/releases/download/${{ env.DRAFT_RELEASE_TAG }}/${{ env.MSIX_NAME }}"
-          
+
           # Path to the file that will be updated
           [string]$FilePath = ".\AppControl Manager\DownloadURL.txt"
 
           # Update the file content with the new URL
           Set-Content -Path $FilePath -Value $DownloadURL -Force
           Write-Host -Object "Updated DownloadURL.txt with download URL: $DownloadURL"
-          
+
           # Configure Git for committing changes
           git config --global user.email 'spynetgirl@outlook.com'
           git config --global user.name 'HotCakeX'
 
           # Create a new branch for the pull request
-          [string]$NewBranch = "update-download-url-$(Get-Random)"
+          [string]$NewBranch = "update-download-url-$([System.Guid]::NewGuid().ToString() -replace '-', '')"
           git checkout -b $NewBranch
 
           # Stage and commit the change
           git add $FilePath
           git commit -m "Update DownloadURL.txt with MSIX download link"
-          
+
           # Manual review of the PR for now
           # git push -u origin $NewBranch
 

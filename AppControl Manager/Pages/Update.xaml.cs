@@ -21,7 +21,7 @@ namespace WDACConfig.Pages
             this.NavigationCacheMode = NavigationCacheMode.Enabled;
         }
 
-
+        // Event handler for check for update button
         private async void CheckForUpdateButton_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
         {
 
@@ -34,9 +34,11 @@ namespace WDACConfig.Pages
                 UpdateStatusInfoBar.Message = "Checking for update";
                 UpdateStatusInfoBar.Severity = InfoBarSeverity.Informational;
 
-                // Check for update asynchronously
-                UpdateCheckResponse updateCheckResult = await Task.Run(() => AppUpdate.Check());
 
+                // Check for update asynchronously using the AppUpdate class's singleton instance
+                UpdateCheckResponse updateCheckResult = await Task.Run(() => AppUpdate.Instance.Check());
+
+                // If a new version is available
                 if (updateCheckResult.IsNewVersionAvailable)
                 {
 
@@ -330,12 +332,18 @@ finally {
 
                     UpdateStatusInfoBar.Message = "Update has been successful. When you close and reopen the AppControl Manager, you will be automatically using the new version.";
                     UpdateStatusInfoBar.Severity = InfoBarSeverity.Success;
+
+                    GlobalVars.updateButtonTextOnTheUpdatePage = "Updates installed";
+
+                    // Keep the CheckForUpdate button disabled since the update has been installed at this point
+                    // And all that's required is for the app to be restarted by the user
                 }
 
                 else
                 {
                     UpdateStatusInfoBar.Message = "The current version is already up to date.";
                     UpdateStatusInfoBar.Severity = InfoBarSeverity.Success;
+                    CheckForUpdateButton.IsEnabled = true;
                 }
             }
 
@@ -346,14 +354,14 @@ finally {
 
                 DownloadProgressRingForMSIXFile.Value = 0;
 
+                CheckForUpdateButton.IsEnabled = true;
+
                 throw;
             }
 
             finally
             {
                 UpdateStatusInfoBar.IsClosable = true;
-
-                CheckForUpdateButton.IsEnabled = true;
 
                 DownloadProgressRingForMSIXFile.Visibility = Microsoft.UI.Xaml.Visibility.Collapsed;
             }

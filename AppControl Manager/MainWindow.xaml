@@ -14,7 +14,7 @@
         <MicaBackdrop Kind="BaseAlt"/>
     </Window.SystemBackdrop>
 
-    <Grid>
+    <Grid x:Name="RootGrid">
 
         <!-- When using this, we shouldn't set PaneDisplayMode="" property on the navigation element itself, otherwise these dynamic triggers won't work on it -->
         <!-- Also apparently there are hardcoded minimum width that do not allow for smaller MinWindowWidth to be set for the triggers below and they are overriden when it happens -->
@@ -114,10 +114,22 @@
             </NavigationView.MenuItems>
 
             <NavigationView.FooterMenuItems>
+                
                 <NavigationViewItem Content="Update" ToolTipService.ToolTip="Check for updates" Tag="Update">
                     <NavigationViewItem.Icon>
                         <FontIcon Glyph="&#xEB52;" />
                     </NavigationViewItem.Icon>
+
+                    <NavigationViewItem.InfoBadge>
+                        <InfoBadge x:Name="AvailableUpdateInfoBadge"
+                                   Opacity="{x:Bind ViewModel.InfoBadgeOpacity, Mode=OneWay}"
+                                   Style="{ThemeResource AttentionIconInfoBadgeStyle}">
+                            <InfoBadge.IconSource>
+                                <FontIconSource Glyph="&#xEA6A;"/>
+                            </InfoBadge.IconSource>
+                        </InfoBadge>
+                    </NavigationViewItem.InfoBadge>
+
                 </NavigationViewItem>
 
             </NavigationView.FooterMenuItems>

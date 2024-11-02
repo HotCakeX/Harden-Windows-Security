@@ -603,12 +603,10 @@ Function ConvertTo-WDACPolicy {
                     }
 
                     #Region Out-GridView properties visibility settings
-
                     # If the ExtremeVisibility switch is used, then display all the properties of the logs without any filtering
                     if (-NOT $ExtremeVisibility) {
                         Set-LogPropertiesVisibility -LogType MDEAH -EventsToDisplay $MDEAHLogsToDisplay
                     }
-
                     #Endregion Out-GridView properties visibility settings
 
                     $CurrentStep++
@@ -714,7 +712,6 @@ Function ConvertTo-WDACPolicy {
                             Copy-Item -Path $OutputPolicyPathMDEAH -Destination ([WDACConfig.GlobalVars]::UserConfigDir) -Force
                         }
                     }
-
                     #Endregion Base To Supplemental Policy Association and Deployment
                 }
                 'EVTXFiles' {
@@ -867,7 +864,6 @@ Function ConvertTo-WDACPolicy {
                             Copy-Item -Path $OutputPolicyPathEVTX -Destination ([WDACConfig.GlobalVars]::UserConfigDir) -Force
                         }
                     }
-
                     #Endregion Base To Supplemental Policy Association and Deployment
                 }
             }
@@ -885,6 +881,5 @@ Function ConvertTo-WDACPolicy {
             }
         }
     }
-
     # .EXTERNALHELP ..\Help\ConvertTo-WDACPolicy.xml
 }

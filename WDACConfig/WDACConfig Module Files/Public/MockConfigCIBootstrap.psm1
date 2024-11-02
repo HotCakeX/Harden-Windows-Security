@@ -5,7 +5,6 @@ https://github.com/MicrosoftDocs/WDAC-Toolkit/pull/365
 https://github.com/MicrosoftDocs/WDAC-Toolkit/issues/362
 
 Features:
-
 Short-circuits the cmdlet and finishes in 2 seconds.
 put in the preloader script so it only runs once in the runspace.
 No output is shown whatsoever (warning, error etc.)

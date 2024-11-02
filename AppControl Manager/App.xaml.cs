@@ -56,9 +56,6 @@ namespace WDACConfig
             m_window = new MainWindow();
             m_window.Closed += Window_Closed;  // Assign event handler for the window closed event
             m_window.Activate();
-
-            // Check for updates
-            _ = UpdateCheck();
         }
 
         private Window? m_window;
@@ -130,34 +127,6 @@ namespace WDACConfig
                     _ = _dialogSemaphore.Release();
                 }
             }
-        }
-
-
-        /// <summary>
-        /// If AutoUpdateCheck is enabled in the user configurations, checks for updates on startup and displays a dot on the Update page in the navigation
-        /// If a new version is available.
-        /// </summary>
-        /// <returns></returns>
-        private static async Task UpdateCheck()
-        {
-
-            await Task.Run(() =>
-            {
-
-                // If the AutoUpdate is true indicating check for update must happen on app startup
-                if (UserConfiguration.Get().AutoUpdateCheck == true)
-                {
-                    // Check for update 
-                    UpdateCheckResponse updateCheckResult = AppUpdate.Check();
-
-                    if (updateCheckResult.IsNewVersionAvailable)
-                    {
-                        // Set the text for the button in the update page
-                        GlobalVars.updateButtonTextOnTheUpdatePage = $"Install version {updateCheckResult.OnlineVersion}";
-                    }
-                }
-            });
-
         }
     }
 }

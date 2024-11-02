@@ -121,7 +121,6 @@ Function New-Macros {
     End {
         if ($Macros.Count -eq 0) { return }
 
-        # Save the modified XML back to the file
         $Xml.Save($XmlFilePath)
     }
 }

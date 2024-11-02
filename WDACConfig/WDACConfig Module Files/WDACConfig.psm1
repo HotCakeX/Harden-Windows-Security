@@ -1,13 +1,3 @@
-<#
-Load order of the WDACConfig module:
-
-1. ScriptsToProcess defined in the manifest
-2. All Individual sub-modules (All psm1 files defined in the NestedModules array in the manifest)
-3. The WDACConfig.psm1 (aka RootModule defined in the manifest)
-4. The cmdlet that the user invoked on the command line, if any.
-#>
-
-# Stopping the module process if any error occurs
 $global:ErrorActionPreference = 'Stop'
 
 if (!$IsWindows) {
@@ -29,7 +19,6 @@ Function Update-WDACConfigPSModule {
         [System.String]$InvocationStatement
     )
     try {
-        # Get the last update check time
         [WDACConfig.Logger]::Write('Getting the last update check time')
         [System.DateTime]$UserConfigDate = [WDACConfig.UserConfiguration]::Get().LastUpdateCheck
     }

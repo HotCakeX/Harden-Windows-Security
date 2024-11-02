@@ -1,7 +1,6 @@
 Function Remove-CommonWDACConfig {
     [CmdletBinding(
-        PositionalBinding = $false,
-        ConfirmImpact = 'High'
+        PositionalBinding = $false
     )]
     Param(
         [parameter(Mandatory = $false)][switch]$CertCN,
@@ -12,10 +11,10 @@ Function Remove-CommonWDACConfig {
         [parameter(Mandatory = $false)][switch]$StrictKernelPolicyGUID,
         [parameter(Mandatory = $false)][switch]$StrictKernelNoFlightRootsPolicyGUID,
         [parameter(Mandatory = $false)][switch]$StrictKernelModePolicyTimeOfDeployment,
-        [Parameter(Mandatory = $false)][switch]$Force
+        [parameter(Mandatory = $false)][switch]$AutoUpdate
     )
     [WDACConfig.LoggerInitializer]::Initialize($VerbosePreference, $DebugPreference, $Host)
-    [WDACConfig.UserConfiguration]::Remove($SignedPolicyPath, $UnsignedPolicyPath, $SignToolPath, $CertCN, $CertPath, $StrictKernelPolicyGUID, $StrictKernelNoFlightRootsPolicyGUID, $LastUpdateCheck, $StrictKernelModePolicyTimeOfDeployment)
+    [WDACConfig.UserConfiguration]::Remove($SignedPolicyPath, $UnsignedPolicyPath, $SignToolPath, $CertCN, $CertPath, $StrictKernelPolicyGUID, $StrictKernelNoFlightRootsPolicyGUID, $LastUpdateCheck, $StrictKernelModePolicyTimeOfDeployment, $AutoUpdate)
     <#
 .SYNOPSIS
     Removes common values for parameters used by WDACConfig module
@@ -39,6 +38,8 @@ Function Remove-CommonWDACConfig {
     Removes the StrictKernelNoFlightRootsPolicyGUID from User Configs
 .PARAMETER StrictKernelModePolicyTimeOfDeployment
     Removes the StrictKernelModePolicyTimeOfDeployment from User Configs
+.PARAMETER AutoUpdate
+    Removes the AutoUpdate from User Configs
 .INPUTS
     System.Management.Automation.SwitchParameter
 .OUTPUTS

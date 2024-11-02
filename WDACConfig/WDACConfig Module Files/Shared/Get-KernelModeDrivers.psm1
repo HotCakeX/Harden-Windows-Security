@@ -173,5 +173,4 @@ Function Get-KernelModeDrivers {
         Return $DriverFiles
     }
 }
-
 Export-ModuleMember -Function 'Get-KernelModeDrivers'

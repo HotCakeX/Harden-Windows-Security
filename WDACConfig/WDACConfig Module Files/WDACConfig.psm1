@@ -26,6 +26,8 @@ Function Update-WDACConfigPSModule {
         # If the User Config file doesn't exist then set this flag to perform online update check
         [WDACConfig.Logger]::Write('No LastUpdateCheck was found in the user configurations, will perform online update check')
         [System.Boolean]$PerformOnlineUpdateCheck = $true
+        # If it's the first time the module is running, keep the auto-update enabled, unless user disables it.
+        $null = [WDACConfig.UserConfiguration]::Set($null, $null, $null, $null, $null, $null, $null, $null , $null, $true)
     }
 
     # Ensure these are run only if the User Config file exists and contains a date for last update check

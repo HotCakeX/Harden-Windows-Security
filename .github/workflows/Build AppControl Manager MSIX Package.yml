@@ -154,8 +154,8 @@ jobs:
           [string]$FilePath = ".\AppControl Manager\DownloadURL.txt"
 
           # Update the file content with the new URL
-          Set-Content -Path $FilePath -Value $DownloadURL
-          Write-Host "Updated DownloadURL.txt with download URL: $DownloadURL"
+          Set-Content -Path $FilePath -Value $DownloadURL -Force
+          Write-Host -Object "Updated DownloadURL.txt with download URL: $DownloadURL"
           
           # Configure Git for committing changes
           git config --global user.email 'spynetgirl@outlook.com'

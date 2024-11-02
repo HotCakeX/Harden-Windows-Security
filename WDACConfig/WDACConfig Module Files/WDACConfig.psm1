@@ -36,9 +36,9 @@ Function Update-WDACConfigPSModule {
         [System.Int64]$TimeDiff = ($CurrentDateTime - $UserConfigDate).TotalMinutes
     }
 
-    # Only check for updates if the last attempt occurred more than 30 minutes ago or the User Config file for last update check doesn't exist
+    # Only check for updates if the last attempt occurred more than 60 minutes ago And the AutoUpdateCheck is true, Or the User Config file for last update check doesn't exist
     # This prevents the module from constantly doing an update check by fetching the version file from GitHub
-    if (($TimeDiff -gt 30) -or $PerformOnlineUpdateCheck) {
+    if ((($TimeDiff -gt 60) -and ([WDACConfig.UserConfiguration]::Get().AutoUpdateCheck -eq $true)) -or $PerformOnlineUpdateCheck) {
 
         [WDACConfig.Logger]::Write("Performing online update check because the last update check was performed $($TimeDiff ?? [System.Char]::ConvertFromUtf32(8734)) minutes ago")
 
@@ -53,7 +53,7 @@ Function Update-WDACConfigPSModule {
                 [System.Version]$LatestVersion = Invoke-RestMethod -Uri 'https://dev.azure.com/SpyNetGirl/011c178a-7b92-462b-bd23-2c014528a67e/_apis/git/repositories/5304fef0-07c0-4821-a613-79c01fb75657/items?path=/WDACConfig/version.txt' -ProgressAction SilentlyContinue
             }
             catch {
-                Throw [System.Security.VerificationException] 'Could not verify if the latest version of the module is installed, please check your Internet connection. You can optionally bypass the online check by using -SkipVersionCheck parameter.'
+                Throw [System.Security.VerificationException] 'Could not verify if the latest version of the module is installed, please check your Internet connection.'
             }
         }
 
@@ -89,7 +89,7 @@ Function Update-WDACConfigPSModule {
         }
     }
     else {
-        [WDACConfig.Logger]::Write("Skipping online update check because the last update check was performed $TimeDiff minutes ago")
+        [WDACConfig.Logger]::Write('Skipping online update check.')
     }
 }
 

@@ -135,14 +135,12 @@ Function Remove-WDACConfig {
         [parameter(Mandatory = $False, ParameterSetName = 'Signed Base', ValueFromPipelineByPropertyName = $true)]
         [System.IO.FileInfo]$SignToolPath,
 
-        [Parameter(Mandatory = $False)][switch]$Force,
-
-        [Parameter(Mandatory = $False)][switch]$SkipVersionCheck
+        [Parameter(Mandatory = $False)][switch]$Force
     )
     Begin {
         [WDACConfig.LoggerInitializer]::Initialize($VerbosePreference, $DebugPreference, $Host)
 
-        if (-NOT $SkipVersionCheck) { Update-WDACConfigPSModule -InvocationStatement $MyInvocation.Statement }
+        Update-WDACConfigPSModule -InvocationStatement $MyInvocation.Statement
 
         [System.IO.DirectoryInfo]$StagingArea = [WDACConfig.StagingArea]::NewStagingArea('Remove-WDACConfig')
 
@@ -352,8 +350,6 @@ Function Remove-WDACConfig {
     Remove Unsigned deployed WDAC policies as well as Signed deployed Supplemental WDAC policies
 .PARAMETER Force
     Bypasses the confirmation prompt
-.PARAMETER SkipVersionCheck
-    Can be used with any parameter to bypass the online version check
 .INPUTS
     System.String
     System.String[]

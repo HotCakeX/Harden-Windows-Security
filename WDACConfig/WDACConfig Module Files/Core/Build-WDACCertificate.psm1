@@ -20,13 +20,11 @@ Function Build-WDACCertificate {
             }, ErrorMessage = 'The password must be at least 5 characters long.')]
         [System.Security.SecureString]$Password,
 
-        [Parameter(Mandatory = $false)][switch]$Force,
-
-        [Parameter(Mandatory = $false)][switch]$SkipVersionCheck
+        [Parameter(Mandatory = $false)][switch]$Force
     )
     Begin {
         [WDACConfig.LoggerInitializer]::Initialize($VerbosePreference, $DebugPreference, $Host)
-        if (-NOT $SkipVersionCheck) { Update-WDACConfigPSModule -InvocationStatement $MyInvocation.Statement }
+        Update-WDACConfigPSModule -InvocationStatement $MyInvocation.Statement
 
         # Define a staging area for Build-WDACCertificate cmdlet
         [System.IO.DirectoryInfo]$StagingArea = Join-Path -Path ([WDACConfig.GlobalVars]::UserConfigDir) -ChildPath 'StagingArea' -AdditionalChildPath 'Build-WDACCertificate'
@@ -267,8 +265,6 @@ ValidityPeriod = Years
     If not passed as a parameter, the user will be prompted to enter a password.
 .PARAMETER Force
     Forces the removal of any existing certificates with the same common name from the system.
-.PARAMETER SkipVersionCheck
-    Skips the version check for the module
 .DESCRIPTION
     Builds a self-signed certificate for use with WDAC that meets all of the requirements for a WDAC policy signing certificate.
     https://learn.microsoft.com/en-us/windows/security/application-security/application-control/app-control-for-business/deployment/create-code-signing-cert-for-appcontrol

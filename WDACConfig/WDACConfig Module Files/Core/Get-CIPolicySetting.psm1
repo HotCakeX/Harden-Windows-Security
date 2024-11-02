@@ -3,11 +3,10 @@ Function Get-CIPolicySetting {
     Param(
         [Parameter(Mandatory = $true)][System.String]$Provider,
         [Parameter(Mandatory = $true)][System.String]$Key,
-        [Parameter(Mandatory = $true)][System.String]$ValueName,
-        [Parameter(Mandatory = $false)][switch]$SkipVersionCheck
+        [Parameter(Mandatory = $true)][System.String]$ValueName
     )
     [WDACConfig.LoggerInitializer]::Initialize($VerbosePreference, $DebugPreference, $Host)
-    if (-NOT $SkipVersionCheck) { Update-WDACConfigPSModule -InvocationStatement $MyInvocation.Statement }
+    Update-WDACConfigPSModule -InvocationStatement $MyInvocation.Statement
     [WDACConfig.GetCIPolicySetting]::Invoke($Provider, $Key, $ValueName)
     <#
     .SYNOPSIS
@@ -36,8 +35,6 @@ Function Get-CIPolicySetting {
         The key of the secure setting
     .PARAMETER ValueName
         The name of the secure setting
-    .PARAMETER SkipVersionCheck
-        If this switch is present, the cmdlet will skip the version check
     .EXAMPLE
         Creating the secure settings in a Code Integrity policy
 

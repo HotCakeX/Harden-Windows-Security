@@ -284,24 +284,6 @@ Function ConvertTo-WDACPolicy {
 
         #Endregion-ExtremeVisibility-Parameter
 
-        #Region-SkipVersionCheck-Parameter
-
-        # Create a parameter attribute collection
-        $SkipVersionCheck_AttributesCollection = New-Object -TypeName System.Collections.ObjectModel.Collection[System.Attribute]
-
-        # Create a mandatory attribute and add it to the collection
-        [System.Management.Automation.ParameterAttribute]$SkipVersionCheck_MandatoryAttrib = New-Object -TypeName System.Management.Automation.ParameterAttribute
-        $SkipVersionCheck_MandatoryAttrib.Mandatory = $false
-        $SkipVersionCheck_AttributesCollection.Add($SkipVersionCheck_MandatoryAttrib)
-
-        # Create a dynamic parameter object with the attributes already assigned: Name, Type, and Attributes Collection
-        [System.Management.Automation.RuntimeDefinedParameter]$SkipVersionCheck = New-Object -TypeName System.Management.Automation.RuntimeDefinedParameter('SkipVersionCheck', [switch], $SkipVersionCheck_AttributesCollection)
-
-        # Add the dynamic parameter object to the dictionary
-        $ParamDictionary.Add('SkipVersionCheck', $SkipVersionCheck)
-
-        #Endregion-SkipVersionCheck-Parameter
-
         return $ParamDictionary
     }
     Begin {
@@ -327,9 +309,8 @@ Function ConvertTo-WDACPolicy {
         New-Variable -Name 'LogType' -Value ($PSBoundParameters['LogType'] ?? 'All') -Force
         New-Variable -Name 'Deploy' -Value $PSBoundParameters['Deploy'] -Force
         New-Variable -Name 'ExtremeVisibility' -Value $PSBoundParameters['ExtremeVisibility'] -Force
-        New-Variable -Name 'SkipVersionCheck' -Value $PSBoundParameters['SkipVersionCheck'] -Force
 
-        if (-NOT $SkipVersionCheck) { Update-WDACConfigPSModule -InvocationStatement $MyInvocation.Statement }
+        Update-WDACConfigPSModule -InvocationStatement $MyInvocation.Statement
 
         # Defining a staging area for the current
         [System.IO.DirectoryInfo]$StagingArea = [WDACConfig.StagingArea]::NewStagingArea('ConvertTo-WDACPolicy')
@@ -420,7 +401,7 @@ Function ConvertTo-WDACPolicy {
                         return
                     }
 
-                    # If the user has selected any logs, then create a WDAC policy for them, otherwise return
+                    # If the user has selected any logs, then create an AppControl policy for them, otherwise return
                     if ($null -eq $SelectedLogs) {
                         return
                     }
@@ -616,7 +597,7 @@ Function ConvertTo-WDACPolicy {
                     [PSCustomObject[]]$SelectMDEAHLogs = $MDEAHLogsToDisplay | Out-GridView -OutputMode Multiple -Title "Displaying $($MDEAHLogsToDisplay.count) Microsoft Defender for Endpoint Advanced Hunting Logs"
 
                     if (($null -eq $SelectMDEAHLogs) -or ($SelectMDEAHLogs.Count -eq 0)) {
-                        Write-ColorfulTextWDACConfig -Color HotPink -InputText 'No MDE Advanced Hunting logs were selected to create a WDAC policy from. Exiting...'
+                        Write-ColorfulTextWDACConfig -Color HotPink -InputText 'No MDE Advanced Hunting logs were selected to create an AppControl policy from. Exiting...'
                         return
                     }
 

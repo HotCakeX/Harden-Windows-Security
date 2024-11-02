@@ -3,12 +3,10 @@ Function Get-CiFileHashes {
     param (
         [ArgumentCompleter([WDACConfig.ArgCompleter.AnyFilePathsPicker])]
         [Parameter(Mandatory = $true, ValueFromPipeline = $true, ValueFromPipelineByPropertyName = $true)]
-        [System.IO.FileInfo]$FilePath,
-
-        [Parameter(Mandatory = $false)][switch]$SkipVersionCheck
+        [System.IO.FileInfo]$FilePath
     )
     [WDACConfig.LoggerInitializer]::Initialize($VerbosePreference, $DebugPreference, $Host)
-    if (!$SkipVersionCheck) { Update-WDACConfigPSModule -InvocationStatement $MyInvocation.Statement }
+    Update-WDACConfigPSModule -InvocationStatement $MyInvocation.Statement
     return [WDACConfig.CiFileHash]::GetCiFileHashes($FilePath)
     <#
 .SYNOPSIS
@@ -19,8 +17,6 @@ Function Get-CiFileHashes {
     https://github.com/HotCakeX/Harden-Windows-Security/wiki/Get-CiFileHashes
 .PARAMETER Path
     The path to the file for which the hashes are to be calculated.
-.PARAMETER SkipVersionCheck
-    Can be used with any parameter to bypass the online version check
 .INPUTS
     System.IO.FileInfo
 .OUTPUTS

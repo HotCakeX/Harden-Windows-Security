@@ -384,21 +384,6 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -SkipVersionCheck
-Can be used with any parameter to bypass the online version check
-
-```yaml
-Type: SwitchParameter
-Parameter Sets: (All)
-Aliases:
-
-Required: False
-Position: Named
-Default value: False
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
 ### -ProgressAction
 Contains the preference for the progress action
 

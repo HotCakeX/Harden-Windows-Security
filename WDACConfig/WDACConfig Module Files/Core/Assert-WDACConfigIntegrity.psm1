@@ -2,11 +2,10 @@ Function Assert-WDACConfigIntegrity {
     [CmdletBinding()]
     param (
         [Alias('S')][Parameter(Mandatory = $false)][switch]$SaveLocally,
-        [Alias('P')][Parameter(Mandatory = $false)][System.IO.DirectoryInfo]$Path = "$([WDACConfig.GlobalVars]::ModuleRootPath)\..\Utilities\",
-        [Parameter(Mandatory = $false)][switch]$SkipVersionCheck
+        [Alias('P')][Parameter(Mandatory = $false)][System.IO.DirectoryInfo]$Path = "$([WDACConfig.GlobalVars]::ModuleRootPath)\..\Utilities\"
     )
     [WDACConfig.LoggerInitializer]::Initialize($VerbosePreference, $DebugPreference, $Host)
-    if (-NOT $SkipVersionCheck) { Update-WDACConfigPSModule -InvocationStatement $MyInvocation.Statement }
+    Update-WDACConfigPSModule -InvocationStatement $MyInvocation.Statement
     return [WDACConfig.AssertWDACConfigIntegrity]::Invoke($SaveLocally, $Path)
     <#
 .SYNOPSIS
@@ -25,8 +24,6 @@ Function Assert-WDACConfigIntegrity {
     Specifies the path to save the CSV file to. The default path is the Utilities folder in the WDACConfig's folder.
     This is used before uploading to GitHub to renew the hashes.
     You don't need to use this parameter.
-.PARAMETER SkipVersionCheck
-    Indicates that the function should skip the version check and not run the updater.
 .INPUTS
     System.Management.Automation.SwitchParameter
     System.IO.DirectoryInfo

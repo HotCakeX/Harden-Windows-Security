@@ -62,13 +62,11 @@ Function New-SupplementalWDACConfig {
 
         [ValidateSet('UserMode', 'KernelMode')]
         [parameter(Mandatory = $false, ParameterSetName = 'Certificate')]
-        [System.String]$SigningScenario = 'UserMode',
-
-        [Parameter(Mandatory = $false)][switch]$SkipVersionCheck
+        [System.String]$SigningScenario = 'UserMode'
     )
     Begin {
         [WDACConfig.LoggerInitializer]::Initialize($VerbosePreference, $DebugPreference, $Host)
-        if (-NOT $SkipVersionCheck) { Update-WDACConfigPSModule -InvocationStatement $MyInvocation.Statement }
+        Update-WDACConfigPSModule -InvocationStatement $MyInvocation.Statement
 
         if ([WDACConfig.GlobalVars]::ConfigCIBootstrap -eq $false) {
             Invoke-MockConfigCIBootstrap
@@ -431,8 +429,6 @@ Function New-SupplementalWDACConfig {
     The default value for it is Hash.
 .PARAMETER Force
     It's used by the entire Cmdlet. Indicates that the confirmation prompts will be bypassed.
-.PARAMETER SkipVersionCheck
-    Can be used with any parameter to bypass the online version check
 .INPUTS
     System.String[]
     System.String

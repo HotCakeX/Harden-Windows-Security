@@ -12,9 +12,7 @@ Function New-KernelModeWDACConfig {
 
         [ValidateSet('Default', 'NoFlightRoots')]
         [Parameter(Mandatory = $false)]
-        [System.String]$Base = 'Default',
-
-        [Parameter(Mandatory = $false)][switch]$SkipVersionCheck
+        [System.String]$Base = 'Default'
     )
     Begin {
         [WDACConfig.LoggerInitializer]::Initialize($VerbosePreference, $DebugPreference, $Host)
@@ -22,7 +20,7 @@ Function New-KernelModeWDACConfig {
         [WDACConfig.Logger]::Write('Importing the required sub-modules')
         Import-Module -Force -FullyQualifiedName @("$([WDACConfig.GlobalVars]::ModuleRootPath)\Shared\Get-KernelModeDriversAudit.psm1")
 
-        if (-NOT $SkipVersionCheck) { Update-WDACConfigPSModule -InvocationStatement $MyInvocation.Statement }
+        Update-WDACConfigPSModule -InvocationStatement $MyInvocation.Statement
 
         [System.IO.DirectoryInfo]$StagingArea = [WDACConfig.StagingArea]::NewStagingArea('New-KernelModeWDACConfig')
 
@@ -413,35 +411,33 @@ Function New-KernelModeWDACConfig {
 
     <#
 .SYNOPSIS
-    Creates Kernel only mode WDAC policy capable of protecting against BYOVD attacks category
+    Creates Kernel only mode AppControl policy capable of protecting against BYOVD attacks category
 .LINK
     https://github.com/HotCakeX/Harden-Windows-Security/wiki/New%E2%80%90KernelModeWDACConfig
 .DESCRIPTION
     Using official Microsoft methods, configure and use App Control for Business
 .PARAMETER Base
-    The base policy to use for creating the strict Kernel mode WDAC policy, offers 2 options:
+    The base policy to use for creating the strict Kernel mode AppControl policy, offers 2 options:
     Default: meaning flight root certs will be allowed, suitable for most users.
     NoFlightRoots: is for users who don't want to allow flighting/insider builds from Dev/Canary channels.
     If not specified, Default will be used.
 .PARAMETER Mode
-    The mode to use for creating the strict Kernel mode WDAC policy, offers 2 options:
-    Prep: Deploys the Kernel mode WDAC policy in Audit mode so that you can restart your system and start capturing any blocked drivers to be automatically allowed.
-    AuditAndEnforce: Deploys the final Kernel mode WDAC policy in Enforced mode
+    The mode to use for creating the strict Kernel mode AppControl policy, offers 2 options:
+    Prep: Deploys the Kernel mode AppControl policy in Audit mode so that you can restart your system and start capturing any blocked drivers to be automatically allowed.
+    AuditAndEnforce: Deploys the final Kernel mode AppControl policy in Enforced mode
 .PARAMETER EVSigners
     Adds EVSigners policy rule option to the deployed policy. Applicable for both Audit and Enforced modes. Drivers not EV (Extended Validation) signed cannot run nor can they be allowed in a Supplemental policy.
 .PARAMETER Deploy
     Deploys the selected policy type instead of just creating it
-.PARAMETER SkipVersionCheck
-    Can be used with any parameter to bypass the online version check
 .INPUTS
     System.Management.Automation.SwitchParameter
 .OUTPUTS
     System.String
 .EXAMPLE
     New-KernelModeWDACConfig -Default -PrepMode -Deploy
-    This example creates the strict Kernel mode WDAC policy based off of the default Windows WDAC example policy, deploys it in Audit mode. System restart will be required after this.
+    This example creates the strict Kernel mode AppControl policy based off of the default Windows WDAC example policy, deploys it in Audit mode. System restart will be required after this.
 .EXAMPLE
     New-KernelModeWDACConfig -Default -AuditAndEnforce -Deploy
-    This example creates the strict Kernel mode WDAC policy based off of the default Windows WDAC example policy, deploys it in Enforced mode. It will also contain the drivers that were blocked during the Audit mode.
+    This example creates the strict Kernel mode AppControl policy based off of the default Windows WDAC example policy, deploys it in Enforced mode. It will also contain the drivers that were blocked during the Audit mode.
 #>
 }

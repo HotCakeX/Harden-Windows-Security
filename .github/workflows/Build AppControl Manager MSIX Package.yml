@@ -41,7 +41,7 @@ jobs:
           Expand-Archive -Path 'DesktopAppInstaller_Dependencies.zip' -DestinationPath .\ -Force
           [string[]]$DependencyPaths = (Get-ChildItem -Path .\x64 -Filter '*.appx' -File).FullName
           Add-AppxProvisionedPackage -Online -PackagePath 'Winget.msixbundle' -DependencyPackagePath $DependencyPaths -LicensePath 'License1.xml'
-          
+
           # Add the dependency paths to the GitHub environment to be used in the next step
           Add-Content -Path $env:GITHUB_ENV -Value "WINGET_DEPENDENCY1=$($DependencyPaths[0])"
           Add-Content -Path $env:GITHUB_ENV -Value "WINGET_DEPENDENCY2=$($DependencyPaths[1])"
@@ -55,11 +55,12 @@ jobs:
       - name: Installing the necessary programs
         run: |
           winget source update
-          winget install --id Microsoft.DotNet.SDK.Preview --exact --accept-package-agreements --accept-source-agreements --uninstall-previous --force
-          winget install --id Microsoft.VisualStudio.2022.BuildTools --exact --accept-package-agreements --accept-source-agreements --uninstall-previous --force
-          winget install --id Microsoft.WindowsSDK.10.0.26100 --exact --accept-package-agreements --accept-source-agreements --uninstall-previous --force
-          winget install --id Microsoft.AppInstaller --exact --accept-package-agreements --accept-source-agreements --force
-          winget install --id Microsoft.VCRedist.2015+.x64 --exact --accept-package-agreements --accept-source-agreements --uninstall-previous --force
+          winget install --id Microsoft.DotNet.SDK.Preview --exact --accept-package-agreements --accept-source-agreements --uninstall-previous --force --source winget
+          winget install --id Microsoft.VisualStudio.2022.BuildTools --exact --accept-package-agreements --accept-source-agreements --uninstall-previous --force --source winget
+          winget install --id Microsoft.WindowsSDK.10.0.26100 --exact --accept-package-agreements --accept-source-agreements --uninstall-previous --force --source winget
+          # https://github.com/microsoft/winget-cli/issues/1705
+          winget install --id Microsoft.AppInstaller --exact --accept-package-agreements --accept-source-agreements --uninstall-previous --force --source winget
+          winget install --id Microsoft.VCRedist.2015+.x64 --exact --accept-package-agreements --accept-source-agreements --uninstall-previous --force --source winget
 
       - name: Building the AppControl Manager
         run: dotnet build "AppControl Manager/AppControl Manager.sln" --configuration Release --verbosity minimal
@@ -154,6 +155,8 @@ jobs:
 
       - name: Updating The MSIX Download Link and Creating Pull Request
         shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
           # Construct the download URL using the draft release tag and MSIX file name
           [string]$DownloadURL = "https://github.com/${{ github.repository }}/releases/download/${{ env.DRAFT_RELEASE_TAG }}/${{ env.MSIX_NAME }}"
@@ -177,8 +180,8 @@ jobs:
           git add $FilePath
           git commit -m "Update DownloadURL.txt with MSIX download link"
 
-          # Manual review of the PR for now
-          # git push -u origin $NewBranch
+          # Push the new branch to the remote repository
+          git push -u origin $NewBranch
 
           # Create the pull request with a label and assignee
           gh pr create --title "AppControl Manager download link update" `

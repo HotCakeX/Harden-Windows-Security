@@ -45,6 +45,7 @@ namespace WDACConfig.Pages
 
                 // Clear the policies before getting and showing the new ones
                 AllPolicies.Clear();
+                AllPoliciesOutput.Clear();
 
                 // The checkboxes belong to the UI thread so can't use their bool value directly on the Task.Run's thread
                 bool ShouldIncludeSystem = IncludeSystemPolicies.IsChecked ?? false;

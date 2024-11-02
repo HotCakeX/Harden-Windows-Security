@@ -341,3 +341,6 @@ dotnet_diagnostic.CA2265.severity = error
 
 # CA1507: Use nameof to express symbol names
 dotnet_diagnostic.CA1507.severity = error
+
+# IDE0001: Simplify name
+dotnet_diagnostic.IDE0001.severity = error

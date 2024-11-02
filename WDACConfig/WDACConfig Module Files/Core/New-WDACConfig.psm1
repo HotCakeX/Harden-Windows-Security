@@ -17,8 +17,7 @@ Function New-WDACConfig {
         [Parameter(Mandatory = $false, ParameterSetName = 'PolicyType')][switch]$Audit,
         [Parameter(Mandatory = $false, ParameterSetName = 'PolicyType')][switch]$TestMode,
         [Parameter(Mandatory = $false, ParameterSetName = 'PolicyType')][switch]$RequireEVSigners,
-        [Parameter(Mandatory = $false, ParameterSetName = 'PolicyType')][switch]$EnableScriptEnforcement,
-        [Parameter(Mandatory = $false)][switch]$SkipVersionCheck
+        [Parameter(Mandatory = $false, ParameterSetName = 'PolicyType')][switch]$EnableScriptEnforcement
     )
     DynamicParam {
 
@@ -126,7 +125,7 @@ Function New-WDACConfig {
             Write-Progress -Id 7 -Activity 'Complete.' -Completed
         }
 
-        if (-NOT $SkipVersionCheck) { Update-WDACConfigPSModule -InvocationStatement $MyInvocation.Statement }
+        Update-WDACConfigPSModule -InvocationStatement $MyInvocation.Statement
     }
 
     process {
@@ -193,8 +192,6 @@ Function New-WDACConfig {
     The parameter is only available when -Audit is used.
 .PARAMETER Audit
     Indicates that the created/deployed policy will have Enabled:Audit Mode policy rule option and will generate audit logs instead of blocking files.
-.PARAMETER SkipVersionCheck
-    Can be used with any parameter to bypass the online version check
 .INPUTS
     System.UInt64
     System.String

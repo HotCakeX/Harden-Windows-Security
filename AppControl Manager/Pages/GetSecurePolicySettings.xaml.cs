@@ -1,5 +1,6 @@
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Navigation;
 using System.Globalization;
 
 namespace WDACConfig.Pages
@@ -11,7 +12,7 @@ namespace WDACConfig.Pages
             this.InitializeComponent();
 
             // Make sure navigating to/from this page maintains its state
-            this.NavigationCacheMode = Microsoft.UI.Xaml.Navigation.NavigationCacheMode.Enabled;
+            this.NavigationCacheMode = NavigationCacheMode.Enabled;
         }
 
         // Event handler for the Fetch button

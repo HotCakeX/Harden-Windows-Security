@@ -19,7 +19,7 @@ namespace WDACConfig.Pages
             this.NavigationCacheMode = Microsoft.UI.Xaml.Navigation.NavigationCacheMode.Enabled;
 
             // Initialize the keys property with dictionary keys
-            PolicyRuleOptionsKeys = [.. WDACConfig.CiRuleOptions.PolicyRuleOptionsActual.Keys];
+            PolicyRuleOptionsKeys = [.. CiRuleOptions.PolicyRuleOptionsActual.Keys];
 
             // Call the method to generate SettingsCards dynamically
             GenerateSettingsCards();
@@ -44,11 +44,11 @@ namespace WDACConfig.Pages
                 // Create a new SettingsCard
                 var settingsCard = new SettingsCard
                 {
-                    ContentAlignment = CommunityToolkit.WinUI.Controls.ContentAlignment.Left
+                    ContentAlignment = ContentAlignment.Left
                 };
 
                 // Create a new CheckBox
-                var checkBox = new CheckBox
+                CheckBox checkBox = new()
                 {
                     // Set the content to the key from the dictionary
                     Content = key
@@ -65,7 +65,7 @@ namespace WDACConfig.Pages
         // Event handler for the browse button
         private void PickPolicyFileButton_Click(object sender, RoutedEventArgs e)
         {
-            string? selectedFile = WDACConfig.FileSystemPicker.ShowFilePicker(
+            string? selectedFile = FileSystemPicker.ShowFilePicker(
                 "Choose a Configuration File", ("XML Files", "*.xml"));
 
             if (!string.IsNullOrEmpty(selectedFile))
@@ -107,7 +107,7 @@ namespace WDACConfig.Pages
             var selectedOptions = GetSelectedPolicyRuleOptions();
 
             // Call the Set method with selected options to add
-            WDACConfig.CiRuleOptions.Set(filePath, rulesToAdd: selectedOptions);
+            CiRuleOptions.Set(filePath, rulesToAdd: selectedOptions);
         }
 
 
@@ -127,7 +127,7 @@ namespace WDACConfig.Pages
             var selectedOptions = GetSelectedPolicyRuleOptions();
 
             // Call the Set method with selected options to remove
-            WDACConfig.CiRuleOptions.Set(filePath, rulesToRemove: selectedOptions);
+            CiRuleOptions.Set(filePath, rulesToRemove: selectedOptions);
         }
 
 
@@ -161,7 +161,7 @@ namespace WDACConfig.Pages
             }
 
             // Call the Set method with only the filePath and template parameters
-            WDACConfig.CiRuleOptions.Set(filePath, template: template);
+            CiRuleOptions.Set(filePath, template: template);
         }
 
 
@@ -178,7 +178,7 @@ namespace WDACConfig.Pages
                     // Get the content of the checkbox, which is the dictionary key
                     string? key = checkBox.Content?.ToString();
 
-                    if (!string.IsNullOrEmpty(key) && WDACConfig.CiRuleOptions.PolicyRuleOptionsActual.TryGetValue(key, out int value))
+                    if (!string.IsNullOrEmpty(key) && CiRuleOptions.PolicyRuleOptionsActual.TryGetValue(key, out int value))
                     {
                         // Convert to PolicyRuleOptions enum and add to the list
                         selectedRules.Add((PolicyRuleOptions)value);

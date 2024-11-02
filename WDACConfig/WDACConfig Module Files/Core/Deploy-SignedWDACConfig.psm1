@@ -33,14 +33,12 @@ Function Deploy-SignedWDACConfig {
         [System.IO.FileInfo]$SignToolPath,
 
         [Parameter(Mandatory = $false)]
-        [switch]$Force,
-
-        [Parameter(Mandatory = $false)][switch]$SkipVersionCheck
+        [switch]$Force
     )
     Begin {
         [WDACConfig.LoggerInitializer]::Initialize($VerbosePreference, $DebugPreference, $Host)
 
-        if (-NOT $SkipVersionCheck) { Update-WDACConfigPSModule -InvocationStatement $MyInvocation.Statement }
+        Update-WDACConfigPSModule -InvocationStatement $MyInvocation.Statement
 
         if ([WDACConfig.GlobalVars]::ConfigCIBootstrap -eq $false) {
             Invoke-MockConfigCIBootstrap
@@ -288,8 +286,6 @@ Function Deploy-SignedWDACConfig {
     Indicates that the cmdlet will deploy the signed policy on the current system
 .PARAMETER Force
     Indicates that the cmdlet will bypass the confirmation prompts
-.PARAMETER SkipVersionCheck
-    Can be used with any parameter to bypass the online version check
 .INPUTS
     System.String
     System.String[]

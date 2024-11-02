@@ -119,8 +119,8 @@ jobs:
             "Authorization" = "token ${{ secrets.GITHUB_TOKEN }}"
             "Content-Type" = "application/octet-stream"
           }
-          Write-Host -Object "Uploaded package to draft release: $Response.name"  
-        shell: pwsh  
+          Write-Host -Object "Uploaded package to draft release: $Response.name"
+        shell: pwsh
 
       - name: Uploading the SBOM file to the Draft Release
         run: |
@@ -133,5 +133,5 @@ jobs:
             "Authorization" = "token ${{ secrets.GITHUB_TOKEN }}"
             "Content-Type" = "application/octet-stream"
           }
-          Write-Host -Object "Uploaded the SBOM file to the draft release: $Response.name"  
+          Write-Host -Object "Uploaded the SBOM file to the draft release: $Response.name"
         shell: pwsh

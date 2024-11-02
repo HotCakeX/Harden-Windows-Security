@@ -11,11 +11,10 @@ Function Invoke-WDACSimulation {
         [Alias('N')][Parameter(Mandatory = $false)][switch]$NoCatalogScanning,
         [ArgumentCompleter([WDACConfig.ArgCompleter.FolderPicker])]
         [Alias('Cat')][Parameter(Mandatory = $false)][string[]]$CatRootPath,
-        [Alias('CPU')][Parameter(Mandatory = $false)][System.UInt32]$ThreadsCount = 2,
-        [Alias('S')][Parameter(Mandatory = $false)][switch]$SkipVersionCheck
+        [Alias('CPU')][Parameter(Mandatory = $false)][System.UInt32]$ThreadsCount = 2
     )
     [WDACConfig.LoggerInitializer]::Initialize($VerbosePreference, $DebugPreference, $Host)
-    if (-NOT $SkipVersionCheck) { Update-WDACConfigPSModule -InvocationStatement $MyInvocation.Statement }
+    Update-WDACConfigPSModule -InvocationStatement $MyInvocation.Statement
     $FinalSimulationResults = [WDACConfig.InvokeWDACSimulation]::Invoke($FilePath, $FolderPath, $XmlFilePath, $NoCatalogScanning, $CSVOutput, $CatRootPath, $ThreadsCount)
 
     # Change the color of the Table header to SkyBlue
@@ -98,8 +97,6 @@ Function Invoke-WDACSimulation {
 .PARAMETER ThreadsCount
     The number of the concurrent/parallel tasks to use when performing App Control Simulation.
     By default it uses 2 parallel tasks. Minimum allowed value is 1.
-.PARAMETER SkipVersionCheck
-    Bypass the online version check
 .INPUTS
     System.IO.FileInfo[]
     System.IO.DirectoryInfo[]

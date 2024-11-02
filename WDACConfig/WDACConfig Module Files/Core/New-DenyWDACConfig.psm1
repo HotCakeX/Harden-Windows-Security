@@ -50,13 +50,11 @@ Function New-DenyWDACConfig {
 
         [Parameter(Mandatory = $false, ParameterSetName = 'Installed AppXPackages')][switch]$Force,
 
-        [Parameter(Mandatory = $false, ParameterSetName = 'Folder Path With WildCards')][switch]$EmbeddedVerboseOutput,
-
-        [Parameter(Mandatory = $false)][switch]$SkipVersionCheck
+        [Parameter(Mandatory = $false, ParameterSetName = 'Folder Path With WildCards')][switch]$EmbeddedVerboseOutput
     )
     Begin {
         [WDACConfig.LoggerInitializer]::Initialize($VerbosePreference, $DebugPreference, $Host)
-        if (-NOT $SkipVersionCheck) { Update-WDACConfigPSModule -InvocationStatement $MyInvocation.Statement }
+        Update-WDACConfigPSModule -InvocationStatement $MyInvocation.Statement
 
         if ([WDACConfig.GlobalVars]::ConfigCIBootstrap -eq $false) {
             Invoke-MockConfigCIBootstrap
@@ -423,9 +421,6 @@ Function New-DenyWDACConfig {
     Creates a Deny standalone base policy for an installed App based on Appx package family names
 .PARAMETER Force
     It's used by the entire Cmdlet. Indicates that the confirmation prompts will be bypassed.
-.PARAMETER SkipVersionCheck
-    Can be used with any parameter to bypass the online version check
-    It's used by the entire Cmdlet.
 .PARAMETER PackageName
     The name of the Appx package to create a Deny base policy for.
 .PARAMETER ScanLocations

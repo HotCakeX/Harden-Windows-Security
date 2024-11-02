@@ -26,7 +26,7 @@ namespace WDACConfig
         {
 
             // Validate input XML file compliance with CI policy schema
-            if (WDACConfig.CiPolicyTest.TestCiPolicy(path, "") is not true)
+            if (CiPolicyTest.TestCiPolicy(path, "") is not true)
             {
                 throw new InvalidOperationException("The input XML file is not compliant with the CI policy schema");
             }

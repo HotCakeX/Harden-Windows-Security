@@ -47,20 +47,6 @@ Function Confirm-WDACConfig {
                     [System.Management.Automation.ParameterAttribute[]]@($OnlySystemPoliciesDynamicParameter)
                 ))
         }
-
-        # Create a dynamic parameter for -SkipVersionCheck, Adding this parameter as dynamic will make it appear at the end of the parameters
-        $SkipVersionCheckDynamicParameter = [System.Management.Automation.ParameterAttribute]@{
-            Mandatory        = $false
-            # To make this parameter available for all parameter sets
-            ParameterSetName = '__AllParameterSets'
-            HelpMessage      = 'Skip Version Check'
-        }
-        $ParamDictionary.Add('SkipVersionCheck', [System.Management.Automation.RuntimeDefinedParameter]::new(
-                'SkipVersionCheck',
-                [switch],
-                [System.Management.Automation.ParameterAttribute[]]@($SkipVersionCheckDynamicParameter)
-            ))
-
         return $ParamDictionary
     }
     Begin {
@@ -72,9 +58,8 @@ Function Confirm-WDACConfig {
         [switch]$OnlyBasePolicies = $($PSBoundParameters['OnlyBasePolicies'])
         [switch]$OnlySupplementalPolicies = $($PSBoundParameters['OnlySupplementalPolicies'])
         [switch]$OnlySystemPolicies = $($PSBoundParameters['OnlySystemPolicies'])
-        [switch]$SkipVersionCheck = $($PSBoundParameters['SkipVersionCheck'])
 
-        if (-NOT $SkipVersionCheck) { Update-WDACConfigPSModule -InvocationStatement $MyInvocation.Statement }
+        Update-WDACConfigPSModule -InvocationStatement $MyInvocation.Statement
 
         # If no main parameter was passed, run all of them
         if (!$ListActivePolicies -and !$VerifyWDACStatus -and !$CheckSmartAppControlStatus) {
@@ -135,7 +120,7 @@ Function Confirm-WDACConfig {
 
     <#
 .SYNOPSIS
-    Shows the status of WDAC on the system, lists the currently deployed policies and shows the details about each of them.
+    Shows the status of AppControl on the system, lists the currently deployed policies and shows the details about each of them.
     It can also show the status of Smart App Control.
 .LINK
     https://github.com/HotCakeX/Harden-Windows-Security/wiki/Confirm-WDACConfig
@@ -153,8 +138,6 @@ Function Confirm-WDACConfig {
     Shows the status of App Control for Business on the system
 .PARAMETER CheckSmartAppControlStatus
     Checks the status of Smart App Control and reports the results on the console
-.PARAMETER SkipVersionCheck
-    Can be used with any parameter to bypass the online version check
 .EXAMPLE
     Confirm-WDACConfig -ListActivePolicies -OnlyBasePolicies
 .EXAMPLE

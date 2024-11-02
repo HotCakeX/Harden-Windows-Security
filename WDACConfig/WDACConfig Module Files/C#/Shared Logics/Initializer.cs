@@ -22,7 +22,7 @@ namespace WDACConfig
                 object? ubrValue = key.GetValue("UBR");
                 if (ubrValue != null && int.TryParse(ubrValue.ToString(), NumberStyles.Integer, CultureInfo.InvariantCulture, out int ubr))
                 {
-                    WDACConfig.GlobalVars.UBR = ubr;
+                    GlobalVars.UBR = ubr;
                 }
                 else
                 {
@@ -31,18 +31,18 @@ namespace WDACConfig
             }
 
             // Concatenate OSBuildNumber and UBR to form the final string
-            WDACConfig.GlobalVars.FullOSBuild = $"{WDACConfig.GlobalVars.OSBuildNumber}.{WDACConfig.GlobalVars.UBR}";
+            GlobalVars.FullOSBuild = $"{GlobalVars.OSBuildNumber}.{GlobalVars.UBR}";
 
             // Convert the FullOSBuild and RequiredBuild strings to decimals so that we can compare them
-            if (!TryParseBuildVersion(WDACConfig.GlobalVars.FullOSBuild, out decimal fullOSBuild))
+            if (!TryParseBuildVersion(GlobalVars.FullOSBuild, out decimal fullOSBuild))
             {
                 throw new FormatException("The OS build version strings are not in a correct format.");
             }
 
             // Make sure the current OS build is equal or greater than the required build number
-            if (!(fullOSBuild >= WDACConfig.GlobalVars.Requiredbuild))
+            if (!(fullOSBuild >= GlobalVars.Requiredbuild))
             {
-                throw new PlatformNotSupportedException($"You are not using the latest build of the Windows OS. A minimum build of {WDACConfig.GlobalVars.Requiredbuild} is required but your OS build is {fullOSBuild}\nPlease go to Windows Update to install the updates and then try again.");
+                throw new PlatformNotSupportedException($"You are not using the latest build of the Windows OS. A minimum build of {GlobalVars.Requiredbuild} is required but your OS build is {fullOSBuild}\nPlease go to Windows Update to install the updates and then try again.");
             }
         }
 

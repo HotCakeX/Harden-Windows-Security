@@ -15,10 +15,12 @@ Function Set-CommonWDACConfig {
         [parameter(Mandatory = $false)][System.IO.FileInfo]$UnsignedPolicyPath,
 
         [ArgumentCompleter([WDACConfig.ArgCompleter.XmlFilePathsPicker])]
-        [parameter(Mandatory = $false)][System.IO.FileInfo]$SignedPolicyPath
+        [parameter(Mandatory = $false)][System.IO.FileInfo]$SignedPolicyPath,
+
+        [Parameter(Mandatory = $false)][bool]$AutoUpdate
     )
     [WDACConfig.LoggerInitializer]::Initialize($VerbosePreference, $DebugPreference, $Host)
-    [WDACConfig.UserConfiguration]::Set($SignedPolicyPath, $UnsignedPolicyPath, $SignToolPath, $CertCN, $CertPath, $null, $null, $null, $null)
+    [WDACConfig.UserConfiguration]::Set($SignedPolicyPath, $UnsignedPolicyPath, $SignToolPath, $CertCN, $CertPath, $null, $null, $null, $null, $AutoUpdate)
     <#
 .SYNOPSIS
     Add/Change common values for parameters used by WDACConfig module
@@ -36,6 +38,8 @@ Function Set-CommonWDACConfig {
     Path to the SignTool.exe
 .PARAMETER CertPath
     Path to a .cer certificate file
+.PARAMETER AutoUpdate
+    A boolean parameter accepting true/false. If set to false, the WDACConfig module will no longer check for update on startup and download new versions automatically if available.
 .INPUTS
     System.IO.FileInfo
     System.String

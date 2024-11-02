@@ -1,11 +1,14 @@
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace WDACConfig
 {
     public sealed partial class MainWindow : Window
     {
+        public MainWindowViewModel ViewModel { get; }
+
         public MainWindow()
         {
             this.InitializeComponent();
@@ -13,6 +16,47 @@ namespace WDACConfig
             // https://learn.microsoft.com/en-us/windows/windows-app-sdk/api/winrt/microsoft.ui.xaml.window.extendscontentintotitlebar
             // Make title bar Mica
             ExtendsContentIntoTitleBar = true;
+
+            #region
+
+            // Use the singleton instance of AppUpdate class
+            AppUpdate updateService = AppUpdate.Instance;
+
+            // Pass the AppUpdate class instance to MainWindowViewModel
+            ViewModel = new MainWindowViewModel(updateService);
+
+            // Set the DataContext of the Grid to enable bindings in XAML
+            RootGrid.DataContext = ViewModel;
+
+            _ = Task.Run(() =>
+               {
+
+                   // If AutoUpdateCheck is enabled in the user configurations, checks for updates on startup and displays a dot on the Update page in the navigation
+                   // If a new version is available.
+                   if (UserConfiguration.Get().AutoUpdateCheck == true)
+                   {
+
+                       Logger.Write("Checking for update on startup because AutoUpdateCheck is enabled");
+
+                       // Start the update check
+                       UpdateCheckResponse updateCheckResponse = updateService.Check();
+
+                       // If a new version is available
+                       if (updateCheckResponse.IsNewVersionAvailable)
+                       {
+                           // Set the text for the button in the update page
+                           GlobalVars.updateButtonTextOnTheUpdatePage = $"Install version {updateCheckResponse.OnlineVersion}";
+                       }
+                       else
+                       {
+                           Logger.Write("No new version of the AppControl Manager is available.");
+                       }
+                   }
+
+               });
+
+            #endregion
+
 
             // Navigate to the CreatePolicy page when the window is loaded
             _ = ContentFrame.Navigate(typeof(Pages.CreatePolicy));

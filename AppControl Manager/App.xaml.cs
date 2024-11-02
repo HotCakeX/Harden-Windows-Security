@@ -5,11 +5,13 @@ using System;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
+using Windows.ApplicationModel;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
 
 // Useful info regarding App Lifecycle events: https://learn.microsoft.com/en-us/windows/apps/windows-app-sdk/applifecycle/applifecycle
+
 
 namespace WDACConfig
 {
@@ -21,6 +23,13 @@ namespace WDACConfig
         // Semaphore to ensure only one error dialog is shown at a time
         // Exceptions will stack up and wait in line to be shown to the user
         private static readonly SemaphoreSlim _dialogSemaphore = new(1, 1);
+
+        // Get the current app's version
+        private static readonly PackageVersion packageVersion = Package.Current.Id.Version;
+
+        // Convert it to a normal Version object
+        internal static readonly Version currentAppVersion = new(packageVersion.Major, packageVersion.Minor, packageVersion.Build, packageVersion.Revision);
+
 
         /// <summary>
         /// Initializes the singleton application object. This is the first line of authored code
@@ -42,7 +51,7 @@ namespace WDACConfig
         /// Invoked when the application is launched.
         /// </summary>
         /// <param name="args">Details about the launch request and process.</param>
-        protected override void OnLaunched(Microsoft.UI.Xaml.LaunchActivatedEventArgs args)
+        protected override void OnLaunched(LaunchActivatedEventArgs args)
         {
             m_window = new MainWindow();
             m_window.Closed += Window_Closed;  // Assign event handler for the window closed event
@@ -76,7 +85,7 @@ namespace WDACConfig
         /// <summary>
         /// Event handler for when the window is closed.
         /// </summary>
-        private void Window_Closed(object sender, Microsoft.UI.Xaml.WindowEventArgs e)
+        private void Window_Closed(object sender, WindowEventArgs e)
         {
             // Clean up the staging area
             if (Directory.Exists(GlobalVars.StagingArea))

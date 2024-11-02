@@ -1,9 +1,16 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-  <!-- The following are the details for AppControlManager, a Self-Contained Trimmed MSIX Packaged App -->
+  <!-- The following are the details for AppControlManager, a Self-Contained MSIX Packaged App -->
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
     <TargetFramework>net9.0-windows10.0.26100.0</TargetFramework>
     <TargetPlatformMinVersion>10.0.26100.0</TargetPlatformMinVersion>
+
+    <!-- https://learn.microsoft.com/en-us/dotnet/fundamentals/apicompat/package-validation/overview -->
+    <EnablePackageValidation>true</EnablePackageValidation>
+
+    <!-- https://learn.microsoft.com/en-us/dotnet/core/project-sdk/msbuild-props#invariantglobalization -->
+    <InvariantGlobalization>true</InvariantGlobalization>
+
     <RootNamespace>WDACConfig</RootNamespace>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <Platforms>x64</Platforms>
@@ -24,7 +31,114 @@
     -->
     <WindowsAppSDKSelfContained>true</WindowsAppSDKSelfContained>
 
+    <!-- Publish Properties -->
+    <PublishReadyToRun Condition="'$(Configuration)' == 'Debug'">False</PublishReadyToRun>
+    <PublishReadyToRun Condition="'$(Configuration)' != 'Debug'">True</PublishReadyToRun>
+
+    <!-- Disabling trimming temporarily -->
+    <!-- There should be absolutely no trim warnings before this can be enabled
+    Otherwise there is no guarantee that the app will work as expected at all times -->
+    <!-- https://learn.microsoft.com/en-us/dotnet/core/deploying/trimming/trimming-options -->
+    <PublishTrimmed>false</PublishTrimmed>
+    <!-- <TrimMode>partial</TrimMode> -->
+    <!-- <SuppressTrimAnalysisWarnings>false</SuppressTrimAnalysisWarnings> -->
+
+    <SupportedOSPlatformVersion>10.0.26100.0</SupportedOSPlatformVersion>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <Description>An application that simplifies management of Application Control in Windows.</Description>
+    <PackageProjectUrl>https://github.com/HotCakeX/Harden-Windows-Security</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/HotCakeX/Harden-Windows-Security</RepositoryUrl>
+    <PackageTags>App Control,WDAC,WDACConfig,AppControl For Business, AppControl Manager</PackageTags>
+    <PackageReleaseNotes>https://github.com/HotCakeX/Harden-Windows-Security/releases</PackageReleaseNotes>
+
+    <!-- Automatically created for packing -->
+    <GenerateAppInstallerFile>False</GenerateAppInstallerFile>
+    <AppxPackageSigningEnabled>False</AppxPackageSigningEnabled>
+    <AppxPackageSigningTimestampDigestAlgorithm>SHA512</AppxPackageSigningTimestampDigestAlgorithm>
+    <AppxAutoIncrementPackageRevision>False</AppxAutoIncrementPackageRevision>
+
+    <!-- Defining custom directory in the root directory to be created if it doesn't exist. MSIX package after packing will be stored there -->
+    <AppxPackageDir>MSIXOutput\</AppxPackageDir>
+    <AppxSymbolPackageEnabled>True</AppxSymbolPackageEnabled>
+    <GenerateTestArtifacts>True</GenerateTestArtifacts>
+    <AppxBundle>Auto</AppxBundle>
+    <AppxBundlePlatforms>x64</AppxBundlePlatforms>
+    <HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
+    <EnforceCodeStyleInBuild>True</EnforceCodeStyleInBuild>
+    <AssemblyName>AppControlManager</AssemblyName>
+    <PublishAot>False</PublishAot>
+    <ErrorReport>send</ErrorReport>
+    <FileVersion>1.2.0.0</FileVersion>
+    <AssemblyVersion>$(FileVersion)</AssemblyVersion>
+    <NeutralLanguage>en-US</NeutralLanguage>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <StartupObject>WDACConfig.Program</StartupObject>
+    <AllowUnsafeBlocks>False</AllowUnsafeBlocks>
+    <Version>$(FileVersion)</Version>
+
   </PropertyGroup>
+
+  <!-- Defining the "Msix" ProjectCapability here allows the Single-project MSIX Packaging
+    Tools extension to be activated for this project even if the Windows App SDK Nuget
+    package has not yet been restored. -->
+  <ItemGroup Condition="'$(DisableMsixProjectCapabilityAddedByProject)'!='true' and '$(EnableMsixTooling)'=='true'">
+    <ProjectCapability Include="Msix" />
+  </ItemGroup>
+
+  <!-- Nuget packages -->
+  <ItemGroup>
+    <!-- <PackageReference Include="CommunityToolkit.Labs.WinUI.Controls.DataTable" Version="0.1.241015-build.1760" /> -->
+    <PackageReference Include="CommunityToolkit.WinUI.Behaviors" Version="8.1.240916" />
+    <PackageReference Include="CommunityToolkit.WinUI.Controls.ColorPicker" Version="8.1.240916" />
+    <PackageReference Include="CommunityToolkit.WinUI.Controls.Primitives" Version="8.1.240916" />
+    <PackageReference Include="CommunityToolkit.WinUI.Controls.RadialGauge" Version="8.1.240916" />
+    <PackageReference Include="CommunityToolkit.WinUI.Controls.SettingsControls" Version="8.1.240916" />
+    <PackageReference Include="CommunityToolkit.WinUI.UI.Controls.DataGrid" Version="7.1.2" />
+    <PackageReference Include="Microsoft.PowerShell.SDK" Version="7.4.6" />
+    <PackageReference Include="Microsoft.Windows.CsWinRT" Version="2.1.6" />
+    <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.26100.1742" />
+    <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.6.240923002" />
+    <PackageReference Include="System.Diagnostics.EventLog" Version="9.0.0-rc.2.24473.5" />
+    <PackageReference Include="System.Management.Automation" Version="7.4.6" />
+    <PackageReference Include="System.Security.Cryptography.Pkcs" Version="9.0.0-rc.2.24473.5" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="Pages\MicrosoftDocumentation.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Pages\GitHubDocumentation.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Pages\Settings.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Update="Pages\GetCIHashes.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <!--
+    Defining the "HasPackageAndPublishMenuAddedByProject" property here allows the Solution
+    Explorer "Package and Publish" context menu entry to be enabled for this project even if
+    the Windows App SDK Nuget package has not yet been restored.
+  -->
+  <PropertyGroup Condition="'$(DisableHasPackageAndPublishMenuAddedByProject)'!='true' and '$(EnableMsixTooling)'=='true'">
+    <HasPackageAndPublishMenu>true</HasPackageAndPublishMenu>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <CheckForOverflowUnderflow>True</CheckForOverflowUnderflow>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <CheckForOverflowUnderflow>True</CheckForOverflowUnderflow>
+  </PropertyGroup>
+
   <ItemGroup>
     <None Remove="Pages\ConfigurePolicyRuleOptions.xaml" />
     <None Remove="Pages\GetCIHashes.xaml" />
@@ -54,103 +168,6 @@
   <ItemGroup>
     <Manifest Include="$(ApplicationManifest)" />
   </ItemGroup>
-  <!--
-    Defining the "Msix" ProjectCapability here allows the Single-project MSIX Packaging
-    Tools extension to be activated for this project even if the Windows App SDK Nuget
-    package has not yet been restored.
-  -->
-  <ItemGroup Condition="'$(DisableMsixProjectCapabilityAddedByProject)'!='true' and '$(EnableMsixTooling)'=='true'">
-    <ProjectCapability Include="Msix" />
-  </ItemGroup>
-  <ItemGroup>
-    <!-- <PackageReference Include="CommunityToolkit.Labs.WinUI.Controls.DataTable" Version="0.1.241015-build.1760" /> -->
-    <PackageReference Include="CommunityToolkit.WinUI.Behaviors" Version="8.1.240916" />
-    <PackageReference Include="CommunityToolkit.WinUI.Controls.ColorPicker" Version="8.1.240916" />
-    <PackageReference Include="CommunityToolkit.WinUI.Controls.Primitives" Version="8.1.240916" />
-    <PackageReference Include="CommunityToolkit.WinUI.Controls.RadialGauge" Version="8.1.240916" />
-    <PackageReference Include="CommunityToolkit.WinUI.Controls.SettingsControls" Version="8.1.240916" />
-    <PackageReference Include="CommunityToolkit.WinUI.UI.Controls.DataGrid" Version="7.1.2" />
-    <PackageReference Include="Microsoft.PowerShell.SDK" Version="7.4.6" />
-    <PackageReference Include="Microsoft.Windows.CsWinRT" Version="2.1.6" />
-    <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.26100.1742" />
-    <PackageReference Include="Microsoft.WindowsAppSDK" Version="1.6.240923002" />
-    <PackageReference Include="System.Diagnostics.EventLog" Version="9.0.0-rc.2.24473.5" />
-    <PackageReference Include="System.Management.Automation" Version="7.4.6" />
-    <PackageReference Include="System.Security.Cryptography.Pkcs" Version="9.0.0-rc.2.24473.5" />
-  </ItemGroup>
-  <ItemGroup>
-    <Page Update="Pages\MicrosoftDocumentation.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Page Update="Pages\GitHubDocumentation.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Page Update="Pages\Settings.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
-    <Page Update="Pages\GetCIHashes.xaml">
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-  </ItemGroup>
-  <!--
-    Defining the "HasPackageAndPublishMenuAddedByProject" property here allows the Solution
-    Explorer "Package and Publish" context menu entry to be enabled for this project even if
-    the Windows App SDK Nuget package has not yet been restored.
-  -->
-  <PropertyGroup Condition="'$(DisableHasPackageAndPublishMenuAddedByProject)'!='true' and '$(EnableMsixTooling)'=='true'">
-    <HasPackageAndPublishMenu>true</HasPackageAndPublishMenu>
-  </PropertyGroup>
-  <!-- Publish Properties -->
-  <PropertyGroup>
-    <PublishReadyToRun Condition="'$(Configuration)' == 'Debug'">False</PublishReadyToRun>
-    <PublishReadyToRun Condition="'$(Configuration)' != 'Debug'">True</PublishReadyToRun>
-
-    <!-- <PublishTrimmed Condition="'$(Configuration)' == 'Debug'">True</PublishTrimmed> -->
-    <!-- <PublishTrimmed Condition="'$(Configuration)' != 'Debug'">True</PublishTrimmed> -->
-    <!-- Disabling trimming temporarily -->
-    <!--
-    There should be absolutely no trim warnings before this can be enabled
-    Otherwise there is no guarantee that the app will work as expected at all times
-    -->
-    <PublishTrimmed>false</PublishTrimmed>
-
-    <SupportedOSPlatformVersion>10.0.26100.0</SupportedOSPlatformVersion>
-    <ImplicitUsings>disable</ImplicitUsings>
-    <Description>An application that simplifies management of Application Control in Windows.</Description>
-    <PackageProjectUrl>https://github.com/HotCakeX/Harden-Windows-Security</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/HotCakeX/Harden-Windows-Security</RepositoryUrl>
-    <PackageTags>App Control,WDAC,WDACConfig,AppControl For Business, AppControl Manager</PackageTags>
-    <PackageReleaseNotes>https://github.com/HotCakeX/Harden-Windows-Security/releases</PackageReleaseNotes>
-
-    <!-- Automatically created for packing -->
-    <GenerateAppInstallerFile>False</GenerateAppInstallerFile>
-    <AppxPackageSigningEnabled>False</AppxPackageSigningEnabled>
-    <AppxPackageSigningTimestampDigestAlgorithm>SHA512</AppxPackageSigningTimestampDigestAlgorithm>
-    <AppxAutoIncrementPackageRevision>False</AppxAutoIncrementPackageRevision>
-    <!-- Defining custom directory in the root directory to be created if it doesn't exist. MSIX package after packing will be stored there -->
-    <AppxPackageDir>MSIXOutput\</AppxPackageDir>
-    <AppxSymbolPackageEnabled>True</AppxSymbolPackageEnabled>
-    <GenerateTestArtifacts>True</GenerateTestArtifacts>
-    <AppxBundle>Auto</AppxBundle>
-    <AppxBundlePlatforms>x64</AppxBundlePlatforms>
-    <HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
-    <EnforceCodeStyleInBuild>True</EnforceCodeStyleInBuild>
-    <AssemblyName>AppControlManager</AssemblyName>
-    <PublishAot>False</PublishAot>
-
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <CheckForOverflowUnderflow>True</CheckForOverflowUnderflow>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <CheckForOverflowUnderflow>True</CheckForOverflowUnderflow>
-  </PropertyGroup>
 
   <!-- Exclude the following files and folders from compilation, build, search, solution explorer etc. -->
   <ItemGroup>
@@ -158,9 +175,19 @@
     <Content Remove="version.txt" />
     <None Remove="version.txt" />
 
+    <Compile Remove="DownloadURL.txt" />
+    <Content Remove="DownloadURL.txt" />
+    <None Remove="DownloadURL.txt" />
+
     <Compile Remove="MSIXOutput\**" />
     <Content Remove="MSIXOutput\**" />
     <None Remove="MSIXOutput\**" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\LICENSE">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Page Update="Pages\Update.xaml">

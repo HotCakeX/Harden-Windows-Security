@@ -65,13 +65,19 @@
 
                         <ProgressRing Visibility="Collapsed" x:Name="DownloadProgressRingForMSIXFile" Width="60" Height="60" Margin="5,5,15,5" Value="0" IsIndeterminate="False" Minimum="0" Maximum="100"/>
 
-                        <Button x:Name="CheckForUpdateButton" Content="Check for update"
+                        <Button x:Name="CheckForUpdateButton"
             Style="{StaticResource AccentButtonStyle}" Margin="0,0,15,0"
-                                Click="CheckForUpdateButton_Click"                               
+                                Click="CheckForUpdateButton_Click"
                                 ToolTipService.ToolTip="Will download and install the latest version from the GitHub repository. The time it takes depends on your network connection. Approxmitate download size is 140 MB."/>
 
                     </controls:WrapPanel>
 
+                </controls:SettingsCard>
+
+
+                <controls:SettingsCard Description="Automatically checks for update when the app launches and notify you if a new version is available so you can use this page to install it."
+Header="Auto Update Check" HeaderIcon="{ui:FontIcon Glyph=&#xE774;}">
+                    <ToggleSwitch x:Name="AutoUpdateCheckToggle" Toggled="AutoUpdateCheckToggle_Toggled" />
                 </controls:SettingsCard>
 
             </StackPanel>

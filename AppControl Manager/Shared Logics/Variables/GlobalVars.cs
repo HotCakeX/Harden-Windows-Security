@@ -19,7 +19,7 @@ namespace WDACConfig
         public const string MSFTRecommendedDriverBlockRulesURL = "https://raw.githubusercontent.com/MicrosoftDocs/windows-itpro-docs/refs/heads/public/windows/security/application-security/application-control/app-control-for-business/design/microsoft-recommended-driver-block-rules.md";
 
         // Minimum required OS build number
-        public const decimal Requiredbuild = 26100.2033M;
+        public const decimal Requiredbuild = 22621.4169M;
 
         // Current OS build version
         public static decimal OSBuildNumber = Environment.OSVersion.Version.Build;
@@ -54,5 +54,16 @@ namespace WDACConfig
         // The value of the automatic variable $HOST from the PowerShell session
         // Stored using the LoggerInitializer method that is called at the beginning of each cmdlet
         public static PSHost? Host;
+
+        // The link to the file that contains the download link for the latest version of the AppControl Manager
+        internal const string AppUpdateDownloadLinkURL = "https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/refs/heads/main/AppControl%20Manager/DownloadURL.txt";
+
+        // The link to the file that contains the version number of the latest available version of the AppControl Manager
+        internal const string AppVersionLinkURL = "https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/refs/heads/main/AppControl%20Manager/version.txt";
+
+        // The check for update button on the Update page uses this variable as the text/content for its button
+        // It is dynamically updated on app launch when a new version is available
+        internal static string updateButtonTextOnTheUpdatePage = "Check for update";
+
     }
 }

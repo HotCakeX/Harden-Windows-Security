@@ -54,10 +54,11 @@ jobs:
 
       - name: Installing the necessary programs
         run: |
+          winget source update
           winget install --id Microsoft.DotNet.SDK.Preview --exact --accept-package-agreements --accept-source-agreements --uninstall-previous --force
           winget install --id Microsoft.VisualStudio.2022.BuildTools --exact --accept-package-agreements --accept-source-agreements --uninstall-previous --force
           winget install --id Microsoft.WindowsSDK.10.0.26100 --exact --accept-package-agreements --accept-source-agreements --uninstall-previous --force
-          winget install --id Microsoft.AppInstaller --exact --accept-package-agreements --accept-source-agreements --uninstall-previous --force
+          winget install --id Microsoft.AppInstaller --exact --accept-package-agreements --accept-source-agreements --force
           winget install --id Microsoft.VCRedist.2015+.x64 --exact --accept-package-agreements --accept-source-agreements --uninstall-previous --force
 
       - name: Building the AppControl Manager
@@ -116,8 +117,8 @@ jobs:
           $DRAFT_RELEASE_TAG = $DraftRelease.tag_name
 
           # Save both the release ID and tag to environment variables for later steps
-          Write-Output -InputObject "DRAFT_RELEASE_ID=$DRAFT_RELEASE_ID" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Force
-          Write-Output -InputObject "DRAFT_RELEASE_TAG=$DRAFT_RELEASE_TAG" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Force
+          Add-Content -Path $env:GITHUB_ENV -Value "DRAFT_RELEASE_ID=$DRAFT_RELEASE_ID"
+          Add-Content -Path $env:GITHUB_ENV -Value "DRAFT_RELEASE_TAG=$DRAFT_RELEASE_TAG"
 
           Write-Host -Object "GitHub Draft ID: $DRAFT_RELEASE_ID"
           Write-Host -Object "GitHub Draft Tag: $DRAFT_RELEASE_TAG"

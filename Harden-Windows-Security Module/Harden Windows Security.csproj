@@ -43,6 +43,7 @@
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <IncludeSymbols>False</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <DebugType>full</DebugType>
   </PropertyGroup>
 
   <ItemGroup>

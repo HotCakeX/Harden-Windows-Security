@@ -1,23 +1,21 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
-    <OutputType>Exe</OutputType>
-    <TargetFramework>net9.0-windows10.0.26100.0</TargetFramework>
-    <RootNamespace>HardenWindowsSecurity</RootNamespace>
-
     <!--
     Setting it to disable so that code clean up will properly remove unused usings.
     With this enabled, VS would take into account the global usings and would remove required usings from .cs files during Code Cleanup task,
     which would lead to errors in VS Code when running the code via Add-Type in PowerShell.
     -->
-    <ImplicitUsings>disable</ImplicitUsings>
 
+    <ImplicitUsings>disable</ImplicitUsings>
     <!-- Reference to the manifest file -->
     <ApplicationManifest>app.manifest</ApplicationManifest>
 
     <!-- This would activate all analyzers -->
     <!-- <AnalysisMode>All</AnalysisMode>  -->
 
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net9.0-windows10.0.26100.0</TargetFramework>
+    <RootNamespace>HardenWindowsSecurity</RootNamespace>
     <Nullable>enable</Nullable>
     <UseWpf>true</UseWpf>
     <UseWindowsForms>false</UseWindowsForms>
@@ -26,28 +24,24 @@
     <StartupObject>HardenWindowsSecurity.Program</StartupObject>
     <PackageProjectUrl>https://github.com/HotCakeX/Harden-Windows-Security</PackageProjectUrl>
     <RepositoryUrl>https://github.com/HotCakeX/Harden-Windows-Security</RepositoryUrl>
-    <PackageTags>Windows;Cyber;CyberSecurity</PackageTags>
+    <PackageTags>Windows;Cyber;CyberSecurity,Harden</PackageTags>
     <Title>Harden Windows Security</Title>
     <Authors>Violet Hansen</Authors>
     <Company>SpyNetGirl</Company>
     <PackageReleaseNotes>https://github.com/HotCakeX/Harden-Windows-Security/releases</PackageReleaseNotes>
     <PackageId>HardenWindowsSecurity</PackageId>
     <Description>Harden Windows Safely, Securely using Official Supported Microsoft methods and proper explanation</Description>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <CheckForOverflowUnderflow>True</CheckForOverflowUnderflow>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <CheckForOverflowUnderflow>True</CheckForOverflowUnderflow>
-  </PropertyGroup>
-
-  <PropertyGroup>
-    <RuntimeIdentifiers>win-x64;win-arm64</RuntimeIdentifiers>
-    <SelfContained>false</SelfContained>
+    <FileVersion>1.0.0.0</FileVersion>
+    <AssemblyVersion>$(FileVersion)</AssemblyVersion>
     <NeutralLanguage>en-US</NeutralLanguage>
+    <AllowUnsafeBlocks>False</AllowUnsafeBlocks>
+    <Version>$(FileVersion)</Version>
+    <RuntimeIdentifiers>win-x64</RuntimeIdentifiers>
+    <SelfContained>true</SelfContained>
     <EnforceCodeStyleInBuild>True</EnforceCodeStyleInBuild>
+    <CheckForOverflowUnderflow>True</CheckForOverflowUnderflow>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <IncludeSymbols>True</IncludeSymbols>
   </PropertyGroup>
 
   <ItemGroup>
@@ -57,6 +51,13 @@
     <Content Include="Main files\Shared\**">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\LICENSE">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
   </ItemGroup>
 
   <ItemGroup>

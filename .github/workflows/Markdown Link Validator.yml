@@ -1,0 +1,137 @@
+name: Markdown Link Validator
+
+permissions:
+  contents: read
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - name: Check out the repository code
+        uses: actions/checkout@v4
+
+      - name: Validate the links
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          Add-Type -TypeDefinition @'
+          using System.Collections.Generic;
+          using System.Collections.Concurrent;
+          public sealed class LinkReport(string originalLink, string fileFoundIn, int statusCode, string redirectedLink, bool redirectMatch)
+          {
+              public string OriginalLink { get; set; } = originalLink;
+              public string FileFoundIn { get; set; } = fileFoundIn;
+              public int StatusCode { get; set; } = statusCode;
+              public string RedirectedLink { get; set; } = redirectedLink;
+              public bool RedirectMatch { get; set; } = redirectMatch;
+          }
+          public static class Variables
+          {
+              // List to store instances of LinkReport
+              public static ConcurrentBag<LinkReport> LinkReports = new ConcurrentBag<LinkReport>();
+          }
+          '@
+
+          [string[]]$MarkdownFilePaths = @('.\README.md', '.\Rationale.md')
+
+          # Iterate over each file simultaneously
+          $MarkdownFilePaths | ForEach-Object -Parallel {
+
+              [string]$MarkdownContent = Get-Content -Path $_ -Raw -Force
+
+              # Define regex patterns for HTML and Markdown links
+              [string]$RegexForHTMLBasedLinks = '="(https://[^"]+)"'
+              [string]$RegexForMarkDownBasedLinks = '\(https://[^)]+\)'
+
+              # Initialize a HashSet to collect unique links
+              [System.Collections.Generic.HashSet[string]]$AggregatedLinks = @()
+
+              # Find all HTML-based link matches and add them to the HashSet
+              $MatchesHTML = [regex]::Matches($MarkdownContent, $RegexForHTMLBasedLinks)
+              foreach ($Match in $MatchesHTML) {
+                  $Url = $Match.Groups[1].Value
+                  [System.Void]$AggregatedLinks.Add($Url)
+              }
+
+              # Find all Markdown-based link matches and add them to the HashSet
+              $MatchesMarkdown = [regex]::Matches($MarkdownContent, $RegexForMarkDownBasedLinks)
+              foreach ($Match in $MatchesMarkdown) {
+                  $Url = $Match.Value.Trim('(', ')')
+                  [System.Void]$AggregatedLinks.Add($Url)
+              }
+
+              # Check each link for validity and redirection
+              foreach ($Link in $AggregatedLinks) {
+                  # Default values in case the link is unreachable
+                  $statusCode = 0
+                  $RedirectedLink = $Link
+                  $RedirectMatch = $true
+
+                  try {
+                      Write-Host "Checking link: $Link" -ForegroundColor Yellow
+
+                      # Attempt to send an HTTP request to check the link, allowing automatic redirection
+                      $Response = Invoke-WebRequest -Uri $Link -Method Head
+
+                      # Check if the response was successful
+                      if ($null -ne $Response) {
+                          # Capture the final status code and redirected URL
+                          $statusCode = $Response.StatusCode
+
+                          # Check if the response has a final redirected URL
+                          if ($Response.BaseResponse.ResponseUri) {
+                              $RedirectedLink = $Response.BaseResponse.ResponseUri.AbsoluteUri
+                          }
+
+                          # Determine if the final redirected link matches the original link
+                          $RedirectMatch = ($Link -eq $RedirectedLink)
+                      }
+                      else {
+                          # If the link is unreachable, set a status code indicating failure (e.g., 404 or 403)
+                          $statusCode = 404
+                          $RedirectedLink = 'Unreachable'
+                          $RedirectMatch = $false
+                      }
+
+                  }
+                  catch {
+                      # If the link is unreachable, set a status code indicating failure (e.g., 404 or 403)
+                      $statusCode = 404
+                      $RedirectedLink = 'Unreachable'
+                      $RedirectMatch = $false
+                  }
+
+                  Write-Host "Status code: $statusCode - Match Result: $RedirectMatch"
+
+                  $LinkReport = [LinkReport]::new($Link, $_, $statusCode, $RedirectedLink, $RedirectMatch)
+                  [Variables]::LinkReports.Add($LinkReport)
+              }
+
+          } -ThrottleLimit 25
+
+          Write-Host 'Sorting the data'
+
+          # Sort the result so unreachable links appear at the top
+          $SortedResult = [Variables]::LinkReports | Sort-Object -Property RedirectMatch
+
+          # Adding header for the markdown summary
+          [string]$outputString = "# Link Validation Report 🚀`n`n<br>`n`n"
+          $outputString += "- Total Links Checked: $($SortedResult.Count) 📉`n`n"
+          $outputString += "- Total number of unreachable links: $($SortedResult.Where({$_.StatusCode -eq 404}).Count) 🙈`n`n<br>`n"
+          $outputString += "`n| 🦄 Original Link | 📁 File Found In | 🗿 Status Code | 🎯 Redirected Link | 👀 Redirect Match |"
+          $outputString += "`n|:-------------|:------------|:----------:|:---------------|:-------------:|"
+
+          # https://docs.github.com/en/actions/writing-workflows/choosing-what-your-workflow-does/workflow-commands-for-github-actions#adding-a-job-summary
+          # https://github.blog/news-insights/product-news/supercharging-github-actions-with-job-summaries/
+
+          Write-Host 'Adding data to the markdown summary'
+
+          foreach ($LinkReport in $SortedResult) {
+              # Append result to the output string
+              $outputString += "`n| $($LinkReport.OriginalLink) | $($LinkReport.FileFoundIn) | $($LinkReport.StatusCode) | $($LinkReport.RedirectedLink) | $($LinkReport.RedirectMatch) $($($LinkReport.RedirectMatch) ? '✅' : '❌') |"
+          }
+
+          Set-Content -Path $env:GITHUB_STEP_SUMMARY -Value $outputString -Force

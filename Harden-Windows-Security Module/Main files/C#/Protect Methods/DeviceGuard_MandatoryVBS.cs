@@ -1,5 +1,4 @@
 ﻿using System;
-using System.IO;
 
 #nullable enable
 
@@ -9,7 +8,7 @@ namespace HardenWindowsSecurity
     {
 
         /// <summary>
-        /// Applies the Device Guard category policies
+        /// Enables mandatory mode of VBS and Memory Integrity
         /// </summary>
         /// <exception cref="ArgumentNullException"></exception>
         public static void DeviceGuard_MandatoryVBS()

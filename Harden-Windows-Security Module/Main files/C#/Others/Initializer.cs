@@ -1,5 +1,7 @@
 using Microsoft.Win32;
 using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 
@@ -101,7 +103,7 @@ namespace HardenWindowsSecurity
             GlobalVars.VerbosePreference = VerbosePreference;
 
             // Create an empty ConcurrentDictionary to store the final results of the cmdlets
-            GlobalVars.FinalMegaObject = new System.Collections.Concurrent.ConcurrentDictionary<System.String, System.Collections.Generic.List<IndividualResult>>();
+            GlobalVars.FinalMegaObject = new ConcurrentDictionary<String, List<IndividualResult>>();
 
             // Create an empty dictionary to store the System Security Policies from the security_policy.inf file
             GlobalVars.SystemSecurityPoliciesIniObject = [];

@@ -41,7 +41,7 @@ namespace HardenWindowsSecurity
                 // Check the type of the JSON value
                 if (property.Value.ValueKind == JsonValueKind.Object)
                 {
-                    // If the value is a nested object, recursively convert it to a Hashtable
+                    // If the value is a nested object, recursively convert it to a HashTable
                     hashtable[property.Name] = ConvertJsonElementToHashtable(property.Value);
                 }
                 else if (property.Value.ValueKind == JsonValueKind.Array)
@@ -51,7 +51,7 @@ namespace HardenWindowsSecurity
                 }
                 else
                 {
-                    // For primitive values, add them directly to the Hashtable
+                    // For primitive values, add them directly to the HashTable
                     hashtable[property.Name] = property.Value.ToString();
                 }
             }

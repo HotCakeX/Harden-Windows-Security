@@ -709,6 +709,12 @@ Refer to this [official documentation about the countermeasures of Bitlocker](ht
 
 <br>
 
+- <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/discord-verify-gradient.gif" width="25" alt="Rotating green checkmark denoting Subcategory"> Enables Virtualization-based Security and Memory Integrity in [Mandatory mode](https://learn.microsoft.com/en-us/windows/security/hardware-security/enable-virtualization-based-protection-of-code-integrity?tabs=reg).
+
+   * Special care should be used before enabling this mode, since, in case of any failure of the virtualization modules, the system will refuse to boot.
+
+<br>
+
 > [!TIP]\
 > **Most of the Device Guard and Virtualization-Based Security features are Automatically enabled by default** on capable and modern hardware. The rest of them will be enabled and configured to the most secure state after you apply the Microsoft Security Baselines and the Harden Windows Security policies.
 >
@@ -1209,6 +1215,10 @@ NistP384
 <br>
 
 - <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/magenta-verification.gif" width="25" alt="Rotating pink checkmark denoting registry or cmdlet"> Configures the [SSH client's configurations](https://learn.microsoft.com/en-us/windows-server/administration/OpenSSH/openssh-server-configuration#openssh-configuration-files) to use the following secure MACs (Message Authentication Codes): `MACs hmac-sha2-512-etm@openssh.com,hmac-sha2-256-etm@openssh.com,umac-128-etm@openssh.com`.
+
+<br>
+
+- <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/main/images/Gifs/bluemark.gif" width="25" alt="Blue Check mark denoting Group Policy"> <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/discord-verify-gradient.gif" width="25" alt="Rotating green checkmark denoting Subcategory"> Enables support for [long paths](https://learn.microsoft.com/en-us/windows/win32/fileio/maximum-file-path-limitation).
 
 <p align="right"><a href="#menu-back-to-top">💡 (back to categories)</a></p>
 

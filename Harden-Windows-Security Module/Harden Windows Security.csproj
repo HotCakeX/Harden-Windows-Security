@@ -41,7 +41,8 @@
     <EnforceCodeStyleInBuild>True</EnforceCodeStyleInBuild>
     <CheckForOverflowUnderflow>True</CheckForOverflowUnderflow>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
-    <IncludeSymbols>True</IncludeSymbols>
+    <IncludeSymbols>False</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
   </PropertyGroup>
 
   <ItemGroup>

@@ -55,7 +55,7 @@ namespace WDACConfig
             string error = process.StandardError.ReadToEnd();
 
             // Log the output and error
-            WDACConfig.Logger.Write(output);
+            Logger.Write(output);
 
             // Check if there is any error and throw an exception if there is
             if (!string.IsNullOrEmpty(error))

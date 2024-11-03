@@ -9,6 +9,7 @@
     xmlns:ui="using:CommunityToolkit.WinUI"
     xmlns:win="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
+    xmlns:tk7controls="using:CommunityToolkit.WinUI.UI.Controls"
     mc:Ignorable="d">
 
     <Grid Margin="20,30,20,20">
@@ -18,87 +19,75 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
+        <Grid.Resources>
+            <Style x:Key="GridCardStyle" TargetType="Border">
+                <Style.Setters>
+                    <Setter Property="Background" Value="{ThemeResource CardBackgroundFillColorDefaultBrush}" />
+                    <Setter Property="BorderThickness" Value="1" />
+                    <Setter Property="BorderBrush" Value="{ThemeResource CardStrokeColorDefaultBrush}" />
+                    <Setter Property="CornerRadius" Value="{StaticResource OverlayCornerRadius}" />
+                </Style.Setters>
+            </Style>
+        </Grid.Resources>
+
         <TextBlock Text="View Currently Deployed Policies" Style="{StaticResource TitleTextBlockStyle}" Margin="15" Grid.Row="0"/>
 
-        <controls:WrapPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center">
+        <Border Grid.Row="1" Margin="0,0,0,30" Style="{StaticResource GridCardStyle}" Padding="10">
 
-            <CheckBox x:Name="IncludeSystemPolicies" Content="System Policies" Margin="12,0,0,0" />
-            <CheckBox x:Name="IncludeBasePolicies" Content="Base Policies" Margin="12,0,0,0" IsChecked="True" />
-            <CheckBox x:Name="IncludeSupplementalPolicies" Content="Supplemental Policies" Margin="12,0,0,0" IsChecked="True" />
+            <controls:WrapPanel Orientation="Horizontal" HorizontalAlignment="Center" HorizontalSpacing="12" VerticalSpacing="12">
 
-            <Button Name="RetrievePoliciesButton" Content="Retrieve Policies" Click="RetrievePoliciesButton_Click" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10"/>
+                <CheckBox x:Name="IncludeSystemPolicies" Content="System Policies" />
+                <CheckBox x:Name="IncludeBasePolicies" Content="Base Policies" IsChecked="True" />
+                <CheckBox x:Name="IncludeSupplementalPolicies" Content="Supplemental Policies" IsChecked="True" />
 
-            <TextBlock Name="PoliciesCountTextBlock" Text="Number of Policies: 0" Margin="10" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                <Button Name="RetrievePoliciesButton" Content="Retrieve Policies" Click="RetrievePoliciesButton_Click" HorizontalAlignment="Center" VerticalAlignment="Center"/>
 
-            <Button x:Name="RemoveUnsignedPolicy" Content="Remove Unsigned Policy" Click="RemoveUnsignedPolicy_Click" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="10"/>
+                <TextBlock Name="PoliciesCountTextBlock" Text="Number of Policies: 0" VerticalAlignment="Center" HorizontalAlignment="Center" />
 
-            <!-- Search Box for filtering policies -->
-            <TextBox x:Name="SearchBox" Width="300" PlaceholderText="Search policies..." TextChanged="SearchBox_TextChanged" Margin="10" VerticalAlignment="Center" />
+                <Button x:Name="RemoveUnsignedPolicy" Content="Remove Unsigned Policy" Click="RemoveUnsignedPolicy_Click" HorizontalAlignment="Center" VerticalAlignment="Center"/>
 
-        </controls:WrapPanel>
+                <!-- Search Box for filtering policies -->
+                <TextBox x:Name="SearchBox" Width="300" PlaceholderText="Search policies..." TextChanged="SearchBox_TextChanged" VerticalAlignment="Center" />
 
-        <ScrollViewer Grid.Row="2" HorizontalScrollBarVisibility="Auto" Margin="10,10,10,10">
+            </controls:WrapPanel>
 
-            <ListView Name="PoliciesListView" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" SelectionChanged="PoliciesListView_SelectionChanged">
+        </Border>
 
-                <!-- ListView Headers -->
-                <ListView.Header>
-                    <Grid Padding="16,12" ColumnSpacing="16">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="280" />
-                            <ColumnDefinition Width="420" />
-                            <ColumnDefinition Width="75" />
-                            <ColumnDefinition Width="95" />
-                            <ColumnDefinition Width="95" />
-                            <ColumnDefinition Width="60" />
-                            <ColumnDefinition Width="60" />
-                            <ColumnDefinition Width="*" />
-                        </Grid.ColumnDefinitions>
+        <Border Grid.Row="2" Style="{StaticResource GridCardStyle}" Margin="0,0,0,25" Padding="5">
 
-                        <TextBlock Foreground="{ThemeResource TextFillColorSecondaryBrush}" Text="Policy ID" />
-                        <TextBlock Grid.Column="1" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Text="Friendly Name" />
-                        <TextBlock Grid.Column="2" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Text="Version" />
-                        <TextBlock Grid.Column="3" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Text="System Policy" />
-                        <TextBlock Grid.Column="4" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Text="Signed Policy" />
-                        <TextBlock Grid.Column="5" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Text="On Disk" />
-                        <TextBlock Grid.Column="6" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Text="Enforced" />
-                        <TextBlock Grid.Column="7" Foreground="{ThemeResource TextFillColorSecondaryBrush}" Text="PolicyOptions" />
-                    </Grid>
-                </ListView.Header>
-
-                <!-- ListView Item Template -->
-                <ListView.ItemTemplate>
-                    <DataTemplate x:DataType="wdac:CiPolicyInfo">
-                        <Grid ColumnSpacing="16">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="280" />
-                                <ColumnDefinition Width="420" />
-                                <ColumnDefinition Width="75" />
-                                <ColumnDefinition Width="95" />
-                                <ColumnDefinition Width="95" />
-                                <ColumnDefinition Width="60" />
-                                <ColumnDefinition Width="60" />
-                                <ColumnDefinition Width="*" />
-                            </Grid.ColumnDefinitions>
-
-                            <TextBlock Text="{x:Bind PolicyID}" />
-                            <TextBlock Grid.Column="1" Text="{x:Bind FriendlyName}" />
-                            <TextBlock Grid.Column="2" Text="{x:Bind VersionString}" />
-                            <TextBlock Grid.Column="3" Text="{x:Bind IsSystemPolicy}" />
-                            <TextBlock Grid.Column="4" Text="{x:Bind IsSignedPolicy}" />
-                            <TextBlock Grid.Column="5" Text="{x:Bind IsOnDisk}" />
-                            <TextBlock Grid.Column="6" Text="{x:Bind IsEnforced}" />
-                            <TextBlock Grid.Column="7" Text="{x:Bind PolicyOptionsDisplay}" />
-                        </Grid>
-                    </DataTemplate>
-                </ListView.ItemTemplate>
-
-                <ListView.ItemContainerStyle>
-                    <Style BasedOn="{StaticResource DefaultListViewItemStyle}" TargetType="ListViewItem">
-                        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
-                    </Style>
-                </ListView.ItemContainerStyle>
-            </ListView>
-        </ScrollViewer>
+            <tk7controls:DataGrid
+        x:Name="DeployedPolicies"
+        ItemsSource="{x:Bind AllPolicies, Mode=OneWay}"
+        AllowDrop="False"
+        AreRowDetailsFrozen="True"
+        AutoGenerateColumns="False"
+        CanDrag="False"
+        HeadersVisibility="Column"
+        IsReadOnly="True"
+        IsTabStop="True"
+        RowDetailsVisibilityMode="Collapsed"
+        SelectionMode="Single"
+        TabIndex="2"
+        ScrollViewer.HorizontalScrollBarVisibility="Auto"
+        ScrollViewer.VerticalScrollBarVisibility="Auto"
+        ScrollViewer.VerticalScrollMode="Auto"
+        ScrollViewer.HorizontalScrollMode="Auto"
+        SelectionChanged="DeployedPolicies_SelectionChanged"
+        Sorting="DeployedPoliciesDataGrid_Sorting"
+        CanUserSortColumns="True">
+                <tk7controls:DataGrid.Columns>
+                    <tk7controls:DataGridTextColumn Header="Policy ID" Binding="{Binding PolicyID}" Tag="PolicyID" Width="Auto"/>
+                    <tk7controls:DataGridTextColumn Header="Base Policy ID" Binding="{Binding BasePolicyID}" Tag="BasePolicyID" Width="Auto"/>
+                    <tk7controls:DataGridTextColumn Header="Friendly Name" Binding="{Binding FriendlyName}" Tag="FriendlyName" Width="Auto"/>
+                    <tk7controls:DataGridTextColumn Header="Version" Binding="{Binding Version}" Tag="Version" Width="Auto"/>
+                    <tk7controls:DataGridTextColumn Header="Is Authorized" Binding="{Binding IsAuthorized}" Tag="IsAuthorized" Width="Auto"/>
+                    <tk7controls:DataGridTextColumn Header="Is Enforced" Binding="{Binding IsEnforced}" Tag="IsEnforced" Width="Auto"/>
+                    <tk7controls:DataGridTextColumn Header="Is On Disk" Binding="{Binding IsOnDisk}" Tag="IsOnDisk" Width="Auto"/>
+                    <tk7controls:DataGridTextColumn Header="Is Signed Policy" Binding="{Binding IsSignedPolicy}" Tag="IsSignedPolicy" Width="Auto"/>
+                    <tk7controls:DataGridTextColumn Header="Is System Policy" Binding="{Binding IsSystemPolicy}" Tag="IsSystemPolicy" Width="Auto"/>
+                    <tk7controls:DataGridTextColumn Header="Policy Options" Binding="{Binding PolicyOptionsDisplay}" Tag="PolicyOptionsDisplay" Width="Auto"/>
+                </tk7controls:DataGrid.Columns>
+            </tk7controls:DataGrid>
+        </Border>
     </Grid>
 </Page>

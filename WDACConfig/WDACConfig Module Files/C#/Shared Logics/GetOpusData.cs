@@ -45,10 +45,10 @@ namespace WDACConfig
         // Declaring a public static method GetOpusData that returns a List of OpusInfoObj, taking a SignedCms parameter
         // https://learn.microsoft.com/en-us/windows/win32/seccrypto/example-c-program--verifying-the-signature-of-a-pe-file
         // https://view.officeapps.live.com/op/view.aspx?src=https%3A%2F%2Fdownload.microsoft.com%2Fdownload%2F9%2Fc%2F5%2F9c5b2167-8017-4bae-9fde-d599bac8184a%2FAuthenticode_PE.docx
-        public static List<Opus.OpusInfoObj> GetOpusData(SignedCms signature)
+        public static List<OpusInfoObj> GetOpusData(SignedCms signature)
         {
             // Initializing a new List of OpusInfoObj to store the output data to return
-            List<Opus.OpusInfoObj> OEMOpusData = [];
+            List<OpusInfoObj> OEMOpusData = [];
 
             // Iterating through each SignerInfo in the SignerInfos collection of the signature
             foreach (SignerInfo signerInfo in signature.SignerInfos)
@@ -86,7 +86,7 @@ namespace WDACConfig
                                 else
                                 {
                                     // Converting the unmanaged memory block to OpusInfoObj structure
-                                    Opus.OpusInfoObj structure = Marshal.PtrToStructure<OpusInfoObj>(decodedDataPtr)!;
+                                    OpusInfoObj structure = Marshal.PtrToStructure<OpusInfoObj>(decodedDataPtr)!;
                                     // Adding the structure to OEMOpusData list
                                     OEMOpusData.Add(structure);
                                 }

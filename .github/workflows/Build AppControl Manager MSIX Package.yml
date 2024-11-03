@@ -4,6 +4,7 @@ permissions:
   id-token: write
   actions: read
   contents: write
+  pull-requests: write
   attestations: write
 
 on:
@@ -13,45 +14,53 @@ jobs:
   build:
     runs-on: windows-latest
     steps:
-
       - name: Check out the repository code
         uses: actions/checkout@v4
 
       - name: Setting up and downloading Winget
         shell: pwsh
         run: |
-          # Set up URLs and retrieve Winget latest release information
+          # Retrieve the latest Winget release information
           [string]$WingetRepoURL = 'https://api.github.com/repos/microsoft/winget-cli/releases'
           $WingetReleases = Invoke-RestMethod -Uri $WingetRepoURL
           $LatestRelease = $WingetReleases | Select-Object -First 1
-          [string]$WingetURL2 = $LatestRelease.assets.browser_download_url | Where-Object { $_.EndsWith('.msixbundle') } | Select-Object -First 1
-          [string]$WingetLicense = $LatestRelease.assets.browser_download_url | Where-Object { $_.EndsWith('License1.xml') } | Select-Object -First 1
+          # Direct links to the latest Winget release assets
+          [string]$WingetURL = $LatestRelease.assets.browser_download_url | Where-Object -FilterScript { $_.EndsWith('.msixbundle') } | Select-Object -First 1
+          [string]$WingetLicense = $LatestRelease.assets.browser_download_url | Where-Object -FilterScript { $_.EndsWith('License1.xml') } | Select-Object -First 1
+          [string]$LatestWingetReleaseDependenciesZipURL = $LatestRelease.assets.browser_download_url | Where-Object -FilterScript { $_.EndsWith('DesktopAppInstaller_Dependencies.zip') } | Select-Object -First 1
           [hashtable]$Downloads = @{
-              'VCLibs.appx'            = 'https://aka.ms/Microsoft.VCLibs.x64.14.00.Desktop.appx'
-              'Microsoft.UI.Xaml.appx' = 'https://github.com/microsoft/microsoft-ui-xaml/releases/download/v2.8.6/Microsoft.UI.Xaml.2.8.x64.appx'
-              'Winget.msixbundle'      = 'https://aka.ms/getwinget'
-              'License1.xml'           = $WingetLicense
+              # 'Winget.msixbundle'                 = 'https://aka.ms/getwinget' This is updated slower than the GitHub release
+              'DesktopAppInstaller_Dependencies.zip' = $LatestWingetReleaseDependenciesZipURL
+              'Winget.msixbundle'                    = $WingetURL
+              'License1.xml'                         = $WingetLicense
           }
           $Downloads.GetEnumerator() | ForEach-Object -Parallel {
-              $FileName = $_.Key
-              $URL = $_.Value
-              Invoke-RestMethod -Uri $URL -OutFile $FileName
+              Invoke-RestMethod -Uri $_.Value -OutFile $_.Key
           }
-          Add-AppxProvisionedPackage -Online -PackagePath 'Winget.msixbundle' -DependencyPackagePath 'Microsoft.UI.Xaml.appx', 'VCLibs.appx' -LicensePath 'License1.xml'
+          Expand-Archive -Path 'DesktopAppInstaller_Dependencies.zip' -DestinationPath .\ -Force
+          # Get the paths to all of the dependencies
+          [string[]]$DependencyPaths = (Get-ChildItem -Path .\x64 -Filter '*.appx' -File -Force).FullName
+          Add-AppxProvisionedPackage -Online -PackagePath 'Winget.msixbundle' -DependencyPackagePath $DependencyPaths -LicensePath 'License1.xml'
+
+          # Add the dependency paths to the GitHub environment to be used in the next step
+          Add-Content -Path $env:GITHUB_ENV -Value "WINGET_DEPENDENCY1=$($DependencyPaths[0])"
+          Add-Content -Path $env:GITHUB_ENV -Value "WINGET_DEPENDENCY2=$($DependencyPaths[1])"
 
       - name: Finishing setting up Winget
         shell: powershell
         run: |
-          Add-AppPackage -Path 'Winget.msixbundle' -DependencyPath 'Microsoft.UI.Xaml.appx', 'VCLibs.appx' -ForceTargetApplicationShutdown -ForceUpdateFromAnyVersion
+          Add-AppPackage -Path 'Winget.msixbundle' -DependencyPath  "${{ env.WINGET_DEPENDENCY1 }}", "${{ env.WINGET_DEPENDENCY2 }}" -ForceTargetApplicationShutdown -ForceUpdateFromAnyVersion
           # Add-AppPackage on Windows Server throws error so we use Windows PowerShell for this section.
 
       - name: Installing the necessary programs
         run: |
-          winget install --id Microsoft.DotNet.SDK.Preview --exact --accept-package-agreements --accept-source-agreements --uninstall-previous --force
-          winget install --id Microsoft.VisualStudio.2022.BuildTools --exact --accept-package-agreements --accept-source-agreements --uninstall-previous --force
-          winget install --id Microsoft.WindowsSDK.10.0.26100 --exact --accept-package-agreements --accept-source-agreements --uninstall-previous --force
-          winget install --id Microsoft.AppInstaller --exact --accept-package-agreements --accept-source-agreements --uninstall-previous --force
-          winget install --id Microsoft.VCRedist.2015+.x64 --exact --accept-package-agreements --accept-source-agreements --uninstall-previous --force
+          winget source update
+          winget install --id Microsoft.DotNet.SDK.Preview --exact --accept-package-agreements --accept-source-agreements --uninstall-previous --force --source winget
+          winget install --id Microsoft.VisualStudio.2022.BuildTools --exact --accept-package-agreements --accept-source-agreements --uninstall-previous --force --source winget
+          winget install --id Microsoft.WindowsSDK.10.0.26100 --exact --accept-package-agreements --accept-source-agreements --uninstall-previous --force --source winget
+          # https://github.com/microsoft/winget-cli/issues/1705
+          winget install --id Microsoft.AppInstaller --exact --accept-package-agreements --accept-source-agreements --uninstall-previous --force --source winget
+          winget install --id Microsoft.VCRedist.2015+.x64 --exact --accept-package-agreements --accept-source-agreements --uninstall-previous --force --source winget
 
       - name: Building the AppControl Manager
         run: dotnet build "AppControl Manager/AppControl Manager.sln" --configuration Release --verbosity minimal
@@ -62,14 +71,16 @@ jobs:
       - name: Capturing the Generated MSIX file Path
         shell: pwsh
         run: |
-          [string]$MSIXPath = (Get-ChildItem -Path '.\AppControl Manager\MSIXOutput\AppControl Manage*\AppControl Manager*.msix').FullName
-          [string]$MSIXName = (Get-ChildItem -Path '.\AppControl Manager\MSIXOutput\AppControl Manage*\AppControl Manager*.msix').Name
-
-          if ([string]::IsNullOrWhiteSpace($MSIXPath)) { throw "Couldn't find the generated MSIX package" }
-
-          # Write the MSIXPath and MSIXName to GITHUB_ENV to set it as an environment variable for the entire workflow
+          [string]$MSIXPath = (Get-ChildItem -File -Path '.\AppControl Manager\MSIXOutput\AppControl Manage*\AppControl Manager*.msix').FullName
+          [string]$MSIXName = (Get-ChildItem -File -Path '.\AppControl Manager\MSIXOutput\AppControl Manage*\AppControl Manager*.msix').Name
+          [XML]$CSProjXMLContent = Get-Content -Path '.\AppControl Manager\AppControl Manager.csproj' -Force
+          [string]$MSIXVersion = $CSProjXMLContent.Project.PropertyGroup.FileVersion
+          [string]$MSIXVersion = $MSIXVersion.Trim() # It would have trailing whitespaces
+          if ([string]::IsNullOrWhiteSpace($MSIXPath) -or [string]::IsNullOrWhiteSpace($MSIXName) -or [string]::IsNullOrWhiteSpace($MSIXVersion)) { throw "Couldn't find the generated MSIX package" }
+          # Write the MSIXPath, MSIXName and MSIXVersion to GITHUB_ENV to set it as an environment variable for the entire workflow
           Add-Content -Path $env:GITHUB_ENV -Value "MSIX_PATH=$MSIXPath"
           Add-Content -Path $env:GITHUB_ENV -Value "MSIX_NAME=$MSIXName"
+          Add-Content -Path $env:GITHUB_ENV -Value "MSIX_VERSION=$MSIXVersion"
 
       - name: Generating Artifact Attestation
         uses: actions/attest-build-provenance@v1
@@ -94,6 +105,7 @@ jobs:
 
       - name: Finding the Latest Draft Release
         id: find_draft_release
+        shell: pwsh
         run: |
           # Find the latest draft release via GitHub REST API
           $Response = Invoke-RestMethod -Uri "https://api.github.com/repos/${{ github.repository }}/releases" -Headers @{ Authorization = "token ${{ secrets.GITHUB_TOKEN }}" }
@@ -102,36 +114,104 @@ jobs:
           if (!$DraftRelease) {
             throw "No draft release found"
           }
+
+          # Capture the draft release ID and tag
           $DRAFT_RELEASE_ID = $DraftRelease.id
-          Write-Output -InputObject "DRAFT_RELEASE_ID=$DRAFT_RELEASE_ID" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Force
-          Write-host -Object "GitHub Draft ID: $DRAFT_RELEASE_ID"
-        shell: pwsh
+          $DRAFT_RELEASE_TAG = $DraftRelease.tag_name
+
+          # Save both the release ID and tag to environment variables for later steps
+          Add-Content -Path $env:GITHUB_ENV -Value "DRAFT_RELEASE_ID=$DRAFT_RELEASE_ID"
+          Add-Content -Path $env:GITHUB_ENV -Value "DRAFT_RELEASE_TAG=$DRAFT_RELEASE_TAG"
+
+          Write-Host -Object "GitHub Draft ID: $DRAFT_RELEASE_ID"
+          Write-Host -Object "GitHub Draft Tag: $DRAFT_RELEASE_TAG"
 
       - name: Uploading the MSIX Package to the Draft Release
+        shell: pwsh
         run: |
-          $DraftReleaseId = $env:DRAFT_RELEASE_ID
-          $FilePath = "${{ env.MSIX_PATH }}"
-          $FileName = "${{ env.MSIX_NAME }}"
-          $uploadUrl = "https://uploads.github.com/repos/${{ github.repository }}/releases/$DraftReleaseId/assets?name=$FileName"
-
+          [string]$DraftReleaseId = $env:DRAFT_RELEASE_ID
+          [string]$FilePath = "${{ env.MSIX_PATH }}"
+          [string]$FileName = "${{ env.MSIX_NAME }}"
+          [string]$UploadUrl = "https://uploads.github.com/repos/${{ github.repository }}/releases/$DraftReleaseId/assets?name=$FileName"
           # Upload the package to the draft release
-          $Response = Invoke-RestMethod -Uri $uploadUrl -Method Put -InFile $FilePath -Headers @{
+          $Response = Invoke-RestMethod -Uri $UploadUrl -Method Put -InFile $FilePath -Headers @{
             "Authorization" = "token ${{ secrets.GITHUB_TOKEN }}"
             "Content-Type" = "application/octet-stream"
           }
-          Write-Host -Object "Uploaded package to draft release: $Response.name"  
-        shell: pwsh  
+          Write-Host -Object "Uploaded package to draft release: $Response.name"
 
       - name: Uploading the SBOM file to the Draft Release
+        shell: pwsh
         run: |
-          $DraftReleaseId = $env:DRAFT_RELEASE_ID
-          $FilePath = "HardenWindowsSecurityRepoSBOM.spdx"
-          $FileName = "HardenWindowsSecurityRepoSBOM.spdx"
-          $uploadUrl = "https://uploads.github.com/repos/${{ github.repository }}/releases/$DraftReleaseId/assets?name=$FileName"
+          [string]$DraftReleaseId = $env:DRAFT_RELEASE_ID
+          [string]$FilePath = "HardenWindowsSecurityRepoSBOM.spdx"
+          [string]$FileName = "HardenWindowsSecurityRepoSBOM.spdx"
+          [string]$UploadUrl = "https://uploads.github.com/repos/${{ github.repository }}/releases/$DraftReleaseId/assets?name=$FileName"
 
-          $Response = Invoke-RestMethod -Uri $uploadUrl -Method Put -InFile $FilePath -Headers @{
+          $Response = Invoke-RestMethod -Uri $UploadUrl -Method Put -InFile $FilePath -Headers @{
             "Authorization" = "token ${{ secrets.GITHUB_TOKEN }}"
             "Content-Type" = "application/octet-stream"
           }
-          Write-Host -Object "Uploaded the SBOM file to the draft release: $Response.name"  
+          Write-Host -Object "Uploaded the SBOM file to the draft release: $Response.name"
+
+      - name: Updating The MSIX Download Link and Version via Pull Request
         shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          [string]$MSIXName = "${{ env.MSIX_NAME }}"
+
+          # Spaces in files added to the GitHub assets will be replaced with dots, so we need to do the same when constructing the download link
+          [string]$AdjustedMSIXName = $MSIXName.Replace('AppControl Manager', 'AppControl.Manager')
+
+          [string]$DRAFT_RELEASE_TAG = "${{ env.DRAFT_RELEASE_TAG }}"
+          [string]$GitHubRepository = "${{ github.repository }}"
+          [string]$MSIX_VERSION = "${{ env.MSIX_VERSION }}"
+
+          # Construct the download URL using the draft release tag and MSIX file name
+          [string]$DownloadURL = "https://github.com/$GitHubRepository/releases/download/$DRAFT_RELEASE_TAG/$AdjustedMSIXName"
+
+          # Path to the files that will be updated
+          [string]$DownloadURLFilePath = '.\AppControl Manager\DownloadURL.txt'
+          [string]$VersionFilePath = '.\AppControl Manager\version.txt'
+
+          # Update the file content with the new URL
+          Set-Content -Path $DownloadURLFilePath -Value $DownloadURL -Force
+          Write-Host -Object "Updated DownloadURL.txt with download URL: $DownloadURL"
+
+          Set-Content -Path $VersionFilePath -Value $MSIX_VERSION -Force
+          Write-Host -Object "Updated version.txt with version: $MSIX_VERSION"
+
+          # Configure Git for committing changes
+          git config --global user.email 'spynetgirl@outlook.com'
+          git config --global user.name 'HotCakeX'
+
+          # Create a new branch for the pull request, making sure branch name has valid characters
+          [string]$NewBranchName = 'AppControl-Manager-DownloadLink-Version-Update'
+          git checkout -b $NewBranchName
+
+          [string]$CommitMessageAndPRTitle = "AppControl-Manager-DownloadLink-Version-Update-Version-$MSIX_VERSION"
+
+          # Stage and commit the change
+          git add $DownloadURLFilePath
+          git add $VersionFilePath
+          git commit -m $CommitMessageAndPRTitle
+
+          # Push the new branch to the remote repository
+          git push -u origin $NewBranchName
+
+          [string]$PRBody = @"
+          This PR updates DownloadURL.txt to
+          ``````
+          $DownloadURL
+          ``````
+          And version.txt to
+          ``````
+          $MSIX_VERSION
+          ``````
+          For the file: $AdjustedMSIXName
+
+          "@
+
+          # Create the pull request
+          gh pr create --title $CommitMessageAndPRTitle --body $PRBody --base main --label 'Automated 🤖' --assignee HotCakeX

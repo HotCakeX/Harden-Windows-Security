@@ -76,9 +76,7 @@ Function Edit-WDACConfig {
         [ValidateSet('DefaultWindows', 'AllowMicrosoft', 'SignedAndReputable')]
         [Parameter(Mandatory = $true, ParameterSetName = 'UpdateBasePolicy')][System.String]$NewBasePolicyType,
 
-        [Parameter(Mandatory = $false, ParameterSetName = 'UpdateBasePolicy')][switch]$RequireEVSigners,
-
-        [Parameter(Mandatory = $false)][switch]$SkipVersionCheck
+        [Parameter(Mandatory = $false, ParameterSetName = 'UpdateBasePolicy')][switch]$RequireEVSigners
     )
     Begin {
         [WDACConfig.LoggerInitializer]::Initialize($VerbosePreference, $DebugPreference, $Host)
@@ -93,7 +91,7 @@ Function Edit-WDACConfig {
         $ModulesToImport += ([WDACConfig.FileUtility]::GetFilesFast("$([WDACConfig.GlobalVars]::ModuleRootPath)\XMLOps", $null, '.psm1')).FullName
         Import-Module -FullyQualifiedName $ModulesToImport -Force
 
-        if (-NOT $SkipVersionCheck) { Update-WDACConfigPSModule -InvocationStatement $MyInvocation.Statement }
+        Update-WDACConfigPSModule -InvocationStatement $MyInvocation.Statement
 
         if ([WDACConfig.GlobalVars]::ConfigCIBootstrap -eq $false) {
             Invoke-MockConfigCIBootstrap
@@ -423,23 +421,7 @@ Function Edit-WDACConfig {
                     [WDACConfig.Logger]::Write('Building the Signer and Hash objects from the selected logs')
                     [WDACConfig.FileBasedInfoPackage]$DataToUseForBuilding = [WDACConfig.SignerAndHashBuilder]::BuildSignerAndHashObjects((ConvertTo-HashtableArray $SelectedLogs), 'EVTX', ($Level -eq 'FilePublisher' ? 'FilePublisher' :  $Level -eq 'Publisher' ? 'Publisher' : $Level -eq 'Hash' ? 'Hash' : 'Auto'), $BoostedSecurity ? $true : $false)
 
-                    [WDACConfig.NewFilePublisherLevelRules]::Create($WDACPolicyPathTEMP, $DataToUseForBuilding.FilePublisherSigners)
-                    [WDACConfig.NewPublisherLevelRules]::Create($WDACPolicyPathTEMP, $DataToUseForBuilding.PublisherSigners)
-                    [WDACConfig.NewHashLevelRules]::Create($WDACPolicyPathTEMP, $DataToUseForBuilding.CompleteHashes)
-
-                    # MERGERS
-                    [WDACConfig.Logger]::Write('Merging the Hash Level rules')
-                    [WDACConfig.RemoveAllowElementsSemantic]::Remove($WDACPolicyPathTEMP)
-                    [WDACConfig.CloseEmptyXmlNodesSemantic]::Close($WDACPolicyPathTEMP)
-
-                    [WDACConfig.Logger]::Write('Merging the Signer Level rules')
-                    Remove-DuplicateFileAttrib_Semantic -XmlFilePath $WDACPolicyPathTEMP
-
-                    Merge-Signers_Semantic -XmlFilePath $WDACPolicyPathTEMP
-                    Merge-Signers_Semantic -XmlFilePath $WDACPolicyPathTEMP
-
-                    # This function runs twice, once for signed data and once for unsigned data
-                    [WDACConfig.CloseEmptyXmlNodesSemantic]::Close($WDACPolicyPathTEMP)
+                    [WDACConfig.XMLOps]::Initiate($DataToUseForBuilding, $WDACPolicyPathTEMP)
 
                     # Add the policy XML file to the array that holds policy XML files
                     [System.Void]$PolicyXMLFilesArray.TryAdd('Temp WDAC Policy', $WDACPolicyPathTEMP)
@@ -774,9 +756,6 @@ Function Edit-WDACConfig {
     Merges multiple deployed supplemental policies into 1 single supplemental policy, removes the old ones, deploys the new one.
 .PARAMETER UpdateBasePolicy
     It can rebootlessly change the type of the deployed base policy.
-.PARAMETER SkipVersionCheck
-    Can be used with any parameter to bypass the online version check
-    It is used by the entire Cmdlet.
 .PARAMETER Level
     The level that determines how the selected folder will be scanned.
     The default value for it is WHQLFilePublisher.

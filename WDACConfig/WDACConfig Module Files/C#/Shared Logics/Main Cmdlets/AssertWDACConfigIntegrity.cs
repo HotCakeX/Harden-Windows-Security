@@ -45,7 +45,7 @@ namespace WDACConfig
             List<WDACConfigHashEntry> ParsedCSVList = ParseCSV(csvData);
 
             // Get all of the files in the PowerShell module directory
-            List<FileInfo> files = WDACConfig.FileUtility.GetFilesFast([new DirectoryInfo(WDACConfig.GlobalVars.ModuleRootPath!)], null, ["*"]);
+            List<FileInfo> files = FileUtility.GetFilesFast([new DirectoryInfo(WDACConfig.GlobalVars.ModuleRootPath!)], null, ["*"]);
 
             // Loop over each file
             foreach (FileInfo file in files)
@@ -72,7 +72,7 @@ namespace WDACConfig
 
                 // Add the file details to the list
                 CurrentFileHashes.Add(new WDACConfigHashEntry(
-                    Path.GetRelativePath(WDACConfig.GlobalVars.ModuleRootPath!, file.FullName),
+                    Path.GetRelativePath(GlobalVars.ModuleRootPath!, file.FullName),
                     file.Name,
                     HashString));
             }

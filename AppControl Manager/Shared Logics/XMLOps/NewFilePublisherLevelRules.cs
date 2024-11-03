@@ -6,7 +6,7 @@ using System.Xml;
 
 namespace WDACConfig
 {
-    public static class NewFilePublisherLevelRules
+    internal static class NewFilePublisherLevelRules
     {
 
         /// <summary>
@@ -16,7 +16,7 @@ namespace WDACConfig
         /// <param name="xmlFilePath"></param>
         /// <param name="filePublisherSigners"> The FilePublisherSigners to be used for creating the rules, they are the output of the BuildSignerAndHashObjects Method </param>
         /// <exception cref="InvalidOperationException"></exception>
-        public static void Create(string xmlFilePath, List<FilePublisherSignerCreator> filePublisherSigners)
+        internal static void Create(string xmlFilePath, List<FilePublisherSignerCreator> filePublisherSigners)
         {
 
             if (filePublisherSigners is null || filePublisherSigners.Count == 0)
@@ -122,7 +122,7 @@ namespace WDACConfig
 
                     string guid2 = Guid.NewGuid().ToString().Replace("-", "", StringComparison.OrdinalIgnoreCase).ToUpperInvariant();
 
-                    string signerID = $"ID_FILEATTRIB_A_{guid2}";
+                    string signerID = $"ID_SIGNER_A_{guid2}";
 
                     // Create the new Signer element
                     XmlElement newSignerNode = codeIntegrityPolicy.XmlDocument.CreateElement("Signer", codeIntegrityPolicy.NameSpaceURI);

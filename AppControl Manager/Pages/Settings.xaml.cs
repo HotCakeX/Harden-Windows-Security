@@ -14,12 +14,18 @@ namespace WDACConfig.Pages
 
             // Make sure navigating to/from this page maintains its state
             this.NavigationCacheMode = Microsoft.UI.Xaml.Navigation.NavigationCacheMode.Enabled;
+
+            // Set the version in the settings card to the current app version
+            VersionTextBlock.Text = $"Version {App.currentAppVersion}";
+
+            // Set the year for the copyright section
+            CopyRightSettingsExpander.Description = $"© {DateTime.Now.Year}. All rights reserved.";
         }
 
         // When the button to get the user configurations on the settings card is pressed
         private void GetConfigurationButton_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
         {
-            var userConfig = WDACConfig.UserConfiguration.Get();
+            UserConfiguration userConfig = UserConfiguration.Get();
 
             SignedPolicyPathTextBox.Text = userConfig.SignedPolicyPath ?? string.Empty;
             UnsignedPolicyPathTextBox.Text = userConfig.UnsignedPolicyPath ?? string.Empty;
@@ -73,7 +79,7 @@ namespace WDACConfig.Pages
                     break;
             }
 
-            _ = WDACConfig.UserConfiguration.Set(
+            _ = UserConfiguration.Set(
                 fieldName == "SignedPolicyPath" ? newValue : null,
                 fieldName == "UnsignedPolicyPath" ? newValue : null,
                 fieldName == "SignToolCustomPath" ? newValue : null,
@@ -94,7 +100,7 @@ namespace WDACConfig.Pages
             var button = sender as Button;
             string? fieldName = button!.Tag.ToString();
 
-            WDACConfig.UserConfiguration.Remove(
+            UserConfiguration.Remove(
                 fieldName == "SignedPolicyPath",
                 fieldName == "UnsignedPolicyPath",
                 fieldName == "SignToolCustomPath",

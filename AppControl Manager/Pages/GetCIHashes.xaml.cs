@@ -1,5 +1,6 @@
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Navigation;
 
 #pragma warning disable CA1401
 
@@ -14,7 +15,7 @@ namespace WDACConfig.Pages
         public GetCIHashes()
         {
             this.InitializeComponent();
-            this.NavigationCacheMode = Microsoft.UI.Xaml.Navigation.NavigationCacheMode.Enabled;
+            this.NavigationCacheMode = NavigationCacheMode.Enabled;
         }
 
         private void PickFile_Click(object sender, RoutedEventArgs e)

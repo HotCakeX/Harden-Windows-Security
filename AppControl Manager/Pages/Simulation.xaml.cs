@@ -3,6 +3,7 @@ using CommunityToolkit.WinUI.UI.Controls;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
@@ -178,13 +179,13 @@ namespace WDACConfig.Pages
 
             // Perform a case-insensitive search in all relevant fields
             List<SimulationOutput> filteredResults = AllSimulationOutputs.Where(output =>
-                (output.Path != null && output.Path.Contains(searchTerm, System.StringComparison.InvariantCultureIgnoreCase)) ||
-                (output.Source != null && output.Source.Contains(searchTerm, System.StringComparison.InvariantCultureIgnoreCase)) ||
-                (output.MatchCriteria != null && output.MatchCriteria.Contains(searchTerm, System.StringComparison.InvariantCultureIgnoreCase)) ||
-                (output.SpecificFileNameLevelMatchCriteria != null && output.SpecificFileNameLevelMatchCriteria.Contains(searchTerm, System.StringComparison.InvariantCultureIgnoreCase)) ||
-                (output.CertSubjectCN != null && output.CertSubjectCN.Contains(searchTerm, System.StringComparison.InvariantCultureIgnoreCase)) ||
-                (output.SignerName != null && output.SignerName.Contains(searchTerm, System.StringComparison.InvariantCultureIgnoreCase)) ||
-                (output.FilePath != null && output.FilePath.Contains(searchTerm, System.StringComparison.InvariantCultureIgnoreCase))
+                (output.Path != null && output.Path.Contains(searchTerm, StringComparison.InvariantCultureIgnoreCase)) ||
+                (output.Source != null && output.Source.Contains(searchTerm, StringComparison.InvariantCultureIgnoreCase)) ||
+                (output.MatchCriteria != null && output.MatchCriteria.Contains(searchTerm, StringComparison.InvariantCultureIgnoreCase)) ||
+                (output.SpecificFileNameLevelMatchCriteria != null && output.SpecificFileNameLevelMatchCriteria.Contains(searchTerm, StringComparison.InvariantCultureIgnoreCase)) ||
+                (output.CertSubjectCN != null && output.CertSubjectCN.Contains(searchTerm, StringComparison.InvariantCultureIgnoreCase)) ||
+                (output.SignerName != null && output.SignerName.Contains(searchTerm, StringComparison.InvariantCultureIgnoreCase)) ||
+                (output.FilePath != null && output.FilePath.Contains(searchTerm, StringComparison.InvariantCultureIgnoreCase))
             ).ToList();
 
 
@@ -203,7 +204,7 @@ namespace WDACConfig.Pages
         private void SimulationDataGrid_Sorting(object sender, DataGridColumnEventArgs e)
         {
             // Check if the column being sorted is the "IsAuthorized" column
-            if (string.Equals(e.Column.Tag?.ToString(), "IsAuthorized", System.StringComparison.OrdinalIgnoreCase))
+            if (string.Equals(e.Column.Tag?.ToString(), "IsAuthorized", StringComparison.OrdinalIgnoreCase))
             {
                 // Perform the sorting based on the current SortDirection (ascending or descending)
                 // At first it is null since no direction has been chosen for the column

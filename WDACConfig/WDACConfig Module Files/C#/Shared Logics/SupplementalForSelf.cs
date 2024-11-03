@@ -31,7 +31,7 @@ namespace WDACConfig
             codeIntegrityPolicy.BasePolicyIDNode.InnerText = basePolicyID;
 
             // Generate a new GUID
-            Guid newRandomGUID = System.Guid.NewGuid();
+            Guid newRandomGUID = Guid.NewGuid();
 
             // Convert it to string
             string newRandomGUIDString = $"{{{newRandomGUID.ToString().ToUpperInvariant()}}}";

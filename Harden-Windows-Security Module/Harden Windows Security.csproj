@@ -37,7 +37,10 @@
     <AllowUnsafeBlocks>False</AllowUnsafeBlocks>
     <Version>$(FileVersion)</Version>
     <RuntimeIdentifiers>win-x64</RuntimeIdentifiers>
-    <SelfContained>true</SelfContained>
+
+    <!-- When compiling into executable can be set to true, otherwise unnecessarily increases debug/build process -->
+    <SelfContained>false</SelfContained>
+
     <EnforceCodeStyleInBuild>True</EnforceCodeStyleInBuild>
     <CheckForOverflowUnderflow>True</CheckForOverflowUnderflow>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>

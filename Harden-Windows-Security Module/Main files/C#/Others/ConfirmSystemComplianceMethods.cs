@@ -480,6 +480,12 @@ sc.exe start LanmanWorkstation
                     ConditionalResultAdd.Add(nestedObjectArray, Result);
                 }
 
+                // Process items in Registry resources.csv file with "Registry Keys" origin and add them to the nestedObjectArray array
+                foreach (IndividualResult Result in (CategoryProcessing.ProcessCategory(CatName, "Registry Keys")))
+                {
+                    ConditionalResultAdd.Add(nestedObjectArray, Result);
+                }
+
                 if (GlobalVars.FinalMegaObject is null)
                 {
                     throw new ArgumentNullException(nameof(GlobalVars.FinalMegaObject), "FinalMegaObject cannot be null.");

@@ -21,11 +21,11 @@ namespace HardenWindowsSecurity
             "TLSSecurity", // 21
             "LockScreen", // 14
             "UserAccountControl", // 6
-            "DeviceGuard", // 9
+            "DeviceGuard", // 10
             "WindowsFirewall", // 20
             "OptionalWindowsFeatures", // 14
             "WindowsNetworking", // 17
-            "MiscellaneousConfigurations", // 18
+            "MiscellaneousConfigurations", // 19
             "WindowsUpdateConfigurations", // 15
             "EdgeBrowserConfigurations", // 14
             "NonAdminCommands" // 9

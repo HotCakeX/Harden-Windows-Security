@@ -19,6 +19,7 @@ TLS,HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANN
 TLS,HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Ciphers\Triple DES 168,Enabled,0,DWORD,AddOrModify,3DES 168-bit (Triple DES 168)
 TLS,HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL\Hashes\MD5,Enabled,0,DWORD,AddOrModify,Disable MD5 Hashing Algorithm
 WindowsNetworking,HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters,EncryptData,1,DWORD,AddOrModify,Enable SMB Server Encryption
+DeviceGuard_MandatoryVBS,HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\DeviceGuard,Mandatory,1,DWORD,AddOrModify,Enable VBS (and memory integrity) in mandatory mode
 Miscellaneous,HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows Search,EnableFindMyFiles,1,DWORD,AddOrModify,Turn on Enhanced mode search for Windows indexer
 Miscellaneous,HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\EdgeUpdate\ClientStateMedium\{56EB18F8-B008-4CBD-B6D2-8C97FE7E9062},allowautoupdatesmetered,1,DWORD,AddOrModify,Set Microsoft Edge (Stable) to update over Metered connections
 Miscellaneous,HKEY_LOCAL_MACHINE\SOFTWARE\WOW6432Node\Microsoft\EdgeUpdate\ClientStateMedium\{2CD8A007-E189-409D-A2C8-9AF4EF3C72AA},allowautoupdatesmetered,1,DWORD,AddOrModify,Set Microsoft Edge (Beta) to update over Metered connections

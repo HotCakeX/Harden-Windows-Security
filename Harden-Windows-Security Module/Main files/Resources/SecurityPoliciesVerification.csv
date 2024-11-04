@@ -15,4 +15,4 @@ UserAccountControl,Registry Values,MACHINE\Software\Microsoft\Windows\CurrentVer
 UserAccountControl,Registry Values,MACHINE\Software\Microsoft\Windows\CurrentVersion\Policies\System\TypeOfAdminApprovalMode,"4,2",UAC: The type of Admin Approval Mode to be Admin Approval Mode with enhanced privilege protection
 WindowsNetworking,Registry Values,MACHINE\System\CurrentControlSet\Control\SecurePipeServers\Winreg\AllowedExactPaths\Machine,"7,",Network access: Remotely accessible registry paths
 WindowsNetworking,Registry Values,MACHINE\System\CurrentControlSet\Control\SecurePipeServers\Winreg\AllowedPaths\Machine,"7,",Network access: Remotely accessible registry paths and subpaths
-Miscellaneous,Registry Values,MACHINE\Software\Policies\Microsoft\Cryptography\ForceKeyProtection,"4,1",System Cryptography: Force strong key protection for user keys stored on the computer
+MiscellaneousConfigurations,Registry Values,MACHINE\Software\Policies\Microsoft\Cryptography\ForceKeyProtection,"4,1",System Cryptography: Force strong key protection for user keys stored on the computer

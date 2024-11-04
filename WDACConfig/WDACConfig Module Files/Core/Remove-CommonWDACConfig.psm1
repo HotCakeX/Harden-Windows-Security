@@ -42,13 +42,9 @@ Function Remove-CommonWDACConfig {
     Removes the AutoUpdate from User Configs
 .INPUTS
     System.Management.Automation.SwitchParameter
-.OUTPUTS
-    System.String
 .EXAMPLE
-    Remove-CoreWDACConfig -CertCN
+    Remove-CoreWDACConfig -CertCN 
 .EXAMPLE
     Remove-CoreWDACConfig -CertPath
-.EXAMPLE
-    Remove-CoreWDACConfig
 #>
 }

@@ -86,7 +86,7 @@ if (($null -eq $CurrentBasePolicyNames) -or (-NOT ($CurrentBasePolicyNames.Conta
     }}
 
     Write-Verbose -Message 'Creating and deploying the Downloads-Defense-Measures policy'
-    New-DenyWDACConfig -PathWildCards -PolicyName 'Downloads-Defense-Measures' -FolderPath ""$DownloadsPathSystem\*"" -Deploy -Verbose:$Verbose -SkipVersionCheck -EmbeddedVerboseOutput
+    New-DenyWDACConfig -PathWildCards -PolicyName 'Downloads-Defense-Measures' -FolderPath ""$DownloadsPathSystem\*"" -Deploy -Verbose:$Verbose -EmbeddedVerboseOutput
 
 }}
 else {{

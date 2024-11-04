@@ -1,8 +1,4 @@
 Function Write-ColorfulTextWDACConfig {
-    <#
-    .SYNOPSIS
-        Function to write modern colorful text
-    #>
     param (
         [Parameter(Mandatory = $True)][ValidateSet('MintGreen', 'TeaGreen', 'Lavender', 'Pink', 'HotPink')][System.String]$Color,
         [parameter(Mandatory = $True)][System.String]$InputText

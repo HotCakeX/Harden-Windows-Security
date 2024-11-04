@@ -17,11 +17,9 @@ Function Remove-CommonWDACConfig {
     [WDACConfig.UserConfiguration]::Remove($SignedPolicyPath, $UnsignedPolicyPath, $SignToolPath, $CertCN, $CertPath, $StrictKernelPolicyGUID, $StrictKernelNoFlightRootsPolicyGUID, $LastUpdateCheck, $StrictKernelModePolicyTimeOfDeployment, $AutoUpdate)
     <#
 .SYNOPSIS
-    Removes common values for parameters used by WDACConfig module
+    Removes common values for parameters used by WDACConfig module from the User Configurations JSON file. If you don't use it with any parameters, then all User Configs will be deleted.
 .LINK
     https://github.com/HotCakeX/Harden-Windows-Security/wiki/Remove-CommonWDACConfig
-.DESCRIPTION
-    Removes common values for parameters used by WDACConfig module from the User Configurations JSON file. If you don't use it with any parameters, then all User Configs will be deleted.
 .PARAMETER SignedPolicyPath
     Removes the SignedPolicyPath from User Configs
 .PARAMETER UnsignedPolicyPath

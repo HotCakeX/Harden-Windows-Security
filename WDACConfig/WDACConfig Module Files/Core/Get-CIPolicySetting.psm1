@@ -27,7 +27,7 @@ Function Get-CIPolicySetting {
 .INPUTS
     System.String
 .OUTPUTS
-    PSCustomObject
+    WDACConfig.SecurePolicySetting
 .PARAMETER Provider
     The provider of the secure setting
 .PARAMETER Key

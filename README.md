@@ -1428,7 +1428,7 @@ The WDAC policy employs a wildcard pattern to prevent any file from running in t
 * mshta.exe
 * cscript.exe
 
-They are insecure, unsandboxed script hosts that pose a security risk. You can [read more about them in here](https://textslashplain.com/2024/05/20/attack-techniques-full-trust-script-downloads/) which is a blog post by Eric Lawrence from Microsoft.
+They are [insecure](https://textslashplain.com/2024/05/20/attack-techniques-full-trust-script-downloads/), unsandboxed script hosts that pose a security risk.
 
 <br>
 

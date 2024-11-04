@@ -29,8 +29,7 @@ Function Protect-WindowsSecurity {
             })]
         [ValidateScript({
                 if ($_ -notin ([HardenWindowsSecurity.GlobalVars]::HardeningCategorieX)) { throw "Invalid Category Name: $_" }
-                # Return true if everything is okay
-                $true
+                $true # Return true if everything is okay
             })]
         [System.String[]]$Categories,
 
@@ -62,58 +61,38 @@ Function Protect-WindowsSecurity {
             }
             # Add the dynamic parameter to the param dictionary
             $ParamDictionary.Add($Name, [System.Management.Automation.RuntimeDefinedParameter]::new(
-                    # Define parameter name
-                    $Name,
-                    # Define parameter type
-                    [System.Management.Automation.SwitchParameter],
-                    # Add both attributes to the parameter
-                    [System.Management.Automation.ParameterAttribute[]]@($ParamAttrib1, $ParamAttrib2)
+                    $Name, # Define parameter name
+                    [System.Management.Automation.SwitchParameter], # Define parameter type
+                    [System.Management.Automation.ParameterAttribute[]]@($ParamAttrib1, $ParamAttrib2) # Add both attributes to the parameter
                 ))
         }
 
         if ('MicrosoftSecurityBaselines' -in $PSBoundParameters['Categories']) {
-            # Create a dynamic parameter for -SecBaselines_NoOverrides
             Invoke-Command -ScriptBlock $DynParamCreatorSubCategories -ArgumentList 'SecBaselines_NoOverrides'
         }
-
         if ('MicrosoftDefender' -in $PSBoundParameters['Categories']) {
-            # Create a dynamic parameter for -MSFTDefender_SAC
-            Invoke-Command -ScriptBlock $DynParamCreatorSubCategories -ArgumentList 'MSFTDefender_SAC'
-            # Create a dynamic parameter for -MSFTDefender_NoDiagData
-            Invoke-Command -ScriptBlock $DynParamCreatorSubCategories -ArgumentList 'MSFTDefender_NoDiagData'
-            # Create a dynamic parameter for -MSFTDefender_NoScheduledTask
-            Invoke-Command -ScriptBlock $DynParamCreatorSubCategories -ArgumentList 'MSFTDefender_NoScheduledTask'
-            # Create a dynamic parameter for -MSFTDefender_BetaChannels
-            Invoke-Command -ScriptBlock $DynParamCreatorSubCategories -ArgumentList 'MSFTDefender_BetaChannels'
+            'MSFTDefender_SAC', 'MSFTDefender_NoDiagData', 'MSFTDefender_NoScheduledTask', 'MSFTDefender_BetaChannels' | ForEach-Object -Process { Invoke-Command -ScriptBlock $DynParamCreatorSubCategories -ArgumentList $_ }
         }
-
+        if ('DeviceGuard' -in $PSBoundParameters['Categories']) {
+            Invoke-Command -ScriptBlock $DynParamCreatorSubCategories -ArgumentList 'DeviceGuard_MandatoryVBS'
+        }
         if ('LockScreen' -in $PSBoundParameters['Categories']) {
-            # Create a dynamic parameter for -LockScreen_NoLastSignedIn
-            Invoke-Command -ScriptBlock $DynParamCreatorSubCategories -ArgumentList 'LockScreen_NoLastSignedIn'
-            # Create a dynamic parameter for -LockScreen_CtrlAltDel
-            Invoke-Command -ScriptBlock $DynParamCreatorSubCategories -ArgumentList 'LockScreen_CtrlAltDel'
+            'LockScreen_NoLastSignedIn', 'LockScreen_CtrlAltDel' | ForEach-Object -Process { Invoke-Command -ScriptBlock $DynParamCreatorSubCategories -ArgumentList $_ }
         }
-
         if ('UserAccountControl' -in $PSBoundParameters['Categories']) {
-            # Create a dynamic parameter for -UAC_NoFastSwitching
-            Invoke-Command -ScriptBlock $DynParamCreatorSubCategories -ArgumentList 'UAC_NoFastSwitching'
-            # Create a dynamic parameter for -UAC_OnlyElevateSigned
-            Invoke-Command -ScriptBlock $DynParamCreatorSubCategories -ArgumentList 'UAC_OnlyElevateSigned'
+            'UAC_NoFastSwitching', 'UAC_OnlyElevateSigned' | ForEach-Object -Process { Invoke-Command -ScriptBlock $DynParamCreatorSubCategories -ArgumentList $_ }
         }
-
         if ('WindowsNetworking' -in $PSBoundParameters['Categories']) {
-            # Create a dynamic parameter for -WindowsNetworking_BlockNTLM
             Invoke-Command -ScriptBlock $DynParamCreatorSubCategories -ArgumentList 'WindowsNetworking_BlockNTLM'
         }
-
         if ('MiscellaneousConfigurations' -in $PSBoundParameters['Categories']) {
-            # Create a dynamic parameter for -Miscellaneous_WindowsProtectedPrint
-            Invoke-Command -ScriptBlock $DynParamCreatorSubCategories -ArgumentList 'Miscellaneous_WindowsProtectedPrint'
+            'Miscellaneous_WindowsProtectedPrint', 'MiscellaneousConfigurations_LongPathSupport', 'MiscellaneousConfigurations_StrongKeyProtection' | ForEach-Object -Process { Invoke-Command -ScriptBlock $DynParamCreatorSubCategories -ArgumentList $_ }
         }
-
         if ('CountryIPBlocking' -in $PSBoundParameters['Categories']) {
-            # Create a dynamic parameter for -CountryIPBlocking_OFAC
             Invoke-Command -ScriptBlock $DynParamCreatorSubCategories -ArgumentList 'CountryIPBlocking_OFAC'
+        }
+        if ('DownloadsDefenseMeasures' -in $PSBoundParameters['Categories']) {
+            Invoke-Command -ScriptBlock $DynParamCreatorSubCategories -ArgumentList 'DangerousScriptHostsBlocking'
         }
 
         # Creating dynamic parameters for the offline mode files
@@ -151,8 +130,7 @@ Function Protect-WindowsSecurity {
                     if (-NOT ([HardenWindowsSecurity.SneakAndPeek]::Search('LGPO_*/LGPO.exe', $_))) {
                         Throw 'The selected Zip file does not contain the LGPO.exe which is required for the Protect-WindowsSecurity function to work properly'
                     }
-                    # Return true if everything is okay
-                    $true
+                    $true # Return true if everything is okay
                 })
             # Add the validate script attribute to the collection
             $PathToLGPO_AttributesCollection.Add($PathToLGPO_ValidateScriptAttrib)
@@ -188,8 +166,7 @@ Function Protect-WindowsSecurity {
                     if (-NOT ([HardenWindowsSecurity.SneakAndPeek]::Search('Microsoft 365 Apps for Enterprise*/Scripts/Baseline-LocalInstall.ps1', $_))) {
                         Throw 'The selected Zip file does not contain the Microsoft 365 Apps for Enterprise Security Baselines Baseline-LocalInstall.ps1 which is required for the Protect-WindowsSecurity function to work properly'
                     }
-                    # Return true if everything is okay
-                    $true
+                    $true # Return true if everything is okay
                 })
             # Add the validate script attribute to the collection
             $PathToMSFT365AppsSecurityBaselines_AttributesCollection.Add($PathToMSFT365AppsSecurityBaselines_ValidateScriptAttrib)
@@ -225,8 +202,7 @@ Function Protect-WindowsSecurity {
                     if (-NOT ([HardenWindowsSecurity.SneakAndPeek]::Search('Windows*Security Baseline/Scripts/Baseline-LocalInstall.ps1', $_))) {
                         Throw 'The selected Zip file does not contain the Microsoft Security Baselines Baseline-LocalInstall.ps1 which is required for the Protect-WindowsSecurity function to work properly'
                     }
-                    # Return true if everything is okay
-                    $true
+                    $true # Return true if everything is okay
                 })
             # Add the validate script attribute to the collection
             $PathToMSFTSecurityBaselines_AttributesCollection.Add($PathToMSFTSecurityBaselines_ValidateScriptAttrib)
@@ -289,11 +265,6 @@ Function Protect-WindowsSecurity {
             $ParamDictionary.Add('LogPath', $LogPath)
         }
 
-        if ('DownloadsDefenseMeasures' -in $PSBoundParameters['Categories']) {
-            # Create a dynamic parameter for -DangerousScriptHostsBlocking
-            Invoke-Command -ScriptBlock $DynParamCreatorSubCategories -ArgumentList 'DangerousScriptHostsBlocking'
-        }
-
         # Only use the dynamic parameters if the GUI switch is not present
         if (-NOT $PSBoundParameters.GUI.IsPresent) {
             return $ParamDictionary
@@ -305,24 +276,15 @@ Function Protect-WindowsSecurity {
         [System.Boolean]$ErrorsOccurred = $false
 
         # Since Dynamic parameters are only available in the parameter dictionary, we have to access them using $PSBoundParameters or assign them manually to another variable in the function's scope
-        New-Variable -Name 'SecBaselines_NoOverrides' -Value $($PSBoundParameters['SecBaselines_NoOverrides']) -Force
-        New-Variable -Name 'MSFTDefender_SAC' -Value $($PSBoundParameters['MSFTDefender_SAC']) -Force
-        New-Variable -Name 'MSFTDefender_NoDiagData' -Value $($PSBoundParameters['MSFTDefender_NoDiagData']) -Force
-        New-Variable -Name 'MSFTDefender_NoScheduledTask' -Value $($PSBoundParameters['MSFTDefender_NoScheduledTask']) -Force
-        New-Variable -Name 'MSFTDefender_BetaChannels' -Value $($PSBoundParameters['MSFTDefender_BetaChannels']) -Force
-        New-Variable -Name 'LockScreen_CtrlAltDel' -Value $($PSBoundParameters['LockScreen_CtrlAltDel']) -Force
-        New-Variable -Name 'LockScreen_NoLastSignedIn' -Value $($PSBoundParameters['LockScreen_NoLastSignedIn']) -Force
-        New-Variable -Name 'UAC_NoFastSwitching' -Value $($PSBoundParameters['UAC_NoFastSwitching']) -Force
-        New-Variable -Name 'UAC_OnlyElevateSigned' -Value $($PSBoundParameters['UAC_OnlyElevateSigned']) -Force
-        New-Variable -Name 'WindowsNetworking_BlockNTLM' -Value $($PSBoundParameters['WindowsNetworking_BlockNTLM']) -Force
-        New-Variable -Name 'Miscellaneous_WindowsProtectedPrint' -Value $($PSBoundParameters['Miscellaneous_WindowsProtectedPrint']) -Force
-        New-Variable -Name 'CountryIPBlocking_OFAC' -Value $($PSBoundParameters['CountryIPBlocking_OFAC']) -Force
-        New-Variable -Name 'PathToLGPO' -Value $($PSBoundParameters['PathToLGPO']) -Force
-        New-Variable -Name 'PathToMSFT365AppsSecurityBaselines' -Value $($PSBoundParameters['PathToMSFT365AppsSecurityBaselines']) -Force
-        New-Variable -Name 'PathToMSFTSecurityBaselines' -Value $($PSBoundParameters['PathToMSFTSecurityBaselines']) -Force
+        ('SecBaselines_NoOverrides', 'MSFTDefender_SAC', 'MSFTDefender_NoDiagData', 'MSFTDefender_NoScheduledTask',
+        'MSFTDefender_BetaChannels', 'LockScreen_CtrlAltDel', 'LockScreen_NoLastSignedIn', 'UAC_NoFastSwitching',
+        'UAC_OnlyElevateSigned', 'WindowsNetworking_BlockNTLM', 'Miscellaneous_WindowsProtectedPrint', 'CountryIPBlocking_OFAC',
+        'PathToLGPO', 'PathToMSFT365AppsSecurityBaselines', 'PathToMSFTSecurityBaselines', 'DangerousScriptHostsBlocking',
+        'MiscellaneousConfigurations_LongPathSupport', 'DeviceGuard_MandatoryVBS', 'MiscellaneousConfigurations_StrongKeyProtection') | ForEach-Object -Process {
+            New-Variable -Name $_ -Value $($PSBoundParameters[$_]) -Force
+        }
         # Set the default value for LogPath to the current working directory if not specified
         New-Variable -Name 'LogPath' -Value $($PSBoundParameters['LogPath'] ?? (Join-Path -Path $(Get-Location).Path -ChildPath "Log-Protect-WindowsSecurity-$(Get-Date -Format 'yyyy-MM-dd HH-mm-ss').txt")) -Force
-        New-Variable -Name 'DangerousScriptHostsBlocking' -Value $($PSBoundParameters['DangerousScriptHostsBlocking']) -Force
 
         # Detecting if Offline mode is used
         ([HardenWindowsSecurity.GlobalVars]::Offline) = $PSBoundParameters['Offline'] ? $true : $false
@@ -335,7 +297,6 @@ Function Protect-WindowsSecurity {
             [HardenWindowsSecurity.Logger]::LogMessage('Skipping update check since the -Offline switch was used', [HardenWindowsSecurity.LogTypeIntel]::Information)
         }
 
-        # Get the execution policy for the current process
         [System.String]$CurrentExecutionPolicy = Get-ExecutionPolicy -Scope 'Process'
 
         # Change the execution policy temporarily only for the current PowerShell session
@@ -475,7 +436,6 @@ Function Protect-WindowsSecurity {
                 [HardenWindowsSecurity.Logger]::LogMessage('Stopping the stopwatch', [HardenWindowsSecurity.LogTypeIntel]::Information)
                 $StopWatch.Stop()
                 [HardenWindowsSecurity.Logger]::LogMessage("Protect-WindowsSecurity completed in $($StopWatch.Elapsed.Hours) Hours - $($StopWatch.Elapsed.Minutes) Minutes - $($StopWatch.Elapsed.Seconds) Seconds - $($StopWatch.Elapsed.Milliseconds) Milliseconds - $($StopWatch.Elapsed.Microseconds) Microseconds - $($StopWatch.Elapsed.Nanoseconds) Nanoseconds", [HardenWindowsSecurity.LogTypeIntel]::Information)
-
                 [HardenWindowsSecurity.Logger]::LogMessage('Stopping the transcription', [HardenWindowsSecurity.LogTypeIntel]::Information)
                 Stop-Transcript
             }
@@ -509,11 +469,12 @@ Function Protect-WindowsSecurity {
     WindowsNetworking_BlockNTLM -> Will block NTLM completely
     Miscellaneous_WindowsProtectedPrint -> Enables Windows Protected Print Mode
     CountryIPBlocking_OFAC -> Include the IP ranges of OFAC Sanctioned Countries in the firewall block rules
+    MiscellaneousConfigurations_LongPathSupport -> Enables support for long paths for applications
+    DeviceGuard_MandatoryVBS -> Enforces VBS and Memory Integrity in Mandatory mode
+    MiscellaneousConfigurations_StrongKeyProtection -> System cryptography: Force strong key protection for user keys stored on the computer
 
     Each of the switch parameters above will be dynamically generated based on the categories you choose.
     For example, if you choose to run the Microsoft Security Baselines category, the SecBaselines_NoOverrides switch parameter will be generated and you can use it to apply the Microsoft Security Baselines without the optional overrides.
-.FUNCTIONALITY
-    Applies the hardening measures described in the GitHub readme.
 .PARAMETER GUI
     Activates the GUI mode. The cmdlet will display a GUI window where you can use the complete set of Harden Windows Security module's features.
 .PARAMETER Categories

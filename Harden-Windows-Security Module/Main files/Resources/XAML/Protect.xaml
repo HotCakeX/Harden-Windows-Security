@@ -222,7 +222,10 @@
                                                 </ListViewItem>
                                                 <ListViewItem ToolTipService.InitialShowDelay="1000" ToolTip="Enables application that opt into long path support to be able to use the feature">
                                                     <CheckBox x:Name="MiscellaneousConfigurations_LongPathSupport" Content="Enable support for Long Paths" VerticalContentAlignment="Center" Padding="10,10,40,10" Template="{StaticResource CustomCheckBoxTemplate}"/>
-                                                </ListViewItem> 
+                                                </ListViewItem>
+                                                <ListViewItem ToolTipService.InitialShowDelay="1000" ToolTip="System cryptography: Force strong key protection for user keys stored on the computer">
+                                                    <CheckBox x:Name="MiscellaneousConfigurations_StrongKeyProtection" Content="Force strong key protection" VerticalContentAlignment="Center" Padding="10,10,40,10" Template="{StaticResource CustomCheckBoxTemplate}"/>
+                                                </ListViewItem>
                                                 <ListViewItem ToolTipService.InitialShowDelay="1000" ToolTip="Blocks OFAC sanctioned countries' IPs in Firewall.">
                                                     <CheckBox x:Name="CountryIPBlocking_OFAC" Content="Block OFAC Sanctions Countries" VerticalContentAlignment="Center" Padding="10,10,40,10" Template="{StaticResource CustomCheckBoxTemplate}"/>
                                                 </ListViewItem>

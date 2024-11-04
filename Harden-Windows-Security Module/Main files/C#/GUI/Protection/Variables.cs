@@ -45,7 +45,7 @@ namespace HardenWindowsSecurity
                 { "LockScreen", new string[] { "LockScreen_CtrlAltDel", "LockScreen_NoLastSignedIn" } },
                 { "UserAccountControl", new string[] { "UAC_NoFastSwitching", "UAC_OnlyElevateSigned" } },
                 { "WindowsNetworking", new string[] { "WindowsNetworking_BlockNTLM" } },
-                { "MiscellaneousConfigurations", new string[] { "Miscellaneous_WindowsProtectedPrint", "MiscellaneousConfigurations_LongPathSupport" } },
+                { "MiscellaneousConfigurations", new string[] { "Miscellaneous_WindowsProtectedPrint", "MiscellaneousConfigurations_LongPathSupport", "MiscellaneousConfigurations_StrongKeyProtection" } },
                 { "DeviceGuard", new string[] { "DeviceGuard_MandatoryVBS" } },
                 { "CountryIPBlocking", new string[] { "CountryIPBlocking_OFAC" } },
                 { "DownloadsDefenseMeasures", new string[] { "DangerousScriptHostsBlocking" } }

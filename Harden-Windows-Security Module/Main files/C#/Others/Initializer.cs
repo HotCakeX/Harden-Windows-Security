@@ -97,7 +97,7 @@ namespace HardenWindowsSecurity
             GlobalVars.MDAVConfigCurrent = ConfigDefenderHelper.GetMpComputerStatus();
 
             // Total number of Compliant values
-            GlobalVars.TotalNumberOfTrueCompliantValues = 255;
+            GlobalVars.TotalNumberOfTrueCompliantValues = 256;
 
             // Getting the $VerbosePreference from the calling cmdlet and saving it in the global variable
             GlobalVars.VerbosePreference = VerbosePreference;

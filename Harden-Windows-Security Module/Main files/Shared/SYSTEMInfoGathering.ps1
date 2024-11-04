@@ -1,6 +1,5 @@
 # using schtasks.exe instead of CimInstance/cmdlet wherever it makes the process faster
 Write-Verbose -Message 'Collecting Intune applied policy details from the System'
-# MDM_BitLocker
 [System.String[]]$CimInstancesList = @('MDM_Firewall_DomainProfile02', 'MDM_Firewall_PrivateProfile02', 'MDM_Firewall_PublicProfile02', 'MDM_Policy_Result01_Update02', 'MDM_Policy_Result01_System02')
 [System.String]$TaskPathGUID = [System.Guid]::NewGuid().ToString().Replace('-', '')
 [System.String]$BaseDirectory = [HardenWindowsSecurity.GlobalVars]::WorkingDir

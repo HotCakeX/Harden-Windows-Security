@@ -54,9 +54,6 @@ function Update-HardenWindowsSecurity {
             Install-Module -Name 'Harden-Windows-Security-Module' -RequiredVersion $LatestVersion -Force -ErrorAction Stop
             # Will not import the new module version in the current session. New version is automatically imported and used when the main cmdlet is run in a new session.
         }
-        catch {
-            throw
-        }
         finally {
             [HardenWindowsSecurity.ControlledFolderAccessHandler]::reset()
         }

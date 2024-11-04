@@ -1,15 +1,9 @@
 $script:ErrorActionPreference = 'Stop'
-
 #Region Helper-Functions
 Function Select-Option {
     <#
     .synopsis
         Function to show a prompt to the user to select an option from a list of options
-    .INPUTS
-        System.String
-        System.Management.Automation.SwitchParameter
-    .OUTPUTS
-        System.String
     .PARAMETER Message
         Contains the main prompt message
     .PARAMETER ExtraMessage
@@ -28,20 +22,20 @@ Function Select-Option {
 
         # Use this style if showing main categories only
         if (!$SubCategory) {
-            Write-ColorfulText -C Fuchsia -I $Message
+            Write-ColorfulText -Color Fuchsia -I $Message
         }
         # Use this style if showing sub-categories only that need additional confirmation
         else {
             # Show sub-category's main prompt
-            Write-ColorfulText -C Orange -I $Message
+            Write-ColorfulText -Color Orange -I $Message
             # Show sub-category's notes/extra message if any
             if ($ExtraMessage) {
-                Write-ColorfulText -C PinkBoldBlink -I $ExtraMessage
+                Write-ColorfulText -Color PinkBoldBlink -I $ExtraMessage
             }
         }
 
         for ($I = 0; $I -lt $Options.Length; $I++) {
-            Write-ColorfulText -C MintGreen -I "$($I+1): $($Options[$I])"
+            Write-ColorfulText -Color MintGreen -I "$($I+1): $($Options[$I])"
         }
 
         # Make sure user only inputs a positive integer
@@ -59,41 +53,21 @@ Function Select-Option {
             Write-Warning -Message 'Invalid input. Please only enter a positive number.'
         }
     }
-    # Add verbose output, helpful when reviewing the log file
     [HardenWindowsSecurity.Logger]::LogMessage("Selected: $Selected", [HardenWindowsSecurity.LogTypeIntel]::Information)
     return [System.String]$Selected
 }
 Function Write-ColorfulText {
-    <#
-    .SYNOPSIS
-        Function to write colorful text to the console
-    #>
-    [CmdletBinding()]
     param (
         [Parameter(Mandatory = $True)]
-        [Alias('C')]
-        [ValidateSet('Fuchsia', 'Orange', 'NeonGreen', 'MintGreen', 'PinkBoldBlink', 'PinkBold', 'Rainbow' , 'Gold', 'TeaGreenNoNewLine', 'LavenderNoNewLine', 'PinkNoNewLine', 'VioletNoNewLine', 'Violet', 'Pink', 'Lavender')]
+        [ValidateSet('Fuchsia', 'Orange', 'MintGreen', 'PinkBoldBlink', 'Rainbow' )]
         [System.String]$Color,
-
-        [parameter(Mandatory = $True)]
-        [Alias('I')]
-        [System.String]$InputText
+        [parameter(Mandatory = $True)][System.String]$InputText
     )
     switch ($Color) {
         'Fuchsia' { Write-Host -Object "$($PSStyle.Foreground.FromRGB(236,68,155))$InputText$($PSStyle.Reset)"; break }
         'Orange' { Write-Host -Object "$($PSStyle.Foreground.FromRGB(255,165,0))$InputText$($PSStyle.Reset)"; break }
-        'NeonGreen' { Write-Host -Object "$($PSStyle.Foreground.FromRGB(153,244,67))$InputText$($PSStyle.Reset)"; break }
         'MintGreen' { Write-Host -Object "$($PSStyle.Foreground.FromRGB(152,255,152))$InputText$($PSStyle.Reset)"; break }
         'PinkBoldBlink' { Write-Host -Object "$($PSStyle.Foreground.FromRgb(255,192,203))$($PSStyle.Bold)$($PSStyle.Blink)$InputText$($PSStyle.Reset)"; break }
-        'PinkBold' { Write-Host -Object "$($PSStyle.Foreground.FromRgb(255,192,203))$($PSStyle.Bold)$($PSStyle.Reverse)$InputText$($PSStyle.Reset)"; break }
-        'Gold' { Write-Host -Object "$($PSStyle.Foreground.FromRgb(255,215,0))$InputText$($PSStyle.Reset)"; break }
-        'VioletNoNewLine' { Write-Host -Object "$($PSStyle.Foreground.FromRGB(153,0,255))$InputText$($PSStyle.Reset)" -NoNewline; break }
-        'PinkNoNewLine' { Write-Host -Object "$($PSStyle.Foreground.FromRGB(255,0,230))$InputText$($PSStyle.Reset)" -NoNewline; break }
-        'Violet' { Write-Host -Object "$($PSStyle.Foreground.FromRGB(153,0,255))$InputText$($PSStyle.Reset)"; break }
-        'Pink' { Write-Host -Object "$($PSStyle.Foreground.FromRGB(255,0,230))$InputText$($PSStyle.Reset)"; break }
-        'LavenderNoNewLine' { Write-Host -Object "$($PSStyle.Foreground.FromRgb(255,179,255))$InputText$($PSStyle.Reset)" -NoNewline; break }
-        'Lavender' { Write-Host -Object "$($PSStyle.Foreground.FromRgb(255,179,255))$InputText$($PSStyle.Reset)"; break }
-        'TeaGreenNoNewLine' { Write-Host -Object "$($PSStyle.Foreground.FromRgb(133, 222, 119))$InputText$($PSStyle.Reset)" -NoNewline; break }
         'Rainbow' {
             [System.Drawing.Color[]]$RainbowColors = @(
                 [System.Drawing.Color]::Pink,
@@ -201,7 +175,6 @@ Function Invoke-MicrosoftDefender {
             else {
                 [HardenWindowsSecurity.Logger]::LogMessage('Microsoft Defender engine and platform update channel is already set to beta', [HardenWindowsSecurity.LogTypeIntel]::Information)
             }
-
         } 'No' { break MicrosoftDefenderLabel }
         'Exit' { break MainSwitchLabel }
     }
@@ -229,6 +202,12 @@ Function Invoke-DeviceGuard {
     :DeviceGuardCategoryLabel switch ($RunUnattended ? 'Yes' : (Select-Option -Options 'Yes', 'No', 'Exit' -Message "`nRun Device Guard category ?")) {
         'Yes' {
             [HardenWindowsSecurity.DeviceGuard]::Invoke()
+            :DeviceGuard_MandatoryVBS switch ($RunUnattended ? ($DeviceGuard_MandatoryVBS ? 'Yes' : 'No') : (Select-Option -SubCategory -Options 'Yes', 'No', 'Exit' -Message "`nEnable VBS and Memory Integrity in Mandatory Mode ?" -ExtraMessage 'Read the GitHub Readme!')) {
+                'Yes' {
+                    [HardenWindowsSecurity.DeviceGuard]::DeviceGuard_MandatoryVBS()
+                } 'No' { break DeviceGuard_MandatoryVBS }
+                'Exit' { break MainSwitchLabel }
+            }
         } 'No' { break DeviceGuardCategoryLabel }
         'Exit' { break MainSwitchLabel }
     }
@@ -328,6 +307,18 @@ Function Invoke-MiscellaneousConfigurations {
                 } 'No' { break Miscellaneous_WindowsProtectedPrintLabel }
                 'Exit' { break MainSwitchLabel }
             }
+            :MiscellaneousConfigurations_LongPathSupport switch ($RunUnattended ? ($MiscellaneousConfigurations_LongPathSupport ? 'Yes' : 'No') : (Select-Option -SubCategory -Options 'Yes', 'No', 'Exit' -Message "`nEnable Long path support for programs ?" -ExtraMessage 'Read the GitHub Readme!')) {
+                'Yes' {
+                    [HardenWindowsSecurity.MiscellaneousConfigurations]::MiscellaneousConfigurations_LongPathSupport()
+                } 'No' { break MiscellaneousConfigurations_LongPathSupport }
+                'Exit' { break MainSwitchLabel }
+            }
+            :MiscellaneousConfigurations_StrongKeyProtection switch ($RunUnattended ? ($MiscellaneousConfigurations_StrongKeyProtection ? 'Yes' : 'No') : (Select-Option -SubCategory -Options 'Yes', 'No', 'Exit' -Message "`nEnforce strong key protection ?" -ExtraMessage 'Read the GitHub Readme!')) {
+                'Yes' {
+                    [HardenWindowsSecurity.MiscellaneousConfigurations]::MiscellaneousConfigurations_StrongKeyProtection()
+                } 'No' { break MiscellaneousConfigurations_StrongKeyProtection }
+                'Exit' { break MainSwitchLabel }
+            }
         } 'No' { break MiscellaneousLabel }
         'Exit' { break MainSwitchLabel }
     }
@@ -402,9 +393,9 @@ Function Invoke-NonAdminCommands {
             if (!$RunUnattended) {
                 if (!$Categories -and [HardenWindowsSecurity.UserPrivCheck]::IsAdmin()) {
                     Write-Host -Object "`r`n"
-                    Write-ColorfulText -C Rainbow -I "################################################################################################`r`n"
-                    Write-ColorfulText -C MintGreen -I "###  Please Restart your device to completely apply the security measures and Group Policies ###`r`n"
-                    Write-ColorfulText -C Rainbow -I "################################################################################################`r`n"
+                    Write-ColorfulText -Color Rainbow -I "################################################################################################`r`n"
+                    Write-ColorfulText -Color MintGreen -I "###  Please Restart your device to completely apply the security measures and Group Policies ###`r`n"
+                    Write-ColorfulText -Color Rainbow -I "################################################################################################`r`n"
                 }
             }
         } 'No' { break NonAdminLabel }

@@ -25,7 +25,6 @@ Function Unprotect-WindowsSecurity {
         }
         $script:ErrorActionPreference = 'Stop'
         [HardenWindowsSecurity.Initializer]::Initialize($VerbosePreference)
-
         [HardenWindowsSecurity.Logger]::LogMessage('Checking for updates...', [HardenWindowsSecurity.LogTypeIntel]::Information)
         Update-HardenWindowsSecurity -InvocationStatement $MyInvocation.Statement
 
@@ -66,7 +65,6 @@ Function Unprotect-WindowsSecurity {
                         [HardenWindowsSecurity.UnprotectWindowsSecurity]::RemoveExploitMitigations()
                     }
                 }
-
                 Write-Host -Object "$($PSStyle.Foreground.FromRGB(236,68,155))Operation Completed, please restart your computer.$($PSStyle.Reset)"
             }
             finally {
@@ -76,15 +74,12 @@ Function Unprotect-WindowsSecurity {
             }
         }
     }
-
     <#
 .SYNOPSIS
     Removes the hardening measures applied by Protect-WindowsSecurity cmdlet
 .LINK
     https://github.com/HotCakeX/Harden-Windows-Security/wiki/Harden%E2%80%90Windows%E2%80%90Security%E2%80%90Module
 .DESCRIPTION
-    Removes the hardening measures applied by Protect-WindowsSecurity cmdlet
-.FUNCTIONALITY
     Removes the hardening measures applied by Protect-WindowsSecurity cmdlet
 .PARAMETER OnlyProcessMitigations
     Only removes the Process Mitigations / Exploit Protection settings and doesn't change anything else

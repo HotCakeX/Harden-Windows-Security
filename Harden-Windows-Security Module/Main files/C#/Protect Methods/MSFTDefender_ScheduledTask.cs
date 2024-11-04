@@ -7,6 +7,10 @@ namespace HardenWindowsSecurity
 {
     public static partial class MicrosoftDefender
     {
+        /// <summary>
+        /// Creates a scheduled task for Microsoft Recommended Drivers Block Rules auto update
+        /// </summary>
+        /// <exception cref="InvalidOperationException"></exception>
         public static void MSFTDefender_ScheduledTask()
         {
             Logger.LogMessage("Creating scheduled task for fast weekly Microsoft recommended driver block list update", LogTypeIntel.Information);

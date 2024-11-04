@@ -7,6 +7,10 @@ namespace HardenWindowsSecurity
 {
     public static partial class MicrosoftDefender
     {
+        /// <summary>
+        /// Enables diagnostic data to ensure security components of the OS will be able to work as expected and communicate with the services
+        /// </summary>
+        /// <exception cref="ArgumentNullException"></exception>
         public static void MSFTDefender_EnableDiagData()
         {
 

@@ -8,7 +8,10 @@ namespace HardenWindowsSecurity
 {
     public static class BitLockerSettings
     {
-        // Applies all Bitlocker settings hardening category
+        /// <summary>
+        /// Applies all Bitlocker settings hardening category
+        /// </summary>
+        /// <exception cref="ArgumentNullException"></exception>
         public static void Invoke()
         {
             if (GlobalVars.path is null)

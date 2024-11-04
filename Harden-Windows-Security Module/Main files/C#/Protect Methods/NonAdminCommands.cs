@@ -6,6 +6,10 @@ namespace HardenWindowsSecurity
 {
     public static partial class NonAdminCommands
     {
+        /// <summary>
+        /// Applies Non-Admin security measures
+        /// </summary>
+        /// <exception cref="ArgumentNullException"></exception>
         public static void Invoke()
         {
             if (GlobalVars.path is null)

@@ -7,6 +7,10 @@ namespace HardenWindowsSecurity
 {
     public static partial class WindowsNetworking
     {
+        /// <summary>
+        /// Blocks usage of NTLM
+        /// </summary>
+        /// <exception cref="ArgumentNullException"></exception>
         public static void WindowsNetworking_BlockNTLM()
         {
 

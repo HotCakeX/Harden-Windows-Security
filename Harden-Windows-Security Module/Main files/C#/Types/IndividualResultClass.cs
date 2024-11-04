@@ -1,9 +1,10 @@
-// Hardening Category results used by the Confirm-SystemCompliance cmdlet
-
 #nullable enable
 
 namespace HardenWindowsSecurity
 {
+    /// <summary>
+    /// A class that defines a single compliance check result
+    /// </summary>
     public sealed class IndividualResult
     {
         public string? FriendlyName { get; set; }

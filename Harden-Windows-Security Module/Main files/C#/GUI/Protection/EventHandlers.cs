@@ -674,6 +674,11 @@ namespace HardenWindowsSecurity
                                                    MiscellaneousConfigurations.MiscellaneousConfigurations_LongPathSupport();
                                                }
 
+                                               if (GUIProtectWinSecurity.SelectedSubCategories.Contains("MiscellaneousConfigurations_StrongKeyProtection"))
+                                               {
+                                                   MiscellaneousConfigurations.MiscellaneousConfigurations_StrongKeyProtection();
+                                               }
+
                                                break;
                                            }
                                        case "WindowsUpdateConfigurations":

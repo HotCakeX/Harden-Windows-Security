@@ -4,6 +4,9 @@ namespace HardenWindowsSecurity
 {
     public static partial class DownloadsDefenseMeasures
     {
+        /// <summary>
+        /// Prevents executables originating from the Downloads folder from running, using AppControl policy
+        /// </summary>
         public static void Invoke()
         {
 

@@ -7,6 +7,10 @@ namespace HardenWindowsSecurity
 {
     public static partial class MiscellaneousConfigurations
     {
+        /// <summary>
+        /// Enables strong key protection for saved certificates with private keys
+        /// </summary>
+        /// <exception cref="ArgumentNullException"></exception>
         public static void MiscellaneousConfigurations_StrongKeyProtection()
         {
             if (GlobalVars.path is null)

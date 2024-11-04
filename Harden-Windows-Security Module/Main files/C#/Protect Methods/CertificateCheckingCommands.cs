@@ -9,6 +9,10 @@ namespace HardenWindowsSecurity
 {
     public static class CertificateCheckingCommands
     {
+        /// <summary>
+        /// Checks the certificates of the system and displays ones that don't come by default in Windows
+        /// </summary>
+        /// <exception cref="ArgumentNullException"></exception>
         public static void Invoke()
         {
             if (GlobalVars.WorkingDir is null || !Directory.Exists(GlobalVars.WorkingDir))

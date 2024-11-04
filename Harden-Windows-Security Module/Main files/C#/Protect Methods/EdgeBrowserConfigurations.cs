@@ -6,6 +6,10 @@ namespace HardenWindowsSecurity
 {
     public static class EdgeBrowserConfigurations
     {
+        /// <summary>
+        /// Applies Microsoft Edge policies
+        /// </summary>
+        /// <exception cref="ArgumentNullException"></exception>
         public static void Invoke()
         {
             if (GlobalVars.path is null)

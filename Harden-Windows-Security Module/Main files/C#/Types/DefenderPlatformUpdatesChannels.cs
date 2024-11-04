@@ -4,6 +4,9 @@ using System.Collections.Generic;
 
 namespace HardenWindowsSecurity
 {
+    /// <summary>
+    /// Microsoft Defender Update channel names for Platform and Engine
+    /// </summary>
     public static class DefenderPlatformUpdatesChannels
     {
         public static readonly Dictionary<ushort, string> Channels = new()

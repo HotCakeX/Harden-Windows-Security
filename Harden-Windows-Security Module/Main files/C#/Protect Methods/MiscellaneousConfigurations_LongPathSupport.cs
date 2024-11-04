@@ -7,6 +7,10 @@ namespace HardenWindowsSecurity
 {
     public static partial class MiscellaneousConfigurations
     {
+        /// <summary>
+        /// Enables support for long paths in Windows for programs
+        /// </summary>
+        /// <exception cref="ArgumentNullException"></exception>
         public static void MiscellaneousConfigurations_LongPathSupport()
         {
             if (GlobalVars.path is null)

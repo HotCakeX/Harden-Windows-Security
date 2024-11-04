@@ -142,7 +142,7 @@ Function New-KernelModeWDACConfig {
                                 Write-Progress -Id 25 -Activity 'Deploying the prep mode policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
                                 [WDACConfig.Logger]::Write('Setting the GUID and time of deployment of the Audit mode policy in the User Configuration file')
-                                $null = [WDACConfig.UserConfiguration]::Set($null, $null, $null, $null, $null, $PolicyID, $null, $null , (Get-Date))
+                                $null = [WDACConfig.UserConfiguration]::Set($null, $null, $null, $null, $null, $PolicyID, $null, $null, (Get-Date), $null)
 
                                 [WDACConfig.CiToolHelper]::UpdatePolicy($FinalAuditCIPPath)
                                 Write-ColorfulTextWDACConfig -Color HotPink -InputText 'Strict Kernel mode policy has been deployed in Audit mode, please restart your system.'
@@ -280,7 +280,7 @@ Function New-KernelModeWDACConfig {
                                 Write-Progress -Id 27 -Activity 'Deploying the prep mode policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)
 
                                 [WDACConfig.Logger]::Write('Setting the GUID and time of deployment of the Audit mode policy in the User Configuration file')
-                                $null = [WDACConfig.UserConfiguration]::Set($null, $null, $null, $null, $null, $null, $PolicyID, $null , (Get-Date))
+                                $null = [WDACConfig.UserConfiguration]::Set($null, $null, $null, $null, $null, $null, $PolicyID, $null, (Get-Date), $null)
 
                                 [WDACConfig.CiToolHelper]::UpdatePolicy($FinalAuditCIPPath)
                                 Write-ColorfulTextWDACConfig -Color HotPink -InputText 'Strict Kernel mode policy with no flighting root certs has been deployed in Audit mode, please restart your system.'

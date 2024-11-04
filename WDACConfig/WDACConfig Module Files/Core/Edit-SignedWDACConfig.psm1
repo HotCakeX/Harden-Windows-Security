@@ -830,7 +830,7 @@ Function Edit-SignedWDACConfig {
 
                 if ([WDACConfig.UserConfiguration]::Get().SignedPolicyPath) {
                     [WDACConfig.Logger]::Write('Replacing the old signed policy path in User Configurations with the new one')
-                    $null = [WDACConfig.UserConfiguration]::Set($PolicyFiles[$NewBasePolicyType], $null, $null, $null, $null, $null, $null, $null , $null)
+                    $null = [WDACConfig.UserConfiguration]::Set($PolicyFiles[$NewBasePolicyType], $null, $null, $null, $null, $null, $null, $null, $null, $null)
                 }
             }
         }

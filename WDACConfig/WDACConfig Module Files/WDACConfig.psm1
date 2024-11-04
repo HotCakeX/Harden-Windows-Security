@@ -61,7 +61,7 @@ Function Update-WDACConfigPSModule {
 
         # Reset the last update timer to the current time
         [WDACConfig.Logger]::Write('Resetting the last update timer to the current time')
-        $null = [WDACConfig.UserConfiguration]::Set($null, $null, $null, $null, $null, $null, $null, $(Get-Date) , $null)
+        $null = [WDACConfig.UserConfiguration]::Set($null, $null, $null, $null, $null, $null, $null, $(Get-Date) , $null, $null)
 
         if ($CurrentVersion -lt $LatestVersion) {
 

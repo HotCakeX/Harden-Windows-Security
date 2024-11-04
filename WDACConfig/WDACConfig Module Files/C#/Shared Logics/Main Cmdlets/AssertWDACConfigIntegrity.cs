@@ -61,7 +61,7 @@ namespace WDACConfig
                 byte[] Bytes = File.ReadAllBytes(file.FullName);
 
                 // Compute the hash of the byte array
-                Byte[] HashBytes = SHA3_512.HashData(Bytes);
+                Byte[] HashBytes = SHA512.HashData(Bytes);
 
                 // Convert the hash bytes to a hexadecimal string to make it look like the output of the Get-FileHash which produces hexadecimals (0-9 and A-F)
                 // If [System.Convert]::ToBase64String was used, it'd return the hash in base64 format, which uses 64 symbols (A-Z, a-z, 0-9, + and /) to represent each byte

@@ -225,10 +225,10 @@ ValidityPeriod = Years
             }
 
             [WDACConfig.Logger]::Write('Saving the common name of the certificate to the User configurations')
-            $null = [WDACConfig.UserConfiguration]::Set($null, $null, $null, $CommonName, $null, $null, $null, $null , $null)
+            $null = [WDACConfig.UserConfiguration]::Set($null, $null, $null, $CommonName, $null, $null, $null, $null, $null, $null)
 
             [WDACConfig.Logger]::Write('Saving the path of the .cer file of the certificate to the User configurations')
-            $null = [WDACConfig.UserConfiguration]::Set($null, $null, $null, $null, $CertificateOutputPath, $null, $null, $null , $null)
+            $null = [WDACConfig.UserConfiguration]::Set($null, $null, $null, $null, $CertificateOutputPath, $null, $null, $null, $null, $null)
         }
         catch {
             throw $_

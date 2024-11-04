@@ -17,7 +17,7 @@ Function Set-CommonWDACConfig {
         [ArgumentCompleter([WDACConfig.ArgCompleter.XmlFilePathsPicker])]
         [parameter(Mandatory = $false)][System.IO.FileInfo]$SignedPolicyPath,
 
-        [Parameter(Mandatory = $false)][bool]$AutoUpdate
+        [Parameter(Mandatory = $false)][Nullable[bool]]$AutoUpdate # Needs to be nullable otherwise PowerShell sets it to false if the parameter is not explicitly used
     )
     [WDACConfig.LoggerInitializer]::Initialize($VerbosePreference, $DebugPreference, $Host)
     [WDACConfig.UserConfiguration]::Set($SignedPolicyPath, $UnsignedPolicyPath, $SignToolPath, $CertCN, $CertPath, $null, $null, $null, $null, $AutoUpdate)

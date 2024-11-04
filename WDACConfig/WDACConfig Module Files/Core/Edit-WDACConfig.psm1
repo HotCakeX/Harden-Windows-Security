@@ -726,7 +726,7 @@ Function Edit-WDACConfig {
 
                 if ([WDACConfig.UserConfiguration]::Get().UnsignedPolicyPath) {
                     [WDACConfig.Logger]::Write('Replacing the old unsigned policy path in User Configurations with the new one')
-                    $null = [WDACConfig.UserConfiguration]::Set($null, $PolicyFiles[$NewBasePolicyType], $null, $null, $null, $null, $null, $null , $null)
+                    $null = [WDACConfig.UserConfiguration]::Set($null, $PolicyFiles[$NewBasePolicyType], $null, $null, $null, $null, $null, $null, $null, $null)
                 }
             }
         }

@@ -20,7 +20,6 @@ Function New-WDACConfig {
         [Parameter(Mandatory = $false, ParameterSetName = 'PolicyType')][switch]$EnableScriptEnforcement
     )
     DynamicParam {
-
         # Create a new dynamic parameter dictionary
         $ParamDictionary = [System.Management.Automation.RuntimeDefinedParameterDictionary]::new()
 

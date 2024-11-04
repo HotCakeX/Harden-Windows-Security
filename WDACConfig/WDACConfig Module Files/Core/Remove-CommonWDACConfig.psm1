@@ -10,18 +10,15 @@ Function Remove-CommonWDACConfig {
         [parameter(Mandatory = $false)][switch]$SignedPolicyPath,
         [parameter(Mandatory = $false)][switch]$StrictKernelPolicyGUID,
         [parameter(Mandatory = $false)][switch]$StrictKernelNoFlightRootsPolicyGUID,
-        [parameter(Mandatory = $false)][switch]$StrictKernelModePolicyTimeOfDeployment,
-        [parameter(Mandatory = $false)][switch]$AutoUpdate
+        [parameter(Mandatory = $false)][switch]$StrictKernelModePolicyTimeOfDeployment
     )
     [WDACConfig.LoggerInitializer]::Initialize($VerbosePreference, $DebugPreference, $Host)
-    [WDACConfig.UserConfiguration]::Remove($SignedPolicyPath, $UnsignedPolicyPath, $SignToolPath, $CertCN, $CertPath, $StrictKernelPolicyGUID, $StrictKernelNoFlightRootsPolicyGUID, $LastUpdateCheck, $StrictKernelModePolicyTimeOfDeployment, $AutoUpdate)
+    [WDACConfig.UserConfiguration]::Remove($SignedPolicyPath, $UnsignedPolicyPath, $SignToolPath, $CertCN, $CertPath, $StrictKernelPolicyGUID, $StrictKernelNoFlightRootsPolicyGUID, $LastUpdateCheck, $StrictKernelModePolicyTimeOfDeployment, $null)
     <#
 .SYNOPSIS
-    Removes common values for parameters used by WDACConfig module
+    Removes common values for parameters used by WDACConfig module from the User Configurations JSON file. If you don't use it with any parameters, then all User Configs will be deleted.
 .LINK
     https://github.com/HotCakeX/Harden-Windows-Security/wiki/Remove-CommonWDACConfig
-.DESCRIPTION
-    Removes common values for parameters used by WDACConfig module from the User Configurations JSON file. If you don't use it with any parameters, then all User Configs will be deleted.
 .PARAMETER SignedPolicyPath
     Removes the SignedPolicyPath from User Configs
 .PARAMETER UnsignedPolicyPath
@@ -38,17 +35,11 @@ Function Remove-CommonWDACConfig {
     Removes the StrictKernelNoFlightRootsPolicyGUID from User Configs
 .PARAMETER StrictKernelModePolicyTimeOfDeployment
     Removes the StrictKernelModePolicyTimeOfDeployment from User Configs
-.PARAMETER AutoUpdate
-    Removes the AutoUpdate from User Configs
 .INPUTS
     System.Management.Automation.SwitchParameter
-.OUTPUTS
-    System.String
 .EXAMPLE
     Remove-CoreWDACConfig -CertCN
 .EXAMPLE
     Remove-CoreWDACConfig -CertPath
-.EXAMPLE
-    Remove-CoreWDACConfig
 #>
 }

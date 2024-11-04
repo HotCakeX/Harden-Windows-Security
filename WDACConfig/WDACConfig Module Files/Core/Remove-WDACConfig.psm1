@@ -139,7 +139,6 @@ Function Remove-WDACConfig {
     )
     Begin {
         [WDACConfig.LoggerInitializer]::Initialize($VerbosePreference, $DebugPreference, $Host)
-
         Update-WDACConfigPSModule -InvocationStatement $MyInvocation.Statement
 
         [System.IO.DirectoryInfo]$StagingArea = [WDACConfig.StagingArea]::NewStagingArea('Remove-WDACConfig')
@@ -201,7 +200,6 @@ Function Remove-WDACConfig {
             $ConfirmPreference = 'None'
         }
     }
-
     process {
 
         Try {
@@ -322,14 +320,11 @@ Function Remove-WDACConfig {
             Remove-Item -Path $StagingArea -Recurse -Force
         }
     }
-
     <#
 .SYNOPSIS
     Removes Signed and unsigned deployed App Control for Business policies
 .LINK
     https://github.com/HotCakeX/Harden-Windows-Security/wiki/Remove-WDACConfig
-.DESCRIPTION
-    Using official Microsoft methods, Removes Signed and unsigned deployed App Control for Business policies
 .PARAMETER PolicyNames
     Names of the deployed policies to be removed
     https://stackoverflow.com/questions/76143006/how-to-prevent-powershell-validateset-argument-completer-from-suggesting-the-sam/76143269

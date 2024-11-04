@@ -9,9 +9,9 @@ Function Assert-WDACConfigIntegrity {
     return [WDACConfig.AssertWDACConfigIntegrity]::Invoke($SaveLocally, $Path)
     <#
 .SYNOPSIS
-    Gets the SHA3-512 hashes of files in the WDACConfig and compares them with the ones in the cloud and shows the differences.
+    Gets the SHA2-512 hashes of files in the WDACConfig and compares them with the ones in the cloud and shows the differences.
 .DESCRIPTION
-    The Assert-WDACConfigIntegrity function scans all the relevant files in the WDACConfig's folder and its subfolders, calculates their SHA3-512 hashes in hexadecimal format,
+    The Assert-WDACConfigIntegrity function scans all the relevant files in the WDACConfig's folder and its subfolders, calculates their SHA2-512 hashes in hexadecimal format,
     Then it downloads the cloud CSV file from the GitHub repository and compares the hashes of the local files with the ones in the cloud.
     By doing so, you can ascertain that the files in your local WDACConfig folder are identical to the ones in the cloud and devoid of any interference.
     If there is any indication of tampering, the outcomes will be displayed on the console.

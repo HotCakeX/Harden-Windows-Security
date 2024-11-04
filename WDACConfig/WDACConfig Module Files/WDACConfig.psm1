@@ -26,7 +26,13 @@ Function Update-WDACConfigPSModule {
         # If the User Config file doesn't exist then set this flag to perform online update check
         [WDACConfig.Logger]::Write('No LastUpdateCheck was found in the user configurations, will perform online update check')
         [System.Boolean]$PerformOnlineUpdateCheck = $true
-        # If it's the first time the module is running, keep the auto-update enabled, unless user disables it.
+        # If it's the first time the module is running on a system, keep the auto-update enabled, unless user disables it. This maintains the same experience as before.
+        $null = [WDACConfig.UserConfiguration]::Set($null, $null, $null, $null, $null, $null, $null, $null , $null, $true)
+    }
+
+    # If the AutoUpdateCheck is not set, set it to true. This only occurs when the user auto updates from a previous version that doesn't have AutoUpdateCheck context to a new one that utilizes it.
+    # This ensures that the auto update check experience remains familiar and the same unless user disables it explicitly. This step can be removed in the future once all users are moved to the new versions.
+    if ($null -eq [WDACConfig.UserConfiguration]::Get().AutoUpdateCheck) {
         $null = [WDACConfig.UserConfiguration]::Set($null, $null, $null, $null, $null, $null, $null, $null , $null, $true)
     }
 
@@ -51,7 +57,7 @@ Function Update-WDACConfigPSModule {
         }
         catch {
             try {
-                # If GitHub source is unavailable, use the Azure DevOps source
+                # If GitHub source is unavailable, use the Azure DevOps source which is the mirror of the GitHub repository
                 [System.Version]$LatestVersion = Invoke-RestMethod -Uri 'https://dev.azure.com/SpyNetGirl/011c178a-7b92-462b-bd23-2c014528a67e/_apis/git/repositories/5304fef0-07c0-4821-a613-79c01fb75657/items?path=/WDACConfig/version.txt' -ProgressAction SilentlyContinue
             }
             catch {
@@ -61,7 +67,7 @@ Function Update-WDACConfigPSModule {
 
         # Reset the last update timer to the current time
         [WDACConfig.Logger]::Write('Resetting the last update timer to the current time')
-        $null = [WDACConfig.UserConfiguration]::Set($null, $null, $null, $null, $null, $null, $null, $(Get-Date) , $null)
+        $null = [WDACConfig.UserConfiguration]::Set($null, $null, $null, $null, $null, $null, $null, $(Get-Date) , $null, $null)
 
         if ($CurrentVersion -lt $LatestVersion) {
 

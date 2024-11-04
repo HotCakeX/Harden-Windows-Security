@@ -233,7 +233,7 @@ Function New-KernelModeWDACConfig {
                                 Write-ColorfulTextWDACConfig -Color HotPink -InputText 'Strict Kernel mode policy has been deployed in Enforced mode, no restart required.'
 
                                 [WDACConfig.Logger]::Write('Removing the GUID and time of deployment of the StrictKernelPolicy from user configuration')
-                                [WDACConfig.UserConfiguration]::Remove($false, $false, $false, $false, $false, $true, $false, $false, $true)
+                                [WDACConfig.UserConfiguration]::Remove($false, $false, $false, $false, $false, $true, $false, $false, $true, $null)
                             }
                             else {
                                 # Remove the Audit mode policy from the system
@@ -376,7 +376,7 @@ Function New-KernelModeWDACConfig {
                                 Write-ColorfulTextWDACConfig -Color HotPink -InputText 'Strict Kernel mode policy with no flighting root certs has been deployed in Enforced mode, no restart required.'
 
                                 [WDACConfig.Logger]::Write('Removing the GUID and time of deployment of the StrictKernelNoFlightRootsPolicy from user configuration')
-                                [WDACConfig.UserConfiguration]::Remove($false, $false, $false, $false, $false, $false, $true, $false, $true)
+                                [WDACConfig.UserConfiguration]::Remove($false, $false, $false, $false, $false, $false, $true, $false, $true, $null)
                             }
                             else {
                                 # Remove the Audit mode policy from the system

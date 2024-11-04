@@ -227,7 +227,7 @@ Function Deploy-SignedWDACConfig {
                                     if ($($PolicyID.TrimStart('{').TrimEnd('}')) -eq $StrictKernelPolicyGUID) {
 
                                         [WDACConfig.Logger]::Write('Removing the GUID of the deployed Strict Kernel mode policy from the User Configs')
-                                        [WDACConfig.UserConfiguration]::Remove($false, $false, $false, $false, $false, $true, $false, $false, $false)
+                                        [WDACConfig.UserConfiguration]::Remove($false, $false, $false, $false, $false, $true, $false, $false, $false, $null)
                                     }
                                 }
                             }
@@ -239,7 +239,7 @@ Function Deploy-SignedWDACConfig {
                                     if ($($PolicyID.TrimStart('{').TrimEnd('}')) -eq $StrictKernelNoFlightRootsPolicyGUID) {
 
                                         [WDACConfig.Logger]::Write('Removing the GUID of the deployed Strict Kernel No Flights mode policy from the User Configs')
-                                        [WDACConfig.UserConfiguration]::Remove($false, $false, $false, $false, $false, $false, $true, $false, $false)
+                                        [WDACConfig.UserConfiguration]::Remove($false, $false, $false, $false, $false, $false, $true, $false, $false, $null)
                                     }
                                 }
                             }

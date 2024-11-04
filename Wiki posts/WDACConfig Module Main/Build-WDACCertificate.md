@@ -11,7 +11,6 @@ Build-WDACCertificate
     [[-BuildingMethod] <String>]
     [[-Password] <SecureString>]
     [-Force]
-    [-SkipVersionCheck]
     [<CommonParameters>]
 ```
 

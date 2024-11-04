@@ -18,7 +18,6 @@ New-SupplementalWDACConfig
     [-NoScript]
     [-Level <String>]
     [-Fallbacks <String[]>]
-    [-SkipVersionCheck]
     [<CommonParameters>]
 ```
 
@@ -218,7 +217,6 @@ New-SupplementalWDACConfig
     -SuppPolicyName <String>
     [-PolicyPath <FileInfo>]
     [-Deploy]
-    [-SkipVersionCheck]
     [-Confirm]
     [<CommonParameters>]
 ```
@@ -328,7 +326,6 @@ New-SupplementalWDACConfig
     [-PolicyPath <FileInfo>]
     [-Deploy]
     [-Force]
-    [-SkipVersionCheck]
     [-Confirm]
     [<CommonParameters>]
 ```
@@ -456,7 +453,6 @@ Indicates that the cmdlet won't ask for confirmation and will proceed with creat
     [-PolicyPath <FileInfo>]
     [-Deploy]
     [-SigningScenario <String>]
-    [-SkipVersionCheck]
     [<CommonParameters>]
 ```
 

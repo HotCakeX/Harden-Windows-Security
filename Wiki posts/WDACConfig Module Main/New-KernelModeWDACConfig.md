@@ -9,7 +9,6 @@ New-KernelModeWDACConfig
     [-Deploy]
     [-EVSigners]
     [-Base <String>]
-    [-SkipVersionCheck]
     [<CommonParameters>]
 ```
 

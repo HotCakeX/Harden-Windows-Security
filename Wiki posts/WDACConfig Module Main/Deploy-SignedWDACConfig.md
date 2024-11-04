@@ -17,7 +17,6 @@ Deploy-SignedWDACConfig
     [-CertCN <String>]
     [-SignToolPath <FileInfo>]
     [-Force]
-    [-SkipVersionCheck]
     [-Confirm]
     [<CommonParameters>]
 ```

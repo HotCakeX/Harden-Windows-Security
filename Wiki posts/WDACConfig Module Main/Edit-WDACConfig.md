@@ -18,7 +18,6 @@ Edit-WDACConfig
      [-NoUserPEs]
      [-SpecificFileNameLevel <String>]
      [-LogSize <UInt64>]
-     [-SkipVersionCheck]
      [<CommonParameters>]
 ```
 
@@ -229,8 +228,7 @@ Edit-WDACConfig
      -SuppPolicyName <String>
      [-PolicyPath <FileInfo>]
      -SuppPolicyPaths <FileInfo[]>
-     [-KeepOldSupplementalPolicies]
-     [-SkipVersionCheck]
+     [-KeepOldSupplementalPolicies]s
      [<CommonParameters>]
 ```
 
@@ -329,7 +327,6 @@ Edit-WDACConfig
      -CurrentBasePolicyName <String[]>
      -NewBasePolicyType <String>
      [-RequireEVSigners]
-     [-SkipVersionCheck]
      [<CommonParameters>]
 ```
 

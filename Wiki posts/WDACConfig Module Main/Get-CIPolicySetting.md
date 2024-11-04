@@ -10,7 +10,6 @@ Get-CIPolicySetting
     [-Provider] <String>
     [-Key] <String>
     [-ValueName] <String>
-    [-SkipVersionCheck]
     [<CommonParameters>]
 ```
 

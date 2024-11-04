@@ -76,6 +76,7 @@
 - <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/wings/bluewings.gif" width="35"> [How to Detect Changes in User and Local Machine Certificate Stores in Real Time Using PowerShell](https://github.com/HotCakeX/Harden-Windows-Security/wiki/How-to-Detect-Changes-in-User-and-Local-Machine-Certificate-Stores-in-Real-Time-Using-PowerShell)
 - <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/wings/bluewings.gif" width="35"> [Cloning Personal and Enterprise Repositories Using GitHub Desktop](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Cloning-Personal-and-Enterprise-Repositories-Using-GitHub-Desktop)
 - <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/wings/bluewings.gif" width="35"> [Only a Small Portion of The Windows OS Security Apparatus](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Only-a-Small-Portion-of-The-Windows-OS-Security-Apparatus)
+- <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/wings/bluewings.gif" width="35"> [Rethinking Trust: Advanced Security Measures for High‐Stakes Systems](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Rethinking-Trust:-Advanced-Security-Measures-for-High%E2%80%90Stakes-Systems)
 
 <br>
 

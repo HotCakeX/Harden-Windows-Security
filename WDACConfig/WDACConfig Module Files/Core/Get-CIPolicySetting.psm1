@@ -12,7 +12,7 @@ Function Get-CIPolicySetting {
 .SYNOPSIS
     Gets the secure settings value from the deployed CI policies.
     If there is a policy with the same provider, key and value then it returns the following details:
-    
+
     Value = The actual value of the string
     ValueType = The type of setting: WldpString, WldpInteger or WldpBoolean
     ValueSize = the size of the returned value
@@ -55,10 +55,10 @@ Function Get-CIPolicySetting {
 .NOTES
     Note-1
     Since these settings are secured by Secure Boot, in order to successfully query these settings, you might need to restart once after deploying the CI Policy on the system.
-    
+
     Note-2
     DWord value is the same as integer or WldpInteger
-    
+
     Note-3
     In order to set a Boolean value using the Set-CIPolicySetting cmdlet, you need to use 1 for True or 0 for False, that will create a valid policy XML file that is compliant with the CI Policy Schema.
     #>

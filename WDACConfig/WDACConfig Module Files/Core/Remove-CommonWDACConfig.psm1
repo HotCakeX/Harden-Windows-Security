@@ -41,7 +41,7 @@ Function Remove-CommonWDACConfig {
 .INPUTS
     System.Management.Automation.SwitchParameter
 .EXAMPLE
-    Remove-CoreWDACConfig -CertCN 
+    Remove-CoreWDACConfig -CertCN
 .EXAMPLE
     Remove-CoreWDACConfig -CertPath
 #>

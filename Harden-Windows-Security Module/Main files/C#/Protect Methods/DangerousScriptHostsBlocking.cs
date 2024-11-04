@@ -7,6 +7,10 @@ namespace HardenWindowsSecurity
 {
     public static partial class DownloadsDefenseMeasures
     {
+        /// <summary>
+        /// Blocks certain dangerous script hosts using AppControl policy
+        /// </summary>
+        /// <exception cref="ArgumentNullException"></exception>
         public static void DangerousScriptHostsBlocking()
         {
             if (GlobalVars.path is null)

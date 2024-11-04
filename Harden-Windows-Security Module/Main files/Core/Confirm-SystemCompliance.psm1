@@ -25,11 +25,9 @@ function Confirm-SystemCompliance {
             })]
         [ValidateScript({
                 if ($_ -notin [HardenWindowsSecurity.ComplianceCategoriex]::new().GetValidValues()) { throw "Invalid Category Name: $_" }
-                # Return true if everything is okay
-                $true
+                $true # Return true if everything is okay
             })]
         [System.String[]]$Categories,
-
         [parameter(Mandatory = $false)]
         [System.Management.Automation.SwitchParameter]$ExportToCSV,
         [parameter(Mandatory = $false)]
@@ -122,8 +120,6 @@ function Confirm-SystemCompliance {
                 return [System.String[]]$Colorsx
             }
         }
-
-        # An array of colors used in multiple places
         [System.Drawing.Color[]]$Global:Colors = @(
             [System.Drawing.Color]::SkyBlue,
             [System.Drawing.Color]::Pink,
@@ -216,7 +212,6 @@ function Confirm-SystemCompliance {
                                 }
                                 "$SwitchColor$($_.Compliant)$($PSStyle.Reset)"
                             }
-
                         }, Value -AutoSize
                     }
                 }
@@ -261,10 +256,6 @@ function Confirm-SystemCompliance {
                 }
             }
         }
-        Catch {
-            # Throw any unhandled errors in a terminating fashion
-            Throw $_
-        }
         finally {
             Write-Progress -Activity 'Compliance checks have been completed' -Status 'Completed' -Completed
             [HardenWindowsSecurity.ControlledFolderAccessHandler]::Reset()
@@ -278,13 +269,6 @@ function Confirm-SystemCompliance {
     https://github.com/HotCakeX/Harden-Windows-Security/wiki/Harden%E2%80%90Windows%E2%80%90Security%E2%80%90Module
 .DESCRIPTION
     Checks the compliance of a system with the Harden Windows Security script. Checks the applied Group policies, registry keys and PowerShell cmdlets used by the hardening script.
-.FUNCTIONALITY
-    Uses Gpresult and Secedit to first export the effective Group policies and Security policies, then goes through them and checks them against the Harden Windows Security's guidelines.
-.EXAMPLE
-    $Result = Confirm-SystemCompliance -ShowAsObjectsOnly
-    ($Result['MicrosoftDefender'] | Where-Object -FilterScript { $_.Name -eq 'Controlled Folder Access Exclusions'}).Value
-
-    Do this to get the Controlled Folder Access Programs list when using ShowAsObjectsOnly optional parameter to output an object
 .EXAMPLE
     $Result = Confirm-SystemCompliance -ShowAsObjectsOnly
     $Result['MicrosoftDefender']

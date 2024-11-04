@@ -7,7 +7,10 @@ namespace HardenWindowsSecurity
 {
     public static partial class LockScreen
     {
-
+        /// <summary>
+        /// Will not display who last signed into the device on lock screen
+        /// </summary>
+        /// <exception cref="ArgumentNullException"></exception>
         public static void LockScreen_LastSignedIn()
         {
 

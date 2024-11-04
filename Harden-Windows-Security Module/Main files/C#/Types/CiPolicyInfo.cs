@@ -5,7 +5,9 @@ using System.Collections.Generic;
 
 namespace HardenWindowsSecurity
 {
-    // Class to represent a policy with various attributes
+    /// <summary>
+    /// Class to represent a policy with various attributes
+    /// </summary>
     public sealed class CiPolicyInfo
     {
         public string? PolicyID { get; set; }           // Unique identifier for the policy

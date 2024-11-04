@@ -7,6 +7,10 @@ namespace HardenWindowsSecurity
 {
     public static class AttackSurfaceReductionRules
     {
+        /// <summary>
+        /// Applies Attack Surface Reduction rules
+        /// </summary>
+        /// <exception cref="ArgumentNullException"></exception>
         public static void Invoke()
         {
             if (GlobalVars.path is null)

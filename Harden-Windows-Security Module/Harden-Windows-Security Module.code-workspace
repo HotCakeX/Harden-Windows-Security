@@ -134,6 +134,7 @@
 			"notcontains",
 			"ntdll",
 			"NTFS",
+			"NTLM",
 			"OFAC",
 			"ONENOTE",
 			"operatingsystem",

@@ -7,6 +7,10 @@ namespace HardenWindowsSecurity
 {
     public static partial class MiscellaneousConfigurations
     {
+        /// <summary>
+        /// Only lets printers who are compatible with the new secure drivers to work
+        /// </summary>
+        /// <exception cref="ArgumentNullException"></exception>
         public static void MiscellaneousConfigurations_WindowsProtectedPrint()
         {
             if (GlobalVars.path is null)

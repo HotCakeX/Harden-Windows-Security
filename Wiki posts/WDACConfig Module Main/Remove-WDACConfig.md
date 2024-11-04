@@ -13,7 +13,6 @@ Remove-WDACConfig
     [-CertCN <String>]
     [-SignToolPath <FileInfo>]
     [-Force]
-    [-SkipVersionCheck]
     [-Confirm]
     [<CommonParameters>]
 ```
@@ -117,7 +116,6 @@ Remove-WDACConfig
     [-PolicyNames <String[]>]
     [-PolicyIDs <String[]>]
     [-Force]
-    [-SkipVersionCheck]
     [-Confirm]
     [<CommonParameters>]
 ```

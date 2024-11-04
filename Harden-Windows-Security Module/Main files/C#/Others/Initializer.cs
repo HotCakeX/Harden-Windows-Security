@@ -1,5 +1,7 @@
 using Microsoft.Win32;
 using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 
@@ -95,13 +97,13 @@ namespace HardenWindowsSecurity
             GlobalVars.MDAVConfigCurrent = ConfigDefenderHelper.GetMpComputerStatus();
 
             // Total number of Compliant values
-            GlobalVars.TotalNumberOfTrueCompliantValues = 253;
+            GlobalVars.TotalNumberOfTrueCompliantValues = 256;
 
             // Getting the $VerbosePreference from the calling cmdlet and saving it in the global variable
             GlobalVars.VerbosePreference = VerbosePreference;
 
             // Create an empty ConcurrentDictionary to store the final results of the cmdlets
-            GlobalVars.FinalMegaObject = new System.Collections.Concurrent.ConcurrentDictionary<System.String, System.Collections.Generic.List<IndividualResult>>();
+            GlobalVars.FinalMegaObject = new ConcurrentDictionary<String, List<IndividualResult>>();
 
             // Create an empty dictionary to store the System Security Policies from the security_policy.inf file
             GlobalVars.SystemSecurityPoliciesIniObject = [];

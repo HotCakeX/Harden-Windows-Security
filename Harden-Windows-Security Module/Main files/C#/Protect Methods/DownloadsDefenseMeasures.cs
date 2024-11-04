@@ -4,6 +4,9 @@ namespace HardenWindowsSecurity
 {
     public static partial class DownloadsDefenseMeasures
     {
+        /// <summary>
+        /// Prevents executables originating from the Downloads folder from running, using AppControl policy
+        /// </summary>
         public static void Invoke()
         {
 
@@ -83,7 +86,7 @@ if (($null -eq $CurrentBasePolicyNames) -or (-NOT ($CurrentBasePolicyNames.Conta
     }}
 
     Write-Verbose -Message 'Creating and deploying the Downloads-Defense-Measures policy'
-    New-DenyWDACConfig -PathWildCards -PolicyName 'Downloads-Defense-Measures' -FolderPath ""$DownloadsPathSystem\*"" -Deploy -Verbose:$Verbose -SkipVersionCheck -EmbeddedVerboseOutput
+    New-DenyWDACConfig -PathWildCards -PolicyName 'Downloads-Defense-Measures' -FolderPath ""$DownloadsPathSystem\*"" -Deploy -Verbose:$Verbose -EmbeddedVerboseOutput
 
 }}
 else {{

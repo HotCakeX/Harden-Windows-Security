@@ -7,6 +7,10 @@ namespace HardenWindowsSecurity
 {
     public static class WindowsUpdateConfigurations
     {
+        /// <summary>
+        /// Applies Windows Update category
+        /// </summary>
+        /// <exception cref="ArgumentNullException"></exception>
         public static void Invoke()
         {
             if (GlobalVars.path is null)

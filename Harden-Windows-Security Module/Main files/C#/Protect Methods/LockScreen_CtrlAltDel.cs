@@ -7,6 +7,10 @@ namespace HardenWindowsSecurity
 {
     public static partial class LockScreen
     {
+        /// <summary>
+        /// Will require CTRL + ALT + DEL keys to be pressed on lock screen during logon
+        /// </summary>
+        /// <exception cref="ArgumentNullException"></exception>
         public static void LockScreen_CtrlAltDel()
         {
             if (GlobalVars.path is null)

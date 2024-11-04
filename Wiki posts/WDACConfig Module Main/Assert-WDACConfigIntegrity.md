@@ -8,7 +8,6 @@
 Assert-WDACConfigIntegrity
     [-SaveLocally]
     [-Path <DirectoryInfo>]
-    [-SkipVersionCheck]
     [<CommonParameters>]
 ```
 

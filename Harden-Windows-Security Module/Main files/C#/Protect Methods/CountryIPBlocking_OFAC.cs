@@ -4,6 +4,9 @@ namespace HardenWindowsSecurity
 {
     public static partial class CountryIPBlocking
     {
+        /// <summary>
+        /// Blocks IP address of the countries in the OFAC list
+        /// </summary>
         public static void CountryIPBlocking_OFAC()
         {
             Logger.LogMessage("Blocking IP ranges of countries in OFAC sanction list", LogTypeIntel.Information);

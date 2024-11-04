@@ -480,6 +480,12 @@ sc.exe start LanmanWorkstation
                     ConditionalResultAdd.Add(nestedObjectArray, Result);
                 }
 
+                // Process items in Registry resources.csv file with "Registry Keys" origin and add them to the nestedObjectArray array
+                foreach (IndividualResult Result in (CategoryProcessing.ProcessCategory(CatName, "Registry Keys")))
+                {
+                    ConditionalResultAdd.Add(nestedObjectArray, Result);
+                }
+
                 if (GlobalVars.FinalMegaObject is null)
                 {
                     throw new ArgumentNullException(nameof(GlobalVars.FinalMegaObject), "FinalMegaObject cannot be null.");
@@ -843,7 +849,7 @@ sc.exe start LanmanWorkstation
                         Compliant = individualItemResult,
                         Value = individualItemResult ? "Success and Failure" : inclusionSetting ?? string.Empty, // just to suppress the warning
                         Name = "Audit policy for Other Logon/Logoff Events",
-                        Category = CatName ?? string.Empty, // just to suppress the warning
+                        Category = CatName,
                         Method = "Cmdlet"
                     });
                 }
@@ -868,19 +874,25 @@ sc.exe start LanmanWorkstation
                     Compliant = MDM_Policy_Result01_System02_AllowLocation.IsMatch,
                     Value = MDM_Policy_Result01_System02_AllowLocation.Value,
                     Name = "Disable Location",
-                    Category = CatName ?? string.Empty, // just to suppress the warning
+                    Category = CatName,
                     Method = "CIM"
                 });
 
 
                 // Process items in Registry resources.csv file with "Group Policy" origin and add them to the $NestedObjectArray array
-                foreach (IndividualResult Result in (CategoryProcessing.ProcessCategory(CatName ?? string.Empty, "Group Policy")))
+                foreach (IndividualResult Result in (CategoryProcessing.ProcessCategory(CatName, "Group Policy")))
                 {
                     ConditionalResultAdd.Add(nestedObjectArray, Result);
                 }
 
                 // Process items in Registry resources.csv file with "Registry Keys" origin and add them to the nestedObjectArray array
-                foreach (IndividualResult Result in (CategoryProcessing.ProcessCategory(CatName ?? string.Empty, "Registry Keys")))
+                foreach (IndividualResult Result in (CategoryProcessing.ProcessCategory(CatName, "Registry Keys")))
+                {
+                    ConditionalResultAdd.Add(nestedObjectArray, Result);
+                }
+
+                // Process the Security Policies for the current category that reside in the "SecurityPoliciesVerification.csv" file
+                foreach (IndividualResult Result in (SecurityPolicyChecker.CheckPolicyCompliance(CatName)))
                 {
                     ConditionalResultAdd.Add(nestedObjectArray, Result);
                 }
@@ -907,7 +919,7 @@ sc.exe start LanmanWorkstation
                     Compliant = testSecureMacsResult,
                     Value = testSecureMacsResult ? "True" : "False",
                     Name = "SSH Secure MACs",
-                    Category = CatName ?? string.Empty, // just to suppress the warning
+                    Category = CatName,
                     Method = "CIM"
                 });
 

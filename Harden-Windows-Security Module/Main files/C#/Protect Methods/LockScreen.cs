@@ -7,6 +7,10 @@ namespace HardenWindowsSecurity
 {
     public static partial class LockScreen
     {
+        /// <summary>
+        /// Applies the LockScreen category policies
+        /// </summary>
+        /// <exception cref="ArgumentNullException"></exception>
         public static void Invoke()
         {
 

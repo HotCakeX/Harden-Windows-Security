@@ -47,6 +47,9 @@ namespace HardenWindowsSecurity
             // Set a tattooed Group policy for SvcHost.exe process mitigations back to disabled state
             RegistryEditor.EditRegistry(@"HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\SCMConfig", "EnableSvchostMitigationPolicy", "0", "DWORD", "AddOrModify");
 
+            // Set a tattooed Group policy for Long path support to disabled state
+            RegistryEditor.EditRegistry(@"HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\FileSystem", "LongPathsEnabled", "0", "DWORD", "AddOrModify");
+
             #endregion
 
 
@@ -154,6 +157,10 @@ foreach ($FirewallRule in Get-NetFirewallRule) {
 """);
 
             #endregion
+
+
+            Logger.LogMessage("""Disabling auditing for the "Other Logon/Logoff Events" subcategory under the Logon/Logoff category""", LogTypeIntel.Information);
+            RunCommandLineCommands.Run("auditpol", "/set /subcategory:\"{0CCE921C-69AE-11D9-BED3-505054503030}\" /success:disable /failure:disable");
 
         }
 

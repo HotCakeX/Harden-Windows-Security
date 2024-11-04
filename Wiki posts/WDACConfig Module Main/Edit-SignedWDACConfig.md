@@ -21,7 +21,6 @@ Edit-SignedWDACConfig
      [-Level <String>]
      [-Fallbacks <String[]>]
      [-SignToolPath <FileInfo>]
-     [-SkipVersionCheck]
      [<CommonParameters>]
 ```
 
@@ -296,7 +295,6 @@ Edit-SignedWDACConfig
      [-CertPath <FileInfo>]
      [-CertCN <String>]
      [-SignToolPath <FileInfo>]
-     [-SkipVersionCheck]
      [<CommonParameters>]
 ```
 
@@ -457,7 +455,6 @@ Edit-SignedWDACConfig
      [-CertCN <String>]
      [-SignToolPath <FileInfo>]
      [-RequireEVSigners]
-     [-SkipVersionCheck]
      [<CommonParameters>]
 ```
 

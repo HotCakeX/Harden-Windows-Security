@@ -17,9 +17,6 @@ New-DenyWDACConfig
     [-SpecificFileNameLevel <String>]
     [-NoUserPEs]
     [-NoScript]
-    [-SkipVersionCheck]
-    [-WhatIf]
-    [-Confirm]
     [<CommonParameters>]
 ```
 
@@ -190,7 +187,6 @@ New-DenyWDACConfig
     -PolicyName <String>
     [-ScanLocations <DirectoryInfo[]>]
     [-Deploy]
-    [-SkipVersionCheck]
     [-Confirm]
     [<CommonParameters>]
 ```
@@ -275,7 +271,6 @@ New-DenyWDACConfig
     -PolicyName <String>
     [-Deploy]
     [-Force]
-    [-SkipVersionCheck]
     [-Confirm]
     [<CommonParameters>]
 ```
@@ -374,7 +369,6 @@ New-DenyWDACConfig
     -PolicyName <String>
     -FolderPath <DirectoryInfo>
     [-Deploy]
-    [-SkipVersionCheck]
     [-Confirm]
     [<CommonParameters>]
 ```

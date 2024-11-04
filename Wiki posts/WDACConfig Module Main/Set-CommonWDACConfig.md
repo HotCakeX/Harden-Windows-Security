@@ -15,6 +15,7 @@ Set-CommonWDACConfig
     [[-StrictKernelNoFlightRootsPolicyGUID] <Guid>]
     [[-LastUpdateCheck] <DateTime>]
     [[-StrictKernelModePolicyTimeOfDeployment] <DateTime>]
+    [[-AutoUpdate] <Boolean>]
     [<CommonParameters>]
 ```
 
@@ -123,6 +124,22 @@ Path to the xml file of a Signed policy. Supports file picker GUI.
 <div align='center'>
 
 | Type: |[FileInfo](https://learn.microsoft.com/en-us/dotnet/api/system.io.fileinfo)|
+| :-------------: | :-------------: |
+| Position: | Named |
+| Default value: | None |
+| Required: | False |
+| Accept pipeline input: | False |
+| Accept wildcard characters: | False |
+
+</div>
+
+### -AutoUpdate
+
+Enables/Disable check for and downloading of new version of the WDACConfig module whenever it's available.
+
+<div align='center'>
+
+| Type: |[BooleanParameter](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_booleans)|
 | :-------------: | :-------------: |
 | Position: | Named |
 | Default value: | None |

@@ -8,6 +8,10 @@ namespace HardenWindowsSecurity
 {
     public static partial class MiscellaneousConfigurations
     {
+        /// <summary>
+        /// Applies the Miscellaneous category security measures
+        /// </summary>
+        /// <exception cref="ArgumentNullException"></exception>
         public static void Invoke()
         {
             if (GlobalVars.path is null)

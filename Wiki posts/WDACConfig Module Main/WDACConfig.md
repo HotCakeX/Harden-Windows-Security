@@ -32,7 +32,7 @@ This page is also available [on my website.](https://spynetgirl.github.io/WDACCo
 
 * Checks for new version periodically and updates itself automatically when necessary.
 
-    - Update check can be skipped with `-SkipVersionCheck`.
+    - [Controllable](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Set-CommonWDACConfig) using `Set-CommonWDACConfig -AutoUpdate $True/$False`.
 
 * Actively trying to design it with [Microsoft Security Development Lifecycle (SDL)](https://www.microsoft.com/en-us/securityengineering/sdl/) guidelines in mind.
 

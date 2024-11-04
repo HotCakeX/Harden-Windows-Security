@@ -214,8 +214,17 @@
                                                 <ListViewItem ToolTipService.InitialShowDelay="1000" ToolTip="Block NTLM completely">
                                                     <CheckBox x:Name="WindowsNetworking_BlockNTLM" Content="Block NTLM" VerticalContentAlignment="Center" Padding="10,10,40,10" Template="{StaticResource CustomCheckBoxTemplate}"/>
                                                 </ListViewItem>
+                                                <ListViewItem ToolTipService.InitialShowDelay="1000" ToolTip="Special care should be used before enabling this mode, since, in case of any failure of the virtualization modules, the system will refuse to boot.">
+                                                    <CheckBox x:Name="DeviceGuard_MandatoryVBS" Content="Mandatory Mode for VBS" VerticalContentAlignment="Center" Padding="10,10,40,10" Template="{StaticResource CustomCheckBoxTemplate}"/>
+                                                </ListViewItem>
                                                 <ListViewItem ToolTipService.InitialShowDelay="1000" ToolTip="Recommended if you either don't connect to printers or your printers use modern secure drivers">
                                                     <CheckBox x:Name="Miscellaneous_WindowsProtectedPrint" Content="Enable Windows Protected Print" VerticalContentAlignment="Center" Padding="10,10,40,10" Template="{StaticResource CustomCheckBoxTemplate}"/>
+                                                </ListViewItem>
+                                                <ListViewItem ToolTipService.InitialShowDelay="1000" ToolTip="Enables application that opt into long path support to be able to use the feature">
+                                                    <CheckBox x:Name="MiscellaneousConfigurations_LongPathSupport" Content="Enable support for Long Paths" VerticalContentAlignment="Center" Padding="10,10,40,10" Template="{StaticResource CustomCheckBoxTemplate}"/>
+                                                </ListViewItem>
+                                                <ListViewItem ToolTipService.InitialShowDelay="1000" ToolTip="System cryptography: Force strong key protection for user keys stored on the computer">
+                                                    <CheckBox x:Name="MiscellaneousConfigurations_StrongKeyProtection" Content="Force strong key protection" VerticalContentAlignment="Center" Padding="10,10,40,10" Template="{StaticResource CustomCheckBoxTemplate}"/>
                                                 </ListViewItem>
                                                 <ListViewItem ToolTipService.InitialShowDelay="1000" ToolTip="Blocks OFAC sanctioned countries' IPs in Firewall.">
                                                     <CheckBox x:Name="CountryIPBlocking_OFAC" Content="Block OFAC Sanctions Countries" VerticalContentAlignment="Center" Padding="10,10,40,10" Template="{StaticResource CustomCheckBoxTemplate}"/>

@@ -599,6 +599,10 @@ namespace HardenWindowsSecurity
                                        case "DeviceGuard":
                                            {
                                                DeviceGuard.Invoke();
+                                               if (GUIProtectWinSecurity.SelectedSubCategories.Contains("DeviceGuard_MandatoryVBS"))
+                                               {
+                                                   DeviceGuard.DeviceGuard_MandatoryVBS();
+                                               }
                                                break;
                                            }
                                        case "TLSSecurity":
@@ -663,6 +667,16 @@ namespace HardenWindowsSecurity
                                                if (GUIProtectWinSecurity.SelectedSubCategories.Contains("Miscellaneous_WindowsProtectedPrint"))
                                                {
                                                    MiscellaneousConfigurations.MiscellaneousConfigurations_WindowsProtectedPrint();
+                                               }
+
+                                               if (GUIProtectWinSecurity.SelectedSubCategories.Contains("MiscellaneousConfigurations_LongPathSupport"))
+                                               {
+                                                   MiscellaneousConfigurations.MiscellaneousConfigurations_LongPathSupport();
+                                               }
+
+                                               if (GUIProtectWinSecurity.SelectedSubCategories.Contains("MiscellaneousConfigurations_StrongKeyProtection"))
+                                               {
+                                                   MiscellaneousConfigurations.MiscellaneousConfigurations_StrongKeyProtection();
                                                }
 
                                                break;

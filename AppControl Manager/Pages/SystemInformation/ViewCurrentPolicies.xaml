@@ -12,9 +12,8 @@
     xmlns:tk7controls="using:CommunityToolkit.WinUI.UI.Controls"
     mc:Ignorable="d">
 
-    <Grid Margin="20,30,20,20">
+    <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
@@ -29,10 +28,8 @@
                 </Style.Setters>
             </Style>
         </Grid.Resources>
-
-        <TextBlock Text="View Currently Deployed Policies" Style="{StaticResource TitleTextBlockStyle}" Margin="15" Grid.Row="0"/>
-
-        <Border Grid.Row="1" Margin="0,0,0,30" Style="{StaticResource GridCardStyle}" Padding="10">
+    
+        <Border Grid.Row="0" Margin="0,0,0,30" Style="{StaticResource GridCardStyle}" Padding="10">
 
             <controls:WrapPanel Orientation="Horizontal" HorizontalAlignment="Center" HorizontalSpacing="12" VerticalSpacing="12">
 
@@ -53,7 +50,7 @@
 
         </Border>
 
-        <Border Grid.Row="2" Style="{StaticResource GridCardStyle}" Margin="0,0,0,25" Padding="5">
+        <Border Grid.Row="1" Style="{StaticResource GridCardStyle}" Margin="0,0,0,25" Padding="5">
 
             <tk7controls:DataGrid
         x:Name="DeployedPolicies"

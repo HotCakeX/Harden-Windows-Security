@@ -39,10 +39,10 @@ namespace WDACConfig.Pages
         // Method to dynamically create SettingsCards based on the dictionary keys
         private void GenerateSettingsCards()
         {
-            foreach (var key in PolicyRuleOptionsKeys)
+            foreach (string key in PolicyRuleOptionsKeys)
             {
                 // Create a new SettingsCard
-                var settingsCard = new SettingsCard
+                SettingsCard settingsCard = new()
                 {
                     ContentAlignment = ContentAlignment.Left
                 };
@@ -104,7 +104,7 @@ namespace WDACConfig.Pages
             }
 
             // Gather selected rules to add
-            var selectedOptions = GetSelectedPolicyRuleOptions();
+            PolicyRuleOptions[] selectedOptions = GetSelectedPolicyRuleOptions();
 
             // Call the Set method with selected options to add
             CiRuleOptions.Set(filePath, rulesToAdd: selectedOptions);
@@ -153,8 +153,7 @@ namespace WDACConfig.Pages
             }
 
             // Convert the ComboBoxItem content to the corresponding PolicyTemplate enum value
-            PolicyTemplate template;
-            if (!Enum.TryParse(selectedComboBoxItem.Content.ToString(), out template))
+            if (!Enum.TryParse(selectedComboBoxItem.Content.ToString(), out PolicyTemplate template))
             {
                 ShowMessage("Invalid policy template selected. Please choose a valid option.");
                 return;
@@ -168,7 +167,7 @@ namespace WDACConfig.Pages
         // Helper method to get selected policy rule options from the UI checkboxes
         private PolicyRuleOptions[] GetSelectedPolicyRuleOptions()
         {
-            var selectedRules = new List<PolicyRuleOptions>();
+            List<PolicyRuleOptions> selectedRules = [];
 
             // Iterate through each SettingsCard in the PolicyRuleExpander
             foreach (var item in PolicyRuleExpander.Items)
@@ -208,7 +207,7 @@ namespace WDACConfig.Pages
         // Helper method to show a simple message dialog
         private async void ShowMessage(string message)
         {
-            var dialog = new ContentDialog
+            ContentDialog dialog = new()
             {
                 Title = "Information",
                 Content = message,

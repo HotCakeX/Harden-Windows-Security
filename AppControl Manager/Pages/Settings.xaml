@@ -23,15 +23,17 @@
             </Style.Setters>
         </Style>
     </Page.Resources>
-    <ScrollViewer Margin="20,30,20,20">
+   
+    <ScrollViewer>
+                
         <Grid>
             <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
-            </Grid.RowDefinitions>
-            <TextBlock Text="Settings for the App Control Manager" Style="{StaticResource TitleTextBlockStyle}" Margin="15" Grid.Row="0"/>
+            </Grid.RowDefinitions>            
+                      
+            
             <StackPanel HorizontalAlignment="Stretch"
-                        Spacing="{StaticResource SettingsCardSpacing}" Grid.Row="1">
+                        Spacing="{StaticResource SettingsCardSpacing}" Grid.Row="0">
                 <win:StackPanel.ChildrenTransitions>
                     <win:EntranceThemeTransition FromVerticalOffset="50" />
                     <win:RepositionThemeTransition IsStaggeringEnabled="False" />
@@ -150,6 +152,10 @@
                 <HyperlinkButton Margin="0,8,0,0"
                                  Content="Send feedback" NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/issues/new/choose" />
             </StackPanel>
+            
         </Grid>
+        
     </ScrollViewer>
+    
 </Page>
+    

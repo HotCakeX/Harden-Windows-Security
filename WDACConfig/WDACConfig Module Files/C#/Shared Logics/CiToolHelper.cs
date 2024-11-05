@@ -27,7 +27,7 @@ namespace WDACConfig
 
 
         // A property to format PolicyOptions as a comma-separated string
-        public string PolicyOptionsDisplay => PolicyOptions != null ? string.Join(", ", PolicyOptions) : string.Empty;
+        public string PolicyOptionsDisplay => PolicyOptions is not null ? string.Join(", ", PolicyOptions) : string.Empty;
     }
 
 
@@ -365,10 +365,10 @@ namespace WDACConfig
                     foreach (var item in value.EnumerateArray())
                     {
                         // Get the string representation of the item.
-                        var str = item.GetString();
+                        string? str = item.GetString();
 
                         // Add the string to the options list if it is not null.
-                        if (str != null)
+                        if (str is not null)
                         {
                             options.Add(str);
                         }
@@ -381,10 +381,10 @@ namespace WDACConfig
                 else if (value.ValueKind == JsonValueKind.String)
                 {
                     // Get the string representation of the single value.
-                    var str = value.GetString();
+                    string? str = value.GetString();
 
                     // Return a list containing the single string if it is not null.
-                    if (str != null)
+                    if (str is not null)
                     {
                         return [str];
                     }

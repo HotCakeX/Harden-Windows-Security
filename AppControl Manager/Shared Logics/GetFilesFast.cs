@@ -46,7 +46,7 @@ namespace WDACConfig
             };
 
             // Process directories if provided
-            if (directories != null && directories.Length > 0)
+            if (directories is not null && directories.Length > 0)
             {
                 foreach (DirectoryInfo directory in directories)
                 {
@@ -74,7 +74,7 @@ namespace WDACConfig
             }
 
             // If files are provided, process them
-            if (files != null && files.Length > 0)
+            if (files is not null && files.Length > 0)
             {
                 foreach (FileInfo file in files)
                 {

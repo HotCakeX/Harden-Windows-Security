@@ -26,7 +26,7 @@ namespace WDACConfig
             Logger.Write("Creating the scheduled task for Snap Back Guarantee");
 
             // Initialize ManagementScope to interact with Task Scheduler's WMI namespace
-            var scope = new ManagementScope(@"root\Microsoft\Windows\TaskScheduler");
+            ManagementScope scope = new(@"root\Microsoft\Windows\TaskScheduler");
             // Establish connection to the WMI namespace
             scope.Connect();
 
@@ -35,7 +35,7 @@ namespace WDACConfig
             using ManagementClass actionClass = new(scope, new ManagementPath("PS_ScheduledTask"), null);
 
             // Prepare method parameters for creating the task action
-            var actionInParams = actionClass.GetMethodParameters("NewActionByExec");
+            ManagementBaseObject actionInParams = actionClass.GetMethodParameters("NewActionByExec");
             actionInParams["Execute"] = "cmd.exe";
 
             // The PowerShell command to run, downloading and deploying the drivers block list
@@ -97,7 +97,7 @@ namespace WDACConfig
             }
 
             // Extract CIM instance for further use in task registration
-            var triggerCimInstance = (ManagementBaseObject)triggerResult["cmdletOutput"];
+            ManagementBaseObject triggerCimInstance = (ManagementBaseObject)triggerResult["cmdletOutput"];
             #endregion
 
 
@@ -142,7 +142,7 @@ namespace WDACConfig
             registerInParams["TaskName"] = "EnforcedModeSnapBack";
 
             // Execute the WMI method to register the task
-            var registerResult = registerClass.InvokeMethod("RegisterByPrincipal", registerInParams, null);
+            ManagementBaseObject registerResult = registerClass.InvokeMethod("RegisterByPrincipal", registerInParams, null);
 
             // Check if the task was registered successfully
             if ((uint)registerResult["ReturnValue"] != 0)

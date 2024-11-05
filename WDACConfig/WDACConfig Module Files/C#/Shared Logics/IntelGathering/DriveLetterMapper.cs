@@ -7,9 +7,9 @@ using System.Text;
 
 #pragma warning disable CA1838 // Avoid 'StringBuilder' parameters for P/Invoke methods
 
-namespace WDACConfig
+namespace WDACConfig.IntelGathering
 {
-    public static class DriveLetterMapper
+    internal static class DriveLetterMapper
     {
         // Importing the GetVolumePathNamesForVolumeNameW function from kernel32.dll
         [DllImport("kernel32.dll", SetLastError = true)]
@@ -41,7 +41,7 @@ namespace WDACConfig
             int ucchMax);
 
         // Class to store drive mapping information
-        public class DriveMapping
+        public sealed class DriveMapping
         {
             // Property to store drive letter
             public string? DriveLetter { get; set; }
@@ -64,11 +64,11 @@ namespace WDACConfig
             // Maximum buffer size for volume names, paths, and mount points
             uint max = 65535;
             // StringBuilder for storing volume names
-            var sbVolumeName = new StringBuilder((int)max);
+            StringBuilder sbVolumeName = new((int)max);
             // StringBuilder for storing path names
-            var sbPathName = new StringBuilder((int)max);
+            StringBuilder sbPathName = new((int)max);
             // StringBuilder for storing mount points
-            var sbMountPoint = new StringBuilder((int)max);
+            StringBuilder sbMountPoint = new((int)max);
             // Variable to store the length of the return string
             uint lpcchReturnLength = 0;
 
@@ -97,7 +97,8 @@ namespace WDACConfig
                     // Add the drive mapping to the list
                     drives.Add(new DriveMapping
                     {
-                        DriveLetter = sbMountPoint.ToString(),
+                        // Doing replace here so instead of "C:\" we get "C:"
+                        DriveLetter = sbMountPoint.ToString().Replace(@":\", ":", StringComparison.OrdinalIgnoreCase),
                         VolumeName = volume,
                         DevicePath = sbPathName.ToString()
                     });

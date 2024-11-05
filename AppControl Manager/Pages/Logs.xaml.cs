@@ -3,6 +3,7 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Documents;
 using Microsoft.UI.Xaml.Media;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -68,11 +69,10 @@ namespace WDACConfig.Pages
         private void LoadLogFiles()
         {
             // Get all log files matching the syntax and sort them by creation time
-            var logFiles = Directory.GetFiles(Logger.LogsDirectory, "WDACConfig_AppLogs_*.txt")
+            List<FileInfo> logFiles = [.. Directory.GetFiles(Logger.LogsDirectory, "WDACConfig_AppLogs_*.txt")
                 .Select(f => new FileInfo(f))
                 .Where(f => f.Length <= 409600) // Filter files that are 400KB or smaller to prevent UI from freezing. ItemsRepeater element should be used for virtualized content display.
-                .OrderByDescending(f => f.CreationTime)
-                .ToList();
+                .OrderByDescending(f => f.CreationTime)];
 
             // Clear existing items and add sorted files to the ComboBox
             LogFileComboBox.Items.Clear();
@@ -98,7 +98,7 @@ namespace WDACConfig.Pages
 
         private async void LogFileComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (LogFileComboBox.SelectedItem != null)
+            if (LogFileComboBox.SelectedItem is not null)
             {
                 // Get the selected file path
                 string? selectedFile = LogFileComboBox.SelectedItem.ToString();

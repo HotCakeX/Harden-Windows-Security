@@ -9,14 +9,15 @@
     xmlns:ui="using:CommunityToolkit.WinUI"
     xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     mc:Ignorable="d">
-    <Grid Margin="20,30,20,20">
+    
+    <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        <TextBlock Text="App Control Manager Logs" Style="{StaticResource TitleTextBlockStyle}" Margin="15" Grid.Row="0"/>
-        <controls:WrapPanel Orientation="Horizontal" Grid.Row="1" Margin="10" HorizontalSpacing="10" VerticalSpacing="10">
+        
+        
+        <controls:WrapPanel Orientation="Horizontal" Grid.Row="0" Margin="10" HorizontalSpacing="10" VerticalSpacing="10">
             <!-- ComboBox for selecting log files -->
             <ComboBox x:Name="LogFileComboBox"
               SelectionChanged="LogFileComboBox_SelectionChanged"
@@ -46,7 +47,7 @@
                                 SelectedColor="Yellow"
                                 Margin="5,0" />
         </controls:WrapPanel>
-        <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto">
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
             <!-- TextBox to display log content -->
             <TextBlock x:Name="LogContentTextBox"
                        FontFamily="Arial"

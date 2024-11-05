@@ -26,15 +26,12 @@
         </Style>
     </Page.Resources>
 
-    <ScrollViewer Margin="20,30,20,20">
+    <ScrollViewer>
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
-
-            <TextBlock Text="Check for updates" Style="{StaticResource TitleTextBlockStyle}" Margin="15" Grid.Row="0"/>
 
             <InfoBar
                 x:Name="UpdateStatusInfoBar"
@@ -42,14 +39,14 @@
                 IsIconVisible="True"
                 IsClosable="False"
                 Title="Update Status"
-                Grid.Row="1">
+                Grid.Row="0">
                 <InfoBar.ActionButton>
                     <HyperlinkButton Content="More info" NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/wiki/AppControl-Manager" />
                 </InfoBar.ActionButton>
             </InfoBar>
 
             <StackPanel HorizontalAlignment="Stretch"
-                        Spacing="{StaticResource SettingsCardSpacing}" Grid.Row="2" Margin="0,40,0,0">
+                        Spacing="{StaticResource SettingsCardSpacing}" Grid.Row="1" Margin="0,40,0,0">
 
                 <win:StackPanel.ChildrenTransitions>
                     <win:EntranceThemeTransition FromVerticalOffset="50" />
@@ -81,6 +78,9 @@ Header="Auto Update Check" HeaderIcon="{ui:FontIcon Glyph=&#xE774;}">
                 </controls:SettingsCard>
 
             </StackPanel>
+
         </Grid>
+
     </ScrollViewer>
+
 </Page>

@@ -83,14 +83,14 @@ namespace WDACConfig
             List<string> csvLines = [];
 
             // Create header instead of using reflection to get the properties' names of the SimulationOutput class
-            var header = "\"Path\",\"Source\",\"IsAuthorized\",\"SignerID\",\"SignerName\",\"SignerCertRoot\",\"SignerCertPublisher\",\"SignerScope\",\"SignerFileAttributeIDs\",\"MatchCriteria\",\"SpecificFileNameLevelMatchCriteria\",\"CertSubjectCN\",\"CertIssuerCN\",\"CertNotAfter\",\"CertTBSValue\",\"FilePath\"";
+            string header = "\"Path\",\"Source\",\"IsAuthorized\",\"SignerID\",\"SignerName\",\"SignerCertRoot\",\"SignerCertPublisher\",\"SignerScope\",\"SignerFileAttributeIDs\",\"MatchCriteria\",\"SpecificFileNameLevelMatchCriteria\",\"CertSubjectCN\",\"CertIssuerCN\",\"CertNotAfter\",\"CertTBSValue\",\"FilePath\"";
             csvLines.Add(header);
 
             // Iterate through the SimulationOutput instances and format each line
-            foreach (var output in finalResults.Values)
+            foreach (SimulationOutput output in finalResults.Values)
             {
-                var values = new List<string>
-                {
+                List<string> values =
+                [
                     $"\"{output.Path}\"",
                     $"\"{output.Source}\"",
                     $"\"{output.IsAuthorized}\"",
@@ -99,7 +99,7 @@ namespace WDACConfig
                     $"\"{output.SignerCertRoot}\"",
                     $"\"{output.SignerCertPublisher}\"",
                     $"\"{output.SignerScope}\"",
-                    output.SignerFileAttributeIDs != null ? $"\"{string.Join(",", output.SignerFileAttributeIDs)}\"" : "\"\"",
+                    output.SignerFileAttributeIDs is not null ? $"\"{string.Join(",", output.SignerFileAttributeIDs)}\"" : "\"\"",
                     $"\"{output.MatchCriteria}\"",
                     $"\"{output.SpecificFileNameLevelMatchCriteria}\"",
                     $"\"{output.CertSubjectCN}\"",
@@ -107,7 +107,7 @@ namespace WDACConfig
                     $"\"{output.CertNotAfter}\"",
                     $"\"{output.CertTBSValue}\"",
                     $"\"{output.FilePath}\""
-                };
+                ];
 
                 csvLines.Add(string.Join(",", values));
             }

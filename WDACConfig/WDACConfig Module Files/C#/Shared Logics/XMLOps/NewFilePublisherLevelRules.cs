@@ -87,17 +87,17 @@ namespace WDACConfig
                     newFileAttribNode.SetAttribute("FileName", filePublisherData.OriginalFileName);
                 }
 
-                if (!string.IsNullOrWhiteSpace(filePublisherData.InternalName))
+                else if (!string.IsNullOrWhiteSpace(filePublisherData.InternalName))
                 {
                     newFileAttribNode.SetAttribute("InternalName", filePublisherData.InternalName);
                 }
 
-                if (!string.IsNullOrWhiteSpace(filePublisherData.FileDescription))
+                else if (!string.IsNullOrWhiteSpace(filePublisherData.FileDescription))
                 {
                     newFileAttribNode.SetAttribute("FileDescription", filePublisherData.FileDescription);
                 }
 
-                if (!string.IsNullOrWhiteSpace(filePublisherData.ProductName))
+                else if (!string.IsNullOrWhiteSpace(filePublisherData.ProductName))
                 {
                     newFileAttribNode.SetAttribute("ProductName", filePublisherData.ProductName);
                 }

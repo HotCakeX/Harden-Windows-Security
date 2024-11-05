@@ -18,10 +18,10 @@ namespace WDACConfig
         {
 
             // Create a new HashSet with case-insensitive string comparison
-            var currentPolicyIDs = new HashSet<string>(StringComparer.InvariantCultureIgnoreCase);
+            HashSet<string> currentPolicyIDs = new(StringComparer.InvariantCultureIgnoreCase);
 
             // Get all of the deployed policies on the system
-            var policies = CiToolHelper.GetPolicies(false, true, true);
+            List<CiPolicyInfo> policies = CiToolHelper.GetPolicies(false, true, true);
 
             // Loop through each policy and add its ID to the HashSet
             foreach (CiPolicyInfo item in policies)

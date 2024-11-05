@@ -1,4 +1,5 @@
 using System;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Management.Automation;
 
@@ -39,8 +40,8 @@ namespace WDACConfig
                 {
                     if (sender is not null)
                     {
-                        var outputStream = (PSDataCollection<PSObject>)sender;
-                        var output = outputStream[args.Index]?.ToString();
+                        PSDataCollection<PSObject> outputStream = (PSDataCollection<PSObject>)sender;
+                        string? output = outputStream[args.Index]?.ToString();
                         Logger.Write($"Output: {output}");
                     }
                 };
@@ -51,7 +52,7 @@ namespace WDACConfig
             {
                 if (sender is not null)
                 {
-                    var verboseStream = (PSDataCollection<VerboseRecord>)sender;
+                    PSDataCollection<VerboseRecord> verboseStream = (PSDataCollection<VerboseRecord>)sender;
                     Logger.Write($"Verbose: {verboseStream[args.Index].Message}");
                 }
             };
@@ -61,7 +62,7 @@ namespace WDACConfig
             {
                 if (sender is not null)
                 {
-                    var warningStream = (PSDataCollection<WarningRecord>)sender;
+                    PSDataCollection<WarningRecord> warningStream = (PSDataCollection<WarningRecord>)sender;
                     Logger.Write($"Warning: {warningStream[args.Index].Message}");
                 }
             };
@@ -72,9 +73,9 @@ namespace WDACConfig
                 if (sender is not null)
                 {
                     // Get the error details
-                    var errorStream = (PSDataCollection<ErrorRecord>)sender;
-                    var error = errorStream[args.Index];
-                    var errorMessage = $"Error: {error.Exception.Message}\n" +
+                    PSDataCollection<ErrorRecord> errorStream = (PSDataCollection<ErrorRecord>)sender;
+                    ErrorRecord error = errorStream[args.Index];
+                    string errorMessage = $"Error: {error.Exception.Message}\n" +
                                        $"Category: {error.CategoryInfo.Category}\n" +
                                        $"Target: {error.TargetObject}\n" +
                                        $"Script StackTrace: {error.ScriptStackTrace}\n" +
@@ -102,7 +103,7 @@ namespace WDACConfig
             if (returnOutput)
             {
                 // Use Invoke to run the script and collect output
-                var results = psInstance.Invoke<PSObject>();
+                Collection<PSObject> results = psInstance.Invoke<PSObject>();
                 return results.Count != 0 ? results.FirstOrDefault()?.ToString() : null;
             }
             else

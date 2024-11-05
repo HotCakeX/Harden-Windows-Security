@@ -22,14 +22,14 @@ namespace WDACConfig
                 return false;
             }
 
-            var other = (PolicyHashObj)obj;
+            PolicyHashObj other = (PolicyHashObj)obj;
             return string.Equals(HashValue, other.HashValue, StringComparison.OrdinalIgnoreCase);
         }
 
         // Override the GetHashCode method
         public override int GetHashCode()
         {
-            return HashValue != null ? StringComparer.OrdinalIgnoreCase.GetHashCode(HashValue) : 0;
+            return HashValue is not null ? StringComparer.OrdinalIgnoreCase.GetHashCode(HashValue) : 0;
         }
     }
 }

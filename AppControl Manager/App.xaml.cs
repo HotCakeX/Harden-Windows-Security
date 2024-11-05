@@ -99,7 +99,7 @@ namespace WDACConfig
         /// </summary>
         private async Task ShowErrorDialogAsync(Exception ex)
         {
-            if (m_window != null)
+            if (m_window is not null)
             {
                 // Wait for the semaphore before showing a new error dialog
                 await _dialogSemaphore.WaitAsync();

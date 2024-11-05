@@ -134,7 +134,7 @@ namespace WDACConfig
                 string? line;
                 bool isHeader = true;
 
-                while ((line = reader.ReadLine()) != null)
+                while ((line = reader.ReadLine()) is not null)
                 {
                     // Skip the header
                     if (isHeader)
@@ -144,7 +144,7 @@ namespace WDACConfig
                     }
 
                     // Split the CSV line by commas
-                    var fields = line.Split(',');
+                    string[] fields = line.Split(',');
 
                     if (fields.Length == 3)
                     {
@@ -177,7 +177,7 @@ namespace WDACConfig
 """);
 
             // Write each entry in the list
-            foreach (var entry in entries)
+            foreach (WDACConfigHashEntry entry in entries)
             {
                 string relativePath = EscapeCsv(entry.RelativePath);
                 string fileName = EscapeCsv(entry.FileName);

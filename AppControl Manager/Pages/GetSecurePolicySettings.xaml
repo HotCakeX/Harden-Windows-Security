@@ -6,47 +6,86 @@
     xmlns:local="using:WDACConfig.Pages"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     mc:Ignorable="d">
 
-    <Grid Margin="20,30,20,20">
+    <ScrollViewer>
+    
+    <Grid>
         <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="*"/>
-        </Grid.ColumnDefinitions>
+        <Grid.Resources>
+            <Style x:Key="GridCardStyle" TargetType="Border">
+                <Style.Setters>
+                    <Setter Property="Background" Value="{ThemeResource CardBackgroundFillColorDefaultBrush}" />
+                    <Setter Property="BorderThickness" Value="1" />
+                    <Setter Property="BorderBrush" Value="{ThemeResource CardStrokeColorDefaultBrush}" />
+                    <Setter Property="CornerRadius" Value="{StaticResource OverlayCornerRadius}" />
+                </Style.Setters>
+            </Style>
 
-        <TextBlock Text="Get and Verify Secure Policy Settings" Style="{StaticResource TitleTextBlockStyle}" Margin="15" Grid.Row="0"/>
+        </Grid.Resources>
 
-        <StackPanel Spacing="10" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Column="0" Grid.Row="1">
+        
 
-            <!-- Input Fields -->
-            <TextBox x:Name="ProviderTextBox" Header="Provider" PlaceholderText="Enter Provider" MinWidth="200"/>
-            <TextBox x:Name="KeyTextBox" Header="Key" PlaceholderText="Enter Key" MinWidth="200"/>
-            <TextBox x:Name="ValueNameTextBox" Header="Value Name" PlaceholderText="Enter Value Name" MinWidth="200"/>
+            <controls:WrapPanel Grid.Row="0" VerticalSpacing="4" HorizontalSpacing="4" Orientation="Vertical" Margin="6,10,6,10">
 
-            <!-- Button -->
-            <Button Content="Fetch" Click="InvokeButton_Click" Margin="0,15,0,0" HorizontalAlignment="Center"/>
+                <TextBlock
+Foreground="LightGray"
+TextWrapping="WrapWholeWords"
+Style="{StaticResource BodyTextBlockStyle}">
 
-        </StackPanel>
+<Span> Retreive and query <Run Foreground="{ThemeResource SystemAccentColor}">the Secure Settings</Run>
+     on the system. </Span>
+                </TextBlock>
 
-        <StackPanel Spacing="10" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Column="1" Grid.Row="1">
+                <HyperlinkButton Content="Check out this page for more info" NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/wiki/Get-CIPolicySetting" />
+            </controls:WrapPanel>
+
+        <Border
+Grid.Row="1"
+Margin="0,10,0,10"
+Style="{StaticResource GridCardStyle}" Padding="8,15,8,15">
+
+            <controls:WrapPanel HorizontalSpacing="10" VerticalSpacing="10" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Row="1">
+
+                    <!-- Button -->
+                    <Button Content="Fetch" Click="InvokeButton_Click" Margin="0,12,5,0"
+                            HorizontalAlignment="Center" Style="{StaticResource AccentButtonStyle}"/>
+
+
+                    <!-- Input Fields -->
+                <TextBox x:Name="ProviderTextBox" Header="Provider" PlaceholderText="Enter Provider" MinWidth="200"/>
+                <TextBox x:Name="KeyTextBox" Header="Key" PlaceholderText="Enter Key" MinWidth="200"/>
+                <TextBox x:Name="ValueNameTextBox" Header="Value Name" PlaceholderText="Enter Value Name" MinWidth="200"/>
+
+             
+            </controls:WrapPanel>
+
+        </Border>
+
+        <controls:WrapPanel HorizontalSpacing="10" Margin="0,15,0,15" VerticalSpacing="10" Orientation="Vertical" HorizontalAlignment="Center" Grid.Row="2">
 
             <!-- Result Fields -->
-            <TextBlock Text="Results:" FontWeight="Bold" Margin="0,0,0,10" />
-            <TextBox x:Name="ValueTextBox" IsReadOnly="True" Header="Value:" MinWidth="200" />
-            <TextBox x:Name="ValueTypeTextBox" IsReadOnly="True" Header="Value Type:" MinWidth="200"/>
-            <TextBox x:Name="ValueSizeTextBox" IsReadOnly="True" Header="Value Size:" MinWidth="200"/>
-            <TextBox x:Name="StatusTextBox" IsReadOnly="True" Header="Status:" MinWidth="200"/>
-            <TextBox x:Name="StatusCodeTextBox" IsReadOnly="True" Header="Status Code:" MinWidth="200"/>
+            <TextBlock Text="The results will be displayed below" FontWeight="Bold" />
+            <TextBox x:Name="ValueTextBox" IsReadOnly="True" Header="Value" MinWidth="200" />
+            <TextBox x:Name="ValueTypeTextBox" IsReadOnly="True" Header="Value Type" MinWidth="200"/>
+            <TextBox x:Name="ValueSizeTextBox" IsReadOnly="True" Header="Value Size" MinWidth="200"/>
+            <TextBox x:Name="StatusTextBox" IsReadOnly="True" Header="Status" MinWidth="200"/>
+            <TextBox x:Name="StatusCodeTextBox" IsReadOnly="True" Header="Status Code" MinWidth="200"/>
 
-        </StackPanel>
+        </controls:WrapPanel>
 
         <!-- InfoBar -->
-        <InfoBar x:Name="InfoBar" IsOpen="False" Grid.ColumnSpan="2" Margin="0,20,0,0" Grid.Row="2"/>
+        <InfoBar x:Name="InfoBar" IsOpen="False" Margin="0,20,0,0" Grid.Row="3"/>      
+
     </Grid>
+
+    </ScrollViewer>
+    
 </Page>

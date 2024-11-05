@@ -20,7 +20,7 @@ namespace WDACConfig
 
             string logName = "Microsoft-Windows-CodeIntegrity/Operational";
 
-            using var logConfig = new EventLogConfiguration(logName);
+            using EventLogConfiguration logConfig = new(logName);
             string logFilePath = Environment.ExpandEnvironmentVariables(logConfig.LogFilePath);
             FileInfo logFileInfo = new(logFilePath);
             long currentLogFileSize = logFileInfo.Length;

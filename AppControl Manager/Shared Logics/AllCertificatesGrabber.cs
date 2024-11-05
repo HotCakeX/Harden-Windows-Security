@@ -221,10 +221,10 @@ namespace WDACConfig
                         if (TrustedData.pSignatureSettings != IntPtr.Zero)
                         {
                             // Using the generic overload of Marshal.PtrToStructure for better type safety and performance
-                            var signatureSettings = Marshal.PtrToStructure<WinTrustSignatureSettings>(TrustedData.pSignatureSettings);
+                            WinTrustSignatureSettings? signatureSettings = Marshal.PtrToStructure<WinTrustSignatureSettings>(TrustedData.pSignatureSettings);
 
                             // Ensuring that the structure is not null before accessing its members
-                            if (signatureSettings != null)
+                            if (signatureSettings is not null)
                             {
                                 maxSigners = signatureSettings.SecondarySignersCount;
                             }
@@ -307,7 +307,7 @@ namespace WDACConfig
                 }
                 finally
                 {
-                    if (TrustedData != null)
+                    if (TrustedData is not null)
                     {
                         // Set StateAction to close the WinTrustData structure
                         TrustedData.StateAction = WinTrust.StateActionClose;

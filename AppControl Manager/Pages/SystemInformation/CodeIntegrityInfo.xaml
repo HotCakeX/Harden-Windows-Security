@@ -9,14 +9,11 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
-    <Grid Margin="20,30,20,20">
+    <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-
-        <TextBlock Text="View Code Integrity Information" Style="{StaticResource TitleTextBlockStyle}" Margin="15" Grid.Row="0"/>
 
         <Button x:Name="RetrieveCodeIntegrityInfo"
                 Content="Retrieve Code Integrity Info"
@@ -26,9 +23,9 @@
                 VerticalAlignment="Top"
                 Style="{StaticResource AccentButtonStyle}"
                 Margin="10"
-                Grid.Row="1"/>
+                Grid.Row="0"/>
 
-        <ScrollViewer Grid.Row="2" HorizontalScrollBarVisibility="Auto" Margin="10,10,10,10">
+        <ScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Auto" Margin="10,10,10,10">
             <ListView Name="CodeIntegrityInfoListView" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" SelectionMode="None">
                 <!-- ListView Headers -->
                 <ListView.Header>

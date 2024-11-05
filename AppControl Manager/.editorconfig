@@ -344,3 +344,12 @@ dotnet_diagnostic.CA1507.severity = error
 
 # IDE0001: Simplify name
 dotnet_diagnostic.IDE0001.severity = error
+
+# SYSLIB1045: Convert to 'GeneratedRegexAttribute'.
+dotnet_diagnostic.SYSLIB1045.severity = error
+
+# Use collection expression for array (IDE0300)
+dotnet_diagnostic.IDE0300.severity = error
+
+# Inline variable declaration (IDE0018)
+dotnet_diagnostic.IDE0018.severity = error

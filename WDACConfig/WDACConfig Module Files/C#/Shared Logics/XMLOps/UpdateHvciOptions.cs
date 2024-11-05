@@ -23,7 +23,7 @@ namespace WDACConfig
             XmlNode? hvciOptionsNode = codeIntegrityPolicy.SiPolicyNode.SelectSingleNode("ns:HvciOptions", codeIntegrityPolicy.NamespaceManager);
 
             // If HvciOptions node exists
-            if (hvciOptionsNode != null)
+            if (hvciOptionsNode is not null)
             {
                 // Ensure the value is "2"
                 if (hvciOptionsNode.InnerText != "2")

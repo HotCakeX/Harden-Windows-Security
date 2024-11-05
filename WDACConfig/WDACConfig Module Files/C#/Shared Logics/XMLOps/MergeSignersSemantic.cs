@@ -130,7 +130,7 @@ namespace WDACConfig
                 foreach (XmlNode node in fileRulesElements)
                 {
                     string? id = node?.Attributes?["ID"]?.Value;
-                    if (id != null)
+                    if (id is not null)
                     {
                         _ = fileRulesValidID_HashSet.Add(id);
                     }

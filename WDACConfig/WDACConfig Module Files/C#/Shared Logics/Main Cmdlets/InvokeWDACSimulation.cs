@@ -501,7 +501,7 @@ namespace WDACConfig
                                 {
                                     // Use the Compare method to process it
 
-                                    // The EKU OIDs of the primary signer of the file, just like the output of the Get-AuthenticodeSignature cmdlet, the ones that WDAC policy uses for EKU-based authorization
+                                    // The EKU OIDs of the primary signer of the file, just like the output of the Get-AuthenticodeSignature cmdlet, the ones that AppControl policy uses for EKU-based authorization
                                     string[] ekuOIDs = FileSignatureResults
                                         .Where(p => p.Signer?.SignerInfos is not null)
                                         .SelectMany(p => p.Signer.SignerInfos.Cast<SignerInfo>())
@@ -514,7 +514,7 @@ namespace WDACConfig
                                     SimulationInput inPutSim = new(
                                         CurrentFilePath, // Path of the signed file
                                         [.. GetCertificateDetails.Get([.. FileSignatureResults])], //  Get all of the details of all certificates of the signed file
-                                        [.. SignerInfo], // The entire Signer Info of the WDAC Policy file
+                                        [.. SignerInfo], // The entire Signer Info of the AppControl Policy file
                                         ekuOIDs);
 
                                     SimulationOutput ComparisonResult = Arbitrator.Compare(inPutSim);

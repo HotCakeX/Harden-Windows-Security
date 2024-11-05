@@ -23,6 +23,9 @@ namespace WDACConfig
         // Their assignments in other methods must happen through their respective nodes exposed by the instantiated class
         internal string PolicyType { get; }
 
+        internal string PolicyID { get; }
+        internal string BasePolicyID { get; }
+
         internal XmlNode PolicyIDNode { get; }
         internal XmlNode BasePolicyIDNode { get; }
 
@@ -149,11 +152,17 @@ namespace WDACConfig
                 _ = SiPolicyNode.AppendChild(newBasePolicyIDNode);
 
                 BasePolicyIDNode = newBasePolicyIDNode;
+
+                BasePolicyID = newRandomGUIDString;
             }
             else
             {
                 BasePolicyIDNode = basePolicyIDNode;
+
+
+                BasePolicyID = basePolicyIDNode.InnerText;
             }
+
 
             #endregion
 
@@ -174,10 +183,14 @@ namespace WDACConfig
                 _ = SiPolicyNode.AppendChild(newPolicyIDNode);
 
                 PolicyIDNode = newPolicyIDNode;
+
+                PolicyID = newRandomGUIDString;
             }
             else
             {
                 PolicyIDNode = policyIDNode;
+
+                PolicyID = policyIDNode.InnerText;
             }
 
             #endregion

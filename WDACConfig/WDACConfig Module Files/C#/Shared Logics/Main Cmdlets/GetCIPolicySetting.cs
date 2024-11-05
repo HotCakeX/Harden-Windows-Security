@@ -29,7 +29,7 @@ namespace WDACConfig
             uint ValueSize = 1024;  // Changed to uint to match the P/Invoke declaration
             var Value = Marshal.AllocHGlobal((int)ValueSize);
 
-            var result = WldpQuerySecurityPolicyWrapper.WldpQuerySecurityPolicy(
+            int result = WldpQuerySecurityPolicyWrapper.WldpQuerySecurityPolicy(
                 ref ProviderUS,
                 ref KeyUS,
                 ref ValueNameUS,

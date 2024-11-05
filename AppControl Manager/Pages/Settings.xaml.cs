@@ -41,7 +41,7 @@ namespace WDACConfig.Pages
         // When the edit button of any field is pressed
         private void EditButton_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
         {
-            var button = sender as Button;
+            Button? button = sender as Button;
             string? fieldName = button!.Tag.ToString();
             string? newValue = null;
 
@@ -97,7 +97,7 @@ namespace WDACConfig.Pages
         // When the clear button of any field is pressed
         private void ClearButton_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
         {
-            var button = sender as Button;
+            Button? button = sender as Button;
             string? fieldName = button!.Tag.ToString();
 
             UserConfiguration.Remove(

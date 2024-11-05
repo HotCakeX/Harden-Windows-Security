@@ -61,7 +61,7 @@ namespace WDACConfig
                 byte[] Bytes = File.ReadAllBytes(file.FullName);
 
                 // Compute the hash of the byte array
-                Byte[] HashBytes = SHA3_512.HashData(Bytes);
+                Byte[] HashBytes = SHA512.HashData(Bytes);
 
                 // Convert the hash bytes to a hexadecimal string to make it look like the output of the Get-FileHash which produces hexadecimals (0-9 and A-F)
                 // If [System.Convert]::ToBase64String was used, it'd return the hash in base64 format, which uses 64 symbols (A-Z, a-z, 0-9, + and /) to represent each byte
@@ -134,7 +134,7 @@ namespace WDACConfig
                 string? line;
                 bool isHeader = true;
 
-                while ((line = reader.ReadLine()) != null)
+                while ((line = reader.ReadLine()) is not null)
                 {
                     // Skip the header
                     if (isHeader)
@@ -144,7 +144,7 @@ namespace WDACConfig
                     }
 
                     // Split the CSV line by commas
-                    var fields = line.Split(',');
+                    string[] fields = line.Split(',');
 
                     if (fields.Length == 3)
                     {
@@ -177,7 +177,7 @@ namespace WDACConfig
 """);
 
             // Write each entry in the list
-            foreach (var entry in entries)
+            foreach (WDACConfigHashEntry entry in entries)
             {
                 string relativePath = EscapeCsv(entry.RelativePath);
                 string fileName = EscapeCsv(entry.FileName);

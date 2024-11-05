@@ -61,7 +61,7 @@ namespace WDACConfig.Pages
             {
 
                 // Check if the WebView2 control or its CoreWebView2 instance is disposed
-                if (GitHubDocumentationWebView2 != null && GitHubDocumentationWebView2.CoreWebView2 != null)
+                if (GitHubDocumentationWebView2 is not null && GitHubDocumentationWebView2.CoreWebView2 is not null)
                 {
                     BackButton.IsEnabled = GitHubDocumentationWebView2.CanGoBack;
                     ForwardButton.IsEnabled = GitHubDocumentationWebView2.CanGoForward;

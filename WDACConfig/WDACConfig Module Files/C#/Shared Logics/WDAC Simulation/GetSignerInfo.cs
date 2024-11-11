@@ -101,7 +101,7 @@ namespace WDACConfig
             // Get all of the Signer nodes in the Signers node
             XmlNodeList? signerNodes = codeIntegrityPolicy.SiPolicyNode.SelectNodes("ns:Signers/ns:Signer", codeIntegrityPolicy.NamespaceManager);
 
-            if (signerNodes is not null)
+            if (signerNodes != null)
             {
                 // Loop through each Signer node and extract all of their information
                 foreach (XmlNode signer in signerNodes)
@@ -229,9 +229,9 @@ namespace WDACConfig
 
                         // Iterate through the rule IDs and find matching FileAttrib nodes in the dictionary that holds the FileAttrib nodes in the <FileRules> node
                         // Get all the FileAttribs associated with the signer
-                        foreach (string id in ruleIds)
+                        foreach (var id in ruleIds)
                         {
-                            if (fileAttribDictionary.TryGetValue(id, out XmlNode? matchingFileAttrib))
+                            if (fileAttribDictionary.TryGetValue(id, out var matchingFileAttrib))
                             {
                                 FileAttribsAssociatedWithTheSigner.Add(matchingFileAttrib);
                             }
@@ -411,7 +411,7 @@ namespace WDACConfig
                 signerNodes = siPolicyNode.SelectNodes($"ns:SigningScenarios/ns:SigningScenario[@Value='{scenarioValue}']/ns:ProductSigners/ns:DeniedSigners/ns:DeniedSigner", namespaceManager);
             }
 
-            if (signerNodes is not null)
+            if (signerNodes != null)
             {
                 foreach (XmlNode signerNode in signerNodes)
                 {

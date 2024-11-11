@@ -10,7 +10,7 @@ using System.Text.RegularExpressions;
 namespace WDACConfig.IntelGathering
 {
 
-    internal sealed partial class OptimizeMDECSVData
+    internal static partial class OptimizeMDECSVData
     {
 
 

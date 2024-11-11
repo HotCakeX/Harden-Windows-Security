@@ -1,44 +1,40 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
-using System.Text;
+using System.Runtime.InteropServices.Marshalling;
 
 #nullable enable
 
-#pragma warning disable CA1838 // Avoid 'StringBuilder' parameters for P/Invoke methods
-
 namespace WDACConfig.IntelGathering
 {
-    internal static class DriveLetterMapper
+    public static partial class DriveLetterMapper
     {
-        // Importing the GetVolumePathNamesForVolumeNameW function from kernel32.dll
-        [DllImport("kernel32.dll", SetLastError = true)]
+        [LibraryImport("kernel32.dll", SetLastError = true, StringMarshalling = StringMarshalling.Utf16, EntryPoint = "FindFirstVolumeW")]
+        private static partial IntPtr FindFirstVolume(
+            [MarshalUsing(CountElementName = "cchBufferLength")][Out] char[] lpszVolumeName,
+            uint cchBufferLength);
+
+        [LibraryImport("kernel32.dll", SetLastError = true, StringMarshalling = StringMarshalling.Utf16, EntryPoint = "FindNextVolumeW")]
         [return: MarshalAs(UnmanagedType.Bool)]
-        private static extern bool GetVolumePathNamesForVolumeNameW(
-            [MarshalAs(UnmanagedType.LPWStr)] string lpszVolumeName,
-            [MarshalAs(UnmanagedType.LPWStr)][Out] StringBuilder lpszVolumeNamePaths,
-            uint cchBuferLength,
-            ref UInt32 lpcchReturnLength);
-
-        // Importing the FindFirstVolume function from kernel32.dll
-        [DllImport("kernel32.dll", SetLastError = true, CharSet = CharSet.Unicode)]
-        private static extern IntPtr FindFirstVolume(
-            [Out] StringBuilder lpszVolumeName,
-            uint cchBufferLength);
-
-        // Importing the FindNextVolume function from kernel32.dll
-        [DllImport("kernel32.dll", SetLastError = true, CharSet = CharSet.Unicode)]
-        private static extern bool FindNextVolume(
+        private static partial bool FindNextVolume(
             IntPtr hFindVolume,
-            [Out] StringBuilder lpszVolumeName,
+            [MarshalUsing(CountElementName = "cchBufferLength")][Out] char[] lpszVolumeName,
             uint cchBufferLength);
 
-        // Importing the QueryDosDevice function from kernel32.dll
-        [DllImport("kernel32.dll", SetLastError = true, CharSet = CharSet.Unicode)]
-        private static extern uint QueryDosDevice(
+        [LibraryImport("kernel32.dll", SetLastError = true, StringMarshalling = StringMarshalling.Utf16, EntryPoint = "QueryDosDeviceW")]
+        private static partial uint QueryDosDevice(
             string lpDeviceName,
-            StringBuilder lpTargetPath,
+            [MarshalUsing(CountElementName = "ucchMax")][Out] char[] lpTargetPath,
             int ucchMax);
+
+        [LibraryImport("kernel32.dll", SetLastError = true, StringMarshalling = StringMarshalling.Utf16, EntryPoint = "GetVolumePathNamesForVolumeNameW")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        private static partial bool GetVolumePathNamesForVolumeNameW(
+            [MarshalAs(UnmanagedType.LPWStr)] string lpszVolumeName,
+            [MarshalUsing(CountElementName = "cchBuferLength")][Out] char[] lpszVolumeNamePaths,
+            uint cchBuferLength,
+            ref uint lpcchReturnLength);
+
 
         // Class to store drive mapping information
         public sealed class DriveMapping
@@ -63,17 +59,17 @@ namespace WDACConfig.IntelGathering
             List<DriveMapping> drives = [];
             // Maximum buffer size for volume names, paths, and mount points
             uint max = 65535;
-            // StringBuilder for storing volume names
-            StringBuilder sbVolumeName = new((int)max);
-            // StringBuilder for storing path names
-            StringBuilder sbPathName = new((int)max);
-            // StringBuilder for storing mount points
-            StringBuilder sbMountPoint = new((int)max);
+            // char[] for storing volume names
+            char[] volumeNameBuffer = new char[max];
+            // char[] for storing path names
+            char[] pathNameBuffer = new char[max];
+            // char[] for storing mount points
+            char[] mountPointBuffer = new char[max];
             // Variable to store the length of the return string
             uint lpcchReturnLength = 0;
 
             // Get the first volume handle
-            IntPtr volumeHandle = FindFirstVolume(sbVolumeName, max);
+            IntPtr volumeHandle = FindFirstVolume(volumeNameBuffer, max);
 
             // Check if the volume handle is valid
             if (volumeHandle == IntPtr.Zero)
@@ -84,37 +80,56 @@ namespace WDACConfig.IntelGathering
             // Loop through all the volumes
             do
             {
-                // Convert the volume name to a string
-                string volume = sbVolumeName.ToString();
+                // Convert the volume name to a string, trimming any leftover null characters
+                string volume = new string(volumeNameBuffer).TrimEnd('\0');
                 // Get the mount point for the volume
-                _ = GetVolumePathNamesForVolumeNameW(volume, sbMountPoint, max, ref lpcchReturnLength);
+                _ = GetVolumePathNamesForVolumeNameW(volume, mountPointBuffer, max, ref lpcchReturnLength);
                 // Get the device path for the volume
-                uint returnLength = QueryDosDevice(volume[4..^1], sbPathName, (int)max);
+                uint returnLength = QueryDosDevice(volume[4..^1], pathNameBuffer, (int)max);
 
                 // Check if the device path is found
                 if (returnLength > 0)
                 {
-                    // Add the drive mapping to the list
+                    // Add a new drive mapping to the list with valid details
                     drives.Add(new DriveMapping
                     {
-                        // Doing replace here so instead of "C:\" we get "C:"
-                        DriveLetter = sbMountPoint.ToString().Replace(@":\", ":", StringComparison.OrdinalIgnoreCase),
+                        // Extract the drive letter (mount point) from the buffer
+                        // Use Array.IndexOf to locate the first null character ('\0')
+                        // If null is not found, use the entire length of the buffer
+                        // Replace ":\" with ":" for consistent formatting
+                        DriveLetter = new string(mountPointBuffer, 0, Array.IndexOf(mountPointBuffer, '\0') >= 0
+                            ? Array.IndexOf(mountPointBuffer, '\0')
+                            : mountPointBuffer.Length)
+                            .Replace(@":\", ":", StringComparison.OrdinalIgnoreCase),
+
+                        // Assign the current volume name
                         VolumeName = volume,
-                        DevicePath = sbPathName.ToString()
+
+                        // Extract the device path from the buffer
+                        // Use Array.IndexOf to locate the first null character ('\0')
+                        // If null is not found, use the entire length of the buffer
+                        DevicePath = new string(pathNameBuffer, 0, Array.IndexOf(pathNameBuffer, '\0') >= 0
+                            ? Array.IndexOf(pathNameBuffer, '\0')
+                            : pathNameBuffer.Length)
                     });
                 }
                 else
                 {
-                    // Add the drive mapping with no mount point found
+                    // Add a new drive mapping with "No mountpoint found" when the path is invalid
                     drives.Add(new DriveMapping
                     {
+                        // No drive letter since the mount point is unavailable
                         DriveLetter = null,
+
+                        // Assign the current volume name
                         VolumeName = volume,
+
+                        // Assign a placeholder string indicating no mount point is found
                         DevicePath = "No mountpoint found"
                     });
                 }
 
-            } while (FindNextVolume(volumeHandle, sbVolumeName, max)); // Continue until there are no more volumes
+            } while (FindNextVolume(volumeHandle, volumeNameBuffer, max)); // Continue until there are no more volumes
 
             // Return the list of drive mappings
             return drives;

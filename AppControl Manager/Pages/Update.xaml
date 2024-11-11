@@ -30,8 +30,23 @@
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
+
+            <controls:WrapPanel Grid.Row="0" VerticalSpacing="4" HorizontalSpacing="4" Orientation="Horizontal" Margin="6,10,6,10">
+
+                <TextBlock
+TextWrapping="WrapWholeWords"
+Style="{StaticResource BodyTextBlockStyle}">
+
+<Span>
+    Check for <Run Foreground="{ThemeResource SystemAccentColor}">updates</Run> in this page. You can also enable automatic update check which will happen once at startup and you will be notified whenever a new version is available.
+</Span>
+                </TextBlock>
+
+            </controls:WrapPanel>
+
 
             <InfoBar
                 x:Name="UpdateStatusInfoBar"
@@ -39,14 +54,14 @@
                 IsIconVisible="True"
                 IsClosable="False"
                 Title="Update Status"
-                Grid.Row="0">
+                Grid.Row="1">
                 <InfoBar.ActionButton>
                     <HyperlinkButton Content="More info" NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/wiki/AppControl-Manager" />
                 </InfoBar.ActionButton>
             </InfoBar>
 
             <StackPanel HorizontalAlignment="Stretch"
-                        Spacing="{StaticResource SettingsCardSpacing}" Grid.Row="1" Margin="0,40,0,0">
+                        Spacing="{StaticResource SettingsCardSpacing}" Grid.Row="2" Margin="0,40,0,0">
 
                 <win:StackPanel.ChildrenTransitions>
                     <win:EntranceThemeTransition FromVerticalOffset="50" />

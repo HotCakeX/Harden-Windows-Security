@@ -34,7 +34,7 @@ namespace WDACConfig
                 }
             }
 
-            if (host is not null)
+            if (host != null)
             {
                 GlobalVars.Host = host;
             }

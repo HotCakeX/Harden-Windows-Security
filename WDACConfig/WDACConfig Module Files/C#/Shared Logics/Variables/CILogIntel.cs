@@ -2,13 +2,13 @@ using System.Collections.Generic;
 
 #nullable enable
 
-namespace WDACConfig.IntelGathering
+namespace WDACConfig
 {
     // Application Control event tags intelligence
-    internal static class CILogIntel
+    public static class CILogIntel
     {
         // Requested and Validated Signing Level Mappings: https://learn.microsoft.com/en-us/windows/security/application-security/application-control/app-control-for-business/operations/event-tag-explanations#requested-and-validated-signing-level
-        internal static readonly Dictionary<int, string> ReqValSigningLevels = new()
+        public static readonly Dictionary<ushort, string> ReqValSigningLevels = new()
         {
             { 0 , "Signing level hasn't yet been checked"},
             { 1 , "File is unsigned or has no signature that passes the active policies"},
@@ -25,7 +25,7 @@ namespace WDACConfig.IntelGathering
         };
 
         // SignatureType Mappings: https://learn.microsoft.com/en-us/windows/security/application-security/application-control/app-control-for-business/operations/event-tag-explanations#signaturetype
-        internal static readonly Dictionary<int, string> SignatureTypeTable = new()
+        public static readonly Dictionary<ushort, string> SignatureTypeTable = new()
         {
             { 0,  "Unsigned or verification hasn't been attempted" },
             { 1 , "Embedded signature" },
@@ -38,7 +38,7 @@ namespace WDACConfig.IntelGathering
         };
 
         // VerificationError mappings: https://learn.microsoft.com/en-us/windows/security/application-security/application-control/app-control-for-business/operations/event-tag-explanations#verificationerror
-        internal static readonly Dictionary<int, string> VerificationErrorTable = new()
+        public static readonly Dictionary<ushort, string> VerificationErrorTable = new()
         {
             { 0  ,   "Successfully verified signature."},
             { 1  ,   "File has an invalid hash."},

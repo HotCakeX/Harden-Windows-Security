@@ -43,7 +43,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.PowerShell.SDK" Version="7.4.6" />
-    <PackageReference Include="System.Management" Version="9.0.0-rc.2.24473.5" />
+    <PackageReference Include="System.Management" Version="9.0.0" />
     <PackageReference Include="System.Management.Automation" Version="7.4.6" />
   </ItemGroup>
 

@@ -182,7 +182,7 @@ namespace WDACConfig
 
            foreach (XmlNode node in optionNodes)
            {
-               if (node.Value is not null)
+               if (node.Value != null)
                {
                    _ = validOptions.Add(node.Value);
                }
@@ -409,22 +409,22 @@ namespace WDACConfig
             #region Compare the existing rule options in the policy XML file with the rule options to implement
 
             // Get keys from the ExistingRuleOptions dictionary
-            int[] existingRuleKeys = [.. ExistingRuleOptions.Keys];
+            var existingRuleKeys = ExistingRuleOptions.Keys.ToArray();
 
             // Find elements in RuleOptionsToImplement that are not in ExistingRuleOptions.Keys
-            IEnumerable<int> toAdd = RuleOptionsToImplement.Except(existingRuleKeys);
+            var toAdd = RuleOptionsToImplement.Except(existingRuleKeys);
 
             // Find elements in ExistingRuleOptions.Keys that are not in RuleOptionsToImplement
-            IEnumerable<int> toRemove = existingRuleKeys.Except(RuleOptionsToImplement);
+            var toRemove = existingRuleKeys.Except(RuleOptionsToImplement);
 
-            foreach (int option in toAdd)
+            foreach (var option in toAdd)
             {
                 _ = PolicyRuleOptionsActualInverted.TryGetValue(option, out string? parsed);
 
                 Logger.Write($"Adding Rule Option: {parsed}");
             }
 
-            foreach (int option in toRemove)
+            foreach (var option in toRemove)
             {
                 _ = PolicyRuleOptionsActualInverted.TryGetValue(option, out string? parsed);
 

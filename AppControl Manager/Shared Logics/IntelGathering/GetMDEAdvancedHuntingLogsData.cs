@@ -24,7 +24,7 @@ namespace WDACConfig.IntelGathering
 
 
             // HashSet to store the output, ensures the data are unique and signed data are prioritized over unsigned data
-            FileIdentityCustomHashSet fileIdentities = new();
+            FileIdentitySignatureBasedHashSet fileIdentities = new();
 
 
             // Group the events based on the EtwActivityId, which is the unique identifier for each group of correlated events
@@ -149,6 +149,9 @@ namespace WDACConfig.IntelGathering
                                 IssuerTBSHash = correlatedEvent.IssuerTBSHash
                             };
 
+                            // Add the CN of the current signer to the FilePublishers HashSet of the FileIdentity
+                            _ = eventData.FilePublishers.Add(PublisherName);
+
                             // Add the current signer info/correlated event data to the main event package
                             _ = eventData.FileSignerInfos.Add(signerInfo);
                         }
@@ -256,6 +259,9 @@ namespace WDACConfig.IntelGathering
                                 IssuerTBSHash = correlatedEvent.IssuerTBSHash
                             };
 
+                            // Add the CN of the current signer to the FilePublishers HashSet of the FileIdentity
+                            _ = eventData.FilePublishers.Add(PublisherName);
+
                             // Add the current signer info/correlated event data to the main event package
                             _ = eventData.FileSignerInfos.Add(signerInfo);
                         }
@@ -360,6 +366,9 @@ namespace WDACConfig.IntelGathering
                                 IssuerTBSHash = correlatedEvent.IssuerTBSHash
                             };
 
+                            // Add the CN of the current signer to the FilePublishers HashSet of the FileIdentity
+                            _ = eventData.FilePublishers.Add(PublisherName);
+
                             // Add the current signer info/correlated event data to the main event package
                             _ = eventData.FileSignerInfos.Add(signerInfo);
                         }
@@ -462,6 +471,9 @@ namespace WDACConfig.IntelGathering
                                 IssuerTBSHash = correlatedEvent.IssuerTBSHash
                             };
 
+                            // Add the CN of the current signer to the FilePublishers HashSet of the FileIdentity
+                            _ = eventData.FilePublishers.Add(PublisherName);
+
                             // Add the current signer info/correlated event data to the main event package
                             _ = eventData.FileSignerInfos.Add(signerInfo);
                         }
@@ -484,12 +496,6 @@ namespace WDACConfig.IntelGathering
             // Return the internal data which is the right return type
             return fileIdentities.FileIdentitiesInternal;
         }
-
-
-
-
-
-
 
 
 

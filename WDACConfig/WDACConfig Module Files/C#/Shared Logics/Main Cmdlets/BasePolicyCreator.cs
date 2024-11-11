@@ -10,8 +10,6 @@ using System.Text.Json;
 using System.Text.RegularExpressions;
 using System.Xml;
 
-#pragma warning disable SYSLIB1045 // Since this file is going to be used in WDACConfig PowerShell module and PowerShell does not support source code generation for Regex, supressing this error
-
 #nullable enable
 
 namespace WDACConfig
@@ -27,7 +25,7 @@ namespace WDACConfig
             Logger.Write("Creating scheduled task for fast weekly Microsoft recommended driver block list update");
 
             // Initialize ManagementScope to interact with Task Scheduler's WMI namespace
-            ManagementScope scope = new(@"root\Microsoft\Windows\TaskScheduler");
+            var scope = new ManagementScope(@"root\Microsoft\Windows\TaskScheduler");
             // Establish connection to the WMI namespace
             scope.Connect();
 
@@ -226,7 +224,7 @@ namespace WDACConfig
 
                 // Use Regex to find the version
                 string version = string.Empty;
-                Match match = Regex.Match(markdownContent, @"<VersionEx>(.*?)<\/VersionEx>");
+                var match = Regex.Match(markdownContent, @"<VersionEx>(.*?)<\/VersionEx>");
                 if (match.Success)
                 {
                     version = match.Groups[1].Value;

@@ -12,7 +12,7 @@ namespace WDACConfig
     {
         internal static class Crypt32
         {
-            // Using the DllImport attribute to import functions from crypt32.dll
+
             // More info: https://learn.microsoft.com/en-us/windows/win32/api/wincrypt/nf-wincrypt-cryptdecodeobject
             [DllImport("crypt32.dll", CharSet = CharSet.Auto, SetLastError = true)]
             internal static extern bool CryptDecodeObject(
@@ -24,6 +24,8 @@ namespace WDACConfig
                         [Out] IntPtr pvStructInto,      // Pointer to a buffer that receives the decoded structure
                         ref uint pcbStructInfo          // Pointer to a variable that specifies the size, in bytes, of the pvStructInfo buffer
                     );
+
+
         }
 
         // More info about this at the end of the code

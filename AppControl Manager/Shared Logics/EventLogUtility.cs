@@ -8,6 +8,11 @@ namespace WDACConfig
 {
     public static class EventLogUtility
     {
+
+
+        private const string logName = "Microsoft-Windows-CodeIntegrity/Operational";
+
+
         /// <summary>
         /// Increase Code Integrity Operational Event Logs size from the default 1MB to user-defined size.
         /// Also automatically increases the log size by 1MB if the current free space is less than 1MB and the current maximum log size is less than or equal to 10MB.
@@ -16,9 +21,7 @@ namespace WDACConfig
         /// <param name="logSize">Size of the Code Integrity Operational Event Log</param>
         public static void SetLogSize(ulong logSize = 0)
         {
-            Logger.Write("Set-SetLogSize method started...");
-
-            string logName = "Microsoft-Windows-CodeIntegrity/Operational";
+            Logger.Write("Setting the Code Integrity Log Size");
 
             using EventLogConfiguration logConfig = new(logName);
             string logFilePath = Environment.ExpandEnvironmentVariables(logConfig.LogFilePath);
@@ -56,5 +59,35 @@ namespace WDACConfig
                 }
             }
         }
+
+
+        /// <summary>
+        /// Gets the Code Integrity Operational Log Max capacity in Double
+        /// </summary>
+        /// <returns></returns>
+        public static double GetCurrentLogSize()
+        {
+            Logger.Write("Getting the Code Integrity Log Capacity");
+
+            try
+            {
+                using EventLogConfiguration logConfig = new(logName);
+                long logCapacityBytes = logConfig.MaximumSizeInBytes;
+
+                // Convert bytes to megabytes
+                double logCapacityMB = logCapacityBytes / (1024.0 * 1024.0);
+
+                Logger.Write($"Log capacity: {logCapacityMB:F2} MB.");
+
+                return logCapacityMB;
+            }
+            catch (Exception ex)
+            {
+                Logger.Write($"An error occurred while retrieving the log capacity: {ex.Message}");
+                throw;
+            }
+        }
+
+
     }
 }

@@ -19,7 +19,7 @@ namespace WDACConfig.CodeIntegrity
         internal required List<CodeIntegrityOption> CodeIntegrityDetails { get; set; }
     }
 
-    internal static class DetailsRetrieval
+    internal static partial class DetailsRetrieval
     {
         private const int SystemCodeIntegrityInformation = 103;
 
@@ -31,8 +31,14 @@ namespace WDACConfig.CodeIntegrity
         }
 
         // https://learn.microsoft.com/en-us/windows/win32/api/winternl/nf-winternl-ntquerysysteminformation#system_codeintegrity_information
-        [DllImport("ntdll.dll")]
-        private static extern int NtQuerySystemInformation(int SystemInformationClass, IntPtr SystemInformation, int SystemInformationLength, ref int ReturnLength);
+        [LibraryImport("ntdll.dll", SetLastError = true)]
+        private static partial int NtQuerySystemInformation(
+        int SystemInformationClass,
+        IntPtr SystemInformation,
+        int SystemInformationLength,
+        ref int ReturnLength
+        );
+
 
         private static List<CodeIntegrityOption> GetCodeIntegrityDetails(uint options)
         {
@@ -84,7 +90,7 @@ namespace WDACConfig.CodeIntegrity
 
             SYSTEM_CODEINTEGRITY_INFORMATION sci = new()
             {
-                Length = (uint)Marshal.SizeOf(typeof(SYSTEM_CODEINTEGRITY_INFORMATION))
+                Length = (uint)Marshal.SizeOf<SYSTEM_CODEINTEGRITY_INFORMATION>()
             };
 
             IntPtr buffer = Marshal.AllocHGlobal((int)sci.Length);

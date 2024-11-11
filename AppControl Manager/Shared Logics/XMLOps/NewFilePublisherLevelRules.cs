@@ -28,6 +28,13 @@ namespace WDACConfig
             // Instantiate the policy
             CodeIntegrityPolicy codeIntegrityPolicy = new(xmlFilePath, null);
 
+            // This method isn't suitable for strict Kernel-Mode policy
+            if (codeIntegrityPolicy.UMCI_ProductSignersNode is null)
+            {
+                throw new InvalidOperationException("NewFilePublisherLevelRules.Create method isn't suitable for strict Kernel-Mode policy");
+            }
+
+
             #region
 
             // Find AllowedSigners node in each ProductSigners node

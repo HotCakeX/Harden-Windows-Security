@@ -27,7 +27,7 @@ namespace WDACConfig.Pages
         // Store all outputs for searching, used as a temporary storage for filtering
         // If ObservableCollection were used directly, any filtering or modification could remove items permanently
         // from the collection, making it difficult to reset or apply different filters without re-fetching data.
-        private List<FileIdentity> AllFileIdentities;
+        private readonly List<FileIdentity> AllFileIdentities;
 
         private string? MDEAdvancedHuntingLogs; // To store the MDE Advanced Hunting CSV log file path
 
@@ -35,6 +35,10 @@ namespace WDACConfig.Pages
         private Guid? BasePolicyGUID;
         private string? PolicyToAddLogsTo;
         private string? BasePolicyXMLFile;
+
+        // The user selected scan level
+        private ScanLevels scanLevel = ScanLevels.FilePublisher;
+
 
 
         public MDEAHPolicyCreation()
@@ -51,6 +55,28 @@ namespace WDACConfig.Pages
             // Add the DateChanged event handler
             FilterByDateCalendarPicker.DateChanged += FilterByDateCalendarPicker_DateChanged;
         }
+
+
+        #region
+
+        // Without the following steps, when the user begins data fetching process and then navigates away from this page
+        // Upon arrival at this page again, the DataGrid loses its virtualization, causing the UI to hang for extended periods of time
+        // But after nullifying DataGrid's ItemsSource when page is navigated from and reassigning it when page is navigated to,
+        // We tackle that problem. Data will sill be stored in the ObservableCollection when page is not in focus,
+        // But DataGrid's source will pick them up only when page is navigated to.
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            base.OnNavigatedTo(e);
+            FileIdentitiesDataGrid.ItemsSource = FileIdentities;
+        }
+
+        protected override void OnNavigatedFrom(NavigationEventArgs e)
+        {
+            base.OnNavigatedFrom(e);
+            FileIdentitiesDataGrid.ItemsSource = null;
+        }
+
+        #endregion
 
 
         /// <summary>
@@ -99,18 +125,19 @@ namespace WDACConfig.Pages
 
                 // Filter results further to match the search term across multiple properties, case-insensitively
                 filteredResults = filteredResults.Where(output =>
-                    (output.FileName is not null && output.FileName.Contains(searchTerm, StringComparison.InvariantCultureIgnoreCase)) ||
-                    (output.SignatureStatus.ToString().Contains(searchTerm, StringComparison.InvariantCultureIgnoreCase)) ||
-                    (output.Action.ToString().Contains(searchTerm, StringComparison.InvariantCultureIgnoreCase)) ||
-                    (output.OriginalFileName is not null && output.OriginalFileName.Contains(searchTerm, StringComparison.InvariantCultureIgnoreCase)) ||
-                    (output.InternalName is not null && output.InternalName.Contains(searchTerm, StringComparison.InvariantCultureIgnoreCase)) ||
-                    (output.FileDescription is not null && output.FileDescription.Contains(searchTerm, StringComparison.InvariantCultureIgnoreCase)) ||
-                    (output.FileVersion is not null && output.FileVersion.ToString().Contains(searchTerm, StringComparison.InvariantCultureIgnoreCase)) ||
-                    (output.PolicyName is not null && output.PolicyName.Contains(searchTerm, StringComparison.InvariantCultureIgnoreCase)) ||
-                    (output.ComputerName is not null && output.ComputerName.Contains(searchTerm, StringComparison.InvariantCultureIgnoreCase)) ||
-                    (output.FilePath is not null && output.FilePath.Contains(searchTerm, StringComparison.InvariantCultureIgnoreCase)) ||
-                    (output.SHA256FlatHash is not null && output.SHA256FlatHash.Contains(searchTerm, StringComparison.InvariantCultureIgnoreCase)) ||
-                    (output.SHA256Hash is not null && output.SHA256Hash.Contains(searchTerm, StringComparison.InvariantCultureIgnoreCase))
+                    (output.FileName is not null && output.FileName.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
+                    (output.SignatureStatus.ToString().Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
+                    (output.Action.ToString().Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
+                    (output.OriginalFileName is not null && output.OriginalFileName.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
+                    (output.InternalName is not null && output.InternalName.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
+                    (output.FileDescription is not null && output.FileDescription.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
+                    (output.FileVersion is not null && output.FileVersion.ToString().Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
+                    (output.PolicyName is not null && output.PolicyName.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
+                    (output.ComputerName is not null && output.ComputerName.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
+                    (output.FilePath is not null && output.FilePath.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
+                    (output.SHA256FlatHash is not null && output.SHA256FlatHash.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
+                    (output.SHA256Hash is not null && output.SHA256Hash.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
+                    output.FilePublishersToDisplay.Contains(searchTerm)
                 );
             }
 
@@ -331,7 +358,10 @@ namespace WDACConfig.Pages
             {
                 SortColumn(e, output => output.PolicyName);
             }
-
+            else if (string.Equals(e.Column.Tag?.ToString(), "FilePublishersToDisplay", StringComparison.OrdinalIgnoreCase))
+            {
+                SortColumn(e, output => output.FilePublishersToDisplay);
+            }
 
             // Clear SortDirection for other columns
             foreach (DataGridColumn column in FileIdentitiesDataGrid.Columns)
@@ -363,9 +393,7 @@ namespace WDACConfig.Pages
             if (e.Column.SortDirection is null || e.Column.SortDirection == DataGridSortDirection.Ascending)
             {
                 // Descending: custom order depending on column type
-                FileIdentities = new ObservableCollection<FileIdentity>(
-                    collectionToSort.OrderByDescending(keySelector)
-                );
+                FileIdentities = [.. collectionToSort.OrderByDescending(keySelector)];
 
                 // Set the column direction to Descending
                 e.Column.SortDirection = DataGridSortDirection.Descending;
@@ -373,9 +401,7 @@ namespace WDACConfig.Pages
             else
             {
                 // Ascending: custom order depending on column type
-                FileIdentities = new ObservableCollection<FileIdentity>(
-                    collectionToSort.OrderBy(keySelector)
-                );
+                FileIdentities = [.. collectionToSort.OrderBy(keySelector)];
                 e.Column.SortDirection = DataGridSortDirection.Ascending;
             }
 
@@ -498,6 +524,7 @@ namespace WDACConfig.Pages
                 .AppendLine($"Computer Name: {row.ComputerName}")
                 .AppendLine($"Policy GUID: {row.PolicyGUID}")
                 .AppendLine($"Policy Name: {row.PolicyName}")
+                .AppendLine($"File Publishers: {row.FilePublishersToDisplay}")
                 .ToString();
         }
 
@@ -539,7 +566,8 @@ namespace WDACConfig.Pages
                 { "File Path", CopyFilePath_Click },
                 { "Computer Name", CopyComputerName_Click },
                 { "Policy GUID", CopyPolicyGUID_Click },
-                { "Policy Name", CopyPolicyName_Click }
+                { "Policy Name", CopyPolicyName_Click },
+                { "File Publishers", CopyFilePublishersToDisplay_Click }
             };
 
             // Create and add menu items with specific click events for each column
@@ -580,6 +608,7 @@ namespace WDACConfig.Pages
         private void CopyComputerName_Click(object sender, RoutedEventArgs e) => CopyPropertyToClipboard("ComputerName");
         private void CopyPolicyGUID_Click(object sender, RoutedEventArgs e) => CopyPropertyToClipboard("PolicyGUID");
         private void CopyPolicyName_Click(object sender, RoutedEventArgs e) => CopyPropertyToClipboard("PolicyName");
+        private void CopyFilePublishersToDisplay_Click(object sender, RoutedEventArgs e) => CopyPropertyToClipboard("FilePublishersToDisplay");
 
 
         /// <summary>
@@ -613,6 +642,7 @@ namespace WDACConfig.Pages
                 "ComputerName" => selectedItem.ComputerName,
                 "PolicyGUID" => selectedItem.PolicyGUID.ToString(),
                 "PolicyName" => selectedItem.PolicyName,
+                "FilePublishersToDisplay" => selectedItem.FilePublishersToDisplay.ToString(),
                 _ => null
             };
 
@@ -805,7 +835,7 @@ namespace WDACConfig.Pages
                     string EmptyPolicyPath = PrepareEmptyPolicy.Prepare(stagingArea.FullName);
 
                     // Separate the signed and unsigned data
-                    FileBasedInfoPackage DataPackage = SignerAndHashBuilder.BuildSignerAndHashObjects(SelectedLogs);
+                    FileBasedInfoPackage DataPackage = SignerAndHashBuilder.BuildSignerAndHashObjects(data: SelectedLogs, level: scanLevel);
 
                     // Insert the data into the empty policy file
                     XMLOps.Initiate(DataPackage, EmptyPolicyPath);
@@ -934,6 +964,26 @@ namespace WDACConfig.Pages
 
             }
 
+        }
+
+
+        /// <summary>
+        /// Scan level selection event handler for ComboBox
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        /// <exception cref="InvalidOperationException"></exception>
+        private void ScanLevelComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (ScanLevelComboBox.SelectedItem is ComboBoxItem selectedItem)
+            {
+                string selectedText = selectedItem.Content.ToString()!;
+
+                if (!Enum.TryParse(selectedText, out scanLevel))
+                {
+                    throw new InvalidOperationException($"{selectedText} is not a valid Scan Level");
+                }
+            }
         }
 
     }

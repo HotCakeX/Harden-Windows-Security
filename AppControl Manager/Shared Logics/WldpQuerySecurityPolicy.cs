@@ -22,10 +22,10 @@ namespace WDACConfig
         public IntPtr Buffer;
     }
 
-    public static class WldpQuerySecurityPolicyWrapper
+    public static partial class WldpQuerySecurityPolicyWrapper
     {
-        [DllImport("Wldp.dll", CharSet = CharSet.Unicode)]
-        internal static extern int WldpQuerySecurityPolicy(
+        [LibraryImport("Wldp.dll")]
+        internal static partial int WldpQuerySecurityPolicy(
             ref UNICODE_STRING Provider,
             ref UNICODE_STRING Key,
             ref UNICODE_STRING ValueName,

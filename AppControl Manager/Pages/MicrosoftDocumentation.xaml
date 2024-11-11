@@ -15,7 +15,7 @@
         </Grid.RowDefinitions>
 
         <!-- Navigation Bar -->
-        <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Top" Height="35" Margin="0,25,0,15">
+        <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Top" Height="35" Margin="0,15,0,15">
             <!-- Back Button with Icon - Set initially to falce until it makes sense to be enabled -->
             <Button Click="BackButton_Click" IsEnabled="False" x:Name="BackButton" Margin="5,0,5,0">
                 <StackPanel Orientation="Horizontal">

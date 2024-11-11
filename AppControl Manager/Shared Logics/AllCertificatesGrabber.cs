@@ -25,20 +25,20 @@ namespace WDACConfig
         public X509Chain Chain { get; } = certificateChain;
     }
 
-    public static class AllCertificatesGrabber
+    public partial class AllCertificatesGrabber
     {
         // Structure defining signer information for cryptographic providers
         // https://learn.microsoft.com/en-us/windows/win32/api/wintrust/ns-wintrust-crypt_provider_sgnr
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
         public struct CryptProviderSigner
         {
-            private uint cbStruct;   // Size of structure
+            private readonly uint cbStruct;   // Size of structure
             private System.Runtime.InteropServices.ComTypes.FILETIME sftVerifyAsOf;   // Verification time
-            private uint csCertChain;   // Number of certificates in the chain
-            private IntPtr pasCertChain;   // Pointer to certificate chain
-            private uint dwSignerType;   // Type of signer
-            private IntPtr psSigner;   // Pointer to signer
-            private uint dwError;   // Error code
+            private readonly uint csCertChain;   // Number of certificates in the chain
+            private readonly IntPtr pasCertChain;   // Pointer to certificate chain
+            private readonly uint dwSignerType;   // Type of signer
+            private readonly IntPtr psSigner;   // Pointer to signer
+            private readonly uint dwError;   // Error code
             internal uint csCounterSigners;   // Number of countersigners
             internal IntPtr pasCounterSigners;   // Pointer to countersigners
             public IntPtr pChainContext;   // Pointer to chain context
@@ -49,21 +49,21 @@ namespace WDACConfig
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
         public struct CryptProviderData
         {
-            private uint cbStruct;   // Size of structure
-            private IntPtr pWintrustData;   // Pointer to WinTrustData
-            private bool fOpenedFile;   // Flag indicating if file is open
-            private IntPtr hWndParent;   // Handle to parent window
-            private IntPtr pgActionId;   // Pointer to action ID
-            private IntPtr hProv;   // Handle to provider
-            private uint dwError;   // Error code
-            private uint dwRegSecuritySettings;   // Security settings
-            private uint dwRegPolicySettings;   // Policy settings
-            private IntPtr psPfns;   // Pointer to provider functions
-            private uint cdwTrustStepErrors;   // Number of trust step errors
-            private IntPtr padwTrustStepErrors;   // Pointer to trust step errors
-            private uint chStores;   // Number of stores
-            private IntPtr pahStores;   // Pointer to stores
-            private uint dwEncoding;   // Encoding type
+            private readonly uint cbStruct;   // Size of structure
+            private readonly IntPtr pWintrustData;   // Pointer to WinTrustData
+            private readonly bool fOpenedFile;   // Flag indicating if file is open
+            private readonly IntPtr hWndParent;   // Handle to parent window
+            private readonly IntPtr pgActionId;   // Pointer to action ID
+            private readonly IntPtr hProv;   // Handle to provider
+            private readonly uint dwError;   // Error code
+            private readonly uint dwRegSecuritySettings;   // Security settings
+            private readonly uint dwRegPolicySettings;   // Policy settings
+            private readonly IntPtr psPfns;   // Pointer to provider functions
+            private readonly uint cdwTrustStepErrors;   // Number of trust step errors
+            private readonly IntPtr padwTrustStepErrors;   // Pointer to trust step errors
+            private readonly uint chStores;   // Number of stores
+            private readonly IntPtr pahStores;   // Pointer to stores
+            private readonly uint dwEncoding;   // Encoding type
             public IntPtr hMsg;   // Handle to message
             public uint csSigners;   // Number of signers
             public IntPtr pasSigners;   // Pointer to signers
@@ -73,7 +73,7 @@ namespace WDACConfig
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
         public class WinTrustSignatureSettings
         {
-            public uint cbStruct = (uint)Marshal.SizeOf(typeof(WinTrustSignatureSettings));   // Size of structure
+            public uint cbStruct = (uint)Marshal.SizeOf<WinTrustSignatureSettings>();   // Size of structure
             public uint dwIndex;   // Index of the signature
             public uint dwFlags = 3;   // Flags for signature verification
             public uint SecondarySignersCount;   // Number of secondary signatures
@@ -97,10 +97,10 @@ namespace WDACConfig
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
         public class FileInfoForWinTrust
         {
-            private uint StructSize = (uint)Marshal.SizeOf(typeof(FileInfoForWinTrust));   // Size of structure
-            private IntPtr FilePath;   // File path pointer
-            private IntPtr hFile = IntPtr.Zero;   // File handle pointer
-            private IntPtr pgKnownSubject = IntPtr.Zero;   // Pointer to known subject
+            private readonly uint StructSize = (uint)Marshal.SizeOf<FileInfoForWinTrust>();   // Size of structure
+            private readonly IntPtr FilePath;   // File path pointer
+            private readonly IntPtr hFile = IntPtr.Zero;   // File handle pointer
+            private readonly IntPtr pgKnownSubject = IntPtr.Zero;   // Pointer to known subject
 
             // Default constructor initializes FilePath to null
             public FileInfoForWinTrust()
@@ -126,7 +126,7 @@ namespace WDACConfig
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
         public class WinTrustData
         {
-            public uint StructSize = (uint)Marshal.SizeOf(typeof(WinTrustData));   // Size of structure
+            public uint StructSize = (uint)Marshal.SizeOf<WinTrustData>();   // Size of structure
             public IntPtr PolicyCallbackData = IntPtr.Zero;   // Pointer to policy callback data
             public IntPtr SIPClientData = IntPtr.Zero;   // Pointer to SIP client data
             public uint UIChoice = 2;   // UI choice for trust verification
@@ -136,7 +136,7 @@ namespace WDACConfig
             public uint StateAction = WinTrust.StateActionVerify;   // State action for trust verification
             public IntPtr StateData = IntPtr.Zero;   // Pointer to state data
             [MarshalAs(UnmanagedType.LPTStr)]
-            private string? URLReference;   // URL reference for trust verification
+            private readonly string? URLReference;   // URL reference for trust verification
             public uint ProvFlags = 4112;   // Provider flags for trust verification
             public uint UIContext;   // UI context for trust verification
             public IntPtr pSignatureSettings;   // Pointer to signature settings
@@ -145,10 +145,10 @@ namespace WDACConfig
             public WinTrustData(string filepath, uint Index)
             {
                 // Initialize FileInfoForWinTrust
-                FileInfoPtr = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(FileInfoForWinTrust)));
+                FileInfoPtr = Marshal.AllocCoTaskMem(Marshal.SizeOf<FileInfoForWinTrust>());
 
                 // Initialize pSignatureSettings
-                pSignatureSettings = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(WinTrustSignatureSettings)));
+                pSignatureSettings = Marshal.AllocCoTaskMem(Marshal.SizeOf<WinTrustSignatureSettings>());
 
                 // Convert TrustedData to pointer and assign to FileInfoPtr
                 Marshal.StructureToPtr(new FileInfoForWinTrust(filepath), FileInfoPtr, false);
@@ -166,21 +166,23 @@ namespace WDACConfig
         }
 
         // Interop with crypt32.dll for cryptographic functions
-        internal static class Crypt32DLL
+        internal static partial class Crypt32DLL
         {
             internal const int EncodedMessageParameter = 29;
 
             // External method declaration for CryptMsgGetParam
-            [DllImport("crypt32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+            [LibraryImport("crypt32.dll", SetLastError = true)]
+            [return: MarshalAs(UnmanagedType.Bool)]
             // https://learn.microsoft.com/en-us/windows/win32/api/wincrypt/nf-wincrypt-cryptmsggetparam
-            internal static extern bool CryptMsgGetParam(
+            internal static partial bool CryptMsgGetParam(
                 IntPtr hCryptMsg,
                 int dwParamType,
                 int dwIndex,
-                byte[]? pvData,
+                [Out] byte[]? pvData, // pvData is populated by CryptMsgGetParam with data from the cryptographic message
                 ref int pcbData
-                );
+            );
         }
+
 
         // This is the main method used to retrieve all signers for a given file
         public static List<AllFileSigners> GetAllFileSigners(string FilePath)
@@ -207,7 +209,7 @@ namespace WDACConfig
                     // Call WinVerifyTrust to verify trust on the file
                     WinTrust.WinVerifyTrustResult verifyTrustResult = WinTrust.WinVerifyTrust(
                         IntPtr.Zero,
-                       WinTrust.GenericWinTrustVerifyActionGuid,
+                        WinTrust.GenericWinTrustVerifyActionGuid,
                         winTrustDataPointer
                     );
 

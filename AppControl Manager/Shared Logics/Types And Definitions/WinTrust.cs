@@ -15,8 +15,9 @@ namespace WDACConfig
         internal const uint CryptcatadminCalchashFlagNonconformantFilesFallbackFlat = 1;
 
         // a method to acquire a handle to a catalog administrator context using a native function from WinTrust.dll
-        [DllImport("WinTrust.dll", CharSet = CharSet.Unicode)]
-        internal static extern bool CryptCATAdminAcquireContext2(
+        [LibraryImport("WinTrust.dll", StringMarshalling = StringMarshalling.Utf16)]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        internal static partial bool CryptCATAdminAcquireContext2(
             ref IntPtr hCatAdmin, // the first parameter: a reference to a pointer to store the handle
             IntPtr pgSubsystem, // the second parameter: a pointer to a GUID that identifies the subsystem
             string pwszHashAlgorithm, // the third parameter: a string that specifies the hash algorithm to use
@@ -25,15 +26,17 @@ namespace WDACConfig
         );
 
         // a method to release a handle to a catalog administrator context using a native function from WinTrust.dll
-        [DllImport("WinTrust.dll", CharSet = CharSet.Unicode)]
-        internal static extern bool CryptCATAdminReleaseContext(
+        [LibraryImport("WinTrust.dll")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        internal static partial bool CryptCATAdminReleaseContext(
             IntPtr hCatAdmin, // the first parameter: a pointer to the handle to release
             uint dwFlags // the second parameter: a flag value that controls the behavior of the function
         );
 
         // a method to calculate the hash of a file using a native function from WinTrust.dll
-        [DllImport("WinTrust.dll", CharSet = CharSet.Unicode)]
-        internal static extern bool CryptCATAdminCalcHashFromFileHandle3(
+        [LibraryImport("WinTrust.dll")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        internal static partial bool CryptCATAdminCalcHashFromFileHandle3(
             IntPtr hCatAdmin, // the first parameter: a pointer to the handle of the catalog administrator context
             IntPtr hFile, // the second parameter: a pointer to the handle of the file to hash
             ref int pcbHash, // the third parameter: a reference to an integer that specifies the size of the hash buffer
@@ -47,27 +50,27 @@ namespace WDACConfig
 
         #region This section is related to the MeowParser class operations
 
-        // P/Invoke declaration to import the 'CryptCATOpen' function from 'WinTrust.dll'.
+        // P/Invoke declaration to import the 'CryptCATOpen' function from WinTrust.dll
         // https://learn.microsoft.com/en-us/windows/win32/api/mscat/nf-mscat-cryptcatopen
-        [DllImport("WinTrust.dll", CharSet = CharSet.Auto, SetLastError = true)]
-        internal static extern IntPtr CryptCATOpen(
+        [LibraryImport("WinTrust.dll", SetLastError = true, StringMarshalling = StringMarshalling.Utf16)]
+        internal static partial IntPtr CryptCATOpen(
             [MarshalAs(UnmanagedType.LPWStr)] string FileName, // The name of the catalog file.
             uint OpenFlags, // Flags to control the function behavior.
             IntPtr MainCryptProviderHandle, // Handle to the cryptographic service provider.
             uint PublicVersion, // The public version number.
             uint EncodingType); // The encoding type.
 
-        // P/Invoke declaration to import the 'CryptCATEnumerateMember' function from 'WinTrust.dll'.
+        // P/Invoke declaration to import the 'CryptCATEnumerateMember' function from WinTrust.dll
         // https://learn.microsoft.com/en-us/windows/win32/api/mscat/nf-mscat-cryptcatenumeratemember
-        [DllImport("WinTrust.dll", CharSet = CharSet.Auto, SetLastError = true)]
-        internal static extern IntPtr CryptCATEnumerateMember(
+        [LibraryImport("WinTrust.dll", SetLastError = true)]
+        internal static partial IntPtr CryptCATEnumerateMember(
             IntPtr MeowLogHandle, // Handle to the catalog context.
             IntPtr PrevCatalogMember); // Pointer to the previous catalog member.
 
-        // P/Invoke declaration to import the 'CryptCATClose' function from 'WinTrust.dll'.
+        // P/Invoke declaration to import the 'CryptCATClose' function from WinTrust.dll
         // https://learn.microsoft.com/en-us/windows/win32/api/mscat/nf-mscat-cryptcatclose
-        [DllImport("WinTrust.dll", CharSet = CharSet.Auto, SetLastError = true)]
-        internal static extern IntPtr CryptCATClose(IntPtr MainCryptProviderHandle); // Closes the catalog context.
+        [LibraryImport("WinTrust.dll", SetLastError = true)]
+        internal static partial IntPtr CryptCATClose(IntPtr MainCryptProviderHandle); // Closes the catalog context.
 
         #endregion
 
@@ -76,8 +79,8 @@ namespace WDACConfig
         #region This section is related to the PageHashCalculator class
 
         // a method to compute the hash of the first page of a file using a native function from Wintrust.dll
-        [DllImport("Wintrust.dll", CharSet = CharSet.Unicode)] // an attribute to specify the DLL name and the character set
-        internal static extern int ComputeFirstPageHash( // the method signature
+        [LibraryImport("Wintrust.dll", StringMarshalling = StringMarshalling.Utf16)] // an attribute to specify the DLL name and the character set
+        internal static partial int ComputeFirstPageHash( // the method signature
             string pszAlgId, // the first parameter: the name of the hash algorithm to use
             string filename, // the second parameter: the name of the file to hash
             IntPtr buffer, // the third parameter: a pointer to a buffer to store the hash value
@@ -112,6 +115,7 @@ namespace WDACConfig
         internal const uint StateActionClose = 2;
         internal static readonly Guid GenericWinTrustVerifyActionGuid = new("{00AAC56B-CD44-11d0-8CC2-00C04FC295EE}");
 
+
         // External method declarations for WinVerifyTrust and WTHelperProvDataFromStateData
         [DllImport("wintrust.dll", CharSet = CharSet.Unicode)]
 
@@ -123,8 +127,8 @@ namespace WDACConfig
             IntPtr pWVTData);
 
         // https://learn.microsoft.com/en-us/windows/win32/api/wintrust/nf-wintrust-wthelperprovdatafromstatedata
-        [DllImport("wintrust.dll", CharSet = CharSet.Unicode, SetLastError = true)]
-        internal static extern IntPtr WTHelperProvDataFromStateData(IntPtr hStateData);
+        [LibraryImport("wintrust.dll", SetLastError = true)]
+        internal static partial IntPtr WTHelperProvDataFromStateData(IntPtr hStateData);
 
         #endregion
 

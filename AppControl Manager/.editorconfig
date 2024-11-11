@@ -353,3 +353,15 @@ dotnet_diagnostic.IDE0300.severity = error
 
 # Inline variable declaration (IDE0018)
 dotnet_diagnostic.IDE0018.severity = error
+
+# IDE0044: Add readonly modifier
+dotnet_diagnostic.IDE0044.severity = error
+
+# IDE0031: Use null propagation
+dotnet_diagnostic.IDE0031.severity = error
+
+# SYSLIB1092: The usage of 'LibraryImportAttribute' does not follow recommendations.
+dotnet_diagnostic.SYSLIB1092.severity = error
+
+# CA2263: Prefer generic overload when type is known
+dotnet_diagnostic.CA2263.severity = error

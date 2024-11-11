@@ -52,6 +52,16 @@
     </Page.Resources>
 
 
+    <!--
+    Never use a ScrollViewer in a page that's gonna have a DataGrid
+    It would:
+    1. Defeat the virtualization feature of the DataGrid.
+    2. Make data injection to the DataGrid super slow.
+    3. Make the UI very slow all the time.
+    4. Prevent the horizontal scrollbar from working and appearing properly.
+    -->
+
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -75,21 +85,18 @@
         <controls:WrapPanel Grid.Row="0" VerticalSpacing="4" HorizontalSpacing="4" Orientation="Horizontal" Margin="6,10,6,10">
 
             <TextBlock
-Foreground="LightGray"
 TextWrapping="WrapWholeWords"
 Style="{StaticResource BodyTextBlockStyle}">
 
 <Span>
     Leverage <Run Foreground="{ThemeResource SystemAccentColor}">the local system logs or EVTX log files</Run>
-     to create <Italic>Application Control Policies.</Italic> 
+     to create <Italic>Application Control Policies.</Italic>
     Only Code Integrity Operational and AppLocker logs are required. Use the
-    <Underline><Bold>Scan button</Bold></Underline> to populate the data grid. 
-    Once populated, use the <Underline><Bold>Create Policy button</Bold></Underline> 
+    <Underline><Bold>Scan button</Bold></Underline> to populate the data grid.
+    Once populated, use the <Underline><Bold>Create Policy button</Bold></Underline>
     to define output configuration and generate the XML policy file.
 </Span>
             </TextBlock>
-
-            <HyperlinkButton Content="Watch the YouTube video for guidance" NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security"  />
         </controls:WrapPanel>
 
         <Border
@@ -204,20 +211,10 @@ Style="{StaticResource BodyTextBlockStyle}">
                                 </controls:SwitchPresenter>
                             </StackPanel>
 
-
-
                         </Flyout>
                     </SplitButton.Flyout>
 
                 </SplitButton>
-
-
-
-
-
-
-
-
 
 
                 <DropDownButton Content="Browse for EVTX" ToolTipService.ToolTip="Select EVTX files">
@@ -311,6 +308,12 @@ Style="{StaticResource BodyTextBlockStyle}">
 
                 <CalendarDatePicker x:Name="FilterByDateCalendarPicker" PlaceholderText="Filter logs by date" ToolTipService.ToolTip="Will only show logs that are newer than the selected date" />
 
+                <ComboBox SelectionChanged="ScanLevelComboBox_SelectionChanged" x:Name="ScanLevelComboBox" ToolTipService.ToolTip="Pick a level based on which the selected logs will be scanned" PlaceholderText="Scan level" >
+                    <ComboBoxItem>FilePublisher</ComboBoxItem>
+                    <ComboBoxItem>Publisher</ComboBoxItem>
+                    <ComboBoxItem>Hash</ComboBoxItem>
+                </ComboBox>
+
             </controls:WrapPanel>
         </Border>
 
@@ -359,7 +362,7 @@ Style="{StaticResource BodyTextBlockStyle}">
                             </MenuFlyoutSubItem.Icon>
                             <!-- Dynamic items will be added here in the Loaded event handler -->
                         </MenuFlyoutSubItem>
-                        
+
                     </MenuFlyout>
                 </tk7controls:DataGrid.ContextFlyout>
 
@@ -383,6 +386,7 @@ Style="{StaticResource BodyTextBlockStyle}">
                     <tk7controls:DataGridTextColumn Header="Computer Name" Binding="{Binding ComputerName}" Width="Auto" Tag="ComputerName"/>
                     <tk7controls:DataGridTextColumn Header="Policy GUID" Binding="{Binding PolicyGUID}" Width="Auto" Tag="PolicyGUID"/>
                     <tk7controls:DataGridTextColumn Header="Policy Name" Binding="{Binding PolicyName}" Width="Auto" Tag="PolicyName"/>
+                    <tk7controls:DataGridTextColumn Header="File Publishers" Binding="{Binding FilePublishersToDisplay}" Width="Auto" Tag="FilePublishersToDisplay"/>
 
                 </tk7controls:DataGrid.Columns>
             </tk7controls:DataGrid>

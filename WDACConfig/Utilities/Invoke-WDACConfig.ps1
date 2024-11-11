@@ -8,7 +8,3 @@ Import-Module -FullyQualifiedName "$ScriptFilePath\..\WDACConfig Module Files\WD
 
 # Replace with any cmdlet of the WDACConfig module that is going to be debugged
 # Assert-WDACConfigIntegrity -SaveLocally -Verbose
-
-# Converts the markdown help file to XML format for the ConvertTo-WDACPolicy cmdlet
-# New-ExternalHelp -Path "$ScriptFilePath\..\WDACConfig Module Files\Help\ConvertTo-WDACPolicy.md" -OutputPath "$ScriptFilePath\..\WDACConfig Module Files\Help\ConvertTo-WDACPolicy.xml" -Force | Out-Null
-# Get-Help ConvertTo-WDACPolicy -Full

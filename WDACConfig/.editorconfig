@@ -350,3 +350,6 @@ dotnet_diagnostic.IDE0300.severity = error
 
 # Inline variable declaration (IDE0018)
 dotnet_diagnostic.IDE0018.severity = error
+
+# SYSLIB1054: Use 'LibraryImportAttribute' instead of 'DllImportAttribute' to generate P/Invoke marshalling code at compile time
+dotnet_diagnostic.SYSLIB1054.severity = error

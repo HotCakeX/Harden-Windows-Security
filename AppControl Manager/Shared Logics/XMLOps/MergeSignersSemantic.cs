@@ -29,7 +29,7 @@ namespace WDACConfig
     // A HashSet to store unique XmlNode objects
     internal sealed class UniqueXmlNodeSet
     {
-        private HashSet<XmlNode> nodes;
+        private readonly HashSet<XmlNode> nodes;
 
         // Constructor initializes the HashSet with XmlNodeComparer as the comparer logic
         public UniqueXmlNodeSet()
@@ -91,7 +91,7 @@ namespace WDACConfig
             CodeIntegrityPolicy codeIntegrityPolicy = new(xmlFilePath, null);
 
             // Get the User Mode Signing Scenario node
-            XmlNode? allowedSigners12 = codeIntegrityPolicy.UMCI_ProductSignersNode.SelectSingleNode("ns:AllowedSigners", codeIntegrityPolicy.NamespaceManager);
+            XmlNode? allowedSigners12 = codeIntegrityPolicy.UMCI_ProductSignersNode?.SelectSingleNode("ns:AllowedSigners", codeIntegrityPolicy.NamespaceManager);
 
             // Get the Kernel Mode Signing Scenario node
             XmlNode? allowedSigners131 = codeIntegrityPolicy.KMCI_ProductSignersNode.SelectSingleNode("ns:AllowedSigners", codeIntegrityPolicy.NamespaceManager);
@@ -396,15 +396,10 @@ namespace WDACConfig
             codeIntegrityPolicy.SignersNode.RemoveAll();
 
             // Clear the existing AllowedSigners and CiSigners nodes from any type of Signer
-            if (allowedSigners131 is not null)
-            {
-                allowedSigners131.RemoveAll();
-            }
+            allowedSigners131?.RemoveAll();
 
-            if (allowedSigners12 is not null)
-            {
-                allowedSigners12.RemoveAll();
-            }
+            allowedSigners12?.RemoveAll();
+
 
             codeIntegrityPolicy.CiSignersNode.RemoveAll();
 

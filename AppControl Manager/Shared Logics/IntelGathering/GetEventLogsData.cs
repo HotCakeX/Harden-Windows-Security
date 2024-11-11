@@ -33,8 +33,8 @@ namespace WDACConfig.IntelGathering
         private static HashSet<FileIdentity> CodeIntegrityEventsRetriever(string? EvtxFilePath = null)
         {
 
-            // HashSet to store the output, ensures the data are unique
-            HashSet<FileIdentity> fileIdentities = new(new FileIdentityComparer());
+            // HashSet to store the output, ensures the data are unique and are time-prioritized
+            FileIdentityTimeBasedHashSet fileIdentities = new();
 
             // query xPath for the following Code Integrity event IDs:
             // 3076 - Audit
@@ -77,7 +77,7 @@ namespace WDACConfig.IntelGathering
             if (rawEvents.Count == 0)
             {
                 Logger.Write("No Code Integrity logs found");
-                return fileIdentities;
+                return fileIdentities.FileIdentitiesInternal;
             }
 
             // Group all events based on their ActivityId property
@@ -271,6 +271,11 @@ namespace WDACConfig.IntelGathering
                                 KnownRoot = GetIntValue(xmlDocumentCore, namespaceManagerCore, "//evt:EventData/evt:Data[@Name='KnownRoot']")
                             };
 
+
+                            // Add the CN of the current signer to the FilePublishers HashSet of the FileIdentity
+                            _ = eventData.FilePublishers.Add(PublisherName);
+
+
                             // Add the current signer info/correlated event data to the main event package
                             _ = eventData.FileSignerInfos.Add(signerInfo);
                         }
@@ -457,6 +462,10 @@ namespace WDACConfig.IntelGathering
                                 KnownRoot = GetIntValue(xmlDocumentCore, namespaceManagerCore, "//evt:EventData/evt:Data[@Name='KnownRoot']")
                             };
 
+
+                            // Add the CN of the current signer to the FilePublishers HashSet of the FileIdentity
+                            _ = eventData.FilePublishers.Add(PublisherName);
+
                             // Add the current signer info/correlated event data to the main event package
                             _ = eventData.FileSignerInfos.Add(signerInfo);
 
@@ -478,7 +487,7 @@ namespace WDACConfig.IntelGathering
             Logger.Write($"Total Code Integrity logs: {fileIdentities.Count}");
 
             // Return the output
-            return fileIdentities;
+            return fileIdentities.FileIdentitiesInternal;
         }
 
 
@@ -495,7 +504,7 @@ namespace WDACConfig.IntelGathering
         {
 
             // HashSet to store the output, ensures the data are unique
-            HashSet<FileIdentity> fileIdentities = new(new FileIdentityComparer());
+            FileIdentityTimeBasedHashSet fileIdentities = new();
 
             // query xPath for the following AppLocker event IDs:
             // 8028 - Audit
@@ -539,7 +548,7 @@ namespace WDACConfig.IntelGathering
             if (rawEvents.Count == 0)
             {
                 Logger.Write("No AppLocker events found.");
-                return fileIdentities;
+                return fileIdentities.FileIdentitiesInternal;
             }
 
             // Group all events based on their ActivityId property
@@ -703,6 +712,9 @@ namespace WDACConfig.IntelGathering
                                 IssuerTBSHash = GetStringValue(xmlDocumentCore, namespaceManagerCore, "//evt:EventData/evt:Data[@Name='IssuerTBSHash']"),
                             };
 
+                            // Add the CN of the current signer to the FilePublishers HashSet of the FileIdentity
+                            _ = eventData.FilePublishers.Add(PublisherName);
+
                             // Add the current signer info/correlated event data to the main event package
                             _ = eventData.FileSignerInfos.Add(signerInfo);
 
@@ -859,6 +871,11 @@ namespace WDACConfig.IntelGathering
                                 IssuerTBSHash = GetStringValue(xmlDocumentCore, namespaceManagerCore, "//evt:EventData/evt:Data[@Name='IssuerTBSHash']"),
                             };
 
+
+                            // Add the CN of the current signer to the FilePublishers HashSet of the FileIdentity
+                            _ = eventData.FilePublishers.Add(PublisherName);
+
+
                             // Add the current signer info/correlated event data to the main event package
                             _ = eventData.FileSignerInfos.Add(signerInfo);
 
@@ -880,7 +897,7 @@ namespace WDACConfig.IntelGathering
             Logger.Write($"Total AppLocker logs: {fileIdentities.Count}");
 
             // Return the output
-            return fileIdentities;
+            return fileIdentities.FileIdentitiesInternal;
         }
 
 

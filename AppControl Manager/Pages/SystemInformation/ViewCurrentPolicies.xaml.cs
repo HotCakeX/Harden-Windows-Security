@@ -5,7 +5,9 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
+using Windows.ApplicationModel.DataTransfer;
 
 namespace WDACConfig.Pages
 {
@@ -15,7 +17,7 @@ namespace WDACConfig.Pages
         public ObservableCollection<CiPolicyInfo> AllPolicies { get; set; }
 
         // Store all outputs for searching
-        private List<CiPolicyInfo> AllPoliciesOutput;
+        private readonly List<CiPolicyInfo> AllPoliciesOutput;
 
         // Keep track of the currently selected policy
         private CiPolicyInfo? selectedPolicy;
@@ -281,9 +283,7 @@ namespace WDACConfig.Pages
             if (e.Column.SortDirection is null || e.Column.SortDirection == DataGridSortDirection.Ascending)
             {
                 // Descending: custom order depending on column type
-                AllPolicies = new ObservableCollection<CiPolicyInfo>(
-                    collectionToSort.OrderByDescending(keySelector)
-                );
+                AllPolicies = [.. collectionToSort.OrderByDescending(keySelector)];
 
                 // Set the column direction to Descending
                 e.Column.SortDirection = DataGridSortDirection.Descending;
@@ -291,14 +291,156 @@ namespace WDACConfig.Pages
             else
             {
                 // Ascending: custom order depending on column type
-                AllPolicies = new ObservableCollection<CiPolicyInfo>(
-                    collectionToSort.OrderBy(keySelector)
-                );
+                AllPolicies = [.. collectionToSort.OrderBy(keySelector)];
                 e.Column.SortDirection = DataGridSortDirection.Ascending;
             }
 
             // Update the ItemsSource of the DataGrid
             DeployedPolicies.ItemsSource = AllPolicies;
         }
+
+
+
+
+        /// <summary>
+        /// Event handler for the Copy Individual Items SubMenu. It will populate the submenu items in the flyout of the data grid.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void DeployedPoliciesDataGrid_Loaded(object sender, RoutedEventArgs e)
+        {
+            // Ensure the CopyIndividualItemsSubMenu is available
+            if (CopyIndividualItemsSubMenu is null)
+            {
+                return;
+            }
+
+            // Clear any existing items to avoid duplication if reloaded
+            CopyIndividualItemsSubMenu.Items.Clear();
+
+            // Create a dictionary to map headers to their specific click event methods
+            Dictionary<string, RoutedEventHandler> copyActions = new()
+            {
+                { "Policy ID", CopyPolicyID_Click },
+                { "Base Policy ID", CopyBasePolicyID_Click },
+                { "Friendly Name", CopyFriendlyName_Click },
+                { "Version", CopyVersion_Click },
+                { "Is Authorized", CopyIsAuthorized_Click },
+                { "Is Enforced", CopyIsEnforced_Click },
+                { "Is On Disk", CopyIsOnDisk_Click },
+                { "Is Signed Policy", CopyIsSignedPolicy_Click },
+                { "Is System Policy", CopyIsSystemPolicy_Click },
+                { "Policy Options", CopyPolicyOptionsDisplay_Click }
+            };
+
+            // Add menu items with specific click events for each column
+            foreach (DataGridColumn column in DeployedPolicies.Columns)
+            {
+                string headerText = column.Header.ToString()!;
+
+                if (copyActions.TryGetValue(headerText, out RoutedEventHandler? value))
+                {
+                    // Create a new MenuFlyout Item
+                    MenuFlyoutItem menuItem = new() { Text = $"Copy {headerText}" };
+
+                    // Set the click event for the menu item
+                    menuItem.Click += value;
+
+                    // Add the menu item to the submenu
+                    CopyIndividualItemsSubMenu.Items.Add(menuItem);
+                }
+            }
+        }
+
+        // Click event handlers for each property
+        private void CopyPolicyID_Click(object sender, RoutedEventArgs e) => CopyToClipboard((item) => item.PolicyID?.ToString());
+        private void CopyBasePolicyID_Click(object sender, RoutedEventArgs e) => CopyToClipboard((item) => item.BasePolicyID?.ToString());
+        private void CopyFriendlyName_Click(object sender, RoutedEventArgs e) => CopyToClipboard((item) => item.FriendlyName);
+        private void CopyVersion_Click(object sender, RoutedEventArgs e) => CopyToClipboard((item) => item.Version?.ToString());
+        private void CopyIsAuthorized_Click(object sender, RoutedEventArgs e) => CopyToClipboard((item) => item.IsAuthorized.ToString());
+        private void CopyIsEnforced_Click(object sender, RoutedEventArgs e) => CopyToClipboard((item) => item.IsEnforced.ToString());
+        private void CopyIsOnDisk_Click(object sender, RoutedEventArgs e) => CopyToClipboard((item) => item.IsOnDisk.ToString());
+        private void CopyIsSignedPolicy_Click(object sender, RoutedEventArgs e) => CopyToClipboard((item) => item.IsSignedPolicy.ToString());
+        private void CopyIsSystemPolicy_Click(object sender, RoutedEventArgs e) => CopyToClipboard((item) => item.IsSystemPolicy.ToString());
+        private void CopyPolicyOptionsDisplay_Click(object sender, RoutedEventArgs e) => CopyToClipboard((item) => item.PolicyOptionsDisplay);
+
+        /// <summary>
+        /// Helper method to copy a specified property to clipboard without reflection
+        /// </summary>
+        /// <param name="getProperty">Function that retrieves the desired property value as a string</param>
+        private void CopyToClipboard(Func<CiPolicyInfo, string?> getProperty)
+        {
+            if (DeployedPolicies.SelectedItem is CiPolicyInfo selectedItem)
+            {
+                string? propertyValue = getProperty(selectedItem);
+                if (propertyValue is not null)
+                {
+                    DataPackage dataPackage = new();
+                    dataPackage.SetText(propertyValue);
+                    Clipboard.SetContent(dataPackage);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Copies the selected rows to the clipboard in a formatted manner, with each property labeled for clarity.
+        /// </summary>
+        /// <param name="sender">The event sender.</param>
+        /// <param name="e">The event arguments.</param>
+        private void DataGridFlyoutMenuCopy_Click(object sender, RoutedEventArgs e)
+        {
+            // Check if there are selected items in the DataGrid
+            if (DeployedPolicies.SelectedItems.Count > 0)
+            {
+                // Initialize StringBuilder to store all selected rows' data with labels
+                StringBuilder dataBuilder = new();
+
+                // Loop through each selected item in the DataGrid
+                foreach (var selectedItem in DeployedPolicies.SelectedItems)
+                {
+                    if (selectedItem is CiPolicyInfo selectedRow)
+                    {
+                        // Append each row's formatted data to the StringBuilder
+                        _ = dataBuilder.AppendLine(ConvertRowToText(selectedRow));
+
+                        // Add a separator between rows for readability in multi-row copies
+                        _ = dataBuilder.AppendLine(new string('-', 50));
+                    }
+                }
+
+                // Create a DataPackage to hold the text data
+                DataPackage dataPackage = new();
+
+                // Set the formatted text as the content of the DataPackage
+                dataPackage.SetText(dataBuilder.ToString());
+
+                // Copy the DataPackage content to the clipboard
+                Clipboard.SetContent(dataPackage);
+            }
+        }
+
+        /// <summary>
+        /// Converts the properties of a CiPolicyInfo row into a labeled, formatted string for copying to clipboard.
+        /// </summary>
+        /// <param name="row">The selected CiPolicyInfo row from the DataGrid.</param>
+        /// <returns>A formatted string of the row's properties with labels.</returns>
+        private static string ConvertRowToText(CiPolicyInfo row)
+        {
+            // Use StringBuilder to format each property with its label for easy reading
+            return new StringBuilder()
+                .AppendLine($"Policy ID: {row.PolicyID}")
+                .AppendLine($"Base Policy ID: {row.BasePolicyID}")
+                .AppendLine($"Friendly Name: {row.FriendlyName}")
+                .AppendLine($"Version: {row.Version}")
+                .AppendLine($"Is Authorized: {row.IsAuthorized}")
+                .AppendLine($"Is Enforced: {row.IsEnforced}")
+                .AppendLine($"Is On Disk: {row.IsOnDisk}")
+                .AppendLine($"Is Signed Policy: {row.IsSignedPolicy}")
+                .AppendLine($"Is System Policy: {row.IsSystemPolicy}")
+                .AppendLine($"Policy Options: {row.PolicyOptionsDisplay}")
+                .ToString();
+        }
+
+
     }
 }

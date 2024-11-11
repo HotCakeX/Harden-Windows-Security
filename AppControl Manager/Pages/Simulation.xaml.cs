@@ -3,6 +3,7 @@ using CommunityToolkit.WinUI.UI.Controls;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
+using Microsoft.UI.Xaml.Navigation;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -18,16 +19,16 @@ namespace WDACConfig.Pages
     public sealed partial class Simulation : Page
     {
         public ObservableCollection<SimulationOutput> SimulationOutputs { get; set; }
-        private List<SimulationOutput> AllSimulationOutputs; // Store all outputs for searching
+        private readonly List<SimulationOutput> AllSimulationOutputs; // Store all outputs for searching
         private List<string> filePaths; // For selected file paths
-        private List<string> folderPaths; // For selected folder paths
+        private readonly List<string> folderPaths; // For selected folder paths
         private string? xmlFilePath; // For selected XML file path
         private List<string> catRootPaths; // For selected Cat Root paths
 
         public Simulation()
         {
             this.InitializeComponent();
-            this.NavigationCacheMode = Microsoft.UI.Xaml.Navigation.NavigationCacheMode.Enabled;
+            this.NavigationCacheMode = NavigationCacheMode.Enabled;
 
             SimulationOutputs = [];
             AllSimulationOutputs = [];
@@ -36,6 +37,32 @@ namespace WDACConfig.Pages
             catRootPaths = [];
 
         }
+
+
+
+        #region
+
+        // Without the following steps, when the user begins data fetching process and then navigates away from this page
+        // Upon arrival at this page again, the DataGrid loses its virtualization, causing the UI to hang for extended periods of time
+        // But after nullifying DataGrid's ItemsSource when page is navigated from and reassigning it when page is navigated to,
+        // We tackle that problem. Data will sill be stored in the ObservableCollection when page is not in focus,
+        // But DataGrid's source will pick them up only when page is navigated to.
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            base.OnNavigatedTo(e);
+            SimulationDataGrid.ItemsSource = SimulationOutputs;
+        }
+
+        protected override void OnNavigatedFrom(NavigationEventArgs e)
+        {
+            base.OnNavigatedFrom(e);
+            SimulationDataGrid.ItemsSource = null;
+        }
+
+        #endregion
+
+
+
 
         // Event handler for the Begin Simulation button
         private async void BeginSimulationButton_Click(object sender, RoutedEventArgs e)
@@ -116,7 +143,10 @@ namespace WDACConfig.Pages
         // Event handler for the Select XML File button
         private void SelectXmlFileButton_Click(object sender, RoutedEventArgs e)
         {
-            string? selectedFile = FileSystemPicker.ShowFilePicker();
+            string? selectedFile = FileSystemPicker.ShowFilePicker(
+            "Select an XML file",
+            ("XML Files", "*.xml"));
+
             if (!string.IsNullOrEmpty(selectedFile))
             {
                 // Store the selected XML file path
@@ -174,6 +204,9 @@ namespace WDACConfig.Pages
             SimulationOutputs.Clear();
             // Clear the full data
             AllSimulationOutputs.Clear();
+
+            // set the total count to 0 after clearing all the data
+            TotalCountOfTheFilesTextBox.Text = "0";
         }
 
         // Event handler for the SearchBox text change
@@ -183,13 +216,13 @@ namespace WDACConfig.Pages
 
             // Perform a case-insensitive search in all relevant fields
             List<SimulationOutput> filteredResults = AllSimulationOutputs.Where(output =>
-                (output.Path is not null && output.Path.Contains(searchTerm, StringComparison.InvariantCultureIgnoreCase)) ||
-                (output.Source is not null && output.Source.Contains(searchTerm, StringComparison.InvariantCultureIgnoreCase)) ||
-                (output.MatchCriteria is not null && output.MatchCriteria.Contains(searchTerm, StringComparison.InvariantCultureIgnoreCase)) ||
-                (output.SpecificFileNameLevelMatchCriteria is not null && output.SpecificFileNameLevelMatchCriteria.Contains(searchTerm, StringComparison.InvariantCultureIgnoreCase)) ||
-                (output.CertSubjectCN is not null && output.CertSubjectCN.Contains(searchTerm, StringComparison.InvariantCultureIgnoreCase)) ||
-                (output.SignerName is not null && output.SignerName.Contains(searchTerm, StringComparison.InvariantCultureIgnoreCase)) ||
-                (output.FilePath is not null && output.FilePath.Contains(searchTerm, StringComparison.InvariantCultureIgnoreCase))
+                (output.Path is not null && output.Path.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
+                (output.Source is not null && output.Source.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
+                (output.MatchCriteria is not null && output.MatchCriteria.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
+                (output.SpecificFileNameLevelMatchCriteria is not null && output.SpecificFileNameLevelMatchCriteria.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
+                (output.CertSubjectCN is not null && output.CertSubjectCN.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
+                (output.SignerName is not null && output.SignerName.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
+                (output.FilePath is not null && output.FilePath.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
             ).ToList();
 
 
@@ -215,9 +248,7 @@ namespace WDACConfig.Pages
                 if (e.Column.SortDirection is null || e.Column.SortDirection is DataGridSortDirection.Ascending)
                 {
                     // Descending: First True, then False
-                    SimulationOutputs = new ObservableCollection<SimulationOutput>(
-                        AllSimulationOutputs.OrderBy(output => !output.IsAuthorized)
-                    );
+                    SimulationOutputs = [.. AllSimulationOutputs.OrderBy(output => !output.IsAuthorized)];
 
                     // Set the column direction to Descending
                     e.Column.SortDirection = DataGridSortDirection.Descending;
@@ -225,9 +256,7 @@ namespace WDACConfig.Pages
                 else
                 {
                     // Ascending: First False, then True
-                    SimulationOutputs = new ObservableCollection<SimulationOutput>(
-                        AllSimulationOutputs.OrderBy(output => output.IsAuthorized)
-                    );
+                    SimulationOutputs = [.. AllSimulationOutputs.OrderBy(output => output.IsAuthorized)];
                     e.Column.SortDirection = DataGridSortDirection.Ascending;
                 }
 
@@ -388,6 +417,6 @@ namespace WDACConfig.Pages
             Clipboard.SetContent(dataPackage);
         }
 
-                     
+
     }
 }

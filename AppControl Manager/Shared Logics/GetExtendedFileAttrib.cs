@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 
 namespace WDACConfig
 {
-    public sealed class ExFileInfo
+    public sealed partial class ExFileInfo
     {
         // Constants used for encoding fallback and error handling
         private const string UnicodeFallbackCode = "04B0";
@@ -23,16 +23,18 @@ namespace WDACConfig
 
         // Importing external functions from Version.dll to work with file version info
         // https://learn.microsoft.com/he-il/windows/win32/api/winver/nf-winver-getfileversioninfosizeexa
-        [DllImport("Version.dll", CharSet = CharSet.Unicode, SetLastError = true)]
-        private static extern int GetFileVersionInfoSizeEx(uint dwFlags, string filename, out int handle);
+        [LibraryImport("Version.dll", EntryPoint = "GetFileVersionInfoSizeExW", SetLastError = true, StringMarshalling = StringMarshalling.Utf16)]
+        private static partial int GetFileVersionInfoSizeEx(uint dwFlags, string filename, out int handle);
 
         // https://learn.microsoft.com/he-il/windows/win32/api/winver/nf-winver-verqueryvaluea
-        [DllImport("Version.dll", CharSet = CharSet.Unicode, SetLastError = true)]
-        private static extern bool VerQueryValue(IntPtr block, string subBlock, out IntPtr buffer, out int len);
+        [LibraryImport("Version.dll", EntryPoint = "VerQueryValueW", SetLastError = true, StringMarshalling = StringMarshalling.Utf16)]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        private static partial bool VerQueryValue(IntPtr block, string subBlock, out IntPtr buffer, out int len);
 
         // https://learn.microsoft.com/he-il/windows/win32/api/winver/nf-winver-getfileversioninfoexa
-        [DllImport("Version.dll", CharSet = CharSet.Unicode, SetLastError = true)]
-        private static extern bool GetFileVersionInfoEx(uint dwFlags, string filename, int handle, int len, byte[] data);
+        [LibraryImport("Version.dll", EntryPoint = "GetFileVersionInfoExW", SetLastError = true, StringMarshalling = StringMarshalling.Utf16)]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        private static partial bool GetFileVersionInfoEx(uint dwFlags, string filename, int handle, int len, [Out] byte[] data);
 
         // Private constructor to prevent direct instantiation
         private ExFileInfo() { }

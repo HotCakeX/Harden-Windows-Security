@@ -31,93 +31,60 @@ namespace WDACConfig
                 X509Chain currentChain = completeSignatureResult[i].Chain;
                 SignedCms currentSignedCms = completeSignatureResult[i].Signer;
 
-                // Get the number of certificates in the current chain
                 uint certificatesInChainCount = (uint)currentChain.ChainElements.Count;
 
                 switch (certificatesInChainCount)
                 {
-                    // If the chain includes a Root, Leaf, and at least one Intermediate certificate
+                    // If the chain includes a Root, Leaf and at least one Intermediate certificate
                     case > 2:
-
-                        #region Root Certificate
-
                         // The last certificate in the chain is the Root certificate
                         X509Certificate2 currentRootCertificate = currentChain.ChainElements[^1].Certificate;
 
-                        // Create the root certificate element
-                        ChainElement rootCertificate = new(
+                        var rootCertificate = new ChainElement(
                             CryptoAPI.GetNameString(currentRootCertificate.Handle, CryptoAPI.CERT_NAME_SIMPLE_DISPLAY_TYPE, null, false), // SubjectCN
                             CryptoAPI.GetNameString(currentRootCertificate.Handle, CryptoAPI.CERT_NAME_SIMPLE_DISPLAY_TYPE, null, true), // IssuerCN
                             currentRootCertificate.NotAfter,
-                            currentRootCertificate.NotBefore,
                             CertificateHelper.GetTBSCertificate(currentRootCertificate),
                             currentRootCertificate, // Append the certificate object itself to the output object as well
-                            CertificateType.Root,
-                            currentRootCertificate // root certificate's issuer is itself
+                            CertificateType.Root
                         );
 
-                        #endregion
-
-                        #region Intermediate Certificate(s)
-
-                        // List to hold the Intermediate Certificate(s) of the current chain
+                        // An array to hold the Intermediate Certificate(s) of the current chain
                         List<ChainElement> intermediateCertificates = [];
 
-                        // Loop through intermediate certificates, which are all certificates in between the root and leaf certificates
-                        // That is why we start from 1 and end at certificatesInChainCount - 1 (excluding the root and leaf certificates)
+                        // All the certificates in between are Intermediate certificates
                         for (int j = 1; j < certificatesInChainCount - 1; j++)
                         {
-                            // Get the current intermediate certificate
                             X509Certificate2 cert = currentChain.ChainElements[j].Certificate;
 
-                            // Get the issuer certificate for the current intermediate certificate (which will be the next certificate in the chain)
-                            X509Certificate2 intermediateIssuerCertificate = currentChain.ChainElements[j + 1].Certificate;
-
-                            // Add the intermediate certificate to the list
+                            // Create a collection of intermediate certificates
                             intermediateCertificates.Add(new ChainElement(
                                 CryptoAPI.GetNameString(cert.Handle, CryptoAPI.CERT_NAME_SIMPLE_DISPLAY_TYPE, null, false),
                                 CryptoAPI.GetNameString(cert.Handle, CryptoAPI.CERT_NAME_SIMPLE_DISPLAY_TYPE, null, true),
                                 cert.NotAfter,
-                                cert.NotBefore,
                                 CertificateHelper.GetTBSCertificate(cert),
                                 cert, // Append the certificate object itself to the output object as well
-                                CertificateType.Intermediate,
-                                intermediateIssuerCertificate
+                                CertificateType.Intermediate
                             ));
                         }
-
-                        #endregion
-
-                        #region Leaf Certificate
 
                         // The first certificate in the chain is the Leaf certificate
                         X509Certificate2 currentLeafCertificate = currentChain.ChainElements[0].Certificate;
 
-                        // The issuer of the leaf certificate will be the first intermediate certificate or root if none
-                        X509Certificate2 leafIssuerCertificate = intermediateCertificates.Count > 0
-                            ? intermediateCertificates[0].Certificate
-                            : rootCertificate.Certificate;
-
-                        // Create the leaf certificate element
-                        ChainElement leafCertificate = new(
+                        var leafCertificate = new ChainElement(
                             CryptoAPI.GetNameString(currentLeafCertificate.Handle, CryptoAPI.CERT_NAME_SIMPLE_DISPLAY_TYPE, null, false),
                             CryptoAPI.GetNameString(currentLeafCertificate.Handle, CryptoAPI.CERT_NAME_SIMPLE_DISPLAY_TYPE, null, true),
                             currentLeafCertificate.NotAfter,
-                            currentLeafCertificate.NotBefore,
                             CertificateHelper.GetTBSCertificate(currentLeafCertificate),
                             currentLeafCertificate, // Append the certificate object itself to the output object as well
-                            CertificateType.Leaf,
-                            leafIssuerCertificate // Set issuer for the leaf certificate
+                            CertificateType.Leaf
                         );
 
-                        #endregion
-
-                        // Add the final package with root, intermediate, and leaf certificates
                         finalObject.Add(new ChainPackage(
                             currentChain, // The entire current chain of the certificate
                             currentSignedCms, // The entire current SignedCms object
                             rootCertificate,
-                            [.. intermediateCertificates], // Spread the intermediate certificates list
+                            [.. intermediateCertificates],
                             leafCertificate
                         ));
 
@@ -125,54 +92,35 @@ namespace WDACConfig
 
                     // If the chain only includes a Root and Leaf certificate
                     case 2:
-
-                        #region Root Certificate
-
                         // The last certificate in the chain is the Root certificate
                         currentRootCertificate = currentChain.ChainElements[^1].Certificate;
 
-                        // Create the root certificate element
                         rootCertificate = new ChainElement(
                             CryptoAPI.GetNameString(currentRootCertificate.Handle, CryptoAPI.CERT_NAME_SIMPLE_DISPLAY_TYPE, null, false), // SubjectCN
                             CryptoAPI.GetNameString(currentRootCertificate.Handle, CryptoAPI.CERT_NAME_SIMPLE_DISPLAY_TYPE, null, true), // IssuerCN
                             currentRootCertificate.NotAfter,
-                            currentRootCertificate.NotBefore,
                             CertificateHelper.GetTBSCertificate(currentRootCertificate),
                             currentRootCertificate, // Append the certificate object itself to the output object as well
-                            CertificateType.Root,
-                            currentRootCertificate // root certificate's issuer is itself
+                            CertificateType.Root
                         );
-
-                        #endregion
-
-                        #region Leaf Certificate
 
                         // The first certificate in the chain is the Leaf certificate
                         currentLeafCertificate = currentChain.ChainElements[0].Certificate;
 
-                        // The issuer of the leaf certificate will be the root certificate
-                        leafIssuerCertificate = rootCertificate.Certificate;
-
-                        // Create the leaf certificate element
                         leafCertificate = new ChainElement(
                             CryptoAPI.GetNameString(currentLeafCertificate.Handle, CryptoAPI.CERT_NAME_SIMPLE_DISPLAY_TYPE, null, false),
                             CryptoAPI.GetNameString(currentLeafCertificate.Handle, CryptoAPI.CERT_NAME_SIMPLE_DISPLAY_TYPE, null, true),
                             currentLeafCertificate.NotAfter,
-                            currentLeafCertificate.NotBefore,
                             CertificateHelper.GetTBSCertificate(currentLeafCertificate),
                             currentLeafCertificate, // Append the certificate object itself to the output object as well
-                            CertificateType.Leaf,
-                            leafIssuerCertificate // Set issuer for the leaf certificate
+                            CertificateType.Leaf
                         );
 
-                        #endregion
-
-                        // Add the final package with root and leaf certificates
                         finalObject.Add(new ChainPackage(
                             currentChain, // The entire current chain of the certificate
                             currentSignedCms, // The entire current SignedCms object
                             rootCertificate,
-                            null, // No intermediate certificates
+                            null,
                             leafCertificate
                         ));
 
@@ -180,43 +128,32 @@ namespace WDACConfig
 
                     // If the chain only includes a Root certificate
                     case 1:
-
-                        #region Root Certificate
-
                         // The only certificate in the chain is the Root certificate
                         currentRootCertificate = currentChain.ChainElements[0].Certificate;
 
-                        // Create the root certificate element
                         rootCertificate = new ChainElement(
                             CryptoAPI.GetNameString(currentRootCertificate.Handle, CryptoAPI.CERT_NAME_SIMPLE_DISPLAY_TYPE, null, false), // SubjectCN
                             CryptoAPI.GetNameString(currentRootCertificate.Handle, CryptoAPI.CERT_NAME_SIMPLE_DISPLAY_TYPE, null, true), // IssuerCN
                             currentRootCertificate.NotAfter,
-                            currentRootCertificate.NotBefore,
                             CertificateHelper.GetTBSCertificate(currentRootCertificate),
                             currentRootCertificate, // Append the certificate object itself to the output object as well
-                            CertificateType.Root,
-                            currentRootCertificate // root certificate's issuer is itself
+                            CertificateType.Root
                         );
 
-                        #endregion
-
-                        // Add the final package with only the root certificate
                         finalObject.Add(new ChainPackage(
                             currentChain, // The entire current chain of the certificate
                             currentSignedCms, // The entire current SignedCms object
                             rootCertificate,
-                            null, // No intermediate certificates
-                            null // No leaf certificate
+                            null,
+                            null
                         ));
 
                         break;
-
                     default:
                         break;
                 }
             }
 
-            // Return the final list of chain packages
             return finalObject;
         }
     }

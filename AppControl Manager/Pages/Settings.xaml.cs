@@ -1,6 +1,8 @@
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using System;
 using System.Globalization;
+using static WDACConfig.AppSettings;
 
 #nullable enable
 
@@ -20,10 +22,162 @@ namespace WDACConfig.Pages
 
             // Set the year for the copyright section
             CopyRightSettingsExpander.Description = $"© {DateTime.Now.Year}. All rights reserved.";
+
+
+            #region Load the user configurations in the UI elements
+
+            NavigationViewBackgroundToggle.IsOn = AppSettings.GetSetting<bool>(SettingKeys.NavViewBackground);
+
+            SoundToggleSwitch.IsOn = AppSettings.GetSetting<bool>(SettingKeys.SoundSetting);
+
+            BackgroundComboBox.SelectedIndex = (AppSettings.GetSetting<string>(SettingKeys.BackDropBackground)) switch
+            {
+                "MicaAlt" => 0,
+                "Mica" => 1,
+                "Acrylic" => 2,
+                _ => 0
+            };
+
+
+            ThemeComboBox.SelectedIndex = (AppSettings.GetSetting<string>(SettingKeys.AppTheme)) switch
+            {
+                "Use System Setting" => 0,
+                "Dark" => 1,
+                "Light" => 2,
+                _ => 0
+            };
+
+            #endregion
+
+
+            // Instead of defining the events in the XAML, defining them here after performing changes on the UI elements based on the saved settings
+            // This way we don't trigger the event handlers just by changing UI element values
+            // Since queries for saved settings already happen in the Main Window, App and other respective places
+            // This also Prevents a dark flash when using brighter theme because of triggering events twice unnecessarily.
+            NavigationViewBackgroundToggle.Toggled += NavigationViewBackground_Toggled;
+            BackgroundComboBox.SelectionChanged += BackgroundComboBox_SelectionChanged;
+            ThemeComboBox.SelectionChanged += ThemeComboBox_SelectionChanged;
+            NavigationMenuLocation.SelectionChanged += NavigationViewLocationComboBox_SelectionChanged;
+            SoundToggleSwitch.Toggled += SoundToggleSwitch_Toggled;
+
         }
 
+
+        /// <summary>
+        /// Event handler for the Background ComboBox selection change event.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void BackgroundComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            // Get the ComboBox that triggered the event
+            ComboBox? comboBox = sender as ComboBox;
+
+            // Get the selected item from the ComboBox
+            string? selectedBackdrop = (comboBox?.SelectedItem as ComboBoxItem)?.Content.ToString();
+
+            if (selectedBackdrop is not null)
+            {
+                // Raise the global BackgroundChanged event
+                ThemeManager.OnBackgroundChanged(selectedBackdrop);
+            }
+
+            AppSettings.SaveSetting(AppSettings.SettingKeys.BackDropBackground, selectedBackdrop);
+        }
+
+
+
+
+        /// <summary>
+        /// Event handler for the NavigationViewLocation ComboBox selection change event.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void NavigationViewLocationComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            // Get the ComboBox that triggered the event
+            ComboBox? comboBox = sender as ComboBox;
+
+            // Get the selected item from the ComboBox
+            string? selectedLocation = (comboBox?.SelectedItem as ComboBoxItem)?.Content?.ToString();
+
+            if (selectedLocation is not null)
+            {
+                // Raise the global OnNavigationViewLocationChanged event
+                NavigationViewLocationManager.OnNavigationViewLocationChanged(selectedLocation);
+            }
+        }
+
+
+
+        /// <summary>
+        /// Event handler for the Theme ComboBox selection change event.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void ThemeComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+
+            // Get the ComboBox that triggered the event
+            ComboBox? comboBox = sender as ComboBox;
+
+            // Get the selected item from the ComboBox
+            string? selectedTheme = (comboBox?.SelectedItem as ComboBoxItem)?.Content?.ToString();
+
+            if (selectedTheme is not null)
+            {
+                // Raise the global BackgroundChanged event
+                AppThemeManager.OnAppThemeChanged(selectedTheme);
+            }
+
+
+            AppSettings.SaveSetting(AppSettings.SettingKeys.AppTheme, selectedTheme);
+        }
+
+
+        /// <summary>
+        /// Event handler for the NavigationViewBackground toggle switch change event.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void NavigationViewBackground_Toggled(object sender, RoutedEventArgs e)
+        {
+            // Get the ToggleSwitch that triggered the event
+            ToggleSwitch? toggleSwitch = sender as ToggleSwitch;
+
+            // Get the state of the ToggleSwitch
+            // Use false as a fallback if toggleSwitch is null
+            bool isBackgroundOn = toggleSwitch?.IsOn ?? false;
+
+            // Notify NavigationBackgroundManager when the toggle switch is changed
+            NavigationBackgroundManager.OnNavigationBackgroundChanged(isBackgroundOn);
+
+            AppSettings.SaveSetting(AppSettings.SettingKeys.NavViewBackground, isBackgroundOn);
+        }
+
+
+
+        /// <summary>
+        /// Event handler for the Sound toggle switch change event.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void SoundToggleSwitch_Toggled(object sender, RoutedEventArgs e)
+        {
+            // Get the state of the toggle switch (on or off)
+            var toggleSwitch = sender as ToggleSwitch;
+            bool isSoundOn = toggleSwitch?.IsOn ?? false;
+
+            // Raise the event to notify the app of the sound setting change
+            SoundManager.OnSoundSettingChanged(isSoundOn);
+
+            // Save the sound setting to the local app settings
+            AppSettings.SaveSetting(AppSettings.SettingKeys.SoundSetting, isSoundOn);
+        }
+
+
         // When the button to get the user configurations on the settings card is pressed
-        private void GetConfigurationButton_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
+        private void GetConfigurationButton_Click(object sender, RoutedEventArgs e)
         {
             UserConfiguration userConfig = UserConfiguration.Get();
 
@@ -39,7 +193,7 @@ namespace WDACConfig.Pages
         }
 
         // When the edit button of any field is pressed
-        private void EditButton_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
+        private void EditButton_Click(object sender, RoutedEventArgs e)
         {
             Button? button = sender as Button;
             string? fieldName = button!.Tag.ToString();
@@ -95,7 +249,7 @@ namespace WDACConfig.Pages
         }
 
         // When the clear button of any field is pressed
-        private void ClearButton_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
+        private void ClearButton_Click(object sender, RoutedEventArgs e)
         {
             Button? button = sender as Button;
             string? fieldName = button!.Tag.ToString();
@@ -169,7 +323,7 @@ namespace WDACConfig.Pages
 
 
         // When the browse button of any field is pressed
-        private void BrowseButton_Click(object sender, Microsoft.UI.Xaml.RoutedEventArgs e)
+        private void BrowseButton_Click(object sender, RoutedEventArgs e)
         {
             var button = sender as Button;
             string? fieldName = button!.Tag.ToString();

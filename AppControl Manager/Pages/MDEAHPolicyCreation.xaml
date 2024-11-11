@@ -74,25 +74,21 @@
         <controls:WrapPanel Grid.Row="0" VerticalSpacing="4" HorizontalSpacing="4" Orientation="Horizontal" Margin="6,10,6,10">
 
             <TextBlock
-    Foreground="LightGray"
     TextWrapping="WrapWholeWords"
     Style="{StaticResource BodyTextBlockStyle}">
 
     <Span>
         Leverage <Italic>Microsoft Defender for Endpoint</Italic>
             <Run Foreground="{ThemeResource SystemAccentColor}">Advanced Hunting</Run>
-        exported logs to build Application Control Policies. 
-        Begin by browsing for the MDE AH CSV logs, then click the 
-        <Underline><Bold>Scan button</Bold></Underline> to populate the data grid. 
-        Once populated, use the <Underline><Bold>Create Policy button</Bold></Underline> 
+        exported logs to build Application Control Policies.
+        Begin by browsing for the MDE AH CSV logs, then click the
+        <Underline><Bold>Scan button</Bold></Underline> to populate the data grid.
+        Once populated, use the <Underline><Bold>Create Policy button</Bold></Underline>
         to define output configuration and generate the XML policy file.
     </Span>
             </TextBlock>
 
-
-            <HyperlinkButton Content="Watch the YouTube video for guidance" NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security"  />
         </controls:WrapPanel>
-
 
         <Border
   Grid.Row="1"
@@ -206,16 +202,10 @@ Spacing="8">
                                 </controls:SwitchPresenter>
                             </StackPanel>
 
-
-
                         </Flyout>
                     </SplitButton.Flyout>
 
                 </SplitButton>
-
-
-
-
 
 
                 <Button x:Name="BrowseForLogs" ToolTipService.ToolTip="Browse for Advanced Hunting Logs" Click="BrowseForLogs_Click" >
@@ -226,11 +216,6 @@ Spacing="8">
                         </StackPanel>
                     </Button.Content>
                 </Button>
-
-
-
-
-
 
                 <DropDownButton Content="Actions" ToolTipService.ToolTip="Multiple actions to take on the logs">
                     <DropDownButton.Flyout>
@@ -299,6 +284,13 @@ Spacing="8">
 
                 <CalendarDatePicker x:Name="FilterByDateCalendarPicker" PlaceholderText="Filter logs by date" ToolTipService.ToolTip="Will only show logs that are newer than the selected date" />
 
+
+                <ComboBox SelectionChanged="ScanLevelComboBox_SelectionChanged" x:Name="ScanLevelComboBox" ToolTipService.ToolTip="Pick a level based on which the selected logs will be scanned" PlaceholderText="Scan level">
+                    <ComboBoxItem>FilePublisher</ComboBoxItem>
+                    <ComboBoxItem>Publisher</ComboBoxItem>
+                    <ComboBoxItem>Hash</ComboBoxItem>
+                </ComboBox>
+
             </controls:WrapPanel>
         </Border>
 
@@ -347,7 +339,7 @@ Spacing="8">
                             </MenuFlyoutSubItem.Icon>
                             <!-- Dynamic items will be added here in the Loaded event handler -->
                         </MenuFlyoutSubItem>
-                        
+
                     </MenuFlyout>
                 </tk7controls:DataGrid.ContextFlyout>
 
@@ -369,6 +361,7 @@ Spacing="8">
                     <tk7controls:DataGridTextColumn Header="Computer Name" Binding="{Binding ComputerName}" Width="Auto" Tag="ComputerName"/>
                     <tk7controls:DataGridTextColumn Header="Policy GUID" Binding="{Binding PolicyGUID}" Width="Auto" Tag="PolicyGUID"/>
                     <tk7controls:DataGridTextColumn Header="Policy Name" Binding="{Binding PolicyName}" Width="Auto" Tag="PolicyName"/>
+                    <tk7controls:DataGridTextColumn Header="File Publishers" Binding="{Binding FilePublishersToDisplay}" Width="Auto" Tag="FilePublishersToDisplay"/>
 
                 </tk7controls:DataGrid.Columns>
             </tk7controls:DataGrid>
@@ -376,4 +369,3 @@ Spacing="8">
 
     </Grid>
 </Page>
-    

@@ -31,10 +31,10 @@ namespace WDACConfig
 
         internal XmlNode SignersNode { get; }
 
-        internal XmlNode UMCI_SigningScenarioNode { get; }
+        internal XmlNode? UMCI_SigningScenarioNode { get; }
         internal XmlNode KMCI_SigningScenarioNode { get; }
 
-        internal XmlNode UMCI_ProductSignersNode { get; }
+        internal XmlNode? UMCI_ProductSignersNode { get; }
         internal XmlNode KMCI_ProductSignersNode { get; }
 
         internal XmlNode CiSignersNode { get; }
@@ -70,17 +70,15 @@ namespace WDACConfig
             SignersNode = SiPolicyNode.SelectSingleNode("ns:Signers", NamespaceManager)
                 ?? throw new InvalidOperationException("Signers node not found");
 
-            // Find the SigningScenario Node for User Mode
-            UMCI_SigningScenarioNode = SiPolicyNode.SelectSingleNode("ns:SigningScenarios/ns:SigningScenario[@Value='12']", NamespaceManager)
-                ?? throw new InvalidOperationException("UMCI Signing Scenario node not found");
+            // Find the SigningScenario Node for User Mode - It is nullable because Kernel-Mode Strict policy won't have this section
+            UMCI_SigningScenarioNode = SiPolicyNode.SelectSingleNode("ns:SigningScenarios/ns:SigningScenario[@Value='12']", NamespaceManager);
 
             // Find the SigningScenario Node for Kernel Mode
             KMCI_SigningScenarioNode = SiPolicyNode.SelectSingleNode("ns:SigningScenarios/ns:SigningScenario[@Value='131']", NamespaceManager)
                 ?? throw new InvalidOperationException("KMCI Signing Scenario node not found");
 
-            // Find the ProductSigners Node for User Mode
-            UMCI_ProductSignersNode = SiPolicyNode.SelectSingleNode("ns:SigningScenarios/ns:SigningScenario[@Value='12']/ns:ProductSigners", NamespaceManager)
-                ?? throw new InvalidOperationException("UMCI Product Signers node not found");
+            // Find the ProductSigners Node for User Mode - It is nullable because Kernel-Mode Strict policy won't have this section
+            UMCI_ProductSignersNode = SiPolicyNode.SelectSingleNode("ns:SigningScenarios/ns:SigningScenario[@Value='12']/ns:ProductSigners", NamespaceManager);
 
             // Find the ProductSigners Node for Kernel Mode
             KMCI_ProductSignersNode = SiPolicyNode.SelectSingleNode("ns:SigningScenarios/ns:SigningScenario[@Value='131']/ns:ProductSigners", NamespaceManager)

@@ -41,7 +41,7 @@ namespace WDACConfig
         /// <param name="level">Auto, FilePublisher, Publisher, Hash</param>
         /// <param name="publisherToHash">It will pass any publisher rules to the hash array. E.g when sandboxing-like behavior using Macros and AppIDs are used.</param>
         /// <returns></returns>
-        public static FileBasedInfoPackage BuildSignerAndHashObjects(List<FileIdentity> data, string level = "Auto", bool publisherToHash = false)
+        public static FileBasedInfoPackage BuildSignerAndHashObjects(List<FileIdentity> data, ScanLevels level = ScanLevels.FilePublisher, bool publisherToHash = false)
         {
             // To store the Signers created with FilePublisher Level
             List<FilePublisherSignerCreator> filePublisherSigners = [];
@@ -60,10 +60,10 @@ namespace WDACConfig
             Logger.Write("BuildSignerAndHashObjects: Starting the data separation process.");
 
             // Data separation based on the level
-            switch (level.ToLowerInvariant())
+            switch (level)
             {
                 // If Hash level is used then add everything to the Unsigned data so Hash rules will be created for them
-                case "hash":
+                case ScanLevels.Hash:
 
                     Logger.Write("BuildSignerAndHashObjects: Using only Hash level.");
 
@@ -73,14 +73,15 @@ namespace WDACConfig
                     break;
 
                 // If Publisher level is used then add all Signed data to the SignedPublisherData list and Unsigned data to the Hash list
-                case "publisher":
+                case ScanLevels.Publisher:
 
                     Logger.Write("BuildSignerAndHashObjects: Using Publisher -> Hash levels.");
 
                     foreach (FileIdentity item in data)
                     {
                         // If the current data is signed and publisherToHash is not used, which would indicate Hash level rules must be created for Publisher level data
-                        if (item.SignatureStatus is SignatureStatus.Signed && !publisherToHash)
+                        // And make sure the file is not ECC Signed
+                        if (item.SignatureStatus is SignatureStatus.Signed && !publisherToHash && item.IsECCSigned != true)
                         {
                             signedPublisherData.Add(item);
                         }
@@ -92,8 +93,9 @@ namespace WDACConfig
                     }
                     break;
 
-                // Detect and separate FilePublisher, Publisher and Hash (Unsigned) data if the level is Auto or FilePublisher
-                default:
+                case ScanLevels.FilePublisher:
+
+                    // Detect and separate FilePublisher, Publisher and Hash (Unsigned) data if the level is Auto or FilePublisher
 
                     Logger.Write("BuildSignerAndHashObjects: Using FilePublisher -> Publisher -> Hash levels.");
 
@@ -102,7 +104,7 @@ namespace WDACConfig
                     {
                         // If the file's version is empty or it has no file attribute, then add it to the Publishers array
                         // because FilePublisher rule cannot be created for it
-                        if (item.SignatureStatus is SignatureStatus.Signed)
+                        if (item.SignatureStatus is SignatureStatus.Signed && item.IsECCSigned != true)
                         {
                             // Get values from the item and check for null, empty or whitespace
                             bool hasNoFileAttributes = string.IsNullOrWhiteSpace(item.OriginalFileName) &&
@@ -138,6 +140,10 @@ namespace WDACConfig
                             unsignedData.Add(item);
                         }
                     }
+                    break;
+
+                default:
+
                     break;
             }
 

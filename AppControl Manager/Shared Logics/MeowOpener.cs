@@ -8,22 +8,23 @@ using System.Xml;
 namespace WDACConfig
 {
     // Declares a public static class that cannot be instantiated.
-    public static class MeowParser
+    public static partial class MeowParser
     {
-        // P/Invoke declaration to import the 'CryptAcquireContext' function from 'AdvApi32.dll'.
-        // https://learn.microsoft.com/en-us/windows/win32/api/wincrypt/nf-wincrypt-cryptacquirecontexta
-        [DllImport("AdvApi32.dll", CharSet = CharSet.Auto, SetLastError = true)]
-        internal static extern bool CryptAcquireContext(
-            out IntPtr MainCryptProviderHandle, // Output parameter to receive the handle of the cryptographic service provider.
-            [MarshalAs(UnmanagedType.LPWStr)] string Container, // The name of the key container within the cryptographic service provider.
-            [MarshalAs(UnmanagedType.LPWStr)] string Provider, // The name of the cryptographic service provider.
-            uint ProviderType, // The type of provider to acquire.
-            uint Flags); // Flags to control the function behavior.
+        // P/Invoke declaration to import the 'BCryptOpenAlgorithmProvider' function from 'bcrypt.dll'.
+        // https://learn.microsoft.com/en-us/windows/win32/api/bcrypt/nf-bcrypt-bcryptopenalgorithmprovider
+        [LibraryImport("bcrypt.dll", EntryPoint = "BCryptOpenAlgorithmProvider", SetLastError = true, StringMarshalling = StringMarshalling.Utf16)]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        internal static partial bool BCryptOpenAlgorithmProvider(
+            out IntPtr phAlgorithm, // Output parameter to receive the handle of the cryptographic algorithm.
+            string pszAlgId, // The algorithm identifier (e.g., AES, SHA256, etc.).
+            string? pszImplementation, // The implementation name (null for default).
+            uint dwFlags); // Flags to control the function behavior.
 
-        // P/Invoke declaration to import the 'CryptReleaseContext' function from 'AdvApi32.dll'.
-        // https://learn.microsoft.com/en-us/windows/win32/api/wincrypt/nf-wincrypt-cryptreleasecontext
-        [DllImport("AdvApi32.dll", CharSet = CharSet.Auto, SetLastError = true)]
-        internal static extern bool CryptReleaseContext(IntPtr MainCryptProviderHandle, uint Flags); // Releases the handle acquired by 'CryptAcquireContext'.
+        // P/Invoke declaration to import the 'BCryptCloseAlgorithmProvider' function from 'bcrypt.dll'.
+        // https://learn.microsoft.com/en-us/windows/win32/api/bcrypt/nf-bcrypt-bcryptclosealgorithmprovider
+        [LibraryImport("bcrypt.dll", EntryPoint = "BCryptCloseAlgorithmProvider", SetLastError = true)]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        internal static partial bool BCryptCloseAlgorithmProvider(IntPtr hAlgorithm, uint dwFlags); // Releases the algorithm handle acquired by 'BCryptOpenAlgorithmProvider'.
 
         // Defines a structure with sequential layout to match the native structure.
         // https://learn.microsoft.com/en-us/windows/win32/api/mscat/ns-mscat-cryptcatmember
@@ -39,8 +40,8 @@ namespace WDACConfig
             public uint MemberFlags; // Flags associated with the member.
             public IntPtr IndirectDataStructure; // Pointer to the indirect data structure.
             public uint CertVersion; // The certificate version.
-            private uint Reserved1; // Reserved for future use.
-            private IntPtr Reserved2; // Reserved for future use.
+            private readonly uint Reserved1; // Reserved for future use.
+            private readonly IntPtr Reserved2; // Reserved for future use.
         }
 
         // A public static method that returns a HashSet of strings.
@@ -62,12 +63,12 @@ namespace WDACConfig
 
             try
             {
-                // Attempts to acquire a cryptographic context.
-                if (!CryptAcquireContext(out MainCryptProviderHandle, string.Empty, string.Empty, 1, 4026531840))
+                // Attempts to acquire a cryptographic context using the CNG API.
+                if (!BCryptOpenAlgorithmProvider(out MainCryptProviderHandle, "SHA256", null, 0))
                 {
                     // If the context is not acquired, capture the error code.
                     int lastWin32Error = Marshal.GetLastWin32Error();
-                    Logger.Write($"CryptAcquireContext failed with error code: {lastWin32Error}");
+                    Logger.Write($"BCryptOpenAlgorithmProvider failed with error code: {lastWin32Error}");
                 }
 
                 // Opens the catalog file and gets a handle to the catalog context.
@@ -79,7 +80,6 @@ namespace WDACConfig
                     int lastWin32Error = Marshal.GetLastWin32Error();
                     Logger.Write($"CryptCATOpen failed with error code: {lastWin32Error}");
                 }
-
 
                 // Creates an XML element to represent the catalog file.
                 XmlElement catalogElement = PurrfectCatalogXMLDoc.CreateElement("MeowFile");
@@ -101,7 +101,7 @@ namespace WDACConfig
             {
                 // Releases the cryptographic context and closes the catalog context in the finally block to ensure resources are freed.
                 if (MainCryptProviderHandle != IntPtr.Zero)
-                    _ = CryptReleaseContext(MainCryptProviderHandle, 0);
+                    _ = BCryptCloseAlgorithmProvider(MainCryptProviderHandle, 0);
 
                 if (MeowLogHandle != IntPtr.Zero)
                     _ = WinTrust.CryptCATClose(MeowLogHandle);

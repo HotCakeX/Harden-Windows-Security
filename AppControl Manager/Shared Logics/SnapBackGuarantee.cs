@@ -9,6 +9,8 @@ namespace WDACConfig
     public static class SnapBackGuarantee
     {
 
+        private static readonly string savePath = Path.Combine(GlobalVars.UserConfigDir, "EnforcedModeSnapBack.cmd");
+
         /// <summary>
         /// A method that arms the system with a snapback guarantee in case of a reboot during the base policy enforcement process.
         /// This will help prevent the system from being stuck in audit mode in case of a power outage or a reboot during the base policy enforcement process.
@@ -158,7 +160,7 @@ namespace WDACConfig
             // Saving the EnforcedModeSnapBack.cmd file to the UserConfig directory in Program Files
             // It contains the instructions to revert the base policy to enforced mode
 
-            string savePath = Path.Combine(GlobalVars.UserConfigDir, "EnforcedModeSnapBack.cmd");
+
 
             string contentToBeSaved = $@"
 REM Deploying the Enforced Mode SnapBack CI Policy
@@ -178,6 +180,20 @@ del ""%~f0""
 
             // An alternative way to do this which is less reliable because RunOnce key can be deleted by 3rd party programs during installation etc.
 
+        }
+
+
+        /// <summary>
+        /// Removes the SnapBack guarantee scheduled task and the related .bat file
+        /// </summary>
+        public static void Remove()
+        {
+            TaskSchedulerHelper.Delete("EnforcedModeSnapBack", @"\", "");
+
+            if (Path.Exists(savePath))
+            {
+                File.Delete(savePath);
+            }
         }
     }
 }

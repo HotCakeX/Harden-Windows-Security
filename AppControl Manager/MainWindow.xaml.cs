@@ -1,8 +1,12 @@
+using Microsoft.UI;
+using Microsoft.UI.Composition.SystemBackdrops;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Media;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using static WDACConfig.AppSettings;
 
 namespace WDACConfig
 {
@@ -22,6 +26,18 @@ namespace WDACConfig
             // https://learn.microsoft.com/en-us/windows/windows-app-sdk/api/winrt/microsoft.ui.xaml.window.extendscontentintotitlebar
             // Make title bar Mica
             ExtendsContentIntoTitleBar = true;
+
+            // Subscribe to the global BackDrop change event
+            ThemeManager.BackDropChanged += OnBackgroundChanged;
+
+            // Subscribe to the NavigationView Content background change event
+            NavigationBackgroundManager.NavViewBackgroundChange += OnNavigationBackgroundChanged;
+
+            // Subscribe to the global NavigationView location change event
+            NavigationViewLocationManager.NavigationViewLocationChanged += OnNavigationViewLocationChanged;
+
+            // Subscribe to the global App theme change event
+            AppThemeManager.AppThemeChanged += OnAppThemeChanged;
 
             #region
 
@@ -75,6 +91,146 @@ namespace WDACConfig
             MainNavigation.Header = "Create Policy";
 
             PopulateMenuItems();
+
+
+            // Set the initial background setting based on the user's settings
+            OnNavigationBackgroundChanged(AppSettings.GetSetting<bool>(SettingKeys.NavViewBackground));
+
+            // Set the initial BackDrop setting based on the user's settings
+            OnBackgroundChanged(AppSettings.GetSetting<string>(SettingKeys.BackDropBackground));
+
+            // Set the initial App Theme based on the user's settings
+            OnAppThemeChanged(AppSettings.GetSetting<string>(SettingKeys.AppTheme));
+
+        }
+
+
+
+        /// <summary>
+        /// Event handler for the global NavigationView location change event
+        /// </summary>
+        /// <param name="newLocation"></param>
+        private void OnNavigationViewLocationChanged(string newLocation)
+        {
+            // Set the NavigationView's location based on the event
+            switch (newLocation)
+            {
+                case "Left":
+                    {
+                        // MainNavigation has no margins by default
+                        MainNavigation.Margin = new Thickness(0);
+
+                        MainNavigation.PaneDisplayMode = NavigationViewPaneDisplayMode.Left;
+                        break;
+                    }
+                case "Top":
+                    {
+                        // Needs some top margin when it's set to top
+                        MainNavigation.Margin = new Thickness(0, 40, 0, 0);
+
+                        MainNavigation.PaneDisplayMode = NavigationViewPaneDisplayMode.Top;
+                        break;
+                    }
+                default:
+                    {
+                        // MainNavigation has no margins by default
+                        MainNavigation.Margin = new Thickness(0);
+                        break;
+                    }
+            };
+
+        }
+
+
+        /// <summary>
+        /// Note: Keeping it transparent would probably not be good for accessibility.
+        /// Changing it during runtime is not possible without trigger a theme change: Light/Dark.
+        /// Application.RequestedTheme is read-only, so we us RootGrid which is the origin of all other elements.
+        /// </summary>
+        /// <param name="isBackgroundOn"></param>
+        private void OnNavigationBackgroundChanged(bool isBackgroundOn)
+        {
+            // Get the current theme
+            ElementTheme currentTheme = RootGrid.ActualTheme;
+
+            // Calculate the opposite theme
+            ElementTheme oppositeTheme = currentTheme == ElementTheme.Dark ? ElementTheme.Light : ElementTheme.Dark;
+
+            // Switch to opposite theme
+            RootGrid.RequestedTheme = oppositeTheme;
+
+            // Perform NavigationView background changes based on the settings' page's button
+            if (isBackgroundOn)
+            {
+                MainNavigation.Resources["NavigationViewContentBackground"] = new SolidColorBrush(Colors.Transparent);
+            }
+            else
+            {
+                _ = MainNavigation.Resources.Remove("NavigationViewContentBackground");
+            }
+
+            // Switch back to the current theme
+            RootGrid.RequestedTheme = currentTheme;
+        }
+
+
+
+
+
+        /// <summary>
+        /// Event handler for the global BackgroundChanged event. When user selects a different background for the app, this will be triggered.
+        /// </summary>
+        /// <param name="selectedBackdrop"></param>
+        private void OnBackgroundChanged(string? selectedBackdrop)
+        {
+            // Update the SystemBackdrop based on the selected background
+            // The Default is set in the XAML
+            switch (selectedBackdrop)
+            {
+                case "MicaAlt":
+                    this.SystemBackdrop = new MicaBackdrop { Kind = MicaKind.BaseAlt };
+                    break;
+                case "Mica":
+                    this.SystemBackdrop = new MicaBackdrop { Kind = MicaKind.Base };
+                    break;
+                case "Acrylic":
+                    this.SystemBackdrop = new DesktopAcrylicBackdrop();
+                    break;
+                default:
+                    break;
+            }
+        }
+
+
+
+        /// <summary>
+        /// Event handler for the global AppThemeChanged event
+        /// </summary>
+        /// <param name="newTheme"></param>
+        private void OnAppThemeChanged(string? newTheme)
+        {
+
+            // Get the current system color mode
+            // UISettings uiSettings = new();
+            // ElementTheme currentColorMode = uiSettings.GetColorValue(UIColorType.Background) == Colors.Black
+            //  ? ElementTheme.Dark
+            //  : ElementTheme.Light;
+
+
+            // Better approach that doesn't require instantiating a new UISettings object
+            ElementTheme currentColorMode = Application.Current.RequestedTheme == ApplicationTheme.Dark
+                ? ElementTheme.Dark
+                : ElementTheme.Light;
+
+
+            // Set the requested theme based on the event
+            // If "Use System Setting" is used, the current system color mode will be assigned which can be either light/dark
+            RootGrid.RequestedTheme = newTheme switch
+            {
+                "Light" => ElementTheme.Light,
+                "Dark" => ElementTheme.Dark,
+                _ => currentColorMode,
+            };
         }
 
 
@@ -157,6 +313,9 @@ namespace WDACConfig
         {
             if (args.SelectedItem is NavigationViewItem selectedItem)
             {
+                // Play sound for selection change
+                ElementSoundPlayer.Play(ElementSoundKind.MoveNext);
+
                 string selectedTag = selectedItem.Tag?.ToString()!;
                 NavigateToMenuItem(selectedTag);
             }
@@ -240,6 +399,9 @@ namespace WDACConfig
                      MainNavigation.DisplayMode == NavigationViewDisplayMode.Minimal))
                 */
 
+                // Play sound for back navigation
+                ElementSoundPlayer.Play(ElementSoundKind.GoBack);
+
                 ContentFrame.GoBack();
             }
         }
@@ -254,7 +416,9 @@ namespace WDACConfig
         {
             if (MainNavigation.SelectedItem is NavigationViewItem item)
             {
-                sender.Header = item.Content.ToString();
+
+                // Must be nullable because when NavigationViewPaneDisplayMode is top, this is null.
+                sender.Header = item.Content?.ToString();
             }
         }
 

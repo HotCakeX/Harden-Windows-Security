@@ -57,7 +57,7 @@ namespace WDACConfig
                 foreach (CryptographicAttributeObject signedAttribute in signerInfo.SignedAttributes)
                 {
                     // Checking if the OID value of the signed attribute matches the Opus SPC_SP_OPUS_INFO_OBJID
-                    if (string.Equals(signedAttribute.Oid.Value, Opus.SPC_SP_OPUS_INFO_OBJID, StringComparison.OrdinalIgnoreCase))
+                    if (string.Equals(signedAttribute.Oid.Value, Opus.SPC_SP_OPUS_INFO_OBJID, StringComparison.Ordinal))
                     {
                         // Initializing pcbStructInfo to 0
                         uint pcbStructInfo = 0;

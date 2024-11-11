@@ -16,15 +16,15 @@ namespace WDACConfig.IntelGathering
         /// Determines whether two FileIdentity instances are equal.
         /// The instances are considered equal if all six specified properties are the same.
         ///
-        /// 
+        ///
         /// Both FileIdentity Instances Are Null:
         /// Result: Equal(true).
         ///
-        /// 
+        ///
         /// One Instance Is Null:
         /// Result: Not equal(false).
         ///
-        /// 
+        ///
         /// Both Instances Are Not Null, with Some Properties Null:
         /// If a property is null in both instances, that property is considered equal.
         /// If a property is null in one instance but has a value in the other, that property is considered not equal.

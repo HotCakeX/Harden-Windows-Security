@@ -3,8 +3,8 @@ namespace WDACConfig
 {
     public class Program
     {
-        public static async void Main()
-        {         
+        public static void Main()
+        {
 
         }
     }

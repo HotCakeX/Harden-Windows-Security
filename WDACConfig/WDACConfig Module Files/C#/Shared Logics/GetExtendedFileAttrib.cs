@@ -40,18 +40,14 @@ namespace WDACConfig
         // Static method to get extended file info
         public static ExFileInfo GetExtendedFileInfo(string filePath)
         {
-            ExFileInfo ExFileInfo = new();
+            var ExFileInfo = new ExFileInfo();
 
             // Get the size of the version information block
             int versionInfoSize = GetFileVersionInfoSizeEx(FILE_VER_GET_NEUTRAL, filePath, out int handle);
-
-            if (versionInfoSize == 0)
-            {
-                return ExFileInfo;
-            }
+            if (versionInfoSize == 0) return ExFileInfo;
 
             // Allocate array for version data and retrieve it
-            byte[] versionData = new byte[versionInfoSize];
+            var versionData = new byte[versionInfoSize];
             if (!GetFileVersionInfoEx(FILE_VER_GET_NEUTRAL, filePath, handle, versionInfoSize, versionData))
                 return ExFileInfo;
 
@@ -96,7 +92,7 @@ namespace WDACConfig
                 return false;
 
             // Marshal the version info structure
-            FileVersionInfo fileInfo = Marshal.PtrToStructure<FileVersionInfo>(buffer);
+            var fileInfo = Marshal.PtrToStructure<FileVersionInfo>(buffer);
 
             // Construct Version object from version info
             version = new Version(
@@ -130,12 +126,10 @@ namespace WDACConfig
         // Get localized resource string based on encoding and locale
         private static string? GetLocalizedResource(Span<byte> versionBlock, string encoding, string locale, string resource)
         {
-            string[] encodings = [encoding, Cp1252FallbackCode, UnicodeFallbackCode];
-
-            foreach (string enc in encodings)
+            var encodings = new[] { encoding, Cp1252FallbackCode, UnicodeFallbackCode };
+            foreach (var enc in encodings)
             {
-                string subBlock = $"StringFileInfo\\{locale}{enc}{resource}";
-
+                var subBlock = $"StringFileInfo\\{locale}{enc}{resource}";
                 if (VerQueryValue(Marshal.UnsafeAddrOfPinnedArrayElement(versionBlock.ToArray(), 0), subBlock, out var buffer, out _))
                     return Marshal.PtrToStringAuto(buffer);
 

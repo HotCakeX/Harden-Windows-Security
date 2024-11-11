@@ -23,10 +23,15 @@ namespace WDACConfig
             baseNodes.Add(codeIntegrityPolicy.SiPolicyNode.SelectSingleNode("ns:EKUs", codeIntegrityPolicy.NamespaceManager)!);
             baseNodes.Add(codeIntegrityPolicy.SiPolicyNode.SelectSingleNode("ns:FileRules", codeIntegrityPolicy.NamespaceManager)!);
             baseNodes.Add(codeIntegrityPolicy.SiPolicyNode.SelectSingleNode("ns:Signers", codeIntegrityPolicy.NamespaceManager)!);
-            baseNodes.Add(codeIntegrityPolicy.UMCI_ProductSignersNode);
+
+            if (codeIntegrityPolicy.UMCI_ProductSignersNode is not null)
+            {
+                baseNodes.Add(codeIntegrityPolicy.UMCI_ProductSignersNode);
+            }
+
             baseNodes.Add(codeIntegrityPolicy.KMCI_ProductSignersNode);
 
-            XmlNode? fileRulesRefUMC = codeIntegrityPolicy.UMCI_ProductSignersNode.SelectSingleNode("ns:FileRulesRef", codeIntegrityPolicy.NamespaceManager);
+            XmlNode? fileRulesRefUMC = codeIntegrityPolicy.UMCI_ProductSignersNode?.SelectSingleNode("ns:FileRulesRef", codeIntegrityPolicy.NamespaceManager);
             if (fileRulesRefUMC is not null)
             {
                 baseNodes.Add(fileRulesRefUMC);

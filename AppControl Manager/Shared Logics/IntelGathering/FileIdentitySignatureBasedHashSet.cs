@@ -14,16 +14,16 @@ namespace WDACConfig.IntelGathering
     /// If the existing item is unsigned and the new item is signed: The unsigned item is removed, and the signed item is added to the set.
     /// If the existing item is already signed: The new item, signed or unsigned, will simply not be added because they are considered equal according to the FileIdentityComparer.
     /// </summary>
-    public sealed class FileIdentityCustomHashSet
+    public sealed class FileIdentitySignatureBasedHashSet
     {
         // A HashSet to store FileIdentity objects with a custom comparer.
         // This comparer defines equality based on selected properties in that comparer, ignoring SignatureStatus for now.
         private readonly HashSet<FileIdentity> _set;
 
         /// <summary>
-        /// Initializes a new instance of the FileIdentityCustomHashSet class.
+        /// Initializes a new instance of the FileIdentitySignatureBasedHashSet class.
         /// </summary>
-        public FileIdentityCustomHashSet()
+        public FileIdentitySignatureBasedHashSet()
         {
             _set = new HashSet<FileIdentity>(new FileIdentityComparer());
         }

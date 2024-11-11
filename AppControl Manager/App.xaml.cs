@@ -6,6 +6,7 @@ using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using Windows.ApplicationModel;
+using static WDACConfig.AppSettings;
 
 // To learn more about WinUI, the WinUI project structure,
 // and more about our project templates, see: http://aka.ms/winui-project-info.
@@ -30,6 +31,11 @@ namespace WDACConfig
         // Convert it to a normal Version object
         internal static readonly Version currentAppVersion = new(packageVersion.Major, packageVersion.Minor, packageVersion.Build, packageVersion.Revision);
 
+        // Check if another instance of AppControl Manager is running
+        private static bool IsUniqueAppInstance;
+
+        private static Mutex? _mutex;
+        private const string MutexName = "AppControlManagerRunning";
 
         /// <summary>
         /// Initializes the singleton application object. This is the first line of authored code
@@ -45,7 +51,53 @@ namespace WDACConfig
 
             // to handle unhandled exceptions
             this.UnhandledException += App_UnhandledException;
+
+
+            #region
+
+            // Check for the SoundSetting in the local settings
+            bool soundSetting = AppSettings.GetSetting<bool>(SettingKeys.SoundSetting);
+
+            if (soundSetting)
+            {
+                ElementSoundPlayer.State = ElementSoundPlayerState.On;
+                ElementSoundPlayer.SpatialAudioMode = ElementSpatialAudioMode.On;
+            }
+            else
+            {
+                ElementSoundPlayer.State = ElementSoundPlayerState.Off;
+                ElementSoundPlayer.SpatialAudioMode = ElementSpatialAudioMode.Off;
+            }
+
+            // Subscribe to the SoundSettingChanged event to listen for changes globally
+            SoundManager.SoundSettingChanged += OnSoundSettingChanged;
+
+            #endregion
+
         }
+
+
+
+        /// <summary>
+        /// Event handler for when the sound setting is changed.
+        /// </summary>
+        /// <param name="isSoundOn"></param>
+        private void OnSoundSettingChanged(bool isSoundOn)
+        {
+            // Set the global sound state based on the event
+            if (isSoundOn)
+            {
+                ElementSoundPlayer.State = ElementSoundPlayerState.On;
+                ElementSoundPlayer.SpatialAudioMode = ElementSpatialAudioMode.On;
+            }
+            else
+            {
+                ElementSoundPlayer.State = ElementSoundPlayerState.Off;
+                ElementSoundPlayer.SpatialAudioMode = ElementSpatialAudioMode.Off;
+            }
+        }
+
+
 
         /// <summary>
         /// Invoked when the application is launched.
@@ -53,6 +105,18 @@ namespace WDACConfig
         /// <param name="args">Details about the launch request and process.</param>
         protected override void OnLaunched(LaunchActivatedEventArgs args)
         {
+
+            // Creates a named Mutex with the specified unique name
+            // The first parameter specifies that this instance initially owns the Mutex if created successfully
+            // The third parameter indicates whether this application instance is the first/unique one
+            // If "IsUniqueAppInstance" is true, it means no other instance of the app is running; otherwise, another instance exists and it will be false
+            _mutex = new Mutex(true, MutexName, out IsUniqueAppInstance);
+
+            if (!IsUniqueAppInstance)
+            {
+                Logger.Write("There is another instance of the AppControl Manager running!");
+            }
+
             m_window = new MainWindow();
             m_window.Closed += Window_Closed;  // Assign event handler for the window closed event
             m_window.Activate();
@@ -87,12 +151,17 @@ namespace WDACConfig
         /// </summary>
         private void Window_Closed(object sender, WindowEventArgs e)
         {
-            // Clean up the staging area
-            if (Directory.Exists(GlobalVars.StagingArea))
+            // Clean up the staging area only if there are no other instance of the AppControl Manager running
+            // Don't want to disrupt their workflow
+            if (Directory.Exists(GlobalVars.StagingArea) && IsUniqueAppInstance)
             {
                 Directory.Delete(GlobalVars.StagingArea, true);
             }
+
+            // Release the Mutex
+            _mutex?.Dispose();
         }
+
 
         /// <summary>
         /// Displays a ContentDialog with the error message.

@@ -7,9 +7,9 @@ using System.Text;
 
 #pragma warning disable CA1838 // Avoid 'StringBuilder' parameters for P/Invoke methods
 
-namespace WDACConfig.IntelGathering
+namespace WDACConfig
 {
-    internal static class DriveLetterMapper
+    public static class DriveLetterMapper
     {
         // Importing the GetVolumePathNamesForVolumeNameW function from kernel32.dll
         [DllImport("kernel32.dll", SetLastError = true)]
@@ -41,7 +41,7 @@ namespace WDACConfig.IntelGathering
             int ucchMax);
 
         // Class to store drive mapping information
-        public sealed class DriveMapping
+        public class DriveMapping
         {
             // Property to store drive letter
             public string? DriveLetter { get; set; }
@@ -64,11 +64,11 @@ namespace WDACConfig.IntelGathering
             // Maximum buffer size for volume names, paths, and mount points
             uint max = 65535;
             // StringBuilder for storing volume names
-            StringBuilder sbVolumeName = new((int)max);
+            var sbVolumeName = new StringBuilder((int)max);
             // StringBuilder for storing path names
-            StringBuilder sbPathName = new((int)max);
+            var sbPathName = new StringBuilder((int)max);
             // StringBuilder for storing mount points
-            StringBuilder sbMountPoint = new((int)max);
+            var sbMountPoint = new StringBuilder((int)max);
             // Variable to store the length of the return string
             uint lpcchReturnLength = 0;
 
@@ -97,8 +97,7 @@ namespace WDACConfig.IntelGathering
                     // Add the drive mapping to the list
                     drives.Add(new DriveMapping
                     {
-                        // Doing replace here so instead of "C:\" we get "C:"
-                        DriveLetter = sbMountPoint.ToString().Replace(@":\", ":", StringComparison.OrdinalIgnoreCase),
+                        DriveLetter = sbMountPoint.ToString(),
                         VolumeName = volume,
                         DevicePath = sbPathName.ToString()
                     });

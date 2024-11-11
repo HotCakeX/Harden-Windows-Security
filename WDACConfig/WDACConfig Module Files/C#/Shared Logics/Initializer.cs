@@ -20,7 +20,7 @@ namespace WDACConfig
             using (RegistryKey key = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows NT\CurrentVersion") ?? throw new InvalidOperationException("Could not get the current Windows version from the registry"))
             {
                 object? ubrValue = key.GetValue("UBR");
-                if (ubrValue is not null && int.TryParse(ubrValue.ToString(), NumberStyles.Integer, CultureInfo.InvariantCulture, out int ubr))
+                if (ubrValue != null && int.TryParse(ubrValue.ToString(), NumberStyles.Integer, CultureInfo.InvariantCulture, out int ubr))
                 {
                     GlobalVars.UBR = ubr;
                 }

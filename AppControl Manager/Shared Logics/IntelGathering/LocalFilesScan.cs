@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
@@ -14,6 +13,8 @@ namespace WDACConfig.IntelGathering
 
         private const string WHQLOid = "1.3.6.1.4.1.311.10.3.5";
 
+        private const string ECCOID = "1.2.840.10045.2.1";
+
 
         public static HashSet<FileIdentity> Scan(List<FileInfo> files)
         {
@@ -24,6 +25,11 @@ namespace WDACConfig.IntelGathering
             foreach (FileInfo file in files)
             {
 
+                // To track whether ECC Signed signature has been detected or not
+                // Once it's been set to true, it won't be changed to false anymore for the current file
+                bool IsECCSigned = false;
+
+                // String path of the current file
                 string fileString = file.ToString();
 
                 #region Gather File information
@@ -58,7 +64,7 @@ namespace WDACConfig.IntelGathering
                     SHA256Hash = fileHashes.SHA256Authenticode,
                     SHA1PageHash = fileHashes.SHA1Page,
                     SHA256PageHash = fileHashes.SHA256Page,
-                    SISigningScenario = 0, // It should be actually detected instead of having static value!
+                    SISigningScenario = KernelModeDrivers.CheckKernelUserModeStatus(fileString).Verdict is UserOrKernelMode.UserMode ? 1 : 0,
                     OriginalFileName = ExtendedFileInfo.OriginalFileName,
                     InternalName = ExtendedFileInfo.InternalName,
                     FileDescription = ExtendedFileInfo.FileDescription,
@@ -115,7 +121,7 @@ namespace WDACConfig.IntelGathering
                         {
 
                             // See if the leaf certificate in the current signer has WHQL OID for its EKU
-                            bool WHQLConfirmed = package.LeafCertificate.Certificate.Extensions.OfType<X509EnhancedKeyUsageExtension>()
+                            bool WHQLConfirmed = package.LeafCertificate.Certificate!.Extensions.OfType<X509EnhancedKeyUsageExtension>()
                                    .Any(eku => eku.EnhancedKeyUsages.Cast<Oid>()
                                    .Any(oid => oid.Value is not null && oid.Value.Contains(WHQLOid, StringComparison.OrdinalIgnoreCase)));
 
@@ -137,6 +143,31 @@ namespace WDACConfig.IntelGathering
                                 EKUs = WHQLConfirmed ? WHQLOid : ekuOIDs.First() // If the Leaf certificate has WHQL EKU then assign that EKU's OID here, otherwise assign the first OID of the leaf certificate of the file.
                             };
 
+
+                            // Add the CN of the file's leaf certificate to the FilePublishers HashSet of the current FileIdentity
+                            if (package.LeafCertificate?.SubjectCN is not null)
+                            {
+                                _ = currentFileIdentity.FilePublishers.Add(package.LeafCertificate.SubjectCN);
+
+                                // Check to see if it hasn't already been determined that the file is ECC signed
+                                // We don't want to find an ECC signed certificate and then overwrite the property's value and set it to false by the next non-ECC signed certificate
+                                if (!IsECCSigned)
+                                {
+
+                                    // Check see if the file is ECC-Signed
+                                    currentFileIdentity.IsECCSigned = string.Equals(package.LeafCertificate.Certificate?.PublicKey?.EncodedKeyValue.Oid?.Value, ECCOID, StringComparison.OrdinalIgnoreCase);
+
+                                    if (currentFileIdentity.IsECCSigned == true)
+                                    {
+                                        // Set it to true so we don't search for ECC Signed certificates in other signers of the file
+                                        IsECCSigned = true;
+
+                                        Logger.Write($"ECC Signed File Detected: {currentFileIdentity.FilePath}. Will create Hash rules for it.");
+                                    }
+                                }
+                            }
+
+
                             _ = currentFileIdentity.FileSignerInfos.Add(signerInfo);
 
                         }
@@ -148,7 +179,7 @@ namespace WDACConfig.IntelGathering
 
 
                             // See if the root certificate in the current signer has WHQL OID for its EKU
-                            bool WHQLConfirmed = package.RootCertificate.Certificate.Extensions.OfType<X509EnhancedKeyUsageExtension>()
+                            bool WHQLConfirmed = package.RootCertificate.Certificate!.Extensions.OfType<X509EnhancedKeyUsageExtension>()
                                    .Any(eku => eku.EnhancedKeyUsages.Cast<Oid>()
                                    .Any(oid => oid.Value is not null && oid.Value.Contains(WHQLOid, StringComparison.OrdinalIgnoreCase)));
 
@@ -167,6 +198,31 @@ namespace WDACConfig.IntelGathering
                                 EKUs = WHQLConfirmed ? WHQLOid : ekuOIDs.First() // If the root certificate has WHQL EKU then assign that EKU's OID here, otherwise assign the first OID of the root certificate of the file.
                             };
 
+
+                            // Add the CN of the file's root certificate to the FilePublishers HashSet of the current FileIdentity
+                            if (package.RootCertificate.SubjectCN is not null)
+                            {
+                                _ = currentFileIdentity.FilePublishers.Add(package.RootCertificate.SubjectCN);
+
+
+                                // Check to see if it hasn't already been determined that the file is ECC signed
+                                // We don't want to find an ECC signed certificate and then overwrite the property's value and set it to false by the next non-ECC signed certificate
+                                if (!IsECCSigned)
+                                {
+                                    // Check see if the file is ECC-Signed
+                                    currentFileIdentity.IsECCSigned = string.Equals(package.RootCertificate.Certificate?.PublicKey?.EncodedKeyValue.Oid?.Value, ECCOID, StringComparison.OrdinalIgnoreCase);
+
+                                    if (currentFileIdentity.IsECCSigned == true)
+                                    {
+                                        // Set it to true so we don't search for ECC Signed certificates in other signers of the file
+                                        IsECCSigned = true;
+
+                                        Logger.Write($"ECC Signed File Detected: {currentFileIdentity.FilePath}. Will create Hash rules for it.");
+                                    }
+                                }
+
+                            }
+
                             _ = currentFileIdentity.FileSignerInfos.Add(signerInfo);
                         }
                     }
@@ -174,6 +230,7 @@ namespace WDACConfig.IntelGathering
 
                 // Add the current file's identity to the output HashSet
                 _ = fileIdentities.Add(currentFileIdentity);
+
             }
 
             return fileIdentities;

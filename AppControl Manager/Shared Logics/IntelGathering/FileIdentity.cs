@@ -40,7 +40,7 @@ namespace WDACConfig.IntelGathering
         public string? SHA256PageHash { get; set; } // 1st Page hash - Local file scanning provides this
         public string? SHA1FlatHash { get; set; } // Flat file hashes - Event logs provide this
         public string? SHA256FlatHash { get; set; } // Flat file hashes - Event logs provide this
-        public int SISigningScenario { get; set; } // Must be determined for local files using methods
+        public int SISigningScenario { get; set; } // 1 for user mode files - 0 for kernel mode files
         public string? OriginalFileName { get; set; }
         public string? InternalName { get; set; }
         public string? FileDescription { get; set; }
@@ -51,8 +51,20 @@ namespace WDACConfig.IntelGathering
         // Signer and certificate information with a custom comparer to ensure data with the same PublisherTBSHash and IssuerTBSHash do not exist
         public HashSet<FileSignerInfo> FileSignerInfos { get; set; } = new HashSet<FileSignerInfo>(new FileSignerInfoComparer());
 
+
+        // Just for display purposes, only contains CNs of the . FileSignerInfos is the one that has actual signing data.
+        public HashSet<string> FilePublishers { get; set; } = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+
+        // Computed property to join FilePublishers into a comma-separated string
+        public string FilePublishersToDisplay => string.Join(", ", FilePublishers);
+
         // If the file has a WHQL signer
         public bool? HasWHQLSigner { get; set; }
+
+
+        // Determines whether the file is signed by ECC algorithm or not
+        // AppControl does not support ECC Signed files yet
+        public bool? IsECCSigned { get; set; }
     }
 
 }

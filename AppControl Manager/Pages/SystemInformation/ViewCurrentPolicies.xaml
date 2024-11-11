@@ -28,8 +28,8 @@
                 </Style.Setters>
             </Style>
         </Grid.Resources>
-    
-        <Border Grid.Row="0" Margin="0,0,0,30" Style="{StaticResource GridCardStyle}" Padding="10">
+
+        <Border Grid.Row="0" Margin="0,0,0,15" Style="{StaticResource GridCardStyle}" Padding="10">
 
             <controls:WrapPanel Orientation="Horizontal" HorizontalAlignment="Center" HorizontalSpacing="12" VerticalSpacing="12">
 
@@ -37,11 +37,25 @@
                 <CheckBox x:Name="IncludeBasePolicies" Content="Base Policies" IsChecked="True" />
                 <CheckBox x:Name="IncludeSupplementalPolicies" Content="Supplemental Policies" IsChecked="True" />
 
-                <Button Name="RetrievePoliciesButton" Content="Retrieve Policies" Click="RetrievePoliciesButton_Click" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                <Button Name="RetrievePoliciesButton" Click="RetrievePoliciesButton_Click" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <Button.Content>
+                        <StackPanel Orientation="Horizontal">
+                            <FontIcon Glyph="&#xE72C;" />
+                            <TextBlock Text="Retrieve Policies" Margin="5,0,0,0" />
+                        </StackPanel>
+                    </Button.Content>
+                </Button>
 
                 <TextBlock Name="PoliciesCountTextBlock" Text="Number of Policies: 0" VerticalAlignment="Center" HorizontalAlignment="Center" />
 
-                <Button x:Name="RemoveUnsignedPolicy" Content="Remove Unsigned Policy" Click="RemoveUnsignedPolicy_Click" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                <Button x:Name="RemoveUnsignedPolicy" Click="RemoveUnsignedPolicy_Click" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <Button.Content>
+                        <StackPanel Orientation="Horizontal">
+                            <FontIcon Glyph="&#xE74D;" />
+                            <TextBlock Text="Remove Unsigned Policy" Margin="5,0,0,0" />
+                        </StackPanel>
+                    </Button.Content>
+                </Button>
 
                 <!-- Search Box for filtering policies -->
                 <TextBox x:Name="SearchBox" Width="300" PlaceholderText="Search policies..." TextChanged="SearchBox_TextChanged" VerticalAlignment="Center" />
@@ -50,7 +64,7 @@
 
         </Border>
 
-        <Border Grid.Row="1" Style="{StaticResource GridCardStyle}" Margin="0,0,0,25" Padding="5">
+        <Border Grid.Row="1" Style="{StaticResource GridCardStyle}" Margin="0" Padding="5">
 
             <tk7controls:DataGrid
         x:Name="DeployedPolicies"
@@ -71,7 +85,26 @@
         ScrollViewer.HorizontalScrollMode="Auto"
         SelectionChanged="DeployedPolicies_SelectionChanged"
         Sorting="DeployedPoliciesDataGrid_Sorting"
-        CanUserSortColumns="True">
+        CanUserSortColumns="True"
+        Loaded="DeployedPoliciesDataGrid_Loaded">
+                <tk7controls:DataGrid.ContextFlyout>
+                    <MenuFlyout>
+
+                        <MenuFlyoutItem Text="Copy Row" Click="DataGridFlyoutMenuCopy_Click">
+                            <MenuFlyoutItem.Icon>
+                                <FontIcon Glyph="&#xE8C8;" />
+                            </MenuFlyoutItem.Icon>
+                        </MenuFlyoutItem>
+
+                        <MenuFlyoutSubItem x:Name="CopyIndividualItemsSubMenu" Text="Copy Individual Items">
+                            <MenuFlyoutSubItem.Icon>
+                                <FontIcon Glyph="&#xE8C8;" />
+                            </MenuFlyoutSubItem.Icon>
+                            <!-- Dynamic items will be added here in the Loaded event handler -->
+                        </MenuFlyoutSubItem>
+
+                    </MenuFlyout>
+                </tk7controls:DataGrid.ContextFlyout>
                 <tk7controls:DataGrid.Columns>
                     <tk7controls:DataGridTextColumn Header="Policy ID" Binding="{Binding PolicyID}" Tag="PolicyID" Width="Auto"/>
                     <tk7controls:DataGridTextColumn Header="Base Policy ID" Binding="{Binding BasePolicyID}" Tag="BasePolicyID" Width="Auto"/>

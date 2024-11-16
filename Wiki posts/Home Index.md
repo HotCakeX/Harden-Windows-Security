@@ -6,6 +6,14 @@
 
 # [Harden Windows Security GitHub Wiki content](https://github.com/HotCakeX/Harden-Windows-Security/wiki)
 
+## <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/refs/heads/main/WDACConfig/icon.png" alt="AppControl Manager icon" width="50"> [AppControl Manager](https://github.com/HotCakeX/Harden-Windows-Security/wiki/AppControl-Manager)
+
+<br>
+
+## <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/wings/purplewings.gif" width="50"> [Harden‐Windows‐Security‐Module](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Harden%E2%80%90Windows%E2%80%90Security%E2%80%90Module)
+
+<br>
+
 ## <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/wings/pinkwings.gif" width="50"> [WDACConfig Module Main](https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDACConfig)
 
 - <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/wings/pinkwings.gif" width="35"> [New-WDACConfig](https://github.com/HotCakeX/Harden-Windows-Security/wiki/New-WDACConfig)
@@ -25,16 +33,7 @@
 - <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/wings/pinkwings.gif" width="35"> [Build-WDACCertificate](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Build-WDACCertificate)
 - <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/wings/pinkwings.gif" width="35"> [Test-CiPolicy](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Test-CiPolicy)
 - <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/wings/pinkwings.gif" width="35"> [Get-CiFileHashes](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Get-CiFileHashes) <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/PNG%20and%20JPG/New.png" alt="New Label" width="25">
-- <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/wings/pinkwings.gif" width="35"> [ConvertTo-WDACPolicy](https://github.com/HotCakeX/Harden-Windows-Security/wiki/ConvertTo-WDACPolicy) <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/PNG%20and%20JPG/New.png" alt="New Label" width="25">
 - <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/wings/pinkwings.gif" width="35"> [Get-CIPolicySetting](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Get-CIPolicySetting) <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/PNG%20and%20JPG/New.png" alt="New Label" width="25">
-
-<br>
-
-## <img src="https://raw.githubusercontent.com/HotCakeX/Harden-Windows-Security/refs/heads/main/WDACConfig/icon.png" alt="AppControl Manager icon" width="50"> [AppControl Manager](https://github.com/HotCakeX/Harden-Windows-Security/wiki/AppControl-Manager)
-
-<br>
-
-## <img src="https://raw.githubusercontent.com/HotCakeX/.github/main/Pictures/Gifs/wings/purplewings.gif" width="50"> [Harden‐Windows‐Security‐Module](https://github.com/HotCakeX/Harden-Windows-Security/wiki/Harden%E2%80%90Windows%E2%80%90Security%E2%80%90Module)
 
 <br>
 

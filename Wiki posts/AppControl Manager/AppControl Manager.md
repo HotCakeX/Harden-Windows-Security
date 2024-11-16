@@ -69,6 +69,11 @@ Please feel free to open a discussion if you have any questions about the build 
 * Self-updating the app
 * Displaying advanced Code Integrity information about the system
 * Complete App Control Simulation feature
+* Create policy from Microsoft Defender for Endpoint Advanced Hunting
+* Create policy from Local event logs
+* Create policy from EVTX files
+* Create policy by scanning local files
+* Change application appearance in multiple ways
 
 More features will come very quickly in the near future.
 

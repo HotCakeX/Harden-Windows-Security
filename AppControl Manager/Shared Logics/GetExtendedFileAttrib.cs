@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 
 namespace WDACConfig
 {
-    public sealed class ExFileInfo
+    public sealed partial class ExFileInfo
     {
         // Constants used for encoding fallback and error handling
         private const string UnicodeFallbackCode = "04B0";
@@ -23,16 +23,18 @@ namespace WDACConfig
 
         // Importing external functions from Version.dll to work with file version info
         // https://learn.microsoft.com/he-il/windows/win32/api/winver/nf-winver-getfileversioninfosizeexa
-        [DllImport("Version.dll", CharSet = CharSet.Unicode, SetLastError = true)]
-        private static extern int GetFileVersionInfoSizeEx(uint dwFlags, string filename, out int handle);
+        [LibraryImport("Version.dll", EntryPoint = "GetFileVersionInfoSizeExW", SetLastError = true, StringMarshalling = StringMarshalling.Utf16)]
+        private static partial int GetFileVersionInfoSizeEx(uint dwFlags, string filename, out int handle);
 
         // https://learn.microsoft.com/he-il/windows/win32/api/winver/nf-winver-verqueryvaluea
-        [DllImport("Version.dll", CharSet = CharSet.Unicode, SetLastError = true)]
-        private static extern bool VerQueryValue(IntPtr block, string subBlock, out IntPtr buffer, out int len);
+        [LibraryImport("Version.dll", EntryPoint = "VerQueryValueW", SetLastError = true, StringMarshalling = StringMarshalling.Utf16)]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        private static partial bool VerQueryValue(IntPtr block, string subBlock, out IntPtr buffer, out int len);
 
         // https://learn.microsoft.com/he-il/windows/win32/api/winver/nf-winver-getfileversioninfoexa
-        [DllImport("Version.dll", CharSet = CharSet.Unicode, SetLastError = true)]
-        private static extern bool GetFileVersionInfoEx(uint dwFlags, string filename, int handle, int len, byte[] data);
+        [LibraryImport("Version.dll", EntryPoint = "GetFileVersionInfoExW", SetLastError = true, StringMarshalling = StringMarshalling.Utf16)]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        private static partial bool GetFileVersionInfoEx(uint dwFlags, string filename, int handle, int len, [Out] byte[] data);
 
         // Private constructor to prevent direct instantiation
         private ExFileInfo() { }
@@ -40,14 +42,18 @@ namespace WDACConfig
         // Static method to get extended file info
         public static ExFileInfo GetExtendedFileInfo(string filePath)
         {
-            var ExFileInfo = new ExFileInfo();
+            ExFileInfo ExFileInfo = new();
 
             // Get the size of the version information block
             int versionInfoSize = GetFileVersionInfoSizeEx(FILE_VER_GET_NEUTRAL, filePath, out int handle);
-            if (versionInfoSize == 0) return ExFileInfo;
+
+            if (versionInfoSize == 0)
+            {
+                return ExFileInfo;
+            }
 
             // Allocate array for version data and retrieve it
-            var versionData = new byte[versionInfoSize];
+            byte[] versionData = new byte[versionInfoSize];
             if (!GetFileVersionInfoEx(FILE_VER_GET_NEUTRAL, filePath, handle, versionInfoSize, versionData))
                 return ExFileInfo;
 
@@ -92,7 +98,7 @@ namespace WDACConfig
                 return false;
 
             // Marshal the version info structure
-            var fileInfo = Marshal.PtrToStructure<FileVersionInfo>(buffer);
+            FileVersionInfo fileInfo = Marshal.PtrToStructure<FileVersionInfo>(buffer);
 
             // Construct Version object from version info
             version = new Version(
@@ -126,10 +132,12 @@ namespace WDACConfig
         // Get localized resource string based on encoding and locale
         private static string? GetLocalizedResource(Span<byte> versionBlock, string encoding, string locale, string resource)
         {
-            var encodings = new[] { encoding, Cp1252FallbackCode, UnicodeFallbackCode };
-            foreach (var enc in encodings)
+            string[] encodings = [encoding, Cp1252FallbackCode, UnicodeFallbackCode];
+
+            foreach (string enc in encodings)
             {
-                var subBlock = $"StringFileInfo\\{locale}{enc}{resource}";
+                string subBlock = $"StringFileInfo\\{locale}{enc}{resource}";
+
                 if (VerQueryValue(Marshal.UnsafeAddrOfPinnedArrayElement(versionBlock.ToArray(), 0), subBlock, out var buffer, out _))
                     return Marshal.PtrToStringAuto(buffer);
 

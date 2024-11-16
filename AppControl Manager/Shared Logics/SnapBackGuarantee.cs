@@ -9,6 +9,8 @@ namespace WDACConfig
     public static class SnapBackGuarantee
     {
 
+        private static readonly string savePath = Path.Combine(GlobalVars.UserConfigDir, "EnforcedModeSnapBack.cmd");
+
         /// <summary>
         /// A method that arms the system with a snapback guarantee in case of a reboot during the base policy enforcement process.
         /// This will help prevent the system from being stuck in audit mode in case of a power outage or a reboot during the base policy enforcement process.
@@ -26,7 +28,7 @@ namespace WDACConfig
             Logger.Write("Creating the scheduled task for Snap Back Guarantee");
 
             // Initialize ManagementScope to interact with Task Scheduler's WMI namespace
-            var scope = new ManagementScope(@"root\Microsoft\Windows\TaskScheduler");
+            ManagementScope scope = new(@"root\Microsoft\Windows\TaskScheduler");
             // Establish connection to the WMI namespace
             scope.Connect();
 
@@ -35,7 +37,7 @@ namespace WDACConfig
             using ManagementClass actionClass = new(scope, new ManagementPath("PS_ScheduledTask"), null);
 
             // Prepare method parameters for creating the task action
-            var actionInParams = actionClass.GetMethodParameters("NewActionByExec");
+            ManagementBaseObject actionInParams = actionClass.GetMethodParameters("NewActionByExec");
             actionInParams["Execute"] = "cmd.exe";
 
             // The PowerShell command to run, downloading and deploying the drivers block list
@@ -97,7 +99,7 @@ namespace WDACConfig
             }
 
             // Extract CIM instance for further use in task registration
-            var triggerCimInstance = (ManagementBaseObject)triggerResult["cmdletOutput"];
+            ManagementBaseObject triggerCimInstance = (ManagementBaseObject)triggerResult["cmdletOutput"];
             #endregion
 
 
@@ -142,7 +144,7 @@ namespace WDACConfig
             registerInParams["TaskName"] = "EnforcedModeSnapBack";
 
             // Execute the WMI method to register the task
-            var registerResult = registerClass.InvokeMethod("RegisterByPrincipal", registerInParams, null);
+            ManagementBaseObject registerResult = registerClass.InvokeMethod("RegisterByPrincipal", registerInParams, null);
 
             // Check if the task was registered successfully
             if ((uint)registerResult["ReturnValue"] != 0)
@@ -158,7 +160,7 @@ namespace WDACConfig
             // Saving the EnforcedModeSnapBack.cmd file to the UserConfig directory in Program Files
             // It contains the instructions to revert the base policy to enforced mode
 
-            string savePath = Path.Combine(GlobalVars.UserConfigDir, "EnforcedModeSnapBack.cmd");
+
 
             string contentToBeSaved = $@"
 REM Deploying the Enforced Mode SnapBack CI Policy
@@ -178,6 +180,20 @@ del ""%~f0""
 
             // An alternative way to do this which is less reliable because RunOnce key can be deleted by 3rd party programs during installation etc.
 
+        }
+
+
+        /// <summary>
+        /// Removes the SnapBack guarantee scheduled task and the related .bat file
+        /// </summary>
+        public static void Remove()
+        {
+            TaskSchedulerHelper.Delete("EnforcedModeSnapBack", @"\", "");
+
+            if (Path.Exists(savePath))
+            {
+                File.Delete(savePath);
+            }
         }
     }
 }

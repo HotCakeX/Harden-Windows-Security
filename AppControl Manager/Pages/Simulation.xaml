@@ -13,12 +13,13 @@
     xmlns:tk7controls="using:CommunityToolkit.WinUI.UI.Controls"
     mc:Ignorable="d">
 
-    <Grid Margin="20,30,20,20" TabFocusNavigation="Cycle">
+    <Grid TabFocusNavigation="Cycle">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
+
         <Grid.Resources>
             <Style x:Key="GridCardStyle" TargetType="Border">
                 <Style.Setters>
@@ -30,14 +31,32 @@
             </Style>
         </Grid.Resources>
 
-        <TextBlock Text="Application Control Policy Simulation" Style="{StaticResource TitleTextBlockStyle}" Margin="15" Grid.Row="0"/>
+
+        <controls:WrapPanel Grid.Row="0" VerticalSpacing="4" HorizontalSpacing="4" Orientation="Horizontal" Margin="6,10,6,10">
+
+            <TextBlock
+TextWrapping="WrapWholeWords"
+Style="{StaticResource BodyTextBlockStyle}">
+
+<Span>
+    Perform <Italic>App Control for Business</Italic>
+        <Run Foreground="{ThemeResource SystemAccentColor}">Simulation</Run>
+    by selecting files or folders, and a XML policy file, then use the
+    <Underline><Bold>Begin Simulation</Bold></Underline> button to populate the data grid.
+     The results will show you whether the selected files would be allowed or blocked by your App Control policy if it was actually deployed on a system and those files were run.
+</Span>
+            </TextBlock>
+
+
+            <HyperlinkButton Content="Watch the YouTube video for guidance" NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security"  />
+        </controls:WrapPanel>
 
         <Border
             Grid.Row="1"
-            Margin="0,0,0,30"
-            Style="{StaticResource GridCardStyle}" Padding="10">
+            Margin="0,10,0,10"
+            Style="{StaticResource GridCardStyle}" Padding="8">
 
-            <controls:WrapPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalSpacing="15" VerticalSpacing="15">
+            <controls:WrapPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalSpacing="10" VerticalSpacing="10">
                 <!-- Begin Simulation Button -->
                 <Button x:Name="BeginSimulationButton" ToolTipService.ToolTip="Start the Simulation using the selected configurations" Style="{StaticResource AccentButtonStyle}" Click="BeginSimulationButton_Click">
                     <StackPanel Orientation="Horizontal">
@@ -71,29 +90,54 @@
                     </StackPanel>
                 </Button>
 
-                <!-- Cat Root Paths Button -->
-                <Button Click="CatRootPathsButton_Click" ToolTipService.ToolTip="Provide path(s) to directories where security catalog .cat files are located. If not provided, the default path is C:\Windows\System32\CatRoot">
-                    <StackPanel Orientation="Horizontal">
-                        <FontIcon Glyph="&#xED25;" />
-                        <TextBlock Text="Cat Root Paths" Margin="5,0,0,0"/>
-                    </StackPanel>
-                </Button>
 
-                <!-- Toggle Button for No Cat Root Scanning -->
-                <ToggleButton x:Name="NoCatRootScanningToggle" ToolTipService.ToolTip="Will not scan the security catalogs on the system">
-                    <StackPanel Orientation="Horizontal">
-                        <FontIcon Glyph="&#xEB95;" />
-                        <TextBlock Text="No Cat Root Scanning" Margin="5,0,0,0"/>
-                    </StackPanel>
-                </ToggleButton>
 
-                <!-- Toggle Button for CSV Output -->
-                <ToggleButton x:Name="CSVOutputToggle" ToolTipService.ToolTip="Exports the output to a CSV file in the WDACConfig directory in the Program Files directory at the end of the simulation job.">
-                    <StackPanel Orientation="Horizontal">
-                        <FontIcon Glyph="&#xE9F9;" />
-                        <TextBlock Text="Save output to CSV" Margin="5,0,0,0"/>
-                    </StackPanel>
-                </ToggleButton>
+
+                <DropDownButton Content="Options" ToolTipService.ToolTip="Multiple Extra Options">
+                    <DropDownButton.Flyout>
+
+                        <MenuFlyout Placement="Bottom">
+
+                            <!-- Cat Root Paths Button -->
+                            <MenuFlyoutItem Text="Cat Root Paths" Click="CatRootPathsButton_Click" ToolTipService.ToolTip="Provide path(s) to directories where security catalog .cat files are located. If not provided, the default path is C:\Windows\System32\CatRoot">
+                                <MenuFlyoutItem.Icon>
+                                    <FontIcon Glyph="&#xED25;"/>
+                                </MenuFlyoutItem.Icon>
+                            </MenuFlyoutItem>
+
+                            <MenuFlyoutSeparator/>
+
+                            <!-- Toggle Button for No Cat Root Scanning -->
+                            <ToggleMenuFlyoutItem IsChecked="True" x:Name="NoCatRootScanningToggle" Text="No Cat Root Scanning" Click="ClearDataButton_Click"  ToolTipService.ToolTip="Will not scan the security catalogs on the system">
+                                <MenuFlyoutItem.Icon>
+                                    <FontIcon Glyph="&#xEB95;" />
+                                </MenuFlyoutItem.Icon>
+                            </ToggleMenuFlyoutItem>
+
+                            <MenuFlyoutSeparator/>
+
+                            <!-- Toggle Button for CSV Output -->
+                            <ToggleMenuFlyoutItem x:Name="CSVOutputToggle" Text="Save output to CSV" IsChecked="False" ToolTipService.ToolTip="Exports the output to a CSV file in the WDACConfig directory in the Program Files directory at the end of the simulation job.">
+                                <ToggleMenuFlyoutItem.Icon>
+                                    <FontIcon Glyph="&#xE9F9;" />
+                                </ToggleMenuFlyoutItem.Icon>
+
+                            </ToggleMenuFlyoutItem>
+
+                            <MenuFlyoutSeparator/>
+
+                            <!-- Clear Data Button -->
+                            <MenuFlyoutItem Text="Clear Data" Click="ClearDataButton_Click" ToolTipService.ToolTip="Clears all of the displayed data">
+                                <MenuFlyoutItem.Icon>
+                                    <SymbolIcon Symbol="Delete" />
+                                </MenuFlyoutItem.Icon>
+                            </MenuFlyoutItem>
+
+                        </MenuFlyout>
+
+                    </DropDownButton.Flyout>
+                </DropDownButton>
+
 
                 <!-- Scalability Button with RadialGauge Flyout -->
                 <Button x:Name="ScalabilityButton" Content="Scalability" ToolTipService.ToolTip="The number of the concurrent/parallel tasks to use when performing App Control Simulation. By default it uses 2 parallel tasks.">
@@ -120,14 +164,6 @@
                     </Button.Flyout>
                 </Button>
 
-                <!-- Clear Data Button -->
-                <Button Click="ClearDataButton_Click" ToolTipService.ToolTip="Clears all of the displayed data">
-                    <StackPanel Orientation="Horizontal">
-                        <SymbolIcon Symbol="Delete" />
-                        <TextBlock Text="Clear Data" Margin="5,0,0,0"/>
-                    </StackPanel>
-                </Button>
-
                 <ProgressBar x:Name="SimulationProgressBar" Width="200" Value="0" ToolTipService.ToolTip="The Simulation progress" />
 
                 <TextBox PlaceholderText="Total count of the files"
@@ -136,7 +172,7 @@
                          VerticalAlignment="Center"
                          VerticalContentAlignment="Center" ToolTipService.ToolTip="The total number of the files that participated in the last Simulation job"/>
 
-                <TextBox x:Name="SearchBox" Width="300" PlaceholderText="Search data..." TextChanged="SearchBox_TextChanged" Margin="10" VerticalAlignment="Center" VerticalContentAlignment="Center" ToolTipService.ToolTip="Search the data, not all fields are included. To perform search in all fields such as hashes, export the results to CSV and then use VS Code." />
+                <TextBox x:Name="SearchBox" Width="300" PlaceholderText="Search data..." TextChanged="SearchBox_TextChanged" VerticalAlignment="Center" VerticalContentAlignment="Center" ToolTipService.ToolTip="Search the data, not all fields are included. To perform search in all fields such as hashes, export the results to CSV and then use VS Code." />
 
             </controls:WrapPanel>
         </Border>
@@ -161,7 +197,30 @@
                 ScrollViewer.VerticalScrollMode="Auto"
                 ScrollViewer.HorizontalScrollMode="Auto"
                 Sorting="SimulationDataGrid_Sorting"
-                CanUserSortColumns="True">
+                CanUserSortColumns="True"
+                Loaded="SimulationDataGrid_Loaded">
+
+                <!-- Context Menu for Copy/Delete Options -->
+                <tk7controls:DataGrid.ContextFlyout>
+                    <MenuFlyout>
+
+                        <MenuFlyoutItem Text="Copy Row" Click="SimulationDataGrid_CopyRow_Click">
+                            <MenuFlyoutItem.Icon>
+                                <FontIcon Glyph="&#xE8C8;" />
+                            </MenuFlyoutItem.Icon>
+                        </MenuFlyoutItem>
+
+                        <MenuFlyoutSubItem x:Name="CopyIndividualItemsSubMenu" Text="Copy Individual Items">
+                            <MenuFlyoutSubItem.Icon>
+                                <FontIcon Glyph="&#xE8C8;" />
+                            </MenuFlyoutSubItem.Icon>
+                            <!-- Dynamic items will be added here in the Loaded event handler -->
+                        </MenuFlyoutSubItem>
+
+                    </MenuFlyout>
+                </tk7controls:DataGrid.ContextFlyout>
+
+                <!-- DataGrid Columns -->
                 <tk7controls:DataGrid.Columns>
                     <tk7controls:DataGridTextColumn Header="Path" Binding="{Binding Path}" Width="Auto"/>
                     <tk7controls:DataGridTextColumn Header="Source" Binding="{Binding Source}" Width="Auto"/>

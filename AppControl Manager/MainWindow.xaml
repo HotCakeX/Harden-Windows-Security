@@ -58,32 +58,44 @@
         <NavigationView x:Name="MainNavigation"
                     IsTabStop="True"
                     SelectionChanged="NavigationView_SelectionChanged"
-                    PaneTitle="Menu">
+                    PaneTitle="Menu"
+                    IsBackButtonVisible="Auto"
+                    IsBackEnabled="True"
+                    BackRequested="NavView_BackRequested"
+                    ItemInvoked="NavigationView_ItemInvoked"
+                    AlwaysShowHeader="True">
+
+            <!--
+             Being controlled from MainWindow.xaml.cs
+
+            <NavigationView.Resources>
+                <SolidColorBrush x:Key="NavigationViewContentBackground" Color="Transparent" />
+            </NavigationView.Resources>
+
+            -->
+
+            <NavigationView.AutoSuggestBox>
+                <AutoSuggestBox x:Name="SearchBox"
+                        QueryIcon="Find"
+                        AutomationProperties.Name="Search"
+                        TextChanged="SearchBox_TextChanged"
+                        SuggestionChosen="SearchBox_SuggestionChosen"
+                        PlaceholderText="Search menu items..."/>
+            </NavigationView.AutoSuggestBox>
+
+            <!--
+            <NavigationView.PaneCustomContent>
+                <HyperlinkButton x:Name="PaneHyperlink" Content="More info" Margin="12,0" Visibility="Visible" />
+            </NavigationView.PaneCustomContent>
+            -->
+
             <NavigationView.MenuItems>
-                <NavigationViewItem Content="Create Policy" ToolTipService.ToolTip="Create Policy" Tag="CreatePolicy">
+                <NavigationViewItem Content="Create Policy" ToolTipService.ToolTip="Create AppControl Policies with different characteristics" Tag="CreatePolicy">
                     <!-- Some icons displayed in the WinUI 3 Gallery app aren't usable in the Icon property so have to be set using Glyph -->
                     <NavigationViewItem.Icon>
                         <FontIcon Glyph="&#xE83D;" />
                     </NavigationViewItem.Icon>
 
-                    <!--
-                Example of sub-menus
-
-                <NavigationViewItem.MenuItems>
-                    <NavigationViewItem Content="Recommended Block Rules" Icon="Download" ToolTipService.ToolTip="Microsoft Recommended Block Rules" Tag="BlockRules"/>
-                </NavigationViewItem.MenuItems>
-                -->
-
-                </NavigationViewItem>
-                <NavigationViewItem Content="Get Code Integrity Hashes" ToolTipService.ToolTip="Get Code Integrity Hashes of files" Tag="GetCIHashes">
-                    <NavigationViewItem.Icon>
-                        <FontIcon Glyph="&#xE950;" />
-                    </NavigationViewItem.Icon>
-                </NavigationViewItem>
-                <NavigationViewItem Content="Get Secure Policy Settings" ToolTipService.ToolTip="Get the secure policy settings among the deployed policies" Tag="GetSecurePolicySettings">
-                    <NavigationViewItem.Icon>
-                        <FontIcon Glyph="&#xEEA3;" />
-                    </NavigationViewItem.Icon>
                 </NavigationViewItem>
 
                 <NavigationViewItem Content="System Information" Icon="Flag" ToolTipService.ToolTip="View information about the system" Tag="SystemInformation"/>
@@ -100,21 +112,60 @@
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>
 
-                <NavigationViewItem Content="Logs" ToolTipService.ToolTip="View the application logs in real time" Tag="Logs">
+                <NavigationViewItem Content="Allow New Apps" ToolTipService.ToolTip="Allow new apps or programs that are being blocked from installation or are already installed but are being blocked from running." Tag="AllowNewApps">
                     <NavigationViewItem.Icon>
-                        <FontIcon Glyph="&#xF5A0;" />
+                        <FontIcon Glyph="&#xED35;" />
                     </NavigationViewItem.Icon>
                 </NavigationViewItem>
 
-                <NavigationViewItemHeader Content="Documentation"/>
+                    <!-- Make it expanded by default to show the import feature to the user at first sight -->
+                    <NavigationViewItem IsExpanded="True" Content="Create policy from Event Logs" ToolTipService.ToolTip="Create AppControl policy either from the local event logs or EVTX files" Tag="EventLogsPolicyCreation">
+                        <NavigationViewItem.Icon>
+                            <FontIcon Glyph="&#xEA18;" />
+                        </NavigationViewItem.Icon>
 
-                <NavigationViewItem Content="GitHub Documentation" Icon="Document" ToolTipService.ToolTip="Get online documentations from GitHub about how to use the application" Tag="GitHubDocumentation" />
-                <NavigationViewItem Content="Microsoft Documentation" Icon="Document" ToolTipService.ToolTip="Get online documentations from Microsoft about App Control for Business policies" Tag="MicrosoftDocumentation" />
+
+                        <NavigationViewItem.MenuItems>
+                            <NavigationViewItem Content="Create policy from MDE Advanced Hunting" ToolTipService.ToolTip="Create AppControl policy from Microsoft Defender for Endpoint (MDE) Advanced Hunting Logs" Tag="MDEAHPolicyCreation">
+                                <NavigationViewItem.Icon>
+                                    <FontIcon Glyph="&#xEB44;" />
+                                </NavigationViewItem.Icon>
+                            </NavigationViewItem>
+
+                        </NavigationViewItem.MenuItems>
+
+                    </NavigationViewItem>
+
+                    <NavigationViewItemSeparator/>
+
+                    <NavigationViewItem Content="Get Code Integrity Hashes" ToolTipService.ToolTip="Get Code Integrity Hashes of files" Tag="GetCIHashes">
+                        <NavigationViewItem.Icon>
+                            <FontIcon Glyph="&#xE950;" />
+                        </NavigationViewItem.Icon>
+                    </NavigationViewItem>
+                    <NavigationViewItem Content="Get Secure Policy Settings" ToolTipService.ToolTip="Get the secure policy settings among the deployed policies" Tag="GetSecurePolicySettings">
+                        <NavigationViewItem.Icon>
+                            <FontIcon Glyph="&#xEEA3;" />
+                        </NavigationViewItem.Icon>
+                    </NavigationViewItem>
+
+                    <!-- These are still considered footer so any actual menu item must be placed above them -->
+
+                    <NavigationViewItem Content="Logs" ToolTipService.ToolTip="View the application logs in real time" Tag="Logs">
+                        <NavigationViewItem.Icon>
+                            <FontIcon Glyph="&#xF5A0;" />
+                        </NavigationViewItem.Icon>
+                    </NavigationViewItem>
+
+                    <NavigationViewItemHeader Content="Documentation"/>
+
+                    <NavigationViewItem Content="GitHub Documentation" Icon="Document" ToolTipService.ToolTip="Get online documentations from GitHub about how to use the application" Tag="GitHubDocumentation" />
+                    <NavigationViewItem Content="Microsoft Documentation" Icon="Document" ToolTipService.ToolTip="Get online documentations from Microsoft about App Control for Business policies" Tag="MicrosoftDocumentation" />
 
             </NavigationView.MenuItems>
 
             <NavigationView.FooterMenuItems>
-                
+
                 <NavigationViewItem Content="Update" ToolTipService.ToolTip="Check for updates" Tag="Update">
                     <NavigationViewItem.Icon>
                         <FontIcon Glyph="&#xEB52;" />
@@ -134,7 +185,8 @@
 
             </NavigationView.FooterMenuItems>
 
-            <Frame x:Name="ContentFrame" />
+            <!-- Global margin settings for every page -->
+            <Frame x:Name="ContentFrame" Margin="15,15,15,10" />
         </NavigationView>
     </Grid>
 </Window>

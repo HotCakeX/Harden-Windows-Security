@@ -8,7 +8,7 @@ using System.Xml;
 
 namespace WDACConfig
 {
-    public static class GetFileRuleOutput
+    public partial class GetFileRuleOutput
     {
         /// <summary>
         /// A function that accepts an App Control policy XML content and creates an output array that contains the file rules that are based on file hashes.
@@ -26,7 +26,7 @@ namespace WDACConfig
             nsmgr.AddNamespace("si", "urn:schemas-microsoft-com:sipolicy");
 
             // Loop through each file rule in the XML file
-            var fileRules = xml.SelectNodes("//si:FileRules/si:Allow", nsmgr);
+            XmlNodeList? fileRules = xml.SelectNodes("//si:FileRules/si:Allow", nsmgr);
             if (fileRules is not null)
             {
                 foreach (XmlNode fileRule in fileRules)
@@ -34,18 +34,18 @@ namespace WDACConfig
                     if (fileRule.Attributes is not null)
                     {
                         // Extract the hash value from the Hash attribute
-                        var hashValue = fileRule.Attributes["Hash"]?.InnerText;
+                        string? hashValue = fileRule.Attributes["Hash"]?.InnerText;
 
                         // Extract the hash type and file path from the FriendlyName attribute using regex
-                        var friendlyName = fileRule.Attributes["FriendlyName"]?.InnerText;
+                        string? friendlyName = fileRule.Attributes["FriendlyName"]?.InnerText;
                         if (!string.IsNullOrEmpty(friendlyName))
                         {
                             // Extract the hash type from the FriendlyName attribute using regex
-                            var hashTypeMatch = Regex.Match(friendlyName, @".* (Hash (Sha1|Sha256|Page Sha1|Page Sha256|Authenticode SIP Sha256))$", RegexOptions.IgnoreCase);
-                            var hashType = hashTypeMatch.Success ? hashTypeMatch.Groups[1].Value : string.Empty;
+                            Match hashTypeMatch = MyRegex().Match(friendlyName);
+                            string hashType = hashTypeMatch.Success ? hashTypeMatch.Groups[1].Value : string.Empty;
 
                             // Extract the file path from the FriendlyName attribute using regex
-                            var filePathForHash = Regex.Replace(friendlyName, @" (Hash (Sha1|Sha256|Page Sha1|Page Sha256|Authenticode SIP Sha256))$", string.Empty, RegexOptions.IgnoreCase);
+                            string filePathForHash = MyRegex1().Replace(friendlyName, string.Empty);
 
                             // Add the extracted values of the current Hash rule to the output HashSet
                             if (!string.IsNullOrEmpty(hashValue) && !string.IsNullOrEmpty(hashType) && !string.IsNullOrEmpty(filePathForHash))
@@ -65,5 +65,12 @@ namespace WDACConfig
             // Return the output HashSet
             return outputHashInfoProcessing;
         }
+
+        [GeneratedRegex(@".* (Hash (Sha1|Sha256|Page Sha1|Page Sha256|Authenticode SIP Sha256))$", RegexOptions.Compiled | RegexOptions.IgnoreCase)]
+        private static partial Regex MyRegex();
+
+        [GeneratedRegex(@" (Hash (Sha1|Sha256|Page Sha1|Page Sha256|Authenticode SIP Sha256))$", RegexOptions.Compiled | RegexOptions.IgnoreCase)]
+        private static partial Regex MyRegex1();
+
     }
 }

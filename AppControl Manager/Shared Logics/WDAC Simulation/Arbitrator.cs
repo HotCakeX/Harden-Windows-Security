@@ -59,7 +59,8 @@ namespace WDACConfig
                     // Check if any of the Signer's OIDs match any of the file's certificates' OIDs (which are basically Leaf certificates' EKU OIDs)
                     // This is used for all levels, not just WHQL levels
                     bool EKUsMatch = false;
-                    foreach (var EKU in signer.CertEKU!)
+
+                    foreach (string EKU in signer.CertEKU!)
                     {
                         if (simulationInput.EKUOIDs is not null && simulationInput.EKUOIDs.Contains(EKU))
                         {
@@ -101,7 +102,7 @@ namespace WDACConfig
                             // Loop through each candidate WHQL chain package
                             foreach (ChainPackage chainPackage in WHQLChainPackagesCandidates)
                             {
-                                List<string>? CurrentOpusData = [];
+                                List<string> CurrentOpusData = [];
 
                                 try
                                 {

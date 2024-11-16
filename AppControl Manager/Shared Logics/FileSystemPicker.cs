@@ -30,7 +30,7 @@ namespace WDACConfig
                 dialog.SetTitle(title);
 
                 // Create the file type filters based on the passed parameters
-                if (filters != null && filters.Length > 0)
+                if (filters is not null && filters.Length > 0)
                 {
                     COMDLG_FILTERSPEC[] filterSpecs = new COMDLG_FILTERSPEC[filters.Length];
                     for (int i = 0; i < filters.Length; i++)
@@ -97,7 +97,7 @@ namespace WDACConfig
             {
                 dialog.SetTitle(title);
 
-                if (filters != null && filters.Length > 0)
+                if (filters is not null && filters.Length > 0)
                 {
                     COMDLG_FILTERSPEC[] filterSpecs = new COMDLG_FILTERSPEC[filters.Length];
                     for (int i = 0; i < filters.Length; i++)

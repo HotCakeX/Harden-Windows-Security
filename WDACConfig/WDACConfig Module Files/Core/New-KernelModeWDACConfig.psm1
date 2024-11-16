@@ -363,11 +363,15 @@ Function New-KernelModeWDACConfig {
 
                             # Deploy the policy if Deploy parameter is used
                             if ($Deploy) {
+
+                                <#
+
                                 [WDACConfig.Logger]::Write('Making sure the current Windows build can work with the NoFlightRoots Strict WDAC Policy')
 
                                 if (!([WDACConfig.InvokeWDACSimulation]::Invoke('C:\Windows\System32\ntoskrnl.exe', $FinalEnforcedPolicyPath, $true))) {
                                     Throw 'The current Windows build cannot work with the NoFlightRoots Strict Kernel-mode Policy, please change the base to Default instead.'
                                 }
+                                #>
 
                                 $CurrentStep++
                                 Write-Progress -Id 28 -Activity 'Deploying the final policy' -Status "Step $CurrentStep/$TotalSteps" -PercentComplete ($CurrentStep / $TotalSteps * 100)

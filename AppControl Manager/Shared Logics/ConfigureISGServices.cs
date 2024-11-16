@@ -9,10 +9,9 @@
         {
             Logger.Write("Configuring and starting the required ISG related services");
 
-            _ = PowerShellExecutor.ExecuteScript("""
-appidtel.exe start
-sc.exe config appidsvc start=auto
-""");
+            ProcessStarter.RunCommand("appidtel.exe", "start");
+
+            ProcessStarter.RunCommand("sc.exe", "config appidsvc start=auto");
 
         }
     }

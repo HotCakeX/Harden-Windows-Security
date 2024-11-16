@@ -20,6 +20,14 @@ namespace WDACConfig
             // Instantiate the policy
             CodeIntegrityPolicy codeIntegrityPolicy = new(xmlFilePath, null);
 
+
+            // This method isn't suitable for strict Kernel-Mode policy
+            if (codeIntegrityPolicy.UMCI_ProductSignersNode is null)
+            {
+                throw new InvalidOperationException("NewPFNLevelRules.Create method isn't suitable for strict Kernel-Mode policy");
+            }
+
+
             // Find the FileRules node
             XmlNode fileRulesNode = codeIntegrityPolicy.SiPolicyNode.SelectSingleNode("ns:FileRules", codeIntegrityPolicy.NamespaceManager) ?? throw new InvalidOperationException("file rules node could not be found.");
 

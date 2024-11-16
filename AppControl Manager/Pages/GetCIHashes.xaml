@@ -6,35 +6,52 @@
     xmlns:local="using:WDACConfig.Pages"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:controls="using:CommunityToolkit.WinUI.Controls"
     mc:Ignorable="d">
 
-    <Grid Margin="20,30,20,20">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
+    <ScrollViewer>
 
-        <TextBlock Text="Get Code Integrity Hashes" Style="{StaticResource TitleTextBlockStyle}" Margin="15" Grid.Row="0"/>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
 
-        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="10" Margin="15,0,15,0" Grid.Row="1">
 
-            <!-- Button to trigger file picker -->
-            <Button x:Name="PickFileButton" Content="Browse for a file" Click="PickFile_Click"
+            <controls:WrapPanel Grid.Row="0" VerticalSpacing="4" HorizontalSpacing="4" Orientation="Horizontal" Margin="6,10,6,10">
+
+                <TextBlock
+TextWrapping="WrapWholeWords"
+Style="{StaticResource BodyTextBlockStyle}">
+
+<Span>
+    Calculate the <Italic>Code Integrity</Italic>
+        <Run Foreground="{ThemeResource SystemAccentColor}">hashes</Run>
+    of files.</Span>
+                </TextBlock>
+
+            </controls:WrapPanel>
+
+
+            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="10" Margin="15,0,15,0" Grid.Row="1">
+
+                <!-- Button to trigger file picker -->
+                <Button x:Name="PickFileButton" Content="Browse for a file" Click="PickFile_Click"
             HorizontalAlignment="Center"
-           ToolTipService.ToolTip="Click/Tap to choose a file from your device."/>
+           ToolTipService.ToolTip="Click/Tap to choose a file from your device." Style="{StaticResource AccentButtonStyle}"/>
 
-            <!-- TextBlocks to display the returned hash values -->
-            <TextBlock Text="SHA1 Page:"/>
-            <TextBox x:Name="Sha1PageTextBox" IsReadOnly="True" MinWidth="300"/>
+                <!-- TextBlocks to display the returned hash values -->
+                <TextBox Header="SHA1 Page" x:Name="Sha1PageTextBox" IsReadOnly="True" MinWidth="300"/>
 
-            <TextBlock Text="SHA256 Page:"/>
-            <TextBox x:Name="Sha256PageTextBox" IsReadOnly="True" MinWidth="300"/>
+                <TextBox Header="SHA256 Page" x:Name="Sha256PageTextBox" IsReadOnly="True" MinWidth="300"/>
 
-            <TextBlock Text="SHA1 Authenticode:"/>
-            <TextBox x:Name="Sha1AuthenticodeTextBox" IsReadOnly="True" MinWidth="300"/>
+                <TextBox Header="SHA1 Authenticode" x:Name="Sha1AuthenticodeTextBox" IsReadOnly="True" MinWidth="300"/>
 
-            <TextBlock Text="SHA256 Authenticode:"/>
-            <TextBox x:Name="Sha256AuthenticodeTextBox" IsReadOnly="True" MinWidth="300"/>
-        </StackPanel>
-    </Grid>
+                <TextBox Header="SHA256 Authenticode" x:Name="Sha256AuthenticodeTextBox" IsReadOnly="True" MinWidth="300"/>
+            </StackPanel>
+
+        </Grid>
+
+    </ScrollViewer>
+
 </Page>

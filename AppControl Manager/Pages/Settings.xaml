@@ -23,13 +23,31 @@
             </Style.Setters>
         </Style>
     </Page.Resources>
-    <ScrollViewer Margin="20,30,20,20">
+
+    <ScrollViewer>
+
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
-            <TextBlock Text="Settings for the App Control Manager" Style="{StaticResource TitleTextBlockStyle}" Margin="15" Grid.Row="0"/>
+
+            <controls:WrapPanel Grid.Row="0" VerticalSpacing="4" HorizontalSpacing="4" Orientation="Horizontal" Margin="6,10,6,10">
+
+                <TextBlock
+TextWrapping="WrapWholeWords"
+Style="{StaticResource BodyTextBlockStyle}">
+
+<Span>
+    Customize your app settings here. Your preferences will be
+        <Run Foreground="{ThemeResource SystemAccentColor}">saved</Run>
+    so they're ready for you every time you start the AppControl Manager.
+</Span>
+                </TextBlock>
+
+            </controls:WrapPanel>
+
+
             <StackPanel HorizontalAlignment="Stretch"
                         Spacing="{StaticResource SettingsCardSpacing}" Grid.Row="1">
                 <win:StackPanel.ChildrenTransitions>
@@ -126,6 +144,54 @@
                         </controls:SettingsCard>
                     </controls:SettingsExpander.Items>
                 </controls:SettingsExpander>
+
+                <!--  'Appearance' section  -->
+                <TextBlock Style="{StaticResource SettingsSectionHeaderTextBlockStyle}" Text="Appearance" />
+                <controls:SettingsExpander Header="Make AppControl Manager Look the Way You Want" HeaderIcon="{ui:FontIcon Glyph=&#xE790;}">
+
+                    <controls:SettingsExpander.Items>
+
+                        <controls:SettingsCard Description="Mostly suitable when using MicaAlt as the background." Header="Darker Background" HeaderIcon="{ui:FontIcon Glyph=&#xF0E8;}">
+                            <ToggleSwitch x:Name="NavigationViewBackgroundToggle"/>
+                        </controls:SettingsCard>
+
+                        <controls:SettingsCard Description="Customize the App Background Style" Header="Background Style" HeaderIcon="{ui:FontIcon Glyph=&#xEF1F;}">
+                            <ComboBox x:Name="BackgroundComboBox">
+                                <ComboBoxItem>MicaAlt</ComboBoxItem>
+                                <ComboBoxItem>Mica</ComboBoxItem>
+                                <ComboBoxItem>Acrylic</ComboBoxItem>
+                            </ComboBox>
+
+                        </controls:SettingsCard>
+
+                        <controls:SettingsCard Description="Customize the Theme" Header="Theme" HeaderIcon="{ui:FontIcon Glyph=&#xE706;}">
+                            <ComboBox x:Name="ThemeComboBox">
+                                <ComboBoxItem>Use System Setting</ComboBoxItem>
+                                <ComboBoxItem>Dark</ComboBoxItem>
+                                <ComboBoxItem>Light</ComboBoxItem>
+                            </ComboBox>
+                        </controls:SettingsCard>
+
+                        <controls:SettingsCard Description="Customize the Navigation Menu location" Header="Navigation Menu" HeaderIcon="{ui:FontIcon Glyph=&#xE90C;}">
+                            <ComboBox SelectedIndex="0" x:Name="NavigationMenuLocation">
+                                <ComboBoxItem>Left</ComboBoxItem>
+                                <ComboBoxItem>Top</ComboBoxItem>
+                            </ComboBox>
+                        </controls:SettingsCard>
+
+                    </controls:SettingsExpander.Items>
+
+                </controls:SettingsExpander>
+
+
+                <!--  'Sound' section  -->
+                <TextBlock Style="{StaticResource SettingsSectionHeaderTextBlockStyle}"
+           Text="Sound" />
+                <controls:SettingsCard Description="Hear audio feedback when using different elements of the AppControl Manager" Header="Sound" HeaderIcon="{ui:FontIcon Glyph=&#xEC4F;}">
+                    <ToggleSwitch x:Name="SoundToggleSwitch" />
+                </controls:SettingsCard>
+
+
                 <!--  'About' section  -->
                 <TextBlock Style="{StaticResource SettingsSectionHeaderTextBlockStyle}"
                            Text="About" />
@@ -150,6 +216,9 @@
                 <HyperlinkButton Margin="0,8,0,0"
                                  Content="Send feedback" NavigateUri="https://github.com/HotCakeX/Harden-Windows-Security/issues/new/choose" />
             </StackPanel>
+
         </Grid>
+
     </ScrollViewer>
+
 </Page>

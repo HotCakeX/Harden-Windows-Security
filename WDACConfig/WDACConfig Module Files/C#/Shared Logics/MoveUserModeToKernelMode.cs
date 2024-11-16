@@ -10,7 +10,7 @@ namespace WDACConfig
         /// <summary>
         /// Moves all User mode AllowedSigners in the User mode signing scenario to the Kernel mode signing scenario and then
         /// deletes the entire User mode signing scenario block
-        /// This is used during the creation of Strict Kernel-mode WDAC policy for complete BYOVD protection scenario.
+        /// This is used during the creation of Strict Kernel-mode AppControl policy for complete BYOVD protection scenario.
         /// It doesn't consider <FileRulesRef> node in the SigningScenario 12 when deleting it because for kernel-mode policy everything is signed and we don't deal with unsigned files.
         /// </summary>
         /// <param name="filePath">The path to the XML file</param>
@@ -22,7 +22,7 @@ namespace WDACConfig
             CodeIntegrityPolicy codeIntegrityPolicy = new(filePath, null);
 
             // Get AllowedSigners from SigningScenario with Value 12
-            XmlNode? allowedSigners12 = codeIntegrityPolicy.UMCI_SigningScenarioNode.SelectSingleNode("./ns:ProductSigners/ns:AllowedSigners", codeIntegrityPolicy.NamespaceManager);
+            XmlNode? allowedSigners12 = codeIntegrityPolicy.UMCI_SigningScenarioNode?.SelectSingleNode("./ns:ProductSigners/ns:AllowedSigners", codeIntegrityPolicy.NamespaceManager);
 
             // If AllowedSigners node exists in SigningScenario 12 and has child nodes
             if (allowedSigners12 is not null && allowedSigners12.HasChildNodes)
@@ -69,7 +69,7 @@ namespace WDACConfig
                 }
 
                 // Remove SigningScenario with Value 12 completely after moving all of its AllowedSigners to SigningScenario with the value of 131
-                _ = (codeIntegrityPolicy.UMCI_SigningScenarioNode.ParentNode?.RemoveChild(codeIntegrityPolicy.UMCI_SigningScenarioNode));
+                _ = (codeIntegrityPolicy.UMCI_SigningScenarioNode?.ParentNode?.RemoveChild(codeIntegrityPolicy.UMCI_SigningScenarioNode));
             }
 
             // Save the modified XML document back to the file

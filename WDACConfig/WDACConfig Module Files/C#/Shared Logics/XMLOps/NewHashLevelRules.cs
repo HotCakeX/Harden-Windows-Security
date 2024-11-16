@@ -28,6 +28,12 @@ namespace WDACConfig
             // Instantiate the policy
             CodeIntegrityPolicy codeIntegrityPolicy = new(xmlFilePath, null);
 
+            // This method isn't suitable for strict Kernel-Mode policy
+            if (codeIntegrityPolicy.UMCI_ProductSignersNode is null)
+            {
+                throw new InvalidOperationException("NewHashLevelRules.Create method isn't suitable for strict Kernel-Mode policy");
+            }
+
             Logger.Write($"NewHashLevelRules: There are {hashes.Count} Hash rules to be added to the XML file '{xmlFilePath}'");
 
             #region

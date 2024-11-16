@@ -3,35 +3,66 @@ using CommunityToolkit.WinUI.UI.Controls;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Controls.Primitives;
+using Microsoft.UI.Xaml.Navigation;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
+using Windows.ApplicationModel.DataTransfer;
 
 namespace WDACConfig.Pages
 {
     public sealed partial class Simulation : Page
     {
         public ObservableCollection<SimulationOutput> SimulationOutputs { get; set; }
-        private List<SimulationOutput> AllSimulationOutputs; // Store all outputs for searching
+        private readonly List<SimulationOutput> AllSimulationOutputs; // Store all outputs for searching
         private List<string> filePaths; // For selected file paths
-        private List<string> folderPaths; // For selected folder paths
+        private readonly List<string> folderPaths; // For selected folder paths
         private string? xmlFilePath; // For selected XML file path
         private List<string> catRootPaths; // For selected Cat Root paths
 
         public Simulation()
         {
             this.InitializeComponent();
-            this.NavigationCacheMode = Microsoft.UI.Xaml.Navigation.NavigationCacheMode.Enabled;
+            this.NavigationCacheMode = NavigationCacheMode.Enabled;
 
             SimulationOutputs = [];
             AllSimulationOutputs = [];
             filePaths = [];
             folderPaths = [];
             catRootPaths = [];
+
         }
+
+
+
+        #region
+
+        // Without the following steps, when the user begins data fetching process and then navigates away from this page
+        // Upon arrival at this page again, the DataGrid loses its virtualization, causing the UI to hang for extended periods of time
+        // But after nullifying DataGrid's ItemsSource when page is navigated from and reassigning it when page is navigated to,
+        // We tackle that problem. Data will sill be stored in the ObservableCollection when page is not in focus,
+        // But DataGrid's source will pick them up only when page is navigated to.
+        protected override void OnNavigatedTo(NavigationEventArgs e)
+        {
+            base.OnNavigatedTo(e);
+            SimulationDataGrid.ItemsSource = SimulationOutputs;
+        }
+
+        protected override void OnNavigatedFrom(NavigationEventArgs e)
+        {
+            base.OnNavigatedFrom(e);
+            SimulationDataGrid.ItemsSource = null;
+        }
+
+        #endregion
+
+
+
 
         // Event handler for the Begin Simulation button
         private async void BeginSimulationButton_Click(object sender, RoutedEventArgs e)
@@ -39,15 +70,15 @@ namespace WDACConfig.Pages
             try
             {
                 // Collect values from UI elements
-                bool noCatRootScanning = (NoCatRootScanningToggle.IsChecked == true);
+                bool noCatRootScanning = (NoCatRootScanningToggle.IsChecked);
                 double radialGaugeValue = ScalabilityRadialGauge.Value; // Value from radial gauge
-                bool CSVOutput = (CSVOutputToggle.IsChecked == true);
+                bool CSVOutput = (CSVOutputToggle.IsChecked);
 
                 BeginSimulationButton.IsEnabled = false;
                 ScalabilityRadialGauge.IsEnabled = false;
 
                 // Run the simulation
-                var result = await Task.Run(() =>
+                ConcurrentDictionary<string, SimulationOutput> result = await Task.Run(() =>
                 {
                     return InvokeWDACSimulation.Invoke(
                         filePaths,
@@ -69,11 +100,11 @@ namespace WDACConfig.Pages
                 TotalCountOfTheFilesTextBox.Text = result.Count.ToString(CultureInfo.InvariantCulture);
 
                 // Update the ObservableCollection on the UI thread
-                foreach (var entry in result)
+                foreach (KeyValuePair<string, SimulationOutput> entry in result)
                 {
-                    var simOutput = entry.Value;
+                    SimulationOutput simOutput = entry.Value;
 
-                    var simulationOutput = new SimulationOutput(
+                    SimulationOutput simulationOutput = new(
                         simOutput.Path,
                         simOutput.Source,
                         simOutput.IsAuthorized,
@@ -112,7 +143,10 @@ namespace WDACConfig.Pages
         // Event handler for the Select XML File button
         private void SelectXmlFileButton_Click(object sender, RoutedEventArgs e)
         {
-            string? selectedFile = FileSystemPicker.ShowFilePicker();
+            string? selectedFile = FileSystemPicker.ShowFilePicker(
+            "Select an XML file",
+            ("XML Files", "*.xml"));
+
             if (!string.IsNullOrEmpty(selectedFile))
             {
                 // Store the selected XML file path
@@ -127,7 +161,7 @@ namespace WDACConfig.Pages
         private void SelectFilesButton_Click(object sender, RoutedEventArgs e)
         {
             List<string>? selectedFiles = FileSystemPicker.ShowMultiFilePicker();
-            if (selectedFiles != null && selectedFiles.Count != 0)
+            if (selectedFiles is not null && selectedFiles.Count != 0)
             {
                 filePaths = [.. selectedFiles];
             }
@@ -147,7 +181,7 @@ namespace WDACConfig.Pages
         private void CatRootPathsButton_Click(object sender, RoutedEventArgs e)
         {
             List<string>? selectedCatRoots = FileSystemPicker.ShowMultiFilePicker();
-            if (selectedCatRoots != null && selectedCatRoots.Count != 0)
+            if (selectedCatRoots is not null && selectedCatRoots.Count != 0)
             {
                 catRootPaths = [.. selectedCatRoots];
             }
@@ -170,6 +204,9 @@ namespace WDACConfig.Pages
             SimulationOutputs.Clear();
             // Clear the full data
             AllSimulationOutputs.Clear();
+
+            // set the total count to 0 after clearing all the data
+            TotalCountOfTheFilesTextBox.Text = "0";
         }
 
         // Event handler for the SearchBox text change
@@ -179,19 +216,19 @@ namespace WDACConfig.Pages
 
             // Perform a case-insensitive search in all relevant fields
             List<SimulationOutput> filteredResults = AllSimulationOutputs.Where(output =>
-                (output.Path != null && output.Path.Contains(searchTerm, StringComparison.InvariantCultureIgnoreCase)) ||
-                (output.Source != null && output.Source.Contains(searchTerm, StringComparison.InvariantCultureIgnoreCase)) ||
-                (output.MatchCriteria != null && output.MatchCriteria.Contains(searchTerm, StringComparison.InvariantCultureIgnoreCase)) ||
-                (output.SpecificFileNameLevelMatchCriteria != null && output.SpecificFileNameLevelMatchCriteria.Contains(searchTerm, StringComparison.InvariantCultureIgnoreCase)) ||
-                (output.CertSubjectCN != null && output.CertSubjectCN.Contains(searchTerm, StringComparison.InvariantCultureIgnoreCase)) ||
-                (output.SignerName != null && output.SignerName.Contains(searchTerm, StringComparison.InvariantCultureIgnoreCase)) ||
-                (output.FilePath != null && output.FilePath.Contains(searchTerm, StringComparison.InvariantCultureIgnoreCase))
+                (output.Path is not null && output.Path.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
+                (output.Source is not null && output.Source.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
+                (output.MatchCriteria is not null && output.MatchCriteria.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
+                (output.SpecificFileNameLevelMatchCriteria is not null && output.SpecificFileNameLevelMatchCriteria.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
+                (output.CertSubjectCN is not null && output.CertSubjectCN.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
+                (output.SignerName is not null && output.SignerName.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) ||
+                (output.FilePath is not null && output.FilePath.Contains(searchTerm, StringComparison.OrdinalIgnoreCase))
             ).ToList();
 
 
             // Update the ObservableCollection on the UI thread with the filtered results
             SimulationOutputs.Clear();
-            foreach (var result in filteredResults)
+            foreach (SimulationOutput result in filteredResults)
             {
                 SimulationOutputs.Add(result);
             }
@@ -211,9 +248,7 @@ namespace WDACConfig.Pages
                 if (e.Column.SortDirection is null || e.Column.SortDirection is DataGridSortDirection.Ascending)
                 {
                     // Descending: First True, then False
-                    SimulationOutputs = new ObservableCollection<SimulationOutput>(
-                        AllSimulationOutputs.OrderBy(output => !output.IsAuthorized)
-                    );
+                    SimulationOutputs = [.. AllSimulationOutputs.OrderBy(output => !output.IsAuthorized)];
 
                     // Set the column direction to Descending
                     e.Column.SortDirection = DataGridSortDirection.Descending;
@@ -221,9 +256,7 @@ namespace WDACConfig.Pages
                 else
                 {
                     // Ascending: First False, then True
-                    SimulationOutputs = new ObservableCollection<SimulationOutput>(
-                        AllSimulationOutputs.OrderBy(output => output.IsAuthorized)
-                    );
+                    SimulationOutputs = [.. AllSimulationOutputs.OrderBy(output => output.IsAuthorized)];
                     e.Column.SortDirection = DataGridSortDirection.Ascending;
                 }
 
@@ -231,7 +264,7 @@ namespace WDACConfig.Pages
                 SimulationDataGrid.ItemsSource = SimulationOutputs;
 
                 // Clear SortDirection for other columns
-                foreach (var column in SimulationDataGrid.Columns)
+                foreach (DataGridColumn column in SimulationDataGrid.Columns)
                 {
                     if (column != e.Column)
                     {
@@ -240,6 +273,150 @@ namespace WDACConfig.Pages
                 }
             }
         }
+
+
+
+
+
+        /// <summary>
+        /// Populates the "Copy Individual Items" submenu in the flyout when the DataGrid is loaded.
+        /// </summary>
+        private void SimulationDataGrid_Loaded(object sender, RoutedEventArgs e)
+        {
+            if (CopyIndividualItemsSubMenu is null)
+            {
+                return;
+            }
+
+            // Clear any existing items to avoid duplicates if reloaded
+            CopyIndividualItemsSubMenu.Items.Clear();
+
+            // Define headers and their associated click events for individual copy actions
+            Dictionary<string, RoutedEventHandler> copyActions = new()
+            {
+                { "Path", CopyPath_Click },
+                { "Source", CopySource_Click },
+                { "Is Authorized", CopyIsAuthorized_Click },
+                { "Match Criteria", CopyMatchCriteria_Click },
+                { "Specific File Name Criteria", CopySpecificFileNameCriteria_Click },
+                { "Signer ID", CopySignerID_Click },
+                { "Signer Name", CopySignerName_Click },
+                { "Signer Cert Root", CopySignerCertRoot_Click },
+                { "Signer Cert Publisher", CopySignerCertPublisher_Click },
+                { "Signer Scope", CopySignerScope_Click },
+                { "Cert Subject CN", CopyCertSubjectCN_Click },
+                { "Cert Issuer CN", CopyCertIssuerCN_Click },
+                { "Cert Not After", CopyCertNotAfter_Click },
+                { "Cert TBS Value", CopyCertTBSValue_Click },
+                { "File Path", CopyFilePath_Click }
+            };
+
+            // Add each column header as an individual copy option in the flyout submenu
+            foreach (KeyValuePair<string, RoutedEventHandler> action in copyActions)
+            {
+                // Create a new menu item for each column header
+                MenuFlyoutItem menuItem = new() { Text = $"Copy {action.Key}" };
+
+                // Set the click event for the menu item
+                menuItem.Click += action.Value;
+
+                // Add the menu item to the submenu
+                CopyIndividualItemsSubMenu.Items.Add(menuItem);
+            }
+        }
+
+        // Event handlers for each column copy action
+        private void CopyPath_Click(object sender, RoutedEventArgs e) => CopyPropertyToClipboard(nameof(SimulationOutput.Path));
+        private void CopySource_Click(object sender, RoutedEventArgs e) => CopyPropertyToClipboard(nameof(SimulationOutput.Source));
+        private void CopyIsAuthorized_Click(object sender, RoutedEventArgs e) => CopyPropertyToClipboard(nameof(SimulationOutput.IsAuthorized));
+        private void CopyMatchCriteria_Click(object sender, RoutedEventArgs e) => CopyPropertyToClipboard(nameof(SimulationOutput.MatchCriteria));
+        private void CopySpecificFileNameCriteria_Click(object sender, RoutedEventArgs e) => CopyPropertyToClipboard(nameof(SimulationOutput.SpecificFileNameLevelMatchCriteria));
+        private void CopySignerID_Click(object sender, RoutedEventArgs e) => CopyPropertyToClipboard(nameof(SimulationOutput.SignerID));
+        private void CopySignerName_Click(object sender, RoutedEventArgs e) => CopyPropertyToClipboard(nameof(SimulationOutput.SignerName));
+        private void CopySignerCertRoot_Click(object sender, RoutedEventArgs e) => CopyPropertyToClipboard(nameof(SimulationOutput.SignerCertRoot));
+        private void CopySignerCertPublisher_Click(object sender, RoutedEventArgs e) => CopyPropertyToClipboard(nameof(SimulationOutput.SignerCertPublisher));
+        private void CopySignerScope_Click(object sender, RoutedEventArgs e) => CopyPropertyToClipboard(nameof(SimulationOutput.SignerScope));
+        private void CopyCertSubjectCN_Click(object sender, RoutedEventArgs e) => CopyPropertyToClipboard(nameof(SimulationOutput.CertSubjectCN));
+        private void CopyCertIssuerCN_Click(object sender, RoutedEventArgs e) => CopyPropertyToClipboard(nameof(SimulationOutput.CertIssuerCN));
+        private void CopyCertNotAfter_Click(object sender, RoutedEventArgs e) => CopyPropertyToClipboard(nameof(SimulationOutput.CertNotAfter));
+        private void CopyCertTBSValue_Click(object sender, RoutedEventArgs e) => CopyPropertyToClipboard(nameof(SimulationOutput.CertTBSValue));
+        private void CopyFilePath_Click(object sender, RoutedEventArgs e) => CopyPropertyToClipboard(nameof(SimulationOutput.FilePath));
+
+        /// <summary>
+        /// Copies the specified property of the selected row to the clipboard.
+        /// </summary>
+        /// <param name="propertyName">Name of the property to copy</param>
+        private void CopyPropertyToClipboard(string propertyName)
+        {
+            // Get the currently selected item in the DataGrid
+            if (SimulationDataGrid.SelectedItem is not SimulationOutput selectedItem)
+            {
+                return;
+            }
+
+            // Retrieve the property value directly based on the property name
+            string? propertyValue = propertyName switch
+            {
+                nameof(SimulationOutput.Path) => selectedItem.Path,
+                nameof(SimulationOutput.Source) => selectedItem.Source,
+                nameof(SimulationOutput.IsAuthorized) => selectedItem.IsAuthorized.ToString(),
+                nameof(SimulationOutput.MatchCriteria) => selectedItem.MatchCriteria,
+                nameof(SimulationOutput.SpecificFileNameLevelMatchCriteria) => selectedItem.SpecificFileNameLevelMatchCriteria,
+                nameof(SimulationOutput.SignerID) => selectedItem.SignerID,
+                nameof(SimulationOutput.SignerName) => selectedItem.SignerName,
+                nameof(SimulationOutput.SignerCertRoot) => selectedItem.SignerCertRoot,
+                nameof(SimulationOutput.SignerCertPublisher) => selectedItem.SignerCertPublisher,
+                nameof(SimulationOutput.SignerScope) => selectedItem.SignerScope,
+                nameof(SimulationOutput.CertSubjectCN) => selectedItem.CertSubjectCN,
+                nameof(SimulationOutput.CertIssuerCN) => selectedItem.CertIssuerCN,
+                nameof(SimulationOutput.CertNotAfter) => selectedItem.CertNotAfter,
+                nameof(SimulationOutput.CertTBSValue) => selectedItem.CertTBSValue,
+                nameof(SimulationOutput.FilePath) => selectedItem.FilePath,
+                _ => null
+            };
+
+            if (!string.IsNullOrEmpty(propertyValue))
+            {
+                DataPackage dataPackage = new();
+                dataPackage.SetText(propertyValue);
+                Clipboard.SetContent(dataPackage);
+            }
+        }
+
+
+        /// <summary>
+        /// Copies all column values of the selected row to the clipboard.
+        /// </summary>
+        private void SimulationDataGrid_CopyRow_Click(object sender, RoutedEventArgs e)
+        {
+            if (SimulationDataGrid.SelectedItem is not SimulationOutput selectedItem)
+            {
+                return;
+            }
+
+            string rowData = new StringBuilder()
+                .AppendLine($"Path: {selectedItem.Path}")
+                .AppendLine($"Source: {selectedItem.Source}")
+                .AppendLine($"Is Authorized: {selectedItem.IsAuthorized}")
+                .AppendLine($"Match Criteria: {selectedItem.MatchCriteria}")
+                .AppendLine($"Specific File Name Criteria: {selectedItem.SpecificFileNameLevelMatchCriteria}")
+                .AppendLine($"Signer ID: {selectedItem.SignerID}")
+                .AppendLine($"Signer Name: {selectedItem.SignerName}")
+                .AppendLine($"Signer Cert Root: {selectedItem.SignerCertRoot}")
+                .AppendLine($"Signer Cert Publisher: {selectedItem.SignerCertPublisher}")
+                .AppendLine($"Signer Scope: {selectedItem.SignerScope}")
+                .AppendLine($"Cert Subject CN: {selectedItem.CertSubjectCN}")
+                .AppendLine($"Cert Issuer CN: {selectedItem.CertIssuerCN}")
+                .AppendLine($"Cert Not After: {selectedItem.CertNotAfter}")
+                .AppendLine($"Cert TBS Value: {selectedItem.CertTBSValue}")
+                .AppendLine($"File Path: {selectedItem.FilePath}")
+                .ToString();
+
+            DataPackage dataPackage = new();
+            dataPackage.SetText(rowData);
+            Clipboard.SetContent(dataPackage);
+        }
+
 
     }
 }

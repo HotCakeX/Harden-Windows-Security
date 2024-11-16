@@ -47,7 +47,7 @@ namespace WDACConfig
                 // Loop through each SupplementalPolicySigners node
                 foreach (XmlNode supplementalPolicySignersNode in supplementalPolicySignersNodes)
                 {
-                    var supplementalPolicySigners = supplementalPolicySignersNode.SelectNodes("ns:SupplementalPolicySigner", codeIntegrityPolicy.NamespaceManager);
+                    XmlNodeList? supplementalPolicySigners = supplementalPolicySignersNode.SelectNodes("ns:SupplementalPolicySigner", codeIntegrityPolicy.NamespaceManager);
 
                     // Get unique SignerIds
                     foreach (XmlElement node in supplementalPolicySigners!)
@@ -60,10 +60,10 @@ namespace WDACConfig
                 }
 
                 // Remove corresponding Signers
-                foreach (var signerId in signerIds)
+                foreach (string signerId in signerIds)
                 {
                     XmlNodeList? signersToRemove = codeIntegrityPolicy.SiPolicyNode.SelectNodes($"ns:Signers/ns:Signer[@ID='{signerId}']", codeIntegrityPolicy.NamespaceManager);
-                    if (signersToRemove != null)
+                    if (signersToRemove is not null)
                     {
                         foreach (XmlNode signerNode in signersToRemove)
                         {

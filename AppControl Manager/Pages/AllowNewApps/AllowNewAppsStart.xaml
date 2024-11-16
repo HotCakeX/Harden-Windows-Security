@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Page
+    x:Class="WDACConfig.Pages.AllowNewAppsStart"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:WDACConfig.Pages"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:ui="using:CommunityToolkit.WinUI"
+    xmlns:controls="using:CommunityToolkit.WinUI.Controls"
+    xmlns:tk7controls="using:CommunityToolkit.WinUI.UI.Controls"
+    xmlns:animations="using:CommunityToolkit.WinUI.Animations"
+    mc:Ignorable="d">
+
+    <ScrollView>
+
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <Grid.Resources>
+                <Style x:Key="GridCardStyle" TargetType="Border">
+                    <Style.Setters>
+                        <Setter Property="Background" Value="{ThemeResource CardBackgroundFillColorDefaultBrush}" />
+                        <Setter Property="BorderThickness" Value="1" />
+                        <Setter Property="BorderBrush" Value="{ThemeResource CardStrokeColorDefaultBrush}" />
+                        <Setter Property="CornerRadius" Value="{StaticResource OverlayCornerRadius}" />
+                    </Style.Setters>
+                </Style>
+
+            </Grid.Resources>
+
+            <controls:WrapPanel Grid.Row="0" VerticalSpacing="15" HorizontalSpacing="15" Orientation="Horizontal" Margin="6,10,6,10">
+
+                <TextBlock
+TextWrapping="WrapWholeWords"
+Style="{StaticResource BodyTextBlockStyle}">
+
+<Span>
+    Use this page to <Run Foreground="{ThemeResource SystemAccentColor}">Allow</Run>
+    new or already installed apps or files to run on the system.
+</Span>
+                </TextBlock>
+
+                <Button x:Name="ResetStepsButton" Click="ResetStepsButton_Click" Content="Reset Steps" ToolTipService.ToolTip="Will reset the steps and if the base policy is deployed in Audit mode, will redeploy it in Enforced mode." />
+
+                <ProgressRing IsActive="False" x:Name="ResetProgressRing"/>
+
+            </controls:WrapPanel>
+
+            <Border x:Name="Step1Border" Grid.Row="1" Style="{StaticResource GridCardStyle}" Padding="8" Margin="6,0,10,20">
+
+                <Grid x:Name="Step1Grid">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <controls:WrapPanel Grid.Row="0" Orientation="Vertical" VerticalSpacing="8" HorizontalSpacing="8" Margin="0,0,0,15">
+
+                        <controls:WrapPanel Orientation="Horizontal" HorizontalSpacing="10" VerticalSpacing="10">
+                            <TextBlock Style="{StaticResource SubtitleTextBlockStyle}" Text="Step 1" Foreground="{ThemeResource SystemAccentColor}" />
+                            <ProgressRing x:Name="Step1ProgressRing" IsActive="False" Margin=" 0,0,15,0"/>
+                        </controls:WrapPanel>
+
+                        <TextBlock Text="Select the required info such as a deployed policy XML file and a name for the Supplemental policy that will be created" TextWrapping="WrapWholeWords" />
+                    </controls:WrapPanel>
+
+                    <controls:WrapPanel Grid.Row="1" Orientation="Horizontal" VerticalSpacing="15" HorizontalSpacing="15">
+
+                        <TextBox x:Name="SupplementalPolicyNameTextBox" Header="Supplemental Policy Name" PlaceholderText="Enter a name for the Supplemental Policy" />
+                        <Button x:Name="BrowseForXMLPolicyButton" Click="BrowseForXMLPolicyButton_Click" Margin="0,27,0,0" Content="Browse for a policy XML file" ToolTipService.ToolTip="Click/Tap to choose a XML policy file from your device." />
+                        <TextBox x:Name="SelectedXMLFilePathTextBox" Header="Selected XML file path" />
+
+
+                        <NumberBox x:Name="LogSizeNumberBox"
+    Header="Enter a number for Log Size in MB"
+SpinButtonPlacementMode="Inline"
+SmallChange="1"
+LargeChange="10" Minimum="2" Maximum="1000000" ValueChanged="LogSizeNumberBox_ValueChanged" ToolTipService.ToolTip="This is the Maximum Capacity of the Code Integrity Operational Log Size" />
+
+
+                        <Button x:Name="GoToStep2Button" Click="GoToStep2Button_Click" Margin="0,27,0,0" Content="Go to step 2" ToolTipService.ToolTip="Start deploying the selected policy in Audit mode and go to step 2" Style="{StaticResource AccentButtonStyle}"/>
+
+                    </controls:WrapPanel>
+
+                    <InfoBar x:Name="Step1InfoBar" Severity="Informational" IsOpen="False" IsClosable='False' Margin="0,20,0,0" Grid.Row="2"/>
+
+                </Grid>
+            </Border>
+
+            <Border x:Name="Step2Border" Grid.Row="2" Style="{StaticResource GridCardStyle}" Padding="8" Margin="6,0,10,20">
+
+                <Grid x:Name="Step2Grid">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <controls:WrapPanel Grid.Row="0" Orientation="Vertical" VerticalSpacing="8" HorizontalSpacing="8" Margin="0,0,0,15">
+
+                        <controls:WrapPanel Orientation="Horizontal" HorizontalSpacing="10" VerticalSpacing="10">
+                            <TextBlock Style="{StaticResource SubtitleTextBlockStyle}" Text="Step 2" Foreground="{ThemeResource SystemAccentColor}" />
+                            <ProgressRing x:Name="Step2ProgressRing" IsActive="False" Margin=" 0,0,15,0"/>
+                        </controls:WrapPanel>
+
+                        <TextBlock Text="Now install your new app or run a pre-installed app that was being blocked. You can optionally browse for folders to scan such as the location where the app is installed. Once you're done, use the button below to go to Step 3." TextWrapping="WrapWholeWords" />
+                    </controls:WrapPanel>
+
+                    <controls:WrapPanel Grid.Row="1" Orientation="Horizontal" VerticalSpacing="8" HorizontalSpacing="8">
+
+                        <Button x:Name="BrowseForFoldersButton" Click="BrowseForFoldersButton_Click" Content="Browse for folders" ToolTipService.ToolTip="Browse for folders of your new or existing apps that are installed and are getting blocked">
+
+                            <Button.Flyout>
+                                <Flyout>
+
+                                    <controls:WrapPanel Orientation="Vertical" HorizontalSpacing="15" VerticalSpacing="15">
+
+                                        <Button Content="Clear" Click="ClearSelectedDirectoriesButton_Click" />
+
+                                        <TextBlock Text="View the directories you selected."  TextWrapping="WrapWholeWords" Width="400" />
+
+                                        <TextBox x:Name="SelectedDirectoriesTextBox" AutomationProperties.Name="multi-line TextBox"
+TextWrapping="Wrap" AcceptsReturn="True" IsSpellCheckEnabled="True"
+SelectionHighlightColor="Green" MinWidth="400" IsReadOnly="True" />
+
+                                    </controls:WrapPanel>
+
+                                </Flyout>
+                            </Button.Flyout>
+
+                        </Button>
+
+                        <Button x:Name="GoToStep3Button" Click="GoToStep3Button_Click" Content="Go to step 3" ToolTipService.ToolTip="Start scanning the event logs and the selected directories (if any) and go to step 3" Style="{StaticResource AccentButtonStyle}"/>
+
+                    </controls:WrapPanel>
+
+                    <InfoBar x:Name="Step2InfoBar" Severity="Informational" IsOpen="False" IsClosable='False' Margin="0,20,0,0" Grid.Row="2"/>
+
+                </Grid>
+            </Border>
+
+            <Border x:Name="Step3Border" Grid.Row="3" Style="{StaticResource GridCardStyle}" Padding="8" Margin="6,0,10,20">
+
+                <Grid x:Name="Step3Grid">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <controls:WrapPanel Grid.Row="0" Orientation="Vertical" VerticalSpacing="8" HorizontalSpacing="8" Margin="0,0,0,15">
+
+                        <controls:WrapPanel Orientation="Horizontal" HorizontalSpacing="10" VerticalSpacing="10">
+                            <TextBlock Style="{StaticResource SubtitleTextBlockStyle}" Text="Step 3" Foreground="{ThemeResource SystemAccentColor}" />
+                            <ProgressRing x:Name="Step3ProgressRing" IsActive="False" Margin=" 0,0,15,0"/>
+                        </controls:WrapPanel>
+
+                        <TextBlock Text="Use the Event logs and local files tab to confirm or select the detected files in order to include them in the final Supplemental policy." TextWrapping="WrapWholeWords" />
+                    </controls:WrapPanel>
+
+                    <controls:WrapPanel Grid.Row="1" Orientation="Horizontal" VerticalSpacing="8" HorizontalSpacing="8">
+
+                        <ToggleButton x:Name="DeployToggleButton" Checked="DeployToggleButton_Checked" Unchecked="DeployToggleButton_Unchecked" ToolTipService.ToolTip="The Supplemental policy will be automatically deployed on the system after creation." IsChecked="True" Content="Deploy" />
+
+                        <ComboBox SelectedIndex="0" SelectionChanged="ScanLevelComboBox_SelectionChanged" x:Name="ScanLevelComboBox" ToolTipService.ToolTip="Pick a level based on which the selected logs and files will be scanned" Header="Scan level" Margin="0,0,0,27">
+                            <ComboBoxItem>FilePublisher</ComboBoxItem>
+                            <ComboBoxItem>Publisher</ComboBoxItem>
+                            <ComboBoxItem>Hash</ComboBoxItem>
+                        </ComboBox>
+
+                        <Button x:Name="CreatePolicyButton" Click="CreatePolicyButton_Click" ToolTipService.ToolTip="Start creating the policy with the logs and files you selected" Content="Create Policy" Style="{StaticResource AccentButtonStyle}"/>
+
+                    </controls:WrapPanel>
+
+                    <InfoBar x:Name="Step3InfoBar" Severity="Informational" IsOpen="False" IsClosable='False' Margin="0,20,0,0" Grid.Row="2"/>
+
+                </Grid>
+            </Border>
+
+        </Grid>
+
+    </ScrollView>
+
+</Page>

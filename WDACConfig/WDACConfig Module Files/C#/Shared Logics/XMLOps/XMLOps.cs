@@ -23,9 +23,12 @@ namespace WDACConfig
             Logger.Write("Merging the Signer Level rules");
             RemoveDuplicateFileAttribSemantic.Remove(xmlFilePath);
 
-            // 2 passes are needed
-            MergeSignersSemantic.Merge(xmlFilePath);
-            MergeSignersSemantic.Merge(xmlFilePath);
+            // 2 passes are needed - Needs improvements
+            // MergeSignersSemantic.Merge(xmlFilePath);
+            // MergeSignersSemantic.Merge(xmlFilePath);
+
+            // Replacement for the above method
+            PolicyMerger.Merge([xmlFilePath], xmlFilePath);
 
             // This method runs twice, once for signed data and once for unsigned data
             CloseEmptyXmlNodesSemantic.Close(xmlFilePath);

@@ -1,4 +1,5 @@
 using Microsoft.UI.Xaml.Controls;
+using Microsoft.UI.Xaml.Navigation;
 using System.Linq;
 
 // To learn more about WinUI, the WinUI project structure,
@@ -16,11 +17,11 @@ namespace WDACConfig.Pages
             this.InitializeComponent();
 
             // Make sure navigating to/from this page maintains its state
-            this.NavigationCacheMode = Microsoft.UI.Xaml.Navigation.NavigationCacheMode.Enabled;
+            this.NavigationCacheMode = NavigationCacheMode.Enabled;
 
 
             // Navigate to the CreatePolicy page when the window is loaded
-            _ = ContentFrame.Navigate(typeof(Pages.ViewCurrentPolicies));
+            _ = ContentFrame.Navigate(typeof(ViewCurrentPolicies));
 
             // Set the "CreatePolicy" item as selected in the NavigationView
             SystemInformationNavigation.SelectedItem = SystemInformationNavigation.MenuItems.OfType<NavigationViewItem>()
@@ -40,10 +41,10 @@ namespace WDACConfig.Pages
                 switch (selectedTag)
                 {
                     case "ViewCurrentPolicies":
-                        _ = ContentFrame.Navigate(typeof(Pages.ViewCurrentPolicies));
+                        _ = ContentFrame.Navigate(typeof(ViewCurrentPolicies));
                         break;
                     case "CodeIntegrityInfo":
-                        _ = ContentFrame.Navigate(typeof(Pages.CodeIntegrityInfo));
+                        _ = ContentFrame.Navigate(typeof(CodeIntegrityInfo));
                         break;
                     default:
                         break;

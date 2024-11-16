@@ -130,6 +130,7 @@ Function Deploy-SignedWDACConfig {
                     # Make sure -User is not added if the UMCI policy rule option doesn't exist in the policy, typically for Strict kernel mode policies
                     if ('Enabled:UMCI' -in $PolicyRuleOptions) {
 
+                        <#
                         [WDACConfig.Logger]::Write('Checking whether SignTool.exe is allowed to execute in the policy or not')
                         if (!([WDACConfig.InvokeWDACSimulation]::Invoke($SignToolPathFinal, $PolicyPath, $true))) {
 
@@ -159,6 +160,7 @@ Function Deploy-SignedWDACConfig {
                         else {
                             [WDACConfig.Logger]::Write('The base policy allows SignTool.exe to execute, no need to scan and include it in the policy')
                         }
+#>
 
                         Add-SignerRule -FilePath $PolicyPath -CertificatePath $CertPath -Update -User -Kernel -Supplemental
                     }

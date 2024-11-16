@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System;
+using System.Collections.Generic;
 using System.Xml;
 
 #nullable enable
@@ -15,9 +15,12 @@ namespace WDACConfig
         /// In order to be considered fully duplicate, they must also be associated with Signers whose IDs are in the same SigningScenario.
         ///
         /// So for example, if two <FileAttrib> nodes have the same FileName and MinimumFileVersion, but they are associated with 2 different Signers, one in kernel mode and the other in user mode signing scenario, they are not considered duplicates.
-        /// After deduplication, the function updates the FileAttribRef RuleID for associated Signers by setting the RuleID of the removed duplicate FileAttrib elements to the RuleID of the unique remaining FileAttrib element.
         ///
         /// This is according to the CI Schema
+        ///
+        /// Any stray <FileAttrib> node is also removed. They are nodes that don't have an associated <FileAttribRef> node in any <Signer> node.er>
+        ///
+        /// If needed a custom HashSet can be created based on the custom comparer so that between 2 identical fileAttribs, one with lower version will be kept while other one will be removed
         ///
         /// </summary>
         /// <param name="xmlFilePath"></param>
@@ -26,6 +29,16 @@ namespace WDACConfig
 
             // Instantiate the policy
             CodeIntegrityPolicy codeIntegrityPolicy = new(xmlFilePath, null);
+
+
+
+            // This method isn't suitable for strict Kernel-Mode policy
+            if (codeIntegrityPolicy.UMCI_ProductSignersNode is null)
+            {
+                throw new InvalidOperationException("RemoveDuplicateFileAttribSemantic.Remove method isn't suitable for strict Kernel-Mode policy");
+            }
+
+
 
             // Get all of the <FileAttrib> nodes inside the <FileRules> node
             XmlNodeList? fileAttribNodes = codeIntegrityPolicy.SiPolicyNode.SelectNodes("ns:FileRules//ns:FileAttrib", codeIntegrityPolicy.NamespaceManager);
@@ -36,218 +49,116 @@ namespace WDACConfig
                 return;
             }
 
-            // A Dictionary to store FileAttrib nodes based on their properties
-            Dictionary<string, List<XmlNode>> fileAttribNodeCollection = [];
+            // To store each <FileAttrib> nodes and its associated details for Kernel-Mode
+            HashSet<FileAttrib> kernelModeFileAttribs = new(new FileAttribComparer());
 
-            // A Dictionary to store each unique FileAttrib key along with its associated unique Signer IDs
-            Dictionary<string, HashSet<string>> fileAttribSignerCollection = [];
+            // To store each <FileAttrib> nodes and its associated details for User-Mode
+            HashSet<FileAttrib> userModeFileAttribs = new(new FileAttribComparer());
 
-            // A Dictionary to store each Signer ID (associated with the current FileAttrib node) and its associated <AllowedSigner> node's ID
-            Dictionary<string, string> allowedSignerCollection = [];
 
-            // Iterate through each FileAttrib nodes
-            foreach (XmlNode fileAttrib in fileAttribNodes)
+            // Iterate over each <FileAttrib> node
+            foreach (XmlNode item in fileAttribNodes)
             {
+                // Get the ID
+                string ID = item.Attributes!["ID"]!.Value;
 
-                // Get the relevant properties of the current <FileAttrib> node
-                string fileAttribID = fileAttrib.Attributes!["ID"]!.Value;
+                // Get the <Signer> node that contains the <FileAttribRef> node with the same RuleID as the ID of the current <FileAttrib> node in the loop
+                XmlNode signer = codeIntegrityPolicy.SignersNode.SelectSingleNode($"ns:Signer[ns:FileAttribRef/@RuleID='{ID}']", codeIntegrityPolicy.NamespaceManager)!;
 
-                string? MinimumFileVersion = fileAttrib.Attributes?["MinimumFileVersion"]?.Value;
-                string? FileName = fileAttrib.Attributes?["FileName"]?.Value;
-                string? InternalName = fileAttrib.Attributes?["InternalName"]?.Value;
-                string? FileDescription = fileAttrib.Attributes?["FileDescription"]?.Value;
-                string? FilePath = fileAttrib.Attributes?["FilePath"]?.Value;
-                string? ProductName = fileAttrib.Attributes?["ProductName"]?.Value;
+                // Get the Signer's ID
+                string signerID = signer.Attributes!["ID"]!.Value;
 
+                // Get the <FileAttribRef> from the signer that is associated with the current <FileAttrib> node
+                XmlNode? fileAttribRefNode = signer.SelectSingleNode($"ns:FileAttribRef[@RuleID='{ID}']", codeIntegrityPolicy.NamespaceManager);
 
-                // Generate a unique key based on relevant properties
-                string uniqueKey = $"{MinimumFileVersion}-{FileName}-{InternalName}-{FileDescription}-{FilePath}-{ProductName}";
-
-                // Check if the key already exists in the dictionary
-                if (!fileAttribNodeCollection.TryGetValue(uniqueKey, out List<XmlNode>? possibleFileAttrib))
+                if (fileAttribRefNode is null)
                 {
-                    // If not, add the key and store the FileAttrib node as a list
-                    _ = fileAttribNodeCollection.TryAdd(uniqueKey, [fileAttrib]);
-                }
-
-                // If the key already exists, append the current FileAttrib node to the existing list of nodes
-                else
-                {
-                    possibleFileAttrib.Add(fileAttrib);
-                }
-
-                // At this point, each <FileAttrib> node in the XML file is identified and grouped together based on their properties
-
-                // Get the Signer ID associated with the current FileAttrib
-                XmlNode? signer = codeIntegrityPolicy.SignersNode.SelectSingleNode($"ns:Signer[ns:FileAttribRef/@RuleID='{fileAttribID}']", codeIntegrityPolicy.NamespaceManager);
-
-                string signerID;
-
-                if (signer is not null)
-                {
-                    signerID = signer.Attributes!["ID"]!.Value;
-                }
-                else
-                {
-                    // Signer ID cannot be null!
+                    // It's a stray <FileAttrib> node so don't include it in any HashSet, which will essentially mean we will not include it in the final XML file
                     continue;
                 }
 
-                // Add the Unique FileAttrib key and its associated Signer ID to the dictionary
-                if (!fileAttribSignerCollection.TryGetValue(uniqueKey, out HashSet<string>? possibleFileAttribSigner))
+                // Try to get the <AllowedSigner> node in both SigningScenarios, give us the node itself and tells us which scenario this FileAttrib belongs to (through its Signer association).
+                XmlNode? UMCI = codeIntegrityPolicy.UMCI_ProductSignersNode.SelectSingleNode($"ns:AllowedSigners/ns:AllowedSigner[@SignerId='{signerID}']", codeIntegrityPolicy.NamespaceManager);
+                XmlNode? KMCI = codeIntegrityPolicy.KMCI_ProductSignersNode.SelectSingleNode($"ns:AllowedSigners/ns:AllowedSigner[@SignerId='{signerID}']", codeIntegrityPolicy.NamespaceManager);
+
+                if (UMCI is null && KMCI is null)
                 {
-                    // If not, add the key and store the Signer ID as value
-                    _ = fileAttribSignerCollection.TryAdd(uniqueKey, [signerID]);
-                }
-
-                // If the key already exists, append the Signer ID to the existing HashSet of strings
-                else
-                {
-                    _ = possibleFileAttribSigner.Add(signerID);
-                }
-
-
-                // Get the ID of the <AllowedSigner> node that is associated with the current Signer ID
-                // Checks all <SigningScenario> nodes throughout the XML
-                XmlNode? allowedSigner = codeIntegrityPolicy.SiPolicyNode.SelectSingleNode($"//ns:SigningScenario[ns:ProductSigners/ns:AllowedSigners/ns:AllowedSigner[@SignerId='{signerID}']]", codeIntegrityPolicy.NamespaceManager);
-
-                if (allowedSigner is null)
-                {
-                    // each signer must have an <AllowedSigner> node!
                     continue;
                 }
 
-                string allowedSignerID = allowedSigner.Attributes!["ID"]!.Value;
+                // Get attributes of the current <FileAttrib> node
+                string? MinimumFileVersion = item.Attributes?["MinimumFileVersion"]?.Value;
+                string? FileName = item.Attributes?["FileName"]?.Value;
+                string? InternalName = item.Attributes?["InternalName"]?.Value;
+                string? FileDescription = item.Attributes?["FileDescription"]?.Value;
+                string? FilePath = item.Attributes?["FilePath"]?.Value;
+                string? ProductName = item.Attributes?["ProductName"]?.Value;
 
-
-                // Add the Signer ID and its associated allowedSigner ID to the dictionary
-                if (!allowedSignerCollection.ContainsKey(signerID))
+                FileAttrib fileAttrib = new()
                 {
-                    _ = allowedSignerCollection.TryAdd(signerID, allowedSignerID);
+                    Node = item,
+                    Signer = signer,
+                    AllowedSigner = UMCI ?? KMCI!,
+                    FileAttribRef = fileAttribRefNode,
+                    Id = ID,
+                    MinimumFileVersion = MinimumFileVersion,
+                    FileDescription = FileDescription,
+                    FileName = FileName,
+                    InternalName = InternalName,
+                    FilePath = FilePath,
+                    ProductName = ProductName
+                };
+
+
+                // If the current <FileAttrib> node belongs to User-Mode Signing Scenario
+                if (UMCI is not null)
+                {
+                    // If the <FileAttrib> node is a duplicate one based on the custom comparer, then not only we don't include it in the final XML file
+                    // We should also remove its associated <FileAttribRef> node from the <Signer> node
+                    if (!userModeFileAttribs.Add(fileAttrib))
+                    {
+                        _ = fileAttrib.FileAttribRef.ParentNode?.RemoveChild(fileAttrib.FileAttribRef);
+                    }
+                }
+                // If the current <FileAttrib> node belongs to Kernel-Mode Signing Scenario
+                else
+                {
+                    // If the <FileAttrib> node is a duplicate one based on the custom comparer, then not only we don't include it in the final XML file
+                    // We should also remove its associated <FileAttribRef> node from the <Signer> node
+                    if (!kernelModeFileAttribs.Add(fileAttrib))
+                    {
+                        _ = fileAttrib.FileAttribRef.ParentNode?.RemoveChild(fileAttrib.FileAttribRef);
+                    }
                 }
             }
 
 
-            // Iterate through the dictionary to find and remove duplicate <FileAttrib> nodes
-            foreach (string key in fileAttribNodeCollection.Keys)
+            // Remove all <FileAttrib> nodes inside the <FileRules> node
+            foreach (XmlNode node in fileAttribNodes)
             {
-
-                // Only proceed if there are more than one FileAttrib node for this key
-                // Indicating that more than 1 <FileAttrib> node with the same exact attributes (except for ID and FriendlyName) exist
-                if (fileAttribNodeCollection.TryGetValue(key, out List<XmlNode>? possibleExistingNodes) && possibleExistingNodes.Count == 1)
-                {
-                    continue;
-                }
-
-                if (possibleExistingNodes is null)
-                {
-                    continue;
-                }
-
-                // Get the associated SignerID of each duplicate <FileAttrib> node
-                // Each <FileAttrib> node is associated with a <Signer> node and we get that node's ID
-                _ = fileAttribSignerCollection.TryGetValue(key, out HashSet<string>? signerIDs);
-
-                if (signerIDs is null)
-                {
-                    continue;
-                }
-
-                // A HashSet to store the unique AllowedSigner IDs associated with the Signer IDs
-                HashSet<string> allowedSignerCol = [];
-
-                // Get the unique <AllowedSigner> node IDs associated with the Signer IDs
-                // Each <Signer> node associated with each duplicate <FileAttrib> node has an <AllowedSigner> node
-                foreach (string id in signerIDs)
-                {
-                    _ = allowedSignerCollection.TryGetValue(id, out string? possibleSigningScenario);
-
-                    if (possibleSigningScenario is not null)
-                    {
-                        _ = allowedSignerCol.Add(possibleSigningScenario);
-                    }
-                }
-
-                // If there are multiple unique AllowedSigner IDs associated with this set of Signer IDs
-                if (allowedSignerCol.Count > 1)
-                {
-                    // Skip deduplication as the Signer IDs are in different Signing scenarios, meaning both User and Kernel nodes are involved so it shouldn't be touched
-                    // According to the schema, each signer must have only 1 <AllowedSigner> node in only one SigningScenario.
-                    // The same signer cannot belong to kernel Mode and User Mode scenarios at the same time.
-                    // This logic is based on that.
-                    continue;
-                }
-                else
-                {
-                    // Remove duplicates by keeping only the first FileAttrib element
-                    XmlNode firstFileAttrib = possibleExistingNodes.First();
-
-                    string? firstFileAttribID = firstFileAttrib.Attributes?["ID"]?.Value;
-
-                    if (firstFileAttribID is null)
-                    {
-                        continue;
-                    }
-
-                    // Iterate through the remaining FileAttrib elements, starting from the 2nd element
-                    for (int i = 1; i < possibleExistingNodes.Count; i++)
-                    {
-
-                        // Get the duplicate FileAttrib element to remove based on the index
-                        XmlNode duplicateFileAttrib = possibleExistingNodes[i];
-
-                        string? duplicateFileAttribID = duplicateFileAttrib?.Attributes?["ID"]?.Value;
-
-                        if (duplicateFileAttribID is null)
-                        {
-                            continue;
-                        }
-
-                        // Update FileAttribRef RuleID for associated Signers
-                        foreach (string id in signerIDs)
-                        {
-
-                            // Get the Signer element associated with this Signer ID
-                            XmlNode? signer = codeIntegrityPolicy.SignersNode.SelectSingleNode($"ns:Signer[@ID='{id}']", codeIntegrityPolicy.NamespaceManager);
-
-                            if (signer is null)
-                            {
-                                continue;
-                            }
-
-
-                            // Get the FileAttribRef node associated with the duplicate FileAttrib node, from the signer
-                            XmlNode? fileAttribRef = signer.SelectSingleNode($"ns:FileAttribRef[@RuleID='{duplicateFileAttribID}']", codeIntegrityPolicy.NamespaceManager);
-
-                            if (fileAttribRef is null)
-                            {
-                                continue;
-                            }
-
-                            // Updating the RuleID of the duplicate <FileAttribRef> of the Signer before removing it and setting it to the RuleID of the unique remaining FileAttrib element
-
-                            XmlNodeList signerAttribs = signer.SelectNodes("ns:FileAttribRef", codeIntegrityPolicy.NamespaceManager)!;
-
-                            List<string> signerAttribsIDs = [];
-
-                            foreach (XmlElement signerAttr in signerAttribs)
-                            {
-                                signerAttribsIDs.Add(signerAttr.GetAttribute("RuleID", codeIntegrityPolicy.NameSpaceURI));
-                            }
-
-                            if (!signerAttribsIDs.Contains(firstFileAttribID))
-                            {
-                                ((XmlElement)fileAttribRef).SetAttribute("RuleID", firstFileAttribID);
-                            }
-                        }
-
-
-                        _ = duplicateFileAttrib?.ParentNode?.RemoveChild(duplicateFileAttrib);
-                    }
-                }
-
+                // Remove each node from its parent
+                _ = node.ParentNode?.RemoveChild(node);
             }
 
+            // Add the <FileAttrib> nodes back to the <FileRules> node
+            if (kernelModeFileAttribs.Count > 0)
+            {
+                foreach (FileAttrib item in kernelModeFileAttribs)
+                {
+                    // Add the node back to the parent
+                    _ = codeIntegrityPolicy.SiPolicyNode.SelectSingleNode("ns:FileRules", codeIntegrityPolicy.NamespaceManager)!.AppendChild(item.Node);
+                }
+            }
+            if (userModeFileAttribs.Count > 0)
+            {
+                foreach (FileAttrib item in userModeFileAttribs)
+                {
+                    // Add the node back to the parent
+                    _ = codeIntegrityPolicy.SiPolicyNode.SelectSingleNode("ns:FileRules", codeIntegrityPolicy.NamespaceManager)!.AppendChild(item.Node);
+                }
+            }
+
+            // Save the changes to the XML file
             codeIntegrityPolicy.XmlDocument.Save(xmlFilePath);
 
         }

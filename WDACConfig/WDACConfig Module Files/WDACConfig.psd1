@@ -15,11 +15,11 @@
     HelpInfoURI          = 'https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDACConfig'
     Description          = @'
 
-This is an advanced PowerShell module for App Control Management in Windows and automates a lot of tasks.
+
+🟢This module is being transitioned to AppControl Manager application which is a modern GUI-based MSIX-packaged open-source Windows application. Check it out here: https://github.com/HotCakeX/Harden-Windows-Security/wiki/AppControl-Manager
 
 
-🟢 Please see the GitHub page for Full details and everything about the module: https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDACConfig
-
+Please see the GitHub page for Full details and everything about the module: https://github.com/HotCakeX/Harden-Windows-Security/wiki/WDACConfig
 
 🛡️ Here is the list of module's cmdlets
 
@@ -54,8 +54,6 @@ This is an advanced PowerShell module for App Control Management in Windows and 
 ✔️ Build-WDACCertificate: https://github.com/HotCakeX/Harden-Windows-Security/wiki/Build-WDACCertificate
 
 ✔️ Test-CiPolicy: https://github.com/HotCakeX/Harden-Windows-Security/wiki/Test-CiPolicy
-
-✔️ ConvertTo-WDACPolicy: https://github.com/HotCakeX/Harden-Windows-Security/wiki/ConvertTo-WDACPolicy
 
 ✔️ Get-CiFileHashes: https://github.com/HotCakeX/Harden-Windows-Security/wiki/Get-CiFileHashes
 

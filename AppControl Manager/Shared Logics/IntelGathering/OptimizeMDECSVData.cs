@@ -3,12 +3,23 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
 
 #nullable enable
 
 namespace WDACConfig.IntelGathering
 {
+
+
+    // Generates precomputed serialization metadata for Dictionary<string, string> at compile time,
+    // avoiding runtime reflection and improving performance for serialization and deserialization.
+    // Also makes it compatible with Trimming and Native AOT scenarios.
+    [JsonSerializable(typeof(Dictionary<string, string>))]
+    public partial class MyJsonContext : JsonSerializerContext
+    {
+    }
+
 
     internal static partial class OptimizeMDECSVData
     {
@@ -102,9 +113,8 @@ namespace WDACConfig.IntelGathering
                     // Format the JSON string so the next method won't throw error
                     string FormattedJSONString = EnsureAllValuesAreQuoted(additionalFieldsString);
 
-                    // Deserialize the JSON content into a dictionary
-                    Dictionary<string, string>? additionalFields = JsonSerializer.Deserialize<Dictionary<string, string>>(FormattedJSONString);
-
+                    // Deserialize the JSON content into a dictionary using the generated context
+                    Dictionary<string, string>? additionalFields = JsonSerializer.Deserialize(FormattedJSONString, MyJsonContext.Default.DictionaryStringString);
 
                     if (additionalFields is not null)
                     {

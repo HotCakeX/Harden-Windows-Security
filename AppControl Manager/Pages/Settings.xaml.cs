@@ -47,6 +47,15 @@ namespace WDACConfig.Pages
                 _ => 0
             };
 
+
+            IconsStyleComboBox.SelectedIndex = (AppSettings.GetSetting<string>(SettingKeys.IconsStyle)) switch
+            {
+                "Animated" => 0,
+                "Windows Accent" => 1,
+                "Monochromatic" => 2,
+                _ => 0
+            };
+
             #endregion
 
 
@@ -59,8 +68,34 @@ namespace WDACConfig.Pages
             ThemeComboBox.SelectionChanged += ThemeComboBox_SelectionChanged;
             NavigationMenuLocation.SelectionChanged += NavigationViewLocationComboBox_SelectionChanged;
             SoundToggleSwitch.Toggled += SoundToggleSwitch_Toggled;
-
+            IconsStyleComboBox.SelectionChanged += IconsStyleComboBox_SelectionChanged;
         }
+
+
+
+        /// <summary>
+        /// Event handler for the IconsStyle ComboBox selection change event.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void IconsStyleComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            // Get the ComboBox that triggered the event
+            ComboBox? comboBox = sender as ComboBox;
+
+            // Get the selected item from the ComboBox
+            string? selectedIconsStyle = (comboBox?.SelectedItem as ComboBoxItem)?.Content.ToString();
+
+            if (selectedIconsStyle is not null)
+            {
+                // Raise the global BackgroundChanged event
+                IconsStyleManager.OnIconsStylesChanged(selectedIconsStyle);
+            }
+
+            AppSettings.SaveSetting(AppSettings.SettingKeys.IconsStyle, selectedIconsStyle);
+        }
+
+
 
 
         /// <summary>
@@ -154,6 +189,9 @@ namespace WDACConfig.Pages
 
             AppSettings.SaveSetting(AppSettings.SettingKeys.NavViewBackground, isBackgroundOn);
         }
+
+
+       
 
 
 

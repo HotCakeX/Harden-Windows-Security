@@ -10,13 +10,17 @@ namespace WDACConfig
 {
 
     // This is to ensure the Serialize method works when trimming is enabled
-
-    /*
+    // Using source-generated context improves performance
     [JsonSerializable(typeof(UserConfiguration))]
     public partial class UserConfigurationContext : JsonSerializerContext
     {
+        // Define default options with WriteIndented set to true
+        public static readonly JsonSerializerOptions DefaultOptions = new()
+        {
+            WriteIndented = true
+        };
     }
-    */
+
 
 
     // Represents an instance of the User configurations JSON settings file
@@ -64,9 +68,6 @@ namespace WDACConfig
 
         [JsonPropertyOrder(10)]
         public bool? AutoUpdateCheck { get; set; } = autoUpdateCheck;
-
-        // Used by the static methods, when trimming is not enabled
-        private static readonly JsonSerializerOptions JsonOptions = new() { WriteIndented = true };
 
 
 
@@ -338,13 +339,8 @@ namespace WDACConfig
 
 
             // Serialize the object to JSON using the new context
-            // Trimming enabled
-            // string jsonString = JsonSerializer.Serialize(json, UserConfigurationContext.Default.UserConfiguration);
+            string jsonString = JsonSerializer.Serialize(json, UserConfigurationContext.DefaultOptions);
 
-
-            // Serialize the object to JSON
-            // Trimming disabled
-            string jsonString = JsonSerializer.Serialize(json, UserConfiguration.JsonOptions);
 
             // Write the JSON string to the file
             File.WriteAllText(GlobalVars.UserConfigJson, jsonString);

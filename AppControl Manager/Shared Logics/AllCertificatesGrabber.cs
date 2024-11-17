@@ -242,8 +242,8 @@ namespace WDACConfig
                     // if there is a hash mismatch in the file, throw an exception
                     if (verifyTrustResult == WinTrust.WinVerifyTrustResult.HashMismatch)
                     {
-                        // Throw a custom exception that will be caught by Invoke-WDACPolicySimulation cmdlet
-                        throw new ExceptionHashMismatchInCertificate($"WinTrust return code: {verifyTrustResult}", "The file is tampered with and there is a Hash Mismatch.");
+                        // Throw a custom exception
+                        throw new ExceptionHashMismatchInCertificate($"WinTrust return code: {verifyTrustResult}", $"The file '{FilePath}' is tampered with and there is a Hash Mismatch.");
                     }
 
                     // If there is valid state data

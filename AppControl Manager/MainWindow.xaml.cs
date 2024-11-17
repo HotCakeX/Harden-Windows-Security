@@ -1,3 +1,4 @@
+using AnimatedVisuals;
 using Microsoft.UI;
 using Microsoft.UI.Composition.SystemBackdrops;
 using Microsoft.UI.Xaml;
@@ -38,6 +39,9 @@ namespace WDACConfig
 
             // Subscribe to the global App theme change event
             AppThemeManager.AppThemeChanged += OnAppThemeChanged;
+
+            // Subscribe to the global Icons Styles change event
+            IconsStyleManager.IconsStyleChanged += OnIconsStylesChanged;
 
             #region
 
@@ -102,7 +106,336 @@ namespace WDACConfig
             // Set the initial App Theme based on the user's settings
             OnAppThemeChanged(AppSettings.GetSetting<string>(SettingKeys.AppTheme));
 
+
+            OnIconsStylesChanged(AppSettings.GetSetting<string>(SettingKeys.IconsStyle));
+
         }
+
+
+
+        private void OnIconsStylesChanged(string? newIconsStyle)
+        {
+
+            // Get the current theme
+            ElementTheme currentTheme = RootGrid.ActualTheme;
+
+
+            // Set the NavigationView's location based on the event
+            switch (newIconsStyle)
+            {
+                case "Animated":
+                    {
+                        // Create Policy
+                        CreatePolicyNavItem.Icon = new AnimatedIcon
+                        {
+                            Margin = new Thickness(-10, -35, -35, -35),
+                            Source = new Blueprint()
+                        };
+
+                        // System Information
+                        SystemInformationNavItem.Icon = new AnimatedIcon
+                        {
+                            Margin = new Thickness(0, -6, -6, -6),
+                            Source = new View()
+                        };
+
+                        // Configure Policy Rule Options
+                        ConfigurePolicyRuleOptionsNavItem.Icon = new AnimatedIcon
+                        {
+                            Margin = new Thickness(0, -8, -8, -8),
+                            Source = new Configure()
+                        };
+
+                        // Simulation
+                        SimulationNavItem.Icon = new AnimatedIcon
+                        {
+                            Margin = new Thickness(0, -8, -8, -8),
+                            Source = new Simulation()
+                        };
+
+
+                        // Allow New Apps     
+                        if (currentTheme is ElementTheme.Dark)
+                        {
+                            AllowNewAppsNavItem.Icon = new AnimatedIcon
+                            {
+                                Margin = new Thickness(0, -6, -6, -6),
+                                Source = new StarYellow()
+                            };
+                        }
+                        else
+                        {
+                            AllowNewAppsNavItem.Icon = new AnimatedIcon
+                            {
+                                Margin = new Thickness(0, -6, -6, -6),
+                                Source = new StarBlack()
+
+                            };
+                        }
+
+
+                        // Create Policy from Event Logs
+                        CreatePolicyFromEventLogsNavItem.Icon = new AnimatedIcon
+                        {
+                            Margin = new Thickness(0, -8, -8, -8),
+                            Source = new Scan()
+                        };
+
+                        // Create Policy from MDE Advanced Hunting
+                        CreatePolicyFromMDEAHNavItem.Icon = new AnimatedIcon
+                        {
+                            Margin = new Thickness(0, -8, -8, -8),
+                            Source = new MDE()
+                        };
+
+                        // Get Code Integrity Hashes
+                        GetCodeIntegrityHashesNavItem.Icon = new AnimatedIcon
+                        {
+                            Margin = new Thickness(0, -8, -8, -8),
+                            Source = new Hash()
+                        };
+
+                        // Get Secure Policy Settings
+                        GetSecurePolicySettingsNavItem.Icon = new AnimatedIcon
+                        {
+                            Margin = new Thickness(0, -6, -6, -6),
+                            Source = new Shield()
+                        };
+
+                        // Logs
+                        LogsNavItem.Icon = new AnimatedIcon
+                        {
+                            Margin = new Thickness(0, -8, -8, -8),
+                            Source = new Timeline()
+                        };
+
+                        // GitHub Documentation
+                        GitHubDocsNavItem.Icon = new AnimatedIcon
+                        {
+                            Margin = new Thickness(0, -11, -11, -11),
+                            Source = new GitHub()
+                        };
+
+                        // Microsoft Documentation
+                        MSFTDocsNavItem.Icon = new AnimatedIcon
+                        {
+                            Margin = new Thickness(0, -9, -9, -9),
+                            Source = new Document()
+                        };
+
+
+
+                        // Update
+                        if (currentTheme is ElementTheme.Dark)
+                        {
+                            UpdateNavItem.Icon = new AnimatedIcon
+                            {
+                                Margin = new Thickness(0, -5, -5, -5),
+                                Source = new Heart()
+                            };
+                        }
+                        else
+                        {
+                            UpdateNavItem.Icon = new AnimatedIcon
+                            {
+                                Margin = new Thickness(0, -25, -25, -25),
+                                Source = new HeartPulse()
+                            };
+                        }
+
+                        break;
+                    }
+                case "Windows Accent":
+                    {
+                        // Get the accent color brush
+                        Brush accentBrush = (Brush)Application.Current.Resources["SystemControlHighlightAccentBrush"];
+
+                        // Create Policy
+                        CreatePolicyNavItem.Icon = new FontIcon
+                        {
+                            Glyph = "\uE83D",
+                            Foreground = accentBrush
+                        };
+
+                        // System Information
+                        SystemInformationNavItem.Icon = new FontIcon
+                        {
+                            Glyph = "\uE7C1",
+                            Foreground = accentBrush
+                        };
+
+                        // Configure Policy Rule Options
+                        ConfigurePolicyRuleOptionsNavItem.Icon = new FontIcon
+                        {
+                            Glyph = "\uEEA3",
+                            Foreground = accentBrush
+                        };
+
+                        // Simulation
+                        SimulationNavItem.Icon = new FontIcon
+                        {
+                            Glyph = "\uE835",
+                            Foreground = accentBrush
+                        };
+
+                        // Allow New Apps
+                        AllowNewAppsNavItem.Icon = new FontIcon
+                        {
+                            Glyph = "\uED35",
+                            Foreground = accentBrush
+                        };
+
+                        // Create Policy from Event Logs
+                        CreatePolicyFromEventLogsNavItem.Icon = new FontIcon
+                        {
+                            Glyph = "\uEA18",
+                            Foreground = accentBrush
+                        };
+
+                        // Create Policy from MDE Advanced Hunting
+                        CreatePolicyFromMDEAHNavItem.Icon = new FontIcon
+                        {
+                            Glyph = "\uEB44",
+                            Foreground = accentBrush
+                        };
+
+                        // Get Code Integrity Hashes
+                        GetCodeIntegrityHashesNavItem.Icon = new FontIcon
+                        {
+                            Glyph = "\uE950",
+                            Foreground = accentBrush
+                        };
+
+                        // Get Secure Policy Settings
+                        GetSecurePolicySettingsNavItem.Icon = new FontIcon
+                        {
+                            Glyph = "\uEEA3",
+                            Foreground = accentBrush
+                        };
+
+                        // Logs
+                        LogsNavItem.Icon = new FontIcon
+                        {
+                            Glyph = "\uF5A0",
+                            Foreground = accentBrush
+                        };
+
+                        // GitHub Documentation
+                        GitHubDocsNavItem.Icon = new FontIcon
+                        {
+                            Glyph = "\uE8A5",
+                            Foreground = accentBrush
+                        };
+
+                        // Microsoft Documentation
+                        MSFTDocsNavItem.Icon = new FontIcon
+                        {
+                            Glyph = "\uE8A5",
+                            Foreground = accentBrush
+                        };
+
+                        // Update
+                        UpdateNavItem.Icon = new FontIcon
+                        {
+                            Glyph = "\uEB52",
+                            Foreground = accentBrush
+                        };
+
+                        break;
+                    }
+                case "Monochromatic":
+                    {
+
+
+                        // Create Policy
+                        CreatePolicyNavItem.Icon = new FontIcon
+                        {
+                            Glyph = "\uE83D"
+                        };
+
+                        // System Information
+                        SystemInformationNavItem.Icon = new FontIcon
+                        {
+                            Glyph = "\uE7C1"
+                        };
+
+                        // Configure Policy Rule Options
+                        ConfigurePolicyRuleOptionsNavItem.Icon = new FontIcon
+                        {
+                            Glyph = "\uEEA3"
+                        };
+
+                        // Simulation
+                        SimulationNavItem.Icon = new FontIcon
+                        {
+                            Glyph = "\uE835"
+                        };
+
+                        // Allow New Apps
+                        AllowNewAppsNavItem.Icon = new FontIcon
+                        {
+                            Glyph = "\uED35"
+                        };
+
+                        // Create Policy from Event Logs
+                        CreatePolicyFromEventLogsNavItem.Icon = new FontIcon
+                        {
+                            Glyph = "\uEA18"
+                        };
+
+                        // Create Policy from MDE Advanced Hunting
+                        CreatePolicyFromMDEAHNavItem.Icon = new FontIcon
+                        {
+                            Glyph = "\uEB44"
+                        };
+
+                        // Get Code Integrity Hashes
+                        GetCodeIntegrityHashesNavItem.Icon = new FontIcon
+                        {
+                            Glyph = "\uE950"
+                        };
+
+                        // Get Secure Policy Settings
+                        GetSecurePolicySettingsNavItem.Icon = new FontIcon
+                        {
+                            Glyph = "\uEEA3"
+                        };
+
+                        // Logs
+                        LogsNavItem.Icon = new FontIcon
+                        {
+                            Glyph = "\uF5A0"
+                        };
+
+                        // GitHub Documentation
+                        GitHubDocsNavItem.Icon = new FontIcon
+                        {
+                            Glyph = "\uE8A5"
+                        };
+
+                        // Microsoft Documentation
+                        MSFTDocsNavItem.Icon = new FontIcon
+                        {
+                            Glyph = "\uE8A5"
+                        };
+
+                        // Update
+                        UpdateNavItem.Icon = new FontIcon
+                        {
+                            Glyph = "\uEB52"
+                        };
+
+                        break;
+                    }
+                default:
+                    {
+                        // Default behavior
+                        break;
+                    }
+            };
+        }
+
+
 
 
 
@@ -205,6 +538,7 @@ namespace WDACConfig
 
         /// <summary>
         /// Event handler for the global AppThemeChanged event
+        /// Also changes the AnimatedIcons based on the theme to maintain their accessibility
         /// </summary>
         /// <param name="newTheme"></param>
         private void OnAppThemeChanged(string? newTheme)
@@ -225,12 +559,110 @@ namespace WDACConfig
 
             // Set the requested theme based on the event
             // If "Use System Setting" is used, the current system color mode will be assigned which can be either light/dark
-            RootGrid.RequestedTheme = newTheme switch
+            // Also performs animated icon switch based on theme
+            switch (newTheme)
             {
-                "Light" => ElementTheme.Light,
-                "Dark" => ElementTheme.Dark,
-                _ => currentColorMode,
-            };
+                case "Light":
+                    {
+                        RootGrid.RequestedTheme = ElementTheme.Light;
+
+                        if (string.Equals(AppSettings.GetSetting<string>(SettingKeys.IconsStyle), "Animated", System.StringComparison.OrdinalIgnoreCase))
+                        {
+
+                            AllowNewAppsNavItem.Icon = new AnimatedIcon
+                            {
+                                Margin = new Thickness(0, -6, -6, -6),
+                                Source = new StarBlack()
+
+                            };
+
+                            UpdateNavItem.Icon = new AnimatedIcon
+                            {
+                                Margin = new Thickness(0, -25, -25, -25),
+                                Source = new HeartPulse()
+                            };
+
+                        }
+
+                        break;
+                    }
+                case "Dark":
+                    {
+                        RootGrid.RequestedTheme = ElementTheme.Dark;
+
+                        if (string.Equals(AppSettings.GetSetting<string>(SettingKeys.IconsStyle), "Animated", System.StringComparison.OrdinalIgnoreCase))
+                        {
+
+                            AllowNewAppsNavItem.Icon = new AnimatedIcon
+                            {
+                                Margin = new Thickness(0, -6, -6, -6),
+                                Source = new StarYellow()
+                            };
+
+                            UpdateNavItem.Icon = new AnimatedIcon
+                            {
+                                Margin = new Thickness(0, -5, -5, -5),
+                                Source = new Heart()
+                            };
+
+                        }
+
+                        break;
+                    }
+
+                // if System Theme is selected
+                default:
+                    {
+                        RootGrid.RequestedTheme = currentColorMode;
+
+
+                        if (currentColorMode is ElementTheme.Dark)
+                        {
+                            if (string.Equals(AppSettings.GetSetting<string>(SettingKeys.IconsStyle), "Animated", System.StringComparison.OrdinalIgnoreCase))
+                            {
+
+                                AllowNewAppsNavItem.Icon = new AnimatedIcon
+                                {
+                                    Margin = new Thickness(0, -6, -6, -6),
+                                    Source = new StarYellow()
+                                };
+
+                                UpdateNavItem.Icon = new AnimatedIcon
+                                {
+                                    Margin = new Thickness(0, -5, -5, -5),
+                                    Source = new Heart()
+                                };
+
+                            }
+
+                        }
+                        else
+                        {
+                            if (string.Equals(AppSettings.GetSetting<string>(SettingKeys.IconsStyle), "Animated", System.StringComparison.OrdinalIgnoreCase))
+                            {
+
+                                AllowNewAppsNavItem.Icon = new AnimatedIcon
+                                {
+                                    Margin = new Thickness(0, -6, -6, -6),
+                                    Source = new StarBlack()
+
+                                };
+
+                                UpdateNavItem.Icon = new AnimatedIcon
+                                {
+                                    Margin = new Thickness(0, -25, -25, -25),
+                                    Source = new HeartPulse()
+                                };
+
+                            }
+
+                        }
+
+
+                        break;
+                    }
+            }
+
         }
 
 

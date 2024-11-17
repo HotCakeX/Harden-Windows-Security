@@ -365,3 +365,6 @@ dotnet_diagnostic.SYSLIB1092.severity = error
 
 # CA2263: Prefer generic overload when type is known
 dotnet_diagnostic.CA2263.severity = error
+
+# Default severity for analyzer diagnostics with category 'AOT'
+dotnet_analyzer_diagnostic.category-AOT.severity = error

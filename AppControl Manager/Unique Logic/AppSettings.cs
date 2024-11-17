@@ -38,7 +38,8 @@ namespace WDACConfig
             NavViewBackground,
             NavViewPaneDisplayMode,
             AppTheme,
-            BackDropBackground
+            BackDropBackground,
+            IconsStyle
         }
     }
 }

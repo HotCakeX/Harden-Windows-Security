@@ -52,7 +52,8 @@ namespace WDACConfig.IntelGathering
         public HashSet<FileSignerInfo> FileSignerInfos { get; set; } = new HashSet<FileSignerInfo>(new FileSignerInfoComparer());
 
 
-        // Just for display purposes, only contains CNs of the . FileSignerInfos is the one that has actual signing data.
+        // Just for display purposes, only contains CNs of the signers
+        // FileSignerInfos is the one that has actual signing data.
         public HashSet<string> FilePublishers { get; set; } = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 
         // Computed property to join FilePublishers into a comma-separated string

@@ -172,6 +172,14 @@ Style="{StaticResource BodyTextBlockStyle}">
                             </ComboBox>
                         </controls:SettingsCard>
 
+                        <controls:SettingsCard Description="Choose a style for the main navigation icons" Header="Icons Style" HeaderIcon="{ui:FontIcon Glyph=&#xE8D3;}">
+                            <ComboBox x:Name="IconsStyleComboBox">
+                                <ComboBoxItem>Animated</ComboBoxItem>
+                                <ComboBoxItem>Windows Accent</ComboBoxItem>
+                                <ComboBoxItem>Monochromatic</ComboBoxItem>
+                            </ComboBox>
+                        </controls:SettingsCard>
+
                         <controls:SettingsCard Description="Customize the Navigation Menu location" Header="Navigation Menu" HeaderIcon="{ui:FontIcon Glyph=&#xE90C;}">
                             <ComboBox SelectedIndex="0" x:Name="NavigationMenuLocation">
                                 <ComboBoxItem>Left</ComboBoxItem>

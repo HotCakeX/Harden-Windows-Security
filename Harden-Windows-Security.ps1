@@ -276,8 +276,8 @@ public static class SecureStringGenerator
 
         if ([System.String]::IsNullOrWhiteSpace($SignTool)) {
             Write-Verbose -Message 'Finding the latest version of the Microsoft.Windows.SDK.BuildTools package from NuGet and Downloading it'
-            [System.String]$LatestSignToolVersion = (Invoke-RestMethod -Uri 'https://api.nuget.org/v3-flatcontainer/Microsoft.Windows.SDK.BuildTools/index.json').versions | Select-Object -Last 1
-            Invoke-WebRequest -Uri "https://api.nuget.org/v3-flatcontainer/Microsoft.Windows.SDK.BuildTools/${LatestSignToolVersion}/Microsoft.Windows.SDK.BuildTools.${LatestSignToolVersion}.nupkg" -OutFile (Join-Path -Path $WorkingDir -ChildPath 'Microsoft.Windows.SDK.BuildTools.zip')
+            [System.String]$LatestSignToolVersion = (Invoke-RestMethod -Uri 'https://api.nuget.org/v3-flatcontainer/microsoft.windows.sdk.buildtools/index.json').versions | Select-Object -Last 1
+            Invoke-WebRequest -Uri "https://api.nuget.org/v3-flatcontainer/microsoft.windows.sdk.buildtools/${LatestSignToolVersion}/microsoft.windows.sdk.buildtools.${LatestSignToolVersion}.nupkg" -OutFile (Join-Path -Path $WorkingDir -ChildPath 'Microsoft.Windows.SDK.BuildTools.zip')
             Write-Verbose -Message 'Extracting the nupkg'
             Expand-Archive -Path "$WorkingDir\Microsoft.Windows.SDK.BuildTools.zip" -DestinationPath $WorkingDir -Force # Saving .nupkg as .zip to satisfy Windows PowerShell
             Write-Verbose -Message 'Finding the Signtool.exe path in the extracted directory'

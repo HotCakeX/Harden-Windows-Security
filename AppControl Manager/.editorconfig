@@ -377,3 +377,6 @@ dotnet_analyzer_diagnostic.category-Interoperability.severity = error
 
 # SYSLIB0057: Type or member is obsolete
 dotnet_diagnostic.SYSLIB0057.severity = error
+
+# CS0162: Unreachable code detected
+dotnet_diagnostic.CS0162.severity = error

@@ -42,15 +42,17 @@ namespace WDACConfig
             }
 
             _ = GenerateSelfSignedCertificate(
-                 CommonName,
-                 100,
-                 4096,
-                 HashAlgorithmName.SHA512,
-                 CertificateStoreLocation.User,
-                 cerFilePath,
-                 CommonName,
-                 pfxFilePath,
-                 Password
+                subjectName: CommonName,
+                validityInYears: 100,
+                keySize: 4096,
+                hashAlgorithm: HashAlgorithmName.SHA512,
+                storeLocation: CertificateStoreLocation.User,
+                cerExportFilePath: cerFilePath,
+                friendlyName: CommonName,
+                pfxExportFilePath: pfxFilePath,
+                pfxPassword: Password,
+                UserProtectedPrivateKey: true,
+                ExportablePrivateKey: true
                  );
 
             // Save the newly created certificate's details in the user config JSON file
@@ -76,6 +78,8 @@ namespace WDACConfig
             int keySize,
             HashAlgorithmName hashAlgorithm,
             CertificateStoreLocation? storeLocation,
+            bool UserProtectedPrivateKey,
+            bool ExportablePrivateKey,
             string? cerExportFilePath = null,
             string? friendlyName = null,
             string? pfxExportFilePath = null,
@@ -140,7 +144,20 @@ namespace WDACConfig
 
             // https://learn.microsoft.com/en-us/dotnet/api/system.security.cryptography.x509certificates.x509certificateloader.loadpkcs12
             // https://learn.microsoft.com/en-us/dotnet/api/system.security.cryptography.x509certificates.x509keystorageflags
-            X509Certificate2 generatedCert = X509CertificateLoader.LoadPkcs12(certData, pfxPassword, X509KeyStorageFlags.PersistKeySet | X509KeyStorageFlags.Exportable | X509KeyStorageFlags.UserProtected);
+
+            X509KeyStorageFlags keyStorageFlags = X509KeyStorageFlags.PersistKeySet;
+
+            if (UserProtectedPrivateKey)
+            {
+                keyStorageFlags |= X509KeyStorageFlags.UserProtected;
+            }
+
+            if (ExportablePrivateKey)
+            {
+                keyStorageFlags |= X509KeyStorageFlags.Exportable;
+            }
+
+            X509Certificate2 generatedCert = X509CertificateLoader.LoadPkcs12(certData, pfxPassword, keyStorageFlags);
 
             // Set the friendly name if provided
             if (!string.IsNullOrEmpty(friendlyName))

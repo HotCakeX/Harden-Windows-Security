@@ -315,26 +315,14 @@ namespace WDACConfig
             }
         }
 
+
+        /// <summary>
+        /// Writes the UserConfiguration object to the JSON file
+        /// </summary>
+        /// <param name="userConfiguration"></param>
         private static void WriteUserConfiguration(UserConfiguration userConfiguration)
         {
-            // Create a JSON object from the UserConfiguration properties
-            var json = new
-            {
-                SignedPolicyPath = userConfiguration.SignedPolicyPath,
-                UnsignedPolicyPath = userConfiguration.UnsignedPolicyPath,
-                SignToolCustomPath = userConfiguration.SignToolCustomPath,
-                CertificateCommonName = userConfiguration.CertificateCommonName,
-                CertificatePath = userConfiguration.CertificatePath,
-                StrictKernelPolicyGUID = userConfiguration.StrictKernelPolicyGUID?.ToString(),
-                StrictKernelNoFlightRootsPolicyGUID = userConfiguration.StrictKernelNoFlightRootsPolicyGUID?.ToString(),
-                LastUpdateCheck = userConfiguration.LastUpdateCheck?.ToString("o"),
-                StrictKernelModePolicyTimeOfDeployment = userConfiguration.StrictKernelModePolicyTimeOfDeployment?.ToString("o"),
-                AutoUpdateCheck = userConfiguration.AutoUpdateCheck
-            };
-
-
             string jsonString = JsonSerializer.Serialize(userConfiguration, UserConfigurationContext.Default.UserConfiguration);
-
 
             // Write the JSON string to the file
             File.WriteAllText(GlobalVars.UserConfigJson, jsonString);

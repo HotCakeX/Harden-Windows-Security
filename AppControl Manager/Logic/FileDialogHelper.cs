@@ -11,6 +11,7 @@ namespace WDACConfig
 {
     /// <summary>
     /// https://learn.microsoft.com/en-us/uwp/api/windows.storage.pickers.filesavepicker?view=winrt-26100
+    /// This class uses managed code, "allowMarshaling" is "true" for CsWin32 JSON settings.
     /// </summary>
     internal static class FileDialogHelper
     {
@@ -21,12 +22,12 @@ namespace WDACConfig
         /// <returns></returns>
         internal unsafe static string? ShowFilePickerDialog(string filter)
         {
-            // Create an instance of the file open dialog
+            // Create an instance of the file open dialog using COM interface.
             int hr = PInvoke.CoCreateInstance(
-                typeof(FileOpenDialog).GUID, // CLSID for FileOpenDialog
+                typeof(FileOpenDialog).GUID, // GUID for FileOpenDialog COM object
                 null, // No outer object for aggregation
-                CLSCTX.CLSCTX_INPROC_SERVER, // In-process server context
-                out IFileOpenDialog* fileOpenDialog // Explicitly specify the output type
+                CLSCTX.CLSCTX_INPROC_SERVER, // Context specifies in-process server execution
+                out IFileOpenDialog fileOpenDialog // Output reference to the created IFileOpenDialog instance
             );
 
             // If creation fails, throw an exception with the corresponding HRESULT code.
@@ -42,109 +43,65 @@ namespace WDACConfig
             {
                 // Split the filter into name and pattern pairs (e.g., "Text Files|*.txt").
                 string[] tokens = filter.Split('|');
-
-                // Ensure the pairs are valid.
-                if (tokens.Length % 2 == 0)
+                if (tokens.Length % 2 == 0) // Ensure the pairs are valid.
                 {
-                    for (int i = 0; i < tokens.Length; i += 2)
+                    for (int i = 1; i < tokens.Length; i += 2)
                     {
+                        // Populate the filter specification structure for each pair.
                         COMDLG_FILTERSPEC extension;
-                        extension.pszName = (char*)Marshal.StringToHGlobalUni(tokens[i]);
-                        extension.pszSpec = (char*)Marshal.StringToHGlobalUni(tokens[i + 1]);
+                        extension.pszName = (char*)Marshal.StringToHGlobalUni(tokens[i - 1]); // Filter name.
+                        extension.pszSpec = (char*)Marshal.StringToHGlobalUni(tokens[i]);     // Filter pattern.
                         extensions.Add(extension);
                     }
                 }
             }
 
             // Apply the filters to the file open dialog.
-            fileOpenDialog->SetFileTypes(extensions.ToArray());
+            fileOpenDialog.SetFileTypes(extensions.ToArray());
 
             // Set the default folder to "My Documents".
             hr = PInvoke.SHCreateItemFromParsingName(
-                Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
-                null,
-                typeof(IShellItem).GUID,
-                out void* pDirectoryShellItem
+                Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), // Path to the folder.
+                null, // No binding context needed.
+                typeof(IShellItem).GUID, // GUID for the IShellItem interface.
+                out var directoryShellItem // Output reference to the IShellItem instance.
             );
 
             if (hr >= 0) // Proceed only if the default folder creation succeeds.
             {
-                IShellItem* directoryShellItem = (IShellItem*)pDirectoryShellItem;
-                fileOpenDialog->SetFolder(directoryShellItem);
-                fileOpenDialog->SetDefaultFolder(directoryShellItem);
-
-                // Release the IShellItem after use
-                _ = directoryShellItem->Release();
+                // Set the initial and default folder for the dialog.
+                fileOpenDialog.SetFolder((IShellItem)directoryShellItem);
+                fileOpenDialog.SetDefaultFolder((IShellItem)directoryShellItem);
             }
 
             try
             {
-
-                try
+                // Display the dialog to the user.
+                fileOpenDialog.Show(new HWND(GlobalVars.hWnd)); // Pass the parent window handle.
+            }
+            catch (Exception e)
+            {
+                // Handle exceptions, such as when the user cancels the dialog.
+                if (e.HResult != -2147023673) // Specific HRESULT for "Operation Canceled".
                 {
-                    // Display the dialog to the user.
-                    fileOpenDialog->Show(new HWND(GlobalVars.hWnd)); // Pass the parent window handle.
-                }
-                catch (Exception e)
-                {
-                    if (e.HResult == -2147023673) // Specific HRESULT for "Operation Canceled".
-                    {
-                        return null;
-                    }
-
                     throw; // Re-throw unexpected exceptions.
                 }
-                finally
+                else
                 {
-                    if (fileOpenDialog != null)
-                    {
-                        _ = fileOpenDialog->Release();
-                    }
-                }
-
-                // Retrieve the result of the dialog (selected file).
-                IShellItem* ppsi = null;
-                fileOpenDialog->GetResult(&ppsi);
-
-                // Retrieve the file path
-                PWSTR filename;
-                ppsi->GetDisplayName(SIGDN.SIGDN_FILESYSPATH, &filename);
-
-                // Convert to managed string
-                string selectedFilePath = new(filename);
-
-                // Free the allocated memory for filename
-                if (filename.Value != null)
-                {
-                    Marshal.FreeCoTaskMem((IntPtr)filename.Value);
-                }
-
-                // Release COM objects
-                _ = ppsi->Release();
-
-                return selectedFilePath;
-            }
-
-            finally
-            {
-                if (fileOpenDialog != null)
-                {
-                    _ = fileOpenDialog->Release();
-                }
-
-                // Clean up extensions memory
-                foreach (var extension in extensions)
-                {
-                    if (extension.pszName.Value != null)
-                    {
-                        Marshal.FreeHGlobal((IntPtr)extension.pszName.Value);
-                    }
-                    if (extension.pszSpec.Value != null)
-                    {
-                        Marshal.FreeHGlobal((IntPtr)extension.pszSpec.Value);
-                    }
+                    return null; // Return null when the dialog is canceled.
                 }
             }
+
+            // Retrieve the result of the dialog (selected file).
+            fileOpenDialog.GetResult(out IShellItem ppsi); // Get the IShellItem representing the selected file.
+
+            // Get the file path as a PWSTR.
+            PWSTR filename;
+            ppsi.GetDisplayName(SIGDN.SIGDN_FILESYSPATH, &filename); // Retrieve the file's full path.
+
+            // Convert the unmanaged PWSTR to a managed string and return it.
+            string selectedFilePath = filename.ToString();
+            return selectedFilePath;
         }
 
 
@@ -157,12 +114,13 @@ namespace WDACConfig
         /// <returns>A list of selected file paths or null if the operation is cancelled.</returns>
         internal unsafe static List<string>? ShowMultipleFilePickerDialog(string filter)
         {
-            // Create the file open dialog
+            // Create the file open dialog using COM's CoCreateInstance method.
+            // CLSCTX.CLSCTX_INPROC_SERVER ensures the dialog runs in the same process.
             int hr = PInvoke.CoCreateInstance(
-                typeof(FileOpenDialog).GUID, // CLSID for FileOpenDialog
-                null,                        // No aggregation
-                CLSCTX.CLSCTX_INPROC_SERVER, // In-process COM server
-                out IFileOpenDialog* fileOpenDialog // Interface for the dialog
+                typeof(FileOpenDialog).GUID, // GUID of the FileOpenDialog class.
+                null,                        // No aggregation.
+                CLSCTX.CLSCTX_INPROC_SERVER, // In-process COM server.
+                out IFileOpenDialog fileOpenDialog // Interface for the dialog.
             );
 
             // If the HRESULT indicates failure, throw a corresponding .NET exception.
@@ -185,123 +143,83 @@ namespace WDACConfig
                     for (int i = 1; i < tokens.Length; i += 2)
                     {
                         COMDLG_FILTERSPEC extension;
-                        extension.pszName = (char*)Marshal.StringToHGlobalUni(tokens[i - 1]);
-                        extension.pszSpec = (char*)Marshal.StringToHGlobalUni(tokens[i]);
+
+                        // Marshal the description and extension strings to unmanaged memory.
+                        extension.pszName = (char*)Marshal.StringToHGlobalUni(tokens[i - 1]); // Filter description.
+                        extension.pszSpec = (char*)Marshal.StringToHGlobalUni(tokens[i]);     // File extension(s).
+
+                        // Add the filter specification to the list.
                         extensions.Add(extension);
                     }
                 }
             }
 
             // Apply the file type filters to the dialog.
-            fileOpenDialog->SetFileTypes(extensions.ToArray());
+            fileOpenDialog.SetFileTypes(extensions.ToArray());
 
-            // Set default folder to My Documents
+            // Optionally set a default folder and starting directory.
+            // Retrieves a shell item representing the "My Documents" directory.
             hr = PInvoke.SHCreateItemFromParsingName(
-                Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
-                null,
-                typeof(IShellItem).GUID,
-                out var directoryShellItem
+                Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), // Folder path to "My Documents".
+                null,  // No binding context.
+                typeof(IShellItem).GUID, // GUID for IShellItem interface.
+                out var directoryShellItem // Output shell item.
             );
 
             // If the "My Documents" folder is successfully retrieved, set it as the default.
             if (hr >= 0)
             {
-                fileOpenDialog->SetFolder((IShellItem*)directoryShellItem);
-                fileOpenDialog->SetDefaultFolder((IShellItem*)directoryShellItem);
+                fileOpenDialog.SetFolder((IShellItem)directoryShellItem);        // Set starting folder.
+                fileOpenDialog.SetDefaultFolder((IShellItem)directoryShellItem); // Set default folder.
             }
 
-            // Configure dialog options for multiple selection
+            // Configure dialog options to allow multiple file selection.
             FILEOPENDIALOGOPTIONS options = FILEOPENDIALOGOPTIONS.FOS_ALLOWMULTISELECT;
-            fileOpenDialog->SetOptions(options);
+            fileOpenDialog.SetOptions(options);
 
             try
             {
-                // Show the dialog
-                fileOpenDialog->Show(new HWND(GlobalVars.hWnd));
+                // Display the file picker dialog to the user.
+                fileOpenDialog.Show(new HWND(GlobalVars.hWnd)); // Owner window handle.
             }
             catch (Exception e)
             {
-                if (e.HResult == -2147023673) // Operation Canceled HRESULT
+                // Handle user cancellation of the dialog (specific HRESULT -2147023673).
+                if (e.HResult != -2147023673)
                 {
-                    return null;
+                    throw; // Rethrow for unexpected errors.
                 }
-
-                throw;
+                else
+                {
+                    return null; // User cancelled; return null.
+                }
             }
-            finally
+
+            // Retrieve the collection of selected items from the dialog.
+            fileOpenDialog.GetResults(out IShellItemArray ppsiCollection);
+
+            // Get the number of selected files in the collection.
+            ppsiCollection.GetCount(out uint fileCount);
+
+            // Initialize the list to store the paths of the selected files.
+            List<string> selectedFiles = [];
+
+            // Iterate through each selected file.
+            for (uint i = 0; i < fileCount; i++)
             {
-                if (fileOpenDialog != null)
-                {
-                    _ = fileOpenDialog->Release();
-                }
+                ppsiCollection.GetItemAt(i, out IShellItem ppsi); // Get the IShellItem for the file.
+
+                // Get the file system path of the file.
+                PWSTR filename;
+                ppsi.GetDisplayName(SIGDN.SIGDN_FILESYSPATH, &filename); // Retrieve the full filesystem path.
+
+                // Convert the unmanaged string (PWSTR) to a managed string and add it to the list.
+                string selectedFilePath = filename.ToString();
+                selectedFiles.Add(selectedFilePath);
             }
 
-            // Retrieve the collection of selected items
-            IShellItemArray* ppsiCollection = null;
-
-            try
-            {
-
-                fileOpenDialog->GetResults(&ppsiCollection);
-
-                // Get the number of selected files
-                uint fileCount = 0;
-                ppsiCollection->GetCount(&fileCount);
-
-                // Initialize the list to store file paths
-                List<string> selectedFiles = [];
-
-                // Iterate through selected items
-                for (uint i = 0; i < fileCount; i++)
-                {
-                    IShellItem* ppsi = null;
-                    ppsiCollection->GetItemAt(i, &ppsi);
-
-                    // Retrieve the file path
-                    PWSTR filename;
-                    ppsi->GetDisplayName(SIGDN.SIGDN_FILESYSPATH, &filename);
-
-                    // Convert to managed string and add to the list
-                    string filePath = new(filename.Value);
-                    selectedFiles.Add(filePath);
-
-                    // Free the unmanaged memory allocated for the file path
-                    if (filename.Value != null)
-                    {
-                        Marshal.FreeCoTaskMem((IntPtr)filename.Value);
-                    }
-
-
-                    // Release the IShellItem COM object
-
-                    _ = ppsi->Release();
-
-                }
-
-                return selectedFiles;
-            }
-            finally
-            {
-                // Clean up extensions memory
-                foreach (var extension in extensions)
-                {
-                    if (extension.pszName.Value != null)
-                    {
-                        Marshal.FreeHGlobal((IntPtr)extension.pszName.Value);
-                    }
-                    if (extension.pszSpec.Value != null)
-                    {
-                        Marshal.FreeHGlobal((IntPtr)extension.pszSpec.Value);
-                    }
-                }
-
-                // Release COM objects
-                _ = ppsiCollection->Release();
-                if (fileOpenDialog != null)
-                {
-                    _ = fileOpenDialog->Release();
-                }
-            }
+            // Return the list of selected file paths.
+            return selectedFiles;
         }
 
 
@@ -314,96 +232,72 @@ namespace WDACConfig
         /// <returns>The selected directory path as a string, or null if the operation is cancelled.</returns>
         internal unsafe static string? ShowDirectoryPickerDialog()
         {
-            // Create the file open dialog
+            // Create the file open dialog using COM's CoCreateInstance method.
+            // CLSCTX.CLSCTX_INPROC_SERVER ensures the dialog runs in the same process.
             int hr = PInvoke.CoCreateInstance(
-                typeof(FileOpenDialog).GUID, // CLSID for FileOpenDialog
-                null,                        // No aggregation
-                CLSCTX.CLSCTX_INPROC_SERVER, // In-process COM server
-                out IFileOpenDialog* fileOpenDialog // Interface for the dialog
+                typeof(FileOpenDialog).GUID, // GUID of the FileOpenDialog class.
+                null,                        // No aggregation.
+                CLSCTX.CLSCTX_INPROC_SERVER, // In-process COM server.
+                out IFileOpenDialog fileOpenDialog // Interface for the dialog.
             );
 
+            // If the HRESULT indicates failure, throw a corresponding .NET exception.
             if (hr < 0)
             {
                 Marshal.ThrowExceptionForHR(hr);
             }
 
-            // Configure dialog options to enable folder selection
+            // Configure dialog options to enable folder selection.
             FILEOPENDIALOGOPTIONS options = FILEOPENDIALOGOPTIONS.FOS_PICKFOLDERS;
-            fileOpenDialog->SetOptions(options);
+            fileOpenDialog.SetOptions(options);
 
-            // Set default folder to "My Documents"
+            // Optionally set a default folder and starting directory.
+            // Retrieves a shell item representing the "My Documents" directory.
             hr = PInvoke.SHCreateItemFromParsingName(
-                Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
-                null,
-                typeof(IShellItem).GUID,
-                out var directoryShellItem
+                Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), // Folder path to "My Documents".
+                null,  // No binding context.
+                typeof(IShellItem).GUID, // GUID for IShellItem interface.
+                out var directoryShellItem // Output shell item.
             );
 
             // If the "My Documents" folder is successfully retrieved, set it as the default.
             if (hr >= 0)
             {
-                fileOpenDialog->SetFolder((IShellItem*)directoryShellItem);
-                fileOpenDialog->SetDefaultFolder((IShellItem*)directoryShellItem);
+                fileOpenDialog.SetFolder((IShellItem)directoryShellItem);        // Set starting folder.
+                fileOpenDialog.SetDefaultFolder((IShellItem)directoryShellItem); // Set default folder.
             }
 
             try
             {
-                // Show the dialog
-                fileOpenDialog->Show(new HWND(GlobalVars.hWnd));
+                // Display the folder picker dialog to the user.
+                fileOpenDialog.Show(new HWND(GlobalVars.hWnd)); // Owner window handle.
             }
             catch (Exception e)
             {
-                if (e.HResult == -2147023673) // Operation Canceled HRESULT
+                // Handle user cancellation of the dialog (specific HRESULT -2147023673).
+                if (e.HResult != -2147023673)
                 {
-                    return null;
+                    throw; // Rethrow for unexpected errors.
                 }
-
-                throw;
-            }
-            finally
-            {
-                // Release the IFileOpenDialog COM object
-                if (fileOpenDialog != null)
+                else
                 {
-                    _ = fileOpenDialog->Release();
+                    return null; // User cancelled; return null.
                 }
             }
 
-            // Retrieve the selected folder
-            IShellItem* ppsi = null;
+            // Retrieve the selected folder from the dialog.
+            fileOpenDialog.GetResult(out IShellItem ppsi);
 
-            try
-            {
+            // Get the file system path of the selected folder.
+            PWSTR folderPath;
+            ppsi.GetDisplayName(SIGDN.SIGDN_FILESYSPATH, &folderPath); // Retrieve the full filesystem path.
 
-                fileOpenDialog->GetResult(&ppsi);
+            // Convert the unmanaged string (PWSTR) to a managed string.
+            string selectedFolderPath = folderPath.ToString();
 
-                // Get the file system path of the folder
-                PWSTR folderPath;
-                ppsi->GetDisplayName(SIGDN.SIGDN_FILESYSPATH, &folderPath);
-
-                // Convert to managed string
-                string selectedFolderPath = new(folderPath.Value);
-
-                // Free unmanaged memory for the folder path
-                Marshal.FreeCoTaskMem((IntPtr)folderPath.Value);
-
-                return selectedFolderPath;
-
-            }
-            finally
-            {
-                // Clean up the IShellItem COM object
-                _ = ppsi->Release();
-
-
-                // Release the IFileOpenDialog COM object
-                if (fileOpenDialog != null)
-                {
-                    _ = fileOpenDialog->Release();
-                }
-            }
+            // Return the selected folder path as a managed string.
+            return selectedFolderPath;
         }
-
 
 
 
@@ -414,118 +308,85 @@ namespace WDACConfig
         /// <returns>A list of selected directory paths or null if cancelled.</returns>
         internal unsafe static List<string>? ShowMultipleDirectoryPickerDialog()
         {
-            // Create the file open dialog
+            // Create the file open dialog using COM's CoCreateInstance method.
+            // CLSCTX.CLSCTX_INPROC_SERVER ensures the dialog runs in the same process.
             int hr = PInvoke.CoCreateInstance(
-                typeof(FileOpenDialog).GUID, // CLSID for FileOpenDialog
-                null,                        // No aggregation
-                CLSCTX.CLSCTX_INPROC_SERVER, // In-process COM server
-                out IFileOpenDialog* fileOpenDialog // Interface for the dialog
+                typeof(FileOpenDialog).GUID, // GUID of the FileOpenDialog class.
+                null,                        // No aggregation.
+                CLSCTX.CLSCTX_INPROC_SERVER, // In-process COM server.
+                out IFileOpenDialog fileOpenDialog // Interface for the dialog.
             );
 
+            // If the HRESULT indicates failure, throw a corresponding .NET exception.
             if (hr < 0)
             {
                 Marshal.ThrowExceptionForHR(hr);
             }
 
-            // Configure dialog options to enable folder picking and multiple selection
+            // Configure dialog options to enable folder picking and multiple selection.
             FILEOPENDIALOGOPTIONS options = FILEOPENDIALOGOPTIONS.FOS_PICKFOLDERS | FILEOPENDIALOGOPTIONS.FOS_ALLOWMULTISELECT;
-            fileOpenDialog->SetOptions(options);
+            fileOpenDialog.SetOptions(options);
 
-            // Set default folder to "My Documents"
+            // Optionally set a default folder and starting directory.
+            // Retrieves a shell item representing the "My Documents" directory.
             hr = PInvoke.SHCreateItemFromParsingName(
-                Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
-                null,
-                typeof(IShellItem).GUID,
-                out var directoryShellItem
+                Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), // Folder path to "My Documents".
+                null,  // No binding context.
+                typeof(IShellItem).GUID, // GUID for IShellItem interface.
+                out var directoryShellItem // Output shell item.
             );
 
+            // If the "My Documents" folder is successfully retrieved, set it as the default.
             if (hr >= 0)
             {
-                fileOpenDialog->SetFolder((IShellItem*)directoryShellItem);
-                fileOpenDialog->SetDefaultFolder((IShellItem*)directoryShellItem);
+                fileOpenDialog.SetFolder((IShellItem)directoryShellItem);        // Set starting folder.
+                fileOpenDialog.SetDefaultFolder((IShellItem)directoryShellItem); // Set default folder.
             }
-
-
 
             try
             {
-                // Show the dialog
-                fileOpenDialog->Show(new HWND(GlobalVars.hWnd));
+                // Display the folder picker dialog to the user.
+                fileOpenDialog.Show(new HWND(GlobalVars.hWnd)); // Owner window handle.
             }
             catch (Exception e)
             {
-                if (e.HResult == -2147023673) // Operation Canceled HRESULT
+                // Handle user cancellation of the dialog (specific HRESULT -2147023673).
+                if (e.HResult != -2147023673)
                 {
-                    return null;
+                    throw; // Rethrow for unexpected errors.
                 }
-
-                throw;
+                else
+                {
+                    return null; // User cancelled; return null.
+                }
             }
-            finally
+
+            // Retrieve the collection of selected items from the dialog.
+            fileOpenDialog.GetResults(out IShellItemArray ppsiCollection);
+
+            // Get the number of selected folders in the collection.
+            ppsiCollection.GetCount(out uint folderCount);
+
+            // Initialize the list to store the paths of the selected folders.
+            List<string> selectedFolders = [];
+
+            // Iterate through each selected folder.
+            for (uint i = 0; i < folderCount; i++)
             {
-                // Release the IFileOpenDialog COM object
-                if (fileOpenDialog != null)
-                {
-                    _ = fileOpenDialog->Release();
-                }
+                ppsiCollection.GetItemAt(i, out IShellItem ppsi); // Get the IShellItem for the folder.
+
+                // Get the file system path of the folder.
+                PWSTR folderPath;
+                ppsi.GetDisplayName(SIGDN.SIGDN_FILESYSPATH, &folderPath); // Retrieve the full filesystem path.
+
+                // Convert the unmanaged string (PWSTR) to a managed string and add it to the list.
+                string selectedFolderPath = folderPath.ToString();
+                selectedFolders.Add(selectedFolderPath);
             }
 
-            // Retrieve the collection of selected items
-            IShellItemArray* ppsiCollection = null;
-
-            try
-            {
-
-                fileOpenDialog->GetResults(&ppsiCollection);
-
-                // Get the number of selected folders
-                uint folderCount;
-                ppsiCollection->GetCount(&folderCount);
-
-                // Initialize the list to store selected folder paths
-                List<string> selectedFolders = [];
-
-                // Iterate through each selected folder
-                for (uint i = 0; i < folderCount; i++)
-                {
-                    IShellItem* ppsi = null;
-                    ppsiCollection->GetItemAt(i, &ppsi); // Retrieve IShellItem for the folder
-
-                    // Get the file system path of the folder
-                    PWSTR folderPath;
-                    ppsi->GetDisplayName(SIGDN.SIGDN_FILESYSPATH, &folderPath);
-
-                    // Convert the unmanaged string (PWSTR) to a managed string and add to the list
-                    string selectedFolderPath = new(folderPath.Value);
-                    selectedFolders.Add(selectedFolderPath);
-
-                    // Free unmanaged memory for the folder path
-                    Marshal.FreeCoTaskMem((IntPtr)folderPath.Value);
-
-                    // Clean up the IShellItem COM object
-
-                    _ = ppsi->Release();
-
-                }
-
-                return selectedFolders;
-            }
-            finally
-            {
-
-                // Clean up the IShellItemArray COM object
-                _ = ppsiCollection->Release();
-
-                // Release the IFileOpenDialog COM object
-                if (fileOpenDialog != null)
-                {
-                    _ = fileOpenDialog->Release();
-                }
-
-            }
+            // Return the list of selected folder paths.
+            return selectedFolders;
         }
-
-
 
     }
 }

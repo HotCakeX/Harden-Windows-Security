@@ -160,7 +160,7 @@ namespace WDACConfig
                             Source = new Simulation()
                         };
 
-                        // Allow New Apps     
+                        // Allow New Apps
                         if (currentTheme is ElementTheme.Dark)
                         {
                             AllowNewAppsNavItem.Icon = new AnimatedIcon

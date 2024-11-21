@@ -65,6 +65,7 @@
     <!-- https://learn.microsoft.com/en-us/windows/msix/app-installer/create-appinstallerfile-vs -->
     <GenerateAppInstallerFile>False</GenerateAppInstallerFile>
     <AppxPackageSigningEnabled>False</AppxPackageSigningEnabled>
+    <!-- This specifies what hashing algorithm must be used for the certificate that will sign the MSIX package -->
     <AppxPackageSigningTimestampDigestAlgorithm>SHA512</AppxPackageSigningTimestampDigestAlgorithm>
     <AppxAutoIncrementPackageRevision>False</AppxAutoIncrementPackageRevision>
 
@@ -221,6 +222,10 @@
     <Compile Remove="Animated Icon Sources\**" />
     <Content Remove="Animated Icon Sources\**" />
     <None Remove="Animated Icon Sources\**" />
+
+    <Compile Remove="Excluded Code\**" />
+    <Content Remove="Excluded Code\**" />
+    <None Remove="Excluded Code\**" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\LICENSE">

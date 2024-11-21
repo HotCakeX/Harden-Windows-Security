@@ -14,7 +14,6 @@ using System.Threading.Tasks;
 using Windows.ApplicationModel;
 using Windows.Management.Deployment;
 
-
 #pragma warning disable IDE0063 // Do not simplify using statements, keep them scoped for proper disposal otherwise files will be in use until the method is exited
 
 namespace WDACConfig.Pages
@@ -138,14 +137,10 @@ namespace WDACConfig.Pages
 
                     DownloadProgressRingForMSIXFile.IsIndeterminate = true;
 
-                    UpdateStatusInfoBar.Message = "Detecting and downloading the SignTool.exe from the Microsoft servers";
+                    UpdateStatusInfoBar.Message = "Detecting/Downloading the SignTool.exe from the Microsoft servers";
 
-                    string signToolPath = string.Empty;
-
-                    await Task.Run(() =>
-                    {
-                        signToolPath = SignToolHelper.GetSignToolPath();
-                    });
+                    // First check if SignTool path is registered in the user configurations, else attempt to detect or download it
+                    string signToolPath = UserConfiguration.Get().SignToolCustomPath ?? await Task.Run(() => SignToolHelper.GetSignToolPath());
 
                     UpdateStatusInfoBar.Message = "All Downloads finished, installing the new AppControl Manager version";
 
@@ -172,7 +167,9 @@ namespace WDACConfig.Pages
                         hashAlgorithm: HashAlgorithmName.SHA512,
                         storeLocation: CertificateGenerator.CertificateStoreLocation.Machine,
                         cerExportFilePath: CertificateOutputPath,
-                        friendlyName: commonName);
+                        friendlyName: commonName,
+                        UserProtectedPrivateKey: false,
+                        ExportablePrivateKey: false);
 
                         // Pattern for AppControl Manager version and architecture extraction from file path and download link URL
                         string pattern = @"_(?<Version>\d+\.\d+\.\d+\.\d+)_(?<Architecture>x64|arm64)\.msix$";
@@ -204,11 +201,13 @@ namespace WDACConfig.Pages
                         PackageManager packageManager = new();
                         IEnumerable<Package> PossibleExistingApp = packageManager.FindPackages("AppControlManager", "CN=SelfSignedCertForAppControlManager");
 
+                        Package? PossibleExistingPackage = PossibleExistingApp.FirstOrDefault();
+
                         // Get the version of the first matching package
-                        string? InstalledAppVersionBefore = PossibleExistingApp.FirstOrDefault()?.Id.Version.ToString();
+                        string? InstalledAppVersionBefore = $"{PossibleExistingPackage?.Id.Version.Major}.{PossibleExistingPackage?.Id.Version.Minor}.{PossibleExistingPackage?.Id.Version.Build}.{PossibleExistingPackage?.Id.Version.Revision}";
 
                         // Get the architecture of the first matching package
-                        string? InstalledAppArchitectureBefore = PossibleExistingApp.FirstOrDefault()?.Id.Architecture.ToString();
+                        string? InstalledAppArchitectureBefore = PossibleExistingPackage?.Id.Architecture.ToString();
 
                         Logger.Write($"Installing AppControl Manager MSIX package version '{InstallingAppVersion}' with architecture '{InstallingAppArchitecture}'");
 

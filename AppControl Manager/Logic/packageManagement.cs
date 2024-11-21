@@ -2,9 +2,21 @@
 using System.Collections.Generic;
 using Windows.ApplicationModel;
 
+
+/* Removes all the packages that match a name and publisher
+
+           var packageManager = new Windows.Management.Deployment.PackageManager();
+           IEnumerable<Package> packages = packageManager.FindPackages("AppControlManager", "CN=SelfSignedCertForAppControlManager");
+
+           foreach (Package package in packages)
+           {
+               packageManager.RemovePackageAsync(package.Id.FullName);
+
+           }
+*/
+
 namespace WDACConfig
 {
-
     public class PackageDetails
     {
         // General Information
